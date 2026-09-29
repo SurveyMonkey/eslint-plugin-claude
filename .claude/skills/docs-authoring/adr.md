@@ -30,7 +30,21 @@ on its own, without the Decision. State the symptom or the constraint that force
 evidence, in terms that admit more than one answer. A Context that says the chosen option is
 missing ("we have no X") restates the Decision as its own absence. Check whether any solution,
 other than the one in Decision, could satisfy the Context. If not, rewrite the Context in terms
-of the underlying symptom.
+of the underlying symptom. [quality.md](quality.md) has the full litmus test and the evidence
+standards.
+
+## A declined decision is an ADR too
+
+A decision not to do something is still a decision. When the team declines a proposal, or cuts a
+part of one in review, record the outcome as a short ADR before you delete the proposal:
+
+- Record what was decided, why, and the constraints at the time (team size, product stage, what
+  the project commits to). A future reader needs these to see whether their situation differs.
+- Do not move the exploration into the ADR. A parked design, with its cost analysis and detail,
+  rests on assumptions that will be false for the next reader. It looks like a head start, and it
+  is a trap. The pull request holds the design, so link it.
+- Cutting scope in review is the process working, not a loss. Record the cut only if the decision
+  is worth a record.
 
 ## PR checklist
 
@@ -38,5 +52,7 @@ of the underlying symptom.
   change, performance trade-off) requires one.
 - **Current ADRs followed?** Changes comply with in-force ADRs (`status: stable`) or explicitly
   note the deviation.
+- **Proposal declined, or a part cut in review?** Record the outcome as an ADR, and delete the
+  proposal or the cut part in the same PR.
 - **ADR superseded?** Set the old one's `status: deprecated`, and link the replacement from its
   body. Do not delete it.

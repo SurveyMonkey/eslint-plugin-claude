@@ -44,8 +44,8 @@ constraints in force at the time. These are team size, product stage, and what t
 and does not commit to. A future reader needs this, to tell whether their own situation differs
 enough to decide otherwise.
 
-Record it on the issue that tracked the proposal. The pull request is the archive for the
-proposal itself, so link it from the record.
+Record it as an ADR ([adr.md](adr.md)). The pull request is the archive for the proposal itself,
+so link it from the record.
 
 ## Shared keys
 

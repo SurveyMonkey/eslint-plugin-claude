@@ -29,4 +29,5 @@ An ADR records one decision, after it is made.
   names one.
 - A superseded ADR is set to `deprecated` and links its replacement. Never delete it.
 
-Section guidance and the pull request checklist are in the `docs-authoring` skill (`adr.md`).
+Section guidance, declined decisions and the pull request checklist are in the `docs-authoring`
+skill (`adr.md`, `quality.md`).
