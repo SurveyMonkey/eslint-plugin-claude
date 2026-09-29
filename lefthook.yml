@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
+#
+# Fast gates. biome and vitest see staged files only; tsc checks the whole
+# project. CI is the enforcement boundary. sort-package-json is the one job
+# that edits: it sorts a staged package.json and re-stages it.
+# `pnpm install` installs the hooks through lefthook's postinstall.
+pre-commit:
+  jobs:
+    - name: sort-package-json
+      glob: 'package.json'
+      # pnpm dlx, not a devDependency. The version is pinned here so every
+      # contributor sorts the same way.
+      run: pnpm dlx sort-package-json@4.0.0 {staged_files}
+      stage_fixed: true
+    - name: biome
+      glob: '*.{json,jsonc,ts}'
+      run: pnpm exec biome check --staged --error-on-warnings --no-errors-on-unmatched
+    - name: types
+      glob: '{*.ts,tsconfig*.json}'
+      run: pnpm exec tsc -p tsconfig.json
+    - name: vitest-related
+      glob: '*.ts'
+      run: pnpm exec vitest related --run --passWithNoTests {staged_files}

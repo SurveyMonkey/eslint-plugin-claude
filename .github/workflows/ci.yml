@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Cancel superseded pull request runs, never runs on main.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# THESE CHECK NAMES ARE A CONTRACT. The repo ruleset "Require CI" (24195202)
+# requires every `test (node ...)` leg and every `check` matrix name, matched
+# by exact string. Renaming one, or changing a Node version in the matrix,
+# does not fail the build: the required check simply never reports, and
+# every pull request waits. Update the ruleset in the same change.
+jobs:
+  test:
+    name: test (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      # The 22.x floor from engines.node, the latest 24.x, and the current line.
+      matrix:
+        node: ['22.13.0', '24', '26']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Installs pnpm from packageManager, and Node from the runtime input or
+      # .nvmrc. require-lockfile adds --frozen-lockfile to the install.
+      - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        with:
+          runtime: node@${{ matrix.node }}
+          cache: true
+          require-lockfile: true
+      - run: pnpm test
+      # Packs the tarball (prepack runs the build), installs it with its eslint
+      # peer into an empty directory, and loads it there. This catches a
+      # `files` or `exports` mistake, and runs the built code on each Node.
+      - name: Smoke-test the packed package
+        run: |
+          smoke="$RUNNER_TEMP/smoke"
+          mkdir -p "$smoke"
+          pnpm pack --pack-destination "$smoke"
+          cp scripts/smoke.mjs "$smoke/"
+          cd "$smoke"
+          echo '{ "private": true, "type": "module" }' > package.json
+          pnpm add ./eslint-plugin-claude-*.tgz "eslint@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies.eslint")"
+          node smoke.mjs
+
+  # One check per tool, so each shows on the pull request and a ruleset can
+  # require it by name.
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: lint
+            run: pnpm lint
+          - name: typecheck
+            run: pnpm typecheck
+          # Unused files, exports and dependencies: a default run, then a
+          # --strict (production) run over src/ only. The script builds first,
+          # because --strict reads dist/*.d.ts to see which type imports reach
+          # consumers.
+          - name: knip
+            run: pnpm knip
+          - name: publint
+            run: pnpm publint
+          - name: lefthook
+            run: pnpm exec lefthook validate
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        with:
+          cache: true
+          require-lockfile: true
+      - run: ${{ matrix.run }}
