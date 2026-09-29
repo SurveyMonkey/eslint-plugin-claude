@@ -14,8 +14,8 @@ Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recomme
 
 ## Code
 
-- Source is TypeScript in `src/`, built by `tsc` to `dist/`. Tests are in `tests/`
-  (`.claude/rules/type-ts.md`).
+- Source is TypeScript in `src/`, built by `tsc` to `dist/` (`.claude/rules/type-ts.md`). Tests
+  are in `tests/`, and follow the `testing` skill.
 - `CONTRIBUTING.md` has the commands, the hooks and the release flow. Run `pnpm lint`,
   `pnpm typecheck`, `pnpm test` and `pnpm knip` before you push.
 
