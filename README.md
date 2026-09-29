@@ -31,9 +31,9 @@ pnpm install     # also installs the lefthook git hooks
 pnpm test        # vitest, 100% coverage required
 pnpm typecheck   # tsc, no emit
 pnpm lint        # biome ci
-pnpm knip        # unused files, exports and dependencies
+pnpm knip        # builds, then finds unused files, exports and dependencies
 pnpm build       # tsc -p tsconfig.build.json, writes dist/
-pnpm publint     # checks the packed package.json and exports
+pnpm publint     # builds, then checks the packed package.json and exports
 ```
 
 Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build rewrites it to
