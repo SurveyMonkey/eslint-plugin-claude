@@ -1,10 +1,15 @@
 # yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
 #
 # Fast gates. biome and vitest see staged files only; tsc checks the whole
-# project. CI is the enforcement boundary.
+# project. CI is the enforcement boundary. sort-package-json is the one job
+# that edits: it sorts a staged package.json and re-stages it.
 # `pnpm install` installs the hooks through lefthook's postinstall.
 pre-commit:
   jobs:
+    - name: sort-package-json
+      glob: 'package.json'
+      run: pnpm exec sort-package-json {staged_files}
+      stage_fixed: true
     - name: biome
       glob: '*.{json,jsonc,ts}'
       run: pnpm exec biome check --staged --error-on-warnings --no-errors-on-unmatched

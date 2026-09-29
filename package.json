@@ -29,10 +29,6 @@
   "files": [
     "dist"
   ],
-  "packageManager": "pnpm@12.6.0",
-  "engines": {
-    "node": "^22.13.0 || >=24"
-  },
   "scripts": {
     "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
     "knip": "pnpm build && knip && knip --strict",
@@ -42,9 +38,6 @@
     "test": "vitest run --coverage && node scripts/check-coverage.mjs",
     "typecheck": "tsc -p tsconfig.json"
   },
-  "peerDependencies": {
-    "eslint": "^10.0.0"
-  },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
     "@types/node": "22.20.4",
@@ -53,7 +46,15 @@
     "knip": "6.38.0",
     "lefthook": "2.1.14",
     "publint": "0.3.24",
+    "sort-package-json": "4.0.0",
     "typescript": "7.0.2",
     "vitest": "5.0.2"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0"
+  },
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": "^22.13.0 || >=24"
   }
 }
