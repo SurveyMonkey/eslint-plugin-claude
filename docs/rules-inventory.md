@@ -23,8 +23,8 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **530 candidate rules** in 9 groups. 397 rules go in `recommended`: 242 at `error` and 155 at
-  `warn`. 133 rules ship `off`, and `strict` turns them on at `warn`.
+- **531 candidate rules** in 9 groups. 397 rules go in `recommended`: 242 at `error` and 155 at
+  `warn`. 134 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 157 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 97 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
@@ -114,7 +114,7 @@ below covers one kind of configuration file, and each rule name starts with its 
 | `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 157 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 49 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 41 |
-| `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 46 |
+| `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 47 |
 | `limit` | `problem` | A size, count or length limit, or a truncation. | 23 |
 | `deprecated` | `suggestion` | A legacy or renamed form that still works. | 15 |
 | `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 102 |
@@ -126,7 +126,7 @@ below covers one kind of configuration file, and each rule name starts with its 
 - `recommended` holds the rules that follow from the Claude Code docs and the skill authoring
   guide, for any team. A rule goes here only when Anthropic documentation is its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 530 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 531 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -158,17 +158,17 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 |-------|--------------------:|-------------------:|------:|------:|
 | Skills and commands | 17 | 17 | 21 | 55 |
 | Subagents and output styles | 18 | 14 | 12 | 44 |
-| Hooks | 20 | 17 | 20 | 57 |
+| Hooks | 20 | 17 | 21 | 58 |
 | Plugin manifest and layout | 45 | 24 | 10 | 79 |
 | Marketplace manifest | 33 | 18 | 4 | 55 |
 | CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
 | Settings | 23 | 24 | 16 | 63 |
 | Permissions and sandbox | 38 | 20 | 23 | 81 |
 | MCP and LSP servers | 36 | 12 | 11 | 59 |
-| **Total** | **242** | **155** | **133** | **530** |
+| **Total** | **242** | **155** | **134** | **531** |
 
-By severity, 242 rules are `error` and 288 are `warn`: the 155 `recommended` `warn` rules and
-the 133 `off` rules that `strict` turns on at `warn`.
+By severity, 242 rules are `error` and 289 are `warn`: the 155 `recommended` `warn` rules and
+the 134 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports the
 check for plugins: `covered`, `partial` or `–`. A `covered` rule stays in the list, because
@@ -386,7 +386,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 
 ### Hooks
 
-These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 57 rules: 20 error and 17 warn in `recommended`, and 20 `off`.
+These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 58 rules: 20 error and 17 warn in `recommended`, and 21 `off`.
 
 Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *handler* is one object in a group's inner `hooks` array. *Shell form* is a `command` handler with no `args`. *Exec form* is a handler with `args`. *Placeholder* means `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}` or `${CLAUDE_PROJECT_DIR}`. Unless a row says otherwise, a rule applies to all five sources.
 
@@ -430,6 +430,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 | `hooks-agent-type-experimental` | No `type: "agent"` handler: agent hooks are experimental. Prefer `command`. | recommended | warn | practice | – | [^hooks-agent-based-hooks] |
 | `hooks-command-removed-cli-flag` | A hook `command`/`args` that runs `claude` does not pass `--enable-auto-mode` (removed in v2.1.111). | recommended | error | load | – | [^cli-reference-cli-flags] |
 | `hooks-command-deprecated-cli-flag` | A hook that runs `claude` uses `--cloud`, not `--remote`. Condition, self-hosted runner: use `--system-prompt-file`/`--append-system-prompt-file`, not `--system-prompt`/`--append-system-prompt`. | recommended | warn | deprecated | – | [^cli-reference-cli-flags] [^changelog-claude-code-changelog] |
+| `hooks-command-path-variable` | (heuristic) A plugin hook reaches bundled files through `${CLAUDE_PLUGIN_ROOT}`, and a project hook through `${CLAUDE_PROJECT_DIR}`, not a bare relative, cwd-relative or absolute path. | off | warn | portability | – | [^plugins-components-reference-plugin-paths-and-store-data] [^hooks-guide-hook-error-in-output] |
 | `hooks-async-on-blocking-event` | (heuristic) `async: true` on an event whose output blocks or decides (`PreToolUse`, `PermissionRequest`, `UserPromptSubmit`, `Stop`, `SubagentStop`, `ConfigChange`, `PreModelSwitch`, `WorktreeCreate`). Async output cannot block. Logging hooks are a valid use. | off | warn | no-op | – | [^hooks-run-hooks-in-the-background] |
 | `hooks-timeout-units` | (heuristic) `timeout` is in seconds; a value of 1000 or more is likely milliseconds. | off | warn | practice | – | [^hooks-common-fields] |
 | `hooks-matcher-unanchored-regex` | (heuristic) A regex matcher that starts with a known tool name and has no `^`/`$` (`Edit.*` also hits `NotebookEdit`). | off | warn | practice | – | [^hooks-matcher-patterns] |
