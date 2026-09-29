@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { Linter } from 'eslint'
+import { defineConfig } from 'eslint/config'
 import { describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
 
@@ -14,12 +15,14 @@ describe('plugin', () => {
   })
 
   it('registers itself in the recommended config under its namespace', () => {
-    expect(plugin.configs.recommended?.plugins?.claude).toBe(plugin)
+    expect(plugin.configs.recommended?.[0]?.plugins?.claude).toBe(plugin)
   })
 
-  it('loads the recommended config in ESLint', () => {
+  it('loads the recommended config by name through extends', () => {
     const linter = new Linter()
-    const config = [{ ...plugin.configs.recommended, files: ['**/*.js'] }]
+    const config = defineConfig([
+      { files: ['**/*.js'], plugins: { claude: plugin }, extends: ['claude/recommended'] },
+    ])
     expect(linter.verify('const a = 1\n', config, 'a.js')).toEqual([])
   })
 })

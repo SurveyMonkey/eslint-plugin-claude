@@ -31,7 +31,7 @@
   ],
   "packageManager": "pnpm@12.6.0",
   "engines": {
-    "node": "^20.19.0 || ^22.13.0 || >=24"
+    "node": "^22.13.0 || >=24"
   },
   "scripts": {
     "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
@@ -47,11 +47,11 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
     "@types/node": "22.20.4",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "5.0.2",
     "eslint": "10.11.0",
     "lefthook": "2.1.14",
     "publint": "0.3.24",
     "typescript": "7.0.2",
-    "vitest": "4.1.11"
+    "vitest": "5.0.2"
   }
 }

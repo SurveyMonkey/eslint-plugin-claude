@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: release
@@ -15,6 +14,7 @@ jobs:
   release-please:
     name: release-please
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
       pull-requests: write
@@ -36,16 +36,19 @@ jobs:
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # Installs pnpm from packageManager, Node from .nvmrc (or the
       # runtime input), then runs `pnpm install --frozen-lockfile`.
       - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        # No dependency cache in the job that publishes.
         with:
-          cache: true
           require-lockfile: true
       # pnpm 11 and later do the OIDC exchange in `pnpm publish` itself.
       # `prepack` runs the build.

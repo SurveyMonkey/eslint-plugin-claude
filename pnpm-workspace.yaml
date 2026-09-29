@@ -8,3 +8,16 @@ engineStrict: true
 # a build script.
 allowBuilds:
   lefthook: true
+
+# Refuse a dependency version whose supply-chain trust evidence is weaker than
+# an earlier version's (for example, lost provenance).
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  # @types/node@22 dependency. 6.21.0 (2024-11-13, published by the undici
+  # maintainer) has no provenance; an earlier version does.
+  - undici-types@6.21.0
+  # vitest dependency. 3.2.1 has provenance and 3.2.2 (2025-01-08, same
+  # maintainer) does not.
+  - why-is-node-running@3.2.2
+# Drop an exclusion above once the lockfile no longer resolves it.
+trustPolicyExcludePrune: true

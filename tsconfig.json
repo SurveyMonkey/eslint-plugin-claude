@@ -2,23 +2,24 @@
   // The type check for everything in the repository. It emits nothing.
   // tsconfig.build.json extends this and emits src/ only.
   "compilerOptions": {
-    // The oldest Node in engines (20.19) supports ES2023.
-    "target": "es2023",
-    "lib": ["es2023"],
+    // The oldest Node in engines (22.13), per the tsconfig/bases node22 base.
+    "target": "es2022",
+    "lib": ["es2024"],
+    // nodenext also sets moduleResolution to nodenext.
     "module": "nodenext",
-    "moduleResolution": "nodenext",
-    // Source imports name the `.ts` extension. The build rewrites it to `.js`.
-    "allowImportingTsExtensions": true,
+    // Source imports name the `.ts` extension, and the build rewrites it to
+    // `.js`. This also turns on allowImportingTsExtensions.
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
+    // Also turns on isolatedModules.
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "isolatedModules": true,
     "skipLibCheck": true,
+    // TypeScript 7 defaults `types` to [].
     "types": ["node"]
   },
   "include": ["src", "tests", "vitest.config.ts"]

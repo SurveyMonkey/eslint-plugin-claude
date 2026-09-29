@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Dependabot's npm ecosystem does not support pnpm 12 yet, so only the
+  # pinned action SHAs are covered here.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci

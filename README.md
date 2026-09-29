@@ -10,15 +10,16 @@ No rules ship yet.
 pnpm add -D eslint eslint-plugin-claude
 ```
 
-Requires ESLint 10 and Node `^20.19.0 || ^22.13.0 || >=24`.
+Requires ESLint 10 and Node `^22.13.0 || >=24`.
 
 ## Usage
 
 ```js
 // eslint.config.js
+import { defineConfig } from 'eslint/config'
 import claude from 'eslint-plugin-claude'
 
-export default [claude.configs.recommended]
+export default defineConfig([{ plugins: { claude }, extends: ['claude/recommended'] }])
 ```
 
 Rules read `claude/<rule>` in a config.
