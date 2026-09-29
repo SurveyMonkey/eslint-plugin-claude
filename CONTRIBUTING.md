@@ -22,6 +22,13 @@ The pre-commit hooks (`lefthook.yml`) sort a staged `package.json`, then run Bio
 Vitest tests related to the staged files. CI runs every check again, and the "Require CI" and
 "Require CodeQL" rulesets require each one on `main`.
 
+## Design docs
+
+- [Rule inventory](docs/rules-inventory.md): the candidate rules, with a group, a preset, a
+  severity and a docs source for each.
+- [ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md): why this is an ESLint plugin on
+  `@eslint/markdown` and `@eslint/json`. See the [ADR index](docs/adr/index.md) for later ADRs.
+
 ## Commits and pull requests
 
 Pull requests are squash-merged, so the pull request title becomes the commit on `main`. Use
