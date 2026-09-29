@@ -68,7 +68,8 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
      heuristics included. It gives an easy way to test the full rule set.
 
    A convention of one organization is not a rule in this package. A check that needs a model
-   judgment is not a lint rule. The [rule inventory](../rules-inventory.md) lists the candidates
+   judgment is not a lint rule. A check that `claude plugin validate` already covers fully is not
+   a rule either. A check that validate covers in part is a rule, for the cases validate misses. The [rule inventory](../rules-inventory.md) lists the candidates
    with a preset and a severity for each.
 3. **The name is `eslint-plugin-claude`, unscoped.** Its namespace is `claude`, and its rules read
    `claude/<rule>` in a config.
