@@ -1,0 +1,25 @@
+{
+  // The type check for everything in the repository. It emits nothing.
+  // tsconfig.build.json extends this and emits src/ only.
+  "compilerOptions": {
+    // The oldest Node in engines (20.19) supports ES2023.
+    "target": "es2023",
+    "lib": ["es2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    // Source imports name the `.ts` extension. The build rewrites it to `.js`.
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["src", "tests", "vitest.config.ts"]
+}

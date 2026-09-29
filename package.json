@@ -1,0 +1,62 @@
+{
+  "name": "eslint-plugin-claude",
+  "version": "0.0.0",
+  "description": "An ESLint plugin that lints Claude Code configuration files.",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "claude",
+    "claude-code"
+  ],
+  "homepage": "https://github.com/SurveyMonkey/eslint-plugin-claude#readme",
+  "bugs": {
+    "url": "https://github.com/SurveyMonkey/eslint-plugin-claude/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SurveyMonkey/eslint-plugin-claude.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
+    "lint": "biome ci . --error-on-warnings",
+    "publint": "publint --strict",
+    "test": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "@types/node": "22.20.4",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "10.11.0",
+    "lefthook": "2.1.14",
+    "publint": "0.3.24",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "lefthook"
+    ]
+  }
+}

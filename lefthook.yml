@@ -1,0 +1,13 @@
+# Staged-only, fast gates. CI is the enforcement boundary.
+# `pnpm install` installs the hooks through lefthook's postinstall.
+pre-commit:
+  commands:
+    biome:
+      glob: '*.{json,jsonc,ts}'
+      run: pnpm exec biome check --staged --error-on-warnings --no-errors-on-unmatched
+    types:
+      glob: '{*.ts,tsconfig*.json}'
+      run: pnpm exec tsc -p tsconfig.json
+    vitest-related:
+      glob: '*.ts'
+      run: pnpm exec vitest related --run --coverage.enabled=false --passWithNoTests {staged_files}

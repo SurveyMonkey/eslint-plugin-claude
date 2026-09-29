@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# local, untracked claude notes
+CLAUDE.local.md
+
+# build, coverage and pack artifacts
+/dist/
+/coverage/
+*.tgz
+
+# node toolchain
+node_modules/
+
+# worktrees
+/.claude/worktrees/
