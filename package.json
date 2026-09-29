@@ -35,7 +35,7 @@
   },
   "scripts": {
     "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
-    "knip": "knip && knip --strict",
+    "knip": "pnpm build && knip && knip --strict",
     "lint": "biome ci . --error-on-warnings",
     "prepack": "pnpm run build",
     "publint": "publint --strict",

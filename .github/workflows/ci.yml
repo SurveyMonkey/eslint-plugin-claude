@@ -67,6 +67,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       # Unused files, exports and dependencies: a default run, then a --strict
-      # (production) run over src/ only.
+      # (production) run over src/ only. The script builds first, because
+      # --strict reads dist/*.d.ts to see which type imports reach consumers.
       - run: pnpm knip
       - run: pnpm publint
