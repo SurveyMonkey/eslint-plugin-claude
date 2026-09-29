@@ -13,7 +13,11 @@ concurrency:
   # Cancel superseded pull request runs, never runs on main.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
-# Job names are a contract once a ruleset requires them. Rename with care.
+# THESE CHECK NAMES ARE A CONTRACT. The repo ruleset "Require CI" (24195202)
+# requires every `test (node ...)` leg and every `check` matrix name, matched
+# by exact string. Renaming one, or changing a Node version in the matrix,
+# does not fail the build: the required check simply never reports, and
+# every pull request waits. Update the ruleset in the same change.
 jobs:
   test:
     name: test (node ${{ matrix.node }})
