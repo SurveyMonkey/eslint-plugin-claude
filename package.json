@@ -46,7 +46,6 @@
     "knip": "6.38.0",
     "lefthook": "2.1.14",
     "publint": "0.3.24",
-    "sort-package-json": "4.0.0",
     "typescript": "7.0.2",
     "vitest": "5.0.2"
   },

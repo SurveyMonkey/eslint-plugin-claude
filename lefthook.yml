@@ -8,7 +8,9 @@ pre-commit:
   jobs:
     - name: sort-package-json
       glob: 'package.json'
-      run: pnpm exec sort-package-json {staged_files}
+      # pnpm dlx, not a devDependency. The version is pinned here so every
+      # contributor sorts the same way.
+      run: pnpm dlx sort-package-json@4.0.0 {staged_files}
       stage_fixed: true
     - name: biome
       glob: '*.{json,jsonc,ts}'
