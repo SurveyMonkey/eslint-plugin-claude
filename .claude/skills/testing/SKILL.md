@@ -8,6 +8,9 @@ description: This repository's test strategy for ESLint rules and configs. Cover
 This is the strategy that the gates enforce. `CONTRIBUTING.md` has the commands. Nothing here
 repeats them.
 
+Paired examples: [tests.md](tests.md). What to mock, and how to inject a dependency:
+[mocking.md](mocking.md).
+
 ## Seams
 
 - **A rule is tested through ESLint's `RuleTester`**, never by a call to a private helper of the
@@ -21,6 +24,10 @@ repeats them.
 - **The built package** is tested once, by the smoke test in `ci.yml`. It installs the packed
   tarball into an empty directory and loads it in ESLint.
 
+**Agree the seams and the cases first.** Before you write a new rule, its issue lists the cases
+that must report and the cases that must stay silent, with a docs source for each. The reviewer
+of the issue agrees to that list, not only to the idea.
+
 ## Layout
 
 - A test lives under `tests/`, at the mirror of the code that it covers:
@@ -28,7 +35,7 @@ repeats them.
 - Fixtures go beside the tests that load them. Nothing test-only goes in `src/`, because `src/`
   builds into the published package.
 - A rule that reads a second file (a cross-file rule) gets a real directory tree in a temporary
-  directory. Do not mock the file system.
+  directory. Do not mock the file system ([mocking.md](mocking.md)).
 
 ## Both sides of every rule
 
@@ -71,7 +78,7 @@ Never calculate the expected value the way the code calculates it.
   fixture of that exact shape, in the same commit as the fix.
 - **Prove the red.** Run the new case against the code before the fix, and see it fail.
 - **One case at a time for a new rule.** Write one case, then the smallest code that passes it,
-  then the next case.
+  then the next case. Do not write all the cases first: bulk cases test imagined behavior.
 
 ## Coverage
 
