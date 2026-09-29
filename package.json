@@ -18,6 +18,10 @@
     "url": "git+https://github.com/SurveyMonkey/eslint-plugin-claude.git"
   },
   "license": "MIT",
+  "author": {
+    "name": "Brian Espinosa",
+    "email": "b@bje.co"
+  },
   "type": "module",
   "exports": {
     ".": {
