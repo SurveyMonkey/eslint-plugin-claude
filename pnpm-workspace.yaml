@@ -1,0 +1,10 @@
+# pnpm settings. pnpm 11 and later read them only from here, not from the
+# `pnpm` field of package.json or from .npmrc (which is auth and registry only).
+
+# Refuse an install on a Node outside engines.
+engineStrict: true
+
+# lefthook's postinstall installs the git hooks. No other dependency may run
+# a build script.
+allowBuilds:
+  lefthook: true

@@ -29,12 +29,12 @@
   "files": [
     "dist"
   ],
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@12.6.0",
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || >=24"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
     "prepack": "pnpm run build",
     "lint": "biome ci . --error-on-warnings",
     "publint": "publint --strict",
@@ -53,10 +53,5 @@
     "publint": "0.3.24",
     "typescript": "7.0.2",
     "vitest": "4.1.11"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "lefthook"
-    ]
   }
 }
