@@ -16,9 +16,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # The check names are `Analyze (actions)` and `Analyze
-  # (javascript-typescript)`. They join the "Require CI" ruleset (24195202)
-  # once they have reported on main.
+  # THESE CHECK NAMES ARE A CONTRACT. The repo ruleset "Require CodeQL"
+  # (24195745) requires `Analyze (actions)` and `Analyze
+  # (javascript-typescript)` by exact string. Renaming the job or changing
+  # the language list does not fail the build: the required check never
+  # reports, and every pull request waits. Update the ruleset in the same
+  # change.
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
