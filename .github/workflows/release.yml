@@ -15,16 +15,29 @@ jobs:
     name: release-please
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
+    # The job itself needs nothing from GITHUB_TOKEN: release-please acts as
+    # the GitHub App below.
+    permissions: {}
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
+      # A short-lived token for the org's release app, installed on this
+      # repository only. GitHub starts no workflow for a pull request that
+      # GITHUB_TOKEN opens, so a release pull request made with it never gets
+      # the checks the rulesets require. The permissions narrow the token to
+      # what release-please uses.
+      - id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
       - id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
+          token: ${{ steps.app-token.outputs.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 

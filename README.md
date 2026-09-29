@@ -42,7 +42,8 @@ Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build 
 ## Releases
 
 [release-please](https://github.com/googleapis/release-please) reads the Conventional Commit
-titles on `main` and opens a release pull request. Merging it tags the release, and
+titles on `main` and opens a release pull request. It acts as an org GitHub App (secrets
+`RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY`), so CI runs on that pull request. Merging it tags the release, and
 `.github/workflows/release.yml` publishes to npm through
 [trusted publishing](https://docs.npmjs.com/trusted-publishers). There is no npm token secret.
 
