@@ -35,10 +35,11 @@
   },
   "scripts": {
     "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
-    "prepack": "pnpm run build",
+    "knip": "knip --treat-config-hints-as-errors && knip --strict --treat-config-hints-as-errors",
     "lint": "biome ci . --error-on-warnings",
+    "prepack": "pnpm run build",
     "publint": "publint --strict",
-    "test": "vitest run --coverage",
+    "test": "vitest run --coverage && node scripts/check-coverage.mjs",
     "typecheck": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
@@ -49,6 +50,7 @@
     "@types/node": "22.20.4",
     "@vitest/coverage-v8": "5.0.2",
     "eslint": "10.11.0",
+    "knip": "6.38.0",
     "lefthook": "2.1.14",
     "publint": "0.3.24",
     "typescript": "7.0.2",

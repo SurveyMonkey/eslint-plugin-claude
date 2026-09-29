@@ -1,7 +1,8 @@
 # pnpm settings. pnpm 11 and later read them only from here, not from the
 # `pnpm` field of package.json or from .npmrc (which is auth and registry only).
 
-# Refuse an install on a Node outside engines.
+# Refuse an install when this package or a dependency declares engines that
+# the running Node does not satisfy.
 engineStrict: true
 
 # lefthook's postinstall installs the git hooks. No other dependency may run
@@ -19,5 +20,5 @@ trustPolicyExclude:
   # vitest dependency. 3.2.1 has provenance and 3.2.2 (2025-01-08, same
   # maintainer) does not.
   - why-is-node-running@3.2.2
-# Drop an exclusion above once the lockfile no longer resolves it.
+# pnpm drops an exclusion above once the lockfile no longer resolves it.
 trustPolicyExcludePrune: true

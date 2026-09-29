@@ -22,15 +22,16 @@ import claude from 'eslint-plugin-claude'
 export default defineConfig([{ plugins: { claude }, extends: ['claude/recommended'] }])
 ```
 
-Rules read `claude/<rule>` in a config.
+Rule IDs take the form `claude/<rule>`.
 
 ## Development
 
 ```sh
 pnpm install     # also installs the lefthook git hooks
-pnpm test        # vitest, coverage at 100
+pnpm test        # vitest, 100% coverage required
 pnpm typecheck   # tsc, no emit
 pnpm lint        # biome ci
+pnpm knip        # unused files, exports and dependencies
 pnpm build       # tsc -p tsconfig.build.json, writes dist/
 pnpm publint     # checks the packed package.json and exports
 ```

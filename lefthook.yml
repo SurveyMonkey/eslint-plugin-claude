@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
 #
-# Staged-only, fast gates. CI is the enforcement boundary.
+# Fast gates. biome and vitest see staged files only; tsc checks the whole
+# project. CI is the enforcement boundary.
 # `pnpm install` installs the hooks through lefthook's postinstall.
 pre-commit:
   jobs:

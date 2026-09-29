@@ -1,7 +1,20 @@
 version: 2
 updates:
-  # Dependabot's npm ecosystem does not support pnpm 12 yet, so only the
-  # pinned action SHAs are covered here.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Longer than pnpm's default minimumReleaseAge (1 day), so an update
+    # never proposes a version that `pnpm install` refuses.
+    cooldown:
+      default-days: 3
+    groups:
+      dev-dependencies:
+        dependency-type: development
+    commit-message:
+      prefix: chore
+      include: scope
+
   - package-ecosystem: github-actions
     directory: /
     schedule:

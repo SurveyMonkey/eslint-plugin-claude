@@ -21,21 +21,34 @@ jobs:
     timeout-minutes: 10
     strategy:
       fail-fast: false
-      # The floor of each range in engines.node, plus the current line.
+      # The 22.x floor from engines.node, the latest 24.x, and the current line.
       matrix:
         node: ['22.13.0', '24', '26']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # Installs pnpm from packageManager, Node from .nvmrc (or the
-      # runtime input), then runs `pnpm install --frozen-lockfile`.
+      # Installs pnpm from packageManager, and Node from the runtime input or
+      # .nvmrc. require-lockfile adds --frozen-lockfile to the install.
       - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
         with:
           runtime: node@${{ matrix.node }}
           cache: true
           require-lockfile: true
       - run: pnpm test
+      # Packs the tarball (prepack runs the build), installs it with its eslint
+      # peer into an empty directory, and loads it there. This catches a
+      # `files` or `exports` mistake, and runs the built code on each Node.
+      - name: Smoke-test the packed package
+        run: |
+          smoke="$RUNNER_TEMP/smoke"
+          mkdir -p "$smoke"
+          pnpm pack --pack-destination "$smoke"
+          cp scripts/smoke.mjs "$smoke/"
+          cd "$smoke"
+          echo '{ "private": true, "type": "module" }' > package.json
+          pnpm add ./eslint-plugin-claude-*.tgz "eslint@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies.eslint")"
+          node smoke.mjs
 
   check:
     name: check
@@ -45,8 +58,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # Installs pnpm from packageManager, Node from .nvmrc (or the
-      # runtime input), then runs `pnpm install --frozen-lockfile`.
       - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
         with:
           cache: true
@@ -55,7 +66,7 @@ jobs:
         run: pnpm exec lefthook validate
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm build
-      - name: Import the built plugin
-        run: node --input-type=module -e "const p = (await import('eslint-plugin-claude')).default; if (p.meta.name !== 'eslint-plugin-claude') process.exit(1)"
+      # Unused files, exports and dependencies: a default run, then a --strict
+      # (production) run over src/ only.
+      - run: pnpm knip
       - run: pnpm publint
