@@ -50,10 +50,30 @@ jobs:
           pnpm add ./eslint-plugin-claude-*.tgz "eslint@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies.eslint")"
           node smoke.mjs
 
+  # One check per tool, so each shows on the pull request and a ruleset can
+  # require it by name.
   check:
-    name: check
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: lint
+            run: pnpm lint
+          - name: typecheck
+            run: pnpm typecheck
+          # Unused files, exports and dependencies: a default run, then a
+          # --strict (production) run over src/ only. The script builds first,
+          # because --strict reads dist/*.d.ts to see which type imports reach
+          # consumers.
+          - name: knip
+            run: pnpm knip
+          - name: publint
+            run: pnpm publint
+          - name: lefthook
+            run: pnpm exec lefthook validate
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -62,12 +82,4 @@ jobs:
         with:
           cache: true
           require-lockfile: true
-      - name: Validate lefthook.yml
-        run: pnpm exec lefthook validate
-      - run: pnpm lint
-      - run: pnpm typecheck
-      # Unused files, exports and dependencies: a default run, then a --strict
-      # (production) run over src/ only. The script builds first, because
-      # --strict reads dist/*.d.ts to see which type imports reach consumers.
-      - run: pnpm knip
-      - run: pnpm publint
+      - run: ${{ matrix.run }}
