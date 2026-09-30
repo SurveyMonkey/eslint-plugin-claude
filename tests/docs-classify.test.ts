@@ -538,6 +538,15 @@ describe('classify', () => {
     const output = await run(cited, PAGE.replaceAll('\n', '\r\n'), { fetch: jev.fetch })
     expect(output.findings).toEqual([])
     expect(jev.calls).toEqual([])
+    const { findings } = await api.classify({
+      map: cited,
+      snapshots: new Map(),
+      rules,
+      links: new Map(),
+      fetchText: serve(PAGE.replaceAll('\n', '\r\n')),
+      jev: { fetch: jev.fetch },
+    })
+    expect(findings.map((f) => f.newHash)).toEqual([watch.sha256(PAGE)])
   })
 
   it('fails for a map that cites no page', async () => {
