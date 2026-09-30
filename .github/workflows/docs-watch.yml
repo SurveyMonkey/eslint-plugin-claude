@@ -4,18 +4,24 @@ on:
   schedule:
     - cron: '17 6 * * *'
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Print each issue that would open, and open none.
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
-# This workflow only reports. It opens no issue and commits nothing. It
-# writes the report to the run summary. Only `update` mode writes the
-# snapshot, and a person runs that mode. See CONTRIBUTING.md.
+# The job commits nothing, and it never changes the snapshot. When a docs
+# page changed, it classifies the change and opens one issue for each
+# finding. A scheduled run opens issues. A manual run opens issues unless
+# `dry_run` is set. See CONTRIBUTING.md and the triage runbook.
 jobs:
   docs-watch:
     name: docs-watch
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -25,6 +31,45 @@ jobs:
           cache: true
           require-lockfile: true
       # Node comes from .nvmrc. It must be 22.18 or later, to run a .ts file.
-      # A changed page gives exit 0. A person reads the run summary. See the
-      # header of scripts/docs-watch.ts for the cases that give exit 1.
-      - run: node scripts/docs-watch.ts check
+      # A changed page gives exit 0. See the header of scripts/docs-watch.ts
+      # for the cases that give exit 1. The classifier reads the pages again
+      # and handles a lost or doubled heading, so the job goes on after a
+      # failure here.
+      - id: check
+        continue-on-error: true
+        run: node scripts/docs-watch.ts check > "$RUNNER_TEMP/docs-watch.json"
+      # Classify when the check failed, or when its report shows a change or
+      # an error. A report from a check that passed always parses.
+      - id: gate
+        env:
+          CHECK: ${{ steps.check.outcome }}
+        run: |
+          if [ "$CHECK" != "success" ] || node -e "const r = require(process.argv[1]); process.exit(r.changed > 0 || r.errors.length > 0 ? 0 : 1)" "$RUNNER_TEMP/docs-watch.json"; then
+            echo "classify=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "classify=false" >> "$GITHUB_OUTPUT"
+          fi
+      # The TypeSafe key goes to this step only, as an environment variable.
+      - if: steps.gate.outputs.classify == 'true'
+        env:
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+        run: node scripts/docs-classify.mjs > "$RUNNER_TEMP/docs-findings.json"
+      # A short-lived token for the org GitHub App, as in release.yml. It can
+      # write issues and nothing else.
+      - id: app-token
+        if: steps.gate.outputs.classify == 'true'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-issues: write
+      - if: steps.gate.outputs.classify == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            node scripts/docs-issues.mjs "$RUNNER_TEMP/docs-findings.json" --dry-run
+          else
+            node scripts/docs-issues.mjs "$RUNNER_TEMP/docs-findings.json"
+          fi
