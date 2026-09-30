@@ -24,9 +24,14 @@ const TREE: Record<string, string> = {
   '.claude/settings.local.json': badHooks,
   'packages/x/.claude/settings.json': badHooks,
   'packages/x/.claude/settings.local.json': badHooks,
+  // Files with the same content that no rule reads.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
+  '.claude/agents/a.md': `---\nname: a\ndescription: ${long}\n---\n`,
   'other.json': badHooks,
+  'hooks.json': badHooks,
+  '.vscode/settings.json': badHooks,
+  '.vscode/settings.local.json': badHooks,
 }
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.

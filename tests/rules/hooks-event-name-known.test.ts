@@ -45,6 +45,8 @@ jsonTester.run('hooks-event-name-known', rule, {
       filename: '.claude-plugin/plugin.json',
     },
     { code: '[]', filename: 'hooks/hooks.json' },
+    // Two `hooks` keys. The rule ignores the first, as `JSON.parse` does.
+    { code: '{"hooks": {"Bogus": []}, "hooks": {"Stop": []}}', filename: '.claude/settings.json' },
     {
       code: hooks('FutureEvent'),
       filename: 'hooks/hooks.json',
@@ -61,6 +63,8 @@ jsonTester.run('hooks-event-name-known', rule, {
     renamed('SesionEd', 'SessionEnd'),
     // Two changed letters.
     renamed('PreToolUxa', 'PreToolUse'),
+    // One extra letter.
+    renamed('PreToolUsee', 'PreToolUse'),
     // A near miss of a name from `additionalEvents`.
     {
       ...renamed('futureEvent', 'FutureEvent'),
@@ -72,6 +76,12 @@ jsonTester.run('hooks-event-name-known', rule, {
       errors: [
         { messageId: 'unknown', data: { key: 'Bogus' }, line: 1, column: 11, suggestions: [] },
       ],
+    },
+    // A known name at the end of a longer key is not a near miss.
+    {
+      code: hooks('MyOwnStop'),
+      filename: 'hooks/hooks.json',
+      errors: [{ messageId: 'unknown', data: { key: 'MyOwnStop' }, suggestions: [] }],
     },
     // Three edits from `PreToolUse` is not a near miss.
     {
