@@ -1,6 +1,6 @@
 ---
 type: ADR
-description: The docs watch classifies each changed Claude Code docs block with three TypeSafe Jev Noul questions and fixed thresholds, keeps its state in docs/ where only a reviewed pull request changes it, and opens one deduplicated GitHub issue for each finding.
+description: The docs watch classifies each changed Claude Code docs block with three TypeSafe Jev Noul questions and fixed thresholds, keeps its state in docs/ where only a reviewed pull request changes it, and opens one deduplicated GitHub issue for each changed block.
 status: stable
 created: 2026-09-29
 owner: brianespinosa
@@ -156,14 +156,20 @@ dedupe key below stops a second issue for it.
 
 ### 5. The dedupe key is a hidden marker with the block hash
 
-Each issue body starts with `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> -->`. The hash is
-the new block hash, or the old hash for a removed block. The block ID comes from the docs, so the
-marker holds it URI encoded. Before it opens an issue, `scripts/docs-issues.ts` reads the
-bodies of all open issues. It opens no issue when an open issue has a marker for the same page,
-block and hash. The kind does not count, because a Jev answer near a threshold can change the
-kind from one run to the next. A block that changes again has a new hash, so it gets a new
-issue. Two findings with one marker in one run give one issue, with the rules and the reasons of
-both.
+Each issue body starts with
+`<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. The hash is the new block
+hash. For a removed block, it is `gone:` and the old hash, so a removal never matches an issue
+about the new text of the block. The block ID comes from the docs, so the marker holds it URI
+encoded. ` rules=<ids>` lists the rules of the issue, and is not there when the issue names no
+rule.
+
+All findings for one page, block and hash in one run give one issue, with all their rules and
+reasons. The first kind in this list names the issue: `rule-removal`, `rule-update`,
+`needs-triage`, `new-rule`. Before it opens an issue, `scripts/docs-issues.ts` reads the
+bodies of all open issues. An open issue for the same page, block and hash stops a new issue
+when the open issues name all its rules. The kind does not count. A Jev answer near a threshold
+can change the kind from one run to the next. A rule that the open issues do not name gives a
+new issue. A block that changes again has a new hash, so it gets a new issue.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
 person closes it first, the next run opens it again.
@@ -180,10 +186,13 @@ how to match the two issues and keep the rule.
 
 - A failed Jev call, a timeout after 30 seconds, an answer that is not a valid Noul, or an
   answer between two thresholds gives a `needs-triage` finding.
-- A map that cites no page, a failed docs fetch, a page that the block split cannot read, a
-  page with no title heading, or no `TYPESAFE_API_KEY` when a block needs a call stops the
-  classifier with exit 1. The block split cannot read a code fence that is not closed, or a line
-  that looks like an HTML heading in a form it does not know.
+- These stop the classifier with exit 1:
+  - a map that cites no page, or a failed docs fetch
+  - a page that the block split cannot read, or a page with no title heading
+  - no `TYPESAFE_API_KEY` when a block needs a call.
+
+  The block split cannot read a code fence that is not closed. It also cannot read a line that
+  looks like an HTML heading in a form that it does not know.
 - A finding that is not valid, a failed `gh` call, or more than 20 new issues in one live run
   stops the issue step with exit 1. A dry run has no limit.
 - A check report that the workflow cannot read fails the job.

@@ -14,9 +14,10 @@ permissions:
   contents: read
 
 # The job commits nothing, and it never changes the snapshot. When a docs
-# page changed, it classifies the change and opens one issue for each
-# finding. A scheduled run opens issues. A manual run opens issues unless
-# `dry_run` is set. See CONTRIBUTING.md and the triage runbook.
+# page changed, or the check failed, it classifies the pages and opens one
+# issue for each changed block. A scheduled run opens issues. A manual run
+# opens issues unless `dry_run` is set. See CONTRIBUTING.md and the triage
+# runbook.
 jobs:
   docs-watch:
     name: docs-watch
@@ -38,8 +39,9 @@ jobs:
       - id: check
         continue-on-error: true
         run: node scripts/docs-watch.ts check > "$RUNNER_TEMP/docs-watch.json"
-      # Classify when the check failed, or when its report shows a change. A
-      # report that node cannot read fails this step, and the job fails.
+      # Classify when the check failed, or when its report shows a change or
+      # an error. A check with an error exits 1 today, so the error test is a
+      # guard. A report that node cannot read fails this step and the job.
       - id: gate
         env:
           CHECK: ${{ steps.check.outcome }}

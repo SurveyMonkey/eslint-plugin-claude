@@ -12,9 +12,12 @@ generated:
 
 # Triage the docs watch issues
 
-The docs watch (`.github/workflows/docs-watch.yml`) opens one issue for each finding. Each issue
-has the type `Task` and no label. Its body starts with a hidden marker:
-`<!-- docs-watch:<kind>:<page>#<blockId>:<hash> -->`. Do not edit the marker.
+The docs watch (`.github/workflows/docs-watch.yml`) opens one issue for each changed block. Each
+issue has the type `Task` and no label. Its body starts with a hidden marker:
+`<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. Do not edit the marker. When
+one block has findings of two kinds, the issue has the first kind of this list:
+`rule-removal`, `rule-update`, `needs-triage`, `new-rule`. The Reason line then gives each
+kind.
 [ADR 002](../adr/002-classify-docs-changes-with-jev.md) records how the classifier decides.
 
 ## The four kinds of issue
@@ -75,10 +78,12 @@ update. Change the rule in the same pull request.
 
 ## A run that fails
 
-- The classifier stops when the map cites no page, a docs fetch fails, a page has no title
-  heading, a page has a code fence that is not closed or an HTML heading that it cannot read, or
-  a block needs a Jev call and the `TYPESAFE_API_KEY` secret is not set. Read the log, fix the
-  cause, and run the workflow again.
+- The classifier stops for these causes. Read the log, fix the cause, and run the workflow
+  again.
+  - The map cites no page, or a docs fetch fails.
+  - A page has no title heading.
+  - A page has a code fence that is not closed, or an HTML heading that it cannot read.
+  - A block needs a Jev call, and the `TYPESAFE_API_KEY` secret is not set.
 - The issue step stops when a live run would open more than 20 issues. Run the workflow by hand
   with `dry_run` set, read the issues that would open, and triage them in groups. A dry run has
   no limit.

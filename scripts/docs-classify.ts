@@ -13,11 +13,14 @@
 // rule-update, rule-removal, new-rule or needs-triage. A result is the
 // outcome for each block, and includes the blocks that need no change.
 //
-// The script fails closed. A failed call to Jev, a timeout, an answer that is
-// not valid, or an answer between two thresholds gives a needs-triage
-// finding. A map that cites no page, a failed docs fetch, a page that
-// splitBlocks cannot read, a page with no title, or no API key when a block
-// needs a call throws, and the job fails. The script drops no change.
+// The script fails closed. These give a needs-triage finding:
+// - a failed call to Jev, or a timeout
+// - an answer that is not valid, or an answer between two thresholds.
+// These throw, and the job fails:
+// - a map that cites no page, or a failed docs fetch
+// - a page that splitBlocks cannot read, or a page with no title
+// - no API key when a block needs a call.
+// The script drops no change.
 //
 // The block text goes into the request `state` as data. The questions are
 // constants, and no docs text goes into them.
@@ -623,11 +626,11 @@ async function pool<T, R>(items: T[], limit: number, run: (item: T) => Promise<R
   return out
 }
 
-// Asks about one block and returns its findings and its result. A Jev error,
-// a Jev answer that is not valid, or a block that is too large gives a
-// needs-triage finding.
 type Classified = { findings: Finding[]; result: Result }
 
+// Asks about one block and returns its findings and its result. These give a
+// needs-triage finding: a Jev error, a Jev answer that is not valid, an
+// answer between two thresholds, and a block that is too large.
 async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): Promise<Classified> {
   const result = {
     page: item.page,

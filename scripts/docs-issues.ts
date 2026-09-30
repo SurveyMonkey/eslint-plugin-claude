@@ -1,4 +1,5 @@
-// Opens one GitHub issue for each finding of scripts/docs-classify.ts.
+// Opens one GitHub issue for each block change in the findings of
+// scripts/docs-classify.ts.
 //
 // Usage: node --experimental-strip-types scripts/docs-issues.ts <findings.json> [--dry-run]
 //   [--repo owner/name] [--max n]
