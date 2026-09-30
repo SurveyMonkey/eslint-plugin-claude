@@ -75,9 +75,11 @@ update. Change the rule in the same pull request.
 
 ## A run that fails
 
-- The classifier stops when a docs fetch fails, a page has no title heading, a page has a code
-  fence that is not closed or an HTML heading that it cannot read, or the `TYPESAFE_API_KEY`
-  secret is not set. Read the log, fix the cause, and run the workflow again.
-- The issue step stops when it would open more than 20 issues. Run the workflow by hand with
-  `dry_run` set, read the issues that would open, and triage them in groups.
+- The classifier stops when the map cites no page, a docs fetch fails, a page has no title
+  heading, a page has a code fence that is not closed or an HTML heading that it cannot read, or
+  a block needs a Jev call and the `TYPESAFE_API_KEY` secret is not set. Read the log, fix the
+  cause, and run the workflow again.
+- The issue step stops when a live run would open more than 20 issues. Run the workflow by hand
+  with `dry_run` set, read the issues that would open, and triage them in groups. A dry run has
+  no limit.
 - A manual run with `dry_run` set prints each issue that would open and opens none.

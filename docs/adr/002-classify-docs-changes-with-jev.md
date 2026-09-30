@@ -66,6 +66,7 @@ below `no` is a no. A value between them goes to a person.
 Code decides these cases with no model call:
 
 - A block that a heading cites is gone: `rule-removal`.
+- A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
 - A block is too large for one request: `needs-triage`.
@@ -156,9 +157,13 @@ dedupe key below stops a second issue for it.
 ### 5. The dedupe key is a hidden marker with the block hash
 
 Each issue body starts with `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> -->`. The hash is
-the new block hash, or the old hash for a removed block. Before it opens an issue,
-`scripts/docs-issues.ts` reads the bodies of all open issues. It opens no issue for a marker
-that it finds. A block that changes again has a new hash, so it gets a new issue.
+the new block hash, or the old hash for a removed block. The block ID comes from the docs, so the
+marker holds it URI encoded. Before it opens an issue, `scripts/docs-issues.ts` reads the
+bodies of all open issues. It opens no issue when an open issue has a marker for the same page,
+block and hash. The kind does not count, because a Jev answer near a threshold can change the
+kind from one run to the next. A block that changes again has a new hash, so it gets a new
+issue. Two findings with one marker in one run give one issue, with the rules and the reasons of
+both.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
 person closes it first, the next run opens it again.
@@ -175,11 +180,13 @@ how to match the two issues and keep the rule.
 
 - A failed Jev call, a timeout after 30 seconds, an answer that is not a valid Noul, or an
   answer between two thresholds gives a `needs-triage` finding.
-- A failed docs fetch, a page that the block split cannot read, a page with no title heading,
-  or no `TYPESAFE_API_KEY` stops the classifier with exit 1. The block split cannot read a code
-  fence that is not closed, or a line that looks like an HTML heading in a form it does not know.
-- A finding that is not valid, a failed `gh` call, or more than 20 new issues in one run stops
-  the issue step with exit 1.
+- A map that cites no page, a failed docs fetch, a page that the block split cannot read, a
+  page with no title heading, or no `TYPESAFE_API_KEY` when a block needs a call stops the
+  classifier with exit 1. The block split cannot read a code fence that is not closed, or a line
+  that looks like an HTML heading in a form it does not know.
+- A finding that is not valid, a failed `gh` call, or more than 20 new issues in one live run
+  stops the issue step with exit 1. A dry run has no limit.
+- A check report that the workflow cannot read fails the job.
 
 ### 8. Issues open with the App token, as a Task, with no label
 

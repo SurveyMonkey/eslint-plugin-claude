@@ -100,10 +100,10 @@ run a `.ts` file.
 ## Docs classifier
 
 `node scripts/docs-classify.ts` reads each cited page again and asks TypeSafe Jev about each
-changed, added or removed block. It needs the `TYPESAFE_API_KEY` secret. It prints the findings
-as JSON: `rule-update`, `rule-removal`, `new-rule` or `needs-triage`. An error or an unclear
-answer gives `needs-triage`. A failed docs fetch, or a page that the block split cannot read,
-fails the job.
+changed, added or removed block. It needs the `TYPESAFE_API_KEY` secret when a block needs a
+call. It prints the findings as JSON: `rule-update`, `rule-removal`, `new-rule` or
+`needs-triage`. An error or an unclear answer gives `needs-triage`. A failed docs fetch, or a
+page that the block split cannot read, fails the job.
 [ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records the questions, the thresholds
 and the spike data.
 
