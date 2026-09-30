@@ -1,0 +1,421 @@
+{
+  "listing-cap-raised": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.78
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.59
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.04
+      }
+    },
+    "usage": {
+      "input_tokens": 1374,
+      "output_tokens": 59
+    }
+  },
+  "when-to-use-leaves-cap": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.68
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.92
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.28
+      }
+    },
+    "usage": {
+      "input_tokens": 1314,
+      "output_tokens": 59
+    }
+  },
+  "listing-cap-configurable": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.45
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.55
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.07
+      }
+    },
+    "usage": {
+      "input_tokens": 1170,
+      "output_tokens": 59
+    }
+  },
+  "listing-cap-removed": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.09
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.8
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.79
+      }
+    },
+    "usage": {
+      "input_tokens": 1126,
+      "output_tokens": 59
+    }
+  },
+  "cut-short-wording": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.61
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.05
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.02
+      }
+    },
+    "usage": {
+      "input_tokens": 1198,
+      "output_tokens": 59
+    }
+  },
+  "frontmatter-new-field": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.73
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.08
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.03
+      }
+    },
+    "usage": {
+      "input_tokens": 1174,
+      "output_tokens": 59
+    }
+  },
+  "hook-event-added": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.29
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.84
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.03
+      }
+    },
+    "usage": {
+      "input_tokens": 1115,
+      "output_tokens": 59
+    }
+  },
+  "hook-event-description": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.19
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.15
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.03
+      }
+    },
+    "usage": {
+      "input_tokens": 1239,
+      "output_tokens": 59
+    }
+  },
+  "hook-event-deprecated": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.27
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.54
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.07
+      }
+    },
+    "usage": {
+      "input_tokens": 1119,
+      "output_tokens": 59
+    }
+  },
+  "hook-event-renamed": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.33
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.86
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.04
+      }
+    },
+    "usage": {
+      "input_tokens": 1159,
+      "output_tokens": 59
+    }
+  },
+  "never-fires-wording": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.66
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.08
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.03
+      }
+    },
+    "usage": {
+      "input_tokens": 1130,
+      "output_tokens": 59
+    }
+  },
+  "manifest-hooks-array": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.74
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.31
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.02
+      }
+    },
+    "usage": {
+      "input_tokens": 1116,
+      "output_tokens": 59
+    }
+  },
+  "commands-stop-loading": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.45
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.6
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.11
+      }
+    },
+    "usage": {
+      "input_tokens": 1132,
+      "output_tokens": 59
+    }
+  },
+  "commands-not-legacy": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.05
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.27
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.73
+      }
+    },
+    "usage": {
+      "input_tokens": 1114,
+      "output_tokens": 59
+    }
+  },
+  "skills-key-default": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.14
+      },
+      "alters_0": {
+        "type": "noul",
+        "noul": 0.41
+      },
+      "obsolete_0": {
+        "type": "noul",
+        "noul": 0.11
+      }
+    },
+    "usage": {
+      "input_tokens": 1186,
+      "output_tokens": 59
+    }
+  },
+  "plugin-agent-fields": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.85
+      }
+    },
+    "usage": {
+      "input_tokens": 695,
+      "output_tokens": 22
+    }
+  },
+  "default-enabled": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.9
+      }
+    },
+    "usage": {
+      "input_tokens": 641,
+      "output_tokens": 22
+    }
+  },
+  "compatibility-limit": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.76
+      }
+    },
+    "usage": {
+      "input_tokens": 637,
+      "output_tokens": 22
+    }
+  },
+  "hooks-section-moved": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.73
+      }
+    },
+    "usage": {
+      "input_tokens": 671,
+      "output_tokens": 22
+    }
+  },
+  "hook-output-to-disk": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.02
+      }
+    },
+    "usage": {
+      "input_tokens": 633,
+      "output_tokens": 22
+    }
+  },
+  "web-fetch-env": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.03
+      }
+    },
+    "usage": {
+      "input_tokens": 615,
+      "output_tokens": 22
+    }
+  },
+  "output-style-command": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.04
+      }
+    },
+    "usage": {
+      "input_tokens": 607,
+      "output_tokens": 22
+    }
+  },
+  "bom-loads": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "requirement": {
+        "type": "noul",
+        "noul": 0.06
+      }
+    },
+    "usage": {
+      "input_tokens": 611,
+      "output_tokens": 22
+    }
+  }
+}
