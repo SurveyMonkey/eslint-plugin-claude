@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.1.0...v0.2.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* source rules from the Claude Code docs only ([#24](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/24))
+
+### Bug Fixes
+
+* source rules from the Claude Code docs only ([#24](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/24)) ([e7af8ad](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/e7af8ada9cbdf9886b806a1ed8c7c57ff409fda0)), closes [#23](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/23)
+
 ## 0.1.0 (2026-09-30)
 
 
