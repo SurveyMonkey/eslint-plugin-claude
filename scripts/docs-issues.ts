@@ -37,6 +37,11 @@ type OpenIssue = { number: number; body: string | null }
 export const KINDS: readonly Kind[] = ['rule-update', 'rule-removal', 'new-rule', 'needs-triage']
 export const MAX_TITLE = 69
 export const MAX_QUOTE = 6000
+// The cap for each of the Before and After sections. A fence can be as long as
+// its text, so a text of backticks takes three times its length. With this
+// cap, the worst body with three fences stays under 60,000 characters. GitHub
+// takes at most 65,536.
+export const MAX_SECTION = 5000
 const MAX_ISSUES = 20
 const ADR = 'docs/adr/002-classify-docs-changes-with-jev.md'
 const RUNBOOK = 'docs/runbooks/docs-watch-triage.md'
@@ -103,28 +108,42 @@ const longestRun = (text: string, char: string) => {
   return best
 }
 
-// Cuts a text to MAX_QUOTE characters and says so.
-const cap = (text: string) =>
-  text.length <= MAX_QUOTE
+// Cuts a text to `max` characters and says so.
+const cap = (text: string, max: number) =>
+  text.length <= max
     ? { text, note: '' }
     : {
-        text: text.slice(0, MAX_QUOTE),
-        note: `The text is cut at ${MAX_QUOTE} of ${text.length} characters. Read the page for the rest.`,
+        text: text.slice(0, max),
+        note: `The text is cut at ${max} of ${text.length} characters. Read the page for the rest.`,
       }
 
 // A fenced block whose fence is longer than any backtick run in the text.
-export function fence(text: string, info = 'text'): string {
-  const { text: body, note } = cap(neutralize(text))
+export function fence(text: string, info = 'text', max = MAX_QUOTE): string {
+  const { text: body, note } = cap(neutralize(text), max)
   const ticks = '`'.repeat(Math.max(3, longestRun(body, '`') + 1))
   return [`${ticks}${info}`, body, ticks, ...(note ? ['', note] : [])].join('\n')
 }
 
-// Inline code that no backtick in the text can close.
+// Inline code that no backtick in the text can close. A text that starts or
+// ends with a backtick gets a space on each side, so that the backtick is
+// not part of the fence. Markdown then removes the two spaces.
 export function inline(text: string): string {
   const body = neutralize(text).replaceAll('\n', ' ')
   const ticks = '`'.repeat(longestRun(body, '`') + 1)
-  return `${ticks} ${body} ${ticks}`
+  const pad = body.startsWith('`') || body.endsWith('`') ? ' ' : ''
+  return `${ticks}${pad}${body}${pad}${ticks}`
 }
+
+// A collapsed section that quotes a full text in a fence. The blank lines
+// after the summary and before the end tag let the fence render.
+const section = (summary: string, text: string) =>
+  [
+    `<details><summary>${summary}</summary>`,
+    '',
+    fence(text, 'text', MAX_SECTION),
+    '',
+    '</details>',
+  ].join('\n')
 
 // Past this number of lines in one text, the body quotes the old text and
 // the new text apart, with no diff. The diff table grows as the product of
@@ -231,6 +250,8 @@ export function bodyOf(f: Finding, repo: string): string {
   } else if (f.oldText !== null && f.newText !== null) {
     lines.push('The diff of the block text, old to new, as quoted data:', '')
     lines.push(fence(diffLines(f.oldText, f.newText), 'diff'), '')
+    lines.push(section('Before: the old section', f.oldText), '')
+    lines.push(section('After: the new section', f.newText), '')
   } else if (f.newText !== null) {
     lines.push(
       f.change === 'added'

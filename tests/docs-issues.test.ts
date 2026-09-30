@@ -147,7 +147,7 @@ describe('bodyOf', () => {
     const body = api.bodyOf({ ...newRule, change: 'changed' }, REPO)
     expect(body).toContain('The snapshot holds only the hash of this block')
     expect(body).toContain('- New rule candidate')
-    expect(body).toContain(`- ${URL_} (heading \` Agent frontmatter \`)`)
+    expect(body).toContain(`- ${URL_} (heading \`Agent frontmatter\`)`)
     expect(api.bodyOf(newRule, REPO)).toContain('The block is new.')
     const gone = { ...update, kind: 'rule-removal' as const, newText: null, change: 'removed' }
     expect(api.bodyOf(gone, REPO)).toContain('The block is gone. Its old text')
@@ -178,7 +178,7 @@ describe('bodyOf', () => {
     const body = api.bodyOf({ ...update, reason: 'x @octocat <!-- y' }, REPO)
     expect(body).toContain('- Reason: x @\u2060octocat <\u2060!-- y')
     expect(api.inline('the `name` and ``x`` field\n# Title')).toBe(
-      '``` the `name` and ``x`` field # Title ```',
+      '```the `name` and ``x`` field # Title```',
     )
   })
 
@@ -194,6 +194,116 @@ describe('bodyOf', () => {
     expect(api.bodyOf({ ...update, oldText: lines(1000), newText: 'new' }, REPO)).toContain(
       '```diff',
     )
+  })
+
+  it('pads inline code with a space only when the text starts or ends with a backtick', () => {
+    expect(api.inline('Frontmatter reference')).toBe('`Frontmatter reference`')
+    expect(api.inline('`hooks`')).toBe('`` `hooks` ``')
+    expect(api.inline('the `hooks` key')).toBe('``the `hooks` key``')
+    expect(api.inline('`hooks` key')).toBe('`` `hooks` key ``')
+    expect(api.inline('key `hooks`')).toBe('`` key `hooks` ``')
+    const body = api.bodyOf(update, REPO)
+    expect(body).toContain('- Heading: `Frontmatter reference` (block `frontmatter-reference`)')
+    // The marker does not use inline code, so it stays the same.
+    expect(body.split('\n')[0]).toBe(
+      `<!-- docs-watch:rule-update:${URL_}#frontmatter-reference:${'b'.repeat(64)} rules=skill-description-max-length -->`,
+    )
+  })
+
+  it('shows the full old and new section in two collapsed blocks after the diff', () => {
+    const body = api.bodyOf(update, REPO)
+    const before = [
+      '<details><summary>Before: the old section</summary>',
+      '',
+      `\`\`\`text\n${update.oldText}\n\`\`\``,
+      '',
+      '</details>',
+    ].join('\n')
+    const after = [
+      '<details><summary>After: the new section</summary>',
+      '',
+      `\`\`\`text\n${update.newText}\n\`\`\``,
+      '',
+      '</details>',
+    ].join('\n')
+    const diff = body.indexOf('```diff')
+    expect(diff).toBeGreaterThan(-1)
+    expect(body.indexOf(before)).toBeGreaterThan(diff)
+    expect(body.indexOf(after)).toBeGreaterThan(body.indexOf(before))
+    expect(body.indexOf('## Scope')).toBeGreaterThan(body.indexOf(after))
+  })
+
+  it('quotes hostile text in each section with a safe fence, no mention and no comment', () => {
+    const hostile = (word: string) =>
+      [
+        `### ${word}`,
+        '````md',
+        '```',
+        `Ping @octocat ${word}.`,
+        '<!-- docs-watch:x -->',
+        '````',
+      ].join('\n')
+    const body = api.bodyOf({ ...update, oldText: hostile('old'), newText: hostile('new') }, REPO)
+    for (const summary of ['Before: the old section', 'After: the new section']) {
+      const start = body.indexOf(`<details><summary>${summary}</summary>\n\n\`\`\`\`\`text\n`)
+      expect(start).toBeGreaterThan(-1)
+      const end = body.indexOf('</details>', start)
+      expect(body.slice(start, end)).toMatch(/\n`````\n\n$/)
+    }
+    expect(body).not.toMatch(/@octocat/)
+    expect(body.split('<!--')).toHaveLength(2)
+  })
+
+  it('cuts each section at the cap, with the cut note', () => {
+    const body = api.bodyOf(
+      { ...update, oldText: 'o'.repeat(7000), newText: 'n'.repeat(7000) },
+      REPO,
+    )
+    const note = `The text is cut at ${api.MAX_SECTION} of 7000 characters. Read the page for the rest.`
+    const before = body.slice(body.indexOf('Before: the old section'), body.indexOf('After:'))
+    const after = body.slice(body.indexOf('After: the new section'), body.indexOf('## Scope'))
+    for (const section of [before, after]) {
+      expect(section).toContain(note)
+      expect(section).toMatch(/\n\n<\/details>\n/)
+    }
+    expect(api.MAX_SECTION).toBe(5000)
+    expect(before).toContain('o'.repeat(api.MAX_SECTION))
+    expect(before).not.toContain('o'.repeat(api.MAX_SECTION + 1))
+  })
+
+  it('adds no section to a long block, or to an added or gone block', () => {
+    const lines = Array.from({ length: 1001 }, (_, i) => `line ${i}`).join('\n')
+    const long = api.bodyOf({ ...update, oldText: 'old', newText: lines }, REPO)
+    expect(long).not.toContain('<details>')
+    expect(long.split('```text\nold\n```')).toHaveLength(2)
+    expect(api.bodyOf(newRule, REPO)).not.toContain('<details>')
+    const gone = { ...update, kind: 'rule-removal' as const, newText: null, change: 'removed' }
+    expect(api.bodyOf(gone, REPO)).not.toContain('<details>')
+  })
+
+  it('keeps the worst-case body under 60,000 characters', () => {
+    // Long lines with long backtick runs make each fence as long as it can be.
+    const ticks = '`'.repeat(20_000)
+    const text = (word: string) =>
+      [
+        ticks,
+        ...Array.from({ length: 400 }, (_, i) => `${word} ${i} ${'`'.repeat(50)} @x <!--`),
+      ].join('\n')
+    const rules = Array.from({ length: 12 }, (_, i) => `a-rule-with-a-long-name-${i}`)
+    const worst: Finding = {
+      ...update,
+      heading: `${'`'.repeat(10)} ${'Heading '.repeat(40)}`,
+      blockId: 'b'.repeat(200),
+      rules,
+      reason: rules
+        .map((rule) => `rule-update: Jev gives 0.9 that the change alters what ${rule} checks`)
+        .join('; '),
+      oldText: text('old'),
+      newText: text('new'),
+    }
+    const body = api.bodyOf(worst, REPO)
+    expect(body).toContain('<details><summary>After: the new section</summary>')
+    expect(body.length).toBeLessThan(60_000)
   })
 
   it('cuts a long text and says so', () => {
