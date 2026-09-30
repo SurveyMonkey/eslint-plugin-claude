@@ -24,7 +24,7 @@ const TREE: Record<string, string> = {
   '.claude/settings.local.json': badHooks,
   'packages/x/.claude/settings.json': badHooks,
   'packages/x/.claude/settings.local.json': badHooks,
-  // Files with the same content that no rule reads.
+  // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
   '.claude/agents/a.md': `---\nname: a\ndescription: ${long}\n---\n`,
