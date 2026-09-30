@@ -434,6 +434,62 @@ describe('classify', () => {
     }
   })
 
+  describe('a page with HTML headings', () => {
+    const HTML = readFileSync(path.join(FIXTURES, 'docs-watch/skills-html.md'), 'utf8')
+    const SKILLS = 'https://code.claude.com/docs/en/skills'
+    const where: SourceMap = { 'a-rule': [{ url: SKILLS, heading: 'Choose where skills load' }] }
+    const classifyHtml = async (sourceMap: SourceMap, stored: string[], live: string) => {
+      const jev = fakeJev(answer({ alters: 0.9, obsolete: 0.01, requirement: 0.05 }))
+      const snapshot = await watch.readPage(SKILLS, stored, serve(HTML))
+      const output = await api.classify({
+        map: sourceMap,
+        snapshots: new Map([[watch.snapshotName(SKILLS), snapshot]]),
+        rules,
+        links: new Map(),
+        fetchText: serve(live),
+        jev: { fetch: jev.fetch, key: KEY },
+      })
+      return { output, jev }
+    }
+
+    it('finds a mapped heading by its title when the block ID is the id attribute', async () => {
+      const live = HTML.replace('decides which sessions load it', 'decides where it loads')
+      const { output } = await classifyHtml(where, ['Choose where skills load'], live)
+      expect(output.findings.map((f) => [f.kind, f.blockId, f.heading, f.rules])).toEqual([
+        ['rule-update', 'where-skills-live', 'Choose where skills load', ['a-rule']],
+      ])
+      expect(output.findings[0]?.oldText).toContain('decides which sessions load it')
+    })
+
+    it('gives rule-removal when the page loses a mapped HTML heading', async () => {
+      const live = HTML.replace(
+        '<h2 id="where-skills-live">\n  Choose where skills load\n</h2>\n',
+        '',
+      )
+      const { output, jev } = await classifyHtml(where, ['Choose where skills load'], live)
+      expect(output.findings.map((f) => [f.kind, f.blockId, f.heading, f.probability])).toEqual([
+        ['rule-removal', 'where-skills-live', 'Choose where skills load', null],
+      ])
+      expect(jev.calls.map((c) => c.request.state.docs_block.heading)).not.toContain(
+        'Choose where skills load',
+      )
+    })
+
+    it('gives needs-triage for a mapped heading that the snapshot does not store yet', async () => {
+      const { output, jev } = await classifyHtml(where, [], HTML)
+      expect(output.findings.map((f) => [f.kind, f.change, f.blockId, f.rules])).toEqual([
+        ['needs-triage', 'new source', 'where-skills-live', ['a-rule']],
+      ])
+      expect(jev.calls).toEqual([])
+    })
+
+    it('fails, and names the page, for a live page with a code fence that is not closed', async () => {
+      await expect(
+        classifyHtml(where, ['Choose where skills load'], `${HTML}\n\`\`\`text\nopen\n`),
+      ).rejects.toThrow(`${SKILLS}: a code fence is not closed`)
+    })
+  })
+
   it('makes no call and no finding for an unchanged page', async () => {
     const jev = fakeJev(() => 1)
     const output = await run(cited, PAGE, { fetch: jev.fetch })

@@ -24,7 +24,7 @@ has the type `Task` and no label. Its body starts with a hidden marker:
 | `rule-update` | A block that a rule cites changed, and Jev says the change alters what the rule checks. | Change the rule, its preset or its severity. Or record that no change is necessary. |
 | `rule-removal` | A block that a rule cites is gone, or Jev says the rule has no purpose left. | Remove the rule, or find the new place of the text and move the map entry. |
 | `new-rule` | A block that no heading cites states a requirement that a lint check can measure. | Add a row to `docs/rules-inventory.md` and open a rule issue, or close the issue. |
-| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block was too large, a mapped heading appears twice or cannot be found, or a page has no snapshot. | Read the block, and treat the issue as one of the three other kinds. |
+| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block was too large, a mapped heading appears twice or cannot be found, the snapshot has no source for a mapped heading, or a page has no snapshot. | Read the block, and treat the issue as one of the three other kinds. |
 
 ## Steps for each issue
 
@@ -75,8 +75,9 @@ update. Change the rule in the same pull request.
 
 ## A run that fails
 
-- The classifier stops when a docs fetch fails, a page has no title heading, or the
-  `TYPESAFE_API_KEY` secret is not set. Read the log, fix the cause, and run the workflow again.
+- The classifier stops when a docs fetch fails, a page has no title heading, a page has a code
+  fence that is not closed or an HTML heading that it cannot read, or the `TYPESAFE_API_KEY`
+  secret is not set. Read the log, fix the cause, and run the workflow again.
 - The issue step stops when it would open more than 20 issues. Run the workflow by hand with
   `dry_run` set, read the issues that would open, and triage them in groups.
 - A manual run with `dry_run` set prints each issue that would open and opens none.

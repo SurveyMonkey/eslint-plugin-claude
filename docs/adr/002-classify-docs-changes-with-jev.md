@@ -66,8 +66,8 @@ below `no` is a no. A value between them goes to a person.
 Code decides these cases with no model call:
 
 - A block that a heading cites is gone: `rule-removal`.
-- A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, or
-  a page has no snapshot: `needs-triage`.
+- A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
+  snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
 - A block is too large for one request: `needs-triage`.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
@@ -175,8 +175,9 @@ how to match the two issues and keep the rule.
 
 - A failed Jev call, a timeout after 30 seconds, an answer that is not a valid Noul, or an
   answer between two thresholds gives a `needs-triage` finding.
-- A failed docs fetch, a page with no title heading, or no `TYPESAFE_API_KEY` stops the
-  classifier with exit 1.
+- A failed docs fetch, a page that the block split cannot read, a page with no title heading,
+  or no `TYPESAFE_API_KEY` stops the classifier with exit 1. The block split cannot read a code
+  fence that is not closed, or a line that looks like an HTML heading in a form it does not know.
 - A finding that is not valid, a failed `gh` call, or more than 20 new issues in one run stops
   the issue step with exit 1.
 

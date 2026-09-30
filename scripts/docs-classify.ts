@@ -15,8 +15,9 @@
 //
 // The script fails closed. A failed call to Jev, a timeout, an answer that is
 // not valid, or an answer between two thresholds gives a needs-triage
-// finding. A failed docs fetch, a page with no title, or no API key when a
-// block needs a call throws, and the job fails. The script drops no change.
+// finding. A failed docs fetch, a page that splitBlocks cannot read, a page
+// with no title, or no API key when a block needs a call throws, and the job
+// fails. The script drops no change.
 //
 // The block text goes into the request `state` as data. The questions are
 // constants, and no docs text goes into them.
@@ -441,7 +442,12 @@ export function planPage({
   links: Map<string, string>
 }): { items: Item[]; findings: Finding[] } {
   const text = pageText.replace(/\r\n?/g, '\n')
-  const blocks = splitBlocks(text)
+  let blocks: Block[]
+  try {
+    blocks = splitBlocks(text)
+  } catch (error) {
+    throw new Error(`${url}: ${(error as Error).message}`, { cause: error })
+  }
   const title = blocks[0]
   if (title?.level !== 1) throw new Error(`${url}: the page has no title heading`)
   const pageHash = sha256(text)
@@ -459,40 +465,72 @@ export function planPage({
     return { items: [], findings: [finding(item, 'needs-triage', { reason })] }
   }
   const before = new Map(stored.blocks.map((block) => [block.id, block.hash]))
+  // The stored source of each mapped heading, and the key of its old block.
+  // A source ID is the block ID, and the key can add a number suffix, so the
+  // hash finds the key.
+  const storedSource = new Map(stored.sources.map((source) => [source.heading, source]))
+  const oldKeyOf = (heading: string) => {
+    const source = storedSource.get(heading)
+    if (source === undefined) return undefined
+    return stored.blocks.find((block) => block.hash === source.hash)?.id ?? source.id
+  }
 
   // Sort the rules that cite this page: by one block, or by the whole page.
+  // A heading finds its block as resolveSource in docs-watch.ts does: by the
+  // block ID first, then by the slug of the title that the page shows.
   const byBlock = new Map<string, string[]>()
+  const headingOf = new Map<string, string>()
   const wholePage: string[] = []
   const findings: Finding[] = []
+  const cite = (key: string, heading: string, rules: string[]) => {
+    const list = byBlock.get(key) ?? []
+    list.push(...rules.filter((rule) => !list.includes(rule)))
+    byBlock.set(key, list)
+    headingOf.set(key, heading)
+  }
   for (const [heading, rules] of citations) {
     const id = slugify(heading)
-    const matches = blocks.filter((block) => block.id === id)
+    const byId = blocks.filter((block) => block.id === id)
+    const matches = byId.length > 0 ? byId : blocks.filter((block) => slugify(block.title) === id)
     const [first] = matches
     if (first !== undefined && matches.length > 1) {
       const reason = `The mapped heading "${heading}" appears ${matches.length} times on the page.`
-      const item = { ...base(first), oldHash: before.get(id) ?? null, newHash: pageHash }
+      const item = { ...base(first), oldHash: before.get(first.key) ?? null, newHash: pageHash }
       findings.push(
         finding({ ...item, change: 'duplicate heading' }, 'needs-triage', { rules, reason }),
       )
       continue
     }
-    if (matches.length === 0 && !before.has(id)) {
-      const reason = `The mapped heading "${heading}" is not on the page or in the snapshot.`
-      const item = { ...base(title), blockId: id, oldHash: null, newHash: pageHash }
-      findings.push(
-        finding({ ...item, heading, change: 'unknown heading' }, 'needs-triage', { rules, reason }),
-      )
+    if (first === undefined) {
+      // The page lost the heading. Its old block is gone, or it has a new
+      // title. A heading with no stored source is unknown.
+      const oldKey = oldKeyOf(heading) ?? (before.has(id) ? id : undefined)
+      if (oldKey === undefined) {
+        const reason = `The mapped heading "${heading}" is not on the page or in the snapshot.`
+        const item = { ...base(title), blockId: id, oldHash: null, newHash: pageHash }
+        findings.push(
+          finding({ ...item, heading, change: 'unknown heading' }, 'needs-triage', {
+            rules,
+            reason,
+          }),
+        )
+      } else {
+        cite(oldKey, heading, rules)
+      }
       continue
     }
-    if (first?.level === 1) {
+    if (!storedSource.has(heading)) {
+      // The map cites a heading that the snapshot does not store yet. The docs
+      // watch reports the page as changed. Only update can settle it.
+      const reason = `The snapshot has no source for the mapped heading "${heading}". Run the update.`
+      const item = { ...base(first), oldHash: null, newHash: first.hash }
+      findings.push(finding({ ...item, change: 'new source' }, 'needs-triage', { rules, reason }))
+    }
+    if (first.level === 1) {
       wholePage.push(...rules.filter((rule) => !wholePage.includes(rule)))
       continue
     }
-    const list = byBlock.get(id) ?? []
-    list.push(...rules.filter((rule) => !list.includes(rule)))
-    // For a heading that the page lost, the id is also the key of its old
-    // block, because update refuses a mapped heading that appears twice.
-    byBlock.set(id, list)
+    cite(first.key, heading, rules)
   }
   // A map entry that the page cannot resolve gives a finding even when the
   // page did not change.
@@ -506,14 +544,15 @@ export function planPage({
   )
   const oldText = new Map([...oldBlocks].map(([key, block]) => [key, block.text]))
   for (const source of stored.sources) {
-    if (source !== wholeStored) oldText.set(source.id, source.text)
+    const key = oldKeyOf(source.heading)
+    if (source !== wholeStored && key !== undefined) oldText.set(key, source.text)
   }
 
   const items: Item[] = []
   for (const [key, oldHash] of before) {
     if (now.has(key)) continue
     const cited = byBlock.get(key) ?? []
-    const heading = citedHeading(citations, key) ?? oldBlocks.get(key)?.title ?? key
+    const heading = headingOf.get(key) ?? oldBlocks.get(key)?.title ?? key
     const item: ItemBase = {
       page: url,
       heading,
@@ -542,7 +581,7 @@ export function planPage({
     const whole = wholePage.filter((rule) => !cited.includes(rule))
     items.push({
       ...base(block),
-      link: cited.length > 0 ? (links.get(`${url}\n${citedHeading(citations, key)}`) ?? url) : url,
+      link: cited.length > 0 ? (links.get(`${url}\n${headingOf.get(key)}`) ?? url) : url,
       oldHash,
       newHash: block.hash,
       change: oldHash === null ? 'added' : 'changed',
@@ -554,9 +593,6 @@ export function planPage({
   }
   return { items, findings }
 }
-
-const citedHeading = (citations: Map<string, string[]>, key: string) =>
-  [...citations.keys()].find((heading) => slugify(heading) === key)
 
 // Maps each page URL to its headings, each with the rules that cite it.
 export function citationsOf(map: SourceMap): Citations {
