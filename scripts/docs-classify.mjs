@@ -325,7 +325,8 @@ export function planPage({ url, citations, pageText, stored, links }) {
 
   const now = new Map(blocks.map((block) => [block.key, block]))
   const before = new Map(stored.blocks.map((block) => [block.id, block.hash]))
-  const wholeStored = stored.sources.find((source) => source.hash === stored.hash)
+  // The whole-page source has the ID of the title block.
+  const wholeStored = stored.sources.find((source) => source.id === stored.blocks[0]?.id)
   const oldBlocks = new Map(
     (wholeStored ? splitBlocks(wholeStored.text) : []).map((block) => [block.key, block]),
   )

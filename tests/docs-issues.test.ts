@@ -103,14 +103,17 @@ describe('markerOf and titleOf', () => {
 
   it('writes a Conventional Commit title of fewer than 70 characters', () => {
     expect(api.titleOf(update)).toBe(
-      'docs(skill-description-max-length): update after docs change to Fr...',
+      'docs(skill-description-max-length): update for Frontmatter reference',
+    )
+    expect(api.titleOf({ ...update, kind: 'rule-removal' })).toBe(
+      'docs(skill-description-max-length): review removal of Frontmatter...',
     )
     expect(api.titleOf(newRule)).toBe('feat: new rule candidate from Agent frontmatter')
     expect(api.titleOf({ ...newRule, kind: 'needs-triage' })).toBe(
       'docs: triage docs change to Agent frontmatter',
     )
     const short = { ...update, rules: ['a'], heading: 'hooks' }
-    expect(api.titleOf(short)).toBe('docs(a): update after docs change to hooks')
+    expect(api.titleOf(short)).toBe('docs(a): update for hooks')
     const long = {
       ...update,
       kind: 'rule-removal',
@@ -190,6 +193,25 @@ describe('diffLines', () => {
   it('marks old lines with "-" and new lines with "+"', () => {
     expect(api.diffLines('a\nb\nc', 'a\nc\nd')).toBe('  a\n- b\n  c\n+ d')
     expect(api.diffLines('', 'x')).toBe('- \n+ x')
+  })
+
+  it('keeps three unchanged lines on each side of a change, and elides the rest', () => {
+    const lines = Array.from({ length: 20 }, (_, i) => `line ${i}`)
+    const edited = lines.map((line) => (line === 'line 10' ? 'line ten' : line))
+    expect(api.diffLines(lines.join('\n'), edited.join('\n'))).toBe(
+      [
+        '  ...',
+        '  line 7',
+        '  line 8',
+        '  line 9',
+        '- line 10',
+        '+ line ten',
+        '  line 11',
+        '  line 12',
+        '  line 13',
+        '  ...',
+      ].join('\n'),
+    )
   })
 })
 

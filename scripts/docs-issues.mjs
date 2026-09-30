@@ -65,7 +65,10 @@ export function inline(text) {
 }
 
 // A line diff: the longest common subsequence of lines, with "-" for an old
-// line and "+" for a new line.
+// line and "+" for a new line. It keeps CONTEXT unchanged lines on each side
+// of a change, and puts "..." in place of the other unchanged lines. The
+// change then stays inside the length cap of a large block.
+const CONTEXT = 3
 export function diffLines(oldText, newText) {
   const a = oldText.split('\n')
   const b = newText.split('\n')
@@ -89,15 +92,22 @@ export function diffLines(oldText, newText) {
       out.push(`+ ${b[j++]}`)
     }
   }
-  return out.join('\n')
+  const changed = out.flatMap((line, index) => (line.startsWith('  ') ? [] : [index]))
+  const near = (index) => changed.some((c) => Math.abs(c - index) <= CONTEXT)
+  const kept = []
+  for (const [index, line] of out.entries()) {
+    if (near(index)) kept.push(line)
+    else if (kept.at(-1) !== '  ...') kept.push('  ...')
+  }
+  return kept.join('\n')
 }
 
 // A Conventional Commit title of MAX_TITLE characters or fewer.
 export function titleOf(f) {
   const scope = f.rules.length > 0 ? `(${f.rules.join(',')})` : ''
   const lead = {
-    'rule-update': `docs${scope}: update after docs change to `,
-    'rule-removal': `docs${scope}: review removal after docs change to `,
+    'rule-update': `docs${scope}: update for `,
+    'rule-removal': `docs${scope}: review removal of `,
     'new-rule': 'feat: new rule candidate from ',
     'needs-triage': `docs${scope}: triage docs change to `,
   }[f.kind]
