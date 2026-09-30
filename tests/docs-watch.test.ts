@@ -143,6 +143,30 @@ describe('HTML headings', () => {
     expect(blocks.filter((block) => block.id === 'live-change-detection')).toHaveLength(2)
   })
 
+  it('keeps the tags, the title and the text in the block, each once', () => {
+    const text = blocks.find((block) => block.id === 'where-skills-live')?.text
+    expect(text).toBe(
+      [
+        '<h2 id="where-skills-live">',
+        '  Choose where skills load',
+        '</h2>',
+        '',
+        'Where you save a skill decides which sessions load it.',
+      ].join('\n'),
+    )
+  })
+
+  it('takes a closing tag of another level as text', () => {
+    const text = '# Title\n\n<h2 id="open">\n  Wrong end\n</h3>\n'
+    expect(api.splitBlocks(text).map((block) => block.key)).toEqual(['title'])
+  })
+
+  it('makes the whole page the source for an HTML title, with the id of the tag', async () => {
+    const page = '<h1 id="the-page">\n  Page title\n</h1>\n\nText.\n'
+    const read = await api.readPage(URL_, ['Page title'], serve(page))
+    expect(read.sources[0]).toMatchObject({ id: 'the-page', text: page })
+  })
+
   it('takes an opening tag without a closing tag as text', () => {
     const text = '# Title\n\n<h2 id="open">\n  Never closed\n\nMore text.\n'
     expect(api.splitBlocks(text).map((block) => block.key)).toEqual(['title'])
