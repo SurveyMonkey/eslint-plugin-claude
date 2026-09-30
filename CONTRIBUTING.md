@@ -62,9 +62,10 @@ claude.com, claude.ai or anthropic.com that is not under `https://code.claude.co
 
 ## Docs watch
 
-`.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It has read access
-only. It opens no issue and commits nothing. It runs `node scripts/docs-watch.ts check`, which
-fetches each page that the map cites (URL plus `.md`) and compares it with `docs/docs-snapshot/`.
+`.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It commits nothing.
+It runs `node scripts/docs-watch.ts check`, which fetches each page that the map cites (URL plus
+`.md`) and compares it with `docs/docs-snapshot/`. When a page changed or the check failed, it
+classifies the change and opens issues (see [Docs classifier](#docs-classifier)).
 
 - `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
   to the run summary. For each changed page, it lists the blocks that changed, were added or were
@@ -95,6 +96,25 @@ To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts upd
 diff of `docs/docs-snapshot/` and `docs/rule-sources.json`. Commit both in a pull request. The
 command makes read-only network calls. Node 22.13 to 22.17 needs `--experimental-strip-types` to
 run a `.ts` file.
+
+## Docs classifier
+
+`node scripts/docs-classify.ts` reads each cited page again and asks TypeSafe Jev about each
+changed, added or removed block. It needs the `TYPESAFE_API_KEY` secret when a block needs a
+call. It prints the findings as JSON: `rule-update`, `rule-removal`, `new-rule` or
+`needs-triage`. An error or an unclear answer gives `needs-triage`. These fail the job: a map
+that cites no page, a failed docs fetch, a page that the block split cannot read, and a page with
+no title.
+[ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records the questions, the thresholds
+and the spike data.
+
+`node scripts/docs-issues.ts <findings.json>` opens one issue for each changed block, as the org
+GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
+hash and the rules stops a second issue for the same change. For a changed block, the body shows
+a diff, then the full old and new sections in two collapsed parts. `--dry-run` prints each issue
+and opens none. A manual run of the workflow takes a `dry_run` input.
+
+To triage the issues, follow the [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
 
 ## Commits and pull requests
 

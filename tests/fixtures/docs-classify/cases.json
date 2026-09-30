@@ -1,0 +1,270 @@
+{
+  "about": "Labeled cases for the docs classifier. Each case rebuilds the shape of a real Claude Code docs change, trimmed to a few lines. `source` names the changelog entry or the docs page that the shape comes from. `label` is set by hand. `cited` is the rule that cites the block, or null for a block that no rule cites. A case with `removed: true` needs no model call.",
+  "cases": [
+    {
+      "id": "listing-cap-raised",
+      "source": "changelog: raised the skill listing cap from 250 to 1,536 characters",
+      "hard": "value change",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "cited": "skill-description-max-length",
+      "old": "### Frontmatter reference\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `description` | Recommended | What the skill does and when to use it. Put the key use case first: the combined `description` and `when_to_use` text is truncated at 250 characters in the skill listing to reduce context usage. |\n| `when_to_use` | No | Additional context for when Claude should invoke the skill. Appended to `description` in the skill listing and counts toward the 250-character cap. |",
+      "new": "### Frontmatter reference\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `description` | Recommended | What the skill does and when to use it. Put the key use case first: the combined `description` and `when_to_use` text is truncated at 1,536 characters in the skill listing to reduce context usage. |\n| `when_to_use` | No | Additional context for when Claude should invoke the skill. Appended to `description` in the skill listing and counts toward the 1,536-character cap. |",
+      "label": "rule-update"
+    },
+    {
+      "id": "when-to-use-leaves-cap",
+      "source": "skills page: `when_to_use` counts toward the listing cap (issue #23), rebuilt in reverse",
+      "hard": "the measured text changes",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "cited": "skill-description-max-length",
+      "old": "### Frontmatter reference\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `description` | Recommended | What the skill does and when to use it. The combined `description` and `when_to_use` text is truncated at 1,536 characters in the skill listing. |\n| `when_to_use` | No | Additional context for when Claude should invoke the skill, such as trigger phrases. Appended to `description` in the skill listing and counts toward the 1,536-character cap. |",
+      "new": "### Frontmatter reference\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `description` | Recommended | What the skill does and when to use it. The `description` text is truncated at 1,536 characters in the skill listing. |\n| `when_to_use` | No | Additional context for when Claude should invoke the skill, such as trigger phrases. It does not count toward the cap. |",
+      "label": "rule-update"
+    },
+    {
+      "id": "listing-cap-configurable",
+      "source": "skills page: the cap is configurable with `skillListingMaxDescChars`",
+      "hard": "default stays, limit becomes an option",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "old": "### Skill descriptions are cut short\n\nYou can also trim the `description` and `when_to_use` text at the source: put the key use case first, since each entry's combined text is capped at 1,536 characters regardless of budget.",
+      "new": "### Skill descriptions are cut short\n\nYou can also trim the `description` and `when_to_use` text at the source: put the key use case first, since each entry's combined text is capped at 1,536 characters regardless of budget. The cap is configurable with the `skillListingMaxDescChars` setting.",
+      "label": "rule-update"
+    },
+    {
+      "id": "listing-cap-removed",
+      "source": "changelog: removed the 200-subagent-per-session spawn cap (the shape of a removed limit)",
+      "hard": "deprecation of the checked limit",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "old": "### Skill descriptions are cut short\n\nYou can also trim the `description` and `when_to_use` text at the source: put the key use case first, since each entry's combined text is capped at 1,536 characters regardless of budget.",
+      "new": "### Skill descriptions are cut short\n\nEach entry's combined `description` and `when_to_use` text is no longer capped. Claude Code keeps the full text of every description, and only the listing budget applies. Long descriptions are fine.",
+      "label": "rule-removal"
+    },
+    {
+      "id": "cut-short-wording",
+      "source": "skills page: a rewrite of the /doctor sentence with no change of value",
+      "hard": "wording only",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "old": "### Skill descriptions are cut short\n\nRun `/doctor` to see the context cost of the listing. You can also trim the `description` and `when_to_use` text at the source: put the key use case first, since each entry's combined text is capped at 1,536 characters regardless of budget.",
+      "new": "### Skill descriptions are cut short\n\nRun `/doctor` for an estimate of the listing's context cost and its biggest contributors. You can also trim the `description` and `when_to_use` text at the source: put the key use case first, since each entry's combined text is capped at 1,536 characters regardless of budget.",
+      "label": "no-change"
+    },
+    {
+      "id": "frontmatter-new-field",
+      "source": "changelog: skills can set `disallowed-tools` in frontmatter",
+      "hard": "same block, other field",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "cited": "skill-description-max-length",
+      "old": "### Frontmatter reference\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `description` | Recommended | The combined `description` and `when_to_use` text is truncated at 1,536 characters in the skill listing. |\n| `allowed-tools` | No | Tools Claude can use without asking permission during the turn that invokes this skill. |",
+      "new": "### Frontmatter reference\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `description` | Recommended | The combined `description` and `when_to_use` text is truncated at 1,536 characters in the skill listing. |\n| `allowed-tools` | No | Tools Claude can use without asking permission during the turn that invokes this skill. |\n| `disallowed-tools` | No | Tools removed from Claude's available pool while this skill is active. Accepts a space- or comma-separated string, or a YAML list. |",
+      "label": "no-change"
+    },
+    {
+      "id": "hook-event-added",
+      "source": "changelog: added the `StopFailure` hook event",
+      "hard": "name list grows",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `UserPromptSubmit` | When you submit a prompt, before Claude processes it |\n| `Stop` | When Claude finishes responding |\n| `SessionEnd` | When a session terminates |",
+      "new": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `UserPromptSubmit` | When you submit a prompt, before Claude processes it |\n| `Stop` | When Claude finishes responding |\n| `StopFailure` | When the turn ends due to an API error |\n| `SessionEnd` | When a session terminates |",
+      "label": "rule-update"
+    },
+    {
+      "id": "hook-event-description",
+      "source": "hooks page: `WorktreeCreate` also fires for a background session",
+      "hard": "table changed, names the same",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `WorktreeCreate` | When a worktree is being created via `--worktree` or `isolation: \"worktree\"`. Replaces default git behavior |\n| `WorktreeRemove` | When a worktree is being removed at session exit |",
+      "new": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `WorktreeCreate` | When a worktree is being created via `--worktree`, `isolation: \"worktree\"`, or for a background session. Replaces default git behavior |\n| `WorktreeRemove` | When a worktree is being removed at session exit, when a subagent finishes, or when you delete a background session |",
+      "label": "no-change"
+    },
+    {
+      "id": "hook-event-deprecated",
+      "source": "changelog: deprecated the Task tool's `mode` parameter (the shape of one deprecated name)",
+      "hard": "deprecation of one name, rule stays",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `TaskCreated` | When a task is being created via `TaskCreate` |\n| `TaskCompleted` | When a task is being marked as completed |\n| `Stop` | When Claude finishes responding |",
+      "new": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `TaskCreated` | Deprecated and no longer fires. Use `PostToolUse` with a `TaskCreate` matcher instead |\n| `TaskCompleted` | When a task is being marked as completed |\n| `Stop` | When Claude finishes responding |",
+      "label": "rule-update"
+    },
+    {
+      "id": "hook-event-renamed",
+      "source": "changelog: renamed a trigger keyword (the shape of a renamed name)",
+      "hard": "rename",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `Setup` | When you start Claude Code with `--init-only`. For one-time preparation in CI or scripts |\n| `SessionEnd` | When a session terminates |",
+      "new": "## Hook lifecycle\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `SessionInit` | When you start Claude Code with `--init-only`. For one-time preparation in CI or scripts. This event was called `Setup` before v2.1.290 |\n| `SessionEnd` | When a session terminates |",
+      "label": "rule-update"
+    },
+    {
+      "id": "never-fires-wording",
+      "source": "plugins troubleshooting page: the steps reworded",
+      "hard": "wording only",
+      "page": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Hook loads but never fires",
+      "cited": "hooks-event-name-known",
+      "old": "#### Hook loads but never fires\n\nIf a hook loads but never fires, check the event name. Event names are case-sensitive, so `PostToolUse` works and `postToolUse` does not. Then check the matcher.",
+      "new": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run. Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`. Then confirm the hook's `matcher` matches the tool name.",
+      "label": "no-change"
+    },
+    {
+      "id": "manifest-hooks-array",
+      "source": "manifest reference: `hooks` also takes an array that mixes paths and objects",
+      "hard": "file shape change, names the same",
+      "page": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "cited": "hooks-event-name-known",
+      "old": "### `hooks`\n\n`hooks` takes a `.json` file path or an inline hooks object in the same shape as `hooks` in `settings.json`. For hook events and handler fields, see the hooks reference.",
+      "new": "### `hooks`\n\n`hooks` takes a `.json` file path, an inline hooks object in the same shape as `hooks` in `settings.json`, or an array mixing both. For hook events and handler fields, see the hooks reference.",
+      "label": "no-change"
+    },
+    {
+      "id": "commands-stop-loading",
+      "source": "changelog: command files in a reserved namespace no longer load; a deprecated path was removed",
+      "hard": "severity change",
+      "page": "https://code.claude.com/docs/en/glossary",
+      "heading": "Deprecated and renamed terms",
+      "cited": "command-legacy-format",
+      "old": "## Deprecated and renamed terms\n\n| Old term | Now called | Notes |\n| - | - | - |\n| Headless mode | Non-interactive mode | Same `-p` flag, same behavior |\n| Custom commands | Skills | `.claude/commands/` files still work |",
+      "new": "## Deprecated and renamed terms\n\n| Old term | Now called | Notes |\n| - | - | - |\n| Headless mode | Non-interactive mode | Same `-p` flag, same behavior |\n| Custom commands | Skills | `.claude/commands/` files no longer load. Move each one to `.claude/skills/<name>/SKILL.md` |",
+      "label": "rule-update"
+    },
+    {
+      "id": "commands-not-legacy",
+      "source": "changelog: reverted a reservation, so the files load again (the shape of a reverted deprecation)",
+      "hard": "deprecation withdrawn",
+      "page": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Commands",
+      "cited": "command-legacy-format",
+      "old": "### Commands\n\nA command is a single Markdown file the user runs by name.\n\n<Note>\n  Commands are the older format, and skills supersede them for new work. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>",
+      "new": "### Commands\n\nA command is a single Markdown file the user runs by name.\n\n<Note>\n  Commands are a current format, equal to skills and not deprecated. Use a command for a single-file prompt, and a skill when you need supporting files.\n</Note>",
+      "label": "rule-removal"
+    },
+    {
+      "id": "skills-key-default",
+      "source": "changelog: a `skills` entry in plugin.json hid the default `skills/` directory",
+      "hard": "default change on another key",
+      "page": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "cited": "command-legacy-format",
+      "old": "### How each key combines with its default location\n\n* **Replaces the default**: `commands`, `agents`, `skills`. When you set `commands`, the default `commands/` directory isn't scanned.\n* **Merges**: `hooks`, `mcpServers`.",
+      "new": "### How each key combines with its default location\n\n* **Replaces the default**: `commands`, `agents`. When you set `commands`, the default `commands/` directory isn't scanned.\n* **Adds to the default**: `skills`. The `skills/` directory is still scanned, and the listed directories load alongside it\n* **Merges**: `hooks`, `mcpServers`.",
+      "label": "no-change"
+    },
+    {
+      "id": "plugin-agent-fields",
+      "source": "changelog: added `effort`, `maxTurns` and `disallowedTools` frontmatter support for plugin-shipped agents",
+      "hard": null,
+      "page": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Agent frontmatter",
+      "cited": null,
+      "old": null,
+      "new": "### Agent frontmatter\n\nA plugin agent accepts these frontmatter fields: `name`, `description`, `model`, `effort`, `maxTurns`, `tools` and `disallowedTools`. `effort` takes `low`, `medium`, `high`, `xhigh` or `max`. Claude Code ignores any other field.",
+      "label": "new-rule"
+    },
+    {
+      "id": "default-enabled",
+      "source": "changelog: plugins can declare `defaultEnabled: false` in plugin.json",
+      "hard": null,
+      "page": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "defaultEnabled",
+      "cited": null,
+      "old": null,
+      "new": "### `defaultEnabled`\n\nSet `defaultEnabled` to `false` in `plugin.json` to install the plugin turned off. The value must be a boolean. Dependencies of enabled plugins are still enabled.",
+      "label": "new-rule"
+    },
+    {
+      "id": "compatibility-limit",
+      "source": "skills page: `compatibility` accepts a string of up to 500 characters",
+      "hard": null,
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Using skill frontmatter outside Claude Code",
+      "cited": null,
+      "old": null,
+      "new": "### Using skill frontmatter outside Claude Code\n\nThe `compatibility` field accepts a string of up to 500 characters. Claude Code accepts the field but doesn't act on it.",
+      "label": "new-rule"
+    },
+    {
+      "id": "hooks-section-moved",
+      "source": "ruling 8 on #25: a cited section moves under a new heading",
+      "hard": "moved section",
+      "page": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Hooks field",
+      "cited": null,
+      "old": null,
+      "new": "### Hooks field\n\n`hooks` takes a `.json` file path, an inline hooks object in the same shape as `hooks` in `settings.json`, or an array mixing both. Event names are case-sensitive. Claude Code merges whatever you declare with `hooks/hooks.json` when that file exists.",
+      "label": "new-rule"
+    },
+    {
+      "id": "hook-output-to-disk",
+      "source": "changelog: hook output over 10,000 characters is saved to disk with a preview",
+      "hard": "a number, but no file requirement",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook output",
+      "cited": null,
+      "old": null,
+      "new": "### Hook output\n\nWhen a hook prints more than 10,000 characters, Claude Code saves the output to a file and puts a 2,000-character preview with the file path into context.",
+      "label": "no-change"
+    },
+    {
+      "id": "web-fetch-env",
+      "source": "changelog 2.1.285: added `CLAUDE_CODE_DISABLE_WEB_FETCH`",
+      "hard": null,
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Turn off web fetch",
+      "cited": null,
+      "old": null,
+      "new": "### Turn off web fetch\n\nSet the `CLAUDE_CODE_DISABLE_WEB_FETCH` environment variable to `1` to turn off the WebFetch tool for the session.",
+      "label": "no-change"
+    },
+    {
+      "id": "output-style-command",
+      "source": "changelog: deprecated the `/output-style` command, use `/config`",
+      "hard": "deprecation of a command, not a file",
+      "page": "https://code.claude.com/docs/en/glossary",
+      "heading": "Output style",
+      "cited": null,
+      "old": null,
+      "new": "### Output style\n\nThe `/output-style` command is deprecated. Use `/config` to pick an output style. The style is fixed at session start.",
+      "label": "no-change"
+    },
+    {
+      "id": "bom-loads",
+      "source": "changelog: agents, skills and commands that start with a UTF-8 BOM were ignored (fixed)",
+      "hard": "a fixed bug, no requirement left",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Byte order marks",
+      "cited": null,
+      "old": null,
+      "new": "### Byte order marks\n\nA `SKILL.md`, agent or command file that starts with a UTF-8 byte order mark loads the same as one without it.",
+      "label": "no-change"
+    },
+    {
+      "id": "cut-short-removed",
+      "source": "ruling 8 on #25: a cited section is gone",
+      "hard": "removed block",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "removed": true,
+      "old": "### Skill descriptions are cut short\n\nEach entry's combined text is capped at 1,536 characters regardless of budget.",
+      "new": null,
+      "label": "rule-removal"
+    }
+  ]
+}
