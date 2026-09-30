@@ -78,6 +78,12 @@ jsonTester.run('hooks-event-name-known', rule, {
       options: [{ additionalEvents: ['FutureEvent'] }],
       errors: [{ messageId: 'unknown', data: { key: 'Bogus' } }],
     },
+    // Two `hooks` keys. `JSON.parse` keeps the last, so the rule reads it.
+    {
+      code: '{"hooks": {"Stop": []}, "hooks": {"Bogus": []}}',
+      filename: '.claude/settings.json',
+      errors: [{ messageId: 'unknown', data: { key: 'Bogus' } }],
+    },
     // Inline in `plugin.json`, as an object and in an array.
     {
       code: JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),

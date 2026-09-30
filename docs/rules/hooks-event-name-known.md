@@ -23,7 +23,8 @@ Use a hook event name that Claude Code knows.
 Claude Code skips a hook entry under an event name that it does not know. It shows no
 error.[^lifecycle][^never] The names are case-sensitive.
 
-The rule reads the `hooks` key at the top level of each file. In `plugin.json`, `hooks` can be
+The rule reads the `hooks` key at the top level of each file. When a file has two `hooks` keys,
+the rule reads the last one, as `JSON.parse` does. In `plugin.json`, `hooks` can be
 an object, a path, or an array of paths and objects.[^manifest] The rule reads each object, and
 ignores each path. It checks each key against the 33 events in the hooks reference, as of Claude
 Code 2.1.285. The list is in `src/data/hook-events.ts`.

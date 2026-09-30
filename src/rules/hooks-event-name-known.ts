@@ -96,7 +96,8 @@ const rule: JSONRuleDefinition<{
         if (node.body.type !== 'Object') {
           return
         }
-        const hooks = node.body.members.find((member) => keyOf(member.name) === 'hooks')
+        // The last `hooks` key, as `JSON.parse` keeps the last of two.
+        const hooks = node.body.members.findLast((member) => keyOf(member.name) === 'hooks')
         if (hooks === undefined) {
           return
         }
