@@ -18,6 +18,10 @@
 // --repo or $GITHUB_REPOSITORY. The issue type is Task. The script adds no
 // label.
 //
+// For a changed block with old and new text, the body shows a diff. Under
+// the diff, two collapsed sections quote the full old text and the full new
+// text. Past MAX_DIFF_LINES lines, the body quotes the two texts with no diff.
+//
 // It fails closed. These make it exit 1 before it opens an issue:
 // - a finding that is not valid
 // - more new issues than --max (default 20), in a live run.

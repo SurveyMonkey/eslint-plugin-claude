@@ -201,8 +201,9 @@ how to match the two issues and keep the rule.
 
 The workflow gets a token from `actions/create-github-app-token` with only
 `permission-issues: write`. The job keeps `contents: read`. Each issue has the type `Task` and
-no label. Its body follows the Why, Scope, Acceptance and References format. Docs text goes in a
-fence that is longer than any fence in the text. Each `@` and each `<!--` in docs text gets a
+no label. Its body follows the Why, Scope, Acceptance and References format. For a changed block
+with old and new text, the body shows a diff, then the full old section and the full new section
+in two collapsed parts. Docs text goes in a fence that is longer than any fence in the text. Each `@` and each `<!--` in docs text gets a
 word joiner, so the text makes no mention and no marker.
 
 ## Consequences

@@ -110,7 +110,8 @@ and the spike data.
 
 `node scripts/docs-issues.ts <findings.json>` opens one issue for each changed block, as the org
 GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
-hash and the rules stops a second issue for the same change. `--dry-run` prints each issue
+hash and the rules stops a second issue for the same change. For a changed block, the body shows
+a diff, then the full old and new sections in two collapsed parts. `--dry-run` prints each issue
 and opens none. A manual run of the workflow takes a `dry_run` input.
 
 To triage the issues, follow the [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
