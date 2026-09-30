@@ -26,13 +26,12 @@ const MAP_FILE = 'docs/rule-sources.json'
 
 export const sha256 = (text) => createHash('sha256').update(text).digest('hex')
 
-// Removes inline Markdown from a heading: code marks, links, images, emphasis
-// marks and HTML tags. The text that remains is the text the page renders.
+// Removes inline Markdown from a heading: code marks, links, images and
+// emphasis marks. The slug step drops angle brackets as punctuation.
 export function stripInline(text) {
   return text
     .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/`([^`]*)`/g, '$1')
-    .replace(/<[^>]+>/g, '')
     .replace(/[*~]/g, '')
     .trim()
 }

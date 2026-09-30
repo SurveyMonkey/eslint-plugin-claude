@@ -82,6 +82,7 @@ describe('slugify', () => {
     expect(api.slugify('How entry fields combine with plugin.json')).toBe(
       'how-entry-fields-combine-with-plugin-json',
     )
+    expect(api.slugify('Config for <server>: <error>')).toBe('config-for-server-error')
     expect(api.slugify('See [the hooks](/docs/en/hooks) page')).toBe('see-the-hooks-page')
   })
 })
