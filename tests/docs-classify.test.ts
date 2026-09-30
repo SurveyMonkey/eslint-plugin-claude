@@ -474,6 +474,28 @@ describe('classify', () => {
     ])
   })
 
+  it('gives needs-triage for a mapped heading on neither the page nor the snapshot', async () => {
+    const stored = await watch.readPage(URL_, ['hooks'], serve(PAGE))
+    const jev = fakeJev(() => 0)
+    // The same finding comes for a changed page and for an unchanged page.
+    for (const text of [EDIT_HOOKS, PAGE]) {
+      const output = await api.classify({
+        map: { 'a-rule': [...(cited['a-rule'] ?? []), { url: URL_, heading: 'Nowhere' }] },
+        snapshots: new Map([[watch.snapshotName(URL_), stored]]),
+        rules,
+        links: new Map(),
+        fetchText: serve(text),
+        jev: { fetch: jev.fetch, key: KEY },
+      })
+      expect(output.findings.map((f) => [f.kind, f.change, f.blockId, f.rules])).toContainEqual([
+        'needs-triage',
+        'unknown heading',
+        'nowhere',
+        ['a-rule'],
+      ])
+    }
+  })
+
   it('makes no call and no finding for an unchanged page', async () => {
     const jev = fakeJev(() => 1)
     const output = await run(cited, PAGE, { fetch: jev.fetch })

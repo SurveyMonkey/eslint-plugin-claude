@@ -321,19 +321,7 @@ export function planPage({ url, citations, pageText, stored, links }) {
     const item = { ...base(blocks[0]), oldHash: null, newHash: pageHash, change: 'new page' }
     return { items: [], findings: [finding(item, 'needs-triage', { reason })] }
   }
-  if (stored.hash === pageHash) return { items: [], findings: [] }
-
-  const now = new Map(blocks.map((block) => [block.key, block]))
   const before = new Map(stored.blocks.map((block) => [block.id, block.hash]))
-  // The whole-page source has the ID of the title block.
-  const wholeStored = stored.sources.find((source) => source.id === stored.blocks[0]?.id)
-  const oldBlocks = new Map(
-    (wholeStored ? splitBlocks(wholeStored.text) : []).map((block) => [block.key, block]),
-  )
-  const oldText = new Map([...oldBlocks].map(([key, block]) => [key, block.text]))
-  for (const source of stored.sources) {
-    if (source !== wholeStored) oldText.set(source.id, source.text)
-  }
 
   // Sort the rules that cite this page: by one block, or by the whole page.
   const byBlock = new Map()
@@ -350,6 +338,14 @@ export function planPage({ url, citations, pageText, stored, links }) {
       )
       continue
     }
+    if (matches.length === 0 && !before.has(id)) {
+      const reason = `The mapped heading "${heading}" is not on the page or in the snapshot.`
+      const item = { ...base(blocks[0]), blockId: id, oldHash: null, newHash: pageHash }
+      findings.push(
+        finding({ ...item, heading, change: 'unknown heading' }, 'needs-triage', { rules, reason }),
+      )
+      continue
+    }
     if (matches[0]?.level === 1) {
       wholePage.push(...rules.filter((rule) => !wholePage.includes(rule)))
       continue
@@ -359,6 +355,20 @@ export function planPage({ url, citations, pageText, stored, links }) {
     // For a heading that the page lost, the id is also the key of its old
     // block, because update refuses a mapped heading that appears twice.
     byBlock.set(id, list)
+  }
+  // A map entry that the page cannot resolve gives a finding even when the
+  // page did not change.
+  if (stored.hash === pageHash) return { items: [], findings }
+
+  const now = new Map(blocks.map((block) => [block.key, block]))
+  // The whole-page source has the ID of the title block.
+  const wholeStored = stored.sources.find((source) => source.id === stored.blocks[0]?.id)
+  const oldBlocks = new Map(
+    (wholeStored ? splitBlocks(wholeStored.text) : []).map((block) => [block.key, block]),
+  )
+  const oldText = new Map([...oldBlocks].map(([key, block]) => [key, block.text]))
+  for (const source of stored.sources) {
+    if (source !== wholeStored) oldText.set(source.id, source.text)
   }
 
   const items = []
