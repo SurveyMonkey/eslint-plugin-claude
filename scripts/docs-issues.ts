@@ -3,16 +3,21 @@
 // Usage: node --experimental-strip-types scripts/docs-issues.ts <findings.json> [--dry-run]
 //   [--repo owner/name] [--max n]
 // Node 22.18 and later need no flag.
-// It reads the open issues first. An open issue whose body holds the marker
-// of a finding stops a second issue for that finding. The marker is
-// <!-- docs-watch:<kind>:<page>#<blockId>:<newHash> -->, so a block that
-// changes again gets a new issue. --dry-run prints each issue that would
-// open, and opens none. The repository comes from --repo or
-// $GITHUB_REPOSITORY. The issue type is Task. The script adds no label.
+// It reads the open issues first. The marker of an issue is
+// <!-- docs-watch:<kind>:<page>#<blockId>:<hash> -->. The hash is the new
+// block hash, or the old hash for a removed block. The block ID is URI
+// encoded. An open issue with a marker for the same page, block and hash
+// stops a new issue, whatever its kind. A block that changes again gets a
+// new issue. Findings with one marker in one run give one issue.
+// --dry-run prints each issue that would open, and opens none. The
+// repository comes from --repo or $GITHUB_REPOSITORY. The issue type is
+// Task. The script adds no label.
 //
-// It fails closed: a finding that is not valid, a gh failure, or more new
-// issues than --max (default 20) makes it exit 1 before it opens an issue
-// for the rest. All gh calls go through a runner, so tests never call GitHub.
+// It fails closed. A finding that is not valid, or more new issues than
+// --max (default 20) in a live run, makes it exit 1 before it opens an
+// issue. A gh failure makes it exit 1. The issues that opened before the
+// failure stay open, and the next run skips them. All gh calls go through a
+// runner, so tests never call GitHub.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -30,12 +35,20 @@ const MAX_ISSUES = 20
 const ADR = 'docs/adr/002-classify-docs-changes-with-jev.md'
 const RUNBOOK = 'docs/runbooks/docs-watch-triage.md'
 
-export const markerOf = (f: Finding): string =>
-  `<!-- docs-watch:${f.kind}:${f.page}#${f.blockId}:${f.newHash ?? f.oldHash} -->`
+// The page, the block and the hash of a finding. The block ID comes from
+// the docs, so it is URI encoded: it cannot close the marker comment.
+export const keyOf = (f: Finding): string =>
+  `${f.page}#${encodeURIComponent(f.blockId)}:${f.newHash ?? f.oldHash}`
 
-// Docs text is data. These make it inert in an issue body: a word joiner
-// after each `@` stops a mention, and one after each `<` of `<!--` stops a
-// comment that could fake a marker.
+export const markerOf = (f: Finding): string => `<!-- docs-watch:${f.kind}:${keyOf(f)} -->`
+
+// The keys in the markers of an issue body.
+const MARKER = /<!-- docs-watch:(?:rule-update|rule-removal|new-rule|needs-triage):(\S+) -->/g
+const keysIn = (body: string): string[] => [...body.matchAll(MARKER)].map((m) => m[1] ?? '')
+
+// Docs text is data. These make it inert in an issue body. A word joiner
+// after each `@` stops a mention. A word joiner after the `<` of each
+// `<!--` stops a comment that could fake a marker.
 export const neutralize = (text: string): string =>
   String(text).replaceAll('@', '@\u2060').replaceAll('<!--', '<\u2060!--')
 
@@ -71,6 +84,11 @@ export function inline(text: string): string {
   const ticks = '`'.repeat(longestRun(body, '`') + 1)
   return `${ticks} ${body} ${ticks}`
 }
+
+// Past this number of lines in one text, the body quotes the old text and
+// the new text apart, with no diff. The diff table grows as the product of
+// the two line counts.
+export const MAX_DIFF_LINES = 1000
 
 // A line diff: the longest common subsequence of lines, with "-" for an old
 // line and "+" for a new line. It keeps CONTEXT unchanged lines on each side
@@ -115,20 +133,22 @@ export function diffLines(oldText: string, newText: string): string {
   return kept.join('\n')
 }
 
+const LEADS: Record<Kind, (scope: string) => string> = {
+  'rule-update': (scope) => `docs${scope}: update for `,
+  'rule-removal': (scope) => `docs${scope}: review removal of `,
+  'new-rule': () => 'feat: new rule candidate from ',
+  'needs-triage': (scope) => `docs${scope}: triage docs change to `,
+}
+
 // A Conventional Commit title of MAX_TITLE characters or fewer.
 export function titleOf(f: Finding): string {
-  const scope = f.rules.length > 0 ? `(${f.rules.join(',')})` : ''
-  const leads: Record<Kind, string> = {
-    'rule-update': `docs${scope}: update for `,
-    'rule-removal': `docs${scope}: review removal of `,
-    'new-rule': 'feat: new rule candidate from ',
-    'needs-triage': `docs${scope}: triage docs change to `,
-  }
-  const lead = leads[f.kind]
+  const scoped = LEADS[f.kind](f.rules.length > 0 ? `(${f.rules.join(',')})` : '')
+  // A long list of rules leaves no room for the heading. The title then has
+  // no scope, and the Scope section of the body names the rules.
+  const lead = MAX_TITLE - scoped.length < 4 ? LEADS[f.kind]('') : scoped
   const heading = neutralize(f.heading).replaceAll('\n', ' ')
   const room = MAX_TITLE - lead.length
   if (heading.length <= room) return `${lead}${heading}`
-  if (room < 4) return lead.trimEnd().slice(0, MAX_TITLE)
   return `${lead}${heading.slice(0, room - 3).trimEnd()}...`
 }
 
@@ -153,14 +173,21 @@ export function bodyOf(f: Finding, repo: string): string {
     WHY[f.kind],
     '',
     `- Page: ${f.page}`,
-    `- Heading: ${inline(f.heading)} (block \`${f.blockId}\`)`,
+    `- Heading: ${inline(f.heading)} (block ${inline(f.blockId)})`,
     `- Change: ${f.change}`,
     `- Classifier result: ${classifier}`,
     `- Reason: ${neutralize(f.reason)}`,
     `- Hashes: old \`${f.oldHash ?? 'none'}\`, new \`${f.newHash ?? 'none'}\``,
     '',
   ]
-  if (f.oldText !== null && f.newText !== null) {
+  const long = (text: string) => text.split('\n').length > MAX_DIFF_LINES
+  if (f.oldText !== null && f.newText !== null && (long(f.oldText) || long(f.newText))) {
+    lines.push(
+      `The block has more than ${MAX_DIFF_LINES} lines, so there is no diff. The old text and the new text, as quoted data:`,
+      '',
+    )
+    lines.push(fence(f.oldText), '', fence(f.newText), '')
+  } else if (f.oldText !== null && f.newText !== null) {
     lines.push('The diff of the block text, old to new, as quoted data:', '')
     lines.push(fence(diffLines(f.oldText, f.newText), 'diff'), '')
   } else if (f.newText !== null) {
@@ -199,6 +226,13 @@ export function bodyOf(f: Finding, repo: string): string {
 }
 
 const FIELDS = ['page', 'heading', 'blockId', 'change', 'reason', 'link']
+const HASH = /^[0-9a-f]{64}$/
+const NULLABLE: [string, 'string' | 'number'][] = [
+  ['oldText', 'string'],
+  ['newText', 'string'],
+  ['probability', 'number'],
+  ['confidence', 'number'],
+]
 
 // Throws for a finding that the classifier cannot have made.
 export function validate(value: unknown): asserts value is Finding {
@@ -209,9 +243,26 @@ export function validate(value: unknown): asserts value is Finding {
       throw new Error(`a ${String(f.kind)} finding has no ${field}`)
     }
   }
-  if (!Array.isArray(f.rules)) throw new Error(`a ${String(f.kind)} finding has no rules list`)
+  if (!Array.isArray(f.rules) || !f.rules.every((rule) => typeof rule === 'string')) {
+    throw new Error(`a ${String(f.kind)} finding has no rules list`)
+  }
   if (typeof f.newHash !== 'string' && typeof f.oldHash !== 'string') {
     throw new Error(`a ${String(f.kind)} finding has no hash`)
+  }
+  for (const field of ['oldHash', 'newHash']) {
+    const hash = f[field]
+    if (hash !== null && !(typeof hash === 'string' && HASH.test(hash))) {
+      throw new Error(`a ${String(f.kind)} finding has a ${field} that is not a SHA-256 hash`)
+    }
+  }
+  for (const [field, type] of NULLABLE) {
+    if (f[field] !== null && typeof f[field] !== type) {
+      throw new Error(`a ${String(f.kind)} finding has a ${field} that is not a ${type} or null`)
+    }
+  }
+  // The marker match reads the page as one run of characters with no space.
+  if (!/^https:\/\/\S+$/.test(String(f.page))) {
+    throw new Error(`a ${String(f.kind)} finding has a page that is not an https URL`)
   }
 }
 
@@ -254,28 +305,40 @@ export async function openIssues({
     validate(f)
     valid.push(f)
   }
-  const open = openBodies(repo, run)
-  const seen = new Set<string>()
-  const toOpen: Finding[] = []
+  const open = openBodies(repo, run).map((issue) => ({
+    number: issue.number,
+    keys: keysIn(String(issue.body ?? '')),
+  }))
+  // One finding for each marker. A second finding with the same marker adds
+  // its rules and its reason to the first.
+  const byMarker = new Map<string, Finding>()
   for (const f of valid) {
-    const marker = markerOf(f)
-    const existing = open.find((issue) => String(issue.body ?? '').includes(marker))
+    const key = keyOf(f)
+    const existing = open.find((issue) => issue.keys.includes(key))
     if (existing) {
-      log(`skip: #${existing.number} already has ${marker}`)
+      log(`skip: #${existing.number} already has ${key}`)
       continue
     }
-    if (seen.has(marker)) continue
-    seen.add(marker)
-    toOpen.push(f)
+    const marker = markerOf(f)
+    const first = byMarker.get(marker)
+    if (first === undefined) {
+      byMarker.set(marker, { ...f, rules: [...f.rules] })
+      continue
+    }
+    first.rules.push(...f.rules.filter((rule) => !first.rules.includes(rule)))
+    if (!first.reason.split('; ').includes(f.reason)) first.reason += `; ${f.reason}`
+    log(`merge: a second ${f.kind} finding for ${key}`)
   }
-  if (toOpen.length > max) {
+  const toOpen = [...byMarker.values()]
+  if (!dryRun && toOpen.length > max) {
     throw new Error(
       `${toOpen.length} new issues is more than the limit of ${max}. Triage by hand, or run again with --max.`,
     )
   }
+  // Every title and body is built before the first issue opens.
+  const issues = toOpen.map((f) => ({ title: titleOf(f), body: bodyOf(f, repo), type: 'Task' }))
   const opened: string[] = []
-  for (const f of toOpen) {
-    const issue = { title: titleOf(f), body: bodyOf(f, repo), type: 'Task' }
+  for (const issue of issues) {
     if (dryRun) {
       log(`would open: ${issue.title}\n\n${issue.body}`)
       continue
