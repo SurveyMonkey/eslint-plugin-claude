@@ -533,10 +533,12 @@ describe('classify', () => {
     expect(jev.calls).toEqual([])
   })
 
-  it('reads a page with CRLF line ends as the same page', async () => {
+  it('reads a page with CRLF or CR line ends as the same page', async () => {
     const jev = fakeJev(() => 1)
-    const output = await run(cited, PAGE.replaceAll('\n', '\r\n'), { fetch: jev.fetch })
-    expect(output.findings).toEqual([])
+    for (const end of ['\r\n', '\r']) {
+      const output = await run(cited, PAGE.replaceAll('\n', end), { fetch: jev.fetch })
+      expect(output.findings).toEqual([])
+    }
     expect(jev.calls).toEqual([])
     const { findings } = await api.classify({
       map: cited,
@@ -551,9 +553,12 @@ describe('classify', () => {
 
   it('fails for a map that cites no page', async () => {
     const jev = fakeJev(() => 1)
-    await expect(run({}, PAGE, { fetch: jev.fetch, key: KEY })).rejects.toThrow(
-      'the map cites no page',
-    )
+    const maps: Record<string, never[]>[] = [{}, { 'skill-description-max-length': [] }]
+    for (const map of maps) {
+      await expect(run(map, PAGE, { fetch: jev.fetch, key: KEY })).rejects.toThrow(
+        'the map cites no page',
+      )
+    }
   })
 
   it('records a removed block that no rule cites as a result with no finding', async () => {
