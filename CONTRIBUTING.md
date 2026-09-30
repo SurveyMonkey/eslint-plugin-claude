@@ -56,8 +56,9 @@ claude.com, claude.ai or anthropic.com that is not under `https://code.claude.co
 - A source has no heading.
 - A URL is not on `code.claude.com/docs`.
 - The map is not the same as the output of the script.
-- A `hash` is not a SHA-256 hex string, or is not the hash of that block in
-  `docs/docs-snapshot/`.
+- A source has no `hash`.
+- A `hash` is not a SHA-256 hex string, or is not the hash that `docs/docs-snapshot/` stores for
+  that heading.
 
 ## Docs watch
 
@@ -67,23 +68,28 @@ fetches each page that the map cites (URL plus `.md`) and compares it with `docs
 
 - `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
   to the run summary. For each changed page, it lists the blocks that changed, were added or were
-  removed. It also counts the blocks that did not change. It exits 0 when a page changed, so a
-  person must read the run summary. It exits 1 when a fetch or parse fails. It also exits 1 when
-  the map cites no page. It exits 1 when a mapped heading is not on its page, or is on it more
-  than once. A missing snapshot is not a failure: every page is then new.
+  removed. It also counts the blocks that did not change.
+- `check` exits 0 when a page changed, so a person must read the run summary. It exits 1 when a
+  fetch or parse fails, or when the map cites no page. It exits 1 when a mapped heading is not on
+  its page, or is on it more than once. It exits 1 for an unknown option, or for a map or
+  snapshot file that it cannot read. A missing snapshot is not a failure: every page is then new.
 - `update` writes the snapshot and sets `hash` on each source in the map. A person runs it, in a
   pull request. The scheduled job never runs it.
 
 A block is a heading and its text, up to the next heading of any level. A heading is a Markdown
 heading, or an HTML heading. The live pages write an HTML heading as three lines: `<h2 id="x">`,
-the title, and `</h2>`. The ID of an HTML heading is its `id` attribute. The ID of a Markdown
-heading is the heading text without inline Markdown, in lowercase. It has no punctuation, a hyphen
-for each space, and a hyphen for each dot.
+the title, and `</h2>`. Each tag is alone on its line, and the title has at most five lines. A
+line that looks like any other form of an HTML heading is an error, as is a code fence that is
+never closed. Setext headings and indented Markdown headings are not supported.
+
+The ID of an HTML heading is its `id` attribute. The ID of a Markdown heading is the heading text
+without inline Markdown, in lowercase. It has no punctuation, a hyphen for each space, and a
+hyphen for each dot.
 
 A second block with the same ID gets a number suffix, such as `-1`. A heading in a code fence
 starts no block. A heading at level 1 makes the whole page the source. A mapped heading is the
 title that the page shows, for example "Choose where skills load". The script finds its block by
-the ID, or by the slug of the title.
+the ID. When no block has that ID, it finds the block by the slug of the title.
 
 To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts update`. Read the
 diff of `docs/docs-snapshot/` and `docs/rule-sources.json`. Commit both in a pull request. The

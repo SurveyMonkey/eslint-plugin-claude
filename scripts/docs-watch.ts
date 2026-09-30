@@ -5,9 +5,11 @@
 // check (default) fetches each cited page and compares it with the snapshot in
 //   docs/docs-snapshot/. It writes no file. It prints a JSON report to stdout.
 //   It also adds a Markdown report to $GITHUB_STEP_SUMMARY when that is set.
-//   It exits 0 when a page changed. It exits 1 when a fetch or a parse fails.
-//   It also exits 1 when the map cites no page. It exits 1 when a mapped
-//   heading is not on its page or is on it twice.
+//   It exits 0 when a page changed.
+//   It exits 1 when a fetch or a parse fails, or when the map cites no page.
+//   It exits 1 when a mapped heading is not on its page or is on it twice.
+//   It exits 1 for an unknown option, or for a map or snapshot file that it
+//   cannot read. Both modes exit 1 on any failure.
 // update writes the snapshot, and sets `hash` on each source in the map. A
 //   person runs it, in a pull request. The scheduled job does not.
 // root defaults to this repository.
@@ -78,8 +80,8 @@ export function stripInline(text: string): string {
     .trim()
 }
 
-// The ID of a heading: rendered text, lowercase, no punctuation, each space
-// a hyphen. The site also turns a dot into a hyphen, as in "plugin-json".
+// The slug of a heading title: rendered text, lowercase, no punctuation, each
+// space a hyphen. A Markdown heading has this slug as its ID. The site also turns a dot into a hyphen, as in "plugin-json".
 export function slugify(heading: string): string {
   return stripInline(heading)
     .toLowerCase()
@@ -230,6 +232,8 @@ export const snapshotName = (url: string): string =>
     .replaceAll('/', '__')}.json`
 
 // Fetches, hashes and splits one page. Returns the state that update writes.
+// It throws when the page has no title heading, or when a mapped heading is
+// not on the page or is on it twice.
 export async function readPage(
   url: string,
   headings: string[],
