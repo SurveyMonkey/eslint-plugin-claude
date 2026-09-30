@@ -38,17 +38,17 @@ jobs:
       - id: check
         continue-on-error: true
         run: node scripts/docs-watch.ts check > "$RUNNER_TEMP/docs-watch.json"
-      # Classify when the check failed, or when its report shows a change or
-      # an error. A report from a check that passed always parses.
+      # Classify when the check failed, or when its report shows a change. A
+      # report that node cannot read fails this step, and the job fails.
       - id: gate
         env:
           CHECK: ${{ steps.check.outcome }}
         run: |
-          if [ "$CHECK" != "success" ] || node -e "const r = require(process.argv[1]); process.exit(r.changed > 0 || r.errors.length > 0 ? 0 : 1)" "$RUNNER_TEMP/docs-watch.json"; then
-            echo "classify=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "classify=false" >> "$GITHUB_OUTPUT"
+          classify=true
+          if [ "$CHECK" = "success" ]; then
+            classify=$(node -e "const r = require(process.argv[1]); if (!Number.isInteger(r.changed) || !Array.isArray(r.errors)) throw new Error('the check report has no changed count or errors list'); console.log(r.changed > 0 || r.errors.length > 0)" "$RUNNER_TEMP/docs-watch.json")
           fi
+          echo "classify=$classify" >> "$GITHUB_OUTPUT"
       # The TypeSafe key goes to this step only, as an environment variable.
       - if: steps.gate.outputs.classify == 'true'
         env:
