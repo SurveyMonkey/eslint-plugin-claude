@@ -1,0 +1,346 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+  "hash": "4a7342531a85bdbcc7199f6201e254859029457a945c396f07d77395dbf6778e",
+  "blocks": [
+    {
+      "id": "troubleshoot-plugins",
+      "hash": "d4b781d6115d008d5e585d2c9f6aeda6a25edd91341de137b1c4c43af3909102"
+    },
+    {
+      "id": "find-where-plugin-runs",
+      "hash": "a24fa96864d94184a65124ad73771576beb1d8624a52f6604ba1be528784cc84"
+    },
+    {
+      "id": "plugin-isnt-available-in-this-environment",
+      "hash": "a5ed57a2febb01a04086e5d4fc7a81148ae57bab97aaf53667a9b4bc0a0cd797"
+    },
+    {
+      "id": "zsh-no-such-file-or-directory-plugin",
+      "hash": "b8af11bcd4d447ab353752f65b430f48d333e0c21fd7168248d5964c89ecaee3"
+    },
+    {
+      "id": "the-term-plugin-is-not-recognized-as-the-name-of-a-cmdlet",
+      "hash": "aad107f744001b3a13f0c8d53a7f6fd727a939c5e9da3eea431b9caa3d0a0ff2"
+    },
+    {
+      "id": "claude-command-not-found-after-claude-plugin",
+      "hash": "9adbc626ae01f527fbf123715539937c0696d0cba2fdeaf3ef24b0baf68a625f"
+    },
+    {
+      "id": "unknown-command-and-command-spellings-that-dont-exist",
+      "hash": "bc51352fb8d15f8a592012c3aef4b1670265b4a1a9c66897055232b807bd7fb2"
+    },
+    {
+      "id": "add-a-marketplace",
+      "hash": "e6e3db73947a25b1b920178274d203696909a25ad5c425a8183c1a570a7fe85d"
+    },
+    {
+      "id": "marketplace-claude-plugins-official-not-found",
+      "hash": "ff8cf1a68ba523fc6ec49cd132570f6967a25ab9e9303d48fe53b01000e08a58"
+    },
+    {
+      "id": "marketplace-not-found",
+      "hash": "4889666233e1296ac80e4e835a352177f7d595edcd376ee6c61060ff9e0095e7"
+    },
+    {
+      "id": "invalid-marketplace-source-format",
+      "hash": "e0b2eb800e8c42247ef6ed86dc5e1a0557ff601d7a7f68adddbe4932369fb761"
+    },
+    {
+      "id": "is-not-a-valid-github-owner-repo-shorthand",
+      "hash": "4efdcc83c774aaa2a45f25e2aebee018d2251c3e802da33394a7100365c60b3b"
+    },
+    {
+      "id": "path-does-not-exist",
+      "hash": "75e606d28d051ff891fc7a499f524679570c673961e039ddd7d3db22de3676e2"
+    },
+    {
+      "id": "marketplace-file-not-found-at-claude-plugin-marketplace-json",
+      "hash": "3c6fb6366701d2f89e16e0560cf6a3914d2ca83ca906a7f1b014d41949560f6f"
+    },
+    {
+      "id": "ssh-authentication-failed-or-https-authentication-failed",
+      "hash": "3ee0610f8b8072023f7f6b76a503f6ae988ba671e604ef42f3470c9e302b2dd9"
+    },
+    {
+      "id": "ssh-host-key-is-not-in-your-known-hosts-file",
+      "hash": "92e747a40f34cc857c4e558b6a041d9d9a4be9ccff49375292f1bd37a57f58d0"
+    },
+    {
+      "id": "command-git-not-found-or-is-in-an-unsafe-location",
+      "hash": "cdaf1b66fdf10c9e550231f3b15f359337645e8ee9839866ad667132a3bbd261"
+    },
+    {
+      "id": "git-clone-timed-out-after-120s",
+      "hash": "26d761a61d2060dd9d6f2bb69da7113a14da6a47f9c88fdf7a0e2197496dbf4c"
+    },
+    {
+      "id": "marketplace-updates-keep-failing-offline",
+      "hash": "381b28e5194ddf1de7a4bf191757fd5d81a05cd9395897f88a185278af43598c"
+    },
+    {
+      "id": "marketplace-add-fails-on-a-github-enterprise-server-host",
+      "hash": "18944d87eb09822d26238af052212d7fa68c1ea9ae915f1cc4f849eee402b621"
+    },
+    {
+      "id": "install-a-plugin",
+      "hash": "c6c1646c5a08ddb05b6aa6eb9a114757b2a47a9b7009f092c29c8622a984d727"
+    },
+    {
+      "id": "plugin-not-found-in-marketplace",
+      "hash": "b8cfbf2131d4f016a2946444f8d379b51d140c0392934c1b2d4d4458b289c2fa"
+    },
+    {
+      "id": "the-message-ends-with-a-refresh-hint",
+      "hash": "d7e102654684d42973042e1fc3c2eeee99bb3c85a783753f0b7c21aa77dd382c"
+    },
+    {
+      "id": "the-message-has-no-hint",
+      "hash": "71e2c788a58e8fa8c8ffa8d5783ca404a402085190eceffa102bce81bd724f94"
+    },
+    {
+      "id": "plugin-not-found-in-any-marketplace",
+      "hash": "0bcee44001883fa1ddae106b5febad4c4e33bc8801635e92ee9b28c1fd3a8fc6"
+    },
+    {
+      "id": "plugin-is-already-installed-globally",
+      "hash": "3b34531525135be82ba99d7cf2d3b2f31e1b7c56f9efabbc510185f52d99bcf2"
+    },
+    {
+      "id": "this-plugin-uses-a-source-type-your-claude-code-version-does-not-suppo",
+      "hash": "b65a11500cc57e3da44ca31ddc5a96daa3b53110714558e70bc89fff3de5ae83"
+    },
+    {
+      "id": "plugin-archive-integrity-check-failed",
+      "hash": "138692c7717514d7ef99a108f572933d3e9bd904e49a776c8a5095a64812be50"
+    },
+    {
+      "id": "marketplace-is-registered-from-an-untrusted-source",
+      "hash": "218a21f7a2e758ae32eb052cddcbfa32ab1bb8069f1f4051dec8b7184990a175"
+    },
+    {
+      "id": "plugin-has-a-corrupt-manifest-file-or-has-an-invalid-manifest-file",
+      "hash": "53ac10e6eafc47d876eb3ac7ebfcb14f6eb843c2f88d1a9568ff3bffc45f933e"
+    },
+    {
+      "id": "plugin-directory-not-found-at-path",
+      "hash": "f8cfc7d8eaf8e774f758edb3da496521063fefa8079f582fd2416372a506b59f"
+    },
+    {
+      "id": "no-plugins-available-or-no-marketplaces-configured",
+      "hash": "6ae36b9feb597416d106f46bf6449e1aba8d55293df878dfaf02cbe2a5f84d1b"
+    },
+    {
+      "id": "marketplace-is-already-added-from-a-different-source",
+      "hash": "af48f20c90d57dbd1c9572fd3cba09e2591c2b39a7ec7b3a93c441d13d02bf33"
+    },
+    {
+      "id": "cannot-add-marketplace-its-network-source-differs",
+      "hash": "0fde71c8d4bd817ed9126b6e02434c50021c90f4648d20a169d188200c6e4dd5"
+    },
+    {
+      "id": "failed-to-install-from-the-plugin-menu",
+      "hash": "ffd778f1ff0b832f35c16b7ad8b363aa140cb78f297c30fb992f3a5bd590cefb"
+    },
+    {
+      "id": "could-not-move-the-new-copy-of-this-plugin-version",
+      "hash": "0c65d43415fd02318a2c4d401c615f8048a662758e697a67bea800b577b24b73"
+    },
+    {
+      "id": "dependency-errors",
+      "hash": "31ff5e80278365a1bf7f914ea5a647752076e420706fa5ca6179245a52a7e8f9"
+    },
+    {
+      "id": "plugin-installed-but-not-working",
+      "hash": "05309c434ad5e57fbbdda7f4339890c511fdbfd120d0e6ba0355e524d38fe201"
+    },
+    {
+      "id": "plugin-doesnt-appear-or-its-skills-dont-show-up",
+      "hash": "90b52d55d1619d4c1237938e4fa84c4f6412225cf4001e6661be0724a81881c0"
+    },
+    {
+      "id": "run-reload-plugins-to-activate",
+      "hash": "5f2a954beae611e6ba918a3883a4e147a93213bac77810650778b3a2f8a2f70d"
+    },
+    {
+      "id": "plugin-not-cached-at",
+      "hash": "09bf928b4e77ff2fd0b69a5ec204cffb9d56d7b438ed0e463b1dd82630864334"
+    },
+    {
+      "id": "installed-plugins-json-holds-a-record-this-version-cannot-read",
+      "hash": "0afccce7c20d6c87f16feda57bbd02cfc20bbaec1eb7076e751beccb95126ce6"
+    },
+    {
+      "id": "installed-plugins-json-could-not-be-read-and-was-rebuilt",
+      "hash": "d89431f62c20a93a1e50d3cc628ade31c9d898e8781ec2aa613fb36b501db7d2"
+    },
+    {
+      "id": "install-records-under-names-that-no-version-can-use",
+      "hash": "e73b0146711d5b310e9fa2669cb6dd64f74d2e04a5e0175511409ccbbe7f4706"
+    },
+    {
+      "id": "a-plugin-you-disabled-still-loads",
+      "hash": "b41af0d3f586dbbc868bcf01f465716272e86f3877316879630c05db63bd1210"
+    },
+    {
+      "id": "plugin-is-enabled-in-project-settings-but-isnt-installed-here",
+      "hash": "db54ee74391f72a5279df12e1c7935b0a858c71088c3825930f6687ad939bb31"
+    },
+    {
+      "id": "failed-to-load-hooks-from-and-hooks-that-dont-fire",
+      "hash": "7fc02cd54c2ca28fe8f95dfca28f9f62e6eff275022e0b4cdd4fd023c0d88d3a"
+    },
+    {
+      "id": "hooks-fail-to-load",
+      "hash": "dedea885a6b4285a5b7b3f43f2c84abc670bf41e85d9286bbc2a08a11f1bc70e"
+    },
+    {
+      "id": "hook-error-notices-in-the-transcript",
+      "hash": "d97f8164a313ed5fd2a24c341240c69693828f08baaf7d02d499bd78c963231a"
+    },
+    {
+      "id": "a-plugin-hook-blocks-a-tool-call-or-prompt",
+      "hash": "07fa18b137780fe40600685d8b75e661b6c6c328cb0a4bac16f9f7f2fd03d92d"
+    },
+    {
+      "id": "hook-loads-but-never-fires",
+      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
+    },
+    {
+      "id": "invalid-mcp-server-config-for-and-mcp-servers-that-dont-start",
+      "hash": "a05c701eb1f5f227318249b3ad7c0db5c5189a0f1a04761b85433b44ba4b07a7"
+    },
+    {
+      "id": "invalid-mcp-server-config-for-server-error",
+      "hash": "184f124b13c14a71d13b1450894951f5c566858f92f332af4c6cf7ad434c7b45"
+    },
+    {
+      "id": "server-is-configured-but-never-connects",
+      "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd"
+    },
+    {
+      "id": "server-works-with---plugin-dir-but-fails-after-install",
+      "hash": "808dca98f05aa32ccfba6731b366ff301d8a7eccbcbfef0a29eeb3c5d467115d"
+    },
+    {
+      "id": "language-server-doesnt-start",
+      "hash": "ce31d904d6f5f6ca2714d59ce7e9d22330f1ebcad0feede7fcf89c0bb1cabf59"
+    },
+    {
+      "id": "language-server-doesnt-start-1",
+      "hash": "052ac5296d4dd8727ecae818e4ac80e49ff193b7e3504055bd48666ac6496caa"
+    },
+    {
+      "id": "language-server-uses-too-much-memory",
+      "hash": "c4ab4ebb0730d005f33368d22a5b1008fac534ded522e4aeb144c37eec22129f"
+    },
+    {
+      "id": "false-positive-diagnostics-in-a-monorepo",
+      "hash": "2ef9ac07f0b3656c2ce5196b4ad0aadf3f7001176af8c3e5ffbe8aa609e19079"
+    },
+    {
+      "id": "build-a-plugin",
+      "hash": "08f5451c84b2e3c192d6f96e007c0d82838c7132a238499f0d79c98008c5c2a2"
+    },
+    {
+      "id": "commands-path-not-found",
+      "hash": "1b482a0441dbb2a71260338f6367e42de718fc9486111f9eeaa9b0ad6b263bdf"
+    },
+    {
+      "id": "plugin-dir-loads-a-plugin-with-no-components",
+      "hash": "22249faca7cf8b84894ac914a1cfafabae32d2c5f5edab0570f6f0dd2df24529"
+    },
+    {
+      "id": "files-the-plugin-references-outside-its-directory-arent-found",
+      "hash": "b9441e35d239e0b4be478a3e338468589b8f7075a9d3f23926d5b692c4218b9c"
+    },
+    {
+      "id": "claude-plugin-root-shows-forward-slashes-on-windows",
+      "hash": "bf621b93a49c12bf3c94061e5706a5fed5423ea1a260ebc76e5db319a11c86bc"
+    },
+    {
+      "id": "plugin-loads-but-its-skills-are-missing",
+      "hash": "49e5a968bdde3b6eab79721a6b5201fc280b3091c0ff2c38f27edd128b4f2048"
+    },
+    {
+      "id": "skill-loads-but-claude-never-invokes-the-skill",
+      "hash": "1785f19f6ac871d323156a6a0e5707e2ca1bf6204fdb41a98d9b734b75e3d71f"
+    },
+    {
+      "id": "is-not-a-plugin-or-skill-folder",
+      "hash": "4c27697f750eccd15d2ebd7415add5ef3c364e85b8427eced74d6e034e987464"
+    },
+    {
+      "id": "the-userconfig-dialog-never-appears",
+      "hash": "5d13be0872b75b45baaebc00b089c0173ba2264c6a83e3608a5eb60c75f4187b"
+    },
+    {
+      "id": "claude-plugin-validate-reports-errors",
+      "hash": "f7402094c22cc26d392156788c72d14a4f911aceb5e7c2f781e1400493f0dce1"
+    },
+    {
+      "id": "plugin-has-conflicting-manifests",
+      "hash": "58f8b1731c63b3f2d79e3f9a447088a7e6d0059944e6e516f5530c2a022a20e4"
+    },
+    {
+      "id": "warning-no-commands-found-in-plugin-custom-directory",
+      "hash": "2cb2897b72750eeaceb4ddf915b05564fc36ae62a53463abe7638854864a0836"
+    },
+    {
+      "id": "host-a-marketplace",
+      "hash": "6fff87e85b23c38e8aa1103bf7549d62e09a71fe1039762fb836d2ce8cbab4f1"
+    },
+    {
+      "id": "plugins-with-relative-paths-fail-in-url-based-marketplaces",
+      "hash": "85b2429427e2464f7921bb9daeb6b420551ceb4985e52444c65d0f0107da4cf5"
+    },
+    {
+      "id": "marketplace-validation-errors",
+      "hash": "09df106e67673e280f793d9cb9ab09ff21ba48489058e097630e91ef7ac19917"
+    },
+    {
+      "id": "blocked-by-your-organization",
+      "hash": "51b1c1605d89eb8c03402f8ac6dbce8714137903b62e54b937933d14b48f0387"
+    },
+    {
+      "id": "marketplace-source-is-blocked-by-enterprise-policy",
+      "hash": "532cb010aab2705ae53f74e8ac1ceada5d4b923132c2f3555bf8b9bd56a0e3cd"
+    },
+    {
+      "id": "marketplace-is-not-in-the-allowed-marketplace-list",
+      "hash": "737718ae2a68262e812a782c469db184456242b338f6d6d4aa6b8284b3a92c72"
+    },
+    {
+      "id": "plugin-is-blocked-by-your-organizations-policy-and-cannot-be-installed",
+      "hash": "a16b453e9d631710d0228d7ed60bcac93eef46e953c0571c77df279b3d99b150"
+    },
+    {
+      "id": "plugin-dir-is-disabled-by-your-organizations-managed-settings-disables",
+      "hash": "8f9dd7ac89a066630ab1540c191918099a31bf231ff1a0fd5787ceadf43f6c83"
+    },
+    {
+      "id": "plugins-from-claude-skills-are-blocked-by-your-organizations-managed-s",
+      "hash": "8edfdbaaf733c0333f2c67392803cb0747895a4a95e564bee53bdb6da9114138"
+    },
+    {
+      "id": "command-sourced-plugins-are-disabled-by-your-organizations-managed-set",
+      "hash": "62b722c1507c24ee6a352af20d04efef7077b7b41037792392f4f148204e8add"
+    },
+    {
+      "id": "marketplace-is-seed-managed",
+      "hash": "fbd6fabd4d361f71765f90fb191ec1e333a044db1f792663e555f0616c8e3f73"
+    },
+    {
+      "id": "next-steps",
+      "hash": "e37396f673487bf92fba432fcdef58050282442431054775b20ba293c6ff0ce5"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Hook loads but never fires",
+      "id": "hook-loads-but-never-fires",
+      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426",
+      "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
+    }
+  ]
+}

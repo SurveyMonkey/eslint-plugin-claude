@@ -25,6 +25,7 @@ const run = (...args: string[]) =>
   })
 const seed = (...args: string[]) => run('--stdout', ...args)
 const DOCS_PREFIX = 'https://code.claude.com/docs/'
+const HASH = /^[0-9a-f]{64}$/
 
 type Source = { url?: unknown; heading?: unknown; hash?: unknown }
 type SourceMap = Record<string, Source[]>
@@ -53,6 +54,12 @@ function check(map: SourceMap, rules: string[]): string[] {
       }
       if (typeof source.heading !== 'string' || source.heading === '') {
         faults.push(`${rule}: no heading`)
+      }
+      if (
+        source.hash !== undefined &&
+        !(typeof source.hash === 'string' && HASH.test(source.hash))
+      ) {
+        faults.push(`${rule}: hash is not a SHA-256 hex string`)
       }
     }
   }
@@ -109,6 +116,16 @@ describe('check', () => {
     const map = { 'a-rule': [{ url: 'https://code.claude.com/blog/x', heading: 'H' }] }
     expect(check(map, ['a-rule'])).toEqual([`a-rule: url is not on ${DOCS_PREFIX}`])
   })
+
+  it('accepts a source with a SHA-256 hash', () => {
+    const map = { 'a-rule': [{ ...good['a-rule']?.[0], hash: 'a'.repeat(64) }] }
+    expect(check(map, ['a-rule'])).toEqual([])
+  })
+
+  it('fails for a hash that is not a SHA-256 hex string', () => {
+    const map = { 'a-rule': [{ ...good['a-rule']?.[0], hash: 'xyz' }] }
+    expect(check(map, ['a-rule'])).toEqual(['a-rule: hash is not a SHA-256 hex string'])
+  })
 })
 
 describe('docs/rule-sources.json', () => {
@@ -116,6 +133,21 @@ describe('docs/rule-sources.json', () => {
 
   it('is valid for the rules in src/rules', () => {
     expect(check(map, ruleNames(ROOT))).toEqual([])
+  })
+
+  it('sets each hash to the hash of its block in the snapshot', () => {
+    for (const sources of Object.values(map) as Source[][]) {
+      for (const { url, heading, hash } of sources) {
+        expect(hash, `${url} ${heading}: no hash`).toBeDefined()
+        // The snapshot file is named for the page path, with "__" for each "/".
+        const name = String(url).slice(`${DOCS_PREFIX}en/`.length).replaceAll('/', '__')
+        const snapshot = JSON.parse(
+          readFileSync(path.join(ROOT, 'docs/docs-snapshot', `${name}.json`), 'utf8'),
+        ) as { sources: { heading: string; hash: string }[] }
+        const stored = snapshot.sources.find((entry) => entry.heading === heading)
+        expect(hash, `${url} ${heading}`).toBe(stored?.hash)
+      }
+    }
   })
 
   it('equals the output of the seed script', () => {
@@ -277,5 +309,39 @@ describe('seed script', () => {
       'a-rule': footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)'),
     })
     expect(seed(root)).toBe(seed(root))
+  })
+
+  it('keeps the hash of a source with the same url and heading, and drops other hashes', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'rule-sources-'))
+    dirs.push(root)
+    mkdirSync(path.join(root, 'src/rules'), { recursive: true })
+    mkdirSync(path.join(root, 'docs/rules'), { recursive: true })
+    writeFileSync(path.join(root, 'src/rules/a-rule.ts'), '')
+    writeFileSync(
+      path.join(root, 'docs/rules/a-rule.md'),
+      [
+        '[^one]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)',
+        '[^two]: [Hooks reference: New heading](https://code.claude.com/docs/en/hooks#new-heading)',
+        '',
+      ].join('\n'),
+    )
+    const hash = 'b'.repeat(64)
+    const url = `${DOCS_PREFIX}en/hooks`
+    writeFileSync(
+      path.join(root, 'docs/rule-sources.json'),
+      JSON.stringify({
+        'a-rule': [
+          { url, heading: 'Hook lifecycle', hash },
+          { url, heading: 'Old heading', hash: 'c'.repeat(64) },
+        ],
+      }),
+    )
+    const seeded = seed(root)
+    expect(JSON.parse(seeded)).toEqual({
+      'a-rule': [
+        { url, heading: 'Hook lifecycle', hash },
+        { url, heading: 'New heading' },
+      ],
+    })
   })
 })

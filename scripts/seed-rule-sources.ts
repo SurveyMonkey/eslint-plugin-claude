@@ -3,11 +3,13 @@
 // different pair of page URL and heading becomes one source. It makes no
 // network call, and two runs give the same file. It stops with an error for a
 // footnote that it cannot read. It also stops for a link to claude.com,
-// claude.ai or anthropic.com that is not under code.claude.com/docs.
+// claude.ai or anthropic.com that is not under code.claude.com/docs. When the
+// map exists, a source that keeps its url and heading keeps its `hash`. The
+// docs watch sets that field.
 //
 // Usage: node --experimental-strip-types scripts/seed-rule-sources.ts [--stdout] [root]
 // --stdout prints the map and writes no file. root defaults to this repository.
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 const DOCS_PREFIX = 'https://code.claude.com/docs/'
@@ -30,10 +32,19 @@ const rules = readdirSync(path.join(root, 'src/rules'))
   .map((file) => file.slice(0, -'.ts'.length))
   .sort()
 
-const map: Record<string, { url: string; heading: string }[]> = {}
+type Source = { url: string; heading: string; hash?: string }
+
+const mapFile = path.join(root, 'docs/rule-sources.json')
+const previous: Record<string, Source[]> = existsSync(mapFile)
+  ? JSON.parse(readFileSync(mapFile, 'utf8'))
+  : {}
+const hashOf = (rule: string, url: string, heading: string) =>
+  previous[rule]?.find((source) => source.url === url && source.heading === heading)?.hash
+
+const map: Record<string, Source[]> = {}
 for (const rule of rules) {
   const doc = readFileSync(path.join(root, 'docs/rules', `${rule}.md`), 'utf8')
-  const sources: { url: string; heading: string }[] = []
+  const sources: Source[] = []
   for (const line of doc.split('\n')) {
     if (!FOOTNOTE_START.test(line)) continue
     const [, label, link] = FOOTNOTE.exec(line) ?? []
@@ -51,7 +62,8 @@ for (const rule of rules) {
     const colon = label.indexOf(': ')
     const heading = link.includes('#') && colon !== -1 ? label.slice(colon + 2) : label
     if (!sources.some((source) => source.url === url && source.heading === heading)) {
-      sources.push({ url, heading })
+      const hash = hashOf(rule, url, heading)
+      sources.push(hash === undefined ? { url, heading } : { url, heading, hash })
     }
   }
   map[rule] = sources
@@ -61,5 +73,5 @@ const json = `${JSON.stringify(map, null, 2)}\n`
 if (toStdout) {
   process.stdout.write(json)
 } else {
-  writeFileSync(path.join(root, 'docs/rule-sources.json'), json)
+  writeFileSync(mapFile, json)
 }

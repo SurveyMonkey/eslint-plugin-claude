@@ -1,0 +1,170 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+  "hash": "2ec613e87106d52bcba2883e4b58c222ce622676f4b14fee0db9c89eb2f8c270",
+  "blocks": [
+    {
+      "id": "plugin-manifest-reference",
+      "hash": "21a6276065517f51e4523cfc0445d3183486ec1ff307bf2d357d0abecb693bc6"
+    },
+    {
+      "id": "manifest-file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
+    },
+    {
+      "id": "unrecognized-fields",
+      "hash": "643fcafc254118c50bf3c76ab46f15f2ee75e622597bfa00c67966597062f2fc"
+    },
+    {
+      "id": "validate-the-manifest",
+      "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05"
+    },
+    {
+      "id": "fields",
+      "hash": "3e515d0002d09fe7bf9dcbe010e4271968a592318a9f2618d8d0c865ecd01201"
+    },
+    {
+      "id": "name",
+      "hash": "9bbf4a5e8c677428baaf53a803fb2ca4a03418bf511f34c7df748f8d05393751"
+    },
+    {
+      "id": "displayname",
+      "hash": "24f532b4e557f050190b4c10764c21823298d833ba2ee22968f62aaa07310dba"
+    },
+    {
+      "id": "version",
+      "hash": "37c7e0f06d9471d9dedc8fbcc6fc2cbf3e248d59eba34524f2346a5eb6cb6b8b"
+    },
+    {
+      "id": "metadata",
+      "hash": "ee3f58518039ea24dec82c79f0224ea75af369cbaf6494f2ec5d8cb7a48f9a99"
+    },
+    {
+      "id": "defaultenabled",
+      "hash": "d06952f01dd62322b99fbb81be471ee8246b6242bb9bcc5ad63755ee4cc4f92b"
+    },
+    {
+      "id": "dependencies",
+      "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05"
+    },
+    {
+      "id": "settings",
+      "hash": "317fe5e02e8a921104edd38e5d07b6fa6d10ad1724e23c3b0bb1343c80f767a6"
+    },
+    {
+      "id": "component-path-forms",
+      "hash": "c9f6908bca953b2710ae505bc9659f604f6f8c19f4db30233c56fbf222ff8822"
+    },
+    {
+      "id": "path-only-fields",
+      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059"
+    },
+    {
+      "id": "commands",
+      "hash": "66e4002f473fe00465b948897872b99da8d374345506c4f0fabdf66764b4bdd5"
+    },
+    {
+      "id": "hooks",
+      "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
+    },
+    {
+      "id": "mcpservers",
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+    },
+    {
+      "id": "lspservers",
+      "hash": "e034938c331a6fa31bdacfc9819d609aa194ee8fb88067aaa56d1808bc854212"
+    },
+    {
+      "id": "monitors",
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    },
+    {
+      "id": "path-rules",
+      "hash": "67855d20b9643b9748e747670f1d71b98a7718936b3d41220797d6bb2c350ae4"
+    },
+    {
+      "id": "containment-and-existence",
+      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
+    },
+    {
+      "id": "how-each-key-combines-with-its-default-location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    },
+    {
+      "id": "user-configuration",
+      "hash": "1ff2573d6b69b32c13752fc9d94c33c6d5a13963c5130f4e4f0348b732cfb8c9"
+    },
+    {
+      "id": "limit-a-field-to-fixed-options",
+      "hash": "c4d761fb39ce76f46b40622daff6ec9628d568295b8beee32d3306a107a57ed9"
+    },
+    {
+      "id": "where-values-are-stored",
+      "hash": "a49b49aa6ac3bae34bf1e21b82898e61984612d7c65db144c1113ffa21bc7ee0"
+    },
+    {
+      "id": "reference-a-saved-value",
+      "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf"
+    },
+    {
+      "id": "fields-that-run-through-a-shell",
+      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
+    },
+    {
+      "id": "channels",
+      "hash": "6404424037691afe9aac7c4392269d0c1a9d01da3d0700b3c8314876ea5094e0"
+    },
+    {
+      "id": "environment-variables",
+      "hash": "5d721c5ed1827ad7a8a56d1ec7abc0a3aba210b7893ca88b1892a9c90e103039"
+    },
+    {
+      "id": "where-each-variable-resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
+    },
+    {
+      "id": "quoting-and-path-separators",
+      "hash": "71056ffa1cc9d43a5896dfe3330e47a5ba814e1a88ba665ffb41c32fb4f1ade4"
+    },
+    {
+      "id": "standard-layout",
+      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+    },
+    {
+      "id": "marketplace-entries-and-the-manifest",
+      "hash": "56d065509dd0e5b525442e7be5a71dd1382de4a3d32b261febda9179b1b7305d"
+    },
+    {
+      "id": "how-entry-fields-combine-with-plugin-json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+    },
+    {
+      "id": "metadata-precedence",
+      "hash": "b47629f51c220dba3f7a6df1bc4e7c32de8ecc64f7a249d2586d8612b2a77a10"
+    },
+    {
+      "id": "next-steps",
+      "hash": "820dbcdcea245ed4caea5b9644598b4b55cea6586c72c2c40fedd9ebf24bffc4"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Manifest file",
+      "id": "manifest-file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418",
+      "text": "## Manifest file\n\nThe manifest is optional. Without it, Claude Code loads the components it finds in the [standard layout](#standard-layout). The plugin name then comes from the marketplace entry, or from the directory name when you load the plugin with `--plugin-dir`.\n\nWrite a manifest when you want metadata, a component outside its default directory, `userConfig`, or an inline component definition.\n\nSave the manifest at `.claude-plugin/plugin.json` under the plugin root. Put every other plugin file at the plugin root, not inside `.claude-plugin/`. That includes `skills/`, `commands/`, and `hooks/`.\n\nThe following example sets most of the keys in the [Fields table](#fields). It passes validation in a plugin directory that contains each referenced path.\n\n```json theme={null}\n{\n  \"name\": \"deploy-tools\",\n  \"displayName\": \"Deploy Tools\",\n  \"version\": \"1.2.0\",\n  \"description\": \"Deployment commands, a review agent, and a status monitor\",\n  \"author\": {\n    \"name\": \"Example Team\",\n    \"email\": \"dev@example.com\",\n    \"url\": \"https://example.com\"\n  },\n  \"homepage\": \"https://example.com/docs/deploy-tools\",\n  \"repository\": \"https://github.com/example/deploy-tools\",\n  \"license\": \"MIT\",\n  \"keywords\": [\"deployment\", \"ci\"],\n  \"defaultEnabled\": true,\n  \"dependencies\": [\"secrets-vault\"],\n  \"metadata\": { \"catalogId\": \"cat-123\" },\n  \"skills\": [\"./extra-skills/\"],\n  \"commands\": {\n    \"status\": {\n      \"source\": \"./commands/status.md\",\n      \"description\": \"Show the current deployment status\"\n    },\n    \"about\": {\n      \"content\": \"Explain what the deploy-tools plugin provides.\",\n      \"description\": \"Describe this plugin\"\n    }\n  },\n  \"agents\": [\"./agents/reviewer.md\"],\n  \"hooks\": \"./config/extra-hooks.json\",\n  \"mcpServers\": {\n    \"deploy-api\": {\n      \"command\": \"node\",\n      \"args\": [\"${CLAUDE_PLUGIN_ROOT}/server.js\"]\n    }\n  },\n  \"lspServers\": \"./.lsp.json\",\n  \"outputStyles\": \"./styles/\",\n  \"experimental\": {\n    \"themes\": \"./themes/\",\n    \"monitors\": \"./config/monitors.json\"\n  },\n  \"userConfig\": {\n    \"api_token\": {\n      \"type\": \"string\",\n      \"title\": \"API token\",\n      \"description\": \"Token for the deployment API\",\n      \"sensitive\": true\n    }\n  }\n}\n```"
+    },
+    {
+      "heading": "How each key combines with its default location",
+      "id": "how-each-key-combines-with-its-default-location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17",
+      "text": "### How each key combines with its default location\n\nEach component key either replaces its default location, adds to it, or merges with it:\n\n* **Replaces the default**: `commands`, `agents`, `outputStyles`, `workflows`, `experimental.themes`, `experimental.monitors`. When you set `commands`, the default `commands/` directory isn't scanned. To keep the default and add more, list it explicitly: `\"commands\": [\"./commands/\", \"./extras/\"]`\n* **Adds to the default**: `skills`. The `skills/` directory is still scanned, and the listed directories load alongside it\n* **Merges**: `hooks`, `mcpServers`, `lspServers`. The default file loads first, and what the manifest declares merges into it, as described under [Component path forms](#component-path-forms)\n\nIf a plugin has a default folder such as `commands/` and also sets the manifest key that replaces it, Claude Code loads the manifest paths and not the folder. `claude plugin list` and the `/plugin` interface then show the warning `Default <folder>/ folder is ignored because the manifest sets \"<key>\"`.\n\nTo avoid the warning, set the key to a path inside that folder: `\"commands\": [\"./commands/deploy.md\"]` names a file in the default folder and produces no warning."
+    },
+    {
+      "heading": "hooks",
+      "id": "hooks",
+      "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47",
+      "text": "### `hooks`\n\n`hooks` takes a `.json` file path, an inline hooks object in the same shape as [`hooks` in `settings.json`](/docs/en/hooks#configuration), or an array mixing both. For hook events and handler fields, see the [hooks reference](/docs/en/hooks#hook-events).\n\nClaude Code merges whatever you declare with `hooks/hooks.json` when that file exists.\n\n```json theme={null}\n{\n  \"hooks\": [\n    \"./config/extra-hooks.json\",\n    {\n      \"PostToolUse\": [\n        {\n          \"matcher\": \"Write|Edit\",\n          \"hooks\": [\n            { \"type\": \"command\", \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}\\\"/scripts/format.sh\" }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```"
+    }
+  ]
+}

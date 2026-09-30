@@ -1,0 +1,122 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/components",
+  "hash": "97fa2babb277ddb65be0d85aad1a3099d1ca34ffdf193ed98be1ce7270408fed",
+  "blocks": [
+    {
+      "id": "add-components-to-a-plugin",
+      "hash": "e06927ba48a102db2bbca4c0a28b5453afe7004ca1e60467506308bfda6540ef"
+    },
+    {
+      "id": "explore-the-plugin-directory",
+      "hash": "2f51c1237b22845788f2a045d8badb059962a7e188275e4b2bd639c0aed02498"
+    },
+    {
+      "id": "add-each-kind-of-component",
+      "hash": "c77a44c6f4a199ab85bde5a963e1eccd0fa2dc48abb428fde8c1f914e0e37055"
+    },
+    {
+      "id": "skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    },
+    {
+      "id": "commands",
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c"
+    },
+    {
+      "id": "define-commands-in-the-manifest",
+      "hash": "7f5c1ddcce18376868c3a5ba39ce6a20f3cb9811dc2a4269bd834cc3a0b5c95a"
+    },
+    {
+      "id": "agents",
+      "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf"
+    },
+    {
+      "id": "organize-agents-in-subfolders",
+      "hash": "e2ebd4ab3f9e16d7596dc56212ad773f7666dc4835782a3a6f9283c9996b467d"
+    },
+    {
+      "id": "frontmatter-fields-in-plugin-agents",
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+    },
+    {
+      "id": "hooks",
+      "hash": "f1f8d33c7e749754c58ca41bc1b40a34a17d923b51e1edab6efb60c607359042"
+    },
+    {
+      "id": "when-plugin-hooks-fire",
+      "hash": "3855bcbece7f949e74f4feae9f05902fa6424d43eb498e71ff31bb588e39aaef"
+    },
+    {
+      "id": "environment-quoting-and-matching-mcp-tools",
+      "hash": "b069f59f62495d79c3cd6c6bae525cc7e74bdc0fdf2280b2a19edd1ec6af9167"
+    },
+    {
+      "id": "mcp-servers",
+      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    },
+    {
+      "id": "reach-users-on-claude-ai-and-cowork",
+      "hash": "4f0529d1f774f14b3041eea6f65851e6c2b086edec7f4981482c3b04bde75759"
+    },
+    {
+      "id": "server-names-tool-names-and-reloads",
+      "hash": "22612bdc79e35256932fec70a4acde5aeb73c2b697bb72c84eddebb32c19b9bd"
+    },
+    {
+      "id": "include-a-packaged-mcpb-server",
+      "hash": "ba629ea225a1367863a1c52a5056304f22cb31200dd1fda5e6f26c6c8d96c888"
+    },
+    {
+      "id": "lsp-servers",
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+    },
+    {
+      "id": "executables",
+      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
+    },
+    {
+      "id": "default-settings",
+      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
+    },
+    {
+      "id": "themes-and-output-styles",
+      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
+    },
+    {
+      "id": "channels",
+      "hash": "eb0e80e27d22500287150337d4c09956ed1dbf2a824e04449335e6b54ba9d141"
+    },
+    {
+      "id": "monitors",
+      "hash": "7a42ffd9e3fa63f4350267774a5fe86fd623691462203b49c973254811d5a4ec"
+    },
+    {
+      "id": "user-configuration",
+      "hash": "7985992b6f5d23c85f453f43e8d61a1fa4fd945d7b177315416bf88b15745129"
+    },
+    {
+      "id": "when-the-configuration-dialog-appears",
+      "hash": "d394ed0f8b1914a2b0332687d97097ca18d739aeef6abb105d82cb1c8cc2f9c8"
+    },
+    {
+      "id": "path-variables-and-persistent-data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
+    },
+    {
+      "id": "install-dependencies-into-the-data-directory",
+      "hash": "0a96435bdd82ae06083a71b4ee0c918c54fc297947c487b7ac8015d9aedf58e5"
+    },
+    {
+      "id": "next-steps",
+      "hash": "c5094a8bae479893102921afadd48c9e1d0a970f4e5014477f2b7d2ffde1cd15"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Commands",
+      "id": "commands",
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c",
+      "text": "### Commands\n\nA command is a single Markdown file the user runs by name, such as `/my-plugin:about`.\n\n<Note>\n  Commands are the older format, and [skills](#skills) supersede them for new work. A skill runs by name the same way, and it can also carry supporting files in its directory. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>\n\nSave a command at `commands/<file>.md` and it becomes `/<plugin>:<file>`. A subdirectory adds a segment, so `commands/db/migrate.md` is `/my-plugin:db:migrate`.\n\nCommand files take the same frontmatter as skills."
+    }
+  ]
+}

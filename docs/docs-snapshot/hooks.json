@@ -1,0 +1,658 @@
+{
+  "url": "https://code.claude.com/docs/en/hooks",
+  "hash": "5129d58370ed4d7910c6e86537e0592b2902ea5bf0a8682721c5484f5d46f566",
+  "blocks": [
+    {
+      "id": "hooks-reference",
+      "hash": "d6fc64d964ef048d72dfac217439cc6fd71863e15c55384ad192121561846456"
+    },
+    {
+      "id": "hook-lifecycle",
+      "hash": "2f7b2883c519d0d9e2eae1a328b188595ce28e2ca69666f59a2db405fe72972b"
+    },
+    {
+      "id": "how-a-hook-resolves",
+      "hash": "9704adcedd9cd358d6315406fce305120ef7220db13be9e61fc6e8ad8e398dfc"
+    },
+    {
+      "id": "configuration",
+      "hash": "c814ca263eb4d93dd7e59da8be540127d589f64d0844ee294a2c9d68dce43907"
+    },
+    {
+      "id": "hook-locations",
+      "hash": "b52987a21c34ce141fe1e5b1db52ed257bb89a50955f068bbeaf81aa17ec7b2b"
+    },
+    {
+      "id": "matcher-patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    },
+    {
+      "id": "match-mcp-tools",
+      "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8"
+    },
+    {
+      "id": "hook-handler-fields",
+      "hash": "70591c889437da0e8d2c043d1828c406746a79a43af0c22b223a1b03526e3cbe"
+    },
+    {
+      "id": "common-fields",
+      "hash": "892963d2890197af43a611978c907486221b02fa3c83962698d46060588af86e"
+    },
+    {
+      "id": "command-hook-fields",
+      "hash": "0985903a8f04aa02ef2a3d2297e6dcc762192d9bc7995a5189d4327d4ded2d56"
+    },
+    {
+      "id": "exec-form-and-shell-form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    },
+    {
+      "id": "http-hook-fields",
+      "hash": "55f69008271efe7c2b0ae85a002496755d748bf1f3c7fb9d636af62537086385"
+    },
+    {
+      "id": "mcp-tool-hook-fields",
+      "hash": "544de1e46b4d56711c8e3d2fe14c74e2a0dac09df6c36120f0c557603ac75c1d"
+    },
+    {
+      "id": "how-the-tools-result-is-read",
+      "hash": "c55ff713d285f90a5bca7c4cc068ec3d8169aa60baf349690ec69656e2db3df4"
+    },
+    {
+      "id": "when-the-server-is-still-connecting",
+      "hash": "79fcee2948642da9d8f34992af2e112f6a28eeb2e86f65b514b2d22252ce5bb0"
+    },
+    {
+      "id": "events-that-fire-before-mcp-servers-are-available",
+      "hash": "9e142b73c480a3bbf7c93c9bc803af807e37d744908959b7fb0531b5efb993cd"
+    },
+    {
+      "id": "prompt-and-agent-hook-fields",
+      "hash": "f1a9bf8f2472c41cbc860fce1ee2eaf8020e4c4784e6c458b1f57b7fac7fc002"
+    },
+    {
+      "id": "reference-scripts-by-path",
+      "hash": "c625ac366f8dba714979c7bf6a35b5cf908b7fb28cb553415b4ed03f20ef6b74"
+    },
+    {
+      "id": "hooks-in-skills-and-agents",
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
+    },
+    {
+      "id": "the-hooks-menu",
+      "hash": "155504b892440a907c78653fc3e1c1dd5f3ac9a774f55a113dcd9c9c504e6c20"
+    },
+    {
+      "id": "disable-or-remove-hooks",
+      "hash": "44919af1d4067b787d45962cc8c4f6fbb090682e546673dabcbb8bc6aa664cd2"
+    },
+    {
+      "id": "hook-input-and-output",
+      "hash": "82f43e74d8a14d420749054627e7342ebf7485e7ee7fc327170d31963e90d5e4"
+    },
+    {
+      "id": "common-input-fields",
+      "hash": "cbb0b65b4e7705b4f37d4c31d83dea82fc828322ed34631c755bf5d244814e6e"
+    },
+    {
+      "id": "exit-code-output",
+      "hash": "dd02efa190cc0459307d8f29e25adb57aeba8cf3dbb5197e99724dc785b4e25a"
+    },
+    {
+      "id": "exit-code-0",
+      "hash": "e063b452b4d3d3610c000c1e26e826b50c9fe252b0910509067b6a599b54ea72"
+    },
+    {
+      "id": "exit-code-2",
+      "hash": "74c610f05c5616f257c768ecc81c928e4348fc90c6edba26d237c2a2403895ad"
+    },
+    {
+      "id": "other-exit-codes",
+      "hash": "73247f97fdf080acedc2ef0d6a4989329dbddbe594d5debc91204e69a8425823"
+    },
+    {
+      "id": "timeouts",
+      "hash": "eed18f1223170d9d24f7e1ca60f911b5461d4bc6ef796742c877fa373ad1c629"
+    },
+    {
+      "id": "exit-code-2-behavior-per-event",
+      "hash": "a385d4ec862f53397f9dcdf30f75fc955c52e6e579cc9d1a5e83bd6620beef50"
+    },
+    {
+      "id": "http-response-handling",
+      "hash": "02e07fe6feeee275481a945fb3f1459e4abff091c43327a73c238c084e29993b"
+    },
+    {
+      "id": "json-output",
+      "hash": "7b2e3ed1c3b78d48c7e430d82b4a228bc335ef317c6a7e762e7946dd69d08668"
+    },
+    {
+      "id": "emit-terminal-notifications",
+      "hash": "235b9be74a9a043fc5cfb868f5c18f0ce22507d493546e1523f8bdc2f9a4af30"
+    },
+    {
+      "id": "add-context-for-claude",
+      "hash": "3ad6c0a4bde06d5d10f26b529e549227eb2cb49988b231c9701156993cedea77"
+    },
+    {
+      "id": "decision-control",
+      "hash": "852b673b3ee79fc65d7d3f75d70850cb176fe8fbd18d61fb7435f88b8d24b7a9"
+    },
+    {
+      "id": "hook-events",
+      "hash": "3cc8caf104e5beab35de707cb6db3b9e0a9f04b8cae417b0aec7366981fe5b67"
+    },
+    {
+      "id": "sessionstart",
+      "hash": "cd80f5cc00cb96989fb7092fb39d66f331b5d5fa9d67b28f2b6113680ccf558a"
+    },
+    {
+      "id": "sessionstart-input",
+      "hash": "736178891d29f9889ed539df5e88bd7eba1913c382514ab5e44b45d453b8e140"
+    },
+    {
+      "id": "sessionstart-decision-control",
+      "hash": "c43ec5f3e927d081181f62b03f0756c2e0746c904bf2931fa4e902c591e00568"
+    },
+    {
+      "id": "persist-environment-variables",
+      "hash": "8b3007d6b0adb35ca8813a3aaeacf004935a0695af9c3048096d194c972ebc69"
+    },
+    {
+      "id": "setup",
+      "hash": "c63d690e62ed97f7b3366b237c30e1b1f86e445a80af5fbfc4a6ed4cfc494f98"
+    },
+    {
+      "id": "setup-input",
+      "hash": "0d3093d991343754b06d10eb8c1c6dabf2b9706f392a00adf77d36c058f8aa91"
+    },
+    {
+      "id": "setup-decision-control",
+      "hash": "2d3b530b072f1e285a64c89793190f1df2757ec27b1e4f9e895c3bbf99562ab0"
+    },
+    {
+      "id": "instructionsloaded",
+      "hash": "462ac07b7acec1347e908a3e0063d73e558fb923511160cfc533d8e613d90c09"
+    },
+    {
+      "id": "instructionsloaded-input",
+      "hash": "3f3a22391d02054282157fe6ef70f38d2ddefca670716d5e518819ced5a2be1a"
+    },
+    {
+      "id": "instructionsloaded-decision-control",
+      "hash": "4ffa6b2a39a05fa73350f46be7f52761379fc18400237df0eb937f3db264aa83"
+    },
+    {
+      "id": "userpromptsubmit",
+      "hash": "00b412bad5ec5d7883aabba9934048a0c9ae6b0492226eb1bf5a372fb0730433"
+    },
+    {
+      "id": "userpromptsubmit-input",
+      "hash": "6b7ede23fa0619e405f6cd5efbaa64ad93918fef3ad83fb2944e9b4642f7c758"
+    },
+    {
+      "id": "userpromptsubmit-decision-control",
+      "hash": "39253854c2bfc3ec40cfcb0b773817adfd2a0b79e0ea4d4d9b2170331d7d5bbd"
+    },
+    {
+      "id": "what-a-blocked-prompt-leaves-behind",
+      "hash": "dfe0614b7bf9aecb34861cb6d34567de0fb08023e55260b5a69acc28104963a5"
+    },
+    {
+      "id": "userpromptexpansion",
+      "hash": "f6b2a3a15169bf9731389f4b55bd0f21a9386c438b1ef9bec5648b42ef71d745"
+    },
+    {
+      "id": "userpromptexpansion-input",
+      "hash": "9caa4763ea2702334e977ec05b0935b7ef365eb557c1aa7f1609a21398724279"
+    },
+    {
+      "id": "userpromptexpansion-decision-control",
+      "hash": "6f8dceb219394c7fda9053df25f9e9c536be8f81faaccd41bfe19f0fda189d91"
+    },
+    {
+      "id": "messagedisplay",
+      "hash": "70f8084f670c25fd18f8f7d6c57afa620afcd842b860e1ed6cd62bfc376d400c"
+    },
+    {
+      "id": "messagedisplay-input",
+      "hash": "1bffc3f145ac7f64fc34c6901144eb3914d093c3acba989e6a28abe7e8197fc5"
+    },
+    {
+      "id": "messagedisplay-output",
+      "hash": "2359ef259d48237e6b3b16309c1fe008e701ec55490ffb326fa63c8fcc9d1ed1"
+    },
+    {
+      "id": "pretooluse",
+      "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4"
+    },
+    {
+      "id": "pretooluse-input",
+      "hash": "69eb36e7d82d2ccb1d769d9f7ce6ebbc234238128f0839086b57df1ba6d78eab"
+    },
+    {
+      "id": "bash",
+      "hash": "f7f6cb6b1becf0ed483ce4baf5e298efeca5c5589c91c70a72c4eb99e14b874a"
+    },
+    {
+      "id": "powershell",
+      "hash": "772ad0da372957840d6f80dfc04b6f1ee14a26fae50007edc83d8d708dca1b6e"
+    },
+    {
+      "id": "write",
+      "hash": "ef4bc5ed0b3236c141b63337f5dedbb8dd9ff58c20f10b2f0e1a60ea89576d5b"
+    },
+    {
+      "id": "edit",
+      "hash": "91efde483b0d7ca22dcfe91ea4de5ebaaa1736561efb2affb75f0ad8329ce6a2"
+    },
+    {
+      "id": "read",
+      "hash": "4c58f92a4e5b88e78471d87ddbb9d142c0cbed8fc372ec312ddc1c92c11a394b"
+    },
+    {
+      "id": "glob",
+      "hash": "cbe343fc0417948c45920365fb5f3e928dab90182621e891447eacabb26829ac"
+    },
+    {
+      "id": "grep",
+      "hash": "76d98190da8de56399135d7f38a678a539824e77ae7eba63f6558c0bd6201a33"
+    },
+    {
+      "id": "webfetch",
+      "hash": "d1af94027edc6c9728a8751a00e6cad12848973ef2d429ef868cb2a1dfe985fd"
+    },
+    {
+      "id": "websearch",
+      "hash": "d3b367405c76db5d3c7d8f3ccb3a95c03c0476511dba7a9a03a50f308850a0f5"
+    },
+    {
+      "id": "agent",
+      "hash": "32405ca3b8e9f4e00fc345da949e5f73ec7c215091bdd8a84cc129894883aa2e"
+    },
+    {
+      "id": "askuserquestion",
+      "hash": "63dc4173618b1804050e60272e2a80094d7361b85549f9b31b52e40c5d402022"
+    },
+    {
+      "id": "exitplanmode",
+      "hash": "832bc1a006baaa34854a4e91225a9a062d8d776d21f34b35b0b19c95eeb0bd1b"
+    },
+    {
+      "id": "pretooluse-decision-control",
+      "hash": "2abd3fb95446b2de1a36731fc51ff9e2b0635c6da7a67c3898ee295b30e42f29"
+    },
+    {
+      "id": "defer-a-tool-call-for-later",
+      "hash": "6aff03c02f63287c14fc8fa8d88d1b425356a53c900ba183e53687e67d8bc80b"
+    },
+    {
+      "id": "permissionrequest",
+      "hash": "6ff44c6117ac448e7edd80a39025db07d59b45b5343da228fac7e59e26e4723b"
+    },
+    {
+      "id": "permissionrequest-input",
+      "hash": "b0505ae5faf5da99d8b50f9038e66578972e4a67ae6642dc09d110824e68fd5a"
+    },
+    {
+      "id": "permissionrequest-decision-control",
+      "hash": "0d55d080d6c25489ef7472a04ac526cb30c498c702d657e48d259254e20e63b2"
+    },
+    {
+      "id": "permission-update-entries",
+      "hash": "9abc20d276f7a2b16047071a2fd3c11b008625911bead50f17e1c9e55d21e2c9"
+    },
+    {
+      "id": "posttooluse",
+      "hash": "7d5c0cddc340fd1ff0c353d148e0e6d721f10fa94b1070cb9c1ca90d585c1165"
+    },
+    {
+      "id": "posttooluse-input",
+      "hash": "b3ea8fa01410c13dabc0192e328be969a09d5d8c43e5a3455e9afd2981889db2"
+    },
+    {
+      "id": "posttooluse-decision-control",
+      "hash": "271abc0c250645bcd170f25440514299dab1aabd8376718db1a854df04eb13b0"
+    },
+    {
+      "id": "annotate-a-result-for-the-auto-mode-classifier",
+      "hash": "0eea0f0fe74937ab6a3c5537563370b10812592fbbca099fcf21cd7799c2c0ed"
+    },
+    {
+      "id": "posttoolusefailure",
+      "hash": "165c66c23c23f1e81e68b0fbb020a6a06707be4bd0dd0e10fa44b7a56243cdf3"
+    },
+    {
+      "id": "posttoolusefailure-input",
+      "hash": "d2d1705e33f679942e29b6bc85d45a036183bf36118468480617bbfffb6217f8"
+    },
+    {
+      "id": "posttoolusefailure-decision-control",
+      "hash": "396a37a32e7a2577ebfd3ad3270f1b37d899bc3b9957f7fed4440e060ad13f24"
+    },
+    {
+      "id": "posttoolbatch",
+      "hash": "ed5e4ab08f5b7e05004f9d40c88b4e14f708ecdb4cad2964bcefc3ea2edfde6c"
+    },
+    {
+      "id": "posttoolbatch-input",
+      "hash": "f6ae164f46a90c1e526fda34b5d7777e8fe95e72956b22deaed638650fcfee4d"
+    },
+    {
+      "id": "posttoolbatch-decision-control",
+      "hash": "fa80108dd5bc769c4e499e765250236b90fd2a9615ceacf0933fc2f1325c2cbf"
+    },
+    {
+      "id": "permissiondenied",
+      "hash": "ac3be29906dd9b3d89d28996dfe2b8f4a93a2b27172ca530d00e58e5dd0f153d"
+    },
+    {
+      "id": "permissiondenied-input",
+      "hash": "51543992d07fbf1a68a3ce739f61fe14bf4316cf0fcae2ab2c7e9cf60d38440b"
+    },
+    {
+      "id": "permissiondenied-decision-control",
+      "hash": "7c5b67c18387dd523a8aba94d207dbcd7c1ed4478c51325f58857126192ea275"
+    },
+    {
+      "id": "notification",
+      "hash": "631b76e3a34d82e932ecedcdd1d6ba791bd8ac55a6909bb255a959d4b2dbd824"
+    },
+    {
+      "id": "notification-input",
+      "hash": "f089b59ba061006147c3ef72f58afd36e4b1573f9075e6daf2ee9bb2f669a708"
+    },
+    {
+      "id": "subagentstart",
+      "hash": "c37942bc3355357947ddf6f22c5fea53ad42c021f400c26ea791b0ee88d1a20b"
+    },
+    {
+      "id": "subagentstart-input",
+      "hash": "654a71ad4abdf1b40c96caae2633301b950e51e01cac9efb55d0b1cd50c35466"
+    },
+    {
+      "id": "subagentstop",
+      "hash": "3ec0b224c16dce5ffe6e5b1cedc13121ef3cc5c3e38b34429961036c88ecc29d"
+    },
+    {
+      "id": "subagentstop-input",
+      "hash": "fc49a62864928ac2e08e38cffd1d73e26b9e84aa6b47bfa51bfe89a8841b67d1"
+    },
+    {
+      "id": "taskcreated",
+      "hash": "1d85119af612f76c244401360b834052fd8763dd9133acb294921fef00b62539"
+    },
+    {
+      "id": "taskcreated-input",
+      "hash": "1f7ee194cd15d1ca2b0ce962f86f704c20105843331700293408498ce25c8a9f"
+    },
+    {
+      "id": "taskcreated-decision-control",
+      "hash": "7d11916db810b16b067b16ec929eeaea3b9dd98c9b0584d32ea7a37173c143eb"
+    },
+    {
+      "id": "taskcompleted",
+      "hash": "a1ae020f95d87ffb3b3465c69dbd112334e394176ef2e4b6331fedffb5241a3d"
+    },
+    {
+      "id": "taskcompleted-input",
+      "hash": "d98f2c5e17683f8715795be37b3d6988ac8046b1857cb6c8171b7c3c023cb270"
+    },
+    {
+      "id": "taskcompleted-decision-control",
+      "hash": "a359e3450b961f0bbe39fb793ef88c6710541206b166f003018bea2ae08d0257"
+    },
+    {
+      "id": "stop",
+      "hash": "8fb702d3f065c35a0874e441167636a8b562dea052379ab9517ad4195390b8e9"
+    },
+    {
+      "id": "stop-input",
+      "hash": "7d673b77a99e1e82d8741d52f7d0d7d10b6e1cdaead6b93b07bee4d63ddd5b02"
+    },
+    {
+      "id": "stop-decision-control",
+      "hash": "287b86688424db62968b1a1d3ddc520e26991daff37ac075d6431ab1b5ba3da9"
+    },
+    {
+      "id": "stopfailure",
+      "hash": "78a5692db4c2cc73d1a043cbc6b695f9f7107f499c7b8823d85e873eb42f57f2"
+    },
+    {
+      "id": "stopfailure-input",
+      "hash": "8f5c7627523ed09cf6ba764fed41ad24e4e4a9f80bd8b873bf2705ced1ed0da4"
+    },
+    {
+      "id": "teammateidle",
+      "hash": "5f65afb5ba1938f3dbe8e927815b1c791660aec71819ad9b0b185ebd1b9eb7e3"
+    },
+    {
+      "id": "teammateidle-input",
+      "hash": "984e2a714cfa26e216b67cffa6186208a12fc50a520af972f28dd1a02d1111cb"
+    },
+    {
+      "id": "teammateidle-decision-control",
+      "hash": "52e4331e815879ed7fe89c5b53c0422e7e444bdc96cad47fd11511f714e2ecc2"
+    },
+    {
+      "id": "configchange",
+      "hash": "8db5dc894ae3d8c04d4f866ea132ce1c3ccbfe24986aace0e7b2214e3289547c"
+    },
+    {
+      "id": "configchange-input",
+      "hash": "c38ce5977f7719094b629cc2a5e89ef4b064b368034ee698e54c46468b201ccb"
+    },
+    {
+      "id": "configchange-decision-control",
+      "hash": "ef7c4162c133f2bba0375c8dfe2a4f78cd88723419851be053c8892eba230f61"
+    },
+    {
+      "id": "cwdchanged",
+      "hash": "3c3a5dd91c7d2c2a5edda533f38ce67add7d5cf099fe1b940c4f140563ccf775"
+    },
+    {
+      "id": "cwdchanged-input",
+      "hash": "ddb83728803f9dcdd75e94464e3afe2a5266752c0ef5db67829c9e1d93acbb05"
+    },
+    {
+      "id": "cwdchanged-output",
+      "hash": "013a849650435fa2c139869f7daa417f8a1c23d34f05c42a4c1cfd2c36de3e3a"
+    },
+    {
+      "id": "directoryadded",
+      "hash": "e6392bc7a4958af08e46631bf7de44a592a22321406123682e80267ccb46bca9"
+    },
+    {
+      "id": "directoryadded-input",
+      "hash": "e098accc935649bb6a7e181309e7bf42e4e8fd1f95c2f4221cdcd3c6d9d421f2"
+    },
+    {
+      "id": "filechanged",
+      "hash": "f9ad6cc54673edfc3eaa4b8a92d8e94269c11e6a08c3f131002f24c3f8b30c8d"
+    },
+    {
+      "id": "filechanged-input",
+      "hash": "03bbc2106bcf3b8d83fad5d730d085ee96c51453294ea97e266b4e099b575eaf"
+    },
+    {
+      "id": "filechanged-output",
+      "hash": "edbf0ba31f548015621b3cc5f9d66c4ba5952d3679952995bd0abed0244dea97"
+    },
+    {
+      "id": "worktreecreate",
+      "hash": "62e89a991494790b4db13535e91d463028b85b9cffa1e251e43fbf8510e11251"
+    },
+    {
+      "id": "worktreecreate-input",
+      "hash": "891d24a40b4372a0e7f6f34291ba572ec7b8d376d0c685c182f37849fa8c8afe"
+    },
+    {
+      "id": "worktreecreate-output",
+      "hash": "2365b2633d0956d03cde3ffd703b3d7999aa8c8d86a5a070bf8cd85d6d1f26ba"
+    },
+    {
+      "id": "worktreeremove",
+      "hash": "72c8fe2cc0a93273d6556fcebf258169e25eab7f6c812c329900adf832ab2e61"
+    },
+    {
+      "id": "worktreeremove-input",
+      "hash": "c0a8784099d9aad2c252817c8a425a2212df5799c32820533d661f90e0a8da77"
+    },
+    {
+      "id": "precompact",
+      "hash": "6a75e75badffcf89732f28dc4bc7d13d1e7fbb4847e3c8aff875fa530846eb59"
+    },
+    {
+      "id": "precompact-input",
+      "hash": "88615c535d6e1e897b0f46a105eeb1c090b2e54744d4f2e878ccd944babfdb82"
+    },
+    {
+      "id": "postcompact",
+      "hash": "edd8863a34515043f224066007c922a8e411b064055b284b8deaffcb4503919d"
+    },
+    {
+      "id": "postcompact-input",
+      "hash": "b69200800738ded51f8327eb9fb926db8927b3ee69b5990916ef97f149151a01"
+    },
+    {
+      "id": "premodelswitch",
+      "hash": "9c838213dd711f659b13b818681ca0148248bdcdca3c39f3b76aa27adde4f41d"
+    },
+    {
+      "id": "premodelswitch-input",
+      "hash": "8fbbbba272e4650b8a6c61d6679910fffc31fb26a9f14640ed67bec1a895e2a8"
+    },
+    {
+      "id": "premodelswitch-decision-control",
+      "hash": "28e9922b7fc04b1f13fc403e782f98fde70486bc8f435337cecad7e91b9375c4"
+    },
+    {
+      "id": "postmodelswitch",
+      "hash": "08489cb08aa97d409ce67d2ed9e34964983b3087fa0dd212963f9935a4906a38"
+    },
+    {
+      "id": "postmodelswitch-input",
+      "hash": "ba7505376c7365273c6b32d459ce7a7a84f4d948abdfd1ac91ae80c6def2dc44"
+    },
+    {
+      "id": "postmodelswitch-decision-control",
+      "hash": "f3c311944587dfba73da82e2ee08ac4b5f78ba5725da23e92cb4fa353d0cd720"
+    },
+    {
+      "id": "sessionend",
+      "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef"
+    },
+    {
+      "id": "sessionend-input",
+      "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
+    },
+    {
+      "id": "elicitation",
+      "hash": "db38176d75c71d641855e69d20dd6c1987c40679b60da957a9fc9a9476d82925"
+    },
+    {
+      "id": "elicitation-input",
+      "hash": "fa83fe76593df7123784c5b3a422eddcbba2d7f4fdd3e8b4cb783e6d6614b82b"
+    },
+    {
+      "id": "elicitation-output",
+      "hash": "0dc2fd371529970eac99fd148b34d009dd536af796aa618f03a7b9db832b49cd"
+    },
+    {
+      "id": "elicitationresult",
+      "hash": "3cce2111d1696ab9fd36c030267d0efe406584eed5a9ba5dbba6f3496496ea22"
+    },
+    {
+      "id": "elicitationresult-input",
+      "hash": "d549ad3cfe2e5a2fd2ff5e57b59f2857020040fba73088e65fa5a9e6217f4e72"
+    },
+    {
+      "id": "elicitationresult-output",
+      "hash": "175c962ae327a9043b421ecdcb51cb14ae61b4f58b0e292400743740350855cc"
+    },
+    {
+      "id": "prompt-based-hooks",
+      "hash": "2cbc1bf7b0f0d5412128234c17ef6f1f4a5aa34d66574aec1b3348930d6564c3"
+    },
+    {
+      "id": "how-prompt-based-hooks-work",
+      "hash": "da78855b18da72c42586a0cb945ec6fec469a8ac664f9505d720042c1f7ff45a"
+    },
+    {
+      "id": "prompt-hook-configuration",
+      "hash": "7ec14ac2e90a3eb67d21501918eec5ad3b770e09a96e71a81bb0665836546dfb"
+    },
+    {
+      "id": "response-schema",
+      "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    },
+    {
+      "id": "check-multiple-conditions-before-stopping",
+      "hash": "0d1b47661a1d95cce2f7eb4efbdfc56f298375867064ded79aa8ad7091a1c49f"
+    },
+    {
+      "id": "agent-based-hooks",
+      "hash": "6f955b8187790807b6df275344be5859c1c774a8f5a3906df9f6bfe6b2d6a92a"
+    },
+    {
+      "id": "how-agent-hooks-work",
+      "hash": "f289aed3afd8e7185c14678953d1085f22cf861f8781e64edcc79b1ac5cb9adc"
+    },
+    {
+      "id": "agent-hook-configuration",
+      "hash": "90b75f3c85bf43a3dd0486077ce95ed9ebc254876bc94f171e113459cfe930b3"
+    },
+    {
+      "id": "run-hooks-in-the-background",
+      "hash": "7b66770780396f453654f868eea190b035dc4271882b6ff3feafd528ba9a582f"
+    },
+    {
+      "id": "configure-an-async-hook",
+      "hash": "be3065cb0690ded4c7196acc84c4be91ead707a5a6cae30af02e5c1ba309337d"
+    },
+    {
+      "id": "how-async-hooks-execute",
+      "hash": "fef31d465cac6072a8dc5a4899c34e07184cf6c36b58855f47adb2bb99e5885e"
+    },
+    {
+      "id": "run-tests-after-file-changes",
+      "hash": "9bc0580c7df7e34af262185d0cbb15ece3940bee442db746be08554bcb57f79d"
+    },
+    {
+      "id": "limitations",
+      "hash": "3fd8b6919561267dc801486d4ab7212e8369d78f314d5a3b82c3444778cbafff"
+    },
+    {
+      "id": "security-considerations",
+      "hash": "6e52ffe2eb32f24c3da41be6515e30d32f04893760a74418c599ff88970c5305"
+    },
+    {
+      "id": "disclaimer",
+      "hash": "ec4c87a681f5047c14cdfbe41ed165054ad95892bb0962fd2f5b88761080d05c"
+    },
+    {
+      "id": "workspace-trust",
+      "hash": "0c020c6a9188b86f027a94c136720af98d831a2a00eac35be07aa6c4ca3f4d6e"
+    },
+    {
+      "id": "security-best-practices",
+      "hash": "1e9c34afa1835e410b899e5bd3084d8b410998c5abefe69cc396109f89202878"
+    },
+    {
+      "id": "windows-powershell-tool",
+      "hash": "39c44fb86a9f18ab8616df4defd7745742f6f70a1dee718462379b89ca0b39cc"
+    },
+    {
+      "id": "debug-hooks",
+      "hash": "d2878ac723ae3d867e78c60ed73a3acc8ecb49a27d0b95495071e3c9f124650f"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Hook lifecycle",
+      "id": "hook-lifecycle",
+      "hash": "2f7b2883c519d0d9e2eae1a328b188595ce28e2ca69666f59a2db405fe72972b",
+      "text": "## Hook lifecycle\n\nClaude Code runs hooks at specific points during a session. When an event fires and a matcher matches, Claude Code passes JSON context about the event to your hook handler. For command hooks, input arrives on stdin. For HTTP hooks, it arrives as the POST request body. Your handler can then inspect the input, take action, and optionally return a decision.\n\nEvents fall into three cadences:\n\n* per session: `SessionStart` and `SessionEnd`\n* per turn: `UserPromptSubmit`, `Stop`, and `StopFailure`\n* on every tool call inside the agentic loop: `PreToolUse` and `PostToolUse`, except [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) calls, which skip both\n\n<div style={{maxWidth: \"500px\", margin: \"0 auto\"}}>\n  <Frame>\n    <img src=\"https://mintcdn.com/claude-code/x7pO8l4XcvAXCoVc/images/hooks-lifecycle.svg?fit=max&auto=format&n=x7pO8l4XcvAXCoVc&q=85&s=81b9256c1bbe8832553485f5d9e9c746\" className=\"dark:hidden\" alt=\"Hook lifecycle diagram showing optional Setup feeding into SessionStart, then a per-turn loop containing UserPromptSubmit, UserPromptExpansion for slash commands, the nested agentic loop (PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, PostToolBatch, SubagentStart/Stop, TaskCreated, TaskCompleted), and Stop or StopFailure, followed by TeammateIdle, PreCompact, PostCompact, and SessionEnd, with Elicitation and ElicitationResult nested inside MCP tool execution, PermissionDenied as a side branch from PermissionRequest for auto-mode denials, WorktreeCreate, WorktreeRemove, Notification, ConfigChange, InstructionsLoaded, CwdChanged, FileChanged, and DirectoryAdded as standalone async events, PreModelSwitch as a standalone sequential event that runs before a requested model switch, PostModelSwitch as a standalone async event that runs after the session's model changes, and MessageDisplay as a display-only event that runs while assistant message text streams\" width=\"520\" height=\"1336\" data-path=\"images/hooks-lifecycle.svg\" />\n\n    <img src=\"https://mintcdn.com/claude-code/x7pO8l4XcvAXCoVc/images/hooks-lifecycle-dark.svg?fit=max&auto=format&n=x7pO8l4XcvAXCoVc&q=85&s=c9b3d88487335f58cce0b52e2f9e7531\" className=\"hidden dark:block\" alt=\"Hook lifecycle diagram showing optional Setup feeding into SessionStart, then a per-turn loop containing UserPromptSubmit, UserPromptExpansion for slash commands, the nested agentic loop (PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, PostToolBatch, SubagentStart/Stop, TaskCreated, TaskCompleted), and Stop or StopFailure, followed by TeammateIdle, PreCompact, PostCompact, and SessionEnd, with Elicitation and ElicitationResult nested inside MCP tool execution, PermissionDenied as a side branch from PermissionRequest for auto-mode denials, WorktreeCreate, WorktreeRemove, Notification, ConfigChange, InstructionsLoaded, CwdChanged, FileChanged, and DirectoryAdded as standalone async events, PreModelSwitch as a standalone sequential event that runs before a requested model switch, PostModelSwitch as a standalone async event that runs after the session's model changes, and MessageDisplay as a display-only event that runs while assistant message text streams\" width=\"520\" height=\"1336\" data-path=\"images/hooks-lifecycle-dark.svg\" />\n  </Frame>\n</div>\n\nThe table below summarizes when each event fires. The [Hook events](#hook-events) section documents the full input schema and decision control options for each one.\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `Setup` | When you start Claude Code with `--init-only`, or with `--init` or `--maintenance` in `-p` mode. For one-time preparation in CI or scripts |\n| `UserPromptSubmit` | When you submit a prompt, before Claude processes it |\n| `UserPromptExpansion` | When a user-typed command expands into a prompt, before it reaches Claude. Can block the expansion |\n| `PreToolUse` | Before a tool call executes. Can block it |\n| `PermissionRequest` | When a tool call needs a permission decision |\n| `PermissionDenied` | When auto mode denies a tool call, including denials without a classifier verdict. Use JSON `hookSpecificOutput.retry: true` to tell the model it may retry the denied tool call. Claude Code ignores `retry` when the classifier produced no verdict |\n| `PostToolUse` | After a tool call succeeds |\n| `PostToolUseFailure` | After a tool call fails |\n| `PostToolBatch` | After a full batch of parallel tool calls resolves, before the next model call |\n| `Notification` | When Claude Code sends a notification |\n| `MessageDisplay` | While assistant message text is displayed |\n| `SubagentStart` | When a subagent is spawned |\n| `SubagentStop` | When a subagent finishes |\n| `TaskCreated` | When a task is being created via `TaskCreate` |\n| `TaskCompleted` | When a task is being marked as completed |\n| `Stop` | When Claude finishes responding |\n| `StopFailure` | When the turn ends due to an API error |\n| `TeammateIdle` | When an [agent team](/docs/en/agent-teams) teammate is about to go idle |\n| `InstructionsLoaded` | When a CLAUDE.md or `.claude/rules/*.md` file is loaded into context. Fires at session start and when files are lazily loaded during a session |\n| `ConfigChange` | When a configuration file changes during a session |\n| `CwdChanged` | When the working directory changes, for example when Claude executes a `cd` command. Useful for reactive environment management with tools like direnv |\n| `DirectoryAdded` | When a working directory is added mid-session via `/add-dir` or the SDK `register_repo_root` control request |\n| `FileChanged` | When a watched file changes on disk. The `matcher` field specifies which filenames to watch |\n| `WorktreeCreate` | When a worktree is being created via `--worktree`, `isolation: \"worktree\"`, or for a background session. Replaces default git behavior |\n| `WorktreeRemove` | When a worktree is being removed at session exit, when a subagent finishes, or when you delete a background session |\n| `PreCompact` | Before context compaction |\n| `PostCompact` | After context compaction completes |\n| `PreModelSwitch` | Before Claude Code applies a model switch that you or a client requested. Can block the switch |\n| `PostModelSwitch` | After the session's model changes, including changes Claude Code makes on its own, such as restoring the model when you resume a session |\n| `Elicitation` | When an MCP server requests user input during a tool call |\n| `ElicitationResult` | After a user responds to an MCP elicitation, before the response is sent back to the server |\n| `SessionEnd` | When a session terminates |"
+    }
+  ]
+}
