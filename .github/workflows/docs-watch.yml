@@ -26,4 +26,4 @@ jobs:
           require-lockfile: true
       # Exit 0 when a page changed. Exit 1 when a fetch or parse fails, or when
       # a mapped heading is missing or appears twice.
-      - run: node scripts/docs-watch.mjs check
+      - run: node scripts/docs-watch.ts check

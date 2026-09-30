@@ -6,60 +6,16 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSyn
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
+import type { Snapshot, SourceMap } from '../scripts/docs-watch.ts'
+import * as api from '../scripts/docs-watch.ts'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
-const SCRIPT = path.join(ROOT, 'scripts/docs-watch.mjs')
+const SCRIPT = path.join(ROOT, 'scripts/docs-watch.ts')
 const FIXTURE = readFileSync(
   path.join(import.meta.dirname, 'fixtures/docs-watch/manifest-reference.md'),
   'utf8',
 )
 const URL_ = 'https://code.claude.com/docs/en/plugins/manifest-reference'
-
-type Block = { id: string; key: string; level: number; title: string; text: string; hash: string }
-type Source = { heading: string; id: string; hash: string; text: string }
-type Snapshot = {
-  url: string
-  hash: string
-  blocks: { id: string; hash: string }[]
-  sources: Source[]
-}
-type Page = {
-  url: string
-  status: string
-  blocks: { changed: string[]; added: string[]; removed: string[]; unchanged: string[] }
-  sources: { heading: string; id: string; status: string }[]
-}
-type Report = { changed: number; unchanged: number; pages: Page[]; errors: string[] }
-type SourceMap = Record<string, { url: string; heading: string; hash?: string }[]>
-type Api = {
-  sha256: (text: string) => string
-  slugify: (heading: string) => string
-  splitBlocks: (markdown: string) => Block[]
-  snapshotName: (url: string) => string
-  checkPages: (input: {
-    map: SourceMap
-    snapshots: Map<string, Snapshot>
-    fetchText: (url: string) => Promise<string>
-  }) => Promise<Report>
-  readPage: (
-    url: string,
-    headings: string[],
-    fetchText: (url: string) => Promise<string>,
-  ) => Promise<Snapshot>
-  updateState: (input: {
-    root: string
-    fetchText: (url: string) => Promise<string>
-  }) => Promise<{ pages: number }>
-  renderMarkdown: (report: Report) => string
-  main: (
-    argv: string[],
-    env: Record<string, string>,
-    fetchText: (url: string) => Promise<string>,
-    out: { write: (text: string) => void },
-  ) => Promise<number>
-}
-
-const api = (await import(SCRIPT)) as Api
 
 const map = (...headings: string[]): SourceMap => ({
   'a-rule': headings.map((heading) => ({ url: URL_, heading })),
@@ -402,7 +358,11 @@ describe('update and check on a temporary tree', () => {
   it('runs as a command and exits 1 when the map is missing', () => {
     const root = mkdtempSync(path.join(tmpdir(), 'docs-watch-'))
     dirs.push(root)
-    expect(() => execFileSync('node', [SCRIPT, 'check', root], { stdio: 'pipe' })).toThrow(/ENOENT/)
+    expect(() =>
+      execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, 'check', root], {
+        stdio: 'pipe',
+      }),
+    ).toThrow(/ENOENT/)
   })
 })
 

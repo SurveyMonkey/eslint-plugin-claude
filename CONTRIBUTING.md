@@ -62,7 +62,7 @@ claude.com, claude.ai or anthropic.com that is not under `https://code.claude.co
 ## Docs watch
 
 `.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It has read access
-only. It opens no issue and commits nothing. It runs `node scripts/docs-watch.mjs check`, which
+only. It opens no issue and commits nothing. It runs `node scripts/docs-watch.ts check`, which
 fetches each page that the map cites (URL plus `.md`) and compares it with `docs/docs-snapshot/`.
 
 - `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
@@ -78,9 +78,10 @@ without inline Markdown, in lowercase, with no punctuation, and with a hyphen fo
 heading in a code fence starts no block. A heading that equals the page title makes the whole
 page the source.
 
-To refresh the snapshot after a docs change, run `node scripts/docs-watch.mjs update`, read the
+To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts update`, read the
 diff of `docs/docs-snapshot/` and `docs/rule-sources.json`, and commit both in a pull request.
-The command makes read-only network calls. The page shows no Claude Code version of its own, so
+The command makes read-only network calls. Node 22.13 to 22.17 needs
+`--experimental-strip-types` to run a `.ts` file. The page shows no Claude Code version of its own, so
 the snapshot stores none.
 
 ## Commits and pull requests
