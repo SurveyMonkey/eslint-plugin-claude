@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**/*.json", "**/*.jsonc", "**/*.mjs", "**/*.ts"]
+    "includes": ["**/*.json", "**/*.jsonc", "**/*.mjs", "**/*.ts", "!.release-please-manifest.json"]
   },
   "linter": {
     "enabled": true,
