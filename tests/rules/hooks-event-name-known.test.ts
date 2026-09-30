@@ -59,6 +59,8 @@ jsonTester.run('hooks-event-name-known', rule, {
     // Spelling misses of two edits or fewer.
     renamed('PreToolUs', 'PreToolUse'),
     renamed('SesionEd', 'SessionEnd'),
+    // Two changed letters.
+    renamed('PreToolUxa', 'PreToolUse'),
     // A near miss of a name from `additionalEvents`.
     {
       ...renamed('futureEvent', 'FutureEvent'),
@@ -70,6 +72,12 @@ jsonTester.run('hooks-event-name-known', rule, {
       errors: [
         { messageId: 'unknown', data: { key: 'Bogus' }, line: 1, column: 11, suggestions: [] },
       ],
+    },
+    // Three edits from `PreToolUse` is not a near miss.
+    {
+      code: hooks('PreToolXyz'),
+      filename: 'hooks/hooks.json',
+      errors: [{ messageId: 'unknown', data: { key: 'PreToolXyz' }, suggestions: [] }],
     },
     // `additionalEvents` adds names. It does not replace the list.
     {

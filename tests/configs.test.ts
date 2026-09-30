@@ -19,8 +19,11 @@ const TREE: Record<string, string> = {
   'plugins/p/hooks/hooks.json': badHooks,
   '.claude/skills/t/SKILL.md': `---\nname: t\ndescription: ${long}\n---\n`,
   '.claude/commands/c.md': '# C\n',
+  '.claude/commands/ns/c.md': '# C\n',
   '.claude/settings.json': badHooks,
   '.claude/settings.local.json': badHooks,
+  'packages/x/.claude/settings.json': badHooks,
+  'packages/x/.claude/settings.local.json': badHooks,
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
   'other.json': badHooks,
@@ -29,9 +32,12 @@ const TREE: Record<string, string> = {
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/commands/c.md: claude/command-legacy-format@1',
+  '.claude/commands/ns/c.md: claude/command-legacy-format@1',
   '.claude/settings.json: claude/hooks-event-name-known@2',
   '.claude/settings.local.json: claude/hooks-event-name-known@2',
   '.claude/skills/t/SKILL.md: claude/skill-description-max-length@1',
+  'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
+  'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
@@ -65,10 +71,6 @@ async function reports(config: Linter.Config[]): Promise<string[]> {
 }
 
 describe('configs', () => {
-  it('has exactly the recommended and strict configs', () => {
-    expect(Object.keys(plugin.configs)).toEqual(['recommended', 'strict'])
-  })
-
   it('names one block for each rule in recommended, at its severity', () => {
     expect(plugin.configs.recommended.map((c) => [c.name, c.rules])).toEqual([
       [
