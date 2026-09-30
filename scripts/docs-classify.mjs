@@ -14,8 +14,8 @@
 //
 // The script fails closed. A failed call to Jev, a timeout, an answer that is
 // not valid, or an answer between two thresholds gives a needs-triage
-// finding. A failed docs fetch, a page with no title, or a missing API key
-// throws, and the job fails. No change is dropped.
+// finding. A failed docs fetch, a page with no title, or no API key when a
+// block needs a call throws, and the job fails. The script drops no change.
 //
 // The block text goes into the request `state` as data. The questions are
 // constants, and no docs text goes into them.
