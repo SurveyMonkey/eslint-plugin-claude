@@ -22,5 +22,5 @@
     // TypeScript 7 defaults `types` to [].
     "types": ["node"]
   },
-  "include": ["src", "tests", "vitest.config.ts"]
+  "include": ["src", "scripts", "tests", "vitest.config.ts"]
 }

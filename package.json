@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
-    "docs:seed": "node scripts/seed-rule-sources.mjs",
+    "docs:seed": "node --experimental-strip-types scripts/seed-rule-sources.ts",
     "knip": "pnpm build && knip && knip --strict",
     "lint": "biome ci . --error-on-warnings",
     "prepack": "pnpm run build",

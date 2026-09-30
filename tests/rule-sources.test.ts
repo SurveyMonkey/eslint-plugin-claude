@@ -8,7 +8,12 @@ import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
-const SCRIPT = path.join(ROOT, 'scripts/seed-rule-sources.mjs')
+const SCRIPT = path.join(ROOT, 'scripts/seed-rule-sources.ts')
+// Node 22.13 needs the flag to run a .ts file. Node 24 accepts it.
+const seed = (...args: string[]) =>
+  execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, '--stdout', ...args], {
+    encoding: 'utf8',
+  })
 const DOCS_PREFIX = 'https://code.claude.com/docs/'
 
 type Source = { url?: unknown; heading?: unknown; hash?: unknown }
@@ -84,7 +89,7 @@ describe('docs/rule-sources.json', () => {
   })
 
   it('equals the output of the seed script', () => {
-    const seeded = execFileSync('node', [SCRIPT, '--stdout'], { encoding: 'utf8' })
+    const seeded = seed()
     expect(seeded).toBe(readFileSync(path.join(ROOT, 'docs/rule-sources.json'), 'utf8'))
   })
 })
@@ -113,7 +118,7 @@ describe('seed script', () => {
         '',
       ].join('\n'),
     )
-    const run = () => execFileSync('node', [SCRIPT, '--stdout', root], { encoding: 'utf8' })
+    const run = () => seed(root)
     const first = run()
     expect(JSON.parse(first)).toEqual({
       'a-rule': [
