@@ -138,7 +138,7 @@ describe('docs/rule-sources.json', () => {
   it('sets each hash to the hash of its block in the snapshot', () => {
     for (const sources of Object.values(map) as Source[][]) {
       for (const { url, heading, hash } of sources) {
-        if (hash === undefined) continue
+        expect(hash, `${url} ${heading}: no hash`).toBeDefined()
         // The snapshot file is named for the page path, with "__" for each "/".
         const name = String(url).slice(`${DOCS_PREFIX}en/`.length).replaceAll('/', '__')
         const snapshot = JSON.parse(

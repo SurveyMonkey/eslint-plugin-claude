@@ -2,7 +2,15 @@
 // compares them with a stored snapshot. These tests inject the fetch function,
 // so no test reaches the network.
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -81,7 +89,7 @@ describe('splitBlocks', () => {
     expect(edited.find((b) => b.id === 'hooks')?.hash).not.toBe(
       blocks.find((b) => b.id === 'hooks')?.hash,
     )
-    // sha256 of the empty string, from RFC 6234 test vectors.
+    // The well-known SHA-256 of the empty string.
     expect(api.sha256('')).toBe('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
   })
 })
@@ -118,6 +126,49 @@ describe('readPage', () => {
     await expect(api.readPage(URL_, [], serve('## Second level\n'))).rejects.toThrow(
       'no title heading',
     )
+  })
+})
+
+describe('pagesOf', () => {
+  it('lists each page once, with each heading once, across rules', () => {
+    const other = 'https://code.claude.com/docs/en/hooks'
+    const pages = api.pagesOf({
+      a: [
+        { url: URL_, heading: 'H' },
+        { url: URL_, heading: 'I' },
+      ],
+      b: [
+        { url: URL_, heading: 'H' },
+        { url: other, heading: 'J' },
+      ],
+    })
+    expect([...pages]).toEqual([
+      [URL_, ['H', 'I']],
+      [other, ['J']],
+    ])
+  })
+})
+
+describe('line ends and blank lines', () => {
+  it('gives the same page hash and source hash for CRLF text', async () => {
+    const lf = await api.readPage(URL_, ['Plugin manifest reference'], serve(FIXTURE))
+    const crlf = await api.readPage(
+      URL_,
+      ['Plugin manifest reference'],
+      serve(FIXTURE.replaceAll('\n', '\r\n')),
+    )
+    expect(crlf.hash).toBe(lf.hash)
+    expect(crlf.sources[0]?.hash).toBe(lf.sources[0]?.hash)
+  })
+
+  it('ignores blank lines at the end of a block', async () => {
+    const spaced = FIXTURE.replace('### `hooks`', '\n\n### `hooks`')
+    const report = await api.checkPages({
+      map: map('commands'),
+      snapshots: await snapshotOf(FIXTURE, ['commands']),
+      fetchText: serve(spaced),
+    })
+    expect(report.pages[0]?.sources[0]?.status).toBe('unchanged')
   })
 })
 
@@ -240,6 +291,52 @@ describe('checkPages', () => {
     })
     expect(report.errors).toEqual(['down'])
   })
+
+  it('reports an error when the map cites no page', async () => {
+    const report = await api.checkPages({ map: {}, snapshots: new Map(), fetchText: serve('') })
+    expect(report.errors).toEqual(['the map cites no page'])
+  })
+
+  it('counts changed and unchanged pages', async () => {
+    const other = 'https://code.claude.com/docs/en/plugins/components'
+    const both: SourceMap = {
+      a: [
+        { url: URL_, heading: 'hooks' },
+        { url: other, heading: 'hooks' },
+      ],
+    }
+    const snapshots = new Map([
+      [api.snapshotName(URL_), await api.readPage(URL_, ['hooks'], serve(FIXTURE))],
+      [api.snapshotName(other), await api.readPage(other, ['hooks'], serve(FIXTURE))],
+    ])
+    const report = await api.checkPages({
+      map: both,
+      snapshots,
+      fetchText: async (url) =>
+        url.includes('components') ? FIXTURE.replace('both', 'two') : FIXTURE,
+    })
+    expect([report.changed, report.unchanged]).toEqual([1, 1])
+  })
+
+  it('reports a page as changed when a mapped heading is not in the snapshot', async () => {
+    const snapshots = await snapshotOf(FIXTURE, ['hooks'])
+    const report = await api.checkPages({
+      map: map('hooks', 'Path rules'),
+      snapshots,
+      fetchText: serve(FIXTURE),
+    })
+    expect(report.pages[0]?.status).toBe('changed')
+    expect(report.pages[0]?.sources.map((source) => source.status)).toEqual(['unchanged', 'new'])
+    expect(report.changed).toBe(1)
+  })
+})
+
+describe('fetchMarkdown', () => {
+  it('names the URL when the network call fails', async () => {
+    await expect(api.fetchMarkdown('http://127.0.0.1:1/page.md')).rejects.toThrow(
+      /^http:\/\/127\.0\.0\.1:1\/page\.md: /,
+    )
+  })
 })
 
 describe('renderMarkdown', () => {
@@ -353,6 +450,95 @@ describe('update and check on a temporary tree', () => {
     const missing = tree(map('Nothing here'))
     await expect(run(['update', missing], FIXTURE)).rejects.toThrow('is not on the page')
     expect(readdirSync(path.join(missing, 'docs'))).toEqual(['rule-sources.json'])
+  })
+
+  it('update writes the hash of each heading, and nothing when a later page fails', async () => {
+    const other = 'https://code.claude.com/docs/en/plugins/components'
+    const both: SourceMap = {
+      a: [
+        { url: URL_, heading: 'hooks' },
+        { url: URL_, heading: 'Path rules' },
+      ],
+      b: [{ url: other, heading: 'hooks' }],
+    }
+    const root = tree(both)
+    await api.main(['update', root], {}, serve(FIXTURE), { write: () => {} })
+    const written = JSON.parse(
+      readFileSync(path.join(root, 'docs/rule-sources.json'), 'utf8'),
+    ) as SourceMap
+    const hooks = api.sha256(
+      '### `hooks`\n\n`hooks` takes a `.json` file path, an inline hooks object, or an array mixing both.',
+    )
+    const paths = written.a?.map((source) => source.hash)
+    expect(paths?.[0]).toBe(hooks)
+    expect(paths?.[1]).toBe(api.splitBlocks(FIXTURE).find((b) => b.id === 'path-rules')?.hash)
+    expect(written.b?.[0]?.hash).toBe(hooks)
+
+    const partial = tree(both)
+    const failing = async (url: string) => {
+      if (url.includes('components')) throw new Error('down')
+      return FIXTURE
+    }
+    await expect(api.main(['update', partial], {}, failing, { write: () => {} })).rejects.toThrow(
+      'down',
+    )
+    expect(readdirSync(path.join(partial, 'docs'))).toEqual(['rule-sources.json'])
+  })
+
+  it('update stops for a map that cites no page, and keeps the snapshot', async () => {
+    const root = tree(map('hooks'))
+    await run(['update', root], FIXTURE)
+    writeFileSync(path.join(root, 'docs/rule-sources.json'), '{}\n')
+    await expect(run(['update', root], FIXTURE)).rejects.toThrow('the map cites no page')
+    expect(readdirSync(path.join(root, 'docs/docs-snapshot'))).toHaveLength(1)
+  })
+
+  it('stops for an option that it does not know', async () => {
+    const root = tree(map('hooks'))
+    await expect(run(['update', '--dry-run', root], FIXTURE)).rejects.toThrow(
+      'unknown option --dry-run',
+    )
+    expect(readdirSync(path.join(root, 'docs'))).toEqual(['rule-sources.json'])
+  })
+
+  it('adds the summary to the text that is in the file already', async () => {
+    const root = tree(map('hooks'))
+    const summary = path.join(root, 'summary.md')
+    writeFileSync(summary, 'prior\n')
+    await run(['check', root], FIXTURE, { GITHUB_STEP_SUMMARY: summary })
+    expect(readFileSync(summary, 'utf8')).toMatch(/^prior\n# Claude Code docs watch/)
+  })
+
+  it('names the file for a snapshot that is not JSON', async () => {
+    const root = tree(map('hooks'))
+    mkdirSync(path.join(root, 'docs/docs-snapshot'))
+    const bad = path.join(root, 'docs/docs-snapshot/bad.json')
+    writeFileSync(bad, '{')
+    expect(() => api.loadSnapshots(root)).toThrow(bad)
+  })
+
+  it('treats a missing snapshot directory as empty, and any other fault as a failure', () => {
+    const root = tree(map('hooks'))
+    expect(api.loadSnapshots(root).size).toBe(0)
+    writeFileSync(path.join(root, 'docs/docs-snapshot'), 'a file, not a directory\n')
+    expect(() => api.loadSnapshots(root)).toThrow(/ENOTDIR/)
+  })
+
+  it('runs through a symbolic link', () => {
+    const root = tree({})
+    const link = path.join(root, 'watch.ts')
+    symlinkSync(SCRIPT, link)
+    let output = ''
+    try {
+      execFileSync(process.execPath, ['--experimental-strip-types', link, 'check', root], {
+        stdio: 'pipe',
+      })
+    } catch (error) {
+      const failure = error as { status: number; stdout: Buffer }
+      expect(failure.status).toBe(1)
+      output = failure.stdout.toString()
+    }
+    expect(output).toContain('the map cites no page')
   })
 
   it('runs as a command and exits 1 when the map is missing', () => {

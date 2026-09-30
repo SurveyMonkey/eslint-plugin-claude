@@ -3,12 +3,13 @@
 // Usage: node --experimental-strip-types scripts/docs-watch.ts [check|update] [root]
 // Node 22.18 and later need no flag.
 // check (default) fetches each cited page and compares it with the snapshot in
-//   docs/docs-snapshot/. It writes no file. It prints a JSON report to stdout,
-//   and a Markdown report to $GITHUB_STEP_SUMMARY when that variable is set.
-//   It exits 0 when a page changed. It exits 1 when a fetch or a parse fails,
-//   or when a mapped heading is missing from its page or appears twice.
+//   docs/docs-snapshot/. It writes no file. It prints a JSON report to stdout.
+//   It also adds a Markdown report to $GITHUB_STEP_SUMMARY when that is set.
+//   It exits 0 when a page changed. It exits 1 when a fetch or a parse fails.
+//   It also exits 1 when the map cites no page. It exits 1 when a mapped
+//   heading is not on its page or is on it twice.
 // update writes the snapshot, and sets `hash` on each source in the map. A
-//   person runs it, or a triage pull request does. The scheduled job does not.
+//   person runs it, in a pull request. The scheduled job does not.
 // root defaults to this repository.
 import { createHash } from 'node:crypto'
 import {
@@ -16,6 +17,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from 'node:fs'
@@ -126,9 +128,9 @@ export function splitBlocks(markdown: string): Block[] {
   })
 }
 
-// Finds the block for a mapped heading. A heading equal to the page title
-// makes the whole page the source. Throws, and never guesses, when the heading
-// is missing or appears more than once.
+// Finds the block for a mapped heading. A heading at level 1 makes the whole
+// page the source. Throws, and never guesses, when the heading is not on the
+// page or is on it more than once.
 export function resolveSource(
   url: string,
   heading: string,
@@ -188,11 +190,13 @@ export async function readPage(
   }
 }
 
-// Compares the page now with its snapshot. `stored` is undefined when the
-// snapshot is missing: the page is then new.
+// A hash that is not stored yet means the block is new.
 const statusOf = (before: string | undefined, now: string): Status =>
   before === undefined ? 'new' : before === now ? 'unchanged' : 'changed'
 
+// Compares the page now with its snapshot. `stored` is undefined when the
+// snapshot is missing: the page is then new. A page with the same hash is
+// changed when a mapped source is not in the snapshot yet.
 export function comparePage(current: Snapshot, stored: Snapshot | undefined): PageReport {
   const before = new Map((stored?.sources ?? []).map((source) => [source.id, source]))
   const sources = current.sources.map(({ heading, id, hash }) => ({
@@ -210,9 +214,10 @@ export function comparePage(current: Snapshot, stored: Snapshot | undefined): Pa
   }
   if (stored.hash === current.hash) {
     const unchanged = current.blocks.map((b) => b.id)
+    const settled = sources.every((source) => source.status === 'unchanged')
     return {
       url: current.url,
-      status: 'unchanged',
+      status: settled ? 'unchanged' : 'changed',
       blocks: { changed: [], added: [], removed: [], unchanged },
       sources,
     }
@@ -243,7 +248,9 @@ export async function checkPages({
 }): Promise<Report> {
   const pages: PageReport[] = []
   const errors: string[] = []
-  for (const [url, headings] of pagesOf(map)) {
+  const cited = pagesOf(map)
+  if (cited.size === 0) errors.push('the map cites no page')
+  for (const [url, headings] of cited) {
     try {
       const current = await readPage(url, headings, fetchText)
       pages.push(comparePage(current, snapshots.get(snapshotName(url))))
@@ -291,17 +298,24 @@ export function loadSnapshots(root: string): Map<string, Snapshot> {
   let files: string[] = []
   try {
     files = readdirSync(dir).filter((file) => file.endsWith('.json'))
-  } catch {
-    // A missing directory is a missing snapshot, not a failure.
+  } catch (error) {
+    // A missing directory is a missing snapshot. Any other fault is a failure.
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
   }
-  for (const file of files) {
-    snapshots.set(file, JSON.parse(readFileSync(path.join(dir, file), 'utf8')))
-  }
+  for (const file of files) snapshots.set(file, readJson(path.join(dir, file)))
   return snapshots
 }
 
-export const loadMap = (root: string): SourceMap =>
-  JSON.parse(readFileSync(path.join(root, MAP_FILE), 'utf8'))
+// Reads a JSON file. A parse error names the file.
+function readJson(file: string) {
+  try {
+    return JSON.parse(readFileSync(file, 'utf8'))
+  } catch (error) {
+    throw new Error(`${file}: ${(error as Error).message}`, { cause: error })
+  }
+}
+
+export const loadMap = (root: string): SourceMap => readJson(path.join(root, MAP_FILE))
 
 // Reads every cited page, then writes the snapshot and the map hashes. It
 // writes nothing when one page fails. It deletes the snapshot file of a page
@@ -315,7 +329,9 @@ export async function updateState({
 }): Promise<{ pages: number }> {
   const map = loadMap(root)
   const current: Snapshot[] = []
-  for (const [url, headings] of pagesOf(map)) {
+  const cited = pagesOf(map)
+  if (cited.size === 0) throw new Error('the map cites no page')
+  for (const [url, headings] of cited) {
     current.push(await readPage(url, headings, fetchText))
   }
   const dir = path.join(root, SNAPSHOT_DIR)
@@ -339,7 +355,13 @@ export async function updateState({
 }
 
 export async function fetchMarkdown(url: string): Promise<string> {
-  const response = await fetch(url, { signal: AbortSignal.timeout(30_000) })
+  let response: Response
+  try {
+    response = await fetch(url, { signal: AbortSignal.timeout(30_000) })
+  } catch (error) {
+    const reason = (error as Error).cause instanceof Error ? (error as Error).cause : error
+    throw new Error(`${url}: ${(reason as Error).message}`, { cause: error })
+  }
   if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`)
   return response.text()
 }
@@ -350,7 +372,9 @@ export async function main(
   fetchText: FetchText = fetchMarkdown,
   out: { write: (text: string) => unknown } = process.stdout,
 ): Promise<number> {
-  const args = argv.filter((arg) => !arg.startsWith('--'))
+  const flag = argv.find((arg) => arg.startsWith('--'))
+  if (flag) throw new Error(`unknown option ${flag}`)
+  const args = [...argv]
   const mode = args[0] === 'check' || args[0] === 'update' ? args.shift() : 'check'
   const root = path.resolve(args[0] ?? path.join(import.meta.dirname, '..'))
   if (mode === 'update') {
@@ -368,7 +392,7 @@ export async function main(
   return report.errors.length > 0 ? 1 : 0
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   process.exitCode = await main(process.argv.slice(2), process.env).catch((error: Error) => {
     console.error(error.message)
     return 1

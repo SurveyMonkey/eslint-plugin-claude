@@ -67,22 +67,22 @@ fetches each page that the map cites (URL plus `.md`) and compares it with `docs
 
 - `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
   to the run summary. For each changed page, it lists the blocks that changed, were added or were
-  removed, and it counts the blocks that did not change. It exits 0 when a page changed. It exits
-  1 when a fetch or parse fails, or when a mapped heading is missing from its page or appears
-  more than once. A missing snapshot is not a failure: every page is then new.
-- `update` writes the snapshot and sets `hash` on each source in the map. A person runs it, or a
-  triage pull request does. The scheduled job never runs it.
+  removed. It also counts the blocks that did not change. It exits 0 when a page changed, so a
+  person must read the run summary. It exits 1 when a fetch or parse fails. It also exits 1 when
+  the map cites no page. It exits 1 when a mapped heading is not on its page, or is on it more
+  than once. A missing snapshot is not a failure: every page is then new.
+- `update` writes the snapshot and sets `hash` on each source in the map. A person runs it, in a
+  pull request. The scheduled job never runs it.
 
 A block is a heading and its text, up to the next heading of any level. Its ID is the heading text
-without inline Markdown, in lowercase, with no punctuation, and with a hyphen for each space. A
-heading in a code fence starts no block. A heading that equals the page title makes the whole
-page the source.
+without inline Markdown, in lowercase. The ID has no punctuation, a hyphen for each space, and a
+hyphen for each dot. A second block with the same ID gets a number suffix, such as `-1`. A heading
+in a code fence starts no block. A heading at level 1 makes the whole page the source.
 
-To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts update`, read the
-diff of `docs/docs-snapshot/` and `docs/rule-sources.json`, and commit both in a pull request.
-The command makes read-only network calls. Node 22.13 to 22.17 needs
-`--experimental-strip-types` to run a `.ts` file. The page shows no Claude Code version of its own, so
-the snapshot stores none.
+To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts update`. Read the
+diff of `docs/docs-snapshot/` and `docs/rule-sources.json`. Commit both in a pull request. The
+command makes read-only network calls. Node 22.13 to 22.17 needs `--experimental-strip-types` to
+run a `.ts` file.
 
 ## Commits and pull requests
 

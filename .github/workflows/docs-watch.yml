@@ -24,6 +24,7 @@ jobs:
         with:
           cache: true
           require-lockfile: true
-      # Exit 0 when a page changed. Exit 1 when a fetch or parse fails, or when
-      # a mapped heading is missing or appears twice.
+      # Node comes from .nvmrc. It must be 22.18 or later, to run a .ts file.
+      # A changed page gives exit 0. A person reads the run summary. See the
+      # header of scripts/docs-watch.ts for the cases that give exit 1.
       - run: node scripts/docs-watch.ts check
