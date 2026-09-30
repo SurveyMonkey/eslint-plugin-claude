@@ -32,8 +32,9 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 ## Rule source map
 
 `docs/rule-sources.json` lists the pages and headings of the Claude Code docs that are the
-source of each rule in `src/rules/`. Each source has a `url` on `code.claude.com/docs` and a `heading`. A
-later check will add a `hash` to each source. Do not set `hash` by hand.
+source of each rule in `src/rules/`. Each source has a `url` on `code.claude.com/docs` and a `heading`. The
+docs watch sets a `hash` on each source. Do not set `hash` by hand. `pnpm docs:seed` keeps a
+`hash` when the `url` and `heading` stay the same.
 
 A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<rule>.md`, then
 run `pnpm docs:seed` and commit the new `docs/rule-sources.json`. The script makes no network
@@ -55,6 +56,32 @@ claude.com, claude.ai or anthropic.com that is not under `https://code.claude.co
 - A source has no heading.
 - A URL is not on `code.claude.com/docs`.
 - The map is not the same as the output of the script.
+- A `hash` is not a SHA-256 hex string, or is not the hash of that block in
+  `docs/docs-snapshot/`.
+
+## Docs watch
+
+`.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It has read access
+only. It opens no issue and commits nothing. It runs `node scripts/docs-watch.mjs check`, which
+fetches each page that the map cites (URL plus `.md`) and compares it with `docs/docs-snapshot/`.
+
+- `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
+  to the run summary. For each changed page, it lists the blocks that changed, were added or were
+  removed, and it counts the blocks that did not change. It exits 0 when a page changed. It exits
+  1 when a fetch or parse fails, or when a mapped heading is missing from its page or appears
+  more than once. A missing snapshot is not a failure: every page is then new.
+- `update` writes the snapshot and sets `hash` on each source in the map. A person runs it, or a
+  triage pull request does. The scheduled job never runs it.
+
+A block is a heading and its text, up to the next heading of any level. Its ID is the heading text
+without inline Markdown, in lowercase, with no punctuation, and with a hyphen for each space. A
+heading in a code fence starts no block. A heading that equals the page title makes the whole
+page the source.
+
+To refresh the snapshot after a docs change, run `node scripts/docs-watch.mjs update`, read the
+diff of `docs/docs-snapshot/` and `docs/rule-sources.json`, and commit both in a pull request.
+The command makes read-only network calls. The page shows no Claude Code version of its own, so
+the snapshot stores none.
 
 ## Commits and pull requests
 
