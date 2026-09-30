@@ -11,6 +11,11 @@ Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recomme
   docs source. A rule enters the plugin in its own pull request.
 - A check that `claude plugin validate` covers fully is not a rule. A check that it covers in
   part is a rule, for the cases that it misses.
+- `docs/adr/002-classify-docs-changes-with-jev.md` records the docs watch. A daily job finds a
+  change to a docs block that a rule cites, classifies it, and opens an issue.
+- `docs/rule-sources.json` maps each rule to its docs sources. `docs/docs-snapshot/` holds the
+  last docs text. Only a reviewed pull request changes them.
+- `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
 
 ## Code
 
@@ -18,6 +23,11 @@ Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recomme
   are in `tests/`, and follow the `testing` skill.
 - `CONTRIBUTING.md` has the commands, the hooks and the release flow. Run `pnpm lint`,
   `pnpm typecheck`, `pnpm test` and `pnpm knip` before you push.
+- A new rule needs footnotes in `docs/rules/<rule>.md` that link to its docs sources. The form
+  is in `CONTRIBUTING.md` (Rule source map). Then run `pnpm docs:seed` and commit
+  `docs/rule-sources.json`. If you do not, `tests/rule-sources.test.ts` fails.
+- The scripts in `scripts/*.ts` run with `node`. Node 22.13 to 22.17 needs
+  `--experimental-strip-types`.
 
 ## Fixtures
 
