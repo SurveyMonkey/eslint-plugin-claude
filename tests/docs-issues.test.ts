@@ -453,7 +453,9 @@ describe('main', () => {
 
   it('exits 1 when it fails, as a script', () => {
     const script = path.join(import.meta.dirname, '../scripts/docs-issues.ts')
-    const result = spawnSync(process.execPath, [script], { encoding: 'utf8', env: {} })
+    // Node 22.13 to 22.17 needs the flag to run a .ts file.
+    const flags = process.features.typescript ? [] : ['--experimental-strip-types']
+    const result = spawnSync(process.execPath, [...flags, script], { encoding: 'utf8', env: {} })
     expect(result.status).toBe(1)
     expect(result.stderr).toContain('usage')
   })

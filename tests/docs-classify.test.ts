@@ -653,9 +653,15 @@ describe('main on a temporary tree', () => {
     const root = mkdtempSync(path.join(tmpdir(), 'docs-classify-'))
     dirs.push(root)
     const script = path.join(import.meta.dirname, '../scripts/docs-classify.ts')
-    const result = spawnSync(process.execPath, [script, root], { encoding: 'utf8', env: {} })
+    // Node 22.13 to 22.17 needs the flag to run a .ts file.
+    const flags = process.features.typescript ? [] : ['--experimental-strip-types']
+    const result = spawnSync(process.execPath, [...flags, script, root], {
+      encoding: 'utf8',
+      env: {},
+    })
     expect(result.status).toBe(1)
     expect(result.stdout).toBe('')
+    expect(result.stderr).toContain('docs/rules')
   })
 
   it('renders the blocks that need no change', () => {
