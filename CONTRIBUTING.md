@@ -29,6 +29,20 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 - [ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md): why this is an ESLint plugin on
   `@eslint/markdown` and `@eslint/json`. See the [ADR index](docs/adr/index.md) for later ADRs.
 
+## Rule source map
+
+`docs/rule-sources.json` maps each rule in `src/rules/` to the Claude Code docs blocks that
+source it. Each source has a `url` on `code.claude.com/docs` and a `heading`. A later check will
+add a `hash` to each source. Do not set `hash` by hand.
+
+A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<rule>.md`, then
+run `pnpm docs:seed`. The script reads those footnotes and writes the map. It makes no network
+call.
+
+`tests/rule-sources.test.ts` runs in `pnpm test`. It fails when a rule has no entry, when an
+entry has no rule or no source, when a URL is not on `code.claude.com/docs`, or when the map
+differs from the output of the script.
+
 ## Commits and pull requests
 
 Pull requests are squash-merged, so the pull request title becomes the commit on `main`. Use

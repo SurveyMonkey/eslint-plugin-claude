@@ -1,0 +1,52 @@
+{
+  "command-legacy-format": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Create your first skill"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/glossary",
+      "heading": "Deprecated and renamed terms"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Extend Claude with skills"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Commands"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Manifest file"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location"
+    }
+  ],
+  "hooks-event-name-known": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Hook loads but never fires"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks"
+    }
+  ],
+  "skill-description-max-length": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short"
+    }
+  ]
+}
