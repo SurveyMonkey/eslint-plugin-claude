@@ -29,6 +29,33 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 - [ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md): why this is an ESLint plugin on
   `@eslint/markdown` and `@eslint/json`. See the [ADR index](docs/adr/index.md) for later ADRs.
 
+## Rule source map
+
+`docs/rule-sources.json` lists the pages and headings of the Claude Code docs that are the
+source of each rule in `src/rules/`. Each source has a `url` on `code.claude.com/docs` and a `heading`. A
+later check will add a `hash` to each source. Do not set `hash` by hand.
+
+A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<rule>.md`, then
+run `pnpm docs:seed` and commit the new `docs/rule-sources.json`. The script makes no network
+call.
+
+Write each footnote on one line, as `[^id]: [Page title: Heading](url#anchor)`. Put no indent,
+link title or text after the link. The script takes the text after the first colon and space
+as the heading. The whole label is the heading when the link has no anchor, or when the label
+has no colon and space. The script skips a link to a site other than claude.com, claude.ai or
+anthropic.com.
+
+The script stops with an error for a footnote that it cannot read. It also stops for a link to
+claude.com, claude.ai or anthropic.com that is not under `https://code.claude.com/docs/`.
+
+`tests/rule-sources.test.ts` runs in `pnpm test`. It fails in these cases:
+
+- A rule has no entry.
+- An entry has no rule file, or has no source.
+- A source has no heading.
+- A URL is not on `code.claude.com/docs`.
+- The map is not the same as the output of the script.
+
 ## Commits and pull requests
 
 Pull requests are squash-merged, so the pull request title becomes the commit on `main`. Use
