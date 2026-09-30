@@ -20,7 +20,12 @@ const modules = [skillDescriptionMaxLength, commandLegacyFormat, hooksEventNameK
 type RuleName = (typeof modules)[number]['name']
 type Severity = 'off' | 'warn' | 'error'
 
-const LANGUAGES: Record<(typeof modules)[number]['language'], Linter.Config> = {
+// Language settings only, so the spread in `configFor` cannot replace a
+// block's `files` or `plugins`.
+const LANGUAGES: Record<
+  (typeof modules)[number]['language'],
+  Pick<Linter.Config, 'language' | 'languageOptions'>
+> = {
   markdown: { language: 'markdown/gfm', languageOptions: { frontmatter: 'yaml' } },
   json: { language: 'json/json' },
 }
@@ -34,15 +39,21 @@ const recommended: Record<RuleName, Severity> = {
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
-const STRICT: Record<Severity, Severity> = { off: 'warn', warn: 'warn', error: 'error' }
+const STRICT: Record<Severity, Exclude<Severity, 'off'>> = {
+  off: 'warn',
+  warn: 'warn',
+  error: 'error',
+}
 
 // Annotated, not inferred: the inferred type reaches into @eslint/core, which
 // the declaration emit cannot name. `meta` and each config key are required
 // here, because `ESLint.Plugin` makes them optional and consumers would have
-// to check for `undefined`. `ESLint.Plugin['rules']` rather than
-// `Rule.RuleModule`, which types JavaScript rules only. Each config is an
-// array of one block per rule that it turns on. Add a key for a new config.
-type Plugin = ESLint.Plugin & {
+// to check for `undefined`. `configs` drops the string index of
+// `ESLint.Plugin`, so a config name with a typo does not type-check.
+// `ESLint.Plugin['rules']` rather than `Rule.RuleModule`, which types
+// JavaScript rules only. Each config is an array of one block per rule that
+// it turns on. Add a key for a new config.
+type Plugin = Omit<ESLint.Plugin, 'meta' | 'configs'> & {
   meta: { name: string; version: string; namespace: 'claude' }
   rules: NonNullable<ESLint.Plugin['rules']>
   configs: { recommended: Linter.Config[]; strict: Linter.Config[] }
