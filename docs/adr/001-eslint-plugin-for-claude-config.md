@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 23]
+related_issues: [5, 6, 7, 23]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -100,6 +100,19 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
      peers, a missing peer shows as a load error.
    - `yaml` is a runtime `dependency`, at an exact version. The frontmatter helper of Decision 6
      imports it, and a consumer does not configure it.
+
+9. **Each rule module names its own `files` glob and language.** A new rule adds no entry to a
+   central list.
+10. **Globs are broad, and a rule checks the plugin root in code.** For example, the glob
+    `**/commands/**/*.md` matches many paths. The rule reports only under `.claude/commands/`, or
+    next to `.claude-plugin/plugin.json`.
+11. **A value set that Claude Code owns lives in one data module.** Hook events, tool names and
+    settings key scopes are examples. The module is in `src/data/`. It records the Claude Code
+    version that the values came from, and a review date.
+12. **Tests have two layers.** A RuleTester test under vitest covers each rule. One ESLint-class
+    test runs each config over a tree in a temporary directory.
+13. **Each rule has one doc.** The doc is at `docs/rules/<rule>.md`, and `meta.docs.url` points to
+    it. The [rule inventory](../rules-inventory.md) stays the backlog of candidate rules.
 
 These items were open, and are now settled:
 
