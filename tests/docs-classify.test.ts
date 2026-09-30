@@ -7,84 +7,18 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
-const ROOT = path.resolve(import.meta.dirname, '..')
+import type { Answers, Jev, JevFetch, Output, Request } from '../scripts/docs-classify.ts'
+import * as api from '../scripts/docs-classify.ts'
+import type { SourceMap } from '../scripts/docs-watch.ts'
+import * as watch from '../scripts/docs-watch.ts'
+
 const FIXTURES = path.join(import.meta.dirname, 'fixtures')
 const PAGE = readFileSync(path.join(FIXTURES, 'docs-watch/manifest-reference.md'), 'utf8')
 const URL_ = 'https://code.claude.com/docs/en/plugins/manifest-reference'
 const KEY = 'test-key-not-real-0123'
 
-type Answers = Record<string, { type: string; noul: number }>
-type Finding = {
-  kind: string
-  page: string
-  heading: string
-  blockId: string
-  oldHash: string | null
-  newHash: string | null
-  rules: string[]
-  probability: number | null
-  confidence: number | null
-  reason: string
-  link: string
-  change: string
-  oldText: string | null
-  newText: string | null
-}
-type Outcome = { kind: string; rule: string | null; probability: number }
-type Result = { blockId: string; change: string; outcomes: Outcome[] }
-type Output = { model: string; findings: Finding[]; results: Result[] }
-type SourceMap = Record<string, { url: string; heading: string }[]>
-type Request = {
-  state: { docs_block: Record<string, unknown>; rules: { id: string; checks: string }[] }
-  model: string
-  questions: Record<string, { type: string; instructions: unknown }>
-}
-type Init = { method: string; headers: Record<string, string>; body: string; signal: AbortSignal }
-type FakeFetch = (url: string, init: Init) => Promise<Response>
-type Jev = { fetch: FakeFetch; key?: string; timeoutMs?: number; wait?: () => Promise<void> }
-type Api = {
-  THRESHOLDS: Record<string, { yes: number; no: number }>
-  MODEL: string
-  ENDPOINT: string
-  lineDiff: (a: string | null, b: string | null) => { removed: string[]; added: string[] }
-  buildRequest: (input: {
-    page: string
-    heading: string
-    oldText: string | null
-    newText: string | null
-    rules: { id: string; checks: string }[]
-  }) => Request
-  askJev: (body: Request, jev: Jev) => Promise<{ answers: Answers }>
-  confidenceOf: (p: number) => number
-  decide: (item: { rules: string[]; askRequirement: boolean }, answers: Answers) => Outcome[]
-  classify: (input: {
-    map: SourceMap
-    snapshots: Map<string, unknown>
-    rules: Map<string, string>
-    links: Map<string, string>
-    fetchText: (url: string) => Promise<string>
-    jev: Jev
-  }) => Promise<Output>
-  loadRules: (root: string) => { rules: Map<string, string>; links: Map<string, string> }
-  renderMarkdown: (output: Output) => string
-  main: (
-    argv: string[],
-    env: Record<string, string>,
-    deps: {
-      fetchText: (url: string) => Promise<string>
-      fetch: FakeFetch
-      wait?: () => Promise<void>
-      out: { write: (text: string) => void }
-    },
-  ) => Promise<number>
-}
-type Watch = {
-  readPage: (url: string, headings: string[], fetchText: () => Promise<string>) => Promise<unknown>
-  snapshotName: (url: string) => string
-}
-
-const api = (await import(path.join(ROOT, 'scripts/docs-classify.mjs'))) as Api
-const watch = (await import(path.join(ROOT, 'scripts/docs-watch.mjs'))) as Watch
+type Init = Parameters<JevFetch>[1]
+type FakeFetch = JevFetch
 
 const noWait = async () => {}
 const serve = (text: string) => async () => text
@@ -150,7 +84,11 @@ describe('buildRequest', () => {
     const request = api.buildRequest(block)
     expect(request.model).toBe('jev-1.13.0')
     expect(Object.keys(request.questions).sort()).toEqual(['alters_0', 'obsolete_0', 'requirement'])
-    expect(Object.values(request.questions).map((q) => q.type)).toEqual(['noul', 'noul', 'noul'])
+    expect(Object.values(request.questions).map((q) => (q as { type: string }).type)).toEqual([
+      'noul',
+      'noul',
+      'noul',
+    ])
     expect(request.state.docs_block).toEqual({
       page: URL_,
       heading: 'hooks',
@@ -600,7 +538,7 @@ describe('main on a temporary tree', () => {
     const text = api.renderMarkdown({
       model: 'jev-1.13.0',
       findings: [],
-      results: [{ blockId: 'b', change: 'changed', outcomes: [], page: URL_ } as Result],
+      results: [{ blockId: 'b', heading: 'B', change: 'changed', outcomes: [], page: URL_ }],
     })
     expect(text).toContain('0 finding(s).')
     expect(text).toContain(`- ${URL_} \`b\` (changed)`)

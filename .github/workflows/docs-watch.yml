@@ -53,7 +53,7 @@ jobs:
       - if: steps.gate.outputs.classify == 'true'
         env:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
-        run: node scripts/docs-classify.mjs > "$RUNNER_TEMP/docs-findings.json"
+        run: node scripts/docs-classify.ts > "$RUNNER_TEMP/docs-findings.json"
       # A short-lived token for the org GitHub App, as in release.yml. It can
       # write issues and nothing else.
       - id: app-token
@@ -69,7 +69,7 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           if [ "$DRY_RUN" = "true" ]; then
-            node scripts/docs-issues.mjs "$RUNNER_TEMP/docs-findings.json" --dry-run
+            node scripts/docs-issues.ts "$RUNNER_TEMP/docs-findings.json" --dry-run
           else
-            node scripts/docs-issues.mjs "$RUNNER_TEMP/docs-findings.json"
+            node scripts/docs-issues.ts "$RUNNER_TEMP/docs-findings.json"
           fi

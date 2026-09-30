@@ -5,51 +5,12 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
-const ROOT = path.resolve(import.meta.dirname, '..')
+import type { Finding } from '../scripts/docs-classify.ts'
+import type { Run } from '../scripts/docs-issues.ts'
+import * as api from '../scripts/docs-issues.ts'
+
 const URL_ = 'https://code.claude.com/docs/en/skills'
 const REPO = 'SurveyMonkey/eslint-plugin-claude'
-
-type Finding = {
-  kind: string
-  page: string
-  heading: string
-  blockId: string
-  oldHash: string | null
-  newHash: string | null
-  rules: string[]
-  probability: number | null
-  confidence: number | null
-  reason: string
-  link: string
-  change: string
-  oldText: string | null
-  newText: string | null
-}
-type Run = (args: string[], input?: string) => string
-type Api = {
-  markerOf: (f: Finding) => string
-  titleOf: (f: Finding) => string
-  bodyOf: (f: Finding, repo: string) => string
-  fence: (text: string, info?: string) => string
-  diffLines: (a: string, b: string) => string
-  validate: (f: unknown) => void
-  openIssues: (input: {
-    findings: Finding[]
-    repo: string
-    run: Run
-    dryRun: boolean
-    max?: number
-    log: (text: string) => void
-  }) => Promise<{ opened: string[]; skipped: number; wouldOpen: number }>
-  main: (
-    argv: string[],
-    env: Record<string, string>,
-    run: Run,
-    log: (t: string) => void,
-  ) => Promise<number>
-}
-
-const api = (await import(path.join(ROOT, 'scripts/docs-issues.mjs'))) as Api
 
 const update: Finding = {
   kind: 'rule-update',
@@ -97,7 +58,7 @@ describe('markerOf and titleOf', () => {
     expect(api.markerOf(update)).toBe(
       `<!-- docs-watch:rule-update:${URL_}#frontmatter-reference:${'b'.repeat(64)} -->`,
     )
-    const removal = { ...update, kind: 'rule-removal', newHash: null }
+    const removal = { ...update, kind: 'rule-removal' as const, newHash: null }
     expect(api.markerOf(removal)).toContain(`#frontmatter-reference:${'a'.repeat(64)} -->`)
   })
 
@@ -116,7 +77,7 @@ describe('markerOf and titleOf', () => {
     expect(api.titleOf(short)).toBe('docs(a): update for hooks')
     const long = {
       ...update,
-      kind: 'rule-removal',
+      kind: 'rule-removal' as const,
       rules: ['a-very-long-rule-name', 'another-rule'],
     }
     for (const f of [update, newRule, long, { ...long, heading: 'x'.repeat(200) }]) {
@@ -134,7 +95,7 @@ describe('bodyOf', () => {
     }
     expect(body).toContain('- Classifier result: `rule-update`, probability 0.59, confidence 0.18')
     expect(body).toContain('- `claude/skill-description-max-length`')
-    expect(body).toContain('`node scripts/docs-watch.mjs update`')
+    expect(body).toContain('`node scripts/docs-watch.ts update`')
     expect(body).toContain(`- ${URL_}#frontmatter-reference`)
     expect(body).toContain(
       `https://github.com/${REPO}/blob/main/docs/adr/002-classify-docs-changes-with-jev.md`,
@@ -157,9 +118,9 @@ describe('bodyOf', () => {
     expect(body).toContain('- New rule candidate')
     expect(body).toContain(`- ${URL_} (heading \` Agent frontmatter \`)`)
     expect(api.bodyOf(newRule, REPO)).toContain('The block is new.')
-    const gone = { ...update, kind: 'rule-removal', newText: null, change: 'removed' }
+    const gone = { ...update, kind: 'rule-removal' as const, newText: null, change: 'removed' }
     expect(api.bodyOf(gone, REPO)).toContain('The block is gone. Its old text')
-    const none = { ...newRule, kind: 'needs-triage', newText: null, probability: null }
+    const none = { ...newRule, kind: 'needs-triage' as const, newText: null, probability: null }
     const text = api.bodyOf(none, REPO)
     expect(text).toContain('No block text is available')
     expect(text).toContain('`needs-triage`, with no model answer')

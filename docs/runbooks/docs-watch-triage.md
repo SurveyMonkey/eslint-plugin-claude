@@ -37,7 +37,7 @@ has the type `Task` and no label. Its body starts with a hidden marker:
 
    ```sh
    pnpm docs:seed
-   node scripts/docs-watch.mjs update
+   node scripts/docs-watch.ts update
    ```
 
    `pnpm docs:seed` writes the map again from the footnotes of `docs/rules/*.md`. It keeps the
@@ -66,7 +66,7 @@ Do these steps:
 3. In `docs/rules/<rule>.md`, change the footnote to the new heading. Keep the one-line form
    `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`. Copy the
    anchor from the page, because the site anchor is not always the slug of the heading.
-4. Run `pnpm docs:seed`, then `node scripts/docs-watch.mjs update`.
+4. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.
 5. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.
 6. Close both issues with the pull request.
 

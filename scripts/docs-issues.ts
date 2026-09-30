@@ -1,6 +1,8 @@
-// Opens one GitHub issue for each finding of scripts/docs-classify.mjs.
+// Opens one GitHub issue for each finding of scripts/docs-classify.ts.
 //
-// Usage: node scripts/docs-issues.mjs <findings.json> [--dry-run] [--repo owner/name] [--max n]
+// Usage: node --experimental-strip-types scripts/docs-issues.ts <findings.json> [--dry-run]
+//   [--repo owner/name] [--max n]
+// Node 22.18 and later need no flag.
 // It reads the open issues first. An open issue whose body holds the marker
 // of a finding stops a second issue for that finding. The marker is
 // <!-- docs-watch:<kind>:<page>#<blockId>:<newHash> -->, so a block that
@@ -15,23 +17,29 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import type { Finding, Kind } from './docs-classify.ts'
 
-export const KINDS = ['rule-update', 'rule-removal', 'new-rule', 'needs-triage']
+// Runs gh with the arguments and the standard input, and returns stdout.
+export type Run = (args: string[], input?: string) => string
+type OpenIssue = { number: number; body: string | null }
+
+export const KINDS: readonly Kind[] = ['rule-update', 'rule-removal', 'new-rule', 'needs-triage']
 export const MAX_TITLE = 69
 export const MAX_QUOTE = 6000
 const MAX_ISSUES = 20
 const ADR = 'docs/adr/002-classify-docs-changes-with-jev.md'
 const RUNBOOK = 'docs/runbooks/docs-watch-triage.md'
 
-export const markerOf = (f) =>
+export const markerOf = (f: Finding): string =>
   `<!-- docs-watch:${f.kind}:${f.page}#${f.blockId}:${f.newHash ?? f.oldHash} -->`
 
 // Docs text is data. These make it inert in an issue body: a word joiner
 // after each `@` stops a mention, and one after each `<` of `<!--` stops a
 // comment that could fake a marker.
-export const neutralize = (text) => String(text).replaceAll('@', '@⁠').replaceAll('<!--', '<⁠!--')
+export const neutralize = (text: string): string =>
+  String(text).replaceAll('@', '@\u2060').replaceAll('<!--', '<\u2060!--')
 
-const longestRun = (text, char) => {
+const longestRun = (text: string, char: string) => {
   let best = 0
   let run = 0
   for (const c of text) {
@@ -42,7 +50,7 @@ const longestRun = (text, char) => {
 }
 
 // Cuts a text to MAX_QUOTE characters and says so.
-const cap = (text) =>
+const cap = (text: string) =>
   text.length <= MAX_QUOTE
     ? { text, note: '' }
     : {
@@ -51,14 +59,14 @@ const cap = (text) =>
       }
 
 // A fenced block whose fence is longer than any backtick run in the text.
-export function fence(text, info = 'text') {
+export function fence(text: string, info = 'text'): string {
   const { text: body, note } = cap(neutralize(text))
   const ticks = '`'.repeat(Math.max(3, longestRun(body, '`') + 1))
   return [`${ticks}${info}`, body, ticks, ...(note ? ['', note] : [])].join('\n')
 }
 
 // Inline code that no backtick in the text can close.
-export function inline(text) {
+export function inline(text: string): string {
   const body = neutralize(text).replaceAll('\n', ' ')
   const ticks = '`'.repeat(longestRun(body, '`') + 1)
   return `${ticks} ${body} ${ticks}`
@@ -69,32 +77,37 @@ export function inline(text) {
 // of a change, and puts "..." in place of the other unchanged lines. The
 // change then stays inside the length cap of a large block.
 const CONTEXT = 3
-export function diffLines(oldText, newText) {
+export function diffLines(oldText: string, newText: string): string {
   const a = oldText.split('\n')
   const b = newText.split('\n')
-  const table = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0))
+  const table: number[][] = Array.from({ length: a.length + 1 }, () =>
+    new Array<number>(b.length + 1).fill(0),
+  )
+  // The length of the longest common subsequence from line i of a and line j
+  // of b. A cell outside the table is 0.
+  const at = (i: number, j: number) => table[i]?.[j] ?? 0
   for (let i = a.length - 1; i >= 0; i--) {
+    const row = table[i] as number[]
     for (let j = b.length - 1; j >= 0; j--) {
-      table[i][j] =
-        a[i] === b[j] ? table[i + 1][j + 1] + 1 : Math.max(table[i + 1][j], table[i][j + 1])
+      row[j] = a[i] === b[j] ? at(i + 1, j + 1) + 1 : Math.max(at(i + 1, j), at(i, j + 1))
     }
   }
-  const out = []
+  const out: string[] = []
   let i = 0
   let j = 0
   while (i < a.length || j < b.length) {
     if (i < a.length && j < b.length && a[i] === b[j]) {
       out.push(`  ${a[i++]}`)
       j++
-    } else if (i < a.length && (j >= b.length || table[i + 1][j] >= table[i][j + 1])) {
+    } else if (i < a.length && (j >= b.length || at(i + 1, j) >= at(i, j + 1))) {
       out.push(`- ${a[i++]}`)
     } else {
       out.push(`+ ${b[j++]}`)
     }
   }
   const changed = out.flatMap((line, index) => (line.startsWith('  ') ? [] : [index]))
-  const near = (index) => changed.some((c) => Math.abs(c - index) <= CONTEXT)
-  const kept = []
+  const near = (index: number) => changed.some((c) => Math.abs(c - index) <= CONTEXT)
+  const kept: string[] = []
   for (const [index, line] of out.entries()) {
     if (near(index)) kept.push(line)
     else if (kept.at(-1) !== '  ...') kept.push('  ...')
@@ -103,14 +116,15 @@ export function diffLines(oldText, newText) {
 }
 
 // A Conventional Commit title of MAX_TITLE characters or fewer.
-export function titleOf(f) {
+export function titleOf(f: Finding): string {
   const scope = f.rules.length > 0 ? `(${f.rules.join(',')})` : ''
-  const lead = {
+  const leads: Record<Kind, string> = {
     'rule-update': `docs${scope}: update for `,
     'rule-removal': `docs${scope}: review removal of `,
     'new-rule': 'feat: new rule candidate from ',
     'needs-triage': `docs${scope}: triage docs change to `,
-  }[f.kind]
+  }
+  const lead = leads[f.kind]
   const heading = neutralize(f.heading).replaceAll('\n', ' ')
   const room = MAX_TITLE - lead.length
   if (heading.length <= room) return `${lead}${heading}`
@@ -118,14 +132,14 @@ export function titleOf(f) {
   return `${lead}${heading.slice(0, room - 3).trimEnd()}...`
 }
 
-const WHY = {
+const WHY: Record<Kind, string> = {
   'rule-update': 'The Claude Code docs changed a block that a rule cites.',
   'rule-removal': 'A block that a rule cites is gone, or it now makes the rule obsolete.',
   'new-rule': 'A docs block that no rule cites states a requirement that a lint check can measure.',
   'needs-triage': 'The classifier could not decide this docs change, so a person must decide.',
 }
 
-export function bodyOf(f, repo) {
+export function bodyOf(f: Finding, repo: string): string {
   const blob = `https://github.com/${repo}/blob/main`
   const classifier =
     f.probability === null
@@ -172,7 +186,7 @@ export function bodyOf(f, repo) {
     '## Acceptance',
     '',
     '- [ ] A person decides: update the rule, drop it, add a rule, or move the map entry.',
-    '- [ ] The resolving pull request refreshes the snapshot with `node scripts/docs-watch.mjs update`.',
+    '- [ ] The resolving pull request refreshes the snapshot with `node scripts/docs-watch.ts update`.',
     '',
     '## References',
     '',
@@ -187,25 +201,26 @@ export function bodyOf(f, repo) {
 const FIELDS = ['page', 'heading', 'blockId', 'change', 'reason', 'link']
 
 // Throws for a finding that the classifier cannot have made.
-export function validate(f) {
-  if (!KINDS.includes(f?.kind)) throw new Error(`a finding has an unknown kind: ${f?.kind}`)
+export function validate(value: unknown): asserts value is Finding {
+  const f = (value ?? {}) as Record<string, unknown>
+  if (!KINDS.includes(f.kind as Kind)) throw new Error(`a finding has an unknown kind: ${f.kind}`)
   for (const field of FIELDS) {
     if (typeof f[field] !== 'string' || f[field] === '') {
-      throw new Error(`a ${f.kind} finding has no ${field}`)
+      throw new Error(`a ${String(f.kind)} finding has no ${field}`)
     }
   }
-  if (!Array.isArray(f.rules)) throw new Error(`a ${f.kind} finding has no rules list`)
+  if (!Array.isArray(f.rules)) throw new Error(`a ${String(f.kind)} finding has no rules list`)
   if (typeof f.newHash !== 'string' && typeof f.oldHash !== 'string') {
-    throw new Error(`a ${f.kind} finding has no hash`)
+    throw new Error(`a ${String(f.kind)} finding has no hash`)
   }
 }
 
 // Runs gh and returns its stdout. Tests pass a fake runner instead.
-export const ghRunner = (args, input) =>
+export const ghRunner: Run = (args, input) =>
   execFileSync('gh', args, { input, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'] })
 
 // The bodies of the open issues (not pull requests), one JSON object a line.
-export function openBodies(repo, run) {
+export function openBodies(repo: string, run: Run): OpenIssue[] {
   const out = run([
     'api',
     '--paginate',
@@ -216,15 +231,33 @@ export function openBodies(repo, run) {
   return out
     .split('\n')
     .filter((line) => line.trim() !== '')
-    .map((line) => JSON.parse(line))
+    .map((line) => JSON.parse(line) as OpenIssue)
 }
 
-export async function openIssues({ findings, repo, run, dryRun, max = MAX_ISSUES, log }) {
-  for (const f of findings) validate(f)
-  const open = openBodies(repo, run)
-  const seen = new Set()
-  const toOpen = []
+export async function openIssues({
+  findings,
+  repo,
+  run,
+  dryRun,
+  max = MAX_ISSUES,
+  log,
+}: {
+  findings: unknown[]
+  repo: string
+  run: Run
+  dryRun: boolean
+  max?: number
+  log: (text: string) => void
+}): Promise<{ opened: string[]; skipped: number; wouldOpen: number }> {
+  const valid: Finding[] = []
   for (const f of findings) {
+    validate(f)
+    valid.push(f)
+  }
+  const open = openBodies(repo, run)
+  const seen = new Set<string>()
+  const toOpen: Finding[] = []
+  for (const f of valid) {
     const marker = markerOf(f)
     const existing = open.find((issue) => String(issue.body ?? '').includes(marker))
     if (existing) {
@@ -240,7 +273,7 @@ export async function openIssues({ findings, repo, run, dryRun, max = MAX_ISSUES
       `${toOpen.length} new issues is more than the limit of ${max}. Triage by hand, or run again with --max.`,
     )
   }
-  const opened = []
+  const opened: string[] = []
   for (const f of toOpen) {
     const issue = { title: titleOf(f), body: bodyOf(f, repo), type: 'Task' }
     if (dryRun) {
@@ -257,20 +290,27 @@ export async function openIssues({ findings, repo, run, dryRun, max = MAX_ISSUES
   return { opened, skipped: findings.length - toOpen.length, wouldOpen: dryRun ? toOpen.length : 0 }
 }
 
-export async function main(argv, env, run = ghRunner, log = console.log) {
-  const value = (flag) => {
+export async function main(
+  argv: string[],
+  env: Record<string, string | undefined>,
+  run: Run = ghRunner,
+  log: (text: string) => void = console.log,
+): Promise<number> {
+  const value = (flag: string) => {
     const index = argv.indexOf(flag)
     return index === -1 ? undefined : argv[index + 1]
   }
   const flagValues = new Set([value('--repo'), value('--max')])
   const file = argv.find((arg) => !arg.startsWith('--') && !flagValues.has(arg))
   if (!file)
-    throw new Error('usage: docs-issues.mjs <findings.json> [--dry-run] [--repo owner/name]')
+    throw new Error('usage: docs-issues.ts <findings.json> [--dry-run] [--repo owner/name]')
   const repo = value('--repo') ?? env.GITHUB_REPOSITORY
   if (!repo) throw new Error('set --repo or GITHUB_REPOSITORY')
   const max = value('--max') === undefined ? MAX_ISSUES : Number(value('--max'))
   if (!Number.isInteger(max) || max < 0) throw new Error('--max takes a whole number')
-  const { findings } = JSON.parse(readFileSync(path.resolve(file), 'utf8'))
+  const { findings } = JSON.parse(readFileSync(path.resolve(file), 'utf8')) as {
+    findings?: unknown
+  }
   if (!Array.isArray(findings)) throw new Error(`${file} has no findings list`)
   const result = await openIssues({
     findings,
@@ -285,7 +325,7 @@ export async function main(argv, env, run = ghRunner, log = console.log) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  process.exitCode = await main(process.argv.slice(2), process.env).catch((error) => {
+  process.exitCode = await main(process.argv.slice(2), process.env).catch((error: Error) => {
     console.error(error.message)
     return 1
   })

@@ -99,14 +99,14 @@ run a `.ts` file.
 
 ## Docs classifier
 
-`node scripts/docs-classify.mjs` reads each cited page again and asks TypeSafe Jev about each
+`node scripts/docs-classify.ts` reads each cited page again and asks TypeSafe Jev about each
 changed, added or removed block. It needs the `TYPESAFE_API_KEY` secret. It prints the findings
 as JSON: `rule-update`, `rule-removal`, `new-rule` or `needs-triage`. An error or an unclear
 answer gives `needs-triage`, and a failed docs fetch fails the job.
 [ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records the questions, the thresholds
 and the spike data.
 
-`node scripts/docs-issues.mjs <findings.json>` opens one issue for each finding, as the org
+`node scripts/docs-issues.ts <findings.json>` opens one issue for each finding, as the org
 GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
 hash stops a second issue for the same change. `--dry-run` prints each issue and opens none. A
 manual run of the workflow takes a `dry_run` input.

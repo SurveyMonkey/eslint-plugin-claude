@@ -13,7 +13,7 @@ related_issues: [25]
 
 **A docs change can make a rule wrong, and nobody sees it.** The rules in `src/rules/` come
 from the Claude Code docs. `docs/rule-sources.json` maps each rule to its docs blocks. The docs
-watch (`scripts/docs-watch.mjs`) finds the blocks that changed since the snapshot in
+watch (`scripts/docs-watch.ts`) finds the blocks that changed since the snapshot in
 `docs/docs-snapshot/`. It does not say what a change means for a rule.
 
 **Most changes do not affect a rule, and some do.** The Claude Code changelog on 2026-09-29
@@ -43,7 +43,7 @@ model, and TypeSafe Jev.
 
 ### 1. The classifier is Jev, with three Noul questions and fixed thresholds
 
-`scripts/docs-classify.mjs` sends one request for each changed, added or removed block. All
+`scripts/docs-classify.ts` sends one request for each changed, added or removed block. All
 questions share one `state`: the page, the heading, the old text, the new text, the lines that
 each side adds, and each rule that cites the block. The questions are constants. Docs text goes
 only into the `state`, as data.
@@ -150,14 +150,14 @@ no held-out set exists. Record new cases and their results here before you chang
 
 The snapshot stays in `docs/docs-snapshot/` and the map stays in `docs/rule-sources.json`. The
 job never writes them and never commits. A person, or a triage pull request, runs
-`node scripts/docs-watch.mjs update`. Until then, each run sees the same change again. The
+`node scripts/docs-watch.ts update`. Until then, each run sees the same change again. The
 dedupe key below stops a second issue for it.
 
 ### 5. The dedupe key is a hidden marker with the block hash
 
 Each issue body starts with `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> -->`. The hash is
 the new block hash, or the old hash for a removed block. Before it opens an issue,
-`scripts/docs-issues.mjs` reads the bodies of all open issues. It opens no issue for a marker
+`scripts/docs-issues.ts` reads the bodies of all open issues. It opens no issue for a marker
 that it finds. A block that changes again has a new hash, so it gets a new issue.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
