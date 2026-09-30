@@ -92,21 +92,24 @@ const HEADING = /^(#{1,6})[ \t]+(.+?)[ \t]*#*[ \t]*$/
 const FENCE = /^[ \t]*(`{3,}|~{3,})/
 // An HTML heading, as the live pages write it: the opening tag alone on a line
 // at column 0, the title on the next lines, and the closing tag alone on a
-// line. The pattern is anchored at both ends and reads only the tag name and
-// the attribute text. It removes and sanitizes nothing.
+// line. Attributes are name="value" pairs. The title keeps inner HTML tags.
+// Any other form of a heading tag is an error, not text (see splitBlocks).
 const HTML_OPEN = /^<h([1-6])((?:[ \t]+[a-z-]+="[^"]*")*)[ \t]*>$/
+const HTML_LIKE = /^\s*<h[1-6][\s>]/i
 const HTML_ID = /(?:^|[ \t])id="([^"]*)"/
 // The most lines that may sit between the opening tag and the closing tag.
 const HTML_TITLE_LINES = 5
 
 // Reads an HTML heading that starts at lines[start]. Returns undefined when
-// the line is not an opening tag, or when no closing tag follows it soon.
+// the line is not an opening tag, or when no closing tag follows it soon. The
+// scan stops at a line that starts another heading or a code fence.
 function readHtmlHeading(lines: string[], start: number) {
   const open = HTML_OPEN.exec(lines[start] ?? '')
-  const level = Number(open?.[1])
   if (!open) return undefined
+  const level = Number(open[1])
   for (let end = start + 1; end <= start + HTML_TITLE_LINES + 1; end++) {
-    if (lines[end] === `</h${level}>`) {
+    const line = lines[end] ?? ''
+    if (line === `</h${level}>`) {
       const title = stripInline(
         lines
           .slice(start + 1, end)
@@ -115,6 +118,7 @@ function readHtmlHeading(lines: string[], start: number) {
       )
       return { level, title, id: HTML_ID.exec(open[2] ?? '')?.[1], end }
     }
+    if (HTML_OPEN.test(line) || HEADING.test(line) || FENCE.test(line)) break
   }
   return undefined
 }
@@ -125,6 +129,9 @@ function readHtmlHeading(lines: string[], start: number) {
 // block. Text before the first heading is not a block. The ID of an HTML
 // heading is its `id` attribute, which is the anchor of the site. `key` is
 // `id`, with a numeric suffix on the second and later blocks that share an ID.
+// It throws for a code fence that is not closed, and for a line that looks
+// like an HTML heading but is not in the form above. Setext headings and
+// indented Markdown headings are not supported.
 export function splitBlocks(markdown: string): Block[] {
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n')
   const blocks: { level: number; title: string; id?: string; lines: string[] }[] = []
@@ -157,9 +164,13 @@ export function splitBlocks(markdown: string): Block[] {
         })
         continue
       }
+      if (HTML_LIKE.test(line)) {
+        throw new Error(`line ${index + 1} looks like an HTML heading that the parser cannot read`)
+      }
     }
     blocks.at(-1)?.lines.push(line)
   }
+  if (fence) throw new Error('a code fence is not closed')
   const seen = new Map<string, number>()
   return blocks.map(({ level, title, id: explicit, lines: own }) => {
     const id = explicit || slugify(title)
@@ -180,9 +191,11 @@ export function resolveSource(
   pageText: string,
 ): SnapshotSource {
   const id = slugify(heading)
-  // A block matches by its ID, or by the slug of the title that the page shows.
-  // An HTML heading has an ID that can differ from the slug of its title.
-  const matches = blocks.filter((block) => block.id === id || slugify(block.title) === id)
+  // A block matches by its ID first. Only when no ID matches does a block match
+  // by the slug of the title that the page shows. An HTML heading has an ID
+  // that can differ from the slug of its title.
+  const byId = blocks.filter((block) => block.id === id)
+  const matches = byId.length > 0 ? byId : blocks.filter((block) => slugify(block.title) === id)
   if (matches.length === 0) {
     throw new Error(`${url}: heading "${heading}" (id ${id}) is not on the page`)
   }
@@ -224,7 +237,12 @@ export async function readPage(
 ): Promise<Snapshot> {
   const raw = await fetchText(`${url}.md`)
   const pageText = raw.replace(/\r\n?/g, '\n')
-  const blocks = splitBlocks(pageText)
+  let blocks: Block[]
+  try {
+    blocks = splitBlocks(pageText)
+  } catch (error) {
+    throw new Error(`${url}: ${(error as Error).message}`, { cause: error })
+  }
   if (blocks[0]?.level !== 1) throw new Error(`${url}: the page has no title heading`)
   return {
     url,
@@ -242,11 +260,13 @@ const statusOf = (before: string | undefined, now: string): Status =>
 // snapshot is missing: the page is then new. A page with the same hash is
 // changed when a mapped source is not in the snapshot yet.
 export function comparePage(current: Snapshot, stored: Snapshot | undefined): PageReport {
-  const before = new Map((stored?.sources ?? []).map((source) => [source.id, source]))
+  // The mapped heading is unique on a page. The block ID is not, when two
+  // HTML headings share an `id` attribute.
+  const before = new Map((stored?.sources ?? []).map((source) => [source.heading, source]))
   const sources = current.sources.map(({ heading, id, hash }) => ({
     heading,
     id,
-    status: statusOf(before.get(id)?.hash, hash),
+    status: statusOf(before.get(heading)?.hash, hash),
   }))
   if (!stored) {
     return {

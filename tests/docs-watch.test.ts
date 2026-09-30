@@ -13,7 +13,7 @@ import {
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Snapshot, SourceMap } from '../scripts/docs-watch.ts'
 import * as api from '../scripts/docs-watch.ts'
 
@@ -113,7 +113,7 @@ describe('HTML headings', () => {
     ])
   })
 
-  it('no longer lets the block before an HTML heading absorb its section', () => {
+  it('ends the block before an HTML heading at that heading', () => {
     const first = blocks.find((block) => block.id === 'create-your-first-skill')
     expect(first?.text).toContain('Create a `SKILL.md` file')
     expect(first?.text).not.toContain('Where you save a skill')
@@ -122,7 +122,7 @@ describe('HTML headings', () => {
     expect(live?.text).not.toContain('Claude Code looks in each parent directory')
   })
 
-  it('reads the title from the lines between the tags, and keeps inner markup out of it', () => {
+  it('reads the title between the tags, drops code marks and keeps angle brackets', () => {
     expect(blocks.find((block) => block.id === 'where-skills-live')?.title).toBe(
       'Choose where skills load',
     )
@@ -156,9 +156,9 @@ describe('HTML headings', () => {
     )
   })
 
-  it('takes a closing tag of another level as text', () => {
+  it('stops for a closing tag of another level', () => {
     const text = '# Title\n\n<h2 id="open">\n  Wrong end\n</h3>\n'
-    expect(api.splitBlocks(text).map((block) => block.key)).toEqual(['title'])
+    expect(() => api.splitBlocks(text)).toThrow('line 3 looks like an HTML heading')
   })
 
   it('makes the whole page the source for an HTML title, with the id of the tag', async () => {
@@ -167,9 +167,95 @@ describe('HTML headings', () => {
     expect(read.sources[0]).toMatchObject({ id: 'the-page', text: page })
   })
 
-  it('takes an opening tag without a closing tag as text', () => {
+  it('stops for an opening tag without a closing tag', () => {
     const text = '# Title\n\n<h2 id="open">\n  Never closed\n\nMore text.\n'
-    expect(api.splitBlocks(text).map((block) => block.key)).toEqual(['title'])
+    expect(() => api.splitBlocks(text)).toThrow('line 3 looks like an HTML heading')
+  })
+
+  it('stops at the next heading when it looks for a closing tag', () => {
+    const text = '# T\n\n<h2 id="a">\n  A\n\nText\n<h2 id="b">\n  B\n</h2>\n'
+    expect(() => api.splitBlocks(text)).toThrow('line 3 looks like an HTML heading')
+    const fenced = '# T\n\n<h2 id="a">\n```\n</h2>\n'
+    expect(() => api.splitBlocks(fenced)).toThrow('line 3 looks like an HTML heading')
+    const markdown = '# T\n\n<h2 id="a">\n## B\n</h2>\n'
+    expect(() => api.splitBlocks(markdown)).toThrow('line 3 looks like an HTML heading')
+  })
+
+  it('stops for an HTML heading in any other form', () => {
+    for (const line of [
+      '<h2 id="x">Title</h2>',
+      "<h2 id='x'>",
+      '  <h2 id="x">',
+      '<H2 id="x">',
+      '<h2 id="x"> ',
+    ]) {
+      const text = `# T\n${line}\nY\n</h2>\n`
+      expect(() => api.splitBlocks(text), line).toThrow('looks like an HTML heading')
+    }
+    expect(() => api.splitBlocks('# T\n<h2 id="x">\nY\n</h2> \n')).toThrow('line 2 looks like')
+  })
+
+  it('reads a title of five lines, and stops for one of six', () => {
+    const title = (count: number) =>
+      `# T\n<h2 id="x">\n${Array.from({ length: count }, (_, n) => `w${n}`).join('\n')}\n</h2>\n`
+    expect(api.splitBlocks(title(5)).map((block) => block.title)).toEqual(['T', 'w0 w1 w2 w3 w4'])
+    expect(() => api.splitBlocks(title(6))).toThrow('looks like an HTML heading')
+  })
+
+  it('joins a title of several lines with one space', () => {
+    const text = '# T\n<h2>\n  Foo\n     bar\n</h2>\n'
+    const [, block] = api.splitBlocks(text)
+    expect(block?.title).toBe('Foo bar')
+    expect(block?.key).toBe('foo-bar')
+  })
+
+  it('takes the title slug for an empty id attribute', () => {
+    const [, block] = api.splitBlocks('# T\n<h2 id="">\n  Empty\n</h2>\n')
+    expect(block?.key).toBe('empty')
+  })
+
+  it('reads the id attribute, and not an attribute that ends in id', () => {
+    const both = api.splitBlocks('# T\n<h2 data-id="wrong" id="right">\n  Title\n</h2>\n')
+    expect(both[1]?.key).toBe('right')
+    const only = api.splitBlocks('# T\n<h2 data-id="wrong">\n  Title\n</h2>\n')
+    expect(only[1]?.key).toBe('title')
+  })
+
+  it('stops for a code fence that is not closed', () => {
+    const text = '# T\n## A\n```sh\nx\n## B\n'
+    expect(() => api.splitBlocks(text)).toThrow('a code fence is not closed')
+  })
+
+  it('names the page when a code fence is not closed', async () => {
+    await expect(api.readPage(URL_, ['T'], serve('# T\n```sh\nx\n'))).rejects.toThrow(
+      `${URL_}: a code fence is not closed`,
+    )
+  })
+
+  it('prefers a block with the ID over a block with the same title slug', async () => {
+    const page = '# T\n## Examples\n<h2 id="hook-examples">\n  Examples\n</h2>\n'
+    const read = await api.readPage(URL_, ['Examples'], serve(page))
+    expect(read.sources[0]?.id).toBe('examples')
+  })
+
+  it('still fails for two title slugs when no block has the ID', async () => {
+    const page = '# T\n<h2 id="a">\n  Same\n</h2>\n<h2 id="b">\n  Same\n</h2>\n'
+    await expect(api.readPage(URL_, ['Same'], serve(page))).rejects.toThrow('appears 2 times')
+  })
+
+  it('reports a source by its heading when two HTML headings share an id', async () => {
+    const page = (foo: string) =>
+      `# T\n<h2 id="x">\n  Other\n</h2>\nother\n<h2 id="x">\n  Foo\n</h2>\n${foo}\n`
+    const snapshots = await snapshotOf(page('a'), ['Other', 'Foo'])
+    const report = await api.checkPages({
+      map: map('Other', 'Foo'),
+      snapshots,
+      fetchText: serve(page('b')),
+    })
+    expect(report.pages[0]?.sources.map((source) => [source.heading, source.status])).toEqual([
+      ['Other', 'unchanged'],
+      ['Foo', 'changed'],
+    ])
   })
 
   it('takes an HTML heading with no id from the slug of its title', () => {
@@ -441,8 +527,28 @@ describe('fetchMarkdown', () => {
   })
 })
 
+describe('fetchMarkdown', () => {
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('names the URL and the cause of a failed request', async () => {
+    const cause = new Error('connect ECONNREFUSED')
+    vi.stubGlobal('fetch', async () => {
+      throw Object.assign(new TypeError('fetch failed'), { cause })
+    })
+    await expect(api.fetchMarkdown('https://x.test/a.md')).rejects.toThrow(
+      'https://x.test/a.md: connect ECONNREFUSED',
+    )
+    vi.stubGlobal('fetch', async () => {
+      throw new TypeError('fetch failed')
+    })
+    await expect(api.fetchMarkdown('https://x.test/a.md')).rejects.toThrow(
+      'https://x.test/a.md: fetch failed',
+    )
+  })
+})
+
 describe('renderMarkdown', () => {
-  it('lists the blocks of a changed page and only counts an unchanged page', async () => {
+  it('lists the blocks of a changed page and only names an unchanged page', async () => {
     const snapshots = await snapshotOf(FIXTURE, ['hooks'])
     const edited = FIXTURE.replace('an array mixing both', 'an array of both')
     const changed = api.renderMarkdown(
@@ -619,6 +725,14 @@ describe('update and check on a temporary tree', () => {
     expect(() => api.loadSnapshots(root)).toThrow(bad)
   })
 
+  it('reads only the .json files of the snapshot directory', () => {
+    const root = tree(map('hooks'))
+    mkdirSync(path.join(root, 'docs/docs-snapshot'))
+    writeFileSync(path.join(root, 'docs/docs-snapshot/notes.txt'), 'not json\n')
+    writeFileSync(path.join(root, 'docs/docs-snapshot/a.json'), '{"url":"u"}\n')
+    expect([...api.loadSnapshots(root).keys()]).toEqual(['a.json'])
+  })
+
   it('treats a missing snapshot directory as empty, and any other fault as a failure', () => {
     const root = tree(map('hooks'))
     expect(api.loadSnapshots(root).size).toBe(0)
@@ -646,11 +760,16 @@ describe('update and check on a temporary tree', () => {
   it('runs as a command and exits 1 when the map is missing', () => {
     const root = mkdtempSync(path.join(tmpdir(), 'docs-watch-'))
     dirs.push(root)
-    expect(() =>
+    let failure: { status: number; stderr: Buffer } | undefined
+    try {
       execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, 'check', root], {
         stdio: 'pipe',
-      }),
-    ).toThrow(/ENOENT/)
+      })
+    } catch (error) {
+      failure = error as { status: number; stderr: Buffer }
+    }
+    expect(failure?.status).toBe(1)
+    expect(failure?.stderr.toString()).toContain('ENOENT')
   })
 })
 
