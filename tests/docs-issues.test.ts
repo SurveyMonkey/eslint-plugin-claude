@@ -1,5 +1,5 @@
-// The issue step opens one issue for each classifier finding. These tests
-// inject the gh runner, so no test calls GitHub.
+// The issue step opens one issue for each changed block. These tests inject
+// the gh runner, so no test calls GitHub.
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -55,12 +55,17 @@ function fakeGh(open: { number: number; body: string | null }[] = []) {
 const quiet = () => {}
 
 describe('markerOf and titleOf', () => {
-  it('marks the kind, the page, the block and the new hash', () => {
+  it('marks the kind, the page, the block, the new hash and the rules', () => {
     expect(api.markerOf(update)).toBe(
-      `<!-- docs-watch:rule-update:${URL_}#frontmatter-reference:${'b'.repeat(64)} -->`,
+      `<!-- docs-watch:rule-update:${URL_}#frontmatter-reference:${'b'.repeat(64)} rules=skill-description-max-length -->`,
     )
-    const removal = { ...update, kind: 'rule-removal' as const, newHash: null }
-    expect(api.markerOf(removal)).toContain(`#frontmatter-reference:${'a'.repeat(64)} -->`)
+    const removal = { ...update, kind: 'rule-removal' as const, newHash: null, rules: ['a', 'b'] }
+    expect(api.markerOf(removal)).toContain(
+      `#frontmatter-reference:gone:${'a'.repeat(64)} rules=a,b -->`,
+    )
+    expect(api.markerOf(newRule)).toBe(
+      `<!-- docs-watch:new-rule:${URL_}#agent-frontmatter:${'b'.repeat(64)} -->`,
+    )
   })
 
   it('writes a Conventional Commit title of fewer than 70 characters', () => {
@@ -89,6 +94,11 @@ describe('markerOf and titleOf', () => {
   it('drops the scope when the rules leave no room for the heading', () => {
     const many = { ...update, rules: ['a'.repeat(30), 'b'.repeat(30)] }
     expect(api.titleOf(many)).toBe('docs: update for Frontmatter reference')
+    // "docs(<rule>): update for " with 65 or 66 characters leaves room for 4
+    // or 3 characters of the heading.
+    const room = (n: number) => ({ ...update, rules: ['r'.repeat(n - 19)] })
+    expect(api.titleOf(room(65))).toBe(`docs(${'r'.repeat(46)}): update for F...`)
+    expect(api.titleOf(room(66))).toBe('docs: update for Frontmatter reference')
   })
 
   it('makes a heading inert in the title', () => {
@@ -173,11 +183,17 @@ describe('bodyOf', () => {
   })
 
   it('quotes the old and new text apart, with no diff, for a block of many lines', () => {
-    const lines = Array.from({ length: api.MAX_DIFF_LINES + 1 }, (_, i) => `line ${i}`)
-    const body = api.bodyOf({ ...update, newText: lines.join('\n'), oldText: 'old' }, REPO)
-    expect(body).toContain(`more than ${api.MAX_DIFF_LINES} lines, so there is no diff`)
+    expect(api.MAX_DIFF_LINES).toBe(1000)
+    const lines = (n: number) => Array.from({ length: n }, (_, i) => `line ${i}`).join('\n')
+    const body = api.bodyOf({ ...update, newText: lines(1001), oldText: 'old' }, REPO)
+    expect(body).toContain('One text of the block has more than 1000 lines, so there is no diff')
     expect(body).not.toContain('```diff')
     expect(body).toContain('```text\nold\n```')
+    const old = api.bodyOf({ ...update, oldText: lines(1001), newText: 'new' }, REPO)
+    expect(old).not.toContain('```diff')
+    expect(api.bodyOf({ ...update, oldText: lines(1000), newText: 'new' }, REPO)).toContain(
+      '```diff',
+    )
   })
 
   it('cuts a long text and says so', () => {
@@ -284,6 +300,87 @@ describe('openIssues', () => {
     expect(gh.posts()).toEqual([])
   })
 
+  it('reads the marker of an open issue of each kind', async () => {
+    for (const kind of api.KINDS) {
+      const f = { ...update, kind }
+      const gh = fakeGh([{ number: 7, body: api.markerOf(f) }])
+      await api.openIssues({ findings: [f], repo: REPO, run: gh.run, dryRun: false, log: quiet })
+      expect(gh.posts()).toEqual([])
+    }
+  })
+
+  it('opens an issue for a rule that the open issue for the block does not name', async () => {
+    const gh = fakeGh([{ number: 7, body: api.bodyOf(update, REPO) }])
+    const logs: string[] = []
+    const both = { ...update, rules: [...update.rules, 'b-rule'] }
+    await api.openIssues({
+      findings: [both],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    expect(gh.posts()).toHaveLength(1)
+    expect(logs[0]).toContain('open: #7 has')
+    expect(logs[0]).toContain('but not b-rule')
+    // Two open issues that name the rules between them stop a new issue.
+    const b = { ...update, rules: ['b-rule'] }
+    const two = fakeGh([
+      { number: 7, body: api.bodyOf(update, REPO) },
+      { number: 8, body: api.bodyOf(b, REPO) },
+    ])
+    await api.openIssues({ findings: [both], repo: REPO, run: two.run, dryRun: false, log: quiet })
+    expect(two.posts()).toEqual([])
+  })
+
+  it('does not match the issue for new text with the removal of that block', async () => {
+    // The snapshot took the new text, then the block went away.
+    const gh = fakeGh([{ number: 7, body: api.bodyOf(update, REPO) }])
+    const removal: Finding = {
+      ...update,
+      kind: 'rule-removal',
+      oldHash: update.newHash,
+      newHash: null,
+      change: 'removed',
+      newText: null,
+    }
+    await api.openIssues({
+      findings: [removal],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(gh.posts()).toHaveLength(1)
+  })
+
+  it('opens the rest on the next run after gh fails', async () => {
+    const other = { ...newRule, newHash: 'c'.repeat(64) }
+    const open: { number: number; body: string | null }[] = []
+    let posts = 0
+    const run: Run = (args, input) => {
+      if (args.includes('--paginate')) return open.map((issue) => JSON.stringify(issue)).join('\n')
+      posts += 1
+      if (posts === 2) throw new Error('gh: HTTP 502')
+      open.push({ number: posts, body: JSON.parse(input ?? '{}').body })
+      return `https://github.com/${REPO}/issues/${posts}\n`
+    }
+    const findings = [
+      update,
+      { ...update, kind: 'needs-triage' as const, rules: ['b-rule'] },
+      other,
+    ]
+    await expect(
+      api.openIssues({ findings, repo: REPO, run, dryRun: false, log: quiet }),
+    ).rejects.toThrow('HTTP 502')
+    const again = await api.openIssues({ findings, repo: REPO, run, dryRun: false, log: quiet })
+    expect(again.opened).toHaveLength(1)
+    expect(open.map((issue) => issue.body?.split('\n')[0])).toEqual([
+      api.markerOf({ ...update, rules: [...update.rules, 'b-rule'] }),
+      api.markerOf(other),
+    ])
+  })
+
   it('opens a new issue when the block changes again and has a new hash', async () => {
     const gh = fakeGh([{ number: 7, body: api.bodyOf(update, REPO) }])
     const again = { ...update, oldHash: update.newHash, newHash: 'c'.repeat(64) }
@@ -293,7 +390,7 @@ describe('openIssues', () => {
 
   it('opens one issue for two findings with one marker', async () => {
     const gh = fakeGh()
-    await api.openIssues({
+    const result = await api.openIssues({
       findings: [update, { ...update }],
       repo: REPO,
       run: gh.run,
@@ -301,6 +398,46 @@ describe('openIssues', () => {
       log: quiet,
     })
     expect(gh.posts()).toHaveLength(1)
+    expect(result.skipped).toBe(0)
+  })
+
+  it('opens one issue for findings of two kinds on one block, named by the first kind', async () => {
+    const gh = fakeGh()
+    const triage = { ...update, kind: 'needs-triage' as const, rules: ['b-rule'], reason: 'b' }
+    const cand = { ...update, kind: 'new-rule' as const, rules: [], reason: 'c' }
+    await api.openIssues({
+      findings: [cand, triage, update],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(gh.posts()).toHaveLength(1)
+    const sent = JSON.parse(gh.posts()[0]?.input ?? '{}')
+    expect(sent.title).toBe('docs(b-rule,skill-description-max-length): update for Frontmatter...')
+    expect(sent.body).toContain(
+      `- Reason: new-rule: c; needs-triage: b; rule-update: ${update.reason}\n`,
+    )
+    const removal = { ...update, kind: 'rule-removal' as const, rules: ['c-rule'] }
+    expect(api.merge([update, removal, triage]).kind).toBe('rule-removal')
+    expect(api.merge([cand, triage]).kind).toBe('needs-triage')
+    expect(() => api.merge([])).toThrow('one finding or more')
+  })
+
+  it('keeps the highest probability of the kind that names the issue', () => {
+    const code = { ...update, kind: 'rule-removal' as const, probability: null, confidence: null }
+    const jev = { ...code, rules: ['b-rule'], probability: 0.9, confidence: 0.8, reason: 'j' }
+    const low = { ...jev, probability: 0.7, confidence: 0.4 }
+    const merged = api.merge([code, low, jev, { ...update, probability: 0.99 }])
+    expect([merged.probability, merged.confidence]).toEqual([0.9, 0.8])
+  })
+
+  it('keeps each part of a reason once, and every rule once', () => {
+    const a = { ...update, rules: ['a', 'b'], reason: 'x; y' }
+    const merged = api.merge([a, { ...a, rules: ['b', 'c'], reason: 'y; z' }, { ...a }])
+    expect(merged.reason).toBe('x; y; z')
+    expect(merged.rules).toEqual(['a', 'b', 'c'])
+    expect(a.rules).toEqual(['a', 'b'])
   })
 
   it('joins the rules and the reasons of two findings with one marker', async () => {
@@ -364,10 +501,32 @@ describe('openIssues', () => {
     expect(() => api.validate({ ...update, oldHash: null, newHash: null })).toThrow('has no hash')
     expect(() => api.validate({ ...update, reason: '' })).toThrow('has no reason')
     expect(() => api.validate({ ...update, rules: [{}] })).toThrow('has no rules list')
+    expect(() => api.validate({ ...update, rules: ['a', {}] })).toThrow('has no rules list')
     expect(() => api.validate({ ...update, newHash: 'x -->' })).toThrow('not a SHA-256 hash')
-    expect(() => api.validate({ ...update, oldText: undefined })).toThrow('oldText that is not')
+    const tail = `${'a'.repeat(64)} --> <!-- x`
+    for (const hash of [tail, `x${'a'.repeat(64)}`, 'A'.repeat(64), 'a'.repeat(63)]) {
+      expect(() => api.validate({ ...update, oldHash: hash })).toThrow('oldHash that is not')
+      expect(() => api.validate({ ...update, newHash: hash })).toThrow('newHash that is not')
+    }
+    expect(() => api.validate({ ...update, newHash: undefined })).toThrow('newHash that is not')
+    for (const field of ['oldText', 'newText', 'probability', 'confidence']) {
+      expect(() => api.validate({ ...update, [field]: undefined })).toThrow(`${field} that is not`)
+    }
     expect(() => api.validate({ ...update, probability: '0.5' })).toThrow('probability that')
-    expect(() => api.validate({ ...update, page: 'https://x y' })).toThrow('not an https URL')
+    for (const page of ['https://x y', 'see https://x', 'http://x']) {
+      expect(() => api.validate({ ...update, page })).toThrow('page that is not an https URL')
+      expect(() => api.validate({ ...update, link: page })).toThrow('link that is not an https')
+    }
+    for (const rules of [[''], ['a`b'], ['a b'], ['a', 'a']]) {
+      expect(() => api.validate({ ...update, rules })).toThrow('rule ID that is not valid')
+    }
+    for (const kind of ['rule-update', 'rule-removal']) {
+      expect(() => api.validate({ ...update, kind, rules: [] })).toThrow('names no rule')
+    }
+    expect(() => api.validate({ ...update, change: 'x <!-- y' })).toThrow('unknown change')
+    for (const f of [update, newRule, { ...newRule, kind: 'needs-triage', change: 'new source' }]) {
+      expect(() => api.validate(f)).not.toThrow()
+    }
   })
 
   it('opens at most 20 new issues in a live run, and has no limit in a dry run', async () => {
