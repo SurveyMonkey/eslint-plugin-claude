@@ -4,24 +4,22 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6]
+related_issues: [5, 6, 23]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
 
 ## Context
 
-**A person found a defect that a check could find.** A review found a skill description that did
-not follow the skill authoring guidance. The description was imperative, not third person, and its
-trigger was narrow. That skill set `user-invocable: false`, so the description was its only
+**A person found a defect that a check could find.** A review found a skill description with a
+narrow trigger. That skill set `user-invocable: false`, so the description was its only
 trigger. An earlier case was of the same kind: a frontmatter flag hid a skill from the skills that
 call it.
 
 **The current checks cover structure, not practice.** `claude plugin validate --strict` checks that
 a manifest loads, and it only turns warnings into errors
 ([plugin commands reference](https://code.claude.com/docs/en/plugins/cli-reference)).
-Nothing checks the practices in the [skills docs](https://code.claude.com/docs/en/skills) or the
-[skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
+Nothing checks the practices in the [skills docs](https://code.claude.com/docs/en/skills).
 
 **The checks span two file formats and more than one file.**
 
@@ -62,8 +60,13 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    A rule that needs a second file reads it from `context.filename`. No third-party ESLint plugin
    is a dependency. The two plugins in the table above are prior art to read, not code to import.
 2. **The plugin ships two configs.**
-   - `recommended` holds the rules that follow from the Claude Code docs and the skill authoring
-     guide. Any team can use it. A rule goes here only when Anthropic documentation is its source.
+   - `recommended` holds the rules that follow from the
+     [Claude Code docs](https://code.claude.com/docs). Any team can use it. A rule goes here only
+     when the Claude Code docs are its source.
+
+   This plugin lints the files of the Claude Code harness only. A rule that no Claude Code docs
+   page gives is not a rule in this package, even when other documentation gives it. Such
+   documentation covers skills outside Claude Code, where the limits are different (#23).
    - `strict` extends `recommended`, then turns on at `warn` each rule that is still off, the
      heuristics included. It gives an easy way to test the full rule set.
 
@@ -122,5 +125,5 @@ These items were open, and are now settled:
   hook can miss the defect until CI runs.
 - **A rule can be wrong in a way a test cannot see.** Each rule gets fixtures that show it reports
   when it must and stays silent when it must not. The fixtures come from real cases, such as a
-  skill description that did not follow the authoring guide and a frontmatter flag that hid a
-  skill from its callers.
+  skill description with a narrow trigger and a frontmatter flag that hid a skill from its
+  callers.

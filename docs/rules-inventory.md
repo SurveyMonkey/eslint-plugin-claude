@@ -3,7 +3,7 @@ type: Reference
 description: Every check on Claude Code configuration files that the Claude Code docs make measurable, as candidate rules for eslint-plugin-claude, with a group, a preset and a severity for each rule and a link to the docs that source it.
 owner: brianespinosa
 created: 2026-09-29
-related_issues: [5]
+related_issues: [5, 23]
 stale_after: 2027-03-29
 generated:
   by: claude-code
@@ -23,13 +23,13 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **493 candidate rules** in 9 groups. 360 rules go in `recommended`: 214 at `error` and 146 at
-  `warn`. 133 rules ship `off`, and `strict` turns them on at `warn`.
+- **479 candidate rules** in 9 groups. 357 rules go in `recommended`: 214 at `error` and 143 at
+  `warn`. 122 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 149 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 15 rules are `partial`: validate reports
-  some of their cases. The other 478 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 464 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -37,8 +37,8 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 ## Method
 
 1. A snapshot of the Claude Code docs was taken on 2026-09-29, at Claude Code 2.1.284. It holds
-   211 pages from `code.claude.com/docs/llms.txt`, and the three Agent Skills pages on
-   `platform.claude.com`.
+   211 pages from `code.claude.com/docs/llms.txt`. No other source is used: the plugin lints the
+   files of the Claude Code harness only (#23).
 2. Eight research passes read the pages by area: skills and commands, subagents and output
    styles, hooks, plugins and marketplaces, memory and context, settings and permissions, MCP and
    tools, and the changelog and errors pages. They recorded about 1,415 findings, each with a
@@ -116,20 +116,21 @@ below covers one kind of configuration file, and each rule name starts with its 
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
 | `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 149 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 49 |
-| `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 40 |
-| `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 45 |
+| `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 39 |
+| `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
 | `limit` | `problem` | A size, count or length limit, or a truncation. | 21 |
 | `deprecated` | `suggestion` | A legacy or renamed form that still works. | 14 |
-| `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 97 |
+| `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 88 |
 
 ## Presets and severity
 
 [ADR 001](adr/001-eslint-plugin-for-claude-config.md) Decision 2 names two configs:
 
-- `recommended` holds the rules that follow from the Claude Code docs and the skill authoring
-  guide, for any team. A rule goes here only when Anthropic documentation is its source.
+- `recommended` holds the rules that follow from the
+  [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
+  Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 493 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 479 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -159,7 +160,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
-| Skills and commands | 16 | 16 | 21 | 53 |
+| Skills and commands | 16 | 13 | 10 | 39 |
 | Subagents and output styles | 17 | 14 | 12 | 43 |
 | Hooks | 20 | 17 | 21 | 58 |
 | Plugin manifest and layout | 28 | 20 | 10 | 58 |
@@ -168,10 +169,10 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 23 | 24 | 16 | 63 |
 | Permissions and sandbox | 38 | 20 | 23 | 81 |
 | MCP and LSP servers | 35 | 12 | 11 | 58 |
-| **Total** | **214** | **146** | **133** | **493** |
+| **Total** | **214** | **143** | **122** | **479** |
 
-By severity, 214 rules are `error` and 279 are `warn`: the 146 `recommended` `warn` rules and
-the 133 `off` rules that `strict` turns on at `warn`.
+By severity, 214 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
+the 122 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
 of the check for plugins (`partial`) or none of it (`–`).
@@ -222,7 +223,7 @@ Decisions on the open questions, made in review of this document:
 3. **A `strict` config turns on every rule.** It extends `recommended`, then turns on at `warn`
    each rule that is still off. It is little work and gives an easy way to test. Other plugins
    call such a config `all`, so the name can change.
-4. **CI lints without `--cache`.** 79 rules read a second file. The ESLint cache stores one
+4. **CI lints without `--cache`.** 76 rules read a second file. The ESLint cache stores one
    result per file, so it does not see a change to that second file. A CI run that lints every
    file catches the defect. The editor and a staged-only commit hook can miss it until CI runs.
    The logic stays simple: each rule reads what it needs, and no rule reports on two files.
@@ -240,7 +241,7 @@ Decisions on the open questions, made in review of this document:
 
 ### Skills and commands
 
-Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 53 rules: 16 error and 16 warn in `recommended`, and 21 heuristic or opt-in rules `off`.
+Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 39 rules: 16 error and 13 warn in `recommended`, and 10 heuristic or opt-in rules `off`.
 
 Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKILL.md`, `<plugin>/SKILL.md`. CMD = `**/.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`. A rule applies to SKILL only unless its Checks cell names CMD.
 
@@ -266,34 +267,20 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 | `skill-boolean-literal` | SKILL, CMD: `disable-model-invocation`, `user-invocable` and `background` use `true` or `false`. `yes`,`no`,`on`,`off`,`1`,`0` work only on v2.1.218 or later (option `minVersion`). | recommended | warn | portability | – | [^skills-frontmatter-reference] |
 | `skill-metadata-reserved-keys` | SKILL, CMD: no key inside `metadata` equals a frontmatter field name, such as `paths`. | recommended | warn | practice | – | [^skills-frontmatter-reference] |
 | `skill-invocation-redundant-fields` | SKILL: no `when_to_use` with `disable-model-invocation: true` (the description is not in context). No `argument-hint` with `user-invocable: false` (the user cannot see autocomplete). | recommended | warn | practice | – | [^skills-control-who-invokes-a-skill] [^skills-frontmatter-reference] |
-| `skill-description-present` | SKILL, CMD: `description` is set and not empty or whitespace. Without it, the first body line (often a heading) is the description, and the SDK `init.skills` list omits a skill that has no `description` or `when_to_use`. | recommended | warn | practice | – | [^skills-frontmatter-reference] [^plugins-components-skills] [^agent-sdk-skills-confirm-skills-loaded] [^platform-agent-skills-overview-skill-structure] |
-| `skill-description-max-length` | SKILL: two checks. `description` is at most `max` 1,024 chars (Agent Skills spec). `description` plus `when_to_use` is at most `listingMax` 1,536 chars (Claude Code listing cap, `skillListingMaxDescChars`). A CMD file is out of scope: `command-legacy-format` reports it. | recommended | warn | limit | – | [^skills-frontmatter-reference] [^skills-skill-descriptions-are-cut-short] [^platform-agent-skills-best-practices-yaml-frontmatter-requirements] [^changelog-claude-code-changelog] |
-| `skill-spec-field-format` | SKILL: effective name (frontmatter `name`, else directory) is at most `maxName` 64 chars of `[a-z0-9-]`, has no XML tag and no `anthropic` or `claude`. `description` has no XML tag. A plugin's own `<plugin>:` prefix is exempt. | recommended | warn | portability | – | [^platform-agent-skills-overview-skill-structure] [^platform-agent-skills-best-practices-yaml-frontmatter-requirements] |
-| `skill-name-not-vague` | SKILL: the effective name is not a vague name from `deny` (default `helper`, `utils`, `tools`, `documents`, `data`, `files`). | recommended | warn | practice | – | [^platform-agent-skills-best-practices-naming-conventions] |
+| `skill-description-present` | SKILL, CMD: `description` is set and not empty or whitespace. Without it, the first body line (often a heading) is the description, and the SDK `init.skills` list omits a skill that has no `description` or `when_to_use`. | recommended | warn | practice | – | [^skills-frontmatter-reference] [^plugins-components-skills] [^agent-sdk-skills-confirm-skills-loaded] |
+| `skill-description-max-length` | SKILL: `description` plus `when_to_use` is at most `listingMax` 1,536 chars (Claude Code listing cap, `skillListingMaxDescChars`). A CMD file is out of scope: `command-legacy-format` reports it. | recommended | warn | limit | – | [^skills-frontmatter-reference] [^skills-skill-descriptions-are-cut-short] [^changelog-claude-code-changelog] |
 | `skill-name-shadows-builtin` | SKILL, CMD: the effective name is not a built-in command (`clear`, `compact`, `login`, `model`, `help` ...; the name does not take) or a bundled skill (`batch`, `code-review`, `debug`, `loop`, `simplify`, `verify` ...; yours replaces it, not its aliases). Option `allow`. List pinned to docs snapshot. | recommended | warn | consistency | – | [^skills-resolve-skills-that-share-a-name] [^skills-how-a-skill-gets-its-command-name] [^commands-all-commands] [^agent-sdk-skills-create-and-dispatch-your-first-skill] |
 | `skill-plugin-name-prefix` | Plugin SKILL: `name` does not start with the plugin's own `<plugin>:` prefix. From v2.1.216 through v2.1.245 the prefix was doubled in the `/` menu. Fails only on those versions. | recommended | warn | portability | – | [^skills-how-a-skill-gets-its-command-name] [^changelog-claude-code-changelog] |
 | `skill-plugin-root-name` | `<plugin>/SKILL.md` sets `name`. Otherwise a marketplace install names the skill after its cache directory, not the plugin. | recommended | warn | practice | – | [^plugins-components-skills] [^skills-how-a-skill-gets-its-command-name] |
-| `skill-max-lines` | SKILL: the file has fewer than `max` 500 lines. Option `countFrontmatter` (default true, counts the whole file; false counts the body only). Move reference material to supporting files. | recommended | warn | limit | – | [^skills-add-supporting-files] [^platform-agent-skills-best-practices-token-budgets] |
-| `skill-references-one-level` | A Markdown file that SKILL.md links to does not link to further bundled reference files. Link every reference file directly from SKILL.md. (cross-file) | recommended | warn | practice | – | [^platform-agent-skills-best-practices-avoid-deeply-nested-references] |
+| `skill-max-lines` | SKILL: the file has fewer than `max` 500 lines. Option `countFrontmatter` (default true, counts the whole file; false counts the body only). Move reference material to supporting files. | recommended | warn | limit | – | [^skills-add-supporting-files] |
 | `skill-argument-escape` | SKILL, CMD body: no doubled backslash before an argument placeholder (`\\$1`, `\\$ARGUMENTS`, `\\$<declared-name>`). Both backslashes stay and the placeholder still expands. Use one backslash. | recommended | warn | practice | – | [^skills-available-string-substitutions] |
 | `skill-shell-platform` | SKILL, CMD with injected commands: `shell: bash` fails on Windows without Git Bash; `shell: powershell` runs only with the PowerShell tool on (`CLAUDE_CODE_USE_POWERSHELL_TOOL=1` on macOS, Linux, WSL, Bedrock, Vertex, Foundry). Fails only on those platforms. | recommended | warn | portability | – | [^skills-how-injected-commands-run] [^skills-frontmatter-reference] [^tools-reference-shell-selection-in-settings-hooks-and-skills] |
 | `command-legacy-format` | Any CMD file, in `.claude/commands/` or a plugin `commands/` directory, is the legacy format. Move it to `skills/<name>/SKILL.md`, which also supports supporting files. Commands still work. | recommended | warn | deprecated | – | [^skills-create-your-first-skill] [^plugins-components-commands] [^glossary-deprecated-and-renamed-terms] |
-| `skill-spec-frontmatter-only` | SKILL meant for claude.ai upload, the Skills API or `package_skill.py`: keys are only `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`, and `name` is set. Other keys fail upload with a hard error. Opt-in per path. | off | warn | portability | – | [^skills-using-skill-frontmatter-outside-claude-code] [^platform-agent-skills-overview-skill-structure] |
-| `skill-description-third-person` | SKILL, CMD: `description` is not written in first or second person: no `\bI (can\|will)\b`, leading `You`, or `you can`. (heuristic) | off | warn | practice | – | [^platform-agent-skills-best-practices-writing-effective-descriptions] |
-| `skill-description-trigger-clause` | SKILL: `description` (plus `when_to_use`) states when to use the skill, such as a `Use when` clause, and has more than `minWords` 4 words. (heuristic) | off | warn | practice | – | [^platform-agent-skills-overview-skill-structure] [^platform-agent-skills-best-practices-writing-effective-descriptions] |
 | `skill-listing-budget` | Sum over all repo SKILL and CMD files of name + `description` + `when_to_use` chars is at most `max` 8,000 (the documented fallback; the live budget is 1% of the context window). User and plugin skills are not visible. (heuristic, cross-file) | off | warn | limit | – | [^skills-skill-descriptions-are-cut-short] [^env-vars-variables] |
-| `skill-body-token-budget` | SKILL, CMD: estimated body tokens (chars / 4) are at most `max` 5,000. Compaction re-attaches only the first 5,000 tokens of a skill, and Level 2 instructions should stay under 5k tokens. (heuristic) | off | warn | limit | – | [^skills-skill-content-lifecycle] [^context-window-what-survives-compaction] [^platform-agent-skills-overview-level-3-resources-and-code-loaded-as-needed] |
+| `skill-body-token-budget` | SKILL, CMD: estimated body tokens (chars / 4) are at most `max` 5,000. Compaction re-attaches only the first 5,000 tokens of a skill. (heuristic) | off | warn | limit | – | [^skills-skill-content-lifecycle] [^context-window-what-survives-compaction] |
 | `skill-literal-dollar` | SKILL, CMD body: an unescaped `$<digit>` in prose (such as `$1.00`) or `$ARGUMENTS` meant as text expands. Escape it as `\$`. (heuristic) | off | warn | practice | – | [^skills-available-string-substitutions] |
 | `skill-plugin-path-vars` | Plugin SKILL body: plugin paths use `${CLAUDE_PLUGIN_ROOT}` (braced, substituted in the Markdown), not shell `$CLAUDE_PLUGIN_ROOT` (absent from the Bash tool env) or `${CLAUDE_SKILL_DIR}/..`. (heuristic) | off | warn | portability | – | [^skills-available-string-substitutions] [^plugins-manifest-reference-where-each-variable-resolves] |
 | `skill-inject-robustness` | SKILL, CMD injected commands: each is matched by an `allowed-tools` Bash rule (else it aborts outside auto mode); script paths use `${CLAUDE_SKILL_DIR}` or `${CLAUDE_PROJECT_DIR}`; check scripts end with `\|\| true`; output is not a nested `` !` `` placeholder. (heuristic) | off | warn | load | – | [^skills-permission-checks-on-injected-commands] [^skills-how-injected-commands-run] [^skills-when-an-injected-command-fails] [^skills-inject-dynamic-context] |
-| `skill-reference-toc` | A bundled reference `.md` file longer than `maxLines` 100 has a table of contents (such as a `## Contents` list) near the top. (heuristic) | off | warn | practice | – | [^platform-agent-skills-best-practices-structure-longer-reference-files-with-table-of-contents] |
-| `skill-orphan-file` | Each file in a skill directory is referenced from SKILL.md or from a file SKILL.md links to. (heuristic, cross-file) | off | warn | practice | – | [^platform-agent-skills-best-practices-observe-how-claude-navigates-skills] |
-| `skill-windows-paths` | SKILL and bundled `.md` files: file paths use forward slashes, not `scripts\helper.py`. Backslash paths break on Unix. (heuristic) | off | warn | portability | – | [^platform-agent-skills-best-practices-avoid-windows-style-paths] |
-| `skill-no-time-sensitive` | SKILL and bundled `.md` files: no dated conditional (`before August 2025`, `after <date>`) outside an "Old patterns" section. (heuristic) | off | warn | practice | – | [^platform-agent-skills-best-practices-avoid-time-sensitive-information] |
-| `skill-descriptive-filenames` | Files in a skill directory do not have generic names matched by `deny` (default `^(doc\|file\|misc\|untitled)\d*\.`), such as `doc2.md`. (heuristic) | off | warn | practice | – | [^platform-agent-skills-best-practices-runtime-environment] |
-| `skill-no-global-install` | SKILL and bundled files: no global package install (`npm install -g`, `sudo pip install`, `pip install` without a venv or `--user`). (heuristic) | off | warn | practice | – | [^platform-agent-skills-overview-runtime-environment-constraints] |
-| `skill-mcp-tool-qualified` | SKILL and bundled `.md` files: MCP tools are named in fully qualified form (`mcp__<server>__<tool>` in Claude Code, `Server:tool` on the platform). Option `form`. (heuristic) | off | warn | portability | – | [^platform-agent-skills-best-practices-mcp-tool-references] |
-| `skill-name-consistent-pattern` | All skills in one collection follow one naming pattern (gerund such as `processing-pdfs`, noun phrase, or action). Flag the minority form. (heuristic, cross-file) | off | warn | consistency | – | [^platform-agent-skills-best-practices-naming-conventions] |
 | `skill-side-effects-manual-only` | SKILL, CMD: a skill whose `allowed-tools` or injected commands run side effects (`git push`, `git commit`, deploy, send message; list `patterns`) sets `disable-model-invocation: true`. (heuristic) | off | warn | practice | – | [^skills-control-who-invokes-a-skill] [^features-overview-understand-how-features-load] [^context-window-explore-the-context-window] |
 | `skill-model-override` | SKILL, CMD: no `model` other than `inherit`. A model that differs from the session model makes that turn a full prompt-cache miss. (heuristic) | off | warn | practice | – | [^prompt-caching-switching-models] |
 | `skill-precedence-shadowing` | A project skill name is not in option `personalNames` or `enterpriseNames`. Enterprise beats personal, and personal beats project, so the project skill never runs. (heuristic, cross-file) | off | warn | consistency | – | [^skills-resolve-skills-that-share-a-name] [^features-overview-understand-how-features-layer] |
@@ -302,11 +289,11 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 
 #### Skills and commands: notes
 
-- **Description length, 1,024 vs 1,536.** The Agent Skills spec caps `description` at 1,024 characters and upload fails above it. Claude Code truncates `description` plus `when_to_use` at 1,536 characters in the listing. `skill-description-max-length` checks each limit against its own text: 1,024 on `description` alone, and 1,536 on `description` plus `when_to_use`. One limit on the combined text would be stricter than both sources. The 1,536 cap is configurable with `skillListingMaxDescChars`. The changelog also records an older 250-character cap, raised to 1,536. [^skills-frontmatter-reference] [^platform-agent-skills-best-practices-yaml-frontmatter-requirements] [^changelog-claude-code-changelog]
-- **500 lines: file or body.** skills.md says "Keep `SKILL.md` under 500 lines"; best-practices says "SKILL.md body". The default counts the whole file (stricter). [^skills-add-supporting-files] [^platform-agent-skills-best-practices-token-budgets]
+- **Description length, 1,536.** Claude Code truncates `description` plus `when_to_use` at 1,536 characters in the listing. `skill-description-max-length` checks that limit. The cap is configurable with `skillListingMaxDescChars`. The changelog also records an older 250-character cap, raised to 1,536. The Claude Code docs give no limit on `description` alone, so no rule checks one (#23). [^skills-frontmatter-reference] [^changelog-claude-code-changelog]
+- **500 lines.** skills.md says "Keep `SKILL.md` under 500 lines". The default counts the whole file. [^skills-add-supporting-files]
 - **Listing budget.** skills.md and env-vars.md give 1% of the context window, with an 8,000-character fallback. An older changelog entry says 2%. The rule uses the later value. The budget depends on the model, so `skill-listing-budget` is a heuristic. [^skills-skill-descriptions-are-cut-short] [^env-vars-variables]
-- **`name` required.** The platform pages require `name`; Claude Code makes every field optional and falls back to the directory name. Only `skill-spec-frontmatter-only` requires it. [^platform-agent-skills-overview-skill-structure] [^skills-frontmatter-reference]
-- **`skill-spec-frontmatter-only` is `off` although exact.** It fails only on upload outside Claude Code, and in `recommended` it would flag every Claude Code-only field (`disable-model-invocation`, `argument-hint`, ...). This diverges from the policy table (which gives recommended warn); enable it per path for skills you upload. [^skills-using-skill-frontmatter-outside-claude-code]
+- **`name` is optional.** Claude Code makes every field optional and falls back to the directory name, so no rule requires `name`. [^skills-frontmatter-reference]
+- **Rules dropped because no Claude Code docs page sources them (#23).** These came from documentation for skills outside Claude Code, and this plugin lints the Claude Code harness only: `skill-spec-field-format`, `skill-name-not-vague`, `skill-references-one-level`, `skill-spec-frontmatter-only`, `skill-description-third-person`, `skill-description-trigger-clause`, `skill-reference-toc`, `skill-orphan-file`, `skill-windows-paths`, `skill-no-time-sensitive`, `skill-descriptive-filenames`, `skill-no-global-install`, `skill-mcp-tool-qualified` and `skill-name-consistent-pattern`.
 - **Command frontmatter.** skills.md says `.claude/commands/` files accept the skill fields except `name` and `paths`. plugins/components says plugin command files "take the same frontmatter as skills". `skill-frontmatter-schema` applies the exception to both. [^skills-frontmatter-reference] [^plugins-components-commands]
 - **`AskUserQuestion` in `allowed-tools`.** The finding was best-practice. Since the changelog fix, listing it no longer auto-allows it, so the entry has no effect. It is folded into the `no-op` rule `skill-allowed-tools-ineffective`. [^changelog-claude-code-changelog]
 - **`skill-paths-glob-valid`** relies on "Uses the same format as path-specific rules" plus the changelog fix that bounds `SKILL.md` brace expansion. It mirrors the memory group's rules glob rule. [^skills-frontmatter-reference] [^memory-path-specific-rules]
@@ -1092,34 +1079,19 @@ Other names a rule may contain:
 [^skills-add-supporting-files]: [Extend Claude with skills: Add supporting files](https://code.claude.com/docs/en/skills#add-supporting-files)
 [^skills-pre-approve-tools-for-a-skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)
 [^agent-sdk-skills-confirm-skills-loaded]: [Extend agents with skills: Confirm skills loaded](https://code.claude.com/docs/en/agent-sdk/skills#confirm-skills-loaded)
-[^platform-agent-skills-overview-skill-structure]: [Agent Skills: Skill structure](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#skill-structure)
 [^skills-skill-descriptions-are-cut-short]: [Extend Claude with skills: Skill descriptions are cut short](https://code.claude.com/docs/en/skills#skill-descriptions-are-cut-short)
-[^platform-agent-skills-best-practices-yaml-frontmatter-requirements]: [Skill authoring best practices: YAML frontmatter requirements](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#yaml-frontmatter-requirements)
-[^platform-agent-skills-best-practices-naming-conventions]: [Skill authoring best practices: Naming conventions](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#naming-conventions)
 [^commands-all-commands]: [Commands: All commands](https://code.claude.com/docs/en/commands#all-commands)
 [^agent-sdk-skills-create-and-dispatch-your-first-skill]: [Extend agents with skills: Create and dispatch your first skill](https://code.claude.com/docs/en/agent-sdk/skills#create-and-dispatch-your-first-skill)
-[^platform-agent-skills-best-practices-token-budgets]: [Skill authoring best practices: Token budgets](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#token-budgets)
-[^platform-agent-skills-best-practices-avoid-deeply-nested-references]: [Skill authoring best practices: Avoid deeply nested references](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#avoid-deeply-nested-references)
 [^skills-how-injected-commands-run]: [Extend Claude with skills: How injected commands run](https://code.claude.com/docs/en/skills#how-injected-commands-run)
 [^tools-reference-shell-selection-in-settings-hooks-and-skills]: [Tools reference: Shell selection in settings, hooks, and skills](https://code.claude.com/docs/en/tools-reference#shell-selection-in-settings-hooks-and-skills)
 [^plugins-components-commands]: [Add components to a plugin: Commands](https://code.claude.com/docs/en/plugins/components#commands)
 [^glossary-deprecated-and-renamed-terms]: [Glossary: Deprecated and renamed terms](https://code.claude.com/docs/en/glossary#deprecated-and-renamed-terms)
-[^skills-using-skill-frontmatter-outside-claude-code]: [Extend Claude with skills: Using skill frontmatter outside Claude Code](https://code.claude.com/docs/en/skills#using-skill-frontmatter-outside-claude-code)
-[^platform-agent-skills-best-practices-writing-effective-descriptions]: [Skill authoring best practices: Writing effective descriptions](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#writing-effective-descriptions)
 [^env-vars-variables]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)
 [^skills-skill-content-lifecycle]: [Extend Claude with skills: Skill content lifecycle](https://code.claude.com/docs/en/skills#skill-content-lifecycle)
 [^context-window-what-survives-compaction]: [Explore the context window: What survives compaction](https://code.claude.com/docs/en/context-window#what-survives-compaction)
-[^platform-agent-skills-overview-level-3-resources-and-code-loaded-as-needed]: [Agent Skills: Level 3: Resources and code (loaded as needed)](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#level-3-resources-and-code-loaded-as-needed)
 [^plugins-manifest-reference-where-each-variable-resolves]: [Plugin manifest reference: Where each variable resolves](https://code.claude.com/docs/en/plugins/manifest-reference#where-each-variable-resolves)
 [^skills-permission-checks-on-injected-commands]: [Extend Claude with skills: Permission checks on injected commands](https://code.claude.com/docs/en/skills#permission-checks-on-injected-commands)
 [^skills-when-an-injected-command-fails]: [Extend Claude with skills: When an injected command fails](https://code.claude.com/docs/en/skills#when-an-injected-command-fails)
-[^platform-agent-skills-best-practices-structure-longer-reference-files-with-table-of-contents]: [Skill authoring best practices: Structure longer reference files with table of contents](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#structure-longer-reference-files-with-table-of-contents)
-[^platform-agent-skills-best-practices-observe-how-claude-navigates-skills]: [Skill authoring best practices: Observe how Claude navigates Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#observe-how-claude-navigates-skills)
-[^platform-agent-skills-best-practices-avoid-windows-style-paths]: [Skill authoring best practices: Avoid Windows-style paths](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#avoid-windows-style-paths)
-[^platform-agent-skills-best-practices-avoid-time-sensitive-information]: [Skill authoring best practices: Avoid time-sensitive information](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#avoid-time-sensitive-information)
-[^platform-agent-skills-best-practices-runtime-environment]: [Skill authoring best practices: Runtime environment](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#runtime-environment)
-[^platform-agent-skills-overview-runtime-environment-constraints]: [Agent Skills: Runtime environment constraints](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#runtime-environment-constraints)
-[^platform-agent-skills-best-practices-mcp-tool-references]: [Skill authoring best practices: MCP tool references](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#mcp-tool-references)
 [^features-overview-understand-how-features-load]: [Extend Claude Code: Understand how features load](https://code.claude.com/docs/en/features-overview#understand-how-features-load)
 [^context-window-explore-the-context-window]: [Explore the context window: Explore the context window](https://code.claude.com/docs/en/context-window#explore-the-context-window)
 [^prompt-caching-switching-models]: [How Claude Code uses prompt caching: Switching models](https://code.claude.com/docs/en/prompt-caching#switching-models)

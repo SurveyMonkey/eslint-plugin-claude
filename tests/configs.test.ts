@@ -9,7 +9,7 @@ import { ESLint, type Linter } from 'eslint'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
 
-const long = 'a'.repeat(1025)
+const long = 'a'.repeat(1537)
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 
 const TREE: Record<string, string> = {

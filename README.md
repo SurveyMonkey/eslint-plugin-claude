@@ -36,14 +36,14 @@ Each rule brings its own `files` glob and language, and the config registers `ma
 
 | Config | Rules |
 |--------|-------|
-| `recommended` | The rules whose source is the Claude Code or Agent Skills docs. |
+| `recommended` | The rules whose source is the [Claude Code docs](https://code.claude.com/docs). |
 | `strict` | `recommended`, plus each rule that is still off, at `warn`. Use it to test the full rule set. |
 
 ## Rules
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
-| [`claude/skill-description-max-length`](docs/rules/skill-description-max-length.md) | The length of `description`, and of `description` plus `when_to_use`, in a `SKILL.md` | `warn` | `warn` |
+| [`claude/skill-description-max-length`](docs/rules/skill-description-max-length.md) | The length of `description` plus `when_to_use` in a `SKILL.md` | `warn` | `warn` |
 | [`claude/command-legacy-format`](docs/rules/command-legacy-format.md) | A command file is the legacy form of a skill | `warn` | `warn` |
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings and `plugin.json` is one that Claude Code knows | `error` | `error` |
 

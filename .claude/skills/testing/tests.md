@@ -35,14 +35,14 @@ export const jsonTester = new RuleTester({
 // GOOD: RuleTester runs the rule the way ESLint does, on a real file name.
 markdownTester.run('skill-description-max-length', rule, {
   valid: [
-    // The near miss: exactly at the 1,024 limit (Agent Skills spec) stays silent.
-    { code: `---\ndescription: ${'a'.repeat(1024)}\n---\n`, filename: '.claude/skills/s/SKILL.md' },
+    // The near miss: exactly at the 1,536 limit (Claude Code skill listing) stays silent.
+    { code: `---\ndescription: ${'a'.repeat(1536)}\n---\n`, filename: '.claude/skills/s/SKILL.md' },
   ],
   invalid: [
     {
-      code: `---\ndescription: ${'a'.repeat(1025)}\n---\n`,
+      code: `---\ndescription: ${'a'.repeat(1537)}\n---\n`,
       filename: '.claude/skills/s/SKILL.md',
-      errors: [{ messageId: 'tooLong', data: { length: '1025', max: '1024' }, line: 2 }],
+      errors: [{ messageId: 'listingTruncated', data: { length: '1537', max: '1536' }, line: 1 }],
     },
   ],
 })
@@ -91,10 +91,10 @@ A shared helper gets its own tests only when more than one rule uses it.
 
 ```ts
 // BAD: the expected message uses the rule's own formatting, so it cannot disagree with it.
-errors: [{ message: formatTooLong(description.length, MAX) }]
+errors: [{ message: formatTruncated(listing.length, MAX) }]
 
-// GOOD: an independent literal. The 1,024 limit comes from the Agent Skills spec, not from the code.
-errors: [{ messageId: 'tooLong', data: { length: '1025', max: '1024' } }]
+// GOOD: an independent literal. The 1,536 limit comes from the Claude Code docs, not from the code.
+errors: [{ messageId: 'listingTruncated', data: { length: '1537', max: '1536' } }]
 ```
 
 ## Bad: an invented shape
