@@ -1,9 +1,9 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-description-max-length, which limits a SKILL.md description to 1,024 characters and the description plus when_to_use to 1,536, with its options, examples and sources.
+description: The ESLint rule claude/skill-description-max-length, which limits a SKILL.md description plus when_to_use to 1,536 characters, the cut in the Claude Code skill listing, with its options, examples and sources.
 owner: brianespinosa
 created: 2026-09-29
-related_issues: [6]
+related_issues: [6, 23]
 stale_after: 2027-03-29
 generated:
   by: claude-code
@@ -20,14 +20,11 @@ Limit the length of a skill description.
 
 ## Rule details
 
-Two sources limit a skill description. Each one measures a different text.
+The Claude Code skill listing cuts `description` plus `when_to_use` at 1,536
+characters.[^fields][^cut] The model does not see the text after the cut. The rule reports
+a skill whose combined text is longer than the limit.
 
-- The Agent Skills spec limits `description` to 1,024 characters.[^spec][^guide]
-- The Claude Code skill listing cuts `description` plus `when_to_use` at 1,536
-  characters.[^fields][^cut] The model does not see the text after the cut.
-
-The rule does one check for each source. It counts characters as JavaScript does
-(`String.length`, UTF-16 code units).
+The rule counts characters as JavaScript does (`String.length`, UTF-16 code units).
 
 The rule reads the YAML frontmatter. It ignores a file with no frontmatter, and a file whose
 frontmatter does not parse. It ignores a field that is not a string.
@@ -40,7 +37,7 @@ Fail:
 ```markdown
 ---
 name: deploy
-description: <1,025 characters>
+description: <1,537 characters>
 ---
 ```
 
@@ -57,16 +54,13 @@ description: Deploys the service to staging. Use when the user asks to ship a br
 
 | Option | Default | Use |
 |--------|---------|-----|
-| `max` | `1024` | The limit on `description` alone. |
 | `listingMax` | `1536` | The limit on `description` plus `when_to_use`. Set it to match `skillListingMaxDescChars` if you change that setting.[^cut] |
 
 ```js
-'claude/skill-description-max-length': ['warn', { max: 1024, listingMax: 1536 }]
+'claude/skill-description-max-length': ['warn', { listingMax: 1536 }]
 ```
 
 ## Sources
 
-[^spec]: [Agent Skills specification: Frontmatter](https://agentskills.io/specification#frontmatter)
-[^guide]: [Skill authoring best practices: YAML frontmatter requirements](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#yaml-frontmatter-requirements)
 [^fields]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)
 [^cut]: [Extend Claude with skills: Skill descriptions are cut short](https://code.claude.com/docs/en/skills#skill-descriptions-are-cut-short)

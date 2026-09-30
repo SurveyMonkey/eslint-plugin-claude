@@ -10,7 +10,7 @@ assert.equal(plugin.meta.name, 'eslint-plugin-claude')
 assert.equal(plugin.meta.namespace, 'claude')
 assert.deepEqual(Object.keys(plugin.configs), ['recommended', 'strict'])
 
-const SKILL = `---\nname: s\ndescription: ${'a'.repeat(1025)}\n---\n`
+const SKILL = `---\nname: s\ndescription: ${'a'.repeat(1537)}\n---\n`
 const HOOKS = JSON.stringify({ hooks: { Bogus: [] } })
 
 // One Markdown file and one JSON file, each with one report. 1 is warn, 2 is

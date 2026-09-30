@@ -9,7 +9,7 @@ const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url),
   version: string
 }
 
-const SKILL = `---\nname: s\ndescription: ${'a'.repeat(1025)}\n---\n`
+const SKILL = `---\nname: s\ndescription: ${'a'.repeat(1537)}\n---\n`
 
 describe('plugin', () => {
   it('reports the name and version from package.json', () => {

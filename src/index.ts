@@ -31,7 +31,7 @@ const LANGUAGES: Record<
 }
 
 // Each rule at its `recommended` severity. A rule whose source is not the
-// Claude Code or Agent Skills docs is `off` here.
+// Claude Code docs is `off` here.
 const recommended: Record<RuleName, Severity> = {
   'skill-description-max-length': 'warn',
   'command-legacy-format': 'warn',
