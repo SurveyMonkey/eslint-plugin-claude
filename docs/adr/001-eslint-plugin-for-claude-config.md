@@ -79,8 +79,8 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    on `main` and opens a release pull request. Merging it publishes through npm trusted publishing
    (OIDC), with no npm token. `CONTRIBUTING.md` describes the release flow and the CI checks.
 6. **The frontmatter parser is `yaml`.** `@eslint/markdown` gives the frontmatter as raw text.
-   `yaml` parses it, once for each file, in one helper that each rule calls. A hand-written parser
-   would fail on folded, block and quoted scalars.
+   `yaml` parses it, in one helper that each rule calls. A hand-written parser would fail on
+   folded, block and quoted scalars.
 7. **Biome lints this repository's source, and ESLint is the product.** Biome checks the
    TypeScript and JSON in this repository. The plugin's rules lint Claude Code configuration files
    in the repositories that install it.

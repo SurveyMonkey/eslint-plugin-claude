@@ -25,15 +25,16 @@ skill at `skills/<name>/SKILL.md` does the same job. It also holds supporting fi
 model can start it on its own.[^merged][^components]
 
 The glob is broad. The rule then reports a file only when its `commands/` directory is in one of
-the places that Claude Code reads:
+these places:
 
 - `.claude/commands/`, and any directory below it;
 - a `commands/` directory at the root of a plugin, next to `.claude-plugin/plugin.json`.
 
 Any other `commands/` directory, for example `docs/commands/`, is not a report. A plugin with no
 `.claude-plugin/plugin.json` is not a report either, because the rule finds a plugin root by
-its manifest. When `plugin.json` sets `commands`, Claude Code does not read the `commands/`
-directory.[^manifest] The rule still reports it.
+its manifest. Claude Code still loads such a plugin.[^optional] When `plugin.json` sets
+`commands`, Claude Code does not read the `commands/` directory.[^manifest] The rule still
+reports it.
 
 Fail: `.claude/commands/deploy.md`, `plugins/ops/commands/deploy.md`.
 
@@ -50,4 +51,5 @@ None.
 [^glossary]: [Glossary: Deprecated and renamed terms](https://code.claude.com/docs/en/glossary#deprecated-and-renamed-terms)
 [^merged]: [Extend Claude with skills](https://code.claude.com/docs/en/skills)
 [^components]: [Add components to a plugin: Commands](https://code.claude.com/docs/en/plugins/components#commands)
+[^optional]: [Plugin manifest reference: Manifest file](https://code.claude.com/docs/en/plugins/manifest-reference#manifest-file)
 [^manifest]: [Plugin manifest reference: How each key combines with its default location](https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location)

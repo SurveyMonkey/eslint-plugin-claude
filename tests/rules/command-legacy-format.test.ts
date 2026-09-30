@@ -1,5 +1,5 @@
-// A `commands/` directory is a command only where Claude Code reads it:
-// `.claude/commands/`, or `commands/` beside `.claude-plugin/plugin.json`.
+// The rule reports a file under `.claude/commands/`, or under `commands/`
+// beside `.claude-plugin/plugin.json`.
 // The plugin case needs a real manifest on disk.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -18,7 +18,7 @@ const legacy = [{ messageId: 'legacy', line: 1, column: 1 }]
 
 markdownTester.run('command-legacy-format', ruleOf('command-legacy-format'), {
   valid: [
-    // A `commands/` directory that Claude Code does not read.
+    // A `commands/` directory in another place.
     { code: '# Doc\n', filename: path.join(scratch, 'docs', 'commands', 'a.md') },
     { code: '# Doc\n', filename: path.join(plugin, 'skills', 'commands', 'a.md') },
     { code: '# Doc\n', filename: path.join(scratch, 'commands.md') },

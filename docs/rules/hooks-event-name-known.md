@@ -30,9 +30,9 @@ path. It checks each key against the 33 events in the hooks reference, as of Cla
 2.1.285. The list is in `src/data/hook-events.ts`.
 
 A key that is a near miss gets a suggestion with the correct name. A near miss has the same
-letters with a different case or separator (`preToolUse`, `pre_tool_use`), or is two edits or
-fewer from a known name when case and separators are ignored. The suggestion is not an autofix.
-A rename changes what runs, because a hook that never ran starts to run.
+letters with a different case or separator (`preToolUse`, `pre_tool_use`). It can also be two
+edits or fewer from a known name. The edit count ignores case and separators. The suggestion is
+not an autofix. A rename changes what runs, because a hook that never ran starts to run.
 
 Hooks in skill and agent frontmatter use the same names. This rule does not check them yet.
 

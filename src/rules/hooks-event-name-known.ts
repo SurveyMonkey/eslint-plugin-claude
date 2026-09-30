@@ -10,7 +10,7 @@ const name = 'hooks-event-name-known' as const
 
 type Options = [{ additionalEvents: string[] }]
 
-/** The letters of a name, in lowercase, with no `_`, `-` or space. */
+/** The ASCII letters and digits of a name, in lowercase. */
 function fold(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, '')
 }
@@ -42,8 +42,9 @@ function distance(a: string, b: string): number {
 }
 
 /** The known event that `key` is a near miss of, or null. A near miss has
- *  the same letters with a different case or separator, or is at most two
- *  edits from a known name when case and separators are ignored. */
+ *  the same letters with a different case or separator. It can also be at
+ *  most two edits from a known name. The edit count ignores case and
+ *  separators. */
 function nearMiss(key: string, known: readonly string[]): string | null {
   const folded = fold(key)
   let best: string | null = null

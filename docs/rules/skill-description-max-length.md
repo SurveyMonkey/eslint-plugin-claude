@@ -22,7 +22,7 @@ Limit the length of a skill description.
 
 Two sources limit a skill description. Each one measures a different text.
 
-- The Agent Skills spec limits `description` to 1,024 characters.[^spec]
+- The Agent Skills spec limits `description` to 1,024 characters.[^spec][^guide]
 - The Claude Code skill listing cuts `description` plus `when_to_use` at 1,536
   characters.[^fields][^cut] The model does not see the text after the cut.
 
@@ -66,6 +66,7 @@ description: Deploys the service to staging. Use when the user asks to ship a br
 
 ## Sources
 
-[^spec]: [Skill authoring best practices: YAML frontmatter requirements](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#yaml-frontmatter-requirements)
+[^spec]: [Agent Skills specification: Frontmatter](https://agentskills.io/specification#frontmatter)
+[^guide]: [Skill authoring best practices: YAML frontmatter requirements](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#yaml-frontmatter-requirements)
 [^fields]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)
 [^cut]: [Extend Claude with skills: Skill descriptions are cut short](https://code.claude.com/docs/en/skills#skill-descriptions-are-cut-short)

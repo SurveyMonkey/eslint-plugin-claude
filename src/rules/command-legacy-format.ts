@@ -1,7 +1,7 @@
 // A command file is the legacy form of a skill (docs/rules/command-legacy-format.md).
-// The glob is broad, so the rule itself checks that the `commands/`
-// directory is one that Claude Code reads: `.claude/commands/`, or
-// `commands/` at the root of a plugin.
+// The glob is broad, so the rule itself checks where the `commands/`
+// directory is: `.claude/commands/`, or `commands/` at the root of a plugin.
+// It finds a plugin root by its manifest.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -9,8 +9,8 @@ import { isPluginRoot } from '../plugin-root.ts'
 
 const name = 'command-legacy-format' as const
 
-/** True when `file` is under a `commands/` directory that Claude Code
- *  reads as commands. */
+/** True when `file` is under `.claude/commands/`, or under `commands/`
+ *  next to `.claude-plugin/plugin.json`. */
 function isCommandFile(file: string): boolean {
   const parts = path.resolve(file).split(path.sep)
   for (let i = 1; i < parts.length - 1; i++) {
