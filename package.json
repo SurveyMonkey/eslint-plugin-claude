@@ -42,8 +42,13 @@
     "test": "vitest run --coverage && node scripts/check-coverage.mjs",
     "typecheck": "tsc -p tsconfig.json"
   },
+  "dependencies": {
+    "yaml": "2.9.1"
+  },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
+    "@eslint/json": "2.1.0",
+    "@eslint/markdown": "8.0.3",
     "@types/node": "22.20.4",
     "@vitest/coverage-v8": "5.0.2",
     "eslint": "10.11.0",
@@ -54,6 +59,8 @@
     "vitest": "5.0.2"
   },
   "peerDependencies": {
+    "@eslint/json": "^2.0.0",
+    "@eslint/markdown": "^8.0.0",
     "eslint": "^10.0.0"
   },
   "packageManager": "pnpm@12.6.0",

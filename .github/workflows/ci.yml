@@ -40,8 +40,9 @@ jobs:
           cache: true
           require-lockfile: true
       - run: pnpm test
-      # Packs the tarball (prepack runs the build), installs it with its eslint
-      # peer into an empty directory, and loads it there. This catches a
+      # Packs the tarball (prepack runs the build), installs it with its eslint,
+      # @eslint/markdown and @eslint/json peers into an empty directory, and
+      # lints a Markdown and a JSON file there with each config. This catches a
       # `files` or `exports` mistake, and runs the built code on each Node.
       - name: Smoke-test the packed package
         run: |
@@ -51,7 +52,7 @@ jobs:
           cp scripts/smoke.mjs "$smoke/"
           cd "$smoke"
           echo '{ "private": true, "type": "module" }' > package.json
-          pnpm add ./eslint-plugin-claude-*.tgz "eslint@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies.eslint")"
+          pnpm add ./eslint-plugin-claude-*.tgz "eslint@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies.eslint")" "@eslint/markdown@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies['@eslint/markdown']")" "@eslint/json@$(node -p "require('$GITHUB_WORKSPACE/package.json').devDependencies['@eslint/json']")"
           node smoke.mjs
 
   # One check per tool, so each shows on the pull request and a ruleset can

@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5]
+related_issues: [5, 6]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -79,13 +79,26 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    on `main` and opens a release pull request. Merging it publishes through npm trusted publishing
    (OIDC), with no npm token. `CONTRIBUTING.md` describes the release flow and the CI checks.
 6. **The frontmatter parser is `yaml`.** `@eslint/markdown` gives the frontmatter as raw text.
-   `yaml` parses it, once for each file, in one helper that each rule calls. A hand-written parser
-   would fail on folded, block and quoted scalars.
+   `yaml` parses it, in one helper that each rule calls. A hand-written parser would fail on
+   folded, block and quoted scalars.
 7. **Biome lints this repository's source, and ESLint is the product.** Biome checks the
    TypeScript and JSON in this repository. The plugin's rules lint Claude Code configuration files
    in the repositories that install it.
+8. **`@eslint/markdown` and `@eslint/json` are `peerDependencies`, and `yaml` is a
+   `dependency`.**
+   - The two language plugins are peers, at `^8.0.0` and `^2.0.0`. The consumer installs one
+     copy of each. The configs import that copy and register it in `plugins`, so a consumer
+     needs no other setup.
+   - ESLint 10 refuses two different plugin objects under one name, with
+     `Cannot redefine plugin "markdown"` (`eslint/lib/config/flat-config-schema.js:398`, ESLint
+     10.11.0). A copy inside this package would cause this error for a consumer that also
+     configures `@eslint/markdown`. A peer gives one copy, so the two objects are the same.
+   - The cost: the install line names both peers. If the package manager does not install
+     peers, a missing peer shows as a load error.
+   - `yaml` is a runtime `dependency`, at an exact version. The frontmatter helper of Decision 6
+     imports it, and a consumer does not configure it.
 
-Two items were open in the earlier design and are now settled:
+These items were open, and are now settled:
 
 - **The build step.** The earlier design ran erasable TypeScript directly, with no build step, and
   loaded the plugin by relative path. Node does not strip types from a file under `node_modules`,
@@ -93,13 +106,9 @@ Two items were open in the earlier design and are now settled:
   `dist/`.
 - **Sharing.** The earlier design left the registry, the version policy and the build to a later
   decision. Decisions 3 to 5 settle them: an unscoped npm package, versioned by release-please.
-
-Still open:
-
-- **How `@eslint/markdown` and `@eslint/json` reach a consumer.** They can be `peerDependencies`,
-  which the consumer installs and configures, or `dependencies`, which the plugin wires into its
-  configs. The first rule that needs one settles it.
-- **Where `yaml` sits.** It is a runtime `dependency` unless the parser choice changes.
+- **How `@eslint/markdown`, `@eslint/json` and `yaml` reach a consumer.** The first rules
+  ([#6](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/6)) import all three.
+  Decision 8 settles it.
 
 ## Consequences
 
