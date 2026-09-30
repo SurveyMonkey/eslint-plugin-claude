@@ -273,6 +273,14 @@ describe('openIssues', () => {
     expect(gh.posts()).toEqual([])
     expect(result).toEqual({ opened: [], skipped: 2, wouldOpen: 0 })
     expect(logs[0]).toContain('skip: #7')
+    const twice = await api.openIssues({
+      findings: [update, { ...update, reason: 'another reason' }],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(twice).toEqual({ opened: [], skipped: 2, wouldOpen: 0 })
   })
 
   it('reads the open issues of the repository, not its pull requests', async () => {
