@@ -9,31 +9,46 @@ const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url),
   version: string
 }
 
+const SKILL = `---\nname: s\ndescription: ${'a'.repeat(1025)}\n---\n`
+
 describe('plugin', () => {
   it('reports the name and version from package.json', () => {
     expect(plugin.meta).toEqual({ name: pkg.name, version: pkg.version, namespace: 'claude' })
   })
 
-  it('registers itself in the recommended config under its namespace', () => {
-    expect(plugin.configs.recommended[0]?.plugins?.claude).toBe(plugin)
+  it('has exactly the recommended and strict configs', () => {
+    expect(Object.keys(plugin.configs)).toEqual(['recommended', 'strict'])
   })
 
-  it('loads the recommended config by name through extends', () => {
-    const linter = new Linter()
-    const config = defineConfig([
-      { files: ['**/*.js'], plugins: { claude: plugin }, extends: ['claude/recommended'] },
-    ])
-    expect(linter.verify('const a = 1\n', config, 'a.js')).toEqual([])
+  it('registers itself in each block of each config under its namespace', () => {
+    for (const block of [...plugin.configs.recommended, ...plugin.configs.strict]) {
+      expect(block.plugins?.claude).toBe(plugin)
+    }
   })
+
+  for (const config of ['recommended', 'strict'] as const) {
+    it(`loads the ${config} config by name through extends`, () => {
+      const linter = new Linter()
+      const viaName = defineConfig([{ plugins: { claude: plugin }, extends: [`claude/${config}`] }])
+      const messages = linter.verify(SKILL, viaName, '.claude/skills/s/SKILL.md')
+      expect(messages.map((m) => [m.ruleId, m.severity])).toEqual([
+        ['claude/skill-description-max-length', 1],
+      ])
+    })
+  }
 
   // No optional chaining on purpose. `pnpm typecheck` covers tests/, so this
-  // fails if the public type makes `configs.recommended` or `meta` optional.
-  it('loads the recommended config object through extends and defineConfig', () => {
+  // fails if the public type makes a config key or `meta` optional.
+  it('loads each config object through extends and defineConfig', () => {
     const linter = new Linter()
-    const viaExtends = defineConfig([{ files: ['**/*.js'], extends: [plugin.configs.recommended] }])
-    const viaSpread = defineConfig([...plugin.configs.recommended])
-    expect(linter.verify('const a = 1\n', viaExtends, 'a.js')).toEqual([])
-    expect(linter.verify('const a = 1\n', viaSpread, 'a.js')).toEqual([])
+    for (const config of [plugin.configs.recommended, plugin.configs.strict]) {
+      const viaExtends = defineConfig([{ extends: [config] }])
+      const viaSpread = defineConfig([...config])
+      for (const loaded of [viaExtends, viaSpread]) {
+        const messages = linter.verify(SKILL, loaded, '.claude/skills/s/SKILL.md')
+        expect(messages.map((m) => m.ruleId)).toEqual(['claude/skill-description-max-length'])
+      }
+    }
     expect(plugin.meta.name).toBe(pkg.name)
   })
 })
