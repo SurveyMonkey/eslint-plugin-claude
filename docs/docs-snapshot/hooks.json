@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "368137fa66b4600800103a197bbec79d5a845e0b991378a210396792473a718b",
+  "hash": "5129d58370ed4d7910c6e86537e0592b2902ea5bf0a8682721c5484f5d46f566",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -24,11 +24,11 @@
     },
     {
       "id": "matcher-patterns",
-      "hash": "22df6e82a654f0c73cb5f152ba9629304ffb5dcbf385c64f9d9230ca5ae08550"
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
     },
     {
       "id": "match-mcp-tools",
-      "hash": "c1a27f888a2ba5bf9737eb0850df27df7af6dbb89c6c3f29bd2a12af4ea4488f"
+      "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8"
     },
     {
       "id": "hook-handler-fields",
@@ -116,7 +116,7 @@
     },
     {
       "id": "exit-code-2-behavior-per-event",
-      "hash": "63547a47aa0c262fc37e79a2ceec2726b99b990b5b64d62641e35b7db6c0f2ef"
+      "hash": "a385d4ec862f53397f9dcdf30f75fc955c52e6e579cc9d1a5e83bd6620beef50"
     },
     {
       "id": "http-response-handling",
@@ -192,7 +192,11 @@
     },
     {
       "id": "userpromptsubmit-decision-control",
-      "hash": "f76ab22f4aae295d006061738d86255fd1de08d7f755f0daf5b301a469fc1f69"
+      "hash": "39253854c2bfc3ec40cfcb0b773817adfd2a0b79e0ea4d4d9b2170331d7d5bbd"
+    },
+    {
+      "id": "what-a-blocked-prompt-leaves-behind",
+      "hash": "dfe0614b7bf9aecb34861cb6d34567de0fb08023e55260b5a69acc28104963a5"
     },
     {
       "id": "userpromptexpansion",

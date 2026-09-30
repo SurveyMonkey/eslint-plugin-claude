@@ -3,7 +3,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Create your first skill",
-      "hash": "c9959a951f449708bd56689b0f60ead64598fb23d13b94ef310498d9b13db0e9"
+      "hash": "e43a66a42b7b27772a225a16023a178d7e631e8beed3a4025f1e5a77d11ad3a7"
     },
     {
       "url": "https://code.claude.com/docs/en/glossary",
@@ -13,7 +13,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "ffe690866cdac3e163ebefbd270161e62796dc35399f3335e4067b43d2b23910"
+      "hash": "8d22bd7ed1d0fcf62c879a406b84f052cbc9658fb62bed8cac2dd0067e1c811d"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -40,7 +40,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
       "heading": "Hook loads but never fires",
-      "hash": "3a3031f80291b175e477c32e719edba01f3c17a30355091faeb0811a8102b965"
+      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",

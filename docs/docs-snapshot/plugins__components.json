@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "8b082db9d9063e3399b83bd34174dce04a481986376ce75e99f1647bb15d41bc",
+  "hash": "97fa2babb277ddb65be0d85aad1a3099d1ca34ffdf193ed98be1ce7270408fed",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -16,7 +16,7 @@
     },
     {
       "id": "skills",
-      "hash": "88480d500dd92c471901d2c3289ef528f4888471416a55cc29d22e5a4018b932"
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
     },
     {
       "id": "commands",
@@ -88,11 +88,19 @@
     },
     {
       "id": "monitors",
-      "hash": "58e5a4589895234af4e05f023a985bc2741ce1bbb54ffdca62cfbfb3cc7583fd"
+      "hash": "7a42ffd9e3fa63f4350267774a5fe86fd623691462203b49c973254811d5a4ec"
+    },
+    {
+      "id": "user-configuration",
+      "hash": "7985992b6f5d23c85f453f43e8d61a1fa4fd945d7b177315416bf88b15745129"
     },
     {
       "id": "when-the-configuration-dialog-appears",
-      "hash": "3f814abd250b6a6b296c25126017ff80cb88216b9acd85858d185a4b7ede35ac"
+      "hash": "d394ed0f8b1914a2b0332687d97097ca18d739aeef6abb105d82cb1c8cc2f9c8"
+    },
+    {
+      "id": "path-variables-and-persistent-data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
     },
     {
       "id": "install-dependencies-into-the-data-directory",
