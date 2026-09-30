@@ -22,8 +22,7 @@ Limit the length of a skill description.
 
 Two sources limit a skill description. Each one measures a different text.
 
-- The Agent Skills spec limits `description` to 1,024 characters. An upload to the API or to
-  claude.ai fails above it.[^spec]
+- The Agent Skills spec limits `description` to 1,024 characters.[^spec]
 - The Claude Code skill listing cuts `description` plus `when_to_use` at 1,536
   characters.[^fields][^cut] The model does not see the text after the cut.
 

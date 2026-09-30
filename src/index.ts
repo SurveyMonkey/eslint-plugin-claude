@@ -41,7 +41,7 @@ const STRICT: Record<Severity, Severity> = { off: 'warn', warn: 'warn', error: '
 // here, because `ESLint.Plugin` makes them optional and consumers would have
 // to check for `undefined`. `ESLint.Plugin['rules']` rather than
 // `Rule.RuleModule`, which types JavaScript rules only. Each config is an
-// array of one block per rule. Add a key for a new config.
+// array of one block per rule that it turns on. Add a key for a new config.
 type Plugin = ESLint.Plugin & {
   meta: { name: string; version: string; namespace: 'claude' }
   rules: NonNullable<ESLint.Plugin['rules']>

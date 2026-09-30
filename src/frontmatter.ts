@@ -1,11 +1,11 @@
-// Parse the YAML frontmatter of a Markdown file, once, for each rule that
-// reads a field. `@eslint/markdown` gives the frontmatter as one `yaml` node
-// with the raw text in `value`. It does not parse the fields.
+// Parse the YAML frontmatter of a Markdown file, for each rule that reads a
+// field. `@eslint/markdown` gives the frontmatter as one `yaml` node with the
+// raw text in `value`. It does not parse the fields.
 import { parse } from 'yaml'
 
 /** The fields of a frontmatter block as a plain object. Returns null when
- *  the YAML does not parse, or when its top level is not a mapping. A later
- *  rule reports bad YAML. The other rules stay silent on it. */
+ *  the YAML does not parse, or when its top level is not a mapping. The rules
+ *  stay silent on bad YAML. */
 export function parseFrontmatter(text: string): Record<string, unknown> | null {
   let data: unknown
   try {

@@ -24,17 +24,17 @@ Claude Code skips a hook entry under an event name that it does not know. It sho
 error.[^lifecycle][^never] The names are case-sensitive.
 
 The rule reads the `hooks` key at the top level of each file. When a file has two `hooks` keys,
-the rule reads the last one, as `JSON.parse` does. In `plugin.json`, `hooks` can be
-an object, a path, or an array of paths and objects.[^manifest] The rule reads each object, and
-ignores each path. It checks each key against the 33 events in the hooks reference, as of Claude
-Code 2.1.285. The list is in `src/data/hook-events.ts`.
+the rule reads the last one, as `JSON.parse` does. In `plugin.json`, `hooks` can be an object, a
+path, or an array of paths and objects.[^manifest] The rule reads each object, and ignores each
+path. It checks each key against the 33 events in the hooks reference, as of Claude Code
+2.1.285. The list is in `src/data/hook-events.ts`.
 
 A key that is a near miss gets a suggestion with the correct name. A near miss has the same
 letters with a different case or separator (`preToolUse`, `pre_tool_use`), or is two edits or
-fewer from a known name. The suggestion is not an autofix. A rename changes what runs, because
-a hook that never ran starts to run.
+fewer from a known name when case and separators are ignored. The suggestion is not an autofix.
+A rename changes what runs, because a hook that never ran starts to run.
 
-Hooks in skill and agent frontmatter use the same names. A later rule checks them.
+Hooks in skill and agent frontmatter use the same names. This rule does not check them yet.
 
 Fail:
 

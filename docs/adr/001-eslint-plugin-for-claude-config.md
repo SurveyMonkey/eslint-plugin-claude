@@ -93,8 +93,8 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
      `Cannot redefine plugin "markdown"` (`eslint/lib/config/flat-config-schema.js:398`, ESLint
      10.11.0). A copy inside this package would cause this error for a consumer that also
      configures `@eslint/markdown`. A peer gives one copy, so the two objects are the same.
-   - The cost: the install line names both peers, and a missing peer shows only as a load
-     error.
+   - The cost: the install line names both peers. If the package manager does not install
+     peers, a missing peer shows as a load error.
    - `yaml` is a runtime `dependency`, at an exact version. The frontmatter helper of Decision 6
      imports it, and a consumer does not configure it.
 

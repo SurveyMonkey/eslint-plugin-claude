@@ -43,7 +43,7 @@ function distance(a: string, b: string): number {
 
 /** The known event that `key` is a near miss of, or null. A near miss has
  *  the same letters with a different case or separator, or is at most two
- *  edits from a known name. */
+ *  edits from a known name when case and separators are ignored. */
 function nearMiss(key: string, known: readonly string[]): string | null {
   const folded = fold(key)
   let best: string | null = null
