@@ -2,51 +2,62 @@
   "command-legacy-format": [
     {
       "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Create your first skill"
+      "heading": "Create your first skill",
+      "hash": "c9959a951f449708bd56689b0f60ead64598fb23d13b94ef310498d9b13db0e9"
     },
     {
       "url": "https://code.claude.com/docs/en/glossary",
-      "heading": "Deprecated and renamed terms"
+      "heading": "Deprecated and renamed terms",
+      "hash": "157d7e6327a4d05655407f4289c13571851d6bd14d0c90a2175c03857f06ed9a"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Extend Claude with skills"
+      "heading": "Extend Claude with skills",
+      "hash": "ffe690866cdac3e163ebefbd270161e62796dc35399f3335e4067b43d2b23910"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
-      "heading": "Commands"
+      "heading": "Commands",
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "Manifest file"
+      "heading": "Manifest file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "How each key combines with its default location"
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
   "hooks-event-name-known": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Hook lifecycle"
+      "heading": "Hook lifecycle",
+      "hash": "2f7b2883c519d0d9e2eae1a328b188595ce28e2ca69666f59a2db405fe72972b"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-      "heading": "Hook loads but never fires"
+      "heading": "Hook loads but never fires",
+      "hash": "3a3031f80291b175e477c32e719edba01f3c17a30355091faeb0811a8102b965"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "hooks"
+      "heading": "hooks",
+      "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
     }
   ],
   "skill-description-max-length": [
     {
       "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Frontmatter reference"
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Skill descriptions are cut short"
+      "heading": "Skill descriptions are cut short",
+      "hash": "c775fcb514225572ec37a8c40da69984ee636217c03de63b497df02486955b30"
     }
   ]
 }

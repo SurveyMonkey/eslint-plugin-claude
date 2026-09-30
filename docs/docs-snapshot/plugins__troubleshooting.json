@@ -1,0 +1,90 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+  "hash": "04c8d709b01f6e6c07ece6217438570e9ad9e9a854816ffb7eb045ac138a8ee9",
+  "blocks": [
+    {
+      "id": "troubleshoot-plugins",
+      "hash": "d4b781d6115d008d5e585d2c9f6aeda6a25edd91341de137b1c4c43af3909102"
+    },
+    {
+      "id": "find-where-plugin-runs",
+      "hash": "1ce8673c0e091d73b079da4b3ad17742ca2c11366d2b953446f85b10e0316c45"
+    },
+    {
+      "id": "add-a-marketplace",
+      "hash": "74edb27c639eafee17544ddaa69fa7de6c17a6c70275c66b9c73d360817c0056"
+    },
+    {
+      "id": "install-a-plugin",
+      "hash": "c0f662bdb9908265b90029326bab0dda3adc9a45377cf68bd8dc68ed4fab0402"
+    },
+    {
+      "id": "plugin-installed-but-not-working",
+      "hash": "492fdb7eef7a2265ba3093ba07e8484ea2f127df10d1c8199198b9642efb4c3b"
+    },
+    {
+      "id": "hooks-fail-to-load",
+      "hash": "dedea885a6b4285a5b7b3f43f2c84abc670bf41e85d9286bbc2a08a11f1bc70e"
+    },
+    {
+      "id": "hook-error-notices-in-the-transcript",
+      "hash": "d97f8164a313ed5fd2a24c341240c69693828f08baaf7d02d499bd78c963231a"
+    },
+    {
+      "id": "a-plugin-hook-blocks-a-tool-call-or-prompt",
+      "hash": "07fa18b137780fe40600685d8b75e661b6c6c328cb0a4bac16f9f7f2fd03d92d"
+    },
+    {
+      "id": "hook-loads-but-never-fires",
+      "hash": "3a3031f80291b175e477c32e719edba01f3c17a30355091faeb0811a8102b965"
+    },
+    {
+      "id": "invalid-mcp-server-config-for-",
+      "hash": "184f124b13c14a71d13b1450894951f5c566858f92f332af4c6cf7ad434c7b45"
+    },
+    {
+      "id": "server-is-configured-but-never-connects",
+      "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd"
+    },
+    {
+      "id": "server-works-with---plugin-dir-but-fails-after-install",
+      "hash": "e36b9c16e5fe767a1b67af44e98f78af40956c347715993111ac3f03083c6812"
+    },
+    {
+      "id": "language-server-doesnt-start",
+      "hash": "052ac5296d4dd8727ecae818e4ac80e49ff193b7e3504055bd48666ac6496caa"
+    },
+    {
+      "id": "language-server-uses-too-much-memory",
+      "hash": "c4ab4ebb0730d005f33368d22a5b1008fac534ded522e4aeb144c37eec22129f"
+    },
+    {
+      "id": "false-positive-diagnostics-in-a-monorepo",
+      "hash": "2ef9ac07f0b3656c2ce5196b4ad0aadf3f7001176af8c3e5ffbe8aa609e19079"
+    },
+    {
+      "id": "build-a-plugin",
+      "hash": "cb2fbac2464395d480981ccd18ec4cc79d5fd372fd04547a82f35b3947b9dd72"
+    },
+    {
+      "id": "host-a-marketplace",
+      "hash": "2e9dcdaf9c62382fc6cb4e037fe54e1d3023b9094a4322db50f5f9c8907fa32d"
+    },
+    {
+      "id": "blocked-by-your-organization",
+      "hash": "81833774110ba591b7a5b959ab5a020f18f983e738461a7a847496ac0817dc41"
+    },
+    {
+      "id": "next-steps",
+      "hash": "e37396f673487bf92fba432fcdef58050282442431054775b20ba293c6ff0ce5"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Hook loads but never fires",
+      "id": "hook-loads-but-never-fires",
+      "hash": "3a3031f80291b175e477c32e719edba01f3c17a30355091faeb0811a8102b965",
+      "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>\n\n<h3 id=\"invalid-mcp-server-config-for-and-mcp-servers-that-dont-start\">\n  `Invalid MCP server config for \"<server>\"` and MCP servers that don't start\n</h3>\n\nA plugin bundles an MCP server, and the **Errors** tab shows `Invalid MCP server config for \"<server>\": <error>`, or the server is listed but `/mcp` never shows it connected."
+    }
+  ]
+}
