@@ -24,8 +24,8 @@ Commands still work, but the docs call them the older format of a skill.[^first]
 skill at `skills/<name>/SKILL.md` does the same job. It also holds supporting files, and the
 model can start it on its own.[^merged][^components]
 
-The glob is broad. The rule then reports a file only when its `commands/` directory is one that
-Claude Code reads:
+The glob is broad. The rule then reports a file only when its `commands/` directory is in one of
+the places that Claude Code reads:
 
 - `.claude/commands/`, and any directory below it;
 - a `commands/` directory at the root of a plugin, next to `.claude-plugin/plugin.json`.
