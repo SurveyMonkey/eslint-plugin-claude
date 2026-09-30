@@ -66,7 +66,8 @@ below `no` is a no. A value between them goes to a person.
 Code decides these cases with no model call:
 
 - A block that a heading cites is gone: `rule-removal`.
-- A mapped heading appears twice, or a page has no snapshot: `needs-triage`.
+- A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, or
+  a page has no snapshot: `needs-triage`.
 - A block is too large for one request: `needs-triage`.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no

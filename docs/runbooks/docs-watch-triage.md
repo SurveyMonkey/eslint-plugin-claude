@@ -24,7 +24,7 @@ has the type `Task` and no label. Its body starts with a hidden marker:
 | `rule-update` | A block that a rule cites changed, and Jev says the change alters what the rule checks. | Change the rule, its preset or its severity. Or record that no change is necessary. |
 | `rule-removal` | A block that a rule cites is gone, or Jev says the rule has no purpose left. | Remove the rule, or find the new place of the text and move the map entry. |
 | `new-rule` | A block that no heading cites states a requirement that a lint check can measure. | Add a row to `docs/rules-inventory.md` and open a rule issue, or close the issue. |
-| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block was too large, a mapped heading appears twice, or a page has no snapshot. | Read the block, and treat the issue as one of the three other kinds. |
+| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block was too large, a mapped heading appears twice or cannot be found, or a page has no snapshot. | Read the block, and treat the issue as one of the three other kinds. |
 
 ## Steps for each issue
 
