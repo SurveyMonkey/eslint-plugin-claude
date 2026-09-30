@@ -94,6 +94,84 @@ describe('splitBlocks', () => {
   })
 })
 
+describe('HTML headings', () => {
+  const HTML = readFileSync(
+    path.join(import.meta.dirname, 'fixtures/docs-watch/skills-html.md'),
+    'utf8',
+  )
+  const blocks = api.splitBlocks(HTML)
+
+  it('starts a block at an HTML heading, and takes the id attribute as the block id', () => {
+    expect(blocks.map((block) => [block.key, block.level])).toEqual([
+      ['extend-claude-with-skills', 1],
+      ['create-your-first-skill', 2],
+      ['where-skills-live', 2],
+      ['discovery-from-parent-and-nested-directories', 3],
+      ['invalid-mcp-server-config', 3],
+      ['live-change-detection', 2],
+      ['live-change-detection-1', 3],
+    ])
+  })
+
+  it('no longer lets the block before an HTML heading absorb its section', () => {
+    const first = blocks.find((block) => block.id === 'create-your-first-skill')
+    expect(first?.text).toContain('Create a `SKILL.md` file')
+    expect(first?.text).not.toContain('Where you save a skill')
+    const live = blocks.find((block) => block.id === 'where-skills-live')
+    expect(live?.text).toContain('Where you save a skill')
+    expect(live?.text).not.toContain('Claude Code looks in each parent directory')
+  })
+
+  it('reads the title from the lines between the tags, and keeps inner markup out of it', () => {
+    expect(blocks.find((block) => block.id === 'where-skills-live')?.title).toBe(
+      'Choose where skills load',
+    )
+    expect(blocks.find((block) => block.id === 'invalid-mcp-server-config')?.title).toBe(
+      'Invalid MCP server config for "<server>" and MCP servers that don\'t start',
+    )
+  })
+
+  it('starts no block at an HTML heading inside a code fence', () => {
+    expect(blocks.some((block) => block.id === 'inside-a-fence')).toBe(false)
+    const parent = blocks.find(
+      (block) => block.id === 'discovery-from-parent-and-nested-directories',
+    )
+    expect(parent?.text).toContain('<h2 id="inside-a-fence">')
+  })
+
+  it('numbers the second heading that has the same id, Markdown or HTML', () => {
+    expect(blocks.filter((block) => block.id === 'live-change-detection')).toHaveLength(2)
+  })
+
+  it('takes an opening tag without a closing tag as text', () => {
+    const text = '# Title\n\n<h2 id="open">\n  Never closed\n\nMore text.\n'
+    expect(api.splitBlocks(text).map((block) => block.key)).toEqual(['title'])
+  })
+
+  it('takes an HTML heading with no id from the slug of its title', () => {
+    const text = '# Title\n\n<h2>\n  No id here\n</h2>\n'
+    expect(api.splitBlocks(text).map((block) => block.key)).toEqual(['title', 'no-id-here'])
+  })
+
+  it('finds a mapped HTML heading by the text that the page shows', async () => {
+    const page = await api.readPage(URL_, ['Choose where skills load'], serve(HTML))
+    expect(page.sources[0]?.id).toBe('where-skills-live')
+    expect(page.sources[0]?.text).toContain('Where you save a skill')
+    expect(page.sources[0]?.text).not.toContain('Claude Code looks in each parent')
+  })
+
+  it('finds a mapped HTML heading by its id text too', async () => {
+    const page = await api.readPage(URL_, ['Where skills live'], serve(HTML))
+    expect(page.sources[0]?.id).toBe('where-skills-live')
+  })
+
+  it('fails for a mapped heading whose id appears twice', async () => {
+    await expect(api.readPage(URL_, ['Live change detection'], serve(HTML))).rejects.toThrow(
+      'appears 2 times',
+    )
+  })
+})
+
 describe('readPage', () => {
   it('finds the block of an inline-code heading by its slug', async () => {
     const page = await api.readPage(URL_, ['hooks'], serve(FIXTURE))

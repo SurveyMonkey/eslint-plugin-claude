@@ -90,22 +90,64 @@ export function slugify(heading: string): string {
 
 const HEADING = /^(#{1,6})[ \t]+(.+?)[ \t]*#*[ \t]*$/
 const FENCE = /^[ \t]*(`{3,}|~{3,})/
+// An HTML heading, as the live pages write it: the opening tag alone on a line
+// at column 0, the title on the next lines, and the closing tag alone on a
+// line. The pattern is anchored at both ends and reads only the tag name and
+// the attribute text. It removes and sanitizes nothing.
+const HTML_OPEN = /^<h([1-6])((?:[ \t]+[a-z-]+="[^"]*")*)[ \t]*>$/
+const HTML_ID = /(?:^|[ \t])id="([^"]*)"/
+// The most lines that may sit between the opening tag and the closing tag.
+const HTML_TITLE_LINES = 5
+
+// Reads an HTML heading that starts at lines[start]. Returns undefined when
+// the line is not an opening tag, or when no closing tag follows it soon.
+function readHtmlHeading(lines: string[], start: number) {
+  const open = HTML_OPEN.exec(lines[start] ?? '')
+  const level = Number(open?.[1])
+  if (!open) return undefined
+  for (let end = start + 1; end <= start + HTML_TITLE_LINES + 1; end++) {
+    if (lines[end] === `</h${level}>`) {
+      const title = stripInline(
+        lines
+          .slice(start + 1, end)
+          .join(' ')
+          .replace(/\s+/g, ' '),
+      )
+      return { level, title, id: HTML_ID.exec(open[2] ?? '')?.[1], end }
+    }
+  }
+  return undefined
+}
 
 // Splits a page into blocks. A block is a heading and its text, up to the next
-// heading of any level. A heading inside a code fence starts no block. Text
-// before the first heading is not a block. `key` is `id`, with a numeric
-// suffix on the second and later blocks that share an ID.
+// heading of any level. A heading is a Markdown heading, or an HTML heading
+// with the tags on their own lines. A heading inside a code fence starts no
+// block. Text before the first heading is not a block. The ID of an HTML
+// heading is its `id` attribute, which is the anchor of the site. `key` is
+// `id`, with a numeric suffix on the second and later blocks that share an ID.
 export function splitBlocks(markdown: string): Block[] {
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n')
-  const blocks: { level: number; title: string; lines: string[] }[] = []
+  const blocks: { level: number; title: string; id?: string; lines: string[] }[] = []
   let fence: string | null = null
-  for (const line of lines) {
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index] ?? ''
     const mark = FENCE.exec(line)?.[1]
     if (fence) {
       if (mark && mark[0] === fence[0] && mark.length >= fence.length) fence = null
     } else if (mark) {
       fence = mark
     } else {
+      const html = readHtmlHeading(lines, index)
+      if (html) {
+        blocks.push({
+          level: html.level,
+          title: html.title,
+          id: html.id,
+          lines: lines.slice(index, html.end + 1),
+        })
+        index = html.end
+        continue
+      }
       const match = HEADING.exec(line)
       if (match) {
         blocks.push({
@@ -119,8 +161,8 @@ export function splitBlocks(markdown: string): Block[] {
     blocks.at(-1)?.lines.push(line)
   }
   const seen = new Map<string, number>()
-  return blocks.map(({ level, title, lines: own }) => {
-    const id = slugify(title)
+  return blocks.map(({ level, title, id: explicit, lines: own }) => {
+    const id = explicit || slugify(title)
     const count = seen.get(id) ?? 0
     seen.set(id, count + 1)
     const text = own.join('\n').trimEnd()
@@ -138,7 +180,9 @@ export function resolveSource(
   pageText: string,
 ): SnapshotSource {
   const id = slugify(heading)
-  const matches = blocks.filter((block) => block.id === id)
+  // A block matches by its ID, or by the slug of the title that the page shows.
+  // An HTML heading has an ID that can differ from the slug of its title.
+  const matches = blocks.filter((block) => block.id === id || slugify(block.title) === id)
   if (matches.length === 0) {
     throw new Error(`${url}: heading "${heading}" (id ${id}) is not on the page`)
   }
@@ -148,9 +192,9 @@ export function resolveSource(
   const [block] = matches
   if (block === undefined) throw new Error(`${url}: heading "${heading}" is not on the page`)
   if (block.level === 1) {
-    return { heading, id, hash: sha256(pageText), text: pageText }
+    return { heading, id: block.id, hash: sha256(pageText), text: pageText }
   }
-  return { heading, id, hash: block.hash, text: block.text }
+  return { heading, id: block.id, hash: block.hash, text: block.text }
 }
 
 // The pages that the map cites, each with its mapped headings.
