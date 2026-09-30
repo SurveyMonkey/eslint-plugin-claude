@@ -1,8 +1,16 @@
-// The map in docs/rule-sources.json ties each rule to the docs blocks that
-// source it. Layer 2 of the docs watch reads it. A rule with no entry is a
-// rule that the watch cannot see.
+// The map in docs/rule-sources.json lists the Claude Code docs pages and
+// headings that are the source of each rule. A later check of the docs will
+// read it. A rule with no entry is a rule that this check cannot see.
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -10,10 +18,12 @@ import { afterEach, describe, expect, it } from 'vitest'
 const ROOT = path.resolve(import.meta.dirname, '..')
 const SCRIPT = path.join(ROOT, 'scripts/seed-rule-sources.ts')
 // Node 22.13 needs the flag to run a .ts file. Node 24 accepts it.
-const seed = (...args: string[]) =>
-  execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, '--stdout', ...args], {
+const run = (...args: string[]) =>
+  execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, ...args], {
     encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
   })
+const seed = (...args: string[]) => run('--stdout', ...args)
 const DOCS_PREFIX = 'https://code.claude.com/docs/'
 
 type Source = { url?: unknown; heading?: unknown; hash?: unknown }
@@ -79,6 +89,26 @@ describe('check', () => {
     const map = { 'a-rule': [{ url: `${DOCS_PREFIX}en/hooks` }] }
     expect(check(map, ['a-rule'])).toEqual(['a-rule: no heading'])
   })
+
+  it('fails for a source with an empty heading', () => {
+    const map = { 'a-rule': [{ url: `${DOCS_PREFIX}en/hooks`, heading: '' }] }
+    expect(check(map, ['a-rule'])).toEqual(['a-rule: no heading'])
+  })
+
+  it('fails for a source with no url', () => {
+    const map = { 'a-rule': [{ heading: 'H' }] }
+    expect(check(map, ['a-rule'])).toEqual([`a-rule: url is not on ${DOCS_PREFIX}`])
+  })
+
+  it('fails for an entry that is not a list', () => {
+    const map = { 'a-rule': {} } as unknown as SourceMap
+    expect(check(map, ['a-rule'])).toEqual(['a-rule: no source'])
+  })
+
+  it('fails for a URL on the host but not under /docs/', () => {
+    const map = { 'a-rule': [{ url: 'https://code.claude.com/blog/x', heading: 'H' }] }
+    expect(check(map, ['a-rule'])).toEqual([`a-rule: url is not on ${DOCS_PREFIX}`])
+  })
 })
 
 describe('docs/rule-sources.json', () => {
@@ -100,32 +130,118 @@ describe('seed script', () => {
     for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true })
   })
 
-  it('reads the footnotes of a rule doc, and is stable', () => {
+  // Makes a repository root. Each key is a rule, each value the text of its doc.
+  function makeRoot(docs: Record<string, string>): string {
     const root = mkdtempSync(path.join(tmpdir(), 'rule-sources-'))
     dirs.push(root)
     mkdirSync(path.join(root, 'src/rules'), { recursive: true })
     mkdirSync(path.join(root, 'docs/rules'), { recursive: true })
-    writeFileSync(path.join(root, 'src/rules/a-rule.ts'), '')
-    writeFileSync(
-      path.join(root, 'docs/rules/a-rule.md'),
-      [
-        'Text.[^one]',
-        '',
-        '[^one]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)',
-        '[^two]: [Skills](https://code.claude.com/docs/en/skills)',
-        '[^dup]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)',
-        '[^other]: [Elsewhere](https://example.com/page)',
-        '',
-      ].join('\n'),
+    for (const [rule, text] of Object.entries(docs)) {
+      writeFileSync(path.join(root, 'src/rules', `${rule}.ts`), '')
+      writeFileSync(path.join(root, 'docs/rules', `${rule}.md`), text)
+    }
+    return root
+  }
+  const footnotes = (...lines: string[]) => `Text.\n\n${lines.join('\n')}\n`
+  const one = (text: string) => JSON.parse(seed(makeRoot({ 'a-rule': text })))['a-rule']
+
+  it('reads a footnote with an anchor and a page title', () => {
+    const text = footnotes(
+      '[^one]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)',
     )
-    const run = () => seed(root)
-    const first = run()
-    expect(JSON.parse(first)).toEqual({
-      'a-rule': [
-        { url: `${DOCS_PREFIX}en/hooks`, heading: 'Hook lifecycle' },
-        { url: `${DOCS_PREFIX}en/skills`, heading: 'Skills' },
-      ],
+    expect(one(text)).toEqual([{ url: `${DOCS_PREFIX}en/hooks`, heading: 'Hook lifecycle' }])
+  })
+
+  it('uses the whole label as the heading for a link with no anchor', () => {
+    const text = footnotes('[^one]: [Page: Title](https://code.claude.com/docs/en/skills)')
+    expect(one(text)).toEqual([{ url: `${DOCS_PREFIX}en/skills`, heading: 'Page: Title' }])
+  })
+
+  it('uses the whole label as the heading for an anchor and a label with no colon', () => {
+    const text = footnotes('[^one]: [Skills](https://code.claude.com/docs/en/skills#skills)')
+    expect(one(text)).toEqual([{ url: `${DOCS_PREFIX}en/skills`, heading: 'Skills' }])
+  })
+
+  it('splits the label at the first colon', () => {
+    const text = footnotes('[^one]: [A: B: C](https://code.claude.com/docs/en/skills#c)')
+    expect(one(text)).toEqual([{ url: `${DOCS_PREFIX}en/skills`, heading: 'B: C' }])
+  })
+
+  it('keeps one source for a repeated link', () => {
+    const link = '[Hooks: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)'
+    expect(one(footnotes(`[^a]: ${link}`, `[^b]: ${link}`))).toHaveLength(1)
+  })
+
+  it('keeps two sources for one page with two headings', () => {
+    const text = footnotes(
+      '[^a]: [Hooks: One](https://code.claude.com/docs/en/hooks#one)',
+      '[^b]: [Hooks: Two](https://code.claude.com/docs/en/hooks#two)',
+    )
+    expect(one(text)).toHaveLength(2)
+  })
+
+  it('keeps two sources for two pages with one heading', () => {
+    const text = footnotes(
+      '[^a]: [Hooks: One](https://code.claude.com/docs/en/hooks#one)',
+      '[^b]: [Skills: One](https://code.claude.com/docs/en/skills#one)',
+    )
+    expect(one(text)).toHaveLength(2)
+  })
+
+  it('skips a link to another site, and a docs link in text', () => {
+    const text = footnotes(
+      'See [Hooks: X](https://code.claude.com/docs/en/hooks#x) in the text.',
+      '[^other]: [Elsewhere](https://example.com/page)',
+    )
+    expect(one(text)).toEqual([])
+  })
+
+  it.each([
+    ['a link title', '[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x "t")'],
+    ['text after the link', '[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x) (see)'],
+    ['an indent', '  [^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)'],
+    ['no link', '[^a]: Hooks reference.'],
+  ])('stops for a footnote that it cannot read: %s', (_name, line) => {
+    expect(() => seed(makeRoot({ 'a-rule': footnotes(line) }))).toThrow(/cannot read the footnote/)
+  })
+
+  it.each([
+    'http://code.claude.com/docs/en/hooks#x',
+    'https://docs.anthropic.com/en/hooks#x',
+    'https://code.claude.com/blog/x',
+    'https://code.claude.com/docs',
+  ])('stops for a Claude link that is not under /docs/: %s', (link) => {
+    const root = makeRoot({ 'a-rule': footnotes(`[^a]: [Hooks: X](${link})`) })
+    expect(() => seed(root)).toThrow(/link is not under/)
+  })
+
+  it('gives an empty list for a doc with no footnotes', () => {
+    expect(one('No footnotes.\n')).toEqual([])
+  })
+
+  it('lists the rules in sorted order and skips files that are not .ts', () => {
+    const doc = footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)')
+    const root = makeRoot({ 'b-rule': doc, 'a-rule': doc })
+    writeFileSync(path.join(root, 'src/rules/notes.md'), '')
+    const out = seed(root)
+    expect(Object.keys(JSON.parse(out))).toEqual(['a-rule', 'b-rule'])
+    expect(out.indexOf('"a-rule"')).toBeLessThan(out.indexOf('"b-rule"'))
+  })
+
+  it('writes the map file without --stdout, and does not write it with --stdout', () => {
+    const doc = footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)')
+    const root = makeRoot({ 'a-rule': doc })
+    const file = path.join(root, 'docs/rule-sources.json')
+    const out = seed(root)
+    expect(existsSync(file)).toBe(false)
+    expect(run(root)).toBe('')
+    expect(readFileSync(file, 'utf8')).toBe(out)
+  })
+
+  it('gives the same output on a second run', () => {
+    const root = makeRoot({
+      'a-rule': footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)'),
     })
-    expect(run()).toBe(first)
+    expect(seed(root)).toBe(seed(root))
   })
 })
