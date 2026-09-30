@@ -162,9 +162,18 @@ describe('seed script', () => {
     expect(one(text)).toEqual([{ url: `${DOCS_PREFIX}en/skills`, heading: 'Skills' }])
   })
 
-  it('splits the label at the first colon', () => {
+  it('splits the label at the first colon and space', () => {
     const text = footnotes('[^one]: [A: B: C](https://code.claude.com/docs/en/skills#c)')
     expect(one(text)).toEqual([{ url: `${DOCS_PREFIX}en/skills`, heading: 'B: C' }])
+    const bare = footnotes('[^one]: [A:B: C](https://code.claude.com/docs/en/skills#c)')
+    expect(one(bare)).toEqual([{ url: `${DOCS_PREFIX}en/skills`, heading: 'C' }])
+  })
+
+  it('reads a footnote that ends with a space or a carriage return', () => {
+    const link = '[Hooks: X](https://code.claude.com/docs/en/hooks#x)'
+    const expected = [{ url: `${DOCS_PREFIX}en/hooks`, heading: 'X' }]
+    expect(one(footnotes(`[^a]: ${link} `))).toEqual(expected)
+    expect(one(`Text.\r\n\r\n[^a]: ${link}\r\n`)).toEqual(expected)
   })
 
   it('keeps one source for a repeated link', () => {
@@ -192,8 +201,13 @@ describe('seed script', () => {
     const text = footnotes(
       'See [Hooks: X](https://code.claude.com/docs/en/hooks#x) in the text.',
       '[^other]: [Elsewhere](https://example.com/page)',
+      '[^path]: [Elsewhere](https://example.com/claude.com/x)',
     )
     expect(one(text)).toEqual([])
+  })
+
+  it('skips a line that starts with a footnote reference and is not a definition', () => {
+    expect(one('[^a] is defined below.\n')).toEqual([])
   })
 
   it.each([
@@ -207,12 +221,23 @@ describe('seed script', () => {
 
   it.each([
     'http://code.claude.com/docs/en/hooks#x',
+    'HTTPS://code.claude.com/docs/en/hooks#x',
+    'https://Code.Claude.com/docs/en/hooks#x',
+    '<https://code.claude.com/docs/en/hooks#x>',
+    '//code.claude.com/docs/en/hooks#x',
     'https://docs.anthropic.com/en/hooks#x',
+    'https://claude.ai/docs/x',
     'https://code.claude.com/blog/x',
     'https://code.claude.com/docs',
-  ])('stops for a Claude link that is not under /docs/: %s', (link) => {
+    'https://code.claude.com:443/docs/en/hooks#x',
+  ])('stops for a link to a Claude site that is not under the docs prefix: %s', (link) => {
     const root = makeRoot({ 'a-rule': footnotes(`[^a]: [Hooks: X](${link})`) })
     expect(() => seed(root)).toThrow(/link is not under/)
+  })
+
+  it('does not stop for a host that only contains a Claude name', () => {
+    const text = footnotes('[^a]: [Other: X](https://notclaude.com/x)')
+    expect(one(text)).toEqual([])
   })
 
   it('gives an empty list for a doc with no footnotes', () => {
@@ -221,11 +246,19 @@ describe('seed script', () => {
 
   it('lists the rules in sorted order and skips files that are not .ts', () => {
     const doc = footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)')
-    const root = makeRoot({ 'b-rule': doc, 'a-rule': doc })
+    // "a-rule-b.ts" comes before "a-rule.ts" as a file name, but not as a rule name.
+    const root = makeRoot({ 'b-rule': doc, 'a-rule-b': doc, 'a-rule': doc })
     writeFileSync(path.join(root, 'src/rules/notes.md'), '')
-    const out = seed(root)
-    expect(Object.keys(JSON.parse(out))).toEqual(['a-rule', 'b-rule'])
-    expect(out.indexOf('"a-rule"')).toBeLessThan(out.indexOf('"b-rule"'))
+    expect(Object.keys(JSON.parse(seed(root)))).toEqual(['a-rule', 'a-rule-b', 'b-rule'])
+  })
+
+  it('reads this repository when it gets no root, from any directory', () => {
+    const out = execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, '--stdout'], {
+      encoding: 'utf8',
+      cwd: tmpdir(),
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
+    expect(out).toBe(readFileSync(path.join(ROOT, 'docs/rule-sources.json'), 'utf8'))
   })
 
   it('writes the map file without --stdout, and does not write it with --stdout', () => {
