@@ -1,6 +1,6 @@
-// The map in docs/rule-sources.json lists the Claude Code docs pages and
-// headings that are the source of each rule. A later check of the docs will
-// read it. A rule with no entry is a rule that this check cannot see.
+// The map in docs/rule-sources.json lists the pages and headings of the Claude
+// Code docs that are the source of each rule. A later check of the docs will
+// read it. A rule with no entry is a rule that the later check cannot see.
 import { execFileSync } from 'node:child_process'
 import {
   existsSync,
@@ -227,6 +227,7 @@ describe('seed script', () => {
     '//code.claude.com/docs/en/hooks#x',
     'https://docs.anthropic.com/en/hooks#x',
     'https://claude.ai/docs/x',
+    'https://claude.com',
     'https://code.claude.com/blog/x',
     'https://code.claude.com/docs',
     'https://code.claude.com:443/docs/en/hooks#x',
