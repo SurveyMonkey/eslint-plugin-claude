@@ -31,17 +31,26 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 
 ## Rule source map
 
-`docs/rule-sources.json` maps each rule in `src/rules/` to the Claude Code docs blocks that
-source it. Each source has a `url` on `code.claude.com/docs` and a `heading`. A later check will
-add a `hash` to each source. Do not set `hash` by hand.
+`docs/rule-sources.json` lists the Claude Code docs pages and headings that are the source of
+each rule in `src/rules/`. Each source has a `url` on `code.claude.com/docs` and a `heading`. A
+later check will add a `hash` to each source. Do not set `hash` by hand.
 
 A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<rule>.md`, then
-run `pnpm docs:seed`. The script reads those footnotes and writes the map. It makes no network
+run `pnpm docs:seed` and commit the new `docs/rule-sources.json`. The script makes no network
 call.
 
-`tests/rule-sources.test.ts` runs in `pnpm test`. It fails when a rule has no entry, when an
-entry has no rule or no source, when a URL is not on `code.claude.com/docs`, or when the map
-differs from the output of the script.
+Write each footnote on one line, as `[^id]: [Page title: Heading](url#anchor)`. The script
+takes the text after the first colon as the heading. A link with no anchor has no heading, so
+the whole label is the heading. The script skips a link to a site that is not a Claude site.
+It stops with an error for a footnote that it cannot read, and for a Claude link that is not
+under `code.claude.com/docs`.
+
+`tests/rule-sources.test.ts` runs in `pnpm test`. It fails in these cases:
+
+- A rule has no entry.
+- An entry has no rule or no source.
+- A URL is not on `code.claude.com/docs`.
+- The map is not the same as the output of the script.
 
 ## Commits and pull requests
 
