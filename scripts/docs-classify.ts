@@ -15,9 +15,9 @@
 //
 // The script fails closed. A failed call to Jev, a timeout, an answer that is
 // not valid, or an answer between two thresholds gives a needs-triage
-// finding. A failed docs fetch, a page that splitBlocks cannot read, a page
-// with no title, or no API key when a block needs a call throws, and the job
-// fails. The script drops no change.
+// finding. A map that cites no page, a failed docs fetch, a page that
+// splitBlocks cannot read, a page with no title, or no API key when a block
+// needs a call throws, and the job fails. The script drops no change.
 //
 // The block text goes into the request `state` as data. The questions are
 // constants, and no docs text goes into them.
@@ -427,7 +427,8 @@ export function loadRules(root: string): {
 }
 
 // Compares one page with its snapshot. Returns the blocks to ask about and
-// the findings that need no call. Throws for a page with no title.
+// the findings that need no call. Throws for a page that splitBlocks cannot
+// read, and for a page with no title.
 export function planPage({
   url,
   citations,
@@ -622,8 +623,9 @@ async function pool<T, R>(items: T[], limit: number, run: (item: T) => Promise<R
   return out
 }
 
-// Asks about one block and returns its findings and its result. Every error
-// gives a needs-triage finding.
+// Asks about one block and returns its findings and its result. A Jev error,
+// a Jev answer that is not valid, or a block that is too large gives a
+// needs-triage finding.
 type Classified = { findings: Finding[]; result: Result }
 
 async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): Promise<Classified> {
@@ -679,7 +681,11 @@ export async function classify({
   const citations = citationsOf(map)
   const findings: Finding[] = []
   const items: Item[] = []
-  for (const url of pagesOf(map).keys()) {
+  const pages = pagesOf(map)
+  // The check reports this as an error. The classifier must fail too, or the
+  // job is green with no watch.
+  if (pages.size === 0) throw new Error('the map cites no page')
+  for (const url of pages.keys()) {
     const planned = planPage({
       url,
       citations: citations.get(url) ?? new Map(),

@@ -2,6 +2,7 @@
 // tests inject the docs fetch and the Jev fetch, so no test reaches the
 // network. The saved answers in fixtures/docs-classify are real Jev answers
 // from the spike in ADR 002, and the labels there are set by hand.
+import { spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -185,6 +186,39 @@ describe('askJev', () => {
     )
   })
 
+  it('tries again after a network error, a timeout or a 504, and waits 1 s, then 2 s', async () => {
+    const waits: number[] = []
+    const wait = async (ms: number) => {
+      waits.push(ms)
+    }
+    const ok = json({ answers: { requirement: { type: 'noul', noul: 1 } } })
+    const steps: (() => Promise<Response>)[] = [
+      () => Promise.reject(new TypeError('fetch failed')),
+      () => Promise.reject(new DOMException('slow', 'TimeoutError')),
+      async () => ok,
+    ]
+    const flaky: FakeFetch = () => (steps.shift() as () => Promise<Response>)()
+    await expect(api.askJev(body, { fetch: flaky, key: KEY, wait })).resolves.toEqual({
+      answers: { requirement: { type: 'noul', noul: 1 } },
+    })
+    expect(waits).toEqual([1000, 2000])
+    const gateway = [504]
+    const once: FakeFetch = async () => {
+      const status = gateway.shift()
+      return status ? json({}, status) : json({ answers: {} })
+    }
+    await expect(api.askJev(body, { fetch: once, key: KEY, wait: noWait })).resolves.toEqual({
+      answers: {},
+    })
+  })
+
+  it('times out after 30 s by default', async () => {
+    const slow: FakeFetch = () => Promise.reject(new DOMException('slow', 'TimeoutError'))
+    await expect(api.askJev(body, { fetch: slow, key: KEY, wait: noWait })).rejects.toThrow(
+      'timeout after 30000 ms',
+    )
+  })
+
   it('fails for a body that is not JSON', async () => {
     const fetch: FakeFetch = async () => new Response('not json', { status: 200 })
     await expect(api.askJev(body, { fetch, key: KEY })).rejects.toThrow('the response is not JSON')
@@ -249,6 +283,8 @@ describe('decide', () => {
     expect(() => api.decide(item, choice)).toThrow('answer "alters_0"')
     expect(() => api.decide(item, answers(1.2, 0))).toThrow('answer "alters_0" is above 1')
     expect(() => api.decide(item, answers(Number.NaN, 0))).toThrow('answer "alters_0"')
+    const uncited = { rules: [], askRequirement: true }
+    expect(() => api.decide(uncited, {})).toThrow('answer "requirement" is missing')
   })
 
   it('gives a confidence for a Noul as its distance from 0.5', () => {
@@ -497,6 +533,20 @@ describe('classify', () => {
     expect(jev.calls).toEqual([])
   })
 
+  it('reads a page with CRLF line ends as the same page', async () => {
+    const jev = fakeJev(() => 1)
+    const output = await run(cited, PAGE.replaceAll('\n', '\r\n'), { fetch: jev.fetch })
+    expect(output.findings).toEqual([])
+    expect(jev.calls).toEqual([])
+  })
+
+  it('fails for a map that cites no page', async () => {
+    const jev = fakeJev(() => 1)
+    await expect(run({}, PAGE, { fetch: jev.fetch, key: KEY })).rejects.toThrow(
+      'the map cites no page',
+    )
+  })
+
   it('records a removed block that no rule cites as a result with no finding', async () => {
     const edited = PAGE.replace('## Path rules', 'Path rules')
     const jev = fakeJev(() => 0)
@@ -588,6 +638,15 @@ describe('main on a temporary tree', () => {
     const text = readFileSync(summary, 'utf8')
     expect(text).toContain('| rule-update | ')
     expect(text).not.toContain(KEY)
+  })
+
+  it('exits 1 when it fails, as a script', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'docs-classify-'))
+    dirs.push(root)
+    const script = path.join(import.meta.dirname, '../scripts/docs-classify.ts')
+    const result = spawnSync(process.execPath, [script, root], { encoding: 'utf8', env: {} })
+    expect(result.status).toBe(1)
+    expect(result.stdout).toBe('')
   })
 
   it('renders the blocks that need no change', () => {
