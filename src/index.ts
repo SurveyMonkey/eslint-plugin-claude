@@ -13,6 +13,7 @@ import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
 import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
 import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import skillNameUnique from './rules/skill-name-unique.ts'
 import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
 import skillReferenceExists from './rules/skill-reference-exists.ts'
@@ -43,6 +44,7 @@ const modules = [
   skillFileLayout,
   skillReferenceExists,
   skillAgentExists,
+  skillNameUnique,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -76,6 +78,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-file-layout': 'error',
   'skill-reference-exists': 'error',
   'skill-agent-exists': 'error',
+  'skill-name-unique': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

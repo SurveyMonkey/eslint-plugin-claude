@@ -50,6 +50,9 @@ const TREE: Record<string, string> = {
   '.claude/skills/ref-ok/reference.md': '# Reference\n',
   '.claude/skills/agent/SKILL.md': '---\ncontext: fork\nagent: ghost\n---\n',
   '.claude/skills/agent-ok/SKILL.md': '---\ncontext: fork\nagent: Explore\n---\n',
+  '.claude/skills/twin-a/SKILL.md': '---\nname: twin\n---\n',
+  '.claude/skills/twin-b/SKILL.md': '---\nname: Twin\n---\n',
+  'packages/x/.claude/skills/twin/SKILL.md': '# Twin\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
@@ -67,6 +70,7 @@ const EXPECTED = [
   '.claude/commands/ns/c.md: claude/command-legacy-format@1',
   '.claude/commands/schema.md: claude/command-legacy-format@1',
   '.claude/commands/schema.md: claude/skill-frontmatter-schema@2',
+  '.claude/commands/schema.md: claude/skill-name-unique@2',
   '.claude/settings.json: claude/hooks-event-name-known@2',
   '.claude/settings.local.json: claude/hooks-event-name-known@2',
   '.claude/skills/agent/SKILL.md: claude/skill-agent-exists@2',
@@ -77,9 +81,12 @@ const EXPECTED = [
   '.claude/skills/position/SKILL.md: claude/skill-frontmatter-position@2',
   '.claude/skills/ref/SKILL.md: claude/skill-reference-exists@2',
   '.claude/skills/schema/SKILL.md: claude/skill-frontmatter-schema@2',
+  '.claude/skills/schema/SKILL.md: claude/skill-name-unique@2',
   '.claude/skills/synced/SKILL.md: claude/skill-reserved-name@2',
   '.claude/skills/t/SKILL.md: claude/skill-description-max-length@1',
   '.claude/skills/tools/SKILL.md: claude/skill-allowed-tools-ineffective@2',
+  '.claude/skills/twin-a/SKILL.md: claude/skill-name-unique@2',
+  '.claude/skills/twin-b/SKILL.md: claude/skill-name-unique@2',
   '.claude/skills/unreachable/SKILL.md: claude/skill-invocation-unreachable@2',
   '.claude/skills/vars/SKILL.md: claude/skill-plugin-vars-outside-plugin@2',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
@@ -105,6 +112,7 @@ const NEW_RULES = [
   'skill-file-layout',
   'skill-reference-exists',
   'skill-agent-exists',
+  'skill-name-unique',
 ]
 
 let root = ''
