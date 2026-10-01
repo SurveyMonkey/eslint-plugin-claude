@@ -34,6 +34,10 @@ markdownTester.run('skill-reserved-name', ruleOf('skill-reserved-name'), {
     { code: '# C\n', filename: '.claude/commands/deploy.md' },
     { code: '# C\n', filename: '.claude/commands/synced.md' },
     { code: '# C\n', filename: '.claude/commands/ops/deploy.md' },
+    // Only a file or folder directly in `commands/` is reserved.
+    { code: '# C\n', filename: '.claude/commands/ops/anthropic-skills.md' },
+    { code: '# C\n', filename: '.claude/commands/ops/anthropic-skills/x.md' },
+    { code: '# C\n', filename: '.claude/commands/anthropic-skillset/x.md' },
     // A command file has no `name` field, so the rule reads none.
     { ...named('anthropic-skills', '.claude/commands/c.md') },
     // The frontmatter `name` is not a string.
@@ -94,6 +98,11 @@ markdownTester.run('skill-reserved-name', ruleOf('skill-reserved-name'), {
     {
       code: '# C\n',
       filename: '.claude/commands/anthropic-skills/pdf.md',
+      errors: [{ messageId: 'command', data: { name: 'anthropic-skills' } }],
+    },
+    {
+      code: '# C\n',
+      filename: '.claude/commands/anthropic-skills/ops/x.md',
       errors: [{ messageId: 'command', data: { name: 'anthropic-skills' } }],
     },
   ],

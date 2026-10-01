@@ -45,8 +45,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'name' | 'command' }
           }
           return
         }
-        const reserved = file.names.find(isSyncedNamespace)
-        if (reserved !== undefined) {
+        // The docs reserve a file or subfolder directly in `commands/`. A
+        // deeper name is only a part of the command name.
+        const reserved = file.names[0] as string
+        if (isSyncedNamespace(reserved)) {
           context.report({ loc: first, messageId: 'command', data: { name: reserved } })
         }
       },
