@@ -77,7 +77,7 @@ export function skillFiles(dir: string): string[] {
 }
 
 // The fields of each file that was read, by path. An entry is current while
-// the change time and the size of the file are the same.
+// the time of the last write and the size of the file are the same.
 const read = new Map<string, { stamp: string; fields: Record<string, unknown> | null }>()
 
 /** The frontmatter fields of the file at `file`, or null. */
