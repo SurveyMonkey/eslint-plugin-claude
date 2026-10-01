@@ -103,7 +103,7 @@ function realOf(file: string): string | null | Unreadable {
 
 /** The entries of the directory `dir`, null when it is not there, or
  *  `UNREADABLE`. */
-function entriesOf(dir: string): Dirent[] | null | Unreadable {
+export function entriesOf(dir: string): Dirent[] | null | Unreadable {
   try {
     return readdirSync(dir, { withFileTypes: true })
   } catch (error) {
