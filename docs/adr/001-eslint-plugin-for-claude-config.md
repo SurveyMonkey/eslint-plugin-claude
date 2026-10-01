@@ -1,10 +1,10 @@
 ---
 type: ADR
-description: The checks for Claude Code configuration files (SKILL.md, agents, plugin and marketplace manifests, hooks.json, settings) live in an ESLint plugin, eslint-plugin-claude, on @eslint/markdown and @eslint/json, with `yaml` for frontmatter. It is TypeScript built to `dist/`, published to npm from this repository, and ships the `recommended` and `strict` configs.
+description: The checks for Claude Code configuration files (SKILL.md, agents, plugin and marketplace manifests, hooks.json, settings) live in an ESLint plugin, eslint-plugin-claude, on @eslint/markdown and @eslint/json, with `yaml` for frontmatter. It is TypeScript built to `dist/`, published to npm from this repository, and ships the `recommended` and `strict` configs. Its rules check only the files that a git repository holds.
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 23]
+related_issues: [5, 6, 7, 8, 23]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -27,6 +27,13 @@ Nothing checks the practices in the [skills docs](https://code.claude.com/docs/e
 - Plugin manifests, the marketplace manifest, `hooks.json` and settings are JSON.
 - Some checks read a second file. Examples: a skill name that must match its directory, a
   referenced file that must exist, and a hook command that must point at a real script.
+
+**A check that reads files out of the repository gives a result that the repository does not
+fix.** Claude Code also loads configuration from the user's machine, such as `~/.claude/` and
+links to folders out of the checkout. A check that reads those files gives two contributors, or a
+contributor and CI, different reports for one commit. It also costs time on each lint: in review
+of [#41](https://github.com/SurveyMonkey/eslint-plugin-claude/pull/41), one link to a large folder
+out of the repository made a single lint take 92 seconds.
 
 **Teams in more than one organization need the same checks.** They need one install, not a set of
 tools to join together. The checks must run in three places: the editor, a staged-only commit
@@ -113,6 +120,15 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
     test runs each config over a tree in a temporary directory.
 13. **Each rule has one doc.** The doc is at `docs/rules/<rule>.md`, and `meta.docs.url` points to
     it. The [rule inventory](../rules-inventory.md) stays the backlog of candidate rules.
+14. **The plugin checks what a git repository holds.** It helps a team govern the Claude Code files
+    that it writes and commits. It does not manage the Claude Code configuration of a user.
+    - A rule reads no file out of the repository. The repository is the first directory at or
+      above the linted file that has a `.git` entry.
+    - A rule does not follow a link whose real path is out of the repository.
+    - A rule does not model what Claude Code loads from out of the repository, such as user
+      settings or agents in `~/.claude/`.
+    - A rule that cannot see a file because of this limit makes no report that rests on that file.
+      A rule option, such as `allow`, names what the repository cannot see.
 
 These items were open, and are now settled:
 
@@ -133,6 +149,9 @@ These items were open, and are now settled:
 - **A consuming repository may run two linters.** A repository that uses Biome keeps it for its
   code and adds ESLint for its Claude Code files. The file globs keep them apart, but a
   contributor installs both editor extensions.
+- **Each contributor and CI get the same reports for one commit.** The cost: a rule cannot catch a
+  fault that needs a file out of the repository, such as a skill that names an agent in
+  `~/.claude/agents/`. A rule option names such a file, or the rule stays silent.
 - **A rule that reads a second file needs a CI run without `--cache`.** The ESLint cache stores one
   result per file, so it does not see a change to that second file. The editor and a staged-only
   hook can miss the defect until CI runs.

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "97fa2babb277ddb65be0d85aad1a3099d1ca34ffdf193ed98be1ce7270408fed",
+  "hash": "459ecdbe115c26ad2499f54617d1c1cca42c43f3c981846f8838bb439a69c397",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -64,7 +64,7 @@
     },
     {
       "id": "include-a-packaged-mcpb-server",
-      "hash": "ba629ea225a1367863a1c52a5056304f22cb31200dd1fda5e6f26c6c8d96c888"
+      "hash": "8a0ff461b0a91ad8c13072b917adf7982103e231d33a5c606b9650bc6e6b8015"
     },
     {
       "id": "lsp-servers",
@@ -96,7 +96,7 @@
     },
     {
       "id": "when-the-configuration-dialog-appears",
-      "hash": "d394ed0f8b1914a2b0332687d97097ca18d739aeef6abb105d82cb1c8cc2f9c8"
+      "hash": "c0c338e82c0331b86c32865ded4415034a4ebd5107b2d79a8436d5af483885d2"
     },
     {
       "id": "path-variables-and-persistent-data",
@@ -117,6 +117,18 @@
       "id": "commands",
       "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c",
       "text": "### Commands\n\nA command is a single Markdown file the user runs by name, such as `/my-plugin:about`.\n\n<Note>\n  Commands are the older format, and [skills](#skills) supersede them for new work. A skill runs by name the same way, and it can also carry supporting files in its directory. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>\n\nSave a command at `commands/<file>.md` and it becomes `/<plugin>:<file>`. A subdirectory adds a segment, so `commands/db/migrate.md` is `/my-plugin:db:migrate`.\n\nCommand files take the same frontmatter as skills."
+    },
+    {
+      "heading": "Agents",
+      "id": "agents",
+      "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf",
+      "text": "### Agents\n\nA [subagent](/docs/en/sub-agents) is a separate assistant, with its own instructions and context window, that Claude can delegate a task to. Each Markdown file under `agents/` defines one:\n\n```markdown agents/security-reviewer.md theme={null}\n---\nname: security-reviewer\ndescription: Reviews code changes for security issues. Use after edits to authentication or input handling.\nmodel: sonnet\n---\n\nYou are a security reviewer. Read the changed files and report injection, authentication, and secrets-handling risks.\n```\n\nThis agent is named `my-plugin:security-reviewer`, and the user can [invoke it explicitly](/docs/en/sub-agents#invoke-subagents-explicitly) with `@agent-my-plugin:security-reviewer`. The name form is `<plugin>:<name>`, where `<name>` comes from the frontmatter, or from the file name when there is none.\n\nThe `agents` manifest key replaces the `agents/` scan."
+    },
+    {
+      "heading": "Skills",
+      "id": "skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c",
+      "text": "### Skills\n\nA [skill](/docs/en/skills) is a `SKILL.md` file that Claude can load when its description matches the task. The user can also run it as a command. Save each skill in its own directory under `skills/`:\n\n```text theme={null}\nmy-plugin/\n├── .claude-plugin/\n│   └── plugin.json\n└── skills/\n    └── review/\n        └── SKILL.md\n```\n\nGive the `SKILL.md` a `description` so Claude knows when to use it:\n\n```markdown skills/review/SKILL.md theme={null}\n---\ndescription: Reviews a pull request for style and test coverage. Use when asked to review code.\n---\n\nReview the changed files. Report style problems first, then missing tests.\n```\n\nAfter you load the plugin, `/my-plugin:review` runs the skill. The command name and who can invoke it follow these rules:\n\n* **Command name**: `/<plugin>:<directory>`, so `skills/review/SKILL.md` in `my-plugin` is `/my-plugin:review`. If you set `name` in the frontmatter, it replaces the last segment and the plugin prefix stays. See [how a skill gets its command name](/docs/en/skills#how-a-skill-gets-its-command-name)\n* **Who invokes it**: Claude, the user, or both, controlled by frontmatter. See [Control who invokes a skill](/docs/en/skills#control-who-invokes-a-skill)\n\nYou can also place skills outside the default `skills/` directory:\n\n* **Additional directories**: list them in the `skills` manifest key. They add to the default `skills/` scan rather than replacing it, unlike `commands` and `agents`\n* **A single skill at the plugin root**: with no `skills/` directory and no `skills` manifest key, a `SKILL.md` at the plugin root loads as one skill. Set `name` in its frontmatter, because otherwise a marketplace install names the skill after its [cache directory](/docs/en/plugins/loading#find-plugins-on-disk) rather than your plugin\n\nTo include instructions in a plugin, write them as a skill. Claude Code doesn't load a `CLAUDE.md` at the plugin root, and `claude plugin validate` warns `CLAUDE.md at the plugin root is not loaded as project context`.\n\nIf a rule must hold every time, such as [blocking edits to protected files](/docs/en/hooks-guide#block-edits-to-protected-files), add it to the plugin as a [hook](#hooks) rather than a skill. To choose between the two, see the Hook vs Skill tab under [Compare similar features](/docs/en/features-overview#compare-similar-features).\n\nFor frontmatter fields and supporting files, see [Skills](/docs/en/skills)."
     }
   ]
 }

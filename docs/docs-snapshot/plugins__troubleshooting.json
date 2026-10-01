@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "4a7342531a85bdbcc7199f6201e254859029457a945c396f07d77395dbf6778e",
+  "hash": "5aed3a4e153532b7654d0a0fb781bec49c3aa041acc7682380ee3ab3d5ef45b4",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -49,6 +49,10 @@
     {
       "id": "is-not-a-valid-github-owner-repo-shorthand",
       "hash": "4efdcc83c774aaa2a45f25e2aebee018d2251c3e802da33394a7100365c60b3b"
+    },
+    {
+      "id": "invalid-git-url",
+      "hash": "3f983c1dc58a30b61443c3ce8535f1331d0f6bfc5e47c6e317a49421d974ba57"
     },
     {
       "id": "path-does-not-exist",
@@ -105,6 +109,10 @@
     {
       "id": "plugin-is-already-installed-globally",
       "hash": "3b34531525135be82ba99d7cf2d3b2f31e1b7c56f9efabbc510185f52d99bcf2"
+    },
+    {
+      "id": "plugin-would-share-its-folder",
+      "hash": "77953dfdd66ad79e9ea3ca90e7fa442480120be38adf1ca7c24e2e7b38c58f5f"
     },
     {
       "id": "this-plugin-uses-a-source-type-your-claude-code-version-does-not-suppo",
@@ -215,6 +223,10 @@
       "hash": "184f124b13c14a71d13b1450894951f5c566858f92f332af4c6cf7ad434c7b45"
     },
     {
+      "id": "bundled-mcp-server-name-was-not-started-it-needs-configuration",
+      "hash": "2ead88646706996b2ab317ecced505f40a48ec2f6b982ced0c34430117e21128"
+    },
+    {
       "id": "server-is-configured-but-never-connects",
       "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd"
     },
@@ -272,7 +284,7 @@
     },
     {
       "id": "the-userconfig-dialog-never-appears",
-      "hash": "5d13be0872b75b45baaebc00b089c0173ba2264c6a83e3608a5eb60c75f4187b"
+      "hash": "5d9fdb475026a476e20dcd446b1c9a439b90ea4acfadf810f74afb2baf6fd429"
     },
     {
       "id": "claude-plugin-validate-reports-errors",

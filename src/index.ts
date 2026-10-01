@@ -4,14 +4,20 @@ import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
+import skillFileLayout from './rules/skill-file-layout.ts'
 import skillForkFieldsRequireContext from './rules/skill-fork-fields-require-context.ts'
 import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
 import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
 import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import skillNameUnique from './rules/skill-name-unique.ts'
+import skillPathsGlobValid from './rules/skill-paths-glob-valid.ts'
+import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
+import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
@@ -35,6 +41,12 @@ const modules = [
   skillPluginVarsOutsidePlugin,
   skillInjectBangPosition,
   skillAllowedToolsIneffective,
+  skillPluginRootShadowed,
+  skillFileLayout,
+  skillReferenceExists,
+  skillAgentExists,
+  skillNameUnique,
+  skillPathsGlobValid,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -64,6 +76,12 @@ const recommended: Record<RuleName, Severity> = {
   'skill-plugin-vars-outside-plugin': 'error',
   'skill-inject-bang-position': 'error',
   'skill-allowed-tools-ineffective': 'error',
+  'skill-plugin-root-shadowed': 'error',
+  'skill-file-layout': 'error',
+  'skill-reference-exists': 'error',
+  'skill-agent-exists': 'error',
+  'skill-name-unique': 'error',
+  'skill-paths-glob-valid': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
