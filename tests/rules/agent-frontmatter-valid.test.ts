@@ -1,5 +1,5 @@
-// The rule checks local agents only. A plugin agent with the same fault still
-// loads, so the rule stays silent there.
+// The rule checks local agents only. The docs say a plugin agent with no name
+// or bad YAML still loads, so the rule stays silent there.
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -20,6 +20,11 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
     { code: '# Agents\n\nNotes.\n', filename: '.claude/agents/README.md' },
     // A horizontal rule is not a frontmatter block.
     { code: '# Agents\n\n---\n\nNotes.\n\n---\n', filename: '.claude/agents/README.md' },
+    // A block in a code fence is an example, not frontmatter.
+    {
+      code: '# Agents\n\n```yaml\n---\nname: x\ndescription: d\n---\n```\n',
+      filename: local,
+    },
     // A late block with no agent field is a table or a note.
     { code: '# Notes\n\n---\nowner: web\n---\n', filename: local },
     // A plugin agent with the same faults loads anyway.
@@ -78,6 +83,23 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
     {
       ...file('just text\n'),
       errors: [{ messageId: 'invalidYaml' }],
+    },
+    // A whitespace-only block is an empty block.
+    {
+      code: '---\n  \n\n---\n\nBody.\n',
+      filename: local,
+      errors: [{ messageId: 'missingName' }, { messageId: 'missingDescription' }],
+    },
+    // The deepest `agents/` directory that fits is local, when an outer one is not.
+    {
+      ...file('description: d\n', '.claude/agents/team/agents/x.md'),
+      errors: [{ messageId: 'missingName' }],
+    },
+    // A horizontal rule above the block does not hide it.
+    {
+      code: '# Agents\n\n---\n\nText\n\n---\nname: x\ndescription: d\n---\n',
+      filename: local,
+      errors: [{ messageId: 'notFirst', line: 7 }],
     },
     // The opening marker is not line 1.
     {

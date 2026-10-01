@@ -19,6 +19,9 @@ markdownTester.run('output-style-frontmatter-valid', ruleOf('output-style-frontm
     // A horizontal rule, and a late block with no style field.
     { code: 'Intro.\n\n---\n\nMore.\n\n---\n', filename: local },
     { code: 'Intro.\n\n---\nowner: web\n---\n', filename: local },
+    // A block in a code fence is an example, and a whitespace-only block is empty.
+    { code: '```yaml\n---\nname: x\n---\n```\n', filename: local },
+    { code: '---\n  \n\n---\n\nAnswer in rhyme.\n', filename: local },
     file('name: [unclosed\n', '.claude/output-styles/nested/s.md'),
     file('name: [unclosed\n', 'docs/output-styles/s.md'),
     file('name: [unclosed\n', '.claude/other/s.md'),
@@ -40,6 +43,12 @@ markdownTester.run('output-style-frontmatter-valid', ruleOf('output-style-frontm
       code: '\n---\nname: Rhyme\n---\n\nAnswer in rhyme.\n',
       filename: local,
       errors: [{ messageId: 'notFirst', line: 2, column: 1, endColumn: 4 }],
+    },
+    // A horizontal rule above the block does not hide it.
+    {
+      code: 'Intro.\n\n---\n\nText\n\n---\nname: x\n---\n',
+      filename: local,
+      errors: [{ messageId: 'notFirst', line: 7 }],
     },
     {
       code: 'Intro.\n\n---\nkeep-coding-instructions: true\n---\n',

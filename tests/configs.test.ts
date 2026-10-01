@@ -78,6 +78,11 @@ const TREE: Record<string, string> = {
   '.claude/teams/teams.json': '{}',
   '.claude/teams/team.md': '# Team\n',
   '.claude/teams/team.yaml': 'members: []\n',
+  '.claude/teams/sub/x.json': '{}',
+  'packages/x/.claude/teams/x.md': '# Team\n',
+  '.claude/agents/review/deep/n.md':
+    '---\nname: n\ndescription: d\npermissionMode: bypassPermissions\n---\n',
+  'plugins/p/agents/sub/n.md': '---\nname: n\ndescription: d\npermissionMode: plan\n---\n',
   'docs/agents/a.md': '---\nmade_up: 1\npermissionMode: bypassPermissions\n---\n',
   'docs/output-styles/s.md': '---\nname: [unclosed\nforce-for-plugin: true\n---\n',
   'other.json': badHooks,
@@ -91,6 +96,7 @@ const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
   '.claude/agents/mcp.md: claude/agent-mcp-servers-schema@2',
   '.claude/agents/memory.md: claude/agent-memory-grants-write@2',
+  '.claude/agents/review/deep/n.md: claude/agent-permission-mode-bypass@2',
   '.claude/agents/schema.md: claude/agent-frontmatter-schema@2',
   '.claude/agents/valid.md: claude/agent-frontmatter-valid@2',
   '.claude/commands/c.md: claude/command-legacy-format@1',
@@ -121,14 +127,17 @@ const EXPECTED = [
   '.claude/skills/twin-b/SKILL.md: claude/skill-name-unique@2',
   '.claude/skills/unreachable/SKILL.md: claude/skill-invocation-unreachable@2',
   '.claude/skills/vars/SKILL.md: claude/skill-plugin-vars-outside-plugin@2',
+  '.claude/teams/sub/x.json: claude/agent-teams-no-project-config@2',
   '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
+  'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
   'plugins/p/agents/ignored.md: claude/agent-plugin-ignored-fields@2',
   'plugins/p/agents/schema.md: claude/agent-frontmatter-schema@2',
+  'plugins/p/agents/sub/n.md: claude/agent-plugin-ignored-fields@2',
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
@@ -217,6 +226,16 @@ describe('configs', () => {
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
+    ])
+  })
+
+  it('gives the team rule one Markdown block and one JSON block', () => {
+    const blocks = plugin.configs.recommended.filter(
+      (c) => c.name === 'claude/recommended/agent-teams-no-project-config',
+    )
+    expect(blocks.map((c) => [c.language, c.files])).toEqual([
+      ['markdown/gfm', ['**/.claude/teams/**/*.md']],
+      ['json/json', ['**/.claude/teams/**/*.json']],
     ])
   })
 

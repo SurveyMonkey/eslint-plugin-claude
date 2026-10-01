@@ -14,6 +14,10 @@ markdownTester.run('output-style-frontmatter-schema', ruleOf('output-style-front
     file('name: Rhyme\ndescription: Answers in rhyme.\nkeep-coding-instructions: true\n'),
     file('name: Rhyme\nforce-for-plugin: true\nkeep-coding-instructions: false\n', pluginStyle()),
     ...['yes', 'No', 'ON', 'off', '1', '0'].map((v) => file(`keep-coding-instructions: ${v}\n`)),
+    // A quoted form is a string, and the forms are read as strings too.
+    ...['"true"', '"False"', '"yes"', '"On"', '"1"', '"0"'].map((v) =>
+      file(`keep-coding-instructions: ${v}\n`),
+    ),
     // An empty value is an absent field.
     file('name:\ndescription:\nkeep-coding-instructions:\n'),
     // A local style with no `force-for-plugin` value is not a fault of the value.

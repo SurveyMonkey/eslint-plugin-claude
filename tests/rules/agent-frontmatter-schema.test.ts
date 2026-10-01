@@ -59,6 +59,10 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
     file('tools: Bash(git add *), Read\ndisallowedTools: Write\n'),
     // The Boolean forms of the skills reference.
     ...['yes', 'No', 'ON', 'off', '1', '0', 'true'].map((v) => file(`background: ${v}\n`)),
+    // A quoted form is a string, and the forms are read as strings too.
+    ...['"true"', '"False"', '"yes"', '"On"', '"1"', '"0"'].map((v) =>
+      file(`omitClaudeMd: ${v}\n`),
+    ),
     // An empty value is an absent field.
     file('name:\ndescription:\ntools:\nmaxTurns:\nexperimental:\n'),
     { code: '# No frontmatter\n', filename: local },
@@ -81,6 +85,23 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
           messageId: 'nearMiss',
           data: { key: 'max_turns', expected: 'maxTurns' },
           line: 2,
+          suggestions: [
+            {
+              messageId: 'rename',
+              data: { expected: 'maxTurns' },
+              output: '---\nmaxTurns: 3\n---\n\nBody.\n',
+            },
+          ],
+        },
+      ],
+    },
+    // A key with a space is a near miss too.
+    {
+      ...file('"max turns": 3\n'),
+      errors: [
+        {
+          messageId: 'nearMiss',
+          data: { key: 'max turns', expected: 'maxTurns' },
           suggestions: [
             {
               messageId: 'rename',
