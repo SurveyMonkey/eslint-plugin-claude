@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.2.0...v0.3.0) (2026-10-01)
+
+
+### Features
+
+* classify docs changes and open issues ([#31](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/31)) ([63578fb](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/63578fbc15e244d3d215a9721991c69db11b8a5e)), closes [#25](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/25)
+* **skills:** add cross-file skill error rules ([#41](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/41)) ([faaba44](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/faaba44a2a79a498812f73da5c2219736cbe59c2)), closes [#8](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/8)
+* **skills:** add single-file skill error rules ([#40](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/40)) ([1b08a94](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/1b08a9457f3eb2f2eee5a7cc9f9eff72b618dd34)), closes [#8](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/8)
+
 ## [0.2.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.1.0...v0.2.0) (2026-09-30)
 
 
