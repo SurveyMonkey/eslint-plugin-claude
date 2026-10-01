@@ -78,6 +78,12 @@ describe('classifySkillFile', () => {
     expect(at('.claude', 'skills', 'a', 'b', 'SKILL.md')).toBeNull()
     expect(at('docs', 'commands', 'a.md')).toBeNull()
     expect(at('commands.md')).toBeNull()
+    // Only a file named SKILL.md is a skill file.
+    expect(at('.claude', 'skills', 'a', 'other.md')).toBeNull()
+    expect(classifySkillFile(path.join(plugin, 'skills', 'a', 'other.md'))).toBeNull()
+    expect(classifySkillFile(path.join(plugin, 'README.md'))).toBeNull()
+    // A `.claude` folder in a plugin does not make a skill without `skills/`.
+    expect(classifySkillFile(path.join(plugin, '.claude', 'a', 'SKILL.md'))).toBeNull()
     expect(classifySkillFile(`${path.sep}commands${path.sep}a.md`)).toBeNull()
   })
 })

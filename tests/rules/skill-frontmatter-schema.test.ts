@@ -168,6 +168,10 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
         },
       ],
     })),
+    {
+      ...file('name: [a]\n'),
+      errors: [{ messageId: 'wrongType', data: { key: 'name', expected: 'a string' } }],
+    },
     ...['arguments', 'allowed-tools', 'disallowed-tools', 'paths'].map((key) => ({
       ...file(`${key}: { a: 1 }\n`),
       errors: [{ messageId: 'wrongType' as const, data: { key, expected: 'a string or a list' } }],

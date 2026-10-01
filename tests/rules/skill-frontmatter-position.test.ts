@@ -19,6 +19,8 @@ markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-posit
     { code: '\n---\nmade-up: 1\n---\n', filename: skill },
     // A block with no closing line.
     { code: '\n---\nname: s\n', filename: skill },
+    // A `...` line does not open a block.
+    { code: '\n...\nname: s\n---\n', filename: skill },
     // Near misses of the marker lines.
     { code: '\n----\nname: s\n----\n', filename: skill },
     { code: '\n--- x\nname: s\n---\n', filename: skill },
@@ -44,6 +46,12 @@ markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-posit
     {
       code: '\n---\nname: s\n---\n',
       filename: pluginSkill(),
+      errors: [{ messageId: 'notFirst', line: 2 }],
+    },
+    // The report is for the first block only.
+    {
+      code: '\n---\nname: a\n---\ndescription: b\n---\n',
+      filename: skill,
       errors: [{ messageId: 'notFirst', line: 2 }],
     },
     // The marker lines have trailing spaces.

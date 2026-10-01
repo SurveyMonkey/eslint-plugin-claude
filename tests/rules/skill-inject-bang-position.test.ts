@@ -60,6 +60,11 @@ markdownTester.run('skill-inject-bang-position', ruleOf('skill-inject-bang-posit
         { messageId: 'literal', line: 9, column: 27 },
       ],
     },
+    // A `!` after the end of a code span is not at the start of a word.
+    {
+      ...body('`a`!`b`'),
+      errors: [{ messageId: 'literal', line: 5, column: 4, endColumn: 8 }],
+    },
     {
       code: 'x!`cmd`\n',
       filename: skill,

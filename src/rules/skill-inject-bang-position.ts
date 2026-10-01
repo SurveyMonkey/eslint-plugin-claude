@@ -8,9 +8,8 @@ import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-inject-bang-position' as const
 
-// A placeholder after a character that is not whitespace. A backtick before
-// the `!` is the form of an inline code example, so it does not count.
-const MISPLACED = /[^\s`](!`[^`]+`)/g
+// A placeholder after a character that is not whitespace.
+const MISPLACED = /[^\s](!`[^`]+`)/g
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'literal' }> = {
   meta: {

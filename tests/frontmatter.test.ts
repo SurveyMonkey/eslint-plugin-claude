@@ -44,6 +44,9 @@ describe('frontmatterFields', () => {
       expect(field?.key).toBe('paths')
       expect(field?.valueStart).toBe(field?.valueEnd)
     }
+    // With no value node, the range falls back to the end of the key.
+    const [explicit] = frontmatterFields('? paths\n')
+    expect(explicit?.valueStart).toBe(explicit?.keyEnd)
   })
 
   it('leaves out a key that is not a string', () => {
