@@ -1,13 +1,13 @@
 // The files around a skill or command file, for a rule that reads a second
 // file. A scope is a `.claude/` directory or a plugin root.
-import { type Dirent, readdirSync, readFileSync } from 'node:fs'
+import { type Dirent, readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
 /** The `.claude/` directory or the plugin root that holds `file`. */
 export function scopeRoot(file: string, info: SkillFile): string {
-  // A command file sits `names.length` levels below its root. A skill sits
+  // The directory of a command file sits `names.length` levels below its root. A skill sits
   // in `skills/<folder>/`, and a plugin-root skill sits in the root.
   const levels = info.kind === 'command' ? info.names.length : info.names.length * 2
   let dir = path.dirname(path.resolve(file))
@@ -19,18 +19,32 @@ export function scopeRoot(file: string, info: SkillFile): string {
 
 const BLOCK = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/
 
-/** The frontmatter fields of the text of a Markdown file, or null when the
- *  file has no block on line 1, or the YAML does not parse. */
+/** The frontmatter fields of the text of a Markdown file. The result is null
+ *  when line 1 starts no block, or the YAML does not parse. */
 function frontmatterOf(text: string): Record<string, unknown> | null {
   const block = BLOCK.exec(text.replace(/^\u{FEFF}/u, ''))
   return block === null ? null : parseFrontmatter(block[1] as string)
 }
 
-/** The path of each `.md` file below `dir`, at any depth. The result is
- *  empty when `dir` does not exist. */
-export function markdownFiles(dir: string): string[] {
+/** True when `file` is a directory, or a link to one. */
+function isDirectory(file: string): boolean {
+  try {
+    return statSync(file).isDirectory()
+  } catch {
+    return false
+  }
+}
+
+/** The path of each `.md` file below `dir`, at any depth. A link to a
+ *  directory is followed once. The result is empty when `dir` does not exist. */
+export function markdownFiles(dir: string, seen = new Set<string>()): string[] {
   let entries: Dirent[]
   try {
+    const real = realpathSync(dir)
+    if (seen.has(real)) {
+      return []
+    }
+    seen.add(real)
     entries = readdirSync(dir, { withFileTypes: true })
   } catch {
     return []
@@ -39,22 +53,32 @@ export function markdownFiles(dir: string): string[] {
     .sort((a, b) => a.name.localeCompare(b.name, 'en'))
     .flatMap((entry) => {
       const full = path.join(dir, entry.name)
-      if (entry.isDirectory()) {
-        return markdownFiles(full)
+      if (entry.isDirectory() || (entry.isSymbolicLink() && isDirectory(full))) {
+        return markdownFiles(full, seen)
       }
       return entry.name.endsWith('.md') ? [full] : []
     })
 }
 
+// The fields of each file that was read, by path. An entry is current while
+// the change time and the size of the file are the same.
+const read = new Map<string, { stamp: string; fields: Record<string, unknown> | null }>()
+
 /** The frontmatter fields of the file at `file`, or null. */
 export function frontmatterOfFile(file: string): Record<string, unknown> | null {
-  let text: string
   try {
-    text = readFileSync(file, 'utf8')
+    const stat = statSync(file, { bigint: true })
+    const stamp = `${stat.mtimeNs}:${stat.size}`
+    const hit = read.get(file)
+    if (hit?.stamp === stamp) {
+      return hit.fields
+    }
+    const fields = frontmatterOf(readFileSync(file, 'utf8'))
+    read.set(file, { stamp, fields })
+    return fields
   } catch {
     return null
   }
-  return frontmatterOf(text)
 }
 
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`, or

@@ -1,6 +1,6 @@
 // The files around a skill: the scope root, frontmatter read from text and
 // from a file, the Markdown files below a directory, and the plugin manifest.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
@@ -62,6 +62,9 @@ describe('frontmatterOf', () => {
     expect(frontmatterOf('---\nname: a\n')).toBeNull()
     expect(frontmatterOf('---\nname: [unclosed\n---\n')).toBeNull()
     expect(frontmatterOf('---\nname: a\n...\n')).toBeNull()
+    // The closing line holds `---` and nothing else, and the first one counts.
+    expect(frontmatterOf('---\nname: a\n---x\n# A\n')).toBeNull()
+    expect(frontmatterOf('---\nname: a\n---\n# A\n\n---\n\nname: b\n---\n')).toEqual({ name: 'a' })
   })
 })
 
@@ -69,6 +72,17 @@ describe('frontmatterOfFile', () => {
   it('reads a file, and gives null for a missing file', () => {
     expect(frontmatterOfFile(put('a/x.md', '---\nname: x\n---\n'))).toEqual({ name: 'x' })
     expect(frontmatterOfFile(path.join(scratch, 'a', 'none.md'))).toBeNull()
+  })
+
+  it('reads a file again when it changes, and gives the same fields when it does not', () => {
+    const file = put('a/changing.md', '---\nname: one\n---\n')
+    expect(frontmatterOfFile(file)).toEqual({ name: 'one' })
+    expect(frontmatterOfFile(file)).toEqual({ name: 'one' })
+    // The same size, so only the time of the change differs.
+    put('a/changing.md', '---\nname: two\n---\n')
+    expect(frontmatterOfFile(file)).toEqual({ name: 'two' })
+    put('a/changing.md', '---\nname: three\n---\n')
+    expect(frontmatterOfFile(file)).toEqual({ name: 'three' })
   })
 })
 
@@ -78,6 +92,7 @@ describe('markdownFiles', () => {
     put('tree/b.md', '')
     put('tree/a/c.md', '')
     put('tree/a/d.txt', '')
+    put('tree/readmd', '')
     put('tree/a/e/f.md', '')
     const rel = markdownFiles(path.join(scratch, 'tree')).map((f) =>
       path.relative(path.join(scratch, 'tree'), f).split(path.sep).join('/'),
@@ -85,6 +100,23 @@ describe('markdownFiles', () => {
     expect(rel).toEqual(['a/c.md', 'a/e/f.md', 'b.md', 'Z.md'])
     expect(markdownFiles(path.join(scratch, 'none'))).toEqual([])
   })
+
+  it.skipIf(process.platform === 'win32')(
+    'follows a link to a directory once, and ends on a link back up',
+    () => {
+      put('links/real/x.md', '')
+      put('links/other/y.md', '')
+      symlinkSync('real', path.join(scratch, 'links', 'alias'))
+      symlinkSync('..', path.join(scratch, 'links', 'real', 'up'))
+      symlinkSync('missing', path.join(scratch, 'links', 'dangling'))
+      symlinkSync('other/y.md', path.join(scratch, 'links', 'file.md'))
+      const rel = markdownFiles(path.join(scratch, 'links')).map((f) =>
+        path.relative(path.join(scratch, 'links'), f).split(path.sep).join('/'),
+      )
+      // `alias` is the same directory as `real`, so its files are not listed twice.
+      expect(rel).toEqual(['alias/x.md', 'file.md', 'other/y.md'])
+    },
+  )
 })
 
 describe('readManifest', () => {
