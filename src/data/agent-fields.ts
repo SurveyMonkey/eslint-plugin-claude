@@ -1,4 +1,5 @@
-// The frontmatter fields of a subagent file and of an output style file.
+// The frontmatter fields of a subagent file and of an output style file, and
+// the values of the subagent fields that take a fixed set.
 // Sources: the Frontmatter reference tables,
 // https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields and
 // https://code.claude.com/docs/en/output-styles#frontmatter, checked on
