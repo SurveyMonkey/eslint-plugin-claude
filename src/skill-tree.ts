@@ -36,7 +36,7 @@ export function markdownFiles(dir: string): string[] {
     return []
   }
   return entries
-    .sort((a, b) => (a.name < b.name ? -1 : 1))
+    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
     .flatMap((entry) => {
       const full = path.join(dir, entry.name)
       if (entry.isDirectory()) {

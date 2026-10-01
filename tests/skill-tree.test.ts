@@ -82,7 +82,7 @@ describe('markdownFiles', () => {
     const rel = markdownFiles(path.join(scratch, 'tree')).map((f) =>
       path.relative(path.join(scratch, 'tree'), f).split(path.sep).join('/'),
     )
-    expect(rel).toEqual(['Z.md', 'a/c.md', 'a/e/f.md', 'b.md'])
+    expect(rel).toEqual(['a/c.md', 'a/e/f.md', 'b.md', 'Z.md'])
     expect(markdownFiles(path.join(scratch, 'none'))).toEqual([])
   })
 })
