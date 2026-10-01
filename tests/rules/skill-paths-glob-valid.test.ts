@@ -44,6 +44,8 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     text('{a,{b,c}}'.repeat(6)),
     // Exactly 4 MiB is within the budget: 512 patterns of 8,192 bytes.
     text(`${many}${'x'.repeat(8192 - 9)}`),
+    // A group nested more than 100 deep is text, so the rule neither fails nor counts it.
+    text(`${'{'.repeat(20000)}a,b${'}'.repeat(20000)}`),
     // A brace that closes nothing, or that is escaped, or that has no comma, is text.
     text(`${group(10)}${group(10)}${group(10)}/{a,b`),
     text('\\{a,b\\}'.repeat(12)),
@@ -109,7 +111,7 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     },
     {
       ...text('{a,{b,c}}'.repeat(7)),
-      errors: [budget(2187, 2187 * 7 + 0)],
+      errors: [budget(2187, 2187 * 7)],
     },
     // An escaped brace or comma does not end a group, and a group of one alternative expands inside.
     { ...text('{a,\\{b}'.repeat(10)), errors: [budget(1024, 20480)] },
@@ -125,7 +127,7 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
       ...list(`${group(11)}/${group(10)}/${group(10)}`, 'plain/**/*.ts'),
       errors: [budget(1100, 5500)],
     },
-    // The bytes: 512 patterns of 8,193 bytes are one pattern's byte over 4 MiB.
+    // The bytes: 512 patterns of 8,193 bytes are 512 bytes over 4 MiB.
     {
       ...text(`${many}${'x'.repeat(8193 - 9)}`),
       errors: [budget(512, 512 * 8193)],

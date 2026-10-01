@@ -1,7 +1,7 @@
 // A `paths` glob of a skill must be one that Claude Code can use
 // (docs/rules/skill-paths-glob-valid.md). The rule checks the two faults that
-// the docs name: a `[` with no bracket expression, and brace groups that
-// expand past the budget.
+// the docs name. These are a `[` with no bracket expression, and brace groups
+// that expand past the budget.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
@@ -13,6 +13,8 @@ const MAX_PATTERNS = 1000
 const MAX_BYTES = 4 * 1024 * 1024
 // A cap that keeps the products finite for a pattern with many groups.
 const CAP = 1e12
+// A group nested deeper than this is text. It keeps the recursion finite.
+const MAX_DEPTH = 100
 
 /** The index of the `}` that closes each `{` of `text`, by the index of the
  *  `{`. A `{` with no `}` has no entry. A backslash escapes the next character. */
@@ -61,7 +63,16 @@ interface Size {
 const cap = (n: number) => Math.min(n, CAP)
 
 /** The size of the expansion of `text` between `from` and `to`. */
-function measure(text: string, matches: Map<number, number>, from: number, to: number): Size {
+function measure(
+  text: string,
+  matches: Map<number, number>,
+  from: number,
+  to: number,
+  depth = 0,
+): Size {
+  if (depth > MAX_DEPTH) {
+    return { count: 1, bytes: Buffer.byteLength(text.slice(from, to)), braced: false }
+  }
   let size: Size = { count: 1, bytes: 0, braced: false }
   /** Append the parts `parts`, each one a choice, to the text so far. */
   const append = (parts: Size[]) => {
@@ -86,7 +97,7 @@ function measure(text: string, matches: Map<number, number>, from: number, to: n
       const cuts = [i, ...commas, close]
       const parts = cuts
         .slice(0, -1)
-        .map((start, n) => measure(text, matches, start + 1, cuts[n + 1] as number))
+        .map((start, n) => measure(text, matches, start + 1, cuts[n + 1] as number, depth + 1))
       if (commas.length === 0) {
         // Without a comma, the braces stay as text and the inside may expand.
         literal('{')
@@ -113,7 +124,7 @@ function hasBrokenBracket(pattern: string): boolean {
       if (pattern[j] === '!' || pattern[j] === '^') {
         j++
       }
-      // A `]` right after the opening is a member, not the end.
+      // A `]` right after `[`, `[!` or `[^` is a member, not the end.
       if (pattern[j] === ']') {
         j++
       }
@@ -155,7 +166,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
       bracket:
         '`{{pattern}}` has a `[` that starts no bracket expression. Claude Code matches no file with it. Escape the `[` as `\\[`.',
       budget:
-        'The brace groups in `paths` expand to {{count}} patterns and {{bytes}} bytes. The limit is 1,000 patterns and 4 MiB. Claude Code then keeps the patterns as they are, and their braces match no file.',
+        'The brace groups in `paths` expand to {{count}} patterns and {{bytes}} bytes. The limit is 1,000 patterns or 4 MiB. Claude Code then keeps the patterns as they are, and their braces match no file.',
     },
   },
   create(context) {
