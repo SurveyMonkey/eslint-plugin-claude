@@ -1,6 +1,6 @@
 // The frontmatter fields of a skill or command file, with their types and
-// values, from the Frontmatter reference of the Claude Code 2.1.286 docs
-// (docs/rules/skill-frontmatter-schema.md).
+// values. The source is the Frontmatter reference of the Claude Code 2.1.286
+// docs (docs/rules/skill-frontmatter-schema.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { COMMAND_EXCLUDED, SKILL_FIELDS } from '../data/skill-fields.ts'
 import { docsUrl } from '../docs-url.ts'

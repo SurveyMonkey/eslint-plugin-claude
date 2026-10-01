@@ -1,6 +1,6 @@
-// The lines of a Markdown file that are not in fenced code, for a rule that
-// reads the text of the body. A rule that reads the text sees a line of
-// fenced code as it sees any line, so it asks here which lines to skip.
+// The lines of a Markdown file that are not in fenced code. A rule that
+// reads the text of the body asks here which lines to skip. It would see a
+// line of fenced code as any other line.
 import type { MarkdownSourceCode } from '@eslint/markdown'
 
 export interface BodyLine {
