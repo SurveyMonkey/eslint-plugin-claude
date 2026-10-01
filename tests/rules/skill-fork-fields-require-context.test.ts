@@ -1,5 +1,6 @@
 // `agent` and `background` need `context: fork`. Without it, Claude Code
 // ignores both.
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -44,6 +45,11 @@ markdownTester.run(
       },
       {
         ...file('agent: Explore\n', command),
+        errors: [{ messageId: 'needsFork', data: { key: 'agent' } }],
+      },
+      // A plugin skill is checked too.
+      {
+        ...file('agent: Explore\n', pluginSkill()),
         errors: [{ messageId: 'needsFork', data: { key: 'agent' } }],
       },
     ],

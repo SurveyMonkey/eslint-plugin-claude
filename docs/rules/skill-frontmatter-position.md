@@ -29,13 +29,15 @@ fields. Claude Code shows no error.
 reports a block when all of these are true:
 
 - The file has no frontmatter at line 1.
-- A line outside fenced code has only `---`. This is the opening line.
-- A later line outside fenced code has only `---` or `...`. This is the closing line.
+- A line outside fenced code has only `---`. This is the first line of the block.
+- A later line outside fenced code has only `---` or `...`. This is the last line of the block.
 - The lines between them are a YAML mapping that holds at least one field of a skill, such as
   `name` or `description`.
 
+The rule tests each two such lines that follow each other. A line can end one block and start
+the next.
 The last condition keeps the rule silent for a pair of horizontal rules in the body. The rule
-reports on the opening line.
+reports on the first line of the block.
 
 The rule checks the files that the other skill rules check:
 

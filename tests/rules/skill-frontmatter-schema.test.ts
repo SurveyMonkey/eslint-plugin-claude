@@ -1,5 +1,6 @@
 // Fixtures for each field type and enum of the Frontmatter reference, the
 // near-miss keys, and the two fields that a command file does not take.
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -42,6 +43,8 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
     // Each enum value.
     ...['low', 'medium', 'high', 'xhigh', 'max'].map((v) => file(`effort: ${v}\n`)),
     file('shell: bash\n'),
+    // The docs example for `argument-hint` is a YAML list.
+    file('argument-hint: [issue-number]\n'),
     // An empty value is an absent field.
     file('name:\ndescription:\nmetadata:\nmodel:\n'),
     // A string list and a comma string.
@@ -82,6 +85,36 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
         },
       ],
     },
+    // A key with a space is a near miss too.
+    {
+      ...file('allowed tools: Read\n'),
+      errors: [
+        {
+          messageId: 'nearMiss',
+          data: { key: 'allowed tools', expected: 'allowed-tools' },
+          suggestions: [{ messageId: 'rename', output: '---\nallowed-tools: Read\n---\n\n# S\n' }],
+        },
+      ],
+    },
+    // CRLF text: the rename covers the key and not the line break.
+    {
+      code: '---\r\nallowed_tools: Read\r\n---\r\n\r\n# S\r\n',
+      filename: skill,
+      errors: [
+        {
+          messageId: 'nearMiss',
+          line: 2,
+          column: 1,
+          endColumn: 14,
+          suggestions: [
+            {
+              messageId: 'rename',
+              output: '---\r\nallowed-tools: Read\r\n---\r\n\r\n# S\r\n',
+            },
+          ],
+        },
+      ],
+    },
     {
       ...file('when-to-use: x\n'),
       errors: [
@@ -110,6 +143,12 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
         { messageId: 'commandField', data: { key: 'paths' }, line: 3 },
       ],
     },
+    // A plugin skill is checked too.
+    {
+      code: '---\nmade_up: 1\n---\n',
+      filename: pluginSkill(),
+      errors: [{ messageId: 'unknownKey', data: { key: 'made_up' } }],
+    },
     // A near miss of a field that a command does not take is an unknown key.
     {
       ...file('Name: c\n', command),
@@ -124,6 +163,8 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
           data: { key, expected: 'a string' },
           line: 2,
           column: key.length + 3,
+          endLine: 2,
+          endColumn: key.length + 4,
         },
       ],
     })),

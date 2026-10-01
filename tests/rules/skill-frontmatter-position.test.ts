@@ -1,5 +1,6 @@
 // The rule reports a frontmatter block that Claude Code reads as body text:
 // the opening `---` is not line 1.
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -18,6 +19,9 @@ markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-posit
     { code: '\n---\nmade-up: 1\n---\n', filename: skill },
     // A block with no closing line.
     { code: '\n---\nname: s\n', filename: skill },
+    // Near misses of the marker lines.
+    { code: '\n----\nname: s\n----\n', filename: skill },
+    { code: '\n--- x\nname: s\n---\n', filename: skill },
     // A block in fenced code, as in a skill that teaches frontmatter.
     { code: '# S\n\n```yaml\n---\nname: s\n---\n```\n', filename: skill },
     // A file that is not a skill or a command file.
@@ -35,6 +39,30 @@ markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-posit
       code: '# S\n---\nname: s\n---\n',
       filename: command,
       errors: [{ messageId: 'notFirst', line: 2, column: 1 }],
+    },
+    // A plugin skill is checked too.
+    {
+      code: '\n---\nname: s\n---\n',
+      filename: pluginSkill(),
+      errors: [{ messageId: 'notFirst', line: 2 }],
+    },
+    // The marker lines have trailing spaces.
+    {
+      code: '\n---  \nname: s\n---  \n',
+      filename: skill,
+      errors: [{ messageId: 'notFirst', line: 2, endColumn: 6 }],
+    },
+    // A rule above the block pairs with the first marker of the block.
+    {
+      code: 'Intro\n\n---\n\nsome text\n\n---\nname: x\ndescription: y\n---\n',
+      filename: skill,
+      errors: [{ messageId: 'notFirst', line: 7 }],
+    },
+    // A block in tilde fences does not hide a block after it.
+    {
+      code: '~~~\n---\nname: a\n---\n~~~\n\n---\nname: s\n---\n',
+      filename: skill,
+      errors: [{ messageId: 'notFirst', line: 7 }],
     },
     {
       code: 'Intro text.\n\n---\ndescription: d\n...\n',

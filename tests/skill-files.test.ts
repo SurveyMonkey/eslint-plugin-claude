@@ -67,6 +67,8 @@ describe('classifySkillFile', () => {
 
   it('uses the deepest commands/ directory that fits', () => {
     expect(at('commands', 'x', '.claude', 'commands', 'a.md')?.names).toEqual(['a'])
+    // Both directories fit: the inner one gives the names.
+    expect(at('.claude', 'commands', 'x', '.claude', 'commands', 'a.md')?.names).toEqual(['a'])
   })
 
   it('gives null for a file in no skill or command location', () => {

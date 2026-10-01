@@ -36,24 +36,30 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' }> = {
         if (node.children[0]?.type === 'yaml') {
           return
         }
-        const lines = unfencedLines(sourceCode)
-        const opening = lines.find((l) => OPEN.test(l.text))
-        const closing = lines.find((l) => l.line > (opening?.line ?? 0) && CLOSE.test(l.text))
-        if (opening === undefined || closing === undefined) {
-          return
+        // Each marker line may close one block and open the next. A horizontal
+        // rule above a block must not hide the block.
+        const markers = unfencedLines(sourceCode).filter((l) => CLOSE.test(l.text))
+        for (const [index, opening] of markers.entries()) {
+          const closing = markers[index + 1]
+          if (closing === undefined) {
+            return
+          }
+          if (!OPEN.test(opening.text)) {
+            continue
+          }
+          const between = sourceCode.lines.slice(opening.line, closing.line - 1)
+          const data = parseFrontmatter(between.join('\n'))
+          if (data !== null && SKILL_FIELDS.some((field) => field in data)) {
+            context.report({
+              loc: {
+                start: { line: opening.line, column: 1 },
+                end: { line: opening.line, column: opening.text.length + 1 },
+              },
+              messageId: 'notFirst',
+            })
+            return
+          }
         }
-        const between = sourceCode.lines.slice(opening.line, closing.line - 1)
-        const data = parseFrontmatter(between.join('\n'))
-        if (data === null || !SKILL_FIELDS.some((field) => field in data)) {
-          return
-        }
-        context.report({
-          loc: {
-            start: { line: opening.line, column: 1 },
-            end: { line: opening.line, column: opening.text.length + 1 },
-          },
-          messageId: 'notFirst',
-        })
       },
     }
   },

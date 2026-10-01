@@ -1,5 +1,6 @@
 // `EndConversation` stays in the pool while any other tool does, and a listed
 // `AskUserQuestion` is not auto-allowed. The docs name no other interactive tool.
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -26,6 +27,11 @@ markdownTester.run('skill-allowed-tools-ineffective', ruleOf('skill-allowed-tool
     file('allowed-tools: AskUserQuestion\n', 'docs/SKILL.md'),
   ],
   invalid: [
+    // A plugin skill is checked too.
+    {
+      ...file('allowed-tools: AskUserQuestion\n', pluginSkill()),
+      errors: [{ messageId: 'ineffective' }],
+    },
     {
       ...file('allowed-tools: AskUserQuestion\n'),
       errors: [

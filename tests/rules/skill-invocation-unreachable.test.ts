@@ -1,4 +1,5 @@
 // The rule reports a skill that blocks both callers: Claude and the user.
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -16,6 +17,9 @@ markdownTester.run('skill-invocation-unreachable', ruleOf('skill-invocation-unre
     file('disable-model-invocation: maybe\nuser-invocable: false\n'),
     file('disable-model-invocation: true\nuser-invocable: maybe\n'),
     file('description: d\n'),
+    // A list is not a Boolean.
+    file('disable-model-invocation: [true]\nuser-invocable: [false]\n'),
+    file('disable-model-invocation: true\nuser-invocable: { a: false }\n'),
     // A command file has no `user-invocable` rule: the rule reads skills only.
     file('disable-model-invocation: true\nuser-invocable: false\n', '.claude/commands/c.md'),
     file('disable-model-invocation: true\nuser-invocable: false\n', 'docs/SKILL.md'),
@@ -31,10 +35,15 @@ markdownTester.run('skill-invocation-unreachable', ruleOf('skill-invocation-unre
       ...file('user-invocable: false\ndisable-model-invocation: true\n'),
       errors: [{ messageId: 'unreachable', line: 3 }],
     },
+    // A plugin skill is checked too.
+    {
+      ...file('disable-model-invocation: true\nuser-invocable: false\n', pluginSkill()),
+      errors: [{ messageId: 'unreachable' }],
+    },
     // The boolean forms that Claude Code reads.
     {
       ...file('disable-model-invocation: Yes\nuser-invocable: No\n'),
-      errors: [{ messageId: 'unreachable' }],
+      errors: [{ messageId: 'unreachable', line: 2, column: 1, endLine: 2, endColumn: 30 }],
     },
     {
       ...file('disable-model-invocation: on\nuser-invocable: off\n'),

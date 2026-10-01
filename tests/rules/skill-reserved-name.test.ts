@@ -23,6 +23,8 @@ const named = (value: string, filename = skillIn('s')) => ({
 
 markdownTester.run('skill-reserved-name', ruleOf('skill-reserved-name'), {
   valid: [
+    // `synced` is reserved as a skill folder only.
+    named('synced'),
     named('deploy'),
     named('anthropic'),
     named('my-anthropic-skills'),

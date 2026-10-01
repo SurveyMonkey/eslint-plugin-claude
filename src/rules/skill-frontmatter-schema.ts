@@ -34,7 +34,9 @@ type Problem = {
 function valueProblem(key: string, value: unknown): Problem | null {
   const wrong = (expected: string): Problem => ({ messageId: 'wrongType', data: { key, expected } })
   if (STRING_FIELDS.includes(key)) {
-    return typeof value === 'string' ? null : wrong('a string')
+    // The docs show `argument-hint: [issue-number]`, which YAML reads as a list.
+    const listAllowed = key === 'argument-hint' && Array.isArray(value)
+    return typeof value === 'string' || listAllowed ? null : wrong('a string')
   }
   if (STRING_OR_LIST_FIELDS.includes(key)) {
     return typeof value === 'string' || Array.isArray(value) ? null : wrong('a string or a list')

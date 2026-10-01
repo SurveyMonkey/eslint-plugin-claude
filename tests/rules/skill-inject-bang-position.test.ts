@@ -1,5 +1,6 @@
 // An inline `!` placeholder runs after whitespace or at the start of a line.
 // After any other character, it stays literal text.
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -22,6 +23,9 @@ markdownTester.run('skill-inject-bang-position', ruleOf('skill-inject-bang-posit
     body('KEY=! `cmd` and KEY=!`cmd'),
     // The inline code form of the placeholder in a text about skills.
     body('Write `` !`<command>` `` to run a command, or ``!`cmd`` in a table.'),
+    // A code span that ends in `!` is not a placeholder.
+    body('Run `git push --force!` or `git status` to check.'),
+    body('Say `Done!` then `exit` and `ok!`.'),
     // Fenced code.
     body('```sh\nKEY=!`cmd`\n```'),
     body('~~~\nKEY=!`cmd`\n~~~'),
@@ -42,6 +46,11 @@ markdownTester.run('skill-inject-bang-position', ruleOf('skill-inject-bang-posit
       code: 'Run (!`cmd`) now\n',
       filename: command,
       errors: [{ messageId: 'literal', line: 1, column: 6, endColumn: 12 }],
+    },
+    // A plugin skill is checked too.
+    {
+      ...body('KEY=!`cmd`', pluginSkill()),
+      errors: [{ messageId: 'literal', line: 5 }],
     },
     // A fence that closes, then a placeholder after it.
     {

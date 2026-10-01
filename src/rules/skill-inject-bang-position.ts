@@ -30,8 +30,13 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'literal' }> = {
       return {}
     }
     const { sourceCode } = context
+    // The ranges of inline code spans. A `!` inside a span is code text.
+    const spans: [number, number][] = []
     return {
-      root(node) {
+      inlineCode(node) {
+        spans.push(sourceCode.getRange(node))
+      },
+      'root:exit'(node) {
         const first = node.children[0]
         let after = 0
         if (first?.type === 'yaml') {
@@ -44,6 +49,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'literal' }> = {
           for (const match of text.matchAll(MISPLACED)) {
             const placeholder = match[1] as string
             const from = offset + match.index + 1
+            if (spans.some(([start, end]) => from >= start && from < end)) {
+              continue
+            }
             context.report({
               loc: {
                 start: sourceCode.getLocFromIndex(from),

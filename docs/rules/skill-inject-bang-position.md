@@ -31,6 +31,7 @@ that is not whitespace. The report is on the placeholder. The rule skips these c
 - Lines in fenced code. A fenced block is not an inline placeholder.
 - A `!` that follows a backtick. This is the form of an inline code example, such as
   ``` ``!`cmd` ```, in a text about skills.
+- A `!` inside an inline code span, such as the end of `` `Done!` ``.
 - The frontmatter.
 
 The rule ignores a file whose frontmatter does not parse.

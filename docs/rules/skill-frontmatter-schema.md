@@ -34,8 +34,10 @@ the narrowest part of the key or value:
   the key. The suggestion is not an autofix. A rename turns on a setting that did nothing before.
 - **Command file.** A command file takes the skill fields except `name` and `paths`.[^command][^directory][^plugin]
   The rule reports each of these two keys in a command file.
-- **Type.** `name`, `description` and `argument-hint` are strings. `arguments`, `allowed-tools`,
-  `disallowed-tools` and `paths` are a string or a list. `metadata` is a map.[^reference]
+- **Type.** `name`, `description` and `argument-hint` are strings. The docs write the hint as
+  `[issue-number]`, which YAML reads as a list. So the rule also accepts a list for
+  `argument-hint`. `arguments`, `allowed-tools`, `disallowed-tools` and `paths` are a string or a
+  list. `metadata` is a map.[^reference]
   `compatibility` is a string of 500 characters or fewer. `model` is a string that is not empty.
 - **Value.** `effort` is `low`, `medium`, `high`, `xhigh` or `max`. `context` is `fork`. `shell` is
   `bash` or `powershell`.[^reference]
