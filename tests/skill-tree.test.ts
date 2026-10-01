@@ -1,6 +1,6 @@
 // The files around a skill: the scope root, frontmatter read from text and
 // from a file, the Markdown files below a directory, and the plugin manifest.
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
@@ -78,6 +78,13 @@ describe('frontmatterOfFile', () => {
     const file = put('a/changing.md', '---\nname: one\n---\n')
     expect(frontmatterOfFile(file)).toEqual({ name: 'one' })
     expect(frontmatterOfFile(file)).toEqual({ name: 'one' })
+    // The same size and the same time of change: the file counts as the same.
+    put('a/pinned.md', '---\nname: one\n---\n')
+    utimesSync(path.join(scratch, 'a/pinned.md'), 1000, 1000)
+    expect(frontmatterOfFile(path.join(scratch, 'a/pinned.md'))).toEqual({ name: 'one' })
+    put('a/pinned.md', '---\nname: two\n---\n')
+    utimesSync(path.join(scratch, 'a/pinned.md'), 1000, 1000)
+    expect(frontmatterOfFile(path.join(scratch, 'a/pinned.md'))).toEqual({ name: 'one' })
     // The same size, so only the time of the change differs.
     put('a/changing.md', '---\nname: two\n---\n')
     expect(frontmatterOfFile(file)).toEqual({ name: 'two' })
