@@ -1,6 +1,14 @@
 // The files around a skill: the scope root, frontmatter read from text and
 // from a file, the Markdown files below a directory, and the plugin manifest.
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs'
+import {
+  mkdirSync,
+  mkdtempSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  utimesSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
@@ -9,11 +17,15 @@ import {
   frontmatterOfFile,
   markdownFiles,
   readManifest,
+  realDirectory,
+  repositoryRoot,
   scopeRoot,
   skillFiles,
 } from '../src/skill-tree.ts'
 
-const scratch = mkdtempSync(path.join(tmpdir(), 'skill-tree-'))
+// The real path, so that a bound compares equal on a system where the
+// temporary directory is a link (macOS).
+const scratch = realpathSync(mkdtempSync(path.join(tmpdir(), 'skill-tree-')))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 
 const put = (file: string, text: string) => {
@@ -126,11 +138,19 @@ describe('markdownFiles', () => {
     put('tree/a/d.txt', '')
     put('tree/readmd', '')
     put('tree/a/e/f.md', '')
-    const rel = markdownFiles(path.join(scratch, 'tree')).map((f) =>
+    const rel = markdownFiles(path.join(scratch, 'tree'), scratch).files.map((f) =>
       path.relative(path.join(scratch, 'tree'), f).split(path.sep).join('/'),
     )
     expect(rel).toEqual(['a/c.md', 'a/e/f.md', 'b.md', 'Z.md'])
-    expect(markdownFiles(path.join(scratch, 'none'))).toEqual([])
+    expect(markdownFiles(path.join(scratch, 'none'), scratch)).toEqual({
+      files: [],
+      outside: false,
+    })
+    // A path that is a file, not a directory, has nothing below it.
+    expect(markdownFiles(path.join(scratch, 'tree', 'b.md'), scratch)).toEqual({
+      files: [],
+      outside: false,
+    })
   })
 
   it.skipIf(process.platform === 'win32')(
@@ -143,12 +163,15 @@ describe('markdownFiles', () => {
       symlinkSync('..', path.join(scratch, 'links', 'real', 'up'))
       symlinkSync('missing', path.join(scratch, 'links', 'dangling'))
       symlinkSync('other/y.md', path.join(scratch, 'links', 'file.md'))
+      // A link to a file that is not Markdown is not listed.
+      put('links/other/z.txt', '')
+      symlinkSync('other/z.txt', path.join(scratch, 'links', 'note.txt'))
       // A link to a file that is not there is not a file.
       symlinkSync('missing.md', path.join(scratch, 'links', 'dead.md'))
       // These two directories hold many files, and hold no agent or command.
       put('links/node_modules/pkg/readme.md', '')
       put('links/.git/info/note.md', '')
-      const rel = markdownFiles(path.join(scratch, 'links')).map((f) =>
+      const rel = markdownFiles(path.join(scratch, 'links'), scratch).files.map((f) =>
         path.relative(path.join(scratch, 'links'), f).split(path.sep).join('/'),
       )
       // `alias` is the same directory as `real`, so its files are not listed twice.
@@ -167,17 +190,17 @@ describe('skillFiles', () => {
     put('sk/d/e/SKILL.md', '')
     put('sk/SKILL.md', '')
     put('sk/f.md', '')
-    const rel = skillFiles(path.join(scratch, 'sk')).map((f) =>
+    const rel = skillFiles(path.join(scratch, 'sk'), scratch).map((f) =>
       path.relative(path.join(scratch, 'sk'), f).split(path.sep).join('/'),
     )
     expect(rel).toEqual(['a/SKILL.md', 'b/SKILL.md', 'Z/SKILL.md'])
-    expect(skillFiles(path.join(scratch, 'none'))).toEqual([])
+    expect(skillFiles(path.join(scratch, 'none'), scratch)).toEqual([])
   })
 
   it.skipIf(process.platform === 'win32')('counts a link to a folder', () => {
     put('sk2/real/SKILL.md', '')
     symlinkSync('real', path.join(scratch, 'sk2', 'alias'))
-    const rel = skillFiles(path.join(scratch, 'sk2')).map((f) =>
+    const rel = skillFiles(path.join(scratch, 'sk2'), scratch).map((f) =>
       path.relative(path.join(scratch, 'sk2'), f).split(path.sep).join('/'),
     )
     expect(rel).toEqual(['alias/SKILL.md', 'real/SKILL.md'])
@@ -186,15 +209,87 @@ describe('skillFiles', () => {
 
 describe('readManifest', () => {
   it('reads an object, and gives null for a missing, bad or non-object file', () => {
-    expect(readManifest(plugin)).toEqual({ name: 'p', skills: './extra' })
-    expect(readManifest(path.join(scratch, 'none'))).toBeNull()
+    expect(readManifest(plugin, scratch)).toEqual({ name: 'p', skills: './extra' })
+    expect(readManifest(path.join(scratch, 'none'), scratch)).toBeNull()
     put('m1/.claude-plugin/plugin.json', '{')
-    expect(readManifest(path.join(scratch, 'm1'))).toBeNull()
+    expect(readManifest(path.join(scratch, 'm1'), scratch)).toBeNull()
     put('m2/.claude-plugin/plugin.json', '[]')
-    expect(readManifest(path.join(scratch, 'm2'))).toBeNull()
+    expect(readManifest(path.join(scratch, 'm2'), scratch)).toBeNull()
     put('m4/.claude-plugin/plugin.json', '3')
-    expect(readManifest(path.join(scratch, 'm4'))).toBeNull()
+    expect(readManifest(path.join(scratch, 'm4'), scratch)).toBeNull()
     put('m3/.claude-plugin/plugin.json', 'null')
-    expect(readManifest(path.join(scratch, 'm3'))).toBeNull()
+    expect(readManifest(path.join(scratch, 'm3'), scratch)).toBeNull()
+  })
+})
+
+describe('repositoryRoot', () => {
+  it('gives the first directory at or above that holds .git, or the directory itself', () => {
+    put('repo/.git/HEAD', '')
+    put('repo/a/b/x.md', '')
+    put('wt/.git', 'gitdir: elsewhere')
+    put('bare/c/x.md', '')
+    expect(repositoryRoot(path.join(scratch, 'repo', 'a', 'b'))).toBe(path.join(scratch, 'repo'))
+    expect(repositoryRoot(path.join(scratch, 'repo'))).toBe(path.join(scratch, 'repo'))
+    // A `.git` file, as in a worktree or a submodule, counts too.
+    expect(repositoryRoot(path.join(scratch, 'wt'))).toBe(path.join(scratch, 'wt'))
+    // A directory that does not exist gives its absolute path.
+    expect(realDirectory(path.join(scratch, 'repo', 'gone'))).toBe(
+      path.join(scratch, 'repo', 'gone'),
+    )
+    expect(repositoryRoot(path.join(scratch, 'repo', 'gone'))).toBe(path.join(scratch, 'repo'))
+  })
+
+  it('gives the directory itself when no directory above holds .git', () => {
+    // The scratch directory is in the temporary directory, which no repository holds.
+    const free = mkdtempSync(path.join(tmpdir(), 'skill-tree-free-'))
+    try {
+      expect(repositoryRoot(free)).toBe(realpathSync(free))
+    } finally {
+      rmSync(free, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('the repository bound', () => {
+  it.skipIf(process.platform === 'win32')(
+    'does not follow a link out of the bound, and says so',
+    () => {
+      put('in/repo/.git/HEAD', '')
+      put('in/repo/agents/own.md', '')
+      put('in/elsewhere/team/far.md', '')
+      put('in/elsewhere/far.md', '')
+      put('in/elsewhere/s/SKILL.md', '')
+      put('in/elsewhere/.claude-plugin/plugin.json', '{"name":"far"}')
+      const repo = path.join(scratch, 'in', 'repo')
+      symlinkSync('../../elsewhere/team', path.join(repo, 'agents', 'team'))
+      symlinkSync('../../elsewhere/far.md', path.join(repo, 'agents', 'far.md'))
+      const scan = markdownFiles(path.join(repo, 'agents'), repo)
+      expect(scan.files.map((f) => path.relative(repo, f))).toEqual([path.join('agents', 'own.md')])
+      expect(scan.outside).toBe(true)
+      // A directory that is itself a link out of the bound gives nothing.
+      symlinkSync('../elsewhere/team', path.join(repo, 'linked'))
+      expect(markdownFiles(path.join(repo, 'linked'), repo)).toEqual({ files: [], outside: true })
+      // A skill folder that is a link out of the bound is not a skill of the scope.
+      mkdirSync(path.join(repo, 'skills'))
+      symlinkSync('../../elsewhere/s', path.join(repo, 'skills', 's'))
+      expect(skillFiles(path.join(repo, 'skills'), repo)).toEqual([])
+      // A manifest that is a link out of the bound is not read.
+      symlinkSync('../elsewhere/.claude-plugin', path.join(repo, '.claude-plugin'))
+      expect(readManifest(repo, repo)).toBeNull()
+      expect(readManifest(repo, scratch)).toEqual({ name: 'far' })
+    },
+  )
+
+  it('takes a bound with a trailing separator, and does not take a sibling with the same prefix', () => {
+    put('pre/repo/x.md', '')
+    put('pre/repo-other/y.md', '')
+    const repo = path.join(scratch, 'pre', 'repo')
+    expect(markdownFiles(repo, `${repo}${path.sep}`).files).toEqual([path.join(repo, 'x.md')])
+    // The root of the file system is a bound too.
+    expect(markdownFiles(repo, path.parse(repo).root).files).toEqual([path.join(repo, 'x.md')])
+    expect(markdownFiles(path.join(scratch, 'pre', 'repo-other'), repo)).toEqual({
+      files: [],
+      outside: true,
+    })
   })
 })

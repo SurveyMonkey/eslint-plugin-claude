@@ -9,6 +9,7 @@ import {
   frontmatterOfFile,
   markdownFiles,
   readManifest,
+  repositoryRoot,
   scopeRoot,
   skillFiles,
 } from '../skill-tree.ts'
@@ -41,24 +42,27 @@ interface Entry {
 
 /** True when the plugin at `root` sets `commands`, so that Claude Code reads
  *  the key instead of `commands/`. */
-function setsCommands(root: string): boolean {
-  const manifest = readManifest(root)
+function setsCommands(root: string, bound: string): boolean {
+  const manifest = readManifest(root, bound)
   return manifest !== null && 'commands' in manifest
 }
 
 /** The command name of each skill and command file in the scope at `root`,
- *  read from disk. The plugin-root `SKILL.md` has no entry. */
-function scopeEntries(root: string): Entry[] {
+ *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
+ *  entry. */
+function scopeEntries(root: string, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
-  const skills = skillFiles(skillsDir).map((file) => ({
+  const skills = skillFiles(skillsDir, bound).map((file) => ({
     file,
     name: skillName(frontmatterOfFile(file), path.basename(path.dirname(file))),
   }))
   const commandsDir = path.join(root, 'commands')
-  const commands = (setsCommands(root) ? [] : markdownFiles(commandsDir)).map((file) => ({
-    file,
-    name: path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':'),
-  }))
+  const commands = (setsCommands(root, bound) ? [] : markdownFiles(commandsDir, bound).files).map(
+    (file) => ({
+      file,
+      name: path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':'),
+    }),
+  )
   return [...skills, ...commands]
 }
 
@@ -83,8 +87,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     }
     const self = path.resolve(context.filename)
     const root = scopeRoot(self, file)
+    const bound = repositoryRoot(file.plugin ? root : path.dirname(root))
     // A file in `commands/` is not a command when the key replaces the folder.
-    if (file.kind === 'command' && setsCommands(root)) {
+    if (file.kind === 'command' && setsCommands(root, bound)) {
       return {}
     }
     return {
@@ -111,7 +116,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const own =
           file.kind === 'skill' ? skillName(given, file.names[0] as string) : file.names.join(':')
-        const others = scopeEntries(root).filter(
+        const others = scopeEntries(root, bound).filter(
           (entry) => entry.file !== self && fold(entry.name) === fold(own),
         )
         if (others.length > 0) {

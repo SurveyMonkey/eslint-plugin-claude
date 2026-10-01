@@ -1,12 +1,18 @@
 // The `agent` field of a skill or command file must name an agent that Claude
 // Code can find (docs/rules/skill-agent-exists.md).
-import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
-import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../skill-tree.ts'
+import {
+  frontmatterOfFile,
+  markdownFiles,
+  readManifest,
+  realDirectory,
+  repositoryRoot,
+  scopeRoot,
+} from '../skill-tree.ts'
 
 const name = 'skill-agent-exists' as const
 
@@ -22,25 +28,31 @@ const BUILT_IN = [
   'claude-code-guide',
 ]
 
-/** `dir` and each directory above it, up to the root of the file system. */
-function ancestors(dir: string): string[] {
-  const parent = path.dirname(dir)
-  return parent === dir ? [dir] : [dir, ...ancestors(parent)]
+/** The agent names that a scan found. `outside` is true when the scan did not
+ *  follow a link out of the repository, so an agent can be out of sight. */
+interface Agents {
+  names: string[]
+  outside: boolean
 }
 
-/** The `name` of each agent file in `.claude/agents/` of `start`. The same
- *  for each directory above it, up to the first one that holds `.git`. */
-function projectAgents(start: string): string[] {
-  const found: string[] = []
-  for (const dir of ancestors(start)) {
-    for (const file of markdownFiles(path.join(dir, '.claude', 'agents'))) {
+/** `dir` and each directory above it, up to `bound`. */
+function ancestors(dir: string, bound: string): string[] {
+  const parent = path.dirname(dir)
+  return dir === bound || parent === dir ? [dir] : [dir, ...ancestors(parent, bound)]
+}
+
+/** The `name` of each agent file in `.claude/agents/` of `start`, and of each
+ *  directory above it up to the repository root `bound`. */
+function projectAgents(start: string, bound: string): Agents {
+  const found: Agents = { names: [], outside: false }
+  for (const dir of ancestors(start, bound)) {
+    const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
+    found.outside ||= scan.outside
+    for (const file of scan.files) {
       const agent = frontmatterOfFile(file)?.name
       if (typeof agent === 'string') {
-        found.push(agent)
+        found.names.push(agent)
       }
-    }
-    if (existsSync(path.join(dir, '.git'))) {
-      break
     }
   }
   return found
@@ -49,14 +61,16 @@ function projectAgents(start: string): string[] {
 /** The names that a skill in the plugin at `root` can use for each agent of
  *  the plugin. These are the scoped name and, to avoid a false report, the
  *  bare name, which the docs do not confirm. */
-function pluginAgents(root: string, plugin: string): string[] {
+function pluginAgents(root: string, plugin: string, bound: string): Agents {
   const agentsDir = path.join(root, 'agents')
-  return markdownFiles(agentsDir).flatMap((file) => {
+  const scan = markdownFiles(agentsDir, bound)
+  const names = scan.files.flatMap((file) => {
     const given = frontmatterOfFile(file)?.name
     const own = typeof given === 'string' ? given : path.basename(file, '.md')
     const folders = path.relative(agentsDir, path.dirname(file)).split(path.sep).filter(Boolean)
     return [own, [plugin, ...folders, own].join(':')]
   })
+  return { names, outside: scan.outside }
 }
 
 const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project' | 'plugin' }> = {
@@ -90,7 +104,10 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
     }
     const [{ allow }] = context.options
     const root = scopeRoot(context.filename, file)
-    const manifest = readManifest(root)
+    // The rule reads no file out of the repository that holds the scope.
+    const project = file.plugin ? root : path.dirname(root)
+    const bound = repositoryRoot(project)
+    const manifest = readManifest(root, bound)
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
     if (manifest !== null && 'agents' in manifest) {
       return {}
@@ -121,9 +138,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         if (BUILT_IN.some(same) || allow.some(same)) {
           return
         }
-        const files =
-          plugin === null ? projectAgents(path.dirname(root)) : pluginAgents(root, plugin)
-        if (!files.some(same)) {
+        const agents =
+          plugin === null
+            ? projectAgents(realDirectory(project), bound)
+            : pluginAgents(root, plugin, bound)
+        // A link out of the repository can hold the agent, so the rule cannot
+        // prove that it is missing.
+        if (!agents.outside && !agents.names.some(same)) {
           const field = fm.fields.get('agent')
           context.report({
             // A key that is an alias has a value but no field.

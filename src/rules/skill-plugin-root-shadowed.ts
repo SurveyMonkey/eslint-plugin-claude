@@ -5,7 +5,7 @@ import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
-import { readManifest } from '../skill-tree.ts'
+import { readManifest, repositoryRoot } from '../skill-tree.ts'
 
 const name = 'skill-plugin-root-shadowed' as const
 
@@ -46,7 +46,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'directory' | 'manifest' }> = {
         if (isDirectory(path.join(root, 'skills'))) {
           context.report({ loc: first, messageId: 'directory' })
         }
-        const manifest = readManifest(root)
+        const manifest = readManifest(root, repositoryRoot(root))
         if (manifest !== null && 'skills' in manifest) {
           context.report({ loc: first, messageId: 'manifest' })
         }

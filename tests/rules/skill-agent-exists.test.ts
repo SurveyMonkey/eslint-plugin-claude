@@ -53,6 +53,15 @@ put('padded/.claude/agents/p.md', '---  \nname: padded\n---\n')
 // A plugin agent with a `name` that is not a string has the file name.
 put('numname/.claude-plugin/plugin.json', '{"name": "nn"}')
 put('numname/agents/n.md', '---\nname: 3\n---\n')
+// A link out of the repository, from a project and from a plugin in that repository.
+put('out/elsewhere/far.md', agentFile('far'))
+put('out/repo/.git/HEAD', '')
+mkdirSync(path.join(scratch, 'out/repo/.claude/agents'), { recursive: true })
+symlinkSync('../../../elsewhere', path.join(scratch, 'out/repo/.claude/agents/team'))
+put('outp/.git/HEAD', '')
+put('outp/.claude-plugin/plugin.json', '{"name": "outp"}')
+mkdirSync(path.join(scratch, 'outp/agents'), { recursive: true })
+symlinkSync('../../out/elsewhere', path.join(scratch, 'outp/agents/team'))
 // A `.git` entry that is a file, as in a worktree or a submodule.
 put('above/.claude/agents/above.md', agentFile('above'))
 put('above/wt/.git', 'gitdir: elsewhere')
@@ -168,11 +177,16 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
       code: fork('inrepo'),
       filename: path.join(scratch, 'outer', 'repo', 'sub', '.claude', 'skills', 's', 'SKILL.md'),
     },
-    // Without `.git`, the walk goes on above the directory.
+    // A link out of the repository can hold the agent, so the rule stays silent.
     {
-      code: fork('free'),
-      filename: path.join(scratch, 'free', 'deep', '.claude', 'skills', 's', 'SKILL.md'),
+      code: fork('far'),
+      filename: path.join(scratch, 'out', 'repo', '.claude', 'skills', 's', 'SKILL.md'),
     },
+    {
+      code: fork('ghost'),
+      filename: path.join(scratch, 'out', 'repo', '.claude', 'skills', 's', 'SKILL.md'),
+    },
+    { code: fork('outp:ghost'), filename: path.join(scratch, 'outp', 'skills', 's', 'SKILL.md') },
     // Not a skill or command file.
     { code: fork('ghost'), filename: path.join(project, 'docs', 'SKILL.md') },
     { code: fork('ghost'), filename: path.join(project, '.claude', 'agents', 'reviewer.md') },
@@ -233,6 +247,18 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
       code: '---\nx: &k agent\n*k : ghost\n---\n',
       filename: projectSkill,
       errors: [{ messageId: 'project', data: { agent: 'ghost' }, line: 2, column: 1 }],
+    },
+    // Without `.git`, the walk does not go above the directory that holds `.claude/`.
+    {
+      code: fork('free'),
+      filename: path.join(scratch, 'free', 'deep', '.claude', 'skills', 's', 'SKILL.md'),
+      errors: [{ messageId: 'project' }],
+    },
+    // A link in the repository is followed, so the scan is whole and a missing agent is reported.
+    {
+      code: fork('ghost'),
+      filename: path.join(scratch, 'linked', '.claude', 'skills', 's', 'SKILL.md'),
+      errors: [{ messageId: 'project' }],
     },
     // The agents above a `.git` directory are not the agents of the repository.
     {
