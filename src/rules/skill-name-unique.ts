@@ -3,16 +3,15 @@
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import type { FrontmatterField } from '../frontmatter.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
-import { frontmatterOfFile, markdownFiles, scopeRoot } from '../skill-tree.ts'
+import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../skill-tree.ts'
 
 const name = 'skill-name-unique' as const
 
-/** The name without the differences that Claude Code ignores when it compares
- *  names: case, spacing, invisible characters, compatibility forms such as
- *  fullwidth letters, and dash variants. */
+/** The name without the differences that Claude Code ignores for a synced
+ *  skill: case, spacing, invisible characters, compatibility forms such as
+ *  fullwidth letters, and dash variants. The rule applies it to all names. */
 function fold(text: string): string {
   return text
     .normalize('NFKC')
@@ -33,6 +32,13 @@ interface Entry {
   name: string
 }
 
+/** True when the plugin at `root` sets `commands`, so that Claude Code reads
+ *  the key instead of `commands/`. */
+function setsCommands(root: string): boolean {
+  const manifest = readManifest(root)
+  return manifest !== null && 'commands' in manifest
+}
+
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk. The plugin-root `SKILL.md` has no entry. */
 function scopeEntries(root: string): Entry[] {
@@ -47,7 +53,7 @@ function scopeEntries(root: string): Entry[] {
       name: skillName(frontmatterOfFile(file), path.basename(path.dirname(file))),
     }))
   const commandsDir = path.join(root, 'commands')
-  const commands = markdownFiles(commandsDir).map((file) => ({
+  const commands = (setsCommands(root) ? [] : markdownFiles(commandsDir)).map((file) => ({
     file,
     name: path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':'),
   }))
@@ -75,6 +81,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     }
     const self = path.resolve(context.filename)
     const root = scopeRoot(self, file)
+    // A file in `commands/` is not a command when the key replaces the folder.
+    if (file.kind === 'command' && setsCommands(root)) {
+      return {}
+    }
     return {
       root(node) {
         let given: Record<string, unknown> | null = null
@@ -90,9 +100,11 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
           }
           given = fm.data
           if (typeof fm.data.name === 'string' && fm.data.name !== '') {
-            // A string value has a field.
-            const field = fm.fields.get('name') as FrontmatterField
-            loc = fm.at(field.valueStart, field.valueEnd)
+            const field = fm.fields.get('name')
+            // A key that is an alias has a value but no field.
+            if (field !== undefined) {
+              loc = fm.at(field.valueStart, field.valueEnd)
+            }
           }
         }
         const own =

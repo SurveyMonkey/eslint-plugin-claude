@@ -3,7 +3,7 @@
 // disk under tests/fixtures/skill-agent-exists/. The `.git` stop of the walk
 // up needs a directory that git would not commit, so those trees are built at
 // run time.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll } from 'vitest'
@@ -34,6 +34,12 @@ put('numeric/.claude-plugin/plugin.json', '{"name": 3}')
 put('numeric/agents/a.md', agentFile('a'))
 put('broken/.claude-plugin/plugin.json', '{')
 put('broken/agents/a.md', agentFile('a'))
+// An agent file in a directory that a link names, and a link that leads back up.
+put('linked/shared/team/member.md', agentFile('member'))
+mkdirSync(path.join(scratch, 'linked/.claude/agents'), { recursive: true })
+symlinkSync('../../shared/team', path.join(scratch, 'linked/.claude/agents/team'))
+symlinkSync('..', path.join(scratch, 'linked/.claude/agents/up'))
+put('linked/.git/HEAD', '')
 
 const fork = (agent: string) => `---\ncontext: fork\nagent: ${agent}\n---\n\n# S\n`
 
@@ -87,6 +93,13 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     { code: fork('checker'), filename: pluginCommand },
     { code: fork('Explore'), filename: pluginSkill },
     { code: fork('my-user-agent'), options: [{ allow: ['my-user-agent'] }], filename: pluginSkill },
+    // A plugin name is a whole prefix: `pq:` is the scope of another plugin.
+    { code: fork('pq:helper'), filename: pluginSkill },
+    // A link to a directory of agents is followed, and a link back up is not.
+    {
+      code: fork('member'),
+      filename: path.join(scratch, 'linked', '.claude', 'skills', 's', 'SKILL.md'),
+    },
     // The agent of another plugin is out of sight.
     { code: fork('other-plugin:helper'), filename: pluginSkill },
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
@@ -164,6 +177,12 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
       code: fork('numeric:ghost'),
       filename: path.join(scratch, 'numeric', 'skills', 's', 'SKILL.md'),
       errors: [{ messageId: 'plugin' }],
+    },
+    // A key that is an alias: the report falls back to the start of the frontmatter.
+    {
+      code: '---\nx: &k agent\n*k : ghost\n---\n',
+      filename: projectSkill,
+      errors: [{ messageId: 'project', data: { agent: 'ghost' }, line: 2, column: 1 }],
     },
     // The agents above a `.git` directory are not the agents of the repository.
     {

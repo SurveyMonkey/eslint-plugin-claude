@@ -68,6 +68,11 @@ markdownTester.run('skill-reference-exists', ruleOf('skill-reference-exists'), {
         { messageId: 'missing', data: { target: 'missing.md' }, line: 3, column: 5, endColumn: 23 },
       ],
     },
+    // A name that starts with two dots is in the folder.
+    {
+      ...body('[a](..hidden.md)'),
+      errors: [{ messageId: 'missing', data: { target: '..hidden.md' } }],
+    },
     {
       ...body('[a](./nested/missing.md)'),
       errors: [{ messageId: 'missing', data: { target: './nested/missing.md' } }],

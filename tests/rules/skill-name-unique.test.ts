@@ -16,6 +16,9 @@ const skillAt = (tree: string, folder: string, ...above: string[]) =>
   at(tree, ...above, '.claude', 'skills', folder, 'SKILL.md')
 const named = (value: string) => `---\nname: ${value}\n---\n\n# Skill\n`
 const bare = '# Skill\n'
+// A quoted YAML string. The line separators are escapes, because YAML reads a raw one as a line break.
+const quote = (value: string) =>
+  JSON.stringify(value).replace(/[\u2028\u2029]/g, (c) => `\\u${c.charCodeAt(0).toString(16)}`)
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'skill-name-unique-'))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
@@ -25,7 +28,7 @@ const put = (file: string, text: string) => {
   return path.join(scratch, file)
 }
 
-// Two names that Claude Code treats as one, and two that it keeps apart.
+// Two names that the rule treats as one, and two that it keeps apart.
 const SAME: [string, string, string][] = [
   ['case', 'Deploy', 'deploy'],
   ['case', 'DEPLOY', 'dEpLoY'],
@@ -33,6 +36,11 @@ const SAME: [string, string, string][] = [
   ['spacing', 'deploy\u{a0}', 'deploy'],
   ['spacing', 'dep\u{3000}loy', 'deploy'],
   ['spacing', 'dep\tloy', 'deploy'],
+  ['spacing', 'dep\u{2028}loy', 'deploy'],
+  ['spacing', 'dep\u{2029}loy', 'deploy'],
+  ['spacing, twice', 'a b c', 'abc'],
+  ['invisible, twice', 'd\u{200b}e\u{200b}ploy', 'deploy'],
+  ['dash, twice', 'a\u{2010}b\u{2010}c', 'a-b-c'],
   ['invisible', 'dep\u{200b}loy', 'deploy'],
   ['invisible', '\u{ad}deploy', 'deploy'],
   ['invisible', '\u{feff}deploy', 'deploy'],
@@ -57,13 +65,21 @@ const DIFFERENT: [string, string][] = [
   ['deploy', 'deploys'],
 ]
 put('three/.claude/commands/t.md', bare)
+// The `commands` key of a plugin is read instead of `commands/`.
+put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
+put('ckey/commands/review.md', bare)
+put('ckey/skills/review/SKILL.md', bare)
+// A key that is an alias has a value, and no key node to report on.
+const alias = '---\nx: &k name\n*k : build\n---\n\n# Skill\n'
+put('alias/.claude/skills/a/SKILL.md', alias)
+put('alias/.claude/skills/b/SKILL.md', named('build'))
 put('three/.claude/skills/u/SKILL.md', named('t'))
 const pair = (index: number, first: string, second: string) => {
   const tree = `fold-${index}`
   const file = (folder: string, value: string) =>
-    put(`${tree}/.claude/skills/${folder}/SKILL.md`, named(JSON.stringify(value)))
+    put(`${tree}/.claude/skills/${folder}/SKILL.md`, named(quote(value)))
   return {
-    code: named(JSON.stringify(first)),
+    code: named(quote(first)),
     filename: file('a', first),
     other: file('b', second),
     tree,
@@ -105,6 +121,9 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: bare, filename: skillAt('cmd-name', 'other') },
     // A folder below a skill folder is not a skill.
     { code: bare, filename: skillAt('nested', 'a') },
+    // A plugin that sets `commands` does not load `commands/`, so nothing collides.
+    { code: bare, filename: path.join(scratch, 'ckey', 'skills', 'review', 'SKILL.md') },
+    { code: bare, filename: path.join(scratch, 'ckey', 'commands', 'review.md') },
     // The plugin-root skill has no name from a folder or a path.
     { code: named('review'), filename: at('plugin', 'SKILL.md') },
     // The frontmatter of this file does not parse, so the rule reads nothing from it.
@@ -114,6 +133,19 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: named('build'), filename: at('dup-name', '.claude', 'agents', 'build.md') },
   ],
   invalid: [
+    // A key that is an alias: the report falls back to line 1.
+    {
+      code: alias,
+      filename: path.join(scratch, 'alias', '.claude', 'skills', 'a', 'SKILL.md'),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'build', others: '`skills/b/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
     // A shared `name`.
     {
       code: named('build'),

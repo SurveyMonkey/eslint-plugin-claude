@@ -3,15 +3,30 @@
 // case in a skill folder. The trees are on disk under
 // tests/fixtures/skill-file-layout/. A plugin `skills/` directory counts only
 // with a manifest, so `plugin/` has one and `notplugin/` has none.
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { afterAll } from 'vitest'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-file-layout')
 const at = (...parts: string[]) => path.join(fixtures, ...parts)
 const skills = (...parts: string[]) => at('project', '.claude', 'skills', ...parts)
 
+// A folder with both `SKILL.md` and `skill.md` needs a file system that keeps case.
+const scratch = mkdtempSync(path.join(tmpdir(), 'skill-file-layout-'))
+afterAll(() => rmSync(scratch, { recursive: true, force: true }))
+const both = path.join(scratch, '.claude', 'skills', 'both')
+mkdirSync(both, { recursive: true })
+writeFileSync(path.join(both, 'SKILL.md'), '# S\n')
+writeFileSync(path.join(both, 'skill.md'), '# Notes\n')
+const keepsCase =
+  existsSync(path.join(both, 'SKILL.md')) && !existsSync(path.join(both, 'Skill.md'))
+
 markdownTester.run('skill-file-layout', ruleOf('skill-file-layout'), {
   valid: [
+    // Next to a `SKILL.md`, a `skill.md` is a file of the skill.
+    ...(keepsCase ? [{ code: '# Notes\n', filename: path.join(both, 'skill.md') }] : []),
     // A skill in its folder, and a supporting file beside it.
     { code: '# S\n', filename: skills('ok', 'SKILL.md') },
     { code: '# R\n', filename: skills('ok', 'reference.md') },
@@ -55,6 +70,12 @@ markdownTester.run('skill-file-layout', ruleOf('skill-file-layout'), {
     {
       code: '# Wrong\n',
       filename: at('plugin', 'skills', 'wrong', 'skill.md'),
+      errors: [{ messageId: 'wrongCase' }],
+    },
+    // A folder that is not on disk has no `SKILL.md` beside the file.
+    {
+      code: '# Wrong\n',
+      filename: skills('ghost', 'skill.md'),
       errors: [{ messageId: 'wrongCase' }],
     },
     // The rule does not read the file, so bad frontmatter changes nothing.

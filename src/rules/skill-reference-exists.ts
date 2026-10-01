@@ -1,5 +1,5 @@
-// A relative link in a `SKILL.md`, or a path that starts with
-// `${CLAUDE_SKILL_DIR}/`, must name a file in the skill folder
+// A relative link in a `SKILL.md` must name a file in the skill folder, and so
+// must a path that starts with `${CLAUDE_SKILL_DIR}/`
 // (docs/rules/skill-reference-exists.md).
 import { existsSync } from 'node:fs'
 import path from 'node:path'
@@ -16,8 +16,8 @@ const SCHEME = /^[a-z][a-z0-9+.-]*:/i
 // Text that stands for a path, and is not one.
 const PLACEHOLDER = /[$*{}|]/
 
-/** The path in `raw`, below the skill folder, or null when `raw` is not
- *  a path that the rule checks. */
+/** The path in `raw`, relative to the skill folder, or null when `raw` is
+ *  not a path that the rule checks. */
 function folderPath(raw: string): string | null {
   const bare = raw.split(/[#?]/)[0] as string
   const inFolder = bare.startsWith(SKILL_DIR)

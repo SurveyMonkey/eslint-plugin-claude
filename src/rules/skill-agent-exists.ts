@@ -4,7 +4,6 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import type { FrontmatterField } from '../frontmatter.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../skill-tree.ts'
@@ -29,8 +28,8 @@ function ancestors(dir: string): string[] {
   return parent === dir ? [dir] : [dir, ...ancestors(parent)]
 }
 
-/** The `name` of each agent file in `.claude/agents/` of `start` and of each
- *  directory above it, up to the first directory that holds `.git`. */
+/** The `name` of each agent file in `.claude/agents/` of `start`. The same
+ *  for each directory above it, up to the first one that holds `.git`. */
 function projectAgents(start: string): string[] {
   const found: string[] = []
   for (const dir of ancestors(start)) {
@@ -48,7 +47,7 @@ function projectAgents(start: string): string[] {
 }
 
 /** The names that a skill in the plugin at `root` can use for each agent of
- *  the plugin: the bare name, and the scoped name. */
+ *  the plugin. These are the bare name and the scoped name. */
 function pluginAgents(root: string, plugin: string): string[] {
   const agentsDir = path.join(root, 'agents')
   return markdownFiles(agentsDir).flatMap((file) => {
@@ -116,17 +115,18 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         if (agent.includes(':') && (plugin === null || !agent.startsWith(`${plugin}:`))) {
           return
         }
-        const known = [
-          ...BUILT_IN,
-          ...allow,
-          ...(plugin === null ? projectAgents(path.dirname(root)) : pluginAgents(root, plugin)),
-        ]
         // The docs do not say if Claude Code compares names with case.
-        if (!known.some((other) => other.toLowerCase() === agent.toLowerCase())) {
-          // A string value has a field.
-          const field = fm.fields.get('agent') as FrontmatterField
+        const same = (other: string) => other.toLowerCase() === agent.toLowerCase()
+        if (BUILT_IN.some(same) || allow.some(same)) {
+          return
+        }
+        const files =
+          plugin === null ? projectAgents(path.dirname(root)) : pluginAgents(root, plugin)
+        if (!files.some(same)) {
+          const field = fm.fields.get('agent')
           context.report({
-            loc: fm.at(field.valueStart, field.valueEnd),
+            // A key that is an alias has a value but no field.
+            loc: field === undefined ? fm.at(0, 0) : fm.at(field.valueStart, field.valueEnd),
             messageId: plugin === null ? 'project' : 'plugin',
             data: { agent },
           })
