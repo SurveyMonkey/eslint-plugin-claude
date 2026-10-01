@@ -62,6 +62,24 @@ const TREE: Record<string, string> = {
   'docs/readme.md': '# Other Markdown\n',
   'docs/SKILL.md': `\n---\nmade_up: 1\nagent: Plan\nallowed-tools: AskUserQuestion\n---\nKEY=!\`cmd\` ${pluginRoot}\n`,
   '.claude/agents/a.md': `---\nname: a\ndescription: ${long}\n---\n`,
+  // One bad file for each agent and output style rule, and the same fault where it is silent.
+  '.claude/agents/valid.md': '---\nname: v\n---\n',
+  '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
+  '.claude/agents/bypass.md':
+    '---\nname: b\ndescription: d\npermissionMode: bypassPermissions\n---\n',
+  '.claude/agents/mcp.md': '---\nname: m\ndescription: d\nmcpServers: github\n---\n',
+  '.claude/agents/memory.md': '---\nname: y\ndescription: d\nmemory: project\ntools: Read\n---\n',
+  'plugins/p/agents/ignored.md': '---\nname: i\ndescription: d\npermissionMode: plan\n---\n',
+  'plugins/p/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
+  'plugins/p/agents/no-name.md': '---\ndescription: A plugin agent without a name loads.\n---\n',
+  '.claude/output-styles/yaml.md': '---\nname: [unclosed\n---\n',
+  '.claude/output-styles/schema.md': '---\nforce-for-plugin: true\n---\n',
+  'plugins/p/output-styles/forced.md': '---\nforce-for-plugin: true\n---\n',
+  '.claude/teams/teams.json': '{}',
+  '.claude/teams/team.md': '# Team\n',
+  '.claude/teams/team.yaml': 'members: []\n',
+  'docs/agents/a.md': '---\nmade_up: 1\npermissionMode: bypassPermissions\n---\n',
+  'docs/output-styles/s.md': '---\nname: [unclosed\nforce-for-plugin: true\n---\n',
   'other.json': badHooks,
   'hooks.json': badHooks,
   '.vscode/settings.json': badHooks,
@@ -70,6 +88,11 @@ const TREE: Record<string, string> = {
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
+  '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
+  '.claude/agents/mcp.md: claude/agent-mcp-servers-schema@2',
+  '.claude/agents/memory.md: claude/agent-memory-grants-write@2',
+  '.claude/agents/schema.md: claude/agent-frontmatter-schema@2',
+  '.claude/agents/valid.md: claude/agent-frontmatter-valid@2',
   '.claude/commands/c.md: claude/command-legacy-format@1',
   '.claude/commands/ghost.md: claude/command-legacy-format@1',
   '.claude/commands/ghost.md: claude/skill-agent-exists@2',
@@ -77,6 +100,8 @@ const EXPECTED = [
   '.claude/commands/schema.md: claude/command-legacy-format@1',
   '.claude/commands/schema.md: claude/skill-frontmatter-schema@2',
   '.claude/commands/schema.md: claude/skill-name-unique@2',
+  '.claude/output-styles/schema.md: claude/output-style-frontmatter-schema@2',
+  '.claude/output-styles/yaml.md: claude/output-style-frontmatter-valid@2',
   '.claude/settings.json: claude/hooks-event-name-known@2',
   '.claude/settings.local.json: claude/hooks-event-name-known@2',
   '.claude/skills/agent/SKILL.md: claude/skill-agent-exists@2',
@@ -96,13 +121,32 @@ const EXPECTED = [
   '.claude/skills/twin-b/SKILL.md: claude/skill-name-unique@2',
   '.claude/skills/unreachable/SKILL.md: claude/skill-invocation-unreachable@2',
   '.claude/skills/vars/SKILL.md: claude/skill-plugin-vars-outside-plugin@2',
+  '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
+  '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
+  'plugins/p/agents/ignored.md: claude/agent-plugin-ignored-fields@2',
+  'plugins/p/agents/schema.md: claude/agent-frontmatter-schema@2',
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
+]
+
+// The agent and output style rules of #9, in the order of the `modules` list. Each is an
+// error. The team rule has one block for Markdown and one for JSON.
+const AGENT_RULES = [
+  'agent-frontmatter-valid',
+  'agent-frontmatter-schema',
+  'agent-plugin-ignored-fields',
+  'agent-mcp-servers-schema',
+  'agent-permission-mode-bypass',
+  'agent-memory-grants-write',
+  'agent-teams-no-project-config',
+  'agent-teams-no-project-config',
+  'output-style-frontmatter-valid',
+  'output-style-frontmatter-schema',
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
@@ -159,6 +203,7 @@ describe('configs', () => {
       ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
+      ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
     ])
   })
 
@@ -171,6 +216,7 @@ describe('configs', () => {
       'claude/strict/command-legacy-format',
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
+      ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 

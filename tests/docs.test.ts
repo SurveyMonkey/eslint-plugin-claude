@@ -17,8 +17,17 @@ it('points docsUrl at docs/rules in this repository', () => {
 it('gives each rule a doc and a URL that names it', () => {
   const rules = Object.entries(plugin.rules)
   expect(rules.map(([name]) => name).sort()).toEqual([
+    'agent-frontmatter-schema',
+    'agent-frontmatter-valid',
+    'agent-mcp-servers-schema',
+    'agent-memory-grants-write',
+    'agent-permission-mode-bypass',
+    'agent-plugin-ignored-fields',
+    'agent-teams-no-project-config',
     'command-legacy-format',
     'hooks-event-name-known',
+    'output-style-frontmatter-schema',
+    'output-style-frontmatter-valid',
     'skill-agent-exists',
     'skill-allowed-tools-ineffective',
     'skill-description-max-length',

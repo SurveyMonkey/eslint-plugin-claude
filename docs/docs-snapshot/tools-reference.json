@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "919cadf60837dda177280ae63de5cd74b96269b1cf58e9203d139ad563c41589",
+  "hash": "18eda29898be723c087ad5511551435998a3201671afee6c3e6a34c90e3fe1ca",
   "blocks": [
     {
       "id": "tools-reference",
@@ -56,11 +56,11 @@
     },
     {
       "id": "foreground-commands-that-move-to-the-background",
-      "hash": "4ddf8dee6d3697889d48df6b19bf2311ad856d7fef1012ea9ef65a9ce4c370ea"
+      "hash": "47d02e53aac6d21156436804926154d10b3a2396cad3a5c263623ff636894472"
     },
     {
       "id": "memory-limit-on-linux-and-wsl",
-      "hash": "4cb5f8840ed3e1acf35841c4083da7a2344a0422e09bc7a1cf776638090dd2fb"
+      "hash": "afdc6ea8c10b65462bf59d9fb1667a0000bc095b73dcd5f08244cb62ee2b5653"
     },
     {
       "id": "edit-tool-behavior",
@@ -153,6 +153,10 @@
     {
       "id": "webfetch-tool-behavior",
       "hash": "cb973df23f7c83a6093afa0f3d61c45ac8739db44207e6cfe8b34e7ba61dbecf"
+    },
+    {
+      "id": "webfetch-availability",
+      "hash": "96eb45d943b207362251c2846a24b6ccec4874143591b886be45fbe4594e4fef"
     },
     {
       "id": "websearch-tool-behavior",

@@ -285,16 +285,16 @@
   ],
   "sources": [
     {
-      "heading": "Deprecated and renamed terms",
-      "id": "deprecated-and-renamed-terms",
-      "hash": "157d7e6327a4d05655407f4289c13571851d6bd14d0c90a2175c03857f06ed9a",
-      "text": "## Deprecated and renamed terms\n\nThese terms appear in older docs, blog posts, and community content. Use the current name when searching this site.\n\n| Old term | Now called | Notes |\n| - | - | - |\n| Headless mode | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior |\n| Web session; \"Claude Code on the web\" as the name for any cloud session | [Cloud session](#cloud-session) | \"Claude Code on the web\" now names only the browser surface at claude.ai/code |\n| Custom commands | [Skills](#skill) | `.claude/commands/` files still work |\n| Slash commands | Commands | \"Slash\" dropped from product copy |"
-    },
-    {
       "heading": "Frontmatter",
       "id": "frontmatter",
       "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db",
       "text": "### Frontmatter\n\nA block of YAML settings at the very top of a Markdown file, between an opening `---` line and a closing `---` line. Skills, subagents, output styles, and rules each read their configuration from frontmatter, such as a skill's `description` or a subagent's `tools`, and treat everything after the closing `---` as the instructions. The opening `---` must be the file's first line. Each file type accepts its own set of fields.\n\nLearn more: [Skill frontmatter](/docs/en/skills#frontmatter-reference), [Subagent frontmatter](/docs/en/sub-agents#supported-frontmatter-fields), [Output style frontmatter](/docs/en/output-styles#frontmatter), [Rule frontmatter](/docs/en/memory#rules-frontmatter-reference)"
+    },
+    {
+      "heading": "Deprecated and renamed terms",
+      "id": "deprecated-and-renamed-terms",
+      "hash": "157d7e6327a4d05655407f4289c13571851d6bd14d0c90a2175c03857f06ed9a",
+      "text": "## Deprecated and renamed terms\n\nThese terms appear in older docs, blog posts, and community content. Use the current name when searching this site.\n\n| Old term | Now called | Notes |\n| - | - | - |\n| Headless mode | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior |\n| Web session; \"Claude Code on the web\" as the name for any cloud session | [Cloud session](#cloud-session) | \"Claude Code on the web\" now names only the browser surface at claude.ai/code |\n| Custom commands | [Skills](#skill) | `.claude/commands/` files still work |\n| Slash commands | Commands | \"Slash\" dropped from product copy |"
     }
   ]
 }

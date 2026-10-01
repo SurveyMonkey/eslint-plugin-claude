@@ -1,10 +1,10 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "9dd68316c1111c118e3ddb82861ac6271a8cd164cee0d371b26165efff35fe88",
+  "hash": "ccb6f0da88f4159a8e1ca205ba0f9e0a4699443cf57f778b4a5c71f679e42dc5",
   "blocks": [
     {
       "id": "hooks-reference",
-      "hash": "d6fc64d964ef048d72dfac217439cc6fd71863e15c55384ad192121561846456"
+      "hash": "540d190868a6f304daa04bdd9d9845cbd42150837914294faa99b33b7d873cf1"
     },
     {
       "id": "hook-lifecycle",
@@ -36,7 +36,7 @@
     },
     {
       "id": "common-fields",
-      "hash": "892963d2890197af43a611978c907486221b02fa3c83962698d46060588af86e"
+      "hash": "c21a7787217a5b4e5c5074eedfd88f10f1df8e4aede1ab757553356697fca91a"
     },
     {
       "id": "command-hook-fields",
@@ -80,11 +80,11 @@
     },
     {
       "id": "the-hooks-menu",
-      "hash": "155504b892440a907c78653fc3e1c1dd5f3ac9a774f55a113dcd9c9c504e6c20"
+      "hash": "133c197159534d7656da076be83775a58af3687e1e40fe5021e24860a8c8211a"
     },
     {
       "id": "disable-or-remove-hooks",
-      "hash": "44919af1d4067b787d45962cc8c4f6fbb090682e546673dabcbb8bc6aa664cd2"
+      "hash": "07c2742ce0fb8b69c603d08c4d41493120a00315407c5e56648b6b7a6e7e1ed8"
     },
     {
       "id": "hook-input-and-output",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/debug-your-config",
-  "hash": "aeba853a127c9096edafefc1fa06f46444b2dacccb25f0444afb28c786e77772",
+  "hash": "94e90ce53c13f8b17d30f235bb2ff010e40791878e5d0c39b8caad8a5a772a62",
   "blocks": [
     {
       "id": "debug-your-configuration",
@@ -20,7 +20,7 @@
     },
     {
       "id": "check-hooks",
-      "hash": "457f6a342830a2d2f8dbe311a984583a1364dc7ac215642b7166e24f81a953cb"
+      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da"
     },
     {
       "id": "test-against-a-clean-configuration",

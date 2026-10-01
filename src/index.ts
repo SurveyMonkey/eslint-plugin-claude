@@ -2,8 +2,17 @@ import { createRequire } from 'node:module'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
+import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
+import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
+import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
+import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
+import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
+import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
+import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
+import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
@@ -47,9 +56,27 @@ const modules = [
   skillAgentExists,
   skillNameUnique,
   skillPathsGlobValid,
+  agentFrontmatterValid,
+  agentFrontmatterSchema,
+  agentPluginIgnoredFields,
+  agentMcpServersSchema,
+  agentPermissionModeBypass,
+  agentMemoryGrantsWrite,
+  agentTeamsNoProjectConfig,
+  outputStyleFrontmatterValid,
+  outputStyleFrontmatterSchema,
 ]
 
 type RuleName = (typeof modules)[number]['name']
+type Language = (typeof modules)[number]['language'] | 'json'
+// A rule for files of two languages adds its second language and files in
+// `also`. The config then has one block for each.
+interface Module {
+  name: string
+  language: Language
+  files: string[]
+  also?: { language: Language; files: string[] }
+}
 type Severity = 'off' | 'warn' | 'error'
 
 // Language settings only, so the spread in `configFor` cannot replace a
@@ -82,6 +109,15 @@ const recommended: Record<RuleName, Severity> = {
   'skill-agent-exists': 'error',
   'skill-name-unique': 'error',
   'skill-paths-glob-valid': 'error',
+  'agent-frontmatter-valid': 'error',
+  'agent-frontmatter-schema': 'error',
+  'agent-plugin-ignored-fields': 'error',
+  'agent-mcp-servers-schema': 'error',
+  'agent-permission-mode-bypass': 'error',
+  'agent-memory-grants-write': 'error',
+  'agent-teams-no-project-config': 'error',
+  'output-style-frontmatter-valid': 'error',
+  'output-style-frontmatter-schema': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
@@ -118,13 +154,15 @@ const plugin: Plugin = {
 function configFor(config: string, severity: (rule: RuleName) => Severity): Linter.Config[] {
   return modules
     .filter((m) => severity(m.name) !== 'off')
-    .map((m) => ({
-      name: `claude/${config}/${m.name}`,
-      files: m.files,
-      plugins: { claude: plugin, markdown, json },
-      ...LANGUAGES[m.language],
-      rules: { [`claude/${m.name}`]: severity(m.name) },
-    }))
+    .flatMap((m: Module) =>
+      [{ language: m.language, files: m.files }, ...(m.also ? [m.also] : [])].map((target) => ({
+        name: `claude/${config}/${m.name}`,
+        files: target.files,
+        plugins: { claude: plugin, markdown, json },
+        ...LANGUAGES[target.language],
+        rules: { [`claude/${m.name}`]: severity(m.name as RuleName) },
+      })),
+    )
 }
 
 plugin.configs.recommended = configFor('recommended', (rule) => recommended[rule])
