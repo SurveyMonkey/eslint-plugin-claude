@@ -7,8 +7,14 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll } from 'vitest'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { afterAll, describe, expect, it } from 'vitest'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-name-unique')
 const at = (...parts: string[]) => path.join(fixtures, ...parts)
@@ -358,4 +364,66 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
       ],
     },
   ],
+})
+
+// A read that fails with `EACCES` is not a missing file. The rule compares no name that
+// it cannot read, so it makes no report that rests on one.
+describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
+  const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
+
+  it('does not compare a skill file that it cannot read', () => {
+    // The folder name is `dup`, and the file may set another name.
+    const hidden = put('deny-skill/.claude/skills/dup/SKILL.md', named('other'))
+    const file = path.join(scratch, 'deny-skill', '.claude', 'skills', 'mine', 'SKILL.md')
+    withoutAccess(hidden, () => expect(lint(file, named('dup'))).toEqual([]))
+    // The file is readable again, and has the name `other`, so `dup` is free.
+    expect(lint(file, named('dup'))).toEqual([])
+    // A file that is readable and has the same name is still a duplicate.
+    expect(lint(file, named('other'))).toHaveLength(1)
+  })
+
+  it('does not compare a skill folder or a skills directory that it cannot read', () => {
+    put('deny-folder/.claude/skills/dup/SKILL.md', bare)
+    const file = path.join(scratch, 'deny-folder', '.claude', 'skills', 'mine', 'SKILL.md')
+    expect(lint(file, named('dup'))).toHaveLength(1)
+    withoutAccess(path.join(scratch, 'deny-folder/.claude/skills/dup'), () =>
+      expect(lint(file, named('dup'))).toEqual([]),
+    )
+    withoutAccess(path.join(scratch, 'deny-folder/.claude/skills'), () =>
+      expect(lint(file, named('dup'))).toEqual([]),
+    )
+  })
+
+  it('does not compare a commands directory that it cannot read', () => {
+    put('deny-commands/.claude/commands/dup.md', bare)
+    const file = path.join(scratch, 'deny-commands', '.claude', 'skills', 'mine', 'SKILL.md')
+    expect(lint(file, named('dup'))).toHaveLength(1)
+    withoutAccess(path.join(scratch, 'deny-commands/.claude/commands'), () =>
+      expect(lint(file, named('dup'))).toEqual([]),
+    )
+  })
+
+  it('reads no commands/ folder when it cannot read the manifest', () => {
+    const manifest = put('deny-manifest/.claude-plugin/plugin.json', '{"commands":"./cmds"}')
+    put('deny-manifest/commands/review.md', bare)
+    const skill = path.join(scratch, 'deny-manifest', 'skills', 'review', 'SKILL.md')
+    const command = path.join(scratch, 'deny-manifest', 'commands', 'review.md')
+    put('deny-manifest/skills/review/SKILL.md', bare)
+    // The key replaces `commands/`, so the folder is not a command source.
+    expect(lint(skill, bare)).toEqual([])
+    withoutAccess(manifest, () => {
+      expect(lint(skill, bare)).toEqual([])
+      expect(lint(command, bare)).toEqual([])
+    })
+    withoutAccess(path.dirname(manifest), () => {
+      expect(lint(skill, bare)).toEqual([])
+      expect(lint(command, bare)).toEqual([])
+    })
+  })
+
+  it('reports a command file that the rule cannot read, because the path gives its name', () => {
+    const hidden = put('deny-command/.claude/commands/dup.md', bare)
+    const file = path.join(scratch, 'deny-command', '.claude', 'skills', 'mine', 'SKILL.md')
+    withoutAccess(hidden, () => expect(lint(file, named('dup'))).toHaveLength(1))
+  })
 })

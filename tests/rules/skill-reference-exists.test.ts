@@ -3,8 +3,17 @@
 // are on disk under tests/fixtures/skill-reference-exists/: `summarize` holds
 // the supporting files of the docs example, and `plugin` is a plugin with a
 // skill and a root skill.
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { afterAll, describe, expect, it } from 'vitest'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-reference-exists')
 const skill = path.join(fixtures, 'project', '.claude', 'skills', 'summarize', 'SKILL.md')
@@ -136,4 +145,40 @@ markdownTester.run('skill-reference-exists', ruleOf('skill-reference-exists'), {
       errors: [{ messageId: 'missing' }],
     },
   ],
+})
+
+// A read that fails with `EACCES` is not a missing file. The rule makes no report for a
+// target that it cannot reach, and still reports a target that is absent.
+describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
+  const scratch = mkdtempSync(path.join(tmpdir(), 'skill-reference-exists-'))
+  afterAll(() => rmSync(scratch, { recursive: true, force: true }))
+  const folder = path.join(scratch, '.claude', 'skills', 's')
+  const file = path.join(folder, 'SKILL.md')
+  mkdirSync(path.join(folder, 'refs'), { recursive: true })
+  writeFileSync(path.join(folder, 'refs', 'a.md'), '')
+  const lint = (link: string) => lintMarkdown('skill-reference-exists', `# S\n\n${link}\n`, file)
+
+  it('makes no report for a target in a directory that it cannot search', () => {
+    expect(lint('[a](refs/missing.md)')).toHaveLength(1)
+    withoutAccess(path.join(folder, 'refs'), () => {
+      expect(lint('[a](refs/a.md)')).toEqual([])
+      expect(lint('[a](refs/missing.md)')).toEqual([])
+    })
+  })
+
+  it('makes no report for a target that it cannot read, and a target that exists', () => {
+    withoutAccess(path.join(folder, 'refs', 'a.md'), () =>
+      expect(lint('[a](refs/a.md)')).toEqual([]),
+    )
+    expect(lint('[a](refs/a.md)')).toEqual([])
+  })
+
+  it('makes no report for a skill folder that it cannot search', () => {
+    withoutAccess(folder, () => expect(lint('[a](refs/a.md)')).toEqual([]))
+  })
+
+  it.skipIf(process.platform === 'win32')('reports a dangling link, which is absent', () => {
+    symlinkSync('nowhere.md', path.join(folder, 'dangling.md'))
+    expect(lint('[a](dangling.md)')).toHaveLength(1)
+  })
 })

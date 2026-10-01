@@ -51,6 +51,12 @@ The rule does not read the frontmatter. It checks the body of a file with frontm
 not parse. A command file is not in scope. A `SKILL.md` that is not in a skill location, such as
 `docs/SKILL.md`, is not in scope.
 
+The rule reports a target only when the file system says that the target is not there. It makes
+no report for a target that it cannot reach, such as a target in a directory with no access
+mode. The read fails for a reason other than a missing file, so the rule cannot tell if the file
+exists. The rule adds no message for this case. A link to a file that is not there is still
+reported.
+
 The rule asks the file system, so a name with a different letter case can pass on a file system
 that ignores case. It does not check what is in a directory that a link names.
 

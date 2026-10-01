@@ -1,11 +1,11 @@
 // A relative link in a `SKILL.md` must name a file in the skill folder, and so
 // must a path that starts with `${CLAUDE_SKILL_DIR}/`
 // (docs/rules/skill-reference-exists.md).
-import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition, MarkdownSourceCode } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
+import { statOf } from '../skill-tree.ts'
 
 const name = 'skill-reference-exists' as const
 
@@ -50,7 +50,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
       return {}
     }
     const folder = path.dirname(path.resolve(context.filename))
-    /** Report `node` when `raw` is a path to a file that is not there. */
+    /** Report `node` when `raw` is a path to a file that is not there. A path
+     *  that the rule cannot read gets no report. */
     const check = (node: Parameters<MarkdownSourceCode['getLoc']>[0], raw: string) => {
       const target = folderPath(raw)
       if (target === null) {
@@ -58,7 +59,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
       }
       const resolved = path.resolve(folder, target)
       const inside = path.relative(folder, resolved)
-      if (!inside.startsWith(`..${path.sep}`) && !existsSync(resolved)) {
+      if (!inside.startsWith(`..${path.sep}`) && statOf(resolved) === null) {
         context.report({
           loc: context.sourceCode.getLoc(node),
           messageId: 'missing',

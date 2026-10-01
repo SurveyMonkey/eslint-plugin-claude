@@ -5,8 +5,14 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll } from 'vitest'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { afterAll, describe, expect, it } from 'vitest'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-plugin-root-shadowed')
 const rootSkill = (tree: string) => path.join(fixtures, tree, 'SKILL.md')
@@ -82,4 +88,43 @@ markdownTester.run('skill-plugin-root-shadowed', ruleOf('skill-plugin-root-shado
       errors: [{ messageId: 'manifest' }],
     },
   ],
+})
+
+// A read that fails with `EACCES` is not a missing file. The rule makes no report that
+// rests on a path that it cannot read.
+describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
+  const lint = (file: string) => lintMarkdown('skill-plugin-root-shadowed', code, file)
+
+  it('makes no report for a manifest that it cannot read', () => {
+    const file = build('deny-manifest', '{"skills": "./x"}')
+    expect(lint(file)).toHaveLength(1)
+    const manifest = path.join(scratch, 'deny-manifest', '.claude-plugin', 'plugin.json')
+    withoutAccess(manifest, () => expect(lint(file)).toEqual([]))
+    withoutAccess(path.dirname(manifest), () => expect(lint(file)).toEqual([]))
+  })
+
+  it('makes no report for a plugin root that it cannot search', () => {
+    const file = build('deny-root', '{"skills": "./x"}')
+    mkdirSync(path.join(scratch, 'deny-root', 'skills'))
+    expect(lint(file)).toHaveLength(2)
+    withoutAccess(path.join(scratch, 'deny-root'), () => expect(lint(file)).toEqual([]))
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'makes no report for a skills entry that fails with a code other than a missing file',
+    () => {
+      const file = build('deny-loop', '{}')
+      // A link to itself fails with `ELOOP`, so the rule cannot tell if it is a directory.
+      symlinkSync('skills', path.join(scratch, 'deny-loop', 'skills'))
+      expect(lint(file)).toEqual([])
+    },
+  )
+
+  it('still reports a skills directory that it cannot list', () => {
+    const file = build('deny-skills', '{}')
+    mkdirSync(path.join(scratch, 'deny-skills', 'skills'))
+    withoutAccess(path.join(scratch, 'deny-skills', 'skills'), () =>
+      expect(lint(file)).toHaveLength(1),
+    )
+  })
 })

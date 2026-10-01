@@ -1,21 +1,18 @@
 // A `SKILL.md` at the plugin root loads only when the plugin has no `skills/`
 // directory and no `skills` manifest key (docs/rules/skill-plugin-root-shadowed.md).
-import { statSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
-import { readManifest, repositoryRoot } from '../skill-tree.ts'
+import { readManifest, repositoryRoot, statOf, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'skill-plugin-root-shadowed' as const
 
-/** True when `dir` is a directory. */
+/** True when `dir` is a directory. A path that is absent or that the rule
+ *  cannot read gives false, and so no report. */
 function isDirectory(dir: string): boolean {
-  try {
-    return statSync(dir).isDirectory()
-  } catch {
-    return false
-  }
+  const stat = statOf(dir)
+  return typeof stat === 'object' && stat !== null && stat.isDirectory()
 }
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'directory' | 'manifest' }> = {
@@ -47,7 +44,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'directory' | 'manifest' }> = {
           context.report({ loc: first, messageId: 'directory' })
         }
         const manifest = readManifest(root, repositoryRoot(root))
-        if (manifest !== null && 'skills' in manifest) {
+        if (manifest !== null && manifest !== UNREADABLE && 'skills' in manifest) {
           context.report({ loc: first, messageId: 'manifest' })
         }
       },
