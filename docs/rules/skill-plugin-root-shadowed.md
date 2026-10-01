@@ -39,7 +39,8 @@ The rule is silent in these cases:
 - A manifest that does not parse, or that is not an object. The rule reads no key from it, so it
   gives no `manifest` report. The `directory` report does not need the manifest.
 
-The rule reads the files of the checkout only.
+The rule reads the files of the repository only. It does not read a `plugin.json` whose real path
+is out of the repository, and then gives no `manifest` report.
 
 Fail, a plugin with `SKILL.md` and `skills/review/SKILL.md`:
 

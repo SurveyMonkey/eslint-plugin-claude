@@ -55,8 +55,11 @@ one file cannot know the order of the files. The report is on the `name` value, 
 when the name comes from the path or the folder. The message lists the other files of the scope.
 
 A plugin that sets `commands` does not load `commands/`, so the rule skips that folder. The rule
-reads the other files from the disk. It follows a link to a directory once, lists the real
-directory before a link to it, and skips `.git` and `node_modules`. It reads the file that it
+reads the other files from the disk, and reads no file out of the repository. The repository is
+the first directory at or above the scope that has a `.git` entry. Without one, it is the directory
+that holds `.claude/`, or the plugin root. The rule follows a link to a directory once, lists the
+real directory before a link to it, and skips `.git` and `node_modules`. It does not follow a link
+whose real path is out of the repository. It reads the file that it
 lints from the text that ESLint gives. It ignores a file whose frontmatter does not parse. For
 another file with frontmatter that does not parse, it uses the folder name.
 

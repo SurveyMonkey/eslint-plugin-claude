@@ -30,10 +30,14 @@ Code compares names with case.
 
 For a skill or command file outside a plugin, the rule reads the `name` field of each Markdown
 file below `.claude/agents/`.[^scope] It reads the `.claude/agents/` of the directory that holds
-`.claude/`. It does the same for each directory above it, up to the first directory that has a
-`.git` entry. An agent file with no `name` field defines no agent, because the field is required.
-The rule follows a link to a directory once, and lists the real directory before a link to it.
-It skips `.git` and `node_modules`.
+`.claude/`. It does the same for each directory above it, up to the repository root: the first
+directory that has a `.git` entry. Without a `.git` entry, it reads only the directory that holds
+`.claude/`. An agent file with no `name` field defines no agent, because the field is required.
+
+The rule reads no file out of the repository. It follows a link to a directory once, and lists the
+real directory before a link to it. It skips `.git` and `node_modules`. It does not follow a link
+whose real path is out of the repository. Such a link can hold the agent, so the rule then makes
+no report.
 
 For a plugin skill or command file, the rule reads each Markdown file below `agents/` in the
 plugin root.[^plugin] An agent has its `name`, or the file name without `.md`. The value can be
@@ -51,6 +55,7 @@ The rule is silent in these cases:
   the rule does not resolve it.
 - The file is not a skill or command file, such as `docs/SKILL.md`.
 - The frontmatter does not parse.
+- A scan of an agents directory meets a link out of the repository.
 
 The rule checks `agent` with or without `context: fork`. The field has no effect without it.
 [`skill-fork-fields-require-context`](skill-fork-fields-require-context.md) reports that.
