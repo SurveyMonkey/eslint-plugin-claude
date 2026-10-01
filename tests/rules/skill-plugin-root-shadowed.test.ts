@@ -36,6 +36,11 @@ markdownTester.run('skill-plugin-root-shadowed', ruleOf('skill-plugin-root-shado
     { code, filename: build('skills-file', '{}', 'skills') },
     // A skill in `skills/` is not the root skill.
     { code: '# R\n', filename: path.join(fixtures, 'with-both', 'skills', 'review', 'SKILL.md') },
+    // A skill folder that has a `skills/` folder of its own is not a plugin root.
+    {
+      code: '# R\n',
+      filename: path.join(fixtures, 'with-dir', 'skills', 'review', 'SKILL.md'),
+    },
     // No plugin manifest: not a plugin root.
     { code: '# S\n', filename: rootSkill('not-a-plugin') },
     // Not a skill file.

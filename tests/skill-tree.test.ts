@@ -50,7 +50,10 @@ describe('frontmatterOf', () => {
     expect(frontmatterOf('---\nname: a\n---\n# A\n')).toEqual({ name: 'a' })
     expect(frontmatterOf('---\r\nname: a\r\n---\r\n# A\r\n')).toEqual({ name: 'a' })
     expect(frontmatterOf('---\nname: a\n---')).toEqual({ name: 'a' })
-    expect(frontmatterOf('﻿---\nname: a\n---\n')).toEqual({ name: 'a' })
+    expect(frontmatterOf('---\nname: a\n---  \n# A\n')).toEqual({ name: 'a' })
+    expect(frontmatterOf(`${String.fromCharCode(0xfeff)}---\nname: a\n---\n`)).toEqual({
+      name: 'a',
+    })
   })
 
   it('gives null without a block, with a block below line 1, or with bad YAML', () => {
@@ -71,6 +74,7 @@ describe('frontmatterOfFile', () => {
 
 describe('markdownFiles', () => {
   it('lists .md files at any depth in name order, and nothing for a missing directory', () => {
+    put('tree/Z.md', '')
     put('tree/b.md', '')
     put('tree/a/c.md', '')
     put('tree/a/d.txt', '')
@@ -78,7 +82,7 @@ describe('markdownFiles', () => {
     const rel = markdownFiles(path.join(scratch, 'tree')).map((f) =>
       path.relative(path.join(scratch, 'tree'), f).split(path.sep).join('/'),
     )
-    expect(rel).toEqual(['a/c.md', 'a/e/f.md', 'b.md'])
+    expect(rel).toEqual(['Z.md', 'a/c.md', 'a/e/f.md', 'b.md'])
     expect(markdownFiles(path.join(scratch, 'none'))).toEqual([])
   })
 })
@@ -91,6 +95,8 @@ describe('readManifest', () => {
     expect(readManifest(path.join(scratch, 'm1'))).toBeNull()
     put('m2/.claude-plugin/plugin.json', '[]')
     expect(readManifest(path.join(scratch, 'm2'))).toBeNull()
+    put('m4/.claude-plugin/plugin.json', '3')
+    expect(readManifest(path.join(scratch, 'm4'))).toBeNull()
     put('m3/.claude-plugin/plugin.json', 'null')
     expect(readManifest(path.join(scratch, 'm3'))).toBeNull()
   })

@@ -68,6 +68,8 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     },
     // A scoped name is the agent of a plugin that the repository may enable.
     { code: fork('other-plugin:helper'), filename: projectSkill },
+    // A scoped name is not a plugin name that the project lacks.
+    { code: fork('null:helper'), filename: projectSkill },
     // No value, or a value that is not a string.
     { code: '---\ncontext: fork\n---\n', filename: projectSkill },
     { code: '---\ncontext: fork\nagent:\n---\n', filename: projectSkill },

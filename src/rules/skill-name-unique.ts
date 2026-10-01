@@ -3,6 +3,7 @@
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
+import type { FrontmatterField } from '../frontmatter.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 import { frontmatterOfFile, markdownFiles, scopeRoot } from '../skill-tree.ts'
@@ -16,7 +17,7 @@ function fold(text: string): string {
   return text
     .normalize('NFKC')
     .toLowerCase()
-    .replace(/[‐-―−]/g, '-')
+    .replace(/[\u{2010}-\u{2015}\u{2212}]/gu, '-')
     .replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, '')
 }
 
@@ -88,8 +89,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             return
           }
           given = fm.data
-          const field = fm.fields.get('name')
-          if (field !== undefined && typeof fm.data.name === 'string' && fm.data.name !== '') {
+          if (typeof fm.data.name === 'string' && fm.data.name !== '') {
+            // A string value has a field.
+            const field = fm.fields.get('name') as FrontmatterField
             loc = fm.at(field.valueStart, field.valueEnd)
           }
         }

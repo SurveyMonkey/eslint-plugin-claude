@@ -182,6 +182,19 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
+    // The `name` of a command file is not read, so the report stays on line 1.
+    {
+      code: '---\nname: other\n---\n\n# Deploy command\n',
+      filename: at('cmd-with-name', '.claude', 'commands', 'deploy.md'),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'deploy', others: '`skills/deploy/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
     // The path of a command file, with `/` as `:`.
     {
       code: '# Deploy command\n',

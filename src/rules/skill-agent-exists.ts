@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
+import type { FrontmatterField } from '../frontmatter.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../skill-tree.ts'
@@ -89,37 +90,44 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
     }
     const [{ allow }] = context.options
     const root = scopeRoot(context.filename, file)
-    const manifest = file.plugin ? readManifest(root) : null
+    const manifest = readManifest(root)
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
     if (manifest !== null && 'agents' in manifest) {
       return {}
     }
-    const plugin = typeof manifest?.name === 'string' ? manifest.name : path.basename(root)
-    // The prefix of the scoped names of this plugin. A project has none.
-    const prefix = file.plugin ? `${plugin}:` : null
+    // A project has no plugin name, and so no scoped names of its own.
+    const plugin = file.plugin
+      ? typeof manifest?.name === 'string'
+        ? manifest.name
+        : path.basename(root)
+      : null
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
-        const agent = fm?.data.agent
-        const field = fm?.fields.get('agent')
-        if (fm === null || field === undefined || typeof agent !== 'string' || agent === '') {
+        if (fm === null) {
+          return
+        }
+        const agent = fm.data.agent
+        if (typeof agent !== 'string' || agent === '') {
           return
         }
         // A scoped name holds `:`, and names the agent of a plugin. A project
         // agent has no `:`. A plugin that the settings enable is out of sight.
-        if (agent.includes(':') && (prefix === null || !agent.startsWith(prefix))) {
+        if (agent.includes(':') && (plugin === null || !agent.startsWith(`${plugin}:`))) {
           return
         }
         const known = [
           ...BUILT_IN,
           ...allow,
-          ...(file.plugin ? pluginAgents(root, plugin) : projectAgents(path.dirname(root))),
+          ...(plugin === null ? projectAgents(path.dirname(root)) : pluginAgents(root, plugin)),
         ]
         // The docs do not say if Claude Code compares names with case.
         if (!known.some((other) => other.toLowerCase() === agent.toLowerCase())) {
+          // A string value has a field.
+          const field = fm.fields.get('agent') as FrontmatterField
           context.report({
             loc: fm.at(field.valueStart, field.valueEnd),
-            messageId: file.plugin ? 'plugin' : 'project',
+            messageId: plugin === null ? 'project' : 'plugin',
             data: { agent },
           })
         }

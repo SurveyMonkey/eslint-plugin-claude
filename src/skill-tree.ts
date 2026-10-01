@@ -36,7 +36,7 @@ export function markdownFiles(dir: string): string[] {
     return []
   }
   return entries
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => (a.name < b.name ? -1 : 1))
     .flatMap((entry) => {
       const full = path.join(dir, entry.name)
       if (entry.isDirectory()) {
@@ -48,11 +48,13 @@ export function markdownFiles(dir: string): string[] {
 
 /** The frontmatter fields of the file at `file`, or null. */
 export function frontmatterOfFile(file: string): Record<string, unknown> | null {
+  let text: string
   try {
-    return frontmatterOf(readFileSync(file, 'utf8'))
+    text = readFileSync(file, 'utf8')
   } catch {
     return null
   }
+  return frontmatterOf(text)
 }
 
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`, or

@@ -33,7 +33,7 @@ markdownTester.run('skill-reference-exists', ruleOf('skill-reference-exists'), {
     body('[a](#section) [b](#) [c]()'),
     body('[a](/etc/hosts) [b](~/x.md) [c](C:\\x.md) [d](\\\\host\\x.md)'),
     body(
-      '[e](docs/{a,b}.md) [f](docs/{a}.md) [a](<https://example.com/x>) [b](docs/*.md) [c]($HOME/x.md) [d](a|b.md)',
+      '[g](docs/{a.md) [h](docs/a}.md) [e](docs/{a,b}.md) [f](docs/{a}.md) [a](<https://example.com/x>) [b](docs/*.md) [c]($HOME/x.md) [d](a|b.md)',
     ),
     // A path out of the skill folder is not the rule's to check.
     body('[a](../shared/other.md) [b](../missing.md) [c](../../../../../missing.md) [d](..)'),
