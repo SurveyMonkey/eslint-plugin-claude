@@ -74,6 +74,12 @@ The rule does not check these cases:
   reads `skills/` only.
 - A name that matches a bundled skill, a built-in command, an MCP prompt, or a skill in `~/.claude/`.
   The rule cannot see them.
+- A skill folder that is a link out of the repository. Claude Code can load it, but the rule reads
+  no file out of the repository (ADR 001 Decision 14).
+
+The rule reads each `.md` file below a linked directory in `commands/` as a command. A link from
+`commands/` to a directory above it, such as the repository root, makes each Markdown file there a
+command for the rule. The docs do not say whether Claude Code does the same.
 
 Fail, `.claude/skills/deploy/SKILL.md` and `.claude/skills/ship/SKILL.md` with `name: Deploy`:
 
