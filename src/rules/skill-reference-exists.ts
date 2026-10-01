@@ -14,7 +14,7 @@ const SKILL_DIR = `\${CLAUDE_SKILL_DIR}/`
 // A URL, `mailto:` and the like. A drive letter has the same form.
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i
 // Text that stands for a path, and is not one.
-const PLACEHOLDER = /[$*?<>{}|]/
+const PLACEHOLDER = /[$*{}|]/
 
 /** The path in `raw`, below the skill folder, or null when `raw` is not
  *  a path that the rule checks. */

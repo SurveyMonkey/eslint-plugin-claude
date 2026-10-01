@@ -14,6 +14,7 @@ import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
 import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
+import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
@@ -39,6 +40,7 @@ const modules = [
   skillAllowedToolsIneffective,
   skillPluginRootShadowed,
   skillFileLayout,
+  skillReferenceExists,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -70,6 +72,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-allowed-tools-ineffective': 'error',
   'skill-plugin-root-shadowed': 'error',
   'skill-file-layout': 'error',
+  'skill-reference-exists': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

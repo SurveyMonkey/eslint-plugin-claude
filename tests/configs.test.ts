@@ -45,6 +45,9 @@ const TREE: Record<string, string> = {
   'plugins/q/SKILL.md': '# Q\n',
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
+  '.claude/skills/ref/SKILL.md': '[a](missing.md)\n',
+  '.claude/skills/ref-ok/SKILL.md': '[a](reference.md)\n',
+  '.claude/skills/ref-ok/reference.md': '# Reference\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
@@ -69,6 +72,7 @@ const EXPECTED = [
   '.claude/skills/layout/skill.md: claude/skill-file-layout@2',
   '.claude/skills/loose.md: claude/skill-file-layout@2',
   '.claude/skills/position/SKILL.md: claude/skill-frontmatter-position@2',
+  '.claude/skills/ref/SKILL.md: claude/skill-reference-exists@2',
   '.claude/skills/schema/SKILL.md: claude/skill-frontmatter-schema@2',
   '.claude/skills/synced/SKILL.md: claude/skill-reserved-name@2',
   '.claude/skills/t/SKILL.md: claude/skill-description-max-length@1',
@@ -96,6 +100,7 @@ const NEW_RULES = [
   'skill-allowed-tools-ineffective',
   'skill-plugin-root-shadowed',
   'skill-file-layout',
+  'skill-reference-exists',
 ]
 
 let root = ''

@@ -29,6 +29,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-invocation-unreachable',
     'skill-plugin-root-shadowed',
     'skill-plugin-vars-outside-plugin',
+    'skill-reference-exists',
     'skill-reserved-name',
   ])
   for (const [name, rule] of rules) {

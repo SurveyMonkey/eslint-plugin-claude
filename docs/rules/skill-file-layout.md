@@ -21,7 +21,7 @@ Put each skill in a folder, in a file named `SKILL.md`.
 ## Rule details
 
 Claude Code finds a skill as a folder in `skills/` that holds a file named `SKILL.md`.[^create][^plugin]
-A skill in `.claude/skills/name.md` is not in `/skills`.[^debug] Claude Code shows no error.
+A skill in `.claude/skills/name.md` does not appear in `/skills`.[^debug] Claude Code shows no error.
 
 A lint rule reads files, not folders. So the rule reports on a file that it can see. It reports
 on line 1 in these cases:
