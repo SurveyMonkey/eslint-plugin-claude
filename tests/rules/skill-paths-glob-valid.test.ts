@@ -16,6 +16,8 @@ const list = (...items: string[]) =>
 const text = (value: string) => skill(JSON.stringify(value))
 /** A brace group of `n` single letters. */
 const group = (n: number) => `{${'abcdefghijklmnopqrstuvwxyz'.slice(0, n).split('').join(',')}}`
+/** Nine groups of two: 512 patterns, 9 bytes each before any added text. */
+const many = '{a,b}'.repeat(9)
 const budget = (count: number, bytes: number) => ({
   messageId: 'budget' as const,
   data: { count: String(count), bytes: String(bytes) },
@@ -40,8 +42,8 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     // 10 x 10 x 10 is exactly the limit. A nested group counts its leaves.
     text(`${group(10)}/${group(10)}/${group(10)}`),
     text('{a,{b,c}}'.repeat(6)),
-    // Exactly 4 MiB is within the budget: two patterns of 2 MiB.
-    text(`{a,b}${'x'.repeat(2 * 1024 * 1024 - 1)}`),
+    // Exactly 4 MiB is within the budget: 512 patterns of 8,192 bytes.
+    text(`${many}${'x'.repeat(8192 - 9)}`),
     // A brace that closes nothing, or that is escaped, or that has no comma, is text.
     text(`${group(10)}${group(10)}${group(10)}/{a,b`),
     text('\\{a,b\\}'.repeat(12)),
@@ -123,15 +125,15 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
       ...list(`${group(11)}/${group(10)}/${group(10)}`, 'plain/**/*.ts'),
       errors: [budget(1100, 5500)],
     },
-    // The bytes: 2 patterns of more than 2 MiB.
+    // The bytes: 512 patterns of 8,193 bytes are one pattern's byte over 4 MiB.
     {
-      ...text(`{a,b}${'x'.repeat(2 * 1024 * 1024 + 1)}`),
-      errors: [budget(2, 2 * (2 * 1024 * 1024 + 2))],
+      ...text(`${many}${'x'.repeat(8193 - 9)}`),
+      errors: [budget(512, 512 * 8193)],
     },
-    // A letter that takes more than one byte counts its bytes.
+    // A letter that takes more than one byte counts its bytes: 512 patterns of 8,209 bytes.
     {
-      ...text(`{a,b}${'\u00e9'.repeat(1024 * 1024 + 1)}`),
-      errors: [budget(2, 2 * (2 * (1024 * 1024 + 1) + 1))],
+      ...text(`${many}${'\u00e9'.repeat(4100)}`),
+      errors: [budget(512, 512 * 8209)],
     },
     // The count has a cap, so a long list of groups stays finite.
     {
