@@ -33,12 +33,13 @@ The rule reports two faults that the docs name:
   it. A `]` right after `[`, `[!` or `[^` is a member of the set, not the end.
 - `budget`: the brace groups of the whole list expand to more than 1,000 patterns, or to more
   than 4 MiB.[^memory] Claude Code then uses the glob as written, and its braces match no file.
-  A glob with no brace group does not count against the budget. The rule reports once for the
+  A glob with no comma group does not count against the budget. The rule reports once for the
   list, with the total count and the total bytes.
 
 The rule counts the groups that hold a comma, such as `{ts,tsx}`. A group in a group multiplies
 its own alternatives, so `{a,{b,c}}` is three patterns. It does not count a group with no comma,
-a `{` with no `}`, or a brace after a backslash. The docs do not say if Claude Code expands a
+a `{` with no `}`, or a brace after a backslash. It treats a group nested more than 100 deep as
+text. The docs do not say if Claude Code expands a
 range such as `{1..5}`, so the rule does not expand it. The count can then be lower than the
 count of Claude Code, and the rule is silent in a case where Claude Code reports. It does not
 report a list that Claude Code accepts.

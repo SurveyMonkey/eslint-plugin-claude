@@ -23,8 +23,8 @@ Link only to files that exist in the skill folder.
 A skill can have supporting files in its folder. `SKILL.md` names them, so that Claude knows
 when to read each one.[^files] A name for a file that is not there sends Claude to a dead end.
 
-The rule reports a reference that names a file or directory that does not exist in the skill
-folder. The folder is the directory of the `SKILL.md`. For a plugin-root `SKILL.md`, it is the
+The rule reports a reference that names a path that does not exist in the skill folder. A path
+to a directory that exists passes. The folder is the directory of the `SKILL.md`. For a plugin-root `SKILL.md`, it is the
 plugin root. The report is on the link or on the code span.
 
 These references count as paths:
@@ -48,10 +48,11 @@ The rule is silent in these cases:
   and its base directory is not known. A backticked word is not a path.
 
 The rule does not read the frontmatter. It checks the body of a file with frontmatter that does
-not parse. A command file and a `SKILL.md` outside a skill folder are not in scope.
+not parse. A command file is not in scope. A `SKILL.md` that is not in a skill location, such as
+`docs/SKILL.md`, is not in scope.
 
 The rule asks the file system, so a name with a different letter case can pass on a file system
-that ignores case. It does not follow a link to a directory to find a file in it.
+that ignores case. It does not check what is in a directory that a link names.
 
 Fail:
 

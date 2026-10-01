@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-name-unique, which reports each skill and command file whose command name is also the command name of another file in the same .claude directory or plugin, with the name folding that Claude Code uses.
+description: The ESLint rule claude/skill-name-unique, which reports each skill and command file whose command name is also the command name of another file in the same .claude directory or plugin, with a folding of case, spacing, invisible characters, compatibility forms and dashes.
 owner: brianespinosa
 created: 2026-09-30
 related_issues: [8]
@@ -46,24 +46,25 @@ compares skill names:[^fold]
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
 
-The docs give this folding for a synced skill that meets another command. The rule uses it for
-the names in one scope, because the docs give no other rule.
+The docs give this folding for a synced skill that has the same name as another command. The
+rule uses it for the names in one scope, because the docs give no other rule.
 
 The rule reports on each file of a collision, not only on the second file, because a rule that
 lints one file cannot know the order of the files. The report is on the `name` value, or on line 1
 when the name comes from the path or the folder. The message lists the other files of the scope.
 
-The rule reads the other files from the disk. It reads the file that it lints from the text that
+A plugin that sets `commands` does not load `commands/`, so the rule skips that folder. The rule
+reads the other files from the disk, and follows a link to a directory once. It reads the file that it lints from the text that
 ESLint gives. It ignores a file whose frontmatter does not parse. For another file with
 frontmatter that does not parse, it uses the folder name.
 
 The rule does not check these cases:
 
-- The plugin-root `SKILL.md`. It has no folder name, and a plugin that sets `skills/` does not
-  load it. [`skill-plugin-root-shadowed`](skill-plugin-root-shadowed.md) reports that.
+- The plugin-root `SKILL.md`. It has no folder name, and a plugin that has a `skills/` directory
+  does not load it. [`skill-plugin-root-shadowed`](skill-plugin-root-shadowed.md) reports that.
 - A skill whose folder name is the name of another skill. The docs say that the folder name also
   invokes the skill. The rule compares the effective name only.
-- A plugin `name` that has the plugin prefix, such as `my-plugin:review`.
+- A skill `name` in a plugin that has the plugin prefix, such as `my-plugin:review`.
 - A name that matches a bundled skill, a built-in command, an MCP prompt, or a skill in `~/.claude/`.
   The rule cannot see them.
 

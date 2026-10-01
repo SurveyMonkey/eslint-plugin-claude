@@ -29,7 +29,8 @@ on line 1 in these cases:
 - `loose`: a `.md` file directly in `skills/`, such as `.claude/skills/name.md`. The rule skips
   `README.md`, in any letter case, because it does not claim to be a skill.
 - `wrongCase`: a file in a skill folder whose name is `skill.md` in any letter case other than
-  `SKILL.md`, such as `skills/name/Skill.md`.
+  `SKILL.md`, such as `skills/name/Skill.md`. The rule is silent when the folder also holds a
+  file named `SKILL.md`. Then the file is a supporting file.
 
 A `skills/` directory is `.claude/skills/`, or the `skills/` directory of a plugin. A plugin root is
 a directory with `.claude-plugin/plugin.json`. A `skills/` directory in any other place is not a

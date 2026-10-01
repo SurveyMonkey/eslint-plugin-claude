@@ -32,6 +32,7 @@ For a skill or command file outside a plugin, the rule reads the `name` field of
 file below `.claude/agents/`.[^scope] It reads the `.claude/agents/` of the directory that holds
 `.claude/`, and of each directory above it, up to the first directory that has a `.git` entry. An
 agent file with no `name` field defines no agent, because the field is required.
+The rule follows a link to a directory once.
 
 For a plugin skill or command file, the rule reads each Markdown file below `agents/` in the
 plugin root.[^plugin] An agent has its `name`, or the file name without `.md`. The value can be
