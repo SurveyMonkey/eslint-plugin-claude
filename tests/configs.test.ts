@@ -41,6 +41,8 @@ const TREE: Record<string, string> = {
   'plugins/p/skills/synced/SKILL.md': '# Synced\n',
   'plugins/p/skills/vars/SKILL.md': `Run ${pluginRoot}/run.sh\n`,
   'plugins/p/SKILL.md': `---\nname: p\n---\n\nRun ${pluginData}\n`,
+  'plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
+  'plugins/q/SKILL.md': '# Q\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
@@ -72,6 +74,7 @@ const EXPECTED = [
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
+  'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
@@ -87,6 +90,7 @@ const NEW_RULES = [
   'skill-plugin-vars-outside-plugin',
   'skill-inject-bang-position',
   'skill-allowed-tools-ineffective',
+  'skill-plugin-root-shadowed',
 ]
 
 let root = ''

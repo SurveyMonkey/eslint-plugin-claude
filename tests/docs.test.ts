@@ -26,6 +26,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-frontmatter-schema',
     'skill-inject-bang-position',
     'skill-invocation-unreachable',
+    'skill-plugin-root-shadowed',
     'skill-plugin-vars-outside-plugin',
     'skill-reserved-name',
   ])
