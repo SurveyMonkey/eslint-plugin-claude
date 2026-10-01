@@ -17,6 +17,7 @@ markdownTester.run('skill-allowed-tools-ineffective', ruleOf('skill-allowed-tool
     file('description: d\n'),
     // A name that holds the tool name, and a tool name inside a rule.
     file('allowed-tools: AskUserQuestionX Bash(echo AskUserQuestion)\n'),
+    file('allowed-tools: Bash(echo, AskUserQuestion )\n'),
     file('allowed-tools: 3\n'),
     file('allowed-tools: [3, Read]\n'),
     file('allowed-tools:\n'),
