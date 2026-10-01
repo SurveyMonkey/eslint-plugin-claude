@@ -79,9 +79,8 @@ function measure(text: string, matches: Map<number, number>, from: number, to: n
   let run = from
   for (let i = from; i < to; i++) {
     const close = matches.get(i)
-    if (text[i] === '\\') {
-      i++
-    } else if (close !== undefined) {
+    // An escaped brace has no entry in `matches`.
+    if (close !== undefined) {
       literal(text.slice(run, i))
       const commas = topCommas(text, matches, i + 1, close)
       const cuts = [i, ...commas, close]
@@ -141,10 +140,7 @@ function patternsOf(value: unknown): string[] {
   }
   const matches = braceMatches(value)
   const cuts = [-1, ...topCommas(value, matches, 0, value.length), value.length]
-  return cuts
-    .slice(0, -1)
-    .map((start, n) => value.slice(start + 1, cuts[n + 1]).trim())
-    .filter((pattern) => pattern !== '')
+  return cuts.slice(0, -1).map((start, n) => value.slice(start + 1, cuts[n + 1]).trim())
 }
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
@@ -169,8 +165,11 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
-        const field = fm?.fields.get('paths')
-        if (fm === null || field === undefined) {
+        if (fm === null) {
+          return
+        }
+        const field = fm.fields.get('paths')
+        if (field === undefined) {
           return
         }
         const loc = fm.at(field.valueStart, field.valueEnd)

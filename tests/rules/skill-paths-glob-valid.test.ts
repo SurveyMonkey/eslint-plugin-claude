@@ -33,6 +33,7 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     text('{a,b}/{c,d}/*.{ts,tsx}'),
     // A literal `[`, and each form of a bracket expression.
     text('photos \\[2024/**'),
+    text('[[].ts, [^]a].ts, [!]a].ts'),
     text('[abc].ts, file[0-9].ts, [!a]*.ts, [^a]*.ts, []a]*.ts, [[:alpha:]]*.ts, [a\\]b].ts'),
     // Patterns with no brace group do not count against the budget.
     list(...Array.from({ length: 2000 }, (_, i) => `dir${i}/*.ts`)),
@@ -69,10 +70,12 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
       errors: [{ ...bracket('photos [2024/**'), line: 3, column: 8 }],
     },
     // Each form of a `[` that no `]` closes.
-    ...['[', 'a[', '[]', '[!', '[^', '[!]', '[a', 'a\\[b[', '[a\\]', '[\\'].map((pattern) => ({
-      ...list(pattern),
-      errors: [bracket(pattern)],
-    })),
+    ...['[', 'a[', '[]', '[!', '[^', '[!]', '[^]', '[a', 'a\\[b[', '[a\\]', '[\\'].map(
+      (pattern) => ({
+        ...list(pattern),
+        errors: [bracket(pattern)],
+      }),
+    ),
     // The list and the string give one report for each bad pattern.
     {
       ...list('src/*.ts', '[a', 'lib/[', 'ok/**'),
@@ -106,6 +109,10 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
       ...text('{a,{b,c}}'.repeat(7)),
       errors: [budget(2187, 2187 * 7 + 0)],
     },
+    // An escaped brace or comma does not end a group, and a group of one alternative expands inside.
+    { ...text('{a,\\{b}'.repeat(10)), errors: [budget(1024, 20480)] },
+    { ...text('{a\\,b,c}'.repeat(10)), errors: [budget(1024, 25600)] },
+    { ...text('{{a,b}}'.repeat(10)), errors: [budget(1024, 30720)] },
     // The whole list shares the budget: two patterns of 600.
     {
       ...list(`${group(6)}/${group(10)}/${group(10)}`, `${group(10)}/${group(10)}/${group(6)}`),
