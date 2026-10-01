@@ -37,7 +37,7 @@ markdownTester.run('skill-reference-exists', ruleOf('skill-reference-exists'), {
     body('[a](../shared/other.md) [b](../missing.md) [c](../../../../../missing.md) [d](..)'),
     body('[a](.) [b](./) [c](scripts/..)'),
     // Fenced code is an example, not a link.
-    body('```markdown\n[a](missing.md)\n`' + skillDir + '/missing.sh`\n```'),
+    body(`\`\`\`markdown\n[a](missing.md)\n\`${skillDir}/missing.sh\`\n\`\`\``),
     body('~~~\n[a](missing.md)\n~~~'),
     // A backticked word is not a path, even with a slash or an extension.
     body('Edit `src/index.ts`, `missing.md`, `./missing.sh`, `scripts/missing.py` and `a/b`.'),

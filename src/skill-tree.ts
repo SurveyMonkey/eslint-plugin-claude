@@ -21,7 +21,7 @@ const BLOCK = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/
 
 /** The frontmatter fields of the text of a Markdown file, or null when the
  *  file has no block on line 1, or the YAML does not parse. */
-export function frontmatterOf(text: string): Record<string, unknown> | null {
+function frontmatterOf(text: string): Record<string, unknown> | null {
   const block = BLOCK.exec(text.replace(/^﻿/, ''))
   return block === null ? null : parseFrontmatter(block[1] as string)
 }

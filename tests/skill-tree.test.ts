@@ -5,13 +5,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { classifySkillFile } from '../src/skill-files.ts'
-import {
-  frontmatterOf,
-  frontmatterOfFile,
-  markdownFiles,
-  readManifest,
-  scopeRoot,
-} from '../src/skill-tree.ts'
+import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../src/skill-tree.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'skill-tree-'))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
@@ -47,6 +41,9 @@ describe('scopeRoot', () => {
     expect(rootOf(path.join(plugin, 'SKILL.md'))).toBe(plugin)
   })
 })
+
+// `frontmatterOfFile` reads the text that these cases write.
+const frontmatterOf = (text: string) => frontmatterOfFile(put('text.md', text))
 
 describe('frontmatterOf', () => {
   it('reads the block on line 1', () => {
