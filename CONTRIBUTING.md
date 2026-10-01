@@ -36,9 +36,12 @@ source of each rule in `src/rules/`. Each source has a `url` on `code.claude.com
 docs watch sets a `hash` on each source. Do not set `hash` by hand. `pnpm docs:seed` keeps a
 `hash` when the `url` and `heading` stay the same.
 
-A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<rule>.md`, then
-run `pnpm docs:seed` and commit the new `docs/rule-sources.json`. The script makes no network
-call.
+A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<rule>.md`. Then
+run `pnpm docs:seed`, and then `pnpm docs:update`. Commit `docs/rule-sources.json` and
+`docs/docs-snapshot/`. `pnpm docs:seed` makes no network call. `pnpm docs:update` runs
+`node scripts/docs-watch.ts update`. It fetches the live docs, sets `hash` on each new source,
+and rewrites the snapshot of each page that the map cites. So it also takes in each docs change
+that nobody has triaged. Read the diff, and name each such change in the pull request.
 
 Write each footnote on one line, as `[^id]: [Page title: Heading](url#anchor)`. Put no indent,
 link title or text after the link. The script takes the text after the first colon and space
