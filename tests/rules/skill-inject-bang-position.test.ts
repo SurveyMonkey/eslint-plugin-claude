@@ -12,6 +12,8 @@ const body = (text: string, filename = skill) => ({
 
 markdownTester.run('skill-inject-bang-position', ruleOf('skill-inject-bang-position'), {
   valid: [
+    // An empty file has no node.
+    { code: '', filename: skill },
     body('!`git diff HEAD`'),
     body('- PR diff: !`gh pr diff`'),
     body('Branch:\t!`git branch`'),

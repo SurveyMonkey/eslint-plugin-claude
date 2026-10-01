@@ -23,6 +23,8 @@ const projectDir = `\${CLAUDE_PROJECT_DIR}`
 
 markdownTester.run('skill-plugin-vars-outside-plugin', ruleOf('skill-plugin-vars-outside-plugin'), {
   valid: [
+    // An empty file has no node.
+    { code: '', filename: skill },
     {
       code: `---\nname: s\nallowed-tools: Bash(${root}/run.sh)\n---\n\nRun ${root}/run.sh\n`,
       filename: path.join(plugin, 'skills', 's', 'SKILL.md'),

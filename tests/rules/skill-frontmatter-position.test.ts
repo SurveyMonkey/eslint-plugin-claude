@@ -9,6 +9,8 @@ const block = '---\nname: s\ndescription: d\n---\n\n# S\n'
 
 markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-position'), {
   valid: [
+    // An empty file has no node.
+    { code: '', filename: skill },
     { code: block, filename: skill },
     { code: block, filename: command },
     { code: '# S\n\nText.\n', filename: skill },
