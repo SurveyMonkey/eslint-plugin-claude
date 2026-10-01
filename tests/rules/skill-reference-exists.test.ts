@@ -166,7 +166,7 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     })
   })
 
-  it('makes no report for a target that it cannot read, and a target that exists', () => {
+  it('makes no report for a target that exists but has no read mode', () => {
     withoutAccess(path.join(folder, 'refs', 'a.md'), () =>
       expect(lint('[a](refs/a.md)')).toEqual([]),
     )

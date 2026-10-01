@@ -312,6 +312,15 @@ describe.skipIf(chmodCannotBlock)('a read that fails', () => {
     expect(frontmatterOfFile(file)).toEqual({ name: 'x' })
   })
 
+  it('gives a path below a directory that cannot be searched an absolute path as its bound', () => {
+    put('deny/anc/sub/.keep', '')
+    const dir = path.join(scratch, 'deny', 'anc', 'sub')
+    withoutAccess(path.join(scratch, 'deny', 'anc'), () => {
+      expect(realDirectory(dir)).toBe(dir)
+      expect(repositoryRoot(dir)).toBe(dir)
+    })
+  })
+
   it('gives UNREADABLE for a file in a directory that cannot be searched', () => {
     const file = put('deny/dir/file.md', '---\nname: x\n---\n')
     withoutAccess(path.dirname(file), () => {
@@ -346,7 +355,6 @@ describe.skipIf(chmodCannotBlock)('a read that fails', () => {
     'sets unreadable for a link whose target cannot be reached, and not for a dangling link',
     () => {
       put('deny/links/locked/f.md', '')
-      symlinkSync('../locked/f.md', path.join(scratch, 'deny', 'links', 'to-file.md'))
       mkdirSync(path.join(scratch, 'deny', 'links', 'at'))
       symlinkSync('../../links/locked/f.md', path.join(scratch, 'deny', 'links', 'at', 'f.md'))
       symlinkSync('missing.md', path.join(scratch, 'deny', 'links', 'dangling.md'))
