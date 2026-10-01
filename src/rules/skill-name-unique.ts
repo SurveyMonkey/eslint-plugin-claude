@@ -42,9 +42,9 @@ interface Entry {
 }
 
 /** True when the plugin at `root` sets `commands`, so that Claude Code reads
- *  the key instead of `commands/`. A manifest that the rule cannot read can
- *  set the key, so the result is also true then, and the rule reads no
- *  `commands/` folder. */
+ *  the key instead of `commands/`. The rule cannot read some manifests,
+ *  and such a manifest can set the key. The result is then true too, so the
+ *  rule reads no `commands/` folder. */
 function setsCommands(root: string, bound: string): boolean {
   const manifest = readManifest(root, bound)
   return manifest === UNREADABLE || (manifest !== null && 'commands' in manifest)
@@ -63,6 +63,8 @@ function scopeEntries(root: string, bound: string): Entry[] {
       : [{ file, name: skillName(fields, path.basename(path.dirname(file))) }]
   })
   const commandsDir = path.join(root, 'commands')
+  // A `commands/` folder that the scan cannot read gives fewer entries. That can only hide a
+  // duplicate, never add one, so the rule ignores `unreadable` here.
   const commands = (setsCommands(root, bound) ? [] : markdownFiles(commandsDir, bound).files).map(
     (file) => ({
       file,

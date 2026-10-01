@@ -2,10 +2,11 @@
 // file. A scope is a `.claude/` directory or a plugin root. A rule reads no
 // file out of the repository that holds the scope.
 //
-// A read has three results: the content, absent (`ENOENT` or `ENOTDIR`), and
-// unreadable (any other error code, such as `EACCES`). A read that fails
-// stays apart from a file that is not there, so that a rule can make no
-// report that rests on a file that it cannot see.
+// A read in this file has three results: the content, absent (`ENOENT` or
+// `ENOTDIR`), and unreadable (any other error code, such as `EACCES`). A
+// failed read is not the same as a file that is not there. A rule makes no
+// report that rests on a file that it cannot see. The `.git` test in
+// `repositoryRoot` still uses `existsSync`.
 import {
   type BigIntStats,
   type Dirent,
@@ -31,7 +32,8 @@ function failure(error: unknown): null | Unreadable {
   return code === 'ENOENT' || code === 'ENOTDIR' ? null : UNREADABLE
 }
 
-/** The stat of `file`, null when it is not there, or `UNREADABLE`. */
+/** The stat of `file`, null when it is not there, or `UNREADABLE`. Test for
+ *  absence with `=== null`, never with a truthiness test. */
 export function statOf(file: string): Stats | null | Unreadable {
   try {
     return statSync(file)
@@ -61,7 +63,8 @@ export function scopeRoot(file: string, info: SkillFile): string {
   return dir
 }
 
-/** The real path of `dir`, or its absolute path when it does not exist. */
+/** The real path of `dir`, or its absolute path when it does not exist or
+ *  the rule cannot read it. */
 export function realDirectory(dir: string): string {
   const real = realOf(dir)
   return typeof real === 'string' ? real : path.resolve(dir)
@@ -133,8 +136,8 @@ export interface Scan {
  *  or below `bound`. A link to a directory is followed once, and the real
  *  directory comes before a link to it. The walk skips `.git` and
  *  `node_modules`. A link to a file counts when the file exists. The result
- *  is empty when `dir` does not exist, and so is the result for a directory
- *  that the scan cannot read, with `unreadable` set. */
+ *  is empty when `dir` does not exist. When the scan cannot read a directory,
+ *  it sets `unreadable` and keeps the files that it found. */
 export function markdownFiles(dir: string, bound: string): Scan {
   const scan: Scan = { files: [], outside: false, unreadable: false }
   walk(dir, bound, new Set<string>(), scan)
@@ -243,9 +246,9 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
 }
 
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
- *  result is null when the file is not there, does not parse to an object, or
- *  has a real path out of `bound`. The result is `UNREADABLE` when a read
- *  fails for another reason. */
+ *  result is null in three cases. The file is not there, it does not parse to
+ *  an object, or its real path is out of `bound`. The result is `UNREADABLE`
+ *  when a read fails for another reason. */
 export function readManifest(
   root: string,
   bound: string,

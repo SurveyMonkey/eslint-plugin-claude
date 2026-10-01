@@ -30,8 +30,8 @@ const BUILT_IN = [
 ]
 
 /** The agent names that a scan found. `unseen` is true when the scan did not
- *  follow a link out of the repository, or could not read a path, so an agent
- *  can be out of sight. */
+ *  follow a link out of the repository. It is also true when the scan could
+ *  not read a path. An agent can then be out of sight. */
 interface Agents {
   names: string[]
   unseen: boolean

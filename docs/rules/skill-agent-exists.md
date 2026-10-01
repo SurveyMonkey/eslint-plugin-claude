@@ -57,10 +57,10 @@ The rule is silent in these cases:
 - The frontmatter does not parse.
 - A scan of an agents directory meets a link out of the repository.
 
-The rule makes no report that rests on a file that it cannot read. This applies to an agents
-directory, an agent file, and `plugin.json`, when a read fails for a reason other than a missing
-file, such as a permission error. The rule adds no message for this case. A missing file is not
-a file that the rule cannot read, so a missing agent is still reported.
+The rule makes no report that rests on a file that it cannot read. A read can fail for a reason
+other than a missing file, such as a permission error. This applies to an agents directory, an
+agent file, and `plugin.json`. The rule adds no message for this case. A missing file is not a
+file that the rule cannot read, so a missing agent is still reported.
 
 The rule checks `agent` with or without `context: fork`. The field has no effect without it.
 [`skill-fork-fields-require-context`](skill-fork-fields-require-context.md) reports that.

@@ -42,9 +42,9 @@ The rule is silent in these cases:
 The rule reads the files of the repository only. It does not read a `plugin.json` whose real path
 is out of the repository, and then gives no `manifest` report.
 
-The rule makes no report that rests on a path that it cannot read, when a read fails for a
-reason other than a missing file, such as a permission error. It gives no `manifest` report when
-it cannot read `plugin.json`. It gives no `directory` report when it cannot tell if `skills/` is a
+The rule makes no report that rests on a path that it cannot read. A read can fail for a reason
+other than a missing file, such as a permission error. It gives no `manifest` report when it
+cannot read `plugin.json`. It gives no `directory` report when it cannot tell if `skills/` is a
 directory. The rule adds no message for this case.
 
 Fail, a plugin with `SKILL.md` and `skills/review/SKILL.md`:
