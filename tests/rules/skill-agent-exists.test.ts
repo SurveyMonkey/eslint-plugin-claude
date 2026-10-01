@@ -40,6 +40,22 @@ mkdirSync(path.join(scratch, 'linked/.claude/agents'), { recursive: true })
 symlinkSync('../../shared/team', path.join(scratch, 'linked/.claude/agents/team'))
 symlinkSync('..', path.join(scratch, 'linked/.claude/agents/up'))
 put('linked/.git/HEAD', '')
+// A link that sorts before the directory that it names. The real path keeps its name.
+put('twin/.git/HEAD', '')
+put('twin/.claude/agents/real/x.md', agentFile('xagent'))
+symlinkSync('real', path.join(scratch, 'twin/.claude/agents/a-link'))
+put('twinp/.claude-plugin/plugin.json', '{"name": "tp"}')
+put('twinp/agents/real/x.md', agentFile('x'))
+symlinkSync('real', path.join(scratch, 'twinp/agents/a-link'))
+// Blanks after the opening fence, which ESLint accepts for the file that it lints.
+put('padded/.git/HEAD', '')
+put('padded/.claude/agents/p.md', '---  \nname: padded\n---\n')
+// A plugin agent with a `name` that is not a string has the file name.
+put('numname/.claude-plugin/plugin.json', '{"name": "nn"}')
+put('numname/agents/n.md', '---\nname: 3\n---\n')
+// A `.git` entry that is a file, as in a worktree or a submodule.
+put('above/.claude/agents/above.md', agentFile('above'))
+put('above/wt/.git', 'gitdir: elsewhere')
 
 const fork = (agent: string) => `---\ncontext: fork\nagent: ${agent}\n---\n\n# S\n`
 
@@ -74,6 +90,34 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     },
     // A scoped name is the agent of a plugin that the repository may enable.
     { code: fork('other-plugin:helper'), filename: projectSkill },
+    // Letter case does not matter for an agent file, an agent of a plugin, or `allow`.
+    { code: fork('REVIEWER'), filename: projectSkill },
+    { code: fork('Checker'), filename: pluginSkill },
+    { code: fork('P:CHECKER'), filename: pluginSkill },
+    {
+      code: fork('My-User-Agent'),
+      options: [{ allow: ['my-user-agent'] }],
+      filename: projectSkill,
+    },
+    {
+      code: fork('my-user-agent'),
+      options: [{ allow: ['My-User-Agent'] }],
+      filename: projectSkill,
+    },
+    // The real directory keeps its name when a link to it sorts first.
+    {
+      code: fork('xagent'),
+      filename: path.join(scratch, 'twin', '.claude', 'skills', 's', 'SKILL.md'),
+    },
+    {
+      code: fork('tp:real:x'),
+      filename: path.join(scratch, 'twinp', 'skills', 's', 'SKILL.md'),
+    },
+    {
+      code: fork('padded'),
+      filename: path.join(scratch, 'padded', '.claude', 'skills', 's', 'SKILL.md'),
+    },
+    { code: fork('n'), filename: path.join(scratch, 'numname', 'skills', 's', 'SKILL.md') },
     // A scoped name is not a plugin name that the project lacks.
     { code: fork('null:helper'), filename: projectSkill },
     // No value, or a value that is not a string.
@@ -177,6 +221,12 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
       code: fork('numeric:ghost'),
       filename: path.join(scratch, 'numeric', 'skills', 's', 'SKILL.md'),
       errors: [{ messageId: 'plugin' }],
+    },
+    // A `.git` file stops the walk too.
+    {
+      code: fork('above'),
+      filename: path.join(scratch, 'above', 'wt', '.claude', 'skills', 's', 'SKILL.md'),
+      errors: [{ messageId: 'project' }],
     },
     // A key that is an alias: the report falls back to the start of the frontmatter.
     {

@@ -17,7 +17,7 @@ export function scopeRoot(file: string, info: SkillFile): string {
   return dir
 }
 
-const BLOCK = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/
+const BLOCK = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/
 
 /** The frontmatter fields of the text of a Markdown file. The result is null
  *  when line 1 starts no block, or the YAML does not parse. */
@@ -26,17 +26,24 @@ function frontmatterOf(text: string): Record<string, unknown> | null {
   return block === null ? null : parseFrontmatter(block[1] as string)
 }
 
-/** True when `file` is a directory, or a link to one. */
-function isDirectory(file: string): boolean {
+/** What `file` is after its links are followed: a directory, a file, or null
+ *  when it does not exist (a dangling link). */
+function kindOf(file: string): 'directory' | 'file' | null {
   try {
-    return statSync(file).isDirectory()
+    const stat = statSync(file)
+    return stat.isDirectory() ? 'directory' : stat.isFile() ? 'file' : null
   } catch {
-    return false
+    return null
   }
 }
 
+// Directories that hold no agent or command files, and can be very large.
+const SKIPPED = new Set(['.git', 'node_modules'])
+
 /** The path of each `.md` file below `dir`, at any depth. A link to a
- *  directory is followed once. The result is empty when `dir` does not exist. */
+ *  directory is followed once, and the real directory comes before a link to
+ *  it. The walk skips `.git` and `node_modules`. A link to a file counts when
+ *  the file exists. The result is empty when `dir` does not exist. */
 export function markdownFiles(dir: string, seen = new Set<string>()): string[] {
   let entries: Dirent[]
   try {
@@ -50,13 +57,23 @@ export function markdownFiles(dir: string, seen = new Set<string>()): string[] {
     return []
   }
   return entries
-    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+    .filter((entry) => !SKIPPED.has(entry.name))
+    .sort(
+      (a, b) =>
+        Number(a.isSymbolicLink()) - Number(b.isSymbolicLink()) ||
+        a.name.localeCompare(b.name, 'en'),
+    )
     .flatMap((entry) => {
       const full = path.join(dir, entry.name)
-      if (entry.isDirectory() || (entry.isSymbolicLink() && isDirectory(full))) {
+      const kind = entry.isSymbolicLink()
+        ? kindOf(full)
+        : entry.isDirectory()
+          ? 'directory'
+          : 'file'
+      if (kind === 'directory') {
         return markdownFiles(full, seen)
       }
-      return entry.name.endsWith('.md') ? [full] : []
+      return kind === 'file' && entry.name.endsWith('.md') ? [full] : []
     })
 }
 

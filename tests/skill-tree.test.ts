@@ -49,7 +49,14 @@ describe('scopeRoot', () => {
 })
 
 // `frontmatterOfFile` reads the text that these cases write.
-const frontmatterOf = (text: string) => frontmatterOfFile(put('text.md', text))
+// Each case gets its own time of change, so that no case reads the cache of the case before.
+let tick = 2000
+const frontmatterOf = (text: string) => {
+  const file = put('text.md', text)
+  tick += 1
+  utimesSync(file, tick, tick)
+  return frontmatterOfFile(file)
+}
 
 describe('frontmatterOf', () => {
   it('reads the block on line 1', () => {
@@ -57,6 +64,8 @@ describe('frontmatterOf', () => {
     expect(frontmatterOf('---\r\nname: a\r\n---\r\n# A\r\n')).toEqual({ name: 'a' })
     expect(frontmatterOf('---\nname: a\n---')).toEqual({ name: 'a' })
     expect(frontmatterOf('---\nname: a\n---  \n# A\n')).toEqual({ name: 'a' })
+    // The block starts with `---` and blanks, as ESLint reads the file that it lints.
+    expect(frontmatterOf('---  \nname: a\n---\n# A\n')).toEqual({ name: 'a' })
     expect(frontmatterOf(`${String.fromCharCode(0xfeff)}---\nname: a\n---\n`)).toEqual({
       name: 'a',
     })
@@ -91,11 +100,21 @@ describe('frontmatterOfFile', () => {
     put('a/pinned.md', '---\nname: two\n---\n')
     utimesSync(path.join(scratch, 'a/pinned.md'), 1000, 1000)
     expect(frontmatterOfFile(path.join(scratch, 'a/pinned.md'))).toEqual({ name: 'one' })
-    // The same size, so only the time of the change differs.
+    // The same size, so only the time of the change differs. The times are set,
+    // because a file system with a coarse clock can give two writes one time.
     put('a/changing.md', '---\nname: two\n---\n')
+    utimesSync(file, 3000, 3000)
     expect(frontmatterOfFile(file)).toEqual({ name: 'two' })
     put('a/changing.md', '---\nname: three\n---\n')
+    utimesSync(file, 4000, 4000)
     expect(frontmatterOfFile(file)).toEqual({ name: 'three' })
+    // The same time and a different size: the file changed.
+    put('a/sized.md', '---\nname: one\n---\n')
+    utimesSync(path.join(scratch, 'a/sized.md'), 1000, 1000)
+    expect(frontmatterOfFile(path.join(scratch, 'a/sized.md'))).toEqual({ name: 'one' })
+    put('a/sized.md', '---\nname: longer\n---\n')
+    utimesSync(path.join(scratch, 'a/sized.md'), 1000, 1000)
+    expect(frontmatterOfFile(path.join(scratch, 'a/sized.md'))).toEqual({ name: 'longer' })
   })
 })
 
@@ -119,15 +138,22 @@ describe('markdownFiles', () => {
     () => {
       put('links/real/x.md', '')
       put('links/other/y.md', '')
+      // `alias` sorts before `real`, and still the real directory is the one that is listed.
       symlinkSync('real', path.join(scratch, 'links', 'alias'))
       symlinkSync('..', path.join(scratch, 'links', 'real', 'up'))
       symlinkSync('missing', path.join(scratch, 'links', 'dangling'))
       symlinkSync('other/y.md', path.join(scratch, 'links', 'file.md'))
+      // A link to a file that is not there is not a file.
+      symlinkSync('missing.md', path.join(scratch, 'links', 'dead.md'))
+      // These two directories hold many files, and hold no agent or command.
+      put('links/node_modules/pkg/readme.md', '')
+      put('links/.git/info/note.md', '')
       const rel = markdownFiles(path.join(scratch, 'links')).map((f) =>
         path.relative(path.join(scratch, 'links'), f).split(path.sep).join('/'),
       )
       // `alias` is the same directory as `real`, so its files are not listed twice.
-      expect(rel).toEqual(['alias/x.md', 'file.md', 'other/y.md'])
+      // A link comes after the real entries.
+      expect(rel).toEqual(['other/y.md', 'real/x.md', 'file.md'])
     },
   )
 })
@@ -136,6 +162,7 @@ describe('skillFiles', () => {
   it('lists the SKILL.md of each folder directly in the directory, in name order', () => {
     put('sk/b/SKILL.md', '')
     put('sk/a/SKILL.md', '')
+    put('sk/Z/SKILL.md', '')
     put('sk/c/other.md', '')
     put('sk/d/e/SKILL.md', '')
     put('sk/SKILL.md', '')
@@ -143,7 +170,7 @@ describe('skillFiles', () => {
     const rel = skillFiles(path.join(scratch, 'sk')).map((f) =>
       path.relative(path.join(scratch, 'sk'), f).split(path.sep).join('/'),
     )
-    expect(rel).toEqual(['a/SKILL.md', 'b/SKILL.md'])
+    expect(rel).toEqual(['a/SKILL.md', 'b/SKILL.md', 'Z/SKILL.md'])
     expect(skillFiles(path.join(scratch, 'none'))).toEqual([])
   })
 

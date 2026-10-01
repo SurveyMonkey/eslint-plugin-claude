@@ -4,7 +4,7 @@
 // differ only by case, spacing, invisible characters, fullwidth letters and
 // dash variants are built at run time, because a committed file would hide
 // the characters.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll } from 'vitest'
@@ -74,6 +74,14 @@ const alias = '---\nx: &k name\n*k : build\n---\n\n# Skill\n'
 put('alias/.claude/skills/a/SKILL.md', alias)
 put('alias/.claude/skills/b/SKILL.md', named('build'))
 put('three/.claude/skills/u/SKILL.md', named('t'))
+// A link to a file that is not there is not a command.
+put('dead/.claude/skills/x/SKILL.md', named('x'))
+mkdirSync(path.join(scratch, 'dead/.claude/commands'), { recursive: true })
+symlinkSync('missing.md', path.join(scratch, 'dead/.claude/commands/x.md'))
+// A link that sorts before the directory that it names. The real path gives the command name.
+put('twin/.claude/commands/real/deploy.md', bare)
+symlinkSync('real', path.join(scratch, 'twin/.claude/commands/a-link'))
+put('twin/.claude/skills/s/SKILL.md', named('real:deploy'))
 const pair = (index: number, first: string, second: string) => {
   const tree = `fold-${index}`
   const file = (folder: string, value: string) =>
@@ -126,6 +134,10 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: bare, filename: path.join(scratch, 'ckey', 'commands', 'review.md') },
     // The plugin-root skill has no name from a folder or a path.
     { code: named('review'), filename: at('plugin', 'SKILL.md') },
+    {
+      code: named('x'),
+      filename: path.join(scratch, 'dead', '.claude', 'skills', 'x', 'SKILL.md'),
+    },
     // The frontmatter of this file does not parse, so the rule reads nothing from it.
     { code: '---\nname: [unclosed\n---\n', filename: skillAt('bad-sibling', 'dup') },
     // Not a skill or command file.
@@ -133,6 +145,16 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: named('build'), filename: at('dup-name', '.claude', 'agents', 'build.md') },
   ],
   invalid: [
+    {
+      code: named('real:deploy'),
+      filename: path.join(scratch, 'twin', '.claude', 'skills', 's', 'SKILL.md'),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'real:deploy', others: '`commands/real/deploy.md`' },
+        },
+      ],
+    },
     // A key that is an alias: the report falls back to line 1.
     {
       code: alias,
