@@ -13,7 +13,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "8d22bd7ed1d0fcf62c879a406b84f052cbc9658fb62bed8cac2dd0067e1c811d"
+      "hash": "3b94b8efb6e6c09edb962982a9b7c9435e58a533fd76ef88719312f1409cb760"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -48,6 +48,23 @@
       "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
     }
   ],
+  "skill-allowed-tools-ineffective": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "cfa7f81101d8c500fffa9773a6333edc3e63834b28261b518f1bbd734d916cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "EndConversation tool behavior",
+      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea"
+    }
+  ],
   "skill-description-max-length": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -58,6 +75,100 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Skill descriptions are cut short",
       "hash": "c775fcb514225572ec37a8c40da69984ee636217c03de63b497df02486955b30"
+    }
+  ],
+  "skill-fork-fields-require-context": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Run skills in a subagent",
+      "hash": "a9c840a960329ba2c338075d2e7ded915f788a14426c67b2f0c39961a7e17773"
+    }
+  ],
+  "skill-frontmatter-position": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/glossary",
+      "heading": "Frontmatter",
+      "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
+    }
+  ],
+  "skill-frontmatter-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Choose where skills load",
+      "hash": "825bb5974ddabd2fc5a83644513bc5a9557af0bb5efeec460a9ec8ca618a5173"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "Frontmatter fields by file",
+      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Commands",
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Model is not a recognized model id",
+      "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc"
+    }
+  ],
+  "skill-inject-bang-position": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Inject dynamic context",
+      "hash": "8624acca987b47b44ac3b591bbae431065e1e997cfd1d63ae4a84413538ad79a"
+    }
+  ],
+  "skill-invocation-unreachable": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Control who invokes a skill",
+      "hash": "3428ce3abaea92a28963acc8bfea67971f9b0bc0a139ad64a3b2bdaeb714cdfb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    }
+  ],
+  "skill-plugin-vars-outside-plugin": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Available string substitutions",
+      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
+    }
+  ],
+  "skill-reserved-name": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Choose where skills load",
+      "hash": "825bb5974ddabd2fc5a83644513bc5a9557af0bb5efeec460a9ec8ca618a5173"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Names reserved for synced skills",
+      "hash": "43aea60287141fc475ff6a4f41ac1e6502f780896c8459026e02d22d0f27a828"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "A skill, command, or workflow wasn't loaded because its name is reserved",
+      "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4"
     }
   ]
 }

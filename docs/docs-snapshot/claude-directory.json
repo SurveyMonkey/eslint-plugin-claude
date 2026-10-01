@@ -1,0 +1,130 @@
+{
+  "url": "https://code.claude.com/docs/en/claude-directory",
+  "hash": "68cc92fa7d6f0ad0feb59470efb20eb694b3f6b664823898ab1fa1acba288d67",
+  "blocks": [
+    {
+      "id": "explore-the--claude-directory",
+      "hash": "549ab146734510d3a956c4e901db76397f5e8fc23a6d8d82e48cc3e73eeb3680"
+    },
+    {
+      "id": "commands",
+      "hash": "56c93e24505de1ac59f48c57744b0acaa35341fd57f36f52b8071f07950581ec"
+    },
+    {
+      "id": "stack",
+      "hash": "fb63f6dc601f71b9b64745a0b6218d33fa65179d4b3d016635a6a47582b59c0d"
+    },
+    {
+      "id": "rules",
+      "hash": "30285e56072262b5471082cce2df5e5f1c84fabbe07f7188398cc4532065bb04"
+    },
+    {
+      "id": "api-credentials",
+      "hash": "e57063cbf2197c82ae716cf9ebb86eb61dd731b4950bdacbb98a73856a942028"
+    },
+    {
+      "id": "testing-rules",
+      "hash": "cf24528198a82724fb777c506bec47fb3ee48b1546c5a0ff0d2f851e9ba1a14f"
+    },
+    {
+      "id": "api-design-rules",
+      "hash": "0708996d6876a9d30f59694019ca86023547a083b8c793b62a79e52b06b77782"
+    },
+    {
+      "id": "diff-to-review",
+      "hash": "fe9b0d13522a42927b0bfcef84b35278b23ce1dd4fde1e8da8b4c9d692889b54"
+    },
+    {
+      "id": "input-validation",
+      "hash": "9bea9b0df467b43f92a2593911d777eab0b36ce53895d0ff8320100f0fa8819c"
+    },
+    {
+      "id": "authentication",
+      "hash": "1da8ed428cd814bcd3788db98f28c2d1ad3d3793bae299fd5ee94168dacb4304"
+    },
+    {
+      "id": "patterns-seen",
+      "hash": "661350badea8d0b8c92c0c8359f994eb6f17826b0bc84a0b70aa4b5b0f78b1ff"
+    },
+    {
+      "id": "recurring-issues",
+      "hash": "4b386511a58da33cc2fb63e6ebc9d7276e8b851119d767456858e80d8a61d824"
+    },
+    {
+      "id": "project",
+      "hash": "57a0d928ba0fedd9092a2c777fd91d2b877788b201cce6a7b4a0d53045019fde"
+    },
+    {
+      "id": "reference",
+      "hash": "25767c802c912f58d82d2baebce3d809e58496a58051fa941b3865c9657ff906"
+    },
+    {
+      "id": "auth-token-issues",
+      "hash": "39e5de8ecf04e6819353c2bc667203c5b00b9e19b1fe5ac97446d9245ac98084"
+    },
+    {
+      "id": "database-connection-drops",
+      "hash": "785668f1c854a061bae17c8cd4b81b1dff46e1f15003c1be40bae0b7f1731324"
+    },
+    {
+      "id": "explore-the-directory",
+      "hash": "d21409dc25cba42ac9f155afdbd8eedd6d9afc9dfb4a914eb8bdfa14931bc767"
+    },
+    {
+      "id": "whats-not-shown",
+      "hash": "deeaa4fe028c26be529d07eb52a38c88444292fcd138fcfeffbbfbec93e984b6"
+    },
+    {
+      "id": "choose-the-right-file",
+      "hash": "2014d85dbfb85527ceaa70819aebfbbc2996224e4902c9aea2ab7cb170300084"
+    },
+    {
+      "id": "file-reference",
+      "hash": "f9012ae3bdab374f4d4a9ec6f7814767599b475f73e2907ab7d677cda96f02c9"
+    },
+    {
+      "id": "frontmatter-fields-by-file",
+      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
+    },
+    {
+      "id": "troubleshoot-configuration",
+      "hash": "45f200b8d935c9ec7d994c7668ffbead7d1c7f6a45112af80386d4b91f89c08c"
+    },
+    {
+      "id": "application-data",
+      "hash": "c457117928c652ef621ffa30efcb614d250b43c37b8acc3ea1f6827e4f3a0886"
+    },
+    {
+      "id": "cleaned-up-automatically",
+      "hash": "09a842165e264f1c979b1bb004de6f6f10e7cf3798fd8309ffaa3daeadfe75f8"
+    },
+    {
+      "id": "session-scratchpad-directory",
+      "hash": "ea6de981be4c69ebb982aefea08cfdce40a348840aacac1882452d5c97252ce0"
+    },
+    {
+      "id": "kept-until-you-delete-them",
+      "hash": "caa8188e76d7bec33b359ff1d860c9dfdca4e957f9a1ec94aac8d0d47af75983"
+    },
+    {
+      "id": "plaintext-storage",
+      "hash": "c256aeda223d20d2e58d6f1afdd2d572c409041ef533d77d619dc85e916c8642"
+    },
+    {
+      "id": "clear-local-data",
+      "hash": "d4ba8fab1548e9acd728c0d190a9fe3ee3c7e2a8680679f251c82d211f610d60"
+    },
+    {
+      "id": "related-resources",
+      "hash": "6689ff616a08a1812568f214db6507afb6abdf6c9768bf0f3ac0fc49ed26143a"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Frontmatter fields by file",
+      "id": "frontmatter-fields-by-file",
+      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70",
+      "text": "## Frontmatter fields by file\n\nSkills, command files, subagents, output styles, and rules read their configuration from YAML [frontmatter](/docs/en/glossary#frontmatter) at the top of the file, and each accepts its own set of fields. This table lists the field names for each file and links to the reference that describes them.\n\n| File | Frontmatter fields | Reference |\n| - | - | - |\n| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Skill frontmatter](/docs/en/skills#frontmatter-reference) |\n| `commands/*.md` | The skill fields except `name` and `paths` | [Skill frontmatter](/docs/en/skills#frontmatter-reference) |\n| `agents/*.md` | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental` | [Subagent frontmatter](/docs/en/sub-agents#supported-frontmatter-fields) |\n| `output-styles/*.md` | `name`, `description`, `keep-coding-instructions`, `force-for-plugin` | [Output style frontmatter](/docs/en/output-styles#frontmatter) |\n| `rules/*.md` | `paths` | [Rule frontmatter](/docs/en/memory#rules-frontmatter-reference) |\n\nAgents shipped in a [plugin](/docs/en/plugins/components#agents) honor a subset of the subagent fields."
+    }
+  ]
+}
