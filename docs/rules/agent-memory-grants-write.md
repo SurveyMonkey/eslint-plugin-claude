@@ -20,20 +20,20 @@ Do not use memory in a subagent whose tools list leaves out Write and Edit.
 
 ## Rule details
 
-When `memory` is on, Claude Code turns on the Read, Write and Edit tools for the
-subagent, so that it can manage its memory files.[^memory] If auto memory is off, `memory` has no effect and the rule
-reports a grant that Claude Code does not make. This holds when the `tools` list leaves
-them out. A reviewer with `tools: Read, Grep` and `memory: project` can then write files. The rule
-reports the `tools` value when `memory` is `user`, `project` or `local`, and the list does not name
-`Write`, `Edit`, or both. The report names the tools that the list leaves out.
+When `memory` is on, Claude Code turns on the Read, Write and Edit tools. The
+subagent uses them to manage its memory files.[^memory] This holds when the `tools` list leaves
+them out. A reviewer with `tools: Read, Grep` and `memory: project` can then write files. If auto
+memory is off, `memory` has no effect, and the rule reports a grant that Claude Code does not
+make. The rule reports the `tools` value in this case: `memory` is `user`, `project` or `local`, and the list
+leaves out `Write`, `Edit`, or both. The report names the tools that the list leaves out.
 
 A specifier does not change the tool name: `Write(docs/**)` counts as `Write`. The rule is silent
 when `tools` is absent or has no value, because the agent then inherits each tool. An empty list
 `[]` is a report. It is also silent when
 `tools` is neither a string nor a list of strings. `agent-frontmatter-schema` reports that fault.
 
-The rule checks local agents in `.claude/agents/` and plugin agents in the `agents/` directory of a
-plugin, because both take `memory` and `tools`. A file outside these folders gets no report.
+Both local agents in `.claude/agents/` and plugin agents take `memory` and `tools`. So the rule
+checks both, in the `agents/` directory of a plugin. A file outside these folders gets no report.
 The rule ignores a file whose frontmatter does not parse.
 
 Fail:

@@ -22,7 +22,7 @@ Do not set permissionMode to bypassPermissions in a local subagent.
 
 A subagent that sets `permissionMode: bypassPermissions` keeps the permission mode of the main
 conversation, since Claude Code v2.1.267.[^modes] It runs in bypass mode only when the main
-conversation does. Before v2.1.267, the value granted bypass. The field then looks like a grant that
+conversation does. Before v2.1.267, the value granted bypass. The field looks like a grant that
 it does not make, and an older version of Claude Code still grants it. The rule reports the value.
 
 Claude Code ignores `permissionMode` in a plugin agent. So the rule checks only agent files in

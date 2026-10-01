@@ -20,8 +20,8 @@ Write the mcpServers field of a local subagent as a list of servers.
 
 ## Rule details
 
-The `mcpServers` field is a list. Each entry is a server name, or an inline definition: a map with
-one key, the server name, whose value is the server config.[^mcp][^fields] The rule reports these
+The `mcpServers` field is a list. Each entry is a server name or an inline definition. An inline
+definition is a map with one key, the server name. Its value is the server config.[^mcp][^fields] The rule reports these
 faults:
 
 - **Not a list.** The value is a string or a map.
