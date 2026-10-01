@@ -30,8 +30,7 @@ function frontmatterOf(text: string): Record<string, unknown> | null {
  *  when it does not exist (a dangling link). */
 function kindOf(file: string): 'directory' | 'file' | null {
   try {
-    const stat = statSync(file)
-    return stat.isDirectory() ? 'directory' : stat.isFile() ? 'file' : null
+    return statSync(file).isDirectory() ? 'directory' : 'file'
   } catch {
     return null
   }
