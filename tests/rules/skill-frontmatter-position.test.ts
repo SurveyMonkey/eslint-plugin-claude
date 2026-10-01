@@ -19,6 +19,12 @@ markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-posit
     { code: '\n---\nmade-up: 1\n---\n', filename: skill },
     // A block with no closing line.
     { code: '\n---\nname: s\n', filename: skill },
+    // The docs name `---` only as a marker, so `...` closes nothing.
+    { code: '---\nname: s\n...\n', filename: skill },
+    { code: 'Intro text.\n\n---\ndescription: d\n...\n', filename: skill },
+    // A line that only ends in `---` or `...` is not a marker.
+    { code: '\n---\nname: s\nTo be continued...\n', filename: skill },
+    { code: '\n---\nname: s\nso ---\n', filename: skill },
     // A `...` line does not open a block.
     { code: '\n...\nname: s\n---\n', filename: skill },
     // Near misses of the marker lines.
@@ -71,11 +77,6 @@ markdownTester.run('skill-frontmatter-position', ruleOf('skill-frontmatter-posit
       code: '~~~\n---\nname: a\n---\n~~~\n\n---\nname: s\n---\n',
       filename: skill,
       errors: [{ messageId: 'notFirst', line: 7 }],
-    },
-    {
-      code: 'Intro text.\n\n---\ndescription: d\n...\n',
-      filename: skill,
-      errors: [{ messageId: 'notFirst', line: 3 }],
     },
   ],
 })

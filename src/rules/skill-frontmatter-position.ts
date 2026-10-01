@@ -10,8 +10,9 @@ import { classifySkillFile } from '../skill-files.ts'
 
 const name = 'skill-frontmatter-position' as const
 
-// A marker line starts or ends a block. Only `---` starts one.
-const MARKER = /^(---|\.\.\.)\s*$/
+// A marker line starts or ends a block. The docs name only `---` as a marker
+// (https://code.claude.com/docs/en/glossary#frontmatter).
+const MARKER = /^---\s*$/
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' }> = {
   meta: {
@@ -36,16 +37,13 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' }> = {
         if (node.children[0]?.type === 'yaml') {
           return
         }
-        // Each marker line may close one block and open the next. A horizontal
+        // Each marker line can close one block and open the next. A horizontal
         // rule above a block must not hide the block.
         const markers = unfencedLines(sourceCode).filter((l) => MARKER.test(l.text))
         for (const [index, opening] of markers.entries()) {
           const closing = markers[index + 1]
           if (closing === undefined) {
             return
-          }
-          if (!opening.text.startsWith('---')) {
-            continue
           }
           const between = sourceCode.lines.slice(opening.line, closing.line - 1)
           const data = parseFrontmatter(between.join('\n'))
