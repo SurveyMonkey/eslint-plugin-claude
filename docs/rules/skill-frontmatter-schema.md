@@ -32,8 +32,9 @@ the narrowest part of the key or value:
 - **Near miss.** A key that has the letters of a known key with a different case, hyphens or
   underscores, such as `allowed_tools` or `when-to-use`. The report has a suggestion that renames
   the key. The suggestion is not an autofix. A rename turns on a setting that did nothing before.
-- **Command file.** A command file takes the skill fields except `name` and `paths`.[^command][^directory][^plugin]
-  The rule reports each of these two keys in a command file.
+- **Command file.** A command file in `.claude/commands/` takes the skill fields except `name` and
+  `paths`.[^command][^directory] The rule reports each of these two keys there. A command file in a
+  plugin takes the same fields as a skill, so the rule reports neither key.[^plugin]
 - **Type.** `name`, `description` and `argument-hint` are strings. The docs write the hint as
   `[issue-number]`, which YAML reads as a list. So the rule also accepts a list for
   `argument-hint`. `arguments`, `allowed-tools`, `disallowed-tools` and `paths` are a string or a

@@ -14,5 +14,8 @@ writeFileSync(path.join(pluginDir, '.claude-plugin', 'plugin.json'), '{}')
 
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 
+/** The path of the command file `name` in the plugin. */
+export const pluginCommand = (name = 'c') => path.join(pluginDir, 'commands', `${name}.md`)
+
 /** The path of the `SKILL.md` of the skill `folder` in the plugin. */
 export const pluginSkill = (folder = 's') => path.join(pluginDir, 'skills', folder, 'SKILL.md')

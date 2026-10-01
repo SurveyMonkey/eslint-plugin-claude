@@ -51,10 +51,12 @@ function valueProblem(key: string, value: unknown): Problem | null {
     if (typeof value !== 'string') {
       return wrong('a string')
     }
-    return value.length > COMPATIBILITY_MAX
+    // The limit counts characters, not UTF-16 code units.
+    const length = [...value].length
+    return length > COMPATIBILITY_MAX
       ? {
           messageId: 'tooLong',
-          data: { length: String(value.length), max: String(COMPATIBILITY_MAX) },
+          data: { length: String(length), max: String(COMPATIBILITY_MAX) },
         }
       : null
   }
@@ -102,10 +104,12 @@ const rule: MarkdownRuleDefinition<{
     if (file === null) {
       return {}
     }
-    const known: string[] =
-      file.kind === 'command'
-        ? SKILL_FIELDS.filter((f) => !COMMAND_EXCLUDED.includes(f))
-        : [...SKILL_FIELDS]
+    // The docs limit the two excluded fields to `.claude/commands/`. A plugin
+    // command file takes the same fields as a skill.
+    const restricted = file.kind === 'command' && !file.plugin
+    const known: string[] = restricted
+      ? SKILL_FIELDS.filter((f) => !COMMAND_EXCLUDED.includes(f))
+      : [...SKILL_FIELDS]
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
@@ -115,7 +119,7 @@ const rule: MarkdownRuleDefinition<{
         for (const field of fm.fields.values()) {
           const { key } = field
           const keyLoc = fm.at(field.keyStart, field.keyEnd)
-          if (file.kind === 'command' && COMMAND_EXCLUDED.includes(key)) {
+          if (restricted && COMMAND_EXCLUDED.includes(key)) {
             context.report({ loc: keyLoc, messageId: 'commandField', data: { key } })
             continue
           }

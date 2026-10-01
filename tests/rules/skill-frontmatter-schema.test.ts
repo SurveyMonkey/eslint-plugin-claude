@@ -1,6 +1,6 @@
 // Fixtures for each field type and enum of the Frontmatter reference, the
 // near-miss keys, and the two fields that a command file does not take.
-import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { pluginCommand, pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
@@ -51,6 +51,10 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
     file('allowed-tools: Bash(git add *), Read\n'),
     file('paths:\n  - src/**\n  - lib/**\n'),
     file(`compatibility: ${'a'.repeat(500)}\n`),
+    // The limit counts characters. Each emoji is one character and two UTF-16 units.
+    file(`compatibility: ${'\u{1F600}'.repeat(300)}\n`),
+    // A plugin command file takes the same fields as a skill.
+    file('name: c\npaths: src/**\n', pluginCommand()),
     file('model: claude-sonnet-5\n'),
     file('model: sonnet\n'),
     { code: '# No frontmatter\n', filename: skill },
@@ -196,6 +200,10 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
     },
     {
       ...file(`compatibility: ${'a'.repeat(501)}\n`),
+      errors: [{ messageId: 'tooLong', data: { length: '501', max: '500' } }],
+    },
+    {
+      ...file(`compatibility: ${'\u{1F600}'.repeat(501)}\n`),
       errors: [{ messageId: 'tooLong', data: { length: '501', max: '500' } }],
     },
     {
