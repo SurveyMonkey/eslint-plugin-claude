@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "fb629c9a4ecaf81d61ac096e7ca57bcb3edd1b7713b75a8bb2739c06c30101e1",
+  "hash": "9dd68316c1111c118e3ddb82861ac6271a8cd164cee0d371b26165efff35fe88",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -280,7 +280,7 @@
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "2abd3fb95446b2de1a36731fc51ff9e2b0635c6da7a67c3898ee295b30e42f29"
+      "hash": "ed7e5ac643b7d34787c39bbe41f8f9549fafb4decd52952ab9bde1568a04b1ef"
     },
     {
       "id": "defer-a-tool-call-for-later",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "df4b449f5ff813961a98bd60f9d6fbd2c65d087b9f97101326f5f1a8725321ff",
+  "hash": "6ba3e4795403bd1504145ea5387706387b75d3caa8104e6abc384d5a688b602f",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "31e3a827456c514c739afe690f0174bb6aab71c90ec671200dd040f0ab068507"
+      "hash": "749b91a4a7a7f77e9131c34d6a282748a411a6940340d19ae636da6b26e245d0"
     },
     {
       "id": "automatic-retries",
@@ -632,7 +632,7 @@
     },
     {
       "id": "couldnt-open-claude-desktop",
-      "hash": "bce8017e8471461c5e92c2781788e7f6c874e2bbf3db8bae6ab4acdec810a078"
+      "hash": "0a3a1f116a8727c880231a76c26992e80a7cdf502a0349516088502cae860201"
     },
     {
       "id": "terminal-setup-left-your-zed-keymap-unchanged",
@@ -943,12 +943,20 @@
       "hash": "3c6c3ac893d33a3a73dc29572ee4194987b6ca596b839b28a57e461431405d9f"
     },
     {
+      "id": "managed-settings-dont-allow-this-api-provider",
+      "hash": "8f5559e467fb24eafd5c8b7a5a3d0d183258945c0c15d1e532ba4ae7e6f88705"
+    },
+    {
       "id": "mcp-server-is-blocked-by-enterprise-managed-policy",
       "hash": "050c0b0b5b92b20ac430b6346295747f1bef486aa489770102b8e1e2ac7a7cbb"
     },
     {
       "id": "managed-settings-document-could-not-be-parsed",
       "hash": "d1e9587a21189f68c13a1ed4c448129c97c6a5b9326c26f19c1cfb03c99d9dbb"
+    },
+    {
+      "id": "unable-to-read-managed-policy-settings",
+      "hash": "eb56ce06bff7397cef31ec510430c69f98ae64717675b948d90d011d6606982d"
     },
     {
       "id": "otelheadershelper-failed",

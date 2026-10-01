@@ -1,0 +1,178 @@
+{
+  "url": "https://code.claude.com/docs/en/memory",
+  "hash": "11efbfc1af44b658151f1cfe8f2180df57391185065aea5cd1d29b3864dc606a",
+  "blocks": [
+    {
+      "id": "how-claude-remembers-your-project",
+      "hash": "7935159e67672a8606d4e52b2ac7259fdc90d4753af0c9d2f7fd1ffe3d4a05b9"
+    },
+    {
+      "id": "claude-md-vs-auto-memory",
+      "hash": "db5ab8dc4707bb4241addb5a0959bdb8a9b9aca28160f8aa867674b183eaad10"
+    },
+    {
+      "id": "claude-md-files",
+      "hash": "768fefb4032e74cd243d13afd3208605792a7c4f04c6b93a261b6d1ce6ca76c7"
+    },
+    {
+      "id": "when-to-add-to-claude-md",
+      "hash": "06566c0d4316d723c30e526170d1eb6e6e33abb3d8f69c129b96cd42f2b7ccc1"
+    },
+    {
+      "id": "choose-where-to-put-claude-md-files",
+      "hash": "22a740aaa286b2f4fd377cedb744423461c16a21b7130dfd71b8fa50cf4f1e44"
+    },
+    {
+      "id": "set-up-a-project-claude-md",
+      "hash": "10de23d1ced53e2625e0dbf85454719b8e62ac90dc2feb5715f5dadf1fb3a76b"
+    },
+    {
+      "id": "write-effective-instructions",
+      "hash": "718f387c95271b74a191a607263f01cf7a88e5948098c801a525da993f7c23e7"
+    },
+    {
+      "id": "audit-your-instruction-files",
+      "hash": "b737e6a31f9b759fadc90220f16bdd549ec5f4eb603dfcd5865c57d46a184791"
+    },
+    {
+      "id": "import-additional-files",
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
+    },
+    {
+      "id": "how-claude-md-files-load",
+      "hash": "98a733a450b7fd423eb6b00d9ebea9497a9060e7e5274749e98b6f27c0bac7d1"
+    },
+    {
+      "id": "load-from-additional-directories",
+      "hash": "1e00de944a1469518ce5adfebdb51743c9af2fd878d1601a613391de063c2f7d"
+    },
+    {
+      "id": "organize-rules-with--clauderules",
+      "hash": "dd0f29f87815e4b30c134ad58c126da01e2ff52a7e178d9a0f7e1cf4d5472bd4"
+    },
+    {
+      "id": "set-up-rules",
+      "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc"
+    },
+    {
+      "id": "path-specific-rules",
+      "hash": "70e79fad3e19838c743810984e53297057a318ed00ccceab519e6d4c78307f40"
+    },
+    {
+      "id": "rules-frontmatter-reference",
+      "hash": "3b8b3279bd5f63ef3766da20a8bc542fee818f1a35608c6202565cc12eb56df8"
+    },
+    {
+      "id": "share-rules-across-projects-with-symlinks",
+      "hash": "6d70bd72836d9092beff4d5f4f0cadf6853e71ab1a40ff2ec00308d2be51cdb6"
+    },
+    {
+      "id": "user-level-rules",
+      "hash": "6ac98988bffc299e5fa7e0a7a7b9a384b4b7b139f14d4976558d44ab86b6bd35"
+    },
+    {
+      "id": "manage-claude-md-for-large-teams",
+      "hash": "f8ece28c6edc4e7f273e2e94fdb827469823f1f8d85a569b35daf9b375f98686"
+    },
+    {
+      "id": "deploy-organization-wide-claude-md",
+      "hash": "5e44bd90b308fecda9d50b48c93b07cdaf4d55edc9851f1fb62e425ffd0688d4"
+    },
+    {
+      "id": "exclude-specific-claude-md-files",
+      "hash": "76fcc9585d73ea229ea17ef0d5899a380579bc1de1452fc724276b4bd073634d"
+    },
+    {
+      "id": "agents-md",
+      "hash": "e1868b54531cfd99fe938c582b0b9c0f5088029bb2d5871b5640533b85f68df2"
+    },
+    {
+      "id": "when-claude-code-reads-agents-md",
+      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
+    },
+    {
+      "id": "choose-which-instruction-files-load",
+      "hash": "617cea9758eb60751bfed6ded13105ab0579d3b8020df932b27c9dca7f972251"
+    },
+    {
+      "id": "when-agents-md-support-is-unavailable",
+      "hash": "ee002ced26eeb1c1a43912dcaccc8d45990dc8e6c0bf7099a9ac37aca440504a"
+    },
+    {
+      "id": "where-agents-md-differs-from-claude-md",
+      "hash": "f04688bc74ae6de9f4c2005147dfa1eb60d18bbbab2b2613548f2071c9635f6b"
+    },
+    {
+      "id": "remove-an-earlier-agents-md-workaround",
+      "hash": "e57233c8a4fa29f7d36dbdf04038688e32b84b255afa62f61d709ec6720d3339"
+    },
+    {
+      "id": "share-one-file-with-other-coding-tools",
+      "hash": "3186e5008a85b3edb177e7fe216e528bfd9e3c4dd1efceef985e709e266f713a"
+    },
+    {
+      "id": "migrate-instructions-from-other-tools",
+      "hash": "cc4305690f7c55c2e0b9bf25c1fe5f02d88e8419096745d342266a77370ba356"
+    },
+    {
+      "id": "auto-memory",
+      "hash": "22465dc6f3e06d8f7d854e9f4e827789b2e7dd43c156fa6c75b49ec34adb7641"
+    },
+    {
+      "id": "enable-or-disable-auto-memory",
+      "hash": "d32d415837cdc98a87e0292ab2758f14fb6a22e20665975f3e34fe52dabcbffd"
+    },
+    {
+      "id": "storage-location",
+      "hash": "a02cbbf4972edb765999ac55fe61c7815d720a95433b88793297a83938a38b7e"
+    },
+    {
+      "id": "how-it-works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+    },
+    {
+      "id": "audit-and-edit-your-memory",
+      "hash": "2a828881563ba9f920cacd3f23152833e7f17ed04da842842835bbe2ff6ce93d"
+    },
+    {
+      "id": "view-and-edit-with-memory",
+      "hash": "ffce504be4cbed9cb1a2ce6d89cb0038074f5e86af8048a71f32becf8c90c0a2"
+    },
+    {
+      "id": "troubleshoot-memory-issues",
+      "hash": "a11e62722a9328419d3e436adfd6c22bd81c62a852e2d22a99a4455cc46c058a"
+    },
+    {
+      "id": "claude-isnt-following-my-claude-md",
+      "hash": "80b20000fa9364d28935dd56d0bc8d5ff552e6c45a838368f428f6d4f8947f17"
+    },
+    {
+      "id": "my-agents-md-isnt-loading",
+      "hash": "31c79d57cf7c0fd64581e2e2a8f159a21a8cf240c56f916d0ea28cba7187416f"
+    },
+    {
+      "id": "i-dont-know-what-auto-memory-saved",
+      "hash": "df3b731c90d04fa35c7c9cb861de53a0f971d8f64a1f56f3a4b3ae38d4aca246"
+    },
+    {
+      "id": "my-claude-md-is-too-large",
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    },
+    {
+      "id": "instructions-seem-lost-after-compact",
+      "hash": "e6c348a352722cd5593e7b6158a6e4ebebfde36d7b0c66ed153ef8f6250f68f5"
+    },
+    {
+      "id": "related-resources",
+      "hash": "f3edb3355320c16d5945f0d360411c3f89a5c0ff57469c1bd472576d3d7ee396"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Path-specific rules",
+      "id": "path-specific-rules",
+      "hash": "70e79fad3e19838c743810984e53297057a318ed00ccceab519e6d4c78307f40",
+      "text": "#### Path-specific rules\n\nRules can be scoped to specific files using YAML frontmatter with the `paths` field. These conditional rules only apply when Claude is working with files matching the specified patterns.\n\n```markdown theme={null}\n---\npaths:\n  - \"src/api/**/*.ts\"\n---\n\n# API Development Rules\n\n- All API endpoints must include input validation\n- Use the standard error response format\n- Include OpenAPI documentation comments\n```\n\nRules without a `paths` field are loaded unconditionally and apply to all files. Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use. As of v2.1.198, matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.\n\nUse glob patterns in the `paths` field to match files by extension, directory, or any combination:\n\n| Pattern | Matches |\n| - | - |\n| `**/*.ts` | All TypeScript files in any directory |\n| `src/**/*` | All files under `src/` directory |\n| `*.md` | Markdown files in the project root |\n| `src/components/*.tsx` | React components in a specific directory |\n\nYou can specify multiple patterns and use brace expansion to match multiple extensions in one pattern:\n\n```markdown theme={null}\n---\npaths:\n  - \"src/**/*.{ts,tsx}\"\n  - \"lib/**/*.ts\"\n  - \"tests/**/*.test.ts\"\n---\n```\n\nEach brace group multiplies the number of expanded patterns: `src/*.{ts,tsx}` expands to two patterns, and `{a,b}/{c,d}/*.{ts,tsx}` to eight. To keep expansion bounded, a rule's whole `paths` list shares one budget of 1,000 expanded patterns and 4 MiB, and patterns without braces don't count against it.\n\nClaude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files. Before v2.1.217, a `paths` value with many brace groups stalled or crashed the CLI at startup.\n\nGlob syntax treats `[` as the start of a bracket expression such as `[abc]`. A pattern with a `[` that can't be read as a bracket expression, such as `photos [2024/**`, is invalid: it matches nothing, and the rule's other patterns keep working. To match a literal `[` in a file name, escape it as `photos \\[2024/**`. Before v2.1.207, one invalid pattern made the Read tool fail for every file the rule was evaluated against, instead of matching nothing."
+    }
+  ]
+}

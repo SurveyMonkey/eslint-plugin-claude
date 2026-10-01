@@ -13,7 +13,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "3b94b8efb6e6c09edb962982a9b7c9435e58a533fd76ef88719312f1409cb760"
+      "hash": "5bab300fa2392fe456e6a4834a6672290bcf971af49b34ed98fe61945bfeeb7a"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -48,6 +48,33 @@
       "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
     }
   ],
+  "skill-agent-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Run skills in a subagent",
+      "hash": "a9c840a960329ba2c338075d2e7ded915f788a14426c67b2f0c39961a7e17773"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Example: Research skill using Explore agent",
+      "hash": "9ce6aed506ce610e016ee6648e4d0b8485d1f3a0e9ced4993da3b110b54173fa"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Built-in subagents",
+      "hash": "e476de0ed974c18cd04b8cc7418174e7003470f94a505e00dac77333bf691e3b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose the subagent scope",
+      "hash": "66fd77d01dec390e57b5f2239560b74a06870f9661bda1b10bba26589ec6b7dd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Agents",
+      "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf"
+    }
+  ],
   "skill-allowed-tools-ineffective": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -75,6 +102,23 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Skill descriptions are cut short",
       "hash": "c775fcb514225572ec37a8c40da69984ee636217c03de63b497df02486955b30"
+    }
+  ],
+  "skill-file-layout": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Create your first skill",
+      "hash": "e43a66a42b7b27772a225a16023a178d7e631e8beed3a4025f1e5a77d11ad3a7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "8c2defc07057633512ad79efce9b1976c11eaed9a71c7ea37f94cf58d5890596"
     }
   ],
   "skill-fork-fields-require-context": [
@@ -147,7 +191,55 @@
       "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
     }
   ],
+  "skill-name-unique": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Resolve skills that share a name",
+      "hash": "e272fba0dbd6196bd9d700a345a7997f07d52501aca3de998b9c82e5cf644890"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How a skill gets its command name",
+      "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "When a synced skill name matches another command",
+      "hash": "e52b0b9777fea5a905b6397ebe3a4e300301f581392a2ab91a608823628f4416"
+    }
+  ],
+  "skill-paths-glob-valid": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Path-specific rules",
+      "hash": "70e79fad3e19838c743810984e53297057a318ed00ccceab519e6d4c78307f40"
+    }
+  ],
+  "skill-plugin-root-shadowed": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    }
+  ],
   "skill-plugin-vars-outside-plugin": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Available string substitutions",
+      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
+    }
+  ],
+  "skill-reference-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Add supporting files",
+      "hash": "1f05ca5d141e0f4364fea7275f3c79ca8beb9d6de010b780385e9e677e216948"
+    },
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Available string substitutions",
