@@ -1,6 +1,6 @@
 // The files around a skill or command file, for a rule that reads a second
 // file. A scope is a `.claude/` directory or a plugin root.
-import { type Dirent, readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
+import { type Dirent, existsSync, readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
@@ -58,6 +58,22 @@ export function markdownFiles(dir: string, seen = new Set<string>()): string[] {
       }
       return entry.name.endsWith('.md') ? [full] : []
     })
+}
+
+/** The `SKILL.md` of each folder directly in `dir`, which is a `skills/`
+ *  directory. A link to a folder counts. The result is empty when `dir` does
+ *  not exist. */
+export function skillFiles(dir: string): string[] {
+  let entries: Dirent[]
+  try {
+    entries = readdirSync(dir, { withFileTypes: true })
+  } catch {
+    return []
+  }
+  return entries
+    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+    .map((entry) => path.join(dir, entry.name, 'SKILL.md'))
+    .filter((file) => existsSync(file))
 }
 
 // The fields of each file that was read, by path. An entry is current while

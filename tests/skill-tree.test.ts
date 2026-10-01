@@ -5,7 +5,13 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { classifySkillFile } from '../src/skill-files.ts'
-import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../src/skill-tree.ts'
+import {
+  frontmatterOfFile,
+  markdownFiles,
+  readManifest,
+  scopeRoot,
+  skillFiles,
+} from '../src/skill-tree.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'skill-tree-'))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
@@ -124,6 +130,31 @@ describe('markdownFiles', () => {
       expect(rel).toEqual(['alias/x.md', 'file.md', 'other/y.md'])
     },
   )
+})
+
+describe('skillFiles', () => {
+  it('lists the SKILL.md of each folder directly in the directory, in name order', () => {
+    put('sk/b/SKILL.md', '')
+    put('sk/a/SKILL.md', '')
+    put('sk/c/other.md', '')
+    put('sk/d/e/SKILL.md', '')
+    put('sk/SKILL.md', '')
+    put('sk/f.md', '')
+    const rel = skillFiles(path.join(scratch, 'sk')).map((f) =>
+      path.relative(path.join(scratch, 'sk'), f).split(path.sep).join('/'),
+    )
+    expect(rel).toEqual(['a/SKILL.md', 'b/SKILL.md'])
+    expect(skillFiles(path.join(scratch, 'none'))).toEqual([])
+  })
+
+  it.skipIf(process.platform === 'win32')('counts a link to a folder', () => {
+    put('sk2/real/SKILL.md', '')
+    symlinkSync('real', path.join(scratch, 'sk2', 'alias'))
+    const rel = skillFiles(path.join(scratch, 'sk2')).map((f) =>
+      path.relative(path.join(scratch, 'sk2'), f).split(path.sep).join('/'),
+    )
+    expect(rel).toEqual(['alias/SKILL.md', 'real/SKILL.md'])
+  })
 })
 
 describe('readManifest', () => {

@@ -5,7 +5,13 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
-import { frontmatterOfFile, markdownFiles, readManifest, scopeRoot } from '../skill-tree.ts'
+import {
+  frontmatterOfFile,
+  markdownFiles,
+  readManifest,
+  scopeRoot,
+  skillFiles,
+} from '../skill-tree.ts'
 
 const name = 'skill-name-unique' as const
 
@@ -43,15 +49,10 @@ function setsCommands(root: string): boolean {
  *  read from disk. The plugin-root `SKILL.md` has no entry. */
 function scopeEntries(root: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
-  const skills = markdownFiles(skillsDir)
-    .filter(
-      (file) =>
-        path.basename(file) === 'SKILL.md' && path.dirname(path.dirname(file)) === skillsDir,
-    )
-    .map((file) => ({
-      file,
-      name: skillName(frontmatterOfFile(file), path.basename(path.dirname(file))),
-    }))
+  const skills = skillFiles(skillsDir).map((file) => ({
+    file,
+    name: skillName(frontmatterOfFile(file), path.basename(path.dirname(file))),
+  }))
   const commandsDir = path.join(root, 'commands')
   const commands = (setsCommands(root) ? [] : markdownFiles(commandsDir)).map((file) => ({
     file,
