@@ -29,8 +29,8 @@ import claude from 'eslint-plugin-claude'
 export default defineConfig([{ plugins: { claude }, extends: ['claude/recommended'] }])
 ```
 
-Each rule brings its own `files` glob and language, and the config registers `markdown` and
-`json`, so you need no other setup. Rule IDs take the form `claude/<rule>`.
+Each rule brings its own `files` glob and language, and a rule can add a second language and
+glob. The config registers `markdown` and `json`, so you need no other setup. Rule IDs take the form `claude/<rule>`.
 
 ## Configs
 

@@ -24,9 +24,9 @@ Claude Code skips a local subagent file in some cases, and shows no error in the
 cause appears only in the debug log. The rule reports each case on the frontmatter block:
 
 - **Late block.** The opening `---` is not line 1, and the block holds a subagent field. Claude Code
-  reads the file as documentation.
+  reads frontmatter only from line 1.[^glossary]
 - **YAML.** The frontmatter does not parse, or its top level is not a map. Claude Code reads no field.
-- **No `name`.** Claude Code reads the file as documentation.[^fields]
+- **No `name`.** Claude Code reads the file as documentation.[^skips]
 - **No `description`.** Claude Code skips the file.
 - **Bad `name`.** The name starts with `-` or contains `:`. The colon is for the scoped names of
   plugin agents.
@@ -34,18 +34,21 @@ cause appears only in the debug log. The rule reports each case on the frontmatt
 The rule checks an agent file in `.claude/agents/`, at any depth. This also covers a nested
 `.claude/agents/` directory, such as `packages/x/.claude/agents/`.
 
-A plugin agent with the same faults still loads. Claude Code gives it the name of its file and a
-placeholder description. So the rule does not check plugin agents. For a plugin agent,
+A plugin agent with no `name`, or with YAML that does not parse, still loads. Claude Code gives it
+the name of its file, and a placeholder description for YAML that does not parse. The docs do not
+say what a plugin agent with other faults does. So the rule does not check plugin agents. For a plugin agent,
 `claude plugin validate` reports frontmatter that does not parse.[^plugin]
 
 A file with no frontmatter at all, such as `.claude/agents/README.md`, is not a report. The docs
-say that Claude Code keeps such a file as documentation beside the agents. A block below line 1 is
+say that Claude Code keeps such a file as documentation beside the agents. A frontmatter block
+with no `name`, such as `title: Agents`, is a report, because the rule cannot tell it from an
+agent file that lacks its `name`. A block below line 1 is
 a report only when it holds a subagent field. A value that is not a string, such as `name: 123`, is
 a fault for [`agent-frontmatter-schema`](agent-frontmatter-schema.md).
 
 `claude plugin validate` checks a directory that you name, for example `.claude/agents`. It
 finds YAML that does not parse.[^check] It does not find a missing `name`.[^check] The
-rule does not need a command, and it finds the other cases too.[^glossary]
+rule does not need a command, and it finds the other cases too.
 
 Fail:
 

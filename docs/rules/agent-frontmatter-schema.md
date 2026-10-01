@@ -33,20 +33,20 @@ The rule reports these faults, on the narrowest part of the key or value:
 - **Top-level `cacheTtl`.** The docs say to write it inside the `experimental` map.[^fields]
 - **Type.** `name` and `description` are strings. `tools` and `disallowedTools` are a
   comma-separated string or a list of strings. `model` is a string that is not blank. `maxTurns` is a
-  positive integer. `skills` is a list of strings. `background` and `omitClaudeMd` are Booleans.
+  positive integer. The subagent table gives no type, and only the SDK table says `number`.[^sdk] `skills` is a list of strings. `background` and `omitClaudeMd` are Booleans.
   `experimental` is a map.
 - **Value.** `permissionMode` is `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`,
   `plan` or `manual`. `memory` is `user`, `project` or `local`. `effort` is `low`, `medium`, `high`,
   `xhigh` or `max`. `isolation` is `worktree`.[^plugin] `color` is `red`, `blue`, `green`, `yellow`,
-  `purple`, `orange`, `pink` or `cyan`. `experimental.cacheTtl` is `5m` or `1h`, and `experimental`
-  has no other key.[^fields]
+  `purple`, `orange`, `pink` or `cyan`. `experimental.cacheTtl` is `5m` or `1h`. The docs name
+  no other `experimental` option, and the rule reports one.[^fields]
 
-The key list is the subagent table of the docs, with the keys of the SDK and the file
-reference.[^dir][^sdk] A key with no value is the same as an absent key, and the rule ignores it.
+The key list is the subagent table of the docs. The file reference lists the same keys.[^dir]
+The SDK has a `prompt` key that a file does not take.[^sdk] A key with no value is the same as an absent key, and the rule ignores it.
 
 The subagent docs do not say which Boolean forms Claude Code reads. The rule accepts the forms
 that the skills reference lists: `true`, `false`, `yes`, `no`, `on`, `off`, `1` and `0`, in any
-letter case.[^skillsref] It checks that `model` is a string that is not blank, and no more. The set of valid
+letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` work. It checks that `model` is a string that is not blank, and no more. The set of valid
 model ids differs by provider and by gateway.
 
 The rule checks local agents in `.claude/agents/` and plugin agents in the `agents/` directory of a
