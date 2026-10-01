@@ -2,7 +2,8 @@
 // source is the Frontmatter reference of the Claude Code docs
 // (docs/rules/agent-frontmatter-schema.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { AGENT_FIELDS, classifyAgentFile } from '../agent-files.ts'
+import { classifyAgentFile } from '../agent-files.ts'
+import { AGENT_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isBooleanValue, isMap, nearMissOf } from '../frontmatter-values.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'

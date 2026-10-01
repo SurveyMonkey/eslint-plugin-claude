@@ -4,37 +4,6 @@
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
 
-/** The frontmatter fields of a subagent file. The source is the Frontmatter
- *  reference of the Claude Code docs (docs/rules/agent-frontmatter-schema.md). */
-export const AGENT_FIELDS = [
-  'name',
-  'description',
-  'tools',
-  'disallowedTools',
-  'model',
-  'permissionMode',
-  'maxTurns',
-  'skills',
-  'mcpServers',
-  'hooks',
-  'memory',
-  'background',
-  'omitClaudeMd',
-  'effort',
-  'isolation',
-  'color',
-  'initialPrompt',
-  'experimental',
-] as const
-
-/** The frontmatter fields of an output style file. */
-export const OUTPUT_STYLE_FIELDS = [
-  'name',
-  'description',
-  'keep-coding-instructions',
-  'force-for-plugin',
-] as const
-
 export interface ClaudeFile {
   /** True when the file is in a plugin. */
   plugin: boolean

@@ -2,7 +2,8 @@
 // (docs/rules/agent-frontmatter-valid.md). A plugin agent still loads, so the
 // rule checks only files in `.claude/agents/`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { AGENT_FIELDS, classifyAgentFile } from '../agent-files.ts'
+import { classifyAgentFile } from '../agent-files.ts'
+import { AGENT_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lateFrontmatter } from '../late-frontmatter.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'

@@ -2,7 +2,8 @@
 // (docs/rules/output-style-frontmatter-schema.md). `force-for-plugin` works
 // only in a plugin style.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyOutputStyle, OUTPUT_STYLE_FIELDS } from '../agent-files.ts'
+import { classifyOutputStyle } from '../agent-files.ts'
+import { OUTPUT_STYLE_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isBooleanValue, nearMissOf } from '../frontmatter-values.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'

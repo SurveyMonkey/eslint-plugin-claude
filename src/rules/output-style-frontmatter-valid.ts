@@ -3,7 +3,8 @@
 // (docs/rules/output-style-frontmatter-valid.md). A style file without
 // frontmatter is valid, because each field is optional.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyOutputStyle, OUTPUT_STYLE_FIELDS } from '../agent-files.ts'
+import { classifyOutputStyle } from '../agent-files.ts'
+import { OUTPUT_STYLE_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { parseFrontmatter } from '../frontmatter.ts'
 import { lateFrontmatter } from '../late-frontmatter.ts'
