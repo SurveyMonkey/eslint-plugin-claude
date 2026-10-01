@@ -45,6 +45,8 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     // Exactly 4 MiB is within the budget: 512 patterns of 8,192 bytes.
     text(`${many}${'x'.repeat(8192 - 9)}`),
     // A group nested more than 100 deep is text, so the rule neither fails nor counts it.
+    // These are 1,001 patterns inside 101 groups.
+    text(`${'{'.repeat(101)}${group(7)}/${group(11)}/${group(13)}${'}'.repeat(101)}`),
     text(`${'{'.repeat(20000)}a,b${'}'.repeat(20000)}`),
     // A brace that closes nothing, or that is escaped, or that has no comma, is text.
     text(`${group(10)}${group(10)}${group(10)}/{a,b`),
@@ -136,6 +138,11 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     {
       ...text(`${many}${'\u00e9'.repeat(4100)}`),
       errors: [budget(512, 512 * 8209)],
+    },
+    // Inside 100 groups, the same 1,001 patterns count, and each one holds 200 more bytes.
+    {
+      ...text(`${'{'.repeat(100)}${group(7)}/${group(11)}/${group(13)}${'}'.repeat(100)}`),
+      errors: [budget(1001, 1001 * (5 + 200))],
     },
     // The count has a cap, so a long list of groups stays finite.
     {

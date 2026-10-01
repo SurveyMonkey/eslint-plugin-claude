@@ -2,7 +2,7 @@
 // directory and `plugin.json` has no `skills` key. The trees are on disk
 // under tests/fixtures/skill-plugin-root-shadowed/. The malformed manifest is
 // built at run time, because a committed file would fail the JSON lint.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll } from 'vitest'
@@ -22,6 +22,11 @@ const build = (tree: string, manifest: string, extra?: string) => {
   }
   return path.join(root, 'SKILL.md')
 }
+
+// A `skills/` that is a link to a directory is a directory.
+const linked = build('linked', '{"name": "l"}')
+mkdirSync(path.join(scratch, 'linked-target', 'review'), { recursive: true })
+symlinkSync(path.join(scratch, 'linked-target'), path.join(scratch, 'linked', 'skills'))
 
 const code = '---\nname: p\n---\n\n# P\n'
 
@@ -69,7 +74,8 @@ markdownTester.run('skill-plugin-root-shadowed', ruleOf('skill-plugin-root-shado
       filename: rootSkill('with-dir'),
       errors: [{ messageId: 'directory' }],
     },
-    // A `skills` key with no value still replaces the default scan.
+    { code, filename: linked, errors: [{ messageId: 'directory' }] },
+    // A `skills` key with no value still stops the root `SKILL.md` from loading.
     {
       code,
       filename: build('null-key', '{"skills": null}'),

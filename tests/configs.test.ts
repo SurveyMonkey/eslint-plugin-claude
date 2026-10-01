@@ -50,6 +50,7 @@ const TREE: Record<string, string> = {
   '.claude/skills/ref-ok/reference.md': '# Reference\n',
   '.claude/skills/agent/SKILL.md': '---\ncontext: fork\nagent: ghost\n---\n',
   '.claude/skills/agent-ok/SKILL.md': '---\ncontext: fork\nagent: Explore\n---\n',
+  '.claude/commands/ghost.md': '---\ncontext: fork\nagent: ghost\n---\n',
   '.claude/skills/twin-a/SKILL.md': '---\nname: twin\n---\n',
   '.claude/skills/twin-b/SKILL.md': '---\nname: Twin\n---\n',
   'packages/x/.claude/skills/twin/SKILL.md': '# Twin\n',
@@ -70,6 +71,8 @@ const TREE: Record<string, string> = {
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/commands/c.md: claude/command-legacy-format@1',
+  '.claude/commands/ghost.md: claude/command-legacy-format@1',
+  '.claude/commands/ghost.md: claude/skill-agent-exists@2',
   '.claude/commands/ns/c.md: claude/command-legacy-format@1',
   '.claude/commands/schema.md: claude/command-legacy-format@1',
   '.claude/commands/schema.md: claude/skill-frontmatter-schema@2',
