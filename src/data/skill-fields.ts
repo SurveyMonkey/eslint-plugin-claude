@@ -1,6 +1,7 @@
-// The frontmatter fields of a skill, from the Frontmatter reference table of
-// the Claude Code skills docs, as read on 2026-09-30
-// (docs/rules/skill-frontmatter-schema.md).
+// The frontmatter fields of a skill. Source: the Frontmatter reference table,
+// https://code.claude.com/docs/en/skills#frontmatter-reference, checked on
+// Claude Code 2.1.286. Review this list on or before 2027-03-30, the
+// `stale_after` date of docs/rules/skill-frontmatter-schema.md.
 
 /** Every field that a `SKILL.md` accepts. */
 export const SKILL_FIELDS = [

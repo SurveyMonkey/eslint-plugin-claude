@@ -24,10 +24,10 @@ Two entries have no effect:
 
 - `EndConversation` in `disallowed-tools`. Like a deny rule, the field cannot remove this tool
   while any other tool remains.[^reference][^endconversation]
-- `AskUserQuestion` in `allowed-tools`. Claude Code does not auto-allow an interactive tool that
-  a skill lists. Since Claude Code 2.1.69, the permission prompt shows. Before that version, the
-  entry skipped the prompt and the tool ran with empty answers.[^preapprove] The
-  [changelog](https://code.claude.com/docs/en/changelog) records the fix under 2.1.69.
+- `AskUserQuestion` in `allowed-tools`. The field pre-approves a tool.[^preapprove] Claude Code
+  does not auto-allow an interactive tool that a skill lists. The changelog of Claude Code records
+  this fix under 2.1.69. The live docs page of the changelog does not hold that entry. Read it in
+  the [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
 
 The docs name `AskUserQuestion` only as an example of a tool to put in `disallowed-tools`. The
 changelog entry of 2.1.69 calls it an interactive tool. No source gives a list of other interactive

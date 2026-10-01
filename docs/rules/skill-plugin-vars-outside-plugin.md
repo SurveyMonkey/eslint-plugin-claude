@@ -25,10 +25,10 @@ only.[^substitutions] It replaces them in the skill body and in the `allowed-too
 any other skill, the two variables stay literal text. A script path that uses one does not
 resolve, and no error shows.
 
-The rule reports each use of the two variables in a skill or command file that is not in a plugin.
+The rule reports each use of the two variables in a skill or command file outside a plugin.
 It reads the body and the `allowed-tools` value. The report is on the variable. The rule also
-reports inside fenced code. The docs say that Claude Code replaces the variables in the markdown
-content of a plugin skill, and they do not exempt fenced code.
+reports inside fenced code. The docs say Claude Code replaces the variables in the markdown
+content of a plugin skill. They do not exempt fenced code.
 
 The two variables are the only ones that the rule checks. `${CLAUDE_SKILL_DIR}`,
 `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_SESSION_ID}` and `${CLAUDE_EFFORT}` work in every skill.

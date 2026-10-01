@@ -31,8 +31,7 @@ reports a block when all of these are true:
 - The file has no frontmatter at line 1.
 - A line outside fenced code has only `---`. This is the first line of the block.
 - A later line outside fenced code has only `---`. This is the last line of the block.
-- The lines between them are a YAML mapping that holds at least one field of a skill, such as
-  `name` or `description`.
+- The lines between them are a YAML mapping. It has at least one skill field, such as `name`.
 
 The rule tests each two such lines that follow each other. A line can end one block and start
 the next.

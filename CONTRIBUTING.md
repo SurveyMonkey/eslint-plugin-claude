@@ -40,7 +40,7 @@ A new rule needs an entry. Add the docs links to the footnotes of `docs/rules/<r
 run `pnpm docs:seed`, and then `pnpm docs:update`. Commit `docs/rule-sources.json` and
 `docs/docs-snapshot/`. `pnpm docs:seed` makes no network call. `pnpm docs:update` runs
 `node scripts/docs-watch.ts update`. It fetches the live docs and sets `hash` on each new source.
-It also rewrites the snapshot of each page that the map cites. So it also takes in each docs change
+It also rewrites the snapshot of each page that the map cites. So it takes in each docs change
 that nobody has triaged. Read the diff, and name each such change in the pull request.
 
 Write each footnote on one line, as `[^id]: [Page title: Heading](url#anchor)`. Put no indent,

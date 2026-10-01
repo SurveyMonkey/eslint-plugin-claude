@@ -20,16 +20,15 @@ Let the user or Claude invoke a skill.
 
 ## Rule details
 
-`disable-model-invocation: true` stops Claude from invoking a skill. `user-invocable: false`
-stops the user from invoking it.[^invoke][^reference] A skill with both fields has no caller. It
-loads, and nothing can run it.
+`disable-model-invocation: true` blocks Claude from the skill. `user-invocable: false` blocks the
+user from it.[^invoke][^reference] A skill with both fields has no caller. Nothing can run it.
 
 The rule reads each Boolean form that Claude Code reads: `true`, `false`, `yes`, `no`, `on`,
 `off`, `1` and `0`, in any letter case.[^reference] It reports on the
 `disable-model-invocation` field.
 
-The rule checks skills only. A command file is the legacy form of a skill, and
-[`command-legacy-format`](command-legacy-format.md) reports it.
+The rule checks `SKILL.md` files only. It skips a command file.
+[`command-legacy-format`](command-legacy-format.md) reports the legacy form.
 
 The rule ignores a file with no frontmatter, and a file whose frontmatter does not parse.
 

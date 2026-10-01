@@ -26,14 +26,15 @@ Claude Code keeps two names for skills that it downloads from claude.ai.
 - `anthropic-skills`, and every name that starts with `anthropic-skills:`. Claude Code does not
   load a skill or a command with such a name. It shows a startup notice only.[^reserved][^errors]
 
-The rule reports outside a plugin only. A plugin named `anthropic-skills` loads, and the docs
-give the rule for names outside a plugin.[^reserved] The rule reports these cases:
+The rule reports outside a plugin only. The docs state the rule for names outside a plugin.[^reserved]
+They do not say whether a skill folder with this name loads inside a plugin. The rule reports these
+cases:
 
 - A skill folder named `synced`, in any letter case.
 - A skill folder, or a frontmatter `name`, that is `anthropic-skills` or starts with
   `anthropic-skills:`.
-- A command file, or a folder below `.claude/commands/`, with such a name. The name of a file is
-  its name without `.md`.
+- A command file, or a folder, directly in `.claude/commands/` with such a name. The name of a
+  file is its name without `.md`. A deeper path is only a part of the command name.
 
 The report for a folder or a command is on line 1. The report for a frontmatter `name` is on its
 value. The rule does not read the `name` field of a command file, because a command file takes no

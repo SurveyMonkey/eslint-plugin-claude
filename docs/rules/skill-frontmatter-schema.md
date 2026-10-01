@@ -29,8 +29,8 @@ The rule uses the Frontmatter reference of the Claude Code docs as of Claude Cod
 the narrowest part of the key or value:
 
 - **Unknown key.** A key that is not in the table.
-- **Near miss.** A key that has the letters of a known key with a different case, hyphens or
-  underscores, such as `allowed_tools` or `when-to-use`. The report has a suggestion that renames
+- **Near miss.** A key that matches a known key after you ignore case, hyphens and underscores,
+  such as `allowed_tools`. The report has a suggestion that renames
   the key. The suggestion is not an autofix. A rename turns on a setting that did nothing before.
 - **Command file.** A command file in `.claude/commands/` takes the skill fields except `name` and
   `paths`.[^command][^directory] The rule reports each of these two keys there. A command file in a
@@ -39,17 +39,17 @@ the narrowest part of the key or value:
   `[issue-number]`, which YAML reads as a list. So the rule also accepts a list for
   `argument-hint`. `arguments`, `allowed-tools`, `disallowed-tools` and `paths` are a string or a
   list. `metadata` is a map.[^reference]
-  `compatibility` is a string of 500 characters or fewer. `model` is a string that is not empty.
+  `compatibility` is a string of 500 characters or fewer. `model` is a string that is not blank.
 - **Value.** `effort` is `low`, `medium`, `high`, `xhigh` or `max`. `context` is `fork`. `shell` is
   `bash` or `powershell`.[^reference]
 
 A key with no value is the same as an absent key, and the rule ignores it. The rule does not
 check Boolean fields: Claude Code reads `yes`, `no`, `on`, `off`, `1` and `0` as Booleans.[^reference]
 
-The rule checks that `model` is a string that is not empty, and no more. The docs say that `model`
-takes the values of `/model`. On a provider other than the Anthropic API, or behind a gateway,
-Claude Code refuses an empty model string only.[^model] A check for an alias or a `claude-` prefix
-would report a valid value.
+The rule checks that `model` is a string that is not blank, and no more. The docs say that `model`
+takes the values of `/model`, or `inherit`.[^reference] The set of valid model ids differs by
+provider and by gateway.[^model] A check for an alias or a `claude-` prefix would report a valid
+value.
 
 The rule ignores a file with no frontmatter, and a file whose frontmatter does not parse.
 

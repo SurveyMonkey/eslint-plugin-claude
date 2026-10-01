@@ -29,8 +29,7 @@ The rule reads the lines of the body. It reports each placeholder where `!` foll
 that is not whitespace. The report is on the placeholder. The rule skips these cases:
 
 - Lines in fenced code. A fenced block is not an inline placeholder.
-- A `!` inside an inline code span, such as the form ``` ``!`cmd` ``` in a text about skills, or
-  the end of `` `Done!` ``.
+- A `!` inside an inline code span, as in ``` ``!`cmd` ``` or `` `Done!` ``.
 - The frontmatter.
 
 The rule ignores a file whose frontmatter does not parse.

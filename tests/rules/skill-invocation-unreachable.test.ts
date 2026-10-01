@@ -20,7 +20,7 @@ markdownTester.run('skill-invocation-unreachable', ruleOf('skill-invocation-unre
     // A list is not a Boolean.
     file('disable-model-invocation: [true]\nuser-invocable: [false]\n'),
     file('disable-model-invocation: true\nuser-invocable: { a: false }\n'),
-    // A command file has no `user-invocable` rule: the rule reads skills only.
+    // The rule reads skill files only. It skips a command file.
     file('disable-model-invocation: true\nuser-invocable: false\n', '.claude/commands/c.md'),
     file('disable-model-invocation: true\nuser-invocable: false\n', 'docs/SKILL.md'),
     { code: '# No frontmatter\n', filename: skill },
