@@ -20,11 +20,11 @@ Do not use a name that Claude Code reserves for synced skills.
 
 ## Rule details
 
-Claude Code keeps two names for skills that it downloads from claude.ai. It does not load a skill
-or a command with one of these names. It shows a startup notice only.[^errors]
+Claude Code keeps two names for skills that it downloads from claude.ai.
 
 - `synced`: Claude Code skips a skill folder with this name, in any letter case.[^folders]
-- `anthropic-skills`, and every name that starts with `anthropic-skills:`.[^reserved]
+- `anthropic-skills`, and every name that starts with `anthropic-skills:`. Claude Code does not
+  load a skill or a command with such a name. It shows a startup notice only.[^reserved][^errors]
 
 The rule reports outside a plugin only. A plugin named `anthropic-skills` loads, and the docs
 give the rule for names outside a plugin.[^reserved] The rule reports these cases:
@@ -39,7 +39,8 @@ The report for a folder or a command is on line 1. The report for a frontmatter 
 value. The rule does not read the `name` field of a command file, because a command file takes no
 `name`. [`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports it.
 
-The rule ignores a file whose frontmatter does not parse.
+The rule does not read the `name` field of a file whose frontmatter does not parse. It still
+reports a folder or a command name.
 
 The rule checks the files that the other skill rules check:
 

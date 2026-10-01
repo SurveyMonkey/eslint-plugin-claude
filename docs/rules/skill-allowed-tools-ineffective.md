@@ -26,11 +26,12 @@ Two entries have no effect:
   while any other tool remains.[^reference][^endconversation]
 - `AskUserQuestion` in `allowed-tools`. Claude Code does not auto-allow an interactive tool that
   a skill lists. Since Claude Code 2.1.69, the permission prompt shows. Before that version, the
-  entry skipped the prompt and the tool ran with empty answers.[^reference][^preapprove]
-  The [changelog](https://code.claude.com/docs/en/changelog) records the fix.
+  entry skipped the prompt and the tool ran with empty answers.[^preapprove] The
+  [changelog](https://code.claude.com/docs/en/changelog) records the fix under 2.1.69.
 
-The docs name `AskUserQuestion` as the one example of an interactive tool. They give no list of
-other interactive tools. So the rule checks `EndConversation` and `AskUserQuestion` only.
+The docs name `AskUserQuestion` only as an example of a tool to put in `disallowed-tools`. The
+changelog entry of 2.1.69 calls it an interactive tool. No source gives a list of other interactive
+tools. So the rule checks `EndConversation` and `AskUserQuestion` only.
 
 The rule reads a string or a list. It splits a string at spaces and commas outside parentheses.
 It reads the tool name of a permission rule, such as `AskUserQuestion` in `AskUserQuestion(x)`.

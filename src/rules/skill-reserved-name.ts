@@ -1,6 +1,6 @@
-// Claude Code does not load a skill or command with a reserved name
-// (docs/rules/skill-reserved-name.md). A plugin is out of scope: the docs
-// give the rule for names outside a plugin.
+// Claude Code does not load a skill folder `synced`, or a skill or command
+// named `anthropic-skills` (docs/rules/skill-reserved-name.md). A plugin is
+// out of scope: the docs give the rule for names outside a plugin.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'

@@ -27,7 +27,8 @@ resolve, and no error shows.
 
 The rule reports each use of the two variables in a skill or command file that is not in a plugin.
 It reads the body and the `allowed-tools` value. The report is on the variable. The rule also
-reports inside fenced code, because Claude Code replaces the text there too.
+reports inside fenced code. The docs say that Claude Code replaces the variables in the markdown
+content of a plugin skill, and they do not exempt fenced code.
 
 The two variables are the only ones that the rule checks. `${CLAUDE_SKILL_DIR}`,
 `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_SESSION_ID}` and `${CLAUDE_EFFORT}` work in every skill.
