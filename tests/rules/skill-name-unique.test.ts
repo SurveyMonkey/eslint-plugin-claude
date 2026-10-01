@@ -82,6 +82,12 @@ symlinkSync('missing.md', path.join(scratch, 'dead/.claude/commands/x.md'))
 put('twin/.claude/commands/real/deploy.md', bare)
 symlinkSync('real', path.join(scratch, 'twin/.claude/commands/a-link'))
 put('twin/.claude/skills/s/SKILL.md', named('real:deploy'))
+// No `.git`: the project directory is the bound, so a link from `.claude/` to a
+// directory beside it is followed.
+put('nogit/shared/deploy.md', bare)
+put('nogit/.claude/skills/s/SKILL.md', named('shared:deploy'))
+mkdirSync(path.join(scratch, 'nogit/.claude/commands'), { recursive: true })
+symlinkSync('../../shared', path.join(scratch, 'nogit/.claude/commands/shared'))
 const pair = (index: number, first: string, second: string) => {
   const tree = `fold-${index}`
   const file = (folder: string, value: string) =>
@@ -145,6 +151,11 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: named('build'), filename: at('dup-name', '.claude', 'agents', 'build.md') },
   ],
   invalid: [
+    {
+      code: named('shared:deploy'),
+      filename: path.join(scratch, 'nogit', '.claude', 'skills', 's', 'SKILL.md'),
+      errors: [{ messageId: 'duplicate' }],
+    },
     {
       code: named('real:deploy'),
       filename: path.join(scratch, 'twin', '.claude', 'skills', 's', 'SKILL.md'),

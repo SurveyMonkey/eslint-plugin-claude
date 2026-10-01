@@ -62,6 +62,14 @@ put('outp/.git/HEAD', '')
 put('outp/.claude-plugin/plugin.json', '{"name": "outp"}')
 mkdirSync(path.join(scratch, 'outp/agents'), { recursive: true })
 symlinkSync('../../out/elsewhere', path.join(scratch, 'outp/agents/team'))
+// A link out of the repository in a nested project, with an agents directory
+// above it that has no link: the walk keeps what the lower scan found.
+put('mixed/.git/HEAD', '')
+put('mixed/.claude/agents/top.md', agentFile('top'))
+mkdirSync(path.join(scratch, 'mixed/sub/.claude/agents'), { recursive: true })
+symlinkSync('../../../../out/elsewhere', path.join(scratch, 'mixed/sub/.claude/agents/team'))
+// No `.git`: the agents of the project directory still count.
+put('nogit/.claude/agents/local.md', agentFile('local'))
 // A `.git` entry that is a file, as in a worktree or a submodule.
 put('above/.claude/agents/above.md', agentFile('above'))
 put('above/wt/.git', 'gitdir: elsewhere')
@@ -176,6 +184,14 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     {
       code: fork('inrepo'),
       filename: path.join(scratch, 'outer', 'repo', 'sub', '.claude', 'skills', 's', 'SKILL.md'),
+    },
+    {
+      code: fork('ghost'),
+      filename: path.join(scratch, 'mixed', 'sub', '.claude', 'skills', 's', 'SKILL.md'),
+    },
+    {
+      code: fork('local'),
+      filename: path.join(scratch, 'nogit', '.claude', 'skills', 's', 'SKILL.md'),
     },
     // A link out of the repository can hold the agent, so the rule stays silent.
     {
