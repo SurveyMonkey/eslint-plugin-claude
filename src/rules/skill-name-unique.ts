@@ -16,8 +16,9 @@ import {
 const name = 'skill-name-unique' as const
 
 /** The name without the differences that Claude Code ignores for a synced
- *  skill: case, spacing, invisible characters, compatibility forms such as
- *  fullwidth letters, and dash variants. The rule applies it to all names. */
+ *  skill. These are case, spacing, invisible characters, compatibility forms
+ *  such as fullwidth letters, and dash variants. The rule applies this to all
+ *  names. */
 function fold(text: string): string {
   return text
     .normalize('NFKC')
@@ -71,7 +72,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     schema: [],
     messages: {
       duplicate:
-        '`{{name}}` is also the command name of {{others}}. One of them does not run. Rename one.',
+        '`{{name}}` is also the command name of {{others}}. Claude Code gives that name to only one of them. Rename one.',
     },
   },
   create(context) {

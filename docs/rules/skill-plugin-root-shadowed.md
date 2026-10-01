@@ -36,10 +36,10 @@ The rule is silent in these cases:
 
 - A skill in `skills/<name>/SKILL.md`. It is not the root skill.
 - A `SKILL.md` in a directory that has no manifest.
-- A manifest that does not parse, or that is not an object. The rule reads no key from it.
+- A manifest that does not parse, or that is not an object. The rule reads no key from it, so it
+  gives no `manifest` report. The `directory` report does not need the manifest.
 
-The rule cannot see a `skills/` directory that the tool adds at install time. It reads the
-checkout only.
+The rule reads the files of the checkout only.
 
 Fail, a plugin with `SKILL.md` and `skills/review/SKILL.md`:
 

@@ -22,7 +22,7 @@ function folderPath(raw: string): string | null {
   const bare = raw.split(/[#?]/)[0] as string
   const inFolder = bare.startsWith(SKILL_DIR)
   const target = inFolder ? bare.slice(SKILL_DIR.length) : bare
-  // A path that starts with `/` leaves the folder, and the check below skips it.
+  // A path that starts with `/` and is outside the folder is skipped by the check below.
   if (PLACEHOLDER.test(target) || SCHEME.test(target) || /^[\\~]/.test(target)) {
     return null
   }

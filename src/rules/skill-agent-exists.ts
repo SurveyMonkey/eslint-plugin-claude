@@ -47,7 +47,8 @@ function projectAgents(start: string): string[] {
 }
 
 /** The names that a skill in the plugin at `root` can use for each agent of
- *  the plugin. These are the bare name and the scoped name. */
+ *  the plugin. These are the scoped name and, to avoid a false report, the
+ *  bare name, which the docs do not confirm. */
 function pluginAgents(root: string, plugin: string): string[] {
   const agentsDir = path.join(root, 'agents')
   return markdownFiles(agentsDir).flatMap((file) => {

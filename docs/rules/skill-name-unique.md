@@ -20,8 +20,9 @@ Give each skill and command in one scope its own name.
 
 ## Rule details
 
-When two skills or commands have the same name, only one runs. A skill beats a file in
-`.claude/commands/`.[^resolve] Claude Code shows no error for the other one.
+When two skills or commands have the same name, Claude Code gives that name to only one of
+them. A skill beats a file in `.claude/commands/`.[^resolve] Claude Code shows no error for the
+other one. A skill that loses its name can still run by the name of its folder.[^name]
 
 The rule works in one scope. A scope is a `.claude/` directory, or a plugin root. Two scopes can
 share a name. Nested `.claude/` directories load together, and a plugin skill has the plugin name
@@ -34,8 +35,8 @@ The command name of a file comes from these sources:[^name]
 - A command file: its path below `commands/`, without `.md`, with each `/` as `:`. The rule does
   not read the `name` field of a command file.
 
-The rule compares names after it removes the differences that Claude Code ignores when it
-compares skill names:[^fold]
+The rule compares names after it removes the differences that Claude Code ignores for a synced
+skill:[^fold]
 
 - letter case
 - spacing, such as a space, a tab or a no-break space
@@ -49,14 +50,15 @@ A letter from another alphabet that looks like a Latin letter is a different nam
 The docs give this folding for a synced skill that has the same name as another command. The
 rule uses it for the names in one scope, because the docs give no other rule.
 
-The rule reports on each file of a collision, not only on the second file, because a rule that
-lints one file cannot know the order of the files. The report is on the `name` value, or on line 1
+The rule reports on each file of a collision, not only on the second file. A rule that lints
+one file cannot know the order of the files. The report is on the `name` value, or on line 1
 when the name comes from the path or the folder. The message lists the other files of the scope.
 
 A plugin that sets `commands` does not load `commands/`, so the rule skips that folder. The rule
-reads the other files from the disk, and follows a link to a directory once. It reads the file that it lints from the text that
-ESLint gives. It ignores a file whose frontmatter does not parse. For another file with
-frontmatter that does not parse, it uses the folder name.
+reads the other files from the disk. It follows a link to a directory once, lists the real
+directory before a link to it, and skips `.git` and `node_modules`. It reads the file that it
+lints from the text that ESLint gives. It ignores a file whose frontmatter does not parse. For
+another file with frontmatter that does not parse, it uses the folder name.
 
 The rule does not check these cases:
 
@@ -65,6 +67,8 @@ The rule does not check these cases:
 - A skill whose folder name is the name of another skill. The docs say that the folder name also
   invokes the skill. The rule compares the effective name only.
 - A skill `name` in a plugin that has the plugin prefix, such as `my-plugin:review`.
+- A directory that a `skills` key of a plugin lists. The key adds to `skills/`, and the rule
+  reads `skills/` only.
 - A name that matches a bundled skill, a built-in command, an MCP prompt, or a skill in `~/.claude/`.
   The rule cannot see them.
 

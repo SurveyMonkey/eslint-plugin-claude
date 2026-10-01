@@ -58,7 +58,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'loose' | 'wrongCase' }> = {
             })
           }
         } else if (
-          // Claude Code reads the exact name `SKILL.md`.
+          // The docs name the file `SKILL.md`.
           isSkillsDir(path.dirname(folder)) &&
           base !== 'SKILL.md' &&
           base.toLowerCase() === 'skill.md' &&

@@ -166,7 +166,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
       bracket:
         '`{{pattern}}` has a `[` that starts no bracket expression. Claude Code matches no file with it. Escape the `[` as `\\[`.',
       budget:
-        'The brace groups in `paths` expand to {{count}} patterns and {{bytes}} bytes. The limit is 1,000 patterns or 4 MiB. Claude Code then keeps the patterns as they are, and their braces match no file.',
+        'The brace groups in `paths` expand to {{count}} patterns and {{bytes}} bytes. The limit is 1,000 patterns or 4 MiB. Claude Code then keeps the patterns that exceed the budget as they are, and their braces match no file.',
     },
   },
   create(context) {
