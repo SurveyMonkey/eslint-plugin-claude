@@ -6,6 +6,7 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
+import skillFileLayout from './rules/skill-file-layout.ts'
 import skillForkFieldsRequireContext from './rules/skill-fork-fields-require-context.ts'
 import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
 import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
@@ -37,6 +38,7 @@ const modules = [
   skillInjectBangPosition,
   skillAllowedToolsIneffective,
   skillPluginRootShadowed,
+  skillFileLayout,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -67,6 +69,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-inject-bang-position': 'error',
   'skill-allowed-tools-ineffective': 'error',
   'skill-plugin-root-shadowed': 'error',
+  'skill-file-layout': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

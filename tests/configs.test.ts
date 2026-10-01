@@ -43,6 +43,8 @@ const TREE: Record<string, string> = {
   'plugins/p/SKILL.md': `---\nname: p\n---\n\nRun ${pluginData}\n`,
   'plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
   'plugins/q/SKILL.md': '# Q\n',
+  '.claude/skills/loose.md': '# Loose\n',
+  '.claude/skills/layout/skill.md': '# Wrong case\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
@@ -64,6 +66,8 @@ const EXPECTED = [
   '.claude/settings.local.json: claude/hooks-event-name-known@2',
   '.claude/skills/bang/SKILL.md: claude/skill-inject-bang-position@2',
   '.claude/skills/fork/SKILL.md: claude/skill-fork-fields-require-context@2',
+  '.claude/skills/layout/skill.md: claude/skill-file-layout@2',
+  '.claude/skills/loose.md: claude/skill-file-layout@2',
   '.claude/skills/position/SKILL.md: claude/skill-frontmatter-position@2',
   '.claude/skills/schema/SKILL.md: claude/skill-frontmatter-schema@2',
   '.claude/skills/synced/SKILL.md: claude/skill-reserved-name@2',
@@ -91,6 +95,7 @@ const NEW_RULES = [
   'skill-inject-bang-position',
   'skill-allowed-tools-ineffective',
   'skill-plugin-root-shadowed',
+  'skill-file-layout',
 ]
 
 let root = ''

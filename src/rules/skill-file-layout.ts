@@ -1,7 +1,6 @@
 // Claude Code finds a skill only as `skills/<name>/SKILL.md`
 // (docs/rules/skill-file-layout.md). The rule reports the two files that it
 // can see: a loose `.md` file in `skills/`, and a `skill.md` of the wrong case.
-import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -50,11 +49,11 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'loose' | 'wrongCase' }> = {
           }
           return
         }
+        // Claude Code reads the exact name `SKILL.md`.
         if (
           isSkillsDir(path.dirname(folder)) &&
           base !== 'SKILL.md' &&
-          base.toLowerCase() === 'skill.md' &&
-          !existsSync(path.join(folder, 'SKILL.md'))
+          base.toLowerCase() === 'skill.md'
         ) {
           context.report({ loc: first, messageId: 'wrongCase', data: { file: base } })
         }

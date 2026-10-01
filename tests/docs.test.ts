@@ -21,6 +21,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-event-name-known',
     'skill-allowed-tools-ineffective',
     'skill-description-max-length',
+    'skill-file-layout',
     'skill-fork-fields-require-context',
     'skill-frontmatter-position',
     'skill-frontmatter-schema',
