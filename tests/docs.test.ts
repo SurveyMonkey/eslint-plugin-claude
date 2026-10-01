@@ -29,6 +29,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-inject-bang-position',
     'skill-invocation-unreachable',
     'skill-name-unique',
+    'skill-paths-glob-valid',
     'skill-plugin-root-shadowed',
     'skill-plugin-vars-outside-plugin',
     'skill-reference-exists',

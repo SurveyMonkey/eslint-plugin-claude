@@ -53,6 +53,9 @@ const TREE: Record<string, string> = {
   '.claude/skills/twin-a/SKILL.md': '---\nname: twin\n---\n',
   '.claude/skills/twin-b/SKILL.md': '---\nname: Twin\n---\n',
   'packages/x/.claude/skills/twin/SKILL.md': '# Twin\n',
+  '.claude/skills/glob/SKILL.md': '---\npaths: "photos [2024/**"\n---\n',
+  '.claude/skills/glob-ok/SKILL.md':
+    '---\npaths:\n  - "src/**/*.{ts,tsx}"\n  - "photos \\\\[2024/**"\n---\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
@@ -76,6 +79,7 @@ const EXPECTED = [
   '.claude/skills/agent/SKILL.md: claude/skill-agent-exists@2',
   '.claude/skills/bang/SKILL.md: claude/skill-inject-bang-position@2',
   '.claude/skills/fork/SKILL.md: claude/skill-fork-fields-require-context@2',
+  '.claude/skills/glob/SKILL.md: claude/skill-paths-glob-valid@2',
   '.claude/skills/layout/skill.md: claude/skill-file-layout@2',
   '.claude/skills/loose.md: claude/skill-file-layout@2',
   '.claude/skills/position/SKILL.md: claude/skill-frontmatter-position@2',
@@ -113,6 +117,7 @@ const NEW_RULES = [
   'skill-reference-exists',
   'skill-agent-exists',
   'skill-name-unique',
+  'skill-paths-glob-valid',
 ]
 
 let root = ''

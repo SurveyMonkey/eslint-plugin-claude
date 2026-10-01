@@ -75,19 +75,21 @@ function measure(text: string, matches: Map<number, number>, from: number, to: n
   }
   const literal = (chars: string) =>
     append([{ count: 1, bytes: Buffer.byteLength(chars), braced: false }])
+  // The text from `run` to the next group is one literal.
+  let run = from
   for (let i = from; i < to; i++) {
     const close = matches.get(i)
     if (text[i] === '\\') {
-      literal(text.slice(i, i + 2))
       i++
     } else if (close !== undefined) {
+      literal(text.slice(run, i))
       const commas = topCommas(text, matches, i + 1, close)
       const cuts = [i, ...commas, close]
-      // Without a comma, the braces stay as text and the inside may expand.
       const parts = cuts
         .slice(0, -1)
         .map((start, n) => measure(text, matches, start + 1, cuts[n + 1] as number))
       if (commas.length === 0) {
+        // Without a comma, the braces stay as text and the inside may expand.
         literal('{')
         append(parts)
         literal('}')
@@ -95,12 +97,10 @@ function measure(text: string, matches: Map<number, number>, from: number, to: n
         append(parts)
       }
       i = close
-    } else {
-      const char = String.fromCodePoint(text.codePointAt(i) as number)
-      literal(char)
-      i += char.length - 1
+      run = close + 1
     }
   }
+  literal(text.slice(run, to))
   return size
 }
 

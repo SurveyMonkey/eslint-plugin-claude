@@ -59,6 +59,7 @@ Each rule brings its own `files` glob and language, and the config registers `ma
 | [`claude/skill-reference-exists`](docs/rules/skill-reference-exists.md) | A relative link or `${CLAUDE_SKILL_DIR}` path in a `SKILL.md` that names a file which is not there | `error` | `error` |
 | [`claude/skill-agent-exists`](docs/rules/skill-agent-exists.md) | The `agent` of a forked skill names a built-in agent, an agent file, or a plugin agent | `error` | `error` |
 | [`claude/skill-name-unique`](docs/rules/skill-name-unique.md) | Two skills or commands in one scope with the same command name | `error` | `error` |
+| [`claude/skill-paths-glob-valid`](docs/rules/skill-paths-glob-valid.md) | A `paths` glob that Claude Code cannot use | `error` | `error` |
 
 ## Contributing
 
