@@ -89,7 +89,8 @@ const differentCases = DIFFERENT.map(([first, second], index) => {
 
 markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
   valid: [
-    // One skill in the scope, and a name that no other file has.
+    // One skill in the scope, with a supporting file beside it (not a skill).
+    // A name that no other file has.
     { code: bare, filename: skillAt('single', 'only') },
     ...differentCases,
     // Two scopes may share a name: nested `.claude/` directories, two plugins, a plugin and the project.

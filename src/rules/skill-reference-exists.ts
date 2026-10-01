@@ -23,9 +23,7 @@ function folderPath(raw: string): string | null {
   const inFolder = bare.startsWith(SKILL_DIR)
   const target = inFolder ? bare.slice(SKILL_DIR.length) : bare
   const skipped =
-    target === '' ||
-    PLACEHOLDER.test(target) ||
-    (!inFolder && (SCHEME.test(target) || /^[/\\~]/.test(target)))
+    PLACEHOLDER.test(target) || (!inFolder && (SCHEME.test(target) || /^[/\\~]/.test(target)))
   if (skipped) {
     return null
   }
@@ -61,10 +59,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
       }
       const resolved = path.resolve(folder, target)
       const inside = path.relative(folder, resolved)
-      if (inside === '' || inside === '..' || inside.startsWith(`..${path.sep}`)) {
-        return
-      }
-      if (!existsSync(resolved)) {
+      if (!inside.startsWith(`..${path.sep}`) && !existsSync(resolved)) {
         context.report({
           loc: context.sourceCode.getLoc(node),
           messageId: 'missing',

@@ -39,6 +39,8 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     // 10 x 10 x 10 is exactly the limit. A nested group counts its leaves.
     text(`${group(10)}/${group(10)}/${group(10)}`),
     text('{a,{b,c}}'.repeat(6)),
+    // Exactly 4 MiB is within the budget: two patterns of 2 MiB.
+    text(`{a,b}${'x'.repeat(2 * 1024 * 1024 - 1)}`),
     // A brace that closes nothing, or that is escaped, or that has no comma, is text.
     text(`${group(10)}${group(10)}${group(10)}/{a,b`),
     text('\\{a,b\\}'.repeat(12)),

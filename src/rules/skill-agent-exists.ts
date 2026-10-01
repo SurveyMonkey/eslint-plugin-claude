@@ -95,6 +95,8 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
       return {}
     }
     const plugin = typeof manifest?.name === 'string' ? manifest.name : path.basename(root)
+    // The prefix of the scoped names of this plugin. A project has none.
+    const prefix = file.plugin ? `${plugin}:` : null
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
@@ -105,8 +107,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         }
         // A scoped name holds `:`, and names the agent of a plugin. A project
         // agent has no `:`. A plugin that the settings enable is out of sight.
-        const scoped = agent.includes(':')
-        if (scoped && (!file.plugin || !agent.startsWith(`${plugin}:`))) {
+        if (agent.includes(':') && (prefix === null || !agent.startsWith(prefix))) {
           return
         }
         const known = [
