@@ -4,15 +4,12 @@
 // plugin agent, so the rule checks only files in `.claude/agents/`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
+import { MCP_SERVER_TYPES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isMap } from '../frontmatter-values.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'agent-mcp-servers-schema' as const
-
-// The `type` values of a server in `.mcp.json`. Claude Code skips an `sdk`
-// server with a warning, so the rule does not report it.
-const TYPES = ['stdio', 'http', 'sse', 'ws', 'sdk']
 
 type Problem = { messageId: 'badEntry' | 'badConfig' | 'badType'; data: Record<string, string> }
 
@@ -31,7 +28,7 @@ function entryProblem(entry: unknown, index: number): Problem | null {
     return { messageId: 'badConfig', data: { server } }
   }
   const { type } = config
-  if (type !== undefined && !TYPES.includes(type as string)) {
+  if (type !== undefined && !(MCP_SERVER_TYPES as readonly string[]).includes(type as string)) {
     return { messageId: 'badType', data: { server, type: String(type) } }
   }
   return null

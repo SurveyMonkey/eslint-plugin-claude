@@ -15,7 +15,7 @@ markdownTester.run('agent-memory-grants-write', ruleOf('agent-memory-grants-writ
     file('memory: user\ntools: [Read, Write, Edit]\n'),
     // A specifier does not change the tool name.
     file('memory: local\ntools: Write(docs/**), Edit(docs/**)\n'),
-    // `tools` inherits every tool when it is absent or empty.
+    // `tools` inherits every tool when it is absent or has no value.
     file('memory: project\n'),
     file('memory: project\ntools:\n'),
     // No memory, or a scope that the docs do not list.

@@ -1,6 +1,7 @@
 // Claude Code skips a local subagent file with bad frontmatter, with no error
-// (docs/rules/agent-frontmatter-valid.md). A plugin agent still loads, so the
-// rule checks only files in `.claude/agents/`.
+// (docs/rules/agent-frontmatter-valid.md). A plugin agent with no name or
+// bad YAML still loads, and the docs say no more, so the rule checks only
+// files in `.claude/agents/`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
 import { AGENT_FIELDS } from '../data/agent-fields.ts'

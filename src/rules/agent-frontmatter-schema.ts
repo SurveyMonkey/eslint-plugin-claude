@@ -3,7 +3,7 @@
 // (docs/rules/agent-frontmatter-schema.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
-import { AGENT_FIELDS } from '../data/agent-fields.ts'
+import { AGENT_ENUMS, AGENT_FIELDS, CACHE_TTL_VALUES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isBooleanValue, isMap, nearMissOf } from '../frontmatter-values.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -13,22 +13,6 @@ const name = 'agent-frontmatter-schema' as const
 const STRING_FIELDS = ['name', 'description']
 const STRING_OR_LIST_FIELDS = ['tools', 'disallowedTools']
 const BOOLEAN_FIELDS = ['background', 'omitClaudeMd']
-const ENUMS: Record<string, string[]> = {
-  permissionMode: [
-    'default',
-    'acceptEdits',
-    'auto',
-    'dontAsk',
-    'bypassPermissions',
-    'plan',
-    'manual',
-  ],
-  memory: ['user', 'project', 'local'],
-  effort: ['low', 'medium', 'high', 'xhigh', 'max'],
-  isolation: ['worktree'],
-  color: ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan'],
-}
-const CACHE_TTL = ['5m', '1h']
 
 type Problem = {
   messageId: 'wrongType' | 'invalidValue' | 'unknownExperimental'
@@ -38,7 +22,7 @@ type Problem = {
 const isStringList = (value: unknown): boolean =>
   Array.isArray(value) && value.every((item) => typeof item === 'string')
 
-const quoted = (values: string[]): string => values.map((v) => `\`${v}\``).join(', ')
+const quoted = (values: readonly string[]): string => values.map((v) => `\`${v}\``).join(', ')
 
 /** The fault in the value of the known field `key`, or null. */
 function valueProblem(key: string, value: unknown): Problem | null {
@@ -72,14 +56,16 @@ function valueProblem(key: string, value: unknown): Problem | null {
       return { messageId: 'unknownExperimental', data: { key: other } }
     }
     const ttl = value.cacheTtl
-    return ttl === undefined || ttl === null || CACHE_TTL.includes(ttl as string)
+    return ttl === undefined ||
+      ttl === null ||
+      (CACHE_TTL_VALUES as readonly string[]).includes(ttl as string)
       ? null
       : {
           messageId: 'invalidValue',
-          data: { key: 'experimental.cacheTtl', allowed: quoted(CACHE_TTL) },
+          data: { key: 'experimental.cacheTtl', allowed: quoted(CACHE_TTL_VALUES) },
         }
   }
-  const allowed = ENUMS[key]
+  const allowed = AGENT_ENUMS[key]
   if (allowed !== undefined && !allowed.includes(value as string)) {
     return { messageId: 'invalidValue', data: { key, allowed: quoted(allowed) } }
   }
@@ -113,7 +99,7 @@ const rule: MarkdownRuleDefinition<{
       wrongType: '`{{key}}` must be {{expected}}.',
       invalidValue: '`{{key}}` must be one of {{allowed}}.',
       unknownExperimental:
-        '`experimental` has no `{{key}}` option. Claude Code reads only `cacheTtl` there.',
+        '`{{key}}` is not a documented `experimental` option. The docs name only `cacheTtl`.',
       rename: 'Rename the key to `{{expected}}`.',
     },
   },

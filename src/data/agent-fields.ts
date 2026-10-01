@@ -35,3 +35,30 @@ export const OUTPUT_STYLE_FIELDS = [
   'keep-coding-instructions',
   'force-for-plugin',
 ] as const
+
+/** The values of `memory`. */
+export const MEMORY_SCOPES = ['user', 'project', 'local'] as const
+
+/** The values of the fields that take one of a fixed set, by field name. */
+export const AGENT_ENUMS: Readonly<Record<string, readonly string[]>> = {
+  permissionMode: [
+    'default',
+    'acceptEdits',
+    'auto',
+    'dontAsk',
+    'bypassPermissions',
+    'plan',
+    'manual',
+  ],
+  memory: MEMORY_SCOPES,
+  effort: ['low', 'medium', 'high', 'xhigh', 'max'],
+  isolation: ['worktree'],
+  color: ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan'],
+}
+
+/** The values of `experimental.cacheTtl`. */
+export const CACHE_TTL_VALUES = ['5m', '1h'] as const
+
+/** The `type` values of a server in `.mcp.json`. Claude Code skips an `sdk`
+ *  server with a warning. */
+export const MCP_SERVER_TYPES = ['stdio', 'http', 'sse', 'ws', 'sdk'] as const

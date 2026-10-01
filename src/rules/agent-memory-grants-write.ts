@@ -2,12 +2,12 @@
 // when `tools` leaves them out (docs/rules/agent-memory-grants-write.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
+import { MEMORY_SCOPES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'agent-memory-grants-write' as const
 
-const SCOPES = ['user', 'project', 'local']
 const GRANTED = ['Write', 'Edit']
 
 /** The tool names in `tools`, without specifiers, or null when `tools` is
@@ -43,7 +43,11 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'grantsWrite' }> = {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
         const field = fm?.fields.get('tools')
-        if (fm === null || field === undefined || !SCOPES.includes(fm.data.memory as string)) {
+        if (
+          fm === null ||
+          field === undefined ||
+          !(MEMORY_SCOPES as readonly string[]).includes(fm.data.memory as string)
+        ) {
           return
         }
         const names = toolNames(fm.data.tools)

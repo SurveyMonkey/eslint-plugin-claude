@@ -15,7 +15,8 @@ export function nearMissOf(key: string, known: readonly string[]): string | unde
 /** True when Claude Code reads `value` as a Boolean. The skills reference
  *  lists `yes`, `no`, `on`, `off`, `1` and `0` in any case, besides `true`
  *  and `false`. The subagent and output style references do not list the
- *  forms, so the rules accept the same ones. */
+ *  forms, so the rules accept the same ones. Before Claude Code v2.1.218 only
+ *  `true` and `false` work. */
 export function isBooleanValue(value: unknown): boolean {
   if (typeof value === 'boolean' || value === 0 || value === 1) {
     return true

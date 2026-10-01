@@ -24,9 +24,9 @@ const rule: MarkdownRuleDefinition<{
     hasSuggestions: true,
     schema: [],
     messages: {
-      unknownKey: '`{{key}}` is not an output style frontmatter field. Claude Code ignores it.',
+      unknownKey: '`{{key}}` is not a field of an output style. Claude Code ignores it.',
       nearMiss:
-        '`{{key}}` is not an output style frontmatter field. Claude Code ignores it. Use `{{expected}}`.',
+        '`{{key}}` is not a field of an output style. Claude Code ignores it. Use `{{expected}}`.',
       pluginOnly: '`force-for-plugin` works only in the output style of a plugin.',
       wrongType: '`{{key}}` must be {{expected}}.',
       rename: 'Rename the key to `{{expected}}`.',
