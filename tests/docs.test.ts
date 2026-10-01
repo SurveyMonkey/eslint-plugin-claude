@@ -19,6 +19,7 @@ it('gives each rule a doc and a URL that names it', () => {
   expect(rules.map(([name]) => name).sort()).toEqual([
     'command-legacy-format',
     'hooks-event-name-known',
+    'skill-agent-exists',
     'skill-allowed-tools-ineffective',
     'skill-description-max-length',
     'skill-file-layout',

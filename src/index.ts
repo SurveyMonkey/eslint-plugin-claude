@@ -4,6 +4,7 @@ import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
 import skillFileLayout from './rules/skill-file-layout.ts'
@@ -41,6 +42,7 @@ const modules = [
   skillPluginRootShadowed,
   skillFileLayout,
   skillReferenceExists,
+  skillAgentExists,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -73,6 +75,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-plugin-root-shadowed': 'error',
   'skill-file-layout': 'error',
   'skill-reference-exists': 'error',
+  'skill-agent-exists': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

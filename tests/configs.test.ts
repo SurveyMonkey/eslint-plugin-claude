@@ -48,6 +48,8 @@ const TREE: Record<string, string> = {
   '.claude/skills/ref/SKILL.md': '[a](missing.md)\n',
   '.claude/skills/ref-ok/SKILL.md': '[a](reference.md)\n',
   '.claude/skills/ref-ok/reference.md': '# Reference\n',
+  '.claude/skills/agent/SKILL.md': '---\ncontext: fork\nagent: ghost\n---\n',
+  '.claude/skills/agent-ok/SKILL.md': '---\ncontext: fork\nagent: Explore\n---\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
@@ -67,6 +69,7 @@ const EXPECTED = [
   '.claude/commands/schema.md: claude/skill-frontmatter-schema@2',
   '.claude/settings.json: claude/hooks-event-name-known@2',
   '.claude/settings.local.json: claude/hooks-event-name-known@2',
+  '.claude/skills/agent/SKILL.md: claude/skill-agent-exists@2',
   '.claude/skills/bang/SKILL.md: claude/skill-inject-bang-position@2',
   '.claude/skills/fork/SKILL.md: claude/skill-fork-fields-require-context@2',
   '.claude/skills/layout/skill.md: claude/skill-file-layout@2',
@@ -101,6 +104,7 @@ const NEW_RULES = [
   'skill-plugin-root-shadowed',
   'skill-file-layout',
   'skill-reference-exists',
+  'skill-agent-exists',
 ]
 
 let root = ''

@@ -22,21 +22,28 @@ const BUILT_IN = [
   'claude-code-guide',
 ]
 
+/** `dir` and each directory above it, up to the root of the file system. */
+function ancestors(dir: string): string[] {
+  const parent = path.dirname(dir)
+  return parent === dir ? [dir] : [dir, ...ancestors(parent)]
+}
+
 /** The `name` of each agent file in `.claude/agents/` of `start` and of each
  *  directory above it, up to the first directory that holds `.git`. */
 function projectAgents(start: string): string[] {
   const found: string[] = []
-  for (let dir = start; ; dir = path.dirname(dir)) {
+  for (const dir of ancestors(start)) {
     for (const file of markdownFiles(path.join(dir, '.claude', 'agents'))) {
       const agent = frontmatterOfFile(file)?.name
       if (typeof agent === 'string') {
         found.push(agent)
       }
     }
-    if (existsSync(path.join(dir, '.git')) || path.dirname(dir) === dir) {
-      return found
+    if (existsSync(path.join(dir, '.git'))) {
+      break
     }
   }
+  return found
 }
 
 /** The names that a skill in the plugin at `root` can use for each agent of
@@ -51,7 +58,7 @@ function pluginAgents(root: string, plugin: string): string[] {
   })
 }
 
-const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing' }> = {
+const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project' | 'plugin' }> = {
   meta: {
     type: 'problem',
     docs: {
@@ -69,8 +76,10 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
     ],
     defaultOptions: [{ allow: [] }],
     messages: {
-      missing:
-        '`{{agent}}` is not a built-in agent, and no agent file in {{where}} defines it. A forked skill cannot start it.',
+      project:
+        '`{{agent}}` is not a built-in agent, and no file in `.claude/agents/` defines it. A forked skill cannot start it.',
+      plugin:
+        '`{{agent}}` is not a built-in agent, and no file in `agents/` of this plugin defines it. A forked skill cannot start it.',
     },
   },
   create(context) {
@@ -105,11 +114,12 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
           ...allow,
           ...(file.plugin ? pluginAgents(root, plugin) : projectAgents(path.dirname(root))),
         ]
-        if (!known.includes(agent)) {
+        // The docs do not say if Claude Code compares names with case.
+        if (!known.some((other) => other.toLowerCase() === agent.toLowerCase())) {
           context.report({
             loc: fm.at(field.valueStart, field.valueEnd),
-            messageId: 'missing',
-            data: { agent, where: file.plugin ? '`agents/` of the plugin' : '`.claude/agents/`' },
+            messageId: file.plugin ? 'plugin' : 'project',
+            data: { agent },
           })
         }
       },
