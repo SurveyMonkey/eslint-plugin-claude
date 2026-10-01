@@ -24,8 +24,10 @@ Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recomme
 - `CONTRIBUTING.md` has the commands, the hooks and the release flow. Run `pnpm lint`,
   `pnpm typecheck`, `pnpm test` and `pnpm knip` before you push.
 - A new rule needs footnotes in `docs/rules/<rule>.md` that link to its docs sources. The form
-  is in `CONTRIBUTING.md` (Rule source map). Then run `pnpm docs:seed` and commit
-  `docs/rule-sources.json`. If you do not, `tests/rule-sources.test.ts` fails.
+  is in `CONTRIBUTING.md` (Rule source map). Then run `pnpm docs:seed`, then `pnpm docs:update`.
+  Commit `docs/rule-sources.json` and `docs/docs-snapshot/`. `docs:update` fetches the live docs
+  and rewrites the snapshot of each cited page. If you skip a step, `tests/rule-sources.test.ts`
+  fails.
 - The scripts in `scripts/*.ts` run with `node`. Node 22.13 to 22.17 needs
   `--experimental-strip-types`.
 

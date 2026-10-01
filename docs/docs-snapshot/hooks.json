@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "5129d58370ed4d7910c6e86537e0592b2902ea5bf0a8682721c5484f5d46f566",
+  "hash": "fb629c9a4ecaf81d61ac096e7ca57bcb3edd1b7713b75a8bb2739c06c30101e1",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -148,7 +148,7 @@
     },
     {
       "id": "sessionstart-input",
-      "hash": "736178891d29f9889ed539df5e88bd7eba1913c382514ab5e44b45d453b8e140"
+      "hash": "9850d18db5b281b0c83c02d51d08bbc63bbd71f72e1dc65f917d1cb411adc7bf"
     },
     {
       "id": "sessionstart-decision-control",
@@ -188,7 +188,7 @@
     },
     {
       "id": "userpromptsubmit-input",
-      "hash": "6b7ede23fa0619e405f6cd5efbaa64ad93918fef3ad83fb2944e9b4642f7c758"
+      "hash": "65ecd89a4e38deb4169f58c74d3cf088b79ceb19a8d4bfad60b8f99b7202e16d"
     },
     {
       "id": "userpromptsubmit-decision-control",

@@ -4,7 +4,15 @@ import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
+import skillForkFieldsRequireContext from './rules/skill-fork-fields-require-context.ts'
+import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
+import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
+import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
+import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
+import skillReservedName from './rules/skill-reserved-name.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
 // `../package.json` resolves from both `src/` and `dist/`.
@@ -15,7 +23,19 @@ const { name, version } = createRequire(import.meta.url)('../package.json') as {
 
 // Each rule module names its own files and language, so a new rule adds no
 // entry to a central glob list.
-const modules = [skillDescriptionMaxLength, commandLegacyFormat, hooksEventNameKnown]
+const modules = [
+  skillDescriptionMaxLength,
+  commandLegacyFormat,
+  hooksEventNameKnown,
+  skillFrontmatterPosition,
+  skillFrontmatterSchema,
+  skillForkFieldsRequireContext,
+  skillInvocationUnreachable,
+  skillReservedName,
+  skillPluginVarsOutsidePlugin,
+  skillInjectBangPosition,
+  skillAllowedToolsIneffective,
+]
 
 type RuleName = (typeof modules)[number]['name']
 type Severity = 'off' | 'warn' | 'error'
@@ -36,6 +56,14 @@ const recommended: Record<RuleName, Severity> = {
   'skill-description-max-length': 'warn',
   'command-legacy-format': 'warn',
   'hooks-event-name-known': 'error',
+  'skill-frontmatter-position': 'error',
+  'skill-frontmatter-schema': 'error',
+  'skill-fork-fields-require-context': 'error',
+  'skill-invocation-unreachable': 'error',
+  'skill-reserved-name': 'error',
+  'skill-plugin-vars-outside-plugin': 'error',
+  'skill-inject-bang-position': 'error',
+  'skill-allowed-tools-ineffective': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

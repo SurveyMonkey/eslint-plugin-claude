@@ -1,0 +1,1012 @@
+{
+  "url": "https://code.claude.com/docs/en/errors",
+  "hash": "df4b449f5ff813961a98bd60f9d6fbd2c65d087b9f97101326f5f1a8725321ff",
+  "blocks": [
+    {
+      "id": "error-reference",
+      "hash": "ae2a1a96d11053eb3452d559c8863892074fcad3aa4f5bc4f52e4018f5cef662"
+    },
+    {
+      "id": "find-your-error",
+      "hash": "31e3a827456c514c739afe690f0174bb6aab71c90ec671200dd040f0ab068507"
+    },
+    {
+      "id": "automatic-retries",
+      "hash": "03c649d214ac061d4f7790e1e5038d23074e2c32b8cf5ff0cab1913d0e7e8968"
+    },
+    {
+      "id": "what-you-see-while-claude-code-retries-or-waits",
+      "hash": "f845fa3e6272c9b4641500e467d7be6883319278cc50b7ea3471566b0f5e7bad"
+    },
+    {
+      "id": "tune-retry-behavior",
+      "hash": "637645e5047cafa597109fa12e442c1b05ce6d63d057479cb4c42939ef73f014"
+    },
+    {
+      "id": "server-errors",
+      "hash": "1c8f4aba88cc3f618d31c163f03b3bf57c8fc0cb41254ed70125d6261f964b3a"
+    },
+    {
+      "id": "api-error-500-internal-server-error",
+      "hash": "7406c2b8929f5a7d9cbc5b9bd45e847be9822ea1dba8d5bd6f68cb831c7a83b7"
+    },
+    {
+      "id": "api-error-repeated-529-overloaded-errors",
+      "hash": "30801a0bb98d82023f697beb57d080af7fbc6b45b571223ad40f7b1c8c80174a"
+    },
+    {
+      "id": "request-timed-out",
+      "hash": "8023b62c1812e5fed106a9c6529896446bbf450b1cc2a1dfc8993d7301070f9b"
+    },
+    {
+      "id": "no-response-from-api",
+      "hash": "99a4c78ccd8567ca8324727d2b0645dd6b31bb2c8431863d879511a4f374bd67"
+    },
+    {
+      "id": "the-response-above-may-be-incomplete",
+      "hash": "488d564bfd64166fd7eda580342e43ee67afb739c1a763400b3437aa7b1ed388"
+    },
+    {
+      "id": "auto-mode-cannot-determine-the-safety-of-an-action",
+      "hash": "a7dc210299031e563b5371bfcd87bd51a5410d45a4b03a84c84c60a405f3df28"
+    },
+    {
+      "id": "the-server-returned-no-safety-verdict",
+      "hash": "626b49bd14d962fefb1e0f824e7a539b6ce5f57a7c56a2ea3483d76b61f03be5"
+    },
+    {
+      "id": "agent-terminated-early-due-to-an-api-error",
+      "hash": "fe29720a9ba8cd7491b62c5cbf392149d88585eab95cd619b3befea526be8fa9"
+    },
+    {
+      "id": "usage-limits",
+      "hash": "907336289b14529007a0710621648b7c3a34a930fdb3d2fbcdb98573ca060d97"
+    },
+    {
+      "id": "youve-hit-your-session-limit",
+      "hash": "4ac60c1958b19df74e1f5e74fe9896d886b0d2af79f250bc3cc2965944bffe1e"
+    },
+    {
+      "id": "usage-credits-required-for-1m-context",
+      "hash": "97daece68f179bd1a2e39dc1cb0f029244bdd3279be32f6e8b57ad5d4bd00b6e"
+    },
+    {
+      "id": "the-prompt-to-confirm-went-unanswered",
+      "hash": "0ee42bc9dd72575878a3f03bd797ef082c44e06dd34e17b48731b4d17a7f8050"
+    },
+    {
+      "id": "server-is-temporarily-limiting-requests",
+      "hash": "8af4ec7374ba9371455bc48d51d3f3b38b3724d222daad077b0d0d4588e59c4b"
+    },
+    {
+      "id": "request-rejected-429",
+      "hash": "f3ff271e2694a33368fdc6ea5dd29896d5993554c12d9d9f5c9783d724c7b8bd"
+    },
+    {
+      "id": "youve-hit-your-monthly-spend-limit",
+      "hash": "0ea8d0d46b36059200fe9f68d8d896ddaf8ad7fdc8dc2a3a31a957817324e45f"
+    },
+    {
+      "id": "spend-limit-reached",
+      "hash": "42597172f391815841a2d345763378d41245fe365f50e552bff228e66046a020"
+    },
+    {
+      "id": "credit-balance-is-too-low",
+      "hash": "143ef300f1e2f08a00f55178775768c461f62769000a404622a4a0b224634434"
+    },
+    {
+      "id": "could-not-update-your-spend-limit",
+      "hash": "a05c7cbfd563eaa0322f2778db5ea9e21b27490190ff4c540057dfd3ab9d37f0"
+    },
+    {
+      "id": "authentication-errors",
+      "hash": "34740130040c2454f1d87208d80efec8fd139b2ea764d76d7456f1a078e54792"
+    },
+    {
+      "id": "not-logged-in",
+      "hash": "c6e8f974b2fcf3e6ae10b2234a7058b0c9da8873428e8a77f66c96cef8d74ecb"
+    },
+    {
+      "id": "could-not-resolve-authentication-method",
+      "hash": "e7d7776421b99f3abca86623108903471d5c2e1b8a0ac4deff4659357383f269"
+    },
+    {
+      "id": "invalid-api-key",
+      "hash": "05698a03e31dc2cb1541d5a8208f6ed224bbfb14a2bd2f16bf256e3971a41466"
+    },
+    {
+      "id": "your-apikeyhelper-script-is-failing",
+      "hash": "20cc64352eea8b199dc6e782fdc081a77eaa96bde55d74f1817f7ec304d9d798"
+    },
+    {
+      "id": "invalid-request-header-value",
+      "hash": "10580e98798ec7430e2a09e0dc7f72acc3f57161477c75c913717a59371d49e2"
+    },
+    {
+      "id": "this-organization-has-been-disabled",
+      "hash": "81a0e17c19b43cd42f05ac2606984820dac0377fa1d0d45f1d208bf6dab59796"
+    },
+    {
+      "id": "your-organization-has-disabled-api-key-authentication",
+      "hash": "0f148ee9a76526c7e3538c2ff15657990ca37bac5a7550b0b3bbba84210521d9"
+    },
+    {
+      "id": "your-organization-has-disabled-claude-subscription-access",
+      "hash": "587d227f0e98701db5a2dca7e2aedec42f88bd9d8a2ebf32a2aefac2742dda44"
+    },
+    {
+      "id": "routines-are-disabled-by-your-organizations-policy",
+      "hash": "42b52a53015e589b6b2c3db3cdfb55c4ef80897ab57f292bf708e63d15447ed5"
+    },
+    {
+      "id": "remote-control-requires-the-anthropic-api",
+      "hash": "9214b1c99932b564b5826e61c287eb182c774f71182294643a32238b6ce6c4b5"
+    },
+    {
+      "id": "remote-control-couldnt-refresh-your-login",
+      "hash": "76064fee11476cf6ab561586b960f01b1d522daad99642efca4a85839f5d44b0"
+    },
+    {
+      "id": "remote-control-stopped-because-the-signed-in-account-changed",
+      "hash": "d92c39f501f3aaaccbca93a9363a19f509ea5b3d1b8a77344de97c6f220ef28e"
+    },
+    {
+      "id": "remote-control-stopped-because-the-app-running-the-session-signed-out-or-switched-accounts",
+      "hash": "2bf6e4ac001c5b9849bac135742a96db7975e40bda1c67d6177ebb82a12f81fb"
+    },
+    {
+      "id": "oauth-token-revoked-or-expired",
+      "hash": "9b288171210700a6f4512527d792a6d11f79a7c4ce1578dabec79c5a22b6946b"
+    },
+    {
+      "id": "api-error-401-invalid-authentication-credentials",
+      "hash": "67a1c84f6f13be539c9a15b547ba6df4826857f19ff4aeade01323230b47febd"
+    },
+    {
+      "id": "login-expired",
+      "hash": "af931fbcca3bb089a4511ec90ea7488ec87850b38ede38fa82f2229aec498476"
+    },
+    {
+      "id": "could-not-refresh-your-login",
+      "hash": "a9e918b24ead60ff3616a52099806612f51cbe809bb6edc79b3734c6c627001d"
+    },
+    {
+      "id": "couldnt-save-your-login",
+      "hash": "b8a8f9e9303f9403496b89b64c80f7cbd08981cc4d5e2a460cae921e86078cae"
+    },
+    {
+      "id": "failed-to-start-oauth-callback-server",
+      "hash": "552b36e3db8f8dda1afcac6712e30f7dea79c222b6dc8d1c1811411b3bc9de67"
+    },
+    {
+      "id": "claude-login-not-accepted",
+      "hash": "2675e1fb896b679550bd3c3848a0115d9aa58f9583aa2181159db1265ba7cb31"
+    },
+    {
+      "id": "artifacts-need-a-claude-ai-login",
+      "hash": "5655d24a313a98bab9ade0dc873e4bf3990187255139cdfee2b3441ad94a9140"
+    },
+    {
+      "id": "administrator-policy-requires-a-cloud-gateway-sign-in",
+      "hash": "a014f8183d60d8b9965d635d137f440375e438fc283414ceeed732284722b91c"
+    },
+    {
+      "id": "your-account-is-on-hold",
+      "hash": "62fdf2827112f296aa277aa65786ec5ad295f156fc2b288aa4df1da025989e5c"
+    },
+    {
+      "id": "anthropic-profile-login-expired",
+      "hash": "2f0d91a6296f7d5dd83a9066610955c606f842968d006f87aa1bcdd202004253"
+    },
+    {
+      "id": "oauth-scope-requirement",
+      "hash": "e9e283d1bcd20430853141550ae6e3848d8c178315817d596d9e285d592385e7"
+    },
+    {
+      "id": "claude-ai-rejected-the-session-token",
+      "hash": "8aa70647839e4c81b5293aa876dca4eca69227e92a7a5960d047e1143c8bddee"
+    },
+    {
+      "id": "mcp-server-needs-you-to-sign-in-again",
+      "hash": "ec9498c44baefc2f316f6cb72554af614321d6ced981b39c2dc153d4036badcd"
+    },
+    {
+      "id": "mcp-server-url-is-missing-or-not-a-valid-url",
+      "hash": "ef6292177035b12f54026ffee3babb3b28ac2d72ae01b71e71d307ed94e344f6"
+    },
+    {
+      "id": "issuer-mismatch-in-authorization-response",
+      "hash": "be8930ee1bccfcf1e03b650e93c65acfaae1189352cab6d3d7f8da0c7d67cbaa"
+    },
+    {
+      "id": "refusing-to-send-credentials-to-non-https-token-endpoint",
+      "hash": "c9a8353014e98591877befd48f125b9d53c41c13f836d1a10752ec9bb7e80c76"
+    },
+    {
+      "id": "aws-credentials-expired-or-invalid",
+      "hash": "f003185af67f4c0f32a0c02776bfa82a8c18e0d0f07c2eb911df77e2134f55c8"
+    },
+    {
+      "id": "aws-authentication-failed",
+      "hash": "cc7f6b19d70ce574823218b01d5cc3a5b1690159485aa1359e143e2df56786d2"
+    },
+    {
+      "id": "google-cloud-credentials-expired-or-invalid",
+      "hash": "05d7b2a864d1bdcdbf88dfc71aba52142c76210153ecc2b6295ac9687de58952"
+    },
+    {
+      "id": "google-cloud-authentication-failed",
+      "hash": "fba6a758207c7a58ed7314574dc5d33e7d048b1e0f8c53519b3e77c30b4e18ed"
+    },
+    {
+      "id": "microsoft-foundry-authentication-failed",
+      "hash": "27ef47799da89476666df0605e00d309b9987323ddc175ffeeaec068d17fbaf7"
+    },
+    {
+      "id": "could-not-load-aws-or-google-cloud-credentials",
+      "hash": "da8229062134931a02ec1822cab2630c22b010aaf920b81e119f779933edc2eb"
+    },
+    {
+      "id": "aws-default-chain-credential-resolve-timed-out",
+      "hash": "18044b12e96bf8a6cf5d531d62b62cf79102ee1b54792bc14bd1e41d8f33e986"
+    },
+    {
+      "id": "bedrock-setup-verification-timed-out-waiting-for-aws",
+      "hash": "eb5e8f369f2ab73a668cb0410ce9a7c54d1231ae7c82d400e7bd4aba7ac5e4d5"
+    },
+    {
+      "id": "cloud-gateway-session-expired",
+      "hash": "8bc82e7b285498a262da7278634083b787876e5cdef1282fec42ceeb591fe4ea"
+    },
+    {
+      "id": "sign-in-timed-out-while-waiting-for-you-to-continue",
+      "hash": "67af8a9843abb447772382247da4a2b0ec11bdb3352b0b5673166becfa17c921"
+    },
+    {
+      "id": "gateway-refused-the-request",
+      "hash": "c339338ff760755b61f3dc18e90a6bc0c5048bf73d069b00cf04e07e1d56d32f"
+    },
+    {
+      "id": "network-and-connection-errors",
+      "hash": "2b87863a83faaa4b3ca2011b44b5dee9243952d51b0fd8ff464b79ae91bfb95a"
+    },
+    {
+      "id": "unable-to-connect-to-api",
+      "hash": "bf8749f3012784b8fd163c2d995f5c81a582650142996b5c749afcc735575e7b"
+    },
+    {
+      "id": "unable-to-connect-to-anthropic-services",
+      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
+    },
+    {
+      "id": "socket-is-closed",
+      "hash": "cb188cb38d6dfa1e20f98710e794d2f20eded0fafcb9e2d608f80f28c78d7d7f"
+    },
+    {
+      "id": "api-returned-an-empty-or-malformed-response",
+      "hash": "6e0b473a6ba0815ac84b1ad005506b9129eccd4ab18db9896765bfd925ec0f65"
+    },
+    {
+      "id": "streaming-response-ended-before-any-complete-data-was-received",
+      "hash": "8d6f72c181aab6638c820de2794f4022723c8daf14f8c0f7f443a1756a272e74"
+    },
+    {
+      "id": "bedrock-streaming-response-has-an-unexpected-content-type",
+      "hash": "f493ae95c1157b72c01fab6a04e236f17e4115423d496536916b8bafc2a77f94"
+    },
+    {
+      "id": "ssl-certificate-errors",
+      "hash": "67b8ee729de10fc7015994a8c6a65cf80fa37b1a41a47a807eea81d657c1e2f5"
+    },
+    {
+      "id": "host-not-allowed-in-a-cloud-session",
+      "hash": "06e48af3bd8fde75d05536c9f57fca9361e634913a4684f8dfc2a1e1adc955f5"
+    },
+    {
+      "id": "the-proxy-refused-the-connection",
+      "hash": "c27de35b43534aadf8010bca94035ae275c034790577813078efa20518dd1bff"
+    },
+    {
+      "id": "the-cloud-environments-service-returned-an-empty-or-unexpected-response",
+      "hash": "6c2d1032ed1820c3efb1ee28d39a44a7d95865769e8721bb88dfeb11c25d28c5"
+    },
+    {
+      "id": "couldnt-reconnect-to-your-remote-control-session",
+      "hash": "3bdfb554e18d549e29ec5fac93ad9c3bbad8f4ec9151eca09662cbe7967a3364"
+    },
+    {
+      "id": "sessions-ended-while-this-machine-was-offline",
+      "hash": "a62e093a5f1990642d68ff36ba3cf9b6dae9160b01984812f46457053eb16f6f"
+    },
+    {
+      "id": "couldnt-share-the-transcript",
+      "hash": "0abdc7cd19ba9246341dca75fecebea4c1966f9d94bc4a1b374d34e3cf8a97fe"
+    },
+    {
+      "id": "couldnt-send-feedback",
+      "hash": "fe08f88ed867239df7a333577c12ea4f50130eeda2909c07097ba2944a202450"
+    },
+    {
+      "id": "request-errors",
+      "hash": "a88188ea3464de1f6e5b4a4537867e8e55438a5ccc00d5d97a39f30034d7711f"
+    },
+    {
+      "id": "prompt-is-too-long",
+      "hash": "d5d78d1253a43bf70caec93fa3011abbe8e39535d1cdd1d569a4a33e3cc081c1"
+    },
+    {
+      "id": "context-exceeds-the-token-limit",
+      "hash": "5054b3acb297293679a34b41a76855dfd2d6c8466338f13ef4751bb056f90c00"
+    },
+    {
+      "id": "request-too-large",
+      "hash": "1f796a003154f8d4227d4e47d1490dd895496d5bed2676ce5564ddf74be81d2f"
+    },
+    {
+      "id": "image-was-too-large",
+      "hash": "2788a12cd83e97a161d4e00646e0ec8888de08b2660b1d36d61aa9d74708cff2"
+    },
+    {
+      "id": "unable-to-resize-image",
+      "hash": "a946b3b519a6afacde08703183d638e25a6c08e88e402fa3db28273489256722"
+    },
+    {
+      "id": "pdf-errors",
+      "hash": "f575d73cb17dda4011f042dafbaa5d7ed16f1210c58049e206c1702b56aa47d4"
+    },
+    {
+      "id": "extra-inputs-are-not-permitted",
+      "hash": "27f8700bda5f7ba6ebaa079f240d6a801f92621e0067ff29d4b584fbff277253"
+    },
+    {
+      "id": "tool-input-schema-is-invalid",
+      "hash": "c953284ae55b6df5c7d6b937449798348755f80cf23e26cd6f084d1ad797c7b0"
+    },
+    {
+      "id": "tool-use-name-over-200-characters",
+      "hash": "941a7b9284999ff5275486a9b678409b5f05f2c48177581e754a2acd989f2908"
+    },
+    {
+      "id": "theres-an-issue-with-the-selected-model",
+      "hash": "3ed7d35307c82b5018a3cf898197c6b79009ad9c4e84d636b28b72716e64c324"
+    },
+    {
+      "id": "model-is-not-a-recognized-model-id",
+      "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc"
+    },
+    {
+      "id": "model-not-found",
+      "hash": "386417790fe06a31ab58e49e76ce499ded96b52b2bacdaf9cc2fde6b168ac15f"
+    },
+    {
+      "id": "couldnt-confirm-model-with-the-api",
+      "hash": "f6abf316660311e84401242faf397b2e00a5cc6aad0dc50ccdafe51a4c4e4fe0"
+    },
+    {
+      "id": "api-error-model-not-changed",
+      "hash": "4fdee5faceb9c01142c7ff463c81da1e71e46f84f6192d644656574d08bf3772"
+    },
+    {
+      "id": "claude-opus-is-not-available-with-the-claude-pro-plan",
+      "hash": "cc30eb34e661cbf7fb529d75fb4850b7a8deac77497721bb3251b40e39a9febb"
+    },
+    {
+      "id": "claude-code-does-not-support-this-model",
+      "hash": "959c28349bea058e1b6f42a9238a432f7ca7e3da626841c821d43fd4087dafe4"
+    },
+    {
+      "id": "model-is-restricted-by-your-organizations-settings",
+      "hash": "6fe175e439d2d3165df8e723d963de01b04641bf6a8fac5d4af9b7697e14f618"
+    },
+    {
+      "id": "cant-switch-to-the-default-model",
+      "hash": "0fb94fc41556ed486e9b0d68e514072dd179f14d7e29bdfe7d4482c3838a00ab"
+    },
+    {
+      "id": "model-switch-was-blocked-by-a-premodelswitch-hook",
+      "hash": "55ebd333b5d2cfa29d9d5571bef0c6b1d183313c3008d504e69c57eaf3e93b8a"
+    },
+    {
+      "id": "couldnt-save-it-as-your-default",
+      "hash": "80b0101621da1c5ac6bb7360a196c1ae4d4d48efb7b4eb127c240ff9964bd567"
+    },
+    {
+      "id": "thinking-type-enabled-is-not-supported-for-this-model",
+      "hash": "19102a607ad1f70af7b1a58655446df5e46a58a9b1eb717917aae9a915d2c069"
+    },
+    {
+      "id": "effort-isnt-available-with-thinking-turned-off",
+      "hash": "aafdeb5250b2dee72acd0394d956ebdc13844152f4cace14b210b06e124e0d4c"
+    },
+    {
+      "id": "thinking-budget-exceeds-output-limit",
+      "hash": "a5b8a62d9c9f51c59929eb15c6d83b218d7ff7e67e5ab0ef13573465dd1eca21"
+    },
+    {
+      "id": "tool-use-or-thinking-block-mismatch",
+      "hash": "f3473e72796eec6da9621a2b2056475301c59fa0ef2bce676507364298cd35e8"
+    },
+    {
+      "id": "invalid-data-in-redacted-thinking-block",
+      "hash": "a36894b9dcaac10abc4388b9e67e1d3c443a20fe6cce6347ab15068890f61e9b"
+    },
+    {
+      "id": "unsupported-tool-content-removed",
+      "hash": "ba1ad1ec483f58bc7832da767ceda3df35f9e73f3c49c4721eb5733ff0619f66"
+    },
+    {
+      "id": "role-system-must-precede-an-assistant-message",
+      "hash": "1fb388d6a29a2377d84c96b9de6228d22ee689cb1bff7b4d60a1b20c61df9aca"
+    },
+    {
+      "id": "invalid-encrypted-content-in-search-result-block",
+      "hash": "e955d6f7dfca68d8085779fadfff2186badbbaa1b7e041102397ca18aefd98c0"
+    },
+    {
+      "id": "usage-policy-refusal",
+      "hash": "53ce39f0e49c200f50501cd1991d32e661f8db0a9054526c937f4ff0326575b8"
+    },
+    {
+      "id": "safety-measures-flagged-a-cybersecurity-topic",
+      "hash": "30a1fdff7dec55faf7a2657ecbfefe9152cfdd28ff3e2c136a73eadd99d53840"
+    },
+    {
+      "id": "installation-errors",
+      "hash": "8f49593b41684bc8235dbdd7290b508ff252754274fc22f338588c17fb7de66d"
+    },
+    {
+      "id": "installation-was-killed-before-it-could-finish",
+      "hash": "b33c9897f9e2289ce07ae2fb409fe7c00d58a68d1089a579d14d9fdf24f10f22"
+    },
+    {
+      "id": "the-connection-dropped-while-downloading-the-update",
+      "hash": "e8800e60a6784a439ab5cc60f037fadafe2ae21081ad47d73576a11ad8c76242"
+    },
+    {
+      "id": "command-line-errors",
+      "hash": "7a5c934c1f267facbf3d7c8dfa8c9ef7923c8e3bde6a13c1832f86d2b87ccf3d"
+    },
+    {
+      "id": "conflict-between-bg-and-print",
+      "hash": "da83a77b3db533c6f200ae991fab09958b4c624ece3882c72b7edadb59a37f9f"
+    },
+    {
+      "id": "invalid-agents-configuration",
+      "hash": "b1233402840df5f483c2d7667c6142157c316d62f12e85938059bd92e1398ed4"
+    },
+    {
+      "id": "cloud-sessions-cannot-be-created-from-a-restricted-session",
+      "hash": "e23abfe5e7932ec8fa265bd85a547e98c00ac2624fa92cb746c5f34c9f0060d3"
+    },
+    {
+      "id": "cloud-sessions-are-disabled-by-your-organizations-policy",
+      "hash": "b42e82882277a425f7af80057eb1da443b0be807a1c1b2d5e2421f9ccd9c8824"
+    },
+    {
+      "id": "the-json-schema-value-is-not-a-valid-json-schema",
+      "hash": "0950f2caab1946da87d49824d0c1124dca2ce8166479de877f32a546df082232"
+    },
+    {
+      "id": "settings-file-exceeds-the-2mib-limit",
+      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674"
+    },
+    {
+      "id": "the-current-directory-no-longer-exists",
+      "hash": "c66f748f3d469ec043ae13754ecd6b0c4fe52065c0093ff1e07b12cf18418696"
+    },
+    {
+      "id": "temp-directory-refused-or-cannot-be-created",
+      "hash": "35f0ca709a7cb344f3d86d66f47852966ac2cd0e09a03e3b4d1c15e6aeedbe70"
+    },
+    {
+      "id": "directory-couldnt-be-resolved-to-a-real-location",
+      "hash": "1dc3ced90b60f34a439b7d54ef68e4a68139024b7fcf9b2eee741575fabe2dda"
+    },
+    {
+      "id": "workspace-not-trusted-when-starting-remote-control",
+      "hash": "846200b672a5f1c3d7690cc854785180abb6f44ea0fc7ff0b38f2c9a692404fe"
+    },
+    {
+      "id": "not-carried-over-to-the-sessions-remote-control-starts",
+      "hash": "78833cbf7dc503dd8fe8fd8d94e121a88033b06003267d6931845f2886a484e5"
+    },
+    {
+      "id": "claude-import-is-not-yet-available-in-this-build",
+      "hash": "19fd2bfe225e637248087c7948d4e1100b78feb26f1f2825b0eb40ee576e5bcb"
+    },
+    {
+      "id": "could-not-read-claude-code-config",
+      "hash": "08dc7875c095ce4c9339968a5a798632cd5f628d3a48ee623858e5ae40ed768b"
+    },
+    {
+      "id": "could-not-import-a-server-from-claude-desktop",
+      "hash": "59df9e4a25c0324450b8c3fa4788cfe4872e3e918e3ef782fc2ec74f779f3b7e"
+    },
+    {
+      "id": "cannot-add-mcp-server-to-the-managed-scope",
+      "hash": "afa22774ef12430ecac4ffac8a8f7a9f3bed4f8a5ca18642180c562bcb7ab12b"
+    },
+    {
+      "id": "cant-read-mcp-json",
+      "hash": "d34c89d5154aa0218189f7ab5161e908b82926088d27ea239c91f2e9404bbb0a"
+    },
+    {
+      "id": "mcp-server-was-not-saved-or-removed",
+      "hash": "46c7d927917e93d810aabafb333c82a4bc3e692e9af59dd2df2a4c611bb2d1c1"
+    },
+    {
+      "id": "mcp-server-may-not-have-been-saved-or-removed",
+      "hash": "eb846c728f36ee9d563d88e043801f493dd4d10fca7be55ff5316d99eb8bafbb"
+    },
+    {
+      "id": "anthropic-hosted-and-doesnt-support-local-oauth",
+      "hash": "7d2ace7bc320edae9e725e2f7c556f0c3aaf7efe65e8447321d157827abb1fb8"
+    },
+    {
+      "id": "server-rejected-the-authorization-header-minted-by-the-configured-headershelper",
+      "hash": "99e9199334099889561c2db2914e7bcae89d5bd9c2bf5ce9dcb2a5e3749854ad"
+    },
+    {
+      "id": "mcp-permission-prompt-tool-not-found",
+      "hash": "930352bee61224fb8b3907da05cb13e2ca1d2b746b61ec71a830203ac70e0ac8"
+    },
+    {
+      "id": "oauth-callback-port-is-already-in-use",
+      "hash": "75a233b6d5228ee495d75f75b6623d8a367170864e74cf411ad339ea4cdf2116"
+    },
+    {
+      "id": "no-available-ports-for-oauth-redirect",
+      "hash": "30b4d2a0af539f9706550b77b9649724fc6844dc0650ea11ca2198e0ec4dd97b"
+    },
+    {
+      "id": "security-review-fails-without-origin-head",
+      "hash": "57bdf87adbcb6ea712d79f00cd3e7a639d221a17b480d99daf6557f0e0d78328"
+    },
+    {
+      "id": "input-must-be-provided-when-using-print",
+      "hash": "73f2589f985e480d98d8b3e30368e8002172657eca3b260c55747f56e0341ce0"
+    },
+    {
+      "id": "input-contained-only-whitespace",
+      "hash": "38d5eef4f189ad10e363a77e445fd042106f63b6971876e4c8ea593e87f1f743"
+    },
+    {
+      "id": "stream-json-input-carried-over-256m-characters-with-no-newline",
+      "hash": "8f79ee2e390f18b56f8859d1d0966cfd44485165ea9ffffe5391dc3f97b6c219"
+    },
+    {
+      "id": "unknown-command",
+      "hash": "10a2baf1c5a1502efba6826641d210aadf907a9b561fb1a19860680f10cfa53d"
+    },
+    {
+      "id": "diff-is-too-large-for-ultrareview",
+      "hash": "1a6f9711e677727102ecefeb55c219c4a44e1dd772a5bba837cc1758c0c87810"
+    },
+    {
+      "id": "could-not-find-merge-base-with-the-base-branch",
+      "hash": "b115c9ef1505655846c491c262335b739a2d1c3644602229f9f74975bf211097"
+    },
+    {
+      "id": "your-checkout-has-no-branches",
+      "hash": "58d0d8e479c94f01b1df2a5ca5f41d7bf45c6e1e08f1c270af068ecae2d6a1f9"
+    },
+    {
+      "id": "no-github-account-is-connected-to-your-claude-account",
+      "hash": "8b5de0b16ec958cd03effbedc84a358ca780330a0099c422664285bab88d50f0"
+    },
+    {
+      "id": "your-connected-github-account-cant-see-the-repository",
+      "hash": "efc67c25554de97c3bda63f4fea2428a92e70b964e6fb72ab437480f80b8dd59"
+    },
+    {
+      "id": "the-github-app-preflight-failed-transiently",
+      "hash": "7d139890dab6f75f4c71cf6d4cc7e359857cf17fdceb0d3f9a92185df25d35c4"
+    },
+    {
+      "id": "the-repository-upload-cant-follow-a-git-setting",
+      "hash": "a095087c6e87051ca85d6a466b8714e4654c2ccc15aef72a91f657209cd38f44"
+    },
+    {
+      "id": "github-isnt-connected-to-your-claude-account",
+      "hash": "9aa992f3b2d1b3b79b69de445cdffc045a802ea6a1f755af4289a06234a1ae61"
+    },
+    {
+      "id": "single-sign-on-authorization-needed",
+      "hash": "ea1b7ecfc18a543117ced140fea69c5cad19340a77ea00f8f0c54795995d1419"
+    },
+    {
+      "id": "failed-to-resume-the-conversation",
+      "hash": "69dba40af7b7ad002cdea81317e53f3119bb534caa221d725d18f4135d76dcc3"
+    },
+    {
+      "id": "no-conversation-found-with-the-session-id",
+      "hash": "43d7493bdded679b27ac5e6f0f9391fb4b93e850c94619f7c9b8f9d298cc6c94"
+    },
+    {
+      "id": "windows-reported-an-error-ebadf",
+      "hash": "dfe429d139dd843904dbf747277a16b5f3b74cfa83e384fc1cf16c803e550e91"
+    },
+    {
+      "id": "cannot-switch-renderers-in-this-session",
+      "hash": "2d2b2c725ba3cfcafa11ecd48eff9e611983d855a675b6b765e4269155d45fbe"
+    },
+    {
+      "id": "couldnt-open-claude-desktop",
+      "hash": "bce8017e8471461c5e92c2781788e7f6c874e2bbf3db8bae6ab4acdec810a078"
+    },
+    {
+      "id": "terminal-setup-left-your-zed-keymap-unchanged",
+      "hash": "ed54c2f9d0eb74725bfec1e3107516b0d3183b4187e88b206541ae321a8b243a"
+    },
+    {
+      "id": "skill-usage-reports-are-not-available-on-this-connection",
+      "hash": "5e8838983f61a13a2af2a0f8e51f92344e9f228328b003b58573ffcd689e7188"
+    },
+    {
+      "id": "custom-output-styles-cant-be-selected-over-remote-control",
+      "hash": "e63c72ef54990badd4db3e356c6323ccf04f4fac27c4627a603074619a0ff9f5"
+    },
+    {
+      "id": "output-styles-are-saved-to-local-settings-which-this-session-doesnt-load",
+      "hash": "bc2878f38f0ceaa926ea4d0c3ff6fc3972c009e8da05869f6c046dec96a27299"
+    },
+    {
+      "id": "plugin-errors",
+      "hash": "9ecc321ff43436dbf3253fbc465cf3d814c1515e52670c5bbe66de68d109d9fc"
+    },
+    {
+      "id": "plugin-eval-is-currently-in-early-access",
+      "hash": "3228bb2bd36de4864cc5811751637b96f340bc9e1dcb6d5f19481b179d4f4bb7"
+    },
+    {
+      "id": "marketplace-is-registered-from-an-untrusted-source",
+      "hash": "4fbd7b17d887393fa840edc4397381b8ab703439e7870ca3f4f48036b936023f"
+    },
+    {
+      "id": "marketplace-name-is-another-spelling-of-a-reserved-name",
+      "hash": "7ccf99986b1e10e7d033cfdcd4df8a34e27361e11da6011b491dd8af313a62fb"
+    },
+    {
+      "id": "claude-code-refuses-the-marketplace-name",
+      "hash": "3ffc9df4f0a0331230a32e28ddb69c236e69bb13fa4bc585411fa8f87d6f8067"
+    },
+    {
+      "id": "marketplace-is-already-added-from-a-different-source",
+      "hash": "bb2348293f1b050aa315082beb0380e727b5ccc3c2d2327663665f520e2699ea"
+    },
+    {
+      "id": "plugin-command-references-user-config",
+      "hash": "4039daeaeeab00fdabf642e951381a48a0a28c66570e104c88a54b23f0baf7c6"
+    },
+    {
+      "id": "plugin-archive-integrity-check-failed",
+      "hash": "1685ab35244b0af5f78bd2113413cf91afc2feaef4624fbd4d459f4e903bd7f2"
+    },
+    {
+      "id": "path-escapes-plugin-directory",
+      "hash": "2580c697a507af336c8bacd49462e2b1bcfd26d96ccfeed26fbbeb1d60bb4b72"
+    },
+    {
+      "id": "path-could-not-be-checked",
+      "hash": "cb1012664a54714654d764ac746a1b85d4812d35f7a934b26b85fd369285d084"
+    },
+    {
+      "id": "marketplace-entry-path-does-not-stay-inside-the-marketplace-directory",
+      "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0"
+    },
+    {
+      "id": "failed-to-load-marketplace-configuration",
+      "hash": "0fef96e6b8685cdf7db392f1006b4dfa12c00ecbbf8d4c4dc051722bd85f8a4e"
+    },
+    {
+      "id": "plugin-is-required-by-your-organization",
+      "hash": "1f64371fe46b17aa522c985b7d3238521128734b6bce6f839073e3db24517ccb"
+    },
+    {
+      "id": "plugin-was-not-uninstalled",
+      "hash": "17d1f84006387704fdbf23689ec209f207100ea9e151953811e3f3e2a646b141"
+    },
+    {
+      "id": "tool-errors",
+      "hash": "fbae7ba2820c4f83a4253da31c57a6768439b47b04df6a3c832de110fa96444e"
+    },
+    {
+      "id": "agent-would-be-spawned-with-zero-tools",
+      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+    },
+    {
+      "id": "file-is-covered-by-a-read-deny-rule",
+      "hash": "5f482b737fa2ea2d07f900a15004ec6a9b5ea044a837f8f3b01a2fe1dd555799"
+    },
+    {
+      "id": "path-cannot-contain-null-bytes",
+      "hash": "90009e266df5b28fb4667b324d9580ddacc018d2ae33c8a0d1bd058b9303c1c0"
+    },
+    {
+      "id": "subagent-type-is-required",
+      "hash": "31f44fbb1563d84a7a918910930a8024639b598ace721c05fa73ac8472c70b47"
+    },
+    {
+      "id": "memory-index-is-over-its-read-limit",
+      "hash": "105b83ff6fb266ead40be05db044bbba6c18b02ff271d7403e3e0b38ac36dc29"
+    },
+    {
+      "id": "pkill-pattern-matches-the-claude-code-process",
+      "hash": "97000b083dec53d69f0161db145919a99429de62c50a8690dfd5c81f5980ba41"
+    },
+    {
+      "id": "failed-to-write-to-a-teammate-inbox",
+      "hash": "a93a825b58cf372f5038c7a7f0f4d4649e9eae0b43e97fea28798580d4181df0"
+    },
+    {
+      "id": "teammate-agent-definition-not-restored",
+      "hash": "5f6bc5174bcd8d5345f9d634a77cf60cd2527292c6ea1ba1f7ca1d9fa6839ac0"
+    },
+    {
+      "id": "message-too-large-for-cross-session-delivery",
+      "hash": "8d529e9a6204f79dec161426741a893e36d28838cdc294351c4c6cdc60674eb8"
+    },
+    {
+      "id": "too-many-messages-to-this-session-just-now",
+      "hash": "819717939c85d07409499f70412aba1de9a6f3aada48ae119f9d9ae2f2707583"
+    },
+    {
+      "id": "cross-session-message-dropped-at-the-inbox",
+      "hash": "6e4458b191f7d9e2c5350551d014a947cdf74b57e486082189260e02fb9d73b4"
+    },
+    {
+      "id": "refusing-to-send-a-cross-session-message",
+      "hash": "81b74b6f98acc1d42530ffb0b606c7f4ad013b59cf37ec33d7e370b535cef61d"
+    },
+    {
+      "id": "refusing-after-a-symlink-changed",
+      "hash": "2102a0157363f62aa3d0ad4ed617d7132dc612e0b2c416b144a6255d5867b046"
+    },
+    {
+      "id": "task-output-swap-refused",
+      "hash": "218374c828d653eb24c9df4c1a302f31609c9f213580023501df28604dc29dbc"
+    },
+    {
+      "id": "disk-quota-or-temp-filesystem-is-full",
+      "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658"
+    },
+    {
+      "id": "the-source-file-is-not-valid-utf-8-text",
+      "hash": "df455bb21ca40e7dbbbd52b0a613280362380959eb69f0a7763ffc7312fbdb0a"
+    },
+    {
+      "id": "reading-a-local-file-from-outside-the-connected-folders",
+      "hash": "07bcd6a68e636417cfa0573cb71703c50c319d592f894681eb5ce1cb71df712d"
+    },
+    {
+      "id": "webfetch-cannot-fetch-localhost",
+      "hash": "482658058e12ab27a65037ebea762f9fdaf1e3661dca703ae2d5daf4a7e40a2d"
+    },
+    {
+      "id": "background-session-errors",
+      "hash": "ca3af87875393acc48c8e6e524d33c5c5985123bcdbdc463338dcd34db6ac7a1"
+    },
+    {
+      "id": "commands-refused-in-a-background-session",
+      "hash": "f681e3a9a4d36722834c2ec4d88b8f160ac9551d4fa7f3f0f75970727fa32a0b"
+    },
+    {
+      "id": "write-or-command-blocked-because-the-path-cannot-be-safely-resolved",
+      "hash": "607a6a39a6aa51d9713312aca3179d45ae3f23b2c14df7a7ab557e9b5a8ea02c"
+    },
+    {
+      "id": "write-or-command-blocked-because-the-path-names-a-network-location",
+      "hash": "cd3032a3b9d1da0651917cda97e8ecd23307ef0076185172b5b3cc5088d397cc"
+    },
+    {
+      "id": "command-blocked-by-the-worktree-isolation-checks",
+      "hash": "8aa7e9db7155f6442586eb7beea09531e47767412980e86a509f198319832cbf"
+    },
+    {
+      "id": "this-session-has-no-saved-transcript",
+      "hash": "193599d3eae094e3d974bace48e5d3a6807002ebe5896db5829211f4a2e1a7af"
+    },
+    {
+      "id": "this-session-is-running-in-another-terminal",
+      "hash": "36e17082d007ef0a5390eb71c0928a7b679cdb183b712b2344f45aa859359ac9"
+    },
+    {
+      "id": "this-sessions-saved-conversation-is-no-longer-on-disk",
+      "hash": "a0ecca451dca1830f22901ff87892d96b6ee4f58fd5508361f279015b04d7fc2"
+    },
+    {
+      "id": "worktree-has-commits-that-are-not-pushed-anywhere",
+      "hash": "904166030517466c4c657babdf045bd7a0cbde4ccbbc75e4f89074bf5ef7e0a4"
+    },
+    {
+      "id": "terminal-host-process-died",
+      "hash": "e8387b9d9ef305c28ad4156307ed95b69ae4696bae10a059039f876bc0b3e8ce"
+    },
+    {
+      "id": "session-isnt-responding",
+      "hash": "5ac39c9c245be46e007aa4e296fe5aeaf9cbb719d5cc47a84be8937cfced964d"
+    },
+    {
+      "id": "session-was-stopped-while-the-respawn-was-in-flight",
+      "hash": "d8d1481b9293d83699b7a7e332dac0875385c27c13ab830f1f2a2ff9e06312c9"
+    },
+    {
+      "id": "session-agent-no-longer-available",
+      "hash": "1980dc780f53f6cf4808b6ccedfeca55cdf7cdd2bea3bd4c17f6e9dedeed8864"
+    },
+    {
+      "id": "claude_code_process_wrapper-launcher-errors",
+      "hash": "75447808bfc63605530597a81d665cc5b066ff55e5e002850941d43cc630e01b"
+    },
+    {
+      "id": "eunknown-when-starting-a-background-session",
+      "hash": "3b624bc190e5f377fdeab349dbaf30f35ef41fa5272f74e74f9b61941b30a8c1"
+    },
+    {
+      "id": "eacces-when-starting-a-background-session",
+      "hash": "a7c4f16e535f8f610448e999799a6a19fd4e0546e94909816138bb45ee0a4f79"
+    },
+    {
+      "id": "background-service-exited-before-it-became-reachable",
+      "hash": "0cba552969d1007f3c385f3d69ace603547e346a13b20841dd3cc23310d2862d"
+    },
+    {
+      "id": "working-directory-no-longer-exists-when-starting-a-background-session",
+      "hash": "5a339c050ca1f0dbc79949af3e3d78ca911807dbe5d2b9ae03c6a53350287118"
+    },
+    {
+      "id": "workspace-not-trusted-when-dispatching-a-background-session",
+      "hash": "1b2fbe4f30a23e0488ff1ea5654c98539c7f077a3c02892cf4bf5ed20f6f6f19"
+    },
+    {
+      "id": "wrapper-and-ide-errors",
+      "hash": "2cbb9c539bc00810e29117761df702cacba319080054466213d9eb5aa2d4eebb"
+    },
+    {
+      "id": "claude-code-process-exited-with-code-n",
+      "hash": "151352b9be169b41199808e7db9348a19cb73ade82db0fb8b83c6372583ea137"
+    },
+    {
+      "id": "could-not-locate-the-claude-cli-on-path",
+      "hash": "59dc47bd4dd8f536c1a648c3f4a35c3839dbf03bc92eac27436a5e3c765772fe"
+    },
+    {
+      "id": "the-connection-to-claude-code-ended-before-this-message-completed",
+      "hash": "2dc04c82f23af94ea3e62e36a2a32c07cdb41bfd5b201d1b920c72a03bc2ce44"
+    },
+    {
+      "id": "rewind-warnings-and-errors",
+      "hash": "d7248bbb746f6727493eb5ac750e2449f5892c4220aaf1646a35ec098ed3d05e"
+    },
+    {
+      "id": "restored-the-code-but-skipped-files",
+      "hash": "827bf9c082986749dcc8be5c8d7ba126fffa43bc164e9f991a57090379f1d27f"
+    },
+    {
+      "id": "no-files-were-restored",
+      "hash": "747b4209a8fc73c948454b388606402c3dec8a3032db5461ac9ec3986ee80c63"
+    },
+    {
+      "id": "session-saving-warnings",
+      "hash": "265c05f07d0c4b5558a9e0e43614709e321fd6035f8354dfabd24092ea967dc9"
+    },
+    {
+      "id": "transcript-writes-are-failing",
+      "hash": "4247105a1e446f5606ffc1e27dbd4fa7aa8b5d3b897573345335898298d07760"
+    },
+    {
+      "id": "transcript-saving-is-off-skip-prompt-history",
+      "hash": "19d9efa6eba6c74a96da483664193dd8b78a6450dde185d0699dc34c0ecc8819"
+    },
+    {
+      "id": "transcript-saving-is-off-child-session-marker",
+      "hash": "cd5d385daf52b0d90a0dd34d876117ad01ffaa48c9252e3266957a561db86836"
+    },
+    {
+      "id": "configuration-warnings",
+      "hash": "3e2eb3984e6a919a37f92113d3dc3af71eee0344c7b25e74927d4d6f6f678415"
+    },
+    {
+      "id": "fullscreen-failed-start-notice",
+      "hash": "52e7d4c27a328bf518fd7762781a6115225f7bc33ab39f2b4a02770437aa4689"
+    },
+    {
+      "id": "exited-after-an-unrecoverable-interface-error",
+      "hash": "18e922eeea1fb6d29153ead374b08f15b50bf77651a0b91ca1c8ce355210e5af"
+    },
+    {
+      "id": "agent-descriptions-are-over-the-15000-token-limit",
+      "hash": "9a0bbae323aed2dc5a7faf8077bf424d901c4d60fe7bd768558b2d0f493694a0"
+    },
+    {
+      "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
+      "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4"
+    },
+    {
+      "id": "workspace-has-not-been-trusted",
+      "hash": "36842ac7767c36eb1fdc3f93fcc28bd4c43f253d2ec32b1b990705ad3d851962"
+    },
+    {
+      "id": "working-directory-is-a-network-path",
+      "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56"
+    },
+    {
+      "id": "remote-managed-settings-failed-to-load",
+      "hash": "e0036cf01347f5c7a6246128b66788557e71c84eadbfd1bebcc9f7b2c0e65a09"
+    },
+    {
+      "id": "managed-settings-were-not-approved",
+      "hash": "f6ee5479d6da845f5c4d0399706dcfe83f6af0a8d31a41f1517581d0c992af6d"
+    },
+    {
+      "id": "managed-settings-block-the-default-model",
+      "hash": "3c6c3ac893d33a3a73dc29572ee4194987b6ca596b839b28a57e461431405d9f"
+    },
+    {
+      "id": "mcp-server-is-blocked-by-enterprise-managed-policy",
+      "hash": "050c0b0b5b92b20ac430b6346295747f1bef486aa489770102b8e1e2ac7a7cbb"
+    },
+    {
+      "id": "managed-settings-document-could-not-be-parsed",
+      "hash": "d1e9587a21189f68c13a1ed4c448129c97c6a5b9326c26f19c1cfb03c99d9dbb"
+    },
+    {
+      "id": "otelheadershelper-failed",
+      "hash": "e800ee9edd638013784ff717bdc16125e251b68b57b697a2d33a29b2b64330e6"
+    },
+    {
+      "id": "headershelper-not-run",
+      "hash": "89e2460a867cf7225d378916b5f0dcce82cee55a38ed42cbd36bf1ae07df73c7"
+    },
+    {
+      "id": "malformed-tool-content-rule",
+      "hash": "64e6fa825ddbbc3585d8aed429a706a746ba1816e91e97099f8ec0b4e127cc1a"
+    },
+    {
+      "id": "is-not-matched-by-file-permission-checks",
+      "hash": "c82ec831066c9e26f6b23b44bb668004cdaab41529bb28b97a5ff95cc95e0af5"
+    },
+    {
+      "id": "has-a-wildcard-before-the-rest-of-the-command",
+      "hash": "38753ce16f6795726972b2440978fddbfec8df6b8a5c3c025a753da78287596b"
+    },
+    {
+      "id": "crosssessioninbound-must-be-one-of-accept-hold-refuse",
+      "hash": "ec75ea8170b46f6eb4525c4abd405fbcd252fbfa9b6af62668e59168e527cb43"
+    },
+    {
+      "id": "the-200k-limit-isnt-enforced",
+      "hash": "f7724f5b5fc3fc37449d68a39a83c3993f892eb87eb46d3c776bdb2ee201c654"
+    },
+    {
+      "id": "unrecognized-model-id-on-a-request",
+      "hash": "a5e64aa23d8f2c3bd6fc93f999750d6818bd0bad92c2b6b70e1c7f9c3d438aab"
+    },
+    {
+      "id": "stale-sandbox-mask-files-left-by-a-killed-session",
+      "hash": "766dae8e415fe9e85aa2012ba7a8bbb1a3970cc47d93f179fb82528d195b05b7"
+    },
+    {
+      "id": "responses-seem-lower-quality-than-usual",
+      "hash": "e9a6bc168f804b056e44cd61735b966011c0687ac93ce9346388648865fa79ed"
+    },
+    {
+      "id": "report-an-error",
+      "hash": "85e993e92b93a0af9b5866e64556e5e2da608108532d4ad4c1b8ba7f091a7875"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Model is not a recognized model id",
+      "id": "model-is-not-a-recognized-model-id",
+      "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc",
+      "text": "### Model is not a recognized model id\n\nThe string you passed to a model switch isn't one Claude Code can use as a model, so it refused the switch without sending a request and the session keeps its current model. You can get this error when a model is set through the [Agent SDK](/docs/en/agent-sdk/typescript) `setModel()` method, by an app that runs the Claude Code CLI for you, such as the [Desktop app](/docs/en/desktop), or when you pick a model from a device connected through [Remote Control](/docs/en/remote-control). Before v2.1.200, Claude Code saved the string and failed on the next request with [There's an issue with the selected model](#theres-an-issue-with-the-selected-model).\n\n```text theme={null}\nModel \"Sonnet5\" is not a recognized model id. Did you mean 'claude-sonnet-5'?\n```\n\nIn this example an app sent the display name `Sonnet 5`, which the message repeats without its space. The trailing hint names the closest matching alias or model ID. When nothing is close enough, it reads `Run /model to see available models.` instead. In a session that the [Desktop app](/docs/en/desktop) starts for you, the no-match hint reads `Switch to a different model.`\n\nWhen you switch through the Agent SDK or an app on the Anthropic API, only a string that can't be a model ID gets this error, such as a display name or an empty string.\n\nWhen you pick a model from a Remote Control device, Claude Code checks the string locally. Any string that isn't a model alias, a model Claude Code lists or you configured, or an ID that starts with `claude-` gets this error, a mistyped ID such as `claud-sonnet-5` included. Before v2.1.260, this check didn't cover Remote Control picks, so an unrecognized string was applied and failed on the next request.\n\n**What to do:**\n\n* Run `/model` with no argument to open the picker and choose from the models available to your account, then pass the alias or ID shown there\n* If you used an alias that only a newer Claude Code version supports, run `claude update`, or pass the model's full ID instead. The server can still require a minimum Claude Code version for that model; see [Claude Code does not support this model](#claude-code-does-not-support-this-model).\n* A model saved before v2.1.200 isn't repaired by this check. If a stale value keeps coming back, remove it from the locations listed under [Setting your model](/docs/en/model-config#setting-your-model).\n* On any provider other than the Anthropic API, or behind a gateway or custom `ANTHROPIC_BASE_URL`, only an empty string gets this error. Claude Code can still write the [unrecognized-model diagnostic line](#unrecognized-model-id-on-a-request) at request time, on every provider."
+    },
+    {
+      "heading": "A skill, command, or workflow wasn't loaded because its name is reserved",
+      "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
+      "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4",
+      "text": "<h3 id=\"a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved\">\n  A skill, command, or workflow wasn't loaded because its name is reserved\n</h3>\n\nA skill folder, a frontmatter `name`, a file or subfolder in `.claude/commands/`, or a [saved workflow](/docs/en/workflows#save-the-workflow-for-reuse) uses the name `anthropic-skills` or a name that starts with `anthropic-skills:`. Claude Code [reserves that name for skills synced from claude.ai](/docs/en/skills#names-reserved-for-synced-skills) and doesn't load that item.\n\nClaude Code shows this warning as a startup notice in the conversation view rather than on stderr:\n\n```text theme={null}\nNot loaded: rename .claude/skills/anthropic-skills, then restart — its name uses \"anthropic-skills\", a name reserved for the skills synced from your claude.ai account\n```\n\nThe notice names what to change for the first item it refused: a folder or file to rename, a `name:` line to edit, or a workflow to rename. When more than one item was refused, the notice ends with a count such as `· 2 more`, and the [debug log](/docs/en/debug-your-config) names each one.\n\n**What to do:**\n\n* Rename the item the notice names, or edit the `name:` line it points to, then restart the session.\n\nBefore v2.1.282, Claude Code loaded skills and commands with these names."
+    }
+  ]
+}

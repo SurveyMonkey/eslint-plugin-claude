@@ -19,7 +19,15 @@ it('gives each rule a doc and a URL that names it', () => {
   expect(rules.map(([name]) => name).sort()).toEqual([
     'command-legacy-format',
     'hooks-event-name-known',
+    'skill-allowed-tools-ineffective',
     'skill-description-max-length',
+    'skill-fork-fields-require-context',
+    'skill-frontmatter-position',
+    'skill-frontmatter-schema',
+    'skill-inject-bang-position',
+    'skill-invocation-unreachable',
+    'skill-plugin-vars-outside-plugin',
+    'skill-reserved-name',
   ])
   for (const [name, rule] of rules) {
     expect(rule.meta?.docs?.url).toBe(docsUrl(name))

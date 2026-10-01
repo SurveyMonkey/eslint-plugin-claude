@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/glossary",
-  "hash": "535eb51c1f23bc3cfebe06540504094bf1373f08a6dbd7cdbd4e3d93b3092a1e",
+  "hash": "12d7dde60bbf47e0501ac7aa5b12641b2d06b00e89ab7b89f2af90ac0f228761",
   "blocks": [
     {
       "id": "glossary",
@@ -255,6 +255,10 @@
       "hash": "9ccbcfb649b5a465ed330e137998a61f9457a80cc3c7153bbc94f55d49525d60"
     },
     {
+      "id": "transcript",
+      "hash": "c2e2d6d1f1e6c4695902c9055d4a6a7d87052c612c8e69d527664da6f66455f3"
+    },
+    {
       "id": "turn",
       "hash": "3368796ebfc9695e123ccf6c9b6bb41724409a0f9626f85c57f16010e57747e1"
     },
@@ -285,6 +289,12 @@
       "id": "deprecated-and-renamed-terms",
       "hash": "157d7e6327a4d05655407f4289c13571851d6bd14d0c90a2175c03857f06ed9a",
       "text": "## Deprecated and renamed terms\n\nThese terms appear in older docs, blog posts, and community content. Use the current name when searching this site.\n\n| Old term | Now called | Notes |\n| - | - | - |\n| Headless mode | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior |\n| Web session; \"Claude Code on the web\" as the name for any cloud session | [Cloud session](#cloud-session) | \"Claude Code on the web\" now names only the browser surface at claude.ai/code |\n| Custom commands | [Skills](#skill) | `.claude/commands/` files still work |\n| Slash commands | Commands | \"Slash\" dropped from product copy |"
+    },
+    {
+      "heading": "Frontmatter",
+      "id": "frontmatter",
+      "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db",
+      "text": "### Frontmatter\n\nA block of YAML settings at the very top of a Markdown file, between an opening `---` line and a closing `---` line. Skills, subagents, output styles, and rules each read their configuration from frontmatter, such as a skill's `description` or a subagent's `tools`, and treat everything after the closing `---` as the instructions. The opening `---` must be the file's first line. Each file type accepts its own set of fields.\n\nLearn more: [Skill frontmatter](/docs/en/skills#frontmatter-reference), [Subagent frontmatter](/docs/en/sub-agents#supported-frontmatter-fields), [Output style frontmatter](/docs/en/output-styles#frontmatter), [Rule frontmatter](/docs/en/memory#rules-frontmatter-reference)"
     }
   ]
 }

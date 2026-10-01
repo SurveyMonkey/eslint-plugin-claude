@@ -1,0 +1,170 @@
+{
+  "url": "https://code.claude.com/docs/en/tools-reference",
+  "hash": "6efe5ec744704abbf21008003270543bb30e283b713b6579d3a81bf4dcfd63c5",
+  "blocks": [
+    {
+      "id": "tools-reference",
+      "hash": "47f3747062cb0922b18396d0fc191cfa48b005fb4fe1a8a9fe6fb1f376d93f53"
+    },
+    {
+      "id": "configure-tools-with-permission-rules-and-hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    },
+    {
+      "id": "agent-tool-behavior",
+      "hash": "39990846a102ef6a4417e58cf3c4d041def77afb74aa3e53eefba0e41ae4f5ec"
+    },
+    {
+      "id": "askuserquestion-tool-behavior",
+      "hash": "fc16e1dca3ebcca2f62d6aad8267736e01ec3b3cec75f4c6824e6a7465baef67"
+    },
+    {
+      "id": "question-auto-continue-timeout",
+      "hash": "8267a6bb42b70fb70972cc51e2159a0a6ff51edb958d331c72d454229f65b1b1"
+    },
+    {
+      "id": "bash-tool-behavior",
+      "hash": "13fa7fd8ab4c7c8056267ad43f9f62ff2b033e8b8ef991ff60f1196a9a668de3"
+    },
+    {
+      "id": "what-persists-between-commands",
+      "hash": "533ef0f398bf1ed7d810c705e10222f71192a8501d7708129d238955b1592094"
+    },
+    {
+      "id": "timeout-and-output-limits",
+      "hash": "cb628fffbe84862b8c52bff33f9e912e3f8badd77203dd9ae9b2d742b7b8d95c"
+    },
+    {
+      "id": "output-limits",
+      "hash": "063364981c91c0b7aec79b3b8cc93c08594fc81803246e7ef44e36ffe6cb2d26"
+    },
+    {
+      "id": "background-commands",
+      "hash": "d276de075b3d7fe862014d91a840612b097e8067a515b3efe6c197eb0a54dbba"
+    },
+    {
+      "id": "memory-limit-on-linux-and-wsl",
+      "hash": "4cb5f8840ed3e1acf35841c4083da7a2344a0422e09bc7a1cf776638090dd2fb"
+    },
+    {
+      "id": "edit-tool-behavior",
+      "hash": "bdee4021bda74f1cf65b691adf89ba8cd3593715e9e92c20a89d76437ff36140"
+    },
+    {
+      "id": "endconversation-tool-behavior",
+      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea"
+    },
+    {
+      "id": "glob-tool-behavior",
+      "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429"
+    },
+    {
+      "id": "grep-tool-behavior",
+      "hash": "025efe7fdee3674adecd5c556baed309cc857f324bedfbc8f9b5d1316bfae273"
+    },
+    {
+      "id": "lsp-tool-behavior",
+      "hash": "6b4e822bb39d84966d42160b65388fa634445b8111854ca439e0e66bfcf6d8d7"
+    },
+    {
+      "id": "monitor-tool",
+      "hash": "581744c4752a5e10c3bca52ca3b2ac264fdbeb353417a0eb8395780ec23be3cc"
+    },
+    {
+      "id": "websocket-source",
+      "hash": "75133cf89b640f751f204f759a5c719eaad59c459475107133aad1d13be9f9ac"
+    },
+    {
+      "id": "notebookedit-tool-behavior",
+      "hash": "b7ead44f231450a13e4e85574553387f2ef5e95a475e125202a18390fde84361"
+    },
+    {
+      "id": "powershell-tool",
+      "hash": "fc70eca3bfc62aaf1ddd47b39a1bd82fc2bf4ce560e0a148b3ed70328e671c5c"
+    },
+    {
+      "id": "enable-the-powershell-tool",
+      "hash": "358b621b9e028968eefa970552fde932d65fe91e6e23c1f38d2d58123111d119"
+    },
+    {
+      "id": "shell-selection-in-settings-hooks-and-skills",
+      "hash": "3559017539e6dedc2ab6a7e7a69cf3d6295d4e1dafa7008fb7291197fc9ca5dd"
+    },
+    {
+      "id": "windows-encoding-and-exit-codes",
+      "hash": "6708a112ee09d788c0e1e21b3b004ec3b0d083079a2fb51044fa247a9aaba87a"
+    },
+    {
+      "id": "preview-limitations",
+      "hash": "3af85cdac9329f68d4f6310f0e1f229194adaf623c9e0efb3f266600bc9ec79d"
+    },
+    {
+      "id": "read-tool-behavior",
+      "hash": "86db105a7162ec4a17c1a56deb3a394ffb395e63786b0ca8ccf4c44644cb9e6c"
+    },
+    {
+      "id": "sendfeedback-tool-behavior",
+      "hash": "8d255eaf94cf417a534fcf949883f5fc70e508aeb7a58c76a6af10281c65a91b"
+    },
+    {
+      "id": "what-you-see-when-claude-drafts",
+      "hash": "b9f0855e8e6bfdafd6227cd3b9a3c5882fe1ebcac3593a6a14dd7abb6d2177eb"
+    },
+    {
+      "id": "review-and-edit-a-draft",
+      "hash": "e7a7fa41f0b170da219f3b73d6e5351e2854efa6ccf5d027db670f900da7c516"
+    },
+    {
+      "id": "send-a-draft",
+      "hash": "cb816e080b55cd0340ec2a18a2d7c225c3d363c35716b2d2dfe3ee11b17d41b4"
+    },
+    {
+      "id": "discard-or-keep-a-draft",
+      "hash": "982e639dfe51956b4ef0aa928687045fc3a09ca6a67b1929c5d0547029063c99"
+    },
+    {
+      "id": "turn-claude-drafted-feedback-off",
+      "hash": "34524f40860ca0c9c390a660b8c454b221bdb05accae523a64925adda9e0e9da"
+    },
+    {
+      "id": "sessions-without-claude-drafted-feedback",
+      "hash": "fcca3607b4ce350665f7548250d0ffca763619aa4fa5614d3904b6d243f5b9f4"
+    },
+    {
+      "id": "task-tool-availability",
+      "hash": "a3e12d0dbc8c9569bc07f59a21d550c7e795b88bbc0fdff55aa9e662a7ed7c4a"
+    },
+    {
+      "id": "webfetch-tool-behavior",
+      "hash": "cb973df23f7c83a6093afa0f3d61c45ac8739db44207e6cfe8b34e7ba61dbecf"
+    },
+    {
+      "id": "websearch-tool-behavior",
+      "hash": "65de96dac074e52cdfbab75d4be3bc947f1f67188048237d19b86cad6b4b6fad"
+    },
+    {
+      "id": "session-search-limit",
+      "hash": "6f69a38ce765504aaeccd16d130052ae9ca6a3585d3e08600fbde89c142736da"
+    },
+    {
+      "id": "write-tool-behavior",
+      "hash": "c4355369b955e2360b451bc788d9f874afe5d978e20906434c1f533e1023ecb0"
+    },
+    {
+      "id": "check-which-tools-are-available",
+      "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be"
+    },
+    {
+      "id": "see-also",
+      "hash": "641f1836164d717c47ee336531cc8bd9066e94bc5abec19d38454946a569a412"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "EndConversation tool behavior",
+      "id": "endconversation-tool-behavior",
+      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea",
+      "text": "## EndConversation tool behavior\n\nThe EndConversation tool ends the current session. Claude uses it only in two situations:\n\n* as a last resort against sustained abusive input, after attempts to redirect the conversation have failed and after a clear warning in an earlier message\n* when you explicitly ask to see the tool demonstrated and confirm that you want the session to end\n\nGeneral frustration, profanity, or a task going badly don't qualify, and neither do requests for harmful content, which Claude declines instead of ending the session. Claude Code follows the same approach as claude.ai, which can [end a rare subset of chats](https://www.anthropic.com/research/end-subset-conversations).\n\nAfter Claude ends an interactive session, the session locks. New prompts and most commands return `Claude ended this conversation. Start a new session (or /clear) to continue.`, and only `/clear`, `/resume`, `/help`, `/exit`, and `/feedback` still run. Claude Code records the end in the session's transcript, so resuming an ended session restores the lock; the session's history isn't deleted.\n\nResuming an ended session in [non-interactive mode](/docs/en/headless) with the `-p` flag errors and exits with code 1, so a script doesn't read the ended run as a success.\n\nThe tool never prompts for permission, and [PreToolUse hooks](/docs/en/hooks#pretooluse) don't run for it. While any other tool remains, you can't block it either: [deny and ask rules](/docs/en/permissions#tool-specific-permission-rules) naming `EndConversation` have no effect, and neither `--disallowedTools` nor a `--tools` list can remove it. The exemption is deliberate: the tool does nothing except end the conversation, never reading or modifying files or data, and a safeguard of this kind holds only if the session it applies to can't turn it off. When your deny rules remove every other tool and also match `EndConversation`, as `\"*\"` does, Claude Code removes it too rather than leaving it as the only tool, unless an allow rule names `EndConversation` explicitly. A deny list that removes every other tool without matching `EndConversation` leaves it in place.\n\n[Subagents](/docs/en/sub-agents) never get the tool. Background tasks that share the main conversation's tool list see it, but calling it there ends nothing.\n\nThe tool appears only when all of the following are true:\n\n* **Version**: Claude Code v2.1.213 or later.\n* **Model**: the session's model is Claude Opus 4.8, Claude Sonnet 5, Claude Fable 5, or a later version of one of those families.\n* **Surface**: an interactive terminal session, including a `claude` session in an IDE's integrated terminal, which is how the [JetBrains plugin](/docs/en/jetbrains) runs it. Other surfaces don't include the tool, such as:\n  * non-interactive `-p` runs\n  * sessions through the [Agent SDK](/docs/en/agent-sdk/overview) TypeScript and Python packages\n  * the [VS Code extension](/docs/en/vs-code) panel, which bundles its own CLI\n  * [GitHub Actions](/docs/en/github-actions)\n  * [cloud sessions](/docs/en/claude-code-on-the-web)\n* **Startup mode**: not a [`--bare`](/docs/en/headless#start-faster-with-bare-mode) session. Bare mode loads only shell and file tools, so the tool is never registered there.\n* **Provider**: not available on [Amazon Bedrock](/docs/en/amazon-bedrock), [Claude Platform on AWS](/docs/en/claude-platform-on-aws), [Google Cloud's Agent Platform](/docs/en/google-vertex-ai), or [Microsoft Foundry](/docs/en/microsoft-foundry), or on sessions signed in through a [cloud gateway](/docs/en/claude-apps-gateway)."
+    }
+  ]
+}
