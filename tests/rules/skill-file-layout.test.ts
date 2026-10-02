@@ -126,4 +126,19 @@ describe.skipIf(chmodCannotBlock)('a skill folder that the rule cannot list', ()
     // A folder that is not there gives no `SKILL.md`, so the report stays.
     expect(lint(path.join(scratch, '.claude', 'skills', 'absent', 'skill.md'))).toHaveLength(1)
   })
+
+  it('reports the same folder again when it can list it', () => {
+    const folder = path.join(scratch, '.claude', 'skills', 'relistable')
+    mkdirSync(folder, { recursive: true })
+    const file = path.join(folder, 'skill.md')
+    writeFileSync(file, '# Notes\n')
+    chmodSync(folder, 0o311)
+    try {
+      expect(() => accessSync(folder, constants.R_OK)).toThrow()
+      expect(lint(file)).toEqual([])
+    } finally {
+      chmodSync(folder, 0o755)
+    }
+    expect(lint(file).map((m) => m.messageId)).toEqual(['wrongCase'])
+  })
 })
