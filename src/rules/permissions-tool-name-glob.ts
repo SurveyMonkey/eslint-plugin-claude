@@ -1,0 +1,50 @@
+// An allow rule takes a glob in the tool name only after a literal
+// `mcp__<server>__` prefix. Claude Code skips any other glob in an allow rule
+// (docs/rules/permissions-tool-name-glob.md).
+import type { JSONRuleDefinition } from '@eslint/json'
+import { MCP_PREFIX, MCP_SEPARATOR } from '../data/tool-names.ts'
+import { docsUrl } from '../docs-url.ts'
+import { parsedEntries } from '../permission-entries.ts'
+
+const name = 'permissions-tool-name-glob' as const
+
+/** True when `tool` starts with `mcp__<server>__` and the server has no glob. */
+function anchoredToServer(tool: string): boolean {
+  if (!tool.startsWith(MCP_PREFIX)) {
+    return false
+  }
+  const separator = tool.indexOf(MCP_SEPARATOR, MCP_PREFIX.length + 1)
+  return separator !== -1 && !tool.slice(0, separator).includes('*')
+}
+
+const rule: JSONRuleDefinition<{ MessageIds: 'unanchored' }> = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'Put a tool-name glob in an allow rule only after mcp__<server>__',
+      url: docsUrl(name),
+    },
+    messages: {
+      unanchored:
+        'An allow rule takes a tool-name glob only after a literal "mcp__<server>__" prefix. Claude Code skips this rule.',
+    },
+  },
+  create(context) {
+    return {
+      Document(node) {
+        for (const { list, node: entry, rule: parsed } of parsedEntries(node)) {
+          if (list === 'allow' && parsed.tool.includes('*') && !anchoredToServer(parsed.tool)) {
+            context.report({ node: entry, messageId: 'unanchored' })
+          }
+        }
+      },
+    }
+  },
+}
+
+export default {
+  name,
+  language: 'json' as const,
+  files: ['**/.claude/settings.json', '**/.claude/settings.local.json'],
+  rule,
+}

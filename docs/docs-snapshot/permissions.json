@@ -1,0 +1,208 @@
+{
+  "url": "https://code.claude.com/docs/en/permissions",
+  "hash": "f8e04ca750ed01f71d739b598fa3bbe40dab358d69f9e79191479d017cbfdef2",
+  "blocks": [
+    {
+      "id": "configure-permissions",
+      "hash": "02fe990757262f5de470011970fe55f470cf43fdd8aa42a8f1af2fba63a1bb16"
+    },
+    {
+      "id": "permission-system",
+      "hash": "36386598ee312f8910a28a0f57d1834030820aad3c7e97cf9fb668211fad4c25"
+    },
+    {
+      "id": "add-a-comment-when-you-answer-a-permission-prompt",
+      "hash": "6faea71b341a1e81ce88f9d0d9d082b68b594e4db574863666e4996a89731372"
+    },
+    {
+      "id": "manage-permissions",
+      "hash": "56ca5f3f083098267cf7701cd02cf10b2b0abebac77946400176734df2526d9d"
+    },
+    {
+      "id": "permission-modes",
+      "hash": "e6d376b475c1e0cbb1d891797210841003571d566db346d62757e09700f06ee9"
+    },
+    {
+      "id": "permission-rule-syntax",
+      "hash": "8e27af6d30bfc45f5dc9b063931ac4e37cae06739ead5563f4d317ea63bafd4c"
+    },
+    {
+      "id": "match-all-uses-of-a-tool",
+      "hash": "8a5b44ee4d880d824ce8de288d9a07e55aabbcb8c756d10d2c864c0eeccb7339"
+    },
+    {
+      "id": "use-specifiers-for-fine-grained-control",
+      "hash": "b783f3f027139f49bc425a1a15bd39e1570602d18c8202ae27eaaf1830bf3da5"
+    },
+    {
+      "id": "match-by-input-parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "id": "wildcard-patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "id": "tool-name-wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286"
+    },
+    {
+      "id": "tool-specific-permission-rules",
+      "hash": "df4d698fa4f8791d768d008deb1333afa313b81465e676281e941208737120a9"
+    },
+    {
+      "id": "bash",
+      "hash": "d6016876125730d1b139c6fea4fa21ca04aec6bd1a9a62ad18c1173d4c84581e"
+    },
+    {
+      "id": "compound-commands",
+      "hash": "dd8c50ab81c42381d788418cc07dc9cc2c9d22aa6622191e888e75ddc8cf1583"
+    },
+    {
+      "id": "process-wrappers",
+      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+    },
+    {
+      "id": "bash-rule-limits",
+      "hash": "9b1965d522c4ae266ef97f7a6d889a589ef91515bd0f5669ce5b07668f7fb95b"
+    },
+    {
+      "id": "read-only-commands",
+      "hash": "850a8e2c36842d570d74195b1886fae6e0c0d036fed299c351466f9fac025563"
+    },
+    {
+      "id": "redirections",
+      "hash": "eb13cd538181803edd7ccd11f876bcad0bf3d4c53b791ad7a7990ab884b434a3"
+    },
+    {
+      "id": "powershell",
+      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
+    },
+    {
+      "id": "read-and-edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "id": "symlinks",
+      "hash": "824883972098a644c05ea3b5a2559300fd0c204e441eb7043543ed23dd0e7ee3"
+    },
+    {
+      "id": "how-rules-match-a-symlinked-path",
+      "hash": "7bb0da675c8e33584e78cc65f02823f6dbaacc966373356cd966918604c4f115"
+    },
+    {
+      "id": "writes-through-a-symlink",
+      "hash": "a1c950ae0a37a8f70f7b8768e769d8eac7e69b1fdd732c1629e0127187ebc5ab"
+    },
+    {
+      "id": "paths-that-cant-be-resolved-or-that-change",
+      "hash": "7a1d71b9c4320662fbe5432e9485047aadc07f5426dd186df63ea6b5274c6aab"
+    },
+    {
+      "id": "webfetch",
+      "hash": "34f315d4eb30dc7b6e7149d6a1a850903297476471a752edfa885ac250b0d999"
+    },
+    {
+      "id": "allow-or-deny-every-fetch",
+      "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
+    },
+    {
+      "id": "mcp",
+      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    },
+    {
+      "id": "agent-subagents",
+      "hash": "77d5f77fff615e2ff98457ca752d2a9595360766955fca89b3fce0e21637a86d"
+    },
+    {
+      "id": "cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    },
+    {
+      "id": "extend-permissions-with-hooks",
+      "hash": "bdddab71e5cff73c38e4da3016a54b8bde3251c8a19696237b7db9e0c33a8040"
+    },
+    {
+      "id": "working-directories",
+      "hash": "28cc8b8f5de30899574d4004f4388f8f15874e1104d7b96cb134608d540d43f4"
+    },
+    {
+      "id": "move-the-session-to-another-directory",
+      "hash": "c437d70095f6ba4c96c54a698335c4f337bf110d782441f7ea3a1d74aac99fbf"
+    },
+    {
+      "id": "additional-directories-grant-file-access-not-configuration",
+      "hash": "57a469c76350f730b0bff0223ba1752358abe4ce13d5b6b4e7d5c9fb6d872d4c"
+    },
+    {
+      "id": "how-permissions-interact-with-sandboxing",
+      "hash": "6ebfbb100468b0504efeb4ccb55f791849da8fe75685d9f851fc605a5848bfed"
+    },
+    {
+      "id": "managed-settings",
+      "hash": "9cb74c0caa57002fb5dc39703c4dec56b06833612b3f86495524bfde057c0e3f"
+    },
+    {
+      "id": "settings-precedence",
+      "hash": "6878c78544a4f7b4a830a40b5df948396418330baae60c8f89abe72d0a1eea1d"
+    },
+    {
+      "id": "project-allow-rules-and-workspace-trust",
+      "hash": "f8bbaab4eb87b2a68edd4591bfd92ab28978d6a246e8a95fc779170bc6f29ecb"
+    },
+    {
+      "id": "when-your-local-settings-file-needs-trust",
+      "hash": "9f446b8b9691a7436c90b2a277d8dc22ed663d919578907023a3e9eb6fb24e34"
+    },
+    {
+      "id": "what-runs-before-you-trust-a-folder",
+      "hash": "173e436b56ea35918c15cdfb5702e5e4aec9f31c032c1a61418b13f07e6efe26"
+    },
+    {
+      "id": "example-configurations",
+      "hash": "4f146ead6ab034a500db4321fcae1db514bcd1a651719549903729af2a39b3fb"
+    },
+    {
+      "id": "see-also",
+      "hash": "200f5fbac96f52b01484fc82574510fb32481b354839e6b520ea67ff7fc0a56f"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Match by input parameter",
+      "id": "match-by-input-parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb",
+      "text": "### Match by input parameter\n\nDeny and ask rules can match a top-level input parameter on any built-in tool with `Tool(param:value)`.\n\nTo match a parameter on an MCP tool, pass a deny rule with [`--disallowedTools`](/docs/en/cli-reference#cli-flags). When Claude Code loads a settings file, it skips any `mcp__` rule that has parentheses. Claude Code lists the skipped rule in the invalid-settings dialog when an interactive session starts, and in [`claude doctor`](/docs/en/debug-your-config#check-resolved-settings) output.\n\nA parameter rule matches when Claude calls the tool with that parameter set to that exact value. An allow rule for one parameter value wouldn't establish that the call is safe overall, so allow rules continue to use each tool's own specifier syntax. This works for any scalar parameter the tool accepts:\n\n| Rule | Matches |\n| :- | :- |\n| `Agent(model:opus)` | Agent calls that request the Opus model tier |\n| `Agent(isolation:worktree)` | Agent calls that request a git worktree |\n| `Bash(run_in_background:true)` | Bash calls that run in the background |\n\nParameter matching follows these rules:\n\n* The parameter name must be a direct field of the tool's input, such as `model` on the Agent tool. Fields nested inside an object or array are not matchable\n* Each rule names one parameter. To gate on both `model` and `isolation`, write two rules, `Agent(model:opus)` and `Agent(isolation:worktree)`, rather than combining them in one rule\n* The value supports `*` as a wildcard that matches any sequence of characters, so `Agent(isolation:*)` matches any explicit isolation value. Without `*` the match is exact\n* A parameter the model omits is never matched, so `Agent(model:*)` doesn't match a call that leaves `model` unset\n* The value is compared against the literal input Claude sends, before any normalization. `Agent(model:opus)` matches the alias `opus` but not a full model ID\n* A `Skill(skill:<name>)` deny rule instead [matches the skill under any of its names](/docs/en/skills#restrict-claude’s-skill-access), such as its alias or display name\n* Run with [`--verbose`](/docs/en/cli-reference) to see the exact parameter names and values in each tool call\n* Whitespace around the colon is ignored\n\nYou can't match a tool's primary content field this way: `command` for Bash and PowerShell, `file_path` for Read, Edit, and Write, `path` for Grep and Glob, `notebook_path` for NotebookEdit, and `url` for WebFetch. A rule like `Bash(command:rm *)` would be bypassable by a compound command, so Claude Code ignores it and emits a startup warning. Use `Bash(rm *)`, `Read(./path)`, or `WebFetch(domain:host)` instead."
+    },
+    {
+      "heading": "MCP",
+      "id": "mcp",
+      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351",
+      "text": "### MCP\n\nMCP rules use the server name as configured in Claude Code, optionally followed by the name of a tool from that server.\n\n* `mcp__puppeteer` matches any tool provided by the `puppeteer` server\n* `mcp__puppeteer__*` uses wildcard syntax and also matches all tools from the `puppeteer` server\n* `mcp__puppeteer__puppeteer_navigate` matches the `puppeteer_navigate` tool provided by the `puppeteer` server\n\nIf your organization has set a [claude.ai connector](/docs/en/mcp#organization-controls-on-connector-tools) tool to `ask` and that setting reaches Claude Code in your session, allow rules for that tool don't take effect: Claude Code prompts on every call, even in `auto` and `bypassPermissions` modes. In `dontAsk` mode, which never prompts, Claude Code denies the call instead. Tools from connectors Claude Code fetches itself appear as `mcp__claude_ai_<server>__<tool>`.\n\nIn a [Cowork](https://claude.com/docs/cowork/overview) session in the Claude Desktop app, Claude runs shell commands through Cowork's `mcp__workspace__bash` tool rather than the built-in `Bash` tool, and Cowork likewise provides `mcp__workspace__web_fetch` for web fetches. Claude Code also applies deny rules that name the whole `Bash` or `WebFetch` tool to these Cowork tools, so a managed `Bash` deny rule stops Claude from running shell commands in Cowork. When Claude Code blocks such a call, the message names the Cowork tool: `Permission to use mcp__workspace__bash has been denied.` Allow rules don't carry over: Claude Code never applies a `Bash` allow rule to `mcp__workspace__bash`."
+    },
+    {
+      "heading": "Read and Edit",
+      "id": "read-and-edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1",
+      "text": "### Read and Edit\n\nTo block Claude's file tools from reading a file or directory, add a `Read` deny rule for its path, such as `Read(./.env)` or `Read(./secrets/**)`; [Exclude sensitive files](/docs/en/settings-reference#exclude-sensitive-files) has a paste-ready example. If your project has a `.claudeignore` file, it has no effect, so move its entries into `Read` deny rules.\n\n`Edit` rules apply to all built-in tools that edit files. Claude makes a best-effort attempt to apply `Read` rules to all built-in tools that read files like Grep and Glob, to `@file` mentions in your prompts, and to the selection and open-file context that a connected [IDE](/docs/en/vs-code#the-built-in-ide-mcp-server) shares with Claude.\n\nA `Read` deny rule also blocks the [Edit and Write tools](/docs/en/errors#file-is-covered-by-a-read-deny-rule) on the same path, including creating a new file there. NotebookEdit isn't covered, so add an `Edit` deny rule for paths no tool may change. The check requires Claude Code v2.1.208 or later on edits, and v2.1.228 or later on writes.\n\nClaude Code checks file permissions against `Edit(path)` and `Read(path)` rules only. If you write a path rule for `Write`, `NotebookEdit`, `Glob`, or the legacy `MultiEdit` tool instead, Claude Code accepts the rule but never consults it, and [warns at startup](/docs/en/errors#is-not-matched-by-file-permission-checks), except for a `Glob` rule passed in `--allowedTools`. Use `Edit(docs/**)` in place of `Write(docs/**)`, `NotebookEdit(docs/**)`, or `MultiEdit(docs/**)`, and `Read(docs/**)` in place of `Glob(docs/**)`. Claude Code doesn't warn about a tool-name rule with no path, such as a deny rule for `Write`; it matches that rule at the tool level everywhere. Requires Claude Code v2.1.210 or later.\n\n<Warning>\n  Read and Edit deny rules apply to Claude's built-in file tools, to file commands Claude Code recognizes in Bash, such as `cat`, `head`, `tail`, `sed`, and `tee`, and to the targets of Bash [redirections](#redirections) such as `> file` and `< file`. They don't apply to a command that reads files without naming them, such as `grep -r pattern .` run from the directory that holds the file, or to arbitrary subprocesses that read or write files indirectly, like a Python or Node script that opens files itself. For OS-level enforcement that blocks all processes from accessing a path, [enable the sandbox](/docs/en/sandboxing).\n</Warning>\n\nRead and Edit rules both use [gitignore](https://git-scm.com/docs/gitignore) pattern syntax with four distinct pattern types; for single-segment directory patterns, the matching depth also depends on the rule type, described later in this section:\n\n| Pattern | Meaning | Example | Matches |\n| - | - | - | - |\n| `//path` | Absolute path from filesystem root | `Read(//Users/alice/secrets/**)` | `/Users/alice/secrets/**` |\n| `~/path` | Path from home directory | `Read(~/Documents/*.pdf)` | `/Users/alice/Documents/*.pdf` |\n| `/path` | Path relative to the settings source | `Edit(/src/**/*.ts)` | `<primary working directory>/src/**/*.ts` in project settings |\n| `path` or `./path` | Path relative to current directory | `Read(*.env)` | `<cwd>/*.env` |\n\n<Warning>\n  A pattern like `/Users/alice/file` isn't an absolute path. The single leading slash anchors at the settings source, not the filesystem root. Use `//Users/alice/file` for absolute paths.\n</Warning>\n\nA `/path` pattern anchors at a directory associated with the settings source that defines it, so the same rule matches different locations depending on where you put it:\n\n| Rule defined in | `/path` resolves to |\n| :- | :- |\n| Project settings at `.claude/settings.json` | `<primary working directory>/path` |\n| Local settings at `.claude/settings.local.json` | `<primary working directory>/path` |\n| User settings at `~/.claude/settings.json` | `~/.claude/path` |\n| A file passed with `--settings <file>` | `<directory of file>/path` |\n| CLI flags or session rules | `<primary working directory>/path` |\n\nA rule you add through `/permissions` follows the row for the settings file you save it to.\n\nLocal settings rules anchor at the session's [primary working directory](#working-directories), not at the repository root where Claude Code [stores the file](#permission-system) in v2.1.211 and later. In a session started at the repository root, the two directories are the same; in a [worktree](/docs/en/worktrees) session, a shared rule such as `Edit(/src/**)` matches that worktree's own `src/` directory.\n\nA deny rule such as `Read(/secrets/**)` in user settings blocks `~/.claude/secrets/**`, not a `secrets` directory in your project. To write a rule in user settings that applies inside every project, use a `//` absolute path or a `~/` home-relative path instead.\n\nOn Windows, paths are normalized to POSIX form before matching. `C:\\Users\\alice` becomes `/c/Users/alice`, so use `//c/**/.env` to match `.env` files anywhere on that drive. To match across all drives, use `//**/.env`.\n\nExamples:\n\n* `Edit(/docs/**)`: edits in `<primary working directory>/docs/`, not `/docs/` or `<primary working directory>/.claude/docs/`\n* `Read(~/.zshrc)`: reads your home directory's `.zshrc`\n* `Edit(//tmp/scratch.txt)`: edits the absolute path `/tmp/scratch.txt`\n* `Read(src/**)`: as an allow rule, reads from `<current-directory>/src/` only; as a deny or ask rule, matches a `src` directory at any depth under the current directory\n\nA rule only matches files under its anchor; within that bound, matching depth depends on the pattern shape and, for single-segment directory patterns, the rule type, described below. Bare filenames follow gitignore semantics and match at any depth, so `Read(.env)` and `Read(**/.env)` are equivalent:\n\n| Deny rule | Blocks | Does not block |\n| - | - | - |\n| `Read(.env)` or `Read(**/.env)` | any `.env` at or under the current directory | `.env` in a parent directory or another project |\n| `Read(//**/.env)` | any `.env` anywhere on the filesystem | nothing; the rule is anchored at the filesystem root |\n\nA relative pattern with a single directory segment, such as `src/**`, matches at different depths depending on the rule type:\n\n* **Allow rules**: `Edit(src/**)` matches only `<cwd>/src` and the files under it. To allow a directory name at any depth, write `Edit(**/src/**)`.\n* **Deny and ask rules**: `Read(secrets/**)` matches a directory named `secrets` at any depth under the current directory, so the rule also applies to nested copies.\n\nEvery other pattern shape matches at the same depth in every rule type: `Edit(/src/**)` and `Edit(src/components/**)` match only at their anchored location, while `Edit(**/src/**)` matches at any depth.\n\nThe following example shows each pattern shape against a project with a top-level `src/` directory and a nested copy under `vendor/`:\n\n```text theme={null}\n<current-directory>/\n├── src/\n│   └── app.ts\n└── vendor/\n    └── pkg/\n        └── src/\n            └── lib.js\n```\n\n| Rule | Matches `src/app.ts` | Matches `vendor/pkg/src/lib.js` |\n| :- | :- | :- |\n| `Edit(src/**)` as an allow rule | Yes | No |\n| `Edit(src/**)` as a deny or ask rule | Yes | Yes |\n| `Edit(/src/**)` in any rule type | Yes | No |\n| `Edit(**/src/**)` in any rule type | Yes | Yes |\n\n<Note>\n  In gitignore patterns, `*` matches within a single path segment and can appear at any position in the pattern, while `**` matches across directories.\n</Note>\n\nWhen you approve a file path with \"Yes, and don't ask again\", Claude Code escapes gitignore pattern characters in that path, such as `[`, `]`, and `*`, so the generated rule matches only the literal path you approved. Rules you write yourself aren't escaped. Before v2.1.202, Claude Code saved the path unescaped, so a generated rule for a directory named `[2024-06] Reports` could fail to match its own path or match unintended sibling directories.\n\nYou don't need to escape parentheses in a path, so `Edit(./Finance (2024)/**)` matches the `Finance (2024)` folder as spelled.\n\nA deny or ask rule whose path isn't usable as a gitignore pattern still guards that exact path. An allow rule with an unusable pattern doesn't approve anything.\n\nA deny or ask pattern that starts with `!` is a gitignore negation. It carves the paths it matches out of the `path` or `./path` rules listed before it. In one settings file's `deny` list, `Read(*.env)` followed by `Read(!sample.env)` blocks every file whose name ends in `.env` at any depth, except files named `sample.env`. A `!` rule listed first carves nothing out.\n\nThe carve-out reaches only rules from the same source. A `Read(!.env)` in project settings or in `--disallowedTools` doesn't cancel a `Read(./.env)` deny from managed settings or any other settings file.\n\nTwo limits narrow what a `!` pattern can carve out:\n\n* Claude Code reads a `!` pattern relative to the current directory even when `/`, `~/`, or `//` follows the `!`, so the pattern can't reach a rule anchored with one of those prefixes. `Read(!~/notes/public/**)` carves nothing out of `Read(~/notes/**)`.\n* A carve-out can't reopen a file inside a directory that a rule blocks as a whole. With `Read(secrets/**)` and `Read(!secrets/public/**)`, Claude Code still blocks `secrets/public` along with the rest of `secrets`."
+    },
+    {
+      "heading": "Permission rule syntax",
+      "id": "permission-rule-syntax",
+      "hash": "8e27af6d30bfc45f5dc9b063931ac4e37cae06739ead5563f4d317ea63bafd4c",
+      "text": "## Permission rule syntax\n\nPermission rules follow the format `Tool` or `Tool(specifier)`. Parentheses inside the specifier are literal, so a command or path that contains them needs no escaping."
+    },
+    {
+      "heading": "Cd",
+      "id": "cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53",
+      "text": "### Cd\n\n`Cd` rules control which directories the [`/cd` command](/docs/en/commands) can move the session to. `Cd` is not a model-invocable tool: Claude can't call it, and the rules apply only when you run `/cd` yourself.\n\nA bare `Cd` deny rule disables `/cd` entirely. A `Cd(<path-pattern>)` deny rule blocks matching targets. Deny rules check every spelling of the target, including each symlink hop it resolves through, so a rule written for one path also blocks targets that resolve to it.\n\nAdding any `Cd` allow rule switches `/cd` to allowlist mode: the resolved target directory must match one of your allow rules, or `/cd` refuses. With no `Cd` rules configured, `/cd` keeps its default behavior and prompts you to trust an unfamiliar directory.\n\nPath patterns share the `//`, `~/`, and `/` anchors from [Read and Edit rules](#read-and-edit), but matching is anchored to the whole directory path rather than gitignore-style. `*` matches exactly one path segment and `**` matches across segments. A trailing `/**` also matches its named root.\n\n| Rule | Matches | Does not match |\n| - | - | - |\n| `Cd(~/code/*)` | `~/code/app` | `~/code/app/src`, `~/code` |\n| `Cd(~/code/**)` | `~/code` and any directory under it | directories outside `~/code` |\n| `Cd(**/node_modules)` | any `node_modules` directory at any depth under the current directory | `node_modules/pkg` |"
+    },
+    {
+      "heading": "Tool name wildcards",
+      "id": "tool-name-wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286",
+      "text": "### Tool name wildcards\n\nDeny and ask rules also accept glob patterns in the tool-name position. The pattern must match the full tool name: `\"*\"` matches every tool, and `\"mcp__*\"` matches every MCP tool across all servers. A tool matched by a bare-name glob deny rule is removed from Claude's context, the same as a bare tool name, including the [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) exception: a glob deny can't remove it while any other tool remains, and a glob ask never prompts for it. This configuration denies every MCP tool:\n\n```json theme={null}\n{\n  \"permissions\": {\n    \"deny\": [\n      \"mcp__*\"\n    ]\n  }\n}\n```\n\nAllow rules accept tool-name globs only after a literal `mcp__<server>__` prefix. The server segment must be glob-free so the rule names a specific server you configured. `mcp__puppeteer__*` matches every tool from the `puppeteer` server, and `mcp__github__get_*` matches its `get_` tools. An unanchored allow glob such as `\"*\"`, `\"B*\"`, or `\"mcp__*\"` is skipped with a warning and doesn't auto-approve anything.\n\nA deny or ask rule whose tool name matches no known tool produces a startup warning to catch typos. Tool names containing `_` or `*` are exempt from the check, and so are the names of tools Claude Code has removed, such as `TaskOutput`.\n\nThe label shown for a tool in the transcript and permission dialog can differ from its canonical name. For example, the tool labeled `Stop Task` in the transcript has the canonical name `TaskStop`. Permission rules and [hook matchers](/docs/en/hooks) don't match the label, so a rule written as `Stop Task` doesn't match. For deny and ask rules, the startup warning above catches the mismatch. Use the canonical names listed in the [tools reference](/docs/en/tools-reference)."
+    }
+  ]
+}

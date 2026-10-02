@@ -13,6 +13,13 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
+import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
+import permissionsParamRule from './rules/permissions-param-rule.ts'
+import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
+import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
+import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
+import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
+import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
@@ -65,6 +72,13 @@ const modules = [
   agentTeamsNoProjectConfig,
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
+  permissionsRuleSyntax,
+  permissionsUnknownTool,
+  permissionsToolNameGlob,
+  permissionsSpecifierUnsupported,
+  permissionsPathRuleTool,
+  permissionsMcpRuleParens,
+  permissionsParamRule,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -118,6 +132,13 @@ const recommended: Record<RuleName, Severity> = {
   'agent-teams-no-project-config': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
+  'permissions-rule-syntax': 'error',
+  'permissions-unknown-tool': 'error',
+  'permissions-tool-name-glob': 'error',
+  'permissions-specifier-unsupported': 'error',
+  'permissions-path-rule-tool': 'error',
+  'permissions-mcp-rule-parens': 'error',
+  'permissions-param-rule': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

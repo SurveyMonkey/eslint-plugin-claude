@@ -1,0 +1,1176 @@
+{
+  "url": "https://code.claude.com/docs/en/settings-reference",
+  "hash": "9887c768615dce66828cb29ecebd944357d21acdf726a76ad6c86021b376aa2d",
+  "blocks": [
+    {
+      "id": "all-settings",
+      "hash": "5ce47148291331f3a8891f51c04c2f9e2d2872acc7ae5cb59fb1d334dac0d295"
+    },
+    {
+      "id": "settings-index",
+      "hash": "30158ab736034e59be494ae81e5196075c4add6f1c89528cddcf84b2dce3f107"
+    },
+    {
+      "id": "model-and-responses",
+      "hash": "2877798808f43aa079370a791d755e73dd79b77f62344e459f032667a1b8575d"
+    },
+    {
+      "id": "advisormodel",
+      "hash": "2b0354c3c184efeeee8cb4a443f14f19179a0f43f9d896977f4cb8aa691368b9"
+    },
+    {
+      "id": "alwaysthinkingenabled",
+      "hash": "bcb5b5ef63a6a088452fed46bc9f44554475ae6dd9f6eb71063c739b7423fa18"
+    },
+    {
+      "id": "availablemodels",
+      "hash": "c7ce44f7ffae9f6699f8cf638bae02cbdef08238df74464e656ababbaabf33ad"
+    },
+    {
+      "id": "availablemodelsmatch",
+      "hash": "62226fb18925d5e5b56a05b149266aaf886abc8bbe8db97563601b16302f577f"
+    },
+    {
+      "id": "deniedmodels",
+      "hash": "45b295c5d3e5f2f6e5fb5397c2c67203f8bfbaf7f5f06f32c7e921e295d82eb3"
+    },
+    {
+      "id": "effortlevel",
+      "hash": "c48649f2902e054f8aee91c23b860b0f1c468db5fd3e0e6b9300db95bb761d45"
+    },
+    {
+      "id": "enforceavailablemodels",
+      "hash": "0681783159c0965267b9c49b977855c6e110a681952caeb85c917bca5a6e8300"
+    },
+    {
+      "id": "fallbackmodel",
+      "hash": "a077dac729806f0595939eb723e4dc7e83d5736e1a4ed974e82bdc31e181f81e"
+    },
+    {
+      "id": "fastmode",
+      "hash": "701fe8e7e0e2dc99f9dddbb367ff5eaf308c9a7aa06e102052a0944567a47d22"
+    },
+    {
+      "id": "fastmodepersessionoptin",
+      "hash": "f27854257fad4795fefc7985ed23cdc69b4eb08a410e789e819071834f29242b"
+    },
+    {
+      "id": "language",
+      "hash": "82fb58daec2035d8b4f42fcdd09a78877dbc3d8c218351196f0d6f72be1a0544"
+    },
+    {
+      "id": "maxeffortlevel",
+      "hash": "9300ac5a4a77a5e131ebbc90540f3d4efbabb6e35574557786d256b3739eba93"
+    },
+    {
+      "id": "model",
+      "hash": "e91e79c89d7fe9532289a9e3418f3c3d4641e16ae8d2be05bc3f75834695bf62"
+    },
+    {
+      "id": "modeloverrides",
+      "hash": "456dcce66e097009c449460e536955db1d678ace9000a4a10163080fb282b1a9"
+    },
+    {
+      "id": "modelpicker",
+      "hash": "079092698833d34051a050c8b9fd60859015345e3f90b7f8b786a2bf230370df"
+    },
+    {
+      "id": "fields-for-modelpicker",
+      "hash": "ab0c48c277159a54a6c8ddc141c00d1b5fb65969ecc2439fc40cdd2037b4d52c"
+    },
+    {
+      "id": "modelpricing",
+      "hash": "dadddf715f95f8c43b43625eb2d5ca4d90a939b63eb803e53abe7f56e8cc4a47"
+    },
+    {
+      "id": "fields-for-modelpricing",
+      "hash": "9e829bbae1f664d94058a7cdefa3de7c8f3fe5ffe217c51cc9ff14c76fe0621a"
+    },
+    {
+      "id": "which-models-a-modelpricing-row-applies-to",
+      "hash": "e3ce6d9cc40cef269d4dde01f8ad39860c5994241a4b593d13997d40b66bcf92"
+    },
+    {
+      "id": "modelsettings",
+      "hash": "b12b9c8861d5a75c8b7d43f1654e50d2a1ff0e03731445b411a7b1a8da1218de"
+    },
+    {
+      "id": "outputstyle",
+      "hash": "d1bbb755b02563e203bb35f53287acb009dddd329b169da201aed373a4f412fb"
+    },
+    {
+      "id": "promptcachettl",
+      "hash": "189010f9f11aa7425c4f3562c627567a357ba65ffcba6f2906594d944b425ae0"
+    },
+    {
+      "id": "showthinkingsummaries",
+      "hash": "8b0a3133646252f7cb4b517f8a6d58ad3d220fbd8feb4cd55a15d96effc5385f"
+    },
+    {
+      "id": "subagentpromptcachettl",
+      "hash": "7c193f311ab202d503898af059df9319b4061ac781ea3ecfa94835ad8d7b9b0c"
+    },
+    {
+      "id": "switchmodelsonflag",
+      "hash": "e6ee9148fb5ee30c7e92f024c97633bd712c498733367237f5d87205d64371f4"
+    },
+    {
+      "id": "ultracode",
+      "hash": "e9c51ff58ea90fb50ee61c6836ee81a7008612563df0e3edf99fa1ec6dec1f65"
+    },
+    {
+      "id": "permission-settings",
+      "hash": "40ef3318588fc7a9ee4e425bea42284a5f90fb93ad507fc07a2fa653dc4b48f6"
+    },
+    {
+      "id": "allowmanagedpermissionrulesonly",
+      "hash": "a09b1f0b9427cf64bf0c1ff3b5e649e6c1f91f56f75acecd11b1ceacd099ee16"
+    },
+    {
+      "id": "automode",
+      "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522"
+    },
+    {
+      "id": "automode-classifyallshell",
+      "hash": "cd38181fc17023de8384c4bb5f2e4dcf061037b595c4517bb5f3e05c0ff4bb3e"
+    },
+    {
+      "id": "disableautomode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    },
+    {
+      "id": "permissions",
+      "hash": "23a950c07d6332b801953be9c69b2ef1ea2daa03614344753d8889d4c236a465"
+    },
+    {
+      "id": "useautomodeduringplan",
+      "hash": "e4a219d29cca4f02cafb5f0e5ebcdea8111dc8a40485a608de9c34f3551475a5"
+    },
+    {
+      "id": "permissions-allow",
+      "hash": "0e383bc5c3682d19a2cb4a3ea80cf8979c2163d37df12292912a22ad9e67195f"
+    },
+    {
+      "id": "permission-rule-syntax",
+      "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d"
+    },
+    {
+      "id": "permissions-ask",
+      "hash": "bcd0e691db3823ea9d41072154d0b3ef19de8709c896d7b5afec45dbd3ccc3d1"
+    },
+    {
+      "id": "permissions-deny",
+      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
+    },
+    {
+      "id": "permissions-additionaldirectories",
+      "hash": "9153928bd132a6f72591b10aff814dda012710ef079e916713512a52f99a5cdb"
+    },
+    {
+      "id": "permissions-blockreadsoutsideworkingdirectories",
+      "hash": "f1ce276060f50bcee16f3211f33e323cc2b413dd50ef3b2aeade19b1d266d0ba"
+    },
+    {
+      "id": "sandboxed-commands-under-the-block",
+      "hash": "e5f784c354d70ce0a6702ea02d72441a307bcb5d8e5cdad0adeaa1ca8d373901"
+    },
+    {
+      "id": "permissions-defaultmode",
+      "hash": "87d77becdcf62c6f8144751e1769ece3b1d88a254166907972de34097c791fee"
+    },
+    {
+      "id": "permissions-disablebypasspermissionsmode",
+      "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1"
+    },
+    {
+      "id": "skipautopermissionprompt",
+      "hash": "a8d5714cc8631c60c2359d5bb2b037a0c7d7426bdd47055921731768e057a4ac"
+    },
+    {
+      "id": "skipdangerousmodepermissionprompt",
+      "hash": "6cb388e508fafc04e0d2bd3fad45a5d698f73078433983af6b54e89978ca66f6"
+    },
+    {
+      "id": "sandbox-settings",
+      "hash": "d2c4004f6c7daf7c6b3ba89beb70675e54e282a6d0a42b175156077751e31ae6"
+    },
+    {
+      "id": "sandbox",
+      "hash": "acf7e1fb5871b1ccf6f334c6920086e9160868aa11caed7c93644b8231319992"
+    },
+    {
+      "id": "sandbox-enabled",
+      "hash": "3943e60314203ef85704a11d3a21396e9b3b00a73094e5130bed836b2dcb7045"
+    },
+    {
+      "id": "sandbox-failifunavailable",
+      "hash": "35ce095ef65a4f4dc7878b6c449884c796c34e1afd8ea122a36b8713c234eb32"
+    },
+    {
+      "id": "sandbox-autoallowbashifsandboxed",
+      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d"
+    },
+    {
+      "id": "sandbox-excludedcommands",
+      "hash": "3b559f2105cc014bf9422a1f9152d52a822dad80b0721d40d949b4197b7a074f"
+    },
+    {
+      "id": "sandbox-allowunsandboxedcommands",
+      "hash": "d43226c11b66f6619ceff8976e08f874595a2a540499c28ded290ec8e7608577"
+    },
+    {
+      "id": "sandbox-filesystem",
+      "hash": "96f35caef293634055394531e2bc33c8ad683abf47f81448105b5888dde8220a"
+    },
+    {
+      "id": "sandbox-path-prefixes",
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
+    },
+    {
+      "id": "sandbox-filesystem-allowwrite",
+      "hash": "31627177301f27c16c26b011c39a773965443bdfb8c0eeb9c65dba34c8e7c434"
+    },
+    {
+      "id": "sandbox-filesystem-denywrite",
+      "hash": "f55b5fe644d32ac732bbcc8aa3ab48fe89e4e22e047cc9320c43e7a8c448fa44"
+    },
+    {
+      "id": "sandbox-filesystem-denyread",
+      "hash": "59b6d35b015e4765756fa018b027221c683bb438dd0329ae38670f1c61d2d902"
+    },
+    {
+      "id": "sandbox-filesystem-allowread",
+      "hash": "1de2551e60ff3097d8d216392acf1d1d2e96fa7bce03865139fe8ea6d7c51638"
+    },
+    {
+      "id": "sandbox-filesystem-allowmanagedreadpathsonly",
+      "hash": "e4059e894658e605e1ad7b6409d282de0dfc04ac232674334e13609a389c28ac"
+    },
+    {
+      "id": "sandbox-filesystem-disabled",
+      "hash": "67faae21e0c30ab642178a8976b0ea26341922a93d64873f6f677868c78765da"
+    },
+    {
+      "id": "sandbox-ignoreviolations",
+      "hash": "c349ac7846d2c8d13f961bb63cf37e3437b90302f4c12efb682971922fe6367c"
+    },
+    {
+      "id": "sandbox-enableweakernestedsandbox",
+      "hash": "ee4ade3a33eb912181e8e9227e4ad7e52eea8b9d7e761081e733b7afc528168c"
+    },
+    {
+      "id": "sandbox-enableweakernetworkisolation",
+      "hash": "005e33df10f6e266b5451fd99404d6dfda740f760cb5d43e8bbca1ee0d121cb0"
+    },
+    {
+      "id": "sandbox-allowappleevents",
+      "hash": "6ed4f16f93536fff514247ddac50fd3d6820138611b381664c4e127452dfe771"
+    },
+    {
+      "id": "sandbox-ripgrep",
+      "hash": "51ecdb50e87aa5192a7f7971013283d7168a2456500453a82b3390427dc559c0"
+    },
+    {
+      "id": "sandbox-bwrappath",
+      "hash": "0cd256c24af41d960e876bd6caa3a7ed58fb293de6142cb63035ddc53677bbec"
+    },
+    {
+      "id": "sandbox-socatpath",
+      "hash": "eb0ab1176a884ac2217b3108ba455df7269d3f781ccb0fe82fd98401a176f19c"
+    },
+    {
+      "id": "sandbox-credentials",
+      "hash": "2b7d793ea0796150e42acfa04c07c754ab8e0147cb437765a56a7c2a78815672"
+    },
+    {
+      "id": "invalid-credential-entries-in-managed-settings",
+      "hash": "bd0f8bfa4a80bdf4d22a431dd1fb66a306454466c38e8ca85a7158fcf5d92de1"
+    },
+    {
+      "id": "sandbox-credentials-files",
+      "hash": "7bcf139a71ace917bc629bd1fd985eceacfa3a8a6ed87960df716a5c424f578d"
+    },
+    {
+      "id": "mask-fields-for-files",
+      "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906"
+    },
+    {
+      "id": "sandbox-credentials-envvars",
+      "hash": "f549d22c4ffec55bed2dfe95dce7724039ed701400225d0ed8e39289027facb7"
+    },
+    {
+      "id": "mask-fields-for-environment-variables",
+      "hash": "a441b38511d6c9dad01decf4318583347bb717ac5376992334940c918e99da9d"
+    },
+    {
+      "id": "sandbox-credentials-allowplaintextinject",
+      "hash": "cae46263cf082f2bd6a8ac5f84dff789f91ea2b1ba152ba2993c789c4f7809b4"
+    },
+    {
+      "id": "sandbox-credentials-awspairs",
+      "hash": "ca206977e839b2896dcaa4acc6d0c697b8c039d52c9bd325550c268cff688c55"
+    },
+    {
+      "id": "sandbox-credentials-sigv4",
+      "hash": "38c6114da28565bfbb69a7bf81c624a24c7c32bc0a59b3d9860d45096346cab3"
+    },
+    {
+      "id": "sandbox-network",
+      "hash": "21b75ae1c4dec9de9bae5edd7c3cf169dc71bc2e8ecc3aac635a50212df0f86b"
+    },
+    {
+      "id": "sandbox-network-allowunixsockets",
+      "hash": "158d204fa07b1820e7bce30343a88e5a3b58d97343f0fe612371b52e19a0a472"
+    },
+    {
+      "id": "sandbox-network-allowallunixsockets",
+      "hash": "a6a63eca2a3ed830cc5198d069d3ca5d9b04fa971d962537a591f428d7c710e9"
+    },
+    {
+      "id": "sandbox-network-allowlocalbinding",
+      "hash": "ab670d571e9124d23641e11f22670048b6ecd207b07fe97bf4a75030c05095be"
+    },
+    {
+      "id": "sandbox-network-allowmachlookup",
+      "hash": "f87aa794f91e7158ab38aed48e44f90bbf1aef2f7b6c554320d06e11020d5225"
+    },
+    {
+      "id": "sandbox-network-alloweddomains",
+      "hash": "557ebf0a27e224290a75e5a5bb43bd41d4c25c443258d17e0405af3da5096dfa"
+    },
+    {
+      "id": "sandbox-network-denieddomains",
+      "hash": "e8fd871e032980f6e3d6d564cde48dc595fbdeca971b595e498f4eafc3f97ccf"
+    },
+    {
+      "id": "sandbox-network-strictallowlist",
+      "hash": "ba48623b5ed60db0cad4cb2b39f6934435f983fe689d9b3b4372b95075c63f0a"
+    },
+    {
+      "id": "sandbox-network-allowmanageddomainsonly",
+      "hash": "429818b382afbb9e9511316b71140e3a254df831269c3fa80b7ee3b50dcc7ea7"
+    },
+    {
+      "id": "sandbox-network-httpproxyport",
+      "hash": "457af27547af152d0215d04257a59c5f45031f330d245721353e6fe360905122"
+    },
+    {
+      "id": "sandbox-network-socksproxyport",
+      "hash": "c6430ca7a948cefff13d083c263c7379266898816d3716294f52765200de65b3"
+    },
+    {
+      "id": "sandbox-network-tlsterminate",
+      "hash": "1d3de6b1faf83302a3ad4cb2e4a186cf52dff4a8b7ffebec86e7132209463008"
+    },
+    {
+      "id": "memory-and-context",
+      "hash": "0903d71c9527db6bc73b8a5687af06cb86de48bcf0be4f3c582e6d2d6ec1e199"
+    },
+    {
+      "id": "autocompactenabled",
+      "hash": "d5a377566d38b4dc0bce3fa861fdd090f8e04883902d6bb31ad2932060e58678"
+    },
+    {
+      "id": "autocompactwindow",
+      "hash": "1e413e99e23a2ba7a1a7c399cf2a34f40634d61f7aa0fe59d1f9e42fb3fb67ba"
+    },
+    {
+      "id": "automemorydirectory",
+      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
+    },
+    {
+      "id": "automemoryenabled",
+      "hash": "3c2e520f5512c7975ccb059aa4d2422547f9c3771fbb6d407202929c560ef8e0"
+    },
+    {
+      "id": "bashoutputmaxchars",
+      "hash": "1d64ca622d3b5414fc902f0bc57c8fcda5b90b18cc917436efeef9bf311bb7c2"
+    },
+    {
+      "id": "claudemd",
+      "hash": "058342c6cfca10e700917a7fe790549b9b032228ef37b4cef32f5d7e2013b898"
+    },
+    {
+      "id": "claudemdexcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c"
+    },
+    {
+      "id": "env",
+      "hash": "4076131fca929f69ba901b494d67dec2fa790b97696a54d2371e59137257998a"
+    },
+    {
+      "id": "how-env-values-interact-with-your-shell",
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+    },
+    {
+      "id": "when-claude-code-applies-env-values",
+      "hash": "e97a52ed7b110e9267dbb0c989b318a0736c7e348e3eca5dee47ab210fdf35c1"
+    },
+    {
+      "id": "variables-claude-code-ignores-in-env",
+      "hash": "15bc20837795e50924ba0d49286ff1d9c82d04417723363e8f5df82cba7f2aaa"
+    },
+    {
+      "id": "filecheckpointingenabled",
+      "hash": "8e59c5074266fc6d126672a80e7f1a9dd2b0267d312c6514c157420e34f963f8"
+    },
+    {
+      "id": "plansdirectory",
+      "hash": "a4b683cc087abdf823dbf358314141fac153f1880298f9e1074abb1545575670"
+    },
+    {
+      "id": "skilllistingbudgetfraction",
+      "hash": "2f6c3883123ff8b3bb17a00a92df124b22aab68540e8d68769212de0817026f2"
+    },
+    {
+      "id": "skilllistingmaxdescchars",
+      "hash": "2080bff90a623cd34cee21e1d9991b3cb59464e295af6124977820389fdc4fe0"
+    },
+    {
+      "id": "taskoutputmaxchars",
+      "hash": "eeae3bf23d0f765fb626cb4002fe62a5e84deea50cc09f1998d8d6730d522e2a"
+    },
+    {
+      "id": "interface-and-terminal",
+      "hash": "dc27459f5b2cf077dce094beca89a61a12476f001ed0ba358926714e13d4497e"
+    },
+    {
+      "id": "askuserquestiontimeout",
+      "hash": "d4f121c732d345006a907596bb39a3497309f2956e6f43f2818f663601aafd7b"
+    },
+    {
+      "id": "autocontinueatusagelimit",
+      "hash": "b79213c02f493f0e7cd7db2f9c6c37322011ca98baa4b541564b1e16c71662c8"
+    },
+    {
+      "id": "autoscrollenabled",
+      "hash": "bfc908af51d94f5e009d19314e19e992747a9bcda5550f9a2b29f18392f44ff8"
+    },
+    {
+      "id": "axscreenreader",
+      "hash": "ad6c02161b4c6ce21af165297b1e52825f875e9ac7d8e12d0542220ab06f3be4"
+    },
+    {
+      "id": "basheditdiffenabled",
+      "hash": "fb4bdc7166ad5f3d711bb48591d703e6359aeb1af734c236aacb3850bcef67fd"
+    },
+    {
+      "id": "companyannouncements",
+      "hash": "6ab3356c9f2668fc6f2965cf9e4969c583e0c655040bfb5fbef6979b0c1d2e97"
+    },
+    {
+      "id": "defaultshell",
+      "hash": "952236e781b8f672c75a8efbd94ebed80d2664cac9aeea378c58c97ee9f32198"
+    },
+    {
+      "id": "dialogexpiry",
+      "hash": "952b0162eb97a7d3d64bc5e28cd0b9c741c0117fa6b92b1de58233219af885aa"
+    },
+    {
+      "id": "editormode",
+      "hash": "ab3ce02f90101af2db9e491ea3b7a706653e78cf40d2aa876a41aac6a9f2dff7"
+    },
+    {
+      "id": "emojicompletionenabled",
+      "hash": "334dbfe48d2309368f916f99f8e3c265ddbc4d3c1a18f815c5bd85d2b55940eb"
+    },
+    {
+      "id": "filesuggestion",
+      "hash": "3b9603f5087a69b4e2a8545bc463c8b360209506b1ca56ba611024559ba9e4ff"
+    },
+    {
+      "id": "command-input-and-output",
+      "hash": "48acc7f642d684431238c2ad53a5a7c6843645bcd9ddb0de94136a7dac5fe849"
+    },
+    {
+      "id": "footerlinksregexes",
+      "hash": "ab5a02beee6844268f4b9c1bed5fa5953b98906eac89331d6477aa6527881fe0"
+    },
+    {
+      "id": "badge-constraints",
+      "hash": "f01d48be5f83ca7fc6328d2033ea0da1aa0c8b37b4965f32951dd72acdd51fd2"
+    },
+    {
+      "id": "keybindingflavor",
+      "hash": "1e7d8081bb3dd5de9fee428eec6ce5a5307653998f3f2dbba95776bb6edfee55"
+    },
+    {
+      "id": "maxprosewidth",
+      "hash": "1d809c8489a4de3656d6968f9835168c715ba596773480147caa76e1847d7fdc"
+    },
+    {
+      "id": "prefersreducedmotion",
+      "hash": "0931af15733c6a8930f46e4bcd6b2c8f776a4c4a64a626a6ad14585e8cedeb41"
+    },
+    {
+      "id": "promptsuggestionenabled",
+      "hash": "ca60b0d805ef607a2af661b6eb2be81a0fdc4b7ce80e0b82ab9fe65253fc3958"
+    },
+    {
+      "id": "respectgitignore",
+      "hash": "0d28826139305a918e14422586e13ec0440afc824736f1f06b020f5a0ec73b59"
+    },
+    {
+      "id": "respondtobashcommands",
+      "hash": "95537aec648d840db9b7d116c3a09b4af0c7e5de786ccb655069092fbd626300"
+    },
+    {
+      "id": "showclearcontextonplanaccept",
+      "hash": "a27ca7732b98f836483117d3e220fe746f62d9f2002f7d6579d4bfa47895b712"
+    },
+    {
+      "id": "showturnduration",
+      "hash": "80668ecbd46f282278eaa332d51217003b4a45fc05bc1ffdfb4b8e349a3026a5"
+    },
+    {
+      "id": "spellcheck",
+      "hash": "2198cefc08deba2c1e1f5d9be997ce36f1730323828af0a3d167f1d1e818b66b"
+    },
+    {
+      "id": "spinnertipsenabled",
+      "hash": "3ae776af52cef9315893ec629f6163079beba4e358f25bd86b83a071aacc9154"
+    },
+    {
+      "id": "spinnertipsoverride",
+      "hash": "a5d447375ca6aa720317740fb88c827195bf389f6bea3cc96bc130aa1a1bd44f"
+    },
+    {
+      "id": "spinnerverbs",
+      "hash": "0df8956ff27fe526ab4b3baf11db0b186c768eeed64f2913a4811c7630218e5e"
+    },
+    {
+      "id": "statusline",
+      "hash": "eb35c1765e7649454e2c1be1904af6d6bf0a9cf3c797934ce4644566ab5701f6"
+    },
+    {
+      "id": "subagentstatusline",
+      "hash": "97c7c76a9cffd6e307665b1e491356a8b961a0a04e2413ab24b95736801ef376"
+    },
+    {
+      "id": "syntaxhighlightingdisabled",
+      "hash": "0a0cc3e95231f11941cdb019547b3bebdb9885fc48480867c3eb5923b3b99454"
+    },
+    {
+      "id": "terminalprogressbarenabled",
+      "hash": "ac4afb08a138c05ceed6c79986de055c87554f983013026d2da2bc0706147a10"
+    },
+    {
+      "id": "terminaltitlefromrename",
+      "hash": "d9e8dd8ddba3af6747e8ee2f86de1d756ba459bf26f651968ad9d0c55fb13098"
+    },
+    {
+      "id": "theme",
+      "hash": "7bcb9bf8c6d7b183fca918b28abbc1096d5c0a15f03a769efc9fdb2ae1ae09db"
+    },
+    {
+      "id": "timeformat",
+      "hash": "01e04460073952ceea1f286c14b95da27ad86bf0cf2b47181db1338662c572db"
+    },
+    {
+      "id": "timezone",
+      "hash": "095dcc80146fc46cdfc0c5db1c040555ad58ee0f71bba70d69a4e1252ac74750"
+    },
+    {
+      "id": "tui",
+      "hash": "d46a0a876bddabc9197640572a5a50be7b73c10d7e84def892f7c08f1a3a4d69"
+    },
+    {
+      "id": "verbose",
+      "hash": "933fc75fff11ea497ff8a2e1ec004489cf8f1e2ce3171744a25a9755c6f05db7"
+    },
+    {
+      "id": "viewmode",
+      "hash": "4426a84be2955f9177c8a582c595a747d21a8fe1676b4ad66f40823005fc89d6"
+    },
+    {
+      "id": "viminsertmoderemaps",
+      "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181"
+    },
+    {
+      "id": "voice",
+      "hash": "7650d07ccf0e1a3bb4fc28a406d746b9e8c78b9892925192ad7554bd41acd6d1"
+    },
+    {
+      "id": "voiceenabled",
+      "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3"
+    },
+    {
+      "id": "wheelscrollaccelerationenabled",
+      "hash": "7736aa1eea7545d9a9a4cc311527b16304fe59a9ad8bebf9820bd5e1acb40b65"
+    },
+    {
+      "id": "git-and-attribution",
+      "hash": "0202064880c45c8a4b34f06c8cfff0303b0f0a1c391b5ad2d49feb0e44338bae"
+    },
+    {
+      "id": "attribution",
+      "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e"
+    },
+    {
+      "id": "includecoauthoredby",
+      "hash": "1e8ac2eff11dfd01279bb22bad338f3486126dbc8aa8d7110e21c5c5e1d33738"
+    },
+    {
+      "id": "includegitinstructions",
+      "hash": "b85fdd1e53a3176ab8689e63d55f34bd79e12afdccd500a136a2364b2e891edd"
+    },
+    {
+      "id": "prurltemplate",
+      "hash": "3bc68542f8c12eb8f717dbb834bc2766c8d4b13dbc61ee1de2f94f086d650c48"
+    },
+    {
+      "id": "attribution-commit",
+      "hash": "2fabead912e3c91e88e53c3c27a9d6772696999c64e3a78d3bbab9e08c82028c"
+    },
+    {
+      "id": "attribution-pr",
+      "hash": "4d4afbc91ce48a672a8671afa5feddf9b72aed10b94aa34a7c22528c42a3f61c"
+    },
+    {
+      "id": "attribution-sessionurl",
+      "hash": "0ac5892ad867bd5ed37b3e7d0eb909f29b3f945132f1bd2d8219594060593795"
+    },
+    {
+      "id": "hooks-and-automation",
+      "hash": "89572ea757c6b48adc3b94ab45af5ca0298255356844b9cdaba3d5f25edab2f2"
+    },
+    {
+      "id": "allowedhttphookurls",
+      "hash": "a9e8a4bfefd28bb87d92623019f550d78f0ab7f7f5afd7321487ec13ab28b01b"
+    },
+    {
+      "id": "allowmanagedhooksonly",
+      "hash": "ea109832a07238d04cab7d8107bf4203c22de71b2b0e5d75a288b2c405146c28"
+    },
+    {
+      "id": "what-runs-under-allowmanagedhooksonly",
+      "hash": "0436ea9af4a0ef77664b8d711c05ec1df2446848d2f78a2534bd8d23c80a46d0"
+    },
+    {
+      "id": "disableallhooks",
+      "hash": "d7b544944c53bc85bda3166f8c09576717929262b3d86ca2ce3e70e376d11bb8"
+    },
+    {
+      "id": "status-line-and-file-suggestion-gates",
+      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+    },
+    {
+      "id": "disableworkflows",
+      "hash": "9a9cf0efe4744433473bc3a6d38113b5e9a0c511d524ddbcf03583c0c838bdd0"
+    },
+    {
+      "id": "enableworkflows",
+      "hash": "b55c523ebd36d18d89b5a9de57ac462f7d35290d7aa4aed9c22610ecfa72cfc9"
+    },
+    {
+      "id": "hooks",
+      "hash": "f3da96774a6b94fdcfade98d240aa080a092ef1f62a0f4dde5977000d96f3440"
+    },
+    {
+      "id": "httphookallowedenvvars",
+      "hash": "c4cefb3c2edf2f273972438c1ccabc4000768a42ec186816b0926532dde08b0c"
+    },
+    {
+      "id": "workflowkeywordtriggerenabled",
+      "hash": "23c507ffbbb896ea6b3b25139dbe8c776a6a3f55b846c7ffa082911551d73ab7"
+    },
+    {
+      "id": "workflowsizeguideline",
+      "hash": "56719097a11f409359d5f3145d3d618eb729487294eda71a839475339c58c546"
+    },
+    {
+      "id": "plugins-and-skills",
+      "hash": "1cd9a8cc828e13a49f6b18527056cd652097673571ba792a1a2e7f708e3e5ac1"
+    },
+    {
+      "id": "disablebundledskills",
+      "hash": "47b73dbc1482ac58f357996732da71a2da58a828fe561b65762b848ce054020d"
+    },
+    {
+      "id": "disableskillshellexecution",
+      "hash": "ecdc9ab7c69ca7affd8c34992756e58cfb29704e7c5e111f078b5d9e1b89d3a0"
+    },
+    {
+      "id": "skilloverrides",
+      "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc"
+    },
+    {
+      "id": "syncclaudeaiskills",
+      "hash": "ad434b2431cddba2591be161684fdf0f3e98069650e53b46c4eb2fe8ca421c7f"
+    },
+    {
+      "id": "syncclaudeaiplugins",
+      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+    },
+    {
+      "id": "allowedchannelplugins",
+      "hash": "5032559f995729da51c9a51bcf9543b0fd067da3c04480f5f0ca389684563836"
+    },
+    {
+      "id": "blockedmarketplaces",
+      "hash": "305f94819b98232d182d3444e35a4276849d6cb923c8284a6f9ba10d5b89b236"
+    },
+    {
+      "id": "channelsenabled",
+      "hash": "8a515bcd322578de740a4d35b77191dacc36dc1a67d99875f70f84f42d2f7190"
+    },
+    {
+      "id": "disablecommandpluginsources",
+      "hash": "32fe7f909f3e7a80cdcd6ee8518e0380b30618e2366301de89f9ca4c8a53c45d"
+    },
+    {
+      "id": "pluginsuggestionmarketplaces",
+      "hash": "ca7a8ee11271a40c914dcbaa6395db1069cc1d05c369041858818d4f8e7b121e"
+    },
+    {
+      "id": "plugintrustmessage",
+      "hash": "960ef9d351fcfbcb91c7b54b7a3e59e33e3c3a63e9e3e9fa49bb52f4ef92477b"
+    },
+    {
+      "id": "strictknownmarketplaces",
+      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250"
+    },
+    {
+      "id": "allowed-source-types",
+      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418"
+    },
+    {
+      "id": "owner-wildcards",
+      "hash": "f8defb03ff61e7e3b94fcc9a72334099064d63b3c064eada9264db165e748d08"
+    },
+    {
+      "id": "exact-matching",
+      "hash": "0898f1a46f1b8116fea63983d68e762d56b865e01cf6a9bc58d86c65e14bdb2d"
+    },
+    {
+      "id": "allow-only-the-official-marketplace",
+      "hash": "3c82f89063c6c17c776e814d69f8423ef36ea76fb1094786f8267b8688b606de"
+    },
+    {
+      "id": "combine-with-extraknownmarketplaces",
+      "hash": "4ea01f005d07718f6a8896837a5de0285448a0f27aeffcff5a805ace6ce5b96d"
+    },
+    {
+      "id": "strictpluginonlycustomization",
+      "hash": "3e0088b190b498850b769f6957554cb880ff915a0b99017f5af91b27964d4d84"
+    },
+    {
+      "id": "strictpluginonlycustomization-skills",
+      "hash": "05a1e0dfb450c7be99c13cc46cd2678a9e396706bce13470621ae0c62587ee0d"
+    },
+    {
+      "id": "strictpluginonlycustomization-agents",
+      "hash": "c2790ee358de2cef9485f4df2e73ba65b6de22512a6559b0a73b4e33a16e7fa7"
+    },
+    {
+      "id": "strictpluginonlycustomization-hooks",
+      "hash": "cd271be48e910a3974ba1fe31f9a49cc3ea3bf534110bb69bba23bc71c582267"
+    },
+    {
+      "id": "strictpluginonlycustomization-mcp",
+      "hash": "0925bed4f349958f01d1cb1a0b0e660a1b4bb1272d73d95a2a1848d77eb3a5f5"
+    },
+    {
+      "id": "enabledplugins",
+      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11"
+    },
+    {
+      "id": "extraknownmarketplaces",
+      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
+    },
+    {
+      "id": "marketplace-source-types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "id": "marketplace-key-aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "id": "pluginconfigs",
+      "hash": "6d20b1678b1cfd7cb92c4959e58510380059e782b82af32e50cb08b3ce3dfe3e"
+    },
+    {
+      "id": "prependplugins",
+      "hash": "34ddbb0d81114d392f3fb1c1e15b3b36f15decc68935753019f91e8b259f878f"
+    },
+    {
+      "id": "appendplugins",
+      "hash": "68a42d4f3c2783690f816e20b473cb093f440c54fbdabf81e564a468a099bb5b"
+    },
+    {
+      "id": "mcp",
+      "hash": "d9496c73b2f09acfa6fb884ac266d43fd7c07b14ac7e798d5ee83a03380530e1"
+    },
+    {
+      "id": "allowallclaudeaimcps",
+      "hash": "3c83715c81f72082eadcf61a839afc66b262ad954dea9f7ed2f6849e10a07d40"
+    },
+    {
+      "id": "allowclaudeinchromewithmanagedmcp",
+      "hash": "618839b58d0768ff560295ee63cd798f42d8ab71e8f351bd115e1d1d0cd03206"
+    },
+    {
+      "id": "allowedmcpservers",
+      "hash": "ca2cbd69d3e5a19b4663667cf24cb66de92fc6222f8a990f24d6b3ab66c0ef2b"
+    },
+    {
+      "id": "allowmanagedmcpserversonly",
+      "hash": "2b657e94676e7e0426795e310a08a261429e092bfd6a0f973c553b4497d6d43e"
+    },
+    {
+      "id": "deniedmcpservers",
+      "hash": "e703d5859f59901bdedec8cbe836523e1b3b6121369151c25dba68e0f66fede7"
+    },
+    {
+      "id": "disableclaudeaiconnectors",
+      "hash": "28e1de63bf8382604df73704202b00ff34e0a6ccb3f518894111c669fbe793a3"
+    },
+    {
+      "id": "disabledmcpjsonservers",
+      "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232"
+    },
+    {
+      "id": "enableallprojectmcpservers",
+      "hash": "bd1f5be1083d2c379fb8009da3964e3f60ee0cedf7f664fe139cb4192a5a27bd"
+    },
+    {
+      "id": "enabledmcpjsonservers",
+      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24"
+    },
+    {
+      "id": "managedmcpservers",
+      "hash": "8a01589555ca94338b9d81496f7f7d994c539c46eaa28e99670e4a2fe8fbd427"
+    },
+    {
+      "id": "agents-sessions-and-worktrees",
+      "hash": "45853d795ce6636d39be1ac36cdd1ab29d6ae4aa7a4463060b25bb2c2399e890"
+    },
+    {
+      "id": "agent",
+      "hash": "721d922211e0ecaf19dffeab4df4cd8d474d17457f95b7cfc4358943a24e7fd7"
+    },
+    {
+      "id": "crosssessioninbound",
+      "hash": "0a3434d30ac90d992dc6d2b85b16eb3b7d508f55f7ca7d39a0e29fd929c5af24"
+    },
+    {
+      "id": "disableagentview",
+      "hash": "3f5cc9bec9978f936c982c6094f324ac435863bfae7370abd03a576057bb30fc"
+    },
+    {
+      "id": "isolatepeermachines",
+      "hash": "eba8a11f4e02c9d8874a2efa01b18ff7160a52305ddea9b0f030e5612b75b2e9"
+    },
+    {
+      "id": "processwrapper",
+      "hash": "b4e93f5d99f483d5763422f20f4ad4db2616a9efc6e42e80da2b1eba913ddf0b"
+    },
+    {
+      "id": "teammatemode",
+      "hash": "1eba5cd4fffa677988c4b69ff4f02c556d531992382760cd406b4d3bda80842f"
+    },
+    {
+      "id": "worktree",
+      "hash": "7192a8ad1deaaa955f5f22f4b7d1db6af91d1d9ceeb3fa75e8df500a5420f3d9"
+    },
+    {
+      "id": "worktree-baseref",
+      "hash": "c33d9cab1a174f2cdb1ac771d48155a386ab5bc3290dd7958d16cf30feb64e44"
+    },
+    {
+      "id": "worktree-symlinkdirectories",
+      "hash": "f41fd4d6e3be197621898f9215099a954755b7766f81c8c8bc975a30a2132704"
+    },
+    {
+      "id": "worktree-sparsepaths",
+      "hash": "95c97176ceae0c1b5bd5d87755a6a9489f949cbadb854c1bb767666bfd6250c7"
+    },
+    {
+      "id": "worktree-bgisolation",
+      "hash": "03a5ddd1829c2bef24168f872c74bea30eaa0458865a5599295c9858d46b62bb"
+    },
+    {
+      "id": "remote-desktop-and-notifications",
+      "hash": "af234a20440b27c1c91c92483708dc1c8582d3e5bcbe9264161be875d74dc9ba"
+    },
+    {
+      "id": "agentpushnotifenabled",
+      "hash": "d9fd73b9e34d3992b13b2ad6aa818267ba1112b3498c4ec824573474ba937a27"
+    },
+    {
+      "id": "awaysummaryenabled",
+      "hash": "a9aa1e335ac6b0dee29fd8e85e132f0aa3a604c19cee56a418029520dc09e269"
+    },
+    {
+      "id": "disableartifact",
+      "hash": "9c0e53f6cf784de8ee50b9f191fe6cb8136d1c70942a2742b0d24f8de7a450e2"
+    },
+    {
+      "id": "disabledeeplinkregistration",
+      "hash": "118ac44c0d6225ceda980f7cf79d212366f93680b2a35235409cf9ff4b7c1d87"
+    },
+    {
+      "id": "disabledesktoplocalsessions",
+      "hash": "5508e44fe0d02a9e5edcf7db15c46a9ef7ee11acaa5bde432377a37b8ef53be5"
+    },
+    {
+      "id": "disableremotecontrol",
+      "hash": "84850d0f97566973d959e6142d03514ce1ae08017d05f0dbabbbf170aedd9da4"
+    },
+    {
+      "id": "enableartifact",
+      "hash": "74b6999db6eab1b71aa85ee88c6a51a2722ae9164f0f6ea4e1768f826c1a3b74"
+    },
+    {
+      "id": "inputneedednotifenabled",
+      "hash": "74f7ad4c6890074d70c6f6738d596641b96290536e2de85e89f4a73d4e4119da"
+    },
+    {
+      "id": "preferrednotifchannel",
+      "hash": "cc8fa4dfd981cc5ee46bb7547763d8f782717ab8f4a47dd45758f1a02b88ca7a"
+    },
+    {
+      "id": "remote-defaultenvironmentid",
+      "hash": "d3afefc5bc24ce488953e96bb70234853bf8baa69487724c817e45f39bec2308"
+    },
+    {
+      "id": "remotecontrolatstartup",
+      "hash": "9d905b458b2b6227949113fafac3487cf7444548235f20c37959486f146fd187"
+    },
+    {
+      "id": "sshconfigs",
+      "hash": "e8bf6f0932eaeb8b7e4b054acc7750f3db0026e41b1205a50a5b2cf486f31496"
+    },
+    {
+      "id": "sshhostallowlist",
+      "hash": "f4862245a373a7cb1ab2739b9f4b7504a1ffff383fb50001f5bb152df26b54d1"
+    },
+    {
+      "id": "authentication-and-providers",
+      "hash": "7d629613f3824202158ae5a37bff7ba6531a2f59b4e3e47681e9a53e610baf32"
+    },
+    {
+      "id": "allowedproviders",
+      "hash": "c1337a4d65a16154aed79ba700407fcb02f612e35696d662bf238a8738909fb0"
+    },
+    {
+      "id": "endpoints-that-need-a-pin-in-managed-env",
+      "hash": "eb6013fec7aebf419a78a1d14993abc3ecdf0411f95233723b0b3db9aa8fc50c"
+    },
+    {
+      "id": "apikeyhelper",
+      "hash": "efd9c40b52165bfced283ded41ab73dfef7ea57cd354606bfb0f53cb8848b88e"
+    },
+    {
+      "id": "awsauthrefresh",
+      "hash": "bbbd75972b95d07c353899886495adf971851643ffab4906beaf94dae960a6f8"
+    },
+    {
+      "id": "awscredentialexport",
+      "hash": "a79192c5673251d2e2622fe3f1afa646cb76ae400d7695563e3475827fd23802"
+    },
+    {
+      "id": "forceloginmethod",
+      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
+    },
+    {
+      "id": "forcelogingatewayurl",
+      "hash": "8c4a51f34124104c8187a93a1da7ac4c57afe69c8ab9dde9f84dc2dc2706fa6b"
+    },
+    {
+      "id": "forceloginorguuid",
+      "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9"
+    },
+    {
+      "id": "gatewayinternalnetworks",
+      "hash": "1530a1dd8cf5eab6344e4f83cfbe6fa7b2519eba2d992cf57ec57c8930d0b32a"
+    },
+    {
+      "id": "gcpauthrefresh",
+      "hash": "fbfa81160c4fa56b0702019dc32c4b31281aa1edf8b92e9f3b1efbf10ec087f0"
+    },
+    {
+      "id": "otelheadershelper",
+      "hash": "295d3fe3b80b688c2f11f466476e73bdc7c02139db022c6a13c3e590aec75e9c"
+    },
+    {
+      "id": "updates-and-versioning",
+      "hash": "a7e6b55510b36a18220f12c2c1b7adfb7f1590ec045d8d71c16ecef2c4679b6e"
+    },
+    {
+      "id": "autoupdateschannel",
+      "hash": "dde0aaedcf8712f824892c7c77f8ef6f2de0f119b7da7d0d2015f068c660b560"
+    },
+    {
+      "id": "minimumversion",
+      "hash": "c0d8c826c5a8813cc773d86237c6926fb9cebab6fcdb04ef769986cf1168c3b0"
+    },
+    {
+      "id": "requiredmaximumversion",
+      "hash": "354ae366c48ba0bd121053a5b704a84ec189e6dbebdb2d7056c27b9ea366ee55"
+    },
+    {
+      "id": "requiredminimumversion",
+      "hash": "b1489a78ee9bef58c3abd14762e1fa78d4306039bbd2c55ef56c1e01e62f1666"
+    },
+    {
+      "id": "tools",
+      "hash": "fda1132c4f47b7d404e6e9f42ba6444a79a46e154d97fd7a742c5e1933635112"
+    },
+    {
+      "id": "browserexternalpagetools",
+      "hash": "1fdd74b188e4a09e034e650c77e907ad0b31a87bdf87f2470e517cdb4f97d8f0"
+    },
+    {
+      "id": "disablebrowserexternalnavigation",
+      "hash": "ca9af9ffcd78ef1bcf44ac9d40f7abf32f36bd4fcfe1009e768e6f483a6be749"
+    },
+    {
+      "id": "disablemobilesimulatortools",
+      "hash": "144f02cbcaacd7b5408884d5f6dfa428a9b8c7de86e95e476ec20e4ec0f53a68"
+    },
+    {
+      "id": "privacy-and-telemetry",
+      "hash": "e330e1a462b541d53140f0bcfaae69662e27fe35f023ad4735b205c346a96fad"
+    },
+    {
+      "id": "cleanupperioddays",
+      "hash": "e363cebbfc6166039f57262e6b9e52fc9f2956b8ec3ae9fd547ec4e736c7dfe0"
+    },
+    {
+      "id": "desktopsessioncleanupperioddays",
+      "hash": "c998a22a0b7dd8515ab2197e015363a8d1badec4a2b8a753142a81b4806a6434"
+    },
+    {
+      "id": "feedbackdrafts",
+      "hash": "f958196034b4e241cc93b8638dbc5914f9f4f0203b62ece7038124f6e5d002bc"
+    },
+    {
+      "id": "feedbacksurveyrate",
+      "hash": "cced4468cc10d326785c100f60f8e436714aed3d079943826861b97a7a69a96b"
+    },
+    {
+      "id": "skipwebfetchpreflight",
+      "hash": "021426c8a118c8d6539cc66e87ed582be06be390e0d7d5917dedf966bbfc3215"
+    },
+    {
+      "id": "enterprise-and-managed-settings",
+      "hash": "c29c331b7a6460c91aa5ead495ba243635761d7ccbbc4d8fa9d1b5a21d2da291"
+    },
+    {
+      "id": "disablesideloadflags",
+      "hash": "548a7aec8e284b3ba66b2acb542fb6071498c5318d8815aae9f0a067f7b3d042"
+    },
+    {
+      "id": "forceremotesettingsrefresh",
+      "hash": "cd9cb1b09796aceb858104638e1d39ba7545906f825d5f460f3bcadfae6ab0d8"
+    },
+    {
+      "id": "managedsourcesbehavior",
+      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    },
+    {
+      "id": "parentsettingsbehavior",
+      "hash": "a812f70172db31fedff898478d3c6f88761ab6dedc1d2ed88d034300f2abdca5"
+    },
+    {
+      "id": "policyhelper",
+      "hash": "fe14aab4a90a3f582325cb9ec908f1d18fea911f096aebdb48417b07af57d0e5"
+    },
+    {
+      "id": "write-the-helper-output",
+      "hash": "68fe35cae99b5e08ee9236887123751e73fc59bae908c4bc6481c694d366a5fe"
+    },
+    {
+      "id": "helper-failures",
+      "hash": "3666e6a0d665a8a16e8f974241f1f08a648a7af81ab242be2e0d2c9db00335a8"
+    },
+    {
+      "id": "policyhelper-path",
+      "hash": "5308974c74dfb207534d9ca06efde9b21649f0e6ae6380e16d0ef9118cddec37"
+    },
+    {
+      "id": "policyhelper-timeoutms",
+      "hash": "14843159647a5904b5070a62d2a97b6f6b642c9353487ea78666b3fe1108fae0"
+    },
+    {
+      "id": "policyhelper-refreshintervalms",
+      "hash": "b6d1ea127dc2ca89e4f550a66280fadb89e46dcb79df2bd2653931c51f1f3bdd"
+    },
+    {
+      "id": "wslinheritswindowssettings",
+      "hash": "76c41ed125acac0d88eb86b14ed9fbc00061e2f98c5e6a3ca1249c34b257092d"
+    },
+    {
+      "id": "global-config-settings",
+      "hash": "e9ff36789538e7e8fbca017992971575941c6836b9d7522b58a8117c52be4eaa"
+    },
+    {
+      "id": "autoconnectide",
+      "hash": "be3cb8810d67852b4984c9884060f22c210190590c7463e7833b05070311e808"
+    },
+    {
+      "id": "autoinstallideextension",
+      "hash": "ae9bc1cb4e99fd78ca215140c0366224c2128fa9b22c908e93572fe6d97f6f32"
+    },
+    {
+      "id": "claudeinchromedefaultenabled",
+      "hash": "490da88ffa9c706afc53c92978a06df5392993210aa6ba719441cba73a9b3913"
+    },
+    {
+      "id": "copyfullresponse",
+      "hash": "36d90279367073969bccf903a9d5aa2374d55e300c0e1cdb3c27c097ae1a835b"
+    },
+    {
+      "id": "copyonselect",
+      "hash": "10e44349cd5f3a12cdc8d04306300a4295244bcae629581a096e87618893761a"
+    },
+    {
+      "id": "defaulttoagentsview",
+      "hash": "a51400dcdc89fc648387777cf1c2281dedaaf20d910f3b367e79dd2f237b198d"
+    },
+    {
+      "id": "difftool",
+      "hash": "828af62c4a51a4b23f709388c9ddaa1b0858b47b2d6c545059d26907ac0a1b52"
+    },
+    {
+      "id": "externaleditorcontext",
+      "hash": "31ac23c8eec0cd59f04bde45255acfd3656cd7cffb902d1f968af9613e790e94"
+    },
+    {
+      "id": "leftarrowopensagents",
+      "hash": "b3f566986c3456e36dfc8dfbc53e21fa7cdeb9ae355d13ba5b0eb0d4cec80c75"
+    },
+    {
+      "id": "permissionexplainerenabled",
+      "hash": "4fb85d37ca8b88d7b43fd2cb5b46579bbb78c588d992b93860965574d49e1b19"
+    },
+    {
+      "id": "prstatusfooterenabled",
+      "hash": "80954fde2485f083c1c591d6623e74ccbf7afbe44e021a8348c15a34fecdc122"
+    },
+    {
+      "id": "teammatedefaultmodel",
+      "hash": "db6b3c25a2e07fa38c38a3fa9a6a3be54f7a30bd956eeacb7fd78cef56ab3921"
+    },
+    {
+      "id": "see-also",
+      "hash": "9f67a0f233440c873db3c4b1ec41ec4744b8aec0373c52ae9d402b393a87a66f"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Permission rule syntax",
+      "id": "permission-rule-syntax",
+      "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d",
+      "text": "#### Permission rule syntax\n\nPermission rules follow the format `Tool` or `Tool(specifier)`. Claude Code evaluates `deny` rules first, then `ask`, then `allow`, and the first match decides regardless of how specific each rule is; see the [permission rule evaluation order](/docs/en/permissions#manage-permissions).\n\nEach row shows one rule shape and what it matches.\n\n| Rule | What it matches |\n| :- | :- |\n| `Bash` | Every Bash command |\n| `Bash(npm run *)` | Commands starting with `npm run` |\n| `Read(./.env)` | Reads of the `.env` file |\n| `WebFetch(domain:example.com)` | Fetch requests to example.com |\n\nFor the complete rule syntax, including wildcard behavior, tool-specific patterns for Read, Edit, WebFetch, MCP, and Agent rules, and the security limitations of Bash patterns, see [Permission rule syntax](/docs/en/permissions#permission-rule-syntax)."
+    },
+    {
+      "heading": "permissions.allow",
+      "id": "permissions-allow",
+      "hash": "0e383bc5c3682d19a2cb4a3ea80cf8979c2163d37df12292912a22ad9e67195f",
+      "text": "### `permissions.allow`\n\nList the tool uses Claude Code approves without asking you. In an MCP rule, `*` can appear only in the tool name after the `mcp__<server>__` prefix, such as `mcp__github__get_*`; it can't appear in the server name.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: array of permission rule strings\n* **Default**: unset\n* **Per-session overrides**: `--allowedTools` adds allow rules for one session, and a deny rule from any settings file still blocks a tool it names\n\nThis example approves `git diff` and lets Claude Code read your `.zshrc` without asking:\n\n```json settings.json theme={null}\n{\n  \"permissions\": {\n    \"allow\": [\"Bash(git diff *)\", \"Read(~/.zshrc)\"]\n  }\n}\n```\n\nClaude Code applies `allow` rules from a project's `.claude/settings.json` only after you accept the [workspace trust dialog](/docs/en/permissions#project-allow-rules-and-workspace-trust) for that folder."
+    }
+  ]
+}

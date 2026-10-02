@@ -112,7 +112,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "9b976118654c23f314528005d2d63bf8b553390bfeef5cb68c6e2575d10cdd82"
+      "hash": "c4f66ca80056cda4411e7fd26cdb05a44f5db3117e858b64e638e881b617945b"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -144,7 +144,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
-      "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
   "output-style-frontmatter-schema": [
@@ -174,6 +174,125 @@
       "url": "https://code.claude.com/docs/en/glossary",
       "heading": "Frontmatter",
       "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
+    }
+  ],
+  "permissions-mcp-rule-parens": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "MCP",
+      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    }
+  ],
+  "permissions-param-rule": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    }
+  ],
+  "permissions-path-rule-tool": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Is not matched by file permission checks",
+      "hash": "c82ec831066c9e26f6b23b44bb668004cdaab41529bb28b97a5ff95cc95e0af5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    }
+  ],
+  "permissions-rule-syntax": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Permission rule syntax",
+      "hash": "8e27af6d30bfc45f5dc9b063931ac4e37cae06739ead5563f4d317ea63bafd4c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Permission rule syntax",
+      "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Fix a broken settings file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Malformed Tool(content) rule",
+      "hash": "64e6fa825ddbbc3585d8aed429a706a746ba1816e91e97099f8ec0b4e127cc1a"
+    }
+  ],
+  "permissions-specifier-unsupported": [
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    }
+  ],
+  "permissions-tool-name-glob": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Tool name wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.allow",
+      "hash": "0e383bc5c3682d19a2cb4a3ea80cf8979c2163d37df12292912a22ad9e67195f"
+    }
+  ],
+  "permissions-unknown-tool": [
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Tool name wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
     }
   ],
   "skill-agent-exists": [
@@ -212,7 +331,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Pre-approve tools for a skill",
-      "hash": "cfa7f81101d8c500fffa9773a6333edc3e63834b28261b518f1bbd734d916cdb"
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
