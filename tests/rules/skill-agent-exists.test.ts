@@ -335,6 +335,32 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     )
   })
 
+  // A readable file after the unreadable path must not clear the flag.
+  it('stays silent for a project agent file that it cannot read, next to a readable one', () => {
+    put('deny-mixed/.git/HEAD', '')
+    const locked = put('deny-mixed/.claude/agents/a.md', agentFile('a'))
+    put('deny-mixed/.claude/agents/b.md', agentFile('b'))
+    withoutAccess(locked, () => expect(ghost(skill('deny-mixed', '.claude'))).toEqual([]))
+  })
+
+  it('stays silent for a plugin agent file that it cannot read, next to a readable one', () => {
+    put('deny-plugin-mixed/.claude-plugin/plugin.json', '{"name": "dp"}')
+    const locked = put('deny-plugin-mixed/agents/a.md', agentFile('a'))
+    put('deny-plugin-mixed/agents/b.md', agentFile('b'))
+    const file = path.join(scratch, 'deny-plugin-mixed', 'skills', 's', 'SKILL.md')
+    withoutAccess(locked, () => expect(ghost(file)).toEqual([]))
+  })
+
+  it('stays silent for a plugin agents folder that it cannot read, next to a readable file', () => {
+    put('deny-plugin-sub/.claude-plugin/plugin.json', '{"name": "dp"}')
+    put('deny-plugin-sub/agents/sub/a.md', agentFile('a'))
+    put('deny-plugin-sub/agents/b.md', agentFile('b'))
+    const file = path.join(scratch, 'deny-plugin-sub', 'skills', 's', 'SKILL.md')
+    withoutAccess(path.join(scratch, 'deny-plugin-sub/agents/sub'), () =>
+      expect(ghost(file)).toEqual([]),
+    )
+  })
+
   it('stays silent for a plugin manifest that it cannot read', () => {
     const manifest = put('deny-manifest/.claude-plugin/plugin.json', '{"agents": "./x"}')
     put('deny-manifest/agents/a.md', agentFile('a'))
