@@ -16,7 +16,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
     },
     messages: {
       parens:
-        'Claude Code skips an "mcp__" rule that has parentheses. Pass a parameter rule for an MCP tool with --disallowedTools.',
+        'Claude Code skips an "mcp__" rule that has parentheses. To match a parameter, pass a deny rule with --disallowedTools.',
     },
   },
   create(context) {

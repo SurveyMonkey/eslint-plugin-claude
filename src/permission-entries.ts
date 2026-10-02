@@ -18,15 +18,18 @@ type ValueNode = ObjectNode['members'][number]['value']
 type PermissionList = 'allow' | 'ask' | 'deny'
 const LISTS: readonly PermissionList[] = ['allow', 'ask', 'deny']
 
-/** One string entry of a permission list, with the result of its parse. */
-export interface PermissionEntry {
+interface EntryBase {
   readonly list: PermissionList
   readonly node: StringNode
+}
+
+/** One string entry of a permission list, with the result of its parse. */
+interface PermissionEntry extends EntryBase {
   readonly result: ParseResult
 }
 
 /** An entry that parsed. */
-export interface ParsedEntry extends PermissionEntry {
+interface ParsedEntry extends EntryBase {
   readonly rule: ParsedRule
 }
 
@@ -70,7 +73,7 @@ export function permissionEntries(document: DocumentNode): PermissionEntry[] {
  *  `permissions-rule-syntax` alone. */
 export function parsedEntries(document: DocumentNode): ParsedEntry[] {
   return permissionEntries(document).flatMap((entry) =>
-    entry.result.ok ? [{ ...entry, rule: entry.result }] : [],
+    entry.result.ok ? [{ list: entry.list, node: entry.node, rule: entry.result }] : [],
   )
 }
 

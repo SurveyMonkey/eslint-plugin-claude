@@ -21,9 +21,16 @@ Do not match the primary input field of a tool with a parameter rule.
 ## Rule details
 
 A deny or ask rule can match a top-level input parameter of a built-in tool with `Tool(param:value)`. A rule cannot match the
-primary content field of a tool: `command` for Bash and PowerShell, `file_path` for Read, Edit and Write, `path` for Grep and
-Glob, `notebook_path` for NotebookEdit, and `url` for WebFetch. Claude Code ignores such a rule and warns at startup. The
-docs give the replacement: `Bash(rm *)`, `Read(./path)` or `WebFetch(domain:host)`.[^param] Space around the colon does not matter.
+primary content field of a tool. These are the primary fields:
+
+- `command` for Bash and PowerShell
+- `file_path` for Read, Edit and Write
+- `path` for Grep and Glob
+- `notebook_path` for NotebookEdit
+- `url` for WebFetch
+
+Claude Code ignores such a rule and warns at startup. The docs give the replacement: `Bash(rm *)`, `Read(./path)` or
+`WebFetch(domain:host)`.[^param] Space around the colon does not matter.
 
 The rule reads `permissions.ask` and `permissions.deny`. It reports a rule whose parameter is the primary field of its own tool.
 It does not read `permissions.allow`, because an allow rule uses the specifier of its tool.

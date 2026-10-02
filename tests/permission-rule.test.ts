@@ -30,6 +30,8 @@ describe('parsePermissionRule', () => {
     ['Bash(x) ', 'trailingText'],
     ['Bash\0', 'nulByte'],
     ['Bash(a\0b)', 'nulByte'],
+    // The NUL check comes before the check of the tool name.
+    ['(\0)', 'nulByte'],
   ])('rejects %j as %s', (text, reason) => {
     expect(parsePermissionRule(text)).toEqual({ ok: false, reason })
   })

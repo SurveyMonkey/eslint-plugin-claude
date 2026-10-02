@@ -4,25 +4,25 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { permissionEntries } from '../permission-entries.ts'
+import type { ParseFailureReason } from '../permission-rule.ts'
 
 const name = 'permissions-rule-syntax' as const
 
-const rule: JSONRuleDefinition<{
-  MessageIds: 'emptyTool' | 'unbalanced' | 'trailingText' | 'nulByte'
-}> = {
+const messages: Record<ParseFailureReason, string> = {
+  emptyTool: 'This permission rule has no tool name. Claude Code skips it.',
+  unbalanced: 'This permission rule has unbalanced parentheses. Claude Code skips it.',
+  trailingText: 'This permission rule has text after the final parenthesis. Claude Code skips it.',
+  nulByte: 'This permission rule has a NUL byte. It matches nothing.',
+}
+
+const rule: JSONRuleDefinition<{ MessageIds: ParseFailureReason }> = {
   meta: {
     type: 'problem',
     docs: {
       description: 'Write each permission rule as Tool or Tool(specifier)',
       url: docsUrl(name),
     },
-    messages: {
-      emptyTool: 'This permission rule has no tool name. Claude Code skips it.',
-      unbalanced: 'This permission rule has unbalanced parentheses. Claude Code skips it.',
-      trailingText:
-        'This permission rule has text after the closing parenthesis. Claude Code skips it.',
-      nulByte: 'This permission rule has a NUL byte. Claude Code skips it.',
-    },
+    messages,
   },
   create(context) {
     return {

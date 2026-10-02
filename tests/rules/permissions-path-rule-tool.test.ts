@@ -32,6 +32,15 @@ jsonTester.run('permissions-path-rule-tool', rule, {
     { code: JSON.stringify({ allow: ['Write(a)'] }), filename: '.claude/settings.json' },
   ],
   invalid: [
+    // An empty specifier is still a path rule, and Claude Code never consults it.
+    {
+      code: settings({ deny: ['Write()', 'Write(*)'] }),
+      filename: '.claude/settings.json',
+      errors: [
+        { messageId: 'neverConsulted', data: { tool: 'Write', replacement: 'Edit' } },
+        { messageId: 'neverConsulted', data: { tool: 'Write', replacement: 'Edit' } },
+      ],
+    },
     {
       code: settings({ allow: ['Write(docs/**)'] }),
       filename: '.claude/settings.json',

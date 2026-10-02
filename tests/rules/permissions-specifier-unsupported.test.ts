@@ -9,7 +9,7 @@ const rule = ruleOf('permissions-specifier-unsupported')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
 
 describe('SPECIFIER_TOOLS', () => {
-  it('holds each tool of the "Applies to" column but WebSearch', () => {
+  it('holds each tool of the "Applies to" column, and Cd and Task', () => {
     expect([...SPECIFIER_TOOLS].sort()).toEqual(
       [
         'Agent',

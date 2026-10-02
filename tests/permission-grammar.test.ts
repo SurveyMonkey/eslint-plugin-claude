@@ -1,5 +1,5 @@
 // A rule that does not parse gets one report from the 7 grammar rules, from
-// `permissions-rule-syntax` alone (round 3 ruling 8). The other 6 skip it.
+// `permissions-rule-syntax` alone. The other 6 skip it.
 import json from '@eslint/json'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'

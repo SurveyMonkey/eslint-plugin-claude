@@ -27,8 +27,10 @@ startup.[^warning] A bare name such as `Write` is a rule for the whole tool, and
 The rule reports a rule with parentheses for one of those four tools. The message names the rule to use instead.
 `Edit(path)` covers `Write`, `NotebookEdit` and `MultiEdit`. `Read(path)` covers `Glob`.
 
-The rule does not report `Grep(path)` or `LSP(path)`. The tools table says that `Read` rules apply to both tools, and the docs
-do not say that a path rule for them is never consulted.[^tools] It accepts a deny or ask rule in the `param:value` form.
+The rule does not report `Grep(path)` or `LSP(path)`. The tools table says that `Read` rules apply to both tools.[^tools] The
+docs do not say that Claude Code never consults a path rule for them.
+
+The rule accepts a deny or ask rule in the `param:value` form.
 [`permissions-param-rule`](permissions-param-rule.md) reads those. It skips a string that does not parse.
 [`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
 

@@ -25,8 +25,15 @@ never matches a tool. The label that the transcript shows can differ from the ca
 `Stop Task` is the tool `TaskStop`, and a rule written as `Stop Task` does not match.[^wildcards]
 
 The rule reads the tool name of each rule in `permissions.allow`, `permissions.ask` and `permissions.deny`. It
-accepts the 46 tools of the tools table, the old name `Task` of `Agent`, the legacy tool `MultiEdit`, and `Cd`, the rule
-name of the `/cd` command.[^read][^cd] The list is in `src/data/tool-names.ts`, as of Claude Code 2.1.287.
+accepts the 46 tools of the tools table, and these names that the table does not list:
+
+- `Task`, the old name of `Agent`[^task]
+- `MultiEdit`, a legacy tool[^read]
+- `Cd`, the rule name of the `/cd` command[^cd]
+
+The list is in `src/data/tool-names.ts`, as of Claude Code 2.1.287. The docs also exempt the name of a tool that Claude Code
+removed.[^wildcards] The list holds no such name. A rule for a removed tool never matches, so the rule reports it. Use
+`additionalTools` to accept one.
 
 The docs exempt a name that holds `_` or `*` from their own check for a deny or ask rule, and so does this rule.[^wildcards] This
 covers each `mcp__` name and each glob. The docs state that check for deny and ask rules only. The rule also reads allow rules,
@@ -63,3 +70,4 @@ Pass:
 [^wildcards]: [Configure permissions: Tool name wildcards](https://code.claude.com/docs/en/permissions#tool-name-wildcards)
 [^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)
+[^task]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)

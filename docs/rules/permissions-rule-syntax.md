@@ -21,23 +21,23 @@ Write each permission rule as `Tool` or `Tool(specifier)`.
 ## Rule details
 
 A permission rule is `Tool` or `Tool(specifier)`.[^syntax][^reference] Claude Code skips a string that has
-another form.[^broken] The rule reads each string in `permissions.allow`, `permissions.ask` and
+another form.[^broken][^malformed] The rule reads each string in `permissions.allow`, `permissions.ask` and
 `permissions.deny`. It reports at the string. It ignores an entry that is not a string.
 
 The rule reports these faults:
 
 - The tool name is empty, as in `(npm run *)`.
 - A parenthesis is not balanced, as in `Bash(npm run build` or `Bash)`.
-- Text follows the closing parenthesis, as in `Bash(npm run build) --watch`.
-- The string holds a NUL byte.
+- Text follows the final parenthesis, as in `Bash(npm run build) --watch`.
+- The string holds a NUL byte. Claude Code matches nothing with such a rule.
 
 Parentheses inside a specifier are literal, so `Edit(./Finance (2024)/**)` is valid.[^syntax] The
 tool name ends at the first `(`. The specifier ends at the last `)`. The rule does not trim the
 string.
 
 This is the only rule of the permission grammar group that reports a string that does not parse. The
-other six rules skip it. A fault of the tool or of the specifier shows only after you fix the
-syntax.
+other six rules skip it. You see a fault of the tool or of the specifier only after you fix
+the syntax.
 
 Fail:
 
@@ -56,3 +56,4 @@ Pass:
 [^syntax]: [Configure permissions: Permission rule syntax](https://code.claude.com/docs/en/permissions#permission-rule-syntax)
 [^reference]: [All settings: Permission rule syntax](https://code.claude.com/docs/en/settings-reference#permission-rule-syntax)
 [^broken]: [Settings files and precedence: Fix a broken settings file](https://code.claude.com/docs/en/settings#fix-a-broken-settings-file)
+[^malformed]: [Error reference: Malformed Tool(content) rule](https://code.claude.com/docs/en/errors#malformed-tool-content-rule)

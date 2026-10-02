@@ -4,7 +4,7 @@
 // Each place that holds a permission rule uses it.
 
 /** Why a string is not a rule. */
-type ParseFailureReason = 'emptyTool' | 'unbalanced' | 'trailingText' | 'nulByte'
+export type ParseFailureReason = 'emptyTool' | 'unbalanced' | 'trailingText' | 'nulByte'
 
 /** A rule that parsed. `specifier` is null for the bare form, and a string for
  *  the form with parentheses. The string is empty for `Tool()`. */

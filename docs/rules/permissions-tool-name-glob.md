@@ -21,7 +21,7 @@ Put a tool-name glob in an allow rule only after mcp__<server>__.
 ## Rule details
 
 A deny or ask rule accepts a glob in the tool-name position, such as `"*"` or `"mcp__*"`. An allow rule accepts a glob
-only after a literal `mcp__<server>__` prefix, and the server segment must have no glob.[^wildcards][^allow][^allow] Claude Code skips an allow
+only after a literal `mcp__<server>__` prefix, and the server segment must have no glob.[^wildcards][^allow] Claude Code skips an allow
 glob such as `"*"`, `"B*"` or `"mcp__*"` with a warning. It approves nothing.
 
 The rule reads `permissions.allow`. It reports a tool name that has `*` and does not start with `mcp__<server>__`, where

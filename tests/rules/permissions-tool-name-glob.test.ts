@@ -28,6 +28,12 @@ jsonTester.run('permissions-tool-name-glob', rule, {
     { code: JSON.stringify({ deny: ['*'] }), filename: '.claude/settings.json' },
   ],
   invalid: [
+    // `mcp__` inside a name does not make it an MCP name.
+    {
+      code: settings({ allow: ['Xmcp__a__*'] }),
+      filename: '.claude/settings.json',
+      errors: [{ messageId: 'unanchored' }],
+    },
     // The three examples of the docs.
     {
       code: settings({ allow: ['*', 'B*', 'mcp__*'] }),

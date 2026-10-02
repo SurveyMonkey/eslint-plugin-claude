@@ -58,8 +58,9 @@ export const TOOL_NAMES: readonly string[] = [
 
 /** Names that a rule can hold, and that are not in the tools table. `Task` is
  *  the old name of `Agent`. `MultiEdit` is a legacy tool. `Cd` is the rule
- *  name of the `/cd` command. Sources: the Agent tool row of the permissions
- *  page (https://code.claude.com/docs/en/permissions#agent-subagents), the
+ *  name of the `/cd` command. Sources: the note on the `Task` rename in the
+ *  subagents page
+ *  (https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned), the
  *  "Read and Edit" section
  *  (https://code.claude.com/docs/en/permissions#read-and-edit) and the "Cd"
  *  section (https://code.claude.com/docs/en/permissions#cd). */

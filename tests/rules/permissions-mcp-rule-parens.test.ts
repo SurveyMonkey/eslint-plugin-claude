@@ -16,7 +16,7 @@ jsonTester.run('permissions-mcp-rule-parens', rule, {
     },
     // A rule for a tool that is not an MCP tool.
     {
-      code: settings({ deny: ['Agent(model:opus)', 'mcp_a(x)', 'Mcp__a(x)'] }),
+      code: settings({ deny: ['Agent(model:opus)', 'mcp_a(x)', 'Mcp__a(x)', 'Xmcp__a(x)'] }),
       filename: '.claude/settings.local.json',
     },
     // A rule that does not parse is for `permissions-rule-syntax`.
