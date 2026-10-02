@@ -36,10 +36,10 @@ A `skills/` directory is `.claude/skills/`, or the `skills/` directory of a plug
 a directory with `.claude-plugin/plugin.json`. A `skills/` directory in any other place is not a
 report.
 
-The rule makes no report in a plugin whose manifest it cannot see. This is the case when the rule
-cannot search `.claude-plugin/`, or when its real path is out of the repository. The directory can
-be a plugin, so the rule does not judge its `skills/` directory. A `plugin.json` that is a link,
-even a dangling one, still makes a plugin root.
+The rule makes no report in a plugin whose `.claude-plugin/` directory it cannot see. This is the
+case when the rule cannot search that directory, or when its real path is out of the repository.
+The directory can be a plugin, so the rule does not judge its `skills/` directory. A `plugin.json`
+that is a link, even a dangling one, still makes a plugin root.
 
 The rule cannot see these cases:
 
