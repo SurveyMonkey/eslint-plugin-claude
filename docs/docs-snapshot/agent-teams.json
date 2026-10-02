@@ -1,0 +1,174 @@
+{
+  "url": "https://code.claude.com/docs/en/agent-teams",
+  "hash": "6eeb28fa2297ed48d989d9d971008ef3cf2e62c733b58c06d260fa92da1f8c36",
+  "blocks": [
+    {
+      "id": "orchestrate-teams-of-claude-code-sessions",
+      "hash": "0d6e25c449720fb3f8c0d414c7674b8d6cc0c3d7c2b781c0c9f1cd48f9bb91fb"
+    },
+    {
+      "id": "when-to-use-agent-teams",
+      "hash": "d0862cc862027632ef59bae01fa2325375775aa49dfaa39a8d0d43becf4e22c2"
+    },
+    {
+      "id": "compare-with-subagents",
+      "hash": "352c3b3c6c39888b6af5ca0f949165881ccfe64538d878e627a8242de6cb3a17"
+    },
+    {
+      "id": "enable-agent-teams",
+      "hash": "c2c7f93bd280719787e1bf328e63702b910fc05c2e2824c538ff12216206b351"
+    },
+    {
+      "id": "start-your-first-agent-team",
+      "hash": "737430310576a7989a43f43bb05b9fee37e4a2dce9cf1c9e82e7954d4ef71bfd"
+    },
+    {
+      "id": "control-your-agent-team",
+      "hash": "5b17414b75d99d21c8dfb6309d07253aaf64134700e024b4f6bd48c1cd6a784c"
+    },
+    {
+      "id": "choose-a-display-mode",
+      "hash": "b1227e5f6aaa755c2dc4fb7652dacbe80bb9fd26d9d19aae4ffc26ac9b3076d7"
+    },
+    {
+      "id": "specify-teammates-and-models",
+      "hash": "082b12a31fb9d75b7487d5f5b07554cf5331d6e331e359dd349c2862399d819b"
+    },
+    {
+      "id": "have-teammates-plan-before-implementing",
+      "hash": "76f2c2929f016c0995536a77e4abba2c351511a8f3677f9591162452e6045690"
+    },
+    {
+      "id": "talk-to-teammates-directly",
+      "hash": "4de604b07f3d427f438bc7ed93e9983ffb723baa0e109fb4326894ece8834fdb"
+    },
+    {
+      "id": "assign-and-claim-tasks",
+      "hash": "ef65c8958705425dc52174737d518f86a76bc0d476cd5fd0855d2be825a9f6ae"
+    },
+    {
+      "id": "shut-down-teammates",
+      "hash": "b542c667ebb02b9f01b6f9ea45d158892771d8c8d212dbe12ba575466c9d9a8a"
+    },
+    {
+      "id": "enforce-quality-gates-with-hooks",
+      "hash": "df44180bf9bcc70967fb619510a1ed190e2af060761241846a2a827ed7ec660c"
+    },
+    {
+      "id": "how-agent-teams-work",
+      "hash": "c5ad79d50f05882767ac9fb1ab35441f71f3dee62f287b446f0d0ad49d203a01"
+    },
+    {
+      "id": "how-claude-starts-agent-teams",
+      "hash": "0c1ab45dd496df50a2056a25e042a143b93187602949d1c0e5c3d7916af86936"
+    },
+    {
+      "id": "architecture",
+      "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615"
+    },
+    {
+      "id": "use-subagent-definitions-for-teammates",
+      "hash": "2671c52697b4b832d267629904871f36adb3379cd536fea678659502d9bbcda8"
+    },
+    {
+      "id": "permissions",
+      "hash": "99b58f62129d2db0fbbf44a4722b70c43e2f9d03b88e681f4ec7e88219ac2418"
+    },
+    {
+      "id": "messages-between-agents",
+      "hash": "93cef0dcd35fe0711127f3a0ce6b648dbd1dee7a8267e82488e9c015b97887df"
+    },
+    {
+      "id": "context-and-communication",
+      "hash": "81d94061036d20ee5aa27aba9ec6c6fd9f499bafa1df30013cbc6b9c0c39998b"
+    },
+    {
+      "id": "token-usage",
+      "hash": "578043e41a1da4957e7c3055a1827c840c6f39b409be23dcb29e5dbdf1c6ee25"
+    },
+    {
+      "id": "use-case-examples",
+      "hash": "14bcbcb2638cda10678d9ece9ffaabb9ad00cb1d6a84ab1c71e724cbc8774ad5"
+    },
+    {
+      "id": "run-a-parallel-code-review",
+      "hash": "feda71eb6c08080bc22397b1a2b2ed469ccd91236a1667a3f28abe0489093999"
+    },
+    {
+      "id": "investigate-with-competing-hypotheses",
+      "hash": "cb52c0cdaeee18e9b7345436599dd2612ed7e51ddf7f114366037c77361a570c"
+    },
+    {
+      "id": "best-practices",
+      "hash": "d120d91f846e577eb003f898a274dfa433f811650c11f13591ce5ed39e5f02b2"
+    },
+    {
+      "id": "give-teammates-enough-context",
+      "hash": "7367d21f1c735dfab39636c05b8fe2a3b44ac61841d902a14124c80fc46a3bd5"
+    },
+    {
+      "id": "choose-an-appropriate-team-size",
+      "hash": "e8551f886c1b06b66c9541c0c61750396c4a4a16281f038e45f400259792bc7d"
+    },
+    {
+      "id": "size-tasks-appropriately",
+      "hash": "5e0cd55f57d487b5e845b74f2ed26f4fc90a9d8e48d4a86b6f6e6b01032c6ab5"
+    },
+    {
+      "id": "wait-for-teammates-to-finish",
+      "hash": "c0719073eaef4568dec68133d53f34a22f4efcbbffe1c6475e0d72793b2cd47a"
+    },
+    {
+      "id": "start-with-research-and-review",
+      "hash": "60c077aa80589755fa5b69d2e813f957f8c38276ee22aabd2cc38d9c168071bd"
+    },
+    {
+      "id": "avoid-file-conflicts",
+      "hash": "9eaf7ed266b6431143377d4a4845e31eedbbe176fe065ce831a152edf46e82a0"
+    },
+    {
+      "id": "monitor-and-steer",
+      "hash": "86e1aece324299ccfa4eb34830b86426e6631154f83ee49d0402e98ca39b4027"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "659a188b36f9c3262a28539e24c345df4edc9657f59b116b0a1d9887cf2e28e0"
+    },
+    {
+      "id": "teammates-not-appearing",
+      "hash": "4e36cdf15cf5c81bcaa47d69c47d79fc0de6f6b10ca1d5ba465575e2a669b7a2"
+    },
+    {
+      "id": "claude-spawns-teammates-instead-of-subagents",
+      "hash": "3c3d3ed1d95d26605e41604cb6e7ec95b8a4ffcd9ed77cb65752b82c023f9ca0"
+    },
+    {
+      "id": "too-many-permission-prompts",
+      "hash": "fabb051ff7f9f6cf2fbd144a3a230409331a0c5d89a6ce15118abadf4c63606f"
+    },
+    {
+      "id": "agents-stopping-early",
+      "hash": "aa5d0df8e9f4a776cb233f5e3a45a0e4f1c46f7554ade47a4f35986566a9d111"
+    },
+    {
+      "id": "orphaned-tmux-sessions",
+      "hash": "67425b99a517cc041ba09fb9b4e34da18505eec3374d483ad58204cbfedc5009"
+    },
+    {
+      "id": "limitations",
+      "hash": "c47aac4c2ce3bc835f798eb7bbf3d24674f490f876cd1230a1873f0d5758cfe7"
+    },
+    {
+      "id": "next-steps",
+      "hash": "7f40b4761d408de8926826766f6d15ac3943e19c2686e80dd743278d710dea3a"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Architecture",
+      "id": "architecture",
+      "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615",
+      "text": "### Architecture\n\nAn agent team consists of:\n\n| Component | Role |\n| :- | :- |\n| **Team lead** | The main Claude Code session that spawns teammates and coordinates work |\n| **Teammates** | Separate Claude Code instances that each work on assigned tasks |\n| **Task list** | Shared list of work items that teammates claim and complete |\n| **Mailbox** | Messaging system for communication between agents |\n\nEach agent's mailbox is a JSON file at `~/.claude/teams/{team-name}/inboxes/{agent-name}.json`. Claude Code validates every entry when it reads a mailbox file. Entries that don't match the message format are reported as errors and removed from the file; the valid messages are still delivered. Before v2.1.207, a single malformed mailbox entry caused a repeated error every second and blocked delivery for that mailbox until you deleted the file manually.\n\nClaude Code reports a message as sent only when the write to the recipient's mailbox file succeeds, whether the message is plain text or a structured protocol message such as a plan approval or shutdown request. When the write fails, for example because the disk is full or the mailbox directory isn't writable, the sending agent receives an error and nothing is sent. See [Failed to write to a teammate's inbox](/docs/en/errors#failed-to-write-to-a-teammate-inbox) for the error messages and recovery steps.\n\nClaude Code manages task dependencies automatically: when a teammate completes a task that other tasks depend on, it unblocks the dependent tasks without any action from you.\n\nTeams and tasks are stored locally under a session-derived name. The name is `session-` followed by the first eight characters of the session ID:\n\n* **Team config**: `~/.claude/teams/{team-name}/config.json`\n* **Task list**: `~/.claude/tasks/{team-name}/`\n\nClaude Code generates both of these automatically at session startup and updates them as teammates join, go idle, or leave. The team config directory is removed when the session ends. The task list directory persists locally and is never uploaded, so resumed sessions keep their tasks. Retention is governed by the same [`cleanupPeriodDays`](/docs/en/settings-reference#cleanupperioddays) you already control for session transcripts, following the [retention sweep rules](/docs/en/claude-directory#cleaned-up-automatically).\n\nThe team config holds runtime state such as session IDs and tmux pane IDs, so don't edit it by hand or pre-author it: your changes are overwritten on the next state update.\n\nTo define reusable teammate roles, use [subagent definitions](#use-subagent-definitions-for-teammates) instead.\n\nThe team config contains a `members` array with each member's name and agent ID. The lead's entry always carries the agent type `team-lead`. A teammate's entry carries whatever agent type the lead named when spawning it, whether a [built-in type](/docs/en/sub-agents#built-in-subagents) or a [subagent definition](#use-subagent-definitions-for-teammates), and omits the field when the lead named none. Teammates can read this file to discover other team members.\n\nThere is no project-level equivalent of the team config. A file like `.claude/teams/teams.json` in your project directory is not recognized as configuration; Claude treats it as an ordinary file."
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "url": "https://code.claude.com/docs/en/agent-sdk/subagents",
+  "hash": "e4965cef4b484ff4c5b5542b8378fd875721a92d0547ac4ea82e57c7acd53382",
+  "blocks": [
+    {
+      "id": "subagents-in-the-sdk",
+      "hash": "7263bbdd256f976b41cd01e6d81c8bd5bced8f2ddf695f3e8c0010fc1d96ba11"
+    },
+    {
+      "id": "overview",
+      "hash": "e053579e817e7c6beed43e22615ecb57a1d808609ed328037ac260e46308e6a0"
+    },
+    {
+      "id": "benefits-of-using-subagents",
+      "hash": "fbc738a9fd7754d842742b05c72536278da04bcde89cfe4eea77aa488391bd6c"
+    },
+    {
+      "id": "create-subagents",
+      "hash": "42896ba91e7229321bf75d68808f75adb85b2a07501aa73492771d998a047c40"
+    },
+    {
+      "id": "programmatic-definition-recommended",
+      "hash": "493cc3d9d1f10b1287b29838a0896100845d4b1c05241bd1033f6d70c0664603"
+    },
+    {
+      "id": "agentdefinition-configuration",
+      "hash": "1233282047115807dc99486311980a2ec1b4d3c74bc2ec5319979da0893db815"
+    },
+    {
+      "id": "filesystem-based-definition-alternative",
+      "hash": "8c84be96a538360af959a312838b4fb61ac76e22869d5605e6489abf6a8779b8"
+    },
+    {
+      "id": "what-subagents-inherit",
+      "hash": "7f0d2278840b4c5d7f9ceb7b8b029b4d5d7238ab4a3030ab8daed6af9e7659a6"
+    },
+    {
+      "id": "invoke-subagents",
+      "hash": "11aad1d964d6c09b9dfdd40d8ccaa34c7ecf3612a6577b8675a41a77a7047cf8"
+    },
+    {
+      "id": "automatic-invocation",
+      "hash": "13d885d625eea6a0614af807719a02cf32335f0448d873f8a854e3aecf19e1e9"
+    },
+    {
+      "id": "explicit-invocation",
+      "hash": "4d3c64e349615521b66ca9a9d0900688b74adc4b9ae7b7a45ee87d7db30dc3df"
+    },
+    {
+      "id": "dynamic-agent-configuration",
+      "hash": "596699847d6a473ff1ec32025b2c54e30fadcd484799a54c1a82e0ba792f7254"
+    },
+    {
+      "id": "detect-subagent-invocation",
+      "hash": "dc7c38daca1b65415fa29df250e93a17c062513b3f087b23ff21efc7eb8f0c5e"
+    },
+    {
+      "id": "resume-subagents",
+      "hash": "73d4d39fcde110e0d906dbeb2b4f0a1e45c79232880d4ae3a2a08ac13f2f4aa3"
+    },
+    {
+      "id": "tool-restrictions",
+      "hash": "7970bb78876996c952baeba310424b4045f4e3abeb3529a8e1d8bbfd1369859d"
+    },
+    {
+      "id": "common-tool-combinations",
+      "hash": "f9a1b01590a4996cfb9486decdf8ead258d7081097c258ebdd3031d585ff0319"
+    },
+    {
+      "id": "cap-subagent-depth-concurrency-and-spend",
+      "hash": "4689f19913142e041edcb83cc3e86ef374238710b2d8567784c441c70799e4fc"
+    },
+    {
+      "id": "run-opus-5-with-subagents",
+      "hash": "90799ff5330ff4aaa503eff1aa6e0e693a720bbd6a198becb919430d910caa47"
+    },
+    {
+      "id": "scale-up-with-dynamic-workflows",
+      "hash": "c881d34dd196f1d07cd431a9adcea410ffb96f0a192050d8f627b4b370e9d267"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "659a188b36f9c3262a28539e24c345df4edc9657f59b116b0a1d9887cf2e28e0"
+    },
+    {
+      "id": "claude-not-delegating-to-subagents",
+      "hash": "5cf400b1d01935503b51342ac259ae369d74be3637a568321af822399f48b460"
+    },
+    {
+      "id": "filesystem-based-agents-not-loading",
+      "hash": "fab3cb969c49727eecfed89811ec01443376bd37fdde03b9ad7b10de122cc293"
+    },
+    {
+      "id": "related-documentation",
+      "hash": "9e25d1517fe860b2f1ef9f5ecf64638ce8039980117a67fba35cb09b4fc67aa0"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "AgentDefinition configuration",
+      "id": "agentdefinition-configuration",
+      "hash": "1233282047115807dc99486311980a2ec1b4d3c74bc2ec5319979da0893db815",
+      "text": "### AgentDefinition configuration\n\n| Field | Type | Required | Description |\n| :- | :- | :- | :- |\n| `description` | `string` | Yes | Natural language description of when to use this agent |\n| `prompt` | `string` | Yes | The agent's system prompt defining its role and behavior |\n| `tools` | `string[]` | No | Array of allowed tool names. If omitted, inherits every [tool available to subagents](/docs/en/sub-agents#available-tools) |\n| `disallowedTools` | `string[]` | No | Array of tool names to remove from the agent's tool set. MCP server-level patterns are also accepted: `mcp__server` or `mcp__server__*` removes every tool from that server, and `mcp__*` removes every MCP tool from any server |\n| `model` | `string` | No | Model override for this agent. Accepts an alias such as `'fable'`, `'opus'`, `'sonnet'`, `'haiku'`, `'inherit'`, or a full model ID. `'inherit'` uses the main model. When you omit it, Claude Code picks the model in the [subagent model order](/docs/en/sub-agents#choose-a-model) |\n| `skills` | `string[]` | No | List of skill names to preload into the agent's context at startup. Unlisted skills remain invocable through the Skill tool |\n| `memory` | `'user' \\| 'project' \\| 'local'` | No | Memory source for this agent |\n| `mcpServers` | `(string \\| object)[]` | No | MCP servers available to this agent, by name or inline config |\n| `initialPrompt` | `string` | No | Auto-submitted as the first user turn when this agent runs as the main thread agent. Ignored when the agent is invoked as a subagent |\n| `maxTurns` | `number` | No | Maximum number of agentic turns before the agent stops. When the agent reaches the limit, Claude Code returns its output marked as partial, and you can [resume the agent](#resume-subagents) to continue. The partial marking requires Claude Code v2.1.246 or later |\n| `background` | `boolean` | No | Run this agent as a non-blocking background task when invoked |\n| `omitClaudeMd` | `boolean` | No | Run this agent without the user, project, and local CLAUDE.md files when it runs as a subagent; managed policy files still load. Ignored when the agent runs as the main thread agent. Requires TypeScript Agent SDK v0.3.271 or later. The Python SDK's [`AgentDefinition`](/docs/en/agent-sdk/python#agentdefinition) doesn't have this field |\n| `effort` | `'low' \\| 'medium' \\| 'high' \\| 'xhigh' \\| 'max' \\| number` | No | Reasoning effort level for this agent |\n| `permissionMode` | `PermissionMode` | No | Permission mode for tool execution within this agent. The [subagent inheritance rules](/docs/en/agent-sdk/permissions#available-modes) decide when it applies |\n\nIn the Python SDK, multi-word field names such as `disallowedTools` and `mcpServers` keep their camelCase spelling to match the wire format rather than following Python's snake\\_case convention. See the [`AgentDefinition` reference](/docs/en/agent-sdk/python#agentdefinition) for details.\n\nSubagents run in the background by default. An Agent tool call that omits the [`run_in_background`](/docs/en/sub-agents#run-subagents-in-foreground-or-background) input launches a background subagent, and Claude sets `run_in_background: false` when it needs the result before continuing. Set the `background` field to `true` to force background execution for a specific agent regardless of what Claude requests. Before Claude Code v2.1.198, the background default was rolling out gradually, and an Agent tool call that omitted `run_in_background` could run the subagent synchronously.\n\nSubagents can also spawn subagents of their own. To limit how deep that nesting goes, how many subagents run at once, and how much a query spends, see [Cap subagent depth, concurrency, and spend](#cap-subagent-depth-concurrency-and-spend)."
+    }
+  ]
+}

@@ -19,3 +19,9 @@ export const pluginCommand = (name = 'c') => path.join(pluginDir, 'commands', `$
 
 /** The path of the `SKILL.md` of the skill `folder` in the plugin. */
 export const pluginSkill = (folder = 's') => path.join(pluginDir, 'skills', folder, 'SKILL.md')
+
+/** The path of the agent file `name` in the plugin, at `agents/<name>.md`. */
+export const pluginAgent = (name = 'a') => path.join(pluginDir, 'agents', `${name}.md`)
+
+/** The path of the output style file `name` in the plugin. */
+export const pluginStyle = (name = 's') => path.join(pluginDir, 'output-styles', `${name}.md`)

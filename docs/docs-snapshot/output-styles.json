@@ -1,0 +1,66 @@
+{
+  "url": "https://code.claude.com/docs/en/output-styles",
+  "hash": "e5e2ab65d01fb7ce26d04b3ecc1758304d4b305b4097655bb65e6e77505b4a94",
+  "blocks": [
+    {
+      "id": "output-styles",
+      "hash": "4677bfc1c6ad2a856471a1bce0a34b8d2e9405ce129b8860aab51255cec10be9"
+    },
+    {
+      "id": "built-in-output-styles",
+      "hash": "ae56118af1459ff72b0f65644dce78d05438e9aa33084301762d0481c59e99a9"
+    },
+    {
+      "id": "default",
+      "hash": "e22481c30452912727b6f2a0afd98c347b4c7f07aab36894720e07ec875e37ad"
+    },
+    {
+      "id": "proactive",
+      "hash": "4b598c28443b001e3e01db3e5412fae78b7be4293b145c0f87297fa4eaacf346"
+    },
+    {
+      "id": "concise",
+      "hash": "a8b8281f8ab187123bcd5910edecf65c107d1c29591026f0a1e01c299826304d"
+    },
+    {
+      "id": "explanatory",
+      "hash": "e3b174e73fc5edf3976f08326c7e1f74e1cc36d0093b1cfd59af41e2e0f271d7"
+    },
+    {
+      "id": "learning",
+      "hash": "827b93dda7bd6e5b99f85331ad95c1810a858460fb09d0175c8f7f35b256c357"
+    },
+    {
+      "id": "change-your-output-style",
+      "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407"
+    },
+    {
+      "id": "create-a-custom-output-style",
+      "hash": "adf86cd9bf3581d4bae2a29f61b8c52f0c45d838419d4beb8395b8f221aaac6f"
+    },
+    {
+      "id": "frontmatter",
+      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266"
+    },
+    {
+      "id": "choose-between-an-output-style-and-other-features",
+      "hash": "0d55d256a364d64d4b13a7b7946a971e1e34ddd9456768e6a73ae1d523932fe5"
+    },
+    {
+      "id": "how-output-styles-work",
+      "hash": "5af7df7c67a6a0282edf60eaa583f27b200268b9846049248795d5b398f8d69e"
+    },
+    {
+      "id": "related-resources",
+      "hash": "f0f6164462531e6a5336043cddce5df0a9b4927cf938bf906528e5bc219430c0"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Frontmatter reference",
+      "id": "frontmatter",
+      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266",
+      "text": "<h3 id=\"frontmatter\">\n  Frontmatter reference\n</h3>\n\nConfigure an output style with YAML [frontmatter](/docs/en/glossary#frontmatter) between `---` markers at the top of the file. All fields are optional, and field names use lowercase words separated by hyphens. A misspelled field is ignored without an error. If the YAML doesn't parse, the style still loads under its file name with no fields set; run `claude --debug` to see the parse error.\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `name` | No | Name of the output style, shown in the `/config` picker. Default: the file name |\n| `description` | No | Description of the output style, shown in the `/config` picker |\n| `keep-coding-instructions` | No | Set to `true` to keep Claude Code's built-in software engineering instructions alongside your style. Default: `false` |\n| `force-for-plugin` | No | Plugin output styles only. Set to `true` to apply this style automatically whenever the plugin is enabled, without requiring users to select it. Overrides the user's `outputStyle` setting. If multiple enabled plugins set this, Claude Code uses the first one loaded. Default: `false` |\n\n<span id=\"comparisons-to-related-features\" />"
+    }
+  ]
+}

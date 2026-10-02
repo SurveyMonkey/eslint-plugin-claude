@@ -1,4 +1,103 @@
 {
+  "agent-frontmatter-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "Frontmatter fields by file",
+      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/agent-sdk/subagents",
+      "heading": "AgentDefinition configuration",
+      "hash": "1233282047115807dc99486311980a2ec1b4d3c74bc2ec5319979da0893db815"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Frontmatter fields in plugin agents",
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    }
+  ],
+  "agent-frontmatter-valid": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Subagent files Claude Code skips",
+      "hash": "1fe3977a088b6a3a9c48ef627a215449b182befca899d9e377971ef4a9f4971f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Check an agents directory before a session",
+      "hash": "80e49b5663d727fbcb38ec2d779057442d4ebb38b55879e9d19efff25194c8a1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/glossary",
+      "heading": "Frontmatter",
+      "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Frontmatter fields in plugin agents",
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+    }
+  ],
+  "agent-mcp-servers-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Scope MCP servers to a subagent",
+      "hash": "727ec245e004943f2572f7416a27e92ad39013420cdac77afb1bf420c42b8e88"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+    }
+  ],
+  "agent-memory-grants-write": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Enable persistent memory",
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    }
+  ],
+  "agent-permission-mode-bypass": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Permission modes",
+      "hash": "96a96d4130e9b7d1dcd7ff9a57f3e67f4854a0849b1ec2d80ab73a2d5649e123"
+    }
+  ],
+  "agent-plugin-ignored-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Frontmatter fields in plugin agents",
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose the subagent scope",
+      "hash": "66fd77d01dec390e57b5f2239560b74a06870f9661bda1b10bba26589ec6b7dd"
+    }
+  ],
+  "agent-teams-no-project-config": [
+    {
+      "url": "https://code.claude.com/docs/en/agent-teams",
+      "heading": "Architecture",
+      "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615"
+    }
+  ],
   "command-legacy-format": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -13,7 +112,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "5bab300fa2392fe456e6a4834a6672290bcf971af49b34ed98fe61945bfeeb7a"
+      "hash": "9b976118654c23f314528005d2d63bf8b553390bfeef5cb68c6e2575d10cdd82"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -46,6 +145,35 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
+    }
+  ],
+  "output-style-frontmatter-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Frontmatter reference",
+      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "Frontmatter fields by file",
+      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+    }
+  ],
+  "output-style-frontmatter-valid": [
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Frontmatter reference",
+      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/glossary",
+      "heading": "Frontmatter",
+      "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
     }
   ],
   "skill-agent-exists": [
@@ -217,7 +345,7 @@
     {
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Path-specific rules",
-      "hash": "70e79fad3e19838c743810984e53297057a318ed00ccceab519e6d4c78307f40"
+      "hash": "acdf2587aacf5da9273f7d3c4cbe7f78882299c02ea2c479b158a1ff06ecc510"
     }
   ],
   "skill-plugin-root-shadowed": [

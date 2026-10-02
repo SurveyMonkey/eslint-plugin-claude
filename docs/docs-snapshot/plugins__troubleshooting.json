@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "5aed3a4e153532b7654d0a0fb781bec49c3aa041acc7682380ee3ab3d5ef45b4",
+  "hash": "beb5f7e45b3798786605805045d7feb62b62f1de230015aa3569f481bcd8fa4f",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -121,6 +121,10 @@
     {
       "id": "plugin-archive-integrity-check-failed",
       "hash": "138692c7717514d7ef99a108f572933d3e9bd904e49a776c8a5095a64812be50"
+    },
+    {
+      "id": "an-npm-plugin-source-must-name-a-registry-package",
+      "hash": "f543d653c22352d45e625b3bd062c82c47009d35944d659cb0075544fb53da7c"
     },
     {
       "id": "marketplace-is-registered-from-an-untrusted-source",
@@ -288,7 +292,7 @@
     },
     {
       "id": "claude-plugin-validate-reports-errors",
-      "hash": "f7402094c22cc26d392156788c72d14a4f911aceb5e7c2f781e1400493f0dce1"
+      "hash": "8d14913fc53cbb7a5a49069d0a2d396e9f06593d3b27eeaed21db878864b62fd"
     },
     {
       "id": "plugin-has-conflicting-manifests",
