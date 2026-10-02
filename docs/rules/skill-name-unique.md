@@ -83,10 +83,11 @@ command for the rule. The docs do not say whether Claude Code does the same.
 
 The rule makes no report that rests on a file that it cannot read. A read can fail for a reason
 other than a missing file, such as a permission error. The rule does not compare a skill file, a
-skill folder, or a directory that it cannot read. It reads no `commands/` folder of a plugin when
-it cannot read `plugin.json`, because the manifest can set `commands`. The rule then gives no
-command report for that plugin. Skill names still count. A command file that the rule cannot read
-still counts, because its path gives its name. The rule adds no message for this case.
+skill folder, or a directory that it cannot read. The rule adds no message for this case.
+
+A plugin manifest that the rule cannot read can set `commands`. The rule then reads no `commands/`
+folder of that plugin, and gives no command report for it. The rule still compares skill names.
+A command file that the rule cannot read still counts, because its path gives its name.
 
 Fail, `.claude/skills/deploy/SKILL.md` and `.claude/skills/ship/SKILL.md` with `name: Deploy`:
 

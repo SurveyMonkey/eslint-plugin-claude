@@ -2,11 +2,11 @@
 // file. A scope is a `.claude/` directory or a plugin root. A rule reads no
 // file out of the repository that holds the scope.
 //
-// A read in this file has three results: the content, absent (`ENOENT` or
-// `ENOTDIR`), and unreadable (any other error code, such as `EACCES`). A
-// failed read is not the same as a file that is not there. A rule makes no
-// report that rests on a file that it cannot see. The `.git` test in
-// `repositoryRoot` still uses `existsSync`.
+// A read has three results: content, absent (`ENOENT` or `ENOTDIR`), and
+// unreadable (any other code, such as `EACCES`). A failed read is not the
+// same as a file that is not there. A rule makes no report that rests on a
+// file that it cannot read. The `.git` test in `repositoryRoot` uses
+// `existsSync`.
 import {
   type BigIntStats,
   type Dirent,
@@ -199,9 +199,9 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
 
 /** The `SKILL.md` of each folder directly in `dir`, which is a `skills/`
  *  directory. A link to a folder counts when its real path is at or below
- *  `bound`. The result is empty when `dir` does not exist. A folder or a
- *  directory that the scan cannot read is not listed, so that the caller
- *  compares no name that it cannot read. */
+ *  `bound`. The result is empty when `dir` does not exist. The result omits
+ *  a folder that the rule cannot read. It is empty for a `dir` that the rule
+ *  cannot list. The caller then compares no name that it cannot read. */
 export function skillFiles(dir: string, bound: string): string[] {
   const entries = entriesOf(dir)
   if (!Array.isArray(entries)) {

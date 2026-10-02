@@ -43,9 +43,9 @@ The rule cannot see these cases:
   `skills/name/main.md`. The folder can be a shelf for shared files, so the rule does not report it.
 - A skill folder that is nested more than one level below `skills/`.
 
-The rule makes no `wrongCase` report for a skill folder that it cannot list, such as a folder with
-no read mode. It cannot tell if the folder holds a `SKILL.md`. The rule adds no message for this
-case. A folder that is not there is still reported.
+The rule makes no `wrongCase` report for a skill folder that it cannot list. An example is a folder
+with no read mode. The rule cannot tell if the folder holds a `SKILL.md`. The rule adds no message
+for this case. A path to a folder that is not there is still reported, as for input on stdin.
 
 The rule does not read the file. A file with frontmatter that does not parse gets the same report.
 On a file system that ignores letter case, `skill.md` and `SKILL.md` are one file. Then Claude Code

@@ -42,9 +42,9 @@ interface Entry {
 }
 
 /** True when the plugin at `root` sets `commands`, so that Claude Code reads
- *  the key instead of `commands/`. The rule cannot read some manifests,
- *  and such a manifest can set the key. The result is then true too, so the
- *  rule reads no `commands/` folder. */
+ *  the key instead of `commands/`. A manifest that the rule cannot read can
+ *  set the key. The result is true for such a manifest, so the rule reads no
+ *  `commands/` folder. */
 function setsCommands(root: string, bound: string): boolean {
   const manifest = readManifest(root, bound)
   return manifest === UNREADABLE || (manifest !== null && 'commands' in manifest)
