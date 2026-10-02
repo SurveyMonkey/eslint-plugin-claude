@@ -12,6 +12,7 @@ import {
   realDirectory,
   repositoryRoot,
   scopeRoot,
+  UNREADABLE,
 } from '../skill-tree.ts'
 
 const name = 'skill-agent-exists' as const
@@ -28,11 +29,12 @@ const BUILT_IN = [
   'claude-code-guide',
 ]
 
-/** The agent names that a scan found. `outside` is true when the scan did not
- *  follow a link out of the repository, so an agent can be out of sight. */
+/** The agent names that a scan found. `unseen` is true when the scan did not
+ *  follow a link out of the repository. It is also true when the scan could
+ *  not read a path. An agent can then be out of sight. */
 interface Agents {
   names: string[]
-  outside: boolean
+  unseen: boolean
 }
 
 /** `dir` and each directory above it, up to `bound`. */
@@ -44,12 +46,14 @@ function ancestors(dir: string, bound: string): string[] {
 /** The `name` of each agent file in `.claude/agents/` of `start`, and of each
  *  directory above it up to the repository root `bound`. */
 function projectAgents(start: string, bound: string): Agents {
-  const found: Agents = { names: [], outside: false }
+  const found: Agents = { names: [], unseen: false }
   for (const dir of ancestors(start, bound)) {
     const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
-    found.outside ||= scan.outside
+    found.unseen ||= scan.outside || scan.unreadable
     for (const file of scan.files) {
-      const agent = frontmatterOfFile(file)?.name
+      const fields = frontmatterOfFile(file)
+      found.unseen ||= fields === UNREADABLE
+      const agent = fields === UNREADABLE ? undefined : fields?.name
       if (typeof agent === 'string') {
         found.names.push(agent)
       }
@@ -64,13 +68,16 @@ function projectAgents(start: string, bound: string): Agents {
 function pluginAgents(root: string, plugin: string, bound: string): Agents {
   const agentsDir = path.join(root, 'agents')
   const scan = markdownFiles(agentsDir, bound)
+  let unseen = scan.outside || scan.unreadable
   const names = scan.files.flatMap((file) => {
-    const given = frontmatterOfFile(file)?.name
+    const fields = frontmatterOfFile(file)
+    unseen ||= fields === UNREADABLE
+    const given = fields === UNREADABLE ? undefined : fields?.name
     const own = typeof given === 'string' ? given : path.basename(file, '.md')
     const folders = path.relative(agentsDir, path.dirname(file)).split(path.sep).filter(Boolean)
     return [own, [plugin, ...folders, own].join(':')]
   })
-  return { names, outside: scan.outside }
+  return { names, unseen }
 }
 
 const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project' | 'plugin' }> = {
@@ -109,7 +116,8 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
     const bound = repositoryRoot(project)
     const manifest = readManifest(root, bound)
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
-    if (manifest !== null && 'agents' in manifest) {
+    // A manifest that the rule cannot read can hold the key, so the rule makes no report.
+    if (manifest === UNREADABLE || (manifest !== null && 'agents' in manifest)) {
       return {}
     }
     // A project has no plugin name, and so no scoped names of its own.
@@ -142,9 +150,9 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
           plugin === null
             ? projectAgents(realDirectory(project), bound)
             : pluginAgents(root, plugin, bound)
-        // A link out of the repository can hold the agent, so the rule cannot
-        // prove that it is missing.
-        if (!agents.outside && !agents.names.some(same)) {
+        // A link out of the repository, or a path that the rule cannot read,
+        // can hold the agent, so the rule cannot prove that it is missing.
+        if (!agents.unseen && !agents.names.some(same)) {
           const field = fm.fields.get('agent')
           context.report({
             // A key that is an alias has a value but no field.

@@ -6,8 +6,14 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll } from 'vitest'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { afterAll, describe, expect, it } from 'vitest'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-agent-exists')
 const project = path.join(fixtures, 'project')
@@ -283,4 +289,83 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
       errors: [{ messageId: 'project' }],
     },
   ],
+})
+
+// A read that fails with `EACCES` is not a missing file. The rule cannot see what it
+// cannot read, so it makes no report that rests on it.
+describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
+  const skill = (tree: string, inside: string) =>
+    path.join(scratch, tree, inside, 'skills', 's', 'SKILL.md')
+  const ghost = (filename: string) => lintMarkdown('skill-agent-exists', fork('ghost'), filename)
+
+  it('stays silent for an agents directory that it cannot read, and reports when it can', () => {
+    put('deny-dir/.git/HEAD', '')
+    put('deny-dir/.claude/agents/a.md', agentFile('a'))
+    const file = skill('deny-dir', '.claude')
+    expect(ghost(file)).toHaveLength(1)
+    withoutAccess(path.join(scratch, 'deny-dir/.claude/agents'), () => {
+      expect(lintMarkdown('skill-agent-exists', fork('a'), file)).toEqual([])
+      expect(ghost(file)).toEqual([])
+    })
+  })
+
+  it('stays silent for an agent file that it cannot read', () => {
+    put('deny-file/.git/HEAD', '')
+    const agent = put('deny-file/.claude/agents/a.md', agentFile('a'))
+    withoutAccess(agent, () => {
+      expect(ghost(skill('deny-file', '.claude'))).toEqual([])
+    })
+  })
+
+  it('stays silent for a plugin agent file that it cannot read', () => {
+    put('deny-plugin-file/.claude-plugin/plugin.json', '{"name": "dp"}')
+    const agent = put('deny-plugin-file/agents/a.md', agentFile('a'))
+    const file = path.join(scratch, 'deny-plugin-file', 'skills', 's', 'SKILL.md')
+    withoutAccess(agent, () => expect(ghost(file)).toEqual([]))
+    // The agent file is readable again, so the rule reports a value that no agent defines.
+    expect(ghost(file)).toHaveLength(1)
+  })
+
+  it('stays silent for a plugin agents directory that it cannot read', () => {
+    put('deny-plugin-dir/.claude-plugin/plugin.json', '{"name": "dp"}')
+    put('deny-plugin-dir/agents/a.md', agentFile('a'))
+    const file = path.join(scratch, 'deny-plugin-dir', 'skills', 's', 'SKILL.md')
+    withoutAccess(path.join(scratch, 'deny-plugin-dir/agents'), () =>
+      expect(ghost(file)).toEqual([]),
+    )
+  })
+
+  // A readable file after the unreadable path must not clear the flag.
+  it('stays silent for a project agent file that it cannot read, next to a readable one', () => {
+    put('deny-mixed/.git/HEAD', '')
+    const locked = put('deny-mixed/.claude/agents/a.md', agentFile('a'))
+    put('deny-mixed/.claude/agents/b.md', agentFile('b'))
+    withoutAccess(locked, () => expect(ghost(skill('deny-mixed', '.claude'))).toEqual([]))
+  })
+
+  it('stays silent for a plugin agent file that it cannot read, next to a readable one', () => {
+    put('deny-plugin-mixed/.claude-plugin/plugin.json', '{"name": "dp"}')
+    const locked = put('deny-plugin-mixed/agents/a.md', agentFile('a'))
+    put('deny-plugin-mixed/agents/b.md', agentFile('b'))
+    const file = path.join(scratch, 'deny-plugin-mixed', 'skills', 's', 'SKILL.md')
+    withoutAccess(locked, () => expect(ghost(file)).toEqual([]))
+  })
+
+  it('stays silent for a plugin agents folder that it cannot read, next to a readable file', () => {
+    put('deny-plugin-sub/.claude-plugin/plugin.json', '{"name": "dp"}')
+    put('deny-plugin-sub/agents/sub/a.md', agentFile('a'))
+    put('deny-plugin-sub/agents/b.md', agentFile('b'))
+    const file = path.join(scratch, 'deny-plugin-sub', 'skills', 's', 'SKILL.md')
+    withoutAccess(path.join(scratch, 'deny-plugin-sub/agents/sub'), () =>
+      expect(ghost(file)).toEqual([]),
+    )
+  })
+
+  it('stays silent for a plugin manifest that it cannot read', () => {
+    const manifest = put('deny-manifest/.claude-plugin/plugin.json', '{"agents": "./x"}')
+    put('deny-manifest/agents/a.md', agentFile('a'))
+    const file = path.join(scratch, 'deny-manifest', 'skills', 's', 'SKILL.md')
+    withoutAccess(manifest, () => expect(ghost(file)).toEqual([]))
+    withoutAccess(path.dirname(manifest), () => expect(ghost(file)).toEqual([]))
+  })
 })

@@ -21,7 +21,10 @@ import {
   repositoryRoot,
   scopeRoot,
   skillFiles,
+  statOf,
+  UNREADABLE,
 } from '../src/skill-tree.ts'
+import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 // The real path, so that a bound compares equal on a system where the
 // temporary directory is a link (macOS).
@@ -145,11 +148,13 @@ describe('markdownFiles', () => {
     expect(markdownFiles(path.join(scratch, 'none'), scratch)).toEqual({
       files: [],
       outside: false,
+      unreadable: false,
     })
     // A path that is a file, not a directory, has nothing below it.
     expect(markdownFiles(path.join(scratch, 'tree', 'b.md'), scratch)).toEqual({
       files: [],
       outside: false,
+      unreadable: false,
     })
   })
 
@@ -268,7 +273,11 @@ describe('the repository bound', () => {
       expect(scan.outside).toBe(true)
       // A directory that is itself a link out of the bound gives nothing.
       symlinkSync('../elsewhere/team', path.join(repo, 'linked'))
-      expect(markdownFiles(path.join(repo, 'linked'), repo)).toEqual({ files: [], outside: true })
+      expect(markdownFiles(path.join(repo, 'linked'), repo)).toEqual({
+        files: [],
+        outside: true,
+        unreadable: false,
+      })
       // A skill folder that is a link out of the bound is not a skill of the scope.
       mkdirSync(path.join(repo, 'skills'))
       symlinkSync('../../elsewhere/s', path.join(repo, 'skills', 's'))
@@ -290,6 +299,90 @@ describe('the repository bound', () => {
     expect(markdownFiles(path.join(scratch, 'pre', 'repo-other'), repo)).toEqual({
       files: [],
       outside: true,
+      unreadable: false,
     })
+  })
+})
+
+// A read that fails with `EACCES` is unreadable, and is not a missing file.
+describe.skipIf(chmodCannotBlock)('a read that fails', () => {
+  it('gives UNREADABLE for a file that cannot be read, and keeps no cache entry for it', () => {
+    const file = put('deny/file.md', '---\nname: x\n---\n')
+    withoutAccess(file, () => expect(frontmatterOfFile(file)).toBe(UNREADABLE))
+    expect(frontmatterOfFile(file)).toEqual({ name: 'x' })
+  })
+
+  it('gives a path below a directory that cannot be searched an absolute path as its bound', () => {
+    put('deny/anc/sub/.keep', '')
+    const dir = path.join(scratch, 'deny', 'anc', 'sub')
+    withoutAccess(path.join(scratch, 'deny', 'anc'), () => {
+      expect(realDirectory(dir)).toBe(dir)
+      expect(repositoryRoot(dir)).toBe(dir)
+    })
+  })
+
+  it('gives UNREADABLE for a file in a directory that cannot be searched', () => {
+    const file = put('deny/dir/file.md', '---\nname: x\n---\n')
+    withoutAccess(path.dirname(file), () => {
+      expect(frontmatterOfFile(file)).toBe(UNREADABLE)
+      expect(statOf(file)).toBe(UNREADABLE)
+    })
+    expect(statOf(file)).not.toBe(UNREADABLE)
+    expect(statOf(path.join(scratch, 'deny', 'none'))).toBeNull()
+  })
+
+  it('sets unreadable for a directory that the scan cannot read, and for a nested one', () => {
+    put('deny/scan/a.md', '')
+    put('deny/scan/sub/b.md', '')
+    const sub = path.join(scratch, 'deny', 'scan', 'sub')
+    withoutAccess(sub, () => {
+      const scan = markdownFiles(path.join(scratch, 'deny', 'scan'), scratch)
+      expect(scan.files).toEqual([path.join(scratch, 'deny', 'scan', 'a.md')])
+      expect(scan.unreadable).toBe(true)
+    })
+    withoutAccess(path.join(scratch, 'deny', 'scan'), () => {
+      expect(markdownFiles(path.join(scratch, 'deny', 'scan'), scratch)).toEqual({
+        files: [],
+        outside: false,
+        unreadable: true,
+      })
+      // The path below is unreadable too, because its parent cannot be searched.
+      expect(markdownFiles(sub, scratch).unreadable).toBe(true)
+    })
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'sets unreadable for a link whose target cannot be reached, and not for a dangling link',
+    () => {
+      put('deny/links/locked/f.md', '')
+      mkdirSync(path.join(scratch, 'deny', 'links', 'at'))
+      symlinkSync('../../links/locked/f.md', path.join(scratch, 'deny', 'links', 'at', 'f.md'))
+      symlinkSync('missing.md', path.join(scratch, 'deny', 'links', 'dangling.md'))
+      const dir = path.join(scratch, 'deny', 'links', 'at')
+      expect(markdownFiles(dir, scratch).unreadable).toBe(false)
+      withoutAccess(path.join(scratch, 'deny', 'links', 'locked'), () => {
+        expect(markdownFiles(dir, scratch)).toEqual({ files: [], outside: false, unreadable: true })
+      })
+      expect(markdownFiles(path.join(scratch, 'deny', 'links'), scratch).unreadable).toBe(false)
+    },
+  )
+
+  it('lists no skill from a directory or a folder that cannot be read', () => {
+    put('deny/sk/a/SKILL.md', '')
+    put('deny/sk/b/SKILL.md', '')
+    const dir = path.join(scratch, 'deny', 'sk')
+    withoutAccess(path.join(dir, 'b'), () => {
+      expect(skillFiles(dir, scratch)).toEqual([path.join(dir, 'a', 'SKILL.md')])
+    })
+    withoutAccess(dir, () => expect(skillFiles(dir, scratch)).toEqual([]))
+  })
+
+  it('gives UNREADABLE for a manifest that cannot be read, and null for a missing one', () => {
+    const file = put('deny/p/.claude-plugin/plugin.json', '{"name":"p"}')
+    const root = path.join(scratch, 'deny', 'p')
+    withoutAccess(file, () => expect(readManifest(root, scratch)).toBe(UNREADABLE))
+    withoutAccess(path.dirname(file), () => expect(readManifest(root, scratch)).toBe(UNREADABLE))
+    expect(readManifest(root, scratch)).toEqual({ name: 'p' })
+    expect(readManifest(path.join(scratch, 'deny', 'no-plugin'), scratch)).toBeNull()
   })
 })

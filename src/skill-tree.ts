@@ -1,10 +1,55 @@
 // The files around a skill or command file, for a rule that reads a second
 // file. A scope is a `.claude/` directory or a plugin root. A rule reads no
 // file out of the repository that holds the scope.
-import { type Dirent, existsSync, readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
+//
+// A read has three results: content, absent (`ENOENT` or `ENOTDIR`), and
+// unreadable (any other code, such as `EACCES`). A failed read is not the
+// same as a file that is not there. A rule makes no report that rests on a
+// file that it cannot read. The `.git` test in `repositoryRoot` uses
+// `existsSync`.
+import {
+  type BigIntStats,
+  type Dirent,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  type Stats,
+  statSync,
+} from 'node:fs'
 import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
+
+/** The result of a read that failed, and was not a missing file. */
+export const UNREADABLE: unique symbol = Symbol('unreadable')
+export type Unreadable = typeof UNREADABLE
+
+/** The result of a failed read: null for a file that is not there, and
+ *  `UNREADABLE` for any other error. */
+function failure(error: unknown): null | Unreadable {
+  const code = (error as NodeJS.ErrnoException).code
+  return code === 'ENOENT' || code === 'ENOTDIR' ? null : UNREADABLE
+}
+
+/** The stat of `file`, null when it is not there, or `UNREADABLE`. Test for
+ *  absence with `=== null`, never with a truthiness test. */
+export function statOf(file: string): Stats | null | Unreadable {
+  try {
+    return statSync(file)
+  } catch (error) {
+    return failure(error)
+  }
+}
+
+/** The text of `file`, null when it is not there, or `UNREADABLE`. */
+function textOf(file: string): string | null | Unreadable {
+  try {
+    return readFileSync(file, 'utf8')
+  } catch (error) {
+    return failure(error)
+  }
+}
 
 /** The `.claude/` directory or the plugin root that holds `file`. */
 export function scopeRoot(file: string, info: SkillFile): string {
@@ -18,9 +63,11 @@ export function scopeRoot(file: string, info: SkillFile): string {
   return dir
 }
 
-/** The real path of `dir`, or its absolute path when it does not exist. */
+/** The real path of `dir`, or its absolute path when it does not exist or
+ *  the rule cannot read it. */
 export function realDirectory(dir: string): string {
-  return realOf(dir) ?? path.resolve(dir)
+  const real = realOf(dir)
+  return typeof real === 'string' ? real : path.resolve(dir)
 }
 
 /** The real path of the repository that holds `dir`: the first directory at
@@ -44,12 +91,23 @@ function isInside(real: string, bound: string): boolean {
   return real === base || real.startsWith(base.endsWith(path.sep) ? base : base + path.sep)
 }
 
-/** The real path of `file`, or null when it does not exist (a dangling link). */
-function realOf(file: string): string | null {
+/** The real path of `file`, null when it does not exist (a dangling link), or
+ *  `UNREADABLE`. */
+function realOf(file: string): string | null | Unreadable {
   try {
     return realpathSync(file)
-  } catch {
-    return null
+  } catch (error) {
+    return failure(error)
+  }
+}
+
+/** The entries of the directory `dir`, null when it is not there, or
+ *  `UNREADABLE`. */
+export function entriesOf(dir: string): Dirent[] | null | Unreadable {
+  try {
+    return readdirSync(dir, { withFileTypes: true })
+  } catch (error) {
+    return failure(error)
   }
 }
 
@@ -66,25 +124,32 @@ function frontmatterOf(text: string): Record<string, unknown> | null {
 const SKIPPED = new Set(['.git', 'node_modules'])
 
 /** The `.md` files of a scan. `outside` is true when the scan did not follow
- *  a link because its target is out of the bound. */
+ *  a link because its target is out of the bound. `unreadable` is true when
+ *  the scan could not read a directory or a link. */
 export interface Scan {
   files: string[]
   outside: boolean
+  unreadable: boolean
 }
 
 /** The path of each `.md` file below `dir`, at any depth, with a real path at
  *  or below `bound`. A link to a directory is followed once, and the real
  *  directory comes before a link to it. The walk skips `.git` and
  *  `node_modules`. A link to a file counts when the file exists. The result
- *  is empty when `dir` does not exist. */
+ *  is empty when `dir` does not exist. When the scan cannot read a directory,
+ *  it sets `unreadable` and keeps the files that it found. */
 export function markdownFiles(dir: string, bound: string): Scan {
-  const scan: Scan = { files: [], outside: false }
+  const scan: Scan = { files: [], outside: false, unreadable: false }
   walk(dir, bound, new Set<string>(), scan)
   return scan
 }
 
 function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
   const real = realOf(dir)
+  if (real === UNREADABLE) {
+    scan.unreadable = true
+    return
+  }
   if (real === null || seen.has(real)) {
     return
   }
@@ -93,10 +158,11 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
     return
   }
   seen.add(real)
-  let entries: Dirent[]
-  try {
-    entries = readdirSync(dir, { withFileTypes: true })
-  } catch {
+  const entries = entriesOf(dir)
+  if (entries === UNREADABLE) {
+    scan.unreadable = true
+  }
+  if (!Array.isArray(entries)) {
     return
   }
   const sorted = entries
@@ -112,7 +178,10 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
       walk(full, bound, seen, scan)
     } else if (entry.isSymbolicLink()) {
       const target = realOf(full)
-      if (target === null) {
+      if (target === UNREADABLE) {
+        scan.unreadable = true
+      }
+      if (typeof target !== 'string') {
         continue
       }
       if (!isInside(target, bound)) {
@@ -130,12 +199,12 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
 
 /** The `SKILL.md` of each folder directly in `dir`, which is a `skills/`
  *  directory. A link to a folder counts when its real path is at or below
- *  `bound`. The result is empty when `dir` does not exist. */
+ *  `bound`. The result is empty when `dir` does not exist. The result omits
+ *  a folder that the rule cannot read. It is empty for a `dir` that the rule
+ *  cannot list. The caller then compares no name that it cannot read. */
 export function skillFiles(dir: string, bound: string): string[] {
-  let entries: Dirent[]
-  try {
-    entries = readdirSync(dir, { withFileTypes: true })
-  } catch {
+  const entries = entriesOf(dir)
+  if (!Array.isArray(entries)) {
     return []
   }
   return entries
@@ -143,7 +212,7 @@ export function skillFiles(dir: string, bound: string): string[] {
     .map((entry) => path.join(dir, entry.name, 'SKILL.md'))
     .filter((file) => {
       const real = realOf(file)
-      return real !== null && isInside(real, bound)
+      return typeof real === 'string' && isInside(real, bound)
     })
 }
 
@@ -151,34 +220,53 @@ export function skillFiles(dir: string, bound: string): string[] {
 // the time of the last write and the size of the file are the same.
 const read = new Map<string, { stamp: string; fields: Record<string, unknown> | null }>()
 
-/** The frontmatter fields of the file at `file`, or null. */
-export function frontmatterOfFile(file: string): Record<string, unknown> | null {
+/** The frontmatter fields of the file at `file`. The result is null when the
+ *  file is not there, has no block, or has YAML that does not parse. The
+ *  result is `UNREADABLE` when the read fails for another reason, and the
+ *  cache keeps no entry for it. */
+export function frontmatterOfFile(file: string): Record<string, unknown> | null | Unreadable {
+  let stat: BigIntStats
   try {
-    const stat = statSync(file, { bigint: true })
-    const stamp = `${stat.mtimeNs}:${stat.size}`
-    const hit = read.get(file)
-    if (hit?.stamp === stamp) {
-      return hit.fields
-    }
-    const fields = frontmatterOf(readFileSync(file, 'utf8'))
-    read.set(file, { stamp, fields })
-    return fields
-  } catch {
-    return null
+    stat = statSync(file, { bigint: true })
+  } catch (error) {
+    return failure(error)
   }
+  const stamp = `${stat.mtimeNs}:${stat.size}`
+  const hit = read.get(file)
+  if (hit?.stamp === stamp) {
+    return hit.fields
+  }
+  const text = textOf(file)
+  if (typeof text !== 'string') {
+    return text
+  }
+  const fields = frontmatterOf(text)
+  read.set(file, { stamp, fields })
+  return fields
 }
 
-/** The fields of `.claude-plugin/plugin.json` in the plugin root `root`, or
- *  null when the file does not parse to an object, or its real path is out of
- *  `bound`. */
-export function readManifest(root: string, bound: string): Record<string, unknown> | null {
+/** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
+ *  result is null in three cases. The file is not there, it does not parse to
+ *  an object, or its real path is out of `bound`. The result is `UNREADABLE`
+ *  when a read fails for another reason. */
+export function readManifest(
+  root: string,
+  bound: string,
+): Record<string, unknown> | null | Unreadable {
   const file = path.join(root, '.claude-plugin', 'plugin.json')
   const real = realOf(file)
-  if (real === null || !isInside(real, bound)) {
+  if (typeof real !== 'string') {
+    return real
+  }
+  if (!isInside(real, bound)) {
     return null
   }
+  const text = textOf(real)
+  if (typeof text !== 'string') {
+    return text
+  }
   try {
-    const data: unknown = JSON.parse(readFileSync(real, 'utf8'))
+    const data: unknown = JSON.parse(text)
     return data !== null && typeof data === 'object' && !Array.isArray(data)
       ? (data as Record<string, unknown>)
       : null

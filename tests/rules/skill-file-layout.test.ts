@@ -3,11 +3,25 @@
 // case in a skill folder. The trees are on disk under
 // tests/fixtures/skill-file-layout/. A plugin `skills/` directory counts only
 // with a manifest, so `plugin/` has one and `notplugin/` has none.
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  accessSync,
+  chmodSync,
+  constants,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll } from 'vitest'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { afterAll, describe, expect, it } from 'vitest'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+} from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-file-layout')
 const at = (...parts: string[]) => path.join(fixtures, ...parts)
@@ -85,4 +99,46 @@ markdownTester.run('skill-file-layout', ruleOf('skill-file-layout'), {
       errors: [{ messageId: 'loose' }],
     },
   ],
+})
+
+// A folder that the rule can search but not list does not show a `SKILL.md` next to
+// `skill.md`. The rule cannot prove the fault, so it makes no `wrongCase` report.
+describe.skipIf(chmodCannotBlock)('a skill folder that the rule cannot list', () => {
+  const lint = (file: string) => lintMarkdown('skill-file-layout', '# Notes\n', file)
+
+  it('makes no wrongCase report, and still reports when the folder is absent', () => {
+    const folder = path.join(scratch, '.claude', 'skills', 'unlistable')
+    mkdirSync(folder, { recursive: true })
+    // A file system that ignores case cannot hold both names. The lock hides the folder either way.
+    if (keepsCase) {
+      writeFileSync(path.join(folder, 'SKILL.md'), '# S\n')
+    }
+    writeFileSync(path.join(folder, 'skill.md'), '# Notes\n')
+    const file = path.join(folder, 'skill.md')
+    // Mode 0311: the owner can search the folder, and cannot list it.
+    chmodSync(folder, 0o311)
+    try {
+      expect(() => accessSync(folder, constants.R_OK)).toThrow()
+      expect(lint(file)).toEqual([])
+    } finally {
+      chmodSync(folder, 0o755)
+    }
+    // A folder that is not there gives no `SKILL.md`, so the report stays.
+    expect(lint(path.join(scratch, '.claude', 'skills', 'absent', 'skill.md'))).toHaveLength(1)
+  })
+
+  it('reports the same folder again when it can list it', () => {
+    const folder = path.join(scratch, '.claude', 'skills', 'relistable')
+    mkdirSync(folder, { recursive: true })
+    const file = path.join(folder, 'skill.md')
+    writeFileSync(file, '# Notes\n')
+    chmodSync(folder, 0o311)
+    try {
+      expect(() => accessSync(folder, constants.R_OK)).toThrow()
+      expect(lint(file)).toEqual([])
+    } finally {
+      chmodSync(folder, 0o755)
+    }
+    expect(lint(file).map((m) => m.messageId)).toEqual(['wrongCase'])
+  })
 })

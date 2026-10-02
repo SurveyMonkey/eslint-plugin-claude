@@ -12,6 +12,7 @@ import {
   repositoryRoot,
   scopeRoot,
   skillFiles,
+  UNREADABLE,
 } from '../skill-tree.ts'
 
 const name = 'skill-name-unique' as const
@@ -41,10 +42,12 @@ interface Entry {
 }
 
 /** True when the plugin at `root` sets `commands`, so that Claude Code reads
- *  the key instead of `commands/`. */
+ *  the key instead of `commands/`. A manifest that the rule cannot read can
+ *  set the key. The result is true for such a manifest, so the rule reads no
+ *  `commands/` folder. */
 function setsCommands(root: string, bound: string): boolean {
   const manifest = readManifest(root, bound)
-  return manifest !== null && 'commands' in manifest
+  return manifest === UNREADABLE || (manifest !== null && 'commands' in manifest)
 }
 
 /** The command name of each skill and command file in the scope at `root`,
@@ -52,11 +55,16 @@ function setsCommands(root: string, bound: string): boolean {
  *  entry. */
 function scopeEntries(root: string, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
-  const skills = skillFiles(skillsDir, bound).map((file) => ({
-    file,
-    name: skillName(frontmatterOfFile(file), path.basename(path.dirname(file))),
-  }))
+  // A skill file that the rule cannot read has no name to compare.
+  const skills = skillFiles(skillsDir, bound).flatMap((file) => {
+    const fields = frontmatterOfFile(file)
+    return fields === UNREADABLE
+      ? []
+      : [{ file, name: skillName(fields, path.basename(path.dirname(file))) }]
+  })
   const commandsDir = path.join(root, 'commands')
+  // A `commands/` folder that the scan cannot read gives fewer entries. That can only hide a
+  // duplicate, never add one, so the rule ignores `unreadable` here.
   const commands = (setsCommands(root, bound) ? [] : markdownFiles(commandsDir, bound).files).map(
     (file) => ({
       file,
