@@ -29,6 +29,10 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 - [ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md): why this is an ESLint plugin on
   `@eslint/markdown` and `@eslint/json`. See the [ADR index](docs/adr/index.md) for later ADRs.
 
+The Rules section of `README.md` has one table for each group of the rule inventory. Add a new
+rule to the table of its group. The first rule of a group adds a `###` heading and a table for
+that group. Keep the groups in the order of the inventory.
+
 ## Rule source map
 
 `docs/rule-sources.json` lists the pages and headings of the Claude Code docs that are the
