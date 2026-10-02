@@ -1,0 +1,138 @@
+{
+  "url": "https://code.claude.com/docs/en/settings",
+  "hash": "41ea72eb329492a8530f2d4730b093e930151422003f161656297e44cecbf074",
+  "blocks": [
+    {
+      "id": "settings-files-and-precedence",
+      "hash": "aeec38d07ea306844a05f48b2298d7ad4a227fc2f1ed61aa1af11169408af6a8"
+    },
+    {
+      "id": "settings-files-and-who-they-affect",
+      "hash": "53408b1417b9bb613f25fc529d41711e72e0b886b10f5b67417647f77b6eafad"
+    },
+    {
+      "id": "compare-the-scope-of-each-settings-file",
+      "hash": "5b718df2fdc86e2c8ad469e9cdc95c165843ab9e4f583c2b1bc9d8be3b0cfec6"
+    },
+    {
+      "id": "find-or-create-your-settings-files",
+      "hash": "3108f983174219404fa2710e126d1ba08ea60a5c5f18d840acdc5cbcd2128b75"
+    },
+    {
+      "id": "share-settings-with-your-team",
+      "hash": "c45b16966c8f9af8937426e13e75bf3ff53a58f783bcdc14c05331333a5e2232"
+    },
+    {
+      "id": "keep-personal-settings-out-of-a-repository",
+      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc"
+    },
+    {
+      "id": "where-claude-code-keeps-the-local-file-in-a-git-repository",
+      "hash": "d22a9454f31f12a55265c52b63d2ca836a279059a83b925ee0d7184814a16d47"
+    },
+    {
+      "id": "check-what-your-organization-enforces",
+      "hash": "8855b861f4d0b18ebd10bab93c9d4b8d6faeb558f8d38fba1871eb0cd7e9d8e3"
+    },
+    {
+      "id": "change-a-setting",
+      "hash": "e224fca9ae056643994517838283f07ba16d6ec68b2edfd8290f2b97d4446ae8"
+    },
+    {
+      "id": "use-the-config-menu",
+      "hash": "5b6dba79aeb8dd069666b8e6d6d59ad9f2c38043fb41375ec25bc2a5b4c64a7c"
+    },
+    {
+      "id": "edit-a-settings-file",
+      "hash": "499813f3fb39099aaca8887927679984bb6940165ac754a6bfb83299e65027bf"
+    },
+    {
+      "id": "change-a-setting-for-one-session",
+      "hash": "cf3eb5b660abab3e1e18b2cb24856850e6b1e5ebedce13e3b8095449142f8def"
+    },
+    {
+      "id": "when-edits-take-effect",
+      "hash": "24abb8864ae52b90f31a30632bf6f15b47ee2f5069e955a093270287169c021c"
+    },
+    {
+      "id": "confirm-what-loaded",
+      "hash": "0e2812771390d8e4926e0a4962af284ad8457f8cd84c33588d2803169d925915"
+    },
+    {
+      "id": "fix-a-broken-settings-file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+    },
+    {
+      "id": "settings-precedence",
+      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
+    },
+    {
+      "id": "lists-merge-instead-of-overriding",
+      "hash": "83f8af90b4b6f118b10bf04043b20e630a6131e1402e0ed28283d498b2791a1f"
+    },
+    {
+      "id": "precedence-examples",
+      "hash": "b69dcf167aa66c6316abc5fb34b6fa809ce5c85115ad95bf9a0b2e47f5b2d994"
+    },
+    {
+      "id": "team-settings-override-personal-settings",
+      "hash": "635c810b150be451154c58042d2dba3f17e591be407174cbd1abfa89121f93a0"
+    },
+    {
+      "id": "organization-settings-override-everything",
+      "hash": "8180eea56e3335f70e104a4aed1b983704958dda0cbd250fc60e9b7900d44807"
+    },
+    {
+      "id": "the-command-line-overrides-your-files-for-one-session",
+      "hash": "c4e6a6ee085eb4614e0bbc5e0a2aa7e65c402a9cf429e56ac4f183fbd5c2562c"
+    },
+    {
+      "id": "a-flag-or-environment-variable-sets-the-same-thing",
+      "hash": "dee4e57652a3e1f1a2db49460152a0544f5f9e2192a2336269a52c839907d146"
+    },
+    {
+      "id": "troubleshoot-a-setting-that-doesnt-apply",
+      "hash": "f938d4962beb3266ccab41d27dd2cd10d85a92cb2b26714792da7e7bee07117a"
+    },
+    {
+      "id": "a-value-you-set-is-ignored",
+      "hash": "946650199ac3fb5711cb544d59f8b4a1e3606eff5bb9551fd531e5a0f1f78906"
+    },
+    {
+      "id": "a-change-you-made-in-claude-code-is-lost-in-new-sessions",
+      "hash": "a70083829af8ce46bb27873a643c2b2ebab07c48faa8085a82253fecb03699b2"
+    },
+    {
+      "id": "a-managed-change-hasnt-reached-you",
+      "hash": "4bca032f0094a697583290a1709dcf0f60bacafce983d306caf9e0c8261c79d3"
+    },
+    {
+      "id": "a-committed-key-doesnt-reach-teammates",
+      "hash": "e348522d20cb922191e150ed492df47faf117f981786729476bc77ccb1f2981e"
+    },
+    {
+      "id": "permission-rules-combine-differently-than-you-expected",
+      "hash": "d463b6f9233e5d901b75623b1742cf3fe7ab3535dfc93b7e6f7e35dae3a73574"
+    },
+    {
+      "id": "exceptions-to-managed-settings-precedence",
+      "hash": "896053ce5eb50eaa93bd0ee8d2a657ad4d3cc090d451dde1d453ae603ec039be"
+    },
+    {
+      "id": "settings-in-cloud-sessions",
+      "hash": "dd77389bf0ab39b80e6fe215351952d9be13802bb55f0e9e5f475e21a83fc486"
+    },
+    {
+      "id": "whats-next",
+      "hash": "6fe69d401328c8f46c4b0c0b0c9da3bc1d77541c34b790d7cb722df7e122fff0"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Fix a broken settings file",
+      "id": "fix-a-broken-settings-file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696",
+      "text": "### Fix a broken settings file\n\nIf you mistype JSON or set a key to a value Claude Code doesn't accept, Claude Code tells you at the start of an interactive session. What it shows depends on how much of the file is affected:\n\n* **Settings Error**: a user, project, or local file has invalid JSON or a value the schema rejects. At the start of an interactive session Claude Code shows a dialog that lets you fix the file with Claude's help, exit, or continue without the broken settings.\n* **Settings Warning**: only individual entries fail, such as a malformed permission rule or an unknown hook event name. Claude Code skips those values and keeps the rest of the file in effect.\n* **Managed settings**: Claude Code keeps enforcing the rest of the file. [Invalid entries in managed settings](/docs/en/managed-settings#invalid-entries-in-managed-settings) says what it drops and which keys fall back to a stricter value until you fix them. For a managed settings document that isn't valid JSON, see [Managed settings document could not be parsed](/docs/en/errors#managed-settings-document-could-not-be-parsed).\n* **Configuration error**: `~/.claude.json` can't be parsed. Claude Code copies the broken file to `~/.claude/backups/.claude.json.corrupted.<timestamp>` and asks whether to exit and fix it by hand or reset to the default configuration; a `-p` run prints the error and exits. To recover your previous state, copy back one of the five most recent `.claude.json.backup.<timestamp>` files in `~/.claude/backups/`, which Claude Code saves before it writes the file.\n\nAfter you continue, run `/status` to see the affected files and `claude doctor` for the details of each error.\n\nA `-p` run shows no dialog. Unless [a managed settings document can't be parsed](/docs/en/errors#managed-settings-document-could-not-be-parsed), Claude Code skips the broken file or values and continues with the rest, so after a `-p` run that ignores a setting, run `claude doctor` to see what it dropped.\n\n<span id=\"how-scopes-interact\" />\n\n<span id=\"key-points-about-the-configuration-system\" />\n\n<span id=\"which-value-claude-code-uses\" />\n\n<span id=\"which-value-wins\" />"
+    }
+  ]
+}

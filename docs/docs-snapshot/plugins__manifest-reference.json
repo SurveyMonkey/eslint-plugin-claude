@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-  "hash": "56deca8e061338d771501d01a14dcd1c9482db0b2500ae98d476205a70822c6e",
+  "hash": "4db6a28792240bac2869fccef8dd59d65c3ff27cb9503c93cb976f890402e381",
   "blocks": [
     {
       "id": "plugin-manifest-reference",
@@ -20,7 +20,7 @@
     },
     {
       "id": "fields",
-      "hash": "1586cd3028dc24daa45a43bf5ae19853cacc7d1f464693a2d3cc75ae3e99ec79"
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
     },
     {
       "id": "name",
@@ -37,6 +37,10 @@
     {
       "id": "metadata",
       "hash": "ee3f58518039ea24dec82c79f0224ea75af369cbaf6494f2ec5d8cb7a48f9a99"
+    },
+    {
+      "id": "directory-listing-fields",
+      "hash": "5be06b2ff9ea2d2e2bb755322ec4fce85d391ad224b581dfeeadb0b04ee4e38c"
     },
     {
       "id": "defaultenabled",
@@ -64,7 +68,7 @@
     },
     {
       "id": "hooks",
-      "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47"
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     },
     {
       "id": "mcpservers",
@@ -80,7 +84,7 @@
     },
     {
       "id": "path-rules",
-      "hash": "67855d20b9643b9748e747670f1d71b98a7718936b3d41220797d6bb2c350ae4"
+      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
     },
     {
       "id": "containment-and-existence",
@@ -132,7 +136,7 @@
     },
     {
       "id": "marketplace-entries-and-the-manifest",
-      "hash": "56d065509dd0e5b525442e7be5a71dd1382de4a3d32b261febda9179b1b7305d"
+      "hash": "68bd55f1399f21af2a7d8df3ee0a57480ff33ac66b237682087053ef6812debc"
     },
     {
       "id": "how-entry-fields-combine-with-plugin-json",
@@ -163,8 +167,8 @@
     {
       "heading": "hooks",
       "id": "hooks",
-      "hash": "c1ceb420a75974189dbb6b6ee73a1668bc49094250fa31a2eda78c1a75ee7c47",
-      "text": "### `hooks`\n\n`hooks` takes a `.json` file path, an inline hooks object in the same shape as [`hooks` in `settings.json`](/docs/en/hooks#configuration), or an array mixing both. For hook events and handler fields, see the [hooks reference](/docs/en/hooks#hook-events).\n\nClaude Code merges whatever you declare with `hooks/hooks.json` when that file exists.\n\n```json theme={null}\n{\n  \"hooks\": [\n    \"./config/extra-hooks.json\",\n    {\n      \"PostToolUse\": [\n        {\n          \"matcher\": \"Write|Edit\",\n          \"hooks\": [\n            { \"type\": \"command\", \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}\\\"/scripts/format.sh\" }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```"
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6",
+      "text": "### `hooks`\n\n`hooks` takes a `.json` file path, an inline hooks object in the same shape as [`hooks` in `settings.json`](/docs/en/hooks#configuration), or an array mixing both. For hook events and handler fields, see the [hooks reference](/docs/en/hooks#hook-events).\n\nA hooks file wraps the event map in a top-level `\"hooks\"` key, the shape [`hooks/hooks.json`](/docs/en/plugins/components#hooks) uses. A file that contains only the event map, without that wrapper, fails to load. An inline object is the event map itself, with no wrapper.\n\nClaude Code merges whatever you declare with `hooks/hooks.json` when that file exists. This array loads one hooks file and declares one inline `PostToolUse` hook:\n\n```json theme={null}\n{\n  \"hooks\": [\n    \"./config/extra-hooks.json\",\n    {\n      \"PostToolUse\": [\n        {\n          \"matcher\": \"Write|Edit\",\n          \"hooks\": [\n            { \"type\": \"command\", \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}\\\"/scripts/format.sh\" }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```\n\nThe file that array names carries the `\"hooks\"` wrapper around its own event map:\n\n```json config/extra-hooks.json theme={null}\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Bash\",\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}\\\"/scripts/check-command.sh\" }\n        ]\n      }\n    ]\n  }\n}\n```"
     }
   ]
 }

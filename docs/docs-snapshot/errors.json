@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "4b52e6654811082063f6a088922460c35dc7c226be9803ca9ba44556eda5c700",
+  "hash": "4e7787e5a6e3c94989ab24b15a28ded5cc1acfed0c945db33a2df6864a6032b4",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "eba1f0a9b4897488512de80c285813526207f34ea33a8b5400e6fbdc0697dcbe"
+      "hash": "5207994ba8497604ad45d4414a8fc7b11924981cabdca7babf6c22ef9ee3af49"
     },
     {
       "id": "automatic-retries",
@@ -44,7 +44,7 @@
     },
     {
       "id": "the-response-above-may-be-incomplete",
-      "hash": "82332dea698425439f5d081f805adcde419d264b9ec19922874f74e4d3116590"
+      "hash": "488d564bfd64166fd7eda580342e43ee67afb739c1a763400b3437aa7b1ed388"
     },
     {
       "id": "auto-mode-cannot-determine-the-safety-of-an-action",
@@ -1008,6 +1008,12 @@
     }
   ],
   "sources": [
+    {
+      "heading": "Is not matched by file permission checks",
+      "id": "is-not-matched-by-file-permission-checks",
+      "hash": "c82ec831066c9e26f6b23b44bb668004cdaab41529bb28b97a5ff95cc95e0af5",
+      "text": "### Is not matched by file permission checks\n\nClaude Code found a `Write`, `NotebookEdit`, `MultiEdit`, or `Glob` [permission rule](/docs/en/permissions#read-and-edit) with a path in one of your [settings files](/docs/en/settings#where-settings-live), in [managed settings](/docs/en/managed-settings), or in a `--allowedTools`, `--disallowedTools`, or `--settings` flag value. It checks file permissions against `Edit` and `Read` rules only, so it never consults a path rule that names one of the other file tools. It keeps the rule and changes nothing else; the warning names the rule, its source in parentheses, and the replacement to write:\n\n```text theme={null}\nPermission deny rule (.claude/settings.json): Write(docs/**) is not matched by file permission checks — only Edit(path) rules are. Use Edit(docs/**) instead (Edit rules cover all file-editing tools).\n```\n\n**What to do:**\n\n* Replace `Write(path)`, `NotebookEdit(path)`, and legacy `MultiEdit(path)` rules with `Edit(path)`. `Edit` rules cover all file-editing tools.\n* Except in `--allowedTools`, where Claude Code accepts a `Glob` rule without warning, replace `Glob(path)` rules with `Read(path)`.\n* Fix the rule at the source the warning names in parentheses: a settings file path, or the flag itself for `--allowed-tools` and `--disallowed-tools`. A `claude-settings-<hash>.json` path that doesn't exist on disk stands for an inline `--settings` value. Fix the JSON you pass to that flag.\n* Leave bare tool-name rules such as `Write` or `Glob` alone. Claude Code matches them at the [tool level](/docs/en/permissions#match-all-uses-of-a-tool) and doesn't warn about them.\n* If the source reads `managed policy settings`, forward the warning to whoever maintains your managed settings, since you can't clear it yourself.\n\nIn a [background session](/docs/en/agent-view) or with `--output-format json` or `stream-json`, Claude Code writes the warning to the debug log instead of stderr, so machine-read output stays clean. Run with `--debug` to capture it at `~/.claude/debug/<session-id>.txt`. Before v2.1.210, Claude Code accepted these rules without a warning."
+    },
     {
       "heading": "Model is not a recognized model id",
       "id": "model-is-not-a-recognized-model-id",

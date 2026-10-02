@@ -14,6 +14,14 @@ const long = 'a'.repeat(1537)
 const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
+// One bad permission rule for each grammar rule, in the order of GRAMMAR_RULES.
+const badSettings = JSON.stringify({
+  hooks: { preToolUse: [] },
+  permissions: {
+    allow: ['Bash(', 'bogus', 'B*', 'WebSearch(x)', 'Write(docs/**)', 'mcp__a(x)'],
+    deny: ['Bash(command:x)'],
+  },
+})
 
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
@@ -23,10 +31,10 @@ const TREE: Record<string, string> = {
   '.claude/skills/t/SKILL.md': `---\nname: t\ndescription: ${long}\n---\n`,
   '.claude/commands/c.md': '# C\n',
   '.claude/commands/ns/c.md': '# C\n',
-  '.claude/settings.json': badHooks,
-  '.claude/settings.local.json': badHooks,
-  'packages/x/.claude/settings.json': badHooks,
-  'packages/x/.claude/settings.local.json': badHooks,
+  '.claude/settings.json': badSettings,
+  '.claude/settings.local.json': badSettings,
+  'packages/x/.claude/settings.json': badSettings,
+  'packages/x/.claude/settings.local.json': badSettings,
   // One bad file for each skill rule, and the same fault where the rule is silent.
   '.claude/skills/position/SKILL.md': '\n---\nname: position\n---\n',
   '.claude/skills/schema/SKILL.md': '---\nmade_up: 1\n---\n',
@@ -87,9 +95,20 @@ const TREE: Record<string, string> = {
   'docs/output-styles/s.md': '---\nname: [unclosed\nforce-for-plugin: true\n---\n',
   'other.json': badHooks,
   'hooks.json': badHooks,
-  '.vscode/settings.json': badHooks,
-  '.vscode/settings.local.json': badHooks,
+  '.vscode/settings.json': badSettings,
+  '.vscode/settings.local.json': badSettings,
 }
+
+// The permission grammar rules of #15, in the order of the `modules` list. Each is an error.
+const GRAMMAR_RULES = [
+  'permissions-rule-syntax',
+  'permissions-unknown-tool',
+  'permissions-tool-name-glob',
+  'permissions-specifier-unsupported',
+  'permissions-path-rule-tool',
+  'permissions-mcp-rule-parens',
+  'permissions-param-rule',
+]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -141,7 +160,14 @@ const EXPECTED = [
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
-]
+  // The grammar rules read the settings files of a project, and no other settings file.
+  ...[
+    '.claude/settings.json',
+    '.claude/settings.local.json',
+    'packages/x/.claude/settings.json',
+    'packages/x/.claude/settings.local.json',
+  ].flatMap((file) => GRAMMAR_RULES.map((rule) => `${file}: claude/${rule}@2`)),
+].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.
@@ -213,6 +239,10 @@ describe('configs', () => {
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
+      ...GRAMMAR_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'error' },
+      ]),
     ])
   })
 
@@ -226,6 +256,7 @@ describe('configs', () => {
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
+      ...GRAMMAR_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 

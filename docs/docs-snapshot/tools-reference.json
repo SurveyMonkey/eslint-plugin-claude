@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "18eda29898be723c087ad5511551435998a3201671afee6c3e6a34c90e3fe1ca",
+  "hash": "c39cecc3420511ab1248fe522163cf6edfc08050abf886dbea16cbb785cde9a4",
   "blocks": [
     {
       "id": "tools-reference",
@@ -152,7 +152,7 @@
     },
     {
       "id": "webfetch-tool-behavior",
-      "hash": "cb973df23f7c83a6093afa0f3d61c45ac8739db44207e6cfe8b34e7ba61dbecf"
+      "hash": "e798a3c19659b6ae5437654e5a5f2063ed867b9258700acf6ecb3958d95f66e4"
     },
     {
       "id": "webfetch-availability",
@@ -180,6 +180,12 @@
     }
   ],
   "sources": [
+    {
+      "heading": "Configure tools with permission rules and hooks",
+      "id": "configure-tools-with-permission-rules-and-hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",
+      "text": "## Configure tools with permission rules and hooks\n\nFor the most part, Claude decides when to use these tools and you don't need to name them yourself when interacting with Claude. You reference tool names directly when defining permissions and other configuration:\n\n* in [`permissions.allow`](/docs/en/settings-reference#permissions-allow) and [`permissions.deny`](/docs/en/settings-reference#permissions-deny) in settings, and the `/permissions` interface\n* in the `--allowedTools` and `--disallowedTools` [CLI flags](/docs/en/cli-reference)\n* in the Agent SDK's [`allowedTools` and `disallowedTools`](/docs/en/agent-sdk/permissions#allow-and-deny-rules) options\n* in a [skill's `allowed-tools`](/docs/en/skills#frontmatter-reference) frontmatter\n* in a hook's [`if` condition](/docs/en/hooks-guide#filter-by-tool-name-and-arguments-with-the-if-field)\n\nAll of these accept the same rule format, `ToolName(specifier)`. The specifier depends on the tool, and several tools share a format:\n\n| Rule format | Applies to | Details |\n| :- | :- | :- |\n| `Bash(npm run *)` | Bash, Monitor | [Command pattern matching](/docs/en/permissions#bash) |\n| `PowerShell(Get-ChildItem *)` | PowerShell | [Command pattern matching](/docs/en/permissions#powershell) |\n| `Read(~/secrets/**)` | Read, Grep, Glob, LSP | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Edit(/src/**)` | Edit, Write, NotebookEdit | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Skill(deploy *)` | Skill | [Skill name matching](/docs/en/skills#restrict-claude’s-skill-access) |\n| `Agent(Explore)` | Agent | [Subagent type matching](/docs/en/permissions#agent-subagents) |\n| `WebFetch(domain:example.com)` | WebFetch | [Domain matching](/docs/en/permissions#webfetch) |\n| `WebSearch` | WebSearch | No specifier; allow or deny the tool as a whole |\n\nTools not listed here, such as `ExitPlanMode` or `ShareOnboardingGuide`, accept only the bare tool name with no specifier.\n\nAn `Edit(...)` allow rule also grants read access to the same path, so you don't need a matching `Read(...)` rule. A `Read(...)` deny rule also blocks the Edit and Write tools on the same path, including creating a new file there, because both tools change content Claude has to be able to read back. The `Read` deny check requires Claude Code v2.1.208 or later on edits, and v2.1.228 or later on writes.\n\nHook `matcher` fields use bare tool names, not the parenthesized rule format. See [matcher patterns](/docs/en/hooks#matcher-patterns) for the matching rules. For the field names each tool passes to `tool_input` in hooks, see the [PreToolUse input reference](/docs/en/hooks#pretooluse-input)."
+    },
     {
       "heading": "EndConversation tool behavior",
       "id": "endconversation-tool-behavior",

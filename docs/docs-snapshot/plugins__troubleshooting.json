@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "beb5f7e45b3798786605805045d7feb62b62f1de230015aa3569f481bcd8fa4f",
+  "hash": "92614f1ff01ac62cd12423f28fdca43473ef3be0606aee3aceb35f26e30ee598",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -129,6 +129,10 @@
     {
       "id": "marketplace-is-registered-from-an-untrusted-source",
       "hash": "218a21f7a2e758ae32eb052cddcbfa32ab1bb8069f1f4051dec8b7184990a175"
+    },
+    {
+      "id": "marketplace-is-added-but-ignored",
+      "hash": "e2cff1d1e77e777cb587637d4432993158380af1f4c971c6059d2f1a70d72c29"
     },
     {
       "id": "plugin-has-a-corrupt-manifest-file-or-has-an-invalid-manifest-file",
@@ -292,7 +296,7 @@
     },
     {
       "id": "claude-plugin-validate-reports-errors",
-      "hash": "8d14913fc53cbb7a5a49069d0a2d396e9f06593d3b27eeaed21db878864b62fd"
+      "hash": "63615439b0ea563b943e885c3e041091124718069e780ae93ee1cdb0f2615faa"
     },
     {
       "id": "plugin-has-conflicting-manifests",
