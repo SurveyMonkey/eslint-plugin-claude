@@ -1,10 +1,11 @@
 // The layouts of ADR 001 Decision 10: where a skill or command file sits
 // decides what it is. A plugin root is found by its manifest, on disk.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { classifySkillFile } from '../src/skill-files.ts'
+import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'skill-files-'))
 const plugin = path.join(scratch, 'plugins', 'p')
@@ -85,5 +86,72 @@ describe('classifySkillFile', () => {
     // A `.claude` folder in a plugin does not make a skill without `skills/`.
     expect(classifySkillFile(path.join(plugin, '.claude', 'a', 'SKILL.md'))).toBeNull()
     expect(classifySkillFile(`${path.sep}commands${path.sep}a.md`)).toBeNull()
+  })
+})
+
+// A plugin root that the check cannot see gives no classification. The file is
+// not a plugin file, and it is not a local file either.
+describe('classifySkillFile for a plugin root that it cannot see', () => {
+  const unseen = (plugin: string) => {
+    mkdirSync(path.join(scratch, 'unseen', plugin, '.claude-plugin'), { recursive: true })
+    writeFileSync(path.join(scratch, 'unseen', plugin, '.claude-plugin', 'plugin.json'), '{}')
+    return path.join(scratch, 'unseen', plugin, '.claude-plugin')
+  }
+  const file = (...parts: string[]) => path.join(scratch, 'unseen', ...parts)
+
+  describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
+    it('gives null for a plugin-root skill and a plugin skill', () => {
+      withoutAccess(unseen('p'), () => {
+        expect(classifySkillFile(file('p', 'SKILL.md'))).toBeNull()
+        expect(classifySkillFile(file('p', 'skills', 's', 'SKILL.md'))).toBeNull()
+      })
+    })
+
+    it('gives null for a plugin command file', () => {
+      withoutAccess(unseen('p'), () => {
+        expect(classifySkillFile(file('p', 'commands', 'c.md'))).toBeNull()
+      })
+    })
+
+    it.fails('gives null for a plugin root in `.claude/skills/`, and not a project skill', () => {
+      withoutAccess(unseen('.claude/skills/own'), () => {
+        expect(classifySkillFile(file('.claude', 'skills', 'own', 'SKILL.md'))).toBeNull()
+      })
+    })
+
+    it.fails('stops at an unseen plugin root, and does not use a `commands/` directory above it', () => {
+      withoutAccess(unseen('.claude/commands/plug'), () => {
+        expect(
+          classifySkillFile(file('.claude', 'commands', 'plug', 'commands', 'a.md')),
+        ).toBeNull()
+      })
+    })
+  })
+
+  describe.skipIf(process.platform === 'win32')(
+    'with `.claude-plugin/` linked out of the repository',
+    () => {
+      it.fails('gives null', () => {
+        mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
+        mkdirSync(path.join(scratch, 'elsewhere', 'meta'), { recursive: true })
+        writeFileSync(path.join(scratch, 'elsewhere', 'meta', 'plugin.json'), '{}')
+        mkdirSync(path.join(scratch, 'repo', 'p'))
+        symlinkSync(
+          path.join(scratch, 'elsewhere', 'meta'),
+          path.join(scratch, 'repo', 'p', '.claude-plugin'),
+        )
+        expect(
+          classifySkillFile(path.join(scratch, 'repo', 'p', 'skills', 's', 'SKILL.md')),
+        ).toBeNull()
+      })
+    },
+  )
+
+  it.fails('still gives a plugin for a dangling manifest link', () => {
+    mkdirSync(path.join(scratch, 'dangling', '.claude-plugin'), { recursive: true })
+    symlinkSync('missing.json', path.join(scratch, 'dangling', '.claude-plugin', 'plugin.json'))
+    expect(
+      classifySkillFile(path.join(scratch, 'dangling', 'skills', 's', 'SKILL.md'))?.plugin,
+    ).toBe(true)
   })
 })

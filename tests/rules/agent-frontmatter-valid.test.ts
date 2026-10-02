@@ -1,7 +1,17 @@
 // The rule checks local agents only. The docs say a plugin agent with no name
 // or bad YAML still loads, so the rule stays silent there.
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
+import { describe, expect, it } from 'vitest'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const local = '.claude/agents/a.md'
 const file = (frontmatter: string, filename = local) => ({
@@ -113,4 +123,23 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
       errors: [{ messageId: 'notFirst', line: 3 }],
     },
   ],
+})
+
+// A plugin root that the rule cannot see is not a local agent directory. The rule does not use
+// the `.claude/agents/` above it.
+describe.skipIf(chmodCannotBlock)('a plugin root that the rule cannot see', () => {
+  it.fails('makes no report for a plugin agent in `.claude/agents/`', () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), 'agent-frontmatter-valid-'))
+    try {
+      const meta = path.join(scratch, '.claude', 'agents', 'plug', '.claude-plugin')
+      mkdirSync(meta, { recursive: true })
+      writeFileSync(path.join(meta, 'plugin.json'), '{}')
+      const agent = path.join(scratch, '.claude', 'agents', 'plug', 'agents', 'a.md')
+      const lint = () => lintMarkdown('agent-frontmatter-valid', '---\nname: x\n---\n', agent)
+      expect(lint()).toEqual([])
+      withoutAccess(meta, () => expect(lint()).toEqual([]))
+    } finally {
+      rmSync(scratch, { recursive: true, force: true })
+    }
+  })
 })
