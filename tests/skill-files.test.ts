@@ -144,6 +144,32 @@ describe('classifySkillFile for a plugin root that it cannot see', () => {
           classifySkillFile(path.join(scratch, 'repo', 'p', 'skills', 's', 'SKILL.md')),
         ).toBeNull()
       })
+
+      // Each case needs no chmod, so the guard at its branch is proved on every platform.
+      const linkedPlugin = (repo: string, plugin: string) => {
+        mkdirSync(path.join(scratch, repo, '.git'), { recursive: true })
+        mkdirSync(path.join(scratch, `${repo}-meta`), { recursive: true })
+        writeFileSync(path.join(scratch, `${repo}-meta`, 'plugin.json'), '{}')
+        mkdirSync(path.join(scratch, repo, plugin), { recursive: true })
+        symlinkSync(
+          path.join(scratch, `${repo}-meta`),
+          path.join(scratch, repo, plugin, '.claude-plugin'),
+        )
+      }
+
+      it('gives null for a `SKILL.md` in the plugin root', () => {
+        linkedPlugin('root-skill', 'p')
+        expect(classifySkillFile(path.join(scratch, 'root-skill', 'p', 'SKILL.md'))).toBeNull()
+      })
+
+      it('stops at the plugin root, and does not use a `commands/` directory above it', () => {
+        linkedPlugin('walk', '.claude/commands/plug')
+        expect(
+          classifySkillFile(
+            path.join(scratch, 'walk', '.claude', 'commands', 'plug', 'commands', 'a.md'),
+          ),
+        ).toBeNull()
+      })
     },
   )
 

@@ -417,6 +417,8 @@ describe('a plugin manifest that the rule cannot see', () => {
       put('deny-meta/.claude-plugin/plugin.json', '{}')
       put('deny-meta/agents/a.md', agentFile('a'))
       put('deny-meta/.claude/skills/own/.claude-plugin/plugin.json', '{}')
+      // Before the lock, the rule reports the ghost agent, so the silence below comes from the lock.
+      expect(ghost(path.join(scratch, 'deny-meta/skills/s/SKILL.md'))).toHaveLength(1)
       withoutAccess(path.join(scratch, 'deny-meta/.claude-plugin'), () => {
         expect(ghost(path.join(scratch, 'deny-meta/skills/s/SKILL.md'))).toEqual([])
       })

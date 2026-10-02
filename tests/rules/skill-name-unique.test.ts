@@ -421,6 +421,25 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     })
   })
 
+  it.skipIf(process.platform === 'win32')(
+    'reads no commands/ folder when plugin.json is a link out of the repository',
+    () => {
+      put('man-link/.git/HEAD', '')
+      put('man-link/commands/review.md', bare)
+      put('man-link/skills/review/SKILL.md', bare)
+      put('man-link-target/plugin.json', '{"commands":"./cmds"}')
+      mkdirSync(path.join(scratch, 'man-link/.claude-plugin'), { recursive: true })
+      symlinkSync(
+        '../../man-link-target/plugin.json',
+        path.join(scratch, 'man-link/.claude-plugin/plugin.json'),
+      )
+      const skill = path.join(scratch, 'man-link', 'skills', 'review', 'SKILL.md')
+      const command = path.join(scratch, 'man-link', 'commands', 'review.md')
+      expect(lint(skill, bare)).toEqual([])
+      expect(lint(command, bare)).toEqual([])
+    },
+  )
+
   it('reports a command file that the rule cannot read, because the path gives its name', () => {
     const hidden = put('deny-command/.claude/commands/dup.md', bare)
     const file = path.join(scratch, 'deny-command', '.claude', 'skills', 'mine', 'SKILL.md')
