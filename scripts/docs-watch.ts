@@ -1,7 +1,6 @@
 // Watches the Claude Code docs pages that docs/rule-sources.json cites.
 //
-// Usage: node --experimental-strip-types scripts/docs-watch.ts [check|update] [root]
-// Node 22.18 and later need no flag.
+// Usage: node scripts/docs-watch.ts [check|update] [root]
 // check (default) fetches each cited page and compares it with the snapshot in
 //   docs/docs-snapshot/. It writes no file. It prints a JSON report to stdout.
 //   It also adds a Markdown report to $GITHUB_STEP_SUMMARY when that is set.

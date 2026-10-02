@@ -35,8 +35,8 @@
   ],
   "scripts": {
     "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
-    "docs:seed": "node --experimental-strip-types scripts/seed-rule-sources.ts",
-    "docs:update": "node --experimental-strip-types scripts/docs-watch.ts update",
+    "docs:seed": "node scripts/seed-rule-sources.ts",
+    "docs:update": "node scripts/docs-watch.ts update",
     "knip": "pnpm build && knip && knip --strict",
     "lint": "biome ci . --error-on-warnings",
     "prepack": "pnpm run build",
@@ -68,5 +68,12 @@
   "packageManager": "pnpm@12.6.0",
   "engines": {
     "node": "^22.13.0 || >=24"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.18.0",
+      "onFail": "warn"
+    }
   }
 }
