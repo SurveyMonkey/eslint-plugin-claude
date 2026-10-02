@@ -375,7 +375,7 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
 describe('a plugin manifest that the rule cannot see', () => {
   const ghost = (filename: string) => lintMarkdown('skill-agent-exists', fork('ghost'), filename)
 
-  it.skipIf(process.platform === 'win32').fails(
+  it.skipIf(process.platform === 'win32')(
     'stays silent when plugin.json is a link out of the repository, with an `agents` key',
     () => {
       put('man-link/.git/HEAD', '')
@@ -391,7 +391,7 @@ describe('a plugin manifest that the rule cannot see', () => {
     },
   )
 
-  it.skipIf(process.platform === 'win32').fails(
+  it.skipIf(process.platform === 'win32')(
     'stays silent when .claude-plugin/ is a link out of the repository',
     () => {
       put('dir-link/.git/HEAD', '')
@@ -402,7 +402,7 @@ describe('a plugin manifest that the rule cannot see', () => {
     },
   )
 
-  it.fails('still treats a dangling plugin.json link as a plugin with no manifest', () => {
+  it('still treats a dangling plugin.json link as a plugin with no manifest', () => {
     put('dangling/agents/a.md', agentFile('a'))
     mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', path.join(scratch, 'dangling/.claude-plugin/plugin.json'))
@@ -412,7 +412,7 @@ describe('a plugin manifest that the rule cannot see', () => {
   })
 
   describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
-    it.fails('stays silent for a plugin file, and for a plugin root in `.claude/skills/`', () => {
+    it('stays silent for a plugin file, and for a plugin root in `.claude/skills/`', () => {
       put('deny-meta/.git/HEAD', '')
       put('deny-meta/.claude-plugin/plugin.json', '{}')
       put('deny-meta/agents/a.md', agentFile('a'))

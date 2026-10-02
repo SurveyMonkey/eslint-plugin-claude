@@ -1,8 +1,9 @@
 // Find out if a file is a skill or a command file. The globs of the rules are
 // broad, so each rule asks here where the file sits (ADR 001, Decision 10).
-// A plugin root is found by its manifest.
+// A plugin root is found by its manifest. A root that the check cannot see gives null.
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
+import { UNREADABLE } from './skill-tree.ts'
 
 export interface SkillFile {
   kind: 'skill' | 'command'
@@ -27,14 +28,23 @@ export function classifySkillFile(file: string): SkillFile | null {
   const base = parts[last] as string
   if (base === 'SKILL.md') {
     const folder = parts[last - 1] as string
-    if (isPluginRoot(dirOf(parts, last))) {
+    const here = isPluginRoot(dirOf(parts, last))
+    // A root that the check cannot see is not a plugin to judge, and not a local scope.
+    if (here === UNREADABLE) {
+      return null
+    }
+    if (here) {
       return { kind: 'skill', plugin: true, names: [] }
     }
     if (parts[last - 2] === 'skills') {
       if (parts[last - 3] === '.claude') {
         return { kind: 'skill', plugin: false, names: [folder] }
       }
-      if (isPluginRoot(dirOf(parts, last - 2))) {
+      const root = isPluginRoot(dirOf(parts, last - 2))
+      if (root === UNREADABLE) {
+        return null
+      }
+      if (root) {
         return { kind: 'skill', plugin: true, names: [folder] }
       }
     }
@@ -45,7 +55,13 @@ export function classifySkillFile(file: string): SkillFile | null {
       continue
     }
     const inClaude = parts[i - 1] === '.claude'
-    if (inClaude || isPluginRoot(dirOf(parts, i))) {
+    const root = inClaude ? false : isPluginRoot(dirOf(parts, i))
+    // The walk stops at a root that the check cannot see. It does not go on to a
+    // `commands/` directory above it.
+    if (root === UNREADABLE) {
+      return null
+    }
+    if (inClaude || root) {
       const stem = base.replace(/\.md$/, '')
       return { kind: 'command', plugin: !inClaude, names: [...parts.slice(i + 1, last), stem] }
     }

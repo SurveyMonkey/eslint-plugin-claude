@@ -161,7 +161,7 @@ describe('a plugin root that the rule cannot see', () => {
     })
   })
 
-  it.skipIf(process.platform === 'win32').fails(
+  it.skipIf(process.platform === 'win32')(
     'makes no report when .claude-plugin/ is a link out of the repository',
     () => {
       mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })

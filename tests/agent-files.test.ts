@@ -33,7 +33,7 @@ describe('a plugin root that the check can see', () => {
     expect(classifyOutputStyle(at('p', 'other', 's.md'))).toBeNull()
   })
 
-  it.fails('gives plugin for a dangling manifest link', () => {
+  it('gives plugin for a dangling manifest link', () => {
     mkdirSync(at('dangling', '.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', at('dangling', '.claude-plugin', 'plugin.json'))
     expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toEqual({ plugin: true })
@@ -48,7 +48,7 @@ describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
     })
   })
 
-  it.fails('stops at the unseen root, and does not use the `.claude/agents/` above it', () => {
+  it('stops at the unseen root, and does not use the `.claude/agents/` above it', () => {
     withoutAccess(plugin('.claude', 'agents', 'plug'), () => {
       expect(classifyAgentFile(at('.claude', 'agents', 'plug', 'agents', 'a.md'))).toBeNull()
     })
@@ -58,7 +58,7 @@ describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
 describe.skipIf(process.platform === 'win32')(
   'with `.claude-plugin/` linked out of the repository',
   () => {
-    it.fails('gives null', () => {
+    it('gives null', () => {
       mkdirSync(at('repo', '.git'), { recursive: true })
       mkdirSync(at('elsewhere', 'meta'), { recursive: true })
       writeFileSync(at('elsewhere', 'meta', 'plugin.json'), '{}')

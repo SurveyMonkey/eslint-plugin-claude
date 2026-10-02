@@ -59,7 +59,9 @@ The rule is silent in these cases:
 
 The rule makes no report that rests on a file that it cannot read. A read can fail for a reason
 other than a missing file, such as a permission error. This applies to an agents directory, an
-agent file, and `plugin.json`. The rule adds no message for this case. A missing file is not a
+agent file, and `plugin.json`. The rule adds no message for this case. A `plugin.json` with a
+real path out of the repository, or a `.claude-plugin/` with such a path, is also a manifest that
+the rule cannot see. A missing file is not a
 file that the rule cannot read, so a missing agent is still reported.
 
 The rule checks `agent` with or without `context: fork`. The field has no effect without it.

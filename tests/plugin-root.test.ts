@@ -47,7 +47,7 @@ describe.skipIf(process.platform === 'win32')('a link', () => {
     expect(isPluginRoot(repo('p'))).toBe(true)
   })
 
-  it.fails('is a plugin root when the manifest is a dangling link', () => {
+  it('is a plugin root when the manifest is a dangling link', () => {
     mkdirSync(repo('p', '.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', repo('p', '.claude-plugin', 'plugin.json'))
     expect(isPluginRoot(repo('p'))).toBe(true)
@@ -59,7 +59,7 @@ describe.skipIf(process.platform === 'win32')('a link', () => {
     expect(isPluginRoot(repo('p'))).toBe(true)
   })
 
-  it.fails('is unseen when `.claude-plugin/` is a link to a directory out of the repository', () => {
+  it('is unseen when `.claude-plugin/` is a link to a directory out of the repository', () => {
     put(outside('meta', 'plugin.json'))
     mkdirSync(repo('p'), { recursive: true })
     symlinkSync(outside('meta'), repo('p', '.claude-plugin'))
@@ -81,7 +81,7 @@ describe.skipIf(process.platform === 'win32')('a link', () => {
 })
 
 describe.skipIf(chmodCannotBlock)('a path that the check cannot read', () => {
-  it.fails('is unseen when `.claude-plugin/` cannot be searched', () => {
+  it('is unseen when `.claude-plugin/` cannot be searched', () => {
     put(repo('p', '.claude-plugin', 'plugin.json'))
     withoutAccess(repo('p', '.claude-plugin'), () => {
       expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
@@ -89,7 +89,7 @@ describe.skipIf(chmodCannotBlock)('a path that the check cannot read', () => {
     expect(isPluginRoot(repo('p'))).toBe(true)
   })
 
-  it.fails('is unseen when the directory above `.claude-plugin/` cannot be searched', () => {
+  it('is unseen when the directory above `.claude-plugin/` cannot be searched', () => {
     put(repo('p', '.claude-plugin', 'plugin.json'))
     withoutAccess(repo('p'), () => {
       expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)

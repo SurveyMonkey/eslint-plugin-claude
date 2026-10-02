@@ -282,9 +282,9 @@ describe('the repository bound', () => {
       mkdirSync(path.join(repo, 'skills'))
       symlinkSync('../../elsewhere/s', path.join(repo, 'skills', 's'))
       expect(skillFiles(path.join(repo, 'skills'), repo)).toEqual([])
-      // A manifest that is a link out of the bound is not read.
+      // A manifest that is a link out of the bound is not read, and the rule cannot see it.
       symlinkSync('../elsewhere/.claude-plugin', path.join(repo, '.claude-plugin'))
-      expect(readManifest(repo, repo)).toBeNull()
+      expect(readManifest(repo, repo)).toBe(UNREADABLE)
       expect(readManifest(repo, scratch)).toEqual({ name: 'far' })
     },
   )

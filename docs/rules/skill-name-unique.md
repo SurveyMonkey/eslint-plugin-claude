@@ -85,7 +85,8 @@ The rule makes no report that rests on a file that it cannot read. A read can fa
 other than a missing file, such as a permission error. The rule does not compare a skill file, a
 skill folder, or a directory that it cannot read. The rule adds no message for this case.
 
-A plugin manifest that the rule cannot read can set `commands`. The rule then reads no `commands/`
+A plugin manifest that the rule cannot read can set `commands`. So can a manifest with a real path
+out of the repository. The rule then reads no `commands/`
 folder of that plugin, and gives no command report for it. The rule still compares skill names.
 A command file that the rule cannot read still counts, because its path gives its name.
 

@@ -72,7 +72,7 @@ describe('with a plugin root as the working directory', () => {
 describe('a plugin root that the rule cannot see', () => {
   const lint = (file: string) => lintMarkdown('command-legacy-format', '# A\n', file)
 
-  it.skipIf(chmodCannotBlock).fails('makes no report with no access to .claude-plugin/', () => {
+  it.skipIf(chmodCannotBlock)('makes no report with no access to .claude-plugin/', () => {
     const meta = path.join(scratch, 'deny', '.claude-plugin')
     mkdirSync(meta, { recursive: true })
     writeFileSync(path.join(meta, 'plugin.json'), '{}')
@@ -84,7 +84,7 @@ describe('a plugin root that the rule cannot see', () => {
     })
   })
 
-  it.skipIf(process.platform === 'win32').fails(
+  it.skipIf(process.platform === 'win32')(
     'makes no report when .claude-plugin/ is a link out of the repository',
     () => {
       mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })

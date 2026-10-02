@@ -113,13 +113,13 @@ describe('classifySkillFile for a plugin root that it cannot see', () => {
       })
     })
 
-    it.fails('gives null for a plugin root in `.claude/skills/`, and not a project skill', () => {
+    it('gives null for a plugin root in `.claude/skills/`, and not a project skill', () => {
       withoutAccess(unseen('.claude/skills/own'), () => {
         expect(classifySkillFile(file('.claude', 'skills', 'own', 'SKILL.md'))).toBeNull()
       })
     })
 
-    it.fails('stops at an unseen plugin root, and does not use a `commands/` directory above it', () => {
+    it('stops at an unseen plugin root, and does not use a `commands/` directory above it', () => {
       withoutAccess(unseen('.claude/commands/plug'), () => {
         expect(
           classifySkillFile(file('.claude', 'commands', 'plug', 'commands', 'a.md')),
@@ -131,7 +131,7 @@ describe('classifySkillFile for a plugin root that it cannot see', () => {
   describe.skipIf(process.platform === 'win32')(
     'with `.claude-plugin/` linked out of the repository',
     () => {
-      it.fails('gives null', () => {
+      it('gives null', () => {
         mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
         mkdirSync(path.join(scratch, 'elsewhere', 'meta'), { recursive: true })
         writeFileSync(path.join(scratch, 'elsewhere', 'meta', 'plugin.json'), '{}')
@@ -147,7 +147,7 @@ describe('classifySkillFile for a plugin root that it cannot see', () => {
     },
   )
 
-  it.fails('still gives a plugin for a dangling manifest link', () => {
+  it('still gives a plugin for a dangling manifest link', () => {
     mkdirSync(path.join(scratch, 'dangling', '.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', path.join(scratch, 'dangling', '.claude-plugin', 'plugin.json'))
     expect(

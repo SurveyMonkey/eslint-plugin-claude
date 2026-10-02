@@ -128,7 +128,7 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
 // A plugin root that the rule cannot see is not a local agent directory. The rule does not use
 // the `.claude/agents/` above it.
 describe.skipIf(chmodCannotBlock)('a plugin root that the rule cannot see', () => {
-  it.fails('makes no report for a plugin agent in `.claude/agents/`', () => {
+  it('makes no report for a plugin agent in `.claude/agents/`', () => {
     const scratch = mkdtempSync(path.join(tmpdir(), 'agent-frontmatter-valid-'))
     try {
       const meta = path.join(scratch, '.claude', 'agents', 'plug', '.claude-plugin')

@@ -9,11 +9,13 @@ import { entriesOf, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'skill-file-layout' as const
 
-/** True when `dir` is `.claude/skills/` or the `skills/` directory of a plugin. */
+/** True when `dir` is `.claude/skills/` or the `skills/` directory of a plugin.
+ *  A plugin root that the rule cannot see gives false, so the rule makes no report. */
 function isSkillsDir(dir: string): boolean {
   const parent = path.dirname(dir)
   return (
-    path.basename(dir) === 'skills' && (path.basename(parent) === '.claude' || isPluginRoot(parent))
+    path.basename(dir) === 'skills' &&
+    (path.basename(parent) === '.claude' || isPluginRoot(parent) === true)
   )
 }
 
