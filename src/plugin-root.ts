@@ -11,16 +11,19 @@ import {
   type Unreadable,
 } from './skill-tree.ts'
 
-/** Whether `dir` is a plugin root. The result is `UNREADABLE` when the check
- *  cannot see: a read of `.claude-plugin/` fails for a reason other than a
- *  missing file, or `.claude-plugin/` has a real path out of the repository
- *  (ADR 001, Decision 14). A caller makes no report on such a directory, and
- *  does not use the local logic of an outer `.claude/` directory. A
- *  directory that is not a plugin root gives false.
+/** True when `dir` is a plugin root, false when it is not, and `UNREADABLE`
+ *  when the check cannot see. The check cannot see in two cases. A read of
+ *  `.claude-plugin/` fails for a reason other than a missing file. Or
+ *  `.claude-plugin/` has a real path out of the repository (ADR 001,
+ *  Decision 14). A caller makes no report on such a directory. It does not
+ *  use the local logic of an outer `.claude/` directory.
+ *
+ *  `UNREADABLE` is a truthy symbol. Test the result with `=== true`, or
+ *  compare it to `UNREADABLE` first.
  *
  *  A `.claude-plugin/plugin.json` entry makes a plugin root. The check
  *  follows no link at that last step, so a link to any target counts, and a
- *  dangling link too. `readManifest` is the function that reads the content. */
+ *  dangling link too. `readManifest` reads the content. */
 export function isPluginRoot(dir: string): boolean | Unreadable {
   const real = realOf(path.join(dir, '.claude-plugin'))
   if (typeof real !== 'string') {

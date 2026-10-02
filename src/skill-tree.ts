@@ -5,8 +5,9 @@
 // A read has three results: content, absent (`ENOENT` or `ENOTDIR`), and
 // unreadable (any other code, such as `EACCES`). A failed read is not the
 // same as a file that is not there. A rule makes no report that rests on a
-// file that it cannot read, or on a file with a real path out of the
-// repository. The `.git` test in `repositoryRoot` uses `existsSync`.
+// file that it cannot read. It also makes no report that rests on a file with
+// a real path out of the repository. The `.git` test in `repositoryRoot` uses
+// `existsSync`.
 import {
   type BigIntStats,
   type Dirent,
@@ -21,7 +22,8 @@ import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
-/** The result of a read that failed, and was not a missing file. */
+/** The result of a read that failed for a reason other than a missing file.
+ *  It is also the result for a file with a real path out of the repository. */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 

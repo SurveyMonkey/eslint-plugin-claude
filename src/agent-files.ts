@@ -24,7 +24,8 @@ function scopeOf(dir: string): ClaudeFile | null | Unreadable {
 }
 
 /** What `file` is: a subagent file in `.claude/agents/` or in the `agents/`
- *  directory of a plugin, at any depth, or null. */
+ *  directory of a plugin, at any depth, or null. The result is also null when
+ *  the plugin root of the file is unseen. */
 export function classifyAgentFile(file: string): ClaudeFile | null {
   // The deepest `agents/` directory that fits is the one that counts. The
   // loop ends at the root of the file system, which is its own parent.
@@ -50,7 +51,8 @@ export function classifyAgentFile(file: string): ClaudeFile | null {
 }
 
 /** What `file` is: an output style file directly in `.claude/output-styles/`
- *  or in the `output-styles/` directory of a plugin, or null. */
+ *  or in the `output-styles/` directory of a plugin, or null. The result is also
+ *  null when the plugin root of the file is unseen. */
 export function classifyOutputStyle(file: string): ClaudeFile | null {
   const dir = path.dirname(path.resolve(file))
   if (path.basename(dir) !== 'output-styles') {

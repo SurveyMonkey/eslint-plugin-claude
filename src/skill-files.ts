@@ -21,7 +21,8 @@ function dirOf(parts: string[], count: number): string {
 
 /** What `file` is: a skill (`.claude/skills/<name>/SKILL.md`,
  *  `<plugin>/skills/<name>/SKILL.md`, `<plugin>/SKILL.md`), a command file
- *  (`.claude/commands/**`, `<plugin>/commands/**`), or null. */
+ *  (`.claude/commands/**`, `<plugin>/commands/**`), or null. The result is also
+ *  null when the plugin root of the file is unseen. */
 export function classifySkillFile(file: string): SkillFile | null {
   const parts = path.resolve(file).split(path.sep)
   const last = parts.length - 1
@@ -49,7 +50,8 @@ export function classifySkillFile(file: string): SkillFile | null {
       }
     }
   }
-  // The deepest `commands/` directory that fits is the one that counts.
+  // The deepest `commands/` directory that fits is the one that counts, unless
+  // its plugin root is unseen.
   for (let i = last - 1; i >= 1; i--) {
     if (parts[i] !== 'commands') {
       continue
