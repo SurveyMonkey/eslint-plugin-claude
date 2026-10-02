@@ -35,7 +35,8 @@ jobs:
         with:
           cache: true
           require-lockfile: true
-      # Node comes from .nvmrc. It must be 22.18 or later, to run a .ts file.
+      # Node comes from devEngines.runtime in package.json (22.18.0). It must
+      # be 22.18 or later, to run a .ts file.
       # A changed page gives exit 0. See the header of scripts/docs-watch.ts
       # for the cases that give exit 1. The classifier reads the pages again
       # and handles a lost or doubled heading, so the job goes on after a

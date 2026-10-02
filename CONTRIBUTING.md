@@ -2,9 +2,10 @@
 
 ## Development
 
-Development requires Node 22.18.0 or later, and pnpm at the version in `packageManager` in
-`package.json`. `.nvmrc` pins Node 22.18.0, the lowest version that runs a `.ts` file with no flag.
-The CI checks and the docs watch use it. `devEngines` in `package.json` warns on an older Node.
+Development runs on Node 22.18.0, and pnpm at the version in `packageManager` in `package.json`.
+22.18.0 is the lowest version that runs a `.ts` file with no flag. `.nvmrc` and `devEngines.runtime`
+in `package.json` both pin it. The CI checks and the docs watch install it from `devEngines`, and
+pnpm warns on any other version.
 
 The published package needs Node `^22.13.0 || >=24` (`engines`), the same range as ESLint 10. It
 ships JavaScript only. The CI test jobs run on 22.13.0, 24 and 26.

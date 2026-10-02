@@ -30,7 +30,7 @@ Decision 14).
   Commit `docs/rule-sources.json` and `docs/docs-snapshot/`. `docs:update` fetches the live docs
   and rewrites the snapshot of each cited page. If you skip a step, `tests/rule-sources.test.ts`
   fails.
-- The scripts in `scripts/*.ts` run with `node`, at 22.18 or later (`.nvmrc`).
+- The scripts in `scripts/*.ts` run with `node` 22.18.0 or later. `.nvmrc` and `devEngines` pin 22.18.0.
 
 ## Fixtures
 
