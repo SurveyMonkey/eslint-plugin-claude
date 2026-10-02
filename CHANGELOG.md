@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.3.0...v0.4.0) (2026-10-02)
+
+
+### Features
+
+* **agents:** add single-file subagent and output style error rules ([#48](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/48)) ([62c7e9f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/62c7e9f6e2acd6ae60c1ddbe080a35bba04ce427)), closes [#9](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/9)
+* **permissions:** add the permission rule parser and grammar error rules ([#53](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/53)) ([1bdf61e](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/1bdf61eca589085526ff7e811a316c226ca8e1ce)), closes [#15](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/15)
+
+
+### Bug Fixes
+
+* **plugins:** stop reports that rest on a plugin manifest a rule cannot see ([#52](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/52)) ([8e4c5f5](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/8e4c5f579b02ba4282c1b822d1ac73b5dbb0fa61)), closes [#49](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/49)
+* **skills:** stop false reports when a cross-file read fails ([#47](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/47)) ([c7b3445](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/c7b3445e6bc4e0bee349de667ec389aa8a1c4dd3)), closes [#46](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/46)
+
 ## [0.3.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.2.0...v0.3.0) (2026-10-01)
 
 
