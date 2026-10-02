@@ -1,7 +1,6 @@
 // Classifies each Claude Code docs change that the docs watch can see.
 //
-// Usage: node --experimental-strip-types scripts/docs-classify.ts [root]
-// Node 22.18 and later need no flag.
+// Usage: node scripts/docs-classify.ts [root]
 // It fetches each page that docs/rule-sources.json cites, compares it with
 // docs/docs-snapshot/, and asks TypeSafe Jev about each changed, added or
 // removed block. It prints a JSON object { model, findings, results } to

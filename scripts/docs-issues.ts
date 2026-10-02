@@ -1,9 +1,8 @@
 // Opens one GitHub issue for each block change in the findings of
 // scripts/docs-classify.ts.
 //
-// Usage: node --experimental-strip-types scripts/docs-issues.ts <findings.json> [--dry-run]
+// Usage: node scripts/docs-issues.ts <findings.json> [--dry-run]
 //   [--repo owner/name] [--max n]
-// Node 22.18 and later need no flag.
 // It checks the findings, then reads the open issues. The marker of an
 // issue is <!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->.
 // The block ID is URI encoded. The hash is the new block hash. For a

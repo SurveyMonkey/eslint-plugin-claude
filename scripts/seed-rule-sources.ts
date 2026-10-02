@@ -7,7 +7,7 @@
 // map exists, a source that keeps its url and heading keeps its `hash`. The
 // docs watch sets that field.
 //
-// Usage: node --experimental-strip-types scripts/seed-rule-sources.ts [--stdout] [root]
+// Usage: node scripts/seed-rule-sources.ts [--stdout] [root]
 // --stdout prints the map and writes no file. root defaults to this repository.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'

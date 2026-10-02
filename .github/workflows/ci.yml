@@ -33,7 +33,8 @@ jobs:
         with:
           persist-credentials: false
       # Installs pnpm from packageManager, and Node from the runtime input or
-      # .nvmrc. require-lockfile adds --frozen-lockfile to the install.
+      # devEngines.runtime (22.18.0). require-lockfile adds --frozen-lockfile
+      # to the install.
       - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
         with:
           runtime: node@${{ matrix.node }}
