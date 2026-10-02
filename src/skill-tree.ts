@@ -5,7 +5,8 @@
 // A read has three results: content, absent (`ENOENT` or `ENOTDIR`), and
 // unreadable (any other code, such as `EACCES`). A failed read is not the
 // same as a file that is not there. A rule makes no report that rests on a
-// file that it cannot read. The `.git` test in `repositoryRoot` uses
+// file that it cannot read. It also makes no report that rests on a file with
+// a real path out of the repository. The `.git` test in `repositoryRoot` uses
 // `existsSync`.
 import {
   type BigIntStats,
@@ -21,13 +22,14 @@ import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
-/** The result of a read that failed, and was not a missing file. */
+/** The result of a read that failed for a reason other than a missing file.
+ *  It is also the result for a file with a real path out of the repository. */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 
 /** The result of a failed read: null for a file that is not there, and
  *  `UNREADABLE` for any other error. */
-function failure(error: unknown): null | Unreadable {
+export function failure(error: unknown): null | Unreadable {
   const code = (error as NodeJS.ErrnoException).code
   return code === 'ENOENT' || code === 'ENOTDIR' ? null : UNREADABLE
 }
@@ -85,7 +87,7 @@ export function repositoryRoot(dir: string): string {
 }
 
 /** True when the real path `real` is `bound` or below it. */
-function isInside(real: string, bound: string): boolean {
+export function isInside(real: string, bound: string): boolean {
   // `path.resolve` drops a trailing separator, except on the root of the file system.
   const base = path.resolve(bound)
   return real === base || real.startsWith(base.endsWith(path.sep) ? base : base + path.sep)
@@ -93,7 +95,7 @@ function isInside(real: string, bound: string): boolean {
 
 /** The real path of `file`, null when it does not exist (a dangling link), or
  *  `UNREADABLE`. */
-function realOf(file: string): string | null | Unreadable {
+export function realOf(file: string): string | null | Unreadable {
   try {
     return realpathSync(file)
   } catch (error) {
@@ -246,9 +248,10 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
 }
 
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
- *  result is null in three cases. The file is not there, it does not parse to
- *  an object, or its real path is out of `bound`. The result is `UNREADABLE`
- *  when a read fails for another reason. */
+ *  result is null in two cases. The file is not there, or it does not parse to
+ *  an object. The result is `UNREADABLE` in two cases. The real path of the
+ *  file is out of `bound`, or a read fails for another reason. In both cases
+ *  the rule cannot see the file, and the file can hold any key. */
 export function readManifest(
   root: string,
   bound: string,
@@ -259,7 +262,7 @@ export function readManifest(
     return real
   }
   if (!isInside(real, bound)) {
-    return null
+    return UNREADABLE
   }
   const text = textOf(real)
   if (typeof text !== 'string') {

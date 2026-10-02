@@ -11,6 +11,7 @@ import {
   mkdirSync,
   mkdtempSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -21,6 +22,7 @@ import {
   lintMarkdown,
   markdownTester,
   ruleOf,
+  withoutAccess,
 } from '../rule-tester.test-support.ts'
 
 const fixtures = path.join(import.meta.dirname, '../fixtures/skill-file-layout')
@@ -141,4 +143,32 @@ describe.skipIf(chmodCannotBlock)('a skill folder that the rule cannot list', ()
     }
     expect(lint(file).map((m) => m.messageId)).toEqual(['wrongCase'])
   })
+})
+
+// A plugin root that the rule cannot see gives no `skills/` directory to judge.
+describe('a plugin root that the rule cannot see', () => {
+  const lint = (file: string) => lintMarkdown('skill-file-layout', '# Notes\n', file)
+
+  it.skipIf(chmodCannotBlock)('makes no report with no access to .claude-plugin/', () => {
+    const meta = path.join(scratch, 'deny', '.claude-plugin')
+    mkdirSync(meta, { recursive: true })
+    writeFileSync(path.join(meta, 'plugin.json'), '{}')
+    const loose = path.join(scratch, 'deny', 'skills', 'loose.md')
+    expect(lint(loose)).toHaveLength(1)
+    withoutAccess(meta, () => {
+      expect(lint(loose)).toEqual([])
+      expect(lint(path.join(scratch, 'deny', 'skills', 'wrong', 'skill.md'))).toEqual([])
+    })
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'makes no report when .claude-plugin/ is a link out of the repository',
+    () => {
+      mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
+      mkdirSync(path.join(scratch, 'elsewhere'))
+      writeFileSync(path.join(scratch, 'elsewhere', 'plugin.json'), '{}')
+      symlinkSync(path.join(scratch, 'elsewhere'), path.join(scratch, 'repo', '.claude-plugin'))
+      expect(lint(path.join(scratch, 'repo', 'skills', 'loose.md'))).toEqual([])
+    },
+  )
 })

@@ -6,11 +6,13 @@ import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { isPluginRoot } from '../plugin-root.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'command-legacy-format' as const
 
 /** True when `file` is under `.claude/commands/`, or under `commands/`
- *  next to `.claude-plugin/plugin.json`. */
+ *  next to `.claude-plugin/plugin.json`. The walk stops at a plugin root that
+ *  the rule cannot see, and gives false. */
 function isCommandFile(file: string): boolean {
   const parts = path.resolve(file).split(path.sep)
   for (let i = 1; i < parts.length - 1; i++) {
@@ -18,7 +20,14 @@ function isCommandFile(file: string): boolean {
       continue
     }
     const parent = parts.slice(0, i).join(path.sep) || path.sep
-    if (parts[i - 1] === '.claude' || isPluginRoot(parent)) {
+    if (parts[i - 1] === '.claude') {
+      return true
+    }
+    const root = isPluginRoot(parent)
+    if (root === UNREADABLE) {
+      return false
+    }
+    if (root) {
       return true
     }
   }

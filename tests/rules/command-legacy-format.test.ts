@@ -1,11 +1,17 @@
 // The rule reports a file under `.claude/commands/`, or under `commands/`
 // beside `.claude-plugin/plugin.json`.
 // The plugin case needs a real manifest on disk.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll, beforeAll, describe } from 'vitest'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import {
+  chmodCannotBlock,
+  lintMarkdown,
+  markdownTester,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'command-legacy-format-'))
 const plugin = path.join(scratch, 'plugins', 'p')
@@ -59,4 +65,33 @@ describe('with a plugin root as the working directory', () => {
     valid: [{ code: '# Doc\n', filename: `${path.sep}commands${path.sep}a.md` }],
     invalid: [{ code: '# A\n', filename: path.join('commands', 'a.md'), errors: legacy }],
   })
+})
+
+// A plugin root that the rule cannot see is not a `commands/` directory to judge. The walk
+// stops there, and does not go on to a `.claude/commands/` directory below it.
+describe('a plugin root that the rule cannot see', () => {
+  const lint = (file: string) => lintMarkdown('command-legacy-format', '# A\n', file)
+
+  it.skipIf(chmodCannotBlock)('makes no report with no access to .claude-plugin/', () => {
+    const meta = path.join(scratch, 'deny', '.claude-plugin')
+    mkdirSync(meta, { recursive: true })
+    writeFileSync(path.join(meta, 'plugin.json'), '{}')
+    const nested = path.join(scratch, 'deny', 'commands', '.claude', 'commands', 'a.md')
+    expect(lint(path.join(scratch, 'deny', 'commands', 'a.md'))).toHaveLength(1)
+    withoutAccess(meta, () => {
+      expect(lint(path.join(scratch, 'deny', 'commands', 'a.md'))).toEqual([])
+      expect(lint(nested)).toEqual([])
+    })
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'makes no report when .claude-plugin/ is a link out of the repository',
+    () => {
+      mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
+      mkdirSync(path.join(scratch, 'elsewhere'))
+      writeFileSync(path.join(scratch, 'elsewhere', 'plugin.json'), '{}')
+      symlinkSync(path.join(scratch, 'elsewhere'), path.join(scratch, 'repo', '.claude-plugin'))
+      expect(lint(path.join(scratch, 'repo', 'commands', 'a.md'))).toEqual([])
+    },
+  )
 })

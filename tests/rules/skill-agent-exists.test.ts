@@ -369,3 +369,63 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     withoutAccess(path.dirname(manifest), () => expect(ghost(file)).toEqual([]))
   })
 })
+
+// A manifest that the rule cannot see can hold an `agents` key, and a plugin that the rule
+// cannot see is not a plugin to judge. The rule makes no report for either.
+describe('a plugin manifest that the rule cannot see', () => {
+  const ghost = (filename: string) => lintMarkdown('skill-agent-exists', fork('ghost'), filename)
+
+  it.skipIf(process.platform === 'win32')(
+    'stays silent when plugin.json is a link out of the repository, with an `agents` key',
+    () => {
+      put('man-link/.git/HEAD', '')
+      put('man-link/agents/a.md', agentFile('a'))
+      put('man-link-target/plugin.json', '{"agents": "./x"}')
+      mkdirSync(path.join(scratch, 'man-link/.claude-plugin'), { recursive: true })
+      symlinkSync(
+        '../../man-link-target/plugin.json',
+        path.join(scratch, 'man-link/.claude-plugin/plugin.json'),
+      )
+      expect(ghost(path.join(scratch, 'man-link/skills/s/SKILL.md'))).toEqual([])
+      expect(ghost(path.join(scratch, 'man-link/commands/c.md'))).toEqual([])
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'stays silent when .claude-plugin/ is a link out of the repository',
+    () => {
+      put('dir-link/.git/HEAD', '')
+      put('dir-link/agents/a.md', agentFile('a'))
+      put('dir-link-target/plugin.json', '{}')
+      symlinkSync('../dir-link-target', path.join(scratch, 'dir-link/.claude-plugin'))
+      expect(ghost(path.join(scratch, 'dir-link/skills/s/SKILL.md'))).toEqual([])
+    },
+  )
+
+  it('still treats a dangling plugin.json link as a plugin with no manifest', () => {
+    put('dangling/agents/a.md', agentFile('a'))
+    mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
+    symlinkSync('missing.json', path.join(scratch, 'dangling/.claude-plugin/plugin.json'))
+    const file = path.join(scratch, 'dangling/skills/s/SKILL.md')
+    expect(ghost(file)).toHaveLength(1)
+    expect(lintMarkdown('skill-agent-exists', fork('a'), file)).toEqual([])
+  })
+
+  describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
+    it('stays silent for a plugin file, and for a plugin root in `.claude/skills/`', () => {
+      put('deny-meta/.git/HEAD', '')
+      put('deny-meta/.claude-plugin/plugin.json', '{}')
+      put('deny-meta/agents/a.md', agentFile('a'))
+      put('deny-meta/.claude/skills/own/.claude-plugin/plugin.json', '{}')
+      // Before the lock, the rule reports the ghost agent, so the silence below comes from the lock.
+      expect(ghost(path.join(scratch, 'deny-meta/skills/s/SKILL.md'))).toHaveLength(1)
+      withoutAccess(path.join(scratch, 'deny-meta/.claude-plugin'), () => {
+        expect(ghost(path.join(scratch, 'deny-meta/skills/s/SKILL.md'))).toEqual([])
+      })
+      // The root `own/` is a plugin, so a project rule does not judge its `SKILL.md`.
+      withoutAccess(path.join(scratch, 'deny-meta/.claude/skills/own/.claude-plugin'), () => {
+        expect(ghost(path.join(scratch, 'deny-meta/.claude/skills/own/SKILL.md'))).toEqual([])
+      })
+    })
+  })
+})

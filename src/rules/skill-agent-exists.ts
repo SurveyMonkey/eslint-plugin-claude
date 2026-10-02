@@ -116,7 +116,8 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
     const bound = repositoryRoot(project)
     const manifest = readManifest(root, bound)
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
-    // A manifest that the rule cannot read can hold the key, so the rule makes no report.
+    // A manifest that the rule cannot see can hold the key, so the rule makes no report. A
+    // manifest that the rule cannot read, or that is out of the repository, is such a manifest.
     if (manifest === UNREADABLE || (manifest !== null && 'agents' in manifest)) {
       return {}
     }

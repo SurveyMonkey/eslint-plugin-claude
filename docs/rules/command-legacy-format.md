@@ -36,6 +36,11 @@ its manifest. Claude Code still loads such a plugin.[^optional] When `plugin.jso
 `commands`, Claude Code does not read the `commands/` directory.[^manifest] The rule still
 reports it.
 
+The rule makes no report in a plugin whose `.claude-plugin/` directory it cannot see. This is the
+case when the rule cannot search that directory, or when its real path is out of the repository.
+The rule then does not look at a `.claude/commands/` directory below that plugin root. A
+`plugin.json` that is a link, even a dangling one, still makes a plugin root.
+
 Fail: `.claude/commands/deploy.md`, `plugins/ops/commands/deploy.md`.
 
 Pass: `.claude/skills/deploy/SKILL.md`, `plugins/ops/skills/deploy/SKILL.md`,

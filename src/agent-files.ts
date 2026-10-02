@@ -1,8 +1,10 @@
 // Find out if a file is a subagent file or an output style file. The globs of
 // the rules are broad, so each rule asks here where the file sits (ADR 001,
-// Decision 10). A plugin root is found by its manifest.
+// Decision 10). A plugin root is found by its manifest. A root that the check
+// cannot see gives null.
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
+import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 
 export interface ClaudeFile {
   /** True when the file is in a plugin. */
@@ -10,17 +12,20 @@ export interface ClaudeFile {
 }
 
 /** Where the directory `dir` sits: in `.claude/`, in a plugin root, or
- *  neither. */
-function scopeOf(dir: string): ClaudeFile | null {
+ *  neither. The result is `UNREADABLE` when the check cannot see the plugin
+ *  root. */
+function scopeOf(dir: string): ClaudeFile | null | Unreadable {
   const parent = path.dirname(dir)
   if (path.basename(parent) === '.claude') {
     return { plugin: false }
   }
-  return isPluginRoot(parent) ? { plugin: true } : null
+  const root = isPluginRoot(parent)
+  return root === UNREADABLE ? UNREADABLE : root ? { plugin: true } : null
 }
 
 /** What `file` is: a subagent file in `.claude/agents/` or in the `agents/`
- *  directory of a plugin, at any depth, or null. */
+ *  directory of a plugin, at any depth, or null. The result is also null when
+ *  the plugin root of the file is unseen. */
 export function classifyAgentFile(file: string): ClaudeFile | null {
   // The deepest `agents/` directory that fits is the one that counts. The
   // loop ends at the root of the file system, which is its own parent.
@@ -33,6 +38,11 @@ export function classifyAgentFile(file: string): ClaudeFile | null {
       continue
     }
     const scope = scopeOf(dir)
+    // The walk stops at a root that the check cannot see. It does not go on to an
+    // `agents/` directory above it.
+    if (scope === UNREADABLE) {
+      return null
+    }
     if (scope !== null) {
       return scope
     }
@@ -41,8 +51,13 @@ export function classifyAgentFile(file: string): ClaudeFile | null {
 }
 
 /** What `file` is: an output style file directly in `.claude/output-styles/`
- *  or in the `output-styles/` directory of a plugin, or null. */
+ *  or in the `output-styles/` directory of a plugin, or null. The result is also
+ *  null when the plugin root of the file is unseen. */
 export function classifyOutputStyle(file: string): ClaudeFile | null {
   const dir = path.dirname(path.resolve(file))
-  return path.basename(dir) === 'output-styles' ? scopeOf(dir) : null
+  if (path.basename(dir) !== 'output-styles') {
+    return null
+  }
+  const scope = scopeOf(dir)
+  return scope === UNREADABLE ? null : scope
 }
