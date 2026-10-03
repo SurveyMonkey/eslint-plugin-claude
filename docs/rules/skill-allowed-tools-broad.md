@@ -20,7 +20,8 @@ Do not give a skill an unscoped tool grant in `allowed-tools`.
 
 ## Rule details
 
-The `allowed-tools` field of a skill grants the tools that it lists, with no prompt, in the turn that invokes the skill.[^preapprove]
+The `allowed-tools` field of a skill grants the tools that it lists. Claude Code asks for no approval in the turn that
+invokes the skill.[^preapprove]
 Workspace trust does not gate the field. Claude Code applies the `allowed-tools` of a project skill even in a `-p` run in a
 folder that you never trusted.[^preapprove] A skill in a repository can grant itself broad access in this way.
 
@@ -30,9 +31,10 @@ The rule reports an entry of `allowed-tools` that grants every use of a tool:
 - `Bash(*)` or `PowerShell(*)`, which the docs make equal to the bare name[^all][^powershell]
 - `mcp__<server>__*` or `mcp__<server>`, which each match every tool of one server[^mcp]
 
-A glob after the tool prefix, such as `mcp__github__get_*`, matches some tools, and the rule does not report it. `mcp__*`
-is no grant: Claude Code skips it in an allow rule.[^mcp] [`permissions-tool-name-glob`](permissions-tool-name-glob.md)
-reports it.
+A glob after the tool prefix, such as `mcp__github__get_*`, matches some tools, and the rule does not report it.[^wildcards]
+`mcp__*` is no grant: Claude Code skips it in an allow rule.[^wildcards]
+[`permissions-tool-name-glob`](permissions-tool-name-glob.md) reports it. The permissions page states the skip for
+settings rules. The skills page shows permission rules in `allowed-tools`.[^preapprove]
 
 The rule reads `allowed-tools` only. The `disallowed-tools` field removes tools, so a broad entry there is safe.
 It reads a space- or comma-separated string, or a YAML list. It reports at the entry.
@@ -82,3 +84,4 @@ allowed-tools: Read Bash(git add *) Bash(git commit *) Edit(docs/**)
 [^all]: [Configure permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)
 [^powershell]: [Configure permissions: PowerShell](https://code.claude.com/docs/en/permissions#powershell)
 [^mcp]: [Configure permissions: MCP](https://code.claude.com/docs/en/permissions#mcp)
+[^wildcards]: [Configure permissions: Tool name wildcards](https://code.claude.com/docs/en/permissions#tool-name-wildcards)

@@ -28,8 +28,9 @@ entries before a run.
 An entry is one of these:
 
 - a tool name from the tools table, such as `Read`. The name is case-sensitive.
-- `Agent`, or `Agent(type, type)` in `tools`, which limits the types that an agent can spawn. `Task` is the old name of
-  `Agent`.[^spawn]
+- `Agent`, or `Agent(type, type)` in `tools`. `Task` is the old name of `Agent`.[^spawn] The type list limits the
+  subagents of an agent that runs as the main thread with `claude --agent`. In a subagent definition, Claude Code
+  ignores it.[^spawn]
 - `mcp__<server>`, `mcp__<server>__*` or `mcp__<server>__<tool>`. The first two grant or remove every tool of a
   server.[^available]
 - `mcp__*`, in `disallowedTools` only. It removes every MCP tool of any server.[^available]

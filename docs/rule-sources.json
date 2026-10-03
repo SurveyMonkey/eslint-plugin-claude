@@ -453,6 +453,11 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
       "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Tool name wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286"
     }
   ],
   "skill-allowed-tools-ineffective": [

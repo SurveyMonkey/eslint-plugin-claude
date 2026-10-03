@@ -44,11 +44,11 @@ rule reads the tool name of an entry with a specifier. It skips an entry that do
 [`agent-tools-known`](agent-tools-known.md) reports those.
 
 A subagent that has no `background` field runs in the background by default, and Claude Code removes the same tools. The
-rule does not report that case, because the run mode is not in the file. It reports `background: true` only. The
-inventory lists a later rule for it, `agent-tools-conditional`.
+rule does not report that case, because the run mode is not in the file. It reports `background: true` only. A later
+rule may report it.
 
 The rule reads a plugin agent as well. The docs say Claude Code ignores `permissionMode` for a plugin subagent. The rule
-cannot tell that, so it does not report `ExitPlanMode` when `permissionMode` is `plan`.
+does not use the plugin flag of the file, so it does not report `ExitPlanMode` when `permissionMode` is `plan`.
 
 Fail:
 
