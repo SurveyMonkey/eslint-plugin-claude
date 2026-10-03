@@ -1,6 +1,7 @@
 // `tools` and `disallowedTools` in a subagent file list tool names. Claude
-// Code drops an entry that names no tool, and it refuses to launch a subagent
-// whose `tools` list resolves to nothing (docs/rules/agent-tools-known.md).
+// Code drops an entry that names no tool, and it usually refuses to launch a
+// subagent whose `tools` list resolves to nothing
+// (docs/rules/agent-tools-known.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
 import { MCP_PREFIX, OTHER_RULE_TOOL_NAMES, TOOL_NAMES } from '../data/tool-names.ts'
@@ -35,7 +36,7 @@ const rule: MarkdownRuleDefinition<{
         '`{{entry}}` is not a tool name or a rule of the form Tool(specifier). Claude Code does not resolve it.',
       unknown: 'Claude Code has no tool named "{{tool}}", so it does not resolve this entry.',
       specifier:
-        '`tools` takes a tool name only. Only `Agent(type)` takes parentheses here. A specifier such as `{{entry}}` is for `disallowedTools`.',
+        '`tools` takes a tool name only. Only `Agent(type)` and its old name `Task(type)` take parentheses here. A specifier such as `{{entry}}` is for `disallowedTools`.',
       anyMcp:
         '`mcp__*` is for `disallowedTools`. Name a server, as in `mcp__<server>`, in `tools`.',
     },

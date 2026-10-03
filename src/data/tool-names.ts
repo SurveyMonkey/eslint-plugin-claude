@@ -2,9 +2,9 @@
 // the tools reference (https://code.claude.com/docs/en/tools-reference#tools-reference)
 // and its rule format table
 // (https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks),
-// checked on Claude Code 2.1.287. Review this list on or before 2027-03-29,
-// the `stale_after` date of docs/rules-inventory.md. The names are
-// case-sensitive.
+// checked on Claude Code 2.1.287. Review this file, with the subagent lists
+// below, on or before 2027-03-29, the `stale_after` date of
+// docs/rules-inventory.md. The names are case-sensitive.
 
 /** The built-in tools, from the "Tool" column of the tools table. */
 export const TOOL_NAMES: readonly string[] = [

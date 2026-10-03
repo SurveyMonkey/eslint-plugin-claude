@@ -38,7 +38,8 @@ list. A space inside parentheses does not split a rule. The rule reports at the 
 field. It skips a field that is neither a string nor a list. It does not read the `tools` field of a subagent.
 [`agent-tools-known`](agent-tools-known.md) checks that field.
 
-The docs state that Claude Code skips such a rule when it loads a settings file. They do not state this for a skill. The rule applies the same check to a skill, because the skills page shows permission rules in `allowed-tools`.
+The docs state that Claude Code skips such a rule when it loads a settings file. They do not state this for a skill.
+The rule applies the same check to a skill, because the skills page shows permission rules in `allowed-tools`.
 
 Fail:
 

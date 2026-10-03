@@ -28,21 +28,20 @@ the namespace does not match the names inside it. The docs give an example: `Ski
 The rule reports an `allow` rule of the form `Skill(<prefix> *)` when the prefix:
 
 - starts with `anthropic`
-- is shorter than `anthropic-skills`
-- is the start of `anthropic-skills`
+- is a start of `anthropic-skills`, and is not `anthropic-skills`
 
-`Skill(anthropic *)`, `Skill(anthropic- *)` and `Skill(anthropic-skill *)` fit. `Skill(anthropic-skills *)` and
-`Skill(anthropic-skills:pdf)` do not. A shorter prefix such as `a` is a common start for the name of a local skill, so the
-rule skips it.
+The rule reports `Skill(anthropic *)`, `Skill(anthropic- *)` and `Skill(anthropic-skill *)`. It does not report
+`Skill(anthropic-skills *)` or `Skill(anthropic-skills:pdf)`. A shorter prefix such as `a` is a common start for the name
+of a local skill, so the rule skips it.
 
 The docs state the namespace limit for `allow` rules. The rule does not read `ask` and `deny`. A `deny` rule can block a
 skill by an alias or an unqualified name, as the same section says. The docs state no other fault in the form of a `Skill`
 rule, so the rule checks no other form.
 
-The rule reads `permissions.allow` of a settings file, and `allowed-tools` of a skill or command file. It does not read
-`disallowed-tools`, because that field is a deny list. It skips a string that does not parse.
-[`permissions-rule-syntax`](permissions-rule-syntax.md) reports it. It reads the fields of a skill as the grammar rules do:
-a space- or comma-separated string, or a YAML list.
+The rule reads `permissions.allow` of a settings file, and `allowed-tools` of a skill or command file. It reads a skill
+field as the grammar rules do: a space- or comma-separated string, or a YAML list. It does not read `disallowed-tools`,
+because that field is a deny list. The rule skips a string that does not parse.
+[`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
 
 Fail:
 

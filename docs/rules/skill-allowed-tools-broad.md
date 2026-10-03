@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-allowed-tools-broad, which reports an unscoped grant in the allowed-tools of a skill or command file, such as a bare Bash, Write or Edit, or an mcp__ wildcard, because Claude Code applies it with no workspace trust.
+description: The ESLint rule claude/skill-allowed-tools-broad, which reports an unscoped grant in the allowed-tools of a skill or command file, such as a bare Bash, Write or Edit, or a rule for a whole MCP server, because Claude Code applies it with no workspace trust.
 owner: brianespinosa
 created: 2026-10-02
 related_issues: [9, 15]
@@ -22,13 +22,17 @@ Do not give a skill an unscoped tool grant in `allowed-tools`.
 
 The `allowed-tools` field of a skill grants the tools that it lists, with no prompt, in the turn that invokes the skill.[^preapprove]
 Workspace trust does not gate the field. Claude Code applies the `allowed-tools` of a project skill even in a `-p` run in a
-folder that you never trusted.[^preapprove] A skill in a repository can so grant itself broad access.
+folder that you never trusted.[^preapprove] A skill in a repository can grant itself broad access in this way.
 
 The rule reports an entry of `allowed-tools` that grants every use of a tool:
 
 - a bare `Bash`, `PowerShell`, `Write`, `Edit` or `WebFetch`
 - `Bash(*)` or `PowerShell(*)`, which the docs make equal to the bare name[^all][^powershell]
-- an `mcp__` name that has `*`, such as `mcp__github__*`[^mcp]
+- `mcp__<server>__*` or `mcp__<server>`, which each match every tool of one server[^mcp]
+
+A glob after the tool prefix, such as `mcp__github__get_*`, matches some tools, and the rule does not report it. `mcp__*`
+is no grant: Claude Code skips it in an allow rule.[^mcp] [`permissions-tool-name-glob`](permissions-tool-name-glob.md)
+reports it.
 
 The rule reads `allowed-tools` only. The `disallowed-tools` field removes tools, so a broad entry there is safe.
 It reads a space- or comma-separated string, or a YAML list. It reports at the entry.
@@ -58,7 +62,7 @@ Pass:
 
 ```markdown
 ---
-allowed-tools: Read Bash(git add *) Bash(git commit *) Write(docs/**)
+allowed-tools: Read Bash(git add *) Bash(git commit *) Edit(docs/**)
 ---
 ```
 

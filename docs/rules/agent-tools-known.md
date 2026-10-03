@@ -46,12 +46,13 @@ The rule parses each entry with the same parser as the permission rules. It repo
 An empty list gives no report. The docs say that an empty `tools` list launches the subagent with no tools and no
 error.[^zero] A field that is neither a string nor a list gives no report.
 
-The rule splits a string at commas outside parentheses, as the docs say, so `Agent(worker, researcher)` stays whole. It
-does not split at a space. A string such as `Read Grep` is one entry, and the rule reports it. It reports at the entry.
+The docs say that the string is comma-separated. The rule splits it at each comma outside parentheses. So
+`Agent(worker, researcher)` stays whole. The rule does not split at a space. A string such as `Read Grep` is one entry,
+and the rule reports it. It reports at the entry.
 
 The rule accepts each name that starts with `mcp__`, because it cannot know which servers and tools exist. For the other
-names, it uses the list in `src/data/tool-names.ts`, as of Claude Code 2.1.287, and `Task`, `MultiEdit` and `Cd`. These are
-the names that [`permissions-unknown-tool`](permissions-unknown-tool.md) accepts.
+names, it uses the list in `src/data/tool-names.ts`, as of Claude Code 2.1.287, and `Task`, `MultiEdit` and `Cd`. This is
+the base list of [`permissions-unknown-tool`](permissions-unknown-tool.md), without the tools of its option.
 
 The permission grammar rules do not read these fields. Only `disallowedTools` takes a specifier, and the specifier still
 removes the whole tool. So the entries are not permission rules.

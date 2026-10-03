@@ -23,13 +23,13 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **479 candidate rules** in 9 groups. 357 rules go in `recommended`: 214 at `error` and 143 at
+- **478 candidate rules** in 9 groups. 356 rules go in `recommended`: 213 at `error` and 143 at
   `warn`. 122 rules ship `off`, and `strict` turns them on at `warn`.
-- **Silent failure is the largest category.** 149 rules have the category `no-op`. The file loads,
+- **Silent failure is the largest category.** 148 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 15 rules are `partial`: validate reports
-  some of their cases. The other 464 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 463 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -114,7 +114,7 @@ below covers one kind of configuration file, and each rule name starts with its 
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
-| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 149 |
+| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 148 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 49 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 39 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
@@ -130,7 +130,7 @@ below covers one kind of configuration file, and each rule name starts with its 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 479 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 478 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -160,7 +160,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
-| Skills and commands | 16 | 13 | 10 | 39 |
+| Skills and commands | 15 | 13 | 10 | 38 |
 | Subagents and output styles | 17 | 14 | 12 | 43 |
 | Hooks | 20 | 17 | 21 | 58 |
 | Plugin manifest and layout | 28 | 20 | 10 | 58 |
@@ -169,9 +169,9 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 23 | 24 | 16 | 63 |
 | Permissions and sandbox | 38 | 20 | 23 | 81 |
 | MCP and LSP servers | 35 | 12 | 11 | 58 |
-| **Total** | **214** | **143** | **122** | **479** |
+| **Total** | **213** | **143** | **122** | **478** |
 
-By severity, 214 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
+By severity, 213 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
 the 122 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -242,7 +242,7 @@ Decisions on the open questions, made in review of this document:
 
 ### Skills and commands
 
-Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 39 rules: 16 error and 13 warn in `recommended`, and 10 heuristic or opt-in rules `off`.
+Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 38 rules: 15 error and 13 warn in `recommended`, and 10 heuristic or opt-in rules `off`.
 
 Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKILL.md`, `<plugin>/SKILL.md`. CMD = `**/.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`. A rule applies to SKILL only unless its Checks cell names CMD.
 

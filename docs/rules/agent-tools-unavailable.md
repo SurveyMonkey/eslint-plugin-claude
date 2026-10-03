@@ -28,23 +28,27 @@ an entry of `tools` in these cases:
 - The tool is `ExitPlanMode`, and `permissionMode` is not `plan`.
 - `background` is `true`, and the tool is a built-in tool outside the background set.
 
-A background subagent keeps each MCP tool and only some built-in tools. The set is `Read`, `Grep`, `Glob`, `LSP`, `Bash`,
-`PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`,
-`EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`, `SendMessage`, `Artifact` and `SubagentHandback`. `Agent` and
-`ExitPlanMode` follow the first filter wherever the subagent runs. Claude Code removes the other built-in tools with no
-error, unless the removal leaves the `tools` list with nothing.[^available][^zero] The set is in `src/data/tool-names.ts`.
+A background subagent keeps each MCP tool and only some built-in tools. The set is in `src/data/tool-names.ts`:
 
-An entry gets one report. The first case that fits is the one that the rule reports.
+- `Read`, `Grep`, `Glob`, `LSP`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`
+- `WebFetch`, `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`
+- `Monitor`, `TaskStop`, `SendMessage`, `Artifact`, `SubagentHandback`
+
+`Agent` and `ExitPlanMode` follow the first filter wherever the subagent runs. Claude Code removes the other built-in
+tools with no error, unless the removal leaves the `tools` list with nothing.[^available][^zero]
+
+The rule makes one report for each entry. It reports the first case that applies.
 
 The rule reads the `tools` field only. A tool in `disallowedTools` is a removal, and the docs do not call it a fault. The
 rule reads the tool name of an entry with a specifier. It skips an entry that does not parse, and an unknown name.
 [`agent-tools-known`](agent-tools-known.md) reports those.
 
 A subagent that has no `background` field runs in the background by default, and Claude Code removes the same tools. The
-rule does not report that case, because the run mode is not in the file. It reports `background: true` only.
+rule does not report that case, because the run mode is not in the file. It reports `background: true` only. The
+inventory lists a later rule for it, `agent-tools-conditional`.
 
 The rule reads a plugin agent as well. The docs say Claude Code ignores `permissionMode` for a plugin subagent. The rule
-still accepts `permissionMode: plan` there, and reports less.
+cannot tell that, so it does not report `ExitPlanMode` when `permissionMode` is `plan`.
 
 Fail:
 
