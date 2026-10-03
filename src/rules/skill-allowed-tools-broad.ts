@@ -23,8 +23,9 @@ const STAR_BROAD = ['Bash', 'PowerShell']
 
 /** `mcp__<server>__*` and `mcp__<server>`. The permissions page says that
  *  each matches every tool of the server. A glob after the tool prefix, such
- *  as `mcp__<server>__get_*`, matches some tools. `mcp__*` is no grant: Claude
- *  Code skips it in an allow rule, and `permissions-tool-name-glob` reports it. */
+ *  as `mcp__<server>__get_*`, matches some tools. `mcp__*` is no grant.
+ *  Claude Code skips it in an allow rule, and `permissions-tool-name-glob`
+ *  reports it (the "Tool name wildcards" section of the permissions page). */
 const MCP_SERVER_GRANT = /^mcp__(?:(?!__)[^*])+(?:__\*)?$/
 
 /** True when `rule` grants every use of a tool, or every tool of an MCP

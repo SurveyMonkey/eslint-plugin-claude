@@ -249,14 +249,36 @@ markdownTester.run('permissions-unknown-tool in skill files', rule, {
         { messageId: 'unknown', line: 4, column: 3, endColumn: 9 },
       ],
     },
-    // An entry that the text does not hold keeps the search position of the entries after it.
+    // An entry that the text does not hold sends each later entry of the item to the whole item.
+    // The position of the missed entry is not known, so a later match could lie inside it.
     {
       ...skill('allowed-tools: "Bogus \\u0041B Bogus"\n'),
       errors: [
         { messageId: 'unknown', data: { tool: 'AB' }, column: 16, endColumn: 37 },
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 16, endColumn: 37 },
         { messageId: 'unknown', data: { tool: 'Bogus' }, column: 17, endColumn: 22 },
-        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 31, endColumn: 36 },
       ],
+    },
+    // A plain string folded over two lines does not hold the first entry as written. The second
+    // entry would match inside the first, so it is reported at the whole value.
+    {
+      ...skill('allowed-tools: Bogus(a\n  b) Bogus\n'),
+      errors: [
+        { messageId: 'unknown', line: 2, column: 16, endLine: 3, endColumn: 11 },
+        { messageId: 'unknown', line: 2, column: 16, endLine: 3, endColumn: 11 },
+      ],
+    },
+    // A tab separates entries, and a trailing comment is not part of the report.
+    {
+      ...skill('allowed-tools: Bogus1\tBogus2 # Bogus2\n'),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'Bogus1' }, column: 16, endColumn: 22 },
+        { messageId: 'unknown', data: { tool: 'Bogus2' }, column: 23, endColumn: 29 },
+      ],
+    },
+    {
+      ...skill('allowed-tools:\n  - "Bogus\\x28a)" # Bogus\n'),
+      errors: [{ messageId: 'unknown', line: 3, column: 5, endColumn: 18 }],
     },
     {
       ...skill('allowed-tools: Bogus Bogus\n'),

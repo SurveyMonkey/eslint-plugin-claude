@@ -1,4 +1,4 @@
-// The entries of a frontmatter field that holds a list of tools, such as
+// The entries of a frontmatter field that holds a list of tools. Examples are
 // `allowed-tools` in a skill and `tools` in a subagent. The docs accept a
 // string or a YAML list. The helper gives each entry with its location, so a
 // rule reports at the entry. `skill-frontmatter.ts` reads the frontmatter.
@@ -19,7 +19,8 @@ export type Separator = (char: string) => boolean
 /** A skill separates entries with a space or a comma. */
 export const SPACE_OR_COMMA: Separator = (char) => /[\s,]/.test(char)
 
-/** A subagent separates entries with a comma only. */
+/** The sub-agents page gives a comma-separated string, so a subagent splits
+ *  at a comma only. */
 export const COMMA: Separator = (char) => char === ','
 
 /** The entries of one string. An entry ends at a separator outside
@@ -43,12 +44,18 @@ function splitList(text: string, separator: Separator): string[] {
 }
 
 /** The entries of the field `key`. `yaml` is the text that `fm` was read from.
- *  An entry is found in the text of its list item, or of the field when the
- *  value is a string, so a report points at the entry. A comment or another
- *  item cannot hold the match. When the text does not hold the entry as
- *  written, such as a quoted string with an escape, the report points at the
- *  whole item. A value that is neither a string nor a list gives no entry,
- *  and nor does a list item that is not a string. */
+ *  The search for an entry covers the text of its list item. For a string
+ *  value, it covers the text of the field. So a report points at the entry,
+ *  and a comment or another item cannot hold the match.
+ *
+ *  Sometimes the text does not hold an entry as written. A quoted string with
+ *  an escape is one case. A plain string folded over two lines is another. The
+ *  report for that entry then points at the whole item. The same is true for
+ *  each later entry of the item: the position of a missed entry is not known,
+ *  so a later match could lie inside it.
+ *
+ *  A value that is neither a string nor a list gives no entry. A list item
+ *  that is not a string gives none either. */
 export function listEntries(
   fm: SkillFrontmatter,
   yaml: string,
@@ -73,12 +80,15 @@ export function listEntries(
     ]
     const raw = yaml.slice(start, end)
     let cursor = 0
+    let missed = false
     return splitList(item, separator).map((text) => {
-      const found = raw.indexOf(text, cursor)
-      cursor = found === -1 ? cursor : found + text.length
-      const loc =
-        found === -1 ? fm.at(start, end) : fm.at(start + found, start + found + text.length)
-      return { text, loc }
+      const found = missed ? -1 : raw.indexOf(text, cursor)
+      if (found === -1) {
+        missed = true
+        return { text, loc: fm.at(start, end) }
+      }
+      cursor = found + text.length
+      return { text, loc: fm.at(start + found, start + found + text.length) }
     })
   })
 }

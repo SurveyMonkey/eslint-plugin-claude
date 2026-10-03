@@ -1,6 +1,6 @@
-// `tools` and `disallowedTools` in a subagent file list tool names. Claude
-// Code drops an entry that names no tool, and it usually refuses to launch a
-// subagent whose `tools` list resolves to nothing
+// `tools` and `disallowedTools` in a subagent file list tool names. An entry
+// that names no tool does not resolve. When no entry of `tools` resolves,
+// Claude Code usually refuses to launch the subagent
 // (docs/rules/agent-tools-known.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'

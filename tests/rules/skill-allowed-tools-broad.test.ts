@@ -22,6 +22,8 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
     // The permissions page: `mcp__github__get_*` matches the `get_` tools only. Claude Code skips
     // `mcp__*` in an allow rule, and `permissions-tool-name-glob` reports it.
     file('allowed-tools: mcp__github__get_* mcp__*\n'),
+    // An empty server name is no server.
+    file('allowed-tools: mcp__ mcp____*\n'),
     // A rule with parentheses on an MCP name is for `permissions-mcp-rule-parens`.
     file('allowed-tools: mcp__github__*(x)\n'),
     // The docs state the bare form for these tools and the `(*)` form for Bash and PowerShell only.
@@ -62,6 +64,20 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
         { messageId: 'broad', data: { rule: 'mcp__github__*' } },
         { messageId: 'broad', data: { rule: 'mcp__puppeteer' } },
       ],
+    },
+    // A server name can hold `_` and `-`. Claude.ai connectors are `mcp__claude_ai_<server>`.
+    {
+      ...file('allowed-tools: mcp__my_server mcp__my-server__* mcp__claude_ai_Slack__*\n'),
+      errors: [
+        { messageId: 'broad', data: { rule: 'mcp__my_server' } },
+        { messageId: 'broad', data: { rule: 'mcp__my-server__*' } },
+        { messageId: 'broad', data: { rule: 'mcp__claude_ai_Slack__*' } },
+      ],
+    },
+    // A missed entry sends each later entry to the whole value, so the report is never inside it.
+    {
+      ...file('allowed-tools: Bash(git\n  add *) Bash\n'),
+      errors: [{ messageId: 'broad', line: 2, column: 16, endLine: 3, endColumn: 14 }],
     },
     {
       ...file('allowed-tools:\n  - Bash\n  - Read\n', '.claude/commands/c.md'),
