@@ -132,10 +132,11 @@ const GRAMMAR_RULES = [
 
 // The rules that read the settings files and the tool lists of skills. Each has one block for
 // JSON and one for Markdown, in that order.
-const TOOL_LIST_BLOCKS = [...GRAMMAR_RULES, 'permissions-skill-rule'].flatMap((rule) => [
-  rule,
-  rule,
-])
+// `permissions-mcp-rule-parens` reads settings files only (ruling 17), so it has one block.
+const SETTINGS_ONLY = 'permissions-mcp-rule-parens'
+const TOOL_LIST_BLOCKS = [...GRAMMAR_RULES, 'permissions-skill-rule'].flatMap((rule) =>
+  rule === SETTINGS_ONLY ? [rule] : [rule, rule],
+)
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -197,7 +198,9 @@ const EXPECTED = [
     [...GRAMMAR_RULES, 'permissions-skill-rule'].map((rule) => `${file}: claude/${rule}@2`),
   ),
   // The grammar rules also read the tool lists of a skill file. A subagent has none of that.
-  ...GRAMMAR_RULES.map((rule) => `.claude/skills/grammar/SKILL.md: claude/${rule}@2`),
+  ...GRAMMAR_RULES.filter((rule) => rule !== SETTINGS_ONLY).map(
+    (rule) => `.claude/skills/grammar/SKILL.md: claude/${rule}@2`,
+  ),
   '.claude/commands/allowed.md: claude/command-legacy-format@1',
   '.claude/commands/allowed.md: claude/permissions-unknown-tool@2',
   'plugins/p/commands/allowed.md: claude/command-legacy-format@1',
@@ -314,7 +317,9 @@ describe('configs', () => {
   })
 
   it('gives each tool-list rule one JSON block and one Markdown block', () => {
-    for (const rule of [...GRAMMAR_RULES, 'permissions-skill-rule']) {
+    for (const rule of [...GRAMMAR_RULES, 'permissions-skill-rule'].filter(
+      (r) => r !== SETTINGS_ONLY,
+    )) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${rule}`,
       )

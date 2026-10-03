@@ -107,13 +107,10 @@ describe('the grammar rules together, in skill frontmatter', () => {
   })
 
   it('reports a rule that parses from each rule that it breaks', () => {
+    // `permissions-mcp-rule-parens` lints settings files only (ruling 17), so `mcp__a(x)` is silent.
     const fields = 'allowed-tools: mcp__a(x)\ndisallowed-tools:\n  - Bash(command:x)\n'
-    expect(lintFrontmatter(fields, SKILL).sort()).toEqual([
-      'claude/permissions-mcp-rule-parens',
-      'claude/permissions-param-rule',
-    ])
-    expect(lintFrontmatter(fields, '.claude/commands/c.md').sort()).toEqual([
-      'claude/permissions-mcp-rule-parens',
+    expect(lintFrontmatter(fields, SKILL)).toEqual(['claude/permissions-param-rule'])
+    expect(lintFrontmatter(fields, '.claude/commands/c.md')).toEqual([
       'claude/permissions-param-rule',
     ])
   })

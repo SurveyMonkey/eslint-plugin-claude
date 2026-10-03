@@ -208,7 +208,7 @@ The groups were written apart, so some checks came out twice. Each one now lives
 | `settings-teammate-mode` | Subagents and output styles | `settings-schema` |
 | `settings-teammate-default-model` | Subagents and output styles | `settings-key-scope` |
 | `plugin-commands-dir-legacy` | Plugin manifest and layout | `command-legacy-format` |
-| `skill-allowed-tools-syntax` | Skills and commands | the permission grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-mcp-rule-parens`, `permissions-param-rule`) |
+| `skill-allowed-tools-syntax` | Skills and commands | the permission grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) |
 
 
 ## Decisions
@@ -816,7 +816,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 81 rules: 58 in `recommended` (38 error, 20 warn) and 23 `off`.
 
-The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-mcp-rule-parens`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list), and hook `if`. The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). The hooks group refers to the grammar rules by name. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-available-tools]. So `agent-tools-known` owns both agent fields.
+The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list), and hook `if`. `permissions-mcp-rule-parens` stays on settings files, because the docs state the skip for a settings file only (ruling 17). The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). The hooks group refers to the grammar rules by name. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-available-tools]. So `agent-tools-known` owns both agent fields.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|

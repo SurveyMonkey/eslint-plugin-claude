@@ -168,7 +168,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook lifecycle",
-      "hash": "2f7b2883c519d0d9e2eae1a328b188595ce28e2ca69666f59a2db405fe72972b"
+      "hash": "3e05b8f19cf85ffa90518190289ab914237dd1476928ad10dab9ab676f794751"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
@@ -220,16 +220,6 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
       "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Pre-approve tools for a skill",
-      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Frontmatter reference",
-      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "permissions-param-rule": [
