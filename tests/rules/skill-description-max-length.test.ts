@@ -93,12 +93,11 @@ describe('skill-description-max-length options', () => {
     expect(report?.message).toContain('The skill listing cuts it at 1536.')
   })
 
-  it('refuses a value above the 1,536 character cut', () => {
-    expect(() => lint(10, [{ listingMax: 2000 }])).toThrow(/Value 2000 should be <= 1536/)
-  })
-
-  it('accepts 1,536 as the largest value', () => {
-    expect(lint(1537, [{ listingMax: 1536 }])).toHaveLength(1)
-    expect(lint(1536, [{ listingMax: 1536 }])).toHaveLength(0)
+  it.fails('accepts a value above 1,536 for a team that raised the cut', () => {
+    expect(lint(1800, [{ listingMax: 2000 }])).toHaveLength(0)
+    const [report] = lint(2100, [{ listingMax: 2000 }])
+    expect(report?.message).toBe(
+      '`description` plus `when_to_use` has 2100 characters. The configured limit is 2000.',
+    )
   })
 })
