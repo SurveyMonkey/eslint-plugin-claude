@@ -1,13 +1,14 @@
 // Claude Code skips an `mcp__` rule that has parentheses when it loads a
 // settings file (docs/rules/permissions-mcp-rule-parens.md).
-import type { JSONRuleDefinition } from '@eslint/json'
+import type { Rule } from 'eslint'
 import { MCP_PREFIX } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { parsedEntries } from '../permission-entries.ts'
+import { permissionListener, SETTINGS_FILES, SKILL_TARGET } from '../permission-listener.ts'
 
 const name = 'permissions-mcp-rule-parens' as const
 
-const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
+const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
@@ -20,21 +21,21 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
     },
   },
   create(context) {
-    return {
-      Document(node) {
-        for (const { node: entry, rule: parsed } of parsedEntries(node)) {
-          if (parsed.tool.startsWith(MCP_PREFIX) && parsed.specifier !== null) {
-            context.report({ node: entry, messageId: 'parens' })
-          }
+    return permissionListener(context, (entries) => {
+      for (const { loc, rule: parsed } of parsedEntries(entries)) {
+        if (parsed.tool.startsWith(MCP_PREFIX) && parsed.specifier !== null) {
+          context.report({ loc, messageId: 'parens' })
         }
-      },
-    }
+      }
+    })
   },
 }
 
 export default {
   name,
   language: 'json' as const,
-  files: ['**/.claude/settings.json', '**/.claude/settings.local.json'],
+  files: SETTINGS_FILES,
+  // The same rule, for the files that the Markdown language reads.
+  also: SKILL_TARGET,
   rule,
 }

@@ -1,5 +1,6 @@
 // Each valid form is from the permissions page, "Permission rule syntax".
-import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { json5Tester, jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-rule-syntax')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -82,6 +83,57 @@ json5Tester.run('permissions-rule-syntax (JSON5)', rule, {
     {
       code: "{ permissions: { deny: ['Bash('] } }",
       errors: [{ messageId: 'unbalanced' }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-rule-syntax in skill files', rule, {
+  valid: [
+    skill('allowed-tools: Bash Bash(npm run *) WebFetch(domain:example.com) mcp__a__*\n'),
+    // Parentheses inside a specifier are literal.
+    skill('allowed-tools: Edit(./Finance (2024)/**)\n'),
+    skill('allowed-tools: Read,Grep\n'),
+    skill('allowed-tools:\n  - Read\n  - Grep\n'),
+    skill('allowed-tools: 3\n'),
+    skill('allowed-tools: [3, null, [Read(], {a: 1}]\n'),
+    skill('description: Bash(\n'),
+    skill('allowed-tools:\n'),
+    skill('allowed-tools: Bash(\n', 'docs/SKILL.md'),
+    { code: '# No frontmatter\n', filename: '.claude/skills/s/SKILL.md' },
+    skill('allowed-tools: [unclosed\n'),
+  ],
+  invalid: [
+    {
+      ...skill('allowed-tools: Read Bash(git add *\n'),
+      errors: [{ messageId: 'unbalanced', line: 2, column: 21, endColumn: 35 }],
+    },
+    {
+      ...skill('disallowed-tools:\n  - (x)\n  - Read(a)b\n', '.claude/commands/c.md'),
+      errors: [
+        { messageId: 'emptyTool', line: 3, column: 5, endColumn: 8 },
+        { messageId: 'trailingText', line: 4, column: 5, endColumn: 13 },
+      ],
+    },
+    {
+      ...skill('allowed-tools: [Read(a)b, "Bash\\0"]\n', pluginSkill()),
+      // The NUL byte is an escape in the text, so its report covers the whole value.
+      errors: [
+        { messageId: 'nulByte', column: 16, endColumn: 36 },
+        { messageId: 'trailingText', column: 17, endColumn: 25 },
+      ],
+    },
+    // A stray closing parenthesis ends nothing: the rule reads as one string.
+    {
+      ...skill('allowed-tools: Read) Grep\n'),
+      errors: [{ messageId: 'unbalanced', column: 16, endColumn: 21 }],
     },
   ],
 })

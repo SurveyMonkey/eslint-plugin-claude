@@ -121,3 +121,55 @@ export const MCP_PREFIX = 'mcp__'
 
 /** The separator between the server and the tool in an MCP tool name. */
 export const MCP_SEPARATOR = '__'
+
+/** The tools that Claude Code removes from every subagent, even when the
+ *  `tools` field lists them. `Agent` at the depth limit and `ExitPlanMode`
+ *  outside plan mode are conditional, so they are not here. Source: the first
+ *  filter of the "Available tools" section
+ *  (https://code.claude.com/docs/en/sub-agents#available-tools), checked on
+ *  2026-10-02. */
+export const SUBAGENT_REMOVED_TOOLS: readonly string[] = [
+  'AskUserQuestion',
+  'EndConversation',
+  'EnterPlanMode',
+  'ScheduleWakeup',
+  'WaitForMcpServers',
+  'Workflow',
+]
+
+/** The tool that a subagent keeps only when its `permissionMode` is `plan`.
+ *  Source: the same section. */
+export const SUBAGENT_PLAN_MODE_TOOL = 'ExitPlanMode'
+
+/** The built-in tools that a background subagent keeps. Claude Code removes
+ *  every other built-in tool from it, whether inherited or listed in `tools`.
+ *  `Agent` and `ExitPlanMode` follow the conditions of the first filter
+ *  wherever the subagent runs, so the second filter keeps them. Source: the
+ *  second filter of the "Available tools" section
+ *  (https://code.claude.com/docs/en/sub-agents#available-tools), checked on
+ *  2026-10-02. */
+export const BACKGROUND_TOOL_NAMES: readonly string[] = [
+  'Agent',
+  'Artifact',
+  'Bash',
+  'Edit',
+  'EnterWorktree',
+  'ExitPlanMode',
+  'ExitWorktree',
+  'Glob',
+  'Grep',
+  'LSP',
+  'Monitor',
+  'NotebookEdit',
+  'PowerShell',
+  'Read',
+  'SendMessage',
+  'Skill',
+  'SubagentHandback',
+  'TaskStop',
+  'TodoWrite',
+  'ToolSearch',
+  'WebFetch',
+  'WebSearch',
+  'Write',
+]

@@ -9,6 +9,8 @@ import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
 import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
+import agentToolsKnown from './rules/agent-tools-known.ts'
+import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
@@ -17,10 +19,12 @@ import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
+import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
+import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
 import skillFileLayout from './rules/skill-file-layout.ts'
@@ -57,6 +61,7 @@ const modules = [
   skillPluginVarsOutsidePlugin,
   skillInjectBangPosition,
   skillAllowedToolsIneffective,
+  skillAllowedToolsBroad,
   skillPluginRootShadowed,
   skillFileLayout,
   skillReferenceExists,
@@ -69,6 +74,8 @@ const modules = [
   agentMcpServersSchema,
   agentPermissionModeBypass,
   agentMemoryGrantsWrite,
+  agentToolsKnown,
+  agentToolsUnavailable,
   agentTeamsNoProjectConfig,
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
@@ -79,6 +86,7 @@ const modules = [
   permissionsPathRuleTool,
   permissionsMcpRuleParens,
   permissionsParamRule,
+  permissionsSkillRule,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -117,6 +125,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-plugin-vars-outside-plugin': 'error',
   'skill-inject-bang-position': 'error',
   'skill-allowed-tools-ineffective': 'error',
+  'skill-allowed-tools-broad': 'error',
   'skill-plugin-root-shadowed': 'error',
   'skill-file-layout': 'error',
   'skill-reference-exists': 'error',
@@ -129,6 +138,8 @@ const recommended: Record<RuleName, Severity> = {
   'agent-mcp-servers-schema': 'error',
   'agent-permission-mode-bypass': 'error',
   'agent-memory-grants-write': 'error',
+  'agent-tools-known': 'error',
+  'agent-tools-unavailable': 'error',
   'agent-teams-no-project-config': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
@@ -139,6 +150,7 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-path-rule-tool': 'error',
   'permissions-mcp-rule-parens': 'error',
   'permissions-param-rule': 'error',
+  'permissions-skill-rule': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

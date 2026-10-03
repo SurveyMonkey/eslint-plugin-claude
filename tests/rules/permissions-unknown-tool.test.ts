@@ -12,7 +12,8 @@ import {
   TOOL_NAMES,
 } from '../../src/data/tool-names.ts'
 import plugin from '../../src/index.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-unknown-tool')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -177,6 +178,74 @@ jsonTester.run('permissions-unknown-tool', rule, {
       filename: '.claude/settings.json',
       options: [{ additionalTools: ['FutureTool'] }],
       errors: [{ messageId: 'unknown', data: { tool: 'Bogus' } }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-unknown-tool in skill files', rule, {
+  valid: [
+    // The example of the skills page.
+    skill('allowed-tools: Bash(git add *) Bash(git commit *) Bash(git status *)\n'),
+    skill('allowed-tools: Read, Grep\n'),
+    skill('allowed-tools:\n  - Read\n  - mcp__a__b\n  - Task\n'),
+    skill('disallowed-tools: AskUserQuestion\n'),
+    skill('allowed-tools: Bash(\n'),
+    skill('allowed-tools: 3\n'),
+    skill('allowed-tools: [3, Read]\n'),
+    skill('allowed-tools:\n'),
+    skill('allowed-tools: Bogus\n', 'docs/SKILL.md'),
+    { code: '# No frontmatter\n', filename: '.claude/skills/s/SKILL.md' },
+    skill('allowed-tools: [unclosed\n'),
+    { ...skill('allowed-tools: Extra\n'), options: [{ additionalTools: ['Extra'] }] },
+  ],
+  invalid: [
+    {
+      ...skill('allowed-tools: Read Bogus\n'),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'Bogus' }, line: 2, column: 21, endColumn: 26 },
+      ],
+    },
+    {
+      ...skill('allowed-tools: bash(git add *)\n'),
+      errors: [{ messageId: 'wrongCase', data: { tool: 'bash', known: 'Bash' }, column: 16 }],
+    },
+    // The list form reports at the entry.
+    {
+      ...skill('allowed-tools:\n  - Read\n  - Grpe\n', '.claude/commands/c.md'),
+      errors: [{ messageId: 'unknown', line: 4, column: 5, endColumn: 9 }],
+    },
+    // A comma separates two entries, and a space inside parentheses does not.
+    {
+      ...skill('disallowed-tools: Bogus,Read ,  Other(a b)\n', pluginSkill()),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 19 },
+        { messageId: 'unknown', data: { tool: 'Other' }, column: 33 },
+      ],
+    },
+    // The text of an escaped string does not hold the entry as written: the report covers the value.
+    {
+      ...skill('allowed-tools: "Bogus\\x28a)"\n'),
+      errors: [{ messageId: 'unknown', data: { tool: 'Bogus' }, column: 16, endColumn: 29 }],
+    },
+    {
+      ...skill('allowed-tools: Bogus Bogus\n'),
+      errors: [
+        { messageId: 'unknown', column: 16, endColumn: 21 },
+        { messageId: 'unknown', column: 22, endColumn: 27 },
+      ],
+    },
+    {
+      ...skill('allowed-tools: Bad\n'),
+      options: [{ additionalTools: ['Other'] }],
+      errors: [{ messageId: 'unknown' }],
     },
   ],
 })

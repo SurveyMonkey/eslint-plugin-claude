@@ -1,35 +1,47 @@
-// The permission rules in a settings file: each string in `permissions.allow`,
-// `permissions.ask` and `permissions.deny`. The grammar rules share this
-// reader, so each one reports at the node of the entry. It reads the JSON
-// tree. The grammar itself is in `permission-rule.ts`.
+// The permission rules in a file, from two sources. A settings file holds each
+// string in `permissions.allow`, `permissions.ask` and `permissions.deny`. A
+// skill or command file holds the rules of `allowed-tools`, which is an
+// `allow` list, and of `disallowed-tools`, which is a `deny` list. The grammar
+// rules share this reader, so each one reports at the location of the entry.
+// The grammar itself is in `permission-rule.ts`.
 import type { JSONRuleVisitor } from '@eslint/json'
+import type { AST } from 'eslint'
+import { listEntries, SPACE_OR_COMMA } from './frontmatter-list.ts'
 import {
   type ParsedRule,
   type ParseResult,
   paramName,
   parsePermissionRule,
 } from './permission-rule.ts'
+import type { SkillFrontmatter } from './skill-frontmatter.ts'
 
 type DocumentNode = Parameters<NonNullable<JSONRuleVisitor['Document']>>[0]
-type StringNode = Parameters<NonNullable<JSONRuleVisitor['String']>>[0]
 type ObjectNode = Parameters<NonNullable<JSONRuleVisitor['Object']>>[0]
 type ValueNode = ObjectNode['members'][number]['value']
 
 type PermissionList = 'allow' | 'ask' | 'deny'
 const LISTS: readonly PermissionList[] = ['allow', 'ask', 'deny']
 
+/** The frontmatter field of a skill that holds each list. A skill has no
+ *  `ask` list. */
+const SKILL_FIELDS: readonly (readonly [string, PermissionList])[] = [
+  ['allowed-tools', 'allow'],
+  ['disallowed-tools', 'deny'],
+]
+
 interface EntryBase {
   readonly list: PermissionList
-  readonly node: StringNode
+  /** Where the entry sits in the file. A report uses it as `loc`. */
+  readonly loc: AST.SourceLocation
 }
 
-/** One string entry of a permission list, with the result of its parse. */
-interface PermissionEntry extends EntryBase {
+/** One entry of a permission list, with the result of its parse. */
+export interface PermissionEntry extends EntryBase {
   readonly result: ParseResult
 }
 
 /** An entry that parsed. */
-interface ParsedEntry extends EntryBase {
+export interface ParsedEntry extends EntryBase {
   readonly rule: ParsedRule
 }
 
@@ -63,17 +75,30 @@ export function permissionEntries(document: DocumentNode): PermissionEntry[] {
     }
     return value.elements.flatMap((element) =>
       element.value.type === 'String'
-        ? [{ list, node: element.value, result: parsePermissionRule(element.value.value) }]
+        ? [{ list, loc: element.value.loc, result: parsePermissionRule(element.value.value) }]
         : [],
     )
   })
 }
 
+/** Each rule of `allowed-tools` (as `allow`) and `disallowed-tools` (as
+ *  `deny`) in the frontmatter `fm`. `yaml` is the text that `fm` was read from.
+ *  The docs accept a space- or comma-separated string, or a YAML list. */
+export function skillEntries(fm: SkillFrontmatter, yaml: string): PermissionEntry[] {
+  return SKILL_FIELDS.flatMap(([key, list]) =>
+    listEntries(fm, yaml, key, SPACE_OR_COMMA).map(({ text, loc }) => ({
+      list,
+      loc,
+      result: parsePermissionRule(text),
+    })),
+  )
+}
+
 /** The entries that parse. A rule that does not parse is for
  *  `permissions-rule-syntax` alone. */
-export function parsedEntries(document: DocumentNode): ParsedEntry[] {
-  return permissionEntries(document).flatMap((entry) =>
-    entry.result.ok ? [{ list: entry.list, node: entry.node, rule: entry.result }] : [],
+export function parsedEntries(entries: readonly PermissionEntry[]): ParsedEntry[] {
+  return entries.flatMap((entry) =>
+    entry.result.ok ? [{ list: entry.list, loc: entry.loc, rule: entry.result }] : [],
   )
 }
 
