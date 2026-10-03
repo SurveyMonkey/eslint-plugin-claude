@@ -440,24 +440,31 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     },
   )
 
-  // The dangling link can stand for a manifest with a `commands` key. The rule cannot read it.
-  it.skipIf(process.platform === 'win32')(
-    'reads no commands/ folder when plugin.json is a dangling link',
-    () => {
-      put('dangling/commands/review.md', bare)
-      put('dangling/skills/review/SKILL.md', bare)
-      mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
-      symlinkSync('missing.json', path.join(scratch, 'dangling/.claude-plugin/plugin.json'))
-      const skill = path.join(scratch, 'dangling', 'skills', 'review', 'SKILL.md')
-      const command = path.join(scratch, 'dangling', 'commands', 'review.md')
-      expect(lint(skill, bare)).toEqual([])
-      expect(lint(command, bare)).toEqual([])
-    },
-  )
-
   it('reports a command file that the rule cannot read, because the path gives its name', () => {
     const hidden = put('deny-command/.claude/commands/dup.md', bare)
     const file = path.join(scratch, 'deny-command', '.claude', 'skills', 'mine', 'SKILL.md')
     withoutAccess(hidden, () => expect(lint(file, named('dup'))).toHaveLength(1))
+  })
+})
+
+// The rule cannot read the manifest behind a dangling link, and that manifest can set `commands`.
+describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling link', () => {
+  const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
+
+  it('reads no commands/ folder', () => {
+    put('dangling/commands/review.md', bare)
+    put('dangling/skills/review/SKILL.md', bare)
+    mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
+    const manifest = path.join(scratch, 'dangling/.claude-plugin/plugin.json')
+    symlinkSync('missing.json', manifest)
+    const skill = path.join(scratch, 'dangling', 'skills', 'review', 'SKILL.md')
+    const command = path.join(scratch, 'dangling', 'commands', 'review.md')
+    expect(lint(skill, bare)).toEqual([])
+    expect(lint(command, bare)).toEqual([])
+    // With a readable manifest that has no `commands` key, the same tree reports the clash.
+    rmSync(manifest)
+    writeFileSync(manifest, '{}')
+    expect(lint(skill, bare)).toHaveLength(1)
+    expect(lint(command, bare)).toHaveLength(1)
   })
 })

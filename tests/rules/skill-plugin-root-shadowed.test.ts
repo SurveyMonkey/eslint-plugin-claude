@@ -103,14 +103,6 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     withoutAccess(path.dirname(manifest), () => expect(lint(file)).toEqual([]))
   })
 
-  it.skipIf(process.platform === 'win32')('makes no report for a dangling plugin.json link', () => {
-    const file = build('dangling', '')
-    const manifest = path.join(scratch, 'dangling', '.claude-plugin', 'plugin.json')
-    rmSync(manifest)
-    symlinkSync('missing.json', manifest)
-    expect(lint(file)).toEqual([])
-  })
-
   it('makes no report for a plugin root that it cannot search', () => {
     const file = build('deny-root', '{"skills": "./x"}')
     mkdirSync(path.join(scratch, 'deny-root', 'skills'))
@@ -134,5 +126,19 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     withoutAccess(path.join(scratch, 'deny-skills', 'skills'), () =>
       expect(lint(file)).toHaveLength(1),
     )
+  })
+})
+
+// The rule cannot read the manifest behind a dangling link, so it makes no `manifest` report.
+// The `directory` report does not need the manifest.
+describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling link', () => {
+  it('makes no manifest report, and still makes the directory report', () => {
+    const file = build('dangling', '')
+    mkdirSync(path.join(scratch, 'dangling', 'skills'))
+    const manifest = path.join(scratch, 'dangling', '.claude-plugin', 'plugin.json')
+    rmSync(manifest)
+    symlinkSync('missing.json', manifest)
+    const messages = lintMarkdown('skill-plugin-root-shadowed', code, file).map((m) => m.messageId)
+    expect(messages).toEqual(['directory'])
   })
 })

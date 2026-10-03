@@ -227,19 +227,22 @@ describe('readManifest', () => {
   })
 })
 
-describe('readManifest on a link', () => {
-  it.skipIf(process.platform === 'win32')(
-    'gives UNREADABLE for a dangling link, and null for no file',
-    () => {
-      mkdirSync(path.join(scratch, 'dangle/.claude-plugin'), { recursive: true })
-      symlinkSync('missing.json', path.join(scratch, 'dangle/.claude-plugin/plugin.json'))
-      expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
-      mkdirSync(path.join(scratch, 'no-file/.claude-plugin'), { recursive: true })
-      expect(readManifest(path.join(scratch, 'no-file'), scratch)).toBeNull()
-      put('plain/.claude-plugin', 'not a directory')
-      expect(readManifest(path.join(scratch, 'plain'), scratch)).toBeNull()
-    },
-  )
+describe('readManifest on a dangling link', () => {
+  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a dangling link', () => {
+    mkdirSync(path.join(scratch, 'dangle/.claude-plugin'), { recursive: true })
+    symlinkSync('missing.json', path.join(scratch, 'dangle/.claude-plugin/plugin.json'))
+    expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
+  })
+
+  it('gives null for a .claude-plugin directory with no plugin.json', () => {
+    mkdirSync(path.join(scratch, 'no-file/.claude-plugin'), { recursive: true })
+    expect(readManifest(path.join(scratch, 'no-file'), scratch)).toBeNull()
+  })
+
+  it('gives null when .claude-plugin is a file, not a directory', () => {
+    put('plain/.claude-plugin', 'not a directory')
+    expect(readManifest(path.join(scratch, 'plain'), scratch)).toBeNull()
+  })
 })
 
 describe('repositoryRoot', () => {
