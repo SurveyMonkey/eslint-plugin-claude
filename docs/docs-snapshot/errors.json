@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "4e7787e5a6e3c94989ab24b15a28ded5cc1acfed0c945db33a2df6864a6032b4",
+  "hash": "23bae38b93c6524247851eabec96de0a30984dad28641045b2e7e3787140d5b5",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,11 +8,11 @@
     },
     {
       "id": "find-your-error",
-      "hash": "5207994ba8497604ad45d4414a8fc7b11924981cabdca7babf6c22ef9ee3af49"
+      "hash": "0eae1627fe2ae8493e386fb5e551a99e5a88163bf9e3ae5c088bc98cf4ed4158"
     },
     {
       "id": "automatic-retries",
-      "hash": "03c649d214ac061d4f7790e1e5038d23074e2c32b8cf5ff0cab1913d0e7e8968"
+      "hash": "353559c8549f81835a43d43f46ecd18372781fb293fae1a6156c37398751253d"
     },
     {
       "id": "what-you-see-while-claude-code-retries-or-waits",
@@ -20,7 +20,7 @@
     },
     {
       "id": "tune-retry-behavior",
-      "hash": "637645e5047cafa597109fa12e442c1b05ce6d63d057479cb4c42939ef73f014"
+      "hash": "a27401df5103f20510792bcba581cd9b8f525f7449828771eda77de16851ad12"
     },
     {
       "id": "server-errors",
@@ -64,7 +64,7 @@
     },
     {
       "id": "youve-hit-your-session-limit",
-      "hash": "4ac60c1958b19df74e1f5e74fe9896d886b0d2af79f250bc3cc2965944bffe1e"
+      "hash": "97bf3ed74ebf7a64a377073cf2efb057d68b36fb2eaa5c476c0b3a4074bb7cac"
     },
     {
       "id": "usage-credits-required-for-1m-context",
@@ -156,7 +156,7 @@
     },
     {
       "id": "oauth-token-revoked-or-expired",
-      "hash": "9b288171210700a6f4512527d792a6d11f79a7c4ce1578dabec79c5a22b6946b"
+      "hash": "d5b4a08e7f857c67866b106ce018f6cc8f4db7f056deda9b35e3c25cfaf7983f"
     },
     {
       "id": "api-error-401-invalid-authentication-credentials",
@@ -188,7 +188,7 @@
     },
     {
       "id": "administrator-policy-requires-a-cloud-gateway-sign-in",
-      "hash": "a014f8183d60d8b9965d635d137f440375e438fc283414ceeed732284722b91c"
+      "hash": "0e0e1eee92622c21f646d56f72ade0c79077e74117d9097d3138d0a87144e93f"
     },
     {
       "id": "your-account-is-on-hold",
@@ -300,7 +300,7 @@
     },
     {
       "id": "host-not-allowed-in-a-cloud-session",
-      "hash": "bfbcf76a6921635f371730a1876c2dd1d8bc133584d21fd206a87345efd1241f"
+      "hash": "2c79074d60d680be54be722a5a33a5d811092a1f5258283892d8846dc86ff49e"
     },
     {
       "id": "the-proxy-refused-the-connection",
@@ -356,7 +356,7 @@
     },
     {
       "id": "extra-inputs-are-not-permitted",
-      "hash": "27f8700bda5f7ba6ebaa079f240d6a801f92621e0067ff29d4b584fbff277253"
+      "hash": "6e13797a36db13ef4337b851c02866529e832ce67c7d32707b454e61bb792314"
     },
     {
       "id": "tool-input-schema-is-invalid",
@@ -364,7 +364,7 @@
     },
     {
       "id": "tool-use-name-over-200-characters",
-      "hash": "941a7b9284999ff5275486a9b678409b5f05f2c48177581e754a2acd989f2908"
+      "hash": "7143b6159b2b7e38fcddc72e58873637088bd88a86dde4134fa7d5431230909b"
     },
     {
       "id": "theres-an-issue-with-the-selected-model",
@@ -392,7 +392,7 @@
     },
     {
       "id": "claude-code-does-not-support-this-model",
-      "hash": "959c28349bea058e1b6f42a9238a432f7ca7e3da626841c821d43fd4087dafe4"
+      "hash": "8facf086308eb52d7aea596749bfad995f7cc509a4219a15326789dd0d97ed0d"
     },
     {
       "id": "model-is-restricted-by-your-organizations-settings",
@@ -411,8 +411,12 @@
       "hash": "80b0101621da1c5ac6bb7360a196c1ae4d4d48efb7b4eb127c240ff9964bd567"
     },
     {
+      "id": "advisor-is-less-capable-than-the-current-main-model",
+      "hash": "f98c98210631465ec1b741c927358d054c5f2cbc615017a36368a3fb74d96a28"
+    },
+    {
       "id": "thinking-type-enabled-is-not-supported-for-this-model",
-      "hash": "19102a607ad1f70af7b1a58655446df5e46a58a9b1eb717917aae9a915d2c069"
+      "hash": "4aade74fca44e9fb03b4cb02f8b816dd31c547a46f7426fdf949c0a73e948a54"
     },
     {
       "id": "effort-isnt-available-with-thinking-turned-off",
@@ -449,6 +453,10 @@
     {
       "id": "safety-measures-flagged-a-cybersecurity-topic",
       "hash": "30a1fdff7dec55faf7a2657ecbfefe9152cfdd28ff3e2c136a73eadd99d53840"
+    },
+    {
+      "id": "output-blocked-by-content-filtering-policy",
+      "hash": "17672f04ae31525ea5b412373b5857739fa0e80005d05c7009f29e4079094cfa"
     },
     {
       "id": "installation-errors",
@@ -531,6 +539,10 @@
       "hash": "afa22774ef12430ecac4ffac8a8f7a9f3bed4f8a5ca18642180c562bcb7ab12b"
     },
     {
+      "id": "cannot-add-mcp-server-when-managed-settings-allow-only-plugin-servers",
+      "hash": "f32a031417ba542274df9805b8a5299cfc15a75024f3d8201ae453bedbef1076"
+    },
+    {
       "id": "cant-read-mcp-json",
       "hash": "d34c89d5154aa0218189f7ab5161e908b82926088d27ea239c91f2e9404bbb0a"
     },
@@ -569,6 +581,10 @@
     {
       "id": "input-must-be-provided-when-using-print",
       "hash": "73f2589f985e480d98d8b3e30368e8002172657eca3b260c55747f56e0341ce0"
+    },
+    {
+      "id": "claude-code-cant-read-the-keyboard-here",
+      "hash": "c717df4523bbcd80496fd35322bef700f9c0255a30194e7eb979cb51b36474f2"
     },
     {
       "id": "input-contained-only-whitespace",
@@ -615,12 +631,16 @@
       "hash": "9aa992f3b2d1b3b79b69de445cdffc045a802ea6a1f755af4289a06234a1ae61"
     },
     {
+      "id": "a-github-organization-policy-is-blocking-claude",
+      "hash": "200a80ac6f95e3956c792254eaae25f8e16d8a5ebe405789ae2598305e0edf79"
+    },
+    {
       "id": "single-sign-on-authorization-needed",
       "hash": "ea1b7ecfc18a543117ced140fea69c5cad19340a77ea00f8f0c54795995d1419"
     },
     {
       "id": "failed-to-resume-the-conversation",
-      "hash": "69dba40af7b7ad002cdea81317e53f3119bb534caa221d725d18f4135d76dcc3"
+      "hash": "dc7ac46dac98e60f4a7c560a779f5dbe0fd0e7b609dc4809a2909178c3c95716"
     },
     {
       "id": "no-conversation-found-with-the-session-id",
@@ -653,6 +673,10 @@
     {
       "id": "output-styles-are-saved-to-local-settings-which-this-session-doesnt-load",
       "hash": "bc2878f38f0ceaa926ea4d0c3ff6fc3972c009e8da05869f6c046dec96a27299"
+    },
+    {
+      "id": "recap-only-runs-when-you-ask-for-it-yourself",
+      "hash": "c356db7684a3482575158b713071fe7b8efb4c283d1c37dd8316ef01869e72d2"
     },
     {
       "id": "plugin-errors",
@@ -712,7 +736,11 @@
     },
     {
       "id": "tool-errors",
-      "hash": "fbae7ba2820c4f83a4253da31c57a6768439b47b04df6a3c832de110fa96444e"
+      "hash": "474392178546cca063844cfb4db716c57356d23ec48c0dd2278581be4b149e94"
+    },
+    {
+      "id": "no-such-tool-available",
+      "hash": "96a419e65ea6fdccffef78b5668098385342db7b5917f91f4cc218746c4dc041"
     },
     {
       "id": "agent-would-be-spawned-with-zero-tools",
@@ -744,7 +772,7 @@
     },
     {
       "id": "teammate-agent-definition-not-restored",
-      "hash": "5f6bc5174bcd8d5345f9d634a77cf60cd2527292c6ea1ba1f7ca1d9fa6839ac0"
+      "hash": "989c3a5fcb9d142a3346e2453b320fe538ffb726eb36db8b1412e3c89879dbca"
     },
     {
       "id": "message-too-large-for-cross-session-delivery",
@@ -756,7 +784,7 @@
     },
     {
       "id": "cross-session-message-dropped-at-the-inbox",
-      "hash": "6e4458b191f7d9e2c5350551d014a947cdf74b57e486082189260e02fb9d73b4"
+      "hash": "34e45d6ef22cd6cb4cc0592bf758b3459a74996c4d6e94560b2abea59720c482"
     },
     {
       "id": "refusing-to-send-a-cross-session-message",
@@ -777,6 +805,10 @@
     {
       "id": "the-source-file-is-not-valid-utf-8-text",
       "hash": "df455bb21ca40e7dbbbd52b0a613280362380959eb69f0a7763ffc7312fbdb0a"
+    },
+    {
+      "id": "not-published-that-file-is-on-a-network-share",
+      "hash": "c6ae0021431df3c3fd691064c6cbbf77ddac1e1b52ec886c8986014250180ed0"
     },
     {
       "id": "reading-a-local-file-from-outside-the-connected-folders",
@@ -987,6 +1019,10 @@
       "hash": "ec75ea8170b46f6eb4525c4abd405fbcd252fbfa9b6af62668e59168e527cb43"
     },
     {
+      "id": "anthropic-foundry-resource-must-be-a-foundry-resource-name",
+      "hash": "2d1aa91311b2cbd8409c56e8419f73cedca6545f70b7065a444699f0add9b0de"
+    },
+    {
       "id": "the-200k-limit-isnt-enforced",
       "hash": "f7724f5b5fc3fc37449d68a39a83c3993f892eb87eb46d3c776bdb2ee201c654"
     },
@@ -1008,6 +1044,12 @@
     }
   ],
   "sources": [
+    {
+      "heading": "Agent would be spawned with zero tools",
+      "id": "agent-would-be-spawned-with-zero-tools",
+      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923",
+      "text": "### Agent would be spawned with zero tools\n\nEvery entry in the subagent's [`tools` list](/docs/en/sub-agents#supported-frontmatter-fields) failed to match a usable tool, so Claude Code refused to launch the subagent: with no tools, it couldn't act. The message groups your entries by what went wrong:\n\n* **Unrecognized**: the entry matches no tool name, usually a typo such as `Grpe` for `Grep`.\n* **Not available to subagents**: the entry names a real tool that [subagents can't use](/docs/en/sub-agents#available-tools). Background subagents keep a smaller built-in tool set, so an entry that only a foreground subagent can use lands here when the subagent would run in the background, which is the default. If you list `Agent`, the message reports it under the next group instead.\n* **Matched no tools in this session**: the entry is valid but no tool in the current session matches it right now, such as `mcp__github__*` with no GitHub MCP server connected, or `Agent` for a subagent at the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents).\n\nOmitting the `tools` field never triggers this refusal. If you leave the `tools` list empty, or `disallowedTools` removes every entry in it, Claude Code also skips the refusal and launches the subagent without tools.\n\nBefore v2.1.208, the subagent launched with no tools and could return an empty or confusing result.\n\n```text theme={null}\nAgent 'code-reviewer' would be spawned with zero tools — refusing. Its tools list resolved to nothing: unrecognized [Grpe]. Fix the agent's tools frontmatter or pass a different subagent_type.\n```\n\n**What to do:**\n\n* Correct each entry the error names against the [tools available to subagents](/docs/en/sub-agents#available-tools)\n* Remove entries for tools the session doesn't have, such as MCP tools from a server that isn't connected\n* For a tool that [background subagents drop](/docs/en/sub-agents#available-tools), such as `CronCreate`, remove the entry. To keep the tool, [turn fork mode off](/docs/en/sub-agents#turn-fork-mode-on-or-off) and ask Claude to run the subagent in the foreground\n* Delete the `tools` field instead of listing tools to give the subagent every [tool available to subagents](/docs/en/sub-agents#available-tools)\n* For a `tools` list that contains only `Agent`, raise the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents) or give the agent at least one other tool: Claude Code withholds `Agent` at that limit, so a list with nothing else in it resolves to no tools"
+    },
     {
       "heading": "Is not matched by file permission checks",
       "id": "is-not-matched-by-file-permission-checks",

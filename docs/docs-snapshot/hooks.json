@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "ccb6f0da88f4159a8e1ca205ba0f9e0a4699443cf57f778b4a5c71f679e42dc5",
+  "hash": "bb10057ad439cff2300c90e6188ee76d1aaa835346c72cfd8ce090e2a8642dec",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -268,7 +268,7 @@
     },
     {
       "id": "agent",
-      "hash": "32405ca3b8e9f4e00fc345da949e5f73ec7c215091bdd8a84cc129894883aa2e"
+      "hash": "370031bb5d32315e9ce1d0863ebd91e9b570aea613739b090b0fe0ceb22dec79"
     },
     {
       "id": "askuserquestion",
@@ -280,7 +280,7 @@
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "ed7e5ac643b7d34787c39bbe41f8f9549fafb4decd52952ab9bde1568a04b1ef"
+      "hash": "59abaef608512f3e3967cc9d6be5c0cf879b0302977062cddfff0c3b18544e91"
     },
     {
       "id": "defer-a-tool-call-for-later",
@@ -288,7 +288,7 @@
     },
     {
       "id": "permissionrequest",
-      "hash": "6ff44c6117ac448e7edd80a39025db07d59b45b5343da228fac7e59e26e4723b"
+      "hash": "0cd60f343b1419a51a8cce79011c483464a0874abc8855d941ef6fbf39b0c220"
     },
     {
       "id": "permissionrequest-input",
@@ -356,7 +356,7 @@
     },
     {
       "id": "notification",
-      "hash": "631b76e3a34d82e932ecedcdd1d6ba791bd8ac55a6909bb255a959d4b2dbd824"
+      "hash": "3edf71c73301b39990090267d4068b6bd141be1345cace6d009e8b818a534811"
     },
     {
       "id": "notification-input",
@@ -640,7 +640,7 @@
     },
     {
       "id": "windows-powershell-tool",
-      "hash": "39c44fb86a9f18ab8616df4defd7745742f6f70a1dee718462379b89ca0b39cc"
+      "hash": "a8d8d0cf696e9590a4bf712072cea52147f8c779c460efd53304772ad87bb510"
     },
     {
       "id": "debug-hooks",

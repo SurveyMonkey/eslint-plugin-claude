@@ -23,7 +23,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "agent-frontmatter-valid": [
@@ -57,7 +57,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Scope MCP servers to a subagent",
-      "hash": "727ec245e004943f2572f7416a27e92ad39013420cdac77afb1bf420c42b8e88"
+      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -88,7 +88,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Choose the subagent scope",
-      "hash": "66fd77d01dec390e57b5f2239560b74a06870f9661bda1b10bba26589ec6b7dd"
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
     }
   ],
   "agent-teams-no-project-config": [
@@ -96,6 +96,40 @@
       "url": "https://code.claude.com/docs/en/agent-teams",
       "heading": "Architecture",
       "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615"
+    }
+  ],
+  "agent-tools-known": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Available tools",
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Agent would be spawned with zero tools",
+      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+    }
+  ],
+  "agent-tools-unavailable": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Available tools",
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Agent would be spawned with zero tools",
+      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
   "command-legacy-format": [
@@ -112,7 +146,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "c4f66ca80056cda4411e7fd26cdb05a44f5db3117e858b64e638e881b617945b"
+      "hash": "efdc415213d82e2aefd6f144f78b3d806fec595a89ff4e5cd0a7a665a11d2a70"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -161,7 +195,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "output-style-frontmatter-valid": [
@@ -186,6 +220,16 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
       "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "permissions-param-rule": [
@@ -193,6 +237,16 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Match by input parameter",
       "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "permissions-path-rule-tool": [
@@ -210,6 +264,16 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Configure tools with permission rules and hooks",
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "permissions-rule-syntax": [
@@ -232,6 +296,23 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Malformed Tool(content) rule",
       "hash": "64e6fa825ddbbc3585d8aed429a706a746ba1816e91e97099f8ec0b4e127cc1a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    }
+  ],
+  "permissions-skill-rule": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Restrict Claude's skill access",
+      "hash": "98322352f6d4ae3944ab0a152975add1d69d995a4550b2ae7cddd6e3fb83a9da"
     }
   ],
   "permissions-specifier-unsupported": [
@@ -254,6 +335,16 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Cd",
       "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "permissions-tool-name-glob": [
@@ -266,6 +357,16 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.allow",
       "hash": "0e383bc5c3682d19a2cb4a3ea80cf8979c2163d37df12292912a22ad9e67195f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "permissions-unknown-tool": [
@@ -293,6 +394,16 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Restrict which subagents can be spawned",
       "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "skill-agent-exists": [
@@ -309,12 +420,12 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Built-in subagents",
-      "hash": "e476de0ed974c18cd04b8cc7418174e7003470f94a505e00dac77333bf691e3b"
+      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Choose the subagent scope",
-      "hash": "66fd77d01dec390e57b5f2239560b74a06870f9661bda1b10bba26589ec6b7dd"
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -322,11 +433,33 @@
       "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf"
     }
   ],
+  "skill-allowed-tools-broad": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Pre-approve tools for a skill",
+      "hash": "9b22db0b4c92ee9218d08f820b600e1a5c92ea6822a936e8170d83efc3b6c873"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "8a5b44ee4d880d824ce8de288d9a07e55aabbcb8c756d10d2c864c0eeccb7339"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "PowerShell",
+      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "MCP",
+      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    }
+  ],
   "skill-allowed-tools-ineffective": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -343,7 +476,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -365,14 +498,14 @@
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
       "heading": "Check common causes",
-      "hash": "8c2defc07057633512ad79efce9b1976c11eaed9a71c7ea37f94cf58d5890596"
+      "hash": "598bb76c8818c4ba4031dc56add17c0087653c6f16d54cc074ee24f34674c07d"
     }
   ],
   "skill-fork-fields-require-context": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -384,7 +517,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     },
     {
       "url": "https://code.claude.com/docs/en/glossary",
@@ -396,7 +529,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -435,14 +568,14 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "skill-name-unique": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Resolve skills that share a name",
-      "hash": "e272fba0dbd6196bd9d700a345a7997f07d52501aca3de998b9c82e5cf644890"
+      "hash": "8e3457b5a533ae29dee95a38415d08ef9df72d28e5892bda6b01c17e014a8d16"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -459,12 +592,12 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "4fb75fe9c5027c6d6a278f36bdf9f73e93f0e943c74de7bce97c6bd2368970da"
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     },
     {
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Path-specific rules",
-      "hash": "acdf2587aacf5da9273f7d3c4cbe7f78882299c02ea2c479b158a1ff06ecc510"
+      "hash": "5cd16777bd0be738a8cd49b1716f21551a2a28d96f56cf68c19788c317f07590"
     }
   ],
   "skill-plugin-root-shadowed": [
