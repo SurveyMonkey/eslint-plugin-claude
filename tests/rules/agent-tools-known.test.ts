@@ -25,6 +25,8 @@ markdownTester.run('agent-tools-known', ruleOf('agent-tools-known'), {
     // The MCP forms.
     file('tools: mcp__s, mcp__s__*, mcp__s__t\n'),
     file('disallowedTools: mcp__s__*\n'),
+    // The permissions page: a deny rule from the command line takes a parameter on an MCP tool.
+    file('disallowedTools: mcp__s__t(x)\n'),
     // Only `disallowedTools` takes a specifier, and `mcp__*`.
     file('disallowedTools: Bash(git push *), mcp__*\n'),
     // The list form.
@@ -50,6 +52,11 @@ markdownTester.run('agent-tools-known', ruleOf('agent-tools-known'), {
       errors: [
         { messageId: 'unknown', data: { tool: 'Grpe' }, line: 4, column: 14, endColumn: 18 },
       ],
+    },
+    // A subagent separates entries with a comma only, so a space makes one name.
+    {
+      ...file('tools: Read Grep\n'),
+      errors: [{ messageId: 'unknown', data: { tool: 'Read Grep' } }],
     },
     // The names are case-sensitive.
     { ...file('tools: read\n'), errors: [{ messageId: 'unknown', data: { tool: 'read' } }] },

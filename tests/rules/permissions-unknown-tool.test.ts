@@ -204,6 +204,8 @@ markdownTester.run('permissions-unknown-tool in skill files', rule, {
     skill('allowed-tools: Bogus\n', 'docs/SKILL.md'),
     { code: '# No frontmatter\n', filename: '.claude/skills/s/SKILL.md' },
     skill('allowed-tools: [unclosed\n'),
+    // A key written as an alias is in the data and has no field: the rule reads nothing.
+    skill('name: &k allowed-tools\n*k : Bogus\n'),
     { ...skill('allowed-tools: Extra\n'), options: [{ additionalTools: ['Extra'] }] },
   ],
   invalid: [
@@ -234,6 +236,27 @@ markdownTester.run('permissions-unknown-tool in skill files', rule, {
     {
       ...skill('allowed-tools: "Bogus\\x28a)"\n'),
       errors: [{ messageId: 'unknown', data: { tool: 'Bogus' }, column: 16, endColumn: 29 }],
+    },
+    // A comment, a tab or a line break in the field does not move the report.
+    {
+      ...skill('allowed-tools:\n  - Read   # Bogus2\n  - Bogus2\n'),
+      errors: [{ messageId: 'unknown', line: 4, column: 5, endColumn: 11 }],
+    },
+    {
+      ...skill('allowed-tools: |\n  Bogus1\n  Bogus2\n'),
+      errors: [
+        { messageId: 'unknown', line: 3, column: 3, endColumn: 9 },
+        { messageId: 'unknown', line: 4, column: 3, endColumn: 9 },
+      ],
+    },
+    // An entry that the text does not hold keeps the search position of the entries after it.
+    {
+      ...skill('allowed-tools: "Bogus \\u0041B Bogus"\n'),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'AB' }, column: 16, endColumn: 37 },
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 17, endColumn: 22 },
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 31, endColumn: 36 },
+      ],
     },
     {
       ...skill('allowed-tools: Bogus Bogus\n'),

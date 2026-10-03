@@ -124,10 +124,10 @@ markdownTester.run('permissions-rule-syntax in skill files', rule, {
     },
     {
       ...skill('allowed-tools: [Read(a)b, "Bash\\0"]\n', pluginSkill()),
-      // The NUL byte is an escape in the text, so its report covers the whole value.
+      // The NUL byte is an escape in the text, so its report covers the whole list item.
       errors: [
-        { messageId: 'nulByte', column: 16, endColumn: 36 },
         { messageId: 'trailingText', column: 17, endColumn: 25 },
+        { messageId: 'nulByte', column: 27, endColumn: 35 },
       ],
     },
     // A stray closing parenthesis ends nothing: the rule reads as one string.

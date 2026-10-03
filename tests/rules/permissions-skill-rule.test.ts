@@ -37,7 +37,7 @@ jsonTester.run('permissions-skill-rule', rule, {
       filename: '.claude/settings.local.json',
     },
     {
-      code: settings({ allow: ['Skill(anthropic)', 'Skill(anthropic*)'] }),
+      code: settings({ allow: ['Skill(anthropic)', 'Skill(anthropic*)', 'Skill(anthropic-s*)'] }),
       filename: '.claude/settings.json',
     },
     // Another tool.

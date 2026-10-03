@@ -1,7 +1,8 @@
 // The skills page, "Pre-approve tools for a skill": a project skill grants its
 // `allowed-tools` with no workspace trust, even in a `-p` run. The permissions
 // page says that `Bash(*)` is the same as `Bash`, and a bare `PowerShell` or
-// `PowerShell(*)` matches every command.
+// `PowerShell(*)` matches every command. It also says that `mcp__<server>` and
+// `mcp__<server>__*` match every tool of the server.
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -17,7 +18,12 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
     file('allowed-tools: Bash(git add *) Bash(git commit *) Bash(git status *)\n'),
     file('allowed-tools: Read Grep Glob WebSearch\n'),
     file('allowed-tools: Write(docs/**) Edit(src/**) WebFetch(domain:example.com)\n'),
-    file('allowed-tools: mcp__puppeteer__puppeteer_navigate mcp__puppeteer\n'),
+    file('allowed-tools: mcp__puppeteer__puppeteer_navigate mcp__puppeteer__navigate_*\n'),
+    // The permissions page: `mcp__github__get_*` matches the `get_` tools only. Claude Code skips
+    // `mcp__*` in an allow rule, and `permissions-tool-name-glob` reports it.
+    file('allowed-tools: mcp__github__get_* mcp__*\n'),
+    // A rule with parentheses on an MCP name is for `permissions-mcp-rule-parens`.
+    file('allowed-tools: mcp__github__*(x)\n'),
     // The docs state the bare form for these tools and the `(*)` form for Bash and PowerShell only.
     file('allowed-tools: Write(*) Edit(*) WebFetch(*)\n'),
     // The deny list removes tools.
@@ -49,13 +55,12 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
         { messageId: 'broad', data: { rule: 'WebFetch' } },
       ],
     },
-    // An `mcp__` wildcard.
+    // The permissions page: `mcp__puppeteer` and `mcp__puppeteer__*` each match every tool of the server.
     {
-      ...file('allowed-tools: mcp__* mcp__github__* mcp__github__get_*\n'),
+      ...file('allowed-tools: mcp__github__* mcp__puppeteer\n'),
       errors: [
-        { messageId: 'broad', data: { rule: 'mcp__*' } },
         { messageId: 'broad', data: { rule: 'mcp__github__*' } },
-        { messageId: 'broad', data: { rule: 'mcp__github__get_*' } },
+        { messageId: 'broad', data: { rule: 'mcp__puppeteer' } },
       ],
     },
     {

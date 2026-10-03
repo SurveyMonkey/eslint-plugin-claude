@@ -1,5 +1,5 @@
 // `allowed-tools` in a skill grants a tool with no workspace trust. A bare
-// `Bash` or a wildcard grants every use of it
+// `Bash`, or a rule for a whole MCP server, grants every use of it
 // (docs/rules/skill-allowed-tools-broad.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { MCP_PREFIX } from '../data/tool-names.ts'
@@ -21,11 +21,17 @@ const BARE_BROAD = ['Bash', 'PowerShell', 'Write', 'Edit', 'WebFetch']
  *  page says so for Bash and PowerShell. */
 const STAR_BROAD = ['Bash', 'PowerShell']
 
+/** `mcp__<server>__*` and `mcp__<server>`. The permissions page says that
+ *  each matches every tool of the server. A glob after the tool prefix, such
+ *  as `mcp__<server>__get_*`, matches some tools. `mcp__*` is no grant: Claude
+ *  Code skips it in an allow rule, and `permissions-tool-name-glob` reports it. */
+const MCP_SERVER_GRANT = /^mcp__(?:(?!__)[^*])+(?:__\*)?$/
+
 /** True when `rule` grants every use of a tool, or every tool of an MCP
  *  server. */
 function isBroad({ tool, specifier }: ParsedRule): boolean {
   if (tool.startsWith(MCP_PREFIX)) {
-    return tool.includes('*')
+    return specifier === null && MCP_SERVER_GRANT.test(tool)
   }
   return specifier === null
     ? BARE_BROAD.includes(tool)
@@ -51,7 +57,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'broad' }
     defaultOptions: [{ allow: [] }],
     messages: {
       broad:
-        '`{{rule}}` grants every use of the tool, and Claude Code applies it with no workspace trust. Scope the rule to the commands or paths that the skill needs.',
+        '`{{rule}}` grants every use of a tool or of an MCP server, and Claude Code applies it with no workspace trust. Scope the rule to the commands or paths that the skill needs.',
     },
   },
   create(context) {

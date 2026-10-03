@@ -16,6 +16,7 @@ markdownTester.run('agent-tools-unavailable', ruleOf('agent-tools-unavailable'),
     file('tools: Read, Grep, Glob, Bash\n'),
     // `ExitPlanMode` stays in a plan-mode subagent.
     file('permissionMode: plan\ntools: ExitPlanMode, Read\n'),
+    file('permissionMode: plan\nbackground: true\ntools: ExitPlanMode, Read\n'),
     // The foreground set keeps the tools that a background subagent loses.
     file('tools: CronCreate, Monitor, SendUserFile\n'),
     file('background: false\ntools: CronCreate\n'),
@@ -86,6 +87,13 @@ markdownTester.run('agent-tools-unavailable', ruleOf('agent-tools-unavailable'),
         { messageId: 'background', data: { tool: 'CronCreate' }, line: 5, column: 14 },
         { messageId: 'background', data: { tool: 'ListAgents' } },
       ],
+    },
+    // Each built-in tool outside the background set.
+    {
+      ...file(
+        'background: true\ntools: CronDelete, CronList, ListMcpResourcesTool, PushNotification, ReadMcpResourceTool, RemoteTrigger, ReportFindings, SendFeedback, SendUserFile, ShareOnboardingGuide, TaskCreate, TaskGet, TaskList, TaskOutput, TaskUpdate\n',
+      ),
+      errors: Array.from({ length: 15 }, () => ({ messageId: 'background' as const })),
     },
     // The first filter takes priority, so one entry gets one report.
     {
