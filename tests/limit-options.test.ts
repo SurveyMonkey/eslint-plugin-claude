@@ -1,7 +1,8 @@
 // Each built rule in the `limit` category takes its number as an option. The
 // inventory row names the option and the default (ADR 001, Decision 2).
 // The test reads the rows and the registered rules, so a new `limit` rule
-// with no option fails here.
+// with no option fails here. The count of 21 is a tripwire: a new `limit`
+// row makes this test fail until its author updates the count.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -24,11 +25,11 @@ const rows: Row[] = INVENTORY.split('\n')
 /** The options that a row names: `name`, default N (or no default), schema maximum M. */
 function optionsOf(text: string) {
   return [
-    ...text.matchAll(/`(\w+)`, (?:default (\d+)|no default)(?:, schema maximum (\d+))?/g),
+    ...text.matchAll(/`(\w+)`, (?:default (\d[\d,]*)|no default)(?:, schema maximum (\d[\d,]*))?/g),
   ].map(([, option, fallback, maximum]) => ({
     option: option ?? '',
-    fallback: fallback === undefined ? undefined : Number(fallback),
-    maximum: maximum === undefined ? undefined : Number(maximum),
+    fallback: fallback === undefined ? undefined : Number(fallback.replaceAll(',', '')),
+    maximum: maximum === undefined ? undefined : Number(maximum.replaceAll(',', '')),
   }))
 }
 
@@ -41,15 +42,19 @@ describe('limit rule options', () => {
     expect(built.map(({ name }) => name)).toContain('skill-description-max-length')
   })
 
-  it('gives each limit row an option or a statement that it has none', () => {
+  it('gives each limit row an option or a statement that it has none, not both', () => {
     for (const { name, text } of rows) {
-      expect(optionsOf(text).length > 0 || text.includes(NO_OPTION), name).toBe(true)
+      expect(optionsOf(text).length > 0, name).toBe(!text.includes(NO_OPTION))
     }
   })
 
   for (const { name, text } of built) {
     const options = optionsOf(text)
     if (options.length === 0) {
+      it(`${name} has no threshold option, as its row says`, () => {
+        const schema = plugin.rules[name]?.meta?.schema as { properties?: object }[] | undefined
+        expect(Object.keys(schema?.[0]?.properties ?? {}), name).toEqual([])
+      })
       continue
     }
     it(`${name} has each option of its row, with the docs default`, () => {

@@ -55,8 +55,8 @@ markdownTester.run('skill-description-max-length', ruleOf('skill-description-max
   ],
 })
 
-// The schema and the message at a team value are checked through `Linter`,
-// the way a user loads the option from a config.
+// The option, its schema and the message at a team value are checked through
+// `Linter`, the way a user loads the option from a config.
 describe('skill-description-max-length options', () => {
   const lint = (length: number, options: unknown[]) =>
     new Linter({ cwd: '/' }).verify(
@@ -79,6 +79,20 @@ describe('skill-description-max-length options', () => {
       '`description` plus `when_to_use` has 1200 characters. The configured limit is 1000.',
     )
     expect(report?.message).not.toContain('cuts')
+  })
+
+  it('keeps the default when the option object is empty', () => {
+    const [report] = lint(1537, [{}])
+    expect(report?.message).toContain('The skill listing cuts it at 1536.')
+  })
+
+  it.each([
+    ['zero', { listingMax: 0 }],
+    ['a fraction', { listingMax: 1.5 }],
+    ['a string', { listingMax: '1000' }],
+    ['an unknown key', { listingMax: 1000, extra: 1 }],
+  ])('refuses %s as the option', (_, option) => {
+    expect(() => lint(100, [option])).toThrow(/Key "claude\/skill-description-max-length"/)
   })
 
   it('keeps the cut message at the default value', () => {
