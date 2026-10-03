@@ -128,3 +128,17 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     )
   })
 })
+
+// The rule cannot read the manifest behind a dangling link, so it makes no `manifest` report.
+// The `directory` report does not need the manifest.
+describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling link', () => {
+  it('makes no manifest report, and still makes the directory report', () => {
+    const file = build('dangling', '')
+    mkdirSync(path.join(scratch, 'dangling', 'skills'))
+    const manifest = path.join(scratch, 'dangling', '.claude-plugin', 'plugin.json')
+    rmSync(manifest)
+    symlinkSync('missing.json', manifest)
+    const messages = lintMarkdown('skill-plugin-root-shadowed', code, file).map((m) => m.messageId)
+    expect(messages).toEqual(['directory'])
+  })
+})
