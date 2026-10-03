@@ -72,6 +72,22 @@ claude.com, claude.ai or anthropic.com that is not under `https://code.claude.co
 - A `hash` is not a SHA-256 hex string, or is not the hash that `docs/docs-snapshot/` stores for
   that heading.
 
+## Rule thresholds
+
+A new rule that checks a number takes the number as a rule option (ADR 001, Decision 2).
+
+- The option is optional. Its default is the value from the Claude Code docs, set in
+  `meta.defaultOptions`.
+- Where Claude Code cuts or skips the file over the number, set `maximum` in the option schema
+  to the docs value. ESLint then refuses a larger value.
+- Report with one message at the default value. At another value, use a second message that
+  names the value as the configured limit. Do not say that Claude Code acts at that value.
+- Name the option and its default in the rule row of `docs/rules-inventory.md`, and in the
+  Options section of the rule doc. The `recommended` and `strict` configs set no option.
+
+`tests/limit-options.test.ts` reads the `limit` rows of the inventory. It fails for a built
+rule that lacks the option that its row names.
+
 ## Docs watch
 
 `.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It commits nothing.
