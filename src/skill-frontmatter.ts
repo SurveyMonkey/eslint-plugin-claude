@@ -1,6 +1,6 @@
 // The frontmatter of a skill, command or subagent file, for a rule that
-// reports on a field. It gives the parsed fields and the location of each key and value.
-// A rule can then report on the narrowest part.
+// reports on a field. It gives the parsed fields and the location of each key
+// and value. A rule can then report on the narrowest part.
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import { type FrontmatterField, frontmatterFields, parseFrontmatter } from './frontmatter.ts'
 
