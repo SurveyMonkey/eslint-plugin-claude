@@ -3,7 +3,7 @@ type: Reference
 description: The ESLint rule claude/skill-description-max-length, which limits a SKILL.md description plus when_to_use to 1,536 characters, the cut in the Claude Code skill listing, with its options, examples and sources.
 owner: brianespinosa
 created: 2026-09-29
-related_issues: [6, 23]
+related_issues: [6, 23, 56]
 stale_after: 2027-03-29
 generated:
   by: claude-code
@@ -54,7 +54,7 @@ description: Deploys the service to staging. Use when the user asks to ship a br
 
 | Option | Default | Use |
 |--------|---------|-----|
-| `listingMax` | `1536` | The limit on `description` plus `when_to_use`. The option is optional. |
+| `listingMax` | `1536` | The limit on `description` plus `when_to_use`. Optional. |
 
 ```js
 'claude/skill-description-max-length': ['warn', { listingMax: 1000 }]
@@ -67,7 +67,8 @@ The setting `skillListingMaxDescChars` moves the cut in Claude Code.[^cut] If a 
 the same value. The schema sets no maximum, because the cut is not fixed.
 
 At the default, the message says that the skill listing cuts the text at 1,536. At another value, the message says
-"The configured limit is 1000". Claude Code does not cut at a team value, so the message does not say that it does.
+"The configured limit is 1000". The plugin cannot read `skillListingMaxDescChars`, so that message does not say
+where Claude Code cuts.
 
 ## Sources
 

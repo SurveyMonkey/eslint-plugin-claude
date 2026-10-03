@@ -77,14 +77,15 @@ claude.com, claude.ai or anthropic.com that is not under `https://code.claude.co
 A new rule that checks a number takes the number as a rule option (ADR 001, Decision 2).
 
 - The option is optional. Its default is the value from the Claude Code docs, set in
-  `meta.defaultOptions`.
-- Where Claude Code cuts or skips the file over the number, and no Claude Code setting moves it
-  (a hard limit), set `maximum` in the option schema to the docs value. ESLint then refuses a
-  larger value. Set no maximum where a setting moves the number.
-- Report with one message at the default value. At another value, use a second message that
-  names the value as the configured limit. Do not say that Claude Code acts at that value.
-- Name the option and its default in the rule row of `docs/rules-inventory.md`, and in the
-  Options section of the rule doc. The `recommended` and `strict` configs set no option.
+  `meta.defaultOptions`. Where the docs give no number, the inventory row says so.
+- Claude Code can cut or skip the file at a number. If no Claude Code setting moves that number,
+  it is a hard limit. Set `maximum` in the option schema to the docs value. ESLint then refuses
+  a larger value. Set no maximum where a setting moves the number.
+- Where Claude Code acts at the default value, report with one message there. At another value,
+  use a second message that names the value as the configured limit. Do not say that Claude Code
+  acts at that value.
+- Name the option and its default in the rule row of `docs/rules-inventory.md`. Name them in the
+  Options section of the rule doc too. The `recommended` and `strict` configs set no option.
 
 `tests/limit-options.test.ts` reads the `limit` rows of the inventory. It fails for a built
 rule that lacks the option that its row names.

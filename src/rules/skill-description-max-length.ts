@@ -1,6 +1,7 @@
 // The Claude Code skill listing cuts `description` plus `when_to_use` at 1,536
 // characters (docs/rules/skill-description-max-length.md). The option
-// `listingMax` sets another limit. The setting `skillListingMaxDescChars` moves the cut, so the schema sets no maximum.
+// `listingMax` sets another limit. The setting `skillListingMaxDescChars` moves
+// the cut, so the schema sets no maximum.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { parseFrontmatter, stringField } from '../frontmatter.ts'
@@ -52,7 +53,7 @@ const rule: MarkdownRuleDefinition<{
         if (listing > listingMax) {
           context.report({
             node,
-            // At a team value the skill listing does not cut at the limit.
+            // At another value, the message names the configured limit and claims no cut.
             messageId: listingMax === LISTING_CUT ? 'listingTruncated' : 'overConfiguredLimit',
             data: { length: String(listing), max: String(listingMax) },
           })
