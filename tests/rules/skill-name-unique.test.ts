@@ -440,6 +440,21 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     },
   )
 
+  // The dangling link can stand for a manifest with a `commands` key. The rule cannot read it.
+  it.skipIf(process.platform === 'win32').fails(
+    'reads no commands/ folder when plugin.json is a dangling link',
+    () => {
+      put('dangling/commands/review.md', bare)
+      put('dangling/skills/review/SKILL.md', bare)
+      mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
+      symlinkSync('missing.json', path.join(scratch, 'dangling/.claude-plugin/plugin.json'))
+      const skill = path.join(scratch, 'dangling', 'skills', 'review', 'SKILL.md')
+      const command = path.join(scratch, 'dangling', 'commands', 'review.md')
+      expect(lint(skill, bare)).toEqual([])
+      expect(lint(command, bare)).toEqual([])
+    },
+  )
+
   it('reports a command file that the rule cannot read, because the path gives its name', () => {
     const hidden = put('deny-command/.claude/commands/dup.md', bare)
     const file = path.join(scratch, 'deny-command', '.claude', 'skills', 'mine', 'SKILL.md')
