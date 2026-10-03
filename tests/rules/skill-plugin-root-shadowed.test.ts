@@ -103,6 +103,14 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     withoutAccess(path.dirname(manifest), () => expect(lint(file)).toEqual([]))
   })
 
+  it.skipIf(process.platform === 'win32')('makes no report for a dangling plugin.json link', () => {
+    const file = build('dangling', '')
+    const manifest = path.join(scratch, 'dangling', '.claude-plugin', 'plugin.json')
+    rmSync(manifest)
+    symlinkSync('missing.json', manifest)
+    expect(lint(file)).toEqual([])
+  })
+
   it('makes no report for a plugin root that it cannot search', () => {
     const file = build('deny-root', '{"skills": "./x"}')
     mkdirSync(path.join(scratch, 'deny-root', 'skills'))

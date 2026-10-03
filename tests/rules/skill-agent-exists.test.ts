@@ -403,7 +403,7 @@ describe('a plugin manifest that the rule cannot see', () => {
   )
 
   // The dangling link can stand for a manifest with an `agents` key. The rule cannot read it.
-  it.skipIf(process.platform === 'win32').fails(
+  it.skipIf(process.platform === 'win32')(
     'stays silent when plugin.json is a dangling link',
     () => {
       put('dangling/skills/s/SKILL.md', '')

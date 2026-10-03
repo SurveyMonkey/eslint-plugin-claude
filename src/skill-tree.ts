@@ -12,6 +12,7 @@ import {
   type BigIntStats,
   type Dirent,
   existsSync,
+  lstatSync,
   readdirSync,
   readFileSync,
   realpathSync,
@@ -247,11 +248,24 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
   return fields
 }
 
+/** The result for a path that `realOf` gave null for: `UNREADABLE` when the
+ *  path is a dangling link, and null when nothing is there. `lstatSync` does
+ *  not follow the link, so it does not leave the repository. */
+function danglingOf(file: string): null | Unreadable {
+  try {
+    lstatSync(file)
+  } catch (error) {
+    return failure(error)
+  }
+  return UNREADABLE
+}
+
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
  *  result is null in two cases. The file is not there, or it does not parse to
- *  an object. The result is `UNREADABLE` in two cases. The real path of the
- *  file is out of `bound`, or a read fails for another reason. In both cases
- *  the rule cannot see the file, and the file can hold any key. */
+ *  an object. The result is `UNREADABLE` in three cases. The file is a
+ *  dangling link, its real path is out of `bound`, or a read fails for another
+ *  reason. In each case the rule cannot see the file, and the file can hold
+ *  any key. */
 export function readManifest(
   root: string,
   bound: string,
@@ -259,7 +273,8 @@ export function readManifest(
   const file = path.join(root, '.claude-plugin', 'plugin.json')
   const real = realOf(file)
   if (typeof real !== 'string') {
-    return real
+    // A dangling link gives null from `realOf`, as a missing file does. The link is an entry.
+    return real === null ? danglingOf(file) : real
   }
   if (!isInside(real, bound)) {
     return UNREADABLE

@@ -441,7 +441,7 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
   )
 
   // The dangling link can stand for a manifest with a `commands` key. The rule cannot read it.
-  it.skipIf(process.platform === 'win32').fails(
+  it.skipIf(process.platform === 'win32')(
     'reads no commands/ folder when plugin.json is a dangling link',
     () => {
       put('dangling/commands/review.md', bare)
