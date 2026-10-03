@@ -24,7 +24,8 @@ import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
 /** The result of a read that failed for a reason other than a missing file.
- *  It is also the result for a file with a real path out of the repository. */
+ *  It is also the result for a file with a real path out of the repository,
+ *  and for a dangling manifest link. */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 
@@ -248,9 +249,10 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
   return fields
 }
 
-/** The result for a path that `realOf` gave null for: `UNREADABLE` when the
- *  path is a dangling link, and null when nothing is there. `lstatSync` does
- *  not follow the link, so it does not leave the repository. */
+/** The result for a path where `realOf` gives null. The result is
+ *  `UNREADABLE` for a dangling link, and null when nothing is there. A failed
+ *  `lstatSync` for another reason gives `UNREADABLE`. `lstatSync` does not
+ *  follow the last part of the path, so it never reads the link target. */
 function danglingOf(file: string): null | Unreadable {
   try {
     lstatSync(file)
@@ -273,7 +275,8 @@ export function readManifest(
   const file = path.join(root, '.claude-plugin', 'plugin.json')
   const real = realOf(file)
   if (typeof real !== 'string') {
-    // A dangling link gives null from `realOf`, as a missing file does. The link is an entry.
+    // `realOf` gives null for a dangling link and for a missing file.
+    // `danglingOf` tells them apart, because a dangling link is an entry.
     return real === null ? danglingOf(file) : real
   }
   if (!isInside(real, bound)) {
