@@ -208,6 +208,7 @@ The groups were written apart, so some checks came out twice. Each one now lives
 | `settings-teammate-mode` | Subagents and output styles | `settings-schema` |
 | `settings-teammate-default-model` | Subagents and output styles | `settings-key-scope` |
 | `plugin-commands-dir-legacy` | Plugin manifest and layout | `command-legacy-format` |
+| `skill-allowed-tools-syntax` | Skills and commands | the permission grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-mcp-rule-parens`, `permissions-param-rule`) |
 
 
 ## Decisions
@@ -260,7 +261,7 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 | `skill-plugin-vars-outside-plugin` | Non-plugin SKILL and CMD bodies and `allowed-tools` do not use `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_DATA}`. They are substituted only in plugin skills and stay literal text elsewhere. | recommended | error | no-op | – | [^skills-available-string-substitutions] |
 | `skill-inject-bang-position` | SKILL, CMD body: an inline `` !`cmd` `` placeholder starts a line or follows whitespace. After any other character (`` KEY=!`cmd` ``) it stays literal text and the command does not run. Ignore fenced code. | recommended | error | no-op | – | [^skills-inject-dynamic-context] |
 | `skill-reference-exists` | SKILL: each relative Markdown link or backticked relative path in the body resolves to a file inside the skill directory. | recommended | error | load | – | [^skills-add-supporting-files] |
-| `skill-allowed-tools-syntax` | SKILL, CMD: each `allowed-tools` and `disallowed-tools` entry is a known tool name, `mcp__` name, or valid permission rule such as `Bash(git add *)`. The syntax rule itself is defined by the `permissions` group; this rule applies it here. | recommended | error | no-op | – | [^skills-frontmatter-reference] [^skills-pre-approve-tools-for-a-skill] |
+| `skill-allowed-tools-syntax` | Merged into the permission grammar rules (see Cross-group merges). They read skill `allowed-tools` as an allow list and `disallowed-tools` as a deny list, in SKILL and CMD files. Not built as its own rule. | – | – | no-op | – | [^skills-frontmatter-reference] [^skills-pre-approve-tools-for-a-skill] |
 | `skill-allowed-tools-ineffective` | SKILL, CMD: `disallowed-tools` does not list `EndConversation` (not removable while any other tool remains). `allowed-tools` does not list `AskUserQuestion` or other interactive tools (never auto-allowed). | recommended | error | no-op | – | [^skills-frontmatter-reference] [^changelog-claude-code-changelog] |
 | `skill-allowed-tools-broad` | Committed SKILL, CMD: `allowed-tools` has no unscoped grant: bare `Bash`, `Bash(*)`, `PowerShell`, `Write`, `Edit`, `WebFetch`, or an `mcp__` wildcard. The grant applies without workspace trust, even in `-p`. Option `allow`. | recommended | error | security | – | [^skills-pre-approve-tools-for-a-skill] |
 | `skill-no-bom` | SKILL, CMD: the file does not start with a UTF-8 BOM. Before v2.1.239, Claude Code silently ignored such a file. Fails only below that version (option `minVersion`). | recommended | warn | portability | – | [^changelog-claude-code-changelog] |
@@ -815,7 +816,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 81 rules: 58 in `recommended` (38 error, 20 warn) and 23 `off`.
 
-The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to every other place a permission rule appears: skill `allowed-tools` / `disallowed-tools`, agent `tools` / `disallowedTools`, and hook `if`. The skills, agents, and hooks groups reference them by name.
+The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-mcp-rule-parens`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list), and hook `if`. The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). The hooks group refers to the grammar rules by name. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-available-tools]. So `agent-tools-known` owns both agent fields.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
