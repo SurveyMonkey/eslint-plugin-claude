@@ -93,7 +93,7 @@ describe('skill-description-max-length options', () => {
     expect(report?.message).toContain('The skill listing cuts it at 1536.')
   })
 
-  it.fails('accepts a value above 1,536 for a team that raised the cut', () => {
+  it('accepts a value above 1,536 for a team that raised the cut', () => {
     expect(lint(1800, [{ listingMax: 2000 }])).toHaveLength(0)
     const [report] = lint(2100, [{ listingMax: 2000 }])
     expect(report?.message).toBe(

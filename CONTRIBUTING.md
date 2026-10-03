@@ -78,8 +78,9 @@ A new rule that checks a number takes the number as a rule option (ADR 001, Deci
 
 - The option is optional. Its default is the value from the Claude Code docs, set in
   `meta.defaultOptions`.
-- Where Claude Code cuts or skips the file over the number, set `maximum` in the option schema
-  to the docs value. ESLint then refuses a larger value.
+- Where Claude Code cuts or skips the file over the number, and no Claude Code setting moves it
+  (a hard limit), set `maximum` in the option schema to the docs value. ESLint then refuses a
+  larger value. Set no maximum where a setting moves the number.
 - Report with one message at the default value. At another value, use a second message that
   names the value as the configured limit. Do not say that Claude Code acts at that value.
 - Name the option and its default in the rule row of `docs/rules-inventory.md`, and in the

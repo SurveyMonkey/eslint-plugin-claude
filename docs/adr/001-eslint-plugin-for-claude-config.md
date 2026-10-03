@@ -89,10 +89,13 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    - `recommended` and `strict` set no option.
    - A stricter team value is not a new rule. It is also not a convention of one organization,
      because the docs value stays the default.
-   - Where Claude Code cuts or skips the file over the number (a hard limit), the option schema
-     sets `maximum` to the docs value. ESLint then refuses a larger value. A larger value would
-     hide a fault that Claude Code makes real. The cost: if Claude Code raises the limit, the schema
-     blocks the new value until a release of this plugin.
+   - Where Claude Code cuts or skips the file over the number, and no setting moves that number
+     (a hard limit), the option schema sets `maximum` to the docs value. ESLint then refuses a
+     larger value. A larger value would hide a fault that Claude Code makes real. The cost: if
+     Claude Code raises the limit, the schema blocks the new value until a release of this plugin.
+   - A number that a Claude Code setting moves is not a hard limit, and its option has no
+     maximum. An example is the cut of a skill description, which `skillListingMaxDescChars`
+     moves.
    - At a value that is not the default, the message names the value as the configured limit. It
      does not say that Claude Code acts at that value.
 
@@ -163,7 +166,7 @@ These items were open, and are now settled:
 
 ## Consequences
 
-- **A team can set a stricter number, and cannot set a looser one past a hard limit.** Each rule
+- **A team can set another number, and cannot set one past a hard limit.** Each rule
   that checks a number takes it as an option. `CONTRIBUTING.md` states the form, and
   `tests/limit-options.test.ts` fails for a built `limit` rule with no option.
 - **One install covers every file type and every venue.** A team adds one package and what it
