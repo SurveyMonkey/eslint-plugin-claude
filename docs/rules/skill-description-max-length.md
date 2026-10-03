@@ -52,13 +52,24 @@ description: Deploys the service to staging. Use when the user asks to ship a br
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `listingMax` | `1536` | The limit on `description` plus `when_to_use`. Set it to match `skillListingMaxDescChars` if you change that setting.[^cut] |
+| Option | Default | Maximum | Use |
+|--------|---------|---------|-----|
+| `listingMax` | `1536` | `1536` | The limit on `description` plus `when_to_use`. The option is optional. |
 
 ```js
-'claude/skill-description-max-length': ['warn', { listingMax: 1536 }]
+'claude/skill-description-max-length': ['warn', { listingMax: 1000 }]
 ```
+
+The default is the cut in the skill listing.[^cut] A team can set a lower value to keep descriptions short.
+A config that sets only the severity keeps the default. The `recommended` and `strict` configs set no option.
+
+The schema refuses a value above 1,536, and ESLint stops with a configuration error. Claude Code cuts the text at
+that value, so a higher limit would hide text that the model never sees. The setting `skillListingMaxDescChars`
+can raise the cut in Claude Code.[^cut] The rule does not follow it. The maximum stays until a release of this
+plugin changes it.
+
+At the default, the message says that the skill listing cuts the text at 1,536. At another value, the message says
+"The configured limit is 1000". Claude Code does not cut at a team value, so the message does not say that it does.
 
 ## Sources
 

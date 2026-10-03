@@ -18,7 +18,8 @@ markdownTester.run('skill-description-max-length', ruleOf('skill-description-max
     { code: '# No frontmatter\n', filename },
     skill('description: [unclosed\n'),
     skill('description: 3\n'),
-    { ...skill(`description: ${text(1600)}\n`), options: [{ listingMax: 1600 }] },
+    { ...skill(`description: ${text(1000)}\n`), options: [{ listingMax: 1000 }] },
+    { ...skill(`description: ${text(1000)}\n`), options: [{ listingMax: 1536 }] },
     skill(`description: >-\n  ${text(1000)}\n  ${text(535)}\n`),
   ],
   invalid: [
@@ -44,7 +45,12 @@ markdownTester.run('skill-description-max-length', ruleOf('skill-description-max
     {
       ...skill(`description: ${text(101)}\nwhen_to_use: ${text(100)}\n`),
       options: [{ listingMax: 200 }],
-      errors: [{ messageId: 'listingTruncated', data: { length: '201', max: '200' } }],
+      errors: [{ messageId: 'overConfiguredLimit', data: { length: '201', max: '200' } }],
+    },
+    {
+      ...skill(`description: ${text(1200)}\n`),
+      options: [{ listingMax: 1000 }],
+      errors: [{ messageId: 'overConfiguredLimit', data: { length: '1200', max: '1000' } }],
     },
   ],
 })
@@ -67,7 +73,7 @@ describe('skill-description-max-length options', () => {
       { filename: '/repo/.claude/skills/s/SKILL.md' },
     )
 
-  it.fails('names a team value as the configured limit and not as a cut', () => {
+  it('names a team value as the configured limit and not as a cut', () => {
     const [report] = lint(1200, [{ listingMax: 1000 }])
     expect(report?.message).toBe(
       '`description` plus `when_to_use` has 1200 characters. The configured limit is 1000.',
@@ -87,8 +93,8 @@ describe('skill-description-max-length options', () => {
     expect(report?.message).toContain('The skill listing cuts it at 1536.')
   })
 
-  it.fails('refuses a value above the 1,536 character cut', () => {
-    expect(() => lint(10, [{ listingMax: 2000 }])).toThrow(/listingMax/)
+  it('refuses a value above the 1,536 character cut', () => {
+    expect(() => lint(10, [{ listingMax: 2000 }])).toThrow(/Value 2000 should be <= 1536/)
   })
 
   it('accepts 1,536 as the largest value', () => {
