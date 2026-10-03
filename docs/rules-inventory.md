@@ -23,13 +23,13 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **479 candidate rules** in 9 groups. 357 rules go in `recommended`: 214 at `error` and 143 at
+- **478 candidate rules** in 9 groups. 356 rules go in `recommended`: 213 at `error` and 143 at
   `warn`. 122 rules ship `off`, and `strict` turns them on at `warn`.
-- **Silent failure is the largest category.** 149 rules have the category `no-op`. The file loads,
+- **Silent failure is the largest category.** 148 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 15 rules are `partial`: validate reports
-  some of their cases. The other 464 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 463 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -114,7 +114,7 @@ below covers one kind of configuration file, and each rule name starts with its 
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
-| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 149 |
+| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 148 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 49 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 39 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
@@ -130,7 +130,7 @@ below covers one kind of configuration file, and each rule name starts with its 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 479 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 478 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -160,7 +160,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
-| Skills and commands | 16 | 13 | 10 | 39 |
+| Skills and commands | 15 | 13 | 10 | 38 |
 | Subagents and output styles | 17 | 14 | 12 | 43 |
 | Hooks | 20 | 17 | 21 | 58 |
 | Plugin manifest and layout | 28 | 20 | 10 | 58 |
@@ -169,9 +169,9 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 23 | 24 | 16 | 63 |
 | Permissions and sandbox | 38 | 20 | 23 | 81 |
 | MCP and LSP servers | 35 | 12 | 11 | 58 |
-| **Total** | **214** | **143** | **122** | **479** |
+| **Total** | **213** | **143** | **122** | **478** |
 
-By severity, 214 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
+By severity, 213 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
 the 122 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -208,6 +208,7 @@ The groups were written apart, so some checks came out twice. Each one now lives
 | `settings-teammate-mode` | Subagents and output styles | `settings-schema` |
 | `settings-teammate-default-model` | Subagents and output styles | `settings-key-scope` |
 | `plugin-commands-dir-legacy` | Plugin manifest and layout | `command-legacy-format` |
+| `skill-allowed-tools-syntax` | Skills and commands | the permission grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) |
 
 
 ## Decisions
@@ -241,7 +242,7 @@ Decisions on the open questions, made in review of this document:
 
 ### Skills and commands
 
-Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 39 rules: 16 error and 13 warn in `recommended`, and 10 heuristic or opt-in rules `off`.
+Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 38 rules: 15 error and 13 warn in `recommended`, and 10 heuristic or opt-in rules `off`.
 
 Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKILL.md`, `<plugin>/SKILL.md`. CMD = `**/.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`. A rule applies to SKILL only unless its Checks cell names CMD.
 
@@ -260,9 +261,9 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 | `skill-plugin-vars-outside-plugin` | Non-plugin SKILL and CMD bodies and `allowed-tools` do not use `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_DATA}`. They are substituted only in plugin skills and stay literal text elsewhere. | recommended | error | no-op | – | [^skills-available-string-substitutions] |
 | `skill-inject-bang-position` | SKILL, CMD body: an inline `` !`cmd` `` placeholder starts a line or follows whitespace. After any other character (`` KEY=!`cmd` ``) it stays literal text and the command does not run. Ignore fenced code. | recommended | error | no-op | – | [^skills-inject-dynamic-context] |
 | `skill-reference-exists` | SKILL: each relative Markdown link or backticked relative path in the body resolves to a file inside the skill directory. | recommended | error | load | – | [^skills-add-supporting-files] |
-| `skill-allowed-tools-syntax` | SKILL, CMD: each `allowed-tools` and `disallowed-tools` entry is a known tool name, `mcp__` name, or valid permission rule such as `Bash(git add *)`. The syntax rule itself is defined by the `permissions` group; this rule applies it here. | recommended | error | no-op | – | [^skills-frontmatter-reference] [^skills-pre-approve-tools-for-a-skill] |
+| `skill-allowed-tools-syntax` | Merged into the permission grammar rules (see Cross-group merges). They read skill `allowed-tools` as an allow list and `disallowed-tools` as a deny list, in SKILL and CMD files. Not built as its own rule. | – | – | no-op | – | [^skills-frontmatter-reference] [^skills-pre-approve-tools-for-a-skill] |
 | `skill-allowed-tools-ineffective` | SKILL, CMD: `disallowed-tools` does not list `EndConversation` (not removable while any other tool remains). `allowed-tools` does not list `AskUserQuestion` or other interactive tools (never auto-allowed). | recommended | error | no-op | – | [^skills-frontmatter-reference] [^changelog-claude-code-changelog] |
-| `skill-allowed-tools-broad` | Committed SKILL, CMD: `allowed-tools` has no unscoped grant: bare `Bash`, `Bash(*)`, `PowerShell`, `Write`, `Edit`, `WebFetch`, or an `mcp__` wildcard. The grant applies without workspace trust, even in `-p`. Option `allow`. | recommended | error | security | – | [^skills-pre-approve-tools-for-a-skill] |
+| `skill-allowed-tools-broad` | Committed SKILL, CMD: `allowed-tools` has no unscoped grant: bare `Bash`, `Bash(*)`, `PowerShell`, `PowerShell(*)`, `Write`, `Edit`, `WebFetch`, `mcp__<server>__*` or a bare `mcp__<server>`. The permissions page equates `Bash(*)` and `PowerShell(*)` with the bare name and gives both `mcp__` forms as matching every tool of a server. It does not check `mcp__*` (an allow rule skips it; `permissions-tool-name-glob` reports it), `mcp__<server>__get_*` (matches some tools), or `Write(*)`, `Edit(*)` and `WebFetch(*)` (no page equates them with the bare name). The grant applies without workspace trust, even in `-p`. Option `allow`. | recommended | error | security | – | [^skills-pre-approve-tools-for-a-skill] [^permissions-match-all-uses-of-a-tool] [^permissions-powershell] [^permissions-mcp] [^permissions-tool-name-wildcards] |
 | `skill-no-bom` | SKILL, CMD: the file does not start with a UTF-8 BOM. Before v2.1.239, Claude Code silently ignored such a file. Fails only below that version (option `minVersion`). | recommended | warn | portability | – | [^changelog-claude-code-changelog] |
 | `skill-boolean-literal` | SKILL, CMD: `disable-model-invocation`, `user-invocable` and `background` use `true` or `false`. `yes`,`no`,`on`,`off`,`1`,`0` work only on v2.1.218 or later (option `minVersion`). | recommended | warn | portability | – | [^skills-frontmatter-reference] |
 | `skill-metadata-reserved-keys` | SKILL, CMD: no key inside `metadata` equals a frontmatter field name, such as `paths`. | recommended | warn | practice | – | [^skills-frontmatter-reference] |
@@ -815,7 +816,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 81 rules: 58 in `recommended` (38 error, 20 warn) and 23 `off`.
 
-The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to every other place a permission rule appears: skill `allowed-tools` / `disallowed-tools`, agent `tools` / `disallowedTools`, and hook `if`. The skills, agents, and hooks groups reference them by name.
+The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list), and hook `if`. `permissions-mcp-rule-parens` stays on settings files, because the docs state the skip for a settings file only (ruling 17). The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). The hooks group refers to the grammar rules by name. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-available-tools]. So `agent-tools-known` owns both agent fields.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|

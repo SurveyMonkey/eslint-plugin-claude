@@ -3,7 +3,8 @@
 // `WebSearch` is in the table, and its row says "No specifier".
 import { describe, expect, it } from 'vitest'
 import { SPECIFIER_TOOLS, TOOL_NAMES } from '../../src/data/tool-names.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-specifier-unsupported')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -117,6 +118,44 @@ jsonTester.run('permissions-specifier-unsupported', rule, {
     {
       code: settings({ deny: ['WebSearch(a.b:c)'] }),
       filename: '.claude/settings.json',
+      errors: [{ messageId: 'unsupported' }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-specifier-unsupported in skill files', rule, {
+  valid: [
+    skill('allowed-tools: Bash(git add *) Read(docs/**) WebSearch ExitPlanMode\n'),
+    skill('disallowed-tools: WebSearch(query:x)\n'),
+    skill('allowed-tools: WebSearch(x\n'),
+  ],
+  invalid: [
+    {
+      ...skill('allowed-tools: Read WebSearch(x)\n'),
+      errors: [
+        {
+          messageId: 'unsupported',
+          data: { tool: 'WebSearch' },
+          line: 2,
+          column: 21,
+          endColumn: 33,
+        },
+      ],
+    },
+    {
+      ...skill('disallowed-tools:\n  - ToolSearch(x)\n', '.claude/commands/c.md'),
+      errors: [{ messageId: 'unsupported', line: 3 }],
+    },
+    {
+      ...skill('allowed-tools: [SendMessage(x)]\n', pluginSkill()),
       errors: [{ messageId: 'unsupported' }],
     },
   ],

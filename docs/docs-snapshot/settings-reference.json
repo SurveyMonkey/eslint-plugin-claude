@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "9887c768615dce66828cb29ecebd944357d21acdf726a76ad6c86021b376aa2d",
+  "hash": "76582550507f251beaa3688cfb35ad09b0241935d4a16b11b3a09077d19a7e5c",
   "blocks": [
     {
       "id": "all-settings",
@@ -8,7 +8,7 @@
     },
     {
       "id": "settings-index",
-      "hash": "30158ab736034e59be494ae81e5196075c4add6f1c89528cddcf84b2dce3f107"
+      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
     },
     {
       "id": "model-and-responses",
@@ -92,7 +92,7 @@
     },
     {
       "id": "modelsettings",
-      "hash": "b12b9c8861d5a75c8b7d43f1654e50d2a1ff0e03731445b411a7b1a8da1218de"
+      "hash": "2b6d5712ceb1f6f68fa49ceb462753874e79b67533e613b3b2a4d6114327bb8c"
     },
     {
       "id": "outputstyle",
@@ -296,15 +296,15 @@
     },
     {
       "id": "sandbox-credentials-envvars",
-      "hash": "f549d22c4ffec55bed2dfe95dce7724039ed701400225d0ed8e39289027facb7"
+      "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b"
     },
     {
       "id": "mask-fields-for-environment-variables",
-      "hash": "a441b38511d6c9dad01decf4318583347bb717ac5376992334940c918e99da9d"
+      "hash": "35d2058fd639400b9d06e4271f53b322b4b279776434ff23078b6ec864f23443"
     },
     {
       "id": "sandbox-credentials-allowplaintextinject",
-      "hash": "cae46263cf082f2bd6a8ac5f84dff789f91ea2b1ba152ba2993c789c4f7809b4"
+      "hash": "e577b06f3af62d1a15cb5ca93e99ef85af47f4d9795eb3bda10e93ab97e4094a"
     },
     {
       "id": "sandbox-credentials-awspairs",
@@ -360,7 +360,7 @@
     },
     {
       "id": "sandbox-network-tlsterminate",
-      "hash": "1d3de6b1faf83302a3ad4cb2e4a186cf52dff4a8b7ffebec86e7132209463008"
+      "hash": "c7bcb2a65558324a4cd22ae053f5fe008483ed7a6407d0941a70e4b1b7004c49"
     },
     {
       "id": "memory-and-context",
@@ -372,7 +372,7 @@
     },
     {
       "id": "autocompactwindow",
-      "hash": "1e413e99e23a2ba7a1a7c399cf2a34f40634d61f7aa0fe59d1f9e42fb3fb67ba"
+      "hash": "68968b79952e719694960d3c343c797e9a7b3ff245ded63c32886c31651677d1"
     },
     {
       "id": "automemorydirectory",
@@ -408,7 +408,7 @@
     },
     {
       "id": "variables-claude-code-ignores-in-env",
-      "hash": "15bc20837795e50924ba0d49286ff1d9c82d04417723363e8f5df82cba7f2aaa"
+      "hash": "5d480bc5e930435012a5eed292a1093d752c6b0fef901549358a132008b62309"
     },
     {
       "id": "filecheckpointingenabled",
@@ -436,7 +436,7 @@
     },
     {
       "id": "askuserquestiontimeout",
-      "hash": "d4f121c732d345006a907596bb39a3497309f2956e6f43f2818f663601aafd7b"
+      "hash": "4750fd8680f353ffed6d47c55ad61f8b731aec2fa56553bb3375b63687c32de2"
     },
     {
       "id": "autocontinueatusagelimit",
@@ -736,7 +736,7 @@
     },
     {
       "id": "owner-wildcards",
-      "hash": "f8defb03ff61e7e3b94fcc9a72334099064d63b3c064eada9264db165e748d08"
+      "hash": "de827431bbbb5b1d5ef6d4677150a2d2b496ef12724a59acb62f7c6775c35420"
     },
     {
       "id": "exact-matching",
@@ -888,7 +888,7 @@
     },
     {
       "id": "worktree-bgisolation",
-      "hash": "03a5ddd1829c2bef24168f872c74bea30eaa0458865a5599295c9858d46b62bb"
+      "hash": "aeb67466138ce8a2f07d188ee54ec73d6fe3d154835409014f3b68a9de3ec274"
     },
     {
       "id": "remote-desktop-and-notifications",
@@ -952,7 +952,7 @@
     },
     {
       "id": "allowedproviders",
-      "hash": "c1337a4d65a16154aed79ba700407fcb02f612e35696d662bf238a8738909fb0"
+      "hash": "be967dde746d22964a7ee6c8f3a5349d54ef016769f9c7a4dfd0adcccbce4e80"
     },
     {
       "id": "endpoints-that-need-a-pin-in-managed-env",
@@ -1116,7 +1116,7 @@
     },
     {
       "id": "claudeinchromedefaultenabled",
-      "hash": "490da88ffa9c706afc53c92978a06df5392993210aa6ba719441cba73a9b3913"
+      "hash": "7d3f690990904d087009aaeb89019599302bf6a5c8abd0894a1402acfee36f74"
     },
     {
       "id": "copyfullresponse",

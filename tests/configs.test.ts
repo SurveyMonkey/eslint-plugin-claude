@@ -18,7 +18,15 @@ const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 const badSettings = JSON.stringify({
   hooks: { preToolUse: [] },
   permissions: {
-    allow: ['Bash(', 'bogus', 'B*', 'WebSearch(x)', 'Write(docs/**)', 'mcp__a(x)'],
+    allow: [
+      'Bash(',
+      'bogus',
+      'B*',
+      'WebSearch(x)',
+      'Write(docs/**)',
+      'mcp__a(x)',
+      'Skill(anthropic *)',
+    ],
     deny: ['Bash(command:x)'],
   },
 })
@@ -65,10 +73,21 @@ const TREE: Record<string, string> = {
   '.claude/skills/glob/SKILL.md': '---\npaths: "photos [2024/**"\n---\n',
   '.claude/skills/glob-ok/SKILL.md':
     '---\npaths:\n  - "src/**/*.{ts,tsx}"\n  - "photos \\\\[2024/**"\n---\n',
+  // One bad tool list for each rule of the tool-list layer, in a skill, a command and an agent.
+  '.claude/skills/grammar/SKILL.md':
+    '---\nallowed-tools:\n  - Bash(\n  - bogus\n  - B*\n  - WebSearch(x)\n  - Write(docs/**)\n  - mcp__a(x)\ndisallowed-tools: Bash(command:x)\n---\n',
+  '.claude/commands/allowed.md': '---\nallowed-tools: Bogus\n---\n',
+  'plugins/p/commands/allowed.md': '---\nallowed-tools: Bogus\n---\n',
+  '.claude/skills/broad/SKILL.md': '---\nallowed-tools: Bash\n---\n',
+  '.claude/skills/skill-rule/SKILL.md': '---\nallowed-tools: Skill(anthropic *)\n---\n',
+  // The grammar rules do not read the tool lists of a subagent. `agent-tools-known` does.
+  '.claude/agents/tools.md': '---\nname: t\ndescription: d\ntools: Read(\n---\n',
+  'plugins/p/agents/tools.md': '---\nname: t\ndescription: d\ntools: Bogus\n---\n',
+  '.claude/agents/unavailable.md': '---\nname: u\ndescription: d\ntools: AskUserQuestion\n---\n',
   // The same content in files that no rule reads, so no report.
   'docs/commands/c.md': '# Not a command\n',
   'docs/readme.md': '# Other Markdown\n',
-  'docs/SKILL.md': `\n---\nmade_up: 1\nagent: Plan\nallowed-tools: AskUserQuestion\n---\nKEY=!\`cmd\` ${pluginRoot}\n`,
+  'docs/SKILL.md': `\n---\nmade_up: 1\nagent: Plan\nallowed-tools: AskUserQuestion Bash Skill(anthropic *) Bogus(\n---\nKEY=!\`cmd\` ${pluginRoot}\n`,
   '.claude/agents/a.md': `---\nname: a\ndescription: ${long}\n---\n`,
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
@@ -91,7 +110,8 @@ const TREE: Record<string, string> = {
   '.claude/agents/review/deep/n.md':
     '---\nname: n\ndescription: d\npermissionMode: bypassPermissions\n---\n',
   'plugins/p/agents/sub/n.md': '---\nname: n\ndescription: d\npermissionMode: plan\n---\n',
-  'docs/agents/a.md': '---\nmade_up: 1\npermissionMode: bypassPermissions\n---\n',
+  'docs/agents/a.md':
+    '---\nmade_up: 1\npermissionMode: bypassPermissions\ntools: AskUserQuestion, Bogus\n---\n',
   'docs/output-styles/s.md': '---\nname: [unclosed\nforce-for-plugin: true\n---\n',
   'other.json': badHooks,
   'hooks.json': badHooks,
@@ -109,6 +129,14 @@ const GRAMMAR_RULES = [
   'permissions-mcp-rule-parens',
   'permissions-param-rule',
 ]
+
+// The rules that read the settings files and the tool lists of skills. Each has one block for
+// JSON and one for Markdown, in that order.
+// `permissions-mcp-rule-parens` reads settings files only (ruling 17), so it has one block.
+const SETTINGS_ONLY = 'permissions-mcp-rule-parens'
+const TOOL_LIST_BLOCKS = [...GRAMMAR_RULES, 'permissions-skill-rule'].flatMap((rule) =>
+  rule === SETTINGS_ONLY ? [rule] : [rule, rule],
+)
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -166,7 +194,22 @@ const EXPECTED = [
     '.claude/settings.local.json',
     'packages/x/.claude/settings.json',
     'packages/x/.claude/settings.local.json',
-  ].flatMap((file) => GRAMMAR_RULES.map((rule) => `${file}: claude/${rule}@2`)),
+  ].flatMap((file) =>
+    [...GRAMMAR_RULES, 'permissions-skill-rule'].map((rule) => `${file}: claude/${rule}@2`),
+  ),
+  // The grammar rules also read the tool lists of a skill file. A subagent has none of that.
+  ...GRAMMAR_RULES.filter((rule) => rule !== SETTINGS_ONLY).map(
+    (rule) => `.claude/skills/grammar/SKILL.md: claude/${rule}@2`,
+  ),
+  '.claude/commands/allowed.md: claude/command-legacy-format@1',
+  '.claude/commands/allowed.md: claude/permissions-unknown-tool@2',
+  'plugins/p/commands/allowed.md: claude/command-legacy-format@1',
+  'plugins/p/commands/allowed.md: claude/permissions-unknown-tool@2',
+  '.claude/skills/broad/SKILL.md: claude/skill-allowed-tools-broad@2',
+  '.claude/skills/skill-rule/SKILL.md: claude/permissions-skill-rule@2',
+  '.claude/agents/tools.md: claude/agent-tools-known@2',
+  'plugins/p/agents/tools.md: claude/agent-tools-known@2',
+  '.claude/agents/unavailable.md: claude/agent-tools-unavailable@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -178,6 +221,8 @@ const AGENT_RULES = [
   'agent-mcp-servers-schema',
   'agent-permission-mode-bypass',
   'agent-memory-grants-write',
+  'agent-tools-known',
+  'agent-tools-unavailable',
   'agent-teams-no-project-config',
   'agent-teams-no-project-config',
   'output-style-frontmatter-valid',
@@ -194,6 +239,7 @@ const NEW_RULES = [
   'skill-plugin-vars-outside-plugin',
   'skill-inject-bang-position',
   'skill-allowed-tools-ineffective',
+  'skill-allowed-tools-broad',
   'skill-plugin-root-shadowed',
   'skill-file-layout',
   'skill-reference-exists',
@@ -239,7 +285,7 @@ describe('configs', () => {
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
-      ...GRAMMAR_RULES.map((rule) => [
+      ...TOOL_LIST_BLOCKS.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
@@ -256,7 +302,7 @@ describe('configs', () => {
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
-      ...GRAMMAR_RULES.map((rule) => `claude/strict/${rule}`),
+      ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -268,6 +314,20 @@ describe('configs', () => {
       ['markdown/gfm', ['**/.claude/teams/**/*.md']],
       ['json/json', ['**/.claude/teams/**/*.json']],
     ])
+  })
+
+  it('gives each tool-list rule one JSON block and one Markdown block', () => {
+    for (const rule of [...GRAMMAR_RULES, 'permissions-skill-rule'].filter(
+      (r) => r !== SETTINGS_ONLY,
+    )) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${rule}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
+        ['markdown/gfm', ['**/SKILL.md', '**/commands/**/*.md']],
+      ])
+    }
   })
 
   it('recommended reports each rule on its own files, at its own severity', async () => {

@@ -1,6 +1,6 @@
 // The permissions page, "Match by input parameter": Claude Code skips each
 // `mcp__` rule that has parentheses when it loads a settings file.
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-mcp-rule-parens')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -35,4 +35,21 @@ jsonTester.run('permissions-mcp-rule-parens', rule, {
       errors: [{ messageId: 'parens' }, { messageId: 'parens' }, { messageId: 'parens' }],
     },
   ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+// The permissions page states the skip for a settings file only (ruling 17).
+markdownTester.run('permissions-mcp-rule-parens in skill files', rule, {
+  valid: [
+    skill('allowed-tools: mcp__s__t(x)\n'),
+    skill('disallowed-tools: mcp__s__t(x)\n', '.claude/commands/c.md'),
+  ],
+  invalid: [],
 })

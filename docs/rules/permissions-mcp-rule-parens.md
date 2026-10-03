@@ -30,6 +30,8 @@ name starts with `mcp__` and that has parentheses, also empty ones.
 
 The rule skips a string that does not parse. [`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
 
+The docs state the skip for a settings file only, so the rule does not lint skill files (ruling 17).
+
 Fail:
 
 ```json

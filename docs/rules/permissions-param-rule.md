@@ -16,7 +16,7 @@ Do not match the primary input field of a tool with a parameter rule.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -40,10 +40,29 @@ so the rule does not report them.
 
 The rule skips a string that does not parse. [`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
 
+## Skill and command files
+
+The rule also reads a skill file (`SKILL.md`) and a command file. In the frontmatter, `allowed-tools` is an allow list,
+and `disallowed-tools` is a deny list.[^skill][^fields] Each field takes a space- or comma-separated string, or a YAML
+list. A space inside parentheses does not split a rule. The rule reports at the entry. It reads no other frontmatter
+field. It skips a field that is neither a string nor a list. It does not read the `tools` field of a subagent.
+[`agent-tools-known`](agent-tools-known.md) checks that field.
+
+In a skill, the rule reads `disallowed-tools` only, because that field is the deny list. It does not read `allowed-tools`.
+
 Fail:
 
 ```json
 { "permissions": { "deny": ["Bash(command:rm *)"] } }
+```
+
+Fail, in a skill:
+
+```yaml
+---
+name: example
+disallowed-tools: Bash(command:rm *)
+---
 ```
 
 Pass:
@@ -55,3 +74,5 @@ Pass:
 ## Sources
 
 [^param]: [Configure permissions: Match by input parameter](https://code.claude.com/docs/en/permissions#match-by-input-parameter)
+[^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)
+[^fields]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "c39cecc3420511ab1248fe522163cf6edfc08050abf886dbea16cbb785cde9a4",
+  "hash": "a73cd23ed6c150aaa3ef2bcdf85a3ad00f817a5441cd0dd05775c98d0bc6f55c",
   "blocks": [
     {
       "id": "tools-reference",
@@ -20,7 +20,7 @@
     },
     {
       "id": "question-auto-continue-timeout",
-      "hash": "8267a6bb42b70fb70972cc51e2159a0a6ff51edb958d331c72d454229f65b1b1"
+      "hash": "6221fd4d82a3d2eb69d368e86bb413bb6e75f2c476169c144390a319a37b681b"
     },
     {
       "id": "bash-tool-behavior",
@@ -32,7 +32,7 @@
     },
     {
       "id": "timeout-and-output-limits",
-      "hash": "934546da68c3d34e7de7170691df009b37ffc985b1920fae64d9e57d56a7ba8f"
+      "hash": "868c8ba0074a7bef5aa9ee5354612bf595744a2a9c82eff26c9b37277d4ebdfc"
     },
     {
       "id": "output-limits",
@@ -48,7 +48,7 @@
     },
     {
       "id": "time-limit-for-background-commands",
-      "hash": "982093d767f36c4c04688c038cedbc8b7e0a0b58cd43a9365818aaae60087e0c"
+      "hash": "3062d7756d7c56ec8919cd05fc1f2de404bb0da69549bbf8df72b530815a2b0f"
     },
     {
       "id": "raise-the-time-limit-for-background-commands",
@@ -84,7 +84,7 @@
     },
     {
       "id": "monitor-tool",
-      "hash": "581744c4752a5e10c3bca52ca3b2ac264fdbeb353417a0eb8395780ec23be3cc"
+      "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0"
     },
     {
       "id": "websocket-source",
@@ -152,7 +152,7 @@
     },
     {
       "id": "webfetch-tool-behavior",
-      "hash": "e798a3c19659b6ae5437654e5a5f2063ed867b9258700acf6ecb3958d95f66e4"
+      "hash": "b051742104a9e0a260486d0432b12dcc61c01ad531abf938c4ba6fdff8c4e39a"
     },
     {
       "id": "webfetch-availability",
