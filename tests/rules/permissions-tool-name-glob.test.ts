@@ -1,7 +1,8 @@
 // The permissions page, "Tool name wildcards": a deny or ask rule takes a
 // glob anywhere in the name. An allow rule takes one only after a literal
 // `mcp__<server>__` prefix.
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-tool-name-glob')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -59,6 +60,41 @@ jsonTester.run('permissions-tool-name-glob', rule, {
     {
       code: settings({ allow: ['Ba*', 'Re*(./src/**)'] }),
       filename: '.claude/settings.json',
+      errors: [{ messageId: 'unanchored' }, { messageId: 'unanchored' }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-tool-name-glob in skill files', rule, {
+  valid: [
+    skill('allowed-tools: mcp__puppeteer__* mcp__github__get_*\n'),
+    // `disallowed-tools` is a deny list, and a deny rule takes a glob anywhere.
+    skill('disallowed-tools: * mcp__* B*\n'),
+    skill('allowed-tools: Bash(git *) Read(**/*.ts)\n'),
+    skill('allowed-tools: *(\n'),
+  ],
+  invalid: [
+    {
+      ...skill('allowed-tools: Read *\n'),
+      errors: [{ messageId: 'unanchored', line: 2, column: 21, endColumn: 22 }],
+    },
+    {
+      ...skill('allowed-tools:\n  - mcp__*\n  - B*\n', '.claude/commands/c.md'),
+      errors: [
+        { messageId: 'unanchored', line: 3 },
+        { messageId: 'unanchored', line: 4 },
+      ],
+    },
+    {
+      ...skill('allowed-tools: "mcp__*__get, Ba*"\n', pluginSkill()),
       errors: [{ messageId: 'unanchored' }, { messageId: 'unanchored' }],
     },
   ],

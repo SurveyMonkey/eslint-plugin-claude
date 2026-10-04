@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permissions",
-  "hash": "f8e04ca750ed01f71d739b598fa3bbe40dab358d69f9e79191479d017cbfdef2",
+  "hash": "998f954e7ba578251e44a75c8d70ad39c5ba75ee60d3edb04c269a3a4a45eef6",
   "blocks": [
     {
       "id": "configure-permissions",
@@ -8,7 +8,7 @@
     },
     {
       "id": "permission-system",
-      "hash": "36386598ee312f8910a28a0f57d1834030820aad3c7e97cf9fb668211fad4c25"
+      "hash": "0fc0d0ea10bba4c46221ce69b4eb0167dae682a53c479815d243fe5fc9a24e32"
     },
     {
       "id": "add-a-comment-when-you-answer-a-permission-prompt",
@@ -120,7 +120,7 @@
     },
     {
       "id": "extend-permissions-with-hooks",
-      "hash": "bdddab71e5cff73c38e4da3016a54b8bde3251c8a19696237b7db9e0c33a8040"
+      "hash": "96e6697e6633c398a95990444a67053b034a417f9750e6923e0b5cf8f0bee22f"
     },
     {
       "id": "working-directories",
@@ -203,6 +203,18 @@
       "id": "tool-name-wildcards",
       "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286",
       "text": "### Tool name wildcards\n\nDeny and ask rules also accept glob patterns in the tool-name position. The pattern must match the full tool name: `\"*\"` matches every tool, and `\"mcp__*\"` matches every MCP tool across all servers. A tool matched by a bare-name glob deny rule is removed from Claude's context, the same as a bare tool name, including the [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) exception: a glob deny can't remove it while any other tool remains, and a glob ask never prompts for it. This configuration denies every MCP tool:\n\n```json theme={null}\n{\n  \"permissions\": {\n    \"deny\": [\n      \"mcp__*\"\n    ]\n  }\n}\n```\n\nAllow rules accept tool-name globs only after a literal `mcp__<server>__` prefix. The server segment must be glob-free so the rule names a specific server you configured. `mcp__puppeteer__*` matches every tool from the `puppeteer` server, and `mcp__github__get_*` matches its `get_` tools. An unanchored allow glob such as `\"*\"`, `\"B*\"`, or `\"mcp__*\"` is skipped with a warning and doesn't auto-approve anything.\n\nA deny or ask rule whose tool name matches no known tool produces a startup warning to catch typos. Tool names containing `_` or `*` are exempt from the check, and so are the names of tools Claude Code has removed, such as `TaskOutput`.\n\nThe label shown for a tool in the transcript and permission dialog can differ from its canonical name. For example, the tool labeled `Stop Task` in the transcript has the canonical name `TaskStop`. Permission rules and [hook matchers](/docs/en/hooks) don't match the label, so a rule written as `Stop Task` doesn't match. For deny and ask rules, the startup warning above catches the mismatch. Use the canonical names listed in the [tools reference](/docs/en/tools-reference)."
+    },
+    {
+      "heading": "Match all uses of a tool",
+      "id": "match-all-uses-of-a-tool",
+      "hash": "8a5b44ee4d880d824ce8de288d9a07e55aabbcb8c756d10d2c864c0eeccb7339",
+      "text": "### Match all uses of a tool\n\nTo match all uses of a tool, use only the tool name without parentheses:\n\n| Rule | Effect |\n| :- | :- |\n| `Bash` | Matches all Bash commands |\n| `WebFetch` | Matches all web fetch requests |\n| `Read` | Matches all file reads |\n\n`Bash(*)` is equivalent to `Bash` and matches all Bash commands. As a deny rule, both forms remove the tool from Claude's context."
+    },
+    {
+      "heading": "PowerShell",
+      "id": "powershell",
+      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117",
+      "text": "### PowerShell\n\nPowerShell permission rules use the same shape as Bash rules. Wildcards with `*` match at any position, the `:*` suffix is equivalent to a trailing ` *`, and a bare `PowerShell` or `PowerShell(*)` matches every command. This configuration allows `Get-ChildItem` and `git commit` commands while blocking `Remove-Item`:\n\n```json theme={null}\n{\n  \"permissions\": {\n    \"allow\": [\n      \"PowerShell(Get-ChildItem *)\",\n      \"PowerShell(git commit *)\"\n    ],\n    \"deny\": [\n      \"PowerShell(Remove-Item *)\"\n    ]\n  }\n}\n```\n\nCommon aliases are canonicalized before matching. A rule written for the cmdlet name also matches its aliases, so `PowerShell(Get-ChildItem *)` matches `gci`, `ls`, and `dir` as well. Matching is case-insensitive.\n\nClaude Code parses the PowerShell AST and checks each command in a compound command independently. Pipeline operators `|`, statement separators `;`, and on PowerShell 7+ the chain operators `&&` and `||` split a compound command into subcommands. A rule must match every subcommand for the compound command to be allowed."
     }
   ]
 }

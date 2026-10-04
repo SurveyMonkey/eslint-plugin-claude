@@ -12,7 +12,8 @@ import {
   TOOL_NAMES,
 } from '../../src/data/tool-names.ts'
 import plugin from '../../src/index.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-unknown-tool')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -177,6 +178,119 @@ jsonTester.run('permissions-unknown-tool', rule, {
       filename: '.claude/settings.json',
       options: [{ additionalTools: ['FutureTool'] }],
       errors: [{ messageId: 'unknown', data: { tool: 'Bogus' } }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-unknown-tool in skill files', rule, {
+  valid: [
+    // The example of the skills page.
+    skill('allowed-tools: Bash(git add *) Bash(git commit *) Bash(git status *)\n'),
+    skill('allowed-tools: Read, Grep\n'),
+    skill('allowed-tools:\n  - Read\n  - mcp__a__b\n  - Task\n'),
+    skill('disallowed-tools: AskUserQuestion\n'),
+    skill('allowed-tools: Bash(\n'),
+    skill('allowed-tools: 3\n'),
+    skill('allowed-tools: [3, Read]\n'),
+    skill('allowed-tools:\n'),
+    skill('allowed-tools: Bogus\n', 'docs/SKILL.md'),
+    { code: '# No frontmatter\n', filename: '.claude/skills/s/SKILL.md' },
+    skill('allowed-tools: [unclosed\n'),
+    // A key written as an alias is in the data and has no field: the rule reads nothing.
+    skill('name: &k allowed-tools\n*k : Bogus\n'),
+    { ...skill('allowed-tools: Extra\n'), options: [{ additionalTools: ['Extra'] }] },
+  ],
+  invalid: [
+    {
+      ...skill('allowed-tools: Read Bogus\n'),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'Bogus' }, line: 2, column: 21, endColumn: 26 },
+      ],
+    },
+    {
+      ...skill('allowed-tools: bash(git add *)\n'),
+      errors: [{ messageId: 'wrongCase', data: { tool: 'bash', known: 'Bash' }, column: 16 }],
+    },
+    // The list form reports at the entry.
+    {
+      ...skill('allowed-tools:\n  - Read\n  - Grpe\n', '.claude/commands/c.md'),
+      errors: [{ messageId: 'unknown', line: 4, column: 5, endColumn: 9 }],
+    },
+    // A comma separates two entries, and a space inside parentheses does not.
+    {
+      ...skill('disallowed-tools: Bogus,Read ,  Other(a b)\n', pluginSkill()),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 19 },
+        { messageId: 'unknown', data: { tool: 'Other' }, column: 33 },
+      ],
+    },
+    // The text of an escaped string does not hold the entry as written: the report covers the value.
+    {
+      ...skill('allowed-tools: "Bogus\\x28a)"\n'),
+      errors: [{ messageId: 'unknown', data: { tool: 'Bogus' }, column: 16, endColumn: 29 }],
+    },
+    // A comment, a tab or a line break in the field does not move the report.
+    {
+      ...skill('allowed-tools:\n  - Read   # Bogus2\n  - Bogus2\n'),
+      errors: [{ messageId: 'unknown', line: 4, column: 5, endColumn: 11 }],
+    },
+    {
+      ...skill('allowed-tools: |\n  Bogus1\n  Bogus2\n'),
+      errors: [
+        { messageId: 'unknown', line: 3, column: 3, endColumn: 9 },
+        { messageId: 'unknown', line: 4, column: 3, endColumn: 9 },
+      ],
+    },
+    // An entry that the text does not hold sends each later entry of the item to the whole item.
+    // The position of the missed entry is not known, so a later match could lie inside it.
+    {
+      ...skill('allowed-tools: "Bogus \\u0041B Bogus"\n'),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'AB' }, column: 16, endColumn: 37 },
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 16, endColumn: 37 },
+        { messageId: 'unknown', data: { tool: 'Bogus' }, column: 17, endColumn: 22 },
+      ],
+    },
+    // A plain string folded over two lines does not hold the first entry as written. The second
+    // entry would match inside the first, so it is reported at the whole value.
+    {
+      ...skill('allowed-tools: Bogus(a\n  b) Bogus\n'),
+      errors: [
+        { messageId: 'unknown', line: 2, column: 16, endLine: 3, endColumn: 11 },
+        { messageId: 'unknown', line: 2, column: 16, endLine: 3, endColumn: 11 },
+      ],
+    },
+    // A tab separates entries, and a trailing comment is not part of the report.
+    {
+      ...skill('allowed-tools: Bogus1\tBogus2 # Bogus2\n'),
+      errors: [
+        { messageId: 'unknown', data: { tool: 'Bogus1' }, column: 16, endColumn: 22 },
+        { messageId: 'unknown', data: { tool: 'Bogus2' }, column: 23, endColumn: 29 },
+      ],
+    },
+    {
+      ...skill('allowed-tools:\n  - "Bogus\\x28a)" # Bogus\n'),
+      errors: [{ messageId: 'unknown', line: 3, column: 5, endColumn: 18 }],
+    },
+    {
+      ...skill('allowed-tools: Bogus Bogus\n'),
+      errors: [
+        { messageId: 'unknown', column: 16, endColumn: 21 },
+        { messageId: 'unknown', column: 22, endColumn: 27 },
+      ],
+    },
+    {
+      ...skill('allowed-tools: Bad\n'),
+      options: [{ additionalTools: ['Other'] }],
+      errors: [{ messageId: 'unknown' }],
     },
   ],
 })

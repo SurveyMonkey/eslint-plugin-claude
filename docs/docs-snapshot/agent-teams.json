@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/agent-teams",
-  "hash": "6eeb28fa2297ed48d989d9d971008ef3cf2e62c733b58c06d260fa92da1f8c36",
+  "hash": "d18a41b9ddc4ecdf3668165265321fedfe9c9bbe96ea071d8fc0e6ef2dafb19b",
   "blocks": [
     {
       "id": "orchestrate-teams-of-claude-code-sessions",
@@ -20,7 +20,7 @@
     },
     {
       "id": "start-your-first-agent-team",
-      "hash": "737430310576a7989a43f43bb05b9fee37e4a2dce9cf1c9e82e7954d4ef71bfd"
+      "hash": "dab05da6bdde544a22ce62f1f8dc329ef4a09a51548ab659ce2286f4fdab3761"
     },
     {
       "id": "control-your-agent-team",

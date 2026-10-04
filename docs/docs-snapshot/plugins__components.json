@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "93bb49079c1c40d27209198274eaebb498834a0ba528a5478b5d28123d9db625",
+  "hash": "7639f74ce85a2d1ce05c3ee5116831d46ee059f9b9d9a740f61224a8fc4d10f6",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -8,7 +8,7 @@
     },
     {
       "id": "explore-the-plugin-directory",
-      "hash": "92b9216e08d8493561a1f8125aea03638689297b6cb0a04360e166ab44815b20"
+      "hash": "1f04a2d8101caed8553a650710d3ebab3c0cec6893636a4b4579bc0370c14e8f"
     },
     {
       "id": "add-each-kind-of-component",
@@ -88,7 +88,7 @@
     },
     {
       "id": "monitors",
-      "hash": "7a42ffd9e3fa63f4350267774a5fe86fd623691462203b49c973254811d5a4ec"
+      "hash": "db9c603edbb29aa379dbc6f2ac86c8c9b99003108ef6f7e44f449a6c6775d216"
     },
     {
       "id": "user-configuration",

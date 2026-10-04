@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "ccb6f0da88f4159a8e1ca205ba0f9e0a4699443cf57f778b4a5c71f679e42dc5",
+  "hash": "755e30355fb80abada5a6a5ec10fe491cc1a57bf123232c80d1cc68312869ae5",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "hook-lifecycle",
-      "hash": "2f7b2883c519d0d9e2eae1a328b188595ce28e2ca69666f59a2db405fe72972b"
+      "hash": "3e05b8f19cf85ffa90518190289ab914237dd1476928ad10dab9ab676f794751"
     },
     {
       "id": "how-a-hook-resolves",
@@ -184,15 +184,15 @@
     },
     {
       "id": "userpromptsubmit",
-      "hash": "00b412bad5ec5d7883aabba9934048a0c9ae6b0492226eb1bf5a372fb0730433"
+      "hash": "f850fa297e8c0ccc6759045faee9cd770738c6a9dff5406679da31d29f57b6e9"
     },
     {
       "id": "userpromptsubmit-input",
-      "hash": "65ecd89a4e38deb4169f58c74d3cf088b79ceb19a8d4bfad60b8f99b7202e16d"
+      "hash": "8495f69a3db6f0f8c4b05ecb40588aa13aecdca06a723a21cea56f2d3ae2c8db"
     },
     {
       "id": "userpromptsubmit-decision-control",
-      "hash": "39253854c2bfc3ec40cfcb0b773817adfd2a0b79e0ea4d4d9b2170331d7d5bbd"
+      "hash": "89db69d0bdcef1d0deefe18fa51927feca14d0a3959ee1dd9ccc17bbdb603858"
     },
     {
       "id": "what-a-blocked-prompt-leaves-behind",
@@ -268,7 +268,7 @@
     },
     {
       "id": "agent",
-      "hash": "32405ca3b8e9f4e00fc345da949e5f73ec7c215091bdd8a84cc129894883aa2e"
+      "hash": "370031bb5d32315e9ce1d0863ebd91e9b570aea613739b090b0fe0ceb22dec79"
     },
     {
       "id": "askuserquestion",
@@ -280,7 +280,7 @@
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "ed7e5ac643b7d34787c39bbe41f8f9549fafb4decd52952ab9bde1568a04b1ef"
+      "hash": "59abaef608512f3e3967cc9d6be5c0cf879b0302977062cddfff0c3b18544e91"
     },
     {
       "id": "defer-a-tool-call-for-later",
@@ -288,7 +288,7 @@
     },
     {
       "id": "permissionrequest",
-      "hash": "6ff44c6117ac448e7edd80a39025db07d59b45b5343da228fac7e59e26e4723b"
+      "hash": "0cd60f343b1419a51a8cce79011c483464a0874abc8855d941ef6fbf39b0c220"
     },
     {
       "id": "permissionrequest-input",
@@ -356,7 +356,7 @@
     },
     {
       "id": "notification",
-      "hash": "631b76e3a34d82e932ecedcdd1d6ba791bd8ac55a6909bb255a959d4b2dbd824"
+      "hash": "3edf71c73301b39990090267d4068b6bd141be1345cace6d009e8b818a534811"
     },
     {
       "id": "notification-input",
@@ -640,7 +640,7 @@
     },
     {
       "id": "windows-powershell-tool",
-      "hash": "39c44fb86a9f18ab8616df4defd7745742f6f70a1dee718462379b89ca0b39cc"
+      "hash": "a8d8d0cf696e9590a4bf712072cea52147f8c779c460efd53304772ad87bb510"
     },
     {
       "id": "debug-hooks",
@@ -651,8 +651,8 @@
     {
       "heading": "Hook lifecycle",
       "id": "hook-lifecycle",
-      "hash": "2f7b2883c519d0d9e2eae1a328b188595ce28e2ca69666f59a2db405fe72972b",
-      "text": "## Hook lifecycle\n\nClaude Code runs hooks at specific points during a session. When an event fires and a matcher matches, Claude Code passes JSON context about the event to your hook handler. For command hooks, input arrives on stdin. For HTTP hooks, it arrives as the POST request body. Your handler can then inspect the input, take action, and optionally return a decision.\n\nEvents fall into three cadences:\n\n* per session: `SessionStart` and `SessionEnd`\n* per turn: `UserPromptSubmit`, `Stop`, and `StopFailure`\n* on every tool call inside the agentic loop: `PreToolUse` and `PostToolUse`, except [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) calls, which skip both\n\n<div style={{maxWidth: \"500px\", margin: \"0 auto\"}}>\n  <Frame>\n    <img src=\"https://mintcdn.com/claude-code/x7pO8l4XcvAXCoVc/images/hooks-lifecycle.svg?fit=max&auto=format&n=x7pO8l4XcvAXCoVc&q=85&s=81b9256c1bbe8832553485f5d9e9c746\" className=\"dark:hidden\" alt=\"Hook lifecycle diagram showing optional Setup feeding into SessionStart, then a per-turn loop containing UserPromptSubmit, UserPromptExpansion for slash commands, the nested agentic loop (PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, PostToolBatch, SubagentStart/Stop, TaskCreated, TaskCompleted), and Stop or StopFailure, followed by TeammateIdle, PreCompact, PostCompact, and SessionEnd, with Elicitation and ElicitationResult nested inside MCP tool execution, PermissionDenied as a side branch from PermissionRequest for auto-mode denials, WorktreeCreate, WorktreeRemove, Notification, ConfigChange, InstructionsLoaded, CwdChanged, FileChanged, and DirectoryAdded as standalone async events, PreModelSwitch as a standalone sequential event that runs before a requested model switch, PostModelSwitch as a standalone async event that runs after the session's model changes, and MessageDisplay as a display-only event that runs while assistant message text streams\" width=\"520\" height=\"1336\" data-path=\"images/hooks-lifecycle.svg\" />\n\n    <img src=\"https://mintcdn.com/claude-code/x7pO8l4XcvAXCoVc/images/hooks-lifecycle-dark.svg?fit=max&auto=format&n=x7pO8l4XcvAXCoVc&q=85&s=c9b3d88487335f58cce0b52e2f9e7531\" className=\"hidden dark:block\" alt=\"Hook lifecycle diagram showing optional Setup feeding into SessionStart, then a per-turn loop containing UserPromptSubmit, UserPromptExpansion for slash commands, the nested agentic loop (PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, PostToolBatch, SubagentStart/Stop, TaskCreated, TaskCompleted), and Stop or StopFailure, followed by TeammateIdle, PreCompact, PostCompact, and SessionEnd, with Elicitation and ElicitationResult nested inside MCP tool execution, PermissionDenied as a side branch from PermissionRequest for auto-mode denials, WorktreeCreate, WorktreeRemove, Notification, ConfigChange, InstructionsLoaded, CwdChanged, FileChanged, and DirectoryAdded as standalone async events, PreModelSwitch as a standalone sequential event that runs before a requested model switch, PostModelSwitch as a standalone async event that runs after the session's model changes, and MessageDisplay as a display-only event that runs while assistant message text streams\" width=\"520\" height=\"1336\" data-path=\"images/hooks-lifecycle-dark.svg\" />\n  </Frame>\n</div>\n\nThe table below summarizes when each event fires. The [Hook events](#hook-events) section documents the full input schema and decision control options for each one.\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `Setup` | When you start Claude Code with `--init-only`, or with `--init` or `--maintenance` in `-p` mode. For one-time preparation in CI or scripts |\n| `UserPromptSubmit` | When you submit a prompt, before Claude processes it |\n| `UserPromptExpansion` | When a user-typed command expands into a prompt, before it reaches Claude. Can block the expansion |\n| `PreToolUse` | Before a tool call executes. Can block it |\n| `PermissionRequest` | When a tool call needs a permission decision |\n| `PermissionDenied` | When auto mode denies a tool call, including denials without a classifier verdict. Use JSON `hookSpecificOutput.retry: true` to tell the model it may retry the denied tool call. Claude Code ignores `retry` when the classifier produced no verdict |\n| `PostToolUse` | After a tool call succeeds |\n| `PostToolUseFailure` | After a tool call fails |\n| `PostToolBatch` | After a full batch of parallel tool calls resolves, before the next model call |\n| `Notification` | When Claude Code sends a notification |\n| `MessageDisplay` | While assistant message text is displayed |\n| `SubagentStart` | When a subagent is spawned |\n| `SubagentStop` | When a subagent finishes |\n| `TaskCreated` | When a task is being created via `TaskCreate` |\n| `TaskCompleted` | When a task is being marked as completed |\n| `Stop` | When Claude finishes responding |\n| `StopFailure` | When the turn ends due to an API error |\n| `TeammateIdle` | When an [agent team](/docs/en/agent-teams) teammate is about to go idle |\n| `InstructionsLoaded` | When a CLAUDE.md or `.claude/rules/*.md` file is loaded into context. Fires at session start and when files are lazily loaded during a session |\n| `ConfigChange` | When a configuration file changes during a session |\n| `CwdChanged` | When the working directory changes, for example when Claude executes a `cd` command. Useful for reactive environment management with tools like direnv |\n| `DirectoryAdded` | When a working directory is added mid-session via `/add-dir` or the SDK `register_repo_root` control request |\n| `FileChanged` | When a watched file changes on disk. The `matcher` field specifies which filenames to watch |\n| `WorktreeCreate` | When a worktree is being created via `--worktree`, `isolation: \"worktree\"`, or for a background session. Replaces default git behavior |\n| `WorktreeRemove` | When a worktree is being removed at session exit, when a subagent finishes, or when you delete a background session |\n| `PreCompact` | Before context compaction |\n| `PostCompact` | After context compaction completes |\n| `PreModelSwitch` | Before Claude Code applies a model switch that you or a client requested. Can block the switch |\n| `PostModelSwitch` | After the session's model changes, including changes Claude Code makes on its own, such as restoring the model when you resume a session |\n| `Elicitation` | When an MCP server requests user input during a tool call |\n| `ElicitationResult` | After a user responds to an MCP elicitation, before the response is sent back to the server |\n| `SessionEnd` | When a session terminates |"
+      "hash": "3e05b8f19cf85ffa90518190289ab914237dd1476928ad10dab9ab676f794751",
+      "text": "## Hook lifecycle\n\nClaude Code runs hooks at specific points during a session. When an event fires and a matcher matches, Claude Code passes JSON context about the event to your hook handler. For command hooks, input arrives on stdin. For HTTP hooks, it arrives as the POST request body. Your handler can then inspect the input, take action, and optionally return a decision.\n\nEvents fall into three cadences:\n\n* per session: `SessionStart` and `SessionEnd`\n* per turn: `UserPromptSubmit`, `Stop`, and `StopFailure`\n* on every tool call inside the agentic loop: `PreToolUse` and `PostToolUse`, except [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) calls, which skip both\n\n<div style={{maxWidth: \"500px\", margin: \"0 auto\"}}>\n  <Frame>\n    <img src=\"https://mintcdn.com/claude-code/x7pO8l4XcvAXCoVc/images/hooks-lifecycle.svg?fit=max&auto=format&n=x7pO8l4XcvAXCoVc&q=85&s=81b9256c1bbe8832553485f5d9e9c746\" className=\"dark:hidden\" alt=\"Hook lifecycle diagram showing optional Setup feeding into SessionStart, then a per-turn loop containing UserPromptSubmit, UserPromptExpansion for slash commands, the nested agentic loop (PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, PostToolBatch, SubagentStart/Stop, TaskCreated, TaskCompleted), and Stop or StopFailure, followed by TeammateIdle, PreCompact, PostCompact, and SessionEnd, with Elicitation and ElicitationResult nested inside MCP tool execution, PermissionDenied as a side branch from PermissionRequest for auto-mode denials, WorktreeCreate, WorktreeRemove, Notification, ConfigChange, InstructionsLoaded, CwdChanged, FileChanged, and DirectoryAdded as standalone async events, PreModelSwitch as a standalone sequential event that runs before a requested model switch, PostModelSwitch as a standalone async event that runs after the session's model changes, and MessageDisplay as a display-only event that runs while assistant message text streams\" width=\"520\" height=\"1336\" data-path=\"images/hooks-lifecycle.svg\" />\n\n    <img src=\"https://mintcdn.com/claude-code/x7pO8l4XcvAXCoVc/images/hooks-lifecycle-dark.svg?fit=max&auto=format&n=x7pO8l4XcvAXCoVc&q=85&s=c9b3d88487335f58cce0b52e2f9e7531\" className=\"hidden dark:block\" alt=\"Hook lifecycle diagram showing optional Setup feeding into SessionStart, then a per-turn loop containing UserPromptSubmit, UserPromptExpansion for slash commands, the nested agentic loop (PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, PostToolBatch, SubagentStart/Stop, TaskCreated, TaskCompleted), and Stop or StopFailure, followed by TeammateIdle, PreCompact, PostCompact, and SessionEnd, with Elicitation and ElicitationResult nested inside MCP tool execution, PermissionDenied as a side branch from PermissionRequest for auto-mode denials, WorktreeCreate, WorktreeRemove, Notification, ConfigChange, InstructionsLoaded, CwdChanged, FileChanged, and DirectoryAdded as standalone async events, PreModelSwitch as a standalone sequential event that runs before a requested model switch, PostModelSwitch as a standalone async event that runs after the session's model changes, and MessageDisplay as a display-only event that runs while assistant message text streams\" width=\"520\" height=\"1336\" data-path=\"images/hooks-lifecycle-dark.svg\" />\n  </Frame>\n</div>\n\nThe table below summarizes when each event fires. The [Hook events](#hook-events) section documents the full input schema and decision control options for each one.\n\n| Event | When it fires |\n| :- | :- |\n| `SessionStart` | When a session begins or resumes |\n| `Setup` | When you start Claude Code with `--init-only`, or with `--init` or `--maintenance` in `-p` mode. For one-time preparation in CI or scripts |\n| `UserPromptSubmit` | When a prompt is submitted, before Claude processes it. Also fires on [turns Claude Code starts on its own](/docs/en/hooks#userpromptsubmit) |\n| `UserPromptExpansion` | When a user-typed command expands into a prompt, before it reaches Claude. Can block the expansion |\n| `PreToolUse` | Before a tool call executes. Can block it |\n| `PermissionRequest` | When a tool call needs a permission decision |\n| `PermissionDenied` | When auto mode denies a tool call, including denials without a classifier verdict. Use JSON `hookSpecificOutput.retry: true` to tell the model it may retry the denied tool call. Claude Code ignores `retry` when the classifier produced no verdict |\n| `PostToolUse` | After a tool call succeeds |\n| `PostToolUseFailure` | After a tool call fails |\n| `PostToolBatch` | After a full batch of parallel tool calls resolves, before the next model call |\n| `Notification` | When Claude Code sends a notification |\n| `MessageDisplay` | While assistant message text is displayed |\n| `SubagentStart` | When a subagent is spawned |\n| `SubagentStop` | When a subagent finishes |\n| `TaskCreated` | When a task is being created via `TaskCreate` |\n| `TaskCompleted` | When a task is being marked as completed |\n| `Stop` | When Claude finishes responding |\n| `StopFailure` | When the turn ends due to an API error |\n| `TeammateIdle` | When an [agent team](/docs/en/agent-teams) teammate is about to go idle |\n| `InstructionsLoaded` | When a CLAUDE.md or `.claude/rules/*.md` file is loaded into context. Fires at session start and when files are lazily loaded during a session |\n| `ConfigChange` | When a configuration file changes during a session |\n| `CwdChanged` | When the working directory changes, for example when Claude executes a `cd` command. Useful for reactive environment management with tools like direnv |\n| `DirectoryAdded` | When a working directory is added mid-session via `/add-dir` or the SDK `register_repo_root` control request |\n| `FileChanged` | When a watched file changes on disk. The `matcher` field specifies which filenames to watch |\n| `WorktreeCreate` | When a worktree is being created via `--worktree`, `isolation: \"worktree\"`, or for a background session. Replaces default git behavior |\n| `WorktreeRemove` | When a worktree is being removed at session exit, when a subagent finishes, or when you delete a background session |\n| `PreCompact` | Before context compaction |\n| `PostCompact` | After context compaction completes |\n| `PreModelSwitch` | Before Claude Code applies a model switch that you or a client requested. Can block the switch |\n| `PostModelSwitch` | After the session's model changes, including changes Claude Code makes on its own, such as restoring the model when you resume a session |\n| `Elicitation` | When an MCP server requests user input during a tool call |\n| `ElicitationResult` | After a user responds to an MCP elicitation, before the response is sent back to the server |\n| `SessionEnd` | When a session terminates |"
     }
   ]
 }

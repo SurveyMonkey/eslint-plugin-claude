@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "92614f1ff01ac62cd12423f28fdca43473ef3be0606aee3aceb35f26e30ee598",
+  "hash": "9e866d912f19d0cb928aeca31610798cdae50ec0e0a23f3c185caab9bf065877",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -132,7 +132,7 @@
     },
     {
       "id": "marketplace-is-added-but-ignored",
-      "hash": "e2cff1d1e77e777cb587637d4432993158380af1f4c971c6059d2f1a70d72c29"
+      "hash": "80baa09de0c7098dd93de4bb98022639361cd6d59556371ddb89cf5e1e931223"
     },
     {
       "id": "plugin-has-a-corrupt-manifest-file-or-has-an-invalid-manifest-file",
@@ -151,8 +151,8 @@
       "hash": "af48f20c90d57dbd1c9572fd3cba09e2591c2b39a7ec7b3a93c441d13d02bf33"
     },
     {
-      "id": "cannot-add-marketplace-its-network-source-differs",
-      "hash": "0fde71c8d4bd817ed9126b6e02434c50021c90f4648d20a169d188200c6e4dd5"
+      "id": "cannot-add-marketplace-source-doesnt-match",
+      "hash": "329871d8acb382ac57c31199e6b206278a1cd3591b269a2c253c34db1e75e264"
     },
     {
       "id": "failed-to-install-from-the-plugin-menu",
@@ -177,6 +177,10 @@
     {
       "id": "run-reload-plugins-to-activate",
       "hash": "5f2a954beae611e6ba918a3883a4e147a93213bac77810650778b3a2f8a2f70d"
+    },
+    {
+      "id": "the-packages-it-lists-are-not-installed",
+      "hash": "223f9e3aef834a2639ffc8c26c32049fb55f55a874a809824ff31e6f47f18387"
     },
     {
       "id": "plugin-not-cached-at",
