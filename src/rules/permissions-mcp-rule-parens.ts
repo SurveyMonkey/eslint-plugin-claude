@@ -3,7 +3,8 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { MCP_PREFIX } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
-import { parsedEntries } from '../permission-entries.ts'
+import { parsedEntries, permissionEntries } from '../permission-entries.ts'
+import { SETTINGS_FILES } from '../permission-listener.ts'
 
 const name = 'permissions-mcp-rule-parens' as const
 
@@ -22,9 +23,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
   create(context) {
     return {
       Document(node) {
-        for (const { node: entry, rule: parsed } of parsedEntries(node)) {
+        for (const { loc, rule: parsed } of parsedEntries(permissionEntries(node))) {
           if (parsed.tool.startsWith(MCP_PREFIX) && parsed.specifier !== null) {
-            context.report({ node: entry, messageId: 'parens' })
+            context.report({ loc, messageId: 'parens' })
           }
         }
       },
@@ -35,6 +36,6 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
 export default {
   name,
   language: 'json' as const,
-  files: ['**/.claude/settings.json', '**/.claude/settings.local.json'],
+  files: SETTINGS_FILES,
   rule,
 }

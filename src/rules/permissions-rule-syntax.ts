@@ -1,9 +1,9 @@
 // Claude Code reads a permission rule as `Tool` or `Tool(specifier)`. It skips
 // a string that is neither (docs/rules/permissions-rule-syntax.md). This is the
 // only grammar rule that reports a string which does not parse.
-import type { JSONRuleDefinition } from '@eslint/json'
+import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
-import { permissionEntries } from '../permission-entries.ts'
+import { permissionListener, SETTINGS_FILES, SKILL_TARGET } from '../permission-listener.ts'
 import type { ParseFailureReason } from '../permission-rule.ts'
 
 const name = 'permissions-rule-syntax' as const
@@ -15,7 +15,7 @@ const messages: Record<ParseFailureReason, string> = {
   nulByte: 'This permission rule has a NUL byte. It matches nothing.',
 }
 
-const rule: JSONRuleDefinition<{ MessageIds: ParseFailureReason }> = {
+const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
@@ -25,21 +25,21 @@ const rule: JSONRuleDefinition<{ MessageIds: ParseFailureReason }> = {
     messages,
   },
   create(context) {
-    return {
-      Document(node) {
-        for (const { node: entry, result } of permissionEntries(node)) {
-          if (!result.ok) {
-            context.report({ node: entry, messageId: result.reason })
-          }
+    return permissionListener(context, (entries) => {
+      for (const { loc, result } of entries) {
+        if (!result.ok) {
+          context.report({ loc, messageId: result.reason })
         }
-      },
-    }
+      }
+    })
   },
 }
 
 export default {
   name,
   language: 'json' as const,
-  files: ['**/.claude/settings.json', '**/.claude/settings.local.json'],
+  files: SETTINGS_FILES,
+  // The same rule, for the files that the Markdown language reads.
+  also: SKILL_TARGET,
   rule,
 }

@@ -1,10 +1,11 @@
 // An allow rule takes a glob in the tool name only after a literal
 // `mcp__<server>__` prefix. Claude Code skips any other glob in an allow rule
 // (docs/rules/permissions-tool-name-glob.md).
-import type { JSONRuleDefinition } from '@eslint/json'
+import type { Rule } from 'eslint'
 import { MCP_PREFIX, MCP_SEPARATOR } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { parsedEntries } from '../permission-entries.ts'
+import { permissionListener, SETTINGS_FILES, SKILL_TARGET } from '../permission-listener.ts'
 
 const name = 'permissions-tool-name-glob' as const
 
@@ -17,7 +18,7 @@ function anchoredToServer(tool: string): boolean {
   return separator !== -1 && !tool.slice(0, separator).includes('*')
 }
 
-const rule: JSONRuleDefinition<{ MessageIds: 'unanchored' }> = {
+const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
@@ -30,21 +31,21 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unanchored' }> = {
     },
   },
   create(context) {
-    return {
-      Document(node) {
-        for (const { list, node: entry, rule: parsed } of parsedEntries(node)) {
-          if (list === 'allow' && parsed.tool.includes('*') && !anchoredToServer(parsed.tool)) {
-            context.report({ node: entry, messageId: 'unanchored' })
-          }
+    return permissionListener(context, (entries) => {
+      for (const { list, loc, rule: parsed } of parsedEntries(entries)) {
+        if (list === 'allow' && parsed.tool.includes('*') && !anchoredToServer(parsed.tool)) {
+          context.report({ loc, messageId: 'unanchored' })
         }
-      },
-    }
+      }
+    })
   },
 }
 
 export default {
   name,
   language: 'json' as const,
-  files: ['**/.claude/settings.json', '**/.claude/settings.local.json'],
+  files: SETTINGS_FILES,
+  // The same rule, for the files that the Markdown language reads.
+  also: SKILL_TARGET,
   rule,
 }
