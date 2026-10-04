@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 23]
+related_issues: [5, 6, 7, 8, 23, 56]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -34,6 +34,13 @@ links to folders out of the checkout. A check that reads those files gives two c
 contributor and CI, different reports for one commit. It also costs time on each lint: in review
 of [#41](https://github.com/SurveyMonkey/eslint-plugin-claude/pull/41), one link to a large folder
 out of the repository made a single lint take 92 seconds.
+
+**A team can want a stricter number than the docs give.** The rule inventory has 21 rules in the
+`limit` category. Examples are 1,536 characters for a skill description, 500 lines for a `SKILL.md`
+and 200 lines for a `CLAUDE.md`. The docs give each default. A message that names the docs value
+is false at a team value
+([#56](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/56)). A team that wants shorter
+files cannot change a number that is fixed in the rule.
 
 **Teams in more than one organization need the same checks.** They need one install, not a set of
 tools to join together. The checks must run in three places: the editor, a staged-only commit
@@ -76,6 +83,23 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    documentation covers skills outside Claude Code, where the limits are different (#23).
    - `strict` extends `recommended`, then turns on at `warn` each rule that is still off, the
      heuristics included. It gives an easy way to test the full rule set.
+
+   A rule that checks a number can take a stricter team value as an option:
+   - The option is optional. Its default is the value from the Claude Code docs. Where the docs
+     give no number, the inventory row says so. A config that sets only the severity keeps the
+     default.
+   - `recommended` and `strict` set no option.
+   - A stricter team value is not a new rule. It is also not a convention of one organization,
+     because the docs value stays the default.
+   - Claude Code can cut or skip the file at a number. If no setting moves that number, it is a
+     hard limit. The option schema then sets `maximum` to the docs value, and ESLint refuses a
+     larger value. A larger value would hide a fault that Claude Code makes real. The cost: if
+     Claude Code raises the limit, the schema blocks the new value until a release of this plugin.
+   - A number that a Claude Code setting moves is not a hard limit, and its option has no
+     maximum. An example is the cut of a skill description, which `skillListingMaxDescChars`
+     moves.
+   - At a value that is not the default, the message names the value as the configured limit. It
+     does not say that Claude Code acts at that value.
 
    A convention of one organization is not a rule in this package. A check that needs a model
    judgment is not a lint rule. A check that `claude plugin validate` already covers fully is not
@@ -144,6 +168,9 @@ These items were open, and are now settled:
 
 ## Consequences
 
+- **A team can set another number, and cannot set one past a hard limit.** Each rule
+  that checks a number takes it as an option. `CONTRIBUTING.md` states the form, and
+  `tests/limit-options.test.ts` fails for a built rule that lacks the option its row names.
 - **One install covers every file type and every venue.** A team adds one package and what it
   needs to run. It then gets the same rules in the editor, in a hook and in CI.
 - **A consuming repository may run two linters.** A repository that uses Biome keeps it for its
