@@ -16,7 +16,7 @@ Write a path rule as Edit(path) or Read(path).
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -34,10 +34,27 @@ The rule accepts a deny or ask rule in the `param:value` form.
 [`permissions-param-rule`](permissions-param-rule.md) reads those. It skips a string that does not parse.
 [`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
 
+## Skill and command files
+
+The rule also reads a skill file (`SKILL.md`) and a command file. In the frontmatter, `allowed-tools` is an allow list,
+and `disallowed-tools` is a deny list.[^skill][^fields] Each field takes a space- or comma-separated string, or a YAML
+list. A space inside parentheses does not split a rule. The rule reports at the entry. It reads no other frontmatter
+field. It skips a field that is neither a string nor a list. It does not read the `tools` field of a subagent.
+[`agent-tools-known`](agent-tools-known.md) checks that field.
+
 Fail:
 
 ```json
 { "permissions": { "deny": ["Write(docs/**)", "Glob(docs/**)"] } }
+```
+
+Fail, in a skill:
+
+```yaml
+---
+name: example
+allowed-tools: Write(docs/**)
+---
 ```
 
 Pass:
@@ -51,3 +68,5 @@ Pass:
 [^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
 [^warning]: [Error reference: Is not matched by file permission checks](https://code.claude.com/docs/en/errors#is-not-matched-by-file-permission-checks)
 [^tools]: [Tools reference: Configure tools with permission rules and hooks](https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks)
+[^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)
+[^fields]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)

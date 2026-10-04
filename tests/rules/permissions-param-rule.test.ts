@@ -1,6 +1,7 @@
 // The permissions page, "Match by input parameter": a `Tool(param:value)`
 // rule cannot match the primary field of the tool.
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-param-rule')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -95,6 +96,52 @@ jsonTester.run('permissions-param-rule', rule, {
       code: settings({ deny: ['Bash( command : rm)'] }),
       filename: '.claude/settings.json',
       errors: [{ messageId: 'primaryField' }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-param-rule in skill files', rule, {
+  valid: [
+    // A deny rule of the docs.
+    skill('disallowed-tools: Agent(model:opus) Bash(rm *)\n'),
+    // `allowed-tools` is an allow list, and an allow rule uses the specifier of its tool.
+    skill('allowed-tools: Bash(command:rm *)\n'),
+    skill('allowed-tools:\n  - Bash(command:rm *)\n'),
+    // A rule that does not parse is for `permissions-rule-syntax`.
+    skill('disallowed-tools: Bash(command:x\n'),
+    skill('disallowed-tools: 3\n'),
+    { ...skill('disallowed-tools: Bash(command:x)\n', 'docs/SKILL.md') },
+    { code: '# No frontmatter\n', filename: '.claude/skills/s/SKILL.md' },
+    skill('disallowed-tools: [unclosed\n'),
+  ],
+  invalid: [
+    {
+      ...skill('disallowed-tools: Read Bash(command:rm *)\n'),
+      errors: [
+        {
+          messageId: 'primaryField',
+          data: { tool: 'Bash', field: 'command' },
+          line: 2,
+          column: 24,
+          endColumn: 42,
+        },
+      ],
+    },
+    {
+      ...skill('disallowed-tools:\n  - Read(file_path:x)\n  - Grep\n', '.claude/commands/c.md'),
+      errors: [{ messageId: 'primaryField', line: 3, column: 5, endColumn: 22 }],
+    },
+    {
+      ...skill('disallowed-tools: [WebFetch(url:x), Glob(path:x)]\n', pluginSkill()),
+      errors: [{ messageId: 'primaryField' }, { messageId: 'primaryField' }],
     },
   ],
 })

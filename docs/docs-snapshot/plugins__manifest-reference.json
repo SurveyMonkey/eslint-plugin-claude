@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-  "hash": "4db6a28792240bac2869fccef8dd59d65c3ff27cb9503c93cb976f890402e381",
+  "hash": "45289e551da96e9c4a3a5968b3bdcdd7fd766f0c735c019f60d71d06f28a58d1",
   "blocks": [
     {
       "id": "plugin-manifest-reference",
@@ -76,7 +76,7 @@
     },
     {
       "id": "lspservers",
-      "hash": "e034938c331a6fa31bdacfc9819d609aa194ee8fb88067aaa56d1808bc854212"
+      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
     },
     {
       "id": "monitors",

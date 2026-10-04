@@ -16,7 +16,7 @@ Name a tool that Claude Code knows in a permission rule.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -42,10 +42,27 @@ tool. It has no suggestion, because a rename changes what a rule matches.
 
 The rule skips a string that does not parse. [`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
 
+## Skill and command files
+
+The rule also reads a skill file (`SKILL.md`) and a command file. In the frontmatter, `allowed-tools` is an allow list,
+and `disallowed-tools` is a deny list.[^skill][^fields] Each field takes a space- or comma-separated string, or a YAML
+list. A space inside parentheses does not split a rule. The rule reports at the entry. It reads no other frontmatter
+field. It skips a field that is neither a string nor a list. It does not read the `tools` field of a subagent.
+[`agent-tools-known`](agent-tools-known.md) checks that field.
+
 Fail:
 
 ```json
 { "permissions": { "deny": ["Stop Task", "bash(rm *)"] } }
+```
+
+Fail, in a skill:
+
+```yaml
+---
+name: example
+allowed-tools: Bash(git add *) bash
+---
 ```
 
 Pass:
@@ -71,3 +88,5 @@ Pass:
 [^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)
 [^task]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)
+[^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)
+[^fields]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)

@@ -1,7 +1,8 @@
 // The permissions page, "Read and Edit": Claude Code checks file permissions
 // against `Edit(path)` and `Read(path)` rules only. The error reference
 // names `Write`, `NotebookEdit`, `MultiEdit` and `Glob`.
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { pluginSkill } from '../plugin-fixture.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-path-rule-tool')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -69,6 +70,45 @@ jsonTester.run('permissions-path-rule-tool', rule, {
     {
       code: settings({ allow: ['Write(file_path:x)'] }),
       filename: '.claude/settings.json',
+      errors: [{ messageId: 'neverConsulted' }],
+    },
+  ],
+})
+
+// The skills page, "Pre-approve tools for a skill": `allowed-tools` is an
+// allow list, and `disallowed-tools` is a deny list. Each takes a string or a
+// YAML list.
+const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
+  code: `---\n${fields}---\n\n# S\n`,
+  filename,
+})
+
+markdownTester.run('permissions-path-rule-tool in skill files', rule, {
+  valid: [
+    skill('allowed-tools: Edit(docs/**) Read(docs/**) Write NotebookEdit Glob\n'),
+    skill('allowed-tools: Grep(src/**) LSP(src/**)\n'),
+    skill('disallowed-tools: Write(path:x)\n'),
+    skill('allowed-tools: Write(docs/**\n'),
+  ],
+  invalid: [
+    {
+      ...skill('allowed-tools: Read Write(docs/**)\n'),
+      errors: [
+        {
+          messageId: 'neverConsulted',
+          data: { tool: 'Write', replacement: 'Edit' },
+          line: 2,
+          column: 21,
+          endColumn: 35,
+        },
+      ],
+    },
+    {
+      ...skill('disallowed-tools:\n  - Glob(src/**)\n', '.claude/commands/c.md'),
+      errors: [{ messageId: 'neverConsulted', data: { tool: 'Glob', replacement: 'Read' } }],
+    },
+    {
+      ...skill('allowed-tools: [NotebookEdit(a.ipynb)]\n', pluginSkill()),
       errors: [{ messageId: 'neverConsulted' }],
     },
   ],

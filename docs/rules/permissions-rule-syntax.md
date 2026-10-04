@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-rule-syntax, which reports a string in permissions.allow, ask or deny that is not the form Tool or Tool(specifier), because Claude Code skips it.
+description: The ESLint rule claude/permissions-rule-syntax, which reports a string in permissions.allow, ask or deny, or an entry in skill allowed-tools or disallowed-tools, that is not the form Tool or Tool(specifier), because Claude Code skips it.
 owner: brianespinosa
 created: 2026-10-01
 related_issues: [15]
@@ -16,7 +16,7 @@ Write each permission rule as `Tool` or `Tool(specifier)`.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -39,10 +39,29 @@ This is the only rule of the permission grammar group that reports a string that
 other six rules skip it. You see a fault of the tool or of the specifier only after you fix
 the syntax.
 
+## Skill and command files
+
+The rule also reads a skill file (`SKILL.md`) and a command file. In the frontmatter, `allowed-tools` is an allow list,
+and `disallowed-tools` is a deny list.[^skill][^fields] Each field takes a space- or comma-separated string, or a YAML
+list. A space inside parentheses does not split a rule. The rule reports at the entry. It reads no other frontmatter
+field. It skips a field that is neither a string nor a list. It does not read the `tools` field of a subagent.
+[`agent-tools-known`](agent-tools-known.md) checks that field.
+
+This rule reports a field entry that does not parse. The other six rules skip it.
+
 Fail:
 
 ```json
 { "permissions": { "allow": ["Bash(npm run build", "(npm run *)"] } }
+```
+
+Fail, in a skill:
+
+```yaml
+---
+name: example
+allowed-tools: Bash(npm run build
+---
 ```
 
 Pass:
@@ -57,3 +76,5 @@ Pass:
 [^reference]: [All settings: Permission rule syntax](https://code.claude.com/docs/en/settings-reference#permission-rule-syntax)
 [^broken]: [Settings files and precedence: Fix a broken settings file](https://code.claude.com/docs/en/settings#fix-a-broken-settings-file)
 [^malformed]: [Error reference: Malformed Tool(content) rule](https://code.claude.com/docs/en/errors#malformed-tool-content-rule)
+[^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)
+[^fields]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)
