@@ -446,3 +446,25 @@ describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     withoutAccess(hidden, () => expect(lint(file, named('dup'))).toHaveLength(1))
   })
 })
+
+// The rule cannot read the manifest behind a dangling link, and that manifest can set `commands`.
+describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling link', () => {
+  const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
+
+  it('reads no commands/ folder', () => {
+    put('dangling/commands/review.md', bare)
+    put('dangling/skills/review/SKILL.md', bare)
+    mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
+    const manifest = path.join(scratch, 'dangling/.claude-plugin/plugin.json')
+    symlinkSync('missing.json', manifest)
+    const skill = path.join(scratch, 'dangling', 'skills', 'review', 'SKILL.md')
+    const command = path.join(scratch, 'dangling', 'commands', 'review.md')
+    expect(lint(skill, bare)).toEqual([])
+    expect(lint(command, bare)).toEqual([])
+    // With a readable manifest that has no `commands` key, the same tree reports the clash.
+    rmSync(manifest)
+    writeFileSync(manifest, '{}')
+    expect(lint(skill, bare)).toHaveLength(1)
+    expect(lint(command, bare)).toHaveLength(1)
+  })
+})

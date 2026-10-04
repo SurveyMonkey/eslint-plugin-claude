@@ -402,14 +402,23 @@ describe('a plugin manifest that the rule cannot see', () => {
     },
   )
 
-  it('still treats a dangling plugin.json link as a plugin with no manifest', () => {
-    put('dangling/agents/a.md', agentFile('a'))
-    mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
-    symlinkSync('missing.json', path.join(scratch, 'dangling/.claude-plugin/plugin.json'))
-    const file = path.join(scratch, 'dangling/skills/s/SKILL.md')
-    expect(ghost(file)).toHaveLength(1)
-    expect(lintMarkdown('skill-agent-exists', fork('a'), file)).toEqual([])
-  })
+  // The rule cannot read the manifest behind a dangling link, and that manifest can set `agents`.
+  it.skipIf(process.platform === 'win32')(
+    'stays silent when plugin.json is a dangling link',
+    () => {
+      put('dangling/skills/s/SKILL.md', '')
+      mkdirSync(path.join(scratch, 'dangling/.claude-plugin'), { recursive: true })
+      symlinkSync('missing.json', path.join(scratch, 'dangling/.claude-plugin/plugin.json'))
+      const file = path.join(scratch, 'dangling/skills/s/SKILL.md')
+      expect(ghost(file)).toEqual([])
+      expect(lintMarkdown('skill-agent-exists', fork('a'), file)).toEqual([])
+      // With a readable manifest that has no `agents` key, the same tree reports the missing agent.
+      const manifest = path.join(scratch, 'dangling/.claude-plugin/plugin.json')
+      rmSync(manifest)
+      writeFileSync(manifest, '{}')
+      expect(ghost(file)).toHaveLength(1)
+    },
+  )
 
   describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
     it('stays silent for a plugin file, and for a plugin root in `.claude/skills/`', () => {

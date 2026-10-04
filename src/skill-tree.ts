@@ -12,6 +12,7 @@ import {
   type BigIntStats,
   type Dirent,
   existsSync,
+  lstatSync,
   readdirSync,
   readFileSync,
   realpathSync,
@@ -23,7 +24,8 @@ import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
 /** The result of a read that failed for a reason other than a missing file.
- *  It is also the result for a file with a real path out of the repository. */
+ *  It is also the result for a file with a real path out of the repository,
+ *  and for a dangling manifest link. */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 
@@ -247,11 +249,25 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
   return fields
 }
 
+/** The result for a path where `realOf` gives null. The result is
+ *  `UNREADABLE` for a dangling link, and null when nothing is there. A failed
+ *  `lstatSync` for another reason gives `UNREADABLE`. `lstatSync` does not
+ *  follow the last part of the path, so it never reads the link target. */
+function danglingOf(file: string): null | Unreadable {
+  try {
+    lstatSync(file)
+  } catch (error) {
+    return failure(error)
+  }
+  return UNREADABLE
+}
+
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
  *  result is null in two cases. The file is not there, or it does not parse to
- *  an object. The result is `UNREADABLE` in two cases. The real path of the
- *  file is out of `bound`, or a read fails for another reason. In both cases
- *  the rule cannot see the file, and the file can hold any key. */
+ *  an object. The result is `UNREADABLE` in three cases. The file is a
+ *  dangling link, its real path is out of `bound`, or a read fails for another
+ *  reason. In each case the rule cannot see the file, and the file can hold
+ *  any key. */
 export function readManifest(
   root: string,
   bound: string,
@@ -259,7 +275,9 @@ export function readManifest(
   const file = path.join(root, '.claude-plugin', 'plugin.json')
   const real = realOf(file)
   if (typeof real !== 'string') {
-    return real
+    // `realOf` gives null for a dangling link and for a missing file.
+    // `danglingOf` tells them apart, because a dangling link is an entry.
+    return real === null ? danglingOf(file) : real
   }
   if (!isInside(real, bound)) {
     return UNREADABLE
