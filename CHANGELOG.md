@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.4.0...v0.5.0) (2026-10-04)
+
+
+### Features
+
+* make each rule threshold a rule option ([#60](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/60)) ([dc7e1ec](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/dc7e1ec3fa8cd491c062201423c48dbdc97cb0cf)), closes [#54](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/54) [#56](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/56)
+* **permissions:** check the tool lists in skill and agent frontmatter ([#62](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/62)) ([75ee7b5](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/75ee7b5b4bea5a2fba46e0578e4949c3eb095d20)), closes [#9](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/9) [#15](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/15) [#33](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/33)
+
+
+### Bug Fixes
+
+* **plugins:** make no report that rests on a dangling plugin.json ([#61](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/61)) ([676f7f2](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/676f7f28eeeb2a32bf859349d248297943a75b98)), closes [#55](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/55)
+
 ## [0.4.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.3.0...v0.4.0) (2026-10-02)
 
 
