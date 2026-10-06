@@ -234,6 +234,25 @@ describe('readManifest on a dangling link', () => {
     expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
   })
 
+  it.fails('gives UNREADABLE when .claude-plugin is a dangling link', {
+    skip: process.platform === 'win32',
+  }, () => {
+    mkdirSync(path.join(scratch, 'dangle-dir'), { recursive: true })
+    symlinkSync('missing', path.join(scratch, 'dangle-dir/.claude-plugin'))
+    expect(readManifest(path.join(scratch, 'dangle-dir'), scratch)).toBe(UNREADABLE)
+  })
+
+  it.fails('gives UNREADABLE when .claude-plugin is a link out of the bound', {
+    skip: process.platform === 'win32',
+  }, () => {
+    mkdirSync(path.join(scratch, 'out-dir'), { recursive: true })
+    mkdirSync(path.join(scratch, 'inside/p'), { recursive: true })
+    symlinkSync(path.join(scratch, 'out-dir'), path.join(scratch, 'inside/p/.claude-plugin'))
+    expect(readManifest(path.join(scratch, 'inside/p'), path.join(scratch, 'inside'))).toBe(
+      UNREADABLE,
+    )
+  })
+
   it('gives null for a .claude-plugin directory with no plugin.json', () => {
     mkdirSync(path.join(scratch, 'no-file/.claude-plugin'), { recursive: true })
     expect(readManifest(path.join(scratch, 'no-file'), scratch)).toBeNull()
