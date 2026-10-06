@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings",
-  "hash": "41ea72eb329492a8530f2d4730b093e930151422003f161656297e44cecbf074",
+  "hash": "5d20e2c9274251ea89a92c257124cc9347fb0d1e659655c74a8714f983cf29bd",
   "blocks": [
     {
       "id": "settings-files-and-precedence",
@@ -8,7 +8,7 @@
     },
     {
       "id": "settings-files-and-who-they-affect",
-      "hash": "53408b1417b9bb613f25fc529d41711e72e0b886b10f5b67417647f77b6eafad"
+      "hash": "d586ad76b61b81eb665922d4ea810afae04c2cbc0d7e94c2174bea6a560d5516"
     },
     {
       "id": "compare-the-scope-of-each-settings-file",
@@ -128,6 +128,12 @@
     }
   ],
   "sources": [
+    {
+      "heading": "Settings precedence",
+      "id": "settings-precedence",
+      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa",
+      "text": "## Settings precedence\n\nWhen the same key appears in more than one place, Claude Code uses the value from the highest level that sets it. The stack below shows the levels, highest on top; a key at a higher level overrides the same key anywhere below it.\n\n<SettingsPrecedence />\n\nIn order, highest precedence first:\n\n1. **Managed settings**: settings your organization deploys, by a `managed-settings.json` file, an MDM policy, or [server-managed settings](/docs/en/server-managed-settings) from the claude.ai console. Nothing you set overrides them: a key you pass with `--settings` doesn't override the same managed key, and a flag such as `--model` picks only from the models your organization allows. A managed `model` sets the model each session starts with, and you can still switch with `/model`; the lock is [`availableModels`](/docs/en/settings-reference#availablemodels), which constrains `/model`, `--model`, and the `model` key in your own files. When your organization delivers more than one managed source, the rules for [precedence within the managed tier](/docs/en/managed-settings#precedence-within-the-managed-tier) say what Claude Code reads from each.\n2. **Command line arguments**: flags you pass when you start `claude` from a terminal, for one session; see [Change a setting for one session](#change-a-setting-for-one-session). Claude Code merges JSON you pass with `--settings <file-or-json>` with your settings files by the same rules as the other levels: it takes a key you set here over the same key in local, project, or user settings, and keeps the lower-level value for a key you omit.\n3. **Project local settings** (`.claude/settings.local.json`): your personal settings for this project.\n4. **Shared project settings** (`.claude/settings.json`): settings your team checks into source control.\n5. **User settings** (`~/.claude/settings.json`): your personal settings for every project.\n\nEnvironment variables aren't a level in this stack. When a behavior has both a shell variable and a settings key, which one applies is decided per pair, not by level: `ANTHROPIC_MODEL` exported in your shell applies over the `model` key from any file, while `ANTHROPIC_DEFAULT_MODEL` applies only when no file sets `model`. The [environment variables reference](/docs/en/env-vars#precedence) says which keys have a pair and which one Claude Code reads first. An `env` block inside a settings file is an ordinary key and follows the levels above.\n\nFor a few security-sensitive keys, Claude Code honors a stricter value from a lower level over a managed value; [Exceptions to managed settings precedence](#exceptions-to-managed-settings-precedence) lists them."
+    },
     {
       "heading": "Fix a broken settings file",
       "id": "fix-a-broken-settings-file",

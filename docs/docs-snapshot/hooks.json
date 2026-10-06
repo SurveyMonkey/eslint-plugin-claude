@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "755e30355fb80abada5a6a5ec10fe491cc1a57bf123232c80d1cc68312869ae5",
+  "hash": "883bebba1486461a6dc62c66647320783d56ddc638a7422509d0123708b43ce4",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -36,7 +36,11 @@
     },
     {
       "id": "common-fields",
-      "hash": "c21a7787217a5b4e5c5074eedfd88f10f1df8e4aede1ab757553356697fca91a"
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+    },
+    {
+      "id": "bash-if-matching",
+      "hash": "cdc27b3c73d60486ab58f05411ab61717f596ec1aab1b9a9d525f100536d8aaf"
     },
     {
       "id": "command-hook-fields",
@@ -92,7 +96,7 @@
     },
     {
       "id": "common-input-fields",
-      "hash": "cbb0b65b4e7705b4f37d4c31d83dea82fc828322ed34631c755bf5d244814e6e"
+      "hash": "7a0641dab6a9fe405cbd1ec0b173c2a25f9d43e5d812659a31c966244dd5dc46"
     },
     {
       "id": "exit-code-output",
@@ -168,11 +172,11 @@
     },
     {
       "id": "setup-decision-control",
-      "hash": "2d3b530b072f1e285a64c89793190f1df2757ec27b1e4f9e895c3bbf99562ab0"
+      "hash": "a7d24a46c8e10e69833a92d4f32f743a1f58437d7cfd1354b409097b3475c0c3"
     },
     {
       "id": "instructionsloaded",
-      "hash": "462ac07b7acec1347e908a3e0063d73e558fb923511160cfc533d8e613d90c09"
+      "hash": "7ce6d1db930c21b1bd83c63d53a82d597a43b454c1fae8120c7b0368ee1af4aa"
     },
     {
       "id": "instructionsloaded-input",
@@ -272,7 +276,7 @@
     },
     {
       "id": "askuserquestion",
-      "hash": "63dc4173618b1804050e60272e2a80094d7361b85549f9b31b52e40c5d402022"
+      "hash": "88bb1b6003f3d7090f2fdf44d5539dc0181c5f29cca2c3954de1cc3b1fd8f65f"
     },
     {
       "id": "exitplanmode",
@@ -280,11 +284,15 @@
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "59abaef608512f3e3967cc9d6be5c0cf879b0302977062cddfff0c3b18544e91"
+      "hash": "28f6792385e67de437d8999646911ea565fbe0eb177444b7a240ca90d95b3fe8"
+    },
+    {
+      "id": "allow-with-updatedinput",
+      "hash": "ad85ef4eba1f800c6e1e055b0aa7a75d9bab91fa327f941a8ecf56943e40d2ec"
     },
     {
       "id": "defer-a-tool-call-for-later",
-      "hash": "6aff03c02f63287c14fc8fa8d88d1b425356a53c900ba183e53687e67d8bc80b"
+      "hash": "526c2ae7fbcf06ea07ea6cfdbddba01f4a63945df35c70de5ceff583c9fac860"
     },
     {
       "id": "permissionrequest",
@@ -300,7 +308,7 @@
     },
     {
       "id": "permission-update-entries",
-      "hash": "9abc20d276f7a2b16047071a2fd3c11b008625911bead50f17e1c9e55d21e2c9"
+      "hash": "5fe99f34d79702e8deee20c5b2cc1598c50bc1d462b5cdc50fcd42434085fa70"
     },
     {
       "id": "posttooluse",
@@ -408,7 +416,7 @@
     },
     {
       "id": "stop-input",
-      "hash": "7d673b77a99e1e82d8741d52f7d0d7d10b6e1cdaead6b93b07bee4d63ddd5b02"
+      "hash": "48ddafe90e91b478da929959035deb77c66d3d60be1e1d8c546e8b357f155685"
     },
     {
       "id": "stop-decision-control",

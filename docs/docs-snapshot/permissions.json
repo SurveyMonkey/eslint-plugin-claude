@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permissions",
-  "hash": "998f954e7ba578251e44a75c8d70ad39c5ba75ee60d3edb04c269a3a4a45eef6",
+  "hash": "487a51f83edd0c35a6128a2492e288c86aa24bbc07a0c975eb3f61acd5d45452",
   "blocks": [
     {
       "id": "configure-permissions",
@@ -20,7 +20,7 @@
     },
     {
       "id": "permission-modes",
-      "hash": "e6d376b475c1e0cbb1d891797210841003571d566db346d62757e09700f06ee9"
+      "hash": "c128332c5f5a60d534f16760c6f9286cbe5035e7d1767607ef835df12a1efee0"
     },
     {
       "id": "permission-rule-syntax",
@@ -152,7 +152,7 @@
     },
     {
       "id": "when-your-local-settings-file-needs-trust",
-      "hash": "9f446b8b9691a7436c90b2a277d8dc22ed663d919578907023a3e9eb6fb24e34"
+      "hash": "e92f56891f12f525d75863edf865047dd034ce8ab9e2897599cf107c7fa3884d"
     },
     {
       "id": "what-runs-before-you-trust-a-folder",

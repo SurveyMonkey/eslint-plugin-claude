@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "23bae38b93c6524247851eabec96de0a30984dad28641045b2e7e3787140d5b5",
+  "hash": "a516356b9c452b0f893cb12b68365d25567b2444b0c1cdc39978f86d220e196a",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "0eae1627fe2ae8493e386fb5e551a99e5a88163bf9e3ae5c088bc98cf4ed4158"
+      "hash": "3bc7bb90d71fad7840793ffa0ca15f73b728f66be543a057856ca1e137bcd33c"
     },
     {
       "id": "automatic-retries",
@@ -84,7 +84,7 @@
     },
     {
       "id": "youve-hit-your-monthly-spend-limit",
-      "hash": "0ea8d0d46b36059200fe9f68d8d896ddaf8ad7fdc8dc2a3a31a957817324e45f"
+      "hash": "d936a8d6a15a3a652949068c09b508350f92dcf3b47a15b8b53e3f8c33ad40ea"
     },
     {
       "id": "spend-limit-reached",
@@ -448,11 +448,15 @@
     },
     {
       "id": "usage-policy-refusal",
-      "hash": "53ce39f0e49c200f50501cd1991d32e661f8db0a9054526c937f4ff0326575b8"
+      "hash": "8d40a9dd62e4ea0f0874544e1f2eddc5301bfd02a67117be4030b5cf04a311b1"
     },
     {
       "id": "safety-measures-flagged-a-cybersecurity-topic",
-      "hash": "30a1fdff7dec55faf7a2657ecbfefe9152cfdd28ff3e2c136a73eadd99d53840"
+      "hash": "06c98f7a3672cef53fbbc413cee9fbc479a06d898f439fd7154475929113a1bd"
+    },
+    {
+      "id": "safeguards-flagged-a-request-for-claudes-reasoning",
+      "hash": "68e09d6e5c0d8ae5cc35ff72bb6f331f26359431e026f7d04ee84bfd2fe1bad4"
     },
     {
       "id": "output-blocked-by-content-filtering-policy",
@@ -1013,6 +1017,10 @@
     {
       "id": "has-a-wildcard-before-the-rest-of-the-command",
       "hash": "8b7d60bb29de9a85d524939f5c6f1c213208eb33b97719fb66303eb31af17924"
+    },
+    {
+      "id": "denying-bash-also-turns-off-the-powershell-tool",
+      "hash": "857eb5bc397a0885f4edc4cf5986f2e3d8600c98582ebc7ae2ffcc0c1bc48839"
     },
     {
       "id": "crosssessioninbound-must-be-one-of-accept-hold-refuse",
