@@ -335,6 +335,44 @@ describe('repositoryRoot for a linked .claude', () => {
     },
   )
 
+  it('gives the repository for a .claude below a directory link out of it', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('irepo/.git/HEAD', '')
+    put('ioutside/.claude/settings.json', '{"model":"opus"}')
+    symlinkSync('../ioutside', path.join(scratch, 'irepo/link'))
+    const dir = path.join(scratch, 'irepo/link/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'irepo'))
+    expect(readSettings(dir, repositoryRoot(dir))).toBe(UNREADABLE)
+  })
+
+  // ADR 001 Decision 14: the repository is the first directory at or above the
+  // file that has a `.git` entry. A link target with its own `.git` is such a directory.
+  it('gives the link target when the target holds its own .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('grepo/.git/HEAD', '')
+    put('goutside/.git/HEAD', '')
+    put('goutside/settings.json', '{"model":"opus"}')
+    symlinkSync('../goutside', path.join(scratch, 'grepo/.claude'))
+    const dir = path.join(scratch, 'grepo/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'goutside'))
+    expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
+  })
+
+  it('gives the real path of a linked directory when no directory above holds .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const free = realpathSync(mkdtempSync(path.join(tmpdir(), 'skill-tree-nogit-')))
+    try {
+      mkdirSync(path.join(free, 'target'))
+      symlinkSync('target', path.join(free, 'link'))
+      expect(repositoryRoot(path.join(free, 'link'))).toBe(path.join(free, 'target'))
+    } finally {
+      rmSync(free, { recursive: true, force: true })
+    }
+  })
+
   it('reads a .claude that is a real directory', () => {
     put('drepo/.git/HEAD', '')
     put('drepo/.claude/settings.json', '{"model":"opus"}')
