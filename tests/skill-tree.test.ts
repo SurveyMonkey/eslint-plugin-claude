@@ -256,6 +256,16 @@ describe('readManifest on a link', () => {
     )
   })
 
+  it('reads plugin.json when .claude-plugin is a link inside the bound', {
+    skip: process.platform === 'win32',
+  }, () => {
+    mkdirSync(path.join(scratch, 'in-dir'), { recursive: true })
+    writeFileSync(path.join(scratch, 'in-dir/plugin.json'), '{"name":"x"}')
+    mkdirSync(path.join(scratch, 'in-p'), { recursive: true })
+    symlinkSync(path.join(scratch, 'in-dir'), path.join(scratch, 'in-p/.claude-plugin'))
+    expect(readManifest(path.join(scratch, 'in-p'), scratch)).toEqual({ name: 'x' })
+  })
+
   it('gives null for a .claude-plugin directory with no plugin.json', () => {
     mkdirSync(path.join(scratch, 'no-file/.claude-plugin'), { recursive: true })
     expect(readManifest(path.join(scratch, 'no-file'), scratch)).toBeNull()
