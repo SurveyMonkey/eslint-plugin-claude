@@ -32,8 +32,8 @@ variable. The rule does not report other values, such as `0`.
 
 The rule reads both settings files of the `.claude/` directory that holds the agent. When both files
 set a key, the local file wins.[^precedence] A local file that sets `autoMemoryEnabled` to `true` turns the
-report off. The two `env` objects merge by key. The settings page does not say how `env` merges, so this is
-the choice of the plugin. The rule reads no managed or user settings, because they are not in the repository.
+report off. The two `env` objects merge by key. The settings page calls `env` an ordinary key, so a local `env`
+could replace the project `env`. The merge by key is the choice of the plugin. The rule reads no managed or user settings, because they are not in the repository.
 
 The rule reports local agents only. A plugin agent gets no report.
 

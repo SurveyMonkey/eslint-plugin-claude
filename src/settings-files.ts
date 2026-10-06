@@ -26,8 +26,11 @@ function fieldsOf(file: string, bound: string): Record<string, unknown> | null |
  *  in the `.claude/` directory `dir`. A top-level key of the local file
  *  replaces the same key of the project file. The `env` key is the one
  *  exception: when both values are objects, they merge by key, and the local
- *  value wins for one variable. The settings page does not say how `env`
- *  merges, so this is the choice of the plugin. The result is null when
+ *  value wins for one variable. The settings page calls `env` an ordinary
+ *  key, so a local `env` could replace the project `env`. The merge by key is
+ *  the choice of the plugin. A top-level key that is an array or an object
+ *  other than `env` is replaced as a whole, so do not use this merge for a
+ *  list key such as `permissions`. The result is null when
  *  neither file is there. The result is `UNREADABLE` when one file cannot be
  *  seen, because that file can override any key. A file cannot be seen when
  *  the read fails, the file is a dangling link, its real path is out of

@@ -26,8 +26,9 @@ in `.claude/agents/` when the `env` key of `.claude/settings.json` or `.claude/s
 sets the variable to `1` or `true`. The docs show only the value `1`. The rule also takes `true`, in any case.
 
 The rule reads both settings files of the `.claude/` directory that holds the agent. When both files
-set a key, the local file wins.[^precedence] The two `env` objects merge by key. The settings page does not say
-how `env` merges, so this is the choice of the plugin. A local file that sets the variable to `0` turns the
+set a key, the local file wins.[^precedence] The two `env` objects merge by key. The settings page calls `env` an
+ordinary key, so a local `env` could replace the project `env`. The merge by key is the choice of
+the plugin. A local file that sets the variable to `0` turns the
 report off.
 
 The rule reports local agents only. A plugin agent gets no report, because the settings of a plugin

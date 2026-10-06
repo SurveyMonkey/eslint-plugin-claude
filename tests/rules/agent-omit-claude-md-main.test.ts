@@ -71,6 +71,11 @@ describe('agent-omit-claude-md-main', () => {
       expect(run(names, agent('omitClaudeMd: true\n', '5'))).toEqual([])
       expect(run(names, '---\nomitClaudeMd: true\n---\n\nBody.\n')).toEqual([])
     })
+    it('for an agent with no name when the settings name no agent', () => {
+      expect(
+        run({ '.claude/settings.json': '{}' }, '---\nomitClaudeMd: true\n---\n\nBody.\n'),
+      ).toEqual([])
+    })
     it('for a file with no frontmatter or broken frontmatter', () => {
       expect(run(names, 'Body only.\n')).toEqual([])
       expect(run(names, '---\nomitClaudeMd: [unclosed\n---\n\nBody.\n')).toEqual([])

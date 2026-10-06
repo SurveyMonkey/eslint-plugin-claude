@@ -1,5 +1,5 @@
-// The `agent` setting runs a subagent as the main thread. `omitClaudeMd` then
-// leaves the CLAUDE.md files out of the main session
+// The `agent` setting runs a subagent as the main thread. Claude Code ignores
+// `omitClaudeMd` for that agent, so the field has no effect
 // (docs/rules/agent-omit-claude-md-main.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
@@ -21,7 +21,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'omitted' }> = {
     schema: [],
     messages: {
       omitted:
-        'The `agent` setting runs this agent as the main thread, and `omitClaudeMd` leaves the CLAUDE.md files out of the session.',
+        'The `agent` setting runs this agent as the main thread, and Claude Code ignores `omitClaudeMd` for the main session agent. Remove it.',
     },
   },
   create(context) {

@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/agent-omit-claude-md-main, which reports a local subagent file that sets omitClaudeMd to true while the committed settings agent key names that agent, because the main session then loads no CLAUDE.md file.
+description: The ESLint rule claude/agent-omit-claude-md-main, which reports a local subagent file that sets omitClaudeMd to true while the committed settings agent key names that agent, because Claude Code ignores the field for the main session agent.
 owner: brianespinosa
 created: 2026-10-05
 related_issues: [9]
@@ -22,8 +22,8 @@ Do not set `omitClaudeMd` in a local agent that the settings run as the main thr
 
 The `agent` setting makes a subagent the default for each session in a project.[^agent] The `agent`
 value is the name of the subagent. The field `omitClaudeMd: true` launches a subagent without the user,
-project and local CLAUDE.md files.[^omit] When both hold, the main session has no CLAUDE.md files. This
-is rarely the intent.
+project and local CLAUDE.md files. Claude Code ignores the field when the agent runs as the main
+session agent.[^omit] When both hold, the field has no effect.
 
 The rule reports the `omitClaudeMd` field of a local agent in `.claude/agents/`. The field must be `true`.
 The `agent` key of `.claude/settings.json` or `.claude/settings.local.json` must equal the `name` of the
