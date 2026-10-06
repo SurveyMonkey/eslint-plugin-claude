@@ -12,6 +12,7 @@ import {
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
+import { readSettings } from '../src/settings-files.ts'
 import { classifySkillFile } from '../src/skill-files.ts'
 import {
   frontmatterOfFile,
@@ -227,6 +228,19 @@ describe('readManifest', () => {
   })
 })
 
+describe('readManifest on a file that does not parse to an object', () => {
+  it.fails.each([
+    ['a syntax error', '{'],
+    ['null', 'null'],
+    ['an array', '[]'],
+    ['a scalar', '3'],
+  ])('gives UNREADABLE for %s', (_name, text) => {
+    const root = path.join(scratch, `bad-${Buffer.from(text).toString('hex')}`)
+    put(`${path.basename(root)}/.claude-plugin/plugin.json`, text)
+    expect(readManifest(root, scratch)).toBe(UNREADABLE)
+  })
+})
+
 describe('readManifest on a link', () => {
   it.skipIf(process.platform === 'win32')(
     'gives UNREADABLE when plugin.json is a dangling link',
@@ -302,6 +316,39 @@ describe('repositoryRoot', () => {
     } finally {
       rmSync(free, { recursive: true, force: true })
     }
+  })
+})
+
+describe('repositoryRoot for a linked .claude', () => {
+  it.fails('gives the repository, not the link target, and readSettings gives UNREADABLE', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('lrepo/.git/HEAD', '')
+    put('loutside/settings.json', '{"model":"opus"}')
+    symlinkSync('../loutside', path.join(scratch, 'lrepo/.claude'))
+    const dir = path.join(scratch, 'lrepo/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'lrepo'))
+    expect(readSettings(dir, repositoryRoot(dir))).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives the real path of a repository reached by a link',
+    () => {
+      put('rrepo/.git/HEAD', '')
+      put('rrepo/.claude/settings.json', '{"model":"opus"}')
+      symlinkSync('rrepo', path.join(scratch, 'rlink'))
+      const dir = path.join(scratch, 'rlink/.claude')
+      expect(repositoryRoot(dir)).toBe(path.join(scratch, 'rrepo'))
+      expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
+    },
+  )
+
+  it('reads a .claude that is a real directory', () => {
+    put('drepo/.git/HEAD', '')
+    put('drepo/.claude/settings.json', '{"model":"opus"}')
+    const dir = path.join(scratch, 'drepo/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'drepo'))
+    expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
   })
 })
 

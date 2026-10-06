@@ -126,6 +126,17 @@ describe('agent-skills-preloadable', () => {
     expect(lintWith(rule, agent(list('deploy')), path.join(root, 'agents/a.md'))).toEqual([])
   })
 
+  // A manifest that does not parse can hold a `skills` key, so the rule cannot see the skills.
+  it.fails.each([
+    ['a syntax error', '{'],
+    ['null', 'null'],
+    ['an array', '[]'],
+    ['a scalar', '3'],
+  ])('stays silent when the plugin manifest is %s', (_name, text) => {
+    const files = { '.claude-plugin/plugin.json': text, 'skills/deploy/SKILL.md': OFF }
+    expect(run(files, list('deploy'), 'agents/a.md')).toEqual([])
+  })
+
   for (const value of ['skills: deploy\n', 'skills: 3\n', 'skills:\n  a: b\n', 'skills: []\n']) {
     it(`stays silent for the skills value ${JSON.stringify(value)}`, () => {
       expect(run({ '.claude/skills/deploy/SKILL.md': OFF }, value)).toEqual([])
