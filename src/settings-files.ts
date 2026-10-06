@@ -1,9 +1,9 @@
 // The committed settings of a `.claude/` directory. A rule that checks a
 // setting reads both files through `readSettings`.
 //
-// Order: the page "Settings files and precedence" says that a key at a higher
-// level overrides the same key below it. `.claude/settings.local.json` is
-// above `.claude/settings.json`. So the local file wins for one key.
+// Order: the settings page says that a key at a higher level overrides the
+// same key below it. `.claude/settings.local.json` is above
+// `.claude/settings.json`. So the local file wins for one key.
 import path from 'node:path'
 import { readJson, UNREADABLE, type Unreadable } from './skill-tree.ts'
 
@@ -12,8 +12,8 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 
 /** The fields of one settings file. The result is null when the file is not
  *  there, and `UNREADABLE` when the rule cannot see it. A file that does not
- *  parse to an object is `UNREADABLE`, and is not absent: the file can hold
- *  any key, and Claude Code reports it as a settings error. */
+ *  parse to an object is `UNREADABLE`, not absent. It can hold any key, and
+ *  Claude Code reports it as a settings error. */
 function fieldsOf(file: string, bound: string): Record<string, unknown> | null | Unreadable {
   const parsed = readJson(file, bound)
   if (parsed === null || parsed === UNREADABLE) {
@@ -24,17 +24,21 @@ function fieldsOf(file: string, bound: string): Record<string, unknown> | null |
 
 /** The merged top-level fields of `settings.json` and `settings.local.json`
  *  in the `.claude/` directory `dir`. A top-level key of the local file
- *  replaces the same key of the project file. The `env` key is the one
- *  exception: when both values are objects, they merge by key, and the local
- *  value wins for one variable. The settings page calls `env` an ordinary
- *  key, so a local `env` could replace the project `env`. The merge by key is
- *  the choice of the plugin. A top-level key that is an array or an object
- *  other than `env` is replaced as a whole, so do not use this merge for a
- *  list key such as `permissions`. The result is null when
- *  neither file is there. The result is `UNREADABLE` when one file cannot be
- *  seen, because that file can override any key. A file cannot be seen when
- *  the read fails, the file is a dangling link, its real path is out of
- *  `bound`, or its text does not parse to an object. */
+ *  replaces the same key of the project file.
+ *
+ *  The `env` key is the one exception. When both values are objects, they
+ *  merge by key, and the local value wins for one variable. The settings page
+ *  calls `env` an ordinary key, so a local `env` could replace the project
+ *  `env`. The merge by key is the choice of the plugin.
+ *
+ *  This function replaces an array, or an object other than `env`, as a
+ *  whole. Do not use it for a list key such as `permissions`.
+ *
+ *  The result is null when neither file is there. The result is `UNREADABLE`
+ *  when one file cannot be seen, because that file can override any key. A file
+ *  cannot be seen when the read fails, when the file is a link to a file that
+ *  is not there, or when its real path is out of `bound`. A file that does not
+ *  parse to an object cannot be seen either. */
 export function readSettings(
   dir: string,
   bound: string,

@@ -28,7 +28,7 @@ The rule reports on each file of a duplicate, not only on the second file. A rul
 file cannot know the order of the files. The report is on the `name` value. The message lists the
 other files, by their path below `agents/`.
 
-The rule compares names as exact strings. The docs give no folding of case or spacing for a
+The rule compares names as exact strings. The docs say nothing about letter case or spaces in a
 subagent name. It reads the other files from the disk. It reads each `.md` file below
 `.claude/agents/`, at any depth. It reads no file out of the repository. The repository is the
 first directory at or above `.claude/` that has a `.git` entry. The rule follows a link to a
@@ -38,7 +38,7 @@ The rule does not check these cases:
 
 - A plugin agent. The rule reports on local agents only.
 - The same name in two nested `.claude/agents/` directories. Claude Code uses the definition
-  closest to the working directory, so that is not an error.[^scope]
+  closest to the current directory, so that is not an error.[^scope]
 - The same name in a plugin, in `~/.claude/agents/`, or in managed settings. Those sources have
   a priority order, and the rule cannot see all of them.[^scope]
 - A file with no `name`, an empty `name`, or a `name` that is not a string. Such a file has no

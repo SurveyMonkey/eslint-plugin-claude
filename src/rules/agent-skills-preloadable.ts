@@ -43,8 +43,8 @@ function problemOf(entry: string, skillsDir: string, bound: string): MessageIds 
       : null
   }
   // An entry with no skill file is the business of `agent-skills-exist`. The
-  // bundled `verify` skill gets no report: a skill of a user, of a plugin, or
-  // of the repository root can replace it, and the rule cannot see them.
+  // bundled `verify` skill gets no report: a skill of the repository root can
+  // replace it, and the rule cannot see that skill.
   return null
 }
 

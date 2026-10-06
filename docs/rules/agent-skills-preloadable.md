@@ -35,15 +35,15 @@ An entry resolves in the scope of the agent:
   adds other directories, so the rule gives no report for that plugin.
 
 The docs say that the bundled `/verify` skill is not a skill that a subagent can preload.[^preload]
-The rule gives no report for that entry. A skill of a user, of a plugin, or of the repository root
-can replace the bundled skill. The rule cannot see those skills.
+The rule gives no report for that entry. A skill of the repository root can replace the bundled skill.
+The rule cannot see that skill.
 
 The rule does not check these cases:
 
 - An entry that resolves to no skill file. Claude Code skips it. [`agent-skills-exist`](agent-skills-exist.md)
   is the rule for that case, when it is on.
-- A plugin form entry, `<plugin>:<name>`. The docs give no rule for that form in `skills`, so the
-  rule looks for a folder with that exact name, and finds none.
+- A plugin form entry, `<plugin>:<name>`. The docs give no rule for that form in `skills`.
+  The rule looks for a folder with that exact name, and finds none.
 - A skill that a `name` field gives under another folder name. The rule matches the folder name.
 - A skill in `~/.claude/skills/`, in managed settings, or in another `.claude/` directory.
 - A `skills` value that is not a list, and an item that is not a string.

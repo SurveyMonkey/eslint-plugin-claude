@@ -22,8 +22,8 @@ Do not set `model` in a local agent when the settings force one subagent model.
 
 The variable `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` set to `1` applies one model to every subagent.[^force]
 The `model` field of an agent then has no effect. The rule reports the `model` field of a local agent
-in `.claude/agents/` when the `env` key of `.claude/settings.json` or `.claude/settings.local.json`
-sets the variable to `1` or `true`. The docs show only the value `1`. The rule also takes `true`, in any case.
+in `.claude/agents/`. It reports when the `env` key of `.claude/settings.json` or
+`.claude/settings.local.json` sets the variable to `1` or `true`. The docs show only the value `1`. The rule also takes `true`, in any case.
 
 The rule reads both settings files of the `.claude/` directory that holds the agent. When both files
 set a key, the local file wins.[^precedence] The two `env` objects merge by key. The settings page calls `env` an
@@ -35,9 +35,10 @@ The rule reports local agents only. A plugin agent gets no report, because the s
 user are not in the plugin repository. The rule also checks only a `model` that is a string. Managed
 and user settings are not in the repository, so the rule does not read them.
 
-The rule makes no report that rests on a file that it cannot read. This holds when a settings file
-cannot be read, is a dangling link, has a real path out of the repository, or does not parse to an
-object. A file that is not there gives no report. The rule adds no message for this case.
+The rule makes no report that rests on a settings file that it cannot see. A file cannot be seen
+when it cannot be read, or when it is a link to a file that is not there. A file also cannot be seen
+when its real path is out of the repository, or when it does not parse to an object. A file that is
+not there gives no report. The rule adds no message for this case.
 
 Fail, with `{"env": {"CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "1"}}` in `.claude/settings.json`:
 

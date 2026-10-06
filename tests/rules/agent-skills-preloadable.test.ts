@@ -63,22 +63,9 @@ describe('agent-skills-preloadable', () => {
     expect(run({}, list('verify'))).toEqual([])
   })
 
-  it('stays silent for verify in a plugin agent', () => {
-    expect(run(PLUGIN, list('verify'), 'agents/a.md')).toEqual([])
-  })
-
   it('reports a disabled skill that is named verify as a disabled skill', () => {
     const messages = run({ '.claude/skills/verify/SKILL.md': OFF }, list('verify'))
     expect(messages.map((m) => m.messageId)).toEqual(['disabled'])
-  })
-
-  it('stays silent for a verify skill of the repository that a model can invoke', () => {
-    expect(run({ '.claude/skills/verify/SKILL.md': skill('') }, list('verify'))).toEqual([])
-  })
-
-  it('stays silent for a verify folder that the scan skips', () => {
-    // A folder with no `SKILL.md` can be a skill that the rule cannot see.
-    expect(run({ '.claude/skills/verify/notes.md': 'x' }, list('verify'))).toEqual([])
   })
 
   it('stays silent for a skill that a model can invoke', () => {

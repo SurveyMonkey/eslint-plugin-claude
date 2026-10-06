@@ -1,6 +1,8 @@
 // A repository on disk for a rule that compares a local agent with the
 // committed settings. The rule module is the test subject, so the test needs
-// no entry in the plugin list.
+// no entry in the plugin list. `lintWith` uses `Linter`, not `RuleTester`:
+// a case must build the file system around the lint, and `Linter` takes
+// the absolute file name of a file on that disk.
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'

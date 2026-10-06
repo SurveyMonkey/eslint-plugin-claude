@@ -23,7 +23,8 @@ Do not set `omitClaudeMd` in a local agent that the settings run as the main thr
 The `agent` setting makes a subagent the default for each session in a project.[^agent] The `agent`
 value is the name of the subagent. The field `omitClaudeMd: true` launches a subagent without the user,
 project and local CLAUDE.md files. Claude Code ignores the field when the agent runs as the main
-session agent.[^omit] When both hold, the field has no effect.
+session agent.[^omit] The `--agent` flag overrides the `agent` setting. A session can run the agent as
+a subagent, and the field then applies. The rule cannot see the flag.
 
 The rule reports the `omitClaudeMd` field of a local agent in `.claude/agents/`. The field must be `true`.
 The `agent` key of `.claude/settings.json` or `.claude/settings.local.json` must equal the `name` of the
@@ -36,9 +37,10 @@ not in the repository.
 The rule reports local agents only. A plugin agent gets no report. A name or an `agent` value that is
 not a string gives no report.
 
-The rule makes no report that rests on a file that it cannot read. This holds when a settings file
-cannot be read, is a dangling link, has a real path out of the repository, or does not parse to an
-object. A file that is not there gives no report. The rule adds no message for this case.
+The rule makes no report that rests on a settings file that it cannot see. A file cannot be seen
+when it cannot be read, or when it is a link to a file that is not there. A file also cannot be seen
+when its real path is out of the repository, or when it does not parse to an object. A file that is
+not there gives no report. The rule adds no message for this case.
 
 Fail, with `{"agent": "reviewer"}` in `.claude/settings.json`:
 
