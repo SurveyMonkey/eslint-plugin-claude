@@ -20,13 +20,13 @@ const plugin = (...parts: string[]) => {
 describe('a plugin root that the check can see', () => {
   it('gives plugin for an agent file and an output style file', () => {
     plugin('p')
-    expect(classifyAgentFile(at('p', 'agents', 'a.md'))).toEqual({ plugin: true })
-    expect(classifyAgentFile(at('p', 'agents', 'deep', 'a.md'))).toEqual({ plugin: true })
+    expect(classifyAgentFile(at('p', 'agents', 'a.md'))).toMatchObject({ plugin: true })
+    expect(classifyAgentFile(at('p', 'agents', 'deep', 'a.md'))).toMatchObject({ plugin: true })
     expect(classifyOutputStyle(at('p', 'output-styles', 's.md'))).toEqual({ plugin: true })
   })
 
   it('gives local for `.claude/`, and null for a directory with no manifest', () => {
-    expect(classifyAgentFile(at('.claude', 'agents', 'a.md'))).toEqual({ plugin: false })
+    expect(classifyAgentFile(at('.claude', 'agents', 'a.md'))).toMatchObject({ plugin: false })
     expect(classifyOutputStyle(at('.claude', 'output-styles', 's.md'))).toEqual({ plugin: false })
     expect(classifyAgentFile(at('none', 'agents', 'a.md'))).toBeNull()
     expect(classifyOutputStyle(at('none', 'output-styles', 's.md'))).toBeNull()
@@ -36,25 +36,25 @@ describe('a plugin root that the check can see', () => {
   it('gives plugin for a dangling manifest link', () => {
     mkdirSync(at('dangling', '.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', at('dangling', '.claude-plugin', 'plugin.json'))
-    expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toEqual({ plugin: true })
+    expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toMatchObject({ plugin: true })
   })
 })
 
 // The root is the parent of the deepest `agents/` directory that fits.
 describe('the scope root of an agent file', () => {
-  it.fails('is the plugin root for a plugin agent', () => {
+  it('is the plugin root for a plugin agent', () => {
     plugin('r1')
     expect(classifyAgentFile(at('r1', 'agents', 'a.md'))).toEqual({ plugin: true, root: at('r1') })
   })
 
-  it.fails('is the `.claude/` directory for a local agent', () => {
+  it('is the `.claude/` directory for a local agent', () => {
     expect(classifyAgentFile(at('r2', '.claude', 'agents', 'a.md'))).toEqual({
       plugin: false,
       root: at('r2', '.claude'),
     })
   })
 
-  it.fails('is the same for a file in a subfolder of `agents/`', () => {
+  it('is the same for a file in a subfolder of `agents/`', () => {
     plugin('r3')
     expect(classifyAgentFile(at('r3', 'agents', 'x', 'y', 'a.md'))).toMatchObject({
       root: at('r3'),
@@ -64,7 +64,7 @@ describe('the scope root of an agent file', () => {
     })
   })
 
-  it.fails('skips a nested `agents/` directory that does not fit', () => {
+  it('skips a nested `agents/` directory that does not fit', () => {
     plugin('r4')
     // `r4/agents/agents` has no manifest beside it, so `r4/agents` is the one that fits.
     expect(classifyAgentFile(at('r4', 'agents', 'agents', 'a.md'))).toMatchObject({
