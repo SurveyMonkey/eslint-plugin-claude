@@ -227,12 +227,15 @@ describe('readManifest', () => {
   })
 })
 
-describe('readManifest on a dangling link', () => {
-  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a dangling link', () => {
-    mkdirSync(path.join(scratch, 'dangle/.claude-plugin'), { recursive: true })
-    symlinkSync('missing.json', path.join(scratch, 'dangle/.claude-plugin/plugin.json'))
-    expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
-  })
+describe('readManifest on a link', () => {
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE when plugin.json is a dangling link',
+    () => {
+      mkdirSync(path.join(scratch, 'dangle/.claude-plugin'), { recursive: true })
+      symlinkSync('missing.json', path.join(scratch, 'dangle/.claude-plugin/plugin.json'))
+      expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
+    },
+  )
 
   it('gives UNREADABLE when .claude-plugin is a dangling link', {
     skip: process.platform === 'win32',

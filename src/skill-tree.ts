@@ -25,7 +25,8 @@ import type { SkillFile } from './skill-files.ts'
 
 /** The result of a read that failed for a reason other than a missing file.
  *  It is also the result for a file with a real path out of the repository,
- *  and for a dangling manifest link. */
+ *  and for a dangling or out-of-bound manifest link or manifest directory
+ *  link. */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 
@@ -253,9 +254,9 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
  *  `UNREADABLE` for a dangling link, and null when nothing is there. A failed
  *  `lstatSync` for another reason gives `UNREADABLE`. `lstatSync` does not
  *  follow the last part of the path, so it never reads the link target. */
-function danglingOf(file: string): null | Unreadable {
+function danglingOf(entry: string): null | Unreadable {
   try {
-    lstatSync(file)
+    lstatSync(entry)
   } catch (error) {
     return failure(error)
   }
@@ -263,9 +264,9 @@ function danglingOf(file: string): null | Unreadable {
 }
 
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
- *  result is null in two cases. The file is not there, or it does not parse to
- *  an object. A `.claude-plugin` that is not there, or that is a file, gives
- *  null. The result is `UNREADABLE` in five cases. `.claude-plugin` is a
+ *  result is null in three cases. `.claude-plugin` is not there, or it is a
+ *  file. The manifest file is not there. The file does not parse to an
+ *  object. The result is `UNREADABLE` in five cases. `.claude-plugin` is a
  *  dangling link. The real path of `.claude-plugin` is out of `bound`. The
  *  file is a dangling link. The real path of the file is out of `bound`. A
  *  read fails for another reason. In each case the rule cannot see the file,
