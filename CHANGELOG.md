@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.5.0...v0.6.0) (2026-10-06)
+
+
+### Features
+
+* **agents:** add the cross-file subagent error rules ([#67](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/67)) ([eb0a48f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/eb0a48f52155929310f8d5d93fd209e1a78f1703)), closes [#64](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/64)
+
+
+### Bug Fixes
+
+* **agents:** finish the follow-ups of the cross-file agent rules ([#75](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/75)) ([274268d](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/274268dd3c76e83ae21ae5eab77caf0dd36120a0)), closes [#72](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/72) [#71](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/71)
+* keep each rule read in the repository ([#74](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/74)) ([c92861a](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/c92861aa0a421e44bdfdf24b6a60a410c8fea91e)), closes [#69](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/69) [#70](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/70)
+* **plugins:** make no report that rests on an unseen .claude-plugin directory ([#66](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/66)) ([10a433e](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/10a433eb4a028ebc1201cbbbdf13c26c4b158f4a)), closes [#63](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/63)
+
 ## [0.5.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.4.0...v0.5.0) (2026-10-04)
 
 
