@@ -72,7 +72,26 @@ describe('agent-skills-preloadable', () => {
     expect(run({ '.claude/skills/deploy/SKILL.md': skill('') })).toEqual([])
   })
 
-  for (const value of ['false', '"true"', '1', 'yes']) {
+  // The skills page accepts these forms as true, in any letter case.
+  for (const value of ['yes', 'on', '1', 'YES', '"true"']) {
+    it.fails(`reports when disable-model-invocation is ${value}`, () => {
+      const files = {
+        '.claude/skills/deploy/SKILL.md': skill(`disable-model-invocation: ${value}\n`),
+      }
+      const messages = run(files)
+      expect(messages).toHaveLength(1)
+      expect(messages[0]).toMatchObject({ messageId: 'disabled' })
+    })
+  }
+
+  // YAML reads `True` as the Boolean true, so the rule already reports it.
+  it('reports when disable-model-invocation is True', () => {
+    const files = { '.claude/skills/deploy/SKILL.md': skill('disable-model-invocation: True\n') }
+    expect(run(files)).toHaveLength(1)
+  })
+
+  // `false`, `no`, `off` and `0` are Boolean false. `maybe` and `[true]` are no Boolean.
+  for (const value of ['false', 'no', 'off', '0', 'maybe', '[true]']) {
     it(`stays silent when disable-model-invocation is ${value}`, () => {
       const files = {
         '.claude/skills/deploy/SKILL.md': skill(`disable-model-invocation: ${value}\n`),
