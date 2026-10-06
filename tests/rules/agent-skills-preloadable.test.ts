@@ -74,7 +74,7 @@ describe('agent-skills-preloadable', () => {
 
   // The skills page accepts these forms as true, in any letter case.
   for (const value of ['yes', 'on', '1', 'YES', '"true"']) {
-    it.fails(`reports when disable-model-invocation is ${value}`, () => {
+    it(`reports when disable-model-invocation is ${value}`, () => {
       const files = {
         '.claude/skills/deploy/SKILL.md': skill(`disable-model-invocation: ${value}\n`),
       }
