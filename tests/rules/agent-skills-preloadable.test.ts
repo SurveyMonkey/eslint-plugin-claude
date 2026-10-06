@@ -18,14 +18,14 @@ const run = (files: Record<string, string>, fields = list('deploy'), at = LOCAL)
 }
 
 describe('agent-skills-preloadable', () => {
-  it.fails('reports an entry that is a disabled local skill', () => {
+  it('reports an entry that is a disabled local skill', () => {
     const messages = run({ '.claude/skills/deploy/SKILL.md': OFF })
     expect(messages).toHaveLength(1)
-    expect(messages[0]).toMatchObject({ messageId: 'disabled', line: 4 })
+    expect(messages[0]).toMatchObject({ messageId: 'disabled', line: 5 })
     expect(messages[0]?.message).toContain('`deploy`')
   })
 
-  it.fails('reports each disabled entry, and only that entry', () => {
+  it('reports each disabled entry, and only that entry', () => {
     const messages = run(
       {
         '.claude/skills/deploy/SKILL.md': OFF,
@@ -39,19 +39,19 @@ describe('agent-skills-preloadable', () => {
     expect(messages[1]?.message).toContain('`ship`')
   })
 
-  it.fails('reports from an agent in a subfolder', () => {
+  it('reports from an agent in a subfolder', () => {
     const files = { '.claude/skills/deploy/SKILL.md': OFF }
     expect(run(files, list('deploy'), '.claude/agents/x/a.md')).toHaveLength(1)
   })
 
-  it.fails('reports an entry that is a disabled plugin skill', () => {
+  it('reports an entry that is a disabled plugin skill', () => {
     const files = { ...PLUGIN, 'skills/deploy/SKILL.md': OFF }
     const messages = run(files, list('deploy'), 'agents/a.md')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({ messageId: 'disabled' })
   })
 
-  it.fails('reports a plugin skill when the manifest sets other keys', () => {
+  it('reports a plugin skill when the manifest sets other keys', () => {
     const files = {
       '.claude-plugin/plugin.json': '{"name":"p","commands":"./c"}',
       'skills/deploy/SKILL.md': OFF,
@@ -59,17 +59,17 @@ describe('agent-skills-preloadable', () => {
     expect(run(files, list('deploy'), 'agents/a.md')).toHaveLength(1)
   })
 
-  it.fails('reports the bundled verify skill', () => {
+  it('reports the bundled verify skill', () => {
     const messages = run({}, list('verify'))
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({ messageId: 'bundled' })
   })
 
-  it.fails('reports the bundled verify skill for a plugin agent', () => {
+  it('reports the bundled verify skill for a plugin agent', () => {
     expect(run(PLUGIN, list('verify'), 'agents/a.md')).toHaveLength(1)
   })
 
-  it.fails('reports a disabled skill that is named verify as a disabled skill', () => {
+  it('reports a disabled skill that is named verify as a disabled skill', () => {
     const messages = run({ '.claude/skills/verify/SKILL.md': OFF }, list('verify'))
     expect(messages.map((m) => m.messageId)).toEqual(['disabled'])
   })
