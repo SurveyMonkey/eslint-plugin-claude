@@ -67,6 +67,9 @@ The same holds for a `plugin.json` that is a dangling link. The rule cannot read
 and a manifest can set `agents`. A dangling link is not a missing file. A missing file is not a
 file that the rule cannot read, so a missing agent is still reported.
 
+A `plugin.json` that does not parse to an object is also a manifest that the rule cannot read.
+The rule makes no report that rests on the `agents/` folder of that plugin.
+
 The rule checks `agent` with or without `context: fork`. The field has no effect without it.
 [`skill-fork-fields-require-context`](skill-fork-fields-require-context.md) reports that.
 

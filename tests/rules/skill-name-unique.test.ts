@@ -468,3 +468,22 @@ describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling 
     expect(lint(command, bare)).toHaveLength(1)
   })
 })
+
+// A manifest that is not a JSON object gives no key. The rule reads no `commands/` folder.
+describe('a plugin.json that does not parse to an object', () => {
+  const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
+
+  it.each([
+    ['a syntax error', '{'],
+    ['null', 'null'],
+    ['an array', '[]'],
+    ['a scalar', '3'],
+  ])('reads no commands/ folder for %s', (_name, text) => {
+    const tree = `bad-${Buffer.from(text).toString('hex')}`
+    put(`${tree}/.claude-plugin/plugin.json`, text)
+    put(`${tree}/commands/review.md`, bare)
+    put(`${tree}/skills/review/SKILL.md`, bare)
+    expect(lint(path.join(scratch, tree, 'skills', 'review', 'SKILL.md'), bare)).toEqual([])
+    expect(lint(path.join(scratch, tree, 'commands', 'review.md'), bare)).toEqual([])
+  })
+})

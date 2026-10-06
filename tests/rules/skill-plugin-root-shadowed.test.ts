@@ -142,3 +142,27 @@ describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling 
     expect(messages).toEqual(['directory'])
   })
 })
+
+// A plugin root that is a link out of the repository: the rule reads no manifest there.
+describe.skipIf(process.platform === 'win32')(
+  'a plugin root that is a link out of the repository',
+  () => {
+    it('makes no manifest report, and reports for a real plugin root', () => {
+      const lint = (file: string) => lintMarkdown('skill-plugin-root-shadowed', code, file)
+      mkdirSync(path.join(scratch, 'lrepo', '.git'), { recursive: true })
+      mkdirSync(path.join(scratch, 'lrepo', 'real', '.claude-plugin'), { recursive: true })
+      writeFileSync(
+        path.join(scratch, 'lrepo', 'real', '.claude-plugin', 'plugin.json'),
+        '{"skills": "./x"}',
+      )
+      mkdirSync(path.join(scratch, 'lout', '.claude-plugin'), { recursive: true })
+      writeFileSync(
+        path.join(scratch, 'lout', '.claude-plugin', 'plugin.json'),
+        '{"skills": "./x"}',
+      )
+      symlinkSync('../lout', path.join(scratch, 'lrepo', 'plug'))
+      expect(lint(path.join(scratch, 'lrepo', 'plug', 'SKILL.md'))).toEqual([])
+      expect(lint(path.join(scratch, 'lrepo', 'real', 'SKILL.md'))).toHaveLength(1)
+    })
+  },
+)

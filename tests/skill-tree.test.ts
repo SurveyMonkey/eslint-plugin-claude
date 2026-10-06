@@ -12,6 +12,7 @@ import {
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
+import { readSettings } from '../src/settings-files.ts'
 import { classifySkillFile } from '../src/skill-files.ts'
 import {
   frontmatterOfFile,
@@ -213,17 +214,22 @@ describe('skillFiles', () => {
 })
 
 describe('readManifest', () => {
-  it('reads an object, and gives null for a missing, bad or non-object file', () => {
+  it('reads an object, and gives null for a missing file', () => {
     expect(readManifest(plugin, scratch)).toEqual({ name: 'p', skills: './extra' })
     expect(readManifest(path.join(scratch, 'none'), scratch)).toBeNull()
-    put('m1/.claude-plugin/plugin.json', '{')
-    expect(readManifest(path.join(scratch, 'm1'), scratch)).toBeNull()
-    put('m2/.claude-plugin/plugin.json', '[]')
-    expect(readManifest(path.join(scratch, 'm2'), scratch)).toBeNull()
-    put('m4/.claude-plugin/plugin.json', '3')
-    expect(readManifest(path.join(scratch, 'm4'), scratch)).toBeNull()
-    put('m3/.claude-plugin/plugin.json', 'null')
-    expect(readManifest(path.join(scratch, 'm3'), scratch)).toBeNull()
+  })
+})
+
+describe('readManifest on a file that does not parse to an object', () => {
+  it.each([
+    ['a syntax error', '{'],
+    ['null', 'null'],
+    ['an array', '[]'],
+    ['a scalar', '3'],
+  ])('gives UNREADABLE for %s', (_name, text) => {
+    const root = path.join(scratch, `bad-${Buffer.from(text).toString('hex')}`)
+    put(`${path.basename(root)}/.claude-plugin/plugin.json`, text)
+    expect(readManifest(root, scratch)).toBe(UNREADABLE)
   })
 })
 
@@ -302,6 +308,77 @@ describe('repositoryRoot', () => {
     } finally {
       rmSync(free, { recursive: true, force: true })
     }
+  })
+})
+
+describe('repositoryRoot for a linked .claude', () => {
+  it('gives the repository, not the link target, and readSettings gives UNREADABLE', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('lrepo/.git/HEAD', '')
+    put('loutside/settings.json', '{"model":"opus"}')
+    symlinkSync('../loutside', path.join(scratch, 'lrepo/.claude'))
+    const dir = path.join(scratch, 'lrepo/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'lrepo'))
+    expect(readSettings(dir, repositoryRoot(dir))).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives the real path of a repository reached by a link',
+    () => {
+      put('rrepo/.git/HEAD', '')
+      put('rrepo/.claude/settings.json', '{"model":"opus"}')
+      symlinkSync('rrepo', path.join(scratch, 'rlink'))
+      const dir = path.join(scratch, 'rlink/.claude')
+      expect(repositoryRoot(dir)).toBe(path.join(scratch, 'rrepo'))
+      expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
+    },
+  )
+
+  it('gives the repository for a .claude below a directory link out of it', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('irepo/.git/HEAD', '')
+    put('ioutside/.claude/settings.json', '{"model":"opus"}')
+    symlinkSync('../ioutside', path.join(scratch, 'irepo/link'))
+    const dir = path.join(scratch, 'irepo/link/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'irepo'))
+    expect(readSettings(dir, repositoryRoot(dir))).toBe(UNREADABLE)
+  })
+
+  // ADR 001 Decision 14: the repository is the first directory at or above the
+  // file that has a `.git` entry. A link target with its own `.git` is such a directory.
+  it('gives the link target when the target holds its own .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('grepo/.git/HEAD', '')
+    put('goutside/.git/HEAD', '')
+    put('goutside/settings.json', '{"model":"opus"}')
+    symlinkSync('../goutside', path.join(scratch, 'grepo/.claude'))
+    const dir = path.join(scratch, 'grepo/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'goutside'))
+    expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
+  })
+
+  it('gives the real path of a linked directory when no directory above holds .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const free = realpathSync(mkdtempSync(path.join(tmpdir(), 'skill-tree-nogit-')))
+    try {
+      mkdirSync(path.join(free, 'target'))
+      symlinkSync('target', path.join(free, 'link'))
+      expect(repositoryRoot(path.join(free, 'link'))).toBe(path.join(free, 'target'))
+    } finally {
+      rmSync(free, { recursive: true, force: true })
+    }
+  })
+
+  it('reads a .claude that is a real directory', () => {
+    put('drepo/.git/HEAD', '')
+    put('drepo/.claude/settings.json', '{"model":"opus"}')
+    const dir = path.join(scratch, 'drepo/.claude')
+    expect(repositoryRoot(dir)).toBe(path.join(scratch, 'drepo'))
+    expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
   })
 })
 

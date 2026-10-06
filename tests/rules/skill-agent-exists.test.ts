@@ -438,3 +438,20 @@ describe('a plugin manifest that the rule cannot see', () => {
     })
   })
 })
+
+// A manifest that is not a JSON object gives no key, so the rule cannot see the `agents` key.
+// It makes no report that rests on `agents/`.
+describe('a plugin.json that does not parse to an object', () => {
+  it.each([
+    ['a syntax error', '{'],
+    ['null', 'null'],
+    ['an array', '[]'],
+    ['a scalar', '3'],
+  ])('makes no report for %s', (_name, text) => {
+    const tree = `bad-${Buffer.from(text).toString('hex')}`
+    put(`${tree}/.claude-plugin/plugin.json`, text)
+    put(`${tree}/agents/a.md`, agentFile('a'))
+    const file = path.join(scratch, tree, 'skills', 's', 'SKILL.md')
+    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toEqual([])
+  })
+})

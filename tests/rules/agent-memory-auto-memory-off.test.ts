@@ -2,6 +2,7 @@
 // memory off with `autoMemoryEnabled` or with `CLAUDE_CODE_DISABLE_AUTO_MEMORY`.
 // The settings are on disk, because the rule reads `.claude/settings.json`
 // and `.claude/settings.local.json`.
+import { rmSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import rule from '../../src/rules/agent-memory-auto-memory-off.ts'
@@ -112,5 +113,21 @@ describe('agent-memory-auto-memory-off', () => {
         expect(lintWith(rule, agent('memory: project\n'), path.join(root, AGENT))).toEqual([])
       })
     })
+  })
+
+  // A `.claude` link goes to a directory out of the repository. The rule reads no file there.
+  it('stays silent when .claude is a link out of the repository', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    const outside = repo({ 'settings.json': flag(false) })
+    // Remove its `.git`. The old walk from the real path would take it as the repository.
+    rmSync(path.join(outside, '.git'), { recursive: true })
+    symlinkSync(outside, path.join(root, '.claude'))
+    expect(lintWith(rule, agent('memory: project\n'), path.join(root, AGENT))).toEqual([])
+  })
+
+  it('reports when .claude is a real directory', () => {
+    expect(run({ '.claude/settings.json': flag(false) })).toHaveLength(1)
   })
 })

@@ -1,6 +1,6 @@
 // Two local agent files under one `.claude/agents/` tree must not share a
 // `name`. The tree is on disk, because the rule reads the other files.
-import { mkdirSync, symlinkSync } from 'node:fs'
+import { mkdirSync, rmSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import rule from '../../src/rules/agent-name-unique.ts'
@@ -161,5 +161,22 @@ describe('agent-name-unique', () => {
         expect(lint(root, '.claude/agents/a.md')).toEqual([])
       })
     })
+  })
+
+  // A `.claude` link goes to a directory out of the repository. The rule reads no file there.
+  it('makes no report for a .claude that is a link out of the repository', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    const outside = repo({ 'agents/b.md': agent('', 'dup') })
+    // Remove its `.git`. The old walk from the real path would take it as the repository.
+    rmSync(path.join(outside, '.git'), { recursive: true })
+    symlinkSync(outside, path.join(root, '.claude'))
+    expect(lint(root, '.claude/agents/a.md')).toEqual([])
+  })
+
+  it('reports for a .claude that is a real directory', () => {
+    const root = repo({ '.claude/agents/b.md': agent('', 'dup') })
+    expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
   })
 })
