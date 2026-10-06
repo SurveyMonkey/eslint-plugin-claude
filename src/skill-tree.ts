@@ -76,15 +76,17 @@ export function realDirectory(dir: string): string {
 }
 
 /** The real path of the repository that holds `dir`: the first directory at
- *  or above `dir` that holds `.git`. Without one, the real path of `dir`. */
+ *  or above the absolute path of `dir` that holds `.git`. The walk does not
+ *  start at the real path of `dir`. A `.claude` link out of the repository
+ *  then has a real path out of the bound, and a reader gives `UNREADABLE`.
+ *  Without a `.git`, the result is the real path of `dir`. */
 export function repositoryRoot(dir: string): string {
-  const start = realDirectory(dir)
-  for (let at = start; ; at = path.dirname(at)) {
+  for (let at = path.resolve(dir); ; at = path.dirname(at)) {
     if (existsSync(path.join(at, '.git'))) {
-      return at
+      return realDirectory(at)
     }
     if (path.dirname(at) === at) {
-      return start
+      return realDirectory(dir)
     }
   }
 }
@@ -289,13 +291,13 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
 }
 
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
- *  result is null in three cases. `.claude-plugin` is not there, or it is a
- *  file. The manifest file is not there. The file does not parse to an
- *  object. The result is `UNREADABLE` in five cases. `.claude-plugin` is a
- *  dangling link. The real path of `.claude-plugin` is out of `bound`. The
- *  file is a dangling link. The real path of the file is out of `bound`. A
- *  read fails for another reason. In each case the rule cannot see the file,
- *  and the file can hold any key. */
+ *  result is null in two cases. `.claude-plugin` is not there, or it is a
+ *  file. The manifest file is not there. The result is `UNREADABLE` in six
+ *  cases. `.claude-plugin` is a dangling link. The real path of
+ *  `.claude-plugin` is out of `bound`. The file is a dangling link. The real
+ *  path of the file is out of `bound`. A read fails for another reason. The
+ *  file does not parse to an object. In each case the rule cannot see the
+ *  keys, and the file can hold any key. */
 export function readManifest(
   root: string,
   bound: string,
@@ -317,5 +319,5 @@ export function readManifest(
   const data = parsed.data
   return data !== null && typeof data === 'object' && !Array.isArray(data)
     ? (data as Record<string, unknown>)
-    : null
+    : UNREADABLE
 }

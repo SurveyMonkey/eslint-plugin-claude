@@ -52,8 +52,8 @@ The rule does not check these cases:
 
 The rule makes no report that rests on a file that it cannot read. A read can fail for a reason
 other than a missing file, such as a permission error. A skill file that the rule cannot read gives
-no report. A plugin manifest that the rule cannot read can set `skills`, so the rule gives no
-report for that plugin.
+no report. A plugin manifest that the rule cannot read can set `skills`. A manifest that does not parse
+to an object is such a manifest. The rule gives no report for that plugin.
 The rule adds no message for these cases.
 
 Fail, `.claude/agents/a.md` with `skills: [deploy]` and `.claude/skills/deploy/SKILL.md` with

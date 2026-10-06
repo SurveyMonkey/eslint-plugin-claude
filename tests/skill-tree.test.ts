@@ -214,22 +214,14 @@ describe('skillFiles', () => {
 })
 
 describe('readManifest', () => {
-  it('reads an object, and gives null for a missing, bad or non-object file', () => {
+  it('reads an object, and gives null for a missing file', () => {
     expect(readManifest(plugin, scratch)).toEqual({ name: 'p', skills: './extra' })
     expect(readManifest(path.join(scratch, 'none'), scratch)).toBeNull()
-    put('m1/.claude-plugin/plugin.json', '{')
-    expect(readManifest(path.join(scratch, 'm1'), scratch)).toBeNull()
-    put('m2/.claude-plugin/plugin.json', '[]')
-    expect(readManifest(path.join(scratch, 'm2'), scratch)).toBeNull()
-    put('m4/.claude-plugin/plugin.json', '3')
-    expect(readManifest(path.join(scratch, 'm4'), scratch)).toBeNull()
-    put('m3/.claude-plugin/plugin.json', 'null')
-    expect(readManifest(path.join(scratch, 'm3'), scratch)).toBeNull()
   })
 })
 
 describe('readManifest on a file that does not parse to an object', () => {
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['null', 'null'],
     ['an array', '[]'],
@@ -320,7 +312,7 @@ describe('repositoryRoot', () => {
 })
 
 describe('repositoryRoot for a linked .claude', () => {
-  it.fails('gives the repository, not the link target, and readSettings gives UNREADABLE', {
+  it('gives the repository, not the link target, and readSettings gives UNREADABLE', {
     skip: process.platform === 'win32',
   }, () => {
     put('lrepo/.git/HEAD', '')

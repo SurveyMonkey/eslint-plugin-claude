@@ -127,7 +127,7 @@ describe('agent-skills-preloadable', () => {
   })
 
   // A manifest that does not parse can hold a `skills` key, so the rule cannot see the skills.
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['null', 'null'],
     ['an array', '[]'],

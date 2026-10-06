@@ -473,7 +473,7 @@ describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling 
 describe('a plugin.json that does not parse to an object', () => {
   const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
 
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['null', 'null'],
     ['an array', '[]'],

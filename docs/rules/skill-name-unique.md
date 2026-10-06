@@ -86,7 +86,8 @@ other than a missing file, such as a permission error. The rule does not compare
 skill folder, or a directory that it cannot read. The rule adds no message for this case.
 
 A plugin manifest that the rule cannot read can set `commands`. This holds for a dangling
-`plugin.json` link, and for a `plugin.json` with a real path out of the repository. The rule then
+`plugin.json` link, for a `plugin.json` with a real path out of the repository, and for a
+`plugin.json` that does not parse to an object. The rule then
 reads no `commands/` folder of that plugin, and gives no command report for it. The rule still
 compares skill names.
 A command file that the rule cannot read still counts, because its path gives its name.

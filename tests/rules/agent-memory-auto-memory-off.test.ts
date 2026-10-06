@@ -116,7 +116,7 @@ describe('agent-memory-auto-memory-off', () => {
   })
 
   // A `.claude` link to a directory out of the repository: the rule reads no file there.
-  it.fails('stays silent when .claude is a link out of the repository', {
+  it('stays silent when .claude is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})

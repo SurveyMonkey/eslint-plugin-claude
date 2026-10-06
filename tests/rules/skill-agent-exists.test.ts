@@ -442,7 +442,7 @@ describe('a plugin manifest that the rule cannot see', () => {
 // A manifest that does not parse can hold an `agents` key, so the rule cannot see the
 // agents of the plugin. It makes no report that rests on `agents/`.
 describe('a plugin.json that does not parse to an object', () => {
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['null', 'null'],
     ['an array', '[]'],

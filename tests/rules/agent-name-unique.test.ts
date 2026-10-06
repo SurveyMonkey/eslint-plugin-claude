@@ -164,7 +164,7 @@ describe('agent-name-unique', () => {
   })
 
   // A `.claude` link to a directory out of the repository: the rule reads no file there.
-  it.fails('makes no report for a .claude that is a link out of the repository', {
+  it('makes no report for a .claude that is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})
