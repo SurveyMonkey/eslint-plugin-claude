@@ -24,9 +24,9 @@ Let the user or Claude invoke a skill.
 `user-invocable: false` means that the user cannot invoke the skill.[^invoke] The rule reports a
 skill that sets both fields.
 
-The doc says no more than that. A name after plain text, such as `go ahead and /deploy`, gives
-Claude permission to run the skill for that message.[^name] The docs do not say if that
-permission applies to a skill with `user-invocable: false`.
+The skills page says no more than that. A name after plain text, as in `go ahead and /deploy`,
+gives Claude permission to run it for that message.[^name] The docs do not say if that permission
+applies to a skill with `user-invocable: false`.
 
 The rule reads each Boolean form that Claude Code reads: `true`, `false`, `yes`, `no`, `on`,
 `off`, `1` and `0`, in any letter case.[^reference] It reports on the

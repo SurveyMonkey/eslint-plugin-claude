@@ -24,8 +24,8 @@ The `skills` field of a subagent injects the full text of each listed skill at s
 subagent cannot preload a skill that sets `disable-model-invocation: true`. The `skills` field
 draws from the skills that Claude can invoke.[^preload][^field]
 
-The rule reads `disable-model-invocation` in each Boolean form that Claude Code reads, such as
-`yes` or `1`, in any letter case.[^bool] The rule reports each `skills` entry that names such a
+The rule reads `disable-model-invocation` in each Boolean form that Claude Code reads.[^bool]
+Examples are `yes`, `1` and `ON`. The rule reports each `skills` entry that names such a
 skill. The report is on the `skills` value. The message names the entry.
 
 An entry resolves in the scope of the agent:

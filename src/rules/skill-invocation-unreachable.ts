@@ -1,5 +1,5 @@
 // A skill with `disable-model-invocation: true` and `user-invocable: false`
-// has no caller (docs/rules/skill-invocation-unreachable.md).
+// has no direct caller (docs/rules/skill-invocation-unreachable.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
@@ -18,7 +18,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'unreachable' }> = {
     schema: [],
     messages: {
       unreachable:
-        '`disable-model-invocation: true` blocks Claude, and `user-invocable: false` blocks the user. No one can invoke this skill.',
+        '`disable-model-invocation: true` means that Claude cannot invoke this skill on its own, and `user-invocable: false` means that the user cannot invoke it.',
     },
   },
   create(context) {
