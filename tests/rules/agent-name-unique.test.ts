@@ -1,6 +1,6 @@
 // Two local agent files under one `.claude/agents/` tree must not share a
 // `name`. The tree is on disk, because the rule reads the other files.
-import { chmodSync, mkdirSync, symlinkSync } from 'node:fs'
+import { mkdirSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import rule from '../../src/rules/agent-name-unique.ts'
@@ -12,7 +12,7 @@ const lint = (root: string, at: string, code?: string) =>
 const PLUGIN = { '.claude-plugin/plugin.json': '{}' }
 
 describe('agent-name-unique', () => {
-  it.fails('reports a file whose name another file of the tree declares', () => {
+  it('reports a file whose name another file of the tree declares', () => {
     const root = repo({ '.claude/agents/b.md': agent('', 'dup') })
     const messages = lint(root, '.claude/agents/a.md')
     expect(messages).toHaveLength(1)
@@ -20,7 +20,7 @@ describe('agent-name-unique', () => {
     expect(messages[0]?.message).toContain('`b.md`')
   })
 
-  it.fails('reports each file of the duplicate', () => {
+  it('reports each file of the duplicate', () => {
     const root = repo({
       '.claude/agents/a.md': agent('', 'dup'),
       '.claude/agents/b.md': agent('', 'dup'),
@@ -29,14 +29,14 @@ describe('agent-name-unique', () => {
     expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
   })
 
-  it.fails('reports a duplicate in a subfolder', () => {
+  it('reports a duplicate in a subfolder', () => {
     const root = repo({ '.claude/agents/review/b.md': agent('', 'dup') })
     const messages = lint(root, '.claude/agents/a.md')
     expect(messages).toHaveLength(1)
     expect(messages[0]?.message).toContain('`review/b.md`')
   })
 
-  it.fails('reports a file in a subfolder', () => {
+  it('reports a file in a subfolder', () => {
     const root = repo({ '.claude/agents/b.md': agent('', 'dup') })
     expect(lint(root, '.claude/agents/x/y/a.md')).toHaveLength(1)
   })
@@ -111,7 +111,7 @@ describe('agent-name-unique', () => {
     expect(lint(root, '.claude/agents/a.md')).toEqual([])
   })
 
-  it.fails('reports a duplicate that a link inside the repository leads to', () => {
+  it('reports a duplicate that a link inside the repository leads to', () => {
     const root = repo({ 'shared/b.md': agent('', 'dup') })
     mkdirSync(path.join(root, '.claude/agents'), { recursive: true })
     symlinkSync(path.join(root, 'shared'), path.join(root, '.claude/agents/shared'))
@@ -119,7 +119,7 @@ describe('agent-name-unique', () => {
   })
 
   describe('a file that the rule cannot read', () => {
-    it.fails('has no name to compare', { skip: chmodCannotBlock }, () => {
+    it('has no name to compare', { skip: chmodCannotBlock }, () => {
       const root = repo({
         '.claude/agents/b.md': agent('', 'dup'),
         '.claude/agents/c.md': agent('', 'dup'),
@@ -140,7 +140,6 @@ describe('agent-name-unique', () => {
       withoutAccess(path.join(root, '.claude/agents/sub'), () => {
         expect(lint(root, '.claude/agents/a.md')).toEqual([])
       })
-      chmodSync(path.join(root, '.claude/agents/sub'), 0o755)
     })
   })
 })
