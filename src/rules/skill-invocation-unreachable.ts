@@ -2,24 +2,11 @@
 // has no caller (docs/rules/skill-invocation-unreachable.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
+import { readBoolean } from '../frontmatter-boolean.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-invocation-unreachable' as const
-
-/** The boolean that Claude Code reads from `value`: `true`, `false`, or one
- *  of `yes`, `no`, `on`, `off`, `1` and `0` in any letter case. Null for
- *  any other value, and for a list or a map. */
-function readBoolean(value: unknown): boolean | null {
-  if (!['boolean', 'number', 'string'].includes(typeof value)) {
-    return null
-  }
-  const text = String(value).toLowerCase()
-  if (['true', 'yes', 'on', '1'].includes(text)) {
-    return true
-  }
-  return ['false', 'no', 'off', '0'].includes(text) ? false : null
-}
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'unreachable' }> = {
   meta: {
