@@ -70,13 +70,28 @@ describe('the scope root of an agent file', () => {
     expect(classifyAgentFile(at('r4', 'agents', 'agents', 'a.md'))).toMatchObject({
       root: at('r4'),
     })
+    // The same holds under `.claude/`: `r4/.claude/agents/agents` does not fit either.
     expect(classifyAgentFile(at('r4', '.claude', 'agents', 'agents', 'a.md'))).toMatchObject({
       root: at('r4', '.claude'),
     })
   })
 
-  it('is absent when the file is no agent file', () => {
+  it('gives null when the file is no agent file', () => {
     expect(classifyAgentFile(at('r5', 'docs', 'a.md'))).toBeNull()
+  })
+
+  // The parent of a directory that is not `agents/` can be `.claude/`. That is no agent file.
+  it('gives null for a file in `.claude/` outside `agents/`', () => {
+    expect(classifyAgentFile(at('r6', '.claude', 'commands', 'a.md'))).toBeNull()
+  })
+
+  // Two `agents/` directories fit. The deepest one counts.
+  it('gives the root of the deepest `agents/` directory that fits', () => {
+    plugin('r7')
+    expect(classifyAgentFile(at('r7', 'agents', 'x', '.claude', 'agents', 'a.md'))).toEqual({
+      plugin: false,
+      root: at('r7', 'agents', 'x', '.claude'),
+    })
   })
 })
 

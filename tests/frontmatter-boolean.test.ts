@@ -1,5 +1,5 @@
-// The Boolean forms that the skills page accepts. This test pins the result
-// of `readBoolean`, which `skill-invocation-unreachable` read before it moved.
+// The Boolean forms that the skills page accepts. `skill-invocation-unreachable`
+// and `agent-skills-preloadable` share `readBoolean`.
 import { describe, expect, it } from 'vitest'
 import { readBoolean } from '../src/frontmatter-boolean.ts'
 

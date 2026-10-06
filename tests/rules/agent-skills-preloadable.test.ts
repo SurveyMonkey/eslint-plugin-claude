@@ -84,13 +84,13 @@ describe('agent-skills-preloadable', () => {
     })
   }
 
-  // YAML reads `True` as the Boolean true, so the rule already reports it.
+  // YAML reads `True` as the Boolean true, so no string form is involved.
   it('reports when disable-model-invocation is True', () => {
     const files = { '.claude/skills/deploy/SKILL.md': skill('disable-model-invocation: True\n') }
     expect(run(files)).toHaveLength(1)
   })
 
-  // `false`, `no`, `off` and `0` are Boolean false. `maybe` and `[true]` are no Boolean.
+  // `false`, `no`, `off` and `0` are Boolean false. `maybe` is not a Boolean. `[true]` is a list.
   for (const value of ['false', 'no', 'off', '0', 'maybe', '[true]']) {
     it(`stays silent when disable-model-invocation is ${value}`, () => {
       const files = {
