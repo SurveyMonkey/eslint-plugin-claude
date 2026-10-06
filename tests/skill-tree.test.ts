@@ -234,7 +234,7 @@ describe('readManifest on a dangling link', () => {
     expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
   })
 
-  it.fails('gives UNREADABLE when .claude-plugin is a dangling link', {
+  it('gives UNREADABLE when .claude-plugin is a dangling link', {
     skip: process.platform === 'win32',
   }, () => {
     mkdirSync(path.join(scratch, 'dangle-dir'), { recursive: true })
@@ -242,7 +242,7 @@ describe('readManifest on a dangling link', () => {
     expect(readManifest(path.join(scratch, 'dangle-dir'), scratch)).toBe(UNREADABLE)
   })
 
-  it.fails('gives UNREADABLE when .claude-plugin is a link out of the bound', {
+  it('gives UNREADABLE when .claude-plugin is a link out of the bound', {
     skip: process.platform === 'win32',
   }, () => {
     mkdirSync(path.join(scratch, 'out-dir'), { recursive: true })
