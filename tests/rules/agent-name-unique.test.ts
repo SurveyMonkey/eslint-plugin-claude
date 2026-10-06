@@ -29,6 +29,15 @@ describe('agent-name-unique', () => {
     expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
   })
 
+  it('lists every other file of the duplicate, in order', () => {
+    const root = repo({
+      '.claude/agents/b.md': agent('', 'dup'),
+      '.claude/agents/c.md': agent('', 'dup'),
+    })
+    const messages = lint(root, '.claude/agents/a.md')
+    expect(messages[0]?.message).toContain('`b.md`, `c.md`')
+  })
+
   it('stays silent for a file that is the only file of its name, on disk', () => {
     const root = repo({ '.claude/agents/a.md': agent('', 'dup') })
     expect(lint(root, '.claude/agents/a.md')).toEqual([])

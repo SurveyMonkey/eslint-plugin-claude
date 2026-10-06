@@ -71,6 +71,11 @@ describe('agent-omit-claude-md-main', () => {
       expect(run(names, agent('omitClaudeMd: true\n', '5'))).toEqual([])
       expect(run(names, '---\nomitClaudeMd: true\n---\n\nBody.\n')).toEqual([])
     })
+    it('for a name that is a number when the agent key is the same number', () => {
+      expect(
+        run({ '.claude/settings.json': '{"agent":5}' }, agent('omitClaudeMd: true\n', '5')),
+      ).toEqual([])
+    })
     it('for an agent with no name when the settings name no agent', () => {
       expect(
         run({ '.claude/settings.json': '{}' }, '---\nomitClaudeMd: true\n---\n\nBody.\n'),

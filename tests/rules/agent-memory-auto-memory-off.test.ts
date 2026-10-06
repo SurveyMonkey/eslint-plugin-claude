@@ -25,6 +25,12 @@ describe('agent-memory-auto-memory-off', () => {
     expect(messages[0]).toMatchObject({ messageId: 'off', line: 4, column: 1, endColumn: 16 })
   })
 
+  for (const value of [0, '', null, 'false']) {
+    it(`stays silent when autoMemoryEnabled is ${JSON.stringify(value)}`, () => {
+      expect(run({ '.claude/settings.json': flag(value) })).toEqual([])
+    })
+  }
+
   for (const value of ['1', 'true', 'TRUE']) {
     it(`reports when ${DISABLE} is ${value}`, () => {
       expect(run({ '.claude/settings.json': env(value) })).toHaveLength(1)
