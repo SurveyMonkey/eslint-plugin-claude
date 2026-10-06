@@ -2,7 +2,6 @@
 // auto memory off, the field has no effect
 // (docs/rules/agent-memory-auto-memory-off.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
 import { envOf, isOn, localAgentSettings } from '../agent-settings.ts'
 import { MEMORY_SCOPES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -24,9 +23,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'off' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename)?.plugin !== false) {
-      return {}
-    }
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)

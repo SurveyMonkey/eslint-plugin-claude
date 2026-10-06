@@ -31,7 +31,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
       return {}
     }
     const self = path.resolve(context.filename)
-    // The scan lists real paths, so a link to this file must also count as this file.
+    // A file behind a link to a folder shows in the scan under its real path, so
+    // the real path of this file must also count as this file.
     const selfReal = realOf(self)
     return {
       yaml(node) {
@@ -47,7 +48,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         // duplicate, never add one, so the rule ignores both flags.
         const { files } = markdownFiles(agents, repositoryRoot(scope.root))
         const others = files.filter((file) => {
-          if (path.resolve(file) === self || (selfReal !== null && realOf(file) === selfReal)) {
+          if (
+            path.resolve(file) === self ||
+            (typeof selfReal === 'string' && realOf(file) === selfReal)
+          ) {
             return false
           }
           const fields = frontmatterOfFile(file)
