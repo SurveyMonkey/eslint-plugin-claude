@@ -5,7 +5,13 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { agentScope } from '../agent-scope.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
-import { frontmatterOfFile, markdownFiles, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
+import {
+  frontmatterOfFile,
+  markdownFiles,
+  realOf,
+  repositoryRoot,
+  UNREADABLE,
+} from '../skill-tree.ts'
 
 const name = 'agent-name-unique' as const
 
@@ -25,6 +31,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
       return {}
     }
     const self = path.resolve(context.filename)
+    // The scan lists real paths, so a link to this file must also count as this file.
+    const selfReal = realOf(self)
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
@@ -39,7 +47,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         // duplicate, never add one, so the rule ignores both flags.
         const { files } = markdownFiles(agents, repositoryRoot(scope.root))
         const others = files.filter((file) => {
-          if (path.resolve(file) === self) {
+          if (path.resolve(file) === self || (selfReal !== null && realOf(file) === selfReal)) {
             return false
           }
           const fields = frontmatterOfFile(file)

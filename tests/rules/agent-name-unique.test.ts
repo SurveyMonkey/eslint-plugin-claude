@@ -29,6 +29,17 @@ describe('agent-name-unique', () => {
     expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
   })
 
+  it('stays silent for a file that is the only file of its name, on disk', () => {
+    const root = repo({ '.claude/agents/a.md': agent('', 'dup') })
+    expect(lint(root, '.claude/agents/a.md')).toEqual([])
+  })
+
+  it('does not report a file as a duplicate of itself when it is reached by a directory link', () => {
+    const root = repo({ '.claude/agents/real/a.md': agent('', 'dup') })
+    symlinkSync(path.join(root, '.claude/agents/real'), path.join(root, '.claude/agents/link'))
+    expect(lint(root, '.claude/agents/link/a.md')).toEqual([])
+  })
+
   it('reports a duplicate in a subfolder', () => {
     const root = repo({ '.claude/agents/review/b.md': agent('', 'dup') })
     const messages = lint(root, '.claude/agents/a.md')
