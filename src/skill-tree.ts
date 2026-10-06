@@ -263,6 +263,31 @@ function danglingOf(entry: string): null | Unreadable {
   return UNREADABLE
 }
 
+/** The parsed JSON of `file`, as `{ data }`. `data` is `undefined` when the
+ *  text does not parse. The result is null when the file is not there. The
+ *  result is `UNREADABLE` for a dangling link, for a real path out of
+ *  `bound`, and for a read that fails for another reason. */
+export function readJson(file: string, bound: string): { data: unknown } | null | Unreadable {
+  const real = realOf(file)
+  if (typeof real !== 'string') {
+    // `realOf` gives null for a dangling link and for a missing file.
+    // `danglingOf` tells them apart, because a dangling link is an entry.
+    return real === null ? danglingOf(file) : real
+  }
+  if (!isInside(real, bound)) {
+    return UNREADABLE
+  }
+  const text = textOf(real)
+  if (typeof text !== 'string') {
+    return text
+  }
+  try {
+    return { data: JSON.parse(text) as unknown }
+  } catch {
+    return { data: undefined }
+  }
+}
+
 /** The fields of `.claude-plugin/plugin.json` in the plugin root `root`. The
  *  result is null in three cases. `.claude-plugin` is not there, or it is a
  *  file. The manifest file is not there. The file does not parse to an
@@ -285,26 +310,12 @@ export function readManifest(
   if (!isInside(realDir, bound)) {
     return UNREADABLE
   }
-  const file = path.join(realDir, 'plugin.json')
-  const real = realOf(file)
-  if (typeof real !== 'string') {
-    // `realOf` gives null for a dangling link and for a missing file.
-    // `danglingOf` tells them apart, because a dangling link is an entry.
-    return real === null ? danglingOf(file) : real
+  const parsed = readJson(path.join(realDir, 'plugin.json'), bound)
+  if (parsed === null || parsed === UNREADABLE) {
+    return parsed
   }
-  if (!isInside(real, bound)) {
-    return UNREADABLE
-  }
-  const text = textOf(real)
-  if (typeof text !== 'string') {
-    return text
-  }
-  try {
-    const data: unknown = JSON.parse(text)
-    return data !== null && typeof data === 'object' && !Array.isArray(data)
-      ? (data as Record<string, unknown>)
-      : null
-  } catch {
-    return null
-  }
+  const data = parsed.data
+  return data !== null && typeof data === 'object' && !Array.isArray(data)
+    ? (data as Record<string, unknown>)
+    : null
 }
