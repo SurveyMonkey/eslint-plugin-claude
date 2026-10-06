@@ -111,7 +111,7 @@ const TREE: Record<string, string> = {
   'packages/z/.claude/agents/dup1.md': '---\nname: dup\ndescription: d\n---\n',
   'packages/z/.claude/agents/dup2.md': '---\nname: dup\ndescription: d\n---\n',
   'packages/z/.claude/agents/preload.md':
-    '---\nname: preload\ndescription: d\nskills:\n  - hidden\n  - verify\n---\n',
+    '---\nname: preload\ndescription: d\nskills:\n  - hidden\n---\n',
   'packages/z/.claude/agents/clean.md': '---\nname: clean\ndescription: d\n---\n',
   'packages/z/.claude/skills/hidden/SKILL.md':
     '---\nname: hidden\ndescription: d\ndisable-model-invocation: true\n---\n',
