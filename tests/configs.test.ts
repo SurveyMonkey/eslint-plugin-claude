@@ -229,7 +229,6 @@ const EXPECTED = [
   'packages/z/.claude/agents/dup1.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/dup2.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
-  'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

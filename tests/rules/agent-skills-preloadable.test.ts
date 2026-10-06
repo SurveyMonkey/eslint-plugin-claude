@@ -59,14 +59,12 @@ describe('agent-skills-preloadable', () => {
     expect(run(files, list('deploy'), 'agents/a.md')).toHaveLength(1)
   })
 
-  it('reports the bundled verify skill', () => {
-    const messages = run({}, list('verify'))
-    expect(messages).toHaveLength(1)
-    expect(messages[0]).toMatchObject({ messageId: 'bundled' })
+  it('stays silent for the bundled verify skill, which a skill that the rule cannot see replaces', () => {
+    expect(run({}, list('verify'))).toEqual([])
   })
 
-  it('reports the bundled verify skill for a plugin agent', () => {
-    expect(run(PLUGIN, list('verify'), 'agents/a.md')).toHaveLength(1)
+  it('stays silent for verify in a plugin agent', () => {
+    expect(run(PLUGIN, list('verify'), 'agents/a.md')).toEqual([])
   })
 
   it('reports a disabled skill that is named verify as a disabled skill', () => {
@@ -185,16 +183,6 @@ describe('agent-skills-preloadable', () => {
       const root = repo({ ...PLUGIN, 'skills/deploy/SKILL.md': OFF })
       withoutAccess(path.join(root, '.claude-plugin/plugin.json'), () => {
         expect(lintWith(rule, agent(list('deploy')), path.join(root, 'agents/a.md'))).toEqual([])
-      })
-    })
-
-    it('gives no verify report when it cannot list the skills directory', () => {
-      if (chmodCannotBlock) {
-        return
-      }
-      const root = repo({ '.claude/skills/verify/SKILL.md': skill('') })
-      withoutAccess(path.join(root, '.claude/skills'), () => {
-        expect(lintWith(rule, agent(list('verify')), path.join(root, LOCAL))).toEqual([])
       })
     })
   })

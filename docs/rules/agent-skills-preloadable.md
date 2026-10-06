@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/agent-skills-preloadable, which reports a skills entry of a subagent that names a skill with disable-model-invocation true, or the bundled verify skill, because a subagent cannot preload either.
+description: The ESLint rule claude/agent-skills-preloadable, which reports a skills entry of a subagent that names a skill with disable-model-invocation true, because a subagent cannot preload it.
 owner: brianespinosa
 created: 2026-10-05
 related_issues: [9]
@@ -21,9 +21,8 @@ Preload only skills that a model can invoke.
 ## Rule details
 
 The `skills` field of a subagent injects the full text of each listed skill at startup. A
-subagent cannot preload a skill that sets `disable-model-invocation: true`. Preloading draws from
-the skills that Claude can invoke. Claude Code skips such a skill and writes a warning to the
-debug log.[^preload][^field]
+subagent cannot preload a skill that sets `disable-model-invocation: true`. The `skills` field
+draws from the skills that Claude can invoke.[^preload][^field]
 
 The rule reports each `skills` entry that names such a skill. The report is on the `skills`
 value. The message names the entry.
@@ -35,10 +34,9 @@ An entry resolves in the scope of the agent:
 - A plugin agent resolves in `skills/` of its plugin root. A plugin manifest that sets `skills`
   adds other directories, so the rule gives no report for that plugin.
 
-The docs say that the bundled `/verify` skill is also a skill that a subagent cannot preload.[^preload]
-The rule reports the entry `verify` with its own message when the scope has no folder named
-`verify`. A folder of that name is a skill of the repository, and the rule reads its frontmatter
-instead.
+The docs say that the bundled `/verify` skill is not a skill that a subagent can preload.[^preload]
+The rule gives no report for that entry. A skill of a user, of a plugin, or of the repository root
+can replace the bundled skill. The rule cannot see those skills.
 
 The rule does not check these cases:
 
@@ -55,7 +53,7 @@ The rule does not check these cases:
 The rule makes no report that rests on a file that it cannot read. A read can fail for a reason
 other than a missing file, such as a permission error. A skill file that the rule cannot read gives
 no report. A plugin manifest that the rule cannot read can set `skills`, so the rule gives no
-report for that plugin. A `skills/` directory that the rule cannot list gives no `verify` report.
+report for that plugin.
 The rule adds no message for these cases.
 
 Fail, `.claude/agents/a.md` with `skills: [deploy]` and `.claude/skills/deploy/SKILL.md` with

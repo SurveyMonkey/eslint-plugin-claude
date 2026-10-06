@@ -6,7 +6,6 @@ import { type AgentScope, agentScope } from '../agent-scope.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
-  entriesOf,
   frontmatterOfFile,
   readManifest,
   repositoryRoot,
@@ -16,11 +15,7 @@ import {
 
 const name = 'agent-skills-preloadable' as const
 
-type MessageIds = 'disabled' | 'bundled'
-
-/** The bundled skill that Claude cannot run on its own, so a subagent cannot
- *  preload it. */
-const BUNDLED = 'verify'
+type MessageIds = 'disabled'
 
 /** The `skills/` directory in which the entries of an agent in `scope`
  *  resolve, or null when the rule cannot know that directory. A plugin
@@ -47,17 +42,10 @@ function problemOf(entry: string, skillsDir: string, bound: string): MessageIds 
       ? 'disabled'
       : null
   }
-  if (entry !== BUNDLED) {
-    // An entry with no skill file is the business of `agent-skills-exist`.
-    return null
-  }
-  // A folder named like the bundled skill can be a skill that the rule cannot
-  // see, for example a link out of the repository. Then the bundled skill has
-  // no report either. A `skills/` directory that the rule cannot list is the same.
-  const entries = entriesOf(skillsDir)
-  const shadowed =
-    entries === UNREADABLE || (Array.isArray(entries) && entries.some((e) => e.name === BUNDLED))
-  return shadowed ? null : 'bundled'
+  // An entry with no skill file is the business of `agent-skills-exist`. The
+  // bundled `verify` skill gets no report: a skill of a user, of a plugin, or
+  // of the repository root can replace it, and the rule cannot see them.
+  return null
 }
 
 const rule: MarkdownRuleDefinition<{ MessageIds: MessageIds }> = {
@@ -67,9 +55,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageIds }> = {
     schema: [],
     messages: {
       disabled:
-        '`{{entry}}` sets `disable-model-invocation: true`. A subagent cannot preload it, and Claude Code skips it. Remove it from `skills`.',
-      bundled:
-        '`{{entry}}` is a bundled skill that Claude cannot run on its own. A subagent cannot preload it, and Claude Code skips it. Remove it from `skills`.',
+        '`{{entry}}` sets `disable-model-invocation: true`. A subagent cannot preload it. Remove it from `skills`.',
     },
   },
   create(context) {
