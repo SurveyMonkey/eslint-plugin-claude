@@ -349,6 +349,13 @@ describe.skipIf(chmodCannotBlock)('a read that fails', () => {
     expect(frontmatterOfFile(file)).toEqual({ name: 'x' })
   })
 
+  it('gives UNREADABLE for a manifest when the plugin root cannot be searched', () => {
+    put('deny/plugin/.claude-plugin/plugin.json', '{}')
+    const root = path.join(scratch, 'deny', 'plugin')
+    withoutAccess(root, () => expect(readManifest(root, scratch)).toBe(UNREADABLE))
+    expect(readManifest(root, scratch)).toEqual({})
+  })
+
   it('gives a path below a directory that cannot be searched an absolute path as its bound', () => {
     put('deny/anc/sub/.keep', '')
     const dir = path.join(scratch, 'deny', 'anc', 'sub')
