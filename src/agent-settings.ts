@@ -5,9 +5,10 @@ import { readSettings } from './settings-files.ts'
 import { repositoryRoot, type Unreadable } from './skill-tree.ts'
 
 /** The merged settings of the `.claude/` directory of the local agent file
- *  `file`. The result is null for a plugin agent, for a file that is no
- *  agent file, and when no settings file is there. It is `UNREADABLE` when a
- *  settings file cannot be seen. A rule gives no report for any of these. */
+ *  `file`. The result is null for a plugin agent. It is also null for a file
+ *  that is no agent file, and when no settings file is there. It is
+ *  `UNREADABLE` when a settings file cannot be seen. A rule gives no report
+ *  for any of these. */
 export function localAgentSettings(file: string): Record<string, unknown> | null | Unreadable {
   const scope = agentScope(file)
   // `agentScope` gives null for a file that is no agent file. A plugin agent

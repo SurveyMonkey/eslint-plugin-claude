@@ -149,6 +149,11 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Control who invokes a skill",
       "hash": "130070c7f357fd4fb97105203f16aec7cbd3f9d524349d079ae9fc18bdff01c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
   "agent-teams-no-project-config": [
@@ -619,6 +624,11 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Control who invokes a skill",
       "hash": "130070c7f357fd4fb97105203f16aec7cbd3f9d524349d079ae9fc18bdff01c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Where you write the skill's name",
+      "hash": "2d42099af4b7e9f45a82086a8ce8633520bb722d040a66995e059e584ba1572c"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",

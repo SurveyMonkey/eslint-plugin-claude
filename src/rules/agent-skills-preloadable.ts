@@ -4,6 +4,7 @@ import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { type AgentScope, agentScope } from '../agent-scope.ts'
 import { docsUrl } from '../docs-url.ts'
+import { readBoolean } from '../frontmatter-boolean.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
   frontmatterOfFile,
@@ -17,8 +18,8 @@ const name = 'agent-skills-preloadable' as const
 
 type MessageIds = 'disabled'
 
-/** The `skills/` directory in which the entries of an agent in `scope`
- *  resolve, or null when the rule cannot know that directory. A plugin
+/** The `skills/` directory where the entries of an agent in `scope` resolve.
+ *  The result is null when the rule cannot know that directory. A plugin
  *  manifest that sets `skills` adds directories. A manifest that the rule
  *  cannot read can set it. */
 function skillsDirOf(scope: AgentScope, bound: string): string | null {
@@ -38,12 +39,12 @@ function problemOf(entry: string, skillsDir: string, bound: string): MessageIds 
     const fields = frontmatterOfFile(file)
     // A skill file that the rule cannot read gives no report. A file with no
     // frontmatter, or with frontmatter that does not parse, sets no field.
-    return fields !== UNREADABLE && fields?.['disable-model-invocation'] === true
+    return fields !== UNREADABLE && readBoolean(fields?.['disable-model-invocation']) === true
       ? 'disabled'
       : null
   }
   // An entry with no skill file is the business of `agent-skills-exist`. The
-  // bundled `verify` skill gets no report: a skill of the repository root can
+  // bundled `verify` skill gets no report. A skill of the repository root can
   // replace it, and the rule cannot see that skill.
   return null
 }

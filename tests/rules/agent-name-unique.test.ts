@@ -2,10 +2,28 @@
 // `name`. The tree is on disk, because the rule reads the other files.
 import { mkdirSync, rmSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import rule from '../../src/rules/agent-name-unique.ts'
 import { agent, lintWith, repo } from '../agent-settings.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
+
+// `realpathSync` is the one boundary that the `UNREADABLE` case of `realOf` needs. A real file
+// system cannot make it fail for one file and not for another on every platform. Each call goes
+// to the real function, except where a test sets `realpathFails`.
+const realpathFails = vi.hoisted(() => ({ path: null as string | null }))
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>()
+  const realpathSync = Object.assign(
+    (file: string, ...rest: unknown[]) => {
+      if (realpathFails.path !== null && String(file) === realpathFails.path) {
+        throw Object.assign(new Error('permission denied'), { code: 'EACCES' })
+      }
+      return (actual.realpathSync as (...args: unknown[]) => string)(file, ...rest)
+    },
+    { native: actual.realpathSync.native },
+  )
+  return { ...actual, default: { ...actual, realpathSync }, realpathSync }
+})
 
 const lint = (root: string, at: string, code?: string) =>
   lintWith(rule, code ?? agent('', 'dup'), path.join(root, at))
@@ -161,6 +179,22 @@ describe('agent-name-unique', () => {
         expect(lint(root, '.claude/agents/a.md')).toEqual([])
       })
     })
+  })
+
+  it('compares other files by path when the real path of this file is unreadable', () => {
+    const root = repo({
+      '.claude/agents/a.md': agent('', 'dup'),
+      '.claude/agents/b.md': agent('', 'dup'),
+    })
+    realpathFails.path = path.join(root, '.claude/agents/a.md')
+    try {
+      const messages = lint(root, '.claude/agents/a.md')
+      expect(messages).toHaveLength(1)
+      expect(messages[0]?.message).toContain('`b.md`')
+      expect(messages[0]?.message).not.toContain('`a.md`')
+    } finally {
+      realpathFails.path = null
+    }
   })
 
   // A `.claude` link goes to a directory out of the repository. The rule reads no file there.

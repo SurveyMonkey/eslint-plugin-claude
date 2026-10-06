@@ -29,7 +29,17 @@ markdownTester.run('skill-invocation-unreachable', ruleOf('skill-invocation-unre
   invalid: [
     {
       ...file('disable-model-invocation: true\nuser-invocable: false\n'),
-      errors: [{ messageId: 'unreachable', line: 2, column: 1, endLine: 2, endColumn: 31 }],
+      errors: [
+        {
+          // The message says no more than the rule doc.
+          message:
+            '`disable-model-invocation: true` means that Claude cannot invoke this skill on its own, and `user-invocable: false` means that the user cannot invoke it.',
+          line: 2,
+          column: 1,
+          endLine: 2,
+          endColumn: 31,
+        },
+      ],
     },
     {
       ...file('user-invocable: false\ndisable-model-invocation: true\n'),

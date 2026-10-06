@@ -1,7 +1,7 @@
 // Find out if a file is a subagent file or an output style file. The globs of
 // the rules are broad, so each rule asks here where the file sits (ADR 001,
 // Decision 10). A plugin root is found by its manifest. A root that the check
-// cannot see gives null.
+// cannot see gives null. An agent file also gives its scope root.
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
 import { UNREADABLE, type Unreadable } from './skill-tree.ts'
@@ -9,6 +9,14 @@ import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 export interface ClaudeFile {
   /** True when the file is in a plugin. */
   plugin: boolean
+}
+
+/** A subagent file: where it sits, and the directory that holds its `agents/`
+ *  directory. A rule that compares an agent with other files of its scope
+ *  reads the root. */
+export interface AgentFile extends ClaudeFile {
+  /** The `.claude/` directory of a local agent, or the root of a plugin. */
+  root: string
 }
 
 /** Where the directory `dir` sits: in `.claude/`, in a plugin root, or
@@ -25,8 +33,9 @@ function scopeOf(dir: string): ClaudeFile | null | Unreadable {
 
 /** What `file` is: a subagent file in `.claude/agents/` or in the `agents/`
  *  directory of a plugin, at any depth, or null. The result is also null when
- *  the plugin root of the file is unseen. */
-export function classifyAgentFile(file: string): ClaudeFile | null {
+ *  the plugin root of the file is unseen. The root is the parent of the
+ *  deepest `agents/` directory that fits. */
+export function classifyAgentFile(file: string): AgentFile | null {
   // The deepest `agents/` directory that fits is the one that counts. The
   // loop ends at the root of the file system, which is its own parent.
   for (
@@ -44,7 +53,7 @@ export function classifyAgentFile(file: string): ClaudeFile | null {
       return null
     }
     if (scope !== null) {
-      return scope
+      return { ...scope, root: path.dirname(dir) }
     }
   }
   return null
