@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/claude-directory",
-  "hash": "2ff660d38daf436c0ea7c8dcbfada52470f60ccd0899714cfbd6d6e035b37e9d",
+  "hash": "5b42c5ede87710eb4669b4d722c0f5b72e1bc6493a36c314ef2149e89c9a7ad9",
   "blocks": [
     {
       "id": "explore-the--claude-directory",
@@ -48,7 +48,7 @@
     },
     {
       "id": "recurring-issues",
-      "hash": "4b386511a58da33cc2fb63e6ebc9d7276e8b851119d767456858e80d8a61d824"
+      "hash": "409618c000cf4cc4d5312d8651cfb8b4693cda944120bc64b1564255d3064188"
     },
     {
       "id": "project",
@@ -72,7 +72,7 @@
     },
     {
       "id": "whats-not-shown",
-      "hash": "deeaa4fe028c26be529d07eb52a38c88444292fcd138fcfeffbbfbec93e984b6"
+      "hash": "842b247a4ab2b00b1de7d66e537360325c482a7572d141d4dcbf457b613d7d6d"
     },
     {
       "id": "choose-the-right-file",
@@ -96,7 +96,7 @@
     },
     {
       "id": "cleaned-up-automatically",
-      "hash": "8afd96482fad7df63487d597336de1daa9e19a7c6bbe98a7ebf0af9da17783aa"
+      "hash": "0609c288050503673bdf990aa88a77e3d337b166db1a5362b04dc008eb942473"
     },
     {
       "id": "session-scratchpad-directory",
@@ -104,7 +104,7 @@
     },
     {
       "id": "kept-until-you-delete-them",
-      "hash": "3d284655608992344702329e3fa57836e84daf1ef0576bf23cb1d777efa31f6f"
+      "hash": "c592f0947d9d7b93558959d96dc93b6275a0d68db3270a333d8fb4a9f6b85d7e"
     },
     {
       "id": "state-files-to-keep",

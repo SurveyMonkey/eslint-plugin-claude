@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "76582550507f251beaa3688cfb35ad09b0241935d4a16b11b3a09077d19a7e5c",
+  "hash": "f4f0cdc88e2cf36a1490741800dc34a9fdf90ddaa70c2c5848aac03cde90d53a",
   "blocks": [
     {
       "id": "all-settings",
@@ -40,7 +40,7 @@
     },
     {
       "id": "enforceavailablemodels",
-      "hash": "0681783159c0965267b9c49b977855c6e110a681952caeb85c917bca5a6e8300"
+      "hash": "fb96c3d91975ed009073738209439fa2df74779a4625a38fb03c4954d8fe383c"
     },
     {
       "id": "fallbackmodel",
@@ -132,7 +132,7 @@
     },
     {
       "id": "automode-classifyallshell",
-      "hash": "cd38181fc17023de8384c4bb5f2e4dcf061037b595c4517bb5f3e05c0ff4bb3e"
+      "hash": "3d219cdbd147bfeea21d24169b6632353cd46c2f963b56c1670a163bdb957b48"
     },
     {
       "id": "disableautomode",
@@ -176,7 +176,7 @@
     },
     {
       "id": "permissions-defaultmode",
-      "hash": "87d77becdcf62c6f8144751e1769ece3b1d88a254166907972de34097c791fee"
+      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
     },
     {
       "id": "permissions-disablebypasspermissionsmode",
@@ -408,7 +408,7 @@
     },
     {
       "id": "variables-claude-code-ignores-in-env",
-      "hash": "5d480bc5e930435012a5eed292a1093d752c6b0fef901549358a132008b62309"
+      "hash": "16a48b8baaeca168499675034050060826be2c9f4172549d5fa802c948781ccd"
     },
     {
       "id": "filecheckpointingenabled",
@@ -436,7 +436,7 @@
     },
     {
       "id": "askuserquestiontimeout",
-      "hash": "4750fd8680f353ffed6d47c55ad61f8b731aec2fa56553bb3375b63687c32de2"
+      "hash": "1785f4dbae0fbe5711ca257dbd922f91386315cde826b7de14d9a77a0dfaa6f4"
     },
     {
       "id": "autocontinueatusagelimit",
@@ -788,7 +788,7 @@
     },
     {
       "id": "pluginconfigs",
-      "hash": "6d20b1678b1cfd7cb92c4959e58510380059e782b82af32e50cb08b3ce3dfe3e"
+      "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895"
     },
     {
       "id": "prependplugins",
@@ -1040,7 +1040,7 @@
     },
     {
       "id": "desktopsessioncleanupperioddays",
-      "hash": "c998a22a0b7dd8515ab2197e015363a8d1badec4a2b8a753142a81b4806a6434"
+      "hash": "141ee8fb7d47521f98aee0657f2693fadb11d8dbe49b5ef1c46a61780cbc57e9"
     },
     {
       "id": "feedbackdrafts",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "9e866d912f19d0cb928aeca31610798cdae50ec0e0a23f3c185caab9bf065877",
+  "hash": "1a5c32a7ca21aad4138d4fc424a6d229528cf1e47bf77dc8005c03142ffb854e",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -24,7 +24,7 @@
     },
     {
       "id": "claude-command-not-found-after-claude-plugin",
-      "hash": "9adbc626ae01f527fbf123715539937c0696d0cba2fdeaf3ef24b0baf68a625f"
+      "hash": "3b02e7999f9dfe68dd9de97052d05fbf598544321ccc6b6e04c60f51b233a6bc"
     },
     {
       "id": "unknown-command-and-command-spellings-that-dont-exist",
@@ -176,7 +176,7 @@
     },
     {
       "id": "run-reload-plugins-to-activate",
-      "hash": "5f2a954beae611e6ba918a3883a4e147a93213bac77810650778b3a2f8a2f70d"
+      "hash": "037e84d6bbdaf57dc80ee5c7e8bbf2aa28ebd8d64fdb46fa79306eb8aacca385"
     },
     {
       "id": "the-packages-it-lists-are-not-installed",
@@ -288,7 +288,7 @@
     },
     {
       "id": "skill-loads-but-claude-never-invokes-the-skill",
-      "hash": "1785f19f6ac871d323156a6a0e5707e2ca1bf6204fdb41a98d9b734b75e3d71f"
+      "hash": "c959d307b3a6b3555df7dc27495a7cafe5bd18f6e0e0e777d3c6cb619e13b96e"
     },
     {
       "id": "is-not-a-plugin-or-skill-folder",

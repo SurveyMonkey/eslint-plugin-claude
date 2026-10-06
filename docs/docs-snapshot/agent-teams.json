@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/agent-teams",
-  "hash": "d18a41b9ddc4ecdf3668165265321fedfe9c9bbe96ea071d8fc0e6ef2dafb19b",
+  "hash": "a2ed185b716d2550240752d988bfd1875cb2cad3f803be3a795f14054f3c0549",
   "blocks": [
     {
       "id": "orchestrate-teams-of-claude-code-sessions",
@@ -32,7 +32,7 @@
     },
     {
       "id": "specify-teammates-and-models",
-      "hash": "082b12a31fb9d75b7487d5f5b07554cf5331d6e331e359dd349c2862399d819b"
+      "hash": "c154a01d06e22944f9380143c3d467740cac7b05d43efb23d8f3e3d87614ee3c"
     },
     {
       "id": "have-teammates-plan-before-implementing",
@@ -40,7 +40,7 @@
     },
     {
       "id": "talk-to-teammates-directly",
-      "hash": "4de604b07f3d427f438bc7ed93e9983ffb723baa0e109fb4326894ece8834fdb"
+      "hash": "5b6674575d68445d1eab3a28a8fe70b10d294822e3745db26a23d3393d27d185"
     },
     {
       "id": "assign-and-claim-tasks",
@@ -68,7 +68,7 @@
     },
     {
       "id": "use-subagent-definitions-for-teammates",
-      "hash": "2671c52697b4b832d267629904871f36adb3379cd536fea678659502d9bbcda8"
+      "hash": "617e2befd80358b21c9104a2ed554186b21453ab4b6ea05eff1ab5a8d707e0e9"
     },
     {
       "id": "permissions",

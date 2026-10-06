@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-  "hash": "45289e551da96e9c4a3a5968b3bdcdd7fd766f0c735c019f60d71d06f28a58d1",
+  "hash": "6b735b8c7e2fb8f28d7e0e422f7c2524157f64597f6c6badf6613bb758e4ab0d",
   "blocks": [
     {
       "id": "plugin-manifest-reference",
@@ -32,7 +32,7 @@
     },
     {
       "id": "version",
-      "hash": "37c7e0f06d9471d9dedc8fbcc6fc2cbf3e248d59eba34524f2346a5eb6cb6b8b"
+      "hash": "768db8e5ebe000b91b7732a5aa6efc8c1ce0308a215f44365b499e734bb5ab70"
     },
     {
       "id": "metadata",

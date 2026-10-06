@@ -3,7 +3,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
     },
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -35,7 +35,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -62,7 +62,19 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+    }
+  ],
+  "agent-memory-auto-memory-off": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Enable persistent memory",
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Settings precedence",
+      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
     }
   ],
   "agent-memory-grants-write": [
@@ -70,6 +82,42 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Enable persistent memory",
       "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    }
+  ],
+  "agent-model-forced": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Run every subagent on one model",
+      "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Settings precedence",
+      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
+    }
+  ],
+  "agent-name-unique": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose the subagent scope",
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
+    }
+  ],
+  "agent-omit-claude-md-main": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Invoke subagents explicitly",
+      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Supported frontmatter fields",
+      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Settings precedence",
+      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
     }
   ],
   "agent-permission-mode-bypass": [
@@ -91,6 +139,18 @@
       "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
     }
   ],
+  "agent-skills-preloadable": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Preload skills into subagents",
+      "hash": "71bb065e45892ac5171ce52c56838ad37b96ab42a416853e7341bb14218fa5b5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Control who invokes a skill",
+      "hash": "130070c7f357fd4fb97105203f16aec7cbd3f9d524349d079ae9fc18bdff01c3"
+    }
+  ],
   "agent-teams-no-project-config": [
     {
       "url": "https://code.claude.com/docs/en/agent-teams",
@@ -102,7 +162,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "024fbefdfc3373b95f52c0294c683ed5ec6a26522fafc4c936f2af41a8fdde9f"
+      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -146,7 +206,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "efdc415213d82e2aefd6f144f78b3d806fec595a89ff4e5cd0a7a665a11d2a70"
+      "hash": "cf869f4c734b4094b0eaacb308b79447c9ebd5587ec30e186fc54441e8b11147"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -493,7 +553,7 @@
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
       "heading": "Check common causes",
-      "hash": "598bb76c8818c4ba4031dc56add17c0087653c6f16d54cc074ee24f34674c07d"
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
     }
   ],
   "skill-fork-fields-require-context": [
@@ -558,7 +618,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Control who invokes a skill",
-      "hash": "3428ce3abaea92a28963acc8bfea67971f9b0bc0a139ad64a3b2bdaeb714cdfb"
+      "hash": "130070c7f357fd4fb97105203f16aec7cbd3f9d524349d079ae9fc18bdff01c3"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",

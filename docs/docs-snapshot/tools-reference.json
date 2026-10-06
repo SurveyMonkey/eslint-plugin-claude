@@ -1,10 +1,10 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "a73cd23ed6c150aaa3ef2bcdf85a3ad00f817a5441cd0dd05775c98d0bc6f55c",
+  "hash": "9dff373c68a2072871dc8c4f4155902d5d55e275f79eca082dceaec5b87a2377",
   "blocks": [
     {
       "id": "tools-reference",
-      "hash": "47f3747062cb0922b18396d0fc191cfa48b005fb4fe1a8a9fe6fb1f376d93f53"
+      "hash": "4528a01d4d1f0c8b3e0e66b855aa8e4c5a9008db7d9004a3c95c0efff8e1cf57"
     },
     {
       "id": "configure-tools-with-permission-rules-and-hooks",
@@ -12,7 +12,7 @@
     },
     {
       "id": "agent-tool-behavior",
-      "hash": "39990846a102ef6a4417e58cf3c4d041def77afb74aa3e53eefba0e41ae4f5ec"
+      "hash": "6b190f901ae9d9706504c0ed7bd3189796ac37d62809448faaa8d6dbc403d179"
     },
     {
       "id": "askuserquestion-tool-behavior",
@@ -103,8 +103,12 @@
       "hash": "358b621b9e028968eefa970552fde932d65fe91e6e23c1f38d2d58123111d119"
     },
     {
+      "id": "bash-deny-rules-also-turn-off-the-powershell-tool",
+      "hash": "99a1ab3f974652bb48cbca122aeb87101c73a030abf1d2f9300c7a7b0c3cb061"
+    },
+    {
       "id": "shell-selection-in-settings-hooks-and-skills",
-      "hash": "3559017539e6dedc2ab6a7e7a69cf3d6295d4e1dafa7008fb7291197fc9ca5dd"
+      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560"
     },
     {
       "id": "windows-encoding-and-exit-codes",
@@ -116,7 +120,7 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "86db105a7162ec4a17c1a56deb3a394ffb395e63786b0ca8ccf4c44644cb9e6c"
+      "hash": "67b80a70b1c14493553cd3e48d68411505b5fdd4777886dc4dac0294406c179a"
     },
     {
       "id": "sendfeedback-tool-behavior",
@@ -132,7 +136,7 @@
     },
     {
       "id": "send-a-draft",
-      "hash": "cb816e080b55cd0340ec2a18a2d7c225c3d363c35716b2d2dfe3ee11b17d41b4"
+      "hash": "431f1b95bb04b139b924ea383abc7644982dc991e0c8f07dae20e8ea67145a03"
     },
     {
       "id": "discard-or-keep-a-draft",
@@ -144,7 +148,7 @@
     },
     {
       "id": "sessions-without-claude-drafted-feedback",
-      "hash": "fcca3607b4ce350665f7548250d0ffca763619aa4fa5614d3904b6d243f5b9f4"
+      "hash": "44fb55109ef0d6c6ad0ad8d053804b235287a97e4f061f090e728e1d63443fee"
     },
     {
       "id": "task-tool-availability",

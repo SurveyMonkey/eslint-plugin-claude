@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/memory",
-  "hash": "fe99e50e312feae327c1e16847bc5853c71aaf2755fa554f9014c9008850e2cb",
+  "hash": "b4e76ef1a2356fe39d5b5a70368a884e4128f1fc77a70e3556af9d4f84940562",
   "blocks": [
     {
       "id": "how-claude-remembers-your-project",
@@ -20,7 +20,7 @@
     },
     {
       "id": "choose-where-to-put-claude-md-files",
-      "hash": "22a740aaa286b2f4fd377cedb744423461c16a21b7130dfd71b8fa50cf4f1e44"
+      "hash": "2a58e63019788e13bc459acc9ce681f4530a1018ad2d3b61fff0787a5267b126"
     },
     {
       "id": "set-up-a-project-claude-md",
@@ -40,7 +40,7 @@
     },
     {
       "id": "how-claude-md-files-load",
-      "hash": "7fc10f8322eae461e2798eb4d1fc32e8350845c8f29d1240256687427e3018bd"
+      "hash": "bf82bdb84af1c6a682b5efb082ae9ecd231d2d96fbd730710dd83352b4de22b0"
     },
     {
       "id": "load-from-additional-directories",
@@ -92,11 +92,11 @@
     },
     {
       "id": "choose-which-instruction-files-load",
-      "hash": "617cea9758eb60751bfed6ded13105ab0579d3b8020df932b27c9dca7f972251"
+      "hash": "a5bf28053c790e1f870993d51ed44877e47e0528db036df620c2a540fdd9cfa7"
     },
     {
       "id": "when-agents-md-support-is-unavailable",
-      "hash": "ee002ced26eeb1c1a43912dcaccc8d45990dc8e6c0bf7099a9ac37aca440504a"
+      "hash": "32bc8dbe852b3fc845d1950339bee84785708256e916340e307e0a32323bcf9f"
     },
     {
       "id": "where-agents-md-differs-from-claude-md",
@@ -136,7 +136,7 @@
     },
     {
       "id": "view-and-edit-with-memory",
-      "hash": "ffce504be4cbed9cb1a2ce6d89cb0038074f5e86af8048a71f32becf8c90c0a2"
+      "hash": "403ed564cc718fcfd4162507b4e784883d4fae5c138eaa5d315cc6d6464981ba"
     },
     {
       "id": "troubleshoot-memory-issues",
@@ -144,7 +144,7 @@
     },
     {
       "id": "claude-isnt-following-my-claude-md",
-      "hash": "80b20000fa9364d28935dd56d0bc8d5ff552e6c45a838368f428f6d4f8947f17"
+      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
     },
     {
       "id": "my-agents-md-isnt-loading",
@@ -160,7 +160,7 @@
     },
     {
       "id": "instructions-seem-lost-after-compact",
-      "hash": "e6c348a352722cd5593e7b6158a6e4ebebfde36d7b0c66ed153ef8f6250f68f5"
+      "hash": "422935595036bfe3b9507e423419c7cc619bf767cd92ee908ce50cf0f41d530e"
     },
     {
       "id": "related-resources",

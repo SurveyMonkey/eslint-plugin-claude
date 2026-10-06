@@ -5,9 +5,14 @@ import type { ESLint, Linter } from 'eslint'
 import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
 import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
 import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
+import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
+import agentModelForced from './rules/agent-model-forced.ts'
+import agentNameUnique from './rules/agent-name-unique.ts'
+import agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
 import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
+import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
@@ -76,6 +81,11 @@ const modules = [
   agentMemoryGrantsWrite,
   agentToolsKnown,
   agentToolsUnavailable,
+  agentNameUnique,
+  agentSkillsPreloadable,
+  agentMemoryAutoMemoryOff,
+  agentOmitClaudeMdMain,
+  agentModelForced,
   agentTeamsNoProjectConfig,
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
@@ -140,6 +150,11 @@ const recommended: Record<RuleName, Severity> = {
   'agent-memory-grants-write': 'error',
   'agent-tools-known': 'error',
   'agent-tools-unavailable': 'error',
+  'agent-name-unique': 'error',
+  'agent-skills-preloadable': 'error',
+  'agent-memory-auto-memory-off': 'error',
+  'agent-omit-claude-md-main': 'error',
+  'agent-model-forced': 'error',
   'agent-teams-no-project-config': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
