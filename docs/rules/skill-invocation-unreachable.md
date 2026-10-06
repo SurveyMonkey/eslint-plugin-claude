@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-invocation-unreachable, which reports a SKILL.md that sets disable-model-invocation to true and user-invocable to false, because neither Claude nor the user can invoke it.
+description: The ESLint rule claude/skill-invocation-unreachable, which reports a SKILL.md that sets disable-model-invocation to true and user-invocable to false, because the user cannot invoke it and Claude cannot invoke it on its own.
 owner: brianespinosa
 created: 2026-09-30
 related_issues: [8]
@@ -20,8 +20,13 @@ Let the user or Claude invoke a skill.
 
 ## Rule details
 
-`disable-model-invocation: true` blocks Claude from the skill. `user-invocable: false` blocks the
-user from it.[^invoke][^reference] A skill with both fields has no caller. Nothing can run it.
+`disable-model-invocation: true` means that Claude cannot invoke the skill on its own.
+`user-invocable: false` means that the user cannot invoke the skill.[^invoke] The rule reports a
+skill that sets both fields.
+
+The doc says no more than that. A name after plain text, such as `go ahead and /deploy`, gives
+Claude permission to run the skill for that message.[^name] The docs do not say if that
+permission applies to a skill with `user-invocable: false`.
 
 The rule reads each Boolean form that Claude Code reads: `true`, `false`, `yes`, `no`, `on`,
 `off`, `1` and `0`, in any letter case.[^reference] It reports on the
@@ -67,4 +72,5 @@ None.
 ## Sources
 
 [^invoke]: [Extend Claude with skills: Control who invokes a skill](https://code.claude.com/docs/en/skills#control-who-invokes-a-skill)
+[^name]: [Extend Claude with skills: Where you write the skill's name](https://code.claude.com/docs/en/skills#where-you-write-the-skills-name)
 [^reference]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)
