@@ -102,6 +102,19 @@ const TREE: Record<string, string> = {
   '.claude/output-styles/yaml.md': '---\nname: [unclosed\n---\n',
   '.claude/output-styles/schema.md': '---\nforce-for-plugin: true\n---\n',
   'plugins/p/output-styles/forced.md': '---\nforce-for-plugin: true\n---\n',
+  // The cross-file agent rules: one scope with settings, two agents of one name, a skill that
+  // a subagent cannot preload, and one clean agent.
+  'packages/z/.claude/settings.json':
+    '{"agent":"boss","autoMemoryEnabled":false,"env":{"CLAUDE_CODE_SUBAGENT_MODEL_FORCE":"1"}}',
+  'packages/z/.claude/agents/boss.md':
+    '---\nname: boss\ndescription: d\nmodel: sonnet\nmemory: project\nomitClaudeMd: true\n---\n',
+  'packages/z/.claude/agents/dup1.md': '---\nname: dup\ndescription: d\n---\n',
+  'packages/z/.claude/agents/dup2.md': '---\nname: dup\ndescription: d\n---\n',
+  'packages/z/.claude/agents/preload.md':
+    '---\nname: preload\ndescription: d\nskills:\n  - hidden\n  - verify\n---\n',
+  'packages/z/.claude/agents/clean.md': '---\nname: clean\ndescription: d\n---\n',
+  'packages/z/.claude/skills/hidden/SKILL.md':
+    '---\nname: hidden\ndescription: d\ndisable-model-invocation: true\n---\n',
   '.claude/teams/teams.json': '{}',
   '.claude/teams/team.md': '# Team\n',
   '.claude/teams/team.yaml': 'members: []\n',
@@ -210,6 +223,13 @@ const EXPECTED = [
   '.claude/agents/tools.md: claude/agent-tools-known@2',
   'plugins/p/agents/tools.md: claude/agent-tools-known@2',
   '.claude/agents/unavailable.md: claude/agent-tools-unavailable@2',
+  'packages/z/.claude/agents/boss.md: claude/agent-memory-auto-memory-off@2',
+  'packages/z/.claude/agents/boss.md: claude/agent-model-forced@2',
+  'packages/z/.claude/agents/boss.md: claude/agent-omit-claude-md-main@2',
+  'packages/z/.claude/agents/dup1.md: claude/agent-name-unique@2',
+  'packages/z/.claude/agents/dup2.md: claude/agent-name-unique@2',
+  'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
+  'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -223,6 +243,11 @@ const AGENT_RULES = [
   'agent-memory-grants-write',
   'agent-tools-known',
   'agent-tools-unavailable',
+  'agent-name-unique',
+  'agent-skills-preloadable',
+  'agent-memory-auto-memory-off',
+  'agent-omit-claude-md-main',
+  'agent-model-forced',
   'agent-teams-no-project-config',
   'agent-teams-no-project-config',
   'output-style-frontmatter-valid',

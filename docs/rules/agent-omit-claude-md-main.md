@@ -16,7 +16,7 @@ Do not set `omitClaudeMd` in a local agent that the settings run as the main thr
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | correctness | `**/agents/**/*.md` |
+| `recommended`, `strict` | `error` | no-op | `**/agents/**/*.md` |
 
 ## Rule details
 
