@@ -126,7 +126,7 @@ describe('agent-skills-preloadable', () => {
     expect(lintWith(rule, agent(list('deploy')), path.join(root, 'agents/a.md'))).toEqual([])
   })
 
-  // A manifest that does not parse can hold a `skills` key, so the rule cannot see the skills.
+  // A manifest that is not a JSON object gives no key, so the rule cannot see the `skills` key.
   it.each([
     ['a syntax error', '{'],
     ['null', 'null'],

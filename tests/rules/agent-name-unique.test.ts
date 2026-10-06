@@ -163,13 +163,13 @@ describe('agent-name-unique', () => {
     })
   })
 
-  // A `.claude` link to a directory out of the repository: the rule reads no file there.
+  // A `.claude` link goes to a directory out of the repository. The rule reads no file there.
   it('makes no report for a .claude that is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})
     const outside = repo({ 'agents/b.md': agent('', 'dup') })
-    // The directory out of the repository holds no `.git`.
+    // Remove its `.git`. The old walk from the real path would take it as the repository.
     rmSync(path.join(outside, '.git'), { recursive: true })
     symlinkSync(outside, path.join(root, '.claude'))
     expect(lint(root, '.claude/agents/a.md')).toEqual([])

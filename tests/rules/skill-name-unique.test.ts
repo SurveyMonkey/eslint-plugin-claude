@@ -469,7 +469,7 @@ describe.skipIf(process.platform === 'win32')('a plugin.json that is a dangling 
   })
 })
 
-// A manifest that does not parse can hold a `commands` key, so the rule reads no `commands/` folder.
+// A manifest that is not a JSON object gives no key. The rule reads no `commands/` folder.
 describe('a plugin.json that does not parse to an object', () => {
   const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
 

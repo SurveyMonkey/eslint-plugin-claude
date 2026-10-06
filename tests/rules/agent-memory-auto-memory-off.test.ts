@@ -115,13 +115,13 @@ describe('agent-memory-auto-memory-off', () => {
     })
   })
 
-  // A `.claude` link to a directory out of the repository: the rule reads no file there.
+  // A `.claude` link goes to a directory out of the repository. The rule reads no file there.
   it('stays silent when .claude is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})
     const outside = repo({ 'settings.json': flag(false) })
-    // The directory out of the repository holds no `.git`.
+    // Remove its `.git`. The old walk from the real path would take it as the repository.
     rmSync(path.join(outside, '.git'), { recursive: true })
     symlinkSync(outside, path.join(root, '.claude'))
     expect(lintWith(rule, agent('memory: project\n'), path.join(root, AGENT))).toEqual([])

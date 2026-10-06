@@ -77,9 +77,11 @@ export function realDirectory(dir: string): string {
 
 /** The real path of the repository that holds `dir`: the first directory at
  *  or above the absolute path of `dir` that holds `.git`. The walk does not
- *  start at the real path of `dir`. A `.claude` link out of the repository
- *  then has a real path out of the bound, and a reader gives `UNREADABLE`.
- *  Without a `.git`, the result is the real path of `dir`. */
+ *  start at the real path of `dir`. Otherwise a `.claude` link out of the
+ *  repository would move the bound out of it. Now the real path of the link
+ *  is out of the bound, and a read of it gives `UNREADABLE`. A link whose
+ *  target holds its own `.git` is a repository of its own (ADR 001, Decision
+ *  14). Without a `.git`, the result is the real path of `dir`. */
 export function repositoryRoot(dir: string): string {
   for (let at = path.resolve(dir); ; at = path.dirname(at)) {
     if (existsSync(path.join(at, '.git'))) {
@@ -295,8 +297,8 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
  *  file. The manifest file is not there. The result is `UNREADABLE` in six
  *  cases. `.claude-plugin` is a dangling link. The real path of
  *  `.claude-plugin` is out of `bound`. The file is a dangling link. The real
- *  path of the file is out of `bound`. A read fails for another reason. The
- *  file does not parse to an object. In each case the rule cannot see the
+ *  path of the file is out of `bound`. The file does not parse to an object.
+ *  A read fails for another reason. In each case the rule cannot see the
  *  keys, and the file can hold any key. */
 export function readManifest(
   root: string,
