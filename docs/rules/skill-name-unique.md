@@ -87,10 +87,8 @@ skill folder, or a directory that it cannot read. The rule adds no message for t
 
 A plugin manifest that the rule cannot read can set `commands`. This holds for a dangling
 `plugin.json` link, for a `plugin.json` with a real path out of the repository, and for a
-`plugin.json` that does not parse to an object. The rule then
-reads no `commands/` folder of that plugin, and gives no command report for it. The rule still
-compares skill names.
-A command file that the rule cannot read still counts, because its path gives its name.
+`plugin.json` that does not parse to an object. The rule then reads no `commands/` folder of that
+plugin, and gives no command report for it. The rule still compares skill names. A command file that the rule cannot read still counts, because its path gives its name.
 
 Fail, `.claude/skills/deploy/SKILL.md` and `.claude/skills/ship/SKILL.md` with `name: Deploy`:
 
