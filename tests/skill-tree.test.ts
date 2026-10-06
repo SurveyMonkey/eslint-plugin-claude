@@ -227,11 +227,43 @@ describe('readManifest', () => {
   })
 })
 
-describe('readManifest on a dangling link', () => {
-  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a dangling link', () => {
-    mkdirSync(path.join(scratch, 'dangle/.claude-plugin'), { recursive: true })
-    symlinkSync('missing.json', path.join(scratch, 'dangle/.claude-plugin/plugin.json'))
-    expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
+describe('readManifest on a link', () => {
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE when plugin.json is a dangling link',
+    () => {
+      mkdirSync(path.join(scratch, 'dangle/.claude-plugin'), { recursive: true })
+      symlinkSync('missing.json', path.join(scratch, 'dangle/.claude-plugin/plugin.json'))
+      expect(readManifest(path.join(scratch, 'dangle'), scratch)).toBe(UNREADABLE)
+    },
+  )
+
+  it('gives UNREADABLE when .claude-plugin is a dangling link', {
+    skip: process.platform === 'win32',
+  }, () => {
+    mkdirSync(path.join(scratch, 'dangle-dir'), { recursive: true })
+    symlinkSync('missing', path.join(scratch, 'dangle-dir/.claude-plugin'))
+    expect(readManifest(path.join(scratch, 'dangle-dir'), scratch)).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE when .claude-plugin is a link out of the bound', {
+    skip: process.platform === 'win32',
+  }, () => {
+    mkdirSync(path.join(scratch, 'out-dir'), { recursive: true })
+    mkdirSync(path.join(scratch, 'inside/p'), { recursive: true })
+    symlinkSync(path.join(scratch, 'out-dir'), path.join(scratch, 'inside/p/.claude-plugin'))
+    expect(readManifest(path.join(scratch, 'inside/p'), path.join(scratch, 'inside'))).toBe(
+      UNREADABLE,
+    )
+  })
+
+  it('reads plugin.json when .claude-plugin is a link inside the bound', {
+    skip: process.platform === 'win32',
+  }, () => {
+    mkdirSync(path.join(scratch, 'in-dir'), { recursive: true })
+    writeFileSync(path.join(scratch, 'in-dir/plugin.json'), '{"name":"x"}')
+    mkdirSync(path.join(scratch, 'in-p'), { recursive: true })
+    symlinkSync(path.join(scratch, 'in-dir'), path.join(scratch, 'in-p/.claude-plugin'))
+    expect(readManifest(path.join(scratch, 'in-p'), scratch)).toEqual({ name: 'x' })
   })
 
   it('gives null for a .claude-plugin directory with no plugin.json', () => {
@@ -328,6 +360,13 @@ describe.skipIf(chmodCannotBlock)('a read that fails', () => {
     const file = put('deny/file.md', '---\nname: x\n---\n')
     withoutAccess(file, () => expect(frontmatterOfFile(file)).toBe(UNREADABLE))
     expect(frontmatterOfFile(file)).toEqual({ name: 'x' })
+  })
+
+  it('gives UNREADABLE for a manifest when the plugin root cannot be searched', () => {
+    put('deny/plugin/.claude-plugin/plugin.json', '{}')
+    const root = path.join(scratch, 'deny', 'plugin')
+    withoutAccess(root, () => expect(readManifest(root, scratch)).toBe(UNREADABLE))
+    expect(readManifest(root, scratch)).toEqual({})
   })
 
   it('gives a path below a directory that cannot be searched an absolute path as its bound', () => {
