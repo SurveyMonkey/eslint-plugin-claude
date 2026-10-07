@@ -13,6 +13,8 @@ type MessageIds =
   | 'notObject'
   | 'missing'
   | 'empty'
+  | 'nameCharacters'
+  | 'nameDots'
   | 'wrongType'
   | 'notStringElement'
   | 'renamesValue'
@@ -20,6 +22,10 @@ type MessageIds =
 
 /** The kinds of value that a field takes, as the docs name them. */
 type Kind = 'string' | 'boolean' | 'object' | 'array' | 'strings' | 'renames' | 'source' | 'hooks'
+
+// The form of a name, as the docs give it: letters, digits, `.`, `_` and `-`,
+// with a letter or a digit first. The docs do not say that a letter is ASCII.
+const NAME_FORM = /^[\p{L}\p{N}][\p{L}\p{N}._-]*$/u
 
 /** The node types that fit each kind. A `hooks` that is a string or an array
  *  is for `marketplace-entry-hooks-inline`, so it fits here. */
@@ -86,6 +92,9 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
       notObject: 'The marketplace file must be a JSON object.',
       missing: 'The {{where}} needs "{{key}}".',
       empty: 'The "{{path}}" must not be empty.',
+      nameCharacters:
+        'The "{{path}}" must use letters, digits, ".", "_" and "-" only, and start with a letter or a digit.',
+      nameDots: 'The "{{path}}" must not contain "..".',
       wrongType: 'The "{{path}}" must be {{expected}}.',
       notStringElement: 'The "{{path}}" must hold strings only.',
       renamesValue:
@@ -138,6 +147,22 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
       }
     }
 
+    /** A non-empty string name that has a character that the docs do not allow.
+     *  The docs say: letters, digits, `.`, `_` and `-`, and the first one is a
+     *  letter or a digit. A marketplace name has no `..`. An empty name has its
+     *  own report. */
+    function checkNameCharacters(object: ObjectNode, path: string, noDots: boolean): void {
+      const value = lastMember(object, 'name')?.value
+      if (value?.type !== 'String' || value.value === '') {
+        return
+      }
+      if (!NAME_FORM.test(value.value)) {
+        context.report({ node: value, messageId: 'nameCharacters', data: { path } })
+      } else if (noDots && value.value.includes('..')) {
+        context.report({ node: value, messageId: 'nameDots', data: { path } })
+      }
+    }
+
     return {
       Document(node) {
         const body: ValueNode = node.body
@@ -150,6 +175,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
           checkField(body, key, kind, key)
         }
         checkNotEmpty(body, 'name', 'name')
+        checkNameCharacters(body, 'name', true)
         const owner = lastMember(body, 'owner')?.value
         if (owner?.type === 'Object') {
           requireKeys(owner, ['name'], '"owner" object')
@@ -177,6 +203,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
           for (const [key, kind] of ENTRY_FIELDS) {
             checkField(entry, key, kind, `${path}.${key}`)
           }
+          checkNameCharacters(entry, `${path}.name`, false)
         }
       },
     }

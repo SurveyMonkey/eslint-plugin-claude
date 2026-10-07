@@ -123,6 +123,12 @@ jsonTester.run('marketplace-schema (valid)', rule, {
     { code: top({ renames: {} }), filename },
     { code: top({ allowCrossMarketplaceDependenciesOn: [] }), filename },
     { code: withEntry({ name: '' }), filename },
+    // The characters that the docs allow in a name, and a `..` in an entry name.
+    { code: top({ name: 'A1.b_c-d' }), filename },
+    { code: top({ name: '9lives' }), filename },
+    { code: top({ name: 'café' }), filename },
+    { code: withEntry({ name: 'x.y_z-1' }), filename },
+    { code: withEntry({ name: 'a..b' }), filename },
     // Claude Code ignores an entry `metadata`, `experimental` or `relevance` that is not an object.
     // `claude plugin validate` warns, so the rule gives no report at `error`.
     { code: withEntry({ metadata: 'free' }), filename },
@@ -219,6 +225,45 @@ jsonTester.run('marketplace-schema (invalid)', rule, {
         { messageId: 'missing', data: { where: 'entry plugins[1]', key: 'name' } },
         { messageId: 'missing', data: { where: 'entry plugins[1]', key: 'source' } },
       ],
+    },
+    // A name with a character that the docs do not allow, or a first character that is not a letter or a digit.
+    ...[
+      'my marketplace',
+      'a/b',
+      'a\\b',
+      '-a',
+      '.a',
+      '_a',
+      'a+b',
+      'a@b',
+      'a\u001bb',
+      'a\nb',
+      '.',
+    ].map((name) => ({
+      code: top({ name }),
+      filename,
+      errors: [{ messageId: 'nameCharacters' as const, data: { path: 'name' } }],
+    })),
+    // A marketplace name has no `..`. The report is one for each name.
+    {
+      code: top({ name: 'a..b' }),
+      filename,
+      errors: [{ messageId: 'nameDots', data: { path: 'name' } }],
+    },
+    {
+      code: top({ name: '-a..b' }),
+      filename,
+      errors: [{ messageId: 'nameCharacters', data: { path: 'name' } }],
+    },
+    {
+      code: withEntry({ name: 'my plugin' }),
+      filename,
+      errors: [{ messageId: 'nameCharacters', data: { path: 'plugins[0].name' }, line: 1 }],
+    },
+    {
+      code: withEntry({ name: '.p' }),
+      filename,
+      errors: [{ messageId: 'nameCharacters', data: { path: 'plugins[0].name' } }],
     },
     // An empty `name`, as `claude plugin validate` reports for the marketplace and the owner.
     { code: top({ name: '' }), filename, errors: [{ messageId: 'empty', data: { path: 'name' } }] },
