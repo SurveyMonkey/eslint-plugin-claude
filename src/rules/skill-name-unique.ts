@@ -45,16 +45,17 @@ interface Entry {
  *  the key instead of `commands/`. A manifest that the rule cannot see can
  *  set the key. Such a manifest is unreadable, or out of the repository. The
  *  result is true for such a manifest, so the rule reads no `commands/`
- *  folder. */
-function setsCommands(root: string, bound: string): boolean {
-  const manifest = readManifest(root, bound)
+ *  folder. A project `.claude/` is no plugin, so the result is false for it. */
+function setsCommands(root: string, plugin: boolean, bound: string): boolean {
+  // A project `.claude/` has no manifest. Only a plugin root has one.
+  const manifest = plugin ? readManifest(root, bound) : null
   return manifest === UNREADABLE || (manifest !== null && 'commands' in manifest)
 }
 
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. */
-function scopeEntries(root: string, bound: string): Entry[] {
+function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
   const skills = skillFiles(skillsDir, bound).flatMap((file) => {
@@ -66,12 +67,12 @@ function scopeEntries(root: string, bound: string): Entry[] {
   const commandsDir = path.join(root, 'commands')
   // A `commands/` folder that the scan cannot read gives fewer entries. That can only hide a
   // duplicate, never add one, so the rule ignores `unreadable` here.
-  const commands = (setsCommands(root, bound) ? [] : markdownFiles(commandsDir, bound).files).map(
-    (file) => ({
-      file,
-      name: path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':'),
-    }),
-  )
+  const commands = (
+    setsCommands(root, plugin, bound) ? [] : markdownFiles(commandsDir, bound).files
+  ).map((file) => ({
+    file,
+    name: path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':'),
+  }))
   return [...skills, ...commands]
 }
 
@@ -96,9 +97,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     }
     const self = path.resolve(context.filename)
     const root = scopeRoot(self, file)
-    const bound = repositoryRoot(file.plugin ? root : path.dirname(root))
+    const bound = repositoryRoot(root)
     // A file in `commands/` is not a command when the key replaces the folder.
-    if (file.kind === 'command' && setsCommands(root, bound)) {
+    if (file.kind === 'command' && setsCommands(root, file.plugin, bound)) {
       return {}
     }
     return {
@@ -125,7 +126,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const own =
           file.kind === 'skill' ? skillName(given, file.names[0] as string) : file.names.join(':')
-        const others = scopeEntries(root, bound).filter(
+        const others = scopeEntries(root, file.plugin, bound).filter(
           (entry) => entry.file !== self && fold(entry.name) === fold(own),
         )
         if (others.length > 0) {

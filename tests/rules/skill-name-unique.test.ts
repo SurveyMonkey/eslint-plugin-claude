@@ -88,8 +88,8 @@ symlinkSync('missing.md', path.join(scratch, 'dead/.claude/commands/x.md'))
 put('twin/.claude/commands/real/deploy.md', bare)
 symlinkSync('real', path.join(scratch, 'twin/.claude/commands/a-link'))
 put('twin/.claude/skills/s/SKILL.md', named('real:deploy'))
-// No `.git`: the project directory is the bound, so a link from `.claude/` to a
-// directory beside it is followed.
+// No `.git`: `.claude/` is the bound, so a link from `.claude/` to a directory beside it
+// leaves the bound.
 put('nogit/shared/deploy.md', bare)
 put('nogit/.claude/skills/s/SKILL.md', named('shared:deploy'))
 mkdirSync(path.join(scratch, 'nogit/.claude/commands'), { recursive: true })
@@ -155,13 +155,13 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // Not a skill or command file.
     { code: named('build'), filename: at('dup-name', 'docs', 'SKILL.md') },
     { code: named('build'), filename: at('dup-name', '.claude', 'agents', 'build.md') },
-  ],
-  invalid: [
+    // Without `.git`, `.claude/` is the bound, as for the agent rules. The link leaves it.
     {
       code: named('shared:deploy'),
       filename: path.join(scratch, 'nogit', '.claude', 'skills', 's', 'SKILL.md'),
-      errors: [{ messageId: 'duplicate' }],
     },
+  ],
+  invalid: [
     {
       code: named('real:deploy'),
       filename: path.join(scratch, 'twin', '.claude', 'skills', 's', 'SKILL.md'),
@@ -485,5 +485,38 @@ describe('a plugin.json that does not parse to an object', () => {
     put(`${tree}/skills/review/SKILL.md`, bare)
     expect(lint(path.join(scratch, tree, 'skills', 'review', 'SKILL.md'), bare)).toEqual([])
     expect(lint(path.join(scratch, tree, 'commands', 'review.md'), bare)).toEqual([])
+  })
+})
+
+// A project `.claude/` is no plugin root, so a manifest in it changes no result (the plugins
+// reference puts the manifest under the plugin root). The result is the one with no manifest.
+describe('a .claude/.claude-plugin/plugin.json in a project', () => {
+  it.each([
+    ['a syntax error', '{'],
+    ['a `commands` key', '{"commands": "./x"}'],
+  ])('does not change the report, for %s', (_name, text) => {
+    const tree = `proj-man-${Buffer.from(text).toString('hex')}`
+    put(`${tree}/.git/HEAD`, '')
+    put(`${tree}/.claude/.claude-plugin/plugin.json`, text)
+    put(`${tree}/.claude/commands/dup.md`, bare)
+    const skill = path.join(scratch, tree, '.claude', 'skills', 'dup', 'SKILL.md')
+    const command = path.join(scratch, tree, '.claude', 'commands', 'dup.md')
+    put(`${tree}/.claude/skills/dup/SKILL.md`, bare)
+    expect(lintMarkdown('skill-name-unique', bare, skill)).toHaveLength(1)
+    expect(lintMarkdown('skill-name-unique', bare, command)).toHaveLength(1)
+  })
+})
+
+// A `.claude` link whose target holds its own `.git` has the target as its bound, as it has for
+// the agent rules. The scan of the target stays inside that bound, so the rule sees it.
+describe.skipIf(process.platform === 'win32')('a .claude link to a repository of its own', () => {
+  it('reads the skills in the target, and reports a name that clashes', () => {
+    put('lnk/.git/HEAD', '')
+    put('lnk-target/.git/HEAD', '')
+    put('lnk-target/skills/dup/SKILL.md', bare)
+    put('lnk-target/skills/other/SKILL.md', named('dup'))
+    symlinkSync('../lnk-target', path.join(scratch, 'lnk/.claude'))
+    const file = path.join(scratch, 'lnk', '.claude', 'skills', 'dup', 'SKILL.md')
+    expect(lintMarkdown('skill-name-unique', bare, file)).toHaveLength(1)
   })
 })
