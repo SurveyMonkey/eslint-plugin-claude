@@ -37,15 +37,17 @@ interface Agents {
   unseen: boolean
 }
 
-/** `dir` and each directory above it, up to `bound`. */
-function ancestors(dir: string, bound: string): string[] {
+/** `dir` and each directory above it, up to `top`. */
+function ancestors(dir: string, top: string): string[] {
   const parent = path.dirname(dir)
-  return dir === bound || parent === dir ? [dir] : [dir, ...ancestors(parent, bound)]
+  return dir === top || parent === dir ? [dir] : [dir, ...ancestors(parent, top)]
 }
 
 /** The `name` of each agent file in `.claude/agents/` of `start`, and of each
  *  directory above it up to `top`. The scans read no file out of `bound`. The
- *  two differ for a `.claude` link whose target holds its own `.git`. */
+ *  two differ with no `.git`, where `bound` is `.claude/` and `top` is the
+ *  directory that holds it. They also differ for a `.claude` link whose target
+ *  holds its own `.git`. */
 function projectAgents(start: string, top: string, bound: string): Agents {
   const found: Agents = { names: [], unseen: false }
   for (const dir of ancestors(start, top)) {

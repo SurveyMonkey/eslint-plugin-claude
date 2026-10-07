@@ -193,11 +193,13 @@ describe('agent-name-unique', () => {
       realpathFails.path = null
     }
     // With a readable real path, the same tree reports `b.md`.
-    expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
+    const messages = lint(root, '.claude/agents/a.md')
+    expect(messages).toHaveLength(1)
+    expect(messages[0]?.message).toContain('`b.md`')
   })
 
-  // A real path failure on a file that ESLint just read gives no real path to compare. A link to
-  // the linted file is then not a second agent, so the rule makes no report (ADR 001, Decision 14).
+  // A real path failure on a file that ESLint just read gives no real path to compare. The rule
+  // cannot tell a link to the linted file from a second agent, so it makes no report.
   it('stays silent for a link to this file when the real path of this file is unreadable', {
     skip: process.platform === 'win32',
   }, () => {

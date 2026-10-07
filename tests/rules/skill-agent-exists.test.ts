@@ -76,6 +76,10 @@ mkdirSync(path.join(scratch, 'mixed/sub/.claude/agents'), { recursive: true })
 symlinkSync('../../../../out/elsewhere', path.join(scratch, 'mixed/sub/.claude/agents/team'))
 // No `.git`: the agents of the project directory still count.
 put('nogit/.claude/agents/local.md', agentFile('local'))
+// No `.git`: `.claude/` is the bound, so a link from `.claude/agents/` to a directory beside it
+// leaves the bound. The agent can be there, so the rule stays silent.
+put('nogit/shared/m.md', agentFile('m'))
+symlinkSync('../../shared', path.join(scratch, 'nogit/.claude/agents/team'))
 // A `.git` entry that is a file, as in a worktree or a submodule.
 put('above/.claude/agents/above.md', agentFile('above'))
 put('above/wt/.git', 'gitdir: elsewhere')
@@ -197,6 +201,10 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     },
     {
       code: fork('local'),
+      filename: path.join(scratch, 'nogit', '.claude', 'skills', 's', 'SKILL.md'),
+    },
+    {
+      code: fork('ghost'),
       filename: path.join(scratch, 'nogit', '.claude', 'skills', 's', 'SKILL.md'),
     },
     // A link out of the repository can hold the agent, so the rule stays silent.

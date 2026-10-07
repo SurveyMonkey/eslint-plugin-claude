@@ -26,7 +26,8 @@ draws from the skills that Claude can invoke.[^preload][^field]
 
 The rule reads `disable-model-invocation` in each Boolean form that Claude Code reads.[^bool]
 Examples are `yes`, `1` and `ON`. The rule reads the parsed value, so a quoted `"yes"` or a number
-such as `0x1` reads as true. The rule reports each `skills` entry that names such a
+such as `0x1` reads as true. The skills page does not say that Claude Code reads these forms as
+true. The rule reports each `skills` entry that names such a
 skill. The report is on the `skills` value. The message names the entry.
 
 An entry resolves in the scope of the agent:

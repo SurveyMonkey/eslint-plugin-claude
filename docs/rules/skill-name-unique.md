@@ -58,10 +58,9 @@ A plugin that sets `commands` does not load `commands/`, so the rule skips that 
 reads the other files from the disk, and reads no file out of the repository. The repository is
 the first directory at or above the scope that has a `.git` entry. Without one, it is `.claude/`, or
 the plugin root. The rule reads a `plugin.json` for a plugin only. A project `.claude/` has no
-manifest for the rule. The rule follows a link to a directory once, lists the
-real directory before a link to it, and skips `.git` and `node_modules`. It does not follow a link
-whose real path is out of the repository. It reads the file that it
-lints from the text that ESLint gives. It ignores a file whose frontmatter does not parse. For
+manifest for the rule. The rule follows a link to a directory once, lists the real directory
+before a link to it, and skips `.git` and `node_modules`. It does not follow a link whose real
+path is out of the repository. It reads the file that it lints from the text that ESLint gives. It ignores a file whose frontmatter does not parse. For
 another file with frontmatter that does not parse, it uses the folder name.
 
 The rule does not check these cases:

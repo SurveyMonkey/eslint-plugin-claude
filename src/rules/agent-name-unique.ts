@@ -34,8 +34,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     // A file behind a link to a folder shows in the scan under its real path, so
     // the real path of this file must also count as this file.
     const selfReal = realOf(self)
-    // Without that real path, the rule cannot tell a link to this file from a second agent
-    // (ADR 001, Decision 14). A file that does not exist, as in an editor buffer, gives null.
+    // A real path that the rule cannot read gives UNREADABLE. The rule cannot then tell a link to
+    // this file from a second agent, so it makes no report. A file that is not on disk, as in an
+    // editor buffer, gives null. The rule then compares paths.
     if (selfReal === UNREADABLE) {
       return {}
     }
