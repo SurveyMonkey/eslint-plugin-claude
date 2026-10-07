@@ -30,9 +30,9 @@ The rule reports these faults:
   lacks the key.
 - **Empty name.** The top-level `name` or `owner.name` is an empty string.[^validation]
 - **Name characters.** A non-empty `name` of the top level or of an entry has a character other
-  than a letter, a digit, `.`, `_` and `-`, or starts with another character. The top-level `name`
-  also has no `..`. An entry `name` may have `..`, because the docs do not bar it.[^top][^entries]
-  The report is on the `name` value, one for each name.
+  than an ASCII letter, a digit, `.`, `_` and `-`, or starts with another character. The
+  top-level `name` also has no `..`. An entry `name` may have `..`, because the docs do not bar
+  it.[^top][^entries] The report is on the `name` value, one for each name.
 - **Wrong type.** A field has a value of another type than the docs give, as the lists below show.
 - **Plugin item.** An item of `plugins` is not an object. The docs say that each item is an
   object.[^entries]
@@ -78,8 +78,8 @@ The rule does not check these cases, because the docs give no type or no test fo
   `metadata.version` and `metadata.pluginRoot` only.[^top]
 - The fields of an entry that `plugin.json` also defines, such as `author` and `dependencies`. The
   docs send the reader to the manifest reference for them.[^entries]
-- The Unicode class of a letter in a `name`. The docs say "letters" and do not say ASCII, so the
-  rule accepts each Unicode letter and digit.[^top][^entries]
+- Whether a name impersonates an official marketplace, or is on the reserved list. See
+  `marketplace-name-reserved`.[^top]
 - An entry `relevance`, `metadata` or `experimental` that is not an object. Claude Code ignores
   the value, and validate gives a warning for it.[^validation]
 - An unknown key. Claude Code ignores it.[^marketplace-file]

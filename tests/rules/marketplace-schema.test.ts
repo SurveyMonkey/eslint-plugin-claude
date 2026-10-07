@@ -126,7 +126,6 @@ jsonTester.run('marketplace-schema (valid)', rule, {
     // The characters that the docs allow in a name, and a `..` in an entry name.
     { code: top({ name: 'A1.b_c-d' }), filename },
     { code: top({ name: '9lives' }), filename },
-    { code: top({ name: 'café' }), filename },
     { code: withEntry({ name: 'x.y_z-1' }), filename },
     { code: withEntry({ name: 'a..b' }), filename },
     // Claude Code ignores an entry `metadata`, `experimental` or `relevance` that is not an object.
@@ -239,6 +238,7 @@ jsonTester.run('marketplace-schema (invalid)', rule, {
       'a\u001bb',
       'a\nb',
       '.',
+      'café',
     ].map((name) => ({
       code: top({ name }),
       filename,

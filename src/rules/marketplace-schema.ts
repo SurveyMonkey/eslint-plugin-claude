@@ -24,8 +24,9 @@ type MessageIds =
 type Kind = 'string' | 'boolean' | 'object' | 'array' | 'strings' | 'renames' | 'source' | 'hooks'
 
 // The form of a name, as the docs give it: letters, digits, `.`, `_` and `-`,
-// with a letter or a digit first. The docs do not say that a letter is ASCII.
-const NAME_FORM = /^[\p{L}\p{N}][\p{L}\p{N}._-]*$/u
+// with a letter or a digit first. The docs say that a marketplace name with a
+// non-ASCII character is refused, so a letter here is an ASCII letter.
+const NAME_FORM = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
 
 /** The node types that fit each kind. A `hooks` that is a string or an array
  *  is for `marketplace-entry-hooks-inline`, so it fits here. */
