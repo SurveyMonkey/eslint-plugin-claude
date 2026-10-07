@@ -1,9 +1,6 @@
 // The rule reads the `hooks` of each entry in `plugins` in
 // `.claude-plugin/marketplace.json`. The files glob and the decoy files are in
 // tests/configs.test.ts.
-import json from '@eslint/json'
-import { RuleTester } from 'eslint'
-import { it } from 'vitest'
 import hooksInline from '../../src/rules/marketplace-entry-hooks-inline.ts'
 import { jsonTester } from '../rule-tester.test-support.ts'
 
@@ -11,12 +8,6 @@ const { rule } = hooksInline
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (...plugins: unknown[]) => JSON.stringify({ name: 'acme', plugins })
 const inline = { PostToolUse: [{ matcher: 'Write', hooks: [{ type: 'command', command: 'fmt' }] }] }
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
 
 jsonTester.run('marketplace-entry-hooks-inline (valid)', rule, {
   valid: [
@@ -39,13 +30,13 @@ jsonTester.run('marketplace-entry-hooks-inline (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-entry-hooks-inline (invalid)', rule, {
+jsonTester.run('marketplace-entry-hooks-inline (invalid)', rule, {
   valid: [],
   invalid: [
     {
       code: manifest({ name: 'p', source: './p', hooks: './hooks/hooks.json' }),
       filename,
-      errors: [{ messageId: 'string', line: 1, column: 59, endColumn: 80 }],
+      errors: [{ messageId: 'string', line: 1, column: 62, endColumn: 82 }],
     },
     { code: manifest({ name: 'p', hooks: '' }), filename, errors: [{ messageId: 'string' }] },
     {
