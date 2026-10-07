@@ -1,9 +1,6 @@
 // The rule reads the top-level members, `owner`, `metadata` and the entries of
 // `plugins` in `.claude-plugin/marketplace.json`. The files glob and the decoy
 // files are in tests/configs.test.ts.
-import json from '@eslint/json'
-import { RuleTester } from 'eslint'
-import { it } from 'vitest'
 import schema from '../../src/rules/marketplace-schema.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
 
@@ -20,13 +17,6 @@ const withEntry = (patch: Record<string, unknown>) =>
 /** The base file with the key `key` removed from the top level. */
 const without = (key: string) =>
   JSON.stringify(Object.fromEntries(Object.entries(base).filter(([k]) => k !== key)))
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
-const redJson5Tester = new RedTester({ plugins: { json }, language: 'json/json5' })
 
 const everyField = {
   name: 'acme',
@@ -161,7 +151,7 @@ jsonTester.run('marketplace-schema (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-schema (invalid)', rule, {
+jsonTester.run('marketplace-schema (invalid)', rule, {
   valid: [],
   invalid: [
     // The file.
@@ -355,7 +345,7 @@ json5Tester.run('marketplace-schema (JSON5 valid)', rule, {
   invalid: [],
 })
 
-redJson5Tester.run('marketplace-schema (JSON5 invalid)', rule, {
+json5Tester.run('marketplace-schema (JSON5 invalid)', rule, {
   valid: [],
   invalid: [
     {
