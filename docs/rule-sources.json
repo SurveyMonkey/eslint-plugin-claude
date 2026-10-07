@@ -334,6 +334,112 @@
       "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
     }
   ],
+  "marketplace-relative-source-format": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin sources",
+      "hash": "6c045d997cede819c04ace755a58d450634518ebee6f61bc4084355f75edb95b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Marketplace entry path does not stay inside the marketplace directory",
+      "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Invalid input on a source",
+      "hash": "c5c06f4738b2ba4226645d860f41555d9420a4a3a6e58300529feb2bcdcefb5b"
+    }
+  ],
+  "marketplace-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Top-level fields",
+      "hash": "35d8ff64aeb46858bf497f6e5a9208857b8be7fe0d0d3ae1fb07202a1722a054"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin entries",
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Marketplace file",
+      "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b"
+    }
+  ],
+  "marketplace-source-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin sources",
+      "hash": "6c045d997cede819c04ace755a58d450634518ebee6f61bc4084355f75edb95b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "github plugin source",
+      "hash": "974e70540ed101a13c8c9df0dc41b452d3828548c32579aa431a6d8f056b44c5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "url plugin source",
+      "hash": "3969e0bb409d56c54ac58ae537e6fa64f9ff273b77004594b4b1588a34a05877"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "git-subdir plugin source",
+      "hash": "1247e318a5e7ddbf1e90397ca565c8653c982275899735aba14a160cdb79389d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "npm plugin source",
+      "hash": "f737dcb3514b90ea839144486e575f6576369113107648518058866e2dbfecc9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "archive plugin source",
+      "hash": "1d73623b26f5ec6890cf1c0a502695d78fb2293fd85935cd6a24118107595d1d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "command plugin source",
+      "hash": "070a308b4e2bbdf05d944f76313779b9030f95f32e05f5af70c1e4664e6144eb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Invalid input on a source",
+      "hash": "c5c06f4738b2ba4226645d860f41555d9420a4a3a6e58300529feb2bcdcefb5b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Fields by type",
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",
