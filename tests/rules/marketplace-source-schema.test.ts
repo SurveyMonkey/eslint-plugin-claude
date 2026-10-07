@@ -3,7 +3,7 @@
 // tests/configs.test.ts.
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
-import { Linter, RuleTester } from 'eslint'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import sourceSchema from '../../src/rules/marketplace-source-schema.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
@@ -18,14 +18,6 @@ const types = 'github, url, git-subdir, npm, archive, command'
 const text = (length: number) => 'a'.repeat(length)
 const command = (value: unknown) => withSource({ source: 'command', command: value })
 const archive = (url: unknown) => withSource({ source: 'archive', url })
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redIt = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
-const redJson5Tester = new RedTester({ plugins: { json }, language: 'json/json5' })
 
 jsonTester.run('marketplace-source-schema (valid)', rule, {
   valid: [
@@ -121,7 +113,7 @@ jsonTester.run('marketplace-source-schema (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-source-schema (invalid)', rule, {
+jsonTester.run('marketplace-source-schema (invalid)', rule, {
   valid: [],
   invalid: [
     // The type.
@@ -576,7 +568,7 @@ json5Tester.run('marketplace-source-schema (JSON5 valid)', rule, {
   invalid: [],
 })
 
-redJson5Tester.run('marketplace-source-schema (JSON5 invalid)', rule, {
+json5Tester.run('marketplace-source-schema (JSON5 invalid)', rule, {
   valid: [],
   invalid: [
     {
@@ -615,14 +607,14 @@ describe('marketplace-source-schema options', () => {
       { filename: '/repo/.claude-plugin/marketplace.json' },
     )
 
-  redIt('names a team value as the configured limit and not as the docs limit', () => {
+  it('names a team value as the configured limit and not as the docs limit', () => {
     const [report] = lint(150, [{ max: 100 }])
     expect(report?.message).toBe(
       'The "command" of a "command" source has 150 characters. The configured limit is 100.',
     )
   })
 
-  redIt('keeps the default when the option object is empty', () => {
+  it('keeps the default when the option object is empty', () => {
     const [report] = lint(501, [{}])
     expect(report?.message).toBe(
       'The "command" of a "command" source has 501 characters. The docs allow at most 500.',
