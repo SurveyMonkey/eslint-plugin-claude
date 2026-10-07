@@ -1,7 +1,7 @@
 // The rule reads the `hooks` of each entry in `plugins` in
 // `.claude-plugin/marketplace.json`. The files glob and the decoy files are in
 // tests/configs.test.ts.
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('marketplace-entry-hooks-inline')
 const filename = '.claude-plugin/marketplace.json'
@@ -65,5 +65,13 @@ jsonTester.run('marketplace-entry-hooks-inline (invalid)', rule, {
       filename,
       errors: [{ messageId: 'string' }],
     },
+  ],
+})
+
+// JSON5 allows a bare key. The rule reads it the same way.
+json5Tester.run('marketplace-entry-hooks-inline (JSON5)', rule, {
+  valid: [{ code: '{ plugins: [{ hooks: {} }] }' }],
+  invalid: [
+    { code: "{ plugins: [{ hooks: './hooks.json' }] }", errors: [{ messageId: 'string' }] },
   ],
 })
