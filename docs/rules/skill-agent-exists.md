@@ -39,6 +39,12 @@ real directory before a link to it. It skips `.git` and `node_modules`. It does 
 whose real path is out of the repository. Such a link can hold the agent, so the rule then makes
 no report.
 
+The search for the repository starts at `.claude/`. Without a `.git` entry, `.claude/` is the
+repository, so a link out of `.claude/` gives no report. A `.claude` link whose target has its own
+`.git` entry makes that target the repository. A `.claude/agents/` above the project is then out of
+it, so the rule makes no report for it. The rule reads a `plugin.json` for a plugin skill or
+command only. A project `.claude/` has no manifest for the rule.
+
 For a plugin skill or command file, the rule reads each Markdown file below `agents/` in the
 plugin root.[^plugin] An agent has its `name`, or the file name without `.md`. The value can be
 the scoped name `<plugin>:<folder>:<name>`.[^plugin] The rule also accepts the bare name, because

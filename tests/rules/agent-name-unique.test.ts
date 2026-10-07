@@ -181,20 +181,46 @@ describe('agent-name-unique', () => {
     })
   })
 
-  it('compares other files by path when the real path of this file is unreadable', () => {
+  it('stays silent when the real path of this file is unreadable', () => {
     const root = repo({
       '.claude/agents/a.md': agent('', 'dup'),
       '.claude/agents/b.md': agent('', 'dup'),
     })
     realpathFails.path = path.join(root, '.claude/agents/a.md')
     try {
-      const messages = lint(root, '.claude/agents/a.md')
-      expect(messages).toHaveLength(1)
-      expect(messages[0]?.message).toContain('`b.md`')
-      expect(messages[0]?.message).not.toContain('`a.md`')
+      expect(lint(root, '.claude/agents/a.md')).toEqual([])
     } finally {
       realpathFails.path = null
     }
+    // With a readable real path, the same tree reports `b.md`.
+    const messages = lint(root, '.claude/agents/a.md')
+    expect(messages).toHaveLength(1)
+    expect(messages[0]?.message).toContain('`b.md`')
+  })
+
+  // A real path failure on a file that ESLint just read gives no real path to compare. The rule
+  // cannot tell a link to the linted file from a second agent, so it makes no report.
+  it('stays silent for a link to this file when the real path of this file is unreadable', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({ '.claude/agents/a.md': agent('', 'dup') })
+    symlinkSync(path.join(root, '.claude/agents/a.md'), path.join(root, '.claude/agents/alias.md'))
+    realpathFails.path = path.join(root, '.claude/agents/a.md')
+    try {
+      expect(lint(root, '.claude/agents/a.md')).toEqual([])
+    } finally {
+      realpathFails.path = null
+    }
+  })
+
+  // The target of a `.claude` link holds its own `.git`. It is the bound, as for the skill rules.
+  it('reads the agents of a .claude link whose target holds its own .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    const target = repo({ 'agents/b.md': agent('', 'dup') })
+    symlinkSync(target, path.join(root, '.claude'))
+    expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
   })
 
   // A `.claude` link goes to a directory out of the repository. The rule reads no file there.

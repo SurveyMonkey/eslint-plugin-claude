@@ -2,7 +2,7 @@
 // (docs/rules/agent-skills-preloadable.md).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { type AgentScope, agentScope } from '../agent-scope.ts'
+import { type AgentFile, classifyAgentFile } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -22,7 +22,7 @@ type MessageIds = 'disabled'
  *  The result is null when the rule cannot know that directory. A plugin
  *  manifest that sets `skills` adds directories. A manifest that the rule
  *  cannot read can set it. */
-function skillsDirOf(scope: AgentScope, bound: string): string | null {
+function skillsDirOf(scope: AgentFile, bound: string): string | null {
   if (scope.plugin) {
     const manifest = readManifest(scope.root, bound)
     if (manifest === UNREADABLE || (manifest !== null && 'skills' in manifest)) {
@@ -60,7 +60,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageIds }> = {
     },
   },
   create(context) {
-    const scope = agentScope(context.filename)
+    const scope = classifyAgentFile(context.filename)
     if (scope === null) {
       return {}
     }
