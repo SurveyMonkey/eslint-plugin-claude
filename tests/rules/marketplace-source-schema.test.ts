@@ -677,3 +677,42 @@ describe('marketplace-source-schema options', () => {
     expect(() => lint(10, [option])).toThrow(/Key "claude\/marketplace-source-schema"/)
   })
 })
+
+// Each report sits on the value that has the fault. The expected column is the
+// place of the value text in the one-line JSON.
+const located: [string, unknown, string][] = [
+  ['repoFormat', { source: 'github', repo: 'x' }, '"x"'],
+  ['urlScheme', { source: 'url', url: 'ftp://x' }, '"ftp://x"'],
+  ['archiveScheme', { source: 'archive', url: 'http://x.test/f' }, '"http://x.test/f"'],
+  ['archiveHost', { source: 'archive', url: 'https://localhost/f' }, '"https://localhost/f"'],
+  ['shaFormat', { source: 'github', repo: 'o/r', sha: 'abc' }, '"abc"'],
+  ['npmParent', { source: 'npm', package: '../x' }, '"../x"'],
+  ['sha256Format', { source: 'archive', url: 'https://x.test/f', sha256: 'abc' }, '"abc"'],
+  ['commandNotPrintable', { source: 'command', command: 'a\tb' }, '"a\\tb"'],
+  ['commandSpaceRun', { source: 'command', command: 'a     b' }, '"a     b"'],
+  ['commandTooLong', { source: 'command', command: 'a'.repeat(501) }, `"${'a'.repeat(501)}"`],
+  ['timeout', { source: 'command', command: 'x', timeout: 0 }, '0'],
+  ['mode', { source: 'command', command: 'x', mode: 'move' }, '"move"'],
+  ['notString', { source: 'npm', package: 5 }, '5'],
+]
+
+jsonTester.run('marketplace-source-schema (location)', rule, {
+  valid: [],
+  invalid: located.map(([messageId, source, needle]) => {
+    const code = withSource(source)
+    const column = code.indexOf(needle) + 1
+    return {
+      code,
+      filename,
+      errors: [
+        {
+          messageId: messageId as 'repoFormat',
+          line: 1,
+          column,
+          endLine: 1,
+          endColumn: column + needle.length,
+        },
+      ],
+    }
+  }),
+})
