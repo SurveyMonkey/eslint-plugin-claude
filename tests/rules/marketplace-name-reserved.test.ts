@@ -4,7 +4,7 @@
 
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
-import { Linter, RuleTester } from 'eslint'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import {
   ANTHROPIC_MARKETPLACE_NAMES,
@@ -17,12 +17,6 @@ import { jsonTester } from '../rule-tester.test-support.ts'
 const { rule } = named
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (marketplaceName: string) => JSON.stringify({ name: marketplaceName, plugins: [] })
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
 
 jsonTester.run('marketplace-name-reserved (valid)', rule, {
   valid: [
@@ -59,7 +53,7 @@ jsonTester.run('marketplace-name-reserved (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-name-reserved (invalid)', rule, {
+jsonTester.run('marketplace-name-reserved (invalid)', rule, {
   valid: [],
   invalid: [
     ...ANTHROPIC_MARKETPLACE_NAMES.map((marketplaceName) => ({
@@ -120,7 +114,7 @@ redTester.run('marketplace-name-reserved (invalid)', rule, {
     {
       code: '{"name": "acme-tools", "name": "inline"}',
       filename,
-      errors: [{ messageId: 'internal', line: 1, column: 33 }],
+      errors: [{ messageId: 'internal', line: 1, column: 32 }],
     },
   ],
 })
@@ -140,11 +134,11 @@ describe('marketplace-name-reserved options', () => {
       { filename: '/repo/.claude-plugin/marketplace.json' },
     )
 
-  it.fails('reports an official name when the option is not set', () => {
+  it('reports an official name when the option is not set', () => {
     expect(lint([]).map((m) => m.messageId)).toEqual(['official'])
   })
 
-  it.fails('keeps the default when the option object is empty', () => {
+  it('keeps the default when the option object is empty', () => {
     expect(lint([{}]).map((m) => m.messageId)).toEqual(['official'])
   })
 
