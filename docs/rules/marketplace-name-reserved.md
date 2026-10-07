@@ -34,8 +34,8 @@ reports the name in these cases:
   character. The letters must match, because the docs give no case folding for these names.
   `allowOfficial` does not silence this report.
 - **Internal names.** The name is `inline`, `builtin`, `skills-dir`, `synced` or
-  `claude-plugin-test`. These are the names that Claude Code uses for plugins that do not come from
-  a marketplace, and a test name.[^reserved]
+  `claude-plugin-test`. Claude Code uses the first four for plugins that do not come
+  from a marketplace. The docs also reserve the last.[^reserved]
 - **Package-manager names.** The name is `npm`, `pip`, `uv`, `cargo`, `github` or `gh`, in any letter
   case.[^reserved]
 - **The `claudeai-` prefix.** Claude Code reserves it for marketplaces that claude.ai

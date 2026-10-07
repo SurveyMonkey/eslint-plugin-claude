@@ -33,7 +33,7 @@ export const ANTHROPIC_MARKETPLACE_NAMES: readonly string[] = [
 ]
 
 /** The names that Claude Code uses for plugins that do not come from a
- *  marketplace, and the test name. No marketplace can use them. */
+ *  marketplace, and `claude-plugin-test`, which the docs also reserve. */
 export const INTERNAL_MARKETPLACE_NAMES: readonly string[] = [
   'inline',
   'builtin',
