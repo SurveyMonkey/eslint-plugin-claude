@@ -102,7 +102,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/marketplace-entry-hooks-inline`](docs/rules/marketplace-entry-hooks-inline.md) | The `hooks` of an entry is an inline object, not a path or an array | `error` | `error` |
 | [`claude/marketplace-source-schema`](docs/rules/marketplace-source-schema.md) | The object `source` of an entry has a known type, its required fields, and values that the docs allow | `error` | `error` |
 | [`claude/marketplace-relative-source-format`](docs/rules/marketplace-relative-source-format.md) | A string `source` and `metadata.pluginRoot` are relative paths inside the marketplace | `error` | `error` |
-| [`claude/marketplace-schema`](docs/rules/marketplace-schema.md) | The required keys and the field types of `marketplace.json`, its owner, and its entries | `error` | `error` |
+| [`claude/marketplace-schema`](docs/rules/marketplace-schema.md) | The required keys, the name characters and the field types of `marketplace.json`, its owner, and its entries | `error` | `error` |
 
 ### Permissions and sandbox
 

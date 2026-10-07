@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/marketplace-schema, which reports a marketplace.json that lacks a required key or an owner name, or that sets a field of the top level, owner, metadata or an entry to a value of the wrong type.
+description: The ESLint rule claude/marketplace-schema, which reports a marketplace.json that lacks a required key or an owner name, that has a name with a character that the docs bar, or that sets a field of the top level, owner, metadata or an entry to a value of the wrong type.
 owner: brianespinosa
 created: 2026-10-06
 related_issues: [12]
@@ -71,7 +71,8 @@ These cases are the business of other rules, so this rule does not report them:
 - The text of a string `source` and of `metadata.pluginRoot`. See
   `marketplace-relative-source-format`.
 
-The rule does not check these cases, because the docs give no type or no test for them:
+The rule does not check these cases. The docs give no type or no test for them, or they are for
+another rule, or Claude Code ignores them:
 
 - The type of `owner.email` and `owner.url`. The docs call them optional.[^top]
 - The type of the top-level `metadata` itself. The docs give types for `metadata.description`,
@@ -87,12 +88,12 @@ The rule does not check these cases, because the docs give no type or no test fo
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 
 `claude plugin validate` reports an empty `name` and an empty `owner.name`.[^validation] It
-reports a `name` with spaces, path separators, `..` or control characters.[^validation] It
-reports an entry name with spaces or control characters too.[^validation] It also
-reports a warning for an entry `relevance`, `metadata` or `experimental` that is not an object.
-The warning says that Claude Code ignores the value at load time.[^validation] The rule does not
-report those three, because it reports at `error`. The docs list no validate message for the other
-type faults, so the rule reports cases that validate may not.
+reports a `name` with spaces, path separators, `..` or control characters. It reports an entry
+name with spaces or control characters too.[^validation] It also gives a warning for an entry
+`relevance`, `metadata` or `experimental` that is not an object. The warning says that Claude
+Code ignores the value at load time.[^validation] The rule does not report those three, because
+it reports at `error`. The docs list no validate message for the other type faults. So the rule
+reports cases that validate may not.
 
 Fail:
 
