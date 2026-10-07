@@ -54,10 +54,11 @@ The types are these.[^top][^entries]
 | Entry | `headers`, `metadata`, `experimental`, `relevance` | object |
 | Entry | `hooks` | object, string or array |
 
-The rule reports a wrong type once, and only here. Other `marketplace-*` rules read the same
-fields. They give no report on a value of the wrong type, and leave it to this rule. These are the
-fields in question: the top-level `name`, `metadata.pluginRoot`, and the entry `version`,
-`headersHelper`, `hooks` and `source`.
+The rule reports a wrong type once. Other `marketplace-*` rules read the same fields. They give
+no report on a value of the wrong type, and leave it to this rule. These are the fields in
+question: the top-level `name`, `metadata.pluginRoot`, and the entry `version`, `headersHelper`,
+`hooks` and `source`. The fields inside an object `source` are the exception.
+`marketplace-source-schema` reports those.
 
 These cases are the business of other rules, so this rule does not report them:
 

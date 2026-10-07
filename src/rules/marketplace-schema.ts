@@ -1,8 +1,8 @@
 // The top-level fields, the `owner`, and the entries of `marketplace.json`:
 // the fields that the docs require, and the type of each field that the docs
 // list (docs/rules/marketplace-schema.md). This rule reports a value of the
-// wrong type for each field that another `marketplace-*` rule reads, and no
-// other rule does.
+// wrong type for each top-level or entry field that another `marketplace-*`
+// rule reads. It does not read the fields inside an object `source`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ObjectNode, type ValueNode } from '../marketplace-json.ts'

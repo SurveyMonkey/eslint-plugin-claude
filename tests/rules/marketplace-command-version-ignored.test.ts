@@ -31,7 +31,7 @@ jsonTester.run('marketplace-command-version-ignored (valid)', rule, {
       }),
       filename,
     },
-    // A value of the wrong type is for the schema rule.
+    // A value of the wrong type is for `marketplace-schema` or `marketplace-source-schema`.
     { code: manifest({ name: 'p', source: command, version: 1 }), filename },
     { code: manifest({ name: 'p', source: command, version: null }), filename },
     { code: manifest({ name: 'p', source: { source: 3 }, version: '1' }), filename },

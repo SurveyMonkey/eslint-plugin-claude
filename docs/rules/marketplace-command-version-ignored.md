@@ -29,10 +29,11 @@ pinned version, and gets none.
 The rule reads each object in `plugins`. When an entry has two `source` keys or two `version` keys,
 the rule reads the last of each, as `JSON.parse` does. The report is on the `version` member.
 
-The rule does not check these values. They are faults for `marketplace-schema`:
+The rule does not check these values. Two other rules report them:
 
-- an entry that is not an object, and a `source` that is not an object with a string `source`
-- a `version` that is not a string
+- `marketplace-schema` reports an entry that is not an object, a `source` that is not a string or
+  an object, and a `version` that is not a string.
+- `marketplace-source-schema` reports an object `source` with no string `source` key.
 
 A `version` inside the source object, a top-level `version`, and the `version` of a `plugin.json`
 are not an entry `version`. The rule does not read them. The manifest `version` still counts for a

@@ -1,7 +1,8 @@
 // The reader that the `marketplace-*` rules share. A rule gets the top-level
 // members of `marketplace.json` and the entries of `plugins`. A value of the
-// wrong type gives nothing here. The rule `marketplace-schema` reports it, and
-// no other rule does.
+// wrong type gives nothing here. The rule `marketplace-schema` reports it for
+// each field that it reads. `marketplace-source-schema` reports the fields
+// inside an object `source`.
 import type { JSONRuleVisitor } from '@eslint/json'
 
 export type DocumentNode = Parameters<NonNullable<JSONRuleVisitor['Document']>>[0]

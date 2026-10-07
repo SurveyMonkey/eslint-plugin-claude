@@ -25,7 +25,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' }> = {
     return {
       Document(node) {
         for (const entry of pluginEntries(node)) {
-          // A `source` that is not an object with a string type is for `marketplace-schema`.
+          // A `source` that is neither a string nor an object is for `marketplace-schema`.
+          // An object `source` with no string `source` key is for `marketplace-source-schema`.
           const type = lastMember(lastMember(entry, 'source')?.value, 'source')?.value
           const version = lastMember(entry, 'version')
           if (
