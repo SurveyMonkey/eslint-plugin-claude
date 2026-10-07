@@ -25,6 +25,18 @@ jsonTester.run('marketplace-name-reserved (valid)', rule, {
     // A reserved name inside a longer name, or with a letter missing.
     { code: manifest('my-claude-code-plugins'), filename },
     { code: manifest('claude-code-plugin'), filename },
+    // A longer name that starts with a reserved name is not a spelling of it.
+    { code: manifest('healthcare-tools'), filename },
+    { code: manifest('claude-code-plugins-extra'), filename },
+    // A symbol takes the place of a hyphen only, so a final symbol is not a spelling.
+    { code: manifest('claude-code-plugin.'), filename },
+    // A space, a digit and an underscore are not symbols for a hyphen.
+    { code: manifest('claude code plugins'), filename },
+    { code: manifest('claude2code2plugins'), filename },
+    // The letters of a spelling must match in case, and so must an internal name.
+    { code: manifest('Claude.Code.Plugins'), filename },
+    { code: manifest('Inline'), filename },
+    { code: manifest('BUILTIN'), filename },
     // An underscore for a hyphen is not a spelling of a reserved name.
     { code: manifest('claude_code_plugins'), filename },
     // The docs give no case folding for the official names or the prefix.
@@ -96,6 +108,17 @@ jsonTester.run('marketplace-name-reserved (invalid)', rule, {
       code: manifest(marketplaceName),
       filename,
       errors: [{ messageId: 'spelling' as const, data: { name: marketplaceName, reserved } }],
+    })),
+    // Each ASCII symbol other than a hyphen and an underscore counts as a symbol for a hyphen.
+    ...[...'!"#$%&\'()*+,./:;<=>?@[\\]^`{|}~'].map((symbol) => ({
+      code: manifest(`claude${symbol}code-plugins`),
+      filename,
+      errors: [
+        {
+          messageId: 'spelling' as const,
+          data: { name: `claude${symbol}code-plugins`, reserved: 'claude-code-plugins' },
+        },
+      ],
     })),
     // `allowOfficial` does not silence a spelling, an internal name, a
     // package-manager name or the prefix.

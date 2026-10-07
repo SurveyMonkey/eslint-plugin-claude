@@ -33,6 +33,9 @@ jsonTester.run('marketplace-headers-helper-command (valid)', rule, {
     { code: withHelper('/opt/bin/mint'), filename },
     { code: withHelper('~/bin/mint'), filename },
     { code: withHelper('bin/mint'), filename },
+    // A `./` or `../` inside the first word, and three dots, are not a relative start.
+    { code: withHelper('/opt/tools/../bin/mint'), filename },
+    { code: withHelper('.../mint'), filename },
     // A relative path after the first word is not the command.
     { code: withHelper('mint-token ./config.json'), filename },
     { code: withHelper('.hidden-tool'), filename },

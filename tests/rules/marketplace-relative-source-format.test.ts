@@ -22,6 +22,7 @@ jsonTester.run('marketplace-relative-source-format (valid)', rule, {
     { code: withSource('./a//b'), filename },
     // A bare name with a `pluginRoot`.
     { code: withSource('formatter', { pluginRoot: './plugins' }), filename },
+    { code: withSource('a:b', { pluginRoot: './plugins' }), filename },
     // A `pluginRoot` has no effect on a source that starts with `./`.
     { code: withSource('./formatter', { pluginRoot: './plugins' }), filename },
     // A relative `pluginRoot` with or without `./`, and the root itself.
@@ -74,6 +75,8 @@ jsonTester.run('marketplace-relative-source-format (invalid)', rule, {
     { code: withSource(''), filename, errors: [{ messageId: 'noPrefix', data: { path: '' } }] },
     // A bare name without a `pluginRoot`, and with a `pluginRoot` that is not a string.
     { code: withSource('formatter'), filename, errors: [{ messageId: 'noPrefix' }] },
+    // A drive letter needs a slash to be absolute. Else it is a name with no prefix.
+    { code: withSource('C:p'), filename, errors: [{ messageId: 'noPrefix' }] },
     { code: withSource('formatter', 'x'), filename, errors: [{ messageId: 'noPrefix' }] },
     {
       code: withSource('formatter', { pluginRoot: 5 }),

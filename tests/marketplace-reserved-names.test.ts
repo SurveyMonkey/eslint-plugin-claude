@@ -10,6 +10,30 @@ import {
 
 describe('marketplace reserved names', () => {
   it('holds the 19 official, community and directory names, each once', () => {
+    // The names are written out from the "Reserved names" block of the live docs.
+    expect([...ANTHROPIC_MARKETPLACE_NAMES].sort()).toEqual(
+      [
+        'claude-code-marketplace',
+        'claude-code-plugins',
+        'claude-plugins-official',
+        'anthropic-marketplace',
+        'anthropic-plugins',
+        'agent-skills',
+        'anthropic-agent-skills',
+        'life-sciences',
+        'knowledge-work-plugins',
+        'claude-for-legal',
+        'claude-for-financial-services',
+        'financial-services-plugins',
+        'first-party-plugins',
+        'claude-tag-plugins',
+        'claude-community',
+        'claude-plugins-community',
+        'healthcare',
+        'anthropic-plugin-directory',
+        'claude-plugin-directory',
+      ].sort(),
+    )
     expect(ANTHROPIC_MARKETPLACE_NAMES).toHaveLength(19)
     expect(new Set(ANTHROPIC_MARKETPLACE_NAMES).size).toBe(19)
   })
