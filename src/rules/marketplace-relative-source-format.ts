@@ -3,10 +3,31 @@
 // system (docs/rules/marketplace-relative-source-format.md).
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
+import { lastMember, pluginEntries, type ValueNode } from '../marketplace-json.ts'
 
 const name = 'marketplace-relative-source-format' as const
 
-const rule: JSONRuleDefinition<{ MessageIds: 'network' | 'absolute' | 'parent' | 'noPrefix' }> = {
+// Two slashes or two backslashes at the start, in any mix.
+const NETWORK = /^[\\/]{2}/
+// A root slash or backslash at the start, or a drive letter with a slash.
+const ABSOLUTE = /^(?:[\\/]|[A-Za-z]:[\\/])/
+// A bare name is one directory name, with no slash of either kind.
+const BARE_NAME = /^[^\\/]+$/
+
+type MessageIds = 'network' | 'absolute' | 'parent' | 'noPrefix'
+
+/** The first fault that every relative path has, or undefined. */
+function pathFault(path: string): Exclude<MessageIds, 'noPrefix'> | undefined {
+  if (NETWORK.test(path)) {
+    return 'network'
+  }
+  if (ABSOLUTE.test(path)) {
+    return 'absolute'
+  }
+  return path.includes('..') ? 'parent' : undefined
+}
+
+const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
   meta: {
     type: 'problem',
     docs: {
@@ -24,8 +45,42 @@ const rule: JSONRuleDefinition<{ MessageIds: 'network' | 'absolute' | 'parent' |
         'The "source" "{{path}}" does not start with "./". A relative path starts with "./", and a bare name needs "metadata.pluginRoot".',
     },
   },
-  create() {
-    return {}
+  create(context) {
+    /** Report the first fault of the string `value`. A source is `prefixed`: it
+     *  starts with `./`, or is `.`, or is a bare name where `bareNames` is true. */
+    function check(
+      value: ValueNode | undefined,
+      field: string,
+      prefixed: boolean,
+      bareNames: boolean,
+    ): void {
+      // A value that is not a string is for `marketplace-schema`.
+      if (value?.type !== 'String') {
+        return
+      }
+      const path = value.value
+      const data = { field, path }
+      const fault = pathFault(path)
+      if (fault !== undefined) {
+        context.report({ node: value, messageId: fault, data })
+        return
+      }
+      const valid = path === '.' || path.startsWith('./') || (bareNames && BARE_NAME.test(path))
+      if (prefixed && !valid) {
+        context.report({ node: value, messageId: 'noPrefix', data })
+      }
+    }
+    return {
+      Document(node) {
+        const pluginRoot = lastMember(lastMember(node.body, 'metadata')?.value, 'pluginRoot')?.value
+        // The docs set no prefix for `pluginRoot`: it is a relative path inside the marketplace.
+        check(pluginRoot, '"metadata.pluginRoot"', false, false)
+        const rooted = pluginRoot?.type === 'String' && pluginRoot.value !== ''
+        for (const entry of pluginEntries(node)) {
+          check(lastMember(entry, 'source')?.value, '"source"', true, rooted)
+        }
+      },
+    }
   },
 }
 

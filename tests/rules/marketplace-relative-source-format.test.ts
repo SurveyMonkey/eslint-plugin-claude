@@ -1,9 +1,6 @@
 // The rule reads the string `source` of each entry in `plugins`, and
 // `metadata.pluginRoot`, in `.claude-plugin/marketplace.json`. The files glob
 // and the decoy files are in tests/configs.test.ts.
-import json from '@eslint/json'
-import { RuleTester } from 'eslint'
-import { it } from 'vitest'
 import relativeSource from '../../src/rules/marketplace-relative-source-format.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
 
@@ -14,13 +11,6 @@ const manifest = (plugins: unknown[], metadata?: unknown) =>
 const withSource = (source: unknown, metadata?: unknown) =>
   manifest([{ name: 'p', source }], metadata)
 const withRoot = (pluginRoot: unknown) => manifest([], { pluginRoot })
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
-const redJson5Tester = new RedTester({ plugins: { json }, language: 'json/json5' })
 
 jsonTester.run('marketplace-relative-source-format (valid)', rule, {
   valid: [
@@ -47,7 +37,6 @@ jsonTester.run('marketplace-relative-source-format (valid)', rule, {
     { code: withSource(['../x']), filename },
     { code: withRoot(5), filename },
     { code: withRoot(null), filename },
-    { code: withSource('formatter', 'x'), filename },
     { code: withSource('./p', null), filename },
     { code: manifest(['/abs', null, 3]), filename },
     { code: JSON.stringify({ name: 'acme', plugins: '/abs' }), filename },
@@ -66,7 +55,7 @@ jsonTester.run('marketplace-relative-source-format (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-relative-source-format (invalid)', rule, {
+jsonTester.run('marketplace-relative-source-format (invalid)', rule, {
   valid: [],
   invalid: [
     {
@@ -77,14 +66,15 @@ redTester.run('marketplace-relative-source-format (invalid)', rule, {
           messageId: 'noPrefix',
           data: { path: 'plugins/formatter' },
           line: 1,
-          column: 51,
-          endColumn: 70,
+          column: 48,
+          endColumn: 67,
         },
       ],
     },
     { code: withSource(''), filename, errors: [{ messageId: 'noPrefix', data: { path: '' } }] },
     // A bare name without a `pluginRoot`, and with a `pluginRoot` that is not a string.
     { code: withSource('formatter'), filename, errors: [{ messageId: 'noPrefix' }] },
+    { code: withSource('formatter', 'x'), filename, errors: [{ messageId: 'noPrefix' }] },
     {
       code: withSource('formatter', { pluginRoot: 5 }),
       filename,
@@ -110,7 +100,7 @@ redTester.run('marketplace-relative-source-format (invalid)', rule, {
     {
       code: withSource('../x'),
       filename,
-      errors: [{ messageId: 'parent', data: { path: '../x' } }],
+      errors: [{ messageId: 'parent', data: { field: '"source"', path: '../x' } }],
     },
     { code: withSource('./a/../b'), filename, errors: [{ messageId: 'parent' }] },
     { code: withSource('./a..b'), filename, errors: [{ messageId: 'parent' }] },
@@ -141,13 +131,13 @@ redTester.run('marketplace-relative-source-format (invalid)', rule, {
     { code: withRoot('//host/p'), filename, errors: [{ messageId: 'network' }] },
     // Each entry, and the `pluginRoot`, report on their own.
     {
-      code: manifest([{ source: './a' }, { source: 'b' }, { source: '../c' }], {
+      code: manifest([{ source: './a' }, { source: 'b/c' }, { source: '../c' }], {
         pluginRoot: '/r',
       }),
       filename,
       errors: [
-        { messageId: 'absolute', data: { field: '"metadata.pluginRoot"' } },
-        { messageId: 'noPrefix', data: { path: 'b' } },
+        { messageId: 'absolute', data: { field: '"metadata.pluginRoot"', path: '/r' } },
+        { messageId: 'noPrefix', data: { path: 'b/c' } },
         { messageId: 'parent', data: { field: '"source"', path: '../c' } },
       ],
     },
@@ -175,13 +165,17 @@ json5Tester.run('marketplace-relative-source-format (JSON5 valid)', rule, {
   invalid: [],
 })
 
-redJson5Tester.run('marketplace-relative-source-format (JSON5 invalid)', rule, {
+json5Tester.run('marketplace-relative-source-format (JSON5 invalid)', rule, {
   valid: [],
   invalid: [
     { code: "{ plugins: [{ source: '../x' }] }", errors: [{ messageId: 'parent' }] },
     {
       code: "{ metadata: { pluginRoot: '/abs' }, plugins: [{ source: 'x' }] }",
-      errors: [{ messageId: 'absolute' }, { messageId: 'noPrefix' }],
+      errors: [{ messageId: 'absolute' }],
+    },
+    {
+      code: "{ metadata: { pluginRoot: './r' }, plugins: [{ source: 'a/b' }] }",
+      errors: [{ messageId: 'noPrefix' }],
     },
   ],
 })
