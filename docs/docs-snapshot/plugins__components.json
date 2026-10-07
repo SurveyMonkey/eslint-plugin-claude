@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "7639f74ce85a2d1ce05c3ee5116831d46ee059f9b9d9a740f61224a8fc4d10f6",
+  "hash": "4f1eb7aebd7604eaaea6b02c35151de6323f958258586005f0eeb561364d7850",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -28,7 +28,7 @@
     },
     {
       "id": "agents",
-      "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf"
+      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a"
     },
     {
       "id": "organize-agents-in-subfolders",
@@ -127,8 +127,8 @@
     {
       "heading": "Agents",
       "id": "agents",
-      "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf",
-      "text": "### Agents\n\nA [subagent](/docs/en/sub-agents) is a separate assistant, with its own instructions and context window, that Claude can delegate a task to. Each Markdown file under `agents/` defines one:\n\n```markdown agents/security-reviewer.md theme={null}\n---\nname: security-reviewer\ndescription: Reviews code changes for security issues. Use after edits to authentication or input handling.\nmodel: sonnet\n---\n\nYou are a security reviewer. Read the changed files and report injection, authentication, and secrets-handling risks.\n```\n\nThis agent is named `my-plugin:security-reviewer`, and the user can [invoke it explicitly](/docs/en/sub-agents#invoke-subagents-explicitly) with `@agent-my-plugin:security-reviewer`. The name form is `<plugin>:<name>`, where `<name>` comes from the frontmatter, or from the file name when there is none.\n\nThe `agents` manifest key replaces the `agents/` scan."
+      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a",
+      "text": "### Agents\n\nA [subagent](/docs/en/sub-agents) is a separate assistant, with its own instructions and context window, that Claude can delegate a task to. Each Markdown file under `agents/` defines one:\n\n```markdown agents/security-reviewer.md theme={null}\n---\nname: security-reviewer\ndescription: Reviews code changes for security issues. Use after edits to authentication or input handling.\nmodel: sonnet\n---\n\nYou are a security reviewer. Read the changed files and report injection, authentication, and secrets-handling risks.\n```\n\nThis agent is named `my-plugin:security-reviewer`, and the user can [invoke it explicitly](/docs/en/sub-agents#invoke-subagents-explicitly) with `@agent-my-plugin:security-reviewer`. The name form is `<plugin>:<name>`, where `<name>` comes from the frontmatter `name` field, or from the file name when that field is missing.\n\nThe `agents` manifest key replaces the `agents/` scan."
     },
     {
       "heading": "Skills",

@@ -3,7 +3,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
     },
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -30,12 +30,12 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Subagent files Claude Code skips",
-      "hash": "1fe3977a088b6a3a9c48ef627a215449b182befca899d9e377971ef4a9f4971f"
+      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -62,7 +62,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
     }
   ],
   "agent-memory-auto-memory-off": [
@@ -112,7 +112,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Supported frontmatter fields",
-      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -167,7 +167,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "07fdad85e876ee8d9f64a7512bc21291bcaa2fc4c380a431d55261c2727956ca"
+      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -244,6 +244,94 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "marketplace-command-version-ignored": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "How Claude Code computes the version",
+      "hash": "4f6d0641506dc5f6ebf4f9d7a0e10856f9495ba9a866466123ae3d5e232c301b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin sources",
+      "hash": "6c045d997cede819c04ace755a58d450634518ebee6f61bc4084355f75edb95b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+    }
+  ],
+  "marketplace-entry-hooks-inline": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Hooks in an entry",
+      "hash": "9507e979be52f296c481e28bcbea85c45710869175610bfeff866de42d70ebdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Failures that validation doesn't catch",
+      "hash": "795dba9f5d94d758741b3c3d4db584720ff047da7a5723244400bdca274b4792"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "marketplace-headers-helper-command": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin entries",
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Write the headersHelper command",
+      "hash": "6317de714c4b2dcad6898568d25a5a9d9715252b43b4c82a47b982c0e599600a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Fields by type",
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin sources",
+      "hash": "6c045d997cede819c04ace755a58d450634518ebee6f61bc4084355f75edb95b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+    }
+  ],
+  "marketplace-name-reserved": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Reserved names",
+      "hash": "b9d4b15562d660e3e0079e82b892f2c421d6108d116d93112149996e24592d38"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Marketplace is registered from an untrusted source",
+      "hash": "4fbd7b17d887393fa840edc4397381b8ab703439e7870ca3f4f48036b936023f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Marketplace name is another spelling of a reserved name",
+      "hash": "7ccf99986b1e10e7d033cfdcd4df8a34e27361e11da6011b491dd8af313a62fb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+      "heading": "Problems that surface when you add or install",
+      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
     }
   ],
   "output-style-frontmatter-schema": [
@@ -485,7 +573,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Agents",
-      "hash": "b6b5f89f21d00ef05029cca088b275935264d236f7ba58e92358fa406d49deaf"
+      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a"
     }
   ],
   "skill-allowed-tools-broad": [

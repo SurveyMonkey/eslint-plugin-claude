@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "a516356b9c452b0f893cb12b68365d25567b2444b0c1cdc39978f86d220e196a",
+  "hash": "9c4f7fc97d8f2f471c9939b8b8f83592225a4261d2aae111ed00de25de56e1ba",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "3bc7bb90d71fad7840793ffa0ca15f73b728f66be543a057856ca1e137bcd33c"
+      "hash": "881a93f92521d05718ed226950d3c2287aec7ece207346e0ea6ef1f516566b0e"
     },
     {
       "id": "automatic-retries",
@@ -244,7 +244,7 @@
     },
     {
       "id": "could-not-load-aws-or-google-cloud-credentials",
-      "hash": "da8229062134931a02ec1822cab2630c22b010aaf920b81e119f779933edc2eb"
+      "hash": "c01447bf4c03fa0cf08d3b7b397aca3b8d5afa31db1da2f11d69be85b932c49e"
     },
     {
       "id": "aws-default-chain-credential-resolve-timed-out",
@@ -1057,6 +1057,18 @@
       "id": "agent-would-be-spawned-with-zero-tools",
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923",
       "text": "### Agent would be spawned with zero tools\n\nEvery entry in the subagent's [`tools` list](/docs/en/sub-agents#supported-frontmatter-fields) failed to match a usable tool, so Claude Code refused to launch the subagent: with no tools, it couldn't act. The message groups your entries by what went wrong:\n\n* **Unrecognized**: the entry matches no tool name, usually a typo such as `Grpe` for `Grep`.\n* **Not available to subagents**: the entry names a real tool that [subagents can't use](/docs/en/sub-agents#available-tools). Background subagents keep a smaller built-in tool set, so an entry that only a foreground subagent can use lands here when the subagent would run in the background, which is the default. If you list `Agent`, the message reports it under the next group instead.\n* **Matched no tools in this session**: the entry is valid but no tool in the current session matches it right now, such as `mcp__github__*` with no GitHub MCP server connected, or `Agent` for a subagent at the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents).\n\nOmitting the `tools` field never triggers this refusal. If you leave the `tools` list empty, or `disallowedTools` removes every entry in it, Claude Code also skips the refusal and launches the subagent without tools.\n\nBefore v2.1.208, the subagent launched with no tools and could return an empty or confusing result.\n\n```text theme={null}\nAgent 'code-reviewer' would be spawned with zero tools — refusing. Its tools list resolved to nothing: unrecognized [Grpe]. Fix the agent's tools frontmatter or pass a different subagent_type.\n```\n\n**What to do:**\n\n* Correct each entry the error names against the [tools available to subagents](/docs/en/sub-agents#available-tools)\n* Remove entries for tools the session doesn't have, such as MCP tools from a server that isn't connected\n* For a tool that [background subagents drop](/docs/en/sub-agents#available-tools), such as `CronCreate`, remove the entry. To keep the tool, [turn fork mode off](/docs/en/sub-agents#turn-fork-mode-on-or-off) and ask Claude to run the subagent in the foreground\n* Delete the `tools` field instead of listing tools to give the subagent every [tool available to subagents](/docs/en/sub-agents#available-tools)\n* For a `tools` list that contains only `Agent`, raise the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents) or give the agent at least one other tool: Claude Code withholds `Agent` at that limit, so a list with nothing else in it resolves to no tools"
+    },
+    {
+      "heading": "Marketplace is registered from an untrusted source",
+      "id": "marketplace-is-registered-from-an-untrusted-source",
+      "hash": "4fbd7b17d887393fa840edc4397381b8ab703439e7870ca3f4f48036b936023f",
+      "text": "### Marketplace is registered from an untrusted source\n\nThe marketplace is registered under a name that is [reserved for official Anthropic marketplaces](/docs/en/plugins/marketplace-reference#marketplace-file), but its registered source isn't an `anthropics` GitHub repository. Claude Code re-checks reserved names every time it loads or refreshes a marketplace, so the marketplace and the plugins installed from it stop loading. Before v2.1.205, an entry registered before its name became reserved kept loading.\n\n```text theme={null}\nMarketplace \"claude-community\" is registered from an untrusted source: The name 'claude-community' is reserved for official Anthropic marketplaces. Only repositories from 'github.com/anthropics/' can use this name. To fix it, remove the marketplace and re-add it from the official source.\n```\n\nFor a marketplace whose source isn't a GitHub repository or a Git URL, such as a local directory, the middle sentence reads `can only be used with GitHub sources from the 'anthropics' organization` instead. `claude plugin marketplace add` runs the same check, and refuses a reserved name with `Failed to add marketplace:` followed by the same reserved-name sentence.\n\n**What to do:**\n\n* If the marketplace is already registered, run `claude plugin marketplace remove <name>`, then add it again from the official `github.com/anthropics` repository\n* If you publish a third-party marketplace that used the name before it became reserved, rename it and ask users to re-add it from your source\n* See the reserved name list under [Marketplace schema](/docs/en/plugins/marketplace-reference#marketplace-file)"
+    },
+    {
+      "heading": "Marketplace name is another spelling of a reserved name",
+      "id": "marketplace-name-is-another-spelling-of-a-reserved-name",
+      "hash": "7ccf99986b1e10e7d033cfdcd4df8a34e27361e11da6011b491dd8af313a62fb",
+      "text": "<h3 id=\"marketplace-name-is-another-spelling-of-a-reserved-name\">\n  Marketplace name is another spelling of a reserved name\n</h3>\n\nThe marketplace's name isn't itself a reserved name, but Claude Code treats it as another spelling of one. [Reserved names](/docs/en/plugins/marketplace-reference#reserved-name-spellings) lists which spellings count as a reserved name. Claude Code refuses such a name when you add the marketplace:\n\n```text theme={null}\nFailed to add marketplace: \"claude.code.plugins\" is another spelling of \"claude-code-plugins\", a reserved marketplace name.\n```\n\nWhen a marketplace is already registered under such a name, its entry stops loading, and `/plugin`, `claude plugin install`, and `claude plugin update` warn:\n\n```text wrap theme={null}\nknown_marketplaces.json has an entry named \"claude.code.plugins\", another spelling of the reserved marketplace name \"claude-code-plugins\", so it is ignored. Remove it with: claude plugin marketplace remove claude.code.plugins\n```\n\nWhen the name would need shell quoting, the add-time refusal reads `This marketplace's name is another spelling of \"<reserved>\", a reserved marketplace name. It is not exactly the reserved name it appears to be.`\n\n**What to do:**\n\n* Rename the marketplace to a name that doesn't spell a reserved name and add it again\n* For the ignored-entry warning, run the `claude plugin marketplace remove` command it gives, or remove the entry from `~/.claude/plugins/known_marketplaces.json`"
     },
     {
       "heading": "Is not matched by file permission checks",
