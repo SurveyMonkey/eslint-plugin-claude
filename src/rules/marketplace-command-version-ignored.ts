@@ -2,7 +2,7 @@
 // command. It ignores the `version` of the entry
 // (docs/rules/marketplace-command-version-ignored.md).
 import type { JSONRuleDefinition } from '@eslint/json'
-import { COMMAND_SOURCE_TYPE } from '../data/marketplace-source-types.ts'
+import { PLUGIN_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, pluginEntries } from '../marketplace-json.ts'
 
@@ -30,7 +30,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' }> = {
           const version = lastMember(entry, 'version')
           if (
             type?.type === 'String' &&
-            type.value === COMMAND_SOURCE_TYPE &&
+            type.value === PLUGIN_SOURCE_TYPES.command &&
             version?.value.type === 'String'
           ) {
             context.report({ node: version, messageId: 'ignored' })
