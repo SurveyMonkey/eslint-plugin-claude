@@ -3,7 +3,7 @@
 // tests/configs.test.ts.
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
-import { Linter, RuleTester } from 'eslint'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import helper from '../../src/rules/marketplace-headers-helper-command.ts'
 import { jsonTester } from '../rule-tester.test-support.ts'
@@ -19,12 +19,6 @@ const withHelper = (headersHelper: unknown) =>
     headersHelper,
   })
 const text = (length: number) => 'a'.repeat(length)
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
 
 jsonTester.run('marketplace-headers-helper-command (valid)', rule, {
   valid: [
@@ -72,13 +66,13 @@ jsonTester.run('marketplace-headers-helper-command (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-headers-helper-command (invalid)', rule, {
+jsonTester.run('marketplace-headers-helper-command (invalid)', rule, {
   valid: [],
   invalid: [
     {
       code: withHelper('mint-token é'),
       filename,
-      errors: [{ messageId: 'notPrintable', line: 1, column: 133 }],
+      errors: [{ messageId: 'notPrintable', line: 1, column: 129 }],
     },
     { code: withHelper('mint\ttoken'), filename, errors: [{ messageId: 'notPrintable' }] },
     { code: withHelper('mint\u007ftoken'), filename, errors: [{ messageId: 'notPrintable' }] },
@@ -173,14 +167,14 @@ describe('marketplace-headers-helper-command options', () => {
       { filename: '/repo/.claude-plugin/marketplace.json' },
     )
 
-  it.fails('names a team value as the configured limit and not as the docs limit', () => {
+  it('names a team value as the configured limit and not as the docs limit', () => {
     const [report] = lint(150, [{ max: 100 }])
     expect(report?.message).toBe(
       'The "headersHelper" command has 150 characters. The configured limit is 100.',
     )
   })
 
-  it.fails('keeps the default when the option object is empty', () => {
+  it('keeps the default when the option object is empty', () => {
     const [report] = lint(501, [{}])
     expect(report?.message).toBe(
       'The "headersHelper" command has 501 characters. The docs allow at most 500.',
