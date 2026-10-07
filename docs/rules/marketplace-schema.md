@@ -29,10 +29,11 @@ The rule reports these faults:
   is missing from an entry. `name` is missing from `owner`.[^top] The report is on the object that
   lacks the key.
 - **Empty name.** The top-level `name` or `owner.name` is an empty string.[^validation]
-- **Name characters.** A non-empty `name` of the top level or of an entry uses a character other
-  than an ASCII letter, a digit, `.`, `_` and `-`. Or it starts with another character. The
-  top-level `name` also has no `..`. An entry `name` may have `..`, because the docs do not bar
-  it.[^top][^entries] The report is on the `name` value, one for each name.
+- **Name characters.** A `name` of the top level or of an entry must use ASCII letters, digits,
+  `.`, `_` and `-` only. The first character must be a letter or a digit. An empty entry `name`
+  has no first character, so this report covers it. The top-level `name` also has no `..`. An
+  entry `name` may have `..`, because the docs do not bar it.[^top][^entries] The report is on
+  the `name` value, one for each name.
 - **Wrong type.** A field has a value of another type than the docs give, as the lists below show.
 - **Plugin item.** An item of `plugins` is not an object. The docs say that each item is an
   object.[^entries]
@@ -71,16 +72,17 @@ These cases are the business of other rules, so this rule does not report them:
 - The text of a string `source` and of `metadata.pluginRoot`. See
   `marketplace-relative-source-format`.
 
-The rule does not check these cases. The docs give no type or no test for them, or they are for
-another rule, or Claude Code ignores them:
+The rule does not check these cases. The docs give no type or test for them, another rule owns
+them, or Claude Code ignores them:
 
 - The type of `owner.email` and `owner.url`. The docs call them optional.[^top]
 - The type of the top-level `metadata` itself. The docs give types for `metadata.description`,
   `metadata.version` and `metadata.pluginRoot` only.[^top]
 - The fields of an entry that `plugin.json` also defines, such as `author` and `dependencies`. The
   docs send the reader to the manifest reference for them.[^entries]
-- Whether a name impersonates an official marketplace, or is on the reserved list. See
-  `marketplace-name-reserved`.[^top]
+- Whether a name is on the reserved list, or is a spelling of a name on it. See
+  `marketplace-name-reserved`.[^top] A name can have a bad character and be a spelling of a
+  reserved name, such as `claude+code+plugins`. Each rule then reports its own fault.
 - An entry `relevance`, `metadata` or `experimental` that is not an object. Claude Code ignores
   the value, and validate gives a warning for it.[^validation]
 - An unknown key. Claude Code ignores it.[^marketplace-file]

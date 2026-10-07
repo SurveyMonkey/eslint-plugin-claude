@@ -44,8 +44,10 @@ reports the name in these cases:
 The lists are in `src/data/marketplace-reserved-names.ts`, as of Claude Code 2.1.288.
 
 The docs also reserve a name that impersonates an official marketplace, such as
-`official-claude-plugins`. They reserve a name with a non-ASCII character too. The docs give no
-test for an impersonating name, so the rule does not check these.[^reserved] The docs do not say which
+`official-claude-plugins`. The docs give no test for it, so the rule does not check it.[^reserved]
+The docs bar a name with a non-ASCII character too. `marketplace-schema` reports that name, as a
+name with a bad character. A name such as `claude+code+plugins` gets a report from each rule:
+one for the bad character, one for the spelling. The docs do not say which
 reserved names the spelling check covers. The rule checks the 19 Anthropic names only. The rule
 does not check a `name` that is not a string. That value is a fault for `marketplace-schema`.
 
