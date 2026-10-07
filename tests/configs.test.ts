@@ -32,7 +32,8 @@ const badSettings = JSON.stringify({
 })
 
 // One entry with a `command` source and a `version`, a `headersHelper` that starts with a
-// relative path, and `hooks` as a path, under a reserved name.
+// relative path, and `hooks` as a path, under a reserved name with no `owner`. A second entry has
+// a `github` source with a bad `repo`, and a third has a relative `source` with no `./`.
 const badMarketplace = JSON.stringify({
   name: 'claude-code-plugins',
   plugins: [
@@ -43,6 +44,8 @@ const badMarketplace = JSON.stringify({
       headersHelper: './mint-token',
       hooks: './hooks.json',
     },
+    { name: 'b', source: { source: 'github', repo: 'formatter' } },
+    { name: 'c', source: 'plugins/c' },
   ],
 })
 
@@ -144,7 +147,11 @@ const TREE: Record<string, string> = {
   // One bad marketplace file with each fault of the marketplace rules, one in a
   // nested directory, and the same content where no rule reads it.
   '.claude-plugin/marketplace.json': badMarketplace,
-  'packages/m/.claude-plugin/marketplace.json': JSON.stringify({ name: 'inline', plugins: [] }),
+  'packages/m/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'inline',
+    owner: { name: 'm' },
+    plugins: [],
+  }),
   'docs/marketplace.json': badMarketplace,
   'marketplace.json': badMarketplace,
   '.claude-plugin/other.json': badMarketplace,
@@ -179,6 +186,9 @@ const MARKETPLACE_RULES = [
   'marketplace-command-version-ignored',
   'marketplace-headers-helper-command',
   'marketplace-entry-hooks-inline',
+  'marketplace-source-schema',
+  'marketplace-relative-source-format',
+  'marketplace-schema',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
