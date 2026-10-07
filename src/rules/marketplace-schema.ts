@@ -1,8 +1,8 @@
-// The top-level fields, the `owner`, and the entries of `marketplace.json`:
-// the fields that the docs require, and the type of each field that the docs
-// list (docs/rules/marketplace-schema.md). This rule reports a value of the
-// wrong type for each top-level or entry field that another `marketplace-*`
-// rule reads. It does not read the fields inside an object `source`.
+// The top-level fields, the `owner`, and the entries of `marketplace.json`
+// (docs/rules/marketplace-schema.md). This rule reports a missing required
+// key, an empty name, a name with a character that the docs bar, and a value
+// of the wrong type for each field that the docs list. It does not read the
+// fields inside an object `source`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ObjectNode, type ValueNode } from '../marketplace-json.ts'
@@ -148,18 +148,18 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
       }
     }
 
-    /** A non-empty string name that has a character that the docs do not allow.
-     *  The docs say: letters, digits, `.`, `_` and `-`, and the first one is a
-     *  letter or a digit. A marketplace name has no `..`. An empty name has its
-     *  own report. */
-    function checkNameCharacters(object: ObjectNode, path: string, noDots: boolean): void {
+    /** A string name that has a character that the docs do not allow. The docs
+     *  say: letters, digits, `.`, `_` and `-`, and the first one is a letter or
+     *  a digit. The top-level name has no `..` too. An empty top-level name has
+     *  its own report. An empty entry name has none, so it is reported here. */
+    function checkNameCharacters(object: ObjectNode, path: string, topLevel: boolean): void {
       const value = lastMember(object, 'name')?.value
-      if (value?.type !== 'String' || value.value === '') {
+      if (value?.type !== 'String' || (topLevel && value.value === '')) {
         return
       }
       if (!NAME_FORM.test(value.value)) {
         context.report({ node: value, messageId: 'nameCharacters', data: { path } })
-      } else if (noDots && value.value.includes('..')) {
+      } else if (topLevel && value.value.includes('..')) {
         context.report({ node: value, messageId: 'nameDots', data: { path } })
       }
     }

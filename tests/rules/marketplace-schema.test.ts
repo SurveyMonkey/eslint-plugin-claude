@@ -116,16 +116,20 @@ jsonTester.run('marketplace-schema (valid)', rule, {
     { code: top({ plugins: [] }), filename },
     // `owner` `email` and `url` have no type in the docs.
     { code: top({ owner: { name: 'A', email: 5, url: null } }), filename },
-    // `metadata` has no type of its own at the top level in the docs, and no empty `name` check for an entry.
+    // `metadata` has no type of its own at the top level in the docs.
     { code: top({ metadata: 'x' }), filename },
     { code: top({ metadata: null }), filename },
     { code: top({ metadata: [] }), filename },
     { code: top({ renames: {} }), filename },
     { code: top({ allowCrossMarketplaceDependenciesOn: [] }), filename },
-    { code: withEntry({ name: '' }), filename },
     // The characters that the docs allow in a name, and a `..` in an entry name.
     { code: top({ name: 'A1.b_c-d' }), filename },
     { code: top({ name: '9lives' }), filename },
+    // A capital letter after the first character is valid.
+    { code: top({ name: 'acme-Tools' }), filename },
+    { code: withEntry({ name: 'acme-Tools' }), filename },
+    // The last `name` key counts, as in `JSON.parse`.
+    { code: '{"name":"a b","name":"acme","owner":{"name":"A"},"plugins":[]}', filename },
     { code: withEntry({ name: 'x.y_z-1' }), filename },
     { code: withEntry({ name: 'a..b' }), filename },
     // Claude Code ignores an entry `metadata`, `experimental` or `relevance` that is not an object.
@@ -254,6 +258,17 @@ jsonTester.run('marketplace-schema (invalid)', rule, {
       code: top({ name: '-a..b' }),
       filename,
       errors: [{ messageId: 'nameCharacters', data: { path: 'name' } }],
+    },
+    // An empty entry name has no first letter or digit. The top-level name has its own `empty` report.
+    {
+      code: withEntry({ name: '' }),
+      filename,
+      errors: [{ messageId: 'nameCharacters', data: { path: 'plugins[0].name' } }],
+    },
+    {
+      code: '{"name":"acme","name":"a b","owner":{"name":"A"},"plugins":[]}',
+      filename,
+      errors: [{ messageId: 'nameCharacters', data: { path: 'name' }, column: 23, endColumn: 28 }],
     },
     {
       code: withEntry({ name: 'my plugin' }),
