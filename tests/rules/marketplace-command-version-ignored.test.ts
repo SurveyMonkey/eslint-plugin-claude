@@ -1,8 +1,5 @@
 // The rule reads each entry of `plugins` in `.claude-plugin/marketplace.json`.
 // The files glob and the decoy files are in tests/configs.test.ts.
-import json from '@eslint/json'
-import { RuleTester } from 'eslint'
-import { it } from 'vitest'
 import commandVersion from '../../src/rules/marketplace-command-version-ignored.ts'
 import { jsonTester } from '../rule-tester.test-support.ts'
 
@@ -10,12 +7,6 @@ const { rule } = commandVersion
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (...plugins: unknown[]) => JSON.stringify({ name: 'acme', plugins })
 const command = { source: 'command', command: 'my-tool claude-plugin-path' }
-
-/** RED. A tester that expects each case to fail, for the commit that adds the
- *  tests before the rule. The next commit uses `jsonTester` again. */
-class RedTester extends RuleTester {}
-RedTester.it = it.fails
-const redTester = new RedTester({ plugins: { json }, language: 'json/json' })
 
 jsonTester.run('marketplace-command-version-ignored (valid)', rule, {
   valid: [
@@ -59,13 +50,13 @@ jsonTester.run('marketplace-command-version-ignored (valid)', rule, {
   invalid: [],
 })
 
-redTester.run('marketplace-command-version-ignored (invalid)', rule, {
+jsonTester.run('marketplace-command-version-ignored (invalid)', rule, {
   valid: [],
   invalid: [
     {
       code: manifest({ name: 'p', source: command, version: '1.0.0' }),
       filename,
-      errors: [{ messageId: 'ignored', line: 1, column: 94, endColumn: 112 }],
+      errors: [{ messageId: 'ignored', line: 1, column: 108, endColumn: 125 }],
     },
     // Each entry reports once.
     {
