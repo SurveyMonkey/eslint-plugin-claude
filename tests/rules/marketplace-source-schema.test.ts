@@ -103,6 +103,8 @@ jsonTester.run('marketplace-source-schema (valid)', rule, {
     { code: archive('https://'), filename },
     // A key that the docs do not list is no fault.
     { code: withSource({ source: 'github', repo: 'o/r', extra: 1 }), filename },
+    // `timeout` and `mode` are for a `command` source only.
+    { code: withSource({ source: 'github', repo: 'o/r', timeout: 0, mode: 'x' }), filename },
     // A string source is for `marketplace-relative-source-format`.
     { code: withSource('./p'), filename },
     { code: withSource('../p'), filename },
@@ -403,6 +405,16 @@ jsonTester.run('marketplace-source-schema (invalid)', rule, {
       code: archive('https://169.254.10.20/f.zip'),
       filename,
       errors: [{ messageId: 'archiveHost', data: { host: '169.254.10.20', kind: 'link-local' } }],
+    },
+    {
+      code: archive('https://169.254.200.1/f.zip'),
+      filename,
+      errors: [{ messageId: 'archiveHost', data: { host: '169.254.200.1', kind: 'link-local' } }],
+    },
+    {
+      code: archive('https://127.200.200.200/f.zip'),
+      filename,
+      errors: [{ messageId: 'archiveHost', data: { host: '127.200.200.200', kind: 'loopback' } }],
     },
     {
       code: archive('https://[fe80::1]/f.zip'),

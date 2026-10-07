@@ -37,6 +37,11 @@ jsonTester.run('marketplace-name-reserved (valid)', rule, {
     { code: manifest('Claude.Code.Plugins'), filename },
     { code: manifest('Inline'), filename },
     { code: manifest('BUILTIN'), filename },
+    // A symbol for a hyphen is an ASCII symbol. A dash or a letter with an accent is not.
+    { code: manifest('claude\u2013code\u2013plugins'), filename },
+    { code: manifest('claude\u00e9code\u00e9plugins'), filename },
+    // Only one trailing dot counts.
+    { code: manifest('healthcare..'), filename },
     // An underscore for a hyphen is not a spelling of a reserved name.
     { code: manifest('claude_code_plugins'), filename },
     // The docs give no case folding for the official names or the prefix.
