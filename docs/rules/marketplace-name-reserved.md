@@ -28,9 +28,9 @@ reports the name in these cases:
   Claude Code reserves them unless the marketplace comes from a `github` or `git` source under
   `github.com/anthropics/`.[^reserved][^untrusted] The rule reads no source and no git remote. Use
   the `allowOfficial` option for such a repository.
-- **Another spelling.** The name differs from one of those 19 names only by one trailing dot, or
-  by a symbol other than an underscore in place of a hyphen. `claude.code.plugins` counts as
-  `claude-code-plugins`.[^reserved][^spelling] The rule reads a symbol as an ASCII punctuation
+- **Another spelling.** The name differs from one of those 19 names in one of two ways. It has one
+  trailing dot, or it has a symbol other than an underscore in place of a hyphen.
+  `claude.code.plugins` counts as `claude-code-plugins`.[^reserved][^spelling] The rule reads a symbol as an ASCII punctuation
   character. The letters must match, because the docs give no case folding for these names.
   `allowOfficial` does not silence this report.
 - **Internal names.** The name is `inline`, `builtin`, `skills-dir`, `synced` or
@@ -44,13 +44,13 @@ reports the name in these cases:
 The lists are in `src/data/marketplace-reserved-names.ts`, as of Claude Code 2.1.288.
 
 The docs also reserve a name that impersonates an official marketplace, such as
-`official-claude-plugins`, and a name with a non-ASCII character. The docs give no test for an
-impersonating name, so the rule does not check these.[^reserved] The docs do not say which
+`official-claude-plugins`. They reserve a name with a non-ASCII character too. The docs give no
+test for an impersonating name, so the rule does not check these.[^reserved] The docs do not say which
 reserved names the spelling check covers. The rule checks the 19 Anthropic names only. The rule
 does not check a `name` that is not a string. That value is a fault for `marketplace-schema`.
 
 `claude plugin validate` also reports the internal names and the package-manager names as
-errors.[^validation] The docs say that the exact official names pass validation, and that Claude
+errors.[^validation] The docs say that the exact official names pass validation. Claude
 Code refuses them when a user adds the marketplace.[^add] The docs do not say whether validate
 reports a spelling or the `claudeai-` prefix. So the rule reports the official names, which
 validate does not.

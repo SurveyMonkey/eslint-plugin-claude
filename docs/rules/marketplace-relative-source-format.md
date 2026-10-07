@@ -49,8 +49,8 @@ When a key appears twice, the rule reads the last, as `JSON.parse` does. A value
 string is a fault for `marketplace-schema`. The rule does not check it. An object `source` is for
 `marketplace-source-schema`.
 
-`claude plugin validate` reports a relative path that has `..`, as `Path contains ".."`, and the
-docs list `Invalid input` for a path with no `./` prefix.[^validation][^invalid] The docs list no
+`claude plugin validate` reports a relative path that has `..`, as `Path contains ".."`. The docs
+list `Invalid input` for a path with no `./` prefix.[^validation][^invalid] The docs list no
 validate message for an absolute path or a network path. The rule reports those cases, and Claude
 Code refuses them when it installs the plugin.[^refusal] The rule does not check a backslash after
 the `./` prefix.

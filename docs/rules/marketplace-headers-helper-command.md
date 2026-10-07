@@ -46,8 +46,9 @@ the last, as `JSON.parse` does. A `headersHelper` that is not a string is a faul
 `marketplace-schema`. The rule does not check it.
 
 The docs list no `claude plugin validate` message for the text of the command.[^validation]
-Validate reports a `headersHelper` on an `archive` entry that is not `"strict": false`, and warns
-that it has no effect on an entry with another source type. The rule checks neither.
+Validate reports a `headersHelper` on an `archive` entry that is not `"strict": false`. It also
+warns that `headersHelper` has no effect on an entry with another source type. The rule checks
+neither.
 
 Fail:
 

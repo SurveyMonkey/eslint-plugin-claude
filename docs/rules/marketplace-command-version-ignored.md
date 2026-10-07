@@ -26,8 +26,8 @@ Code ignores the `version` of the marketplace entry.[^version] The rule reports 
 in an entry whose `source` is an object with `"source": "command"`. A user who sets it expects a
 pinned version, and gets none.
 
-The rule reads each object in `plugins`. When an entry has two `source` keys or two `version` keys,
-the rule reads the last of each, as `JSON.parse` does. The report is on the `version` member.
+The rule reads each object in `plugins`. An entry can have two `source` keys or two `version` keys.
+The rule reads the last of each, as `JSON.parse` does. The report is on the `version` member.
 
 The rule does not check these values. Two other rules report them:
 

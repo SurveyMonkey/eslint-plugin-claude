@@ -25,8 +25,8 @@ names the type.[^sources] The rule reads each entry whose `source` is an object.
 faults:
 
 - **Type.** The `source` key is missing, is not a string, or is not one of `github`, `url`,
-  `git-subdir`, `npm`, `archive` and `command`. `git` is a marketplace source type and not a plugin
-  source type, so the rule reports it. `unsupported` has its own message, because the docs say that
+  `git-subdir`, `npm`, `archive` and `command`. `git` is a marketplace source type. It is not a
+  plugin source type, so the rule reports it. `unsupported` has its own message, because the docs say that
   it is a placeholder that nobody can write.[^validation]
 - **Required field.** A known type has no required field. The report is on the source object.
 - **Field type.** A field that the docs list for the type is not a string. The exceptions are
@@ -57,7 +57,7 @@ The docs set these limits on the values. The rule reports each value that breaks
   `127.0.0.0/8`, `::1`, `169.254.0.0/16`, `fe80::/10`, and the metadata hosts
   `metadata.google.internal`, `169.254.169.254`, `100.100.100.200` and `fd00:ec2::254`. The docs
   give no list of hosts, so the rule checks only these. A host that is not in this list gives no
-  report, so a clean result does not prove that a host is safe. An IPv4-mapped IPv6 host and
+  report. A clean result does not prove that a host is safe. An IPv4-mapped IPv6 host and
   `0.0.0.0` are examples. Text that the URL parser refuses gets no host report.
 - **`archive` `sha256`.** It is 64 hex characters, in upper or lower case.[^archive]
 - **`command` `command`.** It is printable ASCII, has at most 500 characters, and has no run of four
@@ -74,18 +74,18 @@ The rule does not check these:
 - The `url` of a `git-subdir` source beyond a string. The docs say that it takes a full git URL or
   `owner/repo`, and give no list of schemes.[^subdir]
 - A key that the docs do not list for the type.
-- The content of `ref`, `version` and `registry`, and the other `package` values that Claude Code
-  refuses, such as a git address or a tarball link on a code host.[^npm]
+- The content of `ref`, `version` and `registry`. The rule does not check the other `package`
+  values that Claude Code refuses, such as a git address or a tarball link on a code host.[^npm]
 - A `source` that is a string, which is for `marketplace-relative-source-format`. A `source` that is
   not a string or an object is a fault for `marketplace-schema`.
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 
-`claude plugin validate` reports `Invalid input` on a `source` that matches no type. The causes
-that the docs list are an unknown type, a known type with a required field that is missing or has
-the wrong type, and an `npm` `package` that contains `..`. It also reports the `unsupported`
-placeholder.[^validation][^invalid] The docs do not list a validate message for the `sha`, `sha256`,
-host, `command`, `timeout` and `mode` limits, so the rule reports cases that validate may not.
+`claude plugin validate` reports `Invalid input` on a `source` that matches no type. The docs list
+these causes: an unknown type, a known type with a required field that is missing or has the
+wrong type, and an `npm` `package` that contains `..`. It also reports the `unsupported`
+placeholder.[^validation][^invalid] The docs list no validate message for the `sha`, `sha256`, host,
+`command`, `timeout` and `mode` limits. So the rule reports cases that validate may not.
 
 Fail:
 

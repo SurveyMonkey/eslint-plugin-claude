@@ -29,8 +29,8 @@ The rule reports these faults:
   is missing from an entry. `name` is missing from `owner`.[^top] The report is on the object that
   lacks the key.
 - **Empty name.** The top-level `name` or `owner.name` is an empty string.[^validation]
-- **Name characters.** A non-empty `name` of the top level or of an entry has a character other
-  than an ASCII letter, a digit, `.`, `_` and `-`, or starts with another character. The
+- **Name characters.** A non-empty `name` of the top level or of an entry uses a character other
+  than an ASCII letter, a digit, `.`, `_` and `-`. Or it starts with another character. The
   top-level `name` also has no `..`. An entry `name` may have `..`, because the docs do not bar
   it.[^top][^entries] The report is on the `name` value, one for each name.
 - **Wrong type.** A field has a value of another type than the docs give, as the lists below show.
@@ -87,8 +87,8 @@ The rule does not check these cases, because the docs give no type or no test fo
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 
 `claude plugin validate` reports an empty `name` and an empty `owner.name`.[^validation] It
-reports a `name` with spaces, path separators, `..` or control characters, and an entry name with
-spaces or control characters.[^validation] It also
+reports a `name` with spaces, path separators, `..` or control characters.[^validation] It
+reports an entry name with spaces or control characters too.[^validation] It also
 reports a warning for an entry `relevance`, `metadata` or `experimental` that is not an object.
 The warning says that Claude Code ignores the value at load time.[^validation] The rule does not
 report those three, because it reports at `error`. The docs list no validate message for the other
