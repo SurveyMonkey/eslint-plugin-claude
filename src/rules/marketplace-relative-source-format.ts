@@ -46,8 +46,9 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     },
   },
   create(context) {
-    /** Report the first fault of the string `value`. A source is `prefixed`: it
-     *  starts with `./`, or is `.`, or is a bare name where `bareNames` is true. */
+    /** Report the first fault of the string `value`. The prefix check runs only
+     *  when `prefixed` is true. A bare name is valid only when `bareNames` is
+     *  true. */
     function check(
       value: ValueNode | undefined,
       field: string,

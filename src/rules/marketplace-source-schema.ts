@@ -40,9 +40,10 @@ const PRINTABLE_ASCII = /^[\x20-\x7e]*$/
 const SPACE_RUN = / {4}/
 const IPV4_LOOPBACK = /^127(?:\.\d{1,3}){3}$/
 const IPV4_LINK_LOCAL = /^169\.254(?:\.\d{1,3}){2}$/
-// The first 10 bits of an IPv6 link-local address are fe80::/10. A host of the URL parser has brackets.
+// The first 10 bits of an IPv6 link-local address are fe80::/10. The URL parser keeps the brackets of an IPv6 host.
 const IPV6_LINK_LOCAL = /^\[fe[89ab]/
-// The metadata hosts of the large clouds. The docs name the kind and give no list.
+// The metadata hosts of AWS, Google Cloud and Alibaba Cloud. The docs name the kind and give no list.
+// This list is a lower bound: a host that it omits, such as an IPv4-mapped IPv6 host, gives no report.
 const METADATA_HOSTS = new Set([
   'metadata.google.internal',
   '169.254.169.254',
@@ -125,7 +126,7 @@ const rule: JSONRuleDefinition<{
         'The "source" key of the source object must be a string. Set it to one of these types: {{types}}.',
       typeUnknown: '"{{type}}" is not a plugin source type. Use one of these types: {{types}}.',
       typeUnsupported:
-        '"unsupported" is a placeholder that Claude Code sets at parse time. Do not write it. Use one of these types: {{types}}.',
+        '"unsupported" is a parse-time placeholder that nobody can write. Use one of these types: {{types}}.',
       missingField: 'A "{{type}}" source needs the field "{{field}}".',
       notString: 'The "{{field}}" of a "{{type}}" source must be a string.',
       repoFormat: 'The "repo" of a "github" source must be "owner/repo", and "{{value}}" is not.',

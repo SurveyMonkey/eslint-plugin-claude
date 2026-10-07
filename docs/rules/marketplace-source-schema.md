@@ -56,8 +56,9 @@ The docs set these limits on the values. The rule reports each value that breaks
   cloud-metadata host.[^archive] The rule parses the URL. It checks `localhost` and `*.localhost`,
   `127.0.0.0/8`, `::1`, `169.254.0.0/16`, `fe80::/10`, and the metadata hosts
   `metadata.google.internal`, `169.254.169.254`, `100.100.100.200` and `fd00:ec2::254`. The docs
-  give no list of hosts, so the rule checks only these. Text that the URL parser refuses gets no
-  host report.
+  give no list of hosts, so the rule checks only these. A host that is not in this list gives no
+  report, so a clean result does not prove that a host is safe. An IPv4-mapped IPv6 host and
+  `0.0.0.0` are examples. Text that the URL parser refuses gets no host report.
 - **`archive` `sha256`.** It is 64 hex characters, in upper or lower case.[^archive]
 - **`command` `command`.** It is printable ASCII, has at most 500 characters, and has no run of four
   or more spaces.[^command] Each fault is a separate report. The rule counts characters as
@@ -68,8 +69,8 @@ The docs set these limits on the values. The rule reports each value that breaks
 
 The rule does not check these:
 
-- The `path` of a `github` source. The docs list `repo`, `ref` and `sha` for that source and do not
-  call `path` a fault.[^sources] `path` is a field of a `github` marketplace source.[^fields]
+- The `path` of a `github` source. The docs say that a `github` plugin source has no `path`. They
+  give no error for it.[^sources] `path` is a field of a `github` marketplace source.[^fields]
 - The `url` of a `git-subdir` source beyond a string. The docs say that it takes a full git URL or
   `owner/repo`, and give no list of schemes.[^subdir]
 - A key that the docs do not list for the type.

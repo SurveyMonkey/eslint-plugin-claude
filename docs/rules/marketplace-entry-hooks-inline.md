@@ -33,9 +33,9 @@ The rule does not check the content of the inline object. It does not check the 
 value that is not a string, an array or an object is a fault for `marketplace-schema`. The rule does
 not check it.
 
-In `plugin.json`, `hooks` can be a path or an array of paths and objects.[^manifest] This rule
-does not read that file. For file-based hooks, the docs say to use the `hooks/hooks.json` of the plugin or its
-`plugin.json`.[^entry]
+In `plugin.json`, `hooks` can be a path, an inline object, or an array of either.[^manifest] This
+rule does not read that file. For file-based hooks, the docs say to use the `hooks/hooks.json` of
+the plugin or its `plugin.json`.[^entry]
 
 `claude plugin validate` passes a path or an array in an entry `hooks`. The error appears only when
 the plugin loads.[^failures] So the rule reports a case that validate does not.

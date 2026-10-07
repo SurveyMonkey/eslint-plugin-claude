@@ -23,7 +23,7 @@ jsonTester.run('marketplace-source-schema (valid)', rule, {
   valid: [
     { code: withSource({ source: 'github', repo: 'your-org/formatter' }), filename },
     { code: withSource({ source: 'github', repo: 'o/r', ref: 'v2.0.0', sha }), filename },
-    // The docs list no `path` for a `github` plugin source. They do not call it a fault.
+    // The docs say that a `github` plugin source has no `path`, but give no error for it.
     { code: withSource({ source: 'github', repo: 'o/r', path: 'sub' }), filename },
     { code: withSource({ source: 'url', url: 'https://gitlab.example.com/g/f.git' }), filename },
     { code: withSource({ source: 'url', url: 'http://git.example.com/f' }), filename },
@@ -72,7 +72,7 @@ jsonTester.run('marketplace-source-schema (valid)', rule, {
     { code: command(text(500)), filename },
     // Three spaces are not a run of four.
     { code: command('my-tool   path'), filename },
-    // A relative path in a command is the business of nobody here.
+    // The rule does not check a relative path in a command.
     { code: command('./my-tool'), filename },
     // `max` moves the limit down, and 500 stays valid at `max: 500`.
     { code: command(text(100)), filename, options: [{ max: 100 }] },

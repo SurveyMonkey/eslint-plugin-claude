@@ -99,6 +99,7 @@ Fail:
 ```json
 {
   "name": "acme",
+  "owner": { "name": "Acme" },
   "plugins": [{ "name": "formatter", "source": "./formatter", "tags": "format" }]
 }
 ```
