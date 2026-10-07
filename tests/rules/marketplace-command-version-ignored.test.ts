@@ -1,9 +1,8 @@
 // The rule reads each entry of `plugins` in `.claude-plugin/marketplace.json`.
 // The files glob and the decoy files are in tests/configs.test.ts.
-import commandVersion from '../../src/rules/marketplace-command-version-ignored.ts'
-import { jsonTester } from '../rule-tester.test-support.ts'
+import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-const { rule } = commandVersion
+const rule = ruleOf('marketplace-command-version-ignored')
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (...plugins: unknown[]) => JSON.stringify({ name: 'acme', plugins })
 const command = { source: 'command', command: 'my-tool claude-plugin-path' }

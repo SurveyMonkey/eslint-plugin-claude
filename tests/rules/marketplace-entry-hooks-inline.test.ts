@@ -1,10 +1,9 @@
 // The rule reads the `hooks` of each entry in `plugins` in
 // `.claude-plugin/marketplace.json`. The files glob and the decoy files are in
 // tests/configs.test.ts.
-import hooksInline from '../../src/rules/marketplace-entry-hooks-inline.ts'
-import { jsonTester } from '../rule-tester.test-support.ts'
+import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-const { rule } = hooksInline
+const rule = ruleOf('marketplace-entry-hooks-inline')
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (...plugins: unknown[]) => JSON.stringify({ name: 'acme', plugins })
 const inline = { PostToolUse: [{ matcher: 'Write', hooks: [{ type: 'command', command: 'fmt' }] }] }

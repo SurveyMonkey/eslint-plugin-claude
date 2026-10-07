@@ -5,10 +5,10 @@ import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
-import helper from '../../src/rules/marketplace-headers-helper-command.ts'
-import { jsonTester } from '../rule-tester.test-support.ts'
+import plugin from '../../src/index.ts'
+import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-const { rule } = helper
+const rule = ruleOf('marketplace-headers-helper-command')
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (...plugins: unknown[]) => JSON.stringify({ name: 'acme', plugins })
 const withHelper = (headersHelper: unknown) =>
@@ -159,9 +159,9 @@ describe('marketplace-headers-helper-command options', () => {
       [
         {
           files: ['**/*.json'],
-          plugins: { json, markdown, claude: { rules: { [helper.name]: rule } } },
+          plugins: { json, markdown, claude: plugin },
           language: 'json/json',
-          rules: { [`claude/${helper.name}`]: ['error', ...options] as never },
+          rules: { 'claude/marketplace-headers-helper-command': ['error', ...options] as never },
         },
       ],
       { filename: '/repo/.claude-plugin/marketplace.json' },

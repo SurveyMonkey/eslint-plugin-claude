@@ -11,10 +11,10 @@ import {
   INTERNAL_MARKETPLACE_NAMES,
   PACKAGE_MANAGER_NAMES,
 } from '../../src/data/marketplace-reserved-names.ts'
-import named from '../../src/rules/marketplace-name-reserved.ts'
-import { jsonTester } from '../rule-tester.test-support.ts'
+import plugin from '../../src/index.ts'
+import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-const { rule } = named
+const rule = ruleOf('marketplace-name-reserved')
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (marketplaceName: string) => JSON.stringify({ name: marketplaceName, plugins: [] })
 
@@ -126,9 +126,9 @@ describe('marketplace-name-reserved options', () => {
       [
         {
           files: ['**/*.json'],
-          plugins: { json, markdown, claude: { rules: { [named.name]: rule } } },
+          plugins: { json, markdown, claude: plugin },
           language: 'json/json',
-          rules: { [`claude/${named.name}`]: ['error', ...options] as never },
+          rules: { 'claude/marketplace-name-reserved': ['error', ...options] as never },
         },
       ],
       { filename: '/repo/.claude-plugin/marketplace.json' },
