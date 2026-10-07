@@ -74,6 +74,22 @@ jsonTester.run('marketplace-source-schema (valid)', rule, {
     { code: command('my-tool   path'), filename },
     // The rule does not check a relative path in a command.
     { code: command('./my-tool'), filename },
+    // The printable range ends at `~` (0x7e).
+    { code: command('my~tool'), filename },
+    // A one-character command is valid at the smallest `max`.
+    { code: command('x'), filename, options: [{ max: 1 }] },
+    // The scheme of an archive URL has any letter case, as for a `url` source.
+    { code: archive('HTTPS://x.test/f.zip'), filename },
+    // A host that only starts like a barred one is not barred.
+    { code: archive('https://127.0.0.1.example.com/f.zip'), filename },
+    { code: archive('https://169.254.1.1.example.com/f.zip'), filename },
+    { code: archive('https://[fec0::1]/f.zip'), filename },
+    // Only an `archive` source has a host check. A `url` source may name a local host.
+    { code: withSource({ source: 'url', url: 'https://localhost/r.git' }), filename },
+    {
+      code: withSource({ source: 'git-subdir', url: 'https://localhost/r.git', path: 't' }),
+      filename,
+    },
     // `max` moves the limit down, and 500 stays valid at `max: 500`.
     { code: command(text(100)), filename, options: [{ max: 100 }] },
     { code: command(text(500)), filename, options: [{ max: 500 }] },
@@ -424,6 +440,36 @@ jsonTester.run('marketplace-source-schema (invalid)', rule, {
         { messageId: 'archiveHost', data: { host: '[fd00:ec2::254]', kind: 'cloud-metadata' } },
       ],
     },
+    // The IPv6 link-local range is fe80 to febf.
+    ...['[febf::1]', '[fe90::1]', '[fea0::1]'].map((host) => ({
+      code: archive(`https://${host}/f.zip`),
+      filename,
+      errors: [{ messageId: 'archiveHost' as const, data: { host, kind: 'link-local' } }],
+    })),
+    // A `sha` of 39 characters, and a `sha256` of 63.
+    {
+      code: withSource({ source: 'github', repo: 'o/r', sha: sha.slice(1) }),
+      filename,
+      errors: [{ messageId: 'shaFormat' }],
+    },
+    {
+      code: withSource({ source: 'archive', url: 'https://x.test/f.zip', sha256: sha256.slice(1) }),
+      filename,
+      errors: [{ messageId: 'sha256Format' }],
+    },
+    // The optional fields of a `url` and a `git-subdir` source are strings.
+    {
+      code: withSource({ source: 'url', url: 'https://x.test/r.git', ref: 1 }),
+      filename,
+      errors: [{ messageId: 'notString', data: { type: 'url', field: 'ref' } }],
+    },
+    {
+      code: withSource({ source: 'git-subdir', url: 'o/m', path: 't', ref: 1 }),
+      filename,
+      errors: [{ messageId: 'notString', data: { type: 'git-subdir', field: 'ref' } }],
+    },
+    // A control character below the space is not printable.
+    { code: command('my\u001ftool'), filename, errors: [{ messageId: 'commandNotPrintable' }] },
     // `archive` `sha256`.
     {
       code: withSource({ source: 'archive', url: 'https://x.test/f.zip', sha256: sha }),
