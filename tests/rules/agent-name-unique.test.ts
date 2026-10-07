@@ -197,6 +197,31 @@ describe('agent-name-unique', () => {
     }
   })
 
+  // A real path failure on a file that ESLint just read gives no real path to compare. A link to
+  // the linted file is then not a second agent, so the rule makes no report (ADR 001, Decision 14).
+  it.fails('stays silent for a link to this file when the real path of this file is unreadable', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({ '.claude/agents/a.md': agent('', 'dup') })
+    symlinkSync(path.join(root, '.claude/agents/a.md'), path.join(root, '.claude/agents/alias.md'))
+    realpathFails.path = path.join(root, '.claude/agents/a.md')
+    try {
+      expect(lint(root, '.claude/agents/a.md')).toEqual([])
+    } finally {
+      realpathFails.path = null
+    }
+  })
+
+  // The target of a `.claude` link holds its own `.git`. It is the bound, as for the skill rules.
+  it('reads the agents of a .claude link whose target holds its own .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    const target = repo({ 'agents/b.md': agent('', 'dup') })
+    symlinkSync(target, path.join(root, '.claude'))
+    expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
+  })
+
   // A `.claude` link goes to a directory out of the repository. The rule reads no file there.
   it('makes no report for a .claude that is a link out of the repository', {
     skip: process.platform === 'win32',

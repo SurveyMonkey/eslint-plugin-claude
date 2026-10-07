@@ -455,3 +455,34 @@ describe('a plugin.json that does not parse to an object', () => {
     expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toEqual([])
   })
 })
+
+// A project `.claude/` is no plugin root, so a manifest in it changes no result (the plugins
+// reference puts the manifest under the plugin root). The result is the one with no manifest.
+describe('a .claude/.claude-plugin/plugin.json in a project', () => {
+  it.fails.each([
+    ['a syntax error', '{'],
+    ['an `agents` key', '{"agents": "./x"}'],
+  ])('does not change the report, for %s', (_name, text) => {
+    const tree = `proj-man-${Buffer.from(text).toString('hex')}`
+    put(`${tree}/.git/HEAD`, '')
+    put(`${tree}/.claude/.claude-plugin/plugin.json`, text)
+    put(`${tree}/.claude/agents/a.md`, agentFile('a'))
+    const file = path.join(scratch, tree, '.claude', 'skills', 's', 'SKILL.md')
+    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
+    expect(lintMarkdown('skill-agent-exists', fork('a'), file)).toEqual([])
+  })
+})
+
+// A `.claude` link whose target holds its own `.git` has the target as its bound, as it has for
+// the agent rules. The scan of `.claude/agents/` stays inside that bound, so the rule sees it.
+describe.skipIf(process.platform === 'win32')('a .claude link to a repository of its own', () => {
+  it.fails('reads the agents in the target, and reports a missing agent', () => {
+    put('lnk/.git/HEAD', '')
+    put('lnk-target/.git/HEAD', '')
+    put('lnk-target/agents/a.md', agentFile('a'))
+    symlinkSync('../lnk-target', path.join(scratch, 'lnk/.claude'))
+    const file = path.join(scratch, 'lnk', '.claude', 'skills', 's', 'SKILL.md')
+    expect(lintMarkdown('skill-agent-exists', fork('a'), file)).toEqual([])
+    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
+  })
+})
