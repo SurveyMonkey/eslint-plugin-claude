@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "883bebba1486461a6dc62c66647320783d56ddc638a7422509d0123708b43ce4",
+  "hash": "fde586c999b304e33a9958ae5103b35028fe6910a8d0b5db3111ada72103fa96",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -200,7 +200,7 @@
     },
     {
       "id": "what-a-blocked-prompt-leaves-behind",
-      "hash": "dfe0614b7bf9aecb34861cb6d34567de0fb08023e55260b5a69acc28104963a5"
+      "hash": "6d848954a575db85cd0d8f7960f942f11e4c69c8a8bb2ac705bf7a072e3a7703"
     },
     {
       "id": "userpromptexpansion",

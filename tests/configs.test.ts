@@ -31,6 +31,24 @@ const badSettings = JSON.stringify({
   },
 })
 
+// One entry with a `command` source and a `version`, a `headersHelper` that starts with a
+// relative path, and `hooks` as a path, under a reserved name with no `owner`. A second entry has
+// a `github` source with a bad `repo`, and a third has a relative `source` with no `./`.
+const badMarketplace = JSON.stringify({
+  name: 'claude-code-plugins',
+  plugins: [
+    {
+      name: 'a',
+      source: { source: 'command', command: 'my-tool claude-plugin-path' },
+      version: '1.0.0',
+      headersHelper: './mint-token',
+      hooks: './hooks.json',
+    },
+    { name: 'b', source: { source: 'github', repo: 'formatter' } },
+    { name: 'c', source: 'plugins/c' },
+  ],
+})
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -126,6 +144,17 @@ const TREE: Record<string, string> = {
   'docs/agents/a.md':
     '---\nmade_up: 1\npermissionMode: bypassPermissions\ntools: AskUserQuestion, Bogus\n---\n',
   'docs/output-styles/s.md': '---\nname: [unclosed\nforce-for-plugin: true\n---\n',
+  // One bad marketplace file with each fault of the marketplace rules, one in a
+  // nested directory, and the same content where no rule reads it.
+  '.claude-plugin/marketplace.json': badMarketplace,
+  'packages/m/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'inline',
+    owner: { name: 'm' },
+    plugins: [],
+  }),
+  'docs/marketplace.json': badMarketplace,
+  'marketplace.json': badMarketplace,
+  '.claude-plugin/other.json': badMarketplace,
   'other.json': badHooks,
   'hooks.json': badHooks,
   '.vscode/settings.json': badSettings,
@@ -150,6 +179,17 @@ const SETTINGS_ONLY = 'permissions-mcp-rule-parens'
 const TOOL_LIST_BLOCKS = [...GRAMMAR_RULES, 'permissions-skill-rule'].flatMap((rule) =>
   rule === SETTINGS_ONLY ? [rule] : [rule, rule],
 )
+
+// The marketplace rules of #12, in the order of the `modules` list. Each is an error.
+const MARKETPLACE_RULES = [
+  'marketplace-name-reserved',
+  'marketplace-command-version-ignored',
+  'marketplace-headers-helper-command',
+  'marketplace-entry-hooks-inline',
+  'marketplace-source-schema',
+  'marketplace-relative-source-format',
+  'marketplace-schema',
+]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -201,6 +241,9 @@ const EXPECTED = [
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
+  // The marketplace rules read `.claude-plugin/marketplace.json` only.
+  ...MARKETPLACE_RULES.map((rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`),
+  'packages/m/.claude-plugin/marketplace.json: claude/marketplace-name-reserved@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -313,6 +356,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...MARKETPLACE_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'error' },
+      ]),
     ])
   })
 
@@ -327,6 +374,7 @@ describe('configs', () => {
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
+      ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -350,6 +398,17 @@ describe('configs', () => {
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
         ['markdown/gfm', ['**/SKILL.md', '**/commands/**/*.md']],
+      ])
+    }
+  })
+
+  it('gives each marketplace rule one JSON block for .claude-plugin/marketplace.json', () => {
+    for (const rule of MARKETPLACE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${rule}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['json/json', ['**/.claude-plugin/marketplace.json']],
       ])
     }
   })

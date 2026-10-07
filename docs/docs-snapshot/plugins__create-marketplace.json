@@ -1,0 +1,70 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+  "hash": "0597250fec9a5eb9734df9c6821409431623604656129cf8e462f93460db6a84",
+  "blocks": [
+    {
+      "id": "create-a-marketplace",
+      "hash": "020416723372f147a50d9924506e73f6a200ff536b7d68cb0b2d7bfe399e32f1"
+    },
+    {
+      "id": "create-a-marketplace-1",
+      "hash": "03fc9c0c85494895c906268b250a87fc95ca393d138f4bab7132d5f02207c1f6"
+    },
+    {
+      "id": "add-plugin-entries",
+      "hash": "b1e3048cbf0551e1f60cd1c2a1e3d7926c165fdcabca3009466f26aa6bfdb453"
+    },
+    {
+      "id": "rules-for-plugin-entries",
+      "hash": "fd62a6f288e565058642450c8703e1b054cbeffbfa68fbaa34f5e7f87e1e9a3d"
+    },
+    {
+      "id": "write-relative-paths-from-the-marketplace-root",
+      "hash": "814c053fbb01e6764cd45f1cd0bac890eaf9ce1315a46bff6e452a0e1251ab8a"
+    },
+    {
+      "id": "keep-the-entry-name-and-the-manifest-name-the-same",
+      "hash": "7b9fbfa87ad9074a72c48e244a949556af66447094d8956335808a8ee71c5c6a"
+    },
+    {
+      "id": "choose-a-plugin-source",
+      "hash": "84270f72b9aba6fa12c01f7e57f4a5e34019c514fe20137ea90a86ce0fbcc559"
+    },
+    {
+      "id": "validate-and-test",
+      "hash": "be31f9acac861d211bf32f81a3f71e1e704dbf61243f45be4cba1f453ebf2557"
+    },
+    {
+      "id": "problems-that-validation-reports",
+      "hash": "34d7e317ab1d3c2e5cf9477f85aa32a328ccb980272d10e374ea7ac13767ec5e"
+    },
+    {
+      "id": "problems-that-surface-when-you-add-or-install",
+      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b"
+    },
+    {
+      "id": "test-an-edit-to-a-plugin",
+      "hash": "2ee1593ecbac7bf3f2c751325fc5aa0c1586e52bed457ea8cfca08fb7f013685"
+    },
+    {
+      "id": "remove-the-marketplace-to-start-over",
+      "hash": "ac97cab042f63f26de90912a14be7fd897da313969314221a499d12d3e01a010"
+    },
+    {
+      "id": "host-your-marketplace",
+      "hash": "6563c806f2325931de3ed54b4f8198ecf988b04d66bb5af107eb64a7b85855b7"
+    },
+    {
+      "id": "next-steps",
+      "hash": "aaccf5ee3a44388b4f415fc00e68748c45e5d401598b4d30f2806ed5a6c2d0f8"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Problems that surface when you add or install",
+      "id": "problems-that-surface-when-you-add-or-install",
+      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b",
+      "text": "### Problems that surface when you add or install\n\nProblems that `claude plugin validate` doesn't report appear when you add the marketplace or install from it:\n\n* **When you add the marketplace**: the exact [official marketplace names](/docs/en/plugins/marketplace-reference#reserved-names), such as `claude-plugins-official`, pass validation. When you add a marketplace with one of those names, Claude Code refuses it with a message that starts `The name '<name>' is reserved for official Anthropic marketplaces`.\n* **When you install a plugin**:\n  * Claude Code first fetches a `github`, `git-subdir`, or other remote source when you install the plugin, so a wrong `repo` or `path` appears then.\n  * A relative `source` whose directory doesn't exist also fails at install, with `Source path does not exist: <path>`."
+    }
+  ]
+}

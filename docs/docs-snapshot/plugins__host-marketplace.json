@@ -1,0 +1,142 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+  "hash": "3d2da6cd5c3d8e35800c5b0a4a555c8ada09666cb6528092cd013056c4d7454c",
+  "blocks": [
+    {
+      "id": "host-and-maintain-a-marketplace",
+      "hash": "a5135b00a53295f3c0cbe56c24d2db346bd8af511a602493f736aadbce86956d"
+    },
+    {
+      "id": "host-your-marketplace",
+      "hash": "114c0a4faafac41a4bf77911d530aa75fa808fe9497a668f8f173fc2f033b74e"
+    },
+    {
+      "id": "register-the-marketplace-for-everyone-in-a-repository",
+      "hash": "0b208846a260187f2cc197a9fdf74464eca9b5629e597e1c46042b34b54b2b77"
+    },
+    {
+      "id": "avoid-relative-path-entries-in-a-url-hosted-marketplace",
+      "hash": "f7e91a0e03a030456ff0dfde543bde7c25e6de534fa86b567ff4d7e9673eb1db"
+    },
+    {
+      "id": "stay-within-the-download-limits-for-hosted-files",
+      "hash": "461a28c4a2f64e1dafb2f6fb1da7e93d3f33b4c287aa91fff2cebef8dea20922"
+    },
+    {
+      "id": "edit-plugins-in-place-on-a-shared-directory",
+      "hash": "62773a0fe185667aa1d824f31b25a9ceb1ae92993c56255d933814c7162c213e"
+    },
+    {
+      "id": "keep-plugin-files-out-of-git-lfs",
+      "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810"
+    },
+    {
+      "id": "share-files-within-a-marketplace-with-symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    },
+    {
+      "id": "distribute-through-organization-settings",
+      "hash": "180fb15f7830ff440387a5dc3bffb13835c2f3a70ee9320f40d80d7641149f9c"
+    },
+    {
+      "id": "grant-access-to-a-private-marketplace",
+      "hash": "04807abe53724b039ad2c82485643a0100f80bc1d773002c395f4db9861fea66"
+    },
+    {
+      "id": "serve-users-who-have-no-git-host-account",
+      "hash": "8cb4f50cb63f6c02e0d13a1a48dbdf013814d81b178d626a788d6b1830db55f8"
+    },
+    {
+      "id": "what-background-auto-update-does-with-credentials",
+      "hash": "a6d47cae61d5a81302be9b42a7e5070c586867ea7dd7ba16b14ed4a4ee2d2d43"
+    },
+    {
+      "id": "roll-out-to-a-whole-company",
+      "hash": "09a4736ac6a53e4efde2a25a12d0d5be807bd58643da825f49d62cd3ad130789"
+    },
+    {
+      "id": "keep-users-up-to-date",
+      "hash": "2376566acb7ec29e41f7e223d5e1a79b6502762cddb789858f8101a6189e0634"
+    },
+    {
+      "id": "turn-on-auto-update",
+      "hash": "c20a7f6b42288f463a187f4379c758362e73e58be540b28daafdfea2e8dc7724"
+    },
+    {
+      "id": "release-a-new-version",
+      "hash": "ef8ed525a0fa7f402ddefa908f0df1254bb78a6022a38ffb3000071f1e2ffdfb"
+    },
+    {
+      "id": "hold-users-on-one-version",
+      "hash": "8f67d300fbf63642b0de529ec8e5d7dabd69de860a51bdaac10f5f4fc84ef9a8"
+    },
+    {
+      "id": "change-the-command-of-a-command-source",
+      "hash": "cbfe440f0627008aa6750729e9fa1e10996495f9d9af2e99985fd3995344b97c"
+    },
+    {
+      "id": "run-release-channels",
+      "hash": "e1f64395c7cc5d20f49ed479f1ad7fb329ba977b426564d10667dc3b5cfef67e"
+    },
+    {
+      "id": "rename-or-remove-a-plugin",
+      "hash": "49c4ef9291c9fafba36ed88684e520251777b484c3a981f8d14efd7075a5ec17"
+    },
+    {
+      "id": "migrate-users-with-a-renames-map",
+      "hash": "fbe87cabedacb890a9194623de4a6814146b72acfc75ca74ad94b2b35c9e3c3d"
+    },
+    {
+      "id": "uninstall-removed-plugins-from-users-machines",
+      "hash": "9c9c5c5b4e6e0baa6881e350733535a3fade532a6cd9ac2c6aa233b68008e6ff"
+    },
+    {
+      "id": "authenticate-archive-downloads",
+      "hash": "0f911c139520dfff6ae7339a555f06609159af0b81daf8acc5a795cb9735ac91"
+    },
+    {
+      "id": "add-a-headershelper-to-a-plugin-entry",
+      "hash": "a1e6df5d21c3de953120a77f45034b2ba14226e3d158afe13751b02f90637baa"
+    },
+    {
+      "id": "write-the-headershelper-command",
+      "hash": "6317de714c4b2dcad6898568d25a5a9d9715252b43b4c82a47b982c0e599600a"
+    },
+    {
+      "id": "when-claude-code-skips-a-headershelper-command-or-drops-its-output",
+      "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338"
+    },
+    {
+      "id": "how-users-accept-a-headershelper-command",
+      "hash": "e48923765f7e4449a6f4915fdc536ffd7d2e648b274d3120e3e189a1850ef112"
+    },
+    {
+      "id": "installs-and-updates-that-refuse-the-command-instead-of-asking",
+      "hash": "781332af4ff81478f8f0c70cd1ac991e17381fb1ceb5073b61e11ddc26fa4d8b"
+    },
+    {
+      "id": "when-a-marketplace-url-sources-command-runs",
+      "hash": "cfec73edc9ef6826dddf520d351285eacadde2979b52be79e4ea29ab99552ca2"
+    },
+    {
+      "id": "depend-on-and-recommend-other-plugins",
+      "hash": "8cbf1e22cd64cc851060fb205cd5ab68879295f27bc173156cd26d13466330f3"
+    },
+    {
+      "id": "work-around-what-a-marketplace-cant-do",
+      "hash": "947e638471091961d966eda9274714dd8a283d7da24a545d2817238caabb89db"
+    },
+    {
+      "id": "next-steps",
+      "hash": "9855bbbe079e9a1dc2bdfbf31836d46d94ab2100fb0c78890fd76232332017b4"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Write the headersHelper command",
+      "id": "write-the-headershelper-command",
+      "hash": "6317de714c4b2dcad6898568d25a5a9d9715252b43b4c82a47b982c0e599600a",
+      "text": "### Write the headersHelper command\n\nWhether you set `headersHelper` on a marketplace's `url` source or on a plugin entry, write the command to meet these requirements:\n\n* **Command text**: at most 500 characters of printable ASCII, with no run of four or more spaces.\n* **Output**: print one JSON object of header names and string values on stdout, then exit 0 within 10 seconds.\n* **Shell and working directory**: Claude Code runs the command through `sh`, or through `cmd.exe` on Windows. The working directory is the configuration directory, which is `~/.claude` or [`CLAUDE_CONFIG_DIR`](/docs/en/env-vars#variables). Give an absolute path or a command on `PATH`, because a relative path resolves against that directory, not the user's project.\n* **Variables Claude Code removes**: when the command is set in a `marketplace.json` entry, or in a project's `.claude/settings.json` or `.claude/settings.local.json`, Claude Code removes from the environment every variable whose name looks like a credential, by the [same rule it applies to an MCP `headersHelper`](/docs/en/mcp#which-variables-a-helper-can-read). `ANTHROPIC_API_KEY` and `MY_REGISTRY_TOKEN` are both removed, so have the command read its credential from a file or a credential store. This removal doesn't apply to a command set in user settings, a `--settings` file, or managed settings.\n* **Variables Claude Code sets**: `CLAUDE_CODE_MARKETPLACE_URL` and `CLAUDE_CODE_MARKETPLACE_NAME` for a `url` source's command, and `CLAUDE_CODE_PLUGIN_NAME` and `CLAUDE_CODE_PLUGIN_ARCHIVE_URL` for an entry's command. `CLAUDE_CODE_MARKETPLACE_NAME` is unset on the first fetch after a user adds a marketplace by URL, because that fetch is what supplies the name.\n\nA command that mints a bearer token prints an object like this one:\n\n```json theme={null}\n{\"Authorization\": \"Bearer eyJhbGciOiJSUzI1NiJ9\"}\n```"
+    }
+  ]
+}

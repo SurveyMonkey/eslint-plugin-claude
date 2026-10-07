@@ -1,10 +1,10 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "1a5c32a7ca21aad4138d4fc424a6d229528cf1e47bf77dc8005c03142ffb854e",
+  "hash": "06d9882e59b3d0915a384074a360014e032e152613e0de5196b0c2e06da6cf89",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
-      "hash": "d4b781d6115d008d5e585d2c9f6aeda6a25edd91341de137b1c4c43af3909102"
+      "hash": "fc65dadb9406c9c1956afb1b0fc7697eeb70a47d29890d27e3eb1c876d624d81"
     },
     {
       "id": "find-where-plugin-runs",
@@ -28,7 +28,7 @@
     },
     {
       "id": "unknown-command-and-command-spellings-that-dont-exist",
-      "hash": "bc51352fb8d15f8a592012c3aef4b1670265b4a1a9c66897055232b807bd7fb2"
+      "hash": "8179c4b188c66f13783f1a22ebb2d12124023ff60be8a52e13c06cdd1fcfe1a4"
     },
     {
       "id": "add-a-marketplace",

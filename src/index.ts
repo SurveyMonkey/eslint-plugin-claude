@@ -18,6 +18,13 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
+import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
+import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
+import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
+import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
+import marketplaceSchema from './rules/marketplace-schema.ts'
+import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -97,6 +104,13 @@ const modules = [
   permissionsMcpRuleParens,
   permissionsParamRule,
   permissionsSkillRule,
+  marketplaceNameReserved,
+  marketplaceCommandVersionIgnored,
+  marketplaceHeadersHelperCommand,
+  marketplaceEntryHooksInline,
+  marketplaceSourceSchema,
+  marketplaceRelativeSourceFormat,
+  marketplaceSchema,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -166,6 +180,13 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-mcp-rule-parens': 'error',
   'permissions-param-rule': 'error',
   'permissions-skill-rule': 'error',
+  'marketplace-name-reserved': 'error',
+  'marketplace-command-version-ignored': 'error',
+  'marketplace-headers-helper-command': 'error',
+  'marketplace-entry-hooks-inline': 'error',
+  'marketplace-source-schema': 'error',
+  'marketplace-relative-source-format': 'error',
+  'marketplace-schema': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

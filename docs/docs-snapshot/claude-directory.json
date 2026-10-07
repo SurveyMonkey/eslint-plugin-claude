@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/claude-directory",
-  "hash": "5b42c5ede87710eb4669b4d722c0f5b72e1bc6493a36c314ef2149e89c9a7ad9",
+  "hash": "d351a1a4e9849d3f8a2f3db4df4a7219ac4170acf8bda7a7525b2440e8f4ae3e",
   "blocks": [
     {
       "id": "explore-the--claude-directory",
@@ -96,7 +96,7 @@
     },
     {
       "id": "cleaned-up-automatically",
-      "hash": "0609c288050503673bdf990aa88a77e3d337b166db1a5362b04dc008eb942473"
+      "hash": "b9aa6890ee3764f0fb5fa455cb4281598bc53525adea671f2d87e566e5cf471b"
     },
     {
       "id": "session-scratchpad-directory",
@@ -116,7 +116,7 @@
     },
     {
       "id": "clear-local-data",
-      "hash": "d7b1751f00cceae2d16643de528438003d15783a004d3dae7bc0933228e772dc"
+      "hash": "d3da6da440e82093aa705960a31a9d77574879514993e9bde5e8ae699018e8a5"
     },
     {
       "id": "related-resources",
