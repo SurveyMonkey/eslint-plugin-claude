@@ -29,8 +29,9 @@ gives Claude permission to run it for that message.[^name] The docs do not say i
 applies to a skill with `user-invocable: false`.
 
 The rule reads each Boolean form that Claude Code reads: `true`, `false`, `yes`, `no`, `on`,
-`off`, `1` and `0`, in any letter case.[^reference] It reports on the
-`disable-model-invocation` field.
+`off`, `1` and `0`, in any letter case.[^reference] The rule reads the parsed value, so a quoted
+`"yes"` or a number such as `0x1` reads as true. It reports on the `disable-model-invocation`
+field.
 
 The rule checks `SKILL.md` files only. It skips a command file.
 [`command-legacy-format`](command-legacy-format.md) reports the legacy form.

@@ -2,7 +2,7 @@
 // `name` (docs/rules/agent-name-unique.md).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { agentScope } from '../agent-scope.ts'
+import { classifyAgentFile } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
@@ -26,7 +26,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     },
   },
   create(context) {
-    const scope = agentScope(context.filename)
+    const scope = classifyAgentFile(context.filename)
     if (scope === null || scope.plugin) {
       return {}
     }
@@ -34,6 +34,11 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     // A file behind a link to a folder shows in the scan under its real path, so
     // the real path of this file must also count as this file.
     const selfReal = realOf(self)
+    // Without that real path, the rule cannot tell a link to this file from a second agent
+    // (ADR 001, Decision 14). A file that does not exist, as in an editor buffer, gives null.
+    if (selfReal === UNREADABLE) {
+      return {}
+    }
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)

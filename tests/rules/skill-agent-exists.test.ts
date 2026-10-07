@@ -459,7 +459,7 @@ describe('a plugin.json that does not parse to an object', () => {
 // A project `.claude/` is no plugin root, so a manifest in it changes no result (the plugins
 // reference puts the manifest under the plugin root). The result is the one with no manifest.
 describe('a .claude/.claude-plugin/plugin.json in a project', () => {
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['an `agents` key', '{"agents": "./x"}'],
   ])('does not change the report, for %s', (_name, text) => {
@@ -476,7 +476,7 @@ describe('a .claude/.claude-plugin/plugin.json in a project', () => {
 // A `.claude` link whose target holds its own `.git` has the target as its bound, as it has for
 // the agent rules. The scan of `.claude/agents/` stays inside that bound, so the rule sees it.
 describe.skipIf(process.platform === 'win32')('a .claude link to a repository of its own', () => {
-  it.fails('reads the agents in the target, and reports a missing agent', () => {
+  it('reads the agents in the target, and reports a missing agent', () => {
     put('lnk/.git/HEAD', '')
     put('lnk-target/.git/HEAD', '')
     put('lnk-target/agents/a.md', agentFile('a'))

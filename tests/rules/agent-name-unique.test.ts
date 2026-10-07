@@ -181,25 +181,24 @@ describe('agent-name-unique', () => {
     })
   })
 
-  it('compares other files by path when the real path of this file is unreadable', () => {
+  it('stays silent when the real path of this file is unreadable', () => {
     const root = repo({
       '.claude/agents/a.md': agent('', 'dup'),
       '.claude/agents/b.md': agent('', 'dup'),
     })
     realpathFails.path = path.join(root, '.claude/agents/a.md')
     try {
-      const messages = lint(root, '.claude/agents/a.md')
-      expect(messages).toHaveLength(1)
-      expect(messages[0]?.message).toContain('`b.md`')
-      expect(messages[0]?.message).not.toContain('`a.md`')
+      expect(lint(root, '.claude/agents/a.md')).toEqual([])
     } finally {
       realpathFails.path = null
     }
+    // With a readable real path, the same tree reports `b.md`.
+    expect(lint(root, '.claude/agents/a.md')).toHaveLength(1)
   })
 
   // A real path failure on a file that ESLint just read gives no real path to compare. A link to
   // the linted file is then not a second agent, so the rule makes no report (ADR 001, Decision 14).
-  it.fails('stays silent for a link to this file when the real path of this file is unreadable', {
+  it('stays silent for a link to this file when the real path of this file is unreadable', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({ '.claude/agents/a.md': agent('', 'dup') })

@@ -88,8 +88,8 @@ symlinkSync('missing.md', path.join(scratch, 'dead/.claude/commands/x.md'))
 put('twin/.claude/commands/real/deploy.md', bare)
 symlinkSync('real', path.join(scratch, 'twin/.claude/commands/a-link'))
 put('twin/.claude/skills/s/SKILL.md', named('real:deploy'))
-// No `.git`: the project directory is the bound, so a link from `.claude/` to a
-// directory beside it is followed.
+// No `.git`: `.claude/` is the bound, so a link from `.claude/` to a directory beside it
+// leaves the bound.
 put('nogit/shared/deploy.md', bare)
 put('nogit/.claude/skills/s/SKILL.md', named('shared:deploy'))
 mkdirSync(path.join(scratch, 'nogit/.claude/commands'), { recursive: true })
@@ -155,13 +155,13 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // Not a skill or command file.
     { code: named('build'), filename: at('dup-name', 'docs', 'SKILL.md') },
     { code: named('build'), filename: at('dup-name', '.claude', 'agents', 'build.md') },
-  ],
-  invalid: [
+    // Without `.git`, `.claude/` is the bound, as for the agent rules. The link leaves it.
     {
       code: named('shared:deploy'),
       filename: path.join(scratch, 'nogit', '.claude', 'skills', 's', 'SKILL.md'),
-      errors: [{ messageId: 'duplicate' }],
     },
+  ],
+  invalid: [
     {
       code: named('real:deploy'),
       filename: path.join(scratch, 'twin', '.claude', 'skills', 's', 'SKILL.md'),
@@ -491,7 +491,7 @@ describe('a plugin.json that does not parse to an object', () => {
 // A project `.claude/` is no plugin root, so a manifest in it changes no result (the plugins
 // reference puts the manifest under the plugin root). The result is the one with no manifest.
 describe('a .claude/.claude-plugin/plugin.json in a project', () => {
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['a `commands` key', '{"commands": "./x"}'],
   ])('does not change the report, for %s', (_name, text) => {
@@ -510,7 +510,7 @@ describe('a .claude/.claude-plugin/plugin.json in a project', () => {
 // A `.claude` link whose target holds its own `.git` has the target as its bound, as it has for
 // the agent rules. The scan of the target stays inside that bound, so the rule sees it.
 describe.skipIf(process.platform === 'win32')('a .claude link to a repository of its own', () => {
-  it.fails('reads the skills in the target, and reports a name that clashes', () => {
+  it('reads the skills in the target, and reports a name that clashes', () => {
     put('lnk/.git/HEAD', '')
     put('lnk-target/.git/HEAD', '')
     put('lnk-target/skills/dup/SKILL.md', bare)

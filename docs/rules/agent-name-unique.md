@@ -33,7 +33,9 @@ subagent name. It reads the other files from the disk. It reads each `.md` file 
 `.claude/agents/`, at any depth. It reads no file out of the repository. The repository is the
 first directory at or above `.claude/` that has a `.git` entry. The rule follows a link to a
 directory once. It does not follow a link whose real path is out of the repository. A `.claude`
-link with a real path out of the repository gives no report.
+link with a real path out of the repository gives no report. The rule also gives no report when
+it cannot read the real path of the linted file. It cannot then tell a link to that file from a
+second agent.
 
 The rule does not check these cases:
 

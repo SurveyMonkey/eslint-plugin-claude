@@ -44,10 +44,11 @@ function ancestors(dir: string, bound: string): string[] {
 }
 
 /** The `name` of each agent file in `.claude/agents/` of `start`, and of each
- *  directory above it up to the repository root `bound`. */
-function projectAgents(start: string, bound: string): Agents {
+ *  directory above it up to `top`. The scans read no file out of `bound`. The
+ *  two differ for a `.claude` link whose target holds its own `.git`. */
+function projectAgents(start: string, top: string, bound: string): Agents {
   const found: Agents = { names: [], unseen: false }
-  for (const dir of ancestors(start, bound)) {
+  for (const dir of ancestors(start, top)) {
     const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
     found.unseen ||= scan.outside || scan.unreadable
     for (const file of scan.files) {
@@ -111,10 +112,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
     }
     const [{ allow }] = context.options
     const root = scopeRoot(context.filename, file)
-    // The rule reads no file out of the repository that holds the scope.
-    const project = file.plugin ? root : path.dirname(root)
-    const bound = repositoryRoot(project)
-    const manifest = readManifest(root, bound)
+    // The rule reads no file out of the repository that holds the scope. The walk starts at the
+    // scope root, as it does for the agent rules.
+    const bound = repositoryRoot(root)
+    // The directories above `.claude/` end at the repository that holds the project.
+    const top = repositoryRoot(path.dirname(root))
+    // A project `.claude/` has no manifest. Only a plugin root has one.
+    const manifest = file.plugin ? readManifest(root, bound) : null
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
     // A manifest that the rule cannot see can hold the key, so the rule makes no report. A
     // manifest that the rule cannot read, or that is out of the repository, is such a manifest.
@@ -149,7 +153,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         }
         const agents =
           plugin === null
-            ? projectAgents(realDirectory(project), bound)
+            ? projectAgents(realDirectory(path.dirname(root)), top, bound)
             : pluginAgents(root, plugin, bound)
         // A link out of the repository, or a path that the rule cannot read,
         // can hold the agent, so the rule cannot prove that it is missing.

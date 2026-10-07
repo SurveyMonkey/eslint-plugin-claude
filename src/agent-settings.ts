@@ -1,6 +1,6 @@
 // The committed settings that apply to a local subagent file. A rule that
 // compares an agent with the settings reads them here.
-import { agentScope } from './agent-scope.ts'
+import { classifyAgentFile } from './agent-files.ts'
 import { readSettings } from './settings-files.ts'
 import { repositoryRoot, type Unreadable } from './skill-tree.ts'
 
@@ -10,8 +10,8 @@ import { repositoryRoot, type Unreadable } from './skill-tree.ts'
  *  `UNREADABLE` when a settings file cannot be seen. A rule gives no report
  *  for any of these. */
 export function localAgentSettings(file: string): Record<string, unknown> | null | Unreadable {
-  const scope = agentScope(file)
-  // `agentScope` gives null for a file that is no agent file. A plugin agent
+  const scope = classifyAgentFile(file)
+  // `classifyAgentFile` gives null for a file that is no agent file. A plugin agent
   // has no `.claude/` directory. No report is correct for both.
   if (scope === null || scope.plugin) {
     return null
