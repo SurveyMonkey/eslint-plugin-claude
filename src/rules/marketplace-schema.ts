@@ -71,9 +71,6 @@ const ENTRY_FIELDS: [string, Kind][] = [
   ['displayName', 'string'],
   ['headers', 'object'],
   ['headersHelper', 'string'],
-  ['metadata', 'object'],
-  ['experimental', 'object'],
-  ['relevance', 'object'],
   ['hooks', 'hooks'],
 ]
 

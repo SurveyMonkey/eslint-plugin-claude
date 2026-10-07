@@ -51,7 +51,7 @@ The types are these.[^top][^entries]
 | Entry | `description`, `version`, `category`, `displayName`, `headersHelper` | string |
 | Entry | `tags` | array of strings |
 | Entry | `strict`, `defaultEnabled` | Boolean |
-| Entry | `headers`, `metadata`, `experimental`, `relevance` | object |
+| Entry | `headers` | object |
 | Entry | `hooks` | object, string or array |
 
 The rule reports a wrong type once. Other `marketplace-*` rules read the same fields. They give
@@ -77,15 +77,17 @@ The rule does not check these cases, because the docs give no type or no test fo
 - The characters of `name`, and the name of an entry. The docs say that `claude plugin validate`
   fails a name with other characters. The rule checks only that the top-level `name` is not
   empty.[^top][^entries]
+- An entry `relevance`, `metadata` or `experimental` that is not an object. Claude Code ignores
+  the value, and validate gives a warning for it.[^validation]
 - An unknown key. Claude Code ignores it.[^marketplace-file]
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 
 `claude plugin validate` reports an empty `name` and an empty `owner.name`.[^validation] It also
-reports a warning for an entry `relevance`, `metadata` or `experimental` that is not an object, and
-says that Claude Code ignores it at load time.[^validation] The rule reports those three at the
-severity of the rule. The docs list no validate message for the other type faults, so the rule
-reports cases that validate may not.
+reports a warning for an entry `relevance`, `metadata` or `experimental` that is not an object.
+The warning says that Claude Code ignores the value at load time.[^validation] The rule does not
+report those three, because it reports at `error`. The docs list no validate message for the other
+type faults, so the rule reports cases that validate may not.
 
 Fail:
 

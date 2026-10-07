@@ -104,9 +104,6 @@ const ENTRY_WRONG: [string, unknown, string][] = [
   ['headersHelper', 5, 'a string'],
   ['headersHelper', null, 'a string'],
   ['headersHelper', ['mint'], 'a string'],
-  ['metadata', 'free', 'an object'],
-  ['experimental', [], 'an object'],
-  ['relevance', null, 'an object'],
   ['hooks', 3, 'an object'],
   ['hooks', null, 'an object'],
   ['hooks', true, 'an object'],
@@ -126,6 +123,11 @@ jsonTester.run('marketplace-schema (valid)', rule, {
     { code: top({ renames: {} }), filename },
     { code: top({ allowCrossMarketplaceDependenciesOn: [] }), filename },
     { code: withEntry({ name: '' }), filename },
+    // Claude Code ignores an entry `metadata`, `experimental` or `relevance` that is not an object.
+    // `claude plugin validate` warns, so the rule gives no report at `error`.
+    { code: withEntry({ metadata: 'free' }), filename },
+    { code: withEntry({ experimental: [] }), filename },
+    { code: withEntry({ relevance: null }), filename },
     { code: withEntry({ tags: [] }), filename },
     // An entry `hooks` that is a string or an array is for `marketplace-entry-hooks-inline`.
     { code: withEntry({ hooks: '' }), filename },
