@@ -27,9 +27,9 @@ take these paths. Claude Code drops a path that escapes the plugin directory and
 the plugin.[^escapes] On macOS and Linux, Claude Code also rejects a component path with a
 backslash.[^escapes]
 
-The rule reads each object in `plugins` that has a relative `source`. It resolves the source from
+The rule reads each object in `plugins` that has a relative `source`.[^relative] It resolves the source from
 the marketplace root, the directory that holds `.claude-plugin/`. A bare name resolves under
-`metadata.pluginRoot`.[^relative] The `plugin.json` of the source does not matter, because the
+`metadata.pluginRoot`.[^pluginroot] The `plugin.json` of the source does not matter, because the
 entry paths follow the same rules in both cases. The rule checks each string in the five fields.
 A field can hold one string or an array of strings. It reports the first fault of a path, on the
 string:
@@ -95,3 +95,4 @@ None.
 [^escapes]: [Error reference: Path escapes plugin directory](https://code.claude.com/docs/en/errors#path-escapes-plugin-directory)
 [^symlinks]: [Host and maintain a marketplace: Share files within a marketplace with symlinks](https://code.claude.com/docs/en/plugins/host-marketplace#share-files-within-a-marketplace-with-symlinks)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)
+[^pluginroot]: [Marketplace reference: Bare names under pluginRoot](https://code.claude.com/docs/en/plugins/marketplace-reference#bare-names-under-pluginroot)

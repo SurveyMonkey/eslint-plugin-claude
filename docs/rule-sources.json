@@ -288,6 +288,11 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Relative path plugin source",
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
     }
   ],
   "marketplace-entry-hooks-inline": [
@@ -332,6 +337,11 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Relative path plugin source",
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
     }
   ],
   "marketplace-entry-manifest-only-fields": [
@@ -388,11 +398,6 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "How each key combines with its default location",
       "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "Path-only fields",
-      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -624,6 +629,11 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Relative path plugin source",
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
     }
   ],
   "marketplace-version-duplicate": [

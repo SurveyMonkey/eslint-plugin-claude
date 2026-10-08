@@ -34,7 +34,8 @@ that hold a `SKILL.md`. It reports the folders that the entry does not list. The
 
 The `skills` value is a path, or an array of paths. A path lists a skill when it is `./skills/<name>`,
 with or without a trailing slash. The rule reads a path in normal form, so `./skills/./a` lists `a`.
-A path that lists `./skills` or `.` holds every skill, so it gives no report.[^paths]
+A path that is `./skills` or `.` gives no report. The docs do not say which skills Claude Code
+loads for these two values.
 
 The rule makes no report in these cases:
 
@@ -80,5 +81,4 @@ None.
 
 [^combine]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
 [^default]: [Plugin manifest reference: How each key combines with its default location](https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location)
-[^paths]: [Plugin manifest reference: Path-only fields](https://code.claude.com/docs/en/plugins/manifest-reference#path-only-fields)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)

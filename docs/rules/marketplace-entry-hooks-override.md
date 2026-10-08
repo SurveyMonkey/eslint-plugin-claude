@@ -25,9 +25,9 @@ and combines the entry fields with it. For `hooks`, the matchers of the entry fo
 the matchers of the manifest for that same event. Events that only the manifest declares keep
 their matchers.[^combine] [^strict] So the manifest matchers for a shared event have no effect.
 
-The rule reads each object in `plugins` that has a relative `source`. It resolves the source from
+The rule reads each object in `plugins` that has a relative `source`.[^relative] It resolves the source from
 the marketplace root, the directory that holds `.claude-plugin/`. A bare name resolves under
-`metadata.pluginRoot`.[^relative] It reports each event that the entry `hooks` object declares and
+`metadata.pluginRoot`.[^pluginroot] It reports each event that the entry `hooks` object declares and
 the `hooks` of `.claude-plugin/plugin.json` declares too. The report is on the event key and its
 value in the entry. A key counts as declared for any value. The event names are the names in the
 list of hook events of the plugin.
@@ -96,3 +96,4 @@ None.
 [^entry]: [Marketplace reference: Hooks in an entry](https://code.claude.com/docs/en/plugins/marketplace-reference#hooks-in-an-entry)
 [^forms]: [Plugin manifest reference: hooks](https://code.claude.com/docs/en/plugins/manifest-reference#hooks)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)
+[^pluginroot]: [Marketplace reference: Bare names under pluginRoot](https://code.claude.com/docs/en/plugins/marketplace-reference#bare-names-under-pluginroot)

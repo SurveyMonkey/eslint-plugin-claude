@@ -22,13 +22,14 @@ Declare no component field in an entry with `"strict": false` when the source ha
 
 The `strict` field of an entry decides what happens when the plugin has its own `plugin.json`. The
 default is `true`. Then `plugin.json` is the authority, and Claude Code appends the entry
-component fields to it.[^strict] With `"strict": false`, an entry that declares any of `commands`,
+component fields to it, except `hooks`, whose matchers replace those of the manifest per
+event.[^strict] With `"strict": false`, an entry that declares any of `commands`,
 `agents`, `skills`, `hooks`, `outputStyles` or `themes` is a conflict. The plugin fails to load
 with `Plugin <name> has conflicting manifests`.[^combine] [^conflict]
 
-The rule reads each object in `plugins` that has a relative `source`. It resolves the source from
+The rule reads each object in `plugins` that has a relative `source`.[^relative] It resolves the source from
 the marketplace root, the directory that holds `.claude-plugin/`. A bare name resolves under
-`metadata.pluginRoot`.[^relative] It reports each of the six keys that the entry sets, when
+`metadata.pluginRoot`.[^pluginroot] It reports each of the six keys that the entry sets, when
 `strict` is `false` and `.claude-plugin/plugin.json` is in that directory. The report is on the key
 and its value. A key counts as set for any value, because the docs say that the entry declares the
 field.
@@ -83,3 +84,4 @@ None.
 [^combine]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
 [^conflict]: [Troubleshoot plugins: Plugin <name> has conflicting manifests](https://code.claude.com/docs/en/plugins/troubleshooting#plugin-has-conflicting-manifests)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)
+[^pluginroot]: [Marketplace reference: Bare names under pluginRoot](https://code.claude.com/docs/en/plugins/marketplace-reference#bare-names-under-pluginroot)

@@ -139,6 +139,12 @@
       "text": "### Relative path plugin source\n\nThe path resolves from the marketplace root. `./plugins/formatter` is `<root>/plugins/formatter` even though the marketplace file is in `<root>/.claude-plugin/`.\n\nA path containing `..` fails validation. On macOS and Linux, Claude Code refuses an entry path that contains a backslash anywhere after the leading `./`, so write the path with forward slashes.\n\n```json theme={null}\n{ \"name\": \"formatter\", \"source\": \"./plugins/formatter\" }\n```\n\nA relative path resolves only when Claude Code has the marketplace's files, so check the [marketplace source](#marketplace-sources) type:\n\n* **`github`, `git`, `file`, and `directory`**: Claude Code has the marketplace's files.\n* **`url`**: Claude Code fetches only `marketplace.json`, so relative paths can't resolve. Give each plugin an object source instead, such as `github` or `git-subdir`.\n* **`settings`**: relative paths are rejected outright."
     },
     {
+      "heading": "Bare names under pluginRoot",
+      "id": "bare-names-under-pluginroot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96",
+      "text": "#### Bare names under pluginRoot\n\nA bare name is a single directory name with no `/`, such as `\"formatter\"`. To write bare names instead of `./` paths, set [`metadata.pluginRoot`](#top-level-fields) to the directory they resolve under. With `\"pluginRoot\": \"./plugins\"`, `\"source\": \"formatter\"` resolves to `./plugins/formatter`. Requires Claude Code v2.1.239 or later.\n\n`metadata.pluginRoot` has these limits:\n\n* It must itself be a relative path inside the marketplace.\n* It has no effect on a source that already starts with `./`.\n* A source that contains a `/`, such as `team-a/formatter`, isn't a bare name and still needs the `./` prefix, even when `metadata.pluginRoot` is set."
+    },
+    {
       "heading": "Hooks in an entry",
       "id": "hooks-in-an-entry",
       "hash": "9507e979be52f296c481e28bcbea85c45710869175610bfeff866de42d70ebdb",
@@ -185,12 +191,6 @@
       "id": "marketplace-file",
       "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b",
       "text": "## Marketplace file\n\nSave the marketplace file at `.claude-plugin/marketplace.json` in your marketplace's directory. If you keep the file somewhere else in the repository, users have to declare the marketplace in [`extraKnownMarketplaces`](/docs/en/settings-reference#extraknownmarketplaces) with `path` set on its source, because `claude plugin marketplace add` has no option for it.\n\nThe directory that contains `.claude-plugin/` is called the marketplace root, and every relative plugin source resolves from it, not from `.claude-plugin/`.\n\nEach user registers one marketplace per `name`, so a user can't have two marketplaces with the same name registered at once.\n\nClaude Code ignores an unknown top-level key or plugin-entry key rather than rejecting it, so a typo loads silently. `claude plugin validate` reports each unknown key as a warning."
-    },
-    {
-      "heading": "Bare names under pluginRoot",
-      "id": "bare-names-under-pluginroot",
-      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96",
-      "text": "#### Bare names under pluginRoot\n\nA bare name is a single directory name with no `/`, such as `\"formatter\"`. To write bare names instead of `./` paths, set [`metadata.pluginRoot`](#top-level-fields) to the directory they resolve under. With `\"pluginRoot\": \"./plugins\"`, `\"source\": \"formatter\"` resolves to `./plugins/formatter`. Requires Claude Code v2.1.239 or later.\n\n`metadata.pluginRoot` has these limits:\n\n* It must itself be a relative path inside the marketplace.\n* It has no effect on a source that already starts with `./`.\n* A source that contains a `/`, such as `team-a/formatter`, isn't a bare name and still needs the `./` prefix, even when `metadata.pluginRoot` is set."
     },
     {
       "heading": "Invalid input on a source",
