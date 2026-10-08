@@ -52,8 +52,8 @@ const MISSING: SourceRead = { kind: 'missing' }
 const ESCAPES: SourceRead = { kind: 'escapes' }
 const CANNOT_SEE: SourceRead = { kind: 'unreadable' }
 
-/** True when `pathFault` finds no network, absolute or `..` fault in `text`,
- *  and `text` has no backslash. */
+/** True when `pathFault` finds no network, absolute or `..` segment fault in
+ *  `text`, and `text` has no backslash. */
 function plain(text: string): boolean {
   return pathFault(text) === undefined && !text.includes('\\')
 }
