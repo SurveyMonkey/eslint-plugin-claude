@@ -57,8 +57,15 @@ describe('readMarketplaceFile', () => {
   })
 
   it('resolves from the directory that holds .claude when the tree has no .git', () => {
-    const dir = tree({ [`market/${MARKET}`]: market() }, false)
-    expect(readMarketplaceFile(settingsOf(dir), directory('market'))).toEqual(ACME)
+    const dir = tree(
+      { [`.claude/market/${MARKET}`]: market(), [`market/${MARKET}`]: market() },
+      false,
+    )
+    expect(readMarketplaceFile(settingsOf(dir), directory('.claude/market'))).toEqual(ACME)
+    // The bound is `.claude/`, so a marketplace beside it is out of the bound.
+    expect(readMarketplaceFile(settingsOf(dir), directory('market'))).toEqual({
+      kind: 'unreadable',
+    })
   })
 
   it('reads a path that goes up and stays in the repository', () => {
@@ -229,12 +236,27 @@ describe('readMarketplaceFile (the bound)', () => {
     expect(readMarketplaceFile(settingsOf(dir), file(toFile))).toEqual({ kind: 'unreadable' })
   })
 
-  it('gives unreadable for a path above the directory that holds .claude when there is no .git', () => {
-    // The bound is `sub`, so the marketplace in its parent is out of it.
-    const dir = tree({ [`sub/market/${MARKET}`]: market(), [MARKET]: market() }, false)
+  it('gives unreadable for a path out of .claude when there is no .git', () => {
+    // The bound is `sub/.claude`, so the marketplaces in `sub` and above are out of it.
+    const dir = tree(
+      {
+        [`sub/.claude/market/${MARKET}`]: market(),
+        [`sub/market/${MARKET}`]: market(),
+        [MARKET]: market(),
+      },
+      false,
+    )
     const settings = settingsOf(dir, 'sub/.claude/settings.json')
-    expect(readMarketplaceFile(settings, directory('market'))).toEqual(ACME)
+    expect(readMarketplaceFile(settings, directory('.claude/market'))).toEqual(ACME)
+    expect(readMarketplaceFile(settings, directory('market'))).toEqual({ kind: 'unreadable' })
     expect(readMarketplaceFile(settings, directory('..'))).toEqual({ kind: 'unreadable' })
+  })
+
+  it('resolves from the top directory when it has a .git file, as a git worktree has', () => {
+    const dir = tree({ [`sub/market/${MARKET}`]: market(), '.git': 'gitdir: elsewhere\n' }, false)
+    const settings = settingsOf(dir, 'sub/.claude/settings.json')
+    expect(readMarketplaceFile(settings, directory('sub/market'))).toEqual(ACME)
+    expect(readMarketplaceFile(settings, directory('market'))).toEqual({ kind: 'missing' })
   })
 
   it.skipIf(noLinks)('gives unreadable for a directory link that leads out', () => {
@@ -342,14 +364,46 @@ describe('declaredSource', () => {
   const settings = (marketplaces: unknown) =>
     JSON.stringify({ extraKnownMarketplaces: marketplaces })
 
-  it('reads the same file first', () => {
+  it('reads the local file first for the project file (highest precedence, whole)', () => {
     const own = settings({ acme: entry('own') })
     const dir = tree({ '.claude/settings.local.json': settings({ acme: entry('other') }) })
+    expect(declaredSource(settingsOf(dir), own, 'acme')).toEqual({
+      source: 'directory',
+      path: 'other',
+    })
+  })
+
+  it('reads the project file when the local file lacks the key', () => {
+    const own = settings({ acme: entry('own') })
+    const dir = tree({ '.claude/settings.local.json': settings({ b: entry('other') }) })
     expect(declaredSource(settingsOf(dir), own, 'acme')).toEqual({
       source: 'directory',
       path: 'own',
     })
   })
+
+  it('reads the project file when the local file is missing or has no marketplaces', () => {
+    const own = settings({ acme: entry('own') })
+    const variants: Record<string, string>[] = [{}, { '.claude/settings.local.json': '{' }]
+    for (const files of variants) {
+      const dir = tree(files)
+      expect(declaredSource(settingsOf(dir), own, 'acme')).toEqual({
+        source: 'directory',
+        path: 'own',
+      })
+    }
+  })
+
+  it.skipIf(noLinks)(
+    'gives undefined for the project file when the local file is unreadable',
+    () => {
+      const outside = tree({ 'x.json': settings({ acme: entry('other') }) })
+      const dir = tree({})
+      link(dir, '.claude/settings.local.json', path.join(outside, 'x.json'))
+      const own = settings({ acme: entry('own') })
+      expect(declaredSource(settingsOf(dir), own, 'acme')).toBeUndefined()
+    },
+  )
 
   it('reads the same file first for the local file', () => {
     const own = settings({ acme: entry('own') })
@@ -376,11 +430,17 @@ describe('declaredSource', () => {
     expect(declaredSource(local, '{}', 'acme')).toEqual({ source: 'directory', path: 'other' })
   })
 
-  it('lets the same file decide, even with a source that is not local', () => {
-    const own = settings({ acme: { source: { source: 'github', repo: 'o/r' } } })
-    const dir = tree({ '.claude/settings.local.json': settings({ acme: entry('other') }) })
-    expect(declaredSource(settingsOf(dir), own, 'acme')).toEqual({ source: 'github', repo: 'o/r' })
-    expect(declaredSource(settingsOf(dir), settings({ acme: 'x' }), 'acme')).toBeUndefined()
+  it('lets the file of the highest precedence decide, even with a source that is not local', () => {
+    const github = settings({ acme: { source: { source: 'github', repo: 'o/r' } } })
+    const dir = tree({ '.claude/settings.json': settings({ acme: entry('other') }) })
+    const local = settingsOf(dir, '.claude/settings.local.json')
+    expect(declaredSource(local, github, 'acme')).toEqual({ source: 'github', repo: 'o/r' })
+    expect(declaredSource(local, settings({ acme: 'x' }), 'acme')).toBeUndefined()
+    const dir2 = tree({ '.claude/settings.local.json': github })
+    expect(declaredSource(settingsOf(dir2), settings({ acme: entry('own') }), 'acme')).toEqual({
+      source: 'github',
+      repo: 'o/r',
+    })
   })
 
   it('gives undefined when neither file has the key', () => {
@@ -418,12 +478,13 @@ describe('declaredSource', () => {
       source: 'directory',
       path: 'other',
     })
-    expect(
-      declaredSource(settingsOf(dir), settings({ constructor: entry('own') }), 'constructor'),
-    ).toEqual({
+    const dir2 = tree({ '.claude/settings.json': settings({}) })
+    const local = settingsOf(dir2, '.claude/settings.local.json')
+    expect(declaredSource(local, settings({ constructor: entry('own') }), 'constructor')).toEqual({
       source: 'directory',
       path: 'own',
     })
+    expect(declaredSource(local, settings({}), 'constructor')).toBeUndefined()
   })
 
   it('finds the key "__proto__" and the empty key when the file sets them', () => {

@@ -28,25 +28,26 @@ the key, because the docs say how to write it.
 The rule reads each entry whose `source` is a `file` or `directory` source.[^types] A `file` source
 `path` names the `marketplace.json`. A `directory` source `path` names the marketplace root, the
 directory that holds `.claude-plugin/marketplace.json`.[^fields] A relative path resolves from the
-repository root. The root is the first directory at or above the settings file that holds
-a `.git`. With no `.git`, it is the directory that holds `.claude/`. The docs resolve the path
+repository root. The root is the first directory at or above the directory that holds `.claude/`
+and holds a `.git`. With no `.git`, the rule resolves the path from the directory that holds
+`.claude/`, and reads no file out of `.claude/` (ADR 001, Decision 14). The docs resolve the path
 against the main checkout.[^checkout] The rule resolves it from the root of the checkout that holds
-the settings file, so a git worktree uses its own root.
+the settings file. A git worktree uses its own root.
 
 The rule reports the key when the file has a `name` and the `name` differs from the key. The
 report is on the key. The comparison is exact, with the same letter case and no trim.
 
 The rule makes no report in these cases:
 
-- **The source is not local.** A `github`, `git`, `url`, `settings` or `npm` source, a source of
-  another type, and a source that is not an object are not read. A `settings` source has no file.
+- **The source is not local.** A `github`, `git`, `url` or `settings` source, a source of another
+  type, and a source that is not an object are not read. A `settings` source has no file.
   [`settings-extra-known-marketplaces-schema`](settings-extra-known-marketplaces-schema.md) checks
   its `name`.
 - **The path is absolute, empty or not a string.** The rule reads relative paths only.
 - **The rule cannot read the file.** The file is not there. The file does not parse to an object.
-  The `path` names a directory where a file is due. A link on the path is dangling. The real path
-  is out of the repository, or the read fails. The rule reads no file out of the repository (ADR
-  001, Decision 14).
+  The `path` names a directory where a file is due. The last link of the path is dangling. The
+  real path is out of the bound, or the read fails. The rule reads no file out of the repository
+  (ADR 001, Decision 14).
 - **The file has no usable name.** A `name` that is missing, empty or not a string is a fault for
   [`marketplace-schema`](marketplace-schema.md).
 

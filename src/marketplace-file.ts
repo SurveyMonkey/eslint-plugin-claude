@@ -3,12 +3,15 @@
 // a local marketplace. A rule that compares a settings key with that
 // marketplace asks here. The docs say that a relative path "resolves against
 // your repository's main checkout" (plugins/org, "Require a marketplace and
-// its plugins"). So a relative `path` resolves from the repository root of
-// the settings file. With no `.git`, that root is the directory that holds
-// `.claude/`. The reader reads the file through `readJson`, with the
-// repository root as the bound (ADR 001, Decision 14).
+// its plugins"). The reader resolves a relative `path` from the root of the
+// checkout that holds the settings file. The two differ in a git worktree.
+// With no `.git`, the reader resolves from the directory that holds
+// `.claude/`. That is a choice of this rule, and the docs do not say it. The
+// reader reads the file through `readJson`. The bound is the repository
+// root. With no `.git`, it is `.claude/` (ADR 001, Decision 14).
+import { existsSync } from 'node:fs'
 import path from 'node:path'
-import { readJson, repositoryRoot, UNREADABLE } from './skill-tree.ts'
+import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tree.ts'
 
 /** What a rule sees at a local marketplace source. A rule makes no report
  *  except for `marketplace`.
@@ -17,9 +20,9 @@ import { readJson, repositoryRoot, UNREADABLE } from './skill-tree.ts'
  *    relative `path`. This covers every other source type, and a `path` that
  *    is absolute, empty or not a string.
  *  - `missing`: no `marketplace.json` is at the path.
- *  - `unreadable`: the rule cannot see the file. A link on the path is
- *    dangling, or the real path is out of the repository, or the read fails.
- *    The file does not parse to an object, or is no file.
+ *  - `unreadable`: the rule cannot see the file. The last link of the path is
+ *    dangling, the real path is out of the bound, or the read fails. The file
+ *    does not parse to an object, or is no file.
  *  - `marketplace`: the file. `name` is its `name`, and is undefined when that
  *    is not a string. `entries` holds the `name` of each entry of `plugins`
  *    that has a string `name`. It is undefined when `plugins` is not an
@@ -44,6 +47,17 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 /** The directory that holds the `.claude/` directory of the settings file `file`. */
 const projectOf = (file: string) => path.dirname(path.dirname(path.resolve(file)))
 
+/** The bound of each read for the settings file `file`: its repository root.
+ *  With no `.git`, it is the `.claude/` directory (ADR 001, Decision 14). The
+ *  search starts at the directory that holds `.claude/`, so a `.claude` link
+ *  cannot move the bound. */
+function boundOf(file: string): string {
+  const root = repositoryRoot(projectOf(file))
+  return existsSync(path.join(root, '.git'))
+    ? root
+    : realDirectory(path.dirname(path.resolve(file)))
+}
+
 /** True when `text` is an absolute path on any platform. The Windows form
  *  covers a path that starts with `/` too. */
 const absolute = (text: string) => path.win32.isAbsolute(text)
@@ -67,8 +81,8 @@ export function readMarketplaceFile(settingsFile: string, source: unknown): Mark
   ) {
     return NOT_LOCAL
   }
-  const bound = repositoryRoot(projectOf(settingsFile))
-  const target = path.resolve(bound, given)
+  const bound = boundOf(settingsFile)
+  const target = path.resolve(repositoryRoot(projectOf(settingsFile)), given)
   const parsed = readJson(
     type === 'file' ? target : path.join(target, '.claude-plugin', 'marketplace.json'),
     bound,
@@ -115,23 +129,35 @@ export function sourceOf(entry: unknown): unknown {
 }
 
 /** The `source` value of the marketplace `market`, as the project settings
- *  file `settingsFile` declares it. `text` is the text of that file. The
- *  same file decides when it has the key. Otherwise the other project
- *  settings file of the same `.claude/` decides. The result is undefined when
- *  neither file has the key, and when the other file cannot be read. */
+ *  files of one `.claude/` declare it. `settingsFile` is the linted file, and
+ *  `text` is its text. The settings reference says that Claude Code uses a
+ *  same-name entry "from the highest-precedence file whole". The local file
+ *  is above `settings.json`. So `settings.local.json` decides when it has the
+ *  key. Otherwise `settings.json` decides. The result is undefined when no
+ *  file has the key. It is also undefined when `settings.local.json` is a
+ *  file that the rule cannot read, because it can hold the entry in use. */
 export function declaredSource(settingsFile: string, text: string, market: string): unknown {
   const own = marketplacesOf(text)
-  if (own !== undefined && Object.hasOwn(own, market)) {
+  const ownHas = own !== undefined && Object.hasOwn(own, market)
+  const project = path.basename(settingsFile) === 'settings.json'
+  if (!project && ownHas) {
     return sourceOf(own[market])
   }
   const other = path.join(
     path.dirname(settingsFile),
-    path.basename(settingsFile) === 'settings.json' ? 'settings.local.json' : 'settings.json',
+    project ? 'settings.local.json' : 'settings.json',
   )
-  const parsed = readJson(other, repositoryRoot(projectOf(settingsFile)))
-  if (parsed === null || parsed === UNREADABLE) {
+  const parsed = readJson(other, boundOf(settingsFile))
+  if (parsed === UNREADABLE) {
     return undefined
   }
+  const there = parsed === null ? undefined : marketplacesIn(parsed.data)
+  if (project && there !== undefined && Object.hasOwn(there, market)) {
+    return sourceOf(there[market])
+  }
+  if (project) {
+    return ownHas ? sourceOf(own[market]) : undefined
+  }
   // `sourceOf` gives undefined for a key of the prototype, which is no object with a `source`.
-  return sourceOf(marketplacesIn(parsed.data)?.[market])
+  return sourceOf(there?.[market])
 }

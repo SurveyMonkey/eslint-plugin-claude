@@ -54,7 +54,7 @@ describe(RULE, () => {
       endColumn: 16,
     })
     expect(messages[0]?.message).toBe(
-      'The "enabledPlugins" key "nope@team" names the plugin "nope", and the marketplace.json of "team" has no entry with that "name". The docs say that the entry "name" is the key that "enabledPlugins" takes.',
+      'The "enabledPlugins" key "nope@team" names the plugin "nope", and the marketplace.json of "team" has no entry with that "name". The docs say that the entry "name" is what you write in "enabledPlugins".',
     )
   })
 
@@ -145,25 +145,24 @@ describe(RULE, () => {
     expect(lint(dir, settings({ 'nope@team': true }, own))).toHaveLength(1)
   })
 
-  it('lets the marketplace of the same file win over the other file', () => {
-    const dir = tree({
-      [`good/${MARKET}`]: marketplace(['fmt']),
-      [`bad/${MARKET}`]: marketplace(['other']),
-      [LOCAL]: JSON.stringify({ extraKnownMarketplaces: declare(directory('bad')) }),
-      [PROJECT]: JSON.stringify({ extraKnownMarketplaces: declare(directory('bad')) }),
-    })
-    const own = declare(directory('good'))
-    expect(lint(dir, settings({ 'fmt@team': true }, own), PROJECT)).toEqual([])
-    expect(lint(dir, settings({ 'fmt@team': true }, own), LOCAL)).toEqual([])
-    const reverse = declare(directory('bad'))
-    const good = tree({
-      [`good/${MARKET}`]: marketplace(['fmt']),
-      [`bad/${MARKET}`]: marketplace(['other']),
-      [LOCAL]: JSON.stringify({ extraKnownMarketplaces: declare(directory('good')) }),
-      [PROJECT]: JSON.stringify({ extraKnownMarketplaces: declare(directory('good')) }),
-    })
-    expect(lint(good, settings({ 'fmt@team': true }, reverse), PROJECT)).toHaveLength(1)
-    expect(lint(good, settings({ 'fmt@team': true }, reverse), LOCAL)).toHaveLength(1)
+  it('lets the local file win over the project file, as the docs rank the files', () => {
+    // The settings reference: Claude Code uses a same-name entry from the highest-precedence file.
+    const trees = (local: string, project: string) =>
+      tree({
+        [`good/${MARKET}`]: marketplace(['fmt']),
+        [`bad/${MARKET}`]: marketplace(['other']),
+        [LOCAL]: JSON.stringify({ extraKnownMarketplaces: declare(directory(local)) }),
+        [PROJECT]: JSON.stringify({ extraKnownMarketplaces: declare(directory(project)) }),
+      })
+    const key = { 'fmt@team': true }
+    // The local file points at `good`, so the project file's `bad` does not decide.
+    const goodLocal = trees('good', 'bad')
+    expect(lint(goodLocal, settings(key, declare(directory('bad'))), PROJECT)).toEqual([])
+    expect(lint(goodLocal, settings(key, declare(directory('good'))), LOCAL)).toEqual([])
+    // The local file points at `bad`, so the project file's `good` does not decide.
+    const badLocal = trees('bad', 'good')
+    expect(lint(badLocal, settings(key, declare(directory('good'))), PROJECT)).toHaveLength(1)
+    expect(lint(badLocal, settings(key, declare(directory('bad'))), LOCAL)).toHaveLength(1)
   })
 
   it('resolves a relative path from the repository root, for a nested .claude directory', () => {
@@ -186,9 +185,14 @@ describe(RULE, () => {
   })
 
   it('reports in a tree with no .git', () => {
-    const dir = withMarket(['fmt'], false)
-    expect(lint(dir, settings({ 'nope@team': true }, OWN))).toHaveLength(1)
-    expect(lint(dir, settings({ 'fmt@team': true }, OWN))).toEqual([])
+    // With no `.git`, the bound is `.claude/`, so the marketplace sits in it.
+    const dir = tree({ [`.claude/market/${MARKET}`]: marketplace(['fmt']) }, false)
+    const own = declare(directory('.claude/market'))
+    expect(lint(dir, settings({ 'nope@team': true }, own))).toHaveLength(1)
+    expect(lint(dir, settings({ 'fmt@team': true }, own))).toEqual([])
+    // A marketplace beside `.claude/` is out of the bound.
+    const beside = withMarket(['fmt'], false)
+    expect(lint(beside, settings({ 'nope@team': true }, OWN))).toEqual([])
   })
 
   it('reads the last of two members of one key, as JSON.parse does', () => {
@@ -278,15 +282,25 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(other, text)).toEqual([])
   })
 
-  it('stays silent when the same file declares the marketplace with another source', () => {
-    // The same file decides, and the other file does not make the answer.
+  it('stays silent when the file of the highest precedence has another source', () => {
+    // The local file decides, and the project file does not make the answer.
+    const github = declare({ source: 'github', repo: 'o/market' })
     const dir = tree({
       [`market/${MARKET}`]: marketplace(),
-      [LOCAL]: JSON.stringify({ extraKnownMarketplaces: OWN }),
+      [PROJECT]: JSON.stringify({ extraKnownMarketplaces: OWN }),
+      [LOCAL]: JSON.stringify({ extraKnownMarketplaces: github }),
     })
-    const own = declare({ source: 'github', repo: 'o/market' })
-    expect(lint(dir, settings({ 'nope@team': true }, own))).toEqual([])
-    expect(lint(dir, settings({ 'nope@team': true }, { team: 'market' }))).toEqual([])
+    expect(lint(dir, settings({ 'nope@team': true }, OWN), PROJECT)).toEqual([])
+    expect(lint(dir, settings({ 'nope@team': true }, github), LOCAL)).toEqual([])
+    expect(lint(dir, settings({ 'nope@team': true }, { team: 'market' }), LOCAL)).toEqual([])
+  })
+
+  it('stays silent for a key with an empty plugin or marketplace part', () => {
+    const dir = withMarket()
+    expect(
+      lint(dir, settings({ 'nope@': true }, { ...OWN, '': { source: directory('market') } })),
+    ).toEqual([])
+    expect(lint(dir, settings({ '@team': true }, OWN))).toEqual([])
   })
 
   it.each([

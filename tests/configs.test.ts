@@ -71,8 +71,9 @@ const badMarketSettings = JSON.stringify({
   additionalMarketplaces: {},
   syncClaudeAiPlugins: true,
   extraKnownMarketplaces: {
-    // The marketplace at `packages/mk/market` has the name `acme-market`, not `team`.
-    team: { source: { source: 'directory', path: 'market' } },
+    // The marketplace at `packages/mk/.claude/market` has the name `acme-market`, not `team`.
+    // The tree has no `.git`, so the bound is `.claude/` and the marketplace sits in it.
+    team: { source: { source: 'directory', path: '.claude/market' } },
     acme: { source: { source: 'npm', package: 'acme' } },
     docs: {
       source: { source: 'url', url: 'http://x.test/m.json', headersHelper: '/opt/bin/mint' },
@@ -208,7 +209,7 @@ const TREE: Record<string, string> = {
   'marketplace.json': badMarketplace,
   // The settings rules of #12 read the two project settings files, and no other settings file.
   // A valid marketplace, which the cross-file settings rules read from the settings files.
-  'packages/mk/market/.claude-plugin/marketplace.json': JSON.stringify({
+  'packages/mk/.claude/market/.claude-plugin/marketplace.json': JSON.stringify({
     name: 'acme-market',
     owner: { name: 'mk' },
     plugins: [{ name: 'fmt', source: { source: 'github', repo: 'acme/fmt' } }],

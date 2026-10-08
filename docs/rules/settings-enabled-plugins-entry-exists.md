@@ -25,20 +25,24 @@ An `enabledPlugins` key is `plugin-name@marketplace-name`.[^key] The plugin part
 `enabledPlugins`.[^names][^loading] The `name` in the `plugin.json` of the plugin can differ from the
 entry name. Claude Code reports `Plugin "<manifest-name>" not found in marketplace
 "<marketplace>"` when someone installs by the manifest name.[^names] The docs do not give the
-effect of an `enabledPlugins` key that matches no entry. The rule reports the key, because the
-docs say which name to write.
+effect of an `enabledPlugins` key that matches no entry in the sections that this rule cites. The
+rule reports the key, because the docs say which name to write.
 
 For each key, the rule finds the marketplace in `extraKnownMarketplaces`, by the marketplace part
-of the key.[^org] It looks in the same settings file first. When that file has no such marketplace,
-it looks in the other project settings file of the same `.claude/` directory. When the same file
-has the marketplace, that entry decides, whatever its source. The marketplace needs a `file` or
-`directory` source.[^types] A `file` source `path` names the `marketplace.json`. A `directory`
-source `path` names the marketplace root, the directory that holds
-`.claude-plugin/marketplace.json`.[^fields] A relative path resolves from the repository root. The
-root is the first directory at or above the settings file that holds a `.git`. With no `.git`, it is
-the directory that holds `.claude/`. The docs resolve the path against the main
+of the key.[^org] The settings reference says that Claude Code uses a same-name entry "from the
+highest-precedence file whole".[^precedence] The local file is above the project file. So
+`.claude/settings.local.json` decides when it has the marketplace. Otherwise
+`.claude/settings.json` decides. The entry decides, whatever its source. A local file that the rule
+cannot read gives no report for the project file, because it can hold the entry in use.
+
+The marketplace needs a `file` or `directory` source.[^types] A `file` source `path` names the
+`marketplace.json`. A `directory` source `path` names the marketplace root, the directory that
+holds `.claude-plugin/marketplace.json`.[^fields] A relative path resolves from the repository
+root. The root is the first directory at or above the directory that holds `.claude/` and holds a
+`.git`. With no `.git`, the rule resolves the path from the directory that holds `.claude/`, and
+reads no file out of `.claude/` (ADR 001, Decision 14). The docs resolve the path against the main
 checkout.[^checkout] The rule resolves it from the root of the checkout that holds the settings
-file, so a git worktree uses its own root.
+file. A git worktree uses its own root.
 
 The rule reports the key when the plugin part is not equal to the `name` of any entry in
 `plugins`. The report is on the key. The comparison is exact, with the same letter case and no
@@ -51,13 +55,13 @@ only. It does not say whether the plugin part is a manifest name.
 The rule makes no report in these cases:
 
 - **The marketplace has no `file` or `directory` source.** Neither project file declares it, or the
-  source is a `github`, `git`, `url`, `settings` or `npm` source, or another type. A marketplace
-  that user or managed settings declare gets no check.
+  source is a `github`, `git`, `url` or `settings` source, or another type. A marketplace that
+  user or managed settings declare gets no check.
 - **The path is absolute, empty or not a string.** The rule reads relative paths only.
 - **The rule cannot read the file.** The file is not there. The file does not parse to an object.
-  The `path` names a directory where a file is due. A link on the path is dangling. The real path
-  is out of the repository, or the read fails. The rule reads no file out of the repository (ADR
-  001, Decision 14). The same holds for the other settings file.
+  The `path` names a directory where a file is due. The last link of the path is dangling. The
+  real path is out of the bound, or the read fails. The rule reads no file out of the repository
+  (ADR 001, Decision 14). The same holds for the other settings file.
 - **The file has no `plugins` array.** [`marketplace-schema`](marketplace-schema.md) reports it.
 - **The key has a form that
   [`settings-enabled-plugins-schema`](settings-enabled-plugins-schema.md) reports.** The key has
@@ -102,3 +106,4 @@ None.
 [^types]: [All settings: Marketplace source types](https://code.claude.com/docs/en/settings-reference#marketplace-source-types)
 [^fields]: [Marketplace reference: Fields by type](https://code.claude.com/docs/en/plugins/marketplace-reference#fields-by-type)
 [^checkout]: [Manage Claude Code plugins for your organization: Require plugins per repository](https://code.claude.com/docs/en/plugins/org#require-plugins-per-repository)
+[^precedence]: [All settings: extraKnownMarketplaces](https://code.claude.com/docs/en/settings-reference#extraknownmarketplaces)

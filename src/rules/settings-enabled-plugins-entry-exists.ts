@@ -1,8 +1,8 @@
 // The plugin part of an `enabledPlugins` key `plugin@marketplace` must be the
 // `name` of an entry in the `marketplace.json` that the marketplace names in
 // `extraKnownMarketplaces` (docs/rules/settings-enabled-plugins-entry-exists.md).
-// The rule finds the marketplace in the same settings file first, then in the
-// other project settings file. It reads the file through `readMarketplaceFile`,
+// The rule finds the marketplace in the project settings file of the highest
+// precedence that has it (`declaredSource`). It reads the file through `readMarketplaceFile`,
 // and makes no report when it cannot read it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -24,7 +24,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
     schema: [],
     messages: {
       missing:
-        'The "enabledPlugins" key "{{key}}" names the plugin "{{plugin}}", and the marketplace.json of "{{marketplace}}" has no entry with that "name". The docs say that the entry "name" is the key that "enabledPlugins" takes.',
+        'The "enabledPlugins" key "{{key}}" names the plugin "{{plugin}}", and the marketplace.json of "{{marketplace}}" has no entry with that "name". The docs say that the entry "name" is what you write in "enabledPlugins".',
     },
   },
   create(context) {

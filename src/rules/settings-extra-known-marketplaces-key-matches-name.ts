@@ -22,7 +22,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'mismatch' }> = {
     schema: [],
     messages: {
       mismatch:
-        'The "extraKnownMarketplaces" key "{{key}}" is not the "name" in the marketplace.json that it points at, which is "{{marketplace}}". The docs say to key a marketplace by its own "name".',
+        'The "extraKnownMarketplaces" key "{{key}}" differs from the "name" in the marketplace.json that it points at. That "name" is "{{marketplace}}". The docs say to key a marketplace by its own "name".',
     },
   },
   create(context) {

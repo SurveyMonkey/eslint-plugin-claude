@@ -908,6 +908,11 @@
       "url": "https://code.claude.com/docs/en/plugins/org",
       "heading": "Require plugins per repository",
       "hash": "67c847e1cd322d6ab392081d18421d67272ea6369dbd514df9c318be30894176"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "extraKnownMarketplaces",
+      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
     }
   ],
   "settings-enabled-plugins-schema": [

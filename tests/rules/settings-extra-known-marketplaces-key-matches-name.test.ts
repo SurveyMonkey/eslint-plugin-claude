@@ -40,7 +40,7 @@ describe(RULE, () => {
       endColumn: 11,
     })
     expect(messages[0]?.message).toBe(
-      'The "extraKnownMarketplaces" key "team" is not the "name" in the marketplace.json that it points at, which is "acme". The docs say to key a marketplace by its own "name".',
+      'The "extraKnownMarketplaces" key "team" differs from the "name" in the marketplace.json that it points at. That "name" is "acme". The docs say to key a marketplace by its own "name".',
     )
   })
 
@@ -86,8 +86,11 @@ describe(RULE, () => {
   })
 
   it('reports in a tree with no .git', () => {
-    const dir = withMarket('acme', false)
-    expect(lint(dir, settings('team', directory('market')))).toHaveLength(1)
+    // With no `.git`, the bound is `.claude/`, so the marketplace sits in it.
+    const dir = tree({ [`.claude/market/${MARKET}`]: marketplace() }, false)
+    expect(lint(dir, settings('team', directory('.claude/market')))).toHaveLength(1)
+    // A marketplace beside `.claude/` is out of the bound.
+    expect(lint(withMarket('acme', false), settings('team', directory('market')))).toEqual([])
   })
 
   it('compares the names in the exact letter case', () => {
