@@ -47,8 +47,8 @@ it, so the rule makes no report for it. The rule reads a `plugin.json` for a plu
 command only. A project `.claude/` has no manifest for the rule.
 
 For a plugin skill or command file, the rule reads each Markdown file below `agents/` in the
-plugin root.[^plugin] An agent has its `name`, or the file name without `.md` when it has no `name`. The value can be
-the scoped name `<plugin>:<folder>:<name>`.[^plugin] The rule also accepts the bare name, because
+plugin root.[^plugin] An agent has its `name`. When it has no `name`, it has the file name without `.md`. The value can
+be the scoped name `<plugin>:<folder>:<name>`.[^plugin] The rule also accepts the bare name, because
 the docs do not say that Claude Code refuses it. The plugin name is the `name` in
 `plugin.json`, or the directory name. A plugin skill does not see the agents of the repository
 that installs the plugin.

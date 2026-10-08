@@ -29,7 +29,7 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 15 rules are `partial`: validate reports
-  some of their cases. The other 463 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 462 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -116,7 +116,7 @@ below covers one kind of configuration file, and each rule name starts with its 
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
 | `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 148 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 49 |
-| `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 39 |
+| `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 38 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
 | `limit` | `problem` | A size, count or length limit, or a truncation. | 21 |
 | `deprecated` | `suggestion` | A legacy or renamed form that still works. | 14 |
@@ -371,7 +371,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 - Two headings used here are HTML `<h3>` tags, not `#` lines: sub-agents "Frontmatter reference" (anchor `supported-frontmatter-fields`) and output-styles "Frontmatter reference" (anchor `frontmatter`). The same holds for the two errors.md headings and the troubleshooting heading.
 - Rows handed to other groups: frontmatter `hooks` shape, `Stop` to `SubagentStop`, hook script executable, `shell: powershell`, frontmatter-hook trust, `SubagentStart`/`SubagentStop` matchers (hooks). `agent-memory/*/MEMORY.md` size, memory dir orphans, `agent-memory-local/` gitignore (memory). Plugin `settings.json` `agent` and allowed keys, manifest `agents`/`outputStyles` replacing the folder scan (plugin). Settings `agent`, `outputStyle` case and resolution, `subagentPromptCacheTtl`, and env `CLAUDE_CODE_SUBAGENT_MODEL`, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_FORK_SUBAGENT`, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` (settings). `Agent(name)` deny rules and `Agent(model:...)` (permissions). Glob/Grep with Bash in `tools` (mcp-lsp).
 - Open question: the scope table ranks project agents over plugin agents by name [^sub-agents-choose-the-subagent-scope], but plugin agents register under `<plugin>:<name>`. The docs do not say whether a bare-name clash between them shadows anything, so no rule checks it.
-- One row was dropped: `output-style-force-for-plugin-unique` (at most one style with `force-for-plugin: true` across the plugins of a marketplace). The set of enabled plugins is user state that the repository does not show (ADR 001, Decision 14), and a marketplace lists plugins that a user may not enable. A rule cannot tell which styles compete.
+- One row was dropped: `output-style-force-for-plugin-unique` (at most one style with `force-for-plugin: true` across the plugins of a marketplace). The set of enabled plugins is user state. The repository does not show it (ADR 001, Decision 14). A marketplace lists plugins that a user may not enable. A rule cannot tell which styles compete.
 
 ### Hooks
 

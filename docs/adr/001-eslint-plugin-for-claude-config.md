@@ -149,10 +149,10 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
     - A rule reads no file out of the repository. The repository is the first directory at or
       above the linted file that has a `.git` entry.
     - With no `.git` entry at or above the linted file, the bound is the scope root of that file.
-      The scope root is `.claude/` for a local file, the plugin root for a plugin file, and the
-      marketplace root for `marketplace.json`. A rule then reads no file out of that directory.
-      `repositoryRoot` in `src/skill-tree.ts` does this: with no `.git` entry, it returns the real
-      path of the directory where the search started.
+      The scope root is `.claude/` for a local file and the plugin root for a plugin file. For
+      `marketplace.json`, it is the marketplace root. A rule then reads no file out of that
+      directory. `repositoryRoot` in `src/skill-tree.ts` does this. With no `.git` entry, it
+      returns the real path of the directory where the search started.
     - A rule does not follow a link whose real path is out of the repository.
     - A rule does not model what Claude Code loads from out of the repository, such as user
       settings or agents in `~/.claude/`.

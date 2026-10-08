@@ -84,8 +84,8 @@ You review code.
 ```
 
 The default is the limit in the docs.[^fields] A team can set a lower value to keep names short.
-The schema sets a maximum of 256, because the docs name no setting that moves the limit. A config that sets
-only the severity keeps the default. The `recommended` and `strict` configs set no option.
+The schema sets a maximum of 256, because the docs name no setting that moves the limit. A
+config that sets only the severity keeps the default. The `recommended` and `strict` configs set no option.
 
 At the default, the message says that Claude Code skips the file. At another value, the message
 says "The configured limit is 64". It does not say that Claude Code skips the file at that length.

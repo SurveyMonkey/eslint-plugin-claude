@@ -109,7 +109,7 @@ const rule: MarkdownRuleDefinition<{
           context.report({ loc: fm.at(field.valueStart, field.valueEnd), messageId: 'badName' })
         }
         if (typeof agentName === 'string') {
-          // The docs say "characters". A code point counts once, so the rule never over-counts.
+          // The docs do not say how Claude Code counts a character. The rule counts code points.
           const length = [...agentName].length
           if (length > nameMax) {
             const field = fm.fields.get('name') as { valueStart: number; valueEnd: number }
