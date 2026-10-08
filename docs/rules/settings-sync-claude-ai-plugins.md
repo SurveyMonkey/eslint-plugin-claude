@@ -43,7 +43,7 @@ file. It does not read user settings or managed settings. A value in the local f
 and the rule reports `true` only. The key `syncClaudeAiSkills` is another setting, and the rule does not read it.
 
 To turn off one synced plugin for a project, set `"<name>@synced": false` in `enabledPlugins`. That
-key works in `.claude/settings.json`.[^key]
+key works in `.claude/settings.json`.[^plugins]
 
 Fail:
 
@@ -66,4 +66,5 @@ Pass, in `.claude/settings.local.json`:
 ## Sources
 
 [^key]: [All settings: syncClaudeAiPlugins](https://code.claude.com/docs/en/settings-reference#syncclaudeaiplugins)
+[^plugins]: [All settings: enabledPlugins](https://code.claude.com/docs/en/settings-reference#enabledplugins)
 [^exceptions]: [Settings files and precedence: Exceptions to managed settings precedence](https://code.claude.com/docs/en/settings#exceptions-to-managed-settings-precedence)

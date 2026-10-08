@@ -55,9 +55,11 @@ Four more checks apply to one field each:
   `extraKnownMarketplaces`, Claude Code takes `owner/*` literally and the clone fails. The owner
   wildcard is valid in the two policy lists only.[^wildcards] A `repo` with a `*` gives the wildcard
   report. The rule gives no second report for it.
-- **`path` of a `file` source.** Claude Code reads the file in place. It takes the directory two levels up as the marketplace root.
-  So the path must end with `.claude-plugin/marketplace.json`.
-  Both `/` and `\` count as separators.[^fields]
+- **`path` of a `file` source.** Claude Code reads the file in place. It takes the directory two
+  levels up as the marketplace root. The docs say to keep the file at
+  `<root>/.claude-plugin/marketplace.json`, so the rule reports a path that does not end with
+  that text.[^fields] Both `/` and `\` count as separators. The docs give the advice and the root
+  rule. They do not say that a path elsewhere fails to load.
 - **`name` of a `settings` source.** It must equal the `extraKnownMarketplaces` key, and it must
   not be a reserved name.[^fields] The reserved names are the same as for
   `marketplace-name-reserved`.[^reserved] The `settings` source is not a `github` or `git` source under `github.com/anthropics/`. So the
@@ -72,8 +74,9 @@ Each report is on the value that has the fault. A missing field is on the `sourc
 file has two members with one name, the rule reads the last, as `JSON.parse` does. It does the same
 for a field of a source.
 
-Other rows of the rule inventory own some faults. A `directory` source and a `skipLfs` field give no
-report here. The cross-file rules read the `marketplace.json` that a source points at.
+A `skipLfs` field gives no report, because the docs say Claude Code accepts it and it has no effect.
+The rule checks the type of the `path` of a `directory` source. It does not check whether the path
+exists.
 
 The rule does not check these cases:
 

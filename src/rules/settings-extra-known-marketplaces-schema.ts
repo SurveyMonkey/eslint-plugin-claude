@@ -145,7 +145,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
         'The "repo" of a "github" source must name one repository, and "{{value}}" has a "*". Claude Code takes it literally, and the clone fails.',
       repoForm: 'The "repo" of a "github" source must be "owner/repo", and "{{value}}" is not.',
       filePath:
-        'The "path" of a "file" source must end with ".claude-plugin/marketplace.json". Claude Code takes the directory two levels up as the marketplace root.',
+        'Keep the "path" of a "file" source at "<root>/.claude-plugin/marketplace.json". Claude Code takes the directory two levels up as the marketplace root.',
       nameMismatch:
         'The "name" of a "settings" source must equal the marketplace key "{{key}}", and "{{name}}" does not.',
       nameReserved:

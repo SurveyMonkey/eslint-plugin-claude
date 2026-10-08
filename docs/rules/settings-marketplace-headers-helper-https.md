@@ -23,14 +23,13 @@ Give a `url` marketplace source that has a `headersHelper` an `https://` URL.
 A `url` source in `extraKnownMarketplaces` can set `headersHelper`. It is a command that prints
 HTTP headers for the fetch of the `marketplace.json` file.[^source] Claude Code runs the command
 only for an `https://` marketplace URL. For another URL, the command does not run, and requests
-carry only the headers in the `headers` field.[^skips] So the command is dead text, and Claude
-Code gives no error.
+carry only the headers in the `headers` field.[^skips] So the command has no effect.
 
 The rule reports the `url` value of a source that meets all of these conditions:
 
 - The source type is `url`.
 - The source sets `headersHelper`. The rule counts the key as set for any value, also an empty
-  string. The docs do not say that an empty value changes the rule.
+  string.
 - The `url` is a string that does not start with `https://`. The rule ignores letter case in the
   scheme, because a URL scheme is not case sensitive. The empty string gives a report.
 

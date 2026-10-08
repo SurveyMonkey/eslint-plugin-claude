@@ -42,7 +42,7 @@ The rule does not check these cases:
 
 - An `enabledPlugins` that is not an object. The docs give the type, but this rule reads the
   members only.
-- A name that has a character the docs bar. The docs do not give a name form for a key.
+- The characters of a name. The docs give a name form for a plugin `name` field, and none for a key.
 - A plugin or marketplace that is not there. `settings-enabled-plugins-entry-exists` reads the
   `marketplace.json` of a marketplace that the repository holds.
 
