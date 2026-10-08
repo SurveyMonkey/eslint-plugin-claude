@@ -1,7 +1,8 @@
 // Claude Code skips a local subagent file with bad frontmatter, with no error
 // (docs/rules/agent-frontmatter-valid.md). A plugin agent with no name or
 // bad YAML still loads, and the docs say no more, so the rule checks only
-// files in `.claude/agents/`.
+// files in `.claude/agents/`. Claude Code also skips a file whose `name` has
+// more than 256 characters. The option `nameMax` sets a lower limit.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
 import { AGENT_FIELDS } from '../data/agent-fields.ts'
@@ -11,6 +12,11 @@ import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'agent-frontmatter-valid' as const
 
+// The documented limit on a `name`, and the default of `nameMax`.
+const NAME_LIMIT = 256
+
+type Options = [{ nameMax: number }]
+
 /** True when a required field has no usable value. A value that is not a
  *  string is a fault for `agent-frontmatter-schema`. */
 function isBlank(value: unknown): boolean {
@@ -18,7 +24,15 @@ function isBlank(value: unknown): boolean {
 }
 
 const rule: MarkdownRuleDefinition<{
-  MessageIds: 'notFirst' | 'invalidYaml' | 'missingName' | 'missingDescription' | 'badName'
+  RuleOptions: Options
+  MessageIds:
+    | 'notFirst'
+    | 'invalidYaml'
+    | 'missingName'
+    | 'missingDescription'
+    | 'badName'
+    | 'nameTooLong'
+    | 'nameOverConfiguredLimit'
 }> = {
   meta: {
     type: 'problem',
@@ -26,7 +40,17 @@ const rule: MarkdownRuleDefinition<{
       description: 'Give a local subagent file frontmatter that Claude Code can load',
       url: docsUrl(name),
     },
-    schema: [],
+    // No setting of Claude Code moves the limit of 256, so the schema sets it as the maximum.
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          nameMax: { type: 'integer', minimum: 1, maximum: NAME_LIMIT },
+        },
+        additionalProperties: false,
+      },
+    ],
+    defaultOptions: [{ nameMax: NAME_LIMIT }],
     messages: {
       notFirst:
         'This frontmatter block does not start on line 1. Claude Code reads the file as documentation, and does not load the agent.',
@@ -37,6 +61,9 @@ const rule: MarkdownRuleDefinition<{
         'The frontmatter has no `description`. Claude Code skips this agent file.',
       badName:
         '`name` must not start with `-` and must not contain `:`. Claude Code skips this agent file.',
+      nameTooLong:
+        '`name` has {{length}} characters. Claude Code skips an agent file with a `name` of more than {{max}}.',
+      nameOverConfiguredLimit: '`name` has {{length}} characters. The configured limit is {{max}}.',
     },
   },
   create(context) {
@@ -45,6 +72,7 @@ const rule: MarkdownRuleDefinition<{
       return {}
     }
     const { sourceCode } = context
+    const [{ nameMax }] = context.options
     return {
       root() {
         const opening = lateFrontmatter(sourceCode, AGENT_FIELDS)
@@ -79,6 +107,19 @@ const rule: MarkdownRuleDefinition<{
           // The field exists, because the name is not blank.
           const field = fm.fields.get('name') as { valueStart: number; valueEnd: number }
           context.report({ loc: fm.at(field.valueStart, field.valueEnd), messageId: 'badName' })
+        }
+        if (typeof agentName === 'string') {
+          // The docs say "characters". A code point counts once, so the rule never over-counts.
+          const length = [...agentName].length
+          if (length > nameMax) {
+            const field = fm.fields.get('name') as { valueStart: number; valueEnd: number }
+            context.report({
+              loc: fm.at(field.valueStart, field.valueEnd),
+              // At another value, the message names the configured limit and claims no skip.
+              messageId: nameMax === NAME_LIMIT ? 'nameTooLong' : 'nameOverConfiguredLimit',
+              data: { length: String(length), max: String(nameMax) },
+            })
+          }
         }
         if (isBlank(fm.data.description)) {
           context.report({ node, messageId: 'missingDescription' })

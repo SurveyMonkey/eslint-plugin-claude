@@ -165,26 +165,26 @@ const lintName = (agentName: string, filename: string, options: object[] = []) =
   )
 
 describe('a name of more than 256 characters', () => {
-  it.fails('is silent at 256 characters, and reports at 257', () => {
+  it('is silent at 256 characters, and reports at 257', () => {
     expect(lintName('a'.repeat(256), local)).toEqual([])
     const [report, ...rest] = lintName('a'.repeat(257), local)
     expect(rest).toEqual([])
     expect(report?.messageId).toBe('nameTooLong')
     expect([report?.line, report?.column, report?.endColumn]).toEqual([2, 7, 264])
   })
-  it.fails('counts a character outside the BMP once', () => {
+  it('counts a character outside the BMP once', () => {
     expect(lintName('\u{1F600}'.repeat(200), local, [{ nameMax: 100 }])).toHaveLength(1)
     expect(lintName('\u{1F600}'.repeat(200), local)).toEqual([])
   })
-  it.fails('moves with the option, and names the configured limit', () => {
+  it('moves with the option, and names the configured limit', () => {
     expect(lintName('abcdef', local, [{ nameMax: 6 }])).toEqual([])
     const [report, ...rest] = lintName('abcdefg', local, [{ nameMax: 6 }])
     expect(rest).toEqual([])
     expect(report?.messageId).toBe('nameOverConfiguredLimit')
   })
-  it.fails('refuses an option above 256', () => {
-    const [report] = lintName('a', local, [{ nameMax: 257 }])
-    expect(report?.message).toMatch(/nameMax.*<= 256/s)
+  it('refuses an option above 256', () => {
+    expect(() => lintName('a', local, [{ nameMax: 256 }])).not.toThrow()
+    expect(() => lintName('a', local, [{ nameMax: 257 }])).toThrow('Value 257 should be <= 256.')
   })
   it('is silent for a plugin agent', () => {
     expect(lintName('a'.repeat(300), pluginAgent())).toEqual([])
