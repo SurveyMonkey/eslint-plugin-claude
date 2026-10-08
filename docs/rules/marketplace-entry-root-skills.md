@@ -40,7 +40,7 @@ loads for these two values.
 The rule makes no report in these cases:
 
 - **The `skills` value is not readable.** A value that is not a string or an array of strings, an
-  empty array, an empty string, and a path with no `./` prefix, with `..`, with a backslash, or in
+  empty array, an empty string, and a path with no `./` prefix, with a `..` segment, with a backslash, or in
   a network or absolute form give no report. The docs do not say how Claude Code reads them. The path
   rules are for [`marketplace-entry-component-paths`](marketplace-entry-component-paths.md).
 - **The source is not the marketplace root.** The sentence of the docs is about the root. A plugin
