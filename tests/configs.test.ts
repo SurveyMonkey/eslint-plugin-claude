@@ -68,6 +68,7 @@ const badMarketplace = JSON.stringify({
 const badMarketSettings = JSON.stringify({
   enabledPlugins: { formatter: true },
   additionalMarketplaces: {},
+  syncClaudeAiPlugins: true,
   extraKnownMarketplaces: {
     acme: { source: { source: 'npm', package: 'acme' } },
     docs: {
@@ -266,6 +267,7 @@ const SETTINGS_RULES = [
   'settings-extra-known-marketplaces-schema',
   'settings-marketplace-headers-helper-https',
   'settings-marketplace-key-alias-conflict',
+  'settings-sync-claude-ai-plugins',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.

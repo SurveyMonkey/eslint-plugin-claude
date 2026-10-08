@@ -951,6 +951,18 @@
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
     }
   ],
+  "settings-sync-claude-ai-plugins": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "syncClaudeAiPlugins",
+      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Exceptions to managed settings precedence",
+      "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",
