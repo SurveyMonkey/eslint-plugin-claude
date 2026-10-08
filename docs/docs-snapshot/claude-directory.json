@@ -1,10 +1,10 @@
 {
   "url": "https://code.claude.com/docs/en/claude-directory",
-  "hash": "d351a1a4e9849d3f8a2f3db4df4a7219ac4170acf8bda7a7525b2440e8f4ae3e",
+  "hash": "93f1978339d3a4811e42de406e885c40c865b385760eab07683c0fa254e4f6b3",
   "blocks": [
     {
       "id": "explore-the--claude-directory",
-      "hash": "549ab146734510d3a956c4e901db76397f5e8fc23a6d8d82e48cc3e73eeb3680"
+      "hash": "28abed173abe30a3f2e18c14782c26e8d61b6a6bb4b3701f01e2afecb1965543"
     },
     {
       "id": "commands",
@@ -20,11 +20,11 @@
     },
     {
       "id": "api-credentials",
-      "hash": "d65ac798280f963b2438cfe999bfad95a73d5d563837ba2d56fb32f10e499204"
+      "hash": "2ce2c1544e6b2a6ed2a1712faab333e12d2c9e5fbdc1068d2b3e23e4f5ecde59"
     },
     {
       "id": "testing-rules",
-      "hash": "cf24528198a82724fb777c506bec47fb3ee48b1546c5a0ff0d2f851e9ba1a14f"
+      "hash": "bfd7648372408f4eba3e0ffef6bbe422aa8dfec606e1b1314d7ce673a8bbdc83"
     },
     {
       "id": "api-design-rules",
@@ -64,7 +64,7 @@
     },
     {
       "id": "database-connection-drops",
-      "hash": "785668f1c854a061bae17c8cd4b81b1dff46e1f15003c1be40bae0b7f1731324"
+      "hash": "eddf8e8c53c0f5250a6aca95270813b7f78abe980e19032e33630176aea525cc"
     },
     {
       "id": "explore-the-directory",
@@ -72,7 +72,7 @@
     },
     {
       "id": "whats-not-shown",
-      "hash": "842b247a4ab2b00b1de7d66e537360325c482a7572d141d4dcbf457b613d7d6d"
+      "hash": "ecbab3d62091c2305b6c8e5a2094ae1c6f3298f3dbeff6296a97c7b90a30dd1d"
     },
     {
       "id": "choose-the-right-file",
@@ -80,7 +80,7 @@
     },
     {
       "id": "file-reference",
-      "hash": "f9012ae3bdab374f4d4a9ec6f7814767599b475f73e2907ab7d677cda96f02c9"
+      "hash": "36de4cf4d978f8bb19073b25041a4b1ac6eb17ce6fa0aca654187f40f3d100c2"
     },
     {
       "id": "frontmatter-fields-by-file",
@@ -116,7 +116,7 @@
     },
     {
       "id": "clear-local-data",
-      "hash": "d3da6da440e82093aa705960a31a9d77574879514993e9bde5e8ae699018e8a5"
+      "hash": "6061ea3ff807be14d4ad632fdb8fef0c44b03aa3020cc702d07a653dcd4db665"
     },
     {
       "id": "related-resources",

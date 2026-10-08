@@ -20,11 +20,16 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
+import marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manifest-only-fields.ts'
+import marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
 import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
 import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
+import marketplaceRelativeSourceEscapeSymlink from './rules/marketplace-relative-source-escape-symlink.ts'
+import marketplaceRelativeSourceExists from './rules/marketplace-relative-source-exists.ts'
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
 import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
+import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -111,6 +116,11 @@ const modules = [
   marketplaceSourceSchema,
   marketplaceRelativeSourceFormat,
   marketplaceSchema,
+  marketplaceEntryNameMatchesManifest,
+  marketplaceRelativeSourceExists,
+  marketplaceRelativeSourceEscapeSymlink,
+  marketplaceVersionDuplicate,
+  marketplaceEntryManifestOnlyFields,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -187,6 +197,11 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-source-schema': 'error',
   'marketplace-relative-source-format': 'error',
   'marketplace-schema': 'error',
+  'marketplace-entry-name-matches-manifest': 'error',
+  'marketplace-relative-source-exists': 'error',
+  'marketplace-relative-source-escape-symlink': 'error',
+  'marketplace-version-duplicate': 'error',
+  'marketplace-entry-manifest-only-fields': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

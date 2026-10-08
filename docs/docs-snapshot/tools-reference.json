@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "9dff373c68a2072871dc8c4f4155902d5d55e275f79eca082dceaec5b87a2377",
+  "hash": "ead1879f1f0631d4aa762fde5b2426e6f35ac3ae7d0fd809ce7d874bfc69fe03",
   "blocks": [
     {
       "id": "tools-reference",
@@ -164,11 +164,11 @@
     },
     {
       "id": "websearch-tool-behavior",
-      "hash": "65de96dac074e52cdfbab75d4be3bc947f1f67188048237d19b86cad6b4b6fad"
+      "hash": "09da690747a86a64cba8cba54feb9aabbee00018ac633c31f0653990368394c7"
     },
     {
       "id": "session-search-limit",
-      "hash": "6f69a38ce765504aaeccd16d130052ae9ca6a3585d3e08600fbde89c142736da"
+      "hash": "e9c271881d621b2e266297b9178e79f42e72308a6f4372562fa30bcdc05e0bb2"
     },
     {
       "id": "write-tool-behavior",

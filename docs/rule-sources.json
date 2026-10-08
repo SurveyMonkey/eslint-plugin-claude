@@ -74,7 +74,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings",
       "heading": "Settings precedence",
-      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
+      "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
     }
   ],
   "agent-memory-grants-write": [
@@ -93,7 +93,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings",
       "heading": "Settings precedence",
-      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
+      "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
     }
   ],
   "agent-name-unique": [
@@ -117,7 +117,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings",
       "heading": "Settings precedence",
-      "hash": "65d33145d7b9743e124da0d091b9294d3a2e0e722fbbdba25d2d61c6de1378aa"
+      "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
     }
   ],
   "agent-permission-mode-bypass": [
@@ -211,7 +211,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "cf869f4c734b4094b0eaacb308b79447c9ebd5587ec30e186fc54441e8b11147"
+      "hash": "122b065227f63905c8417644d8bffcd3375236e2f8b8c4e1d66ef651c617957c"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -233,7 +233,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook lifecycle",
-      "hash": "3e05b8f19cf85ffa90518190289ab914237dd1476928ad10dab9ab676f794751"
+      "hash": "e30dbba5fc6b18d829e9816df080980c255c3087a24d5fba808cdf4ac2df8444"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
@@ -260,7 +260,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
   "marketplace-entry-hooks-inline": [
@@ -278,6 +278,50 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "marketplace-entry-manifest-only-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin entries",
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "How an entry combines with plugin.json",
+      "hash": "fbd2314ca0290b77dfeadd4685cf4bc9437b13f16f0cb8ad929402d98ad2f635"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    }
+  ],
+  "marketplace-entry-name-matches-manifest": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+      "heading": "Keep the entry name and the manifest name the same",
+      "hash": "7b9fbfa87ad9074a72c48e244a949556af66447094d8956335808a8ee71c5c6a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Entry name and manifest name",
+      "hash": "37d9429e2b2e7dadd8d9c3b0527355a2057b9d5ddd8f65024f39756f575e5afc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
   "marketplace-headers-helper-command": [
@@ -304,7 +348,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
   "marketplace-name-reserved": [
@@ -331,7 +375,51 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    }
+  ],
+  "marketplace-relative-source-escape-symlink": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Marketplace entry path does not stay inside the marketplace directory",
+      "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Share files within a marketplace with symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    }
+  ],
+  "marketplace-relative-source-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+      "heading": "Write relative paths from the marketplace root",
+      "hash": "814c053fbb01e6764cd45f1cd0bac890eaf9ce1315a46bff6e452a0e1251ab8a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+      "heading": "Problems that surface when you add or install",
+      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Marketplace file",
+      "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b"
     }
   ],
   "marketplace-relative-source-format": [
@@ -358,12 +446,12 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Invalid input on a source",
-      "hash": "c5c06f4738b2ba4226645d860f41555d9420a4a3a6e58300529feb2bcdcefb5b"
+      "hash": "56e9457d774964408e07c36de00c23333db1973fe539a20d3f117760860fd81a"
     }
   ],
   "marketplace-schema": [
@@ -380,7 +468,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -427,12 +515,12 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Invalid input on a source",
-      "hash": "c5c06f4738b2ba4226645d860f41555d9420a4a3a6e58300529feb2bcdcefb5b"
+      "hash": "56e9457d774964408e07c36de00c23333db1973fe539a20d3f117760860fd81a"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "19847a5b34e0b1e7baa44d8112f3c2f2addb7c42bb287f50ab675d5fd7386d59"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -440,11 +528,33 @@
       "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
     }
   ],
+  "marketplace-version-duplicate": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "How Claude Code computes the version",
+      "hash": "4f6d0641506dc5f6ebf4f9d7a0e10856f9495ba9a866466123ae3d5e232c301b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Release a new version",
+      "hash": "ef8ed525a0fa7f402ddefa908f0df1254bb78a6022a38ffb3000071f1e2ffdfb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",
       "heading": "Frontmatter reference",
-      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266"
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
     },
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -461,7 +571,7 @@
     {
       "url": "https://code.claude.com/docs/en/output-styles",
       "heading": "Frontmatter reference",
-      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266"
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
     },
     {
       "url": "https://code.claude.com/docs/en/glossary",

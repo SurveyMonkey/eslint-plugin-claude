@@ -50,7 +50,8 @@ string is a fault for `marketplace-schema`. The rule does not check it. An objec
 `marketplace-source-schema`.
 
 `claude plugin validate` reports a relative path that has `..`, as `Path contains ".."`. The docs
-list `Invalid input` for a path with no `./` prefix.[^validation][^invalid] The docs list no
+list `Invalid string: must start with "./"` for a path with no `./` prefix. Before v2.1.285, they
+listed `Invalid input`.[^validation][^invalid] The docs list no
 validate message for an absolute path or a network path. The rule reports those cases, and Claude
 Code refuses them when it installs the plugin.[^refusal] The rule does not check a backslash after
 the `./` prefix.
