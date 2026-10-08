@@ -66,7 +66,8 @@ const badMarketplace = JSON.stringify({
 // A project settings file with one fault for each settings rule of #12. The sync rule reads the
 // file name, so the two files below differ only in what that rule reports.
 const badMarketSettings = JSON.stringify({
-  enabledPlugins: { formatter: true },
+  // `missing` is no entry of the marketplace that `team` points at.
+  enabledPlugins: { formatter: true, 'missing@team': true, 'fmt@team': true },
   additionalMarketplaces: {},
   syncClaudeAiPlugins: true,
   extraKnownMarketplaces: {
@@ -273,6 +274,7 @@ const MARKETPLACE_RULES = [
 // The settings rules of #12, in the order of the `modules` list. Each is an error.
 const SETTINGS_RULES = [
   'settings-enabled-plugins-schema',
+  'settings-enabled-plugins-entry-exists',
   'settings-extra-known-marketplaces-schema',
   'settings-extra-known-marketplaces-key-matches-name',
   'settings-marketplace-headers-helper-https',

@@ -59,6 +59,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-specifier-unsupported',
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
+    'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-schema',
     'settings-extra-known-marketplaces-key-matches-name',
     'settings-extra-known-marketplaces-schema',

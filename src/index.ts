@@ -44,6 +44,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
@@ -136,6 +137,7 @@ const modules = [
   marketplaceEntryRootSkills,
   marketplaceEntryComponentPaths,
   settingsEnabledPluginsSchema,
+  settingsEnabledPluginsEntryExists,
   settingsExtraKnownMarketplacesSchema,
   settingsExtraKnownMarketplacesKeyMatchesName,
   settingsMarketplaceHeadersHelperHttps,
@@ -227,6 +229,7 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-entry-root-skills': 'error',
   'marketplace-entry-component-paths': 'error',
   'settings-enabled-plugins-schema': 'error',
+  'settings-enabled-plugins-entry-exists': 'error',
   'settings-extra-known-marketplaces-schema': 'error',
   'settings-extra-known-marketplaces-key-matches-name': 'error',
   'settings-marketplace-headers-helper-https': 'error',
