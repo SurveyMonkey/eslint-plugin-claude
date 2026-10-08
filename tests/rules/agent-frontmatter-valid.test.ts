@@ -3,7 +3,10 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import markdown from '@eslint/markdown'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import {
   chmodCannotBlock,
@@ -141,5 +144,49 @@ describe.skipIf(chmodCannotBlock)('a plugin root that the rule cannot see', () =
     } finally {
       rmSync(scratch, { recursive: true, force: true })
     }
+  })
+})
+
+// Claude Code skips a local agent file whose `name` has more than 256 characters. The option
+// `nameMax` sets a lower limit.
+const lintName = (agentName: string, filename: string, options: object[] = []) =>
+  new Linter({ cwd: path.parse(path.resolve(filename)).root }).verify(
+    `---\nname: ${agentName}\ndescription: Reviews code.\n---\n`,
+    [
+      {
+        files: ['**/*.md'],
+        plugins: { markdown, claude: plugin },
+        language: 'markdown/gfm',
+        languageOptions: { frontmatter: 'yaml' },
+        rules: { 'claude/agent-frontmatter-valid': ['error', ...options] },
+      },
+    ],
+    { filename: path.resolve(filename) },
+  )
+
+describe('a name of more than 256 characters', () => {
+  it.fails('is silent at 256 characters, and reports at 257', () => {
+    expect(lintName('a'.repeat(256), local)).toEqual([])
+    const [report, ...rest] = lintName('a'.repeat(257), local)
+    expect(rest).toEqual([])
+    expect(report?.messageId).toBe('nameTooLong')
+    expect([report?.line, report?.column, report?.endColumn]).toEqual([2, 7, 264])
+  })
+  it.fails('counts a character outside the BMP once', () => {
+    expect(lintName('\u{1F600}'.repeat(200), local, [{ nameMax: 100 }])).toHaveLength(1)
+    expect(lintName('\u{1F600}'.repeat(200), local)).toEqual([])
+  })
+  it.fails('moves with the option, and names the configured limit', () => {
+    expect(lintName('abcdef', local, [{ nameMax: 6 }])).toEqual([])
+    const [report, ...rest] = lintName('abcdefg', local, [{ nameMax: 6 }])
+    expect(rest).toEqual([])
+    expect(report?.messageId).toBe('nameOverConfiguredLimit')
+  })
+  it.fails('refuses an option above 256', () => {
+    const [report] = lintName('a', local, [{ nameMax: 257 }])
+    expect(report?.message).toMatch(/nameMax.*<= 256/s)
+  })
+  it('is silent for a plugin agent', () => {
+    expect(lintName('a'.repeat(300), pluginAgent())).toEqual([])
   })
 })
