@@ -393,6 +393,17 @@ describe('sourceReader: the walk and the root', () => {
     expect(readOne(alias, './plugins/p')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
   })
 
+  it.skipIf(noLinks)(
+    'gives unreadable for the source "." when the root links out of the repository',
+    () => {
+      const outside = tree({}, false)
+      const repo = tree({})
+      const alias = path.join(repo, 'site')
+      symlinkSync(outside, alias)
+      expect(readOne(alias, '.')).toEqual({ kind: 'unreadable' })
+    },
+  )
+
   it.skipIf(noLinks)('reads a .claude-plugin link that stays inside the repository', () => {
     const repo = tree({ 'shared/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
     const dir = path.join(repo, 'site')

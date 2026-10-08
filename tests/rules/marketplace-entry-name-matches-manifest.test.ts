@@ -47,6 +47,11 @@ describe(RULE, () => {
     expect(lint(dir, entry('Formatter'))).toHaveLength(1)
   })
 
+  it('compares the names without a trim', () => {
+    const dir = withManifest({ name: 'formatter' })
+    expect(lint(dir, entry('formatter '))).toHaveLength(1)
+  })
+
   it('reports each entry that differs, and no entry that matches', () => {
     const dir = tree({
       'plugins/a/.claude-plugin/plugin.json': manifestOf({ name: 'a' }),

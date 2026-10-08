@@ -22,7 +22,8 @@ import {
  *  - `not-relative`: the `source` is not a plain relative path. This covers
  *    a value that is not a string, and a path that
  *    `marketplace-relative-source-format` reports. A path with a backslash
- *    is also here: `marketplace-relative-source-backslash` owns it.
+ *    is also here. A planned rule owns it (`docs/rules-inventory.md`). A bare
+ *    name is also here when no valid `pluginRoot` is set.
  *  - `missing`: nothing is at the path.
  *  - `escapes`: the real path is out of the marketplace root and inside the
  *    repository. A link on the path leads out.
@@ -33,12 +34,12 @@ import {
  *    that is a file is here too.
  *  - `manifest`: the fields of `plugin.json`. */
 export type SourceRead =
-  | { kind: 'not-relative' }
-  | { kind: 'missing' }
-  | { kind: 'escapes' }
-  | { kind: 'unreadable' }
-  | { kind: 'no-manifest' }
-  | { kind: 'manifest'; manifest: Record<string, unknown> }
+  | { readonly kind: 'not-relative' }
+  | { readonly kind: 'missing' }
+  | { readonly kind: 'escapes' }
+  | { readonly kind: 'unreadable' }
+  | { readonly kind: 'no-manifest' }
+  | { readonly kind: 'manifest'; readonly manifest: Readonly<Record<string, unknown>> }
 
 const NOT_RELATIVE: SourceRead = { kind: 'not-relative' }
 const MISSING: SourceRead = { kind: 'missing' }
@@ -46,15 +47,15 @@ const ESCAPES: SourceRead = { kind: 'escapes' }
 const CANNOT_SEE: SourceRead = { kind: 'unreadable' }
 const NO_MANIFEST: SourceRead = { kind: 'no-manifest' }
 
-/** True when `text` has no fault that the format rule reports and has no
- *  backslash. */
+/** True when `pathFault` finds no network, absolute or `..` fault in `text`,
+ *  and `text` has no backslash. */
 function plain(text: string): boolean {
   return pathFault(text) === undefined && !text.includes('\\')
 }
 
 /** The path of the source `text` from the marketplace root, or undefined when
  *  `text` is not a relative path. A bare name resolves under `pluginRoot`. A
- *  path that starts with `./`, and `.`, do not change (marketplace reference,
+ *  path that starts with `./`, or is `.`, stays as it is (marketplace reference,
  *  "Bare names under pluginRoot"). */
 function relativePath(text: string, pluginRoot: string | undefined): string | undefined {
   if (!plain(text)) {
@@ -93,8 +94,8 @@ function realSource(
   return real
 }
 
-/** The reader for the marketplace file `file` with the document `document`.
- *  The result reads the source of an entry. */
+/** Return a function that reads the source of an entry in `document`. `file`
+ *  is the path of the `marketplace.json` that holds `document`. */
 export function sourceReader(
   file: string,
   document: DocumentNode,
