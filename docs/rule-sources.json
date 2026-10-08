@@ -280,6 +280,28 @@
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
+  "marketplace-entry-manifest-only-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin entries",
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "How an entry combines with plugin.json",
+      "hash": "fbd2314ca0290b77dfeadd4685cf4bc9437b13f16f0cb8ad929402d98ad2f635"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    }
+  ],
   "marketplace-entry-name-matches-manifest": [
     {
       "url": "https://code.claude.com/docs/en/plugins/create-marketplace",

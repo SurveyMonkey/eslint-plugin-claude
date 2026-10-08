@@ -36,7 +36,7 @@ const badSettings = JSON.stringify({
 // a `github` source with a bad `repo`, and a third has a relative `source` with no `./`. A fourth
 // entry is named `renamed`, and its source `plugins/p` has a `plugin.json` that is named `p`. A
 // fifth entry has a relative `source` to a directory that is not there. A sixth entry sets a
-// `version` that `plugins/m/.claude-plugin/plugin.json` sets too.
+// `version` that `plugins/m/.claude-plugin/plugin.json` sets too, and an `mcpServers`.
 const badMarketplace = JSON.stringify({
   name: 'claude-code-plugins',
   plugins: [
@@ -51,7 +51,7 @@ const badMarketplace = JSON.stringify({
     { name: 'c', source: 'plugins/c' },
     { name: 'renamed', source: './plugins/p' },
     { name: 'gone', source: './plugins/gone' },
-    { name: 'm', source: './plugins/m', version: '2.0.0' },
+    { name: 'm', source: './plugins/m', version: '2.0.0', mcpServers: {} },
   ],
 })
 
@@ -215,6 +215,7 @@ const MARKETPLACE_RULES = [
   'marketplace-relative-source-exists',
   ESCAPE_RULE,
   'marketplace-version-duplicate',
+  'marketplace-entry-manifest-only-fields',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
