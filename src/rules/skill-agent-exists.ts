@@ -37,10 +37,12 @@ interface Agents {
   unseen: boolean
 }
 
-/** `dir` and each directory above it, up to `top`. */
+/** `dir` and each directory above it, up to `top`. The walk goes up the path as given, as
+ *  `repositoryRoot` does. `top` is a real path, so the walk compares the real path of each
+ *  directory with it. A project directory that is a link then does not hide `top`. */
 function ancestors(dir: string, top: string): string[] {
   const parent = path.dirname(dir)
-  return dir === top || parent === dir ? [dir] : [dir, ...ancestors(parent, top)]
+  return realDirectory(dir) === top || parent === dir ? [dir] : [dir, ...ancestors(parent, top)]
 }
 
 /** The `name` of each agent file in `.claude/agents/` of `start`, and of each
@@ -155,7 +157,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         }
         const agents =
           plugin === null
-            ? projectAgents(realDirectory(path.dirname(root)), top, bound)
+            ? projectAgents(path.resolve(path.dirname(root)), top, bound)
             : pluginAgents(root, plugin, bound)
         // A link out of the repository, or a path that the rule cannot read,
         // can hold the agent, so the rule cannot prove that it is missing.

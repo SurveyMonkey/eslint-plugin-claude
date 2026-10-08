@@ -507,7 +507,7 @@ describe.skipIf(process.platform === 'win32')('a project directory that is a lin
     return path.join(scratch, 'lnkwrap', 'repo', 'app', '.claude', 'skills', 's', 'SKILL.md')
   })()
   // The walk must reach the agents of the repository that holds the link.
-  it.fails('sees the agents above the link, up to the repository', () => {
+  it('sees the agents above the link, up to the repository', () => {
     expect(lintMarkdown('skill-agent-exists', fork('above-agent'), file)).toEqual([])
   })
   it('does not see the agents above the repository', () => {
