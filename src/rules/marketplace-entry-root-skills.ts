@@ -85,11 +85,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'omitted' }> = {
             continue
           }
           const source = read(entry)
-          if (source.kind !== 'manifest' && source.kind !== 'no-manifest') {
-            continue
-          }
-          // The reader gives the real path of the source. The root is the source when they are equal.
-          if (source.dir !== realOf(root)) {
+          // Only a source with a directory is read. The reader gives the real path of that directory,
+          // and the root is the source when the two are equal.
+          if (!('dir' in source) || source.dir !== realOf(root)) {
             continue
           }
           // The skills directory is read when its real path is inside the marketplace root.
