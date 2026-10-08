@@ -138,3 +138,25 @@ json5Tester.run('settings-enabled-plugins-schema (JSON5 invalid)', rule, {
     },
   ],
 })
+
+// The text of each message.
+jsonTester.run('settings-enabled-plugins-schema (message text)', rule, {
+  valid: [],
+  invalid: [
+    {
+      code: settings({ formatter: true }),
+      filename,
+      errors: [
+        {
+          message:
+            'The "enabledPlugins" key "formatter" must be "plugin-name@marketplace-name": one "@" with a name on each side.',
+        },
+      ],
+    },
+    {
+      code: settings({ 'a@b': 'yes' }),
+      filename,
+      errors: [{ message: 'The "enabledPlugins" value of "a@b" must be true or false.' }],
+    },
+  ],
+})

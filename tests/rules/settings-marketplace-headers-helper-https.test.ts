@@ -170,3 +170,50 @@ json5Tester.run('settings-marketplace-headers-helper-https (JSON5 invalid)', rul
     },
   ],
 })
+
+// Two members with one name: the rule reads the last.
+jsonTester.run('settings-marketplace-headers-helper-https (last member)', rule, {
+  valid: [
+    // The `source` of an entry: the last has an `https://` URL.
+    {
+      code: '{"extraKnownMarketplaces":{"acme":{"source":{"source":"url","url":"http://x","headersHelper":"m"},"source":{"source":"url","url":"https://x","headersHelper":"m"}}}}',
+      filename,
+    },
+    // The type: the last is `git`.
+    {
+      code: '{"extraKnownMarketplaces":{"acme":{"source":{"source":"url","source":"git","url":"http://x","headersHelper":"m"}}}}',
+      filename,
+    },
+  ],
+  invalid: [
+    // The type: the last is `url`.
+    {
+      code: '{"extraKnownMarketplaces":{"acme":{"source":{"source":"git","source":"url","url":"http://x","headersHelper":"m"}}}}',
+      filename,
+      errors: [{ messageId: 'notHttps' }],
+    },
+    // The `source` of an entry: the last has the `http://` URL.
+    {
+      code: '{"extraKnownMarketplaces":{"acme":{"source":{"source":"url","url":"https://x","headersHelper":"m"},"source":{"source":"url","url":"http://x","headersHelper":"m"}}}}',
+      filename,
+      errors: [{ messageId: 'notHttps' }],
+    },
+  ],
+})
+
+// The text of the message.
+jsonTester.run('settings-marketplace-headers-helper-https (message text)', rule, {
+  valid: [],
+  invalid: [
+    {
+      code: urlSource({ url: 'http://x', headersHelper: 'm' }),
+      filename,
+      errors: [
+        {
+          message:
+            'The "url" of this marketplace source does not start with "https://", so Claude Code does not run its "headersHelper" command. Requests carry only the "headers".',
+        },
+      ],
+    },
+  ],
+})

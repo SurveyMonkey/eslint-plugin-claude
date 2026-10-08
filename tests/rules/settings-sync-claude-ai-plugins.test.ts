@@ -92,3 +92,30 @@ json5Tester.run('settings-sync-claude-ai-plugins (JSON5 invalid)', rule, {
     },
   ],
 })
+
+// The text of each message.
+jsonTester.run('settings-sync-claude-ai-plugins (message text)', rule, {
+  valid: [],
+  invalid: [
+    {
+      code: sync(false),
+      filename: project,
+      errors: [
+        {
+          message:
+            'Claude Code ignores "syncClaudeAiPlugins" in .claude/settings.json. A repository cannot turn off the sync.',
+        },
+      ],
+    },
+    {
+      code: sync(true),
+      filename: local,
+      errors: [
+        {
+          message:
+            'Claude Code honors only false for "syncClaudeAiPlugins". The value true is the same as unset.',
+        },
+      ],
+    },
+  ],
+})

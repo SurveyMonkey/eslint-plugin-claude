@@ -98,7 +98,7 @@ jsonTester.run('settings-extra-known-marketplaces-schema (valid)', rule, {
       }),
       filename,
     },
-    // The name of a `settings` source can be close to a reserved name without being one.
+    // The name of a `settings` source can be close to a reserved name and yet not be one.
     {
       code: marketplaces({
         'my-claude-plugins': { source: inline({ name: 'my-claude-plugins' }) },
@@ -538,4 +538,242 @@ json5Tester.run('settings-extra-known-marketplaces-schema (JSON5 invalid)', rule
       errors: [{ messageId: 'valueNotObject', data: { key: 'acme' } }],
     },
   ],
+})
+
+// The text of a message, with the placeholders in order. A `message` case cannot also give a
+// `messageId`, so these cases pin the text and the others pin the id.
+jsonTester.run('settings-extra-known-marketplaces-schema (message text)', rule, {
+  valid: [],
+  invalid: [
+    {
+      code: withSource(inline({ name: 'other' })),
+      filename,
+      errors: [
+        {
+          message:
+            'The "name" of a "settings" source must equal the marketplace key "acme", and "other" does not.',
+        },
+      ],
+    },
+    {
+      code: withSource({ source: 'github', repo: 5 }),
+      filename,
+      errors: [{ message: 'The "repo" of a "github" source must be a string.' }],
+    },
+    {
+      code: withSource({ source: 'git' }),
+      filename,
+      errors: [{ message: 'A "git" source needs the field "url".' }],
+    },
+    {
+      code: withSource({ source: 'bogus' }),
+      filename,
+      errors: [
+        {
+          message: `"bogus" is not a marketplace source type. Use one of these types: ${types}.`,
+        },
+      ],
+    },
+    {
+      code: withSource({ source: 'npm', package: 'x' }),
+      filename,
+      errors: [
+        {
+          message: `Claude Code cannot load an "npm" marketplace source: "NPM marketplace sources not yet implemented". Use one of these types: ${types}.`,
+        },
+      ],
+    },
+    {
+      code: withSource({ source: 'hostPattern', hostPattern: '^a$' }),
+      filename,
+      errors: [
+        {
+          message: `Claude Code does not load a "hostPattern" source in "extraKnownMarketplaces" ("Unsupported marketplace source type"). It is valid in the policy lists only. Use one of these types: ${types}.`,
+        },
+      ],
+    },
+    {
+      code: withSource({ source: 'file', path: './m.json' }),
+      filename,
+      errors: [
+        {
+          message:
+            'Keep the "path" of a "file" source at "<root>/.claude-plugin/marketplace.json". Claude Code takes the directory two levels up as the marketplace root.',
+        },
+      ],
+    },
+  ],
+})
+
+/** An error of `messageId` that starts `offset` columns after the first `needle` in `code`. */
+const at = <Id extends string>(
+  code: string,
+  messageId: Id,
+  needle: string,
+  data: Record<string, string> = {},
+  offset = 0,
+) => ({ messageId, data, line: 1, column: code.indexOf(needle) + offset + 1 })
+
+const wildcard = withSource({ source: 'github', repo: 'acme/*' })
+const mismatch = withSource(inline({ name: 'other' }))
+const reservedName = marketplaces({ inline: { source: inline({ name: 'inline' }) } })
+const filePath = withSource({ source: 'file', path: './m.json' })
+const badItemField = withItem({ ...goodItem, version: 1 })
+const nullSource = withItem({ name: 'f', source: null })
+const noSource = withItem({ name: 'f' })
+const notObjectEntry = marketplaces({ acme: 5 })
+const bareGit = withSource({ source: 'git' })
+const bareUrl = withSource({ source: 'url' })
+const bareFile = withSource({ source: 'file' })
+const bareDirectory = withSource({ source: 'directory' })
+const bareSettings = withSource({ source: 'settings', name: 'acme' })
+
+// Each report is on the node the docs name. A report on the parent would stay green without these.
+jsonTester.run('settings-extra-known-marketplaces-schema (locations)', rule, {
+  valid: [],
+  invalid: [
+    {
+      code: wildcard,
+      filename,
+      errors: [at(wildcard, 'repoWildcard', '"acme/*"', { value: 'acme/*' })],
+    },
+    {
+      code: mismatch,
+      filename,
+      errors: [at(mismatch, 'nameMismatch', '"other"', { key: 'acme', name: 'other' })],
+    },
+    {
+      code: reservedName,
+      filename,
+      errors: [at(reservedName, 'nameReserved', '"name":"inline"', { name: 'inline' }, 7)],
+    },
+    { code: filePath, filename, errors: [at(filePath, 'filePath', '"./m.json"')] },
+    {
+      code: badItemField,
+      filename,
+      errors: [
+        at(
+          badItemField,
+          'pluginFieldType',
+          '"version":1',
+          { field: 'version', expected: 'a string' },
+          10,
+        ),
+      ],
+    },
+    // A `source` of an item that is `null` is reported on the value, and a missing one on the item.
+    { code: nullSource, filename, errors: [at(nullSource, 'pluginSource', 'null')] },
+    { code: noSource, filename, errors: [at(noSource, 'pluginSource', '{"name":"f"}')] },
+    {
+      code: notObjectEntry,
+      filename,
+      errors: [at(notObjectEntry, 'valueNotObject', ':5}', { key: 'acme' }, 1)],
+    },
+    // A missing field is on the `source` object, for each type.
+    {
+      code: bareGit,
+      filename,
+      errors: [at(bareGit, 'missingField', '{"source":"git"}', { type: 'git', field: 'url' })],
+    },
+    {
+      code: bareUrl,
+      filename,
+      errors: [at(bareUrl, 'missingField', '{"source":"url"}', { type: 'url', field: 'url' })],
+    },
+    {
+      code: bareFile,
+      filename,
+      errors: [at(bareFile, 'missingField', '{"source":"file"}', { type: 'file', field: 'path' })],
+    },
+    {
+      code: bareDirectory,
+      filename,
+      errors: [
+        at(bareDirectory, 'missingField', '{"source":"directory"}', {
+          type: 'directory',
+          field: 'path',
+        }),
+      ],
+    },
+    {
+      code: bareSettings,
+      filename,
+      errors: [
+        at(bareSettings, 'missingField', '{"source":"settings"', {
+          type: 'settings',
+          field: 'plugins',
+        }),
+      ],
+    },
+  ],
+})
+
+const github2 = JSON.stringify(github)
+const bogus = '{"source":"bogus"}'
+
+// Two members with one name: the rule reads the last, at each level of an entry.
+jsonTester.run('settings-extra-known-marketplaces-schema (last member, valid)', rule, {
+  valid: [
+    // The `source` of an entry.
+    {
+      code: `{"extraKnownMarketplaces":{"acme":{"source":${bogus},"source":${github2}}}}`,
+      filename,
+    },
+    // The `autoUpdate` of an entry.
+    {
+      code: `{"extraKnownMarketplaces":{"acme":{"autoUpdate":"x","autoUpdate":true,"source":${github2}}}}`,
+      filename,
+    },
+    // The `source` of an item, and a field of an item.
+    {
+      code: withItem({ name: 'f', source: 5 }).replace(
+        '"source":5',
+        `"source":5,"source":{"source":"github","repo":"a/b"}`,
+      ),
+      filename,
+    },
+    {
+      code: withItem({ name: 1 })
+        .replace('"name":1', '"name":1,"name":"f"')
+        .replace('}]', ',"source":{}}]'),
+      filename,
+    },
+    // A field of a source.
+    {
+      code: withSource({ source: 'git', url: 5 }).replace('"url":5', '"url":5,"url":"u"'),
+      filename,
+    },
+  ],
+  invalid: [],
+})
+
+// The policy lists take more types than `extraKnownMarketplaces`. The rule does not read them.
+jsonTester.run('settings-extra-known-marketplaces-schema (other keys)', rule, {
+  valid: [
+    {
+      code: JSON.stringify({
+        strictKnownMarketplaces: [
+          { source: 'hostPattern', hostPattern: '^a$' },
+          { source: 'npm', package: 'x' },
+          { source: 'github', repo: 'acme/*' },
+        ],
+      }),
+      filename,
+    },
+    { code: JSON.stringify({ allowedMarketplaces: [{ source: 'skills-dir' }] }), filename },
+    { code: JSON.stringify({ blockedMarketplaces: [{ source: 'pathPattern' }] }), filename },
+    {
+      code: JSON.stringify({ additionalMarketplaces: { acme: { source: { source: 'npm' } } } }),
+      filename,
+    },
+    // The `source` of an item and the `owner` of a `settings` source are not checked.
+    { code: withItem({ name: 'f', source: { source: 'bogus' } }), filename },
+    { code: withSource(inline({ owner: 5 })), filename },
+    // Names close to a reserved name, with a different case or no dash.
+    ...['claudeai', 'claudeaiteam', 'Inline', 'my-npm'].map((name) => ({
+      code: marketplaces({ [name]: { source: inline({ name }) } }),
+      filename,
+    })),
+  ],
+  invalid: [],
 })

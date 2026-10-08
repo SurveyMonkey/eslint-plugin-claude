@@ -207,6 +207,7 @@ const TREE: Record<string, string> = {
   'packages/mk/.claude/settings.json': badMarketSettings,
   'packages/mk/.claude/settings.local.json': badMarketSettings,
   'packages/mk/.claude/nested/settings.json': badMarketSettings,
+  'packages/mk/.claude/nested/settings.local.json': badMarketSettings,
   'packages/mk/.vscode/settings.json': badMarketSettings,
   'packages/mk/.vscode/settings.local.json': badMarketSettings,
   'packages/mk/settings.json': badMarketSettings,
