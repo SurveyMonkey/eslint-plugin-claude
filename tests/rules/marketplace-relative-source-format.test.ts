@@ -108,7 +108,6 @@ jsonTester.run('marketplace-relative-source-format (invalid)', rule, {
       errors: [{ messageId: 'parent', data: { field: '"source"', path: '../x' } }],
     },
     { code: withSource('./a/../b'), filename, errors: [{ messageId: 'parent' }] },
-    { code: withSource('./a..b'), filename, errors: [{ messageId: 'parent' }] },
     { code: withSource('..'), filename, errors: [{ messageId: 'parent' }] },
     { code: withSource('/usr/share/p'), filename, errors: [{ messageId: 'absolute' }] },
     { code: withSource('\\p'), filename, errors: [{ messageId: 'absolute' }] },
@@ -193,14 +192,14 @@ describe('marketplace-relative-source-format: a ".." segment', () => {
   const messagesOf = (code: string) =>
     lintMarketplace(NAME, dir, code).map((m) => ({ id: m.messageId, text: m.message }))
 
-  it.fails.each(['./a..b', './my..skills', './a/b..', './..a/b', './a/..b/c'])(
+  it.each(['./a..b', './my..skills', './a/b..', './..a/b', './a/..b/c'])(
     'gives no report for the source %s',
     (source) => {
       expect(messagesOf(withSource(source))).toEqual([])
     },
   )
 
-  it.fails('gives no report for a pluginRoot with a name that holds two dots', () => {
+  it('gives no report for a pluginRoot with a name that holds two dots', () => {
     expect(messagesOf(withRoot('./a..b'))).toEqual([])
   })
 
@@ -216,7 +215,7 @@ describe('marketplace-relative-source-format: a ".." segment', () => {
     expect(messagesOf(withSource('/a/..')).map((m) => m.id)).toEqual(['absolute'])
   })
 
-  it.fails('says that the path has a ".." segment', () => {
+  it('says that the path has a ".." segment', () => {
     expect(messagesOf(withSource('./a/../b'))).toEqual([
       {
         id: 'parent',

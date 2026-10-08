@@ -118,15 +118,15 @@ describe('sourceReader: a name that holds two dots', () => {
     'a..b/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }),
   })
 
-  it.fails('reads the manifest of the source ./a..b', () => {
+  it('reads the manifest of the source ./a..b', () => {
     expect(readOne(dir, './a..b')).toEqual({ kind: 'manifest', manifest: { name: 'ab' } })
   })
 
-  it.fails('reads no manifest for the source ./c..d, which has none', () => {
+  it('reads no manifest for the source ./c..d, which has none', () => {
     expect(readOne(dir, './c..d')).toEqual({ kind: 'no-manifest' })
   })
 
-  it.fails('reads the manifest of a bare name under a pluginRoot with two dots', () => {
+  it('reads the manifest of a bare name under a pluginRoot with two dots', () => {
     expect(readOne(dir, 'p', { metadata: { pluginRoot: './a..b' } })).toEqual({
       kind: 'manifest',
       manifest: { name: 'p' },

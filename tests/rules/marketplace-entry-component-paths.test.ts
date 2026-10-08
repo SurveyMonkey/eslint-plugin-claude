@@ -82,7 +82,7 @@ describe(RULE, () => {
     expect(messages.map((m) => m.message)).toEqual([messageOf('commands', text, fault)])
   })
 
-  it.fails('gives no parent report for a path with two dots in a name', () => {
+  it('gives no parent report for a path with two dots in a name', () => {
     const files = { ...PLUGIN, 'plugins/p/a..b/c.md': '# C\n' }
     expect(lint(tree(files), entry({ commands: './a..b/c.md' }))).toEqual([])
   })
