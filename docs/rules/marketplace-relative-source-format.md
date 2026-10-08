@@ -28,9 +28,9 @@ reports one fault for each value. It checks the faults in this order:
   refuses an entry path that has the form of a network path.[^refusal]
 - **Absolute path.** The value starts with a slash or a backslash, or with a drive letter and a
   slash. Claude Code refuses an absolute entry path.[^refusal]
-- **Parent path.** The value has a `..` segment. A segment ends at a slash or a backslash. The
-  docs say that a path containing `..` fails validation.[^relative] A name that holds two dots,
-  such as `./a..b`, has no `..` segment, so the rule does not report it.
+- **Parent path.** The value has a `..` segment. The rule ends a segment at a slash or a
+  backslash. The docs say that a path that contains `..` fails validation.[^relative] A name that
+  holds two dots, such as `./a..b`, has no `..` segment. The rule does not report it.
 - **No prefix.** The value does not start with `./`. The docs allow two other forms. A value of `.`
   alone means the marketplace root. A bare name is valid when `metadata.pluginRoot` is set.[^relative]
 
@@ -40,8 +40,8 @@ is set.[^bare] The rule counts `metadata.pluginRoot` as set when it is a string 
 
 The rule reads `metadata.pluginRoot` too. The docs say that it must be a relative path inside the
 marketplace.[^bare] The rule reports a `pluginRoot` that is a network path, an absolute path, or
-has a `..` segment. The docs set no prefix for it, so the rule does not report a `pluginRoot` that has
-no `./`.
+has a `..` segment. The docs set no prefix for it. The rule does not report a `pluginRoot` that
+has no `./`.
 
 This rule checks text only. It reads no file system. It does not check that the directory exists,
 and it does not follow symlinks.
@@ -50,14 +50,13 @@ When a key appears twice, the rule reads the last, as `JSON.parse` does. A value
 string is a fault for `marketplace-schema`. The rule does not check it. An object `source` is for
 `marketplace-source-schema`.
 
-`claude plugin validate` reports a relative path that has `..`, as `Path contains ".."`. A probe
-with Claude Code 2.1.295 shows that validate reports a `..` segment: it passes `./a..b` and fails
-`./a/../b`. The docs
-list `Invalid string: must start with "./"` for a path with no `./` prefix. Before v2.1.285, they
-listed `Invalid input`.[^validation][^invalid] The docs list no
-validate message for an absolute path or a network path. The rule reports those cases, and Claude
-Code refuses them when it installs the plugin.[^refusal] The rule does not check a backslash after
-the `./` prefix.
+`claude plugin validate` reports a path that has a `..` segment, as `Path contains ".."`. In a
+probe with Claude Code 2.1.295, validate passes `./a..b` and fails `./a/../b`. The probe used
+forward slashes only. The backslash as a separator is a choice of the rule. The docs list
+`Invalid string: must start with "./"` for a path with no `./` prefix. Before v2.1.285, they
+listed `Invalid input`.[^validation][^invalid] The docs list no validate message for an absolute
+path or a network path. The rule reports those cases, and Claude Code refuses them when it installs
+the plugin.[^refusal] The rule does not check a backslash after the `./` prefix.
 
 Fail:
 
