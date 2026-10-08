@@ -106,7 +106,7 @@ describe('sourceReader: a source that has a manifest', () => {
     'other/q/.claude-plugin/plugin.json': manifestOf({ name: 'q', version: '1.0.0' }),
   })
 
-  it.fails.each([
+  it.each([
     ['a ./ path', './plugins/p', {}],
     ['a path with a trailing slash', './plugins/p/', {}],
     ['a bare name under a pluginRoot with ./', 'p', { metadata: { pluginRoot: './plugins' } }],
@@ -125,17 +125,17 @@ describe('sourceReader: a source that has a manifest', () => {
     expect(readOne(dir, source, extra)).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
   })
 
-  it.fails('reads the manifest of the marketplace root for the source "."', () => {
+  it('reads the manifest of the marketplace root for the source "."', () => {
     expect(readOne(dir, '.')).toEqual({ kind: 'manifest', manifest: { name: 'root' } })
   })
 
-  it.fails('reads a bare name under a pluginRoot of "." from the marketplace root', () => {
+  it('reads a bare name under a pluginRoot of "." from the marketplace root', () => {
     expect(readOne(dir, 'other', { metadata: { pluginRoot: '.' } })).toEqual({
       kind: 'no-manifest',
     })
   })
 
-  it.fails('reads each entry on its own, in file order', () => {
+  it('reads each entry on its own, in file order', () => {
     const results = readAll(
       dir,
       marketplaceOf([
@@ -151,18 +151,18 @@ describe('sourceReader: a source that has a manifest', () => {
     ])
   })
 
-  it.fails('reads the last of two source keys, as JSON.parse does', () => {
+  it('reads the last of two source keys, as JSON.parse does', () => {
     const code = '{"plugins": [{"name": "p", "source": "./nope", "source": "./plugins/p"}]}'
     expect(readAll(dir, code)).toEqual([{ kind: 'manifest', manifest: { name: 'p' } }])
   })
 
-  it.fails('reads the last of two pluginRoot keys, as JSON.parse does', () => {
+  it('reads the last of two pluginRoot keys, as JSON.parse does', () => {
     const code =
       '{"metadata": {"pluginRoot": "./nope", "pluginRoot": "./plugins"}, "plugins": [{"name": "p", "source": "p"}]}'
     expect(readAll(dir, code)).toEqual([{ kind: 'manifest', manifest: { name: 'p' } }])
   })
 
-  it.fails('resolves a source from the directory that holds .claude-plugin, not from the repository', () => {
+  it('resolves a source from the directory that holds .claude-plugin, not from the repository', () => {
     const repo = tree({
       'packages/m/plugins/p/.claude-plugin/plugin.json': manifestOf({ name: 'm' }),
     })
@@ -181,30 +181,30 @@ describe('sourceReader: a source with nothing to read', () => {
     'plugins/file.txt': 'a file',
   })
 
-  it.fails('gives missing for a path that does not exist', () => {
+  it('gives missing for a path that does not exist', () => {
     expect(readOne(dir, './nope')).toEqual({ kind: 'missing' })
     expect(readOne(dir, './plugins/nope/deeper')).toEqual({ kind: 'missing' })
   })
 
-  it.fails('gives missing for a path below a file', () => {
+  it('gives missing for a path below a file', () => {
     expect(readOne(dir, './plugins/file.txt/sub')).toEqual({ kind: 'missing' })
   })
 
-  it.fails('gives no-manifest for a directory with no .claude-plugin', () => {
+  it('gives no-manifest for a directory with no .claude-plugin', () => {
     expect(readOne(dir, './plugins/none')).toEqual({ kind: 'no-manifest' })
   })
 
-  it.fails('gives no-manifest for a .claude-plugin directory with no plugin.json', () => {
+  it('gives no-manifest for a .claude-plugin directory with no plugin.json', () => {
     expect(readOne(dir, './plugins/hollow')).toEqual({ kind: 'no-manifest' })
   })
 
-  it.fails('gives no-manifest for a source that is a file', () => {
+  it('gives no-manifest for a source that is a file', () => {
     expect(readOne(dir, './plugins/file.txt')).toEqual({ kind: 'no-manifest' })
   })
 })
 
 describe('sourceReader: a manifest that the rule cannot see', () => {
-  it.fails.each([
+  it.each([
     ['a syntax error', '{'],
     ['null', 'null'],
     ['an array', '[]'],
@@ -214,17 +214,14 @@ describe('sourceReader: a manifest that the rule cannot see', () => {
     expect(readOne(dir, './plugins/p')).toEqual({ kind: 'unreadable' })
   })
 
-  it.skipIf(chmodCannotBlock).fails(
-    'gives unreadable for a plugin directory without access',
-    () => {
-      const dir = tree(PLUGIN)
-      withoutAccess(path.join(dir, 'plugins', 'p'), () => {
-        expect(readOne(dir, './plugins/p')).toEqual({ kind: 'unreadable' })
-      })
-    },
-  )
+  it.skipIf(chmodCannotBlock)('gives unreadable for a plugin directory without access', () => {
+    const dir = tree(PLUGIN)
+    withoutAccess(path.join(dir, 'plugins', 'p'), () => {
+      expect(readOne(dir, './plugins/p')).toEqual({ kind: 'unreadable' })
+    })
+  })
 
-  it.skipIf(chmodCannotBlock).fails(
+  it.skipIf(chmodCannotBlock)(
     'gives unreadable for a path below a directory without access',
     () => {
       const dir = tree(PLUGIN)
@@ -234,14 +231,14 @@ describe('sourceReader: a manifest that the rule cannot see', () => {
     },
   )
 
-  it.skipIf(noLinks).fails('gives unreadable for a plugin.json that is a dangling link', () => {
+  it.skipIf(noLinks)('gives unreadable for a plugin.json that is a dangling link', () => {
     const dir = tree({})
     mkdirSync(path.join(dir, 'plugins/p/.claude-plugin'), { recursive: true })
     symlinkSync('gone.json', path.join(dir, 'plugins/p/.claude-plugin/plugin.json'))
     expect(readOne(dir, './plugins/p')).toEqual({ kind: 'unreadable' })
   })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'gives unreadable for a plugin.json that is a link out of the repository',
     () => {
       const outside = tree({ 'plugin.json': manifestOf({ name: 'far' }) })
@@ -253,24 +250,21 @@ describe('sourceReader: a manifest that the rule cannot see', () => {
 })
 
 describe('sourceReader: a source that is a link', () => {
-  it.skipIf(noLinks).fails(
-    'reads the manifest through a link that stays in the marketplace root',
-    () => {
-      const dir = tree({
-        ...PLUGIN,
-        'shared/s/.claude-plugin/plugin.json': manifestOf({ name: 's' }),
-      })
-      link(dir, 'plugins/alias', 'p')
-      link(dir, 'plugins/shared', '../shared')
-      expect(readOne(dir, './plugins/alias')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
-      expect(readOne(dir, './plugins/shared/s')).toEqual({
-        kind: 'manifest',
-        manifest: { name: 's' },
-      })
-    },
-  )
+  it.skipIf(noLinks)('reads the manifest through a link that stays in the marketplace root', () => {
+    const dir = tree({
+      ...PLUGIN,
+      'shared/s/.claude-plugin/plugin.json': manifestOf({ name: 's' }),
+    })
+    link(dir, 'plugins/alias', 'p')
+    link(dir, 'plugins/shared', '../shared')
+    expect(readOne(dir, './plugins/alias')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
+    expect(readOne(dir, './plugins/shared/s')).toEqual({
+      kind: 'manifest',
+      manifest: { name: 's' },
+    })
+  })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'gives escapes for a link out of the marketplace root, inside the repository',
     () => {
       const repo = tree({ 'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
@@ -283,21 +277,21 @@ describe('sourceReader: a source that is a link', () => {
     },
   )
 
-  it.skipIf(noLinks).fails('gives escapes for a link to the repository root', () => {
+  it.skipIf(noLinks)('gives escapes for a link to the repository root', () => {
     const repo = tree({})
     const dir = path.join(repo, 'site')
     link(dir, 'up', '..')
     expect(readOne(dir, './up')).toEqual({ kind: 'escapes' })
   })
 
-  it.skipIf(noLinks).fails('gives unreadable for a link out of the repository', () => {
+  it.skipIf(noLinks)('gives unreadable for a link out of the repository', () => {
     const outside = tree({ 'p/.claude-plugin/plugin.json': manifestOf({ name: 'far' }) })
     const dir = tree({})
     link(dir, 'plugins/p', path.join(outside, 'p'))
     expect(readOne(dir, './plugins/p')).toEqual({ kind: 'unreadable' })
   })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'gives unreadable for a dangling link, at the end or in the middle of the path',
     () => {
       const dir = tree({})
@@ -308,7 +302,7 @@ describe('sourceReader: a source that is a link', () => {
     },
   )
 
-  it.skipIf(noLinks).fails('gives unreadable for a link to itself', () => {
+  it.skipIf(noLinks)('gives unreadable for a link to itself', () => {
     const dir = tree({})
     link(dir, 'plugins/loop', 'loop')
     expect(readOne(dir, './plugins/loop')).toEqual({ kind: 'unreadable' })
@@ -316,12 +310,12 @@ describe('sourceReader: a source that is a link', () => {
 })
 
 describe('sourceReader: a tree with no .git', () => {
-  it.fails('reads a manifest below the marketplace root', () => {
+  it('reads a manifest below the marketplace root', () => {
     const dir = tree(PLUGIN, false)
     expect(readOne(dir, './plugins/p')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
   })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'takes the marketplace root as the bound: a link out of it is unreadable',
     () => {
       const top = tree({ 'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) }, false)
@@ -332,7 +326,7 @@ describe('sourceReader: a tree with no .git', () => {
     },
   )
 
-  it.skipIf(noLinks).fails('reads a link that stays inside the marketplace root', () => {
+  it.skipIf(noLinks)('reads a link that stays inside the marketplace root', () => {
     const dir = tree(PLUGIN, false)
     link(dir, 'plugins/alias', 'p')
     expect(readOne(dir, './plugins/alias')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
