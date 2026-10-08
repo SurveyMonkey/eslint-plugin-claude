@@ -23,7 +23,7 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **478 candidate rules** in 9 groups. 356 rules go in `recommended`: 213 at `error` and 143 at
+- **477 candidate rules** in 9 groups. 355 rules go in `recommended`: 212 at `error` and 143 at
   `warn`. 122 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 148 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
@@ -132,7 +132,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 478 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 477 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -163,7 +163,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
 | Skills and commands | 15 | 13 | 10 | 38 |
-| Subagents and output styles | 17 | 14 | 12 | 43 |
+| Subagents and output styles | 16 | 14 | 12 | 42 |
 | Hooks | 20 | 17 | 21 | 58 |
 | Plugin manifest and layout | 28 | 20 | 10 | 58 |
 | Marketplace manifest | 25 | 14 | 3 | 42 |
@@ -171,9 +171,9 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 23 | 24 | 16 | 63 |
 | Permissions and sandbox | 38 | 20 | 23 | 81 |
 | MCP and LSP servers | 35 | 12 | 11 | 58 |
-| **Total** | **213** | **143** | **122** | **478** |
+| **Total** | **212** | **143** | **122** | **477** |
 
-By severity, 213 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
+By severity, 212 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
 the 122 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -306,11 +306,11 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 
 ### Subagents and output styles
 
-Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), output style files (`.claude/output-styles/*.md`, plugin `output-styles/*.md`), and agent teams configuration: 43 rules: 17 error and 14 warn in `recommended`, and 12 `off`. "Local" means a project, user, managed or `--add-dir` agent file; "plugin" means a file under a plugin's `agents/` directory or its `agents` manifest key.
+Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), output style files (`.claude/output-styles/*.md`, plugin `output-styles/*.md`), and agent teams configuration: 42 rules: 16 error and 14 warn in `recommended`, and 12 `off`. "Local" means a project, user, managed or `--add-dir` agent file; "plugin" means a file under a plugin's `agents/` directory or its `agents` manifest key.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
-| `agent-frontmatter-valid` | Local agents only. Line 1 is `---`; YAML parses; `name` is present; `description` is present; `name` does not start with `-` and has no `:`. On any failure Claude Code skips the file silently (treated as documentation or logged to the debug log only). | recommended | error | load | partial (YAML parse only, v2.1.233+, when pointed at `.claude/agents`; not a missing `name`) | [^sub-agents-subagent-files-claude-code-skips] [^sub-agents-frontmatter-reference] [^sub-agents-check-an-agents-directory-before-a-session] [^glossary-frontmatter] [^changelog-claude-code-changelog] |
+| `agent-frontmatter-valid` | Local agents only. Line 1 is `---`; YAML parses; `name` is present; `description` is present; `name` does not start with `-`, has no `:`, and has at most 256 characters (option `nameMax`, default 256, schema maximum 256, because the docs name no setting that moves the limit). On any failure Claude Code skips the file silently (treated as documentation or logged to the debug log only). | recommended | error | load | partial (YAML parse only, v2.1.233+, when pointed at `.claude/agents`; not a missing `name`) | [^sub-agents-subagent-files-claude-code-skips] [^sub-agents-frontmatter-reference] [^sub-agents-check-an-agents-directory-before-a-session] [^glossary-frontmatter] [^changelog-claude-code-changelog] |
 | `agent-no-bom` | Agent `.md` file does not start with a UTF-8 BOM. Before v2.1.239 such a file was silently ignored. Condition: older Claude Code versions. | recommended | warn | portability | – | [^changelog-claude-code-changelog] |
 | `agent-frontmatter-schema` | Keys in {`name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `omitClaudeMd`, `effort`, `isolation`, `color`, `initialPrompt`, `experimental`}, exact camelCase (flag `max_turns`, `disallowed-tools`). Types and enums: see Notes. Unknown keys are ignored without error. | recommended | error | no-op | – | [^sub-agents-frontmatter-reference] [^claude-directory-frontmatter-fields-by-file] [^agent-sdk-subagents-agentdefinition-configuration] [^plugins-components-frontmatter-fields-in-plugin-agents] |
 | `agent-plugin-ignored-fields` | Plugin agents do not set `permissionMode`, `hooks`, `mcpServers` or `initialPrompt`; Claude Code ignores them for plugin agents. Move hooks and MCP servers to plugin `hooks/hooks.json` and `.mcp.json`. | recommended | error | no-op | – | [^plugins-components-frontmatter-fields-in-plugin-agents] [^sub-agents-choose-the-subagent-scope] |
@@ -351,12 +351,11 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 | `output-style-plugin-name-description` | Plugin output style sets `name` and `description` frontmatter. | recommended | warn | practice | – | [^plugins-components-themes-and-output-styles] |
 | `output-style-name-unique` | Effective style name (`name`, else file name) is unique across nested project `.claude/output-styles/` directories; the closest to the working directory wins. (cross-file) | recommended | warn | consistency | – | [^output-styles-create-a-custom-output-style] [^output-styles-frontmatter-reference] |
 | `output-style-force-for-plugin` | Plugin style sets `force-for-plugin: true`: it overrides each user's `outputStyle`. | recommended | warn | practice | – | [^output-styles-frontmatter-reference] |
-| `output-style-force-for-plugin-unique` | At most one style across the plugins of a marketplace sets `force-for-plugin: true`; with several, the first loaded wins. (cross-file) | recommended | error | consistency | – | [^output-styles-frontmatter-reference] |
 | `output-style-keep-coding-instructions` | Custom style omits `keep-coding-instructions: true`, so the built-in software engineering instructions are dropped. (heuristic: matters only for coding sessions) | off | warn | practice | – | [^output-styles-how-output-styles-work] [^output-styles-frontmatter-reference] |
 
 #### Subagents and output styles: notes
 
-- Scope difference for broken frontmatter. A local agent with unparsable YAML, no `name`, a `name` but no `description`, a bad `name`, or a late `---` is skipped silently [^sub-agents-subagent-files-claude-code-skips]. A plugin agent with the same fault still loads under its file name with a placeholder description and every field ignored [^plugins-components-frontmatter-fields-in-plugin-agents]. So `agent-frontmatter-valid` (category `load`) applies only to local agents. For plugin agents, `claude plugin validate` reports a missing or unparsable frontmatter block, so no rule repeats it. A plugin agent without `name` is valid. An output style with bad YAML also loads under its file name [^output-styles-frontmatter-reference].
+- Scope difference for broken frontmatter. A local agent with unparsable YAML, no `name`, a `name` but no `description`, a bad `name`, a `name` of more than 256 characters, or a late `---` is skipped silently [^sub-agents-subagent-files-claude-code-skips]. A plugin agent with the same fault still loads under its file name with a placeholder description and every field ignored [^plugins-components-frontmatter-fields-in-plugin-agents]. So `agent-frontmatter-valid` (category `load`) applies only to local agents. For plugin agents, `claude plugin validate` reports a missing or unparsable frontmatter block, so no rule repeats it. A plugin agent without `name` is valid. An output style with bad YAML also loads under its file name [^output-styles-frontmatter-reference].
 - `agent-frontmatter-schema` sub-checks: `tools`, `disallowedTools` comma string or list; `model` string; `permissionMode` in `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, `manual`; `maxTurns` positive integer; `skills` string list; `memory` in `user`, `project`, `local`; `background`, `omitClaudeMd` booleans; `effort` in `low`, `medium`, `high`, `xhigh`, `max`; `isolation` = `worktree`; `color` in `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, `cyan`; `experimental` a map with only `cacheTtl` in `5m`, `1h`; no top-level `cacheTtl` [^sub-agents-frontmatter-reference] [^plugins-components-frontmatter-fields-in-plugin-agents].
 - `maxTurns` type is not stated in the frontmatter table. Only the SDK table gives `number` [^agent-sdk-subagents-agentdefinition-configuration]. `effort` as a number is SDK-only and not accepted here.
 - `isolation: worktree` as the only value is stated for plugin agents [^plugins-components-frontmatter-fields-in-plugin-agents]. The subagent table says only "Set to `worktree`" [^sub-agents-frontmatter-reference]. The stricter value applies to all scopes.
@@ -372,6 +371,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 - Two headings used here are HTML `<h3>` tags, not `#` lines: sub-agents "Frontmatter reference" (anchor `supported-frontmatter-fields`) and output-styles "Frontmatter reference" (anchor `frontmatter`). The same holds for the two errors.md headings and the troubleshooting heading.
 - Rows handed to other groups: frontmatter `hooks` shape, `Stop` to `SubagentStop`, hook script executable, `shell: powershell`, frontmatter-hook trust, `SubagentStart`/`SubagentStop` matchers (hooks). `agent-memory/*/MEMORY.md` size, memory dir orphans, `agent-memory-local/` gitignore (memory). Plugin `settings.json` `agent` and allowed keys, manifest `agents`/`outputStyles` replacing the folder scan (plugin). Settings `agent`, `outputStyle` case and resolution, `subagentPromptCacheTtl`, and env `CLAUDE_CODE_SUBAGENT_MODEL`, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_FORK_SUBAGENT`, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` (settings). `Agent(name)` deny rules and `Agent(model:...)` (permissions). Glob/Grep with Bash in `tools` (mcp-lsp).
 - Open question: the scope table ranks project agents over plugin agents by name [^sub-agents-choose-the-subagent-scope], but plugin agents register under `<plugin>:<name>`. The docs do not say whether a bare-name clash between them shadows anything, so no rule checks it.
+- One row was dropped: `output-style-force-for-plugin-unique` (at most one style with `force-for-plugin: true` across the plugins of a marketplace). The set of enabled plugins is user state that the repository does not show (ADR 001, Decision 14), and a marketplace lists plugins that a user may not enable. A rule cannot tell which styles compete.
 
 ### Hooks
 

@@ -31,7 +31,8 @@ Code compares names with case.
 For a skill or command file outside a plugin, the rule reads the `name` field of each Markdown
 file below `.claude/agents/`.[^scope] It reads the `.claude/agents/` of the directory that holds
 `.claude/`. It does the same for each directory above it, up to the repository root: the first
-directory that has a `.git` entry. Without a `.git` entry, it reads only the directory that holds
+directory that has a `.git` entry. The walk goes up the path as given, so a project directory that
+is a link does not move the stop. Without a `.git` entry, it reads only the directory that holds
 `.claude/`. An agent file with no `name` field defines no agent, because the field is required.
 
 The rule reads no file out of the repository. It follows a link to a directory once, and lists the
@@ -46,7 +47,7 @@ it, so the rule makes no report for it. The rule reads a `plugin.json` for a plu
 command only. A project `.claude/` has no manifest for the rule.
 
 For a plugin skill or command file, the rule reads each Markdown file below `agents/` in the
-plugin root.[^plugin] An agent has its `name`, or the file name without `.md`. The value can be
+plugin root.[^plugin] An agent has its `name`, or the file name without `.md` when it has no `name`. The value can be
 the scoped name `<plugin>:<folder>:<name>`.[^plugin] The rule also accepts the bare name, because
 the docs do not say that Claude Code refuses it. The plugin name is the `name` in
 `plugin.json`, or the directory name. A plugin skill does not see the agents of the repository

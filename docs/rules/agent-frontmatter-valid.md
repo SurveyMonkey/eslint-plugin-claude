@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/agent-frontmatter-valid, which reports a local subagent file in .claude/agents/ that Claude Code skips with no error, because the frontmatter does not parse, has no name or description, has a bad name, or does not start on line 1.
+description: The ESLint rule claude/agent-frontmatter-valid, which reports a local subagent file in .claude/agents/ that Claude Code skips with no error, because the frontmatter does not parse, has no name or description, has a bad name, has a name of more than 256 characters, or does not start on line 1.
 owner: brianespinosa
 created: 2026-10-01
 related_issues: [9]
@@ -30,6 +30,8 @@ cause appears only in the debug log. The rule reports each case on the frontmatt
 - **No `description`.** Claude Code skips the file.
 - **Bad `name`.** The name starts with `-` or contains `:`. The colon is for the scoped names of
   plugin agents.
+- **Long `name`.** The name has more than 256 characters.[^skips] The docs give 256 as the longest
+  name.[^fields] The rule counts each code point once.
 
 The rule checks an agent file in `.claude/agents/`, at any depth. This also covers a nested
 `.claude/agents/` directory, such as `packages/x/.claude/agents/`.
@@ -73,7 +75,20 @@ You review code.
 
 ## Options
 
-None.
+| Option | Default | Use |
+|--------|---------|-----|
+| `nameMax` | `256` | The limit on the length of `name`, in characters. Optional. |
+
+```js
+'claude/agent-frontmatter-valid': ['error', { nameMax: 64 }]
+```
+
+The default is the limit in the docs.[^fields] A team can set a lower value to keep names short.
+The schema sets a maximum of 256, because the docs name no setting that moves the limit. A config that sets
+only the severity keeps the default. The `recommended` and `strict` configs set no option.
+
+At the default, the message says that Claude Code skips the file. At another value, the message
+says "The configured limit is 64". It does not say that Claude Code skips the file at that length.
 
 ## Sources
 
