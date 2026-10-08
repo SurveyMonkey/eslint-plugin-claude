@@ -192,7 +192,7 @@ describe('marketplace-relative-source-format: a ".." segment', () => {
   const messagesOf = (code: string) =>
     lintMarketplace(NAME, dir, code).map((m) => ({ id: m.messageId, text: m.message }))
 
-  it.each(['./a..b', './my..skills', './a/b..', './..a/b', './a/..b/c'])(
+  it.each(['./a..b', './my..skills', './a/b..', './..a/b', './a/..b/c', './...', './a/.../b'])(
     'gives no report for the source %s',
     (source) => {
       expect(messagesOf(withSource(source))).toEqual([])
@@ -203,12 +203,20 @@ describe('marketplace-relative-source-format: a ".." segment', () => {
     expect(messagesOf(withRoot('./a..b'))).toEqual([])
   })
 
-  it.each(['./a/../b', '..', './..', './a/..', '../x', './a\\..\\b', '.\\..'])(
+  it.each(['./a/../b', '..', './..', './a/..', '../x', './a\\..\\b', '.\\..', './a/..\\b'])(
     'reports a parent path for the source %s',
     (source) => {
       expect(messagesOf(withSource(source)).map((m) => m.id)).toEqual(['parent'])
     },
   )
+
+  it('reports a bare name with two dots as no prefix, and accepts it under a pluginRoot', () => {
+    expect(messagesOf(withSource('a..b')).map((m) => m.id)).toEqual(['noPrefix'])
+    expect(messagesOf(withSource('a..b', { pluginRoot: './plugins' }))).toEqual([])
+    expect(messagesOf(withSource('..', { pluginRoot: './plugins' })).map((m) => m.id)).toEqual([
+      'parent',
+    ])
+  })
 
   it('keeps the order of faults: a network or absolute path reports first', () => {
     expect(messagesOf(withSource('//h/..')).map((m) => m.id)).toEqual(['network'])
