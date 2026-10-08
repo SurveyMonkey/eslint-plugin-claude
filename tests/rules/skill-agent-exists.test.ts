@@ -494,3 +494,26 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
     expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
   })
 })
+
+// A project directory that is a link to a target out of the repository. The walk goes up the
+// path of the link, and stops at the repository that holds the link.
+describe.skipIf(process.platform === 'win32')('a project directory that is a link', () => {
+  const file = (() => {
+    put('lnkwrap/repo/.git/HEAD', '')
+    put('lnkwrap/repo/.claude/agents/above.md', agentFile('above-agent'))
+    put('lnkproj-target/keep', '')
+    put('lnkwrap/.claude/agents/beyond.md', agentFile('beyond-agent'))
+    symlinkSync('../../lnkproj-target', path.join(scratch, 'lnkwrap/repo/app'))
+    return path.join(scratch, 'lnkwrap', 'repo', 'app', '.claude', 'skills', 's', 'SKILL.md')
+  })()
+  // The walk must reach the agents of the repository that holds the link.
+  it.fails('sees the agents above the link, up to the repository', () => {
+    expect(lintMarkdown('skill-agent-exists', fork('above-agent'), file)).toEqual([])
+  })
+  it('does not see the agents above the repository', () => {
+    expect(lintMarkdown('skill-agent-exists', fork('beyond-agent'), file)).toHaveLength(1)
+  })
+  it('reports a missing agent', () => {
+    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
+  })
+})
