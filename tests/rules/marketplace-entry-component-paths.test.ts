@@ -33,7 +33,7 @@ const entry = (fields: Record<string, unknown>, source: unknown = './plugins/p')
 const messageOf = (field: string, text: string, fault: string) => {
   const quoted = `The ${field} path "${text}"`
   const faults: Record<string, string> = {
-    parent: `${quoted} contains "..", which fails validation. Write the path from the plugin root, with no "..".`,
+    parent: `${quoted} has a ".." segment, which fails validation. Write the path from the plugin root, with no "..".`,
     start: `${quoted} does not start with "./". Write the path from the plugin root, with the "./" prefix.`,
     backslash: `${quoted} contains a backslash. On macOS and Linux, Claude Code rejects it. Write the path with forward slashes.`,
     missing: `${quoted} does not exist in the plugin directory, so Claude Code does not load it.`,
