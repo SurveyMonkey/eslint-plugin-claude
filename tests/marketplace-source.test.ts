@@ -20,8 +20,9 @@ import {
 } from './marketplace-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
-/** What the reader gives for each entry of the marketplace `code` in `dir`. */
-function readAll(dir: string, code: string): SourceRead[] {
+/** What the reader gives for each entry of the marketplace `code` in `dir`. The result has no
+ *  `dir` member, unless `keepDir` is true. Only the tests of that member need it. */
+function readAll(dir: string, code: string, keepDir = false): SourceRead[] {
   const results: SourceRead[] = []
   const probe: JSONRuleDefinition = {
     create(context) {
@@ -29,7 +30,13 @@ function readAll(dir: string, code: string): SourceRead[] {
         Document(node) {
           const read = sourceReader(context.filename, node)
           for (const entry of pluginEntries(node)) {
-            results.push(read(entry))
+            const result = read(entry)
+            if (keepDir || !('dir' in result)) {
+              results.push(result)
+            } else {
+              const { dir: _dir, ...rest } = result
+              results.push(rest)
+            }
           }
         },
       }
@@ -54,6 +61,10 @@ function readAll(dir: string, code: string): SourceRead[] {
 /** What the reader gives for an entry with the `source` value `source`. */
 const readOne = (dir: string, source: unknown, extra: Record<string, unknown> = {}) =>
   readAll(dir, marketplaceOf([{ name: 'p', source }], extra))[0]
+
+/** What the reader gives for an entry with the `source` value `source`, with its `dir` member. */
+const readWithDir = (dir: string, source: unknown, extra: Record<string, unknown> = {}) =>
+  readAll(dir, marketplaceOf([{ name: 'p', source }], extra), true)[0]
 
 const PLUGIN = { 'plugins/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) }
 
@@ -446,5 +457,80 @@ describe('sourceReader: the walk and the root', () => {
     const dir = path.join(repo, 'site')
     link(dir, 'plugins/p/.claude-plugin', '../../../shared/.claude-plugin')
     expect(readOne(dir, './plugins/p')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
+  })
+})
+
+describe('sourceReader: the directory of the source', () => {
+  it.fails.each([
+    ['a ./ path', './plugins/p', {}],
+    ['a path with a trailing slash', './plugins/p/', {}],
+    ['a bare name under a pluginRoot', 'p', { metadata: { pluginRoot: './plugins' } }],
+  ])(
+    'gives the real path of the plugin directory with the manifest for %s',
+    (_name, source, extra) => {
+      const dir = tree(PLUGIN)
+      expect(readWithDir(dir, source, extra)).toEqual({
+        kind: 'manifest',
+        manifest: { name: 'p' },
+        dir: path.join(dir, 'plugins', 'p'),
+      })
+    },
+  )
+
+  it.fails('gives the marketplace root for the source "."', () => {
+    const dir = tree({ '.claude-plugin/plugin.json': manifestOf({ name: 'root' }) })
+    expect(readWithDir(dir, '.')).toEqual({
+      kind: 'manifest',
+      manifest: { name: 'root' },
+      dir,
+    })
+  })
+
+  it.fails('gives the directory with no-manifest, and the path of a file for a source that is a file', () => {
+    const dir = tree({ 'plugins/none/x.txt': 'x', 'plugins/file.txt': 'x' })
+    expect(readWithDir(dir, './plugins/none')).toEqual({
+      kind: 'no-manifest',
+      dir: path.join(dir, 'plugins', 'none'),
+    })
+    expect(readWithDir(dir, './plugins/file.txt')).toEqual({
+      kind: 'no-manifest',
+      dir: path.join(dir, 'plugins', 'file.txt'),
+    })
+  })
+
+  it.skipIf(noLinks).fails(
+    'gives the real path through a link that stays in the marketplace root',
+    () => {
+      const dir = tree(PLUGIN)
+      link(dir, 'plugins/alias', 'p')
+      expect(readWithDir(dir, './plugins/alias')).toMatchObject({
+        kind: 'manifest',
+        dir: path.join(dir, 'plugins', 'p'),
+      })
+    },
+  )
+
+  it.skipIf(noLinks).fails('gives the real path of a marketplace that sits behind a link', () => {
+    const dir = tree(PLUGIN)
+    const alias = path.join(tree({}), 'alias')
+    symlinkSync(dir, alias)
+    expect(readWithDir(alias, './plugins/p')).toMatchObject({
+      kind: 'manifest',
+      dir: path.join(dir, 'plugins', 'p'),
+    })
+  })
+
+  it('gives no dir with a result that has no source directory', () => {
+    const repo = tree({ 'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
+    const dir = path.join(repo, 'site')
+    mkdirSync(path.join(dir, 'plugins'), { recursive: true })
+    const sources = ['./nope', 'plugins/p', '..', './plugins/p']
+    if (!noLinks) {
+      link(dir, 'plugins/p', '../../shared/p')
+    }
+    for (const source of sources) {
+      expect(readWithDir(dir, source)).not.toHaveProperty('dir')
+    }
+    expect(readWithDir(path.join(dir, 'gone'), './plugins/p')).toEqual({ kind: 'unreadable' })
   })
 })
