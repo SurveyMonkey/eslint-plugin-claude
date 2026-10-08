@@ -233,6 +233,18 @@ describe(`${RULE} (silent)`, () => {
   )
 
   it.skipIf(noLinks)(
+    'stays silent for a skills directory out of the marketplace root, even when its folders link back in',
+    () => {
+      const repo = tree({ 'site/real/a/SKILL.md': SKILL, 'site/real/b/SKILL.md': SKILL })
+      const dir = path.join(repo, 'site')
+      link(repo, 'shared/skills/a', '../../site/real/a')
+      link(repo, 'shared/skills/b', '../../site/real/b')
+      link(dir, 'skills', '../shared/skills')
+      expect(lint(dir, entry({ skills: ['./skills/a'] }))).toEqual([])
+    },
+  )
+
+  it.skipIf(noLinks)(
     'stays silent for a skills directory that is a link out of the repository',
     () => {
       const outside = tree({ 'x/SKILL.md': SKILL, 'y/SKILL.md': SKILL })
