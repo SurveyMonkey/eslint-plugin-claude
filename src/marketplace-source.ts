@@ -32,21 +32,25 @@ import {
  *    is a dangling link, has a real path out of the repository, or fails to
  *    read. Or `plugin.json` is unreadable (see `readManifest`).
  *  - `no-manifest`: the source has no `.claude-plugin/plugin.json`. A source
- *    that is a file is here too.
- *  - `manifest`: the fields of `plugin.json`. */
+ *    that is a file is here too. `dir` is the real path of the source.
+ *  - `manifest`: the fields of `plugin.json`. `dir` is the real path of the
+ *    source directory. It is inside the marketplace root and the bound. */
 export type SourceRead =
   | { readonly kind: 'not-relative' }
   | { readonly kind: 'missing' }
   | { readonly kind: 'escapes' }
   | { readonly kind: 'unreadable' }
-  | { readonly kind: 'no-manifest' }
-  | { readonly kind: 'manifest'; readonly manifest: Readonly<Record<string, unknown>> }
+  | { readonly kind: 'no-manifest'; readonly dir: string }
+  | {
+      readonly kind: 'manifest'
+      readonly manifest: Readonly<Record<string, unknown>>
+      readonly dir: string
+    }
 
 const NOT_RELATIVE: SourceRead = { kind: 'not-relative' }
 const MISSING: SourceRead = { kind: 'missing' }
 const ESCAPES: SourceRead = { kind: 'escapes' }
 const CANNOT_SEE: SourceRead = { kind: 'unreadable' }
-const NO_MANIFEST: SourceRead = { kind: 'no-manifest' }
 
 /** True when `pathFault` finds no network, absolute or `..` fault in `text`,
  *  and `text` has no backslash. */
@@ -136,6 +140,8 @@ export function sourceReader(
     if (manifest === UNREADABLE) {
       return CANNOT_SEE
     }
-    return manifest === null ? NO_MANIFEST : { kind: 'manifest', manifest }
+    return manifest === null
+      ? { kind: 'no-manifest', dir: real }
+      : { kind: 'manifest', manifest, dir: real }
   }
 }

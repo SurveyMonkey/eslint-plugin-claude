@@ -35,7 +35,8 @@ function readAll(dir: string, code: string, keepDir = false): SourceRead[] {
               results.push(result)
             } else {
               const { dir: _dir, ...rest } = result
-              results.push(rest)
+              // The cast keeps the old shape of the cases, which the other tests compare.
+              results.push(rest as SourceRead)
             }
           }
         },
@@ -461,7 +462,7 @@ describe('sourceReader: the walk and the root', () => {
 })
 
 describe('sourceReader: the directory of the source', () => {
-  it.fails.each([
+  it.each([
     ['a ./ path', './plugins/p', {}],
     ['a path with a trailing slash', './plugins/p/', {}],
     ['a bare name under a pluginRoot', 'p', { metadata: { pluginRoot: './plugins' } }],
@@ -477,7 +478,7 @@ describe('sourceReader: the directory of the source', () => {
     },
   )
 
-  it.fails('gives the marketplace root for the source "."', () => {
+  it('gives the marketplace root for the source "."', () => {
     const dir = tree({ '.claude-plugin/plugin.json': manifestOf({ name: 'root' }) })
     expect(readWithDir(dir, '.')).toEqual({
       kind: 'manifest',
@@ -486,7 +487,7 @@ describe('sourceReader: the directory of the source', () => {
     })
   })
 
-  it.fails('gives the directory with no-manifest, and the path of a file for a source that is a file', () => {
+  it('gives the directory with no-manifest, and the path of a file for a source that is a file', () => {
     const dir = tree({ 'plugins/none/x.txt': 'x', 'plugins/file.txt': 'x' })
     expect(readWithDir(dir, './plugins/none')).toEqual({
       kind: 'no-manifest',
@@ -498,7 +499,7 @@ describe('sourceReader: the directory of the source', () => {
     })
   })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'gives the real path through a link that stays in the marketplace root',
     () => {
       const dir = tree(PLUGIN)
@@ -510,7 +511,7 @@ describe('sourceReader: the directory of the source', () => {
     },
   )
 
-  it.skipIf(noLinks).fails('gives the real path of a marketplace that sits behind a link', () => {
+  it.skipIf(noLinks)('gives the real path of a marketplace that sits behind a link', () => {
     const dir = tree(PLUGIN)
     const alias = path.join(tree({}), 'alias')
     symlinkSync(dir, alias)
