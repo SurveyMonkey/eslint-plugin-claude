@@ -240,6 +240,23 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry({ commands: './nope', agents: '../x' }, source))).toEqual([])
   })
 
+  it('reports a path with ./ inside it but not at the start', () => {
+    const messages = lint(tree(PLUGIN), entry({ commands: 'commands/./c.md' }))
+    expect(messages.map((m) => m.message)).toEqual([
+      messageOf('commands', 'commands/./c.md', 'start'),
+    ])
+  })
+
+  it.skipIf(noLinks)('stays silent for a valid path in a marketplace behind a link', () => {
+    const top = tree(Object.fromEntries(Object.entries(PLUGIN).map(([k, v]) => ['real/' + k, v])))
+    link(top, 'alias', 'real')
+    const dir = path.join(top, 'alias')
+    expect(lint(dir, entry({ commands: './commands/c.md' }))).toEqual([])
+    expect(lint(dir, entry({ commands: './nope' }))).toHaveLength(1)
+    const root = marketplaceOf([{ name: 'p', source: '.', skills: '.' }])
+    expect(lint(dir, root)).toEqual([])
+  })
+
   it('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
     const code = marketplaceOf([{ name: 'p', source: 'p', commands: './nope' }], {
       metadata: { pluginRoot: '../plugins' },

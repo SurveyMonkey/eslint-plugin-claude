@@ -53,6 +53,8 @@ describe(RULE, () => {
     ['an array', ['./skills/b', './skills/c'], '"a"'],
     ['a path that needs normal form', ['./skills/./a', './skills//b/'], '"c"'],
     ['paths out of skills/', ['./extra/x'], '"a", "b", "c"'],
+    ['a skills/ directory in another place', ['./extra/skills/a'], '"a", "b", "c"'],
+    ['another directory that ends in skills', ['./extra/skills'], '"a", "b", "c"'],
     ['a path below a skill', ['./skills/a/sub'], '"a", "b", "c"'],
     ['paths with a sibling name', ['./skills-extra', './skills/a'], '"b", "c"'],
   ])('reports with the skills as %s', (_title, skills, names) => {
@@ -172,6 +174,15 @@ describe(`${RULE} (silent)`, () => {
     ['a different spelling of the key', { Skills: ['./skills/a'] }],
   ])('stays silent for %s', (_title, fields) => {
     expect(lint(tree(SKILLS), entry(fields))).toEqual([])
+  })
+
+  it.skipIf(noLinks)('reports for a marketplace that sits behind a link', () => {
+    const top = tree({
+      ...Object.fromEntries(Object.entries(SKILLS).map(([k, v]) => ['real/' + k, v])),
+    })
+    link(top, 'alias', 'real')
+    const messages = lint(path.join(top, 'alias'), entry({ skills: ['./skills/a'] }))
+    expect(messages.map((m) => m.message)).toEqual([message('"b", "c"')])
   })
 
   it('stays silent for a source that is not the marketplace root', () => {
