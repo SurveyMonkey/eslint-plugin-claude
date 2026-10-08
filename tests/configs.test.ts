@@ -2,7 +2,7 @@
 // matches nothing, so this test runs ESLint itself over a tree built in a
 // temporary directory. The tree is not committed, so neither the lint of
 // this repository nor Claude Code reads it as configuration.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { ESLint, type Linter } from 'eslint'
@@ -156,6 +156,16 @@ const TREE: Record<string, string> = {
     owner: { name: 'm' },
     plugins: [],
   }),
+  // A marketplace in a repository with a `.git`, where `plugins/p` is a link to a directory out of
+  // the marketplace root. The test makes the link. The tree above has no `.git`, so no link there
+  // gives a report.
+  'packages/s/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/s/shared/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p' }),
+  'packages/s/site/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'site',
+    owner: { name: 's' },
+    plugins: [{ name: 'p', source: './plugins/p' }],
+  }),
   'docs/marketplace.json': badMarketplace,
   'marketplace.json': badMarketplace,
   '.claude-plugin/other.json': badMarketplace,
@@ -164,6 +174,11 @@ const TREE: Record<string, string> = {
   '.vscode/settings.json': badSettings,
   '.vscode/settings.local.json': badSettings,
 }
+
+// The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
+const ESCAPE_RULE = 'marketplace-relative-source-escape-symlink'
+// A link needs a privilege on Windows, so the test makes the one link elsewhere only.
+const LINKS = process.platform !== 'win32'
 
 // The permission grammar rules of #15, in the order of the `modules` list. Each is an error.
 const GRAMMAR_RULES = [
@@ -195,6 +210,7 @@ const MARKETPLACE_RULES = [
   'marketplace-schema',
   'marketplace-entry-name-matches-manifest',
   'marketplace-relative-source-exists',
+  ESCAPE_RULE,
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -248,8 +264,15 @@ const EXPECTED = [
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
   // The marketplace rules read `.claude-plugin/marketplace.json` only.
-  ...MARKETPLACE_RULES.map((rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`),
+  ...MARKETPLACE_RULES.filter((rule) => rule !== ESCAPE_RULE).map(
+    (rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`,
+  ),
   'packages/m/.claude-plugin/marketplace.json: claude/marketplace-name-reserved@2',
+  ...(LINKS
+    ? [
+        'packages/s/site/.claude-plugin/marketplace.json: claude/marketplace-relative-source-escape-symlink@2',
+      ]
+    : []),
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -328,6 +351,10 @@ beforeAll(() => {
   for (const [file, content] of Object.entries(TREE)) {
     mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
     writeFileSync(path.join(root, file), content)
+  }
+  if (LINKS) {
+    mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
+    symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
   }
 })
 

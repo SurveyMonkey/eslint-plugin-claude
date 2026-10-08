@@ -38,7 +38,7 @@ The rule makes no report in these cases:
 - **The source is a file.** The docs name a missing directory only, and give no message for a file.
 
 A source that leaves the marketplace root through a link is a fault for
-`marketplace-relative-source-escape-symlink`. This rule makes no report for it.
+[`marketplace-relative-source-escape-symlink`](marketplace-relative-source-escape-symlink.md). This rule makes no report for it.
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 

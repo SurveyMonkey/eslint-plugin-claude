@@ -356,6 +356,28 @@
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
+  "marketplace-relative-source-escape-symlink": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Marketplace entry path does not stay inside the marketplace directory",
+      "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Share files within a marketplace with symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    }
+  ],
   "marketplace-relative-source-exists": [
     {
       "url": "https://code.claude.com/docs/en/plugins/create-marketplace",

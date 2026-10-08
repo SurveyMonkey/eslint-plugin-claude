@@ -42,7 +42,7 @@ The rule makes no report in these cases:
   rule reads no file out of the repository (ADR 001, Decision 14). With no `.git`, the repository
   is the marketplace root.
 - **The source leaves the marketplace root through a link.** That is a fault for
-  `marketplace-relative-source-escape-symlink`.
+  [`marketplace-relative-source-escape-symlink`](marketplace-relative-source-escape-symlink.md).
 - **A name is not a string or is empty.** An empty or mistyped entry `name` is a fault for
   [`marketplace-schema`](marketplace-schema.md). A manifest with no `name`, or with a `name` that
   is empty or not a string, is not for this rule.

@@ -38,6 +38,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'marketplace-entry-name-matches-manifest',
     'marketplace-headers-helper-command',
     'marketplace-name-reserved',
+    'marketplace-relative-source-escape-symlink',
     'marketplace-relative-source-exists',
     'marketplace-relative-source-format',
     'marketplace-schema',
