@@ -60,6 +60,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
     'settings-enabled-plugins-schema',
+    'settings-extra-known-marketplaces-schema',
     'skill-agent-exists',
     'skill-allowed-tools-broad',
     'skill-allowed-tools-ineffective',

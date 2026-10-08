@@ -65,7 +65,10 @@ const badMarketplace = JSON.stringify({
 
 // A project settings file with one fault for each settings rule of #12. The sync rule reads the
 // file name, so the two files below differ only in what that rule reports.
-const badMarketSettings = JSON.stringify({ enabledPlugins: { formatter: true } })
+const badMarketSettings = JSON.stringify({
+  enabledPlugins: { formatter: true },
+  extraKnownMarketplaces: { acme: { source: { source: 'npm', package: 'acme' } } },
+})
 
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
@@ -252,7 +255,10 @@ const MARKETPLACE_RULES = [
 ]
 
 // The settings rules of #12, in the order of the `modules` list. Each is an error.
-const SETTINGS_RULES = ['settings-enabled-plugins-schema']
+const SETTINGS_RULES = [
+  'settings-enabled-plugins-schema',
+  'settings-extra-known-marketplaces-schema',
+]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
