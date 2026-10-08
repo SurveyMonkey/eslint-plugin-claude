@@ -410,6 +410,22 @@ describe('declaredSource', () => {
     }
   })
 
+  it('reads a key of the other file that is also a name in the prototype', () => {
+    const dir = tree({
+      '.claude/settings.local.json': settings({ constructor: entry('other') }),
+    })
+    expect(declaredSource(settingsOf(dir), settings({}), 'constructor')).toEqual({
+      source: 'directory',
+      path: 'other',
+    })
+    expect(
+      declaredSource(settingsOf(dir), settings({ constructor: entry('own') }), 'constructor'),
+    ).toEqual({
+      source: 'directory',
+      path: 'own',
+    })
+  })
+
   it('finds the key "__proto__" and the empty key when the file sets them', () => {
     const own = '{"extraKnownMarketplaces": {"__proto__": {"source": 1}, "": {"source": 2}}}'
     const dir = tree({})

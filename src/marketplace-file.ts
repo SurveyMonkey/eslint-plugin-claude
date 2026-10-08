@@ -44,8 +44,9 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 /** The directory that holds the `.claude/` directory of the settings file `file`. */
 const projectOf = (file: string) => path.dirname(path.dirname(path.resolve(file)))
 
-/** True when `text` is an absolute path in the form of any platform. */
-const absolute = (text: string) => path.posix.isAbsolute(text) || path.win32.isAbsolute(text)
+/** True when `text` is an absolute path on any platform. The Windows form
+ *  covers a path that starts with `/` too. */
+const absolute = (text: string) => path.win32.isAbsolute(text)
 
 /** Read the `marketplace.json` that `source` points at. `source` is the
  *  `source` value of an `extraKnownMarketplaces` entry in the settings file
@@ -131,8 +132,6 @@ export function declaredSource(settingsFile: string, text: string, market: strin
   if (parsed === null || parsed === UNREADABLE) {
     return undefined
   }
-  const marketplaces = marketplacesIn(parsed.data)
-  return marketplaces !== undefined && Object.hasOwn(marketplaces, market)
-    ? sourceOf(marketplaces[market])
-    : undefined
+  // `sourceOf` gives undefined for a key of the prototype, which is no object with a `source`.
+  return sourceOf(marketplacesIn(parsed.data)?.[market])
 }
