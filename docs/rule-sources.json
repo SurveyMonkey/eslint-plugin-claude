@@ -280,6 +280,33 @@
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
+  "marketplace-entry-hooks-override": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How entry fields combine with plugin.json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Strict mode",
+      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Hooks in an entry",
+      "hash": "9507e979be52f296c481e28bcbea85c45710869175610bfeff866de42d70ebdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    }
+  ],
   "marketplace-entry-manifest-only-fields": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
