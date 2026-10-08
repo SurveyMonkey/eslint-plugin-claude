@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/glossary",
-  "hash": "e71da9312f59c61e6964233e4b35e7de0a7b4c7e7f79830f8801b4b8981bdbad",
+  "hash": "154e4450eb55f883440c14e059c72d375d8bfaa62501ea7bea524f7dcaa7ac27",
   "blocks": [
     {
       "id": "glossary",
@@ -72,7 +72,7 @@
     },
     {
       "id": "claude-md",
-      "hash": "73e7f7abfd2a1c1097cff2efc76ba4e0aa909a03fbe7e75950e2496cf076e445"
+      "hash": "223e290253fbde7820a938b54150e7e79022e329c6d7e9eed99b70a940071ff4"
     },
     {
       "id": "cloud-session",
@@ -108,7 +108,7 @@
     },
     {
       "id": "effort-level",
-      "hash": "cbfac990f512872a0d69f1b634a45b48778fd06e7afb24cfc04ebf2b77346c84"
+      "hash": "acda4098d8bbb1d780d5d031c4c8d951887c3a2d21ae64c4cf3a71a16c26e185"
     },
     {
       "id": "extended-thinking",
@@ -164,7 +164,7 @@
     },
     {
       "id": "output-style",
-      "hash": "4aad4e9efcdb3136e63419451ecc4fdf4b9581818dad5a8b90fc041983a0e700"
+      "hash": "958ac055f10a1158bb232a438e4629db993cc19705be4d0179d21784794f717d"
     },
     {
       "id": "p",
@@ -220,7 +220,7 @@
     },
     {
       "id": "settings-layers",
-      "hash": "0c456e56ed08e3f6d6b81739262fcea7adffd65167cb96b6ed960230f75cee81"
+      "hash": "66b2c9cea6c1febd43a97e77f0d0e5ff490ce5bc7107496dea644a7ab5c5d270"
     },
     {
       "id": "skill",

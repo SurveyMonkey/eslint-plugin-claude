@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permissions",
-  "hash": "487a51f83edd0c35a6128a2492e288c86aa24bbc07a0c975eb3f61acd5d45452",
+  "hash": "5968a6bf06e691b55d1e94498bf80b462376bd736f09780dec3f89ac18ed2b9c",
   "blocks": [
     {
       "id": "configure-permissions",
@@ -136,7 +136,7 @@
     },
     {
       "id": "how-permissions-interact-with-sandboxing",
-      "hash": "6ebfbb100468b0504efeb4ccb55f791849da8fe75685d9f851fc605a5848bfed"
+      "hash": "7e140cbfceabbc5e61e03cb5d84695a2b853d1bbeec3f8dc41a3ff55bb348a75"
     },
     {
       "id": "managed-settings",

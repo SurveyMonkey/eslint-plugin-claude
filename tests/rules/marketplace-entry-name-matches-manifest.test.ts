@@ -21,7 +21,7 @@ const withManifest = (fields: Record<string, unknown>, git = true) =>
 const entry = (name: unknown, source: unknown = './plugins/p') => marketplaceOf([{ name, source }])
 
 describe(RULE, () => {
-  it.fails('reports an entry name that differs from the manifest name', () => {
+  it('reports an entry name that differs from the manifest name', () => {
     const dir = withManifest({ name: 'formatter' })
     const code = `{
   "name": "acme",
@@ -42,12 +42,12 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('"formatter"')
   })
 
-  it.fails('compares the names in the exact letter case', () => {
+  it('compares the names in the exact letter case', () => {
     const dir = withManifest({ name: 'formatter' })
     expect(lint(dir, entry('Formatter'))).toHaveLength(1)
   })
 
-  it.fails('reports each entry that differs, and no entry that matches', () => {
+  it('reports each entry that differs, and no entry that matches', () => {
     const dir = tree({
       'plugins/a/.claude-plugin/plugin.json': manifestOf({ name: 'a' }),
       'plugins/b/.claude-plugin/plugin.json': manifestOf({ name: 'b' }),
@@ -61,7 +61,7 @@ describe(RULE, () => {
     expect(lint(dir, code).map((m) => m.messageId)).toEqual(['mismatch', 'mismatch'])
   })
 
-  it.fails('reports a bare name source under metadata.pluginRoot', () => {
+  it('reports a bare name source under metadata.pluginRoot', () => {
     const dir = withManifest({ name: 'formatter' })
     const code = marketplaceOf([{ name: 'fmt', source: 'p' }], {
       metadata: { pluginRoot: './plugins' },
@@ -69,12 +69,12 @@ describe(RULE, () => {
     expect(lint(dir, code)).toHaveLength(1)
   })
 
-  it.fails('reports the manifest at the marketplace root for the source "."', () => {
+  it('reports the manifest at the marketplace root for the source "."', () => {
     const dir = tree({ '.claude-plugin/plugin.json': manifestOf({ name: 'root' }) })
     expect(lint(dir, entry('other', '.'))).toHaveLength(1)
   })
 
-  it.fails('reads the last of two name keys, as JSON.parse does', () => {
+  it('reads the last of two name keys, as JSON.parse does', () => {
     const dir = withManifest({ name: 'formatter' })
     const code = '{"plugins": [{"name": "formatter", "name": "fmt", "source": "./plugins/p"}]}'
     expect(lint(dir, code)).toHaveLength(1)
@@ -82,25 +82,25 @@ describe(RULE, () => {
     expect(lint(dir, same)).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('reports a source that is a link inside the marketplace root', () => {
+  it.skipIf(noLinks)('reports a source that is a link inside the marketplace root', () => {
     const dir = withManifest({ name: 'formatter' })
     link(dir, 'plugins/alias', 'p')
     expect(lint(dir, entry('fmt', './plugins/alias'))).toHaveLength(1)
   })
 
-  it.fails('reports in a tree with no .git', () => {
+  it('reports in a tree with no .git', () => {
     const dir = withManifest({ name: 'formatter' }, false)
     expect(lint(dir, entry('fmt'))).toHaveLength(1)
   })
 })
 
 describe(`${RULE} (silent)`, () => {
-  it.fails('stays silent when the names are equal', () => {
+  it('stays silent when the names are equal', () => {
     const dir = withManifest({ name: 'formatter' })
     expect(lint(dir, entry('formatter'))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['has no name', {}],
     ['has a name that is not a string', { name: 3 }],
     ['has an empty name', { name: '' }],
@@ -108,7 +108,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(withManifest(fields), entry('fmt'))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['an empty entry name', ''],
     ['an entry name that is not a string', 3],
     ['an entry name that is null', null],
@@ -116,16 +116,16 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(withManifest({ name: 'formatter' }), entry(name))).toEqual([])
   })
 
-  it.fails('stays silent when both names are empty strings', () => {
+  it('stays silent when both names are empty strings', () => {
     expect(lint(withManifest({ name: '' }), entry(''))).toEqual([])
   })
 
-  it.fails('stays silent for an entry with no name', () => {
+  it('stays silent for an entry with no name', () => {
     const code = marketplaceOf([{ source: './plugins/p' }])
     expect(lint(withManifest({ name: 'formatter' }), code)).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['a source with no manifest', { 'plugins/p/x.txt': 'x' }],
     ['a source that does not exist', {}],
     ['a manifest that does not parse', { 'plugins/p/.claude-plugin/plugin.json': '{' }],
@@ -135,7 +135,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(files), entry('fmt'))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['an object source', { source: 'github', repo: 'a/b' }],
     ['a source with no ./ prefix', 'plugins/p'],
     ['a bare name with no pluginRoot', 'p'],
@@ -147,39 +147,36 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(withManifest({ name: 'formatter' }), entry('fmt', source))).toEqual([])
   })
 
-  it.fails('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
+  it('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
     const code = marketplaceOf([{ name: 'fmt', source: 'p' }], {
       metadata: { pluginRoot: '../plugins' },
     })
     expect(lint(withManifest({ name: 'formatter' }), code)).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a manifest that is a dangling link', () => {
+  it.skipIf(noLinks)('stays silent for a manifest that is a dangling link', () => {
     const dir = tree({})
     link(dir, 'plugins/p/.claude-plugin/plugin.json', 'gone.json')
     expect(lint(dir, entry('fmt'))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a manifest link out of the repository', () => {
+  it.skipIf(noLinks)('stays silent for a manifest link out of the repository', () => {
     const outside = tree({ 'plugin.json': manifestOf({ name: 'formatter' }) })
     const dir = tree({})
     link(dir, 'plugins/p/.claude-plugin/plugin.json', path.join(outside, 'plugin.json'))
     expect(lint(dir, entry('fmt'))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails(
-    'stays silent for a source that is a link out of the marketplace root',
-    () => {
-      const repo = tree({
-        'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'formatter' }),
-      })
-      const dir = path.join(repo, 'site')
-      link(dir, 'plugins/p', '../../shared/p')
-      expect(lint(dir, entry('fmt'))).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('stays silent for a source that is a link out of the marketplace root', () => {
+    const repo = tree({
+      'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'formatter' }),
+    })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/p', '../../shared/p')
+    expect(lint(dir, entry('fmt'))).toEqual([])
+  })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'stays silent for a link out of the repository, and for a dangling link',
     () => {
       const outside = tree({ 'p/.claude-plugin/plugin.json': manifestOf({ name: 'formatter' }) })
@@ -191,7 +188,7 @@ describe(`${RULE} (silent)`, () => {
     },
   )
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'stays silent for a link out of the marketplace root in a tree with no .git',
     () => {
       const top = tree(
@@ -204,7 +201,7 @@ describe(`${RULE} (silent)`, () => {
     },
   )
 
-  it.fails('stays silent for an entry that is not an object, and for a plugins value that is not an array', () => {
+  it('stays silent for an entry that is not an object, and for a plugins value that is not an array', () => {
     const dir = withManifest({ name: 'formatter' })
     expect(lint(dir, marketplaceOf(['fmt', null, 3]))).toEqual([])
     expect(lint(dir, JSON.stringify({ name: 'acme', plugins: { name: 'fmt' } }))).toEqual([])

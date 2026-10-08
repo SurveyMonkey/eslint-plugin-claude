@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "f4f0cdc88e2cf36a1490741800dc34a9fdf90ddaa70c2c5848aac03cde90d53a",
+  "hash": "336052874e175d06cc9749156c3addc4bb06beac85aa2487e59dd72948c79104",
   "blocks": [
     {
       "id": "all-settings",
@@ -20,7 +20,7 @@
     },
     {
       "id": "alwaysthinkingenabled",
-      "hash": "bcb5b5ef63a6a088452fed46bc9f44554475ae6dd9f6eb71063c739b7423fa18"
+      "hash": "9728322c1962dc46af482e03fc08e16dfb1f4ebc666bfb770f1df6c378e16bc0"
     },
     {
       "id": "availablemodels",
@@ -416,7 +416,7 @@
     },
     {
       "id": "plansdirectory",
-      "hash": "a4b683cc087abdf823dbf358314141fac153f1880298f9e1074abb1545575670"
+      "hash": "69fc2d9f03a0951dbd35201e46dd283f67118b9fa2146e9c37aa703cf9c9dd90"
     },
     {
       "id": "skilllistingbudgetfraction",
@@ -912,7 +912,7 @@
     },
     {
       "id": "disabledesktoplocalsessions",
-      "hash": "5508e44fe0d02a9e5edcf7db15c46a9ef7ee11acaa5bde432377a37b8ef53be5"
+      "hash": "1df58cb4fe2951c566b8b38383190c30bcdef89ddb6ee75088fc64825318a470"
     },
     {
       "id": "disableremotecontrol",
@@ -940,11 +940,11 @@
     },
     {
       "id": "sshconfigs",
-      "hash": "e8bf6f0932eaeb8b7e4b054acc7750f3db0026e41b1205a50a5b2cf486f31496"
+      "hash": "722e745a4ff8919bb901747acb7cad7e6716809d10d66d45ef8296bbe902f17e"
     },
     {
       "id": "sshhostallowlist",
-      "hash": "f4862245a373a7cb1ab2739b9f4b7504a1ffff383fb50001f5bb152df26b54d1"
+      "hash": "7707f7b977adb72c9eb6b660e55e05e59ca86edba363d859d818ecee83283865"
     },
     {
       "id": "authentication-and-providers",

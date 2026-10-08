@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/agent-teams",
-  "hash": "a2ed185b716d2550240752d988bfd1875cb2cad3f803be3a795f14054f3c0549",
+  "hash": "c7ccfd71d6e27ed15577ba1578ae70dc331bb613ff57092b2a056f06f828c0d6",
   "blocks": [
     {
       "id": "orchestrate-teams-of-claude-code-sessions",
@@ -32,7 +32,7 @@
     },
     {
       "id": "specify-teammates-and-models",
-      "hash": "c154a01d06e22944f9380143c3d467740cac7b05d43efb23d8f3e3d87614ee3c"
+      "hash": "c3b38a3f864d8b584dd5316bfde0b9baf6a114a9eab4955779c3cb4c1b888d80"
     },
     {
       "id": "have-teammates-plan-before-implementing",

@@ -1,10 +1,10 @@
 {
   "url": "https://code.claude.com/docs/en/memory",
-  "hash": "b4e76ef1a2356fe39d5b5a70368a884e4128f1fc77a70e3556af9d4f84940562",
+  "hash": "a3e8fc767a871c9b4834b19596d5bef206eeee1f484ca1da6b6327b3558295d7",
   "blocks": [
     {
       "id": "how-claude-remembers-your-project",
-      "hash": "7935159e67672a8606d4e52b2ac7259fdc90d4753af0c9d2f7fd1ffe3d4a05b9"
+      "hash": "00f7c2981a4b067bcf62e0759d5c8556659308e792cd8495d3b6f933d96ba865"
     },
     {
       "id": "claude-md-vs-auto-memory",
@@ -64,7 +64,7 @@
     },
     {
       "id": "share-rules-across-projects-with-symlinks",
-      "hash": "6d70bd72836d9092beff4d5f4f0cadf6853e71ab1a40ff2ec00308d2be51cdb6"
+      "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
     },
     {
       "id": "user-level-rules",

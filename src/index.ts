@@ -20,6 +20,7 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
+import marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
 import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
 import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
@@ -111,6 +112,7 @@ const modules = [
   marketplaceSourceSchema,
   marketplaceRelativeSourceFormat,
   marketplaceSchema,
+  marketplaceEntryNameMatchesManifest,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -187,6 +189,7 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-source-schema': 'error',
   'marketplace-relative-source-format': 'error',
   'marketplace-schema': 'error',
+  'marketplace-entry-name-matches-manifest': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

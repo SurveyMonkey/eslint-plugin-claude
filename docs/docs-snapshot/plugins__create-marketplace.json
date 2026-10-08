@@ -61,6 +61,12 @@
   ],
   "sources": [
     {
+      "heading": "Keep the entry name and the manifest name the same",
+      "id": "keep-the-entry-name-and-the-manifest-name-the-same",
+      "hash": "7b9fbfa87ad9074a72c48e244a949556af66447094d8956335808a8ee71c5c6a",
+      "text": "### Keep the entry name and the manifest name the same\n\nA marketplace plugin has an entry `name` in `marketplace.json` and a `name` in its own `plugin.json`, called the manifest name. Each name appears in different places:\n\n* **Entry name**: the install id, `<entry-name>@<marketplace>`. It's what people type to install, what `claude plugin list` shows, and the key Claude Code writes under [`enabledPlugins`](/docs/en/settings-reference#enabledplugins) in their settings file.\n* **Manifest name**: the prefix on the plugin's skills, and the name `claude plugin details` takes.\n\nWhen the two names differ and someone installs by the manifest name, Claude Code reports `Plugin \"<manifest-name>\" not found in marketplace \"<marketplace>\"`. Keep the two names the same. For more on how Claude Code uses the two names, see [Plugin loading reference](/docs/en/plugins/loading#find-where-a-plugin-came-from)."
+    },
+    {
       "heading": "Problems that surface when you add or install",
       "id": "problems-that-surface-when-you-add-or-install",
       "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b",
