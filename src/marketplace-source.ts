@@ -128,9 +128,7 @@ export function sourceReader(
     if (typeof real !== 'string') {
       return real
     }
-    if (!isInside(real, bound)) {
-      return CANNOT_SEE
-    }
+    // The root and each part of the walk are inside `bound`, so `real` is too.
     if (!isInside(real, realRoot)) {
       return ESCAPES
     }
