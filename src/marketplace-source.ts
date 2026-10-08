@@ -22,14 +22,15 @@ import {
  *  - `not-relative`: the `source` is not a plain relative path. This covers
  *    a value that is not a string, and a path that
  *    `marketplace-relative-source-format` reports. A path with a backslash
- *    is also here. A planned rule owns it (`docs/rules-inventory.md`). A bare
+ *    is also here. `marketplace-relative-source-backslash` owns it (`docs/rules-inventory.md`). A bare
  *    name is also here when no valid `pluginRoot` is set.
  *  - `missing`: nothing is at the path.
  *  - `escapes`: the real path is out of the marketplace root and inside the
  *    repository. A link on the path leads out.
- *  - `unreadable`: the rule cannot see the source. The path is a dangling
- *    link, has a real path out of the repository, or fails to read. Or
- *    `plugin.json` is unreadable (see `readManifest`).
+ *  - `unreadable`: the rule cannot see the source. The marketplace root has
+ *    no real path, or a real path out of the repository. A part of the path
+ *    is a dangling link, has a real path out of the repository, or fails to
+ *    read. Or `plugin.json` is unreadable (see `readManifest`).
  *  - `no-manifest`: the source has no `.claude-plugin/plugin.json`. A source
  *    that is a file is here too.
  *  - `manifest`: the fields of `plugin.json`. */
@@ -67,10 +68,11 @@ function relativePath(text: string, pluginRoot: string | undefined): string | un
   return pluginRoot !== undefined && BARE_NAME.test(text) ? `${pluginRoot}/${text}` : undefined
 }
 
-/** The real path of the directory `dir` below `root`, or the result that stops
- *  the read. The walk goes down one part at a time. A part that does not
- *  resolve is either not there, or a dangling link, and a dangling link can
- *  lead anywhere (as in `readJson`). A part with a real path out of the
+/** The real path of `dir` below `root`, or the result that stops the read. The
+ *  walk goes down one part at a time. A part that does not resolve is either
+ *  not there, or a dangling link, and a dangling link can lead anywhere (as in
+ *  `readJson`). A part that fails to read for another reason gives
+ *  `unreadable`. A part with a real path out of the
  *  repository stops the walk, so the reader never looks below it. */
 function realSource(
   root: string,
@@ -116,7 +118,9 @@ export function sourceReader(
       return NOT_RELATIVE
     }
     // A marketplace root that is not on disk gives no answer for any source.
-    if (typeof realRoot !== 'string') {
+    // The same holds for a root with a real path out of the repository: a
+    // missing part must not give `missing` from a look out of the repository.
+    if (typeof realRoot !== 'string' || !isInside(realRoot, bound)) {
       return CANNOT_SEE
     }
     const dir = path.resolve(root, relative)

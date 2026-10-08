@@ -404,6 +404,43 @@ describe('sourceReader: the walk and the root', () => {
     },
   )
 
+  it.skipIf(noLinks)(
+    'gives unreadable for a missing source when the root links out of the repository',
+    () => {
+      const outside = tree({}, false)
+      const repo = tree({})
+      const alias = path.join(repo, 'site')
+      symlinkSync(outside, alias)
+      expect(readOne(alias, './plugins/nope')).toEqual({ kind: 'unreadable' })
+    },
+  )
+
+  it.skipIf(noLinks)('gives missing for a missing part below a link inside the repository', () => {
+    const repo = tree({ 'shared/x': '' })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/dir', '../../shared')
+    expect(readOne(dir, './plugins/dir/nope')).toEqual({ kind: 'missing' })
+  })
+
+  it.skipIf(noLinks)('gives escapes for a link to a sibling that shares a name prefix', () => {
+    const repo = tree({ 'site2/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/p', '../../site2/p')
+    expect(readOne(dir, './plugins/p')).toEqual({ kind: 'escapes' })
+  })
+
+  it.skipIf(noLinks)('gives missing for a path below a link to a file', () => {
+    const dir = tree({ f: '' })
+    link(dir, 'plugins/l', '../f')
+    expect(readOne(dir, './plugins/l/x')).toEqual({ kind: 'missing' })
+  })
+
+  it.skipIf(noLinks)('gives unreadable for a link loop in the middle of the path', () => {
+    const dir = tree({})
+    link(dir, 'plugins/loop', 'loop')
+    expect(readOne(dir, './plugins/loop/x')).toEqual({ kind: 'unreadable' })
+  })
+
   it.skipIf(noLinks)('reads a .claude-plugin link that stays inside the repository', () => {
     const repo = tree({ 'shared/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
     const dir = path.join(repo, 'site')
