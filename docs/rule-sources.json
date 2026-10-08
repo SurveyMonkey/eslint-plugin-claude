@@ -506,6 +506,28 @@
       "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
     }
   ],
+  "marketplace-version-duplicate": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "How Claude Code computes the version",
+      "hash": "4f6d0641506dc5f6ebf4f9d7a0e10856f9495ba9a866466123ae3d5e232c301b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Release a new version",
+      "hash": "ef8ed525a0fa7f402ddefa908f0df1254bb78a6022a38ffb3000071f1e2ffdfb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Validation messages",
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",

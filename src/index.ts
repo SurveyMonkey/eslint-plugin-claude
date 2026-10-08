@@ -28,6 +28,7 @@ import marketplaceRelativeSourceExists from './rules/marketplace-relative-source
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
 import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
+import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -117,6 +118,7 @@ const modules = [
   marketplaceEntryNameMatchesManifest,
   marketplaceRelativeSourceExists,
   marketplaceRelativeSourceEscapeSymlink,
+  marketplaceVersionDuplicate,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -196,6 +198,7 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-entry-name-matches-manifest': 'error',
   'marketplace-relative-source-exists': 'error',
   'marketplace-relative-source-escape-symlink': 'error',
+  'marketplace-version-duplicate': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

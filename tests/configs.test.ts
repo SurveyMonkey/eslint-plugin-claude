@@ -35,7 +35,8 @@ const badSettings = JSON.stringify({
 // relative path, and `hooks` as a path, under a reserved name with no `owner`. A second entry has
 // a `github` source with a bad `repo`, and a third has a relative `source` with no `./`. A fourth
 // entry is named `renamed`, and its source `plugins/p` has a `plugin.json` that is named `p`. A
-// fifth entry has a relative `source` to a directory that is not there.
+// fifth entry has a relative `source` to a directory that is not there. A sixth entry sets a
+// `version` that `plugins/m/.claude-plugin/plugin.json` sets too.
 const badMarketplace = JSON.stringify({
   name: 'claude-code-plugins',
   plugins: [
@@ -50,6 +51,7 @@ const badMarketplace = JSON.stringify({
     { name: 'c', source: 'plugins/c' },
     { name: 'renamed', source: './plugins/p' },
     { name: 'gone', source: './plugins/gone' },
+    { name: 'm', source: './plugins/m', version: '2.0.0' },
   ],
 })
 
@@ -80,6 +82,7 @@ const TREE: Record<string, string> = {
   'plugins/p/skills/vars/SKILL.md': `Run ${pluginRoot}/run.sh\n`,
   'plugins/p/SKILL.md': `---\nname: p\n---\n\nRun ${pluginData}\n`,
   'plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
+  'plugins/m/.claude-plugin/plugin.json': JSON.stringify({ name: 'm', version: '1.0.0' }),
   'plugins/q/SKILL.md': '# Q\n',
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
@@ -211,6 +214,7 @@ const MARKETPLACE_RULES = [
   'marketplace-entry-name-matches-manifest',
   'marketplace-relative-source-exists',
   ESCAPE_RULE,
+  'marketplace-version-duplicate',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
