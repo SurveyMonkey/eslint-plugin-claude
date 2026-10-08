@@ -38,8 +38,7 @@ describe(RULE, () => {
       column: 15,
       endColumn: 20,
     })
-    expect(messages[0]?.message).toContain('"fmt"')
-    expect(messages[0]?.message).toContain('"formatter"')
+    expect(messages[0]?.message).toMatch(/entry "name" is "fmt".*source is "formatter"/)
   })
 
   it('compares the names in the exact letter case', () => {
@@ -50,6 +49,11 @@ describe(RULE, () => {
   it('compares the names without a trim', () => {
     const dir = withManifest({ name: 'formatter' })
     expect(lint(dir, entry('formatter '))).toHaveLength(1)
+    expect(lint(withManifest({ name: ' formatter' }), entry('formatter'))).toHaveLength(1)
+  })
+
+  it('compares the manifest name in the exact letter case', () => {
+    expect(lint(withManifest({ name: 'Formatter' }), entry('formatter'))).toHaveLength(1)
   })
 
   it('reports each entry that differs, and no entry that matches', () => {

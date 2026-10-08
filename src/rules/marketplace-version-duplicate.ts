@@ -1,7 +1,7 @@
 // An entry in `marketplace.json` and the `plugin.json` of its relative source
 // must not both set a `version` (docs/rules/marketplace-version-duplicate.md).
 // The rule reads `plugin.json` through `sourceReader`, and makes no report
-// when it cannot read it. An empty string is not a version.
+// when it cannot read it. The rule does not count an empty string as a version.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, pluginEntries } from '../marketplace-json.ts'

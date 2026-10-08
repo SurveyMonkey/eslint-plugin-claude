@@ -20,9 +20,9 @@ Set the version of a marketplace plugin in the entry or in its `plugin.json`, no
 
 ## Rule details
 
-Claude Code takes the version of a plugin from `plugin.json` first, and then from the marketplace
-entry.[^computes] The docs say not to set `version` in both. If you do, Claude Code uses the
-`plugin.json` value without warning.[^release] So the entry `version` has no effect.
+For a relative-path source, Claude Code takes the version of a plugin from `plugin.json` first, and
+then from the marketplace entry.[^computes] The docs say not to set `version` in both. If you do,
+Claude Code uses the `plugin.json` value, and gives no warning at run time.[^release] So the entry `version` has no effect.
 
 The rule reads each object in `plugins` that has a relative `source`. It resolves the source from
 the marketplace root, the directory that holds `.claude-plugin/`. A bare name resolves under
@@ -30,16 +30,18 @@ the marketplace root, the directory that holds `.claude-plugin/`. A bare name re
 reports the entry `version` when both files set one. The report is on the entry `version` value.
 The report names both values, and it says whether they are equal or different.
 
-`claude plugin validate` reports only a mismatch, as the warning `Entry declares version "<a>" but
-<path>/plugin.json says "<b>"`, and only for a relative-path entry.[^validation] So for values that
-differ, the rule and validate both report. For equal values, only the rule reports.
+`claude plugin validate` warns when the two versions differ, as `Entry declares version "<a>" but
+<path>/plugin.json says "<b>"`, for a relative-path entry.[^validation] The docs state no message
+for equal versions. So for values that differ, the rule and validate both report.
 
 The rule makes no report in these cases:
 
 - **Only one file sets a version.** That is the form that the docs recommend.
-- **A version is an empty string.** An empty string is not a version. The docs do not say how Claude
-  Code reads it, so the rule does not count it. A version that is not a string is a fault for
-  [`marketplace-schema`](marketplace-schema.md).
+- **A version is an empty string.** The docs do not say how Claude Code reads an empty string, so
+  the rule does not count it as a set version.
+- **A version is not a string.** An entry `version` that is not a string is a fault for
+  [`marketplace-schema`](marketplace-schema.md). A `plugin.json` `version` that is not a string is
+  for the plugin manifest rules.
 - **The source is not a relative path.** An object source, a source that
   [`marketplace-relative-source-format`](marketplace-relative-source-format.md) reports, and a value
   that is not a string are not read. The version of a `command` source is for

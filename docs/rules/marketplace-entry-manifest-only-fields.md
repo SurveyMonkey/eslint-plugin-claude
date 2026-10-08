@@ -20,7 +20,7 @@ Declare `mcpServers`, `lspServers`, `userConfig` and `channels` in `plugin.json`
 
 ## Rule details
 
-An entry accepts every `plugin.json` field. How the entry fields apply depends on the plugin that
+Apart from the directory listing fields, an entry accepts every `plugin.json` field. How the entry fields apply depends on the plugin that
 Claude Code fetches.[^entries] When the plugin has no `plugin.json`, the entry is the manifest, and
 every field applies. When the plugin has a `plugin.json`, that file is the manifest. The entry
 fields `mcpServers`, `lspServers`, `userConfig` and `channels` do not apply, and the docs say to
@@ -33,7 +33,7 @@ the marketplace root, the directory that holds `.claude-plugin/`. A bare name re
 counts as set for any value. The value does not matter, because the field does not apply.
 
 The rule does not check the other entry fields. The `strict` field does not change the result for
-these four fields.[^combine] The six component fields have their own rules.
+these four fields.[^combine] Other rules cover the six component fields (see `docs/rules-inventory.md`).
 
 The rule makes no report in these cases:
 

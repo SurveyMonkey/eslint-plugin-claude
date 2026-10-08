@@ -20,7 +20,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'escapes' }> = {
     schema: [],
     messages: {
       escapes:
-        'The "source" "{{path}}" leaves the marketplace root through a link. Claude Code refuses an entry that reaches its target through a link that resolves outside the marketplace directory. Keep each link on the path inside the marketplace root.',
+        'The "source" "{{path}}" leaves the marketplace root through a link. Claude Code refuses this in a marketplace that it fetches from a remote source, and "claude plugin validate" warns about it in a local source. Keep each link on the path inside the marketplace root.',
     },
   },
   create(context) {

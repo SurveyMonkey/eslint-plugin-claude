@@ -39,8 +39,7 @@ describe(RULE, () => {
       column: 56,
       endColumn: 63,
     })
-    expect(messages[0]?.message).toContain('"2.0.0"')
-    expect(messages[0]?.message).toContain('"1.0.0"')
+    expect(messages[0]?.message).toMatch(/sets "version" to "2\.0\.0".*sets it to "1\.0\.0"/)
   })
 
   it('reports versions that are equal, which claude plugin validate does not report', () => {
@@ -54,6 +53,12 @@ describe(RULE, () => {
       'differs',
     ])
     expect(lint(withManifest({ version: '1.0' }), entry('1.0 ')).map((m) => m.messageId)).toEqual([
+      'differs',
+    ])
+    expect(lint(withManifest({ version: ' 1.0' }), entry('1.0')).map((m) => m.messageId)).toEqual([
+      'differs',
+    ])
+    expect(lint(withManifest({ version: 'V1' }), entry('v1')).map((m) => m.messageId)).toEqual([
       'differs',
     ])
   })

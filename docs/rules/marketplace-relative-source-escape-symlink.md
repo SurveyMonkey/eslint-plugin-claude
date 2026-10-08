@@ -21,23 +21,24 @@ Keep a relative marketplace source inside the marketplace root.
 ## Rule details
 
 A relative `source` names a directory inside the marketplace, from the marketplace root.[^relative]
-The marketplace root is the directory that holds `.claude-plugin/`. Claude Code refuses an entry
-that reaches its target through a symbolic link that resolves outside the marketplace directory.
-The docs name this for a marketplace that Claude Code fetches from a remote source, such as git or
-a URL.[^refusal] The plugin does not install or load.
+The marketplace root is the directory that holds `.claude-plugin/`. For a marketplace that
+Claude Code fetches from a remote source, such as git, Claude Code refuses an entry that reaches its
+target through a symbolic link that resolves outside the marketplace directory.[^refusal] The
+plugin does not install or load. The docs state no refusal for a local marketplace.
 
 The rule takes the real path of the source directory. It reports the `source` value when that path
 is out of the marketplace root. A link on any part of the path can cause this. The report does not
 depend on the content of the directory. The rule reports a link to a file out of the root too.
 
 `claude plugin validate` does not follow links. It gives a warning for a local source that is or
-traverses a symlink, and it does not read that path.[^validation] So validate does not find the
+traverses a symlink. It does not read that path.[^validation] So validate does not find the
 target of the link.
 
 The rule makes no report in these cases:
 
-- **The link stays inside the marketplace root.** The docs allow links within one
-  marketplace.[^symlinks]
+- **The link stays inside the marketplace root.** The docs say to keep each link that a source
+  crosses inside the marketplace directory.[^refusal] Claude Code also keeps a link between two
+  plugins of one marketplace.[^symlinks]
 - **The source is not a relative path.** An object source, a source that
   [`marketplace-relative-source-format`](marketplace-relative-source-format.md) reports, and a value
   that is not a string are not read.

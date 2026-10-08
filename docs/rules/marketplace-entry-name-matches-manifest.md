@@ -22,9 +22,9 @@ Keep the name of a marketplace entry the same as the name in its `plugin.json`.
 
 A marketplace plugin has two names: the entry `name` in `marketplace.json`, and the `name` in its
 own `plugin.json`. Users install and enable the plugin by the entry name. Claude Code prefixes the
-skills of the plugin with the manifest name.[^names][^loading] When the two names differ and a user
-installs by the manifest name, Claude Code reports `Plugin "<manifest-name>" not found in
-marketplace`. The docs say to keep the two names the same.[^names]
+skills of the plugin with the manifest name.[^names][^loading] A user can install by the
+manifest name when the two names differ. Claude Code then reports `Plugin "<manifest-name>" not
+found in marketplace "<marketplace>"`. The docs say to keep the two names the same.[^names]
 
 The rule reads each object in `plugins` that has a relative `source`. It resolves the source from
 the marketplace root, the directory that holds `.claude-plugin/`. A bare name resolves under

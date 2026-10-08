@@ -169,6 +169,12 @@ const TREE: Record<string, string> = {
     owner: { name: 's' },
     plugins: [{ name: 'p', source: './plugins/p' }],
   }),
+  // Beside the marketplace with the link, so a glob wider than the directory would read it.
+  'packages/s/site/docs/marketplace.json': JSON.stringify({
+    name: 'site',
+    owner: { name: 's' },
+    plugins: [{ name: 'p', source: './plugins/p' }],
+  }),
   'docs/marketplace.json': badMarketplace,
   'marketplace.json': badMarketplace,
   '.claude-plugin/other.json': badMarketplace,
