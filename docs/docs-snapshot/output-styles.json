@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/output-styles",
-  "hash": "e5e2ab65d01fb7ce26d04b3ecc1758304d4b305b4097655bb65e6e77505b4a94",
+  "hash": "caa152d1d974171c4622c6c4f6c6c45d2f553f491c18f867153375b7ffab8623",
   "blocks": [
     {
       "id": "output-styles",
@@ -40,7 +40,7 @@
     },
     {
       "id": "frontmatter",
-      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266"
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
     },
     {
       "id": "choose-between-an-output-style-and-other-features",
@@ -48,7 +48,7 @@
     },
     {
       "id": "how-output-styles-work",
-      "hash": "5af7df7c67a6a0282edf60eaa583f27b200268b9846049248795d5b398f8d69e"
+      "hash": "44b13a917f0cb05cadebc5c9df4e0c423e105323fa17a467fb76957e648cf18a"
     },
     {
       "id": "related-resources",
@@ -59,8 +59,8 @@
     {
       "heading": "Frontmatter reference",
       "id": "frontmatter",
-      "hash": "f563c49157f9faa30a19d8256da7e34eae98c7e5c7b214db4a7947caf89e8266",
-      "text": "<h3 id=\"frontmatter\">\n  Frontmatter reference\n</h3>\n\nConfigure an output style with YAML [frontmatter](/docs/en/glossary#frontmatter) between `---` markers at the top of the file. All fields are optional, and field names use lowercase words separated by hyphens. A misspelled field is ignored without an error. If the YAML doesn't parse, the style still loads under its file name with no fields set; run `claude --debug` to see the parse error.\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `name` | No | Name of the output style, shown in the `/config` picker. Default: the file name |\n| `description` | No | Description of the output style, shown in the `/config` picker |\n| `keep-coding-instructions` | No | Set to `true` to keep Claude Code's built-in software engineering instructions alongside your style. Default: `false` |\n| `force-for-plugin` | No | Plugin output styles only. Set to `true` to apply this style automatically whenever the plugin is enabled, without requiring users to select it. Overrides the user's `outputStyle` setting. If multiple enabled plugins set this, Claude Code uses the first one loaded. Default: `false` |\n\n<span id=\"comparisons-to-related-features\" />"
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b",
+      "text": "<h3 id=\"frontmatter\">\n  Frontmatter reference\n</h3>\n\nConfigure an output style with YAML [frontmatter](/docs/en/glossary#frontmatter) between `---` markers at the top of the file. All fields are optional, and field names use lowercase words separated by hyphens. A misspelled field is ignored without an error. If the YAML doesn't parse, the style still loads under its file name with no fields set; run `claude --debug` to see the parse error.\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `name` | No | Name of the output style, shown in the `/config` picker. Default: the file name |\n| `description` | No | Description of the output style, shown in the `/config` picker |\n| `keep-coding-instructions` | No | Set to `true` to keep Claude Code's section of built-in software engineering instructions, which only the full system prompt includes, alongside your style. See [How output styles work](#how-output-styles-work). Default: `false` |\n| `force-for-plugin` | No | Plugin output styles only. Set to `true` to apply this style automatically whenever the plugin is enabled, without requiring users to select it. Overrides the user's `outputStyle` setting. If multiple enabled plugins set this, Claude Code uses the first one loaded. Default: `false` |\n\n<span id=\"comparisons-to-related-features\" />"
     }
   ]
 }

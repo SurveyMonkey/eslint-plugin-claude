@@ -2,7 +2,7 @@
 // matches nothing, so this test runs ESLint itself over a tree built in a
 // temporary directory. The tree is not committed, so neither the lint of
 // this repository nor Claude Code reads it as configuration.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { ESLint, type Linter } from 'eslint'
@@ -33,7 +33,14 @@ const badSettings = JSON.stringify({
 
 // One entry with a `command` source and a `version`, a `headersHelper` that starts with a
 // relative path, and `hooks` as a path, under a reserved name with no `owner`. A second entry has
-// a `github` source with a bad `repo`, and a third has a relative `source` with no `./`.
+// a `github` source with a bad `repo`, and a third has a relative `source` with no `./`. A fourth
+// entry is named `renamed`, and its source `plugins/p` has a `plugin.json` that is named `p`. A
+// fifth entry has a relative `source` to a directory that is not there. A sixth entry sets a
+// `version` that `plugins/m/.claude-plugin/plugin.json` sets too, and an `mcpServers`. A seventh
+// entry sets `strict` to `false` and `skills`, and its source has a `plugin.json`. An eighth entry
+// sets `hooks` for `Stop`, and its `plugin.json` does too. A ninth entry has the marketplace root as
+// its `source`, and lists one of the two skills under `skills/`. A tenth entry
+// sets a `commands` path with `..`.
 const badMarketplace = JSON.stringify({
   name: 'claude-code-plugins',
   plugins: [
@@ -46,6 +53,13 @@ const badMarketplace = JSON.stringify({
     },
     { name: 'b', source: { source: 'github', repo: 'formatter' } },
     { name: 'c', source: 'plugins/c' },
+    { name: 'renamed', source: './plugins/p' },
+    { name: 'gone', source: './plugins/gone' },
+    { name: 'm', source: './plugins/m', version: '2.0.0', mcpServers: {} },
+    { name: 'k', source: './plugins/k', strict: false, skills: './' },
+    { name: 'h', source: './plugins/h', hooks: { Stop: [] } },
+    { name: 'root', source: '.', skills: ['./skills/listed'] },
+    { name: 'p', source: './plugins/p', commands: '../c.md' },
   ],
 })
 
@@ -76,6 +90,11 @@ const TREE: Record<string, string> = {
   'plugins/p/skills/vars/SKILL.md': `Run ${pluginRoot}/run.sh\n`,
   'plugins/p/SKILL.md': `---\nname: p\n---\n\nRun ${pluginData}\n`,
   'plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
+  'plugins/m/.claude-plugin/plugin.json': JSON.stringify({ name: 'm', version: '1.0.0' }),
+  'plugins/k/.claude-plugin/plugin.json': JSON.stringify({ name: 'k' }),
+  'plugins/h/.claude-plugin/plugin.json': JSON.stringify({ name: 'h', hooks: { Stop: [] } }),
+  'skills/listed/SKILL.md': '---\nname: listed\ndescription: d\n---\n',
+  'skills/omitted/SKILL.md': '---\nname: omitted\ndescription: d\n---\n',
   'plugins/q/SKILL.md': '# Q\n',
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
@@ -152,6 +171,22 @@ const TREE: Record<string, string> = {
     owner: { name: 'm' },
     plugins: [],
   }),
+  // A marketplace in a repository with a `.git`, where `plugins/p` is a link to a directory out of
+  // the marketplace root. The test makes the link. The tree above has no `.git`, so no link there
+  // gives a report.
+  'packages/s/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/s/shared/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p' }),
+  'packages/s/site/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'site',
+    owner: { name: 's' },
+    plugins: [{ name: 'p', source: './plugins/p' }],
+  }),
+  // Beside the marketplace with the link, so a glob wider than the directory would read it.
+  'packages/s/site/docs/marketplace.json': JSON.stringify({
+    name: 'site',
+    owner: { name: 's' },
+    plugins: [{ name: 'p', source: './plugins/p' }],
+  }),
   'docs/marketplace.json': badMarketplace,
   'marketplace.json': badMarketplace,
   '.claude-plugin/other.json': badMarketplace,
@@ -160,6 +195,11 @@ const TREE: Record<string, string> = {
   '.vscode/settings.json': badSettings,
   '.vscode/settings.local.json': badSettings,
 }
+
+// The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
+const ESCAPE_RULE = 'marketplace-relative-source-escape-symlink'
+// A link needs a privilege on Windows, so the test makes the one link elsewhere only.
+const LINKS = process.platform !== 'win32'
 
 // The permission grammar rules of #15, in the order of the `modules` list. Each is an error.
 const GRAMMAR_RULES = [
@@ -189,6 +229,15 @@ const MARKETPLACE_RULES = [
   'marketplace-source-schema',
   'marketplace-relative-source-format',
   'marketplace-schema',
+  'marketplace-entry-name-matches-manifest',
+  'marketplace-relative-source-exists',
+  ESCAPE_RULE,
+  'marketplace-version-duplicate',
+  'marketplace-entry-manifest-only-fields',
+  'marketplace-strict-false-conflict',
+  'marketplace-entry-hooks-override',
+  'marketplace-entry-root-skills',
+  'marketplace-entry-component-paths',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -242,8 +291,15 @@ const EXPECTED = [
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
   // The marketplace rules read `.claude-plugin/marketplace.json` only.
-  ...MARKETPLACE_RULES.map((rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`),
+  ...MARKETPLACE_RULES.filter((rule) => rule !== ESCAPE_RULE).map(
+    (rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`,
+  ),
   'packages/m/.claude-plugin/marketplace.json: claude/marketplace-name-reserved@2',
+  ...(LINKS
+    ? [
+        'packages/s/site/.claude-plugin/marketplace.json: claude/marketplace-relative-source-escape-symlink@2',
+      ]
+    : []),
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -322,6 +378,10 @@ beforeAll(() => {
   for (const [file, content] of Object.entries(TREE)) {
     mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
     writeFileSync(path.join(root, file), content)
+  }
+  if (LINKS) {
+    mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
+    symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
   }
 })
 

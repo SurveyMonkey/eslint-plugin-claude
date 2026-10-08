@@ -12,12 +12,12 @@ const NETWORK = /^[\\/]{2}/
 // A root slash or backslash at the start, or a drive letter with a slash.
 const ABSOLUTE = /^(?:[\\/]|[A-Za-z]:[\\/])/
 // A bare name is one directory name, with no slash of either kind.
-const BARE_NAME = /^[^\\/]+$/
+export const BARE_NAME = /^[^\\/]+$/
 
 type MessageIds = 'network' | 'absolute' | 'parent' | 'noPrefix'
 
 /** The first fault that every relative path has, or undefined. */
-function pathFault(path: string): Exclude<MessageIds, 'noPrefix'> | undefined {
+export function pathFault(path: string): Exclude<MessageIds, 'noPrefix'> | undefined {
   if (NETWORK.test(path)) {
     return 'network'
   }

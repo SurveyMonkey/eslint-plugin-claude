@@ -1,10 +1,10 @@
 {
   "url": "https://code.claude.com/docs/en/sub-agents",
-  "hash": "3b5b2c092ab8cd94bd87ca4b8bf4bd72caaf814792861734ba2adf44c700e2c1",
+  "hash": "7d245a15843f5470daaf06346621cd195b34c3b9f5c25d5021708eaf7dfdac33",
   "blocks": [
     {
       "id": "create-custom-subagents",
-      "hash": "db4ac2ab2f2947bce839ab9a146ef6ad29556f3664fcbb215949757514181555"
+      "hash": "23ac31e44fde652518e32788650c1b5da0446c66764a3a69f5ab0ca8dfec9164"
     },
     {
       "id": "built-in-subagents",
@@ -40,7 +40,7 @@
     },
     {
       "id": "choose-a-model",
-      "hash": "aa7171c97106a5979b701dbc67a25e479d861864b894a130f2cddfd328ef3870"
+      "hash": "61e5790161539e3ce519ee4369a03936c1232e6c2500e970e92a70ca281bf72c"
     },
     {
       "id": "run-every-subagent-on-one-model",
@@ -168,7 +168,7 @@
     },
     {
       "id": "resume-subagents",
-      "hash": "731924c3bda6f7d93905882377ad819f0b5cd969d75fd168dcecacf28c2f6d56"
+      "hash": "e97d63ba2f0888113a9b9acc4ba550c68242f7a78b995d632ca07827e3a9a95c"
     },
     {
       "id": "auto-compaction",
@@ -184,7 +184,7 @@
     },
     {
       "id": "how-forks-differ-from-other-subagents",
-      "hash": "1903c8c818a275aec13ae60989eef36c24303c7f8369bbb4ca400bbf232dc5d0"
+      "hash": "7b036dc90863a0afae2ce158f7831d3805978421bddb1849e4488a5a31b78aa2"
     },
     {
       "id": "turn-fork-mode-on-or-off",

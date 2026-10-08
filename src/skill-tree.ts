@@ -258,7 +258,7 @@ export function frontmatterOfFile(file: string): Record<string, unknown> | null 
  *  `UNREADABLE` for a dangling link, and null when nothing is there. A failed
  *  `lstatSync` for another reason gives `UNREADABLE`. `lstatSync` does not
  *  follow the last part of the path, so it never reads the link target. */
-function danglingOf(entry: string): null | Unreadable {
+export function danglingOf(entry: string): null | Unreadable {
   try {
     lstatSync(entry)
   } catch (error) {

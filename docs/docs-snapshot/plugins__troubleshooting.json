@@ -365,6 +365,12 @@
       "id": "hook-loads-but-never-fires",
       "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426",
       "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
+    },
+    {
+      "heading": "Plugin <name> has conflicting manifests",
+      "id": "plugin-has-conflicting-manifests",
+      "hash": "58f8b1731c63b3f2d79e3f9a447088a7e6d0059944e6e516f5530c2a022a20e4",
+      "text": "<h3 id=\"plugin-has-conflicting-manifests\">\n  `Plugin <name> has conflicting manifests`\n</h3>\n\nThe plugin fails to load with `Plugin <name> has conflicting manifests: both plugin.json and marketplace entry specify components.`\n\nThe plugin has its own `plugin.json`, and its marketplace entry sets `strict: false` while also declaring any of `commands`, `agents`, `skills`, `hooks`, `outputStyles`, or `themes`. Remove those fields from the entry, or set `strict: true` in the entry so Claude Code appends them to `plugin.json`. See [Strict mode](/docs/en/plugins/marketplace-reference#strict-mode)."
     }
   ]
 }
