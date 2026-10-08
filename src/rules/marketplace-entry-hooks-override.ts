@@ -20,10 +20,9 @@ const name = 'marketplace-entry-hooks-override' as const
 function declaredEvents(hooks: unknown): Set<string> {
   const values = Array.isArray(hooks) ? hooks : [hooks]
   return new Set(
+    // A value inside the array that is an array has index keys, and none is an event name.
     values.flatMap((value) =>
-      value !== null && typeof value === 'object' && !Array.isArray(value)
-        ? Object.keys(value)
-        : [],
+      value !== null && typeof value === 'object' ? Object.keys(value) : [],
     ),
   )
 }
@@ -53,12 +52,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'override' }> = {
           if (strict !== undefined && !(strict.type === 'Boolean' && strict.value)) {
             continue
           }
-          // The entry reads hooks as an inline object only. A path or an array is for
-          // `marketplace-entry-hooks-inline`, and a value of another type is for `marketplace-schema`.
+          // The entry reads hooks as an inline object only. `lastMember` gives nothing for any
+          // other value. A path or an array is for `marketplace-entry-hooks-inline`, and a value of
+          // another type is for `marketplace-schema`.
           const hooks = lastMember(entry, 'hooks')?.value
-          if (hooks?.type !== 'Object') {
-            continue
-          }
           const members = HOOK_EVENTS.flatMap((event) => {
             const member = lastMember(hooks, event)
             return member === undefined ? [] : [{ event, member }]
