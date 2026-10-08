@@ -263,6 +263,38 @@
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
+  "marketplace-entry-component-paths": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Path rules",
+      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Containment and existence",
+      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Path escapes plugin directory",
+      "hash": "5681f5051584c16f8699c406342cad59c118d93e078e0217361ef469c8e5f346"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Share files within a marketplace with symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
+    }
+  ],
   "marketplace-entry-hooks-inline": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -278,6 +310,38 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "marketplace-entry-hooks-override": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How entry fields combine with plugin.json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Strict mode",
+      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Hooks in an entry",
+      "hash": "9507e979be52f296c481e28bcbea85c45710869175610bfeff866de42d70ebdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
     }
   ],
   "marketplace-entry-manifest-only-fields": [
@@ -322,6 +386,23 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+    }
+  ],
+  "marketplace-entry-root-skills": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How entry fields combine with plugin.json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
   "marketplace-headers-helper-command": [
@@ -526,6 +607,33 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Fields by type",
       "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+    }
+  ],
+  "marketplace-strict-false-conflict": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Strict mode",
+      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How entry fields combine with plugin.json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Plugin <name> has conflicting manifests",
+      "hash": "58f8b1731c63b3f2d79e3f9a447088a7e6d0059944e6e516f5530c2a022a20e4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Bare names under pluginRoot",
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
     }
   ],
   "marketplace-version-duplicate": [

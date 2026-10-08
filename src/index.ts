@@ -19,9 +19,12 @@ import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
+import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
+import marketplaceEntryHooksOverride from './rules/marketplace-entry-hooks-override.ts'
 import marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manifest-only-fields.ts'
 import marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
+import marketplaceEntryRootSkills from './rules/marketplace-entry-root-skills.ts'
 import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
 import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
 import marketplaceRelativeSourceEscapeSymlink from './rules/marketplace-relative-source-escape-symlink.ts'
@@ -29,6 +32,7 @@ import marketplaceRelativeSourceExists from './rules/marketplace-relative-source
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
 import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
+import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
@@ -121,6 +125,10 @@ const modules = [
   marketplaceRelativeSourceEscapeSymlink,
   marketplaceVersionDuplicate,
   marketplaceEntryManifestOnlyFields,
+  marketplaceStrictFalseConflict,
+  marketplaceEntryHooksOverride,
+  marketplaceEntryRootSkills,
+  marketplaceEntryComponentPaths,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -202,6 +210,10 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-relative-source-escape-symlink': 'error',
   'marketplace-version-duplicate': 'error',
   'marketplace-entry-manifest-only-fields': 'error',
+  'marketplace-strict-false-conflict': 'error',
+  'marketplace-entry-hooks-override': 'error',
+  'marketplace-entry-root-skills': 'error',
+  'marketplace-entry-component-paths': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
