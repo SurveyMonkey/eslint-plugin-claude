@@ -361,3 +361,42 @@ describe('sourceReader and marketplace-relative-source-format', () => {
     expect(readOne(dir, source, extra)).toEqual({ kind: 'not-relative' })
   })
 })
+
+describe('sourceReader: the walk and the root', () => {
+  it.skipIf(noLinks)(
+    'gives unreadable for a missing part below a link out of the repository',
+    () => {
+      const outside = tree({})
+      const dir = tree({})
+      link(dir, 'plugins/out', outside)
+      expect(readOne(dir, './plugins/out/nope')).toEqual({ kind: 'unreadable' })
+    },
+  )
+
+  it('gives unreadable for every source when the marketplace root is not on disk', () => {
+    const dir = path.join(tree({}), 'not', 'there')
+    expect(readOne(dir, './plugins/p')).toEqual({ kind: 'unreadable' })
+  })
+
+  it('reads a bare name that starts with a dot under the pluginRoot', () => {
+    const dir = tree({ 'plugins/.x/.claude-plugin/plugin.json': manifestOf({ name: 'x' }) })
+    expect(readOne(dir, '.x', { metadata: { pluginRoot: './plugins' } })).toEqual({
+      kind: 'manifest',
+      manifest: { name: 'x' },
+    })
+  })
+
+  it.skipIf(noLinks)('reads a marketplace that sits behind a link to its directory', () => {
+    const dir = tree(PLUGIN)
+    const alias = path.join(tree({}), 'alias')
+    symlinkSync(dir, alias)
+    expect(readOne(alias, './plugins/p')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
+  })
+
+  it.skipIf(noLinks)('reads a .claude-plugin link that stays inside the repository', () => {
+    const repo = tree({ 'shared/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/p/.claude-plugin', '../../../shared/.claude-plugin')
+    expect(readOne(dir, './plugins/p')).toEqual({ kind: 'manifest', manifest: { name: 'p' } })
+  })
+})

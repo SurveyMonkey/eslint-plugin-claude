@@ -11,7 +11,6 @@ import {
   danglingOf,
   isInside,
   readManifest,
-  realDirectory,
   realOf,
   repositoryRoot,
   UNREADABLE,
@@ -70,8 +69,14 @@ function relativePath(text: string, pluginRoot: string | undefined): string | un
 /** The real path of the directory `dir` below `root`, or the result that stops
  *  the read. The walk goes down one part at a time. A part that does not
  *  resolve is either not there, or a dangling link, and a dangling link can
- *  lead anywhere (as in `readJson`). */
-function realSource(root: string, realRoot: string, dir: string): string | SourceRead {
+ *  lead anywhere (as in `readJson`). A part with a real path out of the
+ *  repository stops the walk, so the reader never looks below it. */
+function realSource(
+  root: string,
+  realRoot: string,
+  bound: string,
+  dir: string,
+): string | SourceRead {
   let at = root
   let real = realRoot
   for (const part of path.relative(root, dir).split(path.sep).filter(Boolean)) {
@@ -79,6 +84,9 @@ function realSource(root: string, realRoot: string, dir: string): string | Sourc
     const found = realOf(at)
     if (typeof found !== 'string') {
       return found === null && danglingOf(at) === null ? MISSING : CANNOT_SEE
+    }
+    if (!isInside(found, bound)) {
+      return CANNOT_SEE
     }
     real = found
   }
@@ -92,7 +100,7 @@ export function sourceReader(
   document: DocumentNode,
 ): (entry: ObjectNode) => SourceRead {
   const root = path.dirname(path.dirname(path.resolve(file)))
-  const realRoot = realDirectory(root)
+  const realRoot = realOf(root)
   const bound = repositoryRoot(root)
   const configured = lastMember(lastMember(document.body, 'metadata')?.value, 'pluginRoot')?.value
   // A `pluginRoot` with a fault is for the format rule. A bare name under it is not read.
@@ -106,8 +114,12 @@ export function sourceReader(
     if (relative === undefined) {
       return NOT_RELATIVE
     }
+    // A marketplace root that is not on disk gives no answer for any source.
+    if (typeof realRoot !== 'string') {
+      return CANNOT_SEE
+    }
     const dir = path.resolve(root, relative)
-    const real = realSource(root, realRoot, dir)
+    const real = realSource(root, realRoot, bound, dir)
     if (typeof real !== 'string') {
       return real
     }
