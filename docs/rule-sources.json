@@ -890,6 +890,33 @@
       "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
     }
   ],
+  "settings-extra-known-marketplaces-key-matches-name": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Require a marketplace and its plugins",
+      "hash": "9697c07a43a64a16e7cab4fbd780a24694b7f4f5c8463a201387843c1f0dd43c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "extraKnownMarketplaces",
+      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Fields by type",
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Require plugins per repository",
+      "hash": "67c847e1cd322d6ab392081d18421d67272ea6369dbd514df9c318be30894176"
+    }
+  ],
   "settings-extra-known-marketplaces-schema": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

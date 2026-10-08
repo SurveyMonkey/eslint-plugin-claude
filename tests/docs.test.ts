@@ -60,6 +60,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
     'settings-enabled-plugins-schema',
+    'settings-extra-known-marketplaces-key-matches-name',
     'settings-extra-known-marketplaces-schema',
     'settings-marketplace-headers-helper-https',
     'settings-marketplace-key-alias-conflict',

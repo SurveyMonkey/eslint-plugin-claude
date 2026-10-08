@@ -22,7 +22,7 @@ const directory = (path: unknown) => ({ source: 'directory', path })
 const file = (path: unknown) => ({ source: 'file', path })
 
 describe(RULE, () => {
-  it.fails('reports a key that differs from the name of a directory source', () => {
+  it('reports a key that differs from the name of a directory source', () => {
     const dir = withMarket()
     const code = `{
   "extraKnownMarketplaces": {
@@ -44,7 +44,7 @@ describe(RULE, () => {
     )
   })
 
-  it.fails('reports a key that differs from the name of a file source', () => {
+  it('reports a key that differs from the name of a file source', () => {
     const dir = withMarket()
     const code = `{
   "extraKnownMarketplaces": {
@@ -56,18 +56,18 @@ describe(RULE, () => {
     expect(messages[0]).toMatchObject({ messageId: 'mismatch', line: 3, column: 5, endColumn: 11 })
   })
 
-  it.fails('reports in .claude/settings.local.json', () => {
+  it('reports in .claude/settings.local.json', () => {
     const dir = withMarket()
     const messages = lint(dir, settings('team', directory('market')), LOCAL)
     expect(messages.map((m) => m.messageId)).toEqual(['mismatch'])
   })
 
-  it.fails('reports a path that starts with ./', () => {
+  it('reports a path that starts with ./', () => {
     const dir = withMarket()
     expect(lint(dir, settings('team', directory('./market')))).toHaveLength(1)
   })
 
-  it.fails('resolves a relative path from the repository root, for a nested .claude directory', () => {
+  it('resolves a relative path from the repository root, for a nested .claude directory', () => {
     const dir = withMarket()
     const messages = lint(
       dir,
@@ -85,29 +85,29 @@ describe(RULE, () => {
     ).toEqual([])
   })
 
-  it.fails('reports in a tree with no .git', () => {
+  it('reports in a tree with no .git', () => {
     const dir = withMarket('acme', false)
     expect(lint(dir, settings('team', directory('market')))).toHaveLength(1)
   })
 
-  it.fails('compares the names in the exact letter case', () => {
+  it('compares the names in the exact letter case', () => {
     const dir = withMarket('Acme')
     expect(lint(dir, settings('acme', directory('market')))).toHaveLength(1)
   })
 
-  it.fails('compares the names without a trim', () => {
+  it('compares the names without a trim', () => {
     expect(lint(withMarket('acme '), settings('acme', directory('market')))).toHaveLength(1)
     expect(lint(withMarket('acme'), settings(' acme', directory('market')))).toHaveLength(1)
   })
 
-  it.fails('reports an empty key', () => {
+  it('reports an empty key', () => {
     const dir = withMarket()
     const messages = lint(dir, settings('', directory('market')))
     expect(messages).toHaveLength(1)
     expect(messages[0]?.message).toContain('key ""')
   })
 
-  it.fails('reports each key that differs, and no key that matches', () => {
+  it('reports each key that differs, and no key that matches', () => {
     const dir = tree({
       [`a/${MARKET}`]: marketplace({ name: 'a' }),
       [`b/${MARKET}`]: marketplace({ name: 'b' }),
@@ -122,13 +122,13 @@ describe(RULE, () => {
     })
     const messages = lint(dir, code)
     expect(messages.map((m) => [m.messageId, m.line, m.column])).toEqual([
-      ['mismatch', 1, 52],
-      ['mismatch', 1, 94],
+      ['mismatch', 1, 77],
+      ['mismatch', 1, 126],
     ])
     expect(messages.map((m) => m.message.match(/key "(\w+)"/)?.[1])).toEqual(['x', 'y'])
   })
 
-  it.fails('reads the last of two members of one key, as JSON.parse does', () => {
+  it('reads the last of two members of one key, as JSON.parse does', () => {
     const dir = withMarket()
     const code = `{
   "extraKnownMarketplaces": {
@@ -148,7 +148,7 @@ describe(RULE, () => {
     expect(messages[0]).toMatchObject({ line: 4, column: 5 })
   })
 
-  it.fails('reads the last of two extraKnownMarketplaces keys', () => {
+  it('reads the last of two extraKnownMarketplaces keys', () => {
     const dir = withMarket()
     const code = `{
   "extraKnownMarketplaces": { "acme": { "source": { "source": "directory", "path": "market" } } },
@@ -159,34 +159,34 @@ describe(RULE, () => {
     expect(messages[0]).toMatchObject({ line: 3, column: 31 })
   })
 
-  it.fails('reads the last of two source keys and two path keys', () => {
+  it('reads the last of two source keys and two path keys', () => {
     const dir = withMarket()
     const code =
       '{"extraKnownMarketplaces": {"team": {"source": {"source": "github", "source": "directory", "path": "x", "path": "market"}}}}'
     expect(lint(dir, code)).toHaveLength(1)
   })
 
-  it.skipIf(noLinks).fails('reports a directory that is a link inside the repository', () => {
+  it.skipIf(noLinks)('reports a directory that is a link inside the repository', () => {
     const dir = withMarket()
     link(dir, 'alias', 'market')
     expect(lint(dir, settings('team', directory('alias')))).toHaveLength(1)
   })
 
-  it.fails('reports a path that goes up and stays in the repository', () => {
+  it('reports a path that goes up and stays in the repository', () => {
     const dir = withMarket()
     expect(lint(dir, settings('team', directory('other/../market')))).toHaveLength(1)
   })
 })
 
 describe(`${RULE} (silent)`, () => {
-  it.fails('stays silent when the key equals the name', () => {
+  it('stays silent when the key equals the name', () => {
     const dir = withMarket()
     expect(lint(dir, settings('acme', directory('market')))).toEqual([])
     expect(lint(dir, settings('acme', file(`market/${MARKET}`)))).toEqual([])
     expect(lint(dir, settings('acme', directory('market')), LOCAL)).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['is missing', {}],
     ['is not a string', { name: 3 }],
     ['is empty', { name: '' }],
@@ -196,12 +196,12 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', directory('market')))).toEqual([])
   })
 
-  it.fails('stays silent when there is no marketplace.json', () => {
+  it('stays silent when there is no marketplace.json', () => {
     expect(lint(tree({}), settings('team', directory('market')))).toEqual([])
     expect(lint(tree({}), settings('team', file('market/m.json')))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['does not parse', '{"name": '],
     ['is empty', ''],
     ['is an array', '["acme"]'],
@@ -212,12 +212,12 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', file(`market/${MARKET}`)))).toEqual([])
   })
 
-  it.fails('stays silent when the file source names a directory', () => {
+  it('stays silent when the file source names a directory', () => {
     const dir = withMarket()
     expect(lint(dir, settings('team', file('market')))).toEqual([])
   })
 
-  it.fails('stays silent for a path out of the repository', () => {
+  it('stays silent for a path out of the repository', () => {
     const outside = withMarket()
     const dir = tree({})
     const up = path.relative(dir, outside)
@@ -225,7 +225,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', file(`${up}/market/${MARKET}`)))).toEqual([])
   })
 
-  it.fails('stays silent for a path above the directory that holds .claude when there is no .git', () => {
+  it('stays silent for a path above the directory that holds .claude when there is no .git', () => {
     const dir = tree({ [MARKET]: marketplace(), 'sub/.claude/keep': '' }, false)
     expect(lint(dir, settings('team', directory('..')), 'sub/.claude/settings.json')).toEqual([])
     expect(lint(dir, settings('team', directory('market')), 'sub/.claude/settings.json')).toEqual(
@@ -233,7 +233,7 @@ describe(`${RULE} (silent)`, () => {
     )
   })
 
-  it.skipIf(noLinks).fails('stays silent for a link that leads out of the repository', () => {
+  it.skipIf(noLinks)('stays silent for a link that leads out of the repository', () => {
     const outside = withMarket()
     const dir = tree({})
     link(dir, 'alias', outside)
@@ -242,14 +242,14 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', file('m.json')))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a link on the path that leads out', () => {
+  it.skipIf(noLinks)('stays silent for a link on the path that leads out', () => {
     const outside = withMarket()
     const dir = tree({})
     link(dir, 'alias', outside)
     expect(lint(dir, settings('team', file(`alias/market/${MARKET}`)))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a dangling link', () => {
+  it.skipIf(noLinks)('stays silent for a dangling link', () => {
     const dir = tree({})
     link(dir, 'alias', 'nothing')
     link(dir, 'm.json', 'nothing.json')
@@ -257,7 +257,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', file('m.json')))).toEqual([])
   })
 
-  it.fails('stays silent for an absolute path', () => {
+  it('stays silent for an absolute path', () => {
     const dir = withMarket()
     expect(lint(dir, settings('team', directory(`${dir}/market`)))).toEqual([])
     expect(lint(dir, settings('team', file(`${dir}/market/${MARKET}`)))).toEqual([])
@@ -265,7 +265,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', directory('C:\\market')))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['an empty path', ''],
     ['a path that is not a string', 3],
     ['a missing path', undefined],
@@ -275,7 +275,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', file(given)))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['github', { source: 'github', repo: 'o/market', path: 'market' }],
     ['git', { source: 'git', url: 'https://x.test/r.git', path: 'market' }],
     ['url', { source: 'url', url: 'https://x.test/m.json', path: 'market' }],
@@ -288,7 +288,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', source))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['a string', 'market'],
     ['null', null],
     ['an array', [directory('market')]],
@@ -297,7 +297,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, settings('team', source))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['not an object', '{"extraKnownMarketplaces": []}'],
     ['a string', '{"extraKnownMarketplaces": "market"}'],
     ['null', '{"extraKnownMarketplaces": null}'],
