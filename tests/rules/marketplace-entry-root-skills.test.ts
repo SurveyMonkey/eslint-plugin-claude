@@ -99,6 +99,12 @@ describe(RULE, () => {
     expect(messages.map((m) => m.message)).toEqual([message('"b", "c"')])
   })
 
+  it('reads a skill directory with two dots in its name', () => {
+    const dir = tree({ ...SKILLS, 'skills/a..b/SKILL.md': SKILL })
+    const messages = lint(dir, entry({ skills: ['./skills/a..b'] }))
+    expect(messages.map((m) => m.message)).toEqual([message('"a", "b", "c"')])
+  })
+
   it('reports each entry on its own', () => {
     const dir = tree({ ...SKILLS, 'plugins/p/skills/z/SKILL.md': SKILL })
     const code = marketplaceOf([
