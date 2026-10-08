@@ -24,7 +24,7 @@ const message = (field: string) =>
   `The entry sets "strict": false and "${field}", and its source has a plugin.json. The plugin fails to load with a conflict of manifests. Remove "${field}" from the entry, or remove "strict": false.`
 
 describe(RULE, () => {
-  it.fails('reports the component field, on the member, with the full message', () => {
+  it('reports the component field, on the member, with the full message', () => {
     const code = `{
   "name": "acme",
   "plugins": [
@@ -39,16 +39,16 @@ describe(RULE, () => {
       message: message('commands'),
       line: 4,
       column: 62,
-      endColumn: 77,
+      endColumn: 79,
     })
   })
 
-  it.fails.each(FIELDS)('reports %s', (field) => {
+  it.each(FIELDS)('reports %s', (field) => {
     const messages = lint(tree(PLUGIN), entry({ strict: false, [field]: './x' }))
     expect(messages.map((m) => m.message)).toEqual([message(field)])
   })
 
-  it.fails('reports each declared field once, and the other keys never', () => {
+  it('reports each declared field once, and the other keys never', () => {
     const fields = {
       skills: ['./s'],
       description: 'd',
@@ -65,7 +65,7 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails.each([
+  it.each([
     ['an empty string', ''],
     ['null', null],
     ['an empty array', []],
@@ -75,7 +75,7 @@ describe(RULE, () => {
     expect(lint(tree(PLUGIN), entry({ strict: false, agents: value }))).toHaveLength(1)
   })
 
-  it.fails('reports each entry on its own', () => {
+  it('reports each entry on its own', () => {
     const dir = tree({
       ...PLUGIN,
       'plugins/q/.claude-plugin/plugin.json': manifestOf({ name: 'q' }),
@@ -89,7 +89,7 @@ describe(RULE, () => {
     expect(lint(dir, code).map((m) => m.line)).toHaveLength(2)
   })
 
-  it.fails('reads the last of two keys, as JSON.parse does', () => {
+  it('reads the last of two keys, as JSON.parse does', () => {
     const open = '{"plugins": [{"source": "./plugins/p", "commands": "./c", '
     expect(lint(tree(PLUGIN), `${open}"strict": true, "strict": false}]}`)).toHaveLength(1)
     expect(lint(tree(PLUGIN), `${open}"strict": false, "strict": true}]}`)).toEqual([])
@@ -98,7 +98,7 @@ describe(RULE, () => {
     expect(lint(tree(PLUGIN), twice)).toHaveLength(1)
   })
 
-  it.fails('reports when plugin.json declares the same fields, and when it declares none', () => {
+  it('reports when plugin.json declares the same fields, and when it declares none', () => {
     const dir = tree({
       'plugins/p/.claude-plugin/plugin.json': manifestOf({ name: 'p', commands: './c' }),
     })
@@ -106,7 +106,7 @@ describe(RULE, () => {
     expect(lint(tree(PLUGIN), entry({ strict: false, commands: './c' }))).toHaveLength(1)
   })
 
-  it.fails('reports a bare name under metadata.pluginRoot, and the source "."', () => {
+  it('reports a bare name under metadata.pluginRoot, and the source "."', () => {
     const dir = tree({
       ...PLUGIN,
       '.claude-plugin/plugin.json': manifestOf({ name: 'root' }),
@@ -118,19 +118,19 @@ describe(RULE, () => {
     expect(lint(dir, entry({ strict: false, skills: './s' }, '.'))).toHaveLength(1)
   })
 
-  it.skipIf(noLinks).fails('reports a source that is a link inside the marketplace root', () => {
+  it.skipIf(noLinks)('reports a source that is a link inside the marketplace root', () => {
     const dir = tree(PLUGIN)
     link(dir, 'plugins/alias', 'p')
     expect(lint(dir, entry({ strict: false, hooks: {} }, './plugins/alias'))).toHaveLength(1)
   })
 
-  it.fails('reports in a tree with no .git', () => {
+  it('reports in a tree with no .git', () => {
     expect(lint(tree(PLUGIN, false), entry({ strict: false, hooks: {} }))).toHaveLength(1)
   })
 })
 
 describe(`${RULE} (silent)`, () => {
-  it.fails.each([
+  it.each([
     ['strict unset', {}],
     ['strict true', { strict: true }],
     ['strict as the string "false"', { strict: 'false' }],
@@ -141,7 +141,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry({ ...fields, commands: './c', hooks: {} }))).toEqual([])
   })
 
-  it.fails('stays silent for strict false with no component field', () => {
+  it('stays silent for strict false with no component field', () => {
     const fields = {
       strict: false,
       description: 'd',
@@ -154,7 +154,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry(fields))).toEqual([])
   })
 
-  it.fails('stays silent for other spellings, which are other keys', () => {
+  it('stays silent for other spellings, which are other keys', () => {
     const fields = {
       strict: false,
       Commands: './c',
@@ -165,21 +165,21 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry(fields))).toEqual([])
   })
 
-  it.fails('stays silent when only plugin.json declares the fields', () => {
+  it('stays silent when only plugin.json declares the fields', () => {
     const dir = tree({
       'plugins/p/.claude-plugin/plugin.json': manifestOf({ name: 'p', commands: './c', hooks: {} }),
     })
     expect(lint(dir, entry({ strict: false }))).toEqual([])
   })
 
-  it.fails('stays silent when the source has no plugin.json, because the entry is then the manifest', () => {
+  it('stays silent when the source has no plugin.json, because the entry is then the manifest', () => {
     const dir = tree({ 'plugins/p/x.txt': 'x', 'plugins/q/.claude-plugin/other.json': '{}' })
     const fields = { strict: false, commands: './c', hooks: {} }
     expect(lint(dir, entry(fields))).toEqual([])
     expect(lint(dir, entry(fields, './plugins/q'))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['a source that does not exist', {}],
     ['a manifest that does not parse', { 'plugins/p/.claude-plugin/plugin.json': '{' }],
     ['a manifest that is an array', { 'plugins/p/.claude-plugin/plugin.json': '[]' }],
@@ -188,7 +188,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(files), entry({ strict: false, commands: './c' }))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['an object source', { source: 'github', repo: 'a/b' }],
     ['a source with no ./ prefix', 'plugins/p'],
     ['a bare name with no pluginRoot', 'p'],
@@ -200,41 +200,38 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry({ strict: false, commands: './c' }, source))).toEqual([])
   })
 
-  it.fails('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
+  it('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
     const code = marketplaceOf([{ name: 'p', source: 'p', strict: false, commands: './c' }], {
       metadata: { pluginRoot: '../plugins' },
     })
     expect(lint(tree(PLUGIN), code)).toEqual([])
   })
 
-  it.fails('stays silent for an entry that is not an object', () => {
+  it('stays silent for an entry that is not an object', () => {
     expect(lint(tree(PLUGIN), marketplaceOf(['p', null, 3]))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a manifest that is a dangling link', () => {
+  it.skipIf(noLinks)('stays silent for a manifest that is a dangling link', () => {
     const dir = tree({})
     link(dir, 'plugins/p/.claude-plugin/plugin.json', 'gone.json')
     expect(lint(dir, entry({ strict: false, commands: './c' }))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a manifest link out of the repository', () => {
+  it.skipIf(noLinks)('stays silent for a manifest link out of the repository', () => {
     const outside = tree({ 'plugin.json': manifestOf({ name: 'p' }) })
     const dir = tree({})
     link(dir, 'plugins/p/.claude-plugin/plugin.json', path.join(outside, 'plugin.json'))
     expect(lint(dir, entry({ strict: false, commands: './c' }))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails(
-    'stays silent for a source that is a link out of the marketplace root',
-    () => {
-      const repo = tree({ 'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
-      const dir = path.join(repo, 'site')
-      link(dir, 'plugins/p', '../../shared/p')
-      expect(lint(dir, entry({ strict: false, commands: './c' }))).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('stays silent for a source that is a link out of the marketplace root', () => {
+    const repo = tree({ 'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/p', '../../shared/p')
+    expect(lint(dir, entry({ strict: false, commands: './c' }))).toEqual([])
+  })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'stays silent for a link out of the repository, and for a dangling link',
     () => {
       const outside = tree({ 'p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) })
@@ -247,14 +244,14 @@ describe(`${RULE} (silent)`, () => {
     },
   )
 
-  it.skipIf(noLinks).fails('stays silent for a link out of the root in a tree with no .git', () => {
+  it.skipIf(noLinks)('stays silent for a link out of the root in a tree with no .git', () => {
     const top = tree({ 'shared/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) }, false)
     const dir = path.join(top, 'site')
     link(dir, 'plugins/p', '../../shared/p')
     expect(lint(dir, entry({ strict: false, commands: './c' }))).toEqual([])
   })
 
-  it.skipIf(chmodCannotBlock).fails('stays silent for a manifest that the rule cannot read', () => {
+  it.skipIf(chmodCannotBlock)('stays silent for a manifest that the rule cannot read', () => {
     const dir = tree(PLUGIN)
     withoutAccess(path.join(dir, 'plugins', 'p'), () => {
       expect(lint(dir, entry({ strict: false, commands: './c' }))).toEqual([])

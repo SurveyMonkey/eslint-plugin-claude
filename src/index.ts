@@ -29,6 +29,7 @@ import marketplaceRelativeSourceExists from './rules/marketplace-relative-source
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
 import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
+import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
@@ -121,6 +122,7 @@ const modules = [
   marketplaceRelativeSourceEscapeSymlink,
   marketplaceVersionDuplicate,
   marketplaceEntryManifestOnlyFields,
+  marketplaceStrictFalseConflict,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -202,6 +204,7 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-relative-source-escape-symlink': 'error',
   'marketplace-version-duplicate': 'error',
   'marketplace-entry-manifest-only-fields': 'error',
+  'marketplace-strict-false-conflict': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
