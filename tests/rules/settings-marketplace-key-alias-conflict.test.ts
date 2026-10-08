@@ -17,6 +17,16 @@ jsonTester.run('settings-marketplace-key-alias-conflict (valid)', rule, {
     { code: JSON.stringify({ additionalMarketplaces: source }), filename },
     { code: JSON.stringify({ strictKnownMarketplaces: policy }), filename: local },
     { code: JSON.stringify({ allowedMarketplaces: policy }), filename: local },
+    // The policy pair is not checked: `strictKnownMarketplaces` has the scope "Managed".
+    {
+      code: JSON.stringify({ strictKnownMarketplaces: policy, allowedMarketplaces: policy }),
+      filename,
+    },
+    {
+      code: JSON.stringify({ allowedMarketplaces: policy, strictKnownMarketplaces: policy }),
+      filename: local,
+    },
+    { code: '{"strictKnownMarketplaces": [], "allowedMarketplaces": []}', filename },
     // One spelling from each pair is two pairs with no conflict.
     {
       code: JSON.stringify({ extraKnownMarketplaces: source, allowedMarketplaces: policy }),
@@ -78,56 +88,9 @@ jsonTester.run('settings-marketplace-key-alias-conflict (invalid)', rule, {
         },
       ],
     },
-    {
-      code: JSON.stringify({ strictKnownMarketplaces: policy, allowedMarketplaces: policy }),
-      filename,
-      errors: [
-        {
-          messageId: 'conflict',
-          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
-        },
-      ],
-    },
-    {
-      code: JSON.stringify({ allowedMarketplaces: policy, strictKnownMarketplaces: policy }),
-      filename: local,
-      errors: [
-        {
-          messageId: 'conflict',
-          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
-          line: 1,
-          column: 2,
-        },
-      ],
-    },
-    // Both pairs: one report for each.
-    {
-      code: JSON.stringify({
-        extraKnownMarketplaces: source,
-        strictKnownMarketplaces: policy,
-        allowedMarketplaces: policy,
-        additionalMarketplaces: source,
-      }),
-      filename,
-      errors: [
-        {
-          messageId: 'conflict',
-          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
-        },
-        {
-          messageId: 'conflict',
-          data: { alias: 'additionalMarketplaces', canonical: 'extraKnownMarketplaces' },
-        },
-      ],
-    },
     // A key counts as set for any value.
     {
       code: '{"extraKnownMarketplaces": null, "additionalMarketplaces": {}}',
-      filename,
-      errors: [{ messageId: 'conflict' }],
-    },
-    {
-      code: '{"strictKnownMarketplaces": [], "allowedMarketplaces": []}',
       filename,
       errors: [{ messageId: 'conflict' }],
     },
@@ -137,7 +100,7 @@ jsonTester.run('settings-marketplace-key-alias-conflict (invalid)', rule, {
       errors: [{ messageId: 'conflict' }],
     },
     {
-      code: '{"strictKnownMarketplaces": 0, "allowedMarketplaces": false}',
+      code: '{"extraKnownMarketplaces": 0, "additionalMarketplaces": false}',
       filename,
       errors: [{ messageId: 'conflict' }],
     },
@@ -160,9 +123,25 @@ json5Tester.run('settings-marketplace-key-alias-conflict (JSON5 invalid)', rule,
       errors: [{ messageId: 'conflict' }],
     },
     {
-      code: '{ strictKnownMarketplaces: [], allowedMarketplaces: [] }',
+      code: '{ extraKnownMarketplaces: {}, additionalMarketplaces: {} }',
       filename,
       errors: [{ messageId: 'conflict' }],
+    },
+  ],
+})
+
+jsonTester.run('settings-marketplace-key-alias-conflict (message text)', rule, {
+  valid: [],
+  invalid: [
+    {
+      code: JSON.stringify({ extraKnownMarketplaces: source, additionalMarketplaces: source }),
+      filename,
+      errors: [
+        {
+          message:
+            'This file sets "additionalMarketplaces" and "extraKnownMarketplaces". Claude Code uses the value of "extraKnownMarketplaces" and ignores "additionalMarketplaces".',
+        },
+      ],
     },
   ],
 })

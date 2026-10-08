@@ -946,6 +946,11 @@
       "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
     },
     {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "strictKnownMarketplaces",
+      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250"
+    },
+    {
       "url": "https://code.claude.com/docs/en/plugins/org",
       "heading": "Aliases for the marketplace keys",
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
@@ -956,6 +961,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "syncClaudeAiPlugins",
       "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledPlugins",
+      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",

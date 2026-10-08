@@ -1,7 +1,10 @@
-// A settings file that sets a marketplace key and its alias. Claude Code uses
-// the canonical value and ignores the alias
+// A project settings file that sets `extraKnownMarketplaces` and its alias.
+// Claude Code uses the canonical value and ignores the alias
 // (docs/rules/settings-marketplace-key-alias-conflict.md). A key counts as set
 // for any value, as the docs name no value that Claude Code reads differently.
+// The pair `strictKnownMarketplaces` and `allowedMarketplaces` is not here:
+// the settings reference gives `strictKnownMarketplaces` the scope "Managed",
+// so a project file does not accept it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -9,11 +12,8 @@ import { SETTINGS_FILES } from '../permission-listener.ts'
 
 const name = 'settings-marketplace-key-alias-conflict' as const
 
-/** Each canonical key with its alias, in the order of the docs. */
-const PAIRS = [
-  { canonical: 'extraKnownMarketplaces', alias: 'additionalMarketplaces' },
-  { canonical: 'strictKnownMarketplaces', alias: 'allowedMarketplaces' },
-] as const
+/** The canonical key and its alias. */
+const PAIRS = [{ canonical: 'extraKnownMarketplaces', alias: 'additionalMarketplaces' }] as const
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'conflict' }> = {
   meta: {
