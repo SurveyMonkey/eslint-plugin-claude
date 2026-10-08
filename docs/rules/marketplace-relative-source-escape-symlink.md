@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/marketplace-relative-source-escape-symlink, which reports a relative source in a marketplace.json entry whose real path is out of the marketplace root through a link, inside the repository, because Claude Code refuses such an entry.
+description: The ESLint rule claude/marketplace-relative-source-escape-symlink, which reports a relative source in a marketplace.json entry whose real path is out of the marketplace root through a link, inside the repository, because Claude Code refuses such an entry in a marketplace that it fetches from a remote source.
 owner: brianespinosa
 created: 2026-10-07
 related_issues: [12]
