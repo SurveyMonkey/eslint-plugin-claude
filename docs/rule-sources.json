@@ -351,6 +351,28 @@
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
+  "marketplace-entry-root-skills": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How entry fields combine with plugin.json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Path-only fields",
+      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    }
+  ],
   "marketplace-headers-helper-command": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",

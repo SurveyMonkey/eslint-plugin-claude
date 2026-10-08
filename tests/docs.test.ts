@@ -38,6 +38,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'marketplace-entry-hooks-override',
     'marketplace-entry-manifest-only-fields',
     'marketplace-entry-name-matches-manifest',
+    'marketplace-entry-root-skills',
     'marketplace-headers-helper-command',
     'marketplace-name-reserved',
     'marketplace-relative-source-escape-symlink',
