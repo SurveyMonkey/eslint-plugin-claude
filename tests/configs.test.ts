@@ -67,7 +67,12 @@ const badMarketplace = JSON.stringify({
 // file name, so the two files below differ only in what that rule reports.
 const badMarketSettings = JSON.stringify({
   enabledPlugins: { formatter: true },
-  extraKnownMarketplaces: { acme: { source: { source: 'npm', package: 'acme' } } },
+  extraKnownMarketplaces: {
+    acme: { source: { source: 'npm', package: 'acme' } },
+    docs: {
+      source: { source: 'url', url: 'http://x.test/m.json', headersHelper: '/opt/bin/mint' },
+    },
+  },
 })
 
 const TREE: Record<string, string> = {
@@ -258,6 +263,7 @@ const MARKETPLACE_RULES = [
 const SETTINGS_RULES = [
   'settings-enabled-plugins-schema',
   'settings-extra-known-marketplaces-schema',
+  'settings-marketplace-headers-helper-https',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.

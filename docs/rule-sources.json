@@ -927,6 +927,18 @@
       "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
     }
   ],
+  "settings-marketplace-headers-helper-https": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "When Claude Code skips a headersHelper command or drops its output",
+      "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",

@@ -61,6 +61,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-unknown-tool',
     'settings-enabled-plugins-schema',
     'settings-extra-known-marketplaces-schema',
+    'settings-marketplace-headers-helper-https',
     'skill-agent-exists',
     'skill-allowed-tools-broad',
     'skill-allowed-tools-ineffective',

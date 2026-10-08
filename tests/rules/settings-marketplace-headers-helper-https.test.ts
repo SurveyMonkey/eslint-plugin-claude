@@ -1,31 +1,9 @@
 // The rule reads the `url` sources of `extraKnownMarketplaces` in
 // `.claude/settings.json` and `.claude/settings.local.json`. The files glob and
 // the decoy files are in tests/configs.test.ts.
-import { RuleTester } from 'eslint'
-import { describe, it } from 'vitest'
-import plugin from '../../src/index.ts'
-import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
+import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-// Red first: the rule is not in the plugin yet, so a stub with no checks stands in for it, and
-// each case in an `invalid` block must fail. The rule commit removes the stub and the marks.
-const rule = plugin.rules['settings-marketplace-headers-helper-https'] ?? {
-  meta: { schema: [], messages: {} },
-  create: () => ({}),
-}
-let red = false
-Object.assign(RuleTester, {
-  describe: (title: string, factory: () => void) =>
-    describe(title, () => {
-      const before = red
-      red = title === 'invalid' || before
-      try {
-        factory()
-      } finally {
-        red = before
-      }
-    }),
-  it: (title: string, test: () => void) => (red ? it.fails : it)(title, test),
-})
+const rule = ruleOf('settings-marketplace-headers-helper-https')
 
 const filename = '.claude/settings.json'
 const local = '.claude/settings.local.json'
@@ -105,7 +83,7 @@ jsonTester.run('settings-marketplace-headers-helper-https (invalid)', rule, {
     {
       code: urlSource({ url: 'http://x.test/m.json', headersHelper: '/opt/bin/mint' }),
       filename,
-      errors: [{ messageId: 'notHttps', line: 1, column: 69, endColumn: 91 }],
+      errors: [{ messageId: 'notHttps', line: 1, column: 67, endColumn: 89 }],
     },
     {
       code: urlSource({ url: 'http://x.test/m.json', headersHelper: '/opt/bin/mint' }),
@@ -149,8 +127,8 @@ jsonTester.run('settings-marketplace-headers-helper-https (invalid)', rule, {
       }),
       filename,
       errors: [
-        { messageId: 'notHttps', column: 61 },
-        { messageId: 'notHttps', column: 188 },
+        { messageId: 'notHttps', column: 64 },
+        { messageId: 'notHttps', column: 213 },
       ],
     },
     // Two members with one name, and two keys. The rule reads the last.

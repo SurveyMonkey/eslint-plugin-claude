@@ -46,6 +46,7 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
+import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
@@ -133,6 +134,7 @@ const modules = [
   marketplaceEntryComponentPaths,
   settingsEnabledPluginsSchema,
   settingsExtraKnownMarketplacesSchema,
+  settingsMarketplaceHeadersHelperHttps,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -220,6 +222,7 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-entry-component-paths': 'error',
   'settings-enabled-plugins-schema': 'error',
   'settings-extra-known-marketplaces-schema': 'error',
+  'settings-marketplace-headers-helper-https': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
