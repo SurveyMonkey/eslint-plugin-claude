@@ -12,7 +12,7 @@ export type ValueNode = MemberNode['value']
 
 /** The text of a member name: a string in JSON, or a bare identifier in
  *  JSON5. */
-function keyOf(name: MemberNode['name']): string {
+export function keyOf(name: MemberNode['name']): string {
   return name.type === 'String' ? name.value : name.name
 }
 
