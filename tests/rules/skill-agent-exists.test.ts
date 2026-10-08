@@ -494,3 +494,47 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
     expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
   })
 })
+
+// A project directory that is a link to a target out of the repository. The walk goes up the
+// path of the link, and stops at the repository that holds the link.
+describe.skipIf(process.platform === 'win32')('a project directory that is a link', () => {
+  const file = (() => {
+    put('lnkwrap/repo/.git/HEAD', '')
+    put('lnkwrap/repo/.claude/agents/above.md', agentFile('above-agent'))
+    put('lnkproj-target/keep', '')
+    put('lnkwrap/.claude/agents/beyond.md', agentFile('beyond-agent'))
+    symlinkSync('../../lnkproj-target', path.join(scratch, 'lnkwrap/repo/app'))
+    return path.join(scratch, 'lnkwrap', 'repo', 'app', '.claude', 'skills', 's', 'SKILL.md')
+  })()
+  // The walk must reach the agents of the repository that holds the link.
+  it('sees the agents above the link, up to the repository', () => {
+    expect(lintMarkdown('skill-agent-exists', fork('above-agent'), file)).toEqual([])
+  })
+  it('does not see the agents above the repository', () => {
+    expect(lintMarkdown('skill-agent-exists', fork('beyond-agent'), file)).toHaveLength(1)
+  })
+  it('reports a missing agent', () => {
+    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
+  })
+})
+
+// A project directory that is a link to the repository itself. The real path of the link is
+// `top`, so the walk stops there. An agent above the repository stays out of sight.
+describe.skipIf(process.platform === 'win32')(
+  'a project directory that links to the repository',
+  () => {
+    const file = (() => {
+      put('lnkalias/repo/.git/HEAD', '')
+      put('lnkalias/repo/.claude/agents/inrepo.md', agentFile('inrepo-agent'))
+      put('lnkalias/.claude/agents/beyond.md', agentFile('beyond-agent'))
+      symlinkSync('repo', path.join(scratch, 'lnkalias/alias'))
+      return path.join(scratch, 'lnkalias', 'alias', '.claude', 'skills', 's', 'SKILL.md')
+    })()
+    it('sees the agents of the repository', () => {
+      expect(lintMarkdown('skill-agent-exists', fork('inrepo-agent'), file)).toEqual([])
+    })
+    it('does not see the agents above the repository', () => {
+      expect(lintMarkdown('skill-agent-exists', fork('beyond-agent'), file)).toHaveLength(1)
+    })
+  },
+)
