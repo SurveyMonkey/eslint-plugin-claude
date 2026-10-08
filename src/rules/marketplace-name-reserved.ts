@@ -22,7 +22,7 @@ const SPELLING_SYMBOL = /[!-,./:-@[-^`{-~]/
  *  difference than one trailing dot, and a symbol other than an underscore in
  *  place of a hyphen. The docs do not fold letter case here, so the letters
  *  must match. */
-function isSpellingOf(name: string, reserved: string): boolean {
+export function isSpellingOf(name: string, reserved: string): boolean {
   const candidates = name.endsWith('.') ? [name, name.slice(0, -1)] : [name]
   return candidates.some(
     (candidate) =>
