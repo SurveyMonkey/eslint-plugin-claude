@@ -82,6 +82,11 @@ describe(RULE, () => {
     expect(messages.map((m) => m.message)).toEqual([messageOf('commands', text, fault)])
   })
 
+  it.fails('gives no parent report for a path with two dots in a name', () => {
+    const files = { ...PLUGIN, 'plugins/p/a..b/c.md': '# C\n' }
+    expect(lint(tree(files), entry({ commands: './a..b/c.md' }))).toEqual([])
+  })
+
   it.each(FIELDS)('reports a bad path in %s, and names the field', (field) => {
     const messages = lint(tree(PLUGIN), entry({ [field]: './nope' }))
     expect(messages.map((m) => m.message)).toEqual([messageOf(field, './nope', 'missing')])
