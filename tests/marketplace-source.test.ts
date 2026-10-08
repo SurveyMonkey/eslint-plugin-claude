@@ -511,6 +511,15 @@ describe('sourceReader: the directory of the source', () => {
     },
   )
 
+  it.skipIf(noLinks)('gives the real path with no-manifest through a link', () => {
+    const dir = tree({ 'plugins/none/x.txt': 'x' })
+    link(dir, 'plugins/alias', 'none')
+    expect(readWithDir(dir, './plugins/alias')).toEqual({
+      kind: 'no-manifest',
+      dir: path.join(dir, 'plugins', 'none'),
+    })
+  })
+
   it.skipIf(noLinks)('gives the real path of a marketplace that sits behind a link', () => {
     const dir = tree(PLUGIN)
     const alias = path.join(tree({}), 'alias')
