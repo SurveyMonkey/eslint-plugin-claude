@@ -69,8 +69,13 @@ describe(RULE, () => {
     expect(lint(tree(PLUGIN), entry({ hooks: { Stop: value } }))).toHaveLength(1)
   })
 
-  it('reports an event that plugin.json sets to an empty array', () => {
-    const dir = tree(withHooks({ Stop: [] }))
+  it.each([
+    ['an empty array', []],
+    ['an empty object', {}],
+    ['null', null],
+    ['a number', 3],
+  ])('reports an event that plugin.json sets to %s, because the key is set', (_title, value) => {
+    const dir = tree(withHooks({ Stop: value }))
     expect(lint(dir, entry({ hooks: { Stop: MATCHERS } }))).toHaveLength(1)
   })
 

@@ -25,7 +25,7 @@ const SKILLS = {
 const entry = (fields: Record<string, unknown>, source: unknown = '.') =>
   marketplaceOf([{ name: 'p', source, ...fields }])
 const message = (names: string) =>
-  `The entry lists "skills" and its source is the marketplace root, so Claude Code loads the listed skills only. It does not load these skills under skills/: ${names}. List each skill, or list "./skills".`
+  `The entry lists "skills" and its source is the marketplace root, so Claude Code loads the listed skills only. It does not load these skills under skills/: ${names}. List each skill.`
 
 describe(RULE, () => {
   it('reports the omitted skills, on the member, with the full message', () => {

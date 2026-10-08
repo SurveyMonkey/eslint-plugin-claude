@@ -66,7 +66,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'omitted' }> = {
     schema: [],
     messages: {
       omitted:
-        'The entry lists "skills" and its source is the marketplace root, so Claude Code loads the listed skills only. It does not load these skills under skills/: {{names}}. List each skill, or list "./skills".',
+        'The entry lists "skills" and its source is the marketplace root, so Claude Code loads the listed skills only. It does not load these skills under skills/: {{names}}. List each skill.',
     },
   },
   create(context) {
