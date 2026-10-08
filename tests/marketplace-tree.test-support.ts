@@ -67,3 +67,21 @@ export function lintMarketplace(name: string, dir: string, code: string) {
     { filename: marketplaceFile(dir) },
   )
 }
+
+/** The messages of the rule `name` for the settings file `file` (such as
+ *  `.claude/settings.json`) with the text `code`, in the tree `dir`. The rule
+ *  `name` is the only rule that runs. */
+export function lintSettings(name: string, dir: string, file: string, code: string) {
+  return new Linter({ cwd: path.parse(dir).root }).verify(
+    code,
+    [
+      {
+        files: ['**/.claude/settings.json', '**/.claude/settings.local.json'],
+        plugins: { json, claude: plugin },
+        language: 'json/json',
+        rules: { [`claude/${name}`]: 'error' },
+      },
+    ],
+    { filename: path.join(dir, file) },
+  )
+}
