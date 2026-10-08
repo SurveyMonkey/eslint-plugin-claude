@@ -39,9 +39,8 @@ the file-level report there, because the file is the first reason that the key h
 When a file has two `syncClaudeAiPlugins` keys, the rule reads the last, as `JSON.parse` does.
 
 The rule reads the two project settings files, because the repository holds no other settings
-file. It does not read user settings or managed settings. A value in the local file that is not a
-Boolean gives no report, because the docs give the type as Boolean and the rule reports `true`
-only. The key `syncClaudeAiSkills` is another setting, and the rule does not read it.
+file. It does not read user settings or managed settings. A value in the local file that is not a Boolean gives no report. The docs give the type as Boolean,
+and the rule reports `true` only. The key `syncClaudeAiSkills` is another setting, and the rule does not read it.
 
 To turn off one synced plugin for a project, set `"<name>@synced": false` in `enabledPlugins`. That
 key works in `.claude/settings.json`.[^key]

@@ -41,8 +41,8 @@ does. It does the same for the keys of a source.
 
 Other rules own other faults. A `url` that is missing or is not a string gives no report here.
 `settings-extra-known-marketplaces-schema` reports it. The rule does not check the text of the
-command. It does not read the `headersHelper` of an item in the `plugins` of a `settings`
-source, because that command runs for an archive download and not for this URL. The rule does not
+command. It does not read the `headersHelper` of an item in the `plugins` of a `settings` source. That
+command runs for an archive download and not for this URL. The rule does not
 read the alias `additionalMarketplaces`.
 
 Fail:

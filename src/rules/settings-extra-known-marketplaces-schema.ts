@@ -83,8 +83,8 @@ const REPO = /^[^/\s]+\/[^/\s]+$/
 const MARKETPLACE_FILE = /(?:^|[\\/])\.claude-plugin[\\/]marketplace\.json$/
 
 /** True when Claude Code reserves `text` as a marketplace name. A `settings`
- *  source is not a `github` or `git` source under `github.com/anthropics/`, so
- *  the exception for the Anthropic names does not apply. */
+ *  source is not a `github` or `git` source under `github.com/anthropics/`.
+ *  So the exception for the Anthropic names does not apply. */
 function reserved(text: string): boolean {
   return (
     ANTHROPIC_MARKETPLACE_NAMES.some((official) => isSpellingOf(text, official)) ||

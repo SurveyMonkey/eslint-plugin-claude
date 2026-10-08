@@ -38,8 +38,8 @@ The rule counts a key as set for any value, also `null` and the empty string. Th
 that Claude Code reads differently. When a file has two members with one key, the rule reads the
 last, as `JSON.parse` does. It reports the last alias member only.
 
-The rule reads one file. Claude Code merges the settings files of all scopes, and a conflict
-between two files is not a conflict in one file. The rule does not check that case. A file that
+The rule reads one file. Claude Code merges the settings files of all scopes. A conflict between two files is not a conflict
+in one file. The rule does not check that case. A file that
 sets an alias without the canonical key gets no report here. `settings-marketplace-key-alias`
 covers the choice of the canonical spelling.
 

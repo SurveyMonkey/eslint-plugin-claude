@@ -26,11 +26,11 @@ object and an optional `autoUpdate` Boolean.[^entry] The rule reports each of th
 
 - **Entry.** The value is not an object, it has no `source`, or its `source` is not an object. An
   `autoUpdate` that is not `true` or `false` also gives a report.
-- **Source type.** The `source` object has no `source` type, the type is not a string, or the type
-  is not one that Claude Code loads: `github`, `git`, `url`, `file`, `directory` or
-  `settings`.[^sources] These types fail to load in `extraKnownMarketplaces`: `npm`, `skills-dir`,
-  `hostPattern` and `pathPattern`. The rule names the docs message for each. A plugin source type
-  such as `git-subdir` is an unknown type here.
+- **Source type.** The `source` object has no `source` type, or the type is not a string. A type
+  that Claude Code does not load also gives a report. Claude Code loads `github`, `git`, `url`,
+  `file`, `directory` and `settings`.[^sources] These types fail to load in
+  `extraKnownMarketplaces`: `npm`, `skills-dir`, `hostPattern` and `pathPattern`. The rule names the
+  docs message for each. A plugin source type such as `git-subdir` is an unknown type here.
 - **Fields.** Each type has required fields and optional fields. A field of the wrong type, and a
   missing required field, each give a report.[^fields] A field that the table does not list gives no
   report.
@@ -55,13 +55,13 @@ Four more checks apply to one field each:
   `extraKnownMarketplaces`, Claude Code takes `owner/*` literally and the clone fails. The owner
   wildcard is valid in the two policy lists only.[^wildcards] A `repo` with a `*` gives the wildcard
   report. The rule gives no second report for it.
-- **`path` of a `file` source.** Claude Code reads the file in place and takes the directory two
-  levels up as the marketplace root. So the path must end with `.claude-plugin/marketplace.json`.
+- **`path` of a `file` source.** Claude Code reads the file in place. It takes the directory two levels up as the marketplace root.
+  So the path must end with `.claude-plugin/marketplace.json`.
   Both `/` and `\` count as separators.[^fields]
 - **`name` of a `settings` source.** It must equal the `extraKnownMarketplaces` key, and it must
   not be a reserved name.[^fields] The reserved names are the same as for
-  `marketplace-name-reserved`.[^reserved] The `settings` source is not a `github` or `git`
-  source under `github.com/anthropics/`, so the exception for the Anthropic names does not apply.
+  `marketplace-name-reserved`.[^reserved] The `settings` source is not a `github` or `git` source under `github.com/anthropics/`. So the
+  exception for the Anthropic names does not apply.
   A name that is wrong in both ways gives two reports.
 - **`plugins` of a `settings` source.** Each item must be an object with an object `source`. A
   relative path has no repository to resolve against, so a string `source` gives a report. An item
@@ -78,8 +78,8 @@ report here. The cross-file rules read the `marketplace.json` that a source poin
 The rule does not check these cases:
 
 - An `extraKnownMarketplaces` that is not an object.
-- The alias `additionalMarketplaces`. The docs say that Claude Code reads it as it reads
-  `extraKnownMarketplaces`, but the row for this rule names `extraKnownMarketplaces` only.
+- The alias `additionalMarketplaces`. The docs say that Claude Code reads it as it reads `extraKnownMarketplaces`. The row for this
+  rule names `extraKnownMarketplaces` only.
 - The `source` of an item in `plugins`, and the `owner` of a `settings` source.
 - Whether a repository, URL or path exists.
 
