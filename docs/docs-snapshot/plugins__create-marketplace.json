@@ -71,6 +71,12 @@
       "id": "problems-that-surface-when-you-add-or-install",
       "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b",
       "text": "### Problems that surface when you add or install\n\nProblems that `claude plugin validate` doesn't report appear when you add the marketplace or install from it:\n\n* **When you add the marketplace**: the exact [official marketplace names](/docs/en/plugins/marketplace-reference#reserved-names), such as `claude-plugins-official`, pass validation. When you add a marketplace with one of those names, Claude Code refuses it with a message that starts `The name '<name>' is reserved for official Anthropic marketplaces`.\n* **When you install a plugin**:\n  * Claude Code first fetches a `github`, `git-subdir`, or other remote source when you install the plugin, so a wrong `repo` or `path` appears then.\n  * A relative `source` whose directory doesn't exist also fails at install, with `Source path does not exist: <path>`."
+    },
+    {
+      "heading": "Write relative paths from the marketplace root",
+      "id": "write-relative-paths-from-the-marketplace-root",
+      "hash": "814c053fbb01e6764cd45f1cd0bac890eaf9ce1315a46bff6e452a0e1251ab8a",
+      "text": "### Write relative paths from the marketplace root\n\nThe marketplace root is the directory that contains `.claude-plugin/`. In [the walkthrough](#create-a-marketplace), that's `my-marketplace/`, so the entry's `source` is `\"./plugins/my-first-plugin\"`. The path doesn't start inside `.claude-plugin/`, so don't use `..` to leave it.\n\nA path with `..` and a path to a missing directory fail at different commands:\n\n* **A path with `..`**: `claude plugin validate` reports the entry as invalid. The message begins `Path contains \"..\": ./../plugins/my-first-plugin`.\n* **A path to a directory that doesn't exist**: `claude plugin validate` passes. `claude plugin install` fails with `Source path does not exist: <path>`, and `<path>` is the absolute location Claude Code checked."
     }
   ]
 }

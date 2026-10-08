@@ -356,6 +356,28 @@
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
+  "marketplace-relative-source-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+      "heading": "Write relative paths from the marketplace root",
+      "hash": "814c053fbb01e6764cd45f1cd0bac890eaf9ce1315a46bff6e452a0e1251ab8a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create-marketplace",
+      "heading": "Problems that surface when you add or install",
+      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Marketplace file",
+      "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b"
+    }
+  ],
   "marketplace-relative-source-format": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
