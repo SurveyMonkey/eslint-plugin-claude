@@ -1,31 +1,9 @@
 // The rule reads the top-level keys of `.claude/settings.json` and
 // `.claude/settings.local.json`. The files glob and the decoy files are in
 // tests/configs.test.ts.
-import { RuleTester } from 'eslint'
-import { describe, it } from 'vitest'
-import plugin from '../../src/index.ts'
-import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
+import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-// Red first: the rule is not in the plugin yet, so a stub with no checks stands in for it, and
-// each case in an `invalid` block must fail. The rule commit removes the stub and the marks.
-const rule = plugin.rules['settings-marketplace-key-alias-conflict'] ?? {
-  meta: { schema: [], messages: {} },
-  create: () => ({}),
-}
-let red = false
-Object.assign(RuleTester, {
-  describe: (title: string, factory: () => void) =>
-    describe(title, () => {
-      const before = red
-      red = title === 'invalid' || before
-      try {
-        factory()
-      } finally {
-        red = before
-      }
-    }),
-  it: (title: string, test: () => void) => (red ? it.fails : it)(title, test),
-})
+const rule = ruleOf('settings-marketplace-key-alias-conflict')
 
 const filename = '.claude/settings.json'
 const local = '.claude/settings.local.json'

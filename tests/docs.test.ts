@@ -62,6 +62,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-enabled-plugins-schema',
     'settings-extra-known-marketplaces-schema',
     'settings-marketplace-headers-helper-https',
+    'settings-marketplace-key-alias-conflict',
     'skill-agent-exists',
     'skill-allowed-tools-broad',
     'skill-allowed-tools-ineffective',

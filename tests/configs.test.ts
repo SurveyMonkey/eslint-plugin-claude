@@ -67,6 +67,7 @@ const badMarketplace = JSON.stringify({
 // file name, so the two files below differ only in what that rule reports.
 const badMarketSettings = JSON.stringify({
   enabledPlugins: { formatter: true },
+  additionalMarketplaces: {},
   extraKnownMarketplaces: {
     acme: { source: { source: 'npm', package: 'acme' } },
     docs: {
@@ -264,6 +265,7 @@ const SETTINGS_RULES = [
   'settings-enabled-plugins-schema',
   'settings-extra-known-marketplaces-schema',
   'settings-marketplace-headers-helper-https',
+  'settings-marketplace-key-alias-conflict',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.

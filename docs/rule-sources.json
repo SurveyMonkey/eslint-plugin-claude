@@ -939,6 +939,18 @@
       "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338"
     }
   ],
+  "settings-marketplace-key-alias-conflict": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Aliases for the marketplace keys",
+      "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",
