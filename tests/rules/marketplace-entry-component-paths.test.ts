@@ -43,7 +43,7 @@ const messageOf = (field: string, text: string, fault: string) => {
 }
 
 describe(RULE, () => {
-  it.fails('reports a path with "..", on the string, with the full message', () => {
+  it('reports a path with "..", on the string, with the full message', () => {
     const code = `{
   "name": "acme",
   "plugins": [
@@ -57,12 +57,12 @@ describe(RULE, () => {
       messageId: 'parent',
       message: messageOf('commands', '../shared.md', 'parent'),
       line: 4,
-      column: 56,
-      endColumn: 70,
+      column: 57,
+      endColumn: 71,
     })
   })
 
-  it.fails.each([
+  it.each([
     ['a path with no ./ prefix', 'commands/c.md', 'start'],
     ['a path with a root slash', '/commands/c.md', 'start'],
     ['a path with a drive letter', 'C:/commands/c.md', 'start'],
@@ -82,12 +82,12 @@ describe(RULE, () => {
     expect(messages.map((m) => m.message)).toEqual([messageOf('commands', text, fault)])
   })
 
-  it.fails.each(FIELDS)('reports a bad path in %s, and names the field', (field) => {
+  it.each(FIELDS)('reports a bad path in %s, and names the field', (field) => {
     const messages = lint(tree(PLUGIN), entry({ [field]: './nope' }))
     expect(messages.map((m) => m.message)).toEqual([messageOf(field, './nope', 'missing')])
   })
 
-  it.fails('reports each bad element of an array, and no good element', () => {
+  it('reports each bad element of an array, and no good element', () => {
     const skills = ['./skills', 'skills/s', 3, './skills/nope', null, './skills/../x', './skills/s']
     const messages = lint(tree(PLUGIN), entry({ skills }))
     expect(messages.map((m) => m.message)).toEqual([
@@ -97,7 +97,7 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails('reports the fields of one entry in file order, with one report for each path', () => {
+  it('reports the fields of one entry in file order, with one report for each path', () => {
     const fields = { agents: './a.md', commands: ['./c', 'd'], themes: '../t' }
     const messages = lint(tree(PLUGIN), entry(fields))
     expect(messages.map((m) => m.message)).toEqual([
@@ -108,7 +108,7 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails('reports each entry on its own', () => {
+  it('reports each entry on its own', () => {
     const code = marketplaceOf([
       { name: 'p', source: './plugins/p', commands: './nope' },
       { name: 'q', source: './plugins/p', commands: './commands' },
@@ -117,7 +117,7 @@ describe(RULE, () => {
     expect(lint(tree(PLUGIN), code)).toHaveLength(2)
   })
 
-  it.fails('reads the last of two keys, as JSON.parse does', () => {
+  it('reads the last of two keys, as JSON.parse does', () => {
     const open = '{"plugins": [{"source": "./plugins/p", '
     expect(lint(tree(PLUGIN), `${open}"commands": "./c", "commands": "./commands"}]}`)).toEqual([])
     expect(
@@ -125,20 +125,20 @@ describe(RULE, () => {
     ).toHaveLength(1)
   })
 
-  it.fails('reports a path of a source with no plugin.json, and of a source with one', () => {
+  it('reports a path of a source with no plugin.json, and of a source with one', () => {
     const dir = tree({ 'plugins/q/x.txt': 'x', ...PLUGIN })
     expect(lint(dir, entry({ commands: './nope' }, './plugins/q'))).toHaveLength(1)
     expect(lint(dir, entry({ commands: './nope' }))).toHaveLength(1)
   })
 
-  it.fails('resolves a path from the plugin directory, not from the marketplace root', () => {
+  it('resolves a path from the plugin directory, not from the marketplace root', () => {
     const dir = tree({ ...PLUGIN, 'commands/root.md': '# R\n' })
     expect(lint(dir, entry({ commands: './commands/root.md' }))).toHaveLength(1)
     expect(lint(dir, entry({ commands: './commands/c.md' }))).toEqual([])
     expect(lint(dir, entry({ commands: './commands/root.md' }, '.'))).toEqual([])
   })
 
-  it.fails('reports a bare name under metadata.pluginRoot, and the source "."', () => {
+  it('reports a bare name under metadata.pluginRoot, and the source "."', () => {
     const bare = marketplaceOf([{ name: 'p', source: 'p', commands: './nope' }], {
       metadata: { pluginRoot: './plugins' },
     })
@@ -146,32 +146,29 @@ describe(RULE, () => {
     expect(lint(tree(PLUGIN), entry({ commands: './nope' }, '.'))).toHaveLength(1)
   })
 
-  it.fails('reports in a tree with no .git', () => {
+  it('reports in a tree with no .git', () => {
     expect(lint(tree(PLUGIN, false), entry({ commands: './nope' }))).toHaveLength(1)
   })
 
-  it.skipIf(noLinks).fails(
-    'reports a link out of the marketplace root, inside the repository',
-    () => {
-      const repo = tree({ ...SITE, 'shared/s.md': '# S\n' })
-      const dir = path.join(repo, 'site')
-      link(dir, 'plugins/p/commands', '../../../shared')
-      link(dir, 'plugins/p/agents', '../../../shared/s.md')
-      const messages = lint(
-        dir,
-        entry({ commands: ['./commands', './commands/s.md'], agents: './agents' }),
-      )
-      expect(messages.map((m) => m.message)).toEqual([
-        messageOf('commands', './commands', 'escapes'),
-        messageOf('commands', './commands/s.md', 'escapes'),
-        messageOf('agents', './agents', 'escapes'),
-      ])
-    },
-  )
+  it.skipIf(noLinks)('reports a link out of the marketplace root, inside the repository', () => {
+    const repo = tree({ ...SITE, 'shared/s.md': '# S\n' })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/p/commands', '../../../shared')
+    link(dir, 'plugins/p/agents', '../../../shared/s.md')
+    const messages = lint(
+      dir,
+      entry({ commands: ['./commands', './commands/s.md'], agents: './agents' }),
+    )
+    expect(messages.map((m) => m.message)).toEqual([
+      messageOf('commands', './commands', 'escapes'),
+      messageOf('commands', './commands/s.md', 'escapes'),
+      messageOf('agents', './agents', 'escapes'),
+    ])
+  })
 })
 
 describe(`${RULE} (silent)`, () => {
-  it.fails.each([
+  it.each([
     ['commands', './commands'],
     ['commands', './commands/'],
     ['commands', './commands/c.md'],
@@ -188,11 +185,11 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry({ [field]: value }))).toEqual([])
   })
 
-  it.fails('stays silent for an entry with no component field', () => {
+  it('stays silent for an entry with no component field', () => {
     expect(lint(tree(PLUGIN), entry({ description: 'd', strict: true }))).toEqual([])
   })
 
-  it.fails('stays silent for the fields that other rules and files own, and for other spellings', () => {
+  it('stays silent for the fields that other rules and files own, and for other spellings', () => {
     const fields = {
       hooks: './nope.json',
       mcpServers: './nope.json',
@@ -205,7 +202,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry(fields))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['null', null],
     ['a number', 3],
     ['a boolean', true],
@@ -216,7 +213,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry({ commands: value }))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['a source that does not exist', {}],
     ['a manifest that does not parse', { 'plugins/p/.claude-plugin/plugin.json': '{' }],
     ['a manifest that is an array', { 'plugins/p/.claude-plugin/plugin.json': '[]' }],
@@ -224,14 +221,14 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(files), entry({ commands: './nope', agents: '../x' }))).toEqual([])
   })
 
-  it.fails('stays silent for a source that is a file', () => {
+  it('stays silent for a source that is a file', () => {
     const dir = tree({ plugins: 'a file' })
     expect(lint(dir, entry({ commands: './nope', agents: '../x' }))).toEqual([])
     const nested = tree({ 'plugins/p': 'a file' })
     expect(lint(nested, entry({ commands: './nope', agents: '../x' }))).toEqual([])
   })
 
-  it.fails.each([
+  it.each([
     ['an object source', { source: 'github', repo: 'a/b' }],
     ['a source with no ./ prefix', 'plugins/p'],
     ['a bare name with no pluginRoot', 'p'],
@@ -243,25 +240,25 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(tree(PLUGIN), entry({ commands: './nope', agents: '../x' }, source))).toEqual([])
   })
 
-  it.fails('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
+  it('stays silent for a bare name under a pluginRoot that the format rule reports', () => {
     const code = marketplaceOf([{ name: 'p', source: 'p', commands: './nope' }], {
       metadata: { pluginRoot: '../plugins' },
     })
     expect(lint(tree(PLUGIN), code)).toEqual([])
   })
 
-  it.fails('stays silent for an entry that is not an object', () => {
+  it('stays silent for an entry that is not an object', () => {
     expect(lint(tree(PLUGIN), marketplaceOf(['p', null, 3]))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a link inside the plugin directory', () => {
+  it.skipIf(noLinks)('stays silent for a link inside the plugin directory', () => {
     const dir = tree(PLUGIN)
     link(dir, 'plugins/p/alias', 'commands')
     link(dir, 'plugins/p/file-alias', 'commands/c.md')
     expect(lint(dir, entry({ commands: ['./alias', './alias/c.md', './file-alias'] }))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a link to another place in the marketplace', () => {
+  it.skipIf(noLinks)('stays silent for a link to another place in the marketplace', () => {
     const dir = tree({ ...PLUGIN, 'shared/skills/k/SKILL.md': '---\nname: k\n---\n' })
     link(dir, 'plugins/p/skills/k', '../../../shared/skills/k')
     link(dir, 'plugins/p/commands/up', '../../..')
@@ -269,7 +266,7 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, entry({ commands: './commands/up' }))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a part that is a link out of the repository', () => {
+  it.skipIf(noLinks)('stays silent for a part that is a link out of the repository', () => {
     const outside = tree({ 'c.md': '# C\n' })
     const dir = tree(PLUGIN)
     link(dir, 'plugins/p/far', outside)
@@ -278,34 +275,31 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, entry({ commands: paths }))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a dangling link, and for a link to itself', () => {
+  it.skipIf(noLinks)('stays silent for a dangling link, and for a link to itself', () => {
     const dir = tree(PLUGIN)
     link(dir, 'plugins/p/dead', 'gone')
     link(dir, 'plugins/p/loop', 'loop')
     expect(lint(dir, entry({ commands: ['./dead', './dead/x', './loop', './loop/x'] }))).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('stays silent for a link out of the root in a tree with no .git', () => {
+  it.skipIf(noLinks)('stays silent for a link out of the root in a tree with no .git', () => {
     const top = tree({ ...SITE, 'shared/s.md': '# S\n' }, false)
     const dir = path.join(top, 'site')
     link(dir, 'plugins/p/commands', '../../../shared')
     expect(lint(dir, entry({ commands: ['./commands', './commands/s.md'] }))).toEqual([])
   })
 
-  it.skipIf(chmodCannotBlock).fails('stays silent for a part that the rule cannot read', () => {
+  it.skipIf(chmodCannotBlock)('stays silent for a part that the rule cannot read', () => {
     const dir = tree(PLUGIN)
     withoutAccess(path.join(dir, 'plugins', 'p', 'commands'), () => {
       expect(lint(dir, entry({ commands: ['./commands/c.md', './commands/nope'] }))).toEqual([])
     })
   })
 
-  it.skipIf(noLinks).fails(
-    'stays silent for a source that is a link out of the marketplace root',
-    () => {
-      const repo = tree({ ...PLUGIN })
-      const dir = path.join(repo, 'site')
-      link(dir, 'plugins/p', '../../plugins/p')
-      expect(lint(dir, entry({ commands: './nope' }))).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('stays silent for a source that is a link out of the marketplace root', () => {
+    const repo = tree({ ...PLUGIN })
+    const dir = path.join(repo, 'site')
+    link(dir, 'plugins/p', '../../plugins/p')
+    expect(lint(dir, entry({ commands: './nope' }))).toEqual([])
+  })
 })

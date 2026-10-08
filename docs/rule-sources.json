@@ -263,6 +263,33 @@
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
+  "marketplace-entry-component-paths": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Path rules",
+      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Containment and existence",
+      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Path escapes plugin directory",
+      "hash": "5681f5051584c16f8699c406342cad59c118d93e078e0217361ef469c8e5f346"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Share files within a marketplace with symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    }
+  ],
   "marketplace-entry-hooks-inline": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",

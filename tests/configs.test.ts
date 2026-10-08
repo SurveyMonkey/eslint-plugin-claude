@@ -37,9 +37,10 @@ const badSettings = JSON.stringify({
 // entry is named `renamed`, and its source `plugins/p` has a `plugin.json` that is named `p`. A
 // fifth entry has a relative `source` to a directory that is not there. A sixth entry sets a
 // `version` that `plugins/m/.claude-plugin/plugin.json` sets too, and an `mcpServers`. A seventh
-// entry sets `strict` to `false` and `commands`, and its source has a `plugin.json`. An eighth entry
+// entry sets `strict` to `false` and `skills`, and its source has a `plugin.json`. An eighth entry
 // sets `hooks` for `Stop`, and its `plugin.json` does too. A ninth entry has the marketplace root as
-// its `source`, and lists one of the two skills under `skills/`.
+// its `source`, and lists one of the two skills under `skills/`. A tenth entry
+// sets a `commands` path with `..`.
 const badMarketplace = JSON.stringify({
   name: 'claude-code-plugins',
   plugins: [
@@ -55,9 +56,10 @@ const badMarketplace = JSON.stringify({
     { name: 'renamed', source: './plugins/p' },
     { name: 'gone', source: './plugins/gone' },
     { name: 'm', source: './plugins/m', version: '2.0.0', mcpServers: {} },
-    { name: 'k', source: './plugins/k', strict: false, commands: './commands/' },
+    { name: 'k', source: './plugins/k', strict: false, skills: './' },
     { name: 'h', source: './plugins/h', hooks: { Stop: [] } },
     { name: 'root', source: '.', skills: ['./skills/listed'] },
+    { name: 'p', source: './plugins/p', commands: '../c.md' },
   ],
 })
 
@@ -235,6 +237,7 @@ const MARKETPLACE_RULES = [
   'marketplace-strict-false-conflict',
   'marketplace-entry-hooks-override',
   'marketplace-entry-root-skills',
+  'marketplace-entry-component-paths',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.

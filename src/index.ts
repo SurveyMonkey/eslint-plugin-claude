@@ -19,6 +19,7 @@ import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
+import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
 import marketplaceEntryHooksOverride from './rules/marketplace-entry-hooks-override.ts'
 import marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manifest-only-fields.ts'
@@ -127,6 +128,7 @@ const modules = [
   marketplaceStrictFalseConflict,
   marketplaceEntryHooksOverride,
   marketplaceEntryRootSkills,
+  marketplaceEntryComponentPaths,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -211,6 +213,7 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-strict-false-conflict': 'error',
   'marketplace-entry-hooks-override': 'error',
   'marketplace-entry-root-skills': 'error',
+  'marketplace-entry-component-paths': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

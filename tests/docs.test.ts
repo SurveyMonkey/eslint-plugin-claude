@@ -34,6 +34,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'command-legacy-format',
     'hooks-event-name-known',
     'marketplace-command-version-ignored',
+    'marketplace-entry-component-paths',
     'marketplace-entry-hooks-inline',
     'marketplace-entry-hooks-override',
     'marketplace-entry-manifest-only-fields',
