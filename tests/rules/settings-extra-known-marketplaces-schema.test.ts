@@ -67,18 +67,9 @@ jsonTester.run('settings-extra-known-marketplaces-schema (valid)', rule, {
       code: withSource({ source: 'file', path: './m/.claude-plugin/marketplace.json' }),
       filename,
     },
-    {
-      code: withSource({ source: 'file', path: '/opt/acme/.claude-plugin/marketplace.json' }),
-      filename,
-    },
-    {
-      code: withSource({ source: 'file', path: '.claude-plugin/marketplace.json' }),
-      filename,
-    },
-    {
-      code: withSource({ source: 'file', path: 'C:\\m\\.claude-plugin\\marketplace.json' }),
-      filename,
-    },
+    // The docs give no rule for where the file is, so no path form gets a report.
+    { code: withSource({ source: 'file', path: './team/m.json' }), filename },
+    { code: withSource({ source: 'file', path: '' }), filename },
     { code: withSource({ source: 'directory', path: '/opt/acme/marketplaces' }), filename },
     { code: withSource({ source: 'directory', path: '' }), filename },
     { code: withSource({ source: 'directory', path: '/opt/m', extra: 1 }), filename },
@@ -279,7 +270,7 @@ jsonTester.run('settings-extra-known-marketplaces-schema (invalid github and git
       filename,
       errors: [{ messageId: 'repoWildcard' as const, data: { value: repo } }],
     })),
-    ...['plugins', '', 'a/b/c', 'acme corp/p', '/p', 'a/'].map((repo) => ({
+    ...['plugins', '', 'a/b/c', 'acme corp/p', '/p', 'a/', 'a/b c'].map((repo) => ({
       code: withSource({ source: 'github', repo }),
       filename,
       errors: [{ messageId: 'repoForm' as const, data: { value: repo } }],
@@ -313,6 +304,33 @@ jsonTester.run('settings-extra-known-marketplaces-schema (invalid github and git
         { messageId: 'fieldType', data: { type: 'git', field: 'url', expected: 'a string' } },
         { messageId: 'fieldType', data: { type: 'git', field: 'ref', expected: 'a string' } },
       ],
+    },
+    {
+      code: withSource({ source: 'git', url: 'u', path: [], sparsePaths: 'a' }),
+      filename,
+      errors: [
+        { messageId: 'fieldType', data: { type: 'git', field: 'path', expected: 'a string' } },
+        {
+          messageId: 'fieldType',
+          data: { type: 'git', field: 'sparsePaths', expected: 'an array of strings' },
+        },
+      ],
+    },
+    {
+      code: withSource({ source: 'git', url: 'u', sparsePaths: ['a', 1] }),
+      filename,
+      errors: [
+        {
+          messageId: 'fieldType',
+          data: { type: 'git', field: 'sparsePaths', expected: 'an array of strings' },
+        },
+      ],
+    },
+    // Two `source` type keys. The rule reads the last.
+    {
+      code: '{"extraKnownMarketplaces": {"a": {"source": {"source": "github", "repo": "o/r", "source": "gitlab"}}}}',
+      filename,
+      errors: [{ messageId: 'typeUnknown', data: { type: 'gitlab', types } }],
     },
     // Two `repo` keys. The rule reads the last.
     {
@@ -355,18 +373,6 @@ jsonTester.run('settings-extra-known-marketplaces-schema (invalid url, file and 
         { messageId: 'fieldType', data: { type: 'file', field: 'path', expected: 'a string' } },
       ],
     },
-    // The docs say to keep the file at `<root>/.claude-plugin/marketplace.json`.
-    ...[
-      './m/marketplace.json',
-      '',
-      '/opt/acme/x.claude-plugin/marketplace.json',
-      '/opt/acme/.claude-plugin/marketplace.json.bak',
-      '/opt/acme/.claude-plugin/other.json',
-    ].map((path) => ({
-      code: withSource({ source: 'file', path }),
-      filename,
-      errors: [{ messageId: 'filePath' as const }],
-    })),
     {
       code: withSource({ source: 'directory' }),
       filename,
@@ -592,16 +598,6 @@ jsonTester.run('settings-extra-known-marketplaces-schema (message text)', rule, 
         },
       ],
     },
-    {
-      code: withSource({ source: 'file', path: './m.json' }),
-      filename,
-      errors: [
-        {
-          message:
-            'Keep the "path" of a "file" source at "<root>/.claude-plugin/marketplace.json". Claude Code takes the directory two levels up as the marketplace root.',
-        },
-      ],
-    },
   ],
 })
 
@@ -617,11 +613,17 @@ const at = <Id extends string>(
 const wildcard = withSource({ source: 'github', repo: 'acme/*' })
 const mismatch = withSource(inline({ name: 'other' }))
 const reservedName = marketplaces({ inline: { source: inline({ name: 'inline' }) } })
-const filePath = withSource({ source: 'file', path: './m.json' })
 const badItemField = withItem({ ...goodItem, version: 1 })
 const nullSource = withItem({ name: 'f', source: null })
 const noSource = withItem({ name: 'f' })
 const notObjectEntry = marketplaces({ acme: 5 })
+const autoUpdateBad = marketplaces({ acme: { source: github, autoUpdate: 'x' } })
+const sourceBad = marketplaces({ acme: { source: 5 } })
+const npmType = withSource({ source: 'npm' })
+const unloadedType = withSource({ source: 'hostPattern' })
+const unknownType = withSource({ source: 'bogus' })
+const itemNotObject = withItem(5)
+const repoBad = withSource({ source: 'github', repo: 'plugins' })
 const bareGit = withSource({ source: 'git' })
 const bareUrl = withSource({ source: 'url' })
 const bareFile = withSource({ source: 'file' })
@@ -647,7 +649,6 @@ jsonTester.run('settings-extra-known-marketplaces-schema (locations)', rule, {
       filename,
       errors: [at(reservedName, 'nameReserved', '"name":"inline"', { name: 'inline' }, 7)],
     },
-    { code: filePath, filename, errors: [at(filePath, 'filePath', '"./m.json"')] },
     {
       code: badItemField,
       filename,
@@ -668,6 +669,37 @@ jsonTester.run('settings-extra-known-marketplaces-schema (locations)', rule, {
       code: notObjectEntry,
       filename,
       errors: [at(notObjectEntry, 'valueNotObject', ':5}', { key: 'acme' }, 1)],
+    },
+    {
+      code: autoUpdateBad,
+      filename,
+      errors: [at(autoUpdateBad, 'autoUpdateType', '"x"', { key: 'acme' })],
+    },
+    {
+      code: sourceBad,
+      filename,
+      errors: [at(sourceBad, 'sourceNotObject', '5', { key: 'acme' })],
+    },
+    { code: npmType, filename, errors: [at(npmType, 'typeNpm', '"npm"', { types })] },
+    {
+      code: unloadedType,
+      filename,
+      errors: [at(unloadedType, 'typeUnloaded', '"hostPattern"', { types, type: 'hostPattern' })],
+    },
+    {
+      code: unknownType,
+      filename,
+      errors: [at(unknownType, 'typeUnknown', '"bogus"', { types, type: 'bogus' })],
+    },
+    {
+      code: itemNotObject,
+      filename,
+      errors: [at(itemNotObject, 'pluginNotObject', '5')],
+    },
+    {
+      code: repoBad,
+      filename,
+      errors: [at(repoBad, 'repoForm', '"plugins"', { value: 'plugins' })],
     },
     // A missing field is on the `source` object, for each type.
     {
@@ -717,6 +749,11 @@ jsonTester.run('settings-extra-known-marketplaces-schema (last member, valid)', 
     // The `source` of an entry.
     {
       code: `{"extraKnownMarketplaces":{"acme":{"source":${bogus},"source":${github2}}}}`,
+      filename,
+    },
+    // The `source` type of a source.
+    {
+      code: `{"extraKnownMarketplaces":{"acme":{"source":{"source":"npm","package":"p","source":"github","repo":"o/r"}}}}`,
       filename,
     },
     // The `autoUpdate` of an entry.

@@ -11,7 +11,7 @@ import { SETTINGS_FILES } from '../permission-listener.ts'
 
 const name = 'settings-marketplace-headers-helper-https' as const
 
-// A URL scheme is not case sensitive.
+// The docs do not say whether Claude Code folds letter case, so this accepts `HTTPS://`.
 const HTTPS_URL = /^https:\/\//i
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'notHttps' }> = {

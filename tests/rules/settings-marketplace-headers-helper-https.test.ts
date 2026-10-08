@@ -25,7 +25,8 @@ jsonTester.run('settings-marketplace-headers-helper-https (valid)', rule, {
       code: urlSource({ url: 'https://x.test/m.json', headersHelper: '/opt/bin/mint' }),
       filename: local,
     },
-    // The scheme is not case sensitive, and `https://` alone starts with `https://`.
+    // The docs do not say whether Claude Code folds letter case, so the rule accepts `HTTPS://`.
+    // `https://` alone starts with `https://`.
     { code: urlSource({ url: 'HTTPS://x.test/m.json', headersHelper: 'mint' }), filename },
     { code: urlSource({ url: 'https://', headersHelper: 'mint' }), filename },
     // With no `headersHelper`, the command never runs, so the URL scheme does not matter here.
@@ -64,6 +65,11 @@ jsonTester.run('settings-marketplace-headers-helper-https (valid)', rule, {
     },
     { code: JSON.stringify({ model: 'opus' }), filename },
     { code: '[]', filename },
+    // Two `extraKnownMarketplaces` keys. The rule reads the last.
+    {
+      code: '{"extraKnownMarketplaces": {"a": {"source": {"source": "url", "url": "http://x", "headersHelper": "m"}}}, "extraKnownMarketplaces": {}}',
+      filename,
+    },
     // Two members with one name, and two `url` keys. The rule reads the last.
     {
       code: '{"extraKnownMarketplaces": {"a": {"source": {"source": "url", "url": "http://x", "headersHelper": "m"}}, "a": {"source": {"source": "url", "url": "https://x", "headersHelper": "m"}}}}',
@@ -131,7 +137,13 @@ jsonTester.run('settings-marketplace-headers-helper-https (invalid)', rule, {
         { messageId: 'notHttps', column: 213 },
       ],
     },
-    // Two members with one name, and two keys. The rule reads the last.
+    // Two `extraKnownMarketplaces` keys. The rule reads the last.
+    {
+      code: '{"extraKnownMarketplaces": {"a": {"source": {"source": "url", "url": "https://x", "headersHelper": "m"}}}, "extraKnownMarketplaces": {"a": {"source": {"source": "url", "url": "http://x", "headersHelper": "m"}}}}',
+      filename,
+      errors: [{ messageId: 'notHttps' }],
+    },
+    // Two members with one name, and two `url` keys. The rule reads the last.
     {
       code: '{"extraKnownMarketplaces": {"a": {"source": {"source": "url", "url": "https://x", "headersHelper": "m"}}, "a": {"source": {"source": "url", "url": "http://x", "headersHelper": "m"}}}}',
       filename,

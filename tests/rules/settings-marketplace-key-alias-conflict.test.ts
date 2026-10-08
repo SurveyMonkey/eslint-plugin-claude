@@ -12,7 +12,7 @@ const policy = [{ source: 'github', repo: 'acme-corp/claude-plugins' }]
 
 jsonTester.run('settings-marketplace-key-alias-conflict (valid)', rule, {
   valid: [
-    // One spelling of each pair.
+    // One spelling of the pair, in each file.
     { code: JSON.stringify({ extraKnownMarketplaces: source }), filename },
     { code: JSON.stringify({ additionalMarketplaces: source }), filename },
     { code: JSON.stringify({ strictKnownMarketplaces: policy }), filename: local },
@@ -27,7 +27,7 @@ jsonTester.run('settings-marketplace-key-alias-conflict (valid)', rule, {
       filename: local,
     },
     { code: '{"strictKnownMarketplaces": [], "allowedMarketplaces": []}', filename },
-    // One spelling from each pair is two pairs with no conflict.
+    // One spelling of the pair with a policy key is no conflict.
     {
       code: JSON.stringify({ extraKnownMarketplaces: source, allowedMarketplaces: policy }),
       filename,
@@ -36,7 +36,7 @@ jsonTester.run('settings-marketplace-key-alias-conflict (valid)', rule, {
       code: JSON.stringify({ additionalMarketplaces: source, strictKnownMarketplaces: policy }),
       filename,
     },
-    // The two aliases, or the two canonical keys, are not a pair.
+    // The two aliases, or the two canonical keys, are not the pair.
     {
       code: JSON.stringify({ additionalMarketplaces: source, allowedMarketplaces: policy }),
       filename,

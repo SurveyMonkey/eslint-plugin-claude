@@ -51,6 +51,17 @@ jsonTester.run('settings-sync-claude-ai-plugins (invalid)', rule, {
       filename: project,
       errors: [{ messageId: 'ignoredInProject' as const }],
     })),
+    // A file in a nested directory is read by its name.
+    {
+      code: sync(false),
+      filename: 'packages/app/.claude/settings.json',
+      errors: [{ messageId: 'ignoredInProject' }],
+    },
+    {
+      code: sync(true),
+      filename: 'packages/app/.claude/settings.local.json',
+      errors: [{ messageId: 'trueIsUnset' }],
+    },
     // `true` in the project file is one report: the file-level one.
     {
       code: '{"model": "opus", "syncClaudeAiPlugins": true}',

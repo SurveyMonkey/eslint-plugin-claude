@@ -30,8 +30,8 @@ The rule reports the `url` value of a source that meets all of these conditions:
 - The source type is `url`.
 - The source sets `headersHelper`. The rule counts the key as set for any value, also an empty
   string.
-- The `url` is a string that does not start with `https://`. The rule ignores letter case in the
-  scheme, because a URL scheme is not case sensitive. The empty string gives a report.
+- The `url` is a string that does not start with `https://`. The docs do not say whether Claude
+  Code folds letter case, so the rule ignores letter case in the scheme. The empty string gives a report.
 
 The rule reports the `url` and not the `headersHelper`. A fix is a change of the URL.
 

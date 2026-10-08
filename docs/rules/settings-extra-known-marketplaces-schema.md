@@ -49,22 +49,18 @@ rule takes the type from the field description.[^fields] The rule checks no `url
 `settings-marketplace-headers-helper-https` checks the scheme of a `url` source that has a
 `headersHelper`.
 
-Four more checks apply to one field each:
+Three more checks apply to one field each:
 
 - **`repo` of a `github` source.** It must name one repository, as `owner/repo`. In
   `extraKnownMarketplaces`, Claude Code takes `owner/*` literally and the clone fails. The owner
   wildcard is valid in the two policy lists only.[^wildcards] A `repo` with a `*` gives the wildcard
   report. The rule gives no second report for it.
-- **`path` of a `file` source.** Claude Code reads the file in place. It takes the directory two
-  levels up as the marketplace root. The docs say to keep the file at
-  `<root>/.claude-plugin/marketplace.json`, so the rule reports a path that does not end with
-  that text.[^fields] Both `/` and `\` count as separators. The docs give the advice and the root
-  rule. They do not say that a path elsewhere fails to load.
 - **`name` of a `settings` source.** It must equal the `extraKnownMarketplaces` key, and it must
   not be a reserved name.[^fields] The reserved names are the same as for
   `marketplace-name-reserved`.[^reserved] The `settings` source is not a `github` or `git` source under `github.com/anthropics/`. So the
   exception for the Anthropic names does not apply.
-  A name that is wrong in both ways gives two reports.
+  A name that is wrong in both ways gives two reports. The rule does not check the other
+  reserved-name cases of that page, such as a name that impersonates an official marketplace.
 - **`plugins` of a `settings` source.** Each item must be an object with an object `source`. A
   relative path has no repository to resolve against, so a string `source` gives a report. An item
   can set `name`, `description`, `version`, `strict`, `headers` and `headersHelper`. The rule checks
@@ -85,6 +81,10 @@ The rule does not check these cases:
   rule names `extraKnownMarketplaces` only.
 - The `source` of an item in `plugins`, and the `owner` of a `settings` source.
 - Whether a repository, URL or path exists.
+- Where a `file` source keeps its file. The docs say to keep the file at
+  `<root>/.claude-plugin/marketplace.json`. They give that as advice and say that
+  `marketplace add` takes "a path to a `.json` file". They do not say that another path fails to
+  load.[^fields]
 
 Fail:
 

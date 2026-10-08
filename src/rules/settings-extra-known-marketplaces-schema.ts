@@ -79,8 +79,6 @@ const ITEM_FIELDS: Record<string, Kind> = {
 
 // `owner/repo`: one slash, and no white space or second slash.
 const REPO = /^[^/\s]+\/[^/\s]+$/
-// The path of a `file` source ends with this, after a separator or at the start.
-const MARKETPLACE_FILE = /(?:^|[\\/])\.claude-plugin[\\/]marketplace\.json$/
 
 /** True when Claude Code reserves `text` as a marketplace name. A `settings`
  *  source is not a `github` or `git` source under `github.com/anthropics/`.
@@ -108,7 +106,6 @@ type MessageIds =
   | 'fieldType'
   | 'repoWildcard'
   | 'repoForm'
-  | 'filePath'
   | 'nameMismatch'
   | 'nameReserved'
   | 'pluginNotObject'
@@ -144,8 +141,6 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
       repoWildcard:
         'The "repo" of a "github" source must name one repository, and "{{value}}" has a "*". Claude Code takes it literally, and the clone fails.',
       repoForm: 'The "repo" of a "github" source must be "owner/repo", and "{{value}}" is not.',
-      filePath:
-        'Keep the "path" of a "file" source at "<root>/.claude-plugin/marketplace.json". Claude Code takes the directory two levels up as the marketplace root.',
       nameMismatch:
         'The "name" of a "settings" source must equal the marketplace key "{{key}}", and "{{name}}" does not.',
       nameReserved:
@@ -193,8 +188,6 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
         } else if (!REPO.test(value.value)) {
           report(value, 'repoForm', { value: value.value })
         }
-      } else if (type === 'file' && field === 'path' && !MARKETPLACE_FILE.test(value.value)) {
-        report(value, 'filePath')
       } else if (type === 'settings' && field === 'name') {
         if (value.value !== key) {
           report(value, 'nameMismatch', { key, name: value.value })

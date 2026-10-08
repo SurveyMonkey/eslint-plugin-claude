@@ -19,7 +19,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'conflict' }> = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Do not set a marketplace key and its alias in one settings file',
+      description:
+        'Do not set extraKnownMarketplaces and its alias additionalMarketplaces in one settings file',
       url: docsUrl(name),
     },
     schema: [],
