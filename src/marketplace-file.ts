@@ -18,7 +18,9 @@ import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tre
  *
  *  - `not-local`: the source is not a `file` or `directory` source with a
  *    relative `path`. This covers every other source type, and a `path` that
- *    is absolute, empty or not a string.
+ *    is absolute, empty or not a string. A rule also gets it when no settings
+ *    file declares the marketplace, or the file of higher precedence is not
+ *    readable (`declaredSource`).
  *  - `missing`: no `marketplace.json` is at the path.
  *  - `unreadable`: the rule cannot see the file. The last link of the path is
  *    dangling, the real path is out of the bound, or the read fails. The file
@@ -49,8 +51,9 @@ const projectOf = (file: string) => path.dirname(path.dirname(path.resolve(file)
 
 /** The bound of each read for the settings file `file`: its repository root.
  *  With no `.git`, it is the `.claude/` directory (ADR 001, Decision 14). The
- *  search starts at the directory that holds `.claude/`, so a `.claude` link
- *  cannot move the bound. */
+ *  search starts at the directory that holds `.claude/`. So with a `.git`, a
+ *  `.claude` link cannot move the bound. With no `.git`, the bound is the real
+ *  path of `.claude/`. */
 function boundOf(file: string): string {
   const root = repositoryRoot(projectOf(file))
   return existsSync(path.join(root, '.git'))
@@ -135,7 +138,9 @@ export function sourceOf(entry: unknown): unknown {
  *  is above `settings.json`. So `settings.local.json` decides when it has the
  *  key. Otherwise `settings.json` decides. The result is undefined when no
  *  file has the key. It is also undefined when `settings.local.json` is a
- *  file that the rule cannot read, because it can hold the entry in use. */
+ *  dangling link, has a real path out of the bound, fails to read, or does
+ *  not parse to an object, because it can hold the entry in use. A missing
+ *  `settings.local.json` has no entry. */
 export function declaredSource(settingsFile: string, text: string, market: string): unknown {
   const own = marketplacesOf(text)
   const ownHas = own !== undefined && Object.hasOwn(own, market)
@@ -148,7 +153,8 @@ export function declaredSource(settingsFile: string, text: string, market: strin
     project ? 'settings.local.json' : 'settings.json',
   )
   const parsed = readJson(other, boundOf(settingsFile))
-  if (parsed === UNREADABLE) {
+  // A file that does not parse to an object is no file whose entry the rule can compare.
+  if (parsed === UNREADABLE || (parsed !== null && !isObject(parsed.data))) {
     return undefined
   }
   const there = parsed === null ? undefined : marketplacesIn(parsed.data)

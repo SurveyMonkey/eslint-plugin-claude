@@ -408,7 +408,7 @@ describe(`${RULE} (silent)`, () => {
       [`market/${MARKET}`]: marketplace(),
       [LOCAL]: '{"extraKnownMarketplaces": ',
     })
-    expect(lint(dir, settings({ 'nope@team': true }))).toEqual([])
+    expect(lint(dir, settings({ 'nope@team': true }, declare(directory('market'))))).toEqual([])
   })
 
   it('stays silent for an absolute path', () => {

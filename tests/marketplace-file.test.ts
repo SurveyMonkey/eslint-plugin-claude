@@ -384,7 +384,7 @@ describe('declaredSource', () => {
 
   it('reads the project file when the local file is missing or has no marketplaces', () => {
     const own = settings({ acme: entry('own') })
-    const variants: Record<string, string>[] = [{}, { '.claude/settings.local.json': '{' }]
+    const variants: Record<string, string>[] = [{}, { '.claude/settings.local.json': '{}' }]
     for (const files of variants) {
       const dir = tree(files)
       expect(declaredSource(settingsOf(dir), own, 'acme')).toEqual({
@@ -404,6 +404,35 @@ describe('declaredSource', () => {
       expect(declaredSource(settingsOf(dir), own, 'acme')).toBeUndefined()
     },
   )
+
+  it.each([
+    ['does not parse', '{'],
+    ['is an array', '[]'],
+    ['is null', 'null'],
+  ])('gives undefined for the project file when the local file %s', (_title, text) => {
+    const dir = tree({ '.claude/settings.local.json': text })
+    const own = settings({ acme: entry('own') })
+    expect(declaredSource(settingsOf(dir), own, 'acme')).toBeUndefined()
+  })
+
+  it.skipIf(noLinks)('bounds the other file at .claude when there is no .git', () => {
+    const dir = tree({ 'shared/s.json': settings({ acme: entry('other') }) }, false)
+    link(dir, '.claude/settings.local.json', '../shared/s.json')
+    expect(declaredSource(settingsOf(dir), '{}', 'acme')).toBeUndefined()
+  })
+
+  it('reads a real key that is also a name in the prototype, from the project file', () => {
+    const dir = tree({ '.claude/settings.json': settings({ constructor: entry('other') }) })
+    const local = settingsOf(dir, '.claude/settings.local.json')
+    expect(declaredSource(local, settings({}), 'constructor')).toEqual({
+      source: 'directory',
+      path: 'other',
+    })
+    const dir2 = tree({ '.claude/settings.local.json': settings({}) })
+    expect(
+      declaredSource(settingsOf(dir2), settings({ constructor: entry('own') }), 'constructor'),
+    ).toEqual({ source: 'directory', path: 'own' })
+  })
 
   it('reads the same file first for the local file', () => {
     const own = settings({ acme: entry('own') })

@@ -33,14 +33,16 @@ of the key.[^org] The settings reference says that Claude Code uses a same-name 
 highest-precedence file whole".[^precedence] The local file is above the project file. So
 `.claude/settings.local.json` decides when it has the marketplace. Otherwise
 `.claude/settings.json` decides. The entry decides, whatever its source. A local file that the rule
-cannot read gives no report for the project file, because it can hold the entry in use.
+cannot read gives no report for the project file, because it can hold the entry in use. The rule
+cannot read a local file in these cases: the file is a dangling link, has a real path out of the
+bound, fails to read, or does not parse to an object. A missing local file has no entry.
 
 The marketplace needs a `file` or `directory` source.[^types] A `file` source `path` names the
 `marketplace.json`. A `directory` source `path` names the marketplace root, the directory that
 holds `.claude-plugin/marketplace.json`.[^fields] A relative path resolves from the repository
 root. The root is the first directory at or above the directory that holds `.claude/` and holds a
 `.git`. With no `.git`, the rule resolves the path from the directory that holds `.claude/`, and
-reads no file out of `.claude/` (ADR 001, Decision 14). The docs resolve the path against the main
+reads no file out of `.claude/`, so only a `path` inside `.claude/` is read (ADR 001, Decision 14). The docs resolve the path against the main
 checkout.[^checkout] The rule resolves it from the root of the checkout that holds the settings
 file. A git worktree uses its own root.
 
@@ -61,7 +63,8 @@ The rule makes no report in these cases:
 - **The rule cannot read the file.** The file is not there. The file does not parse to an object.
   The `path` names a directory where a file is due. The last link of the path is dangling. The
   real path is out of the bound, or the read fails. The rule reads no file out of the repository
-  (ADR 001, Decision 14). The same holds for the other settings file.
+  (ADR 001, Decision 14). A `settings.local.json` that the rule cannot read gives no report, as
+  the text above says.
 - **The file has no `plugins` array.** [`marketplace-schema`](marketplace-schema.md) reports it.
 - **The key has a form that
   [`settings-enabled-plugins-schema`](settings-enabled-plugins-schema.md) reports.** The key has

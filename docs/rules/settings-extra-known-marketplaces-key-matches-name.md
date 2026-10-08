@@ -30,7 +30,7 @@ The rule reads each entry whose `source` is a `file` or `directory` source.[^typ
 directory that holds `.claude-plugin/marketplace.json`.[^fields] A relative path resolves from the
 repository root. The root is the first directory at or above the directory that holds `.claude/`
 and holds a `.git`. With no `.git`, the rule resolves the path from the directory that holds
-`.claude/`, and reads no file out of `.claude/` (ADR 001, Decision 14). The docs resolve the path
+`.claude/`, and reads no file out of `.claude/`, so only a `path` inside `.claude/` is read (ADR 001, Decision 14). The docs resolve the path
 against the main checkout.[^checkout] The rule resolves it from the root of the checkout that holds
 the settings file. A git worktree uses its own root.
 
