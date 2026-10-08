@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "ead1879f1f0631d4aa762fde5b2426e6f35ac3ae7d0fd809ce7d874bfc69fe03",
+  "hash": "62cd0d517c9de70da9bdd73ab1abb1dcb015448dcf5028d2294e6e0ab1d57104",
   "blocks": [
     {
       "id": "tools-reference",
@@ -44,15 +44,15 @@
     },
     {
       "id": "when-a-background-command-stops",
-      "hash": "e15aaaa479dda16bb7099400233a981eaa5b562cd009a8277acbd10d275f7342"
+      "hash": "f22bf2a580629fc12fa4027c6019a32e0c168e1be862d9bfef632927d633171b"
     },
     {
       "id": "time-limit-for-background-commands",
-      "hash": "3062d7756d7c56ec8919cd05fc1f2de404bb0da69549bbf8df72b530815a2b0f"
+      "hash": "7aae1e7343cf4af8a2f9db047cf9e1321b63671e9c12d6b5cae582db467335a9"
     },
     {
       "id": "raise-the-time-limit-for-background-commands",
-      "hash": "7332680096ac6a86fbbc6e744254856fa28fa05fc94853590aa14fbe0ba19d72"
+      "hash": "0600c77509f652e6582a0a61901ed9b6d2292413626adad793eadb1c0d0eeba7"
     },
     {
       "id": "foreground-commands-that-move-to-the-background",
@@ -64,7 +64,7 @@
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "bdee4021bda74f1cf65b691adf89ba8cd3593715e9e92c20a89d76437ff36140"
+      "hash": "9963d3e531649ff4991df88191b104875b04a1bbc31c3956f737251f25f1a802"
     },
     {
       "id": "endconversation-tool-behavior",
@@ -168,7 +168,7 @@
     },
     {
       "id": "session-search-limit",
-      "hash": "e9c271881d621b2e266297b9178e79f42e72308a6f4372562fa30bcdc05e0bb2"
+      "hash": "e1594683d0bd61236e7eb88184c47840c616e71ac14a299e4384f7618b2f1688"
     },
     {
       "id": "write-tool-behavior",

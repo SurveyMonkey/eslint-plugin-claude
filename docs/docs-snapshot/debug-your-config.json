@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/debug-your-config",
-  "hash": "44280de02450ce251541452b3c48a2a8ed7272a65ae2bab8305143f33985783a",
+  "hash": "666461d253efdd3717b6b66f56952fc065123a42959905076630077f8ebfffca",
   "blocks": [
     {
       "id": "debug-your-configuration",
@@ -24,7 +24,7 @@
     },
     {
       "id": "test-against-a-clean-configuration",
-      "hash": "db4118339c03cbea1db9a2ff989684e3886121dff7c736db516fdc19cb688acb"
+      "hash": "81de51a255fc5f0a2bcc1451d86494d95fc4f00f3d71b59265fccaad054d671e"
     },
     {
       "id": "check-common-causes",

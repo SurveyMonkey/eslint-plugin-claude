@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "403645d3a96659f4eaed1755a30ef28fff4477f711fd84acc7833a1949c168dd",
+  "hash": "35ad60ec531279806922e87895d7c7acc891d912322b2e54352e3c88f0619313",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -120,7 +120,7 @@
     },
     {
       "id": "exit-code-2-behavior-per-event",
-      "hash": "a385d4ec862f53397f9dcdf30f75fc955c52e6e579cc9d1a5e83bd6620beef50"
+      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038"
     },
     {
       "id": "http-response-handling",
@@ -140,7 +140,7 @@
     },
     {
       "id": "decision-control",
-      "hash": "852b673b3ee79fc65d7d3f75d70850cb176fe8fbd18d61fb7435f88b8d24b7a9"
+      "hash": "30ebda41a34adc421b0a4e8607fd03c71cfc6e5a40c5385a0830357914ab3239"
     },
     {
       "id": "hook-events",
@@ -392,7 +392,7 @@
     },
     {
       "id": "taskcreated-input",
-      "hash": "1f7ee194cd15d1ca2b0ce962f86f704c20105843331700293408498ce25c8a9f"
+      "hash": "18f9350b5b2c46428cec0979e42d590951ea4220378735b357c9cccecec169bd"
     },
     {
       "id": "taskcreated-decision-control",
@@ -404,7 +404,7 @@
     },
     {
       "id": "taskcompleted-input",
-      "hash": "d98f2c5e17683f8715795be37b3d6988ac8046b1857cb6c8171b7c3c023cb270"
+      "hash": "00a46c27bbeba8ce867e2a69064723ca8bf1608136a6590795a727a19a39f8e8"
     },
     {
       "id": "taskcompleted-decision-control",
@@ -436,7 +436,7 @@
     },
     {
       "id": "teammateidle-input",
-      "hash": "984e2a714cfa26e216b67cffa6186208a12fc50a520af972f28dd1a02d1111cb"
+      "hash": "d68ada7a6826ef805179834a6d8878fb744b5b7da7a7534fb32ee2e08bcd8a05"
     },
     {
       "id": "teammateidle-decision-control",
@@ -556,7 +556,7 @@
     },
     {
       "id": "elicitation",
-      "hash": "db38176d75c71d641855e69d20dd6c1987c40679b60da957a9fc9a9476d82925"
+      "hash": "1e371b483aa2c0b5cdba27bf95419cbf3a5cc437486095bbe26290a2c3c2979c"
     },
     {
       "id": "elicitation-input",
@@ -564,19 +564,27 @@
     },
     {
       "id": "elicitation-output",
-      "hash": "0dc2fd371529970eac99fd148b34d009dd536af796aa618f03a7b9db832b49cd"
+      "hash": "ef443c7bf16e75dad6412ec96192195afad7772b5c7966836d49bdccd05a0955"
+    },
+    {
+      "id": "other-ways-to-decline-an-elicitation",
+      "hash": "89ecb6b8ee0a389e97bbdd8aa9eab49a98018509830b7c121775cf988adfb29e"
+    },
+    {
+      "id": "answer-a-form-request-from-a-script",
+      "hash": "13ac94ecc4deb31c07f20fc0977054c7a13f2aa5c81f606461bc12ea5012a0c5"
     },
     {
       "id": "elicitationresult",
-      "hash": "3cce2111d1696ab9fd36c030267d0efe406584eed5a9ba5dbba6f3496496ea22"
+      "hash": "8fc2966ceda1074169d83a8e2e76eca7349a7ad08a253bd03289f2d7b3930fd3"
     },
     {
       "id": "elicitationresult-input",
-      "hash": "d549ad3cfe2e5a2fd2ff5e57b59f2857020040fba73088e65fa5a9e6217f4e72"
+      "hash": "f8aeaaa7caf68729cb06ea47669185ac6aa0593eec18fddde7862cb710279d85"
     },
     {
       "id": "elicitationresult-output",
-      "hash": "175c962ae327a9043b421ecdcb51cb14ae61b4f58b0e292400743740350855cc"
+      "hash": "11991a0816f5a01d27f18f2732eb499a358fb5f60faf12d6d91e272cf58fa976"
     },
     {
       "id": "prompt-based-hooks",
@@ -588,7 +596,7 @@
     },
     {
       "id": "prompt-hook-configuration",
-      "hash": "7ec14ac2e90a3eb67d21501918eec5ad3b770e09a96e71a81bb0665836546dfb"
+      "hash": "8b686b0fc223bc121e59dc5ff4f4a431c05895f6c7317bb2f4f5528d553417c6"
     },
     {
       "id": "response-schema",

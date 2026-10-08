@@ -59,6 +59,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-specifier-unsupported',
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
+    'settings-enabled-plugins-schema',
     'skill-agent-exists',
     'skill-allowed-tools-broad',
     'skill-allowed-tools-ineffective',

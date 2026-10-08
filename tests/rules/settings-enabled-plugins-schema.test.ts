@@ -1,31 +1,9 @@
 // The rule reads `enabledPlugins` in `.claude/settings.json` and
 // `.claude/settings.local.json`. The files glob and the decoy files are in
 // tests/configs.test.ts.
-import { RuleTester } from 'eslint'
-import { describe, it } from 'vitest'
-import plugin from '../../src/index.ts'
-import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
+import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
-// Red first: the rule is not in the plugin yet, so a stub with no checks stands in for it, and
-// each case in an `invalid` block must fail. The rule commit removes the stub and the marks.
-const rule = plugin.rules['settings-enabled-plugins-schema'] ?? {
-  meta: { schema: [], messages: {} },
-  create: () => ({}),
-}
-let red = false
-Object.assign(RuleTester, {
-  describe: (title: string, factory: () => void) =>
-    describe(title, () => {
-      const before = red
-      red = title === 'invalid' || before
-      try {
-        factory()
-      } finally {
-        red = before
-      }
-    }),
-  it: (title: string, test: () => void) => (red ? it.fails : it)(title, test),
-})
+const rule = ruleOf('settings-enabled-plugins-schema')
 
 const filename = '.claude/settings.json'
 const local = '.claude/settings.local.json'
@@ -50,6 +28,8 @@ jsonTester.run('settings-enabled-plugins-schema (valid)', rule, {
     { code: '"a@b"', filename },
     // Two `enabledPlugins` keys. The rule reads the last, as `JSON.parse` does.
     { code: '{"enabledPlugins": {"bad": 1}, "enabledPlugins": {"a@b": true}}', filename },
+    // Two members of one plugin. The last one counts.
+    { code: '{"enabledPlugins": {"a@b": 1, "a@b": true}}', filename },
   ],
   invalid: [],
 })
@@ -94,7 +74,7 @@ jsonTester.run('settings-enabled-plugins-schema (invalid)', rule, {
       code: settings({ 'a@b': 'true' }),
       filename,
       errors: [
-        { messageId: 'valueType', data: { key: 'a@b' }, line: 1, column: 27, endColumn: 33 },
+        { messageId: 'valueType', data: { key: 'a@b' }, line: 1, column: 26, endColumn: 32 },
       ],
     },
     { code: settings({ 'a@b': 1 }), filename, errors: [{ messageId: 'valueType' }] },
@@ -124,6 +104,15 @@ jsonTester.run('settings-enabled-plugins-schema (invalid)', rule, {
       code: '{"enabledPlugins": {"a@b": true}, "enabledPlugins": {"bad": true}}',
       filename,
       errors: [{ messageId: 'keyForm', data: { key: 'bad' } }],
+    },
+    {
+      code: '{"enabledPlugins": {"a@b": true, "a@b": "no", "bad": 1, "bad": 2}}',
+      filename,
+      errors: [
+        { messageId: 'valueType', data: { key: 'a@b' }, column: 41 },
+        { messageId: 'keyForm', data: { key: 'bad' } },
+        { messageId: 'valueType', data: { key: 'bad' } },
+      ],
     },
   ],
 })

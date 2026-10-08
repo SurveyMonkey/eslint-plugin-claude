@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "17e4a368ad9acb36232b49c12daf7ab519cc1864251d083db1562dbeb36c3443",
+  "hash": "96a4d852514448d317e8327a2c15da6511e27600b45bed85a4a1d95eae74f06c",
   "blocks": [
     {
       "id": "error-reference",
@@ -20,7 +20,7 @@
     },
     {
       "id": "tune-retry-behavior",
-      "hash": "a27401df5103f20510792bcba581cd9b8f525f7449828771eda77de16851ad12"
+      "hash": "51c0b20e588e10b6b245efe7431be0730e8970a022938423826b2b1760e54b9d"
     },
     {
       "id": "server-errors",
@@ -84,7 +84,7 @@
     },
     {
       "id": "youve-hit-your-monthly-spend-limit",
-      "hash": "d936a8d6a15a3a652949068c09b508350f92dcf3b47a15b8b53e3f8c33ad40ea"
+      "hash": "c26f84dfcdd5014457e52d0dc9aa7786ee45bbeded59343a0661a53a180427eb"
     },
     {
       "id": "spend-limit-reached",
@@ -452,7 +452,7 @@
     },
     {
       "id": "safety-measures-flagged-a-cybersecurity-topic",
-      "hash": "06c98f7a3672cef53fbbc413cee9fbc479a06d898f439fd7154475929113a1bd"
+      "hash": "7b058d14075f552fc6b36b1d902bf4a259c4ba8c4c18b017d23e90474296444c"
     },
     {
       "id": "safeguards-flagged-a-request-for-claudes-reasoning",
@@ -848,11 +848,11 @@
     },
     {
       "id": "this-session-has-no-saved-transcript",
-      "hash": "193599d3eae094e3d974bace48e5d3a6807002ebe5896db5829211f4a2e1a7af"
+      "hash": "bbf66c5c4d0e48900e48d1603955905827ab83d72e6aa43e451d17b254e156e7"
     },
     {
       "id": "this-session-is-running-in-another-terminal",
-      "hash": "36e17082d007ef0a5390eb71c0928a7b679cdb183b712b2344f45aa859359ac9"
+      "hash": "8e050b81619b5ff770fa62df2fccfa71d5a1b89e8fa06ee7af7ce98d459d6fcc"
     },
     {
       "id": "this-sessions-saved-conversation-is-no-longer-on-disk",
