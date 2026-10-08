@@ -78,7 +78,7 @@ function relativePath(text: string, pluginRoot: string | undefined): string | un
  *  `readJson`). A part that fails to read for another reason gives
  *  `unreadable`. A part with a real path out of the
  *  repository stops the walk, so the reader never looks below it. */
-function realSource(
+export function realSource(
   root: string,
   realRoot: string,
   bound: string,
