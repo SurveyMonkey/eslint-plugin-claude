@@ -517,3 +517,24 @@ describe.skipIf(process.platform === 'win32')('a project directory that is a lin
     expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
   })
 })
+
+// A project directory that is a link to the repository itself. The real path of the link is
+// `top`, so the walk stops there. An agent above the repository stays out of sight.
+describe.skipIf(process.platform === 'win32')(
+  'a project directory that links to the repository',
+  () => {
+    const file = (() => {
+      put('lnkalias/repo/.git/HEAD', '')
+      put('lnkalias/repo/.claude/agents/inrepo.md', agentFile('inrepo-agent'))
+      put('lnkalias/.claude/agents/beyond.md', agentFile('beyond-agent'))
+      symlinkSync('repo', path.join(scratch, 'lnkalias/alias'))
+      return path.join(scratch, 'lnkalias', 'alias', '.claude', 'skills', 's', 'SKILL.md')
+    })()
+    it('sees the agents of the repository', () => {
+      expect(lintMarkdown('skill-agent-exists', fork('inrepo-agent'), file)).toEqual([])
+    })
+    it('does not see the agents above the repository', () => {
+      expect(lintMarkdown('skill-agent-exists', fork('beyond-agent'), file)).toHaveLength(1)
+    })
+  },
+)

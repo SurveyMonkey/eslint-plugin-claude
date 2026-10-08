@@ -170,6 +170,9 @@ describe('a name of more than 256 characters', () => {
     const [report, ...rest] = lintName('a'.repeat(257), local)
     expect(rest).toEqual([])
     expect(report?.messageId).toBe('nameTooLong')
+    expect(report?.message).toBe(
+      '`name` has 257 characters. Claude Code skips an agent file with a `name` of more than 256.',
+    )
     expect([report?.line, report?.column, report?.endColumn]).toEqual([2, 7, 264])
   })
   it('counts a character outside the BMP once', () => {
@@ -181,10 +184,20 @@ describe('a name of more than 256 characters', () => {
     const [report, ...rest] = lintName('abcdefg', local, [{ nameMax: 6 }])
     expect(rest).toEqual([])
     expect(report?.messageId).toBe('nameOverConfiguredLimit')
+    expect(report?.message).toBe('`name` has 7 characters. The configured limit is 6.')
   })
   it('refuses an option above 256', () => {
     expect(() => lintName('a', local, [{ nameMax: 256 }])).not.toThrow()
     expect(() => lintName('a', local, [{ nameMax: 257 }])).toThrow('Value 257 should be <= 256.')
+  })
+  it('refuses an option of 0, of 6.5, or with an unknown key', () => {
+    expect(() => lintName('a', local, [{ nameMax: 0 }])).toThrow()
+    expect(() => lintName('a', local, [{ nameMax: 6.5 }])).toThrow()
+    expect(() => lintName('a', local, [{ other: 1 }])).toThrow()
+  })
+  it('reports a bad name and a long name as two faults', () => {
+    const reports = lintName(`-${'a'.repeat(256)}`, local)
+    expect(reports.map((report) => report.messageId).toSorted()).toEqual(['badName', 'nameTooLong'])
   })
   it('is silent for a plugin agent', () => {
     expect(lintName('a'.repeat(300), pluginAgent())).toEqual([])
