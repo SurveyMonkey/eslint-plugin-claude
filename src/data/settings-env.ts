@@ -7,9 +7,9 @@
 // checked on Claude Code 2.1.295 on 2026-10-08. Review these lists on or before 2027-04-08,
 // the `stale_after` date of docs/rules/settings-env-credential.md.
 
-/** The variables that hold an authentication credential. The server-managed settings page
- *  lists them as "Authentication credentials". `CLAUDE_CODE_CLIENT_KEY` is not here. It holds
- *  the path to a key file, not a credential. */
+/** The variables that hold an authentication credential. Rows of the env vars reference:
+ *  an API key, a value for the `Authorization` header, and an OAuth access token.
+ *  `CLAUDE_CODE_CLIENT_KEY` is not here. It holds the path to a key file, not a credential. */
 export const CREDENTIAL_ENV_VARS: readonly string[] = [
   'ANTHROPIC_API_KEY',
   'ANTHROPIC_AUTH_TOKEN',

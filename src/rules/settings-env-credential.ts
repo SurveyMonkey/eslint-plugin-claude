@@ -1,4 +1,4 @@
-// A credential in the `env` block of a committed settings file
+// A credential in the `env` block of a settings file
 // (docs/rules/settings-env-credential.md). The variables and the header names are in
 // `src/data/settings-env.ts`. A message never holds the value.
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -15,13 +15,17 @@ import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 const name = 'settings-env-credential' as const
 
 /** The credential header that a `Name: Value` line of `value` names, if any. The first line
- *  that names one counts. A header name is the text before the first colon. HTTP header names
+ *  that names one and has text after the colon counts. A header name is the text before the first colon. HTTP header names
  *  have no letter case, so the match has none. */
 function credentialHeader(value: string): string | undefined {
   for (const line of value.split(/\r?\n/)) {
     const colon = line.indexOf(':')
     // A line without a colon has no name.
     if (colon < 0) {
+      continue
+    }
+    // A line with no text after the colon holds no credential.
+    if (line.slice(colon + 1).trim() === '') {
       continue
     }
     const lineName = line.slice(0, colon).trim().toLowerCase()
@@ -43,9 +47,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'variable' | 'head
     schema: [],
     messages: {
       variable:
-        'The "env" block sets "{{name}}", a credential, in a committed file. Use "apiKeyHelper" to get a credential at run time.',
+        'The "env" block sets "{{name}}", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
       header:
-        'The "env" block sets "ANTHROPIC_CUSTOM_HEADERS" with the header "{{header}}", a credential, in a committed file. Use "apiKeyHelper" to get a credential at run time.',
+        'The "env" block sets "ANTHROPIC_CUSTOM_HEADERS" with the header "{{header}}", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
     },
   },
   create(context) {

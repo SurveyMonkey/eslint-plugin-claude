@@ -12,7 +12,7 @@ generated:
 
 # `settings-env-credential`
 
-Do not set a credential in the `env` block of a committed settings file.
+Do not set a credential in the `env` block of a settings file.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -31,9 +31,8 @@ The rule reports an `env` block that sets one of these:
 | `ANTHROPIC_API_KEY` | An API key, sent as the `X-Api-Key` header[^vars] |
 | `ANTHROPIC_AUTH_TOKEN` | A value for the `Authorization` header[^vars] |
 | `CLAUDE_CODE_OAUTH_TOKEN` | An OAuth access token for claude.ai[^vars] |
-| `ANTHROPIC_CUSTOM_HEADERS` | `Name: Value` lines. The rule reports a line named `Authorization` or `X-Api-Key`[^vars] |
+| `ANTHROPIC_CUSTOM_HEADERS` | `Name: Value` lines. The rule reports a line named `Authorization` or `X-Api-Key`[^vars][^managed] |
 
-The server-managed settings page lists the first three as authentication credentials.[^managed]
 A header line is a credential when its name is `Authorization` or `X-Api-Key`. The name is the
 text before the first colon. Header names have no letter case in HTTP, so `authorization` counts
 too. One variable gets one report, for the first credential line. A header such as `Accept-Language`
@@ -45,7 +44,7 @@ names the variable or the header, and never holds the value.
 ### What the rule does not check
 
 - A variable with the value `""` or a blank value. It cancels a shell value and holds no
-  credential.[^env]
+  credential.[^env] A header line with no text after the colon is the same.
 - A value that is not a string. `settings-env-value-format` reports it.
 - `CLAUDE_CODE_CLIENT_KEY`. Its value is the path to a key file, not a credential.[^vars]
 - A hidden file in `managed-settings.d/`. Claude Code ignores it.

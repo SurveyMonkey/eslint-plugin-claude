@@ -1,8 +1,8 @@
 // The expected values come from the env vars reference
 // (https://code.claude.com/docs/en/env-vars#variables): `ANTHROPIC_API_KEY` is sent as the
 // `X-Api-Key` header, `ANTHROPIC_AUTH_TOKEN` as the `Authorization` header, and
-// `ANTHROPIC_CUSTOM_HEADERS` holds `Name: Value` lines. The server-managed settings page lists
-// the credentials: `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `CLAUDE_CODE_OAUTH_TOKEN`.
+// `ANTHROPIC_CUSTOM_HEADERS` holds `Name: Value` lines. `CLAUDE_CODE_OAUTH_TOKEN` is an OAuth
+// access token.
 
 import json from '@eslint/json'
 import { Linter } from 'eslint'
@@ -64,6 +64,18 @@ jsonTester.run('settings-env-credential (valid)', rule, {
     },
     // A line without a colon has no name.
     { code: env({ ANTHROPIC_CUSTOM_HEADERS: 'Authorization' }), filename: project },
+    // A name with no text after the colon holds no credential, as a blank variable value.
+    ...['Authorization:', 'X-Api-Key:  ', 'Accept: x\nauthorization:\t\nX-Api-Key:'].map(
+      (value) => ({
+        code: env({ ANTHROPIC_CUSTOM_HEADERS: value }),
+        filename: project,
+      }),
+    ),
+    // A name without a colon must not match on a cut-off name.
+    ...['Authorizationx', 'X-Api-Keys', 'Authorizatio'].map((value) => ({
+      code: env({ ANTHROPIC_CUSTOM_HEADERS: value }),
+      filename: project,
+    })),
     { code: env({ ANTHROPIC_CUSTOM_HEADERS: '' }), filename: project },
     { code: env({ ANTHROPIC_CUSTOM_HEADERS: ['Authorization: x'] }), filename: project },
     // A variable outside `env`, and inside a nested value, is no env variable.
@@ -159,7 +171,7 @@ jsonTester.run('settings-env-credential (invalid)', rule, {
       errors: [
         {
           message:
-            'The "env" block sets "ANTHROPIC_AUTH_TOKEN", a credential, in a committed file. Use "apiKeyHelper" to get a credential at run time.',
+            'The "env" block sets "ANTHROPIC_AUTH_TOKEN", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
         },
       ],
     },
@@ -169,9 +181,15 @@ jsonTester.run('settings-env-credential (invalid)', rule, {
       errors: [
         {
           message:
-            'The "env" block sets "ANTHROPIC_CUSTOM_HEADERS" with the header "Authorization", a credential, in a committed file. Use "apiKeyHelper" to get a credential at run time.',
+            'The "env" block sets "ANTHROPIC_CUSTOM_HEADERS" with the header "Authorization", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
         },
       ],
+    },
+    // A blank header line is skipped. A later line with a value reports.
+    {
+      code: env({ ANTHROPIC_CUSTOM_HEADERS: 'Authorization:\nX-Api-Key: k' }),
+      filename: project,
+      errors: [{ messageId: 'header' as const, data: { header: 'X-Api-Key' } }],
     },
     // One report for each variable.
     {
