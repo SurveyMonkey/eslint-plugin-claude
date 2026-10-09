@@ -15,8 +15,8 @@ import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 const name = 'settings-env-credential' as const
 
 /** The credential header that a `Name: Value` line of `value` names, if any. The first line
- *  that names one and has text after the colon counts. A header name is the text before the first colon. HTTP header names
- *  have no letter case, so the match has none. */
+ *  that names one and has text after the colon counts. A header name is the text before the
+ *  first colon. HTTP header names have no letter case, so the match has none. */
 function credentialHeader(value: string): string | undefined {
   for (const line of value.split(/\r?\n/)) {
     const colon = line.indexOf(':')
