@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 23, 56, 86]
+related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -152,7 +152,13 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
       The scope root is `.claude/` for a local file and the plugin root for a plugin file. For
       `marketplace.json`, it is the marketplace root. A rule then reads no file out of that
       directory. `repositoryRoot` in `src/skill-tree.ts` does this. With no `.git` entry, it
-      returns the real path of the directory where the search started.
+      returns the real path of the directory where the search started. So a `.claude/` link moves
+      the bound to its target. The bound is then the real path of `.claude/`, and a rule reads
+      files in that real path. With a `.git` entry above the link, a link cannot move the bound.
+      A link whose target holds its own `.git` is a repository of its own.
+    - A path that does not exist is out of the repository when the real path of its nearest part
+      that exists is out. A rule cannot see it. A dangling link is a part that exists. A rule
+      cannot see a path that has a dangling link in it.
     - A rule does not follow a link whose real path is out of the repository.
     - A rule does not model what Claude Code loads from out of the repository, such as user
       settings or agents in `~/.claude/`.

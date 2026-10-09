@@ -299,10 +299,14 @@ describe('readMarketplaceFile (the bound)', () => {
     link(dir, 'alias', 'nothing')
     link(dir, 'm.json', 'nothing.json')
     link(dir, 'market/.claude-plugin', 'nothing')
-    expect(readMarketplaceFile(settingsOf(dir), directory('alias'))).toEqual({ kind: 'missing' })
+    // A dangling link is unreadable as the file and as a part of the path.
+    expect(readMarketplaceFile(settingsOf(dir), directory('alias'))).toEqual({
+      kind: 'unreadable',
+    })
     expect(readMarketplaceFile(settingsOf(dir), file('m.json'))).toEqual({ kind: 'unreadable' })
-    // `readJson` gives null for a file below a dangling directory link. Both results are silent.
-    expect(readMarketplaceFile(settingsOf(dir), directory('market'))).toEqual({ kind: 'missing' })
+    expect(readMarketplaceFile(settingsOf(dir), directory('market'))).toEqual({
+      kind: 'unreadable',
+    })
   })
 
   it.skipIf(noLinks)('gives unreadable for a link loop', () => {

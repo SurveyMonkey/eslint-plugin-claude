@@ -75,8 +75,8 @@ function relativePath(text: string, pluginRoot: string | undefined): string | un
 /** The real path of `dir` below `root`, or the result that stops the read. The
  *  walk goes down one part at a time. A part that does not resolve is either
  *  not there, or a dangling link, and a dangling link can lead anywhere (as in
- *  `readJson`). A part that fails to read for another reason gives
- *  `unreadable`. A part with a real path out of the
+ *  `readJson`, for a part of the path too). A part that fails to read for
+ *  another reason gives `unreadable`. A part with a real path out of the
  *  repository stops the walk, so the reader never looks below it. `realRoot`
  *  is the real path of `root`. `dir` is `root` or a path below it. */
 export function realSource(

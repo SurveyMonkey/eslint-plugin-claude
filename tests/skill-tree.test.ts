@@ -17,6 +17,7 @@ import { classifySkillFile } from '../src/skill-files.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
+  readJson,
   readManifest,
   realDirectory,
   repositoryRoot,
@@ -283,6 +284,111 @@ describe('readManifest on a link', () => {
   })
 })
 
+describe('readJson', () => {
+  it('parses a file in the bound', () => {
+    put('rj/in/a.json', '{"a":1}')
+    expect(readJson(path.join(scratch, 'rj/in/a.json'), path.join(scratch, 'rj/in'))).toEqual({
+      data: { a: 1 },
+    })
+  })
+
+  it('gives null for a missing file in the bound', () => {
+    put('rj/in/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    expect(readJson(path.join(bound, 'gone.json'), bound)).toBeNull()
+    // A missing directory in the bound is a missing file too.
+    expect(readJson(path.join(bound, 'gone/deep/gone.json'), bound)).toBeNull()
+    // A file below a file is not there.
+    expect(readJson(path.join(bound, 'x/gone.json'), bound)).toBeNull()
+  })
+
+  it('gives UNREADABLE for a missing file out of the bound', () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    expect(readJson(path.join(scratch, 'rj/out/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a missing file below a missing directory out of the bound', () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    expect(readJson(path.join(scratch, 'rj/out/gone/deep/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a real file out of the bound', () => {
+    put('rj/in/x', '')
+    put('rj/out/real.json', '{}')
+    expect(readJson(path.join(scratch, 'rj/out/real.json'), path.join(scratch, 'rj/in'))).toBe(
+      UNREADABLE,
+    )
+  })
+
+  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a dangling link', () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    symlinkSync('gone.json', path.join(bound, 'dangling.json'))
+    symlinkSync('../out/gone.json', path.join(bound, 'far.json'))
+    expect(readJson(path.join(bound, 'dangling.json'), bound)).toBe(UNREADABLE)
+    expect(readJson(path.join(bound, 'far.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a missing file below a link out of the bound', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    symlinkSync('../out', path.join(bound, 'out-link'))
+    expect(readJson(path.join(bound, 'out-link/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it('gives null for a missing file when the bound does not exist', () => {
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/nobound')
+    expect(readJson(path.join(bound, 'gone.json'), bound)).toBeNull()
+    expect(readJson(path.join(bound, 'a/b/gone.json'), bound)).toBeNull()
+    expect(readJson(path.join(scratch, 'rj/out/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives null for a missing file below a link to a directory in the bound',
+    () => {
+      put('rj/in/sub/x', '')
+      const bound = path.join(scratch, 'rj/in')
+      symlinkSync('sub', path.join(bound, 'in-link'))
+      expect(readJson(path.join(bound, 'in-link/gone.json'), bound)).toBeNull()
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a missing file below a dangling directory link, whatever its target',
+    () => {
+      put('rj/in/x', '')
+      put('rj/out/x', '')
+      const bound = path.join(scratch, 'rj/in')
+      symlinkSync('../out/nothing', path.join(bound, 'dl-out'))
+      symlinkSync('nothing', path.join(bound, 'dl-in'))
+      expect(readJson(path.join(bound, 'dl-out/gone.json'), bound)).toBe(UNREADABLE)
+      expect(readJson(path.join(bound, 'dl-out/deep/gone.json'), bound)).toBe(UNREADABLE)
+      expect(readJson(path.join(bound, 'dl-in/gone.json'), bound)).toBe(UNREADABLE)
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'resolves a .. part before a link, as realpath does',
+    () => {
+      put('rj/in/x', '')
+      put('rj/out/x', '')
+      const bound = path.join(scratch, 'rj/in')
+      symlinkSync('../out', path.join(bound, 'dotted'))
+      expect(readJson(path.join(bound, 'dotted/../gone.json'), bound)).toBeNull()
+      expect(readJson(path.join(bound, 'dotted/gone.json'), bound)).toBe(UNREADABLE)
+    },
+  )
+})
+
 describe('repositoryRoot', () => {
   it('gives the first directory at or above that holds .git, or the directory itself', () => {
     put('repo/.git/HEAD', '')
@@ -368,6 +474,22 @@ describe('repositoryRoot for a linked .claude', () => {
       mkdirSync(path.join(free, 'target'))
       symlinkSync('target', path.join(free, 'link'))
       expect(repositoryRoot(path.join(free, 'link'))).toBe(path.join(free, 'target'))
+    } finally {
+      rmSync(free, { recursive: true, force: true })
+    }
+  })
+
+  it('gives the target of a .claude link when no directory above holds .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const free = realpathSync(mkdtempSync(path.join(tmpdir(), 'skill-tree-nogit-')))
+    try {
+      mkdirSync(path.join(free, 'target'))
+      writeFileSync(path.join(free, 'target/settings.json'), '{"model":"opus"}')
+      symlinkSync('target', path.join(free, '.claude'))
+      const dir = path.join(free, '.claude')
+      expect(repositoryRoot(dir)).toBe(path.join(free, 'target'))
+      expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
     } finally {
       rmSync(free, { recursive: true, force: true })
     }

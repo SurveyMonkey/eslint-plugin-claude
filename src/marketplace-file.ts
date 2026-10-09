@@ -8,7 +8,8 @@
 // With no `.git`, the reader resolves from the directory that holds
 // `.claude/`. That is a choice of this rule, and the docs do not say it. The
 // reader reads the file through `readJson`. The bound is the repository
-// root. With no `.git`, it is `.claude/` (ADR 001, Decision 14).
+// root. With no `.git`, it is the real path of `.claude/` (ADR 001, Decision
+// 14).
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tree.ts'
@@ -21,10 +22,12 @@ import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tre
  *    is absolute, empty or not a string. A rule also gets it when no settings
  *    file declares the marketplace, or the file of higher precedence is not
  *    readable (`declaredSource`).
- *  - `missing`: no `marketplace.json` is at the path.
- *  - `unreadable`: the rule cannot see the file. The last link of the path is
+ *  - `missing`: no `marketplace.json` is at the path, and the path is in the
+ *    bound.
+ *  - `unreadable`: the rule cannot see the file. A link of the path is
  *    dangling, the real path is out of the bound, or the read fails. The file
- *    does not parse to an object, or is no file.
+ *    is not there and its path is out of the bound. The file does not parse
+ *    to an object, or is no file.
  *  - `marketplace`: the file. `name` is its `name`, and is undefined when that
  *    is not a string. `entries` holds the `name` of each entry of `plugins`
  *    that has a string `name`. It is undefined when `plugins` is not an
@@ -50,10 +53,10 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 const projectOf = (file: string) => path.dirname(path.dirname(path.resolve(file)))
 
 /** The bound of each read for the settings file `file`: its repository root.
- *  With no `.git`, it is the `.claude/` directory (ADR 001, Decision 14). The
- *  search starts at the directory that holds `.claude/`. So with a `.git`, a
- *  `.claude` link cannot move the bound. With no `.git`, the bound is the real
- *  path of `.claude/`. */
+ *  With no `.git`, it is the real path of the `.claude/` directory (ADR 001,
+ *  Decision 14). The search starts at the directory that holds `.claude/`. So
+ *  with a `.git`, a `.claude` link cannot move the bound. With no `.git`, the
+ *  bound is the real path of `.claude/`. */
 function boundOf(file: string): string {
   const root = repositoryRoot(projectOf(file))
   return existsSync(path.join(root, '.git'))
@@ -139,8 +142,9 @@ export function sourceOf(entry: unknown): unknown {
  *  key. Otherwise `settings.json` decides. The result is undefined when no
  *  file has the key. It is also undefined when `settings.local.json` is a
  *  dangling link, has a real path out of the bound, fails to read, or does
- *  not parse to an object, because it can hold the entry in use. A missing
- *  `settings.local.json` has no entry. */
+ *  not parse to an object, because it can hold the entry in use. It is also
+ *  undefined when it is not there and its path is out of the bound. A missing
+ *  `settings.local.json` in the bound has no entry. */
 export function declaredSource(settingsFile: string, text: string, market: string): unknown {
   const own = marketplacesOf(text)
   const ownHas = own !== undefined && Object.hasOwn(own, market)

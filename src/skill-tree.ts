@@ -23,10 +23,11 @@ import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
-/** The result of a read that failed for a reason other than a missing file.
- *  It is also the result for a file with a real path out of the repository,
- *  and for a dangling or out-of-bound manifest link or manifest directory
- *  link. */
+/** The result of a read that failed for a reason other than a file that is
+ *  not there in the bound. It is also the result for a file with a real path
+ *  out of the repository, for a dangling or out-of-bound manifest link or
+ *  manifest directory link, and for a missing path out of the repository (see
+ *  `readJson`). */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 
@@ -81,7 +82,9 @@ export function realDirectory(dir: string): string {
  *  repository would move the bound out of it. Now the real path of the link
  *  is out of the bound, and a read of it gives `UNREADABLE`. A link whose
  *  target holds its own `.git` is a repository of its own (ADR 001, Decision
- *  14). Without a `.git`, the result is the real path of `dir`. */
+ *  14). Without a `.git`, the result is the real path of `dir`. So when `dir`
+ *  is a `.claude` link, the bound is its target, and a rule reads files
+ *  there. */
 export function repositoryRoot(dir: string): string {
   for (let at = path.resolve(dir); ; at = path.dirname(at)) {
     if (existsSync(path.join(at, '.git'))) {
@@ -267,16 +270,45 @@ export function danglingOf(entry: string): null | Unreadable {
   return UNREADABLE
 }
 
-/** The parsed JSON of `file`, as `{ data }`. `data` is `undefined` when the
- *  text does not parse. The result is null when the file is not there. The
- *  result is `UNREADABLE` for a dangling link, for a real path out of
- *  `bound`, and for a read that fails for another reason. */
+/** The result for a path where `realOf` gives null. The helper walks up to
+ *  the nearest part of the path that exists, and adds the parts that do not.
+ *  The result is `UNREADABLE` when it meets a part that is an entry, such as a
+ *  dangling link, because a dangling link can lead anywhere. It is also
+ *  `UNREADABLE` when a part fails to read for another reason. The same holds
+ *  when the walk reaches a root that does not exist (Windows only).
+ *  Otherwise the result is null when the real path of that part, plus the
+ *  rest, is in `bound`. It is `UNREADABLE` when that path is out of `bound`,
+ *  because the rule cannot see out of `bound`. */
+function missingOf(file: string, bound: string): null | Unreadable {
+  const rest: string[] = []
+  let at = path.resolve(file)
+  let real = realOf(at)
+  while (real === null) {
+    if (danglingOf(at) !== null || path.dirname(at) === at) {
+      return UNREADABLE
+    }
+    rest.unshift(path.basename(at))
+    at = path.dirname(at)
+    real = realOf(at)
+  }
+  return typeof real === 'string' && isInside(path.join(real, ...rest), bound) ? null : UNREADABLE
+}
+
+/** The parsed JSON of `file`, as `{ data }`. The result is:
+ *  - `{ data }` with the parsed value, when `file` parses.
+ *  - `{ data: undefined }`, when the text does not parse.
+ *  - null, when `file` is not there and its path is in `bound`.
+ *  - `UNREADABLE`, when `file` is a dangling link.
+ *  - `UNREADABLE`, when a part of the path is a dangling link.
+ *  - `UNREADABLE`, when `file` is not there and its path is out of `bound`.
+ *  - `UNREADABLE`, when its real path is out of `bound`.
+ *  - `UNREADABLE`, when a read fails for another reason. */
 export function readJson(file: string, bound: string): { data: unknown } | null | Unreadable {
   const real = realOf(file)
   if (typeof real !== 'string') {
     // `realOf` gives null for a dangling link and for a missing file.
-    // `danglingOf` tells them apart, because a dangling link is an entry.
-    return real === null ? danglingOf(file) : real
+    // `missingOf` tells them apart, because a dangling link is an entry.
+    return real === null ? missingOf(file, bound) : real
   }
   if (!isInside(real, bound)) {
     return UNREADABLE
