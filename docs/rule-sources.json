@@ -1192,6 +1192,58 @@
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
     }
   ],
+  "settings-project-value-ignored": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Exceptions to managed settings precedence",
+      "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "remoteControlAtStartup",
+      "hash": "9d905b458b2b6227949113fafac3487cf7444548235f20c37959486f146fd187"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "isolatePeerMachines",
+      "hash": "eba8a11f4e02c9d8874a2efa01b18ff7160a52305ddea9b0f030e5612b75b2e9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableClaudeAiConnectors",
+      "hash": "28e1de63bf8382604df73704202b00ff34e0a6ccb3f518894111c669fbe793a3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "crossSessionInbound",
+      "hash": "0a3434d30ac90d992dc6d2b85b16eb3b7d508f55f7ca7d39a0e29fd929c5af24"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "forceLoginMethod",
+      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "remote.defaultEnvironmentId",
+      "hash": "d3afefc5bc24ce488953e96bb70234853bf8baa69487724c817e45f39bec2308"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "spinnerTipsOverride",
+      "hash": "a5d447375ca6aa720317740fb88c827195bf389f6bea3cc96bc130aa1a1bd44f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "bashEditDiffEnabled",
+      "hash": "fb4bdc7166ad5f3d711bb48591d703e6359aeb1af734c236aacb3850bcef67fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "forceLoginOrgUUID",
+      "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9"
+    }
+  ],
   "settings-removed-key": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

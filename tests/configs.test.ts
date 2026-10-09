@@ -319,6 +319,14 @@ const TREE: Record<string, string> = {
   'packages/ei/managed-settings.d/40-c.txt': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
   'packages/ei/managed-settings.d/sub/50-d.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
   'packages/ei/.vscode/settings.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  // `settings-project-value-ignored`: a value that Claude Code ignores in a project file. It
+  // reads the two project files only. A managed file can set the value. The same content in
+  // another settings file is silent.
+  'packages/pv/.claude/settings.json': '{"remoteControlAtStartup": true}',
+  'packages/pv/.claude/settings.local.json': '{"crossSessionInbound": "accept"}',
+  'packages/pv/managed-settings.json': '{"remoteControlAtStartup": true, "model": "m"}',
+  'packages/pv/managed-settings.d/10-a.json': '{"forceLoginMethod": "gateway"}',
+  'packages/pv/.vscode/settings.json': '{"remoteControlAtStartup": true}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -389,6 +397,7 @@ const SCOPE_RULES = [
   { name: 'settings-env-credential', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-value-format', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-ignored-var', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-project-value-ignored', files: PROJECT_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -510,6 +519,9 @@ const EXPECTED = [
     'packages/ei/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-env-ignored-var@2`),
   'packages/ei/managed-settings.d/.30-hidden.json: claude/settings-managed-file@2',
+  // `settings-project-value-ignored` reads the project files only.
+  'packages/pv/.claude/settings.json: claude/settings-project-value-ignored@2',
+  'packages/pv/.claude/settings.local.json: claude/settings-project-value-ignored@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

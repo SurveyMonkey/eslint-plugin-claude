@@ -56,6 +56,7 @@ import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
@@ -159,6 +160,7 @@ const modules = [
   settingsEnvCredential,
   settingsEnvValueFormat,
   settingsEnvIgnoredVar,
+  settingsProjectValueIgnored,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -259,6 +261,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-env-credential': 'error',
   'settings-env-value-format': 'error',
   'settings-env-ignored-var': 'error',
+  'settings-project-value-ignored': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

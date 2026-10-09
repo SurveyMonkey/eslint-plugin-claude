@@ -72,6 +72,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-managed-file',
     'settings-marketplace-headers-helper-https',
     'settings-marketplace-key-alias-conflict',
+    'settings-project-value-ignored',
     'settings-removed-key',
     'settings-sync-claude-ai-plugins',
     'settings-valid-json',
