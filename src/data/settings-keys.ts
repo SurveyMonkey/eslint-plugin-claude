@@ -297,7 +297,7 @@ export const MANAGED_CONTROL_KEYS: readonly string[] = [
   'managedSourcesBehavior',
 ]
 
-/** The key with a rule of its own for a repository file, and the rule. The
+/** The keys with a rule of their own, and the rule. The
  *  settings reference gives the scope of `syncClaudeAiPlugins` as "User,
  *  local, or managed", and `settings-sync-claude-ai-plugins` already reports
  *  it in `.claude/settings.json`. A project value of

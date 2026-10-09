@@ -51,14 +51,14 @@ A variable that is not in the table has no form, and any string is valid.
 | `CLAUDE_CODE_SHELL` | A path to a `bash` or `zsh` binary. Other shells are not supported[^vars] |
 | `ANTHROPIC_DEFAULT_*_MODEL_SUPPORTED_CAPABILITIES`, `ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES` | A comma-separated list of `effort`, `xhigh_effort`, `max_effort`, `thinking`, `adaptive_thinking`, `interleaved_thinking`[^capabilities] |
 
-The comparison of a value is exact. The rule also accepts a few spellings that the docs do not
+The rule compares a value as written. It also accepts a few spellings that the docs do not
 state. A list entry may have spaces around it. The size suffix and the words of the memory limit
-have any letter case. A path has `\` or `/` between its parts.
+have any letter case. A path has `\` or `/` between its parts, and may end in `.exe`.
 
 ### What the rule does not check
 
-- A variable that the docs set to `0` or `1` without a rule for other spellings:
-  `CLAUDE_CODE_FORK_SUBAGENT` and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
+- A variable that the docs set without a rule for other spellings:
+  `CLAUDE_CODE_FORK_SUBAGENT` (`1` or `0`) and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` (`1`).
 - A value for `BASH_MAX_OUTPUT_LENGTH` that is not plain digits. The docs give the maximum only.
 - Whether the variable can be set in this file. `settings-env-ignored-var` reports a variable
   that settings cannot set.

@@ -27,8 +27,8 @@ export const CREDENTIAL_HEADERS: readonly string[] = ['Authorization', 'X-Api-Ke
 // reference, the tool search table of the MCP page, the memory limit section of the tools
 // reference, and the capabilities table of the model configuration page. A variable that the
 // docs name without a rule for other spellings has no form here. These are
-// `CLAUDE_CODE_FORK_SUBAGENT` and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`, which the docs set to
-// `1` or `0`.
+// `CLAUDE_CODE_FORK_SUBAGENT` (the docs give `1` or `0`) and
+// `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` (the docs give `1`).
 
 /** The form of the value of one variable. */
 export interface EnvForm {
@@ -52,8 +52,8 @@ const oneOf = (expected: string, values: readonly string[]): EnvForm => ({
 const listOf = (values: readonly string[]) => (value: string) =>
   value.split(',').every((entry) => values.includes(entry.trim()))
 
-// The tools reference says that Claude Code ignores a kind name that it does not know, and that
-// the set of kinds can change. The form checks the shape of each name, not the name.
+// The tools reference says that Claude Code ignores a kind name that it does not know. The form
+// checks the shape of each name, not the name.
 const KIND_NAME = /^[A-Za-z][A-Za-z0-9_-]*$/
 
 const CAPABILITIES = [

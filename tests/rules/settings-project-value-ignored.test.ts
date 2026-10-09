@@ -43,6 +43,11 @@ jsonTester.run('settings-project-value-ignored (valid)', rule, {
       code: obj({ crossSessionInbound: 'refuse', forceLoginMethod: 'console' }),
       filename,
     })),
+    // A string outside the enumeration is for `settings-schema`.
+    ...PROJECT_FILES.map((filename) => ({
+      code: obj({ crossSessionInbound: 'bogus', forceLoginMethod: 'bogus' }),
+      filename,
+    })),
     // A value of another type is for `settings-schema`.
     ...PROJECT_FILES.map((filename) => ({
       code: obj({

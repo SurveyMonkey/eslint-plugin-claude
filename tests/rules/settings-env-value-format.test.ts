@@ -52,18 +52,18 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'at most 150000',
   },
   {
-    // "plain digits, alone for a number of bytes or with a K, M, G, or T suffix. Set 0, off,
-    // false, no, or none to turn the cap off. Claude Code ignores any other value, such as 4e9".
+    // "Write the size as a number of bytes or with a K, M, G, or T suffix. Set 0, off, false, no,
+    // or none to turn the cap off. Claude Code ignores any other value it can't read as a size,
+    // such as 4e9". Lower-case spellings are a choice of the plugin.
     name: 'CLAUDE_CODE_TOOL_MEMORY_LIMIT',
     pass: ['4G', '512M', '1024', '2T', '64K', '0', 'off', 'false', 'no', 'none', '4g', 'OFF', 'No'],
-    fail: ['4e9', '4 GB', 'G', '1.5G', 'unlimited', '4GB'],
+    fail: ['4e9', '4 GB', 'G', '1.5G', 'unlimited', '4GB', '4P', '4B', '4KM', '4GG'],
     expected:
       'a size in plain digits with an optional K, M, G or T suffix, or one of 0, off, false, no, none',
   },
   {
     // "none", "all-new", or a comma-separated list of kinds. "Unknown names: Claude Code ignores
-    // names it doesn't recognize", and the set of kinds "can change over time", so a name that
-    // is not in the table today is valid.
+    // names it doesn't recognize", so a name that is not in the table is valid.
     name: 'CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE',
     pass: [
       'none',
@@ -74,8 +74,11 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
       'helper,agent',
       'mcps',
       'mcp,newkind',
+      'MCP',
+      'my_kind-2',
+      'a',
     ],
-    fail: ['mcp,', ',mcp', 'mcp;lsp', 'mcp,,lsp', 'two words'],
+    fail: ['mcp,', ',mcp', 'mcp;lsp', 'mcp,,lsp', 'two words', '1mcp', '-x', '_x'],
     expected: 'none, all-new, or a comma-separated list of kind names such as mcp, lsp or hooks',
   },
   {
@@ -95,6 +98,8 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
       'yes',
       'On',
       'TRUE',
+      'AUTO',
+      'Auto:50',
       'no',
       'off',
     ],
