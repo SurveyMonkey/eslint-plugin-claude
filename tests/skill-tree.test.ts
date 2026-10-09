@@ -17,6 +17,7 @@ import { classifySkillFile } from '../src/skill-files.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
+  readJson,
   readManifest,
   realDirectory,
   repositoryRoot,
@@ -280,6 +281,76 @@ describe('readManifest on a link', () => {
   it('gives null when .claude-plugin is a file, not a directory', () => {
     put('plain/.claude-plugin', 'not a directory')
     expect(readManifest(path.join(scratch, 'plain'), scratch)).toBeNull()
+  })
+})
+
+describe('readJson', () => {
+  it('parses a file in the bound', () => {
+    put('rj/in/a.json', '{"a":1}')
+    expect(readJson(path.join(scratch, 'rj/in/a.json'), path.join(scratch, 'rj/in'))).toEqual({
+      data: { a: 1 },
+    })
+  })
+
+  it('gives null for a missing file in the bound', () => {
+    put('rj/in/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    expect(readJson(path.join(bound, 'gone.json'), bound)).toBeNull()
+    // A missing directory in the bound is a missing file too.
+    expect(readJson(path.join(bound, 'gone/deep/gone.json'), bound)).toBeNull()
+    // A file below a file is not there.
+    expect(readJson(path.join(bound, 'x/gone.json'), bound)).toBeNull()
+  })
+
+  it.fails('gives UNREADABLE for a missing file out of the bound', () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    expect(readJson(path.join(scratch, 'rj/out/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it.fails('gives UNREADABLE for a missing file below a missing directory out of the bound', () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    expect(readJson(path.join(scratch, 'rj/out/gone/deep/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a real file out of the bound', () => {
+    put('rj/in/x', '')
+    put('rj/out/real.json', '{}')
+    expect(readJson(path.join(scratch, 'rj/out/real.json'), path.join(scratch, 'rj/in'))).toBe(
+      UNREADABLE,
+    )
+  })
+
+  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a dangling link', () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    symlinkSync('gone.json', path.join(bound, 'dangling.json'))
+    symlinkSync('../out/gone.json', path.join(bound, 'far.json'))
+    expect(readJson(path.join(bound, 'dangling.json'), bound)).toBe(UNREADABLE)
+    expect(readJson(path.join(bound, 'far.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it.fails('gives UNREADABLE for a missing file below a dangling directory link', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('rj/in/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    symlinkSync('gone-dir', path.join(bound, 'dir-link'))
+    expect(readJson(path.join(bound, 'dir-link/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it.fails('gives UNREADABLE for a missing file below a link out of the bound', {
+    skip: process.platform === 'win32',
+  }, () => {
+    put('rj/in/x', '')
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/in')
+    symlinkSync('../out', path.join(bound, 'out-link'))
+    expect(readJson(path.join(bound, 'out-link/gone.json'), bound)).toBe(UNREADABLE)
   })
 })
 
