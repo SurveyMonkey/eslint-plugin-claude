@@ -270,6 +270,63 @@ const TREE: Record<string, string> = {
   'packages/mf3/managed-settings.d/10-ctl.json': '{"managedSourcesBehavior": "first-wins"}',
   'packages/mf2/managed-settings.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
   'packages/mf2/managed-settings.d/10-m.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
+  // The settings rules of the env layer of #14. `settings-removed-key`: a key with no effect in
+  // each file that it reads. `permissionExplainerEnabled` is also a Global config key, and gets
+  // one report, from this rule. `disableArtifact: false` in a managed file, and a key with its
+  // replacement in a drop-in. A hidden drop-in is for `settings-managed-file`. The same content
+  // where no rule reads it: another extension, a nested directory, and another settings file.
+  'packages/rk/.claude/settings.json': '{"taskOutputMaxChars": 1}',
+  'packages/rk/.claude/settings.local.json': '{"permissionExplainerEnabled": false}',
+  'packages/rk/managed-settings.json': '{"disableArtifact": false}',
+  'packages/rk/managed-settings.d/10-a.json': '{"voiceEnabled": true, "voice": {"enabled": true}}',
+  'packages/rk/managed-settings.d/.20-hidden.json': '{"taskOutputMaxChars": 1}',
+  'packages/rk/managed-settings.d/30-b.txt': '{"taskOutputMaxChars": 1}',
+  'packages/rk/managed-settings.d/sub/40-c.json': '{"taskOutputMaxChars": 1}',
+  'packages/rk/.vscode/settings.json': '{"taskOutputMaxChars": 1}',
+  // `settings-env-credential`: a credential variable, and a credential header line, in each
+  // file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where
+  // no rule reads it: another extension, a nested directory, and another settings file.
+  'packages/ec/.claude/settings.json': '{"env": {"ANTHROPIC_API_KEY": "sk-x"}}',
+  'packages/ec/.claude/settings.local.json':
+    '{"env": {"ANTHROPIC_CUSTOM_HEADERS": "X-Api-Key: x"}}',
+  'packages/ec/managed-settings.json': '{"env": {"CLAUDE_CODE_OAUTH_TOKEN": "x"}}',
+  'packages/ec/managed-settings.d/10-a.json': '{"env": {"ANTHROPIC_AUTH_TOKEN": "x"}}',
+  'packages/ec/managed-settings.d/.20-hidden.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  'packages/ec/managed-settings.d/30-b.txt': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  'packages/ec/managed-settings.d/sub/40-c.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  'packages/ec/.vscode/settings.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  // `settings-env-value-format`: an `env` that is not an object, a value that is not a string,
+  // and a known variable with a value that breaks its form, in each file that it reads. A hidden
+  // drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ef/.claude/settings.json': '{"env": []}',
+  'packages/ef/.claude/settings.local.json': '{"env": {"FOO": 1}}',
+  'packages/ef/managed-settings.json': '{"env": {"ENABLE_TOOL_SEARCH": "maybe"}}',
+  'packages/ef/managed-settings.d/10-a.json': '{"env": {"BASH_MAX_OUTPUT_LENGTH": "200000"}}',
+  'packages/ef/managed-settings.d/.20-hidden.json': '{"env": []}',
+  'packages/ef/managed-settings.d/30-b.txt': '{"env": []}',
+  'packages/ef/managed-settings.d/sub/40-c.json': '{"env": []}',
+  'packages/ef/.vscode/settings.json': '{"env": []}',
+  // `settings-env-ignored-var`: a variable that is ignored in every file, in a project file, and
+  // a removed variable. A project-only variable is silent in a managed file. A hidden drop-in is
+  // for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ei/.claude/settings.json': '{"env": {"CLAUDE_CONFIG_DIR": "/x"}}',
+  'packages/ei/.claude/settings.local.json': '{"env": {"OTEL_LOGS_EXPORTER": "otlp"}}',
+  'packages/ei/managed-settings.json': '{"env": {"CLAUDE_CODE_REMOTE": "1", "HOME": "/x"}}',
+  'packages/ei/managed-settings.d/10-a.json': '{"env": {"TASK_MAX_OUTPUT_LENGTH": "1"}}',
+  'packages/ei/managed-settings.d/20-b.json':
+    '{"env": {"HOME": "/x", "OTEL_LOGS_EXPORTER": "otlp"}}',
+  'packages/ei/managed-settings.d/.30-hidden.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  'packages/ei/managed-settings.d/40-c.txt': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  'packages/ei/managed-settings.d/sub/50-d.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  'packages/ei/.vscode/settings.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  // `settings-project-value-ignored`: a value that Claude Code ignores in a project file. It
+  // reads the two project files only. A managed file can set the value. The same content in
+  // another settings file is silent.
+  'packages/pv/.claude/settings.json': '{"remoteControlAtStartup": true}',
+  'packages/pv/.claude/settings.local.json': '{"crossSessionInbound": "accept"}',
+  'packages/pv/managed-settings.json': '{"remoteControlAtStartup": true, "model": "m"}',
+  'packages/pv/managed-settings.d/10-a.json': '{"forceLoginMethod": "gateway"}',
+  'packages/pv/.vscode/settings.json': '{"remoteControlAtStartup": true}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -336,6 +393,11 @@ const SCOPE_RULES = [
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-key-scope', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-managed-file', files: MANAGED_FILES },
+  { name: 'settings-removed-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-credential', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-value-format', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-ignored-var', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-project-value-ignored', files: PROJECT_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -423,6 +485,43 @@ const EXPECTED = [
   'packages/mf/.claude/settings.local.json: claude/settings-valid-json@2',
   'packages/mf2/managed-settings.json: claude/settings-managed-file@2',
   'packages/mf3/managed-settings.json: claude/settings-managed-file@2',
+  // `settings-removed-key` reads the project and managed files, and no other file.
+  ...[
+    'packages/rk/.claude/settings.json',
+    'packages/rk/.claude/settings.local.json',
+    'packages/rk/managed-settings.json',
+    'packages/rk/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-removed-key@2`),
+  'packages/rk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-credential` reads the project and managed files, and no other file.
+  ...[
+    'packages/ec/.claude/settings.json',
+    'packages/ec/.claude/settings.local.json',
+    'packages/ec/managed-settings.json',
+    'packages/ec/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-credential@2`),
+  'packages/ec/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-value-format` reads the project and managed files, and no other file.
+  ...[
+    'packages/ef/.claude/settings.json',
+    'packages/ef/.claude/settings.local.json',
+    'packages/ef/managed-settings.json',
+    'packages/ef/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-value-format@2`),
+  'packages/ef/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-ignored-var` reads the project and managed files, and no other file. A managed
+  // file reports a variable that is ignored in every file, and not one that is ignored in project
+  // files only.
+  ...[
+    'packages/ei/.claude/settings.json',
+    'packages/ei/.claude/settings.local.json',
+    'packages/ei/managed-settings.json',
+    'packages/ei/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-ignored-var@2`),
+  'packages/ei/managed-settings.d/.30-hidden.json: claude/settings-managed-file@2',
+  // `settings-project-value-ignored` reads the project files only.
+  'packages/pv/.claude/settings.json: claude/settings-project-value-ignored@2',
+  'packages/pv/.claude/settings.local.json: claude/settings-project-value-ignored@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

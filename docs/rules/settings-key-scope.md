@@ -44,7 +44,7 @@ below it gets one report, on the key. The rule does not report the keys below it
 A top-level key with a dot in its name is one key. It is not a nested key.
 
 The data is in `src/data/settings-keys.ts`, with the Claude Code version and the date of the last
-review. The data module also holds the three exceptions below.
+review. The data module also holds the exceptions below.
 
 ### Exceptions
 
@@ -59,6 +59,10 @@ review. The data module also holds the three exceptions below.
   does not count. A `false` in those files still turns the feature off.[^bash] So the rule
   reports a `true`, and makes no report on a `false`. It makes no report on a value that is not a
   Boolean.
+
+The Global config keys `permissionExplainerEnabled` and `teammateDefaultModel` get no report from
+this rule. Claude Code removed them, and `settings-removed-key` reports them in each file, so each
+key gets one report.
 
 The keys `syncClaudeAiSkills` and `useAutoModeDuringPlan` have the Scope `User, local, or
 managed`. Claude Code honors a `false` in `.claude/settings.local.json`. It ignores a `false` in
