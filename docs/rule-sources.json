@@ -954,6 +954,18 @@
       "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
     }
   ],
+  "settings-env-ignored-var": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Variables Claude Code ignores in env",
+      "hash": "1c4573d89b1883270fdb29fda6339cf84a38a1b964d207ec23099763ee1c3152"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "38db0864730a51f7940c839a56a94d37f06f6fbee0e46d5e61d8fc56fccd7053"
+    }
+  ],
   "settings-env-value-format": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

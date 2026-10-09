@@ -306,6 +306,19 @@ const TREE: Record<string, string> = {
   'packages/ef/managed-settings.d/30-b.txt': '{"env": []}',
   'packages/ef/managed-settings.d/sub/40-c.json': '{"env": []}',
   'packages/ef/.vscode/settings.json': '{"env": []}',
+  // `settings-env-ignored-var`: a variable that is ignored in every file, in a project file, and
+  // a removed variable. A project-only variable is silent in a managed file. A hidden drop-in is
+  // for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ei/.claude/settings.json': '{"env": {"CLAUDE_CONFIG_DIR": "/x"}}',
+  'packages/ei/.claude/settings.local.json': '{"env": {"OTEL_LOGS_EXPORTER": "otlp"}}',
+  'packages/ei/managed-settings.json': '{"env": {"CLAUDE_CODE_REMOTE": "1", "HOME": "/x"}}',
+  'packages/ei/managed-settings.d/10-a.json': '{"env": {"TASK_MAX_OUTPUT_LENGTH": "1"}}',
+  'packages/ei/managed-settings.d/20-b.json':
+    '{"env": {"HOME": "/x", "OTEL_LOGS_EXPORTER": "otlp"}}',
+  'packages/ei/managed-settings.d/.30-hidden.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  'packages/ei/managed-settings.d/40-c.txt': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  'packages/ei/managed-settings.d/sub/50-d.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
+  'packages/ei/.vscode/settings.json': '{"env": {"CLAUDE_CODE_REMOTE": "1"}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -375,6 +388,7 @@ const SCOPE_RULES = [
   { name: 'settings-removed-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-credential', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-value-format', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-ignored-var', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -486,6 +500,16 @@ const EXPECTED = [
     'packages/ef/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-env-value-format@2`),
   'packages/ef/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-ignored-var` reads the project and managed files, and no other file. A managed
+  // file reports a variable that is ignored in every file, and not one that is ignored in project
+  // files only.
+  ...[
+    'packages/ei/.claude/settings.json',
+    'packages/ei/.claude/settings.local.json',
+    'packages/ei/managed-settings.json',
+    'packages/ei/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-ignored-var@2`),
+  'packages/ei/managed-settings.d/.30-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

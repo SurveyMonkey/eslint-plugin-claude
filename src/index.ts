@@ -47,6 +47,7 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
+import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
@@ -157,6 +158,7 @@ const modules = [
   settingsRemovedKey,
   settingsEnvCredential,
   settingsEnvValueFormat,
+  settingsEnvIgnoredVar,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -256,6 +258,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-removed-key': 'error',
   'settings-env-credential': 'error',
   'settings-env-value-format': 'error',
+  'settings-env-ignored-var': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

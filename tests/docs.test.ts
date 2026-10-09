@@ -63,6 +63,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-schema',
     'settings-env-credential',
+    'settings-env-ignored-var',
     'settings-env-value-format',
     'settings-extra-known-marketplaces-key-matches-name',
     'settings-extra-known-marketplaces-schema',
