@@ -2,6 +2,10 @@
 // reference lists. The scope of each key is the Scope column of the settings index
 // (https://code.claude.com/docs/en/settings-reference#settings-index). The files glob and the
 // managed files are in tests/configs.test.ts.
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
+import { describe, expect, it } from 'vitest'
+import { settingsKeyScope } from '../../src/data/settings-keys.ts'
 import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-key-scope')
@@ -24,6 +28,10 @@ const GLOBAL_KEY = 'autoConnectIde'
 jsonTester.run('settings-key-scope (valid)', rule, {
   valid: [
     // A Managed key is for managed files.
+    // A drop-in can have the name of a project file. The directory makes it a managed file.
+    ...['managed-settings.d/settings.json', 'managed-settings.d/settings.local.json'].map(
+      (filename) => ({ code: obj({ [MANAGED_KEY]: true, [USER_OR_MANAGED_KEY]: [] }), filename }),
+    ),
     ...[managed, dropIn, 'etc/claude-code/managed-settings.json'].map((filename) => ({
       code: obj({ [MANAGED_KEY]: true }),
       filename,
@@ -68,6 +76,7 @@ jsonTester.run('settings-key-scope (valid)', rule, {
     // A top-level key with a dot is one key, not a nested path.
     { code: obj({ 'sandbox.bwrapPath': '/bin/bwrap' }), filename: project },
     { code: obj({ sandbox: { 'network.allowManagedDomainsOnly': true } }), filename: project },
+    { code: obj({ 'policyHelper path': 1 }), filename: project },
     // The aliases take the scope of their canonical key.
     { code: obj({ additionalMarketplaces: {} }), filename: project },
     { code: obj({ allowedMarketplaces: [] }), filename: managed },
@@ -173,7 +182,7 @@ jsonTester.run('settings-key-scope (invalid)', rule, {
       filename: local,
       errors: [{ messageId: 'userOrManaged', column: 2 }],
     },
-    // A child of a parent that is allowed in the file is read.
+    // A parent with listed children gets one report, on the parent. The rule does not read below it.
     {
       code: obj({ strictPluginOnlyCustomization: { hooks: true } }),
       filename: local,
@@ -284,4 +293,37 @@ jsonTester.run('settings-key-scope (message text)', rule, {
       ],
     },
   ],
+})
+
+// The data module follows the Scope column of the settings index. The snapshot is the reviewed
+// copy of that page, so it is a source that the module does not share.
+describe('settings-keys data against the settings index snapshot', () => {
+  const snapshot = JSON.parse(
+    readFileSync(
+      path.resolve(import.meta.dirname, '../../docs/docs-snapshot/settings-reference.json'),
+      'utf8',
+    ),
+  ) as { sources: { id: string; text: string }[] }
+  const index = snapshot.sources.find(({ id }) => id === 'settings-index')?.text ?? ''
+  const SCOPE_OF: Record<string, string> = {
+    Managed: 'managed',
+    'User or managed': 'user-or-managed',
+    'User, local, or managed': 'user-local-or-managed',
+    'Global config': 'global',
+    'Any file': 'any',
+  }
+  const rows = [...index.matchAll(/^\| \[`([^`]+)`\].*\| ([^|]+?) \|$/gm)].map(
+    ([, key, scope]) => [key ?? '', scope ?? ''] as const,
+  )
+
+  it('reads the rows of the index', () => {
+    expect(rows.length).toBeGreaterThan(200)
+  })
+
+  it('gives each key of the index the scope that the index states', () => {
+    const wrong = rows.flatMap(([key, scope]) =>
+      settingsKeyScope(key.split('.'))?.scope === SCOPE_OF[scope] ? [] : [`${key}: ${scope}`],
+    )
+    expect(wrong).toEqual([])
+  })
 })

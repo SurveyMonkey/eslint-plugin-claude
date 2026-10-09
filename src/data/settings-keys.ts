@@ -321,10 +321,10 @@ const ALIASES: Record<string, string> = {
   'permissions.disableAutoMode': 'disableAutoMode',
 }
 
-// A path joins its keys with a character that a key name does not hold, so a
-// top-level key "sandbox.bwrapPath" is not the nested key `sandbox.bwrapPath`.
-const SEPARATOR = ' '
-const idOf = (path: readonly string[]) => path.join(SEPARATOR)
+// A path becomes one string with `JSON.stringify`, so a top-level key
+// "sandbox.bwrapPath" or a key with a space is not the nested key
+// `sandbox.bwrapPath`.
+const idOf = (path: readonly string[]) => JSON.stringify(path)
 const idOfDotted = (dotted: string) => idOf(dotted.split('.'))
 
 const SCOPES = new Map<string, KeyScope>()

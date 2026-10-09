@@ -31,14 +31,14 @@ const FAULTS: Record<KeyScope['scope'], { id: MessageId; kinds: FileKind[] } | u
 }
 
 function kindOf(filename: string): FileKind {
-  switch (path.basename(filename)) {
-    case 'settings.json':
-      return 'project'
-    case 'settings.local.json':
-      return 'local'
-    default:
-      return 'managed'
+  // A drop-in can have any name, so the directory decides before the name does.
+  if (
+    path.basename(path.dirname(filename)) === 'managed-settings.d' ||
+    path.basename(filename) === 'managed-settings.json'
+  ) {
+    return 'managed'
   }
+  return path.basename(filename) === 'settings.local.json' ? 'local' : 'project'
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
