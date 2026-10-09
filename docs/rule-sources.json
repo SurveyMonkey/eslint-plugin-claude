@@ -3,7 +3,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
     },
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -35,7 +35,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -62,7 +62,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
     }
   ],
   "agent-memory-auto-memory-off": [
@@ -112,7 +112,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Supported frontmatter fields",
-      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -167,7 +167,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "4ba84534a9c40c995755660aa32ab8f686bee5a1d0229f224daf2796f8636fad"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -436,7 +436,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "b9d4b15562d660e3e0079e82b892f2c421d6108d116d93112149996e24592d38"
+      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -873,6 +873,106 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "settings-enabled-plugins-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledPlugins",
+      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Require a marketplace and its plugins",
+      "hash": "9697c07a43a64a16e7cab4fbd780a24694b7f4f5c8463a201387843c1f0dd43c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "syncClaudeAiPlugins",
+      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+    }
+  ],
+  "settings-extra-known-marketplaces-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "extraKnownMarketplaces",
+      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Marketplace sources",
+      "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Fields by type",
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Owner wildcards",
+      "hash": "de827431bbbb5b1d5ef6d4677150a2d2b496ef12724a59acb62f7c6775c35420"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Reserved names",
+      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin entries",
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+    }
+  ],
+  "settings-marketplace-headers-helper-https": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "When Claude Code skips a headersHelper command or drops its output",
+      "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338"
+    }
+  ],
+  "settings-marketplace-key-alias-conflict": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "strictKnownMarketplaces",
+      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Aliases for the marketplace keys",
+      "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
+    }
+  ],
+  "settings-sync-claude-ai-plugins": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "syncClaudeAiPlugins",
+      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledPlugins",
+      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Exceptions to managed settings precedence",
+      "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -1074,7 +1174,7 @@
     {
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Path-specific rules",
-      "hash": "5cd16777bd0be738a8cd49b1716f21551a2a28d96f56cf68c19788c317f07590"
+      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
     }
   ],
   "skill-plugin-root-shadowed": [

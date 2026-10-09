@@ -63,6 +63,20 @@ const badMarketplace = JSON.stringify({
   ],
 })
 
+// A project settings file with one fault for each settings rule of #12. The sync rule reads the
+// file name, so the two files below differ only in what that rule reports.
+const badMarketSettings = JSON.stringify({
+  enabledPlugins: { formatter: true },
+  additionalMarketplaces: {},
+  syncClaudeAiPlugins: true,
+  extraKnownMarketplaces: {
+    acme: { source: { source: 'npm', package: 'acme' } },
+    docs: {
+      source: { source: 'url', url: 'http://x.test/m.json', headersHelper: '/opt/bin/mint' },
+    },
+  },
+})
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -189,6 +203,14 @@ const TREE: Record<string, string> = {
   }),
   'docs/marketplace.json': badMarketplace,
   'marketplace.json': badMarketplace,
+  // The settings rules of #12 read the two project settings files, and no other settings file.
+  'packages/mk/.claude/settings.json': badMarketSettings,
+  'packages/mk/.claude/settings.local.json': badMarketSettings,
+  'packages/mk/.claude/nested/settings.json': badMarketSettings,
+  'packages/mk/.claude/nested/settings.local.json': badMarketSettings,
+  'packages/mk/.vscode/settings.json': badMarketSettings,
+  'packages/mk/.vscode/settings.local.json': badMarketSettings,
+  'packages/mk/settings.json': badMarketSettings,
   '.claude-plugin/other.json': badMarketplace,
   'other.json': badHooks,
   'hooks.json': badHooks,
@@ -238,6 +260,15 @@ const MARKETPLACE_RULES = [
   'marketplace-entry-hooks-override',
   'marketplace-entry-root-skills',
   'marketplace-entry-component-paths',
+]
+
+// The settings rules of #12, in the order of the `modules` list. Each is an error.
+const SETTINGS_RULES = [
+  'settings-enabled-plugins-schema',
+  'settings-extra-known-marketplaces-schema',
+  'settings-marketplace-headers-helper-https',
+  'settings-marketplace-key-alias-conflict',
+  'settings-sync-claude-ai-plugins',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -300,6 +331,10 @@ const EXPECTED = [
         'packages/s/site/.claude-plugin/marketplace.json: claude/marketplace-relative-source-escape-symlink@2',
       ]
     : []),
+  // The settings rules read the settings files of a project, and no other settings file.
+  ...['packages/mk/.claude/settings.json', 'packages/mk/.claude/settings.local.json'].flatMap(
+    (file) => SETTINGS_RULES.map((rule) => `${file}: claude/${rule}@2`),
+  ),
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -420,6 +455,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...SETTINGS_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'error' },
+      ]),
     ])
   })
 
@@ -435,6 +474,7 @@ describe('configs', () => {
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
+      ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -469,6 +509,17 @@ describe('configs', () => {
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude-plugin/marketplace.json']],
+      ])
+    }
+  })
+
+  it('gives each settings rule one JSON block for the two project settings files', () => {
+    for (const rule of SETTINGS_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${rule}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
       ])
     }
   })

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/memory",
-  "hash": "a3e8fc767a871c9b4834b19596d5bef206eeee1f484ca1da6b6327b3558295d7",
+  "hash": "52c9ce2203d522ab02f6f5d9e6bede9998a9a71c9b2bf58fd237ca689e013161",
   "blocks": [
     {
       "id": "how-claude-remembers-your-project",
@@ -40,7 +40,7 @@
     },
     {
       "id": "how-claude-md-files-load",
-      "hash": "bf82bdb84af1c6a682b5efb082ae9ecd231d2d96fbd730710dd83352b4de22b0"
+      "hash": "49f503e30c5544e6f39be3bcf65860398560e8e9524fe85577077a2e8da3a7ed"
     },
     {
       "id": "load-from-additional-directories",
@@ -56,7 +56,7 @@
     },
     {
       "id": "path-specific-rules",
-      "hash": "5cd16777bd0be738a8cd49b1716f21551a2a28d96f56cf68c19788c317f07590"
+      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
     },
     {
       "id": "rules-frontmatter-reference",
@@ -171,8 +171,8 @@
     {
       "heading": "Path-specific rules",
       "id": "path-specific-rules",
-      "hash": "5cd16777bd0be738a8cd49b1716f21551a2a28d96f56cf68c19788c317f07590",
-      "text": "#### Path-specific rules\n\nRules can be scoped to specific files using YAML frontmatter with the `paths` field. These conditional rules only apply when Claude is working with files matching the specified patterns.\n\n```markdown theme={null}\n---\npaths:\n  - \"src/api/**/*.ts\"\n---\n\n# API Development Rules\n\n- All API endpoints must include input validation\n- Use the standard error response format\n- Include OpenAPI documentation comments\n```\n\nRules without a `paths` field are loaded unconditionally and apply to all files. Path-scoped rules trigger when Claude uses the Read, Write, or Edit tool on a file matching the pattern, not on every tool use. Matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.\n\nUse glob patterns in the `paths` field to match files by extension, directory, or any combination:\n\n| Pattern | Matches |\n| - | - |\n| `**/*.ts` | All TypeScript files in any directory |\n| `src/**/*` | All files under `src/` directory |\n| `*.md` | Markdown files in the project root |\n| `src/components/*.tsx` | React components in a specific directory |\n\nYou can specify multiple patterns and use brace expansion to match multiple extensions in one pattern:\n\n```markdown theme={null}\n---\npaths:\n  - \"src/**/*.{ts,tsx}\"\n  - \"lib/**/*.ts\"\n  - \"tests/**/*.test.ts\"\n---\n```\n\nEach brace group multiplies the number of expanded patterns: `src/*.{ts,tsx}` expands to two patterns, and `{a,b}/{c,d}/*.{ts,tsx}` to eight. To keep expansion bounded, a rule's whole `paths` list shares one budget of 1,000 expanded patterns and 4 MiB, and patterns without braces don't count against it.\n\nClaude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files. Before v2.1.217, a `paths` value with many brace groups stalled or crashed the CLI at startup.\n\nGlob syntax treats `[` as the start of a bracket expression such as `[abc]`. A pattern with a `[` that can't be read as a bracket expression, such as `photos [2024/**`, is invalid: it matches nothing, and the rule's other patterns keep working. To match a literal `[` in a file name, escape it as `photos \\[2024/**`. Before v2.1.207, one invalid pattern made the Read tool fail for every file the rule was evaluated against, instead of matching nothing."
+      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202",
+      "text": "#### Path-specific rules\n\nRules can be scoped to specific files using YAML frontmatter with the `paths` field. These conditional rules only apply when Claude is working with files matching the specified patterns.\n\n```markdown theme={null}\n---\npaths:\n  - \"src/api/**/*.ts\"\n---\n\n# API Development Rules\n\n- All API endpoints must include input validation\n- Use the standard error response format\n- Include OpenAPI documentation comments\n```\n\nRules without a `paths` field are loaded unconditionally and apply to all files. A path-scoped rule loads when Claude uses the Read, Write, or Edit tool on a matching file. It also loads when Claude views a matching file with a Bash command that [counts as a read](/docs/en/tools-reference#edit-tool-behavior), such as `cat` or `head` on a single file. Matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.\n\nUse glob patterns in the `paths` field to match files by extension, directory, or any combination:\n\n| Pattern | Matches |\n| - | - |\n| `**/*.ts` | All TypeScript files in any directory |\n| `src/**/*` | All files under `src/` directory |\n| `*.md` | Markdown files in the project root |\n| `src/components/*.tsx` | React components in a specific directory |\n\nYou can specify multiple patterns and use brace expansion to match multiple extensions in one pattern:\n\n```markdown theme={null}\n---\npaths:\n  - \"src/**/*.{ts,tsx}\"\n  - \"lib/**/*.ts\"\n  - \"tests/**/*.test.ts\"\n---\n```\n\nEach brace group multiplies the number of expanded patterns: `src/*.{ts,tsx}` expands to two patterns, and `{a,b}/{c,d}/*.{ts,tsx}` to eight. To keep expansion bounded, a rule's whole `paths` list shares one budget of 1,000 expanded patterns and 4 MiB, and patterns without braces don't count against it.\n\nClaude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files. Before v2.1.217, a `paths` value with many brace groups stalled or crashed the CLI at startup.\n\nGlob syntax treats `[` as the start of a bracket expression such as `[abc]`. A pattern with a `[` that can't be read as a bracket expression, such as `photos [2024/**`, is invalid: it matches nothing, and the rule's other patterns keep working. To match a literal `[` in a file name, escape it as `photos \\[2024/**`. Before v2.1.207, one invalid pattern made the Read tool fail for every file the rule was evaluated against, instead of matching nothing."
     }
   ]
 }
