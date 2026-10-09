@@ -1042,6 +1042,18 @@
       "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
     }
   ],
+  "settings-valid-json": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Fix a broken settings file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",

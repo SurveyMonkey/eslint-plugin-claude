@@ -51,6 +51,7 @@ import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-m
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
+import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
@@ -143,6 +144,7 @@ const modules = [
   settingsMarketplaceHeadersHelperHttps,
   settingsMarketplaceKeyAliasConflict,
   settingsSyncClaudeAiPlugins,
+  settingsValidJson,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -235,6 +237,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-headers-helper-https': 'error',
   'settings-marketplace-key-alias-conflict': 'error',
   'settings-sync-claude-ai-plugins': 'error',
+  'settings-valid-json': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

@@ -226,6 +226,11 @@ const TREE: Record<string, string> = {
   'hooks.json': badHooks,
   '.vscode/settings.json': badSettings,
   '.vscode/settings.local.json': badSettings,
+  // The settings rules of the scope layer of #14. A top level that is not an object, in the
+  // two project files and in the same files in a decoy directory.
+  'packages/vj/.claude/settings.json': '[1]',
+  'packages/vj/.claude/settings.local.json': '"x"',
+  'packages/vj/.vscode/settings.json': '[1]',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -282,6 +287,11 @@ const SETTINGS_RULES = [
   'settings-marketplace-key-alias-conflict',
   'settings-sync-claude-ai-plugins',
 ]
+
+// The settings rules of the scope layer of #14, in the order of the `modules` list, with the
+// files of each. Each is an error.
+const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
+const SCOPE_RULES = [{ name: 'settings-valid-json', files: PROJECT_FILES }]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -347,6 +357,9 @@ const EXPECTED = [
   ...['packages/mk/.claude/settings.json', 'packages/mk/.claude/settings.local.json'].flatMap(
     (file) => SETTINGS_RULES.map((rule) => `${file}: claude/${rule}@2`),
   ),
+  // `settings-valid-json` reads the two project settings files, and no other settings file.
+  'packages/vj/.claude/settings.json: claude/settings-valid-json@2',
+  'packages/vj/.claude/settings.local.json: claude/settings-valid-json@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -471,6 +484,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...SCOPE_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
     ])
   })
 
@@ -487,6 +504,7 @@ describe('configs', () => {
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
+      ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -533,6 +551,15 @@ describe('configs', () => {
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
       ])
+    }
+  })
+
+  it('gives each rule of the scope layer one JSON block for its files', () => {
+    for (const { name, files } of SCOPE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
   })
 
