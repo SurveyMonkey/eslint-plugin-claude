@@ -7,6 +7,17 @@
 import path from 'node:path'
 import { readJson, UNREADABLE, type Unreadable } from './skill-tree.ts'
 
+/** The managed settings files that a repository can hold. The managed settings
+ *  page (https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams)
+ *  names `managed-settings.json` and the `managed-settings.d/` directory
+ *  beside it. Claude Code reads each `*.json` file in that directory, and
+ *  ignores a hidden file and a file that does not end in `.json`.
+ *  The globs do not match the legacy Windows path, which is not a repository
+ *  path. A drop-in name that does not end in `.json` is not in this list.
+ *  This list is not `SETTINGS_FILES` (`src/permission-listener.ts`). A rule
+ *  that lists only `SETTINGS_FILES` does not lint a managed file. */
+export const MANAGED_SETTINGS_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
+
 const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 

@@ -2,7 +2,8 @@
 // (docs/rules/settings-sync-claude-ai-plugins.md). Claude Code reads the key in
 // user, local and managed settings, and not in `.claude/settings.json`. It
 // honors only `false`. A key in `.claude/settings.json` gives one report for any
-// value, so a `true` there gives no second report.
+// value, so a `true` there gives no second report. The rule `settings-key-scope`
+// skips this key, so the fault in `.claude/settings.json` gets one report.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'

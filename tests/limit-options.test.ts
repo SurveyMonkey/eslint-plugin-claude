@@ -22,10 +22,14 @@ const rows: Row[] = INVENTORY.split('\n')
   .map((line) => ({ line, match: /^\| `([a-z0-9-]+)` \|.*\| limit \| – \|/.exec(line) }))
   .flatMap(({ line, match }) => (match?.[1] === undefined ? [] : [{ name: match[1], text: line }]))
 
-/** The options that a row names: `name`, default N (or no default), schema maximum M. */
+/** The options that a row names: `name`, default N (or no default), schema maximum M.
+ *  A number has digits and groups of digits after a comma, so the comma that ends "default N,"
+ *  is not part of N. */
 function optionsOf(text: string) {
   return [
-    ...text.matchAll(/`(\w+)`, (?:default (\d[\d,]*)|no default)(?:, schema maximum (\d[\d,]*))?/g),
+    ...text.matchAll(
+      /`(\w+)`, (?:default (\d+(?:,\d+)*)|no default)(?:, schema maximum (\d+(?:,\d+)*))?/g,
+    ),
   ].map(([, option, fallback, maximum]) => ({
     option: option ?? '',
     fallback: fallback === undefined ? undefined : Number(fallback.replaceAll(',', '')),

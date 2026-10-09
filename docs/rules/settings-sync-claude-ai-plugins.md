@@ -36,6 +36,9 @@ A key in `.claude/settings.json` gives one report, also when its value is `true`
 the file-level report there, because the file is the first reason that the key has no effect. A
 `true` in the local file gives the value report. A `false` in the local file gives no report.
 
+The rule `settings-key-scope` makes no report on this key. So the key in `.claude/settings.json` gets
+one report, and it is from this rule.
+
 When a file has two `syncClaudeAiPlugins` keys, the rule reads the last, as `JSON.parse` does.
 
 The rule reads the two project settings files. It does not read user settings or managed settings. A value in the local file that is not a Boolean gives no report. The docs give the type as Boolean,

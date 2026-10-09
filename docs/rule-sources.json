@@ -996,6 +996,97 @@
       "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
     }
   ],
+  "settings-file-size": [
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Settings file exceeds the 2MiB limit",
+      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "heading": "CLI flags",
+      "hash": "13eda81af012ba8834893ecaa594a6efeee5073bf2dd368653852a78cd2f268b"
+    }
+  ],
+  "settings-key-scope": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Settings index",
+      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "A committed key doesn't reach teammates",
+      "hash": "e348522d20cb922191e150ed492df47faf117f981786729476bc77ccb1f2981e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys only a managed source can set",
+      "hash": "7ebef6067c9c7333e39ab7f6b39c44f39e80f6e440c1f60976c7ee0a65c7c093"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Global config settings",
+      "hash": "e9ff36789538e7e8fbca017992971575941c6836b9d7522b58a8117c52be4eaa"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Exceptions to managed settings precedence",
+      "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "bashEditDiffEnabled",
+      "hash": "fb4bdc7166ad5f3d711bb48591d703e6359aeb1af734c236aacb3850bcef67fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoContinueAtUsageLimit",
+      "hash": "b79213c02f493f0e7cd7db2f9c6c37322011ca98baa4b541564b1e16c71662c8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableAutoMode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    }
+  ],
+  "settings-managed-file": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Find entries Claude Code dropped",
+      "hash": "89145fe5c80324f843eb18722091ac5cb9165bc6a8c1594fec3566051ebb7b27"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "How Claude Code combines managed sources",
+      "hash": "bc412eef48c5ddd66c80e0c9460f9832fe0c71671a40f3f7346b1fe87d0005bb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "managedSourcesBehavior",
+      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Where each mechanism stores the policy",
+      "hash": "192ec50ea2638a49de33ab07ca94173177804306af2ab7bbd9a7b76ec3a94aed"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
   "settings-marketplace-headers-helper-https": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1040,6 +1131,18 @@
       "url": "https://code.claude.com/docs/en/settings",
       "heading": "Exceptions to managed settings precedence",
       "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
+    }
+  ],
+  "settings-valid-json": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Fix a broken settings file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
     }
   ],
   "skill-agent-exists": [

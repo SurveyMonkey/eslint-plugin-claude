@@ -81,6 +81,9 @@ const badMarketSettings = JSON.stringify({
   },
 })
 
+// One string value of 2 MiB makes a file over the limit of the size rule.
+const big = JSON.stringify({ a: 'x'.repeat(2097152) })
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -226,6 +229,47 @@ const TREE: Record<string, string> = {
   'hooks.json': badHooks,
   '.vscode/settings.json': badSettings,
   '.vscode/settings.local.json': badSettings,
+  // The settings rules of the scope layer of #14. A top level that is not an object, in the
+  // two project files and in the same files in a decoy directory.
+  'packages/vj/.claude/settings.json': '[1]',
+  'packages/vj/.claude/settings.local.json': '"x"',
+  'packages/vj/.vscode/settings.json': '[1]',
+  // A file of 2 MiB and 8 bytes, in each place the size rule reads, and in places it does not.
+  'packages/big/.claude/settings.json': big,
+  'packages/big/.claude/settings.local.json': big,
+  'packages/big/managed-settings.json': big,
+  'packages/big/managed-settings.d/30-big.json': big,
+  'packages/big/managed-settings.d/30-big.txt': big,
+  'packages/big/managed-settings.d/sub/40-big.json': big,
+  'packages/big/.vscode/settings.json': big,
+  // `settings-key-scope`: a Managed key in the project file, and a User, local, or managed key in
+  // the local file, which is allowed there. A Global config key in a managed file, and a Managed
+  // key in a drop-in, which is allowed there. The same keys where no rule reads them.
+  'packages/sc/.claude/settings.json': '{"allowManagedHooksOnly": true}',
+  'packages/sc/.claude/settings.local.json': '{"skipDangerousModePermissionPrompt": true}',
+  'packages/sc/managed-settings.json': '{"autoConnectIde": true}',
+  'packages/sc/managed-settings.d/10-a.json': '{"allowManagedHooksOnly": true}',
+  'packages/sc/managed-settings.d/20-b.txt': '{"autoConnectIde": true}',
+  'packages/sc/managed-settings.d/sub/30-c.json': '{"autoConnectIde": true}',
+  'packages/sc/managed-settings.json.bak': '{"autoConnectIde": true}',
+  'packages/sc/.vscode/settings.json': '{"autoConnectIde": true}',
+  // `settings-managed-file`: a top level that is an array, a hidden drop-in, and
+  // "merge" in `managed-settings.json`. A drop-in with a policy key is silent, and so is a drop-in
+  // with only a control key.
+  // The same content where no rule reads it: another extension, a nested directory, and a
+  // project settings file.
+  'packages/mf/managed-settings.json': '[1]',
+  'packages/mf/managed-settings.d/10-ctl.json': '{"managedSourcesBehavior": "first-wins"}',
+  'packages/mf/managed-settings.d/.20-hidden.json': '{"model": "opus"}',
+  'packages/mf/managed-settings.d/30-ok.json': '{"model": "opus"}',
+  'packages/mf/managed-settings.d/40-x.txt': '[1]',
+  'packages/mf/managed-settings.d/sub/50-y.json': '[1]',
+  'packages/mf/.claude/settings.local.json': '[1]',
+  // Only control keys in `managed-settings.json`, and no policy drop-in beside it.
+  'packages/mf3/managed-settings.json': '{"wslInheritsWindowsSettings": true}',
+  'packages/mf3/managed-settings.d/10-ctl.json': '{"managedSourcesBehavior": "first-wins"}',
+  'packages/mf2/managed-settings.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
+  'packages/mf2/managed-settings.d/10-m.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -281,6 +325,17 @@ const SETTINGS_RULES = [
   'settings-marketplace-headers-helper-https',
   'settings-marketplace-key-alias-conflict',
   'settings-sync-claude-ai-plugins',
+]
+
+// The settings rules of the scope layer of #14, in the order of the `modules` list, with the
+// files of each. Each is an error.
+const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
+const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
+const SCOPE_RULES = [
+  { name: 'settings-valid-json', files: PROJECT_FILES },
+  { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-key-scope', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-managed-file', files: MANAGED_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -347,6 +402,27 @@ const EXPECTED = [
   ...['packages/mk/.claude/settings.json', 'packages/mk/.claude/settings.local.json'].flatMap(
     (file) => SETTINGS_RULES.map((rule) => `${file}: claude/${rule}@2`),
   ),
+  // `settings-valid-json` reads the two project settings files, and no other settings file.
+  'packages/vj/.claude/settings.json: claude/settings-valid-json@2',
+  'packages/vj/.claude/settings.local.json: claude/settings-valid-json@2',
+  // `settings-file-size` also reads the managed settings files, and no other file.
+  ...[
+    'packages/big/.claude/settings.json',
+    'packages/big/.claude/settings.local.json',
+    'packages/big/managed-settings.json',
+    'packages/big/managed-settings.d/30-big.json',
+  ].map((file) => `${file}: claude/settings-file-size@2`),
+  // `settings-key-scope` reads the project and managed files. It reports a Managed key in the
+  // project file, and a Global config key in a managed file. It makes no report on the rest.
+  'packages/sc/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/sc/managed-settings.json: claude/settings-key-scope@2',
+  // `settings-managed-file` reads the managed files. A project settings file is for
+  // `settings-valid-json`.
+  'packages/mf/managed-settings.json: claude/settings-managed-file@2',
+  'packages/mf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/mf/.claude/settings.local.json: claude/settings-valid-json@2',
+  'packages/mf2/managed-settings.json: claude/settings-managed-file@2',
+  'packages/mf3/managed-settings.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -471,6 +547,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...SCOPE_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
     ])
   })
 
@@ -487,6 +567,7 @@ describe('configs', () => {
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
+      ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -533,6 +614,15 @@ describe('configs', () => {
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
       ])
+    }
+  })
+
+  it('gives each rule of the scope layer one JSON block for its files', () => {
+    for (const { name, files } of SCOPE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
   })
 
