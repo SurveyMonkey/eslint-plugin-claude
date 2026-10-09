@@ -49,6 +49,18 @@ jsonTester.run('settings-removed-key (valid)', rule, {
         filename,
       })),
     ),
+    // A key that is a property of every object is no listed key.
+    ...ALL.flatMap((filename) =>
+      ['constructor', 'toString', 'hasOwnProperty', '__proto__'].map((key) => ({
+        code: `{"${key}": 1}`,
+        filename,
+      })),
+    ),
+    // The last of two keys of one name counts, in the `attribution` path too.
+    {
+      code: '{"includeCoAuthoredBy": false, "attribution": {"commit": "x", "commit": null}}',
+      filename: project,
+    },
     // `includeCoAuthoredBy` and `voiceEnabled` still work when nothing replaces them.
     ...ALL.map((filename) => ({
       code: obj({ includeCoAuthoredBy: false, voiceEnabled: true }),

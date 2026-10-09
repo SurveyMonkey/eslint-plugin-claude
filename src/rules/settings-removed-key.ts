@@ -54,8 +54,11 @@ const rule: JSONRuleDefinition<{
           if (lastMember(body, key) !== member) {
             continue
           }
-          const since = NO_EFFECT_KEYS[key]
-          const replacements = SUPERSEDED_KEYS[key]
+          // A key such as `constructor` is a property of every object, not a listed key.
+          const since = Object.hasOwn(NO_EFFECT_KEYS, key) ? NO_EFFECT_KEYS[key] : undefined
+          const replacements = Object.hasOwn(SUPERSEDED_KEYS, key)
+            ? SUPERSEDED_KEYS[key]
+            : undefined
           if (since !== undefined) {
             context.report({ node: member.name, messageId: 'noEffect', data: { key, since } })
           } else if (
