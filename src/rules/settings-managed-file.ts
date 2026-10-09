@@ -35,10 +35,8 @@ function dropInsMayHoldPolicy(dir: string): boolean {
     .filter(({ name: entry }) => entry.endsWith('.json') && !entry.startsWith('.'))
     .some(({ name: entry }) => {
       const parsed = readJson(path.join(directory, entry), bound)
-      if (parsed === null) {
-        return false
-      }
-      if (parsed === UNREADABLE) {
+      // A file that vanished since the listing, or one that cannot be read.
+      if (parsed === null || parsed === UNREADABLE) {
         return true
       }
       const { data } = parsed

@@ -68,6 +68,12 @@ jsonTester.run('settings-managed-file (valid)', rule, {
     },
     // A dot inside a file name is not a hidden file.
     { code: obj({ model: 'x' }), filename: 'managed-settings.d/10.x.json' },
+    // Only control keys, in a file that is no `managed-settings.json` file, or is a drop-in.
+    { code: obj({ managedSourcesBehavior: 'first-wins' }), filename: 'x/other.json' },
+    {
+      code: obj({ managedSourcesBehavior: 'first-wins' }),
+      filename: 'managed-settings.d/managed-settings.json',
+    },
     // "merge" in a file with another name is no `managed-settings.json` file.
     { code: obj({ managedSourcesBehavior: 'merge', model: 'x' }), filename: 'x/other.json' },
     // A hidden name outside `managed-settings.d` is not a drop-in.
@@ -237,8 +243,9 @@ describe('settings-managed-file control keys with drop-ins on disk', () => {
     expect(ids({ 'managed-settings.d/10-p.json': '{"model": null}' })).toEqual(['controlKeysOnly'])
   })
   it('is silent when a drop-in does not parse to an object', () => {
-    expect(ids({ 'managed-settings.d/10-p.json': '[1]' })).toEqual([])
-    expect(ids({ 'managed-settings.d/10-p.json': '{' })).toEqual([])
+    for (const text of ['[1]', '[]', 'null', '1', '"x"', '{']) {
+      expect(ids({ 'managed-settings.d/10-p.json': text })).toEqual([])
+    }
   })
   it('is silent when a drop-in is a dangling link', { skip: process.platform === 'win32' }, () => {
     const root = repo({})
