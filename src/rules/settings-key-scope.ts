@@ -30,16 +30,24 @@ const FAULTS: Record<KeyScope['scope'], { id: MessageId; kinds: FileKind[] } | u
   any: undefined,
 }
 
+const DROP_IN_DIRECTORY = 'managed-settings.d'
+
 function kindOf(filename: string): FileKind {
-  // A drop-in can have any name, so the directory decides before the name does.
+  // A drop-in can have any name that the files glob matches, such as `managed-settings.json`
+  // or `settings.local.json`, so the directory decides first.
   if (
-    path.basename(path.dirname(filename)) === 'managed-settings.d' ||
+    path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY ||
     path.basename(filename) === 'managed-settings.json'
   ) {
     return 'managed'
   }
   return path.basename(filename) === 'settings.local.json' ? 'local' : 'project'
 }
+
+/** A hidden file in `managed-settings.d`. Claude Code ignores it, so it reads no key there. */
+const isHiddenDropIn = (filename: string) =>
+  path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY &&
+  path.basename(filename).startsWith('.')
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {
@@ -61,6 +69,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     },
   },
   create(context) {
+    if (isHiddenDropIn(context.filename)) {
+      return {}
+    }
     const kind = kindOf(context.filename)
 
     /** Report the faulty keys of `object`, whose keys are below `parent`. */

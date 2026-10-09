@@ -34,6 +34,8 @@ rule reports a key that the file cannot set. The report is on the key.
 
 The managed files are `managed-settings.json` and the `*.json` files in `managed-settings.d/`.
 User settings files are not in a repository, so the rule does not read them.
+Claude Code ignores a hidden file in `managed-settings.d/`. The rule reads no key in it, and
+`settings-managed-file` reports the file.
 
 A nested key has a dotted name in the index, such as `sandbox.network.allowManagedDomainsOnly`.
 The rule reads an object only when the index lists a key below it. A key that has a listed key

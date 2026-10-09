@@ -297,6 +297,28 @@ jsonTester.run('settings-key-scope (message text)', rule, {
 
 // The data module follows the Scope column of the settings index. The snapshot is the reviewed
 // copy of that page, so it is a source that the module does not share.
+// Claude Code ignores a hidden drop-in, so it reads no key in it. `settings-managed-file` reports
+// the file once.
+jsonTester.run('settings-key-scope (hidden drop-in)', rule, {
+  valid: [
+    { code: obj({ copyOnSelect: true }), filename: 'managed-settings.d/.10-x.json' },
+    { code: obj({ copyOnSelect: true }), filename: 'etc/managed-settings.d/.10-x.json' },
+  ],
+  invalid: [
+    // A dot inside a name is no hidden file, and a hidden name outside the directory is no drop-in.
+    {
+      code: obj({ copyOnSelect: true }),
+      filename: 'managed-settings.d/10.x.json',
+      errors: [{ messageId: 'globalConfig' }],
+    },
+    {
+      code: obj({ copyOnSelect: true }),
+      filename: '.claude/.settings.local.json',
+      errors: [{ messageId: 'globalConfig' }],
+    },
+  ],
+})
+
 describe('settings-keys data against the settings index snapshot', () => {
   const snapshot = JSON.parse(
     readFileSync(
@@ -318,6 +340,11 @@ describe('settings-keys data against the settings index snapshot', () => {
 
   it('reads the rows of the index', () => {
     expect(rows.length).toBeGreaterThan(200)
+  })
+
+  it('maps the Scope label of each row', () => {
+    const unmapped = rows.filter(([, scope]) => SCOPE_OF[scope] === undefined)
+    expect(unmapped).toEqual([])
   })
 
   it('gives each key of the index the scope that the index states', () => {
