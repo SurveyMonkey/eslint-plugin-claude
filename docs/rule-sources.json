@@ -1116,6 +1116,48 @@
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
     }
   ],
+  "settings-removed-key": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "taskOutputMaxChars",
+      "hash": "eeae3bf23d0f765fb626cb4002fe62a5e84deea50cc09f1998d8d6730d522e2a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "keybindingFlavor",
+      "hash": "1e7d8081bb3dd5de9fee428eec6ce5a5307653998f3f2dbba95776bb6edfee55"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissionExplainerEnabled",
+      "hash": "4fb85d37ca8b88d7b43fd2cb5b46579bbb78c588d992b93860965574d49e1b19"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "teammateDefaultModel",
+      "hash": "db6b3c25a2e07fa38c38a3fa9a6a3be54f7a30bd956eeacb7fd78cef56ab3921"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableArtifact",
+      "hash": "9c0e53f6cf784de8ee50b9f191fe6cb8136d1c70942a2742b0d24f8de7a450e2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "includeCoAuthoredBy",
+      "hash": "1e8ac2eff11dfd01279bb22bad338f3486126dbc8aa8d7110e21c5c5e1d33738"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "attribution",
+      "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "voiceEnabled",
+      "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3"
+    }
+  ],
   "settings-sync-claude-ai-plugins": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

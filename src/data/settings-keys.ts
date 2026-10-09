@@ -302,10 +302,15 @@ export const MANAGED_CONTROL_KEYS: readonly string[] = [
  *  local, or managed", and `settings-sync-claude-ai-plugins` already reports
  *  it in `.claude/settings.json`. A project value of
  *  `autoContinueAtUsageLimit` turns the feature off, and is not ignored, so
- *  `settings-project-autocontinue-off` owns it. */
+ *  `settings-project-autocontinue-off` owns it. Claude Code removed
+ *  `permissionExplainerEnabled` and `teammateDefaultModel`, which are Global
+ *  config keys. `settings-removed-key` reports them in any file, so one fault
+ *  gets one report. */
 const REPORTED_BY: Record<string, string> = {
   syncClaudeAiPlugins: 'settings-sync-claude-ai-plugins',
   autoContinueAtUsageLimit: 'settings-project-autocontinue-off',
+  permissionExplainerEnabled: 'settings-removed-key',
+  teammateDefaultModel: 'settings-removed-key',
 }
 
 /** The Boolean value that Claude Code ignores in a repository file, for a key
@@ -365,4 +370,34 @@ export function settingsKeyScope(path: readonly string[]): KeyScope | undefined 
  *  at `path`. */
 export function hasListedChildren(path: readonly string[]): boolean {
   return PARENTS.has(idOf(path))
+}
+
+// Keys that Claude Code reads and does not act on. Source: the entries of the
+// settings reference (https://code.claude.com/docs/en/settings-reference), checked on Claude
+// Code 2.1.295 on 2026-10-08. Review these lists with the lists above.
+
+/** A key that has no effect in any settings file, and the Claude Code version
+ *  from which it has none. `taskOutputMaxChars` and `teammateDefaultModel` and
+ *  `permissionExplainerEnabled` were removed in that version. Claude Code
+ *  deprecated `keybindingFlavor` in it, still accepts the key, and ignores
+ *  its value. */
+export const NO_EFFECT_KEYS: Readonly<Record<string, string>> = {
+  taskOutputMaxChars: '2.1.277',
+  keybindingFlavor: '2.1.261',
+  permissionExplainerEnabled: '2.1.257',
+  teammateDefaultModel: '2.1.234',
+}
+
+/** A key whose value `false` Claude Code ignores. It honors `true`. */
+export const IGNORED_FALSE_KEYS: readonly string[] = ['disableArtifact']
+
+/** A deprecated key that Claude Code ignores once a key that replaces it is
+ *  set, and the paths of the keys that replace it. The key still works when
+ *  none of them is set. */
+export const SUPERSEDED_KEYS: Readonly<Record<string, readonly (readonly string[])[]>> = {
+  includeCoAuthoredBy: [
+    ['attribution', 'commit'],
+    ['attribution', 'pr'],
+  ],
+  voiceEnabled: [['voice', 'enabled']],
 }

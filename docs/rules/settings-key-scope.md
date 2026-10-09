@@ -60,6 +60,10 @@ review. The data module also holds the three exceptions below.
   reports a `true`, and makes no report on a `false`. It makes no report on a value that is not a
   Boolean.
 
+The Global config keys `permissionExplainerEnabled` and `teammateDefaultModel` get no report from
+this rule. Claude Code removed them, and `settings-removed-key` reports them in each file, so each
+key gets one report.
+
 The keys `syncClaudeAiSkills` and `useAutoModeDuringPlan` have the Scope `User, local, or
 managed`. Claude Code honors a `false` in `.claude/settings.local.json`. It ignores a `false` in
 `.claude/settings.json`.[^exceptions] So the rule reports these keys in `.claude/settings.json` for

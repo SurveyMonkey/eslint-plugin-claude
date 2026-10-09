@@ -270,6 +270,19 @@ const TREE: Record<string, string> = {
   'packages/mf3/managed-settings.d/10-ctl.json': '{"managedSourcesBehavior": "first-wins"}',
   'packages/mf2/managed-settings.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
   'packages/mf2/managed-settings.d/10-m.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
+  // The settings rules of the env layer of #14. `settings-removed-key`: a key with no effect in
+  // each file that it reads. `permissionExplainerEnabled` is also a Global config key, and gets
+  // one report, from this rule. `disableArtifact: false` in a managed file, and a key with its
+  // replacement in a drop-in. A hidden drop-in is for `settings-managed-file`. The same content
+  // where no rule reads it: another extension, a nested directory, and another settings file.
+  'packages/rk/.claude/settings.json': '{"taskOutputMaxChars": 1}',
+  'packages/rk/.claude/settings.local.json': '{"permissionExplainerEnabled": false}',
+  'packages/rk/managed-settings.json': '{"disableArtifact": false}',
+  'packages/rk/managed-settings.d/10-a.json': '{"voiceEnabled": true, "voice": {"enabled": true}}',
+  'packages/rk/managed-settings.d/.20-hidden.json': '{"taskOutputMaxChars": 1}',
+  'packages/rk/managed-settings.d/30-b.txt': '{"taskOutputMaxChars": 1}',
+  'packages/rk/managed-settings.d/sub/40-c.json': '{"taskOutputMaxChars": 1}',
+  'packages/rk/.vscode/settings.json': '{"taskOutputMaxChars": 1}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -336,6 +349,7 @@ const SCOPE_RULES = [
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-key-scope', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-managed-file', files: MANAGED_FILES },
+  { name: 'settings-removed-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -423,6 +437,14 @@ const EXPECTED = [
   'packages/mf/.claude/settings.local.json: claude/settings-valid-json@2',
   'packages/mf2/managed-settings.json: claude/settings-managed-file@2',
   'packages/mf3/managed-settings.json: claude/settings-managed-file@2',
+  // `settings-removed-key` reads the project and managed files, and no other file.
+  ...[
+    'packages/rk/.claude/settings.json',
+    'packages/rk/.claude/settings.local.json',
+    'packages/rk/managed-settings.json',
+    'packages/rk/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-removed-key@2`),
+  'packages/rk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

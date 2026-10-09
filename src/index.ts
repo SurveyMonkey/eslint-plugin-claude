@@ -53,6 +53,7 @@ import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
@@ -151,6 +152,7 @@ const modules = [
   settingsFileSize,
   settingsKeyScope,
   settingsManagedFile,
+  settingsRemovedKey,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -247,6 +249,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-file-size': 'error',
   'settings-key-scope': 'error',
   'settings-managed-file': 'error',
+  'settings-removed-key': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
