@@ -253,8 +253,9 @@ const TREE: Record<string, string> = {
   'packages/sc/managed-settings.d/sub/30-c.json': '{"autoConnectIde": true}',
   'packages/sc/managed-settings.json.bak': '{"autoConnectIde": true}',
   'packages/sc/.vscode/settings.json': '{"autoConnectIde": true}',
-  // `settings-managed-file`: a top level that is an array, a drop-in with only a control key, a
-  // hidden drop-in, and "merge" in `managed-settings.json`. A drop-in with a policy key is silent.
+  // `settings-managed-file`: a top level that is an array, a hidden drop-in, and
+  // "merge" in `managed-settings.json`. A drop-in with a policy key is silent, and so is a drop-in
+  // with only a control key.
   // The same content where no rule reads it: another extension, a nested directory, and a
   // project settings file.
   'packages/mf/managed-settings.json': '[1]',
@@ -264,6 +265,9 @@ const TREE: Record<string, string> = {
   'packages/mf/managed-settings.d/40-x.txt': '[1]',
   'packages/mf/managed-settings.d/sub/50-y.json': '[1]',
   'packages/mf/.claude/settings.local.json': '[1]',
+  // Only control keys in `managed-settings.json`, and no policy drop-in beside it.
+  'packages/mf3/managed-settings.json': '{"wslInheritsWindowsSettings": true}',
+  'packages/mf3/managed-settings.d/10-ctl.json': '{"managedSourcesBehavior": "first-wins"}',
   'packages/mf2/managed-settings.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
   'packages/mf2/managed-settings.d/10-m.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
 }
@@ -415,10 +419,10 @@ const EXPECTED = [
   // `settings-managed-file` reads the managed files. A project settings file is for
   // `settings-valid-json`.
   'packages/mf/managed-settings.json: claude/settings-managed-file@2',
-  'packages/mf/managed-settings.d/10-ctl.json: claude/settings-managed-file@2',
   'packages/mf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/mf/.claude/settings.local.json: claude/settings-valid-json@2',
   'packages/mf2/managed-settings.json: claude/settings-managed-file@2',
+  'packages/mf3/managed-settings.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

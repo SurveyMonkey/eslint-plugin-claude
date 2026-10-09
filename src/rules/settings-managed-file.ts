@@ -1,17 +1,53 @@
 // What one managed settings file shows (docs/rules/settings-managed-file.md).
-// The rule reads the one file that it lints. Two files or more, such as the
-// merge order of the drop-ins, are not in its view.
+// The rule reads the file that it lints. For the control-only report, it also
+// reads the drop-ins beside `managed-settings.json`. The merge order of the
+// drop-ins is not in its view.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { MANAGED_CONTROL_KEYS } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import { entriesOf, readJson, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-managed-file' as const
 
 const DROP_IN_DIRECTORY = 'managed-settings.d'
 const MERGE_FILE = 'managed-settings.json'
+
+const isPolicyKey = (key: string) => !MANAGED_CONTROL_KEYS.includes(key)
+
+/** True when a drop-in in `managed-settings.d` beside `dir` holds a policy key,
+ *  or when the rule cannot tell. Claude Code reads each `*.json` file there
+ *  that is not hidden. A drop-in that cannot be read, or that does not parse
+ *  to an object, counts as a policy source: it can hold any key. */
+function dropInsMayHoldPolicy(dir: string): boolean {
+  const directory = path.join(dir, DROP_IN_DIRECTORY)
+  const entries = entriesOf(directory)
+  if (entries === null) {
+    return false
+  }
+  if (entries === UNREADABLE) {
+    return true
+  }
+  const bound = repositoryRoot(dir)
+  return entries
+    .filter(({ name: entry }) => entry.endsWith('.json') && !entry.startsWith('.'))
+    .some(({ name: entry }) => {
+      const parsed = readJson(path.join(directory, entry), bound)
+      if (parsed === null) {
+        return false
+      }
+      if (parsed === UNREADABLE) {
+        return true
+      }
+      const { data } = parsed
+      if (data === null || typeof data !== 'object' || Array.isArray(data)) {
+        return true
+      }
+      return Object.entries(data).some(([key, value]) => value !== null && isPolicyKey(key))
+    })
+}
 
 const rule: JSONRuleDefinition<{
   RuleOptions: []
@@ -57,7 +93,16 @@ const rule: JSONRuleDefinition<{
               lastMember(body, keyOf(member.name)) === member && member.value.type !== 'Null',
           )
           .map((member) => keyOf(member.name))
-        if (keys.length > 0 && keys.every((key) => MANAGED_CONTROL_KEYS.includes(key))) {
+        // The source counts as one merged policy. A drop-in with only control keys can sit beside
+        // a file with policy keys, so only `managed-settings.json` gets this report, and only
+        // when no drop-in beside it holds a policy key.
+        if (
+          !isDropIn &&
+          file === MERGE_FILE &&
+          keys.length > 0 &&
+          !keys.some(isPolicyKey) &&
+          !dropInsMayHoldPolicy(path.dirname(context.filename))
+        ) {
           context.report({ node: body, messageId: 'controlKeysOnly' })
           return
         }

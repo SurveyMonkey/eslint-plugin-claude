@@ -2,7 +2,14 @@
 // `managed-settings.d/` directory. The files glob, and the match of a hidden file by that glob,
 // are in tests/configs.test.ts. The page "Deploy managed settings" gives each fact:
 // https://code.claude.com/docs/en/managed-settings
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { mkdirSync, symlinkSync } from 'node:fs'
+import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
+import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
+import { repo } from '../agent-settings.test-support.ts'
+import { chmodCannotBlock, jsonTester, ruleOf, withoutAccess } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-managed-file')
 
@@ -44,6 +51,10 @@ jsonTester.run('settings-managed-file (valid)', rule, {
     },
     // Two keys of one name: the last `model` is a value, so the file holds a policy key.
     { code: '{"model": null, "model": "x", "managedSourcesBehavior": "merge"}', filename: dropIn },
+    // A drop-in with only control keys is silent: another file of the merged source can hold the
+    // policy keys.
+    { code: obj({ managedSourcesBehavior: 'first-wins' }), filename: dropIn },
+    { code: obj({ wslInheritsWindowsSettings: true }), filename: dropIn },
     // "merge" beside a policy key in a drop-in. The page states the lowest rank for the
     // `managed-settings.json` file. The rule does not check a drop-in for it.
     { code: obj({ managedSourcesBehavior: 'merge', model: 'x' }), filename: dropIn },
@@ -57,6 +68,8 @@ jsonTester.run('settings-managed-file (valid)', rule, {
     },
     // A dot inside a file name is not a hidden file.
     { code: obj({ model: 'x' }), filename: 'managed-settings.d/10.x.json' },
+    // "merge" in a file with another name is no `managed-settings.json` file.
+    { code: obj({ managedSourcesBehavior: 'merge', model: 'x' }), filename: 'x/other.json' },
     // A hidden name outside `managed-settings.d` is not a drop-in.
     { code: obj({ model: 'x' }), filename: 'other/.managed-settings.json' },
   ],
@@ -94,8 +107,9 @@ jsonTester.run('settings-managed-file (invalid)', rule, {
       filename: 'etc/claude-code/managed-settings.d/.20-y.json',
       errors: [{ messageId: 'hiddenDropIn' }],
     },
-    // A file with only control keys: Claude Code does not count it, and moves on.
-    ...[main, dropIn].flatMap((filename) =>
+    // A `managed-settings.json` with only control keys and no policy drop-in beside it: Claude
+    // Code does not count it, and moves on. A drop-in gets no such report (see below).
+    ...[main].flatMap((filename) =>
       [
         { managedSourcesBehavior: 'first-wins' },
         { wslInheritsWindowsSettings: true },
@@ -160,7 +174,7 @@ jsonTester.run('settings-managed-file (message text)', rule, {
     },
     {
       code: obj({ wslInheritsWindowsSettings: true }),
-      filename: dropIn,
+      filename: main,
       errors: [
         {
           message:
@@ -179,4 +193,85 @@ jsonTester.run('settings-managed-file (message text)', rule, {
       ],
     },
   ],
+})
+
+// A `managed-settings.json` file with only control keys is a fault only when no drop-in beside it
+// holds a policy key. The rule reads the sibling `managed-settings.d/` on disk.
+describe('settings-managed-file control keys with drop-ins on disk', () => {
+  const CONTROL = JSON.stringify({ managedSourcesBehavior: 'first-wins' })
+  const POLICY = JSON.stringify({ model: 'opus' })
+  /** The message ids of the rule for the text `code` at `managed-settings.json` of `root`. */
+  const lintMain = (root: string, code = CONTROL) =>
+    new Linter({ cwd: path.parse(root).root })
+      .verify(
+        code,
+        [
+          {
+            files: ['**/*.json'],
+            plugins: { json, claude: plugin },
+            language: 'json/json',
+            rules: { 'claude/settings-managed-file': 'error' },
+          },
+        ],
+        { filename: path.join(root, 'managed-settings.json') },
+      )
+      .map((message) => message.messageId)
+  const ids = (files: Record<string, string>) => lintMain(repo(files))
+
+  it('reports a file alone', () => {
+    expect(ids({})).toEqual(['controlKeysOnly'])
+  })
+  it('reports beside a control-only drop-in', () => {
+    expect(ids({ 'managed-settings.d/10-ctl.json': CONTROL })).toEqual(['controlKeysOnly'])
+  })
+  it('is silent beside a drop-in with a policy key', () => {
+    expect(ids({ 'managed-settings.d/10-p.json': POLICY })).toEqual([])
+  })
+  it('reports beside a hidden drop-in with a policy key', () => {
+    expect(ids({ 'managed-settings.d/.10-p.json': POLICY })).toEqual(['controlKeysOnly'])
+  })
+  it('reports beside a file that does not end in .json', () => {
+    expect(ids({ 'managed-settings.d/10-p.txt': POLICY })).toEqual(['controlKeysOnly'])
+  })
+  it('reports when the policy key of the drop-in is null', () => {
+    expect(ids({ 'managed-settings.d/10-p.json': '{"model": null}' })).toEqual(['controlKeysOnly'])
+  })
+  it('is silent when a drop-in does not parse to an object', () => {
+    expect(ids({ 'managed-settings.d/10-p.json': '[1]' })).toEqual([])
+    expect(ids({ 'managed-settings.d/10-p.json': '{' })).toEqual([])
+  })
+  it('is silent when a drop-in is a dangling link', { skip: process.platform === 'win32' }, () => {
+    const root = repo({})
+    mkdirSync(path.join(root, 'managed-settings.d'))
+    symlinkSync(path.join(root, 'gone.json'), path.join(root, 'managed-settings.d/10-p.json'))
+    expect(lintMain(root)).toEqual([])
+  })
+  it('is silent when a drop-in cannot be read', () => {
+    if (chmodCannotBlock) {
+      return
+    }
+    const root = repo({ 'managed-settings.d/10-p.json': POLICY })
+    withoutAccess(path.join(root, 'managed-settings.d/10-p.json'), () => {
+      expect(lintMain(root)).toEqual([])
+    })
+  })
+  it('is silent when the drop-in directory cannot be read', () => {
+    if (chmodCannotBlock) {
+      return
+    }
+    const root = repo({ 'managed-settings.d/10-p.json': POLICY })
+    withoutAccess(path.join(root, 'managed-settings.d'), () => {
+      expect(lintMain(root)).toEqual([])
+    })
+  })
+  it('reports a "merge" file with only control keys once', () => {
+    expect(lintMain(repo({}), JSON.stringify({ managedSourcesBehavior: 'merge' }))).toEqual([
+      'controlKeysOnly',
+    ])
+  })
+  it('reports "merge" beside a policy drop-in', () => {
+    const merge = JSON.stringify({ managedSourcesBehavior: 'merge' })
+    const root = repo({ 'managed-settings.d/10-p.json': POLICY })
+    expect(lintMain(root, merge)).toEqual(['mergeNothing'])
+  })
 })
