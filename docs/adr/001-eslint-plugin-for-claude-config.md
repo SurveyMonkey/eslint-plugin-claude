@@ -153,10 +153,12 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
       `marketplace.json`, it is the marketplace root. A rule then reads no file out of that
       directory. `repositoryRoot` in `src/skill-tree.ts` does this. With no `.git` entry, it
       returns the real path of the directory where the search started. So a `.claude/` link moves
-      the bound to its target, and a rule reads files there. With a `.git` entry, a link cannot
-      move the bound, because the search starts from the path of the linted file.
-    - A path that does not exist is out of the repository when its nearest parent that exists is.
-      A rule cannot see it.
+      the bound to its target. The bound is then the real path of `.claude/`, and a rule reads
+      files in that real path. With a `.git` entry, a link cannot move the bound. The search
+      starts from the path of the linted file.
+    - A path that does not exist is out of the repository when its nearest part that exists is.
+      A rule cannot see it. A dangling link is a part that exists. A path that has a dangling
+      link in it is one that a rule cannot see.
     - A rule does not follow a link whose real path is out of the repository.
     - A rule does not model what Claude Code loads from out of the repository, such as user
       settings or agents in `~/.claude/`.
