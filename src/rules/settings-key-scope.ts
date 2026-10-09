@@ -5,20 +5,16 @@
 // `syncClaudeAiPlugins`, which `settings-sync-claude-ai-plugins` reports, and
 // `autoContinueAtUsageLimit`, which a project file turns off and does not
 // ignore.
-import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { hasListedChildren, type KeyScope, settingsKeyScope } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ObjectNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
-import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import { type FileKind, isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'settings-key-scope' as const
 
 type MessageId = 'managedOnly' | 'userOrManaged' | 'userLocalOrManaged' | 'globalConfig'
-
-/** The kind of file: the two project files, or a managed file. */
-type FileKind = 'project' | 'local' | 'managed'
 
 /** For each scope that has a fault: the message, and the kinds of file that
  *  have the fault. An "any" key has no fault. */
@@ -29,25 +25,6 @@ const FAULTS: Record<KeyScope['scope'], { id: MessageId; kinds: FileKind[] } | u
   global: { id: 'globalConfig', kinds: ['project', 'local', 'managed'] },
   any: undefined,
 }
-
-const DROP_IN_DIRECTORY = 'managed-settings.d'
-
-function kindOf(filename: string): FileKind {
-  // A drop-in can have any name that the files glob matches, such as `managed-settings.json`
-  // or `settings.local.json`, so the directory decides first.
-  if (
-    path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY ||
-    path.basename(filename) === 'managed-settings.json'
-  ) {
-    return 'managed'
-  }
-  return path.basename(filename) === 'settings.local.json' ? 'local' : 'project'
-}
-
-/** A hidden file in `managed-settings.d`. Claude Code ignores it, so it reads no key there. */
-const isHiddenDropIn = (filename: string) =>
-  path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY &&
-  path.basename(filename).startsWith('.')
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {
