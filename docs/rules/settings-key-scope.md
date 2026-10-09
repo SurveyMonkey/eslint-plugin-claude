@@ -44,7 +44,7 @@ below it gets one report, on the key. The rule does not report the keys below it
 A top-level key with a dot in its name is one key. It is not a nested key.
 
 The data is in `src/data/settings-keys.ts`, with the Claude Code version and the date of the last
-review. The data module also holds the three exceptions below.
+review. The data module also holds the exceptions below.
 
 ### Exceptions
 

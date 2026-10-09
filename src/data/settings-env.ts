@@ -166,8 +166,8 @@ export function envValueForm(name: string): EnvForm | undefined {
 // env" in the settings reference, and the rows of the env vars reference.
 
 /** Variables that Claude Code ignores in the `env` block of every settings file. The settings
- *  reference names the identity variables of the hosting environments, and the variables that
- *  Claude Code exports or reads from the launch environment only. */
+ *  reference names two kinds. Host platforms own the identity variables. Claude Code exports
+ *  the others, or reads them from the launch environment only. */
 const IGNORED_IN_EVERY_FILE = new Set([
   'CLAUDE_CODE_REMOTE',
   'CLAUDE_CODE_ACCOUNT_UUID',
@@ -237,9 +237,10 @@ const IGNORED_IN_PROJECT_FILES: readonly (string | RegExp)[] = [
 ]
 
 /** The values that still apply from a project or local file, because they turn telemetry off:
- *  `none` for the three exporter selectors, and an off value for three content variables. A
- *  value has no letter case. `OTEL_LOG_MANAGED_SETTINGS` has the same exception. The env vars
- *  reference says that a project value does not turn it on. */
+ *  `none` for the three exporter selectors, and an off value for three content variables. The
+ *  letter case of a value does not matter. The plugin gives `OTEL_LOG_MANAGED_SETTINGS` the same
+ *  exception. The docs name none. The env vars reference says that a project value does not
+ *  turn it on, so an off value changes nothing. */
 const OFF_VALUES = ['0', 'false', 'no', 'off']
 const TELEMETRY_OFF_VALUES = new Map<string, readonly string[]>([
   ['OTEL_LOGS_EXPORTER', ['none']],

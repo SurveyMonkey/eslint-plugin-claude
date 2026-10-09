@@ -51,9 +51,9 @@ A variable that is not in the table has no form, and any string is valid.
 | `CLAUDE_CODE_SHELL` | A path to a `bash` or `zsh` binary. Other shells are not supported[^vars] |
 | `ANTHROPIC_DEFAULT_*_MODEL_SUPPORTED_CAPABILITIES`, `ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES` | A comma-separated list of `effort`, `xhigh_effort`, `max_effort`, `thinking`, `adaptive_thinking`, `interleaved_thinking`[^capabilities] |
 
-The comparison of a value is exact, with these exceptions. A list entry may have spaces around it.
-The size suffix and the words `off`, `false`, `no` and `none` of the memory limit have any letter
-case. A path has `\` or `/` between its parts.
+The comparison of a value is exact. The rule also accepts a few spellings that the docs do not
+state. A list entry may have spaces around it. The size suffix and the words of the memory limit
+have any letter case. A path has `\` or `/` between its parts.
 
 ### What the rule does not check
 

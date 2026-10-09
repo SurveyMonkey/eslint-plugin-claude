@@ -1,10 +1,10 @@
 // A settings key in a file that Claude Code does not read it from
 // (docs/rules/settings-key-scope.md). The scope of each key is in
 // `src/data/settings-keys.ts`. The rule makes no report on a key that has a
-// rule of its own for a repository file, and the data names it. Today that is
-// `syncClaudeAiPlugins`, which `settings-sync-claude-ai-plugins` reports, and
-// `autoContinueAtUsageLimit`, which a project file turns off and does not
-// ignore.
+// rule of its own, and the data names it. These are `syncClaudeAiPlugins`
+// (`settings-sync-claude-ai-plugins`), `autoContinueAtUsageLimit`, which a project file
+// turns off and does not ignore, and `permissionExplainerEnabled` and `teammateDefaultModel`
+// (`settings-removed-key`).
 import type { JSONRuleDefinition } from '@eslint/json'
 import { hasListedChildren, type KeyScope, settingsKeyScope } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'

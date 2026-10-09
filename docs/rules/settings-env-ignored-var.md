@@ -21,7 +21,8 @@ Set an `env` variable only in a file where Claude Code reads it.
 ## Rule details
 
 Most variables of the env vars reference can go in `env`. Some cannot.[^ignored] Claude Code
-drops them, and logs a warning that `claude --debug` shows. The rule reports a variable in `env`
+drops a project or local value of many of them, and logs a warning that `claude --debug`
+shows.[^ignored] The rule reports a variable in `env`
 in three cases. The report is on the variable name. The lists are in `src/data/settings-env.ts`,
 with the Claude Code version of the last review.
 
@@ -29,7 +30,7 @@ with the Claude Code version of the last review.
 
 Claude Code ignores these variables in the `env` block of any settings file:[^ignored]
 
-- The identity variables that the hosting environments own: `CLAUDE_CODE_REMOTE` and
+- The identity variables that host platforms own: `CLAUDE_CODE_REMOTE` and
   `CLAUDE_CODE_ACCOUNT_UUID`.
 - `CLAUDE_CODE_MESSAGING_SOCKET` and `CLAUDE_CODE_MESSAGING_TOKEN`, which Claude Code exports
   itself.
@@ -68,8 +69,9 @@ can set them, so the rule makes no report in a managed file.[^ignored]
 A few values that turn telemetry off still apply from a project or local file. The rule makes
 no report on them: `none` for the three exporter selectors, and an off value such as `0` for
 `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_CONTENT` and `OTEL_LOG_TOOL_DETAILS`.[^ignored] The
-rule reads `0`, `false`, `no` and `off`, in any letter case, as off values. It gives
-`OTEL_LOG_MANAGED_SETTINGS` the same exception. The other OpenTelemetry variables get a report
+rule reads `0`, `false`, `no` and `off`, in any letter case, as off values. The plugin
+gives `OTEL_LOG_MANAGED_SETTINGS` the same exception. The docs name none, and an off value
+changes nothing. The other OpenTelemetry variables get a report
 for each value, and so does a value that is not a string.
 
 ### Removed variables
@@ -81,7 +83,7 @@ These variables have no effect. Claude Code removed them, or accepts them for co
 | `CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE` | v2.1.142 |
 | `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` | v2.1.160 |
 | `CLAUDE_CODE_CONNECT_TIMEOUT_MS` | v2.1.186 |
-| `CLAUDE_CODE_ENABLE_AUTO_MODE` | v2.1.207. Setting it was required in v2.1.158 through v2.1.206 |
+| `CLAUDE_CODE_ENABLE_AUTO_MODE` | v2.1.207. It was required in v2.1.158 through v2.1.206 |
 | `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` | v2.1.224 |
 | `CLAUDE_SUBAGENT_BG_SHELL_MAX_MS` | v2.1.260 |
 | `TASK_MAX_OUTPUT_LENGTH` | v2.1.277 |
@@ -93,9 +95,10 @@ The rule reports a removed variable in each file.
 
 - A variable that Claude Code sets itself, such as `CLAUDE_CODE_CHILD_SESSION`,
   `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_REMOTE_SESSION_ID`, `CLAUDE_CODE_BRIDGE_SESSION_ID`,
-  `CLAUDE_EFFORT`, `CLAUDE_JOB_DIR`, `CLAUDE_PID` and `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`.
-  The env vars reference says how Claude Code sets them. It does not say that Claude Code drops a
-  settings value.[^vars]
+  `CLAUDE_EFFORT`, `CLAUDE_JOB_DIR` and `CLAUDE_PID`. The env vars reference says how Claude
+  Code sets them. It does not say that Claude Code drops a settings value.[^vars]
+- `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`. A host platform sets it. The env vars reference does
+  not say that Claude Code drops a settings value.[^vars]
 - `OTEL_RESOURCE_ATTRIBUTES`, and the interval, timeout and compression variables of the
   OpenTelemetry export. The settings reference does not list them.
 - A hidden file in `managed-settings.d/`. Claude Code ignores it.

@@ -23,7 +23,7 @@ Do not set a value in a project settings file that Claude Code ignores there.
 A repository must not steer some behavior of a session. For a few keys, Claude Code reads a
 value from user, managed and `--settings` sources, and ignores or limits the same value in a
 project or local file.[^exceptions] The rule reports each such value. The report is on the value,
-or on the key for the tip keys.
+on the key for a tip key, or on the object for a tip object.
 
 | Key and value | What Claude Code does in a project or local file |
 |---------------|--------------------------------------------------|
@@ -39,7 +39,7 @@ The `isolatePeerMachines` and `disableClaudeAiConnectors` messages say that the 
 effect. A project `false` is the same as no value, or loses to a `true` from another file.
 
 The rule lints the two project files. The managed files can set each of these values, and the
-rule does not read them. A hidden file in `managed-settings.d/` is not a project file.
+rule does not read them.
 
 ### What the rule does not check
 

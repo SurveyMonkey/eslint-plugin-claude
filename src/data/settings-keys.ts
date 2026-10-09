@@ -376,11 +376,11 @@ export function hasListedChildren(path: readonly string[]): boolean {
 // settings reference (https://code.claude.com/docs/en/settings-reference), checked on Claude
 // Code 2.1.295 on 2026-10-08. Review these lists with the lists above.
 
-/** A key that has no effect in any settings file, and the Claude Code version
- *  from which it has none. `taskOutputMaxChars` and `teammateDefaultModel` and
- *  `permissionExplainerEnabled` were removed in that version. Claude Code
- *  deprecated `keybindingFlavor` in it, still accepts the key, and ignores
- *  its value. */
+/** A key that has no effect in any settings file. Each value is the Claude Code
+ *  version of the entry for that key, from which the key has no effect. Claude
+ *  Code removed `taskOutputMaxChars`, `teammateDefaultModel` and
+ *  `permissionExplainerEnabled`. It deprecated `keybindingFlavor`, still accepts
+ *  the key, and ignores its value. */
 export const NO_EFFECT_KEYS: Readonly<Record<string, string>> = {
   taskOutputMaxChars: '2.1.277',
   keybindingFlavor: '2.1.261',
