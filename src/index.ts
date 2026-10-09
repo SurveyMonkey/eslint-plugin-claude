@@ -48,6 +48,7 @@ import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
+import settingsFileSize from './rules/settings-file-size.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
@@ -145,6 +146,7 @@ const modules = [
   settingsMarketplaceKeyAliasConflict,
   settingsSyncClaudeAiPlugins,
   settingsValidJson,
+  settingsFileSize,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -238,6 +240,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-key-alias-conflict': 'error',
   'settings-sync-claude-ai-plugins': 'error',
   'settings-valid-json': 'error',
+  'settings-file-size': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

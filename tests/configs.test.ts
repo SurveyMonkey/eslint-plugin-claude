@@ -81,6 +81,9 @@ const badMarketSettings = JSON.stringify({
   },
 })
 
+// One string value of 2 MiB makes a file over the limit of the size rule.
+const big = JSON.stringify({ a: 'x'.repeat(2097152) })
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -231,6 +234,14 @@ const TREE: Record<string, string> = {
   'packages/vj/.claude/settings.json': '[1]',
   'packages/vj/.claude/settings.local.json': '"x"',
   'packages/vj/.vscode/settings.json': '[1]',
+  // A file of 2 MiB and 8 bytes, in each place the size rule reads, and in places it does not.
+  'packages/big/.claude/settings.json': big,
+  'packages/big/.claude/settings.local.json': big,
+  'packages/big/managed-settings.json': big,
+  'packages/big/managed-settings.d/30-big.json': big,
+  'packages/big/managed-settings.d/30-big.txt': big,
+  'packages/big/managed-settings.d/sub/40-big.json': big,
+  'packages/big/.vscode/settings.json': big,
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -291,7 +302,11 @@ const SETTINGS_RULES = [
 // The settings rules of the scope layer of #14, in the order of the `modules` list, with the
 // files of each. Each is an error.
 const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
-const SCOPE_RULES = [{ name: 'settings-valid-json', files: PROJECT_FILES }]
+const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
+const SCOPE_RULES = [
+  { name: 'settings-valid-json', files: PROJECT_FILES },
+  { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -360,6 +375,13 @@ const EXPECTED = [
   // `settings-valid-json` reads the two project settings files, and no other settings file.
   'packages/vj/.claude/settings.json: claude/settings-valid-json@2',
   'packages/vj/.claude/settings.local.json: claude/settings-valid-json@2',
+  // `settings-file-size` also reads the managed settings files, and no other file.
+  ...[
+    'packages/big/.claude/settings.json',
+    'packages/big/.claude/settings.local.json',
+    'packages/big/managed-settings.json',
+    'packages/big/managed-settings.d/30-big.json',
+  ].map((file) => `${file}: claude/settings-file-size@2`),
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

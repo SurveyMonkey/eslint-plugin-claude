@@ -996,6 +996,18 @@
       "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
     }
   ],
+  "settings-file-size": [
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Settings file exceeds the 2MiB limit",
+      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "heading": "CLI flags",
+      "hash": "13eda81af012ba8834893ecaa594a6efeee5073bf2dd368653852a78cd2f268b"
+    }
+  ],
   "settings-marketplace-headers-helper-https": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

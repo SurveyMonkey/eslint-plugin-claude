@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "96a4d852514448d317e8327a2c15da6511e27600b45bed85a4a1d95eae74f06c",
+  "hash": "854d591b0976e880b7724f330a2f5c7a865f5b300191d738ab4bc61f77afea14",
   "blocks": [
     {
       "id": "error-reference",
@@ -1105,6 +1105,12 @@
       "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4",
       "text": "<h3 id=\"a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved\">\n  A skill, command, or workflow wasn't loaded because its name is reserved\n</h3>\n\nA skill folder, a frontmatter `name`, a file or subfolder in `.claude/commands/`, or a [saved workflow](/docs/en/workflows#save-the-workflow-for-reuse) uses the name `anthropic-skills` or a name that starts with `anthropic-skills:`. Claude Code [reserves that name for skills synced from claude.ai](/docs/en/skills#names-reserved-for-synced-skills) and doesn't load that item.\n\nClaude Code shows this warning as a startup notice in the conversation view rather than on stderr:\n\n```text theme={null}\nNot loaded: rename .claude/skills/anthropic-skills, then restart — its name uses \"anthropic-skills\", a name reserved for the skills synced from your claude.ai account\n```\n\nThe notice names what to change for the first item it refused: a folder or file to rename, a `name:` line to edit, or a workflow to rename. When more than one item was refused, the notice ends with a count such as `· 2 more`, and the [debug log](/docs/en/debug-your-config) names each one.\n\n**What to do:**\n\n* Rename the item the notice names, or edit the `name:` line it points to, then restart the session.\n\nBefore v2.1.282, Claude Code loaded skills and commands with these names."
+    },
+    {
+      "heading": "Settings file exceeds the 2MiB limit",
+      "id": "settings-file-exceeds-the-2mib-limit",
+      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674",
+      "text": "### Settings file exceeds the 2MiB limit\n\nThe file you passed to [`--settings`](/docs/en/cli-reference#cli-flags) is larger than 2 MiB, so `claude` exits with code 1 at startup instead of loading it. Before v2.1.214, Claude Code read the file with no size check, and a multi-gigabyte file or a device file such as `/dev/zero` grew memory without bound.\n\n```text theme={null}\nError: Settings file exceeds the 2MiB limit: /path/to/settings.json\n```\n\nClaude Code rejects a `--settings` path that isn't a regular file the same way: a device, FIFO, or socket reports `Error: Cannot use settings file (Not a regular file (device, FIFO, or socket))` followed by the path, and a directory reports an `EISDIR` reason.\n\n**What to do:**\n\n* Point `--settings` at a regular JSON settings file under 2 MiB. See [Settings](/docs/en/settings) for the format."
     }
   ]
 }

@@ -64,6 +64,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-enabled-plugins-schema',
     'settings-extra-known-marketplaces-key-matches-name',
     'settings-extra-known-marketplaces-schema',
+    'settings-file-size',
     'settings-marketplace-headers-helper-https',
     'settings-marketplace-key-alias-conflict',
     'settings-sync-claude-ai-plugins',

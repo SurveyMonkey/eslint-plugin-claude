@@ -125,6 +125,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
 | [`claude/settings-valid-json`](docs/rules/settings-valid-json.md) | The top level of a project settings file is a JSON object | `error` | `error` |
+| [`claude/settings-file-size`](docs/rules/settings-file-size.md) | A settings file has at most 2 MiB (2097152 bytes); option `max` | `error` | `error` |
 
 ### Permissions and sandbox
 
