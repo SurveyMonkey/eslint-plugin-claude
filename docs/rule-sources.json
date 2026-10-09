@@ -1055,6 +1055,38 @@
       "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
     }
   ],
+  "settings-managed-file": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Find entries Claude Code dropped",
+      "hash": "89145fe5c80324f843eb18722091ac5cb9165bc6a8c1594fec3566051ebb7b27"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "How Claude Code combines managed sources",
+      "hash": "bc412eef48c5ddd66c80e0c9460f9832fe0c71671a40f3f7346b1fe87d0005bb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "managedSourcesBehavior",
+      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Where each mechanism stores the policy",
+      "hash": "192ec50ea2638a49de33ab07ca94173177804306af2ab7bbd9a7b76ec3a94aed"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
   "settings-marketplace-headers-helper-https": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

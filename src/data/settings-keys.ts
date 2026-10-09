@@ -288,6 +288,14 @@ const ANY_FILE: readonly string[] = [
   'worktree.symlinkDirectories',
 ]
 
+/** The two control keys of the managed settings. They are not policy keys. A
+ *  managed settings file or MDM policy that holds only these keys does not count
+ *  as a source (https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources). */
+export const MANAGED_CONTROL_KEYS: readonly string[] = [
+  'wslInheritsWindowsSettings',
+  'managedSourcesBehavior',
+]
+
 /** The key with a rule of its own for a repository file, and the rule. The
  *  settings reference gives the scope of `syncClaudeAiPlugins` as "User,
  *  local, or managed", and `settings-sync-claude-ai-plugins` already reports
