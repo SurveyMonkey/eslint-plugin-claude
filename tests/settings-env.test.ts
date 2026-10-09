@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { envIgnoredIn, removedEnvVarSince } from '../src/data/settings-env.ts'
+import { NO_EFFECT_KEYS } from '../src/data/settings-keys.ts'
 
 function snapshotText(page: string, id: string): string {
   const snapshot = JSON.parse(
@@ -148,5 +149,31 @@ describe('the value forms, against the docs', () => {
 
   it('states the range of the tool search threshold', () => {
     expect(snapshotText('mcp', 'configure-tool-search')).toContain('where `N` is 0-100')
+  })
+})
+
+describe('the keys with no effect, against the settings reference', () => {
+  it('gives each key the version of its entry', () => {
+    for (const [key, since] of Object.entries(NO_EFFECT_KEYS)) {
+      const text = snapshotText('settings-reference', key.toLowerCase())
+      expect(text, key).toMatch(
+        new RegExp(`(?:Removed in|Deprecated since) v${since.replaceAll('.', '\\.')}\\b`),
+      )
+    }
+  })
+
+  it('lists the four keys that the entries mark as removed or deprecated with no effect', () => {
+    expect(Object.keys(NO_EFFECT_KEYS).sort()).toEqual([
+      'keybindingFlavor',
+      'permissionExplainerEnabled',
+      'taskOutputMaxChars',
+      'teammateDefaultModel',
+    ])
+  })
+
+  it('states that disableArtifact false is ignored', () => {
+    expect(snapshotText('settings-reference', 'disableartifact')).toContain(
+      'ignores `disableArtifact: false`',
+    )
   })
 })
