@@ -61,18 +61,45 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
       'a size in plain digits with an optional K, M, G or T suffix, or one of 0, off, false, no, none',
   },
   {
-    // "none", "all-new", or a comma-separated list of: mcp, lsp, hooks, plugin, helper, agent.
+    // "none", "all-new", or a comma-separated list of kinds. "Unknown names: Claude Code ignores
+    // names it doesn't recognize", and the set of kinds "can change over time", so a name that
+    // is not in the table today is valid.
     name: 'CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE',
-    pass: ['none', 'all-new', 'mcp', 'mcp,lsp', 'hooks, plugin', 'helper,agent'],
-    fail: ['mcps', 'mcp,', 'mcp;lsp', 'all', 'none,mcp', 'all-new,mcp'],
-    expected: 'none, all-new, or a comma-separated list of mcp, lsp, hooks, plugin, helper, agent',
+    pass: [
+      'none',
+      'all-new',
+      'mcp',
+      'mcp,lsp',
+      'hooks, plugin',
+      'helper,agent',
+      'mcps',
+      'mcp,newkind',
+    ],
+    fail: ['mcp,', ',mcp', 'mcp;lsp', 'mcp,,lsp', 'two words'],
+    expected: 'none, all-new, or a comma-separated list of kind names such as mcp, lsp or hooks',
   },
   {
-    // "true, false, auto, auto:N where N is 0-100".
+    // "true, false, auto, auto:N where N is 0-100". The env vars reference says that a variable
+    // that turns a behavior on or off takes "1, true, yes, or on" and "0, false, no, or off",
+    // "in any casing".
     name: 'ENABLE_TOOL_SEARCH',
-    pass: ['true', 'false', 'auto', 'auto:0', 'auto:5', 'auto:100'],
-    fail: ['1', '0', 'auto:101', 'auto:-1', 'auto:5.5', 'auto:', 'auto:x', 'yes', 'True'],
-    expected: 'true, false, auto, or auto:N with N from 0 to 100',
+    pass: [
+      'true',
+      'false',
+      'auto',
+      'auto:0',
+      'auto:5',
+      'auto:100',
+      '1',
+      '0',
+      'yes',
+      'On',
+      'TRUE',
+      'no',
+      'off',
+    ],
+    fail: ['auto:101', 'auto:-1', 'auto:5.5', 'auto:', 'auto:x', 'maybe', 'enabled'],
+    expected: 'a Boolean word such as true or false, auto, or auto:N with N from 0 to 100',
   },
   {
     // "v1 ... or v2".
@@ -193,7 +220,7 @@ jsonTester.run('settings-env-value-format (valid)', rule, {
     { code: '{"env": {"FOO": 1, "FOO": "1"}}', filename: project },
     { code: '{"env": 1, "env": {"FOO": "1"}}', filename: project },
     {
-      code: '{"env": {"ENABLE_TOOL_SEARCH": "yes", "ENABLE_TOOL_SEARCH": "auto"}}',
+      code: '{"env": {"ENABLE_TOOL_SEARCH": "maybe", "ENABLE_TOOL_SEARCH": "auto"}}',
       filename: project,
     },
   ],
@@ -292,18 +319,18 @@ jsonTester.run('settings-env-value-format (invalid)', rule, {
       errors: [{ message: 'The value of "FOO" must be a string, not a number.' }],
     },
     {
-      code: '{"env": {"ENABLE_TOOL_SEARCH": "1"}}',
+      code: '{"env": {"ENABLE_TOOL_SEARCH": "maybe"}}',
       filename: local,
       errors: [
         {
           message:
-            'The value of "ENABLE_TOOL_SEARCH" must be true, false, auto, or auto:N with N from 0 to 100.',
+            'The value of "ENABLE_TOOL_SEARCH" must be a Boolean word such as true or false, auto, or auto:N with N from 0 to 100.',
         },
       ],
     },
     // One report for each fault.
     {
-      code: '{"env": {"FOO": null, "ENABLE_TOOL_SEARCH": "yes", "BAR": "ok", "MCP_SDK_GENERATION": "v3"}}',
+      code: '{"env": {"FOO": null, "ENABLE_TOOL_SEARCH": "maybe", "BAR": "ok", "MCP_SDK_GENERATION": "v3"}}',
       filename: project,
       errors: [
         { messageId: 'notString' as const },
@@ -318,7 +345,7 @@ jsonTester.run('settings-env-value-format (invalid)', rule, {
       errors: [{ messageId: 'notString' as const, column: 29 }],
     },
     {
-      code: '{"env": {"ENABLE_TOOL_SEARCH": "auto", "ENABLE_TOOL_SEARCH": "yes"}}',
+      code: '{"env": {"ENABLE_TOOL_SEARCH": "auto", "ENABLE_TOOL_SEARCH": "maybe"}}',
       filename: project,
       errors: [{ messageId: 'badForm' as const, column: 62 }],
     },

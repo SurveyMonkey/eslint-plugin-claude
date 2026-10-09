@@ -300,7 +300,7 @@ const TREE: Record<string, string> = {
   // drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/ef/.claude/settings.json': '{"env": []}',
   'packages/ef/.claude/settings.local.json': '{"env": {"FOO": 1}}',
-  'packages/ef/managed-settings.json': '{"env": {"ENABLE_TOOL_SEARCH": "1"}}',
+  'packages/ef/managed-settings.json': '{"env": {"ENABLE_TOOL_SEARCH": "maybe"}}',
   'packages/ef/managed-settings.d/10-a.json': '{"env": {"BASH_MAX_OUTPUT_LENGTH": "200000"}}',
   'packages/ef/managed-settings.d/.20-hidden.json': '{"env": []}',
   'packages/ef/managed-settings.d/30-b.txt': '{"env": []}',

@@ -42,8 +42,8 @@ A variable that is not in the table has no form, and any string is valid.
 | `CLAUDE_CODE_AUTO_COMPACT_WINDOW` | A plain integer from 100000 to 1000000. A value such as `500k` reads as `500`[^vars] |
 | `BASH_MAX_OUTPUT_LENGTH` | At most 150000, the maximum[^vars] |
 | `CLAUDE_CODE_TOOL_MEMORY_LIMIT` | A size in plain digits with an optional `K`, `M`, `G` or `T` suffix, or `0`, `off`, `false`, `no`, `none`[^memory] |
-| `CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE` | `none`, `all-new`, or a comma-separated list of `mcp`, `lsp`, `hooks`, `plugin`, `helper`, `agent`[^memory] |
-| `ENABLE_TOOL_SEARCH` | `true`, `false`, `auto`, or `auto:N` with N from 0 to 100[^search] |
+| `CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE` | `none`, `all-new`, or a comma-separated list of kind names such as `mcp`, `lsp` or `hooks`. Claude Code ignores a name that it does not know, so the rule checks the shape of each name only[^memory] |
+| `ENABLE_TOOL_SEARCH` | `auto`, `auto:N` with N from 0 to 100, or a Boolean word: `1`, `true`, `yes`, `on`, `0`, `false`, `no` or `off`, in any casing[^search][^vars] |
 | `MCP_SDK_GENERATION` | `v1` or `v2`[^vars] |
 | `MCP_PROTOCOL_NEGOTIATION` | `auto` or `legacy`[^vars] |
 | `CLAUDE_CODE_PROMPT_CACHE_TTL`, `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL` | `5m` or `1h`, the only values that Claude Code accepts[^vars] |
@@ -71,7 +71,7 @@ Fail:
 ```json
 {
   "env": {
-    "ENABLE_TOOL_SEARCH": "1",
+    "ENABLE_TOOL_SEARCH": "maybe",
     "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": 5,
     "BASH_MAX_OUTPUT_LENGTH": "200000"
   }

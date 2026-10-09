@@ -52,7 +52,9 @@ const oneOf = (expected: string, values: readonly string[]): EnvForm => ({
 const listOf = (values: readonly string[]) => (value: string) =>
   value.split(',').every((entry) => values.includes(entry.trim()))
 
-const CGROUP_KINDS = ['mcp', 'lsp', 'hooks', 'plugin', 'helper', 'agent']
+// The tools reference says that Claude Code ignores a kind name that it does not know, and that
+// the set of kinds can change. The form checks the shape of each name, not the name.
+const KIND_NAME = /^[A-Za-z][A-Za-z0-9_-]*$/
 
 const CAPABILITIES = [
   'effort',
@@ -71,6 +73,10 @@ const CAPABILITIES_FORM: EnvForm = {
 /** The `_SUPPORTED_CAPABILITIES` variables of the pinned models. */
 const CAPABILITIES_VARIABLE =
   /^ANTHROPIC_(?:DEFAULT_[A-Z]+_MODEL|CUSTOM_MODEL_OPTION)_SUPPORTED_CAPABILITIES$/
+
+// The env vars reference: a variable that turns a behavior on or off takes one of these, in any
+// casing.
+const BOOLEAN_WORDS = ['1', 'true', 'yes', 'on', '0', 'false', 'no', 'off']
 
 const PROMPT_CACHE_TTL = oneOf('5m or 1h', ['5m', '1h'])
 
@@ -105,17 +111,25 @@ const FORMS = new Map<string, EnvForm>([
   [
     'CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE',
     {
-      expected: `none, all-new, or a comma-separated list of ${CGROUP_KINDS.join(', ')}`,
-      accepts: (value) => value === 'none' || value === 'all-new' || listOf(CGROUP_KINDS)(value),
+      expected: 'none, all-new, or a comma-separated list of kind names such as mcp, lsp or hooks',
+      accepts: (value) =>
+        value === 'none' ||
+        value === 'all-new' ||
+        value.split(',').every((entry) => KIND_NAME.test(entry.trim())),
     },
   ],
   [
     'ENABLE_TOOL_SEARCH',
     {
-      expected: 'true, false, auto, or auto:N with N from 0 to 100',
-      accepts: (value) =>
-        ['true', 'false', 'auto'].includes(value) ||
-        (/^auto:\d+$/.test(value) && Number(value.slice('auto:'.length)) <= 100),
+      expected: 'a Boolean word such as true or false, auto, or auto:N with N from 0 to 100',
+      accepts: (value) => {
+        const word = value.toLowerCase()
+        return (
+          BOOLEAN_WORDS.includes(word) ||
+          word === 'auto' ||
+          (/^auto:\d+$/.test(word) && Number(word.slice('auto:'.length)) <= 100)
+        )
+      },
     },
   ],
   ['MCP_SDK_GENERATION', oneOf('v1 or v2', ['v1', 'v2'])],
