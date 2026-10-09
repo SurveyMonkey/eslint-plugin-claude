@@ -13,7 +13,8 @@ generated:
 # Triage the docs watch issues
 
 The docs watch (`.github/workflows/docs-watch.yml`) opens one issue for each changed block. Each
-issue has the type `Task` and no label. Its body starts with a hidden marker:
+issue has the type `Task` and the `claude-docs-change` label. To list the open docs watch
+issues, run `gh issue list --label claude-docs-change`. The body starts with a hidden marker:
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. Do not edit the marker. When
 one block has findings of two kinds, the issue has the first kind of this list:
 `rule-removal`, `rule-update`, `needs-triage`, `new-rule`. The Reason line then gives each
