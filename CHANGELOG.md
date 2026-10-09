@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.7.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.6.0...v0.7.0) (2026-10-09)
+
+
+### Features
+
+* **marketplace:** add the marketplace settings cross-file rules ([#96](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/96)) ([b3aaa6c](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/b3aaa6c3c4a3e778bb3f2339d7fa5271fffd18fc))
+* **marketplace:** add the marketplace settings schema rules ([#95](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/95)) ([9709a04](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/9709a04a06a53307bcac1f8bcb9172e925be395d))
+* **marketplace:** add the marketplace.json entry rules ([#90](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/90)) ([1952c83](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/1952c8351d1797ef9c4d1d8bce3210a3c2c4f207))
+* **marketplace:** add the marketplace.json schema rules ([#83](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/83)) ([f79e90e](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/f79e90e5be6c8c6217d2d6e74faff9bc5a6dc9db))
+* **marketplace:** add the marketplace.json source rules ([#89](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/89)) ([04c50d5](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/04c50d522cbbac18383e1ab5dbb5c6712b0132c8))
+
+
+### Bug Fixes
+
+* **agents:** follow the changed agent docs and bound the agent walk ([#88](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/88)) ([f71216d](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/f71216dbe2a78960e58af2ed5e467e7e7e9daeb2)), closes [#84](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/84) [#85](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/85) [#86](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/86)
+* **agents:** give the agent and skill rules one scope and bound ([#82](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/82)) ([5e92773](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/5e9277377247493a0f981248bb9dfb59431475f5)), closes [#77](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/77) [#78](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/78) [#79](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/79) [#80](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/80)
+* **marketplace:** test a ".." path segment, not a substring ([#94](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/94)) ([648ae51](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/648ae51093d95d082c20f7cf53fea5b453ef5b38)), closes [#92](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/92)
+
 ## [0.6.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.5.0...v0.6.0) (2026-10-06)
 
 
