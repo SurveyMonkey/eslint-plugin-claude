@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25]
+related_issues: [25, 112]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -197,11 +197,13 @@ how to match the two issues and keep the rule.
   stops the issue step with exit 1. A dry run has no limit.
 - A check report that the workflow cannot read fails the job.
 
-### 8. Issues open with the App token, as a Task, with no label
+### 8. Issues open with the App token, as a Task, with the `claude-docs-change` label
 
 The workflow gets a token from `actions/create-github-app-token` with only
 `permission-issues: write`. The job keeps `contents: read`. Each issue has the type `Task` and
-no label. Its body follows the Why, Scope, Acceptance and References format. For a changed block
+the `claude-docs-change` label. The type tells the kind of work. The label tells the source, so
+a person can find the docs watch issues. Issue types are set for the organization, so a type is
+not the source (#112). Its body follows the Why, Scope, Acceptance and References format. For a changed block
 with old and new text, the body shows a diff, then the full old section and the full new section
 in two collapsed parts. Docs text goes in a fence that is longer than any fence in the text. Each `@` and each `<!--` in docs text gets a
 word joiner, so the text makes no mention and no marker.

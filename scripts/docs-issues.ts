@@ -14,8 +14,8 @@
 // the open issues name all the rules. A rule that they do not name gives a
 // new issue. A block that changes again gets a new issue. --dry-run prints
 // each issue that would open, and opens none. The repository comes from
-// --repo or $GITHUB_REPOSITORY. The issue type is Task. The script adds no
-// label.
+// --repo or $GITHUB_REPOSITORY. The issue type is Task. Each issue gets the
+// claude-docs-change label (LABEL), so a person can find the docs watch issues.
 //
 // For a changed block with old and new text, the body shows a diff. Under
 // the diff, two collapsed sections quote the full old text and the full new
@@ -36,6 +36,9 @@ import type { Finding, Kind } from './docs-classify.ts'
 // Runs gh with the arguments and the standard input, and returns stdout.
 export type Run = (args: string[], input?: string) => string
 type OpenIssue = { number: number; body: string | null }
+
+// The label must exist in the repository before a live run.
+const LABEL = 'claude-docs-change'
 
 export const KINDS: readonly Kind[] = ['rule-update', 'rule-removal', 'new-rule', 'needs-triage']
 export const MAX_TITLE = 69
@@ -425,7 +428,12 @@ export async function openIssues({
     )
   }
   // Every title and body is built before the first issue opens.
-  const issues = toOpen.map((f) => ({ title: titleOf(f), body: bodyOf(f, repo), type: 'Task' }))
+  const issues = toOpen.map((f) => ({
+    title: titleOf(f),
+    body: bodyOf(f, repo),
+    type: 'Task',
+    labels: [LABEL],
+  }))
   const opened: string[] = []
   for (const issue of issues) {
     if (dryRun) {

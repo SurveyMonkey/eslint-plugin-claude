@@ -340,7 +340,7 @@ describe('diffLines', () => {
 })
 
 describe('openIssues', () => {
-  it('opens one Task issue for each finding, with no label', async () => {
+  it('opens one Task issue for each finding, with the claude-docs-change label', async () => {
     const gh = fakeGh()
     const result = await api.openIssues({
       findings: [update, newRule],
@@ -362,8 +362,9 @@ describe('openIssues', () => {
       '.html_url',
     ])
     const sent = JSON.parse(first?.input ?? '{}')
-    expect(Object.keys(sent).sort()).toEqual(['body', 'title', 'type'])
+    expect(Object.keys(sent).sort()).toEqual(['body', 'labels', 'title', 'type'])
     expect(sent.type).toBe('Task')
+    expect(sent.labels).toEqual(['claude-docs-change'])
     expect(sent.body).toContain(api.markerOf(update))
   })
 
