@@ -1,5 +1,9 @@
 // The rule counts the UTF-8 bytes of the text of a settings file. The files glob and the managed
 // files are in tests/configs.test.ts. The limit is 2 MiB, 2097152 bytes, in the Claude Code docs.
+import json from '@eslint/json'
+import { Linter } from 'eslint'
+import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-file-size')
@@ -122,4 +126,33 @@ jsonTester.run('settings-file-size (message text)', rule, {
       errors: [{ message: 'This settings file has 101 bytes. The configured limit is 100 bytes.' }],
     },
   ],
+})
+
+// The schema of the option `max`: an integer from 1 to 2097152, and no other key.
+describe('settings-file-size option schema', () => {
+  const lint = (options: object[]) =>
+    new Linter().verify(
+      '{}',
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { 'claude/settings-file-size': ['error', ...options] },
+        },
+      ],
+      { filename: '.claude/settings.json' },
+    )
+
+  it('accepts an empty object and each integer from 1 to 2097152', () => {
+    expect(lint([{}])).toEqual([])
+    expect(lint([{ max: 1 }])).toHaveLength(1)
+    expect(lint([{ max: LIMIT }])).toEqual([])
+  })
+  it('refuses 0, a fraction, a value above 2097152, and an unknown key', () => {
+    expect(() => lint([{ max: 0 }])).toThrow()
+    expect(() => lint([{ max: 1.5 }])).toThrow()
+    expect(() => lint([{ max: LIMIT + 1 }])).toThrow()
+    expect(() => lint([{ min: 1 }])).toThrow()
+  })
 })
