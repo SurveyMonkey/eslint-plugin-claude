@@ -149,6 +149,22 @@ describe('settings-file-size option schema', () => {
     expect(lint([{ max: 1 }])).toHaveLength(1)
     expect(lint([{ max: LIMIT }])).toEqual([])
   })
+  it('applies the default limit beside an empty object', () => {
+    const over = 'x'.repeat(LIMIT)
+    const messages = new Linter().verify(
+      `{"a": "${over}"}`,
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { 'claude/settings-file-size': ['error', {}] },
+        },
+      ],
+      { filename: '.claude/settings.json' },
+    )
+    expect(messages).toHaveLength(1)
+  })
   it('refuses 0, a fraction, a value above 2097152, and an unknown key', () => {
     expect(() => lint([{ max: 0 }])).toThrow()
     expect(() => lint([{ max: 1.5 }])).toThrow()

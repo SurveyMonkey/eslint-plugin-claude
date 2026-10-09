@@ -8,9 +8,9 @@ import { type PermissionEntry, permissionEntries, skillEntries } from './permiss
 import { classifySkillFile } from './skill-files.ts'
 import { readFrontmatter } from './skill-frontmatter.ts'
 
-/** The files of the settings that hold permission rules. The managed settings
- *  files are in `MANAGED_SETTINGS_FILES` (`src/settings-files.ts`). The rules that
- *  use this list do not read them. */
+/** The project settings files that hold permission rules. The managed settings
+ *  files are in `MANAGED_SETTINGS_FILES` (`src/settings-files.ts`). A rule that
+ *  lists only `SETTINGS_FILES` does not lint a managed file. */
 export const SETTINGS_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
 
 /** The second target of a grammar rule: the skill and command files, where

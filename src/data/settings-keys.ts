@@ -74,7 +74,8 @@ const MANAGED_ONLY: readonly string[] = [
   'wslInheritsWindowsSettings',
 ]
 
-/** Scope "User or managed": Claude Code ignores the key in project and local settings. */
+/** Scope "User or managed": Claude Code ignores the key in project and local settings, apart
+ *  from the keys in `REPORTED_BY` and `FLAGGED_VALUE`. */
 const USER_OR_MANAGED: readonly string[] = [
   'askUserQuestionTimeout',
   'appendPlugins',
