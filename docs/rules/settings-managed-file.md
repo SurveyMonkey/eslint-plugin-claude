@@ -45,8 +45,8 @@ reports these cases.
   (ADR 001, Consequences).
 - **`"managedSourcesBehavior": "merge"` in `managed-settings.json`.** The page says that a
   `managed-settings.json` file is the lowest-ranked admin source. So "merge" set there has no
-  source below it to combine with.[^sources] The report is on the value. A file that holds only
-  control keys gets the control key report, not this one.
+  source below it to combine with.[^sources] The report is on the value. A file that gets the
+  control key report does not get this one.
 
 When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.
 
