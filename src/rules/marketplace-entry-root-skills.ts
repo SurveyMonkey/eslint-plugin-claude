@@ -24,7 +24,7 @@ const SKILL_DIRECTORY = /^skills\/([^/]+)$/
  *  undefined when the rule cannot read the value, and `ALL` when the value
  *  lists the default `skills/` directory or the plugin root, which hold every
  *  skill. A value is readable when it is a string or an array of strings, and
- *  each string is `.` or a path that starts with `./`, with no `..`, no
+ *  each string is `.` or a path that starts with `./`, with no `..` segment, no
  *  backslash and no network form. An empty array is not read: the docs do
  *  not say what it does. Other values are for
  *  `marketplace-entry-component-paths` and `marketplace-schema`. */

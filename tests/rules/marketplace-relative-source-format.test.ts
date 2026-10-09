@@ -1,7 +1,9 @@
 // The rule reads the string `source` of each entry in `plugins`, and
 // `metadata.pluginRoot`, in `.claude-plugin/marketplace.json`. The files glob
 // and the decoy files are in tests/configs.test.ts.
+import { describe, expect, it } from 'vitest'
 import relativeSource from '../../src/rules/marketplace-relative-source-format.ts'
+import { lintMarketplace, tree } from '../marketplace-tree.test-support.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
 
 const { rule } = relativeSource
@@ -106,7 +108,6 @@ jsonTester.run('marketplace-relative-source-format (invalid)', rule, {
       errors: [{ messageId: 'parent', data: { field: '"source"', path: '../x' } }],
     },
     { code: withSource('./a/../b'), filename, errors: [{ messageId: 'parent' }] },
-    { code: withSource('./a..b'), filename, errors: [{ messageId: 'parent' }] },
     { code: withSource('..'), filename, errors: [{ messageId: 'parent' }] },
     { code: withSource('/usr/share/p'), filename, errors: [{ messageId: 'absolute' }] },
     { code: withSource('\\p'), filename, errors: [{ messageId: 'absolute' }] },
@@ -181,4 +182,59 @@ json5Tester.run('marketplace-relative-source-format (JSON5 invalid)', rule, {
       errors: [{ messageId: 'noPrefix' }],
     },
   ],
+})
+
+// `..` is a fault only as a whole path segment. `claude plugin validate`
+// (Claude Code 2.1.295) passes `./a..b` and fails `./a/../b`.
+describe('marketplace-relative-source-format: a ".." segment', () => {
+  const dir = tree({})
+  const NAME = 'marketplace-relative-source-format'
+  const messagesOf = (code: string) =>
+    lintMarketplace(NAME, dir, code).map((m) => ({ id: m.messageId, text: m.message }))
+
+  it.each(['./a..b', './my..skills', './a/b..', './..a/b', './a/..b/c', './...', './a/.../b'])(
+    'gives no report for the source %s',
+    (source) => {
+      expect(messagesOf(withSource(source))).toEqual([])
+    },
+  )
+
+  it('gives no report for a pluginRoot with a name that holds two dots', () => {
+    expect(messagesOf(withRoot('./a..b'))).toEqual([])
+  })
+
+  it.each(['./a/../b', '..', './..', './a/..', '../x', './a\\..\\b', '.\\..', './a/..\\b'])(
+    'reports a parent path for the source %s',
+    (source) => {
+      expect(messagesOf(withSource(source)).map((m) => m.id)).toEqual(['parent'])
+    },
+  )
+
+  it('reports a bare name with two dots as no prefix, and accepts it under a pluginRoot', () => {
+    expect(messagesOf(withSource('a..b')).map((m) => m.id)).toEqual(['noPrefix'])
+    expect(messagesOf(withSource('a..b', { pluginRoot: './plugins' }))).toEqual([])
+    expect(messagesOf(withSource('..', { pluginRoot: './plugins' })).map((m) => m.id)).toEqual([
+      'parent',
+    ])
+  })
+
+  it('keeps the order of faults: a network or absolute path reports first', () => {
+    expect(messagesOf(withSource('//h/..')).map((m) => m.id)).toEqual(['network'])
+    expect(messagesOf(withSource('/a/..')).map((m) => m.id)).toEqual(['absolute'])
+  })
+
+  it('says that the path has a ".." segment', () => {
+    expect(messagesOf(withSource('./a/../b'))).toEqual([
+      {
+        id: 'parent',
+        text: 'The "source" "./a/../b" has a ".." segment. The path must stay inside the marketplace.',
+      },
+    ])
+    expect(messagesOf(withRoot('../p'))).toEqual([
+      {
+        id: 'parent',
+        text: 'The "metadata.pluginRoot" "../p" has a ".." segment. The path must stay inside the marketplace.',
+      },
+    ])
+  })
 })

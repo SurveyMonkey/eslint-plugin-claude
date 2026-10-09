@@ -59,7 +59,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
       start:
         'The {{field}} path "{{path}}" does not start with "./". Write the path from the plugin root, with the "./" prefix.',
       parent:
-        'The {{field}} path "{{path}}" contains "..", which fails validation. Write the path from the plugin root, with no "..".',
+        'The {{field}} path "{{path}}" has a ".." segment, which fails validation. Write the path from the plugin root, with no "..".',
       backslash:
         'The {{field}} path "{{path}}" contains a backslash. On macOS and Linux, Claude Code rejects it. Write the path with forward slashes.',
       missing:
