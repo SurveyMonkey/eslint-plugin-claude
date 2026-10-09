@@ -16,9 +16,9 @@ type Scope = 'managed' | 'user-or-managed' | 'user-local-or-managed' | 'global' 
 /** What a rule needs to know about a key. */
 export interface KeyScope {
   scope: Scope
-  /** A key that a repository file can still set. Claude Code ignores only this
-   *  Boolean value there. The settings reference says that a `false` in
-   *  `bashEditDiffEnabled` in a project file still counts. */
+  /** The one Boolean value that Claude Code ignores in a repository file. The
+   *  rule reports only this value. The settings reference says that a `false`
+   *  in `bashEditDiffEnabled` in a project file still counts. */
   flaggedValue?: boolean
   /** The rule that reports this key in a repository file, when it is not the
    *  scope rule. The scope rule makes no report on the key. */

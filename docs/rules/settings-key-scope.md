@@ -50,7 +50,7 @@ review. The data module also holds the three exceptions below.
   `settings-sync-claude-ai-plugins` reports it in `.claude/settings.json`, so one fault gets one
   report. Its Scope is `User, local, or managed`.
 - **`autoContinueAtUsageLimit`.** The rule makes no report on this key. Its Scope is `User or
-  managed`. But when no user, `--settings` or managed file sets the key, a value in a project or
+  managed`. When no user, `--settings` or managed file sets the key, a value in a project or
   local file turns the feature off. Claude Code does not ignore it.[^autocontinue] The rule
   `settings-project-autocontinue-off` is for this key.
 - **`bashEditDiffEnabled`.** Its Scope is `User or managed`. A `true` in a project or local file

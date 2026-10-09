@@ -44,6 +44,8 @@ When a file has two keys of one name, the rule reads the last, as `JSON.parse` d
 
 ### What the rule does not check
 
+- An empty file. Claude Code treats an empty managed settings file as `{}`.[^dropped] The
+  `json/json` language gives a parse error for an empty file, and no rule runs on it.
 - A drop-in with a name that does not end in `.json`. The files glob does not match it, and Claude
   Code ignores it.[^split]
 - The legacy Windows path `C:\ProgramData\ClaudeCode\managed-settings.json`. It is not a path in a
