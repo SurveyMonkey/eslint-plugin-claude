@@ -44,7 +44,9 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
@@ -135,7 +137,9 @@ const modules = [
   marketplaceEntryRootSkills,
   marketplaceEntryComponentPaths,
   settingsEnabledPluginsSchema,
+  settingsEnabledPluginsEntryExists,
   settingsExtraKnownMarketplacesSchema,
+  settingsExtraKnownMarketplacesKeyMatchesName,
   settingsMarketplaceHeadersHelperHttps,
   settingsMarketplaceKeyAliasConflict,
   settingsSyncClaudeAiPlugins,
@@ -225,7 +229,9 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-entry-root-skills': 'error',
   'marketplace-entry-component-paths': 'error',
   'settings-enabled-plugins-schema': 'error',
+  'settings-enabled-plugins-entry-exists': 'error',
   'settings-extra-known-marketplaces-schema': 'error',
+  'settings-extra-known-marketplaces-key-matches-name': 'error',
   'settings-marketplace-headers-helper-https': 'error',
   'settings-marketplace-key-alias-conflict': 'error',
   'settings-sync-claude-ai-plugins': 'error',

@@ -66,10 +66,14 @@ const badMarketplace = JSON.stringify({
 // A project settings file with one fault for each settings rule of #12. The sync rule reads the
 // file name, so the two files below differ only in what that rule reports.
 const badMarketSettings = JSON.stringify({
-  enabledPlugins: { formatter: true },
+  // `missing` is no entry of the marketplace that `team` points at.
+  enabledPlugins: { formatter: true, 'missing@team': true, 'fmt@team': true },
   additionalMarketplaces: {},
   syncClaudeAiPlugins: true,
   extraKnownMarketplaces: {
+    // The marketplace at `packages/mk/.claude/market` has the name `acme-market`, not `team`.
+    // The tree has no `.git`, so the bound is `.claude/` and the marketplace sits in it.
+    team: { source: { source: 'directory', path: '.claude/market' } },
     acme: { source: { source: 'npm', package: 'acme' } },
     docs: {
       source: { source: 'url', url: 'http://x.test/m.json', headersHelper: '/opt/bin/mint' },
@@ -204,6 +208,12 @@ const TREE: Record<string, string> = {
   'docs/marketplace.json': badMarketplace,
   'marketplace.json': badMarketplace,
   // The settings rules of #12 read the two project settings files, and no other settings file.
+  // A valid marketplace, which the cross-file settings rules read from the settings files.
+  'packages/mk/.claude/market/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'acme-market',
+    owner: { name: 'mk' },
+    plugins: [{ name: 'fmt', source: { source: 'github', repo: 'acme/fmt' } }],
+  }),
   'packages/mk/.claude/settings.json': badMarketSettings,
   'packages/mk/.claude/settings.local.json': badMarketSettings,
   'packages/mk/.claude/nested/settings.json': badMarketSettings,
@@ -265,7 +275,9 @@ const MARKETPLACE_RULES = [
 // The settings rules of #12, in the order of the `modules` list. Each is an error.
 const SETTINGS_RULES = [
   'settings-enabled-plugins-schema',
+  'settings-enabled-plugins-entry-exists',
   'settings-extra-known-marketplaces-schema',
+  'settings-extra-known-marketplaces-key-matches-name',
   'settings-marketplace-headers-helper-https',
   'settings-marketplace-key-alias-conflict',
   'settings-sync-claude-ai-plugins',

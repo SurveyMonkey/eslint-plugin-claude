@@ -10,7 +10,7 @@ import { SETTINGS_FILES } from '../permission-listener.ts'
 const name = 'settings-enabled-plugins-schema' as const
 
 /** True when `key` has one "@", with text on each side. */
-function keyForm(key: string): boolean {
+export function keyForm(key: string): boolean {
   const parts = key.split('@')
   return parts.length === 2 && parts.every((part) => part !== '')
 }
