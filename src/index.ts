@@ -46,11 +46,20 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import settingsEnvCredential from './rules/settings-env-credential.ts'
+import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
+import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
+import settingsFileSize from './rules/settings-file-size.ts'
+import settingsKeyScope from './rules/settings-key-scope.ts'
+import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
+import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
+import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
@@ -143,6 +152,15 @@ const modules = [
   settingsMarketplaceHeadersHelperHttps,
   settingsMarketplaceKeyAliasConflict,
   settingsSyncClaudeAiPlugins,
+  settingsValidJson,
+  settingsFileSize,
+  settingsKeyScope,
+  settingsManagedFile,
+  settingsRemovedKey,
+  settingsEnvCredential,
+  settingsEnvValueFormat,
+  settingsEnvIgnoredVar,
+  settingsProjectValueIgnored,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -235,6 +253,15 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-headers-helper-https': 'error',
   'settings-marketplace-key-alias-conflict': 'error',
   'settings-sync-claude-ai-plugins': 'error',
+  'settings-valid-json': 'error',
+  'settings-file-size': 'error',
+  'settings-key-scope': 'error',
+  'settings-managed-file': 'error',
+  'settings-removed-key': 'error',
+  'settings-env-credential': 'error',
+  'settings-env-value-format': 'error',
+  'settings-env-ignored-var': 'error',
+  'settings-project-value-ignored': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

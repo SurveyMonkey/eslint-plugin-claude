@@ -1,0 +1,98 @@
+{
+  "url": "https://code.claude.com/docs/en/server-managed-settings",
+  "hash": "13159513774345f8c44ac838e1f4e849752298d9bd7ecb4c936120bf6b5b8e05",
+  "blocks": [
+    {
+      "id": "configure-server-managed-settings",
+      "hash": "e9b9e8d718489fdca9bfedf4639eeedb9257ca6fe12e3b7253f91cb42ae2bd39"
+    },
+    {
+      "id": "requirements",
+      "hash": "7001102e77d7a1ca6aaa0dbf456386301c273e84e8fb2b2aa17cc0cb4c3ea9f2"
+    },
+    {
+      "id": "choose-between-server-managed-and-endpoint-managed-settings",
+      "hash": "7be256c6ae88d04c652b1b6ae4630f8aefed6152a31a2b7c02b41506e0cbf569"
+    },
+    {
+      "id": "configure-server-managed-settings-1",
+      "hash": "cd1480e58bae5cc8a13c6ceefbf2aab60fd87849fec9751979bf2d6ceaa0450c"
+    },
+    {
+      "id": "verify-settings-delivery",
+      "hash": "69338391d5465985856d02cf463421872d0feeb57fcd0457befbe8e253dab7f9"
+    },
+    {
+      "id": "access-control",
+      "hash": "6bafd6fca2ec2aa63a455eacb477aae72f98161027b97973e4c90d2270494f54"
+    },
+    {
+      "id": "managed-only-settings",
+      "hash": "4630c68057e0e2f664072fef386ca64539d4cc68f0bc772252397787e1cef252"
+    },
+    {
+      "id": "current-limitations",
+      "hash": "cdbadc76f05b65f1b4290d6c71f6d00a50def4f5e9b6296073b3e02f8169d4d3"
+    },
+    {
+      "id": "settings-delivery",
+      "hash": "b578ca7d8e016b051844127452af30518e8f6bec1088fc52d6235cc2b3f30172"
+    },
+    {
+      "id": "settings-precedence",
+      "hash": "d82a5823b7e675cf3b7ddf9d416f4c1be46dab0fff8c54c5dc29b34e5783c90e"
+    },
+    {
+      "id": "per-key-exceptions-across-managed-sources",
+      "hash": "90e7f6ef00f730029ff8f6940bf13b5ae241e2055cad3e6de858c1618b868954"
+    },
+    {
+      "id": "fetch-and-caching-behavior",
+      "hash": "552d4e629d11300826cb9b538f2706172c7b6ffad87d97409bc9b52142d8c81c"
+    },
+    {
+      "id": "invalid-entries-in-delivered-settings",
+      "hash": "0a1f49dfbaf6a3f33f180fad6c58725103586ae3ff0373530ff3bd8ae78c0207"
+    },
+    {
+      "id": "enforce-fail-closed-startup",
+      "hash": "f3856c625602f089608324cbc773483dae9265fabf2420c74647d0401ca1cce2"
+    },
+    {
+      "id": "security-approval-dialogs",
+      "hash": "2c75b48de8a33fb99c33f4a3a5184ae04433d6202d8d337c201f840fcda9432e"
+    },
+    {
+      "id": "approval-memory",
+      "hash": "a830c7307e47beb4d67879b8a7392455b4494ecb5463563a0a7ee764cfe19ca3"
+    },
+    {
+      "id": "environment-variables-and-the-approval-dialog",
+      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
+    },
+    {
+      "id": "platform-availability",
+      "hash": "8175078ee5efd0636ef91f71a4d1dc06a34d0339de0dd1970e6c6c8b8a34be4a"
+    },
+    {
+      "id": "audit-logging",
+      "hash": "d2698e781a9904f3e72c9a3a3593ccf6d4bf5e8410786a811480e384ed7b338d"
+    },
+    {
+      "id": "security-considerations",
+      "hash": "3f7c2af4aa3844b4de442154219673c79c0da8a43d608d00e429b71df90f9801"
+    },
+    {
+      "id": "see-also",
+      "hash": "ba3fbb2ae1423928daca89110495c22938784ea76e2d71b6bc2c6b6c7f7f362a"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Environment variables and the approval dialog",
+      "id": "environment-variables-and-the-approval-dialog",
+      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81",
+      "text": "#### Environment variables and the approval dialog\n\nClaude Code applies some delivered `env` variables without showing the user the approval dialog, including:\n\n* Feature and command toggles\n* Model selection and behavior settings, such as `ANTHROPIC_MODEL`, `DISABLE_PROMPT_CACHING`, and `CLAUDE_CODE_EFFORT_LEVEL`\n* Context window and compaction settings, such as `DISABLE_AUTO_COMPACT`\n* Terminal UI and accessibility options\n* Numeric limits, budgets, and timeouts\n\nOther delivered variables can require the user's approval before they take effect; a non-empty proxy, base-URL, or `OTEL_EXPORTER_OTLP_ENDPOINT` value always does. When a delivered variable needs approval, the dialog names it, so the user sees exactly what the policy is asking to set. Before v2.1.218, Claude Code applied fewer variables without asking the user, so settings such as `DISABLE_AUTO_COMPACT` triggered the dialog at any non-empty value.\n\nClaude Code decides whether four privacy toggles need approval by the delivered value rather than by the variable name: `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, `DISABLE_ERROR_REPORTING`, `DISABLE_TELEMETRY`, and `DO_NOT_TRACK`. A truthy value such as `1` or `true` only turns tracking, reporting, or other nonessential traffic off, so Claude Code applies it without asking the user. For any other non-empty value, Claude Code shows the dialog. Before v2.1.218, all of them except `DO_NOT_TRACK` applied without approval at any value, and `DO_NOT_TRACK` triggered the dialog at any non-empty value.\n\nClaude Code also decides whether [`API_FORCE_IDLE_TIMEOUT`](/docs/en/env-vars) needs approval by the delivered value: a truthy value only turns the [body idle timeout](/docs/en/network-config#streaming-idle-watchdogs) on, so Claude Code applies it without asking the user. For any other non-empty value, Claude Code shows the dialog. Before v2.1.248, any non-empty value triggered the dialog.\n\nWhether [`ANTHROPIC_CUSTOM_HEADERS`](/docs/en/env-vars#variables) needs approval also depends on the delivered value. Headers that only tag requests, such as `Accept-Language`, apply without the dialog. A line that names a credential, an org or tenant selector, a routing or host override, or an API-behavior header, such as `Authorization`, `X-Api-Key`, `Host`, `anthropic-beta`, or the `X-Amzn-Bedrock-*` headers, requires approval. A line also requires approval when its name isn't a valid HTTP header token or its value contains a character an HTTP header can't carry. The check matches words inside the header name, so `X-Client-Version`, which contains `client` and `version`, requires approval too. Before v2.1.251, any `ANTHROPIC_CUSTOM_HEADERS` value applied without it.\n\nA falsy value such as `0` or `false` for [`ENABLE_BETA_TRACING_DETAILED`](/docs/en/env-vars#variables) or [`OTEL_LOG_RAW_API_BODIES`](/docs/en/env-vars#variables) applies without the dialog, because it only turns detailed tracing or raw API body capture off. Any other non-empty value for either variable requires approval."
+    }
+  ]
+}

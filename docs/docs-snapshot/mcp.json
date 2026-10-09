@@ -1,0 +1,338 @@
+{
+  "url": "https://code.claude.com/docs/en/mcp",
+  "hash": "030a5df4d8ca49457147e0f826bb8a0390156e2514216866585a4ee49844c7d5",
+  "blocks": [
+    {
+      "id": "connect-claude-code-to-tools-via-mcp",
+      "hash": "4f087ce3782c3e2c561a3704af754f98cc2e94d99a2812199d9209835182f291"
+    },
+    {
+      "id": "what-you-can-do-with-mcp",
+      "hash": "bfcf316fff7da2d19ed561ad7bbd855fe218b09b6a9bde5835d145b4452ba4ed"
+    },
+    {
+      "id": "find-and-build-mcp-servers",
+      "hash": "beaf6aeb02b496c30865d048429cb6ff7358afbf3306aede0b68bc5f511ff10e"
+    },
+    {
+      "id": "installing-mcp-servers",
+      "hash": "041c91eb37cb1b63d8214cbf0f7fc7c1e5b6f69b994415d4738c11588bfbd126"
+    },
+    {
+      "id": "option-1-add-a-remote-http-server",
+      "hash": "8621821eb444c49ade0a15684e8e40fe711933cb83a6c80477f0a109efc27401"
+    },
+    {
+      "id": "option-2-add-a-remote-sse-server",
+      "hash": "e1713ad3b9bb184eff9aa7f2e179b2b7bf1d8fac1f6c1877597d988bf0e771c6"
+    },
+    {
+      "id": "option-3-add-a-local-stdio-server",
+      "hash": "a5a82c6934bf4d14831e55e5fd801986344c53038f4010ddfe9cdb5a2347f664"
+    },
+    {
+      "id": "option-4-add-a-remote-websocket-server",
+      "hash": "557d432d27ee5eff52ebda3a8f9bd7427cd2d2a0b958ce131a6764d0940ad4e4"
+    },
+    {
+      "id": "add-a-server-from-setup-instructions-written-for-another-client",
+      "hash": "edc745ca82b41f298f727c810ebc553412fbc54e034bcf89f67adbd97a9c6713"
+    },
+    {
+      "id": "from-a-url",
+      "hash": "602f64c3a7723d95c5d49324a219a74ab3d577e02b13b82e9daa8f147ef083e2"
+    },
+    {
+      "id": "from-an-npx-uvx-or-binary-command",
+      "hash": "7fe2009b171237d033e58b99b80ac627f52a918f1875c2c165d84e19866e3905"
+    },
+    {
+      "id": "from-an-mcpservers-json-block",
+      "hash": "b27bf3a7f136873fa1e5f5f8de0abf8c6ced42ea2943b3286588568eb2afc6d2"
+    },
+    {
+      "id": "managing-your-servers",
+      "hash": "db6ce1061794c5a05235c4ae4172842aeee27075fc00d2148207d1b3960ed875"
+    },
+    {
+      "id": "server-status",
+      "hash": "c5a94bbc0e38adce5a6c2519ba420c3beb4653fa334455cdce71964808ae4ecf"
+    },
+    {
+      "id": "project-server-approvals-and-workspace-trust",
+      "hash": "1a22572e8875db0366c846bbda15cb867e2f11fbf32afb6725f8fb740478bcf6"
+    },
+    {
+      "id": "server-status-detail",
+      "hash": "c7905ba8c09b780cd000645e341c982056103923e9f66d292f5cae4b769c3703"
+    },
+    {
+      "id": "configuration-warnings",
+      "hash": "30a7b267d3cf703e1c1038d207472a346adfa5e0d2d6223cb3accbc7ec943a38"
+    },
+    {
+      "id": "tool-availability",
+      "hash": "ff75977cccbcc48e894c610dabcec0984ae52cd99ce7ab40886763eb2738ab80"
+    },
+    {
+      "id": "disable-a-server-without-removing-it",
+      "hash": "b9d51c5a0d299d4a7747d46ea7eb03af778f8c1121bad3b1bef6042a9358821b"
+    },
+    {
+      "id": "mcp-client-runtimes",
+      "hash": "c2269fc6b89e6193b6fd63d8c1344f385fc8b8c09ce373b7d7cb25b714df0131"
+    },
+    {
+      "id": "dynamic-tool-updates",
+      "hash": "014bea87f9b1325e2a0292f0979accf88101e6283604e5a8b5cd4cc77faa2c7b"
+    },
+    {
+      "id": "notification-streams-on-the-v2-runtime",
+      "hash": "df2bb9aa80e4fd07a2f0fdad581d61d89c9988c94e98996a92a5184ef31978f2"
+    },
+    {
+      "id": "automatic-reconnection",
+      "hash": "8af2471b620ed002f5fe20b3cbde201f39fb2a7dbff961a71e3f40df81328540"
+    },
+    {
+      "id": "mid-session-drops-of-a-remote-server",
+      "hash": "1fe18deafa58d3149d41be117ec078f481f48da73008069befd1df92e310dd66"
+    },
+    {
+      "id": "failed-first-connections",
+      "hash": "e670a34350cb304c732f5f864ea075a361fc221b2c02599fbeecc1fbd6a7ad82"
+    },
+    {
+      "id": "failed-discovery-requests",
+      "hash": "81dd46d86972b0cac98db6cb59497f2c47074bd812e1b2138e6c1e931f55d4ff"
+    },
+    {
+      "id": "retry-failed-servers-yourself",
+      "hash": "6f6f3dcfda8fac11b5190810c683d087cb56c83ace7d34199bb5a5601d9954f6"
+    },
+    {
+      "id": "how-claude-learns-that-a-server-failed",
+      "hash": "3a6f2621a2c171f66064d0f0f04925acd1cbc4f753897da1304e8fb5e63888c0"
+    },
+    {
+      "id": "push-messages-with-channels",
+      "hash": "aa6ba95bd64d1420826d0aa9749a2e0b6abd049464bb7767a97c5bb030d55c35"
+    },
+    {
+      "id": "automatic-backgrounding-of-long-tool-calls",
+      "hash": "15aa596ed878ca54409925aca591dba3f8b51bee2797f3b6deef9c68694534a5"
+    },
+    {
+      "id": "plugin-provided-mcp-servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
+    },
+    {
+      "id": "mcp-installation-scopes",
+      "hash": "ccf7550288a7f4484a8912aef5e402ae3b6a7d06c8ea0921128a278e0c734463"
+    },
+    {
+      "id": "local-scope",
+      "hash": "69ce16bbc39e42df843aa7db77ac4dcd2328a75106e3e56671272c7cf5f811ba"
+    },
+    {
+      "id": "project-scope",
+      "hash": "a4e88d55aab831d2429e3595f6577f4bd9a0c62a2287788880e7d9ca3bfadd41"
+    },
+    {
+      "id": "user-scope",
+      "hash": "49c441209927ab88fa2766f30602527a96b3cc862c31a84e0d3c067639ca7781"
+    },
+    {
+      "id": "scope-hierarchy-and-precedence",
+      "hash": "0d5e70ac04a14fbefd075d7f806ed7c59d954341d95ed870d3a89ce6450f9926"
+    },
+    {
+      "id": "environment-variable-expansion-in--mcp-json",
+      "hash": "204d1dd6a96f3ea5f736cafd1e78405c6411d73da2e3ae324471615f631e2b17"
+    },
+    {
+      "id": "supported-syntax",
+      "hash": "77a12b27b16188cc713c1d8ee44a5d18c9ab61c9985c2114c73c8f1fa73375ea"
+    },
+    {
+      "id": "expansion-locations",
+      "hash": "500945dd95e5abb58fce44477333b79eb14f416a94a1a0f2a7057fac761c4cf6"
+    },
+    {
+      "id": "example-with-variable-expansion",
+      "hash": "0ec51616a18e96e10a1b35af6438a45a755f5e891969cabdcd6c8ffde7a6d563"
+    },
+    {
+      "id": "unset-variables-without-a-default",
+      "hash": "e4987b19bcc3110bae6334c36cf45eca5d07f4509973f68e753f457ddda55a4b"
+    },
+    {
+      "id": "credential-variables-that-read-as-empty",
+      "hash": "8313023272a9ec82b3e4788b2e1469b08b6ea3cd85c57a9a8b829331a09ffcec"
+    },
+    {
+      "id": "how-references-appear-in-mcp-and-cli-output",
+      "hash": "9e60388cd8c1a3477a2c86f45e3339eb3046ea1b20636a30f7abbdf529a4f987"
+    },
+    {
+      "id": "practical-examples",
+      "hash": "9781bbc8e8b7787132adcd4e4651cc048d65a033177424a4724b5a2e4af1ece9"
+    },
+    {
+      "id": "example-connect-to-github-for-code-reviews",
+      "hash": "7661c40c908b74a49df0a0ae1998ad693706d2ce4b42ad62e4702da259dc7d38"
+    },
+    {
+      "id": "example-query-your-postgresql-database",
+      "hash": "54cb20f812332585d2ee03a0d2ed305d0f0a336a6ee989774611864602d3ebbf"
+    },
+    {
+      "id": "authenticate-with-remote-mcp-servers",
+      "hash": "d4d72826a429059a4c0f8070822b649e883f4167610c3bb799db31b2cb2f6180"
+    },
+    {
+      "id": "authenticate-from-the-command-line",
+      "hash": "afa158d6bc5952ca2805d932c01307cf8d6bf5eb8c05d9374a3da4cdd297e7e9"
+    },
+    {
+      "id": "use-a-fixed-oauth-callback-port",
+      "hash": "9d6a54a6bf7f1c7e87ce24285e8df98712c2bd9e6da8085be3337efaf342db98"
+    },
+    {
+      "id": "use-pre-configured-oauth-credentials",
+      "hash": "d9b10ec6ffc74a77a92136d4b40cd4bdcd48d7d7d8fd6b5a906910241741356e"
+    },
+    {
+      "id": "override-oauth-metadata-discovery",
+      "hash": "ff5c6fd4997b04ffd623bc5a1b1e4e9f44a3aa146f8282d58abfffb3a759516e"
+    },
+    {
+      "id": "restrict-oauth-scopes",
+      "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
+    },
+    {
+      "id": "use-dynamic-headers-for-custom-authentication",
+      "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    },
+    {
+      "id": "where-the-helper-runs",
+      "hash": "54cea62e0bfdf2e4f949006f21c537ecb6cd47caa2d32eeba0323d585a7ac44f"
+    },
+    {
+      "id": "which-variables-a-helper-can-read",
+      "hash": "08703a83b2070f459b2f4d8c94c6d87d1d13aeab889d8908a9c944ff3d2cd3eb"
+    },
+    {
+      "id": "trust-a-folder-before-its-headershelper-runs",
+      "hash": "f3664b5eb60ee17edcee0b3ee879c3562edb40e7a7285968b0886fb6a61e4f58"
+    },
+    {
+      "id": "add-mcp-servers-from-json-configuration",
+      "hash": "c1f7be28b82e2c7585bc83920828e2778f492229b4208b711d2069ac6e53a8b4"
+    },
+    {
+      "id": "import-mcp-servers-from-claude-desktop",
+      "hash": "dfa2299c40448d48c2b4f8715826a7d72681f62ef95939c3a32ad24938dd59a9"
+    },
+    {
+      "id": "use-mcp-servers-from-claude-ai",
+      "hash": "e26c8b5bdc0b9eb8bc4e114357e60754b3d76c9f048d5cdb680b29a7fdbcd403"
+    },
+    {
+      "id": "how-connectors-reach-claude-code",
+      "hash": "030fc36a334598ca81d32102ded37eda9e185712c717e89c7af2a0e219412a74"
+    },
+    {
+      "id": "organization-controls-on-connector-tools",
+      "hash": "8b599f9c7b89dd3929659ba05655429e3087a0d9ac0d8ecb6dfe796f6bdb9b0f"
+    },
+    {
+      "id": "disable-claude-ai-connectors",
+      "hash": "f5cfaaf96dbb64796c1367ff809a5aa977914b425888707d1c75e9542aaa7de1"
+    },
+    {
+      "id": "use-claude-code-as-an-mcp-server",
+      "hash": "f4513b21b4246b9f55110200ac77146dc88408ee36fd2b5d5e6c45cc22911e81"
+    },
+    {
+      "id": "mcp-output-limits-and-warnings",
+      "hash": "a7be145b597e81241795b548d4f03abd1ccbc5c05b86114e03b80adda114f898"
+    },
+    {
+      "id": "raise-the-limit-for-a-specific-tool",
+      "hash": "4fbb9c2c79cabdac79870185870867fedede82ef97f7517565b1f945f0885fbd"
+    },
+    {
+      "id": "images-in-tool-results",
+      "hash": "5509089539a57d3ad5a7ab114e96c2badd926de54e9248c5f4c8ef9e9c6177ad"
+    },
+    {
+      "id": "tool-input-schemas-with-a-root-level-combinator",
+      "hash": "0e14a80c9203382f003879691bb265b8d9c9b3bf4554723f8cfeb79199b8a344"
+    },
+    {
+      "id": "tools-with-invalid-input-schemas",
+      "hash": "62a15ecaeee84e4f250763c6645fcc145272ad862f9320c390813fd4e7a1bcf5"
+    },
+    {
+      "id": "require-approval-for-a-specific-tool",
+      "hash": "5a73c97ae21e0cf4d34a92d10cb37141346b0e3204217d1607f338f2b086359c"
+    },
+    {
+      "id": "respond-to-mcp-elicitation-requests",
+      "hash": "001203124e71d1766bc16dbe74c651a8e3cc7b4e2a2bcac4bcebdac97d30f919"
+    },
+    {
+      "id": "use-mcp-resources",
+      "hash": "1a39a86e6a35bb23608048a31a70d7e2a1ba030de8cbe7ada008134f111d02c9"
+    },
+    {
+      "id": "reference-mcp-resources",
+      "hash": "bcd5621c3dba26c66d75b9b2693382945154680f729572f8f1a038253cd4504e"
+    },
+    {
+      "id": "scale-with-mcp-tool-search",
+      "hash": "4f3c0ea11447328a27a2588a4ab3010ed11c6249812d4574bf36eabee7693162"
+    },
+    {
+      "id": "for-mcp-server-authors",
+      "hash": "aeef5ae1e9774d1fea0878c70df47a42cb3ff5ffac0efde892ccea693a4d11b8"
+    },
+    {
+      "id": "per-tool-alwaysload",
+      "hash": "06e1b5a6775143363a8b8e2c8c04b8c2a5f6ba992c664f5c77f5d6208629e005"
+    },
+    {
+      "id": "configure-tool-search",
+      "hash": "8ffdacb36d969ffd0191b805a239308fb10e8fbb702bb7dca0f473aa611ba17d"
+    },
+    {
+      "id": "exempt-a-server-from-deferral",
+      "hash": "844c12a04324e4f5cc8be1269dd4afc59b78e52382ab57f1c5638f59a25a0968"
+    },
+    {
+      "id": "defer-a-servers-tools",
+      "hash": "6256abd5649f219ca4d4d34fb21a3873c27d1a3ad43bb536edfc38514c8785e9"
+    },
+    {
+      "id": "use-mcp-prompts-as-commands",
+      "hash": "b79f3570fa1febf344554b56c445e0882167f4dbeaf81121f84a829037d29dcf"
+    },
+    {
+      "id": "execute-mcp-prompts",
+      "hash": "270d9df977e9f9ac3b091d51fa891784343f1a53ea4d643a83858bbcb3fff01c"
+    },
+    {
+      "id": "managed-mcp-configuration",
+      "hash": "8430b7c1634dcff37d9c39e81865409b5a2fdd18c6fb77af424569308800251e"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Configure tool search",
+      "id": "configure-tool-search",
+      "hash": "8ffdacb36d969ffd0191b805a239308fb10e8fbb702bb7dca0f473aa611ba17d",
+      "text": "### Configure tool search\n\nTool search is enabled by default: MCP tools are deferred and discovered on demand. Claude Code disables it when `ANTHROPIC_BASE_URL` points to a non-first-party host, since most proxies don't forward `tool_reference` blocks. Set `ENABLE_TOOL_SEARCH` explicitly to override that fallback.\n\nSetting [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/en/env-vars) keeps tool search off. You can't override it by setting `ENABLE_TOOL_SEARCH` yourself. Your organization can keep tool search on through [managed settings](/docs/en/managed-settings), on Claude Code v2.1.227 or later. [Disable pre-release capabilities](/docs/en/llm-gateway-protocol#disable-pre-release-capabilities) covers where the override applies and what the variable strips.\n\nTool search requires a model that supports `tool_reference` blocks: Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5, and later models. See [model compatibility in the API docs](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility) for the current list.\n\nOn Google Cloud's Agent Platform, Claude Code decides by model generation:\n\n* **Claude Opus 4.5, Sonnet 4.5, Haiku 4.5, and later**: tool search is on by default, the same as on the Anthropic API.\n* **Earlier Agent Platform models**: Claude Code loads all MCP tools upfront, because their serving stacks reject the required beta header. `ENABLE_TOOL_SEARCH=true` doesn't override this.\n\nBefore v2.1.221, Claude Code disabled tool search for all models on Google Cloud's Agent Platform unless you set `ENABLE_TOOL_SEARCH=true`.\n\nControl tool search behavior with the `ENABLE_TOOL_SEARCH` environment variable:\n\n| Value | Behavior |\n| :- | :- |\n| (unset) | All MCP tools deferred and loaded on demand. Falls back to loading upfront on Google Cloud's Agent Platform models earlier than the Claude 4.5 generation, when `ANTHROPIC_BASE_URL` is a non-first-party host, or on a Microsoft Foundry deployment hosted on Azure |\n| `true` | All MCP tools deferred, except on a Microsoft Foundry deployment hosted on Azure, where the server-side rejection still forces upfront loading, and on Google Cloud's Agent Platform models earlier than the Claude 4.5 generation, where Claude Code keeps loading tools upfront. Claude Code sends the beta header through proxies, and requests fail on proxies that don't support `tool_reference` blocks |\n| `auto` | Threshold mode: Claude Code loads the tools it would otherwise defer upfront while their definitions total less than 10% of the context window, and defers all of them once the definitions reach 10% |\n| `auto:N` | Threshold mode with a custom percentage, where `N` is 0-100. For example, `auto:5` for 5% |\n| `false` | All MCP tools loaded upfront, no deferral |\n\n```bash theme={null}\n# Use a custom 5% threshold\nENABLE_TOOL_SEARCH=auto:5 claude\n\n# Disable tool search entirely\nENABLE_TOOL_SEARCH=false claude\n```\n\nOr set the value in your [settings.json `env` field](/docs/en/settings-reference#env).\n\nYou can also disable the `ToolSearch` tool specifically:\n\n```json theme={null}\n{\n  \"permissions\": {\n    \"deny\": [\"ToolSearch\"]\n  }\n}\n```"
+    }
+  ]
+}
