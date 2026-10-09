@@ -242,6 +242,17 @@ const TREE: Record<string, string> = {
   'packages/big/managed-settings.d/30-big.txt': big,
   'packages/big/managed-settings.d/sub/40-big.json': big,
   'packages/big/.vscode/settings.json': big,
+  // `settings-key-scope`: a Managed key in the project file, and a User, local, or managed key in
+  // the local file, which is allowed there. A Global config key in a managed file, and a Managed
+  // key in a drop-in, which is allowed there. The same keys where no rule reads them.
+  'packages/sc/.claude/settings.json': '{"allowManagedHooksOnly": true}',
+  'packages/sc/.claude/settings.local.json': '{"skipDangerousModePermissionPrompt": true}',
+  'packages/sc/managed-settings.json': '{"autoConnectIde": true}',
+  'packages/sc/managed-settings.d/10-a.json': '{"allowManagedHooksOnly": true}',
+  'packages/sc/managed-settings.d/20-b.txt': '{"autoConnectIde": true}',
+  'packages/sc/managed-settings.d/sub/30-c.json': '{"autoConnectIde": true}',
+  'packages/sc/managed-settings.json.bak': '{"autoConnectIde": true}',
+  'packages/sc/.vscode/settings.json': '{"autoConnectIde": true}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -306,6 +317,7 @@ const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json
 const SCOPE_RULES = [
   { name: 'settings-valid-json', files: PROJECT_FILES },
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-key-scope', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -382,6 +394,10 @@ const EXPECTED = [
     'packages/big/managed-settings.json',
     'packages/big/managed-settings.d/30-big.json',
   ].map((file) => `${file}: claude/settings-file-size@2`),
+  // `settings-key-scope` reads the project and managed files. It reports a Managed key in the
+  // project file, and a Global config key in a managed file. It makes no report on the rest.
+  'packages/sc/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/sc/managed-settings.json: claude/settings-key-scope@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
