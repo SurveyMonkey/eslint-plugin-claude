@@ -1,8 +1,9 @@
 // Each rule links to its own doc. A rule with no doc, or a URL that names
 // another file, sends the reader of a report to a 404.
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { expect, it } from 'vitest'
+import { parse } from 'yaml'
 import { docsUrl } from '../src/docs-url.ts'
 import plugin from '../src/index.ts'
 
@@ -86,5 +87,23 @@ it('gives each rule a doc and a URL that names it', () => {
   for (const [name, rule] of rules) {
     expect(rule.meta?.docs?.url).toBe(docsUrl(name))
     expect(existsSync(path.join(DOCS, `${name}.md`)), `${name}.md`).toBe(true)
+  }
+})
+
+// The docs watch reads the `description` of each rule doc with `yaml`
+// (`loadRules` in scripts/docs-classify.ts). One frontmatter that does not
+// parse stops the whole watch.
+it.fails('gives each rule doc frontmatter that parses, with a string description', () => {
+  const docs = readdirSync(DOCS).filter((file) => file.endsWith('.md') && file !== 'index.md')
+  expect(docs.length).toBeGreaterThan(0)
+  for (const file of docs) {
+    const text = readFileSync(path.join(DOCS, file), 'utf8')
+    expect(text.startsWith('---\n'), file).toBe(true)
+    const front = text.slice(4, text.indexOf('\n---', 4))
+    let description: unknown
+    expect(() => {
+      description = (parse(front) as { description?: unknown } | null)?.description
+    }, file).not.toThrow()
+    expect(typeof description, file).toBe('string')
   }
 })
