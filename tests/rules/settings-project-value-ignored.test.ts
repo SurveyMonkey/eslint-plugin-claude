@@ -56,6 +56,11 @@ jsonTester.run('settings-project-value-ignored (valid)', rule, {
       }),
       filename,
     })),
+    // The self-hosted prefix is `ccpool_`, with the underscore.
+    ...PROJECT_FILES.map((filename) => ({
+      code: obj({ remote: { defaultEnvironmentId: 'ccpoolx' } }),
+      filename,
+    })),
     // A `ccpool_` text elsewhere in the value is no self-hosted ID. The ID starts with it.
     ...PROJECT_FILES.map((filename) => ({
       code: obj({ remote: { defaultEnvironmentId: 'env_ccpool_1' } }),

@@ -55,7 +55,7 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     // "plain digits, alone for a number of bytes or with a K, M, G, or T suffix. Set 0, off,
     // false, no, or none to turn the cap off. Claude Code ignores any other value, such as 4e9".
     name: 'CLAUDE_CODE_TOOL_MEMORY_LIMIT',
-    pass: ['4G', '512M', '1024', '2T', '64K', '0', 'off', 'false', 'no', 'none'],
+    pass: ['4G', '512M', '1024', '2T', '64K', '0', 'off', 'false', 'no', 'none', '4g', 'OFF', 'No'],
     fail: ['4e9', '4 GB', 'G', '1.5G', 'unlimited', '4GB'],
     expected:
       'a size in plain digits with an optional K, M, G or T suffix, or one of 0, off, false, no, none',
@@ -140,7 +140,7 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     // "Accepts a path to a bash or zsh binary. Other shells such as fish are not supported".
     name: 'CLAUDE_CODE_SHELL',
     pass: ['/opt/homebrew/bin/bash', '/bin/zsh', 'bash', 'C:\\Program Files\\Git\\bin\\bash.exe'],
-    fail: ['/usr/bin/fish', 'fish', '/bin/sh', '/opt/bash/bin/', 'bashrc'],
+    fail: ['/usr/bin/fish', 'fish', '/bin/sh', '/opt/bash/bin/', 'bashrc', 'mybash', '/bin/notzsh'],
     expected: 'a path to a bash or zsh binary',
   },
   {

@@ -123,6 +123,15 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
     ...PROJECT_ONLY.flatMap((name) =>
       MANAGED_FILES.map((filename) => ({ code: env({ [name]: 'x' }), filename })),
     ),
+    // `OTEL_LOG_MANAGED_SETTINGS` is "Set to 1" to turn it on and "a value in project or local
+    // settings doesn't turn it on". The rule lets an off value pass, which is a choice of the
+    // plugin, because the value changes nothing.
+    ...['0', 'false', 'No', 'OFF'].flatMap((value) =>
+      PROJECT_FILES.map((filename) => ({
+        code: env({ OTEL_LOG_MANAGED_SETTINGS: value }),
+        filename,
+      })),
+    ),
     // The telemetry-off values still apply in a project file.
     ...SELECTORS.flatMap((name) =>
       ['none', 'None'].flatMap((value) =>
@@ -169,6 +178,8 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
     ...ALL.map((filename) => ({
       code: env({
         XDG: 'x',
+        MYXDG_HOME: 'x',
+        XProgramFiles: 'x',
         MYHOME: 'x',
         home: 'x',
         systemroot: 'x',
