@@ -35,12 +35,12 @@ function fieldsOf(file: string, bound: string): Record<string, unknown> | null |
  *  This function replaces an array, or an object other than `env`, as a
  *  whole. Do not use it for a list key such as `permissions`.
  *
- *  The result is null when neither file is there, in `bound`. The result is
- *  `UNREADABLE` when one file cannot be seen, because that file can override any key. A file
- *  cannot be seen when the read fails, when the file is a link to a file that
- *  is not there, when it is not there and its path is out of `bound`, or when
- *  its real path is out of `bound`. A file that does not parse to an object
- *  cannot be seen either. */
+ *  The result is null when neither file is there and the path of each is in
+ *  `bound`. The result is `UNREADABLE` when one file cannot be seen, because
+ *  that file can override any key. A file cannot be seen when the read fails,
+ *  when the file is a link to a file that is not there, when it is not there
+ *  and its path is out of `bound`, or when its real path is out of `bound`. A
+ *  file that does not parse to an object cannot be seen either. */
 export function readSettings(
   dir: string,
   bound: string,

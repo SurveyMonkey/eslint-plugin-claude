@@ -23,10 +23,11 @@ import path from 'node:path'
 import { parseFrontmatter } from './frontmatter.ts'
 import type { SkillFile } from './skill-files.ts'
 
-/** The result of a read that failed for a reason other than a missing file.
- *  It is also the result for a file with a real path out of the repository,
- *  for a dangling or out-of-bound manifest link or manifest directory link,
- *  and for a missing path out of the repository (see `readJson`). */
+/** The result of a read that failed for a reason other than a file that is
+ *  not there in the bound. It is also the result for a file with a real path
+ *  out of the repository, for a dangling or out-of-bound manifest link or
+ *  manifest directory link, and for a missing path out of the repository (see
+ *  `readJson`). */
 export const UNREADABLE: unique symbol = Symbol('unreadable')
 export type Unreadable = typeof UNREADABLE
 
@@ -272,11 +273,12 @@ export function danglingOf(entry: string): null | Unreadable {
 /** The result for a path where `realOf` gives null. The helper walks up to
  *  the nearest part of the path that exists, and adds the parts that do not.
  *  The result is `UNREADABLE` when it meets a part that is an entry, such as a
- *  dangling link, because a dangling link can lead anywhere. The same holds
- *  when the walk reaches a root that does not exist. Otherwise the result is
- *  null when the real path of that part, plus the rest, is in `bound`. It is
- *  `UNREADABLE` when that path is out of `bound`, because the rule cannot see
- *  out of `bound`. */
+ *  dangling link, because a dangling link can lead anywhere. It is also
+ *  `UNREADABLE` when a part fails to read for another reason. The same holds
+ *  when the walk reaches a root that does not exist (Windows only).
+ *  Otherwise the result is null when the real path of that part, plus the
+ *  rest, is in `bound`. It is `UNREADABLE` when that path is out of `bound`,
+ *  because the rule cannot see out of `bound`. */
 function missingOf(file: string, bound: string): null | Unreadable {
   const rest: string[] = []
   let at = path.resolve(file)

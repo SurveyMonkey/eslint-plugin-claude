@@ -142,8 +142,8 @@ export function sourceOf(entry: unknown): unknown {
  *  key. Otherwise `settings.json` decides. The result is undefined when no
  *  file has the key. It is also undefined when `settings.local.json` is a
  *  dangling link, has a real path out of the bound, fails to read, or does
- *  not parse to an object, because it can hold the entry in use. It is the
- *  same when it is not there and its path is out of the bound. A missing
+ *  not parse to an object, because it can hold the entry in use. It is also
+ *  undefined when it is not there and its path is out of the bound. A missing
  *  `settings.local.json` in the bound has no entry. */
 export function declaredSource(settingsFile: string, text: string, market: string): unknown {
   const own = marketplacesOf(text)
