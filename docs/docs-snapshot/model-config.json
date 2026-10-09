@@ -1,0 +1,228 @@
+{
+  "url": "https://code.claude.com/docs/en/model-config",
+  "hash": "8f65d1b1463bc7e24fa0eeeadd290278162b1f26c56be6190a1db510de8d7ca0",
+  "blocks": [
+    {
+      "id": "model-configuration",
+      "hash": "26e1937ec116bab719dcecf65e1feea54e0bf1e69f85e04edcb086e5f1188bbd"
+    },
+    {
+      "id": "available-models",
+      "hash": "a61fdea3fcb28659495a24c4e22ccc30a1953428e5f6161ef6f61130231d9bb6"
+    },
+    {
+      "id": "model-aliases",
+      "hash": "a09e1c9b1762d03557790bd6d2bff27c741d3881a2fb9c76d1c2379d1949c324"
+    },
+    {
+      "id": "work-with-fable",
+      "hash": "cb7a38c02a03492619732cc15be04404cf8c31093712e973ff7ec3317766ec95"
+    },
+    {
+      "id": "fable-and-usage-credits",
+      "hash": "49e23c3a3b46aa3db71bc5ba859c9a7f19e06829cfdc101a9f5c6676ee88f9be"
+    },
+    {
+      "id": "setting-your-model",
+      "hash": "708ecc9713dd5dcae895be8925a215142ea177a49e9026c944902fa6f26c6422"
+    },
+    {
+      "id": "set-a-default-model-for-new-sessions",
+      "hash": "308c734d7738bd2e9d4054889f2891eff8c7256da5b13fd8b466d008a69e5d51"
+    },
+    {
+      "id": "a-new-session-starts-on-a-different-model-than-you-picked",
+      "hash": "3dbf73650b9964fe375d14f38e2323119d5170b2ae2dbfa85fba9a913855a16f"
+    },
+    {
+      "id": "restrict-model-selection",
+      "hash": "5b9b2432071d621fb4a31293c05c7a9435be578b17621df5974f6d1c4f060d99"
+    },
+    {
+      "id": "surface-coverage",
+      "hash": "99e6e114a037b327e6ed44efb02bd6435209848c74abf089d861df9f472aa2aa"
+    },
+    {
+      "id": "default-model-behavior",
+      "hash": "dd52d36a90ad970a24f0b1f553f54c493d032ca1630adbc6d6113d0267e0596e"
+    },
+    {
+      "id": "enforce-the-allowlist-for-the-default-model",
+      "hash": "24b6815ab79e57502985da6a4298e0a4cfeb99048115be8d9a5bfb88cfef330a"
+    },
+    {
+      "id": "control-the-model-users-run-on",
+      "hash": "04ac928904eb237dd7b04ca94a4e9fd7565c692d070482e607aeea399c094351"
+    },
+    {
+      "id": "merge-behavior",
+      "hash": "28eccd688b8c980aca7297516d1480fe1bd09dac795655f14da3a6b260181337"
+    },
+    {
+      "id": "mantle-model-ids",
+      "hash": "d0e955bad34345d2279b3ff33975313e106a62e7f148914a4e9c1bfdb47a85a2"
+    },
+    {
+      "id": "block-specific-models-or-versions",
+      "hash": "bcadcf38852a8781e32b31c765cc06c49352a68ca276c6bbb806c15091292648"
+    },
+    {
+      "id": "organization-model-restrictions",
+      "hash": "f097962291eb1d719b56da5918eb92731d895f337d3d7e5ef9d05d96c80a1492"
+    },
+    {
+      "id": "organization-default-model",
+      "hash": "b2cc93bfe52ca9b578709fd3a7be301e90ac3c0a98aec5cbcfddeef22b25fcde"
+    },
+    {
+      "id": "organization-effort-limits",
+      "hash": "5dd60f696d2982c2e366989b66525b8121d60a6dbad67df5d20a15ce29713e70"
+    },
+    {
+      "id": "special-model-behavior",
+      "hash": "e29d9e7cecbca6c590615461dde44761706e1b6e68eb041c579956d4b4a060b2"
+    },
+    {
+      "id": "default-model-setting",
+      "hash": "b93b80c9d181f5fe320e45a656c10b0a418e8ada9f013f9e57c123d5dcbfaf89"
+    },
+    {
+      "id": "opusplan-model-setting",
+      "hash": "96cf02541829ca1fc8fe84c556a1263d5714f96a6022c8315aae5ba8ba24f139"
+    },
+    {
+      "id": "fallback-model-chains",
+      "hash": "a1aea939c48e014c2f3bbffe974a1bfdf6be47adb6c00ea947c9eff3cc382107"
+    },
+    {
+      "id": "automatic-model-fallback",
+      "hash": "8c06afe653d5a1997386f6a1c711178fce53f0317a9e326ce60274e84b23f313"
+    },
+    {
+      "id": "effort-level-after-a-fallback",
+      "hash": "90bd045409c169788c9bd377479dfc6e4d3bf1dba9f530a0c61048906ff51391"
+    },
+    {
+      "id": "check-what-triggered-fallback",
+      "hash": "f6b78f49e5dd02bb1374c1d4a6341e5c0eaa276b415850128c957ef16bd4f34e"
+    },
+    {
+      "id": "ask-before-switching",
+      "hash": "a8b395bee4be34c0fab93ebb0deca2a82bbd0a110ece41294ec99810f347bde9"
+    },
+    {
+      "id": "enable-fallback-on-bedrock-agent-platform-and-foundry",
+      "hash": "1ec97977ad31b350c46a69ddae5a913e3c86f49980c7caeb12f5f9bcebba8ea0"
+    },
+    {
+      "id": "security-research-and-biology-workloads",
+      "hash": "25753dd92c4fc9b1a83b2acc332ca03a80fdae5d4214446a890a5819f929cc12"
+    },
+    {
+      "id": "adjust-effort-level",
+      "hash": "536ea2c27d79d7674f3737c6de82d2c371ed3153675fd39029bd7d326ea68f85"
+    },
+    {
+      "id": "choose-an-effort-level",
+      "hash": "d52d8564d19f78f8ca340b63d73fe023c9c5a9b383cbbe9ca264ab9de71aea70"
+    },
+    {
+      "id": "use-ultrathink-for-one-off-deep-reasoning",
+      "hash": "5dd8db06dc012dbc909d839846963a8d9ef9bd4ea7df8ba335ebf00fa10680cc"
+    },
+    {
+      "id": "set-the-effort-level",
+      "hash": "5ee3f55a027f9008af47b6fd47e5b22a73113596d941cc8d898ef836dba15d22"
+    },
+    {
+      "id": "adaptive-reasoning-and-fixed-thinking-budgets",
+      "hash": "fc6931bbfd23772b35edeb001bd6ac1db39b7301d4522cb76fe1469da4e12817"
+    },
+    {
+      "id": "extended-thinking",
+      "hash": "73f7fdf3ec8070a0ba2e0925813f50483e0eb6dac7262e190ea7f500f472674d"
+    },
+    {
+      "id": "extended-context",
+      "hash": "2ba52e5faf23df35c0f4eff2f7d095a96233b70686329bcc97552e1290d1aec8"
+    },
+    {
+      "id": "select-1m-context-for-opus-4-6-or-sonnet-4-6",
+      "hash": "85606ed245650790f65a75725df8dbcd31bcfd2146864a1c9ebe523f48523728"
+    },
+    {
+      "id": "context-window-behind-an-llm-gateway",
+      "hash": "2ca8489688c19791cdfb04f4a8305b52b27bb3314a4434a9f2fb453239901146"
+    },
+    {
+      "id": "turn-off-1m-context",
+      "hash": "18fcd3eb3ae816db460461aaf383cad9c0659a6bd0c34325a66ba76da778381c"
+    },
+    {
+      "id": "haiku-5-5-context-window-and-pricing",
+      "hash": "6d678085372a161a1dd4251165fe5a4d93fccc734137c0df1c6b7c3e2de0e3c1"
+    },
+    {
+      "id": "context-window-and-auto-compaction",
+      "hash": "e19878414bed26ffb58f981fca8a344303110f5b0c5f2999a0d6efd14bf3c7c8"
+    },
+    {
+      "id": "set-the-auto-compact-window",
+      "hash": "b0f2d18f2dbdd34afd6fc2696fe8a71a6506963e2cc8f096da90b0d0d9adb9f8"
+    },
+    {
+      "id": "default-auto-compact-thresholds",
+      "hash": "529e9f8947fd19d909576a538f84bd4590e0bc2824200301897c49295da554d9"
+    },
+    {
+      "id": "correct-the-window-for-a-gateway-or-custom-model-id",
+      "hash": "710c5611d94c9dc79094c2e3a67f7088d93bf2c67cbe24214a954444bcc92c43"
+    },
+    {
+      "id": "checking-your-current-model",
+      "hash": "d32d20c6b6818f6e88398504fa3f478696c55b4b8529593806ffa2cf49d506ca"
+    },
+    {
+      "id": "add-a-custom-model-option",
+      "hash": "130ce8ae9d679f5a8515e329e13e05d22b197f4286a5e938c180230f75725ad7"
+    },
+    {
+      "id": "environment-variables",
+      "hash": "870502c6df0b0889bd44c1ef54e104d6332d7bc6d5c5c22ae195fa8c7536496d"
+    },
+    {
+      "id": "pin-models-for-third-party-deployments",
+      "hash": "7646ed271b02b7eec2a6d8be4879cb78ed3135d7b02aa272a6d32f4be05338c0"
+    },
+    {
+      "id": "customize-pinned-model-display-and-capabilities",
+      "hash": "ec0dda099206f49b68cca09d7d84db3718ce6bec6b996446ad44bd8cff420bbb"
+    },
+    {
+      "id": "override-model-ids-per-version",
+      "hash": "fe4739ce777ae46401f5ebc360cf21142f4afe595de38ce14c5157799f4fa475"
+    },
+    {
+      "id": "prompt-caching-configuration",
+      "hash": "8bcfd979738bb7b3511581bbe6d60d986f15bde0e552e61428d4bb9f77e359e8"
+    },
+    {
+      "id": "version-history",
+      "hash": "92fa51c96124a2370d7b4d73f3c95c67d6143c5704eae045d3587f139bb002ee"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Adjust effort level",
+      "id": "adjust-effort-level",
+      "hash": "536ea2c27d79d7674f3737c6de82d2c371ed3153675fd39029bd7d326ea68f85",
+      "text": "### Adjust effort level\n\n[Effort levels](https://platform.claude.com/docs/en/build-with-claude/effort) control adaptive reasoning, which lets the model decide whether and how much to think on each step based on task complexity. Lower effort is faster and cheaper for straightforward tasks, while higher effort provides deeper reasoning for complex problems.\n\nThe available effort levels depend on the model. Models not listed here do not support effort:\n\n| Model | Levels |\n| :- | :- |\n| Fable 5.1 and Fable 5 | `low`, `medium`, `high`, `xhigh`, `max` |\n| Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Sonnet 5, Opus 4.8, and Opus 4.7 | `low`, `medium`, `high`, `xhigh`, `max` |\n| Opus 4.6 and Sonnet 4.6 | `low`, `medium`, `high`, `max` |\n\nIf you set a level the active model does not support, Claude Code falls back to the highest supported level at or below the one you set. For example, `xhigh` runs as `high` on Opus 4.6. Your organization or your own settings can also cap the levels a model offers; see [Organization effort limits](#organization-effort-limits).\n\nClaude Code resolves the session's effort level in this order, taking the first that applies:\n\n1. An explicit choice: the [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/en/env-vars#variables) environment variable, launching with `--effort`, or `/effort` in the session ([a non-interactive `/effort` has narrower effect](#non-interactive-effort))\n2. Your settings: the level you saved for the model or an [`effortLevel`](/docs/en/settings-reference#effortlevel) key, with the precedence between them and across settings files stated at [`modelSettings`](/docs/en/settings-reference#modelsettings)\n3. The model's default effort: `high` on every model that supports effort, except that Opus 5.5, Sonnet 5.5, and Haiku 5.5 default to `medium`, Opus 4.7 defaults to `xhigh`, and, when your organization sets a default effort level for its [organization default model](#organization-default-model), that level is the default when you run that model\n\nAfter an automatic model fallback, see [Effort level after a fallback](#effort-level-after-a-fallback) for the level that applies.\n\nOpus 5.5 starts at `medium` unless one of the sources above sets a level for it, and a top-level `effortLevel` in your user settings file doesn't count for Opus 5.5. That key is the older form `/effort` wrote before Claude Code saved levels per model: it keeps applying where it applied before, on Opus 5, Fable 5.1, and earlier models, while Opus 5.5 and models released after it start at their own default until you choose a level for them with `/effort` or the `/model` picker. A top-level `effortLevel` in project, local, or managed settings, or one passed with `--settings`, applies to every model.\n\nWhen you set `low`, `medium`, `high`, or `xhigh` in an interactive session on your machine, you choose how long it lasts by how you confirm it:\n\n* `Enter` in the `/effort` slider or the `/model` picker, or a level typed after `/effort`: save the level as your default and apply it in later sessions\n* `s` in the `/effort` slider or the `/model` picker: apply the level to this session only. Requires Claude Code v2.1.257 or later\n\nClaude Code saves the level per model, under the [`modelSettings`](/docs/en/settings-reference#modelsettings) key in your user settings, so each model keeps its own saved level.\n\n`max` is the deepest reasoning level. Unless you set it through the `CLAUDE_CODE_EFFORT_LEVEL` environment variable, Claude Code applies `max` to the current session only.\n\n<Note>\n  A level you pick from the effort control on a phone or browser connected through [Remote Control](/docs/en/remote-control#what-connected-devices-see) applies to that session only.\n</Note>\n\n<span id=\"non-interactive-effort\" />\n\nWhen you set a level with `/effort` in a [`-p` run](/docs/en/headless), Claude Code applies it to that session only and doesn't save it as your default.\n\nThe `/effort` slider also has an **Ultracode** toggle. Ultracode is a Claude Code setting rather than a model effort level: with it on, Claude orchestrates [dynamic workflows](/docs/en/workflows) for substantive tasks, at whichever effort level the session runs at. For where it can be set persistently, see the [`ultracode`](/docs/en/settings-reference#ultracode) setting.\n\nTurning ultracode on or off with `/effort` or the `ultracode` setting leaves the effort level unchanged. The `--effort ultracode` flag and the Agent SDK `effortLevel: \"ultracode\"` value turn it on and also set the level to `xhigh`. Picking a level in the `/effort` slider or the `/model` picker leaves ultracode as it was.\n\nYou can turn on ultracode through any of the following:\n\n* **`/effort`**: run `/effort ultracode` to turn it on for the current session or `/effort ultracode off` to turn it off. In the `/effort` slider, press `Tab` to flip the **Ultracode** toggle, then `Enter` to apply it\n* **`--effort` flag**: launch with `claude --effort ultracode`, which starts the session at `xhigh` effort with ultracode on\n* **`ultracode` setting**: set [`\"ultracode\": true`](/docs/en/settings-reference#ultracode) in a settings file, with `--settings`, or in an Agent SDK control request. An [`applyFlagSettings()`](/docs/en/agent-sdk/typescript#applyflagsettings) request also accepts `effortLevel: \"ultracode\"`, which turns it on and sets the effort level to `xhigh`\n\nThe `/effort ultracode off` form, the slider toggle, and keeping ultracode on at effort levels other than `xhigh` require Claude Code v2.1.284 or later. Before v2.1.284, turning on ultracode set the session to `xhigh` effort, picking another level turned it off, and an effort cap below `xhigh` made it unavailable.\n\nPassing `ultracode` to the `--effort` flag or the Agent SDK `effortLevel` value requires Claude Code v2.1.203 or later. Before v2.1.203, `--effort ultracode` printed `Unknown --effort value 'ultracode'` and the session started at the default effort.\n\nThe persisted `effortLevel` setting and the `CLAUDE_CODE_EFFORT_LEVEL` environment variable don't accept `ultracode`. If `CLAUDE_CODE_EFFORT_LEVEL` or an [effort cap](#organization-effort-limits) sets the session's level, ultracode stays on at that level.\n\n<span id=\"when-ultracode-is-available\" />\n\nUltracode is unavailable when:\n\n* [Workflows are turned off](/docs/en/workflows#turn-workflows-off)\n* The model doesn't support `xhigh` effort\n\nIn those cases `--effort ultracode` starts the session with ultracode off, at the highest effort level the model and any cap allow, up to `xhigh`."
+    },
+    {
+      "heading": "Customize pinned model display and capabilities",
+      "id": "customize-pinned-model-display-and-capabilities",
+      "hash": "ec0dda099206f49b68cca09d7d84db3718ce6bec6b996446ad44bd8cff420bbb",
+      "text": "### Customize pinned model display and capabilities\n\nWhen you pin a model on a third-party provider, its row in the `/model` picker shows the model's name by default if Claude Code recognizes the pinned ID, and the raw ID otherwise:\n\n* **Recognized**: the exact ID of a model Claude Code knows, such as its Anthropic API ID or your provider's or gateway's form of it, with or without the `[1m]` suffix. Pin `us.anthropic.claude-sonnet-4-5-20250929-v1:0` and the row reads `Sonnet 4.5`.\n* **Not recognized**: any other ID, such as an application inference profile ARN or a model version Claude Code doesn't know, unless a [`modelOverrides`](#override-model-ids-per-version) entry maps a model to that exact string. On Microsoft Foundry, deployment names are user-defined, so Claude Code never recognizes a pinned ID there, mapped or not, and the row shows the deployment name by default.\n\nWhen a row shows the model's name, its default description includes the pinned ID so you can still see which ID is pinned.\n\nClaude Code may also not recognize which features a pinned model supports. You can set the display name and description yourself and declare capabilities with companion environment variables for each pinned model.\n\nThese variables take effect on third-party providers such as Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry. The `_NAME` and `_DESCRIPTION` variables also take effect when `ANTHROPIC_BASE_URL` points to an [LLM gateway](/docs/en/llm-gateway). They have no effect when connecting directly to `api.anthropic.com`.\n\n| Environment variable | Description |\n| - | - |\n| `ANTHROPIC_DEFAULT_OPUS_MODEL_NAME` | Display name for the pinned Opus model in the `/model` picker. When not set, the row shows the model's name if Claude Code recognizes the pinned ID, and the pinned ID otherwise |\n| `ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION` | Display description for the pinned Opus model in the `/model` picker. When not set, the row shows a default description that begins `Custom Opus model` |\n| `ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES` | Comma-separated list of capabilities the pinned Opus model supports |\n\nThe same `_NAME`, `_DESCRIPTION`, and `_SUPPORTED_CAPABILITIES` suffixes are available for `ANTHROPIC_DEFAULT_SONNET_MODEL`, `ANTHROPIC_DEFAULT_HAIKU_MODEL`, `ANTHROPIC_DEFAULT_FABLE_MODEL`, and `ANTHROPIC_CUSTOM_MODEL_OPTION`.\n\nClaude Code enables features like [effort levels](#adjust-effort-level) and [extended thinking](#extended-thinking) by matching the model ID against known patterns. Provider-specific IDs such as Amazon Bedrock ARNs or custom deployment names often don't match these patterns, leaving supported features disabled. Set `_SUPPORTED_CAPABILITIES` to tell Claude Code which features the model actually supports:\n\n| Capability value | Enables |\n| - | - |\n| `effort` | [Effort levels](#adjust-effort-level) and the `/effort` command |\n| `xhigh_effort` | The `xhigh` effort level |\n| `max_effort` | The `max` effort level |\n| `thinking` | [Extended thinking](#extended-thinking) |\n| `adaptive_thinking` | Adaptive reasoning that dynamically allocates thinking based on task complexity |\n| `interleaved_thinking` | Thinking between tool calls |\n\nWhen `_SUPPORTED_CAPABILITIES` is set, Claude Code enables the listed capabilities and disables the unlisted ones for the matching pinned model. When the variable is unset, Claude Code falls back to built-in detection based on the model ID.\n\nThis example pins Opus to an Amazon Bedrock custom model ARN, sets a friendly name, and declares its capabilities:\n\n```bash theme={null}\nexport ANTHROPIC_DEFAULT_OPUS_MODEL='arn:aws:bedrock:us-east-1:123456789012:custom-model/abc'\nexport ANTHROPIC_DEFAULT_OPUS_MODEL_NAME='Opus via Bedrock'\nexport ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION='Opus 4.7 routed through a Bedrock custom endpoint'\nexport ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES='effort,xhigh_effort,max_effort,thinking,adaptive_thinking,interleaved_thinking'\n```"
+    }
+  ]
+}

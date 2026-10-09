@@ -954,6 +954,48 @@
       "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
     }
   ],
+  "settings-env-value-format": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "env",
+      "hash": "4076131fca929f69ba901b494d67dec2fa790b97696a54d2371e59137257998a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "How env values interact with your shell",
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "In settings files",
+      "hash": "fd3b871f4d83a62d90dce594b4a4e4c327781f57e420e4c0d4f7c42b73aa61f3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "38db0864730a51f7940c839a56a94d37f06f6fbee0e46d5e61d8fc56fccd7053"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Memory limit on Linux and WSL",
+      "hash": "afdc6ea8c10b65462bf59d9fb1667a0000bc095b73dcd5f08244cb62ee2b5653"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Configure tool search",
+      "hash": "8ffdacb36d969ffd0191b805a239308fb10e8fbb702bb7dca0f473aa611ba17d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Adjust effort level",
+      "hash": "536ea2c27d79d7674f3737c6de82d2c371ed3153675fd39029bd7d326ea68f85"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Customize pinned model display and capabilities",
+      "hash": "ec0dda099206f49b68cca09d7d84db3718ce6bec6b996446ad44bd8cff420bbb"
+    }
+  ],
   "settings-extra-known-marketplaces-key-matches-name": [
     {
       "url": "https://code.claude.com/docs/en/plugins/org",

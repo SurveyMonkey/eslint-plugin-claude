@@ -295,6 +295,17 @@ const TREE: Record<string, string> = {
   'packages/ec/managed-settings.d/30-b.txt': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
   'packages/ec/managed-settings.d/sub/40-c.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
   'packages/ec/.vscode/settings.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  // `settings-env-value-format`: an `env` that is not an object, a value that is not a string,
+  // and a known variable with a value that breaks its form, in each file that it reads. A hidden
+  // drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ef/.claude/settings.json': '{"env": []}',
+  'packages/ef/.claude/settings.local.json': '{"env": {"FOO": 1}}',
+  'packages/ef/managed-settings.json': '{"env": {"ENABLE_TOOL_SEARCH": "1"}}',
+  'packages/ef/managed-settings.d/10-a.json': '{"env": {"BASH_MAX_OUTPUT_LENGTH": "200000"}}',
+  'packages/ef/managed-settings.d/.20-hidden.json': '{"env": []}',
+  'packages/ef/managed-settings.d/30-b.txt': '{"env": []}',
+  'packages/ef/managed-settings.d/sub/40-c.json': '{"env": []}',
+  'packages/ef/.vscode/settings.json': '{"env": []}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -363,6 +374,7 @@ const SCOPE_RULES = [
   { name: 'settings-managed-file', files: MANAGED_FILES },
   { name: 'settings-removed-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-credential', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-value-format', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -466,6 +478,14 @@ const EXPECTED = [
     'packages/ec/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-env-credential@2`),
   'packages/ec/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-value-format` reads the project and managed files, and no other file.
+  ...[
+    'packages/ef/.claude/settings.json',
+    'packages/ef/.claude/settings.local.json',
+    'packages/ef/managed-settings.json',
+    'packages/ef/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-value-format@2`),
+  'packages/ef/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
