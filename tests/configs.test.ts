@@ -283,6 +283,18 @@ const TREE: Record<string, string> = {
   'packages/rk/managed-settings.d/30-b.txt': '{"taskOutputMaxChars": 1}',
   'packages/rk/managed-settings.d/sub/40-c.json': '{"taskOutputMaxChars": 1}',
   'packages/rk/.vscode/settings.json': '{"taskOutputMaxChars": 1}',
+  // `settings-env-credential`: a credential variable, and a credential header line, in each
+  // file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where
+  // no rule reads it: another extension, a nested directory, and another settings file.
+  'packages/ec/.claude/settings.json': '{"env": {"ANTHROPIC_API_KEY": "sk-x"}}',
+  'packages/ec/.claude/settings.local.json':
+    '{"env": {"ANTHROPIC_CUSTOM_HEADERS": "X-Api-Key: x"}}',
+  'packages/ec/managed-settings.json': '{"env": {"CLAUDE_CODE_OAUTH_TOKEN": "x"}}',
+  'packages/ec/managed-settings.d/10-a.json': '{"env": {"ANTHROPIC_AUTH_TOKEN": "x"}}',
+  'packages/ec/managed-settings.d/.20-hidden.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  'packages/ec/managed-settings.d/30-b.txt': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  'packages/ec/managed-settings.d/sub/40-c.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
+  'packages/ec/.vscode/settings.json': '{"env": {"ANTHROPIC_API_KEY": "x"}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -350,6 +362,7 @@ const SCOPE_RULES = [
   { name: 'settings-key-scope', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-managed-file', files: MANAGED_FILES },
   { name: 'settings-removed-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-credential', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -445,6 +458,14 @@ const EXPECTED = [
     'packages/rk/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-removed-key@2`),
   'packages/rk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-credential` reads the project and managed files, and no other file.
+  ...[
+    'packages/ec/.claude/settings.json',
+    'packages/ec/.claude/settings.local.json',
+    'packages/ec/managed-settings.json',
+    'packages/ec/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-credential@2`),
+  'packages/ec/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

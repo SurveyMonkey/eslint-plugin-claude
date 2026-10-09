@@ -46,6 +46,7 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsFileSize from './rules/settings-file-size.ts'
@@ -153,6 +154,7 @@ const modules = [
   settingsKeyScope,
   settingsManagedFile,
   settingsRemovedKey,
+  settingsEnvCredential,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -250,6 +252,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-key-scope': 'error',
   'settings-managed-file': 'error',
   'settings-removed-key': 'error',
+  'settings-env-credential': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

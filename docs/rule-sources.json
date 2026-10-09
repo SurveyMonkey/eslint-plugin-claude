@@ -932,6 +932,28 @@
       "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
     }
   ],
+  "settings-env-credential": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "How env values interact with your shell",
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "apiKeyHelper",
+      "hash": "efd9c40b52165bfced283ded41ab73dfef7ea57cd354606bfb0f53cb8848b88e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "38db0864730a51f7940c839a56a94d37f06f6fbee0e46d5e61d8fc56fccd7053"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Environment variables and the approval dialog",
+      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
+    }
+  ],
   "settings-extra-known-marketplaces-key-matches-name": [
     {
       "url": "https://code.claude.com/docs/en/plugins/org",
