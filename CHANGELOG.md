@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.7.0...v0.8.0) (2026-10-09)
+
+
+### Features
+
+* **settings:** add the settings env and removed key rules ([#108](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/108)) ([95815ac](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/95815acc817d6480b4cfd6f74edd6b2b222ad037))
+* **settings:** add the settings scope and managed file rules ([#107](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/107)) ([010e94a](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/010e94a4f9872d9f33bd68f5854eef4760dc634e))
+
+
+### Bug Fixes
+
+* **docs:** quote a rule doc description that breaks the docs watch ([#101](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/101)) ([ee50bd5](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/ee50bd58396d4f0c973f241c689258e2ea4e9d23)), closes [#100](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/100)
+* **skill-tree:** bound a missing file and a linked .claude ([#106](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/106)) ([c491e3a](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/c491e3af39dc349a53d5304bec2915e723bec8ec)), closes [#98](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/98) [#99](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/99)
+
 ## [0.7.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.6.0...v0.7.0) (2026-10-09)
 
 
