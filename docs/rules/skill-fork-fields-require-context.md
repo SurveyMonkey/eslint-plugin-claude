@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-fork-fields-require-context, which reports an agent or background field in a skill or command file that does not set context: fork, because Claude Code then ignores both fields.
+description: "The ESLint rule claude/skill-fork-fields-require-context, which reports an agent or background field in a skill or command file that does not set context: fork, because Claude Code then ignores both fields."
 owner: brianespinosa
 created: 2026-09-30
 related_issues: [8]

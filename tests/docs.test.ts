@@ -93,7 +93,7 @@ it('gives each rule a doc and a URL that names it', () => {
 // The docs watch reads the `description` of each rule doc with `yaml`
 // (`loadRules` in scripts/docs-classify.ts). One frontmatter that does not
 // parse stops the whole watch.
-it.fails('gives each rule doc frontmatter that parses, with a string description', () => {
+it('gives each rule doc frontmatter that parses, with a string description', () => {
   const docs = readdirSync(DOCS).filter((file) => file.endsWith('.md') && file !== 'index.md')
   expect(docs.length).toBeGreaterThan(0)
   for (const file of docs) {
