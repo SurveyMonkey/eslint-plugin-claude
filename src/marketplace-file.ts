@@ -8,7 +8,8 @@
 // With no `.git`, the reader resolves from the directory that holds
 // `.claude/`. That is a choice of this rule, and the docs do not say it. The
 // reader reads the file through `readJson`. The bound is the repository
-// root. With no `.git`, it is `.claude/` (ADR 001, Decision 14).
+// root. With no `.git`, it is the real path of `.claude/` (ADR 001, Decision
+// 14).
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tree.ts'

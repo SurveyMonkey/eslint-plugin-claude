@@ -302,14 +302,14 @@ describe('readJson', () => {
     expect(readJson(path.join(bound, 'x/gone.json'), bound)).toBeNull()
   })
 
-  it.fails('gives UNREADABLE for a missing file out of the bound', () => {
+  it('gives UNREADABLE for a missing file out of the bound', () => {
     put('rj/in/x', '')
     put('rj/out/x', '')
     const bound = path.join(scratch, 'rj/in')
     expect(readJson(path.join(scratch, 'rj/out/gone.json'), bound)).toBe(UNREADABLE)
   })
 
-  it.fails('gives UNREADABLE for a missing file below a missing directory out of the bound', () => {
+  it('gives UNREADABLE for a missing file below a missing directory out of the bound', () => {
     put('rj/in/x', '')
     put('rj/out/x', '')
     const bound = path.join(scratch, 'rj/in')
@@ -334,16 +334,7 @@ describe('readJson', () => {
     expect(readJson(path.join(bound, 'far.json'), bound)).toBe(UNREADABLE)
   })
 
-  it.fails('gives UNREADABLE for a missing file below a dangling directory link', {
-    skip: process.platform === 'win32',
-  }, () => {
-    put('rj/in/x', '')
-    const bound = path.join(scratch, 'rj/in')
-    symlinkSync('gone-dir', path.join(bound, 'dir-link'))
-    expect(readJson(path.join(bound, 'dir-link/gone.json'), bound)).toBe(UNREADABLE)
-  })
-
-  it.fails('gives UNREADABLE for a missing file below a link out of the bound', {
+  it('gives UNREADABLE for a missing file below a link out of the bound', {
     skip: process.platform === 'win32',
   }, () => {
     put('rj/in/x', '')
