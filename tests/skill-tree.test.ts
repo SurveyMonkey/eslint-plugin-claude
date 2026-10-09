@@ -343,6 +343,50 @@ describe('readJson', () => {
     symlinkSync('../out', path.join(bound, 'out-link'))
     expect(readJson(path.join(bound, 'out-link/gone.json'), bound)).toBe(UNREADABLE)
   })
+
+  it('gives null for a missing file when the bound does not exist', () => {
+    put('rj/out/x', '')
+    const bound = path.join(scratch, 'rj/nobound')
+    expect(readJson(path.join(bound, 'gone.json'), bound)).toBeNull()
+    expect(readJson(path.join(bound, 'a/b/gone.json'), bound)).toBeNull()
+    expect(readJson(path.join(scratch, 'rj/out/gone.json'), bound)).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives null for a missing file below a link to a directory in the bound',
+    () => {
+      put('rj/in/sub/x', '')
+      const bound = path.join(scratch, 'rj/in')
+      symlinkSync('sub', path.join(bound, 'in-link'))
+      expect(readJson(path.join(bound, 'in-link/gone.json'), bound)).toBeNull()
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a missing file below a dangling directory link, whatever its target',
+    () => {
+      put('rj/in/x', '')
+      put('rj/out/x', '')
+      const bound = path.join(scratch, 'rj/in')
+      symlinkSync('../out/nothing', path.join(bound, 'dl-out'))
+      symlinkSync('nothing', path.join(bound, 'dl-in'))
+      expect(readJson(path.join(bound, 'dl-out/gone.json'), bound)).toBe(UNREADABLE)
+      expect(readJson(path.join(bound, 'dl-out/deep/gone.json'), bound)).toBe(UNREADABLE)
+      expect(readJson(path.join(bound, 'dl-in/gone.json'), bound)).toBe(UNREADABLE)
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'resolves a .. part before a link, as realpath does',
+    () => {
+      put('rj/in/x', '')
+      put('rj/out/x', '')
+      const bound = path.join(scratch, 'rj/in')
+      symlinkSync('../out', path.join(bound, 'dotted'))
+      expect(readJson(path.join(bound, 'dotted/../gone.json'), bound)).toBeNull()
+      expect(readJson(path.join(bound, 'dotted/gone.json'), bound)).toBe(UNREADABLE)
+    },
+  )
 })
 
 describe('repositoryRoot', () => {
@@ -430,6 +474,22 @@ describe('repositoryRoot for a linked .claude', () => {
       mkdirSync(path.join(free, 'target'))
       symlinkSync('target', path.join(free, 'link'))
       expect(repositoryRoot(path.join(free, 'link'))).toBe(path.join(free, 'target'))
+    } finally {
+      rmSync(free, { recursive: true, force: true })
+    }
+  })
+
+  it('gives the target of a .claude link when no directory above holds .git', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const free = realpathSync(mkdtempSync(path.join(tmpdir(), 'skill-tree-nogit-')))
+    try {
+      mkdirSync(path.join(free, 'target'))
+      writeFileSync(path.join(free, 'target/settings.json'), '{"model":"opus"}')
+      symlinkSync('target', path.join(free, '.claude'))
+      const dir = path.join(free, '.claude')
+      expect(repositoryRoot(dir)).toBe(path.join(free, 'target'))
+      expect(readSettings(dir, repositoryRoot(dir))).toEqual({ model: 'opus' })
     } finally {
       rmSync(free, { recursive: true, force: true })
     }

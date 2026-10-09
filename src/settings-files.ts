@@ -11,9 +11,10 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 
 /** The fields of one settings file. The result is null when the file is not
- *  there, and `UNREADABLE` when the rule cannot see it. A file that does not
- *  parse to an object is `UNREADABLE`, not absent. It can hold any key, and
- *  Claude Code reports it as a settings error. */
+ *  there and its path is in `bound`, and `UNREADABLE` when the rule cannot
+ *  see it. A file that is not there, with a path out of `bound`, cannot be
+ *  seen. A file that does not parse to an object is `UNREADABLE`, not absent.
+ *  It can hold any key, and Claude Code reports it as a settings error. */
 function fieldsOf(file: string, bound: string): Record<string, unknown> | null | Unreadable {
   const parsed = readJson(file, bound)
   if (parsed === null || parsed === UNREADABLE) {
@@ -34,11 +35,12 @@ function fieldsOf(file: string, bound: string): Record<string, unknown> | null |
  *  This function replaces an array, or an object other than `env`, as a
  *  whole. Do not use it for a list key such as `permissions`.
  *
- *  The result is null when neither file is there. The result is `UNREADABLE`
- *  when one file cannot be seen, because that file can override any key. A file
+ *  The result is null when neither file is there, in `bound`. The result is
+ *  `UNREADABLE` when one file cannot be seen, because that file can override any key. A file
  *  cannot be seen when the read fails, when the file is a link to a file that
- *  is not there, or when its real path is out of `bound`. A file that does not
- *  parse to an object cannot be seen either. */
+ *  is not there, when it is not there and its path is out of `bound`, or when
+ *  its real path is out of `bound`. A file that does not parse to an object
+ *  cannot be seen either. */
 export function readSettings(
   dir: string,
   bound: string,
