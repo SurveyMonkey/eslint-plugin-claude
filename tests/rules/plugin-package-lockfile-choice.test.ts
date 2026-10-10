@@ -17,7 +17,7 @@ const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
 const several = (files: string, first: string) =>
   `The plugin has ${files}. Claude Code reads only the first match, \`${first}\`, and ignores the others. Keep one lockfile, and prefer an npm lockfile.`
 const BUN_ONLY =
-  'The plugin has `bun.lock` and no npm lockfile. Claude Code runs Bun for it, and does not run npm when Bun is missing. Add `package-lock.json` or `npm-shrinkwrap.json` to reach the most users.'
+  'The plugin has `bun.lock` and no npm lockfile. Claude Code runs Bun for it, and does not run npm when Bun is missing. Claude Code reads `bun.lock` first, so an npm lockfile beside it does not help. Use `package-lock.json` or `npm-shrinkwrap.json` instead of `bun.lock` to reach the most users.'
 const run = (files: Record<string, string>) => {
   const { dir, code } = pluginTree({ name: 'p' }, files)
   return lint(dir, code).map((m) => m.message)

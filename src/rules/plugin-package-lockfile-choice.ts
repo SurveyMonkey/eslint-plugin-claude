@@ -33,7 +33,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'several' | 'bunOnly' }> = {
       several:
         'The plugin has {{files}}. Claude Code reads only the first match, `{{first}}`, and ignores the others. Keep one lockfile, and prefer an npm lockfile.',
       bunOnly:
-        'The plugin has `bun.lock` and no npm lockfile. Claude Code runs Bun for it, and does not run npm when Bun is missing. Add `package-lock.json` or `npm-shrinkwrap.json` to reach the most users.',
+        'The plugin has `bun.lock` and no npm lockfile. Claude Code runs Bun for it, and does not run npm when Bun is missing. Claude Code reads `bun.lock` first, so an npm lockfile beside it does not help. Use `package-lock.json` or `npm-shrinkwrap.json` instead of `bun.lock` to reach the most users.',
     },
   },
   create(context) {
