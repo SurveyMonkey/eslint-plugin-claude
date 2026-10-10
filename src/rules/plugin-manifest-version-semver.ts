@@ -1,5 +1,5 @@
 // The `version` of `plugin.json`, when set, is a semantic version (docs/rules/plugin-manifest-version-semver.md).
-// Claude Code does not check it. A dependency range and a `<name>--v<version>` release tag need it.
+// Claude Code does not check it. A dependency range needs it.
 // The rule reports the value. It makes no report when it cannot see the plugin.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -22,7 +22,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'notSemver' }> = {
     schema: [],
     messages: {
       notSemver:
-        'The `version` "{{version}}" is not a semantic version such as 1.2.3. A dependency range and a release tag need one.',
+        'The `version` "{{version}}" is not a semantic version such as 1.2.3. A dependency range needs one.',
     },
   },
   create(context) {

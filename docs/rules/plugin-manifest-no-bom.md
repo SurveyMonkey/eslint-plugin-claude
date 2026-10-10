@@ -22,9 +22,10 @@ The rule makes no report until the option `minVersion` is set.
 
 ## Rule details
 
-Claude Code 2.1.246 fixed the install of a plugin whose manifest file, `.claude-plugin/plugin.json`,
-was saved with a UTF-8 BOM (byte order mark).[^manifest] Before that version, the install failed. The mark is the three bytes
-`EF BB BF`. Some Windows editors add it when they save a file as "UTF-8 with BOM".
+The manifest file of a plugin is `.claude-plugin/plugin.json`.[^manifest] Claude Code 2.1.246 fixed
+the install of a plugin whose manifest was saved with a UTF-8 BOM (byte order mark). Before that
+version, the install failed. The mark is the three bytes `EF BB BF`. Some Windows editors add it
+when they save a file as "UTF-8 with BOM".
 
 No page of the docs states this fault. The 2.1.246 entry in the
 [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) states it.

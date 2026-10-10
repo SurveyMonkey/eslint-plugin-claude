@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/plugin-manifest-version-semver, which reports a plugin.json whose version is not a semantic version, because a dependency range and a release tag need one, with examples and sources.
+description: The ESLint rule claude/plugin-manifest-version-semver, which reports a plugin.json whose version is not a semantic version, because a dependency range needs one, with examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [11]
@@ -24,10 +24,10 @@ The `version` key of `plugin.json` is a version string that Claude Code does not
 semver.[^version] `claude plugin validate` does not check it either. It warns only when `version`
 is missing.
 
-Other features of a plugin do need semver. A dependency on the plugin has a version range, which
-Claude Code resolves against the git tags of the plugin.[^tag] Each release tag reads
-`<plugin-name>--v<version>`, and `<version>` matches the `version` field of `plugin.json` in that
-commit.[^tag] A version such as `1.0` or `latest` is not a version for a range to match.
+A dependency on the plugin has a semantic version range. Claude Code installs the highest git tag
+that satisfies the range.[^range] Each release tag reads `<plugin-name>--v<version>`. The
+`<version>` matches the `version` field of `plugin.json` in that commit.[^tag] A version such as
+`1.0` or `latest` is not a version for a range to match.
 
 The rule reports a `version` string that is not a semantic version of semver.org 2.0.0. That
 version has three numbers, and a number has no zero at its start. It can have a prerelease after
@@ -53,4 +53,5 @@ None.
 ## Sources
 
 [^version]: [Plugin manifest reference: version](https://code.claude.com/docs/en/plugins/manifest-reference#version)
+[^range]: [Plugin dependencies: Declare a dependency with a version constraint](https://code.claude.com/docs/en/plugins/dependencies#declare-a-dependency-with-a-version-constraint)
 [^tag]: [Plugin dependencies: Create a release tag](https://code.claude.com/docs/en/plugins/dependencies#create-a-release-tag)

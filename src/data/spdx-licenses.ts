@@ -3,8 +3,8 @@
 // (https://spdx.org/licenses/, data at https://github.com/spdx/license-list-data). The list
 // holds the deprecated identifiers too, because they are still SPDX identifiers.
 // The manifest reference says that `license` is an SPDX identifier
-// (https://code.claude.com/docs/en/plugins/manifest-reference#fields), checked on Claude Code
-// 2.1.296 on 2026-10-10. Review this list on or before 2027-04-10, the `stale_after` date of
+// (https://code.claude.com/docs/en/plugins/manifest-reference#fields). On 2026-10-10,
+// `claude plugin validate` on Claude Code 2.1.296 accepted any text. Review this list on or before 2027-04-10, the `stale_after` date of
 // docs/rules/plugin-manifest-metadata-format.md. A new SPDX release adds identifiers, and a stale
 // list reports a valid new identifier.
 
@@ -752,7 +752,8 @@ export const SPDX_LICENSE_IDS: readonly string[] = [
   'ZPL-2.1',
 ]
 
-/** The license exception identifiers (86) for the right side of `WITH`, in the order of the SPDX list. */
+/** The license exception identifiers (86) for the right side of `WITH`, in the order of the SPDX
+ *  list. */
 export const SPDX_EXCEPTION_IDS: readonly string[] = [
   '389-exception',
   'Asterisk-exception',

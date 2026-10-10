@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/plugin-feature-min-version, which with the option minVersion reports a plugin.json feature that a Claude Code older than minVersion cannot load, namely skills ".", metadata and userConfig options, with its option, examples and sources.
+description: The ESLint rule claude/plugin-feature-min-version, which with the option minVersion reports a plugin.json feature that needs a Claude Code newer than minVersion, namely skills ".", metadata and userConfig options, with its option, examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [11]

@@ -1,6 +1,5 @@
 // The `version` of `plugin.json`, when set, is a semantic version. Claude Code does not check it,
-// and `claude plugin validate` does not either. A dependency range and a `<name>--v<version>`
-// release tag need it. The files glob is in tests/configs.test.ts.
+// and `claude plugin validate` does not either. A dependency range needs it. The files glob is in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
 import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
@@ -10,7 +9,7 @@ const check = it
 const linked = noLinks ? it.skip : check
 
 const message = (version: string) =>
-  `The \`version\` "${version}" is not a semantic version such as 1.2.3. A dependency range and a release tag need one.`
+  `The \`version\` "${version}" is not a semantic version such as 1.2.3. A dependency range needs one.`
 const run = (text: string) => {
   const { dir, code } = pluginTree(text)
   return lintPlugin(RULE, dir, code)
@@ -39,6 +38,9 @@ describe(RULE, () => {
     ['a leading v', 'v1.0.0'],
     ['a leading zero', '01.0.0'],
     ['a leading zero in the patch', '1.0.01'],
+    ['a leading zero in the minor', '1.01.0'],
+    ['a character for a dot in the core', '1x2x3'],
+    ['an underscore for a dot in the core', '1_0_0'],
     ['a word', 'latest'],
     ['a range', '^1.0.0'],
     ['an empty text', ''],
@@ -81,6 +83,12 @@ describe(`${RULE} (silent)`, () => {
     ['a prerelease of a letter then a digit', '1.0.0-rc1'],
     ['a prerelease in capitals', '1.0.0-RC.1'],
     ['a hyphen in a prerelease', '1.0.0-x-y-z.--'],
+    ['a prerelease of two words', '1.0.0-alpha.beta'],
+    ['a zero in a later prerelease part', '1.0.0-rc.0'],
+    ['three prerelease parts', '1.0.0-0.3.7'],
+    ['a prerelease of two hyphens', '1.0.0--'],
+    ['build metadata with a hyphen and capitals', '1.0.0+Build-1.EXP-sha.A'],
+    ['build metadata of three parts', '1.0.0+a.b.c'],
     ['build metadata', '1.0.0+20130313144700'],
     ['build metadata with a leading zero', '1.0.0+001'],
     ['a prerelease and build metadata', '1.0.0-rc.1+sha.5114f85'],

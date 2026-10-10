@@ -22,12 +22,12 @@ Set `homepage` and `repository` in `plugin.json`, and add a `README.md` at the p
 
 The docs ask for `description`, `author`, `homepage` and `repository` in `plugin.json` before a
 release. They also ask for a `README.md` at the plugin root.[^publish] `claude plugin validate`
-warns about a missing `description` and `author`, but not about a missing `homepage`,
+on Claude Code 2.1.296 warns about a missing `description` and `author`, but not about a missing `homepage`,
 `repository` or `README.md`. So this rule checks the rest.
 
 The rule makes one report for a manifest, on line 1. The message lists what is missing, in this
 order: `homepage`, `repository`, `README.md`. A key is missing when it is not in the manifest.
-A key is also missing when its value is a string of spaces only. The README is missing when the
+A key is also missing when its value is an empty string or a string of white space. The README is missing when the
 plugin root holds no file with the name `README.md`. A file system that ignores case can accept
 `readme.md`, so the result can differ between machines.
 
