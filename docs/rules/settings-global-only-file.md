@@ -28,11 +28,11 @@ who clones the repository gets none of it.
 The rule reports three cases:
 
 - **`.claude/keybindings.json`.** The keybindings page names one file, `~/.claude/keybindings.json`.
-  The command `/keybindings` creates it there.[^keybindings] The report is on the first character of the
-  file, for any content.
+  The command `/keybindings` creates it there.[^keybindings] The report is on the first character
+  of the top-level value, for any content.
 - **`.claude/themes/*.json`.** Each file defines a custom color theme. Claude Code reads the themes
-  from `~/.claude/themes/`.[^reference] The report is on the first character of the file, for any
-  content.
+  from `~/.claude/themes/`.[^reference] The report is on the first character of the top-level value,
+  for any content.
 - **`permissions`, `hooks` or `env` in a `.claude.json`.** `~/.claude.json` holds app state and UI
   toggles. The three keys belong in a settings file.[^causes] The report is on each of the keys.
 

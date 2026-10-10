@@ -20,7 +20,8 @@ Replace a deprecated settings key that Claude Code still honors.
 
 ## Rule details
 
-The settings reference marks three keys as deprecated. Claude Code still reads each of them.
+The settings reference marks four keys as deprecated. This rule covers three of them.
+Claude Code still reads each of them.
 The rule reports the key, and the message names the key to use in its place. The list is
 `DEPRECATED_KEYS` in `src/data/settings-keys.ts`.
 

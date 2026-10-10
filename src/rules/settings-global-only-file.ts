@@ -43,7 +43,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       Document(node) {
         const body = node.body
         if (messageId !== 'settingsKey') {
-          // The first character of the file, so that an editor marks one character.
+          // The first character of the top-level value, so that an editor marks one character.
           const { start } = body.loc
           context.report({
             loc: { start, end: { line: start.line, column: start.column + 1 } },
