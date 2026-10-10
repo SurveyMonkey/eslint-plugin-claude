@@ -23,6 +23,7 @@ import {
   repositoryRoot,
   scopeRoot,
   skillFiles,
+  skillScan,
   statOf,
   UNREADABLE,
 } from '../src/skill-tree.ts'
@@ -211,6 +212,75 @@ describe('skillFiles', () => {
       path.relative(path.join(scratch, 'sk2'), f).split(path.sep).join('/'),
     )
     expect(rel).toEqual(['alias/SKILL.md', 'real/SKILL.md'])
+  })
+})
+
+// `skipped` is true when the scan leaves out a skill that it cannot see. The cases that follow
+// each change one input. Each `SKILL.md` that is a link needs a platform that has links.
+describe('skillScan', () => {
+  const scan = (dir: string) => skillScan(path.join(scratch, dir), scratch)
+  const names = (dir: string) =>
+    scan(dir).files.map((f) => path.relative(path.join(scratch, dir), f).split(path.sep).join('/'))
+
+  it('sets skipped for nothing that holds no skill', () => {
+    put('sc-ok/a/SKILL.md', '')
+    mkdirSync(path.join(scratch, 'sc-ok/empty'), { recursive: true })
+    put('sc-ok/file.md', '')
+    expect(scan('sc-ok')).toEqual({
+      files: [path.join(scratch, 'sc-ok/a/SKILL.md')],
+      skipped: false,
+    })
+    expect(scan('sc-none')).toEqual({ files: [], skipped: false })
+    put('sc-file', 'not a folder')
+    expect(scan('sc-file')).toEqual({ files: [], skipped: false })
+  })
+
+  it.skipIf(process.platform === 'win32')('sets skipped for a link that holds no skill', () => {
+    put('sc-lnk/a/SKILL.md', '')
+    mkdirSync(path.join(scratch, 'sc-shared/empty'), { recursive: true })
+    put('sc-shared/notes.md', '')
+    symlinkSync('../sc-shared/empty', path.join(scratch, 'sc-lnk/folder'))
+    symlinkSync('../sc-shared/notes.md', path.join(scratch, 'sc-lnk/notes.md'))
+    expect(scan('sc-lnk').skipped).toBe(false)
+    expect(names('sc-lnk')).toEqual(['a/SKILL.md'])
+  })
+
+  it.skipIf(process.platform === 'win32')('sets skipped for a link to nothing', () => {
+    // The entry is a link to nothing.
+    mkdirSync(path.join(scratch, 'sc-dead'), { recursive: true })
+    symlinkSync('missing', path.join(scratch, 'sc-dead/x'))
+    expect(scan('sc-dead')).toEqual({ files: [], skipped: true })
+    // The `SKILL.md` is a link to nothing, in a real folder.
+    mkdirSync(path.join(scratch, 'sc-dead2/x'), { recursive: true })
+    symlinkSync('missing', path.join(scratch, 'sc-dead2/x/SKILL.md'))
+    expect(scan('sc-dead2')).toEqual({ files: [], skipped: true })
+    // The directory is a link to nothing.
+    symlinkSync('missing', path.join(scratch, 'sc-dead3'))
+    expect(scan('sc-dead3')).toEqual({ files: [], skipped: true })
+  })
+
+  it.skipIf(process.platform === 'win32')('sets skipped for a link out of the bound', () => {
+    put('sc-out-target/x/SKILL.md', '')
+    mkdirSync(path.join(scratch, 'sc-bounded/inside'), { recursive: true })
+    symlinkSync(path.join(scratch, 'sc-out-target/x'), path.join(scratch, 'sc-bounded/inside/x'))
+    const bound = path.join(scratch, 'sc-bounded')
+    expect(skillScan(path.join(bound, 'inside'), bound)).toEqual({ files: [], skipped: true })
+  })
+
+  describe.skipIf(chmodCannotBlock)('without access', () => {
+    it('sets skipped for a directory that the rule cannot list', () => {
+      put('sc-lock/a/SKILL.md', '')
+      withoutAccess(path.join(scratch, 'sc-lock'), () =>
+        expect(scan('sc-lock')).toEqual({ files: [], skipped: true }),
+      )
+    })
+
+    it('sets skipped for a skill folder that the rule cannot search', () => {
+      put('sc-lock2/a/SKILL.md', '')
+      withoutAccess(path.join(scratch, 'sc-lock2/a'), () =>
+        expect(scan('sc-lock2')).toEqual({ files: [], skipped: true }),
+      )
+    })
   })
 })
 

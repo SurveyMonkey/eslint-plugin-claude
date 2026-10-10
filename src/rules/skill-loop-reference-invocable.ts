@@ -83,7 +83,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'manualOnly' }> = {
           return
         }
         const states = targets(path.dirname(path.resolve(context.filename)), invoked[1] as string)
-        // A name that nothing in the repository has, or a file that the rule cannot read, gives no
+        // A name that nothing in that folder has, or a file that the rule cannot read, gives no
         // report. So does a skill that Claude can invoke.
         if (states.length === 0 || !states.every((state) => state === true)) {
           return

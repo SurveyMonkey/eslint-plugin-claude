@@ -218,13 +218,18 @@ export function skillFiles(dir: string, bound: string): string[] {
   return skillScan(dir, bound).files
 }
 
-/** The same files as `skillFiles`, and `skipped`. It is true when a folder is left out that
- *  could hold a skill: the rule cannot list `dir`, or a `SKILL.md` is a link to nothing, a link
- *  out of `bound`, or a file that the rule cannot resolve. */
+/** The same files as `skillFiles`, and `skipped`. It is true when the scan leaves out a skill
+ *  that it cannot see: `dir` is a link to nothing or the rule cannot list it, an entry of `dir` is
+ *  a link to nothing, a `SKILL.md` is a link to nothing or a link out of `bound`, or the rule
+ *  cannot resolve a `SKILL.md`. A folder with no `SKILL.md`, and a link to a folder or a file
+ *  that holds no skill, set nothing. */
 export function skillScan(dir: string, bound: string): { files: string[]; skipped: boolean } {
   const entries = entriesOf(dir)
   if (!Array.isArray(entries)) {
-    return { files: [], skipped: entries === UNREADABLE }
+    // A link to nothing can lead anywhere, so a skill can be behind it.
+    const hidden =
+      entries === UNREADABLE || (realOf(dir) === null && danglingOf(dir) === UNREADABLE)
+    return { files: [], skipped: hidden }
   }
   let skipped = false
   const files = entries
@@ -237,10 +242,12 @@ export function skillScan(dir: string, bound: string): { files: string[]; skippe
       }
       // A folder with no `SKILL.md` is not a skill. A dead link, or a link out of the bound, is
       // a skill that the rule cannot see.
-      skipped ||=
-        real === UNREADABLE ||
-        typeof real === 'string' ||
-        (real === null && (entry.isSymbolicLink() || danglingOf(file) === UNREADABLE))
+      if (real === null) {
+        const linked = entry.isSymbolicLink() ? realOf(path.join(dir, entry.name)) : undefined
+        skipped ||= linked === null || linked === UNREADABLE || danglingOf(file) === UNREADABLE
+      } else {
+        skipped = true
+      }
       return false
     })
     .map(({ file }) => file)
