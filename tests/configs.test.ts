@@ -3512,7 +3512,6 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-agent-type-experimental@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-deprecated-cli-flag@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-worktree-create-without-remove@1',
-  'packages/hk/.claude/agents/hk.md: claude/hooks-agent-stop-event@1',
   'packages/dup/.claude-plugin/plugin.json: claude/hooks-duplicate-handler@1',
   'packages/dup/hooks/hooks.json: claude/hooks-duplicate-handler@1',
 ].sort()
@@ -3522,6 +3521,7 @@ const EXPECTED = [
 // ignored. The marketplace credential rule reads the project settings files and the marketplace,
 // and no other file. The declared rule reads the two project settings files.
 const STRICT_ONLY = [
+  'packages/hk/.claude/agents/hk.md: claude/hooks-agent-stop-event@1',
   '.claude/agents/task-alias.md: claude/agent-tools-agent-type-list@1',
   'packages/o/.claude/agents/skill-tool.md: claude/agent-tools-skill-for-preload@1',
   'packages/o/.claude/agents/model.md: claude/agent-model-value@1',
@@ -3733,8 +3733,14 @@ const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(-5)
 // A rule of the hooks config has one JSON block and one Markdown block. Each is an error.
 const HOOKS_JSON = [...PROJECT_FILES, ...MANAGED_FILES, '**/hooks/hooks.json']
 const HOOKS_MARKDOWN = ['**/SKILL.md', '**/agents/**/*.md']
-const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
-  { name: 'hooks-agent-stop-event', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
+// `strictOnly` marks a rule that is `off` in recommended and `warn` in strict.
+const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strictOnly?: true }[] = [
+  {
+    name: 'hooks-agent-stop-event',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   {
     name: 'hooks-agent-type-experimental',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
@@ -3938,8 +3944,14 @@ const OFF_FILES: Record<string, string[]> = {
   'skill-plugin-path-vars': ['**/SKILL.md'],
 }
 
+// The hooks rules that are `off` in recommended. A rule with a Markdown target has two blocks.
+const HOOKS_OFF_RULES = HOOKS_RULES.filter(({ strictOnly }) => strictOnly).flatMap(
+  ({ name, blocks }) => blocks.map(() => name),
+)
+
 // The `off` rules of `strict`, in the order of its blocks.
 const OFF_RULES = [
+  ...HOOKS_OFF_RULES,
   ...SKILL_OFF_RULES,
   ...AGENT_OFF_RULES,
   ...MARKETPLACE_OFF_RULES,
@@ -4048,7 +4060,7 @@ describe('configs', () => {
       ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
-      ...HOOKS_RULES.flatMap(({ name, blocks, severity }) =>
+      ...HOOKS_RULES.filter(({ strictOnly }) => !strictOnly).flatMap(({ name, blocks, severity }) =>
         blocks.map(() => [
           `claude/recommended/${name}`,
           { [`claude/${name}`]: severity ?? 'error' },
@@ -4315,9 +4327,9 @@ describe('configs', () => {
   })
 
   it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
-    for (const { name, blocks } of HOOKS_RULES) {
-      const found = plugin.configs.recommended.filter(
-        (c) => c.name === `claude/recommended/${name}`,
+    for (const { name, blocks, strictOnly } of HOOKS_RULES) {
+      const found = (strictOnly ? plugin.configs.strict : plugin.configs.recommended).filter(
+        (c) => c.name === `claude/${strictOnly ? 'strict' : 'recommended'}/${name}`,
       )
       expect(found.map((c) => c.files)).toEqual(blocks)
       expect(found.map((c) => c.language)).toEqual(

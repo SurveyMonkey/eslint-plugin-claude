@@ -27,7 +27,7 @@ describe(`${name}: the report`, () => {
     const [message] = lintMarkdown(name, yaml('Stop'), FILES.agent)
     expect([message?.line, message?.column]).toEqual([5, 3])
     expect(message?.message).toBe(
-      'Claude Code converts a "Stop" hook in subagent frontmatter to "SubagentStop". Use "SubagentStop". Keep "Stop" only for an agent that you run as the main session.',
+      'Claude Code converts a "Stop" hook in subagent frontmatter to "SubagentStop". Name the event "SubagentStop", so that the file says what fires. Keep "Stop" only for an agent that you run as the main session.',
     )
   })
 
