@@ -34,10 +34,17 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
+import mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
+import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
+import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
 import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
 import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
 import mcpJsonLocation from './rules/mcp-json-location.ts'
 import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
+import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
+import mcpOauthValues from './rules/mcp-oauth-values.ts'
+import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
 import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
 import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
 import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
@@ -189,6 +196,13 @@ const modules = [
   mcpRemoteUrlEmpty,
   mcpHiddenWhitespace,
   mcpTimeoutMin,
+  mcpOauthTransport,
+  mcpOauthValues,
+  mcpAuthorizationHeaderWithOauth,
+  mcpProjectDirDefault,
+  mcpEnvExpansionField,
+  mcpCredentialVarRemote,
+  mcpHeadershelperCredentialEnv,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -304,6 +318,13 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-remote-url-empty': 'error',
   'mcp-hidden-whitespace': 'error',
   'mcp-timeout-min': 'error',
+  'mcp-oauth-transport': 'error',
+  'mcp-oauth-values': 'error',
+  'mcp-authorization-header-with-oauth': 'error',
+  'mcp-project-dir-default': 'error',
+  'mcp-env-expansion-field': 'error',
+  'mcp-credential-var-remote': 'error',
+  'mcp-headershelper-credential-env': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

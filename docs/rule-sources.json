@@ -658,6 +658,44 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "mcp-authorization-header-with-oauth": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Authenticate with remote MCP servers",
+      "hash": "d4d72826a429059a4c0f8070822b649e883f4167610c3bb799db31b2cb2f6180"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use dynamic headers for custom authentication",
+      "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    }
+  ],
+  "mcp-credential-var-remote": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Credential variables that read as empty",
+      "hash": "8313023272a9ec82b3e4788b2e1469b08b6ea3cd85c57a9a8b829331a09ffcec"
+    }
+  ],
+  "mcp-env-expansion-field": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Expansion locations",
+      "hash": "500945dd95e5abb58fce44477333b79eb14f416a94a1a0f2a7057fac761c4cf6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use dynamic headers for custom authentication",
+      "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    }
+  ],
+  "mcp-headershelper-credential-env": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Which variables a helper can read",
+      "hash": "08703a83b2070f459b2f4d8c94c6d87d1d13aeab889d8908a9c944ff3d2cd3eb"
+    }
+  ],
   "mcp-hidden-whitespace": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -699,6 +737,37 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "MCP servers",
       "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    }
+  ],
+  "mcp-oauth-transport": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 4: Add a remote WebSocket server",
+      "hash": "557d432d27ee5eff52ebda3a8f9bd7427cd2d2a0b958ce131a6764d0940ad4e4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use pre-configured OAuth credentials",
+      "hash": "d9b10ec6ffc74a77a92136d4b40cd4bdcd48d7d7d8fd6b5a906910241741356e"
+    }
+  ],
+  "mcp-oauth-values": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Override OAuth metadata discovery",
+      "hash": "ff5c6fd4997b04ffd623bc5a1b1e4e9f44a3aa146f8282d58abfffb3a759516e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Restrict OAuth scopes",
+      "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
+    }
+  ],
+  "mcp-project-dir-default": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 3: Add a local stdio server",
+      "hash": "a5a82c6934bf4d14831e55e5fd801986344c53038f4010ddfe9cdb5a2347f664"
     }
   ],
   "mcp-remote-url-empty": [
