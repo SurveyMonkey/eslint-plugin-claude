@@ -37,6 +37,7 @@ import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.t
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
+import permissionsAllowDirDepth from './rules/permissions-allow-dir-depth.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
 import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
 import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
@@ -47,6 +48,7 @@ import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildc
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
 import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
 import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
+import permissionsCdAllowlist from './rules/permissions-cd-allowlist.ts'
 import permissionsDeadAllow from './rules/permissions-dead-allow.ts'
 import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
 import permissionsDefaultModeManualAlias from './rules/permissions-default-mode-manual-alias.ts'
@@ -57,12 +59,15 @@ import permissionsDenyAllTools from './rules/permissions-deny-all-tools.ts'
 import permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
 import permissionsDuplicateRule from './rules/permissions-duplicate-rule.ts'
 import permissionsEndConversation from './rules/permissions-end-conversation.ts'
+import permissionsGlobGrepAllow from './rules/permissions-glob-grep-allow.ts'
 import permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
+import permissionsLegacyToolName from './rules/permissions-legacy-tool-name.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
 import permissionsNegation from './rules/permissions-negation.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
+import permissionsReadDenyNotebook from './rules/permissions-read-deny-notebook.ts'
 import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
 import permissionsSandboxBashAsk from './rules/permissions-sandbox-bash-ask.ts'
 import permissionsSchema from './rules/permissions-schema.ts'
@@ -70,7 +75,9 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import permissionsWebfetchApex from './rules/permissions-webfetch-apex.ts'
 import permissionsWebfetchDomainSyntax from './rules/permissions-webfetch-domain-syntax.ts'
+import permissionsWebfetchMidWildcard from './rules/permissions-webfetch-mid-wildcard.ts'
 import permissionsWindowsPath from './rules/permissions-windows-path.ts'
 import sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
 import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
@@ -208,6 +215,13 @@ const modules = [
   permissionsDefaultModeSurface,
   permissionsDenyAllTools,
   permissionsDuplicateRule,
+  permissionsAllowDirDepth,
+  permissionsCdAllowlist,
+  permissionsGlobGrepAllow,
+  permissionsLegacyToolName,
+  permissionsReadDenyNotebook,
+  permissionsWebfetchApex,
+  permissionsWebfetchMidWildcard,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -352,6 +366,13 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-default-mode-surface': 'warn',
   'permissions-deny-all-tools': 'warn',
   'permissions-duplicate-rule': 'warn',
+  'permissions-allow-dir-depth': 'warn',
+  'permissions-cd-allowlist': 'warn',
+  'permissions-glob-grep-allow': 'warn',
+  'permissions-legacy-tool-name': 'warn',
+  'permissions-read-deny-notebook': 'warn',
+  'permissions-webfetch-apex': 'warn',
+  'permissions-webfetch-mid-wildcard': 'warn',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

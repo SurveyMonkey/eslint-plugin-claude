@@ -5,6 +5,7 @@
 // A check that rests on an absence must make no report when `complete` is false. A scalar value
 // is such a check, because an unreadable file can override it.
 import type { DocumentNode, ObjectNode } from './marketplace-json.ts'
+import { type ParsedRule, parsePermissionRule } from './permission-rule.ts'
 import { valueAt } from './permission-sandbox.ts'
 import { kindOf, readManagedSource, readSiblingSettings } from './settings-files.ts'
 import { UNREADABLE } from './skill-tree.ts'
@@ -71,5 +72,31 @@ export function objectEntries(
     element.value.type === 'Object'
       ? [{ entry: list[index] as SettingsObject, node: element.value }]
       : [],
+  )
+}
+
+/** The rules that parse in the list `list` of `permissions`, over each of `objects`, in order. An
+ *  entry that is not a string, and one that does not parse, is not a rule. */
+export function listRules(
+  objects: readonly SettingsObject[],
+  list: 'allow' | 'ask' | 'deny',
+): ParsedRule[] {
+  return stringsAt(objects, ['permissions', list]).flatMap((text) => {
+    const parsed = parsePermissionRule(text)
+    return parsed.ok ? [parsed] : []
+  })
+}
+
+/** True when a `deny` or `ask` rule of `objects` covers the `allow` rule `rule` as
+ *  `permissions-dead-allow` reads it for a tool that has no command pattern: a rule with no
+ *  specifier, or one with the same specifier. That rule reports the `allow` rule, so a rule that
+ *  would report it too skips it, and one fault gets one report. */
+export function isDeadAllow(objects: readonly SettingsObject[], rule: ParsedRule): boolean {
+  return (['deny', 'ask'] as const).some((list) =>
+    listRules(objects, list).some(
+      (cover) =>
+        cover.tool === rule.tool &&
+        (cover.specifier === null || cover.specifier === rule.specifier),
+    ),
   )
 }

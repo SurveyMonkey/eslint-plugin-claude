@@ -189,6 +189,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-default-mode-surface`](docs/rules/permissions-default-mode-surface.md) | `defaultMode` is not `dontAsk`, which cloud sessions ignore, and with the option `vscode` is not set in a project or local file | `warn` | `warn` |
 | [`claude/permissions-deny-all-tools`](docs/rules/permissions-deny-all-tools.md) | A `deny` rule is not `*` or `mcp__*` unless you want every tool or every MCP tool removed | `warn` | `warn` |
 | [`claude/permissions-duplicate-rule`](docs/rules/permissions-duplicate-rule.md) | A permission rule is written once in a settings file | `warn` | `warn` |
+| [`claude/permissions-allow-dir-depth`](docs/rules/permissions-allow-dir-depth.md) | An `allow` rule for `Read` or `Edit` states its depth when it names one directory (`src/**`) | `warn` | `warn` |
+| [`claude/permissions-cd-allowlist`](docs/rules/permissions-cd-allowlist.md) | A `Cd` `allow` rule is written only to put `/cd` in allowlist mode | `warn` | `warn` |
+| [`claude/permissions-glob-grep-allow`](docs/rules/permissions-glob-grep-allow.md) | A bare `Glob` or `Grep` `allow` rule is not used to restore the tool | `warn` | `warn` |
+| [`claude/permissions-legacy-tool-name`](docs/rules/permissions-legacy-tool-name.md) | A rule names `Agent` and `Edit`, not the legacy `Task` and `MultiEdit` | `warn` | `warn` |
+| [`claude/permissions-read-deny-notebook`](docs/rules/permissions-read-deny-notebook.md) | A `Read` `deny` rule has an `Edit` `deny` rule, because `NotebookEdit` is not covered | `warn` | `warn` |
+| [`claude/permissions-webfetch-apex`](docs/rules/permissions-webfetch-apex.md) | A `WebFetch(domain:*.example.com)` rule has a rule for `example.com` in the same list | `warn` | `warn` |
+| [`claude/permissions-webfetch-mid-wildcard`](docs/rules/permissions-webfetch-mid-wildcard.md) | A `WebFetch` domain has only a leading `*.` or a bare `*` while the sandbox is on | `warn` | `warn` |
 
 ## Contributing
 
