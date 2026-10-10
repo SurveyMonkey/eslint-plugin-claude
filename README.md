@@ -90,7 +90,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
-| [`claude/hooks-agent-stop-event`](docs/rules/hooks-agent-stop-event.md) | A subagent uses `SubagentStop` in its frontmatter hooks, not `Stop`, which Claude Code converts to `SubagentStop` | `warn` | `warn` |
+| [`claude/hooks-agent-stop-event`](docs/rules/hooks-agent-stop-event.md) | A subagent uses `SubagentStop` in its frontmatter hooks, not `Stop`, which Claude Code converts to `SubagentStop` | `off` | `warn` |
 | [`claude/hooks-agent-type-experimental`](docs/rules/hooks-agent-type-experimental.md) | No `type: "agent"` hook on an event that runs it, because agent hooks are experimental; prefer a command hook | `warn` | `warn` |
 | [`claude/hooks-command-deprecated-cli-flag`](docs/rules/hooks-command-deprecated-cli-flag.md) | A hook command that runs `claude` uses `--cloud`, not `--remote`, a deprecated alias | `warn` | `warn` |
 | [`claude/hooks-command-removed-cli-flag`](docs/rules/hooks-command-removed-cli-flag.md) | A hook command or `args` that runs `claude` does not pass `--enable-auto-mode`, which Claude Code removed in v2.1.111 | `error` | `error` |

@@ -271,7 +271,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-description-max-length': 'warn',
   'command-legacy-format': 'warn',
   'hooks-event-name-known': 'error',
-  'hooks-agent-stop-event': 'warn',
+  'hooks-agent-stop-event': 'off',
   'hooks-agent-type-experimental': 'warn',
   'hooks-command-deprecated-cli-flag': 'warn',
   'hooks-command-removed-cli-flag': 'error',

@@ -16,23 +16,26 @@ Use SubagentStop, not Stop, in the hooks of a subagent.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| `strict` | `warn` | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
 When a subagent runs, Claude Code converts a `Stop` hook in its frontmatter to `SubagentStop`.[^hooks][^agents]
-That is the event that fires when a subagent completes. The name `Stop` in the file then says the wrong thing.
+That is the event that fires when a subagent completes.
 
-The subagents page states the conversion for a subagent only. An agent can also run as the main session, with
-`--agent` or the `agent` setting. Its frontmatter hooks then run too, so `Stop` is not converted. Keep `Stop`
-for that use only.
+The rule is `off` in `recommended`. The subagents page lists `Stop` in frontmatter as a pattern that works, and
+the conversion makes the hook fire. `strict` turns the rule on as a warning, for a team that wants the name of
+the event to match the event that fires.
+
+The docs state the conversion for a subagent only. An agent can also run as the main session, with `--agent`
+or the `agent` setting. The docs do not say that the conversion applies there. Keep `Stop` for that use only.
 
 The rule reports a `Stop` event name that has a handler, in the frontmatter of a project subagent. It reports
 at the event name.
 
-The rule reads the frontmatter of an agent file only. The docs state the conversion for subagents only, so a
-skill gets no report. A settings file and a plugin `hooks.json` keep it too. The rule reads no plugin
-agent, because Claude Code ignores the `hooks` field there.
+The rule reads the frontmatter of a project agent file only. A skill, a settings file and a plugin `hooks.json`
+get no report, because the docs state the conversion for subagents only. The rule reads no plugin agent,
+because Claude Code ignores the `hooks` field there.
 
 Fail, in `.claude/agents/reviewer.md`:
 

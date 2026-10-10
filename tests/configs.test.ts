@@ -1156,8 +1156,14 @@ const AGENT_RULES = [
 // A rule of the hooks config has one JSON block and one Markdown block. Each is an error.
 const HOOKS_JSON = [...PROJECT_FILES, ...MANAGED_FILES, '**/hooks/hooks.json']
 const HOOKS_MARKDOWN = ['**/SKILL.md', '**/agents/**/*.md']
-const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
-  { name: 'hooks-agent-stop-event', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
+// `strictOnly` marks a rule that is `off` in recommended and `warn` in strict.
+const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strictOnly?: true }[] = [
+  {
+    name: 'hooks-agent-stop-event',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   {
     name: 'hooks-agent-type-experimental',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
@@ -1301,7 +1307,7 @@ describe('configs', () => {
       ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
-      ...HOOKS_RULES.flatMap(({ name, blocks, severity }) =>
+      ...HOOKS_RULES.filter(({ strictOnly }) => !strictOnly).flatMap(({ name, blocks, severity }) =>
         blocks.map(() => [
           `claude/recommended/${name}`,
           { [`claude/${name}`]: severity ?? 'error' },
@@ -1328,10 +1334,29 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // Only hooks-agent-stop-event is off in recommended: the sub-agents page shows `Stop` in agent
+  // frontmatter as a pattern that works. Strict turns it on as a warning.
+  it('gives strict the rules of recommended, and the strictOnly rules as warnings', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const strictOnly = HOOKS_RULES.filter((rule) => rule.strictOnly).map(
+      ({ name }) => `claude/${name}`,
+    )
+    expect(
+      rulesOf(plugin.configs.strict).filter(
+        (rules) => !strictOnly.some((id) => id in (rules ?? {})),
+      ),
+    ).toEqual(rulesOf(plugin.configs.recommended))
+    expect(
+      plugin.configs.recommended.some((c) => strictOnly.some((id) => id in (c.rules ?? {}))),
+    ).toBe(false)
+    expect(
+      plugin.configs.strict
+        .filter((c) => 'claude/hooks-agent-stop-event' in (c.rules ?? {}))
+        .map((c) => c.rules),
+    ).toEqual([
+      { 'claude/hooks-agent-stop-event': 'warn' },
+      { 'claude/hooks-agent-stop-event': 'warn' },
+    ])
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1403,9 +1428,9 @@ describe('configs', () => {
   })
 
   it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
-    for (const { name, blocks } of HOOKS_RULES) {
-      const found = plugin.configs.recommended.filter(
-        (c) => c.name === `claude/recommended/${name}`,
+    for (const { name, blocks, strictOnly } of HOOKS_RULES) {
+      const found = (strictOnly ? plugin.configs.strict : plugin.configs.recommended).filter(
+        (c) => c.name === `claude/${strictOnly ? 'strict' : 'recommended'}/${name}`,
       )
       expect(found.map((c) => c.files)).toEqual(blocks)
       expect(found.map((c) => c.language)).toEqual(
@@ -1434,10 +1459,15 @@ describe('configs', () => {
   })
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
-    expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
+    const strictOnly = HOOKS_RULES.filter((rule) => rule.strictOnly).map(
+      ({ name }) => `claude/${name}@`,
+    )
+    expect(await reports(plugin.configs.recommended)).toEqual(
+      EXPECTED.filter((line) => !strictOnly.some((id) => line.includes(id))),
+    )
   }, 30_000)
 
-  it('strict reports the same files as recommended today', async () => {
+  it('strict reports the files of recommended, and the strictOnly rules', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
   }, 30_000)
 })
