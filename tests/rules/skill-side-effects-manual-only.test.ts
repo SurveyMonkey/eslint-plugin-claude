@@ -74,7 +74,7 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
     },
     // An escaped quote does not end a quoted string.
     {
-      code: withFields('description: d', inline('make "say \\" deploy"')),
+      code: withFields('description: d', inline('make "a \\" deploy \\" b"')),
       filename: skill,
     },
     { code: withFields('description: d', inline("echo 'git push' | wc -l")), filename: skill },

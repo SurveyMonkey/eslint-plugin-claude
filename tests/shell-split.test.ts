@@ -84,7 +84,7 @@ describe('subcommands', () => {
     expect(subcommands('(make)')).toEqual(['make'])
     expect(subcommands('a) b')).toEqual(['a) b'])
     expect(subcommands('a|b) x')).toEqual(['a', 'b) x'])
-    expect(subcommands('showcase x) y')).toEqual(['showcase x) y'])
+    expect(subcommands('showcase x\nfoo) y')).toEqual(['showcase x', 'foo) y'])
   })
 
   it('drops a closing bracket that closes a group the part did not open', () => {
