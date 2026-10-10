@@ -30,8 +30,20 @@ describe(`${name}: the reports`, () => {
     expect(lint(allow('Monitor(git*)'))[0]?.message).toContain('`Monitor(git *)`')
   })
 
-  it('is silent for a family name that ends in a hyphen, and for a backslash', () => {
-    expect(ids(allow('PowerShell(Get-*)', 'Bash(docker-*)', 'Bash(ls\\*)'))).toEqual([])
+  it('is silent for a PowerShell cmdlet name pattern', () => {
+    expect(ids(allow('PowerShell(Get-*)', 'PowerShell(Get-Child*)'))).toEqual([])
+  })
+
+  it('reports a hyphen in a Bash or Monitor rule, and a PowerShell program with no hyphen', () => {
+    expect(ids(allow('Bash(docker-*)', 'Monitor(docker-*)', 'PowerShell(git*)'))).toEqual([
+      'glued',
+      'glued',
+      'glued',
+    ])
+  })
+
+  it('is silent for a backslash', () => {
+    expect(ids(allow('Bash(ls\\*)'))).toEqual([])
   })
 
   it('names the rule, and gives the rule with the space', () => {

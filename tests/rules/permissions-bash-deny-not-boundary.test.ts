@@ -80,6 +80,7 @@ describe(`${name}: one file`, () => {
             'Bash(run_in_background:true)',
             'Read',
             'Edit(./x)',
+            'PowerShell(rm *)',
             'WebFetch(domain:a.test)',
             'Read(offset:5)',
             'Bash(rm *',
