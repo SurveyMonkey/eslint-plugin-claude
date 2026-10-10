@@ -241,6 +241,16 @@ const TREE: Record<string, string> = {
   // field.
   '.claude/commands/model.md': '---\ndescription: d\n---\n',
   '.claude/commands/cmeta.md': '---\ndescription: d\nmetadata:\n  model: x\n---\n',
+  // The warn rules of #50, layer 2. `skill-plugin-name-prefix` and `skill-shell-platform` are
+  // inactive in the presets, so their files give no report here. The files of the others are
+  // bad, and each has a silent twin. `plugins/q/SKILL.md` above has no `name`.
+  '.claude/skills/escape/SKILL.md': '---\ndescription: d\n---\n\nPrice \\\\$1.00\n',
+  '.claude/skills/escape-ok/SKILL.md': '---\ndescription: d\n---\n\nPrice \\$1.00\n',
+  '.claude/commands/cescape.md': '---\ndescription: d\n---\n\nRun \\\\$ARGUMENTS\n',
+  '.claude/skills/long/SKILL.md': `---\ndescription: d\n---\n${'line\n'.repeat(497)}`,
+  '.claude/skills/short/SKILL.md': `---\ndescription: d\n---\n${'line\n'.repeat(496)}`,
+  'plugins/p/skills/prefixed/SKILL.md': '---\nname: p:prefixed\ndescription: d\n---\n',
+  '.claude/skills/shell/SKILL.md': '---\ndescription: d\nshell: powershell\n---\n\n!`date`\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
@@ -1418,6 +1428,12 @@ const EXPECTED = [
   'plugins/p/skills/synced/SKILL.md: claude/skill-description-present@1',
   'plugins/p/skills/vars/SKILL.md: claude/skill-description-present@1',
   'plugins/q/SKILL.md: claude/skill-description-present@1',
+  // The warn rules of #50, layer 2. The folder `long` has 500 lines, and `short` has 499.
+  '.claude/commands/cescape.md: claude/command-legacy-format@1',
+  '.claude/commands/cescape.md: claude/skill-argument-escape@1',
+  '.claude/skills/escape/SKILL.md: claude/skill-argument-escape@1',
+  '.claude/skills/long/SKILL.md: claude/skill-max-lines@1',
+  'plugins/q/SKILL.md: claude/skill-plugin-root-name@1',
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
@@ -1598,6 +1614,15 @@ const WARN_SKILL_RULES = [
   'skill-no-bom',
 ]
 
+// The warn skill rules of #50, layer 2, in the order of the `modules` list.
+const PLUGIN_SKILL_RULES = [
+  'skill-argument-escape',
+  'skill-max-lines',
+  'skill-plugin-name-prefix',
+  'skill-plugin-root-name',
+  'skill-shell-platform',
+]
+
 let root = ''
 isolateGitConfig()
 let descriptionRoot = ''
@@ -1669,6 +1694,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'warn' },
       ]),
+      ...PLUGIN_SKILL_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'warn' },
+      ]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...AGENT_WARN_RULES.map((rule) => [
         `claude/recommended/${rule}`,
@@ -1718,6 +1747,7 @@ describe('configs', () => {
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...WARN_SKILL_RULES.map((rule) => `claude/strict/${rule}`),
+      ...PLUGIN_SKILL_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_OFF_RULES.map((rule) => `claude/strict/${rule}`),
