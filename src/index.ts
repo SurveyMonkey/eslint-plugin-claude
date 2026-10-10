@@ -40,6 +40,7 @@ import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
+import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
 import claudeMdImportExternal from './rules/claude-md-import-external.ts'
@@ -355,6 +356,7 @@ const modules = [
   memoryIndexMaxSize,
   rulesMaxLines,
   rulesSymlinkExternal,
+  claudeMdCombinedSize,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -553,6 +555,7 @@ const recommended: Record<RuleName, Severity> = {
   'memory-index-max-size': 'warn',
   'rules-max-lines': 'warn',
   'rules-symlink-external': 'warn',
+  'claude-md-combined-size': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

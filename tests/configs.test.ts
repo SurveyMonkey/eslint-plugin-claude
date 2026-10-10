@@ -1299,6 +1299,13 @@ const MEMORY_WARN_RULES = [
   'rules-symlink-external',
 ]
 
+// The rules of #13 that are `off` in `recommended`, in the order of the `modules` list. `strict`
+// turns each on at `warn`.
+const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
+  'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+}
+const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS)
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -1984,6 +1991,7 @@ const OFF_RULES = [
   ...AGENT_OFF_RULES,
   ...MARKETPLACE_OFF_RULES,
   ...MARKET_SETTINGS_OFF_RULES,
+  ...MEMORY_OFF_RULES,
 ]
 
 let root = ''
@@ -2157,6 +2165,7 @@ describe('configs', () => {
       ...MARKET_SETTINGS_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
       ...MEMORY_WARN_RULES.map((rule) => `claude/strict/${rule}`),
+      ...MEMORY_OFF_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -2381,6 +2390,14 @@ describe('configs', () => {
     expect(blocks('rules-md-extension')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
     ])
+  })
+
+  it('turns each off memory rule on in strict only, on the files that it reads', () => {
+    for (const rule of MEMORY_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([MEMORY_OFF_BLOCKS[rule]])
+    }
   })
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
