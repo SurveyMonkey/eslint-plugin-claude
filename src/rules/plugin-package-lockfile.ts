@@ -15,7 +15,7 @@ const name = 'plugin-package-lockfile' as const
 
 // The lockfiles that Claude Code reads, and the ones that it skips. Source: the
 // loading page, "When the dependency install runs".
-const READ = ['bun.lock', 'npm-shrinkwrap.json', 'package-lock.json']
+export const READ = ['bun.lock', 'npm-shrinkwrap.json', 'package-lock.json']
 const SKIPPED_LOCKFILES = ['bun.lockb', 'pnpm-lock.yaml', 'yarn.lock']
 
 /** True when `file` at the plugin root is a file, false when it is not there or
