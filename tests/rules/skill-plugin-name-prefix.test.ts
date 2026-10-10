@@ -25,6 +25,8 @@ const rootSkill = put('plug/SKILL.md', '')
 const bareSkill = put('bare/skills/s/SKILL.md', '')
 const brokenSkill = put('broken/skills/s/SKILL.md', '')
 const command = put('plug/commands/c.md', '')
+// A file with this name below `commands/` is a command file, not a skill.
+const commandNamedSkill = put('plug/commands/SKILL.md', '')
 const project = put('proj/.claude/skills/s/SKILL.md', '')
 const decoy = put('plug/docs/SKILL.md', '')
 
@@ -57,8 +59,11 @@ markdownTester.run('skill-plugin-name-prefix', ruleOf('skill-plugin-name-prefix'
     { code: '---\nname: [my-plugin:x\n---\n', filename: skill, options: BEFORE_FIX },
     // A project skill has no plugin prefix.
     { code: named('my-plugin:fancy'), filename: project, options: BEFORE_FIX },
+    // The name of the scope directory is no prefix.
+    { code: named('.claude:fancy'), filename: project, options: BEFORE_FIX },
     // Claude Code does not read the `name` of a command file.
     { code: named('my-plugin:fancy'), filename: command, options: BEFORE_FIX },
+    { code: named('my-plugin:fancy'), filename: commandNamedSkill, options: BEFORE_FIX },
     // A manifest that the rule cannot read can hold any name.
     { code: named('broken:fancy'), filename: brokenSkill, options: BEFORE_FIX },
     // Not a skill file.
