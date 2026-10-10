@@ -65,6 +65,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
     'plugin-bin-executable',
+    'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',

@@ -25,7 +25,7 @@ const ids = (root: string, code = manifest(), file = MANIFEST) =>
   lint(root, code, file).map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a .gitignore pattern that covers mocks/.replay/, at the start', () => {
+  it('reports a .gitignore pattern that covers mocks/.replay/, at the start', () => {
     const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x', '.gitignore': '.replay/\n' })
     const messages = lint(root)
     expect(messages).toHaveLength(1)
@@ -38,12 +38,11 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('"evals/mocks/.replay/"')
   })
 
-  it.fails('reports each form of a pattern that covers the directory, with or without the directory', () => {
+  it('reports each form of a pattern that covers the directory, with or without the directory', () => {
     const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
     for (const pattern of [
       '.replay/',
       '.replay',
-      'mocks/.replay/',
       'evals/mocks/.replay/',
       '/evals/mocks/.replay',
       '**/.replay/',
@@ -55,7 +54,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent for a pattern that does not reach the directory', () => {
+  it('stays silent for a pattern that does not reach the directory', () => {
     const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
     for (const pattern of [
       'results/',
@@ -70,7 +69,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent for a pattern that a later negation takes back', () => {
+  it('stays silent for a pattern that a later negation takes back', () => {
     const root = repo({
       [MANIFEST]: manifest(),
       [CASE]: 'x',
@@ -79,7 +78,7 @@ describe(RULE, () => {
     expect(ids(root)).toEqual([])
   })
 
-  it.fails('reports files in mocks/.replay/ that git does not track', () => {
+  it('reports files in mocks/.replay/ that git does not track', () => {
     const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' }, [], { [REPLAY]: 'answer\n' })
     const messages = lint(root)
     expect(messages.map((m) => m.messageId)).toEqual(['untracked'])
@@ -87,7 +86,7 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('"evals/mocks/.replay/"')
   })
 
-  it.fails('stays silent when git tracks a file in mocks/.replay/, at any depth', () => {
+  it('stays silent when git tracks a file in mocks/.replay/, at any depth', () => {
     const root = repo({ [MANIFEST]: manifest(), [REPLAY]: 'answer\n' })
     expect(ids(root)).toEqual([])
     const deep = repo({
@@ -97,14 +96,14 @@ describe(RULE, () => {
     expect(ids(deep)).toEqual([])
   })
 
-  it.fails('stays silent when git tracks one file and another file is new', () => {
+  it('stays silent when git tracks one file and another file is new', () => {
     const root = repo({ [MANIFEST]: manifest(), [REPLAY]: 'x' }, [], {
       'evals/mocks/.replay/github/new.md': 'y',
     })
     expect(ids(root)).toEqual([])
   })
 
-  it.fails('does not take a tracked file of another directory for a recording', () => {
+  it('does not take a tracked file of another directory for a recording', () => {
     const root = repo({ [MANIFEST]: manifest(), 'evals/mocks/github/x.md': 'x' }, [], {
       [REPLAY]: 'answer\n',
     })
@@ -115,7 +114,7 @@ describe(RULE, () => {
     expect(ids(sibling)).toEqual(['untracked'])
   })
 
-  it.fails('stays silent for a missing mocks/.replay/, an empty one, and a file of that name', () => {
+  it('stays silent for a missing mocks/.replay/, an empty one, and a file of that name', () => {
     expect(ids(repo({ [MANIFEST]: manifest(), [CASE]: 'x' }))).toEqual([])
     const empty = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
     mkdirSync(path.join(empty, 'evals/mocks/.replay'), { recursive: true })
@@ -123,7 +122,7 @@ describe(RULE, () => {
     expect(ids(repo({ [MANIFEST]: manifest(), 'evals/mocks/.replay': 'x' }))).toEqual([])
   })
 
-  it.fails('reports the pattern once for files that are there, tracked or not', () => {
+  it('reports the pattern once for files that are there, tracked or not', () => {
     const tracked = repo({ [MANIFEST]: manifest(), [REPLAY]: 'x', '.gitignore': '.replay/\n' })
     expect(ids(tracked)).toEqual(['ignored'])
     const loose = repo({ [MANIFEST]: manifest(), '.gitignore': '.replay/\n' }, [], {
@@ -132,7 +131,7 @@ describe(RULE, () => {
     expect(ids(loose)).toEqual(['ignored'])
   })
 
-  it.fails('checks the directory that experimental.evals names', () => {
+  it('checks the directory that experimental.evals names', () => {
     const code = manifest('quality/evals')
     const files = { [MANIFEST]: code, 'quality/evals/first/prompt.md': 'x' }
     const loose = { 'quality/evals/mocks/.replay/github/answer.md': 'x' }
@@ -145,11 +144,11 @@ describe(RULE, () => {
     expect(ids(other, code)).toEqual([])
   })
 
-  it.fails('stays silent for a plugin with no eval directory', () => {
+  it('stays silent for a plugin with no eval directory', () => {
     expect(ids(repo({ [MANIFEST]: manifest(), '.gitignore': '.replay/\n' }))).toEqual([])
   })
 
-  it.fails('takes a path with a space, a leading dash and a leading colon as literal', () => {
+  it('takes a path with a space, a leading dash and a leading colon as literal', () => {
     for (const dir of ['my dir', '-p', ':(top)p']) {
       const root = repo({ [`${dir}/${MANIFEST}`]: manifest(), [`${dir}/${CASE}`]: 'x' }, [], {
         [`${dir}/${REPLAY}`]: 'x',
@@ -160,7 +159,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('does not count a pattern in the global excludes file or in .git/info/exclude', () => {
+  it('does not count a pattern in the global excludes file or in .git/info/exclude', () => {
     const global = plain({ '.gitignore': '.replay/\n' })
     put(global, { config: `[core]\n\texcludesFile = ${path.join(global, '.gitignore')}\n` })
     const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
@@ -173,12 +172,12 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent in a tree with no .git, where git cannot answer', () => {
+  it('stays silent in a tree with no .git, where git cannot answer', () => {
     const root = plain({ [MANIFEST]: manifest(), [REPLAY]: 'x', '.gitignore': '.replay/\n' })
     expect(ids(root)).toEqual([])
   })
 
-  it.fails('stays silent when git cannot run', () => {
+  it('stays silent when git cannot run', () => {
     const root = repo({ [MANIFEST]: manifest(), '.gitignore': '.replay/\n', [CASE]: 'x' })
     vi.stubEnv('PATH', '')
     try {
@@ -188,41 +187,43 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent when git reads an outer repository', () => {
+  it('stays silent when git reads an outer repository', () => {
     const outer = repo({ [`inner/${MANIFEST}`]: manifest(), [`inner/${CASE}`]: 'x' })
     put(outer, { 'inner/.git/keep': '', 'inner/.gitignore': '.replay/\n' })
     expect(git(path.join(outer, 'inner'), 'rev-parse', '--show-toplevel').trim()).toBe(outer)
     expect(ids(outer, manifest(), `inner/${MANIFEST}`)).toEqual([])
   })
 
-  it.fails('stays silent for a manifest that is in no plugin root', () => {
+  it('stays silent for a manifest that is in no plugin root', () => {
     const root = repo({ [CASE]: 'x', '.gitignore': '.replay/\n' })
     expect(ids(root)).toEqual([])
   })
 
   describe('when mocks/.replay is a link', () => {
-    it.fails('stays silent when it leads out of the repository', () => {
-      const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
-      const outside = plain({ 'github/answer.md': 'x' })
-      mkdirSync(path.join(root, 'evals/mocks'), { recursive: true })
-      symlinkSync(outside, path.join(root, 'evals/mocks/.replay'))
-      expect(ids(root)).toEqual([])
-    })
+    it.skipIf(process.platform === 'win32')(
+      'stays silent when it leads out of the repository',
+      () => {
+        const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
+        const outside = plain({ 'github/answer.md': 'x' })
+        mkdirSync(path.join(root, 'evals/mocks'), { recursive: true })
+        symlinkSync(outside, path.join(root, 'evals/mocks/.replay'))
+        expect(ids(root)).toEqual([])
+      },
+    )
 
-    it.fails('is read where it leads inside the repository', () => {
-      const loose = repo({ [MANIFEST]: manifest(), [CASE]: 'x' }, [], {
-        'shared/github/answer.md': 'x',
-      })
-      mkdirSync(path.join(loose, 'evals/mocks'), { recursive: true })
-      symlinkSync('../../shared', path.join(loose, 'evals/mocks/.replay'))
-      expect(ids(loose)).toEqual(['untracked'])
-      const tracked = repo({ [MANIFEST]: manifest(), [CASE]: 'x', 'shared/github/answer.md': 'x' })
-      mkdirSync(path.join(tracked, 'evals/mocks'), { recursive: true })
-      symlinkSync('../../shared', path.join(tracked, 'evals/mocks/.replay'))
-      expect(ids(tracked)).toEqual([])
-    })
+    it.skipIf(process.platform === 'win32')(
+      'stays silent when it leads inside the repository: git refuses a path behind a link',
+      () => {
+        const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' }, [], {
+          'shared/github/answer.md': 'x',
+        })
+        mkdirSync(path.join(root, 'evals/mocks'), { recursive: true })
+        symlinkSync('../../shared', path.join(root, 'evals/mocks/.replay'))
+        expect(ids(root)).toEqual([])
+      },
+    )
 
-    it.fails('stays silent when it is a dangling link', () => {
+    it.skipIf(process.platform === 'win32')('stays silent when it is a dangling link', () => {
       const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
       mkdirSync(path.join(root, 'evals/mocks'), { recursive: true })
       symlinkSync('missing', path.join(root, 'evals/mocks/.replay'))

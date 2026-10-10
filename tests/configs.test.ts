@@ -572,11 +572,23 @@ const GU_TREE: Record<string, string> = {
   'ev/ok/evals/first/prompt.md': '# Case\n',
   'ev/ok/.gitignore': 'evals/results/\n',
   'ev/none/.claude-plugin/plugin.json': JSON.stringify({ name: 'none' }),
+  // `plugin-evals-replay-committed`: a pattern that covers `mocks/.replay/`; recordings that git
+  // does not track; recordings that git tracks.
+  'rp/ignored/.claude-plugin/plugin.json': JSON.stringify({ name: 'ignored' }),
+  'rp/ignored/evals/first/prompt.md': '# Case\n',
+  'rp/ignored/.gitignore': 'evals/results/\n.replay/\n',
+  'rp/loose/.claude-plugin/plugin.json': JSON.stringify({ name: 'loose' }),
+  'rp/loose/evals/first/prompt.md': '# Case\n',
+  'rp/loose/.gitignore': 'evals/results/\n',
+  'rp/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'rp/ok/evals/mocks/.replay/github/answer.md': 'answer\n',
+  'rp/ok/.gitignore': 'evals/results/\n',
 }
 const GU_LOOSE: Record<string, string> = {
   'claude/ok/CLAUDE.local.md': 'mine\n',
   'mem/ok/.claude/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
   'set/ok/.claude/settings.local.json': '{}\n',
+  'rp/loose/evals/mocks/.replay/github/answer.md': 'answer\n',
 }
 
 const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
@@ -673,6 +685,11 @@ const UNTRACKED_RULES = [
     name: 'memory-agent-memory-local-untracked',
     language: 'markdown/gfm',
     files: ['**/.claude/agent-memory-local/**/*.md'],
+  },
+  {
+    name: 'plugin-evals-replay-committed',
+    language: 'json/json',
+    files: ['**/.claude-plugin/plugin.json'],
   },
   {
     name: 'plugin-evals-results-gitignored',
@@ -881,6 +898,9 @@ const EXPECTED = [
   'packages/gu/mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md: claude/memory-agent-memory-local-untracked@1',
   // `plugin-evals-results-gitignored` reads the manifest of a plugin that has an eval directory.
   'packages/gu/ev/bad/.claude-plugin/plugin.json: claude/plugin-evals-results-gitignored@1',
+  // `plugin-evals-replay-committed` reports a pattern, and files that git does not track.
+  'packages/gu/rp/ignored/.claude-plugin/plugin.json: claude/plugin-evals-replay-committed@1',
+  'packages/gu/rp/loose/.claude-plugin/plugin.json: claude/plugin-evals-replay-committed@1',
   // `settings-local-untracked` reads the shared file, and reports on its `settings.local.json`.
   'packages/gu/set/bad/.claude/settings.json: claude/settings-local-untracked@1',
   // `settings-local-gitignored` reads the shared file. The pattern of the root covers the files
