@@ -2,7 +2,7 @@
 // https://code.claude.com/docs/en/memory#choose-where-to-put-claude-md-files
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { classifyMemoryFile } from '../src/memory-files.ts'
+import { classifyMemoryFile, isAgentsMd } from '../src/memory-files.ts'
 
 const at = (...parts: string[]) => classifyMemoryFile(path.join('/repo', ...parts))
 
@@ -52,5 +52,21 @@ describe('classifyMemoryFile', () => {
     expect(at('.claude', 'agents', 'a.md')).toBeNull()
     expect(at('.claude', 'skills', 'rules', 'a.md')).toBeNull()
     expect(at('.claude', 'rules')).toBeNull()
+  })
+})
+
+describe('isAgentsMd', () => {
+  it('reads an AGENTS.md in the root, in a subdirectory and in .claude', () => {
+    expect(isAgentsMd(path.join('/repo', 'AGENTS.md'))).toBe(true)
+    expect(isAgentsMd(path.join('/repo', 'packages', 'web', 'AGENTS.md'))).toBe(true)
+    expect(isAgentsMd(path.join('/repo', '.claude', 'AGENTS.md'))).toBe(true)
+  })
+
+  it('does not read a file below .claude/rules or .agents, or another name', () => {
+    expect(isAgentsMd(path.join('/repo', '.claude', 'rules', 'AGENTS.md'))).toBe(false)
+    expect(isAgentsMd(path.join('/repo', '.agents', 'AGENTS.md'))).toBe(false)
+    expect(isAgentsMd(path.join('/repo', 'AGENTS.local.md'))).toBe(false)
+    expect(isAgentsMd(path.join('/repo', 'agents.md'))).toBe(false)
+    expect(isAgentsMd(path.join('/repo', 'CLAUDE.md'))).toBe(false)
   })
 })
