@@ -1,6 +1,6 @@
 // An event without matcher support ignores a `matcher`. The list is in the hooks reference,
 // "Matcher patterns" (https://code.claude.com/docs/en/hooks#matcher-patterns).
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { NO_MATCHER_EVENTS } from '../../src/data/hook-events.ts'
 import {
   command,
@@ -13,9 +13,6 @@ import {
   settings,
 } from '../hooks.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
-
-// Red: the rule does not exist yet. The fix commit removes this line and the alias.
-const it = realIt.fails
 
 const name = 'hooks-matcher-unsupported-event'
 const ids = (event: string, matcher: unknown, file = FILES.project) =>
@@ -69,7 +66,7 @@ describe(`${name}: the events`, () => {
   it('reports at the matcher value', () => {
     const text = '{\n  "hooks": {\n    "Stop": [{"matcher": "x", "hooks": []}]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
-    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 25]])
+    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 26]])
   })
 })
 
