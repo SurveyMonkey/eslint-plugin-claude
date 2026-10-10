@@ -126,13 +126,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
-| [`claude/claude-md-max-bytes`](docs/rules/claude-md-max-bytes.md) | A `CLAUDE.md` or `CLAUDE.local.md` file has at most 4 MiB (4194304 bytes), the size above which Claude Code skips it; option `max` | `error` | `error` |
 | [`claude/claude-md-agents-md-variant`](docs/rules/claude-md-agents-md-variant.md) | No `AGENTS.local.md`, `AGENTS.override.md` or Markdown file below `.agents/`, which Claude Code never reads; option `allow` | `error` | `error` |
 | [`claude/claude-md-excludes-pattern`](docs/rules/claude-md-excludes-pattern.md) | Each `claudeMdExcludes` pattern starts with `/`, `**/` or a Windows drive, because Claude Code matches absolute paths | `error` | `error` |
+| [`claude/claude-md-max-bytes`](docs/rules/claude-md-max-bytes.md) | A `CLAUDE.md` or `CLAUDE.local.md` file has at most 4 MiB (4194304 bytes), the size above which Claude Code skips it; option `max` | `error` | `error` |
 | [`claude/memory-settings-schema`](docs/rules/memory-settings-schema.md) | The types and values of `autoMemoryEnabled`, `autoMemoryDirectory`, `claudeMdExcludes` and the `instructionFiles` option of the `AGENTS.md` plugin | `error` | `error` |
 | [`claude/rules-frontmatter-schema`](docs/rules/rules-frontmatter-schema.md) | A rule file has `paths` as its only frontmatter key, as a list of strings or a string, with YAML that parses and the block on line 1 | `error` | `error` |
-| [`claude/rules-paths-glob-valid`](docs/rules/rules-paths-glob-valid.md) | A `paths` glob of a rule file that Claude Code can use: no `[` without a bracket expression, and brace groups within 1,000 patterns and 4 MiB | `error` | `error` |
 | [`claude/rules-md-extension`](docs/rules/rules-md-extension.md) | Each file in `.claude/rules/` ends in `.md`, the only extension that Claude Code discovers | `error` | `error` |
+| [`claude/rules-paths-glob-valid`](docs/rules/rules-paths-glob-valid.md) | A `paths` glob of a rule file that Claude Code can use: no `[` without a bracket expression, and brace groups within 1,000 patterns and 4 MiB | `error` | `error` |
 
 ### Settings
 
