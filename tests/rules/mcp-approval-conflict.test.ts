@@ -3,6 +3,8 @@
 // files of one place merge: the two project files of a `.claude/` folder, or the files of one
 // managed source. The files are on disk, so the cases use `Linter` and a repository with a `.git`
 // directory.
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
@@ -114,4 +116,27 @@ it('reads no hidden drop-in, and ignores a hidden sibling', () => {
   expect(ids(lint(lists(['db'], ['db']), {}, hidden))).toEqual([])
   const files = { 'managed-settings.d/.10-a.json': lists(undefined, ['db']) }
   expect(ids(lint(lists(['db']), files, 'managed-settings.json'))).toEqual([])
+})
+it('keeps the conflict that readable managed files show when one drop-in cannot be read', () => {
+  const files = {
+    'managed-settings.json': lists(undefined, ['db']),
+    'managed-settings.d/05-bad.json': '{ nope',
+  }
+  expect(ids(lint(lists(['db']), files, 'managed-settings.d/10-a.json'))).toEqual(['conflict'])
+})
+it('reads no sibling that is a link out of the repository', () => {
+  const root = repo({ '.claude/settings.json': '{}' })
+  const outside = mkdtempSync(path.join(tmpdir(), 'mcp-conflict-outside-'))
+  try {
+    writeFileSync(path.join(outside, 'local.json'), lists(undefined, ['db']))
+    symlinkSync(path.join(outside, 'local.json'), path.join(root, '.claude', 'settings.local.json'))
+    const file = path.join(root, '.claude', 'settings.json')
+    expect(ids(lintJson(NAME, lists(['db']), file))).toEqual([])
+  } finally {
+    rmSync(outside, { recursive: true, force: true })
+  }
+})
+it('reads a sibling list of one character as a list, not as a string', () => {
+  const sibling = { '.claude/settings.local.json': lists(undefined, 'd') }
+  expect(ids(lint(lists(['d']), sibling))).toEqual([])
 })

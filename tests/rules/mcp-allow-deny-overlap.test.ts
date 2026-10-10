@@ -2,6 +2,8 @@
 // `allowedMcpServers` and `deniedMcpServers` leaves the allow entry with no effect (settings
 // reference). Entries from every file merge into one list. The files are on disk, so the cases
 // use `Linter` and a repository with a `.git` directory.
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
@@ -127,4 +129,25 @@ it('keeps the overlap of the file when a sibling is locked', () => {
 it('reads no hidden drop-in', () => {
   const hidden = 'managed-settings.d/.10-a.json'
   expect(ids(lint(lists([named('db')], [named('db')]), {}, hidden))).toEqual([])
+})
+it('keeps the overlap that readable managed files show when one drop-in cannot be read', () => {
+  const files = {
+    'managed-settings.json': lists(undefined, [named('db')]),
+    'managed-settings.d/05-bad.json': '{ nope',
+  }
+  expect(ids(lint(lists([named('db')]), files, 'managed-settings.d/10-a.json'))).toEqual([
+    'overlap',
+  ])
+})
+it('reads no sibling that is a link out of the repository', () => {
+  const root = repo({ '.claude/settings.json': '{}' })
+  const outside = mkdtempSync(path.join(tmpdir(), 'mcp-overlap-outside-'))
+  try {
+    writeFileSync(path.join(outside, 'local.json'), lists(undefined, [named('db')]))
+    symlinkSync(path.join(outside, 'local.json'), path.join(root, '.claude', 'settings.local.json'))
+    const file = path.join(root, '.claude', 'settings.json')
+    expect(ids(lintJson(NAME, lists([named('db')]), file))).toEqual([])
+  } finally {
+    rmSync(outside, { recursive: true, force: true })
+  }
 })

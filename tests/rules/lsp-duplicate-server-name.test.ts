@@ -111,3 +111,8 @@ it('keeps the report that the readable files support when one file is locked', (
   expect(ids(found)).toEqual(['duplicate'])
   expect(found[0]?.message).toContain('.lsp.json')
 })
+it('reads a file that the manifest names once, even when it is the root file or is named twice', () => {
+  const files = { 'p/.lsp.json': lspFile('go'), 'p/a.json': lspFile('rs') }
+  expect(ids(lint(manifest('./.lsp.json'), files))).toEqual([])
+  expect(ids(lint(manifest(['./a.json', './a.json']), files))).toEqual([])
+})
