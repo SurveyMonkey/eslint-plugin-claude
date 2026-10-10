@@ -242,6 +242,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-commands-map-fields',
     'plugin-default-dir-shadowed',
     'plugin-dependencies-not-auto-installed',
+    'plugin-dependencies-prerelease-range',
     'plugin-dependencies-resolve',
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
