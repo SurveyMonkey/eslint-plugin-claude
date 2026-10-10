@@ -61,6 +61,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
     'plugin-manifest-location',
+    'plugin-skill-dir-layout',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-schema',
