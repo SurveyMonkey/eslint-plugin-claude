@@ -117,6 +117,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo "$(echo ")")" $x',
       'echo "$(sed \'s/(//\')" $y',
       'echo $(echo \\)) $Z',
+      'echo $(echo "a\\"b $(date)") $U',
       'echo "a\\"b$(date)" $W',
       "echo $(echo 'a(' ) $V",
     ]) {
