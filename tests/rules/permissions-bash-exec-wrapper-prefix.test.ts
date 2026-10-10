@@ -121,4 +121,12 @@ describe(`${name}: the rules that it leaves alone`, () => {
   it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash(watch *)'), HIDDEN)).toEqual([])
   })
+
+  it('is silent for a bare tool name', () => {
+    expect(ids(allow('Bash', 'Monitor', 'PowerShell'))).toEqual([])
+  })
+
+  it('names the tool of the rule in the message', () => {
+    expect(lint(allow('Monitor(watch *)'))[0]?.message).toContain('`Monitor(watch *)`')
+  })
 })
