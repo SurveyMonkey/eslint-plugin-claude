@@ -2,7 +2,8 @@
 // (docs/rules/mcp-project-plugin-bundle.md). A plugin in the skills directory of a project is
 // checked into the repository. Claude Code skips each MCP server that such a plugin declares as an
 // MCP bundle, a `.mcpb` or `.dxt` file. The rule reads the manifest text only and reads no file.
-// A path that leaves the plugin directory fails `claude plugin validate`, so the rule skips it.
+// The rule does not check that a path stays in the plugin directory. A path with `..` fails
+// `claude plugin validate`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { declaredMcpStrings } from '../mcp-servers.ts'

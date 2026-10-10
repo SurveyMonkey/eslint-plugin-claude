@@ -57,6 +57,7 @@ jsonTester.run('mcp-policy-entry-schema (valid)', rule, {
       code: allow(
         { serverName: 'a' },
         { serverName: 'A-z_0-9' },
+        { serverName: 'Z' },
         { serverName: '-' },
         { serverName: '_' },
         { serverName: '9' },
@@ -163,6 +164,12 @@ jsonTester.run('mcp-policy-entry-schema (invalid)', rule, {
       errors: [{ messageId: 'keyCount', data: { list: 'allowedMcpServers', count: '2' } }],
     },
     {
+      name: 'a repeated key counts once',
+      code: '{"allowedMcpServers": [{"serverName": "a", "serverName": "b", "serverUrl": "x"}]}',
+      filename: managed,
+      errors: [{ messageId: 'keyCount', data: { list: 'allowedMcpServers', count: '2' } }],
+    },
+    {
       name: 'three keys',
       code: allow({ serverName: 'a', serverUrl: 'b', serverCommand: ['c'] }),
       filename: managed,
@@ -238,14 +245,29 @@ jsonTester.run('mcp-policy-entry-schema (invalid)', rule, {
       errors: [{ messageId: 'valueType', line: 1, column: 37, endColumn: 39 }],
     },
     // The allowlist name.
-    ...['', ' ', 'a b', 'a.b', 'a*', '*', 'claude.ai Slack', 'ü', 'a\n', ' a', 'a/b', 'a:b'].map(
-      (value) => ({
-        name: `allow name ${JSON.stringify(value)}`,
-        code: allow({ serverName: value }),
-        filename: managed,
-        errors: [{ messageId: 'allowName' as const, data: { value } }],
-      }),
-    ),
+    ...[
+      '',
+      ' ',
+      'a b',
+      'a.b',
+      'a*',
+      '*',
+      'claude.ai Slack',
+      'ü',
+      'a\n',
+      ' a',
+      'a/b',
+      'a:b',
+      'a@',
+      'a[',
+      'a`',
+      'a{',
+    ].map((value) => ({
+      name: `allow name ${JSON.stringify(value)}`,
+      code: allow({ serverName: value }),
+      filename: managed,
+      errors: [{ messageId: 'allowName' as const, data: { value } }],
+    })),
     {
       name: 'allow name, with the position of the value',
       code: allow({ serverName: 'a b' }),

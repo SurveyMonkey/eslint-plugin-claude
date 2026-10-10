@@ -3,7 +3,8 @@
 // `serverCommand` or `serverUrl`. In managed settings, Claude Code strips an invalid entry and
 // enforces the rest. In an allowlist, `serverName` holds letters, numbers, hyphens and
 // underscores. In a denylist, it is not empty and has no leading or trailing whitespace. A `*` in
-// a `serverName` is a literal character, so the rule makes no report on it.
+// a `serverName` is a literal character. A denylist name can hold it, and the allowlist pattern
+// rejects it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
