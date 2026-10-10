@@ -29,6 +29,11 @@ jsonTester.run('mcp-env-expansion-field (valid)', rule, {
       filename: project,
     },
     {
+      name: 'empty braces are no reference',
+      code: servers({ a: { ...http, timeout: `\${}` } }),
+      filename: project,
+    },
+    {
       name: 'headersHelper is read by a shell',
       code: servers({ a: { ...http, headersHelper: `echo \${HOME}` } }),
       filename: project,

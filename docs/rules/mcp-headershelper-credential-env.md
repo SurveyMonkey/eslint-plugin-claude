@@ -31,8 +31,8 @@ variable. The report is on the string and names the variable. The rule reports e
 for each string.
 
 The rule reads shell variable syntax only. It cannot see a read through `printenv`, `env`, or a
-script that a path names. It does not know about shell quoting, so `'$MY_TOKEN'` in single quotes
-also counts. The rule reads the fixed list in `src/data/mcp-credential-vars.ts`. That list holds
+script that a path names. The rule does not know how the shell quotes a word, so `'$MY_TOKEN'` in single
+quotes also counts. It skips a name that the command sets first, such as `token=$(get-token)`. The rule reads the fixed list in `src/data/mcp-credential-vars.ts`. That list holds
 only `ANTHROPIC_CUSTOM_HEADERS`, the one name that the docs give.
 
 The rule reads the `mcpServers` object of a project `.mcp.json` and of a plugin `.mcp.json`. A plugin

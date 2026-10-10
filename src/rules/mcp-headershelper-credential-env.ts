@@ -2,7 +2,8 @@
 // A helper that a project `.mcp.json` or a plugin supplies runs without the credential variables
 // of the user. Claude Code removes each variable with `TOKEN`, `SECRET`, `PASSWORD`, `KEY` or
 // `AUTH` in its name, in either letter case. It keeps `GIT_CONFIG_KEY_<n>`. It also removes
-// `ANTHROPIC_CUSTOM_HEADERS`. The rule finds `$NAME` and `${NAME}` in the command text. The words
+// `ANTHROPIC_CUSTOM_HEADERS`. The rule finds `$NAME` and `${NAME}` in the command text. It skips a
+// name that the command sets with `NAME=`. The words
 // are in `src/data/mcp-credential-vars.ts`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
@@ -16,8 +17,12 @@ import { mcpFileKind, serverMembers } from '../mcp-servers.ts'
 
 const name = 'mcp-headershelper-credential-env' as const
 
-/** `$NAME` or `${NAME`. The match skips `$(command)` and `$1`. */
+/** A read of `$NAME` or `${NAME}`. The match skips `$(command)` and `$1`. */
 const SHELL_VARIABLE = /\$\{?([A-Za-z_][A-Za-z0-9_]*)/g
+
+/** A variable that the command sets before it reads it, such as `token=$(get); echo $token`.
+ *  Claude Code removes only the inherited variable, so a variable that the command sets is safe. */
+const SHELL_ASSIGNMENT = /(?:^|[\s;&|(])(?:(?:export|local)\s+)?([A-Za-z_][A-Za-z0-9_]*)=/g
 
 /** True when Claude Code removes the variable `variable` from the environment of the helper. */
 function isRemoved(variable: string): boolean {
@@ -55,9 +60,12 @@ const rule: JSONRuleDefinition<{ MessageIds: 'removed' }> = {
           if (helper?.type !== 'String') {
             continue
           }
+          const assigned = new Set(
+            Array.from(helper.value.matchAll(SHELL_ASSIGNMENT), (match) => String(match[1])),
+          )
           const variables = new Set(
             Array.from(helper.value.matchAll(SHELL_VARIABLE), (match) => String(match[1])).filter(
-              isRemoved,
+              (variable) => !assigned.has(variable) && isRemoved(variable),
             ),
           )
           for (const variable of variables) {

@@ -169,7 +169,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-oauth-values`](docs/rules/mcp-oauth-values.md) | `oauth.authServerMetadataUrl` starts with `https://`, and `oauth.scopes` is one space-separated string | `error` | `error` |
 | [`claude/mcp-authorization-header-with-oauth`](docs/rules/mcp-authorization-header-with-oauth.md) | A server has no `oauth` object beside a static `Authorization` header, which stops the OAuth fallback | `error` | `error` |
 | [`claude/mcp-project-dir-default`](docs/rules/mcp-project-dir-default.md) | `${CLAUDE_PROJECT_DIR}` in the `command` or `args` of a project `.mcp.json` has a default, such as `${CLAUDE_PROJECT_DIR:-.}` | `error` | `error` |
-| [`claude/mcp-env-expansion-field`](docs/rules/mcp-env-expansion-field.md) | A `${VAR}` reference is only in `command`, `args`, `env`, `url`, `headers` or `headersHelper`, the fields that read it | `error` | `error` |
+| [`claude/mcp-env-expansion-field`](docs/rules/mcp-env-expansion-field.md) | A `${VAR}` reference is only in `command`, `args`, `env`, `url`, `headers`, the fields that read it, or `headersHelper`, which a shell reads | `error` | `error` |
 | [`claude/mcp-credential-var-remote`](docs/rules/mcp-credential-var-remote.md) | The `url` and `headers` of a remote server do not reference a credential variable that Claude Code reads as empty; option `names` | `error` | `error` |
 | [`claude/mcp-headershelper-credential-env`](docs/rules/mcp-headershelper-credential-env.md) | An inline `headersHelper` does not read a variable that Claude Code removes, such as one with `TOKEN`, `SECRET`, `PASSWORD`, `KEY` or `AUTH` in its name | `error` | `error` |
 

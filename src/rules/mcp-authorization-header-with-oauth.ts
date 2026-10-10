@@ -5,7 +5,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
-import { lastMembers, mcpFileKind, serverMembers } from '../mcp-servers.ts'
+import { mcpFileKind, serverMembers } from '../mcp-servers.ts'
 
 const name = 'mcp-authorization-header-with-oauth' as const
 
@@ -44,7 +44,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'shadowed' }> = {
             continue
           }
           // HTTP header names do not depend on letter case.
-          const header = lastMembers(headers.members).some(
+          const header = headers.members.some(
             (entry) => keyOf(entry.name).toLowerCase() === 'authorization',
           )
           if (header) {

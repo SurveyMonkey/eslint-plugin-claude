@@ -21,14 +21,14 @@ Do not reference a credential variable in the `url` or `headers` of a remote MCP
 ## Rule details
 
 In the `url` and `headers` of a remote server, Claude Code reads a covered credential variable as
-empty. This stops a project file or a plugin from sending a credential to a server that it names.
+empty. A project file or a plugin cannot send a credential to a server that it names.
 The variable reads as empty whether or not it is set, and Claude Code ignores a `:-default`. A
 header `Bearer ${ANTHROPIC_AUTH_TOKEN}` becomes `Bearer ` and the server rejects it.[^empty]
 
 The rule reports each covered variable that a `url` string or a `headers` value references, as
 `${NAME}` or `${NAME:-default}`. The report is on the string. A message names the variable and the
 field, never a value. The rule reads servers whose `type` is `http`, `streamable-http`, `sse` or `ws`.
-It makes no report for a stdio server, where `env` expands the variable.
+It makes no report for a stdio server.
 
 The docs name these variables. They also say "such as", so the set is open.
 

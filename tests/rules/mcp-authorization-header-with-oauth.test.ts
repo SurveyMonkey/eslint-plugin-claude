@@ -36,6 +36,16 @@ jsonTester.run('mcp-authorization-header-with-oauth (valid)', rule, {
       code: remote({ oauth: 'x', headers: { Authorization: 't' } }),
       filename: project,
     },
+    {
+      name: 'a headersHelper is not read',
+      code: remote({ oauth: {}, headersHelper: 'get-headers' }),
+      filename: project,
+    },
+    {
+      name: 'duplicate oauth, the last is no object',
+      code: `{"mcpServers": {"a": {"type": "http", "oauth": {}, "oauth": 1, "headers": {"Authorization": "t"}}}}`,
+      filename: project,
+    },
     { name: 'headers is no object', code: remote({ oauth: {}, headers: 'x' }), filename: project },
     // `mcp-oauth-transport` owns these.
     {
@@ -105,6 +115,12 @@ jsonTester.run('mcp-authorization-header-with-oauth (invalid)', rule, {
     {
       name: 'a header with an environment reference',
       code: remote({ oauth: {}, headers: { 'X-A': 'b', Authorization: `Bearer \${T}` } }),
+      filename: project,
+      errors: [{ messageId: 'shadowed', data: { server: 'a' } }],
+    },
+    {
+      name: 'duplicate oauth, the last is an object',
+      code: `{"mcpServers": {"a": {"type": "http", "oauth": 1, "oauth": {}, "headers": {"Authorization": "t"}}}}`,
       filename: project,
       errors: [{ messageId: 'shadowed', data: { server: 'a' } }],
     },
