@@ -85,6 +85,12 @@ const hooksFaults = {
     // A matcher in the form `Tool(specifier)` (`hooks-matcher-syntax`).
     { matcher: 'Bash(rm *)', hooks: [{ type: 'command', command: './x.sh' }] },
   ],
+  // A `*` matcher on FileChanged (`hooks-filechanged-star-matcher`).
+  FileChanged: [{ matcher: '*', hooks: [{ type: 'command', command: './x.sh' }] }],
+  // An unquoted placeholder (`hooks-placeholder-quoted`) in shell form (`hooks-prefer-exec-form`).
+  ConfigChange: [{ hooks: [{ type: 'command', command: `bash ${projectDir}/x.sh` }] }],
+  // A quoted placeholder in shell form (`hooks-prefer-exec-form`).
+  InstructionsLoaded: [{ hooks: [{ type: 'command', command: `"${projectDir}"/x.sh` }] }],
   // A matcher value that the event never sends (`hooks-matcher-enum`).
   Notification: [{ matcher: 'nope', hooks: [{ type: 'command', command: './x.sh' }] }],
   UserPromptSubmit: [{ matcher: 'Bash', hooks: [{ type: 'command', command: './x.sh' }] }],
@@ -161,6 +167,19 @@ hooks:
       hooks:
         - type: command
           command: ./x.sh
+  FileChanged:
+    - matcher: '*'
+      hooks:
+        - type: command
+          command: ./x.sh
+  ConfigChange:
+    - hooks:
+        - type: command
+          command: bash ${projectDir}/x.sh
+  InstructionsLoaded:
+    - hooks:
+        - type: command
+          command: '"${projectDir}"/x.sh'
   Notification:
     - matcher: nope
       hooks:
@@ -747,6 +766,10 @@ const TREE: Record<string, string> = {
   'packages/hk/plugin/hooks/hooks.json': JSON.stringify({ hooks: hooksFaults }),
   'packages/hk/.claude/skills/hk/SKILL.md': hooksYaml,
   'packages/hk/.claude/agents/hk.md': hooksYaml.replace('name: hk', 'name: hk\ndescription: d'),
+  // `disableAllHooks: false` is reported in the project file only (`hooks-disable-all-override`).
+  'packages/dh/.claude/settings.json': '{"disableAllHooks": false}',
+  'packages/dh/.claude/settings.local.json': '{"disableAllHooks": false}',
+  'packages/dh/managed-settings.json': '{"disableAllHooks": false}',
   'packages/hk/.claude/skills/ev/SKILL.md': unknownEventYaml,
   'packages/hk/.claude/agents/ev.md': unknownEventYaml.replace(
     'name: ev',
@@ -3375,6 +3398,41 @@ const EXPECTED = [
   'packages/lc/.claude-plugin/marketplace.json: claude/lsp-extension-conflict@2',
   'packages/lc/marketplace.json: claude/marketplace-location@1',
   'plugins/ld/.claude-plugin/plugin.json: claude/lsp-duplicate-server-name@2',
+  // The hooks warn rules of layer H5.
+  'packages/dh/.claude/settings.json: claude/hooks-disable-all-override@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-placeholder-quoted@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-sessionend-default-timeout@1',
+  'packages/hk/.claude/settings.json: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/.claude/settings.json: claude/hooks-placeholder-quoted@1',
+  'packages/hk/.claude/settings.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/settings.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/settings.json: claude/hooks-sessionend-default-timeout@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-placeholder-quoted@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-sessionend-default-timeout@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-placeholder-quoted@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-sessionend-default-timeout@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-placeholder-quoted@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-sessionend-default-timeout@1',
+  'packages/hk/managed-settings.json: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/managed-settings.json: claude/hooks-placeholder-quoted@1',
+  'packages/hk/managed-settings.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/managed-settings.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/managed-settings.json: claude/hooks-sessionend-default-timeout@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-filechanged-star-matcher@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-prefer-exec-form@1',
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
@@ -3596,9 +3654,15 @@ const HOOKS_MARKDOWN = ['**/SKILL.md', '**/agents/**/*.md']
 const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-disable-all-override', blocks: [['**/.claude/settings.json']], severity: 'warn' },
   { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
   { name: 'hooks-env-var-unavailable', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-filechanged-star-matcher',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
   { name: 'hooks-handler-field-ignored', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-field-unknown', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-handler-type-event-support', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
@@ -3632,9 +3696,21 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
       ],
     ],
   },
+  { name: 'hooks-placeholder-quoted', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-powershell-placeholder', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-prefer-exec-form', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   {
     name: 'hooks-prompt-on-permission-request',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
+  {
+    name: 'hooks-ps1-needs-powershell-shell',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
+  {
+    name: 'hooks-sessionend-default-timeout',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
   },

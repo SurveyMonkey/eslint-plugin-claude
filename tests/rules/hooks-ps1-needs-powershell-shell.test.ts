@@ -43,23 +43,23 @@ const lintMd = (code: string, file: string, platforms: string[]) =>
     .map((message) => message.messageId)
 
 describe(`${name}: the platforms`, () => {
-  it.fails('makes no report without the option, or with an empty list', () => {
+  it('makes no report without the option, or with an empty list', () => {
     expect(ids(command({ command: './a.ps1' }))).toEqual([])
     expect(ids(command({ command: './a.ps1' }), [])).toEqual([])
   })
 
-  it.fails('reports for each platform that runs the hook in Bash', () => {
+  it('reports for each platform that runs the hook in Bash', () => {
     for (const platform of ['windows-git-bash', 'macos', 'linux', 'wsl']) {
       expect(run('./a.ps1', {}, [platform]), platform).toEqual(['ps1'])
     }
     expect(run('./a.ps1', {}, ['windows-no-git-bash', 'linux'])).toEqual(['ps1'])
   })
 
-  it.fails('is silent when every platform runs the hook in PowerShell', () => {
+  it('is silent when every platform runs the hook in PowerShell', () => {
     expect(run('./a.ps1', {}, ['windows-no-git-bash'])).toEqual([])
   })
 
-  it.fails('names the platforms in the message', () => {
+  it('names the platforms in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('Stop', [command({ command: './a.ps1' })])),
@@ -67,13 +67,13 @@ describe(`${name}: the platforms`, () => {
       [{ platforms: ['macos', 'windows-git-bash'] }],
     )
     expect(message?.message).toBe(
-      'This command runs a .ps1 file with no "shell": "powershell". On macos and windows-git-bash Claude Code runs the command in Bash, which cannot run a PowerShell script. Set "shell": "powershell".',
+      'This command runs a .ps1 file with no "shell": "powershell". On "macos" and "windows-git-bash" Claude Code runs the command in Bash, which cannot run a PowerShell script. Set "shell": "powershell".',
     )
   })
 })
 
 describe(`${name}: the command`, () => {
-  it.fails('reports a .ps1 file as the command word', () => {
+  it('reports a .ps1 file as the command word', () => {
     for (const text of [
       './a.ps1',
       `"${P}/.claude/hooks/check.ps1"`,
@@ -88,15 +88,15 @@ describe(`${name}: the command`, () => {
     }
   })
 
-  it.fails('reports with an explicit bash shell', () => {
+  it('reports with an explicit bash shell', () => {
     expect(run('./a.ps1', { shell: 'bash' })).toEqual(['ps1'])
   })
 
-  it.fails('reports once for a handler', () => {
+  it('reports once for a handler', () => {
     expect(run('./a.ps1 && ./b.ps1')).toEqual(['ps1'])
   })
 
-  it.fails('is silent when PowerShell runs the file', () => {
+  it('is silent when PowerShell runs the file', () => {
     for (const text of [
       'pwsh -File ./a.ps1',
       'powershell.exe -NoProfile -File "x.ps1"',
@@ -107,28 +107,30 @@ describe(`${name}: the command`, () => {
       './ps1',
       'ps1',
       '',
+      'exec',
+      'FOO=./a.ps1',
     ]) {
       expect(run(text), text).toEqual([])
     }
   })
 
-  it.fails('is silent with shell powershell', () => {
+  it('is silent with shell powershell', () => {
     expect(run('./a.ps1', { shell: 'powershell' })).toEqual([])
     expect(run('& ./a.ps1', { shell: 'powershell' })).toEqual([])
   })
 
-  it.fails('is silent in exec form, where the shell field has no effect', () => {
+  it('is silent in exec form, where the shell field has no effect', () => {
     expect(run('./a.ps1', { args: [] })).toEqual([])
     expect(run('./a.ps1', { args: ['x'] })).toEqual([])
   })
 
-  it.fails('is silent for a handler that is no command hook, and for a command that is no string', () => {
+  it('is silent for a handler that is no command hook, and for a command that is no string', () => {
     expect(ids({ type: 'http', url: 'u', command: './a.ps1' }, BASH)).toEqual([])
     expect(ids({ type: 'command', command: 1 }, BASH)).toEqual([])
     expect(ids({ type: 'command' }, BASH)).toEqual([])
   })
 
-  it.fails('reports at the command string', () => {
+  it('reports at the command string', () => {
     const text =
       '{\n  "hooks": {\n    "Stop": [{"hooks": [{"type": "command", "command": "./a.ps1"}]}]\n  }\n}'
     const found = lintJson(name, text, FILES.project, [{ platforms: BASH }])
@@ -137,7 +139,7 @@ describe(`${name}: the command`, () => {
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(command({ command: './a.ps1' }), BASH, file), file).toEqual(['ps1'])
       expect(ids(command({ command: './a.ps1', shell: 'powershell' }), BASH, file), file).toEqual(
@@ -146,7 +148,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (extra: string) =>
       frontmatter(
         `PostToolUse:\n  - matcher: Write\n    hooks:\n      - type: command\n        command: ./a.ps1\n${extra}`,
@@ -158,7 +160,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
+  it('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
     expect(ids(command({ command: './a.ps1' }), BASH, FILES.hidden)).toEqual([])
     expect(ids(command({ command: './a.ps1' }), BASH, '/repo/.github/hooks/hooks.json')).toEqual([])
   })

@@ -20,37 +20,37 @@ const ids = (event: string, matcher: unknown, file = FILES.project) =>
   jsonIds(name, settings(hooks(event, [command()], matcher)), file)
 
 describe(`${name}: the star matcher`, () => {
-  it.fails('reports "*" on FileChanged', () => {
+  it('reports "*" on FileChanged', () => {
     expect(ids('FileChanged', '*')).toEqual(['star'])
   })
 
-  it.fails('reports a star segment in a list, once for the matcher', () => {
+  it('reports a star segment in a list, once for the matcher', () => {
     expect(ids('FileChanged', '*|.env')).toEqual(['star'])
     expect(ids('FileChanged', '.envrc|*')).toEqual(['star'])
     expect(ids('FileChanged', '*|.env|*')).toEqual(['star'])
   })
 
-  it.fails('is silent for an omitted or empty matcher and for a named file', () => {
+  it('is silent for an omitted or empty matcher and for a named file', () => {
     for (const matcher of [undefined, '', '.envrc', '.envrc|.env', 'data.csv']) {
       expect(ids('FileChanged', matcher), String(matcher)).toEqual([])
     }
   })
 
-  it.fails('is silent for a segment that only holds a star', () => {
+  it('is silent for a segment that only holds a star', () => {
     // `hooks-matcher-syntax` reports a pattern character in a file name.
     for (const matcher of ['**', '*.env', '.env*', '* ', 'a*']) {
       expect(ids('FileChanged', matcher), matcher).toEqual([])
     }
   })
 
-  it.fails('is silent on another event and for a matcher that is no string', () => {
+  it('is silent on another event and for a matcher that is no string', () => {
     expect(ids('PreToolUse', '*')).toEqual([])
     expect(ids('SessionStart', '*')).toEqual([])
     expect(ids('FileChanged', ['*'])).toEqual([])
     expect(ids('FileChanged', 1)).toEqual([])
   })
 
-  it.fails('reports at the matcher value', () => {
+  it('reports at the matcher value', () => {
     const text = '{\n  "hooks": {\n    "FileChanged": [{"matcher": "*", "hooks": []}]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
     expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 33]])
@@ -58,14 +58,14 @@ describe(`${name}: the star matcher`, () => {
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids('FileChanged', '*', file), file).toEqual(['star'])
       expect(ids('FileChanged', '.envrc', file), file).toEqual([])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (matcher: string) =>
       frontmatter(
         `FileChanged:\n  - matcher: '${matcher}'\n    hooks:\n      - type: command\n        command: c\n`,
@@ -76,7 +76,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
+  it('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
     expect(ids('FileChanged', '*', FILES.hidden)).toEqual([])
     expect(ids('FileChanged', '*', '/repo/.github/hooks/hooks.json')).toEqual([])
   })
