@@ -24,8 +24,9 @@ The rule is `off` in `recommended`.
 
 Claude Code adds its own commit and pull request instructions. The docs say that when your
 CLAUDE.md sets commit or pull request rules, you turn the built-in ones off with the setting
-`includeGitInstructions`, and set the attribution text with `attribution`.[^compete] The two sets of
-instructions can disagree, and then Claude can follow either one.
+`includeGitInstructions`, and set the attribution text with `attribution`.[^compete] The variable
+`CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` set to `1` removes them too, and it takes precedence over the
+setting.[^variable] The two sets of instructions can disagree, and then Claude can follow either one.
 
 The rule reports a `CLAUDE.md`, a `.claude/CLAUDE.md` or a rule file when both of these are true:
 
@@ -34,12 +35,14 @@ The rule reports a `CLAUDE.md`, a `.claude/CLAUDE.md` or a rule file when both o
   PR title, description, body or template, `gh pr create`, `git commit`, `Co-Authored-By`,
   `Signed-off-by` and `squash`. The cues are words such as `must`, `should`, `always`, `never`,
   `use`, `write`, `follow`, `include`, `keep`, `add` and `run`.
-- The project settings do not set `includeGitInstructions` to `false`.
+- The project settings do not set `includeGitInstructions` to `false`, and do not set
+  `env.CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` to `1`.
 
 The rule reports once for each file, on the first such sentence. It reads the file
 `.claude/settings.json` of the folder that holds the instruction file, and of each folder above it,
 up to the repository root. For a file in a `.claude` folder, the first folder is the one that holds
-`.claude`. One file that sets the key to `false` is enough.
+`.claude`. One file that sets the key to `false`, or the variable to `1`, is enough. The variable
+silences the rule even when `includeGitInstructions` is `true`.
 
 The rule makes no report in these cases:
 
@@ -72,3 +75,4 @@ Pass, with this in `.claude/settings.json`:
 ## Sources
 
 [^compete]: [How Claude remembers your project: Claude isn't following my CLAUDE.md](https://code.claude.com/docs/en/memory#claude-isnt-following-my-claude-md)
+[^variable]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)

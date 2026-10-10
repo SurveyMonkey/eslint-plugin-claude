@@ -36,7 +36,9 @@ The rule reports two shapes of wording, over the words that make the shape:
   `after` each, every or any edit, change or write.
 
 The rule reads a paragraph, a heading or a table cell, in any case of letters. It hides each code
-span and each inline HTML tag, so a code span cannot split a sentence.
+span and each inline HTML tag, so a code span cannot split a sentence. Emphasis marks (`*`, and `_`
+at the edge of a word), block quote marks and a curly apostrophe do not change the result. So
+`Do **not** edit the lock file` and `> Never edit the lock file` are reported.
 
 The rule makes no report in these cases:
 
