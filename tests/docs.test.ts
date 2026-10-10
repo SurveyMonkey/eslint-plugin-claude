@@ -58,6 +58,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'mcp-authorization-header-with-oauth',
     'mcp-credential-var-remote',
     'mcp-disable-connectors-false',
+    'mcp-duplicate-server-name',
     'mcp-env-client-secret',
     'mcp-env-expansion-field',
     'mcp-headershelper-credential-env',

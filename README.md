@@ -184,6 +184,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-managed-servers-entry`](docs/rules/mcp-managed-servers-entry.md) | Each `managedMcpServers` entry is one that Claude Code loads: a valid name, `type`, `https://` `url`, no `command`, `${VAR}` or invisible character | `error` | `error` |
 | [`claude/lsp-json-schema`](docs/rules/lsp-json-schema.md) | A `.lsp.json` at a plugin root maps names to configs with the documented fields, so that Claude Code does not skip the file | `error` | `error` |
 | [`claude/lsp-transport-socket`](docs/rules/lsp-transport-socket.md) | No LSP server sets `transport` to `socket`, which Claude Code runs over stdio | `error` | `error` |
+| [`claude/mcp-duplicate-server-name`](docs/rules/mcp-duplicate-server-name.md) | One plugin declares each MCP server name once across `.mcp.json`, each `mcpServers` `.json` file and the inline maps | `error` | `error` |
 
 ## Contributing
 

@@ -583,6 +583,19 @@ const TREE: Record<string, string> = {
   'packages/cs/managed-settings.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
   'packages/cs/managed-settings.d/10-a.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
   'packages/cs/.vscode/settings.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
+  // `mcp-duplicate-server-name`: `db` in `.mcp.json` and in the inline map. A plugin with distinct
+  // names, and a `plugin.json` outside `.claude-plugin/`, are silent.
+  'plugins/dn/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'dn',
+    mcpServers: { db: { command: 'x' } },
+  }),
+  'plugins/dn/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'plugins/dv/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'dv',
+    mcpServers: { web: { command: 'x' } },
+  }),
+  'plugins/dv/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'packages/dn/plugin.json': JSON.stringify({ name: 'dn', mcpServers: [{ db: {} }, { db: {} }] }),
   // The same content where no rule reads it: other names and other directories.
   'packages/mc/mcp.json': badMcp,
   'packages/mc/.mcp.json.bak': badMcp,
@@ -703,6 +716,7 @@ const MCP_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
   { name: 'mcp-allowlist-servername-dead', files: MANAGED_FILES },
   { name: 'mcp-env-client-secret', files: PROJECT_FILES },
   { name: 'mcp-managed-servers-entry', files: MANAGED_FILES },
+  { name: 'mcp-duplicate-server-name', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -971,6 +985,7 @@ const EXPECTED = [
   'packages/me/managed-settings.d/10-a.json: claude/mcp-managed-servers-entry@2',
   'packages/me/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/cs/.claude/settings.json: claude/mcp-env-client-secret@2',
+  'plugins/dn/.claude-plugin/plugin.json: claude/mcp-duplicate-server-name@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

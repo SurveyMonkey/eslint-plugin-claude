@@ -42,6 +42,7 @@ import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
 import mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
 import mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
 import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
+import mcpDuplicateServerName from './rules/mcp-duplicate-server-name.ts'
 import mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
 import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
 import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
@@ -227,6 +228,7 @@ const modules = [
   mcpAllowlistServernameDead,
   mcpEnvClientSecret,
   mcpManagedServersEntry,
+  mcpDuplicateServerName,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -361,6 +363,7 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-allowlist-servername-dead': 'error',
   'mcp-env-client-secret': 'error',
   'mcp-managed-servers-entry': 'error',
+  'mcp-duplicate-server-name': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
