@@ -1018,6 +1018,11 @@
       "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
       "heading": "Share files within a marketplace with symlinks",
       "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "In-place and copied plugins",
+      "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
     }
   ],
   "plugin-symlink-escapes-plugin": [
