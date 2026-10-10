@@ -494,8 +494,44 @@ const GIT_TREE: Record<string, string> = {
   'ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
   'ok/bin/tool': '#!/bin/sh\n',
   'loose/bin/tool': '#!/bin/sh\n',
+  // `statusline-script-exists`: a script with mode `100644`, a script that is not there, and a
+  // key of each of the three, in each file that it reads. The project of a managed file is the
+  // repository, so it names `sl/line.sh`. A hidden drop-in is for `settings-managed-file`. The
+  // same content where no rule reads it. A script with mode `100755` is silent.
+  'sl/line.sh': '#!/bin/sh\n',
+  'sl/ok/line.sh': '#!/bin/sh\n',
+  'sl/.claude/settings.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/line.sh` },
+  }),
+  'sl/.claude/settings.local.json': JSON.stringify({
+    subagentStatusLine: { type: 'command', command: './gone.sh' },
+  }),
+  'sl/managed-settings.json': JSON.stringify({
+    model: 'opus',
+    fileSuggestion: { type: 'command', command: `${projectDir}/sl/line.sh` },
+  }),
+  'sl/managed-settings.d/10-a.json': JSON.stringify({
+    model: 'opus',
+    statusLine: { type: 'command', command: `${projectDir}/sl/line.sh` },
+  }),
+  'sl/managed-settings.d/.20-hidden.json': JSON.stringify({
+    model: 'opus',
+    statusLine: { type: 'command', command: `${projectDir}/sl/gone.sh` },
+  }),
+  'sl/managed-settings.d/30-b.txt': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/sl/gone.sh` },
+  }),
+  'sl/managed-settings.d/sub/40-c.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/sl/gone.sh` },
+  }),
+  'sl/.vscode/settings.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/gone.sh` },
+  }),
+  'sl/ok/.claude/settings.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/line.sh` },
+  }),
 }
-const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool']
+const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
 const ESCAPE_RULE = 'marketplace-relative-source-escape-symlink'
@@ -578,6 +614,7 @@ const SCOPE_RULES = [
   { name: 'hooks-script-exists', files: HOOKS_FILES },
   { name: 'hooks-script-executable', files: HOOKS_FILES },
   { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'statusline-script-exists', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -762,6 +799,14 @@ const EXPECTED = [
   'packages/hx/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `plugin-bin-executable` reads the manifest, and reports one file of its `bin/`.
   'packages/hx/plugin/.claude-plugin/plugin.json: claude/plugin-bin-executable@2',
+  // `statusline-script-exists` reads the project and managed files, and no other file.
+  ...[
+    'packages/hx/sl/.claude/settings.json',
+    'packages/hx/sl/.claude/settings.local.json',
+    'packages/hx/sl/managed-settings.json',
+    'packages/hx/sl/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/statusline-script-exists@2`),
+  'packages/hx/sl/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

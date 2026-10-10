@@ -86,6 +86,7 @@ import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
 import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
+import statuslineScriptExists from './rules/statusline-script-exists.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
 // `../package.json` resolves from both `src/` and `dist/`.
@@ -181,6 +182,7 @@ const modules = [
   hooksScriptExists,
   hooksScriptExecutable,
   pluginBinExecutable,
+  statuslineScriptExists,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -292,6 +294,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-script-exists': 'error',
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',
+  'statusline-script-exists': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

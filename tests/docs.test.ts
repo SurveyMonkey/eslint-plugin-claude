@@ -102,6 +102,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-plugin-vars-outside-plugin',
     'skill-reference-exists',
     'skill-reserved-name',
+    'statusline-script-exists',
   ])
   for (const [name, rule] of rules) {
     expect(rule.meta?.docs?.url).toBe(docsUrl(name))

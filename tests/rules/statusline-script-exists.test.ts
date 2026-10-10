@@ -23,7 +23,7 @@ const SETTINGS = '.claude/settings.json'
 const KEYS = ['statusLine', 'subagentStatusLine', 'fileSuggestion']
 
 describe(RULE, () => {
-  it.fails('reports a script that is not there, on the command', () => {
+  it('reports a script that is not there, on the command', () => {
     const root = repo({ 'a.txt': 'x' })
     const code = `{
   "statusLine": {
@@ -43,7 +43,7 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('statusLine')
   })
 
-  it.fails('reports a script with mode 100644, on the command', () => {
+  it('reports a script with mode 100644, on the command', () => {
     const root = repo({ '.claude/statusline.sh': '#!/bin/sh\n' })
     const messages = lint(root, SETTINGS, settings(`${PROJECT}/.claude/statusline.sh`))
     expect(messages).toHaveLength(1)
@@ -51,12 +51,12 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('statusLine')
   })
 
-  it.fails('stays silent for a script with mode 100755', () => {
+  it('stays silent for a script with mode 100755', () => {
     const root = repo({ '.claude/statusline.sh': '#!/bin/sh\n' }, ['.claude/statusline.sh'])
     expect(lint(root, SETTINGS, settings(`${PROJECT}/.claude/statusline.sh`))).toEqual([])
   })
 
-  it.fails('reads each of the three keys, and names the key', () => {
+  it('reads each of the three keys, and names the key', () => {
     const root = repo({ 'a.sh': 'x' })
     for (const key of KEYS) {
       const messages = lint(root, SETTINGS, settings(`${PROJECT}/gone.sh`, key))
@@ -68,7 +68,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reports each key of a file on its own', () => {
+  it('reports each key of a file on its own', () => {
     const root = repo({ 'a.sh': 'x' })
     const code = JSON.stringify({
       statusLine: { type: 'command', command: `${PROJECT}/gone.sh` },
@@ -78,7 +78,7 @@ describe(RULE, () => {
     expect(ids(lint(root, SETTINGS, code))).toEqual(['missing', 'notExecutable', 'missing'])
   })
 
-  it.fails('reads the forms of the path', () => {
+  it('reads the forms of the path', () => {
     const root = repo({ 'tools/line.sh': 'x' }, ['tools/line.sh'])
     for (const command of [
       `${PROJECT}/tools/line.sh`,
@@ -95,7 +95,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('needs the bit on the program only, and the file for every script word', () => {
+  it('needs the bit on the program only, and the file for every script word', () => {
     const root = repo({ 'tools/line.js': 'x' })
     expect(lint(root, SETTINGS, settings(`node ${PROJECT}/tools/line.js`))).toEqual([])
     expect(ids(lint(root, SETTINGS, settings(`node ${PROJECT}/tools/gone.js`)))).toEqual([
@@ -104,7 +104,7 @@ describe(RULE, () => {
     expect(ids(lint(root, SETTINGS, settings(`bash tools/gone.js`)))).toEqual([])
   })
 
-  it.fails('does not read a command that is not a repository path', () => {
+  it('does not read a command that is not a repository path', () => {
     const root = repo({ 'tools/line.sh': 'x' })
     for (const command of [
       "jq -r '.model.display_name'",
@@ -121,7 +121,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent for a value of another shape', () => {
+  it('stays silent for a value of another shape', () => {
     const root = repo({ 'a.txt': 'x' })
     for (const code of [
       '{}',
@@ -137,7 +137,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reads the last of two keys of one name, as JSON.parse does', () => {
+  it('reads the last of two keys of one name, as JSON.parse does', () => {
     const root = repo({ 'ok.sh': 'x' }, ['ok.sh'])
     const gone = settings(`${PROJECT}/gone.sh`)
     const ok = settings(`${PROJECT}/ok.sh`)
@@ -146,7 +146,7 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, join(ok, gone))).toHaveLength(1)
   })
 
-  it.fails('reports in settings.local.json, and resolves from the parent of .claude', () => {
+  it('reports in settings.local.json, and resolves from the parent of .claude', () => {
     const root = repo({ 'packages/x/tools/line.sh': 'x' })
     const code = settings(`${PROJECT}/tools/line.sh`)
     expect(ids(lint(root, 'packages/x/.claude/settings.local.json', code))).toEqual([
@@ -157,7 +157,7 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails('reads the index mode, not the disk mode', () => {
+  it('reads the index mode, not the disk mode', () => {
     const root = repo({ 'a.sh': 'x', 'b.sh': 'x' }, ['a.sh'])
     chmodSync(path.join(root, 'a.sh'), 0o644)
     chmodSync(path.join(root, 'b.sh'), 0o755)
@@ -165,26 +165,26 @@ describe(RULE, () => {
     expect(ids(lint(root, SETTINGS, settings(`${PROJECT}/b.sh`)))).toEqual(['notExecutable'])
   })
 
-  it.fails('reads the mode that a later git update-index records', () => {
+  it('reads the mode that a later git update-index records', () => {
     const root = repo({ 'a.sh': 'x' })
     expect(lint(root, SETTINGS, settings(`${PROJECT}/a.sh`))).toHaveLength(1)
     git(root, 'update-index', '--chmod=+x', 'a.sh')
     expect(lint(root, SETTINGS, settings(`${PROJECT}/a.sh`))).toEqual([])
   })
 
-  it.fails('stays silent about the bit for a script that git does not track', () => {
+  it('stays silent about the bit for a script that git does not track', () => {
     const root = repo({ 'a.txt': 'x' }, [], { 'loose.sh': '#!/bin/sh\n' })
     expect(lint(root, SETTINGS, settings(`${PROJECT}/loose.sh`))).toEqual([])
   })
 
-  it.fails('reports a missing script where git cannot be read, and no bit', () => {
+  it('reports a missing script where git cannot be read, and no bit', () => {
     // With no `.git`, the mode cannot be read, but the file is there or it is not.
     const root = plain({ 'tools/line.sh': 'x' })
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/line.sh`))).toEqual([])
     expect(ids(lint(root, SETTINGS, settings(`${PROJECT}/tools/gone.sh`)))).toEqual(['missing'])
   })
 
-  it.fails('stays silent about the bit when git cannot run', () => {
+  it('stays silent about the bit when git cannot run', () => {
     const root = repo({ 'tools/line.sh': 'x' })
     vi.stubEnv('PATH', '')
     try {
@@ -195,7 +195,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent for a path out of the repository, and for a link out of it', () => {
+  it('stays silent for a path out of the repository, and for a link out of it', () => {
     const root = repo({ 'a.txt': 'x' })
     const outside = repo({ 'real.sh': 'x' })
     symlinkSync(path.join(outside, 'real.sh'), path.join(root, 'link.sh'))
@@ -210,13 +210,13 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reads a link to a file in the repository where it leads', () => {
+  it('reads a link to a file in the repository where it leads', () => {
     const root = repo({ 'real.sh': 'x' })
     symlinkSync('real.sh', path.join(root, 'alias.sh'))
     expect(ids(lint(root, SETTINGS, settings(`${PROJECT}/alias.sh`)))).toEqual(['notExecutable'])
   })
 
-  it.skipIf(chmodCannotBlock).fails('stays silent for a directory that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('stays silent for a directory that it cannot read', () => {
     const root = repo({ 'locked/ok.sh': 'x' })
     withoutAccess(path.join(root, 'locked'), () => {
       expect(lint(root, SETTINGS, settings(`${PROJECT}/locked/ok.sh`))).toEqual([])
@@ -224,7 +224,7 @@ describe(RULE, () => {
   })
 
   describe('managed settings files', () => {
-    it.fails('resolves the project variable from the repository root', () => {
+    it('resolves the project variable from the repository root', () => {
       const root = repo({ 'tools/line.sh': 'x' })
       for (const file of [
         'managed-settings.json',
@@ -237,12 +237,12 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('does not read a path from the project in a managed file', () => {
+    it('does not read a path from the project in a managed file', () => {
       const root = repo({ 'a.txt': 'x' })
       expect(lint(root, 'managed-settings.json', settings('tools/gone.sh'))).toEqual([])
     })
 
-    it.fails('skips a hidden drop-in, which Claude Code ignores', () => {
+    it('skips a hidden drop-in, which Claude Code ignores', () => {
       const root = repo({ 'a.txt': 'x' })
       const file = 'managed-settings.d/.20-hidden.json'
       expect(lint(root, file, settings(`${PROJECT}/gone.sh`))).toEqual([])
