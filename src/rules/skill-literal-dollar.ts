@@ -22,7 +22,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'literal' }> = {
     schema: [],
     messages: {
       literal:
-        'Claude Code replaces `{{token}}` with an argument. Write `\\{{token}}` to keep it as text.',
+        'Claude Code can replace `{{token}}` with an argument. Write `\\{{token}}` to keep it as text.',
     },
   },
   create(context) {

@@ -42,6 +42,8 @@ the budget.[^cut] So the rule counts at most 1,536 characters of text for each e
   the count.
 - A file with no frontmatter, or with a block that does not parse, adds its name.
 - A field that is not a string adds nothing.
+- A skill with no `description` is listed with the first line of its body. The rule counts none
+  of it, so the sum can be too low.
 
 The rule reports at line 1 of each skill and command file of a scope that is over the budget. The
 message gives the total of the scope and the share of that file. It reads the file that it lints
