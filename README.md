@@ -99,6 +99,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/output-style-force-for-plugin`](docs/rules/output-style-force-for-plugin.md) | `force-for-plugin: true` in a plugin output style | `warn` | `warn` |
 | [`claude/output-style-name-unique`](docs/rules/output-style-name-unique.md) | Two project output styles with the same name, in one folder or in nested folders | `warn` | `warn` |
 | [`claude/output-style-plugin-name-description`](docs/rules/output-style-plugin-name-description.md) | A plugin output style with no `name` or no `description` | `warn` | `warn` |
+| [`claude/agent-initial-prompt-main-only`](docs/rules/agent-initial-prompt-main-only.md) | `initialPrompt` in a local agent that no setting runs as the main thread | `off` | `warn` |
+| [`claude/agent-mcp-servers-ref-exists`](docs/rules/agent-mcp-servers-ref-exists.md) | A string `mcpServers` entry that `.mcp.json` does not define | `off` | `warn` |
+| [`claude/agent-model-value`](docs/rules/agent-model-value.md) | A subagent `model` that is no alias, `inherit` or model ID | `off` | `warn` |
+| [`claude/agent-skills-exist`](docs/rules/agent-skills-exist.md) | A `skills` entry of a subagent that names no skill or bundled skill | `off` | `warn` |
+| [`claude/agent-tools-agent-type-list`](docs/rules/agent-tools-agent-type-list.md) | An `Agent(type)` list in an agent that does not run as the main thread, and a type that no agent defines | `off` | `warn` |
+| [`claude/agent-tools-skill-for-preload`](docs/rules/agent-tools-skill-for-preload.md) | `Skill` in the `tools` of a subagent that preloads no skill | `off` | `warn` |
 
 ### Hooks
 
