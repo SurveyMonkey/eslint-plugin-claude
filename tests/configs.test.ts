@@ -981,6 +981,7 @@ const AGENT_WARN_RULES = [
   'agent-name-shadows-builtin',
   'agent-no-bom',
   'agent-tools-conditional',
+  'agent-tools-task-alias',
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.

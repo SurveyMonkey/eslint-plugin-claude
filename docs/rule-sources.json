@@ -240,6 +240,13 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "agent-tools-task-alias": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    }
+  ],
   "agent-tools-unavailable": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
