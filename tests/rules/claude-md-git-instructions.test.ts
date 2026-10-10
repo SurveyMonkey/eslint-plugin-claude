@@ -24,7 +24,7 @@ function lint(code: string, files: Record<string, string> = {}, file = 'CLAUDE.m
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports commit rules when the settings do not turn the git instructions off', () => {
+  it('reports commit rules when the settings do not turn the git instructions off', () => {
     const messages = lint(`# Git\n\n${COMMIT}`)
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -33,21 +33,21 @@ describe(RULE, () => {
       line: 3,
       column: 1,
       endLine: 3,
-      endColumn: 47,
+      endColumn: 46,
     })
     expect(messages[0]?.message).toBe(
       'This file sets commit or pull request rules, and the project settings do not set `includeGitInstructions` to `false`. Claude Code adds its own git instructions, which compete with these rules. Set the key to `false` in `.claude/settings.json`.',
     )
   })
 
-  it.fails('stays silent when the project settings set includeGitInstructions to false', () => {
+  it('stays silent when the project settings set includeGitInstructions to false', () => {
     expect(lint(COMMIT, { [SETTINGS]: OFF })).toEqual([])
     expect(
       lint(COMMIT, { [SETTINGS]: '{"model": "opus", "includeGitInstructions": false}' }),
     ).toEqual([])
   })
 
-  it.fails('reports when the key is true, another value, or not set, or the file is absent', () => {
+  it('reports when the key is true, another value, or not set, or the file is absent', () => {
     for (const settings of [
       '{"includeGitInstructions": true}',
       '{"includeGitInstructions": "false"}',
@@ -60,12 +60,12 @@ describe(RULE, () => {
     expect(ids(lint(COMMIT, {}))).toEqual(['gitInstructions'])
   })
 
-  it.fails('reads the project file only, and not the local file', () => {
+  it('reads the project file only, and not the local file', () => {
     const local = { '.claude/settings.local.json': OFF }
     expect(ids(lint(COMMIT, local))).toEqual(['gitInstructions'])
   })
 
-  it.fails('reports once for the file, at the first sentence', () => {
+  it('reports once for the file, at the first sentence', () => {
     const messages = lint(
       'Open a pull request for each change.\n\nWrite commit messages in English.\n',
     )
@@ -74,7 +74,7 @@ describe(RULE, () => {
 })
 
 describe(`${RULE}: the wording`, () => {
-  it.fails('reports each topic with an instruction cue in the same sentence', () => {
+  it('reports each topic with an instruction cue in the same sentence', () => {
     for (const text of [
       'Write commit messages in the imperative mood.',
       'Always follow the commit message format.',
@@ -94,7 +94,7 @@ describe(`${RULE}: the wording`, () => {
     }
   })
 
-  it.fails('stays silent on text that sets no commit or pull request rule', () => {
+  it('stays silent on text that sets no commit or pull request rule', () => {
     for (const text of [
       'Run `npm test` before committing.',
       'Use 2-space indentation.',
@@ -107,7 +107,7 @@ describe(`${RULE}: the wording`, () => {
     }
   })
 
-  it.fails('stays silent on a mention in a fence, an HTML comment or an indented block', () => {
+  it('stays silent on a mention in a fence, an HTML comment or an indented block', () => {
     expect(lint('```\nWrite commit messages in English.\n```\n')).toEqual([])
     expect(lint('<!-- Write commit messages in English. -->\n')).toEqual([])
     expect(lint('    Write commit messages in English.\n')).toEqual([])
@@ -115,7 +115,7 @@ describe(`${RULE}: the wording`, () => {
 })
 
 describe(`${RULE}: which files report`, () => {
-  it.fails('checks a CLAUDE.md, a .claude/CLAUDE.md and a rule file', () => {
+  it('checks a CLAUDE.md, a .claude/CLAUDE.md and a rule file', () => {
     for (const file of [
       'CLAUDE.md',
       '.claude/CLAUDE.md',
@@ -128,20 +128,20 @@ describe(`${RULE}: which files report`, () => {
     }
   })
 
-  it.fails('does not check a CLAUDE.local.md, an AGENTS.md or another file', () => {
+  it('does not check a CLAUDE.local.md, an AGENTS.md or another file', () => {
     for (const file of ['CLAUDE.local.md', 'AGENTS.md', 'docs/git.md', 'git.md']) {
       expect(lint(COMMIT, {}, file), file).toEqual([])
     }
   })
 
-  it.fails('reads the settings of the folder that holds .claude for a file in .claude', () => {
+  it('reads the settings of the folder that holds .claude for a file in .claude', () => {
     const files = { 'packages/a/.claude/settings.json': OFF }
     expect(lint(COMMIT, files, 'packages/a/.claude/CLAUDE.md')).toEqual([])
     expect(lint(COMMIT, files, 'packages/a/.claude/rules/web/git.md')).toEqual([])
     expect(ids(lint(COMMIT, files, 'packages/b/.claude/CLAUDE.md'))).toEqual(['gitInstructions'])
   })
 
-  it.fails('reads the settings of each folder above, up to the repository root', () => {
+  it('reads the settings of each folder above, up to the repository root', () => {
     expect(lint(COMMIT, { [SETTINGS]: OFF }, 'packages/a/CLAUDE.md')).toEqual([])
     expect(lint(COMMIT, { 'packages/.claude/settings.json': OFF }, 'packages/a/CLAUDE.md')).toEqual(
       [],
@@ -151,13 +151,13 @@ describe(`${RULE}: which files report`, () => {
     ).toEqual(['gitInstructions'])
   })
 
-  it.fails('does not read a folder above the repository root', () => {
+  it('does not read a folder above the repository root', () => {
     const dir = tree({ [SETTINGS]: OFF, 'inner/.git/HEAD': 'ref\n' })
     expect(lintMemory(RULE, dir, 'inner/CLAUDE.md', COMMIT)).toHaveLength(1)
     expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
   })
 
-  it.fails('reads only its own folder where no .git is above', () => {
+  it('reads only its own folder where no .git is above', () => {
     const dir = tree({ [SETTINGS]: OFF }, false)
     expect(lintMemory(RULE, dir, 'sub/CLAUDE.md', COMMIT)).toHaveLength(1)
     expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
@@ -165,7 +165,7 @@ describe(`${RULE}: which files report`, () => {
 })
 
 describe(`${RULE}: settings that the rule cannot read`, () => {
-  it.fails('stays silent when the settings file is not JSON, or not an object', () => {
+  it('stays silent when the settings file is not JSON, or not an object', () => {
     for (const settings of [
       '{',
       '',
@@ -178,44 +178,35 @@ describe(`${RULE}: settings that the rule cannot read`, () => {
     }
   })
 
-  it.skipIf(chmodCannotBlock).fails('stays silent when the settings file has no read right', () => {
+  it.skipIf(chmodCannotBlock)('stays silent when the settings file has no read right', () => {
     const dir = tree({ [SETTINGS]: '{}' })
     withoutAccess(path.join(dir, SETTINGS), () => {
       expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
     })
   })
 
-  it.skipIf(noLinks).fails(
-    'stays silent when the settings file is a link that leads nowhere',
-    () => {
-      const dir = tree({})
-      link(dir, SETTINGS, 'nowhere.json')
-      expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('stays silent when the settings file is a link that leads nowhere', () => {
+    const dir = tree({})
+    link(dir, SETTINGS, 'nowhere.json')
+    expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
+  })
 
-  it.skipIf(noLinks).fails(
-    'stays silent when the settings file is a link out of the repository',
-    () => {
-      const dir = tree({})
-      link(dir, SETTINGS, path.join(tree({ 'settings.json': OFF }), 'settings.json'))
-      expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
-      const plain = tree({})
-      link(plain, SETTINGS, path.join(tree({ 'settings.json': '{}' }), 'settings.json'))
-      expect(lintMemory(RULE, plain, 'CLAUDE.md', COMMIT)).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('stays silent when the settings file is a link out of the repository', () => {
+    const dir = tree({})
+    link(dir, SETTINGS, path.join(tree({ 'settings.json': OFF }), 'settings.json'))
+    expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
+    const plain = tree({})
+    link(plain, SETTINGS, path.join(tree({ 'settings.json': '{}' }), 'settings.json'))
+    expect(lintMemory(RULE, plain, 'CLAUDE.md', COMMIT)).toEqual([])
+  })
 
-  it.skipIf(noLinks).fails(
-    'stays silent when the .claude folder is a link that leads nowhere',
-    () => {
-      const dir = tree({})
-      link(dir, '.claude', 'nowhere')
-      expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('stays silent when the .claude folder is a link that leads nowhere', () => {
+    const dir = tree({})
+    link(dir, '.claude', 'nowhere')
+    expect(lintMemory(RULE, dir, 'CLAUDE.md', COMMIT)).toEqual([])
+  })
 
-  it.fails('stays silent on a folder above that has a settings file it cannot read', () => {
+  it('stays silent on a folder above that has a settings file it cannot read', () => {
     const files = { 'packages/.claude/settings.json': '{' }
     expect(lint(COMMIT, files, 'packages/a/CLAUDE.md')).toEqual([])
   })

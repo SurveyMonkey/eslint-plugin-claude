@@ -288,6 +288,13 @@
       "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
     }
   ],
+  "claude-md-git-instructions": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Claude isn't following my CLAUDE.md",
+      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
+    }
+  ],
   "claude-md-guardrail-to-hook": [
     {
       "url": "https://code.claude.com/docs/en/memory",

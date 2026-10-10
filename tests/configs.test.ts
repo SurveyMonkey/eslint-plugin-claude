@@ -597,6 +597,18 @@ const TREE: Record<string, string> = {
   'packages/dc/.claude/rules/layout.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
   'packages/dc/docs/notes.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
   'packages/dc/ok/CLAUDE.md': '```\nsrc/\n├── a.ts\n└── b.ts\n```\n',
+  // `claude-md-git-instructions`: a commit rule in each file that the rule reads, in a repository
+  // whose settings do not turn the git instructions off. The same text where no rule reads it, and
+  // in a repository whose project settings turn them off. The files `.git` make the repositories.
+  'packages/gi/.git': 'gitdir: ../.git\n',
+  'packages/gi/CLAUDE.md': 'Write commit messages in English.\n',
+  'packages/gi/.claude/CLAUDE.md': 'Write commit messages in English.\n',
+  'packages/gi/.claude/rules/git.md': 'Write commit messages in English.\n',
+  'packages/gi/CLAUDE.local.md': 'Write commit messages in English.\n',
+  'packages/gi/docs/notes.md': 'Write commit messages in English.\n',
+  'packages/gi/ok/.git': 'gitdir: ../.git\n',
+  'packages/gi/ok/CLAUDE.md': 'Write commit messages in English.\n',
+  'packages/gi/ok/.claude/settings.json': '{"includeGitInstructions": false}',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
@@ -775,6 +787,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-derivable-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-emphasis-overuse': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-git-instructions': ['markdown/gfm', ['**/CLAUDE.md', '**/.claude/rules/**/*.md']],
   'claude-md-guardrail-to-hook': [
     'markdown/gfm',
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md'],
@@ -1101,6 +1114,10 @@ const STRICT_ONLY = [
   'packages/dc/CLAUDE.md: claude/claude-md-derivable-content@1',
   'packages/dc/.claude/CLAUDE.md: claude/claude-md-derivable-content@1',
   'packages/dc/CLAUDE.local.md: claude/claude-md-derivable-content@1',
+  // `claude-md-git-instructions` reads CLAUDE.md and the rule files, and no other file.
+  'packages/gi/CLAUDE.md: claude/claude-md-git-instructions@1',
+  'packages/gi/.claude/CLAUDE.md: claude/claude-md-git-instructions@1',
+  'packages/gi/.claude/rules/git.md: claude/claude-md-git-instructions@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

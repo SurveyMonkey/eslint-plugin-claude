@@ -24,6 +24,7 @@ import claudeMdDerivableContent from './rules/claude-md-derivable-content.ts'
 import claudeMdEmphasisOveruse from './rules/claude-md-emphasis-overuse.ts'
 import claudeMdExcludesAbsoluteCommitted from './rules/claude-md-excludes-absolute-committed.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdGitInstructions from './rules/claude-md-git-instructions.ts'
 import claudeMdGuardrailToHook from './rules/claude-md-guardrail-to-hook.ts'
 import claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
@@ -232,6 +233,7 @@ const modules = [
   claudeMdDerivableContent,
   claudeMdEmphasisOveruse,
   claudeMdExcludesAbsoluteCommitted,
+  claudeMdGitInstructions,
   claudeMdGuardrailToHook,
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
@@ -373,6 +375,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-derivable-content': 'off',
   'claude-md-emphasis-overuse': 'off',
   'claude-md-excludes-absolute-committed': 'off',
+  'claude-md-git-instructions': 'off',
   'claude-md-guardrail-to-hook': 'off',
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
