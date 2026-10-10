@@ -1116,6 +1116,12 @@
       "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     }
   ],
+  "settings-env-numeric-spelling": [
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables"
+    }
+  ],
   "settings-env-prompt-caching-off": [
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -1305,6 +1311,12 @@
       "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
     }
   ],
+  "settings-footerlinks-pattern": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Badge constraints"
+    }
+  ],
   "settings-global-only-file": [
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -1443,6 +1455,26 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "settings-managed-value-form": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Turn telemetry off for your organization"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Environment variables and the approval dialog"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed"
+    }
+  ],
+  "settings-managed-version-floor": [
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Block specific models or versions"
     }
   ],
   "settings-marketplace-headers-helper-https": [
@@ -1912,6 +1944,12 @@
       "hash": "34f315d4eb30dc7b6e7149d6a1a850903297476471a752edfa885ac250b0d999"
     }
   ],
+  "settings-worktree-sparse-claude-dir": [
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Check out only the directories you need"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -2157,6 +2195,12 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "A skill, command, or workflow wasn't loaded because its name is reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4"
+    }
+  ],
+  "statusline-windows-path": [
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Windows configuration"
     }
   ]
 }

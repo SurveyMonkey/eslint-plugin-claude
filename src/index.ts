@@ -53,6 +53,7 @@ import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schem
 import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
+import settingsEnvNumericSpelling from './rules/settings-env-numeric-spelling.ts'
 import settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off.ts'
 import settingsEnvRouting from './rules/settings-env-routing.ts'
 import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
@@ -60,11 +61,14 @@ import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsFileSize from './rules/settings-file-size.ts'
+import settingsFooterlinksPattern from './rules/settings-footerlinks-pattern.ts'
 import settingsGlobalOnlyFile from './rules/settings-global-only-file.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
 import settingsLocalLocation from './rules/settings-local-location.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
+import settingsManagedValueForm from './rules/settings-managed-value-form.ts'
+import settingsManagedVersionFloor from './rules/settings-managed-version-floor.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
 import settingsModelList from './rules/settings-model-list.ts'
@@ -81,6 +85,7 @@ import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import settingsWebfetchPreflightSkip from './rules/settings-webfetch-preflight-skip.ts'
+import settingsWorktreeSparseClaudeDir from './rules/settings-worktree-sparse-claude-dir.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
@@ -97,6 +102,7 @@ import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
 import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
+import statuslineWindowsPath from './rules/statusline-windows-path.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
 // `../package.json` resolves from both `src/` and `dist/`.
@@ -203,6 +209,12 @@ const modules = [
   settingsEnvRouting,
   settingsLocalLocation,
   settingsWebfetchPreflightSkip,
+  settingsEnvNumericSpelling,
+  settingsFooterlinksPattern,
+  settingsManagedValueForm,
+  settingsManagedVersionFloor,
+  settingsWorktreeSparseClaudeDir,
+  statuslineWindowsPath,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -325,6 +337,12 @@ const recommended: Record<RuleName, Severity> = {
   'settings-env-routing': 'warn',
   'settings-local-location': 'warn',
   'settings-webfetch-preflight-skip': 'warn',
+  'settings-env-numeric-spelling': 'warn',
+  'settings-footerlinks-pattern': 'warn',
+  'settings-managed-value-form': 'warn',
+  'settings-managed-version-floor': 'warn',
+  'settings-worktree-sparse-claude-dir': 'warn',
+  'statusline-windows-path': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

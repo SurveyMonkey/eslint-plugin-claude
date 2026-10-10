@@ -561,6 +561,85 @@ const TREE: Record<string, string> = {
   'packages/wf2/managed-settings.json': '{"skipWebFetchPreflight": true}',
   'packages/wf2/managed-settings.d/10-a.json':
     '{"permissions": {"deny": ["WebFetch(domain:evil.example)"]}}',
+  // The warn rules of the managed and status line layer of #14. Each group has the files that the
+  // rule reads, a hidden drop-in, and the same content where no rule reads it.
+  // `settings-env-numeric-spelling` reads the project and managed files. The variable of
+  // `packages/numeric2` has a form in `settings-env-value-format`, which reports it.
+  'packages/numeric/.claude/settings.json': '{"env": {"API_TIMEOUT_MS": "1e6"}}',
+  'packages/numeric/.claude/settings.local.json': '{"env": {"MAX_THINKING_TOKENS": "64_000"}}',
+  'packages/numeric/managed-settings.json': '{"env": {"API_TIMEOUT_MS": "2e3"}}',
+  'packages/numeric/managed-settings.d/10-a.json': '{"env": {"API_TIMEOUT_MS": "1_000"}}',
+  'packages/numeric/managed-settings.d/.20-hidden.json': '{"env": {"API_TIMEOUT_MS": "1e6"}}',
+  'packages/numeric/managed-settings.d/30-b.txt': '{"env": {"API_TIMEOUT_MS": "1e6"}}',
+  'packages/numeric/managed-settings.d/sub/40-c.json': '{"env": {"API_TIMEOUT_MS": "1e6"}}',
+  'packages/numeric/.vscode/settings.json': '{"env": {"API_TIMEOUT_MS": "1e6"}}',
+  'packages/numeric2/.claude/settings.json':
+    '{"env": {"CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS": "9e5"}}',
+  'packages/numeric3/.claude/settings.json': '{"env": {"API_TIMEOUT_MS": "1000000"}}',
+  // `settings-worktree-sparse-claude-dir` reads the project and managed files. A list with
+  // `.claude` in the other file of the folder or of the managed source is silent.
+  'packages/sparse/.claude/settings.json': '{"worktree": {"sparsePaths": ["packages/api"]}}',
+  'packages/sparse/.claude/settings.local.json': '{"worktree": {"sparsePaths": ["packages/api"]}}',
+  'packages/sparse/managed-settings.json': '{"worktree": {"sparsePaths": ["packages/api"]}}',
+  'packages/sparse/managed-settings.d/10-a.json': '{"worktree": {"sparsePaths": ["packages/web"]}}',
+  'packages/sparse/managed-settings.d/.20-hidden.json': '{"worktree": {"sparsePaths": ["x"]}}',
+  'packages/sparse/managed-settings.d/30-b.txt': '{"worktree": {"sparsePaths": ["x"]}}',
+  'packages/sparse/managed-settings.d/sub/40-c.json': '{"worktree": {"sparsePaths": ["x"]}}',
+  'packages/sparse/.vscode/settings.json': '{"worktree": {"sparsePaths": ["x"]}}',
+  'packages/sparse2/.claude/settings.json': '{"worktree": {"sparsePaths": ["packages/api"]}}',
+  'packages/sparse2/.claude/settings.local.json': '{"worktree": {"sparsePaths": [".claude"]}}',
+  'packages/sparse3/managed-settings.json': '{"worktree": {"sparsePaths": ["packages/api"]}}',
+  'packages/sparse3/managed-settings.d/10-a.json': '{"worktree": {"sparsePaths": [".claude"]}}',
+  // `settings-footerlinks-pattern` reads the managed files. The project file of `packages/footer` has
+  // the key, and `settings-key-scope` reports it there.
+  'packages/footer/managed-settings.json':
+    '{"footerLinksRegexes": [{"type": "regex", "pattern": "(a+)+", "url": "https://x.example/{k}"}]}',
+  'packages/footer/managed-settings.d/10-a.json':
+    '{"footerLinksRegexes": [{"type": "regex", "pattern": "a", "url": "https://x.example/{k}", "label": "123456789012345678901234567890"}]}',
+  'packages/footer/managed-settings.d/.20-hidden.json':
+    '{"footerLinksRegexes": [{"type": "regex", "pattern": "(a+)+", "url": "https://x.example/{k}"}]}',
+  'packages/footer/managed-settings.d/30-b.txt':
+    '{"footerLinksRegexes": [{"type": "regex", "pattern": "(a+)+", "url": "https://x.example/{k}"}]}',
+  'packages/footer/.claude/settings.json':
+    '{"footerLinksRegexes": [{"type": "regex", "pattern": "(a+)+", "url": "https://x.example/{k}"}]}',
+  'packages/footer2/managed-settings.json':
+    '{"footerLinksRegexes": [{"type": "regex", "pattern": "\\\\b(?<k>X-\\\\d+)\\\\b", "url": "https://x.example/{k}", "label": "{k}"}]}',
+  // `settings-managed-value-form` reads the managed files. The project file of `packages/form` sets
+  // the same variable, and no rule reports it.
+  'packages/form/managed-settings.json': '{"env": {"DISABLE_TELEMETRY": "0"}}',
+  'packages/form/managed-settings.d/10-a.json': '{"env": {"DO_NOT_TRACK": "false"}}',
+  'packages/form/managed-settings.d/.20-hidden.json': '{"env": {"DISABLE_TELEMETRY": "0"}}',
+  'packages/form/managed-settings.d/30-b.txt': '{"env": {"DISABLE_TELEMETRY": "0"}}',
+  'packages/form/.claude/settings.json': '{"env": {"DISABLE_TELEMETRY": "0"}}',
+  'packages/form2/managed-settings.json': '{"env": {"DISABLE_TELEMETRY": "1"}}',
+  // `settings-managed-version-floor` reads the managed files. A floor of 2.1.283 in the other file
+  // of the source is silent. The project file of `packages/floor` has `deniedModels`, and
+  // `settings-key-scope` reports it there.
+  'packages/floor/managed-settings.json': '{"deniedModels": ["claude-opus-5-5"]}',
+  'packages/floor/managed-settings.d/10-a.json': '{"availableModelsMatch": "exact"}',
+  'packages/floor/managed-settings.d/.20-hidden.json': '{"requiredMinimumVersion": "2.1.283"}',
+  'packages/floor/managed-settings.d/30-b.txt': '{"requiredMinimumVersion": "2.1.283"}',
+  'packages/floor/.claude/settings.json': '{"deniedModels": ["claude-opus-5-5"]}',
+  'packages/floor2/managed-settings.json': '{"deniedModels": ["claude-opus-5-5"]}',
+  'packages/floor2/managed-settings.d/10-a.json': '{"requiredMinimumVersion": "2.1.283"}',
+  // `statusline-windows-path` reads the project and managed files. The shared file of
+  // `packages/winpath` also gets the report of `settings-committed-helper-command`.
+  'packages/winpath/.claude/settings.json':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath/.claude/settings.local.json':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath/managed-settings.json':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath/managed-settings.d/10-a.json':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath/managed-settings.d/.20-hidden.json':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath/managed-settings.d/30-b.txt':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath/.vscode/settings.json':
+    '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
+  'packages/winpath2/managed-settings.json':
+    '{"statusLine": {"type": "command", "command": "node C:/Users/me/status.mjs"}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -676,6 +755,25 @@ const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
   { name: 'settings-local-location', files: ['**/.claude/settings.local.json'], severity: 'warn' },
   {
     name: 'settings-webfetch-preflight-skip',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  // The rules of the managed and status line layer are `warn`. Two of them read managed files only.
+  {
+    name: 'settings-env-numeric-spelling',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  { name: 'settings-footerlinks-pattern', files: MANAGED_FILES, severity: 'warn' },
+  { name: 'settings-managed-value-form', files: MANAGED_FILES, severity: 'warn' },
+  { name: 'settings-managed-version-floor', files: MANAGED_FILES, severity: 'warn' },
+  {
+    name: 'settings-worktree-sparse-claude-dir',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  {
+    name: 'statusline-windows-path',
     files: [...PROJECT_FILES, ...MANAGED_FILES],
     severity: 'warn',
   },
@@ -840,6 +938,8 @@ const EXPECTED = [
   'packages/ml/.claude/settings.json: claude/settings-model-list@2',
   'packages/ml/.claude/settings.local.json: claude/settings-model-list@2',
   'packages/ml/managed-settings.json: claude/settings-model-list@2',
+  // The `deniedModels` of this file has no floor, for `settings-managed-version-floor`.
+  'packages/ml/managed-settings.json: claude/settings-managed-version-floor@1',
   'packages/ml/managed-settings.d/10-a.json: claude/settings-model-list@2',
   'packages/ml/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `settings-skilloverrides-key` reads the project and managed files, and no other file. A
@@ -929,6 +1029,51 @@ const EXPECTED = [
     'packages/wf/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-webfetch-preflight-skip@1`),
   'packages/wf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-numeric-spelling` reads the project and managed files. `settings-env-value-format`
+  // owns a variable that has a form.
+  ...[
+    'packages/numeric/.claude/settings.json',
+    'packages/numeric/.claude/settings.local.json',
+    'packages/numeric/managed-settings.json',
+    'packages/numeric/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-numeric-spelling@1`),
+  'packages/numeric/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/numeric2/.claude/settings.json: claude/settings-env-value-format@2',
+  // `settings-worktree-sparse-claude-dir` reads the project and managed files. A list with
+  // `.claude` in the other file makes both files silent.
+  ...[
+    'packages/sparse/.claude/settings.json',
+    'packages/sparse/.claude/settings.local.json',
+    'packages/sparse/managed-settings.json',
+    'packages/sparse/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-worktree-sparse-claude-dir@1`),
+  'packages/sparse/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-footerlinks-pattern` reads the managed files. `settings-key-scope` reports the key in
+  // the project file.
+  'packages/footer/managed-settings.json: claude/settings-footerlinks-pattern@1',
+  'packages/footer/managed-settings.d/10-a.json: claude/settings-footerlinks-pattern@1',
+  'packages/footer/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/footer/.claude/settings.json: claude/settings-key-scope@2',
+  // `settings-managed-value-form` reads the managed files.
+  'packages/form/managed-settings.json: claude/settings-managed-value-form@1',
+  'packages/form/managed-settings.d/10-a.json: claude/settings-managed-value-form@1',
+  'packages/form/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-managed-version-floor` reads the managed files. `settings-key-scope` reports the key
+  // in the project file.
+  'packages/floor/managed-settings.json: claude/settings-managed-version-floor@1',
+  'packages/floor/managed-settings.d/10-a.json: claude/settings-managed-version-floor@1',
+  'packages/floor/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/floor/.claude/settings.json: claude/settings-key-scope@2',
+  // `statusline-windows-path` reads the project and managed files.
+  // `settings-committed-helper-command` reports the shared file too.
+  ...[
+    'packages/winpath/.claude/settings.json',
+    'packages/winpath/.claude/settings.local.json',
+    'packages/winpath/managed-settings.json',
+    'packages/winpath/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/statusline-windows-path@1`),
+  'packages/winpath/.claude/settings.json: claude/settings-committed-helper-command@1',
+  'packages/winpath/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `settings-global-only-file` reads the files of `packages/go`, and no other file.
   'packages/go/.claude/keybindings.json: claude/settings-global-only-file@2',
   'packages/go/.claude/themes/dracula.json: claude/settings-global-only-file@2',
