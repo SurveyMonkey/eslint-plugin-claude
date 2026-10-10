@@ -231,6 +231,7 @@ import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts
 import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
+import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
@@ -679,6 +680,7 @@ const modules = [
   pluginSkillDirLayout,
   pluginNoProjectPluginsDir,
   pluginProjectSkillsDirLimits,
+  pluginCommandsDirNonempty,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1039,6 +1041,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-skill-dir-layout': 'error',
   'plugin-no-project-plugins-dir': 'error',
   'plugin-project-skills-dir-limits': 'error',
+  'plugin-commands-dir-nonempty': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
