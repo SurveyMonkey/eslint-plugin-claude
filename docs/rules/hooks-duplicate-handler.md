@@ -46,8 +46,8 @@ maps. It does not read a hooks file that a path names.
 The rule reads the settings files of the plugin folder. It reads those of each folder above it, up to the
 repository root. A project can keep a plugin in a sub folder, as in the plugin guide.[^convert] The rule reads no file
 outside the repository. A file that is not there, that does not parse, or that the rule cannot read gives no
-report. A settings file that sets `disableAllHooks` to `true` runs no hook, so it adds none. The user settings
-and the managed settings are not in the repository, so the rule does not read them.
+report. A settings file that sets `disableAllHooks` to `true` runs no hook, so it adds none. The rule does not read a user settings file or a managed settings
+file.
 
 The rule reads no `hooks.json` that Claude Code does not read, and no `plugin.json` outside `.claude-plugin/`.
 
