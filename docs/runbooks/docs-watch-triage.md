@@ -16,7 +16,8 @@ The docs watch (`.github/workflows/docs-watch.yml`) opens one issue for each cha
 block that an inventory row cites, and that no map heading of a section cites, also gets a
 comment on its group issue. While that issue is open, a finding of the block that names no rule
 opens no issue (see [A tracked-block comment](#a-tracked-block-comment)). Each issue has the
-type `Task` and the `claude-docs-change` label. To list the open docs watch issues, run `gh issue list --label claude-docs-change`. The body starts with a hidden marker:
+type `Task` and the `claude-docs-change` label. To list the open docs watch issues, run
+`gh issue list --label claude-docs-change`. The body starts with a hidden marker:
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. Do not edit the marker. When
 one block has findings of two kinds, the issue has the first kind of this list:
 `rule-removal`, `rule-update`, `needs-triage`, `new-rule`. The Reason line then gives each
