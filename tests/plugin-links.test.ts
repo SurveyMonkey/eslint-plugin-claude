@@ -162,9 +162,9 @@ describe('escapingLinks', () => {
     link(dir, 'sub/deeper/b-far', '../../../../../out')
     link(dir, 'inside', '.claude-plugin')
     expect(escapingLinks(pluginAt(dir))).toEqual([
-      { file: 'a-sibling', real: path.join(top, 'site/shared'), reach: 'marketplace' },
-      { file: 'sub/deeper/b-far', real: path.join(top, 'out'), reach: 'outside' },
-      { file: 'z-far', real: path.join(top, 'out/o.md'), reach: 'outside' },
+      { file: 'a-sibling', reach: 'marketplace', target: 'site/shared' },
+      { file: 'sub/deeper/b-far', reach: 'outside', target: 'out' },
+      { file: 'z-far', reach: 'outside', target: 'out/o.md' },
     ])
   })
 
@@ -174,8 +174,8 @@ describe('escapingLinks', () => {
     link(dir, 'skills/s', '../../q/skills/s')
     link(dir, 'file.md', '../../shared/s.md')
     expect(escapingLinks(pluginAt(dir))).toEqual([
-      { file: 'file.md', real: path.join(top, 'shared/s.md'), reach: 'marketplace' },
-      { file: 'skills/s', real: path.join(top, 'plugins/q/skills/s'), reach: 'marketplace' },
+      { file: 'file.md', reach: 'marketplace', target: 'shared/s.md' },
+      { file: 'skills/s', reach: 'marketplace', target: 'plugins/q/skills/s' },
     ])
   })
 
@@ -188,6 +188,16 @@ describe('escapingLinks', () => {
     link(dir, 'q', '../q')
     link(dir, 'own', 'x.md')
     expect(escapingLinks(pluginAt(dir)).map((l) => [l.file, l.reach])).toEqual([['q', 'outside']])
+  })
+
+  linked('names the repository root as a dot', () => {
+    const top = tree({
+      'site/.claude-plugin/marketplace.json': CATALOG,
+      'site/plugins/p/.claude-plugin/plugin.json': MANIFEST,
+    })
+    const dir = path.join(top, 'site/plugins/p')
+    link(dir, 'root', '../../..')
+    expect(escapingLinks(pluginAt(dir))).toEqual([{ file: 'root', reach: 'outside', target: '.' }])
   })
 
   linked('skips a link with no target, a link out of the repository, and a loop', () => {
