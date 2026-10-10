@@ -1,0 +1,86 @@
+{
+  "url": "https://code.claude.com/docs/en/scheduled-tasks",
+  "hash": "437452e24f1e1ab8008638034f2703f62a98775f84cd22933e44122558c0750f",
+  "blocks": [
+    {
+      "id": "run-prompts-on-a-schedule",
+      "hash": "e44509469705aba45e1b76eb56294d3d2d18353af3464471ffcd223249c021cd"
+    },
+    {
+      "id": "compare-scheduling-options",
+      "hash": "6445e12cc522bb0b033ce24f1de8b4e8e23b3e1809fbbe41d49f3eb797f12830"
+    },
+    {
+      "id": "run-a-prompt-repeatedly-with-loop",
+      "hash": "8f01b2142185b56861d214ce48748b24363d77c2a61ceae2b60e9fb2727989d0"
+    },
+    {
+      "id": "run-on-a-fixed-interval",
+      "hash": "129ae007768cb347ffc3ecee108db9f9bb8015ba226a8a5261d024fcdacb5bd8"
+    },
+    {
+      "id": "let-claude-choose-the-interval",
+      "hash": "d6f75ad34e00f9fa7df31b03ec920bd4c8de6377ba5acb5143cedb0e9d6eb9fb"
+    },
+    {
+      "id": "run-the-built-in-maintenance-prompt",
+      "hash": "27dd272666774584e7e3cca23741ef35dd7eabe906fbf60831bad2e0a77920e7"
+    },
+    {
+      "id": "customize-the-default-prompt-with-loop-md",
+      "hash": "45d7605923d6954d727788526dc45f08b007ca2c3c906a4b7f010e6c4ebc60b4"
+    },
+    {
+      "id": "stop-a-loop",
+      "hash": "2457b8a80e48a95739c93546a5eaa606ca842b4a6004b5eb22a2133a5b9a27e4"
+    },
+    {
+      "id": "set-a-one-time-reminder",
+      "hash": "189670211a5f05a97baab1eba2a8a7a4dd5a128b206b74fa3e609f4639bfcfe8"
+    },
+    {
+      "id": "manage-scheduled-tasks",
+      "hash": "9c1cf5aaf12b9461b0eed754e42f65bb1554020879358211e2c2c48c472ce60a"
+    },
+    {
+      "id": "how-scheduled-tasks-run",
+      "hash": "f78bb794dae6542b14a8efcd6d6d4672d1bc063711f64147a6769386d020595d"
+    },
+    {
+      "id": "jitter",
+      "hash": "45a28ebf6d94dc4050eb5e7ab4e22142f756a58f58ca7e1f93e5d49ad363e0ac"
+    },
+    {
+      "id": "how-late-a-recurring-task-runs",
+      "hash": "de317decafd063cbffaaaf5706b3664d0e0993e0b3ecda041e753e3306db8d73"
+    },
+    {
+      "id": "when-a-one-shot-task-runs-early",
+      "hash": "44d10cd0eb18c35ab5461c9027e681ed04758edf7c26872fd14ed6552e0c65cf"
+    },
+    {
+      "id": "seven-day-expiry",
+      "hash": "8dd1c06a7fb7124d4ff08d8efeff895ae710f31ecf28af10e381262d4f88e09b"
+    },
+    {
+      "id": "cron-expression-reference",
+      "hash": "07d305f3f59fb654c5e72c554296560cd270c0817626ee13e7519db43e7c7bac"
+    },
+    {
+      "id": "disable-scheduled-tasks",
+      "hash": "fe1060aa53073d004377ba947ad6de74104e36dbf2ee78805f2beae68c5e7bb6"
+    },
+    {
+      "id": "limitations",
+      "hash": "3e6121527c1b78f39de71aa2e4cb3e33db73d170cda775ef9a7c30ab7792028e"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Run a prompt repeatedly with /loop",
+      "id": "run-a-prompt-repeatedly-with-loop",
+      "hash": "8f01b2142185b56861d214ce48748b24363d77c2a61ceae2b60e9fb2727989d0",
+      "text": "## Run a prompt repeatedly with /loop\n\nThe `/loop` [bundled skill](/docs/en/commands) is the quickest way to run a prompt on repeat while the session stays open. Both the interval and the prompt are optional, and what you provide determines how the loop behaves.\n\n| What you provide | Example | What happens |\n| :- | :- | :- |\n| Interval and prompt | `/loop 5m check the deploy` | Your prompt runs on a [fixed schedule](#run-on-a-fixed-interval) |\n| Prompt only | `/loop check the deploy` | Your prompt runs at an [interval Claude chooses](#let-claude-choose-the-interval) each iteration |\n| Interval only, or nothing | `/loop` | The [built-in maintenance prompt](#run-the-built-in-maintenance-prompt) runs, or your `loop.md` if one exists |\n\nYou can also pass a skill as the prompt, for example `/loop 20m /review-pr 1234`, to re-run that skill each iteration. A scheduled fire only runs skills that Claude is [allowed to invoke on its own](/docs/en/skills#control-who-invokes-a-skill). The following reach Claude as plain text instead of executing:\n\n* Built-in commands such as `/permissions`, `/model`, or `/clear`\n* Skills marked [`disable-model-invocation: true`](/docs/en/skills#frontmatter-reference), including the bundled `/verify` skill\n* Skills withheld from Claude by a [`skillOverrides`](/docs/en/skills#override-skill-visibility-from-settings) setting or a `Skill` [deny rule](/docs/en/skills#restrict-claude’s-skill-access)\n* [MCP prompts](/docs/en/mcp#use-mcp-prompts-as-commands) such as `/mcp__github__list_prs`"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "ad56e03ba949864cab3346b7d69a896b34a004f1af26f0a7666a9c5bdc44553b",
+  "hash": "1ecadd63b50a0081ce6c59772d843fa62f720066e1773908f87f386871cbceca",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -96,7 +96,7 @@
     },
     {
       "id": "common-input-fields",
-      "hash": "7a0641dab6a9fe405cbd1ec0b173c2a25f9d43e5d812659a31c966244dd5dc46"
+      "hash": "1987741385051ff100d4b7acd4e2dc0eba6e01ad4b28313cd3665ca4aa6a6cda"
     },
     {
       "id": "exit-code-output",
@@ -104,7 +104,7 @@
     },
     {
       "id": "exit-code-0",
-      "hash": "2de9906b192b49f4eb37a40b3f3a71353142f9b2aa675c1be74d3c8c1ae0f0fc"
+      "hash": "9bd747d426e0b256983e46f526ad1c84dad5020321ca5d6fb3e8e3c4fddcd2e6"
     },
     {
       "id": "exit-code-2",
@@ -132,7 +132,7 @@
     },
     {
       "id": "json-output",
-      "hash": "7b2e3ed1c3b78d48c7e430d82b4a228bc335ef317c6a7e762e7946dd69d08668"
+      "hash": "78baa86b335ff7b55ddee0ec0608c1db4e9e00b29dd7f875b5e886537e7b999d"
     },
     {
       "id": "emit-terminal-notifications",
@@ -140,7 +140,7 @@
     },
     {
       "id": "add-context-for-claude",
-      "hash": "3ad6c0a4bde06d5d10f26b529e549227eb2cb49988b231c9701156993cedea77"
+      "hash": "7247c174169e87d40a14ca3e8af8fe8beae4425157a3bd557ecd382dbd108522"
     },
     {
       "id": "decision-control",
@@ -168,7 +168,11 @@
     },
     {
       "id": "persist-environment-variables",
-      "hash": "8b3007d6b0adb35ca8813a3aaeacf004935a0695af9c3048096d194c972ebc69"
+      "hash": "14e8618c3e24535e15e79d7361254f081602947b6b85ca1896dd6baa9c08e09e"
+    },
+    {
+      "id": "persisted-variables-in-powershell-commands",
+      "hash": "873c66a4c313f268946d315b98e90ba6526e0773925ac3c97faf2197aec5fb06"
     },
     {
       "id": "setup",
@@ -292,7 +296,7 @@
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "28f6792385e67de437d8999646911ea565fbe0eb177444b7a240ca90d95b3fe8"
+      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
     },
     {
       "id": "allow-with-updatedinput",
@@ -300,7 +304,7 @@
     },
     {
       "id": "defer-a-tool-call-for-later",
-      "hash": "526c2ae7fbcf06ea07ea6cfdbddba01f4a63945df35c70de5ceff583c9fac860"
+      "hash": "dc87410f68626813d23473aefe0b9657b4f84a0c2a03c49bed66b22ef38c39af"
     },
     {
       "id": "permissionrequest",
@@ -636,7 +640,7 @@
     },
     {
       "id": "how-async-hooks-execute",
-      "hash": "fef31d465cac6072a8dc5a4899c34e07184cf6c36b58855f47adb2bb99e5885e"
+      "hash": "5558cece94a9f61ddd90a91aa20320858ecf5fad3adfe8a0bb0668290fd4fcea"
     },
     {
       "id": "run-tests-after-file-changes",
@@ -668,7 +672,7 @@
     },
     {
       "id": "debug-hooks",
-      "hash": "d2878ac723ae3d867e78c60ed73a3acc8ecb49a27d0b95495071e3c9f124650f"
+      "hash": "1447eaf4a2010e99afca2a527e40a3d52a85fe3cf346d30385c7f12a85c1f06d"
     }
   ],
   "sources": [

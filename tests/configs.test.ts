@@ -215,6 +215,27 @@ const TREE: Record<string, string> = {
     '---\ndescription: d\nallowed-tools: Bash(npm *)\n---\n\n!`npm test`\n',
   'packages/ir/.claude/commands/cbad.md': '---\ndescription: d\n---\n\n!`npm test`\n',
   'packages/ir/notes.md': '!`npm test`\n',
+  // The `off` skill rules of #50, layer 4. A skill that Claude can invoke and has a side effect, and
+  // the same skill with `disable-model-invocation: true`.
+  'packages/se/.claude/skills/push/SKILL.md':
+    '---\ndescription: d\nallowed-tools: Bash(git push *)\n---\n',
+  'packages/se/.claude/skills/push-ok/SKILL.md':
+    '---\ndescription: d\ndisable-model-invocation: true\nallowed-tools: Bash(git push *)\n---\n',
+  'packages/se/.claude/commands/cpush.md': '---\ndescription: d\n---\n\n!`git push`\n',
+  'packages/se/notes.md': '!`git push`\n',
+  // A `model` other than `inherit`, and `inherit`.
+  'packages/mo/.claude/skills/opus/SKILL.md': '---\ndescription: d\nmodel: opus\n---\n',
+  'packages/mo/.claude/skills/inherit/SKILL.md': '---\ndescription: d\nmodel: inherit\n---\n',
+  'packages/mo/.claude/commands/cmodel.md': '---\ndescription: d\nmodel: opus\n---\n',
+  'packages/mo/notes.md': '---\nmodel: opus\n---\n',
+  // A `loop.md` that starts with a skill that only the user can invoke, and one that starts with a
+  // skill that Claude can invoke. A file of that name elsewhere is not read.
+  'packages/lr/.claude/loop.md': '/deploy now\n',
+  'packages/lr/.claude/skills/deploy/SKILL.md':
+    '---\ndescription: d\ndisable-model-invocation: true\n---\n',
+  'packages/lq/.claude/loop.md': '/check now\n',
+  'packages/lq/.claude/skills/check/SKILL.md': '---\ndescription: d\n---\n',
+  'packages/lr/notes/loop.md': '/deploy now\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
@@ -812,11 +833,13 @@ const EXPECTED = [
   '.claude/skills/escape/SKILL.md: claude/skill-argument-escape@1',
   '.claude/skills/long/SKILL.md: claude/skill-max-lines@1',
   'plugins/q/SKILL.md: claude/skill-plugin-root-name@1',
-  // The command files of the `off` skill rules of layer 3 are legacy files.
+  // The command files of the `off` skill rules of layers 3 and 4 are legacy files.
   'packages/bt/.claude/commands/cbig.md: claude/command-legacy-format@1',
   'packages/ir/.claude/commands/cbad.md: claude/command-legacy-format@1',
   'packages/ld/.claude/commands/cprice.md: claude/command-legacy-format@1',
+  'packages/mo/.claude/commands/cmodel.md: claude/command-legacy-format@1',
   'packages/pw/commands/cbad.md: claude/command-legacy-format@1',
+  'packages/se/.claude/commands/cpush.md: claude/command-legacy-format@1',
 ].sort()
 
 // The reports of the `off` skill rules. They appear in `strict` only, at `warn`. Each of the six
@@ -832,6 +855,11 @@ const STRICT_ONLY = [
   'packages/pw/skills/bad/SKILL.md: claude/skill-plugin-path-vars@1',
   'packages/ir/.claude/skills/bad/SKILL.md: claude/skill-inject-robustness@1',
   'packages/ir/.claude/commands/cbad.md: claude/skill-inject-robustness@1',
+  'packages/se/.claude/skills/push/SKILL.md: claude/skill-side-effects-manual-only@1',
+  'packages/se/.claude/commands/cpush.md: claude/skill-side-effects-manual-only@1',
+  'packages/mo/.claude/skills/opus/SKILL.md: claude/skill-model-override@1',
+  'packages/mo/.claude/commands/cmodel.md: claude/skill-model-override@1',
+  'packages/lr/.claude/loop.md: claude/skill-loop-reference-invocable@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -894,16 +922,24 @@ const PLUGIN_SKILL_RULES = [
   'skill-shell-platform',
 ]
 
-// The `off` skill rules of #50, layer 3, in the order of the `modules` list. `strict` turns each
-// on at `warn`. `skill-plugin-path-vars` reads a `SKILL.md` only.
+// The `off` skill rules of #50, layers 3 and 4, in the order of the `modules` list. `strict` turns
+// each on at `warn`. Each reads a `SKILL.md` and the command files, except the two that
+// `OFF_FILES` names.
 const SKILL_OFF_RULES = [
   'skill-body-token-budget',
   'skill-inject-robustness',
   'skill-listing-budget',
   'skill-literal-dollar',
+  'skill-loop-reference-invocable',
+  'skill-model-override',
   'skill-plugin-path-vars',
+  'skill-precedence-shadowing',
+  'skill-side-effects-manual-only',
 ]
-const PATH_VARS_RULE = 'skill-plugin-path-vars'
+const OFF_FILES: Record<string, string[]> = {
+  'skill-loop-reference-invocable': ['**/.claude/loop.md'],
+  'skill-plugin-path-vars': ['**/SKILL.md'],
+}
 
 let root = ''
 
@@ -1048,10 +1084,7 @@ describe('configs', () => {
       expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
-        [
-          'markdown/gfm',
-          rule === PATH_VARS_RULE ? ['**/SKILL.md'] : ['**/SKILL.md', '**/commands/**/*.md'],
-        ],
+        ['markdown/gfm', OFF_FILES[rule] ?? ['**/SKILL.md', '**/commands/**/*.md']],
       ])
     }
   })
@@ -1195,4 +1228,57 @@ describe('configs', () => {
       rmSync(dir, { recursive: true, force: true })
     }
   })
+
+  it('reports the precedence rule on the project folder once an option names a skill', async () => {
+    const skill = '---\ndescription: d\n---\n'
+    const files: Record<string, string> = {
+      '.claude/skills/deploy/SKILL.md': skill,
+      '.claude/skills/other/SKILL.md': skill,
+      '.claude/commands/ship.md': skill,
+      'packages/web/.claude/skills/deploy/SKILL.md': skill,
+      'plugins/p/.claude-plugin/plugin.json': '{"name": "p"}',
+      'plugins/p/skills/deploy/SKILL.md': skill,
+      'notes/deploy.md': skill,
+    }
+    // The option goes into the shipped `strict` block, so the rule keeps its own `files`.
+    const rule = 'claude/skill-precedence-shadowing'
+    const dir = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
+    try {
+      // The project folder is the `.claude/` folder in the root of the repository.
+      mkdirSync(path.join(dir, '.git'))
+      for (const [file, content] of Object.entries(files)) {
+        mkdirSync(path.dirname(path.join(dir, file)), { recursive: true })
+        writeFileSync(path.join(dir, file), content)
+      }
+      const eslint = new ESLint({
+        cwd: dir,
+        overrideConfigFile: true,
+        overrideConfig: plugin.configs.strict.map((block): Linter.Config => {
+          const level = block.rules?.[rule]
+          return level === undefined
+            ? block
+            : {
+                ...block,
+                rules: {
+                  [rule]: [level as Linter.RuleSeverity, { personalNames: ['deploy', 'ship'] }],
+                },
+              }
+        }),
+      })
+      const results = await eslint.lintFiles(['.'])
+      const found = results
+        .flatMap((r) =>
+          r.messages
+            .filter((m) => m.ruleId === rule)
+            .map((m) => `${path.relative(dir, r.filePath).split(path.sep).join('/')}: ${m.ruleId}`),
+        )
+        .sort()
+      expect(found).toEqual([
+        `.claude/commands/ship.md: ${rule}`,
+        `.claude/skills/deploy/SKILL.md: ${rule}`,
+      ])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  }, 30_000)
 })

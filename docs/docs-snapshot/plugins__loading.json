@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/loading",
-  "hash": "5f2c61daf0df22624ca9977d86a73873e2afac685c389fd0c3e9213fd1cc950f",
+  "hash": "265af07d8c1eb2ac82c4893cffe852d4b03ff2aefcbcab8ce824678d789c65a4",
   "blocks": [
     {
       "id": "plugin-loading-reference",
@@ -113,6 +113,10 @@
     {
       "id": "name-conflicts",
       "hash": "975ff0be4bbc70b185ec1ceb208aa5a5b3116036f1b72b0ce590302a97b6a20a"
+    },
+    {
+      "id": "hooks-when-two-enabled-plugins-share-a-name",
+      "hash": "3e932e32fb9986dfcb31043772a68529d3c5f514a56e46e107746f26fd96b1e8"
     },
     {
       "id": "keep-a-session-only-plugin-from-loading",

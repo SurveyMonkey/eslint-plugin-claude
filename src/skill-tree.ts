@@ -215,17 +215,43 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
  *  a folder that the rule cannot read. It is empty for a `dir` that the rule
  *  cannot list. The caller then compares no name that it cannot read. */
 export function skillFiles(dir: string, bound: string): string[] {
+  return skillScan(dir, bound).files
+}
+
+/** The same files as `skillFiles`, and `skipped`. It is true when the scan leaves out a skill
+ *  that it cannot see: `dir` is a link to nothing or the rule cannot list it, an entry of `dir` is
+ *  a link to nothing, a `SKILL.md` is a link to nothing or a link out of `bound`, or the rule
+ *  cannot resolve a `SKILL.md`. A folder with no `SKILL.md`, and a link to a folder or a file
+ *  that holds no skill, set nothing. */
+export function skillScan(dir: string, bound: string): { files: string[]; skipped: boolean } {
   const entries = entriesOf(dir)
   if (!Array.isArray(entries)) {
-    return []
+    // A link to nothing can lead anywhere, so a skill can be behind it.
+    const hidden =
+      entries === UNREADABLE || (realOf(dir) === null && danglingOf(dir) === UNREADABLE)
+    return { files: [], skipped: hidden }
   }
-  return entries
+  let skipped = false
+  const files = entries
     .sort((a, b) => a.name.localeCompare(b.name, 'en'))
-    .map((entry) => path.join(dir, entry.name, 'SKILL.md'))
-    .filter((file) => {
+    .map((entry) => ({ entry, file: path.join(dir, entry.name, 'SKILL.md') }))
+    .filter(({ entry, file }) => {
       const real = realOf(file)
-      return typeof real === 'string' && isInside(real, bound)
+      if (typeof real === 'string' && isInside(real, bound)) {
+        return true
+      }
+      // A folder with no `SKILL.md` is not a skill. A dead link, or a link out of the bound, is
+      // a skill that the rule cannot see.
+      if (real === null) {
+        // The entry is a link to nothing, or the `SKILL.md` is.
+        skipped ||= realOf(path.join(dir, entry.name)) === null || danglingOf(file) === UNREADABLE
+      } else {
+        skipped = true
+      }
+      return false
     })
+    .map(({ file }) => file)
+  return { files, skipped }
 }
 
 // The fields of each file that was read, by path. An entry is current while

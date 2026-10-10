@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permissions",
-  "hash": "5968a6bf06e691b55d1e94498bf80b462376bd736f09780dec3f89ac18ed2b9c",
+  "hash": "cd4e5f5e0a87bd6a9bd64e469d9271e796143ebd9caf3e6e009c5c9c7317a71f",
   "blocks": [
     {
       "id": "configure-permissions",
@@ -8,7 +8,7 @@
     },
     {
       "id": "permission-system",
-      "hash": "0fc0d0ea10bba4c46221ce69b4eb0167dae682a53c479815d243fe5fc9a24e32"
+      "hash": "8a98bb9140eaee477296078cbfb34058d07b628240bdabbc1c6dcd62ea72984a"
     },
     {
       "id": "add-a-comment-when-you-answer-a-permission-prompt",
@@ -20,7 +20,7 @@
     },
     {
       "id": "permission-modes",
-      "hash": "c128332c5f5a60d534f16760c6f9286cbe5035e7d1767607ef835df12a1efee0"
+      "hash": "8ad6af7fed7a79909788a967a3b7e593f2761cbe9771895a5a689baceec9d9d8"
     },
     {
       "id": "permission-rule-syntax",
@@ -52,7 +52,7 @@
     },
     {
       "id": "bash",
-      "hash": "d6016876125730d1b139c6fea4fa21ca04aec6bd1a9a62ad18c1173d4c84581e"
+      "hash": "aa665e0f6c866ed55ca6c6bd886ac58e48e34e0ffbc1308246d523577f9eb436"
     },
     {
       "id": "compound-commands",
@@ -60,7 +60,11 @@
     },
     {
       "id": "process-wrappers",
-      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+      "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
+    },
+    {
+      "id": "exec-wrappers-and-find-actions",
+      "hash": "fddc5345565ac62850bb5f1640d21477355eae1d2d9ccc419464ecdce5f722c1"
     },
     {
       "id": "bash-rule-limits",
@@ -68,7 +72,7 @@
     },
     {
       "id": "read-only-commands",
-      "hash": "850a8e2c36842d570d74195b1886fae6e0c0d036fed299c351466f9fac025563"
+      "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e"
     },
     {
       "id": "redirections",
@@ -99,6 +103,10 @@
       "hash": "7a1d71b9c4320662fbe5432e9485047aadc07f5426dd186df63ea6b5274c6aab"
     },
     {
+      "id": "network-paths",
+      "hash": "de2a13a553f7be02a0890738ba5686c276069f95d41ea65ff907c1c9320aa318"
+    },
+    {
       "id": "webfetch",
       "hash": "34f315d4eb30dc7b6e7149d6a1a850903297476471a752edfa885ac250b0d999"
     },
@@ -120,11 +128,11 @@
     },
     {
       "id": "extend-permissions-with-hooks",
-      "hash": "96e6697e6633c398a95990444a67053b034a417f9750e6923e0b5cf8f0bee22f"
+      "hash": "3e73b379d7be863acbd4a94a9c92fae0179aa61966394d0b588640e039a6a15f"
     },
     {
       "id": "working-directories",
-      "hash": "28cc8b8f5de30899574d4004f4388f8f15874e1104d7b96cb134608d540d43f4"
+      "hash": "a5eef13704984e6b63821950c6d4c00ab4f066d9dadb0f3bce59e59aee313dd2"
     },
     {
       "id": "move-the-session-to-another-directory",
@@ -231,8 +239,8 @@
     {
       "heading": "Read-only commands",
       "id": "read-only-commands",
-      "hash": "850a8e2c36842d570d74195b1886fae6e0c0d036fed299c351466f9fac025563",
-      "text": "#### Read-only commands\n\nClaude Code recognizes a built-in set of Bash commands as read-only and runs them without a permission prompt in every mode, except as [`permissions.blockReadsOutsideWorkingDirectories`](/docs/en/settings-reference#permissions-blockreadsoutsideworkingdirectories) changes for paths outside your working directories. The set includes `ls`, `cat`, `echo`, `pwd`, `head`, `tail`, `grep`, `find`, `wc`, `which`, `diff`, `stat`, `du`, `cd`, and read-only forms of `git`. The set is not configurable; to require a prompt for one of these commands, add an `ask` or `deny` rule for it. In auto mode, these commands can also wait for the classifier's review; see [how the classifier evaluates actions](/docs/en/permission-modes#how-the-classifier-evaluates-actions).\n\nA redirect such as `ls > out.txt` adds a check on the target. See [Redirections](#redirections).\n\nUnquoted glob patterns are permitted for commands whose every flag is read-only, so `ls *.ts` and `wc -l src/*.py` run without a prompt.\n\nIn Manual mode, commands from this set still prompt in these cases:\n\n* **Unquoted globs for commands with write-capable flags**: commands with write-capable or exec-capable flags, such as `find`, `sort`, `sed`, and `git`, prompt when an unquoted glob is present, because the glob could expand to a flag like `-delete`.\n* **`docker` pointed at another daemon**: read-only forms of `docker` prompt when the command carries a flag that selects a different daemon, such as `-H`, `--context`, or Podman's `--url` and `--connection`.\n* **`file` with path-opening flags**: `file` prompts when it passes `-m`/`--magic-file` or `-f`/`--files-from`, because those flags make `file` open the paths named in the flag's value.\n* **Network paths on Windows**: a command whose arguments include a network (UNC) path, such as `\\\\server\\share\\file`, prompts because accessing a network path can send your Windows credentials to the host it names. The same check applies to [PowerShell tool](/docs/en/tools-reference#powershell-tool) commands.\n* **Writes to special shell variables**: a command that sets, unsets, or loops over certain special shell variables, such as `PATH` or `IFS`, prompts even when the rest of the command is read-only.\n* **Commands the analysis can't parse**: when Claude Code can't fully parse a command, it asks for approval instead of treating the command as read-only. Commands longer than 10,000 characters always prompt because they exceed what the analysis parses.\n\nA `cd` into a path inside your working directory or an [additional directory](#working-directories) is also read-only, and a compound command like `cd packages/api && ls` runs without a prompt when each part qualifies on its own. These combinations prompt even when each part is read-only:\n\n* **`cd` with `git`**: prompts when the `cd` changes into a different directory, since running `git` in a new directory can execute that directory's hooks. A `cd` whose target resolves to the current working directory is a no-op and doesn't trigger the prompt.\n* **`cd` with a redirect**: prompts when Claude Code can't determine which directory the redirect target resolves against after the `cd` runs. A command whose only redirect target is `/dev/null`, such as `cd app; grep -r pattern . 2>/dev/null`, doesn't prompt, because `/dev/null` doesn't depend on the working directory.\n\n<Warning>\n  Bash permission patterns that try to constrain command arguments are fragile. For example, `Bash(curl http://github.com/ *)` intends to restrict curl to GitHub URLs, but won't match variations like:\n\n  * Options before URL: `curl -X GET http://github.com/...`\n  * Different protocol: `curl https://github.com/...`\n  * Redirects: `curl -L http://short.example.com/xyz`, which redirects to GitHub\n  * Variables: `URL=http://github.com && curl $URL`\n\n  For more reliable URL filtering, consider:\n\n  * **Restrict Bash network tools**: use deny rules to stop `curl`, `wget`, and similar commands, then use the WebFetch tool with `WebFetch(domain:github.com)` permission for allowed domains. A deny rule doesn't match the same program by path or inside `sh -c`, so pair it with the [sandbox network allowlist](/docs/en/sandboxing#network-isolation) when the restriction must hold; see [what a Bash rule doesn't match](#bash-rule-limits)\n  * **Use PreToolUse hooks**: implement a hook that validates URLs in Bash commands and blocks disallowed domains\n  * **Add CLAUDE.md guidance**: describe your allowed curl patterns in `CLAUDE.md`. This shapes what Claude tries but doesn't enforce a boundary, so pair it with one of the options above\n\n  Note that using WebFetch alone doesn't prevent network access. If Bash is allowed, Claude can still use `curl`, `wget`, or other tools to reach any URL.\n</Warning>"
+      "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e",
+      "text": "#### Read-only commands\n\nClaude Code recognizes a built-in set of Bash commands as read-only and runs them without a permission prompt in every mode, except as [`permissions.blockReadsOutsideWorkingDirectories`](/docs/en/settings-reference#permissions-blockreadsoutsideworkingdirectories) changes for paths outside your working directories. The set includes `ls`, `cat`, `echo`, `pwd`, `head`, `tail`, `grep`, `find`, `wc`, `which`, `diff`, `stat`, `du`, `cd`, and read-only forms of `git`. The set is not configurable; to require a prompt for one of these commands, add an `ask` or `deny` rule for it. In auto mode, these commands can also wait for the classifier's review; see [how the classifier evaluates actions](/docs/en/permission-modes#how-the-classifier-evaluates-actions).\n\nA redirect such as `ls > out.txt` adds a check on the target. See [Redirections](#redirections).\n\nUnquoted glob patterns are permitted for commands whose every flag is read-only, so `ls *.ts` and `wc -l src/*.py` run without a prompt.\n\nIn Manual mode, commands from this set still prompt in these cases:\n\n* **Unquoted globs for commands with write-capable flags**: commands with write-capable or exec-capable flags, such as `find`, `sort`, `sed`, and `git`, prompt when an unquoted glob is present, because the glob could expand to a flag like `-delete`.\n* **`docker` pointed at another daemon**: read-only forms of `docker` prompt when the command carries a flag that selects a different daemon, such as `-H`, `--context`, or Podman's `--url` and `--connection`.\n* **`file` with path-opening flags**: `file` prompts when it passes `-m`/`--magic-file` or `-f`/`--files-from`, because those flags make `file` open the paths named in the flag's value.\n* **`ps` that could print environment variables**: `ps` prompts when one of its arguments could act as the `e` option, such as in `ps auxe` or `ps aux -e`, because that option prints process environment variables. `ps aux` and `ps -ef` run without a prompt. The check on dashed forms such as `ps aux -e` requires Claude Code v2.1.290 or later.\n* **Network paths on Windows**: a command whose arguments include a network (UNC) path, such as `\\\\server\\share\\file`, prompts because accessing a network path can send your Windows credentials to the host it names. The same check applies to [PowerShell tool](/docs/en/tools-reference#powershell-tool) commands.\n* **Writes to special shell variables**: a command that sets, unsets, or loops over certain special shell variables, such as `PATH` or `IFS`, prompts even when the rest of the command is read-only.\n* **Commands the analysis can't parse**: when Claude Code can't fully parse a command, it asks for approval instead of treating the command as read-only. Commands longer than 10,000 characters always prompt because they exceed what the analysis parses.\n\nA `cd` into a path inside your working directory or an [additional directory](#working-directories) is also read-only, and a compound command like `cd packages/api && ls` runs without a prompt when each part qualifies on its own. These combinations prompt even when each part is read-only:\n\n* **`cd` with `git`**: prompts when the `cd` changes into a different directory, since running `git` in a new directory can execute that directory's hooks. A `cd` whose target resolves to the current working directory is a no-op and doesn't trigger the prompt.\n* **`cd` with a redirect**: prompts when Claude Code can't determine which directory the redirect target resolves against after the `cd` runs. A command whose only redirect target is `/dev/null`, such as `cd app; grep -r pattern . 2>/dev/null`, doesn't prompt, because `/dev/null` doesn't depend on the working directory.\n\n<Warning>\n  Bash permission patterns that try to constrain command arguments are fragile. For example, `Bash(curl http://github.com/ *)` intends to restrict curl to GitHub URLs, but won't match variations like:\n\n  * Options before URL: `curl -X GET http://github.com/...`\n  * Different protocol: `curl https://github.com/...`\n  * Redirects: `curl -L http://short.example.com/xyz`, which redirects to GitHub\n  * Variables: `URL=http://github.com && curl $URL`\n\n  For more reliable URL filtering, consider:\n\n  * **Restrict Bash network tools**: use deny rules to stop `curl`, `wget`, and similar commands, then use the WebFetch tool with `WebFetch(domain:github.com)` permission for allowed domains. A deny rule doesn't match the same program by path or inside `sh -c`, so pair it with the [sandbox network allowlist](/docs/en/sandboxing#network-isolation) when the restriction must hold; see [what a Bash rule doesn't match](#bash-rule-limits)\n  * **Use PreToolUse hooks**: implement a hook that validates URLs in Bash commands and blocks disallowed domains\n  * **Add CLAUDE.md guidance**: describe your allowed curl patterns in `CLAUDE.md`. This shapes what Claude tries but doesn't enforce a boundary, so pair it with one of the options above\n\n  Note that using WebFetch alone doesn't prevent network access. If Bash is allowed, Claude can still use `curl`, `wget`, or other tools to reach any URL.\n</Warning>"
     }
   ]
 }
