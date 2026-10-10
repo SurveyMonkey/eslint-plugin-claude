@@ -128,3 +128,15 @@ export const REMOVED_MATCHER_VALUES: ReadonlyMap<string, readonly string[]> = ne
 /** The events whose matcher is a list of exact values with `|` as the one separator. Every other
  *  event with matcher support also accepts `,`, a space and `-`. */
 export const NARROW_MATCHER_EVENTS: readonly string[] = ['FileChanged', 'StopFailure']
+
+// The events that set `CLAUDE_ENV_FILE`. Source: the hooks reference, "Persist environment
+// variables" (https://code.claude.com/docs/en/hooks#persist-environment-variables), checked on
+// 2026-10-10. Other hook types do not have the variable. Review this section on or before 2027-04-10.
+
+/** The events whose hooks get the `CLAUDE_ENV_FILE` environment variable. */
+export const ENV_FILE_EVENTS: readonly string[] = [
+  'SessionStart',
+  'Setup',
+  'CwdChanged',
+  'FileChanged',
+]
