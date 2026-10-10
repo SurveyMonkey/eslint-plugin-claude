@@ -213,6 +213,12 @@
   ],
   "sources": [
     {
+      "heading": "Set a default model for new sessions",
+      "id": "set-a-default-model-for-new-sessions",
+      "hash": "308c734d7738bd2e9d4054889f2891eff8c7256da5b13fd8b466d008a69e5d51",
+      "text": "#### Set a default model for new sessions\n\nSet `ANTHROPIC_DEFAULT_MODEL=<alias|name>` to choose the model your sessions start on by default. Requires Claude Code v2.1.236 or later.\n\nClaude Code starts a new session on the variable's model only when none of these selects a model:\n\n* The `--model` flag\n* `ANTHROPIC_MODEL`\n* A `model` value in any settings file, including the choice you save with `/model`\n* An [organization default model](#organization-default-model)\n\nA choice you save with `/model` takes precedence over the variable on later launches too. With `ANTHROPIC_MODEL` set instead, Claude Code returns to that variable's model on the next launch, whatever you saved with `/model`.\n\nClaude Code also resolves the Default option to the variable's model, unless an organization default model applies. When the Default option resolves to the variable's model, the Default row in the `/model` picker shows the label Set by ANTHROPIC\\_DEFAULT\\_MODEL.\n\nClaude Code ignores the variable in these cases, and the Default option resolves as if you hadn't set it:\n\n* You set it to `default`, `inherit`, `opusplan`, or `haiku`\n* [`enforceAvailableModels`](#enforce-the-allowlist-for-the-default-model) is on\n* Your organization's [model restrictions](#restrict-model-selection) exclude the model\n* The model isn't available to your account\n\nWhen a new session would start on the variable's model, a session you resume with `claude --resume`, `--continue`, or the `/resume` picker starts on it too. Claude Code doesn't restore the model saved in that session's transcript. Otherwise Claude Code doesn't use the variable when you [resume a session](#setting-your-model)."
+    },
+    {
       "heading": "Adjust effort level",
       "id": "adjust-effort-level",
       "hash": "536ea2c27d79d7674f3737c6de82d2c371ed3153675fd39029bd7d326ea68f85",

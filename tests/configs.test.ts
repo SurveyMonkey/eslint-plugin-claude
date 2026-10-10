@@ -403,6 +403,17 @@ const TREE: Record<string, string> = {
   'packages/so/managed-settings.d/30-b.txt': '{"skillOverrides": {"a:b": "off"}}',
   'packages/so/managed-settings.d/sub/40-c.json': '{"skillOverrides": {"a:b": "off"}}',
   'packages/so/.vscode/settings.json': '{"skillOverrides": {"a:b": "off"}}',
+  // `settings-env-shadowed`: a voided variable in each file that it reads. A hidden drop-in is for
+  // `settings-managed-file`. The same content where no rule reads it.
+  'packages/es/.claude/settings.json':
+    '{"bashOutputMaxChars": 5000, "env": {"BASH_MAX_OUTPUT_LENGTH": "1000"}}',
+  'packages/es/.claude/settings.local.json': '{"env": {"ANTHROPIC_DEFAULT_MODEL": "haiku"}}',
+  'packages/es/managed-settings.json': '{"env": {"CLAUDE_CODE_SUBAGENT_MODEL": "inherit"}}',
+  'packages/es/managed-settings.d/10-a.json': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/managed-settings.d/.20-hidden.json': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -480,6 +491,7 @@ const SCOPE_RULES = [
   { name: 'settings-model-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -637,6 +649,12 @@ const EXPECTED = [
   'packages/so/.claude/settings.local.json: claude/settings-skilloverrides-key@2',
   'packages/so/managed-settings.json: claude/settings-skilloverrides-key@2',
   'packages/so/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-shadowed` reads the project and managed files, and no other file.
+  'packages/es/.claude/settings.json: claude/settings-env-shadowed@2',
+  'packages/es/.claude/settings.local.json: claude/settings-env-shadowed@2',
+  'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
+  'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
+  'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

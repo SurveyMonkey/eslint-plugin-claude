@@ -49,6 +49,7 @@ import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
+import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
@@ -173,6 +174,7 @@ const modules = [
   settingsModelValue,
   settingsModelList,
   settingsSkilloverridesKey,
+  settingsEnvShadowed,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -280,6 +282,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-value': 'error',
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
+  'settings-env-shadowed': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

@@ -1018,6 +1018,33 @@
       "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     }
   ],
+  "settings-env-shadowed": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "bashOutputMaxChars",
+      "hash": "1d64ca622d3b5414fc902f0bc57c8fcda5b90b18cc917436efeef9bf311bb7c2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Set a default model for new sessions",
+      "hash": "308c734d7738bd2e9d4054889f2891eff8c7256da5b13fd8b466d008a69e5d51"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose a model",
+      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Run every subagent on one model",
+      "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "How env values interact with your shell",
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+    }
+  ],
   "settings-env-value-format": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
