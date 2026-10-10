@@ -1,8 +1,8 @@
 // A hook that references a path placeholder runs better in exec form (docs/rules/hooks-prefer-exec-form.md).
-// With `args`, each element is one argument with no quotes, and a path with a space needs no care. The
-// hooks reference also says to omit `args` when the hook needs shell features, so the rule reads a
-// line with none: no pipe, redirect, list, group, glob, other variable or assignment. A PowerShell
-// hook is out of scope, because exec form there needs the shell as the executable.
+// With `args`, each element is one argument with no quotes, and a path with a space needs no care.
+// The hooks reference also says to omit `args` when the hook needs shell features. So the rule reads
+// a line with none: no pipe, redirect, list, group, glob, other variable or assignment.
+// A PowerShell hook is out of scope, and so is a bare `$NAME` (`hooks-placeholder-quoted` reads it).
 // `hooks-placeholder-quoted` reports a placeholder outside quotes in shell form.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
@@ -19,8 +19,9 @@ import { isAssignment } from '../shell-words.ts'
 const name = 'hooks-prefer-exec-form' as const
 
 const PLACEHOLDER = new RegExp(`\\$\\{(?:${PATH_VARIABLES.join('|')})\\}`, 'g')
-/** A character of a shell feature. A `$` left after the placeholders is another variable. */
-const SHELL_FEATURE = /[<>&|;()`*?$\n]/
+/** A character of a shell feature. A `$` left after the placeholders is another variable. `~`, `{`,
+ *  `[`, `#` and `!` change meaning in exec form. */
+const SHELL_FEATURE = /[<>&|;()`*?$~{}[#!\n]/
 
 const rule: Rule.RuleModule = {
   meta: {

@@ -89,12 +89,21 @@ describe(`${name}: the silent cases`, () => {
       `echo \`cat ${P}/a\``,
       `${P}/a.sh\n${P}/b.sh`,
       `(${P}/a.sh)`,
+      `${P}/t[12].sh`,
+      `${P}/{a,b}.sh`,
+      `~/bin/tool ${P}/f`,
+      `${P}/a.sh # note`,
+      `${P}/a.sh !x`,
     ]) {
       expect(run(text), text).toEqual([])
     }
   })
 
-  it('is silent for a PowerShell hook, where exec form needs the shell as the executable', () => {
+  it('skips leading space before it reads an assignment', () => {
+    expect(run(`  FOO=1 ${P}/a.sh`)).toEqual([])
+  })
+
+  it('is silent for a PowerShell hook, which this rule leaves to its author', () => {
     expect(run(`& "${P}\\a.ps1"`, { shell: 'powershell' })).toEqual([])
   })
 
