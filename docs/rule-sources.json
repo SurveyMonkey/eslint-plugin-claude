@@ -699,6 +699,13 @@
       "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56"
     }
   ],
+  "permissions-allow-dir-depth": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    }
+  ],
   "permissions-allow-unrestricted": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -872,6 +879,13 @@
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Available modes",
       "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1"
+    }
+  ],
+  "permissions-cd-allowlist": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
     }
   ],
   "permissions-dead-allow": [
@@ -1059,6 +1073,13 @@
       "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
     }
   ],
+  "permissions-glob-grep-allow": [
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Glob tool behavior",
+      "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429"
+    }
+  ],
   "permissions-invalid-path-pattern": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -1069,6 +1090,18 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Cd",
       "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    }
+  ],
+  "permissions-legacy-tool-name": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
     }
   ],
   "permissions-mcp-rule-parens": [
@@ -1164,6 +1197,13 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.filesystem.allowWrite",
       "hash": "31627177301f27c16c26b011c39a773965443bdfb8c0eeb9c65dba34c8e7c434"
+    }
+  ],
+  "permissions-read-deny-notebook": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
     }
   ],
   "permissions-rule-syntax": [
@@ -1335,6 +1375,13 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "permissions-webfetch-apex": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "WebFetch",
+      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
+    }
+  ],
   "permissions-webfetch-domain-syntax": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -1350,6 +1397,18 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Configure tools with permission rules and hooks",
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    }
+  ],
+  "permissions-webfetch-mid-wildcard": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "WebFetch",
+      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Network isolation",
+      "hash": "b5d83df90c4e3c59646ae1fe5650a830bd4f82acbd4e1cf3106530573218ef54"
     }
   ],
   "permissions-windows-path": [

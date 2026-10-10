@@ -715,6 +715,23 @@ const TREE: Record<string, string> = {
   ...settingsFiles('wdt', { permissions: { deny: ['mcp__*'] } }),
   // `permissions-auto-mode-dropped-allow`: an allow rule for the Agent tool.
   ...settingsFiles('wad', { permissions: { allow: ['Agent'] } }),
+  // `permissions-allow-dir-depth`: an allow rule for a one-directory pattern.
+  ...settingsFiles('wdd', { permissions: { allow: ['Edit(src/**)'] } }),
+  // `permissions-cd-allowlist`: a Cd allow rule.
+  ...settingsFiles('wca', { permissions: { allow: ['Cd(~/code/**)'] } }),
+  // `permissions-glob-grep-allow`: a bare Glob allow rule.
+  ...settingsFiles('wga', { permissions: { allow: ['Glob'] } }),
+  // `permissions-legacy-tool-name`: the old name of the Agent tool.
+  ...settingsFiles('wlt', { permissions: { deny: ['Task(Explore)'] } }),
+  // `permissions-read-deny-notebook`: a Read deny rule with no Edit deny rule.
+  ...settingsFiles('wrn', { permissions: { deny: ['Read(./secrets/**)'] } }),
+  // `permissions-webfetch-apex`: a wildcard subdomain rule with no apex rule.
+  ...settingsFiles('wwa', { permissions: { allow: ['WebFetch(domain:*.example.com)'] } }),
+  // `permissions-webfetch-mid-wildcard`: a trailing wildcard with the sandbox on.
+  ...settingsFiles('wwm', {
+    permissions: { allow: ['WebFetch(domain:example.*)'] },
+    sandbox: { enabled: true },
+  }),
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -859,6 +876,13 @@ const WARN_RULES = [
   { name: 'permissions-default-mode-surface', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-deny-all-tools', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-duplicate-rule', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-allow-dir-depth', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-cd-allowlist', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-glob-grep-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-legacy-tool-name', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-read-deny-notebook', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-webfetch-apex', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-webfetch-mid-wildcard', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1108,6 +1132,9 @@ const EXPECTED = [
     'packages/ppa/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/permissions-protected-path-allow@2`),
   'packages/ppa/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The `Edit` allow rules of `ppa` name one directory, which `permissions-allow-dir-depth` reads.
+  'packages/ppa/.claude/settings.json: claude/permissions-allow-dir-depth@1',
+  'packages/ppa/managed-settings.json: claude/permissions-allow-dir-depth@1',
   // The auto mode and sandbox rules read the project and managed files, and no other file. A hidden
   // drop-in is for `settings-managed-file`.
   ...[
@@ -1163,6 +1190,13 @@ const EXPECTED = [
   // `settings-managed-file`.
   ...[
     ['wad', 'permissions-auto-mode-dropped-allow'],
+    ['wdd', 'permissions-allow-dir-depth'],
+    ['wca', 'permissions-cd-allowlist'],
+    ['wga', 'permissions-glob-grep-allow'],
+    ['wlt', 'permissions-legacy-tool-name'],
+    ['wrn', 'permissions-read-deny-notebook'],
+    ['wwa', 'permissions-webfetch-apex'],
+    ['wwm', 'permissions-webfetch-mid-wildcard'],
     ['wcm', 'permissions-bash-colon-star-mid'],
     ['wcs', 'permissions-bash-colon-star-suffix'],
     ['wdr', 'permissions-duplicate-rule'],

@@ -28,3 +28,14 @@ export const isIpv6Literal = (host: string) => IPV6_LITERAL.test(host)
  *  white space, `@`, `:` or backslash. A wildcard is valid in any position. This check does not
  *  read where it stands. */
 export const isPlainHost = (host: string) => host !== '' && !/[\s@:\\]/.test(host)
+
+/** The host of a `WebFetch` specifier in the form `domain:<host>`, or null for another form. Claude
+ *  Code matches a domain without case, and strips one `.` from the end of the rule and of the
+ *  hostname (https://code.claude.com/docs/en/permissions#webfetch), so the host is in lower case
+ *  with no final dot. */
+export function fetchHost(specifier: string | null): string | null {
+  const prefix = specifier === null ? null : /^\s*domain\s*:/.exec(specifier)
+  return specifier === null || prefix === null
+    ? null
+    : specifier.slice(prefix[0].length).trim().replace(/\.$/, '').toLowerCase()
+}
