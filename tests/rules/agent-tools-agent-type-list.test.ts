@@ -50,8 +50,22 @@ describe('agent-tools-agent-type-list', () => {
       const code = '---\nname: ""\ndescription: d\ntools: Agent(worker)\n---\n'
       expect(lintAgent('agent-tools-agent-type-list', code, path.join(repo({}), AGENT))).toEqual([])
     })
-    it('stays silent for a name in the option allow', () => {
-      expect(run({}, 'tools: Agent(worker)\n', AGENT, [{ allow: ['a'] }])).toEqual([])
+    it('stays silent for a name in the option allow, and checks its types', () => {
+      expect(run({}, 'tools: Agent(explore)\n', AGENT, [{ allow: ['a'] }])).toEqual([])
+      expect(run({}, 'tools: Agent(ghost)\n', AGENT, [{ allow: ['a'] }])).toMatchObject([
+        { messageId: 'unknownType' },
+      ])
+    })
+    it('stays silent for a file outside the agents folders', () => {
+      expect(run({}, 'tools: Agent(worker)\n', 'docs/a.md')).toEqual([])
+    })
+    it('stays silent for a name that is missing or is a number', () => {
+      for (const head of ['', 'name: 5\n']) {
+        const code = `---\n${head}description: d\ntools: Agent(worker)\n---\n`
+        expect(lintAgent('agent-tools-agent-type-list', code, path.join(repo({}), AGENT))).toEqual(
+          [],
+        )
+      }
     })
     it('stays silent for a plugin agent', () => {
       // The plugin is in a repository, so a rule that read the settings there would report.

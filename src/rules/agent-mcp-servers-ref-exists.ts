@@ -50,7 +50,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
         if (fm === null || !Array.isArray(fm.data.mcpServers)) {
           return
         }
-        // The docs do not say if Claude Code compares a server name with case.
+        // The docs do not say if Claude Code treats upper and lower case of a server name as different.
         const same = (entry: string) => (other: string) =>
           other.toLowerCase() === entry.toLowerCase()
         const entries = listEntries(fm, node.value, 'mcpServers', () => false).filter(

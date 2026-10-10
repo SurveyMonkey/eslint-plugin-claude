@@ -27,15 +27,14 @@ configured in your session".[^scope] The rule checks the string entries.
 
 A project server is in `.mcp.json` at the project root. The docs list two other scopes: local and
 user. Both are in `~/.claude.json`.[^scopes] The rule cannot see that file. It also cannot see a server
-of a plugin, a connector, `--mcp-config` or `managed-mcp.json`. The row in the rule inventory named
-"committed settings" too. The docs show no place in a project settings file where a server is
-defined, so the rule reads `.mcp.json` only.
+of a plugin, a connector, `--mcp-config` or `managed-mcp.json`. The rule does not read
+committed settings. The docs show no place in a project settings file where a server is defined.
 
 The rule reports a string entry that matches no key of `mcpServers` in `.mcp.json`. The report is on
 the entry. It reads `.mcp.json` in the project folder that holds `.claude/`, and in each folder above
 it, up to the repository root. The docs name the project root only. Claude Code can start in a folder
-below the root, so a file above can define the server. The rule ignores letter case, because the docs
-do not say if Claude Code compares a server name with case.
+below the root, so a file above can define the server. The docs do not say if Claude Code treats upper and lower case as different. The rule treats them
+as the same.
 
 The rule is a heuristic. Name a server of the user config in the option `allow`.
 
@@ -49,11 +48,12 @@ The rule is silent in these cases:
   `mcpServers`. An entry that is empty or not a string gets no report either.
 - The `mcpServers` value is not a list. [`agent-mcp-servers-schema`](agent-mcp-servers-schema.md)
   reports it.
-- A `.mcp.json` that the rule cannot see. It cannot be read, does not parse to an object, or has a real
-  path out of the repository. Without a `.git` entry, the repository ends at `.claude/`, so a
+- A `.mcp.json` that the rule cannot see. It cannot be read, does not parse to an object, is not
+  there while its path is out of the repository, or has a real path out of the repository. Without a `.git` entry, the repository ends at `.claude/`, so a
   `.mcp.json` in the project folder is out of it. The rule adds no message for these cases.
 
-A project folder with no `.mcp.json` at all gives a report for each string entry.
+In a git repository, a project folder with no `.mcp.json` at all gives a report for each string
+entry. With no `.git` entry, the rule is silent, as the list above says.
 
 The rule reads no file out of the repository (ADR 001, Decision 14).
 

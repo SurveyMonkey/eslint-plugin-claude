@@ -34,14 +34,16 @@ The rule reports in two cases. The report is on the `tools` entry.
 - A committed `agent` setting names the agent, and the list holds a type that no agent defines. The
   agent cannot spawn that type. One report covers all unknown types of an entry.
 
-A type is known when it is a built-in agent, or the `name` of a file in `.claude/agents/` of the
-project folder or of a folder above it, up to the repository root. The rule ignores letter case,
-because the docs do not say if Claude Code compares a type with case. A type with a `:` names the
-agent of a plugin, and the rule cannot see it.
+A type is known when it is a built-in agent. It is also known when it is the `name` of a file in
+`.claude/agents/` of the project folder, or of a folder above it, up to the repository root. The
+docs do not say if Claude Code treats upper and lower case as different. The rule treats them as
+the same. A type with a `:` names the agent of a plugin, and the rule cannot see it.
 
 The rule is a heuristic. It cannot see the `--agent` flag. Name an agent that the team starts
-with the flag in the option `allow`. That silences the first report. The same option lists agent types
-from outside the repository, such as agents in `~/.claude/agents/`. That silences the second report.
+with the flag in the option `allow`. That silences the first report, and the type list of that agent
+is then checked. The same option lists agent types from outside the repository, such as agents in
+`~/.claude/agents/`. That silences the second report. The rule compares an agent name with `allow`
+in exact case, and a type in any case.
 
 The rule reads `settings.json` and `settings.local.json` in `.claude/` of the project folder and of
 each folder above it, up to the repository root. It reads no managed or user settings. It

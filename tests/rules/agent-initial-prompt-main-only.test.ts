@@ -60,9 +60,11 @@ describe('agent-initial-prompt-main-only', () => {
       expect(run({}, agent('initialPrompt:\n'))).toEqual([])
       expect(run({}, agent('initialPrompt: ""\n'))).toEqual([])
       expect(run({}, agent('initialPrompt: 5\n'))).toEqual([])
+      expect(run({}, agent('initialPrompt: "  "\n'))).toEqual([])
     })
     it('for an agent whose name is not a string', () => {
       expect(run({}, agent(PROMPT, '5'))).toEqual([])
+      expect(run({}, agent(PROMPT, '""'))).toEqual([])
       expect(run({}, `---\n${PROMPT}---\n\nBody.\n`)).toEqual([])
     })
     it('for a file with no frontmatter, or outside the agents folders', () => {

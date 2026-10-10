@@ -1,5 +1,6 @@
-// The frontmatter fields of a subagent file and of an output style file, and
-// the values of the subagent fields that take a fixed set.
+// The frontmatter fields of a subagent file and of an output style file, the
+// values of the subagent fields that take a fixed set, the built-in agents and
+// the bundled skills.
 // Sources: the Frontmatter reference tables,
 // https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields and
 // https://code.claude.com/docs/en/output-styles#frontmatter, checked on
@@ -79,8 +80,9 @@ export const BUILT_IN_AGENTS = [
 /** The bundled skills. Source: the rows that the commands reference marks as a bundled skill
  *  (https://code.claude.com/docs/en/commands#all-commands), checked on Claude Code 2.1.296 on
  *  2026-10-10. Review this list on or before 2027-04-10, the `stale_after` date of
- *  docs/rules/agent-skills-exist.md. A subagent can preload a bundled skill that a model can
- *  invoke. A project does not define one, so `agent-skills-exist` cannot find it on disk. */
+ *  docs/rules/agent-skills-exist.md. A project does not define a bundled skill, so
+ *  `agent-skills-exist` cannot find it on disk. The list holds `verify`. `agent-skills-preloadable`
+ *  gives it no report. */
 export const BUNDLED_SKILLS = [
   'artifact-capabilities',
   'artifact-diagramming',

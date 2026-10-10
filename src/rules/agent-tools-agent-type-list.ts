@@ -76,11 +76,10 @@ const rule: MarkdownRuleDefinition<{
         if (mains === UNREADABLE) {
           return
         }
-        if (!mains.includes(agentName)) {
-          if (!allow.includes(agentName)) {
-            for (const { loc } of lists) {
-              context.report({ loc, messageId: 'ignored', data: { name: agentName } })
-            }
+        // An agent in `allow` runs with `--agent`, so it is a main thread. Its list is live.
+        if (!mains.includes(agentName) && !allow.includes(agentName)) {
+          for (const { loc } of lists) {
+            context.report({ loc, messageId: 'ignored', data: { name: agentName } })
           }
           return
         }
@@ -88,7 +87,8 @@ const rule: MarkdownRuleDefinition<{
         if (defined === UNREADABLE) {
           return
         }
-        // The docs do not say if Claude Code compares a type with case, so the rule ignores it.
+        // The docs do not say if Claude Code treats upper and lower case as different. The rule
+        // treats them as the same.
         const known = new Set([...BUILT_IN_AGENTS, ...defined].map((type) => type.toLowerCase()))
         for (const { types, loc } of lists) {
           // A scoped type, with a `:`, names the agent of a plugin that the rule cannot see.
