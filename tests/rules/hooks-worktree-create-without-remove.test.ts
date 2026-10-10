@@ -20,13 +20,13 @@ const remove = { WorktreeRemove: [{ hooks: [command()] }] }
 const ids = (value: unknown, file = FILES.project) => jsonIds(name, settings(value), file)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a WorktreeCreate hook with no WorktreeRemove hook in the file', () => {
+  it('reports a WorktreeCreate hook with no WorktreeRemove hook in the file', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(create, file), file).toEqual(['noRemove'])
     }
   })
 
-  it.fails('reports at the WorktreeCreate key, and says what Claude Code does without a remove hook', () => {
+  it('reports at the WorktreeCreate key, and says what Claude Code does without a remove hook', () => {
     const text =
       '{\n  "hooks": {\n    "WorktreeCreate": [{ "hooks": [{ "type": "command", "command": "./c.sh" }] }]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
@@ -38,7 +38,7 @@ describe(`${name}: the report`, () => {
     )
   })
 
-  it.fails('reports once for two WorktreeCreate handlers', () => {
+  it('reports once for two WorktreeCreate handlers', () => {
     expect(
       ids({
         WorktreeCreate: [
@@ -49,12 +49,12 @@ describe(`${name}: the report`, () => {
     ).toEqual(['noRemove'])
   })
 
-  it.fails('reports when the WorktreeRemove event holds no handler', () => {
+  it('reports when the WorktreeRemove event holds no handler', () => {
     expect(ids({ ...create, WorktreeRemove: [] })).toEqual(['noRemove'])
     expect(ids({ ...create, WorktreeRemove: [{ hooks: [] }] })).toEqual(['noRemove'])
   })
 
-  it.fails('reads the last of two events of one name', () => {
+  it('reads the last of two events of one name', () => {
     expect(
       jsonIds(
         name,
@@ -64,7 +64,7 @@ describe(`${name}: the report`, () => {
     ).toEqual(['noRemove'])
   })
 
-  it.fails('reports in the frontmatter of a skill and of a project subagent', () => {
+  it('reports in the frontmatter of a skill and of a project subagent', () => {
     const yaml = frontmatter(
       'WorktreeCreate:\n  - hooks:\n      - type: command\n        command: ./c.sh\n',
     )
@@ -74,7 +74,7 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent when the same file has a WorktreeRemove hook', () => {
+  it('is silent when the same file has a WorktreeRemove hook', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids({ ...create, ...remove }, file), file).toEqual([])
     }
@@ -84,7 +84,7 @@ describe(`${name}: the silent cases`, () => {
     expect(markdownIds(name, yaml, FILES.skill)).toEqual([])
   })
 
-  it.fails('is silent with no WorktreeCreate handler, or with other events only', () => {
+  it('is silent with no WorktreeCreate handler, or with other events only', () => {
     expect(ids(hooks('Stop', [command()]))).toEqual([])
     expect(ids({ WorktreeCreate: [] })).toEqual([])
     expect(ids({ WorktreeCreate: [{ hooks: [] }] })).toEqual([])
@@ -93,7 +93,7 @@ describe(`${name}: the silent cases`, () => {
     expect(jsonIds(name, '{"hooks": 1}', FILES.project)).toEqual([])
   })
 
-  it.fails('is silent for a hidden drop-in, a hooks.json that Claude Code does not read, and a plugin agent', () => {
+  it('is silent for a hidden drop-in, a hooks.json that Claude Code does not read, and a plugin agent', () => {
     expect(ids(create, FILES.hidden)).toEqual([])
     expect(ids(create, '/repo/.claude/hooks.json')).toEqual([])
     const yaml = frontmatter(
@@ -105,7 +105,7 @@ describe(`${name}: the silent cases`, () => {
 })
 
 describe(`${name}: one file at a time`, () => {
-  it.fails('reports a create hook whose remove hook is in another settings file', () => {
+  it('reports a create hook whose remove hook is in another settings file', () => {
     expect(ids(create, FILES.project)).toEqual(['noRemove'])
     expect(ids(remove, FILES.local)).toEqual([])
   })

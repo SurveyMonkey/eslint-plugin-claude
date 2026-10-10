@@ -21,7 +21,7 @@ const shell = (text: string) => ids(command({ command: text }))
 const exec = (executable: string, args: unknown[]) => ids(command({ command: executable, args }))
 
 describe(`${name}: shell form`, () => {
-  it.fails('reports a claude command that passes --remote', () => {
+  it('reports a claude command that passes --remote', () => {
     for (const text of [
       'claude --remote "Fix the login bug"',
       'claude -p x --remote',
@@ -41,7 +41,7 @@ describe(`${name}: shell form`, () => {
     }
   })
 
-  it.fails('reports at the command string, and names --cloud', () => {
+  it('reports at the command string, and names --cloud', () => {
     const text =
       '{\n  "hooks": {"Stop": [{"hooks": [{"type": "command", "command": "claude --remote x"}]}]}\n}'
     const found = lintJson(name, text, FILES.project)
@@ -55,7 +55,7 @@ describe(`${name}: shell form`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for --cloud, and for flags that only start with --remote', () => {
+  it('is silent for --cloud, and for flags that only start with --remote', () => {
     for (const text of [
       'claude --cloud "Fix the login bug"',
       'claude --remote-control',
@@ -71,7 +71,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for the flag in a command that is not claude', () => {
+  it('is silent for the flag in a command that is not claude', () => {
     for (const text of [
       'echo --remote',
       'grep -- --remote notes.md',
@@ -85,40 +85,40 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for the system prompt flags, which the docs do not deprecate', () => {
+  it('is silent for the system prompt flags, which the docs do not deprecate', () => {
     expect(shell('claude --system-prompt "x" --append-system-prompt "y"')).toEqual([])
   })
 })
 
 describe(`${name}: exec form`, () => {
-  it.fails('reports claude with the flag in args, at the argument', () => {
+  it('reports claude with the flag in args, at the argument', () => {
     expect(exec('claude', ['-p', '--remote'])).toEqual(['remote'])
     expect(exec('/usr/bin/claude', ['--remote=x'])).toEqual(['remote'])
     expect(exec('claude.exe', ['--remote'])).toEqual(['remote'])
     const text = settings(hooks('Stop', [command({ command: 'claude', args: ['-p', '--remote'] })]))
-    expect(lintJson(name, text, FILES.project).map(({ column }) => column)).toEqual([75])
+    expect(lintJson(name, text, FILES.project).map(({ column }) => column)).toEqual([79])
   })
 
-  it.fails('is silent for another executable, and for args that are not the flag', () => {
+  it('is silent for another executable, and for args that are not the flag', () => {
     expect(exec('echo', ['--remote'])).toEqual([])
     expect(exec('claude', ['--cloud', '--remote-control'])).toEqual([])
     expect(exec('claude', [1, null, '--remote-x'])).toEqual([])
     expect(exec('claude', [])).toEqual([])
   })
 
-  it.fails('reads the line, not the arguments, when args is no array', () => {
+  it('reads the line, not the arguments, when args is no array', () => {
     expect(ids(command({ command: 'claude --remote x', args: 'a' }))).toEqual(['remote'])
   })
 })
 
 describe(`${name}: the handlers and files`, () => {
-  it.fails('is silent for a handler that is no command hook, and for a command that is no string', () => {
+  it('is silent for a handler that is no command hook, and for a command that is no string', () => {
     expect(ids({ type: 'http', url: 'u', command: 'claude --remote x' })).toEqual([])
     expect(ids({ type: 'command', command: 1 })).toEqual([])
     expect(ids({ type: 'command' })).toEqual([])
   })
 
-  it.fails('reads every settings file, the hooks.json of a plugin, and the frontmatter', () => {
+  it('reads every settings file, the hooks.json of a plugin, and the frontmatter', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(command({ command: 'claude --remote x' }), file), file).toEqual(['remote'])
     }
@@ -129,7 +129,7 @@ describe(`${name}: the handlers and files`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['remote'])
   })
 
-  it.fails('is silent for a hidden drop-in', () => {
+  it('is silent for a hidden drop-in', () => {
     expect(ids(command({ command: 'claude --remote x' }), FILES.hidden)).toEqual([])
   })
 })

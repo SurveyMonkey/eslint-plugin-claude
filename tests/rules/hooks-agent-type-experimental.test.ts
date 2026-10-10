@@ -21,7 +21,7 @@ const ids = (event: string, handler: object, file = FILES.project) =>
   jsonIds(name, settings(hooks(event, [handler])), file)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports an agent handler, in every file that holds hooks', () => {
+  it('reports an agent handler, in every file that holds hooks', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids('Stop', agent, file), file).toEqual(['experimental'])
     }
@@ -32,16 +32,16 @@ describe(`${name}: the report`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['experimental'])
   })
 
-  it.fails('reports at the type value, and names the command hook', () => {
+  it('reports at the type value, and names the command hook', () => {
     const text = '{\n  "hooks": {"Stop": [{"hooks": [{"type": "agent", "prompt": "p"}]}]}\n}'
     const [message] = lintJson(name, text, FILES.project)
-    expect([message?.messageId, message?.line, message?.column]).toEqual(['experimental', 2, 50])
+    expect([message?.messageId, message?.line, message?.column]).toEqual(['experimental', 2, 42])
     expect(message?.message).toBe(
       'Agent hooks are experimental and may change. Use a command hook for production work.',
     )
   })
 
-  it.fails('reports each agent handler on each event that runs one', () => {
+  it('reports each agent handler on each event that runs one', () => {
     for (const event of [
       'UserPromptSubmit',
       'UserPromptExpansion',
@@ -61,7 +61,7 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for the other handler types', () => {
+  it('is silent for the other handler types', () => {
     for (const type of ['command', 'http', 'mcp_tool', 'prompt', 'other']) {
       expect(ids('Stop', { type, prompt: 'p' }), type).toEqual([])
     }
@@ -69,7 +69,7 @@ describe(`${name}: the silent cases`, () => {
     expect(ids('Stop', { type: 1 })).toEqual([])
   })
 
-  it.fails('leaves an event that does not run an agent hook to hooks-handler-type-event-support', () => {
+  it('leaves an event that does not run an agent hook to hooks-handler-type-event-support', () => {
     for (const event of [
       'PermissionRequest',
       'PermissionDenied',
@@ -82,7 +82,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('reports each known event once, in this rule or in its owner', () => {
+  it('reports each known event once, in this rule or in its owner', () => {
     for (const event of HOOK_EVENTS) {
       const text = settings(hooks(event, [agent]))
       const mine = jsonIds(name, text, FILES.project).length
@@ -91,7 +91,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a hidden drop-in', () => {
+  it('is silent for a hidden drop-in', () => {
     expect(ids('Stop', agent, FILES.hidden)).toEqual([])
   })
 })
