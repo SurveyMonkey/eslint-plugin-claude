@@ -1,10 +1,10 @@
-// A link under a plugin whose target is out of the plugin and in the same
-// marketplace is copied by a marketplace install, and skipped by a local-path
-// install and by a `command` source in copy mode
+// A link under a plugin can have a target out of the plugin and in the same
+// marketplace. A marketplace install copies that target. A local-path install
+// and a `command` source in copy mode skip it
 // (docs/rules/plugin-symlink-escapes-plugin.md). The rule walks the plugin on
-// disk with `escapingLinks`, and reports each link that stays in the
-// marketplace root and leaves the plugin. A link that leaves the marketplace
-// is for `plugin-symlink-escapes-marketplace`, so one link gets one report.
+// disk with `escapingLinks`. It reports each link that stays in the marketplace
+// root and leaves the plugin. A link that leaves the marketplace is for
+// `plugin-symlink-escapes-marketplace`, so one link gets one report.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { escapingLinks } from '../plugin-links.ts'
