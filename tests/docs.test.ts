@@ -25,6 +25,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-memory-auto-memory-off',
     'agent-memory-grants-write',
     'agent-model-forced',
+    'agent-name-shadows-builtin',
     'agent-name-unique',
     'agent-no-bom',
     'agent-omit-claude-md-main',

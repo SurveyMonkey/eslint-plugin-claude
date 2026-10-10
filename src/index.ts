@@ -9,6 +9,7 @@ import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
 import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
 import agentModelForced from './rules/agent-model-forced.ts'
+import agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import agentNameUnique from './rules/agent-name-unique.ts'
 import agentNoBom from './rules/agent-no-bom.ts'
 import agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
@@ -141,6 +142,7 @@ const modules = [
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
   agentFieldMinVersion,
+  agentNameShadowsBuiltin,
   agentNoBom,
   permissionsRuleSyntax,
   permissionsUnknownTool,
@@ -261,6 +263,7 @@ const recommended: Record<RuleName, Severity> = {
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
   'agent-field-min-version': 'warn',
+  'agent-name-shadows-builtin': 'warn',
   'agent-no-bom': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
