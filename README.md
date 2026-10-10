@@ -262,6 +262,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-local-gitignored`](docs/rules/settings-local-gitignored.md) | A `.gitignore` pattern of the repository covers the `settings.local.json` beside a `.claude/settings.json` | `warn` | `warn` |
 | [`claude/settings-local-untracked`](docs/rules/settings-local-untracked.md) | The `settings.local.json` beside a `.claude/settings.json` is not tracked by git, and `.claude` is not a symbolic link | `warn` | `warn` |
 | [`claude/settings-schema`](docs/rules/settings-schema.md) | A settings key is one that Claude Code knows, an environment variable name is in `env` and not at the top level, and a value has the type, enum value, range, form and shape that the docs give; no report inside `permissions` or `sandbox` | `error` | `error` |
+| [`claude/settings-attribution-false`](docs/rules/settings-attribution-false.md) | `attribution` is not `false` in a project or local file, because Claude Code before v2.1.281 skips the whole file | `warn` | `warn` |
+| [`claude/settings-deprecated-key`](docs/rules/settings-deprecated-key.md) | No deprecated key that Claude Code still honors: `includeCoAuthoredBy`, `voiceEnabled`, and `disableArtifact: true` | `warn` | `warn` |
+| [`claude/settings-project-autocontinue-off`](docs/rules/settings-project-autocontinue-off.md) | `autoContinueAtUsageLimit` is not in a project or local file, where any value turns automatic continue off, and its value is a Boolean | `warn` | `warn` |
+| [`claude/settings-redundant-value`](docs/rules/settings-redundant-value.md) | A value is not the same as an unset key: `alwaysThinkingEnabled`, `enableArtifact`, `syncClaudeAiSkills` and `syncClaudeAiPlugins` set to `true`, and `spinnerVerbs` in replace mode with no verbs | `warn` | `warn` |
+| [`claude/settings-schema-url`](docs/rules/settings-schema-url.md) | `$schema` is present and is the published schema URL for Claude Code settings | `warn` | `warn` |
 
 ### Permissions and sandbox
 
