@@ -55,7 +55,8 @@ The rule makes no report in these cases:
 
 - The target is in the plugin, or out of the marketplace.
 - The plugin root is `.claude/skills/<name>`. Claude Code loads that plugin in place and never
-  copies it.[^loading]
+  copies it.[^loading] The rule reads the path only. A catalog entry that names that folder as a
+  source makes an install copy it, and the rule still makes no report.
 - The link has no target, or the link is a loop.
 - The target is out of the repository. The rule reads no file out of the repository.
 - A folder of the plugin cannot be listed. The rule skips that folder and still reads the others.
