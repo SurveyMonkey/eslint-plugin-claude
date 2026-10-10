@@ -31,6 +31,8 @@ markdownTester.run('rules-frontmatter-schema', rule, {
     { code: '# Testing\n', filename },
     { code: '---\n---\n# Testing\n', filename },
     { code: '---\n  \n---\n# Testing\n', filename },
+    // A block of comments only sets no field, as an empty block does not.
+    { code: '---\n# note\n\n  # more\n---\n# Testing\n', filename },
     // A horizontal rule and prose that are not frontmatter.
     { code: '# Testing\n\n---\n\nText\n\n---\n', filename },
     { code: '# Testing\n\n---\nname: a\n---\n', filename },

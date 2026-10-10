@@ -50,8 +50,8 @@ const rule: MarkdownRuleDefinition<{
         }
       },
       yaml(node) {
-        // An empty block sets no field.
-        if (node.value.trim() === '') {
+        // A block of blank lines and YAML comments sets no field, as an empty block does not.
+        if (node.value.split('\n').every((line) => /^\s*(#.*)?$/.test(line))) {
           return
         }
         const fm = readFrontmatter(sourceCode, node)
