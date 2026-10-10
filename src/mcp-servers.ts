@@ -2,7 +2,8 @@
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
 // may omit that wrapper, so its map is the top-level object. The module also holds the reader of
 // the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
-// reader of the allow and deny lists, and the reader of a URL that holds a reference in its port.
+// reader of the allow and deny lists. It also holds the reader of a URL that holds a reference in
+// its port.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
 import json from '@eslint/json'
@@ -290,7 +291,7 @@ export function plainOf(node: ValueNode): unknown {
   return undefined
 }
 
-/** The value of the URL text `url`, or null when it does not parse, because a rule then does not
+/** The `URL` of the text `url`, or null when it does not parse, because a rule then does not
  *  know the host. A host that holds a `${` reference parses. A reference in the port, as in
  *  `host:${PORT}/path`, does not parse. The parser reads the URL without that port, because the
  *  port is not part of the host or the scheme. */

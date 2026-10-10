@@ -53,6 +53,22 @@ it('reports each server', () => {
   })
   expect(ids(lintProject(NAME, both))).toEqual(['insecure', 'insecure'])
 })
+it('reports a server that follows each kind of skipped server', () => {
+  const map = mapOf({
+    a: { command: 'x' },
+    b: { type: 'http', url: 'https://b.test' },
+    c: { type: 'http', url: 'http://localhost' },
+    d: { type: 'http', url: 'http://' },
+    e: { type: 'http', url: `http://\${HOST}/mcp` },
+    f: { type: 'http', url: 'http://f.test' },
+  })
+  const found = lintProject(NAME, map)
+  expect(ids(found)).toEqual(['insecure'])
+  expect(found[0]?.message).toContain('"f"')
+})
+it('reports a host with a variable only in the path', () => {
+  expect(ids(lintProject(NAME, at(`http://example.com/\${P}`)))).toEqual(['insecure'])
+})
 it('stays silent for https://, wss:// and loopback hosts', () => {
   for (const url of [
     'https://example.com/mcp',

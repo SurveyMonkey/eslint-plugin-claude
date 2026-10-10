@@ -39,6 +39,15 @@ it('stays silent for an unterminated reference, and for a reference split across
   expect(run(allow({ serverCommand: [`\${`, '}'] }))).toEqual([])
   expect(run(allow({ serverCommand: [`a\${`, 'b}'] }))).toEqual([])
 })
+it('reports the first reference of the items, after an item with an unterminated one', () => {
+  const found = lint(allow({ serverCommand: [`a\${`, `\${B}`, `\${C}`] }))
+  expect(found.map((m) => m.messageId)).toEqual(['variable'])
+  expect(found[0]?.message).toContain(`uses \${B}.`)
+})
+it('keeps the entries after an entry of another kind', () => {
+  expect(run(allow({ serverName: 'a' }, { serverUrl: `\${X}` }))).toEqual(['variable'])
+  expect(run(allow({ serverUrl: 1 }, { serverUrl: `\${X}` }))).toEqual(['variable'])
+})
 it('reports a variable with a default, in the denylist and in a drop-in', () => {
   expect(run(deny({ serverUrl: `https://\${HOST:-x.test}/*` }))).toEqual(['variable'])
   expect(run(allow({ serverUrl: `\${SCHEME}://x.test` }), dropIn)).toEqual(['variable'])
