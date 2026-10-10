@@ -5,12 +5,14 @@
 // https://code.claude.com/docs/en/model-config#override-model-ids-per-version
 // https://code.claude.com/docs/en/model-config#add-a-custom-model-option
 // https://code.claude.com/docs/en/settings-reference#deniedmodels
-// The rule reads the linted file only.
+// The rule reads the linted file. For a managed file, it also reads the sibling files of the
+// managed source, in the tests of the last block.
 import path from 'node:path'
 import json from '@eslint/json'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import plugin from '../../src/index.ts'
+import { repo } from '../agent-settings.test-support.ts'
 
 const name = 'settings-model-list'
 const PROJECT = '/repo/.claude/settings.json'
@@ -399,5 +401,72 @@ describe(`${name}: files`, () => {
   it('is silent for a document that is not an object', () => {
     expect(ids('[1]')).toEqual([])
     expect(ids('"x"')).toEqual([])
+  })
+})
+
+// The managed settings page merges `managed-settings.json` and its drop-ins into one source
+// (round 10 mid-round ruling 22). Lists of the files combine.
+describe(`${name}: the sibling files of a managed source, on disk`, () => {
+  /** The message ids for `code` at `file` of the repository `root`. */
+  const at = (root: string, file: string, code: unknown) =>
+    lint(code, path.join(root, file)).map((message) => message.messageId)
+  const LIST = JSON.stringify({ availableModels: ['opus'] })
+
+  it('is silent for enforceAvailableModels when a sibling holds the list', () => {
+    const root = repo({ 'managed-settings.d/10-a.json': LIST })
+    expect(at(root, 'managed-settings.d/20-b.json', { enforceAvailableModels: true })).toEqual([])
+    const main = repo({ 'managed-settings.json': LIST })
+    expect(at(main, 'managed-settings.d/20-b.json', { enforceAvailableModels: true })).toEqual([])
+  })
+
+  it('reports enforceAvailableModels when no sibling holds a list', () => {
+    const root = repo({
+      'managed-settings.d/10-a.json': '{"availableModels": []}',
+      'managed-settings.d/11-a.json': '{"availableModels": null}',
+      'managed-settings.d/12-a.json': '{"availableModels": "opus"}',
+      'managed-settings.d/.13-a.json': LIST,
+    })
+    expect(at(root, 'managed-settings.d/20-b.json', { enforceAvailableModels: true })).toEqual([
+      'enforceNeedsList',
+    ])
+  })
+
+  it('is silent for an empty availableModels when a sibling adds entries', () => {
+    const root = repo({ 'managed-settings.d/10-a.json': LIST })
+    const code = { availableModels: [], model: 'opus' }
+    expect(at(root, 'managed-settings.d/20-b.json', code)).toEqual([])
+    expect(at(repo({}), 'managed-settings.d/20-b.json', code)).toEqual(['emptyList'])
+  })
+
+  it('counts the entries of a sibling for the custom model option', () => {
+    const code = {
+      availableModels: ['sonnet'],
+      env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'claude-opus-5' },
+    }
+    const root = repo({ 'managed-settings.d/10-a.json': '{"availableModels": ["haiku"]}' })
+    expect(at(root, 'managed-settings.d/20-b.json', code)).toEqual(['customOption'])
+    const listed = repo({
+      'managed-settings.d/10-a.json': '{"availableModels": ["claude-opus-5"]}',
+    })
+    expect(at(listed, 'managed-settings.d/20-b.json', code)).toEqual([])
+  })
+
+  it('is silent for all three when a sibling does not parse to an object', () => {
+    const root = repo({ 'managed-settings.d/10-a.json': '[1]' })
+    const codes = [
+      { enforceAvailableModels: true },
+      { availableModels: [], model: 'opus' },
+      { availableModels: ['sonnet'], env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'claude-opus-5' } },
+    ]
+    for (const code of codes) {
+      expect(at(root, 'managed-settings.d/20-b.json', code)).toEqual([])
+    }
+  })
+
+  it('reads no sibling for a project file', () => {
+    const root = repo({ 'managed-settings.d/10-a.json': LIST })
+    expect(at(root, '.claude/settings.json', { availableModels: [], model: 'opus' })).toEqual([
+      'emptyList',
+    ])
   })
 })

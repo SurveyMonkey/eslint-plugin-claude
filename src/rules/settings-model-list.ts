@@ -1,6 +1,7 @@
 // The model lists of a settings file (docs/rules/settings-model-list.md). Each check is a sentence
-// of the model configuration page or the settings reference. The rule reads the linted file only.
-// A list in another file is not seen. The aliases and the ID forms are in `src/data/models.ts`.
+// of the model configuration page or the settings reference. The rule reads the linted file. For
+// a managed file, it also reads the sibling files of the same managed source. A list in a file
+// outside that source is not seen. The aliases and the ID forms are in `src/data/models.ts`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
   DEFAULT_VALUE,
@@ -14,7 +15,13 @@ import {
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
-import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import {
+  isHiddenDropIn,
+  kindOf,
+  MANAGED_SETTINGS_FILES,
+  readManagedSource,
+} from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-model-list' as const
 
@@ -103,6 +110,20 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
         const available = top('availableModels')
         const entries = stringEntries(available)
 
+        // The managed source is `managed-settings.json` and its drop-ins, merged. Lists combine.
+        // A sibling that the rule cannot read can hold any list, so the three checks that need
+        // the whole list stay silent.
+        const siblings = isManaged ? readManagedSource(context.filename) : []
+        const siblingEntries =
+          siblings === UNREADABLE
+            ? []
+            : siblings.flatMap(({ availableModels }) =>
+                Array.isArray(availableModels)
+                  ? availableModels.filter((entry): entry is string => typeof entry === 'string')
+                  : [],
+              )
+        const listUnknown = siblings === UNREADABLE || siblingEntries.length > 0
+
         // Claude Code caps a chain after it removes the duplicates.
         const distinct = new Set<string>()
         for (const { text, node: entry } of stringEntries(top('fallbackModel'))) {
@@ -118,7 +139,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           }
         }
 
-        if (available?.type === 'Array' && available.elements.length === 0) {
+        if (available?.type === 'Array' && available.elements.length === 0 && !listUnknown) {
           const keys = NAMING_KEYS.filter((key) => {
             const value = top(key)
             return value?.type === 'Array'
@@ -141,6 +162,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           isManaged &&
           enforce?.value.type === 'Boolean' &&
           enforce.value.value &&
+          !listUnknown &&
           !(available?.type === 'Array' && available.elements.length > 0)
         ) {
           context.report({ node: enforce.name, messageId: 'enforceNeedsList' })
@@ -185,7 +207,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           option?.type === 'String' &&
           option.value !== '' &&
           available?.type === 'Array' &&
-          !entries.some(({ text }) => allows(text, option.value))
+          siblings !== UNREADABLE &&
+          ![...entries.map(({ text }) => text), ...siblingEntries].some((text) =>
+            allows(text, option.value),
+          )
         ) {
           context.report({ node: option, messageId: 'customOption', data: { value: option.value } })
         }

@@ -1,11 +1,18 @@
 // Two settings keys in one file where one voids the other
-// (docs/rules/settings-conflicting-keys.md). The rule reads the linted file only. A key in
-// another file is not seen. A `null` value removes a key, so it counts as no key.
+// (docs/rules/settings-conflicting-keys.md). A pair needs both keys in the linted file. Two
+// checks need a key that a sibling file of the same managed source can set. The rule reads the
+// siblings for these checks. A `null` value removes a key, so it counts as no key.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type MemberNode, type ValueNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
-import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import {
+  isHiddenDropIn,
+  kindOf,
+  MANAGED_SETTINGS_FILES,
+  readManagedSource,
+} from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-conflicting-keys' as const
 
@@ -65,7 +72,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       vimRemaps:
         '"vimInsertModeRemaps" has no effect unless "editorMode" is "vim". This file sets "editorMode" to "{{mode}}".',
       autoMode:
-        '"defaultMode": "auto" has no effect while "disableAutoMode" is set. Sessions start in "default" mode.',
+        '"defaultMode": "auto" has no effect while "disableAutoMode" is "disable". Sessions start in "default" mode.',
       timeZone: '"timeZone" has no effect while "timeFormat" is "24-hour-utc". Times stay in UTC.',
       channels: '"allowedChannelPlugins" has no effect unless "channelsEnabled" is true.',
     },
@@ -91,6 +98,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
             context.report({ node: member.name, messageId, data })
           }
         }
+
+        // The managed source is `managed-settings.json` and its drop-ins, merged. A sibling that
+        // the rule cannot read can set any key, so the two checks that need a sibling stay silent.
+        const siblings = isManaged ? readManagedSource(context.filename) : []
 
         const view = stringOf(body, 'viewMode')
         if (view !== undefined && VIEWS.includes(view)) {
@@ -118,7 +129,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         // Claude Code reads the remaps from user and managed settings. `settings-key-scope`
         // reports the key in a project file, so this check leaves that file alone.
         const mode = stringOf(body, 'editorMode')
-        if (isManaged && mode !== undefined && mode !== 'vim') {
+        if (
+          isManaged &&
+          mode !== undefined &&
+          mode !== 'vim' &&
+          siblings !== UNREADABLE &&
+          !siblings.some((fields) => fields.editorMode === 'vim')
+        ) {
           report(setMember(body, 'vimInsertModeRemaps'), 'vimRemaps', { mode })
         }
 
@@ -136,8 +153,15 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           report(setMember(body, 'timeZone'), 'timeZone')
         }
 
-        // Both keys are managed-only. `settings-key-scope` reports them in a project file.
-        if (isManaged && !isBoolean(body, 'channelsEnabled', true)) {
+        // Both keys are managed-only. `settings-key-scope` reports them in a project file. A
+        // `channelsEnabled` of another type is for `settings-schema`.
+        const enabled = setMember(body, 'channelsEnabled')
+        if (
+          isManaged &&
+          (enabled === undefined || isBoolean(body, 'channelsEnabled', false)) &&
+          siblings !== UNREADABLE &&
+          !siblings.some((fields) => fields.channelsEnabled === true)
+        ) {
           report(setMember(body, 'allowedChannelPlugins'), 'channels')
         }
       },

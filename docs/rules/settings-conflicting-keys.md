@@ -20,10 +20,12 @@ Do not set a settings key that another key in the same file voids.
 
 ## Rule details
 
-Some pairs of settings keys cancel each other. Claude Code reads both keys and acts on one. The
-rule reports the key that Claude Code does not act on. The report is on that key.
+Some pairs of settings keys cancel each other. Claude Code ignores one key of the pair. The
+rule reports the key that Claude Code ignores. The report is on that key.
 
-The rule reads the linted file only. A key in another file is not seen. A `null` value removes a
+The rule reads the linted file. In a managed file, two pairs also need the sibling files of the
+same managed source, and the rule reads them (see below). A key in any other file is not seen.
+A `null` value removes a
 key, so the rule takes it as no key. For two keys of one name, the rule reads the last, as
 `JSON.parse` does. A hidden file in `managed-settings.d/` gets no report, because Claude Code
 ignores it.
@@ -44,7 +46,7 @@ ignores it.
 
 ### Pairs that the rule narrows
 
-The rule checks less than the inventory row for three pairs. For each, the other key can be in a
+The rule checks less than the planned check for three pairs. For each, the other key can be in a
 file that the rule does not read. The rule makes no report that the docs do not support.
 
 - **`viewMode: "focus"` without `tui`.** The `tui` key has no default value. Claude Code
@@ -52,18 +54,23 @@ file that the rule does not read. The rule makes no report that the docs do not 
   rule reports `tui: "default"` only. The rule does not check `tui` for any other value.
 - **`vimInsertModeRemaps` without `editorMode`.** `editorMode` is a key of every file, and the
   default is `"normal"`.[^editor] A user file can set `"vim"`. So the rule reports a managed file
-  that sets `editorMode` to another value. It makes no report when the key is unset. In a project
+  that sets `editorMode` to another value. It makes no report when the key is unset, or when a
+  sibling file of the managed source sets `editorMode` to `"vim"`. In a project
   or local file, Claude Code does not read `vimInsertModeRemaps` at all. `settings-key-scope`
   reports it there, so this rule makes no second report.
 - **`allowedChannelPlugins` without `channelsEnabled`.** A managed file holds both keys. The
-  rule reports the list in a managed file when that file does not set `channelsEnabled: true`.
-  A sibling file of `managed-settings.d/` can set the key. The rule does not read it, so it is
-  not seen. In a project or local file, `settings-key-scope` reports `allowedChannelPlugins`, so
+  rule reports the list in a managed file when the managed source does not set
+  `channelsEnabled: true`. The rule reads the sibling files, because the page merges
+  `managed-settings.json` and its drop-ins into one source. It makes no report when a sibling sets
+  the key to `true`, or when the file sets `channelsEnabled` to a value of another type. In a project or local file, `settings-key-scope` reports `allowedChannelPlugins`, so
   this rule makes no second report.
 
 ### What the rule does not check
 
-- A key in another file. The rule reads the linted file only.
+- A key in a file outside the managed source. A sibling that the rule cannot read gives no report
+  for the two pairs above.
+- A later file that turns a key off. A later drop-in can replace a single value of this file. The
+  rule does not check the order of the files.
 - A value of a wrong type. `settings-schema` is for that. A pair applies only when each key has the
   type that the table names.
 - Whether `disableAllHooks` in a project file wins over a value in `settings.local.json`. The

@@ -1,8 +1,12 @@
 // Each pair is a sentence of the settings reference, or of the channels page:
 // https://code.claude.com/docs/en/settings-reference
 // https://code.claude.com/docs/en/channels#restrict-which-channel-plugins-can-run
-// `lintJson` runs the rule on a file at a path. These rules read no second file.
+// `lintJson` runs the rule on a file at a path. Two checks read the sibling files of a managed
+// source: the tests of those use files on disk.
+import { symlinkSync } from 'node:fs'
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
 const name = 'settings-conflicting-keys'
@@ -308,5 +312,80 @@ describe(`${name}: files`, () => {
     expect(ids('[1]')).toEqual([])
     expect(ids('"x"')).toEqual([])
     expect(ids('{"permissions": {"defaultMode": "auto"}, "disableAutoMode": []}')).toEqual([])
+  })
+})
+
+// The managed settings page merges `managed-settings.json` and its drop-ins into one source
+// (round 10 mid-round ruling 22). A single value of a later file replaces an earlier one.
+describe(`${name}: the sibling files of a managed source, on disk`, () => {
+  const plugins = [{ marketplace: 'claude-plugins-official', plugin: 'telegram' }]
+  const CHANNELS = JSON.stringify({ allowedChannelPlugins: plugins })
+  const REMAPS = JSON.stringify({ editorMode: 'normal', vimInsertModeRemaps: { jj: 'escape' } })
+  /** The message ids for `text` at `file` of the repository `root`. */
+  const at = (root: string, file: string, text: string) =>
+    lintJson(name, text, path.join(root, file)).map((message) => message.messageId)
+
+  it('reports allowedChannelPlugins when no sibling sets channelsEnabled', () => {
+    const root = repo({ 'managed-settings.d/10-b.json': '{"model": "opus"}' })
+    expect(at(root, 'managed-settings.json', CHANNELS)).toEqual(['channels'])
+    expect(at(root, 'managed-settings.d/20-a.json', CHANNELS)).toEqual(['channels'])
+  })
+
+  it('is silent when managed-settings.json sets channelsEnabled: true', () => {
+    const root = repo({ 'managed-settings.json': '{"channelsEnabled": true}' })
+    expect(at(root, 'managed-settings.d/20-a.json', CHANNELS)).toEqual([])
+  })
+
+  it('is silent when a drop-in sets channelsEnabled: true', () => {
+    const root = repo({ 'managed-settings.d/10-b.json': '{"channelsEnabled": true}' })
+    expect(at(root, 'managed-settings.json', CHANNELS)).toEqual([])
+    expect(at(root, 'managed-settings.d/20-a.json', CHANNELS)).toEqual([])
+  })
+
+  it('reports when a sibling sets channelsEnabled to false or null', () => {
+    for (const value of ['false', 'null']) {
+      const root = repo({ 'managed-settings.d/10-b.json': `{"channelsEnabled": ${value}}` })
+      expect(at(root, 'managed-settings.d/20-a.json', CHANNELS), value).toEqual(['channels'])
+    }
+  })
+
+  it('is silent when channelsEnabled has a type that settings-schema reports', () => {
+    const text = JSON.stringify({ allowedChannelPlugins: plugins, channelsEnabled: 'true' })
+    expect(ids(text, MANAGED)).toEqual([])
+  })
+
+  it('ignores a hidden sibling and a sibling that does not end in .json', () => {
+    const root = repo({
+      'managed-settings.d/.10-b.json': '{"channelsEnabled": true}',
+      'managed-settings.d/10-c.txt': '{"channelsEnabled": true}',
+    })
+    expect(at(root, 'managed-settings.d/20-a.json', CHANNELS)).toEqual(['channels'])
+  })
+
+  it('is silent when a sibling does not parse to an object', () => {
+    const root = repo({ 'managed-settings.d/10-b.json': '[1]' })
+    expect(at(root, 'managed-settings.d/20-a.json', CHANNELS)).toEqual([])
+  })
+
+  it('is silent when the drop-in directory is a link out of the repository', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    const outside = repo({ 'managed-settings.d/10-b.json': '{"channelsEnabled": true}' })
+    symlinkSync(path.join(outside, 'managed-settings.d'), path.join(root, 'managed-settings.d'))
+    expect(at(root, 'managed-settings.json', CHANNELS)).toEqual([])
+    expect(at(root, 'managed-settings.json', REMAPS)).toEqual([])
+  })
+
+  it('reports vimInsertModeRemaps when no sibling sets editorMode to vim', () => {
+    const root = repo({ 'managed-settings.d/10-b.json': '{"editorMode": "normal"}' })
+    expect(at(root, 'managed-settings.d/20-a.json', REMAPS)).toEqual(['vimRemaps'])
+  })
+
+  it('is silent when a sibling sets editorMode to vim', () => {
+    const root = repo({ 'managed-settings.d/99-z.json': '{"editorMode": "vim"}' })
+    expect(at(root, 'managed-settings.json', REMAPS)).toEqual([])
+    const main = repo({ 'managed-settings.json': '{"editorMode": "vim"}' })
+    expect(at(main, 'managed-settings.d/20-a.json', REMAPS)).toEqual([])
   })
 })

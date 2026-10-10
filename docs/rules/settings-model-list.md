@@ -21,8 +21,8 @@ Keep the model lists of a settings file consistent with the way Claude Code read
 ## Rule details
 
 Some entries of a model list have no effect, or have an effect that the author did not intend.
-The rule reports each one. The rule reads the linted file only. A key in another file is not
-seen. The aliases and the ID forms are in `src/data/models.ts`.
+The rule reports each one. The rule reads the linted file. In a managed file, it also reads the sibling files of the same
+managed source. A key in any other file is not seen. The aliases and the ID forms are in `src/data/models.ts`.
 
 | Check | Files | The docs say |
 |-------|-------|--------------|
@@ -43,10 +43,9 @@ Code ignores it.
 
 The rule counts distinct strings in `fallbackModel`. A duplicate is not a new model. The report is
 on the first entry over the limit. The settings reference says that Claude Code "keeps at most three distinct allowed models".[^fallback] Claude Code also drops each entry that `availableModels` does
-not permit before it counts.[^chains] A list in another file is not seen, so the rule counts all
-entries.
+not permit when it reads the chain.[^chains] The rule counts all entries.
 
-The number 3 is a limit of Claude Code. No Claude Code setting moves it. The option `max` takes a
+The docs cap the chain at 3 models and name no setting that moves the cap. The option `max` takes a
 lower number, and the schema refuses a number above 3. At 3, the message says that Claude Code
 ignores the entry. At another value, the message names the configured limit, and does not say that
 Claude Code acts at that number.
@@ -66,13 +65,17 @@ for the rule.
 
 ### Managed keys
 
-`enforceAvailableModels` and `deniedModels` need a managed source. The docs say to "deploy both
-keys together in the highest-ranked managed source".[^enforce-pair] So the rule checks them in a
-managed file only. In a project or local file, a pair can use a list in a user file. The rule does not see that file. `settings-key-scope` reports `deniedModels` in a project file, so this rule
-makes no second report.
+`deniedModels` is a managed-only key. Claude Code reads `enforceAvailableModels` from the managed
+source when an organization deploys managed settings. The docs say to deploy `availableModels` and
+`enforceAvailableModels` together in the highest-ranked managed source.[^enforce-pair] So the rule
+checks these two keys in a managed file only. In a project or local file, a pair can use a list in
+a user file. The rule does not see that file. `settings-key-scope` reports `deniedModels` in a
+project file, so this rule makes no second report.
 
-The sibling files of `managed-settings.d/` are not seen. A list or a key in a sibling file can
-settle a report of this rule.
+A managed source is `managed-settings.json` and its drop-ins. Lists combine across the files.
+Three checks need the whole list: the empty list, `enforceAvailableModels` and the custom option.
+The rule reads the sibling files for them. It makes no report when a sibling holds an entry, or
+when it cannot read a sibling.
 
 ### The custom model option
 
