@@ -117,6 +117,10 @@ describe(`${name}: the variables`, () => {
     ).toEqual([])
   })
 
+  it('is silent for a wrapper with no program behind it', () => {
+    expect(ids({ type: 'command', command: 'env', args: [] })).toEqual([])
+  })
+
   it('reports a longer CLAUDE_MODEL or CLAUDE_ENV_FILE name that no other rule reports', () => {
     expect(exec(['$CLAUDE_MODEL_ID'])).toEqual(['variable'])
     expect(exec(['$CLAUDE_ENV_FILE_PATH'])).toEqual(['variable'])
