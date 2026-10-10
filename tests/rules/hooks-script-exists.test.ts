@@ -114,6 +114,30 @@ describe(RULE, () => {
       ])
     })
 
+    it('ends a word at a parenthesis and at a new line', () => {
+      const root = plain()
+      for (const command of [
+        `(${PROJECT}/gone.sh)`,
+        `echo $(${PROJECT}/gone.sh)`,
+        `echo\n${PROJECT}/gone.sh`,
+        `echo\r\n${PROJECT}/gone.sh`,
+      ]) {
+        expect(
+          lint(root, SETTINGS, settings(command)).map((m) => m.messageId),
+          command,
+        ).toEqual(['missing'])
+      }
+    })
+
+    it('reads a path from a project that is below the repository root', () => {
+      const root = repo({ 'tools/ok.sh': 'x' })
+      const file = 'packages/app/.claude/settings.json'
+      expect(lint(root, file, settings(`${PROJECT}/../../tools/ok.sh`))).toEqual([])
+      expect(
+        lint(root, file, settings(`${PROJECT}/../../tools/gone.sh`)).map((m) => m.messageId),
+      ).toEqual(['missing'])
+    })
+
     it('does not read the target of a redirect, or a word that is not a path', () => {
       const root = plain()
       for (const command of [
@@ -128,6 +152,11 @@ describe(RULE, () => {
         `${PROJECT}/$EVENT.sh`,
         `${PROJECT}/hooks/*.sh`,
         `${PROJECT}/{a,b}.sh`,
+        `${PROJECT}/tools/run?.sh`,
+        `${PROJECT}/tools/run[12].sh`,
+        `${PROJECT}/gone#.sh`,
+        `${PROJECT}/gone!.sh`,
+        `${PROJECT}/\`name\`.sh`,
         `${PROJECT}/dir/`,
         `${PROJECT}`,
         `${PROJECT}\\hooks\\gone.sh`,
@@ -341,6 +370,13 @@ describe(RULE, () => {
       const root = plain({ 'ok.sh': 'x' })
       expect(lint(root, 'managed-settings.json', settings(`${PROJECT}/ok.sh`))).toEqual([])
       expect(lint(root, 'managed-settings.json', settings(`${PROJECT}/gone.sh`))).toHaveLength(1)
+    })
+
+    it('reads a drop-in with no .git, from the directory of managed-settings.d', () => {
+      const root = plain({ 'ok.sh': 'x' })
+      const file = 'managed-settings.d/10-a.json'
+      expect(lint(root, file, settings(`${PROJECT}/ok.sh`))).toEqual([])
+      expect(lint(root, file, settings(`${PROJECT}/gone.sh`))).toHaveLength(1)
     })
   })
 

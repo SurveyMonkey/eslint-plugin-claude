@@ -45,6 +45,7 @@ describe(RULE, () => {
     const root = repo({
       [MANIFEST]: '{}',
       'bin/.gitkeep': '',
+      'bin/.hidden-tool': 'x',
       'bin/lib/helper': 'x',
       'binary/tool': 'x',
       'scripts/tool': 'x',
