@@ -2,6 +2,7 @@
 // Code can find (docs/rules/skill-agent-exists.md).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
+import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -18,16 +19,6 @@ import {
 const name = 'skill-agent-exists' as const
 
 type Options = [{ allow: string[] }]
-
-// The built-in agents of https://code.claude.com/docs/en/sub-agents#built-in-subagents.
-const BUILT_IN = [
-  'Explore',
-  'Plan',
-  'general-purpose',
-  'claude',
-  'statusline-setup',
-  'claude-code-guide',
-]
 
 /** The agent names that a scan found. `unseen` is true when the scan did not
  *  follow a link out of the repository. It is also true when the scan could
@@ -152,7 +143,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         }
         // The docs do not say if Claude Code compares names with case.
         const same = (other: string) => other.toLowerCase() === agent.toLowerCase()
-        if (BUILT_IN.some(same) || allow.some(same)) {
+        if (BUILT_IN_AGENTS.some(same) || allow.some(same)) {
           return
         }
         const agents =
