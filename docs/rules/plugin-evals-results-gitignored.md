@@ -32,13 +32,14 @@ manifest. The message names the `results/` directory from the plugin root.
 The eval directory is `evals/`. A plugin can set another directory in `experimental.evals`
 of the manifest, for example `quality/evals`.[^dir] The docs accept a relative path of plain
 directory names. An absolute path, or a path with `..`, prints a `Warning:` line, and the run uses
-`evals/`. The rule prints no warning, and it uses `evals/` as well. A value that is not a string, an
-empty segment, a segment `.`, a backslash and a drive letter give `evals/` too.
+`evals/`. The rule prints no warning, and it uses `evals/` as well. These values give `evals/` too: a value that is not a string, an
+empty segment, a segment `.`, a backslash and a drive letter.
 
-The rule asks `git check-ignore` about a directory in `results/`. A pattern counts when it is in
-a `.gitignore` file of the repository. The file is at the root, or in a directory above the
-results directory. A pattern for files, such as `*.json`, does not cover a directory. The rule does not
-count two other sources:
+The rule asks `git check-ignore` about a file in a run directory of `results/`. The names are
+unlikely, so a pattern for another purpose, such as `run/`, does not match. A pattern counts when
+it is in a `.gitignore` file of the repository. The file is at the root, or in a directory above the
+results directory. A pattern for a file extension, such as `*.json`, does not cover the file, which has no
+extension. The rule does not count two other sources:
 
 - `.git/info/exclude` stays in one clone.
 - The global excludes file stays on one machine.
@@ -53,6 +54,8 @@ The rule makes no report in these cases:
 - The eval directory is a link to a place out of the repository (ADR 001, Decision 14).
   The same holds for a link to a place that is not there. The rule reads a link to a directory of the repository where
   it leads. A pattern must then cover the target.
+- A command-line flag moves the eval directory or the results. The flag `--eval-dir` wins over
+  the manifest.[^dir] The rule cannot see a flag, so it checks the directory of the manifest.
 - The rule cannot read git. There is no `.git` entry at or above the manifest. `git` is not
   installed, or a `git` command fails. A `.git` entry that is not a repository lies inside
   another repository.

@@ -2,7 +2,7 @@
 // track it, and a `.gitignore` pattern must cover it
 // (docs/rules/claude-md-local-untracked.md). The file need not exist, and a
 // clone that holds none still needs the pattern. So the rule lints the
-// `CLAUDE.md` and reads the file in the same directory by its path. Both answers come from
+// `CLAUDE.md` and asks git about the file in the same directory by its path. Both answers come from
 // `src/git-state.ts`. The rule makes no report when git cannot answer. This
 // is also the case for a directory that is a link out of the repository.
 import path from 'node:path'

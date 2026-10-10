@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/plugin-evals-replay-committed, which reports a plugin manifest when a .gitignore pattern covers the mocks/.replay directory of its eval suite, or when that directory has files and git tracks none of them, because CI runs then differ.
+description: The ESLint rule claude/plugin-evals-replay-committed, which reports a plugin manifest when a .gitignore pattern covers the mocks/.replay directory of its eval suite, or when that directory holds a file and git tracks none below it, because CI runs then differ.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [11]
@@ -32,9 +32,11 @@ the `.replay/` directory from the plugin root.
 - **`ignored`:** a `.gitignore` pattern covers `mocks/.replay/` in the eval directory. A pattern
   such as `.replay/`, `mocks/` or `evals/` does this. Git then ignores each new saved answer. The
   rule reports this also when the directory is not there yet.
-- **`untracked`:** `mocks/.replay/` has an entry on the disk, and git tracks no file in it.
-  A saved answer is there, and no one has committed it. The rule reports this only when no pattern
-  covers the directory. If git tracks one file, the rule is silent. It does not check each file. Any entry counts, also a file such as `.DS_Store`.
+- **`untracked`:** `mocks/.replay/` holds a file on the disk, at any depth, and git tracks no file
+  below it. A saved answer is there, and no one has committed it. A link counts as a file, and so
+  does a file such as `.DS_Store`. A directory with no file, or with only empty directories, gets no
+  report, because git cannot track an empty directory. The rule reports this only when no pattern
+  covers the directory. If git tracks one file, the rule is silent. It does not check each file.
 
 A pattern counts when it is in a `.gitignore` file of the repository. The file is at the root,
 or in a directory above the eval directory. Git reads a pattern with a `/` inside it from the
@@ -53,11 +55,16 @@ plugin, and `evals/` or the relative path in `experimental.evals`.[^dir] The rul
 `mocks/.replay/` of the suite. A case can have its own `mocks/` directory. The rule does not read
 those directories.
 
+The rule asks `git check-ignore` about a file in a server directory of `.replay/`. The names are
+unlikely, so a pattern for another purpose, such as `server/`, does not match.
+
 The rule makes no report in these cases:
 
 - The manifest is in no plugin root, or the plugin has no eval directory.
 - `mocks/` or `.replay` is a link. Git refuses a path behind a link, so the rule cannot answer.
   This holds for a link to a place in the repository too.
+- A command-line flag moves the eval directory. The flag `--eval-dir` wins over the manifest.[^dir]
+  The rule cannot see a flag, so it checks the directory of the manifest.
 - The eval directory is a link to a place out of the repository (ADR 001, Decision 14).
 - The rule cannot read git. There is no `.git` entry at or above the manifest. `git` is not
   installed, or a `git` command fails. A `.git` entry that is not a repository lies inside

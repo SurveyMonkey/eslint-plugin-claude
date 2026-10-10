@@ -28,7 +28,7 @@ repository-supplied. It holds the rules of the file until you trust the folder, 
 project rules.[^trust]
 
 The lint target is the shared `.claude/settings.json`, in the same directory. The local file
-must stay out of git, so a clone usually holds none and ESLint cannot lint it. The rule reads the
+must stay out of git, so a clone usually holds none and ESLint cannot lint it. The rule asks git about the
 file in the same directory by its path. A repository with a tracked `settings.local.json` and no `settings.json`
 gets no report from this rule.
 
