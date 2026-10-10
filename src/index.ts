@@ -48,6 +48,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -183,6 +184,7 @@ const modules = [
   claudeMdExcludesPattern,
   claudeMdMaxBytes,
   memorySettingsSchema,
+  rulesFrontmatterSchema,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -295,6 +297,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-excludes-pattern': 'error',
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
+  'rules-frontmatter-schema': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

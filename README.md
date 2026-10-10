@@ -130,6 +130,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/claude-md-agents-md-variant`](docs/rules/claude-md-agents-md-variant.md) | No `AGENTS.local.md`, `AGENTS.override.md` or Markdown file below `.agents/`, which Claude Code never reads; option `allow` | `error` | `error` |
 | [`claude/claude-md-excludes-pattern`](docs/rules/claude-md-excludes-pattern.md) | Each `claudeMdExcludes` pattern starts with `/`, `**/` or a Windows drive, because Claude Code matches absolute paths | `error` | `error` |
 | [`claude/memory-settings-schema`](docs/rules/memory-settings-schema.md) | The types and values of `autoMemoryEnabled`, `autoMemoryDirectory`, `claudeMdExcludes` and the `instructionFiles` option of the `AGENTS.md` plugin | `error` | `error` |
+| [`claude/rules-frontmatter-schema`](docs/rules/rules-frontmatter-schema.md) | A rule file has `paths` as its only frontmatter key, as a list of strings or a string, with YAML that parses and the block on line 1 | `error` | `error` |
 
 ### Settings
 

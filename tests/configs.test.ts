@@ -466,6 +466,13 @@ const TREE: Record<string, string> = {
   'packages/ms/managed-settings.d/30-b.txt': '{"autoMemoryEnabled": "no"}',
   'packages/ms/managed-settings.d/sub/40-c.json': '{"autoMemoryEnabled": "no"}',
   'packages/ms/.vscode/settings.json': '{"autoMemoryEnabled": "no"}',
+  // `rules-frontmatter-schema`: a bad frontmatter in a rule file at each depth, and a block below
+  // line 1. The same content where no rule reads it: a Markdown file that is not a rule file.
+  'packages/rf/.claude/rules/globs.md': '---\nglobs: "*.ts"\n---\n# Rule\n',
+  'packages/rf/.claude/rules/sub/yaml.md': '---\npaths: *.ts\n---\n# Rule\n',
+  'packages/rf/.claude/rules/late.md': '# Rule\n\n---\npaths: "src/**"\n---\n',
+  'packages/rf/.claude/rules/ok.md': '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n',
+  'packages/rf/docs/rules/globs.md': '---\nglobs: "*.ts"\n---\n# Not a rule file\n',
   'packages/ms/ok/.claude/settings.json':
     '{"autoMemoryEnabled": false, "autoMemoryDirectory": "~/memory", "claudeMdExcludes": ["**/a/**"]}',
 }
@@ -555,6 +562,7 @@ const MEMORY_RULES = [
   'claude-md-excludes-pattern',
   'claude-md-max-bytes',
   'memory-settings-schema',
+  'rules-frontmatter-schema',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -729,6 +737,10 @@ const EXPECTED = [
   'packages/ex/managed-settings.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/managed-settings.d/10-a.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `rules-frontmatter-schema` reads Markdown below `.claude/rules/`, and no other file.
+  'packages/rf/.claude/rules/globs.md: claude/rules-frontmatter-schema@2',
+  'packages/rf/.claude/rules/sub/yaml.md: claude/rules-frontmatter-schema@2',
+  'packages/rf/.claude/rules/late.md: claude/rules-frontmatter-schema@2',
   // `memory-settings-schema` reads the project and managed files, and no other file.
   'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
   'packages/ms/.claude/settings.local.json: claude/memory-settings-schema@2',

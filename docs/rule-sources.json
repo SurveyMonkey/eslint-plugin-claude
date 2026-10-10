@@ -936,6 +936,23 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "rules-frontmatter-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Rule frontmatter reference",
+      "hash": "3b8b3279bd5f63ef3766da20a8bc542fee818f1a35608c6202565cc12eb56df8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/glossary",
+      "heading": "Frontmatter",
+      "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "Frontmatter fields by file",
+      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
+    }
+  ],
   "settings-conflicting-keys": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
