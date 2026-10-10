@@ -63,10 +63,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadowed
     return {
       root(node) {
         const first = node.children[0]
-        const fm =
-          first?.type === 'yaml' && file.kind === 'skill'
-            ? readFrontmatter(context.sourceCode, first)
-            : null
+        const fm = first?.type === 'yaml' ? readFrontmatter(context.sourceCode, first) : null
         const invoked = invokedBy(file, fm?.data.name)
         // The enterprise skill beats the personal skill, so it names the report first.
         for (const [scopeName, list] of [

@@ -69,7 +69,7 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
     { code: withFields('description: d', inline('ls deploy')), filename: skill },
     // A quoted string is text.
     {
-      code: withFields('description: d', inline('gh issue comment 1 -b "please deploy"')),
+      code: withFields('description: d', inline('gh issue comment 1 -b "please deploy now"')),
       filename: skill,
     },
     { code: withFields('description: d', inline("echo 'git push' | wc -l")), filename: skill },
