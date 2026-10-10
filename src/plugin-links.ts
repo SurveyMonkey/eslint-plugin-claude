@@ -2,16 +2,16 @@
 // its marketplace. `placeOf` is the one check of the component paths of an
 // entry in `marketplace.json` and of the links under a plugin. `escapingLinks`
 // lists the links under a plugin that leave it. Every walk stops at the
-// repository root, and a link out of the repository, a link with no target and
-// a folder that fails to list give no result (ADR 001, Decision 14).
+// repository root. A link out of the repository, a link with no target and a
+// folder that fails to list give no result (ADR 001, Decision 14).
 import path from 'node:path'
 import { realSource } from './marketplace-source.ts'
 import type { Plugin } from './plugin-manifest.ts'
 import { entriesOf, isInside, readJson, SKIPPED, UNREADABLE } from './skill-tree.ts'
 
 /** The places that a path can lead to, as real paths. A plugin is inside its
- *  marketplace. A marketplace with no `marketplace.json` above the plugin is
- *  the plugin itself. */
+ *  marketplace. A marketplace with no `marketplace.json` at or above the
+ *  plugin root is the plugin itself. */
 export interface Scopes {
   readonly marketplace: string
   readonly plugin: string

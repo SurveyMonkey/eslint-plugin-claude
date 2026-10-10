@@ -177,6 +177,23 @@ describe('escapingLinks', () => {
     ])
   })
 
+  linked('walks the real folder of a plugin that is reached through a link', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': CATALOG,
+      'plugins/.claude-plugin/marketplace.json': CATALOG,
+      'packages/p/.claude-plugin/plugin.json': MANIFEST,
+      'packages/p/own.md': '',
+      'shared/s.md': '',
+    })
+    link(top, 'plugins/p', '../packages/p')
+    const real = path.join(top, 'packages/p')
+    link(real, 'shared-link', '../../shared')
+    link(real, 'own-link', 'own.md')
+    expect(escapingLinks(pluginAt(path.join(top, 'plugins/p')))).toEqual([
+      { file: 'shared-link', reach: 'marketplace', target: 'shared' },
+    ])
+  })
+
   linked('gives marketplace for a link to another place in the marketplace', () => {
     const top = repo()
     const dir = path.join(top, 'plugins/p')

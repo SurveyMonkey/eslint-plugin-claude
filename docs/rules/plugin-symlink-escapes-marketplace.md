@@ -33,8 +33,8 @@ out. The walk goes depth first, with the names of each folder in alphabetical or
 
 The marketplace root is the folder that holds the nearest `.claude-plugin/marketplace.json`. The
 search starts at the plugin root and goes up to the top of the repository. The catalog need not
-list the plugin. The rule reads the file only to find its folder. A catalog that does not parse still marks its
-folder. When no folder holds a catalog, the plugin root is the marketplace root. Then each link
+list the plugin. The rule reads the file only to find its folder. A catalog that does not parse
+still marks its folder. When no folder holds a catalog, the plugin root is the marketplace root. Then each link
 that leaves the plugin gets this report.
 
 The rule reads the files on disk, not the files that Git tracks. A link that Git ignores can cause
@@ -59,8 +59,8 @@ The rule makes no report in these cases:
   root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can
   fail to parse.
 
-Fail: a plugin in `site/plugins/p/` with a link `skills/shared` to `../../../shared`, in a
-repository where the marketplace root is `site/`.
+Fail: a plugin in `site/plugins/p/` with a link `skills/shared` to `../../../../shared`, in a
+repository where the marketplace root is `site/`. The target is `shared` at the repository root.
 
 Pass: the same link, with the target `site/shared`. Then the other rule reports it, as a warning.
 
