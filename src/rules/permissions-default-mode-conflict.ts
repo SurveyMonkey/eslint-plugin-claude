@@ -1,10 +1,10 @@
 // `permissions.defaultMode: "bypassPermissions"` in a file that also sets
 // `permissions.disableBypassPermissionsMode: "disable"`
-// (docs/rules/permissions-default-mode-conflict.md). The lock stops anyone from entering the
+// (docs/rules/permissions-default-mode-conflict.md). The lock stops anyone from using the
 // mode, so the session never starts in it. The pair of `disableAutoMode` with
 // `defaultMode: "auto"` is for `settings-conflicting-keys`. Within a managed source, the later
-// file replaces a single value of an earlier file. So a sibling file that sets `defaultMode` or
-// the lock again can change the outcome, and the rule makes no report then.
+// file replaces a single value of an earlier file. A sibling file can set `defaultMode` or
+// the lock again, and change the outcome. The rule makes no report then.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'

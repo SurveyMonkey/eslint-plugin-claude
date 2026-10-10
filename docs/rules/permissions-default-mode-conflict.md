@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-default-mode-conflict, which reports permissions.defaultMode bypassPermissions in a file that also sets disableBypassPermissionsMode to disable, because the lock stops Claude Code from ever entering the mode.
+description: The ESLint rule claude/permissions-default-mode-conflict, which reports permissions.defaultMode bypassPermissions in a file that also sets disableBypassPermissionsMode to disable, because the lock stops Claude Code from ever using the mode.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -20,7 +20,7 @@ Do not set `permissions.defaultMode` to `bypassPermissions` while the file locks
 
 ## Rule details
 
-`permissions.disableBypassPermissionsMode: "disable"` stops anyone from entering
+`permissions.disableBypassPermissionsMode: "disable"` stops anyone from using
 `bypassPermissions` mode. Claude Code rejects the `--dangerously-skip-permissions` flag while the
 key is set.[^lock] A `defaultMode` of `bypassPermissions` in the same file asks for the mode that
 the lock removes. Claude Code never enters it. The rule reports the key `defaultMode`.
@@ -47,8 +47,8 @@ rule reads the sibling files. It makes no report when a sibling sets `permission
 
 ### One report for one fault
 
-`permissions-bypass-mode-committed` makes no report for a file that has the lock, so the pair
-gets one report. `permissions-default-mode-project-ignored` reports `auto` only.
+`permissions-bypass-mode-committed` makes no report for a file that has the lock. So the pair gets
+one report, or none when this rule is silent because of a sibling file. `permissions-default-mode-project-ignored` reports `auto` only.
 `settings-key-scope` makes no report on either key, because the settings reference lists the
 scope of each as any file.[^mode]
 

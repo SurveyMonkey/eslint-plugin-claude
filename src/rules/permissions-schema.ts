@@ -16,8 +16,8 @@ type MessageId = 'unknownKey' | 'notArray' | 'listWithheld' | 'notString' | 'not
 /** The keys that hold an array of strings. */
 const LISTS = ['allow', 'ask', 'deny', 'additionalDirectories']
 
-/** The lists that Claude Code reads first in a managed file. While one is unreadable, it
- *  withholds `allow` and `additionalDirectories`. */
+/** The lists whose failure makes Claude Code withhold `allow` and `additionalDirectories` in a
+ *  managed file. */
 const RESTRICTIONS = ['deny', 'ask']
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
