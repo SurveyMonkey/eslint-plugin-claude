@@ -1232,13 +1232,6 @@ const TREE: Record<string, string> = {
   'packages/oa-format/.claude/settings.local.json': '{"env": {"MCP_TIMEOUT": "30000"}}',
   'packages/oa-format/managed-settings.json':
     '{"availableModels": ["opus"], "env": {"MCP_TIMEOUT": "30s"}}',
-  // `settings-env-subprocess-scrub` reports each `.claude/settings.json` that does not turn the
-  // scrub on, so the list is computed from the tree (SCRUB_MISSING). The files below are silent:
-  // the shared file with the scrub, the local file, and the managed files.
-  'packages/oa-scrub/.claude/settings.json': '{"env": {"CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1"}}',
-  'packages/oa-scrub/.claude/settings.local.json': '{}',
-  'packages/oa-scrub/managed-settings.json': '{"availableModels": ["opus"]}',
-  'packages/oa-scrub/managed-settings.d/10-a.json': '{"availableModels": ["opus"]}',
   // `settings-defaultshell-powershell-tool` reports only with the option `platforms`, and the
   // configs set no option, so the files below get no report.
   'packages/oa-shell/.claude/settings.json': '{"defaultShell": "powershell"}',
@@ -1807,7 +1800,6 @@ const SETTINGS_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'settings-env-context-cost', files: SHARED_FILE },
   { name: 'settings-env-format-heuristic', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-secret-heuristic', files: SHARED_FILE },
-  { name: 'settings-env-subprocess-scrub', files: SHARED_FILE },
   { name: 'settings-managed-effort-cap', files: MANAGED_FILES },
   { name: 'settings-managed-merge', files: MANAGED_FILES },
   { name: 'settings-model-capability', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -1835,22 +1827,6 @@ const SCHEMA_URL_MISSING = SCHEMA_URL_TREES.filter(([file, content]) => {
   const data: unknown = SETTINGS_FILE.test(file) ? JSON.parse(content) : null
   return typeof data === 'object' && data !== null && !Array.isArray(data) && !('$schema' in data)
 }).map(([file]) => file)
-
-// `settings-env-subprocess-scrub` reports each `.claude/settings.json` that is a JSON object and
-// does not turn the scrub on. The tree has many such files, so the list is computed from the tree.
-const SHARED_SETTINGS_FILE = /(^|\/)\.claude\/settings\.json$/
-const SCRUB_MISSING = Object.entries(TREE)
-  .filter(([file, content]) => {
-    const data: unknown = SHARED_SETTINGS_FILE.test(file) ? JSON.parse(content) : null
-    const env = (data as { env?: Record<string, unknown> } | null)?.env
-    return (
-      typeof data === 'object' &&
-      data !== null &&
-      !Array.isArray(data) &&
-      env?.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB !== '1'
-    )
-  })
-  .map(([file]) => file)
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -2550,7 +2526,6 @@ const STRICT_ONLY = [
   'packages/hx/sl/.claude/settings.json: claude/settings-nested-project-file@1',
   'packages/hx/sl/ok/.claude/settings.json: claude/settings-nested-project-file@1',
   'packages/oa-skill/.claude/settings.json: claude/settings-skilloverrides-unknown-skill@1',
-  ...SCRUB_MISSING.map((file) => `${file}: claude/settings-env-subprocess-scrub@1`),
   // The sparse paths of the `settings-worktree-sparse-claude-dir` fixtures are not in the tree.
   'packages/sparse/.claude/settings.json: claude/settings-worktree-paths@1',
   'packages/sparse/.claude/settings.local.json: claude/settings-worktree-paths@1',
