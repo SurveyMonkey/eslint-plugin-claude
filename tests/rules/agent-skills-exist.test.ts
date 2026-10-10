@@ -3,7 +3,7 @@
 // skills load", names the project, nested and plugin locations, and says a `.claude/commands/`
 // file creates the same command as a skill. The skills on disk are the subject, so the trees are
 // built at run time. `agent-skills-preloadable` owns a skill that sets `disable-model-invocation`.
-import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
@@ -122,6 +122,37 @@ describe('agent-skills-exist', () => {
       expect(lintAgent('agent-skills-exist', agent(list('ghost')), path.join(root, AGENT))).toEqual(
         [],
       )
+    })
+    it('when a skills or commands folder leads out of the repository', () => {
+      const root = repo({})
+      const outside = path.join(path.dirname(root), `${path.basename(root)}-folders`)
+      mkdirSync(path.join(outside, 'commands'), { recursive: true })
+      mkdirSync(path.join(outside, 'skills'), { recursive: true })
+      writeFileSync(path.join(outside, 'commands', 'ghost.md'), skill())
+      mkdirSync(path.join(root, '.claude'), { recursive: true })
+      const code = agent(list('ghost'))
+      const lint = () => lintAgent('agent-skills-exist', code, path.join(root, AGENT))
+      symlinkSync(path.join(outside, 'commands'), path.join(root, '.claude/commands'))
+      expect(lint()).toEqual([])
+      symlinkSync(path.join(outside, 'skills'), path.join(root, '.claude/skills'))
+      rmSync(path.join(root, '.claude/commands'))
+      expect(lint()).toEqual([])
+    })
+    it('when a skills folder, a commands folder or a SKILL.md is a dangling link', () => {
+      const dangling = (name: string, at: string) => {
+        const root = repo({})
+        mkdirSync(path.join(root, path.dirname(at)), { recursive: true })
+        symlinkSync(path.join(root, name), path.join(root, at))
+        return lintAgent('agent-skills-exist', agent(list('ghost')), path.join(root, AGENT))
+      }
+      expect(dangling('gone', '.claude/skills')).toEqual([])
+      expect(dangling('gone', '.claude/commands')).toEqual([])
+      expect(dangling('gone', '.claude/skills/ghost')).toEqual([])
+      expect(dangling('gone', '.claude/skills/other/SKILL.md')).toEqual([])
+    })
+    it('for a plugin whose manifest sets commands', () => {
+      const files = { 'plugins/p/.claude-plugin/plugin.json': '{"name":"p","commands":"./cmds"}' }
+      expect(run(files, list('ghost'), PLUGIN_AGENT)).toEqual([])
     })
     unreadable('when a skills folder or a SKILL.md cannot be read', () => {
       const root = repo({

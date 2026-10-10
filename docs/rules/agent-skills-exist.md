@@ -24,11 +24,12 @@ The rule is `off` in `recommended`.
 
 The `skills` field lists skills that Claude Code injects into the subagent at startup.[^preload]
 The docs say: "If a listed skill is missing or disabled, Claude Code skips it and logs a warning to
-the debug log". The skip is silent in a session, so a misspelled name goes unseen.
+the debug log". The warning is only in the debug log, so a misspelled name goes unseen.
 
 The rule reports a `skills` entry that matches no skill that it can see. The report is on the entry.
-The rule is a heuristic. Skills in `~/.claude/skills/`, in managed settings, in an enabled plugin and in
-a directory added with `--add-dir` are not in the repository. Name such a skill in the option `allow`.
+The rule is a heuristic. These skills are not in the repository: skills in `~/.claude/skills/`,
+in managed settings, in an enabled plugin, and in a directory added with `--add-dir`. Name such a
+skill in the option `allow`.
 
 An entry matches in these places:
 
@@ -38,11 +39,12 @@ An entry matches in these places:
   the file name, without `.md`, of a command file in `commands/`. The skills page says that a command
   file and a skill create the same command.[^where]
 - A plugin agent sees `skills/` and `commands/` of its plugin root. A plugin manifest that sets
-  `skills` adds other directories, so the rule gives no report for that plugin.
+  `skills` or `commands` adds other directories, so the rule gives no report for that plugin.
 - A bundled skill. The commands reference marks each bundled skill.[^commands] A project does not
   define one, so the rule accepts the name.
 
-The docs do not say if Claude Code compares a skill name with case. The rule ignores case.
+The docs do not say if Claude Code treats upper and lower case as different. The rule treats them
+as the same.
 
 The rule is silent in these cases:
 
@@ -53,13 +55,13 @@ The rule is silent in these cases:
   reports it.
 - A skill that sets `disable-model-invocation: true`. It exists, and a subagent cannot preload it.
   [`agent-skills-preloadable`](agent-skills-preloadable.md) reports that case.
-- A skills folder or a `SKILL.md` that the rule cannot read, or that leads out of the repository. A
-  plugin manifest that the rule cannot read gives no report either. The rule adds no message for these
-  cases.
+- A `skills/` or `commands/` folder, or a `SKILL.md`, that the rule cannot read. The same holds
+  when it leads out of the repository, or is a link whose target is not there. A plugin manifest that
+  the rule cannot read gives no report either. The rule adds no message for these cases.
 
-The row in the rule inventory also named the total size of the preloaded skills. The docs give no size
-limit, so the rule does not check it. The docs limit the preload to "the first 32 distinct names in the
-list". The rule does not check that number.
+The rule does not check the total size of the preloaded skills. The docs give no size limit. The
+docs limit the preload to "the first 32 distinct names in the list". The rule does not check that
+number.
 
 The rule reads no file out of the repository (ADR 001, Decision 14).
 

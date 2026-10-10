@@ -25,6 +25,12 @@ describe('agent-model-value', () => {
     }
   })
 
+  it('reports a claude- ID in other letter case, and not an alias', () => {
+    expect(lint('model: Claude-Opus-5\n')).toHaveLength(1)
+    expect(lint('model: Sonnet\n')).toEqual([])
+    expect(lint('model: INHERIT\n')).toEqual([])
+  })
+
   it('reports a plugin agent', () => {
     expect(lint('model: sonet\n', pluginAgent())).toHaveLength(1)
   })
@@ -63,6 +69,7 @@ describe('agent-model-value', () => {
     expect(lint('')).toEqual([])
     expect(lint('model:\n')).toEqual([])
     expect(lint('model: ""\n')).toEqual([])
+    expect(lint('model: "  "\n')).toEqual([])
     expect(lint('model: 5\n')).toEqual([])
     expect(lint('model: [opus]\n')).toEqual([])
     expect(lint('model: sonet\n', path.resolve('/project/docs/a.md'))).toEqual([])

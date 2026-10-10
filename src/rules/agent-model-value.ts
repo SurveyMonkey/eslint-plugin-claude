@@ -53,7 +53,8 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown'
         ) {
           return
         }
-        // The docs do not say if Claude Code compares an alias with case, so the rule ignores it.
+        // The docs do not say if Claude Code treats upper and lower case of an alias as different. The
+        // rule treats them as the same. A `claude-` ID stays case-sensitive, as in settings-model-value.
         const lower = value.toLowerCase()
         if (
           lower === INHERIT ||

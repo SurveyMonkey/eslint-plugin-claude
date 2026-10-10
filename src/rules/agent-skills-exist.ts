@@ -11,6 +11,7 @@ import { foldersAbove } from '../folders-above.ts'
 import { listEntries } from '../frontmatter-list.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
+  danglingOf,
   entriesOf,
   frontmatterOfFile,
   isInside,
@@ -32,11 +33,27 @@ interface Skills {
   unseen: boolean
 }
 
+/** True when the rule can list the directory `dir`. A link that leads out of the repository, a
+ *  link whose target is not there, and a path that cannot be resolved are a directory that the
+ *  rule cannot see. The scan is then `unseen`. A directory that is not there has no entries. */
+function visible(dir: string, bound: string, found: Skills): boolean {
+  const real = realOf(dir)
+  if (
+    typeof real === 'string'
+      ? !isInside(real, bound)
+      : real === UNREADABLE || danglingOf(dir) === UNREADABLE
+  ) {
+    found.unseen = true
+    return false
+  }
+  return true
+}
+
 /** The folder name and the `name` of each skill in the `skills/` directory `dir`, and the name
  *  of each command file in the `commands/` directory `commands`. A command file creates the same
  *  command as a skill of its name. A folder with no `SKILL.md` is no skill. */
 function skillsIn(dir: string, commands: string, bound: string, found: Skills): void {
-  const folders = entriesOf(dir)
+  const folders = visible(dir, bound, found) ? entriesOf(dir) : null
   if (folders === UNREADABLE) {
     found.unseen = true
   }
@@ -45,7 +62,11 @@ function skillsIn(dir: string, commands: string, bound: string, found: Skills): 
     const real = realOf(file)
     if (real === UNREADABLE || (typeof real === 'string' && !isInside(real, bound))) {
       found.unseen = true
-    } else if (real !== null) {
+    } else if (real === null) {
+      // A dangling link, to the folder or to `SKILL.md`, can lead anywhere. A skill can be out of
+      // sight.
+      found.unseen ||= realOf(path.dirname(file)) === null || danglingOf(file) === UNREADABLE
+    } else {
       found.names.push(folder.name)
       const fields = frontmatterOfFile(file)
       if (fields === UNREADABLE) {
@@ -55,7 +76,7 @@ function skillsIn(dir: string, commands: string, bound: string, found: Skills): 
       }
     }
   }
-  const files = entriesOf(commands)
+  const files = visible(commands, bound, found) ? entriesOf(commands) : null
   if (files === UNREADABLE) {
     found.unseen = true
   }
@@ -68,13 +89,16 @@ function skillsIn(dir: string, commands: string, bound: string, found: Skills): 
 
 /** The skills that an agent in `scope` can preload from the repository. A local agent sees the
  *  `.claude/` directory of each project folder. A plugin agent sees its own plugin. The names are
- *  null when the rule cannot know them: a plugin manifest that sets `skills` adds directories,
- *  and a manifest that the rule cannot read can set it. */
+ *  null when the rule cannot know them: a plugin manifest that sets `skills` or `commands` adds
+ *  directories, and a manifest that the rule cannot read can set them. */
 function skillsOf(scope: AgentFile, bound: string): Skills | null {
   const found: Skills = { names: [], unseen: false }
   if (scope.plugin) {
     const manifest = readManifest(scope.root, bound)
-    if (manifest === UNREADABLE || (manifest !== null && 'skills' in manifest)) {
+    if (
+      manifest === UNREADABLE ||
+      (manifest !== null && ('skills' in manifest || 'commands' in manifest))
+    ) {
       return null
     }
     skillsIn(path.join(scope.root, 'skills'), path.join(scope.root, 'commands'), bound, found)
@@ -120,12 +144,12 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
         if (fm === null || !Array.isArray(fm.data.skills)) {
           return
         }
-        // The docs do not say if Claude Code compares a skill name with case.
+        // The docs do not say if Claude Code treats upper and lower case as different.
         const same = (entry: string) => (other: string) =>
           other.toLowerCase() === entry.toLowerCase()
         const entries = listEntries(fm, node.value, 'skills', () => false).filter(
           // A name with a `:` is a plugin skill or a command in a folder. The docs give no rule
-          // for that form in `skills`. A bundled skill and an allowed name are out of sight.
+          // for that form in `skills`. The rule does not check a bundled skill or an allowed name.
           ({ text }) =>
             !text.includes(':') && !BUNDLED_SKILLS.some(same(text)) && !allow.some(same(text)),
         )

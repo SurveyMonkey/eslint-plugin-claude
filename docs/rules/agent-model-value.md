@@ -29,20 +29,21 @@ values as the `--model` flag". That flag takes the aliases of the model configur
 The rule accepts these values:
 
 - `inherit`.
-- An alias: `sonnet`, `opus`, `haiku`, `fable`, `best`, `opusplan` or `default`. An alias takes the
-  suffix `[1m]`.
+- An alias: `sonnet`, `opus`, `haiku`, `fable`, `best` or `opusplan`. An alias takes the suffix
+  `[1m]`.
+- The value `default`. The model configuration page says that it is not itself an alias.
 - A model ID: `claude-` and a name, with no space, and the optional suffix `[1m]`.
 - A provider form: an Amazon Bedrock ARN, an `anthropic.` ID, or an ID that embeds a `claude-`
   model name, such as `us.anthropic.claude-opus-4-8`.
 - A value in the option `allow`.
 
-The docs do not say if Claude Code compares an alias with letter case. The rule ignores case for
-`inherit` and for the aliases. It does not ignore case for a `claude-` model ID.
-[`settings-model-value`](settings-model-value.md) ignores no case, so `Sonnet` is silent here and
-reported there.
+The docs do not say if Claude Code treats upper and lower case of an alias as different. The rule
+treats them as the same for `inherit` and for the aliases. A `claude-` model ID stays
+case-sensitive. [`settings-model-value`](settings-model-value.md) is case-sensitive for all values,
+so `Sonnet` is silent here and reported there.
 
 The sub-agents page lists four aliases and `inherit`. The rule also accepts the other aliases of the
-model configuration page, because the page says a subagent takes the values of `--model`. The rule
+model configuration page. The sub-agents page says that a full ID takes the values of `--model`. The rule
 cannot tell which models a provider or a gateway accepts, so it is a heuristic. A custom model value
 goes in the option `allow`.
 

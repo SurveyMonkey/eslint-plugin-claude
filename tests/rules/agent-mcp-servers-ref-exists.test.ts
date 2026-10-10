@@ -3,7 +3,8 @@
 // installation scopes": a project server is in `.mcp.json` at the project root. A user server is in
 // `~/.claude.json`, and the rule cannot see it. The files are on disk, because the rule reads
 // `.mcp.json` in the project folder and in each folder above it.
-import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
@@ -54,6 +55,21 @@ describe('agent-mcp-servers-ref-exists', () => {
     it('for a name in .mcp.json of a folder above the project', () => {
       const files = { '.mcp.json': servers('github') }
       expect(run(files, list('github'), 'pkg/.claude/agents/a.md')).toEqual([])
+    })
+    it('for a name in a .mcp.json at two levels, from the union of the files', () => {
+      const files = { 'pkg/.mcp.json': servers('a'), '.mcp.json': servers('b') }
+      expect(run(files, list('a', 'b'), 'pkg/.claude/agents/a.md')).toEqual([])
+    })
+    it('when the tree has no .git entry, so the project folder is out of the bound', () => {
+      const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'agent-nogit-')))
+      try {
+        mkdirSync(path.join(root, '.claude/agents'), { recursive: true })
+        writeFileSync(path.join(root, '.mcp.json'), servers('slack'))
+        const code = agent(list('github'))
+        expect(lintAgent('agent-mcp-servers-ref-exists', code, path.join(root, AGENT))).toEqual([])
+      } finally {
+        rmSync(root, { recursive: true, force: true })
+      }
     })
     it('for a name in the option allow', () => {
       expect(run({}, list('hubspot'), AGENT, [{ allow: ['HubSpot'] }])).toEqual([])
