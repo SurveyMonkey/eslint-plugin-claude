@@ -38,21 +38,26 @@ The `if` field holds exactly one permission rule. It has no `&&`, `||` or list s
 condition, define one handler for each.[^fields] The rule reports `&&`, `||` or a comma that joins rules. Examples are
 `Bash(git *) && Edit(*.ts)`, `Bash(git *), Edit(*.ts)` and `Bash && Edit`.
 
-The rule reads the raw text. The parser takes `Bash(git *) && Edit(*.ts)` as one rule for `Bash`. An
-operator inside a specifier is part of the pattern, so `Bash(a && b)` is one rule.
+The rule reads the raw text. The parser takes `Bash(git *) && Edit(*.ts)` as one rule for `Bash`. The rule
+ends the first rule at the parenthesis that closes the first `(`. It reports an operator after that point, when
+a name follows the operator. An operator inside a specifier is part of the pattern, so `Bash(a && b)` is one
+rule. A specifier with an unbalanced `)` that is followed by an operator and a name is a limit of this check.
 
 ### A rule that does not parse
 
 The rule uses the parser of the permission rule syntax, the same parser as
 [`permissions-rule-syntax`](permissions-rule-syntax.md).[^syntax] It reports four faults. The rule has no tool name, has
 unbalanced parentheses, has text after the final parenthesis, or holds a NUL byte. This rule reports
-these faults in a hook. `permissions-rule-syntax` reads permission lists and skill fields, not hooks.
+these faults in a hook. `permissions-rule-syntax` reads permission lists and skill fields, not hooks. The rule
+runs the parser only. It does not run the other checks of the permission rule group, such as the check of the
+tool name or of the specifier.
 
 ### A tool the matcher never selects
 
 The matcher of a group selects the tool, and `if` narrows the call further. The hook runs only when both
 match.[^resolve] A rule for one tool matches that tool's calls only.[^resolve] So `Bash(rm *)` in a group with the
-matcher `Edit` never runs. The rule reports it for a built-in tool or a full MCP tool name.
+matcher `Edit` never runs. The rule reports it for a built-in tool or a full MCP tool name. A rule such as `mcp__memory` names a whole
+MCP server, so the rule makes no report for it.
 The matcher must be an exact list, or a regular expression that compiles. A rule format covers a family of
 tools:[^rules]
 

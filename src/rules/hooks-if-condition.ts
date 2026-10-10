@@ -4,7 +4,7 @@
 // the group selects. `hooks-config-schema` reports an `if` that is not a string.
 import type { Rule } from 'eslint'
 import { HOOK_EVENTS, TOOL_EVENTS } from '../data/hook-events.ts'
-import { MCP_PREFIX, TOOL_NAMES } from '../data/tool-names.ts'
+import { MCP_PREFIX, MCP_SEPARATOR, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { exactValues, HOOKS_TARGET, handlersOf, hooksListener, memberOf } from '../hooks-config.ts'
 import { type ParseFailureReason, parsePermissionRule } from '../permission-rule.ts'
@@ -19,10 +19,9 @@ const FAMILIES: readonly (readonly string[])[] = [
   ['Edit', 'Write', 'NotebookEdit'],
 ]
 
-/** A `)`, then `&&`, `||` or a comma, then what looks like another rule: a name, then
- *  a parenthesis, the end of the text or another operator. A literal parenthesis inside a specifier
- *  is not followed by a name in this way. */
-const SECOND_RULE = /\)\s*(&&|\|\||,)\s*[A-Za-z_][\w-]*\s*(?:\(|$|&&|\|\||,)/
+/** What follows the end of the first rule: `&&`, `||` or a comma, then what looks like another rule. That
+ *  is a name, then a parenthesis, the end of the text or another operator. */
+const AFTER_RULE = /^\s*(&&|\|\||,)\s*[A-Za-z_][\w-]*\s*(?:\(|$|&&|\|\||,)/
 /** An operator in the tool part, such as `Bash && Edit`. */
 const OPERATOR_IN_TOOL = /&&|\|\||,/
 
@@ -34,10 +33,23 @@ const parseMessages: Record<ParseFailureReason, string> = {
 }
 
 /** The operator that joins two rules in `text`, or undefined. The check reads the raw text, because
- *  the parser reads `Bash(a) && Edit(b)` as one rule for `Bash`. */
+ *  the parser reads `Bash(a) && Edit(b)` as one rule for `Bash`. It ends the first rule at the `)`
+ *  that closes the first `(`. A parenthesis inside a specifier opens and closes in pairs, so it does not end the
+ *  rule early. */
 function operatorOf(text: string): string | undefined {
-  const tool = text.slice(0, text.includes('(') ? text.indexOf('(') : text.length)
-  return OPERATOR_IN_TOOL.exec(tool)?.[0] ?? SECOND_RULE.exec(text)?.[1]
+  const open = text.indexOf('(')
+  const inTool = OPERATOR_IN_TOOL.exec(open === -1 ? text : text.slice(0, open))?.[0]
+  if (inTool !== undefined || open === -1) {
+    return inTool
+  }
+  let depth = 0
+  for (let index = open; index < text.length; index++) {
+    depth += text[index] === '(' ? 1 : text[index] === ')' ? -1 : 0
+    if (depth === 0) {
+      return AFTER_RULE.exec(text.slice(index + 1))?.[1]
+    }
+  }
+  return undefined
 }
 
 /** True when the matcher selects one of `tools`, or when the rule cannot tell. A case variant
@@ -104,8 +116,12 @@ const rule: Rule.RuleModule = {
           continue
         }
         const { tool } = parsed
+        // A built-in tool, or a full MCP tool name. `mcp__server` is the rule of a whole server.
         const known =
-          TOOL_NAMES.includes(tool) || (tool.startsWith(MCP_PREFIX) && !tool.includes('*'))
+          TOOL_NAMES.includes(tool) ||
+          (tool.startsWith(MCP_PREFIX) &&
+            !tool.includes('*') &&
+            tool.slice(MCP_PREFIX.length).includes(MCP_SEPARATOR))
         if (matcher !== undefined && known) {
           const family = FAMILIES.find((tools) => tools.includes(tool)) ?? [tool]
           if (!selects(matcher, family)) {

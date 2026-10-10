@@ -140,14 +140,14 @@ describe(`${name}: one rule only`, () => {
   })
 })
 
-// Red: two false positives from the review of this layer. The fix commit changes `it.fails` to `it`.
+// Two false positives that the review of this layer found.
 describe(`${name}: review findings`, () => {
-  it.fails('is silent for the rule of a whole MCP server, which the matcher can select', () => {
+  it('is silent for the rule of a whole MCP server, which the matcher can select', () => {
     expect(run('PreToolUse', 'mcp__memory', 'mcp__memory__.*')).toEqual([])
     expect(run('PreToolUse', 'mcp__memory', 'mcp__memory__create_entities')).toEqual([])
   })
 
-  it.fails('is silent for parentheses and a comma inside a specifier', () => {
+  it('is silent for parentheses and a comma inside a specifier', () => {
     expect(run('PreToolUse', 'Bash(python -c "f(a), g(b)")')).toEqual([])
     expect(run('PreToolUse', 'Bash(echo (a)) || ls')).toEqual(['multiple'])
   })
