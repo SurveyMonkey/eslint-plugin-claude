@@ -39,6 +39,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-event-name-known',
     'hooks-handler-field-ignored',
     'hooks-handler-type-event-support',
+    'hooks-if-condition',
     'hooks-matcher-enum',
     'hooks-matcher-mcp-name',
     'hooks-matcher-never-matches',

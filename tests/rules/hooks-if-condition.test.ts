@@ -1,7 +1,7 @@
 // The `if` field of a hook handler holds one permission rule, and Claude Code evaluates it on tool
 // events only. The docs are the hooks reference, "Common fields" and "How a hook resolves", and the
 // tools reference, "Configure tools with permission rules and hooks".
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { HOOK_EVENTS, NO_MATCHER_EVENTS, TOOL_EVENTS } from '../../src/data/hook-events.ts'
 import {
   command,
@@ -14,9 +14,6 @@ import {
   settings,
 } from '../hooks.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
-
-// Red: the rule does not exist yet. The fix commit removes this line and the alias.
-const it = realIt.fails
 
 const name = 'hooks-if-condition'
 const run = (event: string, condition: unknown, matcher?: unknown, file = FILES.project) =>

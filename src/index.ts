@@ -23,6 +23,7 @@ import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableall
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
+import hooksIfCondition from './rules/hooks-if-condition.ts'
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
 import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
@@ -113,6 +114,7 @@ const modules = [
   hooksDisabledByDisableallhooks,
   hooksHandlerFieldIgnored,
   hooksHandlerTypeEventSupport,
+  hooksIfCondition,
   hooksMatcherEnum,
   hooksMatcherMcpName,
   hooksMatcherNeverMatches,
@@ -232,6 +234,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-disabled-by-disableallhooks': 'error',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-type-event-support': 'error',
+  'hooks-if-condition': 'error',
   'hooks-matcher-enum': 'error',
   'hooks-matcher-mcp-name': 'error',
   'hooks-matcher-never-matches': 'error',
