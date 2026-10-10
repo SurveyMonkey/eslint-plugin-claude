@@ -28,8 +28,9 @@ and `,`.[^patterns] It reports at the `matcher` value, once for each value that 
   `bash` and `WRITE` match no tool. The message names the correct tool. The tool names are in
   `src/data/tool-names.ts`.[^tools]
 - **`EndConversation` on `PreToolUse` and `PostToolUse`.** Claude Code skips both events for a call of that
-  tool.[^pretooluse] The docs say this for these two events only, so the rule makes no report there.
-- **The advisor tool.** It is a server tool that the API runs. It has no name that a hook matcher can
+  tool.[^pretooluse] The docs name these two events only, so the rule makes no report for `EndConversation` on other events.
+  A case variant such as `endconversation` gets this report too, because a fix of the case alone still never matches.
+- **The advisor tool, in any case.** It is a server tool that the API runs. It has no name that a hook matcher can
   use.[^tools]
 
 The rule makes no report for a regular expression, for `*`, or for an empty matcher. It makes no report

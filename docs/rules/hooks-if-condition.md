@@ -46,20 +46,19 @@ rule. A specifier with an unbalanced `)` that is followed by an operator and a n
 ### A rule that does not parse
 
 The rule uses the parser of the permission rule syntax, the same parser as
-[`permissions-rule-syntax`](permissions-rule-syntax.md).[^syntax] It reports four faults. The rule has no tool name, has
-unbalanced parentheses, has text after the final parenthesis, or holds a NUL byte. This rule reports
-these faults in a hook. `permissions-rule-syntax` reads permission lists and skill fields, not hooks. The rule
-runs the parser only. It does not run the other checks of the permission rule group, such as the check of the
+[`permissions-rule-syntax`](permissions-rule-syntax.md).[^syntax] It reports four faults in the `if` value: no tool name,
+unbalanced parentheses, text after the final parenthesis, and a NUL byte. `permissions-rule-syntax` reads
+permission lists and skill fields, not hooks. This rule runs the parser only. It does not run the other checks of the permission rule group, such as the check of the
 tool name or of the specifier.
 
 ### A tool the matcher never selects
 
 The matcher of a group selects the tool, and `if` narrows the call further. The hook runs only when both
-match.[^resolve] A rule for one tool matches that tool's calls only.[^resolve] So `Bash(rm *)` in a group with the
+match.[^resolve] A rule for one tool matches that tool's calls only.[^rules] So `Bash(rm *)` in a group with the
 matcher `Edit` never runs. The rule reports it for a built-in tool or a full MCP tool name. A rule such as `mcp__memory` names a whole
 MCP server, so the rule makes no report for it.
-The matcher must be an exact list, or a regular expression that compiles. A rule format covers a family of
-tools:[^rules]
+
+A rule format covers a family of tools:[^rules]
 
 | Rule | Tools that it covers |
 |------|----------------------|
@@ -70,7 +69,7 @@ tools:[^rules]
 The rule makes no report in these cases:
 
 - The matcher selects a tool of the family.
-- The matcher is match-all.
+- The matcher is match-all or omitted.
 - The tool name has a `*`, or the tool is not known.
 - The matcher is a case variant of the tool, such as `bash`.
   [`hooks-matcher-never-matches`](hooks-matcher-never-matches.md) reports it.
