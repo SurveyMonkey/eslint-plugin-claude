@@ -68,6 +68,7 @@ describe(RULE, () => {
     ['a license reference after WITH', 'GPL-2.0-only WITH LicenseRef-x'],
     ['an addition reference with no name', 'GPL-2.0-only WITH AdditionRef-'],
     ['an addition reference with no WITH', 'AdditionRef-x'],
+    ['a prefix before an addition reference', 'GPL-2.0-only WITH xAdditionRef-a'],
     ['a plus sign alone', '+'],
     ['two plus signs', 'MIT++'],
     ['a plus sign after a space', 'MIT +'],
