@@ -4,35 +4,43 @@
   "blocks": [
     {
       "id": "configure-server-managed-settings",
-      "hash": "e9b9e8d718489fdca9bfedf4639eeedb9257ca6fe12e3b7253f91cb42ae2bd39"
+      "hash": "e9b9e8d718489fdca9bfedf4639eeedb9257ca6fe12e3b7253f91cb42ae2bd39",
+      "bodyHash": "c224cf94eb47d9db84466f516280a8559740cf9c4e4a2a6955749853c3348fce"
     },
     {
       "id": "requirements",
-      "hash": "7001102e77d7a1ca6aaa0dbf456386301c273e84e8fb2b2aa17cc0cb4c3ea9f2"
+      "hash": "7001102e77d7a1ca6aaa0dbf456386301c273e84e8fb2b2aa17cc0cb4c3ea9f2",
+      "bodyHash": "99d2f6d878c449b237706b69f0803437d896bf7d53a08d06719a3d34f95ae9b5"
     },
     {
       "id": "choose-between-server-managed-and-endpoint-managed-settings",
-      "hash": "7be256c6ae88d04c652b1b6ae4630f8aefed6152a31a2b7c02b41506e0cbf569"
+      "hash": "7be256c6ae88d04c652b1b6ae4630f8aefed6152a31a2b7c02b41506e0cbf569",
+      "bodyHash": "f2d7ba2c786d54209606861f94c03bd54fe7ea655b6da316857c7f5384a62bf7"
     },
     {
       "id": "configure-server-managed-settings-1",
-      "hash": "cd1480e58bae5cc8a13c6ceefbf2aab60fd87849fec9751979bf2d6ceaa0450c"
+      "hash": "cd1480e58bae5cc8a13c6ceefbf2aab60fd87849fec9751979bf2d6ceaa0450c",
+      "bodyHash": "239c81b030218f5323921c9be7219c9a2b795eab15d12d0534935e47408385ca"
     },
     {
       "id": "verify-settings-delivery",
-      "hash": "69338391d5465985856d02cf463421872d0feeb57fcd0457befbe8e253dab7f9"
+      "hash": "69338391d5465985856d02cf463421872d0feeb57fcd0457befbe8e253dab7f9",
+      "bodyHash": "0a183f171631508484cadb951928dd2c801bd2ec878eebbb2705fd25cadc3f3f"
     },
     {
       "id": "access-control",
-      "hash": "6bafd6fca2ec2aa63a455eacb477aae72f98161027b97973e4c90d2270494f54"
+      "hash": "6bafd6fca2ec2aa63a455eacb477aae72f98161027b97973e4c90d2270494f54",
+      "bodyHash": "aa4bc34d677e2f082a6dcec1a9b699c638ed22eb85137aefd8fe9fb49ac20b10"
     },
     {
       "id": "managed-only-settings",
-      "hash": "4630c68057e0e2f664072fef386ca64539d4cc68f0bc772252397787e1cef252"
+      "hash": "4630c68057e0e2f664072fef386ca64539d4cc68f0bc772252397787e1cef252",
+      "bodyHash": "186375e62f56fb5edc920b2259832d9c05e128d0c7a54fc4e96012425b86d58f"
     },
     {
       "id": "current-limitations",
-      "hash": "cdbadc76f05b65f1b4290d6c71f6d00a50def4f5e9b6296073b3e02f8169d4d3"
+      "hash": "cdbadc76f05b65f1b4290d6c71f6d00a50def4f5e9b6296073b3e02f8169d4d3",
+      "bodyHash": "c65b68950283c223bf7d099b90568004ad7224e1b85cf2dfadee0de59b0d866a"
     },
     {
       "id": "settings-delivery",
@@ -40,51 +48,63 @@
     },
     {
       "id": "settings-precedence",
-      "hash": "d82a5823b7e675cf3b7ddf9d416f4c1be46dab0fff8c54c5dc29b34e5783c90e"
+      "hash": "d82a5823b7e675cf3b7ddf9d416f4c1be46dab0fff8c54c5dc29b34e5783c90e",
+      "bodyHash": "d395a15a77aa8a403b18e29b91e73c1a139c94da96221b4a8dba351080fc9ef6"
     },
     {
       "id": "per-key-exceptions-across-managed-sources",
-      "hash": "90e7f6ef00f730029ff8f6940bf13b5ae241e2055cad3e6de858c1618b868954"
+      "hash": "90e7f6ef00f730029ff8f6940bf13b5ae241e2055cad3e6de858c1618b868954",
+      "bodyHash": "ad8b3cc24fb581f50ecb0735ef2ef9c16efc256e736bbd880fb6df49fba4cfe6"
     },
     {
       "id": "fetch-and-caching-behavior",
-      "hash": "552d4e629d11300826cb9b538f2706172c7b6ffad87d97409bc9b52142d8c81c"
+      "hash": "552d4e629d11300826cb9b538f2706172c7b6ffad87d97409bc9b52142d8c81c",
+      "bodyHash": "b6b0558e34b502c901338429a1f21a10aad52d9ec4dda6d198397b172ae3f435"
     },
     {
       "id": "invalid-entries-in-delivered-settings",
-      "hash": "0a1f49dfbaf6a3f33f180fad6c58725103586ae3ff0373530ff3bd8ae78c0207"
+      "hash": "0a1f49dfbaf6a3f33f180fad6c58725103586ae3ff0373530ff3bd8ae78c0207",
+      "bodyHash": "a750835601654560b2b92d9b80260b7fd7545a7f8a2238718ae33b3201551a23"
     },
     {
       "id": "enforce-fail-closed-startup",
-      "hash": "f3856c625602f089608324cbc773483dae9265fabf2420c74647d0401ca1cce2"
+      "hash": "f3856c625602f089608324cbc773483dae9265fabf2420c74647d0401ca1cce2",
+      "bodyHash": "8f550435d4daeeae94fc785611dd971a53a3afe9b0d9c4af24a5a03561afa718"
     },
     {
       "id": "security-approval-dialogs",
-      "hash": "2c75b48de8a33fb99c33f4a3a5184ae04433d6202d8d337c201f840fcda9432e"
+      "hash": "2c75b48de8a33fb99c33f4a3a5184ae04433d6202d8d337c201f840fcda9432e",
+      "bodyHash": "06ce85ee24665d4e3b917e82636362fe5cee10066e06aafeb953d145642189f0"
     },
     {
       "id": "approval-memory",
-      "hash": "a830c7307e47beb4d67879b8a7392455b4494ecb5463563a0a7ee764cfe19ca3"
+      "hash": "a830c7307e47beb4d67879b8a7392455b4494ecb5463563a0a7ee764cfe19ca3",
+      "bodyHash": "dc134864c135001b3b60c1d3f234736fc0dffe1e46263a9811be6731c06cd930"
     },
     {
       "id": "environment-variables-and-the-approval-dialog",
-      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
+      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81",
+      "bodyHash": "f8315dd5fcb9ce9f4672d3c6c0f9bcdb1cc51546f0c3b83a2f5d814981972b07"
     },
     {
       "id": "platform-availability",
-      "hash": "8175078ee5efd0636ef91f71a4d1dc06a34d0339de0dd1970e6c6c8b8a34be4a"
+      "hash": "8175078ee5efd0636ef91f71a4d1dc06a34d0339de0dd1970e6c6c8b8a34be4a",
+      "bodyHash": "551b0e70ee438d7f4e8ce236cf01795f9907dbf11935b286802853ca68e95f19"
     },
     {
       "id": "audit-logging",
-      "hash": "d2698e781a9904f3e72c9a3a3593ccf6d4bf5e8410786a811480e384ed7b338d"
+      "hash": "d2698e781a9904f3e72c9a3a3593ccf6d4bf5e8410786a811480e384ed7b338d",
+      "bodyHash": "aecfc7448706d207967db2fdadada4fd107ec4b4a2137b0b7ce574ea9c9eb9f0"
     },
     {
       "id": "security-considerations",
-      "hash": "3f7c2af4aa3844b4de442154219673c79c0da8a43d608d00e429b71df90f9801"
+      "hash": "3f7c2af4aa3844b4de442154219673c79c0da8a43d608d00e429b71df90f9801",
+      "bodyHash": "3a7c7e397c76fc338e77f23c55b41be25dad3dcdc662ad9a78f12f5163ed6cb6"
     },
     {
       "id": "see-also",
-      "hash": "ba3fbb2ae1423928daca89110495c22938784ea76e2d71b6bc2c6b6c7f7f362a"
+      "hash": "ba3fbb2ae1423928daca89110495c22938784ea76e2d71b6bc2c6b6c7f7f362a",
+      "bodyHash": "bf372609839d0cb4e17dfc5c0446923ddcdc90c39c73ca50dd873780e12fc46e"
     }
   ],
   "sources": [

@@ -1,186 +1,241 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "2f14b19549d911bdf0797d3e41e7c3d74e0fa0b237778f954019a2bc57e061e3",
+  "hash": "64b179bbd125a9fa55717b755e956f4067f1e4ec5f27a8860742a6a24dfd7993",
   "blocks": [
     {
       "id": "tools-reference",
-      "hash": "4528a01d4d1f0c8b3e0e66b855aa8e4c5a9008db7d9004a3c95c0efff8e1cf57"
+      "hash": "4528a01d4d1f0c8b3e0e66b855aa8e4c5a9008db7d9004a3c95c0efff8e1cf57",
+      "bodyHash": "d10dae1147ffb04824a60c8c4c94338b7291e8f27ec3b8adb90280c53c01a35f"
     },
     {
       "id": "configure-tools-with-permission-rules-and-hooks",
-      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",
+      "bodyHash": "4c315264884b6be4392deaee4d2525731dcefffdfb02002944f5e109b0c04555"
     },
     {
       "id": "agent-tool-behavior",
-      "hash": "6b190f901ae9d9706504c0ed7bd3189796ac37d62809448faaa8d6dbc403d179"
+      "hash": "6b190f901ae9d9706504c0ed7bd3189796ac37d62809448faaa8d6dbc403d179",
+      "bodyHash": "66ff762765035815a7de0f4e58af3c43d0cce034f3e54f65fd36617eb16e4769"
     },
     {
       "id": "askuserquestion-tool-behavior",
-      "hash": "fc16e1dca3ebcca2f62d6aad8267736e01ec3b3cec75f4c6824e6a7465baef67"
+      "hash": "fc16e1dca3ebcca2f62d6aad8267736e01ec3b3cec75f4c6824e6a7465baef67",
+      "bodyHash": "f0bc1cdc1df200825cd779f661e50ca6cc9a338698974c11c583ea582203f983"
     },
     {
       "id": "question-auto-continue-timeout",
-      "hash": "6221fd4d82a3d2eb69d368e86bb413bb6e75f2c476169c144390a319a37b681b"
+      "hash": "6221fd4d82a3d2eb69d368e86bb413bb6e75f2c476169c144390a319a37b681b",
+      "bodyHash": "4ef935bf80a10751f4c78ff98b04a835d8134ee2fb0fd36be4c75261e8d05741"
     },
     {
       "id": "bash-tool-behavior",
-      "hash": "13fa7fd8ab4c7c8056267ad43f9f62ff2b033e8b8ef991ff60f1196a9a668de3"
+      "hash": "13fa7fd8ab4c7c8056267ad43f9f62ff2b033e8b8ef991ff60f1196a9a668de3",
+      "bodyHash": "dbde4ae093b486a830a37eb54fddbad41eeec4e9c2ef01b092ef704c95b9383a"
     },
     {
       "id": "what-persists-between-commands",
-      "hash": "533ef0f398bf1ed7d810c705e10222f71192a8501d7708129d238955b1592094"
+      "hash": "533ef0f398bf1ed7d810c705e10222f71192a8501d7708129d238955b1592094",
+      "bodyHash": "df318170a9a75e73aba1ec34faa9164d3771301b7e8bb74d4d63c6b383c07a18"
     },
     {
       "id": "timeout-and-output-limits",
-      "hash": "868c8ba0074a7bef5aa9ee5354612bf595744a2a9c82eff26c9b37277d4ebdfc"
+      "hash": "868c8ba0074a7bef5aa9ee5354612bf595744a2a9c82eff26c9b37277d4ebdfc",
+      "bodyHash": "b5ddae84c377b8739c82a38dfcc65f6eb90c7b7a2fbc7429ce76ca550c99eddc"
     },
     {
       "id": "output-limits",
-      "hash": "063364981c91c0b7aec79b3b8cc93c08594fc81803246e7ef44e36ffe6cb2d26"
+      "hash": "063364981c91c0b7aec79b3b8cc93c08594fc81803246e7ef44e36ffe6cb2d26",
+      "bodyHash": "ea907b8e74119a889484f771e6a795514c1ed0a576d93c83ffe79d46225cb729"
     },
     {
       "id": "background-commands",
-      "hash": "38ced6e4af97cc6e95561a492efbc1ed4ec52d8c38085b9eb2d05531f1ca5764"
+      "hash": "38ced6e4af97cc6e95561a492efbc1ed4ec52d8c38085b9eb2d05531f1ca5764",
+      "bodyHash": "4757309039e3fd8f2e970258db1fc9a8624364cf7377a5899edadcfa70d6c163"
     },
     {
       "id": "when-a-background-command-stops",
-      "hash": "f22bf2a580629fc12fa4027c6019a32e0c168e1be862d9bfef632927d633171b"
+      "hash": "f22bf2a580629fc12fa4027c6019a32e0c168e1be862d9bfef632927d633171b",
+      "bodyHash": "dd7430d517f5f86258addd4d079b045fbe1156834d84d7b72b541bf3077faae5"
     },
     {
       "id": "time-limit-for-background-commands",
-      "hash": "7aae1e7343cf4af8a2f9db047cf9e1321b63671e9c12d6b5cae582db467335a9"
+      "hash": "7aae1e7343cf4af8a2f9db047cf9e1321b63671e9c12d6b5cae582db467335a9",
+      "bodyHash": "c45233f8ff82bf5bf1945f522bcdf5cbabedc918ae92250a28030aca874a2eea"
     },
     {
       "id": "raise-the-time-limit-for-background-commands",
-      "hash": "0600c77509f652e6582a0a61901ed9b6d2292413626adad793eadb1c0d0eeba7"
+      "hash": "0600c77509f652e6582a0a61901ed9b6d2292413626adad793eadb1c0d0eeba7",
+      "bodyHash": "0b587f94a419159eebbb81f8846013b05aae7c9ea65f7008439f5be2132480d6"
     },
     {
       "id": "foreground-commands-that-move-to-the-background",
-      "hash": "47d02e53aac6d21156436804926154d10b3a2396cad3a5c263623ff636894472"
+      "hash": "47d02e53aac6d21156436804926154d10b3a2396cad3a5c263623ff636894472",
+      "bodyHash": "8244eb4fb3aaae366e971a4044d3b9be03facaab80462e5c292651bfa4e0ed2b"
     },
     {
       "id": "memory-limit-on-linux-and-wsl",
-      "hash": "afdc6ea8c10b65462bf59d9fb1667a0000bc095b73dcd5f08244cb62ee2b5653"
+      "hash": "afdc6ea8c10b65462bf59d9fb1667a0000bc095b73dcd5f08244cb62ee2b5653",
+      "bodyHash": "46dcef82668807fd0af4c1c8f1eacc02cfa1dd861d5d044077ad465e26e2ea8b"
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "9963d3e531649ff4991df88191b104875b04a1bbc31c3956f737251f25f1a802"
+      "hash": "5e046e4380c1d67c674f347680698bcc270a573f2acf767c51969c9225875d44",
+      "bodyHash": "8eb6a9bc233f8b592882ddf7f3d310f73b497ca30ffd7aa6be8b210440cc40ca"
+    },
+    {
+      "id": "non-utf-8-files",
+      "hash": "9bc7627e2650e21f78124216596778b11e442dfbd6451deec8f4cfa1b8ac2955",
+      "bodyHash": "f20e2d90ac0d1be030a06f0449dd19b46df944c63f3a9ee267fc87b27e38f506"
     },
     {
       "id": "endconversation-tool-behavior",
-      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea"
+      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea",
+      "bodyHash": "13c2f919f54fbacdde601730e01905a69af0982cc8b64b0db97066f9a236bd04"
     },
     {
       "id": "glob-tool-behavior",
-      "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429"
+      "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429",
+      "bodyHash": "d9673d252af90cbadd97ab8c5a694f5be147bb674d15ab497b7ae88ff278ceac"
     },
     {
       "id": "grep-tool-behavior",
-      "hash": "025efe7fdee3674adecd5c556baed309cc857f324bedfbc8f9b5d1316bfae273"
+      "hash": "025efe7fdee3674adecd5c556baed309cc857f324bedfbc8f9b5d1316bfae273",
+      "bodyHash": "400e9724eac6287ba698fd9e8570719b8e6395660e8cd86065109295cca3e11f"
     },
     {
       "id": "lsp-tool-behavior",
-      "hash": "6b4e822bb39d84966d42160b65388fa634445b8111854ca439e0e66bfcf6d8d7"
+      "hash": "6b4e822bb39d84966d42160b65388fa634445b8111854ca439e0e66bfcf6d8d7",
+      "bodyHash": "156af438ce705722f05260f4f4615bdd23fd0b21746a353cbb97913d4b2140d3"
     },
     {
       "id": "monitor-tool",
-      "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0"
+      "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0",
+      "bodyHash": "d32a5026d4d84dff543f3bb4fed65d2fb7273b812f3bc8fbf4b1fd165909c8b3"
     },
     {
       "id": "websocket-source",
-      "hash": "75133cf89b640f751f204f759a5c719eaad59c459475107133aad1d13be9f9ac"
+      "hash": "75133cf89b640f751f204f759a5c719eaad59c459475107133aad1d13be9f9ac",
+      "bodyHash": "831b1f461bca76aae39db975dcf907334f1310151d8d5ab777ef941ff013e18a"
     },
     {
       "id": "notebookedit-tool-behavior",
-      "hash": "b7ead44f231450a13e4e85574553387f2ef5e95a475e125202a18390fde84361"
+      "hash": "a1192f6f4e3e60a6a4c18d64850ff2838d2a1f6a6156a6bf5630320ee1475df0",
+      "bodyHash": "54efab65759aa0e78a0ff5435da27c18d547a1409fb7bf10177ce07f9597d3d7"
     },
     {
       "id": "powershell-tool",
-      "hash": "fc70eca3bfc62aaf1ddd47b39a1bd82fc2bf4ce560e0a148b3ed70328e671c5c"
+      "hash": "fc70eca3bfc62aaf1ddd47b39a1bd82fc2bf4ce560e0a148b3ed70328e671c5c",
+      "bodyHash": "2a1d74dfc83fcc23298e8a3a22d18f0457576ed0e28f952e99f4563ed4cafb70"
     },
     {
       "id": "enable-the-powershell-tool",
-      "hash": "358b621b9e028968eefa970552fde932d65fe91e6e23c1f38d2d58123111d119"
+      "hash": "358b621b9e028968eefa970552fde932d65fe91e6e23c1f38d2d58123111d119",
+      "bodyHash": "8532a365d76f5f8710e12d1285652b91fb7921eec32ea180619e27f963e13ccb"
     },
     {
       "id": "bash-deny-rules-also-turn-off-the-powershell-tool",
-      "hash": "99a1ab3f974652bb48cbca122aeb87101c73a030abf1d2f9300c7a7b0c3cb061"
+      "hash": "99a1ab3f974652bb48cbca122aeb87101c73a030abf1d2f9300c7a7b0c3cb061",
+      "bodyHash": "df26697e7d42079134929e0670c824a19eee40fe6aab6d3e5aa29827efb8ccb2"
     },
     {
       "id": "shell-selection-in-settings-hooks-and-skills",
-      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560"
+      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f",
+      "bodyHash": "67ede2a62b329d944b8ee029ecdb95c7543f6e59fdfb02a7df0d73d1ff80f32c"
     },
     {
       "id": "windows-encoding-and-exit-codes",
-      "hash": "6708a112ee09d788c0e1e21b3b004ec3b0d083079a2fb51044fa247a9aaba87a"
+      "hash": "6708a112ee09d788c0e1e21b3b004ec3b0d083079a2fb51044fa247a9aaba87a",
+      "bodyHash": "18eda3f9119bbd7130d90de810aa18ae882603e2af82542cd8ae7c50f6afbe10"
     },
     {
       "id": "preview-limitations",
-      "hash": "3af85cdac9329f68d4f6310f0e1f229194adaf623c9e0efb3f266600bc9ec79d"
+      "hash": "3af85cdac9329f68d4f6310f0e1f229194adaf623c9e0efb3f266600bc9ec79d",
+      "bodyHash": "7292bb92ceefc2f040f526e16d59440e3b44dfbedf8cfc8cef37d6eb0328b8cc"
     },
     {
       "id": "read-tool-behavior",
-      "hash": "67b80a70b1c14493553cd3e48d68411505b5fdd4777886dc4dac0294406c179a"
+      "hash": "934d7f37f6999d1e7f954d8cfe5336f91e8a0b595bf31dd65ae889c1b6fd053a",
+      "bodyHash": "867ac13d737fabbcfaea08e295b81b06eb45093748e5da8738352e8256d7b468"
+    },
+    {
+      "id": "large-files",
+      "hash": "5f6e4b7ce468b340689d8dd8769c3d982278b2e83d38fb09c9dd34961538e2c5",
+      "bodyHash": "67d99cd2e2cbf27a0be62ba82f5ea87b374f1c4750f63fa391fb57bcb70e8def"
     },
     {
       "id": "sendfeedback-tool-behavior",
-      "hash": "8d255eaf94cf417a534fcf949883f5fc70e508aeb7a58c76a6af10281c65a91b"
+      "hash": "8d255eaf94cf417a534fcf949883f5fc70e508aeb7a58c76a6af10281c65a91b",
+      "bodyHash": "79d2b0abf97d523ffd96494c24f1f6ae9dff208113c55d8e24e99651714136ee"
     },
     {
       "id": "what-you-see-when-claude-drafts",
-      "hash": "b9f0855e8e6bfdafd6227cd3b9a3c5882fe1ebcac3593a6a14dd7abb6d2177eb"
+      "hash": "b9f0855e8e6bfdafd6227cd3b9a3c5882fe1ebcac3593a6a14dd7abb6d2177eb",
+      "bodyHash": "c64003370e470eefecab5465863bd8fc8e99c45aa5328d28211cb4049c55aef8"
     },
     {
       "id": "review-and-edit-a-draft",
-      "hash": "e7a7fa41f0b170da219f3b73d6e5351e2854efa6ccf5d027db670f900da7c516"
+      "hash": "e7a7fa41f0b170da219f3b73d6e5351e2854efa6ccf5d027db670f900da7c516",
+      "bodyHash": "cfde9fed00565fe0d4bee0b0d0f4902ab103eb9cc515df44b5b29cc0a363da64"
     },
     {
       "id": "send-a-draft",
-      "hash": "431f1b95bb04b139b924ea383abc7644982dc991e0c8f07dae20e8ea67145a03"
+      "hash": "431f1b95bb04b139b924ea383abc7644982dc991e0c8f07dae20e8ea67145a03",
+      "bodyHash": "ccecdab67007a4e65b4d26c47871772238aca229ac7da64275c0090590601a42"
     },
     {
       "id": "discard-or-keep-a-draft",
-      "hash": "982e639dfe51956b4ef0aa928687045fc3a09ca6a67b1929c5d0547029063c99"
+      "hash": "982e639dfe51956b4ef0aa928687045fc3a09ca6a67b1929c5d0547029063c99",
+      "bodyHash": "87b062585b2962979a5359598225308ee66f0993a7a3385aeb06c5aba5eb593c"
     },
     {
       "id": "turn-claude-drafted-feedback-off",
-      "hash": "34524f40860ca0c9c390a660b8c454b221bdb05accae523a64925adda9e0e9da"
+      "hash": "34524f40860ca0c9c390a660b8c454b221bdb05accae523a64925adda9e0e9da",
+      "bodyHash": "d2b6432d0def9d2bf432657d0cef0d1571877cfb070d645e5b58ba60600bdff3"
     },
     {
       "id": "sessions-without-claude-drafted-feedback",
-      "hash": "44fb55109ef0d6c6ad0ad8d053804b235287a97e4f061f090e728e1d63443fee"
+      "hash": "44fb55109ef0d6c6ad0ad8d053804b235287a97e4f061f090e728e1d63443fee",
+      "bodyHash": "c3d2024cfba4dc14f2f760ce0ad1f6cd40bcef949bd31bd68aaff68191f0131b"
     },
     {
       "id": "task-tool-availability",
-      "hash": "a3e12d0dbc8c9569bc07f59a21d550c7e795b88bbc0fdff55aa9e662a7ed7c4a"
+      "hash": "a3e12d0dbc8c9569bc07f59a21d550c7e795b88bbc0fdff55aa9e662a7ed7c4a",
+      "bodyHash": "643ccdd03b72752eacfe34a219965eb1b47be417673d898a5b0a179c9a9a5a89"
     },
     {
       "id": "webfetch-tool-behavior",
-      "hash": "125ad96d4795b1089c1c135d507e76daaba2b84e9c6abe1929a639c896addfde"
+      "hash": "125ad96d4795b1089c1c135d507e76daaba2b84e9c6abe1929a639c896addfde",
+      "bodyHash": "da185bc23054320122589d6d3d9367b55c2632c95dacce4f7b31a9423cb3e217"
     },
     {
       "id": "webfetch-availability",
-      "hash": "96eb45d943b207362251c2846a24b6ccec4874143591b886be45fbe4594e4fef"
+      "hash": "96eb45d943b207362251c2846a24b6ccec4874143591b886be45fbe4594e4fef",
+      "bodyHash": "b6f99b10518f308a16173ad3b9921e79ac238168e8417a36131e3d2318df370a"
     },
     {
       "id": "websearch-tool-behavior",
-      "hash": "09da690747a86a64cba8cba54feb9aabbee00018ac633c31f0653990368394c7"
+      "hash": "09da690747a86a64cba8cba54feb9aabbee00018ac633c31f0653990368394c7",
+      "bodyHash": "66acca651a4771e58ef843b20f310ab01293a324873aa83c1fea1274fec86cd7"
     },
     {
       "id": "session-search-limit",
-      "hash": "e1594683d0bd61236e7eb88184c47840c616e71ac14a299e4384f7618b2f1688"
+      "hash": "e1594683d0bd61236e7eb88184c47840c616e71ac14a299e4384f7618b2f1688",
+      "bodyHash": "dc5b45407e0a377920f720fb3eb1f28aacff3683f2cffc7ba6fe15252ece363b"
     },
     {
       "id": "write-tool-behavior",
-      "hash": "c4355369b955e2360b451bc788d9f874afe5d978e20906434c1f533e1023ecb0"
+      "hash": "046c80c6ffd74866d6249edb5ce86359c9df8f86a88d943e97856c09efe3efce",
+      "bodyHash": "ca4b0b651023e4179a2cfc0901998558961afe2d5c533c30a1eef6d42aea135e"
     },
     {
       "id": "check-which-tools-are-available",
-      "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be"
+      "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be",
+      "bodyHash": "001885d60a57efd2e9670d6980df31255c0639b7d052821cb52676235df2258a"
     },
     {
       "id": "see-also",
-      "hash": "641f1836164d717c47ee336531cc8bd9066e94bc5abec19d38454946a569a412"
+      "hash": "641f1836164d717c47ee336531cc8bd9066e94bc5abec19d38454946a569a412",
+      "bodyHash": "4da0f6e1d59fbf02cfd293ff2270cc025d45bfbaa244bf678be2faea6706efc3"
     }
   ],
   "sources": [

@@ -1,134 +1,166 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
-  "hash": "b7d397a8393137fd3a4e630140b48282d2d0d492ce220a853a44a1896a4900d9",
+  "hash": "c7cd5187df8cb7c483d478716b727376310f33e8d417dd5e027188c3be9c4dbc",
   "blocks": [
     {
       "id": "host-and-maintain-a-marketplace",
-      "hash": "a5135b00a53295f3c0cbe56c24d2db346bd8af511a602493f736aadbce86956d"
+      "hash": "a5135b00a53295f3c0cbe56c24d2db346bd8af511a602493f736aadbce86956d",
+      "bodyHash": "16c06ebebbfa3320736091040acda607a44e43e7526c638355a765444360a787"
     },
     {
       "id": "host-your-marketplace",
-      "hash": "114c0a4faafac41a4bf77911d530aa75fa808fe9497a668f8f173fc2f033b74e"
+      "hash": "114c0a4faafac41a4bf77911d530aa75fa808fe9497a668f8f173fc2f033b74e",
+      "bodyHash": "5ac546ed52690d747e2846bbc82c60d3652228ad4642f42b21c81eb0c1a04dd9"
     },
     {
       "id": "register-the-marketplace-for-everyone-in-a-repository",
-      "hash": "0b208846a260187f2cc197a9fdf74464eca9b5629e597e1c46042b34b54b2b77"
+      "hash": "0b208846a260187f2cc197a9fdf74464eca9b5629e597e1c46042b34b54b2b77",
+      "bodyHash": "9455668a543ebecf38eeafa21b695ca2f5cab97a9ed9f16e8b381826c46ee4e5"
     },
     {
       "id": "avoid-relative-path-entries-in-a-url-hosted-marketplace",
-      "hash": "f7e91a0e03a030456ff0dfde543bde7c25e6de534fa86b567ff4d7e9673eb1db"
+      "hash": "f7e91a0e03a030456ff0dfde543bde7c25e6de534fa86b567ff4d7e9673eb1db",
+      "bodyHash": "c3d6ca69052410c6763cbc73e57902a37fa38ff60a5d50fe4f972e7d5a8a8a68"
     },
     {
       "id": "stay-within-the-download-limits-for-hosted-files",
-      "hash": "461a28c4a2f64e1dafb2f6fb1da7e93d3f33b4c287aa91fff2cebef8dea20922"
+      "hash": "461a28c4a2f64e1dafb2f6fb1da7e93d3f33b4c287aa91fff2cebef8dea20922",
+      "bodyHash": "6f668ab0af05b601e08e529c50069d8eccaefb9736980e8fcd6311f750ab3c5a"
     },
     {
       "id": "edit-plugins-in-place-on-a-shared-directory",
-      "hash": "62773a0fe185667aa1d824f31b25a9ceb1ae92993c56255d933814c7162c213e"
+      "hash": "62773a0fe185667aa1d824f31b25a9ceb1ae92993c56255d933814c7162c213e",
+      "bodyHash": "2c3b224312d9433e14b22d96e40feea145387918ecc0ca84bbf1f964155a2755"
     },
     {
       "id": "keep-plugin-files-out-of-git-lfs",
-      "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810"
+      "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810",
+      "bodyHash": "67a7d5d08c19b46e4a6af067c0864540ee5b5d25130f27a1b75e21e7adc2c568"
     },
     {
       "id": "share-files-within-a-marketplace-with-symlinks",
-      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f",
+      "bodyHash": "3a92ecde8c0aeade208d40b5d5bb89da2563e1309ee06d3a27a46606f65f299f"
     },
     {
       "id": "distribute-through-organization-settings",
-      "hash": "180fb15f7830ff440387a5dc3bffb13835c2f3a70ee9320f40d80d7641149f9c"
+      "hash": "180fb15f7830ff440387a5dc3bffb13835c2f3a70ee9320f40d80d7641149f9c",
+      "bodyHash": "e187bb985d7eeeb5a9a7a607a46df7288f4948941e56407bb5189bddcecfedc6"
     },
     {
       "id": "grant-access-to-a-private-marketplace",
-      "hash": "04807abe53724b039ad2c82485643a0100f80bc1d773002c395f4db9861fea66"
+      "hash": "04807abe53724b039ad2c82485643a0100f80bc1d773002c395f4db9861fea66",
+      "bodyHash": "a39d504e15d99c2adeea7fac6cfdf69ef791a384e1331ee0cc5d674a32fe21ba"
     },
     {
       "id": "serve-users-who-have-no-git-host-account",
-      "hash": "8cb4f50cb63f6c02e0d13a1a48dbdf013814d81b178d626a788d6b1830db55f8"
+      "hash": "b0005d3b939b2ef3e13533917434718a87865ca6882fae1c7b98d13698e4db06",
+      "bodyHash": "9dc08568c1d72aa29086f907743c7d8995fa2cede5178affc3fa956990344448"
     },
     {
       "id": "what-background-auto-update-does-with-credentials",
-      "hash": "a6d47cae61d5a81302be9b42a7e5070c586867ea7dd7ba16b14ed4a4ee2d2d43"
+      "hash": "a6d47cae61d5a81302be9b42a7e5070c586867ea7dd7ba16b14ed4a4ee2d2d43",
+      "bodyHash": "446e5ad1c7dc21af6a99612c14ae72e2845f971497f841a2e4add88253485d33"
     },
     {
       "id": "roll-out-to-a-whole-company",
-      "hash": "09a4736ac6a53e4efde2a25a12d0d5be807bd58643da825f49d62cd3ad130789"
+      "hash": "09a4736ac6a53e4efde2a25a12d0d5be807bd58643da825f49d62cd3ad130789",
+      "bodyHash": "f210f68651cab479fe02602c3cc14fe2224cd6bf77c76758bd9c7912208bc16a"
     },
     {
       "id": "keep-users-up-to-date",
-      "hash": "2376566acb7ec29e41f7e223d5e1a79b6502762cddb789858f8101a6189e0634"
+      "hash": "2376566acb7ec29e41f7e223d5e1a79b6502762cddb789858f8101a6189e0634",
+      "bodyHash": "60d2a74957b0784ddc994e3e87bb742023c26b276c7334c8fcf5e070ae1878b9"
     },
     {
       "id": "turn-on-auto-update",
-      "hash": "c20a7f6b42288f463a187f4379c758362e73e58be540b28daafdfea2e8dc7724"
+      "hash": "c20a7f6b42288f463a187f4379c758362e73e58be540b28daafdfea2e8dc7724",
+      "bodyHash": "a1babb133d9d9aed28cf3dc068b9b2a90f0bcd1229bd0ee05eb74daa39092020"
     },
     {
       "id": "release-a-new-version",
-      "hash": "ef8ed525a0fa7f402ddefa908f0df1254bb78a6022a38ffb3000071f1e2ffdfb"
+      "hash": "ef8ed525a0fa7f402ddefa908f0df1254bb78a6022a38ffb3000071f1e2ffdfb",
+      "bodyHash": "7f2ed415245e8ef4a191752166663c3bd5c78c8d45a8478158f1573daf06cd60"
     },
     {
       "id": "hold-users-on-one-version",
-      "hash": "8f67d300fbf63642b0de529ec8e5d7dabd69de860a51bdaac10f5f4fc84ef9a8"
+      "hash": "8f67d300fbf63642b0de529ec8e5d7dabd69de860a51bdaac10f5f4fc84ef9a8",
+      "bodyHash": "9d4eb1d413e1ec0907442bb1c2a2b9add03c84f62df228949066c0e838b898ac"
     },
     {
       "id": "change-the-command-of-a-command-source",
-      "hash": "cbfe440f0627008aa6750729e9fa1e10996495f9d9af2e99985fd3995344b97c"
+      "hash": "cbfe440f0627008aa6750729e9fa1e10996495f9d9af2e99985fd3995344b97c",
+      "bodyHash": "596818ce287307ed2020c38b0af0533af3b5b0773bfae0e6a9e105c3ae32cbcf"
     },
     {
       "id": "run-release-channels",
-      "hash": "e1f64395c7cc5d20f49ed479f1ad7fb329ba977b426564d10667dc3b5cfef67e"
+      "hash": "e1f64395c7cc5d20f49ed479f1ad7fb329ba977b426564d10667dc3b5cfef67e",
+      "bodyHash": "1a573503102c777d6c5e3c26b7f6f417868890563d8bec29514361df84017932"
     },
     {
       "id": "rename-or-remove-a-plugin",
-      "hash": "49c4ef9291c9fafba36ed88684e520251777b484c3a981f8d14efd7075a5ec17"
+      "hash": "49c4ef9291c9fafba36ed88684e520251777b484c3a981f8d14efd7075a5ec17",
+      "bodyHash": "036b2d698f053a2684e6ef277826d5ff495e6265b20ab9bdf897720eab298d0b"
     },
     {
       "id": "migrate-users-with-a-renames-map",
-      "hash": "fbe87cabedacb890a9194623de4a6814146b72acfc75ca74ad94b2b35c9e3c3d"
+      "hash": "fbe87cabedacb890a9194623de4a6814146b72acfc75ca74ad94b2b35c9e3c3d",
+      "bodyHash": "8b4f3f3d994ba2f9e3e72c01e66337fe96309a0c125ca8ccc01e8e311b7ebac5"
     },
     {
       "id": "uninstall-removed-plugins-from-users-machines",
-      "hash": "9c9c5c5b4e6e0baa6881e350733535a3fade532a6cd9ac2c6aa233b68008e6ff"
+      "hash": "9c9c5c5b4e6e0baa6881e350733535a3fade532a6cd9ac2c6aa233b68008e6ff",
+      "bodyHash": "119dcb138164107b61ad29a29927b747f3fd8b2580d2dd8d773a77d1542d7948"
     },
     {
       "id": "authenticate-archive-downloads",
-      "hash": "0f911c139520dfff6ae7339a555f06609159af0b81daf8acc5a795cb9735ac91"
+      "hash": "0f911c139520dfff6ae7339a555f06609159af0b81daf8acc5a795cb9735ac91",
+      "bodyHash": "4056cda7190efbf215506e4272b9ba5c272b98f8996c07716df665c01ea6cdb9"
     },
     {
       "id": "add-a-headershelper-to-a-plugin-entry",
-      "hash": "a1e6df5d21c3de953120a77f45034b2ba14226e3d158afe13751b02f90637baa"
+      "hash": "a1e6df5d21c3de953120a77f45034b2ba14226e3d158afe13751b02f90637baa",
+      "bodyHash": "f47b95392fc13fc9954b742ba93ae12c018ff7bd6dd726ddb761d939995d5a27"
     },
     {
       "id": "write-the-headershelper-command",
-      "hash": "6317de714c4b2dcad6898568d25a5a9d9715252b43b4c82a47b982c0e599600a"
+      "hash": "6317de714c4b2dcad6898568d25a5a9d9715252b43b4c82a47b982c0e599600a",
+      "bodyHash": "cd762a7d596ec17abd7007e6f3a7d209222934489c5559d43e97c17a26c3bd11"
     },
     {
       "id": "when-claude-code-skips-a-headershelper-command-or-drops-its-output",
-      "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338"
+      "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338",
+      "bodyHash": "e1f984dba449972c5b6f1f99052c81c537ecec2cfd40f8480a58b6a8cd4b3765"
     },
     {
       "id": "how-users-accept-a-headershelper-command",
-      "hash": "68223f61c1181a5996b6908f753ce9f610421ecbc262e97f0fe8e576d6b92eb9"
+      "hash": "68223f61c1181a5996b6908f753ce9f610421ecbc262e97f0fe8e576d6b92eb9",
+      "bodyHash": "201e383d2a362a414803f7fc67d6089c18f7710e5f8a28e6366afdaabc07c71f"
     },
     {
       "id": "installs-and-updates-that-refuse-the-command-instead-of-asking",
-      "hash": "781332af4ff81478f8f0c70cd1ac991e17381fb1ceb5073b61e11ddc26fa4d8b"
+      "hash": "781332af4ff81478f8f0c70cd1ac991e17381fb1ceb5073b61e11ddc26fa4d8b",
+      "bodyHash": "a2aea6e2e11601289ad492550be00ed89845f3782cadd41a749cf68f0da90d4f"
     },
     {
       "id": "when-a-marketplace-url-sources-command-runs",
-      "hash": "cfec73edc9ef6826dddf520d351285eacadde2979b52be79e4ea29ab99552ca2"
+      "hash": "cfec73edc9ef6826dddf520d351285eacadde2979b52be79e4ea29ab99552ca2",
+      "bodyHash": "e4b9a15d5c53330ecba5f2459e39449f1248c37f144f951df40becf08d37beef"
     },
     {
       "id": "depend-on-and-recommend-other-plugins",
-      "hash": "8cbf1e22cd64cc851060fb205cd5ab68879295f27bc173156cd26d13466330f3"
+      "hash": "8cbf1e22cd64cc851060fb205cd5ab68879295f27bc173156cd26d13466330f3",
+      "bodyHash": "24add719119bdb3115fe7f252fbad0e4eb9aaa52e69184ca63f36fc5518e99fa"
     },
     {
       "id": "work-around-what-a-marketplace-cant-do",
-      "hash": "947e638471091961d966eda9274714dd8a283d7da24a545d2817238caabb89db"
+      "hash": "947e638471091961d966eda9274714dd8a283d7da24a545d2817238caabb89db",
+      "bodyHash": "3b4c641de067313d06c965f2e184d3cbdbd966c8864b954faeb4f56a64890e2d"
     },
     {
       "id": "next-steps",
-      "hash": "9855bbbe079e9a1dc2bdfbf31836d46d94ab2100fb0c78890fd76232332017b4"
+      "hash": "9855bbbe079e9a1dc2bdfbf31836d46d94ab2100fb0c78890fd76232332017b4",
+      "bodyHash": "b152705f232165cf513a23ee2381e9e211b02328e86d8dbe956e6c90102dbc18"
     }
   ],
   "sources": [

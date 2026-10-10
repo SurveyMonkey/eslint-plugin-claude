@@ -1,10 +1,11 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "e7d592dc8ec3baaeaf3156e764f924874e491ffd9af911d5a743edbdafb8452f",
+  "hash": "632ca58b63afeac3dde90eef93e55f4b91039dc49d8c39754e31760de7f74e1c",
   "blocks": [
     {
       "id": "all-settings",
-      "hash": "5ce47148291331f3a8891f51c04c2f9e2d2872acc7ae5cb59fb1d334dac0d295"
+      "hash": "5ce47148291331f3a8891f51c04c2f9e2d2872acc7ae5cb59fb1d334dac0d295",
+      "bodyHash": "0ccdb2e5423cba2431bf63cdfa58a3d678070795710bab1b66647f08c6a7c0f9"
     },
     {
       "id": "settings-index",
@@ -13,1151 +14,1443 @@
     },
     {
       "id": "model-and-responses",
-      "hash": "2877798808f43aa079370a791d755e73dd79b77f62344e459f032667a1b8575d"
+      "hash": "2877798808f43aa079370a791d755e73dd79b77f62344e459f032667a1b8575d",
+      "bodyHash": "14e04116baead0523c74458a928fd548bfcea9da43ebb2519ed96691a7101243"
     },
     {
       "id": "advisormodel",
-      "hash": "2b0354c3c184efeeee8cb4a443f14f19179a0f43f9d896977f4cb8aa691368b9"
+      "hash": "2b0354c3c184efeeee8cb4a443f14f19179a0f43f9d896977f4cb8aa691368b9",
+      "bodyHash": "707d8eb90b604cac74470a09cf504b6e56c642c18fab7af118ace6e09eab6166"
     },
     {
       "id": "alwaysthinkingenabled",
-      "hash": "9728322c1962dc46af482e03fc08e16dfb1f4ebc666bfb770f1df6c378e16bc0"
+      "hash": "9728322c1962dc46af482e03fc08e16dfb1f4ebc666bfb770f1df6c378e16bc0",
+      "bodyHash": "7239bc9bcb0a10f230cd7cea57326109ae13d4df9554b3bdcfc3186f6580ecb1"
     },
     {
       "id": "availablemodels",
-      "hash": "c7ce44f7ffae9f6699f8cf638bae02cbdef08238df74464e656ababbaabf33ad"
+      "hash": "c7ce44f7ffae9f6699f8cf638bae02cbdef08238df74464e656ababbaabf33ad",
+      "bodyHash": "e9566e9ade1503236fd711cdf969c26d523c1b1e032d49d5ce456b421a88aa40"
     },
     {
       "id": "availablemodelsmatch",
-      "hash": "62226fb18925d5e5b56a05b149266aaf886abc8bbe8db97563601b16302f577f"
+      "hash": "62226fb18925d5e5b56a05b149266aaf886abc8bbe8db97563601b16302f577f",
+      "bodyHash": "322e8c6049955fb4d0ca13907fe3cd0ee048eb62bafdb19a943d2c90b6a94277"
     },
     {
       "id": "deniedmodels",
-      "hash": "45b295c5d3e5f2f6e5fb5397c2c67203f8bfbaf7f5f06f32c7e921e295d82eb3"
+      "hash": "45b295c5d3e5f2f6e5fb5397c2c67203f8bfbaf7f5f06f32c7e921e295d82eb3",
+      "bodyHash": "8e270cd9198548aeb5a0990d021f68dad70659702a6955e4f033691d865c3c8c"
     },
     {
       "id": "effortlevel",
-      "hash": "c48649f2902e054f8aee91c23b860b0f1c468db5fd3e0e6b9300db95bb761d45"
+      "hash": "c48649f2902e054f8aee91c23b860b0f1c468db5fd3e0e6b9300db95bb761d45",
+      "bodyHash": "b7a2ec06cffac2bca0f60f9e5c6f3bc0ec47e653cf834f9661be757fee6f0060"
     },
     {
       "id": "enforceavailablemodels",
-      "hash": "fb96c3d91975ed009073738209439fa2df74779a4625a38fb03c4954d8fe383c"
+      "hash": "fb96c3d91975ed009073738209439fa2df74779a4625a38fb03c4954d8fe383c",
+      "bodyHash": "0dc48ac15ec713b97c1f501b221a66ef279ab9151cc959a73d8ddf3742da7976"
     },
     {
       "id": "fallbackmodel",
-      "hash": "a077dac729806f0595939eb723e4dc7e83d5736e1a4ed974e82bdc31e181f81e"
+      "hash": "a077dac729806f0595939eb723e4dc7e83d5736e1a4ed974e82bdc31e181f81e",
+      "bodyHash": "3854d8cbc322ebb021441bbe10d5c968335634a254a1372d8b55a178b853a942"
     },
     {
       "id": "fastmode",
-      "hash": "701fe8e7e0e2dc99f9dddbb367ff5eaf308c9a7aa06e102052a0944567a47d22"
+      "hash": "701fe8e7e0e2dc99f9dddbb367ff5eaf308c9a7aa06e102052a0944567a47d22",
+      "bodyHash": "1c1b2dc7cc6b4fe1f12849ff3320d0ab786ff214328e008821f3edc0138e3207"
     },
     {
       "id": "fastmodepersessionoptin",
-      "hash": "f27854257fad4795fefc7985ed23cdc69b4eb08a410e789e819071834f29242b"
+      "hash": "f27854257fad4795fefc7985ed23cdc69b4eb08a410e789e819071834f29242b",
+      "bodyHash": "f7205c6b374b34ba902becd40a2e9f1d32e79ccec589f1f3eac31db52aa0bf58"
     },
     {
       "id": "language",
-      "hash": "82fb58daec2035d8b4f42fcdd09a78877dbc3d8c218351196f0d6f72be1a0544"
+      "hash": "82fb58daec2035d8b4f42fcdd09a78877dbc3d8c218351196f0d6f72be1a0544",
+      "bodyHash": "170f943ea80da6e80ae6fc77492594a27e119ce774ca439a19fdca02dc0a3504"
     },
     {
       "id": "maxeffortlevel",
-      "hash": "9300ac5a4a77a5e131ebbc90540f3d4efbabb6e35574557786d256b3739eba93"
+      "hash": "9300ac5a4a77a5e131ebbc90540f3d4efbabb6e35574557786d256b3739eba93",
+      "bodyHash": "bd73664ba6f8584a7ea2c1a46468a960b427c2d138ded70b8fb97984b7555943"
     },
     {
       "id": "model",
-      "hash": "e91e79c89d7fe9532289a9e3418f3c3d4641e16ae8d2be05bc3f75834695bf62"
+      "hash": "e91e79c89d7fe9532289a9e3418f3c3d4641e16ae8d2be05bc3f75834695bf62",
+      "bodyHash": "3f50cd6dc852fbef9de4dc853ce828476fee4e6b61c654b7e7a35f9373b10d11"
     },
     {
       "id": "modeloverrides",
-      "hash": "456dcce66e097009c449460e536955db1d678ace9000a4a10163080fb282b1a9"
+      "hash": "456dcce66e097009c449460e536955db1d678ace9000a4a10163080fb282b1a9",
+      "bodyHash": "5b55b5322902f21efb70028f0d952201e78f56f89e923646eb090f26eb67ae75"
     },
     {
       "id": "modelpicker",
-      "hash": "079092698833d34051a050c8b9fd60859015345e3f90b7f8b786a2bf230370df"
+      "hash": "079092698833d34051a050c8b9fd60859015345e3f90b7f8b786a2bf230370df",
+      "bodyHash": "2c730115d5c5519710db5cbb499d3bdaacd1ab155d2e428b953c2870a4a54f37"
     },
     {
       "id": "fields-for-modelpicker",
-      "hash": "ab0c48c277159a54a6c8ddc141c00d1b5fb65969ecc2439fc40cdd2037b4d52c"
+      "hash": "ab0c48c277159a54a6c8ddc141c00d1b5fb65969ecc2439fc40cdd2037b4d52c",
+      "bodyHash": "cc5c7bca0518cbe990e965e385eeb7c23a9143af41cb0ef384f7b927111972a3"
     },
     {
       "id": "modelpricing",
-      "hash": "dadddf715f95f8c43b43625eb2d5ca4d90a939b63eb803e53abe7f56e8cc4a47"
+      "hash": "dadddf715f95f8c43b43625eb2d5ca4d90a939b63eb803e53abe7f56e8cc4a47",
+      "bodyHash": "f6f8d726c50454119cf078605e02dd7a86e79f0d358e5b64a828eb98a108d2f0"
     },
     {
       "id": "fields-for-modelpricing",
-      "hash": "9e829bbae1f664d94058a7cdefa3de7c8f3fe5ffe217c51cc9ff14c76fe0621a"
+      "hash": "9e829bbae1f664d94058a7cdefa3de7c8f3fe5ffe217c51cc9ff14c76fe0621a",
+      "bodyHash": "5059b0481d5621dd419323becb8f616f7901672cc2707ede247b28eeaed5250f"
     },
     {
       "id": "which-models-a-modelpricing-row-applies-to",
-      "hash": "e3ce6d9cc40cef269d4dde01f8ad39860c5994241a4b593d13997d40b66bcf92"
+      "hash": "e3ce6d9cc40cef269d4dde01f8ad39860c5994241a4b593d13997d40b66bcf92",
+      "bodyHash": "0c907f17584708a6f40f21a056d29caeb4530bc405f52a88d565970a7f9b410b"
     },
     {
       "id": "modelsettings",
-      "hash": "2b6d5712ceb1f6f68fa49ceb462753874e79b67533e613b3b2a4d6114327bb8c"
+      "hash": "2b6d5712ceb1f6f68fa49ceb462753874e79b67533e613b3b2a4d6114327bb8c",
+      "bodyHash": "80dfb40be3984ccffc4e979c54536a5d2cfb806dbd5301c97799556aadafcda7"
     },
     {
       "id": "outputstyle",
-      "hash": "d1bbb755b02563e203bb35f53287acb009dddd329b169da201aed373a4f412fb"
+      "hash": "d1bbb755b02563e203bb35f53287acb009dddd329b169da201aed373a4f412fb",
+      "bodyHash": "98dd648f3c1ba9173f1dbe96d35605b81ad7dc3069f18a2090c3bcddc204075f"
     },
     {
       "id": "promptcachettl",
-      "hash": "189010f9f11aa7425c4f3562c627567a357ba65ffcba6f2906594d944b425ae0"
+      "hash": "189010f9f11aa7425c4f3562c627567a357ba65ffcba6f2906594d944b425ae0",
+      "bodyHash": "946ca6db4eb278c60601908dac917c633430d54f7dae403bc72d05b809d09340"
     },
     {
       "id": "showthinkingsummaries",
-      "hash": "8b0a3133646252f7cb4b517f8a6d58ad3d220fbd8feb4cd55a15d96effc5385f"
+      "hash": "8b0a3133646252f7cb4b517f8a6d58ad3d220fbd8feb4cd55a15d96effc5385f",
+      "bodyHash": "3f0e215b4fba08aae9e6918306f7b66683c6fcbba9fb57b1758ebc15d93cb825"
     },
     {
       "id": "subagentpromptcachettl",
-      "hash": "7c193f311ab202d503898af059df9319b4061ac781ea3ecfa94835ad8d7b9b0c"
+      "hash": "7c193f311ab202d503898af059df9319b4061ac781ea3ecfa94835ad8d7b9b0c",
+      "bodyHash": "54cb4fe43773b22611a3ec5d9ef99618320d4f84f2b09927e514386f4deee7ee"
     },
     {
       "id": "switchmodelsonflag",
-      "hash": "e2971aecaea0e895220e87ca2943642d12eb6678987d9d8f690d7d207b0cfb3a"
+      "hash": "e2971aecaea0e895220e87ca2943642d12eb6678987d9d8f690d7d207b0cfb3a",
+      "bodyHash": "05a61727333b875d6fafae45d3e9b8d733cb4c832aa13ae74caddca0b7fb7541"
     },
     {
       "id": "ultracode",
-      "hash": "e9c51ff58ea90fb50ee61c6836ee81a7008612563df0e3edf99fa1ec6dec1f65"
+      "hash": "e9c51ff58ea90fb50ee61c6836ee81a7008612563df0e3edf99fa1ec6dec1f65",
+      "bodyHash": "5ea3571a280aa2c81726769a64f1f6ed7cdbdfe1f672549faee2d9d68e775bbf"
     },
     {
       "id": "permission-settings",
-      "hash": "40ef3318588fc7a9ee4e425bea42284a5f90fb93ad507fc07a2fa653dc4b48f6"
+      "hash": "40ef3318588fc7a9ee4e425bea42284a5f90fb93ad507fc07a2fa653dc4b48f6",
+      "bodyHash": "8bc3c6a7c4e961008fc11a6d93c197f545acd476c969b4eaa02997cebc800b8a"
     },
     {
       "id": "allowmanagedpermissionrulesonly",
-      "hash": "a09b1f0b9427cf64bf0c1ff3b5e649e6c1f91f56f75acecd11b1ceacd099ee16"
+      "hash": "a09b1f0b9427cf64bf0c1ff3b5e649e6c1f91f56f75acecd11b1ceacd099ee16",
+      "bodyHash": "bbc45a703e606a23f325afc4b22c1567f5b5d275ae6d05aabd80ee4b8c2a4900"
     },
     {
       "id": "automode",
-      "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522"
+      "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522",
+      "bodyHash": "d76ace1b7c4d3f4acdba45f73f813a53871d6558f2171d43fb564d99050c0af0"
     },
     {
       "id": "automode-classifyallshell",
-      "hash": "3d219cdbd147bfeea21d24169b6632353cd46c2f963b56c1670a163bdb957b48"
+      "hash": "3d219cdbd147bfeea21d24169b6632353cd46c2f963b56c1670a163bdb957b48",
+      "bodyHash": "3a6418869e9ffcf5e7d36541b4ea6a77f3a5952015467e0fc849d139c9314e8e"
     },
     {
       "id": "disableautomode",
-      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
+      "bodyHash": "9a531a81fb8c201877e53fa9e95be3494930a91cdb4a7d472212e98c64fe12d6"
     },
     {
       "id": "permissions",
-      "hash": "23a950c07d6332b801953be9c69b2ef1ea2daa03614344753d8889d4c236a465"
+      "hash": "23a950c07d6332b801953be9c69b2ef1ea2daa03614344753d8889d4c236a465",
+      "bodyHash": "7a17309ffdcaed81e8d5a48bf6857dac67e349c6c16429bb96a3d5a6de15d8be"
     },
     {
       "id": "useautomodeduringplan",
-      "hash": "e4a219d29cca4f02cafb5f0e5ebcdea8111dc8a40485a608de9c34f3551475a5"
+      "hash": "e4a219d29cca4f02cafb5f0e5ebcdea8111dc8a40485a608de9c34f3551475a5",
+      "bodyHash": "8af25c2d027d1007702e2dbb369b26ca8639681bb3dc420b05aa9e6befa8897e"
     },
     {
       "id": "permissions-allow",
-      "hash": "0e383bc5c3682d19a2cb4a3ea80cf8979c2163d37df12292912a22ad9e67195f"
+      "hash": "0e383bc5c3682d19a2cb4a3ea80cf8979c2163d37df12292912a22ad9e67195f",
+      "bodyHash": "96db4b522d5f862e63360189806db5416f1c4148675d2095c779819df64820e0"
     },
     {
       "id": "permission-rule-syntax",
-      "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d"
+      "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d",
+      "bodyHash": "03b9abfcc524a711ce97563cb12b6704caa098522709f91f6855a87e89f52046"
     },
     {
       "id": "permissions-ask",
-      "hash": "bcd0e691db3823ea9d41072154d0b3ef19de8709c896d7b5afec45dbd3ccc3d1"
+      "hash": "bcd0e691db3823ea9d41072154d0b3ef19de8709c896d7b5afec45dbd3ccc3d1",
+      "bodyHash": "a7932954f3676555ac4c9792f996292e25de1a28b9d148cd48cc98976821258c"
     },
     {
       "id": "permissions-deny",
-      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
+      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc",
+      "bodyHash": "81a628702dd7707d9dc2200885d435a006e1eb82d9f6ce659919c9c91060d4a2"
     },
     {
       "id": "permissions-additionaldirectories",
-      "hash": "9153928bd132a6f72591b10aff814dda012710ef079e916713512a52f99a5cdb"
+      "hash": "9153928bd132a6f72591b10aff814dda012710ef079e916713512a52f99a5cdb",
+      "bodyHash": "e9c0455263962c81851a871821436d8ced284f3060e7722d0594599a0eda2b9c"
     },
     {
       "id": "permissions-blockreadsoutsideworkingdirectories",
-      "hash": "f1ce276060f50bcee16f3211f33e323cc2b413dd50ef3b2aeade19b1d266d0ba"
+      "hash": "f1ce276060f50bcee16f3211f33e323cc2b413dd50ef3b2aeade19b1d266d0ba",
+      "bodyHash": "8a9a637685adb7418397c5e82c9c04ace87deda65d0c06558ce14a73c0cd63f8"
     },
     {
       "id": "sandboxed-commands-under-the-block",
-      "hash": "e5f784c354d70ce0a6702ea02d72441a307bcb5d8e5cdad0adeaa1ca8d373901"
+      "hash": "e5f784c354d70ce0a6702ea02d72441a307bcb5d8e5cdad0adeaa1ca8d373901",
+      "bodyHash": "ad43aa7ce65089ee2d9777db9f1809ba33153057dc4fb720cb48c73416798404"
     },
     {
       "id": "permissions-defaultmode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9",
+      "bodyHash": "deba01d8c918198d5373ebdfbdf33434c92e8bd2af3be75d892199f659faa34d"
     },
     {
       "id": "permissions-disablebypasspermissionsmode",
-      "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1"
+      "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1",
+      "bodyHash": "c036505dc80a91a0eff5cd4c7831d8fb71a8a1e466021f1efff4f40c0ea2b712"
     },
     {
       "id": "skipautopermissionprompt",
-      "hash": "a8d5714cc8631c60c2359d5bb2b037a0c7d7426bdd47055921731768e057a4ac"
+      "hash": "a8d5714cc8631c60c2359d5bb2b037a0c7d7426bdd47055921731768e057a4ac",
+      "bodyHash": "6692a2716f0c36cf75d177749d66773fd5c438a5e7ce966571d736666e36c4be"
     },
     {
       "id": "skipdangerousmodepermissionprompt",
-      "hash": "6cb388e508fafc04e0d2bd3fad45a5d698f73078433983af6b54e89978ca66f6"
+      "hash": "6cb388e508fafc04e0d2bd3fad45a5d698f73078433983af6b54e89978ca66f6",
+      "bodyHash": "0a0dd962cf537030f763b32f222932a51fa865c283c90355eaf87c15c36f7bd0"
     },
     {
       "id": "sandbox-settings",
-      "hash": "d2c4004f6c7daf7c6b3ba89beb70675e54e282a6d0a42b175156077751e31ae6"
+      "hash": "d2c4004f6c7daf7c6b3ba89beb70675e54e282a6d0a42b175156077751e31ae6",
+      "bodyHash": "35410924dfa5a934e78cf9d16d18768012ec0e4ae8fcad13d231bd9d01ac2238"
     },
     {
       "id": "sandbox",
-      "hash": "acf7e1fb5871b1ccf6f334c6920086e9160868aa11caed7c93644b8231319992"
+      "hash": "acf7e1fb5871b1ccf6f334c6920086e9160868aa11caed7c93644b8231319992",
+      "bodyHash": "b440404077455c6c1855d9fdccdeea8a352ff7a66b89f02fe8ea78e67bfcfe7b"
     },
     {
       "id": "sandbox-enabled",
-      "hash": "3943e60314203ef85704a11d3a21396e9b3b00a73094e5130bed836b2dcb7045"
+      "hash": "3943e60314203ef85704a11d3a21396e9b3b00a73094e5130bed836b2dcb7045",
+      "bodyHash": "8bf8f221c9b4dd9a149377b6c1b5ef3d6b2c03092135838cc3c7dc6036cb7852"
     },
     {
       "id": "sandbox-failifunavailable",
-      "hash": "35ce095ef65a4f4dc7878b6c449884c796c34e1afd8ea122a36b8713c234eb32"
+      "hash": "35ce095ef65a4f4dc7878b6c449884c796c34e1afd8ea122a36b8713c234eb32",
+      "bodyHash": "54877ed791ca7ae56d0d0a65fff1c3186947fe4d16645040ddaa1ba1d24b4f8b"
     },
     {
       "id": "sandbox-autoallowbashifsandboxed",
-      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d"
+      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d",
+      "bodyHash": "b047dc91e27613f89c2e15c7b21333aa65480681466682bbc7b063381f235624"
     },
     {
       "id": "sandbox-excludedcommands",
-      "hash": "3b559f2105cc014bf9422a1f9152d52a822dad80b0721d40d949b4197b7a074f"
+      "hash": "3b559f2105cc014bf9422a1f9152d52a822dad80b0721d40d949b4197b7a074f",
+      "bodyHash": "51448077f1f830f44da9bc42e1e2b4a76946626179cf1bfa541626583366b5c4"
     },
     {
       "id": "sandbox-allowunsandboxedcommands",
-      "hash": "d43226c11b66f6619ceff8976e08f874595a2a540499c28ded290ec8e7608577"
+      "hash": "d43226c11b66f6619ceff8976e08f874595a2a540499c28ded290ec8e7608577",
+      "bodyHash": "2050d22473a2e20c3144333c059a30bf39a1d13efee36ec61c62b3a79463dcaf"
     },
     {
       "id": "sandbox-filesystem",
-      "hash": "96f35caef293634055394531e2bc33c8ad683abf47f81448105b5888dde8220a"
+      "hash": "96f35caef293634055394531e2bc33c8ad683abf47f81448105b5888dde8220a",
+      "bodyHash": "c0e267d3bdb326683620df4c37d412fa5d22e81fe13d89a45abe8d327dd942bd"
     },
     {
       "id": "sandbox-path-prefixes",
-      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5",
+      "bodyHash": "09773171a82dc9357aed89361969819cf8a3ce1966904ffc533badc9618f2c9b"
     },
     {
       "id": "sandbox-filesystem-allowwrite",
-      "hash": "31627177301f27c16c26b011c39a773965443bdfb8c0eeb9c65dba34c8e7c434"
+      "hash": "31627177301f27c16c26b011c39a773965443bdfb8c0eeb9c65dba34c8e7c434",
+      "bodyHash": "52529268c92c50a2066567a05f7ef471009adab31323b6be23a3e12e57bbb3f1"
     },
     {
       "id": "sandbox-filesystem-denywrite",
-      "hash": "f55b5fe644d32ac732bbcc8aa3ab48fe89e4e22e047cc9320c43e7a8c448fa44"
+      "hash": "f55b5fe644d32ac732bbcc8aa3ab48fe89e4e22e047cc9320c43e7a8c448fa44",
+      "bodyHash": "cca75e69f82cb207f5d206994808e3d4842bf8a0f51808e48a47f6e426749730"
     },
     {
       "id": "sandbox-filesystem-denyread",
-      "hash": "59b6d35b015e4765756fa018b027221c683bb438dd0329ae38670f1c61d2d902"
+      "hash": "59b6d35b015e4765756fa018b027221c683bb438dd0329ae38670f1c61d2d902",
+      "bodyHash": "e9f2fa6107ac173f60d80fa0fd9d0381cf325648c1e161ed215ea5392cc107f4"
     },
     {
       "id": "sandbox-filesystem-allowread",
-      "hash": "1de2551e60ff3097d8d216392acf1d1d2e96fa7bce03865139fe8ea6d7c51638"
+      "hash": "1de2551e60ff3097d8d216392acf1d1d2e96fa7bce03865139fe8ea6d7c51638",
+      "bodyHash": "0311f4bfd29cf40e0cc8c7e593d029b86c68843a2464e4393b269e880ff55293"
     },
     {
       "id": "sandbox-filesystem-allowmanagedreadpathsonly",
-      "hash": "e4059e894658e605e1ad7b6409d282de0dfc04ac232674334e13609a389c28ac"
+      "hash": "e4059e894658e605e1ad7b6409d282de0dfc04ac232674334e13609a389c28ac",
+      "bodyHash": "bd5b74a5c657f3fe221d14855b89b3f2f8d0a7074a91a542e0c8619faca05e95"
     },
     {
       "id": "sandbox-filesystem-disabled",
-      "hash": "67faae21e0c30ab642178a8976b0ea26341922a93d64873f6f677868c78765da"
+      "hash": "67faae21e0c30ab642178a8976b0ea26341922a93d64873f6f677868c78765da",
+      "bodyHash": "c5fe895f5fb98d0b9061f6d52ef78900eff2350b723eb826dbb465f663eab1b4"
     },
     {
       "id": "sandbox-ignoreviolations",
-      "hash": "c349ac7846d2c8d13f961bb63cf37e3437b90302f4c12efb682971922fe6367c"
+      "hash": "c349ac7846d2c8d13f961bb63cf37e3437b90302f4c12efb682971922fe6367c",
+      "bodyHash": "05c71086e1018152482336b09e1743d7029f0e9d9aaed98d6c7787939dc31dce"
     },
     {
       "id": "sandbox-enableweakernestedsandbox",
-      "hash": "ee4ade3a33eb912181e8e9227e4ad7e52eea8b9d7e761081e733b7afc528168c"
+      "hash": "ee4ade3a33eb912181e8e9227e4ad7e52eea8b9d7e761081e733b7afc528168c",
+      "bodyHash": "65b98a9ab4cabd15fce5af181aad5e1f749cf6f3cdf6f24531364e8406fa41a4"
     },
     {
       "id": "sandbox-enableweakernetworkisolation",
-      "hash": "005e33df10f6e266b5451fd99404d6dfda740f760cb5d43e8bbca1ee0d121cb0"
+      "hash": "005e33df10f6e266b5451fd99404d6dfda740f760cb5d43e8bbca1ee0d121cb0",
+      "bodyHash": "2a20dac65021b6688b57187f2dbe5da3f4357a07d03bf28f72f05725ab71fb0a"
     },
     {
       "id": "sandbox-allowappleevents",
-      "hash": "6ed4f16f93536fff514247ddac50fd3d6820138611b381664c4e127452dfe771"
+      "hash": "6ed4f16f93536fff514247ddac50fd3d6820138611b381664c4e127452dfe771",
+      "bodyHash": "9bdaf56173059fc2f19ec038e42766132e7fb9d4f1e688ec1cb1cebca1bc32b2"
     },
     {
       "id": "sandbox-ripgrep",
-      "hash": "51ecdb50e87aa5192a7f7971013283d7168a2456500453a82b3390427dc559c0"
+      "hash": "51ecdb50e87aa5192a7f7971013283d7168a2456500453a82b3390427dc559c0",
+      "bodyHash": "a8647111f1233808e1fa47a22db89c30518da811370a8013bb7f0c480b455b8a"
     },
     {
       "id": "sandbox-bwrappath",
-      "hash": "0cd256c24af41d960e876bd6caa3a7ed58fb293de6142cb63035ddc53677bbec"
+      "hash": "0cd256c24af41d960e876bd6caa3a7ed58fb293de6142cb63035ddc53677bbec",
+      "bodyHash": "7152a0c7b9bcc47b63c2d565b7a1ac4a409f87e4121c12628f1a3d281c1b7030"
     },
     {
       "id": "sandbox-socatpath",
-      "hash": "eb0ab1176a884ac2217b3108ba455df7269d3f781ccb0fe82fd98401a176f19c"
+      "hash": "eb0ab1176a884ac2217b3108ba455df7269d3f781ccb0fe82fd98401a176f19c",
+      "bodyHash": "a3edcec7becc09f366b674d9447046082c49ab84c63009224f4ad05c8da3490f"
     },
     {
       "id": "sandbox-credentials",
-      "hash": "2b7d793ea0796150e42acfa04c07c754ab8e0147cb437765a56a7c2a78815672"
+      "hash": "2b7d793ea0796150e42acfa04c07c754ab8e0147cb437765a56a7c2a78815672",
+      "bodyHash": "cd4f031e7ed0b4206bc38e13531d4a9dc580cb5d4fd7becc95f1bc63b4c56006"
     },
     {
       "id": "invalid-credential-entries-in-managed-settings",
-      "hash": "bd0f8bfa4a80bdf4d22a431dd1fb66a306454466c38e8ca85a7158fcf5d92de1"
+      "hash": "c4997cd8ee1c15271277fcfd9c652c012e6841c99d21e566c0a517adb71cbe47",
+      "bodyHash": "89ffe4520412577b066a11bb68d4ab70890aa26316288fac9eadf63133925653"
     },
     {
       "id": "sandbox-credentials-files",
-      "hash": "7bcf139a71ace917bc629bd1fd985eceacfa3a8a6ed87960df716a5c424f578d"
+      "hash": "7bcf139a71ace917bc629bd1fd985eceacfa3a8a6ed87960df716a5c424f578d",
+      "bodyHash": "01b8e1433c0e128a0019c70d48bd0c8cf41e4e9626e7759856cb20a48fcc125c"
     },
     {
       "id": "mask-fields-for-files",
-      "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906"
+      "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906",
+      "bodyHash": "8eba90f2783199c2f86468f1582d425ff8714d8b03fa79ddb09f908228e29b20"
     },
     {
       "id": "sandbox-credentials-envvars",
-      "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b"
+      "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b",
+      "bodyHash": "2a28633623ea69f46a0985f50a5a169ca818fa710ee69f759e15b8e611806d9c"
     },
     {
       "id": "mask-fields-for-environment-variables",
-      "hash": "35d2058fd639400b9d06e4271f53b322b4b279776434ff23078b6ec864f23443"
+      "hash": "35d2058fd639400b9d06e4271f53b322b4b279776434ff23078b6ec864f23443",
+      "bodyHash": "24f99011af9ffa3535ee82b2c091d01ed7492058cb54ba9f0f8c31d90a706d8d"
     },
     {
       "id": "sandbox-credentials-allowplaintextinject",
-      "hash": "e577b06f3af62d1a15cb5ca93e99ef85af47f4d9795eb3bda10e93ab97e4094a"
+      "hash": "e577b06f3af62d1a15cb5ca93e99ef85af47f4d9795eb3bda10e93ab97e4094a",
+      "bodyHash": "c2173d1ad24cd325884486ef1bb01cfa49ffa56285f870e32f97f972934bc466"
     },
     {
       "id": "sandbox-credentials-awspairs",
-      "hash": "ca206977e839b2896dcaa4acc6d0c697b8c039d52c9bd325550c268cff688c55"
+      "hash": "ca206977e839b2896dcaa4acc6d0c697b8c039d52c9bd325550c268cff688c55",
+      "bodyHash": "e4df99480db5ffd24801f9f4fc5ea5625b3c5268d610f58a3771aea13ba959f1"
     },
     {
       "id": "sandbox-credentials-sigv4",
-      "hash": "38c6114da28565bfbb69a7bf81c624a24c7c32bc0a59b3d9860d45096346cab3"
+      "hash": "38c6114da28565bfbb69a7bf81c624a24c7c32bc0a59b3d9860d45096346cab3",
+      "bodyHash": "969f8634eaa20459ffdef5ce1f196c0dcf8340c6ea790920c8143e96149670a6"
     },
     {
       "id": "sandbox-network",
-      "hash": "21b75ae1c4dec9de9bae5edd7c3cf169dc71bc2e8ecc3aac635a50212df0f86b"
+      "hash": "21b75ae1c4dec9de9bae5edd7c3cf169dc71bc2e8ecc3aac635a50212df0f86b",
+      "bodyHash": "9d1c1145c287ea9e4b4d0c75ad30891327441e39af54b16c55b9f3ba141f2dd8"
     },
     {
       "id": "sandbox-network-allowunixsockets",
-      "hash": "158d204fa07b1820e7bce30343a88e5a3b58d97343f0fe612371b52e19a0a472"
+      "hash": "158d204fa07b1820e7bce30343a88e5a3b58d97343f0fe612371b52e19a0a472",
+      "bodyHash": "4db9f4514c830f10a9014d4fa851e6dd1dea9c9be0d1c5824fb6fe16cb5f69f8"
     },
     {
       "id": "sandbox-network-allowallunixsockets",
-      "hash": "a6a63eca2a3ed830cc5198d069d3ca5d9b04fa971d962537a591f428d7c710e9"
+      "hash": "a6a63eca2a3ed830cc5198d069d3ca5d9b04fa971d962537a591f428d7c710e9",
+      "bodyHash": "c65ef6d0befd6877e6bd4cdc7a6ac8887ef27d3dadce73df494d5cea3f839fd2"
     },
     {
       "id": "sandbox-network-allowlocalbinding",
-      "hash": "ab670d571e9124d23641e11f22670048b6ecd207b07fe97bf4a75030c05095be"
+      "hash": "ab670d571e9124d23641e11f22670048b6ecd207b07fe97bf4a75030c05095be",
+      "bodyHash": "59b15aa90f77e1ed9128a1507a4c9accb43983c62f1ca5013ee5328f65f55472"
     },
     {
       "id": "sandbox-network-allowmachlookup",
-      "hash": "f87aa794f91e7158ab38aed48e44f90bbf1aef2f7b6c554320d06e11020d5225"
+      "hash": "f87aa794f91e7158ab38aed48e44f90bbf1aef2f7b6c554320d06e11020d5225",
+      "bodyHash": "bf840404bb42a645374f231a53f64af8aee5ccbc9d8697c198ccd9db54e5e24b"
     },
     {
       "id": "sandbox-network-alloweddomains",
-      "hash": "557ebf0a27e224290a75e5a5bb43bd41d4c25c443258d17e0405af3da5096dfa"
+      "hash": "557ebf0a27e224290a75e5a5bb43bd41d4c25c443258d17e0405af3da5096dfa",
+      "bodyHash": "0a462c5808a807fb55f220dadf90d05726bd9265ac666d855dc570c45001df05"
     },
     {
       "id": "sandbox-network-denieddomains",
-      "hash": "e8fd871e032980f6e3d6d564cde48dc595fbdeca971b595e498f4eafc3f97ccf"
+      "hash": "e8fd871e032980f6e3d6d564cde48dc595fbdeca971b595e498f4eafc3f97ccf",
+      "bodyHash": "0a302bf9a365ac5958bc1612113860f48aa96a15b32abdfc259ec94fdd29420f"
     },
     {
       "id": "sandbox-network-strictallowlist",
-      "hash": "ba48623b5ed60db0cad4cb2b39f6934435f983fe689d9b3b4372b95075c63f0a"
+      "hash": "ba48623b5ed60db0cad4cb2b39f6934435f983fe689d9b3b4372b95075c63f0a",
+      "bodyHash": "15a53de385668094bb7b4f9743c5cc875049a79695f835206eefcd96c3952bf1"
     },
     {
       "id": "sandbox-network-allowmanageddomainsonly",
-      "hash": "429818b382afbb9e9511316b71140e3a254df831269c3fa80b7ee3b50dcc7ea7"
+      "hash": "429818b382afbb9e9511316b71140e3a254df831269c3fa80b7ee3b50dcc7ea7",
+      "bodyHash": "2fd14e71e16095b957cbf15c940a60069000af8e61475160a1e5cefe406d657f"
     },
     {
       "id": "sandbox-network-httpproxyport",
-      "hash": "457af27547af152d0215d04257a59c5f45031f330d245721353e6fe360905122"
+      "hash": "457af27547af152d0215d04257a59c5f45031f330d245721353e6fe360905122",
+      "bodyHash": "63cb5e442fdc7c8a5c168ecbe9291c87b29b9de9664454de5d527a5f136772ca"
     },
     {
       "id": "sandbox-network-socksproxyport",
-      "hash": "c6430ca7a948cefff13d083c263c7379266898816d3716294f52765200de65b3"
+      "hash": "c6430ca7a948cefff13d083c263c7379266898816d3716294f52765200de65b3",
+      "bodyHash": "ebf5f20572a74b921ecc8d95887b945e8b1c58c080a8341a9f0e686e58c46236"
     },
     {
       "id": "sandbox-network-tlsterminate",
-      "hash": "c7bcb2a65558324a4cd22ae053f5fe008483ed7a6407d0941a70e4b1b7004c49"
+      "hash": "c7bcb2a65558324a4cd22ae053f5fe008483ed7a6407d0941a70e4b1b7004c49",
+      "bodyHash": "db054fef3319c91963ce87776df770b2437c7abec9d4500c1cf0b62556734703"
     },
     {
       "id": "memory-and-context",
-      "hash": "0903d71c9527db6bc73b8a5687af06cb86de48bcf0be4f3c582e6d2d6ec1e199"
+      "hash": "0903d71c9527db6bc73b8a5687af06cb86de48bcf0be4f3c582e6d2d6ec1e199",
+      "bodyHash": "8eb3129214d18aa31338328a280dae5e87af539811eaf87102e34496b82bd663"
     },
     {
       "id": "autocompactenabled",
-      "hash": "d5a377566d38b4dc0bce3fa861fdd090f8e04883902d6bb31ad2932060e58678"
+      "hash": "d5a377566d38b4dc0bce3fa861fdd090f8e04883902d6bb31ad2932060e58678",
+      "bodyHash": "c2e6888a7156a74225178c4630e06d056194eed2fb9e78c443d3f0e7134f46d0"
     },
     {
       "id": "autocompactwindow",
-      "hash": "68968b79952e719694960d3c343c797e9a7b3ff245ded63c32886c31651677d1"
+      "hash": "68968b79952e719694960d3c343c797e9a7b3ff245ded63c32886c31651677d1",
+      "bodyHash": "c95619883e677cc2138be01769527a451c2a3e40d784f1bb9f09bdc658c73907"
     },
     {
       "id": "automemorydirectory",
-      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
+      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f",
+      "bodyHash": "b93afd3901c6bdbce5ce5f34df7788c7af4fec29e5c9f70d42db65eaaf54608d"
     },
     {
       "id": "automemoryenabled",
-      "hash": "3c2e520f5512c7975ccb059aa4d2422547f9c3771fbb6d407202929c560ef8e0"
+      "hash": "3c2e520f5512c7975ccb059aa4d2422547f9c3771fbb6d407202929c560ef8e0",
+      "bodyHash": "d389cff73e1d9a2a14dc275b60ae11ae5728424573bce8c77e593be4c735bd7f"
     },
     {
       "id": "bashoutputmaxchars",
-      "hash": "1d64ca622d3b5414fc902f0bc57c8fcda5b90b18cc917436efeef9bf311bb7c2"
+      "hash": "1d64ca622d3b5414fc902f0bc57c8fcda5b90b18cc917436efeef9bf311bb7c2",
+      "bodyHash": "cb996773795469f00f7fe69908dbf88b8d0ceb5d79867b897a172c85c48cdca1"
     },
     {
       "id": "claudemd",
-      "hash": "058342c6cfca10e700917a7fe790549b9b032228ef37b4cef32f5d7e2013b898"
+      "hash": "058342c6cfca10e700917a7fe790549b9b032228ef37b4cef32f5d7e2013b898",
+      "bodyHash": "628ec6de9354e2f8e30308513e3d7a63e306eaf1cc695d621306e17382acdc34"
     },
     {
       "id": "claudemdexcludes",
-      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c"
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c",
+      "bodyHash": "5ebc2ad78ac4658bc2d549f378be0ce306b42a900ae7fe2f314de9a6ae61f008"
     },
     {
       "id": "env",
-      "hash": "4076131fca929f69ba901b494d67dec2fa790b97696a54d2371e59137257998a"
+      "hash": "4076131fca929f69ba901b494d67dec2fa790b97696a54d2371e59137257998a",
+      "bodyHash": "c3bf7ba07702f26a0ea1ad1026e89d912cf381af75adba18fa047dcf8195db1a"
     },
     {
       "id": "how-env-values-interact-with-your-shell",
-      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432",
+      "bodyHash": "cc5d0f86fa830af7021cfeaa6aa747b4ac678e347e668089e6369a2192bdb410"
     },
     {
       "id": "when-claude-code-applies-env-values",
-      "hash": "e97a52ed7b110e9267dbb0c989b318a0736c7e348e3eca5dee47ab210fdf35c1"
+      "hash": "e97a52ed7b110e9267dbb0c989b318a0736c7e348e3eca5dee47ab210fdf35c1",
+      "bodyHash": "a6a9e37e03362066ac69171eccb0d02d3e1725181baacf5b38972906ded1cb4d"
     },
     {
       "id": "variables-claude-code-ignores-in-env",
-      "hash": "1c4573d89b1883270fdb29fda6339cf84a38a1b964d207ec23099763ee1c3152"
+      "hash": "1c4573d89b1883270fdb29fda6339cf84a38a1b964d207ec23099763ee1c3152",
+      "bodyHash": "7fbe74720579f13738731ccb3555a0e158ea6c4f5e369d1a86803d60b17650c6"
     },
     {
       "id": "filecheckpointingenabled",
-      "hash": "8e59c5074266fc6d126672a80e7f1a9dd2b0267d312c6514c157420e34f963f8"
+      "hash": "8e59c5074266fc6d126672a80e7f1a9dd2b0267d312c6514c157420e34f963f8",
+      "bodyHash": "b9402abfa7797110adf7119c7f6ed6b68dc92234890ef8ea646d93f5e7f32e23"
     },
     {
       "id": "plansdirectory",
-      "hash": "69fc2d9f03a0951dbd35201e46dd283f67118b9fa2146e9c37aa703cf9c9dd90"
+      "hash": "69fc2d9f03a0951dbd35201e46dd283f67118b9fa2146e9c37aa703cf9c9dd90",
+      "bodyHash": "30c32ef46369b8f49f235dc98ae9ad372dcb54bab68261561e227b47145a6ed9"
     },
     {
       "id": "skilllistingbudgetfraction",
-      "hash": "2f6c3883123ff8b3bb17a00a92df124b22aab68540e8d68769212de0817026f2"
+      "hash": "2f6c3883123ff8b3bb17a00a92df124b22aab68540e8d68769212de0817026f2",
+      "bodyHash": "4011017c8137d671963f0bafa6cb43c1fd4bdf43598e9ddfb9b71ed449dd69d8"
     },
     {
       "id": "skilllistingmaxdescchars",
-      "hash": "2080bff90a623cd34cee21e1d9991b3cb59464e295af6124977820389fdc4fe0"
+      "hash": "2080bff90a623cd34cee21e1d9991b3cb59464e295af6124977820389fdc4fe0",
+      "bodyHash": "dd060b40ac353ac694d0ce15e0e9314d161fdd4a2468b83ca68f8cf41d8cfefc"
     },
     {
       "id": "taskoutputmaxchars",
-      "hash": "eeae3bf23d0f765fb626cb4002fe62a5e84deea50cc09f1998d8d6730d522e2a"
+      "hash": "eeae3bf23d0f765fb626cb4002fe62a5e84deea50cc09f1998d8d6730d522e2a",
+      "bodyHash": "4636db00d3e60cbddcad189d0f52086cd8cb860ef2c557d981c4bbb423ede66b"
     },
     {
       "id": "interface-and-terminal",
-      "hash": "dc27459f5b2cf077dce094beca89a61a12476f001ed0ba358926714e13d4497e"
+      "hash": "dc27459f5b2cf077dce094beca89a61a12476f001ed0ba358926714e13d4497e",
+      "bodyHash": "05a574f3aabe7a79efa6f55508104cd2095a3a631e1c731313d212a444464058"
     },
     {
       "id": "askuserquestiontimeout",
-      "hash": "1785f4dbae0fbe5711ca257dbd922f91386315cde826b7de14d9a77a0dfaa6f4"
+      "hash": "1785f4dbae0fbe5711ca257dbd922f91386315cde826b7de14d9a77a0dfaa6f4",
+      "bodyHash": "ee45800684436f6e89170b92b0e99b6a622c1196645005455b28ada1f588cce7"
     },
     {
       "id": "autocontinueatusagelimit",
-      "hash": "b79213c02f493f0e7cd7db2f9c6c37322011ca98baa4b541564b1e16c71662c8"
+      "hash": "b79213c02f493f0e7cd7db2f9c6c37322011ca98baa4b541564b1e16c71662c8",
+      "bodyHash": "e9754c864eaa63f3333430f990f7ecaddee9026eb2c393e8840b4c39f011df6a"
     },
     {
       "id": "autoscrollenabled",
-      "hash": "bfc908af51d94f5e009d19314e19e992747a9bcda5550f9a2b29f18392f44ff8"
+      "hash": "bfc908af51d94f5e009d19314e19e992747a9bcda5550f9a2b29f18392f44ff8",
+      "bodyHash": "2ba38ecc18faaa8b535866afc150660cad0057d2f6597c7c1792aed7723fb9da"
     },
     {
       "id": "axscreenreader",
-      "hash": "ad6c02161b4c6ce21af165297b1e52825f875e9ac7d8e12d0542220ab06f3be4"
+      "hash": "ad6c02161b4c6ce21af165297b1e52825f875e9ac7d8e12d0542220ab06f3be4",
+      "bodyHash": "f06be8a2e71219f2e7015def2d79da48d83abfbbe8528aad87a56bb9ed332eaf"
     },
     {
       "id": "basheditdiffenabled",
-      "hash": "fb4bdc7166ad5f3d711bb48591d703e6359aeb1af734c236aacb3850bcef67fd"
+      "hash": "fb4bdc7166ad5f3d711bb48591d703e6359aeb1af734c236aacb3850bcef67fd",
+      "bodyHash": "c913761d3a86c26c7c2c4471c6b1aff41e361b3a70f6936a62b85a97e786899d"
     },
     {
       "id": "companyannouncements",
-      "hash": "6ab3356c9f2668fc6f2965cf9e4969c583e0c655040bfb5fbef6979b0c1d2e97"
+      "hash": "6ab3356c9f2668fc6f2965cf9e4969c583e0c655040bfb5fbef6979b0c1d2e97",
+      "bodyHash": "49e9c90eabc161b4cfc37a0e9037d72e128ffb05e35243a94cd2635ff974731e"
     },
     {
       "id": "defaultshell",
-      "hash": "952236e781b8f672c75a8efbd94ebed80d2664cac9aeea378c58c97ee9f32198"
+      "hash": "952236e781b8f672c75a8efbd94ebed80d2664cac9aeea378c58c97ee9f32198",
+      "bodyHash": "0a2d585e7af6bb11623c79c097533c073e5d4d442da53e190ff2a3678436d163"
     },
     {
       "id": "dialogexpiry",
-      "hash": "952b0162eb97a7d3d64bc5e28cd0b9c741c0117fa6b92b1de58233219af885aa"
+      "hash": "952b0162eb97a7d3d64bc5e28cd0b9c741c0117fa6b92b1de58233219af885aa",
+      "bodyHash": "f8219f57ef7584dd394f19a458ba1e2bc1b69488b971de2829dd1ba4c4876890"
     },
     {
       "id": "editormode",
-      "hash": "ab3ce02f90101af2db9e491ea3b7a706653e78cf40d2aa876a41aac6a9f2dff7"
+      "hash": "ab3ce02f90101af2db9e491ea3b7a706653e78cf40d2aa876a41aac6a9f2dff7",
+      "bodyHash": "6c9a28cc8c683da47b4c0b5ceb3a65f201adfda3674cb4ce1f8864824acc0d27"
     },
     {
       "id": "emojicompletionenabled",
-      "hash": "334dbfe48d2309368f916f99f8e3c265ddbc4d3c1a18f815c5bd85d2b55940eb"
+      "hash": "334dbfe48d2309368f916f99f8e3c265ddbc4d3c1a18f815c5bd85d2b55940eb",
+      "bodyHash": "05b8f82bc68314f69d248835cafdf4d335eccac69e0cbdb8a3f08e6bfee02c35"
     },
     {
       "id": "filesuggestion",
-      "hash": "3b9603f5087a69b4e2a8545bc463c8b360209506b1ca56ba611024559ba9e4ff"
+      "hash": "3b9603f5087a69b4e2a8545bc463c8b360209506b1ca56ba611024559ba9e4ff",
+      "bodyHash": "469f4cbc01dda6072a344b2fd79763896aaccd0cadd211d7432427f1b1619104"
     },
     {
       "id": "command-input-and-output",
-      "hash": "48acc7f642d684431238c2ad53a5a7c6843645bcd9ddb0de94136a7dac5fe849"
+      "hash": "48acc7f642d684431238c2ad53a5a7c6843645bcd9ddb0de94136a7dac5fe849",
+      "bodyHash": "8152383cf2c3c0256cdfd390171e3fa78f273f1e222347fea71e4c16c5268866"
     },
     {
       "id": "footerlinksregexes",
-      "hash": "ab5a02beee6844268f4b9c1bed5fa5953b98906eac89331d6477aa6527881fe0"
+      "hash": "ab5a02beee6844268f4b9c1bed5fa5953b98906eac89331d6477aa6527881fe0",
+      "bodyHash": "6a73e8d0833b4902ebce6c0513dbbde9eaeecb6097a17f52fa2adec7ce6f8fb6"
     },
     {
       "id": "badge-constraints",
-      "hash": "f01d48be5f83ca7fc6328d2033ea0da1aa0c8b37b4965f32951dd72acdd51fd2"
+      "hash": "f01d48be5f83ca7fc6328d2033ea0da1aa0c8b37b4965f32951dd72acdd51fd2",
+      "bodyHash": "c8bc0241cef65b6e59e7394556c4be22e27e1af356ef62f289775c30a6dd35aa"
     },
     {
       "id": "keybindingflavor",
-      "hash": "1e7d8081bb3dd5de9fee428eec6ce5a5307653998f3f2dbba95776bb6edfee55"
+      "hash": "1e7d8081bb3dd5de9fee428eec6ce5a5307653998f3f2dbba95776bb6edfee55",
+      "bodyHash": "399f6426d025ddc0a0b442fd18e15c40100a41d3903c63164e79cd684d9f38e3"
     },
     {
       "id": "maxprosewidth",
-      "hash": "1d809c8489a4de3656d6968f9835168c715ba596773480147caa76e1847d7fdc"
+      "hash": "1d809c8489a4de3656d6968f9835168c715ba596773480147caa76e1847d7fdc",
+      "bodyHash": "418dab50894a116d3ee7a9dd80bd06532900f85543180c9db5d44f8f1b1f895c"
     },
     {
       "id": "prefersreducedmotion",
-      "hash": "0931af15733c6a8930f46e4bcd6b2c8f776a4c4a64a626a6ad14585e8cedeb41"
+      "hash": "0931af15733c6a8930f46e4bcd6b2c8f776a4c4a64a626a6ad14585e8cedeb41",
+      "bodyHash": "bf41bdd41a8a37d1c1bdc918bac61caa83e5159942986819999d5bb6188cb0b1"
     },
     {
       "id": "promptsuggestionenabled",
-      "hash": "ca60b0d805ef607a2af661b6eb2be81a0fdc4b7ce80e0b82ab9fe65253fc3958"
+      "hash": "ca60b0d805ef607a2af661b6eb2be81a0fdc4b7ce80e0b82ab9fe65253fc3958",
+      "bodyHash": "82e79b838a2544f2e526c368888b593c2389132b6ed162dc815293a827b25cc9"
     },
     {
       "id": "respectgitignore",
-      "hash": "0d28826139305a918e14422586e13ec0440afc824736f1f06b020f5a0ec73b59"
+      "hash": "0d28826139305a918e14422586e13ec0440afc824736f1f06b020f5a0ec73b59",
+      "bodyHash": "cc901a7575558277e5db2fcd7e54061bb2b2aa985bad07dce31a4d11f6b945a0"
     },
     {
       "id": "respondtobashcommands",
-      "hash": "95537aec648d840db9b7d116c3a09b4af0c7e5de786ccb655069092fbd626300"
+      "hash": "95537aec648d840db9b7d116c3a09b4af0c7e5de786ccb655069092fbd626300",
+      "bodyHash": "719663a75d77b2aec59bdb154431e59f3a11b6f7d1434404003d8403af9c7909"
     },
     {
       "id": "showclearcontextonplanaccept",
-      "hash": "a27ca7732b98f836483117d3e220fe746f62d9f2002f7d6579d4bfa47895b712"
+      "hash": "a27ca7732b98f836483117d3e220fe746f62d9f2002f7d6579d4bfa47895b712",
+      "bodyHash": "c382b69e7d5722f82e02976c0769a352abbd7629d58af1faf905af22d58d820f"
     },
     {
       "id": "showturnduration",
-      "hash": "80668ecbd46f282278eaa332d51217003b4a45fc05bc1ffdfb4b8e349a3026a5"
+      "hash": "80668ecbd46f282278eaa332d51217003b4a45fc05bc1ffdfb4b8e349a3026a5",
+      "bodyHash": "940bd8008dda260e5fdf875aa51918707135d4bd31dc0a1fde28b7cd3f998e09"
     },
     {
       "id": "spellcheck",
-      "hash": "2198cefc08deba2c1e1f5d9be997ce36f1730323828af0a3d167f1d1e818b66b"
+      "hash": "2198cefc08deba2c1e1f5d9be997ce36f1730323828af0a3d167f1d1e818b66b",
+      "bodyHash": "102166e246fe17e1744798efdd0ba5cd270f45f17499a77a47e3cecb7e13e7fb"
     },
     {
       "id": "spinnertipsenabled",
-      "hash": "3ae776af52cef9315893ec629f6163079beba4e358f25bd86b83a071aacc9154"
+      "hash": "3ae776af52cef9315893ec629f6163079beba4e358f25bd86b83a071aacc9154",
+      "bodyHash": "e33bccef8704e05ea26f88b2209086eda8a2d26d7ad4b8c4c2f34da041f4a2dd"
     },
     {
       "id": "spinnertipsoverride",
-      "hash": "a5d447375ca6aa720317740fb88c827195bf389f6bea3cc96bc130aa1a1bd44f"
+      "hash": "a5d447375ca6aa720317740fb88c827195bf389f6bea3cc96bc130aa1a1bd44f",
+      "bodyHash": "f1cca314c758c18442cc5018ad967e4f84721113a7ea6793cc4dc90631ed2836"
     },
     {
       "id": "spinnerverbs",
-      "hash": "0df8956ff27fe526ab4b3baf11db0b186c768eeed64f2913a4811c7630218e5e"
+      "hash": "0df8956ff27fe526ab4b3baf11db0b186c768eeed64f2913a4811c7630218e5e",
+      "bodyHash": "94fe8da7b21ee663bda27f906b776fe496b8fe15b243ce81cc4d4426e398b2d1"
     },
     {
       "id": "statusline",
-      "hash": "eb35c1765e7649454e2c1be1904af6d6bf0a9cf3c797934ce4644566ab5701f6"
+      "hash": "eb35c1765e7649454e2c1be1904af6d6bf0a9cf3c797934ce4644566ab5701f6",
+      "bodyHash": "0db6dc733f447d324e24d61392a929f3cf6ac328502fb732b6d085fdf0201ebe"
     },
     {
       "id": "subagentstatusline",
-      "hash": "97c7c76a9cffd6e307665b1e491356a8b961a0a04e2413ab24b95736801ef376"
+      "hash": "97c7c76a9cffd6e307665b1e491356a8b961a0a04e2413ab24b95736801ef376",
+      "bodyHash": "f33e347f4585b70c33b7c35ce07b146b10c126f2237c5b01ed9b43226e6a0940"
     },
     {
       "id": "syntaxhighlightingdisabled",
-      "hash": "0a0cc3e95231f11941cdb019547b3bebdb9885fc48480867c3eb5923b3b99454"
+      "hash": "0a0cc3e95231f11941cdb019547b3bebdb9885fc48480867c3eb5923b3b99454",
+      "bodyHash": "ab9745ca5c0b02e9619e2d368136a673492fa2178f353de5e144657078156d3b"
     },
     {
       "id": "terminalprogressbarenabled",
-      "hash": "ac4afb08a138c05ceed6c79986de055c87554f983013026d2da2bc0706147a10"
+      "hash": "ac4afb08a138c05ceed6c79986de055c87554f983013026d2da2bc0706147a10",
+      "bodyHash": "3ea64d07fdaa264d4ff38ddac457f204a12c8ba3e5faf2205f0a21b19e7f34f8"
     },
     {
       "id": "terminaltitlefromrename",
-      "hash": "d9e8dd8ddba3af6747e8ee2f86de1d756ba459bf26f651968ad9d0c55fb13098"
+      "hash": "d9e8dd8ddba3af6747e8ee2f86de1d756ba459bf26f651968ad9d0c55fb13098",
+      "bodyHash": "3e79c1e2496951583a115f08f6d699a2a60e83b0d8cf3004cd2a2a5d4d9558f1"
     },
     {
       "id": "theme",
-      "hash": "7bcb9bf8c6d7b183fca918b28abbc1096d5c0a15f03a769efc9fdb2ae1ae09db"
+      "hash": "7bcb9bf8c6d7b183fca918b28abbc1096d5c0a15f03a769efc9fdb2ae1ae09db",
+      "bodyHash": "12e47522aaa9cf63a69e4b04f9b0af96a3a35f743b28fd16655fd5399ab69d35"
     },
     {
       "id": "timeformat",
-      "hash": "01e04460073952ceea1f286c14b95da27ad86bf0cf2b47181db1338662c572db"
+      "hash": "01e04460073952ceea1f286c14b95da27ad86bf0cf2b47181db1338662c572db",
+      "bodyHash": "5f0dbee15508f64f42408acb23ec538afc372255c94a940c2c27b12e0f3c1394"
     },
     {
       "id": "timezone",
-      "hash": "095dcc80146fc46cdfc0c5db1c040555ad58ee0f71bba70d69a4e1252ac74750"
+      "hash": "095dcc80146fc46cdfc0c5db1c040555ad58ee0f71bba70d69a4e1252ac74750",
+      "bodyHash": "401bb573375a162ee1e800c61bb512669e395515d5707a8332baf60d32eec06f"
     },
     {
       "id": "tui",
-      "hash": "d46a0a876bddabc9197640572a5a50be7b73c10d7e84def892f7c08f1a3a4d69"
+      "hash": "d46a0a876bddabc9197640572a5a50be7b73c10d7e84def892f7c08f1a3a4d69",
+      "bodyHash": "2c6ec5576c055152040e1eed1a14f44a9d1f48b9bf7878ae50c130c200fa3e90"
     },
     {
       "id": "verbose",
-      "hash": "933fc75fff11ea497ff8a2e1ec004489cf8f1e2ce3171744a25a9755c6f05db7"
+      "hash": "933fc75fff11ea497ff8a2e1ec004489cf8f1e2ce3171744a25a9755c6f05db7",
+      "bodyHash": "dcb01893b29c41f15c8e9cb2a8a4045909139a9af9b76716748a92e245383b96"
     },
     {
       "id": "viewmode",
-      "hash": "4426a84be2955f9177c8a582c595a747d21a8fe1676b4ad66f40823005fc89d6"
+      "hash": "4426a84be2955f9177c8a582c595a747d21a8fe1676b4ad66f40823005fc89d6",
+      "bodyHash": "26e2f8c0514b5203144287bb0494941e400efff8048e25eba3bb434d28b9a0a0"
     },
     {
       "id": "viminsertmoderemaps",
-      "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181"
+      "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181",
+      "bodyHash": "2ca97d4800df872362c818ab53d7c5e44780d8ff9b664738e97115cd908d06e0"
     },
     {
       "id": "voice",
-      "hash": "7650d07ccf0e1a3bb4fc28a406d746b9e8c78b9892925192ad7554bd41acd6d1"
+      "hash": "7650d07ccf0e1a3bb4fc28a406d746b9e8c78b9892925192ad7554bd41acd6d1",
+      "bodyHash": "322427ca3f7f183152a3279f1004942b0d9acced92df413363960dbd77cb6918"
     },
     {
       "id": "voiceenabled",
-      "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3"
+      "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3",
+      "bodyHash": "1fb2b47238938e5f5f5f869e94f9c57ef17fa0abea7123660fa1cd36d0bbdb50"
     },
     {
       "id": "wheelscrollaccelerationenabled",
-      "hash": "7736aa1eea7545d9a9a4cc311527b16304fe59a9ad8bebf9820bd5e1acb40b65"
+      "hash": "7736aa1eea7545d9a9a4cc311527b16304fe59a9ad8bebf9820bd5e1acb40b65",
+      "bodyHash": "7ce97bf44aa49c917340dbf224622b1a2e65d51cc07067dc9a2cd0575cc11499"
     },
     {
       "id": "git-and-attribution",
-      "hash": "0202064880c45c8a4b34f06c8cfff0303b0f0a1c391b5ad2d49feb0e44338bae"
+      "hash": "0202064880c45c8a4b34f06c8cfff0303b0f0a1c391b5ad2d49feb0e44338bae",
+      "bodyHash": "02d282c4570afd86d94c6e75abb6fcf585f718c01cf078d7e1b6617a14405b1a"
     },
     {
       "id": "attribution",
-      "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e"
+      "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e",
+      "bodyHash": "0bfd511a51fc62a016fe115a7c49daffc9821daf8919ea30157fb5f4b58fd3d7"
     },
     {
       "id": "includecoauthoredby",
-      "hash": "1e8ac2eff11dfd01279bb22bad338f3486126dbc8aa8d7110e21c5c5e1d33738"
+      "hash": "1e8ac2eff11dfd01279bb22bad338f3486126dbc8aa8d7110e21c5c5e1d33738",
+      "bodyHash": "c6ce17bdf8390208f3626eb814b9e243b1585e09c8e06b174ca60271111fc8e7"
     },
     {
       "id": "includegitinstructions",
-      "hash": "b85fdd1e53a3176ab8689e63d55f34bd79e12afdccd500a136a2364b2e891edd"
+      "hash": "b85fdd1e53a3176ab8689e63d55f34bd79e12afdccd500a136a2364b2e891edd",
+      "bodyHash": "c598fb40a5b181922697dbea4023f9fef8da028d479b9655e2857e8b9a36ea30"
     },
     {
       "id": "prurltemplate",
-      "hash": "3bc68542f8c12eb8f717dbb834bc2766c8d4b13dbc61ee1de2f94f086d650c48"
+      "hash": "3bc68542f8c12eb8f717dbb834bc2766c8d4b13dbc61ee1de2f94f086d650c48",
+      "bodyHash": "6e2a6c7337714b171d400e8f0fda4d8dc3eb07fdc9b61ce541fdd2316c41c3d4"
     },
     {
       "id": "attribution-commit",
-      "hash": "2fabead912e3c91e88e53c3c27a9d6772696999c64e3a78d3bbab9e08c82028c"
+      "hash": "2fabead912e3c91e88e53c3c27a9d6772696999c64e3a78d3bbab9e08c82028c",
+      "bodyHash": "c77723f830a84e6fa6a2e8575f3878a560a87162abc8baa5dc67e8ad8ed1f6a7"
     },
     {
       "id": "attribution-pr",
-      "hash": "4d4afbc91ce48a672a8671afa5feddf9b72aed10b94aa34a7c22528c42a3f61c"
+      "hash": "4d4afbc91ce48a672a8671afa5feddf9b72aed10b94aa34a7c22528c42a3f61c",
+      "bodyHash": "edfaabc55a6d452efe43fd66ede0f7969d861ad16a2a3ed57bcc698190adf978"
     },
     {
       "id": "attribution-sessionurl",
-      "hash": "0ac5892ad867bd5ed37b3e7d0eb909f29b3f945132f1bd2d8219594060593795"
+      "hash": "0ac5892ad867bd5ed37b3e7d0eb909f29b3f945132f1bd2d8219594060593795",
+      "bodyHash": "18fe21e6aedb2de9cfcba2d0139bdeada6e0b4360d99cf228774c82dfb59e8d1"
     },
     {
       "id": "hooks-and-automation",
-      "hash": "89572ea757c6b48adc3b94ab45af5ca0298255356844b9cdaba3d5f25edab2f2"
+      "hash": "89572ea757c6b48adc3b94ab45af5ca0298255356844b9cdaba3d5f25edab2f2",
+      "bodyHash": "2065274bfa77f384c1d3186f5dc20d9ab3de1761b61d78c4223f03e3d2510830"
     },
     {
       "id": "allowedhttphookurls",
-      "hash": "a9e8a4bfefd28bb87d92623019f550d78f0ab7f7f5afd7321487ec13ab28b01b"
+      "hash": "a9e8a4bfefd28bb87d92623019f550d78f0ab7f7f5afd7321487ec13ab28b01b",
+      "bodyHash": "3632dc1a88f621253c0437882644af3f800ea66fcc5eb64d481b14369daf8358"
     },
     {
       "id": "allowmanagedhooksonly",
-      "hash": "ea109832a07238d04cab7d8107bf4203c22de71b2b0e5d75a288b2c405146c28"
+      "hash": "ea109832a07238d04cab7d8107bf4203c22de71b2b0e5d75a288b2c405146c28",
+      "bodyHash": "5dd5adf4030320e4c95ace1bc9e6e6e06e275052b92624c62ba9377103bd8649"
     },
     {
       "id": "what-runs-under-allowmanagedhooksonly",
-      "hash": "0436ea9af4a0ef77664b8d711c05ec1df2446848d2f78a2534bd8d23c80a46d0"
+      "hash": "0436ea9af4a0ef77664b8d711c05ec1df2446848d2f78a2534bd8d23c80a46d0",
+      "bodyHash": "7b41c52ea97879c136f3b1e056c386197d2695591200b686148f7aeed8fba1d9"
     },
     {
       "id": "disableallhooks",
-      "hash": "d7b544944c53bc85bda3166f8c09576717929262b3d86ca2ce3e70e376d11bb8"
+      "hash": "d7b544944c53bc85bda3166f8c09576717929262b3d86ca2ce3e70e376d11bb8",
+      "bodyHash": "a9b3d61f2d6504b11ad3cc1ac3892ffc4dbe96abf74c02c7de79caf0524854ca"
     },
     {
       "id": "status-line-and-file-suggestion-gates",
-      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33",
+      "bodyHash": "1dfce8d74b6a5c70fe22d83384002e213a31c2a018cc11ec9df23efdb1ef9165"
     },
     {
       "id": "disableworkflows",
-      "hash": "9a9cf0efe4744433473bc3a6d38113b5e9a0c511d524ddbcf03583c0c838bdd0"
+      "hash": "9a9cf0efe4744433473bc3a6d38113b5e9a0c511d524ddbcf03583c0c838bdd0",
+      "bodyHash": "6e14e70a793f6a8dcbcb503de5599104024b2b833da2dddfbff5664bb7255dea"
     },
     {
       "id": "enableworkflows",
-      "hash": "b55c523ebd36d18d89b5a9de57ac462f7d35290d7aa4aed9c22610ecfa72cfc9"
+      "hash": "b55c523ebd36d18d89b5a9de57ac462f7d35290d7aa4aed9c22610ecfa72cfc9",
+      "bodyHash": "eb4ef92278e81e44045a66bcbf55733b6d499689bce153adc296d73d882e45cd"
     },
     {
       "id": "hooks",
-      "hash": "f3da96774a6b94fdcfade98d240aa080a092ef1f62a0f4dde5977000d96f3440"
+      "hash": "f3da96774a6b94fdcfade98d240aa080a092ef1f62a0f4dde5977000d96f3440",
+      "bodyHash": "ab4dcdb14242415d632bba8a39152f3e4fc1fea233c06f4b2badc046691ec8e7"
     },
     {
       "id": "httphookallowedenvvars",
-      "hash": "c4cefb3c2edf2f273972438c1ccabc4000768a42ec186816b0926532dde08b0c"
+      "hash": "c4cefb3c2edf2f273972438c1ccabc4000768a42ec186816b0926532dde08b0c",
+      "bodyHash": "5a902af96e32a249dd7e75fc979671506d05a544f93da71e3d69d28c5438e96d"
     },
     {
       "id": "workflowkeywordtriggerenabled",
-      "hash": "23c507ffbbb896ea6b3b25139dbe8c776a6a3f55b846c7ffa082911551d73ab7"
+      "hash": "23c507ffbbb896ea6b3b25139dbe8c776a6a3f55b846c7ffa082911551d73ab7",
+      "bodyHash": "8cf9fd81fbd7a8babb7f48a78d142d905b167d773e16275af0ed01cfa17cd3db"
     },
     {
       "id": "workflowsizeguideline",
-      "hash": "56719097a11f409359d5f3145d3d618eb729487294eda71a839475339c58c546"
+      "hash": "56719097a11f409359d5f3145d3d618eb729487294eda71a839475339c58c546",
+      "bodyHash": "7864b6be6483c2933f43ef4a18760db385a5fa1bde82720fe5ed908fd7b5ffe1"
     },
     {
       "id": "plugins-and-skills",
-      "hash": "1cd9a8cc828e13a49f6b18527056cd652097673571ba792a1a2e7f708e3e5ac1"
+      "hash": "1cd9a8cc828e13a49f6b18527056cd652097673571ba792a1a2e7f708e3e5ac1",
+      "bodyHash": "f8386f7900768497ff81fc7d1096d41fc1be6d06f3e9b55e476f233698672857"
     },
     {
       "id": "disablebundledskills",
-      "hash": "47b73dbc1482ac58f357996732da71a2da58a828fe561b65762b848ce054020d"
+      "hash": "47b73dbc1482ac58f357996732da71a2da58a828fe561b65762b848ce054020d",
+      "bodyHash": "5f5c9b80f82c99a5a61a17fdff7e0144f586936c643c4594984a592788bc5bb1"
     },
     {
       "id": "disableskillshellexecution",
-      "hash": "ecdc9ab7c69ca7affd8c34992756e58cfb29704e7c5e111f078b5d9e1b89d3a0"
+      "hash": "ecdc9ab7c69ca7affd8c34992756e58cfb29704e7c5e111f078b5d9e1b89d3a0",
+      "bodyHash": "01fd121d0b145eaf49c4dc0408a6e0bb743e83a3d9258d99c5cbfdde0921957b"
     },
     {
       "id": "skilloverrides",
-      "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc"
+      "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc",
+      "bodyHash": "4feafc0e62cb14dfe39c01444dcd1ac900f0d45f0d0818634ff638aea1b34660"
     },
     {
       "id": "syncclaudeaiskills",
-      "hash": "ad434b2431cddba2591be161684fdf0f3e98069650e53b46c4eb2fe8ca421c7f"
+      "hash": "ad434b2431cddba2591be161684fdf0f3e98069650e53b46c4eb2fe8ca421c7f",
+      "bodyHash": "b41d50636eeb22c9e10cf69fa5a7bb1e10ebb31b4c4b042d4443484d900e874b"
     },
     {
       "id": "syncclaudeaiplugins",
-      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192",
+      "bodyHash": "5db3c28b8c233ef8d4889225ae95e5b371905b7b8110076a1549f1dfde60c5dd"
     },
     {
       "id": "allowedchannelplugins",
-      "hash": "5032559f995729da51c9a51bcf9543b0fd067da3c04480f5f0ca389684563836"
+      "hash": "5032559f995729da51c9a51bcf9543b0fd067da3c04480f5f0ca389684563836",
+      "bodyHash": "aa24bea220f801875d35fcd73409ae7b6b0804da28f1f72949f0103d9dc6eaf2"
     },
     {
       "id": "blockedmarketplaces",
-      "hash": "305f94819b98232d182d3444e35a4276849d6cb923c8284a6f9ba10d5b89b236"
+      "hash": "305f94819b98232d182d3444e35a4276849d6cb923c8284a6f9ba10d5b89b236",
+      "bodyHash": "82bd58e6924db01aeeb0f25472626d728e49a86a14884d82954b5ca7462b1f1b"
     },
     {
       "id": "channelsenabled",
-      "hash": "8a515bcd322578de740a4d35b77191dacc36dc1a67d99875f70f84f42d2f7190"
+      "hash": "8a515bcd322578de740a4d35b77191dacc36dc1a67d99875f70f84f42d2f7190",
+      "bodyHash": "4647b2e526947db2e2ce899cd575cfcfa9a85f755c505d59c806ef88d7194af2"
     },
     {
       "id": "disablecommandpluginsources",
-      "hash": "32fe7f909f3e7a80cdcd6ee8518e0380b30618e2366301de89f9ca4c8a53c45d"
+      "hash": "32fe7f909f3e7a80cdcd6ee8518e0380b30618e2366301de89f9ca4c8a53c45d",
+      "bodyHash": "81f04d841c3a77395ae1b700eea459c58a493fa18e01ad78db1d1c9ced0f3c0b"
     },
     {
       "id": "pluginsuggestionmarketplaces",
-      "hash": "ca7a8ee11271a40c914dcbaa6395db1069cc1d05c369041858818d4f8e7b121e"
+      "hash": "ca7a8ee11271a40c914dcbaa6395db1069cc1d05c369041858818d4f8e7b121e",
+      "bodyHash": "579b55c7c9c6e4babde37a7735e7143926e4eb3a78a59e9dd5c5253d252d680a"
     },
     {
       "id": "plugintrustmessage",
-      "hash": "960ef9d351fcfbcb91c7b54b7a3e59e33e3c3a63e9e3e9fa49bb52f4ef92477b"
+      "hash": "960ef9d351fcfbcb91c7b54b7a3e59e33e3c3a63e9e3e9fa49bb52f4ef92477b",
+      "bodyHash": "db0d26877afe1ade6d0865c613eb24831d9f3c34f750da7821a6cde018bed808"
     },
     {
       "id": "strictknownmarketplaces",
-      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250"
+      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250",
+      "bodyHash": "0e516f29e55b8f9341c260478d740d896189296f1319aa332426adb24064ddc1"
     },
     {
       "id": "allowed-source-types",
-      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418"
+      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418",
+      "bodyHash": "24be8467551d89892e1b52eb3efcc882d1e7f8e06f7f65d93eb7b8b122eb6c05"
     },
     {
       "id": "owner-wildcards",
-      "hash": "de827431bbbb5b1d5ef6d4677150a2d2b496ef12724a59acb62f7c6775c35420"
+      "hash": "de827431bbbb5b1d5ef6d4677150a2d2b496ef12724a59acb62f7c6775c35420",
+      "bodyHash": "9d2b3d19b02f2ba03c4ced9769d9addb292f72a60bf005b09c098ab3b84483ec"
     },
     {
       "id": "exact-matching",
-      "hash": "0898f1a46f1b8116fea63983d68e762d56b865e01cf6a9bc58d86c65e14bdb2d"
+      "hash": "0898f1a46f1b8116fea63983d68e762d56b865e01cf6a9bc58d86c65e14bdb2d",
+      "bodyHash": "4fa3471d07eeeb187a5169992ea3c7770c04a33397f930819de6c2b7d50c7266"
     },
     {
       "id": "allow-only-the-official-marketplace",
-      "hash": "3c82f89063c6c17c776e814d69f8423ef36ea76fb1094786f8267b8688b606de"
+      "hash": "3c82f89063c6c17c776e814d69f8423ef36ea76fb1094786f8267b8688b606de",
+      "bodyHash": "c311d8f7551be7531def8358e0893c08f8be77ac93e6437b5e0674fab675a6dc"
     },
     {
       "id": "combine-with-extraknownmarketplaces",
-      "hash": "4ea01f005d07718f6a8896837a5de0285448a0f27aeffcff5a805ace6ce5b96d"
+      "hash": "4ea01f005d07718f6a8896837a5de0285448a0f27aeffcff5a805ace6ce5b96d",
+      "bodyHash": "a61219c3d4cfa83fe550f7ee06a5ca9358240377df5ff2442cf57922d287adda"
     },
     {
       "id": "strictpluginonlycustomization",
-      "hash": "3e0088b190b498850b769f6957554cb880ff915a0b99017f5af91b27964d4d84"
+      "hash": "3e0088b190b498850b769f6957554cb880ff915a0b99017f5af91b27964d4d84",
+      "bodyHash": "229fe628a335995f9c9acf770dff9da72752948d7573e6c9bb2bb1727507afff"
     },
     {
       "id": "strictpluginonlycustomization-skills",
-      "hash": "05a1e0dfb450c7be99c13cc46cd2678a9e396706bce13470621ae0c62587ee0d"
+      "hash": "05a1e0dfb450c7be99c13cc46cd2678a9e396706bce13470621ae0c62587ee0d",
+      "bodyHash": "767c443baaa72f80f8cac2d885b3371039340eacb399d770782428a55d8a9db4"
     },
     {
       "id": "strictpluginonlycustomization-agents",
-      "hash": "c2790ee358de2cef9485f4df2e73ba65b6de22512a6559b0a73b4e33a16e7fa7"
+      "hash": "c2790ee358de2cef9485f4df2e73ba65b6de22512a6559b0a73b4e33a16e7fa7",
+      "bodyHash": "1f1864f61dcc3743ce447e8cfede3eb4f66e737b1825ae5744a67877dbdb5d76"
     },
     {
       "id": "strictpluginonlycustomization-hooks",
-      "hash": "cd271be48e910a3974ba1fe31f9a49cc3ea3bf534110bb69bba23bc71c582267"
+      "hash": "cd271be48e910a3974ba1fe31f9a49cc3ea3bf534110bb69bba23bc71c582267",
+      "bodyHash": "eff66edab6ad7519b03fe1f52986cba547e0410e529c3e0e7f02568f65bf03bb"
     },
     {
       "id": "strictpluginonlycustomization-mcp",
-      "hash": "0925bed4f349958f01d1cb1a0b0e660a1b4bb1272d73d95a2a1848d77eb3a5f5"
+      "hash": "0925bed4f349958f01d1cb1a0b0e660a1b4bb1272d73d95a2a1848d77eb3a5f5",
+      "bodyHash": "c407e6d8e87546eac45267502409d00883935804f93eb43ceab895870d5703e1"
     },
     {
       "id": "enabledplugins",
-      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11"
+      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11",
+      "bodyHash": "024df704d141d66cf3077995bad900e4dda1f025bc45a9e9a970b569e97a6990"
     },
     {
       "id": "extraknownmarketplaces",
-      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
+      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3",
+      "bodyHash": "76eb63f71fb9f857f654b3b0a3ccb5193c5746dce4a12a3cf44fdc6d1ec6a4d6"
     },
     {
       "id": "marketplace-source-types",
-      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb",
+      "bodyHash": "a3839e115c73838168568f1652acbae9af5d45b37e26e3b42bb615c7627ecad5"
     },
     {
       "id": "marketplace-key-aliases",
-      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be",
+      "bodyHash": "1d11e43dcfbe35fd47d9610e03d2fefd2f8e63f6d222cd2edbd06a133edab368"
     },
     {
       "id": "pluginconfigs",
-      "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895"
+      "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895",
+      "bodyHash": "36976ac8812b80d457407fffe9f73f9a8f6b422fecf75c3122784aa62eaa069f"
     },
     {
       "id": "prependplugins",
-      "hash": "34ddbb0d81114d392f3fb1c1e15b3b36f15decc68935753019f91e8b259f878f"
+      "hash": "34ddbb0d81114d392f3fb1c1e15b3b36f15decc68935753019f91e8b259f878f",
+      "bodyHash": "2df199a5eef4b6f41ea79777138e40062ba78e36b4ee19b5a97ed06b52a7de65"
     },
     {
       "id": "appendplugins",
-      "hash": "68a42d4f3c2783690f816e20b473cb093f440c54fbdabf81e564a468a099bb5b"
+      "hash": "68a42d4f3c2783690f816e20b473cb093f440c54fbdabf81e564a468a099bb5b",
+      "bodyHash": "bd573a0051dd38de09efe8760973c796ee0391e31f2ecdc89e8df53551efb70f"
     },
     {
       "id": "mcp",
-      "hash": "d9496c73b2f09acfa6fb884ac266d43fd7c07b14ac7e798d5ee83a03380530e1"
+      "hash": "d9496c73b2f09acfa6fb884ac266d43fd7c07b14ac7e798d5ee83a03380530e1",
+      "bodyHash": "bfb0cbd8d1c93f573bfb21dff45dfa7300ab962f33bc37eb1647c646a29f7ebc"
     },
     {
       "id": "allowallclaudeaimcps",
-      "hash": "3c83715c81f72082eadcf61a839afc66b262ad954dea9f7ed2f6849e10a07d40"
+      "hash": "3c83715c81f72082eadcf61a839afc66b262ad954dea9f7ed2f6849e10a07d40",
+      "bodyHash": "eadbddebd72e7bd47e7a7431c1cdcf4b704eae0d8b3d31cfdd8fbc96934f0d1c"
     },
     {
       "id": "allowclaudeinchromewithmanagedmcp",
-      "hash": "618839b58d0768ff560295ee63cd798f42d8ab71e8f351bd115e1d1d0cd03206"
+      "hash": "618839b58d0768ff560295ee63cd798f42d8ab71e8f351bd115e1d1d0cd03206",
+      "bodyHash": "735efb54583b5c08ebb7127633b700a3494a944ea10475b2cb4d2573d445d72d"
     },
     {
       "id": "allowedmcpservers",
-      "hash": "ca2cbd69d3e5a19b4663667cf24cb66de92fc6222f8a990f24d6b3ab66c0ef2b"
+      "hash": "ca2cbd69d3e5a19b4663667cf24cb66de92fc6222f8a990f24d6b3ab66c0ef2b",
+      "bodyHash": "02c07a8caef3887de3aaa5b2c2d99f58ce80f5dd19f5c965019665c6b23bf1ab"
     },
     {
       "id": "allowmanagedmcpserversonly",
-      "hash": "2b657e94676e7e0426795e310a08a261429e092bfd6a0f973c553b4497d6d43e"
+      "hash": "2b657e94676e7e0426795e310a08a261429e092bfd6a0f973c553b4497d6d43e",
+      "bodyHash": "c8f7e8706162c599871eacf6ec3b6a1d2274a70a14ea3f456fdbc2de202d4208"
     },
     {
       "id": "deniedmcpservers",
-      "hash": "e703d5859f59901bdedec8cbe836523e1b3b6121369151c25dba68e0f66fede7"
+      "hash": "e703d5859f59901bdedec8cbe836523e1b3b6121369151c25dba68e0f66fede7",
+      "bodyHash": "804248b010098ebc20e0749dff2e9f8958c7a67992794145662cda4713df699e"
     },
     {
       "id": "disableclaudeaiconnectors",
-      "hash": "28e1de63bf8382604df73704202b00ff34e0a6ccb3f518894111c669fbe793a3"
+      "hash": "28e1de63bf8382604df73704202b00ff34e0a6ccb3f518894111c669fbe793a3",
+      "bodyHash": "c6a95014c66b6cae15f3dbf2fa5cc5b764c0fa105e9b3050cb03ee07e866e520"
     },
     {
       "id": "disabledmcpjsonservers",
-      "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232"
+      "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232",
+      "bodyHash": "8e8aaa8e24caf990794fffaf412797ebc66ba4fc2b09fd60ce7f93d2a597861e"
     },
     {
       "id": "enableallprojectmcpservers",
-      "hash": "bd1f5be1083d2c379fb8009da3964e3f60ee0cedf7f664fe139cb4192a5a27bd"
+      "hash": "bd1f5be1083d2c379fb8009da3964e3f60ee0cedf7f664fe139cb4192a5a27bd",
+      "bodyHash": "b49a32a123202d0830c9180fed9eb4658a330bd7841025dfeeabdc0705241eb0"
     },
     {
       "id": "enabledmcpjsonservers",
-      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24"
+      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24",
+      "bodyHash": "338ae7273638fbb3d13a40c9dccff11c373e8814138e146831f4187d9dca0185"
     },
     {
       "id": "managedmcpservers",
-      "hash": "8a01589555ca94338b9d81496f7f7d994c539c46eaa28e99670e4a2fe8fbd427"
+      "hash": "8a01589555ca94338b9d81496f7f7d994c539c46eaa28e99670e4a2fe8fbd427",
+      "bodyHash": "7281f857db0afaad013248e2ce53c7f0e6df251c8220deb3964958ae10fd5dde"
     },
     {
       "id": "agents-sessions-and-worktrees",
-      "hash": "45853d795ce6636d39be1ac36cdd1ab29d6ae4aa7a4463060b25bb2c2399e890"
+      "hash": "45853d795ce6636d39be1ac36cdd1ab29d6ae4aa7a4463060b25bb2c2399e890",
+      "bodyHash": "50f27a78eff3f4e345c0c68b0f67b2fc341ba1ce48942fa84e3d046d74897e3f"
     },
     {
       "id": "agent",
-      "hash": "721d922211e0ecaf19dffeab4df4cd8d474d17457f95b7cfc4358943a24e7fd7"
+      "hash": "721d922211e0ecaf19dffeab4df4cd8d474d17457f95b7cfc4358943a24e7fd7",
+      "bodyHash": "ca93c7d81ac5c23a25efc279f6c23356a7de2a1828b5dd0cb12ed4871f137179"
     },
     {
       "id": "crosssessioninbound",
-      "hash": "0a3434d30ac90d992dc6d2b85b16eb3b7d508f55f7ca7d39a0e29fd929c5af24"
+      "hash": "0a3434d30ac90d992dc6d2b85b16eb3b7d508f55f7ca7d39a0e29fd929c5af24",
+      "bodyHash": "5c8e87839c3ad9daad24b79e7f1d4422a7bb31971e64783308847957aa7cd668"
     },
     {
       "id": "disableagentview",
-      "hash": "3f5cc9bec9978f936c982c6094f324ac435863bfae7370abd03a576057bb30fc"
+      "hash": "3f5cc9bec9978f936c982c6094f324ac435863bfae7370abd03a576057bb30fc",
+      "bodyHash": "88014a5b21b1ab36f67ae7a594e4612eeff047772ae5e14e06381561a7397fa9"
     },
     {
       "id": "isolatepeermachines",
-      "hash": "eba8a11f4e02c9d8874a2efa01b18ff7160a52305ddea9b0f030e5612b75b2e9"
+      "hash": "eba8a11f4e02c9d8874a2efa01b18ff7160a52305ddea9b0f030e5612b75b2e9",
+      "bodyHash": "37b8504acd0ab7524f82ee0d502fb84af0445724888b94bfc7869e6828376098"
     },
     {
       "id": "processwrapper",
-      "hash": "b4e93f5d99f483d5763422f20f4ad4db2616a9efc6e42e80da2b1eba913ddf0b"
+      "hash": "b4e93f5d99f483d5763422f20f4ad4db2616a9efc6e42e80da2b1eba913ddf0b",
+      "bodyHash": "e4340b0a8c99ab27c4d10dce0635013758ff59156734e9d69e2a1beb23c94572"
     },
     {
       "id": "teammatemode",
-      "hash": "1eba5cd4fffa677988c4b69ff4f02c556d531992382760cd406b4d3bda80842f"
+      "hash": "1eba5cd4fffa677988c4b69ff4f02c556d531992382760cd406b4d3bda80842f",
+      "bodyHash": "ce40dd570dec3405725383fab9526875b169203f32f853db3272b6ed1b61598b"
     },
     {
       "id": "worktree",
-      "hash": "7192a8ad1deaaa955f5f22f4b7d1db6af91d1d9ceeb3fa75e8df500a5420f3d9"
+      "hash": "7192a8ad1deaaa955f5f22f4b7d1db6af91d1d9ceeb3fa75e8df500a5420f3d9",
+      "bodyHash": "497dc18870bcaf373c4a6b7c43a0074ae61d267ef2080145804ec282e9c1e338"
     },
     {
       "id": "worktree-baseref",
-      "hash": "c33d9cab1a174f2cdb1ac771d48155a386ab5bc3290dd7958d16cf30feb64e44"
+      "hash": "c33d9cab1a174f2cdb1ac771d48155a386ab5bc3290dd7958d16cf30feb64e44",
+      "bodyHash": "db9731160791da7c5e4025e27dd7b2bec8ed8203e69ce71f9cde7fef6133264a"
     },
     {
       "id": "worktree-symlinkdirectories",
-      "hash": "f41fd4d6e3be197621898f9215099a954755b7766f81c8c8bc975a30a2132704"
+      "hash": "f41fd4d6e3be197621898f9215099a954755b7766f81c8c8bc975a30a2132704",
+      "bodyHash": "d6fbc130577554f5f601e4e8c7cae8e2f299ecf3d292c4f826134179ac6cae6f"
     },
     {
       "id": "worktree-sparsepaths",
-      "hash": "95c97176ceae0c1b5bd5d87755a6a9489f949cbadb854c1bb767666bfd6250c7"
+      "hash": "95c97176ceae0c1b5bd5d87755a6a9489f949cbadb854c1bb767666bfd6250c7",
+      "bodyHash": "16b6d9fcadb5173755546610b71900497712fa89c09592376b95c58f3e2154e7"
     },
     {
       "id": "worktree-bgisolation",
-      "hash": "aeb67466138ce8a2f07d188ee54ec73d6fe3d154835409014f3b68a9de3ec274"
+      "hash": "aeb67466138ce8a2f07d188ee54ec73d6fe3d154835409014f3b68a9de3ec274",
+      "bodyHash": "41903ce00278311dcb1a3ec76525e679a1db9c630267acb4092664b69b42722d"
+    },
+    {
+      "id": "worktree-location",
+      "hash": "9fdadfe5018be165d0d4f935190f2ca9828ff4974f80e8adacd34a616ae23acf",
+      "bodyHash": "c1dfe50af89a19250d82f338bcdfa85bc32d75de7aec9589b28fa40bfa2a7f8b"
     },
     {
       "id": "remote-desktop-and-notifications",
-      "hash": "af234a20440b27c1c91c92483708dc1c8582d3e5bcbe9264161be875d74dc9ba"
+      "hash": "af234a20440b27c1c91c92483708dc1c8582d3e5bcbe9264161be875d74dc9ba",
+      "bodyHash": "742442d6c729f4a5f032941dcb4c0b3fb86f39ad85628e72923fd6529c4975b7"
     },
     {
       "id": "agentpushnotifenabled",
-      "hash": "d9fd73b9e34d3992b13b2ad6aa818267ba1112b3498c4ec824573474ba937a27"
+      "hash": "d9fd73b9e34d3992b13b2ad6aa818267ba1112b3498c4ec824573474ba937a27",
+      "bodyHash": "230b52aeeb3ecd63b454cfce0b7a32e53c08715644902e8b66d42fffc538044c"
     },
     {
       "id": "awaysummaryenabled",
-      "hash": "a9aa1e335ac6b0dee29fd8e85e132f0aa3a604c19cee56a418029520dc09e269"
+      "hash": "a9aa1e335ac6b0dee29fd8e85e132f0aa3a604c19cee56a418029520dc09e269",
+      "bodyHash": "77196955e8243b100b8636ac3add3bb3cc3104d980fd1d9c1135917100d37e35"
     },
     {
       "id": "disableartifact",
-      "hash": "9c0e53f6cf784de8ee50b9f191fe6cb8136d1c70942a2742b0d24f8de7a450e2"
+      "hash": "9c0e53f6cf784de8ee50b9f191fe6cb8136d1c70942a2742b0d24f8de7a450e2",
+      "bodyHash": "e8b14671413176fc84df4d2ca2f232773911ec5bfa00f6e2c7daa0a8f712169a"
     },
     {
       "id": "disabledeeplinkregistration",
-      "hash": "118ac44c0d6225ceda980f7cf79d212366f93680b2a35235409cf9ff4b7c1d87"
+      "hash": "118ac44c0d6225ceda980f7cf79d212366f93680b2a35235409cf9ff4b7c1d87",
+      "bodyHash": "020f6aba88cf715c6d4da03799141bfb2c11b957b8bc37645f3dab6f42b7d6ef"
     },
     {
       "id": "disabledesktoplocalsessions",
-      "hash": "1df58cb4fe2951c566b8b38383190c30bcdef89ddb6ee75088fc64825318a470"
+      "hash": "1df58cb4fe2951c566b8b38383190c30bcdef89ddb6ee75088fc64825318a470",
+      "bodyHash": "3b55053f7d52b009507569f11e37ac4ff33e67c371f1ce7f8a1156d875ca5e32"
     },
     {
       "id": "disableremotecontrol",
-      "hash": "84850d0f97566973d959e6142d03514ce1ae08017d05f0dbabbbf170aedd9da4"
+      "hash": "84850d0f97566973d959e6142d03514ce1ae08017d05f0dbabbbf170aedd9da4",
+      "bodyHash": "f078d08daf7de21b7d5bc80a35a9e22e9d5f707b71ac100776bbe29bcd84c6ea"
     },
     {
       "id": "enableartifact",
-      "hash": "74b6999db6eab1b71aa85ee88c6a51a2722ae9164f0f6ea4e1768f826c1a3b74"
+      "hash": "e117748af17cbe4ab1e9dec130e6f0144be9f15e882ef495b47307855fd60233",
+      "bodyHash": "f8061f82eb5e2700f3acaf517a7ffefae435308e1c11cc570a67854eb0b120d2"
     },
     {
       "id": "inputneedednotifenabled",
-      "hash": "74f7ad4c6890074d70c6f6738d596641b96290536e2de85e89f4a73d4e4119da"
+      "hash": "74f7ad4c6890074d70c6f6738d596641b96290536e2de85e89f4a73d4e4119da",
+      "bodyHash": "31b7e90b4590392264eff66106af89e94e7aeded4643cb194fbc065e69745870"
     },
     {
       "id": "preferrednotifchannel",
-      "hash": "cc8fa4dfd981cc5ee46bb7547763d8f782717ab8f4a47dd45758f1a02b88ca7a"
+      "hash": "cc8fa4dfd981cc5ee46bb7547763d8f782717ab8f4a47dd45758f1a02b88ca7a",
+      "bodyHash": "dc61c4ab67f6b3f53e8f3d2825d1c4841f97646bf9b342b52a60d9d7ecc17e11"
     },
     {
       "id": "remote-defaultenvironmentid",
-      "hash": "d3afefc5bc24ce488953e96bb70234853bf8baa69487724c817e45f39bec2308"
+      "hash": "d3afefc5bc24ce488953e96bb70234853bf8baa69487724c817e45f39bec2308",
+      "bodyHash": "4adbaf0f3a9c480d6a7808d11ab5a9def2bc8b00962a6487fd4c908b834cddf3"
     },
     {
       "id": "remotecontrolatstartup",
-      "hash": "9d905b458b2b6227949113fafac3487cf7444548235f20c37959486f146fd187"
+      "hash": "9d905b458b2b6227949113fafac3487cf7444548235f20c37959486f146fd187",
+      "bodyHash": "abfd1c5909c504f44daeebc731151647ecbefa804c4f1afe60ecb5d107c8f970"
     },
     {
       "id": "sshconfigs",
-      "hash": "722e745a4ff8919bb901747acb7cad7e6716809d10d66d45ef8296bbe902f17e"
+      "hash": "91f3aff3cb0349e5c060e2ba6bd85230d1931d48bde429952de4b3bb47f96684",
+      "bodyHash": "31c9092d80feb2be7e2a2c1c0a5fd6d8a0c01b367314f341ead20c1a506aae95"
     },
     {
       "id": "sshhostallowlist",
-      "hash": "7707f7b977adb72c9eb6b660e55e05e59ca86edba363d859d818ecee83283865"
+      "hash": "7707f7b977adb72c9eb6b660e55e05e59ca86edba363d859d818ecee83283865",
+      "bodyHash": "079ec28bd014aeada7589b9ed0c9d1b6cc5a5ed6492e9e54302c8706fb04dc4e"
     },
     {
       "id": "authentication-and-providers",
-      "hash": "7d629613f3824202158ae5a37bff7ba6531a2f59b4e3e47681e9a53e610baf32"
+      "hash": "7d629613f3824202158ae5a37bff7ba6531a2f59b4e3e47681e9a53e610baf32",
+      "bodyHash": "52b779e2469490471765f86f4ebdeab56e3831f9609f6147b08427dec8d71f9f"
     },
     {
       "id": "allowedproviders",
-      "hash": "be967dde746d22964a7ee6c8f3a5349d54ef016769f9c7a4dfd0adcccbce4e80"
+      "hash": "be967dde746d22964a7ee6c8f3a5349d54ef016769f9c7a4dfd0adcccbce4e80",
+      "bodyHash": "9e970e48ae44e09684287112157caae055d85c8bdfc79e2f1fb32897376be247"
     },
     {
       "id": "endpoints-that-need-a-pin-in-managed-env",
-      "hash": "eb6013fec7aebf419a78a1d14993abc3ecdf0411f95233723b0b3db9aa8fc50c"
+      "hash": "eb6013fec7aebf419a78a1d14993abc3ecdf0411f95233723b0b3db9aa8fc50c",
+      "bodyHash": "989645f31c0b6a246969268c5475d23f156445a9b8db2427d39ed6210ca82343"
     },
     {
       "id": "apikeyhelper",
-      "hash": "efd9c40b52165bfced283ded41ab73dfef7ea57cd354606bfb0f53cb8848b88e"
+      "hash": "efd9c40b52165bfced283ded41ab73dfef7ea57cd354606bfb0f53cb8848b88e",
+      "bodyHash": "7199d97f98af2d66babb735fb8e63c3eb044206428ce15732b18b11972196739"
     },
     {
       "id": "awsauthrefresh",
-      "hash": "bbbd75972b95d07c353899886495adf971851643ffab4906beaf94dae960a6f8"
+      "hash": "bbbd75972b95d07c353899886495adf971851643ffab4906beaf94dae960a6f8",
+      "bodyHash": "9af9ccf948b09900e5dd6b8a8e01a918c9931bd9594a8603bb88447153d8baa7"
     },
     {
       "id": "awscredentialexport",
-      "hash": "a79192c5673251d2e2622fe3f1afa646cb76ae400d7695563e3475827fd23802"
+      "hash": "a79192c5673251d2e2622fe3f1afa646cb76ae400d7695563e3475827fd23802",
+      "bodyHash": "9987c96724a1f82fd279341b182bc32a750a4401fba68964307e3afc262b7ec4"
     },
     {
       "id": "forceloginmethod",
-      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
+      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f",
+      "bodyHash": "9a8048f898dbcfd545f3e5c9fcf131be589a5b8f6b91450035c582165f8d2c38"
     },
     {
       "id": "forcelogingatewayurl",
-      "hash": "8c4a51f34124104c8187a93a1da7ac4c57afe69c8ab9dde9f84dc2dc2706fa6b"
+      "hash": "1cb6f3f981fff4bc406772b73682051c616f050e8010664f99951e1f43b17b36",
+      "bodyHash": "3c6df7ac99c6fb2103f8f0db9018c92794deb59ad5e1360eb2a5fd2a26e88cf1"
     },
     {
       "id": "forceloginorguuid",
-      "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9"
+      "hash": "0c84d4cf19830e18cdecb7181a57dd6598c68920f436bc5a19a78ecda86df313",
+      "bodyHash": "5e147091b3d974777fe30c20d9ba568a19e653464892591013e35929f0c0abc3"
     },
     {
       "id": "gatewayinternalnetworks",
-      "hash": "1530a1dd8cf5eab6344e4f83cfbe6fa7b2519eba2d992cf57ec57c8930d0b32a"
+      "hash": "1530a1dd8cf5eab6344e4f83cfbe6fa7b2519eba2d992cf57ec57c8930d0b32a",
+      "bodyHash": "d7e6235e710892cd90cfe57e332c8a6d01920bff85924643cc1d79032f21578b"
     },
     {
       "id": "gcpauthrefresh",
-      "hash": "fbfa81160c4fa56b0702019dc32c4b31281aa1edf8b92e9f3b1efbf10ec087f0"
+      "hash": "fbfa81160c4fa56b0702019dc32c4b31281aa1edf8b92e9f3b1efbf10ec087f0",
+      "bodyHash": "0172e48431208f85ee23bf471242fe86d67a6acbe92ae88a33ec657b4bf9a705"
     },
     {
       "id": "otelheadershelper",
-      "hash": "295d3fe3b80b688c2f11f466476e73bdc7c02139db022c6a13c3e590aec75e9c"
+      "hash": "295d3fe3b80b688c2f11f466476e73bdc7c02139db022c6a13c3e590aec75e9c",
+      "bodyHash": "08e520f532724d794a23b1d17f397825b91d6ae7b5c2178666a253ea6f69e79c"
     },
     {
       "id": "updates-and-versioning",
-      "hash": "a7e6b55510b36a18220f12c2c1b7adfb7f1590ec045d8d71c16ecef2c4679b6e"
+      "hash": "a7e6b55510b36a18220f12c2c1b7adfb7f1590ec045d8d71c16ecef2c4679b6e",
+      "bodyHash": "03180275caf65e0053f89f093f7e3b92412954e9eedad79bc098e6edc969c025"
     },
     {
       "id": "autoupdateschannel",
-      "hash": "dde0aaedcf8712f824892c7c77f8ef6f2de0f119b7da7d0d2015f068c660b560"
+      "hash": "dde0aaedcf8712f824892c7c77f8ef6f2de0f119b7da7d0d2015f068c660b560",
+      "bodyHash": "cd2f50466e14b79201753fa61d777dc42564f41b07bf3b5a996e75bb873d9062"
     },
     {
       "id": "minimumversion",
-      "hash": "c0d8c826c5a8813cc773d86237c6926fb9cebab6fcdb04ef769986cf1168c3b0"
+      "hash": "c0d8c826c5a8813cc773d86237c6926fb9cebab6fcdb04ef769986cf1168c3b0",
+      "bodyHash": "2cf3a2611da28e02ba40cf39e9a938aa72c18cae8543525831d5f5b011fbb903"
     },
     {
       "id": "requiredmaximumversion",
-      "hash": "354ae366c48ba0bd121053a5b704a84ec189e6dbebdb2d7056c27b9ea366ee55"
+      "hash": "354ae366c48ba0bd121053a5b704a84ec189e6dbebdb2d7056c27b9ea366ee55",
+      "bodyHash": "f2644817bbf04493305df67a7ff78edac250d866b172aa0d1898e048f3d0974f"
     },
     {
       "id": "requiredminimumversion",
-      "hash": "b1489a78ee9bef58c3abd14762e1fa78d4306039bbd2c55ef56c1e01e62f1666"
+      "hash": "b1489a78ee9bef58c3abd14762e1fa78d4306039bbd2c55ef56c1e01e62f1666",
+      "bodyHash": "ab0ca9b52521652b4c1a2054575a0259d9410e582982ca6a4754fa1506527f52"
     },
     {
       "id": "tools",
-      "hash": "fda1132c4f47b7d404e6e9f42ba6444a79a46e154d97fd7a742c5e1933635112"
+      "hash": "fda1132c4f47b7d404e6e9f42ba6444a79a46e154d97fd7a742c5e1933635112",
+      "bodyHash": "ea2437a01c9b39bbeb3a286f778b683a8a37ddfb25b63ff84bc302bbfd7169e7"
     },
     {
       "id": "browserexternalpagetools",
-      "hash": "1fdd74b188e4a09e034e650c77e907ad0b31a87bdf87f2470e517cdb4f97d8f0"
+      "hash": "1fdd74b188e4a09e034e650c77e907ad0b31a87bdf87f2470e517cdb4f97d8f0",
+      "bodyHash": "7dee2559d33f9ebcd96885982d3b80115b2f70c535eecbd385a7509c7c5c04c8"
     },
     {
       "id": "disablebrowserexternalnavigation",
-      "hash": "ca9af9ffcd78ef1bcf44ac9d40f7abf32f36bd4fcfe1009e768e6f483a6be749"
+      "hash": "ca9af9ffcd78ef1bcf44ac9d40f7abf32f36bd4fcfe1009e768e6f483a6be749",
+      "bodyHash": "86b97b520308dbaa2a806fc66c8bd7c97e8d666328f3890d5003273efee2b1cf"
     },
     {
       "id": "disablemobilesimulatortools",
-      "hash": "144f02cbcaacd7b5408884d5f6dfa428a9b8c7de86e95e476ec20e4ec0f53a68"
+      "hash": "144f02cbcaacd7b5408884d5f6dfa428a9b8c7de86e95e476ec20e4ec0f53a68",
+      "bodyHash": "b3a55eb1368b8e6270b3c99ecdb2235477a8b0b85ecfd8f23f5c3f3af47b4f64"
     },
     {
       "id": "privacy-and-telemetry",
-      "hash": "e330e1a462b541d53140f0bcfaae69662e27fe35f023ad4735b205c346a96fad"
+      "hash": "e330e1a462b541d53140f0bcfaae69662e27fe35f023ad4735b205c346a96fad",
+      "bodyHash": "c97732f2782ac5de2ca8b94970f52a2025ddd69eb1f16b74554cd82f15544e73"
     },
     {
       "id": "cleanupperioddays",
-      "hash": "e363cebbfc6166039f57262e6b9e52fc9f2956b8ec3ae9fd547ec4e736c7dfe0"
+      "hash": "e363cebbfc6166039f57262e6b9e52fc9f2956b8ec3ae9fd547ec4e736c7dfe0",
+      "bodyHash": "e81528bea2e2a3827652d91f38a953a7a8346a397881132142c1aaf0748897c6"
     },
     {
       "id": "desktopsessioncleanupperioddays",
-      "hash": "141ee8fb7d47521f98aee0657f2693fadb11d8dbe49b5ef1c46a61780cbc57e9"
+      "hash": "141ee8fb7d47521f98aee0657f2693fadb11d8dbe49b5ef1c46a61780cbc57e9",
+      "bodyHash": "0b81c771716f31f047f4cb8b257a0d90468fd3c82a7e8c6cb9896da9046dda0e"
     },
     {
       "id": "feedbackdrafts",
-      "hash": "f958196034b4e241cc93b8638dbc5914f9f4f0203b62ece7038124f6e5d002bc"
+      "hash": "f958196034b4e241cc93b8638dbc5914f9f4f0203b62ece7038124f6e5d002bc",
+      "bodyHash": "e7b91f64dd57283a61e93d2dbaf348058ba9c03c3cee4246263f10acf75c51b6"
     },
     {
       "id": "feedbacksurveyrate",
-      "hash": "cced4468cc10d326785c100f60f8e436714aed3d079943826861b97a7a69a96b"
+      "hash": "cced4468cc10d326785c100f60f8e436714aed3d079943826861b97a7a69a96b",
+      "bodyHash": "f53fdcbc0f36ae411d9aabfa72bec29842593b7b625fbacdc876ed5911887dac"
     },
     {
       "id": "skipwebfetchpreflight",
-      "hash": "021426c8a118c8d6539cc66e87ed582be06be390e0d7d5917dedf966bbfc3215"
+      "hash": "021426c8a118c8d6539cc66e87ed582be06be390e0d7d5917dedf966bbfc3215",
+      "bodyHash": "04457cbcfc0e342d85e5b64c932aff34723ff9897edeb97651e1c0a74ac3abd7"
     },
     {
       "id": "enterprise-and-managed-settings",
-      "hash": "c29c331b7a6460c91aa5ead495ba243635761d7ccbbc4d8fa9d1b5a21d2da291"
+      "hash": "c29c331b7a6460c91aa5ead495ba243635761d7ccbbc4d8fa9d1b5a21d2da291",
+      "bodyHash": "b066fd479d4083ef213edaabfc2da8f5433daa52e0b36a441dc4f2bebe6f6c19"
     },
     {
       "id": "disablesideloadflags",
-      "hash": "548a7aec8e284b3ba66b2acb542fb6071498c5318d8815aae9f0a067f7b3d042"
+      "hash": "548a7aec8e284b3ba66b2acb542fb6071498c5318d8815aae9f0a067f7b3d042",
+      "bodyHash": "500f9ae1d8c281cb4d8725cd7ed066aa3bf5983875d42dae6e0ad78bd4ed6605"
     },
     {
       "id": "forceremotesettingsrefresh",
-      "hash": "cd9cb1b09796aceb858104638e1d39ba7545906f825d5f460f3bcadfae6ab0d8"
+      "hash": "cd9cb1b09796aceb858104638e1d39ba7545906f825d5f460f3bcadfae6ab0d8",
+      "bodyHash": "fb0bf756040ee8e21ac8ae77beece06d54fc6cc64a343be7d4f906b466e79ed5"
     },
     {
       "id": "managedsourcesbehavior",
-      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3",
+      "bodyHash": "6dc42e6ad8015ccba80cb31ecf39a7c3852a3eee6b2a3de2205972a528b95c63"
     },
     {
       "id": "parentsettingsbehavior",
-      "hash": "a812f70172db31fedff898478d3c6f88761ab6dedc1d2ed88d034300f2abdca5"
+      "hash": "a812f70172db31fedff898478d3c6f88761ab6dedc1d2ed88d034300f2abdca5",
+      "bodyHash": "0799e7155c35ffffe7544f22bdd9ac5492090500b3e6f630c762292ae25c4971"
     },
     {
       "id": "policyhelper",
-      "hash": "fe14aab4a90a3f582325cb9ec908f1d18fea911f096aebdb48417b07af57d0e5"
+      "hash": "fe14aab4a90a3f582325cb9ec908f1d18fea911f096aebdb48417b07af57d0e5",
+      "bodyHash": "37783f7033c08b7a9edeb68b0c0e5c7adcb9c785dd8f188405bc94b44450bd98"
     },
     {
       "id": "write-the-helper-output",
-      "hash": "68fe35cae99b5e08ee9236887123751e73fc59bae908c4bc6481c694d366a5fe"
+      "hash": "68fe35cae99b5e08ee9236887123751e73fc59bae908c4bc6481c694d366a5fe",
+      "bodyHash": "ffb2bd2e1fbe42d5a0c37413890291a62c9d3846068b278d8f4bc29ddbb61f3c"
     },
     {
       "id": "helper-failures",
-      "hash": "3666e6a0d665a8a16e8f974241f1f08a648a7af81ab242be2e0d2c9db00335a8"
+      "hash": "3666e6a0d665a8a16e8f974241f1f08a648a7af81ab242be2e0d2c9db00335a8",
+      "bodyHash": "ab0c30ea24aff047f297b826a5816b35ebead2b6dfd72cfcc4fe0b1b4de24d69"
     },
     {
       "id": "policyhelper-path",
-      "hash": "5308974c74dfb207534d9ca06efde9b21649f0e6ae6380e16d0ef9118cddec37"
+      "hash": "5308974c74dfb207534d9ca06efde9b21649f0e6ae6380e16d0ef9118cddec37",
+      "bodyHash": "401b92af82d9c39fa6528bffca9a5834a609f18f4f3b4f17d99b5aecb12c54e9"
     },
     {
       "id": "policyhelper-timeoutms",
-      "hash": "14843159647a5904b5070a62d2a97b6f6b642c9353487ea78666b3fe1108fae0"
+      "hash": "14843159647a5904b5070a62d2a97b6f6b642c9353487ea78666b3fe1108fae0",
+      "bodyHash": "1ce1e498184d4a0e10bfa159f4d0fa80fa166c332f33b00d9d92d7f3a72e07e2"
     },
     {
       "id": "policyhelper-refreshintervalms",
-      "hash": "b6d1ea127dc2ca89e4f550a66280fadb89e46dcb79df2bd2653931c51f1f3bdd"
+      "hash": "b6d1ea127dc2ca89e4f550a66280fadb89e46dcb79df2bd2653931c51f1f3bdd",
+      "bodyHash": "d5f5ed46d0c023e33571ee86666f47fca71643a14213e9fe1c88a2d3209b54d4"
     },
     {
       "id": "wslinheritswindowssettings",
-      "hash": "76c41ed125acac0d88eb86b14ed9fbc00061e2f98c5e6a3ca1249c34b257092d"
+      "hash": "76c41ed125acac0d88eb86b14ed9fbc00061e2f98c5e6a3ca1249c34b257092d",
+      "bodyHash": "2bf7722637d1a4949a922ac8b8c64d786e26720f536284fd4c7143f4353d1824"
     },
     {
       "id": "global-config-settings",
-      "hash": "e9ff36789538e7e8fbca017992971575941c6836b9d7522b58a8117c52be4eaa"
+      "hash": "e9ff36789538e7e8fbca017992971575941c6836b9d7522b58a8117c52be4eaa",
+      "bodyHash": "5308c3664d9ef35a5b68827e1999fc3ea43e9a74cc78a3611c3e07a62c670839"
     },
     {
       "id": "autoconnectide",
-      "hash": "be3cb8810d67852b4984c9884060f22c210190590c7463e7833b05070311e808"
+      "hash": "be3cb8810d67852b4984c9884060f22c210190590c7463e7833b05070311e808",
+      "bodyHash": "04355fc896264ea29a991056624d3fdcc72df080e6b862cd428751d390b5a75c"
     },
     {
       "id": "autoinstallideextension",
-      "hash": "ae9bc1cb4e99fd78ca215140c0366224c2128fa9b22c908e93572fe6d97f6f32"
+      "hash": "ae9bc1cb4e99fd78ca215140c0366224c2128fa9b22c908e93572fe6d97f6f32",
+      "bodyHash": "38ca0a0a6ff65d9769e3bc7086e34f3459b658b43aa58927e7660fc65e7d3221"
     },
     {
       "id": "claudeinchromedefaultenabled",
-      "hash": "7d3f690990904d087009aaeb89019599302bf6a5c8abd0894a1402acfee36f74"
+      "hash": "7d3f690990904d087009aaeb89019599302bf6a5c8abd0894a1402acfee36f74",
+      "bodyHash": "af1c66467706b56d103a6c83c36a16c8319a90e921f501b316c7c39cd99eeba6"
     },
     {
       "id": "copyfullresponse",
-      "hash": "36d90279367073969bccf903a9d5aa2374d55e300c0e1cdb3c27c097ae1a835b"
+      "hash": "b003c62c7eeb806567567fb1b73fbd2a4fa9dcbd1c5e84444033d102b859b643",
+      "bodyHash": "76b7143525f61fe76411094d110b2b6c75946e5027048bb74ec5a480397875e4"
     },
     {
       "id": "copyonselect",
-      "hash": "10e44349cd5f3a12cdc8d04306300a4295244bcae629581a096e87618893761a"
+      "hash": "10e44349cd5f3a12cdc8d04306300a4295244bcae629581a096e87618893761a",
+      "bodyHash": "f29e78b50ab9770a43057cab7074c839eaaeb9e398f245a33a0daf02ac68ccfc"
     },
     {
       "id": "defaulttoagentsview",
-      "hash": "a51400dcdc89fc648387777cf1c2281dedaaf20d910f3b367e79dd2f237b198d"
+      "hash": "a51400dcdc89fc648387777cf1c2281dedaaf20d910f3b367e79dd2f237b198d",
+      "bodyHash": "cc860d494dc3593c859783158be2126392401e434bbe5258a4d993a646d3801a"
     },
     {
       "id": "difftool",
-      "hash": "828af62c4a51a4b23f709388c9ddaa1b0858b47b2d6c545059d26907ac0a1b52"
+      "hash": "828af62c4a51a4b23f709388c9ddaa1b0858b47b2d6c545059d26907ac0a1b52",
+      "bodyHash": "17ba91ac031a6b8679896f0e051f5bd92c738eb12da62809554f54da2ad581ed"
     },
     {
       "id": "externaleditorcontext",
-      "hash": "31ac23c8eec0cd59f04bde45255acfd3656cd7cffb902d1f968af9613e790e94"
+      "hash": "31ac23c8eec0cd59f04bde45255acfd3656cd7cffb902d1f968af9613e790e94",
+      "bodyHash": "35306166a8bdfc6944e3bcee91e1a6b75518a70a22798034de693afd9dda223a"
     },
     {
       "id": "leftarrowopensagents",
-      "hash": "b3f566986c3456e36dfc8dfbc53e21fa7cdeb9ae355d13ba5b0eb0d4cec80c75"
+      "hash": "b3f566986c3456e36dfc8dfbc53e21fa7cdeb9ae355d13ba5b0eb0d4cec80c75",
+      "bodyHash": "d73adad86f0b22237bd28387a4cec3fce42a02c8c5827e3fcc2b6f520bde665b"
     },
     {
       "id": "permissionexplainerenabled",
-      "hash": "4fb85d37ca8b88d7b43fd2cb5b46579bbb78c588d992b93860965574d49e1b19"
+      "hash": "4fb85d37ca8b88d7b43fd2cb5b46579bbb78c588d992b93860965574d49e1b19",
+      "bodyHash": "e6957fbbf87d328b98f205d54ebb2050a461ab2c8f844beea10bfa12ab496029"
     },
     {
       "id": "prstatusfooterenabled",
-      "hash": "80954fde2485f083c1c591d6623e74ccbf7afbe44e021a8348c15a34fecdc122"
+      "hash": "80954fde2485f083c1c591d6623e74ccbf7afbe44e021a8348c15a34fecdc122",
+      "bodyHash": "b1bada3bee52dda0af402be48799448a46e57a87dd4cfdc038dec5f2dc5467d8"
     },
     {
       "id": "teammatedefaultmodel",
-      "hash": "db6b3c25a2e07fa38c38a3fa9a6a3be54f7a30bd956eeacb7fd78cef56ab3921"
+      "hash": "db6b3c25a2e07fa38c38a3fa9a6a3be54f7a30bd956eeacb7fd78cef56ab3921",
+      "bodyHash": "707b415858f6ad5c739799c5801dd8753ac47494120179cfe8064acd90409e78"
     },
     {
       "id": "see-also",
-      "hash": "9f67a0f233440c873db3c4b1ec41ec4744b8aec0373c52ae9d402b393a87a66f"
+      "hash": "9f67a0f233440c873db3c4b1ec41ec4744b8aec0373c52ae9d402b393a87a66f",
+      "bodyHash": "e0713acbbee6af0f83fcad08f8e3f1646a2d0b8f701dda6e03d810c9c3cde25f"
     }
   ],
   "sources": [
@@ -1294,6 +1587,12 @@
       "text": "## Settings index\n\nEvery key below links to its entry. Scope lists the [files](/docs/en/settings#settings-files-and-who-they-affect) it can go in: `User` is `~/.claude/settings.json`, `Project` is `.claude/settings.json`, `Local` is `.claude/settings.local.json`, and `Managed` is [what your organization deploys](/docs/en/managed-settings). `Any file` means all four, and `Global config` means [`~/.claude.json`](#global-config-settings).\n\n<ReferenceFilter\n  noun=\"settings\"\n  placeholder=\"Filter settings by key or purpose\"\n  facetOrder={{ scope: [\"Any file\", \"User, local, or managed\", \"User or managed\", \"User\", \"Managed\", \"Global config\"] }}\n  columnHelp={{\ntopic: \"The section of this page that holds the entry. Use Sort by to group the table by topic.\",\nscope: \"Which settings files can set the key: user (~/.claude/settings.json), project (.claude/settings.json), local (.claude/settings.local.json), or managed (deployed by your organization). Global config keys are in ~/.claude.json instead.\",\n}}\n/>\n\n| Key | Description | Topic | Scope |\n| :- | :- | :- | :- |\n| [`advisorModel`](#advisormodel) | Pick which model answers when Claude asks the [advisor tool](/docs/en/advisor) | Model and responses | Any file |\n| [`agent`](#agent) | Start every session as a named [subagent](/docs/en/sub-agents) with its prompt, tools, and model | Agents, sessions, and worktrees | Any file |\n| [`agentPushNotifEnabled`](#agentpushnotifenabled) | Let Claude send a [push notification to your phone](/docs/en/remote-control#mobile-push-notifications) when it decides to | Remote, desktop, and notifications | Any file |\n| [`allowAllClaudeAiMcps`](#allowallclaudeaimcps) | Load the [claude.ai connectors](/docs/en/mcp) Claude Code fetches itself alongside a deployed [`managed-mcp.json`](/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) | MCP | Managed |\n| [`allowClaudeInChromeWithManagedMcp`](#allowclaudeinchromewithmanagedmcp) | Let the built-in [Claude in Chrome](/docs/en/chrome) server run alongside a deployed [`managed-mcp.json`](/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) | MCP | Managed |\n| [`allowedChannelPlugins`](#allowedchannelplugins) | Replace the default allowlist of [channel plugins](/docs/en/channels#restrict-which-channel-plugins-can-run) that can push messages | Plugins and skills | Managed |\n| [`allowedHttpHookUrls`](#allowedhttphookurls) | Limit which URLs [HTTP hooks](/docs/en/hooks) can target | Hooks and automation | Any file |\n| [`allowedMcpServers`](#allowedmcpservers) | Allowlist which [MCP servers](/docs/en/mcp) users can add | MCP | Any file |\n| [`allowedProviders`](#allowedproviders) | Limit which [API providers](/docs/en/third-party-integrations) a machine may use | Authentication and providers | Managed |\n| [`allowManagedHooksOnly`](#allowmanagedhooksonly) | Run only the [hooks](/docs/en/hooks) your organization deploys | Hooks and automation | Managed |\n| [`allowManagedMcpServersOnly`](#allowmanagedmcpserversonly) | Make the managed [MCP](/docs/en/mcp) allowlist the only one that applies | MCP | Managed |\n| [`allowManagedPermissionRulesOnly`](#allowmanagedpermissionrulesonly) | Make [managed settings](/docs/en/managed-settings) the only settings source of [permission rules](/docs/en/permissions#managed-settings) | Permission settings | Managed |\n| [`alwaysThinkingEnabled`](#alwaysthinkingenabled) | Turn [extended thinking](/docs/en/model-config#extended-thinking) off for every session | Model and responses | Any file |\n| [`apiKeyHelper`](#apikeyhelper) | Generate the [API credential](/docs/en/authentication#credential-management) with your own command | Authentication and providers | Any file |\n| [`askUserQuestionTimeout`](#askuserquestiontimeout) | Let an unanswered question [auto-continue](/docs/en/tools-reference#question-auto-continue-timeout) after idle time | Interface and terminal | User or managed |\n| [`appendPlugins`](#appendplugins) | Run your organization's [mods](/docs/en/plugins/mods/admin) after every mod a user installs | Plugins and skills | User or managed |\n| [`attribution`](#attribution) | Customize the attribution Claude Code adds to commits and pull requests | Git and attribution | Any file |\n| [`attribution.commit`](#attribution-commit) | Change or hide the trailer Claude Code adds to commits | Git and attribution | Any file |\n| [`attribution.pr`](#attribution-pr) | Change or hide the attribution line in pull request descriptions | Git and attribution | Any file |\n| [`attribution.sessionUrl`](#attribution-sessionurl) | Omit the claude.ai session link from [cloud](/docs/en/claude-code-on-the-web) and [Remote Control](/docs/en/remote-control) commits | Git and attribution | Any file |\n| [`autoCompactEnabled`](#autocompactenabled) | Turn [automatic compaction](/docs/en/context-window) off or on | Memory and context | Any file |\n| [`autoCompactWindow`](#autocompactwindow) | Set how full the context gets before Claude Code [compacts](/docs/en/context-window) | Memory and context | Any file |\n| [`autoConnectIde`](#autoconnectide) | Connect to a running [VS Code](/docs/en/vs-code) or [JetBrains](/docs/en/jetbrains#from-external-terminals) IDE automatically from an external terminal | Global config settings | Global config |\n| [`autoContinueAtUsageLimit`](#autocontinueatusagelimit) | Wait in the open session and [continue the task automatically](/docs/en/interactive-mode#wait-for-a-usage-limit-to-reset) after a claude.ai usage limit resets | Interface and terminal | User or managed |\n| [`autoInstallIdeExtension`](#autoinstallideextension) | Turn off automatic install of the [IDE extension](/docs/en/vs-code#install-the-extension) from a VS Code terminal | Global config settings | Global config |\n| [`autoMemoryDirectory`](#automemorydirectory) | Store [auto memory](/docs/en/memory#auto-memory) in a directory you choose | Memory and context | Any file |\n| [`autoMemoryEnabled`](#automemoryenabled) | Turn [auto memory](/docs/en/memory#auto-memory) off or on | Memory and context | Any file |\n| [`autoMode`](#automode) | Add your own allow and deny rules to the [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) classifier | Permission settings | User or managed |\n| [`autoMode.classifyAllShell`](#automode-classifyallshell) | Send every shell command through the [auto mode classifier](/docs/en/permission-modes#what-the-classifier-blocks-by-default), even ones a narrow allow rule matches | Permission settings | User or managed |\n| [`autoScrollEnabled`](#autoscrollenabled) | [Follow new output](/docs/en/fullscreen#auto-follow) to the bottom in fullscreen rendering | Interface and terminal | Any file |\n| [`autoUpdatesChannel`](#autoupdateschannel) | Follow the stable [release channel](/docs/en/setup#configure-release-channel) instead of latest | Updates and versioning | Any file |\n| [`availableModels`](#availablemodels) | [Restrict which models](/docs/en/model-config#restrict-model-selection) people can pick | Model and responses | Any file |\n| [`availableModelsMatch`](#availablemodelsmatch) | Make each `availableModels` model ID entry [permit only the version it names](/docs/en/model-config#block-specific-models-or-versions) | Model and responses | Managed |\n| [`awaySummaryEnabled`](#awaysummaryenabled) | Turn off the [session recap](/docs/en/interactive-mode#session-recap) shown when you come back to the terminal | Remote, desktop, and notifications | Any file |\n| [`awsAuthRefresh`](#awsauthrefresh) | Refresh expired [Bedrock credentials](/docs/en/amazon-bedrock#advanced-credential-configuration) in `.aws` with your own command | Authentication and providers | Any file |\n| [`awsCredentialExport`](#awscredentialexport) | Supply [Bedrock credentials](/docs/en/amazon-bedrock#advanced-credential-configuration) as JSON from your own command | Authentication and providers | Any file |\n| [`axScreenReader`](#axscreenreader) | Render [screen-reader friendly output](/docs/en/accessibility) | Interface and terminal | Any file |\n| [`bashEditDiffEnabled`](#basheditdiffenabled) | Record the [files that changed while a Bash command ran](/docs/en/hooks#bash) in every permission mode | Interface and terminal | User or managed |\n| [`bashOutputMaxChars`](#bashoutputmaxchars) | Set how much of a successful command's [output](/docs/en/tools-reference#output-limits) Claude receives inline | Memory and context | Any file |\n| [`blockedMarketplaces`](#blockedmarketplaces) | Block [plugin marketplace](/docs/en/plugins/overview) sources for your organization | Plugins and skills | Managed |\n| [`browserExternalPageTools`](#browserexternalpagetools) | Keep Claude's tools off external pages in the [desktop](/docs/en/desktop) Browser pane | Tools | Managed |\n| [`channelsEnabled`](#channelsenabled) | Allow [channels](/docs/en/channels#enable-channels-for-your-organization) for your organization | Plugins and skills | Managed |\n| [`claudeInChromeDefaultEnabled`](#claudeinchromedefaultenabled) | Turn on [Chrome integration](/docs/en/chrome) when a session starts, in the interactive CLI and the VS Code extension | Global config settings | Global config |\n| [`claudeMd`](#claudemd) | Inject organization-wide [CLAUDE.md](/docs/en/memory#deploy-organization-wide-claude-md) instructions from managed settings | Memory and context | Managed |\n| [`claudeMdExcludes`](#claudemdexcludes) | Skip specific [CLAUDE.md](/docs/en/memory#exclude-specific-claude-md-files) files when memory loads | Memory and context | Any file |\n| [`cleanupPeriodDays`](#cleanupperioddays) | Choose how many days Claude Code keeps [transcripts](/docs/en/data-usage#data-retention) before deleting them | Privacy and telemetry | Any file |\n| [`companyAnnouncements`](#companyannouncements) | Show your organization's announcements at startup | Interface and terminal | Any file |\n| [`copyFullResponse`](#copyfullresponse) | Make [`/copy`](/docs/en/commands) copy the full response without showing the picker | Global config settings | Global config |\n| [`copyOnSelect`](#copyonselect) | Turn off automatic copying of text you select with the mouse in [fullscreen rendering](/docs/en/fullscreen#use-the-mouse) and agent view | Global config settings | Global config |\n| [`crossSessionInbound`](#crosssessioninbound) | Choose whether Claude Code delivers [messages from your other sessions](/docs/en/cross-session-messaging#control-inbound-messages), shows a notice without delivering them, or refuses them | Agents, sessions, and worktrees | Any file |\n| [`defaultShell`](#defaultshell) | Choose whether Bash or PowerShell runs the shell commands you type with the [`!` prefix](/docs/en/interactive-mode#shell-mode-with-prefix) | Interface and terminal | Any file |\n| [`defaultToAgentsView`](#defaulttoagentsview) | Open [agent view](/docs/en/agent-view) instead of a new conversation when you run `claude` with no arguments | Global config settings | Global config |\n| [`deniedMcpServers`](#deniedmcpservers) | Block specific [MCP servers](/docs/en/mcp) by URL, command, or name | MCP | Any file |\n| [`deniedModels`](#deniedmodels) | [Block specific models](/docs/en/model-config#block-specific-models-or-versions), even ones `availableModels` permits | Model and responses | Managed |\n| [`desktopSessionCleanupPeriodDays`](#desktopsessioncleanupperioddays) | Set an age limit in days for [Claude Desktop and Cowork transcripts](/docs/en/claude-directory#cleaned-up-automatically) | Privacy and telemetry | User or managed |\n| [`dialogExpiry`](#dialogexpiry) | Set how long Claude Code waits for [Remote Control](/docs/en/remote-control) or an SDK host to answer a forwarded dialog before it cancels the dialog | Interface and terminal | User or managed |\n| [`diffTool`](#difftool) | Choose whether Claude's proposed file changes open in the [VS Code](/docs/en/vs-code) or [JetBrains](/docs/en/jetbrains#features) diff viewer or stay in the terminal | Global config settings | Global config |\n| [`disableAgentView`](#disableagentview) | Turn off background agents and [agent view](/docs/en/agent-view) | Agents, sessions, and worktrees | Any file |\n| [`disableAllHooks`](#disableallhooks) | Turn off [hooks](/docs/en/hooks), a custom [status line](/docs/en/statusline), and a custom [`@` file suggestion](/docs/en/interactive-mode#quick-commands) command at once | Hooks and automation | Any file |\n| [`disableArtifact`](#disableartifact) | Deprecated; use `enableArtifact` to turn the [Artifact tool](/docs/en/artifacts) off | Remote, desktop, and notifications | Any file |\n| [`disableAutoMode`](#disableautomode) | Remove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the permission mode cycle | Permission settings | Any file |\n| [`disableBrowserExternalNavigation`](#disablebrowserexternalnavigation) | Limit the [desktop](/docs/en/desktop) Browser pane to localhost for people and Claude | Tools | Managed |\n| [`disableBundledSkills`](#disablebundledskills) | Turn off the [skills](/docs/en/skills#bundled-skills) and [workflows](/docs/en/workflows) included with Claude Code | Plugins and skills | Any file |\n| [`disableClaudeAiConnectors`](#disableclaudeaiconnectors) | Turn off [claude.ai connectors](/docs/en/mcp#disable-claude-ai-connectors) so Claude Code doesn't fetch them | MCP | Any file |\n| [`disableCommandPluginSources`](#disablecommandpluginsources) | Block [plugins](/docs/en/plugins/overview) that install by running a marketplace-declared command | Plugins and skills | Managed |\n| [`disableDeepLinkRegistration`](#disabledeeplinkregistration) | Stop Claude Code from registering the [`claude-cli://` handler](/docs/en/deep-links) | Remote, desktop, and notifications | Any file |\n| [`disableDesktopLocalSessions`](#disabledesktoplocalsessions) | Turn off [Desktop Code sessions](/docs/en/desktop#local-sessions-on-managed-devices) that run on the device, leaving SSH to other hosts and cloud | Remote, desktop, and notifications | Managed |\n| [`disabledMcpjsonServers`](#disabledmcpjsonservers) | Reject specific servers from a project's [`.mcp.json`](/docs/en/mcp#project-scope) | MCP | Any file |\n| [`disableMobileSimulatorTools`](#disablemobilesimulatortools) | Block Claude's tools in the [desktop](/docs/en/desktop) iOS Simulator pane | Tools | Managed |\n| [`disableRemoteControl`](#disableremotecontrol) | Turn off [Remote Control](/docs/en/remote-control) everywhere it can start | Remote, desktop, and notifications | Any file |\n| [`disableSideloadFlags`](#disablesideloadflags) | Reject the CLI flags that sideload [plugins](/docs/en/plugins/overview), [subagents](/docs/en/sub-agents), and [MCP servers](/docs/en/mcp) | Enterprise and managed settings | Managed |\n| [`disableSkillShellExecution`](#disableskillshellexecution) | Stop [skills](/docs/en/skills) and custom commands from running inline shell | Plugins and skills | Any file |\n| [`disableWorkflows`](#disableworkflows) | Turn [dynamic workflows](/docs/en/workflows) off for everyone; use `enableWorkflows` for yourself | Hooks and automation | Any file |\n| [`editorMode`](#editormode) | Use [vim key bindings](/docs/en/interactive-mode#vim-editor-mode) in the input prompt | Interface and terminal | Any file |\n| [`effortLevel`](#effortlevel) | Set a default [effort level](/docs/en/model-config#adjust-effort-level) for models without a saved level of their own | Model and responses | Any file |\n| [`emojiCompletionEnabled`](#emojicompletionenabled) | Turn off [`:shortcode:` emoji suggestions and replacement](/docs/en/interactive-mode#emoji-shortcodes) in the prompt input | Interface and terminal | Any file |\n| [`enableAllProjectMcpServers`](#enableallprojectmcpservers) | Approve every server in project [`.mcp.json`](/docs/en/mcp#project-server-approvals-and-workspace-trust) files without a prompt | MCP | Any file |\n| [`enableArtifact`](#enableartifact) | Turn the [Artifact tool](/docs/en/artifacts) off with a `false` in any file; no file can turn it back on | Remote, desktop, and notifications | Any file |\n| [`enabledMcpjsonServers`](#enabledmcpjsonservers) | Approve specific servers from a project's [`.mcp.json`](/docs/en/mcp#project-server-approvals-and-workspace-trust) | MCP | Any file |\n| [`enabledPlugins`](#enabledplugins) | Turn individual [plugins](/docs/en/plugins/overview) on or off per scope | Plugins and skills | Any file |\n| [`enableWorkflows`](#enableworkflows) | Turn [dynamic workflows](/docs/en/workflows) on or off against your plan's default | Hooks and automation | Any file |\n| [`enforceAvailableModels`](#enforceavailablemodels) | Keep the [`/model` Default choice](/docs/en/model-config#enforce-the-allowlist-for-the-default-model) inside your `availableModels` allowlist | Model and responses | Any file |\n| [`env`](#env) | Set [environment variables](/docs/en/env-vars#in-settings-files) for every session and its subprocesses | Memory and context | Any file |\n| [`externalEditorContext`](#externaleditorcontext) | Show Claude's last response as comments when you press [Ctrl+G](/docs/en/interactive-mode#general-controls) to edit | Global config settings | Global config |\n| [`extraKnownMarketplaces`](#extraknownmarketplaces) | Register [marketplaces](/docs/en/plugins/overview) for a repository or an organization | Plugins and skills | Any file |\n| [`fallbackModel`](#fallbackmodel) | Name [backup models](/docs/en/model-config#fallback-model-chains) for when the primary is overloaded | Model and responses | Any file |\n| [`fastMode`](#fastmode) | Turn [fast mode](/docs/en/fast-mode) on for sessions where it's available | Model and responses | Any file |\n| [`fastModePerSessionOptIn`](#fastmodepersessionoptin) | Require people to turn [fast mode](/docs/en/fast-mode) on each session | Model and responses | Any file |\n| [`feedbackDrafts`](#feedbackdrafts) | Control whether Claude queues [feedback drafts](/docs/en/tools-reference#sendfeedback-tool-behavior) for you to review | Privacy and telemetry | User or managed |\n| [`feedbackSurveyRate`](#feedbacksurveyrate) | Change how often the [session quality survey](/docs/en/data-usage#session-quality-surveys) appears | Privacy and telemetry | Any file |\n| [`fileCheckpointingEnabled`](#filecheckpointingenabled) | Turn off or on the file snapshots that [`/rewind`](/docs/en/checkpointing) restores | Memory and context | Any file |\n| [`fileSuggestion`](#filesuggestion) | Supply [`@` file autocomplete](/docs/en/interactive-mode#quick-commands) from your own command | Interface and terminal | Any file |\n| [`footerLinksRegexes`](#footerlinksregexes) | Make issue or review IDs in output into [clickable links](/docs/en/statusline#clickable-links) below the input box | Interface and terminal | User or managed |\n| [`forceLoginGatewayUrl`](#forcelogingatewayurl) | Set the [gateway URL](/docs/en/claude-apps-gateway#set-the-gateway-url) the login screen connects to | Authentication and providers | User or managed |\n| [`forceLoginMethod`](#forceloginmethod) | [Restrict login](/docs/en/authentication#restrict-login-to-your-organization) to claude.ai, Claude Console, or a [cloud gateway](/docs/en/claude-apps-gateway) | Authentication and providers | Any file |\n| [`forceLoginOrgUUID`](#forceloginorguuid) | [Pin claude.ai logins to your organization](/docs/en/authentication#restrict-login-to-your-organization); only a managed source enforces it | Authentication and providers | Any file |\n| [`forceRemoteSettingsRefresh`](#forceremotesettingsrefresh) | Block startup until [server-managed settings](/docs/en/server-managed-settings) are freshly fetched | Enterprise and managed settings | Managed |\n| [`gatewayInternalNetworks`](#gatewayinternalnetworks) | Let `/login` reach a [cloud gateway](/docs/en/claude-apps-gateway#allow-a-gateway-on-public-address-space-you-own) on public IPv4 space your organization uses internally | Authentication and providers | Managed |\n| [`gcpAuthRefresh`](#gcpauthrefresh) | Refresh [Google Cloud credentials](/docs/en/google-vertex-ai#advanced-credential-configuration) with your own command | Authentication and providers | Any file |\n| [`hooks`](#hooks) | Run your own commands as [hooks](/docs/en/hooks) at points in Claude Code's lifecycle | Hooks and automation | Any file |\n| [`httpHookAllowedEnvVars`](#httphookallowedenvvars) | Limit which env vars [HTTP hooks](/docs/en/hooks) can put in headers | Hooks and automation | Any file |\n| [`includeCoAuthoredBy`](#includecoauthoredby) | Deprecated; use `attribution` to hide or change commit and PR attribution | Git and attribution | Any file |\n| [`includeGitInstructions`](#includegitinstructions) | Remove the built-in commit and PR instructions from Claude's context | Git and attribution | Any file |\n| [`inputNeededNotifEnabled`](#inputneedednotifenabled) | Get a [push notification](/docs/en/remote-control#mobile-push-notifications) when Claude is waiting on you | Remote, desktop, and notifications | Any file |\n| [`isolatePeerMachines`](#isolatepeermachines) | Ask you before Claude [messages one of your sessions on another machine](/docs/en/cross-session-messaging#require-approval-for-cross-machine-messages) | Agents, sessions, and worktrees | Any file |\n| [`keybindingFlavor`](#keybindingflavor) | Deprecated and has no effect; the word-editing shortcuts always [follow readline conventions](/docs/en/interactive-mode#make-ctrl-w-delete-back-to-whitespace) | Interface and terminal | Any file |\n| [`language`](#language) | Have Claude respond in a language other than English | Model and responses | Any file |\n| [`leftArrowOpensAgents`](#leftarrowopensagents) | Turn off the `←` shortcut that [backgrounds the session and opens agent view](/docs/en/agent-view#switch-sessions-without-leaving-the-terminal) | Global config settings | Global config |\n| [`managedMcpServers`](#managedmcpservers) | Provide remote [MCP servers](/docs/en/managed-mcp#provide-servers-through-managed-settings) to every user alongside the ones they add | MCP | Managed |\n| [`managedSourcesBehavior`](#managedsourcesbehavior) | Compose every [managed source](/docs/en/managed-settings#how-claude-code-combines-managed-sources) you deploy instead of using the highest-priority one alone | Enterprise and managed settings | Managed |\n| [`maxEffortLevel`](#maxeffortlevel) | Cap the [effort level](/docs/en/model-config#adjust-effort-level) for every model or per model, on every provider | Model and responses | Any file |\n| [`maxProseWidth`](#maxprosewidth) | Cap how wide the prose in Claude's responses runs in a wide terminal | Interface and terminal | Any file |\n| [`minimumVersion`](#minimumversion) | Keep [auto-updates](/docs/en/setup#pin-a-minimum-version) from installing anything below a version | Updates and versioning | Any file |\n| [`model`](#model) | Change the [model](/docs/en/model-config#set-a-default-model-for-new-sessions) Claude Code starts with | Model and responses | Any file |\n| [`modelOverrides`](#modeloverrides) | [Map model IDs](/docs/en/model-config#override-model-ids-per-version) to your provider's IDs, such as Bedrock ARNs | Model and responses | Any file |\n| [`modelPicker`](#modelpicker) | Choose which models the [`/model` picker](/docs/en/model-config#available-models) lists, in your own order and with your own labels | Model and responses | User or managed |\n| [`modelPricing`](#modelpricing) | Report spend at your organization's contracted rates instead of list price | Model and responses | Managed |\n| [`modelSettings`](#modelsettings) | Keep a saved [effort level](/docs/en/model-config#adjust-effort-level) or [auto-compact window](/docs/en/model-config#set-the-auto-compact-window) per model, or cap one model's effort | Model and responses | Any file |\n| [`otelHeadersHelper`](#otelheadershelper) | Generate rotating [OpenTelemetry](/docs/en/monitoring-usage#dynamic-headers) headers with your own command | Authentication and providers | Any file |\n| [`outputStyle`](#outputstyle) | Change Claude's role, tone, and output format with an [output style](/docs/en/output-styles) | Model and responses | Any file |\n| [`parentSettingsBehavior`](#parentsettingsbehavior) | Apply or drop restrictions an [SDK or IDE host](/docs/en/managed-settings#let-an-embedding-host-add-policy) passes when you deploy [managed settings](/docs/en/managed-settings) | Enterprise and managed settings | Managed |\n| [`permissionExplainerEnabled`](#permissionexplainerenabled) | Removed in v2.1.257, together with the `Ctrl+E` command explanation on shell permission prompts | Global config settings | Global config |\n| [`permissions`](#permissions) | Set allow, ask, and deny rules and the starting [permission mode](/docs/en/permission-modes) | Permission settings | Any file |\n| [`permissions.additionalDirectories`](#permissions-additionaldirectories) | Give Claude file access to [directories outside the current one](/docs/en/permissions#working-directories) | Permission settings | Any file |\n| [`permissions.allow`](#permissions-allow) | Approve listed [tool uses](/docs/en/permissions#permission-rule-syntax) without a prompt | Permission settings | Any file |\n| [`permissions.ask`](#permissions-ask) | Always prompt before listed [tool uses](/docs/en/permissions#permission-rule-syntax) | Permission settings | Any file |\n| [`permissions.blockReadsOutsideWorkingDirectories`](#permissions-blockreadsoutsideworkingdirectories) | Make the file tools refuse reads outside the [working directories](/docs/en/permissions#working-directories) in every permission mode | Permission settings | Any file |\n| [`permissions.defaultMode`](#permissions-defaultmode) | Set the [permission mode](/docs/en/permission-modes#which-mode-a-session-starts-in) new sessions start in | Permission settings | Any file |\n| [`permissions.deny`](#permissions-deny) | Block listed [tool uses](/docs/en/permissions#permission-rule-syntax), including reads of files that hold secrets | Permission settings | Any file |\n| [`permissions.disableBypassPermissionsMode`](#permissions-disablebypasspermissionsmode) | Prevent anyone from entering [bypassPermissions mode](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode) | Permission settings | Any file |\n| [`plansDirectory`](#plansdirectory) | Choose where [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) writes plan files | Memory and context | Any file |\n| [`pluginConfigs`](#pluginconfigs) | Store the answers you gave a [plugin](/docs/en/plugins/overview)'s configuration dialog | Plugins and skills | User or managed |\n| [`pluginSuggestionMarketplaces`](#pluginsuggestionmarketplaces) | Choose which [marketplaces](/docs/en/plugins/org#restrict-what-users-can-install) can surface plugin install suggestions in `/plugin` | Plugins and skills | Managed |\n| [`pluginTrustMessage`](#plugintrustmessage) | Add your own text to the [plugin](/docs/en/plugins/overview) trust warning | Plugins and skills | Managed |\n| [`policyHelper`](#policyhelper) | Run an executable that computes [managed settings](/docs/en/managed-settings#compute-the-policy-with-a-helper-program) at startup | Enterprise and managed settings | Managed |\n| [`policyHelper.path`](#policyhelper-path) | Name the [helper executable](/docs/en/managed-settings#compute-the-policy-with-a-helper-program) Claude Code runs | Enterprise and managed settings | Managed |\n| [`policyHelper.refreshIntervalMs`](#policyhelper-refreshintervalms) | Re-run the [helper](/docs/en/managed-settings#compute-the-policy-with-a-helper-program) in the background on an interval | Enterprise and managed settings | Managed |\n| [`policyHelper.timeoutMs`](#policyhelper-timeoutms) | Set how long Claude Code waits for the [helper](/docs/en/managed-settings#compute-the-policy-with-a-helper-program) | Enterprise and managed settings | Managed |\n| [`preferredNotifChannel`](#preferrednotifchannel) | Choose a [terminal bell or desktop notification](/docs/en/terminal-config#get-a-terminal-bell-or-notification) for task completion | Remote, desktop, and notifications | Any file |\n| [`prefersReducedMotion`](#prefersreducedmotion) | [Reduce or turn off](/docs/en/accessibility#accessibility-settings) spinner, shimmer, and flash animations | Interface and terminal | Any file |\n| [`prependPlugins`](#prependplugins) | Run your organization's [mods](/docs/en/plugins/mods/admin) before every mod a user installs | Plugins and skills | User or managed |\n| [`processWrapper`](#processwrapper) | Run Claude Code's background processes through a [corporate launcher](/docs/en/corporate-launcher) on macOS and Linux | Agents, sessions, and worktrees | User or managed |\n| [`promptCacheTtl`](#promptcachettl) | Choose the [prompt cache lifetime](/docs/en/prompt-caching#cache-lifetime) for the main conversation | Model and responses | Any file |\n| [`promptSuggestionEnabled`](#promptsuggestionenabled) | Hide the grayed-out [prompt suggestions](/docs/en/interactive-mode#prompt-suggestions) in the input box | Interface and terminal | Any file |\n| [`prStatusFooterEnabled`](#prstatusfooterenabled) | Turn off the prompt footer's [PR review status](/docs/en/interactive-mode#pr-review-status) badge and the pull request check behind it | Global config settings | Global config |\n| [`prUrlTemplate`](#prurltemplate) | Point PR links at an internal code-review tool instead of github.com | Git and attribution | Any file |\n| [`remote.defaultEnvironmentId`](#remote-defaultenvironmentid) | Pick the default [cloud environment](/docs/en/cloud-environments) for `claude --cloud`; a self-hosted `ccpool_` ID is read only from user and managed settings and `--settings` | Remote, desktop, and notifications | Any file |\n| [`remoteControlAtStartup`](#remotecontrolatstartup) | Connect [Remote Control](/docs/en/remote-control#enable-remote-control-for-all-sessions) automatically when a session starts | Remote, desktop, and notifications | Any file |\n| [`requiredMaximumVersion`](#requiredmaximumversion) | [Refuse to start](/docs/en/setup#pin-a-minimum-version) on a version newer than your organization allows | Updates and versioning | Managed |\n| [`requiredMinimumVersion`](#requiredminimumversion) | [Refuse to start](/docs/en/setup#pin-a-minimum-version) on a version older than your organization requires | Updates and versioning | Managed |\n| [`respectGitignore`](#respectgitignore) | Keep gitignored files out of the [`@` file picker](/docs/en/interactive-mode#quick-commands) | Interface and terminal | Any file |\n| [`respondToBashCommands`](#respondtobashcommands) | Stop Claude from responding after a [`!` shell command](/docs/en/interactive-mode#shell-mode-with-prefix) runs | Interface and terminal | Any file |\n| [`sandbox`](#sandbox) | [Isolate Bash commands](/docs/en/sandboxing) from your filesystem and network on macOS, Linux, and WSL2 | Sandbox settings | Any file |\n| [`sandbox.allowAppleEvents`](#sandbox-allowappleevents) | Let [sandboxed](/docs/en/sandboxing) commands send Apple Events on macOS | Sandbox settings | User or managed |\n| [`sandbox.allowUnsandboxedCommands`](#sandbox-allowunsandboxedcommands) | Let Claude retry a blocked command outside the [sandbox](/docs/en/sandboxing#the-unsandboxed-retry-escape-hatch), or forbid it | Sandbox settings | Any file |\n| [`sandbox.autoAllowBashIfSandboxed`](#sandbox-autoallowbashifsandboxed) | Run [sandboxed](/docs/en/sandboxing#auto-allow-mode) commands without a permission prompt | Sandbox settings | Any file |\n| [`sandbox.bwrapPath`](#sandbox-bwrappath) | Point the [sandbox](/docs/en/sandboxing) at a bubblewrap binary outside `PATH` | Sandbox settings | Managed |\n| [`sandbox.credentials`](#sandbox-credentials) | Hide or mask credential files and variables inside the [sandbox](/docs/en/sandboxing#protect-credentials) | Sandbox settings | Any file |\n| [`sandbox.credentials.allowPlaintextInject`](#sandbox-credentials-allowplaintextinject) | Let [masked credentials](/docs/en/sandboxing#mask-credentials) reach plain HTTP services on trusted test networks | Sandbox settings | User or managed |\n| [`sandbox.credentials.awsPairs`](#sandbox-credentials-awspairs) | Link custom-named AWS key variables into one credential for [re-signing](/docs/en/sandboxing#re-sign-aws-requests) | Sandbox settings | User or managed |\n| [`sandbox.credentials.envVars`](#sandbox-credentials-envvars) | Unset or mask an environment variable inside the [sandbox](/docs/en/sandboxing#mask-environment-variables) | Sandbox settings | Any file |\n| [`sandbox.credentials.files`](#sandbox-credentials-files) | Block or mask reads of a credential file inside the [sandbox](/docs/en/sandboxing#mask-credential-files) | Sandbox settings | Any file |\n| [`sandbox.credentials.sigv4`](#sandbox-credentials-sigv4) | Choose whether streaming, presigned, or [SigV4A AWS requests](/docs/en/sandboxing#re-sign-aws-requests) fail or pass through | Sandbox settings | User or managed |\n| [`sandbox.enabled`](#sandbox-enabled) | Turn on [Bash sandboxing](/docs/en/sandboxing#get-started) on macOS, Linux, and WSL2 | Sandbox settings | Any file |\n| [`sandbox.enableWeakerNestedSandbox`](#sandbox-enableweakernestedsandbox) | Run the Linux [sandbox](/docs/en/sandboxing) inside an unprivileged container | Sandbox settings | Any file |\n| [`sandbox.enableWeakerNetworkIsolation`](#sandbox-enableweakernetworkisolation) | Let `gh`, `gcloud`, and `terraform` verify TLS behind a MITM proxy inside the [sandbox](/docs/en/sandboxing#go-based-clis-fail-tls-verification-on-macos) on macOS | Sandbox settings | Any file |\n| [`sandbox.excludedCommands`](#sandbox-excludedcommands) | Name commands Claude Code can run outside the [sandbox](/docs/en/sandboxing) | Sandbox settings | Any file |\n| [`sandbox.failIfUnavailable`](#sandbox-failifunavailable) | Refuse to start when the [sandbox](/docs/en/sandboxing) can't, instead of running unsandboxed | Sandbox settings | Any file |\n| [`sandbox.filesystem`](#sandbox-filesystem) | Control which paths [sandboxed](/docs/en/sandboxing#filesystem-isolation) commands can read and write | Sandbox settings | Any file |\n| [`sandbox.filesystem.allowManagedReadPathsOnly`](#sandbox-filesystem-allowmanagedreadpathsonly) | Stop developers from re-opening [read paths your organization blocked](/docs/en/sandboxing#keep-developers-from-widening-the-policy) | Sandbox settings | Managed |\n| [`sandbox.filesystem.allowRead`](#sandbox-filesystem-allowread) | Re-open reading inside a region [`denyRead`](#sandbox-filesystem-denyread) blocks | Sandbox settings | Any file |\n| [`sandbox.filesystem.allowWrite`](#sandbox-filesystem-allowwrite) | Add paths [sandboxed](/docs/en/sandboxing) commands can write to | Sandbox settings | Any file |\n| [`sandbox.filesystem.denyRead`](#sandbox-filesystem-denyread) | Block [sandboxed](/docs/en/sandboxing) commands from reading specific paths | Sandbox settings | Any file |\n| [`sandbox.filesystem.denyWrite`](#sandbox-filesystem-denywrite) | Block [sandboxed](/docs/en/sandboxing) commands from writing to specific paths | Sandbox settings | Any file |\n| [`sandbox.filesystem.disabled`](#sandbox-filesystem-disabled) | [Turn off filesystem isolation](/docs/en/sandboxing#disable-filesystem-isolation) while keeping network isolation | Sandbox settings | User or managed |\n| [`sandbox.ignoreViolations`](#sandbox-ignoreviolations) | Silence violation reports for paths a command is expected to probe | Sandbox settings | Any file |\n| [`sandbox.network`](#sandbox-network) | Control which hosts, ports, and sockets [sandboxed](/docs/en/sandboxing#network-isolation) commands reach | Sandbox settings | Any file |\n| [`sandbox.network.allowAllUnixSockets`](#sandbox-network-allowallunixsockets) | Let [sandboxed](/docs/en/sandboxing) commands connect to every Unix socket | Sandbox settings | Any file |\n| [`sandbox.network.allowedDomains`](#sandbox-network-alloweddomains) | Pre-allow domains so [sandboxed](/docs/en/sandboxing) commands don't prompt for them | Sandbox settings | Any file |\n| [`sandbox.network.allowLocalBinding`](#sandbox-network-allowlocalbinding) | Let [sandboxed](/docs/en/sandboxing) commands listen on network ports and connect to localhost on macOS | Sandbox settings | Any file |\n| [`sandbox.network.allowMachLookup`](#sandbox-network-allowmachlookup) | Let macOS [sandboxed](/docs/en/sandboxing) tools like the iOS Simulator or Playwright reach their XPC services | Sandbox settings | Any file |\n| [`sandbox.network.allowManagedDomainsOnly`](#sandbox-network-allowmanageddomainsonly) | Lock the network allowlist to [managed settings](/docs/en/sandboxing#keep-developers-from-widening-the-policy) | Sandbox settings | Managed |\n| [`sandbox.network.allowUnixSockets`](#sandbox-network-allowunixsockets) | List Unix socket paths [sandboxed](/docs/en/sandboxing) commands can use on macOS | Sandbox settings | Any file |\n| [`sandbox.network.deniedDomains`](#sandbox-network-denieddomains) | Block domains for [sandboxed](/docs/en/sandboxing) commands, even inside an allowed wildcard | Sandbox settings | Any file |\n| [`sandbox.network.httpProxyPort`](#sandbox-network-httpproxyport) | Route [sandbox](/docs/en/sandboxing#custom-proxy-configuration) HTTP traffic through your own proxy | Sandbox settings | Any file |\n| [`sandbox.network.socksProxyPort`](#sandbox-network-socksproxyport) | Route [sandbox](/docs/en/sandboxing#custom-proxy-configuration) SOCKS traffic through your own proxy | Sandbox settings | Any file |\n| [`sandbox.network.strictAllowlist`](#sandbox-network-strictallowlist) | Deny hosts outside the [allowlist](/docs/en/sandboxing#network-isolation) instead of prompting | Sandbox settings | User or managed |\n| [`sandbox.network.tlsTerminate`](#sandbox-network-tlsterminate) | Have the [sandbox](/docs/en/sandboxing#network-isolation) proxy terminate TLS so it can read HTTPS requests | Sandbox settings | User or managed |\n| [`sandbox.ripgrep`](#sandbox-ripgrep) | Use your own ripgrep binary inside the [sandbox](/docs/en/sandboxing) | Sandbox settings | User or managed |\n| [`sandbox.socatPath`](#sandbox-socatpath) | Point the [sandbox](/docs/en/sandboxing) proxy at a `socat` binary outside `PATH` | Sandbox settings | Managed |\n| [`showClearContextOnPlanAccept`](#showclearcontextonplanaccept) | Show a \"clear context\" option on the [plan accept screen](/docs/en/permission-modes#review-and-approve-a-plan) | Interface and terminal | Any file |\n| [`showThinkingSummaries`](#showthinkingsummaries) | See summaries of Claude's [thinking](/docs/en/model-config#extended-thinking) instead of a collapsed stub | Model and responses | Any file |\n| [`showTurnDuration`](#showturnduration) | Hide the \"Cooked for\" duration after each response | Interface and terminal | Any file |\n| [`skillListingBudgetFraction`](#skilllistingbudgetfraction) | Reserve more or less context for the [skill listing](/docs/en/skills#skill-descriptions-are-cut-short) | Memory and context | Any file |\n| [`skillListingMaxDescChars`](#skilllistingmaxdescchars) | Cap each skill's description length in the [skill listing](/docs/en/skills#skill-descriptions-are-cut-short) | Memory and context | Any file |\n| [`skillOverrides`](#skilloverrides) | [Hide or collapse a skill](/docs/en/skills#override-skill-visibility-from-settings) without editing its SKILL.md | Plugins and skills | Any file |\n| [`skipAutoPermissionPrompt`](#skipautopermissionprompt) | Skip the one-time notice Claude Code shows when you first enter [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) yourself rather than through the built-in default | Permission settings | User or managed |\n| [`skipDangerousModePermissionPrompt`](#skipdangerousmodepermissionprompt) | Skip the confirmation dialog before [bypassPermissions mode](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode) | Permission settings | User, local, or managed |\n| [`skipWebFetchPreflight`](#skipwebfetchpreflight) | Skip the [WebFetch hostname check](/docs/en/tools-reference#webfetch-tool-behavior) when Anthropic is unreachable | Privacy and telemetry | Any file |\n| [`spellcheck`](#spellcheck) | Underline misspelled words in the prompt input with a [spell checker](/docs/en/interactive-mode#check-spelling-as-you-type) you install | Interface and terminal | User or managed |\n| [`spinnerTipsEnabled`](#spinnertipsenabled) | Hide tips in the spinner while Claude works | Interface and terminal | Any file |\n| [`spinnerTipsOverride`](#spinnertipsoverride) | Add your own tips to the spinner rotation, or replace the built-in tips | Interface and terminal | Any file |\n| [`spinnerVerbs`](#spinnerverbs) | Add or replace the verbs shown while a turn runs | Interface and terminal | Any file |\n| [`sshConfigs`](#sshconfigs) | Add [SSH connections](/docs/en/desktop#pre-configure-ssh-connections-for-your-team) to the Desktop environment dropdown | Remote, desktop, and notifications | User or managed |\n| [`sshHostAllowlist`](#sshhostallowlist) | Limit which hosts [Desktop SSH sessions](/docs/en/desktop#restrict-which-ssh-hosts-users-can-connect-to) can reach | Remote, desktop, and notifications | Managed |\n| [`statusLine`](#statusline) | Run your own command to render a [status line](/docs/en/statusline) below the prompt | Interface and terminal | Any file |\n| [`strictKnownMarketplaces`](#strictknownmarketplaces) | Allowlist the [marketplace](/docs/en/plugins/overview) sources users can add and install from | Plugins and skills | Managed |\n| [`strictPluginOnlyCustomization`](#strictpluginonlycustomization) | Block [skills](/docs/en/skills), [agents](/docs/en/sub-agents), [hooks](/docs/en/hooks), and [MCP servers](/docs/en/mcp) from user and project sources | Plugins and skills | Managed |\n| [`strictPluginOnlyCustomization.agents`](#strictpluginonlycustomization-agents) | Lock [agents](/docs/en/sub-agents) to plugin and managed sources | Plugins and skills | Managed |\n| [`strictPluginOnlyCustomization.hooks`](#strictpluginonlycustomization-hooks) | Lock [hooks](/docs/en/hooks) to plugin and managed sources | Plugins and skills | Managed |\n| [`strictPluginOnlyCustomization.mcp`](#strictpluginonlycustomization-mcp) | Lock [MCP servers](/docs/en/mcp) to plugin and managed sources | Plugins and skills | Managed |\n| [`strictPluginOnlyCustomization.skills`](#strictpluginonlycustomization-skills) | Lock [skills](/docs/en/skills) to plugin and managed sources | Plugins and skills | Managed |\n| [`subagentPromptCacheTtl`](#subagentpromptcachettl) | Choose the [prompt cache lifetime](/docs/en/prompt-caching#cache-lifetime) for subagents and other requests outside the main conversation | Model and responses | Any file |\n| [`subagentStatusLine`](#subagentstatusline) | Rewrite rows in the [subagent](/docs/en/sub-agents) task display with your own command | Interface and terminal | Any file |\n| [`switchModelsOnFlag`](#switchmodelsonflag) | Switch models automatically or pause when a [safety classifier](/docs/en/model-config#ask-before-switching) flags a request | Model and responses | Any file |\n| [`syncClaudeAiPlugins`](#syncclaudeaiplugins) | Stop loading the [plugins enabled on your claude.ai account](/docs/en/plugins/loading#synced-plugins) and stop downloading new ones | Plugins and skills | User, local, or managed |\n| [`syncClaudeAiSkills`](#syncclaudeaiskills) | Stop loading the [skills enabled on your claude.ai account](/docs/en/skills#how-synced-skills-behave) and stop downloading new ones | Plugins and skills | User, local, or managed |\n| [`syntaxHighlightingDisabled`](#syntaxhighlightingdisabled) | Turn off syntax highlighting in diffs and code blocks | Interface and terminal | Any file |\n| [`taskOutputMaxChars`](#taskoutputmaxchars) | Removed in v2.1.277, together with the `TaskOutput` tool it sized | Memory and context | Any file |\n| [`teammateDefaultModel`](#teammatedefaultmodel) | Removed in v2.1.234; see [Specify teammates and models](/docs/en/agent-teams#specify-teammates-and-models) for how Claude Code picks a teammate's model | Global config settings | Global config |\n| [`teammateMode`](#teammatemode) | Choose how [agent team teammates display](/docs/en/agent-teams#choose-a-display-mode) | Agents, sessions, and worktrees | Any file |\n| [`terminalProgressBarEnabled`](#terminalprogressbarenabled) | Hide the terminal progress bar in terminals that support it | Interface and terminal | Any file |\n| [`terminalTitleFromRename`](#terminaltitlefromrename) | Stop [`/rename`](/docs/en/sessions#name-your-sessions) and `--name` from changing the terminal tab title | Interface and terminal | Any file |\n| [`theme`](#theme) | Pick the interface [color theme](/docs/en/terminal-config#match-the-color-theme), built-in or custom | Interface and terminal | Any file |\n| [`timeFormat`](#timeformat) | Show the times in the interface on a 12-hour or 24-hour clock, in UTC, or with a strftime pattern | Interface and terminal | Any file |\n| [`timeZone`](#timezone) | Show the times in the interface in a time zone other than your system's | Interface and terminal | Any file |\n| [`tui`](#tui) | Choose the [fullscreen](/docs/en/fullscreen) or classic terminal renderer | Interface and terminal | Any file |\n| [`ultracode`](#ultracode) | Have Claude plan a [workflow](/docs/en/workflows#let-claude-decide-with-ultracode) for each substantive task without being asked | Model and responses | Any file |\n| [`useAutoModeDuringPlan`](#useautomodeduringplan) | Let the [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) classifier review shell commands in [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode); set `false` to get prompts instead | Permission settings | User, local, or managed |\n| [`verbose`](#verbose) | Show [full tool output](/docs/en/cli-reference#cli-flags) instead of truncated summaries; `viewMode` takes precedence when both are set | Interface and terminal | Any file |\n| [`viewMode`](#viewmode) | Start every session in [default, verbose, or focus view](/docs/en/cli-reference#cli-flags) | Interface and terminal | Any file |\n| [`vimInsertModeRemaps`](#viminsertmoderemaps) | Map a two-key [INSERT-mode sequence](/docs/en/interactive-mode#remap-insert-mode-key-sequences) such as `jj` to Escape | Interface and terminal | User or managed |\n| [`voice`](#voice) | Turn on [voice dictation](/docs/en/voice-dictation) and pick hold or tap mode | Interface and terminal | Any file |\n| [`voiceEnabled`](#voiceenabled) | Turn on [voice dictation](/docs/en/voice-dictation) with the older single-key form | Interface and terminal | Any file |\n| [`wheelScrollAccelerationEnabled`](#wheelscrollaccelerationenabled) | Turn off [mouse-wheel acceleration](/docs/en/fullscreen#mouse-wheel-scrolling) in fullscreen rendering | Interface and terminal | Any file |\n| [`workflowKeywordTriggerEnabled`](#workflowkeywordtriggerenabled) | Let the word `ultracode` in a prompt start a [workflow](/docs/en/workflows); set `false` to type it without starting one | Hooks and automation | Any file |\n| [`workflowSizeGuideline`](#workflowsizeguideline) | Set the agent count Claude aims for in [dynamic workflows](/docs/en/workflows) | Hooks and automation | Any file |\n| [`worktree`](#worktree) | Configure how Claude Code creates git [worktrees](/docs/en/worktrees) | Agents, sessions, and worktrees | Any file |\n| [`worktree.baseRef`](#worktree-baseref) | Branch new [worktrees](/docs/en/worktrees) from the remote default branch or your local HEAD | Agents, sessions, and worktrees | Any file |\n| [`worktree.bgIsolation`](#worktree-bgisolation) | Let background sessions edit the working copy without a [worktree](/docs/en/worktrees) | Agents, sessions, and worktrees | Any file |\n| [`worktree.location`](#worktree-location) | Choose where [Desktop SSH sessions](/docs/en/desktop#ssh-sessions) create their worktrees on a remote machine | Agents, sessions, and worktrees | User |\n| [`worktree.sparsePaths`](#worktree-sparsepaths) | Check out only the directories you need in each [worktree](/docs/en/worktrees) | Agents, sessions, and worktrees | Any file |\n| [`worktree.symlinkDirectories`](#worktree-symlinkdirectories) | Symlink large directories into each [worktree](/docs/en/worktrees) instead of duplicating them | Agents, sessions, and worktrees | Any file |\n| [`wslInheritsWindowsSettings`](#wslinheritswindowssettings) | Have WSL read [managed settings](/docs/en/managed-settings) from the Windows policy chain | Enterprise and managed settings | Managed |"
     },
     {
+      "heading": "worktree.location",
+      "id": "worktree-location",
+      "hash": "9fdadfe5018be165d0d4f935190f2ca9828ff4974f80e8adacd34a616ae23acf",
+      "text": "### `worktree.location`\n\nChoose the folder on a remote machine where [Desktop SSH sessions](/docs/en/desktop#choose-where-ssh-session-worktrees-go) create their worktrees, instead of `<project-root>/.claude/worktrees/`. Only the desktop app reads this key: `--worktree`, the `EnterWorktree` tool, isolated subagents, and background sessions ignore it. Requires Claude Desktop v1.44121.0 or later.\n\n* **Scope**: [`User`](#scopes), in `~/.claude/settings.json` on the remote machine\n* **Type**: string, an absolute path or one that starts with `~/`\n* **Default**: unset, so worktrees go inside the project\n\nThis example sets the folder to `~/worktrees`:\n\n```json settings.json theme={null}\n{\n  \"worktree\": {\n    \"location\": \"~/worktrees\"\n  }\n}\n```\n\nA **Worktree folder** set on the SSH connection in Desktop takes precedence. If your organization restricts which folders sessions may use, Desktop keeps worktrees inside the project."
+    },
+    {
       "heading": "Global config settings",
       "id": "global-config-settings",
       "hash": "e9ff36789538e7e8fbca017992971575941c6836b9d7522b58a8117c52be4eaa",
@@ -1416,8 +1715,8 @@
     {
       "heading": "forceLoginMethod",
       "id": "forceloginmethod",
-      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45",
-      "text": "### `forceLoginMethod`\n\nRestrict which kind of account people can log in with. Set `\"claudeai\"` to allow only claude.ai accounts, `\"console\"` to allow only Claude Console accounts, or `\"gateway\"` to send people to a [cloud gateway](/docs/en/claude-apps-gateway) instead of a first-party login. Administrators set it in managed settings and pair it with [`forceLoginOrgUUID`](#forceloginorguuid) to keep developers' claude.ai logins inside one organization. If you set it to `\"claudeai\"` or `\"console\"` in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to.\n\n* **Scope**: [`Any file`](#scopes). Claude Code honors `\"gateway\"` only from a managed source on the machine: `managed-settings.json`, the macOS plist or Windows HKLM registry, or a policy helper. It treats `\"gateway\"` as unset in user, project, local, HKCU, and server-managed settings, the same rule as [`forceLoginGatewayUrl`](#forcelogingatewayurl).\n* **Type**: string, one of:\n  * `\"claudeai\"`: only claude.ai accounts can log in\n  * `\"console\"`: only Claude Console accounts can log in\n  * `\"gateway\"`: Claude Code sends people to a cloud gateway instead of a first-party login\n* **Default**: unset, so people pick a login method\n\n```json settings.json theme={null}\n{\n  \"forceLoginMethod\": \"claudeai\"\n}\n```\n\nEvery first-party login path applies the restriction, including the [VS Code extension](/docs/en/vs-code), the Agent SDK, `claude setup-token`, and `/install-github-app`, except the terminal's interactive login screen, reached by `/login` or first-run onboarding, which pre-selects the method without enforcing it. Before v2.1.212, only terminal logins applied it. See [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how each login path, environment credentials, and third-party providers are handled.\n\nWhen a managed source on the machine sets `\"gateway\"`, Claude Code doesn't use a leftover login, API key, or `apiKeyHelper` credential. See [Administrator policy requires a Cloud gateway sign-in](/docs/en/errors#administrator-policy-requires-a-cloud-gateway-sign-in) for the message each one produces. If you select a cloud provider through `CLAUDE_CODE_USE_BEDROCK` or a similar environment variable, the session doesn't need the gateway sign-in. Before v2.1.261, Claude Code used a leftover login on these machines."
+      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f",
+      "text": "### `forceLoginMethod`\n\nRestrict which kind of account people can log in with. Set `\"claudeai\"` to allow only claude.ai accounts, `\"console\"` to allow only Claude Console accounts, or `\"gateway\"` to send people to a [cloud gateway](/docs/en/claude-apps-gateway) instead of a first-party login. Administrators set it in managed settings and pair it with [`forceLoginOrgUUID`](#forceloginorguuid) to keep developers' claude.ai logins inside one organization. If you set it to `\"claudeai\"` or `\"console\"` in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to.\n\n* **Scope**: [`Any file`](#scopes). Claude Code honors `\"gateway\"` from the same sources as [`forceLoginGatewayUrl`](#forcelogingatewayurl) and treats it as unset everywhere else.\n* **Type**: string, one of:\n  * `\"claudeai\"`: only claude.ai accounts can log in\n  * `\"console\"`: only Claude Console accounts can log in\n  * `\"gateway\"`: Claude Code sends people to a cloud gateway instead of a first-party login\n* **Default**: unset, so people pick a login method\n\n```json settings.json theme={null}\n{\n  \"forceLoginMethod\": \"claudeai\"\n}\n```\n\nEvery first-party login path applies the restriction, including the [VS Code extension](/docs/en/vs-code), the Agent SDK, `claude setup-token`, and `/install-github-app`, except the terminal's interactive login screen, reached by `/login` or first-run onboarding, which pre-selects the method without enforcing it. Before v2.1.212, only terminal logins applied it. See [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how each login path, environment credentials, and third-party providers are handled.\n\nWhen a managed source on the machine sets `\"gateway\"`, Claude Code doesn't use a leftover login, API key, or `apiKeyHelper` credential. See [Administrator policy requires a Cloud gateway sign-in](/docs/en/errors#administrator-policy-requires-a-cloud-gateway-sign-in) for the message each one produces. If you select a cloud provider through `CLAUDE_CODE_USE_BEDROCK` or a similar environment variable, the session doesn't need the gateway sign-in. Before v2.1.261, Claude Code used a leftover login on these machines."
     },
     {
       "heading": "remote.defaultEnvironmentId",
@@ -1428,8 +1727,8 @@
     {
       "heading": "forceLoginOrgUUID",
       "id": "forceloginorguuid",
-      "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9",
-      "text": "### `forceLoginOrgUUID`\n\nFrom a managed source, require claude.ai account logins to belong to one Anthropic organization, given as a single UUID, or to any of several organizations, given as an array. From any settings file, Claude Code also uses a single UUID to pre-select that organization during a claude.ai or Claude Console login, and pre-selects nothing for an array. If you set the key in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to and creates an API key instead.\n\n* **Scope**: [`Any file`](#scopes). Only a managed source enforces the restriction; a single UUID in any other settings file pre-selects the organization during login without restricting it.\n* **Type**: string, one UUID, or array of strings, several UUIDs\n* **Default**: unset, so any organization can log in\n\nThis example accepts logins from either of two organizations without pre-selecting one:\n\n```json managed-settings.json theme={null}\n{\n  \"forceLoginOrgUUID\": [\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\", \"yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy\"]\n}\n```\n\nIf a managed source sets an empty array, or a value Claude Code can't parse, Claude Code blocks every login with a misconfiguration message.\n\nSee [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how Claude Code treats Claude Console logins, the other login paths, and environment credentials."
+      "hash": "0c84d4cf19830e18cdecb7181a57dd6598c68920f436bc5a19a78ecda86df313",
+      "text": "### `forceLoginOrgUUID`\n\nFrom a managed source, require claude.ai account logins to belong to one Anthropic organization, given as a single UUID, or to any of several organizations, given as an array. From any settings file, Claude Code also uses a single UUID to pre-select that organization during a claude.ai or Claude Console login, and pre-selects nothing for an array. If you set the key in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to and creates an API key instead.\n\n* **Scope**: [`Any file`](#scopes). Only a managed source enforces the restriction; a single UUID in any other settings file pre-selects the organization during login without restricting it.\n* **Type**: string, one UUID, or array of strings, several UUIDs\n* **Default**: unset, so any organization can log in\n\nThis example accepts logins from either of two organizations without pre-selecting one:\n\n```json managed-settings.json theme={null}\n{\n  \"forceLoginOrgUUID\": [\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\", \"yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy\"]\n}\n```\n\nIf a managed source sets an empty array, or a value that isn't a string or an array of strings, users who sign in with an Anthropic account can't start Claude Code or complete a login. They see a message that names `forceLoginOrgUUID` and tells them to contact their administrator. A [`policyHelper`](#policyhelper) that emits a value of the wrong type [fails its run](#helper-failures) instead.\n\nSee [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how Claude Code treats Claude Console logins, the other login paths, and environment credentials."
     },
     {
       "heading": "taskOutputMaxChars",
@@ -1484,12 +1783,6 @@
       "id": "skilloverrides",
       "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc",
       "text": "### `skillOverrides`\n\nHide or collapse a [skill](/docs/en/skills#override-skill-visibility-from-settings) without editing its `SKILL.md`. Claude Code applies the value under each skill's name to the skill list Claude sees and to your `/` autocomplete.\n\n* **Scope**: [`Any file`](#scopes). The `/skills` menu writes to `.claude/settings.local.json`.\n* **Type**: object mapping skill name to one of:\n  * `\"on\"`: Claude sees the skill and you can type `/name`\n  * `\"name-only\"`: Claude sees the skill by name without its description\n  * `\"user-invocable-only\"`: Claude doesn't see the skill, but you can still type `/name`\n  * `\"off\"`: Claude doesn't see the skill and `/name` is hidden from autocomplete\n* **Default**: unset, so every skill is `\"on\"`\n\nThis example lists `legacy-context` to Claude by name only and hides `deploy` from Claude and from `/` autocomplete:\n\n```json settings.json theme={null}\n{\n  \"skillOverrides\": {\n    \"legacy-context\": \"name-only\",\n    \"deploy\": \"off\"\n  }\n}\n```\n\nOverrides don't apply to plugin skills, which you manage through `/plugin`.\n\nIn managed settings and files passed with `--settings`, a key on a bundled skill's alias, such as `checkup` for `/doctor`, also applies to the skill; see [how alias keys combine with keys on the skill's own name](/docs/en/skills#override-skill-visibility-from-settings)."
-    },
-    {
-      "heading": "worktree.location",
-      "id": "worktree-location",
-      "hash": "9fdadfe5018be165d0d4f935190f2ca9828ff4974f80e8adacd34a616ae23acf",
-      "text": "### `worktree.location`\n\nChoose the folder on a remote machine where [Desktop SSH sessions](/docs/en/desktop#choose-where-ssh-session-worktrees-go) create their worktrees, instead of `<project-root>/.claude/worktrees/`. Only the desktop app reads this key: `--worktree`, the `EnterWorktree` tool, isolated subagents, and background sessions ignore it. Requires Claude Desktop v1.44121.0 or later.\n\n* **Scope**: [`User`](#scopes), in `~/.claude/settings.json` on the remote machine\n* **Type**: string, an absolute path or one that starts with `~/`\n* **Default**: unset, so worktrees go inside the project\n\nThis example sets the folder to `~/worktrees`:\n\n```json settings.json theme={null}\n{\n  \"worktree\": {\n    \"location\": \"~/worktrees\"\n  }\n}\n```\n\nA **Worktree folder** set on the SSH connection in Desktop takes precedence. If your organization restricts which folders sessions may use, Desktop keeps worktrees inside the project."
     }
   ]
 }

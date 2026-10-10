@@ -4,123 +4,153 @@
   "blocks": [
     {
       "id": "manage-claude-code-plugins-for-your-organization",
-      "hash": "9e1286f8f77895d46d145e5f618d8cf40a7c47c2b6c358e4ae5ecae8a77c838d"
+      "hash": "9e1286f8f77895d46d145e5f618d8cf40a7c47c2b6c358e4ae5ecae8a77c838d",
+      "bodyHash": "11ba2b232d0466513f1a291226513df4735f2b3c3fb70cc9ed10ce609967cab3"
     },
     {
       "id": "pre-install-and-require-plugins",
-      "hash": "f13f1c38ff6ea313a6ac6859b91a2ff4cca5a46fcc4e58966057c4f80cd9a28d"
+      "hash": "f13f1c38ff6ea313a6ac6859b91a2ff4cca5a46fcc4e58966057c4f80cd9a28d",
+      "bodyHash": "14c218c659fb83ee33f75e84a3e945dbbe9a04abd5f6f9bed82c3fca45f3d027"
     },
     {
       "id": "choose-a-delivery-mechanism",
-      "hash": "5dcf44490b5959fe40eb0f22f65b13730de5df5f5a41fe736d4e7859b6cae0a7"
+      "hash": "5dcf44490b5959fe40eb0f22f65b13730de5df5f5a41fe736d4e7859b6cae0a7",
+      "bodyHash": "aaf470098439ce266ef9021e857bd7e6858d8092ca73ce8b09f41e05579bb5c0"
     },
     {
       "id": "which-managed-source-applies-on-a-machine",
-      "hash": "c202eb3bbf3446a5af38d751dd62c082cd9ac824f1731de563c8fedafc9cc1b1"
+      "hash": "c202eb3bbf3446a5af38d751dd62c082cd9ac824f1731de563c8fedafc9cc1b1",
+      "bodyHash": "35f776ca09d13a98de14cee0525833873a4f422a4e30efcc92fce39ea18e2c07"
     },
     {
       "id": "require-a-marketplace-and-its-plugins",
-      "hash": "9697c07a43a64a16e7cab4fbd780a24694b7f4f5c8463a201387843c1f0dd43c"
+      "hash": "9697c07a43a64a16e7cab4fbd780a24694b7f4f5c8463a201387843c1f0dd43c",
+      "bodyHash": "d78fc0e57002ab1688b5f807d4830241875257876e884dce942f1f663d85fc67"
     },
     {
       "id": "require-plugins-per-repository",
-      "hash": "67c847e1cd322d6ab392081d18421d67272ea6369dbd514df9c318be30894176"
+      "hash": "67c847e1cd322d6ab392081d18421d67272ea6369dbd514df9c318be30894176",
+      "bodyHash": "e4be2e035ded951960e456c9fed34d8e866bb9903a1b28ef189d24c3a5adcb82"
     },
     {
       "id": "when-each-surface-applies-the-plugin-keys",
-      "hash": "3d2b49cbb485b662fd6e7df9b07c503e3278f424c3d307b1b5d87e73f1a3a7a1"
+      "hash": "3d2b49cbb485b662fd6e7df9b07c503e3278f424c3d307b1b5d87e73f1a3a7a1",
+      "bodyHash": "ac3e8fafe947d3a81ec5d5dc16921d7678e65cffe7e8a86d7e3badb0f8bd7fe2"
     },
     {
       "id": "confirm-the-rollout",
-      "hash": "27c5980262f02c3e708742059bfcb09d9649c2eebf9c34295d179e7f125271b9"
+      "hash": "27c5980262f02c3e708742059bfcb09d9649c2eebf9c34295d179e7f125271b9",
+      "bodyHash": "97cc7ab77c2cd9d5f8e697650848d4aa9eebff4393c27df91c056bc7554aa8a9"
     },
     {
       "id": "seed-containers-and-ci",
-      "hash": "c5952cdf7bae0c41f8d5544328d7806b312d93923dbfe69319a26bc71fbdc012"
+      "hash": "c5952cdf7bae0c41f8d5544328d7806b312d93923dbfe69319a26bc71fbdc012",
+      "bodyHash": "9538a0a56818a071d645a7c476d572c4e2af8afd54ca6113467bd55d06b5dd7d"
     },
     {
       "id": "restrict-what-users-can-install",
-      "hash": "d2b70ba5104da073c5cff64a53f097feaf152016f08d4f07f1bf60039ad1341b"
+      "hash": "d2b70ba5104da073c5cff64a53f097feaf152016f08d4f07f1bf60039ad1341b",
+      "bodyHash": "cf976ea4ba41775d47a24b6c0786fed00ea9c1b0aadb433f51dd6a95ff416fe1"
     },
     {
       "id": "control-matrix",
-      "hash": "71faf3568af09c4ead43452715fb0fdda27eff949e01beb7f6053a4ffabc4360"
+      "hash": "71faf3568af09c4ead43452715fb0fdda27eff949e01beb7f6053a4ffabc4360",
+      "bodyHash": "aadad78360879337666ad1c5afe1e6520fd5b7d3222cb983423c69348a331def"
     },
     {
       "id": "aliases-for-the-marketplace-keys",
-      "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
+      "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab",
+      "bodyHash": "004dbb8d54847a628822bc0c62e48f7cd4d472de316b2f0ad503cd5342c1046f"
     },
     {
       "id": "allowlist-with-strictknownmarketplaces",
-      "hash": "f3eb446c848d7df24ee6496df9a97c55ecd12ec5124f9881e347bdd95da37ddc"
+      "hash": "f3eb446c848d7df24ee6496df9a97c55ecd12ec5124f9881e347bdd95da37ddc",
+      "bodyHash": "e8ba029007a4cd24bed12f5a3030ed6c03d5c470a0097fa24f960963d8235a07"
     },
     {
       "id": "how-entries-match",
-      "hash": "cadfe3f75a4175ab9a12e8b6de61008ed84240faab3453f5b0326ecb8ec3a3ac"
+      "hash": "cadfe3f75a4175ab9a12e8b6de61008ed84240faab3453f5b0326ecb8ec3a3ac",
+      "bodyHash": "025a6faac4c22baf67eb6ecd2b259e6ed6aeb035e91c8d3ca1008e03bf670ad7"
     },
     {
       "id": "keep-skills-directory-plugins-loading",
-      "hash": "d24b9504a58e27f5e2e720422c602cac6b9c6cfb9f5bda995c1a5ed4804eea6b"
+      "hash": "d24b9504a58e27f5e2e720422c602cac6b9c6cfb9f5bda995c1a5ed4804eea6b",
+      "bodyHash": "b410e7da78d448622739c8003b5c1c06fb2f6a7617c6b4cbbb6964a7b1fb6562"
     },
     {
       "id": "marketplaces-hosted-on-claude-ai",
-      "hash": "e615b01d0ab827d644c95691cd06acb0b058ae224409120e5903834924895ce9"
+      "hash": "e615b01d0ab827d644c95691cd06acb0b058ae224409120e5903834924895ce9",
+      "bodyHash": "3aa08221b2df53558a427dec760cb800e16bef01d6a12f28903b03ef3abf3d20"
     },
     {
       "id": "lock-every-source-out",
-      "hash": "941d0ee5e7bd9d68aaad95ad3440ca546e49697a1d74ddf0bd96b1c6266add12"
+      "hash": "941d0ee5e7bd9d68aaad95ad3440ca546e49697a1d74ddf0bd96b1c6266add12",
+      "bodyHash": "5218cd255f242ff0ca628040d0fe61dd3357e7688942abce02ad775d7fc8fe08"
     },
     {
       "id": "blocklist-with-blockedmarketplaces",
-      "hash": "a42163648c8b6ccf5c8ec142f9d407802825ed06abcddc18a289dc6be76504ad"
+      "hash": "a42163648c8b6ccf5c8ec142f9d407802825ed06abcddc18a289dc6be76504ad",
+      "bodyHash": "f2b73c1c527843a427b36bdbef7de8f82e981dc89834262066ed705ba0286c36"
     },
     {
       "id": "allow-the-official-marketplace-and-your-own",
-      "hash": "5666a55f00872256eed6a8eb3c4c94d78a4e40a4c97682e8ab240fa0fb624c6d"
+      "hash": "5666a55f00872256eed6a8eb3c4c94d78a4e40a4c97682e8ab240fa0fb624c6d",
+      "bodyHash": "23f1cf8949f0931322475c791bde8a22219f4aefd935eea2f6c8752d1d9433d8"
     },
     {
       "id": "set-update-policy",
-      "hash": "0b047096f38cb1f33f6c8ea1220ffdb8b62ba611fd543661b88a5b674e5367d6"
+      "hash": "0b047096f38cb1f33f6c8ea1220ffdb8b62ba611fd543661b88a5b674e5367d6",
+      "bodyHash": "cb48b40054eda169ebe8fdeeef029b2977e58278ecd74dcaf66488b321c854ce"
     },
     {
       "id": "turn-auto-update-on-or-off-per-marketplace",
-      "hash": "4972624f55b4f46d492e5621cd3429ca339fa609697b01f0c4847d4cf36889b9"
+      "hash": "4972624f55b4f46d492e5621cd3429ca339fa609697b01f0c4847d4cf36889b9",
+      "bodyHash": "08c67ce7f5eb2177e68efc22545c0d55490e3d04bcc8c67aa197df85b4c05ca5"
     },
     {
       "id": "turn-updates-off-for-the-whole-fleet",
-      "hash": "5c56e2c4bb4e709a7f02fc4f53b2af1f7362927880d268579d127303a0d9e76b"
+      "hash": "5c56e2c4bb4e709a7f02fc4f53b2af1f7362927880d268579d127303a0d9e76b",
+      "bodyHash": "ba9cedbb0c143fca5a77472d139fce14a133ab9ec9573bc42e2eda3985fe4311"
     },
     {
       "id": "assign-release-channels-to-user-groups",
-      "hash": "4321e5dfa77dd4aa900e6fee563c071401c7ec3eab05c0b813d404816f3fe997"
+      "hash": "4321e5dfa77dd4aa900e6fee563c071401c7ec3eab05c0b813d404816f3fe997",
+      "bodyHash": "2312b779e61b03d7585d656bc38f402004788da9e52fdd41e65f0cb1991ecd69"
     },
     {
       "id": "recommend-plugins",
-      "hash": "eb2a1f37f5f9e9e454259b40a73629b036c0927ce866adfc774b69b99ac1f441"
+      "hash": "eb2a1f37f5f9e9e454259b40a73629b036c0927ce866adfc774b69b99ac1f441",
+      "bodyHash": "cd74edcd08ba3b24a5dca92bc056b787c9052ef77f9b51a470f4f8f7e2923fc0"
     },
     {
       "id": "audit-and-review",
-      "hash": "85b0ec8143ca55476248c3b527f2281729a9f9b81451d1ec58f60070de7a5bda"
+      "hash": "85b0ec8143ca55476248c3b527f2281729a9f9b81451d1ec58f60070de7a5bda",
+      "bodyHash": "a07bd1e91c15ded2779b9ba1d9cb355734b37c15fa6d2bf28e70201861a91bfc"
     },
     {
       "id": "opentelemetry-events",
-      "hash": "c53a9f753767f5ebe3bc56d47a15a0f66165314e635241d2ea790153951b3649"
+      "hash": "c53a9f753767f5ebe3bc56d47a15a0f66165314e635241d2ea790153951b3649",
+      "bodyHash": "f60a2a53b1c77eaab02c7793f3ad54671e97318810cd33f0da5950b7c39d641b"
     },
     {
       "id": "analytics-api",
-      "hash": "55ece8a0e9298ddcb09ef4d7bd62f99e23c5f7e96fcaed0b1074301e1bb8bae5"
+      "hash": "55ece8a0e9298ddcb09ef4d7bd62f99e23c5f7e96fcaed0b1074301e1bb8bae5",
+      "bodyHash": "9b3c8ddd67ef677e6aed1276f3fa122ceb7f8b292275a744b43adf17b6e6f054"
     },
     {
       "id": "plan-for-what-managed-settings-cant-enforce",
-      "hash": "f7130e4e37c95ce20957b43fbb1c913cd87f32582ac744d544d932bb4b21c595"
+      "hash": "f7130e4e37c95ce20957b43fbb1c913cd87f32582ac744d544d932bb4b21c595",
+      "bodyHash": "53b9627edd518f6aba32370f9fd2df45901b3df55f40fb8a2af4035fc05db028"
     },
     {
       "id": "troubleshoot-policy",
-      "hash": "364696d40f92a697c5fa254488dcab0d9fa93732ae5073acb2dd48bd62d1a698"
+      "hash": "364696d40f92a697c5fa254488dcab0d9fa93732ae5073acb2dd48bd62d1a698",
+      "bodyHash": "bc9a4244416510f1e895c00c883e2ba3e8eef39bef8402fdd5c4bd12b47a1464"
     },
     {
       "id": "next-steps",
-      "hash": "e50797ac92e2299f2768961d101dc900b795bb82cc69dbd8ae4e16a6baf61c7b"
+      "hash": "e50797ac92e2299f2768961d101dc900b795bb82cc69dbd8ae4e16a6baf61c7b",
+      "bodyHash": "4ff218d6ec9fb85a19b5c2502f20b7be04a6d0c9a2d7f53af4053759fba57000"
     }
   ],
   "sources": [

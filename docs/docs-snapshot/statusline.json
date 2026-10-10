@@ -4,147 +4,183 @@
   "blocks": [
     {
       "id": "customize-your-status-line",
-      "hash": "e95f414640bd86ee3191c4fbb3f4784bcc3552935a654718c131e1daa36e10c3"
+      "hash": "e95f414640bd86ee3191c4fbb3f4784bcc3552935a654718c131e1daa36e10c3",
+      "bodyHash": "d5ba5f8a2256e040b256b8f4731614876513383a0d4f9bb7da5f9cdc9f82b4f5"
     },
     {
       "id": "set-up-a-status-line",
-      "hash": "a8b43afa6d6198ef7100ebde1d0eb510ddc38b94c33570cdac600ade568699ff"
+      "hash": "a8b43afa6d6198ef7100ebde1d0eb510ddc38b94c33570cdac600ade568699ff",
+      "bodyHash": "116048ed8cde8bf5116d58b8a7ac572583a66ceed86af59f1c1f1a88dcedaf49"
     },
     {
       "id": "use-the-statusline-command",
-      "hash": "44e446be0845c7bd451d32181623431219f3ddbe134f1792f5d9057adb6532f0"
+      "hash": "44e446be0845c7bd451d32181623431219f3ddbe134f1792f5d9057adb6532f0",
+      "bodyHash": "0d70cb4c5678b9289bf66bc98d6d7a28ce416a522083439799eb7133dc6c8b15"
     },
     {
       "id": "manually-configure-a-status-line",
-      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26"
+      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26",
+      "bodyHash": "4215dc08500d758dcb2d34b7c5bcac9e2dbada948512ef94ea67db7d85f567fd"
     },
     {
       "id": "disable-the-status-line",
-      "hash": "945c3955a43a88638c1e2dc5d69795f05f73a4a12b69cfe87b33abb3007eae3f"
+      "hash": "945c3955a43a88638c1e2dc5d69795f05f73a4a12b69cfe87b33abb3007eae3f",
+      "bodyHash": "a4a01c3ed4eac82d0e4e9d37715ebd770720a42af455636f855d57a2d0d48ea1"
     },
     {
       "id": "build-a-status-line-step-by-step",
-      "hash": "d3f3fa61ac1598871ff5491772f55d022792a1d2a7a280793a4abe7b921cec92"
+      "hash": "d3f3fa61ac1598871ff5491772f55d022792a1d2a7a280793a4abe7b921cec92",
+      "bodyHash": "5348e5ff1535b8cfee0e4628d346191480bd9a79eefa53b4d46582c70d0d34b0"
     },
     {
       "id": "how-status-lines-work",
-      "hash": "051d56364702fbe388285beef979f29ccdc1caf7252b8fbf09f7db0041c1a2c7"
+      "hash": "051d56364702fbe388285beef979f29ccdc1caf7252b8fbf09f7db0041c1a2c7",
+      "bodyHash": "e6a7f3da28d2d07910c59a8cdd1371f67e9ab98ae7116afa984f95e161930091"
     },
     {
       "id": "when-the-status-line-updates",
-      "hash": "694e3f9562ca6f2ae72bf73a74175e88ab12cce22f5d1c791ee43326fe892f3d"
+      "hash": "694e3f9562ca6f2ae72bf73a74175e88ab12cce22f5d1c791ee43326fe892f3d",
+      "bodyHash": "305c35cdd5e9c6e6136f10a5c4691c72b6e24835f39eb8a64b18ed2c32f8a9bb"
     },
     {
       "id": "what-your-script-can-output",
-      "hash": "3e31c0e597c870c763f7a685eb73b06864daa6d54a627a4f959ade5e7c8723a9"
+      "hash": "3e31c0e597c870c763f7a685eb73b06864daa6d54a627a4f959ade5e7c8723a9",
+      "bodyHash": "083996722bc60058a2b085228f69b966447b85045710671900e0cd97d105a69c"
     },
     {
       "id": "size-output-to-the-terminal",
-      "hash": "cab76d0ce094ae1adcf8be564ca053080286ef8d290cda6306c0c8459a333158"
+      "hash": "cab76d0ce094ae1adcf8be564ca053080286ef8d290cda6306c0c8459a333158",
+      "bodyHash": "25dc2c5a9af5badc945b10cf64378bdda5c883ebf3005d48a48dc7fc7f153a30"
     },
     {
       "id": "available-data",
-      "hash": "dc0bbafcc4d9561b0ae65a05660228ef73d3e1dcf46425226e796b9788c4c236"
+      "hash": "dc0bbafcc4d9561b0ae65a05660228ef73d3e1dcf46425226e796b9788c4c236",
+      "bodyHash": "66f67ad29be7b13e214fa5d023cab7f91eea82b9f860cc34a19b2e7849efc772"
     },
     {
       "id": "context-window-fields",
-      "hash": "4bbe4ffdc30cb750c180b45f793dc4543e9fed58f340a208ab3c1947c7ef1cd5"
+      "hash": "4bbe4ffdc30cb750c180b45f793dc4543e9fed58f340a208ab3c1947c7ef1cd5",
+      "bodyHash": "ba10a780d9f94b0f691b31dd66a4dc1eeb4919e54c4508fb9207e3d50cde8c6d"
     },
     {
       "id": "spend-limit-fields",
-      "hash": "b2512f5d9472ab3f2a6592188f8eb56475c646b2113cc66df806dba92aafc009"
+      "hash": "b2512f5d9472ab3f2a6592188f8eb56475c646b2113cc66df806dba92aafc009",
+      "bodyHash": "4d0a2d63fe2498ad775ead56daeaa0cfff1e6b10ce899b99a6116491b868ede5"
     },
     {
       "id": "prompt-cache-fields",
-      "hash": "e74d1beb4f5993d4b3e5f84ed544df032c3dd6a8e62188a45019315f92e9e0eb"
+      "hash": "e74d1beb4f5993d4b3e5f84ed544df032c3dd6a8e62188a45019315f92e9e0eb",
+      "bodyHash": "6bb1a17d5e7bc6804c6e0769f62814003ee73fdf7c11d06108a17625c3820845"
     },
     {
       "id": "last-miss-cause",
-      "hash": "2c7da3c0cf90b95d106a29915181d599186e8414fdb17126ec9391aec84f8468"
+      "hash": "2c7da3c0cf90b95d106a29915181d599186e8414fdb17126ec9391aec84f8468",
+      "bodyHash": "3a166e15660f6f42297da1f111c5336ef9c6814bd6f06c2246b942112b515cba"
     },
     {
       "id": "examples",
-      "hash": "58d32b993263655651f29a5246df3920a298663dcda91b3e2eb8a83de51cc515"
+      "hash": "58d32b993263655651f29a5246df3920a298663dcda91b3e2eb8a83de51cc515",
+      "bodyHash": "af2660400497776932dd970366574b51e7b2a41a4916fc75343893e89447c4d4"
     },
     {
       "id": "context-window-usage",
-      "hash": "cb916f7e58d2b2b5dd1d76da45e68c80dbd7abe9af0fa3d12e49c0e3a4b9a872"
+      "hash": "cb916f7e58d2b2b5dd1d76da45e68c80dbd7abe9af0fa3d12e49c0e3a4b9a872",
+      "bodyHash": "a08821bfc7d9a1b89a3959dc60aad056aa82ef56bb314f0ebfceb22cd9a59d73"
     },
     {
       "id": "git-status-with-colors",
-      "hash": "b3832c21f99e00f1ad4396e1c061afddfd4ae1257254f24a10417a952b48d713"
+      "hash": "b3832c21f99e00f1ad4396e1c061afddfd4ae1257254f24a10417a952b48d713",
+      "bodyHash": "043b861c3166d70e07add079efc23d4aa4b6325bdbd98895bb583849afea2303"
     },
     {
       "id": "cost-and-duration-tracking",
-      "hash": "56bd20f16caca6002d0e96cf46049da7e581b7f7125dd8eab43798b749842575"
+      "hash": "56bd20f16caca6002d0e96cf46049da7e581b7f7125dd8eab43798b749842575",
+      "bodyHash": "92fd9f1b964bbdf6177a6a1de974e0502461cfc91458a5d333f673babb16e483"
     },
     {
       "id": "display-multiple-lines",
-      "hash": "24a43f7669317d250cc09845a6f8a6a6c382178adaadba9459e43b5b5a99d135"
+      "hash": "24a43f7669317d250cc09845a6f8a6a6c382178adaadba9459e43b5b5a99d135",
+      "bodyHash": "063924d9b5d0ee2beb564a95306db688d60c840ae0fb454e3de8a56f714573f5"
     },
     {
       "id": "clickable-links",
-      "hash": "8828c77afb69606af0ed6978fcd001849c5122bbe71ba40d56ea7c0aa53eeb8c"
+      "hash": "8828c77afb69606af0ed6978fcd001849c5122bbe71ba40d56ea7c0aa53eeb8c",
+      "bodyHash": "f3e0e542a7d20396131e74b92379ae7b00b6f9a3f95ba08838b88a3007a5d784"
     },
     {
       "id": "rate-limit-usage",
-      "hash": "1197cf291d03e9e32a4c91798e1ee217eac4bc2eb0b99fc7804a8383a6b92930"
+      "hash": "1197cf291d03e9e32a4c91798e1ee217eac4bc2eb0b99fc7804a8383a6b92930",
+      "bodyHash": "4bc4185bd068050f5b905474af0feefcca00d3b9f39d957f7a7494749c7951d6"
     },
     {
       "id": "cache-expensive-operations",
-      "hash": "c7665101f50e5cc543c89f2e69606d659c22edf0393737154481fc6b37e7db4e"
+      "hash": "c7665101f50e5cc543c89f2e69606d659c22edf0393737154481fc6b37e7db4e",
+      "bodyHash": "f055e19b348729df22353d296cd1df848bbedb679a0fdd7b48bfc15a21a01dc2"
     },
     {
       "id": "windows-configuration",
-      "hash": "cf11b740fddf26d96b3cf6ebd9ca43b9bf1954c1a5fd14240efea2109beed74f"
+      "hash": "cf11b740fddf26d96b3cf6ebd9ca43b9bf1954c1a5fd14240efea2109beed74f",
+      "bodyHash": "741e58f0c0fed13634437ee9c3d07d365ec8bcffa3ed1f8714ba22a45694d757"
     },
     {
       "id": "subagent-status-lines",
-      "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d"
+      "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d",
+      "bodyHash": "a96de0513e12ac531f0716b2acc3825fa409552bb2d691fcbfb0ec54b83c06b8"
     },
     {
       "id": "task-fields",
-      "hash": "c2f9e1965dfc75055cb755c6b86c6948a46bffe2c5b8448375db522c80e8b32c"
+      "hash": "c2f9e1965dfc75055cb755c6b86c6948a46bffe2c5b8448375db522c80e8b32c",
+      "bodyHash": "929b0234157ce7fc9d5b5e3f0dfc9577ffe564cd934cdb5c6ad8d68856e2fdf1"
     },
     {
       "id": "tips",
-      "hash": "924cf40717dbc48d3c817dc84c3645168d405e00cb370cb9c09485f9300b4ab8"
+      "hash": "924cf40717dbc48d3c817dc84c3645168d405e00cb370cb9c09485f9300b4ab8",
+      "bodyHash": "80cd1b4d300a09593dfae9a300dc48b995e7be2fcfffa46c3086b8f5186c2581"
     },
     {
       "id": "troubleshooting",
-      "hash": "c9dfe5c473af62edf2ed36ae2bf81cbe7635190ec1a7be405013eafb7d4f4cae"
+      "hash": "c9dfe5c473af62edf2ed36ae2bf81cbe7635190ec1a7be405013eafb7d4f4cae",
+      "bodyHash": "b2f93f4e5929e6e74b314e63b7aa7189a6978717a448ad41d3e1182402d7c255"
     },
     {
       "id": "status-line-not-appearing",
-      "hash": "a71152f13345df7577464f2d0663172b03c93886d0750b2c47bf450d30f13dec"
+      "hash": "a71152f13345df7577464f2d0663172b03c93886d0750b2c47bf450d30f13dec",
+      "bodyHash": "81f2c3ebb69427e4ba915c64b14ba5624b07401a0129fde08b7a013d3554f27e"
     },
     {
       "id": "status-line-shows----or-empty-values",
-      "hash": "0052b49797d48df09e0494d91877e1084083d6c9f9561215e8153a7a9662304e"
+      "hash": "0052b49797d48df09e0494d91877e1084083d6c9f9561215e8153a7a9662304e",
+      "bodyHash": "df6b8d1380acbc2987e535e5faa6f43eab7323702c57cf58a7bb196de326513f"
     },
     {
       "id": "context-percentage-shows-unexpected-values",
-      "hash": "f467aa3b0431a86fe3be6dd6bf51c08d9d46a2bfffe94f1800e4085e9189b089"
+      "hash": "f467aa3b0431a86fe3be6dd6bf51c08d9d46a2bfffe94f1800e4085e9189b089",
+      "bodyHash": "fd1672df98593f80c26075a1f94273413ce3e480e3e275e0132cb4e7841e1d08"
     },
     {
       "id": "osc-8-links-not-clickable",
-      "hash": "d174bd2f2b4ce1d3591ed4137b01075dcb2354750f20b7af9afe23e3cbdcb1b9"
+      "hash": "d174bd2f2b4ce1d3591ed4137b01075dcb2354750f20b7af9afe23e3cbdcb1b9",
+      "bodyHash": "c1a60263fb8d3edefddf9c008a83775cf5aaacb3f6450b2d7ec5657208a1721e"
     },
     {
       "id": "display-glitches-with-escape-sequences",
-      "hash": "ba034dc99657e28855105b7c788c3802b6b1527288f83918ac163392f79424cd"
+      "hash": "ba034dc99657e28855105b7c788c3802b6b1527288f83918ac163392f79424cd",
+      "bodyHash": "7deb79afd5f71eb9ed4faab1d950c344e77f0df75a2641780e45ae5a1ec3fab2"
     },
     {
       "id": "workspace-trust-required",
-      "hash": "7f4753011ddebfe37b7d1362ceea6f5f1a1a3e8baabccdbec414035d20f23ddc"
+      "hash": "7f4753011ddebfe37b7d1362ceea6f5f1a1a3e8baabccdbec414035d20f23ddc",
+      "bodyHash": "8bb8bcad800583b8280f112a59b55808ed4638634539c790dcdbde62e7eb839b"
     },
     {
       "id": "script-errors-or-hangs",
-      "hash": "f7a96fbe03a6c2d9980df8de7f2a503e2295b63a1903bc7b2d4e2604ac48ca5f"
+      "hash": "f7a96fbe03a6c2d9980df8de7f2a503e2295b63a1903bc7b2d4e2604ac48ca5f",
+      "bodyHash": "e9543f37a10923c595d35afc8aedb9acd41011335b713f7012e9cdbfa146e582"
     },
     {
       "id": "notifications-share-the-status-line-row",
-      "hash": "0c7b1391e9689d8a739748c8d54ef3f927a9fa2b0ae60c4bd85d84f942cdfb98"
+      "hash": "0c7b1391e9689d8a739748c8d54ef3f927a9fa2b0ae60c4bd85d84f942cdfb98",
+      "bodyHash": "076c27beee7ab967034cd02eb99e52bd214a0b95430767e3337884338f523479"
     }
   ],
   "sources": [

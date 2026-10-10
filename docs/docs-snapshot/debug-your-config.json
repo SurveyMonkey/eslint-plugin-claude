@@ -4,35 +4,43 @@
   "blocks": [
     {
       "id": "debug-your-configuration",
-      "hash": "674128363a5edc3c846304fc0793134ca81a2ef1551775c3568007c0d08ff58a"
+      "hash": "674128363a5edc3c846304fc0793134ca81a2ef1551775c3568007c0d08ff58a",
+      "bodyHash": "e486fd04b5c62fe3fbd331c77d241b8d2cccfd97dd10b13f8c4c4104f7cfbbb6"
     },
     {
       "id": "see-what-loaded-into-context",
-      "hash": "8f9651fca653f7b7ad95f334e143ffa8cad5aaebb73f6c2ace8e1db1b506a094"
+      "hash": "8f9651fca653f7b7ad95f334e143ffa8cad5aaebb73f6c2ace8e1db1b506a094",
+      "bodyHash": "0d9316838e4f24de807bda69a45b45269e977018bd1add0993b8b3d58aa0c0b9"
     },
     {
       "id": "check-resolved-settings",
-      "hash": "a4d130d4d2808157e35b3759adbd2404f41df0a416f47115d44da0ddfe5360d7"
+      "hash": "a4d130d4d2808157e35b3759adbd2404f41df0a416f47115d44da0ddfe5360d7",
+      "bodyHash": "af186c8608fc1b2595f9f0ee8f1c2adc99a51e9188c7b6b57359db72b0624f76"
     },
     {
       "id": "check-mcp-servers",
-      "hash": "4ae50a277c11dfb09cbb92567b814b966be5dd1d8e3efc956b4b686d2dc7eb5a"
+      "hash": "4ae50a277c11dfb09cbb92567b814b966be5dd1d8e3efc956b4b686d2dc7eb5a",
+      "bodyHash": "efc7e03bfe799bd73e4c6e5b5b3a9c2d7773ddf9dd2261fa6237a2138a419e44"
     },
     {
       "id": "check-hooks",
-      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da"
+      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da",
+      "bodyHash": "efc422ca4e82a40c826c7d1ffe7bd9779b84088a96b3ddc663e39e6e197161a2"
     },
     {
       "id": "test-against-a-clean-configuration",
-      "hash": "81de51a255fc5f0a2bcc1451d86494d95fc4f00f3d71b59265fccaad054d671e"
+      "hash": "81de51a255fc5f0a2bcc1451d86494d95fc4f00f3d71b59265fccaad054d671e",
+      "bodyHash": "c62cb9b6416f173c17cb41f7bd31860da0fb9752e3214c1cc61d30355f89464c"
     },
     {
       "id": "check-common-causes",
-      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996",
+      "bodyHash": "dd30507335c2aa5c5d7e8603c96022b27a30a6cccd6af3c7cbeb4e05d6038cdd"
     },
     {
       "id": "related-resources",
-      "hash": "4342e364b47b173139837d2203afe81353ca380b2117559e45ed19cc0d322d0c"
+      "hash": "4342e364b47b173139837d2203afe81353ca380b2117559e45ed19cc0d322d0c",
+      "bodyHash": "b9990a74c4b8baeae2fa16bc68ed25ddde80327f6ba042a3553493bf3d5d2527"
     }
   ],
   "sources": [

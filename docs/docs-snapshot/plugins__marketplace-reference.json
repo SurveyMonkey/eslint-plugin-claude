@@ -1,122 +1,151 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
-  "hash": "f4b52438f0ef4af76ddcfcd710c14949c380b5f28508bfc1a6626cbad8f609f6",
+  "hash": "a2ac85a7e81a60683470cc5604eca3b3122a12a0ef039c71137f5eaae01d46f5",
   "blocks": [
     {
       "id": "marketplace-reference",
-      "hash": "3ff16ef3a8a3df5a0f03ef7d6e5f609a9ff605a29633ce30555e6d43f0c99ffd"
+      "hash": "3ff16ef3a8a3df5a0f03ef7d6e5f609a9ff605a29633ce30555e6d43f0c99ffd",
+      "bodyHash": "1bc4a5304c69c367a13120bd39f696361fb36df217bc59d02ba11988ea74b71c"
     },
     {
       "id": "marketplace-file",
-      "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b"
+      "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b",
+      "bodyHash": "b476d7228eb78bec38169bcc19133d4e5ccc12074743b9c4202aa5a2a28e58fa"
     },
     {
       "id": "reserved-names",
-      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
+      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66",
+      "bodyHash": "6c4fb3dd771c7ea5d88ed746934bd45ae28f1866d3ac96446d1713f7185e1ccd"
     },
     {
       "id": "top-level-fields",
-      "hash": "e5384a8956d41f274a51582cd478af76c5c32a806c696cde570d53a89de3e263"
+      "hash": "e5384a8956d41f274a51582cd478af76c5c32a806c696cde570d53a89de3e263",
+      "bodyHash": "1d504096ff9de0614047b80664481730bff498854e189cb9cd7e3a828ce03f59"
     },
     {
       "id": "plugin-entries",
-      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006",
+      "bodyHash": "7fbca40330b95a8fae610fa2b1dd47ec4f60ece7cd092f279b09f52c5f83e4d3"
     },
     {
       "id": "entry-and-plugin-json",
-      "hash": "fbd2314ca0290b77dfeadd4685cf4bc9437b13f16f0cb8ad929402d98ad2f635"
+      "hash": "fbd2314ca0290b77dfeadd4685cf4bc9437b13f16f0cb8ad929402d98ad2f635",
+      "bodyHash": "1387b425b95c9a9c6d0294347b2c079ff31bf608952a252f4018f31638f88f83"
     },
     {
       "id": "hooks-in-an-entry",
-      "hash": "9507e979be52f296c481e28bcbea85c45710869175610bfeff866de42d70ebdb"
+      "hash": "9507e979be52f296c481e28bcbea85c45710869175610bfeff866de42d70ebdb",
+      "bodyHash": "0bc25ee569548cc247d1994e606fc1867c67de08c30b7bf0c3c7a97d4832698d"
     },
     {
       "id": "display-fields",
-      "hash": "8f197cceecdde5a10405ccb4d10f4484b5afb14754250269e99a317cebf34103"
+      "hash": "8f197cceecdde5a10405ccb4d10f4484b5afb14754250269e99a317cebf34103",
+      "bodyHash": "cf079dff050a250442f368f15dda5a6569ca0df91c2d24ef7ddf8b5edbe8bbf8"
     },
     {
       "id": "strict-mode",
-      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
+      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d",
+      "bodyHash": "11f172003fef501fb2e6cbd88ba19f608a2dbaf558c1a194b7956ab46362b65b"
     },
     {
       "id": "plugin-sources",
-      "hash": "6c045d997cede819c04ace755a58d450634518ebee6f61bc4084355f75edb95b"
+      "hash": "6c045d997cede819c04ace755a58d450634518ebee6f61bc4084355f75edb95b",
+      "bodyHash": "c0d6b34978ecf376743419183c6921012e737fb081c672ac931452d8b2dbf1cf"
     },
     {
       "id": "relative-path-plugin-source",
-      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f",
+      "bodyHash": "7296f2a1135183598962493a207b8da472f873050d2161c9bc7f16856b7bca25"
     },
     {
       "id": "bare-names-under-pluginroot",
-      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
+      "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96",
+      "bodyHash": "fd976169584376c949dfcf6a3cb63393274b2a50f9bdf9bdefe75884693740a5"
     },
     {
       "id": "github-plugin-source",
-      "hash": "974e70540ed101a13c8c9df0dc41b452d3828548c32579aa431a6d8f056b44c5"
+      "hash": "974e70540ed101a13c8c9df0dc41b452d3828548c32579aa431a6d8f056b44c5",
+      "bodyHash": "8ad4f0601171022aaa4f77e74ee780710aab29d7122219cf69b6a9ce4644fe48"
     },
     {
       "id": "url-plugin-source",
-      "hash": "3969e0bb409d56c54ac58ae537e6fa64f9ff273b77004594b4b1588a34a05877"
+      "hash": "3969e0bb409d56c54ac58ae537e6fa64f9ff273b77004594b4b1588a34a05877",
+      "bodyHash": "e062b83af741dd947dda6a45039499aaa60cfb8f34a8bfc684ff15ee9c273813"
     },
     {
       "id": "git-subdir-plugin-source",
-      "hash": "1247e318a5e7ddbf1e90397ca565c8653c982275899735aba14a160cdb79389d"
+      "hash": "1247e318a5e7ddbf1e90397ca565c8653c982275899735aba14a160cdb79389d",
+      "bodyHash": "5b4f4da17d511fb52e2abcdf043ee5eb11f5f7bf6f061cd742a6b3dd2f2e8e82"
     },
     {
       "id": "npm-plugin-source",
-      "hash": "f737dcb3514b90ea839144486e575f6576369113107648518058866e2dbfecc9"
+      "hash": "f737dcb3514b90ea839144486e575f6576369113107648518058866e2dbfecc9",
+      "bodyHash": "e30582949e447a65330191188a102ed1c971d27836913903e1615a647d3a6d98"
     },
     {
       "id": "archive-plugin-source",
-      "hash": "1d73623b26f5ec6890cf1c0a502695d78fb2293fd85935cd6a24118107595d1d"
+      "hash": "1d73623b26f5ec6890cf1c0a502695d78fb2293fd85935cd6a24118107595d1d",
+      "bodyHash": "2b5434ecf237fb8047e23151560584b889176fd831f508234be0136047aa92da"
     },
     {
       "id": "command-plugin-source",
-      "hash": "070a308b4e2bbdf05d944f76313779b9030f95f32e05f5af70c1e4664e6144eb"
+      "hash": "070a308b4e2bbdf05d944f76313779b9030f95f32e05f5af70c1e4664e6144eb",
+      "bodyHash": "4c74a80fd87b4963bc44faece0f62ed0f86677db2ffa2ef84b4cb54c0043d055"
     },
     {
       "id": "what-the-command-must-do",
-      "hash": "4902457a54b2bf5b8a3dcdbeaa48b03baeb8580da3fe6e3fb4378e4711b2b46c"
+      "hash": "4902457a54b2bf5b8a3dcdbeaa48b03baeb8580da3fe6e3fb4378e4711b2b46c",
+      "bodyHash": "f7c3e324894686e9d9b2d541642daf15486a776db12fa8b4af9424edc2499a0b"
     },
     {
       "id": "output-that-fails-the-install-or-update",
-      "hash": "9ea4b600d25edebadb62a3ce77f9e041fc3ea6ce1934f175c3df1e6796f94afd"
+      "hash": "9ea4b600d25edebadb62a3ce77f9e041fc3ea6ce1934f175c3df1e6796f94afd",
+      "bodyHash": "a0d26320681b9dc13a203788e2b5f171d34fa4aeb50842b7c7c0e5d67221644d"
     },
     {
       "id": "copy-mode-and-link-mode",
-      "hash": "9ddda8cee5ab00c130882315717e12a0d0f160a875018e222774617bef1c2ca2"
+      "hash": "9ddda8cee5ab00c130882315717e12a0d0f160a875018e222774617bef1c2ca2",
+      "bodyHash": "59f15d959518f9450913b2fd4f0ec5d61e6c8fe5dbef700c14f80ad4f8469d29"
     },
     {
       "id": "marketplace-sources",
-      "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
+      "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557",
+      "bodyHash": "09e77bf67b49400dc56d6a6759775c65ecdf7b8b34b8f6eb73f54a3acdd161ae"
     },
     {
       "id": "fields-by-type",
-      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b",
+      "bodyHash": "24a339a5b1eb9b31703c11af55e8362d07711b470885b136672cd07b81c759e7"
     },
     {
       "id": "source-values-valid-only-in-policy-lists",
-      "hash": "c7cf7a570c36a42beaba68b45ac2c70e39e9dbb5d4faaab71ee458ed9b714150"
+      "hash": "c7cf7a570c36a42beaba68b45ac2c70e39e9dbb5d4faaab71ee458ed9b714150",
+      "bodyHash": "6a0b0a741b3313294c83385fe6ecb458d3700698aa9715683aa022ce65eccf45"
     },
     {
       "id": "source-objects-in-settings",
-      "hash": "f0f50d386c207face0775972a4c4ab28ff0ade37ab6f661e08e4e190327e523d"
+      "hash": "f0f50d386c207face0775972a4c4ab28ff0ade37ab6f661e08e4e190327e523d",
+      "bodyHash": "fbc26f5c5179ccf2cece58ec074b1c913b0debc10e343573ce02ee5f8681eae9"
     },
     {
       "id": "validation-messages",
-      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
+      "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee",
+      "bodyHash": "999eaae87cace7422c2b5b8c1a50ffe34c5b02732b9eb94013bbd4ccfcb34711"
     },
     {
       "id": "invalid-input-on-a-source",
-      "hash": "56e9457d774964408e07c36de00c23333db1973fe539a20d3f117760860fd81a"
+      "hash": "56e9457d774964408e07c36de00c23333db1973fe539a20d3f117760860fd81a",
+      "bodyHash": "30cef0e1456b1f483ed495e8344428cfa484ce522e178e30d37904171cb9ded2"
     },
     {
       "id": "failures-that-validation-doesnt-catch",
-      "hash": "795dba9f5d94d758741b3c3d4db584720ff047da7a5723244400bdca274b4792"
+      "hash": "795dba9f5d94d758741b3c3d4db584720ff047da7a5723244400bdca274b4792",
+      "bodyHash": "34079b9a25ab0c4fef65c7ed97c63d92881eab7228f87f317ec72ffefa6dd04c"
     },
     {
       "id": "next-steps",
-      "hash": "79ec2f5512a4d5234da59a6c390b3b167b0847105d206503678c702e8fcc4da5"
+      "hash": "79ec2f5512a4d5234da59a6c390b3b167b0847105d206503678c702e8fcc4da5",
+      "bodyHash": "db86ec04444dca60d80c415fee8b9ec43bcc40d3a66a142e8c84d289d9bb67fd"
     }
   ],
   "sources": [
@@ -183,8 +212,8 @@
     {
       "heading": "Reserved names",
       "id": "reserved-names",
-      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287",
-      "text": "### Reserved names\n\nYou can't give your marketplace any of the following names:\n\n* **Official marketplace names**: `claude-code-marketplace`, `claude-code-plugins`, `claude-plugins-official`, `anthropic-marketplace`, `anthropic-plugins`, `agent-skills`, `anthropic-agent-skills`, `life-sciences`, `knowledge-work-plugins`, `claude-for-legal`, `claude-for-financial-services`, `financial-services-plugins`, `first-party-plugins`, and `claude-tag-plugins`. Reserved unless the marketplace comes from a `github` or `git` [marketplace source](#marketplace-sources) under `github.com/anthropics/`.\n* **Community marketplace names**: `claude-community`, `claude-plugins-community`, and `healthcare`. Reserved under the same rule as the official names.\n* **Plugin directory names**: `anthropic-plugin-directory` and `claude-plugin-directory`. Reserved under the same rule as the official names.\n* **Names that impersonate an official marketplace**: names such as `official-claude-plugins` or `claude-plugins-v2`, and any name containing a non-ASCII character. The error is `Marketplace name impersonates an official Anthropic/Claude marketplace`. A control or bidirectional-formatting character in a name also reports `Marketplace name cannot contain control or bidirectional-formatting characters`. A marketplace already registered under such a name stops loading, along with its plugins.\n* <span id=\"reserved-name-spellings\" />**Another spelling of a reserved name**: a name that differs from a reserved name only by a trailing dot, or by a symbol other than an underscore in place of a hyphen, so `claude.code.plugins` counts as `claude-code-plugins`. Adding the marketplace fails with [`is another spelling of \"<reserved>\", a reserved marketplace name`](/docs/en/errors#marketplace-name-is-another-spelling-of-a-reserved-name), and a marketplace already registered under one stops loading. This check requires Claude Code v2.1.280 or later.\n* **Names Claude Code uses for plugins that don't come from a marketplace**: `inline` for plugins loaded with [`--plugin-dir`](/docs/en/cli-reference), `builtin` for built-in plugins, `skills-dir` for plugins auto-loaded from [`.claude/skills/`](/docs/en/skills), and `synced` for plugins synced from your claude.ai account. `claude-plugin-test` is also reserved. `skills-dir` also appears as `{\"source\": \"skills-dir\"}` in `strictKnownMarketplaces` and `blockedMarketplaces`, described under [Source values valid only in policy lists](#source-values-valid-only-in-policy-lists).\n* **`npm`, `pip`, `uv`, `cargo`, `github`, and `gh`**: reserved in any casing. This check requires Claude Code v2.1.275 or later.\n* **Names starting with `claudeai-`**: reserved for marketplaces hosted on claude.ai. `claude plugin marketplace add` refuses any other marketplace that uses one with `Cannot add marketplace \"<name>\": names starting with \"claudeai-\" are reserved for marketplaces hosted on claude.ai`.\n* **The download folder of a registered GitHub marketplace, `<owner>-<repo>`**: Claude Code downloads a marketplace added from a `github` source such as `acme/x-tools` through a folder named `acme-x-tools`, whatever that marketplace's own `name` is. While that marketplace is registered under a name other than `acme-x-tools`, `claude plugin marketplace add` refuses a different marketplace named `acme-x-tools` after downloading it, and reports `Can't use the marketplace name \"acme-x-tools\"`. This check requires Claude Code v2.1.290 or later.\n\nWhen a registered marketplace stops loading because its name imitates an official one, `claude plugin list` and `/plugin` report `Claude Code refuses the marketplace name \"<name>\"`. The message tells you to remove the marketplace. Removing it also uninstalls its plugins and deletes their saved data. This named refusal message requires Claude Code v2.1.282 or later."
+      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66",
+      "text": "### Reserved names\n\nYou can't give your marketplace any of the following names:\n\n* **Official marketplace names**: `claude-code-marketplace`, `claude-code-plugins`, `claude-plugins-official`, `anthropic-marketplace`, `anthropic-plugins`, `agent-skills`, `anthropic-agent-skills`, `life-sciences`, `knowledge-work-plugins`, `claude-for-legal`, `claude-for-financial-services`, `financial-services-plugins`, `first-party-plugins`, and `claude-tag-plugins`. Reserved unless the marketplace comes from a `github` or `git` [marketplace source](#marketplace-sources) under `github.com/anthropics/`.\n* **Community marketplace names**: `claude-community`, `claude-plugins-community`, and `healthcare`. Reserved under the same rule as the official names.\n* **Plugin directory names**: `anthropic-plugin-directory` and `claude-plugin-directory`. Reserved under the same rule as the official names.\n* **Names that impersonate an official marketplace**: names such as `official-claude-plugins` or `claude-plugins-v2`, and any name containing a non-ASCII character. The error is `Marketplace name impersonates an official Anthropic/Claude marketplace`. A control or bidirectional-formatting character in a name also reports `Marketplace name cannot contain control or bidirectional-formatting characters`. A marketplace already registered under such a name stops loading, along with its plugins.\n* <span id=\"reserved-name-spellings\" />**Another spelling of a reserved name**: a name that differs from a reserved name only by a trailing dot, or by a symbol other than an underscore in place of a hyphen, so `claude.code.plugins` counts as `claude-code-plugins`. Adding the marketplace fails with [`is another spelling of \"<reserved>\", a reserved marketplace name`](/docs/en/errors#marketplace-name-is-another-spelling-of-a-reserved-name), and a marketplace already registered under one stops loading. This check requires Claude Code v2.1.280 or later.\n* **Names Claude Code uses for plugins that don't come from a marketplace**: `inline` for plugins loaded with [`--plugin-dir`](/docs/en/cli-reference), `builtin` for built-in plugins, `skills-dir` for plugins auto-loaded from [`.claude/skills/`](/docs/en/skills), and `synced` for plugins synced from your claude.ai account. `claude-plugin-test` is also reserved. `skills-dir` also appears as `{\"source\": \"skills-dir\"}` in `strictKnownMarketplaces` and `blockedMarketplaces`, described under [Source values valid only in policy lists](#source-values-valid-only-in-policy-lists).\n* **`npm`, `pip`, `uv`, `cargo`, `github`, and `gh`**: reserved in any casing. This check requires Claude Code v2.1.275 or later.\n* **Member names that every JavaScript object has**: `constructor`, `hasOwnProperty`, `isPrototypeOf`, `propertyIsEnumerable`, `toLocaleString`, `toString`, and `valueOf`. `claude plugin marketplace add` refuses a marketplace that uses one with [`Claude Code reserves this name and cannot register a marketplace under it`](/docs/en/plugins/troubleshooting#claude-code-reserves-this-name). This check requires Claude Code v2.1.296 or later.\n* **Names starting with `claudeai-`**: reserved for marketplaces hosted on claude.ai. `claude plugin marketplace add` refuses any other marketplace that uses one with `Cannot add marketplace \"<name>\": names starting with \"claudeai-\" are reserved for marketplaces hosted on claude.ai`.\n* **The download folder of a registered GitHub marketplace, `<owner>-<repo>`**: Claude Code downloads a marketplace added from a `github` source such as `acme/x-tools` through a folder named `acme-x-tools`, whatever that marketplace's own `name` is. While that marketplace is registered under a name other than `acme-x-tools`, `claude plugin marketplace add` refuses a different marketplace named `acme-x-tools` after downloading it, and reports `Can't use the marketplace name \"acme-x-tools\"`. This check requires Claude Code v2.1.290 or later.\n\nWhen a registered marketplace stops loading because its name imitates an official one, `claude plugin list` and `/plugin` report `Claude Code refuses the marketplace name \"<name>\"`. The message tells you to remove the marketplace. Removing it also uninstalls its plugins and deletes their saved data. This named refusal message requires Claude Code v2.1.282 or later."
     },
     {
       "heading": "Marketplace file",

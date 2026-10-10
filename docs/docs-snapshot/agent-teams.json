@@ -4,99 +4,123 @@
   "blocks": [
     {
       "id": "orchestrate-teams-of-claude-code-sessions",
-      "hash": "0d6e25c449720fb3f8c0d414c7674b8d6cc0c3d7c2b781c0c9f1cd48f9bb91fb"
+      "hash": "0d6e25c449720fb3f8c0d414c7674b8d6cc0c3d7c2b781c0c9f1cd48f9bb91fb",
+      "bodyHash": "304fd15fa80db06e7328ed12ea0601aa65b717845a16103f34c9c329d87cf0e5"
     },
     {
       "id": "when-to-use-agent-teams",
-      "hash": "d0862cc862027632ef59bae01fa2325375775aa49dfaa39a8d0d43becf4e22c2"
+      "hash": "d0862cc862027632ef59bae01fa2325375775aa49dfaa39a8d0d43becf4e22c2",
+      "bodyHash": "24a77d3413f64ca27aaf3463e8e47db17f9bb7f8cac30bd923f49409bc473bee"
     },
     {
       "id": "compare-with-subagents",
-      "hash": "352c3b3c6c39888b6af5ca0f949165881ccfe64538d878e627a8242de6cb3a17"
+      "hash": "352c3b3c6c39888b6af5ca0f949165881ccfe64538d878e627a8242de6cb3a17",
+      "bodyHash": "27d1d83529c5c2f61e2f207ac702e6126ef9d5ff513d36351ebc5deb8f04ff6a"
     },
     {
       "id": "enable-agent-teams",
-      "hash": "c2c7f93bd280719787e1bf328e63702b910fc05c2e2824c538ff12216206b351"
+      "hash": "c2c7f93bd280719787e1bf328e63702b910fc05c2e2824c538ff12216206b351",
+      "bodyHash": "8c5c46671b36a27590dd4fbec934dc79d2316d524e9bcfcf5542f71d3908ee08"
     },
     {
       "id": "start-your-first-agent-team",
-      "hash": "dab05da6bdde544a22ce62f1f8dc329ef4a09a51548ab659ce2286f4fdab3761"
+      "hash": "dab05da6bdde544a22ce62f1f8dc329ef4a09a51548ab659ce2286f4fdab3761",
+      "bodyHash": "67eb77d04b0f1ecde72bb0b22bbb4530b4246298389465f1287386996a340941"
     },
     {
       "id": "control-your-agent-team",
-      "hash": "5b17414b75d99d21c8dfb6309d07253aaf64134700e024b4f6bd48c1cd6a784c"
+      "hash": "5b17414b75d99d21c8dfb6309d07253aaf64134700e024b4f6bd48c1cd6a784c",
+      "bodyHash": "53c18004c06e4b4d795e3cec0f7580c1b682396b311ab6234db3e638f8aa444d"
     },
     {
       "id": "choose-a-display-mode",
-      "hash": "b1227e5f6aaa755c2dc4fb7652dacbe80bb9fd26d9d19aae4ffc26ac9b3076d7"
+      "hash": "b1227e5f6aaa755c2dc4fb7652dacbe80bb9fd26d9d19aae4ffc26ac9b3076d7",
+      "bodyHash": "bf63b30d04b81358f63077051b872f600e78d9f95f035c834d3e692b7e0a2a47"
     },
     {
       "id": "specify-teammates-and-models",
-      "hash": "c3b38a3f864d8b584dd5316bfde0b9baf6a114a9eab4955779c3cb4c1b888d80"
+      "hash": "c3b38a3f864d8b584dd5316bfde0b9baf6a114a9eab4955779c3cb4c1b888d80",
+      "bodyHash": "9ede61e84f8f882a65a5740afb7559d5ea90890f7eaeb88d8e936c3b28e92ba8"
     },
     {
       "id": "have-teammates-plan-before-implementing",
-      "hash": "76f2c2929f016c0995536a77e4abba2c351511a8f3677f9591162452e6045690"
+      "hash": "76f2c2929f016c0995536a77e4abba2c351511a8f3677f9591162452e6045690",
+      "bodyHash": "6f11773a0ae4e1dc9229a34f060190007dad705b9891f3588e39dcdc5d042231"
     },
     {
       "id": "talk-to-teammates-directly",
-      "hash": "5b6674575d68445d1eab3a28a8fe70b10d294822e3745db26a23d3393d27d185"
+      "hash": "5b6674575d68445d1eab3a28a8fe70b10d294822e3745db26a23d3393d27d185",
+      "bodyHash": "c72ced4100c7c624454754864753b1da10c1c0c53eb77825389244f92ac6a1c0"
     },
     {
       "id": "assign-and-claim-tasks",
-      "hash": "ef65c8958705425dc52174737d518f86a76bc0d476cd5fd0855d2be825a9f6ae"
+      "hash": "ef65c8958705425dc52174737d518f86a76bc0d476cd5fd0855d2be825a9f6ae",
+      "bodyHash": "2fc4eca6f79bf66c2793fb9b29355eca3aa302e9c6058fd272151f266a73bcca"
     },
     {
       "id": "shut-down-teammates",
-      "hash": "b542c667ebb02b9f01b6f9ea45d158892771d8c8d212dbe12ba575466c9d9a8a"
+      "hash": "b542c667ebb02b9f01b6f9ea45d158892771d8c8d212dbe12ba575466c9d9a8a",
+      "bodyHash": "3dd52f1f6a8751a26b6ed66c2b6f68556944fd47248951b78078259f5d59c81e"
     },
     {
       "id": "enforce-quality-gates-with-hooks",
-      "hash": "df44180bf9bcc70967fb619510a1ed190e2af060761241846a2a827ed7ec660c"
+      "hash": "df44180bf9bcc70967fb619510a1ed190e2af060761241846a2a827ed7ec660c",
+      "bodyHash": "044709b83e4e2ecf7e85feba721c2a0362f991674e0df41958019c65d8ea8ce4"
     },
     {
       "id": "how-agent-teams-work",
-      "hash": "c5ad79d50f05882767ac9fb1ab35441f71f3dee62f287b446f0d0ad49d203a01"
+      "hash": "c5ad79d50f05882767ac9fb1ab35441f71f3dee62f287b446f0d0ad49d203a01",
+      "bodyHash": "93145a609ad79513b4f8e06365df9e6f7fbb89fa0f7c2e404101bda4c49a0863"
     },
     {
       "id": "how-claude-starts-agent-teams",
-      "hash": "0c1ab45dd496df50a2056a25e042a143b93187602949d1c0e5c3d7916af86936"
+      "hash": "0c1ab45dd496df50a2056a25e042a143b93187602949d1c0e5c3d7916af86936",
+      "bodyHash": "bf161e09056725419a33c80633dd965058d8d9a3a5da3664100a39731feb542e"
     },
     {
       "id": "architecture",
-      "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615"
+      "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615",
+      "bodyHash": "99e52ab9f3f351e3633620fb4d712d6487b0448bcd7df21fd2cd2f12c07cccbe"
     },
     {
       "id": "use-subagent-definitions-for-teammates",
-      "hash": "617e2befd80358b21c9104a2ed554186b21453ab4b6ea05eff1ab5a8d707e0e9"
+      "hash": "617e2befd80358b21c9104a2ed554186b21453ab4b6ea05eff1ab5a8d707e0e9",
+      "bodyHash": "6563ff16825be60e62c97144b3ba2a4f48af87f7311de47c463a084e670049ef"
     },
     {
       "id": "permissions",
-      "hash": "99b58f62129d2db0fbbf44a4722b70c43e2f9d03b88e681f4ec7e88219ac2418"
+      "hash": "99b58f62129d2db0fbbf44a4722b70c43e2f9d03b88e681f4ec7e88219ac2418",
+      "bodyHash": "554829ebef27cf1f0c1f01c3f74b28c56a8a3e83ac53f97c74a175cab155b16d"
     },
     {
       "id": "messages-between-agents",
-      "hash": "93cef0dcd35fe0711127f3a0ce6b648dbd1dee7a8267e82488e9c015b97887df"
+      "hash": "93cef0dcd35fe0711127f3a0ce6b648dbd1dee7a8267e82488e9c015b97887df",
+      "bodyHash": "fa88fabdbe16935b61c2bfff4fd5226e9fa62bd6bf00efc3496fce2d9181f4f7"
     },
     {
       "id": "context-and-communication",
-      "hash": "81d94061036d20ee5aa27aba9ec6c6fd9f499bafa1df30013cbc6b9c0c39998b"
+      "hash": "81d94061036d20ee5aa27aba9ec6c6fd9f499bafa1df30013cbc6b9c0c39998b",
+      "bodyHash": "1236e0bda0d9ae1b44e4d011eabc72d5ba2477daad79e5935004c77601b7f4fe"
     },
     {
       "id": "token-usage",
-      "hash": "578043e41a1da4957e7c3055a1827c840c6f39b409be23dcb29e5dbdf1c6ee25"
+      "hash": "578043e41a1da4957e7c3055a1827c840c6f39b409be23dcb29e5dbdf1c6ee25",
+      "bodyHash": "bc3e2a94f22f6be93fc61460f543a6d0ffaa3d13f864f33e07a7a2b77761b896"
     },
     {
       "id": "use-case-examples",
-      "hash": "14bcbcb2638cda10678d9ece9ffaabb9ad00cb1d6a84ab1c71e724cbc8774ad5"
+      "hash": "14bcbcb2638cda10678d9ece9ffaabb9ad00cb1d6a84ab1c71e724cbc8774ad5",
+      "bodyHash": "b02ebd27b2e2853e7e1d3e2d39c32b03b622c492b4f94b4235119d13e79d44db"
     },
     {
       "id": "run-a-parallel-code-review",
-      "hash": "feda71eb6c08080bc22397b1a2b2ed469ccd91236a1667a3f28abe0489093999"
+      "hash": "feda71eb6c08080bc22397b1a2b2ed469ccd91236a1667a3f28abe0489093999",
+      "bodyHash": "3a9226074eddea1c8776e3d93da6070b0a3fcf58e661f41c11a8ae637b2cb54f"
     },
     {
       "id": "investigate-with-competing-hypotheses",
-      "hash": "cb52c0cdaeee18e9b7345436599dd2612ed7e51ddf7f114366037c77361a570c"
+      "hash": "cb52c0cdaeee18e9b7345436599dd2612ed7e51ddf7f114366037c77361a570c",
+      "bodyHash": "175be322480b1f0a87d4a779572374d74e7ed3e6ccd5b7f8bbe382dc3ed6677f"
     },
     {
       "id": "best-practices",
@@ -104,31 +128,38 @@
     },
     {
       "id": "give-teammates-enough-context",
-      "hash": "7367d21f1c735dfab39636c05b8fe2a3b44ac61841d902a14124c80fc46a3bd5"
+      "hash": "7367d21f1c735dfab39636c05b8fe2a3b44ac61841d902a14124c80fc46a3bd5",
+      "bodyHash": "9f4dace671444aed3a73c5745efa4c556cd3cd55e2671e1f67ad3dddcc846e2d"
     },
     {
       "id": "choose-an-appropriate-team-size",
-      "hash": "e8551f886c1b06b66c9541c0c61750396c4a4a16281f038e45f400259792bc7d"
+      "hash": "e8551f886c1b06b66c9541c0c61750396c4a4a16281f038e45f400259792bc7d",
+      "bodyHash": "ceab7482076783f4ac05ca5c57a36536929bebc37515a9f5a115a97f5c946265"
     },
     {
       "id": "size-tasks-appropriately",
-      "hash": "5e0cd55f57d487b5e845b74f2ed26f4fc90a9d8e48d4a86b6f6e6b01032c6ab5"
+      "hash": "5e0cd55f57d487b5e845b74f2ed26f4fc90a9d8e48d4a86b6f6e6b01032c6ab5",
+      "bodyHash": "f74bd5814467e36dff63103efdd37b94ad52b3a6e5484846713c308e5de89148"
     },
     {
       "id": "wait-for-teammates-to-finish",
-      "hash": "c0719073eaef4568dec68133d53f34a22f4efcbbffe1c6475e0d72793b2cd47a"
+      "hash": "c0719073eaef4568dec68133d53f34a22f4efcbbffe1c6475e0d72793b2cd47a",
+      "bodyHash": "f16a6e9c0d30e5a420d024500c68a5751a873c2c67a1e44cc50621405259ce5b"
     },
     {
       "id": "start-with-research-and-review",
-      "hash": "60c077aa80589755fa5b69d2e813f957f8c38276ee22aabd2cc38d9c168071bd"
+      "hash": "60c077aa80589755fa5b69d2e813f957f8c38276ee22aabd2cc38d9c168071bd",
+      "bodyHash": "6c1728b05adacd1d53a2b291acb6c64d85507b5dab1b163265171eefc0f557d4"
     },
     {
       "id": "avoid-file-conflicts",
-      "hash": "9eaf7ed266b6431143377d4a4845e31eedbbe176fe065ce831a152edf46e82a0"
+      "hash": "9eaf7ed266b6431143377d4a4845e31eedbbe176fe065ce831a152edf46e82a0",
+      "bodyHash": "69c0a114429ee24b081cb7ef943747c447da87ca9b23141cbe0cf7da3eb15a17"
     },
     {
       "id": "monitor-and-steer",
-      "hash": "86e1aece324299ccfa4eb34830b86426e6631154f83ee49d0402e98ca39b4027"
+      "hash": "86e1aece324299ccfa4eb34830b86426e6631154f83ee49d0402e98ca39b4027",
+      "bodyHash": "0eee2e13ff765e0db9e9edb1cbb39987f0ecc913764c57eb1d60fc4a595d335f"
     },
     {
       "id": "troubleshooting",
@@ -136,31 +167,38 @@
     },
     {
       "id": "teammates-not-appearing",
-      "hash": "4e36cdf15cf5c81bcaa47d69c47d79fc0de6f6b10ca1d5ba465575e2a669b7a2"
+      "hash": "4e36cdf15cf5c81bcaa47d69c47d79fc0de6f6b10ca1d5ba465575e2a669b7a2",
+      "bodyHash": "26c82fa0a339385af37f7d35aa0fe6eaee72038f5c86ff482e26192ace25363e"
     },
     {
       "id": "claude-spawns-teammates-instead-of-subagents",
-      "hash": "3c3d3ed1d95d26605e41604cb6e7ec95b8a4ffcd9ed77cb65752b82c023f9ca0"
+      "hash": "3c3d3ed1d95d26605e41604cb6e7ec95b8a4ffcd9ed77cb65752b82c023f9ca0",
+      "bodyHash": "3655c23d1e701a17f482302370976faee598e77c28cf2b18bde0df968e08412f"
     },
     {
       "id": "too-many-permission-prompts",
-      "hash": "fabb051ff7f9f6cf2fbd144a3a230409331a0c5d89a6ce15118abadf4c63606f"
+      "hash": "fabb051ff7f9f6cf2fbd144a3a230409331a0c5d89a6ce15118abadf4c63606f",
+      "bodyHash": "2e8a8d996640e3eb0f90ed50728d360180c24cecf924ce59fd3d4444c15ae2f2"
     },
     {
       "id": "agents-stopping-early",
-      "hash": "aa5d0df8e9f4a776cb233f5e3a45a0e4f1c46f7554ade47a4f35986566a9d111"
+      "hash": "aa5d0df8e9f4a776cb233f5e3a45a0e4f1c46f7554ade47a4f35986566a9d111",
+      "bodyHash": "5e548b7cb3e4412dabde9cf0df76e2cd1aec3aa1f0e527df6bd270cba6971621"
     },
     {
       "id": "orphaned-tmux-sessions",
-      "hash": "67425b99a517cc041ba09fb9b4e34da18505eec3374d483ad58204cbfedc5009"
+      "hash": "67425b99a517cc041ba09fb9b4e34da18505eec3374d483ad58204cbfedc5009",
+      "bodyHash": "91dcbeaca787720efe7abe587fe9eb96adc254472780c7fe1fd79c826372ad78"
     },
     {
       "id": "limitations",
-      "hash": "c47aac4c2ce3bc835f798eb7bbf3d24674f490f876cd1230a1873f0d5758cfe7"
+      "hash": "c47aac4c2ce3bc835f798eb7bbf3d24674f490f876cd1230a1873f0d5758cfe7",
+      "bodyHash": "2cb1bbe6949682d9e7cd6a6ef013a974e5fe0f6c011db18d061abdf7ef0a7261"
     },
     {
       "id": "next-steps",
-      "hash": "7f40b4761d408de8926826766f6d15ac3943e19c2686e80dd743278d710dea3a"
+      "hash": "7f40b4761d408de8926826766f6d15ac3943e19c2686e80dd743278d710dea3a",
+      "bodyHash": "9322421e94c521c560a0da714a96f2d749ffe33b7e504b8f0407814323a0e814"
     }
   ],
   "sources": [

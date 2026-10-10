@@ -4,15 +4,18 @@
   "blocks": [
     {
       "id": "subagents-in-the-sdk",
-      "hash": "7263bbdd256f976b41cd01e6d81c8bd5bced8f2ddf695f3e8c0010fc1d96ba11"
+      "hash": "7263bbdd256f976b41cd01e6d81c8bd5bced8f2ddf695f3e8c0010fc1d96ba11",
+      "bodyHash": "819efea3e74bc87af5a5803a8b5b466813d59eb8f914593da5bbeeaa88f89da4"
     },
     {
       "id": "overview",
-      "hash": "e053579e817e7c6beed43e22615ecb57a1d808609ed328037ac260e46308e6a0"
+      "hash": "e053579e817e7c6beed43e22615ecb57a1d808609ed328037ac260e46308e6a0",
+      "bodyHash": "43c8e44c007a6f8a9b45b59c558cad88daff3c4363b67039bd0f70e49b58af4c"
     },
     {
       "id": "benefits-of-using-subagents",
-      "hash": "fbc738a9fd7754d842742b05c72536278da04bcde89cfe4eea77aa488391bd6c"
+      "hash": "fbc738a9fd7754d842742b05c72536278da04bcde89cfe4eea77aa488391bd6c",
+      "bodyHash": "f3b439d6c3c24ca445e13733a0bf11caf3120a7583bcbc83476f4a512c93fe9d"
     },
     {
       "id": "create-subagents",
@@ -20,19 +23,23 @@
     },
     {
       "id": "programmatic-definition-recommended",
-      "hash": "493cc3d9d1f10b1287b29838a0896100845d4b1c05241bd1033f6d70c0664603"
+      "hash": "493cc3d9d1f10b1287b29838a0896100845d4b1c05241bd1033f6d70c0664603",
+      "bodyHash": "4be9d27a95a8506146e969582109c6cb761eaae5d8199f07fc8221b97f882667"
     },
     {
       "id": "agentdefinition-configuration",
-      "hash": "1233282047115807dc99486311980a2ec1b4d3c74bc2ec5319979da0893db815"
+      "hash": "1233282047115807dc99486311980a2ec1b4d3c74bc2ec5319979da0893db815",
+      "bodyHash": "3296f76bc9e21cdfd020a125a2936a114dc017822390700781876d9c3f7abff6"
     },
     {
       "id": "filesystem-based-definition-alternative",
-      "hash": "8c84be96a538360af959a312838b4fb61ac76e22869d5605e6489abf6a8779b8"
+      "hash": "8c84be96a538360af959a312838b4fb61ac76e22869d5605e6489abf6a8779b8",
+      "bodyHash": "87fe7eb56dada94bc50486e93b3f6233df13a1d2e6285eea326482da33f306c2"
     },
     {
       "id": "what-subagents-inherit",
-      "hash": "7f0d2278840b4c5d7f9ceb7b8b029b4d5d7238ab4a3030ab8daed6af9e7659a6"
+      "hash": "7f0d2278840b4c5d7f9ceb7b8b029b4d5d7238ab4a3030ab8daed6af9e7659a6",
+      "bodyHash": "21e56452279878f1b9cb418d670866feabcb3ceed8aaffbce6d65cf41e4c5ac7"
     },
     {
       "id": "invoke-subagents",
@@ -40,43 +47,53 @@
     },
     {
       "id": "automatic-invocation",
-      "hash": "13d885d625eea6a0614af807719a02cf32335f0448d873f8a854e3aecf19e1e9"
+      "hash": "13d885d625eea6a0614af807719a02cf32335f0448d873f8a854e3aecf19e1e9",
+      "bodyHash": "5b4e68bf0f84e88d75055d8426f7de02c11453cccc63b1cda2192262d3277608"
     },
     {
       "id": "explicit-invocation",
-      "hash": "4d3c64e349615521b66ca9a9d0900688b74adc4b9ae7b7a45ee87d7db30dc3df"
+      "hash": "4d3c64e349615521b66ca9a9d0900688b74adc4b9ae7b7a45ee87d7db30dc3df",
+      "bodyHash": "aad9f87a2ebb07bbbaaa8cbed598208a8db8b836e544b211be8d4da3d5415932"
     },
     {
       "id": "dynamic-agent-configuration",
-      "hash": "596699847d6a473ff1ec32025b2c54e30fadcd484799a54c1a82e0ba792f7254"
+      "hash": "596699847d6a473ff1ec32025b2c54e30fadcd484799a54c1a82e0ba792f7254",
+      "bodyHash": "164e45607a7f2b9c9f82b6db05eb1b9e0a6b58650560d8126555d540f6933b02"
     },
     {
       "id": "detect-subagent-invocation",
-      "hash": "f940cfad466ab60769272598ff529d3a74dda89b587178417fa6490070aa9a97"
+      "hash": "f940cfad466ab60769272598ff529d3a74dda89b587178417fa6490070aa9a97",
+      "bodyHash": "262fd1f63963f9563f41d96f4012dc1c227ea9c2d5c3012d1b50d42e46e32c3e"
     },
     {
       "id": "resume-subagents",
-      "hash": "73d4d39fcde110e0d906dbeb2b4f0a1e45c79232880d4ae3a2a08ac13f2f4aa3"
+      "hash": "73d4d39fcde110e0d906dbeb2b4f0a1e45c79232880d4ae3a2a08ac13f2f4aa3",
+      "bodyHash": "bdf097e1f3b93e5d021a929b5ab7da52ab2cce45a3747af4f4f7584ca0660d02"
     },
     {
       "id": "tool-restrictions",
-      "hash": "7970bb78876996c952baeba310424b4045f4e3abeb3529a8e1d8bbfd1369859d"
+      "hash": "7970bb78876996c952baeba310424b4045f4e3abeb3529a8e1d8bbfd1369859d",
+      "bodyHash": "63ac76ccae4ec126cf795a4e12b55812167c6bbd5234005a9210ae68dc126665"
     },
     {
       "id": "common-tool-combinations",
-      "hash": "f9a1b01590a4996cfb9486decdf8ead258d7081097c258ebdd3031d585ff0319"
+      "hash": "f9a1b01590a4996cfb9486decdf8ead258d7081097c258ebdd3031d585ff0319",
+      "bodyHash": "caaf62c3876236406768848bd4e759b099dd2cfd6a9259d33720604753a1e63a"
     },
     {
       "id": "cap-subagent-depth-concurrency-and-spend",
-      "hash": "4689f19913142e041edcb83cc3e86ef374238710b2d8567784c441c70799e4fc"
+      "hash": "4689f19913142e041edcb83cc3e86ef374238710b2d8567784c441c70799e4fc",
+      "bodyHash": "4fb591142cf5df60b83251efef77cad99a356347640845e42189c82bc5916204"
     },
     {
       "id": "run-opus-5-with-subagents",
-      "hash": "90799ff5330ff4aaa503eff1aa6e0e693a720bbd6a198becb919430d910caa47"
+      "hash": "90799ff5330ff4aaa503eff1aa6e0e693a720bbd6a198becb919430d910caa47",
+      "bodyHash": "1d526152d7e3c7ec726bbf4c08b5be3871fb1adc8160db3e6ab22e9036396d58"
     },
     {
       "id": "scale-up-with-dynamic-workflows",
-      "hash": "c881d34dd196f1d07cd431a9adcea410ffb96f0a192050d8f627b4b370e9d267"
+      "hash": "c881d34dd196f1d07cd431a9adcea410ffb96f0a192050d8f627b4b370e9d267",
+      "bodyHash": "c6f1c98c7afd1c05a2625208484a532a36d5fb7600baa9902ec77aa7420a892c"
     },
     {
       "id": "troubleshooting",
@@ -84,15 +101,18 @@
     },
     {
       "id": "claude-not-delegating-to-subagents",
-      "hash": "5cf400b1d01935503b51342ac259ae369d74be3637a568321af822399f48b460"
+      "hash": "5cf400b1d01935503b51342ac259ae369d74be3637a568321af822399f48b460",
+      "bodyHash": "985ca9d36e21ff059c6d3e1539ad208773f98afcb33ab7eb8167290c0e90f531"
     },
     {
       "id": "filesystem-based-agents-not-loading",
-      "hash": "fab3cb969c49727eecfed89811ec01443376bd37fdde03b9ad7b10de122cc293"
+      "hash": "fab3cb969c49727eecfed89811ec01443376bd37fdde03b9ad7b10de122cc293",
+      "bodyHash": "bfaeeaeeda6505930e32af37394cd5022be28d8d118270d5171e7d75b989d45d"
     },
     {
       "id": "related-documentation",
-      "hash": "8aade2d4e0a8e5cd3f3c803fc0a4984831c8528e72d98e34235b10157b3e7009"
+      "hash": "8aade2d4e0a8e5cd3f3c803fc0a4984831c8528e72d98e34235b10157b3e7009",
+      "bodyHash": "982be561dcdd46d51407491bed12d6109957eb6c18d5f20af8f945914e7c4635"
     }
   ],
   "sources": [
