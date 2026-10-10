@@ -24,7 +24,10 @@ By default, Claude Code reads an `AGENTS.md` in one case. No `CLAUDE.md`, `.clau
 `CLAUDE.local.md` may exist in the working directory or above it.[^when] With such a file, Claude
 Code reads the CLAUDE.md files only. A CLAUDE.md file that imports the `AGENTS.md` loads it. So
 does a CLAUDE.md that is a link to it.[^share] The rule reports an `AGENTS.md` that a CLAUDE.md
-file shadows and no CLAUDE.md file lets through. The message names the nearest such file.
+file shadows and no CLAUDE.md file lets through.
+
+The message names the nearest such file. With no `.git` above the file, only the folder of the
+`AGENTS.md` is checked.
 
 Fail, when `CLAUDE.md` is in the same folder and does not import the file:
 

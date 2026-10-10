@@ -60,9 +60,9 @@ line 1. The other is a block with YAML that does not parse. Claude Code reads su
 `paths` field. It loads the rule when you
 approve the link.[^frontmatter]
 
-The repository is the first folder above the file that holds `.git`. A link whose target has a
-`.git` of its own leads to another repository. The rule makes no report for it. Claude Code does
-not exempt such a link. With no `.git` on the way, the end of the repository is not known, and the
+The repository is the first folder above the file that holds `.git`. A link to a folder that
+holds a `.git` leads to another repository. The rule makes no report for it. The docs name no
+exception for such a link. A link to a file in another repository is reported. With no `.git` on the way, the end of the repository is not known, and the
 rule makes no report. A user config can turn this rule off for files that
 a team shares on purpose.
 

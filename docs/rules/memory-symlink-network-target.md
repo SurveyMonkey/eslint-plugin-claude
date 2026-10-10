@@ -22,7 +22,9 @@ Do not link a `CLAUDE.md` or a rule to a network path.
 
 Claude Code reads a `CLAUDE.md`, or a file in `.claude/rules/`, through a link. It does not follow
 a link to a network path. A lookup of such a path can contact the host that it names. The
-instructions in the target do not load.[^symlinks] The docs name two kinds of network path. One is
+instructions in the target do not load.[^symlinks]
+
+The docs name two kinds of network path. One is
 the UNC share `\\server\share`. The other is a path under `/net` or `/Network`. The docs say that
 `\\wsl$` paths do not count as network paths.[^symlinks]
 
