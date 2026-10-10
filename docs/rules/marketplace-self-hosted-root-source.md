@@ -36,9 +36,9 @@ reads the `plugin.json` of a root source, and reports a `name` that differs.
 
 The rule makes no report in these cases:
 
-- **The rule cannot read the `plugin.json`.** The file is not there, does not parse to an object,
-  is a dangling link, or has a real path out of the repository. The rule reads no file out of the
-  repository (ADR 001, Decision 14). With no `.git`, the repository is the marketplace root.
+- **The rule cannot read the `plugin.json`.** The file is not there, or it does not parse to an
+  object. It can be a dangling link, or have a real path out of the repository. The rule reads no
+  file out of the repository (ADR 001, Decision 14). With no `.git`, the repository is the marketplace root.
 - **`plugins` is not an array.** That is a fault for [`marketplace-schema`](marketplace-schema.md).
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does. A marketplace can list

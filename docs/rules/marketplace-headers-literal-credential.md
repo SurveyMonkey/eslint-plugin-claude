@@ -20,17 +20,18 @@ Keep a literal credential out of the headers of a marketplace download.
 
 ## Rule details
 
-The `headers` of a marketplace entry hold the HTTP headers that Claude Code sends when it downloads
-the archive of that entry.[^auth] The `headers` of a `url` marketplace source hold the headers that
-it sends with the fetch of the marketplace file.[^types] Both are for authenticated hosts.
-A file in a repository is readable by everyone who can read the repository. So a literal
-credential in `headers` is open to all of them.
+The `headers` of a marketplace entry hold HTTP headers. Claude Code sends them when it downloads
+the archive of that entry.[^auth] The `headers` of a `url` marketplace source go with requests to
+the origin of the marketplace URL.[^auth][^types] Both are for authenticated hosts. Anyone who can
+read a committed file can read a literal credential in it. A gitignored `settings.local.json` is
+open to fewer people, but the rule still reads it.
 
 The docs do not bar a literal header. This rule is a security practice check, and it is `off` in
 `recommended`. For a value that expires, the docs say to set a `headersHelper` command
 instead.[^auth][^types] The docs show the form `Bearer ${TOKEN}` in an example of a `url`
 source.[^allowed] They do not say that Claude Code expands such a reference. The rule takes it
-as no literal, as the inventory row does.
+as no literal, as the inventory row does. A value that still has a scheme and a token after the
+references go is a literal, as in `Bearer abc123${SUFFIX}`.
 
 The rule reads two places:
 
@@ -41,17 +42,22 @@ The rule reads two places:
 
 The rule reports the value of a header when all of these hold:
 
-- The value is a string, and it has no `${NAME}` reference.
+- The value is a string. It has no `${NAME}` reference, or a scheme and a token stay without them.
 - The value is not empty, and is not only a scheme word such as `Bearer`.
-- The value is a scheme and a token (`Bearer`, `Basic`, `Token` or `Digest`), or the header name
-  holds `auth`, `token`, `secret`, `key`, `passw` or `cred`, in any letter case.
+- The value is a scheme and a token (`Bearer`, `Basic`, `Token` or `Digest`). Or the header name
+  holds `auth`, `token`, `secret`, `key`, `passw` or `cred`. Letter case does not matter for the
+  scheme or the name.
+
+The name match is a substring match. A name such as `X-Author` can match. A name outside the list,
+such as `X-Api-Sig`, passes unless its value is a scheme and a token.
 
 The message names the header. It never gives the value.
 
-The rule does not read the `headers` of an inline plugin entry in a `settings` source, or a file
-that is not a project settings file. A `headers` value that is not an object, and a value that is
-not a string, are faults for [`marketplace-schema`](marketplace-schema.md) and
-[`settings-extra-known-marketplaces-schema`](settings-extra-known-marketplaces-schema.md).
+The rule does not read the `headers` of an inline plugin entry in a `settings` source. It does not
+read a file that is not a project settings file. A `headers` value that is not an object is a
+fault for [`marketplace-schema`](marketplace-schema.md) and
+[`settings-extra-known-marketplaces-schema`](settings-extra-known-marketplaces-schema.md). So is a
+value that is not a string.
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 
@@ -80,7 +86,6 @@ Pass:
   "plugins": [
     {
       "name": "formatter",
-      "strict": false,
       "source": { "source": "archive", "url": "https://registry.example.com/formatter.zip" },
       "headersHelper": "/opt/bin/mint-registry-token.sh"
     }

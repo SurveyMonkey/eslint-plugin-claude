@@ -21,16 +21,17 @@ Give each entry of a URL-hosted marketplace a source that needs no marketplace f
 ## Rule details
 
 A `url` marketplace source is a direct link to a `marketplace.json` file. Claude Code downloads
-that file only, so a relative plugin path cannot resolve.[^fields][^relative] An entry with a
-relative `source` then fails at install with `its marketplace entry path does not stay inside the
-marketplace directory`.[^host][^troubleshooting] The docs say to give each entry a source that can
-be fetched on its own, such as a `github` repository or an `archive` URL.[^host]
+that file only, so a relative plugin path cannot resolve.[^fields][^relative] The install of an
+entry with a relative `source` then fails.[^host][^troubleshooting] The error says that the
+marketplace entry path does not stay inside the marketplace directory. The docs say to give each
+entry a source that Claude Code can fetch alone. Examples are a `github` repository and an
+`archive` URL.[^host]
 
 The rule finds the registration in the project settings files. It reads `.claude/settings.json`
 and `.claude/settings.local.json` in the marketplace root, the directory that holds
 `.claude-plugin/`. It looks for the `extraKnownMarketplaces` key that equals the marketplace
-`name`. When more than one file has the key, Claude Code uses the entry of the file of higher
-precedence whole, and so does the rule.[^settings] The rule reports each string `source` of an
+`name`. More than one file can have the key. Claude Code uses the whole entry of the file with
+the higher precedence, and so does the rule.[^settings] The rule reports each string `source` of an
 entry when the declared source type is `url`. The report is on the `source` value.
 
 This is a heuristic, and it is `off` in `recommended`. The rule cannot see a user who runs
@@ -51,7 +52,7 @@ The rule makes no report in these cases:
 - **The marketplace has no string `name`.** That is a fault for
   [`marketplace-schema`](marketplace-schema.md).
 
-The rule reports the host, and not the path. A `source` with a path fault stays a fault for
+The rule does not check the path. A `source` with a path fault stays a fault for
 [`marketplace-relative-source-format`](marketplace-relative-source-format.md). A directory that is
 not there stays a fault for [`marketplace-relative-source-exists`](marketplace-relative-source-exists.md).
 
