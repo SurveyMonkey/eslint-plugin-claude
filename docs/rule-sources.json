@@ -1274,18 +1274,6 @@
       "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
     }
   ],
-  "settings-env-subprocess-scrub": [
-    {
-      "url": "https://code.claude.com/docs/en/env-vars",
-      "heading": "Variables",
-      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/env-vars",
-      "heading": "What the subprocess environment scrub removes",
-      "hash": "29ad397cacabdf40c414d283400207db3c4c7010acca42d6cb187081e0bcf314"
-    }
-  ],
   "settings-env-value-format": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

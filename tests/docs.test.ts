@@ -78,7 +78,6 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-env-routing',
     'settings-env-secret-heuristic',
     'settings-env-shadowed',
-    'settings-env-subprocess-scrub',
     'settings-env-value-format',
     'settings-extra-known-marketplaces-key-matches-name',
     'settings-extra-known-marketplaces-schema',

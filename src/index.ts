@@ -62,7 +62,6 @@ import settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off
 import settingsEnvRouting from './rules/settings-env-routing.ts'
 import settingsEnvSecretHeuristic from './rules/settings-env-secret-heuristic.ts'
 import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
-import settingsEnvSubprocessScrub from './rules/settings-env-subprocess-scrub.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
@@ -235,7 +234,6 @@ const modules = [
   settingsEnvContextCost,
   settingsEnvFormatHeuristic,
   settingsEnvSecretHeuristic,
-  settingsEnvSubprocessScrub,
   settingsManagedEffortCap,
   settingsManagedMerge,
   settingsModelCapability,
@@ -378,7 +376,6 @@ const recommended: Record<RuleName, Severity> = {
   'settings-env-context-cost': 'off',
   'settings-env-format-heuristic': 'off',
   'settings-env-secret-heuristic': 'off',
-  'settings-env-subprocess-scrub': 'off',
   'settings-managed-effort-cap': 'off',
   'settings-managed-merge': 'off',
   'settings-model-capability': 'off',
