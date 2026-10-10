@@ -9,7 +9,7 @@ import { agent, repo } from '../agent-settings.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
-const unreadable = chmodCannotBlock ? it.skip : it.fails
+const unreadable = chmodCannotBlock ? it.skip : it
 const AGENT = '.claude/agents/a.md'
 const PROMPT = 'initialPrompt: Start with /review\n'
 const named = (name: unknown) => JSON.stringify({ agent: name })
@@ -21,54 +21,54 @@ const run = (
 ) => lintAgent('agent-initial-prompt-main-only', code, path.join(repo(files), at), options)
 
 describe('agent-initial-prompt-main-only', () => {
-  it.fails('reports when no settings file names the agent, on the field', () => {
+  it('reports when no settings file names the agent, on the field', () => {
     expect(run({})).toMatchObject([
       { messageId: 'ignored', line: 4, column: 1, endLine: 4, endColumn: 34 },
     ])
   })
 
-  it.fails('reports when the agent setting names another agent', () => {
+  it('reports when the agent setting names another agent', () => {
     expect(run({ '.claude/settings.json': named('other') })).toHaveLength(1)
   })
 
-  it.fails('reports when the agent setting is not a string', () => {
+  it('reports when the agent setting is not a string', () => {
     expect(run({ '.claude/settings.json': named(5) })).toHaveLength(1)
   })
 
-  it.fails('reports an agent in a subfolder of agents', () => {
+  it('reports an agent in a subfolder of agents', () => {
     expect(run({}, agent(PROMPT), '.claude/agents/team/a.md')).toHaveLength(1)
   })
 
   describe('stays silent', () => {
-    it.fails('when the settings name the agent', () => {
+    it('when the settings name the agent', () => {
       expect(run({ '.claude/settings.json': named('a') })).toEqual([])
       expect(run({ '.claude/settings.local.json': named('a') })).toEqual([])
     })
-    it.fails('when the settings of a folder above name the agent', () => {
+    it('when the settings of a folder above name the agent', () => {
       const files = { '.claude/settings.json': named('a') }
       expect(run(files, agent(PROMPT), 'pkg/.claude/agents/a.md')).toEqual([])
     })
-    it.fails('for a name in the option allow', () => {
+    it('for a name in the option allow', () => {
       expect(run({}, agent(PROMPT), AGENT, [{ allow: ['a'] }])).toEqual([])
     })
-    it.fails('for a plugin agent', () => {
+    it('for a plugin agent', () => {
       expect(lintAgent('agent-initial-prompt-main-only', agent(PROMPT), pluginAgent())).toEqual([])
     })
-    it.fails('for an initialPrompt with no text', () => {
+    it('for an initialPrompt with no text', () => {
       expect(run({}, agent(''))).toEqual([])
       expect(run({}, agent('initialPrompt:\n'))).toEqual([])
       expect(run({}, agent('initialPrompt: ""\n'))).toEqual([])
       expect(run({}, agent('initialPrompt: 5\n'))).toEqual([])
     })
-    it.fails('for an agent whose name is not a string', () => {
+    it('for an agent whose name is not a string', () => {
       expect(run({}, agent(PROMPT, '5'))).toEqual([])
       expect(run({}, `---\n${PROMPT}---\n\nBody.\n`)).toEqual([])
     })
-    it.fails('for a file with no frontmatter, or outside the agents folders', () => {
+    it('for a file with no frontmatter, or outside the agents folders', () => {
       expect(run({}, 'Body only.\n')).toEqual([])
       expect(run({}, agent(PROMPT), 'docs/a.md')).toEqual([])
     })
-    it.fails('when a settings file does not parse, here or above', () => {
+    it('when a settings file does not parse, here or above', () => {
       expect(run({ '.claude/settings.json': '{' })).toEqual([])
       expect(
         run({ '.claude/settings.json': '{' }, agent(PROMPT), 'pkg/.claude/agents/a.md'),

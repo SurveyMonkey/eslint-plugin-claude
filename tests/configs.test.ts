@@ -232,6 +232,40 @@ const TREE: Record<string, string> = {
   'packages/sh/.claude/agents/layered.md': '---\nname: layered\ndescription: d\n---\n',
   'packages/sh/pkg/.claude/agents/layered.md': '---\nname: layered\ndescription: d\n---\n',
   'packages/sh/pkg/.claude/agents/solo.md': '---\nname: solo\ndescription: d\n---\n',
+  // The `off` agent rules report in `strict` only. `packages/o` is a repository of its own, with
+  // a `.git` entry, so each rule reads this folder and nothing above it. Without `.git`, the
+  // repository would end at `.claude/`, and `.mcp.json` would be out of it. Each reporting file
+  // has a silent twin.
+  'packages/o/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/o/.claude/settings.json': '{"agent":"main"}',
+  'packages/o/.mcp.json':
+    '{"mcpServers":{"github":{"type":"http","url":"https://mcp.example.com/mcp"}}}',
+  'packages/o/.claude/skills/real/SKILL.md': '---\nname: real\ndescription: d\n---\n\nBody\n',
+  'packages/o/.claude/agents/skill-tool.md':
+    '---\nname: skill-tool\ndescription: d\ntools: Read, Skill\n---\n',
+  'packages/o/.claude/agents/skill-tool-ok.md':
+    '---\nname: skill-tool-ok\ndescription: d\ntools: Read, Skill\nskills:\n  - real\n---\n',
+  'packages/o/.claude/agents/model.md': '---\nname: model\ndescription: d\nmodel: sonet\n---\n',
+  'packages/o/.claude/agents/model-ok.md':
+    '---\nname: model-ok\ndescription: d\nmodel: opus\n---\n',
+  'plugins/p/agents/model.md': '---\nname: model\ndescription: d\nmodel: sonet\n---\n',
+  'packages/o/.claude/agents/prompt.md':
+    '---\nname: prompt\ndescription: d\ninitialPrompt: Review the diff\n---\n',
+  'packages/o/.claude/agents/main.md':
+    '---\nname: main\ndescription: d\ninitialPrompt: Review the diff\ntools: Agent(ghost), Read\n---\n',
+  'packages/o/.claude/agents/typelist.md':
+    '---\nname: typelist\ndescription: d\ntools: Agent(worker), Read\n---\n',
+  'plugins/p/agents/typelist.md':
+    '---\nname: typelist\ndescription: d\ntools: Agent(worker), Read\n---\n',
+  'packages/o/.claude/agents/skills.md':
+    '---\nname: skills\ndescription: d\nskills:\n  - ghost\n---\n',
+  'packages/o/.claude/agents/mcp-ref.md':
+    '---\nname: mcp-ref\ndescription: d\nmcpServers:\n  - ghost\n---\n',
+  'packages/o/.claude/agents/mcp-ok.md':
+    '---\nname: mcp-ok\ndescription: d\nmcpServers:\n  - github\n---\n',
+  // The same faults in a file that no rule reads.
+  'docs/agents/off.md':
+    '---\nname: off\ndescription: d\nmodel: sonet\ninitialPrompt: Go\ntools: Skill, Agent(ghost)\nskills:\n  - ghost\n---\n',
   'packages/sh/.claude/output-styles/layered.md': '---\nname: layered\n---\n',
   'packages/sh/pkg/.claude/output-styles/layered.md': '---\nname: layered\n---\n',
   '.claude/output-styles/twin-a.md': '---\nname: twin\n---\n',
@@ -1029,6 +1063,20 @@ const EXPECTED = [
   'plugins/p/output-styles/bare.md: claude/output-style-plugin-name-description@1',
 ].sort()
 
+// The reports of the `off` agent rules. They appear in `strict` only, at `warn`. `task-alias.md`
+// is an agent that no setting runs as the main thread, so its type list is ignored.
+const STRICT_ONLY = [
+  '.claude/agents/task-alias.md: claude/agent-tools-agent-type-list@1',
+  'packages/o/.claude/agents/skill-tool.md: claude/agent-tools-skill-for-preload@1',
+  'packages/o/.claude/agents/model.md: claude/agent-model-value@1',
+  'plugins/p/agents/model.md: claude/agent-model-value@1',
+  'packages/o/.claude/agents/prompt.md: claude/agent-initial-prompt-main-only@1',
+  'packages/o/.claude/agents/main.md: claude/agent-tools-agent-type-list@1',
+  'packages/o/.claude/agents/typelist.md: claude/agent-tools-agent-type-list@1',
+  'packages/o/.claude/agents/skills.md: claude/agent-skills-exist@1',
+  'packages/o/.claude/agents/mcp-ref.md: claude/agent-mcp-servers-ref-exists@1',
+]
+
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.
 const AGENT_RULES = [
@@ -1068,6 +1116,17 @@ const AGENT_WARN_RULES = [
   'output-style-force-for-plugin',
   'output-style-name-unique',
   'output-style-plugin-name-description',
+]
+
+// The agent rules of #9 that are `off` in `recommended`, in the order of the `modules` list.
+// `strict` turns each on at `warn`.
+const AGENT_OFF_RULES = [
+  'agent-initial-prompt-main-only',
+  'agent-mcp-servers-ref-exists',
+  'agent-model-value',
+  'agent-skills-exist',
+  'agent-tools-agent-type-list',
+  'agent-tools-skill-for-preload',
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
@@ -1175,10 +1234,16 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
+  it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const isOff = (rules: Linter.Config['rules']) =>
+      AGENT_OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
+    const strict = rulesOf(plugin.configs.strict)
+    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
+    expect(strict.filter(isOff)).toEqual(
+      AGENT_OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })),
+    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1186,12 +1251,23 @@ describe('configs', () => {
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_WARN_RULES.map((rule) => `claude/strict/${rule}`),
+      ...AGENT_OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...UNTRACKED_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
+  })
+
+  it('turns each off agent rule on in strict only, on the agent files', () => {
+    for (const rule of AGENT_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['markdown/gfm', ['**/agents/**/*.md']],
+      ])
+    }
   })
 
   it('gives the team rule one Markdown block and one JSON block', () => {
@@ -1295,7 +1371,7 @@ describe('configs', () => {
     ])
   })
 
-  it('strict reports the same files as recommended today', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
+  it('strict reports the files of recommended, and those of the off rules', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
   }, 30_000)
 })

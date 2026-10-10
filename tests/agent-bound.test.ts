@@ -53,7 +53,7 @@ const AT = 'pkg/.claude/agents/a.md'
 const named = JSON.stringify({ agent: 'a' })
 
 describe('a walk above the project folder', () => {
-  it.fails('agent-initial-prompt-main-only makes no call above the repository root', () => {
+  it('agent-initial-prompt-main-only makes no call above the repository root', () => {
     const root = repo({})
     clash(root, '.claude/settings.json', named)
     const messages = lintAgent(
@@ -66,7 +66,7 @@ describe('a walk above the project folder', () => {
     expect(above(root)).toEqual([])
   })
 
-  it.fails('agent-tools-agent-type-list makes no call above the repository root', () => {
+  it('agent-tools-agent-type-list makes no call above the repository root', () => {
     const root = repo({})
     clash(root, '.claude/settings.json', named)
     clash(root, '.claude/agents/ghost.md', agent('', 'ghost'))
@@ -77,6 +77,7 @@ describe('a walk above the project folder', () => {
     )
     expect(messages).toHaveLength(1)
     expect(above(root)).toEqual([])
+    calls.paths = []
     const main = repo({ '.claude/settings.json': named })
     clash(main, '.claude/agents/ghost.md', agent('', 'ghost'))
     const second = lintAgent(
@@ -88,7 +89,7 @@ describe('a walk above the project folder', () => {
     expect(above(main)).toEqual([])
   })
 
-  it.fails('agent-skills-exist makes no call above the repository root', () => {
+  it('agent-skills-exist makes no call above the repository root', () => {
     const root = repo({})
     clash(root, '.claude/skills/ghost/SKILL.md', '---\ndescription: d\n---\n')
     const messages = lintAgent(
@@ -100,7 +101,7 @@ describe('a walk above the project folder', () => {
     expect(above(root)).toEqual([])
   })
 
-  it.fails('agent-mcp-servers-ref-exists makes no call above the repository root', () => {
+  it('agent-mcp-servers-ref-exists makes no call above the repository root', () => {
     const root = repo({})
     clash(root, '.mcp.json', '{"mcpServers":{"github":{"command":"x"}}}')
     const messages = lintAgent(
