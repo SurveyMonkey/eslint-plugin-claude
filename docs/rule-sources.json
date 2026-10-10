@@ -345,6 +345,11 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hooks in skills and agents",
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
     }
   ],
   "hooks-handler-field-ignored": [
@@ -409,6 +414,108 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Response schema",
       "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    }
+  ],
+  "hooks-if-condition": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common fields",
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "How a hook resolves",
+      "hash": "9704adcedd9cd358d6315406fce305120ef7220db13be9e61fc6e8ad8e398dfc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Permission rule syntax",
+      "hash": "8e27af6d30bfc45f5dc9b063931ac4e37cae06739ead5563f4d317ea63bafd4c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    }
+  ],
+  "hooks-matcher-enum": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionEnd",
+      "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef"
+    }
+  ],
+  "hooks-matcher-mcp-name": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Match MCP tools",
+      "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    }
+  ],
+  "hooks-matcher-never-matches": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Hook not firing",
+      "hash": "9e1447393024785b239935c51f5bba3dbba37ebcac4fdcf9c04bbe8121b0d062"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreToolUse",
+      "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PermissionRequest input",
+      "hash": "b0505ae5faf5da99d8b50f9038e66578972e4a67ae6642dc09d110824e68fd5a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Check which tools are available",
+      "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be"
+    }
+  ],
+  "hooks-matcher-syntax": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "FileChanged",
+      "hash": "f9ad6cc54673edfc3eaa4b8a92d8e94269c11e6a08c3f131002f24c3f8b30c8d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    }
+  ],
+  "hooks-matcher-unsupported-event": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
     }
   ],
   "hooks-no-standalone-file": [

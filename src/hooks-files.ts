@@ -26,8 +26,8 @@ function manifestNames(hooks: unknown, root: string, file: string): boolean {
  *
  *  A file under `.claude-plugin/` is read only when the manifest names it. The file
  *  `.claude/hooks/hooks.json` is read only when `.claude/` is itself a plugin root.
- *  A plugin reads no `hooks.json` at the top of its root, so `.claude/hooks.json` is
- *  never read. Any other `hooks/hooks.json` is a plugin file, unless a hidden folder
+ *  A plugin reads no top-level `hooks.json` by default, so `.claude/hooks.json` is
+ *  not read. Any other `hooks/hooks.json` is a plugin file, unless a hidden folder
  *  holds it. */
 export function hooksFileKind(filename: string): HooksFileKind | null {
   const file = path.resolve(filename)

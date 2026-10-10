@@ -87,6 +87,21 @@ export function quotedList(items: readonly string[]): string {
     : `${quoted.slice(0, -1).join(', ')} and ${quoted[quoted.length - 1]}`
 }
 
+/** The values of a matcher that holds exact-match characters only, or null when Claude Code reads
+ *  the matcher as a regular expression. Letters, digits, `_`, `-`, spaces, `,` and `|` are the exact
+ *  set, and `|` or `,` separates values. `narrow` is the set of `FileChanged` and `StopFailure`: letters,
+ *  digits, `_` and `|`, with `|` as the one separator (the hooks reference, "Matcher patterns").
+ *  An empty matcher gives no values. `*` is not an exact-match character, so it gives null. */
+export function exactValues(matcher: string, narrow: boolean): string[] | null {
+  if (!(narrow ? /^[\w|]*$/ : /^[\w\- ,|]*$/).test(matcher)) {
+    return null
+  }
+  return matcher
+    .split(narrow ? '|' : /[|,]/)
+    .map((value) => value.trim())
+    .filter((value) => value !== '')
+}
+
 /** The last member `key` of the object `node`, as `JSON.parse` keeps the last of two. */
 export function memberOf(node: HObject, key: string): HMember | undefined {
   return node.members.findLast((member) => member.key === key)
@@ -242,10 +257,21 @@ export function hooksListener(
   return listener as unknown as Rule.RuleListener
 }
 
-/** The handlers of the source, in file order. A value of the wrong nesting adds none:
- *  an event whose value is not an array, a group that is not an object or that has no
- *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
-export function handlersOf(source: HookSource): HookHandler[] {
+/** A matcher group in its place: the event and the group object. `matcher` is the `matcher` of the
+ *  group when it is a string, with the location of the value. `handlers` is the inner `hooks`
+ *  array when it is an array, with the objects in it. */
+export interface HookGroup {
+  source: HookSource
+  event: string
+  group: HObject
+  matcher: { value: string; loc: Loc } | undefined
+  handlers: HObject[]
+}
+
+/** The matcher groups of the source, in file order. A value of the wrong shape adds none: an
+ *  event whose value is not an array, and a group that is not an object. A group that has no
+ *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. */
+export function groupsOf(source: HookSource): HookGroup[] {
   const { hooks } = source
   if (hooks?.kind !== 'object') {
     return []
@@ -258,14 +284,30 @@ export function handlersOf(source: HookSource): HookHandler[] {
       if (group.kind !== 'object') {
         return []
       }
-      const handlers = memberOf(group, 'hooks')?.value
-      if (handlers?.kind !== 'array') {
-        return []
-      }
-      const matcher = stringOf(group, 'matcher')
-      return handlers.items.flatMap((handler) =>
-        handler.kind === 'object' ? [{ source, event, matcher, handler }] : [],
-      )
+      const inner = memberOf(group, 'hooks')?.value
+      const matcher = memberOf(group, 'matcher')?.value
+      return [
+        {
+          source,
+          event,
+          group,
+          matcher:
+            matcher?.kind === 'string' ? { value: matcher.value, loc: matcher.loc } : undefined,
+          handlers:
+            inner?.kind === 'array'
+              ? inner.items.filter((item): item is HObject => item.kind === 'object')
+              : [],
+        },
+      ]
     })
   })
+}
+
+/** The handlers of the source, in file order. A value of the wrong shape adds none:
+ *  an event whose value is not an array, a group that is not an object or that has no
+ *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
+export function handlersOf(source: HookSource): HookHandler[] {
+  return groupsOf(source).flatMap(({ event, matcher, handlers }) =>
+    handlers.map((handler) => ({ source, event, matcher: matcher?.value, handler })),
+  )
 }
