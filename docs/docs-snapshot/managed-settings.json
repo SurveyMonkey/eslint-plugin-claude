@@ -4,91 +4,113 @@
   "blocks": [
     {
       "id": "deploy-managed-settings",
-      "hash": "2a9291954e69468e9dab24d3915f9d3a1a196ac7e58036a526489d288936ff1f"
+      "hash": "2a9291954e69468e9dab24d3915f9d3a1a196ac7e58036a526489d288936ff1f",
+      "bodyHash": "ea72e83f8a14401468ef16c20252330fd2efa94f72c00a59106dfb8499ca5c82"
     },
     {
       "id": "deploy-a-managed-settings-file",
-      "hash": "20c4619fd8f698be478ffa7cfae3aca368cad904ea4d86c11be9b2e602878945"
+      "hash": "20c4619fd8f698be478ffa7cfae3aca368cad904ea4d86c11be9b2e602878945",
+      "bodyHash": "02f844c52be35305f98164e5a2ba08426a3241023dcda13de6f578032cfb5e41"
     },
     {
       "id": "choose-a-delivery-mechanism",
-      "hash": "5a7282c1fe65aa14bb583f1644b9a6ab37df9a6a9211525bf9450f1120f820b3"
+      "hash": "5a7282c1fe65aa14bb583f1644b9a6ab37df9a6a9211525bf9450f1120f820b3",
+      "bodyHash": "1aca157079372d8c80d75b3891e6c309b8b21a1f4176fe73ff5ef711cd5921c1"
     },
     {
       "id": "where-and-when-a-policy-applies",
-      "hash": "1cc086fc698a1210c1489ee4f08fe84aa052c005ae7bdc42a27f26b03b6ad684"
+      "hash": "1cc086fc698a1210c1489ee4f08fe84aa052c005ae7bdc42a27f26b03b6ad684",
+      "bodyHash": "308aba1162b0551cf53e38d603d1860d1bc00d4aa214b12cce6359e414901537"
     },
     {
       "id": "where-each-mechanism-stores-the-policy",
-      "hash": "192ec50ea2638a49de33ab07ca94173177804306af2ab7bbd9a7b76ec3a94aed"
+      "hash": "192ec50ea2638a49de33ab07ca94173177804306af2ab7bbd9a7b76ec3a94aed",
+      "bodyHash": "d646fe6121369c26069636ae62c6235bce1de01edbe0959247073e85b4bddb7b"
     },
     {
       "id": "split-a-file-based-policy-across-teams",
-      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8",
+      "bodyHash": "e9d7211c333fd23ae56188b382696cedb420ea29b13c9970d6bf934bf0bcd01a"
     },
     {
       "id": "how-claude-code-combines-managed-sources",
-      "hash": "abe44f2b4c66cfcbc336d49da018dec208d0cb8fcd5f92478c6f0effa446e7ff"
+      "hash": "abe44f2b4c66cfcbc336d49da018dec208d0cb8fcd5f92478c6f0effa446e7ff",
+      "bodyHash": "8d800e691d05e7b9c276108da87460c1408cf4f33b046743730ea5cd35f0f966"
     },
     {
       "id": "present-admin-documents",
-      "hash": "d79a7d7d2cadb2227933bdf0fb72c0006a9bb8b2c1df5555f98e53eff18bc34f"
+      "hash": "d79a7d7d2cadb2227933bdf0fb72c0006a9bb8b2c1df5555f98e53eff18bc34f",
+      "bodyHash": "879fb8cd886a74cf91d0b2fa1cf2f4ae15a2a8b4b814e766e9897a967c94efac"
     },
     {
       "id": "keys-read-from-every-admin-source",
-      "hash": "98085b485925821e16b41662bac742ae6b25b410b19355893a81f5a914744192"
+      "hash": "98085b485925821e16b41662bac742ae6b25b410b19355893a81f5a914744192",
+      "bodyHash": "34389b6ef3dd50748dfbe46eb63d1f60ad9b0e15cf840273595b0eed51a71f49"
     },
     {
       "id": "compose-every-managed-source",
-      "hash": "53148f11f1a782f35d259f2377369ee37f222231c00e8866dc7484ed59070bc0"
+      "hash": "53148f11f1a782f35d259f2377369ee37f222231c00e8866dc7484ed59070bc0",
+      "bodyHash": "08938c56abd7decd7d74592cf269febaa646eb4618ba67a193e7e37a6bd3c604"
     },
     {
       "id": "compute-the-policy-with-a-helper-program",
-      "hash": "42e14ce00f34dbf718f34fb0f359adce95a71fa59f1896a4d73e323f4a0904ef"
+      "hash": "42e14ce00f34dbf718f34fb0f359adce95a71fa59f1896a4d73e323f4a0904ef",
+      "bodyHash": "97ce17f3f4710ea8ff7cd0e59352ff8c78936c909888253183f8ab5a0dc9a709"
     },
     {
       "id": "let-an-embedding-host-add-policy",
-      "hash": "b54dcf257bd2e8d4df5c1c7d1046a5733c1419d76fd24528cc0ff5d02f791a77"
+      "hash": "b54dcf257bd2e8d4df5c1c7d1046a5733c1419d76fd24528cc0ff5d02f791a77",
+      "bodyHash": "81e0c33023a6d6245525402a8e5d2d911f38b6fa1fcb089ee2e8c36561681eff"
     },
     {
       "id": "keep-cowork-folder-access-when-only-managed-rules-apply",
-      "hash": "eb09e6983af6bace9c9e2a6df871a642959d9d5ebc9be4ed19c202fc6cb6284f"
+      "hash": "eb09e6983af6bace9c9e2a6df871a642959d9d5ebc9be4ed19c202fc6cb6284f",
+      "bodyHash": "800842146e982d68916f561dd928f02cd4edda61545ecd6ad198c386cab0e79d"
     },
     {
       "id": "what-a-developer-can-change",
-      "hash": "2289e6da3964c4efdbf25ce145a8d55399b28ce69e540b511a0cf433a5e9eafd"
+      "hash": "2289e6da3964c4efdbf25ce145a8d55399b28ce69e540b511a0cf433a5e9eafd",
+      "bodyHash": "c801f5ba56d37b4355c16d21e5d0371941069dd3076b89fbcae3fea585d0733f"
     },
     {
       "id": "check-that-a-policy-is-in-force",
-      "hash": "56daaaf31e9832ccb63b0e148e94d82067ec58517e94bccab1d52459bdc989fb"
+      "hash": "56daaaf31e9832ccb63b0e148e94d82067ec58517e94bccab1d52459bdc989fb",
+      "bodyHash": "c0af6c61e8021fc101cad50c7d004d5ae643dbc6fc594c2af5bc4ef19ce72aa2"
     },
     {
       "id": "read-the-source-in-status",
-      "hash": "2e1aee4c6130bd66c8c2a754d5acb01442326d514aab71f4b88d589b955fcc2a"
+      "hash": "2e1aee4c6130bd66c8c2a754d5acb01442326d514aab71f4b88d589b955fcc2a",
+      "bodyHash": "4eebd75f1f520cea05e1cbdaf8a4920f854a2998a9c11d8c1d956f132af40435"
     },
     {
       "id": "find-entries-claude-code-dropped",
-      "hash": "89145fe5c80324f843eb18722091ac5cb9165bc6a8c1594fec3566051ebb7b27"
+      "hash": "89145fe5c80324f843eb18722091ac5cb9165bc6a8c1594fec3566051ebb7b27",
+      "bodyHash": "8d48568c8679229c795e46a59d464fbde5cfb1c141c31e17990680bfe5198afe"
     },
     {
       "id": "keys-that-fail-closed",
-      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9",
+      "bodyHash": "34342d2e68f6a3dc6cb1b1656ba258ee69ced2d03309733cdd5452c26f5f0e01"
     },
     {
       "id": "invalid-values-inside-sandbox",
-      "hash": "d36a5dbcbc0af011c1c472e5f7c7aadaff6e2a7648c6d628ffce23aa96e44173"
+      "hash": "d36a5dbcbc0af011c1c472e5f7c7aadaff6e2a7648c6d628ffce23aa96e44173",
+      "bodyHash": "50ce4aabc13dee3f6a15102a7a39a1e350a195cea278265f6566ed0355884949"
     },
     {
       "id": "keys-only-a-managed-source-can-set",
-      "hash": "7ebef6067c9c7333e39ab7f6b39c44f39e80f6e440c1f60976c7ee0a65c7c093"
+      "hash": "7ebef6067c9c7333e39ab7f6b39c44f39e80f6e440c1f60976c7ee0a65c7c093",
+      "bodyHash": "53f2d8a568ec5323e734acd42029ba481b27e6766fd80f9b5ae957d333c9f9d4"
     },
     {
       "id": "turn-telemetry-off-for-your-organization",
-      "hash": "5193b719ebb9569a57e9057c6ea11c5159d05864690a4bc1683a3c7e528d46d2"
+      "hash": "5193b719ebb9569a57e9057c6ea11c5159d05864690a4bc1683a3c7e528d46d2",
+      "bodyHash": "b035bae69f34364985c7c480f441f91d746ca02b1fd72051189dc11dd38b07b7"
     },
     {
       "id": "see-also",
-      "hash": "9f04f2731399b1e945dbd4212ea3af0c2758d4bc6214e304cda33991478d12cd"
+      "hash": "9f04f2731399b1e945dbd4212ea3af0c2758d4bc6214e304cda33991478d12cd",
+      "bodyHash": "05b9ac3270e697d6b8a49608b07724279e8acdd0caaad2fefc9c6c4f0721c472"
     }
   ],
   "sources": [

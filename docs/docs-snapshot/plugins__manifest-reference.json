@@ -4,151 +4,188 @@
   "blocks": [
     {
       "id": "plugin-manifest-reference",
-      "hash": "21a6276065517f51e4523cfc0445d3183486ec1ff307bf2d357d0abecb693bc6"
+      "hash": "21a6276065517f51e4523cfc0445d3183486ec1ff307bf2d357d0abecb693bc6",
+      "bodyHash": "1eaf5ce0aadb7e950e92272e4733bbd9277ec2f1a94c5f5dc38556575196bc42"
     },
     {
       "id": "manifest-file",
-      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418",
+      "bodyHash": "7a3fb044101f79c5b1fbc3c2db90c2a10c3ce58ff91d953034df4a48636c1375"
     },
     {
       "id": "unrecognized-fields",
-      "hash": "643fcafc254118c50bf3c76ab46f15f2ee75e622597bfa00c67966597062f2fc"
+      "hash": "643fcafc254118c50bf3c76ab46f15f2ee75e622597bfa00c67966597062f2fc",
+      "bodyHash": "830d335be04d7a34031ec27892ab8d4cadfcbd7fd365c0fbc9b41f016354aad9"
     },
     {
       "id": "validate-the-manifest",
-      "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05"
+      "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05",
+      "bodyHash": "47ca6d295a2b73ebf9537144c8448aabd82943727f63399ff03ad2e62fdf7dc5"
     },
     {
       "id": "fields",
-      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228",
+      "bodyHash": "9ddc5406b1f1bb01ba516d3be0e6a0addf22986c8f3913f36e85adcc139257d7"
     },
     {
       "id": "name",
-      "hash": "61e559bf30d9d77607200c483aa3d3bd311cb49a99bc73de439aef11dca9a9f4"
+      "hash": "61e559bf30d9d77607200c483aa3d3bd311cb49a99bc73de439aef11dca9a9f4",
+      "bodyHash": "8dec2d0977abca496134aea3757e542ca2aed124665a90692883abeccc32a760"
     },
     {
       "id": "displayname",
-      "hash": "24f532b4e557f050190b4c10764c21823298d833ba2ee22968f62aaa07310dba"
+      "hash": "24f532b4e557f050190b4c10764c21823298d833ba2ee22968f62aaa07310dba",
+      "bodyHash": "652c7ea6a39d23a05203c15b88d13bf2d3eb9b5711eb8c4460616f90e768c815"
     },
     {
       "id": "version",
-      "hash": "768db8e5ebe000b91b7732a5aa6efc8c1ce0308a215f44365b499e734bb5ab70"
+      "hash": "768db8e5ebe000b91b7732a5aa6efc8c1ce0308a215f44365b499e734bb5ab70",
+      "bodyHash": "b19ad950b7846ba1ed901b621b072537d5c13a23886c78461539e3303dc39d28"
     },
     {
       "id": "metadata",
-      "hash": "ee3f58518039ea24dec82c79f0224ea75af369cbaf6494f2ec5d8cb7a48f9a99"
+      "hash": "ee3f58518039ea24dec82c79f0224ea75af369cbaf6494f2ec5d8cb7a48f9a99",
+      "bodyHash": "fe7678f75efe5abec2d7896eea927ce2ecf80cb06dc62b4f14c424211b9b8d57"
     },
     {
       "id": "directory-listing-fields",
-      "hash": "5be06b2ff9ea2d2e2bb755322ec4fce85d391ad224b581dfeeadb0b04ee4e38c"
+      "hash": "5be06b2ff9ea2d2e2bb755322ec4fce85d391ad224b581dfeeadb0b04ee4e38c",
+      "bodyHash": "765e15b61e5ac3ef9e18a9c77b58b965c71983d876a3feb60ec055da58050a55"
     },
     {
       "id": "defaultenabled",
-      "hash": "d06952f01dd62322b99fbb81be471ee8246b6242bb9bcc5ad63755ee4cc4f92b"
+      "hash": "d06952f01dd62322b99fbb81be471ee8246b6242bb9bcc5ad63755ee4cc4f92b",
+      "bodyHash": "d60544cf383cca84d86c25b86131bf7be459917d0522be5e512bcf0d0ba9f9d3"
     },
     {
       "id": "dependencies",
-      "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05"
+      "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05",
+      "bodyHash": "acc69d0b77ee3493d0d71c153b0a3ee9d1da23570194f0fab852a3081d37fbdf"
     },
     {
       "id": "settings",
-      "hash": "317fe5e02e8a921104edd38e5d07b6fa6d10ad1724e23c3b0bb1343c80f767a6"
+      "hash": "317fe5e02e8a921104edd38e5d07b6fa6d10ad1724e23c3b0bb1343c80f767a6",
+      "bodyHash": "c1ae40d5c144299351b13926fe9f661ba6e37fa128d9c601dfd7550aa90442b2"
     },
     {
       "id": "component-path-forms",
-      "hash": "c9f6908bca953b2710ae505bc9659f604f6f8c19f4db30233c56fbf222ff8822"
+      "hash": "c9f6908bca953b2710ae505bc9659f604f6f8c19f4db30233c56fbf222ff8822",
+      "bodyHash": "1301610a43c3a30b7054fb7f9b7e67757a41f0982ebb510332e30444221b3d59"
     },
     {
       "id": "path-only-fields",
-      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059"
+      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059",
+      "bodyHash": "e100c4eaa6c1aa0e3bac2730e15a36cb2ebf1b6f71f6d25418c84d308b036b8f"
     },
     {
       "id": "commands",
-      "hash": "66e4002f473fe00465b948897872b99da8d374345506c4f0fabdf66764b4bdd5"
+      "hash": "66e4002f473fe00465b948897872b99da8d374345506c4f0fabdf66764b4bdd5",
+      "bodyHash": "07ded964f4c3fb55f1e4c14cf14950aeff18f57a3b6b97653d0938eafba0e56d"
     },
     {
       "id": "hooks",
-      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6",
+      "bodyHash": "c2113d531f54afbd33abf38b1ab8bf608bb5bbecb546182c0125996cbf490061"
     },
     {
       "id": "mcpservers",
-      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41",
+      "bodyHash": "afbf01594bf87e9b83451c25dce0d0e202a39d3ca4af6fe68cdf44cf2d793553"
     },
     {
       "id": "lspservers",
-      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
+      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731",
+      "bodyHash": "4e4b37b51850afe3fcc2d68b05c99c8d61bca74df4215d7e9b591a1723375544"
     },
     {
       "id": "monitors",
-      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8",
+      "bodyHash": "12377b11c26935c724d07ae79b159c0edcc8f8b42ba1dbdb090375f8766a2797"
     },
     {
       "id": "path-rules",
-      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
+      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54",
+      "bodyHash": "0eebed7044d012feda9d059e01ceef25cb9ee0355a0224423bd0e8a27dea5526"
     },
     {
       "id": "containment-and-existence",
-      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
+      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8",
+      "bodyHash": "f0c6512032bac23d5a3880ee6e21b117babdb80c3d6435746d8ea7d86cd85979"
     },
     {
       "id": "how-each-key-combines-with-its-default-location",
-      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17",
+      "bodyHash": "79903ffa0802c724b73251e326dbbae1e9f7f23a22c0b9803eec498d2ab4c4f6"
     },
     {
       "id": "user-configuration",
-      "hash": "1ff2573d6b69b32c13752fc9d94c33c6d5a13963c5130f4e4f0348b732cfb8c9"
+      "hash": "1ff2573d6b69b32c13752fc9d94c33c6d5a13963c5130f4e4f0348b732cfb8c9",
+      "bodyHash": "2597cfc5c7d0d7c3bae180d0411ff935c9d9eb6acbb2b1417ffcb8b366117522"
     },
     {
       "id": "limit-a-field-to-fixed-options",
-      "hash": "c4d761fb39ce76f46b40622daff6ec9628d568295b8beee32d3306a107a57ed9"
+      "hash": "c4d761fb39ce76f46b40622daff6ec9628d568295b8beee32d3306a107a57ed9",
+      "bodyHash": "da238c3a72f7c729ba379827b9b8e491d4785dfaa6ecd1bca9dd3d516fe2070f"
     },
     {
       "id": "where-values-are-stored",
-      "hash": "a49b49aa6ac3bae34bf1e21b82898e61984612d7c65db144c1113ffa21bc7ee0"
+      "hash": "a49b49aa6ac3bae34bf1e21b82898e61984612d7c65db144c1113ffa21bc7ee0",
+      "bodyHash": "8848529cf77bc79f5aa9c431de5abbcbc5855da3eacada8c7d10c9b37901b683"
     },
     {
       "id": "reference-a-saved-value",
-      "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf"
+      "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf",
+      "bodyHash": "2cd9bf02cfecda72f4276573becf2f454570a6133baaa0f44b7bf616196a02ef"
     },
     {
       "id": "fields-that-run-through-a-shell",
-      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
+      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd",
+      "bodyHash": "c347665fa9a8c7433c9daab6836767c7efae2818be0a28af6c0a778c20b124a9"
     },
     {
       "id": "channels",
-      "hash": "6404424037691afe9aac7c4392269d0c1a9d01da3d0700b3c8314876ea5094e0"
+      "hash": "6404424037691afe9aac7c4392269d0c1a9d01da3d0700b3c8314876ea5094e0",
+      "bodyHash": "e07412712966f3f06a14ebdae78bf756bff619320b97a7e7cd87706aa4934b89"
     },
     {
       "id": "environment-variables",
-      "hash": "5d721c5ed1827ad7a8a56d1ec7abc0a3aba210b7893ca88b1892a9c90e103039"
+      "hash": "5d721c5ed1827ad7a8a56d1ec7abc0a3aba210b7893ca88b1892a9c90e103039",
+      "bodyHash": "235d3f30d4588e2a1368f3878beb31d5655ff0dc6798eddb858e725654ca4a80"
     },
     {
       "id": "where-each-variable-resolves",
-      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0",
+      "bodyHash": "b3f5877e2f91a6e6b8d0cc0bb6d9d1704643907fa04c893321e55fc84f734954"
     },
     {
       "id": "quoting-and-path-separators",
-      "hash": "71056ffa1cc9d43a5896dfe3330e47a5ba814e1a88ba665ffb41c32fb4f1ade4"
+      "hash": "71056ffa1cc9d43a5896dfe3330e47a5ba814e1a88ba665ffb41c32fb4f1ade4",
+      "bodyHash": "7cbc99f5c549b090974c9e26dd6d3c15eb5bbd16ffedf9a8dca2d636210b328d"
     },
     {
       "id": "standard-layout",
-      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e",
+      "bodyHash": "8e9f34a1b84df06e0e1193cbda69c9d7055fb9f8669918e00b7d297f0219670c"
     },
     {
       "id": "marketplace-entries-and-the-manifest",
-      "hash": "68bd55f1399f21af2a7d8df3ee0a57480ff33ac66b237682087053ef6812debc"
+      "hash": "68bd55f1399f21af2a7d8df3ee0a57480ff33ac66b237682087053ef6812debc",
+      "bodyHash": "89ae55413611f7c894195fd93a96270b412ad3128e2f160642e17a979ee3e401"
     },
     {
       "id": "how-entry-fields-combine-with-plugin-json",
-      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0",
+      "bodyHash": "0ccbde502acbae8b5febe5ff650532994b5a4041a7cf85485b1e773e94cf5ae6"
     },
     {
       "id": "metadata-precedence",
-      "hash": "b47629f51c220dba3f7a6df1bc4e7c32de8ecc64f7a249d2586d8612b2a77a10"
+      "hash": "b47629f51c220dba3f7a6df1bc4e7c32de8ecc64f7a249d2586d8612b2a77a10",
+      "bodyHash": "3d43d73b427e95445652b2f78a2dffe06b63de98c6e01a7a45fac7f566e1f5fa"
     },
     {
       "id": "next-steps",
-      "hash": "820dbcdcea245ed4caea5b9644598b4b55cea6586c72c2c40fedd9ebf24bffc4"
+      "hash": "820dbcdcea245ed4caea5b9644598b4b55cea6586c72c2c40fedd9ebf24bffc4",
+      "bodyHash": "39db23f9a6b5601d08e7858528856ef1c39707851a94b6a9277673f24085748f"
     }
   ],
   "sources": [

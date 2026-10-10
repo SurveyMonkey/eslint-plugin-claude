@@ -1,110 +1,136 @@
 {
   "url": "https://code.claude.com/docs/en/sub-agents",
-  "hash": "8f2fd54755e35862095b49f7008b0ef5f74285be368286b068d47bfc1c039784",
+  "hash": "dd3f22aa021a3525f48227321c34eab28b322d7ab77cb3d5fc01ddd048e8f6ea",
   "blocks": [
     {
       "id": "create-custom-subagents",
-      "hash": "23ac31e44fde652518e32788650c1b5da0446c66764a3a69f5ab0ca8dfec9164"
+      "hash": "23ac31e44fde652518e32788650c1b5da0446c66764a3a69f5ab0ca8dfec9164",
+      "bodyHash": "3f50b2db5e0acf56e6a654ae5dc4de6d75dd613a3e1c3b785b6f60d54fb724e1"
     },
     {
       "id": "built-in-subagents",
-      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d"
+      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d",
+      "bodyHash": "22043429de4aaad3a8d33be740e0a870c9c78aae059a3a465c3b6e5c65d04e3d"
     },
     {
       "id": "quickstart-create-your-first-subagent",
-      "hash": "7fce8d9fca49d313ec8d98d1e2c9c8c7662c390f3a68088b164c23c7aef9bced"
+      "hash": "7fce8d9fca49d313ec8d98d1e2c9c8c7662c390f3a68088b164c23c7aef9bced",
+      "bodyHash": "423a270b45798d6a8c73b228dadaf6625c877bbf6c3c96ac9f5e71ca1ee51371"
     },
     {
       "id": "configure-subagents",
-      "hash": "1b5e3ae4590a7cebcde6ebda1ac9d3e679e1fdae4dde52ff31f87e91465ced41"
+      "hash": "1b5e3ae4590a7cebcde6ebda1ac9d3e679e1fdae4dde52ff31f87e91465ced41",
+      "bodyHash": "f8f95d9dad5cd09cdd8ca95ea976d5600c917985eaad4651f2c8bf83fbcb0290"
     },
     {
       "id": "choose-the-subagent-scope",
-      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a",
+      "bodyHash": "5400f8cb5a0316f2ccff2cef648fed5db7c8560088acd82496eb757465d9f255"
     },
     {
       "id": "write-subagent-files",
-      "hash": "365d563dc5a8b404417649185c198c9dbaf4ea7de9c9b880c31efccd9d2b8e28"
+      "hash": "365d563dc5a8b404417649185c198c9dbaf4ea7de9c9b880c31efccd9d2b8e28",
+      "bodyHash": "5d6d6bc83ac51631be6ed177c68b4ef1caa2c8766547fac55109199b1a5284ea"
     },
     {
       "id": "supported-frontmatter-fields",
-      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74",
+      "bodyHash": "e73cc10859f324a35356955285f9c0e1bc0dc9edc34eb68e1424daf04b08d4c9"
     },
     {
       "id": "subagent-files-claude-code-skips",
-      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3"
+      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3",
+      "bodyHash": "03aa706aab8eb4476e95abe34baa4f68875bf913c048ff28532fe939e2b8f5fe"
     },
     {
       "id": "check-an-agents-directory-before-a-session",
-      "hash": "80e49b5663d727fbcb38ec2d779057442d4ebb38b55879e9d19efff25194c8a1"
+      "hash": "80e49b5663d727fbcb38ec2d779057442d4ebb38b55879e9d19efff25194c8a1",
+      "bodyHash": "390a3453f456798cb051350ab32d15b19b6df12197249c330203a0acfd6b1b98"
     },
     {
       "id": "choose-a-model",
-      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+      "hash": "ea006bdc1af80c1cb4fad720394d98e780a1772c5b47fa34eea9e8c07a62e59e",
+      "bodyHash": "b6ee9692adb92f23e2306e8f0ad9650502fdb0cd1fe46c40d27ce2e4536e3444"
     },
     {
       "id": "run-every-subagent-on-one-model",
-      "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681"
+      "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681",
+      "bodyHash": "1f00e784302d346ceb77f78cf0de47b48acc65577467efb5efd2dc381b51dbd7"
     },
     {
       "id": "choose-an-effort-level",
-      "hash": "bfe065ca4ccd631299fb3faf49ab6680168b5b3afe51d9bc3a5e66fc90801844"
+      "hash": "bfe065ca4ccd631299fb3faf49ab6680168b5b3afe51d9bc3a5e66fc90801844",
+      "bodyHash": "f6518d4c33d81a2ab05350bc2e1e47e019225605f67173ce409ee236e5fb3e10"
     },
     {
       "id": "control-subagent-capabilities",
-      "hash": "deca3af791adacfcffae9610875872bc7f017846b7ddcaaa9bbadff1755b4ab8"
+      "hash": "deca3af791adacfcffae9610875872bc7f017846b7ddcaaa9bbadff1755b4ab8",
+      "bodyHash": "5e049eab665ae3299c72fd0c0d376028123646a31fe9bb84ae68cd382a4c90d5"
     },
     {
       "id": "available-tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493",
+      "bodyHash": "bd73e84d5fc6ca851b27095389d1686547c424d5333922e70aed9d99d6cdba0c"
     },
     {
       "id": "restrict-which-subagents-can-be-spawned",
-      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d",
+      "bodyHash": "de746546924e600372cfa4d9eb986cd2d3674beeca1ce5d4c52ec51fb3cfb4bf"
     },
     {
       "id": "scope-mcp-servers-to-a-subagent",
-      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12"
+      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12",
+      "bodyHash": "a46098cde630c18a60b4b38375ea311a07ff6b2c7d1cb396d345fdef070f9d01"
     },
     {
       "id": "inline-server-trust",
-      "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e"
+      "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e",
+      "bodyHash": "46beb86be9efd3d14fce126649828c34671fc29181628c10b8a4a0d81639fa20"
     },
     {
       "id": "permission-modes",
-      "hash": "3d8082b6b76c04b1e6dd126251ca535eba14de00c6371e8eeeca041ec6341144"
+      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129",
+      "bodyHash": "ce30082453e65645b28e6a73e8d0dc8c3421ed2acbbae38ef4ad45ceddf47600"
     },
     {
       "id": "preload-skills-into-subagents",
-      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7",
+      "bodyHash": "c19d79ecf69ced4cef54b8e6e3ff1df45e2d482100ba1d1f43b2bbdac367d525"
     },
     {
       "id": "enable-persistent-memory",
-      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de",
+      "bodyHash": "58a7958104634d5d64d2e6b945fca9099854738a0e07540d76c6a52c30335c19"
     },
     {
       "id": "persistent-memory-tips",
-      "hash": "092ff2d1ba59805d02281760049a88ebfa85b4434d4da8aeb9f17d02a6702693"
+      "hash": "092ff2d1ba59805d02281760049a88ebfa85b4434d4da8aeb9f17d02a6702693",
+      "bodyHash": "d4edf8be663ffdbcc13aeac5231006475326d026d8a6e4beb6dfeb90c803cfec"
     },
     {
       "id": "conditional-rules-with-hooks",
-      "hash": "d2a6706c321b3564a76122e05951cfbb10284130a4ece6885db49a7a97f778c1"
+      "hash": "d2a6706c321b3564a76122e05951cfbb10284130a4ece6885db49a7a97f778c1",
+      "bodyHash": "ac22da897ac49112c4ce23585170cfd18403888d19574bfde8c7727fdd717d71"
     },
     {
       "id": "disable-specific-subagents",
-      "hash": "0a27d1ce1f15c5bf6965bca5e50dcf928ca64b88f37599b1db7f2af960696bbd"
+      "hash": "0a27d1ce1f15c5bf6965bca5e50dcf928ca64b88f37599b1db7f2af960696bbd",
+      "bodyHash": "d43630fbe3954404bd4d5515ed607862c0153a1a398cafb04001aaa0d379911b"
     },
     {
       "id": "define-hooks-for-subagents",
-      "hash": "c4d9835d9d3ab594b05cfa3f4795d033eb446e70ed576b3527aaaf3a08c3d8fc"
+      "hash": "c4d9835d9d3ab594b05cfa3f4795d033eb446e70ed576b3527aaaf3a08c3d8fc",
+      "bodyHash": "044f33854e613379b7c5e5424726a9d90f5dcbc18529aa4601ed503dc7d2eec8"
     },
     {
       "id": "hooks-in-subagent-frontmatter",
-      "hash": "8701fb5db031c0b97a178933492c78f9e0d3135f102bce023f080158a1bb2b04"
+      "hash": "8701fb5db031c0b97a178933492c78f9e0d3135f102bce023f080158a1bb2b04",
+      "bodyHash": "b9a71bd9d3fdd53011873277ef95925853e6b5460afb70b0a397317425f97175"
     },
     {
       "id": "project-level-hooks-for-subagent-events",
-      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f"
+      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f",
+      "bodyHash": "6c747e68c659755c01d8632132412ae48e807078e5b0960fd0fa3761ebde3b3a"
     },
     {
       "id": "work-with-subagents",
@@ -112,27 +138,33 @@
     },
     {
       "id": "understand-automatic-delegation",
-      "hash": "4232b0e8ef80c8dd0bcd1e3207ce7d342db34301900e3c594c89bb14a806e71f"
+      "hash": "4232b0e8ef80c8dd0bcd1e3207ce7d342db34301900e3c594c89bb14a806e71f",
+      "bodyHash": "cf37c092cdf624c94c29d56340c8222256e296e826dcb5abe7e503767441cff3"
     },
     {
       "id": "invoke-subagents-explicitly",
-      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d"
+      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d",
+      "bodyHash": "f623e8d3e67fcbd114273bb5160ed899757e4575b47638fd38ed4956422bfeb7"
     },
     {
       "id": "run-subagents-in-foreground-or-background",
-      "hash": "b5c906ea4ebd8e32eefdb3b44b30499aa6e0b3318b6f2c5ef441ec1ec0726607"
+      "hash": "b5c906ea4ebd8e32eefdb3b44b30499aa6e0b3318b6f2c5ef441ec1ec0726607",
+      "bodyHash": "ff40a30d2731e527a169174927f7f36cce42c5ac3c50ee1bc3ca2231fe51899a"
     },
     {
       "id": "subagent-names",
-      "hash": "f957a10b6d32e3a62ce69c5872e7e655b45618523cd75fd68d23a637ea268f76"
+      "hash": "f957a10b6d32e3a62ce69c5872e7e655b45618523cd75fd68d23a637ea268f76",
+      "bodyHash": "0ec5f6c932d6c2f34909ed657d95fa3c98571a0ccec46f5bc15d2039e59d4083"
     },
     {
       "id": "api-errors-in-subagents",
-      "hash": "2bcbf096f1f5afbf3c9f3a54a65d17c9e3c58d1d4f0cdd1801dbf09a9be03400"
+      "hash": "2bcbf096f1f5afbf3c9f3a54a65d17c9e3c58d1d4f0cdd1801dbf09a9be03400",
+      "bodyHash": "56ea1882823643b335b940cca7dd9752a1e780a832d0ed5a72798168a8057ae4"
     },
     {
       "id": "subagent-output-scanning",
-      "hash": "9312725e786572b9c2e5df7697497440e802c8842fc95e3409ee2b23eb84dcf3"
+      "hash": "9312725e786572b9c2e5df7697497440e802c8842fc95e3409ee2b23eb84dcf3",
+      "bodyHash": "c9f03c55e977a235943b2d35942eb6dd86d0457a8b6c456716be8c443be94d11"
     },
     {
       "id": "common-patterns",
@@ -140,27 +172,33 @@
     },
     {
       "id": "isolate-high-volume-operations",
-      "hash": "dfaaab3bf24690a88b280d86605e0eaca2fe0ec0272458cdf884ad54ab2b95f0"
+      "hash": "dfaaab3bf24690a88b280d86605e0eaca2fe0ec0272458cdf884ad54ab2b95f0",
+      "bodyHash": "7fb5c7c8472a2460b0b67879f5888ec31b65c4b6af989b773ac074d1f2d7b563"
     },
     {
       "id": "run-parallel-research",
-      "hash": "0f53a7b8c64adee210e8db3169d0a18eca3c8681b1fb4ea7d35427b0df4de698"
+      "hash": "0f53a7b8c64adee210e8db3169d0a18eca3c8681b1fb4ea7d35427b0df4de698",
+      "bodyHash": "a68a950c1e195aeeee258f176514b34fd3cc114930aef333929c85f73e181dcc"
     },
     {
       "id": "chain-subagents",
-      "hash": "07822bf3d7ac2eba8b8437b00e2ad752a72f73dec88ec4276ccb002c3aee3481"
+      "hash": "07822bf3d7ac2eba8b8437b00e2ad752a72f73dec88ec4276ccb002c3aee3481",
+      "bodyHash": "8700a65a058e7d22726f98f12853f3131e5b0effdf64c07f903e3f7b90dc60c7"
     },
     {
       "id": "choose-between-subagents-and-main-conversation",
-      "hash": "0ca4db5d7b85c5609d7d47f1d4c22a774ad518e5e8fdca7f5ed6482c15bb1282"
+      "hash": "0ca4db5d7b85c5609d7d47f1d4c22a774ad518e5e8fdca7f5ed6482c15bb1282",
+      "bodyHash": "e5a1cc543e22c5a66001e849dd8f2c901a386282576888d25718ddde17c2c500"
     },
     {
       "id": "let-subagents-spawn-their-own-subagents",
-      "hash": "9fb950d07dbb10138c62b65193c8048e3c9fe0fc42450322804063a7249abc34"
+      "hash": "9fb950d07dbb10138c62b65193c8048e3c9fe0fc42450322804063a7249abc34",
+      "bodyHash": "8aa6f0d88427f22de922f59e6c57b62dbd2c434cdbf5cc75a5d9fda48b38af08"
     },
     {
       "id": "concurrent-subagent-limit",
-      "hash": "bf847bb675a8985a53febd0deb7f67fd6b0a6722e6914fc42747d2fc62219dce"
+      "hash": "bf847bb675a8985a53febd0deb7f67fd6b0a6722e6914fc42747d2fc62219dce",
+      "bodyHash": "4ab9541bd76b78e8cb13cf98c26d55aed456dc731f6abad090d2e59de9565668"
     },
     {
       "id": "manage-subagent-context",
@@ -168,55 +206,68 @@
     },
     {
       "id": "what-loads-at-startup",
-      "hash": "f4f4f5593b4196f9d1820e1ca842e918b36e7e3393398af6a11c498962cbf61b"
+      "hash": "9069ac9222a02860aafa374fc14d71d140acd1be4b4ca7eb93bd04de4e46baaa",
+      "bodyHash": "26156073fc8d7eb68935c22aab4ebf4f08aa15677187b0ee892e71b4ed7ddbd6"
     },
     {
       "id": "resume-subagents",
-      "hash": "e97d63ba2f0888113a9b9acc4ba550c68242f7a78b995d632ca07827e3a9a95c"
+      "hash": "e97d63ba2f0888113a9b9acc4ba550c68242f7a78b995d632ca07827e3a9a95c",
+      "bodyHash": "e5dc14a0e9e373ef8b1ed945ba45b46f872d2d1ce5a0f8039685eb10fb4de89d"
     },
     {
       "id": "auto-compaction",
-      "hash": "4e5d3378f75fa8b1602b6e7970100b82015c398346d31db18cdabbad7357cfd3"
+      "hash": "4e5d3378f75fa8b1602b6e7970100b82015c398346d31db18cdabbad7357cfd3",
+      "bodyHash": "88f9ef07cec5f38e72ffb9e9a3c48e4b6891f4e1261f5f4e8dc13d35aec8aa5a"
     },
     {
       "id": "fork-the-current-conversation",
-      "hash": "3184eae9de867b089f5dd77238a086c236059ffe160753f6c93225861cda505b"
+      "hash": "3184eae9de867b089f5dd77238a086c236059ffe160753f6c93225861cda505b",
+      "bodyHash": "1d063572e1275920a001dc1b19357cc5119e4ef9fd7b3b9f6a9fab265ef847f2"
     },
     {
       "id": "observe-and-steer-running-forks",
-      "hash": "c95104f92c6e7b57652451e01962f84c3f29c90d01f8039fcbb0cfbde881b7f7"
+      "hash": "c95104f92c6e7b57652451e01962f84c3f29c90d01f8039fcbb0cfbde881b7f7",
+      "bodyHash": "73042a8dc633ddbdf46cf3d36cd56cd1e57541d73f17cef0cb26f67a3a94e7a2"
     },
     {
       "id": "how-forks-differ-from-other-subagents",
-      "hash": "7b036dc90863a0afae2ce158f7831d3805978421bddb1849e4488a5a31b78aa2"
+      "hash": "7b036dc90863a0afae2ce158f7831d3805978421bddb1849e4488a5a31b78aa2",
+      "bodyHash": "28e0a20080cd020ee398453b6c32c677092ff5b95c2c949434602e64053ea15f"
     },
     {
       "id": "turn-fork-mode-on-or-off",
-      "hash": "9ae9423836bb2667689e69a908e437991bccb8d5086739d10cf4f49f00382037"
+      "hash": "9ae9423836bb2667689e69a908e437991bccb8d5086739d10cf4f49f00382037",
+      "bodyHash": "6315278b67b9247fba7b020cdc3f2a62d461fbecf7a6c293b4591e6c1da38cb5"
     },
     {
       "id": "example-subagents",
-      "hash": "82629c8ea8380caaf4dcae8ffad4d3aa77caad73cad55b160cec3402d6c88b84"
+      "hash": "82629c8ea8380caaf4dcae8ffad4d3aa77caad73cad55b160cec3402d6c88b84",
+      "bodyHash": "e1df74beb90f0dffcfa578308a2383ae408b3a10aadc2dd24cfcd7d1850f2e09"
     },
     {
       "id": "code-reviewer",
-      "hash": "d67b7b527dae9c3f72d9b9a8da3bc4d0bef08073572f5449348f0c0dcd638e01"
+      "hash": "d67b7b527dae9c3f72d9b9a8da3bc4d0bef08073572f5449348f0c0dcd638e01",
+      "bodyHash": "5f1546864deb2abe30c395a837916908c2bab3c414b7b1ee187f260d6ff37d7f"
     },
     {
       "id": "debugger",
-      "hash": "7a6e805c70d84f59b17a020532d27a83b98ff495280d3602a9e13fd5fe9b39ba"
+      "hash": "7a6e805c70d84f59b17a020532d27a83b98ff495280d3602a9e13fd5fe9b39ba",
+      "bodyHash": "db88d63e5013dc4060e97a88415e0b37c8cd21969183cb2f01904c801fee40c2"
     },
     {
       "id": "data-scientist",
-      "hash": "ff50a87795c22ae3ba359fcb51e1f9f1636332998d2c7d7a5abdbd50fc09b901"
+      "hash": "ff50a87795c22ae3ba359fcb51e1f9f1636332998d2c7d7a5abdbd50fc09b901",
+      "bodyHash": "f116c72714454fcdfdf9ba792ba95f51a78fdb3348a51901f48897148fe6732a"
     },
     {
       "id": "database-query-validator",
-      "hash": "f7f42fc982522097b127028f5291606fec9bb1dd92170eaf88d7f985325af9d5"
+      "hash": "f7f42fc982522097b127028f5291606fec9bb1dd92170eaf88d7f985325af9d5",
+      "bodyHash": "de6ab2f7558699b20ae82a1be4f78e0a19dd622d1f5f6d6db2ef3e38720e2fd4"
     },
     {
       "id": "next-steps",
-      "hash": "d0fb8706dea3a0b6b0593ddce7b304df5dbd5a5d97fb0f93dd4aabd2e9abe323"
+      "hash": "d0fb8706dea3a0b6b0593ddce7b304df5dbd5a5d97fb0f93dd4aabd2e9abe323",
+      "bodyHash": "4ba05371e1f54a261072fd4807f1f66760f246238b730b94abea8185169845f9"
     }
   ],
   "sources": [
@@ -235,8 +286,8 @@
     {
       "heading": "Permission modes",
       "id": "permission-modes",
-      "hash": "3d8082b6b76c04b1e6dd126251ca535eba14de00c6371e8eeeca041ec6341144",
-      "text": "#### Permission modes\n\nSet `permissionMode` to choose the permission mode a subagent runs in. Use the modes' config values, so Manual mode is `default`. If you leave it unset, the subagent inherits the main conversation's [permission mode](/docs/en/permission-modes).\n\nThe main conversation's permission mode decides whether Claude Code uses the value you set:\n\n* When the main conversation is in `bypassPermissions`, `acceptEdits`, or [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode), the subagent runs in that same mode and Claude Code ignores the `permissionMode` you set. Under auto mode, the classifier evaluates the subagent's tool calls with the main conversation's block and allow rules. When the subagent finishes, the classifier also reviews its work and its final report before the report is delivered, as [How auto mode handles subagents](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) describes.\n* When the main conversation is in `default`, `dontAsk`, or `plan` mode, the subagent runs in the permission mode you set. It keeps the main conversation's permission mode instead in these cases:\n  * You set `bypassPermissions`. The `bypassPermissions` exception requires Claude Code v2.1.267 or later.\n  * You set `auto` and [auto mode isn't available](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) to the subagent, such as when a settings file sets [`disableAutoMode`](/docs/en/settings-reference#disableautomode) or the subagent's model doesn't support auto mode.\n\n`permissionMode` accepts these values, and `manual` as an alias for `default`:\n\n| Mode | Behavior |\n| :- | :- |\n| `default` | Manual mode: prompts for permission |\n| `acceptEdits` | Auto-accept file edits and common filesystem commands for paths in the working directory or `additionalDirectories` |\n| `auto` | [Auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode): a background classifier reviews commands and protected-directory writes |\n| `dontAsk` | Auto-deny permission prompts. Explicitly allowed tools still work; `AskUserQuestion`, MCP tools marked [`requiresUserInteraction`](/docs/en/mcp#require-approval-for-a-specific-tool), and connector tools [your organization set to `ask`](/docs/en/mcp#organization-controls-on-connector-tools) in sessions where that setting reaches Claude Code are denied even if you've allowed them |\n| `bypassPermissions` | [Skip permission prompts](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode). A subagent runs in this mode only when the main conversation does |\n| `plan` | Plan mode (read-only exploration) |"
+      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129",
+      "text": "#### Permission modes\n\nSet `permissionMode` to choose the permission mode a subagent runs in. Use the modes' config values, so Manual mode is `default`. If you leave it unset, the subagent inherits the main conversation's [permission mode](/docs/en/permission-modes).\n\nThe main conversation's permission mode decides whether Claude Code uses the value you set:\n\n* When the main conversation is in `bypassPermissions`, `acceptEdits`, or [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode), the subagent runs in that same mode and Claude Code ignores the `permissionMode` you set. Under auto mode, the classifier evaluates the subagent's tool calls with the main conversation's block and allow rules. When the subagent finishes, the classifier also reviews its work and its final report before the report is delivered, as [How auto mode handles subagents](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) describes.\n* When the main conversation is in `default`, `dontAsk`, or `plan` mode, the subagent runs in the permission mode you set. It keeps the main conversation's permission mode instead in these cases:\n  * You set `bypassPermissions`. The `bypassPermissions` exception requires Claude Code v2.1.267 or later.\n  * You set `auto` and [auto mode isn't available](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) to the subagent, such as when a settings file sets [`disableAutoMode`](/docs/en/settings-reference#disableautomode) or the subagent's model doesn't support auto mode.\n\n`permissionMode` accepts these values, and `manual` as an alias for `default`:\n\n| Mode | Behavior |\n| :- | :- |\n| `default` | Manual mode: prompts for permission |\n| `acceptEdits` | Auto-accept file edits and common filesystem commands for paths in the working directory or `additionalDirectories` |\n| `auto` | [Auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode): a background classifier reviews commands and protected-directory writes |\n| `dontAsk` | Auto-deny permission prompts. Explicitly allowed tools still work; `AskUserQuestion`, MCP tools marked [`requiresUserInteraction`](/docs/en/mcp#require-approval-for-a-specific-tool), [reads from network paths](/docs/en/permissions#network-paths), and connector tools [your organization set to `ask`](/docs/en/mcp#organization-controls-on-connector-tools) in sessions where that setting reaches Claude Code are denied even if you've allowed them |\n| `bypassPermissions` | [Skip permission prompts](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode). A subagent runs in this mode only when the main conversation does |\n| `plan` | Plan mode (read-only exploration) |"
     },
     {
       "heading": "Subagent files Claude Code skips",
@@ -319,8 +370,8 @@
     {
       "heading": "Choose a model",
       "id": "choose-a-model",
-      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae",
-      "text": "### Choose a model\n\nThe `model` field controls which model the subagent uses:\n\n* **Model alias**: use one of the available aliases: `sonnet`, `opus`, `haiku`, or `fable`\n* **Full model ID**: use a full model ID such as `claude-opus-5-5` or `claude-sonnet-5`. Accepts the same values as the `--model` flag\n* **inherit**: use the same model as the main conversation\n\nWhen Claude invokes a subagent, it can also pass a `model` parameter for that specific invocation. Claude Code resolves the subagent's model in this order:\n\n1. The per-invocation `model` parameter\n2. The subagent definition's `model` frontmatter, where `inherit` selects the main conversation's model\n3. The [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/en/model-config#environment-variables) environment variable, when you set it to a model alias or model ID\n4. The main conversation's model\n\nIf an installed [mod](/docs/en/plugins/mods/overview) sets a model in its [`agent.spawn`](/docs/en/plugins/mods/reference#subagents) hook, Claude Code uses that model in place of the per-invocation parameter.\n\nIn two cases, a family alias such as `opus` in the per-invocation parameter or the frontmatter resolves to the main conversation's model instead of the [version the alias points to](/docs/en/model-config#model-aliases):\n\n* **The main conversation's model belongs to that family**: the subagent runs on the main conversation's exact model, including any `[1m]` suffix, so it gets the same [extended context](/docs/en/model-config#extended-context) window as the main conversation.\n* **Claude Code can't tell the main conversation's model family, on [a provider other than the Anthropic API](/docs/en/third-party-integrations)**: this can happen with an [application inference profile ARN](/docs/en/amazon-bedrock#iam-configuration) on Amazon Bedrock that Claude Code hasn't resolved to a backing model. This case covers only the `opus` alias, and doesn't apply when you set [`ANTHROPIC_DEFAULT_OPUS_MODEL`](/docs/en/model-config#environment-variables), since `opus` then resolves to the model you set.\n\nAn alias in `CLAUDE_CODE_SUBAGENT_MODEL` always resolves to the version the alias points to, even when it names the main conversation's family.\n\nSetting `CLAUDE_CODE_SUBAGENT_MODEL` by itself doesn't change the model the built-in Explore and Plan subagents run on. To change it, see [Run every subagent on one model](#run-every-subagent-on-one-model).\n\nBefore v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` came first in this order and overrode both the per-invocation parameter and the frontmatter, including `model: inherit`.\n\nSetting the variable to `inherit` is the same as leaving it unset. Before v2.1.196, that value forced subagents onto the main conversation's model and ignored the other sources.\n\nClaude Code checks the per-invocation parameter, frontmatter, and environment variable values against your organization's [`availableModels`](/docs/en/model-config#restrict-model-selection) allowlist. For a blocked value, it substitutes another model:\n\n* When the blocked value is a family alias such as `opus`, Claude Code runs the subagent on the newest version of that family the allowlist permits, following the same [substitution rules and provider scope](/docs/en/model-config#restrict-model-selection) as `/model`. Before v2.1.222, Claude Code ran the subagent on the inherited model for a blocked family alias as well.\n* For any other blocked value, on providers where that substitution doesn't operate, or when the allowlist permits no version of the family, Claude Code runs the subagent on the inherited model instead. If you set `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code tries that model first, under these same rules.\n\nIn interactive sessions, Claude Code shows a warning naming the requested model and the model the subagent runs on, for either substitution.\n\nTo check which model a subagent is running on, run [`/tasks`](/docs/en/commands). Claude Code names the model on the subagent's row, and adds the [effort level](/docs/en/model-config#adjust-effort-level) set for that subagent, if any. Requires Claude Code v2.1.242 or later.\n\nA per-invocation `model` parameter also applies when the subagent is [resumed or sent a follow-up message](#resume-subagents), so the subagent stays on that model. Before v2.1.211, resuming dropped the per-invocation value and the subagent reverted to its definition's `model` field or, without one, the main conversation's model.\n\nAs of v2.1.198, subagents also inherit the main conversation's [extended thinking](/docs/en/model-config#extended-thinking) configuration: if thinking is on in your session, it's on for the subagent, and if it's off, it stays off. There is no per-subagent thinking setting. Before v2.1.198, subagents ran with extended thinking disabled regardless of the main conversation's setting."
+      "hash": "ea006bdc1af80c1cb4fad720394d98e780a1772c5b47fa34eea9e8c07a62e59e",
+      "text": "### Choose a model\n\nThe `model` field controls which model the subagent uses:\n\n* **Model alias**: use one of the available aliases: `sonnet`, `opus`, `haiku`, or `fable`\n* **Full model ID**: use a full model ID such as `claude-opus-5-5` or `claude-sonnet-5`. Accepts the same values as the `--model` flag\n* **inherit**: use the same model as the main conversation\n\nWhen Claude invokes a subagent, it can also pass a `model` parameter for that specific invocation. Claude Code resolves the subagent's model in this order:\n\n1. The per-invocation `model` parameter\n2. The subagent definition's `model` frontmatter, where `inherit` selects the main conversation's model\n3. The [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/en/model-config#environment-variables) environment variable, when you set it to a model alias or model ID\n4. The main conversation's model\n\nIf an installed [mod](/docs/en/plugins/mods/overview) sets a model in its [`agent.spawn`](/docs/en/plugins/mods/reference#subagents) hook, Claude Code uses that model in place of the per-invocation parameter.\n\nIn two cases, a family alias such as `opus` in the per-invocation parameter or the frontmatter resolves to the main conversation's model instead of the [version the alias points to](/docs/en/model-config#model-aliases):\n\n* **The main conversation's model belongs to that family**: the subagent runs on the main conversation's exact model, including any `[1m]` suffix, so it gets the same [extended context](/docs/en/model-config#extended-context) window as the main conversation.\n* **Claude Code can't tell the main conversation's model family, on [a provider other than the Anthropic API](/docs/en/third-party-integrations)**: this can happen with an [application inference profile ARN](/docs/en/amazon-bedrock#iam-configuration) on Amazon Bedrock that Claude Code hasn't resolved to a backing model. This case covers only the `opus` alias, and doesn't apply when you set [`ANTHROPIC_DEFAULT_OPUS_MODEL`](/docs/en/model-config#environment-variables), since `opus` then resolves to the model you set.\n\nAn alias in `CLAUDE_CODE_SUBAGENT_MODEL` always resolves to the version the alias points to, even when it names the main conversation's family. Setting the variable to `inherit` is the same as leaving it unset.\n\nSetting `CLAUDE_CODE_SUBAGENT_MODEL` by itself doesn't change the model the built-in Explore and Plan subagents run on. To change it, see [Run every subagent on one model](#run-every-subagent-on-one-model).\n\nBefore v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` came first in this order and overrode both the per-invocation parameter and the frontmatter, including `model: inherit`.\n\nClaude Code checks the per-invocation parameter, frontmatter, and environment variable values against your organization's [`availableModels`](/docs/en/model-config#restrict-model-selection) allowlist. For a blocked value, it substitutes another model:\n\n* When the blocked value is a family alias such as `opus`, Claude Code runs the subagent on the newest version of that family the allowlist permits, following the same [substitution rules and provider scope](/docs/en/model-config#restrict-model-selection) as `/model`. Before v2.1.222, Claude Code ran the subagent on the inherited model for a blocked family alias as well.\n* For any other blocked value, on providers where that substitution doesn't operate, or when the allowlist permits no version of the family, Claude Code runs the subagent on the inherited model instead. If you set `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code tries that model first, under these same rules.\n\nIn interactive sessions, Claude Code shows a warning naming the requested model and the model the subagent runs on, for either substitution.\n\nTo check which model a subagent is running on, run [`/tasks`](/docs/en/commands). Claude Code names the model on the subagent's row, and adds the [effort level](/docs/en/model-config#adjust-effort-level) set for that subagent, if any. Requires Claude Code v2.1.242 or later.\n\nA per-invocation `model` parameter also applies when the subagent is [resumed or sent a follow-up message](#resume-subagents), so the subagent stays on that model. Before v2.1.211, resuming dropped the per-invocation value and the subagent reverted to its definition's `model` field or, without one, the main conversation's model.\n\nAs of v2.1.198, subagents also inherit the main conversation's [extended thinking](/docs/en/model-config#extended-thinking) configuration: if thinking is on in your session, it's on for the subagent, and if it's off, it stays off. There is no per-subagent thinking setting. Before v2.1.198, subagents ran with extended thinking disabled regardless of the main conversation's setting."
     }
   ]
 }

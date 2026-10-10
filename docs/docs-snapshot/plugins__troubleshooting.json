@@ -1,386 +1,484 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "8ee8806f2183fc83439d9d71564b274ce021b2c20ea54afec2be0581ea77dafb",
+  "hash": "f1e8f6fdee70ecbf5271d21f3dc34a8edf80b20dd2ad6a57cb729fa713fb3ab9",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
-      "hash": "fc65dadb9406c9c1956afb1b0fc7697eeb70a47d29890d27e3eb1c876d624d81"
+      "hash": "fc65dadb9406c9c1956afb1b0fc7697eeb70a47d29890d27e3eb1c876d624d81",
+      "bodyHash": "1c1c2fb32a4ad3f7cea203c73824bd1a2f5a502e8d948c99858ba382be4503de"
     },
     {
       "id": "find-where-plugin-runs",
-      "hash": "a24fa96864d94184a65124ad73771576beb1d8624a52f6604ba1be528784cc84"
+      "hash": "a24fa96864d94184a65124ad73771576beb1d8624a52f6604ba1be528784cc84",
+      "bodyHash": "b6f978e4fdcb4097927b065918ce6304911f9c2420ffa2f06ecf61068c61c358"
     },
     {
       "id": "plugin-isnt-available-in-this-environment",
-      "hash": "a5ed57a2febb01a04086e5d4fc7a81148ae57bab97aaf53667a9b4bc0a0cd797"
+      "hash": "a5ed57a2febb01a04086e5d4fc7a81148ae57bab97aaf53667a9b4bc0a0cd797",
+      "bodyHash": "1edcee233feeb8d6634e026023f8b07e8c3d7d3c8dbe1280dee4ee9fe1ee97c8"
     },
     {
       "id": "zsh-no-such-file-or-directory-plugin",
-      "hash": "b8af11bcd4d447ab353752f65b430f48d333e0c21fd7168248d5964c89ecaee3"
+      "hash": "b8af11bcd4d447ab353752f65b430f48d333e0c21fd7168248d5964c89ecaee3",
+      "bodyHash": "305b34284e6781da481b35987bdcb1092ddb4c2ce8f1df222d781f11ff024b6b"
     },
     {
       "id": "the-term-plugin-is-not-recognized-as-the-name-of-a-cmdlet",
-      "hash": "aad107f744001b3a13f0c8d53a7f6fd727a939c5e9da3eea431b9caa3d0a0ff2"
+      "hash": "aad107f744001b3a13f0c8d53a7f6fd727a939c5e9da3eea431b9caa3d0a0ff2",
+      "bodyHash": "ec00f25a9a43b38efc984e12378816a15d30081c7c0bee3e527cd19594f80389"
     },
     {
       "id": "claude-command-not-found-after-claude-plugin",
-      "hash": "3b02e7999f9dfe68dd9de97052d05fbf598544321ccc6b6e04c60f51b233a6bc"
+      "hash": "3b02e7999f9dfe68dd9de97052d05fbf598544321ccc6b6e04c60f51b233a6bc",
+      "bodyHash": "1469a2fee58f37bf46858d2e59f0c0ce113fe9c5d7b03c5f12a59ee2e937c881"
     },
     {
       "id": "unknown-command-and-command-spellings-that-dont-exist",
-      "hash": "8179c4b188c66f13783f1a22ebb2d12124023ff60be8a52e13c06cdd1fcfe1a4"
+      "hash": "8179c4b188c66f13783f1a22ebb2d12124023ff60be8a52e13c06cdd1fcfe1a4",
+      "bodyHash": "d91c9b456415ff6d874e8b6cd01aac201c4793210863bcc960a829533bb16138"
     },
     {
       "id": "add-a-marketplace",
-      "hash": "e6e3db73947a25b1b920178274d203696909a25ad5c425a8183c1a570a7fe85d"
+      "hash": "e6e3db73947a25b1b920178274d203696909a25ad5c425a8183c1a570a7fe85d",
+      "bodyHash": "1cda37696887a7713d5a95fbd8826b7352a9029093e955e22ded291a171248f7"
     },
     {
       "id": "marketplace-claude-plugins-official-not-found",
-      "hash": "ff8cf1a68ba523fc6ec49cd132570f6967a25ab9e9303d48fe53b01000e08a58"
+      "hash": "ff8cf1a68ba523fc6ec49cd132570f6967a25ab9e9303d48fe53b01000e08a58",
+      "bodyHash": "a4dfcb15fbc96f49d975d00db81e364884966fd97bf28a3204ef6a3eddeb2657"
     },
     {
       "id": "marketplace-not-found",
-      "hash": "4889666233e1296ac80e4e835a352177f7d595edcd376ee6c61060ff9e0095e7"
+      "hash": "4889666233e1296ac80e4e835a352177f7d595edcd376ee6c61060ff9e0095e7",
+      "bodyHash": "ec5b1ee996adaa939a33a92ce6b5e90af99a6801cfab364eba87d915b5e07a19"
     },
     {
       "id": "invalid-marketplace-source-format",
-      "hash": "e3833e61e37da7f57aec1caed33e0547270a45a015cc5e3c031671cb105947e3"
+      "hash": "e3833e61e37da7f57aec1caed33e0547270a45a015cc5e3c031671cb105947e3",
+      "bodyHash": "de331d3e45cbdfb96a9311e26e2e82e5b90e05be8572dd478c9cb3021c05e838"
     },
     {
       "id": "is-not-a-valid-github-owner-repo-shorthand",
-      "hash": "4efdcc83c774aaa2a45f25e2aebee018d2251c3e802da33394a7100365c60b3b"
+      "hash": "4efdcc83c774aaa2a45f25e2aebee018d2251c3e802da33394a7100365c60b3b",
+      "bodyHash": "a061c964edc15b956ce3daf89b3efbbd278fefacea0a51bd8f925f47e8fe189f"
     },
     {
       "id": "invalid-git-url",
-      "hash": "3f983c1dc58a30b61443c3ce8535f1331d0f6bfc5e47c6e317a49421d974ba57"
+      "hash": "3f983c1dc58a30b61443c3ce8535f1331d0f6bfc5e47c6e317a49421d974ba57",
+      "bodyHash": "a501ab765f39fafb4fbbad21f3556299c823f2bd7b944dec74802f924f713776"
     },
     {
       "id": "path-does-not-exist",
-      "hash": "75e606d28d051ff891fc7a499f524679570c673961e039ddd7d3db22de3676e2"
+      "hash": "75e606d28d051ff891fc7a499f524679570c673961e039ddd7d3db22de3676e2",
+      "bodyHash": "173a89dcbcba280183f7cbba062be466a5fb37d812d9f720cbf1daf61a275e63"
     },
     {
       "id": "marketplace-file-not-found-at-claude-plugin-marketplace-json",
-      "hash": "3c6fb6366701d2f89e16e0560cf6a3914d2ca83ca906a7f1b014d41949560f6f"
+      "hash": "3c6fb6366701d2f89e16e0560cf6a3914d2ca83ca906a7f1b014d41949560f6f",
+      "bodyHash": "d08a056ea098ddc2a7d5cde855a70339baf46935dbc07fbd7481d3ec56fc9a1a"
     },
     {
       "id": "cannot-install-plugins-from-a-marketplace-with-this-name",
-      "hash": "f66be0668c04e969ccda71c53e0961b1565383fbc5202ca554158be0a6a077bd"
+      "hash": "f66be0668c04e969ccda71c53e0961b1565383fbc5202ca554158be0a6a077bd",
+      "bodyHash": "2f3adaeb3756dcb35e3db3917fce15e5b423b545359cc0231ea6c5d5f1d8e1ed"
+    },
+    {
+      "id": "claude-code-reserves-this-name",
+      "hash": "c72804a931e94091ca9235259643099523f267e72a698c7be83a78fe02612d6d",
+      "bodyHash": "5bdc3ee7d21ce1eee568e350e08c7c6c524aa801a656a6a746ffc33c5a487673"
     },
     {
       "id": "ssh-authentication-failed-or-https-authentication-failed",
-      "hash": "3ee0610f8b8072023f7f6b76a503f6ae988ba671e604ef42f3470c9e302b2dd9"
+      "hash": "3ee0610f8b8072023f7f6b76a503f6ae988ba671e604ef42f3470c9e302b2dd9",
+      "bodyHash": "b665d584e194dea4cd5dd9446728c31ad5999690cda98465d25673aa50234163"
     },
     {
       "id": "ssh-host-key-is-not-in-your-known-hosts-file",
-      "hash": "92e747a40f34cc857c4e558b6a041d9d9a4be9ccff49375292f1bd37a57f58d0"
+      "hash": "92e747a40f34cc857c4e558b6a041d9d9a4be9ccff49375292f1bd37a57f58d0",
+      "bodyHash": "e7f397206ff80284abf64c9f811c9f39307c5ba7b3e70264f82fab51a0438a12"
     },
     {
       "id": "command-git-not-found-or-is-in-an-unsafe-location",
-      "hash": "cdaf1b66fdf10c9e550231f3b15f359337645e8ee9839866ad667132a3bbd261"
+      "hash": "cdaf1b66fdf10c9e550231f3b15f359337645e8ee9839866ad667132a3bbd261",
+      "bodyHash": "6c4928829f7d6e2e8266f78540771e0fdeb7ec5e901f88abb6fff5cb812b8d62"
     },
     {
       "id": "git-clone-timed-out-after-120s",
-      "hash": "26d761a61d2060dd9d6f2bb69da7113a14da6a47f9c88fdf7a0e2197496dbf4c"
+      "hash": "26d761a61d2060dd9d6f2bb69da7113a14da6a47f9c88fdf7a0e2197496dbf4c",
+      "bodyHash": "d3dd619860429f9c47b440fdfbe2e942caf7689f0f5c01a84224f3ece52ebd90"
     },
     {
       "id": "marketplace-updates-keep-failing-offline",
-      "hash": "381b28e5194ddf1de7a4bf191757fd5d81a05cd9395897f88a185278af43598c"
+      "hash": "381b28e5194ddf1de7a4bf191757fd5d81a05cd9395897f88a185278af43598c",
+      "bodyHash": "929f2104728229438a42d1a6a8dcf505f0441dce996c5ab534515837bdbdc10d"
     },
     {
       "id": "marketplace-add-fails-on-a-github-enterprise-server-host",
-      "hash": "18944d87eb09822d26238af052212d7fa68c1ea9ae915f1cc4f849eee402b621"
+      "hash": "18944d87eb09822d26238af052212d7fa68c1ea9ae915f1cc4f849eee402b621",
+      "bodyHash": "ffee8676bcffa29100b403b79372d153f5b816595d5f8ae2374d3ba6c879ad37"
     },
     {
       "id": "install-a-plugin",
-      "hash": "c6c1646c5a08ddb05b6aa6eb9a114757b2a47a9b7009f092c29c8622a984d727"
+      "hash": "c6c1646c5a08ddb05b6aa6eb9a114757b2a47a9b7009f092c29c8622a984d727",
+      "bodyHash": "d8683cc9ed12d6af223f9160e6075c4b0137d9d4346eefcd25b4ee0ae31e4176"
     },
     {
       "id": "plugin-not-found-in-marketplace",
-      "hash": "b8cfbf2131d4f016a2946444f8d379b51d140c0392934c1b2d4d4458b289c2fa"
+      "hash": "b8cfbf2131d4f016a2946444f8d379b51d140c0392934c1b2d4d4458b289c2fa",
+      "bodyHash": "34a02566f4a93a61bb4a00058f43373e28752480f1a788a1a42249a68c384a86"
     },
     {
       "id": "the-message-ends-with-a-refresh-hint",
-      "hash": "d7e102654684d42973042e1fc3c2eeee99bb3c85a783753f0b7c21aa77dd382c"
+      "hash": "d7e102654684d42973042e1fc3c2eeee99bb3c85a783753f0b7c21aa77dd382c",
+      "bodyHash": "af3f081555265487eb5741cdadb1a20d512fadff919f15bb80fb11d9d9d9583e"
     },
     {
       "id": "the-message-has-no-hint",
-      "hash": "71e2c788a58e8fa8c8ffa8d5783ca404a402085190eceffa102bce81bd724f94"
+      "hash": "71e2c788a58e8fa8c8ffa8d5783ca404a402085190eceffa102bce81bd724f94",
+      "bodyHash": "e51aafecdd8c804631ca3ef8208174ea2f91ddbd21cce32b56a14d06e44ca909"
     },
     {
       "id": "plugin-not-found-in-any-marketplace",
-      "hash": "0bcee44001883fa1ddae106b5febad4c4e33bc8801635e92ee9b28c1fd3a8fc6"
+      "hash": "0bcee44001883fa1ddae106b5febad4c4e33bc8801635e92ee9b28c1fd3a8fc6",
+      "bodyHash": "ae635674df5e4807aa453c28763559db4be46c5b3ccd2b4ee23e6a0fbfed3787"
     },
     {
       "id": "plugin-is-already-installed-globally",
-      "hash": "3b34531525135be82ba99d7cf2d3b2f31e1b7c56f9efabbc510185f52d99bcf2"
+      "hash": "3b34531525135be82ba99d7cf2d3b2f31e1b7c56f9efabbc510185f52d99bcf2",
+      "bodyHash": "bb64f29c76731d98c4d01011a9be4c7bfb21efdc1b3df49ec3ae41b970d8fae7"
     },
     {
       "id": "plugin-would-share-its-folder",
-      "hash": "77953dfdd66ad79e9ea3ca90e7fa442480120be38adf1ca7c24e2e7b38c58f5f"
+      "hash": "77953dfdd66ad79e9ea3ca90e7fa442480120be38adf1ca7c24e2e7b38c58f5f",
+      "bodyHash": "dee4ce58b3e1492e1a9ecd34eafc6700702a245a222a858d1535b6a49a71ee36"
     },
     {
       "id": "this-plugin-uses-a-source-type-your-claude-code-version-does-not-suppo",
-      "hash": "b65a11500cc57e3da44ca31ddc5a96daa3b53110714558e70bc89fff3de5ae83"
+      "hash": "b65a11500cc57e3da44ca31ddc5a96daa3b53110714558e70bc89fff3de5ae83",
+      "bodyHash": "c1f2e7bea1acb23d8af6bbe0cd53fe98da54c1a6ac034b2ec686079d6c670070"
     },
     {
       "id": "plugin-archive-integrity-check-failed",
-      "hash": "138692c7717514d7ef99a108f572933d3e9bd904e49a776c8a5095a64812be50"
+      "hash": "138692c7717514d7ef99a108f572933d3e9bd904e49a776c8a5095a64812be50",
+      "bodyHash": "a6a11a3e88ef511cd79bb3a1e8d52a863e0e9b5101d033d5cce913e102139e05"
     },
     {
       "id": "an-npm-plugin-source-must-name-a-registry-package",
-      "hash": "f543d653c22352d45e625b3bd062c82c47009d35944d659cb0075544fb53da7c"
+      "hash": "f543d653c22352d45e625b3bd062c82c47009d35944d659cb0075544fb53da7c",
+      "bodyHash": "6e5100076ac342bc338c60db20b3ca675e2144dcf843a39a95c60b34bb8e27c1"
     },
     {
       "id": "marketplace-is-registered-from-an-untrusted-source",
-      "hash": "218a21f7a2e758ae32eb052cddcbfa32ab1bb8069f1f4051dec8b7184990a175"
+      "hash": "218a21f7a2e758ae32eb052cddcbfa32ab1bb8069f1f4051dec8b7184990a175",
+      "bodyHash": "08400fe48ffa44487be9609abdfab760c862f1e684d175aa937417e0ac7fae67"
     },
     {
       "id": "marketplace-is-added-but-ignored",
-      "hash": "80baa09de0c7098dd93de4bb98022639361cd6d59556371ddb89cf5e1e931223"
+      "hash": "80baa09de0c7098dd93de4bb98022639361cd6d59556371ddb89cf5e1e931223",
+      "bodyHash": "9cf411a0e5ad2c39784f3b606a4e6c941fa1c9a82d2b820aa548ba1a89a1e6e1"
     },
     {
       "id": "plugin-has-a-corrupt-manifest-file-or-has-an-invalid-manifest-file",
-      "hash": "53ac10e6eafc47d876eb3ac7ebfcb14f6eb843c2f88d1a9568ff3bffc45f933e"
+      "hash": "53ac10e6eafc47d876eb3ac7ebfcb14f6eb843c2f88d1a9568ff3bffc45f933e",
+      "bodyHash": "d701fc4909f154b63bc330104e72ccb62bd67682bc5d8df773168f145d71f34b"
     },
     {
       "id": "plugin-directory-not-found-at-path",
-      "hash": "f8cfc7d8eaf8e774f758edb3da496521063fefa8079f582fd2416372a506b59f"
+      "hash": "f8cfc7d8eaf8e774f758edb3da496521063fefa8079f582fd2416372a506b59f",
+      "bodyHash": "ad395a851fe23cd64fde80e307ff4efac73d53e851a0e6469473ca137ce474a1"
     },
     {
       "id": "no-plugins-available-or-no-marketplaces-configured",
-      "hash": "6ae36b9feb597416d106f46bf6449e1aba8d55293df878dfaf02cbe2a5f84d1b"
+      "hash": "6ae36b9feb597416d106f46bf6449e1aba8d55293df878dfaf02cbe2a5f84d1b",
+      "bodyHash": "d9682340003f1dbdcbe994be55be9ca13aab463a80c7f4b8b38e89937b053381"
     },
     {
       "id": "marketplace-is-already-added-from-a-different-source",
-      "hash": "92cd504fd09c6bf88cdf0a905ece4164c92a1ac08763cab7735c81485e0b84cb"
+      "hash": "92cd504fd09c6bf88cdf0a905ece4164c92a1ac08763cab7735c81485e0b84cb",
+      "bodyHash": "c4a7fc51ade64de7809f5eb4ed745240bd105fc1270acd91c5ba0d0e2da29da9"
     },
     {
       "id": "cannot-add-marketplace-source-doesnt-match",
-      "hash": "329871d8acb382ac57c31199e6b206278a1cd3591b269a2c253c34db1e75e264"
+      "hash": "329871d8acb382ac57c31199e6b206278a1cd3591b269a2c253c34db1e75e264",
+      "bodyHash": "ae1eb637ab59240bd755d2ad668c27ea9ba62f0e129d06c1106310933e44d3f5"
     },
     {
       "id": "failed-to-install-from-the-plugin-menu",
-      "hash": "ffd778f1ff0b832f35c16b7ad8b363aa140cb78f297c30fb992f3a5bd590cefb"
+      "hash": "ffd778f1ff0b832f35c16b7ad8b363aa140cb78f297c30fb992f3a5bd590cefb",
+      "bodyHash": "d6f5a62aabbb5a00e4f0f7aa9fd84317287c37e13ba706938f2b4ac6f1c10a87"
     },
     {
       "id": "could-not-move-the-new-copy-of-this-plugin-version",
-      "hash": "0c65d43415fd02318a2c4d401c615f8048a662758e697a67bea800b577b24b73"
+      "hash": "0c65d43415fd02318a2c4d401c615f8048a662758e697a67bea800b577b24b73",
+      "bodyHash": "63449f278fea10737e57ad0165de91caafdf98eb0e38252d156e0edcd705ca5c"
     },
     {
       "id": "dependency-errors",
-      "hash": "31ff5e80278365a1bf7f914ea5a647752076e420706fa5ca6179245a52a7e8f9"
+      "hash": "31ff5e80278365a1bf7f914ea5a647752076e420706fa5ca6179245a52a7e8f9",
+      "bodyHash": "fa27bd86746e2f96c8b2518b31c85b0baa930b799d23cc9185878e2704db0024"
     },
     {
       "id": "plugin-installed-but-not-working",
-      "hash": "05309c434ad5e57fbbdda7f4339890c511fdbfd120d0e6ba0355e524d38fe201"
+      "hash": "05309c434ad5e57fbbdda7f4339890c511fdbfd120d0e6ba0355e524d38fe201",
+      "bodyHash": "71035779ac4c99a716c13926dd07e9da9c7e4270a9297decf30935c879318cd0"
     },
     {
       "id": "plugin-doesnt-appear-or-its-skills-dont-show-up",
-      "hash": "90b52d55d1619d4c1237938e4fa84c4f6412225cf4001e6661be0724a81881c0"
+      "hash": "90b52d55d1619d4c1237938e4fa84c4f6412225cf4001e6661be0724a81881c0",
+      "bodyHash": "16e18460ef7c42248ce7b686f8c6a34cea59c43a7c7fe375a26426bfc49b8ce1"
     },
     {
       "id": "run-reload-plugins-to-activate",
-      "hash": "037e84d6bbdaf57dc80ee5c7e8bbf2aa28ebd8d64fdb46fa79306eb8aacca385"
+      "hash": "037e84d6bbdaf57dc80ee5c7e8bbf2aa28ebd8d64fdb46fa79306eb8aacca385",
+      "bodyHash": "fc9d1cb2a7b273e960e08e0dcfa1a63556b17676e5c6ac1f0be2e041621431f7"
     },
     {
       "id": "the-packages-it-lists-are-not-installed",
-      "hash": "223f9e3aef834a2639ffc8c26c32049fb55f55a874a809824ff31e6f47f18387"
+      "hash": "223f9e3aef834a2639ffc8c26c32049fb55f55a874a809824ff31e6f47f18387",
+      "bodyHash": "c6647f5c6a22808c744c15a31c1d5c62b3bd40e8bb53815e6dae907dcba66bd5"
     },
     {
       "id": "plugin-not-cached-at",
-      "hash": "09bf928b4e77ff2fd0b69a5ec204cffb9d56d7b438ed0e463b1dd82630864334"
+      "hash": "09bf928b4e77ff2fd0b69a5ec204cffb9d56d7b438ed0e463b1dd82630864334",
+      "bodyHash": "b57390550994c8e74bf603ac3f4b7d7b64308c14091ff9de4d5e50673c2c13df"
     },
     {
       "id": "installed-plugins-json-holds-a-record-this-version-cannot-read",
-      "hash": "0afccce7c20d6c87f16feda57bbd02cfc20bbaec1eb7076e751beccb95126ce6"
+      "hash": "0afccce7c20d6c87f16feda57bbd02cfc20bbaec1eb7076e751beccb95126ce6",
+      "bodyHash": "dacacd7eacc96ae4cff6466b672a4a6512d06c79dcf52c2c724941f7776c1c5d"
     },
     {
       "id": "installed-plugins-json-could-not-be-read-and-was-rebuilt",
-      "hash": "d89431f62c20a93a1e50d3cc628ade31c9d898e8781ec2aa613fb36b501db7d2"
+      "hash": "d89431f62c20a93a1e50d3cc628ade31c9d898e8781ec2aa613fb36b501db7d2",
+      "bodyHash": "adee5daa768e1d7a34f9d8e5413dd761515c73b509bbbe467fa1b0c8255b38b9"
     },
     {
       "id": "install-records-under-names-that-no-version-can-use",
-      "hash": "e73b0146711d5b310e9fa2669cb6dd64f74d2e04a5e0175511409ccbbe7f4706"
+      "hash": "e73b0146711d5b310e9fa2669cb6dd64f74d2e04a5e0175511409ccbbe7f4706",
+      "bodyHash": "d9b57aa3e39c5904de1e90b274510ac55a00802da0a3d7937ddcda6f46b9d18a"
     },
     {
       "id": "does-not-load-so-claude-code-ignores-the-whole-file",
-      "hash": "e3c715ebf747967df79a87505f07ad87ac2c4af021805d9d5075419d6751f312"
+      "hash": "e3c715ebf747967df79a87505f07ad87ac2c4af021805d9d5075419d6751f312",
+      "bodyHash": "423c21a645b137f6266ca75198f82a4cc2f1e671e549347d91acbc281983fc9e"
     },
     {
       "id": "a-plugin-you-disabled-still-loads",
-      "hash": "b41af0d3f586dbbc868bcf01f465716272e86f3877316879630c05db63bd1210"
+      "hash": "b41af0d3f586dbbc868bcf01f465716272e86f3877316879630c05db63bd1210",
+      "bodyHash": "1180de1632a9792b8106d0036330c2b5a5f294c1acf1072e30a416ebc0e4ad9d"
     },
     {
       "id": "plugin-is-enabled-in-project-settings-but-isnt-installed-here",
-      "hash": "db54ee74391f72a5279df12e1c7935b0a858c71088c3825930f6687ad939bb31"
+      "hash": "db54ee74391f72a5279df12e1c7935b0a858c71088c3825930f6687ad939bb31",
+      "bodyHash": "956e71eb22c5ecb3b9e515dbe9a723c5362d6f701f808b6e8ce1a78d3e92b242"
     },
     {
       "id": "a-plugin-stays-installed-after-plugin-uninstall-on-windows",
-      "hash": "346af4d3ad6ab97f2daefd8fbca75e7a7a8adf9c845b3e9ba371b097bafc0d75"
+      "hash": "346af4d3ad6ab97f2daefd8fbca75e7a7a8adf9c845b3e9ba371b097bafc0d75",
+      "bodyHash": "1211a71e6fc2966c4c2140a37f7b9a17b3843f7a554a95ea4a39f33b0e56ca4e"
     },
     {
       "id": "failed-to-load-hooks-from-and-hooks-that-dont-fire",
-      "hash": "7fc02cd54c2ca28fe8f95dfca28f9f62e6eff275022e0b4cdd4fd023c0d88d3a"
+      "hash": "7fc02cd54c2ca28fe8f95dfca28f9f62e6eff275022e0b4cdd4fd023c0d88d3a",
+      "bodyHash": "6f8c754b2a5c50a3699b228c31aa652df813f4ded811481545e64c1bea790d0a"
     },
     {
       "id": "hooks-fail-to-load",
-      "hash": "dedea885a6b4285a5b7b3f43f2c84abc670bf41e85d9286bbc2a08a11f1bc70e"
+      "hash": "dedea885a6b4285a5b7b3f43f2c84abc670bf41e85d9286bbc2a08a11f1bc70e",
+      "bodyHash": "8f75fa1d2e7ffd330ba56f79b0b8004316522ee95b39a04f8ff7b3949e1c2eb9"
     },
     {
       "id": "hook-error-notices-in-the-transcript",
-      "hash": "5da573ad04fa565698fc1e197fea521dd22b1dc4e7548f5633e5baaa901e7acd"
+      "hash": "5da573ad04fa565698fc1e197fea521dd22b1dc4e7548f5633e5baaa901e7acd",
+      "bodyHash": "13abab92a7ca5ae54f120a315d7dc0d4b409d8f576527a91873bdf2db9acd5bc"
     },
     {
       "id": "a-plugin-hook-blocks-a-tool-call-or-prompt",
-      "hash": "07fa18b137780fe40600685d8b75e661b6c6c328cb0a4bac16f9f7f2fd03d92d"
+      "hash": "07fa18b137780fe40600685d8b75e661b6c6c328cb0a4bac16f9f7f2fd03d92d",
+      "bodyHash": "e9dee52accdb1b55aaf6727b7a2809a64a3de8e0811b5b0724a932541e7785d5"
     },
     {
       "id": "hook-loads-but-never-fires",
-      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
+      "hash": "468bce684f6e3525ac658ee96e4e5155b6447345bee84c145dfd72ef7cc6c9fc",
+      "bodyHash": "43e274ccf91682c6dc2ce33c4e417820cb863d40867dea8576d66f2f7fbdf74e"
     },
     {
       "id": "plugin-directory-does-not-exist",
-      "hash": "a14f94de8c60da27eeb2abbf65578c884f36786df5200c8126c906f57941d960"
+      "hash": "a14f94de8c60da27eeb2abbf65578c884f36786df5200c8126c906f57941d960",
+      "bodyHash": "4a8af49e84807a1fa14968f22f27eb34991c5d4cc773785d972b29468b84b66b"
     },
     {
       "id": "invalid-mcp-server-config-for-and-mcp-servers-that-dont-start",
-      "hash": "a05c701eb1f5f227318249b3ad7c0db5c5189a0f1a04761b85433b44ba4b07a7"
+      "hash": "a05c701eb1f5f227318249b3ad7c0db5c5189a0f1a04761b85433b44ba4b07a7",
+      "bodyHash": "ec3247456ebf91b57c98232aa52062ae4f741f45742bb3c1936ee6cef323d793"
     },
     {
       "id": "invalid-mcp-server-config-for-server-error",
-      "hash": "184f124b13c14a71d13b1450894951f5c566858f92f332af4c6cf7ad434c7b45"
+      "hash": "184f124b13c14a71d13b1450894951f5c566858f92f332af4c6cf7ad434c7b45",
+      "bodyHash": "a525b60751cdb5bd05fe194757722c0a7ae89cf04a6933f905fcb7bff8d5b6d5"
     },
     {
       "id": "bundled-mcp-server-name-was-not-started-it-needs-configuration",
-      "hash": "2ead88646706996b2ab317ecced505f40a48ec2f6b982ced0c34430117e21128"
+      "hash": "2ead88646706996b2ab317ecced505f40a48ec2f6b982ced0c34430117e21128",
+      "bodyHash": "c963c1e2474fdf2ab4bf19685300e2d568128c11903995468d4ae00b5379fc62"
     },
     {
       "id": "server-is-configured-but-never-connects",
-      "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd"
+      "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd",
+      "bodyHash": "9db859d5247bd51fedb0e7f9753868723df62c92ca73403f1d92dc118c26515b"
     },
     {
       "id": "server-works-with---plugin-dir-but-fails-after-install",
-      "hash": "808dca98f05aa32ccfba6731b366ff301d8a7eccbcbfef0a29eeb3c5d467115d"
+      "hash": "808dca98f05aa32ccfba6731b366ff301d8a7eccbcbfef0a29eeb3c5d467115d",
+      "bodyHash": "6a8517dd31020b9edeed67da4a04e23cc785bc09a40dc41b730b08570323a8c9"
     },
     {
       "id": "language-server-doesnt-start",
-      "hash": "ce31d904d6f5f6ca2714d59ce7e9d22330f1ebcad0feede7fcf89c0bb1cabf59"
+      "hash": "ce31d904d6f5f6ca2714d59ce7e9d22330f1ebcad0feede7fcf89c0bb1cabf59",
+      "bodyHash": "d848e1700bfea50b8d333b7e4ccc7615207da0ec9691a975b7cbfeb947b42f00"
     },
     {
       "id": "language-server-doesnt-start-1",
-      "hash": "052ac5296d4dd8727ecae818e4ac80e49ff193b7e3504055bd48666ac6496caa"
+      "hash": "052ac5296d4dd8727ecae818e4ac80e49ff193b7e3504055bd48666ac6496caa",
+      "bodyHash": "c0d00c098e20235719e5b113aedaf0b73b1908567606291015d25f18647f908d"
     },
     {
       "id": "language-server-uses-too-much-memory",
-      "hash": "c4ab4ebb0730d005f33368d22a5b1008fac534ded522e4aeb144c37eec22129f"
+      "hash": "c4ab4ebb0730d005f33368d22a5b1008fac534ded522e4aeb144c37eec22129f",
+      "bodyHash": "924a699651259a1288eb0a517237c8dc1da1d4bb6ebcb3bf6cf00817b135e8d2"
     },
     {
       "id": "false-positive-diagnostics-in-a-monorepo",
-      "hash": "2ef9ac07f0b3656c2ce5196b4ad0aadf3f7001176af8c3e5ffbe8aa609e19079"
+      "hash": "2ef9ac07f0b3656c2ce5196b4ad0aadf3f7001176af8c3e5ffbe8aa609e19079",
+      "bodyHash": "be955d6644751bf54310aa8ee37476071d1fb5f939fe20872dd7f2783e64423e"
     },
     {
       "id": "build-a-plugin",
-      "hash": "08f5451c84b2e3c192d6f96e007c0d82838c7132a238499f0d79c98008c5c2a2"
+      "hash": "08f5451c84b2e3c192d6f96e007c0d82838c7132a238499f0d79c98008c5c2a2",
+      "bodyHash": "531ca9e7479a865eb174bb2b11ff03ac90cd3eee2e7f1d9ad488991a27cd60d7"
     },
     {
       "id": "commands-path-not-found",
-      "hash": "1b482a0441dbb2a71260338f6367e42de718fc9486111f9eeaa9b0ad6b263bdf"
+      "hash": "1b482a0441dbb2a71260338f6367e42de718fc9486111f9eeaa9b0ad6b263bdf",
+      "bodyHash": "034db9c9933372628d55402a73e8e8cdac9714e3bc467d603950107b4915ec5a"
     },
     {
       "id": "plugin-dir-loads-a-plugin-with-no-components",
-      "hash": "22249faca7cf8b84894ac914a1cfafabae32d2c5f5edab0570f6f0dd2df24529"
+      "hash": "22249faca7cf8b84894ac914a1cfafabae32d2c5f5edab0570f6f0dd2df24529",
+      "bodyHash": "e856a6e5caf454577de8e87c084c982cddec063a6a26b73b6be7d9dacb8f6bc3"
     },
     {
       "id": "files-the-plugin-references-outside-its-directory-arent-found",
-      "hash": "b9441e35d239e0b4be478a3e338468589b8f7075a9d3f23926d5b692c4218b9c"
+      "hash": "b9441e35d239e0b4be478a3e338468589b8f7075a9d3f23926d5b692c4218b9c",
+      "bodyHash": "f9da0efe4cc1b070e42ca333760e3a3d49abac59494d9bdfe88456ef1cb49d28"
     },
     {
       "id": "claude-plugin-root-shows-forward-slashes-on-windows",
-      "hash": "bf621b93a49c12bf3c94061e5706a5fed5423ea1a260ebc76e5db319a11c86bc"
+      "hash": "bf621b93a49c12bf3c94061e5706a5fed5423ea1a260ebc76e5db319a11c86bc",
+      "bodyHash": "22dfc3a9b2c117a3cf1b3300cf89dcd97197a4b5deb229344cf7b5ace75e353c"
     },
     {
       "id": "plugin-loads-but-its-skills-are-missing",
-      "hash": "49e5a968bdde3b6eab79721a6b5201fc280b3091c0ff2c38f27edd128b4f2048"
+      "hash": "49e5a968bdde3b6eab79721a6b5201fc280b3091c0ff2c38f27edd128b4f2048",
+      "bodyHash": "444d1e1149fa5bac4491e7d5983d6331f4de8b752b9ef645f763baea1dfa0d71"
     },
     {
       "id": "skill-loads-but-claude-never-invokes-the-skill",
-      "hash": "c959d307b3a6b3555df7dc27495a7cafe5bd18f6e0e0e777d3c6cb619e13b96e"
+      "hash": "c959d307b3a6b3555df7dc27495a7cafe5bd18f6e0e0e777d3c6cb619e13b96e",
+      "bodyHash": "44aef5293950e1127716d7836d2da989b783bbd1327008c3b00e19e2af615333"
     },
     {
       "id": "is-not-a-plugin-or-skill-folder",
-      "hash": "4c27697f750eccd15d2ebd7415add5ef3c364e85b8427eced74d6e034e987464"
+      "hash": "4c27697f750eccd15d2ebd7415add5ef3c364e85b8427eced74d6e034e987464",
+      "bodyHash": "df5ecf18e2982ac2bce1fff457e6697b27910f5de3e52705439a13a3176c5db4"
     },
     {
       "id": "the-userconfig-dialog-never-appears",
-      "hash": "5d9fdb475026a476e20dcd446b1c9a439b90ea4acfadf810f74afb2baf6fd429"
+      "hash": "5d9fdb475026a476e20dcd446b1c9a439b90ea4acfadf810f74afb2baf6fd429",
+      "bodyHash": "fa483428d25422cdb54e6682b7f412770042c6501273f43d5750e7781cf8ea80"
     },
     {
       "id": "claude-plugin-validate-reports-errors",
-      "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
+      "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c",
+      "bodyHash": "e8254d8f2908f70ef98a4516a16647fd7fa3a39f42b054a284b23d0976c367e9"
     },
     {
       "id": "plugin-has-conflicting-manifests",
-      "hash": "58f8b1731c63b3f2d79e3f9a447088a7e6d0059944e6e516f5530c2a022a20e4"
+      "hash": "58f8b1731c63b3f2d79e3f9a447088a7e6d0059944e6e516f5530c2a022a20e4",
+      "bodyHash": "7ad8d4d1ca2bf75770332fbd2e0fadd0201aa722aa46a9ee759e71bb74e28b53"
     },
     {
       "id": "warning-no-commands-found-in-plugin-custom-directory",
-      "hash": "2cb2897b72750eeaceb4ddf915b05564fc36ae62a53463abe7638854864a0836"
+      "hash": "2cb2897b72750eeaceb4ddf915b05564fc36ae62a53463abe7638854864a0836",
+      "bodyHash": "5b8f42b3d25a513b2a5a2f2d2d1e3fc3c807ef4a8a13acd135deb14a503668da"
     },
     {
       "id": "host-a-marketplace",
-      "hash": "6fff87e85b23c38e8aa1103bf7549d62e09a71fe1039762fb836d2ce8cbab4f1"
+      "hash": "6fff87e85b23c38e8aa1103bf7549d62e09a71fe1039762fb836d2ce8cbab4f1",
+      "bodyHash": "6a89e5138daa2982cb755345f8ab324a1fb41514dbbb63a5ec9346eca453a6d8"
     },
     {
       "id": "plugins-with-relative-paths-fail-in-url-based-marketplaces",
-      "hash": "85b2429427e2464f7921bb9daeb6b420551ceb4985e52444c65d0f0107da4cf5"
+      "hash": "85b2429427e2464f7921bb9daeb6b420551ceb4985e52444c65d0f0107da4cf5",
+      "bodyHash": "cfea98cd924985d083637298a6577356f7d6ecc7caa8484899b4b85a3688b2f0"
     },
     {
       "id": "marketplace-validation-errors",
-      "hash": "09df106e67673e280f793d9cb9ab09ff21ba48489058e097630e91ef7ac19917"
+      "hash": "09df106e67673e280f793d9cb9ab09ff21ba48489058e097630e91ef7ac19917",
+      "bodyHash": "16f0a19952a67571a09f105ca950ec82cb5b6a6ce38eed0c17e1f6cd590846da"
     },
     {
       "id": "blocked-by-your-organization",
-      "hash": "51b1c1605d89eb8c03402f8ac6dbce8714137903b62e54b937933d14b48f0387"
+      "hash": "51b1c1605d89eb8c03402f8ac6dbce8714137903b62e54b937933d14b48f0387",
+      "bodyHash": "1aecc7dad70b2c6db16e1fc5b3250957208a87d0b027aa2cd0e08d7df25cbdf2"
     },
     {
       "id": "marketplace-source-is-blocked-by-enterprise-policy",
-      "hash": "532cb010aab2705ae53f74e8ac1ceada5d4b923132c2f3555bf8b9bd56a0e3cd"
+      "hash": "532cb010aab2705ae53f74e8ac1ceada5d4b923132c2f3555bf8b9bd56a0e3cd",
+      "bodyHash": "29504e6931fa81bab704ef922eba6b854dddb579fffcd8a5db13b6f1217445a2"
     },
     {
       "id": "marketplace-is-not-in-the-allowed-marketplace-list",
-      "hash": "737718ae2a68262e812a782c469db184456242b338f6d6d4aa6b8284b3a92c72"
+      "hash": "737718ae2a68262e812a782c469db184456242b338f6d6d4aa6b8284b3a92c72",
+      "bodyHash": "03e3dcbc202cf483ebefcc8fa26a1f5e39173f01078034f958c2c9c6eddad261"
     },
     {
       "id": "plugin-is-blocked-by-your-organizations-policy-and-cannot-be-installed",
-      "hash": "a16b453e9d631710d0228d7ed60bcac93eef46e953c0571c77df279b3d99b150"
+      "hash": "a16b453e9d631710d0228d7ed60bcac93eef46e953c0571c77df279b3d99b150",
+      "bodyHash": "e2f5eb4a2a6d5885d6ff800d880cdf11f52c647777a9fe01ba5dcaa60ecfad58"
     },
     {
       "id": "plugin-dir-is-disabled-by-your-organizations-managed-settings-disables",
-      "hash": "8f9dd7ac89a066630ab1540c191918099a31bf231ff1a0fd5787ceadf43f6c83"
+      "hash": "8f9dd7ac89a066630ab1540c191918099a31bf231ff1a0fd5787ceadf43f6c83",
+      "bodyHash": "48067bbffb9dd144a604638da0fa2deb531f9440705130e625dcea6d8397254c"
     },
     {
       "id": "plugins-from-claude-skills-are-blocked-by-your-organizations-managed-s",
-      "hash": "8edfdbaaf733c0333f2c67392803cb0747895a4a95e564bee53bdb6da9114138"
+      "hash": "8edfdbaaf733c0333f2c67392803cb0747895a4a95e564bee53bdb6da9114138",
+      "bodyHash": "df708673e6837192013c262b12ee7888a1dc8773508f048ff4ced20e93d7e126"
     },
     {
       "id": "command-sourced-plugins-are-disabled-by-your-organizations-managed-set",
-      "hash": "62b722c1507c24ee6a352af20d04efef7077b7b41037792392f4f148204e8add"
+      "hash": "62b722c1507c24ee6a352af20d04efef7077b7b41037792392f4f148204e8add",
+      "bodyHash": "f5fc690308da1db19190dfd34903a7c2c276901ae811f2204c32d28b42b6a11b"
     },
     {
       "id": "marketplace-is-seed-managed",
-      "hash": "fbd6fabd4d361f71765f90fb191ec1e333a044db1f792663e555f0616c8e3f73"
+      "hash": "fbd6fabd4d361f71765f90fb191ec1e333a044db1f792663e555f0616c8e3f73",
+      "bodyHash": "fa5263a67bbdeee75f0b0c791e5bfd4777ef93b2162941eef663c7a4e72e4761"
     },
     {
       "id": "next-steps",
-      "hash": "e37396f673487bf92fba432fcdef58050282442431054775b20ba293c6ff0ce5"
+      "hash": "e37396f673487bf92fba432fcdef58050282442431054775b20ba293c6ff0ce5",
+      "bodyHash": "14ca2e6719211bc9deb04b26421052893f0214955554098beaea2fe5ce5fc523"
     }
   ],
   "sources": [
     {
       "heading": "Hook loads but never fires",
       "id": "hook-loads-but-never-fires",
-      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426",
-      "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
+      "hash": "468bce684f6e3525ac658ee96e4e5155b6447345bee84c145dfd72ef7cc6c9fc",
+      "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, first run `/plugin` in your session and open the plugin's details. A note there that begins `Its hooks.json hooks do not run` means another enabled plugin with the same name registered its hooks instead, and [Hooks when two enabled plugins share a name](/docs/en/plugins/loading#hooks-when-two-enabled-plugins-share-a-name) says which copy that is and how to switch. Otherwise, check the hook's definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
     },
     {
       "heading": "Plugin <name> has conflicting manifests",

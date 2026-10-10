@@ -1,1050 +1,1316 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
+  "hash": "41f2e746a21c3107ac5705286bf792792c74926c5de9e2b9ebe443609e5e3a81",
   "blocks": [
     {
       "id": "error-reference",
-      "hash": "ae2a1a96d11053eb3452d559c8863892074fcad3aa4f5bc4f52e4018f5cef662"
+      "hash": "ae2a1a96d11053eb3452d559c8863892074fcad3aa4f5bc4f52e4018f5cef662",
+      "bodyHash": "2d44a65f18eaed515ea70a9cf6f783a589061b02dfffdba1fa98c0bf67ba1b30"
     },
     {
       "id": "find-your-error",
-      "hash": "eb4293eed93638852324c848beb5b28b5271e8e694cedcbdc507ae38407789b0"
+      "hash": "b6b9911854c6e3a457377eb11394691635eb2c579ecd91e8e414ee97c0f5e45e",
+      "bodyHash": "78131d20ba8dc74c9c5d8843d0241420d3a5adadb51bda417aa914dc5c3b0758"
     },
     {
       "id": "automatic-retries",
-      "hash": "5dbca1ed3a2917bef07a5e4b21c9841d154bedceaf6f86c9347c1243201bc88a"
+      "hash": "5dbca1ed3a2917bef07a5e4b21c9841d154bedceaf6f86c9347c1243201bc88a",
+      "bodyHash": "0e937dea53f7ff9500cd9d7d9659cb2a6c2aad5dac881a967a0e38c6812b57e9"
     },
     {
       "id": "what-you-see-while-claude-code-retries-or-waits",
-      "hash": "f845fa3e6272c9b4641500e467d7be6883319278cc50b7ea3471566b0f5e7bad"
+      "hash": "f845fa3e6272c9b4641500e467d7be6883319278cc50b7ea3471566b0f5e7bad",
+      "bodyHash": "48890e6746f77aee552fef6c6756ec6e84ede8067741b23e672edf6c3519469b"
     },
     {
       "id": "tune-retry-behavior",
-      "hash": "1605a176882327677dc822cab3147cd67da76865d5d69d38a87cae360062e2cb"
+      "hash": "1605a176882327677dc822cab3147cd67da76865d5d69d38a87cae360062e2cb",
+      "bodyHash": "35a9c5e971791e4291bc3e51e35015132f4de54b0da5f384712fbb6d2cdb9695"
     },
     {
       "id": "server-errors",
-      "hash": "1c8f4aba88cc3f618d31c163f03b3bf57c8fc0cb41254ed70125d6261f964b3a"
+      "hash": "1c8f4aba88cc3f618d31c163f03b3bf57c8fc0cb41254ed70125d6261f964b3a",
+      "bodyHash": "7a50a7248a7d417bb3e679836ac656e31b4aab565e881a865d25f9f0516db3ba"
     },
     {
       "id": "api-error-500-internal-server-error",
-      "hash": "7406c2b8929f5a7d9cbc5b9bd45e847be9822ea1dba8d5bd6f68cb831c7a83b7"
+      "hash": "7406c2b8929f5a7d9cbc5b9bd45e847be9822ea1dba8d5bd6f68cb831c7a83b7",
+      "bodyHash": "592a218586fd5be15f7a402a0e2677ae5143bff7b587b9f5a2f87138d56529ec"
     },
     {
       "id": "api-error-repeated-529-overloaded-errors",
-      "hash": "30801a0bb98d82023f697beb57d080af7fbc6b45b571223ad40f7b1c8c80174a"
+      "hash": "30801a0bb98d82023f697beb57d080af7fbc6b45b571223ad40f7b1c8c80174a",
+      "bodyHash": "73a918677d8b8de720ae331562bd98bb5e10687f6f96fb4034b356993499489a"
     },
     {
       "id": "request-timed-out",
-      "hash": "8023b62c1812e5fed106a9c6529896446bbf450b1cc2a1dfc8993d7301070f9b"
+      "hash": "8023b62c1812e5fed106a9c6529896446bbf450b1cc2a1dfc8993d7301070f9b",
+      "bodyHash": "3f6db3526a3ec68a34e63c8b9cab094c7c33843f645c4158ad6c6d048fdb95cb"
     },
     {
       "id": "no-response-from-api",
-      "hash": "99a4c78ccd8567ca8324727d2b0645dd6b31bb2c8431863d879511a4f374bd67"
+      "hash": "99a4c78ccd8567ca8324727d2b0645dd6b31bb2c8431863d879511a4f374bd67",
+      "bodyHash": "2045b98e5e24b6883b84df26d86fb19859ed953c99cece787f87b3ed81e3a12f"
     },
     {
       "id": "the-response-above-may-be-incomplete",
-      "hash": "488d564bfd64166fd7eda580342e43ee67afb739c1a763400b3437aa7b1ed388"
+      "hash": "488d564bfd64166fd7eda580342e43ee67afb739c1a763400b3437aa7b1ed388",
+      "bodyHash": "9320c99e87eeedc5510a9972a8b0dbf6c79a71bf6482fbbbc7d75171e0b87e14"
     },
     {
       "id": "auto-mode-cannot-determine-the-safety-of-an-action",
-      "hash": "a7dc210299031e563b5371bfcd87bd51a5410d45a4b03a84c84c60a405f3df28"
+      "hash": "54c9c246922f35cee898a56a1e873197596904658ebe69582896840de739e220",
+      "bodyHash": "f76261af1f55b821bb8aca8aefd0816ad52d2673e7dbe408eb1802d88e4be01c"
     },
     {
       "id": "the-server-returned-no-safety-verdict",
-      "hash": "626b49bd14d962fefb1e0f824e7a539b6ce5f57a7c56a2ea3483d76b61f03be5"
+      "hash": "626b49bd14d962fefb1e0f824e7a539b6ce5f57a7c56a2ea3483d76b61f03be5",
+      "bodyHash": "2b109f30cdc513cebfa18a4708f465da0d473c397c413de62f23f941eee2fecc"
     },
     {
       "id": "agent-terminated-early-due-to-an-api-error",
-      "hash": "fe29720a9ba8cd7491b62c5cbf392149d88585eab95cd619b3befea526be8fa9"
+      "hash": "fe29720a9ba8cd7491b62c5cbf392149d88585eab95cd619b3befea526be8fa9",
+      "bodyHash": "ba6be6f64aee8b4f0cc2a434b6b1fe737dede50682823d64f65f82b1545df00e"
     },
     {
       "id": "usage-limits",
-      "hash": "907336289b14529007a0710621648b7c3a34a930fdb3d2fbcdb98573ca060d97"
+      "hash": "907336289b14529007a0710621648b7c3a34a930fdb3d2fbcdb98573ca060d97",
+      "bodyHash": "a3ef0a048995269168b63f5d2e4eee32ee1164a459ef36e42686b843daebfd09"
     },
     {
       "id": "youve-hit-your-session-limit",
-      "hash": "97bf3ed74ebf7a64a377073cf2efb057d68b36fb2eaa5c476c0b3a4074bb7cac"
+      "hash": "97bf3ed74ebf7a64a377073cf2efb057d68b36fb2eaa5c476c0b3a4074bb7cac",
+      "bodyHash": "70add9fa79d6447ea2be39fd8689971469eaf44a6d3f228f8567fa27b542ccc6"
     },
     {
       "id": "usage-credits-required-for-1m-context",
-      "hash": "97daece68f179bd1a2e39dc1cb0f029244bdd3279be32f6e8b57ad5d4bd00b6e"
+      "hash": "97daece68f179bd1a2e39dc1cb0f029244bdd3279be32f6e8b57ad5d4bd00b6e",
+      "bodyHash": "dfd9b12a37d00a23ae150dbf836f4f661db2b60f56bb6b5b18de520276915ef3"
     },
     {
       "id": "the-prompt-to-confirm-went-unanswered",
-      "hash": "0ee42bc9dd72575878a3f03bd797ef082c44e06dd34e17b48731b4d17a7f8050"
+      "hash": "0ee42bc9dd72575878a3f03bd797ef082c44e06dd34e17b48731b4d17a7f8050",
+      "bodyHash": "2fbc90c29249d4f76cf1a02de79929f8f64c3391bc49b84c5a87f3a15a703c9b"
     },
     {
       "id": "server-is-temporarily-limiting-requests",
-      "hash": "8af4ec7374ba9371455bc48d51d3f3b38b3724d222daad077b0d0d4588e59c4b"
+      "hash": "8af4ec7374ba9371455bc48d51d3f3b38b3724d222daad077b0d0d4588e59c4b",
+      "bodyHash": "424607d200a1f358ac5d6ecd76b7fb69e1a0c5d80d5607d54b8b152820c20a1e"
     },
     {
       "id": "request-rejected-429",
-      "hash": "f3ff271e2694a33368fdc6ea5dd29896d5993554c12d9d9f5c9783d724c7b8bd"
+      "hash": "f3ff271e2694a33368fdc6ea5dd29896d5993554c12d9d9f5c9783d724c7b8bd",
+      "bodyHash": "9575cb76e72604cb13842d86d2c83666de8931235c32cec7c95877057cde5e6a"
     },
     {
       "id": "youve-hit-your-monthly-spend-limit",
-      "hash": "c26f84dfcdd5014457e52d0dc9aa7786ee45bbeded59343a0661a53a180427eb"
+      "hash": "c26f84dfcdd5014457e52d0dc9aa7786ee45bbeded59343a0661a53a180427eb",
+      "bodyHash": "e4c503e5db773e1e8707abfdacfdb8d8a62e059f725b50ae2a7034ad4a8c2c49"
     },
     {
       "id": "spend-limit-reached",
-      "hash": "42597172f391815841a2d345763378d41245fe365f50e552bff228e66046a020"
+      "hash": "42597172f391815841a2d345763378d41245fe365f50e552bff228e66046a020",
+      "bodyHash": "e6e13e65543189cb4a8c1fba3355a1cac25cdd4026bba0e9b9c007d9eecbeab5"
     },
     {
       "id": "credit-balance-is-too-low",
-      "hash": "143ef300f1e2f08a00f55178775768c461f62769000a404622a4a0b224634434"
+      "hash": "143ef300f1e2f08a00f55178775768c461f62769000a404622a4a0b224634434",
+      "bodyHash": "136853dc1d67d1a16bd05565238ec3da1b6daff482ed5a2b85510010554cb738"
     },
     {
       "id": "could-not-update-your-spend-limit",
-      "hash": "a05c7cbfd563eaa0322f2778db5ea9e21b27490190ff4c540057dfd3ab9d37f0"
+      "hash": "a05c7cbfd563eaa0322f2778db5ea9e21b27490190ff4c540057dfd3ab9d37f0",
+      "bodyHash": "09381c1e20c8efe13a7f519ee7ad5e48da113fb48b09b779c4d2fba4327625ca"
     },
     {
       "id": "authentication-errors",
-      "hash": "34740130040c2454f1d87208d80efec8fd139b2ea764d76d7456f1a078e54792"
+      "hash": "34740130040c2454f1d87208d80efec8fd139b2ea764d76d7456f1a078e54792",
+      "bodyHash": "234a481a7ae9c142374d0b092a91f0b85eeb5f3a820df4c34ee0d76c4e7de1a7"
     },
     {
       "id": "not-logged-in",
-      "hash": "a5d278927063e6a8f273d34a7e09256f950045dafd9a56814a762e97d6c72978"
+      "hash": "a5d278927063e6a8f273d34a7e09256f950045dafd9a56814a762e97d6c72978",
+      "bodyHash": "dd7c498c7227f856cf117dbcf2a3ba8dbe2829478fb9f8433ba811d25d19d5ba"
     },
     {
       "id": "could-not-resolve-authentication-method",
-      "hash": "e7d7776421b99f3abca86623108903471d5c2e1b8a0ac4deff4659357383f269"
+      "hash": "e7d7776421b99f3abca86623108903471d5c2e1b8a0ac4deff4659357383f269",
+      "bodyHash": "db74a60c34f27e4568922e8a4634e9087533426983d084744a5ff2f399bdc15e"
     },
     {
       "id": "invalid-api-key",
-      "hash": "05698a03e31dc2cb1541d5a8208f6ed224bbfb14a2bd2f16bf256e3971a41466"
+      "hash": "05698a03e31dc2cb1541d5a8208f6ed224bbfb14a2bd2f16bf256e3971a41466",
+      "bodyHash": "8b1086ca70c2bde7ad321a1541b4d8918e7fc857b63d409433fc27105dc5fb95"
     },
     {
       "id": "your-apikeyhelper-script-is-failing",
-      "hash": "20cc64352eea8b199dc6e782fdc081a77eaa96bde55d74f1817f7ec304d9d798"
+      "hash": "20cc64352eea8b199dc6e782fdc081a77eaa96bde55d74f1817f7ec304d9d798",
+      "bodyHash": "5c687ac619110b2572833164b65586b6135b1ecc300a7923400eb7d57ab378cf"
     },
     {
       "id": "invalid-request-header-value",
-      "hash": "10580e98798ec7430e2a09e0dc7f72acc3f57161477c75c913717a59371d49e2"
+      "hash": "10580e98798ec7430e2a09e0dc7f72acc3f57161477c75c913717a59371d49e2",
+      "bodyHash": "da497fca561791813d5dbfd8dd23792d428b8d9995142a97c5325e985c0f6136"
     },
     {
       "id": "this-organization-has-been-disabled",
-      "hash": "81a0e17c19b43cd42f05ac2606984820dac0377fa1d0d45f1d208bf6dab59796"
+      "hash": "81a0e17c19b43cd42f05ac2606984820dac0377fa1d0d45f1d208bf6dab59796",
+      "bodyHash": "fd5e8dd05fe47b48e1c546d288d8f1b51fa43ecda5952acc3cb2a653f0c781d1"
     },
     {
       "id": "your-organization-has-disabled-api-key-authentication",
-      "hash": "0f148ee9a76526c7e3538c2ff15657990ca37bac5a7550b0b3bbba84210521d9"
+      "hash": "0f148ee9a76526c7e3538c2ff15657990ca37bac5a7550b0b3bbba84210521d9",
+      "bodyHash": "8e1dbd8396ab687ae10ef3a0bb07d5fcc5bd2081692ed43fbda0bcf185278f65"
     },
     {
       "id": "your-organization-has-disabled-claude-subscription-access",
-      "hash": "587d227f0e98701db5a2dca7e2aedec42f88bd9d8a2ebf32a2aefac2742dda44"
+      "hash": "587d227f0e98701db5a2dca7e2aedec42f88bd9d8a2ebf32a2aefac2742dda44",
+      "bodyHash": "7343e5e704f6d85f69819c815f33d2594c3b9807169202e89dfbec5b80a275b9"
     },
     {
       "id": "routines-are-disabled-by-your-organizations-policy",
-      "hash": "42b52a53015e589b6b2c3db3cdfb55c4ef80897ab57f292bf708e63d15447ed5"
+      "hash": "42b52a53015e589b6b2c3db3cdfb55c4ef80897ab57f292bf708e63d15447ed5",
+      "bodyHash": "13d895317d4668cf7af6c2392e07ebaebf135de82b0c71f086ed55308ee72093"
     },
     {
       "id": "remote-control-requires-the-anthropic-api",
-      "hash": "9214b1c99932b564b5826e61c287eb182c774f71182294643a32238b6ce6c4b5"
+      "hash": "9214b1c99932b564b5826e61c287eb182c774f71182294643a32238b6ce6c4b5",
+      "bodyHash": "a97843a4d6659550d0b71e68e8fd4ed927bbdae0a1a838913ece71417bccb122"
     },
     {
       "id": "remote-control-couldnt-refresh-your-login",
-      "hash": "76064fee11476cf6ab561586b960f01b1d522daad99642efca4a85839f5d44b0"
+      "hash": "76064fee11476cf6ab561586b960f01b1d522daad99642efca4a85839f5d44b0",
+      "bodyHash": "931f0570181194602dc00c01d2c89764dbded613727336f7b81ff9ce422d3c2d"
     },
     {
       "id": "remote-control-stopped-because-the-signed-in-account-changed",
-      "hash": "d92c39f501f3aaaccbca93a9363a19f509ea5b3d1b8a77344de97c6f220ef28e"
+      "hash": "d92c39f501f3aaaccbca93a9363a19f509ea5b3d1b8a77344de97c6f220ef28e",
+      "bodyHash": "af1e2cf90c9234af746cb1f9dac0d4bd027967e2de018f4168f073d2f2eef20f"
     },
     {
       "id": "remote-control-stopped-because-the-app-running-the-session-signed-out-or-switched-accounts",
-      "hash": "2bf6e4ac001c5b9849bac135742a96db7975e40bda1c67d6177ebb82a12f81fb"
+      "hash": "2bf6e4ac001c5b9849bac135742a96db7975e40bda1c67d6177ebb82a12f81fb",
+      "bodyHash": "2787671000764b1b0520eac90dceb044f832ea78a47fc1184b9359203bfbc86a"
     },
     {
       "id": "oauth-token-revoked-or-expired",
-      "hash": "d5b4a08e7f857c67866b106ce018f6cc8f4db7f056deda9b35e3c25cfaf7983f"
+      "hash": "d5b4a08e7f857c67866b106ce018f6cc8f4db7f056deda9b35e3c25cfaf7983f",
+      "bodyHash": "34876f71fdb48644c1d270f3c4368df6d20b0177d3489455a077bac333fe76e3"
     },
     {
       "id": "api-error-401-invalid-authentication-credentials",
-      "hash": "67a1c84f6f13be539c9a15b547ba6df4826857f19ff4aeade01323230b47febd"
+      "hash": "67a1c84f6f13be539c9a15b547ba6df4826857f19ff4aeade01323230b47febd",
+      "bodyHash": "bd8273254923c11fc0a5fe33acdb36fb90f71ffa80fcff6c30f5f1b79b4f21a7"
     },
     {
       "id": "login-expired",
-      "hash": "068562ff957f84562f9659a9cf78846feb9d7348eeaa6f6d9d94bbf58c10e36c"
+      "hash": "068562ff957f84562f9659a9cf78846feb9d7348eeaa6f6d9d94bbf58c10e36c",
+      "bodyHash": "35a5025d0ad7fa7cd77097eb44d3f200038940c9abbf372570b3e968b5398429"
     },
     {
       "id": "could-not-refresh-your-login",
-      "hash": "a9e918b24ead60ff3616a52099806612f51cbe809bb6edc79b3734c6c627001d"
+      "hash": "a9e918b24ead60ff3616a52099806612f51cbe809bb6edc79b3734c6c627001d",
+      "bodyHash": "dfe2db43e38782aedf82bdf4522d53be23bd8b1db52f0029fb2f54188dc7d844"
     },
     {
       "id": "couldnt-save-your-login",
-      "hash": "b8a8f9e9303f9403496b89b64c80f7cbd08981cc4d5e2a460cae921e86078cae"
+      "hash": "b8a8f9e9303f9403496b89b64c80f7cbd08981cc4d5e2a460cae921e86078cae",
+      "bodyHash": "85c64e86cf9145ac5f7731790e7a8a7a440821e6590048d0ce7013d0a015fe3f"
     },
     {
       "id": "failed-to-start-oauth-callback-server",
-      "hash": "552b36e3db8f8dda1afcac6712e30f7dea79c222b6dc8d1c1811411b3bc9de67"
+      "hash": "552b36e3db8f8dda1afcac6712e30f7dea79c222b6dc8d1c1811411b3bc9de67",
+      "bodyHash": "2934ffe983de24b0759bc92333a5fda4ccf7a86a437110b82f1b3dad2690e0a9"
     },
     {
       "id": "claude-login-not-accepted",
-      "hash": "2675e1fb896b679550bd3c3848a0115d9aa58f9583aa2181159db1265ba7cb31"
+      "hash": "2675e1fb896b679550bd3c3848a0115d9aa58f9583aa2181159db1265ba7cb31",
+      "bodyHash": "03f492cfc578c81b7b8f66f1f5540f605f4250846cb2dcd81f8584eaf1eeac3e"
     },
     {
       "id": "artifacts-need-a-claude-ai-login",
-      "hash": "5655d24a313a98bab9ade0dc873e4bf3990187255139cdfee2b3441ad94a9140"
+      "hash": "5655d24a313a98bab9ade0dc873e4bf3990187255139cdfee2b3441ad94a9140",
+      "bodyHash": "7e8888ee6881642968215cd28d61839deaf8e426534171e6504e4fee187947af"
     },
     {
       "id": "administrator-policy-requires-a-cloud-gateway-sign-in",
-      "hash": "0e0e1eee92622c21f646d56f72ade0c79077e74117d9097d3138d0a87144e93f"
+      "hash": "0e0e1eee92622c21f646d56f72ade0c79077e74117d9097d3138d0a87144e93f",
+      "bodyHash": "d26a31a56b312efee7f8d57bd443a4ab0abfd62f81b9f076a04d05dfe829dc7e"
     },
     {
       "id": "your-account-is-on-hold",
-      "hash": "62fdf2827112f296aa277aa65786ec5ad295f156fc2b288aa4df1da025989e5c"
+      "hash": "62fdf2827112f296aa277aa65786ec5ad295f156fc2b288aa4df1da025989e5c",
+      "bodyHash": "c27318096c59d737008538f2d25e80a20e5d395a745533c5279c0a7f346de7d3"
     },
     {
       "id": "anthropic-profile-login-expired",
-      "hash": "2f0d91a6296f7d5dd83a9066610955c606f842968d006f87aa1bcdd202004253"
+      "hash": "2f0d91a6296f7d5dd83a9066610955c606f842968d006f87aa1bcdd202004253",
+      "bodyHash": "7a21a73af3b95dc77d9921b6d92c2ebd9de25dd04ae31fd0be08080c53ba07e5"
     },
     {
       "id": "oauth-scope-requirement",
-      "hash": "e9e283d1bcd20430853141550ae6e3848d8c178315817d596d9e285d592385e7"
+      "hash": "e9e283d1bcd20430853141550ae6e3848d8c178315817d596d9e285d592385e7",
+      "bodyHash": "6be87bd55e4f9a66d3fdd5ef75e12dfc387cb0d443fc651316f99c7a9fab1fe6"
     },
     {
       "id": "claude-ai-rejected-the-session-token",
-      "hash": "8aa70647839e4c81b5293aa876dca4eca69227e92a7a5960d047e1143c8bddee"
+      "hash": "8aa70647839e4c81b5293aa876dca4eca69227e92a7a5960d047e1143c8bddee",
+      "bodyHash": "d34a40e61c5fd703b70b0afdfc5fde95906907d9d1a0c4a0227658eb3fac390f"
     },
     {
       "id": "mcp-server-needs-you-to-sign-in-again",
-      "hash": "ec9498c44baefc2f316f6cb72554af614321d6ced981b39c2dc153d4036badcd"
+      "hash": "ec9498c44baefc2f316f6cb72554af614321d6ced981b39c2dc153d4036badcd",
+      "bodyHash": "8ef5d7abbc0f0cc72f05b0d9d13a75f36c46078b2cc8f01d4f944e1afd4e11aa"
     },
     {
       "id": "mcp-server-url-is-missing-or-not-a-valid-url",
-      "hash": "ef6292177035b12f54026ffee3babb3b28ac2d72ae01b71e71d307ed94e344f6"
+      "hash": "ef6292177035b12f54026ffee3babb3b28ac2d72ae01b71e71d307ed94e344f6",
+      "bodyHash": "e9bcb00d27586e298085584005a6540cbf5304a4877b13d338a8d65915bb8786"
     },
     {
       "id": "issuer-mismatch-in-authorization-response",
-      "hash": "be8930ee1bccfcf1e03b650e93c65acfaae1189352cab6d3d7f8da0c7d67cbaa"
+      "hash": "be8930ee1bccfcf1e03b650e93c65acfaae1189352cab6d3d7f8da0c7d67cbaa",
+      "bodyHash": "e047ffe0192af5e0387dec82742094595bb8a7684b67c9c27363c2b10fdf8e80"
     },
     {
       "id": "refusing-to-send-credentials-to-non-https-token-endpoint",
-      "hash": "c9a8353014e98591877befd48f125b9d53c41c13f836d1a10752ec9bb7e80c76"
+      "hash": "c9a8353014e98591877befd48f125b9d53c41c13f836d1a10752ec9bb7e80c76",
+      "bodyHash": "86097350436ca2e1f7669cfe0081cc786bff813a2f0027e0a8240382640b0eb3"
     },
     {
       "id": "aws-credentials-expired-or-invalid",
-      "hash": "f003185af67f4c0f32a0c02776bfa82a8c18e0d0f07c2eb911df77e2134f55c8"
+      "hash": "f003185af67f4c0f32a0c02776bfa82a8c18e0d0f07c2eb911df77e2134f55c8",
+      "bodyHash": "5830f2da70fc1c5d99d6adad94416a668eb0a6ebbdfafc9984bf9e4b1ae1f099"
     },
     {
       "id": "aws-authentication-failed",
-      "hash": "cc7f6b19d70ce574823218b01d5cc3a5b1690159485aa1359e143e2df56786d2"
+      "hash": "cc7f6b19d70ce574823218b01d5cc3a5b1690159485aa1359e143e2df56786d2",
+      "bodyHash": "a4ca29ceed3652324ccf1d81c0093d36cc8baed3a4109b8036d1322e925ec168"
     },
     {
       "id": "google-cloud-credentials-expired-or-invalid",
-      "hash": "05d7b2a864d1bdcdbf88dfc71aba52142c76210153ecc2b6295ac9687de58952"
+      "hash": "05d7b2a864d1bdcdbf88dfc71aba52142c76210153ecc2b6295ac9687de58952",
+      "bodyHash": "bfce6e55d97b4147173129d3f793d4fbeeee0e6731366099355084d01d43a2f9"
     },
     {
       "id": "google-cloud-authentication-failed",
-      "hash": "fba6a758207c7a58ed7314574dc5d33e7d048b1e0f8c53519b3e77c30b4e18ed"
+      "hash": "fba6a758207c7a58ed7314574dc5d33e7d048b1e0f8c53519b3e77c30b4e18ed",
+      "bodyHash": "b212840ebee33ccdeaa5c70f8cd7d8d28c44f1e5c541e5d21ee7ba5f36e78a9e"
     },
     {
       "id": "microsoft-foundry-authentication-failed",
-      "hash": "27ef47799da89476666df0605e00d309b9987323ddc175ffeeaec068d17fbaf7"
+      "hash": "27ef47799da89476666df0605e00d309b9987323ddc175ffeeaec068d17fbaf7",
+      "bodyHash": "d5d6d5bf3049c060f4d74de02440e7b532808f91e76a55c49aeca4bc81a0f0f3"
     },
     {
       "id": "could-not-load-aws-or-google-cloud-credentials",
-      "hash": "c01447bf4c03fa0cf08d3b7b397aca3b8d5afa31db1da2f11d69be85b932c49e"
+      "hash": "c01447bf4c03fa0cf08d3b7b397aca3b8d5afa31db1da2f11d69be85b932c49e",
+      "bodyHash": "1b977737806a5fbc03efabe02c97549411725a6fb9c1b6a310f711df39e1f199"
     },
     {
       "id": "aws-default-chain-credential-resolve-timed-out",
-      "hash": "18044b12e96bf8a6cf5d531d62b62cf79102ee1b54792bc14bd1e41d8f33e986"
+      "hash": "18044b12e96bf8a6cf5d531d62b62cf79102ee1b54792bc14bd1e41d8f33e986",
+      "bodyHash": "78645dbacb6ec9470e10f134f43869fccd6231c3a5247df88e606a8d92eabfdb"
     },
     {
       "id": "bedrock-setup-verification-timed-out-waiting-for-aws",
-      "hash": "eb5e8f369f2ab73a668cb0410ce9a7c54d1231ae7c82d400e7bd4aba7ac5e4d5"
+      "hash": "eb5e8f369f2ab73a668cb0410ce9a7c54d1231ae7c82d400e7bd4aba7ac5e4d5",
+      "bodyHash": "7715998d388576ee60f63724d1b06f024be40efa656079175356058cc1250e92"
     },
     {
       "id": "cloud-gateway-session-expired",
-      "hash": "8bc82e7b285498a262da7278634083b787876e5cdef1282fec42ceeb591fe4ea"
+      "hash": "8bc82e7b285498a262da7278634083b787876e5cdef1282fec42ceeb591fe4ea",
+      "bodyHash": "d642bb09b252d645d0b6175cf284436227299f73566680b8141e3876a011679e"
     },
     {
       "id": "sign-in-timed-out-while-waiting-for-you-to-continue",
-      "hash": "67af8a9843abb447772382247da4a2b0ec11bdb3352b0b5673166becfa17c921"
+      "hash": "67af8a9843abb447772382247da4a2b0ec11bdb3352b0b5673166becfa17c921",
+      "bodyHash": "c543f73aca77869a61dbab922bcc8ac00e974e72d9b38a84d4772d0c3a11b3fc"
     },
     {
       "id": "gateway-refused-the-request",
-      "hash": "c339338ff760755b61f3dc18e90a6bc0c5048bf73d069b00cf04e07e1d56d32f"
+      "hash": "c339338ff760755b61f3dc18e90a6bc0c5048bf73d069b00cf04e07e1d56d32f",
+      "bodyHash": "6a4524da28e07b3b46ab21be989724a2279cd7cff07141cb9a2791c3c3f50bd6"
     },
     {
       "id": "network-and-connection-errors",
-      "hash": "2b87863a83faaa4b3ca2011b44b5dee9243952d51b0fd8ff464b79ae91bfb95a"
+      "hash": "2b87863a83faaa4b3ca2011b44b5dee9243952d51b0fd8ff464b79ae91bfb95a",
+      "bodyHash": "ce9d534621d6acfbb8dc98850eef6fe7a28185b3e12ba3961144e184a09f696b"
     },
     {
       "id": "unable-to-connect-to-api",
-      "hash": "bf8749f3012784b8fd163c2d995f5c81a582650142996b5c749afcc735575e7b"
+      "hash": "bf8749f3012784b8fd163c2d995f5c81a582650142996b5c749afcc735575e7b",
+      "bodyHash": "8c03c64cfe16477c143d1f819116464448011558fded3ce55cd5f098966e7b52"
     },
     {
       "id": "unable-to-connect-to-anthropic-services",
-      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
+      "hash": "6aea251ad1e99ca65cdb98c28bbe46c3bed22e50fb9e85adcd431dbbec7ec83a",
+      "bodyHash": "137cf12084b161228f6e1ac7f10527434d40968ad0d89201e734087e6950ba29"
     },
     {
       "id": "socket-is-closed",
-      "hash": "cb188cb38d6dfa1e20f98710e794d2f20eded0fafcb9e2d608f80f28c78d7d7f"
+      "hash": "cb188cb38d6dfa1e20f98710e794d2f20eded0fafcb9e2d608f80f28c78d7d7f",
+      "bodyHash": "3da2fa9b1d81014763e294abacfdfd62c58558d737420e84b4fe8163d9c74070"
     },
     {
       "id": "api-returned-an-empty-or-malformed-response",
-      "hash": "6e0b473a6ba0815ac84b1ad005506b9129eccd4ab18db9896765bfd925ec0f65"
+      "hash": "6e0b473a6ba0815ac84b1ad005506b9129eccd4ab18db9896765bfd925ec0f65",
+      "bodyHash": "87cfa34156838ef84d8ebf297939dcbfe15ea6966ae7cf0c86c993b583cc8393"
     },
     {
       "id": "streaming-response-ended-before-any-complete-data-was-received",
-      "hash": "8d6f72c181aab6638c820de2794f4022723c8daf14f8c0f7f443a1756a272e74"
+      "hash": "8d6f72c181aab6638c820de2794f4022723c8daf14f8c0f7f443a1756a272e74",
+      "bodyHash": "ffaaf31b95d3c93a2d46686de7c01b7f4c63e8509f9f247f26cba1934da09904"
     },
     {
       "id": "bedrock-streaming-response-has-an-unexpected-content-type",
-      "hash": "f493ae95c1157b72c01fab6a04e236f17e4115423d496536916b8bafc2a77f94"
+      "hash": "f493ae95c1157b72c01fab6a04e236f17e4115423d496536916b8bafc2a77f94",
+      "bodyHash": "9a9ad54d3ba1be518db2ea96b0f0e5f22df82b1133c3743ea49bcdf2561cab11"
     },
     {
       "id": "ssl-certificate-errors",
-      "hash": "67b8ee729de10fc7015994a8c6a65cf80fa37b1a41a47a807eea81d657c1e2f5"
+      "hash": "67b8ee729de10fc7015994a8c6a65cf80fa37b1a41a47a807eea81d657c1e2f5",
+      "bodyHash": "d9b6ac575018c5250254ff296efee08d33d434d0d14f7ba5b20d49ef263580cf"
     },
     {
       "id": "host-not-allowed-in-a-cloud-session",
-      "hash": "2c79074d60d680be54be722a5a33a5d811092a1f5258283892d8846dc86ff49e"
+      "hash": "2c79074d60d680be54be722a5a33a5d811092a1f5258283892d8846dc86ff49e",
+      "bodyHash": "674a8ff3a7c523f99bfade36a73094686f15c7a61619ab1e860005195cc4fd6d"
     },
     {
       "id": "the-proxy-refused-the-connection",
-      "hash": "c27de35b43534aadf8010bca94035ae275c034790577813078efa20518dd1bff"
+      "hash": "c27de35b43534aadf8010bca94035ae275c034790577813078efa20518dd1bff",
+      "bodyHash": "8ffd5a283a9e77fb7d98a6df94f77107c040ce6d2881ed42e0a0e4085ba3ae09"
     },
     {
       "id": "the-cloud-environments-service-returned-an-empty-or-unexpected-response",
-      "hash": "6c2d1032ed1820c3efb1ee28d39a44a7d95865769e8721bb88dfeb11c25d28c5"
+      "hash": "6c2d1032ed1820c3efb1ee28d39a44a7d95865769e8721bb88dfeb11c25d28c5",
+      "bodyHash": "190155ca5d9b74e0140257e3975566578508c60930770754539ef1bff64630b9"
     },
     {
       "id": "couldnt-reconnect-to-your-remote-control-session",
-      "hash": "3bdfb554e18d549e29ec5fac93ad9c3bbad8f4ec9151eca09662cbe7967a3364"
+      "hash": "3bdfb554e18d549e29ec5fac93ad9c3bbad8f4ec9151eca09662cbe7967a3364",
+      "bodyHash": "ada4e656c5a099538ee8ad5ca11c8bfd0e7011fdfc7f47ba5f6769003773fd04"
     },
     {
       "id": "sessions-ended-while-this-machine-was-offline",
-      "hash": "a62e093a5f1990642d68ff36ba3cf9b6dae9160b01984812f46457053eb16f6f"
+      "hash": "a62e093a5f1990642d68ff36ba3cf9b6dae9160b01984812f46457053eb16f6f",
+      "bodyHash": "82bbf87f985b05a05275531087f9da52750be43b2e0c08ec705239084f4a7797"
     },
     {
       "id": "couldnt-share-the-transcript",
-      "hash": "0abdc7cd19ba9246341dca75fecebea4c1966f9d94bc4a1b374d34e3cf8a97fe"
+      "hash": "0abdc7cd19ba9246341dca75fecebea4c1966f9d94bc4a1b374d34e3cf8a97fe",
+      "bodyHash": "4a9ac384500fe4e1b9654ff04bf447eab0dde5a510dd50b15f0100638dc7a1a9"
     },
     {
       "id": "couldnt-send-feedback",
-      "hash": "fe08f88ed867239df7a333577c12ea4f50130eeda2909c07097ba2944a202450"
+      "hash": "fe08f88ed867239df7a333577c12ea4f50130eeda2909c07097ba2944a202450",
+      "bodyHash": "22802ab7a4df78e2a37b97169ee9b62cbf75a8c3d48a1ce53a8f090583e0c6d9"
     },
     {
       "id": "request-errors",
-      "hash": "a88188ea3464de1f6e5b4a4537867e8e55438a5ccc00d5d97a39f30034d7711f"
+      "hash": "a88188ea3464de1f6e5b4a4537867e8e55438a5ccc00d5d97a39f30034d7711f",
+      "bodyHash": "f321bdc23eebd7c1e4b89e9dc93bb99d6f39c52fb243859013200e237d1c8380"
     },
     {
       "id": "prompt-is-too-long",
-      "hash": "d5d78d1253a43bf70caec93fa3011abbe8e39535d1cdd1d569a4a33e3cc081c1"
+      "hash": "d5d78d1253a43bf70caec93fa3011abbe8e39535d1cdd1d569a4a33e3cc081c1",
+      "bodyHash": "7aef9e45a313215c3abc24f09a8a7a57551064132f8f61caac93da8319773e77"
     },
     {
       "id": "context-exceeds-the-token-limit",
-      "hash": "5054b3acb297293679a34b41a76855dfd2d6c8466338f13ef4751bb056f90c00"
+      "hash": "5054b3acb297293679a34b41a76855dfd2d6c8466338f13ef4751bb056f90c00",
+      "bodyHash": "f5776cc173cb10671c2dd5c3fa3d8deb4939cd984349f0d9040141b552300c04"
     },
     {
       "id": "request-too-large",
-      "hash": "1f796a003154f8d4227d4e47d1490dd895496d5bed2676ce5564ddf74be81d2f"
+      "hash": "1f796a003154f8d4227d4e47d1490dd895496d5bed2676ce5564ddf74be81d2f",
+      "bodyHash": "96631b4ef295c05175e0e278e8608ea4ea443c5cef3381cba9763ed5b217379c"
     },
     {
       "id": "image-was-too-large",
-      "hash": "0322e2344b3b3d0168b818413c9d2829725cab9407e5e6f5d092802af4ab7ccc"
+      "hash": "0322e2344b3b3d0168b818413c9d2829725cab9407e5e6f5d092802af4ab7ccc",
+      "bodyHash": "5db98c4796d760059c2c1f38e2da6001c98305d5a5525317fdff74300f42b457"
     },
     {
       "id": "unable-to-resize-image",
-      "hash": "a946b3b519a6afacde08703183d638e25a6c08e88e402fa3db28273489256722"
+      "hash": "a946b3b519a6afacde08703183d638e25a6c08e88e402fa3db28273489256722",
+      "bodyHash": "7b13afbd8af7527330f1bdcda160d3b3387e5383c3eb51945edd2ea58d556c6a"
     },
     {
       "id": "pdf-errors",
-      "hash": "f575d73cb17dda4011f042dafbaa5d7ed16f1210c58049e206c1702b56aa47d4"
+      "hash": "f575d73cb17dda4011f042dafbaa5d7ed16f1210c58049e206c1702b56aa47d4",
+      "bodyHash": "b692957cbff3345a9747d836356b22a1a2363f49d4f3a87e8695bb9ec76d2334"
     },
     {
       "id": "extra-inputs-are-not-permitted",
-      "hash": "6e13797a36db13ef4337b851c02866529e832ce67c7d32707b454e61bb792314"
+      "hash": "6e13797a36db13ef4337b851c02866529e832ce67c7d32707b454e61bb792314",
+      "bodyHash": "0d1d8afd2806d7c84cdd12893bb1b38b79dcc74be597bbdb10de123b035ff341"
     },
     {
       "id": "tool-input-schema-is-invalid",
-      "hash": "c953284ae55b6df5c7d6b937449798348755f80cf23e26cd6f084d1ad797c7b0"
+      "hash": "c953284ae55b6df5c7d6b937449798348755f80cf23e26cd6f084d1ad797c7b0",
+      "bodyHash": "091a5a5f1df951b88483eaba94afdeef2aaaab8cfed1a0d5127d6f98b250962d"
     },
     {
       "id": "tool-use-name-over-200-characters",
-      "hash": "7143b6159b2b7e38fcddc72e58873637088bd88a86dde4134fa7d5431230909b"
+      "hash": "7143b6159b2b7e38fcddc72e58873637088bd88a86dde4134fa7d5431230909b",
+      "bodyHash": "9808b422c84f5485ac8a613dc0b9817858bd3683018e7d1083ec40a42a540a0b"
     },
     {
       "id": "theres-an-issue-with-the-selected-model",
-      "hash": "3ed7d35307c82b5018a3cf898197c6b79009ad9c4e84d636b28b72716e64c324"
+      "hash": "3ed7d35307c82b5018a3cf898197c6b79009ad9c4e84d636b28b72716e64c324",
+      "bodyHash": "baf6a36b195119a2d8d1973c8f42afd957f3fc76be832bc73eeb1b7b72b37191"
     },
     {
       "id": "model-is-not-a-recognized-model-id",
-      "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc"
+      "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc",
+      "bodyHash": "522422c24a9baca456743ba7f4d50b5a7e9371ed3f398d09d34b82ebf5a144a2"
     },
     {
       "id": "model-not-found",
-      "hash": "386417790fe06a31ab58e49e76ce499ded96b52b2bacdaf9cc2fde6b168ac15f"
+      "hash": "386417790fe06a31ab58e49e76ce499ded96b52b2bacdaf9cc2fde6b168ac15f",
+      "bodyHash": "561524ca775eedc93de22b16fe97d31bb0c7a3947da1803520562da54feae2e1"
     },
     {
       "id": "couldnt-confirm-model-with-the-api",
-      "hash": "f6abf316660311e84401242faf397b2e00a5cc6aad0dc50ccdafe51a4c4e4fe0"
+      "hash": "f6abf316660311e84401242faf397b2e00a5cc6aad0dc50ccdafe51a4c4e4fe0",
+      "bodyHash": "a6f65e76c129af069bdfc464dd43b916056b44242199446671aa3430ee2158a9"
     },
     {
       "id": "api-error-model-not-changed",
-      "hash": "4fdee5faceb9c01142c7ff463c81da1e71e46f84f6192d644656574d08bf3772"
+      "hash": "4fdee5faceb9c01142c7ff463c81da1e71e46f84f6192d644656574d08bf3772",
+      "bodyHash": "5570a0e8af8dc75c95901b8bc11a5f47e4ce9f45787387dfbd7602a03a89dd26"
     },
     {
       "id": "claude-opus-is-not-available-with-the-claude-pro-plan",
-      "hash": "cc30eb34e661cbf7fb529d75fb4850b7a8deac77497721bb3251b40e39a9febb"
+      "hash": "cc30eb34e661cbf7fb529d75fb4850b7a8deac77497721bb3251b40e39a9febb",
+      "bodyHash": "e593356be1280ab80107f393285e70577944b8d8603f6b552b27952e09f05aa2"
     },
     {
       "id": "claude-code-does-not-support-this-model",
-      "hash": "8facf086308eb52d7aea596749bfad995f7cc509a4219a15326789dd0d97ed0d"
+      "hash": "8facf086308eb52d7aea596749bfad995f7cc509a4219a15326789dd0d97ed0d",
+      "bodyHash": "9c96f512bc68e62809f1bdef8805c022766e67674bbd84127f1dea5431011bd7"
     },
     {
       "id": "model-is-restricted-by-your-organizations-settings",
-      "hash": "6fe175e439d2d3165df8e723d963de01b04641bf6a8fac5d4af9b7697e14f618"
+      "hash": "6fe175e439d2d3165df8e723d963de01b04641bf6a8fac5d4af9b7697e14f618",
+      "bodyHash": "fc78a9e31611c7d57f6e723d0fb6a046db5db20b1a482a21df6826319fc5e46f"
     },
     {
       "id": "cant-switch-to-the-default-model",
-      "hash": "0fb94fc41556ed486e9b0d68e514072dd179f14d7e29bdfe7d4482c3838a00ab"
+      "hash": "0fb94fc41556ed486e9b0d68e514072dd179f14d7e29bdfe7d4482c3838a00ab",
+      "bodyHash": "e5fb8c4b5d4f9b67923cd849fe540fb3addd49edd0a934bb3b3846461a14cccd"
     },
     {
       "id": "model-switch-was-blocked-by-a-premodelswitch-hook",
-      "hash": "55ebd333b5d2cfa29d9d5571bef0c6b1d183313c3008d504e69c57eaf3e93b8a"
+      "hash": "55ebd333b5d2cfa29d9d5571bef0c6b1d183313c3008d504e69c57eaf3e93b8a",
+      "bodyHash": "e0dc7f9a97b892121ada933b7b8877e0f23322f9684e3b04a53fcba24e9b56b8"
     },
     {
       "id": "couldnt-save-it-as-your-default",
-      "hash": "80b0101621da1c5ac6bb7360a196c1ae4d4d48efb7b4eb127c240ff9964bd567"
+      "hash": "80b0101621da1c5ac6bb7360a196c1ae4d4d48efb7b4eb127c240ff9964bd567",
+      "bodyHash": "f6e6c42b3b660ebdc5e383dbb319d998517aaa19df9c7ca007ddb0e54b38ae09"
     },
     {
       "id": "advisor-is-less-capable-than-the-current-main-model",
-      "hash": "f98c98210631465ec1b741c927358d054c5f2cbc615017a36368a3fb74d96a28"
+      "hash": "f98c98210631465ec1b741c927358d054c5f2cbc615017a36368a3fb74d96a28",
+      "bodyHash": "22f90fe05d79bf1282e72976fae66b06a88a28a060dc266cf840ef0077f97447"
     },
     {
       "id": "thinking-type-enabled-is-not-supported-for-this-model",
-      "hash": "4aade74fca44e9fb03b4cb02f8b816dd31c547a46f7426fdf949c0a73e948a54"
+      "hash": "4aade74fca44e9fb03b4cb02f8b816dd31c547a46f7426fdf949c0a73e948a54",
+      "bodyHash": "c66d205649f02860e36381fd7717d1e6291f888e42d500fa2c6ab72baf826e9a"
     },
     {
       "id": "effort-isnt-available-with-thinking-turned-off",
-      "hash": "aafdeb5250b2dee72acd0394d956ebdc13844152f4cace14b210b06e124e0d4c"
+      "hash": "aafdeb5250b2dee72acd0394d956ebdc13844152f4cace14b210b06e124e0d4c",
+      "bodyHash": "dfcc54aef030b5239d8043435adb779e5e85621d36c6883ab725a2343b3081f6"
     },
     {
       "id": "thinking-budget-exceeds-output-limit",
-      "hash": "a5b8a62d9c9f51c59929eb15c6d83b218d7ff7e67e5ab0ef13573465dd1eca21"
+      "hash": "a5b8a62d9c9f51c59929eb15c6d83b218d7ff7e67e5ab0ef13573465dd1eca21",
+      "bodyHash": "12e58b5717c0f8afa30375583f7ce7522e92e4cf636842c606fef3141a413c2a"
     },
     {
       "id": "tool-use-or-thinking-block-mismatch",
-      "hash": "f3473e72796eec6da9621a2b2056475301c59fa0ef2bce676507364298cd35e8"
+      "hash": "f3473e72796eec6da9621a2b2056475301c59fa0ef2bce676507364298cd35e8",
+      "bodyHash": "82f45e8ff545bd2e0b98cd4a2944031ee3c36320d8cbbb7e109d6566de3010b4"
     },
     {
       "id": "invalid-data-in-redacted-thinking-block",
-      "hash": "a36894b9dcaac10abc4388b9e67e1d3c443a20fe6cce6347ab15068890f61e9b"
+      "hash": "a36894b9dcaac10abc4388b9e67e1d3c443a20fe6cce6347ab15068890f61e9b",
+      "bodyHash": "e9692c5fa2db332cc1d0f7298ab845a968811e9bb96bfe1c442403c83f6e24ac"
     },
     {
       "id": "unsupported-tool-content-removed",
-      "hash": "ba1ad1ec483f58bc7832da767ceda3df35f9e73f3c49c4721eb5733ff0619f66"
+      "hash": "ba1ad1ec483f58bc7832da767ceda3df35f9e73f3c49c4721eb5733ff0619f66",
+      "bodyHash": "5f551bb4912434a40cd01d66151e858571d93493e04cc2f39e4f881c358fb1ba"
     },
     {
       "id": "role-system-must-precede-an-assistant-message",
-      "hash": "1fb388d6a29a2377d84c96b9de6228d22ee689cb1bff7b4d60a1b20c61df9aca"
+      "hash": "1fb388d6a29a2377d84c96b9de6228d22ee689cb1bff7b4d60a1b20c61df9aca",
+      "bodyHash": "b7df4949b9d1b14f6a54d2ab2254a676a7b215c86ec06e535c1c4825c5891c98"
     },
     {
       "id": "invalid-encrypted-content-in-search-result-block",
-      "hash": "e955d6f7dfca68d8085779fadfff2186badbbaa1b7e041102397ca18aefd98c0"
+      "hash": "e955d6f7dfca68d8085779fadfff2186badbbaa1b7e041102397ca18aefd98c0",
+      "bodyHash": "804994efb0302667bc4aa27729e504fcca4cf84b951591665d59f4193b2f104f"
     },
     {
       "id": "usage-policy-refusal",
-      "hash": "8d40a9dd62e4ea0f0874544e1f2eddc5301bfd02a67117be4030b5cf04a311b1"
+      "hash": "8d40a9dd62e4ea0f0874544e1f2eddc5301bfd02a67117be4030b5cf04a311b1",
+      "bodyHash": "28a922d4b735ee3c29e533dc821e3a01e123b383ae2388236b58f26a47968a9e"
     },
     {
       "id": "safety-measures-flagged-a-cybersecurity-topic",
-      "hash": "7b058d14075f552fc6b36b1d902bf4a259c4ba8c4c18b017d23e90474296444c"
+      "hash": "7b058d14075f552fc6b36b1d902bf4a259c4ba8c4c18b017d23e90474296444c",
+      "bodyHash": "8cb6258067f50771ba8fb6cb05392acf9ac010a84c1611365d5d0c39d1e9931a"
     },
     {
       "id": "safeguards-flagged-a-request-for-claudes-reasoning",
-      "hash": "68e09d6e5c0d8ae5cc35ff72bb6f331f26359431e026f7d04ee84bfd2fe1bad4"
+      "hash": "68e09d6e5c0d8ae5cc35ff72bb6f331f26359431e026f7d04ee84bfd2fe1bad4",
+      "bodyHash": "0f83bee12000393bb399e121e1afc099312345acf51698e00c34aa3260367a37"
     },
     {
       "id": "output-blocked-by-content-filtering-policy",
-      "hash": "6f8de686ba8aa4e5b2cc914a576b581dae4e0159ee81d956e8642f34163774fa"
+      "hash": "6f8de686ba8aa4e5b2cc914a576b581dae4e0159ee81d956e8642f34163774fa",
+      "bodyHash": "15a2afff42fa34d5c14b0c508976d417cbef8eeaf424b13457e6dab2da0777f6"
     },
     {
       "id": "command-line-errors",
-      "hash": "7a5c934c1f267facbf3d7c8dfa8c9ef7923c8e3bde6a13c1832f86d2b87ccf3d"
+      "hash": "7a5c934c1f267facbf3d7c8dfa8c9ef7923c8e3bde6a13c1832f86d2b87ccf3d",
+      "bodyHash": "eb7a26460ab8598115caf41301d3fd130561a6effe0a6e2fb7ddafacfefe72e7"
     },
     {
       "id": "conflict-between-bg-and-print",
-      "hash": "da83a77b3db533c6f200ae991fab09958b4c624ece3882c72b7edadb59a37f9f"
+      "hash": "da83a77b3db533c6f200ae991fab09958b4c624ece3882c72b7edadb59a37f9f",
+      "bodyHash": "17e350aa99431e3eeb526432250b408b47878915bb6ec631d392a2d0b76ffabb"
     },
     {
       "id": "conflict-between-a-system-prompt-flag-and-its-file-form",
-      "hash": "0bf5168ff00653ba8a5552bf935b60e37874f7a12c83b0768475e7386245b52b"
+      "hash": "0bf5168ff00653ba8a5552bf935b60e37874f7a12c83b0768475e7386245b52b",
+      "bodyHash": "0888de5c10e61e3d22e4912c28448e8b7d241dbbafb75808244a8df1ca50586b"
     },
     {
       "id": "invalid-agents-configuration",
-      "hash": "b1233402840df5f483c2d7667c6142157c316d62f12e85938059bd92e1398ed4"
+      "hash": "b1233402840df5f483c2d7667c6142157c316d62f12e85938059bd92e1398ed4",
+      "bodyHash": "17967cbbe7446a5c5a96be1fde9ec6ec0da1a33c8395fffeba62cd5496aa2d53"
     },
     {
       "id": "cloud-sessions-cannot-be-created-from-a-restricted-session",
-      "hash": "e23abfe5e7932ec8fa265bd85a547e98c00ac2624fa92cb746c5f34c9f0060d3"
+      "hash": "e23abfe5e7932ec8fa265bd85a547e98c00ac2624fa92cb746c5f34c9f0060d3",
+      "bodyHash": "58d5080a7cee8df90a7835fb9d94edc6db51d91c5751e4586e0df0635ba98d69"
     },
     {
       "id": "cloud-sessions-are-disabled-by-your-organizations-policy",
-      "hash": "b42e82882277a425f7af80057eb1da443b0be807a1c1b2d5e2421f9ccd9c8824"
+      "hash": "b42e82882277a425f7af80057eb1da443b0be807a1c1b2d5e2421f9ccd9c8824",
+      "bodyHash": "0e619917d9a2eb6c1a0662e379434a370fac24359905a7e7486a9e62b5262b94"
     },
     {
       "id": "the-json-schema-value-is-not-a-valid-json-schema",
-      "hash": "0950f2caab1946da87d49824d0c1124dca2ce8166479de877f32a546df082232"
+      "hash": "0950f2caab1946da87d49824d0c1124dca2ce8166479de877f32a546df082232",
+      "bodyHash": "44a3f8d5022a53d4700d7e27f77fb8424a291b7436116fd82a60ae100fcdcec7"
     },
     {
       "id": "settings-file-exceeds-the-2mib-limit",
-      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674"
+      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674",
+      "bodyHash": "aec0a4720e60112e59d278a29ca6e95246b6ef5d0ef01015fe729855b2b72fcc"
     },
     {
       "id": "the-current-directory-no-longer-exists",
-      "hash": "c66f748f3d469ec043ae13754ecd6b0c4fe52065c0093ff1e07b12cf18418696"
+      "hash": "c66f748f3d469ec043ae13754ecd6b0c4fe52065c0093ff1e07b12cf18418696",
+      "bodyHash": "be74a5d5f829434da682d9adfb20cb6e277d760fe1974c06890703759189c65d"
     },
     {
       "id": "temp-directory-refused-or-cannot-be-created",
-      "hash": "35f0ca709a7cb344f3d86d66f47852966ac2cd0e09a03e3b4d1c15e6aeedbe70"
+      "hash": "35f0ca709a7cb344f3d86d66f47852966ac2cd0e09a03e3b4d1c15e6aeedbe70",
+      "bodyHash": "6ce7940751caff1f6e212cda608692c64cfc124c00b02e4357102b993addfb68"
     },
     {
       "id": "directory-couldnt-be-resolved-to-a-real-location",
-      "hash": "1dc3ced90b60f34a439b7d54ef68e4a68139024b7fcf9b2eee741575fabe2dda"
+      "hash": "1dc3ced90b60f34a439b7d54ef68e4a68139024b7fcf9b2eee741575fabe2dda",
+      "bodyHash": "c5f0cf2d739cc7ca255a20cc610329f61d0824d070960b9d098be7a2a3aaf935"
     },
     {
       "id": "workspace-not-trusted-when-starting-remote-control",
-      "hash": "846200b672a5f1c3d7690cc854785180abb6f44ea0fc7ff0b38f2c9a692404fe"
+      "hash": "846200b672a5f1c3d7690cc854785180abb6f44ea0fc7ff0b38f2c9a692404fe",
+      "bodyHash": "339e4be7a66bd394b0b45dbefc39615ddab758c0257fe24f63b1f0fa7b0afa74"
     },
     {
       "id": "not-carried-over-to-the-sessions-remote-control-starts",
-      "hash": "78833cbf7dc503dd8fe8fd8d94e121a88033b06003267d6931845f2886a484e5"
+      "hash": "78833cbf7dc503dd8fe8fd8d94e121a88033b06003267d6931845f2886a484e5",
+      "bodyHash": "a7f8ab35fa3d796be7dc997bd1d2ad2225532f980449df9545d58840c94f4463"
     },
     {
       "id": "claude-import-is-not-yet-available-in-this-build",
-      "hash": "19fd2bfe225e637248087c7948d4e1100b78feb26f1f2825b0eb40ee576e5bcb"
+      "hash": "19fd2bfe225e637248087c7948d4e1100b78feb26f1f2825b0eb40ee576e5bcb",
+      "bodyHash": "56348bc91b5e3690de80e83533c17f4ae267c537600e1ac8f6136fd67e77d231"
     },
     {
       "id": "could-not-read-claude-code-config",
-      "hash": "08dc7875c095ce4c9339968a5a798632cd5f628d3a48ee623858e5ae40ed768b"
+      "hash": "08dc7875c095ce4c9339968a5a798632cd5f628d3a48ee623858e5ae40ed768b",
+      "bodyHash": "2ffc15aa6ecbaeb20466d1702e5c26ee453cbd94da78578d0d9632e50afba922"
     },
     {
       "id": "could-not-import-a-server-from-claude-desktop",
-      "hash": "59df9e4a25c0324450b8c3fa4788cfe4872e3e918e3ef782fc2ec74f779f3b7e"
+      "hash": "59df9e4a25c0324450b8c3fa4788cfe4872e3e918e3ef782fc2ec74f779f3b7e",
+      "bodyHash": "d14a396288726e8c9628b9071688e88008dc014c8016f655f56f21cf9b1b9e56"
     },
     {
       "id": "cannot-add-mcp-server-to-the-managed-scope",
-      "hash": "afa22774ef12430ecac4ffac8a8f7a9f3bed4f8a5ca18642180c562bcb7ab12b"
+      "hash": "afa22774ef12430ecac4ffac8a8f7a9f3bed4f8a5ca18642180c562bcb7ab12b",
+      "bodyHash": "b4930ffb5abf5c399869e2b54370aacca22539d8bfce366e48670630610285fe"
     },
     {
       "id": "cannot-add-mcp-server-when-managed-settings-allow-only-plugin-servers",
-      "hash": "f32a031417ba542274df9805b8a5299cfc15a75024f3d8201ae453bedbef1076"
+      "hash": "f32a031417ba542274df9805b8a5299cfc15a75024f3d8201ae453bedbef1076",
+      "bodyHash": "929c63ae0dfe805482b2a1b7df8d7b5ec262babe9556f2c83ae17eb7510ed942"
     },
     {
       "id": "cant-read-mcp-json",
-      "hash": "d34c89d5154aa0218189f7ab5161e908b82926088d27ea239c91f2e9404bbb0a"
+      "hash": "d34c89d5154aa0218189f7ab5161e908b82926088d27ea239c91f2e9404bbb0a",
+      "bodyHash": "0946a51a539f0451883fd2c814547970855b5b2d90be3f9cd5d7eba2cee21850"
     },
     {
       "id": "mcp-server-was-not-saved-or-removed",
-      "hash": "46c7d927917e93d810aabafb333c82a4bc3e692e9af59dd2df2a4c611bb2d1c1"
+      "hash": "46c7d927917e93d810aabafb333c82a4bc3e692e9af59dd2df2a4c611bb2d1c1",
+      "bodyHash": "bc6c34fa36a475dc956cc7d49f9ea5e485dae1f3cefa449911771e6345bc61ec"
     },
     {
       "id": "mcp-server-may-not-have-been-saved-or-removed",
-      "hash": "eb846c728f36ee9d563d88e043801f493dd4d10fca7be55ff5316d99eb8bafbb"
+      "hash": "eb846c728f36ee9d563d88e043801f493dd4d10fca7be55ff5316d99eb8bafbb",
+      "bodyHash": "b193b468bab59d70b139db99746024b03581bce1c302135bd4ebe04836bd7b20"
     },
     {
       "id": "anthropic-hosted-and-doesnt-support-local-oauth",
-      "hash": "9bc11fdf30f8a56c58272ef55303938cda39199e98c56b6c8546e37274ea4577"
+      "hash": "9bc11fdf30f8a56c58272ef55303938cda39199e98c56b6c8546e37274ea4577",
+      "bodyHash": "cd840d9b3f90d33f850dbcf33b1a3e3012e231411e30552d6566b4953529b950"
     },
     {
       "id": "server-rejected-the-authorization-header-minted-by-the-configured-headershelper",
-      "hash": "99e9199334099889561c2db2914e7bcae89d5bd9c2bf5ce9dcb2a5e3749854ad"
+      "hash": "99e9199334099889561c2db2914e7bcae89d5bd9c2bf5ce9dcb2a5e3749854ad",
+      "bodyHash": "9ed9f7e54c8684a70efc09508206523fc396ae4209757cd1b93021bfd135e11f"
     },
     {
       "id": "mcp-permission-prompt-tool-not-found",
-      "hash": "930352bee61224fb8b3907da05cb13e2ca1d2b746b61ec71a830203ac70e0ac8"
+      "hash": "930352bee61224fb8b3907da05cb13e2ca1d2b746b61ec71a830203ac70e0ac8",
+      "bodyHash": "ad6d3ea23d1a693dd468a54529744545d5a89d549eb4c769c1fbe981dd8d842c"
     },
     {
       "id": "oauth-callback-port-is-already-in-use",
-      "hash": "75a233b6d5228ee495d75f75b6623d8a367170864e74cf411ad339ea4cdf2116"
+      "hash": "75a233b6d5228ee495d75f75b6623d8a367170864e74cf411ad339ea4cdf2116",
+      "bodyHash": "b5e8bfd7a5fa2944be67f463afdb3b7caba55de9c87bcb82943253b6b7e4a9e6"
     },
     {
       "id": "no-available-ports-for-oauth-redirect",
-      "hash": "30b4d2a0af539f9706550b77b9649724fc6844dc0650ea11ca2198e0ec4dd97b"
+      "hash": "30b4d2a0af539f9706550b77b9649724fc6844dc0650ea11ca2198e0ec4dd97b",
+      "bodyHash": "0eb53fe65e6fbf76e5ea9ce26036ab76e348a7488c52b3909f9663cf8bb7fe56"
     },
     {
       "id": "security-review-fails-without-origin-head",
-      "hash": "57bdf87adbcb6ea712d79f00cd3e7a639d221a17b480d99daf6557f0e0d78328"
+      "hash": "57bdf87adbcb6ea712d79f00cd3e7a639d221a17b480d99daf6557f0e0d78328",
+      "bodyHash": "1de22e492de68178c87699c1def8968b0f73418e4ed41e1742370832295b767c"
     },
     {
       "id": "input-must-be-provided-when-using-print",
-      "hash": "73f2589f985e480d98d8b3e30368e8002172657eca3b260c55747f56e0341ce0"
+      "hash": "73f2589f985e480d98d8b3e30368e8002172657eca3b260c55747f56e0341ce0",
+      "bodyHash": "899fc56e503566197fb0eb74727bd39cfab0a7b7e04e519e2ed84107da111081"
     },
     {
       "id": "claude-code-cant-read-the-keyboard-here",
-      "hash": "c717df4523bbcd80496fd35322bef700f9c0255a30194e7eb979cb51b36474f2"
+      "hash": "c717df4523bbcd80496fd35322bef700f9c0255a30194e7eb979cb51b36474f2",
+      "bodyHash": "05aab7d20a29a93068793be6f1e533e922b49a98b3e66677f3f5634a56df2048"
     },
     {
       "id": "input-contained-only-whitespace",
-      "hash": "38d5eef4f189ad10e363a77e445fd042106f63b6971876e4c8ea593e87f1f743"
+      "hash": "38d5eef4f189ad10e363a77e445fd042106f63b6971876e4c8ea593e87f1f743",
+      "bodyHash": "7823acd1cc1107d694e3865f2b535c98c779fbd444320ec4d5834761b0faaa0f"
     },
     {
       "id": "stream-json-input-carried-over-256m-characters-with-no-newline",
-      "hash": "8f79ee2e390f18b56f8859d1d0966cfd44485165ea9ffffe5391dc3f97b6c219"
+      "hash": "8f79ee2e390f18b56f8859d1d0966cfd44485165ea9ffffe5391dc3f97b6c219",
+      "bodyHash": "adbf1c1553674e1366245a6a74cc5ed5904d382d4d08b69e93c03549518491da"
     },
     {
       "id": "unknown-command",
-      "hash": "10a2baf1c5a1502efba6826641d210aadf907a9b561fb1a19860680f10cfa53d"
+      "hash": "10a2baf1c5a1502efba6826641d210aadf907a9b561fb1a19860680f10cfa53d",
+      "bodyHash": "fdf4a26c65f670db8bdc5b8daba3e3e3fee570ff1b8290c4fe046b08e77b5a19"
     },
     {
       "id": "diff-is-too-large-for-ultrareview",
-      "hash": "1a6f9711e677727102ecefeb55c219c4a44e1dd772a5bba837cc1758c0c87810"
+      "hash": "1a6f9711e677727102ecefeb55c219c4a44e1dd772a5bba837cc1758c0c87810",
+      "bodyHash": "76c7bed59d151d30e55bbefb20e7e45d3e75da62da6188b9ab3859131af07551"
     },
     {
       "id": "could-not-find-merge-base-with-the-base-branch",
-      "hash": "b115c9ef1505655846c491c262335b739a2d1c3644602229f9f74975bf211097"
+      "hash": "b115c9ef1505655846c491c262335b739a2d1c3644602229f9f74975bf211097",
+      "bodyHash": "526b7807045cbec4296bec6c41b0b89cb2a9887129ec9f5c4dbaac83bfda477d"
     },
     {
       "id": "your-checkout-has-no-branches",
-      "hash": "58d0d8e479c94f01b1df2a5ca5f41d7bf45c6e1e08f1c270af068ecae2d6a1f9"
+      "hash": "58d0d8e479c94f01b1df2a5ca5f41d7bf45c6e1e08f1c270af068ecae2d6a1f9",
+      "bodyHash": "a24d3b72d20b02f7863d01932cb60b80031700d2666c3b7a60fdc031ab71e36b"
     },
     {
       "id": "no-github-account-is-connected-to-your-claude-account",
-      "hash": "8b5de0b16ec958cd03effbedc84a358ca780330a0099c422664285bab88d50f0"
+      "hash": "8b5de0b16ec958cd03effbedc84a358ca780330a0099c422664285bab88d50f0",
+      "bodyHash": "70952c4dbbdf84f391f71e2bce7961704762ee9993b7775daf3a74f691bfa9ef"
     },
     {
       "id": "your-connected-github-account-cant-see-the-repository",
-      "hash": "efc67c25554de97c3bda63f4fea2428a92e70b964e6fb72ab437480f80b8dd59"
+      "hash": "efc67c25554de97c3bda63f4fea2428a92e70b964e6fb72ab437480f80b8dd59",
+      "bodyHash": "b351e0fd9f144dc1cbcdcdb1bf9f7e7ea5cfea42b2a060b689646aacec3b60c4"
     },
     {
       "id": "the-github-app-preflight-failed-transiently",
-      "hash": "7d139890dab6f75f4c71cf6d4cc7e359857cf17fdceb0d3f9a92185df25d35c4"
+      "hash": "7d139890dab6f75f4c71cf6d4cc7e359857cf17fdceb0d3f9a92185df25d35c4",
+      "bodyHash": "7f3e489c4a167e749d74905c9cc156e087d206744297f9365d43f2dc2234014e"
     },
     {
       "id": "the-repository-upload-cant-follow-a-git-setting",
-      "hash": "a095087c6e87051ca85d6a466b8714e4654c2ccc15aef72a91f657209cd38f44"
+      "hash": "a095087c6e87051ca85d6a466b8714e4654c2ccc15aef72a91f657209cd38f44",
+      "bodyHash": "9fbe7c5ea239a95831f3684290e42069bf2bdc56b7eb05a1140c93a0bda8713b"
     },
     {
       "id": "github-isnt-connected-to-your-claude-account",
-      "hash": "9aa992f3b2d1b3b79b69de445cdffc045a802ea6a1f755af4289a06234a1ae61"
+      "hash": "9aa992f3b2d1b3b79b69de445cdffc045a802ea6a1f755af4289a06234a1ae61",
+      "bodyHash": "f49c33814af33aeac10d52cfbad318afd4abf4c32d98390f914190c2041cc6ee"
     },
     {
       "id": "a-github-organization-policy-is-blocking-claude",
-      "hash": "200a80ac6f95e3956c792254eaae25f8e16d8a5ebe405789ae2598305e0edf79"
+      "hash": "200a80ac6f95e3956c792254eaae25f8e16d8a5ebe405789ae2598305e0edf79",
+      "bodyHash": "7f8877ad7ce543c8053e4c1f2de7d72db09ec7b7e7403ef923fc149d4c4d142f"
     },
     {
       "id": "single-sign-on-authorization-needed",
-      "hash": "ea1b7ecfc18a543117ced140fea69c5cad19340a77ea00f8f0c54795995d1419"
+      "hash": "ea1b7ecfc18a543117ced140fea69c5cad19340a77ea00f8f0c54795995d1419",
+      "bodyHash": "222ed1e36437bc7c756c06f125485b76e97791e6b516adbcceca35a25d2cb248"
     },
     {
       "id": "failed-to-resume-the-conversation",
-      "hash": "dc7ac46dac98e60f4a7c560a779f5dbe0fd0e7b609dc4809a2909178c3c95716"
+      "hash": "dc7ac46dac98e60f4a7c560a779f5dbe0fd0e7b609dc4809a2909178c3c95716",
+      "bodyHash": "5f3216565b74ffdfbe0bec3e872eb742960b977d2a932f74b5bf08aa95b99918"
     },
     {
       "id": "no-conversation-found-with-the-session-id",
-      "hash": "43d7493bdded679b27ac5e6f0f9391fb4b93e850c94619f7c9b8f9d298cc6c94"
+      "hash": "d94446e67c0ad9ca81303c01f6e262c40da1c5a6b0366cde2dd77a7ad320b826",
+      "bodyHash": "99955839b7d33db1014135d1558fe97117fd428ba7b202fd42d850a596e2a49e"
     },
     {
       "id": "windows-reported-an-error-ebadf",
-      "hash": "dfe429d139dd843904dbf747277a16b5f3b74cfa83e384fc1cf16c803e550e91"
+      "hash": "dfe429d139dd843904dbf747277a16b5f3b74cfa83e384fc1cf16c803e550e91",
+      "bodyHash": "318e02cc9803daace7a796b6d4cef75aebd45848ad4d897442bc20f641d09c8c"
     },
     {
       "id": "cannot-switch-renderers-in-this-session",
-      "hash": "2d2b2c725ba3cfcafa11ecd48eff9e611983d855a675b6b765e4269155d45fbe"
+      "hash": "2d2b2c725ba3cfcafa11ecd48eff9e611983d855a675b6b765e4269155d45fbe",
+      "bodyHash": "21e9140c3f53eccbee4fd0416f9d2ab40c1c8e31e5bd543f4c2165981e84e898"
     },
     {
       "id": "claude-code-couldnt-restart",
-      "hash": "b14adbcb092dc6bc3e8a2485fc37499234ee97663fc0e46ac1124f9323a9eed2"
+      "hash": "b14adbcb092dc6bc3e8a2485fc37499234ee97663fc0e46ac1124f9323a9eed2",
+      "bodyHash": "a0091cf220e2bd3d3c8863efcba399b21f78235f271f6e7cafd6164bf8558ce7"
     },
     {
       "id": "couldnt-open-claude-desktop",
-      "hash": "0a3a1f116a8727c880231a76c26992e80a7cdf502a0349516088502cae860201"
+      "hash": "0a3a1f116a8727c880231a76c26992e80a7cdf502a0349516088502cae860201",
+      "bodyHash": "ad4b77086e96bfb40d14e17ca60bb6281227262fcd1a8c6cafa5faa93ddd174e"
     },
     {
       "id": "terminal-setup-left-your-zed-keymap-unchanged",
-      "hash": "ed54c2f9d0eb74725bfec1e3107516b0d3183b4187e88b206541ae321a8b243a"
+      "hash": "ed54c2f9d0eb74725bfec1e3107516b0d3183b4187e88b206541ae321a8b243a",
+      "bodyHash": "dcb7002e81acccf15b34fa65ad0eaafe5edaed4d01c223503a4d94dd5c959100"
     },
     {
       "id": "skill-usage-reports-are-not-available-on-this-connection",
-      "hash": "5e8838983f61a13a2af2a0f8e51f92344e9f228328b003b58573ffcd689e7188"
+      "hash": "5e8838983f61a13a2af2a0f8e51f92344e9f228328b003b58573ffcd689e7188",
+      "bodyHash": "927425f5354dcc1d2df8ae85d2569d552420e87c8677c8606206a21942c7abdc"
     },
     {
       "id": "custom-output-styles-cant-be-selected-over-remote-control",
-      "hash": "e63c72ef54990badd4db3e356c6323ccf04f4fac27c4627a603074619a0ff9f5"
+      "hash": "e63c72ef54990badd4db3e356c6323ccf04f4fac27c4627a603074619a0ff9f5",
+      "bodyHash": "0ac063415ae4a92461bd6ad43da35611463fd672e6d2aac60de75826573a4353"
     },
     {
       "id": "output-styles-are-saved-to-local-settings-which-this-session-doesnt-load",
-      "hash": "bc2878f38f0ceaa926ea4d0c3ff6fc3972c009e8da05869f6c046dec96a27299"
+      "hash": "bc2878f38f0ceaa926ea4d0c3ff6fc3972c009e8da05869f6c046dec96a27299",
+      "bodyHash": "132d13c5eefffbdbc10350ac5cb08aadc40b156e6c57396f0336ba721cb6db68"
     },
     {
       "id": "recap-only-runs-when-you-ask-for-it-yourself",
-      "hash": "c356db7684a3482575158b713071fe7b8efb4c283d1c37dd8316ef01869e72d2"
+      "hash": "c356db7684a3482575158b713071fe7b8efb4c283d1c37dd8316ef01869e72d2",
+      "bodyHash": "60d352f5800a94d1927b94efc465669e7fe36aa3b1ec3ce8d538597f2922bace"
     },
     {
       "id": "plugin-errors",
-      "hash": "9ecc321ff43436dbf3253fbc465cf3d814c1515e52670c5bbe66de68d109d9fc"
+      "hash": "9ecc321ff43436dbf3253fbc465cf3d814c1515e52670c5bbe66de68d109d9fc",
+      "bodyHash": "c8257d46ef8483787621061c3c33fa9de230ac0b5a0b834f51207dd871ced1fa"
     },
     {
       "id": "plugin-eval-is-currently-in-early-access",
-      "hash": "3228bb2bd36de4864cc5811751637b96f340bc9e1dcb6d5f19481b179d4f4bb7"
+      "hash": "3228bb2bd36de4864cc5811751637b96f340bc9e1dcb6d5f19481b179d4f4bb7",
+      "bodyHash": "d3cb00dd96f4ed2004401638e487cde18007f1928ab132331e94faa70a3d20f5"
     },
     {
       "id": "marketplace-is-registered-from-an-untrusted-source",
-      "hash": "4fbd7b17d887393fa840edc4397381b8ab703439e7870ca3f4f48036b936023f"
+      "hash": "4fbd7b17d887393fa840edc4397381b8ab703439e7870ca3f4f48036b936023f",
+      "bodyHash": "08a50b048efca27b020799171329ca28e8776d660d60cf623aaf8098ed8ef006"
     },
     {
       "id": "marketplace-name-is-another-spelling-of-a-reserved-name",
-      "hash": "7ccf99986b1e10e7d033cfdcd4df8a34e27361e11da6011b491dd8af313a62fb"
+      "hash": "7ccf99986b1e10e7d033cfdcd4df8a34e27361e11da6011b491dd8af313a62fb",
+      "bodyHash": "3b9e656dbf2d0f7be014af28623a55b2d5e1cda499516aecbccd03f8de8b02ec"
     },
     {
       "id": "claude-code-refuses-the-marketplace-name",
-      "hash": "3ffc9df4f0a0331230a32e28ddb69c236e69bb13fa4bc585411fa8f87d6f8067"
+      "hash": "3ffc9df4f0a0331230a32e28ddb69c236e69bb13fa4bc585411fa8f87d6f8067",
+      "bodyHash": "5565db5e50300dad5fd1e7a6db70971da36f9fc23699dc4783e2e87e56c9caa8"
     },
     {
       "id": "marketplace-is-already-added-from-a-different-source",
-      "hash": "515ec8ac7f6b4684f737108df7e0bc0b6219ca8d41c8601a94f64cdcbdc30651"
+      "hash": "515ec8ac7f6b4684f737108df7e0bc0b6219ca8d41c8601a94f64cdcbdc30651",
+      "bodyHash": "121a42a81f0ccbb66c16647a96c0d16cd840960448c6ca106f6a491f34d2c4f6"
     },
     {
       "id": "plugin-command-references-user-config",
-      "hash": "4039daeaeeab00fdabf642e951381a48a0a28c66570e104c88a54b23f0baf7c6"
+      "hash": "4039daeaeeab00fdabf642e951381a48a0a28c66570e104c88a54b23f0baf7c6",
+      "bodyHash": "be4baca1d8ee8681642f88b0790f5a5c978b587c021ddba30566938075cac843"
     },
     {
       "id": "plugin-archive-integrity-check-failed",
-      "hash": "1685ab35244b0af5f78bd2113413cf91afc2feaef4624fbd4d459f4e903bd7f2"
+      "hash": "1685ab35244b0af5f78bd2113413cf91afc2feaef4624fbd4d459f4e903bd7f2",
+      "bodyHash": "2e82f9a6b87a4854bb97d99bb4afb53dfbc1c34911881e7554c621f060d5b1ee"
     },
     {
       "id": "path-escapes-plugin-directory",
-      "hash": "5681f5051584c16f8699c406342cad59c118d93e078e0217361ef469c8e5f346"
+      "hash": "5681f5051584c16f8699c406342cad59c118d93e078e0217361ef469c8e5f346",
+      "bodyHash": "bea2d8e3454d63929e2760e8510b8cc0daa94f7b5c4f599812db53788f2c6178"
     },
     {
       "id": "path-could-not-be-checked",
-      "hash": "cb1012664a54714654d764ac746a1b85d4812d35f7a934b26b85fd369285d084"
+      "hash": "cb1012664a54714654d764ac746a1b85d4812d35f7a934b26b85fd369285d084",
+      "bodyHash": "4d17a2574e61518278f99a3e2d2d13a78cdf410835a3eda56972fdbd0590e6da"
     },
     {
       "id": "marketplace-entry-path-does-not-stay-inside-the-marketplace-directory",
-      "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0"
+      "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0",
+      "bodyHash": "b92fea1fe32160dee1a92e07323b280c862c454567e3afa48153e6e017c084c8"
     },
     {
       "id": "failed-to-load-marketplace-configuration",
-      "hash": "d862792d4eda9f97c4e264cee47fa8d07b4436f815fe52a8b84f3378dcf07a08"
+      "hash": "d862792d4eda9f97c4e264cee47fa8d07b4436f815fe52a8b84f3378dcf07a08",
+      "bodyHash": "746b2e5757aa659cd659c7297e1a5ea3aede569b43c8139c7b5de51f778756d1"
     },
     {
       "id": "plugin-is-required-by-your-organization",
-      "hash": "1f64371fe46b17aa522c985b7d3238521128734b6bce6f839073e3db24517ccb"
+      "hash": "1f64371fe46b17aa522c985b7d3238521128734b6bce6f839073e3db24517ccb",
+      "bodyHash": "f4e7fb3facf6ea62c1346183f2f4d8790d6e636ac84ce15b0d8e50facf53a8f0"
     },
     {
       "id": "plugin-was-not-uninstalled",
-      "hash": "17d1f84006387704fdbf23689ec209f207100ea9e151953811e3f3e2a646b141"
+      "hash": "17d1f84006387704fdbf23689ec209f207100ea9e151953811e3f3e2a646b141",
+      "bodyHash": "b110e5a999c05f3dd42f0d3bd481a25cea0c299aa9bbba6dc4dbea10ebf02761"
     },
     {
       "id": "tool-errors",
-      "hash": "474392178546cca063844cfb4db716c57356d23ec48c0dd2278581be4b149e94"
+      "hash": "474392178546cca063844cfb4db716c57356d23ec48c0dd2278581be4b149e94",
+      "bodyHash": "f9dac4b66050f15438ca57040242917eca8cc81c3bc5f8bc47f1bb6d17a302b2"
     },
     {
       "id": "no-such-tool-available",
-      "hash": "96a419e65ea6fdccffef78b5668098385342db7b5917f91f4cc218746c4dc041"
+      "hash": "96a419e65ea6fdccffef78b5668098385342db7b5917f91f4cc218746c4dc041",
+      "bodyHash": "938da59c67917078aaa103c90c4ffe9f157acb76b1e21eea4c2f626ae56a561e"
     },
     {
       "id": "agent-would-be-spawned-with-zero-tools",
-      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923",
+      "bodyHash": "b792eb7ef3bbbe3b44b704ab0377145072b86903352c03bc3e1315a8ce0e7107"
     },
     {
       "id": "file-is-covered-by-a-read-deny-rule",
-      "hash": "5f482b737fa2ea2d07f900a15004ec6a9b5ea044a837f8f3b01a2fe1dd555799"
+      "hash": "5f482b737fa2ea2d07f900a15004ec6a9b5ea044a837f8f3b01a2fe1dd555799",
+      "bodyHash": "ffbc1e065fba61dc4450595050db0e6f46a94786ec05cd20d3059e749e425443"
     },
     {
       "id": "path-cannot-contain-null-bytes",
-      "hash": "90009e266df5b28fb4667b324d9580ddacc018d2ae33c8a0d1bd058b9303c1c0"
+      "hash": "90009e266df5b28fb4667b324d9580ddacc018d2ae33c8a0d1bd058b9303c1c0",
+      "bodyHash": "8c34c6be372a8dafbab54feca8a45a53b2077ff641dcf8f4032c1c2dcbe75068"
     },
     {
       "id": "subagent-type-is-required",
-      "hash": "31f44fbb1563d84a7a918910930a8024639b598ace721c05fa73ac8472c70b47"
+      "hash": "31f44fbb1563d84a7a918910930a8024639b598ace721c05fa73ac8472c70b47",
+      "bodyHash": "60cffc5ecc2b74bf62a125b11495c96b2efa95c916246c915f69b7a74480f0c0"
     },
     {
       "id": "memory-index-is-over-its-read-limit",
-      "hash": "105b83ff6fb266ead40be05db044bbba6c18b02ff271d7403e3e0b38ac36dc29"
+      "hash": "105b83ff6fb266ead40be05db044bbba6c18b02ff271d7403e3e0b38ac36dc29",
+      "bodyHash": "655ac296cda67053873fd35da4d404eb1ba8331c26fe46123befe4d050b443a8"
     },
     {
       "id": "pkill-pattern-matches-the-claude-code-process",
-      "hash": "97000b083dec53d69f0161db145919a99429de62c50a8690dfd5c81f5980ba41"
+      "hash": "97000b083dec53d69f0161db145919a99429de62c50a8690dfd5c81f5980ba41",
+      "bodyHash": "461bad260b9e09d608adb7043e00017c442cd4bae2b7c789c4076d6657828cae"
     },
     {
       "id": "failed-to-write-to-a-teammate-inbox",
-      "hash": "a93a825b58cf372f5038c7a7f0f4d4649e9eae0b43e97fea28798580d4181df0"
+      "hash": "a93a825b58cf372f5038c7a7f0f4d4649e9eae0b43e97fea28798580d4181df0",
+      "bodyHash": "3952e450940ce9607c3492fd4b5470d4c4767e3426e9bc40cc11dab83b2cea88"
     },
     {
       "id": "teammate-agent-definition-not-restored",
-      "hash": "989c3a5fcb9d142a3346e2453b320fe538ffb726eb36db8b1412e3c89879dbca"
+      "hash": "989c3a5fcb9d142a3346e2453b320fe538ffb726eb36db8b1412e3c89879dbca",
+      "bodyHash": "982759084bab57c13ea5714aca716a12064c01367a44149b706dcf5cbf8c0092"
     },
     {
       "id": "message-too-large-for-cross-session-delivery",
-      "hash": "8d529e9a6204f79dec161426741a893e36d28838cdc294351c4c6cdc60674eb8"
+      "hash": "8d529e9a6204f79dec161426741a893e36d28838cdc294351c4c6cdc60674eb8",
+      "bodyHash": "4fec5c690efbe1cd5bf298f8fa98ad714d35ce3b7d031e9bf433162b1ca2e274"
     },
     {
       "id": "too-many-messages-to-this-session-just-now",
-      "hash": "819717939c85d07409499f70412aba1de9a6f3aada48ae119f9d9ae2f2707583"
+      "hash": "819717939c85d07409499f70412aba1de9a6f3aada48ae119f9d9ae2f2707583",
+      "bodyHash": "9010a3c4d655899aa2ecdfa7f61d59173ee16598d0dd174409bb68f11d38f323"
     },
     {
       "id": "cross-session-message-dropped-at-the-inbox",
-      "hash": "34e45d6ef22cd6cb4cc0592bf758b3459a74996c4d6e94560b2abea59720c482"
+      "hash": "34e45d6ef22cd6cb4cc0592bf758b3459a74996c4d6e94560b2abea59720c482",
+      "bodyHash": "800a2e43bc37b40fa302c235495c7edbf5a550060d27e0d856c9502734f0268a"
     },
     {
       "id": "refusing-to-send-a-cross-session-message",
-      "hash": "81b74b6f98acc1d42530ffb0b606c7f4ad013b59cf37ec33d7e370b535cef61d"
+      "hash": "81b74b6f98acc1d42530ffb0b606c7f4ad013b59cf37ec33d7e370b535cef61d",
+      "bodyHash": "15024886265aac55216c32c727c605c632c36d9f961240a7aaef12b6028a4012"
     },
     {
       "id": "refusing-after-a-symlink-changed",
-      "hash": "2102a0157363f62aa3d0ad4ed617d7132dc612e0b2c416b144a6255d5867b046"
+      "hash": "2102a0157363f62aa3d0ad4ed617d7132dc612e0b2c416b144a6255d5867b046",
+      "bodyHash": "ecc6d0af032be027e85e1f0021ef63d6cb86554ce0ae4361813255f6857b5d6f"
     },
     {
       "id": "task-output-swap-refused",
-      "hash": "218374c828d653eb24c9df4c1a302f31609c9f213580023501df28604dc29dbc"
+      "hash": "218374c828d653eb24c9df4c1a302f31609c9f213580023501df28604dc29dbc",
+      "bodyHash": "3500f508ccd773071f729a7d42718f210492f40a8d8e30cd68be53316559daa1"
     },
     {
       "id": "disk-quota-or-temp-filesystem-is-full",
-      "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658"
+      "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658",
+      "bodyHash": "f2a08a6d26989c175cc60ac269f6b43285948d810609d16e1bd7e53eeda81211"
+    },
+    {
+      "id": "file-is-not-valid-utf-8",
+      "hash": "57a8ff70ce0d53bb4bae8629129cbe2bfd8ba0697713d8e6a537452a0413b72b",
+      "bodyHash": "2f8967101943bead30f9612d5f0ab0f71ca6b1fb7daa6307ef65c3e00038b621"
     },
     {
       "id": "the-source-file-is-not-valid-utf-8-text",
-      "hash": "df455bb21ca40e7dbbbd52b0a613280362380959eb69f0a7763ffc7312fbdb0a"
+      "hash": "df455bb21ca40e7dbbbd52b0a613280362380959eb69f0a7763ffc7312fbdb0a",
+      "bodyHash": "5915faf28f1e965d19f7c91fb0d6864e1a21c2a0118434a55f16c9d1c6f3b1c2"
     },
     {
       "id": "not-published-that-file-is-on-a-network-share",
-      "hash": "c6ae0021431df3c3fd691064c6cbbf77ddac1e1b52ec886c8986014250180ed0"
+      "hash": "c6ae0021431df3c3fd691064c6cbbf77ddac1e1b52ec886c8986014250180ed0",
+      "bodyHash": "d0cd29ea0ac00e66cc4852165f4c99ed3cd2aa605194abf42f7c065758c11ca2"
     },
     {
       "id": "reading-a-local-file-from-outside-the-connected-folders",
-      "hash": "07bcd6a68e636417cfa0573cb71703c50c319d592f894681eb5ce1cb71df712d"
+      "hash": "07bcd6a68e636417cfa0573cb71703c50c319d592f894681eb5ce1cb71df712d",
+      "bodyHash": "ec40551ac81448ede3ca3ed8ec1fdcffdf020501b302b88639f442c34ffa8479"
     },
     {
       "id": "webfetch-cannot-fetch-localhost",
-      "hash": "482658058e12ab27a65037ebea762f9fdaf1e3661dca703ae2d5daf4a7e40a2d"
+      "hash": "482658058e12ab27a65037ebea762f9fdaf1e3661dca703ae2d5daf4a7e40a2d",
+      "bodyHash": "c3c866f5d6f51b5eb4ea0675b02650a779024ad745531c6119acfb7725f51156"
     },
     {
       "id": "webfetch-domain-safety-check-failed",
-      "hash": "f55bdb634bec03e449756ee49008dc99929bb3e313206e9d0965d2130099e70c"
+      "hash": "f55bdb634bec03e449756ee49008dc99929bb3e313206e9d0965d2130099e70c",
+      "bodyHash": "085419660c4b35cf9abf2cbc72b7677f2286896616fbc27987131868705b6426"
     },
     {
       "id": "background-session-errors",
-      "hash": "ca3af87875393acc48c8e6e524d33c5c5985123bcdbdc463338dcd34db6ac7a1"
+      "hash": "ca3af87875393acc48c8e6e524d33c5c5985123bcdbdc463338dcd34db6ac7a1",
+      "bodyHash": "1370caed3bf148949da04f99564382d371fb19ab92a7744ea7ce8ce756d2d1e7"
     },
     {
       "id": "commands-refused-in-a-background-session",
-      "hash": "f681e3a9a4d36722834c2ec4d88b8f160ac9551d4fa7f3f0f75970727fa32a0b"
+      "hash": "f681e3a9a4d36722834c2ec4d88b8f160ac9551d4fa7f3f0f75970727fa32a0b",
+      "bodyHash": "a43bceea0d941c0e917eb19dcf2a77a485aeda7f6810fc5a47d2a13514385aa3"
     },
     {
       "id": "write-or-command-blocked-because-the-path-cannot-be-safely-resolved",
-      "hash": "607a6a39a6aa51d9713312aca3179d45ae3f23b2c14df7a7ab557e9b5a8ea02c"
+      "hash": "607a6a39a6aa51d9713312aca3179d45ae3f23b2c14df7a7ab557e9b5a8ea02c",
+      "bodyHash": "02b3c99be7650c5e8aa9441e39d3b93399a39bfb72e2d62bb1c973049f4f2e9e"
     },
     {
       "id": "write-or-command-blocked-because-the-path-names-a-network-location",
-      "hash": "cd3032a3b9d1da0651917cda97e8ecd23307ef0076185172b5b3cc5088d397cc"
+      "hash": "cd3032a3b9d1da0651917cda97e8ecd23307ef0076185172b5b3cc5088d397cc",
+      "bodyHash": "a70cfff9e43d74ff2bad65e90419c2e1f5861fd57a3c56c9526e8276a735e926"
     },
     {
       "id": "command-blocked-by-the-worktree-isolation-checks",
-      "hash": "aef4e7f67ffe5ff912ec26cb2c0dc82ecf883aa899fca0cbee1720f3c987c5de"
+      "hash": "aef4e7f67ffe5ff912ec26cb2c0dc82ecf883aa899fca0cbee1720f3c987c5de",
+      "bodyHash": "0cd28479ae18d2826e1453a179f0fab67a6ea29b1b5585b36ed16cfac1cb6e9f"
     },
     {
       "id": "this-session-has-no-saved-transcript",
-      "hash": "e59f118cd60d042ce145f802b6df3530454bf8bc6e150c98b3e8220b4b3c203e"
+      "hash": "e59f118cd60d042ce145f802b6df3530454bf8bc6e150c98b3e8220b4b3c203e",
+      "bodyHash": "52b1ab3304ff4ef2bd15b3f637f4790e30d66044cba23777dbe6a13450071d62"
     },
     {
       "id": "this-session-is-running-in-another-terminal",
-      "hash": "8e050b81619b5ff770fa62df2fccfa71d5a1b89e8fa06ee7af7ce98d459d6fcc"
+      "hash": "8e050b81619b5ff770fa62df2fccfa71d5a1b89e8fa06ee7af7ce98d459d6fcc",
+      "bodyHash": "8d596e0d1a79e8fcb5a4cde3d4bdce1aff4f4d1130e77d3a231d8168dd2c2d86"
     },
     {
       "id": "this-sessions-saved-conversation-is-no-longer-on-disk",
-      "hash": "a0ecca451dca1830f22901ff87892d96b6ee4f58fd5508361f279015b04d7fc2"
+      "hash": "a0ecca451dca1830f22901ff87892d96b6ee4f58fd5508361f279015b04d7fc2",
+      "bodyHash": "4df6c115a2eca40eea2d2ddddc8e62211bc832b24eec03900f600f425278d4d0"
     },
     {
       "id": "worktree-has-commits-that-are-not-pushed-anywhere",
-      "hash": "904166030517466c4c657babdf045bd7a0cbde4ccbbc75e4f89074bf5ef7e0a4"
+      "hash": "904166030517466c4c657babdf045bd7a0cbde4ccbbc75e4f89074bf5ef7e0a4",
+      "bodyHash": "2d1c81a0aa97f3380ffb7ec9b0d071b069743eb5a29fc2855f5f224530b53ccf"
     },
     {
       "id": "terminal-host-process-died",
-      "hash": "397e94a8e25be6779f22aa8dd68002750894fc5e79005f16207dc84289059a19"
+      "hash": "397e94a8e25be6779f22aa8dd68002750894fc5e79005f16207dc84289059a19",
+      "bodyHash": "c83e0d50cf355407127463455b4f238461a9cd6a1eeef99cc527723ab9fc25cc"
     },
     {
       "id": "session-isnt-responding",
-      "hash": "5ac39c9c245be46e007aa4e296fe5aeaf9cbb719d5cc47a84be8937cfced964d"
+      "hash": "5ac39c9c245be46e007aa4e296fe5aeaf9cbb719d5cc47a84be8937cfced964d",
+      "bodyHash": "73c9539978f5717b0f9f587aaf0fccd15c1310becb22927b8e7c3c44a9933997"
     },
     {
       "id": "session-was-stopped-while-the-respawn-was-in-flight",
-      "hash": "d8d1481b9293d83699b7a7e332dac0875385c27c13ab830f1f2a2ff9e06312c9"
+      "hash": "d8d1481b9293d83699b7a7e332dac0875385c27c13ab830f1f2a2ff9e06312c9",
+      "bodyHash": "0941b96f7bea9f61b205eebf17d1ea47423a13d77ef987b4336aaf05f75f98c7"
     },
     {
       "id": "session-agent-no-longer-available",
-      "hash": "1980dc780f53f6cf4808b6ccedfeca55cdf7cdd2bea3bd4c17f6e9dedeed8864"
+      "hash": "1980dc780f53f6cf4808b6ccedfeca55cdf7cdd2bea3bd4c17f6e9dedeed8864",
+      "bodyHash": "2015af957afa14cb43b57f2fcc3aa464f145814a68661eb3b018e6af1bf44386"
     },
     {
       "id": "restarted-after-its-next-loop-wakeup-was-due",
-      "hash": "347c16110e8664a141d1a2e4e011e767d1b231c172d837e4f0ac51b64d713559"
+      "hash": "347c16110e8664a141d1a2e4e011e767d1b231c172d837e4f0ac51b64d713559",
+      "bodyHash": "c4074fd615d57d8cd257f3139dd6168c3e6a9582c54a373a2e08824375661e70"
     },
     {
       "id": "claude_code_process_wrapper-launcher-errors",
-      "hash": "75447808bfc63605530597a81d665cc5b066ff55e5e002850941d43cc630e01b"
+      "hash": "75447808bfc63605530597a81d665cc5b066ff55e5e002850941d43cc630e01b",
+      "bodyHash": "cb60ecf257e657372a63780d408d33041e4ef6114a9fa1dd070a44edb44a3a39"
     },
     {
       "id": "eunknown-when-starting-a-background-session",
-      "hash": "3b624bc190e5f377fdeab349dbaf30f35ef41fa5272f74e74f9b61941b30a8c1"
+      "hash": "3b624bc190e5f377fdeab349dbaf30f35ef41fa5272f74e74f9b61941b30a8c1",
+      "bodyHash": "f9254aaccbc8aded40e1d4624d8cb4dc107df8e62841e03c40e4db4479d5e3a5"
     },
     {
       "id": "eacces-when-starting-a-background-session",
-      "hash": "a7c4f16e535f8f610448e999799a6a19fd4e0546e94909816138bb45ee0a4f79"
+      "hash": "a7c4f16e535f8f610448e999799a6a19fd4e0546e94909816138bb45ee0a4f79",
+      "bodyHash": "231c60a84678d5c8411f3e782db28ca7f57dad01617865f9084437619e4d3c8d"
     },
     {
       "id": "background-service-exited-before-it-became-reachable",
-      "hash": "0cba552969d1007f3c385f3d69ace603547e346a13b20841dd3cc23310d2862d"
+      "hash": "0cba552969d1007f3c385f3d69ace603547e346a13b20841dd3cc23310d2862d",
+      "bodyHash": "c2588e6875e9ac742606a5970086a834070a74246213d91328fefe603defabca"
     },
     {
       "id": "working-directory-no-longer-exists-when-starting-a-background-session",
-      "hash": "5a339c050ca1f0dbc79949af3e3d78ca911807dbe5d2b9ae03c6a53350287118"
+      "hash": "5a339c050ca1f0dbc79949af3e3d78ca911807dbe5d2b9ae03c6a53350287118",
+      "bodyHash": "35576619160b2d0088ebc60e8a82b3c50f97ab76ca96e5dda5aae7af737331ae"
     },
     {
       "id": "workspace-not-trusted-when-dispatching-a-background-session",
-      "hash": "28571f7704301d7a20203062708f1bd30ee2624b5a53642f534a52fc9879e0d7"
+      "hash": "28571f7704301d7a20203062708f1bd30ee2624b5a53642f534a52fc9879e0d7",
+      "bodyHash": "61711d2a60b534cd0a02bdfe685c5a89e97917ab2c310016caa6dce55faf2eeb"
     },
     {
       "id": "wrapper-and-ide-errors",
-      "hash": "2cbb9c539bc00810e29117761df702cacba319080054466213d9eb5aa2d4eebb"
+      "hash": "2cbb9c539bc00810e29117761df702cacba319080054466213d9eb5aa2d4eebb",
+      "bodyHash": "c197f681743f613700e783e61cb226c649cc84899993202f9ac59e9286ed9892"
     },
     {
       "id": "claude-code-process-exited-with-code-n",
-      "hash": "151352b9be169b41199808e7db9348a19cb73ade82db0fb8b83c6372583ea137"
+      "hash": "151352b9be169b41199808e7db9348a19cb73ade82db0fb8b83c6372583ea137",
+      "bodyHash": "628cccf14ac75be3cf827f8c995aa3fa710ea587dfe87ff9ca7e5990c6a906f7"
     },
     {
       "id": "could-not-locate-the-claude-cli-on-path",
-      "hash": "59dc47bd4dd8f536c1a648c3f4a35c3839dbf03bc92eac27436a5e3c765772fe"
+      "hash": "59dc47bd4dd8f536c1a648c3f4a35c3839dbf03bc92eac27436a5e3c765772fe",
+      "bodyHash": "4e2d4a8e9edd37d2b067db2be55f7f96de8edea8030647e64e50d0edcf64a924"
     },
     {
       "id": "the-connection-to-claude-code-ended-before-this-message-completed",
-      "hash": "2dc04c82f23af94ea3e62e36a2a32c07cdb41bfd5b201d1b920c72a03bc2ce44"
+      "hash": "2dc04c82f23af94ea3e62e36a2a32c07cdb41bfd5b201d1b920c72a03bc2ce44",
+      "bodyHash": "d71ee4d2029ca7e2c1346f8a945ccf2659f11725ac445fc3d5b4322094b104d1"
     },
     {
       "id": "rewind-warnings-and-errors",
-      "hash": "d7248bbb746f6727493eb5ac750e2449f5892c4220aaf1646a35ec098ed3d05e"
+      "hash": "d7248bbb746f6727493eb5ac750e2449f5892c4220aaf1646a35ec098ed3d05e",
+      "bodyHash": "c229310804622aaeae701fa0c7639a262e53efb78aa0b2709bf8383459afdf16"
     },
     {
       "id": "restored-the-code-but-skipped-files",
-      "hash": "827bf9c082986749dcc8be5c8d7ba126fffa43bc164e9f991a57090379f1d27f"
+      "hash": "827bf9c082986749dcc8be5c8d7ba126fffa43bc164e9f991a57090379f1d27f",
+      "bodyHash": "7de690b85383b10a70134e9e73e74f6f2a6bc69300660ccbe73dcc84074379fc"
     },
     {
       "id": "no-files-were-restored",
-      "hash": "747b4209a8fc73c948454b388606402c3dec8a3032db5461ac9ec3986ee80c63"
+      "hash": "747b4209a8fc73c948454b388606402c3dec8a3032db5461ac9ec3986ee80c63",
+      "bodyHash": "50e444f18cf9ee1006817ef6b97734ff54c567a70704da2c977239952752a432"
     },
     {
       "id": "session-saving-warnings",
-      "hash": "265c05f07d0c4b5558a9e0e43614709e321fd6035f8354dfabd24092ea967dc9"
+      "hash": "265c05f07d0c4b5558a9e0e43614709e321fd6035f8354dfabd24092ea967dc9",
+      "bodyHash": "4054249f1b22a7e877547ba407377ce8eb39e0c6b0336833507eb3f9ecd08c40"
     },
     {
       "id": "transcript-writes-are-failing",
-      "hash": "4247105a1e446f5606ffc1e27dbd4fa7aa8b5d3b897573345335898298d07760"
+      "hash": "4247105a1e446f5606ffc1e27dbd4fa7aa8b5d3b897573345335898298d07760",
+      "bodyHash": "0b5f30c0b0a3a33b6d229e2efa0948330cf41f4a43b99fac97e670d31187240d"
     },
     {
       "id": "transcript-saving-is-off-skip-prompt-history",
-      "hash": "19d9efa6eba6c74a96da483664193dd8b78a6450dde185d0699dc34c0ecc8819"
+      "hash": "19d9efa6eba6c74a96da483664193dd8b78a6450dde185d0699dc34c0ecc8819",
+      "bodyHash": "b0c48e17249b7582f1e948648160d10ac2b446eb6aa9990829f78c4e83f95257"
     },
     {
       "id": "transcript-saving-is-off-child-session-marker",
-      "hash": "cd5d385daf52b0d90a0dd34d876117ad01ffaa48c9252e3266957a561db86836"
+      "hash": "cd5d385daf52b0d90a0dd34d876117ad01ffaa48c9252e3266957a561db86836",
+      "bodyHash": "1222375371164000a5ee1cc7b5d6a308f4492e8110772e2f93e7760f5b012523"
     },
     {
       "id": "configuration-warnings",
-      "hash": "3e2eb3984e6a919a37f92113d3dc3af71eee0344c7b25e74927d4d6f6f678415"
+      "hash": "3e2eb3984e6a919a37f92113d3dc3af71eee0344c7b25e74927d4d6f6f678415",
+      "bodyHash": "2f8644d9f9c1426c5f4d6ae33b51e9fd10ed6c4d9ff80f6d4593b35bc07fccf5"
     },
     {
       "id": "exited-after-an-unrecoverable-interface-error",
-      "hash": "18e922eeea1fb6d29153ead374b08f15b50bf77651a0b91ca1c8ce355210e5af"
+      "hash": "18e922eeea1fb6d29153ead374b08f15b50bf77651a0b91ca1c8ce355210e5af",
+      "bodyHash": "a603346a884b63e445fe06fd13bc099ae675bf09dfd5bf8b49440fdd924a302e"
     },
     {
       "id": "agent-descriptions-are-over-the-15000-token-limit",
-      "hash": "9a0bbae323aed2dc5a7faf8077bf424d901c4d60fe7bd768558b2d0f493694a0"
+      "hash": "9a0bbae323aed2dc5a7faf8077bf424d901c4d60fe7bd768558b2d0f493694a0",
+      "bodyHash": "fba91072dae334ac42fef9802b54915c0ca0889a720c163dd4caf8d5ffd39a89"
     },
     {
       "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
-      "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4"
+      "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4",
+      "bodyHash": "7ee4c03e787f80c4d63df8e481ccb9837493bf911891b434eba5059f435f1dac"
     },
     {
       "id": "workspace-has-not-been-trusted",
-      "hash": "36842ac7767c36eb1fdc3f93fcc28bd4c43f253d2ec32b1b990705ad3d851962"
+      "hash": "36842ac7767c36eb1fdc3f93fcc28bd4c43f253d2ec32b1b990705ad3d851962",
+      "bodyHash": "17f46fd30f65ca1023ba96b251f320b6a34261bcf4b393e95d560e9ab39bc403"
     },
     {
       "id": "working-directory-is-a-network-path",
-      "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56"
+      "hash": "f5bb8ce4eba1e1e76e5ea53bb4de634f71040a091fb85f1ef4c0274646df18b9",
+      "bodyHash": "29b19dd817433f5181c749081373c5d56f9cc4c9c2f506648c6524ba4f6d479d"
     },
     {
       "id": "remote-managed-settings-failed-to-load",
-      "hash": "e0036cf01347f5c7a6246128b66788557e71c84eadbfd1bebcc9f7b2c0e65a09"
+      "hash": "e0036cf01347f5c7a6246128b66788557e71c84eadbfd1bebcc9f7b2c0e65a09",
+      "bodyHash": "37f1b9bf58070b0dace25d13d840a55fadd36f15330995950f746f31f62036db"
     },
     {
       "id": "managed-settings-were-not-approved",
-      "hash": "f6ee5479d6da845f5c4d0399706dcfe83f6af0a8d31a41f1517581d0c992af6d"
+      "hash": "f6ee5479d6da845f5c4d0399706dcfe83f6af0a8d31a41f1517581d0c992af6d",
+      "bodyHash": "dace72576e6223d9e692fd3ba68af12dfd9b4fa6ec44f3731a3f415607622563"
     },
     {
       "id": "managed-settings-block-the-default-model",
-      "hash": "3c6c3ac893d33a3a73dc29572ee4194987b6ca596b839b28a57e461431405d9f"
+      "hash": "3c6c3ac893d33a3a73dc29572ee4194987b6ca596b839b28a57e461431405d9f",
+      "bodyHash": "bdc5d34fd9cbff0ae87e0911b2b535c1ea0eaa98a140f0bad4ab8231d56bc43e"
     },
     {
       "id": "managed-settings-dont-allow-this-api-provider",
-      "hash": "8f5559e467fb24eafd5c8b7a5a3d0d183258945c0c15d1e532ba4ae7e6f88705"
+      "hash": "8f5559e467fb24eafd5c8b7a5a3d0d183258945c0c15d1e532ba4ae7e6f88705",
+      "bodyHash": "1e99347a47eef8e3c9092902f43ff44317af2747c76642fa2d00681ff8b7ca7d"
     },
     {
       "id": "mcp-server-is-blocked-by-enterprise-managed-policy",
-      "hash": "050c0b0b5b92b20ac430b6346295747f1bef486aa489770102b8e1e2ac7a7cbb"
+      "hash": "050c0b0b5b92b20ac430b6346295747f1bef486aa489770102b8e1e2ac7a7cbb",
+      "bodyHash": "df09f327c8aa25362b9a1d4a9e4c9bd6a637c785707d0c4917e25706d348dad8"
     },
     {
       "id": "managed-settings-document-could-not-be-parsed",
-      "hash": "d1e9587a21189f68c13a1ed4c448129c97c6a5b9326c26f19c1cfb03c99d9dbb"
+      "hash": "d1e9587a21189f68c13a1ed4c448129c97c6a5b9326c26f19c1cfb03c99d9dbb",
+      "bodyHash": "087a4fd13be3de3fe14c43baf3e4c9f50bb9bf4b09ec9cc2ac1da76eb1541d9e"
     },
     {
       "id": "unable-to-read-managed-policy-settings",
-      "hash": "eb56ce06bff7397cef31ec510430c69f98ae64717675b948d90d011d6606982d"
+      "hash": "eb56ce06bff7397cef31ec510430c69f98ae64717675b948d90d011d6606982d",
+      "bodyHash": "d3e3ec49fc888dde8df37813c8c60f55a9dfb219b89a27be53bc2e984008e0d0"
     },
     {
       "id": "otelheadershelper-failed",
-      "hash": "e800ee9edd638013784ff717bdc16125e251b68b57b697a2d33a29b2b64330e6"
+      "hash": "e800ee9edd638013784ff717bdc16125e251b68b57b697a2d33a29b2b64330e6",
+      "bodyHash": "01e5299619932b41b647233ab6d35fa5bc237adcdb1f2dfc9858b341cf504b14"
     },
     {
       "id": "headershelper-not-run",
-      "hash": "89e2460a867cf7225d378916b5f0dcce82cee55a38ed42cbd36bf1ae07df73c7"
+      "hash": "89e2460a867cf7225d378916b5f0dcce82cee55a38ed42cbd36bf1ae07df73c7",
+      "bodyHash": "feb189ba9a056b6f9f2db3962b90f44a0987c7298fdf107431e664fabbf6fdb7"
     },
     {
       "id": "malformed-tool-content-rule",
-      "hash": "64e6fa825ddbbc3585d8aed429a706a746ba1816e91e97099f8ec0b4e127cc1a"
+      "hash": "64e6fa825ddbbc3585d8aed429a706a746ba1816e91e97099f8ec0b4e127cc1a",
+      "bodyHash": "9b57800b824f6d6c9e1397e3817c3a6f5b3b1da4e79c70970cf17352a5ebfab9"
     },
     {
       "id": "is-not-matched-by-file-permission-checks",
-      "hash": "c82ec831066c9e26f6b23b44bb668004cdaab41529bb28b97a5ff95cc95e0af5"
+      "hash": "c82ec831066c9e26f6b23b44bb668004cdaab41529bb28b97a5ff95cc95e0af5",
+      "bodyHash": "80f5c90e9a822bcc3575fa7720dd20571763bd731a33ed5dbcd2483824714358"
     },
     {
       "id": "has-a-wildcard-before-the-rest-of-the-command",
-      "hash": "8b7d60bb29de9a85d524939f5c6f1c213208eb33b97719fb66303eb31af17924"
+      "hash": "8b7d60bb29de9a85d524939f5c6f1c213208eb33b97719fb66303eb31af17924",
+      "bodyHash": "e7203901b4621ab18405f63e928abf38d774e89123484663bc0630ccd30b55fc"
     },
     {
       "id": "denying-bash-also-turns-off-the-powershell-tool",
-      "hash": "857eb5bc397a0885f4edc4cf5986f2e3d8600c98582ebc7ae2ffcc0c1bc48839"
+      "hash": "857eb5bc397a0885f4edc4cf5986f2e3d8600c98582ebc7ae2ffcc0c1bc48839",
+      "bodyHash": "3b8888e8e28de8d60defc0ad2ab6312c495d757d04162ad1913cbb06e72fa66e"
     },
     {
       "id": "crosssessioninbound-must-be-one-of-accept-hold-refuse",
-      "hash": "ec75ea8170b46f6eb4525c4abd405fbcd252fbfa9b6af62668e59168e527cb43"
+      "hash": "ec75ea8170b46f6eb4525c4abd405fbcd252fbfa9b6af62668e59168e527cb43",
+      "bodyHash": "3f68494f908d072fc5c06e9e08b93d4671094184b339e7a02ecc85b282f57153"
     },
     {
       "id": "anthropic-foundry-resource-must-be-a-foundry-resource-name",
-      "hash": "2d1aa91311b2cbd8409c56e8419f73cedca6545f70b7065a444699f0add9b0de"
+      "hash": "2d1aa91311b2cbd8409c56e8419f73cedca6545f70b7065a444699f0add9b0de",
+      "bodyHash": "37e36d0a983edd7fdb4f1541c7ed1e8c37f80cd9b9ec42072f1c2e90eefee76b"
     },
     {
       "id": "the-200k-limit-isnt-enforced",
-      "hash": "f7724f5b5fc3fc37449d68a39a83c3993f892eb87eb46d3c776bdb2ee201c654"
+      "hash": "f7724f5b5fc3fc37449d68a39a83c3993f892eb87eb46d3c776bdb2ee201c654",
+      "bodyHash": "ef765372eb7f30d8ca44cc0ee4e1cf3f658e8fdd2001982bb8498b25f11b6cfa"
     },
     {
       "id": "unrecognized-model-id-on-a-request",
-      "hash": "a5e64aa23d8f2c3bd6fc93f999750d6818bd0bad92c2b6b70e1c7f9c3d438aab"
+      "hash": "a5e64aa23d8f2c3bd6fc93f999750d6818bd0bad92c2b6b70e1c7f9c3d438aab",
+      "bodyHash": "42c722c59b14a644ef30d86d4214a0c2850588d5d8d787526a41e3c0a130bbf6"
     },
     {
       "id": "stale-sandbox-mask-files-left-by-a-killed-session",
-      "hash": "766dae8e415fe9e85aa2012ba7a8bbb1a3970cc47d93f179fb82528d195b05b7"
+      "hash": "766dae8e415fe9e85aa2012ba7a8bbb1a3970cc47d93f179fb82528d195b05b7",
+      "bodyHash": "5b47ecf1e8e8d375dd90ac0f2d38083f0d5c151f44bd9ad8ff44a7a5afd6b775"
     },
     {
       "id": "responses-seem-lower-quality-than-usual",
-      "hash": "0b80eb86afe9f910a12923a2f3269059aef30fcac7eca71fcec73d640b14d506"
+      "hash": "0b80eb86afe9f910a12923a2f3269059aef30fcac7eca71fcec73d640b14d506",
+      "bodyHash": "9c1521cf4787079c716be7ba135c65e20e821d4b6e09dee6e1641e8a4a9ed32c"
     },
     {
       "id": "report-an-error",
-      "hash": "85e993e92b93a0af9b5866e64556e5e2da608108532d4ad4c1b8ba7f091a7875"
+      "hash": "85e993e92b93a0af9b5866e64556e5e2da608108532d4ad4c1b8ba7f091a7875",
+      "bodyHash": "a613636b9149b2c6dff4ae4e5b0001ebdd5862336f274ea7a5dbaa7fe5bea614"
     }
   ],
   "sources": [
