@@ -21,17 +21,17 @@ const lint = (code: unknown, file = PROJECT) =>
 const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) => message.messageId)
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports a deny rule in a project, local or managed file', () => {
+  it('reports a deny rule in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids({ permissions: { deny: ['EndConversation'] } }, file), file).toEqual(['noEffect'])
     }
   })
 
-  it.fails('reports an ask rule', () => {
+  it('reports an ask rule', () => {
     expect(ids({ permissions: { ask: ['EndConversation'] } })).toEqual(['noEffect'])
   })
 
-  it.fails('reports each entry once, in deny and in ask', () => {
+  it('reports each entry once, in deny and in ask', () => {
     expect(
       ids({
         permissions: { deny: ['Bash(rm *)', 'EndConversation'], ask: ['EndConversation', 'Read'] },
@@ -39,7 +39,7 @@ describe(`${name}: the reports`, () => {
     ).toEqual(['noEffect', 'noEffect'])
   })
 
-  it.fails('says which list, and that the rule has no effect while another tool remains', () => {
+  it('says which list, and that the rule has no effect while another tool remains', () => {
     const [deny] = lint({ permissions: { deny: ['EndConversation'] } })
     expect(deny?.message).toContain('deny')
     expect(deny?.message).toContain('no effect while any other tool remains')
@@ -47,7 +47,7 @@ describe(`${name}: the reports`, () => {
     expect(ask?.message).toContain('ask')
   })
 
-  it.fails('reports the entry, at its line, column and end', () => {
+  it('reports the entry, at its line, column and end', () => {
     const [message] = lint('{"permissions":{"deny":["EndConversation"]}}')
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
       1, 25, 1, 42,
@@ -56,35 +56,35 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the rules that it leaves alone`, () => {
-  it.fails('is silent in allow, where the docs use the name to keep the tool', () => {
+  it('is silent in allow, where the docs use the name to keep the tool', () => {
     expect(ids({ permissions: { allow: ['EndConversation'] } })).toEqual([])
   })
 
-  it.fails('is silent for a glob, which removes the tool when no other tool remains', () => {
+  it('is silent for a glob, which removes the tool when no other tool remains', () => {
     expect(ids({ permissions: { deny: ['*', 'End*'], ask: ['*'] } })).toEqual([])
   })
 
-  it.fails('is silent for a rule with a specifier: permissions-specifier-unsupported reports it', () => {
+  it('is silent for a rule with a specifier: permissions-specifier-unsupported reports it', () => {
     expect(ids({ permissions: { deny: ['EndConversation(*)', 'EndConversation(x)'] } })).toEqual([])
   })
 
-  it.fails('is silent for another tool, and for a name that is spelled otherwise', () => {
+  it('is silent for another tool, and for a name that is spelled otherwise', () => {
     expect(
       ids({ permissions: { deny: ['Endconversation', 'EndConversations', 'Bash', 'Agent'] } }),
     ).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
+  it('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
     expect(ids({ permissions: { deny: ['EndConversation('] } })).toEqual([])
   })
 
-  it.fails('is silent for an entry that is no string, and a list that is no array', () => {
+  it('is silent for an entry that is no string, and a list that is no array', () => {
     expect(ids({ permissions: { deny: [3, null] } })).toEqual([])
     expect(ids({ permissions: { ask: 'EndConversation' } })).toEqual([])
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids({ permissions: { deny: ['EndConversation'] } }, HIDDEN)).toEqual([])
   })
 })

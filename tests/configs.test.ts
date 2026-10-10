@@ -490,6 +490,72 @@ const TREE: Record<string, string> = {
   'packages/pdc/managed-settings.d/sub/40-c.json': PAIR,
   'packages/pdc/.vscode/settings.json': PAIR,
   'packages/pdc2/managed-settings.d/10-a.json': PAIR,
+  // `permissions-bash-wildcard-before-subcommand`: a `*` before the subcommand, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pwb/.claude/settings.json': '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/.claude/settings.local.json': '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/managed-settings.json': '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/managed-settings.d/10-a.json': '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/managed-settings.d/30-b.txt': '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  'packages/pwb/.vscode/settings.json': '{"permissions": {"allow": ["Bash(git * main)"]}}',
+  // `permissions-bash-runner-wildcard`: a runner with a final `*`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/prw/.claude/settings.json': '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/.claude/settings.local.json': '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/managed-settings.json': '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/managed-settings.d/10-a.json': '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/managed-settings.d/30-b.txt': '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  'packages/prw/.vscode/settings.json': '{"permissions": {"allow": ["Bash(devbox run *)"]}}',
+  // `permissions-bash-exec-wrapper-prefix`: a prefix rule for an exec wrapper, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pew/.claude/settings.json': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/.claude/settings.local.json': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/managed-settings.json': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/managed-settings.d/10-a.json': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/managed-settings.d/30-b.txt': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/managed-settings.d/sub/40-c.json': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  'packages/pew/.vscode/settings.json': '{"permissions": {"allow": ["Bash(watch *)"]}}',
+  // `permissions-allow-unrestricted`: a bare `Bash` in `allow`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pau/.claude/settings.json': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/.claude/settings.local.json': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/managed-settings.json': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/managed-settings.d/10-a.json': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/managed-settings.d/.20-hidden.json': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/managed-settings.d/30-b.txt': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/managed-settings.d/sub/40-c.json': '{"permissions": {"allow": ["Bash"]}}',
+  'packages/pau/.vscode/settings.json': '{"permissions": {"allow": ["Bash"]}}',
+  // `permissions-end-conversation`: a `deny` rule for `EndConversation`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pec/.claude/settings.json': '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/.claude/settings.local.json': '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/managed-settings.json': '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/managed-settings.d/10-a.json': '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/managed-settings.d/30-b.txt': '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/managed-settings.d/sub/40-c.json': '{"permissions": {"deny": ["EndConversation"]}}',
+  'packages/pec/.vscode/settings.json': '{"permissions": {"deny": ["EndConversation"]}}',
+  // `permissions-protected-path-allow`: an `Edit` rule, an `allowWrite` entry and an `rm` rule, each in a file that reads it. The entry is for the two project files, so a managed file with an entry gets no report. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ppa/.claude/settings.json': '{"permissions": {"allow": ["Edit(.claude/**)"]}}',
+  'packages/ppa/.claude/settings.local.json':
+    '{"sandbox": {"filesystem": {"allowWrite": [".git/hooks"]}}}',
+  'packages/ppa/managed-settings.json': '{"permissions": {"allow": ["Edit(.git/**)"]}}',
+  'packages/ppa/managed-settings.d/10-a.json': '{"permissions": {"allow": ["Bash(rm -rf /)"]}}',
+  'packages/ppa/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["Edit(.claude/**)"]}}',
+  'packages/ppa/managed-settings.d/30-b.txt': '{"permissions": {"allow": ["Edit(.claude/**)"]}}',
+  'packages/ppa/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"allow": ["Edit(.claude/**)"]}}',
+  'packages/ppa/.vscode/settings.json': '{"permissions": {"allow": ["Edit(.claude/**)"]}}',
+  // `permissions-protected-path-allow`: the entry in a managed file, which the rule does not read.
+  'packages/ppa2/managed-settings.json':
+    '{"sandbox": {"filesystem": {"allowWrite": [".git/hooks"]}}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -579,6 +645,20 @@ const MODE_RULES = [
   { name: 'permissions-default-mode-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-disable-mode-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The Bash and allow rules of the second layer of #15, in the order of the `modules` list, with
+// the files of each. Each is an error. All six read the project and managed files.
+const ALLOW_RULES = [
+  { name: 'permissions-allow-unrestricted', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-bash-exec-wrapper-prefix', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-bash-runner-wildcard', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  {
+    name: 'permissions-bash-wildcard-before-subcommand',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+  },
+  { name: 'permissions-end-conversation', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-protected-path-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -798,6 +878,30 @@ const EXPECTED = [
   'packages/pdc/managed-settings.json: claude/permissions-default-mode-conflict@2',
   'packages/pdc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/pdc2/managed-settings.d/10-a.json: claude/permissions-default-mode-conflict@2',
+  // The Bash and allow rules read the project and managed files, and no other file. A hidden
+  // drop-in is for `settings-managed-file`.
+  ...[
+    ['pau', 'permissions-allow-unrestricted'],
+    ['pec', 'permissions-end-conversation'],
+    ['pew', 'permissions-bash-exec-wrapper-prefix'],
+    ['prw', 'permissions-bash-runner-wildcard'],
+    ['pwb', 'permissions-bash-wildcard-before-subcommand'],
+  ].flatMap(([dir, rule]) => [
+    `packages/${dir}/.claude/settings.json: claude/${rule}@2`,
+    `packages/${dir}/.claude/settings.local.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
+  ]),
+  // The protected path rule reads a different form in each file. The managed file with an
+  // `allowWrite` entry gets no report.
+  ...[
+    'packages/ppa/.claude/settings.json',
+    'packages/ppa/.claude/settings.local.json',
+    'packages/ppa/managed-settings.json',
+    'packages/ppa/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/permissions-protected-path-allow@2`),
+  'packages/ppa/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -890,6 +994,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...ALLOW_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
       ...MARKETPLACE_RULES.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -917,6 +1025,7 @@ describe('configs', () => {
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MODE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...ALLOW_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
@@ -980,6 +1089,15 @@ describe('configs', () => {
 
   it('gives each permission mode rule one JSON block for its files', () => {
     for (const { name, files } of MODE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each Bash and allow rule one JSON block for its files', () => {
+    for (const { name, files } of ALLOW_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )

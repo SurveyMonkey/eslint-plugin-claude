@@ -42,13 +42,13 @@ const ids = (code: unknown, file = PROJECT, runners?: unknown) =>
 const allow = (...rules: string[]) => ({ permissions: { allow: rules } })
 
 describe(`${name}: the default runners`, () => {
-  it.fails('reports the example of the docs, in a project, local or managed file', () => {
+  it('reports the example of the docs, in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(allow('Bash(devbox run *)'), file), file).toEqual(['runner'])
     }
   })
 
-  it.fails('reports each runner of the docs', () => {
+  it('reports each runner of the docs', () => {
     for (const rule of [
       'Bash(direnv exec *)',
       'Bash(devbox run *)',
@@ -60,29 +60,29 @@ describe(`${name}: the default runners`, () => {
     }
   })
 
-  it.fails('reads the :* suffix as a trailing *', () => {
+  it('reads the :* suffix as a trailing *', () => {
     expect(ids(allow('Bash(npx:*)', 'Bash(devbox run:*)'))).toEqual(['runner', 'runner'])
   })
 
-  it.fails('reports a Monitor rule, which uses the rules of Bash', () => {
+  it('reports a Monitor rule, which uses the rules of Bash', () => {
     expect(ids(allow('Monitor(npx *)'))).toEqual(['runner'])
   })
 
-  it.fails('reports each entry once', () => {
+  it('reports each entry once', () => {
     expect(ids(allow('Bash(npx *)', 'Bash(npx prettier *)', 'Bash(mise exec *)'))).toEqual([
       'runner',
       'runner',
     ])
   })
 
-  it.fails('names the rule and the runner, and says to write a rule for each inner command', () => {
+  it('names the rule and the runner, and says to write a rule for each inner command', () => {
     const [message] = lint(allow('Bash(devbox run *)'))
     expect(message?.message).toContain('`Bash(devbox run *)`')
     expect(message?.message).toContain('`devbox run`')
     expect(message?.message).toContain('each inner command')
   })
 
-  it.fails('reports the entry, at its line, column and end', () => {
+  it('reports the entry, at its line, column and end', () => {
     const [message] = lint(JSON.stringify(allow('Bash(npx *)')))
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
       1, 26, 1, 39,
@@ -91,7 +91,7 @@ describe(`${name}: the default runners`, () => {
 })
 
 describe(`${name}: the rules that it leaves alone`, () => {
-  it.fails('is silent for a rule that names the inner command', () => {
+  it('is silent for a rule that names the inner command', () => {
     for (const rule of [
       'Bash(devbox run npm test)',
       'Bash(devbox run npm *)',
@@ -104,7 +104,7 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for the runner alone, and for a runner that is not a whole word', () => {
+  it('is silent for the runner alone, and for a runner that is not a whole word', () => {
     for (const rule of [
       'Bash(npx)',
       'Bash(devbox run)',
@@ -118,57 +118,57 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for a wrapper that Claude Code strips, which is not a runner', () => {
+  it('is silent for a wrapper that Claude Code strips, which is not a runner', () => {
     for (const rule of ['Bash(timeout 30 *)', 'Bash(nice *)', 'Bash(nohup *)', 'Bash(time *)']) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a * in the middle, and for a runner after another word', () => {
+  it('is silent for a * in the middle, and for a runner after another word', () => {
     expect(ids(allow('Bash(npx * --yes)', 'Bash(sudo npx *)', 'Bash(* npx *)'))).toEqual([])
   })
 
-  it.fails('is silent for a tool with another pattern syntax', () => {
+  it('is silent for a tool with another pattern syntax', () => {
     expect(ids(allow('PowerShell(npx *)', 'Read(npx *)', 'Skill(npx *)'))).toEqual([])
   })
 
-  it.fails('is silent in deny and ask, which hold no grant', () => {
+  it('is silent in deny and ask, which hold no grant', () => {
     expect(ids({ permissions: { deny: ['Bash(npx *)'], ask: ['Bash(npx *)'] } })).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
+  it('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
     expect(ids(allow('Bash(npx *'))).toEqual([])
   })
 
-  it.fails('is silent for an entry that is no string, and a list that is no array', () => {
+  it('is silent for an entry that is no string, and a list that is no array', () => {
     expect(ids({ permissions: { allow: [3, null] } })).toEqual([])
     expect(ids({ permissions: { allow: 'Bash(npx *)' } })).toEqual([])
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash(npx *)'), HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the option runners`, () => {
-  it.fails('replaces the list, so a configured runner is reported and a default one is not', () => {
+  it('replaces the list, so a configured runner is reported and a default one is not', () => {
     expect(ids(allow('Bash(task run *)'), PROJECT, ['task run'])).toEqual(['runner'])
     expect(ids(allow('Bash(npx *)'), PROJECT, ['task run'])).toEqual([])
   })
 
-  it.fails('reads a runner of one word, and many words, and ignores extra white space', () => {
+  it('reads a runner of one word, and many words, and ignores extra white space', () => {
     expect(
       ids(allow('Bash(poetry run *)', 'Bash(uvx *)'), PROJECT, [' poetry   run ', 'uvx']),
     ).toEqual(['runner', 'runner'])
   })
 
-  it.fails('reports nothing for an empty list', () => {
+  it('reports nothing for an empty list', () => {
     expect(ids(allow('Bash(npx *)', 'Bash(devbox run *)'), PROJECT, [])).toEqual([])
   })
 
-  it.fails('refuses an option that is no list of strings', () => {
-    for (const bad of [[''], [3], 'npx', ['npx', 'npx']]) {
+  it('refuses an option that is no list of strings', () => {
+    for (const bad of [[''], ['  '], [3], 'npx', ['npx', 'npx']]) {
       expect(() => lint(allow('Bash(npx *)'), PROJECT, bad), JSON.stringify(bad)).toThrow(
         /Value .* should/s,
       )
