@@ -170,7 +170,7 @@ describe(`${RULE} (silent)`, () => {
     expect(run(['minted'], twice)).toEqual([])
   })
 
-  check('stays silent for a dependency that the allowlist of another marketplace names', () => {
+  check('reads no allowlist, so a dependency in another marketplace stays silent', () => {
     expect(
       run(['minted@shared'], entries, { allowCrossMarketplaceDependenciesOn: ['shared'] }),
     ).toEqual([])
@@ -263,13 +263,16 @@ describe(`${RULE} (silent)`, () => {
     expect(lintPlugin(RULE, path.join(top, 'plugins', 'p'), valid)).toEqual([])
   })
 
-  check('does not read the dependencies of a marketplace entry', () => {
-    const plugins = [
-      { name: 'p', source: './plugins/p', dependencies: ['minted'] },
-      { name: 'minted', source: COMMAND },
-    ]
-    expect(run([], plugins)).toEqual([])
-  })
+  check(
+    'reads no dependencies of a marketplace entry, so a manifest with none gives no report',
+    () => {
+      const plugins = [
+        { name: 'p', source: './plugins/p', dependencies: ['minted'] },
+        { name: 'minted', source: COMMAND },
+      ]
+      expect(run([], plugins)).toEqual([])
+    },
+  )
 
   linked('stays silent when the marketplace.json is a link with no target', () => {
     const code = JSON.stringify({ name: 'p', dependencies: ['minted'] })
