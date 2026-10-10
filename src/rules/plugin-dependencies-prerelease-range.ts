@@ -21,12 +21,12 @@ const name = 'plugin-dependencies-prerelease-range' as const
 
 type Triple = readonly [number, number, number]
 
-/** A comparator of a range. `zero` is true for a pre-release suffix of `-0`, the lowest
- *  pre-release of its version. */
+/** A comparator of a range. The upper bound of a partial version has the suffix `-0` in
+ *  `node-semver`. The rule needs no field for it: only a comparator with the numbers of the
+ *  target counts, and `holds` reads that one as if it had the suffix. */
 interface Comparator {
   readonly op: '>=' | '>' | '<' | '<='
   readonly version: Triple
-  readonly zero: boolean
 }
 
 // An optional operator and a version with one to three numbers. A range with an x, a `v`, a
@@ -55,18 +55,18 @@ function comparatorsOf(token: string): Comparator[] | undefined {
   const floor: Triple = [M, m ?? 0, p ?? 0]
   // The first version above every version that starts with the given parts.
   const next: Triple = m === undefined ? [M + 1, 0, 0] : [M, m + 1, 0]
-  const lower = (version: Triple): Comparator => ({ op: '>=', version, zero: false })
-  const below = (version: Triple, zero = true): Comparator => ({ op: '<', version, zero })
+  const lower = (version: Triple): Comparator => ({ op: '>=', version })
+  const below = (version: Triple): Comparator => ({ op: '<', version })
   const full = p !== undefined
   switch (op) {
     case '>=':
       return [lower(floor)]
     case '>':
-      return [full ? { op: '>', version: floor, zero: false } : lower(next)]
+      return [full ? { op: '>', version: floor } : lower(next)]
     case '<':
-      return [below(floor, !full)]
+      return [below(floor)]
     case '<=':
-      return [full ? { op: '<=', version: floor, zero: false } : below(next)]
+      return [full ? { op: '<=', version: floor } : below(next)]
     case '~':
     case '~>':
       return [lower(floor), below(m === undefined ? next : [M, m + 1, 0])]
@@ -82,9 +82,7 @@ function comparatorsOf(token: string): Comparator[] | undefined {
       return [lower(floor), below(upper)]
     }
     default:
-      return full
-        ? [lower(floor), { op: '<=', version: floor, zero: false }]
-        : [lower(floor), below(next)]
+      return full ? [lower(floor), { op: '<=', version: floor }] : [lower(floor), below(next)]
   }
 }
 
@@ -115,7 +113,8 @@ function prereleaseOf(text: string): { version: Triple; zero: boolean } | undefi
 const sameTriple = (a: Triple, b: Triple) => a.every((n, i) => n === b[i])
 
 /** True when `comparator` holds for the target. The target is a pre-release of `version`. It is
- *  above that pre-release `-0` only when its own pre-release is not exactly `0`. */
+ *  above that pre-release `-0` only when its own pre-release is not exactly `0`. A comparator with
+ *  the numbers of the target must have the suffix. */
 function holds(comparator: Comparator, target: { version: Triple; zero: boolean }): boolean {
   const { version, op } = comparator
   let order = 0
@@ -125,8 +124,9 @@ function holds(comparator: Comparator, target: { version: Triple; zero: boolean 
     }
   }
   if (order === 0) {
-    // The same numbers. A release is above each of its pre-releases, and `-0` is the lowest.
-    order = comparator.zero ? (target.zero ? 0 : 1) : -1
+    // The same numbers. `needsSuffix` gives the suffix `-0` to each such comparator, and `-0` is
+    // the lowest pre-release.
+    order = target.zero ? 0 : 1
   }
   return op === '>=' ? order >= 0 : op === '>' ? order > 0 : op === '<' ? order < 0 : order <= 0
 }
@@ -137,10 +137,7 @@ function holds(comparator: Comparator, target: { version: Triple; zero: boolean 
 function needsSuffix(range: string, target: { version: Triple; zero: boolean }): boolean {
   return (setsOf(range) ?? []).some(
     (set) =>
-      set.some((c) => sameTriple(c.version, target.version)) &&
-      set.every((c) =>
-        holds(sameTriple(c.version, target.version) ? { ...c, zero: true } : c, target),
-      ),
+      set.some((c) => sameTriple(c.version, target.version)) && set.every((c) => holds(c, target)),
   )
 }
 

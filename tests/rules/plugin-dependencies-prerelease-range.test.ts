@@ -179,6 +179,10 @@ describe(`${RULE} (silent)`, () => {
     ['a range up to the minor', '<=2.0', BETA],
     ['a range up to the major', '<=2', BETA],
     ['a bound above the lowest pre-release', '>2.0.0', '2.0.0-0'],
+    ['a minor caret bound below the target', '^0.2.0 >=0.3.0', '0.3.0-beta.1'],
+    ['a patch caret bound below the target', '^0.0.3 >=0.0.4', '0.0.4-beta.1'],
+    ['a major caret bound below the target', '^1.2.3 >=2.0.0', BETA],
+    ['a tilde bound below the target', '~2.0.0 >=2.1.0', '2.1.0-beta.1'],
     ['a range below a minor', '<2', BETA],
     ['a caret range below', '^1', BETA],
   ])('stays silent for %s', (_title, range, target) => {
