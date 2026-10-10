@@ -105,7 +105,11 @@ function addCommands(plugin: Plugin, names: Set<string>): boolean {
 function skillNames(plugin: Plugin): Set<string> | undefined {
   const names = new Set<string>()
   const { commands, skills } = plugin.fields
-  const listed = ['skills', ...listOf(skills)].every((text) => addSkillPath(plugin, text, names))
+  // A `SKILL.md` at the plugin root loads as one skill when no `skills/` folder and no `skills` key
+  // exist. The rule counts it always, which can only make the rule report less.
+  const root = addSkill(plugin, plugin.realRoot, plugin.fields.name, names) !== 'blind'
+  const listed =
+    root && ['skills', ...listOf(skills)].every((text) => addSkillPath(plugin, text, names))
   const object = commands !== null && typeof commands === 'object' && !Array.isArray(commands)
   if (object) {
     for (const key of Object.keys(commands)) {

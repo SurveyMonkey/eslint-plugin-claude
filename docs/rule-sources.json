@@ -966,6 +966,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Commands",
       "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c"
     }

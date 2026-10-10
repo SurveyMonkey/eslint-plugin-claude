@@ -153,6 +153,14 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, MANIFEST, code).map((m) => m.message)).toEqual([message('deploy')])
   })
 
+  check('stays silent for the frontmatter name of a root SKILL.md, with no skills key', () => {
+    expect(run(invoke('deploy'), { 'SKILL.md': SKILL('deploy') })).toEqual([])
+  })
+
+  check('stays silent for the plugin name when a root SKILL.md has no skills key', () => {
+    expect(run(invoke('p'), { 'SKILL.md': SKILL() })).toEqual([])
+  })
+
   check('stays silent for the plugin name when the plugin root is a skill', () => {
     expect(run(invoke('p'), { 'SKILL.md': SKILL() }, { skills: './' })).toEqual([])
   })
