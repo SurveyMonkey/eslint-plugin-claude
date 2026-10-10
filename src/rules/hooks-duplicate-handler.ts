@@ -5,7 +5,8 @@
 // So the rule never pairs two settings files.
 // One pair gets one report, on the later source: settings, then `hooks/hooks.json`, then `plugin.json`.
 // The other files are comparison data. The rule reads them through `fromData`, so `handlersOf` reads
-// every source. A file that the rule cannot read gives no report (ADR 001, Decision 14).
+// every source. A file that the rule cannot read gives no report (ADR 001, Decision 14). A settings file
+// that the rule cannot read can hold `disableAllHooks`, so it stops every settings pair.
 import path from 'node:path'
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
@@ -19,7 +20,7 @@ import {
   lastMembers,
 } from '../hooks-config.ts'
 import { settingsFilesAround } from '../hooks-files.ts'
-import { readJson, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
+import { readJson, repositoryRoot, UNREADABLE, type Unreadable } from '../skill-tree.ts'
 
 const name = 'hooks-duplicate-handler' as const
 
@@ -47,37 +48,47 @@ function canonical(node: HNode): string {
 }
 
 /** The matcher as a key part. An omitted matcher, `""` and `"*"` all match every occurrence of the event
- *  (hooks reference, "Matcher patterns"), so they share one part. */
-const matcherPart = (matcher: string | undefined) =>
-  matcher === undefined || matcher === '' || matcher === '*' ? null : matcher
+ *  (hooks reference, "Matcher patterns"), so they share one part. `FileChanged` is the exception: it
+ *  adds `"*"` to the watch list as a file name, and it adds an omitted matcher to nothing. */
+const matcherPart = (event: string, matcher: string | undefined) =>
+  event !== 'FileChanged' && (matcher === '' || matcher === '*') ? null : (matcher ?? null)
 
 /** The key of a handler: two handlers with one key are identical. The key holds the event, the matcher
  *  and every field of the handler. */
 const keyOf = ({ event, matcher, handler }: HookHandler) =>
-  JSON.stringify([event, matcherPart(matcher), canonical(handler)])
+  JSON.stringify([event, matcherPart(event, matcher), canonical(handler)])
 
-/** The parsed object of the file `file`, or undefined when the rule cannot read it. `bound` is the
- *  repository root. */
-function objectAt(file: string, bound: string): Record<string, unknown> | undefined {
+/** The parsed object of the file `file`. The result is undefined when the file is not there or does not
+ *  hold an object, and `UNREADABLE` when the rule cannot see the file. `bound` is the repository root. */
+function objectAt(file: string, bound: string): Record<string, unknown> | undefined | Unreadable {
   const parsed = readJson(file, bound)
-  return parsed === null || parsed === UNREADABLE || !isObject(parsed.data)
-    ? undefined
-    : parsed.data
+  if (parsed === UNREADABLE) {
+    return UNREADABLE
+  }
+  return parsed === null || !isObject(parsed.data) ? undefined : parsed.data
 }
 
 /** The handlers of the object `data`, read as `kind`. The result is empty when the object holds no hooks. */
-const handlersIn = (data: Record<string, unknown> | undefined, kind: HookSource['kind']) =>
-  data === undefined ? [] : handlersOf({ kind, hooks: fromData(data.hooks), file: undefined })
+const handlersIn = (
+  data: Record<string, unknown> | undefined | Unreadable,
+  kind: HookSource['kind'],
+) =>
+  data === undefined || data === UNREADABLE
+    ? []
+    : handlersOf({ kind, hooks: fromData(data.hooks), file: undefined })
 
 /** The settings files with their handlers. `disableAllHooks` merges across settings files: the nearest
  *  file that sets it wins, and `settings.local.json` wins over `settings.json`. When the merged value is
- *  true, Claude Code runs no hook, so no settings file adds a handler. */
+ *  true, Claude Code runs no hook, so no settings file adds a handler. A file that the rule cannot read
+ *  can set the key, so it stops every settings handler. */
 function settingsHandlers(root: string, bound: string) {
-  const files = settingsFilesAround(root).map((at) => ({ at, data: objectAt(at, bound) }))
+  const read = settingsFilesAround(root).map((at) => ({ at, data: objectAt(at, bound) }))
+  const blind = read.some(({ data }) => data === UNREADABLE)
+  const files = read.map(({ at, data }) => ({ at, data: isObject(data) ? data : undefined }))
   // `settingsFilesAround` lists `settings.json` and then `settings.local.json` for each folder.
   const byPrecedence = files.flatMap((_, i) => (i % 2 === 0 ? [files[i + 1], files[i]] : []))
   const nearest = byPrecedence.find((file) => typeof file?.data?.disableAllHooks === 'boolean')
-  const off = nearest?.data?.disableAllHooks === true
+  const off = blind || nearest?.data?.disableAllHooks === true
   return files.map(({ at, data }) => ({
     at,
     settings: true,
