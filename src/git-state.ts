@@ -203,12 +203,10 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
   try {
     // `-v` names the source of the pattern, in the form `source:line:pattern<TAB>path`.
     // With `-c core.excludesFile`, git reads no global excludes file, not even the
-    // default one. The quote setting keeps a source with non-ASCII letters plain.
+    // default one. A global file can have the name `.gitignore`, so the name is not enough.
     const [source = '', , pattern = ''] = run(root, [
       '-c',
       `core.excludesFile=${devNull}`,
-      '-c',
-      'core.quotePath=false',
       'check-ignore',
       '--no-index',
       '-v',

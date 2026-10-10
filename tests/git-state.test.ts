@@ -349,8 +349,9 @@ describe('gitIgnores', () => {
 
   it('is false for a pattern in the global excludes file of the machine', () => {
     const root = repo({ 'a.txt': 'x' })
-    const global = plain({ ignore: 'machine.md\n' })
-    put(global, { config: `[core]\n\texcludesFile = ${path.join(global, 'ignore')}\n` })
+    // The name `.gitignore` is common for a global file, so the name of the source is not enough.
+    const global = plain({ '.gitignore': 'machine.md\n' })
+    put(global, { config: `[core]\n\texcludesFile = ${path.join(global, '.gitignore')}\n` })
     // The helper `git` reads the same config, so this shows that the config does ignore the path.
     vi.stubEnv('GIT_CONFIG_GLOBAL', path.join(global, 'config'))
     try {
