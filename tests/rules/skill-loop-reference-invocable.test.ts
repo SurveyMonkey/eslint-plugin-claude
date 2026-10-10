@@ -77,10 +77,31 @@ put('hid-out/.claude/commands/deploy.md', manual)
 mkdirSync(at('hid-out/.claude/skills'), { recursive: true })
 symlinkSync('../../../outside/deploy', at('hid-out/.claude/skills/other'))
 mkdirSync(at('hid-out/.git'), { recursive: true })
-// A link out of the repository below `commands/`:
-put('hid-cmd/.claude/commands/cmd.md', manual)
-symlinkSync('../../../outside', at('hid-cmd/.claude/commands/ext'))
+// A link out of the repository below `commands/` can hold `ops/run.md`, which is `/ops:run`,
+// the name of the file `ops:run.md` next to it:
+put('hid-cmd/.claude/commands/ops:run.md', manual)
+symlinkSync('../../../outside', at('hid-cmd/.claude/commands/ops'))
 mkdirSync(at('hid-cmd/.git'), { recursive: true })
+
+// A link to a folder or a file that holds no skill is not a hidden skill.
+put('lnk/shared/n.md', 'Notes\n')
+mkdirSync(at('lnk/shared/empty'), { recursive: true })
+put('lnk/.claude/skills/deploy/SKILL.md', manual)
+symlinkSync('../../shared/empty', at('lnk/.claude/skills/folder'))
+symlinkSync('../../shared/n.md', at('lnk/.claude/skills/n.md'))
+mkdirSync(at('lnk/.git'), { recursive: true })
+// A `skills` folder that is a link to nothing could hold the skill that wins over the command.
+put('hid-skills/.claude/commands/deploy.md', manual)
+symlinkSync('missing', at('hid-skills/.claude/skills'))
+mkdirSync(at('hid-skills/.git'), { recursive: true })
+// A real folder whose `SKILL.md` is a link to nothing.
+put('hid-file/.claude/commands/deploy.md', manual)
+mkdirSync(at('hid-file/.claude/skills/x'), { recursive: true })
+symlinkSync('missing', at('hid-file/.claude/skills/x/SKILL.md'))
+mkdirSync(at('hid-file/.git'), { recursive: true })
+// Command files and no `skills/` folder: the commands answer.
+put('cmds/.claude/commands/cmd.md', manual)
+mkdirSync(at('cmds/.git'), { recursive: true })
 
 const manualOnly = (name: string, line = 1, column = 1) => ({
   messageId: 'manualOnly' as const,
@@ -105,15 +126,17 @@ markdownTester.run('skill-loop-reference-invocable', ruleOf('skill-loop-referenc
     { code: '/p:deploy\n', filename: loop('a') },
     { code: '/clear\n', filename: loop('a') },
     { code: '/nothing-here\n', filename: loop('a') },
-    // A folder with no `SKILL.md`, a link to nothing, and a file in `skills/`.
+    // A folder with no `SKILL.md`, and a file in `skills/`.
     { code: '/empty\n', filename: loop('a') },
-    // A link to nothing, a link out of the repository, and a scan that left a file out.
-    { code: '/dead\n', filename: loop('hid-dead') },
+    { code: '/README.md\n', filename: loop('a') },
+    // A skill that the rule cannot see could have the name: a link to nothing, a link out of the
+    // repository, and a `SKILL.md` that is a link to nothing. A command file does not answer.
     { code: '/deploy\n', filename: loop('hid-dead') },
     { code: '/ship\n', filename: loop('hid-dead') },
     { code: '/deploy\n', filename: loop('hid-out') },
-    { code: '/cmd\n', filename: loop('hid-cmd') },
-    { code: '/README.md\n', filename: loop('a') },
+    { code: '/ops:run\n', filename: loop('hid-cmd') },
+    { code: '/deploy\n', filename: loop('hid-skills') },
+    { code: '/deploy\n', filename: loop('hid-file') },
     // Two skills answer to `dup`, and one of them has no `disable-model-invocation`.
     { code: '/dup\n', filename: loop('a') },
     // The skill wins over a command file of the same name.
@@ -151,6 +174,10 @@ markdownTester.run('skill-loop-reference-invocable', ruleOf('skill-loop-referenc
     { code: '/rev\n', filename: loop('a'), errors: [manualOnly('rev')] },
     // A link inside the repository.
     { code: '/deploy\n', filename: loop('c'), errors: [manualOnly('deploy')] },
+    // A link to a folder or a file that holds no skill hides nothing.
+    { code: '/deploy\n', filename: loop('lnk'), errors: [manualOnly('deploy')] },
+    // Command files, and no `skills/` folder.
+    { code: '/cmd\n', filename: loop('cmds'), errors: [manualOnly('cmd')] },
   ],
 })
 
@@ -182,6 +209,30 @@ describe.skipIf(chmodCannotBlock)('a file that the rule cannot read', () => {
     mkdirSync(at('h/.git'), { recursive: true })
     withoutAccess(file, () => expect(lint('h', '/locked\n')).toEqual([]))
     expect(lint('h', '/locked\n')).toHaveLength(1)
+  })
+
+  it('reports nothing for a command that a skill folder it cannot search could answer', () => {
+    put('j/.claude/skills/x/SKILL.md', open)
+    put('j/.claude/commands/deploy.md', manual)
+    mkdirSync(at('j/.git'), { recursive: true })
+    withoutAccess(at('j/.claude/skills/x'), () => expect(lint('j', '/deploy\n')).toEqual([]))
+    expect(lint('j', '/deploy\n')).toHaveLength(1)
+  })
+
+  it('reports nothing for a command that a skills folder it cannot list could answer', () => {
+    put('i2/.claude/skills/other/SKILL.md', open)
+    put('i2/.claude/commands/deploy.md', manual)
+    mkdirSync(at('i2/.git'), { recursive: true })
+    withoutAccess(at('i2/.claude/skills'), () => expect(lint('i2', '/deploy\n')).toEqual([]))
+    expect(lint('i2', '/deploy\n')).toHaveLength(1)
+  })
+
+  it('reports nothing for a command folder that it cannot list', () => {
+    put('k/.claude/commands/sub/x.md', open)
+    put('k/.claude/commands/cmd.md', manual)
+    mkdirSync(at('k/.git'), { recursive: true })
+    withoutAccess(at('k/.claude/commands/sub'), () => expect(lint('k', '/cmd\n')).toEqual([]))
+    expect(lint('k', '/cmd\n')).toHaveLength(1)
   })
 
   it('reports nothing when it cannot list the skills folder', () => {
