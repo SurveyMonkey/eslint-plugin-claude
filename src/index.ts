@@ -90,6 +90,7 @@ import pluginBinExecutable from './rules/plugin-bin-executable.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
+import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
@@ -327,6 +328,7 @@ const modules = [
   claudeMdMaxBytes,
   memorySettingsSchema,
   rulesFrontmatterSchema,
+  rulesPathsGlobValid,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -511,6 +513,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
   'rules-frontmatter-schema': 'error',
+  'rules-paths-glob-valid': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
