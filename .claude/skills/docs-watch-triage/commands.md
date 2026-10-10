@@ -21,17 +21,18 @@ The third command prints the markers of one issue. The key of a marker is
 ## Phase 2: Snapshot check
 
 Replace `<name>` with the page path after `/docs/en/`. Change each `/` to `__`. Replace
-`<blockId>` with the block id from the marker.
+`<blockId>` with the block id from the marker. The command decodes the block id.
 
 ```sh
-python3 -c "import json,sys; print([b for b in json.load(open(sys.argv[1]))['blocks'] if b['id']==sys.argv[2]])" docs/docs-snapshot/<name>.json <blockId>
+python3 -c "import json,sys,urllib.parse; print([b for b in json.load(open(sys.argv[1]))['blocks'] if b['id']==urllib.parse.unquote(sys.argv[2])])" docs/docs-snapshot/<name>.json <blockId>
 node scripts/docs-watch.ts check
 curl -sL <page>.md
 ```
 
 The first command prints the stored block. Compare its `hash` with the hash in the marker. The
-second command writes no file. It lists the block ids that differ from the snapshot, for each
-page. The third command prints the live page.
+second command writes no file in the repository. It lists the block ids that differ from the
+snapshot, for each page. A page that lost a cited heading is in `errors` only. The third command
+prints the live page.
 
 ## Phase 3: Coverage check
 
@@ -43,7 +44,8 @@ grep -rn '<value or field>' src/data docs/rules
 ## Phase 5: Write back
 
 ```sh
-gh issue edit <n> --title '<type>(<group>): <subject>' --type Feature --parent <group issue> --remove-label claude-docs-change --body-file <file>
+gh issue edit <n> --title '<type>(<group>): <subject>' --type <Bug|Feature|Task> --remove-label claude-docs-change --body-file <file>
+gh issue edit <n> --parent <group issue>
 gh issue close <n> --comment '<outcome, and the rule or the row that covers it>'
 gh issue close <n> --reason 'not planned' --comment '<reason>'
 gh issue edit <n> --add-label duplicate
@@ -51,13 +53,15 @@ gh issue comment <group issue> --body '<scope note>'
 gh issue create --title '<title>' --type Task --body-file <file>
 ```
 
-`gh` has no flag for the Priority field. Set it in the web page of the issue, or with the
-`gh:issues` skill. To rewrite a body, read it first, change the text, and keep the marker line.
-Do not write a body from memory.
+The second command is for a new rule candidate only. `gh` has no flag for the Priority field.
+Set it in the web page of the issue, or with the `gh:issues` skill. To rewrite a body, read it
+first, change the text, and keep the marker line. Do not write a body from memory.
 
 ## Phase 6: Report
 
 ```sh
 gh issue list --label claude-docs-change --state open
-gh issue view <n> --json title,issueType,labels,state
+gh issue view <n> --json title,issueType,labels,state,parent,milestone
 ```
+
+`gh issue view` has no field for Priority. Read it on the web page of the issue.
