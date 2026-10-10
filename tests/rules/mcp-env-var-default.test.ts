@@ -34,6 +34,7 @@ it('reports on the string, and the message names the variable, the field and the
   expect(found[0]?.message).toContain(ref('API_KEY'))
   expect(found[0]?.message).toContain('`args`')
   expect(found[0]?.message).toContain('"a"')
+  expect(found[0]?.message).toContain(`${ref('API_KEY').slice(0, -1)}:-value}`)
 })
 it('says the risk, and does not call the form wrong', () => {
   const message = lintProject(NAME, at({ command: ref('BIN') }))[0]?.message ?? ''

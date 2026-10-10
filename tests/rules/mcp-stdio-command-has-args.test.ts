@@ -103,3 +103,8 @@ it('reports a server of a declared file on the path in the manifest', () => {
   const found = lintManifest(NAME, declared, { 'p/s.json': at({ command: 'npx -y server' }) })
   expect(found[0]).toMatchObject({ line: 1, column: declared.indexOf('"./s.json"') + 1 })
 })
+it('reads the last of two type members', () => {
+  const entry = (types: string) => `{"mcpServers": {"a": {${types}, "command": "npx -y s"}}}`
+  expect(ids(lintProject(NAME, entry('"type": "http", "type": "stdio"')))).toEqual(['splitCommand'])
+  expect(ids(lintProject(NAME, entry('"type": "stdio", "type": "http"')))).toEqual([])
+})
