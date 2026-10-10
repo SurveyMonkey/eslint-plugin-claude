@@ -49,7 +49,7 @@ describe(`${name}: the reports`, () => {
     const [message] = lint(allow('Bash(*)'))
     expect(message?.message).toContain('`Bash(*)`')
     expect(message?.message).toContain('every Bash command')
-    expect(message?.message).toContain('without manual approval')
+    expect(message?.message).toContain('allows each one')
   })
 
   it('says that the PowerShell rule approves every PowerShell command', () => {
@@ -122,5 +122,14 @@ describe(`${name}: the rules that it leaves alone`, () => {
 
   it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash'), HIDDEN)).toEqual([])
+  })
+
+  it('is silent for the domain form on another tool, and for a plain WebFetch star', () => {
+    expect(ids(allow('Read(domain:*)', 'Bash(domain:*)', 'WebFetch(*)'))).toEqual([])
+  })
+
+  it('names the bare rule and the fetch rule in the message', () => {
+    expect(lint(allow('Bash'))[0]?.message).toContain('`Bash` matches')
+    expect(lint(allow('WebFetch(domain:*)'))[0]?.message).toContain('`WebFetch(domain:*)`')
   })
 })

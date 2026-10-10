@@ -22,17 +22,18 @@ export const PROTECTED_DIRECTORIES: readonly (readonly string[])[] = [
   ['.claude'],
 ]
 
-/** The directories under `.claude` that the docs except from the check: the
- *  worktrees of Claude Code, its plan files, the scratch directory of a
- *  background session, the memory files of a project, and the memory files of
- *  a subagent. The docs list these "such as", so the rule treats each as no
- *  protected path. */
-export const CLAUDE_DIRECTORY_EXCEPTIONS: readonly string[] = [
-  'worktrees',
-  'plans',
-  'jobs',
-  'projects',
-  'agent-memory',
+/** The paths under `.claude` that the docs except from the check, as the
+ *  segments after `.claude`. A `*` stands for any one segment. The docs name
+ *  them "such as": the worktrees of Claude Code, its plan files, the scratch
+ *  directory `jobs/<id>/tmp` of a background session, the `memory` directory
+ *  of a project, and the memory files of a subagent. The rule treats a pattern
+ *  at or under one of them as no protected path. */
+export const CLAUDE_DIRECTORY_EXCEPTIONS: readonly (readonly string[])[] = [
+  ['worktrees'],
+  ['plans'],
+  ['jobs', '*', 'tmp'],
+  ['projects', '*', 'memory'],
+  ['agent-memory'],
 ]
 
 /** The files of the permission check, by name. */

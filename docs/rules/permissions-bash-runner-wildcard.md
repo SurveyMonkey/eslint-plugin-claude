@@ -25,7 +25,7 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 Claude Code strips a fixed list of wrappers before it matches a Bash rule. The list is built in. It has no environment
 runner such as `direnv exec`, `devbox run`, `mise exec`, `npx` or `docker exec`.[^wrappers] These tools run their
-arguments as a command. A rule such as `Bash(devbox run *)` matches whatever comes after `run`, including
+arguments as a command. A rule such as `Bash(devbox run *)` matches whatever comes after `run`, such as
 `devbox run rm -rf .`.[^wrappers] The docs give the fix: one rule for each inner command, as in `Bash(devbox run npm test)`.[^wrappers]
 
 The rule reports an `allow` entry for `Bash` or `Monitor` with a runner and then a final `*`:

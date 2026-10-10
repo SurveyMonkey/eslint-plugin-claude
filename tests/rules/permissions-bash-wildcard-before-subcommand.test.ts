@@ -60,7 +60,7 @@ describe(`${name}: the reports`, () => {
     const [message] = lint(allow('Bash(git * main)'))
     expect(message?.message).toContain('`Bash(git * main)`')
     expect(message?.message).toContain('options')
-    expect(message?.message).toContain('without a prompt')
+    expect(message?.message).toContain('more than you intend')
   })
 
   it('reports the entry, at its line, column and end', () => {
@@ -139,5 +139,10 @@ describe(`${name}: the rules that it leaves alone`, () => {
 
   it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash(git * main)'), HIDDEN)).toEqual([])
+  })
+
+  it('is silent when a hyphen sits inside a subcommand, and names the tool in the message', () => {
+    expect(ids(allow('Bash(git cherry-pick * main)', 'Bash(npm run-script * x)'))).toEqual([])
+    expect(lint(allow('PowerShell(git * main)'))[0]?.message).toContain('`PowerShell(git * main)`')
   })
 })
