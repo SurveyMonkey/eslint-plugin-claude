@@ -664,7 +664,8 @@ const TREE: Record<string, string> = {
   'plugins/msk2/monitors/monitors.json': JSON.stringify([
     { name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' },
   ]),
-  // A plugin that sets `agent` in the manifest and in a root `settings.json`.
+  // A plugin that sets `agent` in the manifest and in a root `settings.json`. The file wins, and
+  // the plugin has no agent `b`.
   'plugins/set/.claude-plugin/plugin.json': JSON.stringify({
     name: 'set',
     settings: { agent: 'a' },
@@ -2959,6 +2960,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-settings-agent-exists',
+    files: ['**/.claude-plugin/plugin.json', '**/settings.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -3266,6 +3272,7 @@ const EXPECTED = [
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
   'plugins/shadow/commands/c.md: claude/skill-description-present@1',
   'plugins/set/.claude-plugin/plugin.json: claude/plugin-settings-single-source@2',
+  'plugins/set/settings.json: claude/plugin-settings-agent-exists@1',
   'plugins/sen/agents/a.md: claude/plugin-user-config-sensitive-in-content@2',
   'plugins/sen/commands/c.md: claude/command-legacy-format@1',
   'plugins/sen/commands/c.md: claude/skill-description-present@1',
