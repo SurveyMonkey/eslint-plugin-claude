@@ -658,6 +658,70 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "mcp-hidden-whitespace": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Configuration warnings",
+      "hash": "30a7b267d3cf703e1c1038d207472a346adfa5e0d2d6223cb3accbc7ec943a38"
+    }
+  ],
+  "mcp-json-file-size": [
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Can't read .mcp.json",
+      "hash": "d34c89d5154aa0218189f7ab5161e908b82926088d27ea239c91f2e9404bbb0a"
+    }
+  ],
+  "mcp-json-location": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp-quickstart",
+      "heading": "Troubleshooting",
+      "hash": "1dc08c26dfb4f19bbb5cc4e1e442e5e776b7ecd61679f4754af5dd35aeea5939"
+    }
+  ],
+  "mcp-json-servers-key": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Project scope",
+      "hash": "a4e88d55aab831d2429e3595f6577f4bd9a0c62a2287788880e7d9ca3bfadd41"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "MCP servers",
+      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    }
+  ],
+  "mcp-remote-url-empty": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Server status detail",
+      "hash": "c7905ba8c09b780cd000645e341c982056103923e9f66d292f5cae4b769c3703"
+    }
+  ],
+  "mcp-server-name-reserved": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Configuration warnings",
+      "hash": "30a7b267d3cf703e1c1038d207472a346adfa5e0d2d6223cb3accbc7ec943a38"
+    }
+  ],
+  "mcp-timeout-min": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Push messages with channels",
+      "hash": "aa6ba95bd64d1420826d0aa9749a2e0b6abd049464bb7767a97c5bb030d55c35"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",

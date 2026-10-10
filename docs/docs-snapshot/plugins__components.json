@@ -125,6 +125,12 @@
       "text": "### Commands\n\nA command is a single Markdown file the user runs by name, such as `/my-plugin:about`.\n\n<Note>\n  Commands are the older format, and [skills](#skills) supersede them for new work. A skill runs by name the same way, and it can also carry supporting files in its directory. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>\n\nSave a command at `commands/<file>.md` and it becomes `/<plugin>:<file>`. A subdirectory adds a segment, so `commands/db/migrate.md` is `/my-plugin:db:migrate`.\n\nCommand files take the same frontmatter as skills."
     },
     {
+      "heading": "MCP servers",
+      "id": "mcp-servers",
+      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2",
+      "text": "### MCP servers\n\nAn MCP server gives Claude tools from an external system. Declare it in `.mcp.json` at the plugin root, in the same shape as a [project `.mcp.json`](/docs/en/mcp#project-scope). This `.mcp.json` declares one server named `db`:\n\n```json .mcp.json theme={null}\n{\n  \"mcpServers\": {\n    \"db\": {\n      \"command\": \"node\",\n      \"args\": [\"${CLAUDE_PLUGIN_ROOT}/server.js\"]\n    }\n  }\n}\n```\n\nYou can also omit the `mcpServers` wrapper and put `db` at the top level of the file.\n\nLoad the plugin and run `/mcp` to confirm the server appears as `plugin:my-plugin:db`.\n\n`claude plugin validate` checks `.mcp.json` and reports a server entry that Claude Code would drop at load time as an error. Requires Claude Code v2.1.281 or later.\n\nFor where a bad entry shows up at load time, see [MCP servers that don't start](/docs/en/plugins/troubleshooting#invalid-mcp-server-config-for-and-mcp-servers-that-dont-start).\n\nThe `mcpServers` manifest key takes an inline server map, a path to a JSON file, or an array of those. When a manifest server has the same name as one in `.mcp.json`, the manifest server replaces it."
+    },
+    {
       "heading": "Agents",
       "id": "agents",
       "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a",
