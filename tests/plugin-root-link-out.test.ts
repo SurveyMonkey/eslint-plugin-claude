@@ -19,8 +19,13 @@ const LFS = 'filter=lfs diff=lfs merge=lfs -text'
  *  out of the repository that holds `files`. The `.claude-plugin` of that
  *  folder links back to a folder of the repository. Each name of `back` in
  *  that folder links to a file of the repository, which holds the text. */
-function linkedOut(files: Record<string, string>, back: Record<string, string> = {}) {
-  const top = tree({ 'meta/plugin.json': MANIFEST, ...prefixed(back) })
+function linkedOut(
+  files: Record<string, string>,
+  back: Record<string, string> = {},
+  manifest = MANIFEST,
+  more: Record<string, string> = {},
+) {
+  const top = tree({ 'meta/plugin.json': manifest, ...prefixed(back), ...more })
   const elsewhere = tree(files, false)
   link(top, 'p', elsewhere)
   link(elsewhere, '.claude-plugin', path.join(top, 'meta'))
@@ -87,6 +92,83 @@ describe('a plugin root that links out of the repository', () => {
   linked('plugin-package-lockfile stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, { 'package.json': '{}', 'yarn.lock': '' })
     expect(lintPlugin('plugin-package-lockfile', dir, MANIFEST)).toEqual([])
+  })
+})
+
+describe('the cross-file rules of the plugin layer', () => {
+  const SETTINGS = JSON.stringify({ name: 'p', settings: { agent: 'a' } })
+  it('plugin-settings-single-source reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(SETTINGS, { 'settings.json': '{"agent": "b"}' })
+    expect(lintPlugin('plugin-settings-single-source', dir, code).map((m) => m.messageId)).toEqual([
+      'ignored',
+    ])
+  })
+  linked('plugin-settings-single-source stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, { 'settings.json': '{"agent": "b"}' }, SETTINGS)
+    expect(lintPlugin('plugin-settings-single-source', dir, SETTINGS)).toEqual([])
+  })
+
+  const SENSITIVE = JSON.stringify({
+    name: 'p',
+    userConfig: { token: { type: 'string', title: 'T', description: 'D', sensitive: true } },
+  })
+  const USE = `Use \${user_config.token}\n`
+  it('plugin-user-config-sensitive-in-content reports in the plugin in the repository', () => {
+    const file = path.join(pluginTree(SENSITIVE).dir, 'skills', 's', 'SKILL.md')
+    expect(
+      lintMarkdown('plugin-user-config-sensitive-in-content', USE, file).map((m) => m.messageId),
+    ).toEqual(['placeholder'])
+  })
+  linked('plugin-user-config-sensitive-in-content stays silent for the linked plugin', () => {
+    const file = path.join(linkedOut({}, {}, SENSITIVE).dir, 'skills', 's', 'SKILL.md')
+    expect(lintMarkdown('plugin-user-config-sensitive-in-content', USE, file)).toEqual([])
+  })
+
+  const MONITOR = JSON.stringify({
+    name: 'p',
+    monitors: [{ name: 'm', command: 'run', description: 'd', when: 'on-skill-invoke:gone' }],
+  })
+  it('plugin-monitors-skill-exists reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(MONITOR)
+    expect(lintPlugin('plugin-monitors-skill-exists', dir, code).map((m) => m.messageId)).toEqual([
+      'missing',
+    ])
+  })
+  linked('plugin-monitors-skill-exists stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, MONITOR)
+    expect(lintPlugin('plugin-monitors-skill-exists', dir, MONITOR)).toEqual([])
+  })
+
+  const CATALOG = JSON.stringify({
+    name: 'acme',
+    plugins: [{ name: 'p', source: { source: 'npm', package: '@acme/p' } }],
+  })
+  const DEPENDENT = JSON.stringify({ name: 'p', dependencies: ['ghost'] })
+  it('plugin-dependencies-resolve reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(DEPENDENT, { '.claude-plugin/marketplace.json': CATALOG })
+    expect(lintPlugin('plugin-dependencies-resolve', dir, code).map((m) => m.messageId)).toEqual([
+      'missing',
+    ])
+  })
+  linked('plugin-dependencies-resolve stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, DEPENDENT, { '.claude-plugin/marketplace.json': CATALOG })
+    expect(lintPlugin('plugin-dependencies-resolve', dir, DEPENDENT)).toEqual([])
+  })
+
+  it('plugin-npm-source-shrinkwrap reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(MANIFEST, {
+      '.claude-plugin/marketplace.json': CATALOG,
+      'package.json': '{}',
+    })
+    expect(lintPlugin('plugin-npm-source-shrinkwrap', dir, code).map((m) => m.messageId)).toEqual([
+      'missing',
+    ])
+  })
+  linked('plugin-npm-source-shrinkwrap stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, { 'package.json': '{}' }, MANIFEST, {
+      '.claude-plugin/marketplace.json': CATALOG,
+    })
+    expect(lintPlugin('plugin-npm-source-shrinkwrap', dir, MANIFEST)).toEqual([])
   })
 })
 

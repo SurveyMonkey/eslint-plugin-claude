@@ -46,17 +46,22 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
+import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
+import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
+import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -201,6 +206,11 @@ const modules = [
   pluginUserConfigNoShellFields,
   pluginSymlinkEscapesMarketplace,
   pluginSymlinkEscapesPlugin,
+  pluginDependenciesResolve,
+  pluginMonitorsSkillExists,
+  pluginNpmSourceShrinkwrap,
+  pluginSettingsSingleSource,
+  pluginUserConfigSensitiveInContent,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -322,6 +332,11 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-user-config-no-shell-fields': 'error',
   'plugin-symlink-escapes-marketplace': 'error',
   'plugin-symlink-escapes-plugin': 'warn',
+  'plugin-dependencies-resolve': 'error',
+  'plugin-monitors-skill-exists': 'error',
+  'plugin-npm-source-shrinkwrap': 'error',
+  'plugin-settings-single-source': 'error',
+  'plugin-user-config-sensitive-in-content': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

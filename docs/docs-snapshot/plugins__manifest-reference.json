@@ -195,6 +195,12 @@
       "text": "### `commands`\n\n`commands` takes a path, an array of paths, or an object map. A path names a flat `.md` command file or a directory. In the object map, each key becomes the command name after the plugin prefix. For example, `\"about\"` in plugin `deploy-tools` runs as `/deploy-tools:about`.\n\nEach value sets exactly one of `source` or `content`, and an entry that sets both or neither fails validation. The other fields in this table are optional:\n\n| Field | Type | Description |\n| :- | :- | :- |\n| `source` | string | Path to the command's Markdown file, relative to the plugin root |\n| `content` | string | Inline Markdown for the command body, instead of `source` |\n| `description` | string | Description shown for the command |\n| `argumentHint` | string | Argument hint shown after the command name, such as `[file]` |\n| `model` | string | Default model for the command |\n| `allowedTools` | array of strings | Tools the command may use without prompting |\n\nThis map declares one command from a file and one from inline content:\n\n```json theme={null}\n{\n  \"commands\": {\n    \"status\": { \"source\": \"./commands/status.md\", \"argumentHint\": \"[env]\" },\n    \"about\": { \"content\": \"Explain what this plugin provides.\" }\n  }\n}\n```"
     },
     {
+      "heading": "dependencies",
+      "id": "dependencies",
+      "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05",
+      "text": "### `dependencies`\n\nPlugins that must be enabled for this one to work. Each entry is `\"name\"`, `\"name@marketplace\"`, or `{ \"name\": \"...\", \"marketplace\": \"...\", \"version\": \"...\" }`. Bare names resolve against this plugin's own marketplace. See [dependency constraints](/docs/en/plugins/dependencies)."
+    },
+    {
       "heading": "Standard layout",
       "id": "standard-layout",
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e",

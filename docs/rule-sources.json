@@ -897,6 +897,28 @@
       "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
     }
   ],
+  "plugin-dependencies-resolve": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "dependencies",
+      "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Declare a dependency with a version constraint",
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Depend on a plugin from another marketplace",
+      "hash": "8b0d6df8d63383be54639684afde969608c0b2550b4a35c62c64f0679f28f021"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Constrain a dependency that has a non-git source",
+      "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa"
+    }
+  ],
   "plugin-manifest-location": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -936,6 +958,23 @@
       "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
     }
   ],
+  "plugin-monitors-skill-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "monitors",
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Commands",
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c"
+    }
+  ],
   "plugin-no-git-lfs": [
     {
       "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
@@ -948,6 +987,13 @@
       "url": "https://code.claude.com/docs/en/plugins/loading",
       "heading": "Plugins shared through a repository",
       "hash": "83c964091287b63057f43bf3c1b19a3185cec14a58cc3ab1aa3ef66a21cee8fb"
+    }
+  ],
+  "plugin-npm-source-shrinkwrap": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install runs",
+      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
     }
   ],
   "plugin-package-lockfile": [
@@ -989,6 +1035,13 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "monitors",
       "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    }
+  ],
+  "plugin-settings-single-source": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Default settings",
+      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
     }
   ],
   "plugin-skill-dir-layout": [
@@ -1067,6 +1120,18 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Use dynamic headers for custom authentication",
       "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    }
+  ],
+  "plugin-user-config-sensitive-in-content": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Ask the user for configuration values",
+      "hash": "7985992b6f5d23c85f453f43e8d61a1fa4fd945d7b177315416bf88b15745129"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Reference a saved value",
+      "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf"
     }
   ],
   "settings-conflicting-keys": [
