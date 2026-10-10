@@ -1173,6 +1173,12 @@
       "text": "### `permissions.allow`\n\nList the tool uses Claude Code approves without asking you. In an MCP rule, `*` can appear only in the tool name after the `mcp__<server>__` prefix, such as `mcp__github__get_*`; it can't appear in the server name.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: array of permission rule strings\n* **Default**: unset\n* **Per-session overrides**: `--allowedTools` adds allow rules for one session, and a deny rule from any settings file still blocks a tool it names\n\nThis example approves `git diff` and lets Claude Code read your `.zshrc` without asking:\n\n```json settings.json theme={null}\n{\n  \"permissions\": {\n    \"allow\": [\"Bash(git diff *)\", \"Read(~/.zshrc)\"]\n  }\n}\n```\n\nClaude Code applies `allow` rules from a project's `.claude/settings.json` only after you accept the [workspace trust dialog](/docs/en/permissions#project-allow-rules-and-workspace-trust) for that folder."
     },
     {
+      "heading": "agent",
+      "id": "agent",
+      "hash": "721d922211e0ecaf19dffeab4df4cd8d474d17457f95b7cfc4358943a24e7fd7",
+      "text": "### `agent`\n\nRun the main thread as a named [subagent](/docs/en/sub-agents#invoke-subagents-explicitly), so Claude Code applies that subagent's system prompt, tool restrictions, and model to your session. The same key sets the default agent for sessions you dispatch from `claude agents`.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: string, the name of a built-in or custom agent\n* **Default**: unset, so the main thread runs as Claude Code's default agent\n* **Per-session overrides**: `--agent` takes precedence over this key for one session\n\n```json settings.json theme={null}\n{\n  \"agent\": \"code-reviewer\"\n}\n```\n\nA plugin's own `settings.json` can also supply this key; see [Ship default settings with your plugin](/docs/en/plugins/components#default-settings)."
+    },
+    {
       "heading": "attribution",
       "id": "attribution",
       "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e",

@@ -44,18 +44,22 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import settingsEnvContextCost from './rules/settings-env-context-cost.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
+import settingsEnvFormatHeuristic from './rules/settings-env-format-heuristic.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
 import settingsEnvNumericSpelling from './rules/settings-env-numeric-spelling.ts'
 import settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off.ts'
 import settingsEnvRouting from './rules/settings-env-routing.ts'
+import settingsEnvSecretHeuristic from './rules/settings-env-secret-heuristic.ts'
 import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
@@ -71,8 +75,11 @@ import settingsManagedValueForm from './rules/settings-managed-value-form.ts'
 import settingsManagedVersionFloor from './rules/settings-managed-version-floor.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsModelCapability from './rules/settings-model-capability.ts'
 import settingsModelList from './rules/settings-model-list.ts'
+import settingsModelPinVersion from './rules/settings-model-pin-version.ts'
 import settingsModelValue from './rules/settings-model-value.ts'
+import settingsNestedProjectFile from './rules/settings-nested-project-file.ts'
 import settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
@@ -82,6 +89,7 @@ import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSchema from './rules/settings-schema.ts'
 import settingsSchemaUrl from './rules/settings-schema-url.ts'
 import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
+import settingsSkilloverridesUnknownSkill from './rules/settings-skilloverrides-unknown-skill.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import settingsWebfetchPreflightSkip from './rules/settings-webfetch-preflight-skip.ts'
@@ -215,6 +223,14 @@ const modules = [
   settingsManagedVersionFloor,
   settingsWorktreeSparseClaudeDir,
   statuslineWindowsPath,
+  settingsAgentExists,
+  settingsEnvContextCost,
+  settingsEnvFormatHeuristic,
+  settingsEnvSecretHeuristic,
+  settingsModelCapability,
+  settingsModelPinVersion,
+  settingsNestedProjectFile,
+  settingsSkilloverridesUnknownSkill,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -343,6 +359,14 @@ const recommended: Record<RuleName, Severity> = {
   'settings-managed-version-floor': 'warn',
   'settings-worktree-sparse-claude-dir': 'warn',
   'statusline-windows-path': 'warn',
+  'settings-agent-exists': 'off',
+  'settings-env-context-cost': 'off',
+  'settings-env-format-heuristic': 'off',
+  'settings-env-secret-heuristic': 'off',
+  'settings-model-capability': 'off',
+  'settings-model-pin-version': 'off',
+  'settings-nested-project-file': 'off',
+  'settings-skilloverrides-unknown-skill': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
