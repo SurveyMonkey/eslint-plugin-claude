@@ -345,6 +345,18 @@ const TREE: Record<string, string> = {
   'packages/kp/managed-settings.d/30-b.txt': '{"pluginTrustMessage": 1}',
   'packages/kp/managed-settings.d/sub/40-c.json': '{"pluginTrustMessage": 1}',
   'packages/kp/.vscode/settings.json': '{"pluginTrustMessage": 1}',
+  // `settings-plugin-suggestion-marketplaces-source`: a name with no source in the merged file
+  // source. A drop-in that declares the name makes `managed-settings.json` silent. Where the
+  // source declares it, and where no rule reads the file, the rules are silent.
+  'packages/ps/managed-settings.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps/managed-settings.d/10-a.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps/managed-settings.d/.20-hidden.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps/managed-settings.d/30-b.txt': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps/managed-settings.d/sub/40-c.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps/.vscode/settings.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps2/managed-settings.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
+  'packages/ps2/managed-settings.d/10-a.json':
+    '{"strictKnownMarketplaces": [{"source": "github", "repo": "acme/*"}]}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -417,6 +429,7 @@ const SCOPE_RULES = [
   { name: 'settings-env-ignored-var', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-project-value-ignored', files: PROJECT_FILES },
   { name: 'settings-known-marketplaces-policy-schema', files: MANAGED_FILES },
+  { name: 'settings-plugin-suggestion-marketplaces-source', files: MANAGED_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -545,6 +558,11 @@ const EXPECTED = [
   'packages/kp/managed-settings.json: claude/settings-known-marketplaces-policy-schema@2',
   'packages/kp/managed-settings.d/10-a.json: claude/settings-known-marketplaces-policy-schema@2',
   'packages/kp/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-plugin-suggestion-marketplaces-source` reads the merged source. A drop-in with a
+  // `strictKnownMarketplaces` entry declares the name for the whole source.
+  'packages/ps/managed-settings.json: claude/settings-plugin-suggestion-marketplaces-source@2',
+  'packages/ps/managed-settings.d/10-a.json: claude/settings-plugin-suggestion-marketplaces-source@2',
+  'packages/ps/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

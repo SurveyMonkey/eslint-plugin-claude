@@ -141,6 +141,12 @@
       "id": "aliases-for-the-marketplace-keys",
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab",
       "text": "#### Aliases for the marketplace keys\n\n`strictKnownMarketplaces` can also be spelled `allowedMarketplaces`, and `extraKnownMarketplaces` can also be spelled `additionalMarketplaces`.\n\n* **Version**: the aliases require Claude Code v2.1.232 or later, and older clients ignore them. In a file that a mixed fleet reads, keep the canonical names.\n* **Both spellings set**: when a file sets both spellings, the canonical key's value applies."
+    },
+    {
+      "heading": "Recommend plugins",
+      "id": "recommend-plugins",
+      "hash": "eb2a1f37f5f9e9e454259b40a73629b036c0927ce866adfc774b69b99ac1f441",
+      "text": "## Recommend plugins\n\nMarketplace owners can attach `relevance` signals to entries so Claude Code suggests the plugin when a project matches.\n\nSuggestions from a marketplace appear only when it's registered on the user's machine, you list its name in `pluginSuggestionMarketplaces` in managed settings, and you declare its source in the same policy. Declare the source either as the marketplace's `extraKnownMarketplaces` entry or as an allowlist entry. The official marketplace needs only the name. See [Enable suggestions in managed settings](/docs/en/plugins/relevance#enable-suggestions-in-managed-settings)."
     }
   ]
 }
