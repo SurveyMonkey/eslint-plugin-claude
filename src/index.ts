@@ -44,6 +44,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
@@ -165,6 +166,7 @@ const modules = [
   settingsProjectValueIgnored,
   settingsKnownMarketplacesPolicySchema,
   settingsPluginSuggestionMarketplacesSource,
+  settingsConflictingKeys,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -268,6 +270,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-project-value-ignored': 'error',
   'settings-known-marketplaces-policy-schema': 'error',
   'settings-plugin-suggestion-marketplaces-source': 'error',
+  'settings-conflicting-keys': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

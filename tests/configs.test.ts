@@ -357,6 +357,19 @@ const TREE: Record<string, string> = {
   'packages/ps2/managed-settings.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
   'packages/ps2/managed-settings.d/10-a.json':
     '{"strictKnownMarketplaces": [{"source": "github", "repo": "acme/*"}]}',
+  // `settings-conflicting-keys`: a pair of keys in one file, in each file that it reads. The
+  // channels pair is for a managed file. A hidden drop-in is for `settings-managed-file`. The
+  // same content where no rule reads it: another extension, a nested directory, and another
+  // settings file.
+  'packages/ck/.claude/settings.json': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/.claude/settings.local.json':
+    '{"spinnerTipsOverride": {}, "spinnerTipsEnabled": false}',
+  'packages/ck/managed-settings.json': '{"allowedChannelPlugins": []}',
+  'packages/ck/managed-settings.d/10-a.json': '{"timeZone": "UTC", "timeFormat": "24-hour-utc"}',
+  'packages/ck/managed-settings.d/.20-hidden.json': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/managed-settings.d/30-b.txt': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/managed-settings.d/sub/40-c.json': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/.vscode/settings.json': '{"verbose": true, "viewMode": "default"}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -430,6 +443,7 @@ const SCOPE_RULES = [
   { name: 'settings-project-value-ignored', files: PROJECT_FILES },
   { name: 'settings-known-marketplaces-policy-schema', files: MANAGED_FILES },
   { name: 'settings-plugin-suggestion-marketplaces-source', files: MANAGED_FILES },
+  { name: 'settings-conflicting-keys', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -563,6 +577,12 @@ const EXPECTED = [
   'packages/ps/managed-settings.json: claude/settings-plugin-suggestion-marketplaces-source@2',
   'packages/ps/managed-settings.d/10-a.json: claude/settings-plugin-suggestion-marketplaces-source@2',
   'packages/ps/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-conflicting-keys` reads the project and managed files, and no other file.
+  'packages/ck/.claude/settings.json: claude/settings-conflicting-keys@2',
+  'packages/ck/.claude/settings.local.json: claude/settings-conflicting-keys@2',
+  'packages/ck/managed-settings.json: claude/settings-conflicting-keys@2',
+  'packages/ck/managed-settings.d/10-a.json: claude/settings-conflicting-keys@2',
+  'packages/ck/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

@@ -873,6 +873,58 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "settings-conflicting-keys": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "viewMode",
+      "hash": "4426a84be2955f9177c8a582c595a747d21a8fe1676b4ad66f40823005fc89d6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "spinnerTipsOverride",
+      "hash": "a5d447375ca6aa720317740fb88c827195bf389f6bea3cc96bc130aa1a1bd44f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enableWorkflows",
+      "hash": "b55c523ebd36d18d89b5a9de57ac462f7d35290d7aa4aed9c22610ecfa72cfc9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Status line and file suggestion gates",
+      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "tui",
+      "hash": "d46a0a876bddabc9197640572a5a50be7b73c10d7e84def892f7c08f1a3a4d69"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "vimInsertModeRemaps",
+      "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "editorMode",
+      "hash": "ab3ce02f90101af2db9e491ea3b7a706653e78cf40d2aa876a41aac6a9f2dff7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableAutoMode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "timeZone",
+      "hash": "095dcc80146fc46cdfc0c5db1c040555ad58ee0f71bba70d69a4e1252ac74750"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/channels",
+      "heading": "Restrict which channel plugins can run",
+      "hash": "43d1e4fa703b70785f061ceef00a54a64ff6976540125f9a7175283b3924d1d6"
+    }
+  ],
   "settings-enabled-plugins-entry-exists": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
