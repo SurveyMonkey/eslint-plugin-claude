@@ -23,28 +23,29 @@ Name each MCP server with letters, numbers, hyphens and underscores only.
 `claude mcp` commands accept a server name with letters, numbers, hyphens and underscores only.
 The Claude Desktop import skips a server with any other character in its name, such as a space.[^import]
 The docs for the `mcpServers` JSON block say to pick a name that uses only those
-characters.[^json-block] A tool or prompt name replaces each other character with `_`, so
-two names such as `a.b` and `a_b` can give one tool name.[^plugin]
+characters.[^json-block] The callable tool name of a plugin server replaces each other character with `_`.[^plugin]
 
 The rule reports a server name that does not match `^[A-Za-z0-9_-]+$`, also an empty name. The
 report is on the name. It reads these places:
 
-- A `.mcp.json`, in a project and at the root of a plugin, with or without the `mcpServers` wrapper.
+- A `.mcp.json`, in a project and at the root of a plugin. A project file needs the `mcpServers`
+  wrapper. A plugin file may omit it.
 - The servers that `plugin.json` declares: the inline maps, and each `.json` file that `mcpServers`
   names. A report for a declared file is on the path in the manifest.
 
 The rule leaves these cases alone:
 
-- A reserved name, such as `Claude Preview`. Two reserved names hold a space. The rule
-  `mcp-server-name-reserved` reports them, so this rule does not report them a second time. This rule
-  does not read the option `names` of that rule.
+- A reserved name in a `.mcp.json`, such as `Claude Preview`. Two reserved names hold a space.
+  The rule `mcp-server-name-reserved` reports them there, so this rule does not report them again.
+  This rule does not read the option `names` of that rule. That rule reads no `plugin.json`, so this
+  rule reports a reserved name that holds a space in `plugin.json`.
 - A `managedMcpServers` name in a settings file. The rule `mcp-managed-servers-entry` reports it.
 - A settings file. Claude Code does not read `mcpServers` there, and `mcp-settings-mcpservers`
   reports the key.
 - The `.mcp.json` at the plugin root, when the rule lints `plugin.json`. The rule reads that file as
   a file of its own, so a server gets one report.
-- A path under `.claude/`, which `mcp-json-location` reports. A bundle, a URL and a file that the
-  rule cannot read.
+- A path under `.claude/`, which `mcp-json-location` reports.
+- A bundle, a URL and a file that the rule cannot read.
 
 Of two keys with one name, the last one counts.
 

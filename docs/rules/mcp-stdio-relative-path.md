@@ -22,8 +22,8 @@ Do not use a `./` or `../` path in the `command` or `args` of a project MCP serv
 
 A relative file path in `command` or `args` resolves against the directory where the user started
 Claude Code, not against the directory of `.mcp.json`. A server that uses one fails to start when a
-user starts Claude Code in a subdirectory.[^debug] The docs say to give the path as an absolute path.
-`${CLAUDE_PROJECT_DIR:-.}/server.js` gives a path from the project root.[^stdio]
+user starts Claude Code in a subdirectory.[^debug] Claude Code sets `CLAUDE_PROJECT_DIR` in the
+environment of the server, so the server can find project files from that variable.[^stdio]
 
 The rule reports a `command` string, or an `args` item, that starts with `./` or `../`. The report
 is on the string. It reads each `args` item as one word, because the file lists the words. It reads
@@ -31,7 +31,9 @@ the project `.mcp.json` only.
 
 The rule leaves these cases alone:
 
-- `${CLAUDE_PROJECT_DIR:-.}/server.js`, an absolute path, and a bare command such as `npx`.
+- `${CLAUDE_PROJECT_DIR:-.}/server.js`, an absolute path, and a bare command such as `npx`. The
+  rule does not check what a `${...}` start expands to. Claude Code does not set the variable in
+  its own environment, so the default `.` can apply.
 - A path inside a longer item, such as `--config=./x.json`.
 - A plugin `.mcp.json`. A plugin has `${CLAUDE_PLUGIN_ROOT}` for its own files.
 - A value that is not a string, and an `args` value that is not a list.
@@ -39,8 +41,8 @@ The rule leaves these cases alone:
 
 The docs for channels use `"args": ["./webhook.ts"]` in a project `.mcp.json`, for a server that
 the user starts from the project directory.[^channels] The debug guide names this form as a
-frequent cause of a server that fails to start. The rule follows the debug guide. A project that
-always starts Claude Code from one directory can turn the rule off.
+frequent cause of a server that fails to start. The rule follows the debug guide. A team that always
+starts Claude Code from one directory can turn the rule off.
 
 The rule `mcp-project-dir-default` reports `${CLAUDE_PROJECT_DIR}` with no default. This rule reports
 the relative path itself. A string cannot fail both rules.
