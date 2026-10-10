@@ -34,8 +34,8 @@ The failure needs an install path with a space, so the rule is a `warn`.
 
 A single quote and a double quote both count as quotes. The docs name double quotes. A path inside
 single quotes is also one word, so the rule leaves it alone. A backslash outside single quotes
-escapes the next character. A quote that never closes holds the rest of the line, so the rule
-leaves the line alone. The rule reads the whole command as one line.
+escapes the next character. A quote that never closes holds the rest of the command, so the rule
+reads no variable after it. The rule reads the whole command as one line.
 
 The rule reads the monitors in these places:
 
