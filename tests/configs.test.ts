@@ -45,6 +45,8 @@ const hookGroups = [{ matcher: ['a'], hooks: [{ type: 'http', url: 'u', async: t
 const hooksFaults = {
   Stop: [...hookGroups, { hooks: [{ type: 'command', command: 'claude --enable-auto-mode' }] }],
   SessionEnd: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
+  // A bare executable name with whitespace, in exec form (`hooks-exec-form-command-spaces`).
+  SubagentStop: [{ hooks: [{ type: 'command', command: 'my tool', args: ['x'] }] }],
   // A matcher on an event without matcher support (`hooks-matcher-unsupported-event`).
   // A matcher that names an MCP server and no tool (`hooks-matcher-mcp-name`).
   PreToolUse: [
@@ -80,6 +82,11 @@ hooks:
     - hooks:
         - type: prompt
           prompt: p
+  SubagentStop:
+    - hooks:
+        - type: command
+          command: my tool
+          args: [x]
   PreToolUse:
     - matcher: mcp__memory
       hooks:
@@ -2459,6 +2466,7 @@ const EXPECTED = [
   'packages/hk/.claude/agents/ev.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-config-schema@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-handler-type-event-support@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-if-condition@2',
@@ -2472,6 +2480,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.json: claude/hooks-config-schema@2',
   'packages/hk/.claude/settings.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/.claude/settings.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/settings.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/settings.json: claude/hooks-handler-type-event-support@2',
   'packages/hk/.claude/settings.json: claude/hooks-if-condition@2',
@@ -2489,6 +2498,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.local.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-config-schema@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-handler-type-event-support@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-if-condition@2',
@@ -2507,6 +2517,7 @@ const EXPECTED = [
   'packages/hk/.claude/skills/ev/SKILL.md: claude/skill-description-present@1',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-config-schema@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-type-event-support@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-if-condition@2',
@@ -2518,6 +2529,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-config-schema@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-type-event-support@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-if-condition@2',
@@ -2529,6 +2541,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.json: claude/hooks-config-schema@2',
   'packages/hk/managed-settings.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/managed-settings.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/managed-settings.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/managed-settings.json: claude/hooks-handler-type-event-support@2',
   'packages/hk/managed-settings.json: claude/hooks-if-condition@2',
@@ -2539,6 +2552,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-config-schema@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-type-event-support@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-if-condition@2',
@@ -3452,6 +3466,7 @@ const HOOKS_RULES = [
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
+  { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-field-ignored', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-type-event-support', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-if-condition', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
