@@ -41,10 +41,10 @@ describe(`${name}: the reports`, () => {
 
   it('says which list, and that the rule has no effect while another tool remains', () => {
     const [deny] = lint({ permissions: { deny: ['EndConversation'] } })
-    expect(deny?.message).toContain('A deny rule that names')
+    expect(deny?.message).toContain('A rule in `deny` that names')
     expect(deny?.message).toContain('no effect while any other tool remains')
     const [ask] = lint({ permissions: { ask: ['EndConversation'] } })
-    expect(ask?.message).toContain('A ask rule that names')
+    expect(ask?.message).toContain('A rule in `ask` that names')
   })
 
   it('reports the entry, at its line, column and end', () => {

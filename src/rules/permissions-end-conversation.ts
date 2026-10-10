@@ -18,13 +18,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noEffect' }> = {
     schema: [],
     messages: {
       noEffect:
-        'A {{list}} rule that names `EndConversation` has no effect while any other tool remains. The tool never prompts, and a deny rule cannot remove it. Remove the rule.',
+        'A rule in `{{list}}` that names `EndConversation` has no effect while any other tool remains. The tool never prompts, and a deny rule cannot remove it. Remove the rule.',
     },
   },
   create(context) {
     return settingsListener(context, (entries) => {
-      // A rule with a specifier is for `permissions-specifier-unsupported`, and a glob such as
-      // `*` can remove the tool when no other tool remains.
+      // A rule with a specifier is for `permissions-specifier-unsupported`, except a
+      // `param:value` specifier, which no rule reports. A glob such as `*` can remove the
+      // tool when no other tool remains.
       for (const { list, loc, rule: parsed } of entries) {
         if (list !== 'allow' && parsed.tool === 'EndConversation' && parsed.specifier === null) {
           context.report({ loc, messageId: 'noEffect', data: { list } })

@@ -34,6 +34,7 @@ export const CLAUDE_DIRECTORY_EXCEPTIONS: readonly (readonly string[])[] = [
   ['jobs', '*', 'tmp'],
   ['projects', '*', 'memory'],
   ['agent-memory'],
+  ['agent-memory-local'],
 ]
 
 /** The files of the permission check, by name. */

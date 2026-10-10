@@ -25,7 +25,7 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 Exec wrappers such as `watch`, `setsid`, `ionice` and `flock` cannot be auto-approved by a prefix rule like
 `Bash(watch *)`. In Manual mode they always prompt.[^wrappers] To approve one invocation, write an exact-match rule for the
-full command string.[^wrappers] A prefix rule for a wrapper is a no-op.
+full command string.[^wrappers] In Manual mode, a prefix rule for a wrapper does not approve it.
 
 The rule reports an `allow` entry for `Bash` or `Monitor`. Its first word is `watch`, `setsid`, `ionice` or `flock`,
 and its last word is `*`. The `:*` suffix counts as a final ` *`.[^wildcards] `Monitor` uses the permission
