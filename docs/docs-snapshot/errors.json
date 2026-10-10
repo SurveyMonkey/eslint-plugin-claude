@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "854d591b0976e880b7724f330a2f5c7a865f5b300191d738ab4bc61f77afea14",
+  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,11 +8,11 @@
     },
     {
       "id": "find-your-error",
-      "hash": "507df4943d30f6b335748b346716d71136cfd8bba260224c95b04c707c4f916a"
+      "hash": "eb4293eed93638852324c848beb5b28b5271e8e694cedcbdc507ae38407789b0"
     },
     {
       "id": "automatic-retries",
-      "hash": "604002c71919841bcddee87ffa13b16288b9e7374a0deac39ea21b1e77288350"
+      "hash": "5dbca1ed3a2917bef07a5e4b21c9841d154bedceaf6f86c9347c1243201bc88a"
     },
     {
       "id": "what-you-see-while-claude-code-retries-or-waits",
@@ -20,7 +20,7 @@
     },
     {
       "id": "tune-retry-behavior",
-      "hash": "51c0b20e588e10b6b245efe7431be0730e8970a022938423826b2b1760e54b9d"
+      "hash": "1605a176882327677dc822cab3147cd67da76865d5d69d38a87cae360062e2cb"
     },
     {
       "id": "server-errors",
@@ -463,18 +463,6 @@
       "hash": "6f8de686ba8aa4e5b2cc914a576b581dae4e0159ee81d956e8642f34163774fa"
     },
     {
-      "id": "installation-errors",
-      "hash": "8f49593b41684bc8235dbdd7290b508ff252754274fc22f338588c17fb7de66d"
-    },
-    {
-      "id": "installation-was-killed-before-it-could-finish",
-      "hash": "b33c9897f9e2289ce07ae2fb409fe7c00d58a68d1089a579d14d9fdf24f10f22"
-    },
-    {
-      "id": "the-connection-dropped-while-downloading-the-update",
-      "hash": "e8800e60a6784a439ab5cc60f037fadafe2ae21081ad47d73576a11ad8c76242"
-    },
-    {
       "id": "command-line-errors",
       "hash": "7a5c934c1f267facbf3d7c8dfa8c9ef7923c8e3bde6a13c1832f86d2b87ccf3d"
     },
@@ -659,6 +647,10 @@
       "hash": "2d2b2c725ba3cfcafa11ecd48eff9e611983d855a675b6b765e4269155d45fbe"
     },
     {
+      "id": "claude-code-couldnt-restart",
+      "hash": "b14adbcb092dc6bc3e8a2485fc37499234ee97663fc0e46ac1124f9323a9eed2"
+    },
+    {
       "id": "couldnt-open-claude-desktop",
       "hash": "0a3a1f116a8727c880231a76c26992e80a7cdf502a0349516088502cae860201"
     },
@@ -704,7 +696,7 @@
     },
     {
       "id": "marketplace-is-already-added-from-a-different-source",
-      "hash": "bb2348293f1b050aa315082beb0380e727b5ccc3c2d2327663665f520e2699ea"
+      "hash": "515ec8ac7f6b4684f737108df7e0bc0b6219ca8d41c8601a94f64cdcbdc30651"
     },
     {
       "id": "plugin-command-references-user-config",
@@ -844,11 +836,11 @@
     },
     {
       "id": "command-blocked-by-the-worktree-isolation-checks",
-      "hash": "8aa7e9db7155f6442586eb7beea09531e47767412980e86a509f198319832cbf"
+      "hash": "aef4e7f67ffe5ff912ec26cb2c0dc82ecf883aa899fca0cbee1720f3c987c5de"
     },
     {
       "id": "this-session-has-no-saved-transcript",
-      "hash": "bbf66c5c4d0e48900e48d1603955905827ab83d72e6aa43e451d17b254e156e7"
+      "hash": "e59f118cd60d042ce145f802b6df3530454bf8bc6e150c98b3e8220b4b3c203e"
     },
     {
       "id": "this-session-is-running-in-another-terminal",
@@ -877,6 +869,10 @@
     {
       "id": "session-agent-no-longer-available",
       "hash": "1980dc780f53f6cf4808b6ccedfeca55cdf7cdd2bea3bd4c17f6e9dedeed8864"
+    },
+    {
+      "id": "restarted-after-its-next-loop-wakeup-was-due",
+      "hash": "347c16110e8664a141d1a2e4e011e767d1b231c172d837e4f0ac51b64d713559"
     },
     {
       "id": "claude_code_process_wrapper-launcher-errors",
@@ -1095,6 +1091,12 @@
       "text": "<h3 id=\"malformed-tool-content-rule\">\n  Malformed Tool(content) rule\n</h3>\n\nA [permission rule](/docs/en/permissions#permission-rule-syntax) in one of your settings files doesn't have the shape `Tool` or `Tool(content)`, for example because text follows the closing parenthesis or one of the parentheses is missing. Claude Code skips the rule and lists it in the invalid-settings dialog when an interactive session starts, and in [`claude doctor`](/docs/en/debug-your-config#check-resolved-settings) output:\n\n```text theme={null}\nInvalid permission rule \"Bash(ls) x\" was skipped: Malformed Tool(content) rule. Rules take the form Tool or Tool(content) and must end at the closing \")\"; parentheses inside the content are literal\n```\n\n**What to do:**\n\n* In the settings file listed with the message, rewrite the rule so it ends at its closing parenthesis, for example `Bash(ls *)` in place of `Bash(ls) x`\n* Leave parentheses inside the content as they are. They're literal, so a rule such as `Edit(./Finance (2024)/**)` is valid without escaping\n\nBefore v2.1.260, Claude Code reported a rule with unmatched parentheses as `Mismatched parentheses`."
     },
     {
+      "heading": "Settings file exceeds the 2MiB limit",
+      "id": "settings-file-exceeds-the-2mib-limit",
+      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674",
+      "text": "### Settings file exceeds the 2MiB limit\n\nThe file you passed to [`--settings`](/docs/en/cli-reference#cli-flags) is larger than 2 MiB, so `claude` exits with code 1 at startup instead of loading it. Before v2.1.214, Claude Code read the file with no size check, and a multi-gigabyte file or a device file such as `/dev/zero` grew memory without bound.\n\n```text theme={null}\nError: Settings file exceeds the 2MiB limit: /path/to/settings.json\n```\n\nClaude Code rejects a `--settings` path that isn't a regular file the same way: a device, FIFO, or socket reports `Error: Cannot use settings file (Not a regular file (device, FIFO, or socket))` followed by the path, and a directory reports an `EISDIR` reason.\n\n**What to do:**\n\n* Point `--settings` at a regular JSON settings file under 2 MiB. See [Settings](/docs/en/settings) for the format."
+    },
+    {
       "heading": "Model is not a recognized model id",
       "id": "model-is-not-a-recognized-model-id",
       "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc",
@@ -1105,12 +1107,6 @@
       "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4",
       "text": "<h3 id=\"a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved\">\n  A skill, command, or workflow wasn't loaded because its name is reserved\n</h3>\n\nA skill folder, a frontmatter `name`, a file or subfolder in `.claude/commands/`, or a [saved workflow](/docs/en/workflows#save-the-workflow-for-reuse) uses the name `anthropic-skills` or a name that starts with `anthropic-skills:`. Claude Code [reserves that name for skills synced from claude.ai](/docs/en/skills#names-reserved-for-synced-skills) and doesn't load that item.\n\nClaude Code shows this warning as a startup notice in the conversation view rather than on stderr:\n\n```text theme={null}\nNot loaded: rename .claude/skills/anthropic-skills, then restart — its name uses \"anthropic-skills\", a name reserved for the skills synced from your claude.ai account\n```\n\nThe notice names what to change for the first item it refused: a folder or file to rename, a `name:` line to edit, or a workflow to rename. When more than one item was refused, the notice ends with a count such as `· 2 more`, and the [debug log](/docs/en/debug-your-config) names each one.\n\n**What to do:**\n\n* Rename the item the notice names, or edit the `name:` line it points to, then restart the session.\n\nBefore v2.1.282, Claude Code loaded skills and commands with these names."
-    },
-    {
-      "heading": "Settings file exceeds the 2MiB limit",
-      "id": "settings-file-exceeds-the-2mib-limit",
-      "hash": "6bd62406a1d1420821c1b3c5d5967df45b4baead5d4867bf04a7997907a9e674",
-      "text": "### Settings file exceeds the 2MiB limit\n\nThe file you passed to [`--settings`](/docs/en/cli-reference#cli-flags) is larger than 2 MiB, so `claude` exits with code 1 at startup instead of loading it. Before v2.1.214, Claude Code read the file with no size check, and a multi-gigabyte file or a device file such as `/dev/zero` grew memory without bound.\n\n```text theme={null}\nError: Settings file exceeds the 2MiB limit: /path/to/settings.json\n```\n\nClaude Code rejects a `--settings` path that isn't a regular file the same way: a device, FIFO, or socket reports `Error: Cannot use settings file (Not a regular file (device, FIFO, or socket))` followed by the path, and a directory reports an `EISDIR` reason.\n\n**What to do:**\n\n* Point `--settings` at a regular JSON settings file under 2 MiB. See [Settings](/docs/en/settings) for the format."
     }
   ]
 }

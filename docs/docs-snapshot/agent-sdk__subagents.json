@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/agent-sdk/subagents",
-  "hash": "29c1dc7514d0ca23621e5e0aadd284b2d15a150768903ff6b11b4ed784dc2b66",
+  "hash": "8cf2b51cf69178fbccbdee05fbef63f046c0732369a182eaa74d4bc231ec2342",
   "blocks": [
     {
       "id": "subagents-in-the-sdk",
@@ -52,7 +52,7 @@
     },
     {
       "id": "detect-subagent-invocation",
-      "hash": "dc7c38daca1b65415fa29df250e93a17c062513b3f087b23ff21efc7eb8f0c5e"
+      "hash": "f940cfad466ab60769272598ff529d3a74dda89b587178417fa6490070aa9a97"
     },
     {
       "id": "resume-subagents",

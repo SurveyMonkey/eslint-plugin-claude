@@ -39,8 +39,8 @@ reports these cases.
   `null` is not in the file, because `null` removes the key.[^closed] The rule reports
   `managed-settings.json` when it holds only control keys and no drop-in holds a policy key.
   The rule reads `managed-settings.d/` beside the file. A hidden drop-in and a name that does not
-  end in `.json` do not count. A drop-in that the rule cannot read, or that is not a JSON object,
-  gives no report. A drop-in gets no report of this kind: another file can hold the policy keys.
+  end in `.json` do not count. A drop-in or a `managed-settings.d` link that the rule cannot read, or a drop-in that is not a
+  JSON object, gives no report. A drop-in gets no report of this kind: another file can hold the policy keys.
   The rule reads a second file, so a run with `--cache` can miss a change to a drop-in
   (ADR 001, Consequences).
 - **`"managedSourcesBehavior": "merge"` in `managed-settings.json`.** The page says that a

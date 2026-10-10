@@ -1,8 +1,9 @@
 // The permissions page, "Tool name wildcards": a deny or ask rule takes a
 // glob anywhere in the name. An allow rule takes one only after a literal
 // `mcp__<server>__` prefix.
+import { describe, expect, it } from 'vitest'
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
-import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-tool-name-glob')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -98,4 +99,33 @@ markdownTester.run('permissions-tool-name-glob in skill files', rule, {
       errors: [{ messageId: 'unanchored' }, { messageId: 'unanchored' }],
     },
   ],
+})
+
+// The managed settings files (#14): the rule lints `managed-settings.json` and each
+// `managed-settings.d/*.json` drop-in. Claude Code ignores a hidden drop-in, so the rule reads none.
+describe('permissions-tool-name-glob on managed settings files', () => {
+  const managed = ['managed-settings.json', 'etc/claude-code/managed-settings.d/10-a.json']
+  const list = (key: string) => (rule: string) => JSON.stringify({ permissions: { [key]: [rule] } })
+  const allow = list('allow')
+  const bad = allow('B*')
+  const good = allow('mcp__a__*')
+
+  jsonTester.run('permissions-tool-name-glob (managed files)', rule, {
+    valid: managed.map((filename) => ({ code: good, filename })),
+    invalid: managed.map((filename) => ({
+      code: bad,
+      filename,
+      errors: [{ messageId: 'unanchored' as const }],
+    })),
+  })
+
+  it('reports in a drop-in that is not hidden', () => {
+    expect(
+      lintJson('permissions-tool-name-glob', bad, 'managed-settings.d/10-a.json'),
+    ).toHaveLength(1)
+  })
+
+  it('is silent in a hidden drop-in', () => {
+    expect(lintJson('permissions-tool-name-glob', bad, 'managed-settings.d/.10-a.json')).toEqual([])
+  })
 })

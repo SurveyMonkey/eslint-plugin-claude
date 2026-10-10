@@ -5,12 +5,14 @@
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { Rule } from 'eslint'
 import { type PermissionEntry, permissionEntries, skillEntries } from './permission-entries.ts'
+import { isHiddenDropIn } from './settings-files.ts'
 import { classifySkillFile } from './skill-files.ts'
 import { readFrontmatter } from './skill-frontmatter.ts'
 
 /** The project settings files that hold permission rules. The managed settings
  *  files are in `MANAGED_SETTINGS_FILES` (`src/settings-files.ts`). A rule that
- *  lists only `SETTINGS_FILES` does not lint a managed file. */
+ *  lists only `SETTINGS_FILES` does not lint a managed file. A grammar rule
+ *  lists both sets, and `permissionListener` skips a hidden drop-in. */
 export const SETTINGS_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
 
 /** The second target of a grammar rule: the skill and command files, where
@@ -21,14 +23,20 @@ export const SKILL_TARGET = {
 }
 
 /** A listener that calls `check` with the permission rules of the file. For a
- *  Markdown file, it does so only when the file is a skill or a command file,
- *  and its frontmatter parses. */
+ *  settings file, it does so unless the file is a hidden drop-in in
+ *  `managed-settings.d`: Claude Code ignores that file. For a Markdown file,
+ *  it does so only when the file is a skill or a command file, and its
+ *  frontmatter parses. */
 export function permissionListener(
   context: Rule.RuleContext,
   check: (entries: PermissionEntry[]) => void,
 ): Rule.RuleListener {
   const listener = {
-    Document: (node: Parameters<typeof permissionEntries>[0]) => check(permissionEntries(node)),
+    Document(node: Parameters<typeof permissionEntries>[0]) {
+      if (!isHiddenDropIn(context.filename)) {
+        check(permissionEntries(node))
+      }
+    },
     yaml(node: Parameters<typeof readFrontmatter>[1]) {
       if (classifySkillFile(context.filename) === null) {
         return

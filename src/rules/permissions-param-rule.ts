@@ -6,6 +6,7 @@ import { PRIMARY_FIELDS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { parameterOf, parsedEntries } from '../permission-entries.ts'
 import { permissionListener, SETTINGS_FILES, SKILL_TARGET } from '../permission-listener.ts'
+import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-param-rule' as const
 
@@ -37,7 +38,7 @@ const rule: Rule.RuleModule = {
 export default {
   name,
   language: 'json' as const,
-  files: SETTINGS_FILES,
+  files: [...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES],
   // The same rule, for the files that the Markdown language reads.
   also: SKILL_TARGET,
   rule,

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/glossary",
-  "hash": "154e4450eb55f883440c14e059c72d375d8bfaa62501ea7bea524f7dcaa7ac27",
+  "hash": "4835bb8cff3ee5737c5641622270972ef4e4188e814660783cbea03185a58937",
   "blocks": [
     {
       "id": "glossary",
@@ -248,7 +248,7 @@
     },
     {
       "id": "teleport",
-      "hash": "f8757d09e203104595961e1e07d5b51fd9b74945e47f137ac87831ffa0028534"
+      "hash": "a05f70e4b16ca794eddffca125bbcb2558ad7b9919e907893210a16f05556cde"
     },
     {
       "id": "tool",
@@ -276,7 +276,7 @@
     },
     {
       "id": "worktree-isolation",
-      "hash": "2a01b235dd7c0a26cb96d4cf08eb411dd5671fc030a4d1b8bd54225b3ccc7314"
+      "hash": "5d3071fbe9deaa9e48c18d3a131554a127c7cc9c15c308b4a6191a5a7324a8c8"
     },
     {
       "id": "deprecated-and-renamed-terms",

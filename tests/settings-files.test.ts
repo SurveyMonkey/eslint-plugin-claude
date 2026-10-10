@@ -4,8 +4,9 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSyn
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { readSettings } from '../src/settings-files.ts'
+import { readManagedSource, readSettings } from '../src/settings-files.ts'
 import { UNREADABLE } from '../src/skill-tree.ts'
+import { repo as repository } from './agent-settings.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 // The real path, so that a bound compares equal on a system where the
@@ -124,6 +125,146 @@ describe('readSettings', () => {
       const { bound, dir } = repo({ 'settings.json': '{}', 'settings.local.json': '{"a":1}' })
       withoutAccess(path.join(dir, 'settings.json'), () =>
         expect(readSettings(dir, bound)).toBe(UNREADABLE),
+      )
+    })
+  })
+})
+
+describe('readManagedSource', () => {
+  const MAIN = 'managed-settings.json'
+  const DROP = 'managed-settings.d'
+  const at = (root: string, name: string) => path.join(root, name)
+  const sorted = (value: ReturnType<typeof readManagedSource>) =>
+    value === UNREADABLE
+      ? value
+      : [...value].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)))
+
+  it('gives an empty list when no sibling is there', () => {
+    expect(readManagedSource(at(repository({}), MAIN))).toEqual([])
+  })
+
+  it('gives the drop-ins beside managed-settings.json', () => {
+    const root = repository({ [`${DROP}/10-a.json`]: '{"a":1}', [`${DROP}/20-b.json`]: '{"b":2}' })
+    expect(sorted(readManagedSource(at(root, MAIN)))).toEqual([{ a: 1 }, { b: 2 }])
+  })
+
+  it('does not read the linted file from the disk', () => {
+    const root = repository({ [MAIN]: '{"disk":1}', [`${DROP}/10-a.json`]: '{"a":1}' })
+    expect(readManagedSource(at(root, MAIN))).toEqual([{ a: 1 }])
+    const other = repository({ [MAIN]: '{"m":1}', [`${DROP}/10-a.json`]: '{"disk":1}' })
+    expect(readManagedSource(at(other, `${DROP}/10-a.json`))).toEqual([{ m: 1 }])
+  })
+
+  it('gives managed-settings.json and the other drop-ins for a drop-in', () => {
+    const root = repository({
+      [MAIN]: '{"m":1}',
+      [`${DROP}/10-a.json`]: '{"a":1}',
+      [`${DROP}/20-b.json`]: '{"b":2}',
+    })
+    expect(sorted(readManagedSource(at(root, `${DROP}/10-a.json`)))).toEqual([{ b: 2 }, { m: 1 }])
+  })
+
+  it('reads a drop-in named managed-settings.json as a drop-in', () => {
+    const root = repository({ [MAIN]: '{"m":1}', [`${DROP}/${MAIN}`]: '{"d":1}' })
+    expect(readManagedSource(at(root, `${DROP}/${MAIN}`))).toEqual([{ m: 1 }])
+  })
+
+  it('skips a hidden file and a file that does not end in .json', () => {
+    const root = repository({
+      [`${DROP}/.10-a.json`]: '{"hidden":1}',
+      [`${DROP}/10-a.txt`]: '{"text":1}',
+      [`${DROP}/20-b.json`]: '{"b":2}',
+    })
+    expect(readManagedSource(at(root, MAIN))).toEqual([{ b: 2 }])
+  })
+
+  it.each(['[1]', 'null', '1', '"x"', '{'])(
+    'gives UNREADABLE for a drop-in that holds %s',
+    (text) => {
+      const root = repository({ [`${DROP}/10-a.json`]: text })
+      expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+    },
+  )
+
+  it.each(['[1]', 'null', '{'])(
+    'gives UNREADABLE for a managed-settings.json that holds %s',
+    (text) => {
+      const root = repository({ [MAIN]: text, [`${DROP}/10-a.json`]: '{}' })
+      expect(readManagedSource(at(root, `${DROP}/10-a.json`))).toBe(UNREADABLE)
+    },
+  )
+
+  it('gives UNREADABLE for a dangling link in the drop-in directory', () => {
+    const root = repository({})
+    mkdirSync(at(root, DROP))
+    symlinkSync(at(root, 'gone.json'), at(root, `${DROP}/10-a.json`))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a dangling managed-settings.json link', () => {
+    const root = repository({})
+    symlinkSync(at(root, 'gone.json'), at(root, MAIN))
+    expect(readManagedSource(at(root, `${DROP}/10-a.json`))).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a dangling link as the drop-in directory', () => {
+    const root = repository({})
+    symlinkSync(at(root, 'gone'), at(root, DROP))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a drop-in directory link out of the repository', () => {
+    const root = repository({})
+    const outside = mkdtempSync(path.join(scratch, 'outside-'))
+    symlinkSync(outside, at(root, DROP))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
+  it('reads a drop-in directory link inside the repository', () => {
+    const root = repository({ 'real/10-a.json': '{"a":1}' })
+    symlinkSync(at(root, 'real'), at(root, DROP))
+    expect(readManagedSource(at(root, MAIN))).toEqual([{ a: 1 }])
+  })
+
+  it('bounds a drop-in directory link by the repository, not by the managed directory', () => {
+    const root = repository({ 'pkg/managed-settings.json': '{}', 'shared/10-a.json': '{"a":1}' })
+    symlinkSync(at(root, 'shared'), at(root, `pkg/${DROP}`))
+    expect(readManagedSource(at(root, 'pkg/managed-settings.json'))).toEqual([{ a: 1 }])
+  })
+
+  it('gives UNREADABLE for a drop-in that links to a file out of the repository', () => {
+    const root = repository({})
+    const outside = mkdtempSync(path.join(scratch, 'outside-'))
+    writeFileSync(path.join(outside, 'x.json'), '{"a":1}')
+    mkdirSync(at(root, DROP))
+    symlinkSync(path.join(outside, 'x.json'), at(root, `${DROP}/10-a.json`))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
+  it('gives an empty list when managed-settings.d is a file', () => {
+    const root = repository({ [DROP]: 'x' })
+    expect(readManagedSource(at(root, MAIN))).toEqual([])
+  })
+
+  describe.skipIf(chmodCannotBlock)('a path that cannot be read', () => {
+    it('gives UNREADABLE for a drop-in', () => {
+      const root = repository({ [`${DROP}/10-a.json`]: '{}' })
+      withoutAccess(at(root, `${DROP}/10-a.json`), () =>
+        expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE),
+      )
+    })
+
+    it('gives UNREADABLE for the drop-in directory', () => {
+      const root = repository({ [`${DROP}/10-a.json`]: '{}' })
+      withoutAccess(at(root, DROP), () =>
+        expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE),
+      )
+    })
+
+    it('gives UNREADABLE for managed-settings.json', () => {
+      const root = repository({ [MAIN]: '{}' })
+      withoutAccess(at(root, MAIN), () =>
+        expect(readManagedSource(at(root, `${DROP}/10-a.json`))).toBe(UNREADABLE),
       )
     })
   })

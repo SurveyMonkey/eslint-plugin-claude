@@ -4,7 +4,7 @@
 import { describe, expect, it } from 'vitest'
 import { SPECIFIER_TOOLS, TOOL_NAMES } from '../../src/data/tool-names.ts'
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
-import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-specifier-unsupported')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -159,4 +159,35 @@ markdownTester.run('permissions-specifier-unsupported in skill files', rule, {
       errors: [{ messageId: 'unsupported' }],
     },
   ],
+})
+
+// The managed settings files (#14): the rule lints `managed-settings.json` and each
+// `managed-settings.d/*.json` drop-in. Claude Code ignores a hidden drop-in, so the rule reads none.
+describe('permissions-specifier-unsupported on managed settings files', () => {
+  const managed = ['managed-settings.json', 'etc/claude-code/managed-settings.d/10-a.json']
+  const list = (key: string) => (rule: string) => JSON.stringify({ permissions: { [key]: [rule] } })
+  const allow = list('allow')
+  const bad = allow('WebSearch(x)')
+  const good = allow('WebSearch')
+
+  jsonTester.run('permissions-specifier-unsupported (managed files)', rule, {
+    valid: managed.map((filename) => ({ code: good, filename })),
+    invalid: managed.map((filename) => ({
+      code: bad,
+      filename,
+      errors: [{ messageId: 'unsupported' as const }],
+    })),
+  })
+
+  it('reports in a drop-in that is not hidden', () => {
+    expect(
+      lintJson('permissions-specifier-unsupported', bad, 'managed-settings.d/10-a.json'),
+    ).toHaveLength(1)
+  })
+
+  it('is silent in a hidden drop-in', () => {
+    expect(
+      lintJson('permissions-specifier-unsupported', bad, 'managed-settings.d/.10-a.json'),
+    ).toEqual([])
+  })
 })

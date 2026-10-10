@@ -1,6 +1,7 @@
 // The permissions page, "Match by input parameter": Claude Code skips each
 // `mcp__` rule that has parentheses when it loads a settings file.
-import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { describe, expect, it } from 'vitest'
+import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-mcp-rule-parens')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -52,4 +53,35 @@ markdownTester.run('permissions-mcp-rule-parens in skill files', rule, {
     skill('disallowed-tools: mcp__s__t(x)\n', '.claude/commands/c.md'),
   ],
   invalid: [],
+})
+
+// The managed settings files (#14): the rule lints `managed-settings.json` and each
+// `managed-settings.d/*.json` drop-in. Claude Code ignores a hidden drop-in, so the rule reads none.
+describe('permissions-mcp-rule-parens on managed settings files', () => {
+  const managed = ['managed-settings.json', 'etc/claude-code/managed-settings.d/10-a.json']
+  const list = (key: string) => (rule: string) => JSON.stringify({ permissions: { [key]: [rule] } })
+  const deny = list('deny')
+  const bad = deny('mcp__a(x)')
+  const good = deny('mcp__a')
+
+  jsonTester.run('permissions-mcp-rule-parens (managed files)', rule, {
+    valid: managed.map((filename) => ({ code: good, filename })),
+    invalid: managed.map((filename) => ({
+      code: bad,
+      filename,
+      errors: [{ messageId: 'parens' as const }],
+    })),
+  })
+
+  it('reports in a drop-in that is not hidden', () => {
+    expect(
+      lintJson('permissions-mcp-rule-parens', bad, 'managed-settings.d/10-a.json'),
+    ).toHaveLength(1)
+  })
+
+  it('is silent in a hidden drop-in', () => {
+    expect(lintJson('permissions-mcp-rule-parens', bad, 'managed-settings.d/.10-a.json')).toEqual(
+      [],
+    )
+  })
 })
