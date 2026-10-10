@@ -2,7 +2,7 @@
 // The default shell of a command hook is Bash. It is PowerShell on Windows when Git Bash is not
 // installed (the hooks reference, "Command hook fields"). Bash runs a `.ps1` file as a shell script, or
 // refuses it. The rule cannot know the platform of a team, so it takes the option `platforms` and
-// reports nothing without it (mid-round ruling 26). `shell` has no effect in exec form, so the rule
+// makes no report without it (mid-round ruling 26). `shell` has no effect in exec form, so the rule
 // reads shell form only.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'

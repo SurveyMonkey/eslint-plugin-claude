@@ -33,7 +33,7 @@ the `command` string.
 
 The result depends on the platform of your team, and the rule cannot know it. Windows without Git Bash runs the
 command in PowerShell, where it works. The other platforms run it in Bash. So the rule makes no report unless the
-option `platforms` is set (mid-round ruling 26 of the plugin, in the shape of `minVersion`).
+option `platforms` is set. It has the shape of `minVersion` in other rules.
 
 | Value | The hook shell by default |
 |-------|---------------------------|

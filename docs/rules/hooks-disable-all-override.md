@@ -22,9 +22,9 @@ Do not set `disableAllHooks` to `false` in the committed project settings.
 
 Claude Code reads the value of `disableAllHooks` that is left after settings precedence. The project file is
 above the user file. So a `"disableAllHooks": false` in a project `.claude/settings.json` overrides a `true` in
-the user settings of each person who clones the repository.[^disable] A person who turned hooks off, to review an
-unknown repository, then gets the hooks of that repository again. Hooks run with the permissions of the user, and
-a project hook runs in a `claude -p` session without a trust dialog.[^trust]
+the user settings. This holds for each person who clones the repository.[^disable] A person who turned hooks off, to review an
+unknown repository, then gets the hooks of that repository again. Hooks run with the permissions of the user.
+A project hook also runs in a `claude -p` session, which shows no trust dialog.[^trust]
 
 The rule reports `"disableAllHooks": false` in the committed project file. It reports at the value. It reads the
 last of two members of the same name, as `JSON.parse` does. A `true`, a missing key and a value of another type

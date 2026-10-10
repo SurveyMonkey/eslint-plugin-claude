@@ -38,10 +38,10 @@ export function commandsOf(line: string): string[][] {
       word += char
     } else if (char === '\\' && quote !== "'") {
       if (line.startsWith('\n', i + 1) || line.startsWith('\r\n', i + 1)) {
-        // A backslash before a new line joins the two lines, and adds nothing to the word.
+        // A backslash before a new line joins the two lines, and adds no character to the word.
         i += line.charAt(i + 1) === '\r' ? 2 : 1
       } else {
-        // The next character is part of the word. A backslash at the end of the string adds nothing.
+        // The next character is part of the word. A backslash at the end of the string adds no character.
         word += line.charAt(++i)
         open = true
       }
