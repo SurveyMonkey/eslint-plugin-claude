@@ -1,0 +1,86 @@
+{
+  "url": "https://code.claude.com/docs/en/terminal-config",
+  "hash": "d6f5576f661b1b93b82746123dfb9169efb1709a35e9a71194976ad1f7c87961",
+  "blocks": [
+    {
+      "id": "configure-your-terminal-for-claude-code",
+      "hash": "c9faf15bbd2dd4b2b61a892807755553c9d2339882110427eccd0243995b8d86"
+    },
+    {
+      "id": "enter-multiline-prompts",
+      "hash": "5b7b180ac4a8dee5f45a253f23220053e29e78c83ef9f7d808e657f33d2cdba8"
+    },
+    {
+      "id": "enable-option-key-shortcuts-on-macos",
+      "hash": "664d507f2eb5d714df90b4d625efb2f639a8fc2c32178966fa82b006f0995adf"
+    },
+    {
+      "id": "get-a-terminal-bell-or-notification",
+      "hash": "ad2c4650afc4cc7207e41c5483d4c3d81eb9f3e9249ef757397ee21d72bae3ef"
+    },
+    {
+      "id": "play-a-sound-with-a-notification-hook",
+      "hash": "b293feb7d5abb19c5724484dee90da9e76119c767f2d36cab2c48188abdef55d"
+    },
+    {
+      "id": "see-session-status-in-your-terminal",
+      "hash": "78cd0e0f3d4f72f8611a6c9c5e065d704a7ec1e991d8f4da09853f18c9753263"
+    },
+    {
+      "id": "configure-tmux",
+      "hash": "d56b93963bbba337cd1132a7dac483c8b2328396adc9486dba4d028c9087a2d3"
+    },
+    {
+      "id": "fix-backspace-deleting-a-whole-word-on-windows",
+      "hash": "2a490355b268367674198d26f3a3c9f6fe8d1ef9e1923469b36fe8f85b05b6cf"
+    },
+    {
+      "id": "match-the-color-theme",
+      "hash": "977248396f52eff162e73db313ecb741b9317c3bc3a1894bbba1fd9ec20e2a00"
+    },
+    {
+      "id": "create-a-custom-theme",
+      "hash": "d703916c26837c686ee32a41aca398d321b89499a1d4135e44765881313e5157"
+    },
+    {
+      "id": "switch-to-fullscreen-rendering",
+      "hash": "06c4ebc05804bbc442ab2a457c49ec549f4d652b74217e7f7700e3d2d386529c"
+    },
+    {
+      "id": "cap-response-width-in-wide-terminals",
+      "hash": "f9f496c4772635e9dab92fa3eeef5e89f9f7e206be53471c1c608762d32ff77f"
+    },
+    {
+      "id": "paste-large-content",
+      "hash": "34c057957cf8d3a8b0bf32ce4f8a9dc38d74115e58253b7bfd02a0395fa85b19"
+    },
+    {
+      "id": "how-claude-treats-pasted-text",
+      "hash": "d9b84384a848522af45e3d4fc0b8b3abb7a54ce3cc4add41e4a6038bd5d2a895"
+    },
+    {
+      "id": "delete-and-restore-a-collapsed-paste",
+      "hash": "8fe6eb7d1a65960245e3c79fd4f986cfe63892e05123e56b382367b510b15359"
+    },
+    {
+      "id": "recall-a-prompt-that-had-pasted-text",
+      "hash": "b5bb53826544340b3c10973d0c09e124692bb20f5a98dc6b3dcaba2a3379650c"
+    },
+    {
+      "id": "edit-prompts-with-vim-keybindings",
+      "hash": "8b60838345892e1517e00dc63fee1f1f58a8999bde30d95cbe3ac9dda854edf8"
+    },
+    {
+      "id": "related-resources",
+      "hash": "3eecebb21a78b238c5e83583bfe65a27b8abaac1854055b9c72d24097d3f54b3"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Create a custom theme",
+      "id": "create-a-custom-theme",
+      "hash": "d703916c26837c686ee32a41aca398d321b89499a1d4135e44765881313e5157",
+      "text": "### Create a custom theme\n\nIn addition to the built-in presets, `/theme` lists any custom themes you have defined and any themes contributed by installed [plugins](/docs/en/plugins/components#themes-and-output-styles). Select **New custom theme…** at the end of the list to create one interactively: you name the theme, then pick individual color tokens to override. Press `Ctrl+E` while a custom theme is highlighted to edit it.\n\nEach custom theme is a JSON file in `~/.claude/themes/`. The filename without the `.json` extension is the theme's slug, and selecting the theme stores `custom:<slug>` as your theme preference. The file has three optional fields:\n\n| Field | Type | Description |\n| :- | :- | :- |\n| `name` | string | Display label shown in `/theme`. Defaults to the filename slug |\n| `base` | string | Built-in preset the theme starts from: `dark`, `light`, `dark-daltonized`, `light-daltonized`, `dark-ansi`, or `light-ansi`. Defaults to `dark` |\n| `overrides` | object | Map of color token names to color values. Tokens not listed here fall through to the base preset |\n\nColor values accept `#rrggbb`, `#rgb`, `rgb(r,g,b)`, `ansi256(n)`, or `ansi:<name>` where `<name>` is one of the 16 standard ANSI color names such as `red` or `cyanBright`. Unknown tokens and invalid color values are ignored, so a typo cannot break rendering.\n\nThe following example defines a theme that keeps the dark preset but recolors the prompt accent, error text, and success text:\n\n```json ~/.claude/themes/dracula.json theme={null}\n{\n  \"name\": \"Dracula\",\n  \"base\": \"dark\",\n  \"overrides\": {\n    \"claude\": \"#bd93f9\",\n    \"error\": \"#ff5555\",\n    \"success\": \"#50fa7b\"\n  }\n}\n```\n\nClaude Code watches `~/.claude/themes/` and reloads when a file is added or changed, so edits made in your editor apply to a running session without a restart. If the `~/.claude/themes/` folder itself didn't exist when Claude Code started, restart once after creating your first theme file. After that, changes apply without a restart.\n\nThe reference below covers the tokens you can set in `overrides`. The interactive editor in `/theme` shows the same tokens with a live preview, plus a few single-purpose accents such as onboarding screen colors that are omitted here.\n\n<Accordion title=\"Color token reference\">\n  The following example combines tokens from several of the groups below: the brand accent, the plan mode border, the diff backgrounds, and the message background.\n\n  ```json ~/.claude/themes/midnight.json theme={null}\n  {\n    \"name\": \"Midnight\",\n    \"base\": \"dark\",\n    \"overrides\": {\n      \"claude\": \"#a78bfa\",\n      \"planMode\": \"#38bdf8\",\n      \"diffAdded\": \"#14532d\",\n      \"diffRemoved\": \"#7f1d1d\",\n      \"userMessageBackground\": \"#1e1b4b\"\n    }\n  }\n  ```\n\n  #### Text and accent colors\n\n  Control the primary brand accent and the foreground text shades used throughout the interface.\n\n  | Token | Controls |\n  | :- | :- |\n  | `claude` | Primary brand accent, used for the spinner and assistant label |\n  | `text` | Default foreground text |\n  | `inverseText` | Text drawn on top of a colored background, such as status badges |\n  | `inactive` | Secondary text such as hints, timestamps, and disabled items |\n  | `subtle` | Faint borders and de-emphasized secondary text |\n  | `suggestion` | Autocomplete suggestions and selection highlight in pickers |\n  | `permission` | Dialog borders, including permission prompts and pickers |\n  | `remember` | Memory and `CLAUDE.md` indicators |\n\n  #### Status colors\n\n  Signal success, failure, and warning states across messages and indicators.\n\n  | Token | Controls |\n  | :- | :- |\n  | `success` | Success messages and passing checks |\n  | `error` | Error messages and failures |\n  | `warning` | Warnings, caution messages, and the auto mode indicator |\n  | `merged` | Merged pull request status |\n\n  #### Input box and mode indicators\n\n  Set the input box border color and the accent shown while a permission mode or indicator is active.\n\n  | Token | Controls |\n  | :- | :- |\n  | `promptBorder` | Input box border |\n  | `planMode` | Plan mode accent, plan messages, and plan-mode dialogs |\n  | `autoAccept` | Accept-edits mode accent |\n  | `bashBorder` | Input box border when entering a `!` shell command |\n  | `ide` | IDE connection indicator |\n  | `fastMode` | Fast mode indicator |\n  | `effortUltra` | The `ultracode` tag on the input box border while [ultracode](/docs/en/model-config#adjust-effort-level) is on. Your override of this color takes effect on Claude Code v2.1.239 or later |\n\n  #### Diff rendering\n\n  Color added and removed code in file edits and reviews.\n\n  | Token | Controls |\n  | :- | :- |\n  | `diffAdded` | Background of added lines |\n  | `diffRemoved` | Background of removed lines |\n  | `diffAddedDimmed` | Background of added lines in the dimmed diff shown after you reject an edit |\n  | `diffRemovedDimmed` | Background of removed lines in the dimmed diff shown after you reject an edit |\n  | `diffAddedWord` | Word-level highlight within an added line |\n  | `diffRemovedWord` | Word-level highlight within a removed line |\n\n  #### Fullscreen mode\n\n  Claude Code paints `userMessageBackground`, `bashMessageBackgroundColor`, and `memoryBackgroundColor` in both the default and fullscreen renderers. It uses `userMessageBackgroundHover` and `selectionBg` only in [fullscreen rendering mode](/docs/en/fullscreen).\n\n  | Token | Controls |\n  | :- | :- |\n  | `userMessageBackground` | Background behind your messages in the transcript |\n  | `userMessageBackgroundHover` | Background behind a message while hovered or expanded |\n  | `bashMessageBackgroundColor` | Background behind `!` shell command entries in the transcript |\n  | `memoryBackgroundColor` | Background behind `#` memory entries in the transcript |\n  | `selectionBg` | Background of text selected with the mouse |\n\n  #### Usage meter and speaker labels\n\n  Adjust the bar shown in the `/usage` view and the labels that distinguish your messages from Claude's.\n\n  | Token | Controls |\n  | :- | :- |\n  | `rate_limit_fill` | Filled portion of the usage meter |\n  | `rate_limit_empty` | Unfilled portion of the usage meter |\n  | `briefLabelYou` | Color of the `You` label on your messages |\n  | `briefLabelClaude` | Color of the `Claude` label on assistant messages |\n\n  #### Shimmer variants and subagent colors\n\n  Several tokens have a paired shimmer variant that supplies the lighter color used in the spinner's animated gradient. Override the shimmer alongside its base token if the animation looks mismatched.\n\n  * `claude` and `claudeShimmer`\n  * `warning` and `warningShimmer`\n  * `permission` and `permissionShimmer`\n  * `promptBorder` and `promptBorderShimmer`\n  * `inactive` and `inactiveShimmer`\n  * `fastMode` and `fastModeShimmer`\n\n  Each [subagent](/docs/en/sub-agents) and parallel task is shown in one of eight named colors so you can tell them apart in the transcript. The token names follow the pattern `<color>_FOR_SUBAGENTS_ONLY`, where `<color>` is `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, or `cyan`. Override these to change what each named color looks like. For example, a subagent with `color: blue` in its definition is drawn using the `blue_FOR_SUBAGENTS_ONLY` value.\n\n  Claude Code renders the [`ultrathink`](/docs/en/model-config#use-ultrathink-for-one-off-deep-reasoning) keyword in the prompt input with a seven-color rainbow gradient. The token names follow the pattern `rainbow_<color>` and `rainbow_<color>_shimmer`, where `<color>` is `red`, `orange`, `yellow`, `green`, `blue`, `indigo`, or `violet`.\n</Accordion>"
+    }
+  ]
+}
