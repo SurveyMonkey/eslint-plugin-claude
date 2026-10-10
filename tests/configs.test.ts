@@ -1237,6 +1237,7 @@ const MEMORY_RULES = [
   'claude-md-import-max-depth',
   'claude-md-max-bytes',
   'memory-settings-schema',
+  'memory-symlink-network-target',
   'rules-frontmatter-schema',
   'rules-md-extension',
   'rules-paths-glob-valid',
@@ -2250,6 +2251,11 @@ describe('configs', () => {
     ])
     expect(blocks('memory-settings-schema')).toEqual([
       ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    // The tree has no report for this rule. ESLint stops with an error at a link that leads
+    // nowhere, as a link to a network path does here, before any rule runs.
+    expect(blocks('memory-symlink-network-target')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/.claude/rules/**/*.md']],
     ])
     for (const rule of ['rules-frontmatter-schema', 'rules-paths-glob-valid']) {
       expect(blocks(rule)).toEqual([['markdown/gfm', ['**/.claude/rules/**/*.md']]])

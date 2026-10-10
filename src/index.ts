@@ -77,6 +77,7 @@ import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.t
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
+import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import outputStyleNameUnique from './rules/output-style-name-unique.ts'
@@ -334,6 +335,7 @@ const modules = [
   claudeMdImportMaxDepth,
   claudeMdMaxBytes,
   memorySettingsSchema,
+  memorySymlinkNetworkTarget,
   rulesFrontmatterSchema,
   rulesMdExtension,
   rulesPathsGlobValid,
@@ -523,6 +525,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-import-max-depth': 'error',
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
+  'memory-symlink-network-target': 'error',
   'rules-frontmatter-schema': 'error',
   'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',

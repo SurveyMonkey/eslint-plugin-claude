@@ -93,6 +93,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'memory-agent-memory-local-untracked',
     'memory-settings-schema',
     'output-style-force-for-plugin',
+    'memory-symlink-network-target',
     'output-style-frontmatter-schema',
     'output-style-frontmatter-valid',
     'output-style-name-unique',
