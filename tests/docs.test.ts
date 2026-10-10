@@ -47,6 +47,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-matcher-syntax',
     'hooks-matcher-unsupported-event',
     'hooks-no-standalone-file',
+    'hooks-powershell-placeholder',
     'marketplace-command-version-ignored',
     'marketplace-entry-component-paths',
     'marketplace-entry-hooks-inline',

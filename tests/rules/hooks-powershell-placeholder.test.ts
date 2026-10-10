@@ -24,7 +24,7 @@ const power = (text: string, fields: Record<string, unknown> = {}) =>
 const dir = (form: string) => `\${${form}}`
 
 describe(`${name}: the bare variable`, () => {
-  it.fails('reports $CLAUDE_PROJECT_DIR in a PowerShell command', () => {
+  it('reports $CLAUDE_PROJECT_DIR in a PowerShell command', () => {
     for (const text of [
       '& $CLAUDE_PROJECT_DIR\\.claude\\check.ps1',
       '& "$CLAUDE_PROJECT_DIR\\.claude\\check.ps1"',
@@ -35,7 +35,7 @@ describe(`${name}: the bare variable`, () => {
     }
   })
 
-  it.fails('is silent for the forms that Claude Code and PowerShell expand', () => {
+  it('is silent for the forms that Claude Code and PowerShell expand', () => {
     for (const text of [
       `& "${dir('CLAUDE_PROJECT_DIR')}\\check.ps1"`,
       '& "$env:CLAUDE_PROJECT_DIR\\check.ps1"',
@@ -53,13 +53,13 @@ describe(`${name}: the bare variable`, () => {
 })
 
 describe(`${name}: a placeholder in single quotes`, () => {
-  it.fails('reports each of the three placeholders inside single quotes', () => {
+  it('reports each of the three placeholders inside single quotes', () => {
     for (const variable of ['CLAUDE_PROJECT_DIR', 'CLAUDE_PLUGIN_ROOT', 'CLAUDE_PLUGIN_DATA']) {
       expect(power(`& '${dir(variable)}\\check.ps1'`), variable).toEqual(['quoted'])
     }
   })
 
-  it.fails('reads the quoting of PowerShell', () => {
+  it('reads the quoting of PowerShell', () => {
     const p = dir('CLAUDE_PROJECT_DIR')
     // A doubled single quote stays inside the string.
     expect(power(`Write-Host 'it''s ${p}'`)).toEqual(['quoted'])
@@ -81,7 +81,7 @@ describe(`${name}: a placeholder in single quotes`, () => {
     expect(power(`Write-Host 'a\`' ${p} 'b'`)).toEqual([])
   })
 
-  it.fails('reports a bare variable and a quoted placeholder once each', () => {
+  it('reports a bare variable and a quoted placeholder once each', () => {
     expect(
       power(
         `Write-Host $CLAUDE_PROJECT_DIR '${dir('CLAUDE_PLUGIN_ROOT')}' '${dir('CLAUDE_PLUGIN_DATA')}'`,
@@ -91,7 +91,7 @@ describe(`${name}: a placeholder in single quotes`, () => {
 })
 
 describe(`${name}: the messages`, () => {
-  it.fails('names the fault and reports at the command string', () => {
+  it('names the fault and reports at the command string', () => {
     const text = (value: string) =>
       `{\n  "hooks": {"Stop": [{"hooks": [{"type": "command", "shell": "powershell", "command": ${JSON.stringify(value)}}]}]}\n}`
     const bare = lintJson(name, text('& $CLAUDE_PROJECT_DIR\\a.ps1'), FILES.project)
@@ -109,7 +109,7 @@ describe(`${name}: the messages`, () => {
 })
 
 describe(`${name}: the handlers and the files`, () => {
-  it.fails('is silent with no shell key, with another shell, and in exec form', () => {
+  it('is silent with no shell key, with another shell, and in exec form', () => {
     const text = '& $CLAUDE_PROJECT_DIR\\a.ps1'
     expect(ids(command({ command: text }))).toEqual([])
     expect(ids(command({ command: text, shell: 'bash' }))).toEqual([])
@@ -118,13 +118,13 @@ describe(`${name}: the handlers and the files`, () => {
     expect(power(text, { args: ['x'] })).toEqual([])
   })
 
-  it.fails('reads a command handler with a string command only', () => {
+  it('reads a command handler with a string command only', () => {
     expect(ids({ type: 'http', shell: 'powershell', command: '$CLAUDE_PROJECT_DIR' })).toEqual([])
     expect(ids({ shell: 'powershell', command: '$CLAUDE_PROJECT_DIR' })).toEqual([])
     expect(ids({ type: 'command', shell: 'powershell', command: 5 })).toEqual([])
   })
 
-  it.fails('reads every settings file, hooks.json, a skill and a project subagent', () => {
+  it('reads every settings file, hooks.json, a skill and a project subagent', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(
         ids(command({ command: '$CLAUDE_PROJECT_DIR', shell: 'powershell' }), file),
@@ -137,7 +137,7 @@ describe(`${name}: the handlers and the files`, () => {
     expect(markdownIds(name, frontmatter(yaml), FILES.agent)).toEqual(['bare'])
   })
 
-  it.fails('is silent in a hidden drop-in, and in a plugin agent', () => {
+  it('is silent in a hidden drop-in, and in a plugin agent', () => {
     expect(
       ids(command({ command: '$CLAUDE_PROJECT_DIR', shell: 'powershell' }), FILES.hidden),
     ).toEqual([])
@@ -146,7 +146,7 @@ describe(`${name}: the handlers and the files`, () => {
     expect(markdownIds(name, frontmatter(yaml), pluginAgent())).toEqual([])
   })
 
-  it.fails('is silent on a config that is malformed', () => {
+  it('is silent on a config that is malformed', () => {
     expect(jsonIds(name, settings([]), FILES.project)).toEqual([])
   })
 })

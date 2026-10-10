@@ -104,6 +104,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/hooks-matcher-syntax`](docs/rules/hooks-matcher-syntax.md) | A matcher is written as Claude Code reads it: a bare tool name and not `Tool(specifier)`, a regular expression that compiles, only `\|` as a separator on `StopFailure` and `FileChanged`, and literal file names on `FileChanged` | `error` | `error` |
 | [`claude/hooks-matcher-unsupported-event`](docs/rules/hooks-matcher-unsupported-event.md) | A group on an event with no matcher support (`Stop`, `UserPromptSubmit`, `CwdChanged` and seven more) sets no `matcher` | `error` | `error` |
 | [`claude/hooks-no-standalone-file`](docs/rules/hooks-no-standalone-file.md) | No `.claude/hooks.json` or `.claude/hooks/hooks.json`, and no hooks file under `.claude-plugin/`: Claude Code does not read them | `error` | `error` |
+| [`claude/hooks-powershell-placeholder`](docs/rules/hooks-powershell-placeholder.md) | A hook with `shell: "powershell"` writes no bare `$CLAUDE_PROJECT_DIR` (it gives `$null`) and no path placeholder inside single quotes | `error` | `error` |
 
 ### Marketplace manifest
 

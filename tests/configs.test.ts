@@ -41,6 +41,10 @@ const hooksFaults = {
   SessionEnd: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
   // A bare executable name with whitespace, in exec form (`hooks-exec-form-command-spaces`).
   SubagentStop: [{ hooks: [{ type: 'command', command: 'my tool', args: ['x'] }] }],
+  // A bare `$CLAUDE_PROJECT_DIR` in a PowerShell command (`hooks-powershell-placeholder`).
+  PostCompact: [
+    { hooks: [{ type: 'command', shell: 'powershell', command: '& $CLAUDE_PROJECT_DIR\\x.ps1' }] },
+  ],
   // A matcher on an event without matcher support (`hooks-matcher-unsupported-event`).
   // A matcher that names an MCP server and no tool (`hooks-matcher-mcp-name`).
   PreToolUse: [
@@ -81,6 +85,11 @@ hooks:
         - type: command
           command: my tool
           args: [x]
+  PostCompact:
+    - hooks:
+        - type: command
+          shell: powershell
+          command: '& $CLAUDE_PROJECT_DIR\\x.ps1'
   PreToolUse:
     - matcher: mcp__memory
       hooks:
@@ -671,6 +680,7 @@ const EXPECTED = [
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-powershell-placeholder@2',
   'packages/hk/.claude/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/hooks/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/settings.json: claude/hooks-command-removed-cli-flag@2',
@@ -685,6 +695,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/settings.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-config-schema@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-disabled-by-disableallhooks@2',
@@ -697,6 +708,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/.claude/skills/ev/SKILL.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-config-schema@2',
@@ -709,6 +721,7 @@ const EXPECTED = [
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-powershell-placeholder@2',
   'packages/hk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-config-schema@2',
@@ -721,6 +734,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/managed-settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.json: claude/hooks-config-schema@2',
   'packages/hk/managed-settings.json: claude/hooks-disabled-by-disableallhooks@2',
@@ -733,6 +747,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/managed-settings.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-config-schema@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-exec-form-command-spaces@2',
@@ -744,6 +759,7 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-syntax@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-powershell-placeholder@2',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
@@ -955,6 +971,7 @@ const HOOKS_RULES = [
       ],
     ],
   },
+  { name: 'hooks-powershell-placeholder', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.

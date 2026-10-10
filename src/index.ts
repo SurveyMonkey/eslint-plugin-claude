@@ -31,6 +31,7 @@ import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
 import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
+import hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -123,6 +124,7 @@ const modules = [
   hooksMatcherSyntax,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
+  hooksPowershellPlaceholder,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
   skillForkFieldsRequireContext,
@@ -244,6 +246,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-matcher-syntax': 'error',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
+  'hooks-powershell-placeholder': 'error',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
   'skill-fork-fields-require-context': 'error',
