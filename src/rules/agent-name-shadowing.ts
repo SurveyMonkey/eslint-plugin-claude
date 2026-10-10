@@ -21,7 +21,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadows' }> = {
     schema: [],
     messages: {
       shadows:
-        '`{{name}}` is also the name of {{others}}. Claude Code uses the definition closest to the working directory, so this agent replaces it in a session that starts in or below this folder. Rename one if that is not your intent.',
+        '`{{name}}` is also the name of {{others}}. Claude Code uses the definition closest to the working directory. So this agent replaces it in a session that starts in or below this folder. Rename one if that is not your intent.',
     },
   },
   create(context) {
