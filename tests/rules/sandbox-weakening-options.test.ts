@@ -204,3 +204,15 @@ describe(`${name}: a hidden drop-in`, () => {
     expect(ids(sandbox({ enableWeakerNestedSandbox: true }), HIDDEN)).toEqual([])
   })
 })
+
+describe(`${name}: review round 1 pins`, () => {
+  it('counts only the string "true" as on in a managed file', () => {
+    expect(ids(sandbox({ enableWeakerNestedSandbox: 'false' }), MANAGED)).toEqual([])
+    expect(ids(sandbox({ enableWeakerNestedSandbox: 'yes' }), MANAGED)).toEqual([])
+    expect(ids(sandbox({ enableWeakerNestedSandbox: 'true' }), MANAGED)).toEqual(['weakerNested'])
+  })
+
+  it('does not read a path that only looks like docker.sock', () => {
+    expect(ids(network({ allowUnixSockets: ['/var/run/dockerXsock'] }))).toEqual([])
+  })
+})

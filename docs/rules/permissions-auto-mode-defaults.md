@@ -30,6 +30,9 @@ of that section.[^override] The loss differs by list:
 - `environment`: the built-in context, trust and sensitivity slots.[^trusted]
 - `allow`: the built-in exceptions to the soft block rules.[^override]
 
+The Danger block of the docs names the `soft_deny` and `hard_deny` loss. Its first sentence covers all four lists. Claude
+Code writes the `environment` list of its own draft with no `"$defaults"`, so a managed copy of that draft is reported.
+
 The rule reports the array that has no `"$defaults"` entry. An empty array has none, so the rule reports it. The docs say
 to leave out `"$defaults"` only to own the whole list.[^override] The rule gives a warning for that choice.
 

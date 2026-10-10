@@ -34,7 +34,7 @@ describe(`${name}: the report`, () => {
     expect(ids(network({ deniedDomains: ['example.com.', 'example.com'] }))).toEqual(['duplicate'])
   })
 
-  it('counts letter case and a port as part of the entry', () => {
+  it('ignores letter case and the final dot, and counts a port as part of the entry', () => {
     expect(ids(network({ allowedDomains: ['Example.COM', 'example.com'] }))).toEqual(['duplicate'])
     expect(ids(network({ allowedDomains: ['a.com:443', 'a.com.:443'] }))).toEqual(['duplicate'])
     expect(ids(network({ allowedDomains: ['*.a.com', '*.a.com'] }))).toEqual(['duplicate'])
@@ -85,5 +85,17 @@ describe(`${name}: the silent cases`, () => {
 
   it('is silent in a hidden drop-in', () => {
     expect(ids(network({ allowedDomains: ['a.com', 'a.com'] }), HIDDEN)).toEqual([])
+  })
+})
+
+describe(`${name}: review round 1 pins`, () => {
+  it('drops one final dot only', () => {
+    expect(ids(network({ allowedDomains: ['a.com', 'a.com..'] }))).toEqual([])
+  })
+
+  it('names the first entry as written', () => {
+    const [message] = run(network({ allowedDomains: ['example.com', 'example.com.'] }))
+    expect(message?.message).toContain('`example.com.`')
+    expect(message?.message).toContain('`example.com`')
   })
 })

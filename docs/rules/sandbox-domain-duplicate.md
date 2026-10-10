@@ -24,8 +24,9 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 
 A list that holds a domain twice has a redundant entry. The rule reports each entry after the first, and names the first.
 The rule ignores letter case and one final dot. An entry with the final dot, such as `example.com.`, blocks the same
-connections as `example.com`.[^denied] The docs state this for `deniedDomains`, and say that `deniedDomains` has the same
-syntax as `allowedDomains`.[^denied] So the rule uses one comparison for both lists.
+connections as `example.com`.[^denied] The docs state the final dot for `deniedDomains` only. They say that list has the same wildcard, port and IPv6 syntax as
+`allowedDomains`.[^denied] The rule uses one comparison for both lists. The docs say nothing about letter case for
+these lists. The rule folds case, as DNS does. Both are choices of the rule.
 
 An entry with a port is a different entry from one without a port. An entry with no port matches every port.[^allowed] The
 rule compares a wildcard as text.

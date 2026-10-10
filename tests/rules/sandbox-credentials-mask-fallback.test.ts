@@ -160,3 +160,17 @@ describe(`${name}: the path silent cases`, () => {
     expect(ids(files(5 as never, 'x' as never))).toEqual([])
   })
 })
+
+describe(`${name}: review round 1 pins`, () => {
+  it('is silent for a pattern that does not compile, also with a trailing backslash', () => {
+    for (const extract of ['(', '[', 'abc\\', 'token: (\\S+)\\']) {
+      expect(ids(files(mask({ extract }))), extract).toEqual([])
+    }
+  })
+
+  it('reads only a mask entry', () => {
+    for (const fields of [{ mode: 'deny' }, { mode: undefined }, { mode: 'inject' }]) {
+      expect(ids(files(mask({ ...fields, extract: 'x' }))), JSON.stringify(fields)).toEqual([])
+    }
+  })
+})

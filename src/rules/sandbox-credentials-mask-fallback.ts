@@ -20,6 +20,7 @@ type MessageId = 'noGroup' | 'unmaskablePath'
  *  one slot for each group. A pattern that does not compile is not this fault. */
 function lacksGroup(pattern: string): boolean {
   try {
+    new RegExp(pattern)
     return (new RegExp(`${pattern}|`).exec('') as RegExpExecArray).length === 1
   } catch {
     return false
