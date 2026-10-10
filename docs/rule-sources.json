@@ -1090,6 +1090,40 @@
       "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
     }
   ],
+  "settings-enabled-plugins-external-source": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Require plugins per repository",
+      "hash": "67c847e1cd322d6ab392081d18421d67272ea6369dbd514df9c318be30894176"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Enabled in project settings but not installed",
+      "hash": "f4befea69a0ac2aecb8118be6ebf2752c16ea7c87ffa21956e28bce5b2feb7bb"
+    }
+  ],
+  "settings-enabled-plugins-marketplace-declared": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledPlugins",
+      "hash": "6cf3fbc4677f9f8d2d6d1bb7cf7cb99f48da134051fb5c282204c1135ae88d11"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Require a marketplace and its plugins",
+      "hash": "9697c07a43a64a16e7cab4fbd780a24694b7f4f5c8463a201387843c1f0dd43c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Find where a plugin came from",
+      "hash": "00e7387adcc4279a1bbc9d47c7c0db90da2b7c56b4773bf5ad92c8a13fd90090"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    }
+  ],
   "settings-enabled-plugins-schema": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1210,6 +1244,18 @@
       "hash": "ec0dda099206f49b68cca09d7d84db3718ce6bec6b996446ad44bd8cff420bbb"
     }
   ],
+  "settings-extra-known-marketplaces-directory": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Require plugins per repository",
+      "hash": "67c847e1cd322d6ab392081d18421d67272ea6369dbd514df9c318be30894176"
+    }
+  ],
   "settings-extra-known-marketplaces-key-matches-name": [
     {
       "url": "https://code.claude.com/docs/en/plugins/org",
@@ -1290,7 +1336,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "fb925813ce07d30473520ced16f342d62b6dd044bc729ab379a90b4b419294a0"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -1331,6 +1377,18 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "disableAutoMode",
       "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    }
+  ],
+  "settings-known-marketplaces-pattern-anchored": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Allowed source types",
+      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Allowlist with strictKnownMarketplaces",
+      "hash": "f3eb446c848d7df24ee6496df9a97c55ecd12ec5124f9881e347bdd95da37ddc"
     }
   ],
   "settings-known-marketplaces-policy-schema": [
@@ -1414,6 +1472,23 @@
       "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338"
     }
   ],
+  "settings-marketplace-key-alias": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Aliases for the marketplace keys",
+      "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "strictKnownMarketplaces",
+      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250"
+    }
+  ],
   "settings-marketplace-key-alias-conflict": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1429,6 +1504,18 @@
       "url": "https://code.claude.com/docs/en/plugins/org",
       "heading": "Aliases for the marketplace keys",
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
+    }
+  ],
+  "settings-marketplace-skip-lfs": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Fields by type",
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
     }
   ],
   "settings-model-list": [
@@ -1596,7 +1683,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "forceLoginMethod",
-      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
+      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1676,6 +1763,38 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "How a skill gets its command name",
       "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    }
+  ],
+  "settings-strict-known-marketplaces-skills-dir": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/org",
+      "heading": "Keep skills-directory plugins loading",
+      "hash": "d24b9504a58e27f5e2e720422c602cac6b9c6cfb9f5bda995c1a5ed4804eea6b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Source values valid only in policy lists",
+      "hash": "c7cf7a570c36a42beaba68b45ac2c70e39e9dbb5d4faaab71ee458ed9b714150"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Allowed source types",
+      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "managedSourcesBehavior",
+      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
     }
   ],
   "settings-sync-claude-ai-plugins": [

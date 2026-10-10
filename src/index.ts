@@ -55,25 +55,32 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
+import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
+import settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
 import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
+import settingsExtraKnownMarketplacesDirectory from './rules/settings-extra-known-marketplaces-directory.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsFileSize from './rules/settings-file-size.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
+import settingsKnownMarketplacesPatternAnchored from './rules/settings-known-marketplaces-pattern-anchored.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
+import settingsMarketplaceKeyAlias from './rules/settings-marketplace-key-alias.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsMarketplaceSkipLfs from './rules/settings-marketplace-skip-lfs.ts'
 import settingsModelList from './rules/settings-model-list.ts'
 import settingsModelValue from './rules/settings-model-value.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
+import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
@@ -193,6 +200,13 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  settingsEnabledPluginsExternalSource,
+  settingsEnabledPluginsMarketplaceDeclared,
+  settingsExtraKnownMarketplacesDirectory,
+  settingsKnownMarketplacesPatternAnchored,
+  settingsMarketplaceKeyAlias,
+  settingsMarketplaceSkipLfs,
+  settingsStrictKnownMarketplacesSkillsDir,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -310,6 +324,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'settings-enabled-plugins-external-source': 'warn',
+  'settings-enabled-plugins-marketplace-declared': 'off',
+  'settings-extra-known-marketplaces-directory': 'warn',
+  'settings-known-marketplaces-pattern-anchored': 'warn',
+  'settings-marketplace-key-alias': 'warn',
+  'settings-marketplace-skip-lfs': 'warn',
+  'settings-strict-known-marketplaces-skills-dir': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

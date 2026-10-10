@@ -121,6 +121,34 @@ const credentialMarketplace = JSON.stringify({
 // One string value of 2 MiB makes a file over the limit of the size rule.
 const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
+// The marketplace settings rules of K3 (#12). A marketplace for `settings-enabled-plugins-external-source`
+// has one entry with an external source, and is valid for the marketplace rules.
+const externalMarketplace = JSON.stringify({
+  name: 'acme',
+  owner: { name: 'ex' },
+  plugins: [{ name: 'p', source: { source: 'github', repo: 'acme/p' } }],
+})
+const externalSettings = JSON.stringify({
+  extraKnownMarketplaces: { acme: { source: { source: 'directory', path: '.claude/market' } } },
+  enabledPlugins: { 'p@acme': true },
+})
+const undeclaredSettings = JSON.stringify({ enabledPlugins: { 'p@acme': true } })
+const directorySettings = JSON.stringify({
+  extraKnownMarketplaces: {
+    acme: { source: { source: 'directory', path: '/opt/acme-marketplace' } },
+  },
+})
+const skipLfsSettings = JSON.stringify({
+  extraKnownMarketplaces: {
+    acme: { source: { source: 'github', repo: 'acme/p', skipLfs: true } },
+  },
+})
+const skillsDir = { source: 'skills-dir' }
+const noSkillsDir = JSON.stringify({
+  strictKnownMarketplaces: [{ source: 'github', repo: 'acme/*' }],
+})
+const withSkillsDir = JSON.stringify({ strictKnownMarketplaces: [skillsDir] })
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -484,6 +512,98 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // `settings-enabled-plugins-marketplace-declared` is `off`. It reads the two project files, and
+  // no other file. The same content where no rule reads it: a nested directory, another
+  // directory, a managed file and the top level.
+  'packages/md/.claude/settings.json': undeclaredSettings,
+  'packages/md/.claude/settings.local.json': undeclaredSettings,
+  'packages/md/.claude/nested/settings.json': undeclaredSettings,
+  'packages/md/.vscode/settings.json': undeclaredSettings,
+  'packages/md/settings.json': undeclaredSettings,
+  'packages/md/managed-settings.json': undeclaredSettings,
+  // `settings-enabled-plugins-external-source` reads `.claude/settings.json` only. The local file
+  // holds the same content and no rule reports it.
+  'packages/ex/.claude/market/.claude-plugin/marketplace.json': externalMarketplace,
+  'packages/ex/.claude/settings.json': externalSettings,
+  'packages/ex/.claude/settings.local.json': externalSettings,
+  'packages/ex/.claude/nested/settings.json': externalSettings,
+  'packages/ex/.vscode/settings.json': externalSettings,
+  'packages/ex/settings.json': externalSettings,
+  // `settings-extra-known-marketplaces-directory` reads `.claude/settings.json` only. A managed
+  // file can deploy a marketplace to each machine.
+  'packages/dr/.claude/settings.json': directorySettings,
+  'packages/dr/.claude/settings.local.json': directorySettings,
+  'packages/dr/.claude/nested/settings.json': directorySettings,
+  'packages/dr/.vscode/settings.json': directorySettings,
+  'packages/dr/managed-settings.json': directorySettings,
+  // `settings-marketplace-skip-lfs` reads the project files and the managed files. A hidden drop-in
+  // is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/lf/.claude/settings.json': skipLfsSettings,
+  'packages/lf/.claude/settings.local.json': skipLfsSettings,
+  'packages/lf/managed-settings.json': skipLfsSettings,
+  'packages/lf/managed-settings.d/10-a.json': skipLfsSettings,
+  'packages/lf/managed-settings.d/.20-hidden.json': skipLfsSettings,
+  'packages/lf/managed-settings.d/30-b.txt': skipLfsSettings,
+  'packages/lf/managed-settings.d/sub/40-c.json': skipLfsSettings,
+  'packages/lf/.vscode/settings.json': skipLfsSettings,
+  // `settings-marketplace-key-alias` reads the project files and the managed files. In a project
+  // file it reads `additionalMarketplaces` only. `allowedMarketplaces` there is for
+  // `settings-key-scope`, and an alias beside its key is for the conflict rule.
+  'packages/ka/.claude/settings.json': '{"additionalMarketplaces": {}}',
+  'packages/ka/.claude/settings.local.json': '{"additionalMarketplaces": {}}',
+  'packages/ka/managed-settings.json': '{"allowedMarketplaces": [{"source": "skills-dir"}]}',
+  'packages/ka/managed-settings.d/10-a.json': '{"additionalMarketplaces": {}}',
+  'packages/ka/managed-settings.d/.20-hidden.json': '{"additionalMarketplaces": {}}',
+  'packages/ka/managed-settings.d/30-b.txt': '{"additionalMarketplaces": {}}',
+  'packages/ka/managed-settings.d/sub/40-c.json': '{"additionalMarketplaces": {}}',
+  'packages/ka/.vscode/settings.json': '{"additionalMarketplaces": {}}',
+  'packages/ka2/.claude/settings.json':
+    '{"strictKnownMarketplaces": [], "allowedMarketplaces": []}',
+  // `settings-marketplace-key-alias-conflict` reads a policy pair in the managed files only.
+  'packages/ac/managed-settings.json':
+    '{"strictKnownMarketplaces": [{"source": "skills-dir"}], "allowedMarketplaces": []}',
+  'packages/ac/managed-settings.d/10-a.json':
+    '{"extraKnownMarketplaces": {}, "additionalMarketplaces": {}}',
+  'packages/ac/managed-settings.d/.20-hidden.json':
+    '{"extraKnownMarketplaces": {}, "additionalMarketplaces": {}}',
+  'packages/ac/managed-settings.d/30-b.txt':
+    '{"extraKnownMarketplaces": {}, "additionalMarketplaces": {}}',
+  'packages/ac/managed-settings.d/sub/40-c.json':
+    '{"extraKnownMarketplaces": {}, "additionalMarketplaces": {}}',
+  'packages/ac/.vscode/settings.json':
+    '{"extraKnownMarketplaces": {}, "additionalMarketplaces": {}}',
+  // `settings-known-marketplaces-pattern-anchored` reads the managed files, and no other file.
+  'packages/pa/managed-settings.json': JSON.stringify({
+    strictKnownMarketplaces: [
+      skillsDir,
+      { source: 'hostPattern', hostPattern: 'github.example.com' },
+    ],
+  }),
+  'packages/pa/managed-settings.d/10-a.json': JSON.stringify({
+    strictKnownMarketplaces: [skillsDir, { source: 'pathPattern', pathPattern: '/opt' }],
+  }),
+  'packages/pa/managed-settings.d/.20-hidden.json': JSON.stringify({
+    strictKnownMarketplaces: [skillsDir, { source: 'pathPattern', pathPattern: '/opt' }],
+  }),
+  'packages/pa/managed-settings.d/30-b.txt': JSON.stringify({
+    strictKnownMarketplaces: [skillsDir, { source: 'pathPattern', pathPattern: '/opt' }],
+  }),
+  'packages/pa/managed-settings.d/sub/40-c.json': JSON.stringify({
+    strictKnownMarketplaces: [skillsDir, { source: 'pathPattern', pathPattern: '/opt' }],
+  }),
+  'packages/pa/.vscode/settings.json': JSON.stringify({
+    strictKnownMarketplaces: [skillsDir, { source: 'pathPattern', pathPattern: '/opt' }],
+  }),
+  // `settings-strict-known-marketplaces-skills-dir` reads the merged managed source. A drop-in
+  // with the entry makes `managed-settings.json` and the other drop-in silent.
+  'packages/sd/managed-settings.json': noSkillsDir,
+  'packages/sd/managed-settings.d/10-a.json': noSkillsDir,
+  'packages/sd/managed-settings.d/.20-hidden.json': noSkillsDir,
+  'packages/sd/managed-settings.d/30-b.txt': noSkillsDir,
+  'packages/sd/managed-settings.d/sub/40-c.json': noSkillsDir,
+  'packages/sd/.vscode/settings.json': noSkillsDir,
+  'packages/sd2/managed-settings.json': noSkillsDir,
+  'packages/sd2/managed-settings.d/10-a.json': withSkillsDir,
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -585,6 +705,37 @@ const SCOPE_RULES = [
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
+
+// The marketplace settings rules of K3 (#12), in the order of the `modules` list, with the files and
+// the `recommended` severity of each. `settings-enabled-plugins-marketplace-declared` is `off`:
+// `strict` turns it on at `warn`.
+const PROJECT_SETTINGS = ['**/.claude/settings.json']
+const MARKET_SETTINGS_RULES = [
+  { name: 'settings-enabled-plugins-external-source', files: PROJECT_SETTINGS, severity: 'warn' },
+  { name: 'settings-enabled-plugins-marketplace-declared', files: PROJECT_FILES, severity: 'off' },
+  {
+    name: 'settings-extra-known-marketplaces-directory',
+    files: PROJECT_SETTINGS,
+    severity: 'warn',
+  },
+  { name: 'settings-known-marketplaces-pattern-anchored', files: MANAGED_FILES, severity: 'warn' },
+  {
+    name: 'settings-marketplace-key-alias',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  {
+    name: 'settings-marketplace-skip-lfs',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  { name: 'settings-strict-known-marketplaces-skills-dir', files: MANAGED_FILES, severity: 'warn' },
+] as const
+const MARKET_SETTINGS_OFF_RULES = MARKET_SETTINGS_RULES.filter(
+  ({ severity }) => severity === 'off',
+).map(({ name }) => name)
+// The conflict rule reads the project files, and the managed files for the policy pair.
+const CONFLICT_RULE = 'settings-marketplace-key-alias-conflict'
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -725,11 +876,15 @@ const EXPECTED = [
   'packages/kp/managed-settings.json: claude/settings-known-marketplaces-policy-schema@2',
   'packages/kp/managed-settings.d/10-a.json: claude/settings-known-marketplaces-policy-schema@2',
   'packages/kp/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The bogus entry of `packages/kp` is an allowlist with no `skills-dir` entry.
+  'packages/kp/managed-settings.json: claude/settings-strict-known-marketplaces-skills-dir@1',
   // `settings-plugin-suggestion-marketplaces-source` reads the merged source. A drop-in with a
   // `strictKnownMarketplaces` entry declares the name for the whole source.
   'packages/ps/managed-settings.json: claude/settings-plugin-suggestion-marketplaces-source@2',
   'packages/ps/managed-settings.d/10-a.json: claude/settings-plugin-suggestion-marketplaces-source@2',
   'packages/ps/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The drop-in of `packages/ps2` lists a `github` source and no `skills-dir` entry.
+  'packages/ps2/managed-settings.d/10-a.json: claude/settings-strict-known-marketplaces-skills-dir@1',
   // `settings-conflicting-keys` reads the project and managed files, and no other file.
   'packages/ck/.claude/settings.json: claude/settings-conflicting-keys@2',
   'packages/ck/.claude/settings.local.json: claude/settings-conflicting-keys@2',
@@ -760,6 +915,43 @@ const EXPECTED = [
   'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-enabled-plugins-external-source` reads `.claude/settings.json`. The marketplace in
+  // `packages/mk` lists the plugin `fmt` with a `github` source.
+  'packages/ex/.claude/settings.json: claude/settings-enabled-plugins-external-source@1',
+  'packages/mk/.claude/settings.json: claude/settings-enabled-plugins-external-source@1',
+  // `settings-extra-known-marketplaces-directory` reads `.claude/settings.json`.
+  'packages/dr/.claude/settings.json: claude/settings-extra-known-marketplaces-directory@1',
+  // `settings-marketplace-skip-lfs` reads the project and managed files, and no other file.
+  ...[
+    'packages/lf/.claude/settings.json',
+    'packages/lf/.claude/settings.local.json',
+    'packages/lf/managed-settings.json',
+    'packages/lf/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-marketplace-skip-lfs@1`),
+  'packages/lf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-marketplace-key-alias` reads the project and managed files. `packages/ka2` holds
+  // `allowedMarketplaces` beside its key in a project file: the key and the alias get one scope
+  // report each, no alias report and no conflict report.
+  ...[
+    'packages/ka/.claude/settings.json',
+    'packages/ka/.claude/settings.local.json',
+    'packages/ka/managed-settings.json',
+    'packages/ka/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-marketplace-key-alias@1`),
+  'packages/ka/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  ...Array(2).fill('packages/ka2/.claude/settings.json: claude/settings-key-scope@2'),
+  // `settings-marketplace-key-alias-conflict` reads the policy pair in the managed files.
+  'packages/ac/managed-settings.json: claude/settings-marketplace-key-alias-conflict@2',
+  'packages/ac/managed-settings.d/10-a.json: claude/settings-marketplace-key-alias-conflict@2',
+  'packages/ac/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-known-marketplaces-pattern-anchored` reads the managed files, and no other file.
+  'packages/pa/managed-settings.json: claude/settings-known-marketplaces-pattern-anchored@1',
+  'packages/pa/managed-settings.d/10-a.json: claude/settings-known-marketplaces-pattern-anchored@1',
+  'packages/pa/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-strict-known-marketplaces-skills-dir` reads the merged managed source.
+  'packages/sd/managed-settings.json: claude/settings-strict-known-marketplaces-skills-dir@1',
+  'packages/sd/managed-settings.d/10-a.json: claude/settings-strict-known-marketplaces-skills-dir@1',
+  'packages/sd/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -797,12 +989,17 @@ const EXPECTED = [
 ].sort()
 
 // The reports of the `off` marketplace rules. They appear in `strict` only, at `warn`. The
-// credential rule reads the project settings files and the marketplace, and no other file.
+// credential rule reads the project settings files and the marketplace, and no other file. The
+// declared rule reads the two project settings files.
 const STRICT_ONLY = [
   'packages/uh/.claude-plugin/marketplace.json: claude/marketplace-relative-source-url-hosted@1',
   'packages/hc/.claude-plugin/marketplace.json: claude/marketplace-headers-literal-credential@1',
   'packages/hc/.claude/settings.json: claude/marketplace-headers-literal-credential@1',
   'packages/hc/.claude/settings.local.json: claude/marketplace-headers-literal-credential@1',
+  'packages/md/.claude/settings.json: claude/settings-enabled-plugins-marketplace-declared@1',
+  'packages/md/.claude/settings.local.json: claude/settings-enabled-plugins-marketplace-declared@1',
+  // The local file of `packages/so` enables `a@m`, and no file declares `m`.
+  'packages/so/.claude/settings.local.json: claude/settings-enabled-plugins-marketplace-declared@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -907,19 +1104,21 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...MARKET_SETTINGS_RULES.filter(({ severity }) => severity !== 'off').map(
+        ({ name, severity }) => [`claude/recommended/${name}`, { [`claude/${name}`]: severity }],
+      ),
     ])
   })
 
   // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
   it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
+    const offRules = [...MARKETPLACE_OFF_RULES, ...MARKET_SETTINGS_OFF_RULES]
     const isOff = (rules: Linter.Config['rules']) =>
-      MARKETPLACE_OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
+      offRules.some((rule) => rules?.[`claude/${rule}`] !== undefined)
     const strict = rulesOf(plugin.configs.strict)
     expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
-    expect(strict.filter(isOff)).toEqual(
-      MARKETPLACE_OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })),
-    )
+    expect(strict.filter(isOff)).toEqual(offRules.map((rule) => ({ [`claude/${rule}`]: 'warn' })))
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -932,6 +1131,7 @@ describe('configs', () => {
       ...MARKETPLACE_OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...MARKET_SETTINGS_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -1027,13 +1227,41 @@ describe('configs', () => {
   })
 
   it('gives each settings rule one JSON block for the two project settings files', () => {
-    for (const rule of SETTINGS_RULES) {
+    for (const rule of SETTINGS_RULES.filter((r) => r !== CONFLICT_RULE)) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${rule}`,
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
       ])
+    }
+  })
+
+  it('gives the conflict rule one JSON block for the project and managed files', () => {
+    const blocks = plugin.configs.recommended.filter(
+      (c) => c.name === `claude/recommended/${CONFLICT_RULE}`,
+    )
+    expect(blocks.map((c) => [c.language, c.files])).toEqual([
+      ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+  })
+
+  it('gives each marketplace settings rule of K3 one JSON block for its files', () => {
+    for (const { name, files, severity } of MARKET_SETTINGS_RULES) {
+      // The `off` rule is in `strict` only.
+      const config = severity === 'off' ? plugin.configs.strict : plugin.configs.recommended
+      const prefix = severity === 'off' ? 'strict' : 'recommended'
+      const blocks = config.filter((c) => c.name === `claude/${prefix}/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('turns each off marketplace settings rule on in strict only', () => {
+    expect(MARKET_SETTINGS_OFF_RULES).toEqual(['settings-enabled-plugins-marketplace-declared'])
+    for (const rule of MARKET_SETTINGS_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => c.rules)).toEqual([{ [`claude/${rule}`]: 'warn' }])
     }
   })
 
