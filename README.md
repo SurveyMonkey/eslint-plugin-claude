@@ -118,7 +118,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-manifest-metadata-format`](docs/rules/plugin-manifest-metadata-format.md) | When set, `license` in `plugin.json` is an SPDX license expression and `repository` is a URL | `warn` | `warn` |
 | [`claude/plugin-manifest-no-bom`](docs/rules/plugin-manifest-no-bom.md) | `plugin.json` has no byte order mark, which fails the install on Claude Code before v2.1.246 (option `minVersion`; inactive without it) | `warn` | `warn` |
 | [`claude/plugin-manifest-publish-metadata`](docs/rules/plugin-manifest-publish-metadata.md) | The plugin sets `homepage` and `repository` in `plugin.json` and has a `README.md` at the plugin root | `warn` | `warn` |
-| [`claude/plugin-manifest-version-semver`](docs/rules/plugin-manifest-version-semver.md) | When set, `version` in `plugin.json` is a semantic version, which a dependency range and a release tag need | `warn` | `warn` |
+| [`claude/plugin-manifest-version-semver`](docs/rules/plugin-manifest-version-semver.md) | When set, `version` in `plugin.json` is a semantic version, which a dependency range needs | `warn` | `warn` |
 
 ### Marketplace manifest
 

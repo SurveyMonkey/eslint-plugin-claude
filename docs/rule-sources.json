@@ -997,6 +997,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Declare a dependency with a version constraint",
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
       "heading": "Create a release tag",
       "hash": "6206298e81dd4078540d51d0f2bf087de48e066c4969c5aed6911366634aa9d0"
     }

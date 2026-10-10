@@ -34,11 +34,14 @@ How the rule reads a `license`:
 - It splits the text at spaces and parentheses. `AND`, `OR` and `WITH` are operators.
 - Each other part is a name. A name after `WITH` is a license exception. Any other name is a
   license identifier, and it can end in `+`.
-- The match ignores case, as SPDX says. An operator must be in uppercase.
-- A name that starts with `LicenseRef-` is a license that the author defines. A
-  `DocumentRef-<id>:` prefix is allowed.
-- After `WITH`, a name that starts with `AdditionRef-` is an exception that the author defines. A
-  `DocumentRef-<id>:` prefix is allowed.
+- The match of a listed name ignores case, as SPDX says. An operator must be in uppercase. The
+  prefixes `DocumentRef-`, `LicenseRef-` and `AdditionRef-` are case-sensitive.
+- A name of the form `LicenseRef-<id>`, where `<id>` has only letters, digits, `.` and `-`, is a
+  license that the author defines. A `DocumentRef-<id>:` prefix is allowed. It is not valid after
+  `WITH`.
+- After `WITH`, a name of the form `AdditionRef-<id>` is an exception that the author defines. A
+  `DocumentRef-<id>:` prefix is allowed. Only SPDX 3.0 has this form: SPDX 2.3 allows only a
+  listed exception.
 - A text with no name is not valid.
 
 The rule checks the names, and not the shape of the expression. So `MIT Apache-2.0` and

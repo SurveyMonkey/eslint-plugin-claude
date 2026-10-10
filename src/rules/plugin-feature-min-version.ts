@@ -1,4 +1,4 @@
-// A `plugin.json` that uses a feature that a Claude Code before some version cannot load. The
+// A `plugin.json` that uses a feature that needs a newer Claude Code. The
 // rule reports only when the option `minVersion` is set and is older than the version that added
 // the feature (docs/rules/plugin-feature-min-version.md). It makes no report when it cannot see
 // the plugin.

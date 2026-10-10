@@ -14,13 +14,13 @@ const LICENSES = new Set(SPDX_LICENSE_IDS.map((id) => id.toLowerCase()))
 const EXCEPTIONS = new Set(SPDX_EXCEPTION_IDS.map((id) => id.toLowerCase()))
 // A license that the author defines, with an optional reference to another document.
 const REFERENCE = /^(?:DocumentRef-[A-Za-z0-9.-]+:)?LicenseRef-[A-Za-z0-9.-]+$/
-// An exception that the author defines, as the SPDX 2.3 grammar allows after `WITH`.
+// An exception that the author defines, as the SPDX 3.0 grammar allows after `WITH`.
 const ADDITION = /^(?:DocumentRef-[A-Za-z0-9.-]+:)?AdditionRef-[A-Za-z0-9.-]+$/
 const OPERATORS = new Set(['AND', 'OR', 'WITH', '(', ')'])
 
 /** True when each name in the license expression `text` is in the SPDX License List, and
- *  the text holds at least one name. A name after `WITH` is an exception or an `AdditionRef-` name. A name can end in `+`.
- *  The check leaves out the order of the names and the operators. */
+ *  the text holds at least one name. A name after `WITH` is an exception or an `AdditionRef-`
+ *  name. A name can end in `+`. The check leaves out the order of the names and the operators. */
 function isSpdx(text: string): boolean {
   const tokens = text.match(/[()]|[^\s()]+/g) ?? []
   let names = 0
