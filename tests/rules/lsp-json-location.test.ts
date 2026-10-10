@@ -1,0 +1,87 @@
+// Claude Code takes LSP configuration from a plugin: `.lsp.json` at the plugin root, and the
+// `lspServers` key of the manifest (plugins components, "LSP servers"; tools reference, "LSP tool
+// behavior"). A `.lsp.json` in another place is a no-op. The rule is a heuristic: it reads the
+// place of the file, and not its content. The files glob is in tests/configs.test.ts.
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
+import { describe, expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
+import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-support.ts'
+
+const NAME = 'lsp-json-location'
+const code = '{"go": {"command": "gopls", "extensionToLanguage": {".go": "go"}}}'
+const PLUGIN = { '.claude-plugin/plugin.json': '{"name": "p"}' }
+
+/** Lint the `.lsp.json` at `at` in a repository with `files`. */
+const lintAt = (at: string, files: Record<string, string> = {}, text = code) =>
+  lintJson(NAME, text, path.join(repo(files), at))
+const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
+
+it.fails('reports a .lsp.json at a repository root with no plugin, on the object', () => {
+  const found = lintAt('.lsp.json')
+  expect(ids(found)).toEqual(['outside'])
+  expect(found[0]).toMatchObject({ line: 1, column: 1 })
+  expect(found[0]?.message).toContain('plugin')
+})
+it.fails('reports a .lsp.json under .claude/', () => {
+  expect(ids(lintAt('.claude/.lsp.json'))).toEqual(['outside'])
+  expect(ids(lintAt('.claude/lsp/.lsp.json'))).toEqual(['outside'])
+})
+it.fails('reports a .lsp.json in a subfolder of a plugin, and in .claude-plugin/', () => {
+  expect(ids(lintAt('sub/.lsp.json', PLUGIN))).toEqual(['outside'])
+  expect(ids(lintAt('.claude-plugin/.lsp.json', PLUGIN))).toEqual(['outside'])
+})
+it.fails('reports a .lsp.json in a folder with a .claude-plugin that holds no manifest', () => {
+  expect(ids(lintAt('p/.lsp.json', { 'p/.claude-plugin/marketplace.json': '{}' }))).toEqual([
+    'outside',
+  ])
+})
+it.fails('reports a .lsp.json in a package of a repository that has a plugin elsewhere', () => {
+  const files = { 'plugins/a/.claude-plugin/plugin.json': '{}' }
+  expect(ids(lintAt('packages/b/.lsp.json', files))).toEqual(['outside'])
+})
+it.fails('reports whatever the content, also an empty file', () => {
+  expect(ids(lintAt('.lsp.json', {}, '{}'))).toEqual(['outside'])
+  expect(ids(lintAt('.lsp.json', {}, '[]'))).toEqual(['outside'])
+})
+
+it.fails('stays silent for a .lsp.json at a plugin root', () => {
+  expect(ids(lintAt('.lsp.json', PLUGIN))).toEqual([])
+  expect(
+    ids(lintAt('plugins/a/.lsp.json', { 'plugins/a/.claude-plugin/plugin.json': '{}' })),
+  ).toEqual([])
+})
+it.fails('stays silent for a plugin root with a manifest that does not parse', () => {
+  expect(ids(lintAt('.lsp.json', { '.claude-plugin/plugin.json': '{' }))).toEqual([])
+})
+it.fails('stays silent for a plugin root whose manifest is a dangling link', () => {
+  const root = repo({})
+  mkdirSync(path.join(root, '.claude-plugin'))
+  symlinkSync(path.join(root, 'missing.json'), path.join(root, '.claude-plugin', 'plugin.json'))
+  expect(ids(lintJson(NAME, code, path.join(root, '.lsp.json')))).toEqual([])
+})
+describe('a plugin root that the rule cannot see', () => {
+  it.fails('stays silent when .claude-plugin is a link out of the repository', () => {
+    const root = repo({})
+    const outside = mkdtempSync(path.join(tmpdir(), 'lsp-location-outside-'))
+    try {
+      mkdirSync(path.join(outside, 'meta'))
+      writeFileSync(path.join(outside, 'meta', 'plugin.json'), '{}')
+      symlinkSync(path.join(outside, 'meta'), path.join(root, '.claude-plugin'))
+      expect(ids(lintJson(NAME, code, path.join(root, '.lsp.json')))).toEqual([])
+    } finally {
+      rmSync(outside, { recursive: true, force: true })
+    }
+  })
+  describe.skipIf(chmodCannotBlock)('without access', () => {
+    it.fails('stays silent when .claude-plugin cannot be read', () => {
+      const root = repo(PLUGIN)
+      const file = path.join(root, '.lsp.json')
+      expect(ids(lintJson(NAME, code, file))).toEqual([])
+      withoutAccess(path.join(root, '.claude-plugin'), () => {
+        expect(ids(lintJson(NAME, code, file))).toEqual([])
+      })
+    })
+  })
+})
