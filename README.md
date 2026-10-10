@@ -102,6 +102,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-project-skills-dir-limits`](docs/rules/plugin-project-skills-dir-limits.md) | No monitor, MCP bundle or outside MCP file in a plugin in `.claude/skills/` | `error` | `error` |
 | [`claude/plugin-commands-dir-nonempty`](docs/rules/plugin-commands-dir-nonempty.md) | A `commands` path that names a directory holds at least one command | `error` | `error` |
 | [`claude/plugin-default-dir-shadowed`](docs/rules/plugin-default-dir-shadowed.md) | A key that replaces a default folder, such as `commands`, has a path inside the folder | `error` | `error` |
+| [`claude/plugin-package-lockfile`](docs/rules/plugin-package-lockfile.md) | A plugin with a `package.json` ships a lockfile that Claude Code reads, not only `yarn.lock`, `pnpm-lock.yaml` or `bun.lockb` | `error` | `error` |
 
 ### Marketplace manifest
 

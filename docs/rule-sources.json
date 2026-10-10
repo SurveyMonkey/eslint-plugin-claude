@@ -926,6 +926,23 @@
       "hash": "83c964091287b63057f43bf3c1b19a3185cec14a58cc3ab1aa3ef66a21cee8fb"
     }
   ],
+  "plugin-package-lockfile": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install runs",
+      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install fails or is skipped",
+      "hash": "e9e73986d749ac68cdfca5e3baa46cbd4316c2cba3354985113f8d61bd78638f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Limits on the dependency install",
+      "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
+    }
+  ],
   "plugin-project-skills-dir-limits": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",

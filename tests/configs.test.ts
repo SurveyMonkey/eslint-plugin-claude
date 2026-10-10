@@ -138,6 +138,10 @@ const TREE: Record<string, string> = {
     commands: ['./extras/c.md'],
   }),
   'plugins/shadow/commands/c.md': '# C\n',
+  // A `package.json` with a lockfile that Claude Code skips.
+  'plugins/lock/.claude-plugin/plugin.json': JSON.stringify({ name: 'lock' }),
+  'plugins/lock/package.json': '{}',
+  'plugins/lock/yarn.lock': '',
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -559,6 +563,7 @@ const PLUGIN_RULES = [
   },
   { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-default-dir-shadowed', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-package-lockfile', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -608,6 +613,7 @@ const EXPECTED = [
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
+  'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
