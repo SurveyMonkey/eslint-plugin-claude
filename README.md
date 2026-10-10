@@ -64,12 +64,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/skill-agent-exists`](docs/rules/skill-agent-exists.md) | The `agent` of a skill or command names a built-in agent, an agent file, or a plugin agent | `error` | `error` |
 | [`claude/skill-name-unique`](docs/rules/skill-name-unique.md) | Two skills or commands in one scope with the same command name | `error` | `error` |
 | [`claude/skill-paths-glob-valid`](docs/rules/skill-paths-glob-valid.md) | A `paths` glob that Claude Code cannot use | `error` | `error` |
-| [`claude/skill-boolean-literal`](docs/rules/skill-boolean-literal.md) | A Boolean field written as `yes`, `no`, `on`, `off`, `1` or `0`, which Claude Code reads from v2.1.218 | `warn` | `warn` |
+| [`claude/skill-boolean-literal`](docs/rules/skill-boolean-literal.md) | A Boolean field written as `yes`, `no`, `on`, `off`, `1` or `0`, which Claude Code reads from v2.1.218. Needs `minVersion` | `warn` | `warn` |
 | [`claude/skill-description-present`](docs/rules/skill-description-present.md) | A skill or command with no `description` | `warn` | `warn` |
 | [`claude/skill-invocation-redundant-fields`](docs/rules/skill-invocation-redundant-fields.md) | `when_to_use` on a skill Claude cannot invoke, and `argument-hint` on a skill the user cannot invoke | `warn` | `warn` |
 | [`claude/skill-metadata-reserved-keys`](docs/rules/skill-metadata-reserved-keys.md) | A `metadata` key that is the name of a frontmatter field | `warn` | `warn` |
 | [`claude/skill-name-shadows-builtin`](docs/rules/skill-name-shadows-builtin.md) | A skill or command named like a built-in command or a bundled skill | `warn` | `warn` |
-| [`claude/skill-no-bom`](docs/rules/skill-no-bom.md) | A skill or command file that starts with a byte order mark, which Claude Code ignored before v2.1.239 | `warn` | `warn` |
+| [`claude/skill-no-bom`](docs/rules/skill-no-bom.md) | A skill or command file that starts with a byte order mark, which Claude Code ignored before v2.1.239. Needs `minVersion` | `warn` | `warn` |
 
 ### Subagents and output styles
 

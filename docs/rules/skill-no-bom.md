@@ -18,6 +18,8 @@ Save a skill or command file with no byte order mark.
 |--------|----------|----------|-------|
 | `recommended`, `strict` | `warn` | portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
+The rule makes no report until the option `minVersion` is set.
+
 ## Rule details
 
 Claude Code 2.1.239 fixed agent, skill and command files that start with a UTF-8 BOM
@@ -32,10 +34,10 @@ source map cites the skills page. It says that Claude Code reads the frontmatter
 The rule reports a skill or command file that starts with the mark.
 
 ESLint removes the mark before a rule sees the text. So the rule reads the first three bytes of
-the file on disk. The rule makes no report in these cases:
+the file on disk. It does not read the text in the editor, so the text can differ from the saved
+file. The rule makes no report in these cases:
 
 - The file is not on disk, as in a lint of text with no saved file.
-- The text differs from the saved file. The rule reads the saved file, not the text in the editor.
 - The file is a link to a file outside the repository, or the link is broken or loops back to itself.
 - The rule has no read access to the file.
 
@@ -77,11 +79,12 @@ description: Deploys the service.
 | `minVersion` | unset | The oldest Claude Code version that the repository supports, such as `2.1.239`. Optional. |
 
 ```js
-'claude/skill-no-bom': ['warn', { minVersion: '2.1.239' }]
+'claude/skill-no-bom': ['warn', { minVersion: '2.1.200' }]
 ```
 
 With no `minVersion`, the rule is inactive and makes no report. The `recommended` and `strict`
-configs set no option, so a team turns the rule on when it sets its floor. When `minVersion` is
+configs set no option, so a team turns the rule on when it sets its floor. The example turns the
+rule on for a floor older than 2.1.239. When `minVersion` is
 `2.1.239` or later, the rule makes no report. The value has three numbers,
 such as `2.1.239`.
 

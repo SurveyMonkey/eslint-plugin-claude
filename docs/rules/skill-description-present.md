@@ -34,7 +34,7 @@ The rule makes no report in these cases:
 
 - The `description` is not a string. [`skill-frontmatter-schema`](skill-frontmatter-schema.md)
   reports it.
-- The frontmatter does not parse, or its top level is a list or a plain value.
+- The frontmatter does not parse, or its top level is a list or a plain value other than `null`.
 
 A command file takes `description` as a skill does, so the rule checks both. `when_to_use` does not
 stand in for `description`.
