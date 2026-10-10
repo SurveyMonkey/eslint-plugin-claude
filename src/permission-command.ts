@@ -14,6 +14,16 @@ export function commandWords(specifier: string): string[] {
   return suffix ? [...words, '*'] : words
 }
 
+/** The input parameters of a command tool that the permissions page names. Source: the "Match by
+ *  input parameter" section
+ *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter), checked on 2026-10-10. */
+export const COMMAND_PARAMETERS: readonly string[] = [
+  'run_in_background',
+  'description',
+  'timeout',
+  'dangerouslyDisableSandbox',
+]
+
 /** True for a deny or ask rule on an input parameter of a command tool, as in
  *  `Bash(run_in_background:true)` and `Bash(run_in_background:*)`. There the `*` is the wildcard of
  *  a value and not a command suffix
@@ -21,7 +31,6 @@ export function commandWords(specifier: string): string[] {
  *  that are not the command itself are listed. */
 export function isInputParameterRule(list: string, specifier: string): boolean {
   return (
-    list !== 'allow' &&
-    /^(?:run_in_background|description|timeout|dangerouslyDisableSandbox):/.test(specifier.trim())
+    list !== 'allow' && COMMAND_PARAMETERS.some((name) => specifier.trim().startsWith(`${name}:`))
   )
 }

@@ -190,3 +190,13 @@ export const COMMAND_RULE_TOOLS: readonly string[] = ['Bash', 'Monitor', 'PowerS
 export const BASH_RULE_TOOLS: readonly string[] = COMMAND_RULE_TOOLS.filter(
   (tool) => tool !== 'PowerShell',
 )
+
+/** The input parameters that the docs name for a tool that is not a command tool. A rule in the
+ *  form `Tool(param:value)` matches one of them in `deny` and `ask`. Source: the "Match by input
+ *  parameter" section
+ *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter), checked on
+ *  2026-10-10. The command tools are in `COMMAND_PARAMETERS` (`src/permission-command.ts`). */
+export const INPUT_PARAMETERS: ReadonlyMap<string, readonly string[]> = new Map([
+  ['Agent', ['model', 'isolation']],
+  ['Skill', ['skill']],
+])
