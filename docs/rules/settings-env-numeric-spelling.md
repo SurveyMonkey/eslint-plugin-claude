@@ -33,12 +33,16 @@ The rule reports a string value that has one of these two shapes:
 The report is on the value. When a file has two keys of one name, the rule reads the last, as
 `JSON.parse` does.
 
-### Option
+## Options
+
+| Option | Default | Use |
+|--------|---------|-----|
+| `minVersion` | unset, the rule reports nothing | The oldest Claude Code client of the team, as three numbers such as `2.1.200`. The rule reports when it is below 2.1.211. |
 
 A fault shows only on a client older than v2.1.211. The rule cannot know which clients a team
 runs. So it reports nothing until the option `minVersion` names the oldest client of the team. It
 reports when that version is below 2.1.211. `recommended` and `strict` set no option, so the rule
-is off there until a team sets `minVersion`.
+reports nothing in those configs until a team sets `minVersion`.
 
 ```json
 { "claude/settings-env-numeric-spelling": ["warn", { "minVersion": "2.1.200" }] }

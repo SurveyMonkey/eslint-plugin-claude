@@ -1,5 +1,6 @@
 // A Windows path with backslashes in the `statusLine` `command` (docs/rules/statusline-windows-path.md).
-// The statusline page says that Git Bash treats an unquoted backslash as an escape character. So a
+// The statusline page says that Git Bash treats an unquoted backslash as an escape character. Any
+// POSIX shell does the same, so the rule has no platform option. So a
 // path such as `C:\Users\me\status.mjs` reaches the script with its separators removed. The rule
 // reads the command as text and tracks the quotes of a shell. It reads no word of the command, so
 // it is not a second reader of the command that `statusline-script-exists` checks.
@@ -53,7 +54,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'backslash' }> = {
     schema: [],
     messages: {
       backslash:
-        'The statusLine command has a path with backslashes. Git Bash on Windows treats an unquoted backslash as an escape character, and the command fails. Write the path with forward slashes.',
+        'The statusLine command has a path with backslashes. A POSIX shell, such as Git Bash on Windows, treats an unquoted backslash as an escape character, and the command fails. Write the path with forward slashes.',
     },
   },
   create(context) {

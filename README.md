@@ -154,12 +154,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-env-routing`](docs/rules/settings-env-routing.md) | Shared `.claude/settings.json` does not route the traffic of every user: `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`, a non-default `ANTHROPIC_BASE_URL`, or a `CLAUDE_CODE_USE_*` provider variable set on | `warn` | `warn` |
 | [`claude/settings-local-location`](docs/rules/settings-local-location.md) | `.claude/settings.local.json` is at the repository root, where Claude Code keeps it since v2.1.211 | `warn` | `warn` |
 | [`claude/settings-webfetch-preflight-skip`](docs/rules/settings-webfetch-preflight-skip.md) | `skipWebFetchPreflight: true` goes with a `WebFetch(...)` permission rule in the file or in a file that Claude Code merges with it | `warn` | `warn` |
-| [`claude/settings-env-numeric-spelling`](docs/rules/settings-env-numeric-spelling.md) | A number in `env` is in plain digits, not `1e6` or `64_000`, which Claude Code before v2.1.211 reads as a much smaller number | `warn` | `warn` |
+| [`claude/settings-env-numeric-spelling`](docs/rules/settings-env-numeric-spelling.md) | A number in `env` is in plain digits, not `1e6` or `64_000`, which Claude Code before v2.1.211 reads as a much smaller number; reports only with the option `minVersion` | `warn` | `warn` |
 | [`claude/settings-worktree-sparse-claude-dir`](docs/rules/settings-worktree-sparse-claude-dir.md) | `worktree.sparsePaths` lists `.claude`, or a file that Claude Code merges with it does, so a sparse worktree has the settings and rules of the repository root | `warn` | `warn` |
 | [`claude/settings-footerlinks-pattern`](docs/rules/settings-footerlinks-pattern.md) | In a managed file, a `footerLinksRegexes` pattern has no nested quantifier, a `url` has at most 2048 characters and a `label` at most 28 columns; options `maxUrlChars` and `maxLabelColumns` | `warn` | `warn` |
 | [`claude/settings-managed-value-form`](docs/rules/settings-managed-value-form.md) | In a managed file, `DISABLE_TELEMETRY` and the three like privacy toggles in `env` are truthy, such as `1`, so that Claude Code applies them without an approval dialog | `warn` | `warn` |
 | [`claude/settings-managed-version-floor`](docs/rules/settings-managed-version-floor.md) | In managed settings, `deniedModels` or `availableModelsMatch: "exact"` goes with a `requiredMinimumVersion` of 2.1.283 or later, because earlier versions ignore both keys | `warn` | `warn` |
-| [`claude/statusline-windows-path`](docs/rules/statusline-windows-path.md) | The `statusLine` command has no unquoted backslash path, which Git Bash on Windows breaks | `warn` | `warn` |
+| [`claude/statusline-windows-path`](docs/rules/statusline-windows-path.md) | The `statusLine` command has no unquoted backslash path, which any POSIX shell, such as Git Bash on Windows, breaks | `warn` | `warn` |
 
 ### Permissions and sandbox
 

@@ -47,6 +47,14 @@ describe(`${name}: the linted file`, () => {
     expect(ids(tree({}), MANAGED, both)).toEqual(['floor', 'floor'])
   })
 
+  it('names availableModelsMatch in its own report', () => {
+    const [message] = lint(tree({}), MANAGED, EXACT)
+    expect(message?.message).toContain('ignores "availableModelsMatch"')
+    const both = JSON.stringify({ deniedModels: ['a'], availableModelsMatch: 'exact' })
+    const names = lint(tree({}), MANAGED, both).map((m) => /ignores "(\w+)"/.exec(m.message)?.[1])
+    expect(names).toEqual(['deniedModels', 'availableModelsMatch'])
+  })
+
   it('reports a floor below 2.1.283', () => {
     for (const version of ['2.1.282', '2.1.0', '2.0.999', '1.9.9999', '2.1.9', '0.0.0']) {
       expect(ids(tree({}), MANAGED, floor(version)), version).toEqual(['floor'])
@@ -146,6 +154,11 @@ describe(`${name}: the managed source`, () => {
     expect(ids(tree({ [MANAGED]: low, [A]: floor('3.0.0', {}) }), DROP_IN)).toEqual([])
     // The linted file sets the floor, and a sibling sets a lower one.
     expect(ids(tree({ [A]: low }), DROP_IN, floor('2.1.283'))).toEqual([])
+  })
+
+  it('does not read a floor that is a list as a version', () => {
+    const files = { [A]: floor(['2.1.282'], {}) }
+    expect(ids(tree(files), DROP_IN)).toEqual([])
   })
 
   it('reports when every file sets a floor below 2.1.283, or none sets one', () => {

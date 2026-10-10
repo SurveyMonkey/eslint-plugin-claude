@@ -17,8 +17,8 @@ const name = 'settings-managed-version-floor' as const
 const FIRST_VERSION = [2, 1, 283] as const
 
 /** True when `floor` is a version number from 2.1.283 on, or is not a version number. The rule
- *  cannot tell what Claude Code reads then. A pre-release suffix does not count: `2.1.283-rc1`
- *  reads as 2.1.283. A `null` removes the key, so it is no floor. */
+ *  cannot tell what Claude Code reads then. The rule reads the first three numbers and ignores a
+ *  suffix: `2.1.283-rc1` counts as 2.1.283. A `null` is no floor. */
 function mayHoldFloor(floor: unknown): boolean {
   if (floor === undefined || floor === null) {
     return false
