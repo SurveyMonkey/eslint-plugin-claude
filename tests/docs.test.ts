@@ -241,6 +241,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
     'plugin-manifest-location',
+    'plugin-manifest-no-bom',
     'plugin-monitors-command-env',
     'plugin-monitors-skill-exists',
     'plugin-no-git-lfs',
