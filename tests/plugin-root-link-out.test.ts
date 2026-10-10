@@ -97,6 +97,15 @@ describe('a plugin root that links out of the repository', () => {
     const { dir } = linkedOut({}, { 'package.json': '{}', 'yarn.lock': '' })
     expect(lintPlugin('plugin-package-lockfile', dir, MANIFEST)).toEqual([])
   })
+
+  it('plugin-package-lockfile-choice reports in the plugin in the repository', () => {
+    const files = { 'package.json': '{}', 'bun.lock': '', 'package-lock.json': '' }
+    expect(lintPlugin('plugin-package-lockfile-choice', inside(files), MANIFEST)).toHaveLength(1)
+  })
+  linked('plugin-package-lockfile-choice stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, { 'package.json': '{}', 'bun.lock': '', 'package-lock.json': '' })
+    expect(lintPlugin('plugin-package-lockfile-choice', dir, MANIFEST)).toEqual([])
+  })
 })
 
 describe('the cross-file rules of the plugin layer', () => {
