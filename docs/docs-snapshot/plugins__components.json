@@ -137,6 +137,12 @@
       "text": "### MCP servers\n\nAn MCP server gives Claude tools from an external system. Declare it in `.mcp.json` at the plugin root, in the same shape as a [project `.mcp.json`](/docs/en/mcp#project-scope). This `.mcp.json` declares one server named `db`:\n\n```json .mcp.json theme={null}\n{\n  \"mcpServers\": {\n    \"db\": {\n      \"command\": \"node\",\n      \"args\": [\"${CLAUDE_PLUGIN_ROOT}/server.js\"]\n    }\n  }\n}\n```\n\nYou can also omit the `mcpServers` wrapper and put `db` at the top level of the file.\n\nLoad the plugin and run `/mcp` to confirm the server appears as `plugin:my-plugin:db`.\n\n`claude plugin validate` checks `.mcp.json` and reports a server entry that Claude Code would drop at load time as an error. Requires Claude Code v2.1.281 or later.\n\nFor where a bad entry shows up at load time, see [MCP servers that don't start](/docs/en/plugins/troubleshooting#invalid-mcp-server-config-for-and-mcp-servers-that-dont-start).\n\nThe `mcpServers` manifest key takes an inline server map, a path to a JSON file, or an array of those. When a manifest server has the same name as one in `.mcp.json`, the manifest server replaces it."
     },
     {
+      "heading": "Reach users on claude.ai and Cowork",
+      "id": "reach-users-on-claude-ai-and-cowork",
+      "hash": "4f0529d1f774f14b3041eea6f65851e6c2b086edec7f4981482c3b04bde75759",
+      "text": "#### Reach users on claude.ai and Cowork\n\nA local stdio server, such as the `db` server under [MCP servers](#mcp-servers), runs in Claude Code and in a Cowork session that runs on your machine in the Claude Desktop app, but not on claude.ai. To reach users there too, reference a remote server by its `https://` URL, which claude.ai and Cowork offer to the user as a connector, as [Bundle an MCP connector with its skill](https://claude.com/docs/plugins/build#bundle-an-mcp-connector-with-its-skill) shows."
+    },
+    {
       "heading": "Server names, tool names, and reloads",
       "id": "server-names-tool-names-and-reloads",
       "hash": "22612bdc79e35256932fec70a4acde5aeb73c2b697bb72c84eddebb32c19b9bd",

@@ -197,6 +197,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-server-name-anthropic-skills`](docs/rules/mcp-server-name-anthropic-skills.md) | No server is named `anthropic-skills`, a name that Claude Code reserves for synced skills | `warn` | `warn` |
 | [`claude/mcp-server-name-format`](docs/rules/mcp-server-name-format.md) | A server name has letters, numbers, hyphens and underscores only | `warn` | `warn` |
 | [`claude/mcp-stdio-relative-path`](docs/rules/mcp-stdio-relative-path.md) | The `command` and `args` of a project `.mcp.json` have no `./` or `../` path; use `${CLAUDE_PROJECT_DIR:-.}/...` | `warn` | `warn` |
+| [`claude/mcp-allowlist-empty`](docs/rules/mcp-allowlist-empty.md) | `allowedMcpServers` is not an empty list in the managed files; an empty list allows no added server, unlike an unset key | `warn` | `warn` |
+| [`claude/mcp-insecure-url`](docs/rules/mcp-insecure-url.md) | A remote `url` in a project `.mcp.json` uses `https://` or `wss://`, unless the host is on the machine | `warn` | `warn` |
+| [`claude/mcp-plugin-stdio-reach`](docs/rules/mcp-plugin-stdio-reach.md) | A plugin that targets claude.ai (option `targets`) declares no stdio server; the rule is silent when `targets` is unset | `warn` | `warn` |
+| [`claude/mcp-policy-literal-values`](docs/rules/mcp-policy-literal-values.md) | A `serverUrl` or `serverCommand` policy entry in the managed files has no `${VAR}` reference | `warn` | `warn` |
+| [`claude/mcp-policy-servername-weak`](docs/rules/mcp-policy-servername-weak.md) | A `serverName` policy entry in the managed files gets a review; a name is a label, not a security control | `warn` | `warn` |
 
 ## Contributing
 

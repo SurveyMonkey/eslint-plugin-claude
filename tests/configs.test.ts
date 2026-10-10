@@ -134,6 +134,8 @@ const deadAllowlist = JSON.stringify({
     { serverName: 'a' },
   ],
 })
+// A policy `serverUrl` with a variable reference.
+const variableAllowlist = `{"allowedMcpServers": [{"serverUrl": "https://\${HOST}/*"}]}`
 
 // A `managedMcpServers` value that is an array, and an object with an entry that has a `command`.
 const badManagedArray = JSON.stringify({ managedMcpServers: [{ name: 'a' }] })
@@ -583,6 +585,31 @@ const TREE: Record<string, string> = {
   'packages/me/managed-settings.d/30-b.txt': badManagedEntry,
   'packages/me/managed-settings.d/sub/40-c.json': badManagedEntry,
   'packages/me/.vscode/settings.json': badManagedEntry,
+  // `mcp-insecure-url`: an `http://` URL in a project file. A plugin file is for `claude plugin
+  // validate`, and a loopback host is silent.
+  'packages/iu/.mcp.json':
+    '{"mcpServers": {"a": {"type": "http", "url": "http://example.com/mcp"}}}',
+  'packages/iu/dev/.mcp.json':
+    '{"mcpServers": {"a": {"type": "http", "url": "http://localhost:3000/mcp"}}}',
+  'plugins/iu/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'iu',
+    mcpServers: { b: { type: 'http', url: 'http://example.com/mcp' } },
+  }),
+  'plugins/iu/.mcp.json':
+    '{"mcpServers": {"a": {"type": "http", "url": "http://example.com/mcp"}}}',
+  // `mcp-allowlist-empty`, `mcp-policy-literal-values` and `mcp-policy-servername-weak`: the
+  // managed files. A hidden drop-in, a file that is not a `.json` file and a project file are
+  // silent. `mcp-plugin-stdio-reach` reports nothing, because `targets` is unset.
+  'packages/ae/managed-settings.json': '{"allowedMcpServers": []}',
+  'packages/ae/managed-settings.d/.10-hidden.json': '{"allowedMcpServers": []}',
+  'packages/ae/managed-settings.d/20-b.txt': '{"allowedMcpServers": []}',
+  'packages/ae/.vscode/settings.json': '{"allowedMcpServers": []}',
+  'packages/lv/managed-settings.json': variableAllowlist,
+  'packages/lv/managed-settings.d/.10-hidden.json': variableAllowlist,
+  'packages/lv/.vscode/settings.json': variableAllowlist,
+  'packages/sw/managed-settings.json': '{"deniedMcpServers": [{"serverName": "a"}]}',
+  'packages/sw/managed-settings.d/.10-hidden.json': '{"deniedMcpServers": [{"serverName": "a"}]}',
+  'packages/sw/.vscode/settings.json': '{"deniedMcpServers": [{"serverName": "a"}]}',
   // `mcp-env-client-secret`: the secret in the committed project file. The local file and the
   // managed files are silent. The same content where no rule reads it.
   'packages/cs/.claude/settings.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
@@ -840,6 +867,16 @@ const MCP_RULES: {
     severity: 'warn',
   },
   { name: 'mcp-stdio-relative-path', files: ['**/.mcp.json'], severity: 'warn' },
+  // The warn rules of the URL and the policy lists.
+  { name: 'mcp-allowlist-empty', files: MANAGED_FILES, severity: 'warn' },
+  { name: 'mcp-insecure-url', files: ['**/.mcp.json'], severity: 'warn' },
+  {
+    name: 'mcp-plugin-stdio-reach',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  { name: 'mcp-policy-literal-values', files: MANAGED_FILES, severity: 'warn' },
+  { name: 'mcp-policy-servername-weak', files: MANAGED_FILES, severity: 'warn' },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1115,6 +1152,13 @@ const EXPECTED = [
     `plugins/ns/.claude-plugin/plugin.json: claude/${rule}@1`,
   ]),
   'packages/mc/.mcp.json: claude/mcp-stdio-relative-path@1',
+  'packages/iu/.mcp.json: claude/mcp-insecure-url@1',
+  'packages/ae/managed-settings.json: claude/mcp-allowlist-empty@1',
+  'packages/ae/managed-settings.d/.10-hidden.json: claude/settings-managed-file@2',
+  'packages/lv/managed-settings.json: claude/mcp-policy-literal-values@1',
+  'packages/lv/managed-settings.d/.10-hidden.json: claude/settings-managed-file@2',
+  'packages/sw/managed-settings.json: claude/mcp-policy-servername-weak@1',
+  'packages/sw/managed-settings.d/.10-hidden.json: claude/settings-managed-file@2',
   // The managed policy rules read the main file and the drop-ins, and the secret rule reads the
   // committed project file.
   'packages/ad/managed-settings.json: claude/mcp-allowlist-servername-dead@2',
@@ -1139,6 +1183,8 @@ const EXPECTED = [
   'packages/ao/.claude/settings.json: claude/mcp-allow-deny-overlap@2',
   'packages/ao/managed-settings.d/10-a.json: claude/mcp-allow-deny-overlap@2',
   'packages/ao/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/ao/managed-settings.json: claude/mcp-policy-servername-weak@1',
+  'packages/ao/managed-settings.d/10-a.json: claude/mcp-policy-servername-weak@1',
   'packages/lc/.claude-plugin/marketplace.json: claude/lsp-extension-conflict@2',
   'plugins/ld/.claude-plugin/plugin.json: claude/lsp-duplicate-server-name@2',
 ].sort()

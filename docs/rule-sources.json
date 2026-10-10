@@ -723,6 +723,23 @@
       "hash": "e703d5859f59901bdedec8cbe836523e1b3b6121369151c25dba68e0f66fede7"
     }
   ],
+  "mcp-allowlist-empty": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Match servers by URL, command, or name",
+      "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "allowedMcpServers",
+      "hash": "ca2cbd69d3e5a19b4663667cf24cb66de92fc6222f8a990f24d6b3ab66c0ef2b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
   "mcp-allowlist-servername-dead": [
     {
       "url": "https://code.claude.com/docs/en/managed-mcp",
@@ -898,6 +915,13 @@
       "hash": "30a7b267d3cf703e1c1038d207472a346adfa5e0d2d6223cb3accbc7ec943a38"
     }
   ],
+  "mcp-insecure-url": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Validate the manifest",
+      "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05"
+    }
+  ],
   "mcp-json-file-size": [
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -987,6 +1011,23 @@
       "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
     }
   ],
+  "mcp-plugin-stdio-reach": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Reach users on claude.ai and Cowork",
+      "hash": "4f0529d1f774f14b3041eea6f65851e6c2b086edec7f4981482c3b04bde75759"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Plugin entries",
+      "hash": "c961567cea85297e92308d89f90f5adc81723b326de69901f3c5a8a345b4e006"
+    }
+  ],
   "mcp-plugin-tool-name-scoped": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -1019,6 +1060,30 @@
       "url": "https://code.claude.com/docs/en/managed-mcp",
       "heading": "Match servers by URL, command, or name",
       "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c"
+    }
+  ],
+  "mcp-policy-literal-values": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "How policy entries expand",
+      "hash": "06f370f066111673b25f981f174fc4232cf2f69e5e7c45a2cfe07222146fd1ca"
+    }
+  ],
+  "mcp-policy-servername-weak": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "How serverName entries match",
+      "hash": "5ee30752e3cdc17b0b7efee043509e138766c2fc917eb60dadd1d7a3aa75fdb6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "How a server is evaluated",
+      "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
   "mcp-project-dir-default": [

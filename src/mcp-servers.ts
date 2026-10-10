@@ -2,7 +2,8 @@
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
 // may omit that wrapper, so its map is the top-level object. The module also holds the reader of
 // the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
-// reader of the approval and allow lists.
+// reader of the allow and deny lists. It also holds the reader of a URL that holds a reference in
+// its port.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
 import json from '@eslint/json'
@@ -290,13 +291,29 @@ export function plainOf(node: ValueNode): unknown {
   return undefined
 }
 
+/** The `URL` of the text `url`, or null when it does not parse, because a rule then does not
+ *  know the host. A host that holds a `${` reference parses. A reference in the port, as in
+ *  `host:${PORT}/path`, does not parse. The parser reads the URL without that port, because the
+ *  port is not part of the host or the scheme. */
+export function parseUrl(url: string): URL | null {
+  try {
+    return new URL(url.replace(/:\$\{[^}]*\}(?=[/?#]|$)/, ''))
+  } catch {
+    return null
+  }
+}
+
 /** A key that tells one valid policy entry from another, or undefined for an entry that Claude
- *  Code strips. A valid entry is an object with one key: `serverName` with a string that matches
- *  the allowlist pattern, `serverUrl` with a string, or `serverCommand` with an array of strings.
- *  A name that the pattern rejects is no allowlist entry, so it cannot overlap with a denylist
- *  entry. `mcp-policy-entry-schema` reports it.
+ *  Code strips. A valid entry is an object with one key: `serverName` with a string that is valid
+ *  in `list`, `serverUrl` with a string, or `serverCommand` with an array of strings. In an
+ *  allowlist, a name matches the allowlist pattern. In a denylist, a name is not empty and has no
+ *  leading or trailing whitespace. A name that `list` rejects is no entry of that list, so it
+ *  cannot overlap with an entry of the other list. `mcp-policy-entry-schema` reports it.
  *  (https://code.claude.com/docs/en/settings-reference#allowedmcpservers) */
-export function policyKey(entry: unknown): string | undefined {
+export function policyKey(
+  entry: unknown,
+  list: 'allowedMcpServers' | 'deniedMcpServers' = 'allowedMcpServers',
+): string | undefined {
   if (entry === null || typeof entry !== 'object' || Array.isArray(entry)) {
     return undefined
   }
@@ -315,7 +332,12 @@ export function policyKey(entry: unknown): string | undefined {
   ) {
     return `command:${JSON.stringify(value)}`
   }
-  return key === 'serverName' && typeof value === 'string' && SERVER_NAME_PATTERN.test(value)
-    ? `name:${value}`
-    : undefined
+  if (key !== 'serverName' || typeof value !== 'string') {
+    return undefined
+  }
+  const valid =
+    list === 'allowedMcpServers'
+      ? SERVER_NAME_PATTERN.test(value)
+      : value !== '' && value === value.trim()
+  return valid ? `name:${value}` : undefined
 }
