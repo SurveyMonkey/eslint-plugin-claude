@@ -2,7 +2,8 @@
 // The docs say that an import in a project memory file is external when its path resolves
 // outside the working directory. Claude Code asks each user to approve it, and a decline
 // disables the import for good. The rule reads the path as it is written, so it needs no file
-// of the target. It follows the imports on disk, and checks the imports of each file that loads.
+// of the target. It follows the imports on disk, and checks the imports of files at hops one to
+// three. An import in a file at hop four is at hop five, and Claude Code does not load it.
 // The end of the repository is the first folder with a `.git`. With no `.git`, the rule makes
 // no report (ADR 001, Decision 14).
 import path from 'node:path'
@@ -55,7 +56,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'external' | 'externalInImporte
     },
   },
   create(context) {
-    // An `AGENTS.md` that the setting reads never prompts, and a `CLAUDE.local.md` is not committed.
+    // An `AGENTS.md` that the **Project instructions** setting reads never prompts, and a `CLAUDE.local.md` is not committed.
     if (classifyMemoryFile(context.filename) !== 'claude-md') {
       return {}
     }
