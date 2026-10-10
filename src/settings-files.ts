@@ -51,6 +51,10 @@ export const isHiddenDropIn = (filename: string) =>
   path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY &&
   path.basename(filename).startsWith('.')
 
+/** A file in `managed-settings.d`, hidden or not. The file `managed-settings.json` is not. */
+export const isDropIn = (filename: string) =>
+  path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY
+
 const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 
@@ -152,4 +156,22 @@ export function readManagedSource(filename: string): Record<string, unknown>[] |
     objects.push(parsed.data)
   }
   return objects
+}
+
+/** The parsed objects of the other settings files that Claude Code merges with the file
+ *  `filename`: the other project file of the same `.claude/` folder, or the other files of
+ *  the managed source (see `readManagedSource`). The result is `UNREADABLE` when the rule
+ *  cannot see one of them. A project file that is not there adds nothing. */
+export function readSiblings(filename: string): Record<string, unknown>[] | Unreadable {
+  if (kindOf(filename) === 'managed') {
+    return readManagedSource(filename)
+  }
+  const dir = path.dirname(path.resolve(filename))
+  const other =
+    path.basename(filename) === 'settings.json' ? 'settings.local.json' : 'settings.json'
+  const parsed = readJson(path.join(dir, other), repositoryRoot(dir))
+  if (parsed === null) {
+    return []
+  }
+  return parsed === UNREADABLE || !isObject(parsed.data) ? UNREADABLE : [parsed.data]
 }
