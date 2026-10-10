@@ -200,6 +200,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/claude-md-local-untracked`](docs/rules/claude-md-local-untracked.md) | The `CLAUDE.local.md` beside a `CLAUDE.md` is not tracked by git, and a `.gitignore` pattern covers it | `warn` | `warn` |
 | [`claude/memory-agent-memory-local-untracked`](docs/rules/memory-agent-memory-local-untracked.md) | No Markdown file in `.claude/agent-memory-local/` is tracked by git | `warn` | `warn` |
 
+### CLAUDE.md, rules and memory
+
+| Rule | Checks | `recommended` | `strict` |
+|------|--------|---------------|----------|
+| [`claude/claude-md-max-bytes`](docs/rules/claude-md-max-bytes.md) | A `CLAUDE.md` or `CLAUDE.local.md` file has at most 4 MiB (4194304 bytes), the size above which Claude Code skips it; option `max` | `error` | `error` |
+
 ### Settings
 
 | Rule | Checks | `recommended` | `strict` |

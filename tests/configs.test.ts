@@ -154,6 +154,9 @@ const noSkillsDir = JSON.stringify({
   strictKnownMarketplaces: [{ source: 'github', repo: 'acme/*' }],
 })
 const withSkillsDir = JSON.stringify({ strictKnownMarketplaces: [skillsDir] })
+// One byte over the 4 MiB that Claude Code loads from a CLAUDE.md file. An HTML comment is
+// the cheapest text for the Markdown parser.
+const bigMarkdown = `<!--${'x'.repeat(4194305 - 7)}-->`
 
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
@@ -806,6 +809,15 @@ const TREE: Record<string, string> = {
   'packages/sd/.vscode/settings.json': noSkillsDir,
   'packages/sd2/managed-settings.json': noSkillsDir,
   'packages/sd2/managed-settings.d/10-a.json': withSkillsDir,
+  // The CLAUDE.md, rules and memory rules of #13. `claude-md-max-bytes`: a CLAUDE.md file over
+  // 4 MiB in each place that Claude Code reads one. The same text where it reads none: a Markdown
+  // file with a near name, `AGENTS.md`, and a rule file (a size rule for rules is not this one).
+  'packages/mb/CLAUDE.md': bigMarkdown,
+  'packages/mb/.claude/CLAUDE.md': bigMarkdown,
+  'packages/mb/CLAUDE.local.md': bigMarkdown,
+  'packages/mb/docs/CLAUDE-notes.md': bigMarkdown,
+  'packages/mb/AGENTS.md': bigMarkdown,
+  'packages/mb/.claude/rules/CLAUDE.md': bigMarkdown,
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -1107,6 +1119,9 @@ const MARKET_SETTINGS_OFF_RULES = MARKET_SETTINGS_RULES.filter(
 ).map(({ name }) => name)
 // The conflict rule reads the project files, and the managed files for the policy pair.
 const CONFLICT_RULE = 'settings-marketplace-key-alias-conflict'
+// The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
+// error, and each has one block for its own language.
+const MEMORY_RULES = ['claude-md-max-bytes']
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -1377,6 +1392,10 @@ const EXPECTED = [
   'packages/sd/managed-settings.json: claude/settings-strict-known-marketplaces-skills-dir@1',
   'packages/sd/managed-settings.d/10-a.json: claude/settings-strict-known-marketplaces-skills-dir@1',
   'packages/sd/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `claude-md-max-bytes` reads CLAUDE.md and CLAUDE.local.md, and no other file.
+  'packages/mb/CLAUDE.md: claude/claude-md-max-bytes@2',
+  'packages/mb/.claude/CLAUDE.md: claude/claude-md-max-bytes@2',
+  'packages/mb/CLAUDE.local.md: claude/claude-md-max-bytes@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -1834,6 +1853,10 @@ describe('configs', () => {
       ...MARKET_SETTINGS_RULES.filter(({ severity }) => severity !== 'off').map(
         ({ name, severity }) => [`claude/recommended/${name}`, { [`claude/${name}`]: severity }],
       ),
+      ...MEMORY_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'error' },
+      ]),
     ])
   })
 
@@ -1864,6 +1887,7 @@ describe('configs', () => {
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...UNTRACKED_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKET_SETTINGS_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
