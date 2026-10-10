@@ -147,13 +147,13 @@ describe('the cross-file rules of the plugin layer', () => {
     plugins: [{ name: 'p', source: { source: 'npm', package: '@acme/p' } }],
   })
   const DEPENDENT = JSON.stringify({ name: 'p', dependencies: ['ghost'] })
-  check('plugin-dependencies-resolve reports in the plugin in the repository', () => {
+  it('plugin-dependencies-resolve reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(DEPENDENT, { '.claude-plugin/marketplace.json': CATALOG })
     expect(lintPlugin('plugin-dependencies-resolve', dir, code).map((m) => m.messageId)).toEqual([
       'missing',
     ])
   })
-  checkLinked('plugin-dependencies-resolve stays silent for the linked plugin', () => {
+  linked('plugin-dependencies-resolve stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, {}, DEPENDENT, { '.claude-plugin/marketplace.json': CATALOG })
     expect(lintPlugin('plugin-dependencies-resolve', dir, DEPENDENT)).toEqual([])
   })

@@ -12,6 +12,8 @@
 // 14).
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { marketplaceRootOf } from './plugin-links.ts'
+import type { Plugin } from './plugin-manifest.ts'
 import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tree.ts'
 
 /** What a rule sees at a local marketplace source. A rule makes no report
@@ -170,4 +172,28 @@ export function declaredSource(settingsFile: string, text: string, market: strin
   }
   // `sourceOf` gives undefined for a key of the prototype, which is no object with a `source`.
   return sourceOf(there?.[market])
+}
+
+/** The members of the `marketplace.json` that encloses `plugin`: the file in
+ *  the nearest `.claude-plugin/` folder, from the plugin root up to the
+ *  repository root. The result is undefined when no folder holds one. It is
+ *  also undefined when the rule cannot see the file. The file can be a link
+ *  with no target, or a link out of the repository. It can fail to read, fail
+ *  to parse, or not be an object (ADR 001, Decision 14). */
+export function enclosingMarketplace(plugin: Plugin): Record<string, unknown> | undefined {
+  const root = marketplaceRootOf(plugin)
+  if (root === undefined) {
+    return undefined
+  }
+  const found = readJson(path.join(root, '.claude-plugin', 'marketplace.json'), plugin.bound)
+  return found !== null && found !== UNREADABLE && isObject(found.data) ? found.data : undefined
+}
+
+/** The entries of `plugins` in `marketplace` that are objects. The result is
+ *  undefined when `plugins` is not an array. */
+export function entriesIn(
+  marketplace: Record<string, unknown>,
+): Record<string, unknown>[] | undefined {
+  const { plugins } = marketplace
+  return Array.isArray(plugins) ? plugins.filter(isObject) : undefined
 }

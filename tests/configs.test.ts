@@ -187,6 +187,18 @@ const TREE: Record<string, string> = {
   'plugins/env2/monitors/monitors.json': JSON.stringify([
     { name: 'm', description: 'd', command: 'tail -F $CLAUDE_PLUGIN_DATA/log' },
   ]),
+  // A marketplace in a repository with a `.git`, and a plugin that depends on a name that the
+  // marketplace does not list.
+  'packages/cx/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/cx/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'cx',
+    owner: { name: 'o' },
+    plugins: [{ name: 'dep', source: './plugins/dep' }],
+  }),
+  'packages/cx/plugins/dep/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'dep',
+    dependencies: ['ghost'],
+  }),
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -639,6 +651,7 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  { name: 'plugin-dependencies-resolve', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -700,6 +713,7 @@ const EXPECTED = [
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
+  'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
   ...(LINKS
     ? [
         'packages/l/site/plugins/m/.claude-plugin/plugin.json: claude/plugin-symlink-escapes-marketplace@2',

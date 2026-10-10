@@ -62,6 +62,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-unknown-tool',
     'plugin-commands-dir-nonempty',
     'plugin-default-dir-shadowed',
+    'plugin-dependencies-resolve',
     'plugin-manifest-location',
     'plugin-monitors-command-env',
     'plugin-no-git-lfs',
