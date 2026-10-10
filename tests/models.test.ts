@@ -13,6 +13,7 @@ import {
   isAnthropicModelId,
   isModelAlias,
   isModelId,
+  withoutSuffix,
 } from '../src/data/models.ts'
 
 describe('the model aliases', () => {
@@ -134,11 +135,21 @@ describe('the family of a value', () => {
     }
   })
 
-  it.fails('reads the family of a provider ID that embeds a claude- name', () => {
+  it('reads the family of a provider ID that embeds a claude- name', () => {
     // The page says a provider-form ID "counts as a specific entry for that family".
     expect(familyOf('us.anthropic.claude-opus-4-8')).toBe('opus')
     expect(familyOf('my-gateway/claude-opus-5-5')).toBe('opus')
     expect(familyOf('anthropic.claude-sonnet-4-5-20250929-v1:0')).toBe('sonnet')
     expect(familyOf('global.anthropic.claude-haiku-4-5[1m]')).toBe('haiku')
+  })
+})
+
+describe('the [1m] suffix', () => {
+  it('is removed from the end of a value, and from nowhere else', () => {
+    expect(withoutSuffix('opus[1m]')).toBe('opus')
+    expect(withoutSuffix('claude-opus-4-6[1m]')).toBe('claude-opus-4-6')
+    expect(withoutSuffix('opus')).toBe('opus')
+    expect(withoutSuffix('[1m]opus')).toBe('[1m]opus')
+    expect(withoutSuffix('opus[1m][1m]')).toBe('opus[1m]')
   })
 })

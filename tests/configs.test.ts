@@ -381,6 +381,17 @@ const TREE: Record<string, string> = {
   'packages/mv/managed-settings.d/30-b.txt': '{"model": "sonet"}',
   'packages/mv/managed-settings.d/sub/40-c.json': '{"model": "sonet"}',
   'packages/mv/.vscode/settings.json': '{"model": "sonet"}',
+  // `settings-model-list`: a fallback chain of four models, a list that a family ID narrows, a
+  // `best` entry in `deniedModels` and an override key that is an alias, in each file that it
+  // reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ml/.claude/settings.json': '{"fallbackModel": ["opus", "sonnet", "haiku", "fable"]}',
+  'packages/ml/.claude/settings.local.json': '{"availableModels": ["sonnet", "claude-sonnet-4-5"]}',
+  'packages/ml/managed-settings.json': '{"deniedModels": ["best"]}',
+  'packages/ml/managed-settings.d/10-a.json': '{"modelOverrides": {"opus": "x"}}',
+  'packages/ml/managed-settings.d/.20-hidden.json': '{"deniedModels": ["best"]}',
+  'packages/ml/managed-settings.d/30-b.txt': '{"deniedModels": ["best"]}',
+  'packages/ml/managed-settings.d/sub/40-c.json': '{"deniedModels": ["best"]}',
+  'packages/ml/.vscode/settings.json': '{"fallbackModel": ["opus", "sonnet", "haiku", "fable"]}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -456,6 +467,7 @@ const SCOPE_RULES = [
   { name: 'settings-plugin-suggestion-marketplaces-source', files: MANAGED_FILES },
   { name: 'settings-conflicting-keys', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-model-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -601,6 +613,12 @@ const EXPECTED = [
   'packages/mv/managed-settings.json: claude/settings-model-value@2',
   'packages/mv/managed-settings.d/10-a.json: claude/settings-model-value@2',
   'packages/mv/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-model-list` reads the project and managed files, and no other file.
+  'packages/ml/.claude/settings.json: claude/settings-model-list@2',
+  'packages/ml/.claude/settings.local.json: claude/settings-model-list@2',
+  'packages/ml/managed-settings.json: claude/settings-model-list@2',
+  'packages/ml/managed-settings.d/10-a.json: claude/settings-model-list@2',
+  'packages/ml/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

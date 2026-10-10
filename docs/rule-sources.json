@@ -1281,6 +1281,58 @@
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
     }
   ],
+  "settings-model-list": [
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Fallback model chains",
+      "hash": "a1aea939c48e014c2f3bbffe974a1bfdf6be47adb6c00ea947c9eff3cc382107"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Default model behavior",
+      "hash": "dd52d36a90ad970a24f0b1f553f54c493d032ca1630adbc6d6113d0267e0596e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enforceAvailableModels",
+      "hash": "fb96c3d91975ed009073738209439fa2df74779a4625a38fb03c4954d8fe383c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Enforce the allowlist for the Default model",
+      "hash": "24b6815ab79e57502985da6a4298e0a4cfeb99048115be8d9a5bfb88cfef330a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Merge behavior",
+      "hash": "28eccd688b8c980aca7297516d1480fe1bd09dac795655f14da3a6b260181337"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "deniedModels",
+      "hash": "45b295c5d3e5f2f6e5fb5397c2c67203f8bfbaf7f5f06f32c7e921e295d82eb3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Override model IDs per version",
+      "hash": "fe4739ce777ae46401f5ebc360cf21142f4afe595de38ce14c5157799f4fa475"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Add a custom model option",
+      "hash": "130ce8ae9d679f5a8515e329e13e05d22b197f4286a5e938c180230f75725ad7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Pin models for third-party deployments",
+      "hash": "7646ed271b02b7eec2a6d8be4879cb78ed3135d7b02aa272a6d32f4be05338c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "fallbackModel",
+      "hash": "a077dac729806f0595939eb723e4dc7e83d5736e1a4ed974e82bdc31e181f81e"
+    }
+  ],
   "settings-model-value": [
     {
       "url": "https://code.claude.com/docs/en/model-config",
