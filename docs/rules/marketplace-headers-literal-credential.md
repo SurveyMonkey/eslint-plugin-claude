@@ -21,8 +21,8 @@ Keep a literal credential out of the headers of a marketplace download.
 ## Rule details
 
 The `headers` of a marketplace entry hold HTTP headers. Claude Code sends them when it downloads
-the archive of that entry.[^auth] The `headers` of a `url` marketplace source go with requests to
-the origin of the marketplace URL.[^auth][^types] Both are for authenticated hosts. Anyone who can
+the archive of that entry.[^auth] The `headers` of a `url` marketplace source go with archive
+downloads from the origin of the marketplace URL.[^auth][^types] Both are for authenticated hosts. Anyone who can
 read a committed file can read a literal credential in it. A gitignored `settings.local.json` is
 open to fewer people, but the rule still reads it.
 
@@ -30,8 +30,9 @@ The docs do not bar a literal header. This rule is a security practice check, an
 `recommended`. For a value that expires, the docs say to set a `headersHelper` command
 instead.[^auth][^types] The docs show the form `Bearer ${TOKEN}` in an example of a `url`
 source.[^allowed] They do not say that Claude Code expands such a reference. The rule takes it
-as no literal, as the inventory row does. A value that still has a scheme and a token after the
-references go is a literal, as in `Bearer abc123${SUFFIX}`.
+as no literal, as the inventory row does. A scheme and a token that stay after the
+references go make a literal, as in `Bearer abc123${SUFFIX}`. Punctuation alone is no token, as in
+`Bearer ${A}.${B}`.
 
 The rule reads two places:
 
@@ -56,8 +57,8 @@ The message names the header. It never gives the value.
 The rule does not read the `headers` of an inline plugin entry in a `settings` source. It does not
 read a file that is not a project settings file. A `headers` value that is not an object is a
 fault for [`marketplace-schema`](marketplace-schema.md) and
-[`settings-extra-known-marketplaces-schema`](settings-extra-known-marketplaces-schema.md). So is a
-value that is not a string.
+[`settings-extra-known-marketplaces-schema`](settings-extra-known-marketplaces-schema.md). No rule
+reports a header value that is not a string, and this rule skips it.
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
 

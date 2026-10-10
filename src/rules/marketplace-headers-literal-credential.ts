@@ -1,7 +1,8 @@
 // A file in the repository must not hold a literal credential in the HTTP
 // `headers` of a download (docs/rules/marketplace-headers-literal-credential.md).
 // The rule reads the `headers` of an entry in `marketplace.json`. It also
-// reads the `headers` of a `url` source in a project settings file. A message names the header, and never gives its value.
+// reads the `headers` of a `url` source in a project settings file. A message
+// names the header, and never gives its value.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
@@ -17,6 +18,9 @@ const CREDENTIAL_NAME = /auth|token|secret|key|passw|cred/i
 const SCHEME_TOKEN = /^(?:Bearer|Basic|Token|Digest)\s+\S/i
 // An empty value, or a scheme word with no token.
 const NO_TOKEN = /^(?:Bearer|Basic|Token|Digest)?\s*$/i
+// An authentication scheme and a token that holds a letter or a digit. It is
+// for a value after its references go: only punctuation stays in `Bearer ${A}.${B}`.
+const SCHEME_WORD = /^(?:Bearer|Basic|Token|Digest)\s+\S*\w/i
 // A `${NAME}` reference, as the docs write `Bearer ${TOKEN}`.
 const REFERENCE = /\$\{[^}]*\}/g
 
@@ -29,7 +33,7 @@ function literal(header: string, value: string): boolean {
   }
   const rest = value.replace(REFERENCE, '')
   if (rest !== value) {
-    return SCHEME_TOKEN.test(rest)
+    return SCHEME_WORD.test(rest)
   }
   return SCHEME_TOKEN.test(value) || CREDENTIAL_NAME.test(header)
 }

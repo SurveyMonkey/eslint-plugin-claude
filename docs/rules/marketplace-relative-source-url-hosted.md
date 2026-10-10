@@ -43,8 +43,8 @@ The rule makes no report in these cases:
 
 - **No file registers the marketplace by `url`.** A key with another name, another source type,
   or no `source` object gives no report.
-- **The rule cannot read `settings.local.json`.** The file is a dangling link, has a real path out
-  of the repository, or does not parse to an object. It can hold the entry in use. The rule reads
+- **The rule cannot read `settings.local.json`.** The file is a dangling link or does not parse to an
+  object. Its real path can also be out of the repository. It can hold the entry in use. The rule reads
   no file out of the repository (ADR 001, Decision 14). With no `.git`, the repository is the
   `.claude/` directory.
 - **The rule cannot read `settings.json`.** That file then declares nothing, and

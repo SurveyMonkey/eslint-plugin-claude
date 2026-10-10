@@ -85,9 +85,9 @@ const badMarketSettings = JSON.stringify({
   },
 })
 
-// The two `off` marketplace rules of #12 read these trees. Each file reports in `strict` only.
-// A settings file that registers the marketplace `hosted` as a `url` source, and a marketplace
-// with a relative source.
+// The two `off` marketplace rules of #12 read these trees. Four files report in `strict` only.
+// Decoy files report nowhere. This is a settings file that registers the marketplace `hosted`
+// as a `url` source.
 const hostedSettings = JSON.stringify({
   extraKnownMarketplaces: {
     hosted: { source: { source: 'url', url: 'https://plugins.example.com/marketplace.json' } },

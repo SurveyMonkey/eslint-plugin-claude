@@ -50,7 +50,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'noRootEntry' }> = {
         }
         const root = path.dirname(path.dirname(path.resolve(context.filename)))
         const manifest = readManifest(root, repositoryRoot(root))
-        // No `plugin.json`, or one that the rule cannot read: the file is not a self-hosted one.
+        // No `plugin.json`, or one the rule cannot read: the rule cannot tell, so it makes no report.
         if (manifest === null || manifest === UNREADABLE) {
           return
         }
