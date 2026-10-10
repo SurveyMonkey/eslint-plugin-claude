@@ -103,11 +103,16 @@ describe(`${name}: a tool name`, () => {
     }
   })
 
-  it('is silent when another agent file has no name or does not parse', () => {
+  it('ignores an agent file that Claude Code skips, and still reports', () => {
     for (const other of [
       'no frontmatter',
+      '# Notes\n',
       agent('').replace('name: a', 'name: 5'),
       '---\nname: b\ndescription: Use when: x\n---\n',
+      '---\nname: b\n---\n',
+      agent('', '-b'),
+      agent('', 'b:c'),
+      agent('', 'b'.repeat(257)),
     ]) {
       expect(
         ids(
@@ -115,8 +120,20 @@ describe(`${name}: a tool name`, () => {
           subagents('nope'),
         ),
         other,
-      ).toEqual([])
+      ).toEqual(['agent'])
     }
+  })
+
+  it('does not take the name of an agent file that Claude Code skips', () => {
+    expect(
+      ids(
+        {
+          '.claude/agents/r.md': agent('', 'reviewer'),
+          '.claude/agents/o.md': '---\nname: gone\n---\n',
+        },
+        subagents('gone'),
+      ),
+    ).toEqual(['agent'])
   })
 
   it('is silent for a name in the option allow', () => {
@@ -418,5 +435,81 @@ describe(`${name}: an MCP server name`, () => {
     expect(ids(files, server('dbx'), 'plugins/p/hooks/hooks.json')).toEqual([])
     expect(ids(files, server('dbx'), 'managed-settings.json')).toEqual([])
     expect(ids(files, server('dbx'), 'config/settings.json')).toEqual([])
+  })
+})
+
+describe(`${name}: a link with no target in the agents folder`, () => {
+  const known = { '.claude/agents/reviewer.md': agent('', 'reviewer') }
+  const dangling = (at: string, extra: Record<string, string> = known, target = SETTINGS_FILE) => {
+    const text = subagents('nope')
+    const root = repo({ ...extra, [target]: text })
+    symlinkSync(path.join(root, 'gone'), path.join(root, at))
+    return lintJson(name, text, path.join(root, target)).map((message) => message.messageId)
+  }
+
+  it('is silent for a file link, whatever its name', () => {
+    expect(dangling('.claude/agents/other.md')).toEqual([])
+    expect(dangling('.claude/agents/Other.MD')).toEqual([])
+    expect(dangling('.claude/agents/other')).toEqual([])
+  })
+
+  it('is silent for a folder link', () => {
+    expect(dangling('.claude/agents/team')).toEqual([])
+  })
+
+  it('is silent for a link in a sub folder', () => {
+    expect(
+      dangling('.claude/agents/team/x.md', {
+        ...known,
+        '.claude/agents/team/y.md': agent('', 'y'),
+      }),
+    ).toEqual([])
+  })
+
+  it('is silent for a link in a folder that is a link to a folder', () => {
+    const text = subagents('nope')
+    const root = repo({ ...known, 'shared/y.md': agent('', 'y'), [SETTINGS_FILE]: text })
+    symlinkSync(path.join(root, 'gone'), path.join(root, 'shared/x.md'))
+    symlinkSync(path.join(root, 'shared'), path.join(root, '.claude/agents/linked'))
+    expect(lintJson(name, text, path.join(root, SETTINGS_FILE))).toEqual([])
+  })
+
+  it('is silent when the agents folder is the link', () => {
+    const text = subagents('nope')
+    const root = repo({ [SETTINGS_FILE]: text })
+    symlinkSync(path.join(root, 'gone'), path.join(root, '.claude/agents'))
+    expect(lintJson(name, text, path.join(root, SETTINGS_FILE))).toEqual([])
+  })
+
+  it('is silent when a .claude folder above the settings file is the link', () => {
+    const nested = 'packages/a/.claude/settings.json'
+    const text = subagents('nope')
+    const root = repo({ 'packages/a/.claude/agents/own.md': agent('', 'own'), [nested]: text })
+    symlinkSync(path.join(root, 'gone'), path.join(root, '.claude'))
+    expect(lintJson(name, text, path.join(root, nested))).toEqual([])
+  })
+
+  it('is silent for a link in the agents folder of a folder above the settings file', () => {
+    expect(dangling('.claude/agents/other.md', known, 'packages/a/.claude/settings.json')).toEqual(
+      [],
+    )
+  })
+
+  it('ends on a folder link that loops back, and still reports', () => {
+    const text = subagents('nope')
+    const root = repo({ ...known, [SETTINGS_FILE]: text })
+    symlinkSync(path.join(root, '.claude/agents'), path.join(root, '.claude/agents/loop'))
+    expect(lintJson(name, text, path.join(root, SETTINGS_FILE)).map((m) => m.messageId)).toEqual([
+      'agent',
+    ])
+  })
+
+  it('reports when every link has a target', () => {
+    const text = subagents('nope')
+    const root = repo({ ...known, 'shared/y.md': agent('', 'y'), [SETTINGS_FILE]: text })
+    symlinkSync(path.join(root, 'shared'), path.join(root, '.claude/agents/linked'))
+    expect(lintJson(name, text, path.join(root, SETTINGS_FILE)).map((m) => m.messageId)).toEqual([
+      'agent',
+    ])
   })
 })

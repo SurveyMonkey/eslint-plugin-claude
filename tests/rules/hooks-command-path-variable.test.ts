@@ -26,6 +26,41 @@ const ids = (handler: object, file = FILES.plugin) =>
   jsonIds(name, settings(hooks('PostToolUse', [handler])), file)
 const shell = (line: string, file = FILES.plugin) => ids(command({ command: line }), file)
 
+describe(`${name}: the report after round 1`, () => {
+  it('reports a path in a shell command line, and a script after a flag that is no code flag', () => {
+    for (const line of [
+      "bash -c './scripts/a.sh'",
+      'sh -c "scripts/check.sh --fast"',
+      "bash -lc './scripts/a.sh'",
+      'bash -e ./scripts/a.sh',
+      'sh -p ./a.sh',
+      'ruby -p ./a.rb',
+      'node -c scripts/a.js',
+      'pwsh -Command "./scripts/a.ps1"',
+      'powershell -NoProfile -File ./hooks/a.ps1',
+      'pwsh -f ./hooks/a.ps1',
+      `./x.sh && cd "${dir('CLAUDE_PLUGIN_ROOT')}" && ./y.sh`,
+      'cd ./scripts && ./a.sh',
+      'zsh scripts/a.sh',
+      'ruby scripts/a.rb',
+      'python scripts/a.py',
+      'pwsh scripts/a.ps1',
+      'powershell scripts/a.ps1',
+    ]) {
+      expect(shell(line), line).toEqual(['relative'])
+    }
+  })
+
+  it('reports in exec form', () => {
+    expect(ids({ type: 'command', command: 'bash', args: ['-c', './scripts/a.sh'] })).toEqual([
+      'relative',
+    ])
+    expect(
+      ids({ type: 'command', command: 'powershell.exe', args: ['-NoProfile', '-File', './a.ps1'] }),
+    ).toEqual(['relative'])
+  })
+})
+
 describe(`${name}: the report`, () => {
   it('reports a plugin hook with ./scripts/a.sh', () => {
     expect(shell('./scripts/a.sh')).toEqual(['relative'])
@@ -120,8 +155,23 @@ describe(`${name}: the silent cases`, () => {
       'node -v',
       'bash -c "x"',
       `bash -c 'cat ${dir('CLAUDE_PLUGIN_ROOT')}/a.sh'`,
+      "bash -lc 'cat a/b'",
+      `bash -lc 'cd "${dir('CLAUDE_PLUGIN_ROOT')}" && ./run.sh'`,
       'node -e "console.log(1/2)"',
+      'node -p "1/2"',
+      'node --eval "1/2"',
       "python3 -c 'print(1/2)'",
+      "python -c 'print(1/2)'",
+      "ruby -e 'puts 1/2'",
+      'pwsh -Command "Get-Date"',
+      'powershell -command "Get-Date"',
+      'pwsh -EncodedCommand 1/2',
+      'pwsh -File',
+      `Set-Location "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
+      `set-location "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
+      `Push-Location "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
+      'cd "%CLAUDE_PLUGIN_ROOT%"; ./a.sh',
+      'pwsh -File %CLAUDE_PLUGIN_ROOT%/a.ps1',
       `cd "${dir('CLAUDE_PLUGIN_ROOT')}" && ./scripts/a.sh`,
       `pushd "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
       'FOO=1',

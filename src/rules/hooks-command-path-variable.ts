@@ -27,16 +27,46 @@ const INTERPRETERS = [
   'powershell',
 ]
 
-/** The interpreter flags whose next word is inline code and not a script path. */
-const CODE_FLAGS = ['-c', '-e', '-p', '--eval', '-Command', '-command']
+const SHELLS = ['bash', 'sh', 'zsh']
+const POWERSHELLS = ['pwsh', 'powershell']
 
-/** The commands that change the working directory. A relative path after one of them can resolve inside the plugin. */
-const DIRECTORY_COMMANDS = ['cd', 'pushd', 'Set-Location']
+/** The commands that change the working directory, in lower case. A relative path after one of them can resolve
+ *  inside the plugin. */
+const DIRECTORY_COMMANDS = ['cd', 'pushd', 'set-location', 'push-location']
+
+/** What the word after the flag `flag` of the interpreter `program` is:
+ *  - `line`: a shell command line, which the rule reads again;
+ *  - `code`: code of another language, which holds no path;
+ *  - `file`: a script file;
+ *  - undefined: the flag does not take code. */
+function flagKind(program: string, flag: string): 'line' | 'code' | 'file' | undefined {
+  const lower = flag.toLowerCase()
+  if (SHELLS.includes(program)) {
+    // A short flag cluster that holds `c`, such as `-lc`. `-e` and `-p` are no code flags for a shell.
+    return /^-[A-Za-z]*c[A-Za-z]*$/.test(flag) ? 'line' : undefined
+  }
+  if (POWERSHELLS.includes(program)) {
+    if (['-c', '-command'].includes(lower)) {
+      return 'line'
+    }
+    if (['-file', '-f'].includes(lower)) {
+      return 'file'
+    }
+    return ['-ec', '-encodedcommand'].includes(lower) ? 'code' : undefined
+  }
+  const codeFlags =
+    program === 'node'
+      ? ['-e', '-p', '-pe', '--eval', '--print']
+      : program === 'ruby'
+        ? ['-e']
+        : ['-c']
+  return codeFlags.includes(flag) ? 'code' : undefined
+}
 
 /** True when `word` is a path that Claude Code resolves from the working directory: it has a slash, and it does
- *  not start with a slash, a variable, `~` or a drive letter. */
+ *  not start with a slash, a variable (`$` or `%`), `~` or a drive letter. */
 function isRelativePath(word: string): boolean {
-  return word.includes('/') && !/^([/$~]|[A-Za-z]:)/.test(word)
+  return word.includes('/') && !/^([/$%~]|[A-Za-z]:)/.test(word)
 }
 
 /** The first path in `words` that starts in the working directory, or undefined. `words` is one simple
@@ -50,16 +80,28 @@ function relativeIn(words: string[]): string | undefined {
   if (isRelativePath(program)) {
     return program
   }
-  const base = path.posix.basename(program).replace(/\.exe$/i, '')
+  const base = path.posix
+    .basename(program)
+    .replace(/\.exe$/i, '')
+    .toLowerCase()
   if (!INTERPRETERS.includes(base)) {
     return undefined
   }
-  for (const word of words.slice(at + 1)) {
-    if (CODE_FLAGS.includes(word)) {
-      // The next word is code and not a path.
-      return undefined
-    }
-    if (!word.startsWith('-')) {
+  const rest = words.slice(at + 1)
+  for (const [index, word] of rest.entries()) {
+    if (word.startsWith('-')) {
+      const kind = flagKind(base, word)
+      const next = rest[index + 1]
+      if (kind === 'file') {
+        return next !== undefined && isRelativePath(next) ? next : undefined
+      }
+      if (kind === 'line') {
+        return next === undefined ? undefined : relativeInLines(commandsOf(next))
+      }
+      if (kind === 'code') {
+        return undefined
+      }
+    } else {
       return isRelativePath(word) ? word : undefined
     }
   }
@@ -69,7 +111,22 @@ function relativeIn(words: string[]): string | undefined {
 /** True when `words` is a command that changes the working directory. */
 function changesDirectory(words: string[]): boolean {
   const program = words[commandWordAt(words)]
-  return program !== undefined && DIRECTORY_COMMANDS.includes(program)
+  return program !== undefined && DIRECTORY_COMMANDS.includes(program.toLowerCase())
+}
+
+/** The first path that starts in the working directory in `lines`, which are simple commands. The scan stops
+ *  after the first command that changes the directory, and reads the target of that command. */
+function relativeInLines(lines: string[][]): string | undefined {
+  const moved = lines.findIndex(changesDirectory)
+  return (moved === -1 ? lines : lines.slice(0, moved + 1))
+    .map((words) => (changesDirectory(words) ? relativeTarget(words) : relativeIn(words)))
+    .find((value) => value !== undefined)
+}
+
+/** The target of a command that changes the directory, when it is a path that starts in the working directory. */
+function relativeTarget(words: string[]): string | undefined {
+  const target = words.slice(commandWordAt(words) + 1).find((word) => !word.startsWith('-'))
+  return target !== undefined && isRelativePath(target) ? target : undefined
 }
 
 const rule: Rule.RuleModule = {
@@ -109,10 +166,7 @@ const rule: Rule.RuleModule = {
                 ],
               ]
             : commandsOf(member.value.value)
-        const moved = lines.findIndex(changesDirectory)
-        const found = (moved === -1 ? lines : lines.slice(0, moved))
-          .map(relativeIn)
-          .find((value) => value !== undefined)
+        const found = relativeInLines(lines)
         if (found !== undefined) {
           context.report({
             loc: member.value.loc,
