@@ -1,0 +1,58 @@
+{
+  "url": "https://code.claude.com/docs/en/features-overview",
+  "hash": "b5a7d0ad57b45975e478922ddf8ce1572375f51747b7a53e641f4c4a1308e2e4",
+  "blocks": [
+    {
+      "id": "extend-claude-code",
+      "hash": "283d445e3b0955e269a8e3ba44ad03d238284f8b08e3452f8def28df817b87aa"
+    },
+    {
+      "id": "overview",
+      "hash": "fb235123532d1478fb903dc8fd55e0104c28b455fb039a08aea9c21506f38017"
+    },
+    {
+      "id": "match-features-to-your-goal",
+      "hash": "4b68c6858fdfd799525d582c3d94b11083fd554db1fed210bbbf17784df8e08b"
+    },
+    {
+      "id": "build-your-setup-over-time",
+      "hash": "62dcf019c65aec8095ce62b1b7995b44ae00414ed4d7824e1389b6bf9a8d64de"
+    },
+    {
+      "id": "compare-similar-features",
+      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772"
+    },
+    {
+      "id": "understand-how-features-layer",
+      "hash": "57c10ac99dc60ea62a58253d2eeea45a693ced02ff165ce5c3ec4e683d9cb25b"
+    },
+    {
+      "id": "combine-features",
+      "hash": "e289fa93726f8d2b88a2a2be2813c377b566c090d25e3785e2e5243d6ccd9624"
+    },
+    {
+      "id": "understand-context-costs",
+      "hash": "afa1b5858402e3b4bbde0a6872be24da149ba5b384cbdb9619592bba7770a2d4"
+    },
+    {
+      "id": "context-cost-by-feature",
+      "hash": "8061a9ac6519e236bab65c1fb111c0e93dafd6b75492c2415745e769f71714eb"
+    },
+    {
+      "id": "understand-how-features-load",
+      "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279"
+    },
+    {
+      "id": "learn-more",
+      "hash": "0020d89de5b5302efa07f5acf9e3cfaec11afb064f4fe656e872443607d687ff"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Compare similar features",
+      "id": "compare-similar-features",
+      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772",
+      "text": "### Compare similar features\n\nSome features can seem similar. For a deeper walkthrough of choosing between them, see [Steering Claude Code: when to use CLAUDE.md, skills, hooks, and subagents](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) on the blog. Here's how to tell them apart.\n\n<Tabs>\n  <Tab title=\"Skill vs Subagent\">\n    Skills and subagents solve different problems:\n\n    * **Skills** are reusable content you can load into any context\n    * **Subagents** are isolated workers that run separately from your main conversation\n\n    | Aspect | Skill | Subagent |\n    | - | - | - |\n    | **What it is** | Reusable instructions, knowledge, or workflows | Isolated worker with its own context |\n    | **Key benefit** | Share content across contexts | Context isolation. Work happens separately, only summary returns |\n    | **[Context window](/docs/en/context-window) impact** | Adds to your main window | Uses a separate window with its own input and output tokens |\n    | **Best for** | Reference material, invocable workflows | Tasks that read many files, parallel work, specialized workers |\n\n    **Skills can be reference or action.** Reference skills provide knowledge Claude uses throughout your session (like your API style guide). Action skills tell Claude to do something specific (like `/deploy` that runs your deployment workflow).\n\n    **Use a subagent** when you need context isolation or when your context window is getting full. The subagent might read dozens of files or run extensive searches, but your main conversation only receives a summary. Since subagent work doesn't consume your main context, this is also useful when you don't need the intermediate work to remain visible. Custom subagents can have their own instructions and can preload skills.\n\n    **They can combine.** A subagent can preload specific skills (`skills:` field). A skill can run in isolated context using `context: fork`. See [Skills](/docs/en/skills) for details.\n  </Tab>\n\n  <Tab title=\"CLAUDE.md vs Skill\">\n    Both store instructions, but they load differently and serve different purposes.\n\n    | Aspect | CLAUDE.md | Skill |\n    | - | - | - |\n    | **Loads** | Every session, automatically | On demand |\n    | **Can include files** | Yes, with `@path` imports | Yes, with `@path` imports |\n    | **Can trigger workflows** | No | Yes, with `/<name>` |\n    | **Best for** | \"Always do X\" rules | Reference material, invocable workflows |\n\n    **Put it in CLAUDE.md** if Claude should always know it: coding conventions, build commands, project structure, \"never do X\" rules.\n\n    **Put it in a skill** if it's reference material Claude needs sometimes (API docs, style guides) or a workflow you trigger with `/<name>` (deploy, review, release).\n\n    **Rule of thumb:** Keep CLAUDE.md under 200 lines. If it's growing, move reference content to skills or split into [`.claude/rules/`](/docs/en/memory#organize-rules-with-claude/rules/) files.\n  </Tab>\n\n  <Tab title=\"CLAUDE.md vs Output style\">\n    Both give Claude standing instructions. CLAUDE.md carries what Claude should know, and an output style sets how Claude responds.\n\n    | Aspect | CLAUDE.md | Output style |\n    | - | - | - |\n    | **Holds** | Facts and rules about your project | A role, tone, and response format |\n    | **Switching** | Always loaded | One active at a time; [switch styles](/docs/en/output-styles#change-your-output-style) whenever you want |\n    | **Best for** | Build commands, conventions, \"never do X\" rules | Shorter responses, explanations alongside code, a non-engineering role |\n\n    **Put it in CLAUDE.md** if it's true of the project whatever style you're in: coding conventions, build commands, project structure.\n\n    **Use an output style** if it's about the response itself and you might want it off again: length, format, how much Claude explains, or a different role such as a writing assistant. Claude Code includes [built-in styles](/docs/en/output-styles#built-in-output-styles), and you can write your own.\n\n    **They combine.** CLAUDE.md stays loaded whichever style you pick. Claude follows both as instructions, so neither is enforced. For anything that has to happen every time, use a [hook](/docs/en/hooks-guide).\n  </Tab>\n\n  <Tab title=\"CLAUDE.md vs Rules vs Skills\">\n    All three store instructions, but they load differently:\n\n    | Aspect | CLAUDE.md | `.claude/rules/` | Skill |\n    | - | - | - | - |\n    | **Loads** | Every session | Every session, or when matching files are opened | On demand, when invoked or relevant |\n    | **Scope** | Whole project | Can be scoped to file paths | Task-specific |\n    | **Best for** | Core conventions and build commands | Language-specific or directory-specific guidelines | Reference material, repeatable workflows |\n\n    **Use CLAUDE.md** for instructions every session needs: build commands, test conventions, project architecture.\n\n    **Use rules** to keep CLAUDE.md focused. Rules with [`paths` frontmatter](/docs/en/memory#path-specific-rules) only load when Claude works with matching files, saving context.\n\n    **Use skills** for content Claude only needs sometimes, like API documentation or a deployment checklist you trigger with `/<name>`.\n  </Tab>\n\n  <Tab title=\"Subagent vs Dynamic workflow\">\n    Both do work outside your main conversation. With subagents, Claude decides turn by turn what runs next. In a workflow, the script decides:\n\n    * **Subagents** are workers Claude spawns, each returning a summary to the conversation that spawned it\n    * **[Dynamic workflows](/docs/en/workflows)** are scripts Claude writes that run many subagents in the background and return one result\n\n    **Use a subagent** when you need a quick, focused worker: research a question, verify a claim, review a file. The subagent does the work and returns a summary, so your main conversation stays clean. Subagents that Claude named when it spawned them can also [message each other](/docs/en/sub-agents#what-loads-at-startup).\n\n    **Use a dynamic workflow** when a job [outgrows a handful of subagents](/docs/en/workflows#when-to-use-a-workflow), or when you want the findings cross-checked before you see them, such as a codebase-wide audit, a large migration, or a plan drafted from several angles. To start one, [ask for a workflow in your prompt](/docs/en/workflows#ask-for-a-workflow-in-your-prompt).\n\n    **To pass a finding from one of your sessions to another**, ask the first session's Claude to send it. Claude delivers it with [cross-session messaging](/docs/en/cross-session-messaging). [Run agents in parallel](/docs/en/agents) compares the other ways to run more than one Claude at once, including sessions you hand off and check back on later.\n  </Tab>\n\n  <Tab title=\"MCP vs Skill\">\n    MCP connects Claude to external services. Skills extend what Claude knows, including how to use those services effectively.\n\n    | Aspect | MCP | Skill |\n    | - | - | - |\n    | **What it is** | Protocol for connecting to external services | Knowledge, workflows, and reference material |\n    | **Provides** | Tools and data access | Knowledge, workflows, reference material |\n    | **Examples** | Slack integration, database queries, browser control | Code review checklist, deploy workflow, API style guide |\n\n    These solve different problems and work well together:\n\n    **MCP** gives Claude purpose-built tools for an external system, with the connection and authentication handled by the server.\n\n    **Skills** give Claude knowledge about how to use those tools effectively, plus workflows you can trigger with `/<name>`. A skill might include your team's database schema and query patterns, or a `/post-to-slack` workflow with your team's message formatting rules.\n  </Tab>\n\n  <Tab title=\"Hook vs Skill\">\n    Claude Code runs a hook at a lifecycle event; it loads a skill into context for Claude to apply.\n\n    | Aspect | Hook | Skill |\n    | - | - | - |\n    | **Runs** | A shell command, HTTP request, MCP tool call, LLM prompt, or subagent | Instructions Claude reads and follows |\n    | **Triggered by** | [Lifecycle events](/docs/en/hooks#hook-events) such as `PostToolUse` or `SessionStart` | You typing `/<name>`, or Claude matching the description to your task |\n    | **Determinism** | Always fires on its event; the trigger is guaranteed | Claude interprets the instructions; outcome can vary |\n    | **Context cost** | Zero unless the hook returns output | Description loads each session; full content loads when used |\n    | **Best for** | Linting after edits, blocking unsafe commands, logging, notifications | Workflows that need reasoning, reference material, multi-step tasks |\n\n    **Use a hook** when the action must happen the same way every time and doesn't need Claude to think. For example: format on save, reject `rm -rf /`, post a Slack message when a session ends.\n\n    **Use a skill** when Claude should decide how to apply the steps, or when the content is knowledge rather than a script. For example: a `/release` checklist, your API style guide, a debugging playbook.\n\n    **Put guardrails in hooks.** An instruction like \"never edit `.env`\" in CLAUDE.md or a skill is a request, not a guarantee. A `PreToolUse` hook that blocks the edit is enforcement. If a rule must hold every time, make it a hook rather than a prompt instruction.\n\n    **Hook output lands in context.** A `PostToolUse` hook that runs your linter feeds results back as text Claude reads; a `/fix-lint` skill tells Claude how to resolve them.\n  </Tab>\n</Tabs>"
+    }
+  ]
+}

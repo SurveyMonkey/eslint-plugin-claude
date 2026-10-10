@@ -276,6 +276,18 @@
       "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
     }
   ],
+  "claude-md-guardrail-to-hook": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Claude isn't following my CLAUDE.md",
+      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/features-overview",
+      "heading": "Compare similar features",
+      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772"
+    }
+  ],
   "claude-md-html-comment-content": [
     {
       "url": "https://code.claude.com/docs/en/memory",

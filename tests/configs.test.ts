@@ -581,6 +581,14 @@ const TREE: Record<string, string> = {
   'packages/tf/.claude/agent-memory/rev/MEMORY.md': '---\ntype: note\n---\n',
   'packages/tf/.claude/agent-memory/rev/sub/bad.md': '---\ntype: note\n---\n',
   'packages/tf/docs/bad.md': '---\ntype: note\n---\n',
+  // `claude-md-guardrail-to-hook`: a prohibition in each file that the rule reads. The same text
+  // where no rule reads it, and in a fence.
+  'packages/gh/CLAUDE.md': 'Never edit the lock file.\n',
+  'packages/gh/.claude/CLAUDE.md': 'Never edit the lock file.\n',
+  'packages/gh/CLAUDE.local.md': 'Never edit the lock file.\n',
+  'packages/gh/.claude/rules/lock.md': 'Never edit the lock file.\n',
+  'packages/gh/docs/notes.md': 'Never edit the lock file.\n',
+  'packages/gh/ok/CLAUDE.md': '```\nNever edit the lock file.\n```\n',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
@@ -758,6 +766,10 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-emphasis-overuse': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-guardrail-to-hook': [
+    'markdown/gfm',
+    ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md'],
+  ],
   'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-excludes-absolute-committed': ['json/json', ['**/.claude/settings.json']],
   'claude-md-import-in-code-span': [
@@ -1071,6 +1083,11 @@ const STRICT_ONLY = [
   'packages/ent/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-entry-format@1',
   // `memory-topic-frontmatter` reads the topic files of a subagent, and no other file.
   'packages/tf/.claude/agent-memory/rev/bad.md: claude/memory-topic-frontmatter@1',
+  // `claude-md-guardrail-to-hook` reads CLAUDE.md, CLAUDE.local.md and the rule files.
+  'packages/gh/CLAUDE.md: claude/claude-md-guardrail-to-hook@1',
+  'packages/gh/.claude/CLAUDE.md: claude/claude-md-guardrail-to-hook@1',
+  'packages/gh/CLAUDE.local.md: claude/claude-md-guardrail-to-hook@1',
+  'packages/gh/.claude/rules/lock.md: claude/claude-md-guardrail-to-hook@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

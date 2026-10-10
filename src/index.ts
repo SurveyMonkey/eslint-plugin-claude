@@ -23,6 +23,7 @@ import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
 import claudeMdEmphasisOveruse from './rules/claude-md-emphasis-overuse.ts'
 import claudeMdExcludesAbsoluteCommitted from './rules/claude-md-excludes-absolute-committed.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdGuardrailToHook from './rules/claude-md-guardrail-to-hook.ts'
 import claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
 import claudeMdImportExternal from './rules/claude-md-import-external.ts'
@@ -229,6 +230,7 @@ const modules = [
   claudeMdCombinedSize,
   claudeMdEmphasisOveruse,
   claudeMdExcludesAbsoluteCommitted,
+  claudeMdGuardrailToHook,
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
   claudeMdLocation,
@@ -368,6 +370,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-combined-size': 'off',
   'claude-md-emphasis-overuse': 'off',
   'claude-md-excludes-absolute-committed': 'off',
+  'claude-md-guardrail-to-hook': 'off',
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
   'claude-md-location': 'off',

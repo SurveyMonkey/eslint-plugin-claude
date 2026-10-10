@@ -39,6 +39,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'claude-md-emphasis-overuse',
     'claude-md-excludes-absolute-committed',
     'claude-md-excludes-pattern',
+    'claude-md-guardrail-to-hook',
     'claude-md-html-comment-content',
     'claude-md-import-exists',
     'claude-md-import-external',
