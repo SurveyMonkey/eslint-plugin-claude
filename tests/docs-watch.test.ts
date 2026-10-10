@@ -317,6 +317,62 @@ describe('readPage', () => {
   })
 })
 
+describe('the body hash', () => {
+  it('stores the hash of the text after a heading line, and none for a block with no body', async () => {
+    const page = [
+      '# Title',
+      '',
+      'Intro.',
+      '',
+      '## One',
+      '',
+      ' \t',
+      'First line.',
+      '',
+      'Second line.  ',
+      '',
+      '## Empty',
+      '### Child',
+      '',
+      'Child text.',
+      '',
+    ].join('\n')
+    const read = await api.readPage(URL_, [], serve(page))
+    const blocks = api.splitBlocks(page)
+    expect(read.blocks).toEqual([
+      { id: 'title', hash: blocks[0]?.hash, bodyHash: api.sha256('Intro.') },
+      { id: 'one', hash: blocks[1]?.hash, bodyHash: api.sha256('First line.\n\nSecond line.') },
+      { id: 'empty', hash: blocks[2]?.hash },
+      { id: 'child', hash: blocks[3]?.hash, bodyHash: api.sha256('Child text.') },
+    ])
+    expect(read.blocks[1]?.bodyHash).not.toBe(read.blocks[1]?.hash)
+  })
+
+  it('counts every line of an HTML heading as the heading', () => {
+    const html = '# Title\n\n<h2 id="x">\n  A title of\n  two lines\n</h2>\n\nBody text.\n'
+    const markdown = '# Title\n\n## Another title\n\nBody text.\n'
+    const [, fromHtml] = api.splitBlocks(html)
+    const [, fromMarkdown] = api.splitBlocks(markdown)
+    expect(fromHtml?.bodyHash).toBe(api.sha256('Body text.'))
+    expect(fromMarkdown?.bodyHash).toBe(api.sha256('Body text.'))
+    expect(fromHtml?.hash).not.toBe(fromMarkdown?.hash)
+  })
+
+  it('compares a snapshot with no body hash as before', async () => {
+    const snapshots = await snapshotOf(FIXTURE, ['hooks'])
+    const stored = snapshots.get(api.snapshotName(URL_)) as Snapshot
+    expect(stored.blocks.find((block) => block.id === 'hooks')?.bodyHash).toBeDefined()
+    const old = { ...stored, blocks: stored.blocks.map(({ id, hash }) => ({ id, hash })) }
+    const report = await api.checkPages({
+      map: map('hooks'),
+      snapshots: new Map([[api.snapshotName(URL_), old]]),
+      fetchText: serve(FIXTURE.replace('an array mixing both', 'an array of both')),
+    })
+    expect(report.pages[0]?.blocks.changed).toEqual(['hooks'])
+    expect(report.pages[0]?.sources[0]?.status).toBe('changed')
+  })
+})
+
 describe('pagesOf', () => {
   it('lists each page once, with each heading once, across rules', () => {
     const other = 'https://code.claude.com/docs/en/hooks'
@@ -610,6 +666,13 @@ describe('update and check on a temporary tree', () => {
       readFileSync(path.join(root, 'docs/rule-sources.json'), 'utf8'),
     ) as SourceMap
     expect(written['a-rule']?.[0]?.hash).toBe(snapshot.sources[0]?.hash)
+    const hooks = api.splitBlocks(FIXTURE).find((block) => block.key === 'hooks')
+    expect(snapshot.blocks.find((block) => block.id === 'hooks')).toEqual({
+      id: 'hooks',
+      hash: hooks?.hash,
+      bodyHash: hooks?.bodyHash,
+    })
+    expect(hooks?.bodyHash).toMatch(/^[0-9a-f]{64}$/)
     const checked = await run([root], FIXTURE)
     expect(checked.code).toBe(0)
     expect(JSON.parse(checked.out).changed).toBe(0)

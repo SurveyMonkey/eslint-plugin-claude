@@ -7,9 +7,17 @@
 // --max limits new issues only.
 // It checks the findings, then reads the open issues. The marker of an
 // issue is <!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->.
-// The block ID is URI encoded. The hash is the new block hash. For a
-// removed block, it is `gone:` and the old hash. ` rules=<ids>` is not there
-// when the issue names no rule.
+// kind is rule-update, rule-removal, new-rule, needs-triage or moved. The
+// block ID is URI encoded. The hash is the new block hash. For a removed
+// block, it is `gone:` and the old hash. For a moved block, the block ID is
+// the old one, and the hash is that of the new block. ` rules=<ids>` is not
+// there when the issue names no rule.
+//
+// A moved issue names the old and new headings and the new anchor. It names
+// each footnote to change, in docs/rules/<rule>.md and
+// docs/rules-inventory.md. Its Scope is the steps of "A moved section" in the
+// triage runbook. A removed or an added block can have a line that names a
+// possible move.
 //
 // All findings for one page, block and hash give one issue. An open issue
 // with that page, block and hash stops a new issue, whatever its kind, when
@@ -61,7 +69,13 @@ type OpenIssue = { number: number; body: string | null }
 // The label must exist in the repository before a live run.
 const LABEL = 'claude-docs-change'
 
-export const KINDS: readonly Kind[] = ['rule-update', 'rule-removal', 'new-rule', 'needs-triage']
+export const KINDS: readonly Kind[] = [
+  'rule-update',
+  'rule-removal',
+  'new-rule',
+  'needs-triage',
+  'moved',
+]
 export const MAX_TITLE = 69
 export const MAX_QUOTE = 6000
 // The cap for each of the Before and After sections. A fence can be as long as
@@ -109,7 +123,7 @@ export const markerOf = (f: Finding): string =>
 
 // The key and the rules in each marker of an issue body.
 const MARKER =
-  /<!-- docs-watch:(?:rule-update|rule-removal|new-rule|needs-triage):(\S+?)(?: rules=([a-z0-9,-]+))? -->/g
+  /<!-- docs-watch:(?:rule-update|rule-removal|new-rule|needs-triage|moved):(\S+?)(?: rules=([a-z0-9,-]+))? -->/g
 const markersIn = (body: string): { key: string; rules: string[] }[] =>
   [...body.matchAll(MARKER)].map((m) => ({
     key: m[1] ?? '',
@@ -117,8 +131,9 @@ const markersIn = (body: string): { key: string; rules: string[] }[] =>
   }))
 
 // The kind that names the issue for a block with findings of more than one
-// kind: the first kind in this list.
-const ORDER: readonly Kind[] = ['rule-removal', 'rule-update', 'needs-triage', 'new-rule']
+// kind: the first kind in this list. `moved` is first, because merge keeps
+// the fields of the first kind only, and only a moved finding has `move`.
+const ORDER: readonly Kind[] = ['moved', 'rule-removal', 'rule-update', 'needs-triage', 'new-rule']
 
 // Joins the findings for one page, block and hash into one finding. It keeps
 // every rule and every part of each reason. When the kinds are not all the
@@ -249,15 +264,20 @@ const LEADS: Record<Kind, (scope: string) => string> = {
   'rule-removal': (scope) => `docs${scope}: review removal of `,
   'new-rule': () => 'feat: new rule candidate from ',
   'needs-triage': (scope) => `docs${scope}: triage docs change to `,
+  moved: (scope) => `docs${scope}: move the footnote of `,
 }
 
-// A Conventional Commit title of MAX_TITLE characters or fewer.
+// A Conventional Commit title of MAX_TITLE characters or fewer. A moved title
+// has the rules and "to the renamed heading" in place of the heading. With no
+// rule, it names the footnote of the inventory.
 export function titleOf(f: Finding): string {
   const scoped = LEADS[f.kind](f.rules.length > 0 ? `(${f.rules.join(',')})` : '')
   // A long list of rules leaves no room for the heading. The title then has
   // no scope, and the Scope section of the body names the rules.
   const lead = MAX_TITLE - scoped.length < 4 ? LEADS[f.kind]('') : scoped
-  const heading = neutralize(f.heading).replaceAll('\n', ' ')
+  const names = f.rules.length > 0 ? f.rules.join(',') : 'the inventory'
+  const subject = f.kind === 'moved' ? `${names} to the renamed heading` : f.heading
+  const heading = neutralize(subject).replaceAll('\n', ' ')
   const room = MAX_TITLE - lead.length
   if (heading.length <= room) return `${lead}${heading}`
   return `${lead}${heading.slice(0, room - 3).trimEnd()}...`
@@ -268,6 +288,8 @@ const WHY: Record<Kind, string> = {
   'rule-removal': 'A block that a rule cites is gone, or it now makes the rule obsolete.',
   'new-rule': 'A docs block that no rule cites states a requirement that a lint check can measure.',
   'needs-triage': 'The classifier could not decide this docs change, so a person must decide.',
+  moved:
+    'A block that a rule or an inventory row cites moved to a new heading on the same page. Its body did not change.',
 }
 
 // The rows of a tracked block, by section: "Hooks: `a`, `b`; Settings: `c`".
@@ -313,10 +335,77 @@ function blockText(f: Pick<Finding, 'oldText' | 'newText' | 'change'>, full: boo
   return lines
 }
 
+// The body of a moved issue. It names the old and new headings, the new
+// anchor, and each footnote to change. Its Scope is the steps of "A moved
+// section" in the triage runbook.
+function movedBodyOf(f: Finding, move: NonNullable<Finding['move']>, blob: string): string {
+  const anchor = `${f.page}#${encodeURIComponent(move.blockId)}`
+  const old = inline(f.heading)
+  const footnotes = [
+    ...f.rules.map((rule) => `- \`docs/rules/${rule}.md\`: the footnote that cites ${old}`),
+    ...move.sections.map(
+      (s) =>
+        `- \`docs/rules-inventory.md\`: the footnote that cites ${old}, for the ${neutralize(s.section)} rows ${s.rules.map((rule) => `\`${rule}\``).join(', ')}`,
+    ),
+  ]
+  return [
+    markerOf(f),
+    '',
+    '## Why',
+    '',
+    WHY.moved,
+    '',
+    `- Page: ${f.page}`,
+    `- Old heading: ${old} (block ${inline(f.blockId)})`,
+    `- New heading: ${inline(move.heading)} (block ${inline(move.blockId)})`,
+    `- New anchor: ${anchor}`,
+    `- Change: ${f.change}`,
+    '- Classifier result: `moved`, with no model answer',
+    `- Reason: ${neutralize(f.reason)}`,
+    `- Hashes: old \`${f.oldHash}\`, new \`${f.newHash}\``,
+    '',
+    'The footnotes to change:',
+    '',
+    ...footnotes,
+    '',
+    'The body of the block did not change. The new block, as quoted data:',
+    '',
+    // validate makes sure that a moved finding has the new text.
+    fence(String(f.newText)),
+    '',
+    '## Scope',
+    '',
+    `1. In each file above, change the footnote to the new heading and the anchor \`${encodeURIComponent(move.blockId)}\`. Keep the one-line form \`[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)\`. Compare the anchor with the anchor on the page, because the site anchor is not always the slug of the heading.`,
+    '2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.',
+    '3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.',
+    '4. Close this issue with the pull request.',
+    '',
+    '## Acceptance',
+    '',
+    `- [ ] No footnote cites the old block ${inline(f.blockId)} of this page.`,
+    '- [ ] The resolving pull request refreshes the snapshot with `node scripts/docs-watch.ts update`.',
+    '',
+    '## References',
+    '',
+    `- ${anchor}`,
+    `- [ADR 002](${blob}/${ADR})`,
+    `- [Triage runbook](${blob}/${RUNBOOK}), section "A moved section"`,
+    '',
+  ].join('\n')
+}
+
+// The line for each possible move of a removed or an added block.
+const nearLines = (f: Finding) =>
+  (f.possibleMoves ?? []).map(
+    (m) =>
+      `- Possible move: ${inline(m.heading)} (block ${inline(m.blockId)}) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.`,
+  )
+
 // The body of an issue. `tracked` is the tracked block of the finding, when
 // the inventory cites it. A line then names the inventory rows.
 export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
   const blob = `https://github.com/${repo}/blob/main`
+  if (f.move !== undefined) return movedBodyOf(f, f.move, blob)
   const classifier =
     f.probability === null
       ? `\`${f.kind}\`, with no model answer`
@@ -337,6 +426,7 @@ export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
     ...(tracked
       ? [`- Inventory rows that cite the block: ${rowsOf(tracked)}. Their group issues are closed.`]
       : []),
+    ...nearLines(f),
     '',
     ...blockText(f, true),
   ]
@@ -376,6 +466,7 @@ const CHANGES = [
   'duplicate heading',
   'unknown heading',
   'new source',
+  'moved',
 ]
 const NULLABLE: [string, 'string' | 'number'][] = [
   ['oldText', 'string'],
@@ -425,6 +516,76 @@ export function validate(value: unknown): asserts value is Finding {
     if (!URL_.test(String(f[field]))) {
       throw new Error(`a ${String(f.kind)} finding has a ${field} that is not an https URL`)
     }
+  }
+  // Only a moved finding has the change `moved` and a `move`.
+  const moved = f.kind === 'moved'
+  if (moved !== (f.change === 'moved') || moved !== (f.move !== undefined)) {
+    throw new Error(`a ${String(f.kind)} finding has a change or a move that does not fit its kind`)
+  }
+  if (moved) validateMove(f)
+  if (f.possibleMoves !== undefined) {
+    const list = f.possibleMoves
+    const fits =
+      (f.change === 'removed' || f.change === 'added') &&
+      Array.isArray(list) &&
+      list.length > 0 &&
+      list.every((m: unknown) => {
+        const { heading, blockId } = (m ?? {}) as Record<string, unknown>
+        return (
+          typeof heading === 'string' &&
+          heading !== '' &&
+          typeof blockId === 'string' &&
+          blockId !== ''
+        )
+      })
+    if (!fits) throw new Error(`a ${String(f.kind)} finding has a possible move that is not valid`)
+  }
+}
+
+// True for a list of inventory rows by section. Each section has a name, and
+// is in the list once. It has one valid rule ID or more, each once.
+function rowsFit(sections: unknown[]): boolean {
+  const names = new Set<string>()
+  return sections.every((s) => {
+    const { section, rules } = (s ?? {}) as Record<string, unknown>
+    if (typeof section !== 'string' || section === '' || names.has(section)) return false
+    names.add(section)
+    return (
+      Array.isArray(rules) &&
+      rules.length > 0 &&
+      rules.every((rule) => typeof rule === 'string' && RULE.test(rule)) &&
+      new Set(rules).size === rules.length
+    )
+  })
+}
+
+// Throws for a moved finding whose hashes, texts or move do not fit its kind.
+// It has the old hash, the new hash and the new text. Its old text can be
+// null, because the snapshot stores the text of a mapped block only. Its new
+// block is not its old block. A rule or an inventory row cites the old block.
+function validateMove(f: Record<string, unknown>): void {
+  if (
+    typeof f.oldHash !== 'string' ||
+    typeof f.newHash !== 'string' ||
+    typeof f.newText !== 'string'
+  ) {
+    throw new Error('a moved finding has no old hash, no new hash or no new text')
+  }
+  const { heading, blockId, sections } = (f.move ?? {}) as Record<string, unknown>
+  if (
+    typeof heading !== 'string' ||
+    heading === '' ||
+    typeof blockId !== 'string' ||
+    blockId === '' ||
+    blockId === f.blockId
+  ) {
+    throw new Error('a moved finding has no new heading or new block, or its old block again')
+  }
+  if (!Array.isArray(sections) || !rowsFit(sections)) {
+    throw new Error('a moved finding has no sections list, or a section that is not valid')
+  }
+  if (sections.length === 0 && (f.rules as unknown[]).length === 0) {
+    throw new Error('a moved finding names no rule and no inventory row')
   }
 }
 

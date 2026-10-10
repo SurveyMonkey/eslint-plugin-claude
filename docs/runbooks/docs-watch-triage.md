@@ -1,10 +1,10 @@
 ---
 type: Runbook
-description: How a person or a Claude Code session triages the issues that the docs watch opens after a Claude Code docs change, refreshes the snapshot, and matches the two issues of a moved section.
+description: How a person or a Claude Code session triages the issues that the docs watch opens after a Claude Code docs change, refreshes the snapshot, resolves a `moved` issue, and matches the two issues of a move that the job does not see.
 owner: brianespinosa
 created: 2026-09-29
 stale_after: 2027-03-29
-related_issues: [25, 149]
+related_issues: [25, 149, 152]
 generated:
   by: claude-code
   at: 2026-09-29T00:00:00Z
@@ -19,19 +19,20 @@ opens no issue (see [A tracked-block comment](#a-tracked-block-comment)). Each i
 type `Task` and the `claude-docs-change` label. To list the open docs watch issues, run
 `gh issue list --label claude-docs-change`. The body starts with a hidden marker:
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. Do not edit the marker. When
-one block has findings of two kinds, the issue has the first kind of this list:
+one block has findings of two kinds, the issue has the first kind of this list: `moved`,
 `rule-removal`, `rule-update`, `needs-triage`, `new-rule`. The Reason line then gives each
 kind.
 [ADR 002](../adr/002-classify-docs-changes-with-jev.md) records how the classifier decides.
 
-## The four kinds of issue
+## The five kinds of issue
 
 | Kind | What it means | What you decide |
 | - | - | - |
 | `rule-update` | A block that a rule cites changed, and Jev says the change alters what the rule checks. | Change the rule, its preset or its severity. Or record that no change is necessary. |
 | `rule-removal` | A block that a rule cites is gone, or Jev says the rule has no purpose left. | Remove the rule, or find the new place of the text and move the map entry. |
 | `new-rule` | A block that no heading cites states a requirement that a lint check can measure. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Add a row to `docs/rules-inventory.md` and open a rule issue, or close the issue. For named rows, check each row against the new text instead. |
-| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block or its changed lines were too large, a mapped heading appears twice or cannot be found, the snapshot has no source for a mapped heading, or a page has no snapshot. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Read the block, and treat the issue as one of the three other kinds. |
+| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block or its changed lines were too large, a mapped heading appears twice or cannot be found, the snapshot has no source for a mapped heading, or a page has no snapshot. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Read the block, and treat the issue as one of the other kinds. |
+| `moved` | A block that a rule or an inventory row cites moved to a new heading on the same page. Its body did not change. | Change each footnote that the issue names to the new heading (see [A moved section](#a-moved-section)). |
 
 An issue of any kind can name inventory rows. A `rule-update` or `rule-removal` issue names them
 when a whole-page rule cites the page of the block.
@@ -62,11 +63,41 @@ only. If you close an issue and the snapshot stays old, the next run opens the i
 
 ## A moved section
 
-A cited section can move to a new heading, on the same page or on another cited page. The job
-does not detect a move. It opens two issues:
+A cited section can move to a new heading, on the same page or on another cited page. The
+snapshot stores a body hash for each block: the hash of the block text after its heading. A run
+can find a removed block and an added block on one page with the same body hash. Then the job
+opens one `moved` issue. The issue names the old heading, the new heading and the new anchor.
+It also names each footnote to change: in `docs/rules/<rule>.md` for each rule, and in
+`docs/rules-inventory.md` for each inventory row. A move of a block that nothing cites opens no
+issue.
 
-- a `rule-removal` issue for the old heading, and
-- a `new-rule` issue for the new heading, when Jev says that the new block states a requirement.
+Do these steps for a `moved` issue. They are the Scope of the issue.
+
+1. In each file that the issue names, change the footnote. Use the new heading and the anchor
+   that the issue gives. Keep the one-line form
+   `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`. The
+   anchor in the issue is the block key. Compare it with the anchor on the page, because the
+   site anchor is not always the slug of the heading.
+2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.
+3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.
+4. Close the issue with the pull request.
+
+### When the job does not see the move
+
+These cases still give two issues, and a person matches them:
+
+- The section moved to another page.
+- The body changed too.
+- The snapshot of the page has no body hash. A snapshot file from before the body hash does not
+  have it. The next `update` of the page writes it.
+- Two removed blocks, or two added blocks, have the same body. The job does not guess the pair.
+- The block has no body: the next heading follows its heading at once.
+
+The two issues are a `rule-removal` issue for the old heading and a `new-rule` issue for the new
+heading. The job opens the `new-rule` issue only when Jev says that the new block states a
+requirement. Two headings on one page can share three or more words. Then each of the two
+issues has a "Possible move" line that names the other block. Words of one or two characters do
+not count.
 
 Do these steps:
 
