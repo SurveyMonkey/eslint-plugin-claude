@@ -34,8 +34,11 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
+import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
 import mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
 import mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
+import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
 import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
 import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
 import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
@@ -44,10 +47,14 @@ import mcpJsonLocation from './rules/mcp-json-location.ts'
 import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
+import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
 import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
+import mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
 import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
 import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
+import mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
 import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
+import mcpToolNameFormat from './rules/mcp-tool-name-format.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -203,6 +210,13 @@ const modules = [
   mcpEnvExpansionField,
   mcpCredentialVarRemote,
   mcpHeadershelperCredentialEnv,
+  mcpSettingsMcpservers,
+  mcpAnthropicHostedUrl,
+  mcpProjectPluginBundle,
+  mcpToolNameFormat,
+  mcpApprovalCommitted,
+  mcpDisableConnectorsFalse,
+  mcpPolicyEntrySchema,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -325,6 +339,13 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-env-expansion-field': 'error',
   'mcp-credential-var-remote': 'error',
   'mcp-headershelper-credential-env': 'error',
+  'mcp-settings-mcpservers': 'error',
+  'mcp-anthropic-hosted-url': 'error',
+  'mcp-project-plugin-bundle': 'error',
+  'mcp-tool-name-format': 'error',
+  'mcp-approval-committed': 'error',
+  'mcp-disable-connectors-false': 'error',
+  'mcp-policy-entry-schema': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
