@@ -69,6 +69,7 @@ import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
+import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
@@ -308,6 +309,7 @@ const modules = [
   hooksHandlerTypeEventSupport,
   hooksMatcherEnum,
   hooksMatcherMcpName,
+  hooksMatcherNeverMatches,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
   skillFrontmatterPosition,
@@ -620,6 +622,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-handler-type-event-support': 'error',
   'hooks-matcher-enum': 'error',
   'hooks-matcher-mcp-name': 'error',
+  'hooks-matcher-never-matches': 'error',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
   'skill-frontmatter-position': 'error',
