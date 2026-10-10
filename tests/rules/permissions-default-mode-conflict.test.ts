@@ -1,4 +1,4 @@
-// `disableBypassPermissionsMode: "disable"` stops anyone from entering bypassPermissions mode:
+// `disableBypassPermissionsMode: "disable"` stops anyone from using bypassPermissions mode:
 // https://code.claude.com/docs/en/settings-reference#permissionsdisablebypasspermissionsmode
 // In a managed source, the later file replaces a single value of an earlier file, so a sibling
 // can change either key:
@@ -35,7 +35,9 @@ describe(`${name}: bypassPermissions with the lock`, () => {
   it('reports the key defaultMode, at its line and column', () => {
     const text =
       '{\n  "permissions": {\n    "disableBypassPermissionsMode": "disable",\n    "defaultMode": "bypassPermissions"\n  }\n}'
-    expect(lint(text).map(({ line, column }) => [line, column])).toEqual([[4, 5]])
+    expect(
+      lint(text).map(({ line, column, endLine, endColumn }) => [line, column, endLine, endColumn]),
+    ).toEqual([[4, 5, 4, 18]])
   })
 
   it('says that Claude Code never enters the mode', () => {
@@ -158,7 +160,21 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
   })
 
   it('does not read the siblings for a project file', () => {
-    const root = repo({ 'managed-settings.json': '{"permissions": {"defaultMode": "plan"}}' })
+    const root = repo({
+      '.claude/managed-settings.json': '{"permissions": {"defaultMode": "plan"}}',
+      '.claude/managed-settings.d/20-b.json': '{"permissions": {"defaultMode": "plan"}}',
+    })
     expect(at(root, '.claude/settings.json')).toEqual(['bypass'])
+  })
+
+  it('reports when a sibling has a permissions value that is not an object', () => {
+    for (const sibling of [
+      '{"permissions": null}',
+      '{"permissions": []}',
+      '{"defaultMode": "plan"}',
+    ]) {
+      const root = repo({ 'managed-settings.d/20-b.json': sibling })
+      expect(at(root, 'managed-settings.d/10-a.json'), sibling).toEqual(['bypass'])
+    }
   })
 })

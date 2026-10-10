@@ -423,7 +423,8 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/.20-hidden.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
-  'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}', // `permissions-schema`: a bad key, list or Boolean in `permissions`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // `permissions-schema`: a bad key, list or Boolean in `permissions`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/pms/.claude/settings.json': '{"permissions": {"allowed": []}}',
   'packages/pms/.claude/settings.local.json': '{"permissions": {"allow": "Bash"}}',
   'packages/pms/managed-settings.json': '{"permissions": {"deny": "Bash"}}',
