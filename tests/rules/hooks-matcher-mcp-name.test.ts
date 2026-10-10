@@ -32,7 +32,7 @@ describe(`${name}: the matcher`, () => {
     }
   })
 
-  it('reports a server name with a trailing separator and no tool', () => {
+  it('reports a server name with a separator at the end and no tool', () => {
     expect(ids('PreToolUse', 'mcp__memory__')).toEqual(['bare'])
   })
 

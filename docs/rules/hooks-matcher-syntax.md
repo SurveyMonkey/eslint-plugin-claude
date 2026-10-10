@@ -48,7 +48,7 @@ comma keeps the matcher on the regular expression path, and only `|` separates v
 
 ### `FileChanged`
 
-`FileChanged` splits the matcher at `|`. It watches each value as a literal file name in the working
+`FileChanged` splits the matcher at `|`. It watches each value as a literal file name in the current
 directory.[^filechanged] So `.envrc|.env` watches two files. The rule reports two faults:
 
 - A value with a comma, or with a space at its start or end. Claude Code watches a file with that exact name.

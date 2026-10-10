@@ -68,8 +68,12 @@ const rule: Rule.RuleModule = {
       if (event === 'StopFailure') {
         // Inside the wide exact set and outside the narrow one: the matcher is a regular expression.
         if (exactValues(matcher, false) !== null && exactValues(matcher, true) === null) {
-          const character = STRAY.find(([text]) => matcher.includes(text))?.[1]
-          context.report({ loc, messageId: 'separator', data: { event, character } })
+          for (const [text, character] of STRAY) {
+            if (matcher.includes(text)) {
+              context.report({ loc, messageId: 'separator', data: { event, character } })
+              break
+            }
+          }
         }
         return
       }

@@ -24,7 +24,7 @@ The rule reads the matcher of a group on `PreToolUse`, `PostToolUse`, `PostToolU
 `PermissionRequest` and `PermissionDenied`. It splits a matcher that holds exact-match characters only at `|`
 and `,`.[^patterns] It reports at the `matcher` value, once for each value that can never match:
 
-- **A case variant of a built-in tool.** Matching is case-sensitive, and tool names are capitalized.[^debug][^guide] So
+- **A case variant of a built-in tool.** Matchers are case-sensitive, and tool names are capitalized.[^debug][^guide] So
   `bash` and `WRITE` match no tool. The message names the correct tool. The tool names are in
   `src/data/tool-names.ts`.[^tools]
 - **`EndConversation` on `PreToolUse` and `PostToolUse`.** Claude Code skips both events for a call of that
