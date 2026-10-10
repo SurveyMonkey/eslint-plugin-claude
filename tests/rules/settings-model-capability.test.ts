@@ -102,6 +102,15 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       ),
       filename: project,
     },
+    // The adaptive switch on a model that does not always use adaptive reasoning, at the edge of
+    // the Haiku line.
+    {
+      code: env(
+        { CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: '1' },
+        { model: 'claude-haiku-5-4', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+    },
     // `MAX_THINKING_TOKENS` other than zero, or of another type.
     { code: env({ MAX_THINKING_TOKENS: '8000' }, { model: 'claude-opus-5-5' }), filename: project },
     { code: env({ MAX_THINKING_TOKENS: 0 }, { model: 'claude-opus-5-5' }), filename: project },
@@ -216,6 +225,26 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       code: env(
         { ANTHROPIC_MODEL: '' },
         { model: 'claude-opus-5-5', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+      errors: [{ messageId: 'thinkingOff' }],
+    },
+    // A pin of each family with `[1m]` on a model that has no 1M window.
+    ...[
+      { variable: 'ANTHROPIC_DEFAULT_FABLE_MODEL', value: 'claude-haiku-4-5[1m]' },
+      { variable: 'ANTHROPIC_DEFAULT_OPUS_MODEL', value: 'claude-opus-4-5[1m]' },
+      { variable: 'ANTHROPIC_DEFAULT_SONNET_MODEL', value: 'claude-sonnet-4-5[1m]' },
+      { variable: 'ANTHROPIC_DEFAULT_HAIKU_MODEL', value: 'claude-haiku-4-5[1m]' },
+    ].map(({ variable, value }) => ({
+      code: env({ [variable]: value }),
+      filename: project,
+      errors: [{ messageId: 'noMillion' as const }],
+    })),
+    // An empty pin is no pin: the alias resolves to its Anthropic API model.
+    {
+      code: env(
+        { ANTHROPIC_DEFAULT_OPUS_MODEL: '' },
+        { model: 'opus', alwaysThinkingEnabled: false },
       ),
       filename: project,
       errors: [{ messageId: 'thinkingOff' }],

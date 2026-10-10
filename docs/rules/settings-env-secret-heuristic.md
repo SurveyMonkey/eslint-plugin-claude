@@ -31,10 +31,12 @@ The rule reports a variable of `env` in these cases. The report is on the variab
 
 - The name ends in `_KEY`, `_TOKEN`, `_SECRET` or `_PASSWORD`, with any letter case, and the value
   is not empty.
-- The value has the shape of a credential: it starts with `sk-ant-`, it is a GitHub token
-  (`ghp_`, `gho_`, `ghu_`, `ghs_`, `ghr_` or `github_pat_`), it is an AWS access key ID (`AKIA` or
-  `ASIA` and 16 characters), it starts with `xoxa-`, `xoxb-`, `xoxp-`, `xoxr-` or `xoxs-`, or it is
-  `Bearer` and a token.
+- The value has the shape of a credential. These are the shapes:
+  - It starts with `sk-ant-`.
+  - It is a GitHub token: `ghp_`, `gho_`, `ghu_`, `ghs_`, `ghr_` or `github_pat_`.
+  - It is an AWS access key ID: `AKIA` or `ASIA`, and 16 characters.
+  - It starts with `xoxa-`, `xoxb-`, `xoxp-`, `xoxr-` or `xoxs-`.
+  - It is `Bearer` and a token.
 
 A variable gets one report, even when both parts match. The message names the variable. It never
 holds the value.

@@ -167,8 +167,9 @@ export function alwaysAdaptive(model: ModelVersion): boolean {
   }
 }
 
-/** The model that an alias resolves to on the Anthropic API, from the table of the page. The
- *  model differs on another provider, so a caller must not use this where a provider is set. */
+/** The model that an alias resolves to on the Anthropic API. The table of the page gives `opus`,
+ *  `sonnet` and `haiku`. The sentence after the table gives `fable`. The model differs on
+ *  another provider, so a caller must not use this where a provider is set. */
 export const ANTHROPIC_API_ALIASES: ReadonlyMap<string, ModelVersion> = new Map([
   ['fable', { family: 'fable', major: 5, minor: 1 }],
   ['opus', { family: 'opus', major: 5, minor: 5 }],

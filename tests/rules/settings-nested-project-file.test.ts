@@ -108,4 +108,11 @@ describe('settings-nested-project-file', () => {
     link(dir, 'alias', '.')
     expect(ids(dir, `alias/${ROOT_FILE}`)).toEqual([])
   })
+
+  it.skipIf(noLinks)('stays silent for a project that is a link out of the repository', () => {
+    const outside = tree({}, false)
+    const dir = tree({})
+    link(dir, 'linked', outside)
+    expect(ids(dir, `linked/${ROOT_FILE}`)).toEqual([])
+  })
 })

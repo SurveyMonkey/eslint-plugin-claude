@@ -8,7 +8,7 @@
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { realDirectory, repositoryRoot } from '../skill-tree.ts'
+import { isInside, realDirectory, repositoryRoot } from '../skill-tree.ts'
 
 const name = 'settings-nested-project-file' as const
 
@@ -32,7 +32,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'nested' }> = {
       Document(node) {
         const root = repositoryRoot(project)
         const here = realDirectory(project)
-        if (here !== root) {
+        // A project that is a link out of the repository is not in the repository.
+        if (here !== root && isInside(here, root)) {
           const directory = path.relative(root, here).split(path.sep).join('/')
           context.report({ node: node.body, messageId: 'nested', data: { directory } })
         }

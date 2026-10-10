@@ -32,10 +32,19 @@ jsonTester.run('settings-env-format-heuristic (valid)', rule, {
       { code: env({ CLAUDE_CODE_USE_POWERSHELL_TOOL: '0' }), filename },
       ...WHOLE.map((key) => ({ code: env({ [key]: '30000' }), filename })),
     ]),
+    // The env vars reference: a numeric variable accepts scientific and separator spellings,
+    // where its row does not say plain digits only. Claude Code reads `2e3` as 2000.
+    ...['1e5', '25_000', '2.5e3'].flatMap((value) =>
+      ['MAX_MCP_OUTPUT_TOKENS', ...WHOLE].map((key) => ({
+        code: env({ [key]: value }),
+        filename: project,
+      })),
+    ),
     // `0` turns the idle check and the backgrounding off, and the floor of a timeout is 1000.
     { code: env({ CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT: '0' }), filename: project },
     { code: env({ CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS: '0' }), filename: project },
     { code: env({ MCP_TOOL_TIMEOUT: '500' }), filename: project },
+    { code: env({ MCP_TIMEOUT: '0', MCP_TOOL_TIMEOUT: '0' }), filename: project },
     // The empty string cancels a shell value.
     ...['MAX_MCP_OUTPUT_TOKENS', 'CLAUDE_CODE_USE_POWERSHELL_TOOL', ...WHOLE].map((key) => ({
       code: env({ [key]: '' }),
@@ -63,13 +72,13 @@ jsonTester.run('settings-env-format-heuristic (valid)', rule, {
       filename: project,
       errors: [{ messageId: 'badForm', line: 3, column: 30 }],
     },
-    ...['0', '-5', '1.5', '25k', '1e5', '25_000', ' 5', 'many'].map((value) => ({
+    ...['0', '-5', '1.5', '25k', '0e3', '1e-1', '1e999', '2_', ' 5', 'many'].map((value) => ({
       code: env({ MAX_MCP_OUTPUT_TOKENS: value }),
       filename: project,
       errors: [{ messageId: 'badForm' as const }],
     })),
     ...WHOLE.flatMap((key) =>
-      ['-1', '1.5', '30s', '1e3', '30_000', ' 30000', 'x'].map((value) => ({
+      ['-1', '1.5', '30s', '1e-3', '1.5e0', '3__0', ' 30000', 'x'].map((value) => ({
         code: env({ [key]: value }),
         filename: project,
         errors: [{ messageId: 'badForm' as const }],
@@ -99,10 +108,10 @@ describe('settings-env-format-heuristic: messages', () => {
 
   it('names the variable and the form', () => {
     expect(messages(env({ MAX_MCP_OUTPUT_TOKENS: '0' }))).toEqual([
-      'The value of "MAX_MCP_OUTPUT_TOKENS" should be a positive whole number in plain digits.',
+      'The value of "MAX_MCP_OUTPUT_TOKENS" should be a positive whole number.',
     ])
     expect(messages(env({ MCP_TIMEOUT: '30s' }))).toEqual([
-      'The value of "MCP_TIMEOUT" should be a whole number of milliseconds in plain digits.',
+      'The value of "MCP_TIMEOUT" should be a whole number of milliseconds.',
     ])
     expect(messages(env({ CLAUDE_CODE_USE_POWERSHELL_TOOL: 'true' }))).toEqual([
       'The value of "CLAUDE_CODE_USE_POWERSHELL_TOOL" should be 0 or 1.',

@@ -48,8 +48,7 @@ set to `0` in `env`.[^vars]
 
 Fable, Sonnet 5 and later, Haiku 5.5, and Opus 4.7 and later always use adaptive reasoning. The
 variable `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING` does not apply to them.[^adaptive] The rule reports
-that variable, when it is on, on such a model. The list is longer than the list of the first
-paragraph. The inventory row names three models, and the docs name more.
+that variable, when it is on, on such a model.
 
 ### Which model the rule judges
 

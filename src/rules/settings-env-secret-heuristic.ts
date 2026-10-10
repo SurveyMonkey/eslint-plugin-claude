@@ -18,6 +18,9 @@ import { keyOf, lastMember } from '../marketplace-json.ts'
 
 const name = 'settings-env-secret-heuristic' as const
 
+// `mcp-env-client-secret` owns this variable.
+const CLIENT_SECRET_VAR = 'MCP_CLIENT_SECRET'
+
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'name' | 'value' }> = {
   meta: {
     type: 'problem',
@@ -50,7 +53,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'name' | 'value' }
             value.type !== 'String' ||
             value.value === '' ||
             CREDENTIAL_ENV_VARS.includes(variable) ||
-            variable === CUSTOM_HEADERS_VAR
+            variable === CUSTOM_HEADERS_VAR ||
+            variable === CLIENT_SECRET_VAR
           ) {
             continue
           }
