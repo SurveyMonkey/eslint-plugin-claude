@@ -448,6 +448,18 @@ export function validateTracked(value: unknown): asserts value is Tracked {
   for (const field of ['oldText', 'newText']) {
     if (t[field] !== null && typeof t[field] !== 'string') fail(`has a ${field} that is not text`)
   }
+  // An added block has no old hash and no old text. A removed block has no new
+  // hash and no new text. Other blocks have both hashes and the new text.
+  const hasOld = t.change !== 'added'
+  const hasNew = t.change !== 'removed'
+  if (
+    (typeof t.oldHash === 'string') !== hasOld ||
+    (typeof t.newHash === 'string') !== hasNew ||
+    (typeof t.newText === 'string') !== hasNew ||
+    (!hasOld && t.oldText !== null)
+  ) {
+    fail(`has hashes or texts that do not fit the change ${String(t.change)}`)
+  }
   const sections = t.sections
   if (!Array.isArray(sections) || sections.length === 0) fail('has no sections list')
   const names = new Set<string>()

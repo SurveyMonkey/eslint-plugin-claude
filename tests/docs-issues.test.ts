@@ -1108,6 +1108,13 @@ describe('the group comment path for tracked blocks', () => {
       [{ change: 'moved' }, 'unknown change: moved'],
       [{ oldHash: null, newHash: null }, 'has no hash'],
       [{ oldHash: 'x -->' }, 'oldHash that is not a SHA-256 hash'],
+      [{ oldHash: undefined }, 'oldHash that is not a SHA-256 hash'],
+      [{ oldHash: null }, 'do not fit the change changed'],
+      [{ newText: null }, 'do not fit the change changed'],
+      [{ change: 'added' }, 'do not fit the change added'],
+      [{ change: 'added', oldHash: null, oldText: 'Old.' }, 'do not fit the change added'],
+      [{ change: 'removed' }, 'do not fit the change removed'],
+      [{ change: 'removed', newHash: null }, 'do not fit the change removed'],
       [{ newHash: 'A'.repeat(64) }, 'newHash that is not a SHA-256 hash'],
       [{ oldText: 3 }, 'oldText that is not text'],
       [{ newText: undefined }, 'newText that is not text'],
@@ -1150,7 +1157,7 @@ describe('the group comment path for tracked blocks', () => {
       'a tracked block is in the list twice',
     )
     expect(gh.calls).toEqual([])
-    const removed = { ...common, change: 'removed', newHash: null }
+    const removed = { ...common, change: 'removed', newHash: null, newText: null }
     for (const t of [common, removed, { ...common, change: 'added', oldHash: null }]) {
       expect(() => api.validateTracked(t)).not.toThrow()
     }
