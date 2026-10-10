@@ -1232,11 +1232,12 @@ describe('configs', () => {
     }
   })
 
+  // A CI runner is slow, and a run over the whole tree takes longer than the default 5 s.
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 })
