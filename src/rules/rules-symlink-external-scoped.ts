@@ -3,8 +3,9 @@
 // import. The linked rules do not load until you approve external imports. After that, only the
 // rules with no `paths` load. So a rule with `paths` never loads. The rule asks where the real
 // path of the linted file is. It reads nothing in the target, because ESLint gave it the text.
-// It makes no report for a link that leads nowhere. It makes none for a path that it cannot read
-// (ADR 001, Decision 14).
+// It makes no report for a link that leads nowhere. It makes none for a path that it cannot read,
+// or for a tree with no `.git` (ADR 001, Decision 14).
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -21,10 +22,24 @@ function isScoped(paths: unknown): boolean {
   return globs.some((glob) => typeof glob === 'string' && glob.trim() !== '')
 }
 
-/** True when the real path of `file` is out of the repository that holds its path. */
+/** True when a `.git` is at the folder `dir` or above it. */
+function hasGit(dir: string): boolean {
+  for (let at = path.resolve(dir); ; at = path.dirname(at)) {
+    if (existsSync(path.join(at, '.git'))) {
+      return true
+    }
+    if (path.dirname(at) === at) {
+      return false
+    }
+  }
+}
+
+/** True when the real path of `file` is out of the repository that holds its path. Without a
+ *  `.git` the rule cannot tell where the repository ends, and so it makes no report. */
 function leavesRepository(file: string): boolean {
+  const dir = path.dirname(file)
   const real = realOf(file)
-  return typeof real === 'string' && !isInside(real, repositoryRoot(path.dirname(file)))
+  return typeof real === 'string' && hasGit(dir) && !isInside(real, repositoryRoot(dir))
 }
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'neverLoads' }> = {

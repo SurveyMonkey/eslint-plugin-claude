@@ -87,6 +87,15 @@ describe('parseImports', () => {
     expect(paths('```\r\n@a.md\r\n```\r\n@b.md')).toEqual(['b.md'])
   })
 
+  it('reads a tilde fence with a backtick in the info string as a fence', () => {
+    expect(paths('~~~js`x\n@a.md\n~~~\n@b.md')).toEqual(['b.md'])
+  })
+
+  it('skips only a path that starts with a quote, and keeps each escaped space', () => {
+    expect(paths('@a"b.md @"c.md')).toEqual(['a"b.md'])
+    expect(paths('@a\\ b\\ c.md')).toEqual(['a b c.md'])
+  })
+
   it('keeps a fence open until a fence of the same mark and a size that is at least as long', () => {
     expect(paths('```\n~~~\n@a.md\n``\n@b.md')).toEqual([])
     expect(paths('````\n```\n@a.md\n```x\n@b.md')).toEqual([])
@@ -314,7 +323,10 @@ describe('followImports', () => {
 
   it('reports no unreadable file for what is only missing, or a directory', () => {
     const root = tree({ 'CLAUDE.md': 'x', 'dir/d.md': 'd\n' })
-    expect(follow(root, 4, '@missing.md @dir @~/x.md').unreadable).toBe(false)
+    expect(follow(root, 4, '@missing.md @dir').unreadable).toBe(false)
+    // An import out of the repository can lead back into it, so the chain is not known.
+    expect(follow(root, 4, '@~/x.md').unreadable).toBe(true)
+    expect(follow(root, 4, '@https://example.com/x.md').unreadable).toBe(true)
   })
 
   it('uses the path of a file that is not on disk as the root', () => {

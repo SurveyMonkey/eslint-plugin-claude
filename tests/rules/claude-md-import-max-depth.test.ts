@@ -72,6 +72,11 @@ describe(RULE, () => {
     expect(lint('@f1.md @g1.md\n', files, { max: 3 }).map((m) => m.column)).toEqual([1, 8])
   })
 
+  it('names the file past the limit by its path from the repository', () => {
+    const files = { 'docs/a.md': '@b.md\n', 'docs/b.md': 'end\n' }
+    expect(lint('@docs/a.md\n', files, { max: 1 })[0]?.message).toContain('`docs/b.md`')
+  })
+
   it('resolves each import against the folder of the file that holds it', () => {
     const files = {
       'docs/a.md': '@b.md\n',
@@ -140,6 +145,12 @@ describe(`${RULE}: what the rule skips`, () => {
   it('does not follow a path that is missing, a folder or a path to the home folder', () => {
     const files = { ...chainOf(4), 'f4.md': '@missing.md @dir @~/x.md\n', 'dir/x.md': 'x\n' }
     expect(lint('@f1.md\n', files)).toEqual([])
+  })
+
+  it('makes no report when an import out of the repository can lead to a shorter chain', () => {
+    expect(ids(lint('@f1.md\n', chainOf(5)))).toEqual(['tooDeep'])
+    expect(lint('@f1.md @~/x.md\n', chainOf(5))).toEqual([])
+    expect(lint('@f1.md @https://example.com/x.md\n', chainOf(5))).toEqual([])
   })
 
   it('checks a CLAUDE.md below .claude/rules, which is a rule file', () => {
