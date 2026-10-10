@@ -29,6 +29,8 @@ markdownTester.run('claude-md-agents-md-variant', rule, {
     { code: notes, filename: '.agents.md' },
     { code: notes, filename: '.agents-extra/notes.md', options: [{ allow: ['.agents'] }] },
     { code: notes, filename: 'agents/skills/x/SKILL.md' },
+    // Claude Code loads a file below .claude/rules as a rule, whatever its name.
+    { code: notes, filename: '.claude/rules/AGENTS.override.md' },
     // The option `allow`: a file, a directory, a directory with a different form of the path.
     { code: notes, filename: 'AGENTS.override.md', options: [{ allow: ['AGENTS.override.md'] }] },
     { code: notes, filename: 'AGENTS.override.md', options: [{ allow: ['./AGENTS.override.md'] }] },
@@ -67,6 +69,20 @@ markdownTester.run('claude-md-agents-md-variant', rule, {
       errors: [variant],
     },
     { code: notes, filename: 'AGENTS.local.md', options: [{ allow: [''] }], errors: [variant] },
+    // An entry names a path from the working directory, not a name that ends a path.
+    {
+      code: notes,
+      filename: 'packages/web/AGENTS.local.md',
+      options: [{ allow: ['AGENTS.local.md'] }],
+      errors: [variant],
+    },
+    // A directory entry ends at a separator: `packages/web` does not allow `packages/web2`.
+    {
+      code: notes,
+      filename: 'packages/web2/AGENTS.local.md',
+      options: [{ allow: ['packages/web'] }],
+      errors: [variant],
+    },
   ],
 })
 
