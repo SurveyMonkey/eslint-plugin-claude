@@ -986,7 +986,16 @@ jsonTester.run('settings-schema (forms)', rule, {
         format('allowedChannelPlugins[0]', 'a "plugin@marketplace" string'),
       ),
     ]),
-    ...['1.0.0.0/7', '1.0.0.0/33', '1.0.0.0', '256.0.0.0/8', '1.2.3/8', 'a'].map((block) =>
+    ...[
+      '1.0.0.0/7',
+      '1.0.0.0/8x',
+      'x1.0.0.0/8',
+      '1.0.0.0/33',
+      '1.0.0.0',
+      '256.0.0.0/8',
+      '1.2.3/8',
+      'a',
+    ].map((block) =>
       bad(
         { gatewayInternalNetworks: [block] },
         format('gatewayInternalNetworks[0]', 'an IPv4 CIDR block with a prefix from /8 to /32'),
