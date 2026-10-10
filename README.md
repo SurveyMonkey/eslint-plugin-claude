@@ -94,6 +94,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/hooks-script-exists`](docs/rules/hooks-script-exists.md) | A repository script that a hook command names, with the project or plugin variable or by a path from the project, exists | `error` | `error` |
 | [`claude/hooks-script-executable`](docs/rules/hooks-script-executable.md) | A repository script that is itself the hook command has git mode `100755` | `error` | `error` |
 
+### Plugin manifest and layout
+
+| Rule | Checks | `recommended` | `strict` |
+|------|--------|---------------|----------|
+| [`claude/plugin-bin-executable`](docs/rules/plugin-bin-executable.md) | Each file directly in the `bin/` of a plugin has git mode `100755` | `error` | `error` |
+
 ### Marketplace manifest
 
 | Rule | Checks | `recommended` | `strict` |

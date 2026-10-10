@@ -484,8 +484,18 @@ const GIT_TREE: Record<string, string> = {
   'plugin/hooks/other.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
   'loose/scripts/run.sh': '#!/bin/sh\n',
   'loose/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+  // `plugin-bin-executable`: a plugin with a file in `bin/` at mode `100644` and one at `100755`,
+  // a nested file and a hidden file, which are silent. A plugin with a mode `100755` file only is
+  // silent. The `bin/` of a directory that is no plugin is silent.
+  'plugin/bin/tool': '#!/bin/sh\n',
+  'plugin/bin/ok': '#!/bin/sh\n',
+  'plugin/bin/.gitkeep': '',
+  'plugin/bin/lib/helper': '#!/bin/sh\n',
+  'ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'ok/bin/tool': '#!/bin/sh\n',
+  'loose/bin/tool': '#!/bin/sh\n',
 }
-const GIT_EXECUTABLE = ['ok/tools/ok.sh']
+const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool']
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
 const ESCAPE_RULE = 'marketplace-relative-source-escape-symlink'
@@ -567,6 +577,7 @@ const SCOPE_RULES = [
   // The git layer of #10, #11 and #14. The rules that read the index mode need a repository.
   { name: 'hooks-script-exists', files: HOOKS_FILES },
   { name: 'hooks-script-executable', files: HOOKS_FILES },
+  { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -749,6 +760,8 @@ const EXPECTED = [
     'packages/hx/plugin/hooks/hooks.json',
   ].map((file) => `${file}: claude/hooks-script-executable@2`),
   'packages/hx/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `plugin-bin-executable` reads the manifest, and reports one file of its `bin/`.
+  'packages/hx/plugin/.claude-plugin/plugin.json: claude/plugin-bin-executable@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

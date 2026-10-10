@@ -15,7 +15,7 @@ const files = (messages: ReturnType<typeof lint>) =>
   messages.map((m) => (m.message.match(/"([^"]+)"/) ?? [])[1])
 
 describe(RULE, () => {
-  it.fails('reports a file in bin/ with mode 100644, at the start of the manifest', () => {
+  it('reports a file in bin/ with mode 100644, at the start of the manifest', () => {
     const root = repo({ [MANIFEST]: '{"name":"p"}', 'bin/tool': '#!/bin/sh\n' })
     const messages = lint(root)
     expect(messages).toHaveLength(1)
@@ -28,12 +28,12 @@ describe(RULE, () => {
     expect(files(messages)).toEqual(['bin/tool'])
   })
 
-  it.fails('stays silent for a file with mode 100755', () => {
+  it('stays silent for a file with mode 100755', () => {
     const root = repo({ [MANIFEST]: '{}', 'bin/tool': '#!/bin/sh\n' }, ['bin/tool'])
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('reports each file with mode 100644, in name order, and not the others', () => {
+  it('reports each file with mode 100644, in name order, and not the others', () => {
     const root = repo(
       { [MANIFEST]: '{}', 'bin/zeta': 'x', 'bin/alpha': 'x', 'bin/ok': 'x', 'bin/Beta': 'x' },
       ['bin/ok'],
@@ -41,7 +41,7 @@ describe(RULE, () => {
     expect(files(lint(root))).toEqual(['bin/alpha', 'bin/Beta', 'bin/zeta'])
   })
 
-  it.fails('stays silent for a hidden file, a nested file and a file outside bin/', () => {
+  it('stays silent for a hidden file, a nested file and a file outside bin/', () => {
     const root = repo({
       [MANIFEST]: '{}',
       'bin/.gitkeep': '',
@@ -52,36 +52,36 @@ describe(RULE, () => {
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent for a file that git does not track', () => {
+  it('stays silent for a file that git does not track', () => {
     const root = repo({ [MANIFEST]: '{}', 'a.txt': 'x' }, [], { 'bin/loose': '#!/bin/sh\n' })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent for a plugin with no bin/, or a bin that is a file', () => {
+  it('stays silent for a plugin with no bin/, or a bin that is a file', () => {
     expect(lint(repo({ [MANIFEST]: '{}' }))).toEqual([])
     expect(lint(repo({ [MANIFEST]: '{}', bin: 'x' }))).toEqual([])
   })
 
-  it.fails('reads the index mode, not the disk mode', () => {
+  it('reads the index mode, not the disk mode', () => {
     const root = repo({ [MANIFEST]: '{}', 'bin/a': 'x', 'bin/b': 'x' }, ['bin/a'])
     chmodSync(path.join(root, 'bin/a'), 0o644)
     chmodSync(path.join(root, 'bin/b'), 0o755)
     expect(files(lint(root))).toEqual(['bin/b'])
   })
 
-  it.fails('reads the mode that a later git update-index records', () => {
+  it('reads the mode that a later git update-index records', () => {
     const root = repo({ [MANIFEST]: '{}', 'bin/tool': 'x' })
     expect(lint(root)).toHaveLength(1)
     git(root, 'update-index', '--chmod=+x', 'bin/tool')
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('finds the plugin root in a directory of the repository', () => {
+  it('finds the plugin root in a directory of the repository', () => {
     const root = repo({ 'plugins/p/.claude-plugin/plugin.json': '{}', 'plugins/p/bin/tool': 'x' })
     expect(files(lint(root, 'plugins/p/.claude-plugin/plugin.json'))).toEqual(['bin/tool'])
   })
 
-  it.fails('reads only the bin/ of its own plugin', () => {
+  it('reads only the bin/ of its own plugin', () => {
     const root = repo({
       'plugins/p/.claude-plugin/plugin.json': '{}',
       'plugins/q/.claude-plugin/plugin.json': '{}',
@@ -91,12 +91,12 @@ describe(RULE, () => {
     expect(lint(root, 'plugins/p/.claude-plugin/plugin.json')).toEqual([])
   })
 
-  it.fails('stays silent in a tree with no .git, where the mode cannot be read', () => {
+  it('stays silent in a tree with no .git, where the mode cannot be read', () => {
     const root = plain({ [MANIFEST]: '{}', 'bin/tool': 'x' })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent when git cannot run', () => {
+  it('stays silent when git cannot run', () => {
     const root = repo({ [MANIFEST]: '{}', 'bin/tool': 'x' })
     vi.stubEnv('PATH', '')
     try {
@@ -106,32 +106,32 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent for a manifest that is in no plugin root', () => {
+  it('stays silent for a manifest that is in no plugin root', () => {
     // The linted text is a virtual file. No `plugin.json` is on disk, so no plugin is there.
     const root = repo({ 'bin/tool': 'x' })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('reads a bin/ that is a link to a directory of the repository', () => {
+  it('reads a bin/ that is a link to a directory of the repository', () => {
     const root = repo({ [MANIFEST]: '{}', 'shared/tool': 'x' })
     symlinkSync('shared', path.join(root, 'bin'))
     expect(files(lint(root))).toEqual(['bin/tool'])
   })
 
-  it.fails('stays silent for a bin/ that leads out of the repository', () => {
+  it('stays silent for a bin/ that leads out of the repository', () => {
     const root = repo({ [MANIFEST]: '{}' })
     const outside = repo({ tool: 'x' })
     symlinkSync(outside, path.join(root, 'bin'))
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent for a bin/ that is a dangling link', () => {
+  it('stays silent for a bin/ that is a dangling link', () => {
     const root = repo({ [MANIFEST]: '{}' })
     symlinkSync('missing', path.join(root, 'bin'))
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent for a link in bin/, which has its own git mode', () => {
+  it('stays silent for a link in bin/, which has its own git mode', () => {
     const root = repo({ [MANIFEST]: '{}', 'bin/real': 'x' }, ['bin/real'])
     symlinkSync('real', path.join(root, 'bin/alias'))
     git(root, 'add', '--force', 'bin/alias')
@@ -139,7 +139,7 @@ describe(RULE, () => {
   })
 
   describe('when .claude-plugin is a link', () => {
-    it.fails('stays silent when its real path is out of the repository', () => {
+    it('stays silent when its real path is out of the repository', () => {
       const root = repo({ 'bin/tool': 'x' })
       const outside = plain({ 'plugin.json': '{}' })
       symlinkSync(outside, path.join(root, '.claude-plugin'))
