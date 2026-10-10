@@ -246,6 +246,45 @@
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
+  "hooks-script-executable": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Block edits to protected files",
+      "hash": "89b47ca14e76084d92da70dec31f687bfd52ee74ed2f75ce5414d328deaddf7f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Conditional rules with hooks",
+      "hash": "d2a6706c321b3564a76122e05951cfbb10284130a4ece6885db49a7a97f778c1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Hooks",
+      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+    }
+  ],
+  "hooks-script-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Other exit codes",
+      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Reference scripts by path",
+      "hash": "c625ac366f8dba714979c7bf6a35b5cf908b7fb28cb553415b4ed03f20ef6b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Hook error in output",
+      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+    }
+  ],
   "marketplace-command-version-ignored": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
@@ -871,6 +910,13 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    }
+  ],
+  "plugin-bin-executable": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Executables",
+      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
     }
   ],
   "settings-conflicting-keys": [
@@ -1834,6 +1880,28 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "A skill, command, or workflow wasn't loaded because its name is reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4"
+    }
+  ],
+  "statusline-script-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Manually configure a status line",
+      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Troubleshooting",
+      "hash": "c9dfe5c473af62edf2ed36ae2bf81cbe7635190ec1a7be405013eafb7d4f4cae"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Subagent status lines",
+      "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Status line and file suggestion gates",
+      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
     }
   ]
 }
