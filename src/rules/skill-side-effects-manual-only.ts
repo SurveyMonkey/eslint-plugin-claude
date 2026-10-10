@@ -24,13 +24,22 @@ const WORD_BREAK = /[\s/:=._]+/
 // A quoted string is text, not a command, so the rule does not read it.
 const QUOTED = /"(?:[^"\\]|\\.)*"|'[^']*'/g
 
-/** The lowercase words of `text`, with no quoted string. */
-function wordsIn(text: string): string[] {
+/** The lowercase words of `text`. */
+function splitWords(text: string): string[] {
   return text
-    .replace(QUOTED, ' ')
     .toLowerCase()
     .split(WORD_BREAK)
     .filter((word) => word !== '')
+}
+
+/** The words of a command, with no quoted string. */
+function wordsIn(text: string): string[] {
+  return splitWords(text.replace(QUOTED, ' '))
+}
+
+/** The words of a configured pattern. A quote mark in a pattern is not part of a word. */
+function patternWords(text: string): string[] {
+  return splitWords(text.replaceAll(/["']/g, ' '))
 }
 
 /** True when `words` holds `pattern` as a run of words next to each other. */
@@ -65,8 +74,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'sideEffe
       description: 'Let only the user invoke a skill that has side effects',
       url: docsUrl(name),
     },
-    // Each item needs a letter or a digit. A quoted item can still give no word, so `create`
-    // drops it.
+    // Each item needs a letter or a digit, so each item gives at least one word.
     schema: [
       {
         type: 'object',
@@ -92,10 +100,12 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'sideEffe
     }
     const { sourceCode } = context
     const [{ patterns: extra }] = context.options
-    const patterns = [...DEFAULT_PATTERNS, ...extra]
-      .map((text) => ({ text, words: wordsIn(text) }))
-      .filter((pattern) => pattern.words.length > 0)
-    // True when the skill cannot be invoked by Claude, or when the rule cannot read the block.
+    const patterns = [...DEFAULT_PATTERNS, ...extra].map((text) => ({
+      text,
+      words: patternWords(text),
+    }))
+    // True when the skill needs no `disable-model-invocation`: it sets the field, it sets
+    // `user-invocable: false`, or the rule cannot read the block.
     let exempt = false
     // The evidence in file order: a rule of `allowed-tools` first, then an injected command.
     const found: { pattern: string; loc: AST.SourceLocation }[] = []

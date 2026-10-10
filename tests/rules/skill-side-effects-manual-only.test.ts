@@ -72,6 +72,11 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
       code: withFields('description: d', inline('gh issue comment 1 -b "please deploy now"')),
       filename: skill,
     },
+    // An escaped quote does not end a quoted string.
+    {
+      code: withFields('description: d', inline('make "say \\" deploy"')),
+      filename: skill,
+    },
     { code: withFields('description: d', inline("echo 'git push' | wc -l")), filename: skill },
     {
       code: withFields('description: d', inline("gh issue comment 1 -b 'please deploy now'")),
@@ -214,7 +219,8 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
       filename: skill,
       errors: [found('git push')],
     },
-    // Each separator makes a subcommand. A read-only first word does not hide the next one.
+    // Each separator makes a subcommand: `&&`, `||`, `;`, `|`, `|&` and `&`. A read-only first
+    // word does not hide the next one.
     {
       code: withFields('description: d', inline('ls && git push')),
       filename: skill,
@@ -227,6 +233,27 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
     },
     {
       code: withFields('description: d', inline('cat x | git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    {
+      code: withFields('description: d', inline('ls & git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    {
+      code: withFields('description: d', inline('ls || git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    {
+      code: withFields('description: d', inline('ls |& git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    // A line break after a backslash, in the CRLF form, joins the words.
+    {
+      code: withFields('description: d', block('git \\\r\npush')),
       filename: skill,
       errors: [found('git push')],
     },
@@ -303,11 +330,19 @@ describe('the option patterns', () => {
     expect(() => lint(['x', 'x'])).toThrow(/duplicate items/)
   })
 
-  it('ignores a pattern that has only quoted text, because it has no word', () => {
-    const text = withFields('description: d', inline('npm test'))
-    expect(
-      lintMarkdown('skill-side-effects-manual-only', text, skill, [{ patterns: ['"x"'] }]),
-    ).toEqual([])
+  it('reads the words of a pattern with quote marks, and ignores the quote marks', () => {
+    const run = (command: string, patterns: string[]) =>
+      lintMarkdown(
+        'skill-side-effects-manual-only',
+        withFields('description: d', inline(command)),
+        skill,
+        [{ patterns }],
+      )
+    expect(run('npm test', ['"x"'])).toEqual([])
+    expect(run('x run', ['"x"'])).toHaveLength(1)
+    expect(run('rm -rf build', ["'rm -rf'"])).toHaveLength(1)
+    // A pattern that gives no match does not stop the others.
+    expect(run('terraform apply', ['"x"', 'terraform apply'])).toHaveLength(1)
   })
 
   it('accepts a list with a pattern', () => {
