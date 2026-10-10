@@ -15,7 +15,7 @@ import { isPluginRoot } from './plugin-root.ts'
 
 /** The members of an inline map of server name to config. The result is empty for a value
  *  that is not an object. */
-export const mapMembers = (value: ValueNode): MemberNode[] =>
+const mapMembers = (value: ValueNode): MemberNode[] =>
   value.type === 'Object' ? lastMembers(value.members) : []
 
 /** True when the file `filename` sits at a plugin root. The result is false when the

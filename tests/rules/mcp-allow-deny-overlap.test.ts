@@ -20,13 +20,13 @@ function lint(code: string, files: Record<string, string>, file = '.claude/setti
 }
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
-it.fails('reports an entry that is in both lists, on the allow entry', () => {
+it('reports an entry that is in both lists, on the allow entry', () => {
   const found = lint(lists([named('a'), named('db')], [named('db')]), {})
   expect(ids(found)).toEqual(['overlap'])
-  expect(found[0]).toMatchObject({ line: 1, column: 49, endColumn: 69 })
+  expect(found[0]).toMatchObject({ line: 1, column: 42, endColumn: 61 })
   expect(found[0]?.message).toContain('{"serverName":"db"}')
 })
-it.fails('reports a serverUrl entry and a serverCommand entry', () => {
+it('reports a serverUrl entry and a serverCommand entry', () => {
   const found = lint(
     lists(
       [url('https://a.test/*'), command('npx', '-y', 'srv'), command('npx')],
@@ -36,7 +36,7 @@ it.fails('reports a serverUrl entry and a serverCommand entry', () => {
   )
   expect(ids(found)).toEqual(['overlap', 'overlap'])
 })
-it.fails('reports an entry that another settings file denies', () => {
+it('reports an entry that another settings file denies', () => {
   expect(
     ids(
       lint(lists([named('db')]), {
@@ -52,17 +52,17 @@ it.fails('reports an entry that another settings file denies', () => {
     'overlap',
   ])
 })
-it.fails('reports in the file with the allow entry, and not in the file with the deny entry', () => {
+it('reports in the file with the allow entry, and not in the file with the deny entry', () => {
   const files = { '.claude/settings.json': lists([named('db')]) }
   expect(ids(lint(lists(undefined, [named('db')]), files, '.claude/settings.local.json'))).toEqual(
     [],
   )
 })
-it.fails('does not mix the project files with a managed file', () => {
+it('does not mix the project files with a managed file', () => {
   const managed = { 'managed-settings.json': lists(undefined, [named('db')]) }
   expect(ids(lint(lists([named('db')]), managed))).toEqual([])
 })
-it.fails('stays silent for entries that differ, or that the policy ignores', () => {
+it('stays silent for entries that differ, or that the policy ignores', () => {
   expect(
     ids(lint(lists([named('a'), url('https://a')], [named('b'), url('https://b')]), {})),
   ).toEqual([])
@@ -75,7 +75,7 @@ it.fails('stays silent for entries that differ, or that the policy ignores', () 
   expect(ids(lint('[]', {}))).toEqual([])
   expect(ids(lint(lists('x', 'x'), {}))).toEqual([])
 })
-it.fails('stays silent for an entry that Claude Code strips', () => {
+it('stays silent for an entry that Claude Code strips', () => {
   const bad = [
     named('a b'),
     named(''),
@@ -93,13 +93,13 @@ it.fails('stays silent for an entry that Claude Code strips', () => {
   ]
   expect(ids(lint(lists(bad, bad), {}))).toEqual([])
 })
-it.fails('reads the last of two list keys, and the last of two entry keys', () => {
+it('reads the last of two list keys, and the last of two entry keys', () => {
   const twice = `{"allowedMcpServers": [{"serverName": "db"}], "allowedMcpServers": [], "deniedMcpServers": [{"serverName": "db"}]}`
   expect(ids(lint(twice, {}))).toEqual([])
   const entryTwice = `{"allowedMcpServers": [{"serverName": 1, "serverName": "db"}], "deniedMcpServers": [{"serverName": "db"}]}`
   expect(ids(lint(entryTwice, {}))).toEqual(['overlap'])
 })
-it.fails('keeps the overlap of the file when a sibling cannot be read, and skips a sibling list it cannot read', () => {
+it('keeps the overlap of the file when a sibling cannot be read, and skips a sibling list it cannot read', () => {
   const own = lists([named('db')], [named('db')])
   expect(ids(lint(own, { '.claude/settings.local.json': '{ not json' }))).toEqual(['overlap'])
   expect(ids(lint(lists([named('db')]), { '.claude/settings.local.json': '{ not json' }))).toEqual(
@@ -112,7 +112,7 @@ it.fails('keeps the overlap of the file when a sibling cannot be read, and skips
   const managed = { 'managed-settings.json': '{ not json' }
   expect(ids(lint(own, managed, 'managed-settings.d/10-a.json'))).toEqual(['overlap'])
 })
-it.fails('keeps the overlap of the file when a sibling is locked', () => {
+it('keeps the overlap of the file when a sibling is locked', () => {
   const root = repo({ '.claude/settings.local.json': lists(undefined, [named('db')]) })
   if (chmodCannotBlock) {
     return
@@ -124,7 +124,7 @@ it.fails('keeps the overlap of the file when a sibling is locked', () => {
   const alone = withoutAccess(locked, () => lintJson(NAME, lists([named('db')]), file))
   expect(ids(alone)).toEqual([])
 })
-it.fails('reads no hidden drop-in', () => {
+it('reads no hidden drop-in', () => {
   const hidden = 'managed-settings.d/.10-a.json'
   expect(ids(lint(lists([named('db')], [named('db')]), {}, hidden))).toEqual([])
 })

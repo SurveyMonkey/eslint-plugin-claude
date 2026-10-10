@@ -21,14 +21,14 @@ Declare each MCP server name of a plugin once.
 ## Rule details
 
 Claude Code loads `.mcp.json` at the plugin root first. Then it loads each value of `mcpServers`
-in order. A server name that a later source declares replaces the earlier server.[^manifest] The
+in order. A server name that a later source declares replaces the earlier server.[^manifest] A
+manifest server replaces the server of `.mcp.json` that has the same name.[^components] The
 earlier server never runs.
 
 The `mcpServers` key takes a `.json` file path, an inline map, or an array that mixes them.[^manifest]
 The rule reads `.mcp.json` at the plugin root, each `.json` file that `mcpServers` names, and each
-inline map. It reports a name that a later source repeats. The report is on the later declaration:
-on the name of an inline server, or on the path of a file. The message names the source of the
-first declaration.
+inline map. It reports a name that a later source repeats. The report is on the later declaration. This is the name of an inline server, or the path of a file.
+The message names the source of the first declaration.
 
 A source declares a name once. When one file has two keys of one name, the rule reads the last,
 as `JSON.parse` does. So that file alone gives no report. A plugin file may leave out the
@@ -37,8 +37,9 @@ as `JSON.parse` does. So that file alone gives no report. A plugin file may leav
 The rule reads only the files that it can see (ADR 001, Decision 14). These add no name, and a
 report rests on the sources that do read:
 
-- A bundle (`.mcpb` or `.dxt`), a bundle URL, and a path that is not a plain `./` path to a `.json`
-  file. A path with `..` is for `claude plugin validate`.
+- A bundle (`.mcpb` or `.dxt`) and a bundle URL.
+- A path that is not a plain `./` path to a `.json` file. A path with `..` is for
+  `claude plugin validate`.
 - A file that is not there, that does not parse, or that the process cannot read.
 - A link that leads out of the plugin directory, or out of the repository, and a dangling link.
 

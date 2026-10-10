@@ -21,16 +21,17 @@ Give each LSP server of a marketplace its own file extensions.
 ## Rule details
 
 Each file extension gets one LSP server. When two enabled servers claim the same extension, the
-first registered server handles those files, and the other server is not used for them. This holds
+first registered server handles those files. The other server is not used for them. This holds
 when the servers come from one plugin or from two plugins.[^components] Claude Code shows the
 warning `LSP server "<name>" is not used for <ext> files` in the `/plugin` **Errors** tab.[^components]
 
 The rule lints the marketplace file of a repository. For each entry with a relative `source`, it
-reads the plugin at that path with the reader of the other marketplace rules. Then it reads the
-servers of the plugin: `.lsp.json` at the plugin root, each `.json` file that `lspServers` names,
-and each inline map.[^manifest] A server name that a later source declares replaces the earlier
-server, so the earlier server claims nothing. The claim of a server is the set of keys of its
-`extensionToLanguage` map.
+reads the plugin at that path. It uses the reader of the other marketplace rules.
+
+Then it reads the servers of the plugin. These are in `.lsp.json` at the plugin root, in each
+`.json` file that `lspServers` names, and in each inline map.[^manifest] A server name that a
+later source declares replaces the earlier server, so the earlier server claims nothing. The claim
+of a server is the set of keys of its `extensionToLanguage` map.
 
 The rule reports an extension that a second server claims. The report is on the `source` of the
 entry of that server. The message names the extension, both servers, and both plugins. A plugin

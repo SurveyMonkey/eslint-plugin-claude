@@ -93,9 +93,12 @@ import marketplaceSelfHostedRootSource from './rules/marketplace-self-hosted-roo
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import mcpAllowDenyOverlap from './rules/mcp-allow-deny-overlap.ts'
 import mcpAllowlistServernameDead from './rules/mcp-allowlist-servername-dead.ts'
 import mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
 import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
+import mcpApprovalConflict from './rules/mcp-approval-conflict.ts'
+import mcpApprovalNamesExist from './rules/mcp-approval-names-exist.ts'
 import mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
 import mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
 import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
@@ -110,6 +113,7 @@ import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
 import mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
+import mcpPluginToolNameScoped from './rules/mcp-plugin-tool-name-scoped.ts'
 import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
 import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
 import mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
@@ -513,6 +517,10 @@ const modules = [
   mcpDuplicateServerName,
   lspExtensionConflict,
   lspDuplicateServerName,
+  mcpPluginToolNameScoped,
+  mcpApprovalNamesExist,
+  mcpApprovalConflict,
+  mcpAllowDenyOverlap,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -790,6 +798,10 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-duplicate-server-name': 'error',
   'lsp-extension-conflict': 'error',
   'lsp-duplicate-server-name': 'error',
+  'mcp-plugin-tool-name-scoped': 'error',
+  'mcp-approval-names-exist': 'error',
+  'mcp-approval-conflict': 'error',
+  'mcp-allow-deny-overlap': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
