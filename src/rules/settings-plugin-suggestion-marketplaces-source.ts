@@ -23,10 +23,11 @@ const isObject = (value: unknown): value is Fields =>
 /** True when `fields` sets `managedSourcesBehavior` to "merge". */
 const merges = (fields: Fields) => fields.managedSourcesBehavior === 'merge'
 
-/** True when `fields` declares the marketplace `market`: an `extraKnownMarketplaces` key of that
- *  name with a value other than null, or any `strictKnownMarketplaces` entry. A policy entry is a source pattern, so the rule
- *  cannot tell which entry matches a name. With both spellings of a key, Claude Code uses the
- *  canonical key and ignores the alias. */
+/** True when `fields` declares the marketplace `market`. Two things declare it. One is an
+ *  `extraKnownMarketplaces` key of that name with a value other than null. The other is a
+ *  `strictKnownMarketplaces` list with at least one entry. A policy entry is a source pattern,
+ *  so the rule cannot tell which entry matches a name. With both spellings of a key, Claude Code
+ *  uses the canonical key and ignores the alias. */
 function declares(fields: Fields, market: string): boolean {
   const registered = fields.extraKnownMarketplaces ?? fields.additionalMarketplaces
   const allowed = fields.strictKnownMarketplaces ?? fields.allowedMarketplaces
@@ -75,8 +76,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'undeclared' }> = 
           return
         }
         const source = [own, ...siblings]
-        // With "merge", other admin sources can declare the name. The repository does not hold
-        // them.
+        // The rule cannot tell which sources "merge" joins to this one. The repository does not
+        // hold them.
         if (source.some(merges)) {
           return
         }

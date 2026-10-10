@@ -43,7 +43,8 @@ them, and it makes no report in a hidden drop-in.
 
 A name is declared when one file of the source has one of these:
 
-- an `extraKnownMarketplaces` key of that name, or the alias `additionalMarketplaces`;[^aliases]
+- an `extraKnownMarketplaces` key of that name with a value other than `null`, or the alias
+  `additionalMarketplaces`;[^aliases]
 - a `strictKnownMarketplaces` list with at least one entry, or the alias `allowedMarketplaces`.
 
 A policy entry is a source pattern, so the rule cannot tell which entry matches a name. Any entry
@@ -52,10 +53,11 @@ and ignores the alias, so the rule does the same.[^aliases]
 
 ### When the rule makes no report
 
-- **`managedSourcesBehavior` is `"merge"` in a file of the source.** Other admin sources, such as
-  server-managed settings, can then declare the name. The repository does not hold them.[^merge]
-- **A sibling cannot be read.** This covers a failed read, a link out of the repository, a file
-  that does not parse to an object, and a directory that cannot be listed. That file can declare
+- **`managedSourcesBehavior` is `"merge"` in a file of the source.** The rule cannot tell which
+  sources "merge" joins to this one. The repository does not hold them.[^merge]
+- **A sibling cannot be read.** This covers a failed read, a link out of the repository, a link
+  whose target is not there, a file that does not parse to an object, a drop-in that vanished
+  after the directory read, and a directory that cannot be listed. That file can declare
   the name.
 - **The value is not an array of strings.** The rule skips an item that is not a string.
 

@@ -124,8 +124,8 @@ export function readManagedSource(filename: string): Record<string, unknown>[] |
       : path.dirname(self)
   const bound = repositoryRoot(dir)
   const directory = path.join(dir, DROP_IN_DIRECTORY)
-  // A dangling link, or a link to a directory out of the repository, is a directory
-  // that the rule cannot see.
+  // A link whose target is not there, a link that leads out of the repository, and a path
+  // that cannot be resolved are a directory that the rule cannot see.
   const real = realOf(directory)
   if (typeof real === 'string' ? !isInside(real, bound) : danglingOf(directory) === UNREADABLE) {
     return UNREADABLE
