@@ -28,10 +28,11 @@ definitions still work as aliases.[^task] `MultiEdit` is a legacy tool. `Edit` r
 The rule reports a rule in `allow`, `ask` or `deny` that names:
 
 - **`Task`**, bare or with a specifier. The message gives the same rule with `Agent`: `Task(Explore)` becomes `Agent(Explore)`.
-- **`MultiEdit`**, bare or with a parameter name in `deny` or `ask`, such as `MultiEdit(edits:*)`. The message says to write `Edit`.
+- **`MultiEdit`**, bare. The message says to write `Edit`. No docs page shows a parameter form of `MultiEdit`, so the rule skips every `MultiEdit(...)` rule.
 
-The rule has no option. The docs state the rename as a fact of the current Claude Code, and the old name works, so the advice does not fail
-on an old client in a way a file can show. A client older than v2.1.63 has no `Agent` tool, and it needs `Task`.
+A client older than v2.1.63 has no `Agent` tool, and it needs `Task`. No file shows which client reads it. So the rule reports `Task`
+when you leave the option `minVersion` unset, because the current docs name `Agent`. With `minVersion` below `2.1.63`, the rule makes no
+report for `Task`. It still reports a bare `MultiEdit`, because `Edit` applies to every client.
 
 ### One report for one fault
 
@@ -53,7 +54,15 @@ Pass:
 
 ## Options
 
-None.
+| Option | Default | Use |
+|--------|---------|-----|
+| `minVersion` | unset | The lowest Claude Code version that reads your files, as `major.minor.patch`. Below `2.1.63`, the `Task` report stops. |
+
+```js
+"claude/permissions-legacy-tool-name": ["warn", { minVersion: "2.1.50" }]
+```
+
+The `recommended` and `strict` configs set no option, so they report `Task`.
 
 ## Sources
 
