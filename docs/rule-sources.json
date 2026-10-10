@@ -873,6 +873,18 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "settings-agent-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "agent",
+      "hash": "721d922211e0ecaf19dffeab4df4cd8d474d17457f95b7cfc4358943a24e7fd7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Invoke subagents explicitly",
+      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d"
+    }
+  ],
   "settings-attribution-false": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1065,6 +1077,23 @@
       "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
     }
   ],
+  "settings-env-context-cost": [
+    {
+      "url": "https://code.claude.com/docs/en/prompt-caching",
+      "heading": "Choose the TTL yourself",
+      "hash": "3555d7e2d58416415652bae719bcd284629d03f28386e2a67746dc5e522949de"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/prompt-caching",
+      "heading": "Connecting or removing an MCP server",
+      "hash": "f5b25818ffe348a5a62115434e8da85c3c4fc8b20d4562e5d976003611f365c7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
+    }
+  ],
   "settings-env-credential": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1079,7 +1108,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -1091,7 +1120,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -1104,6 +1133,23 @@
       "hash": "4f15b856c794d8eda7685547ff33fd32093b1a391233e12f012fad2406e37bb6"
     }
   ],
+  "settings-env-format-heuristic": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "MCP output limits and warnings",
+      "hash": "a7be145b597e81241795b548d4f03abd1ccbc5c05b86114e03b80adda114f898"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Enable the PowerShell tool",
+      "hash": "358b621b9e028968eefa970552fde932d65fe91e6e23c1f38d2d58123111d119"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
+    }
+  ],
   "settings-env-ignored-var": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1113,14 +1159,14 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
   "settings-env-numeric-spelling": [
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
   "settings-env-prompt-caching-off": [
@@ -1137,7 +1183,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
   "settings-env-routing": [
@@ -1159,12 +1205,24 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Precedence",
       "hash": "4f15b856c794d8eda7685547ff33fd32093b1a391233e12f012fad2406e37bb6"
+    }
+  ],
+  "settings-env-secret-heuristic": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "How env values interact with your shell",
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
   "settings-env-shadowed": [
@@ -1213,7 +1271,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "e53c5a710b0eea274bcfa555cf445f0594e93ba624644b33a078c958e56324d4"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -1512,6 +1570,33 @@
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
     }
   ],
+  "settings-model-capability": [
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Extended context",
+      "hash": "2ba52e5faf23df35c0f4eff2f7d095a96233b70686329bcc97552e1290d1aec8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Extended thinking",
+      "hash": "73f7fdf3ec8070a0ba2e0925813f50483e0eb6dac7262e190ea7f500f472674d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Adaptive reasoning and fixed thinking budgets",
+      "hash": "fc6931bbfd23772b35edeb001bd6ac1db39b7301d4522cb76fe1469da4e12817"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Model aliases",
+      "hash": "a09e1c9b1762d03557790bd6d2bff27c741d3881a2fb9c76d1c2379d1949c324"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
+    }
+  ],
   "settings-model-list": [
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -1562,6 +1647,23 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "fallbackModel",
       "hash": "a077dac729806f0595939eb723e4dc7e83d5736e1a4ed974e82bdc31e181f81e"
+    }
+  ],
+  "settings-model-pin-version": [
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Model aliases",
+      "hash": "a09e1c9b1762d03557790bd6d2bff27c741d3881a2fb9c76d1c2379d1949c324"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Pin models for third-party deployments",
+      "hash": "7646ed271b02b7eec2a6d8be4879cb78ed3135d7b02aa272a6d32f4be05338c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Override model IDs per version",
+      "hash": "fe4739ce777ae46401f5ebc360cf21142f4afe595de38ce14c5157799f4fa475"
     }
   ],
   "settings-model-value": [
@@ -1619,6 +1721,23 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Choose a model",
       "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+    }
+  ],
+  "settings-nested-project-file": [
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Choose where to start Claude",
+      "hash": "305b0e1ed3d3ddf4b2908deb5ade5754a05605174d836931e3ce709adea23a0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Block reads of generated and vendored code",
+      "hash": "63667dcf98cd2018074df8b2c6a4c9806a595c26b05463dfcbf5e76b07290a14"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Additional directories grant file access, not configuration",
+      "hash": "57a469c76350f730b0bff0223ba1752358abe4ce13d5b6b4e7d5c9fb6d872d4c"
     }
   ],
   "settings-outputstyle-resolves": [
@@ -1907,6 +2026,33 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "How a skill gets its command name",
       "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    }
+  ],
+  "settings-skilloverrides-unknown-skill": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "skillOverrides",
+      "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Override skill visibility from settings",
+      "hash": "26efad2df92f3a3a46b6f73f874c142188e85a984d264ccb37277b4c131cdd90"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How a skill gets its command name",
+      "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Load skills in monorepos and subdirectories",
+      "hash": "23230a64a82408b1348cbdba4a4fed7cee299a72dfd84010244d69f60bbd0a81"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/commands",
+      "heading": "All commands",
+      "hash": "c062c399a79edfe1a9968dbe26791d4ea42c04353adb5dc7216d3609972bc758"
     }
   ],
   "settings-sync-claude-ai-plugins": [

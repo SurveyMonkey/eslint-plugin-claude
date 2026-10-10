@@ -29,3 +29,31 @@ export const SKILL_FIELDS = [
 
 /** The fields that a command file does not accept. */
 export const COMMAND_EXCLUDED: readonly string[] = ['name', 'paths']
+
+/** The bundled skills: the rows of the commands reference that it marks as a skill
+ *  (https://code.claude.com/docs/en/commands#all-commands), checked on Claude Code 2.1.296 on
+ *  2026-10-10. A session can lack some of them, such as `claude-in-chrome` and
+ *  `workflow-authoring`, so the list is a set of valid names, not of available ones. Review it on
+ *  or before the `stale_after` date of docs/rules/settings-skilloverrides-unknown-skill.md. */
+export const BUNDLED_SKILLS: readonly string[] = [
+  'artifact-capabilities',
+  'artifact-diagramming',
+  'batch',
+  'claude-api',
+  'claude-in-chrome',
+  'code-review',
+  'dataviz',
+  'debug',
+  'design',
+  'design-sync',
+  'doctor',
+  'fewer-permission-prompts',
+  'loop',
+  'run',
+  'run-skill-generator',
+  'simplify',
+  'slides',
+  'update-config',
+  'verify',
+  'workflow-authoring',
+]

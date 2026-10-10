@@ -160,6 +160,14 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-managed-value-form`](docs/rules/settings-managed-value-form.md) | In a managed file, `DISABLE_TELEMETRY` and the three like privacy toggles in `env` are truthy, such as `1`, so that Claude Code applies them without an approval dialog | `warn` | `warn` |
 | [`claude/settings-managed-version-floor`](docs/rules/settings-managed-version-floor.md) | In managed settings, `deniedModels` or `availableModelsMatch: "exact"` goes with a `requiredMinimumVersion` of 2.1.283 or later, because earlier versions ignore both keys | `warn` | `warn` |
 | [`claude/statusline-windows-path`](docs/rules/statusline-windows-path.md) | The `statusLine` command has no unquoted backslash path, which any POSIX shell, such as Git Bash on Windows, breaks | `warn` | `warn` |
+| [`claude/settings-agent-exists`](docs/rules/settings-agent-exists.md) | `agent` names a built-in agent or one under `.claude/agents/`; option `allow` for user and plugin agents | `off` | `warn` |
+| [`claude/settings-env-context-cost`](docs/rules/settings-env-context-cost.md) | Shared `.claude/settings.json` does not set `FORCE_PROMPT_CACHING_5M` or `ENABLE_TOOL_SEARCH` to a false value | `off` | `warn` |
+| [`claude/settings-env-format-heuristic`](docs/rules/settings-env-format-heuristic.md) | `MAX_MCP_OUTPUT_TOKENS`, the MCP timeout variables and `CLAUDE_CODE_USE_POWERSHELL_TOOL` take the form that the docs give | `off` | `warn` |
+| [`claude/settings-env-secret-heuristic`](docs/rules/settings-env-secret-heuristic.md) | Shared `.claude/settings.json` `env` has no name that ends in `_KEY`, `_TOKEN`, `_SECRET` or `_PASSWORD`, and no value that has the shape of a credential | `off` | `warn` |
+| [`claude/settings-model-capability`](docs/rules/settings-model-capability.md) | No `[1m]` suffix on a model with no 1M context, and no thinking setting that a model that always thinks ignores | `off` | `warn` |
+| [`claude/settings-model-pin-version`](docs/rules/settings-model-pin-version.md) | Shared `.claude/settings.json` `model` is not an alias that moves with releases; a Bedrock `availableModels` entry has the provider prefix | `off` | `warn` |
+| [`claude/settings-nested-project-file`](docs/rules/settings-nested-project-file.md) | `.claude/settings.json` is at the repository root, not in a subdirectory that Claude Code reads only when a session starts there | `off` | `warn` |
+| [`claude/settings-skilloverrides-unknown-skill`](docs/rules/settings-skilloverrides-unknown-skill.md) | Each `skillOverrides` key names a bundled skill or a skill or command under `.claude/`; option `allow` | `off` | `warn` |
 
 ### Permissions and sandbox
 

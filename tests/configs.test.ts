@@ -546,6 +546,31 @@ const TREE: Record<string, string> = {
   'packages/ll/.claude/settings.local.json': '{}',
   'packages/ll/pkg/.claude/settings.local.json': '{}',
   'packages/ll/pkg/.claude/settings.json': '{}',
+  // The settings rules of #14 that are `off` in `recommended` read these files. Each pair has a
+  // file that reports in `strict` and a file where the rule is silent.
+  'packages/ll/.claude/settings.json': '{}',
+  'packages/oa-agent/.claude/settings.json': '{"agent": "nobody"}',
+  'packages/oa-agent/.claude/settings.local.json': '{"agent": "Explore"}',
+  'packages/oa-skill/.claude/settings.json': '{"skillOverrides": {"nothing": "off"}}',
+  'packages/oa-skill/.claude/settings.local.json': '{"skillOverrides": {"batch": "off"}}',
+  'packages/oa-pin/.claude/settings.json': '{"model": "opus"}',
+  'packages/oa-pin/.claude/settings.local.json': '{"model": "opus"}',
+  'packages/oa-pin/managed-settings.json':
+    '{"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}, "availableModels": ["claude-opus-4-8"]}',
+  'packages/oa-pin/managed-settings.d/10-a.json':
+    '{"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}, "availableModels": ["us.anthropic.claude-opus-4-8"]}',
+  'packages/oa-cap/.claude/settings.json': '{"model": "claude-sonnet-4-5[1m]"}',
+  'packages/oa-cap/.claude/settings.local.json': '{"model": "claude-opus-4-6[1m]"}',
+  'packages/oa-cap/managed-settings.json':
+    '{"availableModels": ["opus"], "model": "claude-opus-5-5", "alwaysThinkingEnabled": false}',
+  'packages/oa-secret/.claude/settings.json': '{"env": {"MY_TOKEN": "abc"}}',
+  'packages/oa-secret/.claude/settings.local.json': '{"env": {"MY_TOKEN": "abc"}}',
+  'packages/oa-cost/.claude/settings.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
+  'packages/oa-cost/.claude/settings.local.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
+  'packages/oa-format/.claude/settings.json': '{"env": {"MCP_TIMEOUT": "30s"}}',
+  'packages/oa-format/.claude/settings.local.json': '{"env": {"MCP_TIMEOUT": "30000"}}',
+  'packages/oa-format/managed-settings.json':
+    '{"availableModels": ["opus"], "env": {"MCP_TIMEOUT": "30s"}}',
   // `settings-webfetch-preflight-skip` reads the project files and the managed files. A
   // `WebFetch(...)` rule in the other file of the folder, or of the managed source, is silent.
   'packages/wf/.claude/settings.json': '{"skipWebFetchPreflight": true}',
@@ -777,6 +802,19 @@ const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
     files: [...PROJECT_FILES, ...MANAGED_FILES],
     severity: 'warn',
   },
+]
+
+// The settings rules of the model and env layer of #14 are `off` in `recommended`. `strict` turns
+// each on at `warn`. They come last in the `modules` list, with the files of each.
+const SETTINGS_OFF_RULES: { name: string; files: string[] }[] = [
+  { name: 'settings-agent-exists', files: PROJECT_FILES },
+  { name: 'settings-env-context-cost', files: SHARED_FILE },
+  { name: 'settings-env-format-heuristic', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-secret-heuristic', files: SHARED_FILE },
+  { name: 'settings-model-capability', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-model-pin-version', files: [...SHARED_FILE, ...MANAGED_FILES] },
+  { name: 'settings-nested-project-file', files: SHARED_FILE },
+  { name: 'settings-skilloverrides-unknown-skill', files: PROJECT_FILES },
 ]
 
 // `settings-schema-url` reports each settings file that is a JSON object with no `$schema`. The
@@ -1108,6 +1146,22 @@ const EXPECTED = [
   'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
 ].sort()
 
+// The reports of the `off` settings rules. They appear in `strict` only, at `warn`. A rule reads
+// only the files of its own glob, so the decoy files report nowhere.
+const STRICT_ONLY = [
+  'packages/oa-agent/.claude/settings.json: claude/settings-agent-exists@1',
+  'packages/oa-cost/.claude/settings.json: claude/settings-env-context-cost@1',
+  'packages/oa-format/.claude/settings.json: claude/settings-env-format-heuristic@1',
+  'packages/oa-format/managed-settings.json: claude/settings-env-format-heuristic@1',
+  'packages/oa-secret/.claude/settings.json: claude/settings-env-secret-heuristic@1',
+  'packages/oa-cap/.claude/settings.json: claude/settings-model-capability@1',
+  'packages/oa-cap/managed-settings.json: claude/settings-model-capability@1',
+  'packages/oa-pin/.claude/settings.json: claude/settings-model-pin-version@1',
+  'packages/oa-pin/managed-settings.json: claude/settings-model-pin-version@1',
+  'packages/ll/pkg/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/oa-skill/.claude/settings.json: claude/settings-skilloverrides-unknown-skill@1',
+]
+
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.
 const AGENT_RULES = [
@@ -1209,10 +1263,16 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
+  it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const isOff = (rules: Linter.Config['rules']) =>
+      SETTINGS_OFF_RULES.some(({ name }) => rules?.[`claude/${name}`] !== undefined)
+    const strict = rulesOf(plugin.configs.strict)
+    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
+    expect(strict.filter(isOff)).toEqual(
+      SETTINGS_OFF_RULES.map(({ name }) => ({ [`claude/${name}`]: 'warn' })),
+    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1223,6 +1283,7 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...SETTINGS_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -1290,12 +1351,20 @@ describe('configs', () => {
     }
   })
 
+  it('turns each off settings rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of SETTINGS_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
   // CI runners are slow, so the two tests that run ESLint get 30 s in place of the 5 s default.
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   }, 30_000)
 
-  it('strict reports the same files as recommended today', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
+  it('strict reports the files of recommended, and those of the off rules', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
   }, 30_000)
 })
