@@ -21,24 +21,24 @@ Cover the results directory of an eval suite with a .gitignore pattern.
 ## Rule details
 
 `claude plugin eval` writes each run to `results/<timestamp>/` in the eval directory of the
-plugin. The directory holds `aggregate-result.json`, `report.html` and the recordings of agent
+plugin. The directory holds `aggregate-result.json`, `report.html` and the saved answers of agent
 mocks. The docs tell the author to add `results/` to `.gitignore`.[^suite]
 
 The lint target is the manifest, `.claude-plugin/plugin.json`. A file in the eval directory has
-no JSON language, and the `results/` directory is not there in a fresh clone. Each plugin has one
+no JSON language. The `results/` directory is not in a fresh clone. Each plugin has one
 manifest, so the rule runs once for each plugin. It reports one message, at the start of the
 manifest. The message names the `results/` directory from the plugin root.
 
 The eval directory is `evals/`. A plugin can set another directory in `experimental.evals`
 of the manifest, for example `quality/evals`.[^dir] The docs accept a relative path of plain
-directory names. An absolute path, or a path with `..`, gives a warning, and the run uses
+directory names. An absolute path, or a path with `..`, prints a `Warning:` line, and the run uses
 `evals/`. The rule does the same: it reads the manifest in the editor, so it does not follow
-the warning of the run. A value that is not a string, an empty segment and a segment `.` give
+that line of the run. A value that is not a string, an empty segment and a segment `.` give
 `evals/` too.
 
 The rule asks `git check-ignore` about a directory in `results/`. A pattern counts when it is in
-a `.gitignore` file of the repository, at the root, or in a directory above the results
-directory. A pattern for files, such as `*.json`, does not cover a directory. The rule does not
+a `.gitignore` file of the repository. The file is at the root, or in a directory above the
+results directory. A pattern for files, such as `*.json`, does not cover a directory. The rule does not
 count two other sources:
 
 - `.git/info/exclude` stays in one clone.
@@ -49,11 +49,11 @@ A later pattern that starts with `!` can take the directory back. The rule then 
 The rule makes no report in these cases:
 
 - The manifest is in no plugin root.
-- The plugin has no eval directory, or the path is a file. The rule does not report a missing
-  directory that `experimental.evals` names.
-- The eval directory is a link to a place out of the repository (ADR 001, Decision 14), or a
-  dangling link. A link to a directory of the repository is read where it leads. A pattern must
-  then cover the target.
+- The plugin has no eval directory, or the path is a file. The rule does not report a directory
+  that `experimental.evals` names and that is not there.
+- The eval directory is a link to a place out of the repository (ADR 001, Decision 14).
+  The same holds for a link to a place that is not there. The rule reads a link to a directory of the repository where
+  it leads. A pattern must then cover the target.
 - The rule cannot read git. There is no `.git` entry at or above the manifest. `git` is not
   installed, or a `git` command fails. A `.git` entry that is not a repository lies inside
   another repository.

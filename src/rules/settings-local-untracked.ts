@@ -3,7 +3,7 @@
 // git tracks the file, or when `.claude` is a link. Claude Code then treats
 // the file as repository-supplied (docs/rules/settings-local-untracked.md).
 // The file must stay out of git, so a clone may hold none. The rule lints the
-// shared `.claude/settings.json` and reads its sibling by path. The link is
+// shared `.claude/settings.json` and reads the file in the same directory by path. The link is
 // read with `lstat`. The index in `src/git-state.ts` tells if git tracks the
 // file. The rule makes no tracked report when git cannot answer.
 import { lstatSync } from 'node:fs'

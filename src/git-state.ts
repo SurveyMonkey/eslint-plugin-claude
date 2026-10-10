@@ -151,8 +151,8 @@ export function gitModeOf(root: string, file: string): string | null | Unreadabl
   return modes.get(path.relative(root, file).split(path.sep).join('/')) ?? null
 }
 
-/** The start of the index path of each file below `dir`: `dir` from `root`
- *  with `/` separators and a final `/`, or the empty text for `root` itself. */
+/** The start of the index path of each file below `dir`. It is `dir` from
+ *  `root` with `/` separators and a final `/`. For `root` itself it is empty. */
 function prefixOf(root: string, dir: string): string {
   const below = path.relative(root, dir).split(path.sep).join('/')
   return below === '' ? '' : `${below}/`
@@ -202,7 +202,7 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
   } catch {
     return UNREADABLE
   }
-  // The path starts with `./`, so that git reads no leading `:` as pathspec
+  // The path starts with `./`, so that git reads no `:` at the start as pathspec
   // magic. `--literal-pathspecs` is not an option here: this command refuses it.
   const target = `./${path.relative(root, file).split(path.sep).join('/')}`
   try {

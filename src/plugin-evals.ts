@@ -1,7 +1,7 @@
 // The eval suite of a plugin. `claude plugin eval` reads the cases from the
-// eval directory: `evals/`, or the relative path in `experimental.evals` of
-// `plugin.json`. The docs say that a path with `..`, an absolute path, or a
-// value that is not usable gives a warning, and the run uses `evals/`
+// eval directory. It is `evals/`, or the relative path in `experimental.evals`
+// of `plugin.json`. An absolute path, a path with `..` or another unusable
+// value prints a `Warning:` line. The run then uses `evals/`
 // (https://code.claude.com/docs/en/plugin-evals#use-a-different-eval-directory).
 // A rule that lints the manifest asks here for the directory of its plugin.
 import path from 'node:path'
@@ -16,10 +16,10 @@ const PLAIN_NAME = /^(?!\.{1,2}$)[^/\\]+$/
 // The start of a path on a drive of Windows. It is an absolute path.
 const DRIVE = /^[A-Za-z]:/
 
-/** The eval directory that `experimental.evals` of the manifest names, as a
- *  path from the plugin root with `/` separators. The result is `evals` when
- *  the value is not there, is not a string, or is not a relative path of
- *  plain directory names. */
+/** The eval directory that `experimental.evals` of the manifest names. It is
+ *  a path from the plugin root with `/` separators. The result is `evals` in
+ *  three cases. The value is not there. It is not a string. It is not a
+ *  relative path of plain directory names. */
 function evalDirName(document: DocumentNode): string {
   const value = lastMember(lastMember(document.body, 'experimental')?.value, 'evals')?.value
   return value?.type === 'String' &&
@@ -30,13 +30,13 @@ function evalDirName(document: DocumentNode): string {
 }
 
 /** The eval directory of the plugin whose manifest is `filename`. The result
- *  is null when the manifest is in no plugin root, or when the directory is
- *  not there, is not a directory, or has a real path out of the repository
- *  (ADR 001, Decision 14). A link to a directory of the repository is read
- *  where it leads.
+ *  is null in four cases. The manifest is in no plugin root. The directory is
+ *  not there. It is not a directory. Its real path is out of the repository
+ *  (ADR 001, Decision 14). The rule reads a link to a directory of the
+ *  repository where it leads.
  *
- *  `name` is the path from the plugin root, `real` is the real path of the
- *  directory, and `bound` is the real path of the repository. */
+ *  `name` is the path from the plugin root. `real` is the real path of the
+ *  directory. `bound` is the real path of the repository. */
 export function evalDirectoryOf(
   filename: string,
   document: DocumentNode,

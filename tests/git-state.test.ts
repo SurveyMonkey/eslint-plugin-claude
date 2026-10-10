@@ -391,7 +391,7 @@ describe('gitIgnores', () => {
     })
     expect(ignores(root, 'a b/z')).toBe(true)
     expect(ignores(root, '-x')).toBe(true)
-    // A leading colon starts pathspec magic, and git would read the path as `target`.
+    // A colon at the start makes pathspec magic, and git would read the path as `target`.
     expect(ignores(root, ':(top)target')).toBe(false)
     expect(ignores(root, 'sub/:(top)target')).toBe(false)
     expect(ignores(root, 'a*')).toBe(false)

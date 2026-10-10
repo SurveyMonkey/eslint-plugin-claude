@@ -21,15 +21,15 @@ Keep settings.local.json out of git and out of a linked .claude directory.
 ## Rule details
 
 `.claude/settings.local.json` is the settings file of one person for one project. Claude Code
-applies its `allow` rules and its additional directories with no trust step, because the file is
-not the work of the repository.[^keep] Two facts end that. The first is a file that git tracks. The
+applies its `allow` rules and its additional directories with no trust step.
+The file is not the work of the repository.[^keep] Two facts end that. The first is a file that git tracks. The
 second is a `.claude` that is a symbolic link. Claude Code then treats the file as
 repository-supplied. It holds the rules of the file until you trust the folder, as it does for
 project rules.[^trust]
 
 The lint target is the shared `.claude/settings.json`, in the same directory. The local file
 must stay out of git, so a clone usually holds none and ESLint cannot lint it. The rule reads the
-sibling by its path. A repository with a tracked `settings.local.json` and no `settings.json`
+file in the same directory by its path. A repository with a tracked `settings.local.json` and no `settings.json`
 gets no report from this rule.
 
 The rule reports at the start of `settings.json`, with one of two messages:
@@ -37,8 +37,8 @@ The rule reports at the start of `settings.json`, with one of two messages:
 - **`tracked`:** git has `settings.local.json` in its index. The message names the path from the
   repository root. Run `git rm --cached` on it.
 - **`symlink`:** the `.claude` directory is a symbolic link. The rule does not follow the link to
-  a place out of the repository. A link to a directory of the repository is read where it leads, so
-  the rule can also report `tracked` for it.
+  a place out of the repository. The rule reads a link to a directory of the repository where it leads.
+  So it can also report `tracked` for it.
 
 A `.gitignore` pattern does not untrack a file. So a pattern that covers a tracked file gives
 `tracked`. [`settings-local-gitignored`](settings-local-gitignored.md) checks the pattern.

@@ -28,8 +28,7 @@ personal notes of one author.
 The lint target is the `CLAUDE.md` in the same directory. Two facts decide this:
 
 - A file that must stay out of git is not in a fresh clone, so ESLint cannot lint it.
-- The `.gitignore` pattern is a fact about the repository, and it matters when no one has made
-  the file yet.
+- The `.gitignore` pattern is a fact about the repository. It matters before anyone makes the file.
 
 The rule asks git two questions about the `CLAUDE.local.md` in the directory of the linted file.
 It reports one message, at the start of the `CLAUDE.md`:
@@ -37,12 +36,12 @@ It reports one message, at the start of the `CLAUDE.md`:
 - **`tracked`:** git has the file in its index. Run `git rm --cached CLAUDE.local.md`.
 - **`notIgnored`:** git does not track the file, and no `.gitignore` pattern covers it. The rule
   reports this when the file is not on the disk too. The check is about the repository, not about
-  one working tree. Without the file, the answer would change from one machine to the next.
+  one checkout. Without the file, the answer would change from one machine to the next.
 
 A tracked file gets the `tracked` message only.
 
-A pattern counts when it is in a `.gitignore` file of the repository, at the root or in a
-directory above the file. The rule does not count two other sources:
+A pattern counts when it is in a `.gitignore` file of the repository. The file is at the root,
+or in a directory above the linted file. The rule does not count two other sources:
 
 - `.git/info/exclude` stays in one clone.
 - The global excludes file stays on one machine. Claude Code writes the global file for
@@ -51,7 +50,7 @@ directory above the file. The rule does not count two other sources:
 A later pattern that starts with `!` can take a file back. The rule then reports `notIgnored`.
 
 Claude Code loads `CLAUDE.local.md` from the project directory and from each directory above the
-working directory.[^import] It does not load a `CLAUDE.local.md` from `.claude/`. So the rule
+directory where you start Claude Code.[^import] It does not load a `CLAUDE.local.md` from `.claude/`. So the rule
 makes no report for `.claude/CLAUDE.md`.
 
 The rule makes no report when it cannot read git (ADR 001, Decision 14):

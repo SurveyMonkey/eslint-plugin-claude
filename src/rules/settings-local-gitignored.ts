@@ -1,10 +1,10 @@
 // A project `.gitignore` must cover `.claude/settings.local.json`
-// (docs/rules/settings-local-gitignored.md). Claude Code writes the pattern to
-// the global excludes file of one machine, and a clone on another machine does
-// not have it. The file may not exist, so the rule lints the shared
-// `.claude/settings.json` and asks `git check-ignore` (`src/git-state.ts`)
-// about the path of its sibling. The rule makes no report when git cannot
-// answer. This is also the case when `.claude` is a link, where git stops
+// (docs/rules/settings-local-gitignored.md). Claude Code writes the pattern to the
+// global excludes file of one machine only. A clone on another machine does not
+// have it. The file may not exist. So the rule lints the shared
+// `.claude/settings.json`. It asks `git check-ignore` (`src/git-state.ts`) about
+// the file in the same directory. The rule makes no report when git cannot
+// answer. This is also the case when `.claude` is a link, because git then stops
 // with an error.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'

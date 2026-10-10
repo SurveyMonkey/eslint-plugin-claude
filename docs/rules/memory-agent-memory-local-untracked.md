@@ -22,14 +22,13 @@ Keep the local memory of a subagent out of git.
 
 A subagent can keep memory between sessions. The `memory` field of the agent sets the scope. The
 `local` scope stores the memory in `.claude/agent-memory-local/<name-of-agent>/`. The docs say
-to use it when the knowledge is specific to the project but must not go into version
-control.[^memory] The `project` scope, in `.claude/agent-memory/`, is the one that a team shares.
+to use it for knowledge of the project that must stay out of version control.[^memory] The `project` scope, in `.claude/agent-memory/`, is the one that a team shares.
 
 A file that git tracks in the `local` directory breaks that rule. The rule reports each such
 file.
 
-The lint target is the memory file itself. This is not the case for the other rules of this
-group, because a tracked file is in each clone, and ESLint can lint it. A memory file that git
+The lint target is the memory file itself. The other rules of this group lint a file in the
+same directory. Here a tracked file is in each clone, so ESLint can lint it. A memory file that git
 does not track is the intended state. The rule makes no report for it. The rule reports one
 message at the start of the file. The message names the path from the repository root.
 

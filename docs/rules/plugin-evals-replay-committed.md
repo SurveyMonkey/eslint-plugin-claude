@@ -22,7 +22,7 @@ Commit the mocks/.replay directory of an eval suite, and do not ignore it.
 
 An agent mock answers with a call to a judge model, so its output varies between runs. A run
 that ends with no error saves each answer in `mock-recordings/` under its results directory. The
-author copies a recording into `mocks/.replay/<server>/`. Later runs answer the same call from
+author copies a saved answer into `mocks/.replay/<server>/`. Later runs answer the same call from
 that copy, with no model call. The docs tell the author to commit `mocks/.replay/` with the rest
 of `mocks/`, so that CI runs repeat.[^replay]
 
@@ -30,14 +30,14 @@ The rule has two messages. It reports one of them, at the start of the manifest.
 the `.replay/` directory from the plugin root.
 
 - **`ignored`:** a `.gitignore` pattern covers `mocks/.replay/` in the eval directory. A pattern
-  such as `.replay/`, `mocks/` or `evals/` does this. Git then ignores each new recording. The
+  such as `.replay/`, `mocks/` or `evals/` does this. Git then ignores each new saved answer. The
   rule reports this also when the directory is not there yet.
 - **`untracked`:** `mocks/.replay/` has an entry on the disk, and git tracks no file in it.
-  A recording is there, and no one has committed it. The rule reports this only when no pattern
+  A saved answer is there, and no one has committed it. The rule reports this only when no pattern
   covers the directory. If git tracks one file, the rule is silent. It does not check each file.
 
-A pattern counts when it is in a `.gitignore` file of the repository, at the root, or in a
-directory above the eval directory. Note that git reads a pattern with a `/` inside it from the
+A pattern counts when it is in a `.gitignore` file of the repository. The file is at the root,
+or in a directory above the eval directory. Git reads a pattern with a `/` inside it from the
 directory of its `.gitignore`. So `mocks/.replay/` in the root file does not cover
 `evals/mocks/.replay/`. The rule does not count two other sources:
 

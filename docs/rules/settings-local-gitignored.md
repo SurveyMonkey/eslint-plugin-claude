@@ -32,12 +32,12 @@ a `.gitignore` of the repository protects each clone.
 
 The lint target is the shared `.claude/settings.json`, in the same directory. The pattern is a
 fact about the repository, and it matters when the local file does not exist yet. So the rule
-asks `git check-ignore` about the path of the sibling. It does not need the file. The rule
+asks `git check-ignore` about the path of the file in the same directory. It does not need the file. The rule
 reports one message, at the start of `settings.json`. The message names the path from the
 repository root.
 
-A pattern counts when it is in a `.gitignore` file of the repository, at the root, in a directory
-above the file, or in the `.claude` directory. The rule does not count two other sources:
+A pattern counts when it is in a `.gitignore` file of the repository. The file is at the root,
+in a directory above the file, or in the `.claude` directory. The rule does not count two other sources:
 
 - `.git/info/exclude` stays in one clone.
 - The global excludes file stays on one machine. This is the file that Claude Code writes.

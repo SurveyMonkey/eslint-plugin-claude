@@ -1,8 +1,8 @@
 // `claude plugin eval` writes each run to `results/<timestamp>/` in the eval
-// directory of the plugin, and the docs tell the author to add `results/` to
+// directory of the plugin. The docs tell the author to add `results/` to
 // `.gitignore` (docs/rules/plugin-evals-results-gitignored.md). The rule lints
-// the manifest of a plugin that has an eval directory. It asks `git
-// check-ignore` (`src/git-state.ts`) about a path in `results/`. The rule
+// the manifest of a plugin that has an eval directory. It asks
+// `git check-ignore` (`src/git-state.ts`) about a path in `results/`. The rule
 // makes no report when git cannot answer.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'

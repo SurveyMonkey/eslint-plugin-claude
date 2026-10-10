@@ -38,9 +38,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' | 'untracked' }> = {
           return
         }
         const replay = path.join(suite.real, 'mocks', '.replay')
-        // A recording sits in `.replay/<server>/`. The names have no extension, so a pattern for
+        // A saved answer sits in `.replay/<server>/`. The names have no extension, so a pattern for
         // files does not cover them.
-        const ignored = gitIgnores(suite.bound, path.join(replay, 'server', 'recording'))
+        const ignored = gitIgnores(suite.bound, path.join(replay, 'server', 'answer'))
         const data = { dir: suite.name }
         // Git refuses a path behind a link, so `ignored` is `UNREADABLE` for a linked directory.
         const entries = ignored === false ? entriesOf(replay) : null

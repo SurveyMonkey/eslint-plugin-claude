@@ -89,7 +89,7 @@ describe(RULE, () => {
     const root = repo({ 'a.txt': 'x' })
     const outside = plain({ 'settings.json': '{}', 'settings.local.json': '{}' })
     symlinkSync(outside, path.join(root, '.claude'))
-    // The rule reads nothing out of the repository, so it cannot report the tracked file.
+    // The rule reads no file out of the repository, so it cannot report the tracked file.
     expect(ids(root)).toEqual(['symlink'])
   })
 
