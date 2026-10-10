@@ -82,7 +82,7 @@ const badMarketSettings = JSON.stringify({
 })
 
 // One string value of 2 MiB makes a file over the limit of the size rule.
-const big = JSON.stringify({ a: 'x'.repeat(2097152) })
+const big = JSON.stringify({ language: 'x'.repeat(2097152) })
 
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
@@ -420,6 +420,18 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // `settings-schema`: an unknown key, an env variable name at the top level, a wrong type and an
+  // unknown field, in each file that it reads. A hidden drop-in is for `settings-managed-file`.
+  // The same content where no rule reads it: another extension, a nested directory, and another
+  // settings file.
+  'packages/ss/.claude/settings.json': '{"modle": "opus"}',
+  'packages/ss/.claude/settings.local.json': '{"DISABLE_TELEMETRY": "1"}',
+  'packages/ss/managed-settings.json': '{"fastMode": "yes"}',
+  'packages/ss/managed-settings.d/10-a.json': '{"worktree": {"base": "head"}}',
+  'packages/ss/managed-settings.d/.20-hidden.json': '{"modle": "opus"}',
+  'packages/ss/managed-settings.d/30-b.txt': '{"modle": "opus"}',
+  'packages/ss/managed-settings.d/sub/40-c.json': '{"modle": "opus"}',
+  'packages/ss/.vscode/settings.json': '{"modle": "opus"}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -498,6 +510,7 @@ const SCOPE_RULES = [
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -661,6 +674,14 @@ const EXPECTED = [
   'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-schema` reads the project and managed files, and no other file.
+  ...[
+    'packages/ss/.claude/settings.json',
+    'packages/ss/.claude/settings.local.json',
+    'packages/ss/managed-settings.json',
+    'packages/ss/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-schema@2`),
+  'packages/ss/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
