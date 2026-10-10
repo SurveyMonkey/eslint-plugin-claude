@@ -10,7 +10,8 @@ import { pathNodes, readPlugin, type StringNode } from '../plugin-manifest.ts'
 
 const name = 'plugin-path-no-backslash' as const
 
-// The `mcpServers` key also takes the URL of a bundle (manifest reference, "Path rules").
+// The `mcpServers` key also takes the `https://` URL of a bundle (manifest reference, "Path
+// rules"). The docs do not name `http://`. The rule skips it too, to avoid a false report.
 const URL_START = /^https?:\/\//
 
 /** The member at the manifest path `key`, or undefined. The last of two members wins. */

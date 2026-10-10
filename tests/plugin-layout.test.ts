@@ -1,6 +1,5 @@
-// The lists are literal copies of the "Standard layout" table and of the
-// section "How each key combines with its default location" of the manifest
-// reference.
+// The lists are literal copies of tables of the manifest reference and the components page. The
+// source of each list is in src/data/plugin-layout.ts.
 import { describe, expect, it } from 'vitest'
 import {
   PLUGIN_COMMAND_FIELDS,
