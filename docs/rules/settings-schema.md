@@ -105,7 +105,8 @@ One fault gets one report. The rule makes no report in these places.
 
 - **Inside `permissions` or `sandbox`.** The permissions group owns both keys, and its rules
   `permissions-schema` and `sandbox-schema` check them. The rule reads neither key. It also
-  leaves `autoMode` and `disableAutoMode` to that group.
+  leaves `autoMode`, `disableAutoMode` and `ignorePatterns` to that group. It makes no report on
+  these three keys or on anything inside them, whatever the type (mid-round ruling 19).
 - **A scope fault.** `settings-key-scope` reports a key in a file that Claude Code does not read
   it from. This rule still checks the value of that key, except for a Global config key, which
   the scope rule reports in every settings file.
