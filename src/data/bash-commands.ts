@@ -40,7 +40,7 @@ export const READ_ONLY_COMMANDS: readonly string[] = [
   'cd',
 ]
 
-/** The read-only commands that still prompt for some arguments. `find` prompts for an action or an
+/** The read-only commands that still prompt for some arguments. `find` prompts for an
  *  unquoted glob, and `cd` prompts for a target out of the working directories
  *  (https://code.claude.com/docs/en/permissions#read-only-commands). A rule for them is not
  *  redundant unless it names the bare command. */

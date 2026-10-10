@@ -40,7 +40,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'intent' }> = {
           !parametersOf(parsed.tool).includes(parameter) ||
           // The colon-star rules report a `:*` in a command rule.
           (COMMAND_RULE_TOOLS.includes(parsed.tool) &&
-            (parsed.specifier as string).includes(':*')) ||
+            /:\*(?:\s|$)/.test(parsed.specifier as string)) ||
           // `permissions-dead-allow` reports an allow rule that a deny or ask rule covers.
           isDeadAllow(objects, parsed)
         ) {

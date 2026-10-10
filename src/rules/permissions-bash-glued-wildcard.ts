@@ -10,7 +10,7 @@ const name = 'permissions-bash-glued-wildcard' as const
 
 /** One program name and a `*` after it, with no space. A `/` makes the word a path, as in
  *  `./scripts/*`. A `:` is the `:*` suffix, which `permissions-bash-colon-star-suffix` reads. */
-const GLUED = /^([^\s*/:]+)\*$/
+const GLUED = /^([^\s*/:\\]+)\*$/
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'glued' }> = {
   meta: {
@@ -32,17 +32,19 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'glued' }> = {
           list === 'allow' && parsed.specifier !== null && COMMAND_RULE_TOOLS.includes(parsed.tool)
             ? GLUED.exec(parsed.specifier.trim())?.[1]
             : undefined
-        if (program !== undefined) {
-          context.report({
-            loc,
-            messageId: 'glued',
-            data: {
-              rule: `${parsed.tool}(${parsed.specifier})`,
-              program,
-              fixed: `${parsed.tool}(${program} *)`,
-            },
-          })
+        // A word that ends in `-`, as `Get-*`, is a family of names and not a program prefix.
+        if (program === undefined || program.endsWith('-')) {
+          continue
         }
+        context.report({
+          loc,
+          messageId: 'glued',
+          data: {
+            rule: `${parsed.tool}(${parsed.specifier})`,
+            program,
+            fixed: `${parsed.tool}(${program} *)`,
+          },
+        })
       }
     })
   },

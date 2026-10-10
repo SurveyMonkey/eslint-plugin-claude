@@ -81,6 +81,10 @@ describe(`${name}: the rules that it leaves alone`, () => {
     expect(ids(allow('Bash(run_in_background:*)', 'Bash(timeout:* x)'))).toEqual([])
   })
 
+  it('reports a :* that is not followed by white space or the end', () => {
+    expect(ids(allow('Bash(timeout:*5)', 'Bash(description:*x)'))).toEqual(['intent', 'intent'])
+  })
+
   it('reports the :* of a tool that has no command pattern', () => {
     expect(ids(allow('Agent(model:*)'))).toEqual(['intent'])
   })

@@ -13,8 +13,8 @@ const name = 'permissions-bash-readonly-redundant' as const
 
 /** The read-only command that the pattern `words` names with no other argument, or undefined. The
  *  bare command is `ls`, and the plain prefix rule is `ls *`. A command that prompts for some
- *  arguments has the bare form only, because its prefix rule can approve a call that prompts
- *  otherwise. */
+ *  arguments has the bare form only. The docs do not say how a prefix rule acts on the forms that
+ *  prompt. */
 function redundantCommand(words: readonly string[]): string | undefined {
   const [command] = words
   if (command === undefined || !READ_ONLY_COMMANDS.includes(command)) {

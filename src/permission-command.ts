@@ -2,6 +2,7 @@
 // `Bash` and the tools of its shape read the pattern by word
 // (https://code.claude.com/docs/en/permissions#wildcard-patterns). The
 // grammar of the rule itself is in `permission-rule.ts`.
+import { paramName } from './permission-rule.ts'
 
 /** The words of `specifier`, split at white space. A `:*` at the end of the
  *  pattern is the same as a final ` *`, so it gives the words before it and
@@ -14,9 +15,10 @@ export function commandWords(specifier: string): string[] {
   return suffix ? [...words, '*'] : words
 }
 
-/** The input parameters of a command tool that the permissions page names. Source: the "Match by
- *  input parameter" section
- *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter), checked on 2026-10-10. */
+/** The input parameters of a command tool. The "Match by input parameter" section
+ *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter) names `run_in_background`
+ *  and says the match works for any scalar parameter of the tool. The other three are fields of
+ *  the Bash tool input. The plugin chooses them. */
 export const COMMAND_PARAMETERS: readonly string[] = [
   'run_in_background',
   'description',
@@ -30,7 +32,5 @@ export const COMMAND_PARAMETERS: readonly string[] = [
  *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter). Only the parameters
  *  that are not the command itself are listed. */
 export function isInputParameterRule(list: string, specifier: string): boolean {
-  return (
-    list !== 'allow' && COMMAND_PARAMETERS.some((name) => specifier.trim().startsWith(`${name}:`))
-  )
+  return list !== 'allow' && COMMAND_PARAMETERS.includes(paramName(specifier) ?? '')
 }
