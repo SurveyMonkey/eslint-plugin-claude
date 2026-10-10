@@ -68,6 +68,9 @@ it('stays silent for a path that holds a space', () => {
     'C:\\Program Files\\node\\node.exe',
     'C:/Program Files/node/node.exe',
     '\\\\host\\my share\\server.exe',
+    ' /opt/my tools/server',
+    `\${CLAUDE_PLUGIN_ROOT}/my tools/server`,
+    `\${HOME}/Library/Application Support/server`,
   ]) {
     expect(ids(lintProject(NAME, at({ command }))), command).toEqual([])
   }
@@ -89,4 +92,9 @@ it('stays silent for a command that is not a string, and an entry that is not an
 it('stays silent for a path Claude Code skips and a file that is not a server map', () => {
   expect(ids(lintProject(NAME, at({ command: 'a b' }), '.claude/mcp.json'))).toEqual([])
   expect(ids(lintProject(NAME, '[]'))).toEqual([])
+})
+it('reports a command that holds a variable reference after the first word', () => {
+  expect(ids(lintProject(NAME, at({ command: `node \${HOME}/server.js` })))).toEqual([
+    'splitCommand',
+  ])
 })

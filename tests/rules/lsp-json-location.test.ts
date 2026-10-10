@@ -28,10 +28,6 @@ it('reports a .lsp.json under .claude/', () => {
   expect(ids(lintAt('.claude/.lsp.json'))).toEqual(['outside'])
   expect(ids(lintAt('.claude/lsp/.lsp.json'))).toEqual(['outside'])
 })
-it('reports a .lsp.json in a subfolder of a plugin, and in .claude-plugin/', () => {
-  expect(ids(lintAt('sub/.lsp.json', PLUGIN))).toEqual(['outside'])
-  expect(ids(lintAt('.claude-plugin/.lsp.json', PLUGIN))).toEqual(['outside'])
-})
 it('reports a .lsp.json in a folder with a .claude-plugin that holds no manifest', () => {
   expect(ids(lintAt('p/.lsp.json', { 'p/.claude-plugin/marketplace.json': '{}' }))).toEqual([
     'outside',
@@ -52,6 +48,13 @@ it('stays silent for a .lsp.json at a plugin root', () => {
     ids(lintAt('plugins/a/.lsp.json', { 'plugins/a/.claude-plugin/plugin.json': '{}' })),
   ).toEqual([])
 })
+it('stays silent for a .lsp.json below a plugin root, where the manifest can name it', () => {
+  expect(ids(lintAt('lsp/.lsp.json', PLUGIN))).toEqual([])
+  expect(ids(lintAt('a/b/.lsp.json', PLUGIN))).toEqual([])
+  expect(ids(lintAt('.claude-plugin/.lsp.json', PLUGIN))).toEqual([])
+  const manifest = '{"name": "p", "lspServers": "./lsp/.lsp.json"}'
+  expect(ids(lintAt('lsp/.lsp.json', { '.claude-plugin/plugin.json': manifest }))).toEqual([])
+})
 it('stays silent for a plugin root with a manifest that does not parse', () => {
   expect(ids(lintAt('.lsp.json', { '.claude-plugin/plugin.json': '{' }))).toEqual([])
 })
@@ -70,6 +73,19 @@ describe('a plugin root that the rule cannot see', () => {
       writeFileSync(path.join(outside, 'meta', 'plugin.json'), '{}')
       symlinkSync(path.join(outside, 'meta'), path.join(root, '.claude-plugin'))
       expect(ids(lintJson(NAME, code, path.join(root, '.lsp.json')))).toEqual([])
+    } finally {
+      rmSync(outside, { recursive: true, force: true })
+    }
+  })
+  it('stays silent when .claude-plugin of an ancestor is a link out of the repository', () => {
+    const root = repo({})
+    const outside = mkdtempSync(path.join(tmpdir(), 'lsp-location-outside-'))
+    try {
+      mkdirSync(path.join(root, 'sub'))
+      mkdirSync(path.join(outside, 'meta'))
+      writeFileSync(path.join(outside, 'meta', 'plugin.json'), '{}')
+      symlinkSync(path.join(outside, 'meta'), path.join(root, '.claude-plugin'))
+      expect(ids(lintJson(NAME, code, path.join(root, 'sub', '.lsp.json')))).toEqual([])
     } finally {
       rmSync(outside, { recursive: true, force: true })
     }

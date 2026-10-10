@@ -1,8 +1,9 @@
 // A stdio `command` with a space and no `args` (docs/rules/mcp-stdio-command-has-args.md). The
 // docs show `command` as the program and `args` as its arguments. They do not say that a `command`
 // with a space fails, so the rule is a heuristic. A path can hold a space, so the rule skips a
-// `command` that starts as an absolute path. `mcp-hidden-whitespace` owns a space at the start or
-// end of the value. A remote server, and an entry that has a `url`, are not stdio.
+// `command` that starts as an absolute path or with a variable reference. `mcp-hidden-whitespace` owns a space at the start or
+// end of the value. A remote server is not stdio. An entry with a `url` and no `type` is not
+// stdio.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -10,8 +11,9 @@ import { lintedServers } from '../mcp-servers.ts'
 
 const name = 'mcp-stdio-command-has-args' as const
 
-// An absolute path: a leading `/`, a drive letter, or a network share.
-const ABSOLUTE_PATH = /^(?:\/|[A-Za-z]:[\\/]|\\\\)/
+// An absolute path (a `/` at the start, a drive letter, or a network share), or a start that is a
+// variable reference. The variable can hold a path with a space.
+const ABSOLUTE_PATH = /^(?:\/|[A-Za-z]:[\\/]|\\\\|\$\{)/
 
 const rule: JSONRuleDefinition<{ MessageIds: 'splitCommand' }> = {
   meta: {

@@ -3,8 +3,8 @@
 // `args`, `env`, `url`, `headers`, `headersHelper`, `oauth`, `timeout`, `alwaysLoad`) and of
 // `oauth` (`clientId`, `callbackPort`, `authServerMetadataUrl`, `scopes`). They do not say that
 // another key is an error, so the rule is a heuristic. The bound of `callbackPort` is the range
-// of a TCP port. The docs state no range. An `sdk` entry is for SDK host applications and its keys
-// are not listed, so the rule skips it. A message names the key and never the value.
+// of a TCP port. The docs state no range. An `sdk` entry is an in-process server that the app registers, and
+// its keys are not listed, so the rule skips it. A message names the key and never the value.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
