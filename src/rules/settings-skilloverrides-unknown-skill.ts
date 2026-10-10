@@ -2,7 +2,8 @@
 // (docs/rules/settings-skilloverrides-unknown-skill.md). A heuristic, and `off` in `recommended`.
 // The bundled skills are in `src/data/skill-fields.ts`, and their aliases in
 // `src/data/settings-keys.ts`. The rule reads the `.claude/skills/` and `.claude/commands/`
-// folders of the project and of each directory above it, up to the repository root. The option `allow` lists the user skills that a repository cannot show.
+// folders of the project and of each directory above it, up to the repository root. The option `allow` lists the user skills that a repository cannot
+// show.
 // A key with a colon names a plugin skill, a nested skill or a command in a subfolder, and the
 // rule does not check it. `settings-skilloverrides-key` reports an alias in a project file, so
 // the rule accepts an alias. The rule does not check a managed file, as it cannot see the

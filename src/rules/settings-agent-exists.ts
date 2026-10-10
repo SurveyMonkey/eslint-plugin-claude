@@ -1,8 +1,8 @@
 // The `agent` setting of a project or local settings file must name an agent that the repository
 // can show (docs/rules/settings-agent-exists.md). A heuristic, and `off` in `recommended`. The
 // built-in agents are in `src/data/agent-fields.ts`. The rule reads the `.claude/agents/` folders
-// of the project and of each directory above it, up to the repository root. The option `allow` lists the user and plugin agents that a repository cannot
-// show. The rule does not check a managed file. A managed file applies to every project on a
+// of the project and of each directory above it, up to the repository root. The option `allow`
+// lists the user and plugin agents that a repository cannot show. The rule does not check a managed file. A managed file applies to every project on a
 // machine, so the project agents that it names are not in the repository that holds it.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'

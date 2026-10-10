@@ -32,7 +32,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'nested' }> = {
       Document(node) {
         const root = repositoryRoot(project)
         const here = realDirectory(project)
-        // A project with a real path out of the repository is not in the repository, so it gets no report.
+        // A project with a real path out of the repository is not in the repository. It gets no report.
         if (here !== root && isInside(here, root)) {
           const directory = path.relative(root, here).split(path.sep).join('/')
           context.report({ node: node.body, messageId: 'nested', data: { directory } })
