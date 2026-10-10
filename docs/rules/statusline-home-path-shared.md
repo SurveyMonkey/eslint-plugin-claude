@@ -25,13 +25,13 @@ each person. `strict` turns it on at `warn`.
 
 The `/statusline` command writes a script to `~/.claude/` and sets `statusLine.command` to its path.[^command]
 The status line page shows `~/.claude/statusline.sh` as the example command.[^manual] The home folder
-belongs to one user. A person who opens the repository has no such script, and the status line fails.
+belongs to one user. A person who opens the repository has no such script.
 
 The rule reports a `statusLine.command` string with the text `~/.claude/`. The report is on the command.
 The rule reads the text of the command and reads no file.
 
 `settings-committed-helper-command` reports each shell command key in the shared file. This rule adds
-the finding that the path is in a home folder.
+the report that the path is in a home folder.
 
 ### What the rule does not check
 

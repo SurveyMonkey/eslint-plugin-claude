@@ -26,7 +26,7 @@ a fresh checkout, and the rule then reports it. `strict` turns the rule on at `w
 Each entry of the two lists is a directory path relative to the repository root.[^symlink][^sparse] The
 rule reports an entry in these cases. The report is on the entry.
 
-- `absolute`: the entry starts with `/` or `\`, or with a drive letter.
+- `absolute`: the entry starts with `/` or `\`, or with a drive letter. The rule reads `\` as `/` in the other checks.
 - `parent`: the entry has a `..` segment.
 - `missing`: no such path is in the repository.
 - `file`: the path is a file, and not a directory.
@@ -34,14 +34,15 @@ rule reports an entry in these cases. The report is on the entry.
 The large codebases page says that sparse checkout writes only the listed directories and the root-level
 files.[^large]
 
-The first two reports read no file. For the other two, the rule looks for the entry from the repository
-root. The root is the first folder at or above the `.claude/` folder that holds `.git`. The rule looks at
+The first two reports do not look at the entry on the disk. For the other two, the rule looks for the entry
+from the repository root. The root is the first folder at or above the folder that holds `.claude/` and
+that holds `.git`. The rule looks at
 no path out of the repository (ADR 001, Decision 14).
 
 ### What the rule does not check
 
-- A path that the rule cannot see gets no report. These are a link that leads out of the repository, a
-  dangling link, and a folder that the rule cannot read.
+- A path that the rule cannot see gets no report. The rule cannot see a link out of the repository, a link
+  to nothing, or a folder that it cannot read.
 - An entry that is not a string, and a list that is not an array. `settings-schema` reports them.
 - `worktree.baseRef`, `worktree.bgIsolation` and `worktree.location`.
 - A managed file. A managed file applies to every project, so no repository root is known.
