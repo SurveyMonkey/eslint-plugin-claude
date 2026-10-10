@@ -103,7 +103,7 @@ describe('claude-md-agents-md-variant message and schema', () => {
 
   it('says that Claude Code never reads the file, and where it reads instructions', () => {
     expect(lint([]).map((m) => m.message)).toEqual([
-      'Claude Code never reads this file. It reads `AGENTS.md` and `.claude/AGENTS.md`. Move the text there, or list the path in the option `allow` if another tool reads it.',
+      'Claude Code never reads this file. Move the text to `CLAUDE.md`, or to `AGENTS.md` if no `CLAUDE.md` file exists. Or list the path in the option `allow` if another tool reads it.',
     ])
   })
   it('accepts an empty object and a list of strings', () => {

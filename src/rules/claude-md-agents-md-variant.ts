@@ -1,8 +1,8 @@
 // An `AGENTS.md` variant that Claude Code never reads (docs/rules/claude-md-agents-md-variant.md).
 // The docs list three: `AGENTS.local.md`, `AGENTS.override.md`, and anything below a `.agents/`
-// directory. A repository can keep one of them for another coding tool, so the option `allow`
-// lists the paths to leave out. The rule lints Markdown files below `.agents/` only, because
-// ESLint reads no other file type as Markdown.
+// directory. A repository can keep one of them for another tool. So the option `allow` lists
+// the paths to leave out. The rule lints Markdown files below `.agents/` only, because ESLint
+// reads no other file type as Markdown.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -37,7 +37,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'variant'
     defaultOptions: [{ allow: [] }],
     messages: {
       variant:
-        'Claude Code never reads this file. It reads `AGENTS.md` and `.claude/AGENTS.md`. Move the text there, or list the path in the option `allow` if another tool reads it.',
+        'Claude Code never reads this file. Move the text to `CLAUDE.md`, or to `AGENTS.md` if no `CLAUDE.md` file exists. Or list the path in the option `allow` if another tool reads it.',
     },
   },
   create(context) {
