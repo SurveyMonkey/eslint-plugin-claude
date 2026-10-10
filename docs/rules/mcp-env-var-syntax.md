@@ -29,9 +29,9 @@ server then gets the text, for example `$HOME/bin/server`, and not a path.
 The rule reports these forms in a string of those five fields:
 
 - `$VAR`.
-- `%VAR%`.
 - `${VAR` followed by one of the operators `-`, `:=`, `=`, `:?`, `?`, `:+` and `+`, such as
   `${VAR-x}` and `${VAR:=x}`. The rule does not read other operators, such as `#`, `%` and `/`.
+- `%VAR%`.
 
 The report is on the string, and the message names one form that it found, in the order of this list. There is one
 report for each string.

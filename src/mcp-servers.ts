@@ -207,9 +207,18 @@ function collect(
       declarations.push({ name: keyOf(member.name), member, node: at ?? member.name, from })
     }
   }
+  // An MCP file that is not an object, or whose `mcpServers` is not an object, has a shape that
+  // the rule cannot read as a map of servers (ADR 001, Decision 14).
+  const shapeFault = (file: ValueNode | null | typeof UNREADABLE) =>
+    kind.key === 'mcpServers' &&
+    file !== null &&
+    file !== UNREADABLE &&
+    (file.type !== 'Object' ||
+      (lastMember(file, 'mcpServers') !== undefined &&
+        lastMember(file, 'mcpServers')?.value.type !== 'Object'))
   const bound = repositoryRoot(root)
   const body = jsonBodyState(path.join(root, kind.rootFile), bound)
-  gaps.incomplete = body === UNREADABLE
+  gaps.incomplete = body === UNREADABLE || shapeFault(body)
   add(body === null || body === UNREADABLE ? [] : kind.rootMembers(body), kind.rootFile)
   // The rule reads a file once, also when the manifest names it twice, with the path of the root
   // file, or through a link. Only a path that the rule accepts counts as read.
@@ -233,7 +242,7 @@ function collect(
       }
       read.add(target.real)
       const file = jsonBodyState(target.file, bound)
-      gaps.incomplete ||= file === null || file === UNREADABLE
+      gaps.incomplete ||= file === null || file === UNREADABLE || shapeFault(file)
       add(file === null || file === UNREADABLE ? [] : kind.fileMembers(file), item.value, item)
     } else if (item?.type === 'Object') {
       add(lastMembers(item.members), 'an inline map')

@@ -1,8 +1,8 @@
 // A server with `alwaysLoad: true` loads all its tools upfront and holds startup for up to five
 // seconds (MCP page, "Exempt a server from deferral"). The docs give no number, so the option
 // `max` has the default 2 of the inventory row. A plugin declares servers in `.mcp.json`, in
-// `.json` files and inline, so the rule counts the readable sources of one plugin. The count is a
-// lower bound when a source cannot be read.
+// `.json` files and inline, so the rule counts the sources of one plugin. It stays silent when it
+// cannot read a source.
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -104,11 +104,37 @@ it('reads the linted text of the root file, and not the text on disk', () => {
     ids(lint(mapOf(load(['a'])), 'p/.mcp.json', { ...files, 'p/.mcp.json': mapOf(load(NAMES)) })),
   ).toEqual([])
 })
-it('reports when the readable sources alone pass max, also with a source it cannot read', () => {
-  const three = manifest({ mcpServers: [load(['a', 'b', 'c']), './gone.json', './b.mcpb'] })
-  expect(ids(lint(three, PLUGIN))).toEqual(['tooMany'])
-  const two = manifest({ mcpServers: [load(['a', 'b']), './gone.json'] })
-  expect(ids(lint(two, PLUGIN))).toEqual([])
+it('stays silent when a source it would count cannot be read, as it can replace a server', () => {
+  const three = load(['a', 'b', 'c'])
+  expect(ids(lint(manifest({ mcpServers: three }), PLUGIN))).toEqual(['tooMany'])
+  for (const gap of ['./gone.json', './b.mcpb', 'https://x.test/m.json']) {
+    expect(ids(lint(manifest({ mcpServers: [three, gap] }), PLUGIN)), gap).toEqual([])
+  }
+  const files = { 'p/more.json': '{ not json' }
+  expect(ids(lint(manifest({ mcpServers: [three, './more.json'] }), PLUGIN, files))).toEqual([])
+  const shape = { 'p/more.json': '{"mcpServers": "x"}' }
+  expect(ids(lint(manifest({ mcpServers: [three, './more.json'] }), PLUGIN, shape))).toEqual([])
+  const list = { 'p/more.json': '[]' }
+  expect(ids(lint(manifest({ mcpServers: [three, './more.json'] }), PLUGIN, list))).toEqual([])
+})
+it('stays silent when the root file of a plugin does not read or has no server map', () => {
+  const three = manifest({ mcpServers: load(['a', 'b', 'c']) })
+  expect(ids(lint(three, PLUGIN, { 'p/.mcp.json': '{ not json' }))).toEqual([])
+  expect(ids(lint(three, PLUGIN, { 'p/.mcp.json': '{"mcpServers": []}' }))).toEqual([])
+})
+it('stays silent for a plugin .mcp.json when its manifest does not parse', () => {
+  const files = { [PLUGIN]: '{ not json' }
+  expect(ids(lint(mapOf(load(NAMES)), 'p/.mcp.json', files))).toEqual([])
+  const fine = { [PLUGIN]: manifest({}) }
+  expect(ids(lint(mapOf(load(NAMES)), 'p/.mcp.json', fine))).toEqual(['tooMany'])
+})
+it('counts a server with a repeated alwaysLoad by its last member', () => {
+  const entry = '{"command": "x", "alwaysLoad": true, "alwaysLoad": false}'
+  const code = `{"mcpServers": {"a": ${entry}, "b": ${entry}, "c": ${entry}}}`
+  expect(ids(lint(code, '.mcp.json'))).toEqual([])
+})
+it('applies the default max when the options are an empty object', () => {
+  expect(ids(lint(mapOf(load(NAMES.slice(0, 3))), '.mcp.json', {}, [{}]))).toEqual(['tooMany'])
 })
 it('ignores a root file that is a link out of the repository', () => {
   const root = repo({})
@@ -131,7 +157,8 @@ it('ignores a root file that is a link out of the repository', () => {
         ],
         { filename: file },
       )
-    expect(ids(run(manifest({ mcpServers: load(['a', 'b', 'c']) })))).toEqual(['tooMany'])
+    // The link leaves the repository, so the rule cannot read the root file and stays silent.
+    expect(ids(run(manifest({ mcpServers: load(['a', 'b', 'c']) })))).toEqual([])
     expect(ids(run(manifest({ mcpServers: load(['a', 'b']) })))).toEqual([])
   } finally {
     rmSync(outside, { recursive: true, force: true })

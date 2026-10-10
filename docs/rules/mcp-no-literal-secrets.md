@@ -37,7 +37,7 @@ match, and `KEY_FILE`, `AUTHOR` and `MONKEY` do not. The words are the list in
 The rule reads these places:
 
 - `env`: a variable with a credential name.
-- `headers`: a header with a credential name, in a project file. A scheme word such as `Bearer` is
+- `headers`: a header with a credential name, in a project file and in `managed-mcp.json`. A scheme word such as `Bearer` is
   not part of the value.
 - `args`: `--token=x`, `NAME=x`, `Name: x`, and a flag with a credential name followed by its value.
 - `url`: user information before the `@`, such as `https://user:pass@host`. A user name with no
@@ -45,7 +45,9 @@ The rule reads these places:
   parse the URL. It does not read a secret in the query string.
 
 A value is a literal when it has text, holds no `${` reference, and is not a bare `$NAME` or
-`%NAME%` (that is for `mcp-env-var-syntax`). The report is on the string. The message names the
+`%NAME%` (that is for `mcp-env-var-syntax`). A value is a setting and not a credential when it is
+a Boolean word (`true`, `false`), `none`, `null` or a plain integer, in any case. So `DISABLE_AUTH=true`
+and `--auth none` make no report. The report is on the string. The message names the
 place and the server, and never holds the value.
 
 The split with `claude plugin validate`: from Claude Code v2.1.281, validate warns about a header

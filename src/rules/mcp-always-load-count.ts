@@ -1,23 +1,24 @@
 // The number of servers with `alwaysLoad: true` (docs/rules/mcp-always-load-count.md). Each loads
-// all its tools upfront and can hold startup for up to five seconds by default. The MCP page says to use it for
-// "a small number of tools" and gives no number, so the option `max` has the default 2 of the
-// inventory row, and the message names the configured limit and claims no docs number.
+// all its tools upfront. Startup can wait for it for up to five seconds by default. The MCP page
+// says to use it for "a small number of tools" and gives no number. So the option `max` has the
+// default 2 of the inventory row, and the message names the configured limit.
 // A plugin declares servers in `.mcp.json`, in `.json` files that the manifest names and inline,
-// and the sources add up. The rule counts the sources that it can read. A source that it cannot
-// read can add servers, or replace a server of an earlier source (the last name wins). So the
-// count is a lower bound in the usual case, and the message says "At least". The report is on an `alwaysLoad: true` of the linted file.
+// and the sources add up. A source that the rule cannot read can replace a server of an earlier
+// source (the last name wins). So the rule is silent when it cannot read a source that it would
+// count (ADR 001, Decision 14). The message says "At least", as the row states: a server of
+// another scope can add to the count. The report is on an `alwaysLoad: true` of the linted file.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
 import {
+  jsonBodyState,
   type LintedServer,
   lintedServers,
   mcpFileKind,
-  pluginMcpDeclarations,
-  readJsonBody,
+  pluginMcpSources,
 } from '../mcp-servers.ts'
-import { repositoryRoot } from '../skill-tree.ts'
+import { repositoryRoot, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'mcp-always-load-count' as const
 
@@ -35,27 +36,34 @@ const flagOf = (entry: ValueNode) => {
 /** A server that loads with the linted file, and whether the linted file holds it. */
 type Source = LintedServer & { own: boolean }
 
-/** The servers that load with the linted file `filename`, in load order. A project file stands
- *  alone. A plugin file adds the other sources of its plugin. The linted `.mcp.json` is read from
- *  its text, and not from disk. */
-function serversOf(filename: string, body: ValueNode): Source[] {
+/** The servers that load with the linted file `filename`, in load order, and whether the rule
+ *  read every source that it would count. A project file stands alone. A plugin file adds the
+ *  other sources of its plugin. The linted `.mcp.json` is read from its text, and not from disk. */
+function serversOf(filename: string, body: ValueNode): { servers: Source[]; complete: boolean } {
   const own = lintedServers(filename, body).map((server) => ({ ...server, own: true }))
   const manifestFile = path.basename(filename) === 'plugin.json'
   if (!manifestFile && mcpFileKind(filename) !== 'plugin') {
-    return own
+    return { servers: own, complete: true }
   }
   const root = manifestFile
     ? path.dirname(path.dirname(path.resolve(filename)))
     : path.dirname(path.resolve(filename))
   const manifest = manifestFile
     ? body
-    : readJsonBody(path.join(root, '.claude-plugin', 'plugin.json'), repositoryRoot(root))
+    : jsonBodyState(path.join(root, '.claude-plugin', 'plugin.json'), repositoryRoot(root))
+  if (manifest === UNREADABLE) {
+    return { servers: own, complete: false }
+  }
   // The linted file stands for its own sources. The others come from disk.
-  const others = pluginMcpDeclarations(root, manifest)
+  const sources = pluginMcpSources(root, manifest)
+  const others = sources.declarations
     .filter(({ from }) => manifestFile === (from === '.mcp.json'))
     .map(({ name: server, member }) => ({ name: server, member, own: false }))
   // The file at the plugin root loads first.
-  return manifestFile ? [...others, ...own] : [...own, ...others]
+  return {
+    servers: manifestFile ? [...others, ...own] : [...own, ...others],
+    complete: sources.complete,
+  }
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooMany' }> = {
@@ -84,7 +92,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooMany' }> 
       Document(node) {
         // Of two servers with one name, the last counts, as Claude Code replaces the earlier one.
         const effective = new Map<string, Source>()
-        for (const server of serversOf(context.filename, node.body)) {
+        const { servers, complete } = serversOf(context.filename, node.body)
+        // A source that the rule cannot read can replace a flagged server by its name, so the
+        // readable sources do not prove a count.
+        if (!complete) {
+          return
+        }
+        for (const server of servers) {
           effective.set(server.name, server)
         }
         const flagged = [...effective.values()].flatMap((server) => {

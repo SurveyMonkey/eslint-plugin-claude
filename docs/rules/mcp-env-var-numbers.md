@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-env-var-numbers, which reports an MCP timeout variable in the env block of a settings file whose plain number is below 1000, because the unit is milliseconds and the number is most likely seconds.
+description: The ESLint rule claude/mcp-env-var-numbers, which reports an MCP timeout variable in the env block of a settings file whose plain number is from 1 to 999, because the unit is milliseconds and the number is most likely seconds.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -22,7 +22,7 @@ The rule is `off` in `recommended`. It is a heuristic.
 
 ## Rule details
 
-The env vars reference gives five MCP timeouts in milliseconds:[^variables]
+The rule reads five of the MCP timeouts that the env vars reference gives in milliseconds:[^variables]
 
 - `MCP_TIMEOUT`: the startup timeout of a server.
 - `MCP_TOOL_TIMEOUT`: the timeout of a tool call.

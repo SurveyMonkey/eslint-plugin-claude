@@ -157,3 +157,11 @@ it('reads each string, also after one that is not a string', () => {
     ids(lintProject(NAME, at({ command: 'x', args: [1, '$A'], env: { K: 5, L: '$A' } }))),
   ).toEqual(['syntax', 'syntax'])
 })
+it('reads the last of two env or header members with one name', () => {
+  const env = '{"mcpServers": {"a": {"command": "x", "env": {"K": "$A", "K": "ok"}}}}'
+  expect(ids(lintProject(NAME, env))).toEqual([])
+  const headers = '{"mcpServers": {"a": {"url": "http://x", "headers": {"K": "$A", "K": "ok"}}}}'
+  expect(ids(lintProject(NAME, headers))).toEqual([])
+  const last = '{"mcpServers": {"a": {"command": "x", "env": {"K": "ok", "K": "$A"}}}}'
+  expect(ids(lintProject(NAME, last))).toEqual(['syntax'])
+})

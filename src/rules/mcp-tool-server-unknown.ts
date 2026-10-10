@@ -68,8 +68,9 @@ function startsBlock(file: string): boolean {
 /** The servers of the project at `project`: the `mcpServers` of its `.mcp.json`, and the inline
  *  servers of the agent files in `.claude/agents`. The result is null when a source cannot be
  *  read, or when there is no `.mcp.json` with an `mcpServers` object to rest on. A file with no
- *  frontmatter block declares none. A file with a block that does not parse can hold any server,
- *  so the result is null. */
+ *  frontmatter block declares none. A file that starts a block that gives no fields is skipped by
+ *  Claude Code if the YAML does not parse. The YAML parser of the rule can differ from the parser
+ *  of Claude Code, so the result is null (ADR 001, Decision 14). */
 function projectServers(project: string): Known | null {
   const bound = repositoryRoot(project)
   const body = jsonBodyState(path.join(project, '.mcp.json'), bound)
