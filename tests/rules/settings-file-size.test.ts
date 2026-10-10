@@ -29,6 +29,17 @@ jsonTester.run('settings-file-size (valid)', rule, {
     { name: 'at the limit, local file', code: objectOfBytes(LIMIT), filename: local },
     { name: 'at the limit, managed file', code: objectOfBytes(LIMIT), filename: managed },
     { name: 'at the limit, drop-in', code: objectOfBytes(LIMIT), filename: dropIn },
+    // Claude Code ignores a hidden drop-in, so the rule makes no report on it.
+    {
+      name: 'hidden drop-in over the limit',
+      code: objectOfBytes(LIMIT + 1),
+      filename: 'managed-settings.d/.20-big.json',
+    },
+    {
+      name: 'hidden drop-in over the limit, in a path',
+      code: objectOfBytes(LIMIT + 1),
+      filename: 'etc/managed-settings.d/.20-big.json',
+    },
     // A custom limit: at it, silent.
     { code: objectOfBytes(100), filename: project, options: [{ max: 100 }] },
     { code: '{}', filename: project, options: [{ max: 2 }] },
@@ -70,6 +81,13 @@ jsonTester.run('settings-file-size (invalid)', rule, {
       name: 'one byte over, drop-in',
       code: objectOfBytes(LIMIT + 1),
       filename: dropIn,
+      errors: [{ messageId: 'tooLarge' }],
+    },
+    // A hidden name outside the directory is no drop-in.
+    {
+      name: 'hidden settings file outside managed-settings.d',
+      code: objectOfBytes(LIMIT + 1),
+      filename: '.claude/.settings.local.json',
       errors: [{ messageId: 'tooLarge' }],
     },
     // An explicit limit equal to the default gives the same message as the default.
@@ -170,26 +188,5 @@ describe('settings-file-size option schema', () => {
     expect(() => lint([{ max: 1.5 }])).toThrow()
     expect(() => lint([{ max: LIMIT + 1 }])).toThrow()
     expect(() => lint([{ min: 1 }])).toThrow()
-  })
-})
-
-// Claude Code ignores a hidden drop-in, so the rule makes no report on it.
-describe('settings-file-size hidden drop-in', () => {
-  const lint = (filename: string) =>
-    new Linter().verify(
-      objectOfBytes(LIMIT + 1),
-      [
-        {
-          files: ['**/*.json'],
-          plugins: { json, claude: plugin },
-          language: 'json/json',
-          rules: { 'claude/settings-file-size': 'error' },
-        },
-      ],
-      { filename },
-    )
-
-  it.fails('makes no report on a hidden drop-in over the limit', () => {
-    expect(lint('managed-settings.d/.20-big.json')).toEqual([])
   })
 })
