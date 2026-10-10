@@ -24,7 +24,7 @@ The rule is `off` in `recommended`. The rule is a heuristic.
 
 The docs describe `name` as a "Unique identifier of at most 256 characters, such as `code-reviewer`
 or `reviewer-v2`".[^fields] They do not require lowercase words. The file name does not have to
-match the `name`.[^fields] Each example in the docs has the form `^[a-z0-9]+(-[a-z0-9]+)*$`.
+match the `name`.[^fields] Each example of a custom agent name in the docs has the form `^[a-z0-9]+(-[a-z0-9]+)*$`.
 
 The rule reports a `name` that does not match this form. The report is on the value. The rule never
 requires the `name` to equal the file name.

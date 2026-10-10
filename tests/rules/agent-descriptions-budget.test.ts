@@ -1,6 +1,6 @@
-// The sub-agents page and the errors page: "When the combined descriptions of your subagents,
-// except the built-in ones, exceed 15,000 tokens, Claude Code shows a warning at startup". "Each
-// agent counts its name plus its `description` frontmatter." The docs give no characters per
+// The errors page: "The combined descriptions of your subagents, except the built-in ones, exceed
+// 15,000 tokens as Claude Code estimates them." The sub-agents page: "Each agent counts its name
+// plus its `description` frontmatter." The docs give no characters per
 // token, so the rule estimates. The rule sums the agents of one scope, on disk.
 import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'

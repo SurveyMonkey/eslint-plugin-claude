@@ -41,7 +41,8 @@ holds only the files that the key names.[^replace]
 - A plugin agent with no `name` takes the name of its file.
 - A field that is not a string adds nothing.
 - A manifest path adds nothing when it does not start with `./`, does not end in `.md`, leaves
-  the plugin root, or names a file that is not there.
+  the plugin root, or names a file that is not there. A link to a file out of the plugin root
+  adds nothing.
 
 The rule reports at line 1 of each agent file of a scope that is over the limit. The message gives
 the estimate for the scope and the share of that file. It reads the file that it lints from the text

@@ -4,6 +4,7 @@
 // cannot see gives null. An agent file also gives its scope root. The manifest
 // key `agents` of a plugin names its agent files. It replaces the `agents/`
 // directory scan (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location).
+// The fields table of that page says that the key takes `.md` files and no directory.
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
