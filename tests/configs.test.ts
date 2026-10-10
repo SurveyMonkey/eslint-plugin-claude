@@ -573,6 +573,14 @@ const TREE: Record<string, string> = {
   'packages/ent/.claude/agent-memory/rev/MEMORY.md': '- [Testing](testing.md): first\n  second\n',
   'packages/ent/.claude/agent-memory/rev/topic.md': '- [Testing](testing.md): first\n  second\n',
   'packages/ent/MEMORY.md': '- [Testing](testing.md): first\n  second\n',
+  // `memory-topic-frontmatter`: a topic file with a `type` that is none of the four kinds. A valid
+  // file, the same text in the index, in a deeper folder and outside `.claude/agent-memory/<name>/`.
+  'packages/tf/.claude/agent-memory/rev/bad.md': '---\ntype: note\n---\n',
+  'packages/tf/.claude/agent-memory/rev/ok.md':
+    '---\ntype: user\nmodified: 2026-10-14T09:30:00Z\n---\n',
+  'packages/tf/.claude/agent-memory/rev/MEMORY.md': '---\ntype: note\n---\n',
+  'packages/tf/.claude/agent-memory/rev/sub/bad.md': '---\ntype: note\n---\n',
+  'packages/tf/docs/bad.md': '---\ntype: note\n---\n',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
@@ -759,6 +767,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-procedure-to-skill': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'memory-agent-memory-orphan': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
   'memory-index-entry-format': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
+  'memory-topic-frontmatter': ['markdown/gfm', ['**/.claude/agent-memory/*/*.md']],
   'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
@@ -1059,6 +1068,8 @@ const STRICT_ONLY = [
   'packages/ica/AGENTS.md: claude/claude-md-import-in-code-span@1',
   // `memory-index-entry-format` reads the `MEMORY.md` index, and no other file.
   'packages/ent/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-entry-format@1',
+  // `memory-topic-frontmatter` reads the topic files of a subagent, and no other file.
+  'packages/tf/.claude/agent-memory/rev/bad.md: claude/memory-topic-frontmatter@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

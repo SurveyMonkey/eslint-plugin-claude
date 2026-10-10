@@ -56,6 +56,7 @@ import memoryIndexEntryFormat from './rules/memory-index-entry-format.ts'
 import memoryIndexMaxSize from './rules/memory-index-max-size.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
+import memoryTopicFrontmatter from './rules/memory-topic-frontmatter.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -232,6 +233,7 @@ const modules = [
   claudeMdProcedureToSkill,
   memoryAgentMemoryOrphan,
   memoryIndexEntryFormat,
+  memoryTopicFrontmatter,
   rulesPathsNoMatch,
 ]
 
@@ -369,6 +371,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-procedure-to-skill': 'off',
   'memory-agent-memory-orphan': 'off',
   'memory-index-entry-format': 'off',
+  'memory-topic-frontmatter': 'off',
   'rules-paths-no-match': 'off',
 }
 

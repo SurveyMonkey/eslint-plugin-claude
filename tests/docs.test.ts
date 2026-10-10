@@ -72,6 +72,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'memory-index-max-size',
     'memory-settings-schema',
     'memory-symlink-network-target',
+    'memory-topic-frontmatter',
     'output-style-frontmatter-schema',
     'output-style-frontmatter-valid',
     'permissions-mcp-rule-parens',
