@@ -70,14 +70,20 @@ import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
+import skillBooleanLiteral from './rules/skill-boolean-literal.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
+import skillDescriptionPresent from './rules/skill-description-present.ts'
 import skillFileLayout from './rules/skill-file-layout.ts'
 import skillForkFieldsRequireContext from './rules/skill-fork-fields-require-context.ts'
 import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
 import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
 import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
+import skillInvocationRedundantFields from './rules/skill-invocation-redundant-fields.ts'
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
+import skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
 import skillNameUnique from './rules/skill-name-unique.ts'
+import skillNoBom from './rules/skill-no-bom.ts'
 import skillPathsGlobValid from './rules/skill-paths-glob-valid.ts'
 import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
@@ -112,6 +118,12 @@ const modules = [
   skillAgentExists,
   skillNameUnique,
   skillPathsGlobValid,
+  skillBooleanLiteral,
+  skillDescriptionPresent,
+  skillInvocationRedundantFields,
+  skillMetadataReservedKeys,
+  skillNameShadowsBuiltin,
+  skillNoBom,
   agentFrontmatterValid,
   agentFrontmatterSchema,
   agentPluginIgnoredFields,
@@ -220,6 +232,12 @@ const recommended: Record<RuleName, Severity> = {
   'skill-agent-exists': 'error',
   'skill-name-unique': 'error',
   'skill-paths-glob-valid': 'error',
+  'skill-boolean-literal': 'warn',
+  'skill-description-present': 'warn',
+  'skill-invocation-redundant-fields': 'warn',
+  'skill-metadata-reserved-keys': 'warn',
+  'skill-name-shadows-builtin': 'warn',
+  'skill-no-bom': 'warn',
   'agent-frontmatter-valid': 'error',
   'agent-frontmatter-schema': 'error',
   'agent-plugin-ignored-fields': 'error',
