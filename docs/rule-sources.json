@@ -108,6 +108,18 @@
       "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
     }
   ],
+  "agent-name-shadows-builtin": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Built-in subagents",
+      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose the subagent scope",
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
+    }
+  ],
   "agent-name-unique": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",

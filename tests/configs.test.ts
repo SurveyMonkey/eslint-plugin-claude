@@ -975,7 +975,7 @@ const AGENT_RULES = [
 
 // The subagent field rules of #9 that are `warn`, in the order of the `modules` list. They
 // follow the agent and output style rules.
-const AGENT_WARN_RULES = ['agent-field-min-version', 'agent-no-bom']
+const AGENT_WARN_RULES = ['agent-field-min-version', 'agent-name-shadows-builtin', 'agent-no-bom']
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [
