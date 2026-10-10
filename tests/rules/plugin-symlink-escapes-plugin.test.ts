@@ -243,3 +243,32 @@ describe(`${RULE} with the marketplace rule`, () => {
     ])
   })
 })
+
+describe(`${RULE} (loads in place)`, () => {
+  linked.fails('stays silent for a plugin in .claude/skills/<name>, which loads in place', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': CATALOG,
+      '.claude/skills/p/.claude-plugin/plugin.json': MANIFEST,
+      'shared/s.md': '# S\n',
+      'out/o.md': '# O\n',
+    })
+    const dir = path.join(top, '.claude', 'skills', 'p')
+    link(dir, 'link.md', '../../../shared/s.md')
+    expect(lintPlugin(RULE, dir, MANIFEST)).toEqual([])
+  })
+
+  linked(
+    'still reports a link in a plugin whose folder is named skills but is not in .claude',
+    () => {
+      const top = tree({
+        '.claude-plugin/marketplace.json': CATALOG,
+        'skills/p/.claude-plugin/plugin.json': MANIFEST,
+        'shared/s.md': '# S\n',
+        'out/o.md': '# O\n',
+      })
+      const dir = path.join(top, 'skills', 'p')
+      link(dir, 'link.md', '../../shared/s.md')
+      expect(lintPlugin(RULE, dir, MANIFEST)).toHaveLength(1)
+    },
+  )
+})
