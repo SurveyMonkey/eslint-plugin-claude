@@ -41,6 +41,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-exec-form-command-spaces',
     'hooks-handler-field-ignored',
     'hooks-handler-type-event-support',
+    'hooks-http-env-allowlist',
     'hooks-if-condition',
     'hooks-matcher-enum',
     'hooks-matcher-mcp-name',

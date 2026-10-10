@@ -41,6 +41,8 @@ const hooksFaults = {
   SessionEnd: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
   // A bare executable name with whitespace, in exec form (`hooks-exec-form-command-spaces`).
   SubagentStop: [{ hooks: [{ type: 'command', command: 'my tool', args: ['x'] }] }],
+  // An http hook with a header variable that \`allowedEnvVars\` does not list (\`hooks-http-env-allowlist\`).
+  Elicitation: [{ hooks: [{ type: 'http', url: 'u', headers: { A: '$X' } }] }],
   // `$CLAUDE_MODEL` does not exist (`hooks-env-var-unavailable`).
   PreModelSwitch: [{ hooks: [{ type: 'command', command: 'echo $CLAUDE_MODEL' }] }],
   // A bare `$CLAUDE_PROJECT_DIR` in a PowerShell command (`hooks-powershell-placeholder`).
@@ -87,6 +89,12 @@ hooks:
         - type: command
           command: my tool
           args: [x]
+  Elicitation:
+    - hooks:
+        - type: http
+          url: u
+          headers:
+            A: $X
   PreModelSwitch:
     - hooks:
         - type: command
@@ -681,6 +689,7 @@ const EXPECTED = [
   'packages/hk/.claude/agents/hk.md: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-if-condition@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-mcp-name@2',
@@ -697,6 +706,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/settings.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/settings.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/settings.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/settings.json: claude/hooks-if-condition@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-mcp-name@2',
@@ -711,6 +721,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.local.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-if-condition@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-mcp-name@2',
@@ -725,6 +736,7 @@ const EXPECTED = [
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-if-condition@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-mcp-name@2',
@@ -739,6 +751,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-if-condition@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-enum@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-mcp-name@2',
@@ -753,6 +766,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/managed-settings.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/managed-settings.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/managed-settings.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/managed-settings.json: claude/hooks-if-condition@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-enum@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-mcp-name@2',
@@ -766,6 +780,7 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-if-condition@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-enum@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-mcp-name@2',
@@ -968,6 +983,7 @@ const HOOKS_RULES = [
   { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-field-ignored', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-type-event-support', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-http-env-allowlist', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-if-condition', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-matcher-enum', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-matcher-mcp-name', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },

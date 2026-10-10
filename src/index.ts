@@ -25,6 +25,7 @@ import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
+import hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
 import hooksIfCondition from './rules/hooks-if-condition.ts'
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
@@ -119,6 +120,7 @@ const modules = [
   hooksExecFormCommandSpaces,
   hooksHandlerFieldIgnored,
   hooksHandlerTypeEventSupport,
+  hooksHttpEnvAllowlist,
   hooksIfCondition,
   hooksMatcherEnum,
   hooksMatcherMcpName,
@@ -242,6 +244,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-exec-form-command-spaces': 'error',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-type-event-support': 'error',
+  'hooks-http-env-allowlist': 'error',
   'hooks-if-condition': 'error',
   'hooks-matcher-enum': 'error',
   'hooks-matcher-mcp-name': 'error',
