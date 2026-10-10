@@ -91,7 +91,7 @@ export function quotedList(items: readonly string[]): string {
  *  the matcher as a regular expression. Letters, digits, `_`, `-`, spaces, `,` and `|` are the exact
  *  set, and `|` or `,` separates values. `narrow` is the set of `FileChanged` and `StopFailure`: letters,
  *  digits, `_` and `|`, with `|` as the one separator (the hooks reference, "Matcher patterns").
- *  A match-all matcher has no value, and `*` is not an exact-match character. */
+ *  An empty matcher gives no values. `*` is not an exact-match character, so it gives null. */
 export function exactValues(matcher: string, narrow: boolean): string[] | null {
   if (!(narrow ? /^[\w|]*$/ : /^[\w\- ,|]*$/).test(matcher)) {
     return null

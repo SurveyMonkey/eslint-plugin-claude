@@ -49,6 +49,21 @@ describe(`${name}: the Tool(specifier) form`, () => {
     }
   })
 
+  it('reports a full MCP tool name with a specifier, with a hyphen in the server', () => {
+    expect(ids('PreToolUse', 'mcp__my-server__tool(x)')).toEqual(['toolSpec'])
+  })
+
+  it('is silent for a valid regular expression whose group follows a name that is no tool', () => {
+    for (const matcher of [
+      'Web(Fetch|Search)',
+      'mcp__(github|gitlab)',
+      'Notebook(Edit)',
+      'Edit|Bash(y)',
+    ]) {
+      expect(ids('PreToolUse', matcher), matcher).toEqual([])
+    }
+  })
+
   it('is silent for a regular expression with a group and for a bare tool name', () => {
     for (const matcher of ['Bash', '(Edit|Write)', '^(Edit|Write)$', 'Edit.*(ts)$', 'Bash|Edit(']) {
       expect(ids('PreToolUse', matcher), matcher).not.toContain('toolSpec')
@@ -115,6 +130,11 @@ describe(`${name}: StopFailure`, () => {
     expect(ids('StopFailure', 'rate-limit')).toEqual(['separator'])
   })
 
+  it('names the comma before the space when both are present', () => {
+    expect(message('StopFailure', 'rate_limit, overloaded')).toContain('A comma is part')
+    expect(message('FileChanged', '.envrc, .env')).toContain('A comma is part')
+  })
+
   it('names the event and the character', () => {
     expect(message('StopFailure', 'a,b')).toBe(
       'On StopFailure only "|" separates values. A comma is part of the value, not a separator.',
@@ -170,6 +190,9 @@ describe(`${name}: FileChanged`, () => {
       '[a]',
       '{a}',
       'a\\b',
+      'a)b',
+      'a]b',
+      'a}b',
     ]) {
       expect(ids('FileChanged', matcher), matcher).toEqual(['literal'])
     }

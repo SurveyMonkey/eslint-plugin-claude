@@ -6,7 +6,13 @@ import { describe, expect, it } from 'vitest'
 import { HOOK_EVENTS } from '../../src/data/hook-events.ts'
 import { FILES, frontmatter, jsonIds, markdownIds } from '../hooks.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
-import { json5Tester, jsonTester, lintMarkdown, ruleOf } from '../rule-tester.test-support.ts'
+import {
+  json5Tester,
+  jsonTester,
+  lintJson,
+  lintMarkdown,
+  ruleOf,
+} from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('hooks-event-name-known')
 const hooks = (...events: string[]) =>
@@ -165,11 +171,37 @@ describe(`${name}: frontmatter`, () => {
   })
 })
 
+describe(`${name}: options and near misses`, () => {
+  const lint = (options: unknown[]) =>
+    lintJson(name, hooks('Stop'), '.claude/settings.json', options)
+
+  it('throws for an option that is not documented', () => {
+    expect(() => lint([{ additionalEvents: 'x' }])).toThrow()
+    expect(() => lint([{ additionalEvents: [1] }])).toThrow()
+    expect(() => lint([{ additionalEvents: ['A', 'A'] }])).toThrow()
+    expect(() => lint([{ other: 1 }])).toThrow()
+    expect(() => lint([{ additionalEvents: ['A'] }])).not.toThrow()
+  })
+
+  it('suggests the closest name, and the first of two that are as close', () => {
+    // `Setp` is one edit from `Setup` and two from `Stop`.
+    expect(
+      lintJson(name, hooks('Setp'), '.claude/settings.json')[0]?.suggestions?.[0]?.fix.text,
+    ).toBe('"Setup"')
+    // `Stup` is one edit from both `Setup` and `Stop`. The list order decides.
+    expect(
+      lintJson(name, hooks('Stup'), '.claude/settings.json')[0]?.suggestions?.[0]?.fix.text,
+    ).toBe('"Setup"')
+  })
+})
+
 describe(`${name}: files that Claude Code does not read`, () => {
   it('is silent for .claude/hooks/hooks.json, which hooks-no-standalone-file reports', () => {
     const text = JSON.stringify({ hooks: { Bogus: [] } })
     expect(jsonIds(name, text, '/repo/.claude/hooks/hooks.json')).toEqual([])
     expect(jsonIds(name, text, '/repo/.github/hooks/hooks.json')).toEqual([])
+    expect(jsonIds(name, text, '/repo/.claude-plugin/hooks.json')).toEqual([])
+    expect(jsonIds(name, text, '/repo/.claude/hooks.json')).toEqual([])
     expect(jsonIds(name, text, '/repo/plugins/p/hooks/hooks.json')).toEqual(['unknown'])
   })
 
