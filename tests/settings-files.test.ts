@@ -289,17 +289,31 @@ describe('readSiblingSettings', () => {
     const broken = repository({ '.claude/settings.json': '{}', '.claude/settings.local.json': '{' })
     expect(readSiblingSettings(at(broken, '.claude/settings.json'))).toEqual([])
   })
-  it('gives the other files of a managed source, and nothing when one cannot be read', () => {
+  it('gives the other files of a managed source', () => {
     const root = repository({
       'managed-settings.json': '{"a": 1}',
       'managed-settings.d/10-b.json': '{"b": 2}',
     })
     expect(readSiblingSettings(at(root, 'managed-settings.d/10-b.json'))).toEqual([{ a: 1 }])
     expect(readSiblingSettings(at(root, 'managed-settings.json'))).toEqual([{ b: 2 }])
+  })
+  it('skips a managed file that cannot be read, and keeps the readable ones', () => {
     const bad = repository({
       'managed-settings.json': '{ nope',
       'managed-settings.d/10-b.json': '{}',
+      'managed-settings.d/20-c.json': '{"c": 3}',
     })
-    expect(readSiblingSettings(at(bad, 'managed-settings.d/10-b.json'))).toEqual([])
+    expect(readSiblingSettings(at(bad, 'managed-settings.d/10-b.json'))).toEqual([{ c: 3 }])
+    const dropIn = repository({
+      'managed-settings.json': '{"a": 1}',
+      'managed-settings.d/05-bad.json': '[1]',
+      'managed-settings.d/10-b.json': '{}',
+    })
+    expect(readSiblingSettings(at(dropIn, 'managed-settings.d/10-b.json'))).toEqual([{ a: 1 }])
+  })
+  it('gives nothing for a managed source whose drop-in directory cannot be seen', () => {
+    const root = repository({ 'managed-settings.json': '{"a": 1}' })
+    symlinkSync(at(root, 'gone'), at(root, 'managed-settings.d'))
+    expect(readSiblingSettings(at(root, 'managed-settings.json'))).toEqual([])
   })
 })

@@ -21,7 +21,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unknown' }> = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Name only servers of .mcp.json in the project server approval lists',
+      description: 'Name only servers of .mcp.json in the approval lists of the project',
       url: docsUrl(name),
     },
     schema: [],

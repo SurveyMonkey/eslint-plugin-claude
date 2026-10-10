@@ -116,3 +116,15 @@ it('reads a file that the manifest names once, even when it is the root file or 
   expect(ids(lint(manifest('./.lsp.json'), files))).toEqual([])
   expect(ids(lint(manifest(['./a.json', './a.json']), files))).toEqual([])
 })
+it('reads a file by its first valid path, after a path that the rule rejects', () => {
+  const files = { 'p/.lsp.json': lspFile('go'), 'p/a.json': lspFile('go') }
+  expect(ids(lint(manifest(['./sub/../a.json', './a.json']), files))).toEqual(['duplicate'])
+  expect(ids(lint(manifest(['a.json', './a.json']), files))).toEqual(['duplicate'])
+})
+it('reads no server of a .lsp.json that has an invalid entry, as Claude Code skips the file', () => {
+  const bad = JSON.stringify({ go: config(), rs: { command: 'rust-analyzer' } })
+  expect(ids(lint(manifest(inline('go')), { 'p/.lsp.json': bad }))).toEqual([])
+  // A declared file keeps its servers: the docs do not say that Claude Code skips it.
+  const files = { 'p/.lsp.json': lspFile('go'), 'p/a.json': bad }
+  expect(ids(lint(manifest('./a.json'), files))).toEqual(['duplicate'])
+})

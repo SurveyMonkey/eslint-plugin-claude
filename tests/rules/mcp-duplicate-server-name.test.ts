@@ -180,3 +180,11 @@ it('does not read a path with a dot segment, or a backslash in a file name', () 
   expect(ids(lint(manifest([inline('db'), './sub\\x.json']), files))).toEqual([])
   expect(ids(lint(manifest([inline('db'), './a.json']), files))).toEqual(['duplicate'])
 })
+it('reads a file by its first valid path, after a path that the rule rejects', () => {
+  // The first path leaves the file unread, so the second path still loads it.
+  const files = { 'p/.mcp.json': servers('db'), 'p/a.json': servers('db') }
+  expect(ids(lint(manifest([inline('web'), './sub/../a.json', './a.json']), files))).toEqual([
+    'duplicate',
+  ])
+  expect(ids(lint(manifest(['a.json', './a.json']), files))).toEqual(['duplicate'])
+})
