@@ -21,10 +21,10 @@ Write the plugin path variables of plugin Markdown in the braced form.
 ## Rule details
 
 In the Markdown body of a plugin skill, command or agent, Claude Code substitutes the reference
-`${CLAUDE_PLUGIN_ROOT}` inline with a path when it loads the content.[^resolve] The variables are
-not in the environment of a command that Claude runs through the Bash tool, in the main session or
-in a subagent.[^resolve] So a bare `$CLAUDE_PLUGIN_ROOT` in the body stays literal text. When
-Claude copies it into a Bash command, the shell reads an unset variable.
+`${CLAUDE_PLUGIN_ROOT}` with a path. It does this when it loads the content.[^resolve] The
+variables are not in the environment of a command that Claude runs through the Bash tool. This
+holds in the main session and in a subagent.[^resolve] So a bare `$CLAUDE_PLUGIN_ROOT` in the body
+stays literal text. When Claude copies it into a Bash command, the shell reads an unset variable.
 
 The rule reports each `$CLAUDE_PLUGIN_ROOT` and `$CLAUDE_PLUGIN_DATA` in the body. The rule reads
 the whole body, fenced code included, because Claude copies a command from a code block. The

@@ -20,10 +20,11 @@ Keep plugin files out of Git LFS.
 
 ## Rule details
 
-When a user adds a marketplace that is hosted in a Git repository, or installs a plugin from a Git
-source, Claude Code clones the repository onto the machine of the user. The clone never downloads
-Git LFS content. Each file that LFS tracks arrives as a pointer file.[^lfs] A script, a skill or a
-binary that a plugin needs would be a few lines of pointer text.
+A user can add a marketplace that is hosted in a Git repository. A user can also install a plugin
+from a Git source. In both cases Claude Code clones the repository onto the machine of the user.
+The clone never downloads Git LFS content. Each file that LFS tracks arrives as a pointer
+file.[^lfs] A script, a skill or a binary that a plugin needs would be a few lines of pointer
+text.
 
 The rule reads the `.gitattributes` files that Git applies to the files of a plugin. It reports
 the first file of the plugin that a `filter=lfs` pattern matches. The files are:
@@ -40,8 +41,8 @@ The rule follows these Git rules:
 - A later line overrides an earlier line. A `.gitattributes` in a deeper folder overrides one above
   it. A line that sets `-filter`, `!filter` or another `filter=` value ends the LFS filter for the
   files that it matches.
-- A pattern with no slash matches the name of a file at any depth below the folder of its
-  `.gitattributes`. A pattern with a slash is relative to that folder, and a slash at the start is
+- A pattern with no slash matches the name of a file at any depth below its `.gitattributes`.
+  A pattern with a slash is relative to the folder of that file. A slash at the start is
   optional.
 - `*` and `?` do not match a slash. `**` matches folders when a slash or the end of the pattern
   bounds it on each side. A class such as `[a-c]` or `[!a]` matches one character. A backslash
@@ -55,8 +56,8 @@ The rule makes no report in these cases:
 
 - The patterns do not match a file of the plugin. The rule does not read a file that is not in the
   plugin.
-- A file below a folder that the rule cannot list, or below a folder with a `.gitattributes` that
-  it cannot read. The rule skips that folder.
+- A file below a folder that the rule cannot list. The rule skips that folder. The rule also skips
+  a folder with a `.gitattributes` that it cannot read.
 - A `.gitattributes` above the plugin that the rule cannot read.
 - A pattern with an unclosed class, a backslash at the end, or a POSIX class such as `[[:alpha:]]`.
   The rule does not read such a pattern.
