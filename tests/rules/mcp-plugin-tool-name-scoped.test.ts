@@ -122,3 +122,7 @@ it('keeps the report that the readable files support when the .mcp.json is locke
   expect(ids(found)).toEqual(['bare'])
   expect(found[0]?.message).toContain('mcp__web__q')
 })
+it('stays silent for a server with an empty name', () => {
+  const files = { ...PLUGIN, 'p/.mcp.json': mcp('') }
+  expect(ids(lint(skill('mcp____q mcp__'), 'p/skills/s/SKILL.md', files))).toEqual([])
+})

@@ -218,6 +218,9 @@ describe('readJsonBody', () => {
   it('gives null for a file that is not there, does not parse, or has a link out', () => {
     expect(readJsonBody(rp('none.json'), rp())).toBeNull()
     expect(readJsonBody(put(rp('bad.json'), '{ no'), rp())).toBeNull()
+    expect(
+      readJsonBody(put(rp('deep.json'), `${'['.repeat(200_000)}${']'.repeat(200_000)}`), rp()),
+    ).toBeNull()
     put(path.join(realpathSync(scratch), 'outside', 'o.json'), '{}')
     symlinkSync(path.join(realpathSync(scratch), 'outside', 'o.json'), rp('link.json'))
     expect(readJsonBody(rp('link.json'), rp())).toBeNull()

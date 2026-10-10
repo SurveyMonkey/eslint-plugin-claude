@@ -129,9 +129,13 @@ it('stays silent for a link that leads out of the plugin or out of the repositor
     for (const declared of ['./in-repo.json', './dangling.json', './out.json']) {
       expect(ids(lintJson(NAME, manifest(declared), at))).toEqual([])
     }
-    // A link to a file in the plugin still loads.
+    // A link to a file in the plugin still loads. It is a file that loads already, so it adds
+    // no second server.
     symlinkSync(path.join(root, 'p', '.mcp.json'), path.join(root, 'p', 'same.json'))
-    expect(ids(lintJson(NAME, manifest('./same.json'), at))).toEqual(['duplicate'])
+    expect(ids(lintJson(NAME, manifest('./same.json'), at))).toEqual([])
+    writeFileSync(path.join(root, 'p', 'b.json'), servers('db'))
+    symlinkSync(path.join(root, 'p', 'b.json'), path.join(root, 'p', 'b-link.json'))
+    expect(ids(lintJson(NAME, manifest(['./b.json', './b-link.json']), at))).toEqual(['duplicate'])
   } finally {
     rmSync(outside, { recursive: true, force: true })
   }
@@ -163,4 +167,16 @@ it('keeps the report that the readable files support when one file is locked', (
   const found = withoutAccess(path.join(root, 'p', 'locked.json'), () => lintJson(NAME, code, at))
   expect(ids(found)).toEqual(['duplicate'])
   expect(found[0]?.message).toContain('.mcp.json')
+})
+it('reads a file that the manifest names once, even when it is the root file or is named twice', () => {
+  const files = { 'p/.mcp.json': servers('db'), 'p/a.json': servers('web') }
+  expect(ids(lint(manifest('./.mcp.json'), files))).toEqual([])
+  expect(ids(lint(manifest(['./a.json', './a.json']), files))).toEqual([])
+})
+it('does not read a path with a dot segment, or a backslash in a file name', () => {
+  // Both paths name a file in the plugin, so only the path checks stop them.
+  const files = { 'p/a.json': servers('db'), 'p/sub\\x.json': servers('db') }
+  expect(ids(lint(manifest([inline('db'), './sub/../a.json']), files))).toEqual([])
+  expect(ids(lint(manifest([inline('db'), './sub\\x.json']), files))).toEqual([])
+  expect(ids(lint(manifest([inline('db'), './a.json']), files))).toEqual(['duplicate'])
 })

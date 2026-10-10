@@ -115,8 +115,14 @@ export function readSettings(
  *  The result is `UNREADABLE` when the rule cannot see one part. These cases
  *  count: a read that fails, and a path out of the repository. A file that
  *  does not parse to an object counts too. So does a drop-in that vanished
- *  after the directory read. Such a file can hold any key. */
-export function readManagedSource(filename: string): Record<string, unknown>[] | Unreadable {
+ *  after the directory read. Such a file can hold any key.
+ *
+ *  With `skipUnreadable`, a file that cannot be read adds nothing and the others stay. The
+ *  directory that cannot be seen still gives `UNREADABLE`. */
+export function readManagedSource(
+  filename: string,
+  skipUnreadable = false,
+): Record<string, unknown>[] | Unreadable {
   const self = path.resolve(filename)
   const dir =
     path.basename(path.dirname(self)) === DROP_IN_DIRECTORY
@@ -147,6 +153,9 @@ export function readManagedSource(filename: string): Record<string, unknown>[] |
       continue
     }
     if (parsed === null || parsed === UNREADABLE || !isObject(parsed.data)) {
+      if (skipUnreadable) {
+        continue
+      }
       return UNREADABLE
     }
     objects.push(parsed.data)
@@ -163,10 +172,10 @@ export function readManagedSource(filename: string): Record<string, unknown>[] |
  *  A file that is not there adds nothing. A file that the rule cannot read adds nothing either:
  *  the read fails, the real path is out of the repository, or the text does not parse to an
  *  object. So a report rests on the files that read (ADR 001, Decision 14). A managed source
- *  that has one unreadable file gives no sibling, as `readManagedSource` does. */
+ *  gives the files that read. When the drop-in directory itself cannot be seen, it gives none. */
 export function readSiblingSettings(filename: string): Record<string, unknown>[] {
   if (kindOf(filename) === 'managed') {
-    const others = readManagedSource(filename)
+    const others = readManagedSource(filename, true)
     return others === UNREADABLE ? [] : others
   }
   const self = path.resolve(filename)

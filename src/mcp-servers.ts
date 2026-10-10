@@ -109,12 +109,17 @@ export function readJsonBody(file: string, bound: string): ValueNode | null {
   if (parsed === null || parsed === UNREADABLE || parsed.data === undefined) {
     return null
   }
-  // The text is the output of `JSON.stringify`, so it parses.
-  const result = json.languages.json.parse(
-    { body: JSON.stringify(parsed.data), path: file, physicalPath: file, bom: false },
-    { languageOptions: {} },
-  )
-  return (result as { ast: { body: ValueNode } }).ast.body
+  // A value nested deeper than the stringifier or the parser accepts is a file that the rule
+  // cannot see.
+  try {
+    const result = json.languages.json.parse(
+      { body: JSON.stringify(parsed.data), path: file, physicalPath: file, bom: false },
+      { languageOptions: {} },
+    )
+    return result.ok ? (result as { ast: { body: ValueNode } }).ast.body : null
+  } catch {
+    return null
+  }
 }
 
 /** The top-level value of the `.json` file that a plugin manifest names with `declared`. The
@@ -179,11 +184,25 @@ export function pluginDeclarations(
   }
   const body = readJsonBody(path.join(root, kind.rootFile), repositoryRoot(root))
   add(body === null ? [] : kind.fileMembers(body), kind.rootFile)
+  // A file that the manifest names twice, or names with the path of the root file, loads again
+  // with the same servers. It declares no second server, so it is read once.
+  const read = new Set<string>()
+  const rootReal = realOf(path.join(root, kind.rootFile))
+  if (typeof rootReal === 'string') {
+    read.add(rootReal)
+  }
   const declared = manifest === null ? undefined : lastMember(manifest, kind.key)?.value
   const items =
     declared?.type === 'Array' ? declared.elements.map(({ value }) => value) : [declared]
   for (const item of items) {
     if (item?.type === 'String') {
+      const real = realOf(path.resolve(root, item.value))
+      if (typeof real === 'string') {
+        if (read.has(real)) {
+          continue
+        }
+        read.add(real)
+      }
       const file = readDeclaredJson(root, item.value)
       add(file === null ? [] : kind.fileMembers(file), item.value, item)
     } else if (item?.type === 'Object') {
