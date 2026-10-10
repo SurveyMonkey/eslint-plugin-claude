@@ -21,9 +21,9 @@ import {
 
 const name = 'output-style-name-unique' as const
 
-/** The style name from the `name` field: the file name for an absent or empty
- *  field, the text for a non-empty string. The result is null for any other
- *  value, which is no name to compare. `output-style-frontmatter-schema`
+/** The style name from the `name` field: the file name for an absent field or a
+ *  null value, the text for a non-empty string. The result is null for any other
+ *  value, such as the empty string, which is no name to compare. `output-style-frontmatter-schema`
  *  reports a name that is not a string. */
 function styleName(given: unknown, file: string): string | null {
   if (given === undefined || given === null) {

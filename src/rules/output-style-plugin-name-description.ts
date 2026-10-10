@@ -29,7 +29,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
     schema: [],
     messages: {
       missing:
-        'A plugin output style sets `name` and `description`. This file sets no {{fields}}. The style then appears under its file name, with no description.',
+        'A plugin output style sets `name` and `description`. This file sets no {{fields}}. Without `name`, the style takes its file name. Without `description`, the picker shows none.',
     },
   },
   create(context) {

@@ -18,7 +18,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notProject' }> = {
     schema: [],
     messages: {
       notProject:
-        '`memory: {{scope}}` is not the recommended scope. `project` is the default that the docs recommend, because it makes the memory shareable through version control. Keep `{{scope}}` only if the memory must not be shared.',
+        '`memory: {{scope}}` is not the recommended scope. `project` is the recommended scope, because it makes the memory shareable through version control. Keep `user` for a memory across all projects. Keep `local` for a memory that stays out of version control.',
     },
   },
   create(context) {

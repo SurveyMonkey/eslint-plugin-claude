@@ -28,15 +28,15 @@ a style of the same name above it. That may be on purpose. The rule makes it vis
 
 The rule makes two kinds of report. The message `shadows` is for a style whose name is the name of
 a style in a `.claude/output-styles/` above it. The rule reports in the nearer file, the one that
-wins. It walks up from the folder of the linted file, to the repository root. The repository
+wins. It walks up from the parent of the project folder, to the repository root. The repository
 root is the first directory at or above `.claude/` that has a `.git` entry. Without one, the
 rule reads no folder above. The message `duplicate` is for two styles in one folder with one
 name. The docs do not say which of them loads. The rule reports each file of that clash.
 
 The rule compares the style name as an exact string. The docs say the `outputStyle` setting is
-case-sensitive.[^setting] A style with no `name`, with an empty `name`, or with frontmatter
-that does not parse, loads under its file name.[^fields] A `name` that is not a string is no name to
-compare. [`output-style-frontmatter-schema`](output-style-frontmatter-schema.md) reports its
+case-sensitive, and that the `/output-style` command ignores case.[^setting] The rule follows
+the setting. A style with no `name`, or with frontmatter that does not parse, loads under its file
+name.[^fields] A `name` that is empty or not a string is no name to compare. [`output-style-frontmatter-schema`](output-style-frontmatter-schema.md) reports its
 type.
 
 The rule reads the files directly in `output-styles/`. The docs name the `output-styles/`
