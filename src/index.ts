@@ -49,6 +49,7 @@ import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsup
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
+import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -189,6 +190,7 @@ const modules = [
   statuslineScriptExists,
   claudeMdLocalUntracked,
   memoryAgentMemoryLocalUntracked,
+  pluginEvalsResultsGitignored,
   settingsLocalGitignored,
   settingsLocalUntracked,
 ]
@@ -305,6 +307,7 @@ const recommended: Record<RuleName, Severity> = {
   'statusline-script-exists': 'error',
   'claude-md-local-untracked': 'warn',
   'memory-agent-memory-local-untracked': 'warn',
+  'plugin-evals-results-gitignored': 'warn',
   'settings-local-gitignored': 'warn',
   'settings-local-untracked': 'warn',
 }

@@ -564,6 +564,14 @@ const GU_TREE: Record<string, string> = {
   // `settings-local-gitignored`: a pattern of a deeper `.gitignore` takes the root pattern back.
   'set/open/.claude/settings.json': '{}\n',
   'set/open/.gitignore': '!.claude/settings.local.json\n',
+  // `plugin-evals-results-gitignored`: a plugin with an eval suite and no pattern for its
+  // results; the same plugin with a pattern; a plugin with no eval directory.
+  'ev/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'ev/bad/evals/first/prompt.md': '# Case\n',
+  'ev/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'ev/ok/evals/first/prompt.md': '# Case\n',
+  'ev/ok/.gitignore': 'evals/results/\n',
+  'ev/none/.claude-plugin/plugin.json': JSON.stringify({ name: 'none' }),
 }
 const GU_LOOSE: Record<string, string> = {
   'claude/ok/CLAUDE.local.md': 'mine\n',
@@ -665,6 +673,11 @@ const UNTRACKED_RULES = [
     name: 'memory-agent-memory-local-untracked',
     language: 'markdown/gfm',
     files: ['**/.claude/agent-memory-local/**/*.md'],
+  },
+  {
+    name: 'plugin-evals-results-gitignored',
+    language: 'json/json',
+    files: ['**/.claude-plugin/plugin.json'],
   },
   { name: 'settings-local-gitignored', language: 'json/json', files: ['**/.claude/settings.json'] },
   { name: 'settings-local-untracked', language: 'json/json', files: ['**/.claude/settings.json'] },
@@ -866,6 +879,8 @@ const EXPECTED = [
   'packages/gu/claude/loose/CLAUDE.md: claude/claude-md-local-untracked@1',
   // `memory-agent-memory-local-untracked` reads the local memory directory, and reports a tracked file.
   'packages/gu/mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md: claude/memory-agent-memory-local-untracked@1',
+  // `plugin-evals-results-gitignored` reads the manifest of a plugin that has an eval directory.
+  'packages/gu/ev/bad/.claude-plugin/plugin.json: claude/plugin-evals-results-gitignored@1',
   // `settings-local-untracked` reads the shared file, and reports on its `settings.local.json`.
   'packages/gu/set/bad/.claude/settings.json: claude/settings-local-untracked@1',
   // `settings-local-gitignored` reads the shared file. The pattern of the root covers the files

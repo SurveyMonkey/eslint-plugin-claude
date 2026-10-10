@@ -99,6 +99,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
 | [`claude/plugin-bin-executable`](docs/rules/plugin-bin-executable.md) | Each file directly in the `bin/` of a plugin has git mode `100755` | `error` | `error` |
+| [`claude/plugin-evals-results-gitignored`](docs/rules/plugin-evals-results-gitignored.md) | A `.gitignore` pattern covers the `results/` directory of the eval suite of a plugin | `warn` | `warn` |
 
 ### Marketplace manifest
 

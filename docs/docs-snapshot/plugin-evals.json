@@ -1,0 +1,240 @@
+{
+  "url": "https://code.claude.com/docs/en/plugin-evals",
+  "hash": "943a63ef6fd88dd8c6451e344436b44e4294bf0f92f2047a784a1fd9c4b9f51d",
+  "blocks": [
+    {
+      "id": "test-plugins-with-evals",
+      "hash": "8b182d9407e4ed28909b97839d09aaebdc514db13fcf92b3aece58663d4bac53"
+    },
+    {
+      "id": "requirements",
+      "hash": "e110c8794e1d3ef9a7e475b66b59a28cd9a15c283ebb611b9f6efd2347414ddd"
+    },
+    {
+      "id": "how-an-eval-run-works",
+      "hash": "f5401980f6cca3ab96048ecdecc92301facc61f1e6a74b7d6f722edff0d43121"
+    },
+    {
+      "id": "what-happens-in-a-run",
+      "hash": "319d84834d73db64e9abaf78b0ee9bcb35a780d79dfabd702d788ccaf16f742b"
+    },
+    {
+      "id": "how-a-case-is-scored",
+      "hash": "4ab001240a3899137236f94f3dfb14bcfb134379b4eb6d6827675643dda4a148"
+    },
+    {
+      "id": "the-no-plugin-baseline",
+      "hash": "e1cb28f4a76b1b16071a703ad330d9b40b378a684d075df6026b1166f163aa28"
+    },
+    {
+      "id": "create-your-first-eval-suite",
+      "hash": "403ee3dd2e0c55e4aa08bc11b4d3488ad30d99183a59230d81337d33920bebb3"
+    },
+    {
+      "id": "write-and-refine-cases",
+      "hash": "0ac631fa373295888f65c76a9d488b6aef7891ce7a67e988c11fda2a5af0d9ce"
+    },
+    {
+      "id": "write-a-case-manually",
+      "hash": "722876c08cec28341e7fffc3db20fe31ec7ac8a7b1d55e40cf8bc0c2a361f816"
+    },
+    {
+      "id": "set-run-limits-and-tools-in-prompt-md",
+      "hash": "76b01a44ca6e3cfe1a0879f6e0916a94307de96689ec93fe1ac9edfb9dea1edd"
+    },
+    {
+      "id": "grade-the-result",
+      "hash": "a4d38fd0d7a57099eb2f599ab4ce30fd9877e029ef4c74f6a3b11b17b51f3f78"
+    },
+    {
+      "id": "choose-graders-that-give-a-stable-signal",
+      "hash": "8c769d16fc759cfdf94b115d697bba42b241f0cae9224eee1f97411fb9813190"
+    },
+    {
+      "id": "compare-against-a-no-plugin-baseline",
+      "hash": "86640c862ad36c360291b6d7f501d5858facd175606476b50c03b66536cfd27d"
+    },
+    {
+      "id": "use-a-different-eval-directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    },
+    {
+      "id": "set-up-fixtures-and-mocks",
+      "hash": "9a56aca812905a16e9458e0c97d9c91b7a7c87ed5d613e0da1c41c2344b5ca41"
+    },
+    {
+      "id": "add-setup-or-history-with-case-yaml",
+      "hash": "f1e6e29f1ca79693578120787c9d7b64a185a442afd1b19011cefe18c1947f4f"
+    },
+    {
+      "id": "mock-mcp-servers",
+      "hash": "156c24365742283311eea11699ea9cb047104abb76f3f11fb796ec3b7829c90b"
+    },
+    {
+      "id": "replay-agent-mock-answers",
+      "hash": "5de9b0e4820bd48bdd6142fc79548a00888737a466249e0880dea782867dc7a2"
+    },
+    {
+      "id": "run-evals",
+      "hash": "a1e2935ffa002ef106b55e621e4a1d71e532efc5e7cd60f16cdc9803801713e8"
+    },
+    {
+      "id": "choose-what-to-evaluate",
+      "hash": "52b9759312e2a9bac1b0d4ae4839eac6a393ca68278bc8919d0aeb482e8f0ace"
+    },
+    {
+      "id": "grant-tools",
+      "hash": "15800a06f527337fc1ac53b5ffe2878bfd185e8b89dcf10062bad054474939f9"
+    },
+    {
+      "id": "command-options",
+      "hash": "cf0fc19f0c8fd790f39b55d131ce4856cef156de72ffb8f0221215c6c417b0fa"
+    },
+    {
+      "id": "run-evals-in-ci",
+      "hash": "8aaf20771d588b0fef605b88b628d19864accbf7ee1c5f8e910e86aff5021ffb"
+    },
+    {
+      "id": "read-the-results",
+      "hash": "900a66b01fb5492f04e487798c146603990e1b322428910e21a4744fc2d58ab9"
+    },
+    {
+      "id": "html-report",
+      "hash": "9fb883090ed345d7f71b72a4d50d2597f20c83c89371f03075c77971de805fd8"
+    },
+    {
+      "id": "json-result",
+      "hash": "2fb425869fbf6558a762d6915605220926970f00e4278a0a7602caea67942f6b"
+    },
+    {
+      "id": "security",
+      "hash": "d41af682275e2fb5d8e39c97fe7a56f4490980ffbfef7766d7135c1116938ba2"
+    },
+    {
+      "id": "trust-the-plugin-directory",
+      "hash": "c641749d583eba44f58d759613624e2bf83676e4714e62f9bbb7785780124375"
+    },
+    {
+      "id": "how-runs-are-isolated",
+      "hash": "ca580bede706128f886fd79c8fa266d39acb2f4a61174477dfdda1c1da844127"
+    },
+    {
+      "id": "eval-suite-reference",
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6"
+    },
+    {
+      "id": "prompt-md-fields",
+      "hash": "5f96edf31109ddc50b9167f50c9015b5fe016d674b53fbdc8633c1453c848dc3"
+    },
+    {
+      "id": "case-yaml-fields",
+      "hash": "1480a6234bb734704db93d51d2478bbefd73392da9bde406356c9f603f850677"
+    },
+    {
+      "id": "grader-frontmatter",
+      "hash": "db226c1e2665ae3f2961e2d6d0352a072180fbadebede9a21cba90d157c750dd"
+    },
+    {
+      "id": "what-a-grader-can-look-at",
+      "hash": "bc92624bd1b81f596300598f8759ab0df738037a558c01f2f5362f43b2779bbe"
+    },
+    {
+      "id": "grader-types",
+      "hash": "e5de5b56f8fd6e23fb9ad61b20700549c2eb5ccfe5088ed65ef1f2344f35408e"
+    },
+    {
+      "id": "mock-files",
+      "hash": "8cc4a7cc4186f7accda5e5479c32ecae2013a57cb42d9e581d44fcaa8b642d6f"
+    },
+    {
+      "id": "expect-patterns",
+      "hash": "655b9d77688fb338d1c6bd0e3e944d8ed96773d0a2ce5837f37d39c9a9763afb"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "bac994bdd5ba98512461dfce1b6f592c0824e454674b8252461db3b41f281eb1"
+    },
+    {
+      "id": "plugin-eval-is-currently-in-early-access",
+      "hash": "bfdd718865731ac2235f41e6defd08971b54c0055e7f6c545688913a2ca70383"
+    },
+    {
+      "id": "plugin-eval-is-currently-unavailable",
+      "hash": "fb21ec62083aac13a37d3e73130263936f5fbf33d7a4022b56512a6bda1198bb"
+    },
+    {
+      "id": "is-not-a-trusted-plugin-directory-and-this-run-cannot-stop-to-ask-you-about-it",
+      "hash": "a42532c818f763b6a2ea555419467b5f3e31b20d49f8b03e80359fac47f1426f"
+    },
+    {
+      "id": "git-is-too-old-for-claude-plugin-eval",
+      "hash": "7fbe53e9e15737b265919b8efbe9985e89c6589df5feb29d77a4f77ecd55afe9"
+    },
+    {
+      "id": "no-eval-cases-found",
+      "hash": "d259c750f79c12e2385bafdbc5629abb4bd375d112dfc17bb2743a4bf2345f21"
+    },
+    {
+      "id": "the-baseline-arm-shows-no-plugin-or-delta-is-zero",
+      "hash": "f1ebfe4a729a59e12a94582ff5179b2df781dfb22e9b480e98de76684e3b96a3"
+    },
+    {
+      "id": "agent-type-----not-found-for-one-of-your-plugins-agents",
+      "hash": "59c565ce56181cb7c80d31d9ee38ba37d2eec094267bdbba449c4241a545a67f"
+    },
+    {
+      "id": "everything-scores-zero-although-the-right-files-were-produced",
+      "hash": "03af0252c2e028a12860c6b130506d7f6f6128e903638e116d4b4c99e66809b6"
+    },
+    {
+      "id": "a-regex-over-the-trace-doesnt-match-text-i-can-see",
+      "hash": "2b64642a7d432fa4d072ebb3499cec4f6da3809c6f400c6b54fe4e5c8e9c5301"
+    },
+    {
+      "id": "tools-are-denied-mcp-tools-are-missing-or-bash-wont-run",
+      "hash": "f99e49836b80b85ff1fd043fb5d11ed26801849042b27699ee3b6c3adc92ccdc"
+    },
+    {
+      "id": "the-run-exits-1-but-the-results-look-fine",
+      "hash": "6e2eb8cd40f2c647772086c093f0ec0e3067507f4b73155be43d3393cc6a2875"
+    },
+    {
+      "id": "json-output-path-must-end-in-json",
+      "hash": "728fc86501aa96295abf269e3ecc672dd498941c6b768648e83f52b63ebdaa0a"
+    },
+    {
+      "id": "a-grader-shows-passed-false-under-a-run-that-scored-1-0",
+      "hash": "1a13b9778138317440e283ffceddf4e2407dc4eb1e2faf932deea1757c9e966e"
+    },
+    {
+      "id": "runs-fail-with-a-usage-limit-or-rate-limit-error-partway-through",
+      "hash": "79f52c631ed1bea710143a695b5e6ef507409d336c089ac8df886df86bce0814"
+    },
+    {
+      "id": "mock-call-budget-exceeded",
+      "hash": "71e67d1847132ea82d2d527bc48bf88aba6221d03b22d05ff610f9c1deabbeab"
+    },
+    {
+      "id": "runs-time-out-or-hit-the-turn-cap",
+      "hash": "3142041e0e4219e74ed7efa928512e3e822b37e32b50027b94be28edc226ef08"
+    },
+    {
+      "id": "see-also",
+      "hash": "5353d0af01a88ea1373a2654791af2e52398c95b2bf8eaee957e5913a80d4f9b"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Eval suite reference",
+      "id": "eval-suite-reference",
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6",
+      "text": "## Eval suite reference\n\nEverything an eval suite can contain lives under the plugin's eval directory, `evals/` unless you [configured another](#use-a-different-eval-directory). A directory counts as a case when it holds a `prompt.md` or a `case.yaml`, and a case without at least one grader fails to load with an `invalid case.yaml` error that names `graders`. This tree shows every file `claude plugin eval` reads or writes in the eval directory:\n\n```text theme={null}\nevals/\n├── <case>/                        # one directory per case; nest under a non-case directory to group\n│   ├── prompt.md                  # frontmatter: case and run fields; body: the prompt\n│   ├── case.yaml                  # optional: context.* fields, or the whole case in one file\n│   ├── graders/\n│   │   └── <name>.md              # one grader per file; frontmatter: type and options; body: rubric\n│   ├── mocks/                     # optional: mocks for this case only, same layout as below\n│   └── <fixtures, scripts, transcripts referenced by case.yaml>\n├── mocks/                         # optional: suite-wide MCP mocks\n│   ├── <server>/\n│   │   ├── <tool>.md              # one mocked tool; body: the tool result\n│   │   ├── _server.md             # optional: one agent that answers several tools\n│   │   ├── _tools.json            # optional: saved tools/list response for real descriptions and schemas\n│   │   └── fixtures/              # files inserted with {{file:fixtures/...}}\n│   └── .replay/<server>/          # adopted agent-mock recordings, answered without a model call\n└── results/<timestamp>/           # written by each run; add results/ to .gitignore\n    ├── aggregate-result.json\n    ├── report.html\n    └── mock-recordings/           # agent-mock answers from clean runs, with ADOPT.txt\n```"
+    },
+    {
+      "heading": "Use a different eval directory",
+      "id": "use-a-different-eval-directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b",
+      "text": "### Use a different eval directory\n\nIf `evals/` is already taken by another tool, keep the suite in a different directory. You can record that directory in the plugin's `plugin.json` so every run and every collaborator uses it, or pass it on the command line for a single run:\n\n* **In `plugin.json`**: add `\"experimental\": { \"evals\": \"quality/evals\" }`.\n* **On the command line**: pass `--eval-dir quality/evals` to both `claude plugin eval` and `claude plugin eval init`.\n\nIf you set both, the flag's directory is used. Give a relative path of plain directory names such as `qa` or `quality/evals`. An absolute path or one containing `..` isn't accepted: as a flag value it's an error, while an unusable manifest value prints a `Warning:` line and the run uses `evals/` instead. Cases, results, and `init` output all move to that directory."
+    }
+  ]
+}

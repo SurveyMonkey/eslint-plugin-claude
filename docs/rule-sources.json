@@ -938,6 +938,18 @@
       "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
     }
   ],
+  "plugin-evals-results-gitignored": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Eval suite reference",
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "settings-conflicting-keys": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
