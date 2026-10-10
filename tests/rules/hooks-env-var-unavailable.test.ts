@@ -31,7 +31,7 @@ describe(`${name}: CLAUDE_ENV_FILE`, () => {
     }
   })
 
-  it.fails('reports a reference on each event that does not set it', () => {
+  it('reports a reference on each event that does not set it', () => {
     const others = HOOK_EVENTS.filter((event) => !ENV_FILE_EVENTS.includes(event))
     expect(others.length).toBeGreaterThan(20)
     for (const event of others) {
@@ -39,13 +39,13 @@ describe(`${name}: CLAUDE_ENV_FILE`, () => {
     }
   })
 
-  it.fails('is silent on the four events that set it', () => {
+  it('is silent on the four events that set it', () => {
     for (const event of ENV_FILE_EVENTS) {
       expect(shell('echo x >> "$CLAUDE_ENV_FILE"', event), event).toEqual([])
     }
   })
 
-  it.fails('reads the spellings of a variable, and stops at the name', () => {
+  it('reads the spellings of a variable, and stops at the name', () => {
     for (const text of [
       '[ -n "$CLAUDE_ENV_FILE" ]',
       `echo x >> ${brace('CLAUDE_ENV_FILE')}`,
@@ -66,12 +66,12 @@ describe(`${name}: CLAUDE_ENV_FILE`, () => {
     }
   })
 
-  it.fails('is silent on an event that Claude Code does not know', () => {
+  it('is silent on an event that Claude Code does not know', () => {
     expect(shell('echo $CLAUDE_ENV_FILE', 'Bogus')).toEqual([])
     expect(shell('echo $CLAUDE_ENV_FILE', 'stop')).toEqual([])
   })
 
-  it.fails('reads the executable and each argument in exec form', () => {
+  it('reads the executable and each argument in exec form', () => {
     expect(ids(command({ command: 'tee', args: ['-a', '$CLAUDE_ENV_FILE'] }))).toEqual(['envFile'])
     expect(ids(command({ command: '$CLAUDE_ENV_FILE', args: ['x'] }))).toEqual(['envFile'])
     expect(
@@ -83,13 +83,13 @@ describe(`${name}: CLAUDE_ENV_FILE`, () => {
 })
 
 describe(`${name}: CLAUDE_MODEL`, () => {
-  it.fails('reports a reference on every event, a SessionStart hook too', () => {
+  it('reports a reference on every event, a SessionStart hook too', () => {
     for (const event of [...HOOK_EVENTS, 'Bogus']) {
       expect(shell('echo "$CLAUDE_MODEL"', event), event).toEqual(['model'])
     }
   })
 
-  it.fails('reads the spellings of a variable, and stops at the name', () => {
+  it('reads the spellings of a variable, and stops at the name', () => {
     expect(shell(`echo ${brace('CLAUDE_MODEL')}`)).toEqual(['model'])
     expect(shell('Write-Host $env:CLAUDE_MODEL')).toEqual(['model'])
     for (const text of [
@@ -102,7 +102,7 @@ describe(`${name}: CLAUDE_MODEL`, () => {
     }
   })
 
-  it.fails('reports each variable once, for a command that holds both', () => {
+  it('reports each variable once, for a command that holds both', () => {
     expect(shell('echo $CLAUDE_MODEL $CLAUDE_ENV_FILE', 'Stop')).toEqual(['envFile', 'model'])
     expect(shell('echo $CLAUDE_MODEL $CLAUDE_ENV_FILE', 'SessionStart')).toEqual(['model'])
   })
@@ -116,17 +116,17 @@ describe(`${name}: the messages`, () => {
       FILES.project,
     )
 
-  it.fails('names the event and the events that set the variable', () => {
+  it('names the event and the events that set the variable', () => {
     const found = at('echo $CLAUDE_ENV_FILE', 'Stop')
     expect(found.map(({ messageId, line, column }) => [messageId, line, column])).toEqual([
-      ['envFile', 2, 55],
+      ['envFile', 2, 64],
     ])
     expect(found[0]?.message).toBe(
       'Claude Code sets CLAUDE_ENV_FILE for "SessionStart", "Setup", "CwdChanged" and "FileChanged" hooks only. A Stop hook has no such variable.',
     )
   })
 
-  it.fails('says that CLAUDE_MODEL does not exist', () => {
+  it('says that CLAUDE_MODEL does not exist', () => {
     expect(at('echo $CLAUDE_MODEL', 'Stop')[0]?.message).toBe(
       'Claude Code sets no CLAUDE_MODEL variable, so it is always empty. Read "model" in the input of a SessionStart hook, or set ANTHROPIC_MODEL.',
     )
@@ -134,14 +134,14 @@ describe(`${name}: the messages`, () => {
 })
 
 describe(`${name}: the handlers and the files`, () => {
-  it.fails('reads a command handler only', () => {
+  it('reads a command handler only', () => {
     expect(ids({ type: 'http', command: '$CLAUDE_MODEL' })).toEqual([])
     expect(ids({ type: 'prompt', prompt: '$CLAUDE_MODEL' })).toEqual([])
     expect(ids({ command: '$CLAUDE_MODEL' })).toEqual([])
     expect(ids({ type: 'command', command: 5 })).toEqual([])
   })
 
-  it.fails('reads every settings file, hooks.json, a skill and a project subagent', () => {
+  it('reads every settings file, hooks.json, a skill and a project subagent', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(command({ command: '$CLAUDE_MODEL' }), 'Stop', file), file).toEqual(['model'])
     }
@@ -153,13 +153,13 @@ describe(`${name}: the handlers and the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a plugin agent', () => {
+  it('is silent in a hidden drop-in, and in a plugin agent', () => {
     expect(ids(command({ command: '$CLAUDE_MODEL' }), 'Stop', FILES.hidden)).toEqual([])
     const yaml = 'Stop:\n  - hooks:\n      - type: command\n        command: echo $CLAUDE_MODEL\n'
     expect(markdownIds(name, frontmatter(yaml), pluginAgent())).toEqual([])
   })
 
-  it.fails('is silent on a config that is malformed', () => {
+  it('is silent on a config that is malformed', () => {
     expect(jsonIds(name, settings([]), FILES.project)).toEqual([])
     expect(
       jsonIds(name, settings({ Stop: [{ hooks: [{ type: 'command' }] }] }), FILES.project),
