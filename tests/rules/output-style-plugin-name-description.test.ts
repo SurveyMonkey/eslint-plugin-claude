@@ -1,22 +1,88 @@
-// The plugin components page: a plugin output style is a style file "with
-// `name` and `description` frontmatter".
-import { describe, expect, it } from 'vitest'
-import { repo } from '../agent-settings.test-support.ts'
-import { lintMarkdown } from '../rule-tester.test-support.ts'
+// The plugin components page, "Themes and output styles": a plugin output
+// style is a style file "with `name` and `description` frontmatter". A style
+// without them loads under its file name, with no description.
+import { pluginStyle } from '../plugin-fixture.test-support.ts'
+import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
-const lint = (code: string, at = 'output-styles/s.md') =>
-  lintMarkdown(
-    'output-style-plugin-name-description',
-    code,
-    `${repo({ '.claude-plugin/plugin.json': '{}' })}/${at}`,
-  )
+const local = '.claude/output-styles/s.md'
+const style = (fields: string) => `---\n${fields}---\n\nBody.\n`
+const file = (fields: string, filename = pluginStyle()) => ({ code: style(fields), filename })
 
-describe('output-style-plugin-name-description', () => {
-  it.fails('reports a plugin style with no name', () => {
-    expect(lint('---\ndescription: d\n---\n\nBody.\n')).toMatchObject([{ messageId: 'missing' }])
-  })
-
-  it.fails('stays silent for a style with both fields', () => {
-    expect(lint('---\nname: s\ndescription: d\n---\n\nBody.\n')).toEqual([])
-  })
-})
+markdownTester.run(
+  'output-style-plugin-name-description',
+  ruleOf('output-style-plugin-name-description'),
+  {
+    valid: [
+      file('name: s\ndescription: d\n'),
+      file('name: s\ndescription: d\nkeep-coding-instructions: true\n'),
+      // A value of another type is for `output-style-frontmatter-schema`.
+      file('name: 1\ndescription: [d]\n'),
+      file('name: s\ndescription: 0\n'),
+      // A local style: the docs ask for the fields in a plugin style.
+      file('', local),
+      { code: 'Body.\n', filename: local },
+      // Frontmatter that does not parse is for `output-style-frontmatter-valid`.
+      file('name: [unclosed\n'),
+      // So is a block that is not on line 1.
+      { code: '\n---\nname: s\ndescription: d\n---\n', filename: pluginStyle() },
+      { code: 'Body.\n\n---\nname: s\n---\n', filename: pluginStyle() },
+      file('name: s\ndescription: d\n', 'docs/s.md'),
+      file(
+        'name: s\ndescription: d\n',
+        pluginStyle().replace('output-styles/', 'output-styles/sub/'),
+      ),
+    ],
+    invalid: [
+      {
+        ...file('description: d\n'),
+        errors: [{ messageId: 'missing', data: { fields: '`name`' }, line: 1, endLine: 3 }],
+      },
+      {
+        ...file('name: s\n'),
+        errors: [{ messageId: 'missing', data: { fields: '`description`' } }],
+      },
+      {
+        ...file('keep-coding-instructions: true\n'),
+        errors: [{ messageId: 'missing', data: { fields: '`name` or `description`' } }],
+      },
+      // An empty value, a blank string and a null value set nothing.
+      {
+        ...file('name:\ndescription: d\n'),
+        errors: [{ messageId: 'missing', data: { fields: '`name`' } }],
+      },
+      {
+        ...file('name: "  "\ndescription: d\n'),
+        errors: [{ messageId: 'missing', data: { fields: '`name`' } }],
+      },
+      {
+        ...file('name: s\ndescription: ""\n'),
+        errors: [{ messageId: 'missing', data: { fields: '`description`' } }],
+      },
+      // Empty frontmatter, and no frontmatter at all.
+      {
+        ...file(''),
+        errors: [{ messageId: 'missing', data: { fields: '`name` or `description`' } }],
+      },
+      {
+        code: 'Body.\n',
+        filename: pluginStyle(),
+        errors: [
+          {
+            messageId: 'missing',
+            data: { fields: '`name` or `description`' },
+            line: 1,
+            column: 1,
+            endLine: 1,
+            endColumn: 1,
+          },
+        ],
+      },
+      // A fenced block in the body is no frontmatter.
+      {
+        code: '```\n---\nname: s\n---\n```\n',
+        filename: pluginStyle(),
+        errors: [{ messageId: 'missing' }],
+      },
+    ],
+  },
+)

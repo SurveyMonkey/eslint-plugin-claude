@@ -210,6 +210,26 @@ const TREE: Record<string, string> = {
   'docs/agents/a.md':
     '---\nmade_up: 1\npermissionMode: bypassPermissions\ntools: AskUserQuestion, Bogus\n---\n',
   'docs/output-styles/s.md': '---\nname: [unclosed\nforce-for-plugin: true\n---\n',
+  // The name rules of the agent and output style group: a reporting file for each rule, and the
+  // same fault where the rule is silent. `packages/sh` has a `.git`, so the rules that read the
+  // folders above can walk up to it. In the rest of the tree the bound is the `.claude/` folder.
+  '.claude/agents/manual.md': '---\nname: man\ndescription: d\npermissionMode: manual\n---\n',
+  'plugins/p/agents/manual.md': '---\nname: man\ndescription: d\npermissionMode: manual\n---\n',
+  '.claude/agents/scope.md': '---\nname: sc\ndescription: d\nmemory: user\n---\n',
+  '.claude/agents/scope-project.md': '---\nname: scp\ndescription: d\nmemory: project\n---\n',
+  'plugins/p/agents/scope.md': '---\nname: sc\ndescription: d\nmemory: local\n---\n',
+  'plugins/p/agents/clash-a.md': '---\nname: clash-b\ndescription: d\n---\n',
+  'plugins/p/agents/clash-b.md': '---\ndescription: d\n---\n',
+  'packages/sh/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/sh/.claude/agents/layered.md': '---\nname: layered\ndescription: d\n---\n',
+  'packages/sh/pkg/.claude/agents/layered.md': '---\nname: layered\ndescription: d\n---\n',
+  'packages/sh/pkg/.claude/agents/solo.md': '---\nname: solo\ndescription: d\n---\n',
+  'packages/sh/.claude/output-styles/layered.md': '---\nname: layered\n---\n',
+  'packages/sh/pkg/.claude/output-styles/layered.md': '---\nname: layered\n---\n',
+  '.claude/output-styles/twin-a.md': '---\nname: twin\n---\n',
+  '.claude/output-styles/twin-b.md': '---\nname: twin\n---\n',
+  'plugins/p/output-styles/clean.md': '---\nname: clean\ndescription: d\n---\n',
+  'plugins/p/output-styles/bare.md': '# Bare\n',
   // One bad marketplace file with each fault of the marketplace rules, one in a
   // nested directory, and the same content where no rule reads it.
   '.claude-plugin/marketplace.json': badMarketplace,
@@ -977,6 +997,23 @@ const EXPECTED = [
   '.claude/agents/inline.md: claude/agent-mcp-servers-inline-trust@1',
   // A plugin agent ignores `mcpServers`, so the trust rule is silent and the ignored-fields rule reports.
   'plugins/p/agents/inline.md: claude/agent-plugin-ignored-fields@2',
+  '.claude/agents/manual.md: claude/agent-permission-mode-manual@1',
+  // A plugin agent ignores `permissionMode`, so the manual rule is silent and the ignored-fields rule reports.
+  'plugins/p/agents/manual.md: claude/agent-plugin-ignored-fields@2',
+  '.claude/agents/scope.md: claude/agent-memory-scope-project@1',
+  'plugins/p/agents/scope.md: claude/agent-memory-scope-project@1',
+  'plugins/p/agents/clash-a.md: claude/agent-plugin-scoped-name-unique@1',
+  'plugins/p/agents/clash-b.md: claude/agent-plugin-scoped-name-unique@1',
+  // `ignored.md` and `inline.md` of the plugin are both named `i`.
+  'plugins/p/agents/ignored.md: claude/agent-plugin-scoped-name-unique@1',
+  'plugins/p/agents/inline.md: claude/agent-plugin-scoped-name-unique@1',
+  'packages/sh/pkg/.claude/agents/layered.md: claude/agent-name-shadowing@1',
+  'packages/sh/pkg/.claude/output-styles/layered.md: claude/output-style-name-unique@1',
+  '.claude/output-styles/twin-a.md: claude/output-style-name-unique@1',
+  '.claude/output-styles/twin-b.md: claude/output-style-name-unique@1',
+  'plugins/p/output-styles/forced.md: claude/output-style-force-for-plugin@1',
+  'plugins/p/output-styles/forced.md: claude/output-style-plugin-name-description@1',
+  'plugins/p/output-styles/bare.md: claude/output-style-plugin-name-description@1',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1001,16 +1038,23 @@ const AGENT_RULES = [
   'output-style-frontmatter-schema',
 ]
 
-// The subagent field rules of #9 that are `warn`, in the order of the `modules` list. They
-// follow the agent and output style rules.
+// The agent and output style rules of #9 that are `warn`, in the order of the `modules` list.
+// They follow the agent and output style rules that are errors.
 const AGENT_WARN_RULES = [
   'agent-disallowed-tools-scope',
   'agent-field-min-version',
   'agent-mcp-servers-inline-trust',
+  'agent-memory-scope-project',
+  'agent-name-shadowing',
   'agent-name-shadows-builtin',
   'agent-no-bom',
+  'agent-permission-mode-manual',
+  'agent-plugin-scoped-name-unique',
   'agent-tools-conditional',
   'agent-tools-task-alias',
+  'output-style-force-for-plugin',
+  'output-style-name-unique',
+  'output-style-plugin-name-description',
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
@@ -1228,6 +1272,8 @@ describe('configs', () => {
     const found = (await reports(config)).filter((report) => !EXPECTED.includes(report))
     expect(found).toEqual([
       '.claude/agents/bom.md: claude/agent-no-bom@1',
+      // The alias `manual` needs a newer Claude Code than the `minVersion` of this test.
+      '.claude/agents/manual.md: claude/agent-field-min-version@1',
       '.claude/agents/versions.md: claude/agent-field-min-version@1',
       'packages/z/.claude/agents/boss.md: claude/agent-field-min-version@1',
       'plugins/p/agents/bom.md: claude/agent-no-bom@1',
