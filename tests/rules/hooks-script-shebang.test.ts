@@ -14,6 +14,8 @@ import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-s
 const name = 'hooks-script-shebang'
 const P = `\${CLAUDE_PROJECT_DIR}`
 const R = `\${CLAUDE_PLUGIN_ROOT}`
+// The system tool that makes a FIFO. Node has no call for it.
+const MAKE_FIFO = 'mkfifo'
 const GOOD = '#!/bin/bash\necho ok\n'
 const BAD = 'echo ok\n'
 
@@ -187,7 +189,7 @@ describe(`${name}: the silent cases`, () => {
   it.skipIf(process.platform === 'win32')('is silent for a FIFO', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/fifo` })]))
     const root = repo({ '.claude/settings.json': text })
-    execFileSync('mkfifo', [path.join(root, 'fifo')])
+    execFileSync(MAKE_FIFO, [path.join(root, 'fifo')])
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toEqual([])
   })
 
