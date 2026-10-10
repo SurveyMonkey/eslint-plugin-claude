@@ -53,6 +53,10 @@ describe('parseImports', () => {
     expect(paths('\\@x.md and **x**@y.md')).toEqual([])
   })
 
+  it('skips a code span that ends the text', () => {
+    expect(paths('`@x.md`')).toEqual([])
+  })
+
   it('skips a code span', () => {
     expect(paths('Write `@README` to keep the text, and @README to import it.')).toEqual(['README'])
     expect(paths('Use ``a ` @x.md`` and ```@y.md``` here')).toEqual([])
