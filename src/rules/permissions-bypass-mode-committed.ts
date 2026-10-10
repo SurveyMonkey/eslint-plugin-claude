@@ -26,14 +26,15 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       project:
         '"defaultMode": "bypassPermissions" has no effect in a project or local settings file since Claude Code v2.1.257: the session starts in Manual mode. Earlier versions honor it and skip every permission check.{{allowNote}} Remove it.',
       managed:
-        '"defaultMode": "bypassPermissions" runs every tool call without a prompt. Deny rules still apply.{{allowNote}}',
+        '"defaultMode": "bypassPermissions" runs tool calls without the usual prompts. Deny rules still apply.{{allowNote}}',
     },
   },
   create(context) {
     if (isHiddenDropIn(context.filename)) {
       return {}
     }
-    const messageId = kindOf(context.filename) === 'managed' ? 'managed' : 'project'
+    const isManaged = kindOf(context.filename) === 'managed'
+    const messageId = isManaged ? 'managed' : 'project'
     return {
       Document(node) {
         const permissions = lastMember(node.body, 'permissions')?.value
@@ -42,7 +43,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           return
         }
         const lock = lastMember(permissions, 'disableBypassPermissionsMode')?.value
-        if (lock?.type === 'String' && lock.value === 'disable') {
+        // In a managed file, Claude Code reads a lock that is not "disable" as "disable", so the
+        // mode is locked. `permissions-disable-mode-value` reports the value.
+        const isLocked =
+          lock !== undefined &&
+          lock.type !== 'Null' &&
+          (isManaged || (lock.type === 'String' && lock.value === 'disable'))
+        if (isLocked) {
           return
         }
         const allow = lastMember(permissions, 'allow')?.value
