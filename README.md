@@ -91,6 +91,14 @@ The rules are in groups by the type of file that they check. The groups follow t
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings and `plugin.json` is one that Claude Code knows | `error` | `error` |
+| [`claude/hooks-script-exists`](docs/rules/hooks-script-exists.md) | A repository script that a hook command names, with the project or plugin variable or by a path from the project, exists | `error` | `error` |
+| [`claude/hooks-script-executable`](docs/rules/hooks-script-executable.md) | A repository script that is itself the hook command has git mode `100755` | `error` | `error` |
+
+### Plugin manifest and layout
+
+| Rule | Checks | `recommended` | `strict` |
+|------|--------|---------------|----------|
+| [`claude/plugin-bin-executable`](docs/rules/plugin-bin-executable.md) | Each file directly in the `bin/` of a plugin has git mode `100755` | `error` | `error` |
 
 ### Marketplace manifest
 
@@ -140,6 +148,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-model-list`](docs/rules/settings-model-list.md) | A model list is consistent: at most 3 distinct `fallbackModel` entries (option `max`), no empty `availableModels` that blocks a named model, `enforceAvailableModels` with a list, no family alias beside a same-family ID, no `best`, `opusplan` or `default` in `deniedModels`, `modelOverrides` keys that are Anthropic IDs, and a custom model option that `availableModels` lists | `error` | `error` |
 | [`claude/settings-skilloverrides-key`](docs/rules/settings-skilloverrides-key.md) | A `skillOverrides` key is one that Claude Code applies: no plugin skill key (`plugin:skill`), and no bundled alias key (`review`, `checkup`, `proactive`) in a project or local file | `error` | `error` |
 | [`claude/settings-env-shadowed`](docs/rules/settings-env-shadowed.md) | An `env` variable is not voided: `BASH_MAX_OUTPUT_LENGTH` beside `bashOutputMaxChars`, `ANTHROPIC_DEFAULT_MODEL` beside `model` or set to `default`, `inherit`, `opusplan` or `haiku`, `CLAUDE_CODE_SUBAGENT_MODEL: "inherit"`, and `NO_COLOR` or `FORCE_COLOR` | `error` | `error` |
+| [`claude/statusline-script-exists`](docs/rules/statusline-script-exists.md) | The script in `statusLine.command`, `subagentStatusLine.command` or `fileSuggestion.command` exists in the repository and has git mode `100755` | `error` | `error` |
 
 ### Permissions and sandbox
 

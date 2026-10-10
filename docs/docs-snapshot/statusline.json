@@ -1,0 +1,170 @@
+{
+  "url": "https://code.claude.com/docs/en/statusline",
+  "hash": "961458b05ed18ec520f3f77269668262829844c914f42dd64f4c78438c06a472",
+  "blocks": [
+    {
+      "id": "customize-your-status-line",
+      "hash": "e95f414640bd86ee3191c4fbb3f4784bcc3552935a654718c131e1daa36e10c3"
+    },
+    {
+      "id": "set-up-a-status-line",
+      "hash": "a8b43afa6d6198ef7100ebde1d0eb510ddc38b94c33570cdac600ade568699ff"
+    },
+    {
+      "id": "use-the-statusline-command",
+      "hash": "44e446be0845c7bd451d32181623431219f3ddbe134f1792f5d9057adb6532f0"
+    },
+    {
+      "id": "manually-configure-a-status-line",
+      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26"
+    },
+    {
+      "id": "disable-the-status-line",
+      "hash": "945c3955a43a88638c1e2dc5d69795f05f73a4a12b69cfe87b33abb3007eae3f"
+    },
+    {
+      "id": "build-a-status-line-step-by-step",
+      "hash": "d3f3fa61ac1598871ff5491772f55d022792a1d2a7a280793a4abe7b921cec92"
+    },
+    {
+      "id": "how-status-lines-work",
+      "hash": "051d56364702fbe388285beef979f29ccdc1caf7252b8fbf09f7db0041c1a2c7"
+    },
+    {
+      "id": "when-the-status-line-updates",
+      "hash": "694e3f9562ca6f2ae72bf73a74175e88ab12cce22f5d1c791ee43326fe892f3d"
+    },
+    {
+      "id": "what-your-script-can-output",
+      "hash": "3e31c0e597c870c763f7a685eb73b06864daa6d54a627a4f959ade5e7c8723a9"
+    },
+    {
+      "id": "size-output-to-the-terminal",
+      "hash": "cab76d0ce094ae1adcf8be564ca053080286ef8d290cda6306c0c8459a333158"
+    },
+    {
+      "id": "available-data",
+      "hash": "dc0bbafcc4d9561b0ae65a05660228ef73d3e1dcf46425226e796b9788c4c236"
+    },
+    {
+      "id": "context-window-fields",
+      "hash": "4bbe4ffdc30cb750c180b45f793dc4543e9fed58f340a208ab3c1947c7ef1cd5"
+    },
+    {
+      "id": "spend-limit-fields",
+      "hash": "b2512f5d9472ab3f2a6592188f8eb56475c646b2113cc66df806dba92aafc009"
+    },
+    {
+      "id": "prompt-cache-fields",
+      "hash": "e74d1beb4f5993d4b3e5f84ed544df032c3dd6a8e62188a45019315f92e9e0eb"
+    },
+    {
+      "id": "last-miss-cause",
+      "hash": "2c7da3c0cf90b95d106a29915181d599186e8414fdb17126ec9391aec84f8468"
+    },
+    {
+      "id": "examples",
+      "hash": "58d32b993263655651f29a5246df3920a298663dcda91b3e2eb8a83de51cc515"
+    },
+    {
+      "id": "context-window-usage",
+      "hash": "cb916f7e58d2b2b5dd1d76da45e68c80dbd7abe9af0fa3d12e49c0e3a4b9a872"
+    },
+    {
+      "id": "git-status-with-colors",
+      "hash": "b3832c21f99e00f1ad4396e1c061afddfd4ae1257254f24a10417a952b48d713"
+    },
+    {
+      "id": "cost-and-duration-tracking",
+      "hash": "56bd20f16caca6002d0e96cf46049da7e581b7f7125dd8eab43798b749842575"
+    },
+    {
+      "id": "display-multiple-lines",
+      "hash": "24a43f7669317d250cc09845a6f8a6a6c382178adaadba9459e43b5b5a99d135"
+    },
+    {
+      "id": "clickable-links",
+      "hash": "8828c77afb69606af0ed6978fcd001849c5122bbe71ba40d56ea7c0aa53eeb8c"
+    },
+    {
+      "id": "rate-limit-usage",
+      "hash": "1197cf291d03e9e32a4c91798e1ee217eac4bc2eb0b99fc7804a8383a6b92930"
+    },
+    {
+      "id": "cache-expensive-operations",
+      "hash": "c7665101f50e5cc543c89f2e69606d659c22edf0393737154481fc6b37e7db4e"
+    },
+    {
+      "id": "windows-configuration",
+      "hash": "cf11b740fddf26d96b3cf6ebd9ca43b9bf1954c1a5fd14240efea2109beed74f"
+    },
+    {
+      "id": "subagent-status-lines",
+      "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d"
+    },
+    {
+      "id": "task-fields",
+      "hash": "c2f9e1965dfc75055cb755c6b86c6948a46bffe2c5b8448375db522c80e8b32c"
+    },
+    {
+      "id": "tips",
+      "hash": "924cf40717dbc48d3c817dc84c3645168d405e00cb370cb9c09485f9300b4ab8"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "c9dfe5c473af62edf2ed36ae2bf81cbe7635190ec1a7be405013eafb7d4f4cae"
+    },
+    {
+      "id": "status-line-not-appearing",
+      "hash": "a71152f13345df7577464f2d0663172b03c93886d0750b2c47bf450d30f13dec"
+    },
+    {
+      "id": "status-line-shows----or-empty-values",
+      "hash": "0052b49797d48df09e0494d91877e1084083d6c9f9561215e8153a7a9662304e"
+    },
+    {
+      "id": "context-percentage-shows-unexpected-values",
+      "hash": "f467aa3b0431a86fe3be6dd6bf51c08d9d46a2bfffe94f1800e4085e9189b089"
+    },
+    {
+      "id": "osc-8-links-not-clickable",
+      "hash": "d174bd2f2b4ce1d3591ed4137b01075dcb2354750f20b7af9afe23e3cbdcb1b9"
+    },
+    {
+      "id": "display-glitches-with-escape-sequences",
+      "hash": "ba034dc99657e28855105b7c788c3802b6b1527288f83918ac163392f79424cd"
+    },
+    {
+      "id": "workspace-trust-required",
+      "hash": "7f4753011ddebfe37b7d1362ceea6f5f1a1a3e8baabccdbec414035d20f23ddc"
+    },
+    {
+      "id": "script-errors-or-hangs",
+      "hash": "f7a96fbe03a6c2d9980df8de7f2a503e2295b63a1903bc7b2d4e2604ac48ca5f"
+    },
+    {
+      "id": "notifications-share-the-status-line-row",
+      "hash": "0c7b1391e9689d8a739748c8d54ef3f927a9fa2b0ae60c4bd85d84f942cdfb98"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Manually configure a status line",
+      "id": "manually-configure-a-status-line",
+      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26",
+      "text": "### Manually configure a status line\n\nAdd a `statusLine` field to your user settings (`~/.claude/settings.json`, where `~` is your home directory) or [project settings](/docs/en/settings#where-settings-live). Set `type` to `\"command\"` and point `command` to a script path or an inline shell command. For a full walkthrough of creating a script, see [Build a status line step by step](#build-a-status-line-step-by-step).\n\n```json theme={null}\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"~/.claude/statusline.sh\",\n    \"padding\": 2\n  }\n}\n```\n\nThe `command` field runs in a shell, so you can also use inline commands instead of a script file. This example uses `jq` to parse the JSON input and display the model name and context percentage:\n\n```json theme={null}\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"jq -r '\\\"[\\\\(.model.display_name)] \\\\(.context_window.used_percentage // 0)% context\\\"'\"\n  }\n}\n```\n\nThe optional `padding` field adds extra horizontal spacing (in characters) to the status line content. Defaults to `0`. This padding is in addition to the interface's built-in spacing, so it controls relative indentation rather than absolute distance from the terminal edge.\n\nThe optional `refreshInterval` field re-runs your command every N seconds in addition to the [event-driven updates](#how-status-lines-work). The minimum is `1`. Set this when your status line shows time-based data such as a clock, or when background subagents change git state while the main session is idle. Leave it unset to run only on events.\n\nThe optional `hideVimModeIndicator` field suppresses the built-in `-- INSERT --` text below the prompt. Set this to `true` when your script renders [`vim.mode`](#available-data) itself, so the mode is not shown twice."
+    },
+    {
+      "heading": "Status line not appearing",
+      "id": "status-line-not-appearing",
+      "hash": "a71152f13345df7577464f2d0663172b03c93886d0750b2c47bf450d30f13dec",
+      "text": "### Status line not appearing\n\nIf you configured a status line and nothing shows at the bottom of the interface, work through these checks:\n\n* Verify your script is executable: `chmod +x ~/.claude/statusline.sh`\n* Check that your script outputs to stdout, not stderr\n* Run your script manually to verify it produces output\n* On Windows with Git Bash installed, backslashes in the `command` path are likely being consumed as escape characters before the script runs. Use forward slashes in the path. See [Windows configuration](#windows-configuration).\n* If `disableAllHooks` is `true` outside managed settings after [settings precedence](/docs/en/hooks#disable-or-remove-hooks) applies, Claude Code runs only a `statusLine` from managed settings, and with no managed `statusLine` the status line is disabled. Remove the setting, or set it to `false` in the file that sets it, to re-enable. See [`disableAllHooks`](/docs/en/settings-reference#disableallhooks).\n* If your organization sets `allowManagedHooksOnly` in managed settings, your custom status line disappears without warning: you can only get a status line from a `statusLine` value in those managed settings. See [what runs under `allowManagedHooksOnly`](/docs/en/settings-reference#what-runs-under-allowmanagedhooksonly) for the full behavior, and ask your administrator whether this setting applies to you.\n* Run `claude --debug` to log your script's stderr on every status line invocation, and its exit code on the first invocation in a session\n* Ask Claude to read your settings file and execute the `statusLine` command directly to surface errors"
+    },
+    {
+      "heading": "Subagent status lines",
+      "id": "subagent-status-lines",
+      "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d",
+      "text": "## Subagent status lines\n\nThe `subagentStatusLine` setting renders a custom row body for each [subagent](/docs/en/sub-agents) shown in the agent panel below the prompt. Use it to replace the default `name · description · token count` row with your own formatting.\n\n```json theme={null}\n{\n  \"subagentStatusLine\": {\n    \"type\": \"command\",\n    \"command\": \"~/.claude/subagent-statusline.sh\"\n  }\n}\n```\n\nThe command runs once per refresh tick and receives all visible subagent rows as a single JSON object on stdin. The input includes the [base hook fields](/docs/en/hooks#common-input-fields), a `columns` field with the usable row width, and a `tasks` array with one entry per row, described in [Task fields](#task-fields).\n\nWrite one JSON line to stdout per row you want to override, in the form `{\"id\": \"<task id>\", \"content\": \"<row body>\"}`. The `content` string is rendered as-is, including ANSI colors and OSC 8 hyperlinks. Omit a task's `id` to keep the default rendering for that row; emit an empty `content` string to hide it.\n\nThe same trust, `disableAllHooks`, and [`allowManagedHooksOnly`](/docs/en/settings-reference#allowmanagedhooksonly) gates that apply to `statusLine` apply here. Plugins can ship a default `subagentStatusLine` in their [`settings.json`](/docs/en/plugins/manifest-reference#standard-layout), but unlike hooks, plugin values don't run under `allowManagedHooksOnly` even when the plugin is force-enabled in managed settings `enabledPlugins`."
+    }
+  ]
+}

@@ -34,6 +34,8 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-tools-unavailable',
     'command-legacy-format',
     'hooks-event-name-known',
+    'hooks-script-executable',
+    'hooks-script-exists',
     'marketplace-command-version-ignored',
     'marketplace-entry-component-paths',
     'marketplace-entry-hooks-inline',
@@ -60,6 +62,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-specifier-unsupported',
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
+    'plugin-bin-executable',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-schema',
@@ -99,6 +102,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-plugin-vars-outside-plugin',
     'skill-reference-exists',
     'skill-reserved-name',
+    'statusline-script-exists',
   ])
   for (const [name, rule] of rules) {
     expect(rule.meta?.docs?.url).toBe(docsUrl(name))

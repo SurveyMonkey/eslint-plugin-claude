@@ -8,12 +8,18 @@ import path from 'node:path'
 import { ESLint, type Linter } from 'eslint'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
+import { stage } from './git-tree.test-support.ts'
 
 const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
 const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
+const projectDir = `\${CLAUDE_PROJECT_DIR}`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
+/** A hooks object with one command hook. */
+const hookOf = (command: string) => ({
+  hooks: { PreToolUse: [{ matcher: 'Bash', hooks: [{ type: 'command', command }] }] },
+})
 // One bad permission rule for each grammar rule, in the order of GRAMMAR_RULES.
 const badSettings = JSON.stringify({
   hooks: { preToolUse: [] },
@@ -420,7 +426,112 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // `hooks-script-exists`: a hook script that is not there, in each file that it reads. A managed
+  // file holds a policy key. A hidden drop-in is for `settings-managed-file`. The same content
+  // where no rule reads it: another extension, a nested directory, another settings file, and
+  // a `hooks/hooks.json` that is in no plugin.
+  'packages/hs/.claude/settings.json': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/.claude/settings.local.json': JSON.stringify(hookOf('tools/gone.sh')),
+  'packages/hs/managed-settings.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/gone.sh`),
+  }),
+  'packages/hs/managed-settings.d/10-a.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/gone.sh`),
+  }),
+  'packages/hs/managed-settings.d/.20-hidden.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/gone.sh`),
+  }),
+  'packages/hs/managed-settings.d/30-b.txt': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/managed-settings.d/sub/40-c.json': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/.vscode/settings.json': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/plugin/.claude-plugin/plugin.json': JSON.stringify({ name: 'hs' }),
+  'packages/hs/plugin/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
+  'packages/hs/plugin/hooks/other.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
+  'packages/hs/loose/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
 }
+
+// The files that the test stages in the repository `packages/hx`, for the rules that read the git
+// index mode. Every file has index mode `100644`, except the four that `GIT_EXECUTABLE` names.
+const GIT_REPO = 'packages/hx'
+const GIT_TREE: Record<string, string> = {
+  'tools/run.sh': '#!/bin/sh\n',
+  'scripts/run.sh': '#!/bin/sh\n',
+  'ok/tools/ok.sh': '#!/bin/sh\n',
+  '.claude/settings.json': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  '.claude/settings.local.json': JSON.stringify(hookOf('./tools/run.sh')),
+  'managed-settings.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/tools/run.sh`),
+  }),
+  'managed-settings.d/10-a.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/tools/run.sh`),
+  }),
+  'managed-settings.d/.20-hidden.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/tools/run.sh`),
+  }),
+  'managed-settings.d/30-b.txt': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  'managed-settings.d/sub/40-c.json': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  '.vscode/settings.json': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  'ok/.claude/settings.json': JSON.stringify(hookOf(`${projectDir}/tools/ok.sh`)),
+  'plugin/.claude-plugin/plugin.json': JSON.stringify({ name: 'hx' }),
+  'plugin/scripts/run.sh': '#!/bin/sh\n',
+  'plugin/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+  'plugin/hooks/other.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+  'loose/scripts/run.sh': '#!/bin/sh\n',
+  'loose/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+  // `plugin-bin-executable`: a plugin with a file in `bin/` at mode `100644` and one at `100755`,
+  // a nested file and a hidden file, which are silent. A plugin with a mode `100755` file only is
+  // silent. The `bin/` of a directory that is no plugin is silent.
+  'plugin/bin/tool': '#!/bin/sh\n',
+  'plugin/bin/ok': '#!/bin/sh\n',
+  'plugin/bin/.gitkeep': '',
+  'plugin/bin/lib/helper': '#!/bin/sh\n',
+  'ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'ok/bin/tool': '#!/bin/sh\n',
+  'loose/bin/tool': '#!/bin/sh\n',
+  // `statusline-script-exists`: a script with mode `100644`, a script that is not there, and a
+  // key of each of the three, in each file that it reads. The project of a managed file is the
+  // repository, so it names `sl/line.sh`. A hidden drop-in is for `settings-managed-file`. The
+  // same content where no rule reads it. A script with mode `100755` is silent.
+  'sl/line.sh': '#!/bin/sh\n',
+  'sl/ok/line.sh': '#!/bin/sh\n',
+  'sl/.claude/settings.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/line.sh` },
+  }),
+  'sl/.claude/settings.local.json': JSON.stringify({
+    subagentStatusLine: { type: 'command', command: './gone.sh' },
+  }),
+  'sl/managed-settings.json': JSON.stringify({
+    model: 'opus',
+    fileSuggestion: { type: 'command', command: `${projectDir}/sl/line.sh` },
+  }),
+  'sl/managed-settings.d/10-a.json': JSON.stringify({
+    model: 'opus',
+    statusLine: { type: 'command', command: `${projectDir}/sl/line.sh` },
+  }),
+  'sl/managed-settings.d/.20-hidden.json': JSON.stringify({
+    model: 'opus',
+    statusLine: { type: 'command', command: `${projectDir}/sl/gone.sh` },
+  }),
+  'sl/managed-settings.d/30-b.txt': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/sl/gone.sh` },
+  }),
+  'sl/managed-settings.d/sub/40-c.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/sl/gone.sh` },
+  }),
+  'sl/.vscode/settings.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/gone.sh` },
+  }),
+  'sl/ok/.claude/settings.json': JSON.stringify({
+    statusLine: { type: 'command', command: `${projectDir}/line.sh` },
+  }),
+}
+const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
 const ESCAPE_RULE = 'marketplace-relative-source-escape-symlink'
@@ -481,6 +592,7 @@ const SETTINGS_RULES = [
 // files of each. Each is an error.
 const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
 const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
+const HOOKS_FILES = ['**/hooks/hooks.json', ...PROJECT_FILES, ...MANAGED_FILES]
 const SCOPE_RULES = [
   { name: 'settings-valid-json', files: PROJECT_FILES },
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -498,6 +610,11 @@ const SCOPE_RULES = [
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  // The git layer of #10, #11 and #14. The rules that read the index mode need a repository.
+  { name: 'hooks-script-exists', files: HOOKS_FILES },
+  { name: 'hooks-script-executable', files: HOOKS_FILES },
+  { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'statusline-script-exists', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -661,6 +778,36 @@ const EXPECTED = [
   'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `hooks-script-exists` reads the project and managed files, and a `hooks.json` in a plugin.
+  ...[
+    'packages/hs/.claude/settings.json',
+    'packages/hs/.claude/settings.local.json',
+    'packages/hs/managed-settings.json',
+    'packages/hs/managed-settings.d/10-a.json',
+    'packages/hs/plugin/hooks/hooks.json',
+  ].map((file) => `${file}: claude/hooks-script-exists@2`),
+  'packages/hs/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `hooks-script-executable` reads the same files. The scripts `tools/run.sh`, `scripts/run.sh`,
+  // `plugin/scripts/run.sh` and `loose/scripts/run.sh` have index mode `100644`. The script
+  // `ok.sh` has `100755`.
+  ...[
+    'packages/hx/.claude/settings.json',
+    'packages/hx/.claude/settings.local.json',
+    'packages/hx/managed-settings.json',
+    'packages/hx/managed-settings.d/10-a.json',
+    'packages/hx/plugin/hooks/hooks.json',
+  ].map((file) => `${file}: claude/hooks-script-executable@2`),
+  'packages/hx/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `plugin-bin-executable` reads the manifest, and reports one file of its `bin/`.
+  'packages/hx/plugin/.claude-plugin/plugin.json: claude/plugin-bin-executable@2',
+  // `statusline-script-exists` reads the project and managed files, and no other file.
+  ...[
+    'packages/hx/sl/.claude/settings.json',
+    'packages/hx/sl/.claude/settings.local.json',
+    'packages/hx/sl/managed-settings.json',
+    'packages/hx/sl/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/statusline-script-exists@2`),
+  'packages/hx/sl/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -746,6 +893,12 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
     writeFileSync(path.join(root, file), content)
   }
+  const repo = path.join(root, GIT_REPO)
+  for (const [file, content] of Object.entries(GIT_TREE)) {
+    mkdirSync(path.dirname(path.join(repo, file)), { recursive: true })
+    writeFileSync(path.join(repo, file), content)
+  }
+  stage(repo, Object.keys(GIT_TREE), GIT_EXECUTABLE)
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))

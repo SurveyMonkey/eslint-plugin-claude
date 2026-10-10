@@ -18,6 +18,8 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import hooksScriptExecutable from './rules/hooks-script-executable.ts'
+import hooksScriptExists from './rules/hooks-script-exists.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -44,6 +46,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import pluginBinExecutable from './rules/plugin-bin-executable.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -83,6 +86,7 @@ import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
 import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
+import statuslineScriptExists from './rules/statusline-script-exists.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
 // `../package.json` resolves from both `src/` and `dist/`.
@@ -175,6 +179,10 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  hooksScriptExists,
+  hooksScriptExecutable,
+  pluginBinExecutable,
+  statuslineScriptExists,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -283,6 +291,10 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'hooks-script-exists': 'error',
+  'hooks-script-executable': 'error',
+  'plugin-bin-executable': 'error',
+  'statusline-script-exists': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
