@@ -27,10 +27,14 @@ import {
 } from '../hooks-config.ts'
 import { kindOf } from '../settings-files.ts'
 import {
+  danglingOf,
+  entriesOf,
   frontmatterOfFile,
+  isInside,
   markdownFiles,
   readJson,
   realDirectory,
+  realOf,
   repositoryRoot,
   UNREADABLE,
 } from '../skill-tree.ts'
@@ -53,8 +57,59 @@ function ancestors(dir: string, top: string): string[] {
   return realDirectory(dir) === top || parent === dir ? [dir] : [dir, ...ancestors(parent, top)]
 }
 
+/** The directories that hold no agent file and can be very large. */
+const SKIPPED = new Set(['.git', 'node_modules'])
+
+/** True when `entry` is a link with no target. */
+const isDangling = (entry: string) => realOf(entry) === null && danglingOf(entry) === UNREADABLE
+
+/** True when `dir` holds, at any depth, a link with no target. The scan of the agents folder skips such a link
+ *  without a flag, and the link can hold any agent: a file link or a folder link, with any name. */
+function hasDanglingLink(dir: string, bound: string, seen = new Set<string>()): boolean {
+  const real = realOf(dir)
+  const entries =
+    typeof real === 'string' && !seen.has(real) && isInside(real, bound) ? entriesOf(dir) : null
+  if (typeof real === 'string') {
+    seen.add(real)
+  }
+  return (
+    Array.isArray(entries) &&
+    entries
+      .filter((entry) => !SKIPPED.has(entry.name))
+      .some((entry) => {
+        const full = path.join(dir, entry.name)
+        return (
+          isDangling(full) ||
+          ((entry.isDirectory() || entry.isSymbolicLink()) && hasDanglingLink(full, bound, seen))
+        )
+      })
+  )
+}
+
+/** True when an agent could hide behind a link with no target in the agents folder of `dir`: the link is
+ *  `.claude`, `.claude/agents`, or an entry below. */
+function agentsHidden(dir: string, bound: string): boolean {
+  const claude = path.join(dir, '.claude')
+  const agents = path.join(claude, 'agents')
+  return isDangling(claude) || isDangling(agents) || hasDanglingLink(agents, bound)
+}
+
+/** Claude Code skips an agent file with no `name`, a `name` that starts with `-`, holds `:` or is longer than 256
+ *  characters, or no `description`, and a file whose YAML does not parse (sub-agents, "Subagent files Claude Code
+ *  skips"). Such a file defines no agent. */
+function agentNameOf(fields: Record<string, unknown> | null): string | undefined {
+  const agent = fields?.name
+  return typeof agent === 'string' &&
+    typeof fields?.description === 'string' &&
+    !agent.startsWith('-') &&
+    !agent.includes(':') &&
+    agent.length <= 256
+    ? agent
+    : undefined
+}
+
 /** The `name` of each agent file in `.claude/agents/` of `project` and of each folder above it. The result is
- *  undefined when a path cannot be read, when an agent file has no name or does not parse, or when no agent file
+ *  undefined when a path cannot be read, when a link with no target can hide an agent, or when no agent file
  *  exists. */
 function agentNames(project: string, claude: string): string[] | undefined {
   const top = repositoryRoot(project)
@@ -62,7 +117,7 @@ function agentNames(project: string, claude: string): string[] | undefined {
   const names: string[] = []
   for (const dir of ancestors(project, top)) {
     const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
-    if (scan.outside || scan.unreadable) {
+    if (scan.outside || scan.unreadable || agentsHidden(dir, bound)) {
       return undefined
     }
     for (const file of scan.files) {
@@ -70,11 +125,10 @@ function agentNames(project: string, claude: string): string[] | undefined {
       if (fields === UNREADABLE) {
         return undefined
       }
-      if (typeof fields?.name !== 'string') {
-        // A file that does not parse, or has no name, can define an agent that the rule cannot see.
-        return undefined
+      const agent = agentNameOf(fields)
+      if (agent !== undefined) {
+        names.push(agent)
       }
-      names.push(fields.name)
     }
   }
   return names.length > 0 ? names : undefined
