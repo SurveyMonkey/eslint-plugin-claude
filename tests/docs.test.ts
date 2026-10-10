@@ -243,6 +243,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-monitors-command-env',
     'plugin-no-project-plugins-dir',
     'plugin-package-lockfile',
+    'plugin-path-var-braced',
     'plugin-project-skills-dir-limits',
     'plugin-skill-dir-layout',
     'rules-frontmatter-schema',
