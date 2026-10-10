@@ -47,6 +47,7 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
+import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
@@ -231,6 +232,7 @@ const modules = [
   pluginCommandsMapFields,
   pluginUserConfigFieldApplicability,
   pluginSettingsAgentExists,
+  pluginDependenciesNotAutoInstalled,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -367,6 +369,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-commands-map-fields': 'warn',
   'plugin-user-config-field-applicability': 'warn',
   'plugin-settings-agent-exists': 'warn',
+  'plugin-dependencies-not-auto-installed': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
