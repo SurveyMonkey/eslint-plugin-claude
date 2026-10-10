@@ -23,7 +23,7 @@ The rule is `off` in `recommended`. It is a heuristic.
 ## Rule details
 
 A server with `alwaysLoad: true` loads all its tools into context, whatever the `ENABLE_TOOL_SEARCH`
-setting is. Startup can also wait for the server, for up to 5 seconds by default (`MCP_CONNECT_TIMEOUT_MS`).
+setting is. Startup can also wait for the server, for up to 5 seconds by default.
 A remote server with a valid `cached` entry does not hold startup. The docs say to use it "for a
 small number of tools" and give no number.[^defer]
 
@@ -44,10 +44,10 @@ server of a file that `plugin.json` names, the report is on the path in the mani
 no such server makes no report. The file that holds the servers reports them when ESLint lints it.
 The linted `.mcp.json` is read from its text and not from disk.
 
-A source that the rule cannot read adds no server. So the message says "At least N": the count is
-usually higher. A later source that the rule cannot read can also replace a server by its name, and
-then the count is lower. The rule makes no report when the sources that it can read stay within
-`max`.
+A later source can replace a server by its name. So the rule makes no report when it cannot read
+a source that it would count: a missing or unparsable file, a path that is not a `.json` file in
+the plugin, a file with a shape that is not a server map, or a `plugin.json` that does not parse.
+The message says "At least N", as the row states.
 
 Fail:
 

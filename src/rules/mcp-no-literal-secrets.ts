@@ -1,10 +1,10 @@
 // A credential written into the `headers`, `env`, `args` or `url` of a committed MCP config
 // (docs/rules/mcp-no-literal-secrets.md). The MCP page expands `${VAR}` in these fields, and the
 // managed MCP page says not to store credentials in `env` blocks. `claude plugin validate`
-// already warns about a header value that looks like a literal credential in a plugin MCP config,
-// so the rule reads `headers` in a project file only. The docs name no credential format, so a
-// credential is a literal value under a name that ends in a credential word (a heuristic). The
-// docs list no `oauth` key for a secret, so the rule does not read `oauth`. A message never holds
+// already warns about a header value that looks like a literal credential in a plugin MCP config.
+// So the rule reads `headers` in a project file and in `managed-mcp.json`, and not in a plugin.
+// The docs name no credential format. So a credential is a literal value under a name that ends
+// in a credential word (a heuristic). The docs list no `oauth` key for a secret, so the rule does not read `oauth`. A message never holds
 // the value.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -32,14 +32,21 @@ function isCredentialName(text: string): boolean {
 }
 
 const SCHEME = /^\s*(?:Bearer|Basic|Token|Digest)\s+/i
+// A Boolean word, `none`, `null` or a plain integer is a setting and not a credential.
+const NOT_A_CREDENTIAL = /^(?:true|false|none|null|\d+)$/i
 const BARE_VARIABLE = /^(?:\$[A-Za-z_]\w*|%[A-Za-z_]\w*%)$/
 
 /** True when `value` is a literal that can be a credential: it has text after an optional
- *  scheme word, it holds no `${` reference, and it is not a bare `$NAME` or `%NAME%` (that is for
- *  `mcp-env-var-syntax`). */
+ *  scheme word, it holds no `${` reference, it is not a bare `$NAME` or `%NAME%` (that is for
+ *  `mcp-env-var-syntax`), and it is not a setting such as `true`, `none` or `30`. */
 function isLiteral(value: string): boolean {
   const rest = value.replace(SCHEME, '').trim()
-  return rest !== '' && !value.includes('${') && !BARE_VARIABLE.test(rest)
+  return (
+    rest !== '' &&
+    !value.includes('${') &&
+    !BARE_VARIABLE.test(rest) &&
+    !NOT_A_CREDENTIAL.test(rest)
+  )
 }
 
 /** The user information of the URL text `url`: the text between `//` and the first `@` of the

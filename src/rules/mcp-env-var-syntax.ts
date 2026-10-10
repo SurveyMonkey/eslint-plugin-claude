@@ -1,7 +1,7 @@
 // A variable reference in a server entry that Claude Code does not expand
 // (docs/rules/mcp-env-var-syntax.md). The MCP page lists two forms: `${VAR}` and
 // `${VAR:-default}`. In `command`, `args`, `env`, `url` and `headers`, any other form stays as
-// written: `$VAR`, `%VAR%`, and a `${VAR` followed by another operator. The shell of a shell
+// written: `$VAR`, `%VAR%`, and a `${VAR` followed by one of seven operators. The shell of a shell
 // command reads its own arguments, so the rule skips the `args` of such a command. That list is
 // a choice of the plugin, not a list of the docs. `${user_config.KEY}` and `${CLAUDE_PLUGIN_ROOT}`
 // have no operator, so the rule leaves them. A `%XX%` with two hex digits is part of a
@@ -21,8 +21,8 @@ type StringNode = Extract<ValueNode, { type: 'String' }>
  *  arguments. */
 const SHELLS = ['sh', 'bash', 'zsh', 'dash', 'fish', 'ksh', 'cmd', 'powershell', 'pwsh']
 
-// A variable form that Claude Code does not expand. `$NAME` is not `$$NAME`. `${NAME` with an
-// operator other than `:-` is the other kind. `%NAME%` is the Windows kind, and a name of two hex
+// A variable form that Claude Code does not expand. `$NAME` is not `$$NAME`. `${NAME` with one
+// of the seven operators is the other kind. `%NAME%` is the Windows kind, and a name of two hex
 // digits is a percent-encoded byte.
 const FORMS = [
   /(?<!\$)\$[A-Za-z_][A-Za-z0-9_]*/,

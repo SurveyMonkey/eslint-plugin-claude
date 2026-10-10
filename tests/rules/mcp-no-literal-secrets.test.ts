@@ -223,3 +223,29 @@ it('reads each item, also after one that is not a string', () => {
   const entry = { command: 'x', args: [1, '--token=abc123'], env: { A_TOKEN: 5, B_TOKEN: 'b' } }
   expect(ids(lintProject(NAME, at(entry)))).toEqual(['secret', 'secret'])
 })
+it('stays silent for a setting that is not a credential', () => {
+  const env = { DISABLE_AUTH: 'true', NO_AUTH: 'FALSE', AUTH: 'none', API_KEY: 'null', KEY: '30' }
+  expect(ids(lintProject(NAME, at({ command: 'x', env })))).toEqual([])
+  expect(ids(lintProject(NAME, remote({ Authorization: 'None', 'X-Api-Key': '123' })))).toEqual([])
+  const args = ['--auth', 'none', '--auth=false', '--token', '30', 'AUTH=true']
+  expect(ids(lintProject(NAME, at({ command: 'x', args })))).toEqual([])
+})
+it('reports a real token beside a setting', () => {
+  const env = { DISABLE_AUTH: 'true', API_TOKEN: 'ghp_realtoken123', KEY: 'true1' }
+  expect(ids(lintProject(NAME, at({ command: 'x', env })))).toEqual(['secret', 'secret'])
+  expect(ids(lintProject(NAME, at({ command: 'x', args: ['--auth', 'abc123'] })))).toEqual([
+    'secret',
+  ])
+})
+it('reports a password that holds a dollar sign, and stays silent for a scheme word alone', () => {
+  expect(ids(lintProject(NAME, at({ command: 'x', env: { DB_PASSWORD: 'pa$word' } })))).toEqual([
+    'secret',
+  ])
+  expect(
+    ids(lintProject(NAME, remote({ Authorization: 'Token ', 'X-Api-Key': 'Digest ' }))),
+  ).toEqual([])
+})
+it('stays silent for a flag whose next item is not a string', () => {
+  expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', 5] })))).toEqual([])
+  expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', null] })))).toEqual([])
+})

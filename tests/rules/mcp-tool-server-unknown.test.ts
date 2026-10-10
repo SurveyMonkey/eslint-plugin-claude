@@ -293,3 +293,36 @@ it('reads each rule, also after one that it skips', () => {
   const code = allow('Bash', 'mcp__*', 'mcp__claude_ai_X__t', 'mcp__db__t', 'mcp__nope__t')
   expect(ids(settings(code, files))).toEqual(['unknown'])
 })
+it('stays silent for a block that does not parse, with CRLF, a byte order mark or a trailing space', () => {
+  for (const [label, text] of [
+    ['crlf', '---\r\nname: [\r\nmcpServers:\r\n  - inline: {}\r\n---\r\n'],
+    ['bom', '\uFEFF---\nname: [\nmcpServers:\n  - inline: {}\n---\n'],
+    ['space', '--- \nname: [\nmcpServers:\n  - inline: {}\n---\n'],
+  ] as const) {
+    const files = { '.mcp.json': servers('db'), '.claude/agents/a.md': text }
+    expect(ids(settings(allow('mcp__nope__t'), files)), label).toEqual([])
+  }
+})
+it('reads an mcpServers value that is not a list of maps as no server', () => {
+  const run = (fields: string) =>
+    ids(
+      settings(allow('mcp__nope__t', 'mcp__0__t'), {
+        '.mcp.json': servers('db'),
+        '.claude/agents/a.md': agent(fields),
+      }),
+    )
+  expect(run('mcpServers: x\n')).toEqual(['unknown', 'unknown'])
+  expect(run('mcpServers:\n  a: {}\n')).toEqual(['unknown', 'unknown'])
+  expect(run('mcpServers:\n  -\n')).toEqual(['unknown', 'unknown'])
+  expect(run('mcpServers:\n  - db2\n')).toEqual(['unknown', 'unknown'])
+  expect(run('mcpServers:\n  - [a]\n')).toEqual(['unknown', 'unknown'])
+})
+it('uses the .mcp.json of the nearest project for a skill of a nested project', () => {
+  const files = {
+    '.mcp.json': servers('db'),
+    'packages/a/.mcp.json': servers('web'),
+  }
+  const file = 'packages/a/.claude/skills/s/SKILL.md'
+  expect(ids(skill('mcp__web__t', files, file))).toEqual([])
+  expect(ids(skill('mcp__db__t', files, file))).toEqual(['unknown'])
+})
