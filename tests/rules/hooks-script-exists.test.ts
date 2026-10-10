@@ -105,27 +105,95 @@ describe(RULE, () => {
       expect(messages.map((m) => m.messageId)).toEqual(['missing'])
     })
 
-    it('reads each script of a command with an operator', () => {
+    it('checks the program word and the first argument of an interpreter only', () => {
       const root = plain({ 'ok.sh': 'x' })
+      // The words after an operator are not the program. The rule does not read them.
       const command = `${PROJECT}/ok.sh && ${PROJECT}/a.sh; ${PROJECT}/b.sh | ${PROJECT}/ok.sh`
-      expect(lint(root, SETTINGS, settings(command)).map((m) => m.messageId)).toEqual([
-        'missing',
-        'missing',
-      ])
+      expect(lint(root, SETTINGS, settings(command))).toEqual([])
+      expect(lint(root, SETTINGS, settings(`${PROJECT}/a.sh && ${PROJECT}/b.sh`))).toHaveLength(1)
     })
 
-    it('ends a word at a parenthesis and at a new line', () => {
+    it('reads the first argument of each interpreter, and no other word', () => {
+      const root = plain({ 'ok.sh': 'x' })
+      const interpreters = [
+        'bash',
+        'sh',
+        'zsh',
+        'node',
+        'python',
+        'python3',
+        'deno',
+        'bun',
+        'pwsh',
+        'powershell',
+        'ruby',
+        'perl',
+      ]
+      for (const program of [...interpreters, ...interpreters.map((name) => `/usr/bin/${name}`)]) {
+        expect(lint(root, SETTINGS, settings(`${program} ${PROJECT}/ok.sh`)), program).toEqual([])
+        const messages = lint(root, SETTINGS, settings(`${program} ${PROJECT}/gone.sh`))
+        expect(
+          messages.map((m) => m.messageId),
+          program,
+        ).toEqual(['missing'])
+        // The second argument is data for the script, and a flag first hides the script.
+        expect(
+          lint(root, SETTINGS, settings(`${program} ${PROJECT}/ok.sh ${PROJECT}/gone.json`)),
+        ).toEqual([])
+        expect(lint(root, SETTINGS, settings(`${program} -x ${PROJECT}/gone.sh`)), program).toEqual(
+          [],
+        )
+      }
+    })
+
+    it('does not read an argument of a program that is not an interpreter', () => {
       const root = plain()
       for (const command of [
-        `(${PROJECT}/gone.sh)`,
-        `echo $(${PROJECT}/gone.sh)`,
-        `echo\n${PROJECT}/gone.sh`,
-        `echo\r\n${PROJECT}/gone.sh`,
+        `tee "${PROJECT}/logs/out.txt"`,
+        `tee -a ${PROJECT}/logs/out.txt`,
+        `mkdir -p ${PROJECT}/logs`,
+        `mytool ${PROJECT}/gone.sh`,
+        `bashful ${PROJECT}/gone.sh`,
+        `echo ${PROJECT}/gone.sh`,
       ]) {
+        expect(lint(root, SETTINGS, settings(command)), command).toEqual([])
+      }
+    })
+
+    it('ends a word at each shell operator, with no space around it', () => {
+      const root = plain()
+      for (const joint of ['|', '&', ';', '&&', '||', '\n', '\r\n', '\t']) {
+        const messages = lint(root, SETTINGS, settings(`bash${joint}${PROJECT}/gone.sh`))
+        expect(
+          messages.map((m) => m.messageId),
+          JSON.stringify(joint),
+        ).toEqual(['missing'])
+      }
+      // The target of a redirect is not a word, so the script follows `bash`.
+      for (const joint of ['<', '>', '>>']) {
+        const command = `bash${joint}${PROJECT}/out.log ${PROJECT}/gone.sh`
         expect(
           lint(root, SETTINGS, settings(command)).map((m) => m.messageId),
-          command,
+          joint,
         ).toEqual(['missing'])
+      }
+    })
+
+    it('ends a word at a parenthesis, and names the word without it', () => {
+      const root = plain()
+      for (const command of [`(${PROJECT}/gone.sh)`, `( ${PROJECT}/gone.sh )`]) {
+        const messages = lint(root, SETTINGS, settings(command))
+        expect(messages, command).toHaveLength(1)
+        expect(messages[0]?.message, command).toContain(`"${PROJECT}/gone.sh" does not`)
+      }
+    })
+
+    it('reads no path that holds a character that the rule cannot resolve', () => {
+      const root = plain()
+      expect(lint(root, SETTINGS, settings(`${PROJECT}/gone.sh`))).toHaveLength(1)
+      for (const char of ['$', '`', '*', '?', '[', ']', '{', '}', '\\', '~', ':', '=', '!', '#']) {
+        const command = `${PROJECT}/gone${char}.sh`
+        expect(lint(root, SETTINGS, settings(command)), command).toEqual([])
       }
     })
 
@@ -179,8 +247,10 @@ describe(RULE, () => {
       const exec = (command: string, args: unknown) => settings(command, { args })
       expect(lint(root, SETTINGS, exec('node', [`${PROJECT}/ok.js`, '--fix']))).toEqual([])
       expect(lint(root, SETTINGS, exec(`${PROJECT}/bin/ok`, []))).toEqual([])
-      const gone = lint(root, SETTINGS, exec('node', ['--fix', `${PROJECT}/gone.js`]))
+      const gone = lint(root, SETTINGS, exec('node', [`${PROJECT}/gone.js`, '--fix']))
       expect(gone.map((m) => m.messageId)).toEqual(['missing'])
+      expect(lint(root, SETTINGS, exec('node', ['--fix', `${PROJECT}/gone.js`]))).toEqual([])
+      expect(lint(root, SETTINGS, exec('tee', [`${PROJECT}/logs/out.txt`]))).toEqual([])
       expect(lint(root, SETTINGS, exec(`${PROJECT}/bin/gone`, [])).map((m) => m.messageId)).toEqual(
         ['missing'],
       )

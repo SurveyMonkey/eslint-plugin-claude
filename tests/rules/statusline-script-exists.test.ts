@@ -95,13 +95,21 @@ describe(RULE, () => {
     }
   })
 
-  it('needs the bit on the program only, and the file for every script word', () => {
+  it('needs the bit on the program only, and the file for the program and an interpreter script', () => {
     const root = repo({ 'tools/line.js': 'x' })
     expect(lint(root, SETTINGS, settings(`node ${PROJECT}/tools/line.js`))).toEqual([])
     expect(ids(lint(root, SETTINGS, settings(`node ${PROJECT}/tools/gone.js`)))).toEqual([
       'missing',
     ])
     expect(ids(lint(root, SETTINGS, settings(`bash tools/gone.js`)))).toEqual([])
+    // An argument of another program can be a file that the program makes.
+    for (const command of [
+      `tee -a ${PROJECT}/logs/out.log`,
+      `mytool --cache ${PROJECT}/.cache/state.json`,
+      `node ${PROJECT}/tools/line.js ${PROJECT}/gone.json`,
+    ]) {
+      expect(lint(root, SETTINGS, settings(command)), command).toEqual([])
+    }
   })
 
   it('does not read a command that is not a repository path', () => {

@@ -7,7 +7,8 @@
 // A rule reads a script only when its path is in the repository (ADR 001,
 // Decision 14). These are not scripts here: a path in a user directory, an
 // absolute path, a glob, and a word that the rule cannot resolve. A word with
-// a variable or a shell expansion is such a word.
+// a variable or a shell expansion is such a word. Only the program, and the
+// first argument of an interpreter, can name a script.
 import path from 'node:path'
 import { realSource } from './marketplace-source.ts'
 import { isPluginRoot } from './plugin-root.ts'
@@ -140,9 +141,9 @@ export function hooksScope(filename: string): Scope | null {
 
 const PLACEHOLDER =
   /^\$(?:\{(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT)\}|(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT))\/(.+)$/
-// A path with one of these characters has a variable, a substitution, a glob,
-// a home path, a Windows separator, a history mark, a comment or an
-// assignment. The rule cannot resolve it.
+// A path with one of these characters can hold a variable, a substitution, a
+// glob, a brace list, a home path, a Windows path, a history mark, a comment
+// or an assignment. The rule cannot resolve it.
 const UNRESOLVED = /[$`*?[\]{}\\~:=!#]/
 
 /** The absolute path that the word `text` names, or null when `text` is not a
@@ -177,10 +178,31 @@ export interface ScriptRef<N> {
   node: N
 }
 
-/** The words of a command that name a repository script, in order. */
+// The programs that run a file, which is their first argument.
+const INTERPRETERS = new Set([
+  'bash',
+  'sh',
+  'zsh',
+  'node',
+  'python',
+  'python3',
+  'deno',
+  'bun',
+  'pwsh',
+  'powershell',
+  'ruby',
+  'perl',
+])
+
+/** The words of a command that name a repository script, in order. Only two
+ *  words can name a script: the program, and the first argument when the
+ *  program is an interpreter. Another word can be a file that the program
+ *  makes, such as the target of `tee`. */
 export function scriptRefs<N>(words: Word<N>[], scope: Scope): ScriptRef<N>[] {
+  const interpreter = INTERPRETERS.has(path.posix.basename(words[0]?.text ?? ''))
   return words.flatMap(({ text, node }, index) => {
-    const file = pathOf(text, index === 0, scope)
+    const file =
+      index > 1 || (index === 1 && !interpreter) ? null : pathOf(text, index === 0, scope)
     return file === null ? [] : [{ word: text, file, first: index === 0, node }]
   })
 }

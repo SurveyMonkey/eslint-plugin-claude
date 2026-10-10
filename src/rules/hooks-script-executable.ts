@@ -1,8 +1,8 @@
 // A repository script that is itself the hook command must have the executable
 // bit (docs/rules/hooks-script-executable.md). The bit is the git index mode
 // `100755`, read by `src/git-state.ts`. The rule makes no report in three
-// cases: a path that it cannot see, a script that git does not track, and a
-// git index that it cannot read.
+// cases. It cannot see the path. Git does not track the script. It cannot read
+// the git index.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { gitModeOf, PLAIN_MODE } from '../git-state.ts'
