@@ -5,6 +5,7 @@ import { MCP_PREFIX } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { parsedEntries, permissionEntries } from '../permission-entries.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-mcp-rule-parens' as const
 
@@ -21,8 +22,13 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
     },
   },
   create(context) {
+    // This rule has no skill target, so it does not use `permissionListener`. It skips a
+    // hidden drop-in itself: Claude Code ignores that file.
     return {
       Document(node) {
+        if (isHiddenDropIn(context.filename)) {
+          return
+        }
         for (const { loc, rule: parsed } of parsedEntries(permissionEntries(node))) {
           if (parsed.tool.startsWith(MCP_PREFIX) && parsed.specifier !== null) {
             context.report({ loc, messageId: 'parens' })
@@ -36,6 +42,6 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
 export default {
   name,
   language: 'json' as const,
-  files: SETTINGS_FILES,
+  files: [...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES],
   rule,
 }

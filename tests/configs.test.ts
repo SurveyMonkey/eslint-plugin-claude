@@ -695,7 +695,7 @@ describe('configs', () => {
     ])
   })
 
-  it.fails('gives each tool-list rule one JSON block and one Markdown block', () => {
+  it('gives each tool-list rule one JSON block and one Markdown block', () => {
     for (const rule of [...GRAMMAR_RULES, 'permissions-skill-rule'].filter(
       (r) => r !== SETTINGS_ONLY,
     )) {
@@ -709,7 +709,7 @@ describe('configs', () => {
     }
   })
 
-  it.fails('gives the settings-only grammar rule one JSON block for the project and managed files', () => {
+  it('gives the settings-only grammar rule one JSON block for the project and managed files', () => {
     const blocks = plugin.configs.recommended.filter(
       (c) => c.name === `claude/recommended/${SETTINGS_ONLY}`,
     )
@@ -749,11 +749,11 @@ describe('configs', () => {
     }
   })
 
-  it.fails('recommended reports each rule on its own files, at its own severity', async () => {
+  it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   })
 
-  it.fails('strict reports the same files as recommended today', async () => {
+  it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
   })
 })

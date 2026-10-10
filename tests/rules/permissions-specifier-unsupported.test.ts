@@ -185,7 +185,7 @@ describe('permissions-specifier-unsupported on managed settings files', () => {
     ).toHaveLength(1)
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(
       lintJson('permissions-specifier-unsupported', bad, 'managed-settings.d/.10-a.json'),
     ).toEqual([])

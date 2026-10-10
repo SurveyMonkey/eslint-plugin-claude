@@ -319,7 +319,7 @@ describe('permissions-unknown-tool on managed settings files', () => {
     )
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(lintJson('permissions-unknown-tool', bad, 'managed-settings.d/.10-a.json')).toEqual([])
   })
 })

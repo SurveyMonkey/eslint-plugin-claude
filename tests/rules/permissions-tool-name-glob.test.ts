@@ -125,7 +125,7 @@ describe('permissions-tool-name-glob on managed settings files', () => {
     ).toHaveLength(1)
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(lintJson('permissions-tool-name-glob', bad, 'managed-settings.d/.10-a.json')).toEqual([])
   })
 })

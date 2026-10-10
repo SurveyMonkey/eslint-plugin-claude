@@ -79,7 +79,7 @@ describe('permissions-mcp-rule-parens on managed settings files', () => {
     ).toHaveLength(1)
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(lintJson('permissions-mcp-rule-parens', bad, 'managed-settings.d/.10-a.json')).toEqual(
       [],
     )

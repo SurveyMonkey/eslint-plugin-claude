@@ -169,7 +169,7 @@ describe('permissions-param-rule on managed settings files', () => {
     expect(lintJson('permissions-param-rule', bad, 'managed-settings.d/10-a.json')).toHaveLength(1)
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(lintJson('permissions-param-rule', bad, 'managed-settings.d/.10-a.json')).toEqual([])
   })
 })

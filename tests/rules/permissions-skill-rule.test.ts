@@ -127,7 +127,7 @@ describe('permissions-skill-rule on managed settings files', () => {
     expect(lintJson('permissions-skill-rule', bad, 'managed-settings.d/10-a.json')).toHaveLength(1)
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(lintJson('permissions-skill-rule', bad, 'managed-settings.d/.10-a.json')).toEqual([])
   })
 })
