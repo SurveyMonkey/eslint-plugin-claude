@@ -220,6 +220,14 @@ const TREE: Record<string, string> = {
   'plugins/p/agents/scope.md': '---\nname: sc\ndescription: d\nmemory: local\n---\n',
   'plugins/p/agents/clash-a.md': '---\nname: clash-b\ndescription: d\n---\n',
   'plugins/p/agents/clash-b.md': '---\ndescription: d\n---\n',
+  // The same rules over a subfolder of `agents/`, which the globs of the four rules must reach.
+  '.claude/agents/review/deep/deep-manual.md':
+    '---\nname: dm\ndescription: d\npermissionMode: manual\n---\n',
+  '.claude/agents/review/deep/deep-scope.md': '---\nname: ds\ndescription: d\nmemory: user\n---\n',
+  'plugins/p/agents/sub/d.md': '---\ndescription: d\n---\n',
+  'plugins/p/agents/sub/e.md': '---\nname: d\ndescription: d\n---\n',
+  'packages/sh/.claude/agents/deepdup.md': '---\nname: deepdup\ndescription: d\n---\n',
+  'packages/sh/pkg/.claude/agents/sub/deepdup.md': '---\nname: deepdup\ndescription: d\n---\n',
   'packages/sh/.git/HEAD': 'ref: refs/heads/main\n',
   'packages/sh/.claude/agents/layered.md': '---\nname: layered\ndescription: d\n---\n',
   'packages/sh/pkg/.claude/agents/layered.md': '---\nname: layered\ndescription: d\n---\n',
@@ -1004,6 +1012,11 @@ const EXPECTED = [
   'plugins/p/agents/scope.md: claude/agent-memory-scope-project@1',
   'plugins/p/agents/clash-a.md: claude/agent-plugin-scoped-name-unique@1',
   'plugins/p/agents/clash-b.md: claude/agent-plugin-scoped-name-unique@1',
+  '.claude/agents/review/deep/deep-manual.md: claude/agent-permission-mode-manual@1',
+  '.claude/agents/review/deep/deep-scope.md: claude/agent-memory-scope-project@1',
+  'plugins/p/agents/sub/d.md: claude/agent-plugin-scoped-name-unique@1',
+  'plugins/p/agents/sub/e.md: claude/agent-plugin-scoped-name-unique@1',
+  'packages/sh/pkg/.claude/agents/sub/deepdup.md: claude/agent-name-shadowing@1',
   // `ignored.md` and `inline.md` of the plugin are both named `i`.
   'plugins/p/agents/ignored.md: claude/agent-plugin-scoped-name-unique@1',
   'plugins/p/agents/inline.md: claude/agent-plugin-scoped-name-unique@1',
@@ -1274,6 +1287,7 @@ describe('configs', () => {
       '.claude/agents/bom.md: claude/agent-no-bom@1',
       // The alias `manual` needs a newer Claude Code than the `minVersion` of this test.
       '.claude/agents/manual.md: claude/agent-field-min-version@1',
+      '.claude/agents/review/deep/deep-manual.md: claude/agent-field-min-version@1',
       '.claude/agents/versions.md: claude/agent-field-min-version@1',
       'packages/z/.claude/agents/boss.md: claude/agent-field-min-version@1',
       'plugins/p/agents/bom.md: claude/agent-no-bom@1',
