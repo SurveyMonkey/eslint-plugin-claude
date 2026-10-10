@@ -23,8 +23,8 @@ Write the component paths of `plugin.json` with forward slashes.
 On macOS and Linux, Claude Code rejects a component path that has a backslash anywhere in it.
 This holds even when the path stays inside the plugin. The component then does not load. A plugin
 whose component paths use Windows separators therefore loads on Windows only.[^loading] The
-`/plugin` interface shows a `path escapes plugin directory` error that ends with `its path
-contains a backslash, which is not resolved reliably on this platform`.[^errors]
+`/plugin` interface shows a `path escapes plugin directory` error.[^errors] The error ends with `its
+path contains a backslash, which is not resolved reliably on this platform`.
 
 `claude plugin validate` covers this in part (checked on Claude Code 2.1.296). It fails the manifest
 with `Path not found`, because no file has the literal name with the backslash. It does not name

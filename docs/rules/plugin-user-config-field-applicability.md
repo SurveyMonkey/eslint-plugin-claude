@@ -29,7 +29,7 @@ as a field "For `string`" that allows an array of strings.[^fields]
 So the rule says only which type the field is for.
 
 The rule reads each option of the top-level `userConfig`. It reads the `userConfig` of each entry
-of `channels` too, because the docs give it "the same shape as top-level `userConfig`".[^channels]
+of `channels` too. The docs give it "the same shape as top-level `userConfig`".[^channels]
 It reports these members:
 
 - `min` or `max` in an option whose `type` is another of the five types than `number`.

@@ -227,12 +227,12 @@ const modules = [
   pluginManifestNoBom,
   pluginManifestPublishMetadata,
   pluginManifestVersionSemver,
-  pluginSkillsKeyRedundantDefault,
-  pluginPathNoBackslash,
   pluginCommandsMapFields,
-  pluginUserConfigFieldApplicability,
-  pluginSettingsAgentExists,
   pluginDependenciesNotAutoInstalled,
+  pluginPathNoBackslash,
+  pluginSettingsAgentExists,
+  pluginSkillsKeyRedundantDefault,
+  pluginUserConfigFieldApplicability,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -364,12 +364,12 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-manifest-no-bom': 'warn',
   'plugin-manifest-publish-metadata': 'warn',
   'plugin-manifest-version-semver': 'warn',
-  'plugin-skills-key-redundant-default': 'warn',
-  'plugin-path-no-backslash': 'warn',
   'plugin-commands-map-fields': 'warn',
-  'plugin-user-config-field-applicability': 'warn',
-  'plugin-settings-agent-exists': 'warn',
   'plugin-dependencies-not-auto-installed': 'warn',
+  'plugin-path-no-backslash': 'warn',
+  'plugin-settings-agent-exists': 'warn',
+  'plugin-skills-key-redundant-default': 'warn',
+  'plugin-user-config-field-applicability': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
