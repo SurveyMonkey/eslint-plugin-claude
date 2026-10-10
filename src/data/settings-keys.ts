@@ -45,7 +45,6 @@ const MANAGED_ONLY: readonly string[] = [
   'disableDesktopLocalSessions',
   'disableMobileSimulatorTools',
   'disableSideloadFlags',
-  'forceLoginGatewayUrl',
   'forceRemoteSettingsRefresh',
   'gatewayInternalNetworks',
   'managedMcpServers',
@@ -87,6 +86,7 @@ const USER_OR_MANAGED: readonly string[] = [
   'dialogExpiry',
   'feedbackDrafts',
   'footerLinksRegexes',
+  'forceLoginGatewayUrl',
   'modelPicker',
   'pluginConfigs',
   'prependPlugins',
@@ -426,3 +426,22 @@ export const BUNDLED_SKILL_ALIASES: ReadonlyMap<string, string> = new Map([
   ['checkup', 'doctor'],
   ['proactive', 'loop'],
 ])
+
+/** The keys that run a shell command from a settings file. Source: the entries of the settings
+ *  reference (https://code.claude.com/docs/en/settings-reference). The server-managed settings page
+ *  names three of them as settings that run shell commands
+ *  (https://code.claude.com/docs/en/server-managed-settings#security-approval-dialogs). Checked on
+ *  Claude Code 2.1.296 on 2026-10-10. A key of the first kind holds a command line. A key of the
+ *  second kind holds an object with a `command` field. */
+export const COMMAND_STRING_KEYS: readonly string[] = [
+  'apiKeyHelper',
+  'awsAuthRefresh',
+  'awsCredentialExport',
+  'gcpAuthRefresh',
+  'otelHeadersHelper',
+]
+export const COMMAND_OBJECT_KEYS: readonly string[] = [
+  'statusLine',
+  'subagentStatusLine',
+  'fileSuggestion',
+]

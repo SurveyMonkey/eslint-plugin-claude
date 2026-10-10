@@ -148,6 +148,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-project-autocontinue-off`](docs/rules/settings-project-autocontinue-off.md) | `autoContinueAtUsageLimit` is not in a project or local file, where any value turns automatic continue off, and its value is a Boolean | `warn` | `warn` |
 | [`claude/settings-redundant-value`](docs/rules/settings-redundant-value.md) | A value is not the same as an unset key: `alwaysThinkingEnabled`, `enableArtifact`, `syncClaudeAiSkills` and `syncClaudeAiPlugins` set to `true`, and `spinnerVerbs` in replace mode with no verbs | `warn` | `warn` |
 | [`claude/settings-schema-url`](docs/rules/settings-schema-url.md) | `$schema` is present and is the published schema URL for Claude Code settings | `warn` | `warn` |
+| [`claude/settings-committed-helper-command`](docs/rules/settings-committed-helper-command.md) | Shared `.claude/settings.json` sets no shell command key: `apiKeyHelper`, `awsAuthRefresh`, `awsCredentialExport`, `gcpAuthRefresh`, `otelHeadersHelper`, `statusLine`, `subagentStatusLine` or `fileSuggestion` | `warn` | `warn` |
+| [`claude/settings-env-deprecated-var`](docs/rules/settings-env-deprecated-var.md) | No `env` variable that Claude Code deprecates or keeps as a legacy name: `ANTHROPIC_SMALL_FAST_MODEL`, `ENABLE_PROMPT_CACHING_1H_BEDROCK`, `DISABLE_BUG_COMMAND`, `SLASH_COMMAND_TOOL_CHAR_BUDGET` and `CLAUDE_CODE_ENABLE_TASKS` set to `0` | `warn` | `warn` |
+| [`claude/settings-env-prompt-caching-off`](docs/rules/settings-env-prompt-caching-off.md) | Shared `.claude/settings.json` does not turn prompt caching off with `DISABLE_PROMPT_CACHING` or a per-model variable | `warn` | `warn` |
+| [`claude/settings-env-routing`](docs/rules/settings-env-routing.md) | Shared `.claude/settings.json` does not route the traffic of every user: `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`, a non-default `ANTHROPIC_BASE_URL`, or a `CLAUDE_CODE_USE_*` provider variable | `warn` | `warn` |
+| [`claude/settings-local-location`](docs/rules/settings-local-location.md) | `.claude/settings.local.json` is at the repository root, where Claude Code keeps it since v2.1.211 | `warn` | `warn` |
+| [`claude/settings-webfetch-preflight-skip`](docs/rules/settings-webfetch-preflight-skip.md) | `skipWebFetchPreflight: true` goes with a `WebFetch(...)` permission rule in the file or in a file that Claude Code merges with it | `warn` | `warn` |
 
 ### Permissions and sandbox
 
