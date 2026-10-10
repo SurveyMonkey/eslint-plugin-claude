@@ -44,6 +44,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
@@ -183,6 +184,7 @@ const modules = [
   pluginSkillDirLayout,
   pluginNoProjectPluginsDir,
   pluginProjectSkillsDirLimits,
+  pluginCommandsDirNonempty,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -295,6 +297,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-skill-dir-layout': 'error',
   'plugin-no-project-plugins-dir': 'error',
   'plugin-project-skills-dir-limits': 'error',
+  'plugin-commands-dir-nonempty': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

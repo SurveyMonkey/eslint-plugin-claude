@@ -129,6 +129,9 @@ const TREE: Record<string, string> = {
   }),
   'plugins/skl/extra/loose.md': '# Loose\n',
   'plugins/skl/skills/loose.md': '# Loose\n',
+  // A `commands` directory with no command in it.
+  'plugins/cmd/.claude-plugin/plugin.json': JSON.stringify({ name: 'cmd', commands: './cmds' }),
+  'plugins/cmd/cmds/.gitkeep': '',
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -548,6 +551,7 @@ const PLUGIN_RULES = [
     name: 'plugin-project-skills-dir-limits',
     files: ['**/.claude/skills/*/.claude-plugin/plugin.json'],
   },
+  { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -595,6 +599,7 @@ const EXPECTED = [
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
+  'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',

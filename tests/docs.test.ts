@@ -60,6 +60,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-specifier-unsupported',
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
+    'plugin-commands-dir-nonempty',
     'plugin-manifest-location',
     'plugin-no-project-plugins-dir',
     'plugin-project-skills-dir-limits',
