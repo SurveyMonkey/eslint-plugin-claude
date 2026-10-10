@@ -118,4 +118,21 @@ describe(RULE, () => {
       expect(lint('Never edit a.\n', file), file).toEqual([])
     }
   })
+
+  it('reports a guardrail in bold, in a block quote, or with a curly apostrophe', () => {
+    for (const text of [
+      '**NEVER** edit generated files.',
+      '*Never* commit to main.',
+      'ALWAYS **run** tests before you commit.',
+      '> Never\n> edit generated files.',
+      'Don\u2019t edit generated files.',
+    ]) {
+      expect(ids(lint(`${text}\n`)), text).toEqual(['guardrail'])
+    }
+  })
+
+  it('keeps the place of a match after a code span', () => {
+    const messages = lint('See `Never edit x` and never edit y.\n')
+    expect(messages.map((m) => [m.column, m.endColumn])).toEqual([[24, 34]])
+  })
 })

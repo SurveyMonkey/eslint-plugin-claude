@@ -21,7 +21,7 @@ const TOPIC =
   /\b(?:commit (?:messages?|styles?|formats?|conventions?|bod(?:y|ies)|titles?|subjects?|prefix(?:es)?)|conventional commits?|pull requests?|PR (?:titles?|descriptions?|bod(?:y|ies)|templates?)|gh pr create|git commit|co-authored-by|signed-off-by|squash)\b/i
 // A sentence has an instruction cue.
 const CUE =
-  /\b(?:must|should|always|never|do not|don't|use|write|follow|include|keep|add|prefix|start|format|sign|limit|end|avoid|open|create|squash|rebase|link|reference|run)\b/i
+  /\b(?:must|should|always|never|do not|don't|use|write|follow|include|keep|add|prefix|start|format|sign|limit|end|avoid|open|create|rebase|link|reference|run)\b/i
 // A sentence ends at `.`, `!` or `?` with a space or the end of the block after it, or at a line end.
 const SENTENCE = /(?:[^.!?\n]|[.!?](?!\s|$))+[.!?]?/g
 

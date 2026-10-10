@@ -3,7 +3,7 @@
 // (https://code.claude.com/docs/en/memory#write-effective-instructions). A path or a slash command
 // in a code span that points to nothing misleads Claude. The rule reads the repository around the
 // file, so each case builds a tree on disk. It makes no report on a path out of the repository, on
-// a link that leads nowhere, or on a folder it cannot read (ADR 001, Decision 14). The stack has
+// a link that leads nowhere, or on a folder it cannot read (ADR 001, Decision 14). This plugin has
 // no list of the bundled commands, so the option `allow` names the commands from outside the
 // repository. The globs are in tests/configs.test.ts.
 import path from 'node:path'
@@ -42,11 +42,10 @@ describe(`${RULE}: paths`, () => {
     )
   })
 
-  it('reports each shape of a path: an extension, a trailing slash, three parts, a dot start', () => {
+  it('reports each shape of a path: an extension, a trailing slash, a dot start', () => {
     for (const ref of [
       'src/gone.ts',
       'docs/gone/',
-      'a/b/c',
       './scripts',
       '.github/gone',
       'src/gone.ts:12',
@@ -92,6 +91,9 @@ describe(`${RULE}: paths`, () => {
       'and/or',
       'src/rules',
       'read/write',
+      'YYYY/MM/DD',
+      'github.com/org/repo',
+      'release/v1.2',
       '/etc/hosts.conf',
       '/usr/local/bin',
       '~/notes/a.md',

@@ -65,6 +65,22 @@ describe(RULE, () => {
     expect(ids(lint(COMMIT, local))).toEqual(['gitInstructions'])
   })
 
+  it('reports once in a paragraph that has two matching sentences, at the later place', () => {
+    const messages = lint('Be kind. Write commit messages in English. Open a pull request.\n')
+    expect(messages.map((m) => [m.column, m.endColumn])).toEqual([[10, 43]])
+  })
+
+  it('stays silent when the topic and the cue are in two sentences', () => {
+    expect(lint('Commit messages live in git. Use tabs.\n')).toEqual([])
+  })
+
+  it('still reports when the key is set to a value that is not false', () => {
+    for (const value of ['0', '""']) {
+      const settings = `{ "includeGitInstructions": ${value} }`
+      expect(ids(lint(COMMIT, { [SETTINGS]: settings })), value).toEqual(['gitInstructions'])
+    }
+  })
+
   it('reports once for the file, at the first sentence', () => {
     const messages = lint(
       'Open a pull request for each change.\n\nWrite commit messages in English.\n',
@@ -102,6 +118,7 @@ describe(`${RULE}: the wording`, () => {
       'The pull request template is on GitHub.',
       'A commit is a snapshot.',
       'Check the project board.',
+      'Pull requests are squash-merged.',
     ]) {
       expect(lint(`${text}\n`), text).toEqual([])
     }

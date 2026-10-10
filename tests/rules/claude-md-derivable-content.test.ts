@@ -46,6 +46,14 @@ describe(RULE, () => {
     expect(lint('```\nsrc/a.ts\nsrc/b.ts\nsrc/c.ts\n```\n')).toEqual([])
   })
 
+  it('stays silent on a table border, a diff and an option list that look like a branch', () => {
+    expect(
+      lint('```\n+----+----+\n| id | n  |\n+----+----+\n| 1  | a  |\n+----+----+\n```\n'),
+    ).toEqual([])
+    expect(lint('```diff\n+--a\n+--b\n+--c\n```\n')).toEqual([])
+    expect(lint('```markdown\nUse `--a` here\nUse `--b` here\nUse `--c` here\n```\n')).toEqual([])
+  })
+
   it('stays silent on a tree outside a code block', () => {
     expect(lint('├── a.ts\n├── b.ts\n└── c.ts\n')).toEqual([])
     expect(lint('<!--\n├── a.ts\n├── b.ts\n└── c.ts\n-->\n')).toEqual([])

@@ -4,11 +4,11 @@
 // Claude. The rule reads the code spans of the syntax tree, so a path in a code block, an HTML
 // comment or plain text is not read.
 // - A path has a slash, no character that a glob or a placeholder uses, and one of these: an
-//   extension, a slash at the end, a start with a dot, or three parts. So `and/or` is not a path.
+//   extension, a slash at the end, or a start with a dot. So `and/or` and `YYYY/MM/DD` are not paths.
 //   The rule looks for it in the folder of the file and in the repository root.
 // - A command is `/name`, with arguments or without. The rule looks for a skill folder or a
 //   command file of that name in the `.claude` folders from the folder of the file up to the
-//   repository root. The stack has no list of the bundled commands, so the option `allow` names the
+//   repository root. This plugin has no list of the bundled commands, so the option `allow` names the
 //   commands and paths from outside the repository.
 // The rule reads no file out of the repository, and makes no report when it cannot see a part of
 // the tree: a path out of the repository, a link that leads nowhere, a folder it cannot read
@@ -39,8 +39,7 @@ function pathOf(value: string): string | null {
   }
   const parts = text.split('/').filter((part) => part !== '')
   const last = parts[parts.length - 1] as string
-  const shaped =
-    text.endsWith('/') || text.startsWith('.') || /\.\w+$/.test(last) || parts.length >= 3
+  const shaped = text.endsWith('/') || text.startsWith('.') || /\.[A-Za-z]\w*$/.test(last)
   return text.includes('/') && shaped ? text : null
 }
 

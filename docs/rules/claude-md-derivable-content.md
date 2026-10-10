@@ -30,7 +30,8 @@ file-by-file descriptions of the code base.[^exclude]
 The rule reports three shapes. It reads the syntax tree, so it reports the whole block or list:
 
 - **A directory tree.** A code block with at least three lines that start a branch. A branch mark is
-  `├─` or `└─`, or the plain forms `|--`, `+--`, `\--` and a backtick with `--`.
+  `├─` or `└─`, or the plain forms `|--`, `+--`, `\--` and a backtick with `--`. A plain mark
+  starts the line, and a name follows it. So the border `+----+` of a table is not a branch.
 - **A list of dependencies.** A code block with a `dependencies`, `devDependencies`,
   `peerDependencies` or `optionalDependencies` key, or a TOML table of dependencies, or at least
   three lines that pin a version, as in `flask==3.0.0`.
