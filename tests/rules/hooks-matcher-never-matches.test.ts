@@ -3,7 +3,7 @@
 // https://code.claude.com/docs/en/debug-your-config#check-common-causes
 // https://code.claude.com/docs/en/hooks#pretooluse
 // https://code.claude.com/docs/en/tools-reference#check-which-tools-are-available
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { TOOL_EVENTS } from '../../src/data/hook-events.ts'
 import { TOOL_NAMES } from '../../src/data/tool-names.ts'
 import {
@@ -17,9 +17,6 @@ import {
   settings,
 } from '../hooks.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
-
-// Red: the rule does not exist yet. The fix commit removes this line and the alias.
-const it = realIt.fails
 
 const name = 'hooks-matcher-never-matches'
 const ids = (event: string, matcher: unknown, file = FILES.project) =>
