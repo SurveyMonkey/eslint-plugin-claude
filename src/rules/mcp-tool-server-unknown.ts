@@ -7,6 +7,7 @@
 // page gives them. The rule rests on an absence, so it makes no report when a source cannot be
 // read. A user-scope server and a connector are not in the repository, so the rule is a
 // heuristic: it reports no connector name and no name of another plugin (ADR 001, Decision 14).
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import type { Rule } from 'eslint'
 import {
@@ -55,10 +56,20 @@ function inlineNames(fields: Record<string, unknown>): string[] {
     : []
 }
 
+/** True when the file at `file` starts a frontmatter block. A read that fails counts as true. */
+function startsBlock(file: string): boolean {
+  try {
+    return /^\uFEFF?---[ \t]*\r?\n/.test(readFileSync(file, 'utf8'))
+  } catch {
+    return true
+  }
+}
+
 /** The servers of the project at `project`: the `mcpServers` of its `.mcp.json`, and the inline
  *  servers of the agent files in `.claude/agents`. The result is null when a source cannot be
- *  read, or when there is no `.mcp.json` with an `mcpServers` object to rest on. A file that
- *  fails to parse as frontmatter declares none. */
+ *  read, or when there is no `.mcp.json` with an `mcpServers` object to rest on. A file with no
+ *  frontmatter block declares none. A file with a block that does not parse can hold any server,
+ *  so the result is null. */
 function projectServers(project: string): Known | null {
   const bound = repositoryRoot(project)
   const body = jsonBodyState(path.join(project, '.mcp.json'), bound)
@@ -77,6 +88,9 @@ function projectServers(project: string): Known | null {
   for (const file of scan.files) {
     const fields = frontmatterOfFile(file)
     if (fields === UNREADABLE) {
+      return null
+    }
+    if (fields === null && startsBlock(file)) {
       return null
     }
     names.push(...inlineNames(fields ?? {}))
