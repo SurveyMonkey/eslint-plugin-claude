@@ -230,7 +230,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         if (value.type === 'Null') {
           continue
         }
-        // `tests/data/sandbox-keys.test.ts` checks that every listed key has a type.
+        // `tests/sandbox-keys.test.ts` checks that every listed key has a type.
         const note = isManaged ? withheldNote(dotted) : ''
         check(SANDBOX_SHAPES[dotted] as Shape, value, dotted, note)
         if (value.type === 'Object' && hasListedChildren(child)) {
