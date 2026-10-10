@@ -223,6 +223,15 @@ describe(`${name}: the matcher of the group`, () => {
     expect(run('PreToolUse', 'Bash(rm *)', 'edit|bash')).toEqual([])
   })
 
+  it('reports trailing text after an operator that is not followed by a rule', () => {
+    expect(run('PreToolUse', 'Bash(npm run build) && --watch')).toEqual(['trailingText'])
+    expect(run('PreToolUse', 'Bash(a), b c')).toEqual(['trailingText'])
+  })
+
+  it('is silent for the name of an MCP server with no tool, which is no full tool name', () => {
+    expect(run('PreToolUse', 'mcp__memory__', 'Edit')).toEqual([])
+  })
+
   it('is silent for a tool that is not known, a wildcard, and a matcher that does not compile', () => {
     expect(run('PreToolUse', 'Foo(x)', 'Edit')).toEqual([])
     expect(run('PreToolUse', 'Task(x)', 'Edit')).toEqual([])
@@ -230,7 +239,7 @@ describe(`${name}: the matcher of the group`, () => {
     expect(run('PreToolUse', 'Bash(rm *)', '(unclosed')).toEqual([])
   })
 
-  it('is silent when the rule has a fault of its own', () => {
+  it('reports only the parse fault of the rule, and not toolNotMatched', () => {
     expect(run('PreToolUse', 'Bash(rm', 'Edit')).toEqual(['unbalanced'])
   })
 

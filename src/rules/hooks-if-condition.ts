@@ -4,7 +4,7 @@
 // the group selects. `hooks-config-schema` reports an `if` that is not a string.
 import type { Rule } from 'eslint'
 import { HOOK_EVENTS, TOOL_EVENTS } from '../data/hook-events.ts'
-import { MCP_PREFIX, MCP_SEPARATOR, TOOL_NAMES } from '../data/tool-names.ts'
+import { isFullMcpName, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { exactValues, HOOKS_TARGET, handlersOf, hooksListener, memberOf } from '../hooks-config.ts'
 import { type ParseFailureReason, parsePermissionRule } from '../permission-rule.ts'
@@ -118,11 +118,7 @@ const rule: Rule.RuleModule = {
         }
         const { tool } = parsed
         // A built-in tool, or a full MCP tool name. `mcp__server` is the rule of a whole server.
-        const known =
-          TOOL_NAMES.includes(tool) ||
-          (tool.startsWith(MCP_PREFIX) &&
-            !tool.includes('*') &&
-            tool.slice(MCP_PREFIX.length).includes(MCP_SEPARATOR))
+        const known = TOOL_NAMES.includes(tool) || (isFullMcpName(tool) && !tool.includes('*'))
         if (matcher !== undefined && known) {
           const family = FAMILIES.find((tools) => tools.includes(tool)) ?? [tool]
           if (!selects(matcher, family)) {

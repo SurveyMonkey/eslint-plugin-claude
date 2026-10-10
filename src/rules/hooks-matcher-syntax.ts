@@ -9,7 +9,7 @@ import {
   NO_MATCHER_EVENTS,
   TOOL_EVENTS,
 } from '../data/hook-events.ts'
-import { MCP_PREFIX, MCP_SEPARATOR, TOOL_NAMES } from '../data/tool-names.ts'
+import { isFullMcpName, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { exactValues, groupsOf, HOOKS_TARGET, hooksListener, type Loc } from '../hooks-config.ts'
 
@@ -39,11 +39,7 @@ const STRAY: readonly (readonly [string, 'comma' | 'space' | 'hyphen'])[] = [
  *  `Web(Fetch|Search)` has a group after a name that is no tool, and it is valid. */
 function isToolSpec(value: string): boolean {
   const tool = TOOL_SPEC.exec(value)?.[1]
-  return (
-    tool !== undefined &&
-    (TOOL_NAMES.includes(tool) ||
-      (tool.startsWith(MCP_PREFIX) && tool.slice(MCP_PREFIX.length).includes(MCP_SEPARATOR)))
-  )
+  return tool !== undefined && (TOOL_NAMES.includes(tool) || isFullMcpName(tool))
 }
 
 /** The reason `pattern` is not a regular expression, or undefined when it is one. */
