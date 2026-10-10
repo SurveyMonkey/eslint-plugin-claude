@@ -1,0 +1,142 @@
+{
+  "url": "https://code.claude.com/docs/en/best-practices",
+  "hash": "3f2d4f1a6eeba4cb13141e68c9f45b7e5af95224ad3b0c62a13b886d144ea86f",
+  "blocks": [
+    {
+      "id": "best-practices-for-claude-code",
+      "hash": "d50ed54de787c3ebe11296bfb76808d5d1fc1bbae8ecfb26ce92e2e6c4eadf5a"
+    },
+    {
+      "id": "give-claude-a-way-to-verify-its-work",
+      "hash": "9713195098a137f3297a5b14b197e0281614d8cd0895376d00f4747866d9b4a2"
+    },
+    {
+      "id": "explore-first-then-plan-then-code",
+      "hash": "ae2dcbc022b0c36886c89cbf00e06f0e93100c13ff4f7ddd83344d46f39f7b29"
+    },
+    {
+      "id": "provide-specific-context-in-your-prompts",
+      "hash": "d61d5da517840b0281f0e5a51066b5a86fd0e0a8b9834cfab9a2736146b4487d"
+    },
+    {
+      "id": "provide-rich-content",
+      "hash": "40432bc2152ec0e83bf7390215b79fafbde902a326547b611aea7200bb559b32"
+    },
+    {
+      "id": "configure-your-environment",
+      "hash": "8aa50365941f509d2efe37f401125c44dcd7cbb47754f3bedb365dcc0793a221"
+    },
+    {
+      "id": "write-an-effective-claude-md",
+      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819"
+    },
+    {
+      "id": "configure-permissions",
+      "hash": "ff2778dd0bf3dcdb697bfcc457dc4e94c6fb24e42cea087167ab3475ac81a626"
+    },
+    {
+      "id": "use-cli-tools",
+      "hash": "efe1531e194b5e78bd84917f3aa30a7487142ff48e1137c3fca456fabc266f44"
+    },
+    {
+      "id": "connect-mcp-servers",
+      "hash": "ebaaf5a475a6fc4dba360d2e58e6ff34cf6d71eab6427448cc70b15152f49607"
+    },
+    {
+      "id": "set-up-hooks",
+      "hash": "530e7be3450b0e6fdba2cf8a71ed966f762cf5ffa9694388bf5e2f971c30e77c"
+    },
+    {
+      "id": "create-skills",
+      "hash": "77742fd3b50adcce7549829d1af55d1bc2e5f17ecf1e506e3cef86dd2ab743f9"
+    },
+    {
+      "id": "create-custom-subagents",
+      "hash": "ad950f200defa05bbc7d4d15b4eff237c060c0bdfdda1abacf8fb09b66c3b025"
+    },
+    {
+      "id": "install-plugins",
+      "hash": "19ce24d89bb4abee31799c886f6e53b52e3fba768baaff23dafc76ed8542c053"
+    },
+    {
+      "id": "communicate-effectively",
+      "hash": "a2e791968f61a0a84ad8abee6e769e6cf05cbb0a5c0ef0ff8a63b6c94cdc7ae1"
+    },
+    {
+      "id": "ask-codebase-questions",
+      "hash": "7095287c16e37f054bf21deda76d804dddfd73730cf06e7b58414d9936e1d84a"
+    },
+    {
+      "id": "let-claude-interview-you",
+      "hash": "d062058245821fad31ee3c2f885abae1d60a8b7da47920d9512552775a1e797c"
+    },
+    {
+      "id": "manage-your-session",
+      "hash": "a137ec0b5d3eb8e8ba38bf4a2c849d9d351c18d5c8c11d13dc456c61dd2cf5b7"
+    },
+    {
+      "id": "course-correct-early-and-often",
+      "hash": "eebe8b2c2b9b9de747e06a40fcbc84588cfb8a0c8449cfca03aa77403a48d17d"
+    },
+    {
+      "id": "manage-context-aggressively",
+      "hash": "e5043c86a7e81c1149f7504d470bfa92dad796804cc655e30e942d237995696c"
+    },
+    {
+      "id": "use-subagents-for-investigation",
+      "hash": "46487f551e7882eb5709735056e64dc140d1e9812c84dee88869e79858bcfee5"
+    },
+    {
+      "id": "rewind-with-checkpoints",
+      "hash": "f8a91d60d5e0c52b0cc416040d45ae9bc6898299682ab3238abe617f55f97dcb"
+    },
+    {
+      "id": "resume-conversations",
+      "hash": "0e41e45cbc686e7ab268323af570464044b203968f66c10dd363b6b5ef3269a2"
+    },
+    {
+      "id": "automate-and-scale",
+      "hash": "cf97949cdf1c057b908f015f95b6d92615398c507539bae91155553a95821bf8"
+    },
+    {
+      "id": "run-non-interactive-mode",
+      "hash": "eca3b57687b65271f5d1c8b6c11a7693d536537a3f54aec6887f3a77e0cd8771"
+    },
+    {
+      "id": "run-multiple-claude-sessions",
+      "hash": "60f9c7cc364994148436acc1e2a8c0df7cf5acb141c8d1156cfde0d5d4e27808"
+    },
+    {
+      "id": "fan-out-across-files",
+      "hash": "a4330356e9ce397946e9c6e6e81580075922a6c71ed563243110ad4a3e93e555"
+    },
+    {
+      "id": "run-autonomously-with-auto-mode",
+      "hash": "e14c4db404942aacc1b31963a1fc95ac77a622a158055a52bf39c4077015dd63"
+    },
+    {
+      "id": "add-an-adversarial-review-step",
+      "hash": "48f561091bd6734decdddf6a568fc3ebc91c62a5ad1fde970231717659c5efb8"
+    },
+    {
+      "id": "avoid-common-failure-patterns",
+      "hash": "d8742ffa004a549a1896a92a2f71fd6d774381df33c7366bac64c3daf4f9ae04"
+    },
+    {
+      "id": "develop-your-intuition",
+      "hash": "5627d874743abd8cba73ca69d7e248f08c9ab815951bb780dd3a04fcc58b8516"
+    },
+    {
+      "id": "related-resources",
+      "hash": "7004cec79c119aae358bd6eed19214e9157ccaf0fd1f904f24057d71ed45bbb0"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Write an effective CLAUDE.md",
+      "id": "write-an-effective-claude-md",
+      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819",
+      "text": "### Write an effective CLAUDE.md\n\n<Tip>\n  Run `/init` to generate a starter CLAUDE.md file based on your current project structure, then refine over time.\n</Tip>\n\nCLAUDE.md is a special file that Claude reads at the start of every conversation. Include Bash commands, code style, and workflow rules. This gives Claude persistent context it can't infer from code alone.\n\nThere's no required format for CLAUDE.md files, but keep it short and human-readable. For example:\n\n```markdown CLAUDE.md theme={null}\n# Code style\n- Use ES modules (import/export) syntax, not CommonJS (require)\n- Destructure imports when possible (eg. import { foo } from 'bar')\n\n# Workflow\n- Be sure to typecheck when you're done making a series of code changes\n- Prefer running single tests, and not the whole test suite, for performance\n```\n\nRun `/context` to confirm Claude loaded the file. CLAUDE.md is loaded every session, so only include things that apply broadly. For domain knowledge or workflows that are only relevant sometimes, use [skills](/docs/en/skills) instead. Claude loads them on demand without bloating every conversation.\n\nKeep it concise. For each line, ask: *\"Would removing this cause Claude to make mistakes?\"* If not, cut it. Bloated CLAUDE.md files cause Claude to ignore your actual instructions!\n\n| ✅ Include | ❌ Exclude |\n| - | - |\n| Bash commands Claude can't guess | Anything Claude can figure out by reading code |\n| Code style rules that differ from defaults | Standard language conventions Claude already knows |\n| Testing instructions and preferred test runners | Detailed API documentation (link to docs instead) |\n| Repository etiquette (branch naming, PR conventions) | Information that changes frequently |\n| Architectural decisions specific to your project | Long explanations or tutorials |\n| Developer environment quirks (required env vars) | File-by-file descriptions of the codebase |\n| Common gotchas or behaviors that aren't self-evident | Self-evident practices like \"write clean code\" |\n\nIf Claude keeps doing something you don't want despite having a rule against it, the file is probably too long and the rule is getting lost. If Claude asks you questions that are answered in CLAUDE.md, the phrasing might be ambiguous. Treat CLAUDE.md like code: review it when things go wrong, prune it regularly, and test changes by observing whether Claude's behavior actually shifts. For a checked-in CLAUDE.md, run [`/doctor`](/docs/en/commands#all-commands) and Claude proposes cuts for content it can derive from the codebase.\n\nIf Claude keeps skipping one instruction, add emphasis such as \"IMPORTANT\" to that line alone. If you emphasize many lines, none of them stands out. Check CLAUDE.md into git so your team can contribute. The file compounds in value over time.\n\nCLAUDE.md files can import additional files using `@path/to/import` syntax. For import rules and where CLAUDE.md files can live, see [CLAUDE.md files](/docs/en/memory#claude-md-files)."
+    }
+  ]
+}

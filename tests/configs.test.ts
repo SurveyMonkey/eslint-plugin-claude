@@ -757,6 +757,7 @@ const MEMORY_WARN_RULES = [
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-emphasis-overuse': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-excludes-absolute-committed': ['json/json', ['**/.claude/settings.json']],
   'claude-md-import-in-code-span': [

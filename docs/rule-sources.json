@@ -240,6 +240,13 @@
       "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc"
     }
   ],
+  "claude-md-emphasis-overuse": [
+    {
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "heading": "Write an effective CLAUDE.md",
+      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819"
+    }
+  ],
   "claude-md-excludes-absolute-committed": [
     {
       "url": "https://code.claude.com/docs/en/memory",

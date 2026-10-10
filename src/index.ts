@@ -20,6 +20,7 @@ import claudeMdAgentsMdProsePointer from './rules/claude-md-agents-md-prose-poin
 import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
+import claudeMdEmphasisOveruse from './rules/claude-md-emphasis-overuse.ts'
 import claudeMdExcludesAbsoluteCommitted from './rules/claude-md-excludes-absolute-committed.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
@@ -226,6 +227,7 @@ const modules = [
   rulesSymlinkExternal,
   claudeMdAgentsMdProsePointer,
   claudeMdCombinedSize,
+  claudeMdEmphasisOveruse,
   claudeMdExcludesAbsoluteCommitted,
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
@@ -364,6 +366,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-symlink-external': 'warn',
   'claude-md-agents-md-prose-pointer': 'off',
   'claude-md-combined-size': 'off',
+  'claude-md-emphasis-overuse': 'off',
   'claude-md-excludes-absolute-committed': 'off',
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
