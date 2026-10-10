@@ -240,6 +240,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
     'plugin-manifest-location',
+    'plugin-monitors-command-env',
     'plugin-no-project-plugins-dir',
     'plugin-package-lockfile',
     'plugin-project-skills-dir-limits',
