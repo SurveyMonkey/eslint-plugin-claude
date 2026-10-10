@@ -47,7 +47,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'redundant' }> = {
           list === 'allow' && parsed.specifier !== null && BASH_RULE_TOOLS.includes(parsed.tool)
             ? redundantCommand(commandWords(parsed.specifier))
             : undefined
-        // `permissions-dead-allow` reports an allow rule that a deny or ask rule covers.
+        // `permissions-dead-allow` reports an allow rule with the same text as a deny or ask rule, or
+        // with a deny or ask rule for the bare tool (`isDeadAllow`).
         if (command !== undefined && !isDeadAllow(objects, parsed)) {
           context.report({
             loc,

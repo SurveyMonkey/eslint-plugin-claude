@@ -36,6 +36,7 @@ The rule is silent for these rules:
 - `command -v`. It looks up a command and does not run one, so Claude Code does not strip it.[^wrappers]
 - `xargs` with a flag, as `Bash(xargs -n1 grep *)`. Claude Code matches it as an `xargs` command, so a rule for `xargs` works.
   A rule that has only `xargs` and `*` is silent too, because the `*` can match a flag. A rule that has only `xargs` is silent.[^wrappers]
+- A bare wrapper, as `Bash(timeout)`. There is no inner command to write the rule for.
 - A deny or ask rule on a parameter of the Bash tool, as `Bash(timeout:*)`. It is no wrapper.
 - `nocorrect`, and the exec wrappers `watch`, `setsid`, `ionice` and `flock`. The docs do not list them as stripped.
   [`permissions-bash-exec-wrapper-prefix`](permissions-bash-exec-wrapper-prefix.md) reads the exec wrappers.

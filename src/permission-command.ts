@@ -17,8 +17,10 @@ export function commandWords(specifier: string): string[] {
 
 /** The input parameters of a command tool. The "Match by input parameter" section
  *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter) names `run_in_background`
- *  and says the match works for any scalar parameter of the tool. The other three are fields of
- *  the Bash tool input. The plugin chooses them. */
+ *  and says the match works for any scalar parameter of the tool. The sandboxing and tools
+ *  pages show `dangerouslyDisableSandbox`, `timeout` and `run_in_background` as inputs of Bash.
+ *  `description` is the choice of the plugin. The plugin also applies the four names to Monitor
+ *  and PowerShell rules: the docs list no inputs for those tools. */
 export const COMMAND_PARAMETERS: readonly string[] = [
   'run_in_background',
   'description',
