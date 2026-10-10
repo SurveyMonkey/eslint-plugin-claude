@@ -125,6 +125,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-settings-agent-exists`](docs/rules/plugin-settings-agent-exists.md) | The `agent` key of the default settings of a plugin names a built-in agent or one of the plugin agents | `warn` | `warn` |
 | [`claude/plugin-skills-key-redundant-default`](docs/rules/plugin-skills-key-redundant-default.md) | The `skills` key of `plugin.json` does not list the default `skills/` directory, which the key adds to anyway | `warn` | `warn` |
 | [`claude/plugin-user-config-field-applicability`](docs/rules/plugin-user-config-field-applicability.md) | A `userConfig` option sets `min` and `max` only on a `number` option, and `multiple` only on a `string` option | `warn` | `warn` |
+| [`claude/plugin-bin-claude-ai`](docs/rules/plugin-bin-claude-ai.md) | A plugin that targets claude.ai has no top-level `bin/` folder, because claude.ai and Cowork do not install such a plugin (option `targets`; inactive without it) | `warn` | `warn` |
+| [`claude/plugin-monitors-command-quote`](docs/rules/plugin-monitors-command-quote.md) | A monitor `command` writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` inside quotes, because an install path with a space splits the command | `warn` | `warn` |
+| [`claude/plugin-package-lifecycle-scripts`](docs/rules/plugin-package-lifecycle-scripts.md) | The `package.json` at a plugin root has no `preinstall`, `install` or `postinstall` script, because Claude Code installs dependencies with `--ignore-scripts` | `warn` | `warn` |
+| [`claude/plugin-package-lockfile-choice`](docs/rules/plugin-package-lockfile-choice.md) | A plugin ships one lockfile that Claude Code reads, and not `bun.lock` alone, because Claude Code reads the first match and does not fall back to npm | `warn` | `warn` |
+| [`claude/plugin-themes-layout`](docs/rules/plugin-themes-layout.md) | A theme file in `themes/` uses the custom theme format: `name` is a string, `base` is a built-in preset, and `overrides` is an object | `warn` | `warn` |
 
 ### Marketplace manifest
 

@@ -44,6 +44,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import pluginBinClaudeAi from './rules/plugin-bin-claude-ai.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
@@ -56,11 +57,14 @@ import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
 import pluginManifestPublishMetadata from './rules/plugin-manifest-publish-metadata.ts'
 import pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
+import pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
+import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.ts'
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
@@ -70,6 +74,7 @@ import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
+import pluginThemesLayout from './rules/plugin-themes-layout.ts'
 import pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
@@ -233,6 +238,11 @@ const modules = [
   pluginSettingsAgentExists,
   pluginSkillsKeyRedundantDefault,
   pluginUserConfigFieldApplicability,
+  pluginBinClaudeAi,
+  pluginMonitorsCommandQuote,
+  pluginPackageLifecycleScripts,
+  pluginPackageLockfileChoice,
+  pluginThemesLayout,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -370,6 +380,11 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-settings-agent-exists': 'warn',
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-user-config-field-applicability': 'warn',
+  'plugin-bin-claude-ai': 'warn',
+  'plugin-monitors-command-quote': 'warn',
+  'plugin-package-lifecycle-scripts': 'warn',
+  'plugin-package-lockfile-choice': 'warn',
+  'plugin-themes-layout': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
