@@ -28,20 +28,20 @@ function lint(code: string, files: Record<string, string> = {}) {
 }
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
-it.fails('reports an extension that two plugins claim, on the source of the later entry', () => {
+it('reports an extension that two plugins claim, on the source of the later entry', () => {
   const found = lint(market(entry('a'), entry('b')), {
     'plugins/a/.lsp.json': lsp({ ts: ['.ts'] }),
     'plugins/b/.lsp.json': lsp({ tsx: ['.ts', '.tsx'] }),
   })
   expect(ids(found)).toEqual(['conflict'])
-  expect(found[0]).toMatchObject({ line: 1, column: 69, endColumn: 81 })
+  expect(found[0]).toMatchObject({ line: 1, column: 81, endColumn: 94 })
   expect(found[0]?.message).toContain('".ts"')
   expect(found[0]?.message).toContain('"ts"')
   expect(found[0]?.message).toContain('"tsx"')
   expect(found[0]?.message).toContain('"a"')
   expect(found[0]?.message).toContain('"b"')
 })
-it.fails('reads the inline lspServers of a manifest and a declared file', () => {
+it('reads the inline lspServers of a manifest and a declared file', () => {
   const found = lint(market(entry('a'), entry('b'), entry('c')), {
     'plugins/a/.lsp.json': lsp({ ts: ['.ts'] }),
     'plugins/b/.claude-plugin/plugin.json': manifestOf('b', { go: server('.go') }),
@@ -51,7 +51,7 @@ it.fails('reads the inline lspServers of a manifest and a declared file', () => 
   expect(ids(found)).toEqual(['conflict'])
   expect(found[0]?.message).toContain('"c"')
 })
-it.fails('reports a conflict between two servers of one plugin', () => {
+it('reports a conflict between two servers of one plugin', () => {
   const found = lint(market(entry('a')), {
     'plugins/a/.lsp.json': lsp({ ts: ['.ts'] }),
     'plugins/a/.claude-plugin/plugin.json': manifestOf('a', { other: server('.ts') }),
@@ -60,7 +60,7 @@ it.fails('reports a conflict between two servers of one plugin', () => {
   expect(found[0]?.message).toContain('"ts"')
   expect(found[0]?.message).toContain('"other"')
 })
-it.fails('reports each later entry once for an extension, and each extension', () => {
+it('reports each later entry once for an extension, and each extension', () => {
   const files = {
     'plugins/a/.lsp.json': lsp({ s: ['.ts', '.go'] }),
     'plugins/b/.lsp.json': lsp({ s: ['.ts', '.go'] }),
@@ -69,7 +69,7 @@ it.fails('reports each later entry once for an extension, and each extension', (
   const found = lint(market(entry('a'), entry('b'), entry('c')), files)
   expect(ids(found)).toEqual(['conflict', 'conflict', 'conflict'])
 })
-it.fails('reads a plugin that has no manifest', () => {
+it('reads a plugin that has no manifest', () => {
   const found = lint(market(entry('a'), entry('b')), {
     'plugins/a/.lsp.json': lsp({ s: ['.ts'] }),
     'plugins/b/.lsp.json': lsp({ s: ['.ts'] }),
@@ -77,14 +77,14 @@ it.fails('reads a plugin that has no manifest', () => {
   })
   expect(ids(found)).toEqual(['conflict'])
 })
-it.fails('stays silent for distinct extensions', () => {
+it('stays silent for distinct extensions', () => {
   const found = lint(market(entry('a'), entry('b')), {
     'plugins/a/.lsp.json': lsp({ s: ['.ts'] }),
     'plugins/b/.lsp.json': lsp({ s: ['.tsx'] }),
   })
   expect(ids(found)).toEqual([])
 })
-it.fails('does not count a server that a later one of the same name replaces', () => {
+it('does not count a server that a later one of the same name replaces', () => {
   const found = lint(market(entry('a'), entry('b')), {
     'plugins/a/.lsp.json': lsp({ go: ['.go'] }),
     'plugins/a/.claude-plugin/plugin.json': manifestOf('a', { go: server('.golang') }),
@@ -92,11 +92,11 @@ it.fails('does not count a server that a later one of the same name replaces', (
   })
   expect(ids(found)).toEqual([])
 })
-it.fails('reads a plugin once when two entries share a source', () => {
+it('reads a plugin once when two entries share a source', () => {
   const files = { 'plugins/a/.lsp.json': lsp({ s: ['.ts'] }) }
   expect(ids(lint(market(entry('a'), entry('again', './plugins/a')), files))).toEqual([])
 })
-it.fails('does not read an entry that has no relative source, or a marketplace it cannot read', () => {
+it('does not read an entry that has no relative source, or a marketplace it cannot read', () => {
   const files = {
     'plugins/a/.lsp.json': lsp({ s: ['.ts'] }),
     'plugins/b/.lsp.json': lsp({ s: ['.ts'] }),
@@ -109,7 +109,7 @@ it.fails('does not read an entry that has no relative source, or a marketplace i
   expect(ids(lint('{"name": "m"}', files))).toEqual([])
   expect(ids(lint('{"plugins": 7}', files))).toEqual([])
 })
-it.fails('stays silent for a plugin it cannot see', () => {
+it('stays silent for a plugin it cannot see', () => {
   const root = repo({
     'plugins/a/.lsp.json': lsp({ s: ['.ts'] }),
     'plugins/b/.lsp.json': '{ not json',
@@ -131,7 +131,7 @@ it.fails('stays silent for a plugin it cannot see', () => {
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('keeps the report that the readable files support when one file is locked', () => {
+it('keeps the report that the readable files support when one file is locked', () => {
   const root = repo({
     'plugins/a/.lsp.json': lsp({ s: ['.ts'] }),
     'plugins/b/.lsp.json': lsp({ s: ['.ts'] }),
@@ -147,4 +147,26 @@ it.fails('keeps the report that the readable files support when one file is lock
   )
   expect(ids(found)).toEqual(['conflict'])
   expect(found[0]?.message).toContain('"c"')
+})
+
+it('names a plugin that has no name by its directory, and reports an extension once for an entry', () => {
+  const found = lint(market(entry('a'), { source: './plugins/b' }), {
+    'plugins/a/.lsp.json': lsp({ s: ['.ts'] }),
+    'plugins/b/.lsp.json': lsp({ s: ['.ts'], t: ['.ts'] }),
+  })
+  expect(ids(found)).toEqual(['conflict'])
+  expect(found[0]?.message).toContain('plugin "b"')
+  expect(found[0]?.message).toContain('plugin "a"')
+})
+
+it('claims nothing for a server that has no extension map, or a map that is not an object', () => {
+  const found = lint(market(entry('a'), entry('b')), {
+    'plugins/a/.lsp.json': JSON.stringify({
+      bare: { command: 'x' },
+      odd: 7,
+      list: { extensionToLanguage: ['.ts'] },
+    }),
+    'plugins/b/.lsp.json': lsp({ s: ['.ts'] }),
+  })
+  expect(ids(found)).toEqual([])
 })

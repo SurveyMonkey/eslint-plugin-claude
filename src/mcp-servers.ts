@@ -202,3 +202,19 @@ const MCP_KIND: DeclarationKind = {
 /** The MCP servers that the plugin at `root` declares, in load order. */
 export const pluginMcpDeclarations = (root: string, manifest: ValueNode | null): Declaration[] =>
   pluginDeclarations(root, manifest, MCP_KIND)
+
+/** The declarations that repeat a name which an earlier source declares, each with the `from` of
+ *  the first declaration of that name. */
+export function repeatedDeclarations(
+  declarations: readonly Declaration[],
+): { declaration: Declaration; earlier: string }[] {
+  const first = new Map<string, string>()
+  return declarations.flatMap((declaration) => {
+    const earlier = first.get(declaration.name)
+    if (earlier === undefined) {
+      first.set(declaration.name, declaration.from)
+      return []
+    }
+    return [{ declaration, earlier }]
+  })
+}

@@ -34,6 +34,8 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-tools-unavailable',
     'command-legacy-format',
     'hooks-event-name-known',
+    'lsp-duplicate-server-name',
+    'lsp-extension-conflict',
     'lsp-json-schema',
     'lsp-transport-socket',
     'marketplace-command-version-ignored',

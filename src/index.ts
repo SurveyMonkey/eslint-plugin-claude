@@ -18,6 +18,8 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
+import lspExtensionConflict from './rules/lsp-extension-conflict.ts'
 import lspJsonSchema from './rules/lsp-json-schema.ts'
 import lspTransportSocket from './rules/lsp-transport-socket.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
@@ -229,6 +231,8 @@ const modules = [
   mcpEnvClientSecret,
   mcpManagedServersEntry,
   mcpDuplicateServerName,
+  lspExtensionConflict,
+  lspDuplicateServerName,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -364,6 +368,8 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-env-client-secret': 'error',
   'mcp-managed-servers-entry': 'error',
   'mcp-duplicate-server-name': 'error',
+  'lsp-extension-conflict': 'error',
+  'lsp-duplicate-server-name': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

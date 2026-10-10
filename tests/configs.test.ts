@@ -596,6 +596,41 @@ const TREE: Record<string, string> = {
   }),
   'plugins/dv/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
   'packages/dn/plugin.json': JSON.stringify({ name: 'dn', mcpServers: [{ db: {} }, { db: {} }] }),
+  // `lsp-extension-conflict`: two plugins of one marketplace claim `.go`. A marketplace with
+  // distinct extensions, and the same content where no rule reads it, are silent.
+  'packages/lc/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'lc',
+    owner: { name: 'lc' },
+    plugins: [
+      { name: 'a', source: './plugins/a' },
+      { name: 'b', source: './plugins/b' },
+    ],
+  }),
+  'packages/lc/plugins/a/.claude-plugin/plugin.json': JSON.stringify({ name: 'a' }),
+  'packages/lc/plugins/a/.lsp.json': goodLsp,
+  'packages/lc/plugins/b/.claude-plugin/plugin.json': JSON.stringify({ name: 'b' }),
+  'packages/lc/plugins/b/.lsp.json': goodLsp,
+  'packages/lv/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'lv',
+    owner: { name: 'lv' },
+    plugins: [
+      { name: 'a', source: './plugins/a' },
+      { name: 'b', source: './plugins/b' },
+    ],
+  }),
+  'packages/lv/plugins/a/.claude-plugin/plugin.json': JSON.stringify({ name: 'a' }),
+  'packages/lv/plugins/a/.lsp.json': goodLsp,
+  'packages/lv/plugins/b/.claude-plugin/plugin.json': JSON.stringify({ name: 'b' }),
+  'packages/lv/plugins/b/.lsp.json': JSON.stringify({
+    rs: { command: 'rust-analyzer', extensionToLanguage: { '.rs': 'rust' } },
+  }),
+  'packages/lc/marketplace.json': JSON.stringify({ plugins: [{ source: './plugins/a' }] }),
+  // `lsp-duplicate-server-name`: `go` in `.lsp.json` and in the inline map.
+  'plugins/ld/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ld',
+    lspServers: JSON.parse(goodLsp),
+  }),
+  'plugins/ld/.lsp.json': goodLsp,
   // The same content where no rule reads it: other names and other directories.
   'packages/mc/mcp.json': badMcp,
   'packages/mc/.mcp.json.bak': badMcp,
@@ -717,6 +752,8 @@ const MCP_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
   { name: 'mcp-env-client-secret', files: PROJECT_FILES },
   { name: 'mcp-managed-servers-entry', files: MANAGED_FILES },
   { name: 'mcp-duplicate-server-name', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'lsp-extension-conflict', files: ['**/.claude-plugin/marketplace.json'] },
+  { name: 'lsp-duplicate-server-name', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -986,6 +1023,8 @@ const EXPECTED = [
   'packages/me/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/cs/.claude/settings.json: claude/mcp-env-client-secret@2',
   'plugins/dn/.claude-plugin/plugin.json: claude/mcp-duplicate-server-name@2',
+  'packages/lc/.claude-plugin/marketplace.json: claude/lsp-extension-conflict@2',
+  'plugins/ld/.claude-plugin/plugin.json: claude/lsp-duplicate-server-name@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
