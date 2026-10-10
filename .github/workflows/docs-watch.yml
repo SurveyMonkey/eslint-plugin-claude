@@ -15,8 +15,9 @@ permissions:
 
 # The job commits nothing, and it never changes the snapshot. When a docs
 # page changed, or the check failed, it classifies the pages and opens one
-# issue for each changed block. A block that only an inventory row cites gets
-# a comment on its group issue instead, while that issue is open. A scheduled
+# issue for each changed block. A block that only an inventory row cites also
+# gets a comment on its group issue, while that issue is open. Then a finding
+# of the block that names no rule opens no issue. A scheduled
 # run opens issues and posts comments. A manual run does too, unless
 # `dry_run` is set. See CONTRIBUTING.md and the triage runbook.
 jobs:

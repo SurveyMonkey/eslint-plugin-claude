@@ -138,17 +138,18 @@ no title.
 and the spike data.
 
 The classifier also reads `docs/rules-inventory.md` as a second source map. Each inventory
-footnote uses the one-line form of [Rule source map](#rule-source-map), and the docs watch reads
-it. The classifier reads the rule tables of each `###` section of "Rules by group". A changed,
-added or removed block is tracked when an inventory footnote cites it and the map does not. The
-JSON lists it in `tracked`, with the rule rows that cite it in each section.
+footnote uses the one-line form of [Rule source map](#rule-source-map), and the classifier reads
+it. The classifier reads the rule tables of each `###` section of "Rules by group". It tracks a
+changed, added or removed block when an inventory footnote cites it. A map heading that cites the
+block stops this, but a heading that cites the whole page does not. The JSON lists each tracked
+block in `tracked`, with the rule rows that cite it in each section.
 
 `node scripts/docs-issues.ts <findings.json>` opens one issue for each changed block, as the org
 GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
 hash and the rules stops a second issue for the same change. For a changed block, the body shows
 a diff, then the full old and new sections in two collapsed parts. For a tracked block, it posts
-one comment on the open group issue of each section (`GROUP_ISSUES`). A finding of the block that
-names no rule then opens no issue. `--dry-run` prints each issue and
+one comment on the open group issue of each section (`GROUP_ISSUES`). While that group issue is
+open, a finding of the block that names no rule opens no issue. `--dry-run` prints each issue and
 each comment, and opens and posts none. A manual run of the workflow takes a `dry_run` input.
 
 To triage the issues and the comments, follow the

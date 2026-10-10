@@ -26,19 +26,21 @@
 // The findings file also has a `tracked` list: the blocks that only an
 // inventory row cites. Each section of those rows has a group issue
 // (GROUP_ISSUES). The step reads the state and the comments of each group
-// issue. While a group issue is open, it gets one comment for each run, with
-// each new block, the rows that cite it, and its text. Each block in the
-// comment has a hidden marker
+// issue. While a group issue is open, it gets at most one comment for each
+// run. The comment shows each new block, the rows that cite it, and its text.
+// Each block in the comment has a hidden marker
 // <!-- docs-watch-tracked:<page>#<blockId>:<hash> -->, with the key of an
-// issue marker. A block whose marker is in a comment of the issue is not
-// posted again. A finding of a tracked block that names no rule opens no
-// issue while one of its group issues is open. When all are closed, the
-// finding opens an issue, with a line that names the inventory rows. Comments
-// do not count toward --max. --dry-run prints each comment, and posts none.
+// issue marker. The step does not post a block again while its marker is in
+// a comment of the issue. A tracked block can have a finding that names no
+// rule. While one of its group issues is open, that finding opens no issue.
+// When all are closed, the finding opens an issue, with a line that names the
+// inventory rows. Comments do not count toward --max. --dry-run prints each
+// comment, and posts none.
 //
 // It fails closed. These make it exit 1 before it opens an issue or posts a
 // comment:
 // - a finding or a tracked block that is not valid, or no tracked list
+// - a tracked block that is in the list twice
 // - a tracked block in a section that has no group issue
 // - a group issue whose state is not open or closed
 // - more new issues than --max (default 20), in a live run.
@@ -84,8 +86,9 @@ const GROUP_ISSUES: Record<string, number> = {
   'Permissions and sandbox': 15,
   'MCP and LSP servers': 16,
 }
-// GitHub takes at most 65,536 characters in a comment. The text after the
-// markers is cut to keep the comment under this value.
+// The markers and the text of a comment take at most this value. The step
+// cuts the text after the markers, and adds a note of the cut after it. The
+// comment then stays under the GitHub limit of 65,536 characters.
 export const MAX_COMMENT = 60_000
 
 // The page, the block and the hash of a finding. The block ID comes from
@@ -273,9 +276,10 @@ const rowsOf = (t: Tracked) =>
     .join('; ')
 
 // The block text, as quoted data, for an issue body or a comment. These are
-// the cases: two texts of more than MAX_DIFF_LINES lines, two texts, the new
-// text only, the old text only, and no text. With `full`, a diff of two texts
-// has the full old and new text in two collapsed sections below it.
+// the cases: two texts, one of them more than MAX_DIFF_LINES lines; two
+// texts; the new text only; the old text only; and no text. With `full`, a
+// diff of two texts has the full old and new text in two collapsed sections
+// below it.
 function blockText(f: Pick<Finding, 'oldText' | 'newText' | 'change'>, full: boolean): string[] {
   const lines: string[] = []
   const long = (text: string) => text.split('\n').length > MAX_DIFF_LINES

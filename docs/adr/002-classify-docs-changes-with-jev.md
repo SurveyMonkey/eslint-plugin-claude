@@ -26,10 +26,10 @@ lists 407 releases. Among them:
 - Many changes are to words only, examples, bug fixes, CLI commands or environment variables. No lint
   rule reads them.
 
-**A block that a planned rule cites is not a new rule.** Four `new-rule` issues (#44, #45, #121,
-#122) and one `needs-triage` issue (#123) were changes to blocks of the hooks page. Rows of the
-Hooks section of `docs/rules-inventory.md` cite each of these blocks (lines 384 to 437 on
-2026-10-10).
+**A block that a planned rule cites is not a new rule.** Five issues were changes to blocks of the
+hooks page: four `new-rule` issues (#44, #45, #121, #122) and one `needs-triage` issue (#123).
+Rows of the Hooks section of `docs/rules-inventory.md` cite each of these blocks (lines 384 to
+437 on 2026-10-10).
 
 **The constraints are these:**
 
@@ -90,12 +90,13 @@ confidence value, so a finding reports `|2p - 1|` as its confidence.
 **The inventory is a second source map.** `docs/rules-inventory.md` lists the rule candidates,
 built and not built. Each rule row cites footnotes, and each footnote names a page and a
 heading. The classifier reads the rule tables of each `###` section of "Rules by group". A
-table in a `####` subsection belongs to its `###` section. A changed, added or removed block is
-tracked when an inventory footnote cites it and `docs/rule-sources.json` does not.
-The output lists each tracked block in `tracked`, with the rule rows that cite it in each
-section. A tracked block gets the same request and the same findings as before. Decision 8 tells
-what the issue step does with it. Only the pages that the map cites are read, so a page that
-only the inventory cites is not watched.
+table in a `####` subsection belongs to its `###` section. The classifier tracks a changed,
+added or removed block when an inventory footnote cites it. A heading of
+`docs/rule-sources.json` that cites the block stops this. A heading that cites the whole page
+does not. The output lists each tracked block in `tracked`, with the rule rows that cite it in
+each section. A tracked block gets the same request and the same findings as before. Decision 8
+tells what the issue step does with it. The classifier reads only the pages that the map cites.
+The job does not watch a page that only the inventory cites.
 
 ### 2. The spike data
 
@@ -244,21 +245,23 @@ word joiner, so the text makes no mention and no marker.
 `scripts/docs-issues.ts` gives the group issue of each section of "Rules by group". A tracked
 block in a section with no group issue stops the step before it writes. While a group issue is
 open, a run posts at most one comment on it. The comment names each new tracked block and the
-rows of that section that cite it. It shows the diff of the block, or its text when the snapshot
-has no old text. Each block has the hidden marker
+rows of that section that cite it. It quotes the block text as an issue body does, but with no
+Before and After parts. It shows a diff, the new text, or the old text of a removed block. When
+no text is available, a note says so. Each block has the hidden marker
 `<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`, with the key of Decision 5. The prefix is
 not `docs-watch:`, so the issue dedupe does not read it. The step reads the comments of each open
-group issue. A block whose marker is in a comment is not posted again.
+group issue. It does not post a block again while its marker is in a comment.
 
 A tracked block opens no issue for a finding with no rule while one of its group issues is open.
 The comment takes its place. When all its group issues are closed, the finding opens its
 issue, with a line that names the inventory rows. A finding that names a rule opens its issue as
 before. Docs text in a comment gets the same fence and word joiners as an issue body. The markers
-come first. The text after them is cut, with a note, so that the comment stays at 60,000
-characters or fewer. A cut never removes a marker. Comments do not
-count toward the limit of 20 issues. A dry run prints each comment and posts none. The step also
-stops before it writes for three causes. The findings file has no `tracked` list. A tracked block
-is not valid. A group issue has a state that is not `open` or `closed`.
+come first. The step cuts the text after them so that the markers and the text take at most
+60,000 characters. A note of the cut follows, so the comment stays under the GitHub limit of
+65,536. A cut never removes a marker. Comments do not count toward the limit of 20 issues. A dry
+run prints each comment and posts none. The step also stops before it writes for four causes.
+The findings file has no `tracked` list. A tracked block is not valid. A tracked block is in the
+list twice. A group issue has a state that is not `open` or `closed`.
 
 ## Consequences
 
@@ -273,8 +276,11 @@ is not valid. A group issue has a state that is not `open` or `closed`.
 - The snapshot has only the hash of an uncited block. A change to the words only of such a block
   can give a `new-rule` issue, because the question sees the new text only.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
-- `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed. When a
-  group issue closes, the findings of its tracked blocks open issues again.
-- A tracked block gets no issue of its own while a group issue is open. Its Jev finding stays in
-  the classifier output. A person reads the comment when they build the row.
+- `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed.
+- When all group issues of a tracked block are closed, each finding of the block opens its issue.
+  A tracked block with no finding gets nothing: a removed block, or a block with a low Jev
+  answer.
+- While a group issue is open, a finding of a tracked block that names no rule opens no issue.
+  The finding stays in the classifier output. A person reads the comment when they build the row.
+  A finding that names a whole-page rule still opens its issue.
 - A new Jev version needs a new run of the spike before the pin moves.

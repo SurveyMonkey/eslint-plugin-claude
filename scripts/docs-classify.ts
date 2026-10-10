@@ -15,11 +15,11 @@
 //
 // docs/rules-inventory.md is a second source map. Its footnotes cite docs
 // headings, and the rule rows of each `###` section of "Rules by group" cite
-// its footnotes. A changed, added or removed block that no heading of
-// docs/rule-sources.json cites, and that an inventory footnote cites, is
-// tracked. Each tracked block is in `tracked` as { page, heading, blockId,
-// change, oldHash, newHash, oldText, newText, sections }, with the rule rows
-// that cite it in each section. The Jev requests do not change: a tracked
+// its footnotes. A changed, added or removed block is tracked when an
+// inventory footnote cites it. A heading of docs/rule-sources.json other than
+// the page title stops this. Each tracked block is in `tracked` as { page,
+// heading, blockId, change, oldHash, newHash, oldText, newText, sections },
+// with the rule rows that cite it in each section. The Jev requests do not change: a tracked
 // block gets the same request and the same findings as before.
 //
 // The script fails closed. These give a needs-triage finding:
@@ -655,10 +655,12 @@ export function planPage({
     cite(first.key, heading, rules)
   }
   // The inventory rows of each block that an inventory heading cites. A
-  // heading finds its block as a mapped heading does. When the page does not
-  // have it, a stored block with its slug as ID is the old block. These track
-  // no block: a heading that is on the page more than once, a heading that is
-  // the page title, and a heading that neither the page nor the snapshot has.
+  // heading finds its block on the page as a mapped heading does. When the
+  // page does not have it, a stored block with its slug as ID is the old
+  // block. These headings track no block:
+  // - a heading that is on the page more than once
+  // - a heading that is the page title
+  // - a heading that neither the page nor the snapshot has.
   const trackedRows = new Map<string, Rows>()
   for (const [heading, rows] of inventory) {
     const id = slugify(heading)
