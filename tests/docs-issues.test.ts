@@ -1,6 +1,6 @@
-// The issue step opens one digest issue for the uncited blocks of each page,
-// and one issue for each other changed block. These tests inject the gh
-// runner, so no test calls GitHub.
+// The issue step opens issues for the changed blocks. Two or more uncited
+// blocks of one page share a digest issue. These tests inject the gh runner,
+// so no test calls GitHub.
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -1651,9 +1651,18 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
     gh.posts().map((p) => JSON.parse(p.input ?? '{}') as { title: string; body: string })
   const markers = (body: string) => body.match(/<!-- docs-watch:[^\n]*? -->/g) ?? []
   const sections = (body: string) => body.match(/^### /gm) ?? []
-  // The note of the cut that the step adds after the block sections.
-  const outerNote =
-    /\n\nThe text is cut at \d+ of \d+ characters\. Read the page for the rest\.(?=\n## Scope\n)/
+  const cuts = (body: string) => body.match(/The text is cut at /g) ?? []
+  // The contract of each live run: every body fits in MAX_COMMENT, each
+  // issue has a section for each of its markers, and each marker of the
+  // findings is in exactly one issue.
+  const packed = (issues: { body: string }[], findings: Finding[]) => {
+    for (const { body } of issues) {
+      expect(body.length).toBeLessThanOrEqual(60_000)
+      if (markers(body).length > 1) expect(sections(body)).toHaveLength(markers(body).length)
+    }
+    const all = issues.flatMap((s) => markers(s.body))
+    expect(all.sort()).toEqual(findings.map(api.markerOf).sort())
+  }
 
   it('opens one issue with three sections and three markers, and nothing on a repeat run', async () => {
     const three = [uncited(0), uncited(1), uncited(2)]
@@ -1683,7 +1692,7 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
     }
     expect(body).toContain(`- Page: ${HOOKS}`)
     expect(body).not.toContain('<details>')
-    expect(body).not.toMatch(outerNote)
+    expect(cuts(body)).toEqual([])
     for (const heading of ['## Why', '## Scope', '## Acceptance', '## References']) {
       expect(body).toContain(`\n${heading}\n`)
     }
@@ -1873,11 +1882,23 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
       [],
       Array.from({ length: 42 }, (_, i) => uncited(i)),
     )
-    expect(sent(more).map((s) => s.title)).toEqual([
-      'docs(hooks): triage 20 changed blocks',
-      'docs(hooks): triage 20 changed blocks',
+    expect(
+      sent(more)
+        .map((s) => s.title)
+        .sort(),
+    ).toEqual([
       'docs(hooks): triage 2 changed blocks',
+      'docs(hooks): triage 20 changed blocks',
+      'docs(hooks): triage 20 changed blocks',
     ])
+  })
+
+  it('opens one digest for a page of exactly 20 uncited blocks', async () => {
+    const twenty = Array.from({ length: 20 }, (_, i) => uncited(i))
+    const gh = fakeGh()
+    await live(gh, [], twenty)
+    expect(sent(gh).map((s) => s.title)).toEqual(['docs(hooks): triage 20 changed blocks'])
+    packed(sent(gh), twenty)
   })
 
   it('titles a digest with the page path, and drops the scope when it does not fit', () => {
@@ -1951,39 +1972,131 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
     const body = api.digestOf(HOOKS, blocks, REPO)
     // The length that the comment on MAX_DIGEST_QUOTE derives.
     expect(body.length).toBe(57_826)
-    expect(body).not.toMatch(outerNote)
     expect(markers(body)).toHaveLength(20)
     expect(sections(body)).toHaveLength(20)
     expect(body.match(/- Inventory rows that cite the block: /g)).toHaveLength(20)
-    // Each section has two fences of 281 backticks, each cut at the cap.
+    // Each section has two fences of 281 backticks. The step cuts the text
+    // in each fence at the cap, and cuts nothing else.
+    expect(cuts(body)).toHaveLength(40)
     expect(body.match(/The text is cut at 280 of /g)).toHaveLength(40)
     expect(body.match(/^`{281}text$/gm)).toHaveLength(40)
     expect(body.endsWith('section "A digest issue"\n')).toBe(true)
   })
 
-  it('cuts the sections of a longer body to exactly 60,000 characters, and keeps every marker and the last sections', () => {
-    const blocks = Array.from({ length: 20 }, (_, i) => ({
-      finding: worstFinding(i, { reason: 'r'.repeat(3000) }),
+  it('splits 20 blocks into more digests when their whole body does not fit, and cuts no section', async () => {
+    // A reason of 3,000 characters makes each section about 5,800
+    // characters, so 20 sections do not fit in 60,000.
+    const big = Array.from({ length: 20 }, (_, i) => worstFinding(i, { reason: 'r'.repeat(3000) }))
+    const gh = fakeGh()
+    const result = await live(gh, [], big)
+    const issues = sent(gh)
+    expect(issues.length).toBeGreaterThan(1)
+    expect(result.opened).toHaveLength(issues.length)
+    packed(issues, big)
+    // Only the fences have a cut note: two for each block.
+    expect(issues.flatMap((s) => cuts(s.body))).toHaveLength(40)
+    // A repeat run with these issues open opens nothing.
+    const open = issues.map((s, i) => ({ number: 300 + i, body: s.body }))
+    const again = fakeGh(open)
+    expect((await live(again, [], big)).skipped).toBe(20)
+    expect(again.posts()).toEqual([])
+    // The split issues count toward --max: with the rest of 20 as
+    // rule-update issues, the run has 21 and fails before any write.
+    const updates = Array.from({ length: 21 - issues.length }, (_, i) => ({
+      ...update,
+      newHash: hash(100 + i),
     }))
-    const body = api.digestOf(HOOKS, blocks, REPO)
-    const note = outerNote.exec(body)?.[0] ?? ''
-    expect(note).not.toBe('')
-    expect(body.length - note.length).toBe(60_000)
-    expect(body.length).toBeLessThan(65_536)
-    expect(new Set(markers(body))).toEqual(new Set(blocks.map((b) => api.markerOf(b.finding))))
-    expect(body.endsWith('section "A digest issue"\n')).toBe(true)
+    const over = fakeGh()
+    await expect(live(over, [], [...updates, ...big])).rejects.toThrow(
+      '21 new issues is more than the limit of 20',
+    )
+    expect(over.posts()).toEqual([])
   })
 
-  it('fails before it opens any issue when the markers of a digest do not fit', async () => {
+  it('splits a digest when long block IDs make the markers long', async () => {
     const long = Array.from({ length: 20 }, (_, i) => ({
       ...uncited(i),
       blockId: `${i}-${'b'.repeat(3000)}`,
     }))
     const gh = fakeGh()
-    await expect(live(gh, [], [update, ...long])).rejects.toThrow(
-      `the markers of the digest for ${HOOKS} do not fit in 60000 characters`,
+    await live(gh, [], long)
+    expect(sent(gh).length).toBeGreaterThan(1)
+    packed(sent(gh), long)
+  })
+
+  it('opens one digest whose body is exactly 60,000 characters, and splits one character past it', async () => {
+    const pad = (n: number): Finding => ({ ...uncited(1), reason: 'r'.repeat(n) })
+    const size = (n: number) =>
+      api.digestOf(HOOKS, [{ finding: uncited(0) }, { finding: pad(n) }], REPO).length
+    const fill = 1 + 60_000 - size(1)
+    expect(size(fill)).toBe(60_000)
+    const fits = fakeGh()
+    await live(fits, [], [uncited(0), pad(fill)])
+    expect(sent(fits).map((s) => s.title)).toEqual(['docs(hooks): triage 2 changed blocks'])
+    expect(sent(fits)[0]?.body).toHaveLength(60_000)
+    // One character more: each block gets the issue of that block.
+    const over = fakeGh()
+    await live(over, [], [uncited(0), pad(fill + 1)])
+    expect(
+      sent(over)
+        .map((s) => s.body)
+        .sort(),
+    ).toEqual([api.bodyOf(uncited(0), REPO), api.bodyOf(pad(fill + 1), REPO)].sort())
+  })
+
+  it('gives a block that does not fit alone its own issue, and keeps the other blocks in one digest', async () => {
+    const huge = (i: number): Finding => ({ ...uncited(i), reason: 'r'.repeat(61_000) })
+    const gh = fakeGh()
+    await live(gh, [], [uncited(0), huge(1), uncited(2), uncited(3)])
+    const issues = sent(gh)
+    expect(issues).toHaveLength(2)
+    expect(issues.map((s) => s.body)).toContain(api.bodyOf(huge(1), REPO))
+    const digest = issues.find((s) => s.title === 'docs(hooks): triage 3 changed blocks')
+    expect(new Set(markers(digest?.body ?? ''))).toEqual(
+      new Set([uncited(0), uncited(2), uncited(3)].map(api.markerOf)),
     )
-    expect(gh.posts()).toEqual([])
+    // Two blocks that do not fit alone give two issues, and no empty digest.
+    const two = fakeGh()
+    await live(two, [], [huge(0), huge(1)])
+    expect(
+      sent(two)
+        .map((s) => s.body)
+        .sort(),
+    ).toEqual([api.bodyOf(huge(0), REPO), api.bodyOf(huge(1), REPO)].sort())
+  })
+
+  it('cuts the text of each kind of fence in a digest section at 280 characters', async () => {
+    const line = (c: string) => c.repeat(500)
+    const blocks: Finding[] = [
+      // Two texts of one line each give a diff.
+      {
+        ...uncited(0),
+        change: 'changed',
+        oldHash: hash(700),
+        oldText: line('o'),
+        newText: line('n'),
+      },
+      // The new text only.
+      { ...uncited(1), newText: line('a') },
+      // The old text only, of a removed block.
+      {
+        ...uncited(2),
+        kind: 'needs-triage',
+        change: 'removed',
+        oldHash: hash(701),
+        newHash: null,
+        oldText: line('g'),
+        newText: null,
+      },
+    ]
+    const gh = fakeGh()
+    await live(gh, [], blocks)
+    const [digest] = sent(gh)
+    expect(digest?.title).toBe('docs(hooks): triage 3 changed blocks')
+    expect(digest?.body.match(/The text is cut at 280 of /g)).toHaveLength(3)
+    expect(digest?.body).toContain('The diff of the block text, old to new, as quoted data:')
+    expect(digest?.body).toContain('The block is gone. Its old text, as quoted data:')
+    expect(digest?.body).not.toContain('<details>')
   })
 
   describe('replay of the five issues of one change (#121 to #125)', () => {
