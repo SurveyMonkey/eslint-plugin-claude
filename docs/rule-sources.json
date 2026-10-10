@@ -240,6 +240,32 @@
       "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc"
     }
   ],
+  "claude-md-dangling-reference": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Write effective instructions",
+      "hash": "718f387c95271b74a191a607263f01cf7a88e5948098c801a525da993f7c23e7"
+    }
+  ],
+  "claude-md-derivable-content": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "My CLAUDE.md is too large",
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "heading": "Write an effective CLAUDE.md",
+      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819"
+    }
+  ],
+  "claude-md-emphasis-overuse": [
+    {
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "heading": "Write an effective CLAUDE.md",
+      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819"
+    }
+  ],
   "claude-md-excludes-absolute-committed": [
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -267,6 +293,30 @@
       "url": "https://code.claude.com/docs/en/large-codebases",
       "heading": "Exclude irrelevant CLAUDE.md files",
       "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
+    }
+  ],
+  "claude-md-git-instructions": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Claude isn't following my CLAUDE.md",
+      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+    }
+  ],
+  "claude-md-guardrail-to-hook": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Claude isn't following my CLAUDE.md",
+      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/features-overview",
+      "heading": "Compare similar features",
+      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772"
     }
   ],
   "claude-md-html-comment-content": [
@@ -348,6 +398,13 @@
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "My CLAUDE.md is too large",
       "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    }
+  ],
+  "claude-md-procedure-to-skill": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When to add to CLAUDE.md",
+      "hash": "06566c0d4316d723c30e526170d1eb6e6e33abb3d8f69c129b96cd42f2b7ccc1"
     }
   ],
   "claude-md-symlink": [
@@ -837,6 +894,13 @@
       "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
     }
   ],
+  "memory-index-entry-format": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+    }
+  ],
   "memory-index-max-size": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -886,6 +950,18 @@
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Share rules across projects with symlinks",
       "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
+    }
+  ],
+  "memory-topic-frontmatter": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Auto memory",
+      "hash": "22465dc6f3e06d8f7d854e9f4e827789b2e7dd43c156fa6c75b49ec34adb7641"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
     }
   ],
   "output-style-frontmatter-schema": [

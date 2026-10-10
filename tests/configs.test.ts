@@ -568,6 +568,60 @@ const TREE: Record<string, string> = {
   'packages/mi/.claude/agent-memory/rev/MEMORY.md': LONG,
   'packages/mi/.claude/agent-memory/rev/topic.md': LONG,
   'packages/mi/MEMORY.md': LONG,
+  // `memory-index-entry-format`: an index entry that takes two lines. The same text in a topic
+  // file and in a file that is not below `.claude/agent-memory/<name>/`.
+  'packages/ent/.claude/agent-memory/rev/MEMORY.md': '- [Testing](testing.md): first\n  second\n',
+  'packages/ent/.claude/agent-memory/rev/topic.md': '- [Testing](testing.md): first\n  second\n',
+  'packages/ent/MEMORY.md': '- [Testing](testing.md): first\n  second\n',
+  // `memory-topic-frontmatter`: a topic file with a `type` that is none of the four kinds. A valid
+  // file, the same text in the index, in a deeper folder and outside `.claude/agent-memory/<name>/`.
+  'packages/tf/.claude/agent-memory/rev/bad.md': '---\ntype: note\n---\n',
+  'packages/tf/.claude/agent-memory/rev/ok.md':
+    '---\ntype: user\nmodified: 2026-10-14T09:30:00Z\n---\n',
+  'packages/tf/.claude/agent-memory/rev/MEMORY.md': '---\ntype: note\n---\n',
+  'packages/tf/.claude/agent-memory/rev/sub/bad.md': '---\ntype: note\n---\n',
+  'packages/tf/docs/bad.md': '---\ntype: note\n---\n',
+  // `claude-md-guardrail-to-hook`: a prohibition in each file that the rule reads. The same text
+  // where no rule reads it, and in a fence.
+  'packages/gh/CLAUDE.md': 'Never edit the lock file.\n',
+  'packages/gh/.claude/CLAUDE.md': 'Never edit the lock file.\n',
+  'packages/gh/CLAUDE.local.md': 'Never edit the lock file.\n',
+  'packages/gh/.claude/rules/lock.md': 'Never edit the lock file.\n',
+  'packages/gh/docs/notes.md': 'Never edit the lock file.\n',
+  'packages/gh/ok/CLAUDE.md': '```\nNever edit the lock file.\n```\n',
+  // `claude-md-derivable-content`: a directory tree in each file that the rule reads. The same text
+  // where no rule reads it, and a block with two branches.
+  'packages/dc/CLAUDE.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
+  'packages/dc/.claude/CLAUDE.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
+  'packages/dc/CLAUDE.local.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
+  'packages/dc/.claude/rules/layout.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
+  'packages/dc/docs/notes.md': '```\nsrc/\n├── a.ts\n├── b.ts\n└── c.ts\n```\n',
+  'packages/dc/ok/CLAUDE.md': '```\nsrc/\n├── a.ts\n└── b.ts\n```\n',
+  // `claude-md-git-instructions`: a commit rule in each file that the rule reads, in a repository
+  // whose settings do not turn the git instructions off. The same text where no rule reads it, and
+  // in a repository whose project settings turn them off. The files `.git` make the repositories.
+  'packages/gi/.git': 'gitdir: ../.git\n',
+  'packages/gi/CLAUDE.md': 'Write commit messages in English.\n',
+  'packages/gi/.claude/CLAUDE.md': 'Write commit messages in English.\n',
+  'packages/gi/.claude/rules/git.md': 'Write commit messages in English.\n',
+  'packages/gi/CLAUDE.local.md': 'Write commit messages in English.\n',
+  'packages/gi/docs/notes.md': 'Write commit messages in English.\n',
+  'packages/gi/ok/.git': 'gitdir: ../.git\n',
+  'packages/gi/ok/CLAUDE.md': 'Write commit messages in English.\n',
+  'packages/gi/ok/.claude/settings.json': '{"includeGitInstructions": false}',
+  // `claude-md-dangling-reference`: a path that is not there, in each file that the rule reads. The
+  // same text where no rule reads it, and a path and a command that are there. The file `.git`
+  // makes `packages/dr` a repository.
+  'packages/dr/.git': 'gitdir: ../.git\n',
+  'packages/dr/CLAUDE.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/.claude/CLAUDE.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/CLAUDE.local.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/.claude/rules/a.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/docs/notes.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/ok/.git': 'gitdir: ../.git\n',
+  'packages/dr/ok/CLAUDE.md': 'See `src/a.ts`, and run `/ship`.\n',
+  'packages/dr/ok/src/a.ts': 'x\n',
+  'packages/dr/ok/.claude/skills/ship/SKILL.md': '---\nname: ship\ndescription: d\n---\n',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
@@ -744,6 +798,17 @@ const MEMORY_WARN_RULES = [
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-dangling-reference': [
+    'markdown/gfm',
+    ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md'],
+  ],
+  'claude-md-derivable-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-emphasis-overuse': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-git-instructions': ['markdown/gfm', ['**/CLAUDE.md', '**/.claude/rules/**/*.md']],
+  'claude-md-guardrail-to-hook': [
+    'markdown/gfm',
+    ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md'],
+  ],
   'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-excludes-absolute-committed': ['json/json', ['**/.claude/settings.json']],
   'claude-md-import-in-code-span': [
@@ -751,7 +816,10 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
   ],
   'claude-md-location': ['markdown/gfm', ['**/*.md']],
+  'claude-md-procedure-to-skill': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'memory-agent-memory-orphan': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
+  'memory-index-entry-format': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
+  'memory-topic-frontmatter': ['markdown/gfm', ['**/.claude/agent-memory/*/*.md']],
   'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
@@ -1050,6 +1118,28 @@ const STRICT_ONLY = [
   'packages/ic/.claude/CLAUDE.md: claude/claude-md-import-in-code-span@1',
   'packages/ic/CLAUDE.local.md: claude/claude-md-import-in-code-span@1',
   'packages/ica/AGENTS.md: claude/claude-md-import-in-code-span@1',
+  // `memory-index-entry-format` reads the `MEMORY.md` index, and no other file.
+  'packages/ent/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-entry-format@1',
+  // `memory-topic-frontmatter` reads the topic files of a subagent, and no other file.
+  'packages/tf/.claude/agent-memory/rev/bad.md: claude/memory-topic-frontmatter@1',
+  // `claude-md-guardrail-to-hook` reads CLAUDE.md, CLAUDE.local.md and the rule files.
+  'packages/gh/CLAUDE.md: claude/claude-md-guardrail-to-hook@1',
+  'packages/gh/.claude/CLAUDE.md: claude/claude-md-guardrail-to-hook@1',
+  'packages/gh/CLAUDE.local.md: claude/claude-md-guardrail-to-hook@1',
+  'packages/gh/.claude/rules/lock.md: claude/claude-md-guardrail-to-hook@1',
+  // `claude-md-derivable-content` reads CLAUDE.md and CLAUDE.local.md, and no other file.
+  'packages/dc/CLAUDE.md: claude/claude-md-derivable-content@1',
+  'packages/dc/.claude/CLAUDE.md: claude/claude-md-derivable-content@1',
+  'packages/dc/CLAUDE.local.md: claude/claude-md-derivable-content@1',
+  // `claude-md-git-instructions` reads CLAUDE.md and the rule files, and no other file.
+  'packages/gi/CLAUDE.md: claude/claude-md-git-instructions@1',
+  'packages/gi/.claude/CLAUDE.md: claude/claude-md-git-instructions@1',
+  'packages/gi/.claude/rules/git.md: claude/claude-md-git-instructions@1',
+  // `claude-md-dangling-reference` reads CLAUDE.md, CLAUDE.local.md and the rule files.
+  'packages/dr/CLAUDE.md: claude/claude-md-dangling-reference@1',
+  'packages/dr/.claude/CLAUDE.md: claude/claude-md-dangling-reference@1',
+  'packages/dr/CLAUDE.local.md: claude/claude-md-dangling-reference@1',
+  'packages/dr/.claude/rules/a.md: claude/claude-md-dangling-reference@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
