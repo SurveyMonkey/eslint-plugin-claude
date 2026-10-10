@@ -42,6 +42,8 @@ const twoBytes = put('short/.claude/skills/two/SKILL.md', Buffer.from([0xef, 0xb
 const onlyBom = put('short/.claude/skills/only/SKILL.md', BOM)
 // A mark that is not the first character.
 const later = put('later/.claude/skills/s/SKILL.md', `# S\n${BOM}\n`)
+// A wrong first byte followed by the last two bytes of the mark.
+const wrongFirst = put('wrong/.claude/skills/s/SKILL.md', Buffer.from([0x00, 0xbb, 0xbf, 0x0a]))
 const notMark = put('latin/.claude/skills/s/SKILL.md', Buffer.from([0xef, 0xbb, 0xbe, 0x0a]))
 
 // The rule is inactive with no `minVersion`, so a case sets a floor before the fix.
@@ -79,6 +81,7 @@ markdownTester.run('skill-no-bom', ruleOf('skill-no-bom'), {
     { code, filename: twoBytes, options: BEFORE_FIX },
     // Three bytes that are not the mark.
     { code, filename: notMark, options: BEFORE_FIX },
+    { code, filename: wrongFirst, options: BEFORE_FIX },
     { code, filename: later, options: BEFORE_FIX },
   ],
   invalid: [
