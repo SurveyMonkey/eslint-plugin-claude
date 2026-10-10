@@ -160,6 +160,10 @@ describe(`${name}: a directory that a rule blocks whole`, () => {
     }
   })
 
+  it('is silent when the end of an earlier rule only looks like a directory', () => {
+    expect(ids(list('deny', 'Read(secrets.env)', 'Read(!secrets./a)'))).toEqual([])
+  })
+
   it('is silent when the earlier rule is not a whole directory', () => {
     for (const earlier of ['Read(secrets/*.md)', 'Read(**/secrets/**)', 'Read(secrets)']) {
       expect(ids(list('deny', earlier, 'Read(!secrets/public)')), earlier).toEqual([])

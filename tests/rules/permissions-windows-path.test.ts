@@ -55,6 +55,9 @@ describe(`${name}: the reports`, () => {
       'Cd(~\\code\\*)',
       'Read(\\\\server\\share\\x)',
       'Read(src\\)',
+      'Read(src\\.env)',
+      'Read(a\\_b)',
+      'Read(a\\1)',
     ]) {
       expect(ids(list('allow', rule)), rule).toEqual(['backslash'])
     }

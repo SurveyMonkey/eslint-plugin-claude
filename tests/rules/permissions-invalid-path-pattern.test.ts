@@ -55,6 +55,7 @@ describe(`${name}: the reports`, () => {
       'Read([^a)',
       'Read([]a)',
       'Read([!]a)',
+      'Read([^]a)',
       'Read(a/[b/c/**)',
       'Read(a\\\\[b)',
       'Read(!a[b)',
@@ -88,6 +89,8 @@ describe(`${name}: the patterns that it leaves alone`, () => {
       'Read([^a].ts)',
       'Read([]].ts)',
       'Read([!]].ts)',
+      'Read([[])',
+      'Read([a[b])',
       'Edit(**/[Dd]ocs/**)',
       'Read(a[b]c[d]e)',
     ]) {

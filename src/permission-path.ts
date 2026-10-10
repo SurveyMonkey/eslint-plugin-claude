@@ -39,11 +39,10 @@ export function windowsFault(pattern: string): 'driveLetter' | 'backslash' | nul
   }
   for (let i = 0; i < pattern.length; i++) {
     if (pattern[i] === '\\') {
-      const next = pattern[i + 1]
       // A backslash before a letter, a digit, an underscore or a dot escapes a character that
       // needs no escape. A person writes it as a Windows separator. Any other character is an
       // escape of a pattern (`\[`, `\*`, `\(`), or the second half of an escaped backslash.
-      if (next === undefined || /[A-Za-z0-9_.]/.test(next)) {
+      if (/^\\(?:[A-Za-z0-9_.]|$)/.test(pattern.slice(i))) {
         return 'backslash'
       }
       i++

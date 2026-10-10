@@ -97,6 +97,13 @@ describe(`${name}: the reports`, () => {
     }
   })
 
+  it('reads a URL with white space around it as a URL', () => {
+    const [message, ...rest] = lint(list('allow', 'WebFetch( https://example.com )'))
+    expect(rest).toEqual([])
+    expect(message?.messageId).toBe('scheme')
+    expect(message?.message).toContain('`https://example.com`')
+  })
+
   it('reports a specifier with no domain: prefix, in allow', () => {
     for (const specifier of ['example.com', '*.example.com', 'url:https://example.com', '']) {
       expect(ids(list('allow', `WebFetch(${specifier})`)), specifier).toEqual(['missingPrefix'])
