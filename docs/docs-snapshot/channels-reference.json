@@ -1,0 +1,78 @@
+{
+  "url": "https://code.claude.com/docs/en/channels-reference",
+  "hash": "ff2e4cd795e64681828d44593718164676f82e492c37b81bee7e2ba03268daba",
+  "blocks": [
+    {
+      "id": "channels-reference",
+      "hash": "50612a78e9752534f6bd1d68bcc4468dd88b6e3942f1734c77a884cbd0beea1d"
+    },
+    {
+      "id": "overview",
+      "hash": "f3d9742d092ea9b4c2cfd63889e667ebc3eda6a091860e06714344c2905cf244"
+    },
+    {
+      "id": "what-you-need",
+      "hash": "032f7fb63f5f53cacdd9cfe29e777c303e1a41b4491979a747252fbb77c0638d"
+    },
+    {
+      "id": "example-build-a-webhook-receiver",
+      "hash": "4d988e3412b3bbf78b852de67126eb5556ebb626ef26dc67bae9ca23b9dbaba2"
+    },
+    {
+      "id": "test-during-the-research-preview",
+      "hash": "85acca16f558b4e65b1e536c257a4e5a54b0d45d66f78fd8e2df720b9dd717ea"
+    },
+    {
+      "id": "server-options",
+      "hash": "2801c8afe9f73079d4d07ee063c76cbc2bb4da1437bfb746518d1bdd647ca41d"
+    },
+    {
+      "id": "notification-format",
+      "hash": "49155c2700032962da2f35e0d4aefc9ccc24eb83de47c728b91538530a1b4eb3"
+    },
+    {
+      "id": "expose-a-reply-tool",
+      "hash": "91a4069bd7d1a20c636efc6ec4aafbc5a2586075e4447919e67d7ecf3f553a61"
+    },
+    {
+      "id": "gate-inbound-messages",
+      "hash": "690ab7b48c5d648b425c9d0c951f8275a8b02d20b9a2a0b8e416583d58637416"
+    },
+    {
+      "id": "relay-permission-prompts",
+      "hash": "03767a63db37a3ad30a5257a91fac7ea12b4bdac2065137ca548bdff1b70d9ad"
+    },
+    {
+      "id": "how-relay-works",
+      "hash": "d3c3d32800fd8768071e96a1cdf635e8ce5c7f7fe9ced39abead01b797e493e0"
+    },
+    {
+      "id": "permission-request-fields",
+      "hash": "fe262568fd8ea279bfa6963aff6842e8bc4e682b39f52e8771ade582cf2674a9"
+    },
+    {
+      "id": "add-relay-to-a-chat-bridge",
+      "hash": "02c501e9ddf215038431bf781a68b7ef3fce094bd40dd6916b0b0e594c58d6f3"
+    },
+    {
+      "id": "full-example",
+      "hash": "c04144d3b54b859cbf4e9eb689a9daebdeecfa771550837b04c504d836d3aacf"
+    },
+    {
+      "id": "package-as-a-plugin",
+      "hash": "5840dffb1cbb54328926f62816d3655291eaf592e4f236a405a18a8b175e70a6"
+    },
+    {
+      "id": "see-also",
+      "hash": "a2de860ea178a9b50f37eda45d314475e3a7676ceb4e59bd27a771297680c613"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Example: build a webhook receiver",
+      "id": "example-build-a-webhook-receiver",
+      "hash": "4d988e3412b3bbf78b852de67126eb5556ebb626ef26dc67bae9ca23b9dbaba2",
+      "text": "## Example: build a webhook receiver\n\nThis walkthrough builds a single-file server that listens for HTTP requests and forwards them into your Claude Code session. By the end, anything that can send an HTTP POST, like a CI pipeline, a monitoring alert, or a `curl` command, can push events to Claude.\n\nThis example uses [Bun](https://bun.sh) as the runtime for its built-in HTTP server and TypeScript support. You can use [Node](https://nodejs.org) or [Deno](https://deno.com) instead; the only requirement is the [MCP SDK](https://www.npmjs.com/package/@modelcontextprotocol/sdk).\n\n<Steps>\n  <Step title=\"Create the project\">\n    The [permission relay](#relay-permission-prompts) examples import `zod` directly, so it installs alongside the MCP SDK. Create a new directory and install both:\n\n    ```bash theme={null}\n    mkdir webhook-channel && cd webhook-channel\n    bun add @modelcontextprotocol/sdk zod\n    ```\n  </Step>\n\n  <Step title=\"Write the channel server\">\n    Create a file called `webhook.ts`. This is your entire channel server: it connects to Claude Code over stdio, and it listens for HTTP POSTs on port 8788. When a request arrives, it pushes the body to Claude as a channel event.\n\n    ```ts title=\"webhook.ts\" theme={null}\n    #!/usr/bin/env bun\n    import { Server } from '@modelcontextprotocol/sdk/server/index.js'\n    import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'\n\n    // Create the MCP server and declare it as a channel\n    const mcp = new Server(\n      { name: 'webhook', version: '0.0.1' },\n      {\n        // this key is what makes it a channel — Claude Code registers a listener for it\n        capabilities: { experimental: { 'claude/channel': {} } },\n        // Claude Code delivers this to Claude as context when the server connects, so it knows how to handle these events\n        instructions: 'Events from the webhook channel arrive as <channel source=\"webhook\" ...>. They are one-way: read them and act, no reply expected.',\n      },\n    )\n\n    // Connect to Claude Code over stdio (Claude Code spawns this process)\n    await mcp.connect(new StdioServerTransport())\n\n    // Start an HTTP server that forwards every POST to Claude\n    Bun.serve({\n      port: 8788,  // any open port works\n      // localhost-only: nothing outside this machine can POST\n      hostname: '127.0.0.1',\n      async fetch(req) {\n        const body = await req.text()\n        await mcp.notification({\n          method: 'notifications/claude/channel',\n          params: {\n            content: body,  // becomes the body of the <channel> tag\n            // each key becomes a tag attribute, e.g. <channel path=\"/\" method=\"POST\">\n            meta: { path: new URL(req.url).pathname, method: req.method },\n          },\n        })\n        return new Response('ok')\n      },\n    })\n    ```\n\n    The file configures the server, connects over stdio, and starts an HTTP listener, in that order:\n\n    * **Server configuration**: creates the MCP server with `claude/channel` in its capabilities, which is what tells Claude Code this is a channel. Claude Code delivers the [`instructions`](#server-options) string to Claude as context when the server connects: tell Claude what events to expect, whether to reply, and how to route replies if it should.\n    * **Stdio connection**: connects to Claude Code over stdin/stdout. This is standard for any [MCP server](https://modelcontextprotocol.io/docs/concepts/transports#standard-io).\n    * **HTTP listener**: starts a local web server on port 8788. Every POST body gets forwarded to Claude as a channel event via `mcp.notification()`. The `content` becomes the event body, and each `meta` entry becomes an attribute on the `<channel>` tag. The listener needs access to the `mcp` instance, so it runs in the same process. You could split it into separate modules for a larger project.\n  </Step>\n\n  <Step title=\"Register your server with Claude Code\">\n    Add the server to your MCP config so Claude Code knows how to start it. For a project-level `.mcp.json` in the same directory, use a relative path. For user-level config in `~/.claude.json`, use the full absolute path so the server can be found from any project:\n\n    ```json title=\".mcp.json\" theme={null}\n    {\n      \"mcpServers\": {\n        \"webhook\": { \"command\": \"bun\", \"args\": [\"./webhook.ts\"] }\n      }\n    }\n    ```\n\n    Claude Code reads your MCP config at startup and spawns each server as a subprocess.\n  </Step>\n\n  <Step title=\"Test it\">\n    During the research preview, custom channels aren't on the allowlist, so start Claude Code with the development flag:\n\n    ```bash theme={null}\n    claude --dangerously-load-development-channels server:webhook\n    ```\n\n    Claude Code first shows a full-screen warning dialog listing the development channels you're loading. Select **I am using this for local development** to continue, or **Exit** to quit.\n\n    The first time you start a session in this project, Claude Code also asks for consent before using the new server from `.mcp.json`. The dialog reports \"New MCP server found in this project: webhook\". Select **Use this MCP server** to continue.\n\n    After you accept, Claude Code spawns your `webhook.ts` as a subprocess, and the HTTP listener starts automatically on the port you configured, 8788 in this example. You don't need to run the server yourself.\n\n    A dim notice below the startup banner confirms the channel is registered: `Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop`.\n\n    If you see \"blocked by org policy,\" your organization admin needs to [enable channels](/docs/en/channels#enterprise-controls) first.\n\n    In a separate terminal, simulate a webhook by sending an HTTP POST with a message to your server. This example sends a CI failure alert to port 8788 (or whichever port you configured):\n\n    ```bash theme={null}\n    curl -X POST localhost:8788 -d \"build failed on main: https://ci.example.com/run/1234\"\n    ```\n\n    The payload arrives in Claude's context as a `<channel>` tag:\n\n    ```text theme={null}\n    <channel source=\"webhook\" path=\"/\" method=\"POST\">\n    build failed on main: https://ci.example.com/run/1234\n    </channel>\n    ```\n\n    Your terminal renders the event as a one-line summary, `← webhook: build failed on main: https://ci.example.com/run/1234`, rather than the raw tag. You'll then see Claude start responding: reading files, running commands, or whatever the message calls for. This is a one-way channel, so Claude acts in your session but doesn't send anything back through the webhook. To add replies, see [Expose a reply tool](#expose-a-reply-tool).\n\n    If the event doesn't arrive, the diagnosis depends on what `curl` returned:\n\n    * **`curl` succeeds but nothing reaches Claude**: run `/mcp` in your session to check the server's status. A `failed` status usually means a dependency or import error in your server file. To see the stderr trace, restart with `claude --debug --dangerously-load-development-channels server:webhook` and check the debug log at `~/.claude/debug/<session-id>.txt`.\n    * **`curl` fails with \"connection refused\"**: the port is either not bound yet or a stale process from an earlier run is holding it. `lsof -i :<port>` shows what's listening; `kill` the stale process before restarting your session.\n  </Step>\n</Steps>\n\nThe [fakechat server](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/fakechat) extends this pattern with a web UI, file attachments, and a reply tool for two-way chat."
+    }
+  ]
+}

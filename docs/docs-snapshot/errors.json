@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
+  "hash": "41f2e746a21c3107ac5705286bf792792c74926c5de9e2b9ebe443609e5e3a81",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "eb4293eed93638852324c848beb5b28b5271e8e694cedcbdc507ae38407789b0"
+      "hash": "b6b9911854c6e3a457377eb11394691635eb2c579ecd91e8e414ee97c0f5e45e"
     },
     {
       "id": "automatic-retries",
@@ -48,7 +48,7 @@
     },
     {
       "id": "auto-mode-cannot-determine-the-safety-of-an-action",
-      "hash": "a7dc210299031e563b5371bfcd87bd51a5410d45a4b03a84c84c60a405f3df28"
+      "hash": "54c9c246922f35cee898a56a1e873197596904658ebe69582896840de739e220"
     },
     {
       "id": "the-server-returned-no-safety-verdict",
@@ -276,7 +276,7 @@
     },
     {
       "id": "unable-to-connect-to-anthropic-services",
-      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
+      "hash": "6aea251ad1e99ca65cdb98c28bbe46c3bed22e50fb9e85adcd431dbbec7ec83a"
     },
     {
       "id": "socket-is-closed",
@@ -636,7 +636,7 @@
     },
     {
       "id": "no-conversation-found-with-the-session-id",
-      "hash": "43d7493bdded679b27ac5e6f0f9391fb4b93e850c94619f7c9b8f9d298cc6c94"
+      "hash": "d94446e67c0ad9ca81303c01f6e262c40da1c5a6b0366cde2dd77a7ad320b826"
     },
     {
       "id": "windows-reported-an-error-ebadf",
@@ -797,6 +797,10 @@
     {
       "id": "disk-quota-or-temp-filesystem-is-full",
       "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658"
+    },
+    {
+      "id": "file-is-not-valid-utf-8",
+      "hash": "57a8ff70ce0d53bb4bae8629129cbe2bfd8ba0697713d8e6a537452a0413b72b"
     },
     {
       "id": "the-source-file-is-not-valid-utf-8-text",
@@ -964,7 +968,7 @@
     },
     {
       "id": "working-directory-is-a-network-path",
-      "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56"
+      "hash": "f5bb8ce4eba1e1e76e5ea53bb4de634f71040a091fb85f1ef4c0274646df18b9"
     },
     {
       "id": "remote-managed-settings-failed-to-load",
@@ -1089,6 +1093,12 @@
       "id": "cant-read-mcp-json",
       "hash": "d34c89d5154aa0218189f7ab5161e908b82926088d27ea239c91f2e9404bbb0a",
       "text": "<h3 id=\"cant-read-mcp-json\">\n  Can't read .mcp.json\n</h3>\n\nA command that reads the project's [`.mcp.json`](/docs/en/mcp#project-scope), such as `claude mcp add` or `claude mcp add-json` with `--scope project`, or `claude mcp remove`, found that the file in your current directory isn't a regular file or is larger than 2 MiB, so it exits with this error instead of reading the file.\n\n```text theme={null}\nCan't read .mcp.json: it isn't a regular file or is larger than 2097152 bytes. Fix or remove it, then run the command again.\n```\n\nBefore v2.1.257, a FIFO at `.mcp.json` left the command waiting forever with no output, and a symlink to a device file such as `/dev/zero` grew memory until the process was killed.\n\n**What to do:**\n\n* Check what sits at `.mcp.json` in your current directory. Replace it with an ordinary JSON file in the [project-scope format](/docs/en/mcp#project-scope), or delete it, then run the command again."
+    },
+    {
+      "heading": "Could not import a server from Claude Desktop",
+      "id": "could-not-import-a-server-from-claude-desktop",
+      "hash": "59df9e4a25c0324450b8c3fa4788cfe4872e3e918e3ef782fc2ec74f779f3b7e",
+      "text": "### Could not import a server from Claude Desktop\n\nClaude Code couldn't add one of the servers you selected in `claude mcp add-from-claude-desktop`. The command still imports the other selected servers and prints one line per server it couldn't add. Before v2.1.205, the first server that failed stopped the import.\n\n```text theme={null}\nCould not import my server: Invalid name my server. Names can only contain letters, numbers, hyphens, and underscores.\n```\n\nThe text after the server name is the reason. The most common one is the name check: Claude Desktop allows characters in server names, such as spaces and periods, that `claude mcp` restricts to letters, numbers, hyphens, and underscores. Other reasons include a server configuration that fails validation and a server blocked by your organization's [MCP policy](/docs/en/managed-mcp).\n\n**What to do:**\n\n* Rename the server in `claude_desktop_config.json` to use only letters, numbers, hyphens, and underscores, then run `claude mcp add-from-claude-desktop` again\n* Add that server directly with `claude mcp add` or `claude mcp add-json` under a valid name. See [Import MCP servers from Claude Desktop](/docs/en/mcp#import-mcp-servers-from-claude-desktop)."
     },
     {
       "heading": "Is not matched by file permission checks",
