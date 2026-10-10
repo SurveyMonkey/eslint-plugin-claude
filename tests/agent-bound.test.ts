@@ -1,8 +1,9 @@
 // ADR 001, Decision 14: a rule reads no file out of the repository. The cross-file agent rules
-// (initial prompt, type list, skills and MCP servers) walk up from the project folder. The wrapper below records the path of each file
-// system call and sends it to the real function. A clash is a decoy file above the repository
-// root. A clash silences a rule that reads it, so each case checks both facts: the report stays,
-// and no call reaches the clash.
+// (initial prompt, type list, skills and MCP servers) walk up from the project folder. The
+// manifest key `agents` and the budget scope read the plugin root and the scope. The
+// wrapper below records the path of each file system call and sends it to the real function. A
+// clash is a decoy file above the repository root. A clash silences a rule that reads it, so each
+// case checks both facts: the report stays, and no call reaches the clash.
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -111,6 +112,44 @@ describe('a walk above the project folder', () => {
       path.join(root, AT),
     )
     expect(messages).toHaveLength(1)
+    expect(above(root)).toEqual([])
+  })
+
+  it('a manifest agents path makes no call above the repository root', () => {
+    const root = repo({
+      'plugins/p/.claude-plugin/plugin.json': '{"name":"p","agents":["./c/a.md"]}',
+    })
+    // The plugin above the repository names the same file. It must not count.
+    clash(
+      root,
+      '.claude-plugin/plugin.json',
+      JSON.stringify({ name: 'o', agents: [`./${path.basename(root)}/plugins/p/d/a.md`] }),
+    )
+    const rule = 'agent-description-proactive'
+    const own = lintAgent(rule, agent(''), path.join(root, 'plugins/p/c/a.md'))
+    expect(own).toHaveLength(1)
+    expect(calls.paths.some((file) => file.startsWith(root))).toBe(true)
+    calls.paths = []
+    const other = lintAgent(rule, agent(''), path.join(root, 'plugins/p/d/a.md'))
+    expect(other).toEqual([])
+    expect(above(root)).toEqual([])
+  })
+
+  it('agent-descriptions-budget makes no call above the repository root', () => {
+    const huge = agent('', 'big').replace('description: d', `description: ${'x'.repeat(30000)}`)
+    const root = repo({
+      '.claude/agents/b.md': huge,
+      'pkg/.claude/agents/b.md': agent('', 'small'),
+    })
+    clash(root, '.claude/agents/c.md', huge)
+    const messages = lintAgent('agent-descriptions-budget', huge, path.join(root, AT))
+    expect(messages).toEqual([])
+    const second = lintAgent(
+      'agent-descriptions-budget',
+      huge,
+      path.join(root, '.claude/agents/a.md'),
+    )
+    expect(second).toHaveLength(1)
     expect(above(root)).toEqual([])
   })
 })
