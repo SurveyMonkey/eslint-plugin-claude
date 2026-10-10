@@ -37,6 +37,8 @@ How the rule reads a `license`:
 - The match ignores case, as SPDX says. An operator must be in uppercase.
 - A name that starts with `LicenseRef-` is a license that the author defines. A
   `DocumentRef-<id>:` prefix is allowed.
+- After `WITH`, a name that starts with `AdditionRef-` is an exception that the author defines. A
+  `DocumentRef-<id>:` prefix is allowed.
 - A text with no name is not valid.
 
 The rule checks the names, and not the shape of the expression. So `MIT Apache-2.0` and
