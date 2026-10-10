@@ -1,10 +1,10 @@
 // A relative file path in the `command` or `args` of a project `.mcp.json`
 // (docs/rules/mcp-stdio-relative-path.md). Claude Code starts the server in the directory where the
 // user started it, not in the directory of `.mcp.json`. So `./server.js` fails when the user
-// starts Claude Code in a subdirectory. The docs give `${CLAUDE_PROJECT_DIR:-.}/server.js`. The
-// rule reports a string that starts with `./` or `../`. It reads each `args` item as one word, as
-// the file lists them, because the plugin has no shell word splitter. A plugin file is out of
-// scope. `mcp-project-dir-default` owns a `${CLAUDE_PROJECT_DIR}` with no default.
+// starts Claude Code in a subdirectory. The rule reports a string that starts with `./` or `../`.
+// It reads each `args` item as one word, as the file lists them, because this ESLint plugin has
+// no shell word splitter. A `${...}` start is silent. A plugin file is out of scope.
+// `mcp-project-dir-default` owns a `${CLAUDE_PROJECT_DIR}` with no default.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
@@ -23,7 +23,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'relative' }> = {
     },
     schema: [],
     messages: {
-      relative: `The \`{{field}}\` of the server "{{server}}" is the relative path "{{path}}". Claude Code starts the server in the directory where the user started it, not where \`.mcp.json\` is. Write \`\${CLAUDE_PROJECT_DIR:-.}/...\`.`,
+      relative: `The \`{{field}}\` of the server "{{server}}" is the relative path "{{path}}". Claude Code starts the server in the directory where the user started it, not where \`.mcp.json\` is. Use an absolute path, or let the server read \`CLAUDE_PROJECT_DIR\`.`,
     },
   },
   create(context) {

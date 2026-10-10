@@ -28,9 +28,24 @@ it('reports ../, a path with a folder, and a path with arguments', () => {
   }
 })
 it('stays silent for an absolute path and a bare command', () => {
-  for (const helper of ['/opt/h.sh', 'h', '/opt/h.sh --flag', 'get-headers --json', '']) {
+  const silent = ['/opt/h.sh', 'h', '/opt/h.sh --flag', 'get-headers --json', '', '"/opt/h.sh" x']
+  for (const helper of [...silent, "'/opt/h.sh'", 'bash ./h.sh']) {
     expect(ids(lintProject(NAME, entry(helper)))).toEqual([])
   }
+})
+it('skips a leading NAME=value word, and reads the word after it', () => {
+  for (const helper of ['FOO=/abs/x h', 'URL=https://x/y A_1=b get-headers', 'FOO=1 /opt/h.sh']) {
+    expect(ids(lintProject(NAME, entry(helper)))).toEqual([])
+  }
+  const found = lintProject(NAME, entry('FOO=/abs/x ./h.sh'))
+  expect(ids(found)).toEqual(['relative'])
+  expect(found[0]?.message).toContain('"./h.sh"')
+  expect(ids(lintProject(NAME, entry('FOO=./x')))).toEqual(['relative'])
+})
+it('reads the first line of a command with more lines', () => {
+  const found = lintProject(NAME, entry('./h.sh\nfoo'))
+  expect(found[0]?.message).toContain('"./h.sh"')
+  expect(found[0]?.message).not.toContain('foo')
 })
 it('stays silent for an inline command and a variable path', () => {
   const inline = `echo '{"Authorization": "Bearer '"$(get-token)"'"}'`

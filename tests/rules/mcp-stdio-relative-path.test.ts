@@ -15,6 +15,10 @@ it('reports a ./ command, on the value', () => {
   expect(found[0]?.message).toContain('`command`')
   expect(found[0]?.message).toContain('"a"')
 })
+it('reports in a nested project file', () => {
+  const found = lintProject(NAME, stdio({ command: './s.js' }), 'packages/app/.mcp.json')
+  expect(ids(found)).toEqual(['relative'])
+})
 it('reports a ../ command', () => {
   expect(ids(lintProject(NAME, stdio({ command: '../bin/server' })))).toEqual(['relative'])
 })

@@ -1,11 +1,10 @@
 // A `headersHelper` that names a relative path (docs/rules/mcp-headershelper-path.md). Claude Code
-// picks the working directory of the helper from where the server is configured: the plugin root
-// for a plugin, the project directory for a project `.mcp.json`. So a relative path changes
-// meaning with the place of the server. The docs say to give the script as an absolute path or
-// to put it on `PATH`. The rule reads the first word of the command. It reports a word with a
-// `/` that does not start with `/`, `$` or `~`, because the shell expands a `$` or `~` start to a
-// path that does not depend on the working directory. The rule reads a `.mcp.json` and the servers
-// that a plugin manifest declares.
+// runs the helper in a directory that depends on where the server is configured: the plugin root
+// for a plugin, the project directory for a project `.mcp.json`. The docs say to give the script
+// as an absolute path or to put it on `PATH`. The rule reads the first word of the command, after
+// any `NAME=value` words. It reports a word with a `/` that does not start with `/`, `$` or `~`.
+// Claude Code or the shell expands a `$` or `~` start to a path that does not depend on the
+// directory. The rule reads a `.mcp.json` and the servers that a plugin manifest declares.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -13,10 +12,12 @@ import { lintedServers } from '../mcp-servers.ts'
 
 const name = 'mcp-headershelper-path' as const
 
-/** The first word of the shell command `command`, with a quote at each end removed. */
+/** The first word of the shell command `command`, with a quote at each end removed. A word
+ *  `NAME=value` before it sets a variable for the command, so the rule skips it. */
 const firstWord = (command: string) =>
   command
     .trim()
+    .replace(/^(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)+/, '')
     .replace(/\s.*$/s, '')
     .replace(/^["']|["']$/g, '')
 
