@@ -10,7 +10,8 @@ import { isInside, readManifest, realDirectory, repositoryRoot, UNREADABLE } fro
 /** The plugin of a manifest. `root` is the plugin root as the linted path gives
  *  it, `realRoot` is its real path, and `bound` is the real path of the
  *  repository (ADR 001, Decision 14). `fields` are the keys of the manifest on
- *  disk. */
+ *  disk. They are always an object: a manifest that is absent or not an object
+ *  gives no plugin. */
 export interface Plugin {
   readonly bound: string
   readonly fields: Readonly<Record<string, unknown>>
@@ -22,7 +23,8 @@ export interface Plugin {
  *  The result is undefined when the rule cannot see the plugin, so a rule makes
  *  no report. The rule cannot see it in these cases: the root is not a plugin
  *  root, or `isPluginRoot` cannot see it. The manifest can be out of the
- *  repository, or a link with no target. It can fail to parse to an object, or
+ *  repository, or a link with no target. The real path of the root can be out
+ *  of the repository. It can fail to parse to an object, or
  *  fail to read. */
 export function readPlugin(file: string): Plugin | undefined {
   return readPluginAt(path.dirname(path.dirname(path.resolve(file))))
@@ -40,7 +42,10 @@ export function readPluginAt(root: string): Plugin | undefined {
   if (fields === UNREADABLE || fields === null) {
     return undefined
   }
-  return { bound, fields, realRoot: realDirectory(root), root }
+  const realRoot = realDirectory(root)
+  // A root that links out of the repository, with a `.claude-plugin` that links
+  // back in, is a plugin that a rule must not look at (ADR 001, Decision 14).
+  return isInside(realRoot, bound) ? { bound, fields, realRoot, root } : undefined
 }
 
 /** The result of `locate` for a path that leaves the plugin root. */
