@@ -10,7 +10,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-user-config-no-shell-fields'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = [
   '**/.claude-plugin/plugin.json',
@@ -23,7 +23,7 @@ const REF = `\${user_config.token}`
 const OTHER = `\${user_config.url}`
 const UC = `\${user_config.*}`
 const TEMPLATES = {
-  hook: 'This shell-form hook `command` references `<UC>`. Claude Code fails the hook instead of running it. Set `args` to run it in exec form, or read `CLAUDE_PLUGIN_OPTION_<KEY>` in the script.',
+  hook: 'This shell-form hook `command` references `<UC>`. Claude Code fails the hook and does not run it. Set `args` to run it in exec form, or read `CLAUDE_PLUGIN_OPTION_<KEY>` in the script.',
   monitor:
     'A monitor `command` cannot reference `<UC>`. Claude Code does not start the monitor. Have the monitor script read the value from a config file.',
   headersHelper:
@@ -63,7 +63,7 @@ describe(RULE, () => {
       messageId: 'hook',
       message: MESSAGES.hook,
       line: 1,
-      column: 62,
+      column: 63,
       endColumn: 97,
     })
   })

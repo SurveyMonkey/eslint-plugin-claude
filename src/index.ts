@@ -51,6 +51,7 @@ import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
+import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -189,6 +190,7 @@ const modules = [
   pluginCommandsDirNonempty,
   pluginDefaultDirShadowed,
   pluginPackageLockfile,
+  pluginUserConfigNoShellFields,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -304,6 +306,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-commands-dir-nonempty': 'error',
   'plugin-default-dir-shadowed': 'error',
   'plugin-package-lockfile': 'error',
+  'plugin-user-config-no-shell-fields': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

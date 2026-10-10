@@ -67,6 +67,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-package-lockfile',
     'plugin-project-skills-dir-limits',
     'plugin-skill-dir-layout',
+    'plugin-user-config-no-shell-fields',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-schema',

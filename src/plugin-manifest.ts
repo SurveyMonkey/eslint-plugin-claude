@@ -9,9 +9,11 @@ import { isInside, readManifest, realDirectory, repositoryRoot, UNREADABLE } fro
 
 /** The plugin of a manifest. `root` is the plugin root as the linted path gives
  *  it, `realRoot` is its real path, and `bound` is the real path of the
- *  repository (ADR 001, Decision 14). */
+ *  repository (ADR 001, Decision 14). `fields` are the keys of the manifest on
+ *  disk. */
 export interface Plugin {
   readonly bound: string
+  readonly fields: Readonly<Record<string, unknown>>
   readonly realRoot: string
   readonly root: string
 }
@@ -23,16 +25,22 @@ export interface Plugin {
  *  repository, or a link with no target. It can fail to parse to an object, or
  *  fail to read. */
 export function readPlugin(file: string): Plugin | undefined {
-  const root = path.dirname(path.dirname(path.resolve(file)))
+  return readPluginAt(path.dirname(path.dirname(path.resolve(file))))
+}
+
+/** The plugin at the plugin root `root`, for a rule that lints a file of the
+ *  plugin other than the manifest. The result is undefined in the cases of
+ *  `readPlugin`. */
+export function readPluginAt(root: string): Plugin | undefined {
   if (isPluginRoot(root) !== true) {
     return undefined
   }
   const bound = repositoryRoot(root)
-  const manifest = readManifest(root, bound)
-  if (manifest === UNREADABLE || manifest === null) {
+  const fields = readManifest(root, bound)
+  if (fields === UNREADABLE || fields === null) {
     return undefined
   }
-  return { bound, realRoot: realDirectory(root), root }
+  return { bound, fields, realRoot: realDirectory(root), root }
 }
 
 /** The result of `locate` for a path that leaves the plugin root. */

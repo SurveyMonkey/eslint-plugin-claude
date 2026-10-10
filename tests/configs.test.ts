@@ -13,6 +13,7 @@ const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
 const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
+const userConfigRef = `./run.sh \${user_config.token}`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 // One bad permission rule for each grammar rule, in the order of GRAMMAR_RULES.
 const badSettings = JSON.stringify({
@@ -142,6 +143,17 @@ const TREE: Record<string, string> = {
   'plugins/lock/.claude-plugin/plugin.json': JSON.stringify({ name: 'lock' }),
   'plugins/lock/package.json': '{}',
   'plugins/lock/yarn.lock': '',
+  // A `${user_config.*}` reference in each field that a shell runs, in the manifest and in the
+  // three default files.
+  'plugins/ucf/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ucf',
+    hooks: { Stop: [{ hooks: [{ type: 'command', command: userConfigRef }] }] },
+  }),
+  'plugins/ucf/hooks/hooks.json': JSON.stringify({
+    hooks: { Stop: [{ hooks: [{ type: 'command', command: userConfigRef }] }] },
+  }),
+  'plugins/ucf/.mcp.json': JSON.stringify({ mcpServers: { a: { headersHelper: userConfigRef } } }),
+  'plugins/ucf/monitors/monitors.json': JSON.stringify([{ name: 'm', command: userConfigRef }]),
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -564,6 +576,15 @@ const PLUGIN_RULES = [
   { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-default-dir-shadowed', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-package-lockfile', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-user-config-no-shell-fields',
+    files: [
+      '**/.claude-plugin/plugin.json',
+      '**/hooks/hooks.json',
+      '**/.mcp.json',
+      '**/monitors/monitors.json',
+    ],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -614,6 +635,10 @@ const EXPECTED = [
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
+  'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',

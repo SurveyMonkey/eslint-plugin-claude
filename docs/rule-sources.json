@@ -982,6 +982,38 @@
       "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
     }
   ],
+  "plugin-user-config-no-shell-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Reference a saved value",
+      "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields that run through a shell",
+      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Plugin command references user_config in a shell command",
+      "hash": "4039daeaeeab00fdabf642e951381a48a0a28c66570e104c88a54b23f0baf7c6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Monitors",
+      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use dynamic headers for custom authentication",
+      "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    }
+  ],
   "settings-conflicting-keys": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
