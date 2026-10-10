@@ -21,7 +21,7 @@ put('plug/.claude-plugin/plugin.json', '{"name": "my-plugin"}')
 put('bare/.claude-plugin/plugin.json', '{}')
 put('broken/.claude-plugin/plugin.json', '{')
 put('numeric/.claude-plugin/plugin.json', '{"name": 5}')
-put('blank/.claude-plugin/plugin.json', '{"name": " "}')
+put('blank/.claude-plugin/plugin.json', '{"name": ""}')
 const skill = put('plug/skills/s/SKILL.md', '')
 const rootSkill = put('plug/SKILL.md', '')
 const bareSkill = put('bare/skills/s/SKILL.md', '')
@@ -72,6 +72,7 @@ markdownTester.run('skill-plugin-name-prefix', ruleOf('skill-plugin-name-prefix'
     { code: named('broken:fancy'), filename: brokenSkill, options: BEFORE_FIX },
     // A manifest `name` that is not text, or is blank, leaves the prefix unknown.
     { code: named('numeric:fancy'), filename: numericSkill, options: BEFORE_FIX },
+    { code: named('5:fancy'), filename: numericSkill, options: BEFORE_FIX },
     { code: named(':fancy'), filename: blankSkill, options: BEFORE_FIX },
     // Not a skill file.
     { code: named('my-plugin:fancy'), filename: decoy, options: BEFORE_FIX },
