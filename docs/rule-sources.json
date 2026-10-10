@@ -1317,6 +1317,23 @@
       "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
     }
   ],
+  "settings-local-gitignored": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Settings files and who they affect",
+      "hash": "354339bf540672253eee313dfaba622fefad8515511e08206b29f13abd61f672"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Keep personal settings out of a repository",
+      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "File reference",
+      "hash": "36de4cf4d978f8bb19073b25041a4b1ac6eb17ce6fa0aca654187f40f3d100c2"
+    }
+  ],
   "settings-local-untracked": [
     {
       "url": "https://code.claude.com/docs/en/settings",

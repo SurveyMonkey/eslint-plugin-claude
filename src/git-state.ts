@@ -92,6 +92,11 @@ function stampOf(gitDir: string): string | null {
  *  than the one in `root`. This is the case for a `.git` directory that is
  *  not a repository, inside another repository. */
 function gitDirOf(root: string): string {
+  // With no `.git` in `root`, git finds an outer repository or none. Both give no answer
+  // for `root`, and the check saves a process.
+  if (!existsSync(path.join(root, '.git'))) {
+    throw new Error('no .git')
+  }
   const [gitDir = '', top = ''] = run(root, [
     'rev-parse',
     '--absolute-git-dir',
@@ -204,7 +209,7 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
     // `-v` names the source of the pattern, in the form `source:line:pattern<TAB>path`.
     // With `-c core.excludesFile`, git reads no global excludes file, not even the
     // default one. A global file can have the name `.gitignore`, so the name is not enough.
-    const [source = '', , pattern = ''] = run(root, [
+    const out = run(root, [
       '-c',
       `core.excludesFile=${devNull}`,
       'check-ignore',
@@ -212,11 +217,12 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
       '-v',
       '--',
       target,
-    ]).split(':')
+    ])
+    // A directory name can hold a colon, so the source ends at the first `:<digits>:`.
+    const source = out.replace(/:\d+:.*/s, '')
+    const negated = /^:\d+:!/.test(out.slice(source.length))
     // Git quotes a source that holds a control character, and a quote ends it.
-    return (
-      !pattern.startsWith('!') && path.posix.basename(source.replace(/"$/, '')) === '.gitignore'
-    )
+    return !negated && path.posix.basename(source.replace(/"$/, '')) === '.gitignore'
   } catch (error) {
     // Status 1 is the answer "no path is ignored". Another status is a failure.
     return (error as { status?: number }).status === 1 ? false : UNREADABLE

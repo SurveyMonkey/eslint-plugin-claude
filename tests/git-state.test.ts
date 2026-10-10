@@ -379,6 +379,11 @@ describe('gitIgnores', () => {
     }
   })
 
+  it('reads the source of a pattern in a directory with a colon in its name', () => {
+    const root = repo({ ':(top)pkg/.gitignore': 'z\n' })
+    expect(ignores(root, ':(top)pkg/z')).toBe(true)
+  })
+
   it('takes a path with a space, a leading dash, a colon and a glob character as a literal', () => {
     const root = repo({
       '.gitignore': 'target\n-x\n',

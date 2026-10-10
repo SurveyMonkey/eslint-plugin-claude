@@ -10,6 +10,8 @@ import { lintMarkdown } from '../rule-tester.test-support.ts'
 const RULE = 'claude-md-local-untracked'
 const LOCAL = 'CLAUDE.local.md'
 isolateGitConfig()
+// Each case starts `git`, and a busy machine needs more than the default 5 s.
+vi.setConfig({ testTimeout: 30_000 })
 
 /** The message ids of the rule for the `CLAUDE.md` at `file` below `root`. */
 const lint = (root: string, file = 'CLAUDE.md') =>
@@ -47,10 +49,9 @@ describe(RULE, () => {
   })
 
   it('stays silent when a pattern covers the file and git does not track it', () => {
+    const root = repo({ 'CLAUDE.md': '# P\n' }, [], { [LOCAL]: 'mine\n' })
     for (const pattern of [LOCAL, '*.local.md', '/CLAUDE.local.md', '**/CLAUDE.local.md']) {
-      const root = repo({ 'CLAUDE.md': '# P\n', '.gitignore': `${pattern}\n` }, [], {
-        [LOCAL]: 'mine\n',
-      })
+      put(root, { '.gitignore': `${pattern}\n` })
       expect(lint(root), pattern).toEqual([])
     }
   })

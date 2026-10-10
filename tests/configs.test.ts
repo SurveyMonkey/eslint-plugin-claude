@@ -536,7 +536,8 @@ const GIT_TREE: Record<string, string> = {
 // `GU_LOOSE` holds files that exist but that git does not track.
 const GU_REPO = 'packages/gu'
 const GU_TREE: Record<string, string> = {
-  '.gitignore': '# No pattern here. Each area has its own.\n',
+  // The root pattern covers each `settings.local.json`. The area `set/open` takes it back.
+  '.gitignore': '**/.claude/settings.local.json\n',
   // `claude-md-local-untracked`: git tracks a `CLAUDE.local.md`; no pattern covers a file that is
   // not there; a pattern covers a file that is there. A file in `.claude/` is not read.
   'claude/bad/CLAUDE.md': '# Project\n',
@@ -560,6 +561,9 @@ const GU_TREE: Record<string, string> = {
   'set/bad/.claude/settings.local.json': '{}\n',
   'set/ok/.claude/settings.json': '{}\n',
   'set/ok/other/.claude/settings.local.json': '{}\n',
+  // `settings-local-gitignored`: a pattern of a deeper `.gitignore` takes the root pattern back.
+  'set/open/.claude/settings.json': '{}\n',
+  'set/open/.gitignore': '!.claude/settings.local.json\n',
 }
 const GU_LOOSE: Record<string, string> = {
   'claude/ok/CLAUDE.local.md': 'mine\n',
@@ -662,6 +666,7 @@ const UNTRACKED_RULES = [
     language: 'markdown/gfm',
     files: ['**/.claude/agent-memory-local/**/*.md'],
   },
+  { name: 'settings-local-gitignored', language: 'json/json', files: ['**/.claude/settings.json'] },
   { name: 'settings-local-untracked', language: 'json/json', files: ['**/.claude/settings.json'] },
 ]
 
@@ -863,6 +868,15 @@ const EXPECTED = [
   'packages/gu/mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md: claude/memory-agent-memory-local-untracked@1',
   // `settings-local-untracked` reads the shared file, and reports on its `settings.local.json`.
   'packages/gu/set/bad/.claude/settings.json: claude/settings-local-untracked@1',
+  // `settings-local-gitignored` reads the shared file. The pattern of the root covers the files
+  // of the other areas. The repository `packages/hx` has no `.gitignore`.
+  'packages/gu/set/open/.claude/settings.json: claude/settings-local-gitignored@1',
+  ...[
+    'packages/hx/.claude/settings.json',
+    'packages/hx/ok/.claude/settings.json',
+    'packages/hx/sl/.claude/settings.json',
+    'packages/hx/sl/ok/.claude/settings.json',
+  ].map((file) => `${file}: claude/settings-local-gitignored@1`),
   // The repository `packages/hx` tracks the local files of the hook and status line trees.
   'packages/hx/.claude/settings.json: claude/settings-local-untracked@1',
   'packages/hx/sl/.claude/settings.json: claude/settings-local-untracked@1',
@@ -1116,11 +1130,13 @@ describe('configs', () => {
     }
   })
 
+  // The run starts a `git` process for each file that a git rule reads, so it needs more than the
+  // default time on a busy machine.
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 })

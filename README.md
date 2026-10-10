@@ -156,6 +156,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-skilloverrides-key`](docs/rules/settings-skilloverrides-key.md) | A `skillOverrides` key is one that Claude Code applies: no plugin skill key (`plugin:skill`), and no bundled alias key (`review`, `checkup`, `proactive`) in a project or local file | `error` | `error` |
 | [`claude/settings-env-shadowed`](docs/rules/settings-env-shadowed.md) | An `env` variable is not voided: `BASH_MAX_OUTPUT_LENGTH` beside `bashOutputMaxChars`, `ANTHROPIC_DEFAULT_MODEL` beside `model` or set to `default`, `inherit`, `opusplan` or `haiku`, `CLAUDE_CODE_SUBAGENT_MODEL: "inherit"`, and `NO_COLOR` or `FORCE_COLOR` | `error` | `error` |
 | [`claude/statusline-script-exists`](docs/rules/statusline-script-exists.md) | The script in `statusLine.command`, `subagentStatusLine.command` or `fileSuggestion.command` exists in the repository and has git mode `100755` | `error` | `error` |
+| [`claude/settings-local-gitignored`](docs/rules/settings-local-gitignored.md) | A `.gitignore` pattern of the repository covers the `settings.local.json` beside a `.claude/settings.json` | `warn` | `warn` |
 | [`claude/settings-local-untracked`](docs/rules/settings-local-untracked.md) | The `settings.local.json` beside a `.claude/settings.json` is not tracked by git, and `.claude` is not a symbolic link | `warn` | `warn` |
 
 ### Permissions and sandbox

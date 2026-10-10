@@ -61,6 +61,7 @@ import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-m
 import settingsFileSize from './rules/settings-file-size.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
+import settingsLocalGitignored from './rules/settings-local-gitignored.ts'
 import settingsLocalUntracked from './rules/settings-local-untracked.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
@@ -188,6 +189,7 @@ const modules = [
   statuslineScriptExists,
   claudeMdLocalUntracked,
   memoryAgentMemoryLocalUntracked,
+  settingsLocalGitignored,
   settingsLocalUntracked,
 ]
 
@@ -303,6 +305,7 @@ const recommended: Record<RuleName, Severity> = {
   'statusline-script-exists': 'error',
   'claude-md-local-untracked': 'warn',
   'memory-agent-memory-local-untracked': 'warn',
+  'settings-local-gitignored': 'warn',
   'settings-local-untracked': 'warn',
 }
 

@@ -10,6 +10,8 @@ import { lintMarkdown } from '../rule-tester.test-support.ts'
 const RULE = 'memory-agent-memory-local-untracked'
 const MEMORY = '.claude/agent-memory-local/reviewer/MEMORY.md'
 isolateGitConfig()
+// Each case starts `git`, and a busy machine needs more than the default 5 s.
+vi.setConfig({ testTimeout: 30_000 })
 
 const lint = (root: string, file = MEMORY) =>
   lintMarkdown(RULE, '# Memory\n', path.join(root, file))

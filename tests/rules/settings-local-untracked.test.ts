@@ -12,6 +12,8 @@ const PROJECT = '.claude/settings.json'
 const LOCAL = '.claude/settings.local.json'
 const links = process.platform !== 'win32'
 isolateGitConfig()
+// Each case starts `git`, and a busy machine needs more than the default 5 s.
+vi.setConfig({ testTimeout: 30_000 })
 
 const lint = (root: string, file = PROJECT) => lintJson(RULE, '{}', path.join(root, file))
 const ids = (root: string, file = PROJECT) => lint(root, file).map((m) => m.messageId)
