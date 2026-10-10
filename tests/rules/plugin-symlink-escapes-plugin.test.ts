@@ -268,7 +268,22 @@ describe(`${RULE} (loads in place)`, () => {
       })
       const dir = path.join(top, 'skills', 'p')
       link(dir, 'link.md', '../../shared/s.md')
-      expect(lintPlugin(RULE, dir, MANIFEST)).toHaveLength(1)
+      expect(lintPlugin(RULE, dir, MANIFEST).map((m) => m.message)).toEqual([
+        message('link.md', 'shared/s.md'),
+      ])
     },
   )
+
+  linked('still reports a link in a plugin whose folder is in .claude but not in skills', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': CATALOG,
+      '.claude/other/p/.claude-plugin/plugin.json': MANIFEST,
+      'shared/s.md': '# S\n',
+    })
+    const dir = path.join(top, '.claude', 'other', 'p')
+    link(dir, 'link.md', '../../../shared/s.md')
+    expect(lintPlugin(RULE, dir, MANIFEST).map((m) => m.message)).toEqual([
+      message('link.md', 'shared/s.md'),
+    ])
+  })
 })
