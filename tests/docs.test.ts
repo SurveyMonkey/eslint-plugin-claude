@@ -60,6 +60,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'claude-md-excludes-pattern',
     'claude-md-import-exists',
     'claude-md-import-external',
+    'claude-md-import-in-code-span',
     'claude-md-import-max-depth',
     'claude-md-local-untracked',
     'claude-md-max-bytes',

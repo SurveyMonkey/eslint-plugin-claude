@@ -126,14 +126,11 @@ function maskSpans(text: string): string {
 
 const TOKEN = /(?<=^|\s)@((?:[^\s\\\uE000`]|\\ )+)/g
 
-/** The imports in `text`, in order. */
-export function parseImports(text: string): MemoryImport[] {
+/** The tokens of `text` that read as imports, in order. The text is taken as it is. A rule that
+ *  looks for a path in code gives it the text of a code span or of a fenced block. */
+export function importTokens(text: string): MemoryImport[] {
   const imports: MemoryImport[] = []
-  // Without an `@` there is no import. The masks are slow on a large text.
-  if (!text.includes('@')) {
-    return imports
-  }
-  for (const match of maskSpans(maskComments(maskFences(text))).matchAll(TOKEN)) {
+  for (const match of text.matchAll(TOKEN)) {
     const written = match[1] as string
     // A path in quotes is not imported at all.
     if (!/^["']/.test(written)) {
@@ -145,6 +142,12 @@ export function parseImports(text: string): MemoryImport[] {
     }
   }
   return imports
+}
+
+/** The imports in `text`, in order. */
+export function parseImports(text: string): MemoryImport[] {
+  // Without an `@` there is no import. The masks are slow on a large text.
+  return text.includes('@') ? importTokens(maskSpans(maskComments(maskFences(text)))) : []
 }
 
 // A URL, `mailto:` and the like. A drive letter has the same form.
