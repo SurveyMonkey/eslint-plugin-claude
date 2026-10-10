@@ -50,6 +50,8 @@ reports a component path of a marketplace entry that leads out through a link. I
 The rule makes no report in these cases:
 
 - The target is in the plugin or in the marketplace.
+- The plugin root is `.claude/skills/<name>`. Claude Code loads that plugin in place and never
+  copies it.[^loading]
 - The link has no target, or the link is a loop.
 - The target is out of the repository. The rule reads no file out of the repository.
 - A folder of the plugin cannot be listed. The rule skips that folder and still reads the others.
@@ -71,3 +73,4 @@ None.
 ## Sources
 
 [^symlinks]: [Host and maintain a marketplace: Share files within a marketplace with symlinks](https://code.claude.com/docs/en/plugins/host-marketplace#share-files-within-a-marketplace-with-symlinks)
+[^loading]: [Plugin loading reference: In-place and copied plugins](https://code.claude.com/docs/en/plugins/loading#in-place-and-copied-plugins)

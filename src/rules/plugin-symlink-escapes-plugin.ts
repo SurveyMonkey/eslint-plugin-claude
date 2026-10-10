@@ -8,7 +8,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { escapingLinks } from '../plugin-links.ts'
-import { readPlugin } from '../plugin-manifest.ts'
+import { isSkillsPlugin, readPlugin } from '../plugin-manifest.ts'
 
 const name = 'plugin-symlink-escapes-plugin' as const
 
@@ -26,7 +26,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'leaves' }> = {
     },
   },
   create(context) {
-    const plugin = readPlugin(context.filename)
+    // A plugin in `.claude/skills/<name>` loads in place, so no install copies it.
+    const plugin = isSkillsPlugin(context.filename) ? undefined : readPlugin(context.filename)
     return {
       Document(node) {
         if (plugin === undefined) {

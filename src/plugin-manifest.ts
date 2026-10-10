@@ -30,6 +30,18 @@ export function readPlugin(file: string): Plugin | undefined {
   return readPluginAt(path.dirname(path.dirname(path.resolve(file))))
 }
 
+/** True when the plugin root of the manifest at `file` is `.claude/skills/<name>`.
+ *  Claude Code loads such a plugin in place and never copies it. */
+export function isSkillsPlugin(file: string): boolean {
+  const skills = path.dirname(path.dirname(path.dirname(path.resolve(file))))
+  return path.basename(skills) === 'skills' && path.basename(path.dirname(skills)) === '.claude'
+}
+
+/** The plugin of the manifest at `file` when its root is `.claude/skills/<name>`. */
+export function skillsPlugin(file: string): Plugin | undefined {
+  return isSkillsPlugin(file) ? readPlugin(file) : undefined
+}
+
 /** The plugin at the plugin root `root`, for a rule that lints a file of the
  *  plugin other than the manifest. The result is undefined in the cases of
  *  `readPlugin`. */

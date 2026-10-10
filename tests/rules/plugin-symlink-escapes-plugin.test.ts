@@ -245,7 +245,7 @@ describe(`${RULE} with the marketplace rule`, () => {
 })
 
 describe(`${RULE} (loads in place)`, () => {
-  linked.fails('stays silent for a plugin in .claude/skills/<name>, which loads in place', () => {
+  linked('stays silent for a plugin in .claude/skills/<name>, which loads in place', () => {
     const top = tree({
       '.claude-plugin/marketplace.json': CATALOG,
       '.claude/skills/p/.claude-plugin/plugin.json': MANIFEST,
