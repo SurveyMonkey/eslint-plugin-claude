@@ -248,6 +248,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-attribution-false',
     'settings-committed-helper-command',
     'plugin-manifest-location',
+    'plugin-no-project-plugins-dir',
     'plugin-skill-dir-layout',
     'settings-conflicting-keys',
     'settings-defaultshell-powershell-tool',
