@@ -35,7 +35,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'noMatch' }> = {
     schema: [],
     messages: {
       noMatch:
-        'The glob "{{pattern}}" matches no file in the repository, so Claude Code never loads this rule for it. Fix the glob, or remove it. A glob is relative to the folder that holds `.claude/`.',
+        'The glob "{{pattern}}" matches no file below the folder that holds `.claude/`, so Claude Code never loads this rule for it. Fix the glob, or remove it. A glob is relative to that folder.',
     },
   },
   create(context) {

@@ -3,7 +3,8 @@
 // as a separate file (https://code.claude.com/docs/en/memory#my-claude-md-is-too-large). The
 // docs give no number, so the rule has the option `max` and no default. The rule reads the
 // repository around the file, so each case builds a tree on disk. A part that the rule
-// cannot read adds nothing. The rule reports when the lines that it read pass max. The globs are in tests/configs.test.ts.
+// cannot read adds nothing. The rule reports when the lines that it read pass max. The globs
+// are in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { link, lintMemory, noLinks, tree } from '../memory-tree.test-support.ts'
@@ -254,6 +255,14 @@ describe(`${RULE}: what the rule cannot read`, () => {
     const small = tree({ 'CLAUDE.local.md': lines(5) })
     link(small, 'gone.md', 'nowhere.md')
     expect(lintMemory(RULE, small, 'CLAUDE.md', 'x\n@gone.md\n', { max: 50 })).toEqual([])
+  })
+
+  it.skipIf(noLinks)('counts an unscoped rule file after an unreadable import', () => {
+    const dir = tree({ '.claude/rules/a.md': lines(60) })
+    link(dir, 'gone.md', 'nowhere.md')
+    const out = lintMemory(RULE, dir, 'CLAUDE.md', 'x\n@gone.md\n', { max: 50 })
+    expect(ids(out)).toEqual(['tooLong'])
+    expect(message(out)[0]).toContain(AT_LEAST)
   })
 
   it.skipIf(noLinks)(
