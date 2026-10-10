@@ -43,12 +43,11 @@ fault gets one report for each.
 
 ### What the rule does not report
 
-The inventory row implies that a theme needs a `name`. The docs say that `name` is optional and
-defaults to the slug, so the rule does not report a theme without it.[^format] The docs also say
+The docs say that `name` is optional and defaults to the slug, so the rule does not report a
+theme without it.[^format] The docs also say
 that Claude Code ignores an unknown token and an invalid color value, so the rule reads neither the
-tokens nor the values.[^format] The row implies a report on a theme file outside `themes/`. A JSON
-file elsewhere in a plugin is not a theme unless the manifest names it, so the rule reads the
-`themes/` folder only.
+tokens nor the values.[^format] A JSON file elsewhere in a plugin is not a theme unless the manifest
+names it, so the rule reads the `themes/` folder only.
 
 The rule makes no report in these cases:
 
