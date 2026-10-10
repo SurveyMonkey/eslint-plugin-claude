@@ -1,650 +1,816 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "ad56e03ba949864cab3346b7d69a896b34a004f1af26f0a7666a9c5bdc44553b",
+  "hash": "3a1f944503d05a61fdc0fac62add9ba3d877ccb03dd4ef9c3c79881c973938ef",
   "blocks": [
     {
       "id": "hooks-reference",
-      "hash": "540d190868a6f304daa04bdd9d9845cbd42150837914294faa99b33b7d873cf1"
+      "hash": "540d190868a6f304daa04bdd9d9845cbd42150837914294faa99b33b7d873cf1",
+      "bodyHash": "967ebf8f731450ec98cb3ea259a95c11bbee1521ed7130bdd1fbb55b694f7e69"
     },
     {
       "id": "hook-lifecycle",
-      "hash": "e30dbba5fc6b18d829e9816df080980c255c3087a24d5fba808cdf4ac2df8444"
+      "hash": "e30dbba5fc6b18d829e9816df080980c255c3087a24d5fba808cdf4ac2df8444",
+      "bodyHash": "de8fa8f8fc5a873e2cd765478f13016a975e633499e6769bfd2aa824471b3d10"
     },
     {
       "id": "how-a-hook-resolves",
-      "hash": "9704adcedd9cd358d6315406fce305120ef7220db13be9e61fc6e8ad8e398dfc"
+      "hash": "9704adcedd9cd358d6315406fce305120ef7220db13be9e61fc6e8ad8e398dfc",
+      "bodyHash": "dea329e61deed372a60d2703736114d2909dbb09552a3473078a4c9df3927c7d"
     },
     {
       "id": "configuration",
-      "hash": "c814ca263eb4d93dd7e59da8be540127d589f64d0844ee294a2c9d68dce43907"
+      "hash": "c814ca263eb4d93dd7e59da8be540127d589f64d0844ee294a2c9d68dce43907",
+      "bodyHash": "112f57d926ebc955a03f25db5ebb7cc664dae57440970468cdb6681a47093ebf"
     },
     {
       "id": "hook-locations",
-      "hash": "b52987a21c34ce141fe1e5b1db52ed257bb89a50955f068bbeaf81aa17ec7b2b"
+      "hash": "b52987a21c34ce141fe1e5b1db52ed257bb89a50955f068bbeaf81aa17ec7b2b",
+      "bodyHash": "17637f23879e2f3cdd2019ab02bf14eb698cbec149d5bb1ae2c0c51268fe5d83"
     },
     {
       "id": "matcher-patterns",
-      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a",
+      "bodyHash": "99f69ab54ded5099c411bb3a48671eeb7f1384912dbc9a12a2cfad3a305f5e35"
     },
     {
       "id": "match-mcp-tools",
-      "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8"
+      "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8",
+      "bodyHash": "467d90fb98e5f9447f0d091e47d1b46c5f1a029390dea3a9c85cbaeb9f0115bf"
     },
     {
       "id": "hook-handler-fields",
-      "hash": "70591c889437da0e8d2c043d1828c406746a79a43af0c22b223a1b03526e3cbe"
+      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca",
+      "bodyHash": "67a8eedb5537965e0c88f865660ff94f0c44b40af9f993197ddac4e642672be4"
     },
     {
       "id": "common-fields",
-      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9",
+      "bodyHash": "f48b65587986d69c890213f1025230445e9dd1685e9d3012016e168192a49982"
     },
     {
       "id": "bash-if-matching",
-      "hash": "cdc27b3c73d60486ab58f05411ab61717f596ec1aab1b9a9d525f100536d8aaf"
+      "hash": "cdc27b3c73d60486ab58f05411ab61717f596ec1aab1b9a9d525f100536d8aaf",
+      "bodyHash": "ab1255f32508efcd7425906586ba51337e7bc0cc470558411e15c93abf6869b5"
     },
     {
       "id": "command-hook-fields",
-      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec",
+      "bodyHash": "95ee65003b5f966c1c99b3eca0a0af8e5e45bd6beecc65381bd7f940e4459684"
     },
     {
       "id": "exec-form-and-shell-form",
-      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214",
+      "bodyHash": "9be91800f4e2453a34ea3cfee64b2e5fbfc2af229c364dd210dac28bc0ddbcc0"
     },
     {
       "id": "http-hook-fields",
-      "hash": "d8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145"
+      "hash": "d8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145",
+      "bodyHash": "a262eaed12f5c699626813144c7958bf92a502352d7f14608cc0ec3bb82703e5"
     },
     {
       "id": "mcp-tool-hook-fields",
-      "hash": "544de1e46b4d56711c8e3d2fe14c74e2a0dac09df6c36120f0c557603ac75c1d"
+      "hash": "544de1e46b4d56711c8e3d2fe14c74e2a0dac09df6c36120f0c557603ac75c1d",
+      "bodyHash": "ae42c29a03a735c8eff61cea71595d6df66fbd8ddbae9db4e8c365435cb439c6"
     },
     {
       "id": "how-the-tools-result-is-read",
-      "hash": "c55ff713d285f90a5bca7c4cc068ec3d8169aa60baf349690ec69656e2db3df4"
+      "hash": "c55ff713d285f90a5bca7c4cc068ec3d8169aa60baf349690ec69656e2db3df4",
+      "bodyHash": "17c488e9853edaa517b89849536216df21ca4d5ad87b1bd462cd9d7aadac57d0"
     },
     {
       "id": "when-the-server-is-still-connecting",
-      "hash": "79fcee2948642da9d8f34992af2e112f6a28eeb2e86f65b514b2d22252ce5bb0"
+      "hash": "79fcee2948642da9d8f34992af2e112f6a28eeb2e86f65b514b2d22252ce5bb0",
+      "bodyHash": "729e130a30d37d07c28939ab5f59b960f4639c37cc9cdb794d09c4cb2c3a0995"
     },
     {
       "id": "events-that-fire-before-mcp-servers-are-available",
-      "hash": "9e142b73c480a3bbf7c93c9bc803af807e37d744908959b7fb0531b5efb993cd"
+      "hash": "9e142b73c480a3bbf7c93c9bc803af807e37d744908959b7fb0531b5efb993cd",
+      "bodyHash": "90c0e8cab90303cb1658d614ccaf4395cf824acb821f6613174b4570bc8dd40e"
     },
     {
       "id": "prompt-and-agent-hook-fields",
-      "hash": "f1a9bf8f2472c41cbc860fce1ee2eaf8020e4c4784e6c458b1f57b7fac7fc002"
+      "hash": "f1a9bf8f2472c41cbc860fce1ee2eaf8020e4c4784e6c458b1f57b7fac7fc002",
+      "bodyHash": "e4d92bcbb226c6a8ea7249b70731e59eafbc078342635dcf08512a892a534342"
     },
     {
       "id": "reference-scripts-by-path",
-      "hash": "c625ac366f8dba714979c7bf6a35b5cf908b7fb28cb553415b4ed03f20ef6b74"
+      "hash": "73d3a437a1f052d0656a5575974552a41eef3368efef087f6c4c1be8486146c1",
+      "bodyHash": "55873132e6718408e8dd0220e062945eba8a7a15ad638811052143c4d124e161"
     },
     {
       "id": "hooks-in-skills-and-agents",
-      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc",
+      "bodyHash": "c83e83e430f7fca277b4a12950b64c57b246f2a96d2c9bb0ca6ee64115e22510"
     },
     {
       "id": "the-hooks-menu",
-      "hash": "133c197159534d7656da076be83775a58af3687e1e40fe5021e24860a8c8211a"
+      "hash": "133c197159534d7656da076be83775a58af3687e1e40fe5021e24860a8c8211a",
+      "bodyHash": "14d7ee3a5ef0ad3671cb394e17f6a5c86611ce0d9d68cd67bf5273b40d666385"
     },
     {
       "id": "disable-or-remove-hooks",
-      "hash": "07c2742ce0fb8b69c603d08c4d41493120a00315407c5e56648b6b7a6e7e1ed8"
+      "hash": "07c2742ce0fb8b69c603d08c4d41493120a00315407c5e56648b6b7a6e7e1ed8",
+      "bodyHash": "0983b71666aeaf046e6e88c47826f125684b7f023f43c13d4d7804caec602c77"
     },
     {
       "id": "hook-input-and-output",
-      "hash": "82f43e74d8a14d420749054627e7342ebf7485e7ee7fc327170d31963e90d5e4"
+      "hash": "82f43e74d8a14d420749054627e7342ebf7485e7ee7fc327170d31963e90d5e4",
+      "bodyHash": "4ce7abae2ed12f77933d9e8f30ec383715d8d8749cab296216be21751efd9f06"
     },
     {
       "id": "common-input-fields",
-      "hash": "7a0641dab6a9fe405cbd1ec0b173c2a25f9d43e5d812659a31c966244dd5dc46"
+      "hash": "1987741385051ff100d4b7acd4e2dc0eba6e01ad4b28313cd3665ca4aa6a6cda",
+      "bodyHash": "39240d738dcfd2980b2d96b48b7866232a5a8994174520cbd5ade01e3d049742"
     },
     {
       "id": "exit-code-output",
-      "hash": "9abbcf1e1ea280971a8e063d82df3f136c0a7277228ed1d8c2c4cceced0d0598"
+      "hash": "9abbcf1e1ea280971a8e063d82df3f136c0a7277228ed1d8c2c4cceced0d0598",
+      "bodyHash": "acd68c52ee456d8470a77a9026f2dc99626bb900ee7bceb70b216818911601f1"
     },
     {
       "id": "exit-code-0",
-      "hash": "2de9906b192b49f4eb37a40b3f3a71353142f9b2aa675c1be74d3c8c1ae0f0fc"
+      "hash": "9bd747d426e0b256983e46f526ad1c84dad5020321ca5d6fb3e8e3c4fddcd2e6",
+      "bodyHash": "530342d1f1204700709616be249ca80dac2816a8b48f3c05b117799a920ebf0c"
     },
     {
       "id": "exit-code-2",
-      "hash": "dc394fc234b94a9188e4f1142d2a58cbb47dee5bfbb59369a059d373bd7e2040"
+      "hash": "dc394fc234b94a9188e4f1142d2a58cbb47dee5bfbb59369a059d373bd7e2040",
+      "bodyHash": "c476f6d486b24dc1a4466872ad77c7c25af9fe98ff9a206b0a3a53ac0cd7783a"
     },
     {
       "id": "other-exit-codes",
-      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43"
+      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43",
+      "bodyHash": "1b4c7abb5b48005e48746053208ad1510e0c7099d9f582dcb526cd4864bfa9f5"
     },
     {
       "id": "timeouts",
-      "hash": "dfe97d089291e108884b69e368d95bac0359985159d30e56ff19c37b1efb1c8b"
+      "hash": "dfe97d089291e108884b69e368d95bac0359985159d30e56ff19c37b1efb1c8b",
+      "bodyHash": "000144e8a98be2592507592106c2ff0ebfb917ec3b3cbbcc25ce49dd87c74e53"
     },
     {
       "id": "block-the-action-when-a-hook-fails",
-      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
+      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7",
+      "bodyHash": "b39905622e7bde1dcc977672ee7fbb72cf364c43a89732635ddbe067e9b94fce"
     },
     {
       "id": "exit-code-2-behavior-per-event",
-      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038"
+      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038",
+      "bodyHash": "3844a08ecf11483860779220a8eb6a699ca2744d9b749f166cb87daa2e06924a"
     },
     {
       "id": "http-response-handling",
-      "hash": "1a9fba60b40ccf35f456c404c6a9c4be4c700408f946eb279d50c3a0a9669cc8"
+      "hash": "1a9fba60b40ccf35f456c404c6a9c4be4c700408f946eb279d50c3a0a9669cc8",
+      "bodyHash": "c9dc719eca6fe807697cd28f7ad852660bb615efa1f91169100a0d21ca8d440d"
     },
     {
       "id": "json-output",
-      "hash": "7b2e3ed1c3b78d48c7e430d82b4a228bc335ef317c6a7e762e7946dd69d08668"
+      "hash": "78baa86b335ff7b55ddee0ec0608c1db4e9e00b29dd7f875b5e886537e7b999d",
+      "bodyHash": "7675f110a8844861e617c8eb492a1b24c769ffbebf0a24434b2519461f09132e"
     },
     {
       "id": "emit-terminal-notifications",
-      "hash": "235b9be74a9a043fc5cfb868f5c18f0ce22507d493546e1523f8bdc2f9a4af30"
+      "hash": "235b9be74a9a043fc5cfb868f5c18f0ce22507d493546e1523f8bdc2f9a4af30",
+      "bodyHash": "a33a80078c992eefa556d9e26ee56fd01de19427fa8c0223f9ebd806aebd6204"
     },
     {
       "id": "add-context-for-claude",
-      "hash": "3ad6c0a4bde06d5d10f26b529e549227eb2cb49988b231c9701156993cedea77"
+      "hash": "7247c174169e87d40a14ca3e8af8fe8beae4425157a3bd557ecd382dbd108522",
+      "bodyHash": "f0b5904725fd07ddb2ba9a6bbbbb8815f0cdc1ca0f331f36e2e36219a5dc5ce5"
     },
     {
       "id": "decision-control",
-      "hash": "30ebda41a34adc421b0a4e8607fd03c71cfc6e5a40c5385a0830357914ab3239"
+      "hash": "30ebda41a34adc421b0a4e8607fd03c71cfc6e5a40c5385a0830357914ab3239",
+      "bodyHash": "273d8e300fb4fc13e51c28acf5691afc909379916c52dc35ef5017091c5b59df"
     },
     {
       "id": "hook-events",
-      "hash": "3cc8caf104e5beab35de707cb6db3b9e0a9f04b8cae417b0aec7366981fe5b67"
+      "hash": "3cc8caf104e5beab35de707cb6db3b9e0a9f04b8cae417b0aec7366981fe5b67",
+      "bodyHash": "b139ad3a8e36687a3172e1d550469a5b0d9717d81e4fd07ee1ccf30e2e047875"
     },
     {
       "id": "sessionstart",
-      "hash": "cd80f5cc00cb96989fb7092fb39d66f331b5d5fa9d67b28f2b6113680ccf558a"
+      "hash": "cd80f5cc00cb96989fb7092fb39d66f331b5d5fa9d67b28f2b6113680ccf558a",
+      "bodyHash": "5105f4f615d8adde3021606a32da3920640bc410a99fe4ec8d5388e5ef1a37a6"
     },
     {
       "id": "sessionstart-input",
-      "hash": "9850d18db5b281b0c83c02d51d08bbc63bbd71f72e1dc65f917d1cb411adc7bf"
+      "hash": "9850d18db5b281b0c83c02d51d08bbc63bbd71f72e1dc65f917d1cb411adc7bf",
+      "bodyHash": "8d5769b3f266d4510b3324b5fbdc7c00206ee3bdd73ea5eb8c25319104e557a3"
     },
     {
       "id": "sessionstart-decision-control",
-      "hash": "bed960cefefcef7d2719e381b396bfcc435bacc9308cfe296130ea2c1b27c145"
+      "hash": "bed960cefefcef7d2719e381b396bfcc435bacc9308cfe296130ea2c1b27c145",
+      "bodyHash": "85a0a8434f4d2caec6a6fc4291e62d4a3cae029d1eeae9c1e056a19c4849fcee"
     },
     {
       "id": "reload-skills-that-a-hook-installs",
-      "hash": "0aecb76e90e8cf72a9b56b4cd94cea74d51faf793fef438dced7c8aae3debdf1"
+      "hash": "0aecb76e90e8cf72a9b56b4cd94cea74d51faf793fef438dced7c8aae3debdf1",
+      "bodyHash": "7f6d4a9dd24732548e970215951b211ddd5870794fc39b76fdbb5736ec828a18"
     },
     {
       "id": "persist-environment-variables",
-      "hash": "8b3007d6b0adb35ca8813a3aaeacf004935a0695af9c3048096d194c972ebc69"
+      "hash": "14e8618c3e24535e15e79d7361254f081602947b6b85ca1896dd6baa9c08e09e",
+      "bodyHash": "28ac035095152e5b02389f37175ac910dcd7df4797687f40371a02027c1095e4"
+    },
+    {
+      "id": "persisted-variables-in-powershell-commands",
+      "hash": "873c66a4c313f268946d315b98e90ba6526e0773925ac3c97faf2197aec5fb06",
+      "bodyHash": "43c1652d7857c4b6c1bdf1274c83dafd8873a8b1112c31224f423eb3b4da0ba9"
     },
     {
       "id": "setup",
-      "hash": "c63d690e62ed97f7b3366b237c30e1b1f86e445a80af5fbfc4a6ed4cfc494f98"
+      "hash": "c63d690e62ed97f7b3366b237c30e1b1f86e445a80af5fbfc4a6ed4cfc494f98",
+      "bodyHash": "c8488f9741beb2fc714c4745b94372e9e1550aae67e10bd0605a78db52c48f6f"
     },
     {
       "id": "setup-input",
-      "hash": "0d3093d991343754b06d10eb8c1c6dabf2b9706f392a00adf77d36c058f8aa91"
+      "hash": "0d3093d991343754b06d10eb8c1c6dabf2b9706f392a00adf77d36c058f8aa91",
+      "bodyHash": "4e04bab0ccec3dae250661103b7101bb083a13225f90b802cf3afafad0aed090"
     },
     {
       "id": "setup-decision-control",
-      "hash": "a7d24a46c8e10e69833a92d4f32f743a1f58437d7cfd1354b409097b3475c0c3"
+      "hash": "a7d24a46c8e10e69833a92d4f32f743a1f58437d7cfd1354b409097b3475c0c3",
+      "bodyHash": "33ea5349a07be2cf94e29c7b654e13ffae3e7e437191ac773da9a5e5c598d25e"
     },
     {
       "id": "instructionsloaded",
-      "hash": "7ce6d1db930c21b1bd83c63d53a82d597a43b454c1fae8120c7b0368ee1af4aa"
+      "hash": "7ce6d1db930c21b1bd83c63d53a82d597a43b454c1fae8120c7b0368ee1af4aa",
+      "bodyHash": "15f41782e1afcf2a475663306a00f1bd21f7e8e32acaf00696353656206750cc"
     },
     {
       "id": "instructionsloaded-input",
-      "hash": "3f3a22391d02054282157fe6ef70f38d2ddefca670716d5e518819ced5a2be1a"
+      "hash": "3f3a22391d02054282157fe6ef70f38d2ddefca670716d5e518819ced5a2be1a",
+      "bodyHash": "e1a16f46484b6ff9da9ecca54eefc450061b0d54315816b9ba06c0acb18adefa"
     },
     {
       "id": "instructionsloaded-decision-control",
-      "hash": "4ffa6b2a39a05fa73350f46be7f52761379fc18400237df0eb937f3db264aa83"
+      "hash": "4ffa6b2a39a05fa73350f46be7f52761379fc18400237df0eb937f3db264aa83",
+      "bodyHash": "d1fbd089264b32c819f8ff178f2214e0745659369354db515eab29ba5ef62f4c"
     },
     {
       "id": "userpromptsubmit",
-      "hash": "3523a1638d31ad3fb28e5b8cc3778224dbca7e005c8f926e564de00fa8685df2"
+      "hash": "3523a1638d31ad3fb28e5b8cc3778224dbca7e005c8f926e564de00fa8685df2",
+      "bodyHash": "94b9e8e1e76a488f9765a037f56969f008bc80f91dcec10dcc7619adbb4dad77"
     },
     {
       "id": "userpromptsubmit-input",
-      "hash": "8495f69a3db6f0f8c4b05ecb40588aa13aecdca06a723a21cea56f2d3ae2c8db"
+      "hash": "8495f69a3db6f0f8c4b05ecb40588aa13aecdca06a723a21cea56f2d3ae2c8db",
+      "bodyHash": "4b97e52a7351879943f4960688e0d7a188a08a62828bc53b7dd4a9026b7a7743"
     },
     {
       "id": "userpromptsubmit-decision-control",
-      "hash": "89db69d0bdcef1d0deefe18fa51927feca14d0a3959ee1dd9ccc17bbdb603858"
+      "hash": "89db69d0bdcef1d0deefe18fa51927feca14d0a3959ee1dd9ccc17bbdb603858",
+      "bodyHash": "8ece498f3313277f00a441ebe91d43a292da0c1b55e854b950150716406108c6"
     },
     {
       "id": "what-a-blocked-prompt-leaves-behind",
-      "hash": "6d848954a575db85cd0d8f7960f942f11e4c69c8a8bb2ac705bf7a072e3a7703"
+      "hash": "6d848954a575db85cd0d8f7960f942f11e4c69c8a8bb2ac705bf7a072e3a7703",
+      "bodyHash": "c87cdfc3b8561c092af0841e357703620cf4dd62cc7cd905e88801820ba3b604"
     },
     {
       "id": "userpromptexpansion",
-      "hash": "f6b2a3a15169bf9731389f4b55bd0f21a9386c438b1ef9bec5648b42ef71d745"
+      "hash": "f6b2a3a15169bf9731389f4b55bd0f21a9386c438b1ef9bec5648b42ef71d745",
+      "bodyHash": "4274a9ead631fc572ffa8963fb53c3863b392077d8615236148352b741de2c16"
     },
     {
       "id": "userpromptexpansion-input",
-      "hash": "9caa4763ea2702334e977ec05b0935b7ef365eb557c1aa7f1609a21398724279"
+      "hash": "9caa4763ea2702334e977ec05b0935b7ef365eb557c1aa7f1609a21398724279",
+      "bodyHash": "f71d5b30b42a54004194e11f858d0498d264ba9bfa29e5faa2df2c1780127247"
     },
     {
       "id": "userpromptexpansion-decision-control",
-      "hash": "6f8dceb219394c7fda9053df25f9e9c536be8f81faaccd41bfe19f0fda189d91"
+      "hash": "6f8dceb219394c7fda9053df25f9e9c536be8f81faaccd41bfe19f0fda189d91",
+      "bodyHash": "6ccb5f1b2ae0f9adad46dc02f124d3ef15898dfa0d825d3f090ffb9ec8ce9320"
     },
     {
       "id": "messagedisplay",
-      "hash": "70f8084f670c25fd18f8f7d6c57afa620afcd842b860e1ed6cd62bfc376d400c"
+      "hash": "70f8084f670c25fd18f8f7d6c57afa620afcd842b860e1ed6cd62bfc376d400c",
+      "bodyHash": "4d2a5ffe1ef1127456ec856351fb24215bb5a869201dce6593dcfce447d56ca8"
     },
     {
       "id": "messagedisplay-input",
-      "hash": "1bffc3f145ac7f64fc34c6901144eb3914d093c3acba989e6a28abe7e8197fc5"
+      "hash": "1bffc3f145ac7f64fc34c6901144eb3914d093c3acba989e6a28abe7e8197fc5",
+      "bodyHash": "95bc30621294460a9c97325bee2e2e57fced7e5d78d9195b881fad48c04df945"
     },
     {
       "id": "messagedisplay-output",
-      "hash": "2359ef259d48237e6b3b16309c1fe008e701ec55490ffb326fa63c8fcc9d1ed1"
+      "hash": "2359ef259d48237e6b3b16309c1fe008e701ec55490ffb326fa63c8fcc9d1ed1",
+      "bodyHash": "6f9dc9a906e18e9b3d3342c9c0bc1621c895d717536c213d60f3d3deb522b50e"
     },
     {
       "id": "pretooluse",
-      "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4"
+      "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4",
+      "bodyHash": "2441bcfc887513a70495d8004ef7ba6292c36b7e5871f2d9323e5eba76c9a1ba"
     },
     {
       "id": "pretooluse-input",
-      "hash": "69eb36e7d82d2ccb1d769d9f7ce6ebbc234238128f0839086b57df1ba6d78eab"
+      "hash": "69eb36e7d82d2ccb1d769d9f7ce6ebbc234238128f0839086b57df1ba6d78eab",
+      "bodyHash": "fb4500805d355cf443b78b52ef160903149eebcfb47dc590aead4080eaecd190"
     },
     {
       "id": "bash",
-      "hash": "f7f6cb6b1becf0ed483ce4baf5e298efeca5c5589c91c70a72c4eb99e14b874a"
+      "hash": "f7f6cb6b1becf0ed483ce4baf5e298efeca5c5589c91c70a72c4eb99e14b874a",
+      "bodyHash": "9ac4fb8213cc001d63bf94bb88d10d048329e7d989370e9c44963ed5d16306c9"
     },
     {
       "id": "powershell",
-      "hash": "772ad0da372957840d6f80dfc04b6f1ee14a26fae50007edc83d8d708dca1b6e"
+      "hash": "772ad0da372957840d6f80dfc04b6f1ee14a26fae50007edc83d8d708dca1b6e",
+      "bodyHash": "f8af735cfd7810e7b63cf678e0445d14c88066a1ec3d56f95089b79dc01e82ed"
     },
     {
       "id": "write",
-      "hash": "ef4bc5ed0b3236c141b63337f5dedbb8dd9ff58c20f10b2f0e1a60ea89576d5b"
+      "hash": "ef4bc5ed0b3236c141b63337f5dedbb8dd9ff58c20f10b2f0e1a60ea89576d5b",
+      "bodyHash": "8e205ec901c7ec06d8b04c90aecdac16bc826fc2c923bf578864cf0f9e6e2c18"
     },
     {
       "id": "edit",
-      "hash": "91efde483b0d7ca22dcfe91ea4de5ebaaa1736561efb2affb75f0ad8329ce6a2"
+      "hash": "91efde483b0d7ca22dcfe91ea4de5ebaaa1736561efb2affb75f0ad8329ce6a2",
+      "bodyHash": "eb9c09bbfcf3cc874783584b105f4c89f84f5eaecb4d7c4f5855b1420f957333"
     },
     {
       "id": "read",
-      "hash": "4c58f92a4e5b88e78471d87ddbb9d142c0cbed8fc372ec312ddc1c92c11a394b"
+      "hash": "4c58f92a4e5b88e78471d87ddbb9d142c0cbed8fc372ec312ddc1c92c11a394b",
+      "bodyHash": "0a9fc772500b0981771422217a465371b63cf14f08a1b8da46862b11a5e07568"
     },
     {
       "id": "glob",
-      "hash": "cbe343fc0417948c45920365fb5f3e928dab90182621e891447eacabb26829ac"
+      "hash": "cbe343fc0417948c45920365fb5f3e928dab90182621e891447eacabb26829ac",
+      "bodyHash": "7ccb34e6600ebf02bc3aaaac51828e8231687576868fda9f8d93c7fbec560ae7"
     },
     {
       "id": "grep",
-      "hash": "76d98190da8de56399135d7f38a678a539824e77ae7eba63f6558c0bd6201a33"
+      "hash": "76d98190da8de56399135d7f38a678a539824e77ae7eba63f6558c0bd6201a33",
+      "bodyHash": "eb4d02de930ad5a63844c813fdf7dee0896f76e89ca14297603a74a465ed969a"
     },
     {
       "id": "webfetch",
-      "hash": "98d4c7779824b038d3593f8e9ce008b4a7c9589ea802b9049738cbc6dbf5229a"
+      "hash": "98d4c7779824b038d3593f8e9ce008b4a7c9589ea802b9049738cbc6dbf5229a",
+      "bodyHash": "d19afaa06537f7b269140da58100f08b2161815a9c70baf736d275df100ea3b3"
     },
     {
       "id": "websearch",
-      "hash": "d3b367405c76db5d3c7d8f3ccb3a95c03c0476511dba7a9a03a50f308850a0f5"
+      "hash": "d3b367405c76db5d3c7d8f3ccb3a95c03c0476511dba7a9a03a50f308850a0f5",
+      "bodyHash": "07ef30874013f5b7763b2f503fbafe89b01ccbaecec20e0b15b5cf55994b54e1"
     },
     {
       "id": "agent",
-      "hash": "370031bb5d32315e9ce1d0863ebd91e9b570aea613739b090b0fe0ceb22dec79"
+      "hash": "370031bb5d32315e9ce1d0863ebd91e9b570aea613739b090b0fe0ceb22dec79",
+      "bodyHash": "833c4e012f3b71bf90ca9b77f37f101dd8a53f3c715640c4d5461093c049d1aa"
     },
     {
       "id": "askuserquestion",
-      "hash": "88bb1b6003f3d7090f2fdf44d5539dc0181c5f29cca2c3954de1cc3b1fd8f65f"
+      "hash": "88bb1b6003f3d7090f2fdf44d5539dc0181c5f29cca2c3954de1cc3b1fd8f65f",
+      "bodyHash": "913576f8d559a889a0fceff302b1f30818ed98bcb671748b7944e85d6f84978f"
     },
     {
       "id": "exitplanmode",
-      "hash": "832bc1a006baaa34854a4e91225a9a062d8d776d21f34b35b0b19c95eeb0bd1b"
+      "hash": "832bc1a006baaa34854a4e91225a9a062d8d776d21f34b35b0b19c95eeb0bd1b",
+      "bodyHash": "bb888fac02723e3c781b03f0e577bb02e0885252b1fc7470b14226a485178976"
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "28f6792385e67de437d8999646911ea565fbe0eb177444b7a240ca90d95b3fe8"
+      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2",
+      "bodyHash": "798d9ac83f190502475f77179558f0d3d17ab7a9870939e1b3652e109af325ac"
     },
     {
       "id": "allow-with-updatedinput",
-      "hash": "ad85ef4eba1f800c6e1e055b0aa7a75d9bab91fa327f941a8ecf56943e40d2ec"
+      "hash": "ad85ef4eba1f800c6e1e055b0aa7a75d9bab91fa327f941a8ecf56943e40d2ec",
+      "bodyHash": "a9282548eb84d4d41b51ba0f147804529e5bc5e52abee83e09269d4ac2ffdfce"
     },
     {
       "id": "defer-a-tool-call-for-later",
-      "hash": "526c2ae7fbcf06ea07ea6cfdbddba01f4a63945df35c70de5ceff583c9fac860"
+      "hash": "dc87410f68626813d23473aefe0b9657b4f84a0c2a03c49bed66b22ef38c39af",
+      "bodyHash": "3c00ba3f9a38dd5168a47e2aef86066cbd84a5eb301debaebb57197968d33dba"
     },
     {
       "id": "permissionrequest",
-      "hash": "0cd60f343b1419a51a8cce79011c483464a0874abc8855d941ef6fbf39b0c220"
+      "hash": "0cd60f343b1419a51a8cce79011c483464a0874abc8855d941ef6fbf39b0c220",
+      "bodyHash": "1f50cad8937749cf05241e8e8ad805fe5e91d79407be4007ade6d8ed895dafa0"
     },
     {
       "id": "permissionrequest-input",
-      "hash": "b0505ae5faf5da99d8b50f9038e66578972e4a67ae6642dc09d110824e68fd5a"
+      "hash": "b0505ae5faf5da99d8b50f9038e66578972e4a67ae6642dc09d110824e68fd5a",
+      "bodyHash": "180c59fa8ea8dc818efb8cd2c9c844ef6fc93339d0b39bebec1c05b21c74a575"
     },
     {
       "id": "permissionrequest-decision-control",
-      "hash": "4fbb4ef39fbac14018b68c411027e4e35eb66b0e141a7068ad93272670adc8a5"
+      "hash": "4fbb4ef39fbac14018b68c411027e4e35eb66b0e141a7068ad93272670adc8a5",
+      "bodyHash": "22913fa42d84504c757018c5f39efb0b24984ba382553b15215efce83bf67a61"
     },
     {
       "id": "permission-update-entries",
-      "hash": "5fe99f34d79702e8deee20c5b2cc1598c50bc1d462b5cdc50fcd42434085fa70"
+      "hash": "5fe99f34d79702e8deee20c5b2cc1598c50bc1d462b5cdc50fcd42434085fa70",
+      "bodyHash": "ed9ff780d314aa5ddfdade3e4ec5c54bc728dfe3b3ed6edc6b29c9b5e76710ad"
     },
     {
       "id": "posttooluse",
-      "hash": "7d5c0cddc340fd1ff0c353d148e0e6d721f10fa94b1070cb9c1ca90d585c1165"
+      "hash": "7d5c0cddc340fd1ff0c353d148e0e6d721f10fa94b1070cb9c1ca90d585c1165",
+      "bodyHash": "c69a85eede41952e59c41c8096cd97bd57589aa3c7325207114a86e1c87cdac4"
     },
     {
       "id": "posttooluse-input",
-      "hash": "b3ea8fa01410c13dabc0192e328be969a09d5d8c43e5a3455e9afd2981889db2"
+      "hash": "b3ea8fa01410c13dabc0192e328be969a09d5d8c43e5a3455e9afd2981889db2",
+      "bodyHash": "bf8a768f1ce7d3c63b38ee7c269a87c846348ca14ae1a7edfce2680f5ded7c85"
     },
     {
       "id": "posttooluse-decision-control",
-      "hash": "271abc0c250645bcd170f25440514299dab1aabd8376718db1a854df04eb13b0"
+      "hash": "271abc0c250645bcd170f25440514299dab1aabd8376718db1a854df04eb13b0",
+      "bodyHash": "72c9dc3c464b5cf0ca2175d3611d39b04a3ca4b33a743168d1c6ff9e608e68b1"
     },
     {
       "id": "annotate-a-result-for-the-auto-mode-classifier",
-      "hash": "0eea0f0fe74937ab6a3c5537563370b10812592fbbca099fcf21cd7799c2c0ed"
+      "hash": "0eea0f0fe74937ab6a3c5537563370b10812592fbbca099fcf21cd7799c2c0ed",
+      "bodyHash": "caf5e503ea677a6d96fa705f90c05035663bfc5b5b45de2b457881b8f5f835cf"
     },
     {
       "id": "posttoolusefailure",
-      "hash": "165c66c23c23f1e81e68b0fbb020a6a06707be4bd0dd0e10fa44b7a56243cdf3"
+      "hash": "165c66c23c23f1e81e68b0fbb020a6a06707be4bd0dd0e10fa44b7a56243cdf3",
+      "bodyHash": "67527fae63a3c8d629303db772afa1de46f2fbdcc7e2fa5cfeaeff5dd7d7a97f"
     },
     {
       "id": "posttoolusefailure-input",
-      "hash": "d2d1705e33f679942e29b6bc85d45a036183bf36118468480617bbfffb6217f8"
+      "hash": "d2d1705e33f679942e29b6bc85d45a036183bf36118468480617bbfffb6217f8",
+      "bodyHash": "036c7fb2eb0918c08e22b248a9665b723901259cb42590a6f4939af72adaaf30"
     },
     {
       "id": "posttoolusefailure-decision-control",
-      "hash": "396a37a32e7a2577ebfd3ad3270f1b37d899bc3b9957f7fed4440e060ad13f24"
+      "hash": "396a37a32e7a2577ebfd3ad3270f1b37d899bc3b9957f7fed4440e060ad13f24",
+      "bodyHash": "71ebd99cd8e2d8a424b88e0f830ecb6a68cd827a31bcec0effa7154f50742fc3"
     },
     {
       "id": "posttoolbatch",
-      "hash": "ed5e4ab08f5b7e05004f9d40c88b4e14f708ecdb4cad2964bcefc3ea2edfde6c"
+      "hash": "ed5e4ab08f5b7e05004f9d40c88b4e14f708ecdb4cad2964bcefc3ea2edfde6c",
+      "bodyHash": "318a21ba54ae650534a4a702f9e89f0d21d5bd27a5769e483ed0da24216585c1"
     },
     {
       "id": "posttoolbatch-input",
-      "hash": "f6ae164f46a90c1e526fda34b5d7777e8fe95e72956b22deaed638650fcfee4d"
+      "hash": "f6ae164f46a90c1e526fda34b5d7777e8fe95e72956b22deaed638650fcfee4d",
+      "bodyHash": "2e20525fe5c08ba721d43dce24c51c12c13c08212ffa0cad139d0148f125a542"
     },
     {
       "id": "posttoolbatch-decision-control",
-      "hash": "fa80108dd5bc769c4e499e765250236b90fd2a9615ceacf0933fc2f1325c2cbf"
+      "hash": "fa80108dd5bc769c4e499e765250236b90fd2a9615ceacf0933fc2f1325c2cbf",
+      "bodyHash": "e4987348fe776b2777eee1517df2793cdf8eedb3c72e34e0bb8c644b24c3b8e9"
     },
     {
       "id": "permissiondenied",
-      "hash": "ac3be29906dd9b3d89d28996dfe2b8f4a93a2b27172ca530d00e58e5dd0f153d"
+      "hash": "ac3be29906dd9b3d89d28996dfe2b8f4a93a2b27172ca530d00e58e5dd0f153d",
+      "bodyHash": "bc81e464bcfbcfd8f3212c7411a09b6746cb874ece08c466ebbaa6af0cf145dc"
     },
     {
       "id": "permissiondenied-input",
-      "hash": "51543992d07fbf1a68a3ce739f61fe14bf4316cf0fcae2ab2c7e9cf60d38440b"
+      "hash": "51543992d07fbf1a68a3ce739f61fe14bf4316cf0fcae2ab2c7e9cf60d38440b",
+      "bodyHash": "45d8810b7f4cadaa65b2eda4b1b17e50d14819fcf70594bf16fd710c4110dc0e"
     },
     {
       "id": "permissiondenied-decision-control",
-      "hash": "7c5b67c18387dd523a8aba94d207dbcd7c1ed4478c51325f58857126192ea275"
+      "hash": "7c5b67c18387dd523a8aba94d207dbcd7c1ed4478c51325f58857126192ea275",
+      "bodyHash": "36c2427b5a7b29c52b44d382304f61372557c979d7185d95f441bc65406fc8d8"
     },
     {
       "id": "notification",
-      "hash": "3edf71c73301b39990090267d4068b6bd141be1345cace6d009e8b818a534811"
+      "hash": "3edf71c73301b39990090267d4068b6bd141be1345cace6d009e8b818a534811",
+      "bodyHash": "aa27c2e46bbf2c0b4657e571a3cc7b74138d070700de7df778e99110f089dbcf"
     },
     {
       "id": "notification-input",
-      "hash": "f089b59ba061006147c3ef72f58afd36e4b1573f9075e6daf2ee9bb2f669a708"
+      "hash": "f089b59ba061006147c3ef72f58afd36e4b1573f9075e6daf2ee9bb2f669a708",
+      "bodyHash": "973f8b177f2b1bdc74910f2a6536f6f261b1c0363b25d7ae98f82a4b0657f69e"
     },
     {
       "id": "subagentstart",
-      "hash": "c37942bc3355357947ddf6f22c5fea53ad42c021f400c26ea791b0ee88d1a20b"
+      "hash": "c37942bc3355357947ddf6f22c5fea53ad42c021f400c26ea791b0ee88d1a20b",
+      "bodyHash": "e0fea1539363ab990a193be209cde454ccae8da13d45557c929d25e0a891efc3"
     },
     {
       "id": "subagentstart-input",
-      "hash": "654a71ad4abdf1b40c96caae2633301b950e51e01cac9efb55d0b1cd50c35466"
+      "hash": "654a71ad4abdf1b40c96caae2633301b950e51e01cac9efb55d0b1cd50c35466",
+      "bodyHash": "f869f694122764e2847938477dd938aac6421df1c135b68cab36c68b6052080a"
     },
     {
       "id": "subagentstop",
-      "hash": "3ec0b224c16dce5ffe6e5b1cedc13121ef3cc5c3e38b34429961036c88ecc29d"
+      "hash": "3ec0b224c16dce5ffe6e5b1cedc13121ef3cc5c3e38b34429961036c88ecc29d",
+      "bodyHash": "5cec8ea44fbc93625f0c3694bb1f82ab6620c8a986c1e4e349ff6a733b9d86d7"
     },
     {
       "id": "subagentstop-input",
-      "hash": "fc49a62864928ac2e08e38cffd1d73e26b9e84aa6b47bfa51bfe89a8841b67d1"
+      "hash": "fc49a62864928ac2e08e38cffd1d73e26b9e84aa6b47bfa51bfe89a8841b67d1",
+      "bodyHash": "fc80aaa2eb64646c31da27dc6ca9dea39c583ad2ed974e582fd6efb748334fdc"
     },
     {
       "id": "taskcreated",
-      "hash": "1d85119af612f76c244401360b834052fd8763dd9133acb294921fef00b62539"
+      "hash": "1d85119af612f76c244401360b834052fd8763dd9133acb294921fef00b62539",
+      "bodyHash": "ba205cc8b946dfa26f4d23a3327651589044effbeefcc253e0a1f5efedef4348"
     },
     {
       "id": "taskcreated-input",
-      "hash": "18f9350b5b2c46428cec0979e42d590951ea4220378735b357c9cccecec169bd"
+      "hash": "18f9350b5b2c46428cec0979e42d590951ea4220378735b357c9cccecec169bd",
+      "bodyHash": "20d1e383f9dce92d4639d02fed687937eb3f678eaf7b197951d9c71ab63254e7"
     },
     {
       "id": "taskcreated-decision-control",
-      "hash": "331b89b6b511ce777c65945adf293f657fb865b86700501555a583dbb21a3551"
+      "hash": "331b89b6b511ce777c65945adf293f657fb865b86700501555a583dbb21a3551",
+      "bodyHash": "4e17b30ce08ea126ea944520000992d8094ef8ae7b4ae482ed5b251f21410c7d"
     },
     {
       "id": "taskcompleted",
-      "hash": "a1ae020f95d87ffb3b3465c69dbd112334e394176ef2e4b6331fedffb5241a3d"
+      "hash": "a1ae020f95d87ffb3b3465c69dbd112334e394176ef2e4b6331fedffb5241a3d",
+      "bodyHash": "dea62ff537310e37834f9f1d202666d9d9d75cfd06fa892a5c84d4cb76b00374"
     },
     {
       "id": "taskcompleted-input",
-      "hash": "00a46c27bbeba8ce867e2a69064723ca8bf1608136a6590795a727a19a39f8e8"
+      "hash": "00a46c27bbeba8ce867e2a69064723ca8bf1608136a6590795a727a19a39f8e8",
+      "bodyHash": "91a59491023243b01114bcb70425f998faad55799680fc4399f89dc2a0f89c70"
     },
     {
       "id": "taskcompleted-decision-control",
-      "hash": "a359e3450b961f0bbe39fb793ef88c6710541206b166f003018bea2ae08d0257"
+      "hash": "a359e3450b961f0bbe39fb793ef88c6710541206b166f003018bea2ae08d0257",
+      "bodyHash": "bc099bb030372737c29a3e4e04b2687924e579cb1d2a09c95cb16769c502b441"
     },
     {
       "id": "stop",
-      "hash": "8fb702d3f065c35a0874e441167636a8b562dea052379ab9517ad4195390b8e9"
+      "hash": "8fb702d3f065c35a0874e441167636a8b562dea052379ab9517ad4195390b8e9",
+      "bodyHash": "c4b6e5f14c8569c25d0c46a03128f8a0a750d140fb11f61fef225b93e23322e2"
     },
     {
       "id": "stop-input",
-      "hash": "48ddafe90e91b478da929959035deb77c66d3d60be1e1d8c546e8b357f155685"
+      "hash": "48ddafe90e91b478da929959035deb77c66d3d60be1e1d8c546e8b357f155685",
+      "bodyHash": "229318119e6f23ac2f68a3519e0219f592623d7bf224d85fcb2d731d000bfbff"
     },
     {
       "id": "stop-decision-control",
-      "hash": "287b86688424db62968b1a1d3ddc520e26991daff37ac075d6431ab1b5ba3da9"
+      "hash": "287b86688424db62968b1a1d3ddc520e26991daff37ac075d6431ab1b5ba3da9",
+      "bodyHash": "85569be1e9be6b6bb1bfa5055cb47584ee706000b0f28a7bb39a0f7ca3f62668"
     },
     {
       "id": "stopfailure",
-      "hash": "78a5692db4c2cc73d1a043cbc6b695f9f7107f499c7b8823d85e873eb42f57f2"
+      "hash": "78a5692db4c2cc73d1a043cbc6b695f9f7107f499c7b8823d85e873eb42f57f2",
+      "bodyHash": "a831627d542f01bf17ef9d1b160445e57a87e99651596bb97f543c8e2ef05f65"
     },
     {
       "id": "stopfailure-input",
-      "hash": "8f5c7627523ed09cf6ba764fed41ad24e4e4a9f80bd8b873bf2705ced1ed0da4"
+      "hash": "8f5c7627523ed09cf6ba764fed41ad24e4e4a9f80bd8b873bf2705ced1ed0da4",
+      "bodyHash": "29d6ddafd3711c5a0039c0b9cabad31ecaf4912f234acca1fedecb7b06503389"
     },
     {
       "id": "teammateidle",
-      "hash": "5f65afb5ba1938f3dbe8e927815b1c791660aec71819ad9b0b185ebd1b9eb7e3"
+      "hash": "5f65afb5ba1938f3dbe8e927815b1c791660aec71819ad9b0b185ebd1b9eb7e3",
+      "bodyHash": "2b4471974fe6c55b21b9dd87c1135407df9efe24ee2a8fe58460e3003e949bf7"
     },
     {
       "id": "teammateidle-input",
-      "hash": "d68ada7a6826ef805179834a6d8878fb744b5b7da7a7534fb32ee2e08bcd8a05"
+      "hash": "d68ada7a6826ef805179834a6d8878fb744b5b7da7a7534fb32ee2e08bcd8a05",
+      "bodyHash": "a5c055196b47c2c942e9c91692e975521bd5492255fe570c9fbf5bb21d90f122"
     },
     {
       "id": "teammateidle-decision-control",
-      "hash": "52e4331e815879ed7fe89c5b53c0422e7e444bdc96cad47fd11511f714e2ecc2"
+      "hash": "52e4331e815879ed7fe89c5b53c0422e7e444bdc96cad47fd11511f714e2ecc2",
+      "bodyHash": "49bbdb36113c6863c1dc4f1e5f06ab2ca7fddb8d7c3afcf39c3eda2f3fbc1e9e"
     },
     {
       "id": "configchange",
-      "hash": "8db5dc894ae3d8c04d4f866ea132ce1c3ccbfe24986aace0e7b2214e3289547c"
+      "hash": "8db5dc894ae3d8c04d4f866ea132ce1c3ccbfe24986aace0e7b2214e3289547c",
+      "bodyHash": "3f747ed086dfe92966c855d99a083059871b586b4c49587b2a73d483a62aa6ad"
     },
     {
       "id": "configchange-input",
-      "hash": "c38ce5977f7719094b629cc2a5e89ef4b064b368034ee698e54c46468b201ccb"
+      "hash": "c38ce5977f7719094b629cc2a5e89ef4b064b368034ee698e54c46468b201ccb",
+      "bodyHash": "4d17fce04806f426551ec546b69f209911a35728f4a218f8d74e2cb19332d439"
     },
     {
       "id": "configchange-decision-control",
-      "hash": "ef7c4162c133f2bba0375c8dfe2a4f78cd88723419851be053c8892eba230f61"
+      "hash": "ef7c4162c133f2bba0375c8dfe2a4f78cd88723419851be053c8892eba230f61",
+      "bodyHash": "4bb801f8ac09348f9e373eee212c341c98c68733813617967a02326c06b6fe31"
     },
     {
       "id": "cwdchanged",
-      "hash": "3c3a5dd91c7d2c2a5edda533f38ce67add7d5cf099fe1b940c4f140563ccf775"
+      "hash": "3c3a5dd91c7d2c2a5edda533f38ce67add7d5cf099fe1b940c4f140563ccf775",
+      "bodyHash": "70bf6c05ea508667317e2418431f80d48242699f42f56177d1dfe6eae8e3eb4e"
     },
     {
       "id": "cwdchanged-input",
-      "hash": "ddb83728803f9dcdd75e94464e3afe2a5266752c0ef5db67829c9e1d93acbb05"
+      "hash": "ddb83728803f9dcdd75e94464e3afe2a5266752c0ef5db67829c9e1d93acbb05",
+      "bodyHash": "99390bdd69696336f61d4602e4dd9159709216f92a386b85fe54a1c548da710f"
     },
     {
       "id": "cwdchanged-output",
-      "hash": "013a849650435fa2c139869f7daa417f8a1c23d34f05c42a4c1cfd2c36de3e3a"
+      "hash": "013a849650435fa2c139869f7daa417f8a1c23d34f05c42a4c1cfd2c36de3e3a",
+      "bodyHash": "264f131e6f44a8db1b29d882212e344d2424754850cd8fd73a940f8619de6d47"
     },
     {
       "id": "directoryadded",
-      "hash": "e6392bc7a4958af08e46631bf7de44a592a22321406123682e80267ccb46bca9"
+      "hash": "e6392bc7a4958af08e46631bf7de44a592a22321406123682e80267ccb46bca9",
+      "bodyHash": "05d27361b18ff2fe5158af2b284c7f678197b945f13c1fe311dbb238ca102579"
     },
     {
       "id": "directoryadded-input",
-      "hash": "e098accc935649bb6a7e181309e7bf42e4e8fd1f95c2f4221cdcd3c6d9d421f2"
+      "hash": "e098accc935649bb6a7e181309e7bf42e4e8fd1f95c2f4221cdcd3c6d9d421f2",
+      "bodyHash": "ae75710cac55936c5c2e500e2fa6683242f08d2eb611d7c7378e607b307d1449"
     },
     {
       "id": "filechanged",
-      "hash": "f9ad6cc54673edfc3eaa4b8a92d8e94269c11e6a08c3f131002f24c3f8b30c8d"
+      "hash": "f9ad6cc54673edfc3eaa4b8a92d8e94269c11e6a08c3f131002f24c3f8b30c8d",
+      "bodyHash": "ba8332894776c4b9aec1f94dea9a60bdd4f2e8aa7f89d88f2eb615eea15cfe30"
     },
     {
       "id": "filechanged-input",
-      "hash": "03bbc2106bcf3b8d83fad5d730d085ee96c51453294ea97e266b4e099b575eaf"
+      "hash": "03bbc2106bcf3b8d83fad5d730d085ee96c51453294ea97e266b4e099b575eaf",
+      "bodyHash": "b4fa2ece4262e7c0ffb37fa44e1a1174f8fbc16c872bcf2071556bde3d0ac87a"
     },
     {
       "id": "filechanged-output",
-      "hash": "edbf0ba31f548015621b3cc5f9d66c4ba5952d3679952995bd0abed0244dea97"
+      "hash": "edbf0ba31f548015621b3cc5f9d66c4ba5952d3679952995bd0abed0244dea97",
+      "bodyHash": "0016a9f215be6e275ddbf987cb027396ae54edaef0c8aa68a92347869992dff8"
     },
     {
       "id": "worktreecreate",
-      "hash": "62e89a991494790b4db13535e91d463028b85b9cffa1e251e43fbf8510e11251"
+      "hash": "62e89a991494790b4db13535e91d463028b85b9cffa1e251e43fbf8510e11251",
+      "bodyHash": "1e9c30ea09c20a00ae02ce5fd8a32a4ab190c07f1414ad3e21fb5b6822e3d561"
     },
     {
       "id": "worktreecreate-input",
-      "hash": "891d24a40b4372a0e7f6f34291ba572ec7b8d376d0c685c182f37849fa8c8afe"
+      "hash": "891d24a40b4372a0e7f6f34291ba572ec7b8d376d0c685c182f37849fa8c8afe",
+      "bodyHash": "476d40b53fabf19f20620d88918c46e45340892bbcc37af3f30afff810cedf23"
     },
     {
       "id": "worktreecreate-output",
-      "hash": "2365b2633d0956d03cde3ffd703b3d7999aa8c8d86a5a070bf8cd85d6d1f26ba"
+      "hash": "2365b2633d0956d03cde3ffd703b3d7999aa8c8d86a5a070bf8cd85d6d1f26ba",
+      "bodyHash": "b50b1c3a39293625e4eabf4161838208a57c553bcf65c1ca8f601d7f0cc4c641"
     },
     {
       "id": "worktreeremove",
-      "hash": "d7536d70260b8a7c781b9b904624f9f4ba66a69fbe20d56c3f0e5276d28a9738"
+      "hash": "d7536d70260b8a7c781b9b904624f9f4ba66a69fbe20d56c3f0e5276d28a9738",
+      "bodyHash": "53950a3d3ce7105ca4898f4f5c14e59b033a558dea5f49c77100a5f30298d404"
     },
     {
       "id": "worktreeremove-input",
-      "hash": "c0a8784099d9aad2c252817c8a425a2212df5799c32820533d661f90e0a8da77"
+      "hash": "c0a8784099d9aad2c252817c8a425a2212df5799c32820533d661f90e0a8da77",
+      "bodyHash": "40357e7fc23255c9c484e834fa25894898381b9941781d9d9b7943f0f25654b7"
     },
     {
       "id": "precompact",
-      "hash": "6a75e75badffcf89732f28dc4bc7d13d1e7fbb4847e3c8aff875fa530846eb59"
+      "hash": "6a75e75badffcf89732f28dc4bc7d13d1e7fbb4847e3c8aff875fa530846eb59",
+      "bodyHash": "c6c6b7d3ae5fb92ffb1572e8683aec4e9db871eba9d14867390fa294ab473b11"
     },
     {
       "id": "precompact-input",
-      "hash": "88615c535d6e1e897b0f46a105eeb1c090b2e54744d4f2e878ccd944babfdb82"
+      "hash": "88615c535d6e1e897b0f46a105eeb1c090b2e54744d4f2e878ccd944babfdb82",
+      "bodyHash": "88d92efe104e9a5f0901b5262913b12b816fbdc881d124872517498616d6bb03"
     },
     {
       "id": "postcompact",
-      "hash": "edd8863a34515043f224066007c922a8e411b064055b284b8deaffcb4503919d"
+      "hash": "edd8863a34515043f224066007c922a8e411b064055b284b8deaffcb4503919d",
+      "bodyHash": "d9d5d1247336786b45ff460d6088890e8138b072f34891a30ed85e21f42bd69b"
     },
     {
       "id": "postcompact-input",
-      "hash": "b69200800738ded51f8327eb9fb926db8927b3ee69b5990916ef97f149151a01"
+      "hash": "b69200800738ded51f8327eb9fb926db8927b3ee69b5990916ef97f149151a01",
+      "bodyHash": "51d1ece5254e124445abeafec538a588a40664cbfed03d334de060f80e62097b"
     },
     {
       "id": "premodelswitch",
-      "hash": "9c838213dd711f659b13b818681ca0148248bdcdca3c39f3b76aa27adde4f41d"
+      "hash": "9c838213dd711f659b13b818681ca0148248bdcdca3c39f3b76aa27adde4f41d",
+      "bodyHash": "cafc3112fe78140c466c277f44127a2f08cc5f52cf9884e97323afd34a2c5b76"
     },
     {
       "id": "premodelswitch-input",
-      "hash": "8fbbbba272e4650b8a6c61d6679910fffc31fb26a9f14640ed67bec1a895e2a8"
+      "hash": "8fbbbba272e4650b8a6c61d6679910fffc31fb26a9f14640ed67bec1a895e2a8",
+      "bodyHash": "d45c23cb6424c567a7d508ad4d23d6b31764c4c5cef63a1e4cece7cdf1ea9876"
     },
     {
       "id": "premodelswitch-decision-control",
-      "hash": "2c384de0259af549ecbc40242dde4b6853651e86c89e7ed06fd9eeca431fb977"
+      "hash": "2c384de0259af549ecbc40242dde4b6853651e86c89e7ed06fd9eeca431fb977",
+      "bodyHash": "fc0ffee61e9d47265734f06abb484fe5c7cc1e636b5235675d8d3053ef2e1451"
     },
     {
       "id": "postmodelswitch",
-      "hash": "08489cb08aa97d409ce67d2ed9e34964983b3087fa0dd212963f9935a4906a38"
+      "hash": "08489cb08aa97d409ce67d2ed9e34964983b3087fa0dd212963f9935a4906a38",
+      "bodyHash": "49dd82d2c28ac2bd8ee596ba7d55b0abf98b560d2a593c6f70f1550b454dffb6"
     },
     {
       "id": "postmodelswitch-input",
-      "hash": "ba7505376c7365273c6b32d459ce7a7a84f4d948abdfd1ac91ae80c6def2dc44"
+      "hash": "ba7505376c7365273c6b32d459ce7a7a84f4d948abdfd1ac91ae80c6def2dc44",
+      "bodyHash": "f8c4c3c783e02058efd3e0f276780036f6cab63de16ca0cb338a5daaaa91b650"
     },
     {
       "id": "postmodelswitch-decision-control",
-      "hash": "f3c311944587dfba73da82e2ee08ac4b5f78ba5725da23e92cb4fa353d0cd720"
+      "hash": "f3c311944587dfba73da82e2ee08ac4b5f78ba5725da23e92cb4fa353d0cd720",
+      "bodyHash": "afe6c18f9f517666150cc086c519399d71c42d466f88e05b57506623e106b225"
     },
     {
       "id": "sessionend",
-      "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef"
+      "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef",
+      "bodyHash": "28f6b00cf8b16d2f8f088cc7827e0a5a73fdf702ab56796cdd96385159da8eae"
     },
     {
       "id": "sessionend-input",
-      "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
+      "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03",
+      "bodyHash": "d27d5aaf958206271fce4b971f320cbcef99224c587416b7f826ff2d7b5a9369"
     },
     {
       "id": "elicitation",
-      "hash": "1e371b483aa2c0b5cdba27bf95419cbf3a5cc437486095bbe26290a2c3c2979c"
+      "hash": "1e371b483aa2c0b5cdba27bf95419cbf3a5cc437486095bbe26290a2c3c2979c",
+      "bodyHash": "d8cce009614c1355ba663bc5de232d44f4fc28a89e854bc0e43167814fce8b02"
     },
     {
       "id": "elicitation-input",
-      "hash": "fa83fe76593df7123784c5b3a422eddcbba2d7f4fdd3e8b4cb783e6d6614b82b"
+      "hash": "fa83fe76593df7123784c5b3a422eddcbba2d7f4fdd3e8b4cb783e6d6614b82b",
+      "bodyHash": "478d1bc20ed7afbadd9d57dae5ef9389660212ba215565c5ec5ecb970cf6d9dc"
     },
     {
       "id": "elicitation-output",
-      "hash": "ef443c7bf16e75dad6412ec96192195afad7772b5c7966836d49bdccd05a0955"
+      "hash": "ef443c7bf16e75dad6412ec96192195afad7772b5c7966836d49bdccd05a0955",
+      "bodyHash": "20695b96327d1e708218f4d361f21def0f24f134cd978e71db7afe136015cc7c"
     },
     {
       "id": "other-ways-to-decline-an-elicitation",
-      "hash": "89ecb6b8ee0a389e97bbdd8aa9eab49a98018509830b7c121775cf988adfb29e"
+      "hash": "89ecb6b8ee0a389e97bbdd8aa9eab49a98018509830b7c121775cf988adfb29e",
+      "bodyHash": "47ee9cad4396b56a515f90ff0dafa76524e20be352fa91c3c3d4dd516cedfe22"
     },
     {
       "id": "answer-a-form-request-from-a-script",
-      "hash": "13ac94ecc4deb31c07f20fc0977054c7a13f2aa5c81f606461bc12ea5012a0c5"
+      "hash": "13ac94ecc4deb31c07f20fc0977054c7a13f2aa5c81f606461bc12ea5012a0c5",
+      "bodyHash": "a89380fecdbe1b8d0dc80b2a3c7e0dfe1ad29b14f1ec2e1b6c7389486817a308"
     },
     {
       "id": "elicitationresult",
-      "hash": "8fc2966ceda1074169d83a8e2e76eca7349a7ad08a253bd03289f2d7b3930fd3"
+      "hash": "8fc2966ceda1074169d83a8e2e76eca7349a7ad08a253bd03289f2d7b3930fd3",
+      "bodyHash": "3ac20d659fd80e39b7ebfb8fcc9df05c0a5582eb5e439b4211aeac85f7700968"
     },
     {
       "id": "elicitationresult-input",
-      "hash": "f8aeaaa7caf68729cb06ea47669185ac6aa0593eec18fddde7862cb710279d85"
+      "hash": "f8aeaaa7caf68729cb06ea47669185ac6aa0593eec18fddde7862cb710279d85",
+      "bodyHash": "ec6acb681795921a42b65016de222389d8bffab7657cba0e64aa3b9b27e89bae"
     },
     {
       "id": "elicitationresult-output",
-      "hash": "11991a0816f5a01d27f18f2732eb499a358fb5f60faf12d6d91e272cf58fa976"
+      "hash": "11991a0816f5a01d27f18f2732eb499a358fb5f60faf12d6d91e272cf58fa976",
+      "bodyHash": "9001f9dc23f42a3f673414d6d37b0a2c98346f82dde0b4ca65452ae454fbcdb9"
     },
     {
       "id": "prompt-based-hooks",
-      "hash": "2cbc1bf7b0f0d5412128234c17ef6f1f4a5aa34d66574aec1b3348930d6564c3"
+      "hash": "2cbc1bf7b0f0d5412128234c17ef6f1f4a5aa34d66574aec1b3348930d6564c3",
+      "bodyHash": "bd63f90cda0fa5117ea57ef4e44c42803c9707610a3fc1d571f64057a8748677"
     },
     {
       "id": "how-prompt-based-hooks-work",
-      "hash": "da78855b18da72c42586a0cb945ec6fec469a8ac664f9505d720042c1f7ff45a"
+      "hash": "da78855b18da72c42586a0cb945ec6fec469a8ac664f9505d720042c1f7ff45a",
+      "bodyHash": "cbef2a6fa460b1fced00e253835e754cd8d7f28dab7c5536c58408a8a341b300"
     },
     {
       "id": "prompt-hook-configuration",
-      "hash": "8b686b0fc223bc121e59dc5ff4f4a431c05895f6c7317bb2f4f5528d553417c6"
+      "hash": "8b686b0fc223bc121e59dc5ff4f4a431c05895f6c7317bb2f4f5528d553417c6",
+      "bodyHash": "93b48bfee9c692ad75c1499e2ffa832f2bce7c9f3de94930096d6150105553ca"
     },
     {
       "id": "response-schema",
-      "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+      "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054",
+      "bodyHash": "db53f4d55bb743f832925cfbca9b3e365ecd0fe60d5ce906119f4c516b880197"
     },
     {
       "id": "check-multiple-conditions-before-stopping",
-      "hash": "0d1b47661a1d95cce2f7eb4efbdfc56f298375867064ded79aa8ad7091a1c49f"
+      "hash": "0d1b47661a1d95cce2f7eb4efbdfc56f298375867064ded79aa8ad7091a1c49f",
+      "bodyHash": "0cb59560f8d8b479e850ffebd3f3e11690a2dbc93a47f638608822d836e8fe4e"
     },
     {
       "id": "agent-based-hooks",
-      "hash": "6f955b8187790807b6df275344be5859c1c774a8f5a3906df9f6bfe6b2d6a92a"
+      "hash": "6f955b8187790807b6df275344be5859c1c774a8f5a3906df9f6bfe6b2d6a92a",
+      "bodyHash": "7d0127692910d3fcbae861f22a99b0089d85084d917dda6aee1d84a15248d7a5"
     },
     {
       "id": "how-agent-hooks-work",
-      "hash": "f289aed3afd8e7185c14678953d1085f22cf861f8781e64edcc79b1ac5cb9adc"
+      "hash": "f289aed3afd8e7185c14678953d1085f22cf861f8781e64edcc79b1ac5cb9adc",
+      "bodyHash": "5743502fd8daf7ff446ddc7cc2d62b63ae58c67b69fda5a820e3b29a2b2ad465"
     },
     {
       "id": "agent-hook-configuration",
-      "hash": "90b75f3c85bf43a3dd0486077ce95ed9ebc254876bc94f171e113459cfe930b3"
+      "hash": "90b75f3c85bf43a3dd0486077ce95ed9ebc254876bc94f171e113459cfe930b3",
+      "bodyHash": "4ef68644205bf27add9071826815cfe834c67cb8ea9448b32c18173186abddda"
     },
     {
       "id": "run-hooks-in-the-background",
-      "hash": "7b66770780396f453654f868eea190b035dc4271882b6ff3feafd528ba9a582f"
+      "hash": "7b66770780396f453654f868eea190b035dc4271882b6ff3feafd528ba9a582f",
+      "bodyHash": "db567fbc4e8ba033ec83680fdaa95c7d073f5abcf3f805767939b8987d1b529c"
     },
     {
       "id": "configure-an-async-hook",
-      "hash": "be3065cb0690ded4c7196acc84c4be91ead707a5a6cae30af02e5c1ba309337d"
+      "hash": "be3065cb0690ded4c7196acc84c4be91ead707a5a6cae30af02e5c1ba309337d",
+      "bodyHash": "02fca4c9767beebb0fa3bcba1297a9a6eab3370da03db32196fa3a1ae6787b2e"
     },
     {
       "id": "how-async-hooks-execute",
-      "hash": "fef31d465cac6072a8dc5a4899c34e07184cf6c36b58855f47adb2bb99e5885e"
+      "hash": "5558cece94a9f61ddd90a91aa20320858ecf5fad3adfe8a0bb0668290fd4fcea",
+      "bodyHash": "77500a77be6da79ad201b5ce00d426d8fae02d16f55eb380a127c5224ce623b8"
     },
     {
       "id": "run-tests-after-file-changes",
-      "hash": "9bc0580c7df7e34af262185d0cbb15ece3940bee442db746be08554bcb57f79d"
+      "hash": "9bc0580c7df7e34af262185d0cbb15ece3940bee442db746be08554bcb57f79d",
+      "bodyHash": "95ab9309653360e822b1dd062216dd52b06d214349610aabe2e9c82ab4d9570e"
     },
     {
       "id": "limitations",
-      "hash": "c3bd678b7eceaea3ae9cd10b27318b77f86e373856979b0275b1771362adaa4f"
+      "hash": "c3bd678b7eceaea3ae9cd10b27318b77f86e373856979b0275b1771362adaa4f",
+      "bodyHash": "f6115d85657c8e4f07aeded1a8f8b78c636eab7135d4c57498626d4deda669ee"
     },
     {
       "id": "security-considerations",
@@ -652,23 +818,28 @@
     },
     {
       "id": "disclaimer",
-      "hash": "ec4c87a681f5047c14cdfbe41ed165054ad95892bb0962fd2f5b88761080d05c"
+      "hash": "ec4c87a681f5047c14cdfbe41ed165054ad95892bb0962fd2f5b88761080d05c",
+      "bodyHash": "e67ca8a4e6cafbbb60acc7e84de1ab708c5a2c09a8ed7206e8b9126076a7f6b1"
     },
     {
       "id": "workspace-trust",
-      "hash": "0c020c6a9188b86f027a94c136720af98d831a2a00eac35be07aa6c4ca3f4d6e"
+      "hash": "0c020c6a9188b86f027a94c136720af98d831a2a00eac35be07aa6c4ca3f4d6e",
+      "bodyHash": "768b0c723766d023ffc831a35bc3cc3f807f92aa7345c263defaac749eef23b3"
     },
     {
       "id": "security-best-practices",
-      "hash": "1e9c34afa1835e410b899e5bd3084d8b410998c5abefe69cc396109f89202878"
+      "hash": "1e9c34afa1835e410b899e5bd3084d8b410998c5abefe69cc396109f89202878",
+      "bodyHash": "0b6b53aece0000da1eb50a114c464b4d4a985320d4dc931f4828040281bdcecf"
     },
     {
       "id": "windows-powershell-tool",
-      "hash": "a8d8d0cf696e9590a4bf712072cea52147f8c779c460efd53304772ad87bb510"
+      "hash": "a8d8d0cf696e9590a4bf712072cea52147f8c779c460efd53304772ad87bb510",
+      "bodyHash": "36ae88733096d275d74808ebdce7a694cb403c1f61d439a28c43d913d01bcd2f"
     },
     {
       "id": "debug-hooks",
-      "hash": "d2878ac723ae3d867e78c60ed73a3acc8ecb49a27d0b95495071e3c9f124650f"
+      "hash": "1447eaf4a2010e99afca2a527e40a3d52a85fe3cf346d30385c7f12a85c1f06d",
+      "bodyHash": "295811462ce155a328faa7c4d00b5d0ba241ec3bccf9a8cb5a4dbbe102ec8134"
     }
   ],
   "sources": [
@@ -687,8 +858,8 @@
     {
       "heading": "Reference scripts by path",
       "id": "reference-scripts-by-path",
-      "hash": "c625ac366f8dba714979c7bf6a35b5cf908b7fb28cb553415b4ed03f20ef6b74",
-      "text": "### Reference scripts by path\n\nUse these placeholders to reference hook scripts relative to the project or plugin root, regardless of the working directory when the hook runs:\n\n* `${CLAUDE_PROJECT_DIR}`: the project root where the session started. Claude Code also sets this variable in the environment of [stdio MCP servers](/docs/en/mcp#option-3-add-a-local-stdio-server) and plugin LSP servers.\n* `${CLAUDE_PLUGIN_ROOT}`: the plugin's installation directory, for scripts bundled with a [plugin](/docs/en/plugins/overview). See [plugin environment variables](/docs/en/plugins/manifest-reference#environment-variables) for how the path behaves across updates.\n* `${CLAUDE_PLUGIN_DATA}`: the plugin's [persistent data directory](/docs/en/plugins/components#path-variables-and-persistent-data), for dependencies and state that should survive plugin updates.\n\n<Note>\n  **Worktrees are different.** If Claude enters a [worktree](/docs/en/worktrees) during the session, Claude Code keeps `${CLAUDE_PROJECT_DIR}` where it was and passes the worktree path to your hooks a different way:\n\n  * **`${CLAUDE_PROJECT_DIR}` stays put**: it still points at the project root where the session started, so a command such as `${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh` still runs the script in the main checkout.\n  * **`cwd` follows Claude**: the `cwd` field in the hook's [input JSON](#common-input-fields) is the worktree root after Claude enters a worktree, and the new directory after Claude runs `cd`. Read it when a hook needs to know which directory Claude is working in.\n</Note>\n\nPrefer [exec form](#exec-form-and-shell-form) for any hook that references a path placeholder. In shell form, wrap each placeholder in double quotes.\n\n<Tabs>\n  <Tab title=\"Project scripts\">\n    This example uses `${CLAUDE_PROJECT_DIR}` to run a style checker from the project's `.claude/hooks/` directory after any `Write` or `Edit` tool call:\n\n    ```json theme={null}\n    {\n      \"hooks\": {\n        \"PostToolUse\": [\n          {\n            \"matcher\": \"Write|Edit\",\n            \"hooks\": [\n              {\n                \"type\": \"command\",\n                \"command\": \"${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh\",\n                \"args\": []\n              }\n            ]\n          }\n        ]\n      }\n    }\n    ```\n  </Tab>\n\n  <Tab title=\"Plugin scripts\">\n    Define plugin hooks in `hooks/hooks.json` with an optional top-level `description` field. When a plugin is enabled, its hooks merge with your user and project hooks.\n\n    This example runs a formatting script bundled with the plugin:\n\n    ```json theme={null}\n    {\n      \"description\": \"Automatic code formatting\",\n      \"hooks\": {\n        \"PostToolUse\": [\n          {\n            \"matcher\": \"Write|Edit\",\n            \"hooks\": [\n              {\n                \"type\": \"command\",\n                \"command\": \"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\",\n                \"args\": [],\n                \"timeout\": 30\n              }\n            ]\n          }\n        ]\n      }\n    }\n    ```\n\n    See the [plugin components reference](/docs/en/plugins/components#hooks) for details on creating plugin hooks.\n  </Tab>\n</Tabs>"
+      "hash": "73d3a437a1f052d0656a5575974552a41eef3368efef087f6c4c1be8486146c1",
+      "text": "### Reference scripts by path\n\nUse these placeholders to reference hook scripts relative to the project or plugin root, regardless of the working directory when the hook runs:\n\n* `${CLAUDE_PROJECT_DIR}`: the project root where the session started. Claude Code also sets this variable in the environment of [stdio MCP servers](/docs/en/mcp#option-3-add-a-local-stdio-server) and plugin LSP servers.\n* `${CLAUDE_PLUGIN_ROOT}`: the plugin's installation directory, for scripts bundled with a [plugin](/docs/en/plugins/overview). See [plugin environment variables](/docs/en/plugins/manifest-reference#environment-variables) for how the path behaves across updates.\n* `${CLAUDE_PLUGIN_DATA}`: the plugin's [persistent data directory](/docs/en/plugins/components#path-variables-and-persistent-data), for dependencies and state that should survive plugin updates.\n\n<Note>\n  **Worktrees are different.** If Claude enters a [worktree](/docs/en/worktrees) during the session, Claude Code keeps `${CLAUDE_PROJECT_DIR}` where it was and passes the worktree path to your hooks a different way:\n\n  * **`${CLAUDE_PROJECT_DIR}` stays put**: it still points at the project root where the session started, so a command such as `${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh` still runs the script in the main checkout.\n  * **`cwd` follows Claude**: the `cwd` field in the hook's [input JSON](#common-input-fields) is the worktree root after Claude enters a worktree, and the new directory after Claude runs `cd`. Read it when a hook needs to know which directory Claude is working in.\n\n  For a worktree session that you start from the desktop app, see [What worktrees share with the main checkout](/docs/en/worktrees#what-worktrees-share-with-the-main-checkout) for where `${CLAUDE_PROJECT_DIR}` points.\n</Note>\n\nPrefer [exec form](#exec-form-and-shell-form) for any hook that references a path placeholder. In shell form, wrap each placeholder in double quotes.\n\n<Tabs>\n  <Tab title=\"Project scripts\">\n    This example uses `${CLAUDE_PROJECT_DIR}` to run a style checker from the project's `.claude/hooks/` directory after any `Write` or `Edit` tool call:\n\n    ```json theme={null}\n    {\n      \"hooks\": {\n        \"PostToolUse\": [\n          {\n            \"matcher\": \"Write|Edit\",\n            \"hooks\": [\n              {\n                \"type\": \"command\",\n                \"command\": \"${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh\",\n                \"args\": []\n              }\n            ]\n          }\n        ]\n      }\n    }\n    ```\n  </Tab>\n\n  <Tab title=\"Plugin scripts\">\n    Define plugin hooks in `hooks/hooks.json` with an optional top-level `description` field. When a plugin is enabled, its hooks merge with your user and project hooks.\n\n    This example runs a formatting script bundled with the plugin:\n\n    ```json theme={null}\n    {\n      \"description\": \"Automatic code formatting\",\n      \"hooks\": {\n        \"PostToolUse\": [\n          {\n            \"matcher\": \"Write|Edit\",\n            \"hooks\": [\n              {\n                \"type\": \"command\",\n                \"command\": \"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\",\n                \"args\": [],\n                \"timeout\": 30\n              }\n            ]\n          }\n        ]\n      }\n    }\n    ```\n\n    See the [plugin components reference](/docs/en/plugins/components#hooks) for details on creating plugin hooks.\n  </Tab>\n</Tabs>"
     },
     {
       "heading": "Exec form and shell form",

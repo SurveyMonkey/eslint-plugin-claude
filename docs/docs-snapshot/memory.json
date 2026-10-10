@@ -4,167 +4,208 @@
   "blocks": [
     {
       "id": "how-claude-remembers-your-project",
-      "hash": "00f7c2981a4b067bcf62e0759d5c8556659308e792cd8495d3b6f933d96ba865"
+      "hash": "00f7c2981a4b067bcf62e0759d5c8556659308e792cd8495d3b6f933d96ba865",
+      "bodyHash": "de35a71291233aceaaa23cb40bba25bb2ab075ad6dbfaeb13e938d12a8001d0f"
     },
     {
       "id": "claude-md-vs-auto-memory",
-      "hash": "db5ab8dc4707bb4241addb5a0959bdb8a9b9aca28160f8aa867674b183eaad10"
+      "hash": "db5ab8dc4707bb4241addb5a0959bdb8a9b9aca28160f8aa867674b183eaad10",
+      "bodyHash": "04e1f1af3bf24e26c65a0e6c39cbb12fc37640662b2f5b92c3cf203d73f374ab"
     },
     {
       "id": "claude-md-files",
-      "hash": "768fefb4032e74cd243d13afd3208605792a7c4f04c6b93a261b6d1ce6ca76c7"
+      "hash": "768fefb4032e74cd243d13afd3208605792a7c4f04c6b93a261b6d1ce6ca76c7",
+      "bodyHash": "b3815bcbac56feedb043d4854f107849ee7da5b9361b01a337e287453f1ca801"
     },
     {
       "id": "when-to-add-to-claude-md",
-      "hash": "06566c0d4316d723c30e526170d1eb6e6e33abb3d8f69c129b96cd42f2b7ccc1"
+      "hash": "06566c0d4316d723c30e526170d1eb6e6e33abb3d8f69c129b96cd42f2b7ccc1",
+      "bodyHash": "d842a270922bff4825c9d67581145607de0d9ac015ac09d9e638312f5793fb4b"
     },
     {
       "id": "choose-where-to-put-claude-md-files",
-      "hash": "2a58e63019788e13bc459acc9ce681f4530a1018ad2d3b61fff0787a5267b126"
+      "hash": "2a58e63019788e13bc459acc9ce681f4530a1018ad2d3b61fff0787a5267b126",
+      "bodyHash": "e21094210cf47c5cf978ed0b3a898d04404220e20e7ddc182a5fb0db0a1e838b"
     },
     {
       "id": "set-up-a-project-claude-md",
-      "hash": "10de23d1ced53e2625e0dbf85454719b8e62ac90dc2feb5715f5dadf1fb3a76b"
+      "hash": "10de23d1ced53e2625e0dbf85454719b8e62ac90dc2feb5715f5dadf1fb3a76b",
+      "bodyHash": "894fb0ce5a6f9a7e627e4c6f19e6939eaee86d72ae6cbddb21d2af9aaa49de90"
     },
     {
       "id": "write-effective-instructions",
-      "hash": "718f387c95271b74a191a607263f01cf7a88e5948098c801a525da993f7c23e7"
+      "hash": "718f387c95271b74a191a607263f01cf7a88e5948098c801a525da993f7c23e7",
+      "bodyHash": "fe022cfffef71ccdb1e94377f59e232b55ef0a0b9106a051e89d8aa2e89bec72"
     },
     {
       "id": "audit-your-instruction-files",
-      "hash": "b737e6a31f9b759fadc90220f16bdd549ec5f4eb603dfcd5865c57d46a184791"
+      "hash": "b737e6a31f9b759fadc90220f16bdd549ec5f4eb603dfcd5865c57d46a184791",
+      "bodyHash": "6dd959701d99876ad76eb125868b44cb7436dd465ad854fda681aef4a483b18d"
     },
     {
       "id": "import-additional-files",
-      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b",
+      "bodyHash": "8e889aa3e4db5f9110674deac600597919c59f0947a4b4b06c6223cf83e6ac97"
     },
     {
       "id": "how-claude-md-files-load",
-      "hash": "49f503e30c5544e6f39be3bcf65860398560e8e9524fe85577077a2e8da3a7ed"
+      "hash": "49f503e30c5544e6f39be3bcf65860398560e8e9524fe85577077a2e8da3a7ed",
+      "bodyHash": "f7ebf98c0ec7e54a3723fd9f7b58607c9752f4dcd42fd30571ca1a87b7317003"
     },
     {
       "id": "load-from-additional-directories",
-      "hash": "1e00de944a1469518ce5adfebdb51743c9af2fd878d1601a613391de063c2f7d"
+      "hash": "1e00de944a1469518ce5adfebdb51743c9af2fd878d1601a613391de063c2f7d",
+      "bodyHash": "3578081c9f72e7f8984fe0920089a2d67e5d7a74fd8bc7ee7fddbc7f87609fdd"
     },
     {
       "id": "organize-rules-with--clauderules",
-      "hash": "dd0f29f87815e4b30c134ad58c126da01e2ff52a7e178d9a0f7e1cf4d5472bd4"
+      "hash": "dd0f29f87815e4b30c134ad58c126da01e2ff52a7e178d9a0f7e1cf4d5472bd4",
+      "bodyHash": "62fee884cbb929604f549cf372a2ad7eead91754eeb771e71662c6a9160e2044"
     },
     {
       "id": "set-up-rules",
-      "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc"
+      "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc",
+      "bodyHash": "8d90ab5601639894a5f2af8aa080908e8bf97d8191a0c472b42dd9fc527084d3"
     },
     {
       "id": "path-specific-rules",
-      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
+      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202",
+      "bodyHash": "5fe225e8d53cf0d648a9c757e9434c556a8ec57009596ac35a18d65a1d7e542d"
     },
     {
       "id": "rules-frontmatter-reference",
-      "hash": "3b8b3279bd5f63ef3766da20a8bc542fee818f1a35608c6202565cc12eb56df8"
+      "hash": "3b8b3279bd5f63ef3766da20a8bc542fee818f1a35608c6202565cc12eb56df8",
+      "bodyHash": "c41ab3d01f50849ff8333f336ef8844cd0ec8bcaac308ba597e8a4cd07f6eb69"
     },
     {
       "id": "share-rules-across-projects-with-symlinks",
-      "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
+      "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f",
+      "bodyHash": "b557dfb85df0dbd3003c1ad8af4fcff862a317c27949125cae4d7e687303cb00"
     },
     {
       "id": "user-level-rules",
-      "hash": "6ac98988bffc299e5fa7e0a7a7b9a384b4b7b139f14d4976558d44ab86b6bd35"
+      "hash": "6ac98988bffc299e5fa7e0a7a7b9a384b4b7b139f14d4976558d44ab86b6bd35",
+      "bodyHash": "0fb312a81eebccd9236a0cdcfac72f1698770dcee340fdbf3bb4fd3324a91a14"
     },
     {
       "id": "manage-claude-md-for-large-teams",
-      "hash": "f8ece28c6edc4e7f273e2e94fdb827469823f1f8d85a569b35daf9b375f98686"
+      "hash": "f8ece28c6edc4e7f273e2e94fdb827469823f1f8d85a569b35daf9b375f98686",
+      "bodyHash": "59a52ba19ad5dc02a7a2c6c39b6f17388263c57c5672fd75b6f7d8ebf5d521ea"
     },
     {
       "id": "deploy-organization-wide-claude-md",
-      "hash": "5e44bd90b308fecda9d50b48c93b07cdaf4d55edc9851f1fb62e425ffd0688d4"
+      "hash": "5e44bd90b308fecda9d50b48c93b07cdaf4d55edc9851f1fb62e425ffd0688d4",
+      "bodyHash": "69f0907967d7cfc33dcd430cb8868d3a72a2e8a0d94fd6483da1440f2972535b"
     },
     {
       "id": "exclude-specific-claude-md-files",
-      "hash": "76fcc9585d73ea229ea17ef0d5899a380579bc1de1452fc724276b4bd073634d"
+      "hash": "76fcc9585d73ea229ea17ef0d5899a380579bc1de1452fc724276b4bd073634d",
+      "bodyHash": "06a4483c958aabb81104defa430422975461ee4fe2a80065f65876d0ed2cbbbf"
     },
     {
       "id": "agents-md",
-      "hash": "e1868b54531cfd99fe938c582b0b9c0f5088029bb2d5871b5640533b85f68df2"
+      "hash": "e1868b54531cfd99fe938c582b0b9c0f5088029bb2d5871b5640533b85f68df2",
+      "bodyHash": "73fab6638c56970dd9014123fdd791867eaca44cb2076b32e71e544071f6da30"
     },
     {
       "id": "when-claude-code-reads-agents-md",
-      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
+      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0",
+      "bodyHash": "8f342aa1886005229f4bc28151923d45280dcb38dec02a66435d33b56778d40f"
     },
     {
       "id": "choose-which-instruction-files-load",
-      "hash": "a5bf28053c790e1f870993d51ed44877e47e0528db036df620c2a540fdd9cfa7"
+      "hash": "a5bf28053c790e1f870993d51ed44877e47e0528db036df620c2a540fdd9cfa7",
+      "bodyHash": "8190e7ee47df53a95dc523e96694a793ad332b0afde257fe3db77a9fd1065a04"
     },
     {
       "id": "when-agents-md-support-is-unavailable",
-      "hash": "32bc8dbe852b3fc845d1950339bee84785708256e916340e307e0a32323bcf9f"
+      "hash": "32bc8dbe852b3fc845d1950339bee84785708256e916340e307e0a32323bcf9f",
+      "bodyHash": "cd6e2f7066c0e448020fbddf506e520dc27c3eb6d7c987855decbb538b3bc569"
     },
     {
       "id": "where-agents-md-differs-from-claude-md",
-      "hash": "f04688bc74ae6de9f4c2005147dfa1eb60d18bbbab2b2613548f2071c9635f6b"
+      "hash": "f04688bc74ae6de9f4c2005147dfa1eb60d18bbbab2b2613548f2071c9635f6b",
+      "bodyHash": "7a92f5eaa3d14b83bf36d862534ce984ab95e85a5e79f9ef82d9c03961a21364"
     },
     {
       "id": "remove-an-earlier-agents-md-workaround",
-      "hash": "e57233c8a4fa29f7d36dbdf04038688e32b84b255afa62f61d709ec6720d3339"
+      "hash": "e57233c8a4fa29f7d36dbdf04038688e32b84b255afa62f61d709ec6720d3339",
+      "bodyHash": "8617d27638cc64951f5f7864eb759114a21fc36fc09f98105de2082ec5804a76"
     },
     {
       "id": "share-one-file-with-other-coding-tools",
-      "hash": "3186e5008a85b3edb177e7fe216e528bfd9e3c4dd1efceef985e709e266f713a"
+      "hash": "3186e5008a85b3edb177e7fe216e528bfd9e3c4dd1efceef985e709e266f713a",
+      "bodyHash": "5fc47a2b284539c077683373f42be3110605a5cf121f97da053a5f884265de7d"
     },
     {
       "id": "migrate-instructions-from-other-tools",
-      "hash": "cc4305690f7c55c2e0b9bf25c1fe5f02d88e8419096745d342266a77370ba356"
+      "hash": "cc4305690f7c55c2e0b9bf25c1fe5f02d88e8419096745d342266a77370ba356",
+      "bodyHash": "336dbe7c64d07f94ca561cc1707faabb8763c92554d1417cf5d473f020c14a29"
     },
     {
       "id": "auto-memory",
-      "hash": "22465dc6f3e06d8f7d854e9f4e827789b2e7dd43c156fa6c75b49ec34adb7641"
+      "hash": "22465dc6f3e06d8f7d854e9f4e827789b2e7dd43c156fa6c75b49ec34adb7641",
+      "bodyHash": "d7dc306132335f2a3f76479fad161fe4e7b5420ac44580f1df1899f4a57c7e81"
     },
     {
       "id": "enable-or-disable-auto-memory",
-      "hash": "f479bda21432f5cedd2dadabe135adf96536aad96e7465a6a144c852281a4ddb"
+      "hash": "f479bda21432f5cedd2dadabe135adf96536aad96e7465a6a144c852281a4ddb",
+      "bodyHash": "2991a878c4296bc558bb18decdae24d7c16e1dea589d13ea90f184d2fa70c882"
     },
     {
       "id": "storage-location",
-      "hash": "a02cbbf4972edb765999ac55fe61c7815d720a95433b88793297a83938a38b7e"
+      "hash": "a02cbbf4972edb765999ac55fe61c7815d720a95433b88793297a83938a38b7e",
+      "bodyHash": "4441347a8e305d00d8b13a08efe0fa8f5029842cdec51dc56da2dd91ee6ca442"
     },
     {
       "id": "how-it-works",
-      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd",
+      "bodyHash": "61b02a8f7f7d6b5b3e5ebeec77a74d940118f445f3c7558cbdeadc207ae9bccf"
     },
     {
       "id": "audit-and-edit-your-memory",
-      "hash": "2a828881563ba9f920cacd3f23152833e7f17ed04da842842835bbe2ff6ce93d"
+      "hash": "2a828881563ba9f920cacd3f23152833e7f17ed04da842842835bbe2ff6ce93d",
+      "bodyHash": "2d242a82dfe4d9ce6d0536499abf10939dd4bb61fa2d40f3e5f59a9f3a1b9fd6"
     },
     {
       "id": "view-and-edit-with-memory",
-      "hash": "403ed564cc718fcfd4162507b4e784883d4fae5c138eaa5d315cc6d6464981ba"
+      "hash": "403ed564cc718fcfd4162507b4e784883d4fae5c138eaa5d315cc6d6464981ba",
+      "bodyHash": "8fb6e997838c0a3e8409a871e328c517596d6ae1bd49d095e51258c600d9fea3"
     },
     {
       "id": "troubleshoot-memory-issues",
-      "hash": "a11e62722a9328419d3e436adfd6c22bd81c62a852e2d22a99a4455cc46c058a"
+      "hash": "a11e62722a9328419d3e436adfd6c22bd81c62a852e2d22a99a4455cc46c058a",
+      "bodyHash": "63cc81a75c956cc630ae7ed099fc1e46fc5bffe5c34263f101713fb1cf23806b"
     },
     {
       "id": "claude-isnt-following-my-claude-md",
-      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
+      "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724",
+      "bodyHash": "e2b3293fbb56dfa1723dd49f0ca4957dc870c9853c823a9d2d26a1c0b0bfdf4d"
     },
     {
       "id": "my-agents-md-isnt-loading",
-      "hash": "31c79d57cf7c0fd64581e2e2a8f159a21a8cf240c56f916d0ea28cba7187416f"
+      "hash": "31c79d57cf7c0fd64581e2e2a8f159a21a8cf240c56f916d0ea28cba7187416f",
+      "bodyHash": "71af4cd2964ce2eef72657c4769be134c215a8e22fed03f6b417d1457ab13cbf"
     },
     {
       "id": "i-dont-know-what-auto-memory-saved",
-      "hash": "df3b731c90d04fa35c7c9cb861de53a0f971d8f64a1f56f3a4b3ae38d4aca246"
+      "hash": "df3b731c90d04fa35c7c9cb861de53a0f971d8f64a1f56f3a4b3ae38d4aca246",
+      "bodyHash": "b4124b7758b00f9ddd115d0d7e574d776c50c653a14f63f182ca3dd107c68e8c"
     },
     {
       "id": "my-claude-md-is-too-large",
-      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f",
+      "bodyHash": "86eecbd52dac14b625a2fc48293fd3a2f03e1bddae513265c42aa321f7081061"
     },
     {
       "id": "instructions-seem-lost-after-compact",
-      "hash": "422935595036bfe3b9507e423419c7cc619bf767cd92ee908ce50cf0f41d530e"
+      "hash": "422935595036bfe3b9507e423419c7cc619bf767cd92ee908ce50cf0f41d530e",
+      "bodyHash": "906ae715f2874f88389619afe1d85cfe864590df13fcc3c0d9ea9ba99dc2d836"
     },
     {
       "id": "related-resources",
-      "hash": "f3edb3355320c16d5945f0d360411c3f89a5c0ff57469c1bd472576d3d7ee396"
+      "hash": "f3edb3355320c16d5945f0d360411c3f89a5c0ff57469c1bd472576d3d7ee396",
+      "bodyHash": "98a6ff160184978056c42380f992748b86a6740a696d0d7c15254eaaab8ca91f"
     }
   ],
   "sources": [

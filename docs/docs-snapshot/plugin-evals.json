@@ -4,223 +4,278 @@
   "blocks": [
     {
       "id": "test-plugins-with-evals",
-      "hash": "8b182d9407e4ed28909b97839d09aaebdc514db13fcf92b3aece58663d4bac53"
+      "hash": "8b182d9407e4ed28909b97839d09aaebdc514db13fcf92b3aece58663d4bac53",
+      "bodyHash": "b245e3dfe7d0f63a511673c228446bcf01b716471057ee76f0041501b40df3ee"
     },
     {
       "id": "requirements",
-      "hash": "e110c8794e1d3ef9a7e475b66b59a28cd9a15c283ebb611b9f6efd2347414ddd"
+      "hash": "e110c8794e1d3ef9a7e475b66b59a28cd9a15c283ebb611b9f6efd2347414ddd",
+      "bodyHash": "0ebe0d9011da7ef07f27c86c096e7377e6329e5d41da6287006beb1f13cd9ad9"
     },
     {
       "id": "how-an-eval-run-works",
-      "hash": "f5401980f6cca3ab96048ecdecc92301facc61f1e6a74b7d6f722edff0d43121"
+      "hash": "f5401980f6cca3ab96048ecdecc92301facc61f1e6a74b7d6f722edff0d43121",
+      "bodyHash": "0e7e945f4014a76024284edaa63ab3085ab4825b9905d8ffb6f7b7afde993395"
     },
     {
       "id": "what-happens-in-a-run",
-      "hash": "319d84834d73db64e9abaf78b0ee9bcb35a780d79dfabd702d788ccaf16f742b"
+      "hash": "319d84834d73db64e9abaf78b0ee9bcb35a780d79dfabd702d788ccaf16f742b",
+      "bodyHash": "3d385895610d5661d3d640dae4cd06b2e9748dc4c4bfb2fa464997e87cff4cbc"
     },
     {
       "id": "how-a-case-is-scored",
-      "hash": "4ab001240a3899137236f94f3dfb14bcfb134379b4eb6d6827675643dda4a148"
+      "hash": "4ab001240a3899137236f94f3dfb14bcfb134379b4eb6d6827675643dda4a148",
+      "bodyHash": "b53d216b56896fee2632a744b905e4409dcc3db4b6d91757c68f137396e8c788"
     },
     {
       "id": "the-no-plugin-baseline",
-      "hash": "e1cb28f4a76b1b16071a703ad330d9b40b378a684d075df6026b1166f163aa28"
+      "hash": "e1cb28f4a76b1b16071a703ad330d9b40b378a684d075df6026b1166f163aa28",
+      "bodyHash": "8185f7113f76655913d266f406cab0f05027b07c1a6bbeb6e871b34021c0161e"
     },
     {
       "id": "create-your-first-eval-suite",
-      "hash": "403ee3dd2e0c55e4aa08bc11b4d3488ad30d99183a59230d81337d33920bebb3"
+      "hash": "403ee3dd2e0c55e4aa08bc11b4d3488ad30d99183a59230d81337d33920bebb3",
+      "bodyHash": "9e8d071b23211a37302b1d4e4af751fc35c957bb9b7385cf14d3cfc12323eb03"
     },
     {
       "id": "write-and-refine-cases",
-      "hash": "0ac631fa373295888f65c76a9d488b6aef7891ce7a67e988c11fda2a5af0d9ce"
+      "hash": "0ac631fa373295888f65c76a9d488b6aef7891ce7a67e988c11fda2a5af0d9ce",
+      "bodyHash": "b229d833d0d2d9d4a912221ac7d1ebf789438aa68bbfe14dd0591121c8cd1997"
     },
     {
       "id": "write-a-case-manually",
-      "hash": "722876c08cec28341e7fffc3db20fe31ec7ac8a7b1d55e40cf8bc0c2a361f816"
+      "hash": "722876c08cec28341e7fffc3db20fe31ec7ac8a7b1d55e40cf8bc0c2a361f816",
+      "bodyHash": "a8de4a1c92a07301b0982deae0b9141973a06090ca4ff7f05170fbd4bee81e87"
     },
     {
       "id": "set-run-limits-and-tools-in-prompt-md",
-      "hash": "76b01a44ca6e3cfe1a0879f6e0916a94307de96689ec93fe1ac9edfb9dea1edd"
+      "hash": "76b01a44ca6e3cfe1a0879f6e0916a94307de96689ec93fe1ac9edfb9dea1edd",
+      "bodyHash": "b41dfc3e477b555e2b713353c2210348af9fa3519b12d1d22d31983641c56c69"
     },
     {
       "id": "grade-the-result",
-      "hash": "a4d38fd0d7a57099eb2f599ab4ce30fd9877e029ef4c74f6a3b11b17b51f3f78"
+      "hash": "a4d38fd0d7a57099eb2f599ab4ce30fd9877e029ef4c74f6a3b11b17b51f3f78",
+      "bodyHash": "1f780f918fe4fa2d7d6a66ff52f4f0ba28249235cf5f80bd8c435248284991c3"
     },
     {
       "id": "choose-graders-that-give-a-stable-signal",
-      "hash": "8c769d16fc759cfdf94b115d697bba42b241f0cae9224eee1f97411fb9813190"
+      "hash": "8c769d16fc759cfdf94b115d697bba42b241f0cae9224eee1f97411fb9813190",
+      "bodyHash": "1d2ba9770bb39e7e5ea15f104ed41f5501c22c206d0399c382a96a16960bf990"
     },
     {
       "id": "compare-against-a-no-plugin-baseline",
-      "hash": "86640c862ad36c360291b6d7f501d5858facd175606476b50c03b66536cfd27d"
+      "hash": "86640c862ad36c360291b6d7f501d5858facd175606476b50c03b66536cfd27d",
+      "bodyHash": "14a5f44acbacb39364227785ec52dad6af2242cea734ec070a72d592344964ce"
     },
     {
       "id": "use-a-different-eval-directory",
-      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b",
+      "bodyHash": "d365489fc822aef10df7f7cf6b84ec495fe6946292fa108f5bed2618d0defd17"
     },
     {
       "id": "set-up-fixtures-and-mocks",
-      "hash": "9a56aca812905a16e9458e0c97d9c91b7a7c87ed5d613e0da1c41c2344b5ca41"
+      "hash": "9a56aca812905a16e9458e0c97d9c91b7a7c87ed5d613e0da1c41c2344b5ca41",
+      "bodyHash": "7d1c73ad57a856243231d9fac9389e0e4d7b3a280042d9866cf7f8b685180258"
     },
     {
       "id": "add-setup-or-history-with-case-yaml",
-      "hash": "f1e6e29f1ca79693578120787c9d7b64a185a442afd1b19011cefe18c1947f4f"
+      "hash": "f1e6e29f1ca79693578120787c9d7b64a185a442afd1b19011cefe18c1947f4f",
+      "bodyHash": "31b39019ffc4d3309591f0863e1bed6363a9b7253619850e8edafc661ceef696"
     },
     {
       "id": "mock-mcp-servers",
-      "hash": "156c24365742283311eea11699ea9cb047104abb76f3f11fb796ec3b7829c90b"
+      "hash": "156c24365742283311eea11699ea9cb047104abb76f3f11fb796ec3b7829c90b",
+      "bodyHash": "265f58739ecd2a798fd574d4854e9e8e6e5153a2797b0a51e1699820ca1478e8"
     },
     {
       "id": "replay-agent-mock-answers",
-      "hash": "5de9b0e4820bd48bdd6142fc79548a00888737a466249e0880dea782867dc7a2"
+      "hash": "5de9b0e4820bd48bdd6142fc79548a00888737a466249e0880dea782867dc7a2",
+      "bodyHash": "b22c6c580162ebb8bc65ffdfdc6afea6c04b978edc7e4285e00888720fb0c3a3"
     },
     {
       "id": "run-evals",
-      "hash": "a1e2935ffa002ef106b55e621e4a1d71e532efc5e7cd60f16cdc9803801713e8"
+      "hash": "a1e2935ffa002ef106b55e621e4a1d71e532efc5e7cd60f16cdc9803801713e8",
+      "bodyHash": "dac4502ce497be85ddd158146e067190dc871aef29ee4853827358bebb76a826"
     },
     {
       "id": "choose-what-to-evaluate",
-      "hash": "52b9759312e2a9bac1b0d4ae4839eac6a393ca68278bc8919d0aeb482e8f0ace"
+      "hash": "52b9759312e2a9bac1b0d4ae4839eac6a393ca68278bc8919d0aeb482e8f0ace",
+      "bodyHash": "a91f822d8b558d10e9c0e6c7b6e45e1795ab8412e135881bf288befb89f33c43"
     },
     {
       "id": "grant-tools",
-      "hash": "15800a06f527337fc1ac53b5ffe2878bfd185e8b89dcf10062bad054474939f9"
+      "hash": "15800a06f527337fc1ac53b5ffe2878bfd185e8b89dcf10062bad054474939f9",
+      "bodyHash": "b15acba17167ce587b1958509de906c9adc3428f3439927d01a36a4a88ce1138"
     },
     {
       "id": "command-options",
-      "hash": "cf0fc19f0c8fd790f39b55d131ce4856cef156de72ffb8f0221215c6c417b0fa"
+      "hash": "cf0fc19f0c8fd790f39b55d131ce4856cef156de72ffb8f0221215c6c417b0fa",
+      "bodyHash": "180b2ebfcfd51cc4caeb57cc34dd475abed39b189abe63d55a716c84458e627c"
     },
     {
       "id": "run-evals-in-ci",
-      "hash": "8aaf20771d588b0fef605b88b628d19864accbf7ee1c5f8e910e86aff5021ffb"
+      "hash": "8aaf20771d588b0fef605b88b628d19864accbf7ee1c5f8e910e86aff5021ffb",
+      "bodyHash": "8a01d5522fd8d14d737e821d5cb977e4f3d9aa58d15cbf1244e2b365596e4f9f"
     },
     {
       "id": "read-the-results",
-      "hash": "900a66b01fb5492f04e487798c146603990e1b322428910e21a4744fc2d58ab9"
+      "hash": "900a66b01fb5492f04e487798c146603990e1b322428910e21a4744fc2d58ab9",
+      "bodyHash": "5805703fa01fdb7ec31e19707bd8a3b80b4283ad8dd3d4f9658efe15de9c6ca0"
     },
     {
       "id": "html-report",
-      "hash": "9fb883090ed345d7f71b72a4d50d2597f20c83c89371f03075c77971de805fd8"
+      "hash": "9fb883090ed345d7f71b72a4d50d2597f20c83c89371f03075c77971de805fd8",
+      "bodyHash": "8274da4a4ecbac49768b8837bb7471999386b21c66c31287bccff4c9753ac225"
     },
     {
       "id": "json-result",
-      "hash": "2fb425869fbf6558a762d6915605220926970f00e4278a0a7602caea67942f6b"
+      "hash": "2fb425869fbf6558a762d6915605220926970f00e4278a0a7602caea67942f6b",
+      "bodyHash": "db70cfcd52d502b8ba89058363c8993b2320a54a1f53f3d0bdf40bc36d6b4ebf"
     },
     {
       "id": "security",
-      "hash": "d41af682275e2fb5d8e39c97fe7a56f4490980ffbfef7766d7135c1116938ba2"
+      "hash": "d41af682275e2fb5d8e39c97fe7a56f4490980ffbfef7766d7135c1116938ba2",
+      "bodyHash": "4a9fa050a904f8816616c654a7360550195d10c27ec6ce62a6df6ef8b89c1ba1"
     },
     {
       "id": "trust-the-plugin-directory",
-      "hash": "c641749d583eba44f58d759613624e2bf83676e4714e62f9bbb7785780124375"
+      "hash": "c641749d583eba44f58d759613624e2bf83676e4714e62f9bbb7785780124375",
+      "bodyHash": "4f00391bfe1ad1babea9df0d85658ecf5bf94b11a8cdc625b3102f7edec6307a"
     },
     {
       "id": "how-runs-are-isolated",
-      "hash": "ca580bede706128f886fd79c8fa266d39acb2f4a61174477dfdda1c1da844127"
+      "hash": "ca580bede706128f886fd79c8fa266d39acb2f4a61174477dfdda1c1da844127",
+      "bodyHash": "8f3c149e6994ebceb619843f5c19f1fea176eb72831ae150795e04c4a07a634b"
     },
     {
       "id": "eval-suite-reference",
-      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6"
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6",
+      "bodyHash": "5e4ed2ef397c351d54763ac76b69882abd5b90f3121e8ba92c5325590f8bc1ef"
     },
     {
       "id": "prompt-md-fields",
-      "hash": "5f96edf31109ddc50b9167f50c9015b5fe016d674b53fbdc8633c1453c848dc3"
+      "hash": "5f96edf31109ddc50b9167f50c9015b5fe016d674b53fbdc8633c1453c848dc3",
+      "bodyHash": "75f47e11204217ceba10f4969d1c716fc0fe3d67155d94a3ae65b66c1f26c2d0"
     },
     {
       "id": "case-yaml-fields",
-      "hash": "1480a6234bb734704db93d51d2478bbefd73392da9bde406356c9f603f850677"
+      "hash": "1480a6234bb734704db93d51d2478bbefd73392da9bde406356c9f603f850677",
+      "bodyHash": "1febacd0414859ca399971b8d30fde0762a03aa961d5ad2cb47efb99abf427bc"
     },
     {
       "id": "grader-frontmatter",
-      "hash": "db226c1e2665ae3f2961e2d6d0352a072180fbadebede9a21cba90d157c750dd"
+      "hash": "db226c1e2665ae3f2961e2d6d0352a072180fbadebede9a21cba90d157c750dd",
+      "bodyHash": "e1d821aea10a2d443e6493b15c4538e38a5c1e790e86c517724e3e2592e564c8"
     },
     {
       "id": "what-a-grader-can-look-at",
-      "hash": "bc92624bd1b81f596300598f8759ab0df738037a558c01f2f5362f43b2779bbe"
+      "hash": "bc92624bd1b81f596300598f8759ab0df738037a558c01f2f5362f43b2779bbe",
+      "bodyHash": "e8a5fcd3a84b6edd9690557915f3632517b161f829129d003a4816d0c2248275"
     },
     {
       "id": "grader-types",
-      "hash": "e5de5b56f8fd6e23fb9ad61b20700549c2eb5ccfe5088ed65ef1f2344f35408e"
+      "hash": "e5de5b56f8fd6e23fb9ad61b20700549c2eb5ccfe5088ed65ef1f2344f35408e",
+      "bodyHash": "7194c7557b1a6a5ffc630be9b06c09c081db6ab5bfb17a3f7aee136831d59686"
     },
     {
       "id": "mock-files",
-      "hash": "8cc4a7cc4186f7accda5e5479c32ecae2013a57cb42d9e581d44fcaa8b642d6f"
+      "hash": "8cc4a7cc4186f7accda5e5479c32ecae2013a57cb42d9e581d44fcaa8b642d6f",
+      "bodyHash": "f7a9ad76f94d772245ce929e1bb1969745c5e32abc4870700331609bd56d0c7e"
     },
     {
       "id": "expect-patterns",
-      "hash": "655b9d77688fb338d1c6bd0e3e944d8ed96773d0a2ce5837f37d39c9a9763afb"
+      "hash": "655b9d77688fb338d1c6bd0e3e944d8ed96773d0a2ce5837f37d39c9a9763afb",
+      "bodyHash": "50a85e6523c2b4d1adbc781d31ab4081d15b3316dacbfd5060f44fc97a8f02f9"
     },
     {
       "id": "troubleshooting",
-      "hash": "bac994bdd5ba98512461dfce1b6f592c0824e454674b8252461db3b41f281eb1"
+      "hash": "bac994bdd5ba98512461dfce1b6f592c0824e454674b8252461db3b41f281eb1",
+      "bodyHash": "94c9a422da67c0a463cd13766e01c5d3f204c303ab403f51b3799921cc4f00e7"
     },
     {
       "id": "plugin-eval-is-currently-in-early-access",
-      "hash": "bfdd718865731ac2235f41e6defd08971b54c0055e7f6c545688913a2ca70383"
+      "hash": "bfdd718865731ac2235f41e6defd08971b54c0055e7f6c545688913a2ca70383",
+      "bodyHash": "0d2ae4af354df1c74aaf66c5fc1a84a8b7d7f2bffdd4ee2cfa504684505536bc"
     },
     {
       "id": "plugin-eval-is-currently-unavailable",
-      "hash": "fb21ec62083aac13a37d3e73130263936f5fbf33d7a4022b56512a6bda1198bb"
+      "hash": "fb21ec62083aac13a37d3e73130263936f5fbf33d7a4022b56512a6bda1198bb",
+      "bodyHash": "83e9e70ffea0d0340d26efb7ef8206daf270aaf5555e16191ba6ce5bb70f8991"
     },
     {
       "id": "is-not-a-trusted-plugin-directory-and-this-run-cannot-stop-to-ask-you-about-it",
-      "hash": "a42532c818f763b6a2ea555419467b5f3e31b20d49f8b03e80359fac47f1426f"
+      "hash": "a42532c818f763b6a2ea555419467b5f3e31b20d49f8b03e80359fac47f1426f",
+      "bodyHash": "b3f1fe75d83858893223e718dbc9ac56a74b95e7701a80526333f853eaeff8d0"
     },
     {
       "id": "git-is-too-old-for-claude-plugin-eval",
-      "hash": "7fbe53e9e15737b265919b8efbe9985e89c6589df5feb29d77a4f77ecd55afe9"
+      "hash": "7fbe53e9e15737b265919b8efbe9985e89c6589df5feb29d77a4f77ecd55afe9",
+      "bodyHash": "ad2debf2306ee30fa6d289a5601d3f3b339eb0be7045c605d416e309f8c3af8d"
     },
     {
       "id": "no-eval-cases-found",
-      "hash": "d259c750f79c12e2385bafdbc5629abb4bd375d112dfc17bb2743a4bf2345f21"
+      "hash": "d259c750f79c12e2385bafdbc5629abb4bd375d112dfc17bb2743a4bf2345f21",
+      "bodyHash": "7743f53537465351dddf47f82f6da590f781346395d528ff5730c808d8ff0a96"
     },
     {
       "id": "the-baseline-arm-shows-no-plugin-or-delta-is-zero",
-      "hash": "f1ebfe4a729a59e12a94582ff5179b2df781dfb22e9b480e98de76684e3b96a3"
+      "hash": "f1ebfe4a729a59e12a94582ff5179b2df781dfb22e9b480e98de76684e3b96a3",
+      "bodyHash": "006b4b94d7d3b1a994ecd0ca588083c3e689a66ed132b31151c6bb21ec72ad93"
     },
     {
       "id": "agent-type-----not-found-for-one-of-your-plugins-agents",
-      "hash": "59c565ce56181cb7c80d31d9ee38ba37d2eec094267bdbba449c4241a545a67f"
+      "hash": "59c565ce56181cb7c80d31d9ee38ba37d2eec094267bdbba449c4241a545a67f",
+      "bodyHash": "98c1e4d21cd938c403add349f224217d8f842b82679a465182925b77f82f5b68"
     },
     {
       "id": "everything-scores-zero-although-the-right-files-were-produced",
-      "hash": "03af0252c2e028a12860c6b130506d7f6f6128e903638e116d4b4c99e66809b6"
+      "hash": "03af0252c2e028a12860c6b130506d7f6f6128e903638e116d4b4c99e66809b6",
+      "bodyHash": "7319254deb1b01e121a8aeb84fcfe5fb9ab71dcccf567b722142e9a795897673"
     },
     {
       "id": "a-regex-over-the-trace-doesnt-match-text-i-can-see",
-      "hash": "2b64642a7d432fa4d072ebb3499cec4f6da3809c6f400c6b54fe4e5c8e9c5301"
+      "hash": "2b64642a7d432fa4d072ebb3499cec4f6da3809c6f400c6b54fe4e5c8e9c5301",
+      "bodyHash": "0a6e57cedd31c5bc79f814a8068818163afae4d276211068bfc4c52971510697"
     },
     {
       "id": "tools-are-denied-mcp-tools-are-missing-or-bash-wont-run",
-      "hash": "f99e49836b80b85ff1fd043fb5d11ed26801849042b27699ee3b6c3adc92ccdc"
+      "hash": "f99e49836b80b85ff1fd043fb5d11ed26801849042b27699ee3b6c3adc92ccdc",
+      "bodyHash": "a86d68eea74a7750063a0f4401e3ed0c62790c32f60b3e10927483f304ec60ae"
     },
     {
       "id": "the-run-exits-1-but-the-results-look-fine",
-      "hash": "6e2eb8cd40f2c647772086c093f0ec0e3067507f4b73155be43d3393cc6a2875"
+      "hash": "6e2eb8cd40f2c647772086c093f0ec0e3067507f4b73155be43d3393cc6a2875",
+      "bodyHash": "e106b1d708e6296bef94acfeeb6c15087933eb5896c74b9f8a554e34d4212347"
     },
     {
       "id": "json-output-path-must-end-in-json",
-      "hash": "728fc86501aa96295abf269e3ecc672dd498941c6b768648e83f52b63ebdaa0a"
+      "hash": "728fc86501aa96295abf269e3ecc672dd498941c6b768648e83f52b63ebdaa0a",
+      "bodyHash": "66a1f49e447007160306a3906bf774910fa0fc0843e7071ed154a67bfacd4835"
     },
     {
       "id": "a-grader-shows-passed-false-under-a-run-that-scored-1-0",
-      "hash": "1a13b9778138317440e283ffceddf4e2407dc4eb1e2faf932deea1757c9e966e"
+      "hash": "1a13b9778138317440e283ffceddf4e2407dc4eb1e2faf932deea1757c9e966e",
+      "bodyHash": "b4a021eb85787a0824ee7182a469530d562fca11cbaaa2cfc9f3e9999a170a7f"
     },
     {
       "id": "runs-fail-with-a-usage-limit-or-rate-limit-error-partway-through",
-      "hash": "79f52c631ed1bea710143a695b5e6ef507409d336c089ac8df886df86bce0814"
+      "hash": "79f52c631ed1bea710143a695b5e6ef507409d336c089ac8df886df86bce0814",
+      "bodyHash": "baa00be82f8d7ad5a1405920a6d47cd6bb69db1d68b98ee0eeea5bbccc378d59"
     },
     {
       "id": "mock-call-budget-exceeded",
-      "hash": "71e67d1847132ea82d2d527bc48bf88aba6221d03b22d05ff610f9c1deabbeab"
+      "hash": "71e67d1847132ea82d2d527bc48bf88aba6221d03b22d05ff610f9c1deabbeab",
+      "bodyHash": "2b173a8b525ebc8e8269d1615d6c3224a50a28145f876cb6c37151ce6e1be241"
     },
     {
       "id": "runs-time-out-or-hit-the-turn-cap",
-      "hash": "3142041e0e4219e74ed7efa928512e3e822b37e32b50027b94be28edc226ef08"
+      "hash": "3142041e0e4219e74ed7efa928512e3e822b37e32b50027b94be28edc226ef08",
+      "bodyHash": "9f930806998be88ea3f39372ef5cc1af32e85f5cd2ffc4f2cb11d7d52865528f"
     },
     {
       "id": "see-also",
-      "hash": "5353d0af01a88ea1373a2654791af2e52398c95b2bf8eaee957e5913a80d4f9b"
+      "hash": "5353d0af01a88ea1373a2654791af2e52398c95b2bf8eaee957e5913a80d4f9b",
+      "bodyHash": "6505786147caedb2d30d01be0ffa3a8a952a4f0704e3a23b331f07ae04940773"
     }
   ],
   "sources": [
