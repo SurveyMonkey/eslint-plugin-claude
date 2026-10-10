@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/agent-mcp-servers-inline-trust, which reports an inline MCP server in the mcpServers field of a local subagent file, because Claude Code runs its command only after the folder of the file is trusted, and the command needs a review.
+description: The ESLint rule claude/agent-mcp-servers-inline-trust, which reports an inline MCP server in the mcpServers field of a local subagent file, because Claude Code connects the server only after the folder of the file is trusted, and the server needs a review.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [9]

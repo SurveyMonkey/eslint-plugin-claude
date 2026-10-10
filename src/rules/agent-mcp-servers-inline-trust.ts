@@ -1,5 +1,5 @@
-// An inline MCP server in a project subagent file runs its command only after
-// the user trusts the folder of the file
+// An inline MCP server in a project subagent file connects only after the user
+// trusts the folder of the file
 // (docs/rules/agent-mcp-servers-inline-trust.md). Claude Code ignores
 // `mcpServers` in a plugin agent, so the rule checks only files in
 // `.claude/agents/`.
@@ -35,7 +35,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'trust' }> = {
     schema: [],
     messages: {
       trust:
-        'This file defines inline MCP servers: {{servers}}. Claude Code connects them, and runs their commands, only after you trust the folder of this file. A parent folder and a `-p` session do not count. Review each command.',
+        'This file defines inline MCP servers: {{servers}}. Claude Code connects them only after you trust the folder of this file. A `stdio` server also runs its command. A parent folder and a `-p` session do not count. Review each server.',
     },
   },
   create(context) {

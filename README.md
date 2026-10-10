@@ -87,7 +87,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/output-style-frontmatter-schema`](docs/rules/output-style-frontmatter-schema.md) | The fields and types of output style frontmatter | `error` | `error` |
 | [`claude/agent-disallowed-tools-scope`](docs/rules/agent-disallowed-tools-scope.md) | A `disallowedTools` entry with a specifier, and a tool that `tools` and `disallowedTools` both list | `warn` | `warn` |
 | [`claude/agent-field-min-version`](docs/rules/agent-field-min-version.md) | A subagent field that needs a newer Claude Code than `minVersion`, and a Boolean form that older versions do not read (inactive until `minVersion` is set) | `warn` | `warn` |
-| [`claude/agent-mcp-servers-inline-trust`](docs/rules/agent-mcp-servers-inline-trust.md) | An inline MCP server in a local subagent, which runs only after you trust the folder | `warn` | `warn` |
+| [`claude/agent-mcp-servers-inline-trust`](docs/rules/agent-mcp-servers-inline-trust.md) | An inline MCP server in a local subagent, which connects only after you trust the folder | `warn` | `warn` |
 | [`claude/agent-name-shadows-builtin`](docs/rules/agent-name-shadows-builtin.md) | A local subagent named like a built-in subagent | `warn` | `warn` |
 | [`claude/agent-no-bom`](docs/rules/agent-no-bom.md) | A UTF-8 byte-order mark at the start of an agent file, for Claude Code before v2.1.239 (inactive until `minVersion` is set) | `warn` | `warn` |
 | [`claude/agent-tools-conditional`](docs/rules/agent-tools-conditional.md) | A `tools` entry that a background subagent loses, and a `tools` list of `Agent` alone | `warn` | `warn` |

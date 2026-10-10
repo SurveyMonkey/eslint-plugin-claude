@@ -81,11 +81,14 @@ describe('agent-no-bom', () => {
       expect(lint(OLD, file, agentText(''))).toEqual([])
     })
 
-    it('for a file that starts like a BOM but is not one', () => {
-      const code = `\ufefe${agentText('')}`
-      const file = write('.claude/agents/a.md', code)
-      expect(lint(OLD, file, code)).toEqual([])
-    })
+    it.each(['\ufefe', '\uffff'])(
+      'for a file that starts like a BOM but is not one: %j',
+      (start) => {
+        const code = `${start}${agentText('')}`
+        const file = write('.claude/agents/a.md', code)
+        expect(lint(OLD, file, code)).toEqual([])
+      },
+    )
 
     it('for a file that is shorter than a BOM', () => {
       const file = write('.claude/agents/a.md', '#')

@@ -34,8 +34,8 @@ The rule reports two cases:
   `tools` entry. The rule compares the tool names, so `Bash` in `tools` and `Bash(git push *)` in `disallowedTools`
   give both reports.
 
-The rule compares names as written. It does not treat `Task` as `Agent`, and it does not match
-`mcp__github__search` to `mcp__github`. An entry that does not parse gets no report.
+The rule treats `Task`, the old name of `Agent`, as `Agent`. No page says this for `disallowedTools`, so it is an inference from the rename.
+The rule does not match `mcp__github__search` to `mcp__github`. An entry that does not parse gets no report.
 [`agent-tools-known`](agent-tools-known.md) reports it.
 
 Fail:
