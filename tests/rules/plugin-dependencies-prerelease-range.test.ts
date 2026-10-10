@@ -206,6 +206,8 @@ describe(`${RULE} (silent)`, () => {
   check.each([
     ['a target that is not semver', 'latest'],
     ['a target with a v prefix', 'v2.0.0-beta.1'],
+    ['a target with an empty identifier', '2.0.0-beta..1'],
+    ['a target with a leading zero', '02.0.0-beta.1'],
     ['a target that is not a string', 5],
     ['a null version', null],
   ])('stays silent for %s', (_title, entry) => {
@@ -311,6 +313,18 @@ describe(`${RULE} (silent)`, () => {
     )
     const { dir, code, top } = build({ range: '^2.0.0', entry: BETA })
     link(top, 'plugins/dep', elsewhere)
+    expect(lintPlugin(RULE, dir, code)).toEqual([])
+  })
+
+  // The `.claude-plugin` of the folder links back in, so only the folder itself tells the source.
+  linked('stays silent when the source folder links out and its manifest links back in', () => {
+    const elsewhere = tree({}, false)
+    const { dir, code, top } = build({
+      range: '^2.0.0',
+      files: { 'meta/plugin.json': JSON.stringify({ version: BETA }) },
+    })
+    link(top, 'plugins/dep', elsewhere)
+    link(elsewhere, '.claude-plugin', path.join(top, 'meta'))
     expect(lintPlugin(RULE, dir, code)).toEqual([])
   })
 
