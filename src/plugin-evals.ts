@@ -53,3 +53,14 @@ export function evalDirectoryOf(
   }
   return { name, real, bound }
 }
+
+/** True when `dir` holds a file at any depth. A link counts as a file. A
+ *  directory that has only directories, or cannot be read, holds none. Git
+ *  cannot track an empty directory. */
+export function holdsFile(dir: string): boolean {
+  const entries = entriesOf(dir)
+  return (
+    Array.isArray(entries) &&
+    entries.some((entry) => !entry.isDirectory() || holdsFile(path.join(dir, entry.name)))
+  )
+}

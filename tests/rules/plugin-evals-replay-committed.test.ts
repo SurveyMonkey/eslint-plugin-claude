@@ -5,7 +5,7 @@ import { mkdirSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { git, isolateGitConfig, plain, put, repo } from '../git-tree.test-support.ts'
-import { lintJson } from '../rule-tester.test-support.ts'
+import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-evals-replay-committed'
 const MANIFEST = '.claude-plugin/plugin.json'
@@ -63,6 +63,11 @@ describe(RULE, () => {
       '*.md',
       'mocks/other/',
       '# .replay/',
+      // A name that a saved answer could have, with no link to `mocks/.replay/`.
+      'server/',
+      'server',
+      'answer*',
+      'answer',
     ]) {
       put(root, { '.gitignore': `${pattern}\n` })
       expect(ids(root), pattern).toEqual([])
@@ -120,6 +125,30 @@ describe(RULE, () => {
     mkdirSync(path.join(empty, 'evals/mocks/.replay'), { recursive: true })
     expect(ids(empty)).toEqual([])
     expect(ids(repo({ [MANIFEST]: manifest(), 'evals/mocks/.replay': 'x' }))).toEqual([])
+  })
+
+  it('stays silent for a mocks/.replay/ that holds only directories, which git cannot track', () => {
+    const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
+    mkdirSync(path.join(root, 'evals/mocks/.replay/github/deep/er'), { recursive: true })
+    mkdirSync(path.join(root, 'evals/mocks/.replay/other'), { recursive: true })
+    expect(ids(root)).toEqual([])
+  })
+
+  it('reports a file below nested directories, next to empty directories', () => {
+    const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' }, [], {
+      'evals/mocks/.replay/github/deep/er/answer.md': 'x',
+    })
+    mkdirSync(path.join(root, 'evals/mocks/.replay/empty'), { recursive: true })
+    expect(ids(root)).toEqual(['untracked'])
+  })
+
+  it.skipIf(chmodCannotBlock)('stays silent when the only subdirectory cannot be read', () => {
+    const root = repo({ [MANIFEST]: manifest(), [CASE]: 'x' })
+    const sub = path.join(root, 'evals/mocks/.replay/github')
+    mkdirSync(sub, { recursive: true })
+    withoutAccess(sub, () => {
+      expect(ids(root)).toEqual([])
+    })
   })
 
   it('reports the pattern once for files that are there, tracked or not', () => {

@@ -69,6 +69,11 @@ describe(RULE, () => {
       'results.html',
       '*.json',
       'evals/result/',
+      // A name that a run directory or its file could have, with no link to `results/`.
+      'run/',
+      'run',
+      'x',
+      'out',
     ]) {
       put(root, { '.gitignore': `${pattern}\n` })
       expect(ids(root), pattern).toEqual(['notIgnored'])
