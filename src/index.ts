@@ -58,6 +58,7 @@ import settingsKnownMarketplacesPolicySchema from './rules/settings-known-market
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsModelValue from './rules/settings-model-value.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
@@ -167,6 +168,7 @@ const modules = [
   settingsKnownMarketplacesPolicySchema,
   settingsPluginSuggestionMarketplacesSource,
   settingsConflictingKeys,
+  settingsModelValue,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -271,6 +273,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-known-marketplaces-policy-schema': 'error',
   'settings-plugin-suggestion-marketplaces-source': 'error',
   'settings-conflicting-keys': 'error',
+  'settings-model-value': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

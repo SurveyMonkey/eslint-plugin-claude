@@ -1281,6 +1281,63 @@
       "hash": "c38267a41d42844760b54223b60e374ec16086de92f48497b2be13ef9889f0ab"
     }
   ],
+  "settings-model-value": [
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Setting your model",
+      "hash": "708ecc9713dd5dcae895be8925a215142ea177a49e9026c944902fa6f26c6422"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Model aliases",
+      "hash": "a09e1c9b1762d03557790bd6d2bff27c741d3881a2fb9c76d1c2379d1949c324"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Model is not a recognized model id",
+      "hash": "57cdc23fc46dca08942aa2a4d94fceb7eeed27ac39fca9a160f6710cc93662cc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "model",
+      "hash": "e91e79c89d7fe9532289a9e3418f3c3d4641e16ae8d2be05bc3f75834695bf62"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "fallbackModel",
+      "hash": "a077dac729806f0595939eb723e4dc7e83d5736e1a4ed974e82bdc31e181f81e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "availableModels",
+      "hash": "c7ce44f7ffae9f6699f8cf638bae02cbdef08238df74464e656ababbaabf33ad"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "advisorModel",
+      "hash": "2b0354c3c184efeeee8cb4a443f14f19179a0f43f9d896977f4cb8aa691368b9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Environment variables",
+      "hash": "870502c6df0b0889bd44c1ef54e104d6332d7bc6d5c5c22ae195fa8c7536496d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Available models",
+      "hash": "a61fdea3fcb28659495a24c4e22ccc30a1953428e5f6161ef6f61130231d9bb6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "How env values interact with your shell",
+      "hash": "ba5b48f6cedbb6b4a23e89ef914ef14b31cfd36c8c1629cf3586b189720b7432"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose a model",
+      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+    }
+  ],
   "settings-plugin-suggestion-marketplaces-source": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
