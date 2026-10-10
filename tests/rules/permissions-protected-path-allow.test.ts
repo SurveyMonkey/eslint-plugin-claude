@@ -114,6 +114,8 @@ describe(`${name}: an Edit allow rule`, () => {
       'Edit(.config/**)',
       'Edit(.config)',
       'Edit(.claude.local)',
+      'Edit(.npmrc/**)',
+      'Edit(.bashrc/x)',
       'Edit(docs/.vscode/**)',
       'Edit(src/.git/**)',
       'Edit(.git*)',
@@ -311,7 +313,14 @@ describe(`${name}: sandbox.filesystem.allowWrite`, () => {
   })
 
   it('is silent for a path that is not relative to the project', () => {
-    for (const entry of ['~/.claude/skills', '/tmp/build', '//tmp/build', '/repo/.claude/skills']) {
+    for (const entry of [
+      '~/.claude/skills',
+      '/tmp/build',
+      '//tmp/build',
+      '/repo/.claude/skills',
+      '/.claude/skills',
+      '//.claude/skills',
+    ]) {
       expect(ids(write(entry)), entry).toEqual([])
     }
   })

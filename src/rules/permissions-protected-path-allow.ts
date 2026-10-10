@@ -53,10 +53,12 @@ function protectedEditPath(specifier: string): string | null {
 }
 
 /** The protected path of the sandbox that the `allowWrite` entry is at or
- *  under, or null. The rule reads an entry that is relative to the project. An
- *  entry with a wildcard is skipped, because the sandbox skips it on Linux. */
+ *  under, or null. The rule reads an entry that is relative to the project. A
+ *  path with a `/` at the start, and a `~/` path, have other first segments
+ *  than a protected path. An entry with a wildcard is skipped, because the
+ *  sandbox skips it on Linux. */
 function protectedSandboxPath(entry: string): string | null {
-  if (entry.startsWith('/') || entry.startsWith('~')) {
+  if (entry.startsWith('/')) {
     return null
   }
   const trimmed = entry.endsWith('/**') ? entry.slice(0, -3) : entry
@@ -79,9 +81,7 @@ function criticalTarget(specifier: string): string | null {
   if ((program !== 'rm' && program !== 'rmdir') || specifier.includes('*')) {
     return null
   }
-  const targets = rest
-    .filter((word) => !word.startsWith('-'))
-    .map((word) => word.replace(/^(["'])(.*)\1$/, '$2'))
+  const targets = rest.map((word) => word.replace(/^(["'])(.*)\1$/, '$2'))
   return targets.find((target) => CRITICAL_TARGET.test(target)) ?? null
 }
 
