@@ -46,8 +46,9 @@ The rule counts the hops in these ways:
   code span, a fenced block or an HTML comment. A relative path starts at the folder of the file
   that holds the import.
 - A chain ends at a path that the rule cannot read. Such a path is out of the repository, or is a
-  link that leads out of it or nowhere. It can also be a folder, or a file with no read right. The
-  rule makes no report that rests on such a file.
+  link that leads out of it or nowhere. It can also be a folder, or a file with no read right. An
+  import of `~` or of a URL is such a path too. It can lead back into the repository by a shorter
+  route. So the rule makes no report for the file.
 
 The rule lints `CLAUDE.md`, `CLAUDE.local.md` and `AGENTS.md`. It lints such a file below
 `.claude/rules/` too, because Claude Code expands the imports of a rule file. It skips a file below
