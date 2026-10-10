@@ -93,7 +93,8 @@ describe('settings-managed-effort-cap: the managed source', () => {
   })
 
   it.skipIf(noLinks)('is silent when a file of the source is a link out of the repository', () => {
-    const outside = tree({ 'cap.json': CAP }, false)
+    // The outside file holds no cap, so a read of it would give a report.
+    const outside = tree({ 'cap.json': '{}' }, false)
     const dir = tree({})
     link(dir, 'managed-settings.d/30-c.json', path.join(outside, 'cap.json'))
     expect(ids(dir, MANAGED)).toEqual([])

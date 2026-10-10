@@ -57,7 +57,15 @@ describe('settings-worktree-paths: the format', () => {
       ['missing', 3, 43],
     ])
     expect(messages[0]?.message).toBe(
-      '"/x" starts with a slash. The entries of "worktree.sparsePaths" are paths relative to the repository root.',
+      '"/x" is an absolute path. The entries of "worktree.sparsePaths" are paths relative to the repository root.',
+    )
+    const [linked] = lintJson(
+      name,
+      '{"worktree": {"symlinkDirectories": ["gone"]}}',
+      path.join(dir, PROJECT),
+    )
+    expect(linked?.message).toBe(
+      '"gone" is not in the repository. The entries of "worktree.symlinkDirectories" name directories that are there.',
     )
   })
 })

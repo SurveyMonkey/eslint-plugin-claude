@@ -23,7 +23,7 @@ each person. `strict` turns it on at `warn`.
 
 ## Rule details
 
-The `/statusline` command writes a script to `~/.claude/` and sets `statusLine.command` to its path.[^command]
+The `/statusline` command writes a script to `~/.claude/` and updates your settings.[^command]
 The status line page shows `~/.claude/statusline.sh` as the example command.[^manual] The home folder
 belongs to one user. A person who opens the repository has no such script.
 
