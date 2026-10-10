@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
+  "hash": "c465532b3cec1a454fa4b6cdd3efd205754115efd240f64bee4776b66bde05cc",
   "blocks": [
     {
       "id": "error-reference",
@@ -276,7 +276,7 @@
     },
     {
       "id": "unable-to-connect-to-anthropic-services",
-      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
+      "hash": "6aea251ad1e99ca65cdb98c28bbe46c3bed22e50fb9e85adcd431dbbec7ec83a"
     },
     {
       "id": "socket-is-closed",
@@ -1077,6 +1077,12 @@
       "id": "marketplace-entry-path-does-not-stay-inside-the-marketplace-directory",
       "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0",
       "text": "### Marketplace entry path does not stay inside the marketplace directory\n\nThe plugin's [marketplace entry](/docs/en/plugins/marketplace-reference#plugin-entries) declares a source path that Claude Code can't resolve to a location inside the marketplace's own directory, so the plugin doesn't install or load. The refusal covers:\n\n* An entry path that is absolute, climbs out of the marketplace with `..`, or is spelled like a network path\n* On macOS and Linux, an entry path that contains a backslash anywhere after the leading `./`\n* An entry in a marketplace fetched from a remote source, such as git or a URL, that reaches its target through a symlink resolving outside the marketplace directory\n* A relative entry in a marketplace added from a direct URL to its `marketplace.json`: Claude Code downloads only that file, so no local plugin files exist for the path to name. See [Plugins with relative paths fail in URL-based marketplaces](/docs/en/plugins/troubleshooting#plugins-with-relative-paths-fail-in-url-based-marketplaces)\n\n`claude plugin install` reports the refusal like this:\n\n```text theme={null}\nCannot install my-plugin@my-marketplace: its marketplace entry path does not stay inside the marketplace directory (an absolute, climbing, network-shaped, backslash-containing or link-traversing entry, an entry of a fetched marketplace that resolves or opens outside its tree — or a relative entry in a url-catalog marketplace, which has no local directory)\n```\n\nWhen an already-installed plugin's entry fails the same check, `claude plugin list` shows the plugin as `failed to load` with:\n\n```text theme={null}\nPlugin source path refused: ./my-plugin does not stay inside its marketplace directory. Check that the marketplace entry has a plain relative path.\n```\n\n**What to do:**\n\n* If you maintain the marketplace, write the entry's `source` as a plain relative path with forward slashes, such as `./plugins/my-plugin`, and keep any symlink it crosses pointed inside the marketplace directory\n* If you added the marketplace from a direct URL, relative entries can't resolve. Ask the marketplace author to use [another plugin source](/docs/en/plugins/marketplace-reference#plugin-sources), or add the marketplace from its git repository instead"
+    },
+    {
+      "heading": "Working directory is a network path",
+      "id": "working-directory-is-a-network-path",
+      "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56",
+      "text": "### Working directory is a network path\n\nClaude Code doesn't add network paths as working directories. Looking up a network path can contact the host it names, and on Windows that contact can send the host your credentials, so Claude Code refuses the path without looking it up. You see this message when you run `/add-dir` with such a path, or as a warning at startup. When it appears at startup, Claude Code starts without that directory.\n\n```text theme={null}\n\\\\server\\share is a network path, which cannot be added as a working directory. On Windows, map the share to a drive letter and pass it at launch with --add-dir (a drive letter added mid-session does not yet carry remote-read trust).\n```\n\nPaths that Claude Code refuses this way include:\n\n* UNC shares such as `\\\\server\\share`\n* Automount paths such as `/net/<host>`, unless you launched Claude Code from a directory under that host's automount\n* Local paths that reach a network location through a symbolic link or junction\n\nMapped drive letters and `\\\\wsl$` paths don't count as network paths.\n\n**What to do:**\n\n* On Windows, map the share to a drive letter, for example with `net use Z: \\\\server\\share`, and pass the drive at launch with `claude --add-dir Z:\\`.\n* On macOS or Linux, mount the share at a local path and add that path instead.\n* If the path is in `permissions.additionalDirectories`, remove it from the settings file that lists it.\n\nBefore v2.1.257, Claude Code accepted a reachable network path as a working directory."
     },
     {
       "heading": "Has a wildcard before the rest of the command",

@@ -36,17 +36,21 @@ import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-con
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
+import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
 import permissionsBashExecWrapperPrefix from './rules/permissions-bash-exec-wrapper-prefix.ts'
 import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildcard.ts'
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
+import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
 import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
 import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
 import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
 import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
 import permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
 import permissionsEndConversation from './rules/permissions-end-conversation.ts'
+import permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
+import permissionsNegation from './rules/permissions-negation.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
@@ -56,6 +60,8 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import permissionsWebfetchDomainSyntax from './rules/permissions-webfetch-domain-syntax.ts'
+import permissionsWindowsPath from './rules/permissions-windows-path.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -160,6 +166,12 @@ const modules = [
   permissionsBashWildcardBeforeSubcommand,
   permissionsEndConversation,
   permissionsProtectedPathAllow,
+  permissionsAdditionalDirectoriesPath,
+  permissionsBlockReadsFalse,
+  permissionsInvalidPathPattern,
+  permissionsNegation,
+  permissionsWebfetchDomainSyntax,
+  permissionsWindowsPath,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -280,6 +292,12 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-bash-wildcard-before-subcommand': 'error',
   'permissions-end-conversation': 'error',
   'permissions-protected-path-allow': 'error',
+  'permissions-additional-directories-path': 'error',
+  'permissions-block-reads-false': 'error',
+  'permissions-invalid-path-pattern': 'error',
+  'permissions-negation': 'error',
+  'permissions-webfetch-domain-syntax': 'error',
+  'permissions-windows-path': 'error',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

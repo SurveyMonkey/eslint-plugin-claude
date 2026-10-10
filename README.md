@@ -165,6 +165,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-bash-wildcard-before-subcommand`](docs/rules/permissions-bash-wildcard-before-subcommand.md) | The `*` of a Bash allow rule comes after the subcommand | `error` | `error` |
 | [`claude/permissions-end-conversation`](docs/rules/permissions-end-conversation.md) | A deny or ask rule does not name `EndConversation`, which has no effect while another tool remains | `error` | `error` |
 | [`claude/permissions-protected-path-allow`](docs/rules/permissions-protected-path-allow.md) | An allow rule does not grant a write to a protected path or the removal of a critical path | `error` | `error` |
+| [`claude/permissions-additional-directories-path`](docs/rules/permissions-additional-directories-path.md) | An `additionalDirectories` entry is a local path, not a UNC share or a `/net/<host>` path | `error` | `error` |
+| [`claude/permissions-block-reads-false`](docs/rules/permissions-block-reads-false.md) | `blockReadsOutsideWorkingDirectories` is not `false`, which is the same as unset | `error` | `error` |
+| [`claude/permissions-invalid-path-pattern`](docs/rules/permissions-invalid-path-pattern.md) | A `Read` or `Edit` specifier has no unclosed `[`, which makes it an unusable gitignore pattern | `error` | `error` |
+| [`claude/permissions-negation`](docs/rules/permissions-negation.md) | A `!` rule comes after the path rule that it carves, and not before an anchor or inside a blocked directory | `error` | `error` |
+| [`claude/permissions-webfetch-domain-syntax`](docs/rules/permissions-webfetch-domain-syntax.md) | A `WebFetch` rule is `domain:<host>`, with no scheme, path or port | `error` | `error` |
+| [`claude/permissions-windows-path`](docs/rules/permissions-windows-path.md) | A `Read`, `Edit` or `Cd` path is in POSIX form, with no drive letter or backslash | `error` | `error` |
 
 ## Contributing
 

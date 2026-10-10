@@ -556,6 +556,93 @@ const TREE: Record<string, string> = {
   // `permissions-protected-path-allow`: the entry in a managed file, which the rule does not read.
   'packages/ppa2/managed-settings.json':
     '{"sandbox": {"filesystem": {"allowWrite": [".git/hooks"]}}}',
+  // `permissions-additional-directories-path`: additionalDirectories: a network path, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pad/.claude/settings.json': '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/.claude/settings.local.json':
+    '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/managed-settings.json': '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/managed-settings.d/10-a.json':
+    '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/managed-settings.d/30-b.txt':
+    '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  'packages/pad/.vscode/settings.json': '{"permissions": {"additionalDirectories": ["/net/host"]}}',
+  // `permissions-block-reads-false`: `blockReadsOutsideWorkingDirectories: false`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pbr/.claude/settings.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/.claude/settings.local.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/managed-settings.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/managed-settings.d/10-a.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/managed-settings.d/30-b.txt':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  'packages/pbr/.vscode/settings.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  // `permissions-invalid-path-pattern`: an `Edit` rule with an unclosed `[`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pip/.claude/settings.json': '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/.claude/settings.local.json':
+    '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/managed-settings.json': '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/managed-settings.d/10-a.json':
+    '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/managed-settings.d/30-b.txt':
+    '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  'packages/pip/.vscode/settings.json': '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
+  // `permissions-negation`: a `!` rule listed first, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pne/.claude/settings.json': '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/.claude/settings.local.json': '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/managed-settings.json': '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/managed-settings.d/10-a.json': '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/managed-settings.d/30-b.txt': '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  'packages/pne/.vscode/settings.json': '{"permissions": {"deny": ["Read(!sample.env)"]}}',
+  // `permissions-webfetch-domain-syntax`: a URL scheme in a `domain:` rule, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pwd/.claude/settings.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/.claude/settings.local.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/managed-settings.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/managed-settings.d/10-a.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/managed-settings.d/30-b.txt':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  'packages/pwd/.vscode/settings.json':
+    '{"permissions": {"allow": ["WebFetch(domain:https://example.com)"]}}',
+  // `permissions-windows-path`: a drive letter in a `Read` rule, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pwp/.claude/settings.json': '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/.claude/settings.local.json':
+    '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/managed-settings.json': '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/managed-settings.d/10-a.json':
+    '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/managed-settings.d/30-b.txt':
+    '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  'packages/pwp/.vscode/settings.json': '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -659,6 +746,17 @@ const ALLOW_RULES = [
   },
   { name: 'permissions-end-conversation', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-protected-path-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The path and WebFetch rules of the third layer of #15, in the order of the `modules` list, with
+// the files of each. Each is an error. All six read the project and managed files.
+const PATH_RULES = [
+  { name: 'permissions-additional-directories-path', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-block-reads-false', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-invalid-path-pattern', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-negation', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-webfetch-domain-syntax', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-windows-path', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -878,14 +976,20 @@ const EXPECTED = [
   'packages/pdc/managed-settings.json: claude/permissions-default-mode-conflict@2',
   'packages/pdc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/pdc2/managed-settings.d/10-a.json: claude/permissions-default-mode-conflict@2',
-  // The Bash and allow rules read the project and managed files, and no other file. A hidden
+  // The Bash, allow, path and WebFetch rules read the project and managed files, and no other file. A hidden
   // drop-in is for `settings-managed-file`.
   ...[
+    ['pad', 'permissions-additional-directories-path'],
     ['pau', 'permissions-allow-unrestricted'],
+    ['pbr', 'permissions-block-reads-false'],
     ['pec', 'permissions-end-conversation'],
     ['pew', 'permissions-bash-exec-wrapper-prefix'],
+    ['pip', 'permissions-invalid-path-pattern'],
+    ['pne', 'permissions-negation'],
     ['prw', 'permissions-bash-runner-wildcard'],
     ['pwb', 'permissions-bash-wildcard-before-subcommand'],
+    ['pwd', 'permissions-webfetch-domain-syntax'],
+    ['pwp', 'permissions-windows-path'],
   ].flatMap(([dir, rule]) => [
     `packages/${dir}/.claude/settings.json: claude/${rule}@2`,
     `packages/${dir}/.claude/settings.local.json: claude/${rule}@2`,
@@ -998,6 +1102,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...PATH_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
       ...MARKETPLACE_RULES.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -1026,6 +1134,7 @@ describe('configs', () => {
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MODE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...ALLOW_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...PATH_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
@@ -1098,6 +1207,15 @@ describe('configs', () => {
 
   it('gives each Bash and allow rule one JSON block for its files', () => {
     for (const { name, files } of ALLOW_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each path and WebFetch rule one JSON block for its files', () => {
+    for (const { name, files } of PATH_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )
