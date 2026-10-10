@@ -2699,6 +2699,8 @@ const TREE: Record<string, string> = {
   ...settingsFiles('ssc', {
     sandbox: { credentials: { files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask' }] } },
   }),
+  // `permissions-dead-allow`: an allow rule under a bare deny.
+  ...settingsFiles('pda', { permissions: { allow: ['Bash(npm test)'], deny: ['Bash'] } }),
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3547,6 +3549,7 @@ const SANDBOX_RULES = [
   { name: 'sandbox-filesystem-disabled-conflict', files: MANAGED_FILES },
   { name: 'sandbox-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-scope', files: PROJECT_FILES },
+  { name: 'permissions-dead-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4680,6 +4683,7 @@ const EXPECTED = [
     ['sdx', 'sandbox-domain-syntax'],
     ['sec', 'sandbox-excluded-commands-syntax'],
     ['ssm', 'sandbox-schema'],
+    ['pda', 'permissions-dead-allow'],
   ].flatMap(([dir, rule]) => [
     // `settings-key-scope` reports `autoMode` in a project file, so
     // `permissions-auto-mode-schema` leaves that file alone.
