@@ -33,11 +33,31 @@ markdownTester.run('claude-md-max-bytes', rule, {
     { code: `﻿${ofBytes(100)}`, filename: root, options: [{ max: 100 }] },
     // A file that Claude Code does not read as a CLAUDE.md. The docs name CLAUDE.md files only,
     // so `AGENTS.md` is left out. A rule file is not a CLAUDE.md file either.
-    { code: ofBytes(LIMIT + 1), filename: '/repo/docs/CLAUDE-notes.md' },
-    { code: ofBytes(LIMIT + 1), filename: '/repo/AGENTS.md' },
-    { code: ofBytes(LIMIT + 1), filename: '/repo/claude.md' },
-    { code: ofBytes(LIMIT + 1), filename: '/repo/.claude/rules/CLAUDE.md' },
-    { code: ofBytes(LIMIT + 1), filename: '/repo/.claude/rules/big.md' },
+    {
+      name: 'over the limit, not read: docs/CLAUDE-notes.md',
+      code: ofBytes(LIMIT + 1),
+      filename: '/repo/docs/CLAUDE-notes.md',
+    },
+    {
+      name: 'over the limit, not read: AGENTS.md',
+      code: ofBytes(LIMIT + 1),
+      filename: '/repo/AGENTS.md',
+    },
+    {
+      name: 'over the limit, not read: claude.md',
+      code: ofBytes(LIMIT + 1),
+      filename: '/repo/claude.md',
+    },
+    {
+      name: 'over the limit, not read: .claude/rules/CLAUDE.md',
+      code: ofBytes(LIMIT + 1),
+      filename: '/repo/.claude/rules/CLAUDE.md',
+    },
+    {
+      name: 'over the limit, not read: .claude/rules/big.md',
+      code: ofBytes(LIMIT + 1),
+      filename: '/repo/.claude/rules/big.md',
+    },
   ],
   invalid: [
     // One byte over the limit. The report is at the start of the file.

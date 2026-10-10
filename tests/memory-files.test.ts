@@ -25,6 +25,12 @@ describe('classifyMemoryFile', () => {
     expect(at('.claude', 'rules', 'notes.txt')).toBe('rule')
   })
 
+  it('reads an AGENTS variant name below .claude/rules as a rule', () => {
+    expect(at('.claude', 'rules', 'AGENTS.override.md')).toBe('rule')
+    expect(at('.claude', 'rules', 'AGENTS.local.md')).toBe('rule')
+    expect(at('.claude', 'rules', '.agents', 'x.md')).toBe('rule')
+  })
+
   it('reads a CLAUDE.md in .claude/rules as a rule, not as a CLAUDE.md', () => {
     expect(at('.claude', 'rules', 'CLAUDE.md')).toBe('rule')
   })
