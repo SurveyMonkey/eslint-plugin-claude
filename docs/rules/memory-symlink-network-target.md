@@ -29,8 +29,9 @@ network path: the UNC share `\\server\share`, and a path under `/net` or `/Netwo
 The rule reports a file when one of these is a link with such a target:
 
 - The file, when it is a `CLAUDE.md` or `.claude/CLAUDE.md`.
-- The file, when it is a rule file. The report is the same for the `.claude/rules` folder, and for
-  each folder below it, because a link to a folder moves the files below it.
+- The file, when it is a rule file.
+- The `.claude/rules` folder, and each folder below it, when the file is a rule file. A link to a
+  folder moves the files below it.
 
 The rule reads the text of the link and nothing else. It never follows the link, so it contacts no
 host. It stops at the first link of that kind, because a look at a path below it would follow the

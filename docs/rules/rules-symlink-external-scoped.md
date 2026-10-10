@@ -56,7 +56,7 @@ a block as no `paths` field, and loads the rule when the link is approved.[^fron
 
 The repository is the first folder above the file that holds `.git`. A link whose target has a
 `.git` of its own leads to another repository, and the rule makes no report for it. With no `.git`
-on the way, the folder of the file is the bound. A user config can keep this rule from running on
+on the way, the folder of the file is the bound. A user config can turn this rule off for
 files that a team shares on purpose.
 
 A linked rule with no `paths` loads after the approval. This rule does not look at it.
