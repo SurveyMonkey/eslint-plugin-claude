@@ -1,0 +1,106 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/mods/reference",
+  "hash": "b6ff422e7b68cbcb4268e49425312bd1969d968ff512b97c62b7419c73ec12dc",
+  "blocks": [
+    {
+      "id": "mods-reference",
+      "hash": "3026cb0caebf11e412cfd732352f22828f73190ee6ccee5b02d7968aee3c2cb6"
+    },
+    {
+      "id": "files",
+      "hash": "ce3d96b14679f96134ec81f14e42ec1440ae007a13fa04b6f96e08fb602cef08"
+    },
+    {
+      "id": "the-hook-function",
+      "hash": "0ae47fe97598ae830024e3fc0fa6555987646265c34b8d9dcd431f4ab88f9e8b"
+    },
+    {
+      "id": "events",
+      "hash": "0a7abc85d98de224db7e308ff2ccec53964fac2d941aaf6fd1f1270509994ec5"
+    },
+    {
+      "id": "tools",
+      "hash": "cbbc1558ca7334c5bb86fe3d777b45af33639dd675f243dde3591260cf15a270"
+    },
+    {
+      "id": "agent-and-organization-fields-on-tool-check",
+      "hash": "974c125c56524ba48c95b27d826e50579f3d690db34c28f4c0eb4376d129768c"
+    },
+    {
+      "id": "prompts-and-what-claude-reads",
+      "hash": "f83828d16e7c8101a1ec8cec9ae1150de3125bd05a89b0d890ee6f381c5829a8"
+    },
+    {
+      "id": "commands-and-configuration",
+      "hash": "e08adad0439ff4dea511e20b218ff963e93dd8ea479e1e3a4bb5782e59ef6542"
+    },
+    {
+      "id": "turns",
+      "hash": "fc4940532cdd0ec406d66bb816355edb70f18743c9ff350f5ad788617ac11bff"
+    },
+    {
+      "id": "session",
+      "hash": "ba6d23b143e5998df55f8044bc87ebf2837ab9afe578989a0545774a0eb1a723"
+    },
+    {
+      "id": "subagents",
+      "hash": "7b1cec5719e92699ead660db19959ea0a420653053a349a3c5408cb8ff364d0c"
+    },
+    {
+      "id": "interface",
+      "hash": "6c69e4764d40803c97a97c646a69b75e90c4ffbb4cb28ff151cd4a7037ebc58e"
+    },
+    {
+      "id": "other-mods",
+      "hash": "931645c41ca98dfe4dc998d18c9e40527b64ae5c23098e9a58ca04fccf00deca"
+    },
+    {
+      "id": "telemetry",
+      "hash": "94731b25dd331f475535b45b715964899e768f832f898272da6cec3952b8735c"
+    },
+    {
+      "id": "settings-hook-events",
+      "hash": "231c40e09408832b74877b33e4fb2a32c834ee6ba232e6325de8e4c29bf1d887"
+    },
+    {
+      "id": "mods-api-calls",
+      "hash": "6b098a1da67c329a5791c85e45a238427ddc4736e0668ba1be89bd769c3a690c"
+    },
+    {
+      "id": "mods-api-methods",
+      "hash": "4bc83f7a6bc69032a60e98172753c396c645a2a31a6e7aee6352b15e9f963edb"
+    },
+    {
+      "id": "render-sites",
+      "hash": "6df9e1f6ff8b94a99e6abd55a066e8e9bbf92941f035bab8194a71cce0356221"
+    },
+    {
+      "id": "elements",
+      "hash": "860cf1236b3e6a68d0ff8591c7332f4942040dd04dc758be3872ce33e2adc2ee"
+    },
+    {
+      "id": "box-border-styles",
+      "hash": "3058446d0fa6706eb331ea928344873356441367c10c6477aba1fcf03b90e402"
+    },
+    {
+      "id": "limits",
+      "hash": "0606c8ec761aef02ccfd86f8c655243101504c42b4f9b19b9bd17926ab16c43e"
+    },
+    {
+      "id": "settings-and-environment-variables",
+      "hash": "aa93412f26f64ca2c0fa0b953da4a5515d0a8ccde83e8b5c75151c09f9d9fdd3"
+    },
+    {
+      "id": "commands",
+      "hash": "23e7a48b8b238790ce88fdef0ad848d4f777e3f0fac417dbb5fa05bec7de5ca3"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Files",
+      "id": "files",
+      "hash": "ce3d96b14679f96134ec81f14e42ec1440ae007a13fa04b6f96e08fb602cef08",
+      "text": "## Files\n\nA mod is a plugin directory with these files:\n\n| File | Required | Contents |\n| :- | :- | :- |\n| `.claude-plugin/plugin.json` | Yes | The plugin [manifest](/docs/en/plugins/manifest-reference). Mods add no required fields. |\n| `hooks/hooks.json` | Yes | `modules`: an array with one path, relative to this file, to the hooks module, as in `\"modules\": [\"./register.js\"]`. Can also hold [settings hooks](/docs/en/hooks) under `hooks`. |\n| The hooks module, such as [`hooks/register.js`](/docs/en/plugins/mods/create#write-a-mod-yourself) | Yes | The mod's entry point. Exports `register(on, options)`. Named `.js`, `.mjs`, `.cjs`, `.jsx`, `.ts`, `.mts`, `.cts`, or `.tsx`. An ES module. |\n| [`types/index.d.ts`](/docs/en/plugins/mods/interface#declare-the-values), named by `types` in the manifest | When the mod uses `$.state` or adds a namespace to the mods API | Declares `PluginState` values and any namespace the mod adds |\n| Files whose names end in `.test.ts` or `.test.tsx` | No | Tests that [`claude plugin test`](/docs/en/plugins/mods/test#write-a-test) runs |\n\n`register` receives `on` and `options`. `options` holds the values of the [`userConfig`](/docs/en/plugins/components#user-configuration) fields the manifest declares, with defaults filled in."
+    }
+  ]
+}

@@ -61,14 +61,14 @@ const ALL_FIVE = [
 ]
 
 describe(`${name}: prompt and agent hooks`, () => {
-  it.fails('reports a prompt and an agent hook on each event that does not run them', () => {
+  it('reports a prompt and an agent hook on each event that does not run them', () => {
     for (const event of NO_PROMPT) {
       expect(ids(event, prompt), event).toEqual(['unsupported'])
       expect(ids(event, agent), event).toEqual(['unsupported'])
     }
   })
 
-  it.fails('is silent for command, http and mcp_tool on those events', () => {
+  it('is silent for command, http and mcp_tool on those events', () => {
     for (const event of NO_PROMPT) {
       expect(ids(event, command()), event).toEqual([])
       expect(ids(event, http), event).toEqual([])
@@ -76,7 +76,7 @@ describe(`${name}: prompt and agent hooks`, () => {
     }
   })
 
-  it.fails('is silent for each type on the events that run all five', () => {
+  it('is silent for each type on the events that run all five', () => {
     for (const event of ALL_FIVE) {
       for (const handler of [command(), http, mcp, prompt, agent]) {
         expect(ids(event, handler), `${event} ${handler.type}`).toEqual([])
@@ -84,7 +84,7 @@ describe(`${name}: prompt and agent hooks`, () => {
     }
   })
 
-  it.fails('names the event, the type and the types that the event runs', () => {
+  it('names the event, the type and the types that the event runs', () => {
     const [message] = lintJson(name, settings(hooks('SessionEnd', [prompt])), FILES.project)
     expect(message?.message).toBe(
       'Claude Code does not run a "prompt" hook on SessionEnd. It runs "command", "http" and "mcp_tool" hooks there.',
@@ -93,7 +93,7 @@ describe(`${name}: prompt and agent hooks`, () => {
 })
 
 describe(`${name}: SessionStart and Setup`, () => {
-  it.fails('reports http, prompt and agent on SessionStart and Setup', () => {
+  it('reports http, prompt and agent on SessionStart and Setup', () => {
     for (const event of ['SessionStart', 'Setup']) {
       for (const handler of [http, prompt, agent]) {
         expect(ids(event, handler), `${event} ${handler.type}`).toEqual(['unsupported'])
@@ -101,12 +101,12 @@ describe(`${name}: SessionStart and Setup`, () => {
     }
   })
 
-  it.fails('reports mcp_tool on Setup, which Claude Code always skips', () => {
+  it('reports mcp_tool on Setup, which Claude Code always skips', () => {
     expect(ids('Setup', mcp)).toEqual(['unsupported'])
     expect(ids('Setup', command())).toEqual([])
   })
 
-  it.fails('is silent for command, and for mcp_tool that can run, on SessionStart', () => {
+  it('is silent for command, and for mcp_tool that can run, on SessionStart', () => {
     expect(ids('SessionStart', command())).toEqual([])
     expect(ids('SessionStart', mcp)).toEqual([])
     expect(ids('SessionStart', mcp, '')).toEqual([])
@@ -118,7 +118,7 @@ describe(`${name}: SessionStart and Setup`, () => {
     expect(ids('SessionStart', mcp, ['startup'])).toEqual([])
   })
 
-  it.fails('reports mcp_tool whose matcher selects only startup and resume', () => {
+  it('reports mcp_tool whose matcher selects only startup and resume', () => {
     for (const matcher of [
       'startup',
       'resume',
@@ -130,7 +130,7 @@ describe(`${name}: SessionStart and Setup`, () => {
     }
   })
 
-  it.fails('says that the hook runs after clear and compaction', () => {
+  it('says that the hook runs after clear and compaction', () => {
     const [message] = lintJson(
       name,
       settings(hooks('SessionStart', [mcp], 'startup')),
@@ -143,19 +143,19 @@ describe(`${name}: SessionStart and Setup`, () => {
 })
 
 describe(`${name}: PermissionRequest and PermissionDenied`, () => {
-  it.fails('reports an agent hook on PermissionRequest', () => {
+  it('reports an agent hook on PermissionRequest', () => {
     expect(ids('PermissionRequest', agent)).toEqual(['unsupported'])
     const [message] = lintJson(name, settings(hooks('PermissionRequest', [agent])), FILES.project)
     expect(message?.message).toContain('"command", "http", "mcp_tool" and "prompt"')
   })
 
-  it.fails('is silent for the four other types on PermissionRequest', () => {
+  it('is silent for the four other types on PermissionRequest', () => {
     for (const handler of [command(), http, mcp, prompt]) {
       expect(ids('PermissionRequest', handler), handler.type).toEqual([])
     }
   })
 
-  it.fails('reports a prompt and an agent hook on PermissionDenied, which discards their output', () => {
+  it('reports a prompt and an agent hook on PermissionDenied, which discards their output', () => {
     expect(ids('PermissionDenied', prompt)).toEqual(['discarded'])
     expect(ids('PermissionDenied', agent)).toEqual(['discarded'])
     expect(ids('PermissionDenied', command())).toEqual([])
@@ -165,7 +165,7 @@ describe(`${name}: PermissionRequest and PermissionDenied`, () => {
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file, hooks.json, a skill and a project subagent', () => {
+  it('reads every settings file, hooks.json, a skill and a project subagent', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids('SessionEnd', prompt, undefined, file), file).toEqual(['unsupported'])
     }
@@ -174,23 +174,23 @@ describe(`${name}: the files`, () => {
     expect(markdownIds(name, frontmatter(yaml), FILES.agent)).toEqual(['unsupported'])
   })
 
-  it.fails('is silent in a hidden drop-in, and in a plugin agent', () => {
+  it('is silent in a hidden drop-in, and in a plugin agent', () => {
     expect(ids('SessionEnd', prompt, undefined, FILES.hidden)).toEqual([])
     const yaml = 'SessionEnd:\n  - hooks:\n      - type: prompt\n        prompt: p\n'
     expect(markdownIds(name, frontmatter(yaml), pluginAgent())).toEqual([])
   })
 
-  it.fails('is silent for an event that Claude Code does not know, and for an unknown type', () => {
+  it('is silent for an event that Claude Code does not know, and for an unknown type', () => {
     expect(ids('Bogus', prompt)).toEqual([])
     expect(ids('SessionEnd', { type: 'script' })).toEqual([])
     expect(ids('SessionEnd', {})).toEqual([])
     expect(ids('constructor', prompt)).toEqual([])
   })
 
-  it.fails('reports at the type value', () => {
+  it('reports at the type value', () => {
     const text =
       '{\n  "hooks": {\n    "SessionEnd": [{"hooks": [{"type": "prompt", "prompt": "p"}]}]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
-    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 44]])
+    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 40]])
   })
 })
