@@ -80,6 +80,6 @@ None.
 ## Sources
 
 [^manual]: [Customize your status line: Manually configure a status line](https://code.claude.com/docs/en/statusline#manually-configure-a-status-line)
-[^trouble]: [Customize your status line: Troubleshooting](https://code.claude.com/docs/en/statusline#troubleshooting)
+[^trouble]: [Customize your status line: Status line not appearing](https://code.claude.com/docs/en/statusline#status-line-not-appearing)
 [^subagent]: [Customize your status line: Subagent status lines](https://code.claude.com/docs/en/statusline#subagent-status-lines)
 [^gates]: [All settings: Status line and file suggestion gates](https://code.claude.com/docs/en/settings-reference#status-line-and-file-suggestion-gates)
