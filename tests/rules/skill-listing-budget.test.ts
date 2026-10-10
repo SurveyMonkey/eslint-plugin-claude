@@ -255,6 +255,13 @@ markdownTester.run('skill-listing-budget', ruleOf('skill-listing-budget'), {
       options: [{ max: 3073 }],
       errors: [configured(3074, 1537, 3073)],
     },
+    // The cut applies to the description and `when_to_use` together, not to each field.
+    {
+      code: `---\ndescription: ${x(1000)}\nwhen_to_use: ${x(1000)}\n---\n`,
+      filename: skillIn('cut', 'a'),
+      options: [{ max: 3073 }],
+      errors: [configured(3074, 1537, 3073)],
+    },
     // `listingMax` sets the cut: two entries of 101.
     {
       code: described(5000),
