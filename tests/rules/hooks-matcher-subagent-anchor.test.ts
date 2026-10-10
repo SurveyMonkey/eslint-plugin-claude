@@ -45,6 +45,10 @@ describe(`${name}: a plugin-scoped name`, () => {
     expect(ids('SubagentStart', '^a:b|c:d$')).toEqual(['unanchored'])
   })
 
+  it('is silent when an even run of backslashes leaves the dollar an anchor', () => {
+    expect(ids('SubagentStart', '^a:b\\\\$')).toEqual([])
+  })
+
   it('is silent for a list whose alternatives each have both anchors, also in a group', () => {
     for (const matcher of ['^a:b$|^c:d$', '(^a:b$)', '(?:^a:b$|^c:d$)', '(?i:^a:b$)']) {
       expect(ids('SubagentStart', matcher), matcher).toEqual([])
