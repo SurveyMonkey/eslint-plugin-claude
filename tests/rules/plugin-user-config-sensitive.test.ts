@@ -22,8 +22,10 @@ const run = (userConfig: unknown, more: Record<string, unknown> = {}) => {
 
 describe(RULE, () => {
   check('reports a token key, on the key, with the full message', () => {
-    const found = run({ api_token: option() })
+    const { dir, code } = pluginTree({ name: 'p', userConfig: { api_token: option() } })
+    const found = lintPlugin(RULE, dir, code)
     expect(found).toHaveLength(1)
+    expect(found[0]?.column).toBe(code.indexOf('"api_token"') + 1)
     expect(found[0]).toMatchObject({
       ruleId: `claude/${RULE}`,
       messageId: 'sensitive',
@@ -39,6 +41,10 @@ describe(RULE, () => {
     ['an upper case key with an acronym', { APIToken: option() }],
     ['an upper case key', { API_TOKEN: option() }],
     ['a plural key', { tokens: option() }],
+    ['a plural password key', { passwords: option() }],
+    ['a key with a digit', { api2Token: option() }],
+    ['a plural title', { cred: option({ title: 'Access Tokens' }) }],
+    ['a option with no type', { api_token: { title: 'T' } }],
     ['a key with a hyphen', { 'db-password': option() }],
     ['a title with the word', { cred: option({ title: 'Admin Password' }) }],
   ])('reports %s', (_title, userConfig) => {
@@ -46,7 +52,8 @@ describe(RULE, () => {
   })
 
   check('reports each option', () => {
-    expect(run({ a_token: option(), b_password: option() })).toHaveLength(2)
+    const found = run({ a_token: option(), b_password: option() })
+    expect(found.map((one) => one.message.slice(12, 19))).toEqual(['a_token', 'b_passw'])
   })
 
   check('reports an option of a channel', () => {
@@ -61,6 +68,9 @@ describe(`${RULE} (silent)`, () => {
   check.each([
     ['sensitive true', option({ sensitive: true })],
     ['sensitive false', option({ sensitive: false })],
+    ['type number', option({ type: 'number' })],
+    ['type boolean', option({ type: 'boolean' })],
+    ['type directory', option({ type: 'directory' })],
   ])('stays silent for an option with %s', (_title, value) => {
     expect(run({ api_token: value })).toEqual([])
   })

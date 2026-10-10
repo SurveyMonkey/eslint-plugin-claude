@@ -2,7 +2,8 @@
 // and keeps the value in secure storage (docs/rules/plugin-user-config-sensitive.md). The docs name
 // a token and a password only. The rule matches whole words of the key and of the `title`. It
 // reads the top-level `userConfig` and the `userConfig` of each channel. It skips an option that
-// sets `sensitive`, with any value. It makes no report when it cannot see the plugin.
+// sets `sensitive`, with any value, and an option with a `type` other than `string`. It makes no
+// report when it cannot see the plugin.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
@@ -48,6 +49,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'sensitive' }> = {
         for (const config of configsOf(node.body)) {
           for (const option of config.members) {
             if (option.value.type !== 'Object' || lastMember(option.value, 'sensitive')) {
+              continue
+            }
+            // `sensitive` masks text. A number, a boolean, a file or a directory has no use for it.
+            const kind = lastMember(option.value, 'type')?.value
+            if (kind?.type === 'String' && kind.value !== 'string') {
               continue
             }
             const title = lastMember(option.value, 'title')?.value

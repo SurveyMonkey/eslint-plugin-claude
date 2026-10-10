@@ -32,7 +32,7 @@ describe(RULE, () => {
   })
 
   check('reports each file with the name of a system command', () => {
-    const found = run({ 'bin/git': '', 'bin/ls': '', 'bin/my-tool': '' })
+    const found = run({ 'bin/ls': '', 'bin/my-tool': '', 'bin/git': '' })
     expect(found.map((m) => m.message.slice(0, 20))).toEqual([
       'The file `bin/git` h',
       'The file `bin/ls` ha',
