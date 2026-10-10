@@ -880,6 +880,58 @@
       "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e"
     }
   ],
+  "settings-committed-helper-command": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "apiKeyHelper",
+      "hash": "efd9c40b52165bfced283ded41ab73dfef7ea57cd354606bfb0f53cb8848b88e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "awsAuthRefresh",
+      "hash": "bbbd75972b95d07c353899886495adf971851643ffab4906beaf94dae960a6f8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "awsCredentialExport",
+      "hash": "a79192c5673251d2e2622fe3f1afa646cb76ae400d7695563e3475827fd23802"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "gcpAuthRefresh",
+      "hash": "fbfa81160c4fa56b0702019dc32c4b31281aa1edf8b92e9f3b1efbf10ec087f0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "otelHeadersHelper",
+      "hash": "295d3fe3b80b688c2f11f466476e73bdc7c02139db022c6a13c3e590aec75e9c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "statusLine",
+      "hash": "eb35c1765e7649454e2c1be1904af6d6bf0a9cf3c797934ce4644566ab5701f6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "subagentStatusLine",
+      "hash": "97c7c76a9cffd6e307665b1e491356a8b961a0a04e2413ab24b95736801ef376"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "fileSuggestion",
+      "hash": "3b9603f5087a69b4e2a8545bc463c8b360209506b1ca56ba611024559ba9e4ff"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Security approval dialogs",
+      "hash": "2c75b48de8a33fb99c33f4a3a5184ae04433d6202d8d337c201f840fcda9432e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "What runs before you trust a folder",
+      "hash": "173e436b56ea35918c15cdfb5702e5e4aec9f31c032c1a61418b13f07e6efe26"
+    }
+  ],
   "settings-conflicting-keys": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1035,6 +1087,23 @@
       "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
     }
   ],
+  "settings-env-deprecated-var": [
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Environment variables",
+      "hash": "870502c6df0b0889bd44c1ef54e104d6332d7bc6d5c5c22ae195fa8c7536496d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Precedence",
+      "hash": "4f15b856c794d8eda7685547ff33fd32093b1a391233e12f012fad2406e37bb6"
+    }
+  ],
   "settings-env-ignored-var": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1045,6 +1114,50 @@
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
       "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+    }
+  ],
+  "settings-env-prompt-caching-off": [
+    {
+      "url": "https://code.claude.com/docs/en/prompt-caching",
+      "heading": "How Claude Code uses prompt caching",
+      "hash": "de13a11825487ea2e021d861db0c83e238a80258b5cbb4296fad23341850a034"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/prompt-caching",
+      "heading": "Disable prompt caching",
+      "hash": "0ee58280cb99fd29fb9de9a29eb1f16d4aa2ad5baeb82d128f3f07132fd22bf4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+    }
+  ],
+  "settings-env-routing": [
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Environment variables and the approval dialog",
+      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Security considerations",
+      "hash": "3f7c2af4aa3844b4de442154219673c79c0da8a43d608d00e429b71df90f9801"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Fetch and caching behavior",
+      "hash": "552d4e629d11300826cb9b538f2706172c7b6ffad87d97409bc9b52142d8c81c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Precedence",
+      "hash": "4f15b856c794d8eda7685547ff33fd32093b1a391233e12f012fad2406e37bb6"
     }
   ],
   "settings-env-shadowed": [
@@ -1213,7 +1326,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "fb925813ce07d30473520ced16f342d62b6dd044bc729ab379a90b4b419294a0"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -1291,6 +1404,13 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Marketplace sources",
       "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
+    }
+  ],
+  "settings-local-location": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Where Claude Code keeps the local file in a git repository",
+      "hash": "d22a9454f31f12a55265c52b63d2ca836a279059a83b925ee0d7184814a16d47"
     }
   ],
   "settings-managed-file": [
@@ -1543,7 +1663,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "forceLoginMethod",
-      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
+      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1639,7 +1759,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "fb925813ce07d30473520ced16f342d62b6dd044bc729ab379a90b4b419294a0"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -1778,6 +1898,18 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "settings-webfetch-preflight-skip": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "skipWebFetchPreflight",
+      "hash": "021426c8a118c8d6539cc66e87ed582be06be390e0d7d5917dedf966bbfc3215"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "WebFetch",
+      "hash": "34f315d4eb30dc7b6e7149d6a1a850903297476471a752edfa885ac250b0d999"
     }
   ],
   "skill-agent-exists": [

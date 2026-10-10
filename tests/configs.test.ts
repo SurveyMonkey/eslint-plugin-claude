@@ -503,6 +503,64 @@ const TREE: Record<string, string> = {
   'packages/go/.vscode/keybindings.json': '{"bindings": []}',
   'packages/go/themes/dracula.json': '{"name": "Dracula"}',
   'packages/go2/.claude.json': '{"theme": "dark"}',
+  // The warn rules of the env and helper layer of #14. Each group has the files that the rule
+  // reads, a hidden drop-in, and the same content where no rule reads it: another extension, a
+  // nested directory, and another settings file.
+  // `settings-env-deprecated-var` reads the project and managed files. A value of `1` for
+  // `CLAUDE_CODE_ENABLE_TASKS` is silent.
+  'packages/dv/.claude/settings.json': '{"env": {"ANTHROPIC_SMALL_FAST_MODEL": "haiku"}}',
+  'packages/dv/.claude/settings.local.json': '{"env": {"CLAUDE_CODE_ENABLE_TASKS": "0"}}',
+  'packages/dv/managed-settings.json': '{"env": {"DISABLE_BUG_COMMAND": "1"}}',
+  'packages/dv/managed-settings.d/10-a.json': '{"env": {"SLASH_COMMAND_TOOL_CHAR_BUDGET": "9000"}}',
+  'packages/dv/managed-settings.d/.20-hidden.json': '{"env": {"DISABLE_BUG_COMMAND": "1"}}',
+  'packages/dv/managed-settings.d/30-b.txt': '{"env": {"DISABLE_BUG_COMMAND": "1"}}',
+  'packages/dv/managed-settings.d/sub/40-c.json': '{"env": {"DISABLE_BUG_COMMAND": "1"}}',
+  'packages/dv/.vscode/settings.json': '{"env": {"DISABLE_BUG_COMMAND": "1"}}',
+  'packages/dv2/.claude/settings.json': '{"env": {"CLAUDE_CODE_ENABLE_TASKS": "1"}}',
+  // `settings-env-routing` reads the shared project file only. The OpenTelemetry endpoint in
+  // `packages/er2` is for `settings-env-ignored-var`.
+  'packages/er/.claude/settings.json': '{"env": {"HTTPS_PROXY": "http://proxy.example.com:3128"}}',
+  'packages/er/.claude/settings.local.json': '{"env": {"HTTPS_PROXY": "http://p.example.com:1"}}',
+  'packages/er/managed-settings.json': '{"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}}',
+  'packages/er/managed-settings.d/10-a.json': '{"env": {"CLAUDE_CODE_USE_VERTEX": "1"}}',
+  'packages/er/.vscode/settings.json': '{"env": {"HTTPS_PROXY": "http://p.example.com:1"}}',
+  'packages/er2/.claude/settings.json':
+    '{"env": {"OTEL_EXPORTER_OTLP_ENDPOINT": "https://otel.example.com"}}',
+  // `settings-env-prompt-caching-off` reads the shared project file only.
+  'packages/pc/.claude/settings.json': '{"env": {"DISABLE_PROMPT_CACHING": "1"}}',
+  'packages/pc/.claude/settings.local.json': '{"env": {"DISABLE_PROMPT_CACHING": "1"}}',
+  'packages/pc/managed-settings.json': '{"env": {"DISABLE_PROMPT_CACHING": "1"}}',
+  'packages/pc/managed-settings.d/10-a.json': '{"env": {"DISABLE_PROMPT_CACHING_OPUS": "1"}}',
+  'packages/pc/.vscode/settings.json': '{"env": {"DISABLE_PROMPT_CACHING": "1"}}',
+  // `settings-committed-helper-command` reads the shared project file only.
+  'packages/hc/.claude/settings.json': '{"apiKeyHelper": "/bin/key.sh"}',
+  'packages/hc/.claude/settings.local.json': '{"apiKeyHelper": "/bin/key.sh"}',
+  'packages/hc/managed-settings.json': '{"apiKeyHelper": "/bin/key.sh"}',
+  'packages/hc/managed-settings.d/10-a.json': '{"awsAuthRefresh": "aws sso login"}',
+  'packages/hc/.vscode/settings.json': '{"apiKeyHelper": "/bin/key.sh"}',
+  'packages/hc2/.claude/settings.json':
+    '{"statusLine": {"type": "command", "command": "~/status.sh"}}',
+  // `settings-local-location` reads the local file in a repository with a `.git`: the file below
+  // the root is a fault, and the file at the root is not.
+  'packages/ll/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/ll/.claude/settings.local.json': '{}',
+  'packages/ll/pkg/.claude/settings.local.json': '{}',
+  'packages/ll/pkg/.claude/settings.json': '{}',
+  // `settings-webfetch-preflight-skip` reads the project files and the managed files. A
+  // `WebFetch(...)` rule in the other file of the folder, or of the managed source, is silent.
+  'packages/wf/.claude/settings.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf/.claude/settings.local.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf/managed-settings.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf/managed-settings.d/10-a.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf/managed-settings.d/.20-hidden.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf/managed-settings.d/30-b.txt': '{"skipWebFetchPreflight": true}',
+  'packages/wf/.vscode/settings.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf2/.claude/settings.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf2/.claude/settings.local.json':
+    '{"permissions": {"deny": ["WebFetch(domain:evil.example)"]}}',
+  'packages/wf2/managed-settings.json': '{"skipWebFetchPreflight": true}',
+  'packages/wf2/managed-settings.d/10-a.json':
+    '{"permissions": {"deny": ["WebFetch(domain:evil.example)"]}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -564,6 +622,7 @@ const SETTINGS_RULES = [
 // files of each. Each is an error.
 const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
 const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
+const SHARED_FILE = ['**/.claude/settings.json']
 const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
   { name: 'settings-valid-json', files: PROJECT_FILES },
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -605,6 +664,21 @@ const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
     severity: 'warn',
   },
   { name: 'settings-schema-url', files: [...PROJECT_FILES, ...MANAGED_FILES], severity: 'warn' },
+  // The rules of the env and helper layer are `warn`. Three of them read the shared file only.
+  { name: 'settings-committed-helper-command', files: SHARED_FILE, severity: 'warn' },
+  {
+    name: 'settings-env-deprecated-var',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  { name: 'settings-env-prompt-caching-off', files: SHARED_FILE, severity: 'warn' },
+  { name: 'settings-env-routing', files: SHARED_FILE, severity: 'warn' },
+  { name: 'settings-local-location', files: ['**/.claude/settings.local.json'], severity: 'warn' },
+  {
+    name: 'settings-webfetch-preflight-skip',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
 ]
 
 // `settings-schema-url` reports each settings file that is a JSON object with no `$schema`. The
@@ -827,6 +901,34 @@ const EXPECTED = [
   // `settings-outputstyle-resolves` reads the two project files, and no managed file.
   'packages/os/.claude/settings.json: claude/settings-outputstyle-resolves@2',
   'packages/os/.claude/settings.local.json: claude/settings-outputstyle-resolves@2',
+  // `settings-env-deprecated-var` reads the project and managed files, and no other file.
+  ...[
+    'packages/dv/.claude/settings.json',
+    'packages/dv/.claude/settings.local.json',
+    'packages/dv/managed-settings.json',
+    'packages/dv/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-env-deprecated-var@1`),
+  'packages/dv/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-routing` reads the shared project file only. `settings-env-ignored-var` owns the
+  // OpenTelemetry endpoint.
+  'packages/er/.claude/settings.json: claude/settings-env-routing@1',
+  'packages/er2/.claude/settings.json: claude/settings-env-ignored-var@2',
+  // `settings-env-prompt-caching-off` reads the shared project file only.
+  'packages/pc/.claude/settings.json: claude/settings-env-prompt-caching-off@1',
+  // `settings-committed-helper-command` reads the shared project file only.
+  'packages/hc/.claude/settings.json: claude/settings-committed-helper-command@1',
+  'packages/hc2/.claude/settings.json: claude/settings-committed-helper-command@1',
+  // `settings-local-location` reports the local file below the root of a repository.
+  'packages/ll/pkg/.claude/settings.local.json: claude/settings-local-location@1',
+  // `settings-webfetch-preflight-skip` reads the project files and the managed source. A rule in
+  // the other file makes the key silent.
+  ...[
+    'packages/wf/.claude/settings.json',
+    'packages/wf/.claude/settings.local.json',
+    'packages/wf/managed-settings.json',
+    'packages/wf/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-webfetch-preflight-skip@1`),
+  'packages/wf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `settings-global-only-file` reads the files of `packages/go`, and no other file.
   'packages/go/.claude/keybindings.json: claude/settings-global-only-file@2',
   'packages/go/.claude/themes/dracula.json: claude/settings-global-only-file@2',
