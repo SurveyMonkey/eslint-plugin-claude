@@ -240,6 +240,13 @@
       "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc"
     }
   ],
+  "claude-md-dangling-reference": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Write effective instructions",
+      "hash": "718f387c95271b74a191a607263f01cf7a88e5948098c801a525da993f7c23e7"
+    }
+  ],
   "claude-md-derivable-content": [
     {
       "url": "https://code.claude.com/docs/en/memory",

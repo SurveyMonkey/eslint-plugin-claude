@@ -609,6 +609,19 @@ const TREE: Record<string, string> = {
   'packages/gi/ok/.git': 'gitdir: ../.git\n',
   'packages/gi/ok/CLAUDE.md': 'Write commit messages in English.\n',
   'packages/gi/ok/.claude/settings.json': '{"includeGitInstructions": false}',
+  // `claude-md-dangling-reference`: a path that is not there, in each file that the rule reads. The
+  // same text where no rule reads it, and a path and a command that are there. The file `.git`
+  // makes `packages/dr` a repository.
+  'packages/dr/.git': 'gitdir: ../.git\n',
+  'packages/dr/CLAUDE.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/.claude/CLAUDE.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/CLAUDE.local.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/.claude/rules/a.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/docs/notes.md': 'See `docs/gone/file.md`.\n',
+  'packages/dr/ok/.git': 'gitdir: ../.git\n',
+  'packages/dr/ok/CLAUDE.md': 'See `src/a.ts`, and run `/ship`.\n',
+  'packages/dr/ok/src/a.ts': 'x\n',
+  'packages/dr/ok/.claude/skills/ship/SKILL.md': '---\nname: ship\ndescription: d\n---\n',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
@@ -785,6 +798,10 @@ const MEMORY_WARN_RULES = [
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-dangling-reference': [
+    'markdown/gfm',
+    ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md'],
+  ],
   'claude-md-derivable-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-emphasis-overuse': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-git-instructions': ['markdown/gfm', ['**/CLAUDE.md', '**/.claude/rules/**/*.md']],
@@ -1118,6 +1135,11 @@ const STRICT_ONLY = [
   'packages/gi/CLAUDE.md: claude/claude-md-git-instructions@1',
   'packages/gi/.claude/CLAUDE.md: claude/claude-md-git-instructions@1',
   'packages/gi/.claude/rules/git.md: claude/claude-md-git-instructions@1',
+  // `claude-md-dangling-reference` reads CLAUDE.md, CLAUDE.local.md and the rule files.
+  'packages/dr/CLAUDE.md: claude/claude-md-dangling-reference@1',
+  'packages/dr/.claude/CLAUDE.md: claude/claude-md-dangling-reference@1',
+  'packages/dr/CLAUDE.local.md: claude/claude-md-dangling-reference@1',
+  'packages/dr/.claude/rules/a.md: claude/claude-md-dangling-reference@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
