@@ -2,6 +2,7 @@
 // (manifest reference, "Monitors"). It never starts when the plugin has no such skill. The trees
 // are on disk, because the rule looks for the skill around the file. The files glob is in
 // tests/configs.test.ts.
+import { chmodSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
@@ -9,7 +10,7 @@ import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-monitors-skill-exists'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const FILES = ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json']
@@ -119,7 +120,6 @@ describe(`${RULE} (silent)`, () => {
     ],
     ['a skill with an empty file', { 'skills/deploy/SKILL.md': '' }, {}],
     ['a command file', { 'commands/deploy.md': '' }, {}],
-    ['a command in a subfolder, by its full name', { 'commands/ops/deploy.md': '' }, {}],
     [
       'a folder that the skills key names',
       { 'extra/deploy/SKILL.md': SKILL() },
@@ -130,7 +130,6 @@ describe(`${RULE} (silent)`, () => {
       { 'extra/deploy/SKILL.md': SKILL() },
       { skills: ['./other', './extra'] },
     ],
-    ['a skill folder that the skills key names', { 'one/SKILL.md': SKILL() }, { skills: './one' }],
     [
       'a skill folder with a name in the frontmatter',
       { 'one/SKILL.md': SKILL('deploy') },
@@ -146,12 +145,24 @@ describe(`${RULE} (silent)`, () => {
     expect(run(invoke('deploy'), files, extra)).toEqual([])
   })
 
+  check('reports a missing skill for a manifest with no name and a root skill', () => {
+    const { dir, code } = pluginTree(
+      { monitors: [monitor(invoke('deploy'))], skills: './' },
+      { 'SKILL.md': SKILL() },
+    )
+    expect(lint(dir, MANIFEST, code).map((m) => m.message)).toEqual([message('deploy')])
+  })
+
   check('stays silent for the plugin name when the plugin root is a skill', () => {
     expect(run(invoke('p'), { 'SKILL.md': SKILL() }, { skills: './' })).toEqual([])
   })
 
   check('stays silent for a plugin-qualified name of a skill that exists', () => {
     expect(run('on-skill-invoke:p:deploy', { 'skills/deploy/SKILL.md': SKILL() })).toEqual([])
+  })
+
+  check('stays silent for the folder name of a skill folder that the skills key names', () => {
+    expect(run(invoke('one'), { 'one/SKILL.md': SKILL() }, { skills: './one' })).toEqual([])
   })
 
   check('stays silent for the command name of a subfolder command', () => {
@@ -193,9 +204,19 @@ describe(`${RULE} (silent)`, () => {
     expect(run(invoke('deploy'), {}, { commands: ['./cmds'] })).toEqual([])
   })
 
+  check.each([
+    ['hooks/hooks.json', '**/hooks/hooks.json'],
+    ['.mcp.json', '**/.mcp.json'],
+  ])('stays silent for %s, if a glob matches it', (file, glob) => {
+    const { dir } = pluginTree({ name: 'p' })
+    const code = JSON.stringify([monitor(invoke('gone'))])
+    expect(lintPluginFile(RULE, [glob], path.join(dir, file), code)).toEqual([])
+  })
+
   check('stays silent for a manifest that does not parse', () => {
     const { dir } = pluginTree('{')
-    expect(lint(dir, MANIFEST, '{')).toEqual([])
+    const valid = JSON.stringify({ name: 'p', monitors: [monitor(invoke('gone'))] })
+    expect(lint(dir, MANIFEST, valid)).toEqual([])
   })
 
   check('stays silent for monitors.json in a folder with no plugin', () => {
@@ -216,6 +237,12 @@ describe(`${RULE} (silent)`, () => {
   linked('stays silent for a skills folder that is a link with no target', () => {
     const { dir, code, top } = pluginTree({ name: 'p', monitors: [monitor(invoke('deploy'))] })
     link(top, 'skills', 'ghost')
+    expect(lint(dir, MANIFEST, code)).toEqual([])
+  })
+
+  linked('stays silent for a commands folder that is a link with no target', () => {
+    const { dir, code, top } = pluginTree({ name: 'p', monitors: [monitor(invoke('deploy'))] })
+    link(top, 'commands', 'ghost')
     expect(lint(dir, MANIFEST, code)).toEqual([])
   })
 
@@ -260,6 +287,21 @@ describe(`${RULE} (silent)`, () => {
     )
     const skills = path.join(dir, 'skills')
     expect(withoutAccess(skills, () => lint(dir, MANIFEST, code))).toEqual([])
+  })
+
+  locked('stays silent for a skills folder that the rule can enter and cannot list', () => {
+    const { dir, code } = pluginTree(
+      { name: 'p', monitors: [monitor(invoke('deploy'))] },
+      { 'skills/x/SKILL.md': SKILL() },
+    )
+    const skills = path.join(dir, 'skills')
+    const mode = statSync(skills).mode
+    chmodSync(skills, 0o100)
+    try {
+      expect(lint(dir, MANIFEST, code)).toEqual([])
+    } finally {
+      chmodSync(skills, mode)
+    }
   })
 
   locked('stays silent for a skill folder that the rule cannot enter', () => {
