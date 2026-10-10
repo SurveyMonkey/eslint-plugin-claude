@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "64b179bbd125a9fa55717b755e956f4067f1e4ec5f27a8860742a6a24dfd7993",
+  "hash": "2f14b19549d911bdf0797d3e41e7c3d74e0fa0b237778f954019a2bc57e061e3",
   "blocks": [
     {
       "id": "tools-reference",
@@ -64,11 +64,7 @@
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "5e046e4380c1d67c674f347680698bcc270a573f2acf767c51969c9225875d44"
-    },
-    {
-      "id": "non-utf-8-files",
-      "hash": "9bc7627e2650e21f78124216596778b11e442dfbd6451deec8f4cfa1b8ac2955"
+      "hash": "9963d3e531649ff4991df88191b104875b04a1bbc31c3956f737251f25f1a802"
     },
     {
       "id": "endconversation-tool-behavior",
@@ -96,7 +92,7 @@
     },
     {
       "id": "notebookedit-tool-behavior",
-      "hash": "a1192f6f4e3e60a6a4c18d64850ff2838d2a1f6a6156a6bf5630320ee1475df0"
+      "hash": "b7ead44f231450a13e4e85574553387f2ef5e95a475e125202a18390fde84361"
     },
     {
       "id": "powershell-tool",
@@ -112,7 +108,7 @@
     },
     {
       "id": "shell-selection-in-settings-hooks-and-skills",
-      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f"
+      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560"
     },
     {
       "id": "windows-encoding-and-exit-codes",
@@ -124,11 +120,7 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "934d7f37f6999d1e7f954d8cfe5336f91e8a0b595bf31dd65ae889c1b6fd053a"
-    },
-    {
-      "id": "large-files",
-      "hash": "5f6e4b7ce468b340689d8dd8769c3d982278b2e83d38fb09c9dd34961538e2c5"
+      "hash": "67b80a70b1c14493553cd3e48d68411505b5fdd4777886dc4dac0294406c179a"
     },
     {
       "id": "sendfeedback-tool-behavior",
@@ -180,7 +172,7 @@
     },
     {
       "id": "write-tool-behavior",
-      "hash": "046c80c6ffd74866d6249edb5ce86359c9df8f86a88d943e97856c09efe3efce"
+      "hash": "c4355369b955e2360b451bc788d9f874afe5d978e20906434c1f533e1023ecb0"
     },
     {
       "id": "check-which-tools-are-available",

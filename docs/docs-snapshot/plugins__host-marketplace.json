@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
-  "hash": "c7cd5187df8cb7c483d478716b727376310f33e8d417dd5e027188c3be9c4dbc",
+  "hash": "b7d397a8393137fd3a4e630140b48282d2d0d492ce220a853a44a1896a4900d9",
   "blocks": [
     {
       "id": "host-and-maintain-a-marketplace",
@@ -44,7 +44,7 @@
     },
     {
       "id": "serve-users-who-have-no-git-host-account",
-      "hash": "b0005d3b939b2ef3e13533917434718a87865ca6882fae1c7b98d13698e4db06"
+      "hash": "8cb4f50cb63f6c02e0d13a1a48dbdf013814d81b178d626a788d6b1830db55f8"
     },
     {
       "id": "what-background-auto-update-does-with-credentials",
