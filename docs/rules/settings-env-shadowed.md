@@ -41,8 +41,7 @@ the empty string cancels a value that the shell exports.[^shell] The rule makes 
 ### Colors
 
 `NO_COLOR` and `FORCE_COLOR` in `env` change the colors of the processes that Claude Code starts,
-for example a Bash command. They do not change the colors of Claude Code. The docs say: "To change
-Claude Code's own interface colors, set them in your shell before launching `claude`."[^shell]
+for example a Bash command. They do not change the colors of Claude Code. To change those, the docs say to set the variables in your shell before you start `claude`.[^shell]
 A team that sets the variable for its subprocesses on purpose can disable the rule for that line.
 
 ### What the rule does not check
