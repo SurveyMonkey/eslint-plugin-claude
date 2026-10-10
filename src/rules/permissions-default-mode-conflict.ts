@@ -1,6 +1,6 @@
 // `permissions.defaultMode: "bypassPermissions"` in a file that also sets
 // `permissions.disableBypassPermissionsMode: "disable"`
-// (docs/rules/permissions-default-mode-conflict.md). The lock stops anyone from using the
+// (docs/rules/permissions-default-mode-conflict.md). The lock blocks the
 // mode, so the session never starts in it. The pair of `disableAutoMode` with
 // `defaultMode: "auto"` is for `settings-conflicting-keys`. Within a managed source, the later
 // file replaces a single value of an earlier file. A sibling file can set `defaultMode` or
