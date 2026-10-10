@@ -24,6 +24,7 @@ const MANAGED_KEY = 'allowManagedHooksOnly'
 const USER_OR_MANAGED_KEY = 'modelPicker'
 const USER_LOCAL_KEY = 'skipDangerousModePermissionPrompt'
 const GLOBAL_KEY = 'autoConnectIde'
+const USER_KEY = 'worktree.location'
 
 jsonTester.run('settings-key-scope (valid)', rule, {
   valid: [
@@ -41,6 +42,13 @@ jsonTester.run('settings-key-scope (valid)', rule, {
       code: obj({ [USER_OR_MANAGED_KEY]: [] }),
       filename,
     })),
+    // A User key is for the user file. The rule makes no report in a managed file.
+    ...[managed, dropIn].map((filename) => ({
+      code: obj({ worktree: { location: 'remote' } }),
+      filename,
+    })),
+    // A top-level key with the name of a User key is no User key.
+    { code: obj({ [USER_KEY]: 'x' }), filename: project },
     // A User, local, or managed key is for the local file and managed files.
     ...[local, managed, dropIn].map((filename) => ({
       code: obj({ [USER_LOCAL_KEY]: true }),
@@ -126,6 +134,12 @@ jsonTester.run('settings-key-scope (invalid)', rule, {
       code: obj({ [USER_OR_MANAGED_KEY]: [] }),
       filename,
       errors: [{ messageId: 'userOrManaged' as const, line: 1, column: 2 }],
+    })),
+    // A User key is a fault in the project files. The report is on the nested key.
+    ...[project, local].map((filename) => ({
+      code: obj({ worktree: { location: 'remote' } }),
+      filename,
+      errors: [{ messageId: 'userOnly' as const }],
     })),
     // A User, local, or managed key is a fault in `.claude/settings.json` only.
     {
@@ -283,6 +297,16 @@ jsonTester.run('settings-key-scope (message text)', rule, {
       ],
     },
     {
+      code: obj({ worktree: { location: 'x' } }),
+      filename: project,
+      errors: [
+        {
+          message:
+            'Claude Code reads "worktree.location" from user settings only. It ignores the key in this file.',
+        },
+      ],
+    },
+    {
       code: obj({ [GLOBAL_KEY]: true }),
       filename: managed,
       errors: [
@@ -329,6 +353,7 @@ describe('settings-keys data against the settings index snapshot', () => {
   const index = snapshot.sources.find(({ id }) => id === 'settings-index')?.text ?? ''
   const SCOPE_OF: Record<string, string> = {
     Managed: 'managed',
+    User: 'user',
     'User or managed': 'user-or-managed',
     'User, local, or managed': 'user-local-or-managed',
     'Global config': 'global',

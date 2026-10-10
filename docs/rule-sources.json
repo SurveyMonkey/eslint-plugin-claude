@@ -1261,7 +1261,12 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "382e732f979ffab665d656536a69282f432760f0859979ae8aad55136058d280"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "worktree.location",
+      "hash": "9fdadfe5018be165d0d4f935190f2ca9828ff4974f80e8adacd34a616ae23acf"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
