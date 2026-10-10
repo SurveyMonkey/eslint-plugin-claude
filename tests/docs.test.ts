@@ -241,6 +241,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-evals-results-gitignored',
     'plugin-manifest-location',
     'plugin-no-project-plugins-dir',
+    'plugin-package-lockfile',
     'plugin-project-skills-dir-limits',
     'plugin-skill-dir-layout',
     'rules-frontmatter-schema',

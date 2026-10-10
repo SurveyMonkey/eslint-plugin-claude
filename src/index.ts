@@ -225,6 +225,7 @@ import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
@@ -683,6 +684,7 @@ const modules = [
   pluginProjectSkillsDirLimits,
   pluginCommandsDirNonempty,
   pluginDefaultDirShadowed,
+  pluginPackageLockfile,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1045,6 +1047,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-project-skills-dir-limits': 'error',
   'plugin-commands-dir-nonempty': 'error',
   'plugin-default-dir-shadowed': 'error',
+  'plugin-package-lockfile': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

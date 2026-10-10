@@ -8,11 +8,11 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-package-lockfile'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
 const message = (files: string) =>
-  `The plugin has a \`package.json\` and ${files}, and none of \`bun.lock\`, \`npm-shrinkwrap.json\` or \`package-lock.json\`. Claude Code skips the dependency install. Add an npm lockfile.`
+  `The plugin has a \`package.json\` and ${files}, but none of \`bun.lock\`, \`npm-shrinkwrap.json\` or \`package-lock.json\`. Claude Code reads only those lockfiles, so it skips the dependency install. Add an npm lockfile.`
 const run = (files: Record<string, string>) => {
   const { dir, code } = pluginTree({ name: 'p' }, files)
   return lint(dir, code).map((m) => m.message)
