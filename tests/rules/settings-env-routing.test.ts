@@ -3,7 +3,7 @@
 // says that a third-party provider variable or a non-default `ANTHROPIC_BASE_URL` bypasses
 // server-managed settings, and the page on the approval dialog names the proxy and TLS variables.
 // The env vars reference (https://code.claude.com/docs/en/env-vars#variables) says that a Boolean
-// variable is on for `1`, `true`, `yes` and `on` in any casing, and that `""` cancels a value of
+// variable is on for `1`, `true`, `yes` and `on` with any letter case, and that `""` cancels a value of
 // the shell. The rule reads the shared file only. The file globs are in `tests/configs.test.ts`. `settings-env-ignored-var` reports
 // `OTEL_EXPORTER_OTLP_ENDPOINT` in a project file.
 import { describe, expect, it } from 'vitest'
@@ -70,7 +70,7 @@ jsonTester.run('settings-env-routing (valid)', rule, {
       filename: project,
       errors: [{ messageId: 'traffic' as const }],
     },
-    // Each brace variant of `CLAUDE_CODE_USE_*`, with each on value in any casing.
+    // Each brace variant of `CLAUDE_CODE_USE_*`, with each on value with any letter case.
     ...PROVIDERS.flatMap((key) =>
       ['1', 'true', 'YES', 'On'].map((value) => ({
         code: env({ [key]: value }),

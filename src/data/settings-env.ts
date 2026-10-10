@@ -79,7 +79,7 @@ const CAPABILITIES_VARIABLE =
 const ON_WORDS = ['1', 'true', 'yes', 'on']
 const BOOLEAN_WORDS = [...ON_WORDS, '0', 'false', 'no', 'off']
 
-/** True when `value` turns a behavior on: `1`, `true`, `yes` or `on`, in any casing. */
+/** True when `value` turns a behavior on: `1`, `true`, `yes` or `on`, with any letter case. */
 export const isEnvOn = (value: string) => ON_WORDS.includes(value.toLowerCase())
 
 const PROMPT_CACHE_TTL = oneOf('5m or 1h', ['5m', '1h'])

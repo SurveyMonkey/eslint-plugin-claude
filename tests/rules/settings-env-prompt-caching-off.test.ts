@@ -2,7 +2,7 @@
 // (https://code.claude.com/docs/en/prompt-caching#disable-prompt-caching): five variables turn
 // caching off when set to `1`, and the page names managed settings for an organization policy.
 // The env vars reference (https://code.claude.com/docs/en/env-vars#variables) says that a Boolean
-// variable is on for `1`, `true`, `yes` and `on` in any casing. The rule reads the shared file
+// variable is on for `1`, `true`, `yes` and `on` with any letter case. The rule reads the shared file
 // only. The file globs are in `tests/configs.test.ts`.
 import { describe, expect, it } from 'vitest'
 import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'

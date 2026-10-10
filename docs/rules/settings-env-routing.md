@@ -30,7 +30,7 @@ variables send the traffic of Claude Code to another place. The rule reports two
 | `ANTHROPIC_BASE_URL` with a host other than `api.anthropic.com` | Selects another API endpoint. Server-managed settings are bypassed | [^security] |
 
 A proxy or certificate variable is a fault at any value that is not empty. A provider variable is
-a fault when its value turns the variable on: `1`, `true`, `yes` or `on`, in any casing.[^vars] A
+a fault when its value turns the variable on: `1`, `true`, `yes` or `on`, with any letter case.[^vars] A
 base URL is a fault when its host is not the default host, and when the text is not a URL.
 
 The report is on the variable name. When a file has two keys of one name, the rule reads the last,
