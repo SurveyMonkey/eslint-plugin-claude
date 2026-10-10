@@ -44,6 +44,7 @@ import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildc
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
 import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
 import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
+import permissionsDeadAllow from './rules/permissions-dead-allow.ts'
 import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
 import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
 import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
@@ -184,6 +185,7 @@ const modules = [
   sandboxFilesystemDisabledConflict,
   sandboxSchema,
   sandboxScope,
+  permissionsDeadAllow,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -316,6 +318,7 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-filesystem-disabled-conflict': 'error',
   'sandbox-schema': 'error',
   'sandbox-scope': 'error',
+  'permissions-dead-allow': 'error',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

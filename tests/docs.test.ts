@@ -60,6 +60,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-bash-wildcard-before-subcommand',
     'permissions-block-reads-false',
     'permissions-bypass-mode-committed',
+    'permissions-dead-allow',
     'permissions-default-mode-conflict',
     'permissions-default-mode-project-ignored',
     'permissions-default-mode-value',
