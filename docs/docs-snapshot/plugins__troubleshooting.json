@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "06d9882e59b3d0915a384074a360014e032e152613e0de5196b0c2e06da6cf89",
+  "hash": "8ee8806f2183fc83439d9d71564b274ce021b2c20ea54afec2be0581ea77dafb",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -44,7 +44,7 @@
     },
     {
       "id": "invalid-marketplace-source-format",
-      "hash": "e0b2eb800e8c42247ef6ed86dc5e1a0557ff601d7a7f68adddbe4932369fb761"
+      "hash": "e3833e61e37da7f57aec1caed33e0547270a45a015cc5e3c031671cb105947e3"
     },
     {
       "id": "is-not-a-valid-github-owner-repo-shorthand",
@@ -61,6 +61,10 @@
     {
       "id": "marketplace-file-not-found-at-claude-plugin-marketplace-json",
       "hash": "3c6fb6366701d2f89e16e0560cf6a3914d2ca83ca906a7f1b014d41949560f6f"
+    },
+    {
+      "id": "cannot-install-plugins-from-a-marketplace-with-this-name",
+      "hash": "f66be0668c04e969ccda71c53e0961b1565383fbc5202ca554158be0a6a077bd"
     },
     {
       "id": "ssh-authentication-failed-or-https-authentication-failed",
@@ -148,7 +152,7 @@
     },
     {
       "id": "marketplace-is-already-added-from-a-different-source",
-      "hash": "af48f20c90d57dbd1c9572fd3cba09e2591c2b39a7ec7b3a93c441d13d02bf33"
+      "hash": "92cd504fd09c6bf88cdf0a905ece4164c92a1ac08763cab7735c81485e0b84cb"
     },
     {
       "id": "cannot-add-marketplace-source-doesnt-match",
@@ -199,12 +203,20 @@
       "hash": "e73b0146711d5b310e9fa2669cb6dd64f74d2e04a5e0175511409ccbbe7f4706"
     },
     {
+      "id": "does-not-load-so-claude-code-ignores-the-whole-file",
+      "hash": "e3c715ebf747967df79a87505f07ad87ac2c4af021805d9d5075419d6751f312"
+    },
+    {
       "id": "a-plugin-you-disabled-still-loads",
       "hash": "b41af0d3f586dbbc868bcf01f465716272e86f3877316879630c05db63bd1210"
     },
     {
       "id": "plugin-is-enabled-in-project-settings-but-isnt-installed-here",
       "hash": "db54ee74391f72a5279df12e1c7935b0a858c71088c3825930f6687ad939bb31"
+    },
+    {
+      "id": "a-plugin-stays-installed-after-plugin-uninstall-on-windows",
+      "hash": "346af4d3ad6ab97f2daefd8fbca75e7a7a8adf9c845b3e9ba371b097bafc0d75"
     },
     {
       "id": "failed-to-load-hooks-from-and-hooks-that-dont-fire",
@@ -216,7 +228,7 @@
     },
     {
       "id": "hook-error-notices-in-the-transcript",
-      "hash": "d97f8164a313ed5fd2a24c341240c69693828f08baaf7d02d499bd78c963231a"
+      "hash": "5da573ad04fa565698fc1e197fea521dd22b1dc4e7548f5633e5baaa901e7acd"
     },
     {
       "id": "a-plugin-hook-blocks-a-tool-call-or-prompt",
@@ -225,6 +237,10 @@
     {
       "id": "hook-loads-but-never-fires",
       "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
+    },
+    {
+      "id": "plugin-directory-does-not-exist",
+      "hash": "a14f94de8c60da27eeb2abbf65578c884f36786df5200c8126c906f57941d960"
     },
     {
       "id": "invalid-mcp-server-config-for-and-mcp-servers-that-dont-start",
@@ -300,7 +316,7 @@
     },
     {
       "id": "claude-plugin-validate-reports-errors",
-      "hash": "63615439b0ea563b943e885c3e041091124718069e780ae93ee1cdb0f2615faa"
+      "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
     },
     {
       "id": "plugin-has-conflicting-manifests",

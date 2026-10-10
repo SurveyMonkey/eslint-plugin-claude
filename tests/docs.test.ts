@@ -69,6 +69,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-extra-known-marketplaces-schema',
     'settings-file-size',
     'settings-key-scope',
+    'settings-known-marketplaces-policy-schema',
     'settings-managed-file',
     'settings-marketplace-headers-helper-https',
     'settings-marketplace-key-alias-conflict',

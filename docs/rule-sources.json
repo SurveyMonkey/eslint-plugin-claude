@@ -124,7 +124,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Permission modes",
-      "hash": "96a96d4130e9b7d1dcd7ff9a57f3e67f4854a0849b1ec2d80ab73a2d5649e123"
+      "hash": "3d8082b6b76c04b1e6dd126251ca535eba14de00c6371e8eeeca041ec6341144"
     }
   ],
   "agent-plugin-ignored-fields": [
@@ -143,7 +143,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Preload skills into subagents",
-      "hash": "71bb065e45892ac5171ce52c56838ad37b96ab42a416853e7341bb14218fa5b5"
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -211,7 +211,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "122b065227f63905c8417644d8bffcd3375236e2f8b8c4e1d66ef651c617957c"
+      "hash": "3a4428d15e821c576506d6a870844f8a9744cc69f85a63bd563e159b00eb0b11"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -539,7 +539,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Top-level fields",
-      "hash": "35d8ff64aeb46858bf497f6e5a9208857b8be7fe0d0d3ae1fb07202a1722a054"
+      "hash": "e5384a8956d41f274a51582cd478af76c5c32a806c696cde570d53a89de3e263"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -946,7 +946,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "38db0864730a51f7940c839a56a94d37f06f6fbee0e46d5e61d8fc56fccd7053"
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -963,7 +963,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "38db0864730a51f7940c839a56a94d37f06f6fbee0e46d5e61d8fc56fccd7053"
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     }
   ],
   "settings-env-value-format": [
@@ -979,13 +979,13 @@
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
-      "heading": "In settings files",
-      "hash": "fd3b871f4d83a62d90dce594b4a4e4c327781f57e420e4c0d4f7c42b73aa61f3"
+      "heading": "Set variables in settings files",
+      "hash": "83d7638f1288ac12bf078291fad8e9ee752d87a2ba81348b37ad0f73bd8142d6"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "38db0864730a51f7940c839a56a94d37f06f6fbee0e46d5e61d8fc56fccd7053"
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -1081,7 +1081,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "13eda81af012ba8834893ecaa594a6efeee5073bf2dd368653852a78cd2f268b"
+      "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
     }
   ],
   "settings-key-scope": [
@@ -1131,6 +1131,43 @@
       "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
     }
   ],
+  "settings-known-marketplaces-policy-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "strictKnownMarketplaces",
+      "hash": "e766b5eaa9da1a18d98c5446dfcb7806ad75a7cb27dd266fa696049187023250"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "blockedMarketplaces",
+      "hash": "305f94819b98232d182d3444e35a4276849d6cb923c8284a6f9ba10d5b89b236"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Allowed source types",
+      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Owner wildcards",
+      "hash": "de827431bbbb5b1d5ef6d4677150a2d2b496ef12724a59acb62f7c6775c35420"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace key aliases",
+      "hash": "35ece94adc1a1fe87cb4e3f3d72cdc3672832bbb341f4c7681ec5e016feec6be"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "pluginTrustMessage",
+      "hash": "960ef9d351fcfbcb91c7b54b7a3e59e33e3c3a63e9e3e9fa49bb52f4ef92477b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Marketplace sources",
+      "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
+    }
+  ],
   "settings-managed-file": [
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -1145,7 +1182,7 @@
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "How Claude Code combines managed sources",
-      "hash": "bc412eef48c5ddd66c80e0c9460f9832fe0c71671a40f3f7346b1fe87d0005bb"
+      "hash": "abe44f2b4c66cfcbc336d49da018dec208d0cb8fcd5f92478c6f0effa446e7ff"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

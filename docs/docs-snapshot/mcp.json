@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/mcp",
-  "hash": "030a5df4d8ca49457147e0f826bb8a0390156e2514216866585a4ee49844c7d5",
+  "hash": "7ef0c97a0e48229b972a97db9adef998f9cf4e22a86223b861b324d28cef21cb",
   "blocks": [
     {
       "id": "connect-claude-code-to-tools-via-mcp",
@@ -36,19 +36,19 @@
     },
     {
       "id": "add-a-server-from-setup-instructions-written-for-another-client",
-      "hash": "edc745ca82b41f298f727c810ebc553412fbc54e034bcf89f67adbd97a9c6713"
+      "hash": "e6654ab2d893f38babc432f13892a5557a4a4481b1a386ecab1359a319bba147"
     },
     {
-      "id": "from-a-url",
-      "hash": "602f64c3a7723d95c5d49324a219a74ab3d577e02b13b82e9daa8f147ef083e2"
+      "id": "add-a-server-from-a-url",
+      "hash": "5042c328de6df259c631adda3e3b2533aa74d1e307017f653cbcd27c0f440550"
     },
     {
-      "id": "from-an-npx-uvx-or-binary-command",
-      "hash": "7fe2009b171237d033e58b99b80ac627f52a918f1875c2c165d84e19866e3905"
+      "id": "add-a-server-from-an-npx-uvx-or-binary-command",
+      "hash": "599be76e2fa64ddbb43f72a6508978f50fd447977b80abac8373e906fbd97861"
     },
     {
-      "id": "from-an-mcpservers-json-block",
-      "hash": "b27bf3a7f136873fa1e5f5f8de0abf8c6ced42ea2943b3286588568eb2afc6d2"
+      "id": "add-a-server-from-an-mcpservers-json-block",
+      "hash": "af1aff3b152c63100d59efe68121f3d45037e80bda64d494e8bc61926e63b295"
     },
     {
       "id": "managing-your-servers",
@@ -80,7 +80,7 @@
     },
     {
       "id": "mcp-client-runtimes",
-      "hash": "c2269fc6b89e6193b6fd63d8c1344f385fc8b8c09ce373b7d7cb25b714df0131"
+      "hash": "e1baef8a377d361ddf38e9ad58209e598118fd7a47a64b32ea0f5a856362edbe"
     },
     {
       "id": "dynamic-tool-updates",
@@ -192,7 +192,7 @@
     },
     {
       "id": "authenticate-from-the-command-line",
-      "hash": "afa158d6bc5952ca2805d932c01307cf8d6bf5eb8c05d9374a3da4cdd297e7e9"
+      "hash": "6bf1a00d38cf7c4bc0eb245185f86c669dc5289b3c2a25d6ae5d7ed6dad4a9ac"
     },
     {
       "id": "use-a-fixed-oauth-callback-port",
@@ -292,11 +292,11 @@
     },
     {
       "id": "scale-with-mcp-tool-search",
-      "hash": "4f3c0ea11447328a27a2588a4ab3010ed11c6249812d4574bf36eabee7693162"
+      "hash": "56defa52da78135443d0c9f51521651873178cadaeb5e29dc53c85a69ee6bff5"
     },
     {
-      "id": "for-mcp-server-authors",
-      "hash": "aeef5ae1e9774d1fea0878c70df47a42cb3ff5ffac0efde892ccea693a4d11b8"
+      "id": "tool-search-for-mcp-server-authors",
+      "hash": "e0682bebe0379ff45c39135a82180de5da3cb0a46e67573c80322aaa927f576a"
     },
     {
       "id": "per-tool-alwaysload",

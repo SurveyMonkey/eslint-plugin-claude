@@ -336,6 +336,15 @@ const TREE: Record<string, string> = {
   'packages/gr/managed-settings.d/30-b.txt': badSettings,
   'packages/gr/managed-settings.d/sub/40-c.json': badSettings,
   'packages/gr/.vscode/settings.json': badSettings,
+  // `settings-known-marketplaces-policy-schema`: a policy entry of an unknown type in a managed
+  // file and in a drop-in. A hidden drop-in is for `settings-managed-file`. The same content
+  // where no rule reads it: another extension, a nested directory, and another settings file.
+  'packages/kp/managed-settings.json': '{"strictKnownMarketplaces": [{"source": "bogus"}]}',
+  'packages/kp/managed-settings.d/10-a.json': '{"blockedMarketplaces": [{"source": "npm"}]}',
+  'packages/kp/managed-settings.d/.20-hidden.json': '{"pluginTrustMessage": 1}',
+  'packages/kp/managed-settings.d/30-b.txt': '{"pluginTrustMessage": 1}',
+  'packages/kp/managed-settings.d/sub/40-c.json': '{"pluginTrustMessage": 1}',
+  'packages/kp/.vscode/settings.json': '{"pluginTrustMessage": 1}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -407,6 +416,7 @@ const SCOPE_RULES = [
   { name: 'settings-env-value-format', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-ignored-var', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-project-value-ignored', files: PROJECT_FILES },
+  { name: 'settings-known-marketplaces-policy-schema', files: MANAGED_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -531,6 +541,10 @@ const EXPECTED = [
   // `settings-project-value-ignored` reads the project files only.
   'packages/pv/.claude/settings.json: claude/settings-project-value-ignored@2',
   'packages/pv/.claude/settings.local.json: claude/settings-project-value-ignored@2',
+  // `settings-known-marketplaces-policy-schema` reads the managed files, and no other file.
+  'packages/kp/managed-settings.json: claude/settings-known-marketplaces-policy-schema@2',
+  'packages/kp/managed-settings.d/10-a.json: claude/settings-known-marketplaces-policy-schema@2',
+  'packages/kp/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

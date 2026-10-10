@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
-  "hash": "32fa7bebd1cbdbea5e2622f9adacf396c20b50c3912e8ac9f7b753967378f183",
+  "hash": "f4b52438f0ef4af76ddcfcd710c14949c380b5f28508bfc1a6626cbad8f609f6",
   "blocks": [
     {
       "id": "marketplace-reference",
@@ -16,7 +16,7 @@
     },
     {
       "id": "top-level-fields",
-      "hash": "35d8ff64aeb46858bf497f6e5a9208857b8be7fe0d0d3ae1fb07202a1722a054"
+      "hash": "e5384a8956d41f274a51582cd478af76c5c32a806c696cde570d53a89de3e263"
     },
     {
       "id": "plugin-entries",
@@ -201,8 +201,8 @@
     {
       "heading": "Top-level fields",
       "id": "top-level-fields",
-      "hash": "35d8ff64aeb46858bf497f6e5a9208857b8be7fe0d0d3ae1fb07202a1722a054",
-      "text": "## Top-level fields\n\nThe table lists every key Claude Code reads from `marketplace.json`. `name`, `owner`, and `plugins` are required.\n\n| Field | Type | Description |\n| :- | :- | :- |\n| `name` | string | Marketplace identifier: letters, digits, `.`, `_`, and `-`, starting with a letter or digit, and no `..`. `claude plugin validate` fails any other name, because Claude Code can't install plugins from a marketplace that uses one. Users type the name after `@` in a [plugin id](/docs/en/plugins/loading#find-where-a-plugin-came-from) such as `my-plugin@my-marketplace` when they install a plugin. See [Reserved names](#reserved-names) |\n| `owner` | object | Maintainer information. `name` is required; `email` and `url` are optional |\n| `plugins` | array | [Plugin entries](#plugin-entries). Each entry is validated on its own, so one invalid entry doesn't fail the marketplace |\n| `$schema` | string | JSON Schema URL for editor autocomplete. Ignored at load time |\n| `description` | string | Marketplace description shown to users. `claude plugin validate` warns when it's missing |\n| `version` | string | Marketplace manifest version |\n| `metadata.description`, `metadata.version` | string | Alternate location for `description` and `version` |\n| `metadata.pluginRoot` | string | Directory that bare plugin source names resolve under. See [Relative path plugin source](#relative-path-plugin-source). Requires Claude Code v2.1.239 or later |\n| `forceRemoveDeletedPlugins` | boolean | When `true`, a plugin you remove from `plugins` is uninstalled on users' machines. See [Host and maintain a marketplace](/docs/en/plugins/host-marketplace) |\n| `allowCrossMarketplaceDependenciesOn` | array of strings | Marketplace names whose plugins may be installed as dependencies of this marketplace's plugins. When you install a plugin, only the list in that plugin's own marketplace applies, for its whole dependency chain. See [Plugin dependencies](/docs/en/plugins/dependencies) |\n| `renames` | object | Map from a former plugin `name` to its current name, or to `null` for a plugin you removed. See [Host and maintain a marketplace](/docs/en/plugins/host-marketplace) |"
+      "hash": "e5384a8956d41f274a51582cd478af76c5c32a806c696cde570d53a89de3e263",
+      "text": "## Top-level fields\n\nThe table lists every key Claude Code reads from `marketplace.json`. `name`, `owner`, and `plugins` are required.\n\n| Field | Type | Description |\n| :- | :- | :- |\n| `name` | string | Marketplace identifier: letters, digits, `.`, `_`, and `-`, starting with a letter or digit, and no `..`. `claude plugin validate` fails any other name, because Claude Code [can't install plugins from a marketplace that uses one](/docs/en/plugins/troubleshooting#cannot-install-plugins-from-a-marketplace-with-this-name). Users type the name after `@` in a [plugin id](/docs/en/plugins/loading#find-where-a-plugin-came-from) such as `my-plugin@my-marketplace` when they install a plugin. See [Reserved names](#reserved-names) |\n| `owner` | object | Maintainer information. `name` is required; `email` and `url` are optional |\n| `plugins` | array | [Plugin entries](#plugin-entries). Each entry is validated on its own, so one invalid entry doesn't fail the marketplace |\n| `$schema` | string | JSON Schema URL for editor autocomplete. Ignored at load time |\n| `description` | string | Marketplace description shown to users. `claude plugin validate` warns when it's missing |\n| `version` | string | Marketplace manifest version |\n| `metadata.description`, `metadata.version` | string | Alternate location for `description` and `version` |\n| `metadata.pluginRoot` | string | Directory that bare plugin source names resolve under. See [Relative path plugin source](#relative-path-plugin-source). Requires Claude Code v2.1.239 or later |\n| `forceRemoveDeletedPlugins` | boolean | When `true`, a plugin you remove from `plugins` is uninstalled on users' machines. See [Host and maintain a marketplace](/docs/en/plugins/host-marketplace) |\n| `allowCrossMarketplaceDependenciesOn` | array of strings | Marketplace names whose plugins may be installed as dependencies of this marketplace's plugins. When you install a plugin, only the list in that plugin's own marketplace applies, for its whole dependency chain. See [Plugin dependencies](/docs/en/plugins/dependencies) |\n| `renames` | object | Map from a former plugin `name` to its current name, or to `null` for a plugin you removed. See [Host and maintain a marketplace](/docs/en/plugins/host-marketplace) |"
     },
     {
       "heading": "github plugin source",

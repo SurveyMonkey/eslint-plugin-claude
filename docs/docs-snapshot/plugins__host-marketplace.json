@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
-  "hash": "3d2da6cd5c3d8e35800c5b0a4a555c8ada09666cb6528092cd013056c4d7454c",
+  "hash": "b7d397a8393137fd3a4e630140b48282d2d0d492ce220a853a44a1896a4900d9",
   "blocks": [
     {
       "id": "host-and-maintain-a-marketplace",
@@ -108,7 +108,7 @@
     },
     {
       "id": "how-users-accept-a-headershelper-command",
-      "hash": "e48923765f7e4449a6f4915fdc536ffd7d2e648b274d3120e3e189a1850ef112"
+      "hash": "68223f61c1181a5996b6908f753ce9f610421ecbc262e97f0fe8e576d6b92eb9"
     },
     {
       "id": "installs-and-updates-that-refuse-the-command-instead-of-asking",

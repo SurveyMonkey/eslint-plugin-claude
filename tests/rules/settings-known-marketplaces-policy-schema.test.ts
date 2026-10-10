@@ -50,17 +50,17 @@ describe(`${name} (silent)`, () => {
     ['a null pluginTrustMessage', { pluginTrustMessage: null }],
   ]
   for (const [title, value] of valid) {
-    it.fails(`is silent for ${title}`, () => {
+    it(`is silent for ${title}`, () => {
       expect(ids(value)).toEqual([])
       expect(ids(value, dropIn)).toEqual([])
     })
   }
 
-  it.fails('is silent for a top level that is not an object', () => {
+  it('is silent for a top level that is not an object', () => {
     expect(lintJson(name, '[1]', main)).toEqual([])
   })
 
-  it.fails('is silent for a hidden drop-in', () => {
+  it('is silent for a hidden drop-in', () => {
     expect(ids(strict({ source: 'bogus' }), hidden)).toEqual([])
     expect(ids({ pluginTrustMessage: 1 }, hidden)).toEqual([])
   })
@@ -152,20 +152,20 @@ describe(`${name} (reports)`, () => {
     ],
   ]
   for (const [title, value, expected] of invalid) {
-    it.fails(`reports ${title}`, () => {
+    it(`reports ${title}`, () => {
       expect(ids(value)).toEqual(expected)
       expect(ids(value, dropIn)).toEqual(expected)
     })
   }
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     const text = '{"strictKnownMarketplaces": [{"source": "bogus"}], "strictKnownMarketplaces": []}'
     expect(lintJson(name, text, main)).toEqual([])
     const bad = '{"strictKnownMarketplaces": [], "strictKnownMarketplaces": [{"source": "bogus"}]}'
     expect(lintJson(name, bad, main).map((m) => m.messageId)).toEqual(['typeUnknown'])
   })
 
-  it.fails('reports at the node of the fault', () => {
+  it('reports at the node of the fault', () => {
     const text =
       '{\n  "strictKnownMarketplaces": [\n    { "source": "file", "path": "rel" }\n  ]\n}'
     const [message] = lintJson(name, text, main)

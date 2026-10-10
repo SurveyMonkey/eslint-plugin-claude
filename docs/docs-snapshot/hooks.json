@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "35ad60ec531279806922e87895d7c7acc891d912322b2e54352e3c88f0619313",
+  "hash": "ad56e03ba949864cab3346b7d69a896b34a004f1af26f0a7666a9c5bdc44553b",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -44,7 +44,7 @@
     },
     {
       "id": "command-hook-fields",
-      "hash": "0985903a8f04aa02ef2a3d2297e6dcc762192d9bc7995a5189d4327d4ded2d56"
+      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
     },
     {
       "id": "exec-form-and-shell-form",
@@ -52,7 +52,7 @@
     },
     {
       "id": "http-hook-fields",
-      "hash": "55f69008271efe7c2b0ae85a002496755d748bf1f3c7fb9d636af62537086385"
+      "hash": "d8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145"
     },
     {
       "id": "mcp-tool-hook-fields",
@@ -100,23 +100,27 @@
     },
     {
       "id": "exit-code-output",
-      "hash": "dd02efa190cc0459307d8f29e25adb57aeba8cf3dbb5197e99724dc785b4e25a"
+      "hash": "9abbcf1e1ea280971a8e063d82df3f136c0a7277228ed1d8c2c4cceced0d0598"
     },
     {
       "id": "exit-code-0",
-      "hash": "e063b452b4d3d3610c000c1e26e826b50c9fe252b0910509067b6a599b54ea72"
+      "hash": "2de9906b192b49f4eb37a40b3f3a71353142f9b2aa675c1be74d3c8c1ae0f0fc"
     },
     {
       "id": "exit-code-2",
-      "hash": "74c610f05c5616f257c768ecc81c928e4348fc90c6edba26d237c2a2403895ad"
+      "hash": "dc394fc234b94a9188e4f1142d2a58cbb47dee5bfbb59369a059d373bd7e2040"
     },
     {
       "id": "other-exit-codes",
-      "hash": "73247f97fdf080acedc2ef0d6a4989329dbddbe594d5debc91204e69a8425823"
+      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43"
     },
     {
       "id": "timeouts",
-      "hash": "eed18f1223170d9d24f7e1ca60f911b5461d4bc6ef796742c877fa373ad1c629"
+      "hash": "dfe97d089291e108884b69e368d95bac0359985159d30e56ff19c37b1efb1c8b"
+    },
+    {
+      "id": "block-the-action-when-a-hook-fails",
+      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
     },
     {
       "id": "exit-code-2-behavior-per-event",
@@ -124,7 +128,7 @@
     },
     {
       "id": "http-response-handling",
-      "hash": "02e07fe6feeee275481a945fb3f1459e4abff091c43327a73c238c084e29993b"
+      "hash": "1a9fba60b40ccf35f456c404c6a9c4be4c700408f946eb279d50c3a0a9669cc8"
     },
     {
       "id": "json-output",
@@ -156,7 +160,11 @@
     },
     {
       "id": "sessionstart-decision-control",
-      "hash": "c43ec5f3e927d081181f62b03f0756c2e0746c904bf2931fa4e902c591e00568"
+      "hash": "bed960cefefcef7d2719e381b396bfcc435bacc9308cfe296130ea2c1b27c145"
+    },
+    {
+      "id": "reload-skills-that-a-hook-installs",
+      "hash": "0aecb76e90e8cf72a9b56b4cd94cea74d51faf793fef438dced7c8aae3debdf1"
     },
     {
       "id": "persist-environment-variables",
@@ -188,7 +196,7 @@
     },
     {
       "id": "userpromptsubmit",
-      "hash": "f850fa297e8c0ccc6759045faee9cd770738c6a9dff5406679da31d29f57b6e9"
+      "hash": "3523a1638d31ad3fb28e5b8cc3778224dbca7e005c8f926e564de00fa8685df2"
     },
     {
       "id": "userpromptsubmit-input",
@@ -264,7 +272,7 @@
     },
     {
       "id": "webfetch",
-      "hash": "d1af94027edc6c9728a8751a00e6cad12848973ef2d429ef868cb2a1dfe985fd"
+      "hash": "98d4c7779824b038d3593f8e9ce008b4a7c9589ea802b9049738cbc6dbf5229a"
     },
     {
       "id": "websearch",
@@ -304,7 +312,7 @@
     },
     {
       "id": "permissionrequest-decision-control",
-      "hash": "0d55d080d6c25489ef7472a04ac526cb30c498c702d657e48d259254e20e63b2"
+      "hash": "4fbb4ef39fbac14018b68c411027e4e35eb66b0e141a7068ad93272670adc8a5"
     },
     {
       "id": "permission-update-entries",
@@ -396,7 +404,7 @@
     },
     {
       "id": "taskcreated-decision-control",
-      "hash": "7d11916db810b16b067b16ec929eeaea3b9dd98c9b0584d32ea7a37173c143eb"
+      "hash": "331b89b6b511ce777c65945adf293f657fb865b86700501555a583dbb21a3551"
     },
     {
       "id": "taskcompleted",
@@ -532,7 +540,7 @@
     },
     {
       "id": "premodelswitch-decision-control",
-      "hash": "28e9922b7fc04b1f13fc403e782f98fde70486bc8f435337cecad7e91b9375c4"
+      "hash": "2c384de0259af549ecbc40242dde4b6853651e86c89e7ed06fd9eeca431fb977"
     },
     {
       "id": "postmodelswitch",
@@ -636,7 +644,7 @@
     },
     {
       "id": "limitations",
-      "hash": "3fd8b6919561267dc801486d4ab7212e8369d78f314d5a3b82c3444778cbafff"
+      "hash": "c3bd678b7eceaea3ae9cd10b27318b77f86e373856979b0275b1771362adaa4f"
     },
     {
       "id": "security-considerations",
