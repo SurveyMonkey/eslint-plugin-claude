@@ -355,7 +355,12 @@ describe('agent-descriptions-budget', () => {
     })
     posix('when a listed file is a link out of the plugin root, inside the repository', () => {
       const root = repo({
-        'plugins/r/.claude-plugin/plugin.json': manifest(['./custom/a.md', './more/link.md']),
+        'plugins/r/.claude-plugin/plugin.json': manifest([
+          './custom/a.md',
+          './custom/g.md',
+          './more/link.md',
+        ]),
+        'plugins/r/custom/g.md': agent('g', 59000),
         'plugins/r/more/x': '',
         'plugins/sibling/real.md': agent('l', 90000),
       })
@@ -364,11 +369,14 @@ describe('agent-descriptions-budget', () => {
         path.join(root, 'plugins/r/more/link.md'),
       )
       const self = path.join(root, 'plugins/r/custom/a.md')
-      // Claude Code does not load the link, so it adds nothing to the sum.
-      expect(lintAgent('agent-descriptions-budget', agent('a', 1000), self)).toEqual([])
+      // Claude Code does not load the link, so it adds nothing to the sum: 1001 + 59001.
+      const before = lintAgent('agent-descriptions-budget', agent('a', 1000), self)
+      expect(before).toHaveLength(1)
+      expect(before[0]?.message).toContain('60002 characters')
       unlinkSync(path.join(root, 'plugins/r/more/link.md'))
       writeFileSync(path.join(root, 'plugins/r/more/link.md'), agent('l', 90000))
-      expect(lintAgent('agent-descriptions-budget', agent('a', 1000), self)).toHaveLength(1)
+      const after = lintAgent('agent-descriptions-budget', agent('a', 1000), self)
+      expect(after[0]?.message).toContain('150003 characters')
     })
     it('when the file is no agent file', () => {
       expect(run(agent('a', 90000), 'docs/a.md', sibling(30000))).toEqual([])
