@@ -164,3 +164,15 @@ describe('mcp-always-load-count option schema', () => {
     expect(run([{ min: 2 }])).toThrow()
   })
 })
+
+it('counts a server of one name once across the sources of a plugin, as the last one', () => {
+  const files = {
+    'p/.mcp.json': mapOf(load(['a', 'b'])),
+    [PLUGIN]: manifest({ mcpServers: { a: { command: 'x', alwaysLoad: false }, ...load(['c']) } }),
+  }
+  // The inline `a` replaces the `a` of the root file, so `b` and `c` are the two that count.
+  expect(ids(lint(files[PLUGIN], PLUGIN, files))).toEqual([])
+  expect(ids(lint(files['p/.mcp.json'], 'p/.mcp.json', files))).toEqual([])
+  const reload = manifest({ mcpServers: { a: { command: 'x', alwaysLoad: true }, ...load(['c']) } })
+  expect(ids(lint(reload, PLUGIN, { ...files, [PLUGIN]: reload }))).toEqual(['tooMany'])
+})

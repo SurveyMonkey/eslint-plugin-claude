@@ -83,3 +83,8 @@ it('reads each variable, also after a value that is not a string', () => {
   const values = { MCP_TIMEOUT: 30, MCP_TOOL_TIMEOUT: '30', MAX_MCP_OUTPUT_TOKENS: '30' }
   expect(ids(lintJson(NAME, env(values), project))).toEqual(['floored'])
 })
+
+it('ignores an earlier key of one name', () => {
+  const code = '{"env": {"MCP_TIMEOUT": "30", "MCP_TIMEOUT": "30000"}}'
+  expect(ids(lintJson(NAME, code, project))).toEqual([])
+})
