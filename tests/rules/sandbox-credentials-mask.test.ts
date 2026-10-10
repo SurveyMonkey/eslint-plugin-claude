@@ -30,12 +30,12 @@ const at = (root: string, file: string, text: string) =>
 const alone = (text: string, file = MANAGED) => at(repo({}), file, text)
 
 describe(`${name}: the mask entries of a managed file`, () => {
-  it.fails('is silent for a plain mask entry', () => {
+  it('is silent for a plain mask entry', () => {
     expect(alone(env(mask()))).toEqual([])
     expect(alone(files(maskFile()))).toEqual([])
   })
 
-  it.fails('reports a mask entry when no file holds tlsTerminate or allowPlaintextInject', () => {
+  it('reports a mask entry when no file holds tlsTerminate or allowPlaintextInject', () => {
     expect(alone(env(mask()).replace('"tlsTerminate":{}', ''))).toEqual(['noTls'])
     expect(alone(settings({ files: [maskFile()] }, {}))).toEqual(['noTls'])
     expect(alone(settings({ envVars: [mask(), mask({ name: 'U' })] }, {}))).toEqual([
@@ -44,20 +44,20 @@ describe(`${name}: the mask entries of a managed file`, () => {
     ])
   })
 
-  it.fails('is silent when tlsTerminate has a path, or allowPlaintextInject is true', () => {
+  it('is silent when tlsTerminate has a path, or allowPlaintextInject is true', () => {
     const paths = { tlsTerminate: { caCertPath: '/a', caKeyPath: '/b' } }
     expect(alone(settings({ envVars: [mask()] }, paths))).toEqual([])
     expect(alone(settings({ envVars: [mask()], allowPlaintextInject: true }, {}))).toEqual([])
   })
 
-  it.fails('reports when tlsTerminate is not an object and allowPlaintextInject is not true', () => {
+  it('reports when tlsTerminate is not an object and allowPlaintextInject is not true', () => {
     for (const credentials of [{ allowPlaintextInject: false }, { allowPlaintextInject: 'true' }]) {
       const text = settings({ envVars: [mask()], ...credentials }, { tlsTerminate: null })
       expect(alone(text), JSON.stringify(credentials)).toEqual(['noTls'])
     }
   })
 
-  it.fails('reports the mode value, at its line and column, and says what the mask needs', () => {
+  it('reports the mode value, at its line and column, and says what the mask needs', () => {
     const text =
       '{\n  "sandbox": {\n    "credentials": {\n      "envVars": [{ "name": "T", "mode": "mask" }]\n    }\n  }\n}'
     const [message] = lintJson(name, text, '/repo/managed-settings.json')
@@ -66,33 +66,33 @@ describe(`${name}: the mask entries of a managed file`, () => {
     expect(message?.message).toContain('allowPlaintextInject')
   })
 
-  it.fails('reports maskClaims without decode', () => {
+  it('reports maskClaims without decode', () => {
     expect(alone(env(mask({ maskClaims: ['sub'] })))).toEqual(['claimsNeedDecode'])
     expect(alone(files(maskFile({ maskClaims: ['sub'] })))).toEqual(['claimsNeedDecode'])
     expect(alone(env(mask({ maskClaims: ['sub'], decode: 'x' })))).toEqual(['claimsNeedDecode'])
   })
 
-  it.fails('is silent for maskClaims with decode, and reports an empty list', () => {
+  it('is silent for maskClaims with decode, and reports an empty list', () => {
     expect(alone(env(mask({ maskClaims: ['sub'], decode: 'jwt' })))).toEqual([])
     expect(alone(files(maskFile({ maskClaims: ['sub'], decode: 'jwt' })))).toEqual([])
     expect(alone(env(mask({ maskClaims: [], decode: 'jwt' })))).toEqual(['emptyClaims'])
     expect(alone(env(mask({ maskClaims: 'sub', decode: 'jwt' })))).toEqual([])
   })
 
-  it.fails('reports maskDuplicates in a file entry without extract or decode', () => {
+  it('reports maskDuplicates in a file entry without extract or decode', () => {
     expect(alone(files(maskFile({ maskDuplicates: true })))).toEqual(['duplicatesNeedExtract'])
     expect(alone(files(maskFile({ maskDuplicates: true, extract: '(a)' })))).toEqual([])
     expect(alone(files(maskFile({ maskDuplicates: true, decode: 'jwt' })))).toEqual([])
   })
 
-  it.fails('reports extract with decode in an environment variable entry only', () => {
+  it('reports extract with decode in an environment variable entry only', () => {
     expect(alone(env(mask({ extract: '(a)', decode: 'jwt' })))).toEqual(['extractAndDecode'])
     expect(alone(files(maskFile({ extract: '(a)', decode: 'jwt' })))).toEqual([])
     expect(alone(env(mask({ extract: '(a)' })))).toEqual([])
     expect(alone(env(mask({ decode: 'jwt' })))).toEqual([])
   })
 
-  it.fails('reports onExtractNoMatch other than warn with decode in an environment variable entry', () => {
+  it('reports onExtractNoMatch other than warn with decode in an environment variable entry', () => {
     for (const value of ['deny', 'error']) {
       const entry = mask({ decode: 'jwt', onExtractNoMatch: value })
       expect(alone(env(entry)), value).toEqual(['decodeWarnOnly'])
@@ -103,26 +103,26 @@ describe(`${name}: the mask entries of a managed file`, () => {
     expect(alone(files(maskFile({ decode: 'jwt', onExtractNoMatch: 'deny' })))).toEqual([])
   })
 
-  it.fails('reports an injectHosts entry that is a bracketed or zone-ID IPv6 address', () => {
+  it('reports an injectHosts entry that is a bracketed or zone-ID IPv6 address', () => {
     for (const host of ['[::1]', '[::1]:443', 'fe80::1%eth0']) {
       expect(alone(env(mask({ injectHosts: [host] }))), host).toEqual(['injectIpv6'])
     }
     expect(alone(files(maskFile({ injectHosts: ['[::1]'] })))).toEqual(['injectIpv6'])
   })
 
-  it.fails('is silent for an injectHosts entry that is a host or a bare address', () => {
+  it('is silent for an injectHosts entry that is a host or a bare address', () => {
     expect(alone(env(mask({ injectHosts: ['api.github.com', '::1', '*.a.com', 3] })))).toEqual([])
     expect(alone(env(mask({ injectHosts: 'api.github.com' })))).toEqual([])
   })
 
-  it.fails('reports a mask entry for a variable that a deny entry names too', () => {
+  it('reports a mask entry for a variable that a deny entry names too', () => {
     expect(alone(env(mask(), { name: 'T', mode: 'deny' }))).toEqual(['denyWins'])
     expect(alone(env({ name: 'T', mode: 'deny' }, mask()))).toEqual(['denyWins'])
     expect(alone(env(mask(), { name: 'U', mode: 'deny' }))).toEqual([])
     expect(alone(env(mask(), mask()))).toEqual([])
   })
 
-  it.fails('reports a fault once per entry, and each entry', () => {
+  it('reports a fault once per entry, and each entry', () => {
     const entry = mask({
       maskClaims: ['a'],
       extract: '(a)',
@@ -137,15 +137,15 @@ describe(`${name}: the mask entries of a managed file`, () => {
     ])
   })
 
-  it.fails('reads a drop-in like the main file', () => {
+  it('reads a drop-in like the main file', () => {
     expect(alone(env(mask({ maskClaims: ['a'] })), DROP_IN)).toEqual(['claimsNeedDecode'])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(alone(env(mask({ maskClaims: ['a'] })), 'managed-settings.d/.10-a.json')).toEqual([])
   })
 
-  it.fails('does not read an entry that is not an object, or a list that is not an array', () => {
+  it('does not read an entry that is not an object, or a list that is not an array', () => {
     expect(alone(settings({ envVars: [1, null, 'x'], files: 'x' }))).toEqual([])
     expect(alone(settings({ envVars: [{ name: 'T', mode: 'x', maskClaims: ['a'] }] }))).toEqual([])
     expect(alone('{}')).toEqual([])
@@ -157,7 +157,7 @@ describe(`${name}: the deny entries of every file`, () => {
   const DENY_FILE = { path: '~/f', mode: 'deny' }
   const DENY_VAR = { name: 'T', mode: 'deny' }
 
-  it.fails('reports a deny entry that holds mask fields', () => {
+  it('reports a deny entry that holds mask fields', () => {
     for (const field of ['extract', 'onExtractNoMatch', 'decode', 'maskClaims', 'injectHosts']) {
       for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
         expect(alone(env({ ...DENY_VAR, [field]: 'x' }), file), `${field} ${file}`).toEqual([
@@ -169,7 +169,7 @@ describe(`${name}: the deny entries of every file`, () => {
     expect(alone(files({ ...DENY_FILE, maskDuplicates: true }), PROJECT)).toEqual(['denyFields'])
   })
 
-  it.fails('names every mask field of the entry in one report', () => {
+  it('names every mask field of the entry in one report', () => {
     const [message] = lintJson(
       name,
       env({ ...DENY_VAR, extract: '(a)', injectHosts: [] }),
@@ -179,13 +179,13 @@ describe(`${name}: the deny entries of every file`, () => {
     expect(message?.message).toContain('injectHosts')
   })
 
-  it.fails('is silent for a deny entry with no mask field', () => {
+  it('is silent for a deny entry with no mask field', () => {
     expect(alone(env(DENY_VAR), PROJECT)).toEqual([])
     expect(alone(files(DENY_FILE), PROJECT)).toEqual([])
     expect(alone(env({ ...DENY_VAR, maskDuplicates: true }))).toEqual([])
   })
 
-  it.fails('is silent for a mask entry in a project or local file: sandbox-scope reports it', () => {
+  it('is silent for a mask entry in a project or local file: sandbox-scope reports it', () => {
     const entry = mask({ maskClaims: ['a'], extract: '(a)', decode: 'jwt', injectHosts: ['[::1]'] })
     for (const file of [PROJECT, LOCAL]) {
       expect(alone(env(entry, { name: 'T', mode: 'deny' }), file), file).toEqual([])
@@ -197,7 +197,7 @@ describe(`${name}: the deny entries of every file`, () => {
 describe(`${name}: a managed source, on disk`, () => {
   const BARE = settings({ envVars: [mask()] }, {})
 
-  it.fails('reads tlsTerminate and allowPlaintextInject from any file of the source', () => {
+  it('reads tlsTerminate and allowPlaintextInject from any file of the source', () => {
     const tls = repo({
       'managed-settings.d/20-b.json': JSON.stringify({ sandbox: { network: TLS } }),
     })
@@ -208,12 +208,12 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(plain, DROP_IN, BARE)).toEqual([])
   })
 
-  it.fails('reads a deny entry of another file of the source', () => {
+  it('reads a deny entry of another file of the source', () => {
     const root = repo({ [MANAGED]: settings({ envVars: [{ name: 'T', mode: 'deny' }] }) })
     expect(at(root, DROP_IN, env(mask()))).toEqual(['denyWins'])
   })
 
-  it.fails('does not read a project file for a managed file', () => {
+  it('does not read a project file for a managed file', () => {
     const root = repo({
       [PROJECT]: settings({}),
       [LOCAL]: JSON.stringify({ sandbox: { network: TLS } }),
@@ -221,20 +221,20 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(root, MANAGED, BARE)).toEqual(['noTls'])
   })
 
-  it.fails('ignores a hidden sibling', () => {
+  it('ignores a hidden sibling', () => {
     const root = repo({
       'managed-settings.d/.20-b.json': JSON.stringify({ sandbox: { network: TLS } }),
     })
     expect(at(root, DROP_IN, BARE)).toEqual(['noTls'])
   })
 
-  it.fails('adds nothing for a sibling that does not read', () => {
+  it('adds nothing for a sibling that does not read', () => {
     const root = repo({ 'managed-settings.d/20-b.json': '[1]' })
     expect(at(root, DROP_IN, BARE)).toEqual(['noTls'])
     expect(at(root, DROP_IN, env(mask()))).toEqual([])
   })
 
-  it.fails('adds nothing for a drop-in directory that is a link out of the repository', {
+  it('adds nothing for a drop-in directory that is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})
@@ -245,7 +245,7 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(root, MANAGED, BARE)).toEqual(['noTls'])
   })
 
-  it.fails('does not read the other file of a project pair for a deny entry', () => {
+  it('does not read the other file of a project pair for a deny entry', () => {
     const root = repo({
       [LOCAL]: settings({ envVars: [{ name: 'T', mode: 'deny', extract: 'x' }] }),
     })

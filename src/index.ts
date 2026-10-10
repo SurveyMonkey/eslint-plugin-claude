@@ -65,6 +65,7 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import permissionsWebfetchDomainSyntax from './rules/permissions-webfetch-domain-syntax.ts'
 import permissionsWindowsPath from './rules/permissions-windows-path.ts'
+import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
 import sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
 import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
 import sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
@@ -187,6 +188,7 @@ const modules = [
   sandboxFilesystemDisabledConflict,
   sandboxSchema,
   sandboxScope,
+  sandboxCredentialsMask,
   sandboxDomainOverlap,
   permissionsSandboxBashAsk,
   permissionsDeadAllow,
@@ -322,6 +324,7 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-filesystem-disabled-conflict': 'error',
   'sandbox-schema': 'error',
   'sandbox-scope': 'error',
+  'sandbox-credentials-mask': 'error',
   'sandbox-domain-overlap': 'error',
   'permissions-sandbox-bash-ask': 'error',
   'permissions-dead-allow': 'error',

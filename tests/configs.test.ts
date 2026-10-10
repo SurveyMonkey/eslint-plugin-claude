@@ -677,6 +677,10 @@ const TREE: Record<string, string> = {
   ...settingsFiles('ssc', {
     sandbox: { credentials: { files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask' }] } },
   }),
+  // `sandbox-credentials-mask`: a deny entry that holds a mask field.
+  ...settingsFiles('scm', {
+    sandbox: { credentials: { envVars: [{ name: 'T', mode: 'deny', extract: '(a)' }] } },
+  }),
   // `sandbox-domain-overlap`: a domain in both lists.
   ...settingsFiles('sdo', {
     sandbox: { network: { allowedDomains: ['a.com'], deniedDomains: ['a.com'] } },
@@ -812,6 +816,7 @@ const SANDBOX_RULES = [
   { name: 'sandbox-filesystem-disabled-conflict', files: MANAGED_FILES },
   { name: 'sandbox-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-scope', files: PROJECT_FILES },
+  { name: 'sandbox-credentials-mask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-domain-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-sandbox-bash-ask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-dead-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -1071,6 +1076,7 @@ const EXPECTED = [
     ['sdx', 'sandbox-domain-syntax'],
     ['sec', 'sandbox-excluded-commands-syntax'],
     ['ssm', 'sandbox-schema'],
+    ['scm', 'sandbox-credentials-mask'],
     ['sdo', 'sandbox-domain-overlap'],
     ['psb', 'permissions-sandbox-bash-ask'],
     ['pda', 'permissions-dead-allow'],
@@ -1102,6 +1108,9 @@ const EXPECTED = [
   'packages/ssc/.claude/settings.json: claude/sandbox-scope@2',
   'packages/ssc/.claude/settings.local.json: claude/sandbox-scope@2',
   'packages/ssc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The `ssc` file has a mask entry and no TLS termination, which `sandbox-credentials-mask` reports in a managed source.
+  'packages/ssc/managed-settings.json: claude/sandbox-credentials-mask@2',
+  'packages/ssc/managed-settings.d/10-a.json: claude/sandbox-credentials-mask@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
