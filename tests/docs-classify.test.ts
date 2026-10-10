@@ -8,7 +8,14 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
-import type { Answers, Jev, JevFetch, Output, Request } from '../scripts/docs-classify.ts'
+import type {
+  Answers,
+  Inventory,
+  Jev,
+  JevFetch,
+  Output,
+  Request,
+} from '../scripts/docs-classify.ts'
 import * as api from '../scripts/docs-classify.ts'
 import type { SourceMap } from '../scripts/docs-watch.ts'
 import * as watch from '../scripts/docs-watch.ts'
@@ -53,7 +60,13 @@ const rules = new Map([
 ])
 
 // Stores a snapshot of PAGE for the map, then classifies the edited page.
-async function run(sourceMap: SourceMap, edited: string, jev: Jev, base = PAGE) {
+async function run(
+  sourceMap: SourceMap,
+  edited: string,
+  jev: Jev,
+  base = PAGE,
+  inventory: Inventory = new Map(),
+) {
   const headings = Object.values(sourceMap)
     .flat()
     .map((s) => s.heading)
@@ -61,6 +74,7 @@ async function run(sourceMap: SourceMap, edited: string, jev: Jev, base = PAGE) 
   const stored = await watch.readPage(URL_, headings, serve(base))
   return api.classify({
     map: sourceMap,
+    inventory,
     snapshots: new Map([[watch.snapshotName(URL_), stored]]),
     rules,
     links: new Map([[`${URL_}\nhooks`, `${URL_}#hooks`]]),
@@ -762,6 +776,253 @@ describe('classify', () => {
   })
 })
 
+describe('loadInventory', () => {
+  const dirs: string[] = []
+  afterEach(() => {
+    for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true })
+  })
+  const HOOKS = 'https://code.claude.com/docs/en/hooks'
+  // The shape of docs/rules-inventory.md: rule tables under the `###`
+  // sections of "Rules by group", an appendix rule table in a `####`
+  // subsection, a tool table that holds no rule, and notes with footnotes.
+  const INVENTORY = [
+    '# Lint rule candidates',
+    '',
+    '## Suggested first rules',
+    '',
+    '| Rule | Why |',
+    '|------|-----|',
+    '| `early-rule` | Not a group table. [^common] |',
+    '',
+    '## Rules by group',
+    '',
+    '### Hooks',
+    '',
+    '| Rule | Checks | Docs |',
+    '|------|--------|------|',
+    '| `hooks-a` | A check. | [^common] [^lifecycle] |',
+    '| `hooks-b` | A check. [^exit] | [^missing] |',
+    '',
+    '#### Appendix: more hooks rules',
+    '',
+    '| Rule | Checks | Docs |',
+    '|------|--------|------|',
+    '| `hooks-c` | A check. | [^common] |',
+    '',
+    '#### Hooks: notes',
+    '',
+    '- A note that cites a footnote [^note].',
+    '',
+    '### Settings',
+    '',
+    '| Rule | Checks | Docs |',
+    '|------|--------|------|',
+    '| `settings-a` | A check. | [^common] |',
+    '',
+    '#### Appendix: tool names',
+    '',
+    '| Tool | Perm | Notes |',
+    '|------|------|-------|',
+    '| `agent-tool` | No | A tool, not a rule. [^tool] |',
+    '',
+    '## After the groups',
+    '',
+    '| Rule | Checks |',
+    '|------|--------|',
+    '| `late-rule` | Not a group table. [^late] |',
+    '',
+    `[^common]: [Hooks reference: Common fields](${HOOKS}#common-fields)`,
+    `[^lifecycle]: [Hooks reference: Hook lifecycle](${HOOKS}#hook-lifecycle)`,
+    `[^exit]: [Hooks reference: Other exit codes](${HOOKS}#other-exit-codes)`,
+    `[^page]: [Hooks reference](${HOOKS})`,
+    `[^note]: [Hooks reference: Matcher patterns](${HOOKS}#matcher-patterns)`,
+    `[^tool]: [Hooks reference: Hook events](${HOOKS}#hook-events)`,
+    `[^late]: [Hooks reference: Debug hooks](${HOOKS}#debug-hooks)`,
+    `[^unused]: [Settings: Available settings](https://code.claude.com/docs/en/settings#available-settings)`,
+    '',
+  ].join('\n')
+
+  const load = (text: string) => {
+    const root = mkdtempSync(path.join(tmpdir(), 'docs-inventory-'))
+    dirs.push(root)
+    mkdirSync(path.join(root, 'docs'))
+    writeFileSync(path.join(root, 'docs/rules-inventory.md'), text)
+    return api.loadInventory(root)
+  }
+
+  it('maps each footnote heading to the rule rows that cite it, by section', () => {
+    expect(load(INVENTORY)).toEqual(
+      new Map([
+        [
+          HOOKS,
+          new Map([
+            [
+              'Common fields',
+              [
+                { section: 'Hooks', rules: ['hooks-a', 'hooks-c'] },
+                { section: 'Settings', rules: ['settings-a'] },
+              ],
+            ],
+            ['Hook lifecycle', [{ section: 'Hooks', rules: ['hooks-a'] }]],
+            ['Other exit codes', [{ section: 'Hooks', rules: ['hooks-b'] }]],
+          ]),
+        ],
+      ]),
+    )
+  })
+
+  it('reads a page link with no anchor, and CRLF line ends', () => {
+    const text = INVENTORY.replace('[^lifecycle] |', '[^page] |').replaceAll('\n', '\r\n')
+    expect(load(text).get(HOOKS)?.get('Hooks reference')).toEqual([
+      { section: 'Hooks', rules: ['hooks-a'] },
+    ])
+  })
+
+  it('reads the real inventory, and maps a hooks heading to the Hooks rows', () => {
+    const inventory = api.loadInventory(path.join(import.meta.dirname, '..'))
+    const rows = inventory.get(HOOKS)?.get('Common fields')
+    expect(rows?.map((r) => r.section)).toEqual(['Hooks'])
+    expect(rows?.[0]?.rules).toEqual(
+      expect.arrayContaining(['hooks-config-schema', 'hooks-if-condition']),
+    )
+  })
+})
+
+describe('classify with the inventory', () => {
+  const inventoryOf = (cites: Record<string, { section: string; rules: string[] }[]>) =>
+    new Map([[URL_, new Map(Object.entries(cites))]]) as Inventory
+  const pathRows = { 'Path rules': [{ section: 'Hooks', rules: ['hooks-a'] }] }
+  const EDIT_PATH = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
+  const runPath = (map: SourceMap, edited: string, jev: ReturnType<typeof fakeJev>) =>
+    run(map, edited, { fetch: jev.fetch, key: KEY }, PAGE, inventoryOf(pathRows))
+
+  it('tracks a changed block that only an inventory row cites, and asks Jev as before', async () => {
+    const jev = fakeJev(answer({ requirement: 0.85 }))
+    const output = await runPath(cited, EDIT_PATH, jev)
+    expect(output.tracked).toEqual([
+      {
+        page: URL_,
+        heading: 'Path rules',
+        blockId: 'path-rules',
+        change: 'changed',
+        oldHash: watch.splitBlocks(PAGE).find((b) => b.key === 'path-rules')?.hash,
+        newHash: watch.splitBlocks(EDIT_PATH).find((b) => b.key === 'path-rules')?.hash,
+        oldText: null,
+        newText: '## Path rules\n\nA path must start with `./`.',
+        sections: [{ section: 'Hooks', rules: ['hooks-a'] }],
+      },
+    ])
+    expect(output.findings.map((f) => [f.kind, f.blockId])).toEqual([['new-rule', 'path-rules']])
+    expect(Object.keys(jev.calls[0]?.request.questions ?? {})).toEqual(['requirement'])
+  })
+
+  it('does not track a block that a built rule cites, and keeps its rule-update', async () => {
+    const jev = fakeJev(answer({ alters: 0.9 }))
+    const inventory = inventoryOf({ hooks: [{ section: 'Hooks', rules: ['hooks-a'] }] })
+    const output = await run(cited, EDIT_HOOKS, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+    expect(output.tracked).toEqual([])
+    expect(output.findings.map((f) => [f.kind, f.rules])).toEqual([['rule-update', ['a-rule']]])
+  })
+
+  it('gives new-rule and no tracked block for a block that no footnote cites', async () => {
+    const jev = fakeJev(answer({ requirement: 0.85 }))
+    const inventory = inventoryOf({ commands: [{ section: 'Hooks', rules: ['hooks-a'] }] })
+    const output = await run(cited, EDIT_PATH, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+    expect(output.tracked).toEqual([])
+    expect(output.findings.map((f) => [f.kind, f.blockId])).toEqual([['new-rule', 'path-rules']])
+  })
+
+  it('tracks a removed block that only an inventory row cites, with no call for it', async () => {
+    const jev = fakeJev(() => 0)
+    const removed = PAGE.replace('## Path rules', 'Path rules')
+    const output = await runPath(cited, removed, jev)
+    expect(output.tracked.map((t) => [t.blockId, t.change, t.newHash, t.newText])).toEqual([
+      ['path-rules', 'removed', null, null],
+    ])
+    expect(output.tracked[0]?.oldHash).toMatch(/^[0-9a-f]{64}$/)
+    expect(output.findings).toEqual([])
+    expect(jev.calls.map((c) => c.request.state.docs_block.heading)).not.toContain('Path rules')
+    expect(output.results).toContainEqual(
+      expect.objectContaining({ blockId: 'path-rules', change: 'removed', outcomes: [] }),
+    )
+  })
+
+  it('tracks a block beside a whole-page rule, and asks that rule as before', async () => {
+    const whole: SourceMap = { 'b-rule': [{ url: URL_, heading: 'Plugin manifest reference' }] }
+    const jev = fakeJev(answer({ alters: 0.9, requirement: 0.1 }))
+    const output = await runPath(whole, EDIT_PATH, jev)
+    expect(output.tracked.map((t) => t.blockId)).toEqual(['path-rules'])
+    expect(output.findings.map((f) => [f.kind, f.rules])).toEqual([['rule-update', ['b-rule']]])
+  })
+
+  it('tracks no block for a heading on the page twice, the page title, or no block', async () => {
+    const edited = PAGE.replace('An unknown path field', 'A path field').replace(
+      '> Complete reference',
+      '> The reference',
+    )
+    const inventory = inventoryOf({
+      'Unrecognized fields': [{ section: 'Hooks', rules: ['hooks-a'] }],
+      'Plugin manifest reference': [{ section: 'Hooks', rules: ['hooks-b'] }],
+      'Not on the page': [{ section: 'Hooks', rules: ['hooks-c'] }],
+    })
+    const jev = fakeJev(() => 0)
+    const output = await run(cited, edited, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+    // Two blocks changed: the title block and the second "Unrecognized fields".
+    expect(output.results.map((r) => r.blockId).sort()).toEqual([
+      'plugin-manifest-reference',
+      'unrecognized-fields-1',
+    ])
+    expect(output.tracked).toEqual([])
+  })
+
+  it('tracks nothing on a page with no snapshot, or a page that did not change', async () => {
+    const jev = fakeJev(() => 1)
+    const none = await api.classify({
+      map: cited,
+      inventory: inventoryOf(pathRows),
+      snapshots: new Map(),
+      rules,
+      links: new Map(),
+      fetchText: serve(EDIT_PATH),
+      jev: { fetch: jev.fetch, key: KEY },
+    })
+    expect(none.tracked).toEqual([])
+    expect(none.findings.map((f) => f.change)).toEqual(['new page'])
+    const same = await run(cited, PAGE, { fetch: jev.fetch, key: KEY }, PAGE, inventoryOf(pathRows))
+    expect(same.tracked).toEqual([])
+  })
+
+  it('lists each tracked block in the summary, with its rows by section', () => {
+    const text = api.renderMarkdown({
+      model: 'jev-1.13.0',
+      findings: [],
+      results: [],
+      tracked: [
+        {
+          page: URL_,
+          heading: 'Path rules',
+          blockId: 'path-rules',
+          change: 'removed',
+          oldHash: 'a'.repeat(64),
+          newHash: null,
+          oldText: null,
+          newText: null,
+          sections: [
+            { section: 'Hooks', rules: ['hooks-a', 'hooks-b'] },
+            { section: 'Settings', rules: ['settings-a'] },
+          ],
+        },
+      ],
+    })
+    expect(text).toContain('Blocks that an inventory row cites:')
+    expect(text).toContain(
+      `- ${URL_} \`path-rules\` (removed): Hooks: hooks-a, hooks-b; Settings: settings-a`,
+    )
+    const empty = api.renderMarkdown({ model: 'm', findings: [], results: [], tracked: [] })
+    expect(empty).not.toContain('inventory row')
+  })
+})
+
 describe('main on a temporary tree', () => {
   const dirs: string[] = []
   afterEach(() => {
@@ -779,6 +1040,23 @@ describe('main on a temporary tree', () => {
     )
     writeFileSync(path.join(root, 'docs/rules/index.md'), '# Rules\n')
     writeFileSync(path.join(root, 'docs/rule-sources.json'), `${JSON.stringify(cited)}\n`)
+    // An inventory row that cites the `commands` block, which the edit also
+    // changes. No built rule cites that block.
+    writeFileSync(
+      path.join(root, 'docs/rules-inventory.md'),
+      [
+        '## Rules by group',
+        '',
+        '### Skills and commands',
+        '',
+        '| Rule | Checks | Docs |',
+        '|------|--------|------|',
+        '| `command-x` | A check. | [^cmd] |',
+        '',
+        `[^cmd]: [Plugins reference: commands](${URL_}#commands)`,
+        '',
+      ].join('\n'),
+    )
     const stored = await watch.readPage(URL_, ['hooks'], serve(PAGE))
     writeFileSync(
       path.join(root, 'docs/docs-snapshot', watch.snapshotName(URL_)),
@@ -795,7 +1073,7 @@ describe('main on a temporary tree', () => {
       [root],
       { TYPESAFE_API_KEY: KEY, GITHUB_STEP_SUMMARY: summary },
       {
-        fetchText: serve(EDIT_HOOKS),
+        fetchText: serve(EDIT_HOOKS.replace('or an object map', 'or a map')),
         fetch: jev.fetch,
         out: { write: (text) => chunks.push(text) },
       },
@@ -804,12 +1082,17 @@ describe('main on a temporary tree', () => {
     const output = JSON.parse(chunks.join('')) as Output
     expect(output.model).toBe('jev-1.13.0')
     expect(output.findings.map((f) => [f.kind, f.link])).toEqual([['rule-update', `${URL_}#hooks`]])
-    expect(jev.calls[0]?.request.state.rules).toEqual([
+    expect(output.tracked.map((t) => [t.blockId, t.change, t.sections])).toEqual([
+      ['commands', 'changed', [{ section: 'Skills and commands', rules: ['command-x'] }]],
+    ])
+    const hooksCall = jev.calls.find((c) => c.request.state.docs_block.heading === 'hooks')
+    expect(hooksCall?.request.state.rules).toEqual([
       { id: 'a-rule', checks: 'The rule a-rule checks hook names.' },
     ])
     expect(chunks.join('')).not.toContain(KEY)
     const text = readFileSync(summary, 'utf8')
     expect(text).toContain('| rule-update | ')
+    expect(text).toContain(`- ${URL_} \`commands\` (changed): Skills and commands: command-x`)
     expect(text).not.toContain(KEY)
   })
 
@@ -832,6 +1115,7 @@ describe('main on a temporary tree', () => {
     const text = api.renderMarkdown({
       model: 'jev-1.13.0',
       findings: [],
+      tracked: [],
       results: [{ blockId: 'b', heading: 'B', change: 'changed', outcomes: [], page: URL_ }],
     })
     expect(text).toContain('0 finding(s).')
@@ -849,6 +1133,7 @@ describe('main on a temporary tree', () => {
     const text = api.renderMarkdown({
       model: 'jev-1.13.0',
       findings: [],
+      tracked: [],
       results: [result('low', 'no-change', 0.31), result('high', 'new-rule', 0.8)],
     })
     expect(text).toContain(`- ${URL_} \`low\` (changed, requirement 0.31)`)
@@ -859,6 +1144,7 @@ describe('main on a temporary tree', () => {
     const text = api.renderMarkdown({
       model: 'jev-1.13.0',
       findings: [],
+      tracked: [],
       results: [
         {
           blockId: 'low',
@@ -885,6 +1171,7 @@ describe('main on a temporary tree', () => {
     const text = api.renderMarkdown({
       model: 'jev-1.13.0',
       findings: [],
+      tracked: [],
       results: [quiet('zero', 'requirement', 0), quiet('cited', 'alters', 0.05)],
     })
     expect(text).toContain(`- ${URL_} \`zero\` (changed, requirement 0)`)
@@ -895,6 +1182,7 @@ describe('main on a temporary tree', () => {
     const text = api.renderMarkdown({
       model: 'jev-1.13.0',
       findings: [],
+      tracked: [],
       results: [
         {
           blockId: 'mixed',

@@ -3,14 +3,24 @@
 // Usage: node scripts/docs-classify.ts [root]
 // It fetches each page that docs/rule-sources.json cites, compares it with
 // docs/docs-snapshot/, and asks TypeSafe Jev about each changed, added or
-// removed block. It prints a JSON object { model, findings, results } to
-// stdout, and a Markdown table to $GITHUB_STEP_SUMMARY when that variable is
-// set. It writes no file in the repository. root defaults to this repository.
+// removed block. It prints a JSON object { model, findings, tracked, results }
+// to stdout, and a Markdown table to $GITHUB_STEP_SUMMARY when that variable
+// is set. It writes no file in the repository. root defaults to this
+// repository.
 //
 // A finding is { kind, page, heading, blockId, oldHash, newHash, rules,
 // probability, confidence, reason, link, change, oldText, newText }. kind is
 // rule-update, rule-removal, new-rule or needs-triage. A result is the
 // outcome for each block, and includes the blocks that need no change.
+//
+// docs/rules-inventory.md is a second source map. Its footnotes cite docs
+// headings, and the rule rows of each `###` section of "Rules by group" cite
+// its footnotes. A changed, added or removed block that no heading of
+// docs/rule-sources.json cites, and that an inventory footnote cites, is
+// tracked. Each tracked block is in `tracked` as { page, heading, blockId,
+// change, oldHash, newHash, oldText, newText, sections }, with the rule rows
+// that cite it in each section. The Jev requests do not change: a tracked
+// block gets the same request and the same findings as before.
 //
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
@@ -82,7 +92,27 @@ export type Result = {
   note?: string
 }
 
-export type Output = { model: string; findings: Finding[]; results: Result[] }
+// The inventory rows that cite a block, by the `###` section of each row.
+export type Rows = { section: string; rules: string[] }[]
+
+// A changed, added or removed block that only the inventory cites.
+export type Tracked = {
+  page: string
+  heading: string
+  blockId: string
+  change: string
+  oldHash: string | null
+  newHash: string | null
+  oldText: string | null
+  newText: string | null
+  sections: Rows
+}
+
+export type Output = { model: string; findings: Finding[]; tracked: Tracked[]; results: Result[] }
+
+// Each page URL maps to its headings, each with the inventory rows that cite
+// it.
+export type Inventory = Map<string, Map<string, Rows>>
 
 // A block to ask about, or a removed block that no rule cites.
 export type Item = {
@@ -444,22 +474,95 @@ export function loadRules(root: string): {
   return { rules, links }
 }
 
-// Compares one page with its snapshot. Returns the blocks to ask about and
-// the findings that need no call. Throws for a page that splitBlocks cannot
-// read, and for a page with no title.
+// Adds rows to a list of rows, with no section or rule twice.
+function addRows(target: Rows, rows: Rows): void {
+  for (const { section, rules } of rows) {
+    let entry = target.find((one) => one.section === section)
+    if (entry === undefined) {
+      entry = { section, rules: [] }
+      target.push(entry)
+    }
+    for (const rule of rules) if (!entry.rules.includes(rule)) entry.rules.push(rule)
+  }
+}
+
+// Reads docs/rules-inventory.md as a second source map. A footnote line is
+// `[^id]: [Page title: Heading](url#anchor)`, as in docs/rules/*.md. The
+// heading is the label after the first colon and space. The whole label is
+// the heading when the link has no anchor, or when the label has no colon and
+// space. Only rule tables count: a table under "## Rules by group" whose
+// header row starts with `| Rule |`. A table in a `####` subsection belongs to
+// the `###` section above it. A footnote that no rule row cites cites nothing.
+export function loadInventory(root: string): Inventory {
+  const text = readFileSync(path.join(root, 'docs/rules-inventory.md'), 'utf8')
+  const footnote = /^\[\^([^\]]+)\]:\s*\[([^\]]+)\]\((\S+?)\)\s*$/
+  const notes = new Map<string, { url: string; heading: string }>()
+  const rows: { section: string; rule: string; ids: string[] }[] = []
+  let inGroups = false
+  let section: string | undefined
+  let ruleTable = false
+  for (const line of text.replace(/\r\n?/g, '\n').split('\n')) {
+    const [, id, label, link] = footnote.exec(line) ?? []
+    if (id !== undefined && label !== undefined && link !== undefined) {
+      const colon = label.indexOf(': ')
+      const heading = link.includes('#') && colon !== -1 ? label.slice(colon + 2) : label
+      notes.set(id, { url: link.split('#')[0] ?? link, heading })
+      continue
+    }
+    if (/^##\s/.test(line)) {
+      inGroups = line.trim() === '## Rules by group'
+      section = undefined
+    } else if (/^###\s/.test(line)) {
+      section = line.slice(4).trim()
+    }
+    // A heading or a line that is not a table row ends a table.
+    if (!line.startsWith('|')) {
+      ruleTable = false
+      continue
+    }
+    if (/^\|\s*Rule\s*\|/.test(line)) {
+      ruleTable = true
+      continue
+    }
+    const rule = /^\|\s*`([a-z0-9-]+)`\s*\|/.exec(line)?.[1]
+    if (inGroups && ruleTable && section !== undefined && rule !== undefined) {
+      const ids = [...line.matchAll(/\[\^([^\]]+)\](?!:)/g)].map((m) => m[1] ?? '')
+      rows.push({ section, rule, ids })
+    }
+  }
+  const inventory: Inventory = new Map()
+  for (const row of rows) {
+    for (const id of row.ids) {
+      const note = notes.get(id)
+      if (note === undefined) continue
+      const headings = inventory.get(note.url) ?? new Map<string, Rows>()
+      const cites = headings.get(note.heading) ?? []
+      addRows(cites, [{ section: row.section, rules: [row.rule] }])
+      headings.set(note.heading, cites)
+      inventory.set(note.url, headings)
+    }
+  }
+  return inventory
+}
+
+// Compares one page with its snapshot. Returns the blocks to ask about, the
+// findings that need no call, and the tracked blocks. Throws for a page that
+// splitBlocks cannot read, and for a page with no title.
 export function planPage({
   url,
   citations,
+  inventory = new Map(),
   pageText,
   stored,
   links,
 }: {
   url: string
   citations: Map<string, string[]>
+  inventory?: Map<string, Rows>
   pageText: string
   stored: Snapshot | undefined
   links: Map<string, string>
-}): { items: Item[]; findings: Finding[] } {
+}): { items: Item[]; findings: Finding[]; tracked: Tracked[] } {
   const text = pageText.replace(/\r\n?/g, '\n')
   let blocks: Block[]
   try {
@@ -481,7 +584,7 @@ export function planPage({
   if (!stored) {
     const reason = 'The page has no snapshot. Run the update to store it, then classify again.'
     const item = { ...base(title), oldHash: null, newHash: pageHash, change: 'new page' }
-    return { items: [], findings: [finding(item, 'needs-triage', { reason })] }
+    return { items: [], findings: [finding(item, 'needs-triage', { reason })], tracked: [] }
   }
   const before = new Map(stored.blocks.map((block) => [block.id, block.hash]))
   // The stored source of each mapped heading, and the key of its old block.
@@ -551,9 +654,36 @@ export function planPage({
     }
     cite(first.key, heading, rules)
   }
+  // The inventory rows of each block that an inventory heading cites. A
+  // heading finds its block as a mapped heading does. When the page does not
+  // have it, a stored block with its slug as ID is the old block. These track
+  // no block: a heading that is on the page more than once, a heading that is
+  // the page title, and a heading that neither the page nor the snapshot has.
+  const trackedRows = new Map<string, Rows>()
+  for (const [heading, rows] of inventory) {
+    const id = slugify(heading)
+    const byId = blocks.filter((block) => block.id === id)
+    const matches = byId.length > 0 ? byId : blocks.filter((block) => slugify(block.title) === id)
+    const [only] = matches
+    let key: string | undefined
+    if (only !== undefined && matches.length === 1 && only.level !== 1) key = only.key
+    if (only === undefined && before.has(id)) key = id
+    if (key === undefined) continue
+    const list = trackedRows.get(key) ?? []
+    addRows(list, rows)
+    trackedRows.set(key, list)
+  }
+  const tracked: Tracked[] = []
+  // A block that no mapped heading cites, and that an inventory row cites.
+  const track = (item: ItemBase, cited: string[]) => {
+    const sections = cited.length === 0 ? trackedRows.get(item.blockId) : undefined
+    if (sections === undefined) return
+    const { page, heading, blockId, change, oldHash, newHash, oldText, newText } = item
+    tracked.push({ page, heading, blockId, change, oldHash, newHash, oldText, newText, sections })
+  }
   // A map entry that the page cannot resolve gives a finding even when the
   // page did not change.
-  if (stored.hash === pageHash) return { items: [], findings }
+  if (stored.hash === pageHash) return { items: [], findings, tracked }
 
   const now = new Map(blocks.map((block) => [block.key, block]))
   // The whole-page source has the ID of the title block.
@@ -583,6 +713,7 @@ export function planPage({
       oldText: oldText.get(key) ?? null,
       newText: null,
     }
+    track(item, cited)
     if (cited.length > 0) {
       const reason = 'A block that a rule cites is gone from the page. No model call.'
       findings.push(finding(item, 'rule-removal', { rules: cited, reason }))
@@ -598,7 +729,7 @@ export function planPage({
     if (oldHash === block.hash) continue
     const cited = byBlock.get(key) ?? []
     const whole = wholePage.filter((rule) => !cited.includes(rule))
-    items.push({
+    const item: ItemBase = {
       ...base(block),
       link: cited.length > 0 ? (links.get(`${url}\n${headingOf.get(key)}`) ?? url) : url,
       oldHash,
@@ -606,11 +737,11 @@ export function planPage({
       change: oldHash === null ? 'added' : 'changed',
       oldText: oldHash === null ? null : (oldText.get(key) ?? null),
       newText: block.text,
-      rules: [...cited, ...whole],
-      askRequirement: cited.length === 0,
-    })
+    }
+    track(item, cited)
+    items.push({ ...item, rules: [...cited, ...whole], askRequirement: cited.length === 0 })
   }
-  return { items, findings }
+  return { items, findings, tracked }
 }
 
 // Maps each page URL to its headings, each with the rules that cite it.
@@ -694,9 +825,12 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
 }
 
 // Classifies every page that the map cites. `fetchText` reads a docs page.
-// `jev` is { fetch, key, timeoutMs, wait } for askJev.
+// `jev` is { fetch, key, timeoutMs, wait } for askJev. `inventory` is the
+// output of loadInventory. It finds tracked blocks on the pages that the map
+// cites. A page that only the inventory cites is not read.
 export async function classify({
   map,
+  inventory = new Map(),
   snapshots,
   rules,
   links,
@@ -704,6 +838,7 @@ export async function classify({
   jev,
 }: {
   map: SourceMap
+  inventory?: Inventory
   snapshots: Map<string, Snapshot>
   rules: Map<string, string>
   links: Map<string, string>
@@ -712,6 +847,7 @@ export async function classify({
 }): Promise<Output> {
   const citations = citationsOf(map)
   const findings: Finding[] = []
+  const tracked: Tracked[] = []
   const items: Item[] = []
   const pages = pagesOf(map)
   // The check reports this as an error. The classifier must fail too, or the
@@ -721,11 +857,13 @@ export async function classify({
     const planned = planPage({
       url,
       citations: citations.get(url) ?? new Map(),
+      inventory: inventory.get(url),
       pageText: await fetchText(`${url}.md`),
       stored: snapshots.get(snapshotName(url)),
       links,
     })
     findings.push(...planned.findings)
+    tracked.push(...planned.tracked)
     items.push(...planned.items)
   }
   if (items.some((item) => !item.skipped) && !jev.key) {
@@ -733,10 +871,10 @@ export async function classify({
   }
   const done = await pool(items, CONCURRENCY, (item) => classifyItem(item, rules, jev))
   for (const one of done) findings.push(...one.findings)
-  return { model: MODEL, findings, results: done.map((one) => one.result) }
+  return { model: MODEL, findings, tracked, results: done.map((one) => one.result) }
 }
 
-export function renderMarkdown({ findings, results }: Output): string {
+export function renderMarkdown({ findings, tracked, results }: Output): string {
   const lines = ['# Docs classifier', '', `${findings.length} finding(s).`, '']
   if (findings.length > 0) {
     lines.push('| Kind | Page | Block | Rules | Probability |', '| - | - | - | - | - |')
@@ -754,6 +892,14 @@ export function renderMarkdown({ findings, results }: Output): string {
       const value = r.outcomes.find((o) => o.reason === 'requirement')?.probability
       const detail = value === undefined ? '' : `, requirement ${round(value)}`
       lines.push(`- ${r.page} \`${r.blockId}\` (${r.change}${detail})`)
+    }
+    lines.push('')
+  }
+  if (tracked.length > 0) {
+    lines.push('Blocks that an inventory row cites:', '')
+    for (const t of tracked) {
+      const rows = t.sections.map((s) => `${s.section}: ${s.rules.join(', ')}`).join('; ')
+      lines.push(`- ${t.page} \`${t.blockId}\` (${t.change}): ${rows}`)
     }
     lines.push('')
   }
@@ -776,6 +922,7 @@ export async function main(
   const { rules, links } = loadRules(root)
   const output = await classify({
     map: loadMap(root),
+    inventory: loadInventory(root),
     snapshots: loadSnapshots(root),
     rules,
     links,
