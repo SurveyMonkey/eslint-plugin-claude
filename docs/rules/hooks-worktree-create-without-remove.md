@@ -20,11 +20,11 @@ Pair a WorktreeCreate hook with a WorktreeRemove hook in the same file.
 
 ## Rule details
 
-A `WorktreeCreate` hook replaces the default git behavior of Claude Code. The hooks reference says to pair it
-with a `WorktreeRemove` hook for the cleanup of its worktrees.[^remove]
+A `WorktreeCreate` hook creates the worktree. The hooks reference says to pair it with a `WorktreeRemove`
+hook for the cleanup of its worktrees.[^remove]
 
-Without a `WorktreeRemove` hook, Claude Code runs `git worktree remove --force` on the path that the create hook
-returned. That removes a worktree that git knows. A worktree that git does not know stays on disk. An example
+Without a `WorktreeRemove` hook, Claude Code removes the worktree at the end of a worktree session with
+`git worktree remove --force` on the path that the create hook returned. That removes a worktree that git knows. A worktree that git does not know stays on disk. An example
 is a worktree that the hook made with another version control system. Claude Code also never deletes a branch
 of a hook-created worktree.[^remove]
 

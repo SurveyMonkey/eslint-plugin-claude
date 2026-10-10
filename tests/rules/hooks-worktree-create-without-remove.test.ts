@@ -1,5 +1,5 @@
-// A WorktreeCreate hook replaces the default git behavior. Without a WorktreeRemove hook, Claude Code
-// removes only a worktree that git knows, and a worktree of another version control system stays on disk
+// A WorktreeCreate hook creates the worktree. Without a WorktreeRemove hook, Claude Code removes only a
+// worktree that git knows. A worktree of another version control system stays on disk
 // (https://code.claude.com/docs/en/hooks#worktreeremove). The rule reads one file at a time.
 import { describe, expect, it } from 'vitest'
 import {

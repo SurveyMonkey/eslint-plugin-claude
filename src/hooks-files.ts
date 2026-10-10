@@ -59,10 +59,11 @@ export function hooksFileKind(filename: string): HooksFileKind | null {
   return inHooksDir && !holder.startsWith('.') ? 'plugin' : null
 }
 
-/** The project settings files that can load with the plugin in the folder `root`, nearest first. These are
- *  `.claude/settings.json` and `.claude/settings.local.json` in `root` and in each folder above it, up to
- *  the folder that holds `.git` (the repository root). A project can keep a plugin in a sub folder. A walk
- *  that finds no `.git` reads `root` only, and no folder above the repository is read (ADR 001, Decision 14). */
+/** The project settings files that apply to a plugin in the folder `root`, nearest folder first. For each
+ *  folder, the list holds `.claude/settings.json` and then `.claude/settings.local.json`. The folders are
+ *  `root` and each folder above it, up to the folder that holds `.git` (the repository root). A project
+ *  can keep a plugin in a sub folder. If the walk finds no `.git`, the list holds the files of `root`
+ *  only (ADR 001, Decision 14). */
 export function settingsFilesAround(root: string): string[] {
   const start = path.resolve(root)
   const folders: string[] = []

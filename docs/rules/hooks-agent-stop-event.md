@@ -23,14 +23,15 @@ Use SubagentStop, not Stop, in the hooks of a subagent.
 When a subagent runs, Claude Code converts a `Stop` hook in its frontmatter to `SubagentStop`.[^hooks][^agents]
 That is the event that fires when a subagent completes. The name `Stop` in the file then says the wrong thing.
 
-The subagents page adds one case. An agent can run as the main session, with `--agent` or the `agent` setting.
-Its frontmatter hooks then run, and `Stop` is the `Stop` event. Keep `Stop` for that use only.
+The subagents page states the conversion for a subagent only. An agent can also run as the main session, with
+`--agent` or the `agent` setting. Its frontmatter hooks then run too, so `Stop` is not converted. Keep `Stop`
+for that use only.
 
 The rule reports a `Stop` event name that has a handler, in the frontmatter of a project subagent. It reports
 at the event name.
 
-The rule reads the frontmatter of an agent file only. A skill keeps its `Stop` event, because the docs state
-the conversion for subagents. A settings file and a plugin `hooks.json` keep it too. The rule reads no plugin
+The rule reads the frontmatter of an agent file only. The docs state the conversion for subagents only, so a
+skill gets no report. A settings file and a plugin `hooks.json` keep it too. The rule reads no plugin
 agent, because Claude Code ignores the `hooks` field there.
 
 Fail, in `.claude/agents/reviewer.md`:
