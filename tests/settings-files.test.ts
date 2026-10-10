@@ -207,6 +207,25 @@ describe('readManagedSource', () => {
     expect(readManagedSource(at(root, `${DROP}/10-a.json`))).toBe(UNREADABLE)
   })
 
+  it('gives UNREADABLE for a dangling link as the drop-in directory', () => {
+    const root = repository({})
+    symlinkSync(at(root, 'gone'), at(root, DROP))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a drop-in directory link out of the repository', () => {
+    const root = repository({})
+    const outside = mkdtempSync(path.join(scratch, 'outside-'))
+    symlinkSync(outside, at(root, DROP))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
+  it('reads a drop-in directory link inside the repository', () => {
+    const root = repository({ 'real/10-a.json': '{"a":1}' })
+    symlinkSync(at(root, 'real'), at(root, DROP))
+    expect(readManagedSource(at(root, MAIN))).toEqual([{ a: 1 }])
+  })
+
   it('gives an empty list when managed-settings.d is a file', () => {
     const root = repository({ [DROP]: 'x' })
     expect(readManagedSource(at(root, MAIN))).toEqual([])

@@ -5,7 +5,16 @@
 // same key below it. `.claude/settings.local.json` is above
 // `.claude/settings.json`. So the local file wins for one key.
 import path from 'node:path'
-import { entriesOf, readJson, repositoryRoot, UNREADABLE, type Unreadable } from './skill-tree.ts'
+import {
+  danglingOf,
+  entriesOf,
+  isInside,
+  readJson,
+  realOf,
+  repositoryRoot,
+  UNREADABLE,
+  type Unreadable,
+} from './skill-tree.ts'
 
 /** The managed settings files that a repository can hold. The managed settings
  *  page (https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams)
@@ -114,6 +123,12 @@ export function readManagedSource(filename: string): Record<string, unknown>[] |
       : path.dirname(self)
   const bound = repositoryRoot(dir)
   const directory = path.join(dir, DROP_IN_DIRECTORY)
+  // A dangling link, or a link to a directory out of the repository, is a directory
+  // that the rule cannot see.
+  const real = realOf(directory)
+  if (typeof real === 'string' ? !isInside(real, bound) : danglingOf(directory) === UNREADABLE) {
+    return UNREADABLE
+  }
   const entries = entriesOf(directory)
   if (entries === UNREADABLE) {
     return UNREADABLE
