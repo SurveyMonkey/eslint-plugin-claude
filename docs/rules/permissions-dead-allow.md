@@ -36,18 +36,19 @@ The rule reports the `allow` entry. The message names the rule that covers it an
   these tools only.
 - For these tools, a command pattern covers an `allow` rule when it matches every command that the `allow` rule matches.
   `Bash(npm *)` covers `Bash(npm test)`, `Bash(npm run *)` and `Bash(npm)`. A final ` *` that is the only wildcard also matches
-  the bare command, and `:*` at the end is a final ` *`. White space between words does not matter.
+  the bare command. A `:*` at the end is a final ` *`. White space between words does not matter.
 - For every other tool, the specifiers must be equal.
 
 ### Limits
 
 The rule reads the text of the rules, so these cases get no report:
 
-- A wildcard in the middle of a pattern that covers a wider pattern (`Bash(git log *)` with `Bash(git log * main)`).
+- A `deny` pattern with a wildcard in the middle that covers an `allow` rule with fewer words (`Bash(git log * main)` with `Bash(git log main)`).
 - A path rule, a `WebFetch` domain rule or an MCP rule that covers another by pattern (`Read(./src/**)` with `Read(./src/a.ts)`).
   Only an equal specifier counts.
 - A tool-name glob such as `mcp__*` in `deny`. `permissions-deny-all-tools` is the rule for it.
-- A compound command, a hook, a mode or a rule in a file that the repository does not hold, such as the user file.
+- A compound command, a hook or a mode.
+- A rule in a file that the repository does not hold, such as the user file.
 
 The same rule twice in `allow` and `deny` is a dead `allow` rule, and the rule reports it. `permissions-duplicate-rule` is the
 rule for the same rule twice in one list.
@@ -56,8 +57,9 @@ rule for the same rule twice in one list.
 
 The rule adds up the lists of one source. For a project file, the source is the pair `.claude/settings.json` and
 `.claude/settings.local.json`. For a managed file, the source is `managed-settings.json` with the files of
-`managed-settings.d/`. A `deny` rule in a project file does not cover an `allow` rule in a managed file, and the rule reads no
-managed file for a project file. A file that the rule cannot read adds nothing. The rule reports on the files that it reads.[^precedence]
+`managed-settings.d/`. A `deny` rule in a project file does not cover an `allow` rule in a managed file.
+The rule reads no managed file for a project file. A file that the rule cannot read adds nothing. If one file of a managed source cannot be read, the rule reads only the file that it lints.[^precedence]
+
 A `deny` rule in a user file can cover an `allow` rule too. The repository does not hold that file.
 
 Fail, in `.claude/settings.json`:

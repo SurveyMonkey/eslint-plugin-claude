@@ -25,8 +25,8 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 A denied domain stays blocked although an `allowedDomains` entry matches it too.[^denied] So an allowed entry that a denied
 entry covers never applies. The rule reports the allowed entry.
 
-An allowed entry is covered when a denied entry has the same host, and either has no port or has the same port. The rule
-ignores the letter case of the host and one trailing dot, as in `example.com.`.[^denied] An entry with no port matches every
+A denied entry covers an allowed entry when it has the same host and no port, or the same port. The rule
+ignores the letter case of the host and one final dot, as in `example.com.`.[^denied] An entry with no port matches every
 port, so `example.com` in `deniedDomains` covers `example.com:443` in `allowedDomains`. The reverse does not hold: a denied
 `example.com:443` leaves the other ports of an allowed `example.com` open.[^allowed]
 
@@ -40,7 +40,8 @@ The rule does not read the domains of `WebFetch` rules or a user file.
 
 The rule adds up the lists of one source. For a project file, the source is the pair `.claude/settings.json` and
 `.claude/settings.local.json`. For a managed file, the source is `managed-settings.json` with the files of
-`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing. A denied entry that it holds is the only proof, so the rule reports on the files that it can read.
+`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing. A denied entry that it holds is the only proof. If one file of a managed source cannot be read, the rule reads only the file that it lints.
+
 [`sandbox-domain-syntax`](sandbox-domain-syntax.md) reports an entry that is not a valid domain.
 
 Fail, in `.claude/settings.json`:

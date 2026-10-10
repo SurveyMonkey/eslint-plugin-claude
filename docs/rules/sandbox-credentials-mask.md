@@ -28,7 +28,7 @@ The rule checks the rules between the fields of an entry. [`sandbox-schema`](san
 
 Claude Code honors a `mask` entry only in user settings, managed settings and the `--settings` flag. It drops the entry in
 `.claude/settings.json` and `.claude/settings.local.json`.[^files-scope] [`sandbox-scope`](sandbox-scope.md) reports it there. So the rule
-reads the `mask` entries of a managed source only. The rule reports each case on the field that is wrong, or on the `mode` value when the whole entry is wrong:
+reads the `mask` entries of a managed source only. The rule reports each case on the field that is wrong. When the whole entry is wrong, it reports on the `mode` value:
 
 - **No TLS termination.** The source holds neither `network.tlsTerminate` nor `credentials.allowPlaintextInject: true`.
   Substitution runs only through the proxy. Without TLS termination, the placeholder reaches the server and authentication
@@ -50,7 +50,7 @@ value of `mode`, and names the fields. This check applies to every file kind, be
 ### Limits
 
 - `injectHosts` is not compared with `allowedDomains`. The list of allowed hosts also holds `WebFetch` allow rules, the approvals of a
-  session and the lists of the user file, and a repository file cannot show it.[^mask]
+  session and the lists of the user file. A repository file cannot show it.[^mask]
 - The rule reads the `tlsTerminate` and `allowPlaintextInject` of the managed files of the repository. A user file or the `--settings`
   flag can set them. A quoted `"true"` in `allowPlaintextInject` does not count. A `tlsTerminate` value that is not an object does not count.
 - The rule reads a variable `name` for the match with a `deny` entry. It does not read a `deny` entry for a file path.
