@@ -64,6 +64,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-default-dir-shadowed',
     'plugin-manifest-location',
     'plugin-monitors-command-env',
+    'plugin-no-git-lfs',
     'plugin-no-project-plugins-dir',
     'plugin-package-lockfile',
     'plugin-path-var-braced',

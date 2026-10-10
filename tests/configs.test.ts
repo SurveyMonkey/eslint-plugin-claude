@@ -143,6 +143,10 @@ const TREE: Record<string, string> = {
   'plugins/lock/.claude-plugin/plugin.json': JSON.stringify({ name: 'lock' }),
   'plugins/lock/package.json': '{}',
   'plugins/lock/yarn.lock': '',
+  // A file that a `.gitattributes` pattern sends to Git LFS.
+  'plugins/lfs/.claude-plugin/plugin.json': JSON.stringify({ name: 'lfs' }),
+  'plugins/lfs/.gitattributes': '*.bin filter=lfs diff=lfs merge=lfs -text\n',
+  'plugins/lfs/model.bin': '',
   // A bare plugin variable in the body of a plugin skill, command and agent.
   'plugins/bare/.claude-plugin/plugin.json': JSON.stringify({ name: 'bare' }),
   'plugins/bare/skills/s/SKILL.md': '---\nname: s\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
@@ -594,6 +598,7 @@ const PLUGIN_RULES: { name: string; files: string[]; language?: string }[] = [
     name: 'plugin-monitors-command-env',
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
   },
+  { name: 'plugin-no-git-lfs', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-package-lockfile', files: ['**/.claude-plugin/plugin.json'] },
   {
     name: 'plugin-path-var-braced',
@@ -657,6 +662,7 @@ const EXPECTED = [
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
+  'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
   'plugins/bare/commands/c.md: claude/command-legacy-format@1',

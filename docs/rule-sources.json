@@ -936,6 +936,13 @@
       "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
     }
   ],
+  "plugin-no-git-lfs": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Keep plugin files out of Git LFS",
+      "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810"
+    }
+  ],
   "plugin-no-project-plugins-dir": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
