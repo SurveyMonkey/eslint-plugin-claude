@@ -71,6 +71,8 @@ describe(RULE, () => {
     ['X-Password', 'abc123'],
     ['X-Credentials', 'abc123'],
     ['X-Custom', 'Bearer abc123'],
+    ['X-Access-Token', 'abc123'],
+    ['X-Custom', 'Basic abc123'],
     ['X-Custom', 'Token abc123'],
     ['X-Custom', 'Digest abc123'],
     ['Authorization', `Bearer abc\${NOT_CLOSED`],

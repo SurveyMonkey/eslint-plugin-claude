@@ -51,6 +51,8 @@ describe(RULE, () => {
     ['a parent', '..'],
     ['a parent with ./', './..'],
     ['a backslash', '.\\'],
+    ['a path that returns to the root with ..', 'plugins/..'],
+    ['a path that returns to the root with ./ and ..', './plugins/..'],
     ['an empty string', ''],
     ['a source that is not a string', 3],
     ['a bare name', 'p'],

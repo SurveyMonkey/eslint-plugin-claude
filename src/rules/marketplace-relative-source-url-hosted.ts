@@ -2,12 +2,12 @@
 // Code that file only. A relative `source` then fails at install
 // (docs/rules/marketplace-relative-source-url-hosted.md). The rule finds the
 // registration in the project settings files beside the marketplace root,
-// through `declaredType`. It makes no report when it cannot read them.
+// through `declaredSourceType`. It makes no report when it cannot read them.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
-import { declaredType } from '../marketplace-file.ts'
+import { declaredSourceType } from '../marketplace-file.ts'
 import { lastMember, pluginEntries } from '../marketplace-json.ts'
 
 const name = 'marketplace-relative-source-url-hosted' as const
@@ -34,7 +34,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'relativeInUrl' }> = {
           return
         }
         const root = path.dirname(path.dirname(path.resolve(context.filename)))
-        if (declaredType(root, market.value) !== MARKETPLACE_SOURCE_TYPES.url) {
+        if (declaredSourceType(root, market.value) !== MARKETPLACE_SOURCE_TYPES.url) {
           return
         }
         for (const entry of pluginEntries(node)) {

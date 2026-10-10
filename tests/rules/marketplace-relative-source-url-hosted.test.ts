@@ -86,6 +86,36 @@ describe(RULE, () => {
     expect(lint(bare, entry())).toHaveLength(1)
   })
 
+  it.each([
+    ['does not parse', '{'],
+    ['is an array', '[]'],
+  ])('reports from settings.local.json when settings.json %s', (_title, text) => {
+    const dir = tree({
+      '.claude/settings.json': text,
+      '.claude/settings.local.json': registers(URL_SOURCE),
+    })
+    expect(lint(dir, entry())).toHaveLength(1)
+  })
+
+  it.skipIf(noLinks)(
+    'reports from settings.local.json when settings.json is a dangling link',
+    () => {
+      const dir = tree({ '.claude/settings.local.json': registers(URL_SOURCE) })
+      link(dir, '.claude/settings.json', 'gone.json')
+      expect(lint(dir, entry())).toHaveLength(1)
+    },
+  )
+
+  it.skipIf(noLinks)(
+    'reports from settings.local.json when settings.json is out of the repository',
+    () => {
+      const outside = tree({ 'settings.json': registers({ source: 'github', repo: 'a/b' }) })
+      const dir = tree({ '.claude/settings.local.json': registers(URL_SOURCE) })
+      link(dir, '.claude/settings.json', path.join(outside, 'settings.json'))
+      expect(lint(dir, entry())).toHaveLength(1)
+    },
+  )
+
   it('reads the last of two name keys, as JSON.parse does', () => {
     const dir = tree({ '.claude/settings.json': registers(URL_SOURCE) })
     const code = '{"name": "other", "name": "acme", "plugins": [{"name": "p", "source": "./p"}]}'
