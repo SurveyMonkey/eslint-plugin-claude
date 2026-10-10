@@ -25,11 +25,12 @@ in order. A server name that a later source declares replaces the earlier server
 manifest server replaces the server of `.lsp.json` that has the same name.[^components] The earlier
 server never runs.
 
-The `lspServers` key takes a `.json` file path, an inline map of server name to config, or an
-array of those.[^manifest] The rule reads `.lsp.json` at the plugin root, each `.json` file that
-`lspServers` names, and each inline map. It reports a name that a later source repeats. The report
-is on the later declaration: on the name of an inline server, or on the path of a file. The message
-names the source of the first declaration.
+The `lspServers` key takes a `.json` file path or an inline map of server name to config. An array
+mixes them.[^manifest] The rule reads `.lsp.json` at the plugin root, each `.json` file that
+`lspServers` names, and each inline map. It reports a name that a later source repeats.
+
+The report is on the later declaration. This is the name of an inline server, or the path of a
+file. The message names the source of the first declaration.
 
 A source declares a name once. When one file has two keys of one name, the rule reads the last,
 as `JSON.parse` does. So that file alone gives no report.

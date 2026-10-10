@@ -631,6 +631,39 @@ const TREE: Record<string, string> = {
     lspServers: JSON.parse(goodLsp),
   }),
   'plugins/ld/.lsp.json': goodLsp,
+  // `mcp-plugin-tool-name-scoped`: a bare tool of the plugin's own server, in each Markdown file
+  // that the rule reads. A skill outside a plugin, a server that the plugin does not declare, and
+  // the same content where no rule reads it, are silent.
+  'plugins/ts/.claude-plugin/plugin.json': JSON.stringify({ name: 'ts' }),
+  'plugins/ts/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'plugins/ts/skills/s/SKILL.md': '---\nallowed-tools: mcp__db__q\n---\n',
+  'plugins/ts/commands/c.md': '---\nallowed-tools: mcp__db__q\n---\n',
+  'plugins/ts/agents/a.md': '---\nname: a\ndescription: d\ntools: mcp__db__q\n---\n',
+  'plugins/ts/skills/o/SKILL.md': '---\nallowed-tools: mcp__other__q mcp__plugin_ts_db__q\n---\n',
+  'plugins/ts/docs/SKILL.md': '---\nallowed-tools: mcp__db__q\n---\n',
+  // `mcp-approval-names-exist`: a name that `.mcp.json` does not declare, in each project file.
+  // The managed files are silent.
+  'packages/an/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'packages/an/.claude/settings.json': '{"enabledMcpjsonServers": ["db", "gone"]}',
+  'packages/an/.claude/settings.local.json': '{"disabledMcpjsonServers": ["missing"]}',
+  'packages/an/managed-settings.json': '{"enabledMcpjsonServers": ["gone"]}',
+  'packages/an/.vscode/settings.json': '{"enabledMcpjsonServers": ["gone"]}',
+  // `mcp-approval-conflict`: a name in both lists. The project pair reports in the file with the
+  // enabled entry. The managed pair reports in the drop-in with the enabled entry. A hidden drop-in
+  // is for `settings-managed-file`.
+  'packages/ac/.claude/settings.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/ac/.claude/settings.local.json': '{"disabledMcpjsonServers": ["db"]}',
+  'packages/ac/managed-settings.json': '{"disabledMcpjsonServers": ["db"]}',
+  'packages/ac/managed-settings.d/10-a.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/ac/managed-settings.d/.20-hidden.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/ac/.vscode/settings.json': '{"enabledMcpjsonServers": ["db"]}',
+  // `mcp-allow-deny-overlap`: the same shape for the policy lists.
+  'packages/ao/.claude/settings.json': '{"allowedMcpServers": [{"serverName": "db"}]}',
+  'packages/ao/.claude/settings.local.json': '{"deniedMcpServers": [{"serverName": "db"}]}',
+  'packages/ao/managed-settings.json': '{"deniedMcpServers": [{"serverName": "db"}]}',
+  'packages/ao/managed-settings.d/10-a.json': '{"allowedMcpServers": [{"serverName": "db"}]}',
+  'packages/ao/managed-settings.d/.20-hidden.json': '{"allowedMcpServers": [{"serverName": "db"}]}',
+  'packages/ao/.vscode/settings.json': '{"allowedMcpServers": [{"serverName": "db"}]}',
   // The same content where no rule reads it: other names and other directories.
   'packages/mc/mcp.json': badMcp,
   'packages/mc/.mcp.json.bak': badMcp,
@@ -719,7 +752,7 @@ const SCOPE_RULES = [
 // The rules of #16 on `.mcp.json`, in the order of the `modules` list, with the files of each.
 // Each is an error.
 const MCP_PATHS = ['**/.claude/.mcp.json', '**/.claude/mcp.json', '**/.claude/config/mcp.json']
-const MCP_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
+const MCP_RULES: { name: string; files: string[]; markdown?: string[]; language?: string }[] = [
   { name: 'mcp-json-location', files: MCP_PATHS },
   { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
@@ -754,6 +787,14 @@ const MCP_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
   { name: 'mcp-duplicate-server-name', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'lsp-extension-conflict', files: ['**/.claude-plugin/marketplace.json'] },
   { name: 'lsp-duplicate-server-name', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'mcp-plugin-tool-name-scoped',
+    files: ['**/SKILL.md', '**/commands/**/*.md', '**/agents/**/*.md'],
+    language: 'markdown/gfm',
+  },
+  { name: 'mcp-approval-names-exist', files: PROJECT_FILES },
+  { name: 'mcp-approval-conflict', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'mcp-allow-deny-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1023,6 +1064,20 @@ const EXPECTED = [
   'packages/me/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/cs/.claude/settings.json: claude/mcp-env-client-secret@2',
   'plugins/dn/.claude-plugin/plugin.json: claude/mcp-duplicate-server-name@2',
+  'plugins/ts/skills/s/SKILL.md: claude/mcp-plugin-tool-name-scoped@2',
+  'plugins/ts/commands/c.md: claude/mcp-plugin-tool-name-scoped@2',
+  'plugins/ts/commands/c.md: claude/command-legacy-format@1',
+  'plugins/ts/agents/a.md: claude/mcp-plugin-tool-name-scoped@2',
+  'packages/an/.claude/settings.json: claude/mcp-approval-names-exist@2',
+  'packages/an/.claude/settings.local.json: claude/mcp-approval-names-exist@2',
+  'packages/an/.claude/settings.json: claude/mcp-approval-committed@2',
+  'packages/ac/.claude/settings.json: claude/mcp-approval-conflict@2',
+  'packages/ac/.claude/settings.json: claude/mcp-approval-committed@2',
+  'packages/ac/managed-settings.d/10-a.json: claude/mcp-approval-conflict@2',
+  'packages/ac/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/ao/.claude/settings.json: claude/mcp-allow-deny-overlap@2',
+  'packages/ao/managed-settings.d/10-a.json: claude/mcp-allow-deny-overlap@2',
+  'packages/ao/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/lc/.claude-plugin/marketplace.json: claude/lsp-extension-conflict@2',
   'plugins/ld/.claude-plugin/plugin.json: claude/lsp-duplicate-server-name@2',
 ].sort()
@@ -1219,12 +1274,12 @@ describe('configs', () => {
   })
 
   it('gives each MCP rule one JSON block for its files, and one Markdown block if it has a second target', () => {
-    for (const { name, files, markdown } of MCP_RULES) {
+    for (const { name, files, markdown, language } of MCP_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
-        ['json/json', files],
+        [language ?? 'json/json', files],
         ...(markdown ? [['markdown/gfm', markdown]] : []),
       ])
     }

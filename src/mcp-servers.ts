@@ -122,7 +122,7 @@ export function readJsonBody(file: string, bound: string): ValueNode | null {
  *  not there or cannot be read. A link to a file out of the plugin directory is not read, as
  *  Claude Code loads no path that leaves the plugin.
  *  (https://code.claude.com/docs/en/plugins/manifest-reference#path-rules) */
-export function readDeclaredJson(root: string, declared: string): ValueNode | null {
+function readDeclaredJson(root: string, declared: string): ValueNode | null {
   if (
     pathFault(declared) !== undefined ||
     declared.includes('\\') ||
@@ -217,4 +217,52 @@ export function repeatedDeclarations(
     }
     return [{ declaration, earlier }]
   })
+}
+
+/** The parsed value of the string, array or object `node`. Another value is undefined, because
+ *  the policy and approval lists hold strings, arrays and objects only. Of two members with one
+ *  name, the last stays, as `JSON.parse` keeps it. */
+export function plainOf(node: ValueNode): unknown {
+  if (node.type === 'String') {
+    return node.value
+  }
+  if (node.type === 'Array') {
+    return node.elements.map(({ value }) => plainOf(value))
+  }
+  if (node.type === 'Object') {
+    return Object.fromEntries(
+      lastMembers(node.members).map((m) => [keyOf(m.name), plainOf(m.value)]),
+    )
+  }
+  return undefined
+}
+
+/** A key that tells one valid policy entry from another, or undefined for an entry that Claude
+ *  Code strips. A valid entry is an object with one key: `serverName` with a string that matches
+ *  the allowlist pattern, `serverUrl` with a string, or `serverCommand` with an array of strings.
+ *  A name that the pattern rejects is no allowlist entry, so it cannot overlap with a denylist
+ *  entry. `mcp-policy-entry-schema` reports it.
+ *  (https://code.claude.com/docs/en/settings-reference#allowedmcpservers) */
+export function policyKey(entry: unknown): string | undefined {
+  if (entry === null || typeof entry !== 'object' || Array.isArray(entry)) {
+    return undefined
+  }
+  const [pair, ...others] = Object.entries(entry)
+  if (pair === undefined || others.length > 0) {
+    return undefined
+  }
+  const [key, value] = pair
+  if (key === 'serverUrl' && typeof value === 'string') {
+    return `url:${value}`
+  }
+  if (
+    key === 'serverCommand' &&
+    Array.isArray(value) &&
+    value.every((v) => typeof v === 'string')
+  ) {
+    return `command:${JSON.stringify(value)}`
+  }
+  return key === 'serverName' && typeof value === 'string' && SERVER_NAME_PATTERN.test(value)
+    ? `name:${value}`
+    : undefined
 }

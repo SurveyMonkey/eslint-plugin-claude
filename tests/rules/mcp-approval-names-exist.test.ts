@@ -21,14 +21,14 @@ function lint(code: string, files: Record<string, string>, file = '.claude/setti
 }
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
-it.fails('reports a name that .mcp.json does not declare, on the name', () => {
+it('reports a name that .mcp.json does not declare, on the name', () => {
   const found = lint(lists(['db', 'gone']), { '.mcp.json': mcp('db') })
   expect(ids(found)).toEqual(['unknown'])
-  expect(found[0]).toMatchObject({ line: 1, column: 38, endColumn: 44 })
+  expect(found[0]).toMatchObject({ line: 1, column: 32, endColumn: 38 })
   expect(found[0]?.message).toContain('"gone"')
   expect(found[0]?.message).toContain('enabledMcpjsonServers')
 })
-it.fails('reports in both lists, and in the local file and a nested project', () => {
+it('reports in both lists, and in the local file and a nested project', () => {
   const files = { '.mcp.json': mcp('db'), 'packages/a/.mcp.json': mcp('web') }
   expect(ids(lint(lists(['x'], ['y']), files))).toEqual(['unknown', 'unknown'])
   expect(ids(lint(lists(['x']), files, '.claude/settings.local.json'))).toEqual(['unknown'])
@@ -37,10 +37,10 @@ it.fails('reports in both lists, and in the local file and a nested project', ()
     'unknown',
   ])
 })
-it.fails('stays silent for names that .mcp.json declares', () => {
+it('stays silent for names that .mcp.json declares', () => {
   expect(ids(lint(lists(['db'], ['web']), { '.mcp.json': mcp('db', 'web') }))).toEqual([])
 })
-it.fails('stays silent when there is no .mcp.json, or the rule cannot read it', () => {
+it('stays silent when there is no .mcp.json, or the rule cannot read it', () => {
   expect(ids(lint(lists(['db']), {}))).toEqual([])
   expect(ids(lint(lists(['db']), { '.mcp.json': '{ not json' }))).toEqual([])
   // `mcp-json-servers-key` owns a file with no `mcpServers` object.
@@ -50,7 +50,7 @@ it.fails('stays silent when there is no .mcp.json, or the rule cannot read it', 
   // The server file in `.claude/` is not read by Claude Code.
   expect(ids(lint(lists(['db']), { '.claude/.mcp.json': mcp('x') }))).toEqual([])
 })
-it.fails('stays silent for a .mcp.json that is a link out of the repository, or dangling', () => {
+it('stays silent for a .mcp.json that is a link out of the repository, or dangling', () => {
   const root = repo({})
   const outside = mkdtempSync(path.join(tmpdir(), 'mcp-approval-outside-'))
   try {
@@ -65,7 +65,7 @@ it.fails('stays silent for a .mcp.json that is a link out of the repository, or 
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('reads the last of two list keys, and skips values it cannot read', () => {
+it('reads the last of two list keys, and skips values it cannot read', () => {
   const files = { '.mcp.json': mcp('db') }
   const twice = '{"enabledMcpjsonServers": ["x"], "enabledMcpjsonServers": ["db"]}'
   expect(ids(lint(twice, files))).toEqual([])
