@@ -70,6 +70,16 @@ it('stays silent for a server that .mcp.json declares', () => {
   )
   expect(ids(settings(code, files))).toEqual([])
 })
+it('reports a name that only starts with a declared name, after names it skips', () => {
+  const files = { '.mcp.json': servers('db') }
+  const code = allow(
+    'mcp__plugin_other_x__t',
+    'mcp__workspace__x',
+    'mcp__db2__t',
+    'mcp__workspace2__x',
+  )
+  expect(ids(settings(code, files))).toEqual(['unknown', 'unknown'])
+})
 it('stays silent for the servers that no repository file declares', () => {
   const files = { '.mcp.json': servers('db') }
   const code = allow(
@@ -108,6 +118,10 @@ it('stays silent when the local agents cannot be read', () => {
   } finally {
     rmSync(outside, { recursive: true, force: true })
   }
+})
+it('reports in a plugin file after a name that the plugin does not own', () => {
+  expect(ids(inPlugin('mcp__db__t mcp__plugin_my-plugin_nope__t', PLUGIN))).toEqual(['unknown'])
+  expect(ids(inPlugin('mcp__plugin_my-plugin_dbx__t', PLUGIN))).toEqual(['unknown'])
 })
 it('stays silent when an agent file cannot be read', () => {
   const root = repo({ '.mcp.json': servers('db'), '.claude/agents/a.md': agent('') })

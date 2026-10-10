@@ -19,6 +19,9 @@ it('reports MCP_TIMEOUT written in seconds, on the value', () => {
   expect(found[0]?.message).toContain('milliseconds')
   expect(ids(lintJson(NAME, env({ MCP_TIMEOUT: '999' }), project))).toEqual(['seconds'])
 })
+it('reads a variable after one that it does not know', () => {
+  expect(ids(lintJson(NAME, env({ PATH: 'x', MCP_TIMEOUT: '30' }), project))).toEqual(['seconds'])
+})
 it('reports each variable that has no floor in the docs', () => {
   for (const variable of [
     'MCP_TIMEOUT',

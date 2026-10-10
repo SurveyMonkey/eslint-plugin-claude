@@ -121,6 +121,16 @@ it('stays silent for the args of a shell, and reports the other fields of it', (
   expect(ids(lintProject(NAME, at(mixed)))).toEqual(['syntax'])
   expect(ids(lintProject(NAME, at({ command: 'node', args: ['$HOME'] })))).toEqual(['syntax'])
 })
+it('stays silent for the args of fish, ksh and a Windows path to a shell', () => {
+  for (const command of ['fish', 'ksh', 'C:\\Windows\\System32\\cmd.exe']) {
+    expect(ids(lintProject(NAME, at({ command, args: ['-c', 'echo $HOME'] }))), command).toEqual([])
+  }
+})
+it('reports each operator form of a variable', () => {
+  for (const text of [`\${V=x}`, `\${V?e}`, `\${V:+x}`, `\${V-x`, `\${V:?e}`, `\${V+x}`]) {
+    expect(ids(lintProject(NAME, at({ command: 'x', args: [text] }))), text).toEqual(['syntax'])
+  }
+})
 it('stays silent for a path that Claude Code does not read, and a server that is shadowed', () => {
   expect(ids(lintProject(NAME, at({ command: '$A' }), '.claude/.mcp.json'))).toEqual([])
   const shadowed = '{"mcpServers": {"a": {"command": "$A"}, "a": {"command": "x"}}}'
@@ -131,6 +141,12 @@ it('stays silent for a path that Claude Code does not read, and a server that is
   expect(ids(lintProject(NAME, '[]'))).toEqual([])
 })
 
+it('reports on the manifest for a server of a declared file, with the field named', () => {
+  const declared = JSON.stringify({ name: 'p', mcpServers: './s.json' })
+  const found = lintManifest(NAME, declared, { 'p/s.json': at({ command: 'x', env: { K: '$A' } }) })
+  expect(found[0]).toMatchObject({ column: declared.indexOf('"./s.json"') + 1 })
+  expect(found[0]?.message).toContain('env')
+})
 it('reads the args of an entry whose command is missing or not a string', () => {
   expect(ids(lintProject(NAME, at({ args: ['$A'] })))).toEqual(['syntax'])
   expect(ids(lintProject(NAME, at({ command: 5, args: ['$A'] })))).toEqual(['syntax'])
