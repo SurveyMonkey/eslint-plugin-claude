@@ -41,6 +41,11 @@ describe(`${name}: the files that Claude Code does not read`, () => {
     expect(ids('.claude-plugin/hooks.json', plain)).toEqual(['pluginDir'])
   })
 
+  it('reports .claude/hooks.json even when .claude is a plugin root', () => {
+    const files = { '.claude/.claude-plugin/plugin.json': '{"name": "p"}' }
+    expect(ids('.claude/hooks.json', files)).toEqual(['standalone'])
+  })
+
   it('reports at line 1, column 1', () => {
     const root = repo({})
     const found = lintJson(name, '{\n  "hooks": {}\n}', path.join(root, '.claude/hooks.json'))

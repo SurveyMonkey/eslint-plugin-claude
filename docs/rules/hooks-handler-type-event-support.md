@@ -35,7 +35,7 @@ event that it does not know.
 
 ### Cases that the docs word with care
 
-- **`mcp_tool` on `SessionStart`.** At launch, including with `--continue` or `--resume`, the MCP servers are not up
+- **`mcp_tool` on `SessionStart`.** At launch, with `--continue` or `--resume` too, the MCP servers are not up
   yet, so Claude Code skips the hook.[^mcp] When `SessionStart` fires again, after `/clear` or a compaction, the
   hook runs. So the rule reports only a matcher that selects `startup` and `resume` and no other source, such as
   `startup`, `resume` or `startup|resume`. A match-all matcher (omitted, empty, or `*`) also fires on `clear`

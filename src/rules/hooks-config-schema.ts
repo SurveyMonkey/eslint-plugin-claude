@@ -57,8 +57,7 @@ const REQUIRED: Record<HandlerType, readonly string[]> = {
 
 type Kind = 'string' | 'number' | 'boolean' | 'strings' | 'object'
 
-/** The type of each handler field that has one. A field that is not in the list is for
- *  `hooks-handler-field-unknown`. */
+/** The type of each handler field that has one. This rule does not check another field. */
 const FIELDS = new Map<string, Kind>([
   ['if', 'string'],
   ['timeout', 'number'],
@@ -233,7 +232,7 @@ const rule: Rule.RuleModule = {
       hooksMissing:
         'hooks.json needs a top-level "hooks" key, or a "modules" key. Claude Code does not load an event map that has no "hooks" wrapper.',
       unknownKey:
-        'hooks.json has the top-level key "{{key}}", which Claude Code does not know. It shows a notice for the key. The known keys are "hooks", "description", "$schema" and "modules".',
+        'hooks.json has the top-level key "{{key}}", which the docs do not list. The known keys are "hooks", "description", "$schema" and "modules".',
       notObject:
         'The "hooks" value must be an object that maps event names to arrays of matcher groups.',
       eventNotArray: 'The event "{{event}}" must hold an array of matcher groups.',

@@ -20,13 +20,13 @@ Do not define hooks in a settings file that sets `disableAllHooks` to `true`.
 
 ## Rule details
 
-`"disableAllHooks": true` turns off every hook without removing it.[^disable][^reference] A settings file that
+`"disableAllHooks": true` turns off every hook and keeps the config.[^disable][^reference] A settings file that
 sets the key and also has a non-empty `hooks` object defines hooks that never run. The rule reports at the `hooks`
 key. A `null` value, an empty `hooks` object and a `hooks` value that is not an object define no hooks, so the
 rule makes no report for them.
 
 A file of a higher scope can set the key again. Claude Code reads the value that is left after settings
-precedence.[^reference] So the rule reads the sibling files, and makes no report when one of them can change the
+precedence.[^disable] So the rule reads the sibling files, and makes no report when one of them can change the
 result:
 
 - **`.claude/settings.json`.** The rule makes no report when `.claude/settings.local.json` sets

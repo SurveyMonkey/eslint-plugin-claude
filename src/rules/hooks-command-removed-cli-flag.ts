@@ -47,9 +47,14 @@ function commandsOf(line: string): string[][] {
     if (quote === "'" && char !== "'") {
       word += char
     } else if (char === '\\' && quote !== "'") {
-      // The next character is part of the word. A backslash at the end of the line adds nothing.
-      word += line.charAt(++i)
-      open = true
+      if (line.charAt(i + 1) === '\n') {
+        // A backslash before a new line joins the two lines, and adds nothing to the word.
+        i++
+      } else {
+        // The next character is part of the word. A backslash at the end of the line adds nothing.
+        word += line.charAt(++i)
+        open = true
+      }
     } else if (quote !== '' && char === quote) {
       quote = ''
     } else if (quote !== '') {

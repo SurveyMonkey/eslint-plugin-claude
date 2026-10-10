@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-handler-field-ignored, which reports a hook handler field that Claude Code ignores, such as async on a prompt hook, continueOnBlock on a command hook, shell with args, once outside a skill, timeout with async, a SessionEnd timeout over the budget, and onFailure on an event or a hook that it does not cover.
+description: The ESLint rule claude/hooks-handler-field-ignored, which reports a hook handler field that Claude Code ignores, such as async on a prompt hook, continueOnBlock on a non-prompt hook, shell with args, once outside a skill, timeout with async, a SessionEnd timeout over the budget, and onFailure on an event or a hook that it does not cover.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [10]
@@ -28,7 +28,7 @@ the same files as [`hooks-config-schema`](hooks-config-schema.md). It skips a ha
 | Field | Ignored when | The docs say |
 |-------|--------------|--------------|
 | `async`, `asyncRewake` | The handler is not a `command` hook | The field "is only available on `type: "command"` hooks".[^async] |
-| `continueOnBlock` | The handler is not a `prompt` hook | Agent hooks have "no `continueOnBlock` field".[^agent] |
+| `continueOnBlock` | The handler is not a `prompt` hook | Agent hooks have "no `continueOnBlock` field".[^agent] The docs describe the field for prompt hooks only, so the rule applies this to every other type. |
 | `continueOnBlock` | The event is `PostToolUseFailure` or `TaskCreated` | The reason goes to Claude as a tool error and the turn continues, "regardless of `continueOnBlock`".[^response] |
 | `shell` | The handler sets `args` | The field is "ignored when `args` is set".[^command] |
 | `once: true` | The file is a settings file or agent frontmatter | The field is "only honored for hooks declared in skill frontmatter".[^common] |
@@ -44,13 +44,13 @@ the same files as [`hooks-config-schema`](hooks-config-schema.md). It skips a ha
 - **`once`.** The docs name settings files and agent frontmatter as the places that ignore the field. They do
   not say what a plugin `hooks.json` does. The rule makes no report there. It makes none in a skill, where the
   field works.[^skills] A `once: false` is no fault.
-- **The two SessionEnd numbers.** 60 and 1.5 are the values in the docs. The rule has no option for them. The
-  environment variable `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` sets the budget outside the config
-  file.[^sessionend] A plugin skill or agent is not a plugin `hooks.json`, so the 60 second cap applies to
-  its hooks.
+- **The two SessionEnd numbers.** 60 and 1.5 are the values in the docs. The environment variable
+  `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` sets the budget outside the config file.[^sessionend] So each number
+  is an option (see Options). The docs do not say if the hooks of a plugin skill count as plugin hooks. The rule
+  applies the first limit to them. This is a rule decision.
 - **`asyncRewake`.** A `timeout` with `asyncRewake: true` is no fault, because Claude Code still enforces it.
-- **`onFailure`.** The field needs Claude Code v2.1.295 or later.[^onfailure] Before that release, Claude Code
-  ignores it on every event.
+- **`onFailure`.** The field needs Claude Code v2.1.295 or later.[^onfailure] The rule does not read the
+  version of Claude Code.
 
 The rule reads no hidden file in `managed-settings.d/`, because Claude Code ignores it. It reads no plugin
 agent, because Claude Code ignores the `hooks` field there. When a handler is malformed, the rule skips it and
@@ -79,6 +79,26 @@ Pass:
   }
 }
 ```
+
+## Options
+
+| Option | Default | Use |
+|--------|---------|-----|
+| `sessionEndMax` | `60` | The most seconds that a `SessionEnd` `timeout` can have. Optional. |
+| `sessionEndPluginMax` | `1.5` | The most seconds that a `SessionEnd` `timeout` can have in a plugin `hooks.json`. Optional. |
+
+```js
+'claude/hooks-handler-field-ignored': ['error', { sessionEndMax: 120 }]
+```
+
+The defaults are the numbers in the docs.[^sessionend] The environment variable
+`CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` moves the budget. A team that sets it sets the same limit here. The
+schema sets no maximum, because the budget is not fixed. A config that sets only the severity keeps the defaults.
+The `recommended` and `strict` configs set no option.
+
+At the default, the message says what Claude Code does at that number. At another value, the message says
+"above the configured limit". The plugin cannot read the environment variable of Claude Code, so that message
+does not say that Claude Code ignores the field.
 
 ## Sources
 

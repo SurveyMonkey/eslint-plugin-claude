@@ -42,16 +42,20 @@ The rule reports these faults:
   `statusMessage`, `command`, `url`, `server`, `tool`, `prompt` and `model` are strings.[^common]
 - `shell` is not `bash` or `powershell`.[^command] `onFailure` is not `continue` or `block`.[^onfailure]
 
-Each fault gets one report. A field with the wrong type is not also a missing field.
+A field with the wrong type is not also a missing field.
 
 ### hooks.json
 
 A plugin keeps its hooks in `hooks/hooks.json` under a top-level `hooks` key.[^components] A file that holds only the
-event map, with no `hooks` wrapper, fails to load.[^manifest] The rule also reports a top-level key other than
-`hooks`, `description`, `$schema` and `modules`. Claude Code shows a notice for an unknown key.[^load] The `description`
-and `$schema` keys are strings. A mod lists its code under `modules`, an array of paths. A file with `modules` needs
-no `hooks` key.[^mods] The rule reads a `hooks.json` that sits at the root of a plugin. It skips a file that Claude Code does not
-read (see [`hooks-no-standalone-file`](hooks-no-standalone-file.md)).
+event map, with no `hooks` wrapper, fails to load.[^manifest][^load] The rule also reports a top-level key other than
+`hooks`, `description`, `$schema` and `modules`, because the docs list no other key. The docs do not list `$schema`
+for this file. The rule accepts it as a string, for editors. The `description` key is a string. A mod lists its code
+under `modules`. The docs show an array with one path. The rule accepts an array of strings. A file with `modules`
+needs no `hooks` key.[^mods]
+
+The rule reads a `hooks.json` at the root of a plugin. It skips a file that Claude Code does not read (see
+[`hooks-no-standalone-file`](hooks-no-standalone-file.md)). It skips a `hooks/hooks.json` in a hidden folder other
+than `.claude`, such as `.github/hooks/`, because that file is for another tool.
 
 ### What the rule does not check
 
