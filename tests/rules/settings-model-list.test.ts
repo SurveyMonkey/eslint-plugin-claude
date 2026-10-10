@@ -497,9 +497,13 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
   })
 
   it('reads no sibling for a project file', () => {
-    const root = repo({ 'managed-settings.d/10-a.json': LIST })
-    expect(at(root, '.claude/settings.json', { availableModels: [], model: 'opus' })).toEqual([
-      'emptyList',
-    ])
+    // The files that a managed file would read, placed beside the project file.
+    const root = repo({
+      '.claude/managed-settings.json': LIST,
+      '.claude/managed-settings.d/a.json': LIST,
+    })
+    const code = { availableModels: [], model: 'opus' }
+    expect(at(root, '.claude/settings.json', code)).toEqual(['emptyList'])
+    expect(at(root, '.claude/managed-settings.d/b.json', code)).toEqual([])
   })
 })

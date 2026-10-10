@@ -232,7 +232,7 @@ function allows(entry: string, id: string): boolean {
   }
   // The next character of the model must start another segment: `claude-opus-5` does not permit
   // `claude-opus-55`.
-  return model === from || (model.startsWith(from) && !/[a-z0-9]/i.test(model.charAt(from.length)))
+  return model.startsWith(from) && !/[a-z0-9]/i.test(model.charAt(from.length))
 }
 
 export default {
