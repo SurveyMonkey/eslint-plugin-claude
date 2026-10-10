@@ -478,6 +478,15 @@ const TREE: Record<string, string> = {
   'packages/rg/.claude/rules/bracket.md': '---\npaths: "photos [2024/**"\n---\n# Rule\n',
   'packages/rg/.claude/rules/sub/ok.md': '---\npaths: "photos \\\\[2024/**"\n---\n# Rule\n',
   'packages/rg/docs/rules/bracket.md': '---\npaths: "photos [2024/**"\n---\n# Not a rule file\n',
+  // `rules-md-extension`: a file below `.claude/rules/` with another extension, at each depth. A
+  // hidden file, a file with the extension `.md`, and the same names where no rule reads them.
+  'packages/re/.claude/rules/style.txt': '# Rule\n',
+  'packages/re/.claude/rules/sub/react.markdown': '# Rule\n',
+  'packages/re/.claude/rules/noextension': '# Rule\n',
+  'packages/re/.claude/rules/.gitkeep': '',
+  'packages/re/.claude/rules/ok.md': '# Rule\n',
+  'packages/re/docs/rules/style.txt': '# Not a rule file\n',
+  'packages/re/.claude/style.txt': '# Not a rule file\n',
   'packages/ms/ok/.claude/settings.json':
     '{"autoMemoryEnabled": false, "autoMemoryDirectory": "~/memory", "claudeMdExcludes": ["**/a/**"]}',
 }
@@ -568,6 +577,7 @@ const MEMORY_RULES = [
   'claude-md-max-bytes',
   'memory-settings-schema',
   'rules-frontmatter-schema',
+  'rules-md-extension',
   'rules-paths-glob-valid',
 ]
 
@@ -749,6 +759,10 @@ const EXPECTED = [
   'packages/rf/.claude/rules/late.md: claude/rules-frontmatter-schema@2',
   // `rules-paths-glob-valid` reads Markdown below `.claude/rules/`, and no other file.
   'packages/rg/.claude/rules/bracket.md: claude/rules-paths-glob-valid@2',
+  // `rules-md-extension` reads every file below `.claude/rules/`, and no other file.
+  'packages/re/.claude/rules/style.txt: claude/rules-md-extension@2',
+  'packages/re/.claude/rules/sub/react.markdown: claude/rules-md-extension@2',
+  'packages/re/.claude/rules/noextension: claude/rules-md-extension@2',
   // `memory-settings-schema` reads the project and managed files, and no other file.
   'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
   'packages/ms/.claude/settings.local.json: claude/memory-settings-schema@2',
@@ -984,6 +998,31 @@ describe('configs', () => {
 
   // The tree holds files of 4 MiB for the size rule, so these two runs need more than 5 seconds
   // on a busy machine.
+  it('gives each rule of the memory layer one block for its own language and files', () => {
+    const blocks = (rule: string) =>
+      plugin.configs.recommended
+        .filter((c) => c.name === `claude/recommended/${rule}`)
+        .map((c) => [c.language, c.files])
+    expect(blocks('claude-md-agents-md-variant')).toEqual([
+      ['markdown/gfm', ['**/AGENTS.local.md', '**/AGENTS.override.md', '**/.agents/**/*.md']],
+    ])
+    expect(blocks('claude-md-excludes-pattern')).toEqual([
+      ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    expect(blocks('claude-md-max-bytes')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+    ])
+    expect(blocks('memory-settings-schema')).toEqual([
+      ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    for (const rule of ['rules-frontmatter-schema', 'rules-paths-glob-valid']) {
+      expect(blocks(rule)).toEqual([['markdown/gfm', ['**/.claude/rules/**/*.md']]])
+    }
+    expect(blocks('rules-md-extension')).toEqual([
+      ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
+    ])
+  })
+
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   }, 60000)

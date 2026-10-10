@@ -953,6 +953,13 @@
       "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
     }
   ],
+  "rules-md-extension": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Set up rules",
+      "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc"
+    }
+  ],
   "rules-paths-glob-valid": [
     {
       "url": "https://code.claude.com/docs/en/memory",

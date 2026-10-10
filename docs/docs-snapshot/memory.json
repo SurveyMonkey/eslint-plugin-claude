@@ -205,6 +205,12 @@
       "text": "<h4 id=\"rules-frontmatter-reference\">\n  Rule frontmatter reference\n</h4>\n\nConfigure a rule with YAML [frontmatter](/docs/en/glossary#frontmatter) between `---` markers at the top of the file. `paths` is the only field Claude Code reads from a rule; any other field is ignored without an error. Claude Code removes the frontmatter before loading the rule into context.\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `paths` | No | Glob patterns that [scope the rule to matching files](#path-specific-rules). Accepts a YAML list or a comma-separated string |\n\nIf the YAML between the markers doesn't parse, Claude Code ignores the frontmatter and loads the rule as if it had no `paths`. Run `claude --debug` to see the parse error."
     },
     {
+      "heading": "Set up rules",
+      "id": "set-up-rules",
+      "hash": "43b8dddc9f72f403e315a709875365c8f7e677bbdf40a184bdca078b6eea15dc",
+      "text": "#### Set up rules\n\nPlace markdown files in your project's `.claude/rules/` directory. Each file should cover one topic, with a descriptive filename like `testing.md` or `api-design.md`. All `.md` files are discovered recursively, so you can organize rules into subdirectories like `frontend/` or `backend/`:\n\n```text theme={null}\nyour-project/\n├── .claude/\n│   ├── CLAUDE.md           # Main project instructions\n│   └── rules/\n│       ├── code-style.md   # Code style guidelines\n│       ├── testing.md      # Testing conventions\n│       └── security.md     # Security requirements\n```\n\nRules without [`paths` frontmatter](#path-specific-rules) are loaded at launch with the same priority as `.claude/CLAUDE.md`.\n\nProject rules are skipped if you exclude `project` from [`--setting-sources`](/docs/en/cli-reference). Before v2.1.211, rules that load on demand, including path-scoped rules and rules in nested `.claude/rules/` directories, loaded even when `project` was excluded."
+    },
+    {
       "heading": "Path-specific rules",
       "id": "path-specific-rules",
       "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202",
