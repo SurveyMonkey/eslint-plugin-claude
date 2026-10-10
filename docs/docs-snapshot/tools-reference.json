@@ -185,6 +185,12 @@
   ],
   "sources": [
     {
+      "heading": "LSP tool behavior",
+      "id": "lsp-tool-behavior",
+      "hash": "6b4e822bb39d84966d42160b65388fa634445b8111854ca439e0e66bfcf6d8d7",
+      "text": "## LSP tool behavior\n\nThe LSP tool gives Claude code intelligence from a running language server. After each file edit, it automatically reports type errors and warnings so Claude can fix issues without a separate build step. Claude can also call it directly to navigate code:\n\n* Jump to a symbol's definition\n* Find all references to a symbol\n* Get type information at a position\n* List symbols in a file\n* Search for a symbol by name across the workspace\n* Find implementations of an interface\n* Trace call hierarchies\n\nClaude Code keeps the tool inactive until you install a [code intelligence plugin](/docs/en/plugins/code-intelligence) for your language. In [cloud sessions](/docs/en/claude-code-on-the-web), Claude Code doesn't start plugin language servers, so the LSP tool stays inactive there. Claude Code takes the language server's configuration from the plugin, and you install the server binary yourself.\n\nClaude Code returns an error result for each LSP call on a file whose language server it can't start."
+    },
+    {
       "heading": "Configure tools with permission rules and hooks",
       "id": "configure-tools-with-permission-rules-and-hooks",
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",

@@ -270,6 +270,23 @@
       "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
     }
   ],
+  "lsp-json-location": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "LSP servers",
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Manifest file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "LSP tool behavior",
+      "hash": "6b4e822bb39d84966d42160b65388fa634445b8111854ca439e0e66bfcf6d8d7"
+    }
+  ],
   "lsp-json-schema": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -889,6 +906,28 @@
       "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
     }
   ],
+  "mcp-env-var-default": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Expansion locations",
+      "hash": "500945dd95e5abb58fce44477333b79eb14f416a94a1a0f2a7057fac761c4cf6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Unset variables without a default",
+      "hash": "e4987b19bcc3110bae6334c36cf45eca5d07f4509973f68e753f457ddda55a4b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Credential variables that read as empty",
+      "hash": "8313023272a9ec82b3e4788b2e1469b08b6ea3cd85c57a9a8b829331a09ffcec"
+    }
+  ],
   "mcp-env-var-numbers": [
     {
       "url": "https://code.claude.com/docs/en/env-vars",
@@ -1064,6 +1103,18 @@
       "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
     }
   ],
+  "mcp-plugin-root-paths": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Reference plugin paths and store data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
+    }
+  ],
   "mcp-plugin-stdio-reach": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -1230,6 +1281,18 @@
       "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
     }
   ],
+  "mcp-stdio-command-has-args": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp-quickstart",
+      "heading": "Edit .mcp.json directly",
+      "hash": "88406efc430301191bc23167781d27b91135ce461933513e18f092d8da8c216c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 3: Add a local stdio server",
+      "hash": "a5a82c6934bf4d14831e55e5fd801986344c53038f4010ddfe9cdb5a2347f664"
+    }
+  ],
   "mcp-stdio-relative-path": [
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
@@ -1276,6 +1339,43 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Plugin-provided MCP servers",
       "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
+    }
+  ],
+  "mcp-unknown-keys": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp-quickstart",
+      "heading": "Edit .mcp.json directly",
+      "hash": "88406efc430301191bc23167781d27b91135ce461933513e18f092d8da8c216c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 4: Add a remote WebSocket server",
+      "hash": "557d432d27ee5eff52ebda3a8f9bd7427cd2d2a0b958ce131a6764d0940ad4e4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use pre-configured OAuth credentials",
+      "hash": "d9b10ec6ffc74a77a92136d4b40cd4bdcd48d7d7d8fd6b5a906910241741356e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use a fixed OAuth callback port",
+      "hash": "9d6a54a6bf7f1c7e87ce24285e8df98712c2bd9e6da8085be3337efaf342db98"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Override OAuth metadata discovery",
+      "hash": "ff5c6fd4997b04ffd623bc5a1b1e4e9f44a3aa146f8282d58abfffb3a759516e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Restrict OAuth scopes",
+      "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "How a server is evaluated",
+      "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb"
     }
   ],
   "output-style-frontmatter-schema": [

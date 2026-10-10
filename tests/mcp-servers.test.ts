@@ -9,6 +9,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { keyOf } from '../src/marketplace-json.ts'
 import {
   declaredMcpStrings,
+  expandedStrings,
   isUnreadMcpPath,
   jsonBodyState,
   MANAGED_SERVER_TYPES,
@@ -383,5 +384,68 @@ describe('parseUrl', () => {
   it('gives null for a text that does not parse', () => {
     expect(parseUrl(`http://h.test:\${P}x`)).toBeNull()
     expect(parseUrl('')).toBeNull()
+  })
+})
+
+describe('expandedStrings', () => {
+  /** The `field:value` pairs of the entry `code`, read in the JSON language. */
+  function pairsOf(code: string): string[] {
+    const pairs: string[] = []
+    const probe = {
+      rules: {
+        probe: {
+          create: () => ({
+            Document(node: { body: Parameters<typeof expandedStrings>[0] }) {
+              pairs.push(...expandedStrings(node.body).map((s) => `${s.field}:${s.node.value}`))
+            },
+          }),
+        },
+      },
+    }
+    new Linter().verify(
+      code,
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, probe },
+          language: 'json/json',
+          rules: { 'probe/probe': 'error' },
+        },
+      ],
+      { filename: 'x.json' },
+    )
+    return pairs
+  }
+
+  it('lists command, args, env, headers and url, in that order', () => {
+    const code =
+      '{"url": "u", "headers": {"H": "h"}, "env": {"E": "e"}, "args": ["a1", "a2"], "command": "c"}'
+    expect(pairsOf(code)).toEqual([
+      'command:c',
+      'args:a1',
+      'args:a2',
+      'env:e',
+      'headers:h',
+      'url:u',
+    ])
+  })
+  it('skips a value that is not a string, and a field of the wrong shape', () => {
+    expect(pairsOf('{"command": 1, "args": ["a", 2, null], "env": {"E": 1}, "url": []}')).toEqual([
+      'args:a',
+    ])
+    expect(pairsOf('{"args": "x", "env": ["e"], "headers": "h"}')).toEqual([])
+    expect(pairsOf('[]')).toEqual([])
+  })
+  it('keeps the last of two members with one name, also inside env and headers', () => {
+    expect(pairsOf('{"command": "a", "command": "b"}')).toEqual(['command:b'])
+    expect(pairsOf('{"env": {"K": "a", "K": "b"}, "headers": {"H": "x", "H": "y"}}')).toEqual([
+      'env:b',
+      'headers:y',
+    ])
+    expect(pairsOf('{"env": {"K": "a", "K": 1}}')).toEqual([])
+    expect(pairsOf('{"args": ["a"], "args": ["b"], "url": "x", "url": "y"}')).toEqual([
+      'args:b',
+      'url:y',
+    ])
   })
 })

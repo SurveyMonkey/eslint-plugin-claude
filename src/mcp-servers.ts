@@ -82,6 +82,38 @@ export function serverMembers(body: ValueNode, kind: McpFileKind): MemberNode[] 
   return lastMembers(members)
 }
 
+/** A string that Claude Code expands, with the field that holds it. */
+export interface ExpandedString {
+  readonly node: Extract<ValueNode, { type: 'String' }>
+  readonly field: 'command' | 'args' | 'env' | 'url' | 'headers'
+}
+
+/** The strings that Claude Code expands in the server entry `entry`: `command`, each `args`
+ *  item, each `env` value, `url`, and each `headers` value. Of two members with one name, the
+ *  last stays. A value that is not a string is not in the result.
+ *  (https://code.claude.com/docs/en/mcp#expansion-locations) */
+export function expandedStrings(entry: ValueNode): ExpandedString[] {
+  const out: ExpandedString[] = []
+  const add = (node: ValueNode | undefined, field: ExpandedString['field']) => {
+    if (node?.type === 'String') {
+      out.push({ node, field })
+    }
+  }
+  add(lastMember(entry, 'command')?.value, 'command')
+  const args = lastMember(entry, 'args')?.value
+  for (const { value } of args?.type === 'Array' ? args.elements : []) {
+    add(value, 'args')
+  }
+  for (const field of ['env', 'headers'] as const) {
+    const map = lastMember(entry, field)?.value
+    for (const member of map?.type === 'Object' ? lastMembers(map.members) : []) {
+      add(member.value, field)
+    }
+  }
+  add(lastMember(entry, 'url')?.value, 'url')
+  return out
+}
+
 /** The members of `members` that stay when two members have one name: the last of each name,
  *  in file order, as `JSON.parse` keeps it. */
 export function lastMembers(members: readonly MemberNode[]): MemberNode[] {
