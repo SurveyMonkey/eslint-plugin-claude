@@ -8,7 +8,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import { lastMembers } from '../mcp-servers.ts'
+import { lastMembers, SERVER_NAME_PATTERN } from '../mcp-servers.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -17,8 +17,6 @@ const name = 'mcp-policy-entry-schema' as const
 type MessageId = 'notObject' | 'keyCount' | 'unknownKey' | 'valueType' | 'allowName' | 'denyName'
 
 const LISTS = ['allowedMcpServers', 'deniedMcpServers'] as const
-
-const ALLOW_NAME = /^[A-Za-z0-9_-]+$/
 
 /** The entry keys, each with the check of its value type. */
 const KEY_TYPES: ReadonlyMap<string, { expected: string; ok: (value: ValueNode) => boolean }> =
@@ -99,7 +97,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageId }> = {
               })
             } else if (key === 'serverName' && only.value.type === 'String') {
               const value = only.value.value
-              if (list === 'allowedMcpServers' && !ALLOW_NAME.test(value)) {
+              if (list === 'allowedMcpServers' && !SERVER_NAME_PATTERN.test(value)) {
                 context.report({ node: only.value, messageId: 'allowName', data: { value } })
               } else if (list === 'deniedMcpServers' && (value === '' || value !== value.trim())) {
                 context.report({ node: only.value, messageId: 'denyName' })

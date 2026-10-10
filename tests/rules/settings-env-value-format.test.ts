@@ -3,8 +3,7 @@
 // reference (https://code.claude.com/docs/en/settings-reference#env), the tool search table of
 // the MCP page, the memory limit section of the tools reference, and the capabilities table of
 // the model configuration page.
-import { describe, expect, it } from 'vitest'
-import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-env-value-format')
 
@@ -120,6 +119,13 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     pass: ['auto', 'legacy'],
     fail: ['on', 'off', 'Auto'],
     expected: 'auto or legacy',
+  },
+  {
+    // "Accepts a positive whole number in plain digits. Anything else is ignored".
+    name: 'CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH',
+    pass: ['1', '2048', '10000'],
+    fail: ['0', '-1', '2.5', '2k', '2e3', '1_000', 'long'],
+    expected: 'a positive whole number in plain digits',
   },
   {
     // "Set 5m or 1h, the only values Claude Code accepts".
@@ -361,14 +367,4 @@ jsonTester.run('settings-env-value-format (invalid)', rule, {
       errors: [{ messageId: 'envNotObject' as const, column: 30 }],
     },
   ],
-})
-
-// Red first: the form is not in the data module yet, so the case is expected to fail.
-describe('CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH (red)', () => {
-  it.fails('reports a value that is not a positive whole number in plain digits', () => {
-    const code = env({ CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH: '0' })
-    expect(lintJson('settings-env-value-format', code, managed).map((m) => m.messageId)).toEqual([
-      'badForm',
-    ])
-  })
 })

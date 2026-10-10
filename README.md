@@ -179,6 +179,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-approval-committed`](docs/rules/mcp-approval-committed.md) | A committed `.claude/settings.json` does not approve the servers of `.mcp.json` | `error` | `error` |
 | [`claude/mcp-disable-connectors-false`](docs/rules/mcp-disable-connectors-false.md) | A managed settings file does not set `disableClaudeAiConnectors` to `false` | `error` | `error` |
 | [`claude/mcp-policy-entry-schema`](docs/rules/mcp-policy-entry-schema.md) | Each `allowedMcpServers` and `deniedMcpServers` entry has exactly one valid key | `error` | `error` |
+| [`claude/mcp-allowlist-servername-dead`](docs/rules/mcp-allowlist-servername-dead.md) | An `allowedMcpServers` list in a managed file with `serverUrl` and `serverCommand` entries has no `serverName` entry, which admits no server | `error` | `error` |
+| [`claude/mcp-env-client-secret`](docs/rules/mcp-env-client-secret.md) | A committed `.claude/settings.json` does not set `MCP_CLIENT_SECRET` in `env` | `error` | `error` |
+| [`claude/mcp-managed-servers-entry`](docs/rules/mcp-managed-servers-entry.md) | Each `managedMcpServers` entry is one that Claude Code loads: a valid name, `type`, `https://` `url`, no `command`, `${VAR}` or invisible character | `error` | `error` |
+| [`claude/lsp-json-schema`](docs/rules/lsp-json-schema.md) | A `.lsp.json` at a plugin root maps names to configs with the documented fields, so that Claude Code does not skip the file | `error` | `error` |
+| [`claude/lsp-transport-socket`](docs/rules/lsp-transport-socket.md) | No LSP server sets `transport` to `socket`, which Claude Code runs over stdio | `error` | `error` |
 
 ## Contributing
 

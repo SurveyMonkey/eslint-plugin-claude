@@ -38,7 +38,7 @@ A variable that is not in the table has no form, and any string is valid.
 
 | Variable | The value must be |
 |----------|-------------------|
-| `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` | A positive whole number in plain digits. Claude Code ignores any other spelling[^vars] |
+| `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS`, `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` | A positive whole number in plain digits. Claude Code ignores any other spelling[^vars] |
 | `CLAUDE_CODE_AUTO_COMPACT_WINDOW` | A plain integer from 100000 to 1000000. A value such as `500k` reads as `500`[^vars] |
 | `BASH_MAX_OUTPUT_LENGTH` | At most 150000, the maximum[^vars] |
 | `CLAUDE_CODE_TOOL_MEMORY_LIMIT` | A size in plain digits with an optional `K`, `M`, `G` or `T` suffix, or `0`, `off`, `false`, `no`, `none`[^memory] |

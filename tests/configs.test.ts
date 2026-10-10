@@ -112,6 +112,28 @@ const badMcpServers = {
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
 
+// An LSP server config with a `command` that has a space, and `transport` `socket`: one fault for
+// each LSP rule. A valid config has neither.
+const badLsp = JSON.stringify({
+  go: { command: 'gopls serve', extensionToLanguage: { '.go': 'go' }, transport: 'socket' },
+})
+const goodLsp = JSON.stringify({ go: { command: 'gopls', extensionToLanguage: { '.go': 'go' } } })
+
+// An allowlist with a `serverUrl`, a `serverCommand` and a `serverName` entry.
+const deadAllowlist = JSON.stringify({
+  allowedMcpServers: [
+    { serverUrl: 'https://a.test/*' },
+    { serverCommand: ['npx'] },
+    { serverName: 'a' },
+  ],
+})
+
+// A `managedMcpServers` value that is an array, and an object with an entry that has a `command`.
+const badManagedArray = JSON.stringify({ managedMcpServers: [{ name: 'a' }] })
+const badManagedEntry = JSON.stringify({
+  managedMcpServers: { a: { command: 'x', type: 'http', url: 'https://a.test' } },
+})
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -522,6 +544,45 @@ const TREE: Record<string, string> = {
   'packages/pe/managed-settings.d/30-b.txt': '{"allowedMcpServers": [1]}',
   'packages/pe/managed-settings.d/sub/40-c.json': '{"allowedMcpServers": [1]}',
   'packages/pe/.vscode/settings.json': '{"allowedMcpServers": [1]}',
+  // `lsp-json-schema` and `lsp-transport-socket`: a `.lsp.json` at a plugin root has both faults. A
+  // valid file, a file in a directory with no manifest, a file below the root, and a file with
+  // another name are silent. The inline `lspServers` of a `plugin.json` is for the socket rule only.
+  'plugins/q/.lsp.json': badLsp,
+  'plugins/q/sub/.lsp.json': badLsp,
+  'plugins/q/lsp.json': badLsp,
+  'plugins/m/.lsp.json': goodLsp,
+  'packages/lp/.lsp.json': badLsp,
+  'plugins/lx/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'lx',
+    lspServers: JSON.parse(badLsp),
+  }),
+  // `mcp-allowlist-servername-dead`: the main file has the three kinds. A drop-in with names only is
+  // dead too, because the lists combine. A hidden drop-in is for `settings-managed-file`. The same
+  // content where no rule reads it.
+  'packages/ad/managed-settings.json': deadAllowlist,
+  'packages/ad/managed-settings.d/10-a.json': JSON.stringify({
+    allowedMcpServers: [{ serverName: 'b' }],
+  }),
+  'packages/ad/managed-settings.d/.20-hidden.json': deadAllowlist,
+  'packages/ad/managed-settings.d/30-b.txt': deadAllowlist,
+  'packages/ad/managed-settings.d/sub/40-c.json': deadAllowlist,
+  'packages/ad/.claude/settings.json': deadAllowlist,
+  'packages/ad/.vscode/settings.json': deadAllowlist,
+  // `mcp-managed-servers-entry`: an array in the main file, and a dropped entry in a drop-in. A
+  // hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/me/managed-settings.json': badManagedArray,
+  'packages/me/managed-settings.d/10-a.json': badManagedEntry,
+  'packages/me/managed-settings.d/.20-hidden.json': badManagedEntry,
+  'packages/me/managed-settings.d/30-b.txt': badManagedEntry,
+  'packages/me/managed-settings.d/sub/40-c.json': badManagedEntry,
+  'packages/me/.vscode/settings.json': badManagedEntry,
+  // `mcp-env-client-secret`: the secret in the committed project file. The local file and the
+  // managed files are silent. The same content where no rule reads it.
+  'packages/cs/.claude/settings.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
+  'packages/cs/.claude/settings.local.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
+  'packages/cs/managed-settings.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
+  'packages/cs/managed-settings.d/10-a.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
+  'packages/cs/.vscode/settings.json': '{"env": {"MCP_CLIENT_SECRET": "s3cret"}}',
   // The same content where no rule reads it: other names and other directories.
   'packages/mc/mcp.json': badMcp,
   'packages/mc/.mcp.json.bak': badMcp,
@@ -637,6 +698,11 @@ const MCP_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
   { name: 'mcp-approval-committed', files: PROJECT_FILES },
   { name: 'mcp-disable-connectors-false', files: MANAGED_FILES },
   { name: 'mcp-policy-entry-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'lsp-json-schema', files: ['**/.lsp.json'] },
+  { name: 'lsp-transport-socket', files: ['**/.lsp.json', '**/.claude-plugin/plugin.json'] },
+  { name: 'mcp-allowlist-servername-dead', files: MANAGED_FILES },
+  { name: 'mcp-env-client-secret', files: PROJECT_FILES },
+  { name: 'mcp-managed-servers-entry', files: MANAGED_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -892,6 +958,19 @@ const EXPECTED = [
     'mcp-headershelper-credential-env',
     'mcp-anthropic-hosted-url',
   ].map((rule) => `plugins/p/.mcp.json: claude/${rule}@2`),
+  // The LSP rules read `.lsp.json` at a plugin root. The socket rule reads an inline `lspServers`.
+  'plugins/q/.lsp.json: claude/lsp-json-schema@2',
+  'plugins/q/.lsp.json: claude/lsp-transport-socket@2',
+  'plugins/lx/.claude-plugin/plugin.json: claude/lsp-transport-socket@2',
+  // The managed policy rules read the main file and the drop-ins, and the secret rule reads the
+  // committed project file.
+  'packages/ad/managed-settings.json: claude/mcp-allowlist-servername-dead@2',
+  'packages/ad/managed-settings.d/10-a.json: claude/mcp-allowlist-servername-dead@2',
+  'packages/ad/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/me/managed-settings.json: claude/mcp-managed-servers-entry@2',
+  'packages/me/managed-settings.d/10-a.json: claude/mcp-managed-servers-entry@2',
+  'packages/me/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/cs/.claude/settings.json: claude/mcp-env-client-secret@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
