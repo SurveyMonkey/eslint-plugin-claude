@@ -23,7 +23,7 @@ Start each `claudeMdExcludes` pattern at the root or with `**/`.
 `claudeMdExcludes` lists the CLAUDE.md files that Claude Code skips. Each entry is a glob pattern
 or an absolute path. Claude Code matches the patterns against absolute file paths.[^memory][^ref]
 A pattern such as `packages/web/**` starts with a name, so it matches no absolute path. Claude
-Code shows no error, and it loads the files that you meant to skip. The large codebases guide says
+Code loads the files that you meant to skip. The docs show no error. The large codebases guide says
 to start a relative-style pattern with `**/`.[^guide]
 
 The rule reports a string entry that does not start in one of these ways:

@@ -21,13 +21,13 @@ Use valid globs in the `paths` field of a rule file.
 ## Rule details
 
 `paths` limits when Claude loads a rule. It takes a YAML list or a comma-separated string of
-globs.[^memory] A glob that Claude Code cannot use matches nothing. The rule then does not load for
-the files that the glob was for. Claude Code shows no error.
+globs.[^memory] A glob that Claude Code cannot use matches nothing. The rule file then does not load
+for the files that the glob was for. The docs show no error.
 
 The rule reports two faults that the docs name:
 
 - `bracket`: a `[` that starts no bracket expression, such as `photos [2024/**`. The glob is
-  invalid and matches nothing. The other globs of the list keep working.[^memory] Escape the `[`
+  invalid and matches nothing. The other globs of the list stay valid.[^memory] Escape the `[`
   as `\[` to match a literal `[`. The rule reports each such glob. A `[` is valid if a `]` closes
   it. A `]` right after `[`, `[!` or `[^` is a member of the set, not the end.
 - `budget`: the brace groups of the whole list expand to more than 1,000 patterns, or to more

@@ -21,7 +21,7 @@ Give each file in `.claude/rules/` the `.md` extension.
 ## Rule details
 
 Claude Code discovers all `.md` files in `.claude/rules/`, at any depth.[^rules] It does not load a
-file with another extension, and it shows no error. A rule that is saved as `style.txt` or
+file with another extension. The docs show no error. A rule that is saved as `style.txt` or
 `style.markdown` never reaches Claude.
 
 The rule reports each such file once, at the start of the file. The message names the fix: rename

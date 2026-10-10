@@ -61,8 +61,8 @@ Build with `pnpm build`.
 'claude/claude-md-max-bytes': ['error', { max: 1048576 }]
 ```
 
-The default is the limit in the docs.[^how] The schema sets 4194304 as the maximum, because no
-Claude Code setting moves that limit. A team can set a lower value. A config that sets only the
+The default is the limit in the docs.[^how] The schema sets 4194304 as the maximum, because the
+docs show no Claude Code setting that moves that limit. A team can set a lower value. A config that sets only the
 severity keeps the default. The `recommended` and `strict` configs set no option.
 
 At the default, the message says that Claude Code skips a CLAUDE.md file of more than 4194304

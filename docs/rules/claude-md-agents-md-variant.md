@@ -21,7 +21,7 @@ Do not keep an `AGENTS.md` variant that Claude Code never reads.
 ## Rule details
 
 Claude Code can read `AGENTS.md` as project instructions. It reads `AGENTS.md` and
-`.claude/AGENTS.md`. The docs list the files that it does not read: `AGENTS.local.md`,
+`.claude/AGENTS.md` when no `CLAUDE.md` file exists. The docs list the files that it does not read: `AGENTS.local.md`,
 `AGENTS.override.md`, and anything under a `.agents/` directory.[^agents] Text in such a file never
 reaches Claude.
 
