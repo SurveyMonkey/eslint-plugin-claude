@@ -204,6 +204,23 @@
       "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
     }
   ],
+  "claude-md-excludes-pattern": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Exclude specific CLAUDE.md files",
+      "hash": "76fcc9585d73ea229ea17ef0d5899a380579bc1de1452fc724276b4bd073634d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "claudeMdExcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Exclude irrelevant CLAUDE.md files",
+      "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
+    }
+  ],
   "claude-md-max-bytes": [
     {
       "url": "https://code.claude.com/docs/en/memory",

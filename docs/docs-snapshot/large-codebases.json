@@ -1,0 +1,98 @@
+{
+  "url": "https://code.claude.com/docs/en/large-codebases",
+  "hash": "e3876d436261084dc8efcfb38a4cf065ca50d6c21493fa6c68019fc07426a8b3",
+  "blocks": [
+    {
+      "id": "set-up-claude-code-in-a-monorepo-or-large-codebase",
+      "hash": "43402efea89b74d2bccf6602f2d5b88f9a79587f6eb44a41ee9784784cd96ca1"
+    },
+    {
+      "id": "what-this-guide-covers",
+      "hash": "19cbd407d4d747dea17d457e201d308078179583122efe3a75a973a9aea89edc"
+    },
+    {
+      "id": "settings-on-this-page",
+      "hash": "6e3a28c2a584627ba91374a5e722ad884d582cb1b9c6134fb4b5db76d72d8c3f"
+    },
+    {
+      "id": "the-example-monorepo",
+      "hash": "d0a49649627523b14f9e0734d6cf99051f25d64524aa3aa9c7e2c0e9a2df14aa"
+    },
+    {
+      "id": "choose-where-to-start-claude",
+      "hash": "305b0e1ed3d3ddf4b2908deb5ade5754a05605174d836931e3ce709adea23a0b"
+    },
+    {
+      "id": "layer-claude-md-files-by-directory",
+      "hash": "3d7bac322a2af45a2b5140464d76f16ae13d2465503e1a0861d7500d19d5990f"
+    },
+    {
+      "id": "choose-between-per-directory-claude-md-and-path-scoped-rules",
+      "hash": "0105a3cd2b961b529223c9f7ddc96e297eb4137997145e28a890a38145175172"
+    },
+    {
+      "id": "exclude-irrelevant-claude-md-files",
+      "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
+    },
+    {
+      "id": "reduce-what-claude-reads",
+      "hash": "da7b7da6c918de8a1019c50f17c1d6fe4f98bc8d354b251852ac0dfdde351ff9"
+    },
+    {
+      "id": "block-reads-of-generated-and-vendored-code",
+      "hash": "63667dcf98cd2018074df8b2c6a4c9806a595c26b05463dfcbf5e76b07290a14"
+    },
+    {
+      "id": "reduce-file-reads-with-code-intelligence",
+      "hash": "bc0da5edaf7964969c7f1be152ad63c6919b18232081d3fc813fe64fef1e4f90"
+    },
+    {
+      "id": "scope-worktrees-and-file-access",
+      "hash": "45963334172867e786665afc7d50be5b89950e61ca9954e3040289b85ad35dd1"
+    },
+    {
+      "id": "check-out-only-the-directories-you-need",
+      "hash": "384853737dbdb0252a9c43b790d94a1afc18be6f7ab91f04779081efa33f2625"
+    },
+    {
+      "id": "grant-access-across-packages-or-repositories",
+      "hash": "4426fb50a81e8d164a0b281f3a26632ddc24392c54ebfcd23eeb359cb7e4c7a5"
+    },
+    {
+      "id": "add-per-directory-skills",
+      "hash": "7bb7e7d7fb3de8c9847cc28956b65af529c6baae0db5fec9ecc40847c574e9ea"
+    },
+    {
+      "id": "keep-skills-discoverable",
+      "hash": "af2ab7d2a6220a6768421a489c9186264e622ffb7c172ea77f315bd9642d78d9"
+    },
+    {
+      "id": "centralize-conventions-when-layering-stops-scaling",
+      "hash": "88e66ca2e076a0120746a8d256e83ebc31f047ade1105fe523491dd6b29f5f17"
+    },
+    {
+      "id": "recommend-the-right-plugin-at-session-start",
+      "hash": "c867cee94e8ffd7ddcd00343bb3c9f9d2718b17d5fc2d7371db8dd6ad7041232"
+    },
+    {
+      "id": "put-it-together",
+      "hash": "5269918ffb6c02c652b8ebd3e4d0479e7c09672c932a2726cbc5afd4d1b72653"
+    },
+    {
+      "id": "scope-and-plan-changes-that-span-packages",
+      "hash": "c93f1c78ce87677bb31a739e594db8aab903cd52d854aa5017c521bb7ac75eaa"
+    },
+    {
+      "id": "next-steps",
+      "hash": "68ea6fa4adb74e95bec870a930b69b94523ddbd2bd59a6a0a6fc5a0bcc02804f"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Exclude irrelevant CLAUDE.md files",
+      "id": "exclude-irrelevant-claude-md-files",
+      "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0",
+      "text": "### Exclude irrelevant CLAUDE.md files\n\nWhen you start Claude from the repository root, each subdirectory's CLAUDE.md can [load on demand](/docs/en/memory#how-claude-md-files-load) during the session. The `claudeMdExcludes` setting skips specific files by path or glob pattern so they never load.\n\nUse this for directories you never work in, such as other teams' packages, legacy code, or vendored subtrees. The exclusion list is static, not a per-task switch. To focus on one package today and another tomorrow, [start Claude from that package's directory](#choose-where-to-start-claude) instead of editing exclusions.\n\nIf you only want these exclusions for yourself, put the setting in `.claude/settings.local.json`. Claude Code adds that file to your global gitignore when it saves a setting there. Since you are creating it by hand here, add it to your gitignore yourself. Patterns use glob syntax matched against absolute file paths, so start relative-style patterns with `**/` to match anywhere in the tree. The example below excludes a package owned by another team:\n\n```json .claude/settings.local.json theme={null}\n{\n  \"claudeMdExcludes\": [\n    \"**/packages/web/**\"\n  ]\n}\n```\n\nThis skips every CLAUDE.md and rules file under that package. The root CLAUDE.md and the packages you do work in still load normally.\n\nThese patterns cover other common cases:\n\n* `\"**/packages/*/CLAUDE.md\"`: excludes every package's CLAUDE.md while keeping the root\n* `\"**/packages/legacy-*/**\"`: excludes every package whose name matches the glob, including rules\n* `\"/home/user/monorepo/legacy/CLAUDE.md\"`: excludes one specific file by absolute path\n\nManaged policy CLAUDE.md files cannot be excluded, so organization-wide instructions always apply. You can set `claudeMdExcludes` at any [settings scope](/docs/en/settings#where-settings-live): user, project, local, or managed. Arrays merge across scopes, so a team can set project-level defaults while individuals add local overrides.\n\nFor the full exclusion documentation, see [Exclude specific CLAUDE.md files](/docs/en/memory#exclude-specific-claude-md-files)."
+    }
+  ]
+}

@@ -1161,6 +1161,12 @@
   ],
   "sources": [
     {
+      "heading": "claudeMdExcludes",
+      "id": "claudemdexcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c",
+      "text": "### `claudeMdExcludes`\n\nSkip specific `CLAUDE.md` files when Claude Code loads [memory](/docs/en/memory#exclude-specific-claude-md-files). In a large monorepo, use it to skip CLAUDE.md files from other teams that aren't relevant to your work; [Exclude irrelevant CLAUDE.md files](/docs/en/large-codebases#exclude-irrelevant-claude-md-files) in the large-codebases guide walks through that case. Patterns match against absolute file paths.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: array of strings, each a glob pattern or absolute path\n* **Default**: unset, so Claude Code loads every CLAUDE.md it finds\n\n```json settings.json theme={null}\n{\n  \"claudeMdExcludes\": [\"**/vendor/**/CLAUDE.md\"]\n}\n```\n\nExclusions apply only to user, project, and local memory files; managed policy CLAUDE.md files can't be excluded.\n\n<span id=\"environment-variables\" />"
+    },
+    {
       "heading": "Permission rule syntax",
       "id": "permission-rule-syntax",
       "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d",
