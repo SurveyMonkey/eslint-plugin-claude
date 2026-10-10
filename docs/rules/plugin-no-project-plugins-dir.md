@@ -22,12 +22,12 @@ Keep a plugin out of the `.claude/plugins/` directory of a project.
 
 To share a plugin through a repository, list it under `enabledPlugins` in `.claude/settings.json`,
 or place it under `.claude/skills/`. Claude Code does not scan the `.claude/plugins/` directory of
-a project.[^repository] The scan does not load a plugin from there.
+a project.[^repository]
 
 The rule runs on the `plugin.json` of a plugin. It reports once, on the first line, when the plugin
 root is below a `.claude/plugins/` directory. The plugin can be in that directory, or in a
 subdirectory of it. The rule counts only the directories below the repository. A repository is the
-nearest directory with a `.git` entry, above the plugin root. So a repository that is itself in a
+nearest directory with a `.git` entry, at or above the plugin root. So a repository that is itself in a
 `.claude/plugins/` directory gives no report. The rule reads the path as the linted file spells it,
 as the `files` glob does. A link in the path does not change the result.
 

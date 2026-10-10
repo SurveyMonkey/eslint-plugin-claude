@@ -119,6 +119,13 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code)).toEqual([])
   })
 
+  linked('reports a directory with two links to itself', () => {
+    const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/.gitkeep': '' })
+    link(dir, 'cmds/a', '.')
+    link(dir, 'cmds/b', '.')
+    expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
+  })
+
   linked('reports a link without a target in a folder that the scan skips', () => {
     const { dir, code } = pluginTree(
       { name: 'p', commands: './cmds' },

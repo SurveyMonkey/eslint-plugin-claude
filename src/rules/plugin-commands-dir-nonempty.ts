@@ -11,15 +11,16 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { locate, pathNodes, readPlugin } from '../plugin-manifest.ts'
-import { entriesOf, isInside, markdownFiles, realOf, SKIPPED } from '../skill-tree.ts'
+import { entriesOf, markdownFiles, realOf, SKIPPED } from '../skill-tree.ts'
 
 const name = 'plugin-commands-dir-nonempty' as const
 
 /** True when a `.md` link in `dir` or below has no target. The walk is the one
- *  of `markdownFiles`: it follows a link to a folder in `bound` once, and skips
- *  `.git` and `node_modules`. `seen` holds the real paths of the folders that it
- *  entered. The rule cannot see such a link, so it makes no report. */
-function hasBrokenMarkdownLink(dir: string, bound: string, seen: Set<string>): boolean {
+ *  of `markdownFiles`: it follows a link to a folder once, and skips `.git` and
+ *  `node_modules`. `seen` holds the real paths of the folders that it entered.
+ *  The scan has set `outside` for a link out of the repository, so the rule has
+ *  made no report before it calls this function. */
+function hasBrokenMarkdownLink(dir: string, seen: Set<string>): boolean {
   const entries = entriesOf(dir)
   return (
     Array.isArray(entries) &&
@@ -28,17 +29,17 @@ function hasBrokenMarkdownLink(dir: string, bound: string, seen: Set<string>): b
       .some((entry) => {
         const full = path.join(dir, entry.name)
         if (!entry.isSymbolicLink()) {
-          return entry.isDirectory() && hasBrokenMarkdownLink(full, bound, seen)
+          return entry.isDirectory() && hasBrokenMarkdownLink(full, seen)
         }
         const target = realOf(full)
         if (target === null) {
           return entry.name.endsWith('.md')
         }
-        if (typeof target !== 'string' || seen.has(target) || !isInside(target, bound)) {
+        if (typeof target !== 'string' || seen.has(target)) {
           return false
         }
         seen.add(target)
-        return statSync(target).isDirectory() && hasBrokenMarkdownLink(full, bound, seen)
+        return statSync(target).isDirectory() && hasBrokenMarkdownLink(full, seen)
       })
   )
 }
@@ -74,7 +75,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'empty' }> = {
             !scan.unreadable &&
             !scan.outside &&
             scan.files.length === 0 &&
-            !hasBrokenMarkdownLink(real, plugin.bound, new Set([real]))
+            !hasBrokenMarkdownLink(real, new Set([real]))
           ) {
             context.report({ node: entry, messageId: 'empty', data: { path: entry.value } })
           }

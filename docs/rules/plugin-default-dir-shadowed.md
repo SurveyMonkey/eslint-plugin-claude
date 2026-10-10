@@ -42,8 +42,9 @@ A path of the key is a string, a string in an array, or the `source` of an entry
 of `commands`. The rule resolves each path from the plugin root, and does not need a `./` prefix.
 A path is inside the folder when it is the folder or is below it. So `./commands`, `./commands/`
 and `./commands/deploy.md` are inside `commands/`. The rule reads the spelling of the path. The
-docs show a path inside the folder as the way to avoid the warning. An inline entry names no path. This holds for a monitor in the array of
-`experimental.monitors`, and for a `content` entry in the map of `commands`. A key with only inline
+docs show a path inside the folder as the way to avoid the warning. An inline entry names no path.
+This holds for a monitor in the array of `experimental.monitors`, and for a `content` entry in the
+map of `commands`. A key with only inline
 entries replaces the folder, so the rule reports it.
 
 The rule makes no report in these cases:
@@ -56,7 +57,7 @@ The rule makes no report in these cases:
 - The default directory is not in the plugin, is a file, or the rule cannot list it.
 - The rule cannot see the plugin or the folder. The plugin root can be unseen. The real path of
   `.claude-plugin/`, of `plugin.json` or of the folder can be out of the repository. The manifest
-  can fail to parse. A part of the path can be a dangling link.
+  can fail to parse. A part of the path can be a link with no target.
 
 Fail: `"commands": ["./extras/"]` in a plugin that has a `commands/` directory.
 

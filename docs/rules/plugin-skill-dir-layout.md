@@ -22,8 +22,8 @@ Put each skill of a listed skills directory in a folder, in a file named `SKILL.
 
 A plugin keeps each skill in its own folder, as `<name>/SKILL.md`.[^standard] The `skills` key of
 `plugin.json` lists more directories to scan for skills. Each one is a directory of
-`<name>/SKILL.md` folders, or one folder that holds `SKILL.md` directly.[^fields] A `.md` file that
-sits loose in a listed directory is not a skill folder, so Claude Code does not find it as a
+`<name>/SKILL.md` folders, or one folder that holds `SKILL.md` directly.[^fields] A loose `.md`
+file in a listed directory is not a skill folder. Claude Code does not find it as a
 skill.[^components]
 
 The rule reads the `skills` value of a manifest: a path, or an array of paths. For each path, it
@@ -32,26 +32,27 @@ The message names the file and the path, and gives the folder where the file bel
 
 The rule makes no report in these cases:
 
-- The path is the default `skills/` directory. The rule [`skill-file-layout`](skill-file-layout.md)
-  reports a loose file there, so a second report would repeat it. The rule compares the spelling of
-  the path. A `skills` that is itself a link is a default directory too. Another spelling that leads
-  to `skills/` is not.
+- The directory is a default skills directory: the `skills/` directory of the plugin, or a
+  `.claude/skills/` directory. The rule [`skill-file-layout`](skill-file-layout.md) reports a loose
+  file there, so a second report would repeat it. The rule compares the real path of the directory.
+  So `./skills/`, `./x/../skills` and a link to `skills/` are all default directories.
+- The file is a `skill.md` in `skills/<name>/`, and the folder has no `SKILL.md`. The rule
+  `skill-file-layout` reports the letter case of that file.
 - The path is the plugin root, as `.` or `./`. The root holds files that are no skills, such as a
   README.
-- The directory holds a `SKILL.md` itself. It is one skill, and its other files are supporting
-  files.
+- The directory holds a `SKILL.md` itself. It is one skill, and its other files belong to it.
 - The file is a `README.md`, in any letter case. It does not claim to be a skill.
-- The file is a `.md` link whose target is not there or is out of the repository. The rule cannot
-  see such a file.
+- The file is a `.md` link whose target is not there, is out of the repository, or is a folder.
+  The rule cannot see such a file.
 - The path is not a string, is not there, names a file, or leaves the plugin root. The rules for
   paths report such a path.
 - The rule cannot see the plugin or the directory. The plugin root can be unseen. The real path of
   `.claude-plugin/`, of `plugin.json` or of the directory can be out of the repository. The
-  manifest can fail to parse. The rule can fail to list the directory. A path with a dangling link
-  is a path that the rule cannot see.
+  manifest can fail to parse. The rule can fail to list the directory. A path with a link that
+  has no target is a path that the rule cannot see.
 
-The rule checks only the files directly in the directory. It does not look for a `skill.md` of the
-wrong letter case, which `skill-file-layout` does for the default directory.
+The rule checks only the files directly in the directory. In a directory outside `skills/<name>/`,
+it reports a `skill.md` of the wrong letter case as a loose file.
 
 `claude plugin validate` reports a `skills` entry that names a file.[^validate] The cited docs list
 no `claude plugin validate` message for a loose file in a listed directory.

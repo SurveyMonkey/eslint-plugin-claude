@@ -12,9 +12,9 @@ import { realDirectory } from '../skill-tree.ts'
 const name = 'plugin-no-project-plugins-dir' as const
 
 /** The directory names from the repository to the plugin root, as the path
- *  of the plugin spells them. The repository is the nearest directory above
- *  the root whose real path is the bound of the plugin. Without a `.git`, the
- *  bound is the plugin root, so the result is empty. */
+ *  of the plugin spells them. The repository is the nearest directory, at or
+ *  above the root, whose real path is the bound of the plugin. Without a `.git`,
+ *  or when the root holds the `.git`, the result is one empty name. */
 function partsBelowRepository(plugin: Plugin): string[] {
   let base = plugin.root
   while (realDirectory(base) !== plugin.bound) {

@@ -21,8 +21,8 @@ Name a `commands` directory that holds at least one command.
 ## Rule details
 
 The `commands` key of `plugin.json` takes a path, an array of paths, or an object map. A path names
-a flat `.md` command file or a directory.[^commands] When a `commands` path exists but holds no
-`.md` file, and no subdirectory with a `SKILL.md`, Claude Code writes a warning in the debug log.
+a flat `.md` command file or a directory.[^commands] Take a `commands` path that exists but holds
+no `.md` file and no subdirectory with a `SKILL.md`. Claude Code writes a warning in the debug log.
 Nothing appears in the session or in the **Errors** tab.[^warning] So a team can ship an empty
 commands directory and not see it.
 
@@ -41,8 +41,10 @@ The rule makes no report in these cases:
 - The rule cannot see the plugin or the directory. The plugin root can be unseen. The real path of
   `.claude-plugin/`, of `plugin.json` or of the directory can be out of the repository. The manifest
   can fail to parse. The rule can fail to list the directory or a subdirectory. A part of the path
-  can be a dangling link. A `.md` link in the directory can lead out of the repository,
-  or can have no target.
+  can be a link with no target.
+- A `.md` link in the directory can lead out of the repository, or can have no target. The rule
+  follows a link to a folder once, as the scan does, and skips `.git` and `node_modules`. It
+  cannot see a `.md` link with no target in a folder that it follows.
 - The plugin has no `commands` key. The rule does not check the default `commands/` directory.
 
 Fail: `"commands": "./cmds"` with only `cmds/.gitkeep` in the directory.
