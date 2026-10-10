@@ -152,3 +152,15 @@ describe(`${RULE} (silent)`, () => {
     withoutAccess(file, () => expect(ids(dir, BEFORE_FIX)).toEqual([]))
   })
 })
+
+describe(`${RULE} (option)`, () => {
+  const PATTERN = 'should match pattern'
+  check.each([
+    ['a version with two numbers', { minVersion: '2.1' }, PATTERN],
+    ['a version with a leading v', { minVersion: 'v2.1.0' }, PATTERN],
+    ['a number', { minVersion: 2 }, 'should be string'],
+    ['an extra key', { minVersion: '2.1.0', other: 1 }, 'should NOT have additional properties'],
+  ])('refuses %s', (_title, options, reason) => {
+    expect(() => lint(plugin(NAME), options)).toThrow(reason)
+  })
+})
