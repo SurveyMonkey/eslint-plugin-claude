@@ -20,7 +20,7 @@ const FITS = new Map([
 ])
 
 /** The `userConfig` objects of a manifest body: the top-level one and one for each channel. */
-function configsOf(body: ValueNode): ObjectNode[] {
+export function configsOf(body: ValueNode): ObjectNode[] {
   const channels = lastMember(body, 'channels')?.value
   const values = [
     lastMember(body, 'userConfig')?.value,
