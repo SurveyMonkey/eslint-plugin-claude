@@ -728,6 +728,28 @@
       "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
     }
   ],
+  "permissions-auto-mode-defaults": [
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Override the block and allow rules",
+      "hash": "8d1869043a9760eb8806df8ba78823d9015f4a1d555b470408bee433bb67d54e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Define trusted infrastructure",
+      "hash": "0a18d4f5a20ba5ea6e0fe10a0706785be2882a7a77f77c01268b67d42a7ac7f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Where the classifier reads configuration",
+      "hash": "58f3d954821551614a5f3bed35cbfc959fac2a61f5f37b94bb6c3b7a80775d88"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoMode",
+      "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522"
+    }
+  ],
   "permissions-auto-mode-dropped-allow": [
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
@@ -1078,6 +1100,13 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Glob tool behavior",
       "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429"
+    }
+  ],
+  "permissions-ignore-patterns": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.deny",
+      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
     }
   ],
   "permissions-invalid-path-pattern": [
@@ -1487,6 +1516,35 @@
       "hash": "0de7dc77eac0e8100fa4b8fc6e3d23676ab5c7d264f37f6ea317ac52266365a8"
     }
   ],
+  "sandbox-credentials-mask-fallback": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Mask fields for files",
+      "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Invalid credential entries in managed settings",
+      "hash": "c4997cd8ee1c15271277fcfd9c652c012e6841c99d21e566c0a517adb71cbe47"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Mask credential files",
+      "hash": "f710e1f6b094956380fe8fa7d883fe93ef255cb7f0b16e7f6f231bf0b5b0e417"
+    }
+  ],
+  "sandbox-domain-duplicate": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.deniedDomains",
+      "hash": "e8fd871e032980f6e3d6d564cde48dc595fbdeca971b595e498f4eafc3f97ccf"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowedDomains",
+      "hash": "557ebf0a27e224290a75e5a5bb43bd41d4c25c443258d17e0405af3da5096dfa"
+    }
+  ],
   "sandbox-domain-overlap": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1548,6 +1606,38 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Invalid values inside sandbox",
       "hash": "d36a5dbcbc0af011c1c472e5f7c7aadaff6e2a7648c6d628ffce23aa96e44173"
+    }
+  ],
+  "sandbox-platform-limits": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Sandbox path prefixes",
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowUnixSockets",
+      "hash": "158d204fa07b1820e7bce30343a88e5a3b58d97343f0fe612371b52e19a0a472"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowedDomains",
+      "hash": "557ebf0a27e224290a75e5a5bb43bd41d4c25c443258d17e0405af3da5096dfa"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "IPv6 addresses in domain lists",
+      "hash": "c62042566fc5f186f5b97861299097ede711bc227f92626bf1b69e1b8e918e50"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Enforce sandboxing with managed settings",
+      "hash": "9ed9ca92638f62e06bddb6525ff368abd8c1e4938246336de81e4a4a64394876"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Set up Linux and WSL2",
+      "hash": "6de934f16aebb93b1e8a2a6bd7083d23562dd57576341f96c350f9dd409714d2"
     }
   ],
   "sandbox-schema": [
@@ -1652,6 +1742,53 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.credentials.envVars",
       "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b"
+    }
+  ],
+  "sandbox-weakening-options": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.enableWeakerNestedSandbox",
+      "hash": "ee4ade3a33eb912181e8e9227e4ad7e52eea8b9d7e761081e733b7afc528168c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.enableWeakerNetworkIsolation",
+      "hash": "005e33df10f6e266b5451fd99404d6dfda740f760cb5d43e8bbca1ee0d121cb0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowAllUnixSockets",
+      "hash": "a6a63eca2a3ed830cc5198d069d3ca5d9b04fa971d962537a591f428d7c710e9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowUnixSockets",
+      "hash": "158d204fa07b1820e7bce30343a88e5a3b58d97343f0fe612371b52e19a0a472"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowMachLookup",
+      "hash": "f87aa794f91e7158ab38aed48e44f90bbf1aef2f7b6c554320d06e11020d5225"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.allowAppleEvents",
+      "hash": "6ed4f16f93536fff514247ddac50fd3d6820138611b381664c4e127452dfe771"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.allowPlaintextInject",
+      "hash": "e577b06f3af62d1a15cb5ca93e99ef85af47f4d9795eb3bda10e93ab97e4094a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Disable filesystem isolation",
+      "hash": "e297b1e1e8385508031d710562f7e70d29f9e93e4dc813f6fe58d319bb839b9e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Security limitations",
+      "hash": "38c6b07ead0e26e0d70c8353b2abf4bdcbeaae12ba549740aacda939664645bf"
     }
   ],
   "settings-conflicting-keys": [
