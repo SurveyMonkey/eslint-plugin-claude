@@ -238,6 +238,20 @@ describe(`${name}: bracketed IPv6 before v2.1.229`, () => {
     expect(ids(text, [])).toEqual([])
   })
 
+  it('is silent for a bracket that does not close or holds nothing', () => {
+    expect(
+      ids(network({ allowedDomains: ['[::1', '[]', '[]:443', '[::1]x', 'a[::1]'] }), OLD),
+    ).toEqual([])
+    expect(
+      ids(
+        JSON.stringify({
+          permissions: { allow: ['WebFetch(domain:[::1)', 'WebFetch(domain:[])'] },
+        }),
+        OLD,
+      ),
+    ).toEqual([])
+  })
+
   it('is silent for hostnames, IPv4 and an unbracketed entry', () => {
     expect(
       ids(network({ allowedDomains: ['a.com', '1.2.3.4', '::1', '*.a.com:443'] }), OLD),
