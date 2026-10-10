@@ -1,8 +1,8 @@
 // Claude Code takes LSP configuration from a plugin: `.lsp.json` at the plugin root, and the
 // `lspServers` key of the manifest (plugins components, "LSP servers"; tools reference, "LSP tool
-// behavior"). A `.lsp.json` in another place is a no-op. The rule is a heuristic: it reads the
+// behavior"). A `.lsp.json` in another place may have no effect. The rule is a heuristic: it reads the
 // place of the file, and not its content. The files glob is in tests/configs.test.ts.
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -70,7 +70,47 @@ it('stays silent for a plugin root whose manifest is a dangling link', () => {
   symlinkSync(path.join(root, 'missing.json'), path.join(root, '.claude-plugin', 'plugin.json'))
   expect(ids(lintJson(NAME, code, path.join(root, '.lsp.json')))).toEqual([])
 })
+it('stays silent for a .lsp.json below a plugin that is below the repository root', () => {
+  const files = { 'plugins/a/.claude-plugin/plugin.json': '{}' }
+  expect(ids(lintAt('plugins/a/x/y/.lsp.json', files))).toEqual([])
+})
+describe('a repository with no .git', () => {
+  const bare = () => realpathSync(mkdtempSync(path.join(tmpdir(), 'lsp-no-git-')))
+  it('reports a .lsp.json in a folder with no plugin', () => {
+    const dir = bare()
+    try {
+      expect(ids(lintJson(NAME, code, path.join(dir, '.lsp.json')))).toEqual(['outside'])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+  it('reads no folder above the folder of the file', () => {
+    const dir = bare()
+    try {
+      mkdirSync(path.join(dir, '.claude-plugin'))
+      writeFileSync(path.join(dir, '.claude-plugin', 'plugin.json'), '{}')
+      mkdirSync(path.join(dir, 'sub'))
+      expect(ids(lintJson(NAME, code, path.join(dir, 'sub', '.lsp.json')))).toEqual(['outside'])
+      expect(ids(lintJson(NAME, code, path.join(dir, '.lsp.json')))).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
 describe('a plugin root that the rule cannot see', () => {
+  it('stays silent when .claude-plugin of a folder between the file and the root is a link out', () => {
+    const root = repo({})
+    const outside = mkdtempSync(path.join(tmpdir(), 'lsp-location-outside-'))
+    try {
+      mkdirSync(path.join(root, 'pkg', 'sub'), { recursive: true })
+      mkdirSync(path.join(outside, 'meta'))
+      writeFileSync(path.join(outside, 'meta', 'plugin.json'), '{}')
+      symlinkSync(path.join(outside, 'meta'), path.join(root, 'pkg', '.claude-plugin'))
+      expect(ids(lintJson(NAME, code, path.join(root, 'pkg', 'sub', '.lsp.json')))).toEqual([])
+    } finally {
+      rmSync(outside, { recursive: true, force: true })
+    }
+  })
   it('stays silent when .claude-plugin is a link out of the repository', () => {
     const root = repo({})
     const outside = mkdtempSync(path.join(tmpdir(), 'lsp-location-outside-'))

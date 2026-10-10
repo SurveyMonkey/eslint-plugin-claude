@@ -556,6 +556,9 @@ const TREE: Record<string, string> = {
   // `lsp-json-schema` and `lsp-transport-socket`: a `.lsp.json` at a plugin root has both faults. A
   // valid file, a file in a directory with no manifest, a file below the root, and a file with
   // another name are silent. The inline `lspServers` of a `plugin.json` is for the socket rule only.
+  // The `.git` makes `plugins/q` the repository root, so the walk of `lsp-json-location` from
+  // `sub/` ends at the plugin root. The tree has no other `.git`, and the walk stops at the folder.
+  'plugins/q/.git/HEAD': 'ref: refs/heads/main\n',
   'plugins/q/.lsp.json': badLsp,
   'plugins/q/sub/.lsp.json': badLsp,
   'plugins/q/lsp.json': badLsp,
