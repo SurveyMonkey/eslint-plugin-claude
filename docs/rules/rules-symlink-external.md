@@ -23,12 +23,17 @@ Do not link a rule file to a folder outside the repository.
 The `.claude/rules/` folder can hold links, so that projects share a set of rules. Claude Code
 treats a link with a target out of the working directory as an external import. The linked rules do
 not load until each user approves external imports for the project.[^symlinks] The approval dialog
-appears once for each project. A teammate who declines gets no linked rules.
+appears once for each project. A teammate who declines gets no linked rules. The rule uses the
+repository root as the working directory.
 
 The rule looks at each part of the path of the linted rule file, from the `.claude` folder down. It
 checks the `.claude` folder, the `.claude/rules` folder, each folder below it, and the file. It
 reports the first part that is a link with a real path outside the repository. The message names that
 link and its target. It reports a rule file once, at the start of the file.
+
+The walk of `eslint .` does not enter a link to a folder. So a linked folder gets a report only
+when ESLint receives a path below it, for example `eslint .claude/rules/shared/`, or in an editor.
+A link to a file gets a report in each case.
 
 Fail, when `.claude/rules/security.md` is a link to a file out of the repository:
 
@@ -41,7 +46,7 @@ Pass, with the same text, when the file is a regular file. It passes when it is 
 The repository is the first folder above the file that holds `.git`. A link to a folder that holds a `.git` leads to another repository. The rule treats that folder as the repository. With no
 `.git` on the way, the end of the repository is not known, and the rule makes no report.
 
-The rule asks for the real path of each link, and reads nothing in the target. ESLint gave it the
+The rule asks for the real path of each link, and reads no file content in the target. ESLint gave it the
 text. The rule makes no report in these cases:
 
 - A link that leads nowhere.

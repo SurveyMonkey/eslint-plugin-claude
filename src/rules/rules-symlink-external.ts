@@ -2,8 +2,8 @@
 // (docs/rules/rules-symlink-external.md). Claude Code treats such a link like an external import.
 // The linked rules do not load until each user approves external imports for the project. The
 // rule looks at each part of the path of the linted file, from the `.claude` folder down. It
-// reports the first part that is a link whose real path is outside the repository. It reads
-// nothing in the target, because ESLint gave it the text. It makes no report for a link that
+// reports the first part that is a link whose real path is outside the repository. It reads no
+// file content in the target, because ESLint gave it the text. It makes no report for a link that
 // leads nowhere, for a path that it cannot read, or for a tree with no `.git` (ADR 001,
 // Decision 14).
 import { lstatSync, readlinkSync } from 'node:fs'

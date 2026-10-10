@@ -21,7 +21,8 @@ Do not import a file from outside the repository.
 ## Rule details
 
 An import in a project memory file is external when its path resolves outside the working
-directory. The first time Claude Code meets external imports in a project, it shows an approval
+directory. The rule uses the repository root as the working directory, because a linter cannot
+know where the user starts a session. The first time Claude Code meets external imports in a project, it shows an approval
 dialog. If the user declines, the imports stay disabled and the dialog does not appear again.[^import]
 So an external import in a committed file works for one teammate and not for another.
 
@@ -64,7 +65,7 @@ The split with other rules:
   through the import.
 - The rule lints a `CLAUDE.md` file, in any folder and in `.claude/`. It does not lint a
   `CLAUDE.local.md` file, because that file is not committed. The docs suggest `@~/...` there for a
-  personal import. It does not lint an `AGENTS.md` file. Claude Code asks for no approval for an import in `AGENTS.md`. It loads the file only if the user approved external imports for the project before.[^agents] Nor does it lint a rule file.
+  personal import. It does not lint an `AGENTS.md` file as a root. Claude Code reads such a file through the **Project instructions** setting. It then asks for no approval for an import in the file, and loads the import only if the user approved external imports for the project before.[^agents] An `AGENTS.md` that a `CLAUDE.md` imports is part of that chain, and the rule checks its imports. Nor does it lint a rule file. A `CLAUDE.local.md` or a rule file that a `CLAUDE.md` imports is checked as an imported file.
 
 ## Sources
 

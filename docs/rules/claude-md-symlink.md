@@ -45,7 +45,7 @@ Pass, when `CLAUDE.md` is a regular file with this text:
 ```
 
 The rule asks the file system if the file is a link (`lstat`). It does not read the Git mode of the
-file, which is 120000 for a committed link. The Git reader of this plugin is not part of the rule.
+file, which is 120000 for a committed link. The plugin has no Git reader yet.
 So the rule checks the clone that it lints.
 
 A link on disk is a link. A clone that checked the link out as a plain file gets no report. So a Windows clone without `core.symlinks` passes the rule, although it has the fault.
