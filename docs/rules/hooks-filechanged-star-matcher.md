@@ -45,6 +45,9 @@ Fail, in `.claude/settings.json`:
 }
 ```
 
+A group with no matcher adds no file to the watch list. The example below fires only when another group or a
+`watchPaths` hook starts the watcher.[^filechanged] A "*" segment is not a fix by itself, because no file is named "*".
+
 Pass:
 
 ```json
@@ -54,9 +57,6 @@ Pass:
   }
 }
 ```
-
-A group with no matcher does not add a file to the watch list. Start the watcher with a group that names a file,
-or with a `SessionStart` or `CwdChanged` hook that returns `watchPaths`.[^filechanged]
 
 ## Sources
 

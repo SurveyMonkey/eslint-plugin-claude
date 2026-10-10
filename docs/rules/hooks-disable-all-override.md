@@ -30,6 +30,9 @@ The rule reports `"disableAllHooks": false` in the committed project file. It re
 last of two members of the same name, as `JSON.parse` does. A `true`, a missing key and a value of another type
 get no report.
 
+The rule reads each file that is named `.claude/settings.json`. It cannot tell the user file from the project
+file, so lint the repository only.
+
 The rule reads `.claude/settings.json` only. It reads no `.claude/settings.local.json`, because that file is the
 person's own. It reads no managed file, because an administrator sets the policy there. Only a managed
 `disableAllHooks` can turn off managed hooks.[^disable] The rule

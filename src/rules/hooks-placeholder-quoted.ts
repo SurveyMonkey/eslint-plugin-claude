@@ -22,7 +22,8 @@ const VARIABLES = PATH_VARIABLES.join('|')
 const REFERENCE = new RegExp(`\\$\\{(?:${VARIABLES})\\}|\\$(?:${VARIABLES})(?![A-Za-z0-9_])`, 'g')
 
 /** The first reference in `line` that sits outside quotes, or undefined. Each reference becomes two
- *  marks with a space between them. The shell splits a word at an unquoted space, so the marks of a
+ *  marks with a space between them. Private-use characters delimit each mark, so a quoted text such
+ *  as "0 0" cannot look like one. The shell splits a word at an unquoted space. So the marks of a
  *  quoted reference stay in one word, and the marks of an unquoted one do not. A line with a command
  *  substitution is not read, because quotes nest inside it. */
 function unquotedReference(line: string): string | undefined {

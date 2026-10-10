@@ -40,6 +40,14 @@ describe(`${name}: the handlers`, () => {
     }
   })
 
+  it('reports a handler with async false, and an http handler with async true', () => {
+    expect(ids('SessionEnd', [command({ async: false })])).toEqual(['timeout'])
+    expect(ids('SessionEnd', [command({ async: 'true' })])).toEqual(['timeout'])
+    expect(ids('SessionEnd', [{ type: 'http', url: 'https://example.com', async: true }])).toEqual([
+      'timeout',
+    ])
+  })
+
   it('is silent when the handler sets a timeout', () => {
     for (const timeout of [1, 5, 60, 0, '5', null]) {
       expect(ids('SessionEnd', [command({ timeout })]), String(timeout)).toEqual([])

@@ -1,8 +1,8 @@
 // `"disableAllHooks": false` in the committed `.claude/settings.json` (docs/rules/hooks-disable-all-override.md).
-// Claude Code reads the value that is left after settings precedence, and the project file is above
-// the user file. So the committed `false` overrides a `true` in the user settings of each person who
-// clones the repository, and turns their hooks back on. The local file is the person's own, and a
-// managed file is the policy of the administrator, so the rule reads neither.
+// Claude Code reads the value that is left after settings precedence. The project file is above the
+// user file. So the committed `false` overrides a `true` in the user settings of each person who
+// clones the repository, and turns their hooks back on. The local file is the person's own. A managed
+// file is the policy of the administrator. The rule reads neither.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'

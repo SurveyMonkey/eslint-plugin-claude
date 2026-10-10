@@ -37,9 +37,18 @@ describe(`${name}: an unquoted placeholder`, () => {
       `echo "a" ${P}`,
       `node "x" && ${P}/b.sh`,
       `echo "a b" "${P}/c" ${P}/d`,
+      // A quoted text that looks like a mark must not hide the reference.
+      `./run.sh "0 0" ${P}/x`,
+      `./run.sh "1 1" ${P}/x ${P}/y`,
     ]) {
       expect(run(text), text).toEqual(['unquoted'])
     }
+  })
+
+  it('tells reference 1 from reference 11 on a line with twelve references', () => {
+    // Only reference 1 is unquoted. The quoted reference 11 must not hide it.
+    const refs = Array.from({ length: 12 }, (_, n) => (n === 1 ? P : `"${P}"`))
+    expect(run(refs.join(' '))).toEqual(['unquoted'])
   })
 
   it('reports the bare environment variable form, which splits the same way', () => {
@@ -100,6 +109,8 @@ describe(`${name}: a quoted placeholder`, () => {
       '',
       'echo $CLAUDE_PROJECT_DIR_OTHER/a',
       'echo $CLAUDE_PROJECT_DIRX',
+      'echo $CLAUDE_PROJECT_DIR1/a',
+      'echo $CLAUDE_PROJECT_DIRx/a',
       `echo ${dir('CLAUDE_ENV_FILE')}`,
       `echo ${dir('CLAUDE_MODEL')}`,
       'echo CLAUDE_PROJECT_DIR',

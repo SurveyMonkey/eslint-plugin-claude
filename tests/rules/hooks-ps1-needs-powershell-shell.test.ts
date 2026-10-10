@@ -72,6 +72,23 @@ describe(`${name}: the platforms`, () => {
   })
 })
 
+describe(`${name}: the message for a mixed list`, () => {
+  it('names only the platforms that run Bash', () => {
+    const [message] = lintJson(
+      name,
+      settings(hooks('Stop', [command({ command: './a.ps1' })])),
+      FILES.project,
+      [{ platforms: ['windows-no-git-bash', 'linux'] }],
+    )
+    expect(message?.message).toContain('On "linux" Claude Code')
+    expect(message?.message).not.toContain('windows-no-git-bash')
+  })
+
+  it('reads a command with args that is no array as shell form', () => {
+    expect(run('./a.ps1', { args: 'x' })).toEqual(['ps1'])
+  })
+})
+
 describe(`${name}: the command`, () => {
   it('reports a .ps1 file as the command word', () => {
     for (const text of [

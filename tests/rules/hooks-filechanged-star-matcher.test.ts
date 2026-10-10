@@ -38,7 +38,8 @@ describe(`${name}: the star matcher`, () => {
 
   it('is silent for a segment that only holds a star', () => {
     // `hooks-matcher-syntax` reports a pattern character in a file name.
-    for (const matcher of ['**', '*.env', '.env*', '* ', 'a*']) {
+    // A comma is no separator for FileChanged: only `|` splits the value.
+    for (const matcher of ['**', '*.env', '.env*', '* ', 'a*', '.env,*', '*,.env']) {
       expect(ids('FileChanged', matcher), matcher).toEqual([])
     }
   })

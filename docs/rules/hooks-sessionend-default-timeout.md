@@ -26,6 +26,9 @@ then rises to the highest `timeout` in your settings files, up to 60 seconds. Or
 `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` sets the budget. A hook without its own `timeout` keeps the default when
 the budget rises through other hooks.[^sessionend]
 
+Since v2.1.268, the variable also sets the timeout of each hook without its own `timeout`.[^sessionend] The rule
+cannot see the variable. A team that uses it can turn the rule off.
+
 The rule reports a `SessionEnd` handler that has no `timeout` member. It checks that the field is set, and it
 compares no number. [`hooks-handler-field-ignored`](hooks-handler-field-ignored.md) reports a number above the
 budget. [`hooks-config-schema`](hooks-config-schema.md) reports a value of the wrong type.
