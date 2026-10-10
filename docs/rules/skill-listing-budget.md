@@ -24,25 +24,29 @@ The rule is `off` in `recommended`. The rule is a heuristic, and it reads more t
 
 Claude Code lists the name and description of each skill, so that Claude knows what is
 available. The listing has a character budget. When the listing is over the budget, Claude Code
-drops descriptions. It drops those of the skills that you invoke least first.[^cut] The budget is
-1% of the context window, with a fallback of 8,000 characters.[^env] The rule uses 8,000
-characters. The real budget depends on the model. Two settings, `skillListingBudgetFraction` and
-`SLASH_COMMAND_TOOL_CHAR_BUDGET`, move it.[^cut]
+drops descriptions. It drops those of the skills that you invoke least first.[^cut]
+
+The budget is 1% of the context window, with a fallback of 8,000 characters.[^env] The rule uses
+8,000 characters. The real budget depends on the model.[^cut]
+
+Two settings, `skillListingBudgetFraction` and `SLASH_COMMAND_TOOL_CHAR_BUDGET`, move the
+budget.[^cut] A third setting, `skillListingMaxDescChars`, moves the cap of one entry.[^cut]
 
 The rule sums the entries of one scope. A scope is a `.claude/` directory, or a plugin root. Each
 skill or command file is one entry. Its size is the length of its name, plus the length of
-`description` and `when_to_use` together. Claude Code caps the text of each entry at 1,536 characters, whatever
-the budget.[^cut] So the rule counts at most 1,536 characters of text for each entry.
+`description` and `when_to_use` together. Claude Code caps the text of each entry at 1,536
+characters, whatever the budget.[^cut] So the rule counts at most 1,536 characters of text for each
+entry.
 
 - A skill takes its name from `name`. It uses the folder name when `name` is not a non-empty
   string. The name of a command file is its path below `commands/`, with each `/` as `:`. The
   rule ignores the plugin prefix.
 - A file that has `disable-model-invocation: true` is not in the listing, so it adds nothing.[^invoke]
   The rule counts only the Boolean `true` as that value. A file with the string `"true"` is in
-  the count.
+  the count. So is a file with `yes`, `on` or `1`. The sum can be too high.
 - A file with no frontmatter, or with a block that does not parse, adds its name.
 - A field that is not a string adds nothing.
-- A skill with no `description` is listed with the first line of its body. The rule counts none
+- A skill with no `description` is listed with the first non-empty line of its body. The rule counts none
   of it, so the sum can be too low.
 
 The rule reports at line 1 of each skill and command file of a scope that is over the budget. The
