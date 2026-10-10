@@ -29,9 +29,9 @@ also allows `github.example.com.attacker.test`.
 
 The rule reports these entries of the allowlist:
 
-- A `hostPattern` that does not start with `^`, or does not end with `$`. A `$` after an odd
-  number of backslashes is a literal character, and is no anchor.
-- A `pathPattern` that does not start with `^`.
+- A `hostPattern` with a branch that does not start with `^`, or does not end with `$`. A `$` after
+  an odd number of backslashes is a literal character, and is no anchor.
+- A `pathPattern` with a branch that does not start with `^`.
 
 The docs show `".*"` as the `pathPattern` that allows every local path.[^org] The rule leaves that
 exact value. It does not leave `".*"` as a `hostPattern`.
@@ -41,9 +41,11 @@ set the canonical key. It does not read `blockedMarketplaces`. An unanchored pat
 blocks more sources, and does not widen what users can add. It skips a hidden file in
 `managed-settings.d`.
 
-The rule is a text check. It does not parse the pattern. A pattern with an alternation is checked as text. The rule
-reports `^a$|b`, because the text ends in `b`. It does not report `^a|b$`. A pattern that does not compile is for
-`settings-known-marketplaces-policy-schema`, so the rule does not report it.
+The rule is a text check. It splits the pattern at each `|` that is outside a group, a class and
+an escape. Each branch matches on its own, so each branch needs its anchors. The rule reports
+`^a|b$` and `^/ok|/evil`, because one branch is loose. A pattern in one group, such as `^(a|b)$`,
+has one branch. A pattern that does not compile is for `settings-known-marketplaces-policy-schema`,
+so the rule does not report it.
 
 Fail:
 

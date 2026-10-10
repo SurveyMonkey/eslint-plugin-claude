@@ -21,7 +21,15 @@ jsonTester.run('settings-known-marketplaces-pattern-anchored (valid)', rule, {
     { code: allow(host('^a\\.example$|^b\\.example$')), filename },
     { code: allow(host('^a\\\\$')), filename },
     { code: allow(host('^a\\\\\\\\$')), filename },
-    { code: allow(host('^a|b$')), filename },
+    { code: allow(host('^a\\\\\\\\\\\\$')), filename },
+    // A whole pattern in a group, a class or an escape holds no top-level alternation.
+    { code: allow(host('^(a|b)$')), filename },
+    { code: allow(host('^(?:a|b)$')), filename },
+    { code: allow(host('^[|a]$')), filename },
+    { code: allow(host('^a\\|b$')), filename },
+    { code: allow(host('^(a[)]|b)$')), filename },
+    { code: allow(path('^(/a|/b)')), filename },
+    { code: allow(path('^/a|^/b')), filename },
     // The docs show `".*"` as the pattern that allows every local path.
     { code: allow(path('.*')), filename },
     // The pattern does not compile: `settings-known-marketplaces-policy-schema` reports it.
@@ -55,6 +63,11 @@ jsonTester.run('settings-known-marketplaces-pattern-anchored (valid)', rule, {
     // The alias is ignored when the canonical key is set.
     {
       code: json({ strictKnownMarketplaces: [], allowedMarketplaces: [host('x')] }),
+      filename,
+    },
+    // A canonical key set to `null` is set, so the alias is ignored.
+    {
+      code: json({ strictKnownMarketplaces: null, allowedMarketplaces: [host('x')] }),
       filename,
     },
     // Claude Code ignores a hidden drop-in, so it reads no key there.
@@ -104,6 +117,15 @@ jsonTester.run('settings-known-marketplaces-pattern-anchored (invalid)', rule, {
     { code: allow(host('^a\\$')), filename, errors: [{ messageId: 'unanchored' }] },
     { code: allow(host('^a\\\\\\$')), filename, errors: [{ messageId: 'unanchored' }] },
     { code: allow(host('^a$|b')), filename, errors: [{ messageId: 'unanchored' }] },
+    // Each top-level branch needs its anchors: one loose branch widens the allowlist.
+    { code: allow(host('^a|b$')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(host('^a\\.com|b\\.com$')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(host('^a$|^b$|c')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(host('^(a|b)$|c')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(host('^[|]a|b$')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(path('^/ok|/evil')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(path('/a|^/b')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(path('.*|^/b')), filename, errors: [{ messageId: 'unanchored' }] },
     { code: allow(host('')), filename, errors: [{ messageId: 'unanchored' }] },
     { code: allow(host('.*')), filename, errors: [{ messageId: 'unanchored' }] },
     // A path needs the start anchor only.

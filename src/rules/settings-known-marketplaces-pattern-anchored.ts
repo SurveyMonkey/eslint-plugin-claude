@@ -2,7 +2,8 @@
 // (docs/rules/settings-known-marketplaces-pattern-anchored.md). The docs say that a pattern
 // "matches anywhere" in the host or the path. So an unanchored pattern widens the allowlist. The
 // rule reads managed settings files. It leaves the blocklist: an unanchored pattern there blocks
-// more, and does not widen what users may add. A pattern that does not compile is for
+// more, and does not widen what users may add. A top-level alternation is split, and each branch
+// needs its anchors. A pattern that does not compile is for
 // `settings-known-marketplaces-policy-schema`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { UNLOADED_MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
@@ -21,6 +22,33 @@ const ALLOW_ALL_PATHS = '.*'
 
 /** True when `text` ends in `$` that is not escaped: an even number of backslashes comes before it. */
 const endsAnchored = (text: string) => /(?<!\\)(?:\\\\)*\$$/.test(text)
+
+/** The branches of `pattern` at the top level: the text between the `|` that sit outside any
+ *  group `(...)`, any class `[...]`, and any escape. */
+function branchesOf(pattern: string): string[] {
+  const branches: string[] = []
+  let start = 0
+  let depth = 0
+  let inClass = false
+  for (let i = 0; i < pattern.length; i++) {
+    const char = pattern[i]
+    if (char === '\\') {
+      i++
+    } else if (inClass) {
+      inClass = char !== ']'
+    } else if (char === '[') {
+      inClass = true
+    } else if (char === '(') {
+      depth++
+    } else if (char === ')') {
+      depth--
+    } else if (char === '|' && depth === 0) {
+      branches.push(pattern.slice(start, i))
+      start = i + 1
+    }
+  }
+  return [...branches, pattern.slice(start)]
+}
 
 /** True when `text` compiles as a JavaScript regular expression. */
 function compiles(text: string): boolean {
@@ -66,7 +94,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'unanchored' }> = 
             continue
           }
           const host = type.value === HOST
-          const anchored = pattern.value.startsWith('^') && (!host || endsAnchored(pattern.value))
+          // Each top-level branch matches on its own, so each one needs its anchors.
+          const anchored = branchesOf(pattern.value).every(
+            (branch) => branch.startsWith('^') && (!host || endsAnchored(branch)),
+          )
           if (!anchored && (host || pattern.value !== ALLOW_ALL_PATHS)) {
             context.report({
               node: pattern,
