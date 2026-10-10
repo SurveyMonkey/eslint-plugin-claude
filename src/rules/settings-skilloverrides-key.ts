@@ -26,7 +26,7 @@ function pluginNames(settings: ValueNode | undefined): Set<string> {
         value.type !== 'Null' &&
         !(value.type === 'Boolean' && !value.value)
       ) {
-        names.add(key.split('@')[0] ?? '')
+        names.add(key.replace(/@.*$/, ''))
       }
     }
   }
