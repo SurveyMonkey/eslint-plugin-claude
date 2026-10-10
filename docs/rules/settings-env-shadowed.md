@@ -28,8 +28,8 @@ ignores it.
 
 | Variable | Voided when | Report on | The docs say |
 |----------|-------------|-----------|--------------|
-| `BASH_MAX_OUTPUT_LENGTH` | the file also sets `bashOutputMaxChars` | the variable name | "When you set this key, Claude Code ignores the `BASH_MAX_OUTPUT_LENGTH` environment variable."[^bash] |
-| `ANTHROPIC_DEFAULT_MODEL` | the file also sets `model` to a value other than `default` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
+| `BASH_MAX_OUTPUT_LENGTH` | the file also sets `bashOutputMaxChars` as a number | the variable name | "When you set this key, Claude Code ignores the `BASH_MAX_OUTPUT_LENGTH` environment variable."[^bash] |
+| `ANTHROPIC_DEFAULT_MODEL` | the file also sets a `model` that is not empty and not `default` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
 | `ANTHROPIC_DEFAULT_MODEL` | its value is `default`, `inherit`, `opusplan` or `haiku` | the value | "Claude Code ignores the variable in these cases ... You set it to `default`, `inherit`, `opusplan`, or `haiku`"[^default] |
 | `CLAUDE_CODE_SUBAGENT_MODEL` | its value is `inherit` | the value | "Setting the variable to `inherit` is the same as leaving it unset."[^subagent] |
 | `NO_COLOR`, `FORCE_COLOR` | its value is not empty | the variable name | "`NO_COLOR` and `FORCE_COLOR` set here reach only subprocesses."[^shell] |
@@ -53,8 +53,8 @@ A team that sets the variable for its subprocesses on purpose can disable the ru
   reports that case, and reads the agent file. This rule makes no second report.
 - `ANTHROPIC_DEFAULT_MODEL` beside `enforceAvailableModels`, or beside a model that the
   organization excludes. The docs name both as reasons that Claude Code ignores the variable.[^default]
-  The first depends on the managed source, which the rule cannot identify. The second needs a file
-  that is not in the repository.
+  The first depends on the managed source and on the admin console. The rule reads the linted
+  file only. The second needs a file that is not in the repository.
 - A `model` or a `bashOutputMaxChars` in another file. A user file can set either one, and Claude
   Code then voids the variable in the same way. The rule does not see it.
 - The value of a variable. `settings-env-value-format` and `settings-model-value` are for it.

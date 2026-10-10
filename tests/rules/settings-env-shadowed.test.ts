@@ -36,6 +36,13 @@ describe(`${name}: BASH_MAX_OUTPUT_LENGTH and bashOutputMaxChars`, () => {
     expect([message?.messageId, message?.line, message?.column]).toEqual(['bashLength', 4, 5])
   })
 
+  it('is silent when bashOutputMaxChars is no number: settings-schema reports the type', () => {
+    for (const value of ['5000', false, [1]]) {
+      const code = { bashOutputMaxChars: value, ...env({ BASH_MAX_OUTPUT_LENGTH: '50000' }) }
+      expect(ids(code), JSON.stringify(value)).toEqual([])
+    }
+  })
+
   it('is silent when bashOutputMaxChars is unset or null, or the variable is not set', () => {
     expect(ids(env({ BASH_MAX_OUTPUT_LENGTH: '50000' }))).toEqual([])
     expect(ids({ bashOutputMaxChars: null, ...env({ BASH_MAX_OUTPUT_LENGTH: '50000' }) })).toEqual(

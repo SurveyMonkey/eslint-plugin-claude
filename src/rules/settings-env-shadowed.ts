@@ -28,8 +28,9 @@ function setMember(object: ValueNode | undefined, key: string): MemberNode | und
   return member?.value.type === 'Null' ? undefined : member
 }
 
-/** The text of a member whose value is a string that is not empty. An empty value cancels a value
- *  of the shell, so it voids nothing, and nothing voids it. */
+/** The text of a member whose value is a string that is not empty. For an `env` variable, an
+ *  empty value cancels a value of the shell, so it voids nothing. For `model`, the rule takes an
+ *  empty value as no model. */
 function textOf(member: MemberNode | undefined): string | undefined {
   return member?.value.type === 'String' && member.value.value !== ''
     ? member.value.value
@@ -79,7 +80,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         if (
           bash !== undefined &&
           textOf(bash) !== undefined &&
-          setMember(body, 'bashOutputMaxChars') !== undefined
+          setMember(body, 'bashOutputMaxChars')?.value.type === 'Number'
         ) {
           context.report({ node: bash.name, messageId: 'bashLength' })
         }

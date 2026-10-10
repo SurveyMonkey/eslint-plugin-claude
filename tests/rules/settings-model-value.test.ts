@@ -204,6 +204,24 @@ describe(`${name}: env.ANTHROPIC_MODEL and env.CLAUDE_CODE_SUBAGENT_MODEL`, () =
   })
 })
 
+describe(`${name}: the custom model option`, () => {
+  const env = { ANTHROPIC_CUSTOM_MODEL_OPTION: 'corp-llm' }
+
+  it('lets the value of the option pass in the same file', () => {
+    expect(ids({ model: 'corp-llm', env })).toEqual([])
+    expect(ids({ fallbackModel: ['corp-llm'], availableModels: ['corp-llm'], env })).toEqual([])
+  })
+
+  it('reports another value, and every value when the option is empty or no string', () => {
+    expect(ids({ model: 'other-llm', env })).toEqual(['notModel'])
+    expect(ids({ model: '', env: { ANTHROPIC_CUSTOM_MODEL_OPTION: '' } })).toEqual(['notModel'])
+    expect(ids({ model: 'corp-llm', env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 5 } })).toEqual([
+      'notModel',
+    ])
+    expect(ids({ model: 'corp-llm' })).toEqual(['notModel'])
+  })
+})
+
 describe(`${name}: advisorModel`, () => {
   it('is silent for fable, opus, sonnet, or a claude- ID', () => {
     for (const value of ['fable', 'opus', 'sonnet', ...IDS]) {

@@ -77,8 +77,6 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
     const patterns = compile(providerIdPatterns)
     const isProviderId = (value: string) =>
       hasProviderForm(value) || patterns.some((pattern) => pattern.test(value))
-    const isModel = (value: string) =>
-      isModelAlias(value) || isModelId(value) || isProviderId(value)
 
     return {
       Document(node) {
@@ -86,6 +84,19 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
         if (body.type !== 'Object') {
           return
         }
+
+        // The docs say Claude Code skips validation for the model ID of the custom model option.
+        // The same file can pick that option as a model.
+        const optionValue = lastMember(
+          lastMember(body, 'env')?.value,
+          'ANTHROPIC_CUSTOM_MODEL_OPTION',
+        )?.value
+        const option = optionValue?.type === 'String' ? optionValue.value : ''
+        const isModel = (value: string) =>
+          isModelAlias(value) ||
+          isModelId(value) ||
+          isProviderId(value) ||
+          (option !== '' && value === option)
 
         /** Report `value` when it is a string that `accepts` does not accept. */
         const check = (
