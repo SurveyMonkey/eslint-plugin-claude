@@ -32,9 +32,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'notIgnored' }> = {
         if (suite === null) {
           return
         }
-        // A run writes `results/<timestamp>/`. A directory in `results/` stands for it. The name
-        // has no extension, so a pattern for files does not cover it.
-        const run = path.join(suite.real, 'results', 'run')
+        // A run writes `results/<timestamp>/`. The path `results/run/x` stands for a file in it.
+        // Git takes the parents of a path that is not there as directories, so a pattern
+        // such as `results/*/` covers it.
+        const run = path.join(suite.real, 'results', 'run', 'x')
         if (gitIgnores(suite.bound, run) === false) {
           context.report({ node, messageId: 'notIgnored', data: { dir: suite.name } })
         }

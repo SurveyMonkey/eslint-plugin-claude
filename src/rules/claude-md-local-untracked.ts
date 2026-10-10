@@ -34,7 +34,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'tracked' | 'notIgnored' }> = {
     return {
       root(node) {
         const dir = path.dirname(path.resolve(context.filename))
-        // Claude Code loads `CLAUDE.local.md` from the project directory, not from `.claude/`.
+        // The docs name the project root as the place of `CLAUDE.local.md`, not `.claude/`.
         if (path.basename(dir) === '.claude') {
           return
         }

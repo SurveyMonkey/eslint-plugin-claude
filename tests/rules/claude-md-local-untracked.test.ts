@@ -61,6 +61,9 @@ describe(RULE, () => {
     expect(lint(root, 'pkg/CLAUDE.md')).toEqual([])
     const bare = repo({ 'pkg/CLAUDE.md': '# P\n' })
     expect(lint(bare, 'pkg/CLAUDE.md')).toEqual(['notIgnored'])
+    expect(lintMarkdown(RULE, '# P\n', path.join(bare, 'pkg/CLAUDE.md'))[0]?.message).toContain(
+      '"pkg/CLAUDE.local.md"',
+    )
   })
 
   it('takes a pattern that a later negation takes back as a missing pattern', () => {

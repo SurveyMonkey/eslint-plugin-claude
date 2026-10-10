@@ -1,4 +1,4 @@
-// The git index, for a rule that checks the executable bit of a file. The
+// The git index, for a rule that checks the executable bit of a file or the tracking of one. The
 // bit is the index mode `100755`. The mode on the disk is not the bit. The
 // index can keep `100755` while the disk shows `644`. With
 // `core.fileMode=false`, git does not see the disk mode at all. A repository
@@ -11,8 +11,8 @@
 // command fails, and when git finds a repository other than the one in `root`.
 // A rule makes no report that rests on `UNREADABLE`.
 //
-// A second question is whether a `.gitignore` file covers a path (`gitIgnores`).
-// It uses `git check-ignore`, and has the same `UNREADABLE` result.
+// Two more questions are whether a `.gitignore` file covers a path (`gitIgnores`) and whether
+// the index holds a file below a directory (`gitTracksBelow`). They have the same `UNREADABLE` result.
 import { execFileSync } from 'node:child_process'
 import { existsSync, realpathSync, statSync } from 'node:fs'
 import { devNull } from 'node:os'
@@ -46,14 +46,17 @@ function gitEnv(): NodeJS.ProcessEnv {
 
 /** The output of `git` with `args`, run in `root` with no shell. It throws
  *  when `git` is not installed, `root` is not there, or the command fails. */
-function run(root: string, args: string[]): string {
+function run(root: string, args: string[], input?: string): string {
   // `core.fsmonitor` in the config of a repository names a program. Git runs
   // that program when it reads the index. The reader sets the key to false.
   return execFileSync('git', ['-c', 'core.fsmonitor=false', ...args], {
     cwd: root,
     env: gitEnv(),
     encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'ignore'],
+    // With `input`, git reads it from standard input.
+    ...(input === undefined
+      ? { stdio: ['ignore', 'pipe', 'ignore'] }
+      : { input, stdio: ['pipe', 'pipe', 'ignore'] }),
     // A large repository lists more than the default 1 MiB.
     maxBuffer: 1 << 30,
     timeout: 30_000,
@@ -89,8 +92,8 @@ function stampOf(gitDir: string): string | null {
 }
 
 /** The git directory of `root`. It throws when git reads a repository other
- *  than the one in `root`. This is the case for a `.git` directory that is
- *  not a repository, inside another repository. */
+ *  than the one in `root`, or when `root` has no `.git`. The first case is a
+ *  `.git` directory that is not a repository, inside another repository. */
 function gitDirOf(root: string): string {
   // With no `.git` in `root`, git finds an outer repository or none. Both give no answer
   // for `root`, and the check saves a process.
@@ -204,26 +207,21 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
   }
   // The path starts with `./`, so that git reads no `:` at the start as pathspec
   // magic. `--literal-pathspecs` is not an option here: this command refuses it.
+  // Git reads the path from standard input, so no leading dash is an option.
   const target = `./${path.relative(root, file).split(path.sep).join('/')}`
   try {
-    // `-v` names the source of the pattern, in the form `source:line:pattern<TAB>path`.
-    // With `-c core.excludesFile`, git reads no global excludes file, not even the
-    // default one. A global file can have the name `.gitignore`, so the name is not enough.
-    const out = run(root, [
-      '-c',
-      `core.excludesFile=${devNull}`,
-      'check-ignore',
-      '--no-index',
-      '-v',
-      '--',
-      target,
-    ])
-    // The source ends at the first `:<digits>:`. A directory name with that form gives a wrong
-    // source, and so a false "not ignored". A colon alone is safe.
-    const source = out.replace(/:\d+:.*/s, '')
-    const negated = /^:\d+:!/.test(out.slice(source.length))
-    // Git quotes a source that holds a control character, and a quote ends it.
-    return !negated && path.posix.basename(source.replace(/"$/, '')) === '.gitignore'
+    // `-v` names the source and the pattern. With `-z`, the output is the fields
+    // `source`, `line`, `pattern` and `path`, each ended by a NUL, with no quotes.
+    // `-z` needs `--stdin`. With `-c core.excludesFile`, git reads no global excludes
+    // file, not even the default one. A global file can have the name `.gitignore`,
+    // so the name is not enough.
+    const out = run(
+      root,
+      ['-c', `core.excludesFile=${devNull}`, 'check-ignore', '--no-index', '--stdin', '-z', '-v'],
+      `${target}\0`,
+    )
+    const [source = '', , pattern = ''] = out.split('\0')
+    return !pattern.startsWith('!') && path.posix.basename(source) === '.gitignore'
   } catch (error) {
     // Status 1 is the answer "no path is ignored". Another status is a failure.
     return (error as { status?: number }).status === 1 ? false : UNREADABLE

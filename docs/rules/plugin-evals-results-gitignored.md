@@ -24,17 +24,16 @@ Cover the results directory of an eval suite with a .gitignore pattern.
 plugin. The directory holds `aggregate-result.json`, `report.html` and the saved answers of agent
 mocks. The docs tell the author to add `results/` to `.gitignore`.[^suite]
 
-The lint target is the manifest, `.claude-plugin/plugin.json`. A file in the eval directory has
-no JSON language. The `results/` directory is not in a fresh clone. Each plugin has one
+The lint target is the manifest, `.claude-plugin/plugin.json`. ESLint has no JSON language
+for a file in the eval directory. The `results/` directory is not in a fresh clone. Each plugin has one
 manifest, so the rule runs once for each plugin. It reports one message, at the start of the
 manifest. The message names the `results/` directory from the plugin root.
 
 The eval directory is `evals/`. A plugin can set another directory in `experimental.evals`
 of the manifest, for example `quality/evals`.[^dir] The docs accept a relative path of plain
 directory names. An absolute path, or a path with `..`, prints a `Warning:` line, and the run uses
-`evals/`. The rule does the same: it reads the manifest in the editor, so it does not follow
-that line of the run. A value that is not a string, an empty segment and a segment `.` give
-`evals/` too.
+`evals/`. The rule prints no warning, and it uses `evals/` as well. A value that is not a string, an
+empty segment, a segment `.`, a backslash and a drive letter give `evals/` too.
 
 The rule asks `git check-ignore` about a directory in `results/`. A pattern counts when it is in
 a `.gitignore` file of the repository. The file is at the root, or in a directory above the

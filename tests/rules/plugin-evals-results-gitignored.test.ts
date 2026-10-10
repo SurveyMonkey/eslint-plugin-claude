@@ -52,6 +52,7 @@ describe(RULE, () => {
       '/evals/results/',
       '**/results/',
       'evals/results/*',
+      'evals/results/*/',
       'evals/',
       'evals',
     ]) {
@@ -141,7 +142,12 @@ describe(RULE, () => {
       ['evals'],
       { path: 'evals' },
     ]) {
-      expect(ids(root, manifest(value)), JSON.stringify(value)).toEqual(['notIgnored'])
+      const messages = lint(root, manifest(value))
+      expect(
+        messages.map((m) => m.messageId),
+        JSON.stringify(value),
+      ).toEqual(['notIgnored'])
+      expect(messages[0]?.message, JSON.stringify(value)).toContain('"evals/results/"')
     }
     // A manifest without an object for `experimental` uses `evals/` too.
     for (const code of [

@@ -64,7 +64,7 @@ The rule makes no report in these cases:
   another repository.
 
 Fail: `.gitignore` with `.replay/`, in a repository with an eval suite. Fail: a plugin with
-`evals/mocks/.replay/github/answer.md` that git does not track.
+`evals/mocks/.replay/github/answer` that git does not track.
 
 Pass: the same plugin after `git add evals/mocks/.replay`, with no pattern for it.
 

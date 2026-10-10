@@ -17,8 +17,12 @@ afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 // The variables that point git at a repository. Git sets some of them when it runs a git hook.
 const LOCATION =
   /^GIT_(DIR|WORK_TREE|INDEX_FILE|COMMON_DIR|OBJECT_DIRECTORY|ALTERNATE_OBJECT_DIRECTORIES|PREFIX|NAMESPACE)$/
+// Git sets these inside a hook that runs under `git -c`. They add config that the test did not choose.
+const INLINE_CONFIG = /^GIT_CONFIG_(PARAMETERS|COUNT|KEY_\d+|VALUE_\d+)$/
 const gitEnv = () => ({
-  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.test(key))),
+  ...Object.fromEntries(
+    Object.entries(process.env).filter(([key]) => !LOCATION.test(key) && !INLINE_CONFIG.test(key)),
+  ),
   GIT_CONFIG_GLOBAL: devNull,
   GIT_CONFIG_NOSYSTEM: '1',
 })

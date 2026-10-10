@@ -52,7 +52,7 @@ The `symlink` message needs no git, and the rule reports it in a tree with no `.
 - A `.git` entry that is not a repository lies inside another repository.
 - The `.claude` directory is a link to a place out of the repository.
 
-The rule makes no report for a `.claude/settings.json` that is not on the disk.
+The rule does not check that `settings.json` is on the disk.
 
 Fail: `.claude/settings.json` with `.claude/settings.local.json` in the index.
 

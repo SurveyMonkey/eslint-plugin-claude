@@ -41,7 +41,7 @@ It reports one message, at the start of the `CLAUDE.md`:
 A tracked file gets the `tracked` message only.
 
 A pattern counts when it is in a `.gitignore` file of the repository. The file is at the root,
-or in a directory above the linted file. The rule does not count two other sources:
+or in the directory of the linted file or a directory above it. The rule does not count two other sources:
 
 - `.git/info/exclude` stays in one clone.
 - The global excludes file stays on one machine. Claude Code writes the global file for
@@ -49,9 +49,8 @@ or in a directory above the linted file. The rule does not count two other sourc
 
 A later pattern that starts with `!` can take a file back. The rule then reports `notIgnored`.
 
-Claude Code loads `CLAUDE.local.md` from the project directory and from each directory above the
-directory where you start Claude Code.[^import] It does not load a `CLAUDE.local.md` from `.claude/`. So the rule
-makes no report for `.claude/CLAUDE.md`.
+The docs name the project root as the place of `CLAUDE.local.md`.[^import][^notshown] So the rule
+makes no report for `.claude/CLAUDE.md`. That choice is an inference from the docs.
 
 The rule makes no report when it cannot read git (ADR 001, Decision 14):
 
