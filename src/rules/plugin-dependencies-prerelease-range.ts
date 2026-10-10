@@ -89,7 +89,13 @@ function comparatorsOf(token: string): Comparator[] | undefined {
 /** The alternatives of a range, each a list of comparators. The result is undefined when a token
  *  is not in the form above, and for the empty range. */
 function setsOf(range: string): Comparator[][] | undefined {
-  const sets = range.split('||').map((part) => part.split(/\s+/).filter(Boolean))
+  // `node-semver` accepts a space between an operator and its version, such as `>= 2.0.0`.
+  const sets = range.split('||').map((part) =>
+    part
+      .replace(/([<>=~^]+)\s+/g, '$1')
+      .split(/\s+/)
+      .filter(Boolean),
+  )
   const parsed = sets.map((tokens) => tokens.map(comparatorsOf))
   return sets.some((tokens) => tokens.length === 0) || parsed.some((set) => set.includes(undefined))
     ? undefined
@@ -112,9 +118,9 @@ function prereleaseOf(text: string): { version: Triple; zero: boolean } | undefi
 
 const sameTriple = (a: Triple, b: Triple) => a.every((n, i) => n === b[i])
 
-/** True when `comparator` holds for the target. The target has the numbers `target.version`. It is
- *  above that pre-release `-0` only when its own pre-release is not exactly `0`. A comparator with
- *  the numbers of the target must have the suffix. */
+/** True when `comparator` holds for the target. `needsSuffix` reads each comparator that has the
+ *  numbers of the target as if it had the suffix `-0`. The target is above that `-0` only when its
+ *  own pre-release is not exactly `0`. */
 function holds(comparator: Comparator, target: { version: Triple; zero: boolean }): boolean {
   const { version, op } = comparator
   let order = 0
@@ -192,9 +198,18 @@ const rule: JSONRuleDefinition<{ MessageIds: 'prerelease' }> = {
           }
           let text = typeof entry.version === 'string' ? entry.version : undefined
           const source = entry.source
-          // A path that is `.` or a bare name under `pluginRoot` has a manifest that this rule does
-          // not read. The entry `version` would then be the wrong target, so the rule is silent.
-          if (typeof source === 'string' && !source.startsWith('./')) {
+          // A bare name resolves under `pluginRoot`, and this rule does not read that manifest. The
+          // entry `version` would be the wrong target, so the rule is silent. A `.` is the
+          // marketplace root (src/marketplace-source.ts, `relativePath`).
+          if (typeof source === 'string' && source !== '.' && !source.startsWith('./')) {
+            continue
+          }
+          // Claude Code ignores the entry `version` of a `command` source (loading reference).
+          if (
+            typeof source === 'object' &&
+            source !== null &&
+            (source as { source?: unknown }).source === 'command'
+          ) {
             continue
           }
           if (typeof source === 'string') {

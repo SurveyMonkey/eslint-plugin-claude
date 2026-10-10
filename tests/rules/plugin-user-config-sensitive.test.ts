@@ -2,7 +2,8 @@
 // "Ask the user for configuration values"). The docs name a token and a password only. The rule
 // matches whole words of the key and of the `title`, so `tokenizer` stays silent. It reads the
 // top-level `userConfig` and the `userConfig` of each channel. It skips an option that sets
-// `sensitive` at all. The files glob is in tests/configs.test.ts.
+// `sensitive` at all, an option with a `type` string other than `string`, and an option with
+// `options`. The files glob is in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
@@ -71,12 +72,16 @@ describe(`${RULE} (silent)`, () => {
     ['type number', option({ type: 'number' })],
     ['type boolean', option({ type: 'boolean' })],
     ['type directory', option({ type: 'directory' })],
+    ['type file', option({ type: 'file' })],
+    ['a choice list', option({ options: ['bearer', 'basic'] })],
   ])('stays silent for an option with %s', (_title, value) => {
     expect(run({ api_token: value })).toEqual([])
   })
 
   check.each([
     ['tokenizer', { tokenizer: option() }],
+    ['a word that ends in token', { csrftoken: option() }],
+    ['a count of tokens', { max_tokens: option({ type: 'number' }) }],
     ['secretary', { secretary: option() }],
     ['passwordless', { passwordless: option() }],
     ['a word in a title', { name: option({ title: 'Tokenizer' }) }],

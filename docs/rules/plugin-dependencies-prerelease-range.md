@@ -33,17 +33,20 @@ and the target `2.0.0-beta.1` get none, and neither do `<2.0.0` and the same tar
 
 The target version is a heuristic, so the rule is `off` in `recommended`. Claude Code resolves a
 dependency with a git source by git tag, and checks the range against the version of the tag.[^tags]
-Tags are not files in the repository. A dependency with a relative path is checked at load against
-the installed copy, and that copy is in the files. So the rule reads the version that the files
-give, in the order of the loading page: the `version` in the `plugin.json` of the dependency, then
-the `version` in its marketplace entry.[^version] The manifest is read when the entry has a relative source that starts with `./`. A source that is `.` or
-a bare name under `pluginRoot` gets no report, because the rule does not read that manifest.
+Tags are not files in the repository. A relative-path dependency also resolves by tag when the
+marketplace repository has tags. The files give the version only when no tag fits. So the rule
+reads the version that the files give, in the order of the loading page: the `version` in the
+`plugin.json` of the dependency, then the `version` in its marketplace entry.[^version] The
+manifest is read when the entry has a relative source, which is `.` or starts with `./`. A bare name
+under `pluginRoot` gets no report, because the rule does not read that manifest. A `command` source
+gets no report, because Claude Code ignores the entry `version` of that source.
 
 The rule reads the dependencies in the same marketplace only. It reads the `marketplace.json` that
 encloses the plugin, and finds the entry by name, as `plugin-dependencies-resolve` does.
 
 The rule reads a range in this form: one to three numbers, with the operator `^`, `~`, `>=`, `>`,
-`<=`, `<` or `=`, or with no operator. Tokens are split by spaces, and alternatives by `||`. The
+`<=`, `<` or `=`, or with no operator. Tokens are split by spaces, and alternatives by `||`. A
+space between an operator and its version, as in `>= 2.0.0`, is allowed. The
 semantic version pattern of `plugin-manifest-version-semver` checks the target. The rule reads a
 partial version, such as `^2.0`, as `node-semver` does.
 
@@ -53,7 +56,8 @@ The rule makes no report in these cases:
   any other form that the rule does not read. A range that already has a pre-release suffix is one
   of them.
 - The target is not a semantic version, has no pre-release part, or is absent. An entry that
-  has a source other than a relative path, and sets no `version`, has no target.
+  has an object source and sets no `version`, has no target.
+- The source of the entry is a bare name under `pluginRoot`, or a `command` source.
 - The dependency is a string, has no `version` string, is in another marketplace, or has no entry or
   two entries in the marketplace. The plugin has no entry in the marketplace.
 - The source folder of the entry is a link with no target, or its real path is out of the
