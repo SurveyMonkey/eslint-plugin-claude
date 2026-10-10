@@ -1,4 +1,4 @@
-// Four limits of the sandbox depend on the platform or on the Claude Code version
+// Five limits of the sandbox depend on the platform or on the Claude Code version
 // (docs/rules/sandbox-platform-limits.md). No file shows the platform of a team or the oldest
 // client that reads it. So each part has an option, and a part with no option makes no report:
 // `platforms` for the three platform parts, and `minVersion` for the two version parts.
@@ -6,7 +6,8 @@
 //     `Edit` permission rules that feed those lists. They ignore `allowUnixSockets`.
 //   - Before v2.1.224, a trailing `/` on a `denyRead` or `denyWrite` entry went to the sandbox.
 //   - Before v2.1.229, a bracketed IPv6 entry of a domain list or a `WebFetch` rule is not read.
-//   - `failIfUnavailable: true` stops Claude Code at startup on native Windows.
+//   - `failIfUnavailable: true` stops Claude Code at startup on native Windows. The rule does not
+//     check `sandbox.enabled` for this part: the docs say Claude Code does not start there.
 // The part for WSL1 is not checked: the value `wsl` of `platforms` means WSL2, the only WSL
 // that the sandbox supports.
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -76,12 +77,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
       writeWildcard:
         'On Linux and WSL2 the sandbox mounts concrete paths, so Claude Code skips this entry and it has no effect. Name the directory in full.',
       editWildcard:
-        'On Linux and WSL2 Claude Code adds the path of an `Edit` rule to the sandbox write lists, and skips a path with `*`, `?` or `[`. The sandbox ignores this rule. Name the directory in full.',
+        'On Linux and WSL2 Claude Code adds the path of an `Edit` rule to the sandbox write lists, and skips a path with `*`, `?` or `[`. The sandbox write lists get no path from this rule. Name the directory in full.',
       unixSockets:
-        'Claude Code ignores "allowUnixSockets" on Linux and WSL2, because the seccomp filter cannot inspect socket paths. "allowAllUnixSockets" is the only way to permit Unix sockets there.',
+        'Claude Code ignores "allowUnixSockets" on Linux and WSL2, because the seccomp filter cannot inspect socket paths. "allowAllUnixSockets" is the only way to permit Unix sockets there, and it opens every Unix socket.',
       trailingSlash:
-        'Before Claude Code v2.1.224, a trailing `/` on a "denyRead" or "denyWrite" entry went to the sandbox, and Claude could still read or write paths under the entry. Your minVersion is {{minVersion}}. Remove the `/`.',
-      ipv6: 'A bracketed IPv6 entry needs Claude Code v2.1.229 or later, and your minVersion is {{minVersion}}. Raise the minimum version, or remove the entry.',
+        'Before Claude Code v2.1.224, a trailing `/` on a "denyRead" or "denyWrite" entry went to the sandbox, and Claude could still read or write paths under the entry. Your minVersion is {{minVersion}}. Raise the minimum version to 2.1.224, or write the entry with no final `/` where a name stays.',
+      ipv6: 'A bracketed IPv6 entry needs Claude Code v2.1.229 or later, and your minVersion is {{minVersion}}. Raise the minimum version to 2.1.229.',
       failIfUnavailable:
         'The sandbox does not run on native Windows, so Claude Code exits at startup with "failIfUnavailable" on. Deliver this setting to macOS, Linux and WSL2 machines only.',
     },

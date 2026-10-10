@@ -332,3 +332,35 @@ describe(`${name}: the parts together`, () => {
     expect(() => lint('{}', [{ minVersion: '2.1' }])).toThrow('pattern')
   })
 })
+
+describe(`${name}: review round 1 pins`, () => {
+  it('reports a bare prefix with a trailing slash, and the message gives a version to raise to', () => {
+    for (const entry of ['~/', '/', './']) {
+      const [message] = lint(filesystem({ denyRead: [entry] }), OLD)
+      expect(message?.messageId, entry).toBe('trailingSlash')
+      expect(message?.message).toContain('2.1.224')
+    }
+  })
+
+  it('names the version in the IPv6 message', () => {
+    expect(lint(network({ allowedDomains: ['[::1]'] }), OLD)[0]?.message).toContain('2.1.200')
+    expect(lint(network({ allowedDomains: ['[::1]'] }), OLD)[0]?.message).toContain('2.1.229')
+  })
+
+  it('treats a quoted value other than "true" as off in a managed file', () => {
+    const fail = (value: unknown) => JSON.stringify({ sandbox: { failIfUnavailable: value } })
+    expect(ids(fail('false'), WINDOWS, MANAGED)).toEqual([])
+    expect(ids(fail('yes'), WINDOWS, MANAGED)).toEqual([])
+  })
+
+  it('rejects an option that the schema does not allow', () => {
+    for (const option of [
+      { platforms: ['linux', 'linux'] },
+      { extra: 1 },
+      { minVersion: '2.1.200x' },
+      { minVersion: 'v2.1.200' },
+    ]) {
+      expect(() => lint('{}', [option]), JSON.stringify(option)).toThrow(/Key "rules"/)
+    }
+  })
+})

@@ -50,7 +50,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       allUnixSockets:
         '"allowAllUnixSockets" lets sandboxed commands connect to every Unix socket. On WSL2 it also reopens the interop socket that starts Windows binaries.',
       dockerSocket:
-        '`{{entry}}` gives sandboxed commands control of the Docker daemon, and so of the host. Do not allow a Docker socket.',
+        '`{{entry}}` gives sandboxed commands control of the Docker daemon on macOS, and so of the host. Linux and WSL2 ignore the list. Do not allow a Docker socket.',
       machLookupAll:
         '"*" in "allowMachLookup" allows every XPC and Mach service. List the services that a tool needs, or a prefix such as `com.apple.coresimulator.*`.',
       appleEvents:
