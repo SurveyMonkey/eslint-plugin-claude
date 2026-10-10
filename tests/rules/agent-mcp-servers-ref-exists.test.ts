@@ -8,11 +8,11 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
 import { agent, repo } from '../agent-settings.test-support.ts'
-import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const unreadable = chmodCannotBlock ? it.skip : it
 const AGENT = '.claude/agents/a.md'
+const PLUGIN = { 'plugins/p/.claude-plugin/plugin.json': '{"name":"p"}' }
 const servers = (...names: string[]) =>
   JSON.stringify({ mcpServers: Object.fromEntries(names.map((n) => [n, { command: 'x' }])) })
 const list = (...names: string[]) => `mcpServers:\n${names.map((n) => `  - ${n}\n`).join('')}`
@@ -64,9 +64,8 @@ describe('agent-mcp-servers-ref-exists', () => {
       expect(run({}, inline)).toEqual([])
     })
     it('for a plugin agent', () => {
-      expect(
-        lintAgent('agent-mcp-servers-ref-exists', agent(list('github')), pluginAgent()),
-      ).toEqual([])
+      // The plugin is in a repository, so a rule that read `.mcp.json` there would report.
+      expect(run(PLUGIN, list('github'), 'plugins/p/agents/a.md')).toEqual([])
     })
     it('for a value that is no list, and for no field', () => {
       expect(run({}, 'mcpServers: github\n')).toEqual([])
