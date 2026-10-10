@@ -505,6 +505,15 @@ const TREE: Record<string, string> = {
   'packages/ic/ok/CLAUDE.md': 'Use `@none.md`, and import @../present.md.\n',
   'packages/ica/AGENTS.md': 'Use `@present.md`.\n',
   'packages/ica/present.md': '# Present\n',
+  // `claude-md-html-comment-content`: a block comment with an instruction in each file that the
+  // rule reads. The same comment where no rule reads it, and inline, in a fence and as a note.
+  'packages/hc/.git': 'gitdir: ../.git\n',
+  'packages/hc/CLAUDE.md': '<!-- MUST run tests -->\n',
+  'packages/hc/.claude/CLAUDE.md': '<!-- MUST run tests -->\n',
+  'packages/hc/CLAUDE.local.md': '<!-- MUST run tests -->\n',
+  'packages/hc/docs/notes.md': '<!-- MUST run tests -->\n',
+  'packages/hc/ok/CLAUDE.md':
+    'Text <!-- MUST run tests --> more\n\n```\n<!-- MUST run tests -->\n```\n\n<!-- Maintainer: Jo -->\n',
   // `claude-md-max-lines`: a file of 201 lines in each place that it lints, and an import of a long
   // file. The same text where no rule reads it: a Markdown file that is not an instruction file.
   'packages/lm/CLAUDE.md': LONG,
@@ -698,6 +707,7 @@ const MEMORY_WARN_RULES = [
 // turns each on at `warn`.
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-import-in-code-span': [
     'markdown/gfm',
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
@@ -978,6 +988,10 @@ const EXPECTED = [
 // The reports of the `off` rules of #13. They appear in `strict` only, at `warn`.
 const STRICT_ONLY = [
   // `claude-md-import-in-code-span` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  // `claude-md-html-comment-content` reads CLAUDE.md and CLAUDE.local.md, and no other file.
+  'packages/hc/CLAUDE.md: claude/claude-md-html-comment-content@1',
+  'packages/hc/.claude/CLAUDE.md: claude/claude-md-html-comment-content@1',
+  'packages/hc/CLAUDE.local.md: claude/claude-md-html-comment-content@1',
   'packages/ic/CLAUDE.md: claude/claude-md-import-in-code-span@1',
   'packages/ic/.claude/CLAUDE.md: claude/claude-md-import-in-code-span@1',
   'packages/ic/CLAUDE.local.md: claude/claude-md-import-in-code-span@1',

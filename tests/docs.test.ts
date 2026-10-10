@@ -36,6 +36,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'claude-md-agents-md-variant',
     'claude-md-combined-size',
     'claude-md-excludes-pattern',
+    'claude-md-html-comment-content',
     'claude-md-import-exists',
     'claude-md-import-external',
     'claude-md-import-in-code-span',
