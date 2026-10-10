@@ -6,7 +6,7 @@ import { lintAgent } from './agent-rules.test-support.ts'
 import { repo } from './agent-settings.test-support.ts'
 
 /** The plugin `p` has the default `agents/` folder. The plugin `q` names `custom/a.md`. */
-export const PLUGINS = {
+const PLUGINS = {
   'plugins/p/.claude-plugin/plugin.json': '{"name":"p"}',
   'plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q', agents: ['./custom/a.md'] }),
 }
