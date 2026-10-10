@@ -61,6 +61,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
     'plugin-bin-claude-ai',
+    'plugin-channel-server-stdio',
     'plugin-commands-dir-nonempty',
     'plugin-commands-map-fields',
     'plugin-default-dir-shadowed',

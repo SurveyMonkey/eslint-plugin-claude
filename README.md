@@ -130,6 +130,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-package-lifecycle-scripts`](docs/rules/plugin-package-lifecycle-scripts.md) | The `package.json` at a plugin root has no `preinstall`, `install` or `postinstall` script, because Claude Code installs dependencies with `--ignore-scripts` | `warn` | `warn` |
 | [`claude/plugin-package-lockfile-choice`](docs/rules/plugin-package-lockfile-choice.md) | A plugin ships one lockfile that Claude Code reads, and not `bun.lock` alone, because Claude Code reads the first match and does not fall back to npm | `warn` | `warn` |
 | [`claude/plugin-themes-layout`](docs/rules/plugin-themes-layout.md) | A theme file in `themes/` uses the custom theme format: `name` is a string, `base` is a built-in preset, and `overrides` is an object | `warn` | `warn` |
+| [`claude/plugin-channel-server-stdio`](docs/rules/plugin-channel-server-stdio.md) | A channel binds to a server with a `command`, which Claude Code starts as a subprocess and talks to over stdio, and not to a remote server with a `url` | `off` | `warn` |
 | [`claude/plugin-user-config-sensitive`](docs/rules/plugin-user-config-sensitive.md) | A `userConfig` option whose key or `title` has the word `token` or `password` sets `sensitive`, so that Claude Code masks the input and keeps the value in secure storage | `off` | `warn` |
 
 ### Marketplace manifest

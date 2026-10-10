@@ -9,7 +9,7 @@ import { link, noLinks } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-channel-server-stdio'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const REMOTE = { url: 'https://chat.example.com/mcp' }

@@ -278,6 +278,17 @@ const TREE: Record<string, string> = {
       tokenizer: { type: 'string', title: 'T', description: 'D' },
     },
   }),
+  // A channel bound to a remote server reports in `strict` only. The decoy binds to a stdio server.
+  'plugins/chs/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'chs',
+    mcpServers: { tg: { url: 'https://chat.example.com/mcp' } },
+    channels: [{ server: 'tg' }],
+  }),
+  'plugins/chs2/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'chs2',
+    mcpServers: { tg: { command: 'node' } },
+    channels: [{ server: 'tg' }],
+  }),
   // A command entry with a field that the manifest reference does not list.
   'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
     name: 'cmf',
@@ -834,6 +845,7 @@ const PLUGIN_RULES: {
 // `strict` turns each on at `warn`.
 const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'plugin-user-config-sensitive', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-channel-server-stdio', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1091,6 +1103,7 @@ const EXPECTED = [
 // The reports of the `off` plugin rules. They appear in `strict` only, at `warn`.
 const STRICT_ONLY = [
   'plugins/ucs/.claude-plugin/plugin.json: claude/plugin-user-config-sensitive@1',
+  'plugins/chs/.claude-plugin/plugin.json: claude/plugin-channel-server-stdio@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
