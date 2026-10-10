@@ -280,22 +280,20 @@ export function followImports(file: string, text: string, bound: string, limit: 
       seen.add(found.real)
       const loadedText = readImported(found.real)
       const top = step.hops === 0 ? index : step.top
-      if (loadedText === UNREADABLE && step.hops + 1 > limit) {
-        // The file does not load at this depth, so what it holds does not matter.
-        if (!chain.tooDeep.has(top)) {
-          chain.tooDeep.set(top, found.real)
-        }
-        continue
-      }
-      if (typeof loadedText !== 'string') {
-        // A directory loads nothing. A file that fails to read can hold any import.
-        chain.unreadable ||= loadedText === UNREADABLE
+      if (loadedText === null) {
+        // A directory loads nothing.
         continue
       }
       if (step.hops + 1 > limit) {
+        // A file past the limit does not load, so what it holds does not matter.
         if (!chain.tooDeep.has(top)) {
           chain.tooDeep.set(top, found.real)
         }
+        continue
+      }
+      if (loadedText === UNREADABLE) {
+        // A file that fails to read can hold any import.
+        chain.unreadable = true
         continue
       }
       chain.loaded.set(found.real, step.hops + 1)
