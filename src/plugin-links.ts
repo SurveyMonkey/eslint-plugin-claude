@@ -75,14 +75,18 @@ export function marketplaceRootOf(plugin: Plugin): string | undefined {
 }
 
 /** A link under a plugin that leaves it. `file` is the path of the link from
- *  the plugin root, with slashes. `real` is the real path of the target.
- *  `reach` is `marketplace` for a target in the marketplace, and `outside` for
- *  a target out of it. */
+ *  the plugin root. `target` is the real path of the target from the
+ *  repository root, and `.` for the repository root. Both use slashes. `reach`
+ *  is `marketplace` for a target in the marketplace, and `outside` for a target
+ *  out of it. */
 export interface Link {
   readonly file: string
-  readonly real: string
   readonly reach: 'marketplace' | 'outside'
+  readonly target: string
 }
+
+/** The path `to` from `from`, with slashes. */
+const shown = (from: string, to: string) => path.relative(from, to).split(path.sep).join('/')
 
 /** The links under `plugin` that lead out of it, in name order. The walk
  *  skips `.git` and `node_modules`, and does not enter a link to a folder.
@@ -111,8 +115,8 @@ function collect(plugin: Plugin, scopes: Scopes, dir: string, links: Link[]): vo
     if (entry.isSymbolicLink()) {
       const place = placeOf(plugin.realRoot, plugin.realRoot, plugin.bound, scopes, full)
       if (place.reach === 'marketplace' || place.reach === 'outside') {
-        const file = path.relative(plugin.realRoot, full).split(path.sep).join('/')
-        links.push({ file, real: place.real, reach: place.reach })
+        const target = shown(plugin.bound, place.real) || '.'
+        links.push({ file: shown(plugin.realRoot, full), reach: place.reach, target })
       }
     } else if (entry.isDirectory()) {
       collect(plugin, scopes, full, links)
