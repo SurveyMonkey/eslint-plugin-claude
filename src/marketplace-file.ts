@@ -172,7 +172,7 @@ export function declaredSource(settingsFile: string, text: string, market: strin
   return sourceOf(there?.[market])
 }
 
-/** The `source.source` value that the project settings files below `root`
+/** The `source.source` value that the project settings files in `root`
  *  declare for the marketplace `market`, or undefined. `root` is a directory
  *  that may hold `.claude/`. The files are the two of that `.claude/`, with
  *  the precedence of `declaredSource`. The result is undefined when no file

@@ -50,13 +50,13 @@ describe(RULE, () => {
   })
 
   it('names the header, and does not echo the value', () => {
-    for (const messages of [
-      inEntry({ Authorization: `Bearer ${SECRET}` }),
-      inSettings({ headers: { 'X-Api-Key': SECRET } }),
-    ]) {
+    for (const [messages, header] of [
+      [inEntry({ Authorization: `Bearer ${SECRET}` }), 'Authorization'],
+      [inSettings({ headers: { 'X-Api-Key': SECRET } }), 'X-Api-Key'],
+    ] as const) {
       expect(messages).toHaveLength(1)
       expect(messages[0]?.message).not.toContain(SECRET)
-      expect(messages[0]?.message).toMatch(/header "(?:Authorization|X-Api-Key)"/)
+      expect(messages[0]?.message).toContain(`The header "${header}" holds`)
     }
   })
 
@@ -76,6 +76,9 @@ describe(RULE, () => {
     ['X-Custom', 'Token abc123'],
     ['X-Custom', 'Digest abc123'],
     ['Authorization', `Bearer abc\${NOT_CLOSED`],
+    ['X-Custom', 'bearer abc123'],
+    ['X-Custom', `Bearer abc123\${SUFFIX}`],
+    ['X-Custom', `Basic \${PREFIX}abc123`],
   ])('reports the header %s with the value %s', (header, value) => {
     expect(inEntry({ [header]: value }).map((m) => m.messageId)).toEqual(['literal'])
     expect(inSettings({ headers: { [header]: value } }).map((m) => m.messageId)).toEqual([
@@ -91,6 +94,47 @@ describe(RULE, () => {
       Authorization2: `\${TOKEN}`,
     })
     expect(messages.map((m) => m.messageId)).toEqual(['literal', 'literal'])
+    expect(messages.map((m) => /header "([^"]+)"/.exec(m.message)?.[1])).toEqual([
+      'Authorization',
+      'X-Api-Key',
+    ])
+  })
+
+  it('reads the headers of each url source in settings, and no other source', () => {
+    const lit = { headers: { Authorization: 'Bearer abc' } }
+    const text = (...sources: Record<string, unknown>[]) =>
+      JSON.stringify({
+        extraKnownMarketplaces: Object.fromEntries(
+          sources.map((source, i) => [`m${i}`, { source }]),
+        ),
+      })
+    const run = (code: string) => lintSettings(RULE, dir, '.claude/settings.json', code)
+    const github = { source: 'github', repo: 'a/b', ...lit }
+    const url = { source: 'url', url: 'https://x.test/m.json', ...lit }
+    expect(run(text(github, url))).toHaveLength(1)
+    expect(run(text(url, github))).toHaveLength(1)
+    expect(run(text(url, url))).toHaveLength(2)
+  })
+
+  it('reads the last of two source members in settings', () => {
+    const run = (code: string) => lintSettings(RULE, dir, '.claude/settings.json', code)
+    const lit = '"headers": {"Authorization": "Bearer abc"}'
+    const url = `{"source": "url", ${lit}}`
+    const git = `{"source": "git", ${lit}}`
+    expect(
+      run(`{"extraKnownMarketplaces": {"a": {"source": ${git}, "source": ${url}}}}`),
+    ).toHaveLength(1)
+    expect(run(`{"extraKnownMarketplaces": {"a": {"source": ${url}, "source": ${git}}}}`)).toEqual(
+      [],
+    )
+    const types = `{"source": "git", "source": "url", ${lit}}`
+    expect(run(`{"extraKnownMarketplaces": {"a": {"source": ${types}}}}`)).toHaveLength(1)
+    const heads = `{"source": "url", "headers": {"Authorization": "Bearer abc"}, "headers": {"X-Ok": "1"}}`
+    expect(run(`{"extraKnownMarketplaces": {"a": {"source": ${heads}}}}`)).toEqual([])
+    const outer = `{"extraKnownMarketplaces": {}, "extraKnownMarketplaces": {"a": {"source": ${url}}}}`
+    expect(run(outer)).toHaveLength(1)
+    const outerRev = `{"extraKnownMarketplaces": {"a": {"source": ${url}}}, "extraKnownMarketplaces": {}}`
+    expect(run(outerRev)).toEqual([])
   })
 
   it('reports each entry that has a literal header', () => {
@@ -134,6 +178,11 @@ describe(`${RULE} (silent)`, () => {
     [`a \${VAR} reference`, `Bearer \${TOKEN}`],
     [`a bare \${VAR} reference`, `\${TOKEN}`],
     ['a reference inside a value', `prefix-\${TOKEN}-suffix`],
+    ['a lowercase scheme word with no token', 'bearer'],
+    ['the scheme word Basic with no token', 'Basic'],
+    ['the scheme word Token with no token', 'Token'],
+    ['the scheme word Digest with no token', 'Digest'],
+    ['a scheme word and two references', `Bearer \${A}\${B}`],
     ['an empty value', ''],
     ['a blank value', '   '],
     ['a scheme word with no token', 'Bearer'],

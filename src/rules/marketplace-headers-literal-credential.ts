@@ -1,8 +1,7 @@
 // A file in the repository must not hold a literal credential in the HTTP
 // `headers` of a download (docs/rules/marketplace-headers-literal-credential.md).
-// The rule reads the `headers` of an entry in `marketplace.json`, and the
-// `headers` of a `url` source in `extraKnownMarketplaces` of a project
-// settings file. A message names the header, and never gives its value.
+// The rule reads the `headers` of an entry in `marketplace.json`. It also
+// reads the `headers` of a `url` source in a project settings file. A message names the header, and never gives its value.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
@@ -19,13 +18,18 @@ const SCHEME_TOKEN = /^(?:Bearer|Basic|Token|Digest)\s+\S/i
 // An empty value, or a scheme word with no token.
 const NO_TOKEN = /^(?:Bearer|Basic|Token|Digest)?\s*$/i
 // A `${NAME}` reference, as the docs write `Bearer ${TOKEN}`.
-const REFERENCE = /\$\{[^}]*\}/
+const REFERENCE = /\$\{[^}]*\}/g
 
 /** True when the header `header` has the literal credential `value`. A value
- *  with a `${NAME}` reference, and a value with no token, are not literal. */
+ *  with a `${NAME}` reference is not literal, unless a scheme and a token
+ *  stay when the references go. A value with no token is not literal. */
 function literal(header: string, value: string): boolean {
-  if (REFERENCE.test(value) || NO_TOKEN.test(value)) {
+  if (NO_TOKEN.test(value)) {
     return false
+  }
+  const rest = value.replace(REFERENCE, '')
+  if (rest !== value) {
+    return SCHEME_TOKEN.test(rest)
   }
   return SCHEME_TOKEN.test(value) || CREDENTIAL_NAME.test(header)
 }
@@ -39,7 +43,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'literal' }> = {
     },
     schema: [],
     messages: {
-      literal: `The header "{{header}}" holds a literal credential, and everyone who reads this file can use it. Use a "headersHelper" command, or a \${VAR} reference as the docs show.`,
+      literal: `The header "{{header}}" holds a literal credential, and anyone who reads this file can use it. Use a "headersHelper" command instead.`,
     },
   },
   create(context) {

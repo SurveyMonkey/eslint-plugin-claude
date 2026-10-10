@@ -135,6 +135,7 @@ describe(`${RULE} (silent)`, () => {
     ['a source with no type', { url: 'https://plugins.example.com/marketplace.json' }],
     ['a source type that is not a string', { source: 3 }],
     ['a source that is not an object', 'url'],
+    ['a source that is null', null],
   ])('stays silent when the marketplace has %s', (_title, source) => {
     expect(lint(tree({ '.claude/settings.json': registers(source) }), entry())).toEqual([])
   })
@@ -200,9 +201,23 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(path.join(repo, 'site'), entry())).toEqual([])
   })
 
-  it.skipIf(noLinks)('stays silent for a settings.json that is a dangling link', () => {
-    const dir = tree({})
-    link(dir, '.claude/settings.json', 'gone.json')
+  it.skipIf(noLinks)(
+    'lets settings.local.json decide when settings.json is a dangling link',
+    () => {
+      const dir = tree({ '.claude/settings.local.json': registers(URL_SOURCE) })
+      link(dir, '.claude/settings.json', 'gone.json')
+      expect(lint(dir, entry())).toHaveLength(1)
+      const github = tree({
+        '.claude/settings.local.json': registers({ source: 'github', repo: 'a/b' }),
+      })
+      link(github, '.claude/settings.json', 'gone.json')
+      expect(lint(github, entry())).toEqual([])
+    },
+  )
+
+  it.skipIf(noLinks)('bounds a settings.json link at .claude when there is no .git', () => {
+    const dir = tree({ 'shared/s.json': registers(URL_SOURCE) }, false)
+    link(dir, '.claude/settings.json', '../shared/s.json')
     expect(lint(dir, entry())).toEqual([])
   })
 

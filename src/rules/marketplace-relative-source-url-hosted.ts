@@ -23,7 +23,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'relativeInUrl' }> = {
     schema: [],
     messages: {
       relativeInUrl:
-        'The "source" "{{path}}" is a relative path, and the settings register this marketplace as a "url" source. Claude Code downloads only marketplace.json, so the install fails. Use a "github" or "git-subdir" source.',
+        'The "source" "{{path}}" is a path, and the settings register this marketplace as a "url" source. Claude Code downloads only marketplace.json, so the install fails. Use a source that needs no marketplace files, such as "github" or "archive".',
     },
   },
   create(context) {
