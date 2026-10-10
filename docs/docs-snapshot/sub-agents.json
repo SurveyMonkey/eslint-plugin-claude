@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/sub-agents",
-  "hash": "8f2fd54755e35862095b49f7008b0ef5f74285be368286b068d47bfc1c039784",
+  "hash": "e628185d7f28ae50e475f166ba218b0f532eaf2723fb11ea77cf9cd1c0f0229b",
   "blocks": [
     {
       "id": "create-custom-subagents",
@@ -297,6 +297,12 @@
       "id": "restrict-which-subagents-can-be-spawned",
       "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d",
       "text": "#### Restrict which subagents can be spawned\n\nWhen an agent runs as the main thread with `claude --agent`, it can spawn subagents using the Agent tool. To restrict which subagent types it can spawn, use `Agent(agent_type)` syntax in the `tools` field.\n\n<Note>In version 2.1.63, the Task tool was renamed to Agent. Existing `Task(...)` references in settings and agent definitions still work as aliases.</Note>\n\n```yaml theme={null}\n---\nname: coordinator\ndescription: Coordinates work across specialized agents\ntools: Agent(worker, researcher), Read, Bash\n---\n```\n\nThis is an allowlist: only the `worker` and `researcher` subagents can be spawned. If the agent tries to spawn any other type, the request fails and the agent sees only the allowed types in its prompt. To block specific agents while allowing all others, use [`permissions.deny`](#disable-specific-subagents) instead.\n\nTo allow spawning any subagent without restrictions, use `Agent` without parentheses:\n\n```yaml theme={null}\ntools: Agent, Read, Bash\n```\n\nIf you omit `Agent` from the `tools` list entirely, the agent can't spawn any subagents with the Agent tool.\n\nThe `Agent(agent_type)` allowlist syntax applies only to an agent running as the main thread with `claude --agent`. In a subagent definition, listing `Agent` in `tools` lets that subagent spawn subagents of its own while the [depth limit](#let-subagents-spawn-their-own-subagents) allows it, but any type list inside the parentheses is ignored."
+    },
+    {
+      "heading": "Project-level hooks for subagent events",
+      "id": "project-level-hooks-for-subagent-events",
+      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f",
+      "text": "#### Project-level hooks for subagent events\n\nConfigure hooks in `settings.json` that respond to subagent lifecycle events in the main session.\n\n| Event | Matcher input | When it fires |\n| :- | :- | :- |\n| `SubagentStart` | Agent type name | When a subagent begins execution |\n| `SubagentStop` | Agent type name | When a subagent completes |\n\nBoth events support matchers to target specific agent types by name. The matcher value is the agent's frontmatter `name` for project-level and user-level subagents, or the plugin-scoped identifier such as `my-plugin:db-agent` for [plugin subagents](/docs/en/plugins/components#agents). A scoped name contains a colon, so it is evaluated as an [unanchored regular expression](/docs/en/hooks#matcher-patterns); anchor it with `^` and `$`, as in `^my-plugin:db-agent$`, to match only that agent.\n\nThis example runs a setup script only when the `db-agent` subagent starts, and a cleanup script when any subagent stops:\n\n```json theme={null}\n{\n  \"hooks\": {\n    \"SubagentStart\": [\n      {\n        \"matcher\": \"db-agent\",\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"./scripts/setup-db-connection.sh\" }\n        ]\n      }\n    ],\n    \"SubagentStop\": [\n      {\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"./scripts/cleanup-db-connection.sh\" }\n        ]\n      }\n    ]\n  }\n}\n```\n\nSee [Hooks](/docs/en/hooks) for the complete hook configuration format."
     },
     {
       "heading": "Choose a model",
