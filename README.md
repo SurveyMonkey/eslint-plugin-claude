@@ -208,6 +208,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-no-literal-secrets`](docs/rules/mcp-no-literal-secrets.md) | A committed MCP config holds no literal credential in `headers`, `env`, `args` or `url` | `off` | `warn` |
 | [`claude/mcp-project-toggle-keys`](docs/rules/mcp-project-toggle-keys.md) | A settings file does not set `disabledMcpServers` or `enabledMcpServers`, which Claude Code stores in `~/.claude.json` | `off` | `warn` |
 | [`claude/mcp-tool-server-unknown`](docs/rules/mcp-tool-server-unknown.md) | An `mcp__<server>` reference names a server that the `.mcp.json` of the project or the plugin declares | `off` | `warn` |
+| [`claude/lsp-json-location`](docs/rules/lsp-json-location.md) | A `.lsp.json` is at the root of a plugin, not at a repository root with no plugin or under `.claude/` | `off` | `warn` |
+| [`claude/mcp-env-var-default`](docs/rules/mcp-env-var-default.md) | A `${VAR}` reference in a server entry has a `:-default`, in case the variable is unset | `off` | `warn` |
+| [`claude/mcp-plugin-root-paths`](docs/rules/mcp-plugin-root-paths.md) | A plugin MCP server writes its files as `${CLAUDE_PLUGIN_ROOT}` paths, not as `./` or `../` paths | `off` | `warn` |
+| [`claude/mcp-stdio-command-has-args`](docs/rules/mcp-stdio-command-has-args.md) | A stdio server puts its arguments in `args`, not in a `command` that holds a space | `off` | `warn` |
+| [`claude/mcp-unknown-keys`](docs/rules/mcp-unknown-keys.md) | A server entry and its `oauth` object use the documented keys, and `callbackPort` is a port number | `off` | `warn` |
 
 ## Contributing
 

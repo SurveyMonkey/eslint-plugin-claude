@@ -20,6 +20,7 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
 import lspExtensionConflict from './rules/lsp-extension-conflict.ts'
+import lspJsonLocation from './rules/lsp-json-location.ts'
 import lspJsonSchema from './rules/lsp-json-schema.ts'
 import lspTransportSocket from './rules/lsp-transport-socket.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
@@ -52,6 +53,7 @@ import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
 import mcpDuplicateServerName from './rules/mcp-duplicate-server-name.ts'
 import mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
 import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
+import mcpEnvVarDefault from './rules/mcp-env-var-default.ts'
 import mcpEnvVarNumbers from './rules/mcp-env-var-numbers.ts'
 import mcpEnvVarSyntax from './rules/mcp-env-var-syntax.ts'
 import mcpHeadershelperCommitted from './rules/mcp-headershelper-committed.ts'
@@ -67,6 +69,7 @@ import mcpNoLiteralSecrets from './rules/mcp-no-literal-secrets.ts'
 import mcpNoSseTransport from './rules/mcp-no-sse-transport.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
+import mcpPluginRootPaths from './rules/mcp-plugin-root-paths.ts'
 import mcpPluginStdioReach from './rules/mcp-plugin-stdio-reach.ts'
 import mcpPluginToolNameScoped from './rules/mcp-plugin-tool-name-scoped.ts'
 import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
@@ -80,10 +83,12 @@ import mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skil
 import mcpServerNameFormat from './rules/mcp-server-name-format.ts'
 import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
 import mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
+import mcpStdioCommandHasArgs from './rules/mcp-stdio-command-has-args.ts'
 import mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
 import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
 import mcpToolNameFormat from './rules/mcp-tool-name-format.ts'
 import mcpToolServerUnknown from './rules/mcp-tool-server-unknown.ts'
+import mcpUnknownKeys from './rules/mcp-unknown-keys.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -275,6 +280,11 @@ const modules = [
   mcpNoLiteralSecrets,
   mcpProjectToggleKeys,
   mcpToolServerUnknown,
+  lspJsonLocation,
+  mcpEnvVarDefault,
+  mcpPluginRootPaths,
+  mcpStdioCommandHasArgs,
+  mcpUnknownKeys,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -433,6 +443,11 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-no-literal-secrets': 'off',
   'mcp-project-toggle-keys': 'off',
   'mcp-tool-server-unknown': 'off',
+  'lsp-json-location': 'off',
+  'mcp-env-var-default': 'off',
+  'mcp-plugin-root-paths': 'off',
+  'mcp-stdio-command-has-args': 'off',
+  'mcp-unknown-keys': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

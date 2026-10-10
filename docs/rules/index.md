@@ -6,6 +6,11 @@ okf_version: "0.2"
 
 | Doc | Description |
 |-----|-------------|
+| [lsp-json-location.md](lsp-json-location.md) | The ESLint rule claude/lsp-json-location, which reports a .lsp.json file outside the root of a plugin, such as at a repository root with no plugin or under .claude, because Claude Code takes LSP servers from plugins only. |
+| [mcp-env-var-default.md](mcp-env-var-default.md) | The ESLint rule claude/mcp-env-var-default, which reports a ${VAR} reference with no :-default in an MCP server entry, because an unset variable leaves the text ${VAR} as written, as a heuristic. |
+| [mcp-plugin-root-paths.md](mcp-plugin-root-paths.md) | The ESLint rule claude/mcp-plugin-root-paths, which reports a path that starts with ./ or ../ in the command, args or env of a plugin MCP server, because the plugin docs write the files of a plugin server with the plugin root variable, as a heuristic. |
+| [mcp-stdio-command-has-args.md](mcp-stdio-command-has-args.md) | The ESLint rule claude/mcp-stdio-command-has-args, which reports a stdio MCP server whose command holds a space and that has no args, because the docs show the program in command and its arguments in args, as a heuristic. |
+| [mcp-unknown-keys.md](mcp-unknown-keys.md) | The ESLint rule claude/mcp-unknown-keys, which reports a key in an MCP server entry or in its oauth object that the MCP docs do not list, and a callbackPort that is not a port number, as a heuristic. |
 | [skill-description-max-length.md](skill-description-max-length.md) | The ESLint rule claude/skill-description-max-length, which limits a SKILL.md description plus when_to_use to 1,536 characters, the cut in the Claude Code skill listing, with its options, examples and sources. |
 | [command-legacy-format.md](command-legacy-format.md) | The ESLint rule claude/command-legacy-format, which reports each Markdown file in a .claude/commands/ directory or in the commands/ directory of a plugin as the legacy form of a skill. |
 | [hooks-event-name-known.md](hooks-event-name-known.md) | The ESLint rule claude/hooks-event-name-known, which reports a hook event name that Claude Code does not know in hooks.json, settings or plugin.json, and suggests the correct name for a near miss. |

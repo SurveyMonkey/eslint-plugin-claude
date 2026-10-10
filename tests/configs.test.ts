@@ -727,6 +727,32 @@ const TREE: Record<string, string> = {
   'packages/sk/other.json': JSON.stringify({
     mcpServers: { a: { command: '$HOME/bin/x', env: { API_KEY: 'abc123' } } },
   }),
+  // `mcp-env-var-default`, `mcp-unknown-keys` and `mcp-stdio-command-has-args`: one entry with a
+  // bare reference, an unknown key and a command with a space. A good entry and the same content
+  // in another file are silent.
+  'packages/ek/.mcp.json': JSON.stringify({
+    mcpServers: { a: { command: 'npx -y s', cwd: '/t', env: { K: `\${API_KEY}` } } },
+  }),
+  'packages/ek/ok/.mcp.json': JSON.stringify({
+    mcpServers: { a: { command: 'npx', args: ['-y', 's'], env: { K: `\${API_KEY:-x}` } } },
+  }),
+  'packages/ek/other.json': JSON.stringify({
+    mcpServers: { a: { command: 'npx -y s', cwd: '/t', env: { K: `\${API_KEY}` } } },
+  }),
+  // `mcp-plugin-root-paths`: a relative path in a plugin file. The root variable is silent. A
+  // project file is for `mcp-stdio-relative-path`.
+  'plugins/rp/.claude-plugin/plugin.json': '{"name": "rp"}',
+  'plugins/rp/.mcp.json': JSON.stringify({ mcpServers: { a: { command: './server.js' } } }),
+  'plugins/rq/.claude-plugin/plugin.json': '{"name": "rq"}',
+  'plugins/rq/.mcp.json': JSON.stringify({
+    mcpServers: { a: { command: `\${CLAUDE_PLUGIN_ROOT}/server.js` } },
+  }),
+  'packages/rl/.mcp.json': JSON.stringify({ mcpServers: { a: { command: './server.js' } } }),
+  // `lsp-json-location`: a `.lsp.json` with no plugin, under `.claude/`, and at a plugin root.
+  'packages/ll/.lsp.json': goodLsp,
+  'packages/ll/.claude/.lsp.json': goodLsp,
+  'plugins/lk/.claude-plugin/plugin.json': '{"name": "lk"}',
+  'plugins/lk/.lsp.json': goodLsp,
   // `mcp-approval-names-exist`: a name that `.mcp.json` does not declare, in each project file.
   // The managed files are silent.
   'packages/an/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
@@ -937,6 +963,11 @@ const MCP_OFF_RULES: { name: string; files: string[]; markdown?: string[] }[] = 
     files: PROJECT_FILES,
     markdown: ['**/SKILL.md', '**/commands/**/*.md'],
   },
+  { name: 'lsp-json-location', files: ['**/.lsp.json'] },
+  { name: 'mcp-env-var-default', files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'] },
+  { name: 'mcp-plugin-root-paths', files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'] },
+  { name: 'mcp-stdio-command-has-args', files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'] },
+  { name: 'mcp-unknown-keys', files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1236,6 +1267,7 @@ const EXPECTED = [
   // The `off` rules report in `strict` only. These files get the reports of other rules.
   'packages/tk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/tu/.claude/commands/c.md: claude/command-legacy-format@1',
+  'packages/rl/.mcp.json: claude/mcp-stdio-relative-path@1',
   'packages/an/.claude/settings.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.local.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.json: claude/mcp-approval-committed@2',
@@ -1270,6 +1302,20 @@ const STRICT_ONLY = [
   'packages/tu/.claude/settings.json: claude/mcp-tool-server-unknown@1',
   'packages/tu/.claude/settings.local.json: claude/mcp-tool-server-unknown@1',
   'packages/tu/.claude/skills/s/SKILL.md: claude/mcp-tool-server-unknown@1',
+  // The `.lsp.json` files with no plugin root: the new ones, and two of the schema fixtures.
+  'packages/ll/.lsp.json: claude/lsp-json-location@1',
+  'packages/ll/.claude/.lsp.json: claude/lsp-json-location@1',
+  'packages/lp/.lsp.json: claude/lsp-json-location@1',
+  'plugins/q/sub/.lsp.json: claude/lsp-json-location@1',
+  'packages/ek/.mcp.json: claude/mcp-env-var-default@1',
+  'packages/ek/.mcp.json: claude/mcp-stdio-command-has-args@1',
+  'packages/ek/.mcp.json: claude/mcp-unknown-keys@1',
+  'plugins/rp/.mcp.json: claude/mcp-plugin-root-paths@1',
+  // The shared fixtures `badMcp` and `badMcpServers` hold an unknown key. The plugin one also holds a
+  // relative path.
+  'packages/mc/.mcp.json: claude/mcp-unknown-keys@1',
+  'plugins/p/.mcp.json: claude/mcp-plugin-root-paths@1',
+  'plugins/p/.mcp.json: claude/mcp-unknown-keys@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
