@@ -40,8 +40,7 @@ disable the rule for that line.
 
 "In user, project, and local settings, Claude Code matches entries against skill names only. If
 you set an entry for `review` there, it applies to a skill named `review`, not to the bundled
-`/code-review` through its `/review` alias."[^skills] A key under an alias applies to the skill
-behind it in managed settings, and in a file that a `--settings` flag passes.[^skills]
+`/code-review` through its `/review` alias."[^skills] In managed settings, a key under an alias applies to the skill behind it. The same is true in a file that a `--settings` flag passes.[^skills]
 
 | Alias key | Bundled skill |
 |-----------|---------------|
@@ -53,8 +52,7 @@ The list is in `src/data/settings-keys.ts`. It holds the aliases of the rows tha
 reference marks as a bundled skill.[^commands] The rule reports an alias key in a project file
 and in a local file. It makes no report in a managed file or a drop-in, where the key applies.
 
-If the repository has a skill named `review`, the key applies to that skill, and the report is a
-false one. The rule reads the linted file only, so it cannot see the skill. Name the skill in
+If the repository has a skill named `review`, the key applies to that skill. Then the report is a false one. The rule reads the linted file only, so it cannot see the skill. Name the skill in
 the key, or disable the rule for that line.
 
 ### What the rule does not check

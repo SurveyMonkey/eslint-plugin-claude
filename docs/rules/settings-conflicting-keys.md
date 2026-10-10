@@ -44,15 +44,15 @@ ignores it.
 
 ### Pairs that the rule narrows
 
-Three pairs of the inventory row hold less in the rule. For each, the other key can be in a file
-that the rule does not read, and the rule makes no report that the docs do not support.
+The rule checks less than the inventory row for three pairs. For each, the other key can be in a
+file that the rule does not read. The rule makes no report that the docs do not support.
 
 - **`viewMode: "focus"` without `tui`.** The `tui` key has no default value. Claude Code
   "picks the renderer for you" when the key is unset, so an unset `tui` is no fault.[^tui] The
   rule reports `tui: "default"` only. The rule does not check `tui` for any other value.
 - **`vimInsertModeRemaps` without `editorMode`.** `editorMode` is a key of every file, and the
   default is `"normal"`.[^editor] A user file can set `"vim"`. So the rule reports a managed file
-  that sets `editorMode` to another value, and makes no report when the key is unset. In a project
+  that sets `editorMode` to another value. It makes no report when the key is unset. In a project
   or local file, Claude Code does not read `vimInsertModeRemaps` at all. `settings-key-scope`
   reports it there, so this rule makes no second report.
 - **`allowedChannelPlugins` without `channelsEnabled`.** A managed file holds both keys. The

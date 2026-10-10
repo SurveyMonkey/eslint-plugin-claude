@@ -42,8 +42,7 @@ Code ignores it.
 ### The fallback chain
 
 The rule counts distinct strings in `fallbackModel`. A duplicate is not a new model. The report is
-on the first entry over the limit. The settings reference says that Claude Code "keeps at most three
-distinct allowed models from the list and ignores the rest".[^fallback] Claude Code also drops each entry that `availableModels` does
+on the first entry over the limit. The settings reference says that Claude Code "keeps at most three distinct allowed models".[^fallback] Claude Code also drops each entry that `availableModels` does
 not permit before it counts.[^chains] A list in another file is not seen, so the rule counts all
 entries.
 
@@ -69,8 +68,7 @@ for the rule.
 
 `enforceAvailableModels` and `deniedModels` need a managed source. The docs say to "deploy both
 keys together in the highest-ranked managed source".[^enforce-pair] So the rule checks them in a
-managed file only. In a project or local file, a pair can use a list in a user file that the
-rule does not see. `settings-key-scope` reports `deniedModels` in a project file, so this rule
+managed file only. In a project or local file, a pair can use a list in a user file. The rule does not see that file. `settings-key-scope` reports `deniedModels` in a project file, so this rule
 makes no second report.
 
 The sibling files of `managed-settings.d/` are not seen. A list or a key in a sibling file can
@@ -79,8 +77,7 @@ settle a report of this rule.
 ### The custom model option
 
 The rule reports the option when the file sets `availableModels` and no entry permits the option.
-An entry permits the option when it equals the option, when it is a version prefix of the option,
-or when it is the family alias of the option. The `[1m]` suffix is removed from both sides.[^custom-match]
+An entry permits the option in three cases. It equals the option. It is a version prefix of the option. It is the family alias of the option. The `[1m]` suffix is removed from both sides.[^custom-match]
 The rule makes no report when a doubt remains.
 
 ### What the rule does not check

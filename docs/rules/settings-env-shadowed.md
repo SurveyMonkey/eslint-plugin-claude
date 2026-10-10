@@ -52,7 +52,7 @@ A team that sets the variable for its subprocesses on purpose can disable the ru
   reports that case, and reads the agent file. This rule makes no second report.
 - `ANTHROPIC_DEFAULT_MODEL` beside `enforceAvailableModels`, or beside a model that the
   organization excludes. The docs name both as reasons that Claude Code ignores the variable.[^default]
-  The first needs a key in the same file, and the second needs a file that is not in the repository.
+  The first needs a key in the same file. The second needs a file that is not in the repository.
 - A `model` or a `bashOutputMaxChars` in another file. A user file can set either one, and Claude
   Code then voids the variable in the same way. The rule does not see it.
 - The value of a variable. `settings-env-value-format` and `settings-model-value` are for it.

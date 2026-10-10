@@ -42,8 +42,7 @@ last review. A model alias is `default`, `best`, `fable`, `sonnet`, `opus`, `hai
 The empty string in an `env` variable is valid. It cancels a value that the shell exports.[^shell]
 
 For an `ANTHROPIC_DEFAULT_*_MODEL` variable, the rule reports an alias only, such as `opus` or
-`default`. The docs give a Bedrock ID, an ARN and a Foundry deployment name as valid values of the
-variable, so the rule does not require the `claude-` prefix there.[^variables]
+`default`. The docs give a Bedrock ID, an ARN and a Foundry deployment name as valid values. So the rule does not require the `claude-` prefix there.[^variables]
 
 ### Options
 
@@ -51,9 +50,7 @@ variable, so the rule does not require the `claude-` prefix there.[^variables]
 check of `model`, `fallbackModel`, `availableModels`, `advisorModel`, `env.ANTHROPIC_MODEL` and
 `env.CLAUDE_CODE_SUBAGENT_MODEL`. The default is an empty list.
 
-The docs name provider forms of a model name: an Amazon Bedrock inference profile ARN, a Microsoft
-Foundry deployment name, and a Google Cloud Agent Platform version name.[^available-forms] The
-rule cannot know the provider of a team. A team that uses one lists its forms:
+The docs name three provider forms of a model name.[^available-forms] On Amazon Bedrock, it is an inference profile ARN. On Microsoft Foundry, it is a deployment name. On Google Cloud Agent Platform, it is a version name. The rule cannot know the provider of a team. A team that uses one lists its forms:
 
 ```json
 {
