@@ -105,6 +105,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-bin-executable',
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
+    'rules-frontmatter-schema',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-external-source',
