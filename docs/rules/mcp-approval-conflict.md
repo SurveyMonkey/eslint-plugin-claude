@@ -21,9 +21,9 @@ Do not list a server in both `enabledMcpjsonServers` and `disabledMcpjsonServers
 ## Rule details
 
 A `disabledMcpjsonServers` entry rejects a server of `.mcp.json` "in any settings file".[^disabled]
-An `enabledMcpjsonServers` entry for the same name does not undo that.[^enabled] So a name in both
-lists is rejected, and the enable has no effect.[^approvals] The author most likely believes that
-the server is approved.
+An `enabledMcpjsonServers` entry for the same name does not undo that.[^approvals] So a name in
+both lists is rejected, and the enable has no effect. The author most likely believes that the
+server is approved.
 
 The rule sums the lists of the files that merge. For a project file, these are the two project
 files of one `.claude/` folder: `settings.json` and `settings.local.json`. For a managed file, these
@@ -40,9 +40,10 @@ The rule reports only from what the repository holds. The user file `~/.claude/s
 merges at run time as well, and the rule does not read it. A conflict between two repository
 files stays a conflict when a user file adds more entries.
 
-A sibling that the rule cannot read adds nothing (ADR 001, Decision 14). A file is unreadable when it is not
-valid JSON, not an object, locked, a link out of the repository, or a dangling link. A managed source with one such file gives no sibling, so the rule then reports
-from the linted file alone. It reads no hidden drop-in, because Claude Code ignores it.
+A sibling that the rule cannot read adds nothing (ADR 001, Decision 14). The rule cannot read a
+file that is not valid JSON, is not an object, cannot be opened, is a link out of the repository,
+or is a dangling link. The other files of the same managed source still count. The rule reads no
+hidden drop-in, because Claude Code ignores it.
 
 When a file has two lists of one name, the rule reads the last, as `JSON.parse` does. It skips an
 item that is not a string.
@@ -61,5 +62,4 @@ Pass: remove `memory` from one of the two lists.
 ## Sources
 
 [^disabled]: [All settings: disabledMcpjsonServers](https://code.claude.com/docs/en/settings-reference#disabledmcpjsonservers)
-[^enabled]: [All settings: enabledMcpjsonServers](https://code.claude.com/docs/en/settings-reference#enabledmcpjsonservers)
 [^approvals]: [Connect Claude Code to tools via MCP: Project server approvals and workspace trust](https://code.claude.com/docs/en/mcp#project-server-approvals-and-workspace-trust)

@@ -1,6 +1,8 @@
 // The reader that the `.mcp.json` rules share. A rule asks where the file is, and gets
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
-// may omit that wrapper, so its map is the top-level object.
+// may omit that wrapper, so its map is the top-level object. The module also holds the reader of
+// the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
+// reader of the approval and allow lists.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
 import json from '@eslint/json'
@@ -110,13 +112,13 @@ export function readJsonBody(file: string, bound: string): ValueNode | null {
     return null
   }
   // A value nested deeper than the stringifier or the parser accepts is a file that the rule
-  // cannot see.
+  // cannot see. A failed parse has no `ast`, so the read of it throws and ends here too.
   try {
     const result = json.languages.json.parse(
       { body: JSON.stringify(parsed.data), path: file, physicalPath: file, bom: false },
       { languageOptions: {} },
     )
-    return result.ok ? (result as { ast: { body: ValueNode } }).ast.body : null
+    return (result as { ast: { body: ValueNode } }).ast.body
   } catch {
     return null
   }
@@ -260,7 +262,7 @@ export function plainOf(node: ValueNode): unknown {
  *  Code strips. A valid entry is an object with one key: `serverName` with a string that matches
  *  the allowlist pattern, `serverUrl` with a string, or `serverCommand` with an array of strings.
  *  A name that the pattern rejects is no allowlist entry, so it cannot overlap with a denylist
- *  entry. `mcp-policy-entry-schema` reports it.
+ *  entry. The rule applies the same pattern to a denylist name for that reason. `mcp-policy-entry-schema` reports it.
  *  (https://code.claude.com/docs/en/settings-reference#allowedmcpservers) */
 export function policyKey(entry: unknown): string | undefined {
   if (entry === null || typeof entry !== 'object' || Array.isArray(entry)) {

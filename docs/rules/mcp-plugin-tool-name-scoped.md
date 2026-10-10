@@ -23,8 +23,8 @@ Name a tool of a plugin MCP server with the scoped name of the plugin.
 A tool of a plugin MCP server has both the plugin name and the server key in its name. The form is
 `mcp__plugin_<plugin>_<server>__<tool>`. Each character outside `A-Z`, `a-z`, `0-9`, `_` and `-`
 becomes `_`.[^names] The `query` tool of the `database-tools` server in the plugin `my-plugin` is
-`mcp__plugin_my-plugin_database-tools__query`. Use that name in a skill `allowed-tools` list and
-in the `tools` field of a subagent.[^names][^components] The bare name `mcp__database-tools__query`
+`mcp__plugin_my-plugin_database-tools__query`. Use that name in a permission rule, for example an
+`allowed-tools` entry.[^names][^components] The bare name `mcp__database-tools__query`
 matches no tool of a plugin server.
 
 The rule reads the tool lists of a file in a plugin. A skill or command has `allowed-tools` and
@@ -35,9 +35,9 @@ The rule finds the plugin root, and reads the `name` of the plugin from
 `.json` file that `mcpServers` names, and each inline map. It reports a tool whose server part is
 one of these servers. The report is on the entry. The message gives the scoped name.
 
-The server part is the text after `mcp__` up to the next `__`, or the end of the entry. The rule
-compares it with the server key as written. It also compares it with the key in which each
-character outside `A-Za-z0-9_-` is `_`. So `mcp__db_tools__q` is a bare name for the server
+The rule takes the text after `mcp__`. It matches a server key when that text is the key, or the
+key and then `__`, and more text. It also matches the key in which each character outside
+`A-Za-z0-9_-` is `_`. So `mcp__db_tools__q` is a bare name for the server
 `db.tools`.
 
 The match is on the whole server part, so the server `db` does not match `mcp__dbx__q`. An entry
@@ -62,9 +62,8 @@ The rule makes no report in these cases:
 The rule does not read a hook. The `matcher` of a hook takes the scoped tool name too. The
 `server` field of an `mcp_tool` hook takes `plugin:<plugin>:<server>`.[^names]
 
-The hooks rule `hooks-matcher-mcp-name` checks only that a matcher names a tool and not a bare
-server. It does not know the servers of the plugin. No rule checks a hook against the servers of
-its own plugin yet. The rule does not read a permission rule in a settings file either.
+No hooks rule checks a matcher against the servers of its own plugin yet. The rule does not read
+a permission rule in a settings file either.
 
 Fail, in `skills/lookup/SKILL.md` of the plugin `my-plugin`, with a `database-tools` server in its
 `.mcp.json`:

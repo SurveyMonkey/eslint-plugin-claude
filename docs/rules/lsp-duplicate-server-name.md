@@ -32,6 +32,7 @@ mixes them.[^manifest] The rule reads `.lsp.json` at the plugin root, each `.jso
 The report is on the later declaration. This is the name of an inline server, or the path of a
 file. The message names the source of the first declaration.
 
+A file that the manifest names twice, or names with the path of the root file, is read once.
 A source declares a name once. When one file has two keys of one name, the rule reads the last,
 as `JSON.parse` does. So that file alone gives no report.
 

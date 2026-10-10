@@ -1,8 +1,9 @@
 // The reader that the LSP rules share. A rule asks for the server configs of a file, and gets
 // the members of its map: a server name and its config. Claude Code reads LSP servers from
 // `.lsp.json` at the plugin root, and from the `lspServers` key of `plugin.json`. The key takes
-// an inline map, a path to a `.json` file, or an array of those. A path is not read here.
-// (https://code.claude.com/docs/en/plugins-reference#lspservers)
+// an inline map, a path to a `.json` file, or an array of those. `lspServerMembers` reads no path. `pluginLspDeclarations`
+// reads the `.json` paths of a plugin.
+// (https://code.claude.com/docs/en/plugins/manifest-reference#lspservers)
 import path from 'node:path'
 import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
 import {

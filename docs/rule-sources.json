@@ -771,11 +771,6 @@
       "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232"
     },
     {
-      "url": "https://code.claude.com/docs/en/settings-reference",
-      "heading": "enabledMcpjsonServers",
-      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24"
-    },
-    {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Project server approvals and workspace trust",
       "hash": "797327fe677dd36d57b98ee0fd3f878f2035814bd5e2173e5ccf82d27297b255"
