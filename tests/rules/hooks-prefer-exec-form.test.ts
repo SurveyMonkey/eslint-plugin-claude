@@ -24,7 +24,7 @@ const dir = (variable: string) => `\${${variable}}`
 const P = dir('CLAUDE_PROJECT_DIR')
 
 describe(`${name}: shell form with a placeholder`, () => {
-  it.fails('reports a placeholder in a shell-form command', () => {
+  it('reports a placeholder in a shell-form command', () => {
     for (const text of [
       `${P}/a.sh`,
       `"${dir('CLAUDE_PLUGIN_ROOT')}/a.sh" --fix`,
@@ -36,16 +36,16 @@ describe(`${name}: shell form with a placeholder`, () => {
     }
   })
 
-  it.fails('reports with an explicit bash shell, and when args is no array', () => {
+  it('reports with an explicit bash shell, and when args is no array', () => {
     expect(run(`${P}/a.sh`, { shell: 'bash' })).toEqual(['exec'])
     expect(run(`${P}/a.sh`, { args: 'x' })).toEqual(['exec'])
   })
 
-  it.fails('reports once for a handler', () => {
+  it('reports once for a handler', () => {
     expect(run(`${P}/a.sh ${P}/b.sh`)).toEqual(['exec'])
   })
 
-  it.fails('reports at the command string', () => {
+  it('reports at the command string', () => {
     const text = `{\n  "hooks": {\n    "Stop": [{"hooks": [{"type": "command", "command": "${P}/a.sh"}]}]\n  }\n}`
     const [message] = lintJson(name, text, FILES.project)
     expect([message?.line, message?.column]).toEqual([3, 56])
@@ -56,12 +56,12 @@ describe(`${name}: shell form with a placeholder`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent in exec form', () => {
+  it('is silent in exec form', () => {
     expect(run(`${P}/a.sh`, { args: [] })).toEqual([])
     expect(run('node', { args: [`${P}/a.js`] })).toEqual([])
   })
 
-  it.fails('is silent when the command has no path placeholder', () => {
+  it('is silent when the command has no path placeholder', () => {
     for (const text of [
       './a.sh',
       '',
@@ -73,7 +73,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent when the line needs a shell', () => {
+  it('is silent when the line needs a shell', () => {
     for (const text of [
       `${P}/a.sh | grep x`,
       `${P}/a.sh && ${P}/b.sh`,
@@ -91,11 +91,11 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a PowerShell hook, where exec form needs the shell as the executable', () => {
+  it('is silent for a PowerShell hook, where exec form needs the shell as the executable', () => {
     expect(run(`& "${P}\\a.ps1"`, { shell: 'powershell' })).toEqual([])
   })
 
-  it.fails('is silent for a handler that is no command hook, and for a command that is no string', () => {
+  it('is silent for a handler that is no command hook, and for a command that is no string', () => {
     expect(ids({ type: 'http', url: `${P}/a`, command: `${P}/a` })).toEqual([])
     expect(ids({ type: 'prompt', prompt: P })).toEqual([])
     expect(ids({ type: 'command', command: 1 })).toEqual([])
@@ -104,14 +104,14 @@ describe(`${name}: the silent cases`, () => {
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(command({ command: `${P}/a.sh` }), file), file).toEqual(['exec'])
       expect(ids(command({ command: `${P}/a.sh`, args: [] }), file), file).toEqual([])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (extra: string) =>
       frontmatter(
         `PostToolUse:\n  - matcher: Write\n    hooks:\n      - type: command\n        command: '${P}/a.sh'\n${extra}`,
@@ -122,7 +122,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
+  it('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
     expect(ids(command({ command: `${P}/a.sh` }), FILES.hidden)).toEqual([])
     expect(ids(command({ command: `${P}/a.sh` }), '/repo/.github/hooks/hooks.json')).toEqual([])
   })

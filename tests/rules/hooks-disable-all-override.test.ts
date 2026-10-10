@@ -11,19 +11,19 @@ const ids = (text: string, file = FILES.project) =>
   lintJson(name, text, file).map((message) => message.messageId)
 
 describe(`${name}: the project file`, () => {
-  it.fails('reports disableAllHooks false', () => {
+  it('reports disableAllHooks false', () => {
     expect(ids('{"disableAllHooks": false}')).toEqual(['override'])
     expect(
       ids('{"hooks": {}, "disableAllHooks": false}', '/repo/pkg/.claude/settings.json'),
     ).toEqual(['override'])
   })
 
-  it.fails('reads the last of two members, as JSON.parse does', () => {
+  it('reads the last of two members, as JSON.parse does', () => {
     expect(ids('{"disableAllHooks": true, "disableAllHooks": false}')).toEqual(['override'])
     expect(ids('{"disableAllHooks": false, "disableAllHooks": true}')).toEqual([])
   })
 
-  it.fails('is silent for true, a missing key and a value of another type', () => {
+  it('is silent for true, a missing key and a value of another type', () => {
     for (const text of [
       '{"disableAllHooks": true}',
       '{}',
@@ -37,12 +37,12 @@ describe(`${name}: the project file`, () => {
     }
   })
 
-  it.fails('reports at the value', () => {
+  it('reports at the value', () => {
     const found = lintJson(name, '{\n  "disableAllHooks": false\n}', FILES.project)
-    expect(found.map(({ line, column }) => [line, column])).toEqual([[2, 3]])
+    expect(found.map(({ line, column }) => [line, column])).toEqual([[2, 22]])
   })
 
-  it.fails('names the effect in the message', () => {
+  it('names the effect in the message', () => {
     const [message] = lintJson(name, '{"disableAllHooks": false}', FILES.project)
     expect(message?.message).toBe(
       'The committed "disableAllHooks": false overrides the user setting of each person who clones the repository, and turns their hooks back on. Remove the key.',
@@ -51,7 +51,7 @@ describe(`${name}: the project file`, () => {
 })
 
 describe(`${name}: the other files`, () => {
-  it.fails('is silent in the local file, the managed files and a plugin file', () => {
+  it('is silent in the local file, the managed files and a plugin file', () => {
     for (const file of [
       FILES.local,
       FILES.managed,

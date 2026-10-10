@@ -92,10 +92,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 |------|--------|---------------|----------|
 | [`claude/hooks-command-removed-cli-flag`](docs/rules/hooks-command-removed-cli-flag.md) | A hook command or `args` that runs `claude` does not pass `--enable-auto-mode`, which Claude Code removed in v2.1.111 | `error` | `error` |
 | [`claude/hooks-config-schema`](docs/rules/hooks-config-schema.md) | The hooks config is events, matcher groups and handlers: a string `matcher`, a known handler `type`, the field each type needs, the field types, and the top-level keys of a plugin `hooks.json` | `error` | `error` |
+| [`claude/hooks-disable-all-override`](docs/rules/hooks-disable-all-override.md) | The committed `.claude/settings.json` does not set `disableAllHooks` to `false`, which turns the hooks of a user back on | `warn` | `warn` |
 | [`claude/hooks-disabled-by-disableallhooks`](docs/rules/hooks-disabled-by-disableallhooks.md) | A settings file does not set `disableAllHooks: true` and also define `hooks` | `error` | `error` |
 | [`claude/hooks-env-var-unavailable`](docs/rules/hooks-env-var-unavailable.md) | A hook command reads `CLAUDE_ENV_FILE` only on `SessionStart`, `Setup`, `CwdChanged` and `FileChanged`, and never reads `CLAUDE_MODEL`, which does not exist | `error` | `error` |
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings, `plugin.json` and the frontmatter of a skill or subagent is one that Claude Code knows | `error` | `error` |
 | [`claude/hooks-exec-form-command-spaces`](docs/rules/hooks-exec-form-command-spaces.md) | The `command` of a hook in exec form (with `args`) is the executable only: a bare name holds no whitespace | `error` | `error` |
+| [`claude/hooks-filechanged-star-matcher`](docs/rules/hooks-filechanged-star-matcher.md) | A `FileChanged` group omits the matcher and does not write `"*"`, which also adds a file named `*` to the watch list | `warn` | `warn` |
 | [`claude/hooks-handler-field-ignored`](docs/rules/hooks-handler-field-ignored.md) | A handler sets no field that Claude Code ignores: `async` on a non-command hook, `continueOnBlock` on a non-prompt hook, `shell` with `args`, `once` outside a skill, `timeout` with `async`, a `SessionEnd` `timeout` over the budget, and `onFailure` where it has no effect | `error` | `error` |
 | [`claude/hooks-handler-field-unknown`](docs/rules/hooks-handler-field-unknown.md) | A handler sets only the fields that the docs list for its `type` | `warn` | `warn` |
 | [`claude/hooks-handler-type-event-support`](docs/rules/hooks-handler-type-event-support.md) | A handler type is one that its event runs: `SessionStart` and `Setup`, `PermissionRequest`, `PermissionDenied`, and the events with no `prompt` or `agent` hook | `error` | `error` |
@@ -111,8 +113,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/hooks-matcher-syntax`](docs/rules/hooks-matcher-syntax.md) | A matcher is written as Claude Code reads it: a bare tool name and not `Tool(specifier)`, a regular expression that compiles, only `\|` as a separator on `StopFailure` and `FileChanged`, and literal file names on `FileChanged` | `error` | `error` |
 | [`claude/hooks-matcher-unsupported-event`](docs/rules/hooks-matcher-unsupported-event.md) | A group on an event with no matcher support (`Stop`, `UserPromptSubmit`, `CwdChanged` and seven more) sets no `matcher` | `error` | `error` |
 | [`claude/hooks-no-standalone-file`](docs/rules/hooks-no-standalone-file.md) | No `.claude/hooks.json` or `.claude/hooks/hooks.json`, and no hooks file under `.claude-plugin/`: Claude Code does not read them | `error` | `error` |
+| [`claude/hooks-placeholder-quoted`](docs/rules/hooks-placeholder-quoted.md) | A path placeholder in a shell-form hook command sits inside quotes, so a path with a space stays one word (a `hooks/hooks.json` of a plugin is for `claude plugin validate`) | `warn` | `warn` |
 | [`claude/hooks-powershell-placeholder`](docs/rules/hooks-powershell-placeholder.md) | A hook with `shell: "powershell"` writes no bare `$CLAUDE_PROJECT_DIR` (it gives `$null`) and no path placeholder inside single quotes | `error` | `error` |
+| [`claude/hooks-prefer-exec-form`](docs/rules/hooks-prefer-exec-form.md) | A command hook that references a path placeholder sets `args` for exec form, unless the line needs a shell | `warn` | `warn` |
 | [`claude/hooks-prompt-on-permission-request`](docs/rules/hooks-prompt-on-permission-request.md) | No `prompt` hook on `PermissionRequest`, where `ok: false` has no effect and the hook cannot deny | `warn` | `warn` |
+| [`claude/hooks-ps1-needs-powershell-shell`](docs/rules/hooks-ps1-needs-powershell-shell.md) | With the option `platforms`, a hook command that runs a `.ps1` file sets `shell: "powershell"` | `warn` | `warn` |
+| [`claude/hooks-sessionend-default-timeout`](docs/rules/hooks-sessionend-default-timeout.md) | A `SessionEnd` handler outside a plugin sets `timeout`, because Claude Code cancels it after 1.5 seconds | `warn` | `warn` |
 
 ### Marketplace manifest
 

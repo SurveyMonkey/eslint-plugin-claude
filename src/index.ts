@@ -19,10 +19,12 @@ import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
 import hooksConfigSchema from './rules/hooks-config-schema.ts'
+import hooksDisableAllOverride from './rules/hooks-disable-all-override.ts'
 import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
 import hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
+import hooksFilechangedStarMatcher from './rules/hooks-filechanged-star-matcher.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerFieldUnknown from './rules/hooks-handler-field-unknown.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
@@ -38,8 +40,12 @@ import hooksMatcherSubagentAnchor from './rules/hooks-matcher-subagent-anchor.ts
 import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
+import hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
 import hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
+import hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
 import hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
+import hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
+import hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -121,9 +127,11 @@ const modules = [
   hooksEventNameKnown,
   hooksCommandRemovedCliFlag,
   hooksConfigSchema,
+  hooksDisableAllOverride,
   hooksDisabledByDisableallhooks,
   hooksEnvVarUnavailable,
   hooksExecFormCommandSpaces,
+  hooksFilechangedStarMatcher,
   hooksHandlerFieldIgnored,
   hooksHandlerFieldUnknown,
   hooksHandlerTypeEventSupport,
@@ -139,8 +147,12 @@ const modules = [
   hooksMatcherSyntax,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
+  hooksPlaceholderQuoted,
   hooksPowershellPlaceholder,
+  hooksPreferExecForm,
   hooksPromptOnPermissionRequest,
+  hooksPs1NeedsPowershellShell,
+  hooksSessionendDefaultTimeout,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
   skillForkFieldsRequireContext,
@@ -251,9 +263,11 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-event-name-known': 'error',
   'hooks-command-removed-cli-flag': 'error',
   'hooks-config-schema': 'error',
+  'hooks-disable-all-override': 'warn',
   'hooks-disabled-by-disableallhooks': 'error',
   'hooks-env-var-unavailable': 'error',
   'hooks-exec-form-command-spaces': 'error',
+  'hooks-filechanged-star-matcher': 'warn',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-field-unknown': 'warn',
   'hooks-handler-type-event-support': 'error',
@@ -269,8 +283,12 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-matcher-syntax': 'error',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
+  'hooks-placeholder-quoted': 'warn',
   'hooks-powershell-placeholder': 'error',
+  'hooks-prefer-exec-form': 'warn',
   'hooks-prompt-on-permission-request': 'warn',
+  'hooks-ps1-needs-powershell-shell': 'warn',
+  'hooks-sessionend-default-timeout': 'warn',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
   'skill-fork-fields-require-context': 'error',
