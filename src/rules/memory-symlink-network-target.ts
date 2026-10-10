@@ -1,7 +1,7 @@
 // A `CLAUDE.md` or `.claude/rules/` symlink that leads to a network path
-// (docs/rules/memory-symlink-network-target.md). Claude Code does not follow such a link,
-// because a lookup of the path can contact the host that it names. The rule reads the text of the
-// link only. It never follows the link, as `realpath` and `stat` would, so it contacts no host.
+// (docs/rules/memory-symlink-network-target.md). Claude Code does not follow such a link. A
+// lookup of the path can contact the host that it names. The rule reads the text of the link
+// only. It never follows the link, as `realpath` and `stat` would, so it contacts no host.
 import { lstatSync, readlinkSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
@@ -10,8 +10,8 @@ import { classifyMemoryFile } from '../memory-files.ts'
 
 const name = 'memory-symlink-network-target' as const
 
-// A UNC share: two backslashes and a host. The `\\wsl$` and `\\wsl.localhost` hosts lead to a
-// Linux distribution on the same machine, and the docs say that `\\wsl$` paths are not network
+// A UNC share: two backslashes and a host. The hosts `\\wsl$` and `\\wsl.localhost` lead to a
+// Linux distribution on the same machine. The docs say that `\\wsl$` paths are not network
 // paths. A long path (`\\?\C:\`) and a device path (`\\.\pipe\`) are local. A long UNC path
 // (`\\?\UNC\server\share`) is a share.
 const UNC = /^\\\\(?:\?\\UNC\\|(?![?.]\\)(?!wsl\$(?:\\|$))(?!wsl\.localhost(?:\\|$)))/i
@@ -32,10 +32,10 @@ function targetOf(entry: string): string | null {
   }
 }
 
-/** The paths of a rule file that can be a link with instructions behind it: the
- *  `.claude/rules` folder, each folder below it, and the file. They come from the top
- *  down, because a look at a path below a link to the network would follow the link. The
- *  classifier gives the kind `rule` only for a path with a `.claude/rules` folder. */
+/** The paths of a rule file that can be a link. They are the `.claude/rules`
+ *  folder, each folder below it, and the file. They come from the top down. A look at a path
+ *  below a link to the network would follow the link. The classifier gives the
+ *  kind `rule` only for a path with a `.claude/rules` folder. */
 function ruleEntries(file: string): string[] {
   const parts = file.split(path.sep)
   const start = parts.findIndex((part, i) => part === '.claude' && parts[i + 1] === 'rules') + 1

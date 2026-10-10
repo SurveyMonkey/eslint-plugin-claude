@@ -1,8 +1,8 @@
 // An `@path` import in an instruction file must name a file that exists
 // (docs/rules/claude-md-import-exists.md). Claude Code resolves a relative path against the
 // folder of the file that holds the import. The rule reads the repository around the file.
-// It makes no report for a path that it cannot read: a path out of the repository, a
-// dangling link, or a folder that it has no right to read (ADR 001, Decision 14).
+// It makes no report for a path that it cannot read. Such a path is out of the repository, is a
+// dangling link, or has no read right. ADR 001, Decision 14 sets this.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'

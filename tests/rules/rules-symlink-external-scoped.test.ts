@@ -1,6 +1,6 @@
-// Claude Code treats a rule file that it reaches through a link out of the working directory as
-// an external import. After the approval of external imports, it loads only the linked rules that
-// have no `paths` field, so a rule with `paths` never loads
+// A rule file that Claude Code reaches through a link out of the working directory is an
+// external import. After you approve external imports, it loads only the linked rules that
+// have no `paths` field. So a rule with `paths` never loads
 // (https://code.claude.com/docs/en/memory#share-rules-across-projects-with-symlinks). The rule
 // asks where the real path of the linted file is. It reads nothing in the target, because the
 // text of the file comes from ESLint. A link that leads nowhere and a path that it cannot read
@@ -15,8 +15,8 @@ const RULE = 'rules-symlink-external-scoped'
 const SCOPED = '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n'
 const FILE = '.claude/rules/a.md'
 
-/** A repository with the file `.claude/rules/a.md` as a link to a file out of it, and the
- *  messages for the text `code` of that file. */
+/** The messages for a rule file that links to a file out of its repository. The text of the
+ *  file is `code`. The file is `.claude/rules/a.md` unless `file` says another. */
 function outside(code: string, options: { git?: boolean; file?: string } = {}) {
   const { git = true, file = FILE } = options
   const elsewhere = tree({ 'shared/a.md': code })
@@ -94,7 +94,7 @@ describe.skipIf(noLinks)(RULE, () => {
     const claude = tree({})
     link(claude, '.claude', shared)
     expect(ids(lintMemory(RULE, claude, '.claude/rules/sub/b.md', SCOPED))).toEqual(['neverLoads'])
-    // A target with its own `.git` is a repository of its own, so the rule reads no link out of it.
+    // A target with its own `.git` is a repository of its own. The rule reads no link out of it.
     const repo = tree({ 'rules/sub/b.md': SCOPED })
     const linked = tree({})
     link(linked, '.claude', repo)

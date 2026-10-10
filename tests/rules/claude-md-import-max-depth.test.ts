@@ -1,8 +1,8 @@
 // A chain of `@path` imports loads to a depth of four hops. The file at hop five and the files
 // past it do not load (https://code.claude.com/docs/en/memory#import-additional-files). The rule
-// follows the chain on disk from the linted file, and reports the import of that file that
-// starts a chain which is too long. A path it cannot read ends the chain there: a path out of the
-// repository, a dangling link and an unreadable file give no report. The globs are in
+// follows the chain on disk from the linted file. It reports the import of that file that
+// starts a chain which is too long. A path it cannot read ends the chain there. A path out of
+// the repository, a dangling link and an unreadable file give no report. The globs are in
 // tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -142,6 +142,13 @@ describe(`${RULE}: what the rule skips`, () => {
     expect(lint('@f1.md\n', files)).toEqual([])
   })
 
+  it('checks a CLAUDE.md below .claude/rules, which is a rule file', () => {
+    expect(ids(lint('@../../f1.md\n', chainOf(5), undefined, '.claude/rules/CLAUDE.md'))).toEqual([
+      'tooDeep',
+    ])
+    expect(lint('@../../f1.md\n', chainOf(4), undefined, '.claude/rules/CLAUDE.md')).toEqual([])
+  })
+
   it('does not check a file that Claude Code never reads', () => {
     expect(lint('@f1.md\n', chainOf(5), undefined, '.agents/AGENTS.md')).toEqual([])
   })
@@ -157,8 +164,8 @@ describe(`${RULE}: what the rule skips`, () => {
     link(dir, 'in.md', 'real.md')
     link(dir, 'out.md', path.join(outside, 'o1.md'))
     link(dir, 'gone.md', 'nowhere.md')
-    // `f1` is hop 1, `f2` hop 2, `f3` hop 3, `real.md` hop 4, and the link out of the repository
-    // ends the chain. A link that is dangling does so too.
+    // The file `f1` is hop 1, `f2` is hop 2, `f3` is hop 3, and `real.md` is hop 4. The link out of
+    // the repository ends the chain. So does a link that is dangling.
     expect(lintMemory(RULE, dir, 'CLAUDE.md', '@f1.md\n')).toEqual([])
     expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', '@f1.md\n', { max: 3 }))).toEqual([
       'overConfiguredLimit',

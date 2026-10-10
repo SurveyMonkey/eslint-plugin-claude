@@ -1,8 +1,8 @@
 // A repository on disk, for a rule that reads a file next to the linted file.
-// `tree` and `link` come from the marketplace helper: each tree is a real
+// `tree` and `link` come from the marketplace helper. Each tree is a real
 // directory in a temporary directory, with or without a `.git` directory.
 // `lintMemory` runs one rule over one instruction file of a tree through
-// `Linter`, because the case must build the file system around the lint.
+// `Linter`. The case must build the file system around the lint.
 import path from 'node:path'
 import markdown from '@eslint/markdown'
 import { Linter } from 'eslint'

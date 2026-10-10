@@ -1,9 +1,9 @@
 // An `AGENTS.md` that no `CLAUDE.md` file lets through (docs/rules/claude-md-agents-md-shadowed.md).
-// By default Claude Code reads an `AGENTS.md` only when no `CLAUDE.md`, `.claude/CLAUDE.md` or
-// `CLAUDE.local.md` exists in the working directory or above it. A CLAUDE.md file that imports the
-// `AGENTS.md`, or links to it, loads it. The rule looks at the folder of the linted file and each
-// folder above it, up to the repository root. It makes no report when it cannot read a file or a
-// folder on the way: such a file can be the import (ADR 001, Decision 14).
+// By default Claude Code reads an `AGENTS.md` in one case. No `CLAUDE.md`, `.claude/CLAUDE.md` or
+// `CLAUDE.local.md` may exist in the working directory or above it. A CLAUDE.md file that imports
+// the `AGENTS.md`, or links to it, loads it. The rule looks at the folder of the linted file and
+// each folder above it, up to the repository root. It makes no report when it cannot read a file
+// or a folder on the way. Such a file can be the import (ADR 001, Decision 14).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -20,9 +20,9 @@ const CLAUDE_FILES = ['CLAUDE.md', '.claude/CLAUDE.md', 'CLAUDE.local.md']
 const DEPTH = 4
 
 /** The nearest CLAUDE file, as a path from the repository root, that shadows
- *  the `AGENTS.md` at `file`. The result is null when no CLAUDE file shadows
- *  it, when one loads it, and when the rule cannot read what it needs to
- *  tell. `home` is the working directory that the file belongs to. */
+ *  the `AGENTS.md` at `file`. The result is null in three cases. No CLAUDE
+ *  file shadows it. A CLAUDE file loads it. The rule cannot read what it needs
+ *  to tell. `home` is the working directory that the file belongs to. */
 function shadowOf(file: string, home: string): string | null {
   const bound = repositoryRoot(home)
   const real = realOf(file)

@@ -38,19 +38,20 @@ Read @a.md first.
 The rule counts the hops in these ways:
 
 - A file loads at the fewest hops that reach it, and it loads once. When two imports lead to one
-  file, the shorter chain counts. The docs do not say which chain Claude Code takes, so the rule
-  makes no report that the other chain would cause.
+  file, the shorter chain counts. The docs do not say which chain Claude Code takes. So the rule
+  makes no report that only the longer chain would cause.
 - A cycle ends where the chain meets a file that it has met. A cycle alone is no fault, and the rule
   makes no report for it. A chain that goes on past a cycle is checked as any other chain.
-- The rule reads an import as `claude-md-import-exists` does. An import in a code span, a fenced
-  block or an HTML comment is not followed. A relative path starts at the folder of the file that
-  holds the import.
-- A chain ends at a path that the rule cannot read: a path out of the repository, a link that leads
-  out of it or nowhere, a folder, and a file that the rule has no right to read. The rule reads no
-  file out of the repository, and makes no report that rests on a file that it cannot read.
+- The rule finds an import as `claude-md-import-exists` does. It does not follow an import in a
+  code span, a fenced block or an HTML comment. A relative path starts at the folder of the file
+  that holds the import.
+- A chain ends at a path that the rule cannot read. Such a path is out of the repository, or is a
+  link that leads out of it or nowhere. It can also be a folder, or a file with no read right. The
+  rule makes no report that rests on such a file.
 
-The rule lints `CLAUDE.md`, `CLAUDE.local.md` and `AGENTS.md`, and skips a file below `.agents/`,
-which Claude Code never reads.
+The rule lints `CLAUDE.md`, `CLAUDE.local.md` and `AGENTS.md`. It lints such a file below
+`.claude/rules/` too, because Claude Code expands the imports of a rule file. It skips a file below
+`.agents/`, which Claude Code never reads.
 
 ## Options
 
@@ -63,8 +64,8 @@ which Claude Code never reads.
 ```
 
 The docs give four hops, and no setting moves it. So the schema refuses a larger value. At another
-value, the message names the value as the configured limit, and does not say that Claude Code stops
-there.
+value, the message names the value as the configured limit. It does not say that Claude Code
+stops there.
 
 ## Sources
 
