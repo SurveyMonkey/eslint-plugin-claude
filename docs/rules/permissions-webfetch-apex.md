@@ -43,7 +43,8 @@ the apex rule. The rule reads no user file.
   skips it.
 - `WebFetch(domain:*)` is for `permissions-allow-unrestricted` in `allow`, and it has no `*.` form.
 - The place of a wildcard that is not a leading `*.` is for `permissions-webfetch-mid-wildcard`. This rule skips a host with another `*`.
-- A rule with no `domain:` prefix is for `permissions-webfetch-domain-syntax`.
+- A rule with no `domain:` prefix is for `permissions-webfetch-domain-syntax`. So is a host with a port, a path, a query or a
+  scheme, such as `*.example.com:443`. This rule skips them, and a host with white space or an empty label such as `*..example.com`.
 
 Fail:
 

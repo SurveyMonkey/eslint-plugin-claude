@@ -36,13 +36,22 @@ describe(`${name}: the reports`, () => {
     expect(messages[0]?.message).toContain('Edit(src/**)')
     expect(messages[0]?.message).toContain('Edit(/src/**)')
     expect(messages[0]?.message).toContain('Edit(**/src/**)')
+    expect(messages[0]?.message).toContain('project or local file')
+    const [padded] = lintJson(name, perms({ allow: ['Edit( src/** )'] }), PROJECT)
+    expect(padded?.message).toContain('Edit(/src/**)')
   })
 })
 
 describe(`${name}: the silent cases`, () => {
   it('is silent for a name that is a drive letter or holds a pattern character', () => {
-    for (const dir of ['C:', 'sr?', 'a[b', 'a]b', 'a\\b']) {
+    for (const dir of ['C:', 'c:', 'sr?', 'a[b', 'a]b', 'a\\b']) {
       expect(ids(perms({ allow: [`Edit(${dir}/**)`] })), dir).toEqual([])
+    }
+  })
+
+  it('reports a name with a colon that is not a drive letter', () => {
+    for (const dir of ['foo:bar', 'ab:', ':']) {
+      expect(ids(perms({ allow: [`Edit(${dir}/**)`] })), dir).toEqual(['depth'])
     }
   })
 
