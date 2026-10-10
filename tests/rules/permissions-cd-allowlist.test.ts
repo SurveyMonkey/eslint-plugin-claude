@@ -26,7 +26,9 @@ describe(`${name}: the report`, () => {
   })
 
   it('reports a bare Cd allow rule', () => {
-    expect(run(perms({ allow: ['Cd'] })).map((m) => m.messageId)).toEqual(['allowlist'])
+    const messages = run(perms({ allow: ['Cd'] }))
+    expect(messages.map((m) => m.messageId)).toEqual(['allowlist'])
+    expect(messages[0]?.message).toMatch(/^`Cd` switches/)
   })
 
   it('gives one report for two Cd allow rules, at the first', () => {

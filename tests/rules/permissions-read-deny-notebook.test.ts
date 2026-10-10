@@ -56,6 +56,10 @@ describe(`${name}: the reports`, () => {
     )
   })
 
+  it('reports a MultiEdit deny rule with the path, which Claude Code never consults', () => {
+    expect(ids(perms({ deny: ['Read(./a)', 'MultiEdit(./a)'] }))).toEqual(['notebook'])
+  })
+
   it('reports a Read deny rule with an absolute or a home anchor', () => {
     expect(ids(perms({ deny: ['Read(//etc/**)', 'Read(~/.ssh/**)'] }))).toEqual([
       'notebook',
@@ -73,6 +77,8 @@ describe(`${name}: the silent cases`, () => {
     expect(ids(perms({ deny: ['Read(secrets/**)', 'Edit(./secrets/**)'] }))).toEqual([])
     expect(ids(perms({ deny: ['Read(./secrets/**)', 'Edit(secrets/**)'] }))).toEqual([])
     expect(ids(perms({ deny: ['Read( ./a )', 'Edit(./a)'] }))).toEqual([])
+    expect(ids(perms({ deny: ['Read(./a)', 'Edit( ./a )'] }))).toEqual([])
+    expect(ids(perms({ deny: ['Read( !a )'] }))).toEqual([])
   })
 
   it('is silent when a bare Edit or bare NotebookEdit deny rule exists', () => {

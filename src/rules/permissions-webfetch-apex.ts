@@ -11,14 +11,15 @@ import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 const name = 'permissions-webfetch-apex' as const
 
 /** The apex of a wildcard host: the text after the leading `*.`. It is null when the host does not
- *  start with `*.`, is empty after it, holds another `*`, or is not a plain host. */
+ *  start with `*.`, is empty after it, holds another `*`, is not a plain host, or holds a path,
+ *  query, fragment or empty label. */
 function apexOf(host: string | null): string | null {
   const apex = host?.startsWith('*.') ? host.slice(2) : ''
   return apex === '' ||
     apex.includes('*') ||
     !isPlainHost(apex) ||
-    apex.includes('/') ||
-    apex.startsWith('.')
+    /[/?#]/.test(apex) ||
+    apex.split('.').includes('')
     ? null
     : apex
 }

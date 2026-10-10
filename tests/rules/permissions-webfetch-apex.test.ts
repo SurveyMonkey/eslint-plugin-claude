@@ -28,6 +28,10 @@ describe(`${name}: the host of the wildcard`, () => {
       'https://x',
       ' x.com',
       '.example.com',
+      'example.com?x',
+      'example.com#x',
+      'example.com..',
+      'a..example.com',
     ]) {
       expect(ids(perms({ allow: [`WebFetch(domain:*.${host})`] })), host).toEqual([])
     }
@@ -63,6 +67,11 @@ describe(`${name}: the reports`, () => {
     const messages = run(text)
     expect(messages.map(({ line, column }) => [line, column])).toEqual([[3, 23]])
     expect(messages[0]?.message).toContain('WebFetch(domain:example.com)')
+  })
+
+  it('names the list of the wildcard rule', () => {
+    const [message] = run(perms({ deny: ['WebFetch(domain:*.example.com)'] }))
+    expect(message?.message).toContain('The deny list has no rule')
   })
 
   it('reports when the apex rule is in another list', () => {
@@ -140,6 +149,11 @@ describe(`${name}: the silent cases`, () => {
       'Read(domain:*.example.com)',
     ]
     expect(ids(perms({ allow: rules }))).toEqual([])
+  })
+
+  it('does not count a rule of another tool as the apex rule', () => {
+    const rules = ['WebFetch(domain:*.example.com)', 'Read(domain:example.com)']
+    expect(ids(perms({ allow: rules }))).toEqual(['apex'])
   })
 
   it('reports when the list holds only a WebFetch rule that has no domain prefix', () => {

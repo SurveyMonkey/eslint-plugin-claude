@@ -25,16 +25,20 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 A relative pattern with one directory segment, such as `src/**`, matches at a different depth for each rule type.[^read]
 In an `allow` rule, `Edit(src/**)` matches only `<cwd>/src` and the files under it. In a `deny` or `ask` rule, the same
 pattern matches a directory named `src` at any depth under the current directory. To allow a directory name at any depth,
-write `Edit(**/src/**)`.[^read] To name one directory, write `Edit(/src/**)`.[^read] A path with a `/` start is relative to the settings source. It is the project root only in a project or local file.[^read]
+write `Edit(**/src/**)`.[^read] To name one directory, write `Edit(/src/**)`.[^read] A path with a `/` start is relative to the settings source. In a project or local file it is the primary working directory.[^read] The docs give no anchor for a managed file, so `**/src/**` is the sure choice there.
 
 The rule reports a `Read` or `Edit` rule in `allow` whose pattern is one directory name and a final `/**`. A person who writes
 `Edit(src/**)` in `allow` can expect the depth of the same pattern in `deny`. The message offers `/src/**` and `**/src/**`.
 
 The docs give no Claude Code version for the split by rule type, so the rule has no version option.
 
+`permissions-protected-path-allow` reads the same `Edit` allow rule when its path is protected, such as `Edit(.claude/**)`. The two
+rules check different faults, so one rule can get a report from each.
+
 ### What the rule does not check
 
 - A pattern with a `./` start, such as `Edit(./src/**)`. The docs name the depth rule for `src/**` only.
+- A directory name that holds `*`, `?`, `[`, `]`, `\` or `!`, a name that is one letter and a `:` (a drive letter, as in `Edit(C:/**)`), and a name of `.`, `..` or `~`.
 - A pattern with more than one segment (`src/components/**`), a wildcard in the directory name (`s*/**`), a final `/*`,
   and a pattern that starts with `/`, `~/` or `//`. These match at one depth in every rule type.[^read]
 - A `deny` or `ask` rule, and a `Write`, `Glob` or `NotebookEdit` path rule. `permissions-path-rule-tool` reads the last three.
