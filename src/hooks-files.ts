@@ -121,7 +121,7 @@ export interface HookScript {
 }
 
 /** The script that the command word `word` names, or undefined. Only a path that starts with
- *  `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}` has a place that the file shows. A path from the
+ *  `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}`, with braces or without, has a place that the file shows. A path from the
  *  working directory has none. */
 function placeholderPath(word: string, folders: PlaceholderFolders): HookScript | undefined {
   const match = PLACEHOLDER_PATH.exec(word)

@@ -29,18 +29,18 @@ practice only.
 
 The rule reads each shell-form `command`, and the line after `-c` of `bash`, `sh` or `zsh`. It also reads the
 repository scripts that the command runs: the command word, and the script of `bash`, `sh` or `zsh`. A script
-path must start with `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}`, as in
+path must start with `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}`, with braces or without, as in
 [`hooks-script-shebang`](hooks-script-shebang.md). The rule makes one report for each handler, at the `command`
 string.
 
-- `unquoted`: a variable (`$NAME`, `${NAME}`, `$1`, `$@`) outside quotes. The scan skips a value in an
-  assignment (`A=$B`), a `[[ ... ]]` test, a comment, a special parameter such as
+- `unquoted`: a variable (`$NAME`, `${NAME}`, `$1`, `$@`) outside quotes. The scan skips a variable in a word that starts with `NAME=` (`A=$B`, and also `make CC=$CC`), a `[[ ... ]]` test, a comment, a special parameter such as
   `$?`, and a variable in single or double quotes. It scans the inside of a command substitution
-  (`$(...)`) on its own, so a quote in it starts a new quote level.
+  (`$(...)`) on its own, so a quote in it starts a new quote level. A quote or a parenthesis inside a
+  substitution does not end it early.
 - `destructive`: `rm` with a recursive flag (`-r`, `-R`, `-rf`, `--recursive`) and an operand that holds a variable
-  when the variable is outside quotes, or gets its value from hook input. A variable holds hook input when the text
+  when the text has the variable name outside quotes, or the variable gets its value from hook input. The match is by name, and not by position. A variable holds hook input when the text
   assigns it from `$(...)` with `jq` or `cat`, or reads it with `read`. A `destructive` report replaces an
-  `unquoted` report for the same handler.
+  `unquoted` report for the same text. The rule reads the command line first, then each `-c` line, then each script, and reports the first finding.
 
 ### What the rule does not read
 

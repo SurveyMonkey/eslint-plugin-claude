@@ -109,6 +109,25 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
+  it('finds the end of a command substitution past a quote, a parenthesis and a nested substitution', () => {
+    for (const text of [
+      'echo $(date) $FILE',
+      'echo $(a $(b) c) $X',
+      "echo $(echo ')') $Y",
+      'echo "$(echo ")")" $x',
+      'echo "$(sed \'s/(//\')" $y',
+      'echo $(echo \\)) $Z',
+      'echo "a\\"b$(date)" $W',
+      "echo $(echo 'a(' ) $V",
+    ]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+    expect(line("echo '$(ls $X)'")).toEqual([])
+    expect(line('echo $(echo ")" ')).toEqual([])
+    expect(line("echo $(echo '")).toEqual([])
+    expect(line("echo \"$(printf ')'); echo '$HOME'\"")).toEqual([])
+  })
+
   it('starts a new word after each comment line', () => {
     expect(script("#!/bin/bash\n# it's a hook\ncat $TARGET\n")).toEqual(['unquoted'])
     expect(script('#!/bin/bash\n# a hook\nrm -rf $TARGET\n')).toEqual(['destructive'])
@@ -127,7 +146,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
-  it('is silent in exec form and in PowerShell, which have no shell', () => {
+  it('is silent in exec form, and in shell form for PowerShell, which the scan does not read', () => {
     expect(ids({ command: 'cat', args: ['$FILE'] })).toEqual([])
     expect(ids({ command: 'cat $FILE', args: [] })).toEqual([])
     expect(ids({ command: 'cat $FILE', shell: 'powershell' })).toEqual([])
@@ -249,10 +268,28 @@ describe(`${name}: a repository script`, () => {
     expect(script('cat $FILE\n', 'bash -o')).toEqual([])
   })
 
-  it('reports once when the command and the script both have a fault', () => {
-    expect(ids({ command: `cat $A; ${P}/hooks/s.sh` }, { 'hooks/s.sh': 'cat $FILE\n' })).toEqual([
-      'unquoted',
-    ])
+  it('reports the command before the script when both have a fault, and once', () => {
+    const text = settings(hooks('Stop', [command({ command: `cat $A; ${P}/hooks/s.sh` })]))
+    const root = repo({ '.claude/settings.json': text, 'hooks/s.sh': 'cat $FILE\n' })
+    const found = lintJson(name, text, path.join(root, '.claude/settings.json'))
+    expect(found.map((message) => message.message.slice(0, 22))).toEqual(['The command uses $A wi'])
+  })
+
+  it('reads the script of a shell given by path, and any shell shebang', () => {
+    expect(script('cat $FILE\n', `/bin/bash ${P}/hooks/s.sh`)).toEqual(['unquoted'])
+    expect(script('cat $FILE\n', `bash --rcfile x.rc ${P}/hooks/s.sh`)).toEqual(['unquoted'])
+    expect(script('cat $FILE\n', `bash -O extglob ${P}/hooks/s.sh`)).toEqual(['unquoted'])
+    for (const shebang of ['#!/usr/bin/env zsh', '#!/bin/dash', '#!/bin/ksh']) {
+      expect(script(`${shebang}\ncat $FILE\n`), shebang).toEqual(['unquoted'])
+    }
+  })
+
+  it('reads a path placeholder in a script as an ordinary variable', () => {
+    expect(script('cat $CLAUDE_PROJECT_DIR/x\n')).toEqual(['unquoted'])
+  })
+
+  it('skips PowerShell only when shell is exactly powershell', () => {
+    expect(ids({ command: 'cat $FILE', shell: 'bash' })).toEqual(['unquoted'])
   })
 
   it('names the script in the message', () => {

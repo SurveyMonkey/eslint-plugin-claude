@@ -42,7 +42,7 @@ The folders follow the place of the hook file:
 
 - A path that starts in the working directory, such as `./hooks/a.sh`. The working directory is not in the file.
 - A script that an interpreter runs, such as `bash a.sh` or `node a.js`. The interpreter needs no shebang.
-- A handler with `shell` set to `"powershell"`, and a file that ends in `.ps1`, `.bat` or `.cmd`.
+- A handler with `shell` set to `"powershell"` and no `args`, and a file that ends in `.ps1`, `.bat` or `.cmd`.
 - A file that holds a null byte, because it is a program and not a script.
 - A file that the rule cannot read inside the repository: a missing file, a folder, a FIFO, a link with no
   target, a link that leads out of the repository, a file that is not readable, and a file of more than one
