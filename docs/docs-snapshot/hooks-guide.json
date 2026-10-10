@@ -1,0 +1,142 @@
+{
+  "url": "https://code.claude.com/docs/en/hooks-guide",
+  "hash": "171ff56657069588300e4b85c8c094d59577ab0ad96b541b2f891b75471ef679",
+  "blocks": [
+    {
+      "id": "automate-actions-with-hooks",
+      "hash": "34b345460417ce312ab449fc939c34e247a615992bba03ac9054afedaec43348"
+    },
+    {
+      "id": "set-up-your-first-hook",
+      "hash": "a828014d9e627c5336178543a20c715f8327b06323bf86fb5384e95241d7b242"
+    },
+    {
+      "id": "what-you-can-automate",
+      "hash": "4b30101e814154da9c1cf856239e9b96cfe9fa5201c7ba438657feb7d9a2a994"
+    },
+    {
+      "id": "get-notified-when-claude-needs-input",
+      "hash": "9abdb94c6759d1c1c0dede9819de9fa088c61dca0766afe2cb7b629846269c3c"
+    },
+    {
+      "id": "auto-format-code-after-edits",
+      "hash": "eb0d9b96f24875066605906d65d7a297ba5555b8eca1fe916cb5fd3a8d3752e5"
+    },
+    {
+      "id": "block-edits-to-protected-files",
+      "hash": "89b47ca14e76084d92da70dec31f687bfd52ee74ed2f75ce5414d328deaddf7f"
+    },
+    {
+      "id": "re-inject-context-after-compaction",
+      "hash": "4b1103d35f0d8803456c1e9095a8623d38ae90ae3c4133227e9fab837adcb176"
+    },
+    {
+      "id": "audit-configuration-changes",
+      "hash": "45c18e79c629a61db2c0a777c552c33bce83bcb3cd4ff0fb33de0f965cef6dca"
+    },
+    {
+      "id": "reload-environment-when-directory-or-files-change",
+      "hash": "d078d8eede1828bd4199e0d83401cae2352106aebe9d1fc5152453099043cce5"
+    },
+    {
+      "id": "auto-approve-specific-permission-prompts",
+      "hash": "d3ec2849cf937664849ad9ac505b6ba2e736e7875b5f6ac998e80fa10388fcf3"
+    },
+    {
+      "id": "how-hooks-work",
+      "hash": "47fa270279c29725535024fefebfc983df1d64565dcb5b8bd860d14ef11801d4"
+    },
+    {
+      "id": "combine-results-from-multiple-hooks",
+      "hash": "576594012545b6b50f4aa491a3b7cbee567ae8b2af8a87c3d5cd415b03b768a3"
+    },
+    {
+      "id": "read-input-and-return-output",
+      "hash": "1e84b44d3f9c1f06e4b701f86daeb7d445105ded9358ec480fe71a64ffe6bb30"
+    },
+    {
+      "id": "hook-input",
+      "hash": "7356c487d91fbce9adde2e3e61823795b1f70fb09a25fca7b03049d0249f3c72"
+    },
+    {
+      "id": "hook-output",
+      "hash": "862d3c623fba8e9c7df54368d71e723c850180682a117b24247990567ea09aef"
+    },
+    {
+      "id": "structured-json-output",
+      "hash": "080c974a3723e8f92e2afd2f08e6a0a65e8484bedce1a956f3deacb0b50cc939"
+    },
+    {
+      "id": "filter-hooks-with-matchers",
+      "hash": "bf22c48b33f1cfa073eeaa3e2b7e39ddab3d8f1442960b0d0f98c0b5b0228e37"
+    },
+    {
+      "id": "filter-by-tool-name-and-arguments-with-the-if-field",
+      "hash": "be6094f10128434a96eefc6f3452fcd0829cf78c085bd602b2ad0d34950a605e"
+    },
+    {
+      "id": "configure-hook-location",
+      "hash": "1a32278fb5af9ad995099936d331cb3867825f1be38eb41d998dc17aa2346d98"
+    },
+    {
+      "id": "prompt-based-hooks",
+      "hash": "bbde674952aff23e76c90493318fccca07d4a56bea9d859bf59c8428f672cd63"
+    },
+    {
+      "id": "agent-based-hooks",
+      "hash": "6c3a43f139ba4832421a6c0715656d079fe5c29051047ea6873bf44571a79f91"
+    },
+    {
+      "id": "http-hooks",
+      "hash": "8a23660c093236337e7c6650b6b867d6bea5d744380e827107be514f8394b9ca"
+    },
+    {
+      "id": "limitations-and-troubleshooting",
+      "hash": "2296bc3e04321b1f6f056ed52bdecda34ccb33ebf37f3c4a5cf46d994cab21e9"
+    },
+    {
+      "id": "limitations",
+      "hash": "47be14633fbf2c285ad4862831a1e7cea78c9567015f4abf6cd4eb5b69014694"
+    },
+    {
+      "id": "hooks-and-permission-modes",
+      "hash": "1e192e00117e6bf1c04b87fb9105ab6599ab97485717b55e8486d0781fcdfb07"
+    },
+    {
+      "id": "hook-not-firing",
+      "hash": "9e1447393024785b239935c51f5bba3dbba37ebcac4fdcf9c04bbe8121b0d062"
+    },
+    {
+      "id": "hook-error-in-output",
+      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+    },
+    {
+      "id": "hooks-shows-no-hooks-configured",
+      "hash": "a5dfb7d8c15b06887d297085628ca199e3221d221b125a981a5a68021236a9de"
+    },
+    {
+      "id": "stop-hook-hits-the-block-cap",
+      "hash": "bb11101aa19099459c20b0cbb582f595299e5f54ee40be8d1b616af28d83d2e5"
+    },
+    {
+      "id": "hook-json-has-no-effect",
+      "hash": "ea7d49431b71bd6ff8b747bbde13feec6fa34698bfcc749ca15327c23ccfe482"
+    },
+    {
+      "id": "check-what-a-hook-did",
+      "hash": "d40b107ebef52c423da2d2e8ff97c9f7acd64755a709c2d4efb0e040273e396c"
+    },
+    {
+      "id": "learn-more",
+      "hash": "ae446c689cf2abd0f54ad1557b5ea0a6602d60aa1ac576835a98a485d0616225"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Hook not firing",
+      "id": "hook-not-firing",
+      "hash": "9e1447393024785b239935c51f5bba3dbba37ebcac4fdcf9c04bbe8121b0d062",
+      "text": "### Hook not firing\n\nThe hook is configured but never executes.\n\n* Run `/hooks` and confirm the hook appears under the correct event\n* Check that the matcher pattern matches the tool name exactly. Matchers are case-sensitive\n* Verify you're triggering the right event type: `PreToolUse` fires before tool execution, `PostToolUse` fires after. A `PermissionRequest` hook fires when Claude Code is about to ask you for permission; see the [limitations](#limitations) for the non-interactive cases"
+    }
+  ]
+}

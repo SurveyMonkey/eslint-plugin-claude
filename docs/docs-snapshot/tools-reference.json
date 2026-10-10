@@ -185,6 +185,12 @@
   ],
   "sources": [
     {
+      "heading": "Check which tools are available",
+      "id": "check-which-tools-are-available",
+      "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be",
+      "text": "## Check which tools are available\n\nYour exact tool set depends on your provider, platform, and settings. To check what's loaded in a running session, ask Claude directly:\n\n```text theme={null}\nWhat tools do you have access to?\n```\n\nClaude gives a conversational summary. For exact MCP tool names, run `/mcp`.\n\n<Note>\n  The [advisor tool](/docs/en/advisor) is a [server tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool) that the API runs, rather than a tool that Claude Code implements. It has no name you can reference in permission rules or hook matchers.\n</Note>"
+    },
+    {
       "heading": "Configure tools with permission rules and hooks",
       "id": "configure-tools-with-permission-rules-and-hooks",
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",
