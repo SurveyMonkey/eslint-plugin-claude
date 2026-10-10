@@ -120,6 +120,7 @@ import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
+import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
@@ -128,12 +129,15 @@ import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-
 import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
 import settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import settingsEnvContextCost from './rules/settings-env-context-cost.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
+import settingsEnvFormatHeuristic from './rules/settings-env-format-heuristic.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
 import settingsEnvNumericSpelling from './rules/settings-env-numeric-spelling.ts'
 import settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off.ts'
 import settingsEnvRouting from './rules/settings-env-routing.ts'
+import settingsEnvSecretHeuristic from './rules/settings-env-secret-heuristic.ts'
 import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesDirectory from './rules/settings-extra-known-marketplaces-directory.ts'
@@ -155,8 +159,11 @@ import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-
 import settingsMarketplaceKeyAlias from './rules/settings-marketplace-key-alias.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
 import settingsMarketplaceSkipLfs from './rules/settings-marketplace-skip-lfs.ts'
+import settingsModelCapability from './rules/settings-model-capability.ts'
 import settingsModelList from './rules/settings-model-list.ts'
+import settingsModelPinVersion from './rules/settings-model-pin-version.ts'
 import settingsModelValue from './rules/settings-model-value.ts'
+import settingsNestedProjectFile from './rules/settings-nested-project-file.ts'
 import settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
@@ -166,6 +173,7 @@ import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSchema from './rules/settings-schema.ts'
 import settingsSchemaUrl from './rules/settings-schema-url.ts'
 import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
+import settingsSkilloverridesUnknownSkill from './rules/settings-skilloverrides-unknown-skill.ts'
 import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
@@ -427,6 +435,14 @@ const modules = [
   memoryIndexEntryFormat,
   memoryTopicFrontmatter,
   rulesPathsNoMatch,
+  settingsAgentExists,
+  settingsEnvContextCost,
+  settingsEnvFormatHeuristic,
+  settingsEnvSecretHeuristic,
+  settingsModelCapability,
+  settingsModelPinVersion,
+  settingsNestedProjectFile,
+  settingsSkilloverridesUnknownSkill,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -661,6 +677,14 @@ const recommended: Record<RuleName, Severity> = {
   'memory-index-entry-format': 'off',
   'memory-topic-frontmatter': 'off',
   'rules-paths-no-match': 'off',
+  'settings-agent-exists': 'off',
+  'settings-env-context-cost': 'off',
+  'settings-env-format-heuristic': 'off',
+  'settings-env-secret-heuristic': 'off',
+  'settings-model-capability': 'off',
+  'settings-model-pin-version': 'off',
+  'settings-nested-project-file': 'off',
+  'settings-skilloverrides-unknown-skill': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

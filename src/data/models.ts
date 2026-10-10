@@ -8,8 +8,11 @@
 //   the same page, for the family of an ID and for the `[1m]` suffix.
 // - The errors page, "Model is not a recognized model ID", for the `claude-` prefix
 //   (https://code.claude.com/docs/en/errors#model-is-not-a-recognized-model-id).
+// - "Extended context", "Adaptive reasoning and fixed thinking budgets" and "Extended thinking" of
+//   the same page, for the model versions at the end of this file.
 // Checked on Claude Code 2.1.296 on 2026-10-09. Review these lists on or before 2027-04-09, the
-// `stale_after` date of docs/rules/settings-model-value.md.
+// `stale_after` date of docs/rules/settings-model-value.md. Review the model versions at the end
+// on or before the `stale_after` date of docs/rules/settings-model-capability.md.
 
 /** The families that have an alias. Each alias resolves to a model of its family. The model can
  *  differ by provider. */
@@ -95,3 +98,92 @@ export function familyOf(value: string): string | undefined {
   const base = withoutSuffix(value)
   return FAMILY_ALIASES.includes(base) ? base : ID_FAMILY.exec(value)?.[1]
 }
+
+/** The family and the version of a model: `claude-opus-4-8` is `opus`, 4, 8. */
+export interface ModelVersion {
+  family: string
+  major: number
+  minor: number
+}
+
+// The name of an ID puts the family first, or the version first for the older models:
+// `claude-sonnet-4-5-20250929`, `claude-3-5-haiku-latest`. A minor version has one or two digits.
+// A date has eight, so a date is not a minor version.
+const NAME_FIRST = new RegExp(
+  `(?:^|[^a-z0-9])claude-(${FAMILY_ALIASES.join('|')})-(\\d+)(?:-(\\d{1,2})(?![0-9]))?`,
+)
+const VERSION_FIRST = new RegExp(
+  `(?:^|[^a-z0-9])claude-(\\d+)(?:-(\\d{1,2})(?![0-9]))?-(${FAMILY_ALIASES.join('|')})`,
+)
+
+/** The family and the version of the model ID `value`. A provider ID that embeds a `claude-`
+ *  name counts. The result is undefined for an alias, an ARN and any other text. A minor version
+ *  that the ID omits is 0. */
+export function modelVersionOf(value: string): ModelVersion | undefined {
+  const named = NAME_FIRST.exec(value)
+  if (named !== null) {
+    return { family: named[1] as string, major: Number(named[2]), minor: Number(named[3] ?? 0) }
+  }
+  const early = VERSION_FIRST.exec(value)
+  return early === null
+    ? undefined
+    : { family: early[3] as string, major: Number(early[1]), minor: Number(early[2] ?? 0) }
+}
+
+/** True when the version of `model` is `major.minor` or later. */
+const isFrom = (model: ModelVersion, major: number, minor: number) =>
+  model.major > major || (model.major === major && model.minor >= minor)
+
+/** True when the model has a 1M context window. The page lists Fable, Sonnet 5 and later, Haiku
+ *  5.5, Opus 4.6 and later, and Sonnet 4.6. Haiku before 5.5 and Sonnet or Opus before 4.6 have
+ *  none, and the `[1m]` suffix does not give it. */
+export function hasOneMillionContext(model: ModelVersion): boolean {
+  if (model.family === 'fable') {
+    return true
+  }
+  return model.family === 'haiku' ? isFrom(model, 5, 5) : isFrom(model, 4, 6)
+}
+
+/** True when thinking cannot be turned off. The page names Opus 5.5, Sonnet 5.5, Haiku 5.5 and
+ *  the Fable models. `alwaysThinkingEnabled: false` and `MAX_THINKING_TOKENS=0` have no effect
+ *  on them. */
+export function alwaysThinks(model: ModelVersion): boolean {
+  return model.family === 'fable' || (model.major === 5 && model.minor === 5)
+}
+
+/** True when the model always uses adaptive reasoning. The page names the Fable models, Sonnet 5
+ *  and later, Haiku 5.5, and Opus 4.7 and later. `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING` does not
+ *  apply to them. */
+export function alwaysAdaptive(model: ModelVersion): boolean {
+  switch (model.family) {
+    case 'fable':
+      return true
+    case 'opus':
+      return isFrom(model, 4, 7)
+    case 'sonnet':
+      return isFrom(model, 5, 0)
+    default:
+      return isFrom(model, 5, 5)
+  }
+}
+
+/** The model that an alias resolves to on the Anthropic API, from the table of the page. The
+ *  model differs on another provider, so a caller must not use this where a provider is set. */
+export const ANTHROPIC_API_ALIASES: ReadonlyMap<string, ModelVersion> = new Map([
+  ['fable', { family: 'fable', major: 5, minor: 1 }],
+  ['opus', { family: 'opus', major: 5, minor: 5 }],
+  ['sonnet', { family: 'sonnet', major: 5, minor: 5 }],
+  ['haiku', { family: 'haiku', major: 5, minor: 5 }],
+])
+
+/** The families that an alias resolves through. `opusplan` uses Opus and then Sonnet. `best` is
+ *  the Fable model where Fable is available, and the Opus model otherwise. `default` is not an
+ *  alias, and the other aliases are their own family. */
+export const ALIAS_FAMILIES: ReadonlyMap<string, readonly string[]> = new Map([
+  ...FAMILY_ALIASES.map((family): [string, readonly string[]] => [family, [family]]),
+  ['opusplan', ['opus', 'sonnet']],
+  ['best', ['fable', 'opus']],
+])
+
+/** The variable that pins the alias of `family` to a model: `ANTHROPIC_DEFAULT_OPUS_MODEL`. */
+export const pinVariableOf = (family: string) => `ANTHROPIC_DEFAULT_${family.toUpperCase()}_MODEL`

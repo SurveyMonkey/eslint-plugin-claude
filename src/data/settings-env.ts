@@ -77,7 +77,8 @@ const CAPABILITIES_VARIABLE =
 // The env vars reference: a variable that turns a behavior on or off takes one of these, in any
 // casing.
 const ON_WORDS = ['1', 'true', 'yes', 'on']
-const BOOLEAN_WORDS = [...ON_WORDS, '0', 'false', 'no', 'off']
+const OFF_WORDS = ['0', 'false', 'no', 'off']
+const BOOLEAN_WORDS = [...ON_WORDS, ...OFF_WORDS]
 
 /** True when `value` turns a behavior on: `1`, `true`, `yes` or `on`, with any letter case. */
 export const isEnvOn = (value: string) => ON_WORDS.includes(value.toLowerCase())
@@ -387,3 +388,70 @@ export const PRIVACY_TOGGLE_ENV_VARS: readonly string[] = [
   'DISABLE_TELEMETRY',
   'DO_NOT_TRACK',
 ]
+
+// The variables of the heuristic env rules. Sources: the rows of the env vars reference, and the
+// MCP page (https://code.claude.com/docs/en/mcp#mcp-output-limits-and-warnings), checked on Claude
+// Code 2.1.296 on 2026-10-10. The docs state these forms less firmly than those in `FORMS`: they
+// give a unit and a default, not a rule for other spellings. So these forms are not in `FORMS`,
+// and `settings-env-value-format` does not report them.
+
+const WHOLE_MILLISECONDS: EnvForm = {
+  expected: 'a whole number of milliseconds in plain digits',
+  accepts: (value) => PLAIN_DIGITS.test(value),
+}
+
+const HEURISTIC_FORMS = new Map<string, EnvForm>([
+  ['MAX_MCP_OUTPUT_TOKENS', positiveWhole],
+  ['MCP_TIMEOUT', WHOLE_MILLISECONDS],
+  ['MCP_TOOL_TIMEOUT', WHOLE_MILLISECONDS],
+  // The reference says to set `0` to turn the idle check or the move to a background task off.
+  ['CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT', WHOLE_MILLISECONDS],
+  ['CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS', WHOLE_MILLISECONDS],
+  ['CLAUDE_CODE_USE_POWERSHELL_TOOL', oneOf('0 or 1', ['0', '1'])],
+])
+
+/** The form of the value of the variable `name`, for a variable that only the heuristic rule
+ *  `settings-env-format-heuristic` checks. */
+export function heuristicEnvForm(name: string): EnvForm | undefined {
+  return HEURISTIC_FORMS.get(name)
+}
+
+/** The variables that hold the path to a key file or a certificate, and not a key. Their names end
+ *  in `_KEY`. The env vars reference says that `CLAUDE_CODE_CLIENT_KEY` is the "path to client
+ *  private key file". The settings reference gives `OTEL_EXPORTER_OTLP_*_CLIENT_KEY` the same
+ *  place among the exporter files. */
+export function holdsKeyPath(name: string): boolean {
+  return name === 'CLAUDE_CODE_CLIENT_KEY' || /^OTEL_EXPORTER_OTLP_(?:.+_)?CLIENT_KEY$/.test(name)
+}
+
+/** The shapes of a value that is a credential, whatever the name: an Anthropic API key
+ *  (`sk-ant-`), a GitHub token, an AWS access key ID, a Slack token, and an `Authorization`
+ *  value. The docs name the first shape in the scrub list of the env vars reference as a value
+ *  that "looks like a credential". The others are the public prefixes of common services. */
+const SECRET_VALUE_SHAPES: readonly RegExp[] = [
+  /^sk-ant-/,
+  /^(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})$/,
+  /^(?:AKIA|ASIA)[A-Z0-9]{16}$/,
+  /^xox[abprs]-/,
+  /^Bearer\s+\S/,
+]
+
+/** True when `value` has the shape of a credential. */
+export function looksLikeSecret(value: string): boolean {
+  return SECRET_VALUE_SHAPES.some((shape) => shape.test(value))
+}
+
+/** True when the variable name ends in `_KEY`, `_TOKEN`, `_SECRET` or `_PASSWORD`. */
+export function hasSecretName(name: string): boolean {
+  return /_(?:KEY|TOKEN|SECRET|PASSWORD)$/i.test(name)
+}
+
+/** The variable that controls MCP tool search. A false value loads every MCP tool definition
+ *  upfront. */
+export const TOOL_SEARCH_VAR = 'ENABLE_TOOL_SEARCH'
+
+/** The variable that forces the 5-minute prompt cache TTL. */
+export const FORCE_CACHE_5M_VAR = 'FORCE_PROMPT_CACHING_5M'
+
+/** True when `value` turns a behavior off: `0`, `false`, `no` or `off`, with any letter case. */
+export const isEnvOff = (value: string) => OFF_WORDS.includes(value.toLowerCase())
