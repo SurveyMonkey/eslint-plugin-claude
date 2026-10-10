@@ -2,6 +2,9 @@ import { createRequire } from 'node:module'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
+import agentBodyNonempty from './rules/agent-body-nonempty.ts'
+import agentDescriptionProactive from './rules/agent-description-proactive.ts'
+import agentDescriptionsBudget from './rules/agent-descriptions-budget.ts'
 import agentDisallowedToolsScope from './rules/agent-disallowed-tools-scope.ts'
 import agentFieldMinVersion from './rules/agent-field-min-version.ts'
 import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
@@ -15,6 +18,7 @@ import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
 import agentMemoryScopeProject from './rules/agent-memory-scope-project.ts'
 import agentModelForced from './rules/agent-model-forced.ts'
 import agentModelValue from './rules/agent-model-value.ts'
+import agentNameKebabCase from './rules/agent-name-kebab-case.ts'
 import agentNameShadowing from './rules/agent-name-shadowing.ts'
 import agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import agentNameUnique from './rules/agent-name-unique.ts'
@@ -26,6 +30,7 @@ import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
 import agentSkillsExist from './rules/agent-skills-exist.ts'
 import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
+import agentTeammateIgnoredFields from './rules/agent-teammate-ignored-fields.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsAgentTypeList from './rules/agent-tools-agent-type-list.ts'
 import agentToolsConditional from './rules/agent-tools-conditional.ts'
@@ -178,6 +183,11 @@ const modules = [
   agentSkillsExist,
   agentToolsAgentTypeList,
   agentToolsSkillForPreload,
+  agentBodyNonempty,
+  agentDescriptionProactive,
+  agentDescriptionsBudget,
+  agentNameKebabCase,
+  agentTeammateIgnoredFields,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -316,6 +326,11 @@ const recommended: Record<RuleName, Severity> = {
   'agent-skills-exist': 'off',
   'agent-tools-agent-type-list': 'off',
   'agent-tools-skill-for-preload': 'off',
+  'agent-body-nonempty': 'off',
+  'agent-description-proactive': 'off',
+  'agent-descriptions-budget': 'off',
+  'agent-name-kebab-case': 'off',
+  'agent-teammate-ignored-fields': 'off',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',

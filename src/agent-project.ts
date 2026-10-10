@@ -5,12 +5,14 @@
 // of these folders (https://code.claude.com/docs/en/sub-agents#choose-the-subagent-scope). A rule
 // reads no file out of the repository (ADR 001, Decision 14).
 import path from 'node:path'
-import type { AgentFile } from './agent-files.ts'
+import { type AgentFile, agentFileState, manifestAgents } from './agent-files.ts'
 import { foldersAbove } from './folders-above.ts'
 import { readSettings } from './settings-files.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
+  missingOf,
+  realOf,
   repositoryRoot,
   UNREADABLE,
   type Unreadable,
@@ -62,4 +64,39 @@ export function projectAgentNames(scope: AgentFile): string[] | Unreadable {
     }
   }
   return names
+}
+
+/** The agent files of the scope `scope`, as absolute paths. A local scope holds each `.md` file
+ *  below its `agents/` directory. A plugin scope holds the files that its manifest key `agents`
+ *  names, or the files below `agents/` when the key is not there. The result is `UNREADABLE` when
+ *  the scope has a part that the check cannot see: a manifest that it cannot read, a path that is
+ *  a dangling link, a link out of the repository, or a directory that it cannot list. A named
+ *  file that is not there adds nothing, as in Claude Code. */
+export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
+  const bound = repositoryRoot(scope.root)
+  const named = scope.plugin ? manifestAgents(scope.root, bound) : null
+  if (named === UNREADABLE) {
+    return UNREADABLE
+  }
+  if (named !== null) {
+    const files: string[] = []
+    for (const file of named) {
+      const state = agentFileState(file, bound)
+      if (state === UNREADABLE) {
+        return UNREADABLE
+      }
+      if (state === 'present') {
+        files.push(file)
+      }
+    }
+    return files
+  }
+  const agents = path.join(scope.root, 'agents')
+  // `markdownFiles` reads a directory that is not there as empty. Such a directory behind a
+  // dangling link, or out of the repository, is a part that the check cannot see.
+  if (realOf(agents) === null && missingOf(agents, bound) === UNREADABLE) {
+    return UNREADABLE
+  }
+  const scan = markdownFiles(agents, bound)
+  return scan.outside || scan.unreadable ? UNREADABLE : scan.files
 }
