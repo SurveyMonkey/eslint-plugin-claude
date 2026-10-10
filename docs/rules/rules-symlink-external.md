@@ -31,9 +31,9 @@ checks the `.claude` folder, the `.claude/rules` folder, each folder below it, a
 reports the first part that is a link with a real path outside the repository. The message names that
 link and its target. It reports a rule file once, at the start of the file.
 
-The walk of `eslint .` does not enter a link to a folder. So a linked folder gets a report only
-when ESLint receives a path below it, for example `eslint .claude/rules/shared/`, or in an editor.
-A link to a file gets a report in each case.
+The walk of `eslint .` does not enter a link to a folder. A linked folder gets a report only when
+ESLint receives a path below it, in an editor or as in `eslint .claude/rules/shared/`. A link to
+a file gets a report in each case.
 
 Fail, when `.claude/rules/security.md` is a link to a file out of the repository:
 
