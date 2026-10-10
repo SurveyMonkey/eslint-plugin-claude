@@ -8,7 +8,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-package-lifecycle-scripts'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = ['**/package.json']
 const lint = (dir: string, file: string, code: string) =>
@@ -34,9 +34,9 @@ describe(RULE, () => {
       messageId: 'ignored',
       message: message('postinstall'),
       line: 1,
-      column: 13,
+      column: 14,
       endLine: 1,
-      endColumn: 26,
+      endColumn: 27,
     })
   })
 
