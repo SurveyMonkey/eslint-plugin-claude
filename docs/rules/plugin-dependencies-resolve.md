@@ -28,7 +28,7 @@ plugin that declares it.[^declare] A dependency from another marketplace is not 
 `allowCrossMarketplaceDependenciesOn`. When a dependency of `plugin.json` is refused, the install
 completes without it, and the plugin then fails to load.[^cross] The check does not apply to a
 dependency that the user has already installed and enabled at the same scope. The rule cannot see
-that state.
+that state, so it still reports such a dependency.
 
 The rule reads the `marketplace.json` that encloses the plugin. That file is in the nearest
 `.claude-plugin/` folder, from the plugin root up to the repository root. The rule reports each
@@ -51,7 +51,10 @@ repository.
 
 The rule makes no report in these cases:
 
-- The plugin is in no marketplace of the repository, or no entry of `plugins` has its name.
+- The plugin is in no marketplace of the repository, or no entry of `plugins` has its name. An
+  entry that lists the plugin under another name is a case for
+  `marketplace-entry-name-matches-manifest`.
+- The manifest has no string `name`.
 - The `marketplace.json` has no string `name`, or its `plugins` value is not an array. The
   marketplace rules report those.
 - `allowCrossMarketplaceDependenciesOn` is set to a value that is not an array.

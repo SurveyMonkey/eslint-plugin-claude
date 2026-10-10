@@ -1,7 +1,8 @@
 // A dependency of a plugin resolves in the marketplace of the plugin, or in another
 // marketplace that the root marketplace allows (docs/rules/plugin-dependencies-resolve.md). The
 // rule reads the `plugin.json` dependencies and the `marketplace.json` that encloses the plugin.
-// It makes no report when it cannot see the plugin or that file.
+// It makes no report when it cannot see the plugin or that file, or when no entry of that file
+// has the name of the plugin.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { enclosingMarketplace, entriesIn } from '../marketplace-file.ts'
@@ -66,7 +67,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' | 'refused' }> = {
         }
         const listed = new Set(entries.map((entry) => entry.name))
         const named = lastMember(node.body, 'name')?.value
-        // A plugin that no entry names is in no marketplace: its dependencies resolve nowhere.
+        // The rule links a plugin to its entry by name. With no such entry, it cannot tell which
+        // marketplace serves the plugin, so it makes no report.
         if (named?.type !== 'String' || !listed.has(named.value)) {
           return
         }

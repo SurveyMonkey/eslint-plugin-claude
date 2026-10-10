@@ -278,6 +278,13 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, MANIFEST, code)).toEqual([])
   })
 
+  linked('stays silent for a skill folder that is a link out of the repository', () => {
+    const elsewhere = tree({ 'other.md': '' }, false)
+    const { dir, code, top } = pluginTree({ name: 'p', monitors: [monitor(invoke('deploy'))] })
+    link(top, 'skills/deploy', elsewhere)
+    expect(lint(dir, MANIFEST, code)).toEqual([])
+  })
+
   linked('stays silent for a SKILL.md that is a link with no target', () => {
     const { dir, code, top } = pluginTree(
       { name: 'p', monitors: [monitor(invoke('deploy'))] },

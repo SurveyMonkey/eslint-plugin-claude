@@ -48,6 +48,10 @@ describe(`${RULE} (unlisted plugin)`, () => {
     expect(run(['ghost'], {}, [{ name: 'other', source: './plugins/other' }])).toEqual([])
   })
 
+  check('stays silent for a plugin that an entry lists under another name', () => {
+    expect(run(['ghost'], {}, [{ name: 'other', source: './plugins/p' }])).toEqual([])
+  })
+
   check('stays silent for a plugin whose manifest has no string name', () => {
     const code = JSON.stringify({ dependencies: ['ghost'] })
     const top = tree({

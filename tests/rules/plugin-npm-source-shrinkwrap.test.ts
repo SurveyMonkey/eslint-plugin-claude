@@ -59,6 +59,8 @@ describe(RULE, () => {
     ['yarn.lock', { 'yarn.lock': '' }],
     ['an npm-shrinkwrap.json in a subfolder', { 'sub/npm-shrinkwrap.json': '{}' }],
     ['an npm-shrinkwrap.json that is a folder', { 'npm-shrinkwrap.json/x': '' }],
+    ['a bun.lock that is a folder', { 'bun.lock/x': '' }],
+    ['a bun.lockb and no bun.lock', { 'bun.lockb': '' }],
   ])('reports a plugin with %s and no shrinkwrap', (_title, lockfiles) => {
     expect(run([entry(NPM)], { ...PKG, ...lockfiles })).toEqual([message('p')])
   })
@@ -189,6 +191,19 @@ describe(`${RULE} (silent)`, () => {
     const elsewhere = tree({ 'npm-shrinkwrap.json': '{}' }, false)
     const { dir, code, top } = setup([entry(NPM)], PKG)
     link(top, 'plugins/p/npm-shrinkwrap.json', path.join(elsewhere, 'npm-shrinkwrap.json'))
+    expect(lintPlugin(RULE, dir, code)).toEqual([])
+  })
+
+  linked('stays silent for a bun.lock that is a link with no target', () => {
+    const { dir, code, top } = setup([entry(NPM)], PKG)
+    link(top, 'plugins/p/bun.lock', 'ghost')
+    expect(lintPlugin(RULE, dir, code)).toEqual([])
+  })
+
+  linked('stays silent for a bun.lock that is a link out of the repository', () => {
+    const elsewhere = tree({ 'bun.lock': '' }, false)
+    const { dir, code, top } = setup([entry(NPM)], PKG)
+    link(top, 'plugins/p/bun.lock', path.join(elsewhere, 'bun.lock'))
     expect(lintPlugin(RULE, dir, code)).toEqual([])
   })
 

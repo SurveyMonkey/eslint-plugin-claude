@@ -24,7 +24,8 @@ Claude Code installs the Node.js dependencies of a plugin when the plugin root h
 `package.json` and a lockfile that it reads: `bun.lock`, `npm-shrinkwrap.json` or
 `package-lock.json`.[^runs] For a plugin that is distributed through an npm source, use
 `npm-shrinkwrap.json`, because npm excludes `package-lock.json` from published packages.[^runs]
-A published package without a shrinkwrap file has no lockfile, so Claude Code skips the install.
+A published package with no lockfile that Claude Code reads gets no install. Because npm drops
+`package-lock.json`, the package needs `npm-shrinkwrap.json` or `bun.lock`.
 
 The rule finds the marketplace entry of the plugin. The marketplace is the nearest
 `.claude-plugin/marketplace.json`, from the plugin root up to the repository root. The entry is
@@ -33,7 +34,8 @@ all of these are true:
 
 - The `source` of the entry is an object with `"source": "npm"`.
 - The plugin root has a `package.json` file.
-- The plugin root has no `npm-shrinkwrap.json` file and no `bun.lock` file.
+- The plugin root has no `npm-shrinkwrap.json` file and no `bun.lock` file. A folder with one of
+  these names is no file, so the rule reports it.
 
 The report is on the `name` of `plugin.json`. To fix it, run `npm shrinkwrap` and commit the
 file. A plugin that ships `package-lock.json` only is reported, because npm drops that file.
@@ -41,16 +43,18 @@ file. A plugin that ships `package-lock.json` only is reported, because npm drop
 The rule checks less than the row of the inventory. The only link between a plugin in the
 repository and an entry with an `npm` source is the name. The entry does not point at a folder.
 `plugin-package-lockfile` reports a plugin with a lockfile that Claude Code skips. This rule
-reports the missing shrinkwrap of a plugin that an npm source serves, whatever other lockfiles it has, except `bun.lock`. Claude Code installs from `bun.lock`.
+reports the missing shrinkwrap of a plugin that an npm source serves, whatever other lockfiles it
+has. The exception is `bun.lock`. Claude Code reads it, so the rule trusts it. The rule does not
+check its `lockfileVersion`, and Bun must be on the user's PATH.
 
 The rule makes no report in these cases:
 
 - The plugin is in no marketplace of the repository, or no entry has its name.
 - The entry has another source: a relative path, `github`, `url`, `git-subdir`, `archive` or
   `command`.
-- The plugin has no `package.json`, or a name is a folder and not a file.
+- The plugin has no `package.json`, or its `package.json` is a folder.
 - The manifest has no string `name`.
-- The rule cannot see the `marketplace.json`, the `package.json` or the `npm-shrinkwrap.json`.
+- The rule cannot see the `marketplace.json`, the `package.json`, the `npm-shrinkwrap.json` or the `bun.lock`.
   The file can fail to parse. Its real path can be out of the repository, or it can be a link with
   no target.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
