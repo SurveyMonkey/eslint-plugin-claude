@@ -493,6 +493,18 @@ const TREE: Record<string, string> = {
   'packages/md/ok/CLAUDE.md': '@../f2.md\n',
   'packages/md/docs/notes.md': '@../f1.md\n',
   'packages/mda/AGENTS.md': '@f1.md\n',
+  // `claude-md-import-in-code-span`: a path in a code span or a fence that names a file, in each
+  // file that the rule reads. The same paths where no rule reads them, and a path to a missing
+  // file. The file `.git` makes `packages/ic` a repository.
+  'packages/ic/.git': 'gitdir: ../.git\n',
+  'packages/ic/present.md': '# Present\n',
+  'packages/ic/CLAUDE.md': 'Use `@present.md`.\n',
+  'packages/ic/.claude/CLAUDE.md': 'Use `@../present.md`.\n',
+  'packages/ic/CLAUDE.local.md': '```\n@present.md\n```\n',
+  'packages/ic/docs/notes.md': 'Use `@../present.md`.\n',
+  'packages/ic/ok/CLAUDE.md': 'Use `@none.md`, and import @../present.md.\n',
+  'packages/ica/AGENTS.md': 'Use `@present.md`.\n',
+  'packages/ica/present.md': '# Present\n',
   // `claude-md-max-lines`: a file of 201 lines in each place that it lints, and an import of a long
   // file. The same text where no rule reads it: a Markdown file that is not an instruction file.
   'packages/lm/CLAUDE.md': LONG,
@@ -686,6 +698,10 @@ const MEMORY_WARN_RULES = [
 // turns each on at `warn`.
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-import-in-code-span': [
+    'markdown/gfm',
+    ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
+  ],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS)
 
@@ -960,7 +976,13 @@ const EXPECTED = [
 ].sort()
 
 // The reports of the `off` rules of #13. They appear in `strict` only, at `warn`.
-const STRICT_ONLY: string[] = []
+const STRICT_ONLY = [
+  // `claude-md-import-in-code-span` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  'packages/ic/CLAUDE.md: claude/claude-md-import-in-code-span@1',
+  'packages/ic/.claude/CLAUDE.md: claude/claude-md-import-in-code-span@1',
+  'packages/ic/CLAUDE.local.md: claude/claude-md-import-in-code-span@1',
+  'packages/ica/AGENTS.md: claude/claude-md-import-in-code-span@1',
+]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.

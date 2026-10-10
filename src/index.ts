@@ -22,6 +22,7 @@ import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
 import claudeMdImportExternal from './rules/claude-md-import-external.ts'
+import claudeMdImportInCodeSpan from './rules/claude-md-import-in-code-span.ts'
 import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import claudeMdMaxLines from './rules/claude-md-max-lines.ts'
@@ -215,6 +216,7 @@ const modules = [
   rulesMaxLines,
   rulesSymlinkExternal,
   claudeMdCombinedSize,
+  claudeMdImportInCodeSpan,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -343,6 +345,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-max-lines': 'warn',
   'rules-symlink-external': 'warn',
   'claude-md-combined-size': 'off',
+  'claude-md-import-in-code-span': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
