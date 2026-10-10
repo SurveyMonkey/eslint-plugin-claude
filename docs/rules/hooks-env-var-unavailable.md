@@ -24,8 +24,8 @@ The rule reads the `command` string and each string item of `args` of a `command
 reports a reference to one of two variables. A reference is `$NAME`, `${NAME}`, `$env:NAME` or
 `${env:NAME}`. A longer name, such as `$CLAUDE_MODEL_ID`, is another variable.
 
-- **`CLAUDE_ENV_FILE`.** This variable holds the path of a file where a hook writes `export`
-  lines, to persist variables for later Bash commands. Claude Code sets it for `SessionStart`,
+- **`CLAUDE_ENV_FILE`.** This variable holds the path of a file. A hook writes `export`
+  lines there to persist variables for later Bash commands. Claude Code sets it for `SessionStart`,
   `Setup`, `CwdChanged` and `FileChanged` hooks only. Other hook types do not have it.[^persist]
   The rule reports a reference on any other event. On an event that Claude Code does not know, the
   rule makes no report, because [`hooks-event-name-known`](hooks-event-name-known.md) reports the
