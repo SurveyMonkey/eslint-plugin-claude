@@ -14,9 +14,10 @@ permissions:
   contents: read
 
 # The job commits nothing, and it never changes the snapshot. When a docs
-# page changed, or the check failed, it classifies the pages and opens one
-# issue for each changed block. A block that an inventory row cites, and that
-# no map heading of a section cites, also gets a comment on its group issue,
+# page changed, or the check failed, it classifies the pages and opens an
+# issue for a changed block. The uncited new-rule and needs-triage blocks of
+# one page share one digest issue. A block that an inventory row cites, and
+# that no map heading of a section cites, also gets a comment on its group issue,
 # while that issue is open. Then a finding of the block that names no rule
 # opens no issue. A scheduled run opens issues and posts comments. A manual
 # run does too, unless `dry_run` is set. See CONTRIBUTING.md and the triage runbook.
@@ -76,7 +77,7 @@ jobs:
           client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
           permission-issues: write
-      - name: Open an issue for each changed block, or comment on its group issue
+      - name: Open the issues for the changed blocks, or comment on their group issues
         if: steps.gate.outputs.classify == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
