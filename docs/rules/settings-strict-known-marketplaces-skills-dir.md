@@ -29,7 +29,8 @@ An author can leave the entry out on purpose. So the rule has the severity `warn
 
 The rule reports the `strictKnownMarketplaces` key of a managed file when no entry has
 `"source": "skills-dir"`. It reads the alias `allowedMarketplaces` when the file does not set the
-canonical key.[^aliases] An empty list gets a report, because the docs say that any allowlist
+canonical key, with any value. A key set to `null` counts as set. The rule makes no report when the
+text of the linted file does not parse as JSON.[^aliases] An empty list gets a report, because the docs say that any allowlist
 stops the plugins.[^types]
 
 The managed settings page merges `managed-settings.json` and each `managed-settings.d/*.json`

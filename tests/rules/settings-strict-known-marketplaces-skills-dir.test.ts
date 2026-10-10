@@ -165,6 +165,12 @@ describe(`${name} (reports)`, () => {
     expect(idsAt(files, allow(github), `${DROP}/10-a.json`)).toEqual(['missing'])
   })
 
+  it('reads a null canonical key of a sibling as set, so its alias is ignored', () => {
+    const sibling = { strictKnownMarketplaces: null, allowedMarketplaces: [skillsDir] }
+    const files = { [`${DROP}/20-b.json`]: json(sibling) }
+    expect(idsAt(files, allow(github))).toEqual(['missing'])
+  })
+
   it('reports when managedSourcesBehavior is another value', () => {
     expect(idsAt({}, { ...allow(github), managedSourcesBehavior: 'first-wins' })).toEqual([
       'missing',
