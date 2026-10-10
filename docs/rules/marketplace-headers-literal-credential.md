@@ -1,0 +1,99 @@
+---
+type: Reference
+description: The ESLint rule claude/marketplace-headers-literal-credential, which reports a literal credential, such as Bearer followed by a token, in the headers of a marketplace.json entry or of a url source in a project settings file.
+owner: brianespinosa
+created: 2026-10-10
+related_issues: [12]
+stale_after: 2027-04-10
+generated:
+  by: claude-code
+  at: 2026-10-10T00:00:00Z
+---
+
+# `marketplace-headers-literal-credential`
+
+Keep a literal credential out of the headers of a marketplace download.
+
+| Config | Severity | Category | Files |
+|--------|----------|----------|-------|
+| `strict` | `warn` | security | `**/.claude-plugin/marketplace.json`, `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+
+## Rule details
+
+The `headers` of a marketplace entry hold the HTTP headers that Claude Code sends when it downloads
+the archive of that entry.[^auth] The `headers` of a `url` marketplace source hold the headers that
+it sends with the fetch of the marketplace file.[^types] Both are for authenticated hosts.
+A file in a repository is readable by everyone who can read the repository. So a literal
+credential in `headers` is open to all of them.
+
+The docs do not bar a literal header. This rule is a security practice check, and it is `off` in
+`recommended`. For a value that expires, the docs say to set a `headersHelper` command
+instead.[^auth][^types] The docs show the form `Bearer ${TOKEN}` in an example of a `url`
+source.[^allowed] They do not say that Claude Code expands such a reference. The rule takes it
+as no literal, as the inventory row does.
+
+The rule reads two places:
+
+- **An entry of `marketplace.json`.** It reads the `headers` object of each entry in `plugins`.
+- **A `url` source in a project settings file.** It reads the `headers` object of each
+  `extraKnownMarketplaces` entry whose `source.source` is `url`, in `.claude/settings.json` and
+  `.claude/settings.local.json`.
+
+The rule reports the value of a header when all of these hold:
+
+- The value is a string, and it has no `${NAME}` reference.
+- The value is not empty, and is not only a scheme word such as `Bearer`.
+- The value is a scheme and a token (`Bearer`, `Basic`, `Token` or `Digest`), or the header name
+  holds `auth`, `token`, `secret`, `key`, `passw` or `cred`, in any letter case.
+
+The message names the header. It never gives the value.
+
+The rule does not read the `headers` of an inline plugin entry in a `settings` source, or a file
+that is not a project settings file. A `headers` value that is not an object, and a value that is
+not a string, are faults for [`marketplace-schema`](marketplace-schema.md) and
+[`settings-extra-known-marketplaces-schema`](settings-extra-known-marketplaces-schema.md).
+
+When a key appears twice, the rule reads the last, as `JSON.parse` does.
+
+Fail:
+
+```json
+{
+  "name": "acme",
+  "owner": { "name": "Acme" },
+  "plugins": [
+    {
+      "name": "formatter",
+      "source": { "source": "archive", "url": "https://registry.example.com/formatter.zip" },
+      "headers": { "Authorization": "Bearer eyJhbGciOiJSUzI1NiJ9" }
+    }
+  ]
+}
+```
+
+Pass:
+
+```json
+{
+  "name": "acme",
+  "owner": { "name": "Acme" },
+  "plugins": [
+    {
+      "name": "formatter",
+      "strict": false,
+      "source": { "source": "archive", "url": "https://registry.example.com/formatter.zip" },
+      "headersHelper": "/opt/bin/mint-registry-token.sh"
+    }
+  ]
+}
+```
+
+## Options
+
+None.
+
+## Sources
+
+[^auth]: [Host and maintain a marketplace: Authenticate archive downloads](https://code.claude.com/docs/en/plugins/host-marketplace#authenticate-archive-downloads)
+[^types]: [All settings: Marketplace source types](https://code.claude.com/docs/en/settings-reference#marketplace-source-types)
+[^allowed]: [All settings: Allowed source types](https://code.claude.com/docs/en/settings-reference#allowed-source-types)

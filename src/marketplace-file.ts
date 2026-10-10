@@ -171,3 +171,21 @@ export function declaredSource(settingsFile: string, text: string, market: strin
   // `sourceOf` gives undefined for a key of the prototype, which is no object with a `source`.
   return sourceOf(there?.[market])
 }
+
+/** The `source.source` type that the project settings files below `root`
+ *  declare for the marketplace `market`, or undefined. `root` is a directory
+ *  that may hold `.claude/`. The files are the two of that `.claude/`, with
+ *  the precedence of `declaredSource`. The result is undefined when no file
+ *  declares `market`, or the `source` has no string type. It is also
+ *  undefined when `settings.json` is a dangling link, has a real path out of
+ *  the bound, fails to read, or does not parse to an object, because it can
+ *  hold the entry in use. A `settings.json` that is not there has no entry. */
+export function declaredType(root: string, market: string): string | undefined {
+  const file = path.join(root, '.claude', 'settings.json')
+  const own = readJson(file, boundOf(file))
+  if (own === UNREADABLE || (own !== null && !isObject(own.data))) {
+    return undefined
+  }
+  const source = declaredSource(file, own === null ? '' : JSON.stringify(own.data), market)
+  return isObject(source) && typeof source.source === 'string' ? source.source : undefined
+}
