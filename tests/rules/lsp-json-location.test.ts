@@ -37,6 +37,12 @@ it('reports a .lsp.json in a package of a repository that has a plugin elsewhere
   const files = { 'plugins/a/.claude-plugin/plugin.json': '{}' }
   expect(ids(lintAt('packages/b/.lsp.json', files))).toEqual(['outside'])
 })
+it('reports a .lsp.json in a repository that sits inside a plugin directory', () => {
+  const root = repo({})
+  mkdirSync(path.join(path.dirname(root), '.claude-plugin'), { recursive: true })
+  writeFileSync(path.join(path.dirname(root), '.claude-plugin', 'plugin.json'), '{}')
+  expect(ids(lintJson(NAME, code, path.join(root, '.lsp.json')))).toEqual(['outside'])
+})
 it('reports whatever the content, also an empty file', () => {
   expect(ids(lintAt('.lsp.json', {}, '{}'))).toEqual(['outside'])
   expect(ids(lintAt('.lsp.json', {}, '[]'))).toEqual(['outside'])
