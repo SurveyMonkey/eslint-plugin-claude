@@ -37,3 +37,11 @@ export function classifyMemoryFile(file: string): MemoryFileKind | null {
   }
   return null
 }
+
+/** True for an `AGENTS.md` that Claude Code can read: in any directory, or in
+ *  a `.claude/` directory. The path `.claude/rules/AGENTS.md` is a rule, and
+ *  `.agents/AGENTS.md` is a file that Claude Code never reads. So neither
+ *  counts. `classifyMemoryFile` gives null for an `AGENTS.md`, and keeps it. */
+export function isAgentsMd(file: string): boolean {
+  return path.basename(file) === 'AGENTS.md' && classifyMemoryFile(file) === null
+}
