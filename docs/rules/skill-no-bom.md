@@ -79,9 +79,10 @@ description: Deploys the service.
 'claude/skill-no-bom': ['warn', { minVersion: '2.1.239' }]
 ```
 
-With no `minVersion`, the plugin cannot know the version that reads the file. So the rule reports.
-When `minVersion` is `2.1.239` or later, the rule makes no report. The value has three numbers,
-such as `2.1.239`. The `recommended` and `strict` configs set no option.
+With no `minVersion`, the rule is inactive and makes no report. The `recommended` and `strict`
+configs set no option, so a team turns the rule on when it sets its floor. When `minVersion` is
+`2.1.239` or later, the rule makes no report. The value has three numbers,
+such as `2.1.239`.
 
 ## Sources
 

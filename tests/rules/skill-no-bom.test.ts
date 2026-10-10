@@ -44,6 +44,9 @@ const onlyBom = put('short/.claude/skills/only/SKILL.md', BOM)
 const later = put('later/.claude/skills/s/SKILL.md', `# S\n${BOM}\n`)
 const notMark = put('latin/.claude/skills/s/SKILL.md', Buffer.from([0xef, 0xbb, 0xbe, 0x0a]))
 
+// The rule is inactive with no `minVersion`, so a case sets a floor before the fix.
+const BEFORE_FIX = [{ minVersion: '2.1.238' }]
+
 const error = (extra: object = {}) => ({
   messageId: 'bom' as const,
   line: 1,
@@ -53,39 +56,45 @@ const error = (extra: object = {}) => ({
 
 markdownTester.run('skill-no-bom', ruleOf('skill-no-bom'), {
   valid: [
-    { code, filename: without },
-    { code: '# C\n', filename: commandPlain },
+    { code, filename: without, options: BEFORE_FIX },
+    { code: '# C\n', filename: commandPlain, options: BEFORE_FIX },
+    // With no `minVersion`, the rule is inactive, even for a file with the mark.
+    { code, filename: withBom },
+    { code, filename: withBom, options: [{}] },
+    { code: '# C\n', filename: command },
     // A file that Claude Code reads without the mark is the target of the option.
     { code, filename: withBom, options: [{ minVersion: '2.1.239' }] },
     { code, filename: withBom, options: [{ minVersion: '2.2.0' }] },
     { code, filename: withBom, options: [{ minVersion: '3.0.0' }] },
     // Not a skill or command file.
-    { code, filename: decoy },
+    { code, filename: decoy, options: BEFORE_FIX },
     // A file that is not on disk, as in a lint of text from an editor.
-    { code, filename: path.join(scratch, 'absent/.claude/skills/s/SKILL.md') },
-    { code, filename: empty },
-    { code, filename: oneByte },
-    { code, filename: twoBytes },
+    {
+      code,
+      filename: path.join(scratch, 'absent/.claude/skills/s/SKILL.md'),
+      options: BEFORE_FIX,
+    },
+    { code, filename: empty, options: BEFORE_FIX },
+    { code, filename: oneByte, options: BEFORE_FIX },
+    { code, filename: twoBytes, options: BEFORE_FIX },
     // Three bytes that are not the mark.
-    { code, filename: notMark },
-    { code, filename: later },
+    { code, filename: notMark, options: BEFORE_FIX },
+    { code, filename: later, options: BEFORE_FIX },
   ],
   invalid: [
-    { code, filename: withBom, errors: [error({ endLine: 1, endColumn: 1 })] },
-    { code: '# C\n', filename: command, errors: [error()] },
-    { code, filename: pluginSkill, errors: [error()] },
-    { code, filename: pluginRoot, errors: [error()] },
-    { code: '', filename: onlyBom, errors: [error()] },
-    // A repository that supports a version before the fix.
-    { code, filename: withBom, options: [{ minVersion: '2.1.238' }], errors: [error()] },
+    { code, filename: withBom, options: BEFORE_FIX, errors: [error({ endLine: 1, endColumn: 1 })] },
+    { code: '# C\n', filename: command, options: BEFORE_FIX, errors: [error()] },
+    { code, filename: pluginSkill, options: BEFORE_FIX, errors: [error()] },
+    { code, filename: pluginRoot, options: BEFORE_FIX, errors: [error()] },
+    { code: '', filename: onlyBom, options: BEFORE_FIX, errors: [error()] },
+    // A repository that supports a version before the fix (BEFORE_FIX is 2.1.238).
     { code, filename: withBom, options: [{ minVersion: '2.0.0' }], errors: [error()] },
-    { code, filename: withBom, options: [{}], errors: [error()] },
   ],
 })
 
 describe('a file that the rule must not read', () => {
   const ids = (file: string) =>
-    lintMarkdown('skill-no-bom', code, file).map((m) => m.messageId ?? m.message)
+    lintMarkdown('skill-no-bom', code, file, BEFORE_FIX).map((m) => m.messageId ?? m.message)
 
   it('reads a file with the mark, as the control for the cases below', () => {
     expect(ids(withBom)).toEqual(['bom'])

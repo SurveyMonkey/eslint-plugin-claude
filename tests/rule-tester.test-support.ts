@@ -71,7 +71,12 @@ export function withoutAccess<T>(target: string, fn: () => T): T {
 
 /** The messages of the rule `name` for `code` at `filename`. The tests use it
  *  where a case must change the file system around the lint. */
-export function lintMarkdown(name: string, code: string, filename: string) {
+export function lintMarkdown(
+  name: string,
+  code: string,
+  filename: string,
+  options: unknown[] = [],
+) {
   // The root of the file system is the base of the globs, so that an absolute path matches.
   return new Linter({ cwd: path.parse(filename).root }).verify(
     code,
@@ -81,7 +86,7 @@ export function lintMarkdown(name: string, code: string, filename: string) {
         plugins: { markdown, claude: plugin },
         language: 'markdown/gfm',
         languageOptions: { frontmatter: 'yaml' },
-        rules: { [`claude/${name}`]: 'error' },
+        rules: { [`claude/${name}`]: ['error', ...options] },
       },
     ],
     { filename },

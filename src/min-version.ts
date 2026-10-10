@@ -1,6 +1,7 @@
 // The option `minVersion` of a rule that flags a feature by the Claude Code
 // version that added it. The value is the oldest version that the repository
-// supports. A rule reports when the version is unset or older than the fix.
+// supports. A rule reports only when the version is set and older than the fix.
+// With no version set, the rule is inactive.
 // No dependency parses a version here, because the docs write three numbers.
 
 /** The schema of the option object `{ minVersion }`. */
@@ -15,11 +16,11 @@ function parts(version: string): number[] {
   return version.split('.').map(Number)
 }
 
-/** True when a Claude Code older than `fixed` can run the file. That is true
- *  when `minVersion` is unset, and when it is older than `fixed`. */
+/** True when `minVersion` is set and older than `fixed`. Then a Claude Code
+ *  older than `fixed` can run the file. It is false when `minVersion` is unset. */
 export function supportsBefore(minVersion: string | undefined, fixed: string): boolean {
   if (minVersion === undefined) {
-    return true
+    return false
   }
   const have = parts(minVersion)
   const want = parts(fixed)
