@@ -1,6 +1,10 @@
 // In the `url` and `headers` of a remote server, Claude Code reads a covered credential variable
 // as empty, and it ignores a `:-default`. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
+import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -25,6 +29,11 @@ jsonTester.run('mcp-credential-var-remote (valid)', rule, {
     { name: 'a prefix of a covered name', code: header(`\${NPM_TOKEN_2}`), filename: project },
     { name: 'shell form is no reference', code: header('Bearer $NPM_TOKEN'), filename: project },
     { name: 'no reference', code: header('Bearer abc'), filename: project },
+    {
+      name: 'duplicate headers object, the last is silent',
+      code: `{"mcpServers": {"a": {"type": "http", "headers": {"A": "\${NPM_TOKEN}"}, "headers": {}}}}`,
+      filename: project,
+    },
     { name: 'no headers', code: remote({}), filename: project },
     { name: 'headers is no object', code: remote({ headers: 'x' }), filename: project },
     { name: 'a header value is no string', code: remote({ headers: { A: 1 } }), filename: project },
@@ -95,6 +104,25 @@ jsonTester.run('mcp-credential-var-remote (invalid)', rule, {
       filename: project,
       errors: [
         { messageId: 'empty', data: { field: 'url', server: 'a', variable: 'ANTHROPIC_API_KEY' } },
+      ],
+    },
+    {
+      name: 'an empty default is ignored',
+      code: header(`Bearer \${NPM_TOKEN:-}`),
+      filename: project,
+      errors: [
+        {
+          messageId: 'empty',
+          data: { field: 'headers.Authorization', server: 'a', variable: 'NPM_TOKEN' },
+        },
+      ],
+    },
+    {
+      name: 'duplicate headers object, the last reports',
+      code: `{"mcpServers": {"a": {"type": "http", "headers": {}, "headers": {"A": "\${NPM_TOKEN}"}}}}`,
+      filename: project,
+      errors: [
+        { messageId: 'empty', data: { field: 'headers.A', server: 'a', variable: 'NPM_TOKEN' } },
       ],
     },
     {
@@ -205,4 +233,32 @@ jsonTester.run('mcp-credential-var-remote (invalid)', rule, {
       errors: [{ messageId: 'empty', data: { field: 'url', server: 'a', variable: 'NPM_TOKEN' } }],
     },
   ],
+})
+
+// The schema of the option `names`: a list of non-empty strings, and no other key.
+describe('mcp-credential-var-remote option schema', () => {
+  const lint = (options: object[]) =>
+    new Linter().verify(
+      `{"mcpServers": {"a": {"type": "http", "url": "https://x.test", "headers": {"A": "\${MY_VAR}"}}}}`,
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { 'claude/mcp-credential-var-remote': ['error', ...options] },
+        },
+      ],
+      { filename: project },
+    )
+
+  it('accepts an empty object and a list of names', () => {
+    expect(lint([{}])).toHaveLength(0)
+    expect(lint([{ names: ['MY_VAR'] }])).toHaveLength(1)
+  })
+  it('refuses an empty name, a name that is no string, and an unknown key', () => {
+    expect(() => lint([{ names: [''] }])).toThrow()
+    expect(() => lint([{ names: [1] }])).toThrow()
+    expect(() => lint([{ names: 'X' }])).toThrow()
+    expect(() => lint([{ extra: 1 }])).toThrow()
+  })
 })

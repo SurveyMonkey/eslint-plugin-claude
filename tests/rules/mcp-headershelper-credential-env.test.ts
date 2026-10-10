@@ -55,6 +55,16 @@ jsonTester.run('mcp-headershelper-credential-env (valid)', rule, {
       code: `{"mcpServers": {"a": {"headersHelper": "echo $TOKEN", "headersHelper": "echo ok"}}}`,
       filename: project,
     },
+    {
+      name: 'a variable that the command sets first',
+      code: helper('token=$(get-token); echo "{\\"A\\":\\"Bearer $token\\"}"'),
+      filename: project,
+    },
+    {
+      name: 'an exported variable that the command sets first',
+      code: helper('export MY_TOKEN=$(get-token) && echo $MY_TOKEN'),
+      filename: project,
+    },
     { name: 'plugin, silent', code: helper('echo $HOME'), filename: pluginMcp },
     { name: 'unread path', code: helper('echo $TOKEN'), filename: '.claude/.mcp.json' },
   ],
@@ -129,6 +139,35 @@ jsonTester.run('mcp-headershelper-credential-env (invalid)', rule, {
       code: `{"mcpServers": {"a": {"headersHelper": "echo ok", "headersHelper": "echo $TOKEN"}}}`,
       filename: project,
       errors: [{ messageId: 'removed', data: { server: 'a', variable: 'TOKEN' } }],
+    },
+    {
+      name: 'a flag value is no assignment',
+      code: helper('curl --my-token=$MY_TOKEN x'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN' } }],
+    },
+    {
+      name: 'another variable is set, this one is not',
+      code: helper('A_TOKEN=1; echo $B_TOKEN'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'B_TOKEN' } }],
+    },
+    ...['$MY_GIT_CONFIG_KEY_0', '$GIT_CONFIG_KEY_0X', '$GIT_CONFIG_KEY_'].map((text) => ({
+      name: `${text} is not a kept git variable`,
+      code: helper(`echo ${text}`),
+      filename: project,
+      errors: [
+        {
+          messageId: 'removed' as const,
+          data: { server: 'a', variable: text.slice(1) },
+        },
+      ],
+    })),
+    {
+      name: 'single quotes do not stop the match',
+      code: helper("echo '$MY_TOKEN'"),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN' } }],
     },
     {
       name: 'plugin',

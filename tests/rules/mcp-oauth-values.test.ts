@@ -66,6 +66,12 @@ jsonTester.run('mcp-oauth-values (invalid)', rule, {
       errors: [{ messageId: 'metadataUrl', data: { server: 'a' }, line: 1, column: 95 }],
     },
     {
+      name: 'one slash after the scheme',
+      code: withOauth({ authServerMetadataUrl: 'https:/auth.test/x' }),
+      filename: project,
+      errors: [{ messageId: 'metadataUrl', data: { server: 'a' } }],
+    },
+    {
       name: 'URL with no scheme',
       code: withOauth({ authServerMetadataUrl: 'auth.test/x' }),
       filename: project,

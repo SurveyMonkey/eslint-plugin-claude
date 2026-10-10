@@ -1,7 +1,7 @@
 // A credential variable in the `url` or `headers` of a remote server
 // (docs/rules/mcp-credential-var-remote.md). In these fields Claude Code reads a covered
-// credential variable as empty, whether or not it is set, and it ignores a `:-default`. This stops
-// a project file or a plugin from sending a credential to a server it names. The names are in
+// credential variable as empty, whether or not it is set, and it ignores a `:-default`. A project
+// file or a plugin cannot send a credential to a server it names. The names are in
 // `src/data/mcp-credential-vars.ts`. The option `names` adds names. A message names the variable,
 // never a value.
 import type { JSONRuleDefinition } from '@eslint/json'
