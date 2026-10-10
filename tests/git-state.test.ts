@@ -14,6 +14,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { gitChildren, gitModeOf, PLAIN_MODE } from '../src/git-state.ts'
 import { UNREADABLE } from '../src/skill-tree.ts'
 import { git, plain, put, repo } from './git-tree.test-support.ts'
+import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 const at = (root: string, file: string) => path.join(root, file)
 
@@ -133,19 +134,61 @@ describe('gitModeOf', () => {
     expect(gitModeOf(linked, at(linked, 'run.sh'))).toBe('100755')
   })
 
-  it('reads the index again when only the file identity changes', () => {
-    // The old index has the same size and the same time of the last write.
+  it('reads the index again when the change time differs', () => {
+    // The old index has the same size and the same modification time. Only the
+    // change time differs, and it moves on each write. A test cannot show the
+    // inode or the other fields alone, so the stamp keeps them as defence.
     const root = repo({ 'run.sh': 'x' })
     const index = path.join(root, '.git', 'index')
     const old = path.join(root, 'old-index')
     copyFileSync(index, old)
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
     git(root, 'update-index', '--chmod=+x', 'run.sh')
-    // A whole second is the same time on both files, at any clock resolution.
     utimesSync(index, 1e9, 1e9)
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100755')
+    // A file system with a coarse change time needs a pause between two writes.
+    const until = Date.now() + 50
+    while (Date.now() < until) {
+      // Wait.
+    }
     writeFileSync(index, readFileSync(old))
     utimesSync(index, 1e9, 1e9)
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
+  })
+
+  it('finds the git directory again after a linked worktree is made again', () => {
+    const main = repo({ 'run.sh': 'x' })
+    git(main, '-c', 'user.name=t', '-c', 'user.email=t@t.test', 'commit', '--quiet', '-m', 'm')
+    const first = path.join(plain(), 'linked')
+    const second = path.join(plain(), 'linked')
+    git(main, 'worktree', 'add', '--quiet', '-b', 'one', first)
+    git(main, 'worktree', 'add', '--quiet', '-b', 'two', second)
+    expect(gitModeOf(second, at(second, 'run.sh'))).toBe('100644')
+    // The second worktree has the git directory "linked1". Making it again, with
+    // the first one gone, gives the git directory "linked".
+    git(main, 'worktree', 'remove', '--force', first)
+    git(main, 'worktree', 'remove', '--force', second)
+    git(main, 'worktree', 'add', '--quiet', '-b', 'three', second)
+    expect(gitModeOf(second, at(second, 'run.sh'))).toBe('100644')
+    git(second, 'update-index', '--chmod=+x', 'run.sh')
+    expect(gitModeOf(second, at(second, 'run.sh'))).toBe('100755')
+  })
+
+  it('gives UNREADABLE when git reads another repository', () => {
+    // A `.git` directory that is not a repository: git walks up to the outer one.
+    const outer = repo({ 'inner/run.sh': 'x' })
+    const inner = at(outer, 'inner')
+    put(outer, { 'inner/.git/keep': '' })
+    expect(git(inner, 'rev-parse', '--show-toplevel').trim()).toBe(outer)
+    expect(gitModeOf(inner, at(inner, 'run.sh'))).toBe(UNREADABLE)
+  })
+
+  it.skipIf(chmodCannotBlock)('gives UNREADABLE when the git directory is not readable', () => {
+    const root = repo({ 'run.sh': 'x' })
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
+    withoutAccess(path.join(root, '.git'), () => {
+      expect(gitModeOf(root, at(root, 'run.sh'))).toBe(UNREADABLE)
+    })
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
   })
 
@@ -207,6 +250,14 @@ describe('gitChildren', () => {
       ['.keep', '100644'],
       ['a', '100755'],
       ['b', '100644'],
+    ])
+  })
+
+  it('lists the files directly in the root', () => {
+    const root = repo({ 'b.txt': 'x', 'a.txt': 'x', 'dir/c.txt': 'x' }, ['a.txt'])
+    expect(gitChildren(root, root)).toEqual([
+      ['a.txt', '100755'],
+      ['b.txt', '100644'],
     ])
   })
 

@@ -2,9 +2,11 @@
 // Each repository is a real directory in a temporary directory, made with
 // `git init`. `repo` stages the files, so a test needs no commit and no user
 // identity. A test that needs the index and the disk to differ calls `git`.
+// `git` reads no global or system config, so a test gives the identity and the
+// branch names that it needs.
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { devNull, tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll } from 'vitest'
 
@@ -12,10 +14,14 @@ import { afterAll } from 'vitest'
 const scratch = realpathSync(mkdtempSync(path.join(tmpdir(), 'git-tree-')))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 
-// The variables that point git at a repository. Git sets them when it runs a git hook.
-const LOCATION = /^GIT_(DIR|WORK_TREE|INDEX_FILE|COMMON_DIR|OBJECT_DIRECTORY|PREFIX|NAMESPACE)$/
-const gitEnv = () =>
-  Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.test(key)))
+// The variables that point git at a repository. Git sets some of them when it runs a git hook.
+const LOCATION =
+  /^GIT_(DIR|WORK_TREE|INDEX_FILE|COMMON_DIR|OBJECT_DIRECTORY|ALTERNATE_OBJECT_DIRECTORIES|PREFIX|NAMESPACE)$/
+const gitEnv = () => ({
+  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.test(key))),
+  GIT_CONFIG_GLOBAL: devNull,
+  GIT_CONFIG_NOSYSTEM: '1',
+})
 
 /** Run `git` with `args` in `root`. */
 export function git(root: string, ...args: string[]): string {
