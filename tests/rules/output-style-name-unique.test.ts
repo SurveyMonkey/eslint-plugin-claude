@@ -247,3 +247,40 @@ describe('output-style-name-unique', () => {
     })
   })
 })
+
+describe('output-style-name-unique, more cases', () => {
+  it('stays silent for the only style of its name, which is the linted file', () => {
+    const root = repo({ '.claude/output-styles/b.md': style('dup') })
+    expect(lint(root, '.claude/output-styles/b.md')).toEqual([])
+  })
+
+  it('ignores a style that the rule cannot read, even when its file name is the name', {
+    skip: chmodCannotBlock,
+  }, () => {
+    const root = repo({
+      '.claude/output-styles/dup.md': bare,
+      '.claude/output-styles/c.md': style('dup'),
+    })
+    withoutAccess(path.join(root, '.claude/output-styles/dup.md'), () => {
+      const messages = lint(root, 'pkg/.claude/output-styles/a.md')
+      expect(messages).toHaveLength(1)
+      expect(messages[0]?.message).toContain('c.md')
+      expect(messages[0]?.message).not.toContain('dup.md')
+    })
+  })
+
+  it('reads a style that a link leads to inside .claude when the repository has no .git', () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), 'output-style-link-'))
+    try {
+      mkdirSync(path.join(scratch, '.claude/shared'), { recursive: true })
+      mkdirSync(path.join(scratch, '.claude/output-styles'), { recursive: true })
+      writeFileSync(path.join(scratch, '.claude/shared/top.md'), style('dup'))
+      symlinkSync('../shared/top.md', path.join(scratch, '.claude/output-styles/top.md'))
+      writeFileSync(path.join(scratch, '.claude/output-styles/a.md'), style('dup'))
+      const messages = lint(scratch, '.claude/output-styles/a.md')
+      expect(messages).toMatchObject([{ messageId: 'duplicate' }])
+    } finally {
+      rmSync(scratch, { recursive: true, force: true })
+    }
+  })
+})

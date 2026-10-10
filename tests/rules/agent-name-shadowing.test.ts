@@ -177,3 +177,13 @@ describe('agent-name-shadowing', () => {
     })
   })
 })
+
+describe('agent-name-shadowing for a plugin nested in the repository', () => {
+  it('stays silent for a plugin agent, even with an agent of that name above the plugin', () => {
+    const root = repo({
+      '.claude/agents/top.md': agent('', 'dup'),
+      'plugins/p/.claude-plugin/plugin.json': '{}',
+    })
+    expect(lint(root, 'plugins/p/agents/a.md')).toEqual([])
+  })
+})

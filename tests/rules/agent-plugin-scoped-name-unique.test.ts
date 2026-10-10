@@ -3,7 +3,7 @@
 // name, or the `name` field in place of the file name. The manifest key
 // `agents` replaces the `agents/` scan, and a file that it lists loses its
 // subfolders. The files are on disk.
-import { symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { agent, repo } from '../agent-settings.test-support.ts'
@@ -269,5 +269,31 @@ describe('agent-plugin-scoped-name-unique', () => {
         expect(lint(root, 'agents/a.md', agent('', 'sub:x'))).toEqual([])
       })
     })
+  })
+})
+
+describe('agent-plugin-scoped-name-unique, more cases', () => {
+  it('does not take a name that is a number for the file name', () => {
+    const root = repo({ ...PLUGIN, 'agents/123.md': bare })
+    expect(lint(root, 'agents/b.md', agent('', '123'))).toEqual([])
+  })
+
+  it('ignores a listed file that is in the repository but out of the plugin', () => {
+    const root = repo({
+      'plugins/p/.claude-plugin/plugin.json': JSON.stringify({
+        agents: ['./agents/a.md', '../q/agents/a.md'],
+      }),
+      'plugins/p/agents/a.md': bare,
+      'plugins/q/agents/a.md': bare,
+    })
+    expect(lint(root, 'plugins/p/agents/a.md')).toEqual([])
+  })
+
+  it('ignores an agent file that is a link out of the repository', () => {
+    const out = repo({ 'ext.md': agent('', 'dup') })
+    const root = repo({ ...PLUGIN })
+    mkdirSync(path.join(root, 'agents'), { recursive: true })
+    symlinkSync(path.join(out, 'ext.md'), path.join(root, 'agents/ext.md'))
+    expect(lint(root, 'agents/a.md', agent('', 'dup'))).toEqual([])
   })
 })
