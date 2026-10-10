@@ -36,10 +36,16 @@ import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-con
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
+import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
+import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
+import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
+import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
+import permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
+import permissionsSchema from './rules/permissions-schema.ts'
 import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
@@ -136,6 +142,12 @@ const modules = [
   permissionsMcpRuleParens,
   permissionsParamRule,
   permissionsSkillRule,
+  permissionsBypassModeCommitted,
+  permissionsDefaultModeConflict,
+  permissionsDefaultModeProjectIgnored,
+  permissionsDefaultModeValue,
+  permissionsDisableModeValue,
+  permissionsSchema,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -244,6 +256,12 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-mcp-rule-parens': 'error',
   'permissions-param-rule': 'error',
   'permissions-skill-rule': 'error',
+  'permissions-bypass-mode-committed': 'error',
+  'permissions-default-mode-conflict': 'error',
+  'permissions-default-mode-project-ignored': 'error',
+  'permissions-default-mode-value': 'error',
+  'permissions-disable-mode-value': 'error',
+  'permissions-schema': 'error',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

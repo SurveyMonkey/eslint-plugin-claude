@@ -687,6 +687,101 @@
       "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
     }
   ],
+  "permissions-bypass-mode-committed": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.defaultMode",
+      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "A value you set is ignored",
+      "hash": "946650199ac3fb5711cb544d59f8b4a1e3606eff5bb9551fd531e5a0f1f78906"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Skip all checks with bypassPermissions mode",
+      "hash": "257ad9c9c074b07dece017046a3485ee91a0e7009a175f236f4a66a75c8dc4e1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Available modes",
+      "hash": "885716091d8f45331e5217c93d3b3684e0000d205315a7d51c7488afeb10a85f"
+    }
+  ],
+  "permissions-default-mode-conflict": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.disableBypassPermissionsMode",
+      "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.defaultMode",
+      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
+  "permissions-default-mode-project-ignored": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.defaultMode",
+      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "A value you set is ignored",
+      "hash": "946650199ac3fb5711cb544d59f8b4a1e3606eff5bb9551fd531e5a0f1f78906"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Which mode a session starts in",
+      "hash": "31afcf301bb31ec53df9202e5bcafb5d13ed08ac7ac8ff22cc84644b8789125d"
+    }
+  ],
+  "permissions-default-mode-value": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.defaultMode",
+      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Fix a broken settings file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "permissions-disable-mode-value": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.disableBypassPermissionsMode",
+      "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableAutoMode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Fix a broken settings file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
   "permissions-mcp-rule-parens": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -773,6 +868,33 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    }
+  ],
+  "permissions-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions",
+      "hash": "23a950c07d6332b801953be9c69b2ef1ea2daa03614344753d8889d4c236a465"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.additionalDirectories",
+      "hash": "9153928bd132a6f72591b10aff814dda012710ef079e916713512a52f99a5cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.blockReadsOutsideWorkingDirectories",
+      "hash": "f1ce276060f50bcee16f3211f33e323cc2b413dd50ef3b2aeade19b1d266d0ba"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Fix a broken settings file",
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
     }
   ],
   "permissions-skill-rule": [

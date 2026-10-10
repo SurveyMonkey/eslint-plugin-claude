@@ -153,6 +153,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-mcp-rule-parens`](docs/rules/permissions-mcp-rule-parens.md) | An mcp__ permission rule has no parentheses | `error` | `error` |
 | [`claude/permissions-param-rule`](docs/rules/permissions-param-rule.md) | A parameter rule does not name the primary input field of its tool | `error` | `error` |
 | [`claude/permissions-skill-rule`](docs/rules/permissions-skill-rule.md) | A `Skill(prefix *)` allow rule whose prefix stops short of `anthropic-skills` | `error` | `error` |
+| [`claude/permissions-bypass-mode-committed`](docs/rules/permissions-bypass-mode-committed.md) | A committed settings file does not set `defaultMode: "bypassPermissions"`, which skips every permission check | `error` | `error` |
+| [`claude/permissions-default-mode-conflict`](docs/rules/permissions-default-mode-conflict.md) | A file does not set `defaultMode: "bypassPermissions"` while `disableBypassPermissionsMode` is `"disable"` | `error` | `error` |
+| [`claude/permissions-default-mode-project-ignored`](docs/rules/permissions-default-mode-project-ignored.md) | A project or local settings file does not set `defaultMode: "auto"`, which Claude Code ignores there | `error` | `error` |
+| [`claude/permissions-default-mode-value`](docs/rules/permissions-default-mode-value.md) | `permissions.defaultMode` is one of the seven permission modes | `error` | `error` |
+| [`claude/permissions-disable-mode-value`](docs/rules/permissions-disable-mode-value.md) | `disableBypassPermissionsMode` and `disableAutoMode` are the string `"disable"`, not `true` | `error` | `error` |
+| [`claude/permissions-schema`](docs/rules/permissions-schema.md) | `permissions` holds only documented keys, each with a value of its type | `error` | `error` |
 
 ## Contributing
 
