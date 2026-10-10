@@ -3,8 +3,8 @@
 // versions in `src/data/models.ts`. It judges a full model ID. It judges an alias in two cases.
 // The file pins the alias, and the rule judges the pinned model. Or the file sets no provider and
 // does not pin the alias, and the rule judges the model of the Anthropic API. On another provider,
-// an alias can resolve to an earlier model. A model that the file does not set is the default model of the
-// account. The rule cannot see it.
+// an alias can resolve to an earlier model. A model that the file does not set is the default
+// model of the account. The rule cannot see it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
   ALIAS_FAMILIES,
