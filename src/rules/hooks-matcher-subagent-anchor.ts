@@ -74,7 +74,7 @@ function anchored(alternative: string): boolean {
   if (alternative.startsWith('^') && endsAnchored(alternative)) {
     return true
   }
-  const inner = /^\((?:\?:)?([\s\S]*)\)$/.exec(alternative)?.[1]
+  const inner = /^\((?:\?[A-Za-z-]*:)?([\s\S]*)\)$/.exec(alternative)?.[1]
   return inner !== undefined && scan(inner).alternatives.every(anchored)
 }
 
