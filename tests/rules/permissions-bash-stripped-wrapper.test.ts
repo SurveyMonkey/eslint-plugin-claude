@@ -77,6 +77,17 @@ describe(`${name}: the rules that it leaves alone`, () => {
     expect(ids(allow('Bash(command -v git)', 'Bash(command -v *)'))).toEqual([])
   })
 
+  it('is silent for a deny or ask rule on a parameter of the Bash tool', () => {
+    const code = { permissions: { deny: ['Bash(timeout:*)'], ask: ['Bash(timeout:5)'] } }
+    expect(ids(code)).toEqual([])
+  })
+
+  it('reports a wrapper with a flag, and time -v', () => {
+    expect(
+      ids(allow('Bash(nice -n 5 npm test)', 'Bash(timeout -k 5 30 make)', 'Bash(time -v ls)')),
+    ).toEqual(['stripped', 'stripped', 'stripped'])
+  })
+
   it('is silent for xargs with a flag, and for xargs with no inner command', () => {
     expect(ids(allow('Bash(xargs -n1 grep *)', 'Bash(xargs *)', 'Bash(xargs)'))).toEqual([])
   })

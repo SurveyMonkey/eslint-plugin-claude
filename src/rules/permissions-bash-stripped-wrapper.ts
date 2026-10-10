@@ -4,7 +4,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { STRIPPED_WRAPPERS } from '../data/bash-commands.ts'
 import { BASH_RULE_TOOLS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
-import { commandWords } from '../permission-command.ts'
+import { commandWords, isInputParameterRule } from '../permission-command.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -12,8 +12,8 @@ const name = 'permissions-bash-stripped-wrapper' as const
 
 /** The wrapper that Claude Code strips from the start of a command that `words` match, or
  *  undefined. `command -v` is a query, and Claude Code does not strip it. Bare `xargs` is
- *  stripped, but `xargs` with a flag is not, and a rule that ends the words after `xargs` with `*`
- *  could match a flag. */
+ *  stripped, but `xargs` with a flag is not. The rule `xargs *` is silent, because its `*` can
+ *  match a flag. The rule `xargs` alone is silent too. */
 function strippedWrapper(words: readonly string[]): string | undefined {
   const [first, second] = words
   if (first === 'xargs') {
@@ -40,9 +40,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'stripped' }> = {
   },
   create(context) {
     return settingsListener(context, (entries) => {
-      for (const { loc, rule: parsed } of entries) {
+      for (const { list, loc, rule: parsed } of entries) {
         const wrapper =
-          parsed.specifier !== null && BASH_RULE_TOOLS.includes(parsed.tool)
+          parsed.specifier !== null &&
+          BASH_RULE_TOOLS.includes(parsed.tool) &&
+          !isInputParameterRule(list, parsed.specifier)
             ? strippedWrapper(commandWords(parsed.specifier))
             : undefined
         if (wrapper !== undefined) {

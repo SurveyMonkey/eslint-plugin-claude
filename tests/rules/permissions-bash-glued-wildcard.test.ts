@@ -23,7 +23,15 @@ describe(`${name}: the reports`, () => {
   })
 
   it('reports a Monitor and a PowerShell rule, which have the shape of a Bash rule', () => {
-    expect(ids(allow('Monitor(git*)', 'PowerShell(Get-*)'))).toEqual(['glued', 'glued'])
+    expect(ids(allow('Monitor(git*)', 'PowerShell(git*)'))).toEqual(['glued', 'glued'])
+  })
+
+  it('gives the tool of the rule in the fix', () => {
+    expect(lint(allow('Monitor(git*)'))[0]?.message).toContain('`Monitor(git *)`')
+  })
+
+  it('is silent for a family name that ends in a hyphen, and for a backslash', () => {
+    expect(ids(allow('PowerShell(Get-*)', 'Bash(docker-*)', 'Bash(ls\\*)'))).toEqual([])
   })
 
   it('names the rule, and gives the rule with the space', () => {
