@@ -77,7 +77,7 @@ const rule: Rule.RuleModule = {
         // An event with a fixed set of values is for `hooks-matcher-enum`.
         if (free && !MATCHER_VALUES.has(event) && isBefore(minVersion, HYPHEN_FIXED)) {
           for (const segment of wide ?? []) {
-            if (segment.includes('-')) {
+            if (/\w-\w/.test(segment)) {
               context.report({ loc, messageId: 'hyphen', data: { ...data, segment } })
             }
           }

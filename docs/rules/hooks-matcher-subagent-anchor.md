@@ -26,7 +26,8 @@ the agent type. The docs say to anchor it with `^` and `$`, as in `^my-plugin:re
 
 The rule reads the `matcher` of a group under `SubagentStart` and `SubagentStop`. It reports a matcher that
 holds a colon and does not start with `^` and end with `$`. A list with a `|` outside a group is not anchored,
-because `^a:b|c:d$` anchors one end of each side. The message gives the anchored form. For a list, it puts the
+because `^a:b|c:d$` anchors one end of each side. A list is anchored when each alternative has both anchors,
+as in `^a:b$|^c:d$`. The message gives the anchored form. For a list, it puts the
 alternatives in a group: `^(a:b|c:d)$`.
 
 The rule makes no report for a matcher with no colon, or on another event. [`hooks-matcher-syntax`](hooks-matcher-syntax.md)
