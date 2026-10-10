@@ -1,8 +1,8 @@
 // A manifest key that replaces a default folder makes Claude Code skip that
 // folder, unless a path of the key is inside it
 // (docs/rules/plugin-default-dir-shadowed.md). The rule reports such a key when
-// the folder is in the plugin. It reads the spelling of each path, as Claude
-// Code does for its warning, and makes no report when it cannot see the folder.
+// the folder is in the plugin. It reads the spelling of each path. It makes no
+// report when it cannot see the folder.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { REPLACED_DEFAULTS } from '../data/plugin-layout.ts'
@@ -50,7 +50,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'shadowed' }> = {
     schema: [],
     messages: {
       shadowed:
-        '`{{key}}` replaces the default `{{folder}}/` folder, so Claude Code ignores that folder. List a path inside it, or add `./{{folder}}/` to `{{key}}`.',
+        '`{{key}}` replaces the default `{{folder}}/` folder, so Claude Code ignores that folder. List a path inside it.',
     },
   },
   create(context) {

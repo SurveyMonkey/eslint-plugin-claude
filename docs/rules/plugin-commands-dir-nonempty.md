@@ -41,11 +41,9 @@ The rule makes no report in these cases:
 - The rule cannot see the plugin or the directory. The plugin root can be unseen. The real path of
   `.claude-plugin/`, of `plugin.json` or of the directory can be out of the repository. The manifest
   can fail to parse. The rule can fail to list the directory or a subdirectory. A part of the path
-  can be a dangling link. A `.md` link in the directory can lead out of the repository.
+  can be a dangling link. A `.md` link in the directory can lead out of the repository,
+  or can have no target.
 - The plugin has no `commands` key. The rule does not check the default `commands/` directory.
-
-A `.md` link in the directory whose target is not there is not a command, so a directory with only
-that link gets a report.
 
 Fail: `"commands": "./cmds"` with only `cmds/.gitkeep` in the directory.
 

@@ -22,7 +22,7 @@ Keep a plugin out of the `.claude/plugins/` directory of a project.
 
 To share a plugin through a repository, list it under `enabledPlugins` in `.claude/settings.json`,
 or place it under `.claude/skills/`. Claude Code does not scan the `.claude/plugins/` directory of
-a project.[^repository] A plugin that sits there does not load from there.
+a project.[^repository] The scan does not load a plugin from there.
 
 The rule runs on the `plugin.json` of a plugin. It reports once, on the first line, when the plugin
 root is below a `.claude/plugins/` directory. The plugin can be in that directory, or in a

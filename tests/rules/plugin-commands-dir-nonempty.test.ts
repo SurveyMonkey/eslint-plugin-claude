@@ -81,15 +81,27 @@ describe(RULE, () => {
     link(top, 'alias', 'store')
     expect(lint(dir, code).map((m) => m.message)).toEqual([message('./alias')])
   })
-
-  linked('reports a directory whose only Markdown entry is a dangling link', () => {
-    const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/.gitkeep': '' })
-    link(dir, 'cmds/c.md', 'ghost.md')
-    expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
-  })
 })
 
 describe(`${RULE} (silent)`, () => {
+  linked('stays silent for a directory whose only Markdown entry has no target', () => {
+    const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/.gitkeep': '' })
+    link(dir, 'cmds/c.md', 'ghost.md')
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('stays silent for a link without a target in a subdirectory', () => {
+    const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/ns/.gitkeep': '' })
+    link(dir, 'cmds/ns/c.md', '/nonexistent/outside.md')
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('reports a directory with a link without a target that is not Markdown', () => {
+    const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/.gitkeep': '' })
+    link(dir, 'cmds/notes.txt', 'ghost.txt')
+    expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
+  })
+
   check.each([
     ['a Markdown file', { 'cmds/c.md': '# C\n' }],
     ['a skill folder', { 'cmds/s/SKILL.md': '# S\n' }],

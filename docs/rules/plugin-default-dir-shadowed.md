@@ -26,7 +26,7 @@ and `experimental.monitors`. When a plugin has the default folder and sets the k
 loads the manifest paths and not the folder. `claude plugin list` and the `/plugin` interface show
 the warning `Default <folder>/ folder is ignored because the manifest sets "<key>"`.[^combine]
 To avoid the warning, set the key to a path inside the folder.[^combine] Output styles and themes
-follow the same rule: setting the manifest key replaces the folder scan.[^themes]
+follow the same rule: when you set the manifest key, it replaces the folder scan.[^themes]
 
 The rule reads each of the six keys. It reports a key when all of these are true:
 
@@ -36,12 +36,13 @@ The rule reads each of the six keys. It reports a key when all of these are true
 - No path of the key is inside that directory.
 
 The report is on the key and its value. The message names the key and the folder.
+The `agents` key takes files, not directories, so list each `.md` file of the folder.
 
 A path of the key is a string, a string in an array, or the `source` of an entry in the object map
 of `commands`. The rule resolves each path from the plugin root, and does not need a `./` prefix.
 A path is inside the folder when it is the folder or is below it. So `./commands`, `./commands/`
-and `./commands/deploy.md` are inside `commands/`. The rule reads the spelling of the path, as the
-docs do for the warning. An inline entry names no path. This holds for a monitor in the array of
+and `./commands/deploy.md` are inside `commands/`. The rule reads the spelling of the path. The
+docs show a path inside the folder as the way to avoid the warning. An inline entry names no path. This holds for a monitor in the array of
 `experimental.monitors`, and for a `content` entry in the map of `commands`. A key with only inline
 entries replaces the folder, so the rule reports it.
 
@@ -50,8 +51,8 @@ The rule makes no report in these cases:
 - The key is `skills`. It adds to the default `skills/` directory and does not replace it.
   The keys `hooks`, `mcpServers` and `lspServers` merge with their default files. The rule reads
   none of them.[^combine]
-- The top-level `themes` and `monitors` keys. They still load with a validate warning, and the docs
-  name the warning for `experimental.themes` and `experimental.monitors` only.
+- The top-level `themes` and `monitors` keys. They still load with a validate warning. The docs
+  list only `experimental.themes` and `experimental.monitors` as keys that replace a folder.
 - The default directory is not in the plugin, is a file, or the rule cannot list it.
 - The rule cannot see the plugin or the folder. The plugin root can be unseen. The real path of
   `.claude-plugin/`, of `plugin.json` or of the folder can be out of the repository. The manifest

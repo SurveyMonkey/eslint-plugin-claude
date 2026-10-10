@@ -52,12 +52,10 @@ makes no report in these cases:
 
 The rule does not report a `.claude/skills/` directory that is not at the repository root. The row
 in the rule inventory names this case. The docs say that such a plugin loads only from the
-`.claude/skills/` of the session's primary working directory, and not from a parent directory. They
-call it no fault: a session that starts in that directory loads the plugin. So the rule cannot
-tell a wrong place from a place that a team chose for a session that starts there.[^repository]
+`.claude/skills/` of the session's primary working directory, and not from a parent directory. The rule cannot see the working directory. A session that starts there loads the plugin. So the
+rule cannot tell a wrong place from a place that a team chose.[^repository]
 
-A plugin that is a `.claude/skills/` directory of a user, in `~/.claude/skills/`, has none of
-these restrictions. The rule judges the files of a repository only, so it does not see such a
+A plugin in `~/.claude/skills/` has none of these restrictions. The rule judges the files of a repository only, so it does not see such a
 plugin.
 
 Fail: `.claude/skills/p/.claude-plugin/plugin.json` with `"mcpServers": "./server.mcpb"`.

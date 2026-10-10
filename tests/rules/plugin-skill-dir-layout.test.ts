@@ -205,6 +205,25 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code)).toEqual([])
   })
 
+  linked('stays silent for a .md link without a target', () => {
+    const { dir, code } = withSkills('./extra', { 'extra/a/SKILL.md': SKILL })
+    link(dir, 'extra/gone.md', 'ghost.md')
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('stays silent for a .md link out of the repository', () => {
+    const outside = tree({ 'x.md': '# X\n' })
+    const { dir, code } = withSkills('./extra', { 'extra/a/SKILL.md': SKILL })
+    link(dir, 'extra/x.md', path.join(outside, 'x.md'))
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('reports a .md link to a file in the repository', () => {
+    const { dir, code } = withSkills('./extra', { 'extra/a/SKILL.md': SKILL, 'real.md': '# R\n' })
+    link(dir, 'extra/x.md', '../real.md')
+    expect(lint(dir, code).map((m) => m.message)).toEqual([message('x.md', './extra')])
+  })
+
   linked('stays silent for a dangling link', () => {
     const { dir, code } = withSkills('./alias', {})
     link(dir, 'alias', 'ghost')

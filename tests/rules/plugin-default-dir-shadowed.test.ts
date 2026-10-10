@@ -15,7 +15,7 @@ const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
 const message = (key: string, folder: string) =>
-  `\`${key}\` replaces the default \`${folder}/\` folder, so Claude Code ignores that folder. List a path inside it, or add \`./${folder}/\` to \`${key}\`.`
+  `\`${key}\` replaces the default \`${folder}/\` folder, so Claude Code ignores that folder. List a path inside it.`
 const FOLDERS = {
   'commands/c.md': '# C\n',
   'agents/a.md': '# A\n',
