@@ -99,6 +99,8 @@ describe(`${name}: the rules that it leaves alone`, () => {
       'Bash(mise exec -- node *)',
       'Bash(docker exec c *)',
       'Bash(direnv exec . make *)',
+      'Bash(npx prettier)',
+      'Bash(devbox run npm)',
     ]) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
