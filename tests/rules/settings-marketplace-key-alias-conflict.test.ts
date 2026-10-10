@@ -1,7 +1,8 @@
 // The rule reads the top-level keys of `.claude/settings.json` and
 // `.claude/settings.local.json`. The files glob and the decoy files are in
 // tests/configs.test.ts.
-import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { expect, it } from 'vitest'
+import { json5Tester, jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-marketplace-key-alias-conflict')
 
@@ -144,4 +145,15 @@ jsonTester.run('settings-marketplace-key-alias-conflict (message text)', rule, {
       ],
     },
   ],
+})
+
+// Red first: the managed files do not get the policy pair yet. The `.fails` mark goes away with the
+// rule change.
+it.fails('reports the policy pair in a managed file', () => {
+  const messages = lintJson(
+    'settings-marketplace-key-alias-conflict',
+    '{"strictKnownMarketplaces":[],"allowedMarketplaces":[]}',
+    'managed-settings.json',
+  )
+  expect(messages.map((m) => m.messageId)).toEqual(['conflict'])
 })
