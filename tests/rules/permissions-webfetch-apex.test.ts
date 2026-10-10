@@ -120,6 +120,14 @@ describe(`${name}: the silent cases`, () => {
     expect(ids(perms({ allow: rules }))).toEqual([])
   })
 
+  it('reports when the list holds only a WebFetch rule that has no domain prefix', () => {
+    const rules = ['WebFetch(domain:*.example.com)', 'WebFetch(example.com)']
+    expect(ids(perms({ allow: rules }))).toEqual(['apex'])
+    expect(ids(perms({ deny: ['WebFetch(domain:*.example.com)', 'WebFetch(prompt:*)'] }))).toEqual([
+      'apex',
+    ])
+  })
+
   it('is silent for a parameter rule in deny', () => {
     expect(ids(perms({ deny: ['WebFetch(prompt:*)'] }))).toEqual([])
   })
