@@ -4,8 +4,8 @@
 // - The entry for `advisorModel` in the settings reference
 //   (https://code.claude.com/docs/en/settings-reference#advisormodel).
 // - "Override model IDs per version" (https://code.claude.com/docs/en/model-config#override-model-ids-per-version).
-// - "Merge behavior" and "Pin models for third-party deployments" of the same page, for the family
-//   of an ID and for the `[1m]` suffix.
+// - "Merge behavior", "Add a custom model option" and "Pin models for third-party deployments" of
+//   the same page, for the family of an ID and for the `[1m]` suffix.
 // - The errors page, "Model is not a recognized model ID", for the `claude-` prefix
 //   (https://code.claude.com/docs/en/errors#model-is-not-a-recognized-model-id).
 // Checked on Claude Code 2.1.296 on 2026-10-09. Review these lists on or before 2027-04-09, the
@@ -44,9 +44,9 @@ export function isModelAlias(value: string): boolean {
 }
 
 // The errors page says that a pick from a Remote Control device must be an alias, a listed model,
-// or an ID that "starts with `claude-`". The rule uses that form for a settings value. A gateway
-// or a provider can accept other forms. An ID has no space, and the only
-// bracket text is the `[1m]` suffix.
+// or an ID that "starts with `claude-`". The rule uses that form for a settings value.
+// A gateway or a provider can accept other forms. An ID has no space.
+// The only bracket text is the `[1m]` suffix.
 const MODEL_ID = /^claude-[^\s[\]]+(?:\[1m\])?$/
 
 /** True when `value` has the form of an Anthropic model ID: `claude-` and a name, with an optional
@@ -81,8 +81,9 @@ const ID_FAMILY = new RegExp(
 
 /** True when `value` has a provider form that the docs name as valid: an Amazon Bedrock ARN, an
  *  `anthropic.` ID (a Mantle ID), or an ID that embeds a `claude-` model name, such as
- *  `us.anthropic.claude-opus-4-8` or `my-gateway/claude-opus-5-5`. The page says a deployment
- *  accepts "any string your API endpoint accepts", so the rule cannot judge any other form. */
+ *  `us.anthropic.claude-opus-4-8` or `my-gateway/claude-opus-5-5`. The docs say that Claude Code
+ *  skips validation for the custom model option. They say that a deployment can take any string
+ *  its endpoint accepts. So the rule cannot judge any other form. */
 export function hasProviderForm(value: string): boolean {
   return value.startsWith('arn:') || value.startsWith('anthropic.') || ID_FAMILY.test(value)
 }

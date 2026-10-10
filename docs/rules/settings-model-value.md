@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-model-value, which reports a model, fallbackModel, availableModels, advisorModel, ANTHROPIC_MODEL or CLAUDE_CODE_SUBAGENT_MODEL value that is no alias and no claude- ID, and an alias in an ANTHROPIC_DEFAULT_*_MODEL variable.
+description: The ESLint rule claude/settings-model-value, which reports a model, fallbackModel, availableModels, advisorModel, ANTHROPIC_MODEL or CLAUDE_CODE_SUBAGENT_MODEL value that is not an alias, a claude- ID or a provider form, and an alias in an ANTHROPIC_DEFAULT_*_MODEL variable.
 owner: brianespinosa
 created: 2026-10-09
 related_issues: [14]
@@ -25,7 +25,8 @@ produces an error on the first request.[^model] The rule finds the typo in the f
 
 The aliases and the ID forms are in `src/data/models.ts`, with the Claude Code version of the
 last review. A model alias is `default`, `best`, `fable`, `sonnet`, `opus`, `haiku` or
-`opusplan`.[^aliases] Every alias except `default` takes the suffix `[1m]`.[^aliases] A model ID starts with
+`opusplan`.[^aliases] The rule accepts the suffix `[1m]` on every alias except `default`. The table lists it for `sonnet`
+and `opus`.[^aliases] A model ID starts with
 `claude-`, as in `claude-opus-5-5`.[^recognized] A gateway or a provider can accept other forms,
 so this is a check of the form. The rule reports on the value.
 
@@ -51,9 +52,11 @@ For an `ANTHROPIC_DEFAULT_*_MODEL` variable, the rule reports an alias only, suc
 check of `model`, `fallbackModel`, `availableModels`, `advisorModel`, `env.ANTHROPIC_MODEL` and
 `env.CLAUDE_CODE_SUBAGENT_MODEL`. The default is an empty list. A pattern is not empty.
 
-A provider form passes without the option. It is an ARN that starts with `arn:`, an ID that
-starts with `anthropic.`, or an ID that embeds a `claude-` name, such as
-`us.anthropic.claude-opus-4-8` or `my-gateway/claude-opus-5-5`.[^available-forms]
+A provider form passes without the option. One form is an ARN that starts with `arn:`. Another is
+an ID that starts with `anthropic.`. The last is an ID that embeds a `claude-` name, such as
+`us.anthropic.claude-opus-4-8` or `my-gateway/claude-opus-5-5`.[^available-forms] The docs say that
+Claude Code skips validation for the custom model option. So a value that equals
+`env.ANTHROPIC_CUSTOM_MODEL_OPTION` in the same file passes too.
 
 The docs name two more forms of a model name. On Microsoft Foundry, it is a deployment name. On
 Google Cloud Agent Platform, it is a version name. These names have no common form. The rule

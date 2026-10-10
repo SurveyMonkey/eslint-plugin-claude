@@ -101,6 +101,8 @@ describe('the model ID forms', () => {
       'us.anthropic.claude-opus-4-8',
       'claude-',
       'claude-Opus-4',
+      'claude-opus-4.6',
+      'claude-opus_4',
     ]) {
       expect(isAnthropicModelId(value), value).toBe(false)
     }
@@ -120,6 +122,7 @@ describe('the family of a value', () => {
     expect(familyOf('claude-sonnet-4-5-20250929')).toBe('sonnet')
     expect(familyOf('claude-3-5-haiku-latest')).toBe('haiku')
     expect(familyOf('claude-fable-5')).toBe('fable')
+    expect(familyOf('claude-10-20-haiku')).toBe('haiku')
     expect(familyOf('claude-opus-4-6[1m]')).toBe('opus')
   })
 
@@ -173,7 +176,17 @@ describe('the provider forms', () => {
   })
 
   it('refuses a name with none of those forms', () => {
-    for (const value of ['gpt-5', 'sonet', 'arn', 'anthropic', 'xclaude-opus-5', 'claude-', '']) {
+    for (const value of [
+      'gpt-5',
+      'sonet',
+      'arn',
+      'anthropic',
+      'xclaude-opus-5',
+      'claude-',
+      '',
+      'xarn:a',
+      'us.anthropic.some-model',
+    ]) {
       expect(hasProviderForm(value), value).toBe(false)
     }
   })
