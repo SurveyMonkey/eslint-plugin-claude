@@ -31,9 +31,10 @@ The rule reports three shapes. It reads the syntax tree, so it reports the whole
 
 - **A directory tree.** A code block with at least three lines that start a branch. A branch mark is
   `├─` or `└─`, or the plain forms `|--`, `+--`, `\--` and a backtick with `--`. A plain mark
-  starts the line, and a name follows it. So the border `+----+` of a table is not a branch.
-- **A list of dependencies.** A code block with a `dependencies`, `devDependencies`,
-  `peerDependencies` or `optionalDependencies` key, or a TOML table of dependencies, or at least
+  starts the line, after any indent or tree bars, and a name follows it. The Windows `tree` forms
+  `+---` and `\---` count. So the border `+----+` of a table is not a branch.
+- **A list of dependencies.** A code block with a double-quoted `dependencies`,
+  `devDependencies`, `peerDependencies` or `optionalDependencies` key (JSON), or a TOML table of dependencies, or at least
   three lines that pin a version, as in `flask==3.0.0`.
 - **A file-by-file list.** A list of at least three items that all start with a code span with a
   path, then a colon, a dash and a space, or the word `is`, `holds` or `contains`. A path has a

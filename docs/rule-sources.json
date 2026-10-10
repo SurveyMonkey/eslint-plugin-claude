@@ -300,6 +300,11 @@
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Claude isn't following my CLAUDE.md",
       "hash": "c937e636f3fdb8b63095aa6035cf5c05b1c31996c6544193c2d56d756ecf7724"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     }
   ],
   "claude-md-guardrail-to-hook": [
