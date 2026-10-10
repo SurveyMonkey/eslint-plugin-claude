@@ -1,0 +1,154 @@
+{
+  "url": "https://code.claude.com/docs/en/prompt-caching",
+  "hash": "de13a11825487ea2e021d861db0c83e238a80258b5cbb4296fad23341850a034",
+  "blocks": [
+    {
+      "id": "how-claude-code-uses-prompt-caching",
+      "hash": "40540c19c5f1e690b4caaf5adfcbb3085d818183f61ca2c4e31e4fdeb706b886"
+    },
+    {
+      "id": "how-the-cache-is-organized",
+      "hash": "0f8757b275c4e4272df83ee2e110ac40a1a15ad983ed4d434d1abd5c51256fc9"
+    },
+    {
+      "id": "where-the-cache-lives",
+      "hash": "328a0e8e2ac7fcf130dd3ed39e9c297b4b0108c200e2bab88748561ce4bbd7e9"
+    },
+    {
+      "id": "actions-that-invalidate-the-cache",
+      "hash": "9ee6533124d9d619cfb0daaab0ea360973fb75348e4f2423a87b10efadbe3990"
+    },
+    {
+      "id": "switching-models",
+      "hash": "c80b1a82c987c26029dbd4c44b5d63dde6536d9ec44543dbd5d23e383e677181"
+    },
+    {
+      "id": "changing-effort-level",
+      "hash": "e35cdd045288e3e3afee02012dfa32beaa61d99e228fdad31d73ded5a4ccc573"
+    },
+    {
+      "id": "turning-on-fast-mode",
+      "hash": "cdff991ea8d95ab0906c513db35bd9296bc88ced5fbfeafbab285facb717036c"
+    },
+    {
+      "id": "connecting-or-removing-an-mcp-server",
+      "hash": "f5b25818ffe348a5a62115434e8da85c3c4fc8b20d4562e5d976003611f365c7"
+    },
+    {
+      "id": "enabling-or-disabling-a-plugin",
+      "hash": "8a137dee42a681804b594bc458d774fb72c465e12fd6da2a7fab47544ae8630b"
+    },
+    {
+      "id": "plugin-components-that-keep-the-cache",
+      "hash": "485d40218cbb01e5f74a285e9e53683de8314f593ca45f2f5356c299916e56d7"
+    },
+    {
+      "id": "plugins-that-provide-mcp-servers",
+      "hash": "ca2f591a88dbc530d2d9c1fa89e04b2c8f76d15826dff7baa783176edd9c259a"
+    },
+    {
+      "id": "code-intelligence-plugins",
+      "hash": "f4e688c48abb73b4f4ae9e345eb553c6768d93d8893127ad7c1e44b78b94b087"
+    },
+    {
+      "id": "when-plugin-changes-apply",
+      "hash": "638d19c7d9f722a08ba73131acd47dd73dbb0616ebd263203783ed388bbf66bc"
+    },
+    {
+      "id": "plugins-you-enable-and-then-disable-in-one-session",
+      "hash": "5328160759d78f3289defd728dbb27295b45e6e473fdf4ab592ba14a549527cc"
+    },
+    {
+      "id": "denying-an-entire-tool",
+      "hash": "6d4288a1436ec4c898314bf0c128b592e7df9a9b06f3e812699444cb489b717f"
+    },
+    {
+      "id": "compacting-the-conversation",
+      "hash": "54e973095681709bb6886dddb480d3242e183193af3fd4b334fb2af4ff5373ad"
+    },
+    {
+      "id": "accumulating-many-images",
+      "hash": "e27fd68d337d10b767d30f76f29edbe4889d4c3550c3835874cc39ab939353d4"
+    },
+    {
+      "id": "upgrading-claude-code",
+      "hash": "0c060049aa1db53990c99f23aba636d4fafad9361b6e1c5ac04c6e71ca52605a"
+    },
+    {
+      "id": "actions-that-keep-the-cache",
+      "hash": "b1e5dbe12fddf50972cbb9353952645295e0a1dcf42c45fdd703dd4e5de7a19e"
+    },
+    {
+      "id": "editing-files-in-your-repository",
+      "hash": "ac487086ac5457731fa5167caaac89d46e24313cb92b0008178aff100f2a54d1"
+    },
+    {
+      "id": "editing-claude-md-mid-session",
+      "hash": "9a469b83c99f0d163b9ee086857437d42ef351a29b63293f318914decf540e7e"
+    },
+    {
+      "id": "changing-permission-mode",
+      "hash": "9fbcb5fe2ff5fc1327a1069a358f3af53e98afcfb714766bb39bb81897979a71"
+    },
+    {
+      "id": "changing-output-style",
+      "hash": "c24e07c0b0e36217f191aa32e6fdb35ded165658ccf84c070b26a9428df2bf46"
+    },
+    {
+      "id": "invoking-skills-and-commands",
+      "hash": "db19d54bed771110a4b087459df725ae9e67096763ddc947409e56d6659f6b9f"
+    },
+    {
+      "id": "running-recap",
+      "hash": "ee34b4dd385674c4adde9ccd9329665b202f425eedb46d16749a780f10e96273"
+    },
+    {
+      "id": "rewinding-the-conversation",
+      "hash": "bd6d6b0dbc4000f347637755d8c4da47c26f926907bd723266525defe06a44ff"
+    },
+    {
+      "id": "resuming-a-session",
+      "hash": "2f8cd14d172f93392658d6a9e091ea550cd1283df30b66aa56887f686c727653"
+    },
+    {
+      "id": "cache-lifetime",
+      "hash": "f84c4e33a65470a09b12366e09c55349963908a4958bf2e1f779b71e2d3ada7f"
+    },
+    {
+      "id": "which-ttl-each-request-gets",
+      "hash": "189a28cd6b079af8f4f5d5f391bc4b17fa4173212784df4b71e5e1aa58eea88a"
+    },
+    {
+      "id": "choose-the-ttl-yourself",
+      "hash": "3555d7e2d58416415652bae719bcd284629d03f28386e2a67746dc5e522949de"
+    },
+    {
+      "id": "cache-scope",
+      "hash": "7539bcaab601443b6780c5416bb8e41e1154848e8de7d0ad7d4e40c6b56e7971"
+    },
+    {
+      "id": "check-cache-performance",
+      "hash": "5b16f3a73e7c49d66c8e33078ffe5156ccd09cb5301fac2979c62846ee193e22"
+    },
+    {
+      "id": "subagents-and-the-cache",
+      "hash": "f03417760d2322cb1bf5915a63dad69b2eacac8712d39709e8e30e6925dd6b2d"
+    },
+    {
+      "id": "disable-prompt-caching",
+      "hash": "0ee58280cb99fd29fb9de9a29eb1f16d4aa2ad5baeb82d128f3f07132fd22bf4"
+    },
+    {
+      "id": "related-resources",
+      "hash": "80eac9e8723aa0f03867fba84a9678ee87d7a160a4bfe105966d0677b652ba99"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Switching models",
+      "id": "switching-models",
+      "hash": "c80b1a82c987c26029dbd4c44b5d63dde6536d9ec44543dbd5d23e383e677181",
+      "text": "### Switching models\n\nEach model has its own cache. Switching with [`/model`](/docs/en/model-config#setting-your-model) means the next request reads the entire conversation history with no cache hits, even though the content is identical.\n\nWhen you run `/model` at the terminal, Claude Code asks you to confirm the switch only while the cache is still warm and the new model isn't the one that produced the last response. The cache stays warm for one [cache TTL](#cache-lifetime) after Claude Code last sent a request in this conversation or Claude last responded. Once that time passes, the cache has expired, so Claude Code switches without asking.\n\nBefore v2.1.238, Claude Code didn't check the cache TTL and asked even after the cache had expired.\n\nYou can also require this confirmation or skip it with a [PreModelSwitch hook](/docs/en/hooks#premodelswitch-decision-control).\n\nThe [`opusplan` model setting](/docs/en/model-config#opusplan-model-setting) resolves to Opus during plan mode and Sonnet during execution, so each plan-mode toggle is a model switch and starts a fresh cache.\n\n[Automatic model fallback](/docs/en/model-config#automatic-model-fallback) on Fable models, Opus 5.5, Sonnet 5.5, and Opus 5 is also a model switch. When a safety classifier flags a request in a category that has a fallback model and Claude Code re-runs the request on that model, the session continues there.\n\nWhen a skill or command's frontmatter names a [`model`](/docs/en/skills#frontmatter-reference) other than the session's current model, that turn is also a model switch: the next request reads the entire conversation history with no cache hits. The session model resumes on your next prompt. A `context: fork` skill sets the [forked subagent's model](/docs/en/skills#run-skills-in-a-subagent) instead."
+    }
+  ]
+}
