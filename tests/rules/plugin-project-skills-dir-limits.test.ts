@@ -13,7 +13,7 @@ import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-project-skills-dir-limits'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
@@ -113,7 +113,8 @@ describe(RULE, () => {
 
   check('reports monitors and a bundle together', () => {
     const fields = { mcpServers: './a.dxt', monitors: [] }
-    expect(messages(fields)).toEqual([MONITORS, bundle('./a.dxt')])
+    // The reports come in the order of the keys in the manifest.
+    expect(messages(fields)).toEqual([bundle('./a.dxt'), MONITORS])
   })
 
   check(

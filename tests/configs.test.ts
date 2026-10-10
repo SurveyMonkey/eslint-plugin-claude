@@ -135,6 +135,23 @@ const TREE: Record<string, string> = {
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'pp' }),
   'packages/pp/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'pp' }),
   '.claude/plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
+  // A plugin in `.claude/skills/` that declares a monitor and an MCP bundle. The same manifest
+  // in a plugin outside `.claude/skills/`, and one level too deep, is a decoy.
+  '.claude/skills/sp/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sp',
+    mcpServers: './server.mcpb',
+    monitors: [],
+  }),
+  '.claude/skills/deep/sp/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sp',
+    mcpServers: './server.mcpb',
+    monitors: [],
+  }),
+  'plugins/sp/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sp',
+    mcpServers: './server.mcpb',
+    monitors: [],
+  }),
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
   '.claude/skills/ref/SKILL.md': '[a](missing.md)\n',
@@ -527,6 +544,10 @@ const PLUGIN_RULES = [
     name: 'plugin-no-project-plugins-dir',
     files: ['**/.claude/plugins/**/.claude-plugin/plugin.json'],
   },
+  {
+    name: 'plugin-project-skills-dir-limits',
+    files: ['**/.claude/skills/*/.claude-plugin/plugin.json'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -571,6 +592,8 @@ const EXPECTED = [
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
+  '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
+  '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
