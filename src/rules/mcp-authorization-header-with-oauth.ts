@@ -1,6 +1,6 @@
 // A static `Authorization` header beside an `oauth` object (docs/rules/mcp-authorization-header-
-// with-oauth.md). With the header, Claude Code never falls back to OAuth for the server. If the
-// server rejects the header, the connection fails. So `oauth` has no effect. The rule reads
+// with-oauth.md). With the header, a server that rejects it gives a failed connection, and Claude Code
+// does not fall back to OAuth. The rule reads
 // `http`, `streamable-http` and `sse` servers. `mcp-oauth-transport` owns the other transports.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -21,7 +21,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'shadowed' }> = {
     schema: [],
     messages: {
       shadowed:
-        'The server "{{server}}" has an `oauth` object and a static `Authorization` header. Claude Code never falls back to OAuth for it. Remove one of them.',
+        'The server "{{server}}" has an `oauth` object and a static `Authorization` header. If the server rejects the header, Claude Code reports a failed connection instead of falling back to OAuth. Remove one of them.',
     },
   },
   create(context) {

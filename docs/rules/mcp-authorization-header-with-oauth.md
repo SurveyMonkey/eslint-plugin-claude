@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-authorization-header-with-oauth, which reports an MCP server with both an oauth object and a static Authorization header, because Claude Code never falls back to OAuth for it.
+description: The ESLint rule claude/mcp-authorization-header-with-oauth, which reports an MCP server with both an oauth object and a static Authorization header, because Claude Code reports a failed connection instead of falling back to OAuth.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -21,9 +21,8 @@ Do not set `oauth` beside a static `Authorization` header on an MCP server.
 ## Rule details
 
 A server with a `headers.Authorization` value uses that credential. If the server rejects the
-header, Claude Code reports the connection as failed. It does not fall back to OAuth.[^auth] So the
-`oauth` object has no effect. A `headersHelper` that returns an `Authorization` header has the
-same result.[^helper] The rule cannot read the output of a helper, so it reads `headers` only.
+header, Claude Code reports the connection as failed. It does not fall back to OAuth.[^auth] A `headersHelper` that returns an `Authorization`
+header gives the same result.[^helper] The rule cannot read the output of a helper, so it reads `headers` only.
 
 The rule reports the `oauth` key of a server that has an `oauth` object and a `headers` object with
 an `Authorization` key. HTTP header names do not depend on letter case, so `authorization` counts.

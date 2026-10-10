@@ -171,6 +171,18 @@ jsonTester.run('mcp-headershelper-credential-env (invalid)', rule, {
       errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN' } }],
     },
     {
+      name: 'a bare word before the read is no assignment',
+      code: helper('echo TOKEN=x $TOKEN'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'TOKEN' } }],
+    },
+    {
+      name: 'an assignment from a longer name still sets the name',
+      code: helper('MY_TOKEN=$MY_TOKEN_FILE; echo $MY_TOKEN'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN_FILE' } }],
+    },
+    {
       name: 'an assignment with a default from the same name',
       code: helper(`export MY_TOKEN=\${MY_TOKEN:-x}`),
       filename: project,
