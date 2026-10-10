@@ -104,6 +104,12 @@ describe('serverMembers', () => {
     return names
   }
 
+  it('keeps only the last of two members with one name', () => {
+    const code = '{"mcpServers": {"a": 1, "b": 2, "a": 3}}'
+    expect(namesOf(code, 'project')).toEqual(['b', 'a'])
+    expect(namesOf('{"a": 1, "a": 2}', 'plugin')).toEqual(['a'])
+  })
+
   it('reads the mcpServers object of a project file and of a plugin file', () => {
     const code = '{"mcpServers": {"a": {}, "b": 1}}'
     expect(namesOf(code, 'project')).toEqual(['a', 'b'])

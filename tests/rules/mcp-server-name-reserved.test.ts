@@ -80,10 +80,10 @@ jsonTester.run('mcp-server-name-reserved (invalid)', rule, {
       ],
     },
     {
-      name: 'a name that two members repeat',
+      name: 'a name that two members repeat is one server',
       code: servers(['workspace', 'workspace']),
       filename: project,
-      errors: [{ messageId: 'reserved' }, { messageId: 'reserved' }],
+      errors: [{ messageId: 'reserved' }],
     },
     {
       name: 'plugin, wrapper',

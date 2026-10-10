@@ -3,7 +3,7 @@
 // may omit that wrapper, so its map is the top-level object.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
-import { lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
+import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
 import { isPluginRoot } from './plugin-root.ts'
 import { UNREADABLE } from './skill-tree.ts'
 
@@ -44,14 +44,20 @@ export function mcpFileKind(filename: string): McpFileKind | null {
 
 /** The members of the server map of a file whose top-level value is `body`: the members of the
  *  `mcpServers` object. A plugin file with no `mcpServers` member has no wrapper, so its map is
- *  the top-level object. The result is empty when there is no map to read. */
+ *  the top-level object. The result is empty when there is no map to read.
+ *  Of two members with one name, only the last stays, as `JSON.parse` keeps the last. */
 export function serverMembers(body: ValueNode, kind: McpFileKind): MemberNode[] {
   if (body.type !== 'Object') {
     return []
   }
   const wrapper = lastMember(body, 'mcpServers')
+  let members: MemberNode[] = []
   if (wrapper === undefined) {
-    return kind === 'plugin' ? body.members : []
+    members = kind === 'plugin' ? body.members : []
+  } else if (wrapper.value.type === 'Object') {
+    members = wrapper.value.members
   }
-  return wrapper.value.type === 'Object' ? wrapper.value.members : []
+  return members.filter(
+    (member) => members.findLast((other) => keyOf(other.name) === keyOf(member.name)) === member,
+  )
 }

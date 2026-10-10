@@ -48,7 +48,7 @@ jsonTester.run('mcp-json-file-size (invalid)', rule, {
       name: 'one byte over the limit, project file',
       code: objectOfBytes(LIMIT + 1),
       filename: project,
-      errors: [{ messageId: 'tooLarge', line: 1, column: 1 }],
+      errors: [{ messageId: 'tooLarge', line: 1, column: 1, endLine: 1, endColumn: 2 }],
     },
     {
       name: 'one byte over, nested',
