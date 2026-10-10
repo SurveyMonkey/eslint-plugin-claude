@@ -2,12 +2,11 @@
 // lint: the manifest, `hooks/hooks.json`, `.mcp.json` and
 // `monitors/monitors.json`. A rule asks here for the shell-form hook commands,
 // the monitor commands and the MCP `headersHelper` strings of one file. This
-// reader is the small one of the plugin layer. The hooks and MCP layers have
-// readers of their own, and a later change can merge them.
+// reader is the small one of the plugin layer.
 //
-// A file that the manifest names (`"hooks": "./h.json"`) is not read here. The
-// rule that lints that file by its own name reads it. The same holds for the
-// monitors file that `experimental.monitors` names.
+// A file that the manifest names (`"hooks": "./h.json"`) is not read here, and
+// no rule reads it. The same holds for the monitors file that
+// `experimental.monitors` names.
 import path from 'node:path'
 import type { DocumentNode, ObjectNode, ValueNode } from './marketplace-json.ts'
 import { lastMember } from './marketplace-json.ts'
@@ -106,7 +105,7 @@ function inlineOf(value: ValueNode | undefined): ObjectNode[] {
     : []
 }
 
-/** True when the manifest `fields` replace `monitors/monitors.json`: a
+/** True when `plugin.fields` replace `monitors/monitors.json`: a
  *  `monitors` or `experimental.monitors` key that names no path, or a path to
  *  another file. A key that names the default file leaves it in force. */
 function replacesMonitorsFile(plugin: Plugin): boolean {
@@ -121,7 +120,8 @@ function replacesMonitorsFile(plugin: Plugin): boolean {
 }
 
 /** The commands of the file with the role `role` and the plugin `plugin`, in
- *  file order for each kind. */
+ *  file order for each kind. In a manifest, `experimental.monitors` comes before
+ *  `monitors`. */
 export function commandsOf(
   role: FileRole,
   document: DocumentNode,

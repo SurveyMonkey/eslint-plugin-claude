@@ -40,10 +40,12 @@ The rule reads these files, when they belong to a plugin:
 The rule makes no report in these cases:
 
 - A file in `.claude/skills/`, `.claude/commands/` or `.claude/agents/`, which is not in a plugin.
-  `skill-plugin-vars-outside-plugin` reports the braced form there.
-- The frontmatter of the file. The docs name the Markdown body.[^resolve]
-- A `$CLAUDE_PLUGIN_ROOT` in a hook, an MCP server or a monitor. The hook and MCP files get the
-  variables in their environment, and `plugin-monitors-command-env` owns the monitor case.
+  `skill-plugin-vars-outside-plugin` reports the braced form in a skill or command file there. It
+  reads the braced form only, and it reads no agent file.
+- The frontmatter of the file, such as `allowed-tools`. The docs name the Markdown body.[^resolve]
+  No shipped rule owns a bare variable in the frontmatter of a plugin skill.
+- A `$CLAUDE_PLUGIN_ROOT` in a hook, an MCP server or a monitor. A hook and an MCP stdio server
+  get the variables in their environment. `plugin-monitors-command-env` owns the monitor case.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.

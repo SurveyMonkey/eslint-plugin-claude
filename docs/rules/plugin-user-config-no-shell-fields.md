@@ -44,13 +44,14 @@ have the script read the value from a config file. For a `headersHelper`, put th
 
 The rule reads these places:
 
-- `plugin.json`, in three keys. The inline `hooks` object, or the objects in a `hooks` array.
-  The inline `mcpServers` map, or the maps in an `mcpServers` array. The inline array of
-  `experimental.monitors` or `monitors`.
+- `plugin.json`, in three keys. The rule reads an inline `hooks` object, or the objects in a
+  `hooks` array. It reads an inline `mcpServers` map, or the maps in an `mcpServers` array. It
+  reads the inline array of `experimental.monitors` or `monitors`.
 - `hooks/hooks.json`, under its top-level `hooks` key.
 - `.mcp.json` at the plugin root, under its top-level `mcpServers` key.
-- `monitors/monitors.json`. A `monitors` or `experimental.monitors` key in the manifest replaces
-  this file. The rule skips the file when the key names no path, or names another file.
+- `monitors/monitors.json`. An `experimental.monitors` key in the manifest replaces this
+  file.[^monitors] The rule treats a top-level `monitors` key in the same way. The rule skips the
+  file when the key names no path, or names another file.
 
 The rule makes no report in these cases:
 
@@ -60,7 +61,9 @@ The rule makes no report in these cases:
 - A `${user_config.KEY}` in a field that is not a shell field. Examples are `headers`, `env`, the
   `args` of a server, and the `description` of a monitor.
 - A hooks or MCP file with no wrapper key. The rule reads the commands under the wrapper only.
-- A hook handler with no `type`. The docs make `type` a required field.[^exec]
+- A hook handler with no `type`. The rule reads only a handler with `"type": "command"`.[^exec]
+- A `headersHelper` in a `marketplace.json` entry. `marketplace-headers-helper-command` reads
+  that file.
 - The file is in no plugin, such as a `.mcp.json` of a project that has no `plugin.json`.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to

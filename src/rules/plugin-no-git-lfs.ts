@@ -4,7 +4,9 @@
 // of the repository above the plugin and of the plugin itself, and reports the
 // first plugin file that the patterns send to LFS. It reads no file out of the
 // repository, so it ignores `.git/info/attributes` and the global attributes
-// file. It makes no report when it cannot read a `.gitattributes` or a folder.
+// file. It skips a folder that it cannot list or whose `.gitattributes` it cannot
+// read. It makes no report when it cannot read a `.gitattributes` above the
+// plugin.
 import { lstatSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -16,7 +18,7 @@ const name = 'plugin-no-git-lfs' as const
 
 // A filter attribute: `filter=<value>`, `filter`, `-filter` or `!filter`.
 const FILTER = /^[-!]?filter(?:=.*)?$/
-// A pattern that no file matches: a comment, a macro, a quoted pattern or a negative pattern.
+// A pattern that the rule does not read: a comment, a macro, a quoted pattern or a negative one.
 const NO_FILE = /^(?:#|\[attr\]|"|!)/
 const SPECIAL = /[-.*+?^${}()|[\]\\/]/g
 

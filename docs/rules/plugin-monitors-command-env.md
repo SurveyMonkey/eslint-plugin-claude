@@ -40,8 +40,9 @@ variable and gets no report.
 The rule reads the monitors in these places:
 
 - The inline array of `experimental.monitors` or `monitors` in `plugin.json`.
-- `monitors/monitors.json`. A `monitors` or `experimental.monitors` key in the manifest replaces
-  this file.[^monitors] The rule skips the file when the key names no path, or names another file.
+- `monitors/monitors.json`. An `experimental.monitors` key in the manifest replaces this
+  file.[^monitors] The rule treats a top-level `monitors` key in the same way. The rule skips the
+  file when the key names no path, or names another file.
 
 The rule makes no report in these cases:
 
