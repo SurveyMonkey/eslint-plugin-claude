@@ -36,6 +36,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-command-removed-cli-flag',
     'hooks-config-schema',
     'hooks-disabled-by-disableallhooks',
+    'hooks-env-var-unavailable',
     'hooks-event-name-known',
     'hooks-exec-form-command-spaces',
     'hooks-handler-field-ignored',
