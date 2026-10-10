@@ -128,3 +128,26 @@ describe(`${name}: more than one list`, () => {
     ])
   })
 })
+
+describe(`${name}: the report text and the cover test`, () => {
+  it('reports an allow copy when an unrelated rule is in a deny list', () => {
+    expect(ids(perms({ allow: ['Edit', 'Edit'], deny: ['Read'] }))).toEqual(['duplicate'])
+    expect(ids(perms({ allow: ['Bash(ls)', 'Bash(ls)'], deny: ['Bash(rm *)'] }))).toEqual([
+      'duplicate',
+    ])
+  })
+
+  it('names the copy, the first rule and the line of the first rule', () => {
+    const text = '{\n "permissions": {\n  "allow": ["Bash(ls:*)",\n "Bash(ls *)"]\n }\n}'
+    const [message] = lintJson(name, text, PROJECT)
+    expect(message?.message).toBe(
+      '`Bash(ls *)` repeats `Bash(ls:*)` in the allow list, at line 3. Remove the copy.',
+    )
+  })
+
+  it('reads a trailing dot only in a domain of WebFetch', () => {
+    expect(ids(perms({ allow: ['WebFetch(a.com.)', 'WebFetch(a.com)'] }))).toEqual([])
+    expect(ids(perms({ allow: ['mcp__x(domain:a.)', 'mcp__x(domain:a)'] }))).toEqual([])
+    expect(ids(perms({ allow: ['WebFetch', 'WebFetch'] }))).toEqual(['duplicate'])
+  })
+})

@@ -39,7 +39,7 @@ describe(`${name}: the report`, () => {
   it('names the rule and the form that works', () => {
     const [message] = lintJson(name, perms({ allow: ['Bash(git:* push)'] }), PROJECT)
     expect(message?.message).toContain('Bash(git:* push)')
-    expect(message?.message).toContain('Bash(git * push)')
+    expect(message?.message).toContain('Bash(git push *)')
   })
 
   it('reports at the entry, at its line and column', () => {
@@ -58,7 +58,15 @@ describe(`${name}: the silent cases`, () => {
   })
 
   it('is silent for a pattern with no :*, and for a bare tool', () => {
-    for (const rule of ['Bash(git * push)', 'Bash(git push)', 'Bash', 'Bash(*)', 'Bash()']) {
+    for (const rule of [
+      'Bash(git * push)',
+      'Bash(git push)',
+      'Bash',
+      'Bash(*)',
+      'Bash()',
+      'Bash(:*)',
+      'Bash(curl http://localhost:*/health)',
+    ]) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])
     }
   })

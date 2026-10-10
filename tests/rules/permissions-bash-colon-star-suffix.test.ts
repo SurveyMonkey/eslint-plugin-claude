@@ -37,6 +37,11 @@ describe(`${name}: the report`, () => {
     expect(message?.message).toContain('Bash(git push *)')
   })
 
+  it('reports a one-character command and a trailing space', () => {
+    expect(ids(perms({ allow: ['Bash(x:*)'] }))).toEqual(['suffix'])
+    expect(ids(perms({ allow: ['Bash(ls:* )'] }))).toEqual(['suffix'])
+  })
+
   it('reports a rule with a :* in the middle as well, for the end', () => {
     expect(ids(perms({ allow: ['Bash(git:* push:*)'] }))).toEqual(['suffix'])
   })
