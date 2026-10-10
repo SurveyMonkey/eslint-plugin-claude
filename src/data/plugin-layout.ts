@@ -14,6 +14,9 @@
 // The fifth list is the table of the "commands" section of the manifest reference
 // (https://code.claude.com/docs/en/plugins/manifest-reference#commands), checked on Claude Code
 // 2.1.296 on 2026-10-10.
+// The sixth list is the table of the "User configuration" section of the manifest reference
+// (https://code.claude.com/docs/en/plugins/manifest-reference#user-configuration), checked on
+// Claude Code 2.1.296 on 2026-10-10.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -90,4 +93,13 @@ export const PLUGIN_COMMAND_FIELDS: readonly string[] = [
   'argumentHint',
   'model',
   'allowedTools',
+]
+
+/** The values of `type` in a `userConfig` option, in the order of the table. */
+export const USER_CONFIG_TYPES: readonly string[] = [
+  'string',
+  'number',
+  'boolean',
+  'directory',
+  'file',
 ]

@@ -84,6 +84,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-skills-key-redundant-default',
     'plugin-symlink-escapes-marketplace',
     'plugin-symlink-escapes-plugin',
+    'plugin-user-config-field-applicability',
     'plugin-user-config-no-shell-fields',
     'plugin-user-config-sensitive-in-content',
     'settings-conflicting-keys',

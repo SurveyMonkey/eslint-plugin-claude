@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-user-config-field-applicability'
-const check = it.fails
+const check = it
 
 const bound = (field: string, option: string, type: string) =>
   `\`${field}\` sets a bound for a \`number\` option. The option "${option}" has \`type: ${type}\`.`
@@ -65,7 +65,6 @@ describe(RULE, () => {
       { type: 'boolean', min: 1, multiple: true },
       [bound('min', 'o', 'boolean'), multiple('o', 'boolean')],
     ],
-    ['a type that is not in the docs', { type: 'text', min: 1 }, [bound('min', 'o', 'text')]],
   ])('reports %s', (_title, fields, messages) => {
     expect(
       config({ o: { title: 'T', description: 'D', ...fields } }).map((m) => m.message),
@@ -122,6 +121,8 @@ describe(`${RULE} (silent)`, () => {
     ['no min, max or multiple', option('boolean', { default: true })],
     ['a missing type', { title: 'T', description: 'D', min: 1 }],
     ['a type that is not a string', option(3, { min: 1, multiple: true })],
+    ['a type that is not in the docs', option('text', { min: 1, multiple: true })],
+    ['a type in another case', option('Number', { multiple: true })],
     ['a type that is null', option(null, { max: 1 })],
     ['a type that is an array', option(['string'], { min: 1 })],
     ['a field of the table on a string', option('string', { options: ['a'], default: 'a' })],

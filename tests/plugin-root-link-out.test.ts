@@ -187,6 +187,21 @@ describe('the path and settings rules of the plugin layer', () => {
 })
 
 describe('the path rules of the plugin layer', () => {
+  const APPLIES = JSON.stringify({
+    name: 'p',
+    userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },
+  })
+  it('plugin-user-config-field-applicability reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(APPLIES)
+    expect(
+      lintPlugin('plugin-user-config-field-applicability', dir, code).map((m) => m.messageId),
+    ).toEqual(['bound'])
+  })
+  linked('plugin-user-config-field-applicability stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, APPLIES)
+    expect(lintPlugin('plugin-user-config-field-applicability', dir, APPLIES)).toEqual([])
+  })
+
   const FIELDS = JSON.stringify({ name: 'p', commands: { a: { content: 'x', bogus: 1 } } })
   it('plugin-commands-map-fields reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(FIELDS)

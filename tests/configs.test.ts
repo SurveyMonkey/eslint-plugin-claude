@@ -223,6 +223,11 @@ const TREE: Record<string, string> = {
     settings: { agent: 'a' },
   }),
   'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
+  // A `min` bound on a string option.
+  'plugins/uca/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'uca',
+    userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },
+  }),
   // A command entry with a field that the manifest reference does not list.
   'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
     name: 'cmf',
@@ -744,6 +749,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-user-config-field-applicability',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -805,6 +815,7 @@ const EXPECTED = [
   'plugins/env/.claude-plugin/plugin.json: claude/plugin-monitors-command-env@2',
   'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
+  'plugins/uca/.claude-plugin/plugin.json: claude/plugin-user-config-field-applicability@1',
   'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',

@@ -68,6 +68,7 @@ import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
+import pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
@@ -227,6 +228,7 @@ const modules = [
   pluginSkillsKeyRedundantDefault,
   pluginPathNoBackslash,
   pluginCommandsMapFields,
+  pluginUserConfigFieldApplicability,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -361,6 +363,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-path-no-backslash': 'warn',
   'plugin-commands-map-fields': 'warn',
+  'plugin-user-config-field-applicability': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
