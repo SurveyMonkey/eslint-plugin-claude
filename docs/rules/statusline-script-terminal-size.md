@@ -45,8 +45,8 @@ script in two cases.
   read a link out of the repository, a link to nothing, or a file with no read access (ADR 001, Decision 14).
 - A word that has one of these characters: `$`, `*`, `?`, `[`, `]`, `{`, `}`, `~`, `:`, `=`, `!`, `#`, a
   backtick or a backslash. The rule cannot resolve such a word.
-- A call after code on the same line, such as `x=1 # tput cols`. The rule counts it as a call.
-- A fallback such as `${COLUMNS:-$(tput cols)}`. The rule counts it as a call.
+- A comment after code, such as `x=1 # tput cols`. The rule reports it as a call.
+- A fallback such as `${COLUMNS:-$(tput cols)}`. The rule reports it as a call.
 - `tput lines`, and the width detection of a language. The page names only `tput cols` as a command.
 - `subagentStatusLine` and `fileSuggestion`.
 - A hidden file in `managed-settings.d/`, which Claude Code ignores.
