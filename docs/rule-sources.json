@@ -792,7 +792,7 @@
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Authenticate with remote MCP servers",
-      "hash": "d4d72826a429059a4c0f8070822b649e883f4167610c3bb799db31b2cb2f6180"
+      "hash": "7cfc4f7df94ca472ee4e0b442534e310f11ecd6068098bf20b25617e6f71553a"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -865,11 +865,30 @@
       "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
     }
   ],
+  "mcp-headershelper-committed": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Trust a folder before its headersHelper runs",
+      "hash": "f3664b5eb60ee17edcee0b3ee879c3562edb40e7a7285968b0886fb6a61e4f58"
+    }
+  ],
   "mcp-headershelper-credential-env": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Which variables a helper can read",
       "hash": "08703a83b2070f459b2f4d8c94c6d87d1d13aeab889d8908a9c944ff3d2cd3eb"
+    }
+  ],
+  "mcp-headershelper-path": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use dynamic headers for custom authentication",
+      "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Where the helper runs",
+      "hash": "54cea62e0bfdf2e4f949006f21c537ecb6cd47caa2d32eeba0323d585a7ac44f"
     }
   ],
   "mcp-hidden-whitespace": [
@@ -937,6 +956,13 @@
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
+  "mcp-no-sse-transport": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 2: Add a remote SSE server",
+      "hash": "e1713ad3b9bb184eff9aa7f2e179b2b7bf1d8fac1f6c1877597d988bf0e771c6"
+    }
+  ],
   "mcp-oauth-transport": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -958,7 +984,7 @@
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Restrict OAuth scopes",
-      "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
+      "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
     }
   ],
   "mcp-plugin-tool-name-scoped": [
@@ -1031,6 +1057,30 @@
       "hash": "c7905ba8c09b780cd000645e341c982056103923e9f66d292f5cae4b769c3703"
     }
   ],
+  "mcp-server-name-anthropic-skills": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use MCP prompts as commands",
+      "hash": "b79f3570fa1febf344554b56c445e0882167f4dbeaf81121f84a829037d29dcf"
+    }
+  ],
+  "mcp-server-name-format": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Add a server from an mcpServers JSON block",
+      "hash": "af1aff3b152c63100d59efe68121f3d45037e80bda64d494e8bc61926e63b295"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Could not import a server from Claude Desktop",
+      "hash": "59df9e4a25c0324450b8c3fa4788cfe4872e3e918e3ef782fc2ec74f779f3b7e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
+    }
+  ],
   "mcp-server-name-reserved": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -1043,6 +1093,23 @@
       "url": "https://code.claude.com/docs/en/debug-your-config",
       "heading": "Check common causes",
       "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    }
+  ],
+  "mcp-stdio-relative-path": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check MCP servers",
+      "hash": "4ae50a277c11dfb09cbb92567b814b966be5dd1d8e3efc956b4b686d2dc7eb5a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/channels-reference",
+      "heading": "Example: build a webhook receiver",
+      "hash": "4d988e3412b3bbf78b852de67126eb5556ebb626ef26dc67bae9ca23b9dbaba2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 3: Add a local stdio server",
+      "hash": "a5a82c6934bf4d14831e55e5fd801986344c53038f4010ddfe9cdb5a2347f664"
     }
   ],
   "mcp-timeout-min": [
