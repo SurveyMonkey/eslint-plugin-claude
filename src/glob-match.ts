@@ -17,6 +17,10 @@ import { entriesOf, isInside, realOf, statOf, UNREADABLE } from './skill-tree.ts
 // Directories that hold no files that a glob names, and can be very large.
 const SKIPPED = new Set(['.git', 'node_modules'])
 
+// The most links to folders that one walk follows. Links that fan out to the same folders make
+// the walk visit a folder once for each path to it, which grows without a bound.
+const MAX_LINKS = 1000
+
 const SPECIAL = /[\\^$.|+()[\]{}*?]/
 
 /** The index of the `}` that closes the `{` at `open`, or -1. A backslash escapes a character. */
@@ -147,11 +151,14 @@ function matchesPath(matcher: RegExp, relative: string): boolean {
 
 /** Walk the files below `root`. `visit` gets the path of each file, relative to `root`, with
  *  `/` as separator. It returns true to stop the walk. A link to a folder is followed when its
- *  real path is in `bound`, and when it is not one of the folders above it (a cycle). The result is true when the walk could not see a part of the
- *  tree: a folder that cannot be read, or a link that leads out of `bound`. */
+ *  real path is in `bound`, and when it is not one of the folders above it (a cycle). The walk
+ *  follows at most `MAX_LINKS` links. The result is true when the walk could not see a part of
+ *  the tree: a folder that cannot be read, a link that leads out of `bound`, or a link past
+ *  the limit. */
 function walkFiles(root: string, bound: string, visit: (relative: string) => boolean) {
   let unreadable = false
   let stopped = false
+  let followed = 0
   const walk = (dir: string, relative: string, above: string[]): void => {
     const real = realOf(dir)
     if (typeof real !== 'string') {
@@ -188,7 +195,9 @@ function walkFiles(root: string, bound: string, visit: (relative: string) => boo
         const info = statOf(target)
         isDirectory = info instanceof Stats && info.isDirectory()
       }
-      if (isDirectory) {
+      if (isDirectory && entry.isSymbolicLink() && ++followed > MAX_LINKS) {
+        unreadable = true
+      } else if (isDirectory) {
         walk(full, rel, [...above, real])
       } else {
         stopped = visit(rel)
