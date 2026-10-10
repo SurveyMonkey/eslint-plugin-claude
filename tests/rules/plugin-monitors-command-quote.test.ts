@@ -70,8 +70,13 @@ describe(RULE, () => {
     ['after an escaped quote', `echo \\"${ROOT}/m.js`],
     ['after an escaped quote in a quote', `echo "a\\"" ${ROOT}/m.js`],
     ['in a quote that holds a dollar sign', `echo "$HOME" ${ROOT}/m.js`],
+    ['after a single quote that holds a backslash', `echo '\\' ${ROOT}/m.js`],
   ])('reports a variable %s', (_title, command) => {
     expect(runCommand(command)).toEqual([message(ROOT)])
+  })
+
+  check('reports a variable that a quote follows, and not the next one in the quote', () => {
+    expect(runCommand(`${ROOT}"${DATA}"`)).toEqual([message(ROOT)])
   })
 
   check('reports a variable of the top-level monitors key', () => {
