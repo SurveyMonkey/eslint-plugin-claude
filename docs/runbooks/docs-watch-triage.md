@@ -26,9 +26,10 @@ one block has findings of two kinds, the issue has the first kind of this list: 
 kind.
 [ADR 002](../adr/002-classify-docs-changes-with-jev.md) records how the classifier decides.
 
-This runbook covers the pull request that resolves one issue. To decide a batch of issues with no
-code change, use the `docs-watch-triage` skill (`.claude/skills/docs-watch-triage/SKILL.md`). It
-closes or retitles the issues. A pull request from this runbook then resolves each work item.
+This runbook covers the pull request side. To decide a batch of issues with no code change, use
+the `docs-watch-triage` skill (`.claude/skills/docs-watch-triage/SKILL.md`). It closes, retitles
+or opens issues, and adds scope notes to group issues. A pull request from this runbook then
+resolves each work item.
 
 ## The five kinds of issue
 
