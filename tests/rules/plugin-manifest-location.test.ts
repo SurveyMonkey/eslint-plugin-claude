@@ -3,6 +3,7 @@
 // (manifest reference, "Manifest file"). The rule lists the components that it
 // finds in that directory. The trees are on disk, because the rule reads the
 // directory. The files glob and the decoy files are in tests/configs.test.ts.
+import { chmodSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
@@ -169,4 +170,23 @@ describe(`${RULE} (silent)`, () => {
       expect(lint(dir, code)).toEqual([])
     })
   })
+
+  locked(
+    'makes no report for a .claude-plugin directory that it can search and cannot list',
+    () => {
+      const { dir, code } = pluginTree(
+        { name: 'p' },
+        { '.claude-plugin/skills/s/SKILL.md': '# S\n' },
+      )
+      const folder = path.join(dir, '.claude-plugin')
+      // Mode 0311: the owner can search the folder and read the manifest, and cannot list it.
+      chmodSync(folder, 0o311)
+      try {
+        expect(lint(dir, code)).toEqual([])
+      } finally {
+        chmodSync(folder, 0o755)
+      }
+      expect(lint(dir, code)).toHaveLength(1)
+    },
+  )
 })
