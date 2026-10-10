@@ -29,3 +29,11 @@ export const SKILL_FIELDS = [
 
 /** The fields that a command file does not accept. */
 export const COMMAND_EXCLUDED: readonly string[] = ['name', 'paths']
+
+/** The fields that hold a Boolean and that exist before v2.1.218. Claude Code
+ *  reads `yes`, `no`, `on`, `off`, `1` and `0` in them from v2.1.218. The field
+ *  `background` is not here, because it needs v2.1.218 itself. */
+export const SKILL_BOOLEAN_FIELDS: readonly string[] = [
+  'disable-model-invocation',
+  'user-invocable',
+]

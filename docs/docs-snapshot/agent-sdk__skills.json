@@ -1,0 +1,102 @@
+{
+  "url": "https://code.claude.com/docs/en/agent-sdk/skills",
+  "hash": "c46492c7d4ae32ab5189ac6370a0a2bd0c8eaf62b395fce8105cb907a0093524",
+  "blocks": [
+    {
+      "id": "extend-agents-with-skills",
+      "hash": "d7ca04fb8d63e09eaddc1855a2860e7b8624cb5ee6ac13a128a7dadf39a0b189"
+    },
+    {
+      "id": "how-skills-work-with-the-agent-sdk",
+      "hash": "415fafd764de1dc1f51ae7c1433c5ba3f486335f7589ccecc8e5b59afe451712"
+    },
+    {
+      "id": "use-skills-with-the-agent-sdk",
+      "hash": "31684b473e182d7bb136e6a54a9aa1e4fa44405be92d752b3fe17dba89e2b815"
+    },
+    {
+      "id": "set-up-skills-in-a-session",
+      "hash": "20e00891b6625fb581b0267ba54ba01a97f10d05c5cb58d48b2b05b1da9815c1"
+    },
+    {
+      "id": "confirm-skills-loaded",
+      "hash": "c6d3646410625b616867798a1e354b60ef131c92799cc99835ee4f136a4c9048"
+    },
+    {
+      "id": "allow-only-specific-skills",
+      "hash": "34db606e8d716c9b52a2d3106e5309c08232580497e16e740f08ff9adf37d445"
+    },
+    {
+      "id": "commands-in-agent-sdk-sessions",
+      "hash": "62bd2f343757ad7896f777703cac4a5ddd0f405f37a7f9af2d7ced2198f1acaf"
+    },
+    {
+      "id": "discover-available-commands",
+      "hash": "923a08ef167a9580c2d802a48835fe724e86ea8a7f3fa74b2e4f23f3bb6bd968"
+    },
+    {
+      "id": "dispatch-commands-by-name",
+      "hash": "fd0434107d46b9b9094dcf1fa1165ab36fbfbd17a17904b2a4a6f46effb128cb"
+    },
+    {
+      "id": "compact-history-with-compact",
+      "hash": "4d6627a1b678f9c1f43449849e746028b812b1bb6beb4b168f4ea89bb0a38531"
+    },
+    {
+      "id": "reset-context-with-clear",
+      "hash": "20d802a2b988525a5602a8d0fa1f06ad0d36272cdb127f4c066670c3fdf62b19"
+    },
+    {
+      "id": "create-skills",
+      "hash": "bcd625e489aca7a17977e968c9a41238cf867fe5859b0a21b64af6655af26c46"
+    },
+    {
+      "id": "choose-a-discovery-level",
+      "hash": "f479298119dde220e457d535e5463a30544850056eb389e0016aa01db0576d2a"
+    },
+    {
+      "id": "create-and-dispatch-your-first-skill",
+      "hash": "621439454a448f3cecf8daa3c16bd75db1fddf0486b66123d306833c5b3f8676"
+    },
+    {
+      "id": "pre-approve-tools-for-skills",
+      "hash": "3e9d6a860ff50654c5abdf075e583c21ce2437730f0d420e901bfb78cc8f18d6"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "659a188b36f9c3262a28539e24c345df4edc9657f59b116b0a1d9887cf2e28e0"
+    },
+    {
+      "id": "skills-not-found",
+      "hash": "ed462ff88e7b306a4845b3f6c2b2a2b8e98346591070c2a5636f9c49a26932a5"
+    },
+    {
+      "id": "skill-not-being-used",
+      "hash": "efd32253d923fe261cdcca65834b914ce6ef3aa4bb6ecf3287892fa8fb247c76"
+    },
+    {
+      "id": "invalid-skill-name-error",
+      "hash": "1e378d4e212de13b62e8942acc17ec40f151c08f73d4e427e732e956e9de4614"
+    },
+    {
+      "id": "additional-troubleshooting",
+      "hash": "d6b9d2cb9270e402df3c1ccaa0579eb40ae9441ace3851b4593ed902d98787ec"
+    },
+    {
+      "id": "next-steps",
+      "hash": "c554af92649d9e3de10b126e313e6ff9fe33ed4df06889cf1eeaa0c6296922be"
+    },
+    {
+      "id": "related-resources",
+      "hash": "54682c8960e78434a9a108d0f310a0371fa7c2491dd12d37eb23c722acfc0737"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Confirm skills loaded",
+      "id": "confirm-skills-loaded",
+      "hash": "c6d3646410625b616867798a1e354b60ef131c92799cc99835ee4f136a4c9048",
+      "text": "### Confirm skills loaded\n\nNear the start of the stream, the SDK yields a system message with subtype `init`. Check its `skills` array to confirm your skills loaded before Claude starts working. The array includes the user-invocable skills that you have defined with a `description` or `when_to_use` frontmatter field, along with [bundled skills included with Claude Code](/docs/en/skills#bundled-skills).\n\nThe array lists user-invocable skills only. A skill with [`user-invocable: false`](/docs/en/skills#control-who-invokes-a-skill) in its frontmatter loads and remains available to Claude, but doesn't appear in the array. The array lists the same skills whether or not they're in your `skills` list."
+    }
+  ]
+}

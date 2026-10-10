@@ -147,6 +147,29 @@ const TREE: Record<string, string> = {
   'docs/readme.md': '# Other Markdown\n',
   'docs/SKILL.md': `\n---\nmade_up: 1\nagent: Plan\nallowed-tools: AskUserQuestion Bash Skill(anthropic *) Bogus(\n---\nKEY=!\`cmd\` ${pluginRoot}\n`,
   '.claude/agents/a.md': `---\nname: a\ndescription: ${long}\n---\n`,
+  // The warn rules of #50, layer 1: one bad file for each, and the same fault where the rule is
+  // silent. `skill-no-bom` and `skill-boolean-literal` are inactive in the presets, so their files
+  // give no report here. The mark is the first character of the three files that start with `\ufeff`.
+  '.claude/skills/bom/SKILL.md': '\ufeff---\nname: bom\ndescription: d\n---\n',
+  '.claude/commands/cbom.md': '\ufeff---\ndescription: d\n---\n',
+  'docs/bom/SKILL.md': '\ufeff---\nname: bom\ndescription: d\n---\n',
+  '.claude/skills/bool/SKILL.md': '---\ndescription: d\ndisable-model-invocation: yes\n---\n',
+  '.claude/skills/bool-ok/SKILL.md':
+    '---\ndescription: d\ndisable-model-invocation: true\nuser-invocable: true\n---\n',
+  '.claude/skills/meta/SKILL.md': '---\ndescription: d\nmetadata:\n  paths: src\n---\n',
+  '.claude/skills/meta-ok/SKILL.md': '---\ndescription: d\nmetadata:\n  team: web\n---\n',
+  '.claude/skills/redundant/SKILL.md':
+    '---\ndescription: d\ndisable-model-invocation: true\nwhen_to_use: x\n---\n',
+  '.claude/skills/redundant-ok/SKILL.md':
+    '---\ndescription: d\ndisable-model-invocation: true\nargument-hint: x\n---\n',
+  '.claude/skills/no-description/SKILL.md': '---\nname: no-description\n---\n',
+  '.claude/skills/shadow/SKILL.md': '---\nname: clear\ndescription: d\n---\n',
+  '.claude/skills/shadow-ok/SKILL.md': '---\nname: shadow-ok\ndescription: d\n---\n',
+  'plugins/p/skills/clear/SKILL.md': '---\ndescription: d\n---\n',
+  // The command files of the same rules. `model` is a built-in command, and `model` is a frontmatter
+  // field.
+  '.claude/commands/model.md': '---\ndescription: d\n---\n',
+  '.claude/commands/cmeta.md': '---\ndescription: d\nmetadata:\n  model: x\n---\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
@@ -695,6 +718,49 @@ const EXPECTED = [
   'packages/z/.claude/agents/dup1.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/dup2.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
+  // The warn rules of #50, layer 1. `skill-description-present` also reports each file of the
+  // earlier rules that has no `description`. The folder `fork` is the name of a built-in command.
+  '.claude/commands/allowed.md: claude/skill-description-present@1',
+  '.claude/commands/c.md: claude/skill-description-present@1',
+  '.claude/commands/cbom.md: claude/command-legacy-format@1',
+  '.claude/commands/ghost.md: claude/skill-description-present@1',
+  '.claude/commands/cmeta.md: claude/command-legacy-format@1',
+  '.claude/commands/cmeta.md: claude/skill-metadata-reserved-keys@1',
+  '.claude/commands/model.md: claude/command-legacy-format@1',
+  '.claude/commands/model.md: claude/skill-name-shadows-builtin@1',
+  '.claude/commands/ns/c.md: claude/skill-description-present@1',
+  '.claude/commands/schema.md: claude/skill-description-present@1',
+  '.claude/skills/agent-ok/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/agent/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/bang/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/broad/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/fork/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/fork/SKILL.md: claude/skill-name-shadows-builtin@1',
+  '.claude/skills/glob-ok/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/glob/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/grammar/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/meta/SKILL.md: claude/skill-metadata-reserved-keys@1',
+  '.claude/skills/no-description/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/position/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/redundant/SKILL.md: claude/skill-invocation-redundant-fields@1',
+  '.claude/skills/ref-ok/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/ref/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/schema/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/shadow/SKILL.md: claude/skill-name-shadows-builtin@1',
+  '.claude/skills/skill-rule/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/synced/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/tools/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/twin-a/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/twin-b/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/unreachable/SKILL.md: claude/skill-description-present@1',
+  '.claude/skills/vars/SKILL.md: claude/skill-description-present@1',
+  'packages/x/.claude/skills/twin/SKILL.md: claude/skill-description-present@1',
+  'plugins/p/commands/allowed.md: claude/skill-description-present@1',
+  'plugins/p/commands/c.md: claude/skill-description-present@1',
+  'plugins/p/SKILL.md: claude/skill-description-present@1',
+  'plugins/p/skills/synced/SKILL.md: claude/skill-description-present@1',
+  'plugins/p/skills/vars/SKILL.md: claude/skill-description-present@1',
+  'plugins/q/SKILL.md: claude/skill-description-present@1',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -738,6 +804,16 @@ const NEW_RULES = [
   'skill-paths-glob-valid',
 ]
 
+// The warn skill rules of #50, layer 1, in the order of the `modules` list.
+const WARN_SKILL_RULES = [
+  'skill-boolean-literal',
+  'skill-description-present',
+  'skill-invocation-redundant-fields',
+  'skill-metadata-reserved-keys',
+  'skill-name-shadows-builtin',
+  'skill-no-bom',
+]
+
 let root = ''
 
 beforeAll(() => {
@@ -778,6 +854,10 @@ describe('configs', () => {
       ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
+      ...WARN_SKILL_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'warn' },
+      ]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...TOOL_LIST_BLOCKS.map((rule) => [
         `claude/recommended/${rule}`,
@@ -807,6 +887,7 @@ describe('configs', () => {
       'claude/strict/command-legacy-format',
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
+      ...WARN_SKILL_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
