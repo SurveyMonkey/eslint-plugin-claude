@@ -338,10 +338,10 @@ Each of these keeps an issue of its own, because it needs its own decision:
 
 **The size of a digest.** A digest holds at most 20 blocks (`MAX_DIGEST_BLOCKS`). Its whole body
 takes at most 60,000 characters, so it stays under the GitHub limit of 65,536. The step cuts no
-section. It puts the blocks of a page in a digest in order. When the next block would pass 20
-blocks or 60,000 characters, that block starts a new digest. A block whose digest alone passes
-60,000 characters gets the issue of that block. A last group of one block also gets the issue of
-that block. Each fence in a section holds at most 280 characters of its text
+section. It puts the blocks of a page in groups, in order. When the next block would pass 20
+blocks or 60,000 characters, that block starts a new group. A block whose digest alone passes
+60,000 characters gets the issue of that block. A group of one block also gets the issue of that
+block. Each fence in a section holds at most 280 characters of its text
 (`MAX_DIGEST_QUOTE`). A fence of a text of backticks takes three times its text, and a section
 can have two fences. The worst body in the tests, 20 such sections with a line of inventory rows
 each, takes 57,826 characters.
@@ -375,7 +375,7 @@ The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
 - A digest issue can need a decision for each block. It closes in the pull request that makes
   all of them. A digest quotes at most 280 characters of each text, so a person reads the page
   for the rest.
-- A page with large blocks gives more digests, because the split depends on the size of each
+- A page with large blocks gives more issues, because the split depends on the size of each
   block.
 - An open digest stops an issue for each block that it names. A new block of the page in a
   later run gets an issue of its own, or a new digest with the other new blocks.
