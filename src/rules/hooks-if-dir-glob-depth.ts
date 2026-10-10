@@ -65,10 +65,7 @@ const rule: Rule.RuleModule = {
           continue
         }
         const parsed = parsePermissionRule(node.value)
-        const dir =
-          parsed.ok && parsed.specifier !== null
-            ? SINGLE_SEGMENT.exec(parsed.specifier)?.[1]
-            : undefined
+        const dir = parsed.ok ? SINGLE_SEGMENT.exec(parsed.specifier ?? '')?.[1] : undefined
         if (parsed.ok && dir !== undefined && FILE_TOOLS.includes(parsed.tool)) {
           context.report({
             loc: node.loc,

@@ -201,6 +201,37 @@ describe(`${name}: a subagent name`, () => {
     expect(ids(files, subagents('nope'), 'config/settings.json')).toEqual([])
   })
 
+  it('is silent for a managed settings file in a .claude folder, and a skill at its root', () => {
+    expect(ids(files, subagents('nope'), '.claude/managed-settings.json')).toEqual([])
+    const text = frontmatter(
+      'SubagentStop:\n  - matcher: nope\n    hooks:\n      - type: command\n        command: ./a.sh\n',
+    )
+    const root = repo({
+      ...files,
+      '.claude/.claude-plugin/plugin.json': '{}',
+      '.claude/SKILL.md': text,
+    })
+    expect(markdownIds(name, text, path.join(root, '.claude/SKILL.md'))).toEqual([])
+  })
+
+  it('is silent when a link out of the repository may hold the agent, though others are known', () => {
+    const outside = repo({ 'agents/out.md': agent('', 'out') })
+    const root = repo({ ...files, '.claude/settings.json': '{}' })
+    symlinkSync(path.join(outside, 'agents'), path.join(root, '.claude/agents/linked'))
+    expect(lintJson(name, subagents('out'), path.join(root, SETTINGS_FILE))).toEqual([])
+    expect(lintJson(name, subagents('nope'), path.join(root, SETTINGS_FILE))).toEqual([])
+  })
+
+  it.skipIf(chmodCannotBlock)(
+    'is silent when a sub folder of the agents folder cannot be read',
+    () => {
+      const root = repo({ ...files, '.claude/agents/team/x.md': agent('', 'x') })
+      withoutAccess(path.join(root, '.claude/agents/team'), () => {
+        expect(lintJson(name, subagents('x'), path.join(root, SETTINGS_FILE))).toEqual([])
+      })
+    },
+  )
+
   it.skipIf(chmodCannotBlock)('is silent when the agents folder cannot be read', () => {
     const root = repo(files)
     const text = subagents('nope')
@@ -301,6 +332,19 @@ describe(`${name}: an MCP server name`, () => {
     ]) {
       expect(ids(files, settings(hooks('PostToolUse', [handler]))), json(handler)).toEqual([])
     }
+  })
+
+  it('is silent for a managed settings file in a .claude folder, and a skill at its root', () => {
+    expect(ids(files, server('dbx'), '.claude/managed-settings.json')).toEqual([])
+    const text = frontmatter(
+      'PostToolUse:\n  - hooks:\n      - type: mcp_tool\n        server: dbx\n        tool: t\n',
+    )
+    const root = repo({
+      ...files,
+      '.claude/.claude-plugin/plugin.json': '{}',
+      '.claude/SKILL.md': text,
+    })
+    expect(markdownIds(name, text, path.join(root, '.claude/SKILL.md'))).toEqual([])
   })
 
   it('is silent in a plugin hooks.json, a managed file and a file outside .claude', () => {

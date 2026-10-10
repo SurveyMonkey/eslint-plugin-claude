@@ -50,7 +50,7 @@ const rule: Rule.RuleModule = {
           data: {
             value,
             limit: millisecondsFrom,
-            seconds: Math.max(1, Math.round(value / 1000)),
+            seconds: Math.round(value / 1000),
           },
         })
       }

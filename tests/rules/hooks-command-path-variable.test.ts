@@ -52,6 +52,8 @@ describe(`${name}: the report`, () => {
       'node scripts/a.js',
       'python3 -u scripts/a.py',
       'env FOO=1 node scripts/a.js',
+      'node.exe scripts/a.js',
+      'bash.EXE scripts/a.sh',
     ]) {
       expect(shell(line), line).toEqual(['relative'])
     }

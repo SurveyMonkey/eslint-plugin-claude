@@ -56,7 +56,7 @@ describe(`${name}: the report`, () => {
     )
   })
 
-  it('rounds the suggestion, and keeps it at 1 second or more', () => {
+  it('rounds the suggestion to whole seconds', () => {
     expect(
       lintJson(name, settings(hooks('Stop', [command({ timeout: 1500 })])), FILES.project)[0]
         ?.message,

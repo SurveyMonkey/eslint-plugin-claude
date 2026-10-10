@@ -4,14 +4,7 @@
 import type { Rule } from 'eslint'
 import { BLOCKING_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
-import {
-  HOOKS_TARGET,
-  handlersOf,
-  hooksListener,
-  isTrue,
-  memberOf,
-  stringOf,
-} from '../hooks-config.ts'
+import { HOOKS_TARGET, handlersOf, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
 
 const name = 'hooks-async-on-blocking-event' as const
 
@@ -32,14 +25,14 @@ const rule: Rule.RuleModule = {
   create(context) {
     return hooksListener(context, (source) => {
       for (const { event, handler } of handlersOf(source)) {
-        const flag = memberOf(handler, 'async')
+        const flag = memberOf(handler, 'async')?.value
         if (
-          flag !== undefined &&
+          flag?.kind === 'boolean' &&
+          flag.value &&
           stringOf(handler, 'type') === 'command' &&
-          isTrue(handler, 'async') &&
           BLOCKING_EVENTS.includes(event)
         ) {
-          context.report({ loc: flag.value.loc, messageId: 'async', data: { event } })
+          context.report({ loc: flag.loc, messageId: 'async', data: { event } })
         }
       }
     })
