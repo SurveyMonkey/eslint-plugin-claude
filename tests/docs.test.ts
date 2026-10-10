@@ -112,6 +112,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'rules-frontmatter-schema',
     'rules-md-extension',
     'rules-paths-glob-valid',
+    'rules-symlink-external-scoped',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',
     'settings-enabled-plugins-external-source',
