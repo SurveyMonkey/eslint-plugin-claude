@@ -39,7 +39,8 @@ report is on the top-level value. The message names the directory.
 The rule reads no file. It finds the repository root with the first `.git` entry above the project,
 as `settings-local-location` does. A `.git` file counts, as a worktree has one. A nested repository
 is a root of its own. When no `.git` entry exists, the project is its own root, and the rule makes
-no report.
+no report. The rule uses the real path of the project. A project with a real path out of the
+repository gets no report.
 
 ### What the rule does not check
 

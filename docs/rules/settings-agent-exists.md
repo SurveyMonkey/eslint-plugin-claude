@@ -24,7 +24,7 @@ repository. `strict` turns it on at `warn`.
 ## Rule details
 
 The setting `agent` runs the main thread as a named subagent. Its value is "the name of a built-in
-or custom agent".[^agent] A name that no agent has gives a session that cannot apply that agent.
+or custom agent".[^agent] A name that no agent has points to nothing.
 
 The rule accepts a value that is one of these:
 
@@ -44,9 +44,12 @@ The rule reads the `.claude/agents/` folder of the project that holds the settin
 reads that folder in each directory above the project, up to the repository root. It reads no file
 out of the repository (ADR 001, Decision 14).
 
-The rule makes no report when it cannot see an agent. These cases give no report. A link leads out
-of the repository. The project is a link out of the repository. A link in place of `.claude` or
-`agents/` has no target. The rule cannot read a folder. The rule cannot read an agent file.
+The rule makes no report when it cannot see an agent. It makes no report in these cases:
+
+- A link leads out of the repository.
+- The project folder is a link that leads out of the repository.
+- A link in place of `.claude` or `agents/` has no target.
+- The rule cannot read a folder or an agent file.
 
 An agent in a user folder (`~/.claude/agents/`) or in a plugin is not in the repository. Name such
 an agent in the option `allow`.
@@ -62,6 +65,7 @@ an agent in the option `allow`.
 - A managed file. A managed file applies to every project on a machine. The project agents that it
   names are not in the repository that holds it.
 - A value that is not a string. `settings-schema` reports it.
+- An empty string.
 - The `--agent` flag, which takes precedence over the setting.
 
 When a file has two `agent` keys, the rule reads the last, as `JSON.parse` does.

@@ -31,13 +31,13 @@ The rule accepts a key that is one of these:
 - A bundled skill. The list is in `src/data/skill-fields.ts`. It follows the rows that the commands
   reference marks as a skill.[^commands]
 - An alias of a bundled skill, such as `review`. In a project file, Claude Code does not apply an
-  alias. `settings-skilloverrides-key` reports that, so this rule stays silent.[^override]
+  alias. `settings-skilloverrides-key` reports that, so this rule makes no report.[^override]
 - The name of a skill folder in `.claude/skills/`. The folder name counts, and so does the `name`
   field of its `SKILL.md`.[^naming]
 - The file name of a command file in `.claude/commands/`, without `.md`.[^naming]
 - A name in the option `allow`.
 - A name with a colon. That is the form of a plugin skill, of a nested skill and of a command in a
-  subfolder. Plugin skills are not affected by `skillOverrides`. The rule does not look up such a
+  subfolder. `skillOverrides` has no effect on a plugin skill. The rule does not check such a
   name.
 
 The docs do not say if Claude Code compares the names with case, so the rule does not.
@@ -46,20 +46,23 @@ The report is on the key.
 
 ### Where the rule looks
 
-Claude Code loads project skills from the `.claude/skills/` folder of the directory where it starts,
-and from every parent directory up to the repository root.[^discovery] The rule reads the
-`.claude/skills/` and `.claude/commands/` folders of the project that holds the settings file, and
-of each directory above it up to the repository root. It reads no file out of the repository (ADR
-001, Decision 14).
+Claude Code loads project skills from the `.claude/skills/` folder where it starts. It also loads
+them from each parent directory up to the repository root.[^discovery] The rule reads the
+`.claude/skills/` and `.claude/commands/` folders of the project that holds the settings file. It
+reads the same folders in each directory above the project, up to the repository root. It reads no
+file out of the repository (ADR 001, Decision 14).
 
 A skill in a folder below the project does not load at the start. The rule does not read it. A user
-skill (`~/.claude/skills/`), a skill from a folder added with `--add-dir`, and a skill from the
-account are not in the repository. Name such a skill in the option `allow`.
+skill (`~/.claude/skills/`) is not in the repository. Neither is a skill from a folder that you add
+with `--add-dir`, or a skill from the account. Name such a skill in the option `allow`.
 
-The rule makes no report when it cannot see a skill. These cases give no report. A link leads out of
-the repository. The project is a link out of the repository. A link in place of `.claude`, a skills
-folder or a skill folder has no target. The rule cannot read a folder. The rule cannot read a
-`SKILL.md`.
+The rule makes no report when it cannot see a skill. It makes no report in these cases:
+
+- A link leads out of the repository. This holds for `.claude`, a skills folder, a skill folder
+  and a `SKILL.md`.
+- The project folder is a link that leads out of the repository.
+- A link has no target.
+- The rule cannot read a folder or a `SKILL.md`.
 
 ### Options
 

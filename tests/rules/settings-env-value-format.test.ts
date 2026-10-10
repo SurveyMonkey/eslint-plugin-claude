@@ -14,6 +14,17 @@ const dropIn = 'managed-settings.d/10-x.json'
 const ALL = [project, local, managed, dropIn]
 const env = (value: object) => JSON.stringify({ env: value })
 
+// The variables of `settings-env-format-heuristic`. This rule must not report them, whatever the
+// value, so one rule never doubles a report of the other.
+const HEURISTIC_VARIABLES = [
+  'MAX_MCP_OUTPUT_TOKENS',
+  'MCP_TIMEOUT',
+  'MCP_TOOL_TIMEOUT',
+  'CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT',
+  'CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS',
+  'CLAUDE_CODE_USE_POWERSHELL_TOOL',
+]
+
 // A variable, the values that its form accepts, and the values that it does not.
 const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[] = [
   {
@@ -178,6 +189,13 @@ jsonTester.run('settings-env-value-format (valid)', rule, {
       code: env({ FOO: 'anything at all', API_TIMEOUT_MS: '1200000', DISABLE_AUTO_COMPACT: '1' }),
       filename,
     })),
+    // A variable of the heuristic rule has no form here, so a bad value passes.
+    ...HEURISTIC_VARIABLES.flatMap((name) =>
+      ['0', '30s', 'x', '1e-3'].map((value) => ({
+        code: env({ [name]: value }),
+        filename: project,
+      })),
+    ),
     // `""` is a valid value for each variable. It cancels a shell value.
     ...FORMS.map(({ name }) => ({ code: env({ [name]: '' }), filename: project })),
     ...CAPABILITY_VARIABLES.filter((name) => !FORMS.some((form) => form.name === name)).map(

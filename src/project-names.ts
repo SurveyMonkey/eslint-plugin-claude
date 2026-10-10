@@ -37,9 +37,10 @@ function isUnseen(entry: string, bound: string): boolean {
 
 /** `start` and each directory above it, up to the real path `top`. The walk goes up the path as
  *  given. A directory counts when its real path is at or below `top`. A directory with a real
- *  path out of `top` is not in the chain, and `skipped` is true. The walk stops at `top`. When
- *  the path as given leaves `top` by a link, the walk goes on up to the root of the file system.
- *  Each step only resolves a path, and reads no file. */
+ *  path out of `top` is not in the chain, and `skipped` is true. The walk stops at the directory
+ *  with the real path `top`. That directory is a parent of the path as given, so a link in the
+ *  chain does not carry the walk above the repository. Each step only resolves a path, and reads
+ *  no file. */
 function ancestors(start: string, top: string): { chain: string[]; skipped: boolean } {
   const chain: string[] = []
   let skipped = false

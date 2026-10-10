@@ -45,18 +45,19 @@ belongs to one user.
 
 ### An allowlist entry without the provider prefix
 
-The allowlist compares each entry with the provider-form model ID. The page says that provider
-prefixes such as `us.anthropic.` are not stripped. To allow a specific model, list its full
-provider-form ID.[^pin] On Amazon Bedrock the form has that prefix.
+The allowlist compares each entry with the model ID in provider form. The page says that Claude
+Code does not strip a provider prefix such as `us.anthropic.`. To allow a specific model, list its
+full ID in provider form.[^pin] On Amazon Bedrock the form has that prefix.
 
 The rule reports an `availableModels` entry that is an Anthropic model ID, such as
-`claude-opus-4-8`, when the same file turns on `CLAUDE_CODE_USE_BEDROCK` in `env`. The report is on
-the entry. The rule makes no report in these cases:
+`claude-opus-4-8`. It does so only when the same file turns on `CLAUDE_CODE_USE_BEDROCK` in `env`.
+The report is on the entry. The rule makes no report in these cases:
 
 - The entry is an alias, or a provider-form ID such as `us.anthropic.claude-opus-4-8`.
 - The entry is a key of `modelOverrides` in the same file. The page says that Claude Code compares
   the allowlist with the Anthropic ID of an overridden model.[^overrides]
-- The file does not select Amazon Bedrock. The other providers use the Anthropic ID.[^pin]
+- The file does not select Amazon Bedrock. The examples of the page use the Anthropic ID for Google Cloud's Agent Platform and
+  Microsoft Foundry.[^pin]
 
 The part reads the shared project file and the managed files. A hidden drop-in gets no report, as
 Claude Code ignores it.

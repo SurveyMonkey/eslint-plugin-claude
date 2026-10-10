@@ -47,8 +47,9 @@ The rule makes no report in these cases:
 - The value is not a string. `settings-env-value-format` reports it.
 - The variable is `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` or `CLAUDE_CODE_OAUTH_TOKEN`, or it
   is `ANTHROPIC_CUSTOM_HEADERS`. `settings-env-credential` owns them.
-- The variable holds the path to a key file. These are `CLAUDE_CODE_CLIENT_KEY` and the
-  `OTEL_EXPORTER_OTLP_*_CLIENT_KEY` variables.[^vars] The rule still reads their values.
+- The variable holds the path to a key file. The env vars page says this of
+  `CLAUDE_CODE_CLIENT_KEY`.[^vars] The rule treats the `OTEL_EXPORTER_OTLP_*_CLIENT_KEY` variables
+  the same way, but the docs do not say that they hold a path. The rule still reads their values.
 
 For an API credential, use `apiKeyHelper`.[^env] For an OTLP token that changes, use
 `otelHeadersHelper`.[^env]

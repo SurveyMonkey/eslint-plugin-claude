@@ -433,7 +433,8 @@ export function heuristicEnvForm(name: string): EnvForm | undefined {
 /** The variables that hold the path to a key file or a certificate, and not a key. Their names end
  *  in `_KEY`. The env vars reference says that `CLAUDE_CODE_CLIENT_KEY` is the "path to client
  *  private key file". The rule reads `OTEL_EXPORTER_OTLP_*_CLIENT_KEY` the same way. The settings
- *  reference lists them among the exporter variables, and does not say that they hold a path. */
+ *  reference lists them among the variables that Claude Code ignores in project settings, and does
+ *  not say that they hold a path. */
 export function holdsKeyPath(name: string): boolean {
   return name === 'CLAUDE_CODE_CLIENT_KEY' || /^OTEL_EXPORTER_OTLP_(?:.+_)?CLIENT_KEY$/.test(name)
 }
