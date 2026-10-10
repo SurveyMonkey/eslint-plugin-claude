@@ -107,6 +107,27 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code)).toEqual([])
   })
 
+  linked('stays silent for a link without a target behind a link to a folder', () => {
+    const { dir, code, top } = pluginTree(
+      { name: 'p', commands: './cmds' },
+      { 'cmds/.gitkeep': '' },
+      'plugins/p/',
+    )
+    mkdirSync(path.join(top, 'other'))
+    link(top, 'other/c.md', 'ghost.md')
+    link(dir, 'cmds/sub', '../../../other')
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('reports a link without a target in a folder that the scan skips', () => {
+    const { dir, code } = pluginTree(
+      { name: 'p', commands: './cmds' },
+      { 'cmds/node_modules/x/.gitkeep': '' },
+    )
+    link(dir, 'cmds/node_modules/x/c.md', 'ghost.md')
+    expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
+  })
+
   linked('reports a directory with a link without a target that is not Markdown', () => {
     const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/.gitkeep': '' })
     link(dir, 'cmds/notes.txt', 'ghost.txt')

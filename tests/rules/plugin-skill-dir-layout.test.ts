@@ -235,6 +235,40 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code)).toEqual([])
   })
 
+  linked('stays silent for a .md link to a folder of the repository', () => {
+    const { dir, code } = withSkills('./extra', { 'extra/a/SKILL.md': SKILL, 'docs/.gitkeep': '' })
+    link(dir, 'extra/notes.md', '../docs')
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('reports a .md link to a file out of the plugin, in the repository', () => {
+    const { dir, code, top } = pluginTree(
+      { name: 'p', skills: './extra' },
+      { 'extra/a/SKILL.md': SKILL },
+      'plugins/p/',
+    )
+    writeFileSync(path.join(top, 'shared.md'), '# S\n')
+    link(dir, 'extra/x.md', '../../../shared.md')
+    expect(lint(dir, code).map((m) => m.message)).toEqual([message('x.md', './extra')])
+  })
+
+  check('leaves a skill.md of the wrong letter case in skills/<name>/ to skill-file-layout', () => {
+    const { dir, code } = withSkills('./skills/team', { 'skills/team/skill.md': '# S\n' })
+    expect(lint(dir, code)).toEqual([])
+    const shipped = lintMarkdown(
+      'skill-file-layout',
+      '# S\n',
+      path.join(dir, 'skills', 'team', 'skill.md'),
+    )
+    expect(shipped.map((m) => m.messageId)).toEqual(['wrongCase'])
+  })
+
+  linked('leaves the default directory to skill-file-layout when a link names it', () => {
+    const { dir, code, top } = withSkills('./alias', { 'skills/loose.md': '# L\n' })
+    link(top, 'alias', 'skills')
+    expect(lint(dir, code)).toEqual([])
+  })
+
   linked('stays silent for a .md link without a target', () => {
     const { dir, code } = withSkills('./extra', { 'extra/a/SKILL.md': SKILL })
     link(dir, 'extra/gone.md', 'ghost.md')
