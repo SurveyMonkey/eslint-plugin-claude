@@ -5,7 +5,7 @@
 // same key below it. `.claude/settings.local.json` is above
 // `.claude/settings.json`. So the local file wins for one key.
 import path from 'node:path'
-import { readJson, UNREADABLE, type Unreadable } from './skill-tree.ts'
+import { entriesOf, readJson, repositoryRoot, UNREADABLE, type Unreadable } from './skill-tree.ts'
 
 /** The managed settings files that a repository can hold. The managed settings
  *  page (https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams)
@@ -19,6 +19,7 @@ import { readJson, UNREADABLE, type Unreadable } from './skill-tree.ts'
 export const MANAGED_SETTINGS_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
 
 const DROP_IN_DIRECTORY = 'managed-settings.d'
+const MAIN_FILE = 'managed-settings.json'
 
 /** The kind of a settings file: the project file, the local file, or a managed file. */
 export type FileKind = 'project' | 'local' | 'managed'
@@ -29,7 +30,7 @@ export function kindOf(filename: string): FileKind {
   // or `settings.local.json`, so the directory decides first.
   if (
     path.basename(path.dirname(filename)) === DROP_IN_DIRECTORY ||
-    path.basename(filename) === 'managed-settings.json'
+    path.basename(filename) === MAIN_FILE
   ) {
     return 'managed'
   }
@@ -92,4 +93,47 @@ export function readSettings(
     merged.env = { ...project.env, ...local.env }
   }
   return merged
+}
+
+/** The parsed objects of the other files of the merged managed source of the
+ *  managed file `filename`: the sibling `managed-settings.json`, and each
+ *  `*.json` file in the sibling `managed-settings.d/` that is not hidden. The
+ *  managed settings page merges these files into one source. The linted file
+ *  is not in the result, because the caller holds its text. Claude Code
+ *  ignores a hidden file and a file that does not end in `.json`.
+ *
+ *  A directory or a file that is not there adds nothing. The result is
+ *  `UNREADABLE` when the rule cannot see one part: a read that fails, a path
+ *  out of the repository, a file that does not parse to an object, or a
+ *  drop-in that vanished after the listing. Such a file can hold any key. */
+export function readManagedSource(filename: string): Record<string, unknown>[] | Unreadable {
+  const self = path.resolve(filename)
+  const dir =
+    path.basename(path.dirname(self)) === DROP_IN_DIRECTORY
+      ? path.dirname(path.dirname(self))
+      : path.dirname(self)
+  const bound = repositoryRoot(dir)
+  const directory = path.join(dir, DROP_IN_DIRECTORY)
+  const entries = entriesOf(directory)
+  if (entries === UNREADABLE) {
+    return UNREADABLE
+  }
+  const dropIns = (entries ?? [])
+    .filter(({ name }) => name.endsWith('.json') && !name.startsWith('.'))
+    .map(({ name }) => ({ file: path.join(directory, name), optional: false }))
+  const files = [{ file: path.join(dir, MAIN_FILE), optional: true }, ...dropIns].filter(
+    ({ file }) => file !== self,
+  )
+  const objects: Record<string, unknown>[] = []
+  for (const { file, optional } of files) {
+    const parsed = readJson(file, bound)
+    if (parsed === null && optional) {
+      continue
+    }
+    if (parsed === null || parsed === UNREADABLE || !isObject(parsed.data)) {
+      return UNREADABLE
+    }
+    objects.push(parsed.data)
+  }
+  return objects
 }

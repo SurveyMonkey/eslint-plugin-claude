@@ -7,8 +7,8 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { MANAGED_CONTROL_KEYS } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
-import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
-import { entriesOf, readJson, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
+import { MANAGED_SETTINGS_FILES, readManagedSource } from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-managed-file' as const
 
@@ -17,34 +17,17 @@ const MERGE_FILE = 'managed-settings.json'
 
 const isPolicyKey = (key: string) => !MANAGED_CONTROL_KEYS.includes(key)
 
-/** True when a drop-in in `managed-settings.d` beside `dir` holds a policy key,
- *  or when the rule cannot tell. Claude Code reads each `*.json` file there
- *  that is not hidden. A drop-in that cannot be read, or that does not parse
- *  to an object, counts as a policy source: it can hold any key. */
-function dropInsMayHoldPolicy(dir: string): boolean {
-  const directory = path.join(dir, DROP_IN_DIRECTORY)
-  const entries = entriesOf(directory)
-  if (entries === null) {
-    return false
-  }
-  if (entries === UNREADABLE) {
-    return true
-  }
-  const bound = repositoryRoot(dir)
-  return entries
-    .filter(({ name: entry }) => entry.endsWith('.json') && !entry.startsWith('.'))
-    .some(({ name: entry }) => {
-      const parsed = readJson(path.join(directory, entry), bound)
-      // A file that vanished since the listing, or one that cannot be read.
-      if (parsed === null || parsed === UNREADABLE) {
-        return true
-      }
-      const { data } = parsed
-      if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-        return true
-      }
-      return Object.entries(data).some(([key, value]) => value !== null && isPolicyKey(key))
-    })
+/** True when a drop-in beside `filename` holds a policy key, or when the rule
+ *  cannot tell. A drop-in that cannot be read, or that does not parse to an
+ *  object, counts as a policy source: it can hold any key. */
+function dropInsMayHoldPolicy(filename: string): boolean {
+  const others = readManagedSource(filename)
+  return (
+    others === UNREADABLE ||
+    others.some((data) =>
+      Object.entries(data).some(([key, value]) => value !== null && isPolicyKey(key)),
+    )
+  )
 }
 
 const rule: JSONRuleDefinition<{
@@ -99,7 +82,7 @@ const rule: JSONRuleDefinition<{
           file === MERGE_FILE &&
           keys.length > 0 &&
           !keys.some(isPolicyKey) &&
-          !dropInsMayHoldPolicy(path.dirname(context.filename))
+          !dropInsMayHoldPolicy(context.filename)
         ) {
           context.report({ node: body, messageId: 'controlKeysOnly' })
           return
