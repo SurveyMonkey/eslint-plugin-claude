@@ -40,6 +40,9 @@ holds one of these:
 - a glob: `*` or `?`
 - a variable assignment before the command, such as `FOO=1 ./a.sh`
 
+The rule cannot tell a `.cmd` or `.bat` shim from another script. On Windows, the docs say to run such a shim
+by name in shell form.[^form] The rule reports that case.
+
 The check is for characters, and a quote does not hide them. A line with one of them gets no report, even when
 the character is inside a quote.
 
