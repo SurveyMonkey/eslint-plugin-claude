@@ -8,14 +8,15 @@ import { type Word, wordsOf } from './script-refs.ts'
 
 export type StringNode = Extract<ValueNode, { type: 'String' }>
 
-/** A handler with `type` `command`. `args` is undefined for the shell form.
- *  An `args` element that is not a string is undefined. */
+/** A handler with `type` `command`. `args` is undefined for the shell form,
+ *  and for an `args` value that is not an array. An `args` element that is
+ *  not a string is undefined. */
 export interface Handler {
   command: StringNode
   args: (StringNode | undefined)[] | undefined
 }
 
-/** The handler of the value `value`, as a list of one, or an empty list when
+/** The command handler in `value`, as a list of one. The list is empty when
  *  `value` is not a command handler. */
 function handlerOf(value: ValueNode): Handler[] {
   const type = lastMember(value, 'type')?.value

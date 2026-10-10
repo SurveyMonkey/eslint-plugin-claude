@@ -1,8 +1,9 @@
 // Each file directly in the `bin/` of a plugin must have the executable bit
 // (docs/rules/plugin-bin-executable.md). The bit is the git index mode `100755`,
 // read by `src/git-state.ts`. A `bin/` file is not a JSON file, so the rule
-// lints the manifest of the plugin and reports one file at a time. It makes no
-// report for a file that git does not track, or when git cannot be read.
+// lints the manifest of the plugin. It reports one message for each `bin/`
+// file. It makes no report for a file that git does not track, or when git
+// cannot be read.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'

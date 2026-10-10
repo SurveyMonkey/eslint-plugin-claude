@@ -28,8 +28,8 @@ skill and agent frontmatter are not read. The rule finds a script path in these 
 command:
 
 - **A word that starts with a path variable.** `${CLAUDE_PROJECT_DIR}` is the project root.
-  `${CLAUDE_PLUGIN_ROOT}` is the plugin directory.[^paths] The `$CLAUDE_PROJECT_DIR` form with
-  no braces counts too. The word can be the program or an argument, as in
+  `${CLAUDE_PLUGIN_ROOT}` is the plugin directory.[^paths] The forms with
+  no braces count too. The word can be the program or an argument, as in
   `node "${CLAUDE_PROJECT_DIR}/.claude/hooks/check.js"`.
 - **The program, when it is a path from the project.** The words `.claude/hooks/check.sh` and
   `./tools/check.sh` count. A bare name such as `check.sh` is a search on the `PATH`, so it does
@@ -42,8 +42,8 @@ form, the rule splits `command` the way a shell does. It follows quotes and the 
 Where each variable resolves:
 
 - **`hooks/hooks.json` in a plugin.** `${CLAUDE_PLUGIN_ROOT}` resolves to the plugin root. The
-  project variable and a path from the project do not resolve, because the project is the
-  project of the user.
+  project variable and a path from the project do not resolve. The project is the project of
+  the user.
 - **A project or local settings file.** The project is the parent of the `.claude/` directory.
   `${CLAUDE_PLUGIN_ROOT}` does not resolve.
 - **A managed settings file.** Claude Code applies it in any project. The rule resolves
@@ -52,12 +52,13 @@ Where each variable resolves:
 
 The rule makes no report in these cases:
 
-- **The word is not a repository path.** An absolute path, a path in `~`, a word with another
-  variable, a glob, a Windows separator or a shell expansion cannot be resolved.
+- **The word is not a repository path.** The rule cannot resolve an absolute path or a path in
+  `~`. It cannot resolve a word with another variable, a glob, a Windows separator or a shell
+  expansion.
 - **The path is out of the repository.** A rule reads no file out of the repository (ADR 001,
   Decision 14). In a plugin, `${CLAUDE_PLUGIN_ROOT}/../x` is out of the plugin too, because
   Claude Code copies the plugin.
-- **A link hides the path.** A link on the path is dangling or leads out of the repository.
+- **A link hides the path.** A link on the path has no target, or leads out of the repository.
 - **The rule cannot read a directory on the path.**
 - **`hooks/hooks.json` is in no plugin.** The file must be in a directory with
   `.claude-plugin/plugin.json`.

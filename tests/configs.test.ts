@@ -454,7 +454,7 @@ const TREE: Record<string, string> = {
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
-// index mode. Every script has index mode `100644`, except `ok.sh`. Git does not track `loose.sh`.
+// index mode. Every file has index mode `100644`, except the four that `GIT_EXECUTABLE` names.
 const GIT_REPO = 'packages/hx'
 const GIT_TREE: Record<string, string> = {
   'tools/run.sh': '#!/bin/sh\n',
@@ -787,8 +787,9 @@ const EXPECTED = [
     'packages/hs/plugin/hooks/hooks.json',
   ].map((file) => `${file}: claude/hooks-script-exists@2`),
   'packages/hs/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
-  // `hooks-script-executable` reads the same files. Only `tools/run.sh` and `scripts/run.sh`
-  // have index mode `100644`, and `ok.sh` has `100755`.
+  // `hooks-script-executable` reads the same files. The scripts `tools/run.sh`, `scripts/run.sh`,
+  // `plugin/scripts/run.sh` and `loose/scripts/run.sh` have index mode `100644`. The script
+  // `ok.sh` has `100755`.
   ...[
     'packages/hx/.claude/settings.json',
     'packages/hx/.claude/settings.local.json',

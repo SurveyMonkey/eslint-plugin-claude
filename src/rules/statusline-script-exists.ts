@@ -1,9 +1,9 @@
 // The script of a status line, a subagent status line or a file suggestion
-// command must exist, and must have the executable bit
-// (docs/rules/statusline-script-exists.md). The bit is the git index mode
-// `100755`, read by `src/git-state.ts`. The rule makes no report for a path that
-// it cannot see, for a script that git does not track, or when git cannot be
-// read.
+// command must exist (docs/rules/statusline-script-exists.md). The script that
+// is the program must also have the executable bit. The bit is the git index
+// mode `100755`, read by `src/git-state.ts`. The rule makes no report in three
+// cases: a path that it cannot see, a script that git does not track, and a
+// git index that it cannot read.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { gitModeOf, PLAIN_MODE } from '../git-state.ts'

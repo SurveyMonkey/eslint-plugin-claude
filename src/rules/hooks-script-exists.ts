@@ -1,7 +1,7 @@
 // A repository script that a hook command names must exist
 // (docs/rules/hooks-script-exists.md). The rule reads `hooks/hooks.json` in a
 // plugin, and the settings files. It makes no report for a path that it cannot
-// see, such as a dangling link or a path out of the repository.
+// see. Two examples are a link with no target and a path out of the repository.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { commandHandlers, handlerWords } from '../hook-handlers.ts'

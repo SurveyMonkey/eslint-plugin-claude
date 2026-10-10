@@ -12,7 +12,7 @@ import { afterAll } from 'vitest'
 const scratch = realpathSync(mkdtempSync(path.join(tmpdir(), 'git-tree-')))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 
-// The variables that point git at a repository. A hook that runs the tests sets them.
+// The variables that point git at a repository. Git sets them when it runs a git hook.
 const LOCATION = /^GIT_(DIR|WORK_TREE|INDEX_FILE|COMMON_DIR|OBJECT_DIRECTORY|PREFIX|NAMESPACE)$/
 const gitEnv = () =>
   Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.test(key)))

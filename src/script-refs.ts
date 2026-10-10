@@ -1,12 +1,13 @@
-// The repository scripts that a command names. A hook command, and the command
-// of a status line, can name a script by the project variable, by the plugin
-// variable, or by a path from the project. The hooks reference lists the two
-// variables (https://code.claude.com/docs/en/hooks#reference-scripts-by-path).
+// The repository scripts that a command names. A hook command can name a script
+// with the project variable, the plugin variable, or a path from the project.
+// The status line command takes the project variable and a path from the
+// project. The hooks reference lists the variables
+// (https://code.claude.com/docs/en/hooks#reference-scripts-by-path).
 //
 // A rule reads a script only when its path is in the repository (ADR 001,
-// Decision 14). A path in a user directory, an absolute path, a glob, and a
-// word with a variable or a shell expansion that the rule cannot resolve are
-// not scripts here.
+// Decision 14). These are not scripts here: a path in a user directory, an
+// absolute path, a glob, and a word that the rule cannot resolve. A word with
+// a variable or a shell expansion is such a word.
 import path from 'node:path'
 import { realSource } from './marketplace-source.ts'
 import { isPluginRoot } from './plugin-root.ts'
@@ -96,8 +97,9 @@ export interface Scope {
 
 /** The scope of the settings file `filename`. A project or local file has the
  *  parent of its `.claude/` directory as the project. A managed file has no
- *  project of its own. Claude Code runs it in any project, so its project is
- *  the repository that holds the file, and it has no relative path. */
+ *  project of its own. Claude Code runs the file in any project. The project
+ *  is then the repository that holds the file, and the file has no relative
+ *  path. */
 export function settingsScope(filename: string): Scope {
   const file = path.resolve(filename)
   const managed = kindOf(file) === 'managed'
@@ -110,9 +112,9 @@ export function settingsScope(filename: string): Scope {
   return { bound, project: base, plugin: null, relative: managed ? null : base }
 }
 
-/** The scope of `hooks/hooks.json` in a plugin, or null when `filename` is not
- *  in a plugin root, or the rule cannot see whether it is. Claude Code copies
- *  a plugin to a cache, so a path must stay in the plugin root. */
+/** The scope of `hooks/hooks.json` in a plugin. The result is null when
+ *  `filename` is not in a plugin root, or the rule cannot see if it is.
+ *  Claude Code copies a plugin to a cache, so a path stays in the plugin root. */
 function pluginScope(filename: string): Scope | null {
   const root = realDirectory(path.dirname(path.dirname(path.resolve(filename))))
   if (isPluginRoot(root) !== true) {
@@ -138,8 +140,9 @@ export function hooksScope(filename: string): Scope | null {
 
 const PLACEHOLDER =
   /^\$(?:\{(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT)\}|(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT))\/(.+)$/
-// A path with one of these characters has a variable, a glob, a home path, a
-// Windows separator or an assignment. The rule cannot resolve it.
+// A path with one of these characters has a variable, a substitution, a glob,
+// a home path, a Windows separator, a history mark, a comment or an
+// assignment. The rule cannot resolve it.
 const UNRESOLVED = /[$`*?[\]{}\\~:=!#]/
 
 /** The absolute path that the word `text` names, or null when `text` is not a
@@ -182,10 +185,10 @@ export function scriptRefs<N>(words: Word<N>[], scope: Scope): ScriptRef<N>[] {
   })
 }
 
-/** The real path of the script `file`, null when it is not there, or
- *  `UNREADABLE` when the rule cannot see it. The rule cannot see a path with a
- *  dangling link in it, a real path out of the repository, or a part that
- *  fails to read. */
+/** The real path of the script `file`. The result is null when the script is
+ *  not there, and `UNREADABLE` when the rule cannot see it. The rule cannot
+ *  see a link whose target is not there, a real path out of the repository,
+ *  or a part of the path that it cannot read. */
 export function realScript(file: string, scope: Scope): string | null | Unreadable {
   const found = realSource(scope.bound, scope.bound, scope.bound, file)
   if (typeof found === 'string') {
