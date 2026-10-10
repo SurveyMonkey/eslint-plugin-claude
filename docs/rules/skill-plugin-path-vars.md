@@ -32,11 +32,11 @@ The rule reports two faults in the body of a plugin skill:
 - `unbraced`: `$CLAUDE_PLUGIN_ROOT` or `$CLAUDE_PLUGIN_DATA`, with no braces. Claude Code does not
   substitute this form, and the Bash tool does not have the variable. A shell reads it as an
   empty string. The report is on the variable.
-- `climb`: `${CLAUDE_SKILL_DIR}/..`. The variable is the directory of the skill. For a skill in
-  `skills/<name>/` of a plugin, that is the skill folder, not the plugin root.[^substitutions] A path that climbs out of
-  it depends on the layout of the plugin. Use `${CLAUDE_PLUGIN_ROOT}` for a file elsewhere in the
-  plugin. The report is on the variable and the `/..`. A name that starts with two dots, such as
-  `/..hidden`, is not a climb.
+- `climb`: `${CLAUDE_SKILL_DIR}/..`. The report is on the variable and the `/..`. The variable is
+  the directory of the skill. For a skill in `skills/<name>/` of a plugin, that is the skill
+  folder, not the plugin root.[^substitutions] A path that climbs out of it depends on the layout
+  of the plugin. Use `${CLAUDE_PLUGIN_ROOT}` for a file elsewhere in the plugin. A name that
+  starts with two dots, such as `/..hidden`, is not a climb.
 
 The rule reads the whole body, fenced code too. Claude Code substitutes the variables anywhere in
 the Markdown body.[^resolve] The rule does not read the frontmatter. A frontmatter block
@@ -47,7 +47,7 @@ The rule checks a `SKILL.md` in a plugin: `<plugin>/skills/<name>/SKILL.md` and
 
 - A skill that is not in a plugin. The braced variable in that skill is the business of
   [`skill-plugin-vars-outside-plugin`](skill-plugin-vars-outside-plugin.md).
-- A command file. The row of this rule is about skills.
+- A command file. The rule applies to skills only.
 - A plugin root that the rule cannot see. The rule makes no report that rests on it.
 
 Fail:

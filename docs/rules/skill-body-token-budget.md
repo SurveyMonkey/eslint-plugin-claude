@@ -35,11 +35,11 @@ line 1.
 The rule counts the body. The body is the text after the frontmatter block, without the line
 break that ends the block. A frontmatter block that does not parse does not change the count.
 The cut probably applies to the rendered content, because the rendered content enters the
-conversation.[^lifecycle] The rendered content can differ from
-the file, because arguments and the output of injected commands change it. So the count is an
-estimate, and the real token count depends on the text. The context window also has a total
-cap for all skills, and it drops the oldest skills first.[^compaction] A body within the limit
-does not always survive compaction.
+conversation.[^lifecycle] Arguments and the output of injected commands change the rendered
+content. So the count is an estimate, and the real token count depends on the text.
+
+Compaction also caps all re-attached skills at 25,000 tokens in total. It drops the oldest first.[^compaction]
+A body within the limit does not always survive compaction.
 
 The rule checks a `SKILL.md` in a project and in a plugin, and a command file. The rule is silent
 in these cases:
