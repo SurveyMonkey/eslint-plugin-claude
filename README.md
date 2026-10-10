@@ -126,6 +126,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
+| [`claude/claude-md-agents-md-shadowed`](docs/rules/claude-md-agents-md-shadowed.md) | An `AGENTS.md` or `.claude/AGENTS.md` has no `CLAUDE.md` in its folder or above it, or a `CLAUDE.md` that imports it or links to it | `error` | `error` |
 | [`claude/claude-md-agents-md-variant`](docs/rules/claude-md-agents-md-variant.md) | No `AGENTS.local.md`, `AGENTS.override.md` or Markdown file below `.agents/`, which Claude Code never reads; option `allow` | `error` | `error` |
 | [`claude/claude-md-excludes-pattern`](docs/rules/claude-md-excludes-pattern.md) | Each `claudeMdExcludes` pattern starts with `/`, `**/`, a Windows drive or a Windows share (or is `**` alone), because Claude Code matches absolute paths | `error` | `error` |
 | [`claude/claude-md-import-exists`](docs/rules/claude-md-import-exists.md) | Each `@path` import in a `CLAUDE.md`, `CLAUDE.local.md` or `AGENTS.md` file names a file that exists, from the folder of the importing file; option `ignorePattern` | `error` | `error` |

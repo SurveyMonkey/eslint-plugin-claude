@@ -444,6 +444,16 @@ const TREE: Record<string, string> = {
   'packages/av/.claude/AGENTS.md': '# Notes\n',
   'packages/av/docs/agents/notes.md': '# Notes\n',
   'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
+  // `claude-md-agents-md-shadowed`: an AGENTS.md in a folder that holds a CLAUDE.md file, in
+  // either place. The same files where the CLAUDE.md imports the AGENTS.md, and where no rule
+  // reads the file as an AGENTS.md. The AGENTS.md files of the trees of other rules sit beside a
+  // CLAUDE.md too, and are reported here (see the reports below).
+  'packages/sh/CLAUDE.md': '# Rules\n',
+  'packages/sh/AGENTS.md': '# Agents\n',
+  'packages/sh/.claude/AGENTS.md': '# Agents\n',
+  'packages/sh/.claude/rules/AGENTS.md': '# Rule\n',
+  'packages/sh/ok/CLAUDE.md': '@AGENTS.md\n',
+  'packages/sh/ok/AGENTS.md': '# Agents\n',
   // `claude-md-import-exists`: an import of a missing file in each instruction file that Claude
   // Code expands. The same text where no rule reads it: a Markdown file that is not one of them,
   // and a rule file.
@@ -603,6 +613,7 @@ const SCOPE_RULES = [
 // The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
 // error, and each has one block for its own language.
 const MEMORY_RULES = [
+  'claude-md-agents-md-shadowed',
   'claude-md-agents-md-variant',
   'claude-md-excludes-pattern',
   'claude-md-import-exists',
@@ -780,6 +791,12 @@ const EXPECTED = [
   'packages/av/AGENTS.override.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
+  // `claude-md-agents-md-shadowed` reads AGENTS.md and .claude/AGENTS.md, and no other file.
+  'packages/sh/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/sh/.claude/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/mb/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/ie/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/ie/.claude/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
   // `claude-md-import-exists` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
   'packages/ie/CLAUDE.md: claude/claude-md-import-exists@2',
   'packages/ie/.claude/CLAUDE.md: claude/claude-md-import-exists@2',
@@ -1047,6 +1064,7 @@ describe('configs', () => {
       plugin.configs.recommended
         .filter((c) => c.name === `claude/recommended/${rule}`)
         .map((c) => [c.language, c.files])
+    expect(blocks('claude-md-agents-md-shadowed')).toEqual([['markdown/gfm', ['**/AGENTS.md']]])
     expect(blocks('claude-md-agents-md-variant')).toEqual([
       ['markdown/gfm', ['**/AGENTS.local.md', '**/AGENTS.override.md', '**/.agents/**/*.md']],
     ])

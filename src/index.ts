@@ -16,6 +16,7 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
@@ -184,6 +185,7 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  claudeMdAgentsMdShadowed,
   claudeMdAgentsMdVariant,
   claudeMdExcludesPattern,
   claudeMdImportExists,
@@ -301,6 +303,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'claude-md-agents-md-shadowed': 'error',
   'claude-md-agents-md-variant': 'error',
   'claude-md-excludes-pattern': 'error',
   'claude-md-import-exists': 'error',
