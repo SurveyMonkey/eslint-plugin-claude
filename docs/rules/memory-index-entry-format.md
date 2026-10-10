@@ -27,7 +27,7 @@ The index has one line for each memory, and Claude Code loads it into every sess
 detail into topic files. When the index nears a limit, Claude Code tells Claude to keep one line
 for each entry.[^index]
 
-The rule reads the syntax tree. An entry is an item of a list at the top of the file, bulleted or
+The rule reads the syntax tree. An entry is an item of a top-level list, bulleted or
 numbered. The rule reports each entry that takes more than one line, over the whole entry. These
 shapes take more than one line:
 

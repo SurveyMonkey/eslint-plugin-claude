@@ -1,6 +1,7 @@
 // CLAUDE.md is context, not enforced configuration. To block an action whatever Claude decides,
-// the docs say to use a PreToolUse hook. A step that must run at a fixed point, such as before
-// every commit, is a hook too
+// the docs say to use a PreToolUse hook
+// (https://code.claude.com/docs/en/features-overview#compare-similar-features). A step that must
+// run at a fixed point, such as before every commit, is a hook too
 // (https://code.claude.com/docs/en/memory#claude-isnt-following-my-claude-md). The rule is a
 // heuristic on the words of a guardrail. The globs are in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
@@ -134,5 +135,10 @@ describe(RULE, () => {
   it('keeps the place of a match after a code span', () => {
     const messages = lint('See `Never edit x` and never edit y.\n')
     expect(messages.map((m) => [m.column, m.endColumn])).toEqual([[24, 34]])
+  })
+
+  it('keeps the place of a match on a later line of a block quote', () => {
+    const messages = lint('> Be kind.\n> Never edit x.\n')
+    expect(messages.map((m) => [m.line, m.column])).toEqual([[2, 3]])
   })
 })

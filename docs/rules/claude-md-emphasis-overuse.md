@@ -41,7 +41,8 @@ The rule reports once, when the count is more than `max`. The report is on the f
 The rule makes no report in these cases:
 
 - The word is in lower case, or is part of a longer word, such as `MUSTARD`. Other capital words
-  such as `API` or `JSON` do not count.
+  such as `API` or `JSON` do not count, unless they are a bold or italic span of three or more
+  capital letters.
 - The word is in a code span, a fenced block, an indented code block or an HTML comment.
 - The file is not a `CLAUDE.md`, a `.claude/CLAUDE.md` or a `CLAUDE.local.md`.
 

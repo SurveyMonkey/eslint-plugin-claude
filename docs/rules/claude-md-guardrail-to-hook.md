@@ -23,9 +23,9 @@ The rule is `off` in `recommended`.
 ## Rule details
 
 Claude reads CLAUDE.md as context, not as enforced configuration. The docs say that to block an
-action whatever Claude decides, you use a `PreToolUse` hook.[^context] A step that must run at a
-fixed point, such as before every commit or after each file edit, is a hook too.[^follow] A hook is
-a shell command that runs at a fixed event, whatever Claude decides to do.
+action whatever Claude decides, you use a `PreToolUse` hook.[^follow] A step that must run at a
+fixed point, such as before every commit or after each file edit, is a hook too.[^context] A hook
+runs at a fixed event, whatever Claude decides to do.
 
 The rule reports two shapes of wording, over the words that make the shape:
 

@@ -3,8 +3,8 @@
 // code, and file-by-file descriptions of the code base. The rule is a heuristic for three
 // shapes. The syntax tree decides what a code block and a list are.
 // - A directory tree in a code block: at least three lines that start a branch.
-// - A list of dependencies in a code block: a `dependencies` key of a manifest, or at least
-//   three lines that pin a package version.
+// - A list of dependencies in a code block: a double-quoted `"dependencies"` key of a JSON
+//   manifest, a TOML table of dependencies, or at least three lines that pin a package version.
 // - A list of at least three items that all describe one file or folder: a code span with a path,
 //   then a colon, a dash or the word `is`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'

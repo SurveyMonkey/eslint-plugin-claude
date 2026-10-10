@@ -84,7 +84,7 @@ describe(RULE, () => {
 
   it('counts a strong or emphasis span in capitals', () => {
     expect(ids(lint('**NO EXCEPTIONS** a\n_ONLY HERE_ b\n*ALL* c\n', 2))).toEqual(['tooMany'])
-    expect(lint('**Note** a\n**Run it** b\n*care* c\n**OK** d\n', 1)).toEqual([])
+    expect(lint('**Note** a\n**Run it** b\n*care* c\n**OK** d\n**QA** e\n', 1)).toEqual([])
   })
 
   it('counts a word in a heading, a link and a table', () => {

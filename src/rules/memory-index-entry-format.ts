@@ -1,7 +1,7 @@
 // An entry of a `MEMORY.md` index takes one line (docs/rules/memory-index-entry-format.md). The
-// docs say that Claude keeps one line for each entry, and moves detail into topic files. The
-// index loads in full at the start of every session, so a long entry costs context each time.
-// An entry is an item of a list at the top of the file. The rule reads the syntax tree, so a
+// docs say to keep one line for each entry, and to move detail into topic files. The
+// first 200 lines or 25KB of the index load at the start of every session, so a long entry costs
+// context each time. An entry is an item of a top-level list. The rule reads the syntax tree, so a
 // list in a code block or in an HTML comment is not an entry. A nested item is part of its
 // parent entry. The globs name the index files, so the rule checks no path itself.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'

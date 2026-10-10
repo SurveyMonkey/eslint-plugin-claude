@@ -30,7 +30,7 @@ instructions can disagree, and then Claude can follow either one.
 The rule reports a `CLAUDE.md`, a `.claude/CLAUDE.md` or a rule file when both of these are true:
 
 - A paragraph or a heading has a sentence that names a git topic and has an instruction cue. The
-  topics are a commit message, style, format or title, `Conventional Commits`, a pull request, a
+  topics are, for example, a commit message, style, format or title, `Conventional Commits`, a pull request, a
   PR title, description, body or template, `gh pr create`, `git commit`, `Co-Authored-By`,
   `Signed-off-by` and `squash`. The cues are words such as `must`, `should`, `always`, `never`,
   `use`, `write`, `follow`, `include`, `keep`, `add` and `run`.
