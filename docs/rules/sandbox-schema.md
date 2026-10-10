@@ -50,24 +50,26 @@ The rule reports these faults, each once for a value:
 ### A managed file
 
 Claude Code validates each field of a managed `sandbox` block on its own and does not drop the block. A quoted `"true"` or
-`"false"` counts as that Boolean, so the rule does not report it in a managed file. It reports it in a project or local file.
+`"false"` counts as that Boolean, so the rule does not report it in a managed file. It reports it in a project or local file, for a key
+that Claude Code reads there.
 While `network.deniedDomains`, `filesystem.denyRead` or `filesystem.denyWrite`, or an entry of one, is invalid, Claude Code
 withholds the allow lists of the same kind, and the message says so. The per-field repair needs Claude Code v2.1.283 or later.[^managed]
 
 ### One report for one fault
 
-- The scope of a key is for [`settings-key-scope`](settings-key-scope.md). It reports `sandbox.bwrapPath` in a project file.
+- The scope of a key is for [`settings-key-scope`](settings-key-scope.md). It reports `sandbox.bwrapPath` in a project file. The
+  rule makes no report on the value of such a key there, or on a key below it. A key that is not in the list still gets a report.
 - The text of a domain is for [`sandbox-domain-syntax`](sandbox-domain-syntax.md), and the text of an `excludedCommands` entry is
   for [`sandbox-excluded-commands-syntax`](sandbox-excluded-commands-syntax.md). The rule checks the type only.
 - A `mask` entry in a project file is for [`sandbox-scope`](sandbox-scope.md).
 - The rule does not check a regular expression in `extract`, the fields that a `mask` entry needs, or the keys inside an object
-  value (`ripgrep`, `tlsTerminate`, `sigv4`, an entry). Those cases are for the credentials rules that the plugin adds later.
+  value (`ripgrep`, `tlsTerminate`, `sigv4`, an entry). Those cases are for other rules of the inventory, such as `sandbox-credentials-mask`.
 - A `permissions` key is for [`permissions-schema`](permissions-schema.md).
 
 A `null` removes a key, so the rule takes it as no key. A required field that is `null` is missing. The rule reads the last of two
 keys of one name, as `JSON.parse` does. A hidden file in `managed-settings.d/` gets no report, because Claude Code ignores it.
 
-Fail:
+Fail, in `managed-settings.json`:
 
 ```json
 {
