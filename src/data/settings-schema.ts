@@ -499,8 +499,8 @@ export const SETTINGS_VALUES: Readonly<Record<string, ValueSpec>> = {
 /** The top-level keys that Claude Code reads and that are not in the settings index. `$schema`
  *  points editors to the JSON schema
  *  (https://code.claude.com/docs/en/settings#settings-files-and-who-they-affect). The settings
- *  reference says that `permissions.deny` replaces the deprecated `ignorePatterns`, and
- *  `permissions-ignore-patterns` reports that key. */
+ *  reference says that `permissions.deny` replaces the deprecated `ignorePatterns`. The
+ *  permissions group owns that key. */
 export const NOT_UNKNOWN_KEYS: readonly string[] = ['$schema', 'ignorePatterns']
 
 /** An environment variable name: capital letters, digits and underscores. Claude Code reads

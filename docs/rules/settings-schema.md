@@ -30,7 +30,8 @@ release.
 
 - **A top-level key that the index does not list** gets `unknownKey`. The report is on the key.
   `$schema` and `ignorePatterns` are the two exceptions. `$schema` points an editor to the JSON
-  schema. `ignorePatterns` is a deprecated key, and `permissions-ignore-patterns` reports it.
+  schema. `ignorePatterns` is a deprecated key that Claude Code still reads. The permissions group
+  owns it.
 - **An environment variable name at the top level** gets `envKey`. The switches that turn off
   usage metrics, error reports and the auto-updater are environment variables, not
   keys.[^privacy][^channel] Set them in `env`. A name is a capital letter, then capital letters,
@@ -115,10 +116,12 @@ One fault gets one report. The rule makes no report in these places.
   `settings-project-autocontinue-off` report.
 - **The text of a model.** `settings-model-value` checks the alias or ID in `model` and
   `advisorModel`. `settings-model-list` checks the lists. This rule checks the types only.
-- **A value of another group.** `env` (`settings-env-value-format`), `hooks`, `enabledPlugins`,
-  `extraKnownMarketplaces`, `strictKnownMarketplaces`, `blockedMarketplaces`, `pluginConfigs`,
-  the MCP keys, `claudeMd`, `claudeMdExcludes` and `autoMemoryDirectory` have rules in their
-  groups. This rule checks their names, and no more.
+- **A value of another group.** The inventory gives these keys to the group that owns them. This
+  rule checks their names, and no more. `settings-env-value-format` checks `env`.
+  `settings-enabled-plugins-schema` checks `enabledPlugins`. `settings-extra-known-marketplaces-schema`
+  and `settings-known-marketplaces-policy-schema` check the marketplace keys. The rows for `hooks`,
+  `pluginConfigs`, the MCP keys, `claudeMd`, `claudeMdExcludes` and `autoMemoryDirectory` are not
+  built yet.
 
 ### What the rule does not check
 
