@@ -12,7 +12,7 @@ generated:
 
 # `hooks-filechanged-star-matcher`
 
-Omit the matcher of a FileChanged hook instead of writing `"*"`.
+Omit the matcher of a FileChanged hook instead of `"*"`.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -25,7 +25,7 @@ watch list as a literal file name. It then uses the same value to choose which h
 file.[^filechanged]
 
 A `"*"` matcher matches every changed file. It also adds a file named `*` to the watch list, like any other
-value.[^filechanged] An omitted matcher matches every watched file and adds nothing to the list.
+value.[^filechanged] An omitted matcher matches every watched file and adds no file to the list.
 
 The rule reports a `FileChanged` matcher with a segment that is exactly `*`. It reports once for a matcher. An
 omitted matcher, an empty matcher and a named file get no report. A segment such as `*.env` or `**` is a

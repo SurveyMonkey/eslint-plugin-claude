@@ -23,8 +23,8 @@ Put the path placeholder of a shell-form hook command inside quotes.
 Claude Code replaces `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` in a `command`
 as plain text. In shell form, the shell then reads the result. A path with a space splits into several words
 unless the reference sits inside quotes.[^scripts][^quoting] The docs say to wrap each placeholder in double
-quotes. Both `"${CLAUDE_PROJECT_DIR}/a.sh"` and `"${CLAUDE_PROJECT_DIR}"/a.sh` are safe. When an install path has a
-space, the `hook error` notice in the transcript shows the path cut off at the space.[^notices]
+quotes. Both `"${CLAUDE_PROJECT_DIR}/a.sh"` and `"${CLAUDE_PROJECT_DIR}"/a.sh` are safe. An install path with a
+space shows in the `hook error` notice, cut off at the space.[^notices]
 
 The rule reports a `command` hook in shell form with a reference outside quotes. It reads the three
 placeholders, and the bare variables `$CLAUDE_PROJECT_DIR`, `$CLAUDE_PLUGIN_ROOT` and `$CLAUDE_PLUGIN_DATA`, which
@@ -35,8 +35,8 @@ at the `command` string.
 
 `claude plugin validate` warns about an unquoted variable in a shell-form command of a plugin hooks file. It does
 not warn when the hook sets `shell` to `"powershell"`.[^quoting] So the rule makes no report in the
-`hooks/hooks.json` of a plugin. It reads the files that validate does not read: the settings files, the managed
-files, and the frontmatter of a skill and of a project subagent.
+`hooks/hooks.json` of a plugin. It reads the other files: the settings files, the managed files, and the frontmatter of a skill
+and of a project subagent.
 
 ### What the rule does not read
 

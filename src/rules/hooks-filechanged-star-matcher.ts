@@ -1,7 +1,7 @@
 // A `FileChanged` matcher is split on `|`, and Claude Code registers each segment in the watch list
 // as a literal file name (docs/rules/hooks-filechanged-star-matcher.md). A `"*"` segment also matches
 // every changed file, but the watch list then holds a file named `*`. An omitted matcher matches every
-// watched file and adds nothing to the list. `hooks-matcher-syntax` skips a `*` segment.
+// watched file and adds no file to the list. `hooks-matcher-syntax` skips a `*` segment.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import { groupsOf, HOOKS_TARGET, hooksListener } from '../hooks-config.ts'
@@ -12,7 +12,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Omit the matcher of a FileChanged hook instead of writing "*"',
+      description: 'Omit the matcher of a FileChanged hook instead of "*"',
       url: docsUrl(name),
     },
     schema: [],

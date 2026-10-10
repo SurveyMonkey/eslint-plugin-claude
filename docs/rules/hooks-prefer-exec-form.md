@@ -24,7 +24,7 @@ A `command` hook runs in exec form when it sets `args`. Claude Code then starts 
 passes each `args` item as one argument. No shell is involved, so a path with a space needs no quotes. The docs
 say to set `args` whenever the hook references a path placeholder.[^scripts][^form] They also say to omit `args`
 when the hook needs shell features, such as pipes or `&&`.[^form] The hooks guide advises `"args": []` for a
-"command not found" error, to avoid shell quoting.[^guide]
+"command not found" error, to skip shell quotes.[^guide]
 
 The rule reports a `command` hook in shell form that holds `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` or
 `${CLAUDE_PLUGIN_DATA}`. It reports once for each handler, at the `command` string. A `command` with a `shell`

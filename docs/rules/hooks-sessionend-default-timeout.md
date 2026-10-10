@@ -21,7 +21,7 @@ Set a timeout on a SessionEnd hook, which Claude Code cancels after 1.5 seconds.
 ## Rule details
 
 A `SessionEnd` hook has a default timeout of 1.5 seconds. It applies when you exit, run `/clear`, or switch
-sessions with `/resume`.[^sessionend] A hook can get more time in two ways. It can set `timeout`, and the budget
+sessions with `/resume`.[^sessionend] A hook can get more time in two ways. A hook can set `timeout`. The budget
 then rises to the highest `timeout` in your settings files, up to 60 seconds. Or the environment variable
 `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` sets the budget. A hook without its own `timeout` keeps the default when
 the budget rises through other hooks.[^sessionend]
