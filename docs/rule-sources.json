@@ -1013,6 +1013,30 @@
       "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
     }
   ],
+  "plugin-symlink-escapes-marketplace": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Share files within a marketplace with symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "In-place and copied plugins",
+      "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
+    }
+  ],
+  "plugin-symlink-escapes-plugin": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Share files within a marketplace with symlinks",
+      "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "In-place and copied plugins",
+      "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
+    }
+  ],
   "plugin-user-config-no-shell-fields": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -1339,7 +1363,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "ac1fe1d096f0218a7c4b5d24d6bcf54afa28350e5af89df341bf50d25c5d6dee"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",

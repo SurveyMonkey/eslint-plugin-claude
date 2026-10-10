@@ -170,6 +170,32 @@ describe(RULE, () => {
       messageOf('agents', './agents', 'escapes'),
     ])
   })
+
+  it.skipIf(noLinks)(
+    'reports a link to a folder that only shares the root name as a prefix',
+    () => {
+      const repo = tree({ ...SITE, 'site-extra/s.md': '# S\n' })
+      const dir = path.join(repo, 'site')
+      link(dir, 'plugins/p/commands', '../../../site-extra')
+      const messages = lint(dir, entry({ commands: ['./commands', './commands/s.md'] }))
+      expect(messages.map((m) => m.message)).toEqual([
+        messageOf('commands', './commands', 'escapes'),
+        messageOf('commands', './commands/s.md', 'escapes'),
+      ])
+    },
+  )
+
+  it.skipIf(noLinks)('reports a link out of a plugin that is the marketplace root', () => {
+    const repo = tree({
+      'site/.claude-plugin/plugin.json': manifestOf({ name: 'p' }),
+      'shared/s.md': '# S\n',
+    })
+    const dir = path.join(repo, 'site')
+    link(dir, 'commands', '../shared')
+    link(dir, 'inside', '.claude-plugin')
+    const messages = lint(dir, entry({ commands: ['./commands', './inside'] }, '.'))
+    expect(messages.map((m) => m.message)).toEqual([messageOf('commands', './commands', 'escapes')])
+  })
 })
 
 describe(`${RULE} (silent)`, () => {
@@ -286,6 +312,12 @@ describe(`${RULE} (silent)`, () => {
     link(dir, 'plugins/p/commands/up', '../../..')
     expect(lint(dir, entry({ skills: ['./skills/k', './skills/k/SKILL.md'] }))).toEqual([])
     expect(lint(dir, entry({ commands: './commands/up' }))).toEqual([])
+  })
+
+  it.skipIf(noLinks)('stays silent for a file link to a file of a sibling plugin', () => {
+    const dir = tree({ ...PLUGIN, 'plugins/q/commands/shared.md': '# Q\n' })
+    link(dir, 'plugins/p/commands/shared.md', '../../q/commands/shared.md')
+    expect(lint(dir, entry({ commands: ['./commands/shared.md'] }))).toEqual([])
   })
 
   it.skipIf(noLinks)('stays silent for a part that is a link out of the repository', () => {

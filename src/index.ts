@@ -54,6 +54,8 @@ import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
+import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
+import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
@@ -197,6 +199,8 @@ const modules = [
   pluginPackageLockfile,
   pluginPathVarBraced,
   pluginUserConfigNoShellFields,
+  pluginSymlinkEscapesMarketplace,
+  pluginSymlinkEscapesPlugin,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -316,6 +320,8 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-package-lockfile': 'error',
   'plugin-path-var-braced': 'error',
   'plugin-user-config-no-shell-fields': 'error',
+  'plugin-symlink-escapes-marketplace': 'error',
+  'plugin-symlink-escapes-plugin': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

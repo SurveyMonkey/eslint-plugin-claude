@@ -2,15 +2,16 @@
 // rules: a `./` prefix, no `..`, no backslash, a path that exists, and a path
 // that does not resolve out of the marketplace through a link
 // (docs/rules/marketplace-entry-component-paths.md). The rule resolves each
-// path from the real source directory that `sourceReader` gives. It reads the
-// disk with the repository as the bound, and makes no report for a part that
-// it cannot read.
+// path from the real source directory that `sourceReader` gives, with
+// `placeOf` (src/plugin-links.ts). It reads the disk with the repository as
+// the bound, and makes no report for a part that it cannot read.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, pluginEntries, type ValueNode } from '../marketplace-json.ts'
-import { realSource, sourceReader } from '../marketplace-source.ts'
-import { entriesOf, isInside, realDirectory, repositoryRoot } from '../skill-tree.ts'
+import { sourceReader } from '../marketplace-source.ts'
+import { placeOf } from '../plugin-links.ts'
+import { entriesOf, realDirectory, repositoryRoot } from '../skill-tree.ts'
 import { pathFault } from './marketplace-relative-source-format.ts'
 
 const name = 'marketplace-entry-component-paths' as const
@@ -89,18 +90,18 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
             continue
           }
           const dir = source.dir
-          const realRoot = realDirectory(root)
+          const scopes = { marketplace: realDirectory(root), plugin: dir }
           const bound = repositoryRoot(root)
           for (const { field, item } of paths) {
             const text = item.value
             let messageId = textFault(text, field)
             if (messageId === undefined) {
-              // A link to another place in the marketplace is allowed. The symlink rules of the
-              // marketplace skip a link that leads out of it.
-              const real = realSource(dir, dir, bound, path.resolve(dir, text))
-              if (typeof real === 'string') {
-                messageId = isInside(real, realRoot) ? undefined : 'escapes'
-              } else if (real.kind === 'missing') {
+              // A link to another place in the marketplace is allowed. Claude Code skips a link
+              // that leads out of the marketplace.
+              const { reach } = placeOf(dir, dir, bound, scopes, path.resolve(dir, text))
+              if (reach === 'outside') {
+                messageId = 'escapes'
+              } else if (reach === 'missing') {
                 messageId = 'missing'
               }
             }
