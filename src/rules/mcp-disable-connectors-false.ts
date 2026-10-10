@@ -2,11 +2,14 @@
 // (docs/rules/mcp-disable-connectors-false.md). The value is the same as unset. A `true` in any
 // settings file applies, and a `false` cannot turn the connectors back on. The rule
 // `settings-project-value-ignored` reports the same value in the two project files, so this rule
-// reads the managed files only.
+// reads the managed files only. The managed settings page merges `managed-settings.json` and the
+// drop-ins into one source, and a later file replaces a single value of an earlier one. So a
+// `false` after a `true` in a sibling file changes the value, and the rule makes no report then.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES, readManagedSource } from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'mcp-disable-connectors-false' as const
 
@@ -31,9 +34,15 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unset' }> = {
     return {
       Document(node) {
         const value = lastMember(node.body, 'disableClaudeAiConnectors')?.value
-        if (value?.type === 'Boolean' && !value.value) {
-          context.report({ node: value, messageId: 'unset' })
+        if (value?.type !== 'Boolean' || value.value) {
+          return
         }
+        // A sibling that cannot be read can hold the `true`, so the rule stays silent.
+        const siblings = readManagedSource(context.filename)
+        if (siblings === UNREADABLE || siblings.some((s) => s.disableClaudeAiConnectors === true)) {
+          return
+        }
+        context.report({ node: value, messageId: 'unset' })
       },
     }
   },
