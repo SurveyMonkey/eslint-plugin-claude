@@ -57,7 +57,7 @@ describe('output-style-name-unique', () => {
     expect(lint(root, 'pkg/.claude/output-styles/a.md', style('terse'))).toHaveLength(1)
   })
 
-  it('uses the file name for an empty name field', () => {
+  it('uses the file name for a name field with no value', () => {
     const root = repo({ '.claude/output-styles/terse.md': 'x\n' })
     expect(lint(root, 'pkg/.claude/output-styles/terse.md', '---\nname:\n---\n')).toHaveLength(1)
   })
@@ -218,7 +218,7 @@ describe('output-style-name-unique', () => {
     const scratch = mkdtempSync(path.join(tmpdir(), 'output-style-name-unique-'))
     afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 
-    it('reads no folder above, because the bound is the output-styles folder', () => {
+    it('reads no folder above, because the bound is the .claude folder', () => {
       mkdirSync(path.join(scratch, '.claude/output-styles'), { recursive: true })
       writeFileSync(path.join(scratch, '.claude/output-styles/top.md'), style('dup'))
       expect(lint(scratch, 'pkg/.claude/output-styles/a.md')).toEqual([])

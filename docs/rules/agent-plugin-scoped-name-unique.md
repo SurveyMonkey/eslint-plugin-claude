@@ -31,8 +31,8 @@ name, is the scoped name of another file of the plugin. The docs do not say whic
 with one scoped name loads. The rule reports each file of the clash. It shows the name as
 `<plugin>:review:audit`.
 
-A file with no `name`, an empty `name`, a `name` that is not a string, or frontmatter that does
-not parse is named after the file.[^fields]
+A file with no `name`, or with frontmatter that does not parse, is named after the file.[^fields]
+By inference, the rule reads an empty `name`, or a `name` that is not a string, the same way.
 
 The manifest key `agents` replaces the `agents/` scan.[^agents] A file that the key lists loads
 without its subfolders, so `"./custom/review/security.md"` loads as `my-plugin:security`.[^subfolders]
