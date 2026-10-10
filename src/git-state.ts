@@ -10,8 +10,12 @@
 // result when there is no `.git`, when `git` is not installed, when a `git`
 // command fails, and when git finds a repository other than the one in `root`.
 // A rule makes no report that rests on `UNREADABLE`.
+//
+// A second question is whether a `.gitignore` file covers a path (`gitIgnores`).
+// It uses `git check-ignore`, and has the same `UNREADABLE` result.
 import { execFileSync } from 'node:child_process'
 import { existsSync, realpathSync, statSync } from 'node:fs'
+import { devNull } from 'node:os'
 import path from 'node:path'
 import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 
@@ -142,6 +146,13 @@ export function gitModeOf(root: string, file: string): string | null | Unreadabl
   return modes.get(path.relative(root, file).split(path.sep).join('/')) ?? null
 }
 
+/** The start of the index path of each file below `dir`: `dir` from `root`
+ *  with `/` separators and a final `/`, or the empty text for `root` itself. */
+function prefixOf(root: string, dir: string): string {
+  const below = path.relative(root, dir).split(path.sep).join('/')
+  return below === '' ? '' : `${below}/`
+}
+
 /** The name and the index mode of each tracked file directly in `dir`, in the
  *  order of the names. `dir` is below `root`. A tracked file in a directory
  *  below `dir` is not in the list. */
@@ -150,20 +161,66 @@ export function gitChildren(root: string, dir: string): [string, string][] | Unr
   if (modes === UNREADABLE) {
     return UNREADABLE
   }
-  const below = path.relative(root, dir).split(path.sep).join('/')
-  const prefix = below === '' ? '' : `${below}/`
+  const prefix = prefixOf(root, dir)
   return [...modes]
     .filter(([file]) => file.startsWith(prefix) && !file.slice(prefix.length).includes('/'))
     .map(([file, mode]): [string, string] => [file.slice(prefix.length), mode])
     .sort(([a], [b]) => a.localeCompare(b, 'en'))
 }
 
-/** Stub for the red commit. */
-export function gitIgnores(_root: string, _file: string): boolean | Unreadable {
-  return UNREADABLE
+/** True when git tracks a file at any depth below `dir`, and false when it
+ *  tracks none. `dir` is below `root`, or is `root`. The result is
+ *  `UNREADABLE` when git cannot read the index. */
+export function gitTracksBelow(root: string, dir: string): boolean | Unreadable {
+  const modes = modesOf(root)
+  if (modes === UNREADABLE) {
+    return UNREADABLE
+  }
+  const prefix = prefixOf(root, dir)
+  return [...modes.keys()].some((file) => file.startsWith(prefix))
 }
 
-/** Stub for the red commit. */
-export function gitTracksBelow(_root: string, _dir: string): boolean | Unreadable {
-  return UNREADABLE
+/** True when a `.gitignore` file has a pattern that covers `file`, and false
+ *  when none does. `root` is the directory that holds `.git`, and `file` is a
+ *  path in it. The file need not be there. The answer comes from the patterns
+ *  only: git tracks the file or not, and the answer is the same. A negated
+ *  pattern that takes the file back gives false.
+ *
+ *  Two other sources of patterns give false. A pattern in `.git/info/exclude`
+ *  stays in one clone. A pattern in the global excludes file stays on one
+ *  machine. A team shares only a `.gitignore` file. The result is
+ *  `UNREADABLE` when git cannot answer, as for `gitModeOf`. It is also
+ *  `UNREADABLE` for a path below a link, where git stops with an error. */
+export function gitIgnores(root: string, file: string): boolean | Unreadable {
+  try {
+    gitDirOf(root)
+  } catch {
+    return UNREADABLE
+  }
+  // The path starts with `./`, so that git reads no leading `:` as pathspec
+  // magic. `--literal-pathspecs` is not an option here: this command refuses it.
+  const target = `./${path.relative(root, file).split(path.sep).join('/')}`
+  try {
+    // `-v` names the source of the pattern, in the form `source:line:pattern<TAB>path`.
+    // With `-c core.excludesFile`, git reads no global excludes file, not even the
+    // default one. The quote setting keeps a source with non-ASCII letters plain.
+    const [source = '', , pattern = ''] = run(root, [
+      '-c',
+      `core.excludesFile=${devNull}`,
+      '-c',
+      'core.quotePath=false',
+      'check-ignore',
+      '--no-index',
+      '-v',
+      '--',
+      target,
+    ]).split(':')
+    // Git quotes a source that holds a control character, and a quote ends it.
+    return (
+      !pattern.startsWith('!') && path.posix.basename(source.replace(/"$/, '')) === '.gitignore'
+    )
+  } catch (error) {
+    // Status 1 is the answer "no path is ignored". Another status is a failure.
+    return (error as { status?: number }).status === 1 ? false : UNREADABLE
+  }
 }

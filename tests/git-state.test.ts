@@ -278,19 +278,19 @@ describe('gitChildren', () => {
 })
 
 describe('gitTracksBelow', () => {
-  it.fails('is true when git tracks a file below the directory, at any depth', () => {
+  it('is true when git tracks a file below the directory, at any depth', () => {
     const root = repo({ 'mem/a/deep/x.md': 'x', 'other/y.md': 'y' })
     expect(gitTracksBelow(root, at(root, 'mem'))).toBe(true)
     expect(gitTracksBelow(root, at(root, 'mem/a'))).toBe(true)
   })
 
-  it.fails('is false for a directory with no tracked file, and for a name that only starts the same', () => {
+  it('is false for a directory with no tracked file, and for a name that only starts the same', () => {
     const root = repo({ 'binary/c': 'x', 'a.txt': 'x' }, [], { 'bin/loose': 'x' })
     expect(gitTracksBelow(root, at(root, 'bin'))).toBe(false)
     expect(gitTracksBelow(root, at(root, 'gone'))).toBe(false)
   })
 
-  it.fails('is true for the root of a repository that tracks a file, false for one with none', () => {
+  it('is true for the root of a repository that tracks a file, false for one with none', () => {
     const root = repo({ 'a.txt': 'x' })
     expect(gitTracksBelow(root, root)).toBe(true)
     const empty = repo({})
@@ -306,48 +306,48 @@ describe('gitTracksBelow', () => {
 describe('gitIgnores', () => {
   const ignores = (root: string, file: string) => gitIgnores(root, at(root, file))
 
-  it.fails('is true for a path that a .gitignore pattern covers, and false for one it does not', () => {
+  it('is true for a path that a .gitignore pattern covers, and false for one it does not', () => {
     const root = repo({ '.gitignore': 'CLAUDE.local.md\n' })
     expect(ignores(root, 'CLAUDE.local.md')).toBe(true)
     expect(ignores(root, 'CLAUDE.md')).toBe(false)
   })
 
-  it.fails('answers for a file that is not there', () => {
+  it('answers for a file that is not there', () => {
     const root = repo({ '.gitignore': '.claude/settings.local.json\n' })
     expect(ignores(root, '.claude/settings.local.json')).toBe(true)
     expect(ignores(root, '.claude/settings.json')).toBe(false)
   })
 
-  it.fails('is true for a tracked file that a pattern covers: the answer is the pattern only', () => {
+  it('is true for a tracked file that a pattern covers: the answer is the pattern only', () => {
     const root = repo({ '.gitignore': 'a.txt\n', 'a.txt': 'x' })
     expect(ignores(root, 'a.txt')).toBe(true)
   })
 
-  it.fails('reads a .gitignore in a directory below the root', () => {
+  it('reads a .gitignore in a directory below the root', () => {
     const root = repo({ 'sub/.gitignore': 'q\n' })
     expect(ignores(root, 'sub/q')).toBe(true)
     expect(ignores(root, 'q')).toBe(false)
   })
 
-  it.fails('is true for a path below a directory that a directory pattern covers', () => {
+  it('is true for a path below a directory that a directory pattern covers', () => {
     const root = repo({ '.gitignore': 'results/\n' })
     expect(ignores(root, 'evals/results/run/out.json')).toBe(true)
     expect(ignores(root, 'evals/other/run/out.json')).toBe(false)
   })
 
-  it.fails('is false for a path that a later negation takes back', () => {
+  it('is false for a path that a later negation takes back', () => {
     const root = repo({ '.gitignore': '*.md\n!keep.md\n' })
     expect(ignores(root, 'drop.md')).toBe(true)
     expect(ignores(root, 'keep.md')).toBe(false)
   })
 
-  it.fails('is false for a pattern in .git/info/exclude, which no clone shares', () => {
+  it('is false for a pattern in .git/info/exclude, which no clone shares', () => {
     const root = repo({ 'a.txt': 'x' })
     put(root, { '.git/info/exclude': 'private.md\n' })
     expect(ignores(root, 'private.md')).toBe(false)
   })
 
-  it.fails('is false for a pattern in the global excludes file of the machine', () => {
+  it('is false for a pattern in the global excludes file of the machine', () => {
     const root = repo({ 'a.txt': 'x' })
     const global = plain({ ignore: 'machine.md\n' })
     put(global, { config: `[core]\n\texcludesFile = ${path.join(global, 'ignore')}\n` })
@@ -367,7 +367,7 @@ describe('gitIgnores', () => {
     }
   })
 
-  it.fails('is false for the default global excludes file under XDG_CONFIG_HOME', () => {
+  it('is false for the default global excludes file under XDG_CONFIG_HOME', () => {
     const root = repo({ 'a.txt': 'x' })
     const home = plain({ 'git/ignore': 'xdg.md\n' })
     vi.stubEnv('XDG_CONFIG_HOME', home)
@@ -378,7 +378,7 @@ describe('gitIgnores', () => {
     }
   })
 
-  it.fails('takes a path with a space, a leading dash, a colon and a glob character as a literal', () => {
+  it('takes a path with a space, a leading dash, a colon and a glob character as a literal', () => {
     const root = repo({
       '.gitignore': 'target\n-x\n',
       'a b/.gitignore': 'z\n',
@@ -391,11 +391,13 @@ describe('gitIgnores', () => {
     expect(ignores(root, 'a*')).toBe(false)
   })
 
-  const quoted = process.platform === 'win32' ? it.skip : it.fails
-  quoted('names the source of a pattern that git quotes, such as a directory with a tab', () => {
-    const root = repo({ 'a\tb/.gitignore': 'z\n' })
-    expect(ignores(root, 'a\tb/z')).toBe(true)
-  })
+  it.skipIf(process.platform === 'win32')(
+    'names the source of a pattern that git quotes, such as a directory with a tab',
+    () => {
+      const root = repo({ 'a\tb/.gitignore': 'z\n' })
+      expect(ignores(root, 'a\tb/z')).toBe(true)
+    },
+  )
 
   it('gives UNREADABLE for a directory with no .git', () => {
     const root = plain({ '.gitignore': 'a\n' })
@@ -430,7 +432,7 @@ describe('gitIgnores', () => {
     },
   )
 
-  it.fails('does not stop on the status of a pattern that matches nothing', () => {
+  it('does not stop on the status of a pattern that matches nothing', () => {
     const root = repo({ '.gitignore': '# only a comment\n' })
     expect(ignores(root, 'a')).toBe(false)
   })
