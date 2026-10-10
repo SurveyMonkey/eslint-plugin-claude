@@ -200,7 +200,7 @@ describe('agent-plugin-scoped-name-unique', () => {
     })
 
     it('ignores a listed link that leads out of the plugin', () => {
-      const out = repo({ 'a.md': bare })
+      const out = repo({ 'a.md': agent('', 'a') })
       const root = repo({
         ...manifest(['./agents/a.md', './link.md']),
         'agents/a.md': bare,

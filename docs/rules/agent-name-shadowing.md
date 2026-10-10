@@ -27,8 +27,8 @@ Claude Code uses the definition closest to the working directory.[^scope] So an 
 session that starts in `packages/web/`. That is an override, and it may be on purpose. The rule
 makes it visible.
 
-The rule reports in the nearer file, the one that wins. It walks up from the parent of the project
-folder, and reads each `.claude/agents/` above it, subfolders included. It stops at the repository
+The rule reports in the nearer file, the one that wins. It starts at the parent of the folder
+that holds `.claude/`, and reads each `.claude/agents/` above it, subfolders included. It stops at the repository
 root. The repository root is the first directory at or above `.claude/` that has a `.git` entry.
 Without one, the rule reads no folder above. The farther file gets no report. To find it, the
 rule would have to scan the whole repository below it.

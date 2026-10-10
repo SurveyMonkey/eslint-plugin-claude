@@ -56,6 +56,30 @@ describe('foldersAbove', () => {
     expect(foldersAbove(path.join(root, '.claude'))).toEqual([])
   })
 
+  it('stops at a .git that is a file, as in a worktree', () => {
+    const root = path.join(scratch, 'gitfile')
+    const scope = path.join(root, 'a', '.claude')
+    mkdirSync(scope, { recursive: true })
+    writeFileSync(path.join(root, '.git'), 'gitdir: elsewhere\n')
+    expect(foldersAbove(scope)).toEqual([root])
+  })
+
+  it('is empty when .git is in the .claude folder itself', () => {
+    const scope = path.join(scratch, 'ingit', 'pkg', '.claude')
+    mkdirSync(path.join(scope, '.git'), { recursive: true })
+    expect(foldersAbove(scope)).toEqual([])
+  })
+
+  it('stops at the nearest of two nested repositories', () => {
+    const root = path.join(scratch, 'outer')
+    const inner = path.join(root, 'sub')
+    const scope = path.join(inner, 'pkg', '.claude')
+    mkdirSync(path.join(root, '.git'), { recursive: true })
+    mkdirSync(path.join(inner, '.git'), { recursive: true })
+    mkdirSync(scope, { recursive: true })
+    expect(foldersAbove(scope)).toEqual([inner])
+  })
+
   it('is empty with no .git, because the bound is the .claude folder', () => {
     const scope = path.join(scratch, 'plain', 'pkg', '.claude')
     mkdirSync(scope, { recursive: true })

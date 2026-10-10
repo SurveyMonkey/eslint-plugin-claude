@@ -68,7 +68,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     schema: [],
     messages: {
       duplicate:
-        'The scoped name `<plugin>:{{id}}` is also the scoped name of {{others}}. Claude Code loads one of them. Rename one.',
+        'The scoped name `<plugin>:{{id}}` is also the scoped name of {{others}}. The docs do not say which of them Claude Code uses. Rename one.',
     },
   },
   create(context) {

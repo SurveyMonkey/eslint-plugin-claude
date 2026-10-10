@@ -1,7 +1,7 @@
 // A project agent in a nested `.claude/agents/` directory replaces an agent of
 // the same name in a directory above it, up to the repository root
-// (docs/rules/agent-name-shadowing.md). The rule walks up from the linted
-// file, so it reports in the nearer file, the one that wins.
+// (docs/rules/agent-name-shadowing.md). The rule walks up from the parent of
+// the project folder. It reports in the nearer file, the one that wins.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
