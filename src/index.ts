@@ -299,6 +299,7 @@ import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
+import sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
 import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
 import sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
 import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
@@ -584,6 +585,7 @@ const modules = [
   sandboxFilesystemDisabledConflict,
   sandboxSchema,
   sandboxScope,
+  sandboxCredentialsAws,
   sandboxCredentialsMask,
   sandboxDomainOverlap,
   permissionsSandboxBashAsk,
@@ -1018,6 +1020,7 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-filesystem-disabled-conflict': 'error',
   'sandbox-schema': 'error',
   'sandbox-scope': 'error',
+  'sandbox-credentials-aws': 'error',
   'sandbox-credentials-mask': 'error',
   'sandbox-domain-overlap': 'error',
   'permissions-sandbox-bash-ask': 'error',
