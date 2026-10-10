@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-server-name-format, which reports an MCP server name that has a character other than a letter, a number, a hyphen or an underscore, because claude mcp commands and the Claude Desktop import reject it.
+description: The ESLint rule claude/mcp-server-name-format reports an MCP server name that has an invalid character. The claude mcp commands and the Claude Desktop import reject such a name.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -23,10 +23,11 @@ Name each MCP server with letters, numbers, hyphens and underscores only.
 `claude mcp` commands accept a server name with letters, numbers, hyphens and underscores only.
 The Claude Desktop import skips a server with any other character in its name, such as a space.[^import]
 The docs for the `mcpServers` JSON block say to pick a name that uses only those
-characters.[^json-block] The callable tool name of a plugin server replaces each other character with `_`.[^plugin]
+characters.[^json-block] The callable tool name of a plugin server replaces each other
+character with `_`.[^plugin]
 
-The rule reports a server name that does not match `^[A-Za-z0-9_-]+$`, also an empty name. The
-report is on the name. It reads these places:
+The rule reports a server name that does not match `^[A-Za-z0-9_-]+$`, and an empty name.
+The report is on the name. It reads these places:
 
 - A `.mcp.json`, in a project and at the root of a plugin. A project file needs the `mcpServers`
   wrapper. A plugin file may omit it.

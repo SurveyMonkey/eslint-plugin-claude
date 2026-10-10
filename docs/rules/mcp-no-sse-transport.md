@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-no-sse-transport, which reports an MCP server with type sse, because the docs call the SSE transport deprecated and say to use HTTP where the server supports it.
+description: The ESLint rule claude/mcp-no-sse-transport reports an MCP server with type sse. The docs call the SSE transport deprecated and say to use HTTP where the server supports it.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -21,8 +21,8 @@ Use the `http` transport for an MCP server, not the deprecated `sse` transport.
 ## Rule details
 
 The docs call the SSE transport deprecated. They say to use HTTP servers where available.[^sse]
-Claude Code tries the HTTP transport first for `claude mcp add --transport http`, and falls back to
-SSE when the server does not accept it. That fallback needs Claude Code v2.1.265 or later.[^sse]
+Claude Code tries the HTTP transport first for `claude mcp add --transport http`. It falls back to
+SSE when the server does not accept HTTP. That fallback needs Claude Code v2.1.265 or later.[^sse]
 
 The rule reports `"type": "sse"`. The report is on the value. It reads these places:
 
@@ -35,14 +35,14 @@ The rule leaves these cases alone:
 
 - A `type` value other than the exact string `sse`, such as `SSE`. The rule
   `mcp-server-schema` owns a `type` value that is not a known transport.
-- An `sse` entry of `managedMcpServers`. Managed MCP accepts the type, and
-  `mcp-managed-servers-entry` owns that list.
+- A settings file. The rule does not read it, because an `sse` entry of `managedMcpServers` is valid
+  and `mcp-managed-servers-entry` owns that list.
 - The `.mcp.json` at the plugin root, when the rule lints `plugin.json`. The rule reads that file as
   a file of its own, so a server gets one report.
 - A path under `.claude/`, which `mcp-json-location` reports.
 
-A team can turn the rule off for a file with a server that must stay on SSE. This holds when the
-endpoint has no HTTP transport.
+Some endpoints have no HTTP transport. A team can turn the rule off for a file that holds such a
+server.
 
 Of two `type` members in one entry, the last one counts.
 
