@@ -42,6 +42,7 @@ describe(`${name}: the header variables`, () => {
     expect(header('Bearer $MY_TOKEN_2', ['MY_TOKEN'])).toEqual(['unlisted'])
     expect(header('Bearer $my_token', ['MY_TOKEN'])).toEqual(['unlisted'])
     expect(header('Bearer $_TOKEN', [])).toEqual(['unlisted'])
+    expect(header(`Bearer ${brace('_TOKEN')}`, [])).toEqual(['unlisted'])
   })
 
   it('reports a variable when allowedEnvVars is missing, since no variable is then allowed', () => {
