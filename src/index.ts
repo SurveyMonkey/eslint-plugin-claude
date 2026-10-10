@@ -40,6 +40,7 @@ import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
+import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
@@ -320,6 +321,7 @@ const modules = [
   settingsMarketplaceSkipLfs,
   settingsStrictKnownMarketplacesSkillsDir,
   claudeMdAgentsMdVariant,
+  claudeMdExcludesPattern,
   claudeMdMaxBytes,
 ]
 
@@ -501,6 +503,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-skip-lfs': 'warn',
   'settings-strict-known-marketplaces-skills-dir': 'warn',
   'claude-md-agents-md-variant': 'error',
+  'claude-md-excludes-pattern': 'error',
   'claude-md-max-bytes': 'error',
 }
 

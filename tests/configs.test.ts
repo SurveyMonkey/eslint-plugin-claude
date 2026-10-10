@@ -829,6 +829,17 @@ const TREE: Record<string, string> = {
   'packages/av/.claude/AGENTS.md': '# Notes\n',
   'packages/av/docs/agents/notes.md': '# Notes\n',
   'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
+  // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
+  // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
+  'packages/ex/.claude/settings.local.json': '{"claudeMdExcludes": ["*/CLAUDE.md", "**/ok/**"]}',
+  'packages/ex/managed-settings.json': '{"claudeMdExcludes": ["a/**"]}',
+  'packages/ex/managed-settings.d/10-a.json': '{"claudeMdExcludes": ["b/**"]}',
+  'packages/ex/managed-settings.d/.20-hidden.json': '{"claudeMdExcludes": ["c/**"]}',
+  'packages/ex/managed-settings.d/30-b.txt': '{"claudeMdExcludes": ["d/**"]}',
+  'packages/ex/managed-settings.d/sub/40-c.json': '{"claudeMdExcludes": ["e/**"]}',
+  'packages/ex/.vscode/settings.json': '{"claudeMdExcludes": ["f/**"]}',
+  'packages/ex/ok/.claude/settings.json': '{"claudeMdExcludes": ["**/web/**", "/abs/CLAUDE.md"]}',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -1132,7 +1143,11 @@ const MARKET_SETTINGS_OFF_RULES = MARKET_SETTINGS_RULES.filter(
 const CONFLICT_RULE = 'settings-marketplace-key-alias-conflict'
 // The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
 // error, and each has one block for its own language.
-const MEMORY_RULES = ['claude-md-agents-md-variant', 'claude-md-max-bytes']
+const MEMORY_RULES = [
+  'claude-md-agents-md-variant',
+  'claude-md-excludes-pattern',
+  'claude-md-max-bytes',
+]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -1408,6 +1423,12 @@ const EXPECTED = [
   'packages/av/AGENTS.override.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
+  // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
+  'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/managed-settings.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/managed-settings.d/10-a.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `claude-md-max-bytes` reads CLAUDE.md and CLAUDE.local.md, and no other file.
   'packages/mb/CLAUDE.md: claude/claude-md-max-bytes@2',
   'packages/mb/.claude/CLAUDE.md: claude/claude-md-max-bytes@2',

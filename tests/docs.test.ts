@@ -56,6 +56,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-tools-unavailable',
     'claude-md-local-untracked',
     'claude-md-agents-md-variant',
+    'claude-md-excludes-pattern',
     'claude-md-max-bytes',
     'command-legacy-format',
     'hooks-event-name-known',
