@@ -109,6 +109,13 @@ const badMcpServers = {
   credential: { type: 'http', url: 'https://x.test/mcp', headers: { Key: `\${NPM_TOKEN}` } },
   helper: { type: 'http', url: 'https://x.test/mcp', headersHelper: 'echo $MY_TOKEN' },
   hosted: { type: 'http', url: 'https://gmail.mcp.claude.com/mcp' },
+  // The warn rules: a name with a dot, the synced skills name, the `sse` type, a relative header
+  // helper, and a relative command.
+  'bad.name': { command: 'x' },
+  'anthropic-skills': { command: 'x' },
+  legacy: { type: 'sse', url: 'https://x.test/sse' },
+  relHelper: { type: 'http', url: 'https://x.test/mcp', headersHelper: './h.sh' },
+  relCommand: { command: './server.js' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
 
@@ -590,6 +597,15 @@ const TREE: Record<string, string> = {
     mcpServers: { db: { command: 'x' } },
   }),
   'plugins/dn/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  // `mcp-server-name-format`, `mcp-server-name-anthropic-skills`, `mcp-no-sse-transport` and
+  // `mcp-headershelper-path` read the inline servers of a manifest.
+  'plugins/ns/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ns',
+    mcpServers: {
+      'bad.name': { type: 'sse', url: 'https://x.test/sse', headersHelper: './h.sh' },
+      'anthropic-skills': { command: 'x' },
+    },
+  }),
   'plugins/dv/.claude-plugin/plugin.json': JSON.stringify({
     name: 'dv',
     mcpServers: { web: { command: 'x' } },
@@ -752,7 +768,13 @@ const SCOPE_RULES = [
 // The rules of #16 on `.mcp.json`, in the order of the `modules` list, with the files of each.
 // Each is an error.
 const MCP_PATHS = ['**/.claude/.mcp.json', '**/.claude/mcp.json', '**/.claude/config/mcp.json']
-const MCP_RULES: { name: string; files: string[]; markdown?: string[]; language?: string }[] = [
+const MCP_RULES: {
+  name: string
+  files: string[]
+  markdown?: string[]
+  language?: string
+  severity?: 'warn'
+}[] = [
   { name: 'mcp-json-location', files: MCP_PATHS },
   { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
@@ -795,6 +817,29 @@ const MCP_RULES: { name: string; files: string[]; markdown?: string[]; language?
   { name: 'mcp-approval-names-exist', files: PROJECT_FILES },
   { name: 'mcp-approval-conflict', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'mcp-allow-deny-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  // The warn rules of the server names, transport and headers.
+  { name: 'mcp-headershelper-committed', files: ['**/.mcp.json'], severity: 'warn' },
+  {
+    name: 'mcp-headershelper-path',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'mcp-no-sse-transport',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'mcp-server-name-anthropic-skills',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'mcp-server-name-format',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  { name: 'mcp-stdio-relative-path', files: ['**/.mcp.json'], severity: 'warn' },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1054,6 +1099,23 @@ const EXPECTED = [
   'plugins/q/.lsp.json: claude/lsp-json-schema@2',
   'plugins/q/.lsp.json: claude/lsp-transport-socket@2',
   'plugins/lx/.claude-plugin/plugin.json: claude/lsp-transport-socket@2',
+  // The warn rules of the server names, transport and headers. The project file holds every
+  // fault, and a reserved name gets no format report. `mcp-headershelper-committed` reports both
+  // helpers. The plugin file gets the rules that read a plugin. The three paths under `.claude/`
+  // get none.
+  'packages/mc/.mcp.json: claude/mcp-headershelper-committed@1',
+  'packages/mc/.mcp.json: claude/mcp-headershelper-committed@1',
+  ...[
+    'mcp-headershelper-path',
+    'mcp-no-sse-transport',
+    'mcp-server-name-anthropic-skills',
+    'mcp-server-name-format',
+  ].flatMap((rule) => [
+    `packages/mc/.mcp.json: claude/${rule}@1`,
+    `plugins/p/.mcp.json: claude/${rule}@1`,
+    `plugins/ns/.claude-plugin/plugin.json: claude/${rule}@1`,
+  ]),
+  'packages/mc/.mcp.json: claude/mcp-stdio-relative-path@1',
   // The managed policy rules read the main file and the drop-ins, and the secret rule reads the
   // committed project file.
   'packages/ad/managed-settings.json: claude/mcp-allowlist-servername-dead@2',
@@ -1180,10 +1242,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
-      ...MCP_RULES.flatMap(({ name, markdown }) =>
+      ...MCP_RULES.flatMap(({ name, markdown, severity }) =>
         (markdown ? [name, name] : [name]).map((block) => [
           `claude/recommended/${block}`,
-          { [`claude/${block}`]: 'error' },
+          { [`claude/${block}`]: severity ?? 'error' },
         ]),
       ),
     ])
