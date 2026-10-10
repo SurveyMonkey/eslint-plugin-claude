@@ -111,6 +111,10 @@ describe(`${name}: plugin.json and hooks/hooks.json`, () => {
     }
   })
 
+  it('reports a pair on plugin.json only, not on hooks/hooks.json', () => {
+    expect(ids({ [MANIFEST]: manifest() }, file(), PLUGIN_HOOKS)).toEqual([])
+  })
+
   it('reports nothing for a plugin.json outside .claude-plugin', () => {
     expect(ids({ [PLUGIN_HOOKS]: file() }, manifest(), 'plugin.json')).toEqual([])
   })
@@ -217,6 +221,35 @@ describe(`${name}: settings files and hooks/hooks.json`, () => {
   })
 })
 
+describe(`${name}: a settings file that the rule cannot see`, () => {
+  const off = json({ disableAllHooks: true })
+
+  it('is silent when settings.local.json links out of the repository', () => {
+    const root = repo({ [PROJECT]: file() })
+    const outside = path.join(path.dirname(root), 'outside-local.json')
+    writeFileSync(outside, off)
+    symlinkSync(outside, path.join(root, LOCAL))
+    expect(lintJson(name, file(), path.join(root, PLUGIN_HOOKS))).toEqual([])
+  })
+
+  it('is silent when settings.local.json is a dangling link', () => {
+    const root = repo({ [PROJECT]: file() })
+    symlinkSync(path.join(root, 'nowhere.json'), path.join(root, LOCAL))
+    expect(lintJson(name, file(), path.join(root, PLUGIN_HOOKS))).toEqual([])
+  })
+
+  it('is silent when a settings file is a directory', () => {
+    const root = repo({ [PROJECT]: file() })
+    mkdirSync(path.join(root, LOCAL))
+    expect(lintJson(name, file(), path.join(root, PLUGIN_HOOKS))).toEqual([])
+  })
+
+  it('still reports when a settings file is only absent or does not parse', () => {
+    expect(ids({ [PROJECT]: file(), [LOCAL]: '{' }, file(), PLUGIN_HOOKS)).toEqual(['duplicate'])
+    expect(ids({ [PROJECT]: file() }, file(), PLUGIN_HOOKS)).toEqual(['duplicate'])
+  })
+})
+
 describe(`${name}: the files`, () => {
   it('is silent in a settings file and a hooks.json that Claude Code does not read', () => {
     const files = { [PROJECT]: file(), [PLUGIN_HOOKS]: file() }
@@ -251,6 +284,23 @@ describe(`${name}: what makes two handlers identical`, () => {
     expect(twin(pre('*'), pre('Bash'))).toEqual([])
   })
 
+  it('keeps an omitted matcher and "*" apart on FileChanged', () => {
+    // The hooks reference, "FileChanged": "*" joins the watch list as a literal file name.
+    const watch = (matcher?: string) =>
+      hooks('FileChanged', [command({ command: './fmt.sh' })], matcher)
+    expect(twin(watch(), watch('*'))).toEqual([])
+    expect(twin(watch('*'), watch())).toEqual([])
+    expect(twin(watch('*'), watch('*'))).toEqual(['bothLoad'])
+    expect(twin(watch(), watch())).toEqual(['bothLoad'])
+  })
+
+  it('tells a string from a number or a boolean, and a value from a key', () => {
+    const one = (extra: Record<string, unknown>) => hooks('Stop', [command(extra)])
+    expect(twin(one({ timeout: 5 }), one({ timeout: '5' }))).toEqual([])
+    expect(twin(one({ once: true }), one({ once: 'true' }))).toEqual([])
+    expect(twin(one({ if: 'a', model: 'b' }), one({ if: 'b', model: 'a' }))).toEqual([])
+  })
+
   it('tells numbers, booleans and the order of array items apart', () => {
     const one = (extra: Record<string, unknown>) => hooks('Stop', [command(extra)])
     expect(twin(one({ timeout: 5 }), one({ timeout: 5 }))).toEqual(['bothLoad'])
@@ -263,10 +313,14 @@ describe(`${name}: what makes two handlers identical`, () => {
   })
 
   it('reads the last of a duplicate key, as Claude Code does', () => {
-    const sibling =
+    const doubled =
       '{"hooks":{"Stop":[{"hooks":[{"type":"command","command":"a","command":"./fmt.sh"}]}]}}'
     const own = hooks('Stop', [command({ command: './fmt.sh' })])
-    expect(ids({ [PLUGIN_HOOKS]: sibling }, manifest(own), MANIFEST)).toEqual(['bothLoad'])
+    expect(ids({ [PLUGIN_HOOKS]: doubled }, manifest(own), MANIFEST)).toEqual(['bothLoad'])
+    // The same file, as the linted text: it goes through the AST and not through JSON.parse.
+    const text =
+      '{"name":"p","hooks":{"Stop":[{"hooks":[{"type":"command","command":"a","command":"./fmt.sh"}]}]}}'
+    expect(ids({ [PLUGIN_HOOKS]: file(own) }, text, MANIFEST)).toEqual(['bothLoad'])
   })
 })
 
@@ -307,6 +361,15 @@ describe(`${name}: disableAllHooks across settings files`, () => {
   it('reports when settings.local.json turns hooks back on', () => {
     const files = { [PROJECT]: off(true, true), [LOCAL]: off(false) }
     expect(ids(files, file(), PLUGIN_HOOKS)).toEqual(['duplicate'])
+  })
+
+  it('lets the settings of the nearest folder win over a folder above', () => {
+    const plugin = 'plugins/p/.claude/settings.json'
+    const target = 'plugins/p/hooks/hooks.json'
+    const near = { [plugin]: off(false, true), [PROJECT]: off(true) }
+    expect(ids(near, file(), target)).toEqual(['duplicate'])
+    const far = { [plugin]: off(true, true), [PROJECT]: off(false) }
+    expect(ids(far, file(), target)).toEqual([])
   })
 
   it('lets a file that sets nothing leave the other file in force', () => {
