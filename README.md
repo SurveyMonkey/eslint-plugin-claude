@@ -175,6 +175,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-dead-allow`](docs/rules/permissions-dead-allow.md) | An `allow` rule is not covered by a `deny` or `ask` rule of the same settings source | `error` | `error` |
 | [`claude/permissions-sandbox-bash-ask`](docs/rules/permissions-sandbox-bash-ask.md) | A bare `Bash` ask rule is not written while the sandbox auto-allows Bash | `error` | `error` |
 | [`claude/sandbox-domain-syntax`](docs/rules/sandbox-domain-syntax.md) | A sandbox allowed or denied domain is a host with an optional port, in the form of the docs | `error` | `error` |
+| [`claude/sandbox-domain-overlap`](docs/rules/sandbox-domain-overlap.md) | A sandbox allowed domain is not in `deniedDomains` of the same settings source | `error` | `error` |
 | [`claude/sandbox-excluded-commands-syntax`](docs/rules/sandbox-excluded-commands-syntax.md) | An `excludedCommands` entry is a command pattern with no `Bash(` wrapper, and does not start with a word that Claude Code keeps sandboxed | `error` | `error` |
 | [`claude/sandbox-filesystem-disabled-conflict`](docs/rules/sandbox-filesystem-disabled-conflict.md) | A managed file does not set `sandbox.filesystem.disabled` with `denyRead` or credentials `deny` entries that it switches off | `error` | `error` |
 | [`claude/sandbox-schema`](docs/rules/sandbox-schema.md) | `sandbox` holds only documented keys, each with a value of its type | `error` | `error` |
