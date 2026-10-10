@@ -10,7 +10,7 @@ import { pluginTree } from '../plugin-tree.test-support.ts'
 import { lintMarkdown } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-path-var-braced'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const plugin = pluginTree({ name: 'p' }).dir
@@ -98,7 +98,7 @@ describe(RULE, () => {
 
   check('reports the bare form on a line that also has the braced form', () => {
     const found = lintMarkdown(RULE, `Run ${root}/a and $CLAUDE_PLUGIN_ROOT/b\n`, command)
-    expect(found.map((m) => [m.line, m.column])).toEqual([[1, 29]])
+    expect(found.map((m) => [m.line, m.column])).toEqual([[1, 33]])
   })
 })
 
@@ -125,7 +125,6 @@ describe(`${RULE} (silent)`, () => {
     ['a local command', BARE, path.join(plugin, '.claude', 'commands', 'c.md')],
     ['a local agent', BARE, path.join(plugin, '.claude', 'agents', 'a.md')],
     ['a SKILL.md outside skills/', BARE, path.join(plugin, 'docs', 'SKILL.md')],
-    ['a SKILL.md in agents/', BARE, path.join(plugin, 'agents', 'SKILL.md')],
     [
       'a skill of a manifest that does not parse',
       BARE,

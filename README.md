@@ -104,6 +104,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-default-dir-shadowed`](docs/rules/plugin-default-dir-shadowed.md) | A key that replaces a default folder, such as `commands`, has a path inside the folder | `error` | `error` |
 | [`claude/plugin-monitors-command-env`](docs/rules/plugin-monitors-command-env.md) | A monitor `command` writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` in the braced form, and reads no `$CLAUDE_PLUGIN_OPTION_*` | `error` | `error` |
 | [`claude/plugin-package-lockfile`](docs/rules/plugin-package-lockfile.md) | A plugin with a `package.json` ships a lockfile that Claude Code reads, not only `yarn.lock`, `pnpm-lock.yaml` or `bun.lockb` | `error` | `error` |
+| [`claude/plugin-path-var-braced`](docs/rules/plugin-path-var-braced.md) | The body of a plugin skill, command or agent writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` in the braced form | `error` | `error` |
 | [`claude/plugin-user-config-no-shell-fields`](docs/rules/plugin-user-config-no-shell-fields.md) | No `${user_config.*}` in a shell-form hook command, a monitor command or an MCP `headersHelper` of a plugin | `error` | `error` |
 
 ### Marketplace manifest

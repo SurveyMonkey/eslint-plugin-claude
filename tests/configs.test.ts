@@ -143,6 +143,12 @@ const TREE: Record<string, string> = {
   'plugins/lock/.claude-plugin/plugin.json': JSON.stringify({ name: 'lock' }),
   'plugins/lock/package.json': '{}',
   'plugins/lock/yarn.lock': '',
+  // A bare plugin variable in the body of a plugin skill, command and agent.
+  'plugins/bare/.claude-plugin/plugin.json': JSON.stringify({ name: 'bare' }),
+  'plugins/bare/skills/s/SKILL.md': '---\nname: s\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
+  'plugins/bare/commands/c.md': 'Run $CLAUDE_PLUGIN_DATA/run.sh\n',
+  'plugins/bare/agents/a.md':
+    '---\nname: a\ndescription: d\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
   // A `${user_config.*}` reference in each field that a shell runs, in the manifest and in the
   // three default files.
   'plugins/ucf/.claude-plugin/plugin.json': JSON.stringify({
@@ -571,7 +577,7 @@ const SCOPE_RULES = [
 
 // The plugin manifest and layout rules of #11, in the order of the `modules` list. Each is an
 // error, with one JSON block for its files.
-const PLUGIN_RULES = [
+const PLUGIN_RULES: { name: string; files: string[]; language?: string }[] = [
   { name: 'plugin-manifest-location', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-skill-dir-layout', files: ['**/.claude-plugin/plugin.json'] },
   {
@@ -589,6 +595,11 @@ const PLUGIN_RULES = [
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
   },
   { name: 'plugin-package-lockfile', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-path-var-braced',
+    language: 'markdown/gfm',
+    files: ['**/SKILL.md', '**/commands/**/*.md', '**/agents/**/*.md'],
+  },
   {
     name: 'plugin-user-config-no-shell-fields',
     files: [
@@ -647,6 +658,10 @@ const EXPECTED = [
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
+  'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
+  'plugins/bare/commands/c.md: claude/command-legacy-format@1',
+  'plugins/bare/commands/c.md: claude/plugin-path-var-braced@2',
+  'plugins/bare/skills/s/SKILL.md: claude/plugin-path-var-braced@2',
   'plugins/env/.claude-plugin/plugin.json: claude/plugin-monitors-command-env@2',
   'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
@@ -1000,12 +1015,12 @@ describe('configs', () => {
     }
   })
 
-  it('gives each rule of the plugin layout layer one JSON block for its files', () => {
-    for (const { name, files } of PLUGIN_RULES) {
+  it('gives each rule of the plugin layout layer one block for its files', () => {
+    for (const { name, files, language = 'json/json' } of PLUGIN_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )
-      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([[language, files]])
     }
   })
 

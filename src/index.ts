@@ -50,6 +50,7 @@ import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
@@ -192,6 +193,7 @@ const modules = [
   pluginDefaultDirShadowed,
   pluginMonitorsCommandEnv,
   pluginPackageLockfile,
+  pluginPathVarBraced,
   pluginUserConfigNoShellFields,
 ]
 
@@ -309,6 +311,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-default-dir-shadowed': 'error',
   'plugin-monitors-command-env': 'error',
   'plugin-package-lockfile': 'error',
+  'plugin-path-var-braced': 'error',
   'plugin-user-config-no-shell-fields': 'error',
 }
 

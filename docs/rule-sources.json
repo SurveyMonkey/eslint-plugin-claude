@@ -960,6 +960,13 @@
       "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
     }
   ],
+  "plugin-path-var-braced": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Where each variable resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
+    }
+  ],
   "plugin-project-skills-dir-limits": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
