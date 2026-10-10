@@ -2,6 +2,7 @@
 // `Explore` overrides the built-in. The page lists six built-in names. A plugin
 // agent has a scoped name, so the rule checks local agents only.
 import { describe, expect, it } from 'vitest'
+import { BUILT_IN_AGENTS } from '../../src/data/agent-fields.ts'
 import { agentText, lintRule } from '../agent-warn.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
@@ -80,5 +81,18 @@ describe('agent-name-shadows-builtin options', () => {
     for (const bad of [{ allow: 'Explore' }, { allow: [1] }, { allow: ['a', 'a'] }, { other: 1 }]) {
       expect(() => lint([bad])).toThrow()
     }
+  })
+})
+
+describe('BUILT_IN_AGENTS', () => {
+  it('holds the six names of the sub-agents page', () => {
+    expect([...BUILT_IN_AGENTS]).toEqual([
+      'Explore',
+      'Plan',
+      'general-purpose',
+      'claude',
+      'statusline-setup',
+      'claude-code-guide',
+    ])
   })
 })

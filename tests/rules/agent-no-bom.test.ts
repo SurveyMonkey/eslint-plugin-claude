@@ -82,7 +82,7 @@ describe('agent-no-bom', () => {
     })
 
     it('for a file that starts like a BOM but is not one', () => {
-      const code = '\ufffe' + agentText('')
+      const code = `\ufefe${agentText('')}`
       const file = write('.claude/agents/a.md', code)
       expect(lint(OLD, file, code)).toEqual([])
     })
