@@ -57,7 +57,7 @@ describe(`${name}: the event`, () => {
     }
   })
 
-  it('is silent for an empty string, where the docs state nothing', () => {
+  it('is silent for an empty string, where the docs do not say', () => {
     expect(run('PreToolUse', '')).toEqual([])
     expect(run('Stop', '')).toEqual(['event'])
   })

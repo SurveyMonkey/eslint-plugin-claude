@@ -41,8 +41,8 @@ the exact set is narrower: letters, digits, `_` and `|`, and only `|` separates.
 report in these cases:
 
 - The matcher is omitted, empty or `*`. Each means match-all.[^patterns]
-- The matcher holds any other character. Claude Code reads it as a regular expression, which can select
-  a value in a way that the rule cannot read.
+- The matcher holds any other character. Claude Code reads it as a regular expression. The rule cannot
+  read which values it selects.
 - The value is `bypass_permissions_disabled` on `SessionEnd`. Claude Code removed it in v2.1.234.[^sessionend]
   The docs tell you to drop it, and that is a deprecation, not an unknown value.
 - The event has no fixed set, or it is not a known event.

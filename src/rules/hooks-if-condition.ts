@@ -19,7 +19,7 @@ const FAMILIES: readonly (readonly string[])[] = [
   ['Edit', 'Write', 'NotebookEdit'],
 ]
 
-/** A closing parenthesis, then `&&`, `||` or a comma, then what looks like another rule: a name, then
+/** A `)`, then `&&`, `||` or a comma, then what looks like another rule: a name, then
  *  a parenthesis, the end of the text or another operator. A literal parenthesis inside a specifier
  *  is not followed by a name in this way. */
 const SECOND_RULE = /\)\s*(&&|\|\||,)\s*[A-Za-z_][\w-]*\s*(?:\(|$|&&|\|\||,)/

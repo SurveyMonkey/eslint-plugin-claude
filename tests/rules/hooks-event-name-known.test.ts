@@ -157,7 +157,7 @@ describe(`${name}: frontmatter`, () => {
     expect([found?.line, found?.column]).toEqual([5, 3])
   })
 
-  it('is silent in a plugin subagent, which ignores hooks, and when hooks is no mapping', () => {
+  it('is silent in a plugin subagent, which ignores hooks, and when hooks is not an object', () => {
     expect(markdownIds(name, yamlOf('Bogus'), pluginAgent())).toEqual([])
     expect(markdownIds(name, '---\nname: s\nhooks: x\n---\n', FILES.skill)).toEqual([])
     expect(markdownIds(name, '---\nname: s\n---\n', FILES.skill)).toEqual([])

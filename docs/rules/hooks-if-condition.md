@@ -23,7 +23,7 @@ Write the `if` field of a hook as one permission rule on a tool event.
 The `if` field of a handler filters when the hook runs. It uses the permission rule syntax: `Bash(git *)` or
 `Edit(*.ts)`.[^fields] The rule reports at the `if` value. It reads a string value only.
 [`hooks-config-schema`](hooks-config-schema.md) reports an `if` that is not a string, such as an array. It makes
-no report for an empty string, because the docs state nothing about it. It reports these faults.
+no report for an empty string, because the docs do not say what it does. It reports these faults.
 
 ### An event that is not a tool event
 
@@ -35,24 +35,26 @@ report on the field.
 ### More than one rule
 
 The `if` field holds exactly one permission rule. It has no `&&`, `||` or list syntax. To apply more than one
-condition, define one handler for each.[^fields] The rule reports `&&`, `||` or a comma that joins rules, such
-as `Bash(git *) && Edit(*.ts)`, `Bash(git *), Edit(*.ts)` and `Bash && Edit`. It reads the raw text, because
-the parser takes `Bash(git *) && Edit(*.ts)` as one rule for `Bash`. An operator inside a specifier is
-part of the pattern, so `Bash(a && b)` is one rule.
+condition, define one handler for each.[^fields] The rule reports `&&`, `||` or a comma that joins rules. Examples are
+`Bash(git *) && Edit(*.ts)`, `Bash(git *), Edit(*.ts)` and `Bash && Edit`.
+
+The rule reads the raw text. The parser takes `Bash(git *) && Edit(*.ts)` as one rule for `Bash`. An
+operator inside a specifier is part of the pattern, so `Bash(a && b)` is one rule.
 
 ### A rule that does not parse
 
 The rule uses the parser of the permission rule syntax, the same parser as
-[`permissions-rule-syntax`](permissions-rule-syntax.md).[^syntax] It reports a rule with no tool name, with
-unbalanced parentheses, with text after the final parenthesis, or with a NUL byte. This is the rule that
-reports these faults in a hook. `permissions-rule-syntax` reads permission lists and skill fields, not hooks.
+[`permissions-rule-syntax`](permissions-rule-syntax.md).[^syntax] It reports four faults. The rule has no tool name, has
+unbalanced parentheses, has text after the final parenthesis, or holds a NUL byte. This rule reports
+these faults in a hook. `permissions-rule-syntax` reads permission lists and skill fields, not hooks.
 
 ### A tool the matcher never selects
 
 The matcher of a group selects the tool, and `if` narrows the call further. The hook runs only when both
 match.[^resolve] A rule for one tool matches that tool's calls only.[^resolve] So `Bash(rm *)` in a group with the
-matcher `Edit` never runs. The rule reports it when the tool is a built-in tool or a full MCP tool name, and the
-matcher is an exact list or a regular expression that compiles. A rule format covers a family of tools:[^rules]
+matcher `Edit` never runs. The rule reports it for a built-in tool or a full MCP tool name.
+The matcher must be an exact list, or a regular expression that compiles. A rule format covers a family of
+tools:[^rules]
 
 | Rule | Tools that it covers |
 |------|----------------------|
@@ -60,10 +62,14 @@ matcher is an exact list or a regular expression that compiles. A rule format co
 | `Read(...)` | `Read`, `Grep`, `Glob`, `LSP` |
 | `Edit(...)` | `Edit`, `Write`, `NotebookEdit` |
 
-The rule makes no report when the matcher selects any tool of the family, when the matcher is match-all, or
-when the tool name has a `*`. It makes no report for a tool that is not known. A matcher that is a case
-variant of the tool, such as `bash`, is for [`hooks-matcher-never-matches`](hooks-matcher-never-matches.md).
-A matcher that does not compile is for [`hooks-matcher-syntax`](hooks-matcher-syntax.md).
+The rule makes no report in these cases:
+
+- The matcher selects a tool of the family.
+- The matcher is match-all.
+- The tool name has a `*`, or the tool is not known.
+- The matcher is a case variant of the tool, such as `bash`.
+  [`hooks-matcher-never-matches`](hooks-matcher-never-matches.md) reports it.
+- The matcher does not compile. [`hooks-matcher-syntax`](hooks-matcher-syntax.md) reports it.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, no plugin agent, and no `hooks.json` that Claude Code does not read.

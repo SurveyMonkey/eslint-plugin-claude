@@ -268,7 +268,7 @@ export interface HookGroup {
   handlers: HObject[]
 }
 
-/** The matcher groups of the source, in file order. A value of the wrong nesting adds none: an
+/** The matcher groups of the source, in file order. A value of the wrong shape adds none: an
  *  event whose value is not an array, and a group that is not an object. A group that has no
  *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. */
 export function groupsOf(source: HookSource): HookGroup[] {
@@ -303,7 +303,7 @@ export function groupsOf(source: HookSource): HookGroup[] {
   })
 }
 
-/** The handlers of the source, in file order. A value of the wrong nesting adds none:
+/** The handlers of the source, in file order. A value of the wrong shape adds none:
  *  an event whose value is not an array, a group that is not an object or that has no
  *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
 export function handlersOf(source: HookSource): HookHandler[] {
