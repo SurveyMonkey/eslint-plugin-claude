@@ -116,7 +116,15 @@ describe(`${name}: the silent cases`, () => {
   })
 
   it('leaves a pattern that does not compile, and the Tool(specifier) form, to hooks-matcher-syntax', () => {
-    for (const matcher of ['Edit(', 'Edit[', 'Edit(src/**)', 'Bash(rm *)', 'mcp__a__b(x)']) {
+    for (const matcher of [
+      'Edit(',
+      'Edit[',
+      'Edit(src/**)',
+      'Bash(rm *)',
+      'mcp__a__b(x)',
+      'Edit(a|)',
+      'mcp__a__b(x)|(Edit)',
+    ]) {
       const text = settings(hooks('PreToolUse', [command()], matcher))
       expect(jsonIds(name, text, FILES.project), matcher).toEqual([])
       expect(jsonIds(syntax, text, FILES.project), matcher).toHaveLength(1)

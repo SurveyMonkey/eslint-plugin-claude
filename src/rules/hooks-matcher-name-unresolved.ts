@@ -55,7 +55,9 @@ function ancestors(dir: string, top: string): string[] {
 
 /** The `name` of each agent file in `.claude/agents/` of `project` and of each folder above it. The result is
  *  undefined when a path cannot be read, or when no agent file has a name. */
-function agentNames(project: string, top: string, bound: string): string[] | undefined {
+function agentNames(project: string, claude: string): string[] | undefined {
+  const top = repositoryRoot(project)
+  const bound = repositoryRoot(claude)
   const names: string[] = []
   for (const dir of ancestors(project, top)) {
     const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
@@ -77,7 +79,9 @@ function agentNames(project: string, top: string, bound: string): string[] | und
 
 /** The server names in the `.mcp.json` file of `project` and of each folder above it. The result is undefined when
  *  a file cannot be read or has an unexpected shape, or when no folder holds the file. */
-function serverNames(project: string, top: string, bound: string): string[] | undefined {
+function serverNames(project: string, claude: string): string[] | undefined {
+  const top = repositoryRoot(project)
+  const bound = repositoryRoot(claude)
   const names: string[] = []
   let found = false
   for (const dir of ancestors(project, top)) {
@@ -141,10 +145,8 @@ const rule: Rule.RuleModule = {
 
     return hooksListener(context, (source) => {
       const inRepository = source.kind === 'settings' && readsRepository
-      const bound = inRepository ? repositoryRoot(claude) : ''
-      const top = inRepository ? repositoryRoot(project) : ''
-      const agents = lazy(() => agentNames(project, top, bound))
-      const servers = lazy(() => serverNames(project, top, bound))
+      const agents = lazy(() => agentNames(project, claude))
+      const servers = lazy(() => serverNames(project, claude))
 
       for (const { event, matcher, handlers } of groupsOf(source)) {
         // A value with another character is a regular expression, which no check reads.
