@@ -86,7 +86,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'dead' }> = {
         if (entry.list !== 'allow') {
           continue
         }
-        const found = covering.find(({ rule: cover }) => covers(cover, entry.rule))
+        // Claude Code checks deny before ask, so a deny rule is the one to name.
+        const covered = covering.filter(({ rule: cover }) => covers(cover, entry.rule))
+        const found = covered.find(({ list }) => list === 'deny') ?? covered[0]
         if (found !== undefined) {
           context.report({
             loc: entry.loc,
