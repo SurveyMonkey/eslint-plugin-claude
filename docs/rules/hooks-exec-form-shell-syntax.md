@@ -37,8 +37,8 @@ The rule reports at the string. The fix is to omit `args` and use shell form, or
 ### What the rule does not read
 
 - A path placeholder: `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}`. Claude Code
-  replaces them in `command` and in each `args` item.[^exec] A bare `$CLAUDE_PROJECT_DIR` is not replaced, so the
-  rule reports it.
+  replaces them in `command` and in each `args` item.[^exec] The rule reports a bare `$CLAUDE_PROJECT_DIR` as a
+  variable, because exec form expands no variable.
 - `$CLAUDE_MODEL`, and `$CLAUDE_ENV_FILE` on an event where Claude Code sets no such variable.
   [`hooks-env-var-unavailable`](hooks-env-var-unavailable.md) reports them.
 - A glob such as `src/**/*.ts`, and an operator character inside a longer item such as `a|b`. Many programs

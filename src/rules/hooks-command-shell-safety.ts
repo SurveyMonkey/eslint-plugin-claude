@@ -31,13 +31,37 @@ const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
 const DERIVED =
   /(?:^|[\s;])([A-Za-z_]\w*)=\$\([^)\n]*\b(?:cat|jq)\b|\bread\s+(?:-\w+\s+)*([A-Za-z_]\w*)/g
 
-/** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. */
+/** The index of the quote that closes the one at `start` in `text`, or the length of `text`. A double quote
+ *  holds command substitutions, which have quotes and parentheses of their own. */
+function quoteEnd(text: string, start: number): number {
+  const quote = text.charAt(start)
+  for (let i = start + 1; i < text.length; i++) {
+    const char = text.charAt(i)
+    if (char === quote) {
+      return i
+    }
+    if (quote === '"' && char === '\\') {
+      i++
+    } else if (quote === '"' && char === '$' && text.startsWith('(', i + 1)) {
+      i = closingParen(text, i + 1)
+    }
+  }
+  return text.length
+}
+
+/** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A
+ *  parenthesis in quotes or after a backslash does not count. */
 function closingParen(text: string, open: number): number {
   let depth = 0
   for (let i = open; i < text.length; i++) {
-    if (text.charAt(i) === '(') {
+    const char = text.charAt(i)
+    if (char === "'" || char === '"') {
+      i = quoteEnd(text, i)
+    } else if (char === '\\') {
+      i++
+    } else if (char === '(') {
       depth++
-    } else if (text.charAt(i) === ')' && --depth === 0) {
+    } else if (char === ')' && --depth === 0) {
       return i
     }
   }

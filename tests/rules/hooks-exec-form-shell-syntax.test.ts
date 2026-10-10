@@ -109,6 +109,32 @@ describe(`${name}: the variables`, () => {
     ])
   })
 
+  it('reads a flag cluster with c, and a shell behind a wrapper', () => {
+    expect(ids({ type: 'command', command: 'bash', args: ['-ce', 'echo $HOME'] })).toEqual([])
+    expect(ids({ type: 'command', command: 'env', args: ['bash', '-c', 'echo $HOME'] })).toEqual([])
+    expect(
+      ids({ type: 'command', command: 'env', args: ['find', '.', '-exec', 'rm', '{}', ';'] }),
+    ).toEqual([])
+  })
+
+  it('reports a longer CLAUDE_MODEL or CLAUDE_ENV_FILE name that no other rule reports', () => {
+    expect(exec(['$CLAUDE_MODEL_ID'])).toEqual(['variable'])
+    expect(exec(['$CLAUDE_ENV_FILE_PATH'])).toEqual(['variable'])
+  })
+
+  it('strips the braced and the bare forms of CLAUDE_ENV_FILE and CLAUDE_MODEL', () => {
+    expect(exec([`\${CLAUDE_ENV_FILE}`, '$CLAUDE_MODEL'])).toEqual([])
+  })
+
+  it('reports CLAUDE_ENV_FILE on an event name that is unknown', () => {
+    const text = settings(
+      hooks('NoSuchEvent', [command({ command: 'tool', args: ['$CLAUDE_ENV_FILE'] })]),
+    )
+    expect(lintJson(name, text, FILES.project).map((message) => message.messageId)).toEqual([
+      'variable',
+    ])
+  })
+
   it('is silent for the ; item that ends -exec of find', () => {
     expect(
       ids({ type: 'command', command: 'find', args: ['.', '-exec', 'rm', '{}', ';'] }),
@@ -142,7 +168,7 @@ describe(`${name}: the handler`, () => {
 
   it('reports in each file that Claude Code reads', () => {
     for (const file of [FILES.project, FILES.local, FILES.managed, FILES.dropIn, FILES.plugin]) {
-      expect(exec(['|']), file).toEqual(['operator'])
+      expect(ids(command({ command: 'tool', args: ['|'] }), file), file).toEqual(['operator'])
     }
     expect(ids(command({ command: 'tool', args: ['|'] }), FILES.plugin)).toEqual(['operator'])
   })

@@ -18,6 +18,7 @@ import {
   PATH_VARIABLES,
   stringOf,
 } from '../hooks-config.ts'
+import { commandWordAt } from '../shell-words.ts'
 
 const name = 'hooks-exec-form-shell-syntax' as const
 
@@ -29,8 +30,8 @@ const PLACEHOLDER = new RegExp(`\\$\\{(?:${PATH_VARIABLES.join('|')})\\}`, 'g')
 const VARIABLE = /\$(?:\{[A-Z_][A-Z0-9_]*\}|[A-Z_][A-Z0-9_]*)/
 /** The variables that `hooks-env-var-unavailable` reports. It reports `CLAUDE_ENV_FILE` only on the events
  *  where Claude Code sets no such variable. */
-const MODEL = /\$\{?CLAUDE_MODEL\}?/g
-const ENV_FILE = /\$\{?CLAUDE_ENV_FILE\}?/g
+const MODEL = /\$\{?CLAUDE_MODEL(?![A-Za-z0-9_])\}?/g
+const ENV_FILE = /\$\{?CLAUDE_ENV_FILE(?![A-Za-z0-9_])\}?/g
 const SHELLS = ['bash', 'sh', 'zsh']
 /** The text of the node `node`, or the empty string. */
 const before = (node: HNode | undefined) => (node?.kind === 'string' ? node.value : '')
@@ -62,16 +63,17 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        const program = path.posix.basename(executable.value)
         const noEnvFile = HOOK_EVENTS.includes(event) && !ENV_FILE_EVENTS.includes(event)
         const items = [executable, ...args.items]
+        const words = items.map((node) => before(node))
+        const program = path.posix.basename(words[commandWordAt(words)] ?? '')
         for (const [index, node] of items.entries()) {
           if (node.kind !== 'string') {
             continue
           }
           const text = node.value
           const shellLine =
-            SHELLS.includes(program) && /^-[A-Za-z]*c$/.test(before(items[index - 1]))
+            SHELLS.includes(program) && /^-[A-Za-z]*c[A-Za-z]*$/.test(before(items[index - 1]))
           const stripped = text.replace(PLACEHOLDER, '').replace(MODEL, '')
           const variable = shellLine
             ? null
