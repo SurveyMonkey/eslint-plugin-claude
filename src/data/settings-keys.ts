@@ -369,6 +369,14 @@ export function settingsKeyScope(path: readonly string[]): KeyScope | undefined 
   return SCOPES.get(ALIAS_IDS.get(id) ?? id)
 }
 
+/** True when Claude Code ignores the key at `path` in a project or local file, because it reads
+ *  the key from managed settings, or from user and managed settings. `settings-key-scope` reports
+ *  the key there, so a rule that checks the value leaves that file alone. */
+export function isIgnoredInRepoFile(path: readonly string[]): boolean {
+  const scope = settingsKeyScope(path)?.scope
+  return scope === 'managed' || scope === 'user-or-managed'
+}
+
 /** True when a listed key lies below `path`, so a rule has to read the object
  *  at `path`. */
 export function hasListedChildren(path: readonly string[]): boolean {

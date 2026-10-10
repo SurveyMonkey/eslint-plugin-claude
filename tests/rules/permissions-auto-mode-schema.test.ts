@@ -14,16 +14,16 @@ const LOCAL = '/repo/.claude/settings.local.json'
 const MANAGED = '/repo/managed-settings.json'
 const DROP_IN = '/repo/managed-settings.d/10-a.json'
 const HIDDEN = '/repo/managed-settings.d/.10-a.json'
-const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
+const ALL_FILES = [PROJECT, LOCAL, MANAGED, DROP_IN]
 const MANAGED_FILES = [MANAGED, DROP_IN]
 const PROJECT_FILES = [PROJECT, LOCAL]
 const LISTS = ['environment', 'allow', 'soft_deny', 'hard_deny']
 const DENY_LISTS = ['soft_deny', 'hard_deny']
 const NOT_LISTS = ['Bash', 1, true, {}]
 
-const lint = (code: unknown, file = PROJECT) =>
+const lint = (code: unknown, file = MANAGED) =>
   lintJson(name, typeof code === 'string' ? code : JSON.stringify(code), file)
-const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) => message.messageId)
+const ids = (code: unknown, file = MANAGED) => lint(code, file).map((message) => message.messageId)
 const autoMode = (fields: object) => ({ autoMode: fields })
 
 describe(`${name}: a valid object`, () => {
@@ -35,7 +35,7 @@ describe(`${name}: a valid object`, () => {
       hard_deny: ['$defaults'],
       classifyAllShell: true,
     })
-    for (const file of EVERY_FILE) {
+    for (const file of ALL_FILES) {
       expect(ids(code, file), file).toEqual([])
     }
   })
@@ -60,7 +60,7 @@ describe(`${name}: a valid object`, () => {
 
 describe(`${name}: a key that is not in the list`, () => {
   it('reports each such key, in every file', () => {
-    for (const file of EVERY_FILE) {
+    for (const file of MANAGED_FILES) {
       const code = autoMode({ allow: [], softDeny: [], Allow: [], 'hard_deny ': [] })
       expect(ids(code, file), file).toEqual(['unknownKey', 'unknownKey', 'unknownKey'])
     }
@@ -86,7 +86,7 @@ describe(`${name}: a key that is not in the list`, () => {
 
 describe(`${name}: autoMode itself`, () => {
   it('reports a value that is not an object, in every file', () => {
-    for (const file of EVERY_FILE) {
+    for (const file of MANAGED_FILES) {
       for (const value of ['x', 1, true, []]) {
         expect(ids({ autoMode: value }, file), `${file} ${JSON.stringify(value)}`).toEqual([
           'notObject',
@@ -113,13 +113,19 @@ describe(`${name}: autoMode itself`, () => {
 })
 
 describe(`${name}: a list that is not an array`, () => {
-  it('reports each list, in a project or local file', () => {
+  it('is silent in a project or local file, where settings-key-scope reports autoMode', () => {
     for (const file of PROJECT_FILES) {
-      for (const key of LISTS) {
-        for (const value of NOT_LISTS) {
-          expect(ids(autoMode({ [key]: value }), file), `${file} ${key}`).toEqual(['notArray'])
-        }
-      }
+      expect(ids(autoMode({ allow: 'x', soft_block: [], classifyAllShell: 1 }), file)).toEqual([])
+      expect(ids({ autoMode: 'x' }, file)).toEqual([])
+    }
+  })
+
+  it('reports each value that is not an array, in a managed file', () => {
+    for (const value of NOT_LISTS) {
+      expect(ids(autoMode({ environment: value, allow: value })), JSON.stringify(value)).toEqual([
+        'notArray',
+        'notArray',
+      ])
     }
   })
 
@@ -140,8 +146,9 @@ describe(`${name}: a list that is not an array`, () => {
   })
 
   it('names the list, and says what Claude Code withholds', () => {
-    const [plain] = lint(autoMode({ soft_deny: 'x' }))
-    expect(plain?.message).toContain('"soft_deny"')
+    const [plain] = lint(autoMode({ allow: 'x' }))
+    expect(plain?.message).toContain('"allow"')
+    expect(plain?.message).not.toContain('withholds')
     const [withheld] = lint(autoMode({ hard_deny: 'x' }), MANAGED)
     expect(withheld?.message).toContain('"hard_deny"')
     expect(withheld?.message).toContain('withholds "allow" and "environment"')
@@ -154,8 +161,8 @@ describe(`${name}: a list that is not an array`, () => {
 })
 
 describe(`${name}: an entry that is not a string`, () => {
-  it('reports each such entry, in a project or local file and for environment and allow', () => {
-    for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
+  it('reports each such entry, for environment and allow', () => {
+    for (const file of MANAGED_FILES) {
       for (const key of ['environment', 'allow']) {
         const code = autoMode({ [key]: ['x', 3, null, { a: 1 }, ['x']] })
         expect(ids(code, file), `${file} ${key}`).toEqual([
@@ -165,12 +172,6 @@ describe(`${name}: an entry that is not a string`, () => {
           'notString',
         ])
       }
-    }
-  })
-
-  it('reports an entry of soft_deny or hard_deny in a project file as a plain fault', () => {
-    for (const key of DENY_LISTS) {
-      expect(ids(autoMode({ [key]: ['x', 3] })), key).toEqual(['notString'])
     }
   })
 
@@ -194,14 +195,20 @@ describe(`${name}: an entry that is not a string`, () => {
 })
 
 describe(`${name}: classifyAllShell`, () => {
-  it('reports a value that is not a Boolean, in every file', () => {
-    for (const file of EVERY_FILE) {
-      for (const value of ['true', 1, [], {}]) {
+  it('reports a value that is not a Boolean, in a managed file', () => {
+    for (const file of MANAGED_FILES) {
+      for (const value of ['yes', 'TRUE', 1, [], {}]) {
         expect(
           ids(autoMode({ classifyAllShell: value }), file),
           `${file} ${JSON.stringify(value)}`,
         ).toEqual(['notBoolean'])
       }
+    }
+  })
+
+  it('reads a quoted Boolean as that Boolean in a managed file', () => {
+    for (const value of ['true', 'false']) {
+      expect(ids(autoMode({ classifyAllShell: value }))).toEqual([])
     }
   })
 

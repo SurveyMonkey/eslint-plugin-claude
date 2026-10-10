@@ -45,6 +45,8 @@ describe(`${name}: an entry in the syntax of the docs`, () => {
         '[::1]:443',
         '[2001:db8::1]:8080',
         'a.com:1',
+        'a.com:080',
+        '[::1]:080',
         'a.com:65535',
         '*.a.com:9',
       ]) {
@@ -65,9 +67,8 @@ describe(`${name}: the faults`, () => {
     }
   })
 
-  it('reports a port with a leading zero, zero, out of range, or not a number', () => {
+  it('reports a port that is zero, out of range, or not a number', () => {
     for (const entry of [
-      'a.com:080',
       'a.com:0',
       'a.com:65536',
       'a.com:100000',
@@ -76,7 +77,6 @@ describe(`${name}: the faults`, () => {
       'a.com:-1',
       'a.com:80.5',
       '[::1]:0',
-      '[::1]:080',
       '[::1]:',
       '[::1]:443:1',
     ]) {
@@ -97,13 +97,15 @@ describe(`${name}: the faults`, () => {
   })
 
   it('reports an IPv6 address with no brackets', () => {
-    for (const entry of ['::1', '::1:443', '2001:db8::1', 'fe80::1:2:3:4']) {
+    for (const entry of ['::1', '::1:443', '2001:db8::1', 'fe80::1:2:3:4', '::FFFF:1.2.3.4']) {
       expect(fault(entry), entry).toEqual(['unbracketedIpv6'])
     }
   })
 
   it('reports a name with two colons that is not an address', () => {
-    expect(fault('host:80:90')).toEqual(['notHost'])
+    for (const entry of ['host:80:90', 'abcx:1:2', 'fe80::1%eth0']) {
+      expect(fault(entry), entry).toEqual(['notHost'])
+    }
   })
 
   it('reports each faulty entry of the list, and no valid one', () => {
@@ -118,8 +120,8 @@ describe(`${name}: the faults`, () => {
   })
 
   it('names the entry in the message', () => {
-    const [message] = lint(network('allowedDomains', 'a.com:080'))
-    expect(message?.message).toContain('`a.com:080`')
+    const [message] = lint(network('allowedDomains', 'a.com:0'))
+    expect(message?.message).toContain('`a.com:0`')
   })
 
   it('says how to write the bracketed form for an IPv6 address', () => {
@@ -134,6 +136,12 @@ describe(`${name}: a managed file`, () => {
       const [message] = lint(network('deniedDomains', 'a.com:0'), file)
       expect(message?.message, file).toContain('withholds "sandbox.network.allowedDomains"')
     }
+  })
+
+  it('does not say it for an address with no brackets, which Claude Code reads', () => {
+    const [message] = lint(network('deniedDomains', '::1'), MANAGED)
+    expect(message?.messageId).toBe('unbracketedIpv6')
+    expect(message?.message).not.toContain('withholds')
   })
 
   it('does not say it for allowedDomains, or in a project file', () => {

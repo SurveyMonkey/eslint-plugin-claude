@@ -1061,14 +1061,20 @@ const EXPECTED = [
     ['sec', 'sandbox-excluded-commands-syntax'],
     ['ssm', 'sandbox-schema'],
   ].flatMap(([dir, rule]) => [
-    `packages/${dir}/.claude/settings.json: claude/${rule}@2`,
-    `packages/${dir}/.claude/settings.local.json: claude/${rule}@2`,
+    // `settings-key-scope` reports `autoMode` in a project file, so
+    // `permissions-auto-mode-schema` leaves that file alone.
+    ...(dir === 'pas'
+      ? []
+      : [
+          `packages/${dir}/.claude/settings.json: claude/${rule}@2`,
+          `packages/${dir}/.claude/settings.local.json: claude/${rule}@2`,
+        ]),
     `packages/${dir}/managed-settings.json: claude/${rule}@2`,
     `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@2`,
     `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
   ]),
   // `autoMode` is a key that Claude Code reads from user and managed settings, so
-  // `settings-key-scope` also reports it in the two project files: a different fault.
+  // `settings-key-scope` reports it in the two project files.
   'packages/pas/.claude/settings.json: claude/settings-key-scope@2',
   'packages/pas/.claude/settings.local.json: claude/settings-key-scope@2',
   // `sandbox-filesystem-disabled-conflict` reads the managed files only. A project file cannot set

@@ -17,9 +17,9 @@ const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
 const MANAGED_FILES = [MANAGED, DROP_IN]
 const PROJECT_FILES = [PROJECT, LOCAL]
 
-const lint = (code: unknown, file = PROJECT) =>
+const lint = (code: unknown, file = MANAGED) =>
   lintJson(name, typeof code === 'string' ? code : JSON.stringify(code), file)
-const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) => message.messageId)
+const ids = (code: unknown, file = MANAGED) => lint(code, file).map((message) => message.messageId)
 const sandbox = (fields: object) => ({ sandbox: fields })
 const at = (level: 'filesystem' | 'network' | 'credentials', fields: object) =>
   sandbox({ [level]: fields })
@@ -208,7 +208,7 @@ describe(`${name}: a Boolean`, () => {
       ? sandbox({ [path[0] as string]: value })
       : at(path[0] as never, { [path[1] as string]: value })
 
-  it('reports a value that is not a Boolean, for each Boolean key, in a project file', () => {
+  it('reports a value that is not a Boolean, for each Boolean key, in a managed file', () => {
     for (const path of BOOLEANS) {
       for (const value of ['yes', 1, [], {}, '', 'True']) {
         expect(ids(shaped(path, value)), `${path.join('.')} ${JSON.stringify(value)}`).toEqual([
@@ -220,7 +220,7 @@ describe(`${name}: a Boolean`, () => {
 
   it('reports a quoted true or false in a project file', () => {
     for (const value of ['true', 'false']) {
-      expect(ids(sandbox({ enabled: value }))).toEqual(['wrongType'])
+      expect(ids(sandbox({ enabled: value }), PROJECT)).toEqual(['wrongType'])
     }
   })
 
@@ -257,8 +257,8 @@ describe(`${name}: a list of strings`, () => {
       ? sandbox({ [path[0] as string]: value })
       : at(path[0] as never, { [path[1] as string]: value })
 
-  it('reports a value that is not an array, for each list, in every file', () => {
-    for (const file of PROJECT_FILES) {
+  it('reports a value that is not an array, for each list, in a managed file', () => {
+    for (const file of MANAGED_FILES) {
       for (const path of LISTS) {
         for (const value of ['x', 1, true, {}]) {
           expect(ids(shaped(path, value), file), `${file} ${path.join('.')}`).toEqual(['wrongType'])
@@ -357,6 +357,32 @@ describe(`${name}: bwrapPath and socatPath`, () => {
   })
 })
 
+describe(`${name}: a key that Claude Code ignores in a project file`, () => {
+  it('is silent on the value, because settings-key-scope reports the key', () => {
+    const code = sandbox({
+      bwrapPath: 'bwrap',
+      socatPath: 1,
+      filesystem: { allowManagedReadPathsOnly: 'yes' },
+      network: { allowManagedDomainsOnly: 'yes' },
+      credentials: { sigv4: { streaming: 'allow' } },
+    })
+    for (const file of PROJECT_FILES) {
+      expect(ids(code, file), file).toEqual([])
+    }
+    expect(ids(code, MANAGED)).toEqual([
+      'relativePath',
+      'wrongType',
+      'wrongType',
+      'wrongType',
+      'badValue',
+    ])
+  })
+
+  it('still reports a key that is not in the list', () => {
+    expect(ids(sandbox({ bwrapPath: 'bwrap', madeUp: 1 }), PROJECT)).toEqual(['unknownKey'])
+  })
+})
+
 describe(`${name}: allowMachLookup`, () => {
   it('is silent for a name, a trailing star and a lone star', () => {
     expect(ids(net({ allowMachLookup: ['com.apple.x', 'com.apple.*', '*'] }))).toEqual([])
@@ -375,6 +401,12 @@ describe(`${name}: allowMachLookup`, () => {
 
   it('does not read a star in another list', () => {
     expect(ids(net({ allowedDomains: ['*.a.*'], allowUnixSockets: ['/tmp/*.sock'] }))).toEqual([])
+    expect(
+      ids(
+        sandbox({ excludedCommands: ['git * push'], filesystem: { allowWrite: ['/tmp/*.sock'] } }),
+      ),
+    ).toEqual([])
+    expect(ids(at('filesystem', { denyRead: ['/tmp/*'], allowRead: ['/tmp/*'] }))).toEqual([])
   })
 })
 
@@ -432,6 +464,7 @@ describe(`${name}: credentials`, () => {
       'wrongType',
     ])
     expect(ids(creds({ files: ['x', 1, null, []] }))).toEqual(Array(4).fill('wrongType'))
+    expect(ids(creds({ files: [{ path: 1, mode: 'deny' }] }))).toEqual(['wrongType'])
   })
 
   it('reports an entry with no path, no name or no mode', () => {
@@ -456,6 +489,11 @@ describe(`${name}: credentials`, () => {
     ]
     expect(ids(creds({ files }))).toEqual(Array(4).fill('badValue'))
     expect(ids(creds({ envVars: [{ name: 'X', mode: 'MASK' }] }))).toEqual(['badValue'])
+    const envVars = [
+      { name: 'X', mode: 'mask', onExtractNoMatch: 'ignore' },
+      { name: 'X', mode: 'mask', decode: 'base64' },
+    ]
+    expect(ids(creds({ envVars }))).toEqual(['badValue', 'badValue'])
   })
 
   it('lists the allowed values in the message', () => {
@@ -488,14 +526,13 @@ describe(`${name}: credentials`, () => {
       ids(creds({ awsPairs: [{ accessKeyIdVar: 'A' }, { secretAccessKeyVar: 'B' }] })),
     ).toEqual(['missingField', 'missingField'])
     expect(
-      ids(
-        creds({ awsPairs: [{ accessKeyIdVar: 1, secretAccessKeyVar: 'B', sessionTokenVar: 2 }] }),
-      ),
-    ).toEqual(['wrongType', 'wrongType'])
+      ids(creds({ awsPairs: [{ accessKeyIdVar: 1, secretAccessKeyVar: 2, sessionTokenVar: 3 }] })),
+    ).toEqual(['wrongType', 'wrongType', 'wrongType'])
   })
 
   it('reports a sigv4 value that is not deny or passthrough', () => {
-    expect(ids(creds({ sigv4: { streaming: 'allow', presigned: 1, sigv4a: 'deny' } }))).toEqual([
+    expect(ids(creds({ sigv4: { streaming: 'allow', presigned: 1, sigv4a: 'allow' } }))).toEqual([
+      'badValue',
       'badValue',
       'badValue',
     ])

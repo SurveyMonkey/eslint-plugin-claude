@@ -2,7 +2,7 @@
 // owns the value of `autoMode`, so `settings-schema` makes no report there. The docs state no
 // limit on how often `"$defaults"` can stand in one array, so the rule reads no such limit.
 import type { JSONRuleDefinition } from '@eslint/json'
-import { AUTO_MODE_LISTS } from '../data/settings-keys.ts'
+import { AUTO_MODE_LISTS, isIgnoredInRepoFile } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -48,6 +48,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       return {}
     }
     const isManaged = kindOf(context.filename) === 'managed'
+    // Claude Code ignores `autoMode` in a project or local file, and `settings-key-scope` reports
+    // it there. A report on its value would be a second report on the same line.
+    if (!isManaged && isIgnoredInRepoFile(['autoMode'])) {
+      return {}
+    }
     return {
       Document(node) {
         const value = lastMember(node.body, 'autoMode')?.value
@@ -67,7 +72,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           const entry = member.value
           const withheld = isManaged && RESTRICTIONS.includes(key)
           if (key === 'classifyAllShell') {
-            if (entry.type !== 'Null' && entry.type !== 'Boolean') {
+            // In a managed file, a quoted Boolean counts as that Boolean (managed-settings,
+            // "Keys that fail closed").
+            const quoted =
+              isManaged && entry.type === 'String' && ['true', 'false'].includes(entry.value)
+            if (entry.type !== 'Null' && entry.type !== 'Boolean' && !quoted) {
               context.report({ node: entry, messageId: 'notBoolean' })
             }
           } else if (!AUTO_MODE_LISTS.includes(key)) {
