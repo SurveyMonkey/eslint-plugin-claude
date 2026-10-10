@@ -78,7 +78,7 @@ The decision is in `docs/adr/001.md`. Run `/deploy` to ship.
 
 | Option | Default | Use |
 |--------|---------|-----|
-| `allow` | `[]` | Commands and paths from outside the repository, written as in the file. A command can have the slash or not. |
+| `allow` | `[]` | Commands and paths from outside the repository, written as in the file, without a line suffix. A command can have the slash or not. |
 
 ```js
 'claude/claude-md-dangling-reference': ['warn', { allow: ['/init', '/memory', 'review'] }]

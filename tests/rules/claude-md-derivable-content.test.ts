@@ -1,6 +1,6 @@
 // The docs list what to leave out of a CLAUDE.md: anything Claude can work out by reading the
 // code, and file-by-file descriptions of the code base
-// (https://code.claude.com/docs/en/memory#my-claude-md-is-too-large). The rule is a heuristic
+// (https://code.claude.com/docs/en/best-practices#write-an-effective-claude-md). The rule is a heuristic
 // for three shapes: a directory tree in a code block, a list of dependencies in a code block,
 // and a list that describes files one by one. The globs are in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
@@ -57,6 +57,10 @@ describe(RULE, () => {
   it('stays silent on a tree outside a code block', () => {
     expect(lint('├── a.ts\n├── b.ts\n└── c.ts\n')).toEqual([])
     expect(lint('<!--\n├── a.ts\n├── b.ts\n└── c.ts\n-->\n')).toEqual([])
+  })
+
+  it('stays silent on two pinned versions', () => {
+    expect(lint('```\nflask==3.0.0\nclick>=8.1\n```\n')).toEqual([])
   })
 
   it('reports a list of dependencies in a code block', () => {
