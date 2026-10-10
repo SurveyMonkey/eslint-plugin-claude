@@ -4,7 +4,7 @@ description: How a person or a Claude Code session triages the issues that the d
 owner: brianespinosa
 created: 2026-09-29
 stale_after: 2027-03-29
-related_issues: [25]
+related_issues: [25, 149]
 generated:
   by: claude-code
   at: 2026-09-29T00:00:00Z
@@ -12,9 +12,12 @@ generated:
 
 # Triage the docs watch issues
 
-The docs watch (`.github/workflows/docs-watch.yml`) opens one issue for each changed block. Each
-issue has the type `Task` and the `claude-docs-change` label. To list the open docs watch
-issues, run `gh issue list --label claude-docs-change`. The body starts with a hidden marker:
+The docs watch (`.github/workflows/docs-watch.yml`) opens one issue for each changed block. A
+block that an inventory row cites, and that no map heading of a section cites, also gets a
+comment on its group issue. While that issue is open, a finding of the block that names no rule
+opens no issue (see [A tracked-block comment](#a-tracked-block-comment)). Each issue has the
+type `Task` and the `claude-docs-change` label. To list the open docs watch issues, run
+`gh issue list --label claude-docs-change`. The body starts with a hidden marker:
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. Do not edit the marker. When
 one block has findings of two kinds, the issue has the first kind of this list:
 `rule-removal`, `rule-update`, `needs-triage`, `new-rule`. The Reason line then gives each
@@ -27,8 +30,11 @@ kind.
 | - | - | - |
 | `rule-update` | A block that a rule cites changed, and Jev says the change alters what the rule checks. | Change the rule, its preset or its severity. Or record that no change is necessary. |
 | `rule-removal` | A block that a rule cites is gone, or Jev says the rule has no purpose left. | Remove the rule, or find the new place of the text and move the map entry. |
-| `new-rule` | A block that no heading cites states a requirement that a lint check can measure. | Add a row to `docs/rules-inventory.md` and open a rule issue, or close the issue. |
-| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block or its changed lines were too large, a mapped heading appears twice or cannot be found, the snapshot has no source for a mapped heading, or a page has no snapshot. | Read the block, and treat the issue as one of the three other kinds. |
+| `new-rule` | A block that no heading cites states a requirement that a lint check can measure. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Add a row to `docs/rules-inventory.md` and open a rule issue, or close the issue. For named rows, check each row against the new text instead. |
+| `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block or its changed lines were too large, a mapped heading appears twice or cannot be found, the snapshot has no source for a mapped heading, or a page has no snapshot. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Read the block, and treat the issue as one of the three other kinds. |
+
+An issue of any kind can name inventory rows. A `rule-update` or `rule-removal` issue names them
+when a whole-page rule cites the page of the block.
 
 ## Steps for each issue
 
@@ -78,6 +84,37 @@ Do these steps:
 If the old text and the new text differ in a value that the rule checks, the move is also a rule
 update. Change the rule in the same pull request.
 
+## A tracked-block comment
+
+`docs/rules-inventory.md` is a second source map. The job tracks a block that an inventory
+footnote cites. A heading of `docs/rule-sources.json` that cites the block stops this, but a
+heading that cites the whole page does not. Each section of "Rules by group"
+has a group issue, for example #10 for Hooks. While that issue is open, the job posts one comment
+on it for each run that finds new tracked blocks. The comment starts with one hidden marker for
+each block: `<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`. Do not edit the markers. The
+job does not post a block again while its marker is in a comment of the issue.
+
+Do these steps:
+
+1. Read each block in the comment: the rows that cite it, and its text. The comment shows a diff,
+   or the old and new texts when one has more than 1,000 lines. Or it shows the new text only,
+   or the old text of a removed block. When no text is available, a note says so.
+2. For a row that is not built yet, check the row against the new text. If a value, a name or a
+   file location changed, change the row in `docs/rules-inventory.md`. Do this in the pull request
+   that builds the rule, or in a pull request of its own.
+3. When the rule of a row is built, its rule doc cites the block. Then `pnpm docs:seed` adds the
+   block to `docs/rule-sources.json`. The next change to the block gives a normal issue.
+4. Refresh the snapshot in one of those pull requests, with `node scripts/docs-watch.ts update`.
+   Until then, the job sees the same change each day, and posts nothing new.
+
+When every group issue of a tracked block is closed, each finding of the block opens its issue.
+This is the same as for a block that no row cites, but the body names the inventory rows. A
+tracked block with no finding gets no issue: a removed block that no whole-page rule cites, or a
+block with a low Jev answer.
+
+A finding that names a rule opens its issue while the group issue is open, too. This occurs on a
+page that a rule cites as a whole, for example the skills page.
+
 ## A run that fails
 
 - The classifier stops for these causes. Read the log, fix the cause, and run the workflow
@@ -88,5 +125,8 @@ update. Change the rule in the same pull request.
   - A block needs a Jev call, and the `TYPESAFE_API_KEY` secret is not set.
 - The issue step stops when a live run would open more than 20 issues. Run the workflow by hand
   with `dry_run` set, read the issues that would open, and triage them in groups. A dry run has
-  no limit.
-- A manual run with `dry_run` set prints each issue that would open and opens none.
+  no limit. Comments do not count toward the limit.
+- The issue step stops before it writes for a tracked block in a section with no group issue.
+  Add the section and its group issue to `GROUP_ISSUES` in `scripts/docs-issues.ts`.
+- A manual run with `dry_run` set prints each issue that would open and each comment that would
+  post. It opens none and posts none.

@@ -15,9 +15,11 @@ permissions:
 
 # The job commits nothing, and it never changes the snapshot. When a docs
 # page changed, or the check failed, it classifies the pages and opens one
-# issue for each changed block. A scheduled run opens issues. A manual run
-# opens issues unless `dry_run` is set. See CONTRIBUTING.md and the triage
-# runbook.
+# issue for each changed block. A block that an inventory row cites, and that
+# no map heading of a section cites, also gets a comment on its group issue,
+# while that issue is open. Then a finding of the block that names no rule
+# opens no issue. A scheduled run opens issues and posts comments. A manual
+# run does too, unless `dry_run` is set. See CONTRIBUTING.md and the triage runbook.
 jobs:
   check-docs:
     name: Check Claude Code docs for rule changes
@@ -65,7 +67,7 @@ jobs:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
         run: node scripts/docs-classify.ts > "$RUNNER_TEMP/docs-findings.json"
       # A short-lived token for the org GitHub App, as in release.yml. It can
-      # write issues and nothing else.
+      # write issues and issue comments, and nothing else.
       - name: Get a token that can write issues
         id: app-token
         if: steps.gate.outputs.classify == 'true'
@@ -74,7 +76,7 @@ jobs:
           client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
           permission-issues: write
-      - name: Open an issue for each changed block
+      - name: Open an issue for each changed block, or comment on its group issue
         if: steps.gate.outputs.classify == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
