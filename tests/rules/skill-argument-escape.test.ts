@@ -1,5 +1,5 @@
 // A doubled backslash before an argument placeholder does not escape it. Both backslashes stay,
-// and the placeholder can still expand. The docs give no exemption for code, so the rule reads
+// and the placeholder still expands. The docs give no exemption for code, so the rule reads
 // code too.
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -44,6 +44,8 @@ markdownTester.run('skill-argument-escape', ruleOf('skill-argument-escape'), {
       code: withBody('Run \\\\$myxname', 'description: d\narguments: [my.name, a+b]'),
       filename: skill,
     },
+    // The name `a+b` is no pattern: `aab` does not match it.
+    { code: withBody('Run \\\\$aab', 'description: d\narguments: ["a+b"]'), filename: skill },
     // Not a skill or command file.
     { code: withBody('Price \\\\$1.00'), filename: 'docs/readme.md' },
     { code: withBody('Price \\\\$1.00'), filename: 'docs/SKILL.md' },
@@ -71,6 +73,17 @@ markdownTester.run('skill-argument-escape', ruleOf('skill-argument-escape'), {
       code: withBody('Run \\\\$branch', 'description: d\narguments: issue branch'),
       filename: skill,
       errors: [error('$branch')],
+    },
+    // A name with a plus sign or a bracket must neither break nor miss the pattern.
+    {
+      code: withBody('Run \\\\$a+b', 'description: d\narguments: ["a+b"]'),
+      filename: skill,
+      errors: [error('$a+b')],
+    },
+    {
+      code: withBody('Run \\\\$a(b', 'description: d\narguments: ["a(b"]'),
+      filename: skill,
+      errors: [error('$a(b')],
     },
     {
       code: withBody('Run \\\\$my.name', 'description: d\narguments: [my.name]'),
@@ -110,7 +123,7 @@ describe('the message', () => {
   it('names the token and the fix', () => {
     const [message] = lintMarkdown('skill-argument-escape', withBody('Price \\\\$1.00'), skill)
     expect(message?.message).toBe(
-      'A doubled backslash does not escape `$1`. Both backslashes stay, and the placeholder can still expand. Use one backslash to keep it as text.',
+      'A doubled backslash does not escape `$1`. Both backslashes stay, and the placeholder still expands. Use one backslash to keep it as text.',
     )
   })
 })

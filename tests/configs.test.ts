@@ -997,4 +997,55 @@ describe('configs', () => {
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
   })
+
+  it('reports the two option rules on their own files once an option turns them on', async () => {
+    const shell = '---\ndescription: d\nshell: bash\n---\n\n!`date`\n'
+    const files: Record<string, string> = {
+      '.claude/skills/s/SKILL.md': shell,
+      '.claude/commands/c.md': shell,
+      'notes/x.md': shell,
+      'plugins/p/.claude-plugin/plugin.json': '{"name": "p"}',
+      'plugins/p/skills/prefixed/SKILL.md': '---\nname: p:prefixed\ndescription: d\n---\n',
+      'plugins/p/commands/c.md': '---\nname: p:c\ndescription: d\n---\n',
+    }
+    const dir = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
+    try {
+      for (const [file, content] of Object.entries(files)) {
+        mkdirSync(path.dirname(path.join(dir, file)), { recursive: true })
+        writeFileSync(path.join(dir, file), content)
+      }
+      const eslint = new ESLint({
+        cwd: dir,
+        overrideConfigFile: true,
+        overrideConfig: [
+          ...plugin.configs.recommended,
+          {
+            rules: {
+              'claude/skill-shell-platform': ['warn', { platforms: ['windows-no-git-bash'] }],
+              'claude/skill-plugin-name-prefix': ['warn', { minVersion: '2.1.230' }],
+            },
+          },
+        ],
+      })
+      const results = await eslint.lintFiles(['.'])
+      const found = results
+        .flatMap((r) =>
+          r.messages
+            .filter(
+              (m) =>
+                m.ruleId === 'claude/skill-shell-platform' ||
+                m.ruleId === 'claude/skill-plugin-name-prefix',
+            )
+            .map((m) => `${path.relative(dir, r.filePath).split(path.sep).join('/')}: ${m.ruleId}`),
+        )
+        .sort()
+      expect(found).toEqual([
+        '.claude/commands/c.md: claude/skill-shell-platform',
+        '.claude/skills/s/SKILL.md: claude/skill-shell-platform',
+        'plugins/p/skills/prefixed/SKILL.md: claude/skill-plugin-name-prefix',
+      ])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
 })

@@ -34,11 +34,10 @@ platform:
 
 The rule reports the value of `shell` when the file has an injected command. The option
 `platforms` must list a platform where the value fails. A file with no `shell` key gets no
-report. Claude Code then picks the tool that works.
+report. Claude Code then uses Bash, or PowerShell when Bash is not there.
 
 The rule cannot read the environment of a user. So a team lists only the platforms where it does
-not set `CLAUDE_CODE_USE_POWERSHELL_TOOL`. On macOS, Linux and WSL, the PowerShell tool also needs
-PowerShell 7 (`pwsh`) on the path.[^tool]
+not set `CLAUDE_CODE_USE_POWERSHELL_TOOL`.
 
 The rule is silent in these cases:
 
