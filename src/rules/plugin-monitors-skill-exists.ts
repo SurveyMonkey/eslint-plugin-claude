@@ -7,11 +7,11 @@ import { docsUrl } from '../docs-url.ts'
 import { pluginFileOf, whensOf } from '../plugin-commands.ts'
 import { ESCAPES, lookup, MISSING, type Plugin } from '../plugin-manifest.ts'
 import {
-  danglingOf,
   entriesOf,
   frontmatterOfFile,
   isInside,
   markdownFiles,
+  missingOf,
   realOf,
   UNREADABLE,
 } from '../skill-tree.ts'
@@ -37,9 +37,8 @@ function addSkill(
   const file = path.join(folder, 'SKILL.md')
   const real = realOf(file)
   if (real === null) {
-    // The folder can be a link with no target. Then `lstat` of its `SKILL.md` finds nothing.
-    const folderGone = realOf(folder) === null && danglingOf(folder) !== null
-    return danglingOf(file) === null && !folderGone ? 'none' : 'blind'
+    // The folder can be a link with no target, or a link out of the repository.
+    return missingOf(file, plugin.bound) === null ? 'none' : 'blind'
   }
   if (real === UNREADABLE || !isInside(real, plugin.bound)) {
     return 'blind'
@@ -102,8 +101,8 @@ function addCommands(plugin: Plugin, names: Set<string>): boolean {
 }
 
 /** The names of the skills of `plugin`, or undefined when the rule cannot list them. The
- *  names come from the `skills/` folder, the paths of the `skills` key, the `commands/` folder,
- *  and the object form of the `commands` key. A `commands` key of paths is not listed. */
+ *  names come from the `SKILL.md` at the plugin root, the `skills/` folder, the paths of the
+ *  `skills` key, the `commands/` folder, and the object form of the `commands` key. A `commands` key of paths is not listed. */
 function skillNames(plugin: Plugin): Set<string> | undefined {
   const names = new Set<string>()
   const { commands, skills } = plugin.fields

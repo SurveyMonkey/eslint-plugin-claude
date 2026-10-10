@@ -37,8 +37,9 @@ To fix it, move the keys into one place.
 
 The rule makes no report in these cases:
 
-- The manifest has no `settings` key, or its value is not an object. The manifest `settings` has
-  no supported key, so the file loses nothing.
+- The manifest has no `settings` key, or its value is not an object.
+- The `settings` object sets neither `agent` nor `subagentStatusLine`. Claude Code drops its keys,
+  so the manifest loses nothing.
 - The plugin has no `settings.json`, or the file sets no supported key.
 - The rule cannot see the file. The file can fail to parse, or not be an object. Its real path
   can be out of the repository, or it can be a link with no target.
