@@ -39,10 +39,12 @@ The rule reports at the string. The fix is to omit `args` and use shell form, or
 - A path placeholder: `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}`. Claude Code
   replaces them in `command` and in each `args` item.[^exec] A bare `$CLAUDE_PROJECT_DIR` is not replaced, so the
   rule reports it.
-- `$CLAUDE_ENV_FILE` and `$CLAUDE_MODEL`. [`hooks-env-var-unavailable`](hooks-env-var-unavailable.md) reports them.
+- `$CLAUDE_MODEL`, and `$CLAUDE_ENV_FILE` on an event where Claude Code sets no such variable.
+  [`hooks-env-var-unavailable`](hooks-env-var-unavailable.md) reports them.
 - A glob such as `src/**/*.ts`, and an operator character inside a longer item such as `a|b`. Many programs
-  expand a glob or read a pattern themselves. The row of the rule in the inventory names globs. The docs do not
-  say that a glob is a fault, so the rule leaves it out.
+  expand a glob or read a pattern themselves. The docs do not say that a glob is a fault, so the rule leaves it out.
+- The `;` item of `find`, which ends `-exec`. The rule also skips the variable in the line that follows `-c` of
+  `bash`, `sh` or `zsh`, because that shell expands it.
 - A lower-case name such as `$x`, which is often a variable of the program (for example a `jq` variable).
 - A handler in shell form, a handler that is not a `command` hook, and a `command` that is not a string.
 - [`hooks-prefer-exec-form`](hooks-prefer-exec-form.md) owns the advice to use exec form.

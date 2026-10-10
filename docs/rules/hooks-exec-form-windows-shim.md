@@ -37,8 +37,8 @@ The rule reports at the `command` string. It makes no report for a handler in sh
 ### The option `platforms`
 
 The result depends on the platform of your team, and the rule cannot know it. So the rule makes no report unless
-the option `platforms` holds `windows-git-bash` or `windows-no-git-bash`. Exec form spawns the program the same
-way with and without Git Bash. The other values are `macos`, `linux` and `wsl`.
+the option `platforms` holds `windows-git-bash` or `windows-no-git-bash`. The docs say that exec form uses no shell on any
+platform. The other values are `macos`, `linux` and `wsl`.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, and no plugin agent.

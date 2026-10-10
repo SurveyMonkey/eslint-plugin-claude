@@ -28,8 +28,7 @@ holds.
 The rule reads each header of an `http` handler. It reports a header when all of these are true:
 
 - The header name holds `auth`, `token`, `secret`, `password`, `api-key`, `api_key`, `apikey` or `credential`, in
-  any letter case. This list is the choice of the plugin. `Authorization` and `X-Api-Key` are the names in it
-  that the docs use.
+  any letter case. This list is the choice of the plugin. `Authorization` is the name in it that the docs use.
 - The value is a string with no `$VAR` or `${VAR}` reference.
 - After the scheme word (`Bearer`, `Basic` or `Token`), some text is left, and that text is not a value that
   cannot be a secret: a Boolean word (`true`, `false`, `yes`, `no`, `on`, `off`), `none`, `null` or a plain integer.

@@ -1,4 +1,4 @@
-// The hooks guide shows each hook script with a `#!/bin/bash` first line, and says that hook scripts must be
+// The hooks guide shows its example hook script with a `#!/bin/bash` first line, and says that hook scripts must be
 // executable (docs/rules/hooks-script-shebang.md). A script that a hook runs directly needs a shebang to name its
 // interpreter. The docs do not state this, so the rule is a practice check. It reads the first line of a
 // repository script that `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}` names, and reports nothing for a

@@ -34,8 +34,9 @@ path must start with `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}`, as in
 string.
 
 - `unquoted`: a variable (`$NAME`, `${NAME}`, `$1`, `$@`) outside quotes. The scan skips a value in an
-  assignment (`A=$B`), a `[[ ... ]]` test, a command substitution (`$(...)`), a comment, a special parameter such as
-  `$?`, and a variable in single or double quotes.
+  assignment (`A=$B`), a `[[ ... ]]` test, a comment, a special parameter such as
+  `$?`, and a variable in single or double quotes. It scans the inside of a command substitution
+  (`$(...)`) on its own, so a quote in it starts a new quote level.
 - `destructive`: `rm` with a recursive flag (`-r`, `-R`, `-rf`, `--recursive`) and an operand that holds a variable
   when the variable is outside quotes, or gets its value from hook input. A variable holds hook input when the text
   assigns it from `$(...)` with `jq` or `cat`, or reads it with `read`. A `destructive` report replaces an
@@ -44,7 +45,9 @@ string.
 ### What the rule does not read
 
 - A path placeholder in the command line. [`hooks-placeholder-quoted`](hooks-placeholder-quoted.md) reports it.
-- A handler in exec form (no shell reads `args`), and a handler with `shell` set to `"powershell"`.
+- The command line of a handler in exec form (no shell reads `args`). The rule still reads a script that an
+  exec-form handler runs. A handler with `shell` set to `"powershell"` and no `args` is not read. The docs say
+  that `shell` is ignored when `args` is set.
 - A script of another language: a file that ends in `.py`, `.js`, `.mjs`, `.cjs`, `.ts`, `.rb`, `.ps1`, `.bat` or
   `.cmd`, a file with a shebang that is not a shell, and a file with a null byte.
 - A file that the rule cannot read inside the repository: a missing file, a folder, a FIFO, a link with no target,
