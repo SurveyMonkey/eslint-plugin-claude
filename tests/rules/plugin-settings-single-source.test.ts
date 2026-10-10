@@ -8,7 +8,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-settings-single-source'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const message = (keys: string) =>
@@ -118,7 +118,7 @@ describe(`${RULE} (silent)`, () => {
 
   check('stays silent for a manifest that does not parse', () => {
     const { dir } = pluginTree('{', { 'settings.json': '{"agent": "b"}' })
-    expect(lintPlugin(RULE, dir, '{')).toEqual([])
+    expect(lintPlugin(RULE, dir, JSON.stringify(manifestOf({ agent: 'a' })))).toEqual([])
   })
 
   linked('stays silent for a settings.json that is a link with no target', () => {

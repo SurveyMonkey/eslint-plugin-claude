@@ -2,7 +2,11 @@
 // section "How each key combines with its default location" of the manifest
 // reference.
 import { describe, expect, it } from 'vitest'
-import { PLUGIN_COMPONENT_NAMES, REPLACED_DEFAULTS } from '../src/data/plugin-layout.ts'
+import {
+  PLUGIN_COMPONENT_NAMES,
+  PLUGIN_SETTINGS_KEYS,
+  REPLACED_DEFAULTS,
+} from '../src/data/plugin-layout.ts'
 
 describe('plugin component names', () => {
   it('holds the first part of each default location, once', () => {
@@ -39,5 +43,11 @@ describe('keys that replace a default folder', () => {
     for (const { folder } of REPLACED_DEFAULTS) {
       expect(PLUGIN_COMPONENT_NAMES).toContain(folder)
     }
+  })
+})
+
+describe('plugin settings keys', () => {
+  it('holds the two keys that take effect, as the docs name them', () => {
+    expect(PLUGIN_SETTINGS_KEYS).toEqual(['agent', 'subagentStatusLine'])
   })
 })

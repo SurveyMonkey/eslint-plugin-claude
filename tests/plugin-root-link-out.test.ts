@@ -100,13 +100,13 @@ const check = it.fails
 const checkLinked = noLinks ? it.skip : check
 describe('the cross-file rules of the plugin layer', () => {
   const SETTINGS = JSON.stringify({ name: 'p', settings: { agent: 'a' } })
-  check('plugin-settings-single-source reports in the plugin in the repository', () => {
+  it('plugin-settings-single-source reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(SETTINGS, { 'settings.json': '{"agent": "b"}' })
     expect(lintPlugin('plugin-settings-single-source', dir, code).map((m) => m.messageId)).toEqual([
       'ignored',
     ])
   })
-  checkLinked('plugin-settings-single-source stays silent for the linked plugin', () => {
+  linked('plugin-settings-single-source stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, { 'settings.json': '{"agent": "b"}' }, SETTINGS)
     expect(lintPlugin('plugin-settings-single-source', dir, SETTINGS)).toEqual([])
   })
