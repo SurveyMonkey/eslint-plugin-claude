@@ -42,12 +42,13 @@ Other rules own the rest:
 
 - A name that starts with `mcp`, and has no underscore and no `*`, such as `mcp-server`. The rule
   `permissions-unknown-tool` reports it, so this rule does not report it twice.
-- A name that has a `*`. The rule `permissions-tool-name-glob` owns the place of a glob in an
-  allow rule. This rule reports no name with a `*`, as in `mcp____*`.
+- A name that has a `*` and does not start with `mcp__`, such as `mcp_a_*`. The rule
+  `permissions-tool-name-glob` owns the place of a glob in an allow rule. This rule still reports
+  `mcp____*`, which has no server name.
 - A rule with parentheses on an `mcp__` name. The rule `permissions-mcp-rule-parens` owns it.
 - A server name that no `.mcp.json` declares. The docs state no set of characters for a server
   name, so the rule does not check the characters of the server segment.
-- The `matcher` of a hook. The inventory plans the rule `hooks-matcher-mcp-name` for it.
+- The `matcher` of a hook. It is not a permission rule, so this rule does not read it.
 
 Fail:
 
