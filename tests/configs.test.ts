@@ -455,6 +455,19 @@ const TREE: Record<string, string> = {
   'packages/ex/managed-settings.d/sub/40-c.json': '{"claudeMdExcludes": ["e/**"]}',
   'packages/ex/.vscode/settings.json': '{"claudeMdExcludes": ["f/**"]}',
   'packages/ex/ok/.claude/settings.json': '{"claudeMdExcludes": ["**/web/**", "/abs/CLAUDE.md"]}',
+  // `memory-settings-schema`: a memory key of the wrong type in each settings file that it reads.
+  // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ms/.claude/settings.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/.claude/settings.local.json': '{"autoMemoryDirectory": "memory"}',
+  'packages/ms/managed-settings.json': '{"claudeMdExcludes": "**/a/**"}',
+  'packages/ms/managed-settings.d/10-a.json':
+    '{"pluginConfigs": {"cc-plugin-agents-md@builtin": {"options": {"instructionFiles": "both"}}}}',
+  'packages/ms/managed-settings.d/.20-hidden.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/managed-settings.d/30-b.txt': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/managed-settings.d/sub/40-c.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/.vscode/settings.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/ok/.claude/settings.json':
+    '{"autoMemoryEnabled": false, "autoMemoryDirectory": "~/memory", "claudeMdExcludes": ["**/a/**"]}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -541,6 +554,7 @@ const MEMORY_RULES = [
   'claude-md-agents-md-variant',
   'claude-md-excludes-pattern',
   'claude-md-max-bytes',
+  'memory-settings-schema',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -715,6 +729,12 @@ const EXPECTED = [
   'packages/ex/managed-settings.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/managed-settings.d/10-a.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `memory-settings-schema` reads the project and managed files, and no other file.
+  'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
+  'packages/ms/.claude/settings.local.json: claude/memory-settings-schema@2',
+  'packages/ms/managed-settings.json: claude/memory-settings-schema@2',
+  'packages/ms/managed-settings.d/10-a.json: claude/memory-settings-schema@2',
+  'packages/ms/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `claude-md-max-bytes` reads CLAUDE.md and CLAUDE.local.md, and no other file.
   'packages/mb/CLAUDE.md: claude/claude-md-max-bytes@2',
   'packages/mb/.claude/CLAUDE.md: claude/claude-md-max-bytes@2',

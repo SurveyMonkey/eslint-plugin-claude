@@ -694,6 +694,33 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "memory-settings-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoMemoryEnabled",
+      "hash": "3c2e520f5512c7975ccb059aa4d2422547f9c3771fbb6d407202929c560ef8e0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoMemoryDirectory",
+      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "claudeMdExcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Choose which instruction files load",
+      "hash": "a5bf28053c790e1f870993d51ed44877e47e0528db036df620c2a540fdd9cfa7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "pluginConfigs",
+      "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",

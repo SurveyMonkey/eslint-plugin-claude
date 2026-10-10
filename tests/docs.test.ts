@@ -53,6 +53,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'marketplace-source-schema',
     'marketplace-strict-false-conflict',
     'marketplace-version-duplicate',
+    'memory-settings-schema',
     'output-style-frontmatter-schema',
     'output-style-frontmatter-valid',
     'permissions-mcp-rule-parens',

@@ -37,6 +37,7 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -181,6 +182,7 @@ const modules = [
   claudeMdAgentsMdVariant,
   claudeMdExcludesPattern,
   claudeMdMaxBytes,
+  memorySettingsSchema,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -292,6 +294,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-agents-md-variant': 'error',
   'claude-md-excludes-pattern': 'error',
   'claude-md-max-bytes': 'error',
+  'memory-settings-schema': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
