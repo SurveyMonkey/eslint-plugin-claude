@@ -740,7 +740,7 @@ const MEMORY_WARN_RULES = [
   'rules-symlink-external',
 ]
 
-// The rules of #13 that are `off` in `recommended`, X// turns each on at `warn`.
+// The rules of #13 that are `off` in `recommended`. `strict` turns each on at `warn`.
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],

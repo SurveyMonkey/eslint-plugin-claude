@@ -28,7 +28,7 @@ When you open the file with the Read tool, the comments stay visible.[^load] So 
 comment never reaches Claude.
 
 The rule reports a block comment whose text reads as an instruction. It reports once for each
-comment, over the whole comment. The message names the text that it found. A comment reads as an
+HTML block, over the whole block. The message names the text that it found. A comment reads as an
 instruction in three cases:
 
 - It has one of the words `MUST`, `NEVER`, `ALWAYS`, `IMPORTANT`, `SHALL` or `REQUIRED`, in
@@ -52,7 +52,7 @@ list item or a quote. The rule makes no report for these:
 - A file other than `CLAUDE.md` and `CLAUDE.local.md`. A `CLAUDE.md` file below `.claude/rules/` is
   a rule file, and the docs name the strip for CLAUDE.md files.
 
-A comment that is never closed runs to the end of the file, and the rule reads it so.
+A comment that is never closed runs to the end of the block that holds it, and the rule reads it so.
 
 Fail:
 

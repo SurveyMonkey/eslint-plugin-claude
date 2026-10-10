@@ -179,7 +179,7 @@ describe(`${RULE}: what the rule cannot read`, () => {
     const run = (...globs: string[]) =>
       patterns(lintMemory(RULE, dir, '.claude/rules/r.md', listOf(...globs)))
     expect(run('alias/deep/*.ts', 'file-link.ts')).toEqual([])
-    // A folder is read once, so a path through the cycle is not a path.
+    // A link to a folder above the link ends the walk, so a path through the cycle is not a path.
     expect(run('real/deep/loop/deep/x.ts')).toEqual(['real/deep/loop/deep/x.ts'])
     expect(run('nope/*', 'gone.ts')).toEqual(['nope/*', 'gone.ts'])
   })
