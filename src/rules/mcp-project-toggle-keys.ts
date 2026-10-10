@@ -23,7 +23,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'toggle' }> = {
     schema: [],
     messages: {
       toggle:
-        'The key "{{key}}" is not a settings key. Claude Code records it for each project in `~/.claude.json`, when a person toggles a server in the `/mcp` panel. To approve or block the servers of `.mcp.json`, use `enabledMcpjsonServers` and `disabledMcpjsonServers`.',
+        'The key "{{key}}" is not a documented settings key. Claude Code records it for each project in `~/.claude.json`, when a person toggles a server in the `/mcp` panel. To approve or block the servers of `.mcp.json`, use `enabledMcpjsonServers` and `disabledMcpjsonServers`.',
     },
   },
   create(context) {

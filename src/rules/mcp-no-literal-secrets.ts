@@ -21,7 +21,7 @@ type StringNode = Extract<ValueNode, { type: 'String' }>
 const WORDS = [...HELPER_CREDENTIAL_WORDS, 'AUTHORIZATION']
 
 /** True when the last word of `text` is a credential word. A word ends at a character that is not
- *  a letter or a digit, and at a change from a lower-case letter to an upper-case one, so `apiKey`
+ *  a letter or a digit, and at a change from a lower-case letter or a digit to an upper-case letter, so `apiKey`
  *  and `X-Api-Key` both end in `KEY`. A name such as `KEY_FILE` or `MONKEY` does not. */
 function isCredentialName(text: string): boolean {
   const last = text

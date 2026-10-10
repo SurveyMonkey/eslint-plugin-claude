@@ -30,7 +30,7 @@ the machine can read `managed-mcp.json`, so it should hold no API key or other c
 The docs name no credential format. So the rule reads a name, and not the text of the value. A
 credential is a literal value under a name whose last word is `TOKEN`, `SECRET`, `PASSWORD`, `KEY`,
 `AUTH` or `AUTHORIZATION`. A word ends at a character that is not a letter or a digit, and at a
-change from a lower-case letter to an upper-case one. So `GITHUB_TOKEN`, `apiKey` and `X-Api-Key`
+change from a lower-case letter or a digit to an upper-case letter. So `GITHUB_TOKEN`, `apiKey` and `X-Api-Key`
 match, and `KEY_FILE`, `AUTHOR` and `MONKEY` do not. The words are the list in
 `src/data/mcp-credential-vars.ts`, with `AUTHORIZATION`.
 
@@ -40,8 +40,9 @@ The rule reads these places:
 - `headers`: a header with a credential name, in a project file. A scheme word such as `Bearer` is
   not part of the value.
 - `args`: `--token=x`, `NAME=x`, `Name: x`, and a flag with a credential name followed by its value.
-- `url`: user information before the `@`, such as `https://user:pass@host`. The rule reads the text
-  and does not parse the URL.
+- `url`: user information before the `@`, such as `https://user:pass@host`. A user name with no
+  password is also reported. Only a `${` reference exempts it. The rule reads the text and does not
+  parse the URL. It does not read a secret in the query string.
 
 A value is a literal when it has text, holds no `${` reference, and is not a bare `$NAME` or
 `%NAME%` (that is for `mcp-env-var-syntax`). The report is on the string. The message names the
@@ -49,7 +50,7 @@ place and the server, and never holds the value.
 
 The split with `claude plugin validate`: from Claude Code v2.1.281, validate warns about a header
 value that looks like a literal credential in a plugin `.mcp.json`, in a `.json` file that
-`mcpServers` names and in an inline map.[^validate] It never reads the project `.mcp.json`. So the
+`mcpServers` names and in an inline map.[^validate] The docs say that it checks the MCP entries that a plugin declares. So the
 rule reads `headers` in a project file and `managed-mcp.json` only. For a plugin file it reads `env`,
 `args` and `url`, which validate does not cover.
 
@@ -60,7 +61,7 @@ The split with other rules:
 - `settings-env-credential` and `mcp-env-client-secret` read the `env` block of a settings file.
   `settings-env-value-format` reads the forms of the values there. This rule reads the `env` of a
   server.
-- `mcp-policy-literal-values` asks for a literal `serverUrl` in a managed policy entry. This rule
+- `mcp-policy-literal-values` asks for a literal `serverUrl` or `serverCommand` in a managed policy entry. This rule
   reads server entries, not policy entries, so the two never meet.
 
 The rule does not read `oauth`. The docs list no `oauth` key for a secret. They store the client
