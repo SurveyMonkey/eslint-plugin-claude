@@ -28,7 +28,7 @@ Code warns about the server in the output of `claude mcp list`. It then uses the
 written.[^unset] The server gets that text, for example in a header, and not a value.
 
 A `${VAR}` reference is valid when the variable is set. The MCP docs use it in their own
-examples.[^unset] So the rule reports a risk, and it does not say that the form is wrong. The
+examples.[^plugin] So the rule reports a risk, and it does not say that the form is wrong. The
 message tells the reader to set the variable in each environment, or to write a default.
 
 The rule reports each variable that a string references with no default. The report is on the
@@ -44,7 +44,7 @@ The rule does not report these cases:
   `${A:-${B}}`, is not read.
 - `CLAUDE_PLUGIN_ROOT`, `CLAUDE_PLUGIN_DATA` and `CLAUDE_PROJECT_DIR`. A plugin configuration
   substitutes them directly.[^plugin] `mcp-project-dir-default` reports `${CLAUDE_PROJECT_DIR}` in the
-  `command` and `args` of a project file.
+  `command` and `args` of a project file. This rule is silent for the three names in every file.
 - `${user_config.KEY}`. It is a setting of the plugin, and no environment variable.
 - A credential variable in the `url` or `headers` of a remote server, such as
   `${ANTHROPIC_API_KEY}`. Claude Code reads it as empty, and a default does not help.[^empty]

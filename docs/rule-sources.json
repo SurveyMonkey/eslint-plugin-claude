@@ -277,6 +277,11 @@
       "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
     },
     {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Manifest file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
+    },
+    {
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "LSP tool behavior",
       "hash": "6b4e822bb39d84966d42160b65388fa634445b8111854ca439e0e66bfcf6d8d7"
@@ -1356,6 +1361,21 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Use a fixed OAuth callback port",
       "hash": "9d6a54a6bf7f1c7e87ce24285e8df98712c2bd9e6da8085be3337efaf342db98"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Override OAuth metadata discovery",
+      "hash": "ff5c6fd4997b04ffd623bc5a1b1e4e9f44a3aa146f8282d58abfffb3a759516e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Restrict OAuth scopes",
+      "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "How a server is evaluated",
+      "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb"
     }
   ],
   "output-style-frontmatter-schema": [

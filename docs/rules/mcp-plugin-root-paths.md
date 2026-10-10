@@ -34,8 +34,8 @@ The rule reports a string that starts with `./` or `../` in these places of a pl
 - Each item of `args`. The rule reads each item as one word, as the file lists them.
 - Each value of `env`.
 
-The report is on the string. The rule reads no file on disk, so it does not check that the file is in
-the plugin.
+The report is on the string. The rule does not look for the target of the path, so it does not check
+that the file is in the plugin.
 
 The rule does not report these cases:
 
