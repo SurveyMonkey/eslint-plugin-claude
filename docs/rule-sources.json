@@ -1466,6 +1466,11 @@
   "settings-outputstyle-resolves": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Built-in output styles",
+      "hash": "ae56118af1459ff72b0f65644dce78d05438e9aa33084301762d0481c59e99a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
       "heading": "Change your output style",
       "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407"
     },
