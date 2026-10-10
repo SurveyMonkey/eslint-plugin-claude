@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/statusline-windows-path, which reports a Windows path with backslashes outside quotes in the statusLine command of a settings file, because Git Bash on Windows treats an unquoted backslash as an escape character.
+description: The ESLint rule claude/statusline-windows-path, which reports a Windows path with backslashes outside quotes in the statusLine command of a settings file, because a POSIX shell, such as Git Bash on Windows, treats an unquoted backslash as an escape character.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -29,8 +29,10 @@ with forward slashes.[^windows]
 The rule reads the `command` string of `statusLine` as text. It tracks single quotes and double
 quotes, as a shell does. It reports a backslash between two path characters outside quotes. A path
 character is a letter, a digit, `_`, `.`, `~` or `-`, and `:` before the backslash. The report is on
-the command. A fault shows only on Windows with Git Bash. The rule has no option for the platform,
-so it reports for every platform.
+the command. Any POSIX shell treats an unquoted backslash as an escape character, so the path
+breaks on macOS and Linux too. The statusline page names only Git Bash on Windows; the other
+shells are shell semantics, not text of that page. The rule has no option for the platform, so it
+reports for every platform.
 
 These backslashes get no report:
 
@@ -43,7 +45,8 @@ This rule checks the text only, so the two rules share no state.
 ### What the rule does not check
 
 - `subagentStatusLine` and `fileSuggestion`. The statusline page names the `statusLine` command.
-- A command that runs in PowerShell. Claude Code uses PowerShell when Git Bash is absent.
+- A command that runs in PowerShell. Claude Code uses PowerShell when Git Bash is absent. The rule
+  cannot see which shell runs the command.
 - A hidden drop-in, which Claude Code ignores.
 
 Fail:

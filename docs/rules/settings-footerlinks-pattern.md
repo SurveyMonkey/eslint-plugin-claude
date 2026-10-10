@@ -33,7 +33,7 @@ The rule reports a `pattern` when a group holds a `+` or `*`, and another `+` or
 group. The rule never runs the pattern. It scans the text of the pattern, and skips an escaped
 character and the inside of a character class. It reports `(a+)+`, `(a|b*)*` and `((a)+b)+`. It
 does not report `(a+)?`, `(a)+`, `a+b+` or `\b(?<key>PROJ-\d+)\b`. A pattern that is not valid
-regex text gets no report and causes no error.
+regex text causes no error. The scan reports it when it sees the shape.
 
 The rule reports a `url` or a `label` string when its literal text is over the limit. The literal
 text is the string without its `{name}` placeholders, because Claude Code fills each one from a

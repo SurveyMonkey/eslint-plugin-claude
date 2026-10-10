@@ -51,7 +51,7 @@ describe(`${name}: a backslash path`, () => {
     expect([message?.line, message?.column]).toEqual([2, 30])
     expect(lint(settings('C:\\a\\b D:\\c\\d'))).toHaveLength(1)
     expect(message?.message).toBe(
-      'The statusLine command has a path with backslashes. Git Bash on Windows treats an unquoted backslash as an escape character, and the command fails. Write the path with forward slashes.',
+      'The statusLine command has a path with backslashes. A POSIX shell, such as Git Bash on Windows, treats an unquoted backslash as an escape character, and the command fails. Write the path with forward slashes.',
     )
   })
 })

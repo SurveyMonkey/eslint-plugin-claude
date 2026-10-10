@@ -189,6 +189,41 @@ describe(`${name}: the label`, () => {
     expect(ids(entry({ label: `{key}${'x'.repeat(29)}` }))).toEqual(['labelTooWide'])
   })
 
+  it('counts a character at each edge of the wide ranges as two columns', () => {
+    // [first, last] of each range of the wide set, and one code point outside each end.
+    const ranges: [number, number][] = [
+      [0x1100, 0x115f],
+      [0x2e80, 0xa4cf],
+      [0xac00, 0xd7a3],
+      [0xf900, 0xfaff],
+      [0xfe30, 0xfe6f],
+      [0xff00, 0xff60],
+      [0xffe0, 0xffe6],
+      [0x1f300, 0x1faff],
+      [0x20000, 0x3fffd],
+    ]
+    for (const [first, last] of ranges) {
+      for (const point of [first, last]) {
+        const label = String.fromCodePoint(point).repeat(15)
+        expect(ids(entry({ label })), point.toString(16)).toEqual(['labelTooWide'])
+      }
+      for (const point of [first - 1, last + 1]) {
+        const label = String.fromCodePoint(point).repeat(28)
+        expect(ids(entry({ label })), point.toString(16)).toEqual([])
+      }
+    }
+  })
+
+  it('counts a mark inside a wide range as no column, an enclosing mark and an astral mark too', () => {
+    // U+3099 is a mark inside the wide range 2E80 to A4CF.
+    expect(ids(entry({ label: `${'x'.repeat(28)}\u3099` }))).toEqual([])
+    // U+20E3 encloses a keycap (Me).
+    expect(ids(entry({ label: `1${'\u20e3'}`.repeat(28) }))).toEqual([])
+    // An astral format character (U+E0067) and an astral mark (U+1D167) are one character each.
+    expect(ids(entry({ label: '\u{E0067}'.repeat(40) }))).toEqual([])
+    expect(ids(entry({ label: '\u{1D167}'.repeat(40) }))).toEqual([])
+  })
+
   it('counts a wide character as two columns, and a mark as none', () => {
     // 14 wide characters are 28 columns. 15 are 30.
     expect(ids(entry({ label: '漢'.repeat(14) }))).toEqual([])

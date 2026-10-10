@@ -43,6 +43,8 @@ and a link that leads out of the repository. That file can list `.claude`.
 
 ### What the rule does not check
 
+- The managed source, when it lints a project file. A managed file reads only managed files, and a
+  project file reads only the other project file, as row 725 says.
 - A list in user settings, or in a file that you pass with `--settings`. The rule cannot see them.
 - An empty list, which can mean that no sparse checkout is on.
 - A value that is not a list, and an entry that is not a string. `settings-schema` reports the type.

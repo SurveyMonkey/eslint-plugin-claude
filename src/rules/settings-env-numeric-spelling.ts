@@ -3,7 +3,7 @@
 // shape of the value, because the docs name no list of numeric variables. A variable that has a
 // form in `src/data/settings-env.ts` and rejects the value is for `settings-env-value-format`.
 // The fault shows only on a client before v2.1.211. So the rule reports nothing unless the option
-// `minVersion` names a client below that version (round 12, mid-round ruling 20).
+// `minVersion` names a client below that version.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { CREDENTIAL_ENV_VARS, envValueForm } from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -27,7 +27,7 @@ type Options = [{ minVersion?: string }?]
 function isBeforeFirst(text: string): boolean {
   const parts = text.split('.').map(Number)
   for (const [index, first] of FIRST_VERSION.entries()) {
-    const part = parts[index] ?? 0
+    const part = parts[index] as number
     if (part !== first) {
       return part < first
     }

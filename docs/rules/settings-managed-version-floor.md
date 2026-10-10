@@ -39,8 +39,8 @@ cannot see a file of the source. A file that does not parse to an object is such
 read that fails, a link that has no target, and a link that leads out of the repository. That file
 can set the floor. It also
 makes no report when a floor is not a version number, such as `latest`. The rule cannot tell what
-Claude Code reads. A pre-release suffix is not read: `2.1.283-rc1` counts as 2.1.283. A
-`null` removes the key, so it is no floor.
+Claude Code reads. The rule reads the first three numbers and ignores a suffix: `2.1.283-rc1`
+counts as 2.1.283. A `null` is no floor.
 
 ### What the rule does not check
 
