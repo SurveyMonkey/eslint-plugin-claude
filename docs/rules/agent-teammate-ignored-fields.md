@@ -55,7 +55,7 @@ The report is on the key and the value of the field. The rule is silent in these
 - The settings do not turn teams on, or a settings file cannot be seen. A file cannot be seen when
   it cannot be read, when it does not parse to an object, or when its real path is out of the
   repository.
-- `skills` or `mcpServers` has no value, or is an empty list.
+- `skills` or `mcpServers` has no value, is an empty list, or is an empty mapping.
 - `background` is not true. The rule reads the Boolean forms that
   [`agent-field-min-version`](agent-field-min-version.md) names.
 - The file has no frontmatter, or the frontmatter does not parse.

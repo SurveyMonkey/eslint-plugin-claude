@@ -23,7 +23,7 @@ const CHARS_PER_TOKEN = 4
 type Options = [{ maxTokens: number; charsPerToken: number }]
 
 /** The characters that one agent file adds: its name plus its description. The result is null for
- *  a file that adds none: a built-in name, which has no file in the count, and a local file that
+ *  a file that adds none: a built-in name, which adds nothing to the count, and a local file that
  *  Claude Code skips for no name or no description. A plugin agent with no name takes the name
  *  of its file. */
 function addedChars(
