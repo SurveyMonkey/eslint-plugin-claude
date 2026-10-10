@@ -18,6 +18,8 @@ Write a Boolean field of a skill as `true` or `false`.
 |--------|----------|----------|-------|
 | `recommended`, `strict` | `warn` | portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
+The rule makes no report until the option `minVersion` is set.
+
 ## Rule details
 
 Boolean fields accept `yes`, `no`, `on`, `off`, `1` and `0` in any letter case, in addition to
@@ -73,11 +75,12 @@ user-invocable: false
 | `minVersion` | unset | The oldest Claude Code version that the repository supports, such as `2.1.218`. Optional. |
 
 ```js
-'claude/skill-boolean-literal': ['warn', { minVersion: '2.1.218' }]
+'claude/skill-boolean-literal': ['warn', { minVersion: '2.1.200' }]
 ```
 
 With no `minVersion`, the rule is inactive and makes no report. The `recommended` and `strict`
-configs set no option, so a team turns the rule on when it sets its floor. When `minVersion` is
+configs set no option, so a team turns the rule on when it sets its floor. The example turns the
+rule on for a floor older than 2.1.218. When `minVersion` is
 `2.1.218` or later, the rule makes no report. The value has three numbers,
 such as `2.1.218`.
 

@@ -21,12 +21,12 @@ Do not give a skill the name of a built-in command or a bundled skill.
 ## Rule details
 
 A skill with the name of a bundled skill replaces it. In a local terminal session, a skill with the
-name of a built-in command replaces the command. In both cases, an alias keeps its target. A
+name of a built-in command replaces the command. In both cases, the aliases still run the original. A
 project `code-review` skill replaces `/code-review`, and the alias `/review` never runs the
 skill.[^resolve] The rule reports a skill or command with such a name. The effect
 can surprise the team, because a command that people know then runs other steps.
 
-The folder of a skill invokes it, so the rule checks that name:[^name]
+The rule checks the name that the location of the file gives:[^name]
 
 - For a skill, the name of the skill folder.
 - For a command file, the path below `commands/`, with `:` between the parts. Only a file directly
@@ -48,8 +48,9 @@ The rule checks skills and commands outside a plugin. A plugin skill has the nam
 files.
 
 A `name` field does not take a name that another command already uses.[^name] The folder name
-still invokes the skill. So a `name` field that holds such a name gets its own report. It says
-that the field does not take the name. A skill in the folder `shadow` with `name: clear` stays
+still invokes the skill. So a `name` field of a skill that holds the name of a built-in command or a bundled skill gets its
+own report. That report says that the field does not take the name. A command file has no
+`name` field that the rule reads. A skill in the folder `shadow` with `name: clear` stays
 `/shadow`, and `/clear` stays the built-in command.
 
 In a non-interactive session, `help` and `feedback` are not reserved. The rule still reports them,
