@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/lsp-json-location, which reports a .lsp.json file outside the root of a plugin, such as at a repository root with no plugin or under .claude, because Claude Code takes LSP servers from plugins only.
+description: The ESLint rule claude/lsp-json-location, which reports a .lsp.json file outside a plugin, such as at a repository root with no plugin or under .claude, because the docs name a plugin as the source of LSP servers.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -36,16 +36,17 @@ does.
 The rule reports these places:
 
 - A repository root with no plugin.
-- A folder under `.claude/`.
+- A folder under `.claude/`, in a repository with no plugin above it.
 - A folder of a repository that has a plugin only in a different folder.
 
 The rule does not report a `.lsp.json` at a plugin root or below it. The `lspServers` key of the
 manifest can name a `.json` file in a folder of the plugin. The rule makes no report when it
 cannot read a plugin root, for example when `.claude-plugin/` is a link out of the repository. The
-plugin root is then not known.
+plugin root is then not known. When no `.git` is at or above the file, the repository root is the
+folder of the file, and the rule reads no folder above it.
 
 The manifest of a plugin is optional.[^manifest] A plugin with no `.claude-plugin/plugin.json`
-gets a report in error. This is a limit of the heuristic.
+gets a false report. This is a limit of the heuristic.
 
 Fail:
 

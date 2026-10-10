@@ -28,7 +28,7 @@ Code warns about the server in the output of `claude mcp list`. It then uses the
 written.[^unset] The server gets that text, for example in a header, and not a value.
 
 A `${VAR}` reference is valid when the variable is set. The MCP docs use it in their own
-examples.[^plugin] So the rule reports a risk, and it does not say that the form is wrong. The
+examples.[^locations] So the rule reports a risk, and it does not say that the form is wrong. The
 message tells the reader to set the variable in each environment, or to write a default.
 
 The rule reports each variable that a string references with no default. The report is on the
