@@ -147,6 +147,20 @@ const TREE: Record<string, string> = {
   'plugins/lfs/.claude-plugin/plugin.json': JSON.stringify({ name: 'lfs' }),
   'plugins/lfs/.gitattributes': '*.bin filter=lfs diff=lfs merge=lfs -text\n',
   'plugins/lfs/model.bin': '',
+  // Two plugins in a marketplace in a repository with a `.git`. The test makes a link in each one.
+  // The link of `m` leads out of the marketplace, and the link of `n` leads to `m`. The marketplace
+  // needs a `.git` above it, because a link out of the plugin has a target out of the repository
+  // otherwise.
+  'packages/l/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/l/shared/s.txt': 'shared\n',
+  'packages/l/site/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'links',
+    owner: { name: 'o' },
+    plugins: [],
+  }),
+  'packages/l/site/plugins/m/.claude-plugin/plugin.json': JSON.stringify({ name: 'm' }),
+  'packages/l/site/plugins/m/own.txt': 'own\n',
+  'packages/l/site/plugins/n/.claude-plugin/plugin.json': JSON.stringify({ name: 'n' }),
   // A bare plugin variable in the body of a plugin skill, command and agent.
   'plugins/bare/.claude-plugin/plugin.json': JSON.stringify({ name: 'bare' }),
   'plugins/bare/skills/s/SKILL.md': '---\nname: s\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
@@ -581,7 +595,12 @@ const SCOPE_RULES = [
 
 // The plugin manifest and layout rules of #11, in the order of the `modules` list. Each is an
 // error, with one JSON block for its files.
-const PLUGIN_RULES: { name: string; files: string[]; language?: string }[] = [
+const PLUGIN_RULES: {
+  name: string
+  files: string[]
+  language?: string
+  severity?: 'warn'
+}[] = [
   { name: 'plugin-manifest-location', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-skill-dir-layout', files: ['**/.claude-plugin/plugin.json'] },
   {
@@ -613,6 +632,12 @@ const PLUGIN_RULES: { name: string; files: string[]; language?: string }[] = [
       '**/.mcp.json',
       '**/monitors/monitors.json',
     ],
+  },
+  { name: 'plugin-symlink-escapes-marketplace', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-symlink-escapes-plugin',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
   },
 ]
 
@@ -675,6 +700,12 @@ const EXPECTED = [
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
+  ...(LINKS
+    ? [
+        'packages/l/site/plugins/m/.claude-plugin/plugin.json: claude/plugin-symlink-escapes-marketplace@2',
+        'packages/l/site/plugins/n/.claude-plugin/plugin.json: claude/plugin-symlink-escapes-plugin@1',
+      ]
+    : []),
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
@@ -886,6 +917,8 @@ beforeAll(() => {
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
+    symlinkSync('../../../shared/s.txt', path.join(root, 'packages/l/site/plugins/m/shared.txt'))
+    symlinkSync('../m/own.txt', path.join(root, 'packages/l/site/plugins/n/sibling.txt'))
   }
 })
 
@@ -932,9 +965,9 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
-      ...PLUGIN_RULES.map(({ name }) => [
+      ...PLUGIN_RULES.map(({ name, severity = 'error' }) => [
         `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
+        { [`claude/${name}`]: severity },
       ]),
     ])
   })

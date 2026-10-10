@@ -107,6 +107,8 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-package-lockfile`](docs/rules/plugin-package-lockfile.md) | A plugin with a `package.json` ships a lockfile that Claude Code reads, not only `yarn.lock`, `pnpm-lock.yaml` or `bun.lockb` | `error` | `error` |
 | [`claude/plugin-path-var-braced`](docs/rules/plugin-path-var-braced.md) | The body of a plugin skill, command or agent writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` in the braced form | `error` | `error` |
 | [`claude/plugin-user-config-no-shell-fields`](docs/rules/plugin-user-config-no-shell-fields.md) | No `${user_config.*}` in a shell-form hook command, a monitor command or an MCP `headersHelper` of a plugin | `error` | `error` |
+| [`claude/plugin-symlink-escapes-marketplace`](docs/rules/plugin-symlink-escapes-marketplace.md) | The target of a link under a plugin is inside the marketplace, because Claude Code skips a link that leads out | `error` | `error` |
+| [`claude/plugin-symlink-escapes-plugin`](docs/rules/plugin-symlink-escapes-plugin.md) | The target of a link under a plugin is inside the plugin, because a local-path install skips a link that leads out of it | `warn` | `warn` |
 
 ### Marketplace manifest
 
