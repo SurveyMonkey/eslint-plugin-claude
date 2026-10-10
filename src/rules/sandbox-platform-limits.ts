@@ -50,6 +50,10 @@ function isBelow(a: string, b: string): boolean {
  *  Claude Code has removed a trailing `/**`. */
 const hasWildcard = (path: string) => /[*?[]/.test(path.replace(/\/\*\*$/, ''))
 
+/** True when `host` is an IPv6 address in brackets, with an optional port. A bracket that does not
+ *  close, or that holds nothing, is not that form. */
+const isBracketed = (host: string) => /^\[[^\]]+\](?::\d+)?$/.test(host)
+
 const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }> = {
   meta: {
     type: 'problem',
@@ -140,7 +144,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
       if (ipv6) {
         for (const key of ['allowedDomains', 'deniedDomains']) {
           for (const entry of list(['sandbox', 'network', key])) {
-            if (entry.value.startsWith('[')) {
+            if (isBracketed(entry.value)) {
               context.report({ node: entry, messageId: 'ipv6', data: { minVersion } })
             }
           }
@@ -149,7 +153,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
           if (
             kind !== 'ask' &&
             parsed.tool === 'WebFetch' &&
-            fetchHost(parsed.specifier)?.startsWith('[')
+            isBracketed(fetchHost(parsed.specifier) ?? '')
           ) {
             context.report({ loc, messageId: 'ipv6', data: { minVersion } })
           }
