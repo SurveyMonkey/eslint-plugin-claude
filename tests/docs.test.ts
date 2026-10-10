@@ -72,6 +72,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-package-lockfile',
     'plugin-path-var-braced',
     'plugin-project-skills-dir-limits',
+    'plugin-settings-single-source',
     'plugin-skill-dir-layout',
     'plugin-symlink-escapes-marketplace',
     'plugin-symlink-escapes-plugin',

@@ -56,6 +56,7 @@ import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
@@ -207,6 +208,7 @@ const modules = [
   pluginDependenciesResolve,
   pluginMonitorsSkillExists,
   pluginNpmSourceShrinkwrap,
+  pluginSettingsSingleSource,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -331,6 +333,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-dependencies-resolve': 'error',
   'plugin-monitors-skill-exists': 'error',
   'plugin-npm-source-shrinkwrap': 'error',
+  'plugin-settings-single-source': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

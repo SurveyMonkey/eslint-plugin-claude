@@ -215,6 +215,12 @@ const TREE: Record<string, string> = {
   'plugins/msk2/monitors/monitors.json': JSON.stringify([
     { name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' },
   ]),
+  // A plugin that sets `agent` in the manifest and in a root `settings.json`.
+  'plugins/set/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'set',
+    settings: { agent: 'a' },
+  }),
+  'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -673,6 +679,7 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
   },
   { name: 'plugin-npm-source-shrinkwrap', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-settings-single-source', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -747,6 +754,7 @@ const EXPECTED = [
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
+  'plugins/set/.claude-plugin/plugin.json: claude/plugin-settings-single-source@2',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
   'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
