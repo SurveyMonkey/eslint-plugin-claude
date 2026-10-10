@@ -92,7 +92,7 @@ describe(RULE, () => {
     }
   })
 
-  it('takes a path with a space, a leading dash and a leading colon as literal', () => {
+  it('takes a path with a space, a dash at the start and a colon at the start as literal', () => {
     for (const dir of ['my dir', '-pkg', ':(top)pkg']) {
       const file = `${dir}/${PROJECT}`
       const bare = repo({ [file]: '{}' })

@@ -34,7 +34,7 @@ the `.replay/` directory from the plugin root.
   rule reports this also when the directory is not there yet.
 - **`untracked`:** `mocks/.replay/` has an entry on the disk, and git tracks no file in it.
   A saved answer is there, and no one has committed it. The rule reports this only when no pattern
-  covers the directory. If git tracks one file, the rule is silent. It does not check each file.
+  covers the directory. If git tracks one file, the rule is silent. It does not check each file. Any entry counts, also a file such as `.DS_Store`.
 
 A pattern counts when it is in a `.gitignore` file of the repository. The file is at the root,
 or in a directory above the eval directory. Git reads a pattern with a `/` inside it from the

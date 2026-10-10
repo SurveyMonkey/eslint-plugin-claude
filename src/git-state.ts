@@ -218,7 +218,8 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
       '--',
       target,
     ])
-    // A directory name can hold a colon, so the source ends at the first `:<digits>:`.
+    // The source ends at the first `:<digits>:`. A directory name with that form gives a wrong
+    // source, and so a false "not ignored". A colon alone is safe.
     const source = out.replace(/:\d+:.*/s, '')
     const negated = /^:\d+:!/.test(out.slice(source.length))
     // Git quotes a source that holds a control character, and a quote ends it.

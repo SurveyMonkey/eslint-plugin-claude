@@ -161,7 +161,7 @@ describe(RULE, () => {
     expect(ids(repo({ [MANIFEST]: manifest('qa'), [CASE]: 'x' }), manifest('qa'))).toEqual([])
   })
 
-  it('takes a path with a space, a leading dash and a leading colon as literal', () => {
+  it('takes a path with a space, a dash at the start and a colon at the start as literal', () => {
     for (const dir of ['my dir', '-p', ':(top)p']) {
       const root = repo({ [`${dir}/${MANIFEST}`]: manifest(), [`${dir}/${CASE}`]: 'x' })
       expect(ids(root, manifest(), `${dir}/${MANIFEST}`), dir).toEqual(['notIgnored'])
