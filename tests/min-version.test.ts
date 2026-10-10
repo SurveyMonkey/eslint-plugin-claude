@@ -34,3 +34,15 @@ it.each(['2.1', 'v2.1.239', '2.1.239-beta', '2.1.x', ''])(
     }
   },
 )
+
+// A misspelt key or a number would leave the rule off with no sign, or crash at lint time.
+it.each([{ minversion: '2.1.0' }, { minVersion: 2 }])(
+  'refuses the option %j in the rules that take it',
+  (option) => {
+    for (const name of ['skill-no-bom', 'skill-boolean-literal']) {
+      expect(() =>
+        lintMarkdown(name, '# S\n', '.claude/skills/s/SKILL.md', [option as never]),
+      ).toThrow(`Key "claude/${name}"`)
+    }
+  },
+)

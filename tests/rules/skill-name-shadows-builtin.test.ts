@@ -28,6 +28,8 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
     { code: bare, filename: inFolder('clear-all') },
     // A command in a subfolder has a name with `:`.
     { code: '# C\n', filename: '.claude/commands/ns/clear.md' },
+    // The `name` field of a command file is not read.
+    { code: named('clear'), filename: '.claude/commands/deploy.md' },
     { code: '# C\n', filename: '.claude/commands/deploy.md' },
     // The option `allow` lists names that the repository means to replace.
     { code: bare, filename: inFolder('clear'), options: [{ allow: ['clear'] }] },
