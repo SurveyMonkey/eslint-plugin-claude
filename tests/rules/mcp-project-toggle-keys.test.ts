@@ -9,7 +9,7 @@ const NAME = 'mcp-project-toggle-keys'
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 const project = '/p/.claude/settings.json'
 
-it.fails('reports each toggle key, on the key', () => {
+it('reports each toggle key, on the key', () => {
   const found = lintJson(NAME, '{"disabledMcpServers": ["a"]}', project)
   expect(ids(found)).toEqual(['toggle'])
   expect(found[0]).toMatchObject({ line: 1, column: 2, endColumn: 22 })
@@ -22,7 +22,7 @@ it.fails('reports each toggle key, on the key', () => {
     ids(lintJson(NAME, '{"enabledMcpServers": [], "disabledMcpServers": []}', project)),
   ).toEqual(['toggle', 'toggle'])
 })
-it.fails('reports in the local file, the managed file and a drop-in', () => {
+it('reports in the local file, the managed file and a drop-in', () => {
   const code = '{"disabledMcpServers": []}'
   for (const file of [
     '/p/.claude/settings.local.json',
@@ -32,13 +32,13 @@ it.fails('reports in the local file, the managed file and a drop-in', () => {
     expect(ids(lintJson(NAME, code, file)), file).toEqual(['toggle'])
   }
 })
-it.fails('reports a key once, also when the value is not a list', () => {
+it('reports a key once, also when the value is not a list', () => {
   expect(ids(lintJson(NAME, '{"disabledMcpServers": "a"}', project))).toEqual(['toggle'])
   expect(
     ids(lintJson(NAME, '{"disabledMcpServers": [], "disabledMcpServers": []}', project)),
   ).toEqual(['toggle'])
 })
-it.fails('stays silent for the approval keys, other keys and a key below the top level', () => {
+it('stays silent for the approval keys, other keys and a key below the top level', () => {
   for (const code of [
     '{"disabledMcpjsonServers": ["a"], "enabledMcpjsonServers": ["b"]}',
     '{"env": {"disabledMcpServers": "x"}}',
@@ -50,7 +50,7 @@ it.fails('stays silent for the approval keys, other keys and a key below the top
     expect(ids(lintJson(NAME, code, project)), code).toEqual([])
   }
 })
-it.fails('stays silent in a hidden drop-in', () => {
+it('stays silent in a hidden drop-in', () => {
   expect(
     ids(lintJson(NAME, '{"disabledMcpServers": []}', '/p/managed-settings.d/.10.json')),
   ).toEqual([])

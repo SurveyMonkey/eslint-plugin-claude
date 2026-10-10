@@ -44,7 +44,7 @@ const project = (names: string[], options: object[] = [], value: unknown = true)
 const manifest = (value: object) => JSON.stringify({ name: 'p', ...value })
 const PLUGIN = 'p/.claude-plugin/plugin.json'
 
-it.fails('reports three servers with alwaysLoad, with no option, on the first', () => {
+it('reports three servers with alwaysLoad, with no option, on the first', () => {
   const code = mapOf(load(NAMES.slice(0, 3)))
   const found = lint(code, '.mcp.json')
   expect(ids(found)).toEqual(['tooMany'])
@@ -53,27 +53,27 @@ it.fails('reports three servers with alwaysLoad, with no option, on the first', 
   expect(found[0]?.message).toContain('`alwaysLoad: true`')
   expect(found[0]?.message).toContain('2')
 })
-it.fails('stays silent for two, and for three at max 3; reports four at max 3', () => {
+it('stays silent for two, and for three at max 3; reports four at max 3', () => {
   expect(ids(project(NAMES.slice(0, 2)))).toEqual([])
   expect(ids(project(NAMES.slice(0, 3), [{ max: 3 }]))).toEqual([])
   expect(ids(project(NAMES, [{ max: 3 }]))).toEqual(['tooMany'])
   expect(project(NAMES, [{ max: 3 }])[0]?.message).toContain('3')
   expect(ids(project(['a'], [{ max: 0 }]))).toEqual(['tooMany'])
 })
-it.fails('counts a literal true only', () => {
+it('counts a literal true only', () => {
   for (const value of [false, 'true', 1, null]) {
     expect(ids(project(NAMES, [], value)), String(value)).toEqual([])
   }
   const mixed = mapOf({ a: load(['x']).x, b: { command: 'x' }, c: load(['x']).x, d: load(['x']).x })
   expect(ids(lint(mixed, '.mcp.json'))).toEqual(['tooMany'])
 })
-it.fails('counts a server once when a name repeats, as JSON.parse keeps the last', () => {
+it('counts a server once when a name repeats, as JSON.parse keeps the last', () => {
   const twice = `{"mcpServers": {"a": {"alwaysLoad": true}, "a": {"alwaysLoad": true}, "b": {"alwaysLoad": true}}}`
   expect(ids(lint(twice, '.mcp.json'))).toEqual([])
   const first = `{"mcpServers": {"a": {"alwaysLoad": true}, "a": {"alwaysLoad": false}, "b": {"alwaysLoad": true}, "c": {"alwaysLoad": true}}}`
   expect(ids(lint(first, '.mcp.json'))).toEqual([])
 })
-it.fails('counts the sources of one plugin, and reports in each file with an own server', () => {
+it('counts the sources of one plugin, and reports in each file with an own server', () => {
   const files = {
     'p/.mcp.json': mapOf(load(['a', 'b'])),
     'p/more.json': mapOf(load(['c'])),
@@ -94,7 +94,7 @@ it.fails('counts the sources of one plugin, and reports in each file with an own
   const plain = manifest({ mcpServers: { e: { command: 'x' } } })
   expect(ids(lint(plain, PLUGIN, { ...files, [PLUGIN]: plain }))).toEqual([])
 })
-it.fails('reads the linted text of the root file, and not the text on disk', () => {
+it('reads the linted text of the root file, and not the text on disk', () => {
   const files = {
     'p/.mcp.json': mapOf(load(['a'])),
     [PLUGIN]: manifest({ mcpServers: load(['b']) }),
@@ -104,13 +104,13 @@ it.fails('reads the linted text of the root file, and not the text on disk', () 
     ids(lint(mapOf(load(['a'])), 'p/.mcp.json', { ...files, 'p/.mcp.json': mapOf(load(NAMES)) })),
   ).toEqual([])
 })
-it.fails('reports when the readable sources alone pass max, also with a source it cannot read', () => {
+it('reports when the readable sources alone pass max, also with a source it cannot read', () => {
   const three = manifest({ mcpServers: [load(['a', 'b', 'c']), './gone.json', './b.mcpb'] })
   expect(ids(lint(three, PLUGIN))).toEqual(['tooMany'])
   const two = manifest({ mcpServers: [load(['a', 'b']), './gone.json'] })
   expect(ids(lint(two, PLUGIN))).toEqual([])
 })
-it.fails('ignores a root file that is a link out of the repository', () => {
+it('ignores a root file that is a link out of the repository', () => {
   const root = repo({})
   const outside = mkdtempSync(path.join(tmpdir(), 'mcp-always-outside-'))
   try {
@@ -137,11 +137,11 @@ it.fails('ignores a root file that is a link out of the repository', () => {
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('stays silent for a project file that holds two, whatever its siblings hold', () => {
+it('stays silent for a project file that holds two, whatever its siblings hold', () => {
   const files = { 'other/.mcp.json': mapOf(load(NAMES)) }
   expect(ids(lint(mapOf(load(['a', 'b'])), '.mcp.json', files))).toEqual([])
 })
-it.fails('stays silent for a path that Claude Code does not read, and for a map that is not an object', () => {
+it('stays silent for a path that Claude Code does not read, and for a map that is not an object', () => {
   expect(ids(lint(mapOf(load(NAMES)), '.claude/.mcp.json'))).toEqual([])
   expect(ids(lint('[]', '.mcp.json'))).toEqual([])
   expect(
@@ -151,12 +151,12 @@ it.fails('stays silent for a path that Claude Code does not read, and for a map 
 
 describe('mcp-always-load-count option schema', () => {
   const run = (options: object[]) => () => project(['a'], options)
-  it.fails('accepts an empty object and each integer from 0', () => {
+  it('accepts an empty object and each integer from 0', () => {
     expect(run([{}])).not.toThrow()
     expect(run([{ max: 0 }])).not.toThrow()
     expect(run([{ max: 10 }])).not.toThrow()
   })
-  it.fails('refuses a negative value, a fraction, a string and an unknown key', () => {
+  it('refuses a negative value, a fraction, a string and an unknown key', () => {
     expect(run([{ max: 2 }])).not.toThrow()
     expect(run([{ max: -1 }])).toThrow()
     expect(run([{ max: 1.5 }])).toThrow()

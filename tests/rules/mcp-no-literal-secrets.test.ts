@@ -15,7 +15,7 @@ const NAME = 'mcp-no-literal-secrets'
 const at = (entry: object) => mapOf({ a: entry })
 const remote = (headers: object) => at({ type: 'http', url: 'https://x.test/mcp', headers })
 
-it.fails('reports a literal token in the headers of a project .mcp.json, on the value', () => {
+it('reports a literal token in the headers of a project .mcp.json, on the value', () => {
   const code = remote({ Authorization: 'Bearer abc123' })
   const found = lintProject(NAME, code)
   expect(ids(found)).toEqual(['secret'])
@@ -33,7 +33,7 @@ it.fails('reports a literal token in the headers of a project .mcp.json, on the 
     expect(ids(lintProject(NAME, remote({ [header]: 'abc123' }))), header).toEqual(['secret'])
   }
 })
-it.fails('reports a literal credential in env', () => {
+it('reports a literal credential in env', () => {
   for (const variable of [
     'GITHUB_TOKEN',
     'API_KEY',
@@ -48,7 +48,7 @@ it.fails('reports a literal credential in env', () => {
     ).toEqual(['secret'])
   }
 })
-it.fails('reports a literal credential in args, as a flag value, a pair and a header line', () => {
+it('reports a literal credential in args, as a flag value, a pair and a header line', () => {
   for (const args of [
     ['--token=abc123'],
     ['--api-key', 'abc123'],
@@ -61,7 +61,7 @@ it.fails('reports a literal credential in args, as a flag value, a pair and a he
   const code = at({ command: 'x', args: ['--token', 'abc123'] })
   expect(lintProject(NAME, code)[0]).toMatchObject({ column: code.indexOf('"abc123"') + 1 })
 })
-it.fails('reports user information in a url', () => {
+it('reports user information in a url', () => {
   for (const url of [
     'https://user:pass@x.test/mcp',
     'https://abc123@x.test/mcp',
@@ -70,12 +70,12 @@ it.fails('reports user information in a url', () => {
     expect(ids(lintProject(NAME, at({ type: 'http', url }))), url).toEqual(['secret'])
   }
 })
-it.fails('reports in a managed-mcp.json file', () => {
+it('reports in a managed-mcp.json file', () => {
   expect(
     ids(lintProject(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } }), 'managed-mcp.json')),
   ).toEqual(['secret'])
 })
-it.fails('reports env, args and url in a plugin file, and not the headers', () => {
+it('reports env, args and url in a plugin file, and not the headers', () => {
   expect(ids(lintPluginFile(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } })))).toEqual([
     'secret',
   ])
@@ -87,7 +87,7 @@ it.fails('reports env, args and url in a plugin file, and not the headers', () =
   ])
   expect(ids(lintPluginFile(NAME, remote({ Authorization: 'Bearer abc123' })))).toEqual([])
 })
-it.fails('reports the servers of a manifest, on the path for a declared file', () => {
+it('reports the servers of a manifest, on the path for a declared file', () => {
   const inline = JSON.stringify({
     name: 'p',
     mcpServers: { a: { command: 'x', env: { API_KEY: 'abc123' } } },
@@ -105,14 +105,14 @@ it.fails('reports the servers of a manifest, on the path for a declared file', (
   expect(ids(found)).toEqual(['secret'])
   expect(found[0]).toMatchObject({ column: declared.indexOf('"./s.json"') + 1 })
 })
-it.fails('reports each literal, and the last of two members', () => {
+it('reports each literal, and the last of two members', () => {
   expect(ids(lintProject(NAME, at({ command: 'x', env: { A_TOKEN: 'a', B_TOKEN: 'b' } })))).toEqual(
     ['secret', 'secret'],
   )
   const twice = `{"mcpServers": {"a": {"env": {"A_TOKEN": "a", "A_TOKEN": "\${A}"}}}}`
   expect(ids(lintProject(NAME, twice))).toEqual([])
 })
-it.fails('stays silent for a reference', () => {
+it('stays silent for a reference', () => {
   expect(
     ids(lintProject(NAME, remote({ Authorization: `Bearer \${TOKEN}`, 'X-Api-Key': `\${KEY:-}` }))),
   ).toEqual([])
@@ -132,7 +132,7 @@ it.fails('stays silent for a reference', () => {
     ids(lintProject(NAME, at({ type: 'http', url: `https://\${USER}:\${PASS}@x.test` }))),
   ).toEqual([])
 })
-it.fails('stays silent for a name that does not end in a credential word', () => {
+it('stays silent for a name that does not end in a credential word', () => {
   const env = {
     KEY_FILE: 'a',
     TOKEN_URL: 'a',
@@ -159,7 +159,7 @@ it.fails('stays silent for a name that does not end in a credential word', () =>
     ),
   ).toEqual([])
 })
-it.fails('stays silent for an empty value, a scheme alone, and a bare variable name', () => {
+it('stays silent for an empty value, a scheme alone, and a bare variable name', () => {
   expect(ids(lintProject(NAME, remote({ Authorization: '', 'X-Api-Key': '  ' })))).toEqual([])
   expect(ids(lintProject(NAME, remote({ Authorization: 'Bearer ', A: 'Basic  ' })))).toEqual([])
   expect(
@@ -171,7 +171,7 @@ it.fails('stays silent for an empty value, a scheme alone, and a bare variable n
     ),
   ).toEqual([])
 })
-it.fails('stays silent for a flag with no value, a flag followed by a flag, and a url without user information', () => {
+it('stays silent for a flag with no value, a flag followed by a flag, and a url without user information', () => {
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token'] })))).toEqual([])
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', '--verbose'] })))).toEqual([])
   for (const url of [
@@ -183,7 +183,7 @@ it.fails('stays silent for a flag with no value, a flag followed by a flag, and 
     expect(ids(lintProject(NAME, at({ type: 'http', url }))), url).toEqual([])
   }
 })
-it.fails('stays silent for values that are not strings, and for fields it does not read', () => {
+it('stays silent for values that are not strings, and for fields it does not read', () => {
   expect(
     ids(
       lintProject(
@@ -212,9 +212,14 @@ it.fails('stays silent for values that are not strings, and for fields it does n
     ids(lintProject(NAME, at({ command: 'x', env: { 'A:B': 'a', '': 'a', '--': 'a' } }))),
   ).toEqual([])
 })
-it.fails('stays silent for a path that Claude Code does not read', () => {
+it('stays silent for a path that Claude Code does not read', () => {
   expect(
     ids(lintProject(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } }), '.claude/mcp.json')),
   ).toEqual([])
   expect(ids(lintProject(NAME, '[]'))).toEqual([])
+})
+
+it('reads each item, also after one that is not a string', () => {
+  const entry = { command: 'x', args: [1, '--token=abc123'], env: { A_TOKEN: 5, B_TOKEN: 'b' } }
+  expect(ids(lintProject(NAME, at(entry)))).toEqual(['secret', 'secret'])
 })

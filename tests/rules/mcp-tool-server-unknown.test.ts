@@ -31,7 +31,7 @@ function skill(tools: string, files: Record<string, string>, file = '.claude/ski
   return lintMarkdown(NAME, `---\nallowed-tools: ${tools}\n---\n`, path.join(repo(files), file))
 }
 
-it.fails('reports a server that .mcp.json lacks, on the entry', () => {
+it('reports a server that .mcp.json lacks, on the entry', () => {
   const code = allow('mcp__db__q', 'mcp__nope__x')
   const found = settings(code, { '.mcp.json': servers('db') })
   expect(ids(found)).toEqual(['unknown'])
@@ -39,7 +39,7 @@ it.fails('reports a server that .mcp.json lacks, on the entry', () => {
   expect(found[0]?.message).toContain('"nope"')
   expect(found[0]?.message).toContain('the .mcp.json of the project')
 })
-it.fails('reports the bare form, a glob and a specifier, in each list and in the local file', () => {
+it('reports the bare form, a glob and a specifier, in each list and in the local file', () => {
   const files = { '.mcp.json': servers('db') }
   const lists = JSON.stringify({
     permissions: { allow: ['mcp__a'], ask: ['mcp__b__*'], deny: ['mcp__c__t(x)'] },
@@ -47,18 +47,18 @@ it.fails('reports the bare form, a glob and a specifier, in each list and in the
   expect(ids(settings(lists, files))).toEqual(['unknown', 'unknown', 'unknown'])
   expect(ids(settings(allow('mcp__a'), files, '.claude/settings.local.json'))).toEqual(['unknown'])
 })
-it.fails('reports in a skill and a command of the project', () => {
+it('reports in a skill and a command of the project', () => {
   const files = { '.mcp.json': servers('db') }
   expect(ids(skill('mcp__nope__x, mcp__db__q', files))).toEqual(['unknown'])
   expect(ids(skill('mcp__nope__x', files, '.claude/commands/c.md'))).toEqual(['unknown'])
 })
-it.fails('uses the .mcp.json of the project that holds the .claude folder', () => {
+it('uses the .mcp.json of the project that holds the .claude folder', () => {
   const files = { '.mcp.json': servers('db'), 'packages/a/.mcp.json': servers('web') }
   const code = allow('mcp__web__t', 'mcp__db__t')
   expect(ids(settings(code, files, 'packages/a/.claude/settings.json'))).toEqual(['unknown'])
   expect(ids(settings(code, files))).toEqual(['unknown'])
 })
-it.fails('stays silent for a server that .mcp.json declares', () => {
+it('stays silent for a server that .mcp.json declares', () => {
   const files = { '.mcp.json': servers('db', 'my.server', 'a-b_c') }
   const code = allow(
     'mcp__db',
@@ -70,7 +70,7 @@ it.fails('stays silent for a server that .mcp.json declares', () => {
   )
   expect(ids(settings(code, files))).toEqual([])
 })
-it.fails('stays silent for the servers that no repository file declares', () => {
+it('stays silent for the servers that no repository file declares', () => {
   const files = { '.mcp.json': servers('db') }
   const code = allow(
     'mcp__claude_ai_Gmail__send',
@@ -85,7 +85,7 @@ it.fails('stays silent for the servers that no repository file declares', () => 
   )
   expect(ids(settings(code, files))).toEqual([])
 })
-it.fails('stays silent for an inline server of a local agent', () => {
+it('stays silent for an inline server of a local agent', () => {
   const inlineAgent =
     '---\nname: a\ndescription: d\nmcpServers:\n  - inline:\n      command: x\n  - db\n---\n'
   const files = { '.mcp.json': servers('db'), '.claude/agents/a.md': inlineAgent }
@@ -97,7 +97,7 @@ it.fails('stays silent for an inline server of a local agent', () => {
   }
   expect(ids(settings(allow('mcp__deep__t'), nested))).toEqual([])
 })
-it.fails('stays silent when the local agents cannot be read', () => {
+it('stays silent when the local agents cannot be read', () => {
   const root = repo({ '.mcp.json': servers('db'), '.claude/agents/a.md': agent('') })
   const outside = mkdtempSync(path.join(tmpdir(), 'mcp-unknown-agents-'))
   try {
@@ -109,7 +109,7 @@ it.fails('stays silent when the local agents cannot be read', () => {
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('stays silent when an agent file cannot be read', () => {
+it('stays silent when an agent file cannot be read', () => {
   const root = repo({ '.mcp.json': servers('db'), '.claude/agents/a.md': agent('') })
   const file = path.join(root, '.claude', 'settings.json')
   if (!chmodCannotBlock) {
@@ -118,7 +118,7 @@ it.fails('stays silent when an agent file cannot be read', () => {
     })
   }
 })
-it.fails('reads a file without a frontmatter block, or with one that does not parse, as no server', () => {
+it('reads a file without a frontmatter block, or with one that does not parse, as no server', () => {
   const broken = '---\nname: [\nmcpServers: x\n---\n'
   const files = {
     '.mcp.json': servers('db'),
@@ -127,7 +127,7 @@ it.fails('reads a file without a frontmatter block, or with one that does not pa
   }
   expect(ids(settings(allow('mcp__nope__t'), files))).toEqual(['unknown'])
 })
-it.fails('stays silent when there is no .mcp.json, or the rule cannot read it', () => {
+it('stays silent when there is no .mcp.json, or the rule cannot read it', () => {
   const code = allow('mcp__nope__t')
   expect(ids(settings(code, {}))).toEqual([])
   expect(ids(settings(code, { '.mcp.json': '{ not json' }))).toEqual([])
@@ -135,7 +135,7 @@ it.fails('stays silent when there is no .mcp.json, or the rule cannot read it', 
   expect(ids(settings(code, { '.mcp.json': '{"mcpServers": []}' }))).toEqual([])
   expect(ids(settings(code, { '.claude/.mcp.json': servers('x') }))).toEqual([])
 })
-it.fails('stays silent for a .mcp.json that is a link out of the repository, or dangling', () => {
+it('stays silent for a .mcp.json that is a link out of the repository, or dangling', () => {
   const root = repo({})
   const outside = mkdtempSync(path.join(tmpdir(), 'mcp-unknown-outside-'))
   try {
@@ -150,7 +150,7 @@ it.fails('stays silent for a .mcp.json that is a link out of the repository, or 
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('stays silent in a managed file and a hidden drop-in', () => {
+it('stays silent in a managed file and a hidden drop-in', () => {
   const files = { '.mcp.json': servers('db') }
   for (const file of [
     'managed-settings.json',
@@ -160,7 +160,7 @@ it.fails('stays silent in a managed file and a hidden drop-in', () => {
     expect(ids(settings(allow('mcp__nope__t'), files, file)), file).toEqual([])
   }
 })
-it.fails('stays silent for rules it cannot read', () => {
+it('stays silent for rules it cannot read', () => {
   const files = { '.mcp.json': servers('db') }
   expect(
     ids(settings('{"permissions": {"allow": "mcp__nope", "deny": [1, null]}}', files)),
@@ -176,7 +176,7 @@ const PLUGIN = { 'p/.claude-plugin/plugin.json': manifest(), 'p/.mcp.json': serv
 const inPlugin = (tools: string, files: Record<string, string>, file = 'p/skills/s/SKILL.md') =>
   skill(tools, files, file)
 
-it.fails('reports a scoped name of its own plugin for a server that the plugin lacks', () => {
+it('reports a scoped name of its own plugin for a server that the plugin lacks', () => {
   const found = inPlugin('mcp__plugin_my-plugin_nope__t, mcp__plugin_my-plugin_db__t', PLUGIN)
   expect(ids(found)).toEqual(['unknown'])
   expect(found[0]?.message).toContain('"nope"')
@@ -185,7 +185,7 @@ it.fails('reports a scoped name of its own plugin for a server that the plugin l
     'unknown',
   ])
 })
-it.fails('knows the servers of the manifest, of a declared file and of a name with an underscore', () => {
+it('knows the servers of the manifest, of a declared file and of a name with an underscore', () => {
   const files = {
     'p/.claude-plugin/plugin.json': manifest({
       mcpServers: ['./s.json', { 'in.line': { command: 'x' } }],
@@ -202,12 +202,12 @@ it.fails('knows the servers of the manifest, of a declared file and of a name wi
   }
   expect(ids(inPlugin('mcp__plugin_my_plugin_db__t', dotted))).toEqual([])
 })
-it.fails('stays silent in a plugin file for a name that is not scoped to its plugin', () => {
+it('stays silent in a plugin file for a name that is not scoped to its plugin', () => {
   const tools =
     'mcp__db__t mcp__nope__t mcp__plugin_other_x__t mcp__plugin_my-plugin mcp__claude_ai_X__t'
   expect(ids(inPlugin(tools, PLUGIN))).toEqual([])
 })
-it.fails('stays silent when a plugin source cannot be read', () => {
+it('stays silent when a plugin source cannot be read', () => {
   const tools = 'mcp__plugin_my-plugin_nope__t'
   expect(ids(inPlugin(tools, { ...PLUGIN, 'p/.mcp.json': '{ not json' }))).toEqual([])
   const declared = (value: unknown) => ({
@@ -229,10 +229,11 @@ it.fails('stays silent when a plugin source cannot be read', () => {
     'unknown',
   ])
 })
-it.fails('stays silent when the plugin has no readable name, or an unreadable .mcp.json link', () => {
+it('stays silent when the plugin has no readable name, or an unreadable .mcp.json link', () => {
   const tools = 'mcp__plugin_my-plugin_nope__t'
   for (const name of [undefined, 5, '']) {
-    const files = { ...PLUGIN, 'p/.claude-plugin/plugin.json': manifest({}, name) }
+    const text = name === undefined ? '{}' : manifest({}, name)
+    const files = { ...PLUGIN, 'p/.claude-plugin/plugin.json': text }
     expect(ids(inPlugin(tools, files)), String(name)).toEqual([])
   }
   const root = repo({ 'p/.claude-plugin/plugin.json': manifest() })
@@ -246,4 +247,24 @@ it.fails('stays silent when the plugin has no readable name, or an unreadable .m
   } finally {
     rmSync(outside, { recursive: true, force: true })
   }
+})
+
+it('stays silent when the manifest of the plugin cannot be read', () => {
+  const files = { ...PLUGIN, 'p/.claude-plugin/plugin.json': '{ not json' }
+  expect(ids(inPlugin('mcp__plugin_my-plugin_nope__t', files))).toEqual([])
+})
+it('skips a server with an empty name, and still knows the others', () => {
+  const files = { ...PLUGIN, 'p/.mcp.json': '{"mcpServers": {"": {"command": "x"}, "db": {}}}' }
+  expect(ids(inPlugin('mcp__plugin_my-plugin_db__t', files))).toEqual([])
+  expect(ids(inPlugin('mcp__plugin_my-plugin_nope__t', files))).toEqual(['unknown'])
+})
+it('makes no report in a Markdown file that is no skill or command', () => {
+  const file = path.join(repo({ '.mcp.json': servers('db') }), 'docs', 'x.md')
+  expect(ids(lintMarkdown(NAME, '---\nallowed-tools: mcp__nope__t\n---\n', file))).toEqual([])
+})
+
+it('reads each rule, also after one that it skips', () => {
+  const files = { '.mcp.json': servers('db') }
+  const code = allow('Bash', 'mcp__*', 'mcp__claude_ai_X__t', 'mcp__db__t', 'mcp__nope__t')
+  expect(ids(settings(code, files))).toEqual(['unknown'])
 })

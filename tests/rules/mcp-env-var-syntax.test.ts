@@ -14,7 +14,7 @@ import {
 const NAME = 'mcp-env-var-syntax'
 const at = (entry: object) => mapOf({ a: entry })
 
-it.fails(`reports $VAR, %VAR%, \${VAR-x} and \${VAR:=x}, in each field that expands`, () => {
+it(`reports $VAR, %VAR%, \${VAR-x} and \${VAR:=x}, in each field that expands`, () => {
   for (const text of [
     '$HOME/x',
     '%HOME%/x',
@@ -35,7 +35,7 @@ it.fails(`reports $VAR, %VAR%, \${VAR-x} and \${VAR:=x}, in each field that expa
     ).toEqual(['syntax'])
   }
 })
-it.fails('reports on the string, and the message names the field, the server and the text', () => {
+it('reports on the string, and the message names the field, the server and the text', () => {
   const code = at({ command: 'x', args: ['--k', 'Bearer $TOKEN'] })
   const found = lintProject(NAME, code)
   expect(found[0]).toMatchObject({ line: 1, column: code.indexOf('"Bearer') + 1 })
@@ -43,11 +43,11 @@ it.fails('reports on the string, and the message names the field, the server and
   expect(found[0]?.message).toContain('"a"')
   expect(found[0]?.message).toContain('$TOKEN')
 })
-it.fails('reports a string once, and each string', () => {
+it('reports a string once, and each string', () => {
   expect(ids(lintProject(NAME, at({ command: `$A $B \${C-d}` })))).toEqual(['syntax'])
   expect(ids(lintProject(NAME, at({ command: '$A', args: ['$B'] })))).toEqual(['syntax', 'syntax'])
 })
-it.fails('reports in a plugin file and in the servers of a manifest', () => {
+it('reports in a plugin file and in the servers of a manifest', () => {
   expect(ids(lintPluginFile(NAME, at({ command: '$ROOT/x' })))).toEqual(['syntax'])
   const manifest = JSON.stringify({ name: 'p', mcpServers: { a: { command: '$ROOT/x' } } })
   expect(ids(lintManifest(NAME, manifest))).toEqual(['syntax'])
@@ -56,7 +56,7 @@ it.fails('reports in a plugin file and in the servers of a manifest', () => {
     'syntax',
   ])
 })
-it.fails(`stays silent for \${VAR}, \${VAR:-default} and the plugin forms`, () => {
+it(`stays silent for \${VAR}, \${VAR:-default} and the plugin forms`, () => {
   for (const text of [
     `\${VAR}`,
     `\${VAR:-x}`,
@@ -72,7 +72,7 @@ it.fails(`stays silent for \${VAR}, \${VAR:-default} and the plugin forms`, () =
     ).toEqual([])
   }
 })
-it.fails('stays silent for text that only looks like a variable', () => {
+it('stays silent for text that only looks like a variable', () => {
   for (const text of [
     '$',
     '$1',
@@ -88,7 +88,7 @@ it.fails('stays silent for text that only looks like a variable', () => {
     expect(ids(lintProject(NAME, at({ command: text, args: [text] }))), text).toEqual([])
   }
 })
-it.fails('stays silent in fields that Claude Code does not expand, and in a non-string', () => {
+it('stays silent in fields that Claude Code does not expand, and in a non-string', () => {
   const entry = {
     command: 'x',
     headersHelper: 'echo $TOKEN',
@@ -103,7 +103,7 @@ it.fails('stays silent in fields that Claude Code does not expand, and in a non-
     ids(lintProject(NAME, at({ command: 'x', args: '$A', env: ['$A'], headers: '$A' }))),
   ).toEqual([])
 })
-it.fails('stays silent for the args of a shell, and reports the other fields of it', () => {
+it('stays silent for the args of a shell, and reports the other fields of it', () => {
   for (const command of [
     'sh',
     'bash',
@@ -121,7 +121,7 @@ it.fails('stays silent for the args of a shell, and reports the other fields of 
   expect(ids(lintProject(NAME, at(mixed)))).toEqual(['syntax'])
   expect(ids(lintProject(NAME, at({ command: 'node', args: ['$HOME'] })))).toEqual(['syntax'])
 })
-it.fails('stays silent for a path that Claude Code does not read, and a server that is shadowed', () => {
+it('stays silent for a path that Claude Code does not read, and a server that is shadowed', () => {
   expect(ids(lintProject(NAME, at({ command: '$A' }), '.claude/.mcp.json'))).toEqual([])
   const shadowed = '{"mcpServers": {"a": {"command": "$A"}, "a": {"command": "x"}}}'
   expect(ids(lintProject(NAME, shadowed))).toEqual([])
@@ -129,4 +129,15 @@ it.fails('stays silent for a path that Claude Code does not read, and a server t
     ids(lintProject(NAME, '{"mcpServers": {"a": {"command": "x", "command": "$A"}}}')),
   ).toEqual(['syntax'])
   expect(ids(lintProject(NAME, '[]'))).toEqual([])
+})
+
+it('reads the args of an entry whose command is missing or not a string', () => {
+  expect(ids(lintProject(NAME, at({ args: ['$A'] })))).toEqual(['syntax'])
+  expect(ids(lintProject(NAME, at({ command: 5, args: ['$A'] })))).toEqual(['syntax'])
+})
+
+it('reads each string, also after one that is not a string', () => {
+  expect(
+    ids(lintProject(NAME, at({ command: 'x', args: [1, '$A'], env: { K: 5, L: '$A' } }))),
+  ).toEqual(['syntax', 'syntax'])
 })
