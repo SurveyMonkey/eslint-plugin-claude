@@ -79,8 +79,8 @@ section for each block: its metadata, and its diff or its quoted text. The secti
 block also has the line of its inventory rows. The job cuts each text at 280 characters, and a
 section has no Before and After parts. Read the page for the full text. A digest holds at most
 20 blocks, and its whole body takes at most 60,000 characters. When a page has more, the job
-opens more than one digest. A block that does not fit in a digest alone gets an issue of its
-own.
+opens more than one issue. A block that does not fit in a digest alone gets an issue of its
+own, as does a group of one block. The log line `alone:` names a block that does not fit.
 
 Do these steps:
 
