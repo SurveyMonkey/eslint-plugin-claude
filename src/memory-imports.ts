@@ -92,29 +92,34 @@ function spanEnd(text: string, from: number, size: number): number {
   return -1
 }
 
+const SPECIAL = /[\\`]/g
+
 /** `text` with each code span replaced by `MASK`. A backslash before a
  *  backtick makes the backtick text. */
 function maskSpans(text: string): string {
   let result = ''
   let at = 0
   while (at < text.length) {
-    const char = text.charAt(at)
-    if (char === '\\') {
+    SPECIAL.lastIndex = at
+    const hit = SPECIAL.exec(text)
+    if (hit === null) {
+      return result + text.slice(at)
+    }
+    result += text.slice(at, hit.index)
+    at = hit.index
+    if (text.charAt(at) === '\\') {
       result += text.slice(at, at + 2)
       at += 2
-    } else if (char === '`') {
-      let size = 1
-      while (text.charAt(at + size) === '`') {
-        size++
-      }
-      const end = spanEnd(text, at + size, size)
-      const stop = end === -1 ? at + size : end + size
-      result += end === -1 ? text.slice(at, stop) : blank(text.slice(at, stop))
-      at = stop
-    } else {
-      result += char
-      at++
+      continue
     }
+    let size = 1
+    while (text.charAt(at + size) === '`') {
+      size++
+    }
+    const end = spanEnd(text, at + size, size)
+    const stop = end === -1 ? at + size : end + size
+    result += end === -1 ? text.slice(at, stop) : blank(text.slice(at, stop))
+    at = stop
   }
   return result
 }

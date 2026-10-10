@@ -444,6 +444,17 @@ const TREE: Record<string, string> = {
   'packages/av/.claude/AGENTS.md': '# Notes\n',
   'packages/av/docs/agents/notes.md': '# Notes\n',
   'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
+  // `claude-md-import-exists`: an import of a missing file in each instruction file that Claude
+  // Code expands. The same text where no rule reads it: a Markdown file that is not one of them,
+  // and a rule file.
+  'packages/ie/present.md': '# Present\n',
+  'packages/ie/CLAUDE.md': '@present.md @missing.md\n',
+  'packages/ie/.claude/CLAUDE.md': '@missing.md\n',
+  'packages/ie/CLAUDE.local.md': '@missing.md\n',
+  'packages/ie/AGENTS.md': '@missing.md\n',
+  'packages/ie/.claude/AGENTS.md': '@missing.md\n',
+  'packages/ie/docs/notes.md': '@missing.md\n',
+  'packages/ie/.claude/rules/r.md': '@missing.md\n',
   // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
   // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
@@ -574,6 +585,7 @@ const SCOPE_RULES = [
 const MEMORY_RULES = [
   'claude-md-agents-md-variant',
   'claude-md-excludes-pattern',
+  'claude-md-import-exists',
   'claude-md-max-bytes',
   'memory-settings-schema',
   'rules-frontmatter-schema',
@@ -747,6 +759,12 @@ const EXPECTED = [
   'packages/av/AGENTS.override.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
+  // `claude-md-import-exists` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  'packages/ie/CLAUDE.md: claude/claude-md-import-exists@2',
+  'packages/ie/.claude/CLAUDE.md: claude/claude-md-import-exists@2',
+  'packages/ie/CLAUDE.local.md: claude/claude-md-import-exists@2',
+  'packages/ie/AGENTS.md: claude/claude-md-import-exists@2',
+  'packages/ie/.claude/AGENTS.md: claude/claude-md-import-exists@2',
   // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
   'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
@@ -1008,6 +1026,9 @@ describe('configs', () => {
     ])
     expect(blocks('claude-md-excludes-pattern')).toEqual([
       ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    expect(blocks('claude-md-import-exists')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
     ])
     expect(blocks('claude-md-max-bytes')).toEqual([
       ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
