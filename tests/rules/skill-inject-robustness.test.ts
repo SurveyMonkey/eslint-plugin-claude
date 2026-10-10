@@ -123,6 +123,54 @@ markdownTester.run('skill-inject-robustness', ruleOf('skill-inject-robustness'),
     { code: withTools('Bash(make [x] *)', inline('make [x] y')), filename: skill },
     { code: withTools('Bash(make $HOME *)', inline('make $HOME c')), filename: skill },
     { code: withTools('Bash(a{1} *)', inline('a{1} c')), filename: skill },
+    // A block word alone on its line, a group with no space, a `case` arm and a comment.
+    {
+      code: withTools('Bash(npm *)', block('if [ -f x ]\nthen\n  npm test\nelse\n  npm test\nfi')),
+      filename: skill,
+    },
+    { code: withTools('Bash(npm *)', block('for f in *; do\n  npm test\ndone')), filename: skill },
+    {
+      code: withTools(
+        'Bash(npm *)',
+        block('if [ -f x ]; then :; elif [ -f y ]; then npm test; else npm test; fi'),
+      ),
+      filename: skill,
+    },
+    { code: withTools('Bash(npm *)', block('until ! npm test; do :; done')), filename: skill },
+    { code: withTools('Bash(npm *)', block('if ! npm test; then :; fi')), filename: skill },
+    { code: withTools('Bash(npm *)', block('{ npm test; }')), filename: skill },
+    { code: withTools('Bash(npm *)', inline('( npm test )')), filename: skill },
+    { code: withTools('Bash(npm *)', inline('(npm test)')), filename: skill },
+    { code: withTools('Bash(npm *)', inline('(cd src && npm test)')), filename: skill },
+    {
+      code: withTools(
+        'Bash(npm *)',
+        block('case $x in\n  a|b) npm test ;;\n  *) npm test ;;\nesac'),
+      ),
+      filename: skill,
+    },
+    {
+      code: withTools('Bash(npm *)', block("# don't skip this\nnpm test\n# it's fine")),
+      filename: skill,
+    },
+    { code: withTools('Bash(npm *)', block('#!/bin/bash\nnpm test')), filename: skill },
+    { code: withTools('Bash(npm *)', inline('fi')), filename: skill },
+    // The word of a block ends at a word boundary.
+    { code: withTools('Bash(a^b *)', inline('a^b c')), filename: skill },
+    { code: withTools('Bash(a\\b *)', inline('a\\b c')), filename: skill },
+    // The option `allow` gives the rules of a settings file.
+    { code: inline('npm test'), filename: skill, options: [{ allow: ['Bash(npm *)'] }] },
+    { code: inline('npm test'), filename: skill, options: [{ allow: ['Read', 'Bash'] }] },
+    {
+      code: withTools('Bash(gh *)', inline('npm test && gh pr diff')),
+      filename: skill,
+      options: [{ allow: ['Bash(npm test)'] }],
+    },
+    // A check script as the last command of a block has a fallback when `fi` follows it.
+    {
+      code: withTools('Bash', inline(`if x; then ${skillDir}/check.sh || true; fi`)),
+      filename: skill,
+    },
     // A check script has no `|| true` form in PowerShell.
     {
       code: `---\nshell: powershell\n---\n\n${inline(`${skillDir}/check.sh`)}\n`,
@@ -197,6 +245,62 @@ markdownTester.run('skill-inject-robustness', ruleOf('skill-inject-robustness'),
     { code: inline('./run.sh'), filename: 'docs/SKILL.md' },
   ],
   invalid: [
+    // A command that starts with the letters of a block word is still a command.
+    ...['firebase deploy', 'file x', 'donext run', 'esacfoo x', 'for-each x', 'ifconfig eth0'].map(
+      (command) => ({
+        code: withTools('Bash(npm *)', inline(command)),
+        filename: skill,
+        errors: [unmatched(command, 5, 2)],
+      }),
+    ),
+    // The rest of a block is judged, whichever block word comes first.
+    ...[
+      'if [ -f x ]\nthen\n  gh pr\nfi',
+      'if ! gh pr; then :; fi',
+      '! gh pr',
+      'if [ x ]; then :; else gh pr; fi',
+      'if [ x ]; then :; elif gh pr; then :; fi',
+      'until gh pr; do :; done',
+      '{ gh pr; }',
+      '(gh pr)',
+      '( gh pr )',
+      "# don't\ngh pr\n# it's",
+      'case $x in a) gh pr ;; esac',
+      'case $x in\n  a|b) gh pr ;;\nesac',
+    ].map((text) => ({
+      code: withTools('Bash(npm *)', block(text)),
+      filename: skill,
+      errors: [unmatched('gh pr', 5, 1)],
+    })),
+    // A pattern with a character of a regular expression stays literal.
+    {
+      code: withTools('Bash(x|y *)', inline('x z')),
+      filename: skill,
+      errors: [unmatched('x z', 5, 2)],
+    },
+    // The option `allow` does not turn other rules on, and a rule of another tool is no rule.
+    {
+      code: inline('npm test'),
+      filename: skill,
+      options: [{ allow: ['Read', 'Bash(gh *)'] }],
+      errors: [unmatched('npm test', 1, 2)],
+    },
+    // A block closer after a check script does not hide the missing fallback.
+    {
+      code: withTools('Bash', inline(`if x; then ${skillDir}/check.sh; fi`)),
+      filename: skill,
+      errors: [check(`${skillDir}/check.sh`)],
+    },
+    {
+      code: withTools('Bash', block(`${skillDir}/check.sh\n# done`)),
+      filename: skill,
+      errors: [check(`${skillDir}/check.sh`)],
+    },
+    {
+      code: `---\nshell: bash\nallowed-tools: Bash\n---\n\n${inline(`${skillDir}/check.sh`)}\n`,
+      filename: skill,
+      errors: [check(`${skillDir}/check.sh`)],
+    },
     // The command after a block word is judged.
     {
       code: withTools('Bash(gh *)', block('if [ -f x ]; then npm test; fi')),
@@ -514,5 +618,31 @@ describe.skipIf(process.platform === 'win32')('a plugin root that the rule canno
     } finally {
       rmSync(scratch, { recursive: true, force: true })
     }
+  })
+})
+
+describe('the option allow', () => {
+  const lint = (option: unknown) =>
+    lintMarkdown('skill-inject-robustness', inline('npm test'), skill, [option])
+
+  it.each([
+    { allow: 'Bash(npm *)' },
+    { allow: [''] },
+    { allow: [1] },
+    { allow: ['Bash', 'Bash'] },
+    { allows: [] },
+    { allow: [], extra: true },
+  ])('refuses %j', (option) => {
+    expect(() => lint(option)).toThrow('Key "claude/skill-inject-robustness"')
+  })
+
+  it('accepts a list of rules and an empty list', () => {
+    expect(() => lint({ allow: ['Bash(npm *)', 'Read'] })).not.toThrow()
+    expect(() => lint({ allow: [] })).not.toThrow()
+  })
+
+  it('allows a command in a skill with no allowed-tools, and adds to a frontmatter list', () => {
+    expect(lint({ allow: ['Bash(npm *)'] })).toEqual([])
+    expect(lint({ allow: [] })).toHaveLength(1)
   })
 })

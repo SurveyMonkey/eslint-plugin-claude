@@ -1,6 +1,6 @@
-// A plugin skill names a path in the plugin with `${CLAUDE_PLUGIN_ROOT}` in the Markdown body,
-// where Claude Code substitutes it (docs/rules/skill-plugin-path-vars.md). The rule is a
-// heuristic. It reads the body only.
+// A plugin skill names a plugin path with `${CLAUDE_PLUGIN_ROOT}` in the Markdown body. Claude
+// Code substitutes it there (docs/rules/skill-plugin-path-vars.md). The rule is a heuristic. It
+// reads the body only.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
@@ -14,8 +14,8 @@ const PLUGIN_ROOT = `\${CLAUDE_PLUGIN_ROOT}`
  *  Bash tool does not have the variable in its environment. */
 const UNBRACED = /\$(CLAUDE_PLUGIN_(?:ROOT|DATA))(?!\w)/g
 
-/** A path that climbs out of the skill directory. For a plugin skill, the skill directory is a
- *  folder below the plugin root, so the path leads to another part of the plugin. */
+/** A path that climbs out of the skill directory. In a skill folder `skills/<name>/`, the path
+ *  leads to another part of the plugin. */
 const CLIMB = /\$\{CLAUDE_SKILL_DIR\}\/\.\.(?![\w.-])/g
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'unbraced' | 'climb' }> = {

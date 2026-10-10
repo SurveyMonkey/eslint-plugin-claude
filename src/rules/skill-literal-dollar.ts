@@ -1,6 +1,6 @@
-// An unescaped `$` and a digit expands to an argument, also in a price such as `$1.00`
-// (docs/rules/skill-literal-dollar.md). The rule is a heuristic: it reports the digit forms that
-// read as an amount, and it does not report `$ARGUMENTS`, which has no static tell.
+// An unescaped `$` and a digit can expand to an argument, also in a price such as `$1.00`
+// (docs/rules/skill-literal-dollar.md). The rule is a heuristic. It reports the digit forms that
+// read as an amount. It does not report `$ARGUMENTS`, because no static sign tells it apart.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
