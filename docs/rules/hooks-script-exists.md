@@ -21,15 +21,19 @@ Name a hook script that exists.
 ## Rule details
 
 A hook whose script is not there cannot start. Claude Code shows a non-blocking error, and the
-hook never runs.[^exit][^error] A mistyped path in a settings file is the usual cause.
+hook never runs.[^exit][^error] A mistyped path is one cause.
 
 The rule reads each command hook (`type: "command"`) in the `hooks` key of the file. Hooks in
-skill and agent frontmatter are not read. The rule finds a script path in these words of the
-command:
+skill and agent frontmatter are not read. The `hooks` key of `plugin.json` is not read either.
+The rule checks two words of the command: the program, and the first argument when the program
+is an interpreter that runs a file. The interpreters are `bash`, `sh`, `zsh`, `node`, `python`,
+`python3`, `deno`, `bun`, `pwsh`, `powershell`, `ruby` and `perl`. Another argument can be a
+file that the program makes, as in `tee "${CLAUDE_PROJECT_DIR}/logs/out.txt"`. The rule does not
+check it. A checked word is a script path in these forms:
 
 - **A word that starts with a path variable.** `${CLAUDE_PROJECT_DIR}` is the project root.
-  `${CLAUDE_PLUGIN_ROOT}` is the plugin directory.[^paths] The forms with
-  no braces count too. The word can be the program or an argument, as in
+  `${CLAUDE_PLUGIN_ROOT}` is the plugin directory.[^paths] The forms with no braces count too.
+  The word can be the program, or the script of an interpreter, as in
   `node "${CLAUDE_PROJECT_DIR}/.claude/hooks/check.js"`.
 - **The program, when it is a path from the project.** The words `.claude/hooks/check.sh` and
   `./tools/check.sh` count. A bare name such as `check.sh` is a search on the `PATH`, so it does
@@ -54,7 +58,8 @@ The rule makes no report in these cases:
 
 - **The word is not a repository path.** The rule cannot resolve an absolute path or a path in
   `~`. It cannot resolve a word with another variable, a glob, a Windows separator or a shell
-  expansion.
+  expansion. A path that holds one of the characters ``$ ` * ? [ ] { } \ ~ : = ! #`` is not
+  read.
 - **The path is out of the repository.** A rule reads no file out of the repository (ADR 001,
   Decision 14). In a plugin, `${CLAUDE_PLUGIN_ROOT}/../x` is out of the plugin too, because
   Claude Code copies the plugin.

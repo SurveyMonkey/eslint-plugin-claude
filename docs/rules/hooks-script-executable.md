@@ -21,7 +21,7 @@ Give a hook script the executable bit.
 ## Rule details
 
 A hook script must be executable for Claude Code to run it.[^guide] On macOS and Linux, a script
-without the bit makes the hook fail instead of blocking anything.[^subagent] A plugin hook script
+without the bit makes the hook fail with an error.[^subagent] A plugin hook script
 needs the bit too.[^plugin]
 
 The rule reads each command hook, and finds the program: the first word of `command` in the shell
@@ -41,10 +41,11 @@ reports mode `100644`. It does not read the mode on the disk, for two reasons:
 The rule makes no report in these cases:
 
 - **The script is an argument.** `node ${CLAUDE_PROJECT_DIR}/run.js` and
-  `bash ${CLAUDE_PROJECT_DIR}/run.sh` run `node` and `bash`. They need no bit on the script. A
-  script after the first word, as in `a && ./run.sh`, is not the program either.
-- **Git does not track the script.** A new file that is not staged has no index mode. A script
-  that is not there is for `hooks-script-exists`.
+  `bash ${CLAUDE_PROJECT_DIR}/run.sh` run `node` and `bash`. They need no bit on the script. The
+  rule does not check a script after the first word, as in `a && ./run.sh`.
+- **Git has no stage-0 entry for the script.** A new file that is not staged has no index mode.
+  A file in a merge conflict has none either. A script that is not there is for
+  `hooks-script-exists`.
 - **The rule cannot read the index.** There is no `.git` entry at or above the file, `git` is not
   installed, or a `git` command fails.
 - **The path is out of the repository**, or a link hides it (ADR 001, Decision 14). A link to a

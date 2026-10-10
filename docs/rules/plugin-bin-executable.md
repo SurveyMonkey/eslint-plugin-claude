@@ -42,11 +42,13 @@ The executable bit is the git index mode, for the same reasons as in
 
 The rule makes no report in these cases:
 
-- **Git does not track the file.** A new file that is not staged has no index mode.
+- **Git has no stage-0 entry for the file.** A new file that is not staged has no index mode.
+  A file in a merge conflict has none either.
 - **The rule cannot read the index.** There is no `.git` entry at or above the manifest, `git` is
   not installed, or a `git` command fails.
 - **The file is hidden.** A name that starts with `.`, such as `.gitkeep`, is not a command.
-- **The entry is a link, a submodule or a directory.** These have other index modes.
+- **The entry is a link or a submodule.** These have other index modes. A directory has no
+  entry in `bin/`, and the rule reads no file below it.
 - **A link hides `bin/`.** A `bin/` link that leads out of the repository is not read (ADR 001,
   Decision 14). A `bin/` link to a directory of the repository is read where it leads.
 - **The manifest is in no plugin root**, or `.claude-plugin` has a real path out of the repository.

@@ -28,7 +28,10 @@ same way.
 The rule reads the `command` string of the three keys, and finds a script path in these words:
 
 - **A word that starts with `${CLAUDE_PROJECT_DIR}`.** The `$CLAUDE_PROJECT_DIR` form with no braces
-  counts too. The word can be the program or an argument.
+  counts too. The rule checks the program, and the first argument when the program is an
+  interpreter that runs a file. The interpreters are the ones in
+  [`hooks-script-exists`](hooks-script-exists.md). Another argument can be a file that the
+  program makes, so the rule does not check it.
 - **The program, when it is a path from the project.** The words `.claude/statusline.sh` and
   `./tools/statusline.sh` count. A bare name is a search on the `PATH`, so it does not count.
 
@@ -57,7 +60,8 @@ The rule makes no report in these cases:
   file in the repository takes the mode of that file.
 - **The rule cannot read the index.** There is no `.git` entry at or above the file, `git` is not
   installed, or a `git` command fails. The rule still reports a script that is not there. A script
-  that git does not track gets no `notExecutable` report.
+  with no stage-0 entry in the index gets no `notExecutable` report. A new file that is not staged
+  has no entry. A file in a merge conflict has none either.
 - **The file is a hidden drop-in** in `managed-settings.d/`, which Claude Code ignores.
 
 When a key appears twice, the rule reads the last, as `JSON.parse` does.
