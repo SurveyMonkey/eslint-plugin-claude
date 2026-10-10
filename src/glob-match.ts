@@ -140,7 +140,7 @@ export function matchesPath(matcher: RegExp, relative: string): boolean {
  *  `/` as separator. It returns true to stop the walk. A link to a folder is followed once, when
  *  its real path is in `bound`. The result is true when the walk could not see a part of the
  *  tree: a folder that cannot be read, or a link that leads out of `bound`. */
-export function walkFiles(root: string, bound: string, visit: (relative: string) => boolean) {
+function walkFiles(root: string, bound: string, visit: (relative: string) => boolean) {
   const seen = new Set<string>()
   let unreadable = false
   let stopped = false
