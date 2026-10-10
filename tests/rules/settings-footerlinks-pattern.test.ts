@@ -108,6 +108,7 @@ describe(`${name}: the pattern`, () => {
       '(?=a+)',
       '(?<=b)a+',
       '[]+',
+      '[\\](a+)+]',
       '\\',
     ]) {
       expect(withPattern(pattern), pattern).toEqual([])

@@ -106,6 +106,12 @@ describe(`${name}: silent cases`, () => {
     expect(ids('echo "a\\"" C:\\x')).toEqual(['backslash'])
   })
 
+  it('reports a path that starts with a dot or a tilde, and a UNC path with a share', () => {
+    expect(ids('node .\\status.sh')).toEqual(['backslash'])
+    expect(ids('node ~\\bin')).toEqual(['backslash'])
+    expect(ids('node \\\\server\\share\\s.mjs')).toEqual(['backslash'])
+  })
+
   it('reads the key statusLine only', () => {
     for (const key of ['subagentStatusLine', 'fileSuggestion', 'apiKeyHelper']) {
       expect(lint(settings('C:\\a\\b', key)), key).toEqual([])
