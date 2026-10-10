@@ -61,6 +61,7 @@ import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
+import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -209,6 +210,7 @@ const modules = [
   pluginMonitorsSkillExists,
   pluginNpmSourceShrinkwrap,
   pluginSettingsSingleSource,
+  pluginUserConfigSensitiveInContent,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -334,6 +336,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-monitors-skill-exists': 'error',
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
+  'plugin-user-config-sensitive-in-content': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

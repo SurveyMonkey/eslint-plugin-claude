@@ -113,6 +113,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-monitors-skill-exists`](docs/rules/plugin-monitors-skill-exists.md) | A monitor that starts with `on-skill-invoke:` names a skill that the plugin has | `error` | `error` |
 | [`claude/plugin-npm-source-shrinkwrap`](docs/rules/plugin-npm-source-shrinkwrap.md) | A plugin that a marketplace entry serves from an `npm` source ships `npm-shrinkwrap.json`, because npm leaves `package-lock.json` out of a published package | `error` | `error` |
 | [`claude/plugin-settings-single-source`](docs/rules/plugin-settings-single-source.md) | A plugin sets its default settings in a root `settings.json` or in the manifest `settings` key, not in both, because the file wins | `error` | `error` |
+| [`claude/plugin-user-config-sensitive-in-content`](docs/rules/plugin-user-config-sensitive-in-content.md) | The body of a plugin skill or agent does not reference a `sensitive` option as `${user_config.KEY}`, because Claude Code writes a placeholder there | `error` | `error` |
 
 ### Marketplace manifest
 

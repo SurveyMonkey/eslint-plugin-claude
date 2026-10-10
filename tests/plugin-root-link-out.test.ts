@@ -95,9 +95,6 @@ describe('a plugin root that links out of the repository', () => {
   })
 })
 
-// Red first: the mark goes away with the rules.
-const check = it.fails
-const checkLinked = noLinks ? it.skip : check
 describe('the cross-file rules of the plugin layer', () => {
   const SETTINGS = JSON.stringify({ name: 'p', settings: { agent: 'a' } })
   it('plugin-settings-single-source reports in the plugin in the repository', () => {
@@ -116,13 +113,13 @@ describe('the cross-file rules of the plugin layer', () => {
     userConfig: { token: { type: 'string', title: 'T', description: 'D', sensitive: true } },
   })
   const USE = `Use \${user_config.token}\n`
-  check('plugin-user-config-sensitive-in-content reports in the plugin in the repository', () => {
+  it('plugin-user-config-sensitive-in-content reports in the plugin in the repository', () => {
     const file = path.join(pluginTree(SENSITIVE).dir, 'skills', 's', 'SKILL.md')
     expect(
       lintMarkdown('plugin-user-config-sensitive-in-content', USE, file).map((m) => m.messageId),
     ).toEqual(['placeholder'])
   })
-  checkLinked('plugin-user-config-sensitive-in-content stays silent for the linked plugin', () => {
+  linked('plugin-user-config-sensitive-in-content stays silent for the linked plugin', () => {
     const file = path.join(linkedOut({}, {}, SENSITIVE).dir, 'skills', 's', 'SKILL.md')
     expect(lintMarkdown('plugin-user-config-sensitive-in-content', USE, file)).toEqual([])
   })

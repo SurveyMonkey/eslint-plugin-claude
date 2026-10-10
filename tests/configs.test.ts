@@ -14,6 +14,7 @@ const long = 'a'.repeat(1537)
 const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
 const userConfigRef = `./run.sh \${user_config.token}`
+const tokenRef = `Use \${user_config.token}\n`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 // One bad permission rule for each grammar rule, in the order of GRAMMAR_RULES.
 const badSettings = JSON.stringify({
@@ -221,6 +222,16 @@ const TREE: Record<string, string> = {
     settings: { agent: 'a' },
   }),
   'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
+  // A reference to a sensitive option in a skill and an agent of a plugin. A command is not read.
+  'plugins/sen/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sen',
+    userConfig: {
+      token: { type: 'string', title: 'T', description: 'D', sensitive: true },
+    },
+  }),
+  'plugins/sen/skills/s/SKILL.md': `---\nname: s\n---\n\n${tokenRef}`,
+  'plugins/sen/agents/a.md': `---\nname: a\ndescription: d\n---\n\n${tokenRef}`,
+  'plugins/sen/commands/c.md': tokenRef,
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -680,6 +691,11 @@ const PLUGIN_RULES: {
   },
   { name: 'plugin-npm-source-shrinkwrap', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-settings-single-source', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-user-config-sensitive-in-content',
+    language: 'markdown/gfm',
+    files: ['**/SKILL.md', '**/agents/**/*.md'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -755,6 +771,9 @@ const EXPECTED = [
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
   'plugins/set/.claude-plugin/plugin.json: claude/plugin-settings-single-source@2',
+  'plugins/sen/agents/a.md: claude/plugin-user-config-sensitive-in-content@2',
+  'plugins/sen/commands/c.md: claude/command-legacy-format@1',
+  'plugins/sen/skills/s/SKILL.md: claude/plugin-user-config-sensitive-in-content@2',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
   'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
