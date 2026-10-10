@@ -61,22 +61,31 @@ The rule skips a subcommand in these cases:
 
 - It starts with `ls`, `cat`, `echo`, `pwd`, `head`, `tail`, `grep`, `find`, `wc`, `which`, `diff`,
   `stat`, `du` or `cd`. The permissions page says that the set of read-only commands includes these
-  names.[^readonly] The page does not list the whole set, so the rule skips only the names that the
-  page gives, with any flags.
+  names.[^readonly] The page does not list the whole set. So the rule skips only the names that
+  the page gives, with any flags. The page says that `find` with `-exec` or `-delete` is not
+  read-only, and that `cd` is read-only only in a working directory. The rule skips these too, so
+  it can miss a real fault.
 - It is `true` or `:`. These are the no-ops of a fallback such as `|| true`.
 - It starts with `git`. The page says only that "read-only forms of `git`" are in the set. The
   rule cannot tell them from the other forms.
 - It starts with a wrapper that Claude Code strips before it matches a rule (`timeout`, `time`,
-  `nice`, `nohup`, `stdbuf`, `command` or `builtin`), or with a variable assignment such as
-  `NODE_ENV=test`.[^compound] The rule does not strip them.
+  `nice`, `nohup`, `stdbuf`, `command`, `builtin`, `noglob` or `xargs`).[^compound] The rule does
+  not strip them.
+- It starts with a variable assignment such as `NODE_ENV=test`. Claude Code strips only known-safe
+  variables, so the rule can miss a real fault here.[^compound]
+- It is a word of a shell block (`fi`, `done`, `esac`, `for`, `case`), a test that starts with
+  `[`, or a comment. A leading `if`, `then`, `else`, `do`, `while`, `until`, `!`, `{` or `(` is
+  dropped, and the rule judges the rest.
 
 The rule makes no `unmatched` report in these cases:
 
 - The frontmatter does not parse, so the rule does not know the rules.
-- The `shell` key is `powershell`. The commands then need `PowerShell` rules.
-- The skill has no `allowed-tools` and the command is not read-only. This case does report. A
-  `permissions.allow` rule in a settings file also allows a command, and the rule does not read
-  settings. Turn the rule on where the team keeps its rules in `allowed-tools`.
+- The `shell` key is `powershell`. The commands then need `PowerShell` rules. The `checkExit`
+  report is also off, because `|| true` is a Bash form.
+
+The rule does report when the skill has no `allowed-tools` and the command is not read-only. A
+`permissions.allow` rule in a settings file also allows a command, and the rule does not read
+settings. Turn the rule on where the team keeps its rules in `allowed-tools`.
 
 For `relativePath`, the rule looks at one path of each subcommand. It is the program when it has
 a `/`, or the first argument of `bash`, `sh`, `zsh`, `node`, `python`, `python3`, `ruby` or

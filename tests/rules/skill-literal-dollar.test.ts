@@ -99,7 +99,7 @@ describe('the message', () => {
   it('names the token and the escape', () => {
     const found = lintMarkdown('skill-literal-dollar', 'Pay $1.00.\n', skill)
     expect(found.map((m) => m.message)).toEqual([
-      'Claude Code replaces `$1` with an argument. Write `\\$1` to keep it as text.',
+      'Claude Code can replace `$1` with an argument. Write `\\$1` to keep it as text.',
     ])
   })
 })

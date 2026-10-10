@@ -79,7 +79,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/skill-inject-robustness`](docs/rules/skill-inject-robustness.md) | Each injected command has an `allowed-tools` Bash rule, uses a path from `${CLAUDE_SKILL_DIR}` or `${CLAUDE_PROJECT_DIR}`, and prints no placeholder. A check script ends with `|| true` | `off` | `warn` |
 | [`claude/skill-listing-budget`](docs/rules/skill-listing-budget.md) | The names and descriptions of one scope fit the skill listing budget of 8,000 characters. Options `max` and `listingMax` | `off` | `warn` |
 | [`claude/skill-literal-dollar`](docs/rules/skill-literal-dollar.md) | A `$1.00` in a skill or command is escaped, because `$1` is an argument placeholder | `off` | `warn` |
-| [`claude/skill-plugin-path-vars`](docs/rules/skill-plugin-path-vars.md) | A plugin skill writes `${CLAUDE_PLUGIN_ROOT}` with braces, and climbs out of `${CLAUDE_SKILL_DIR}` with no `/..` | `off` | `warn` |
+| [`claude/skill-plugin-path-vars`](docs/rules/skill-plugin-path-vars.md) | A plugin skill writes `${CLAUDE_PLUGIN_ROOT}` with braces, and does not climb out of `${CLAUDE_SKILL_DIR}` with `/..` | `off` | `warn` |
 
 ### Subagents and output styles
 

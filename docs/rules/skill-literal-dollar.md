@@ -22,10 +22,11 @@ The rule is `off` in `recommended`. The rule is a heuristic.
 
 ## Rule details
 
-In a skill, `$N` is the shorthand for the Nth argument.[^substitutions] To keep a literal `$`
-before a digit, such as `$1.00` in prose, write a backslash before it: `\$1.00`.[^substitutions]
-Without the backslash, `$1` becomes the first argument, or it stays as `$1` when there is no
-argument. In both cases the text is not the price that the author wrote.
+In a skill, `$N` is the shorthand for `$ARGUMENTS[N]`, and the index starts at 0.[^substitutions]
+So `$1` is the second argument. To keep a literal `$` before a digit, such as `$1.00` in prose,
+write a backslash before it: `\$1.00`.[^substitutions] Without the backslash, `$1` becomes an
+argument when the caller gives one. It stays as `$1` when there is no such argument. In the first
+case the text is not the price that the author wrote.
 
 A placeholder and an amount look the same, so the rule uses one signal. It reports a `$` and
 digits when a decimal point or a comma and a digit follow. The report is on the `$` and the
