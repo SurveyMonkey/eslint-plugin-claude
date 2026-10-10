@@ -13,14 +13,14 @@ import { pathFault } from './marketplace-relative-source-format.ts'
 const name = 'marketplace-self-hosted-root-source' as const
 
 /** True when `source` is a string that names the marketplace root: `"./"`,
- *  `"."` and their plain spellings. A path with a fault, a backslash, or no
- *  text is not the root. */
+ *  `"."` and their plain spellings. A path with a fault, or no text, is not
+ *  the root. */
 function isRoot(source: ValueNode | undefined): boolean {
   if (source?.type !== 'String') {
     return false
   }
   const text = source.value
-  if (text === '' || text.includes('\\') || pathFault(text) !== undefined) {
+  if (text === '' || pathFault(text) !== undefined) {
     return false
   }
   const plain = path.posix.normalize(text)
