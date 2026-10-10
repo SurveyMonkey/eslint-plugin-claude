@@ -59,6 +59,14 @@ describe(RULE, () => {
     expect(lint('Read MYAGENTS.md and AGENTS.md.local\n')).toEqual([])
   })
 
+  it('stays silent when the name is far from the verb, on another line, or part of a name', () => {
+    expect(lint(`Read ${'a'.repeat(81)} AGENTS.md\n`)).toEqual([])
+    expect(ids(lint(`Read ${'a'.repeat(70)} AGENTS.md\n`))).toEqual(['prose'])
+    expect(lint('Read\nAGENTS.md\n')).toEqual([])
+    expect(lint('Read setup.md, then AGENTS.md\n')).toEqual([])
+    expect(lint('Read AGENTS.md-old\n')).toEqual([])
+  })
+
   it('stays silent on a mention in a fence, a heading or an HTML comment', () => {
     expect(lint('```\nRead AGENTS.md\n```\n')).toEqual([])
     expect(lint('# Read AGENTS.md\n')).toEqual([])

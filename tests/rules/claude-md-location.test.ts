@@ -65,6 +65,17 @@ describe(RULE, () => {
     }
   })
 
+  it('reports a claude.md in a folder named like a tool folder outside .claude', () => {
+    for (const file of [
+      '/repo/commands/claude.md',
+      '/repo/skills/claude.md',
+      '/repo/docs/agents/Claude.md',
+    ]) {
+      expect(ids(lint(file)), file).toEqual(['caseVariant'])
+    }
+    expect(lint('/repo/.claude/commands/CLAUDE.local.md')).toEqual([])
+  })
+
   it('stays silent on a file with another name', () => {
     for (const file of [
       '/repo/README.md',

@@ -30,8 +30,7 @@ The rule matches each glob against the files on disk. The base is the folder tha
 `.claude/` directory of the rule file. It reports each glob that matches no file, at the `paths`
 field, once for each glob.
 
-The inventory row said "tracked file". The plugin has no Git reader yet, so the rule reads the
-disk. It counts a file that `.gitignore` covers, such as a build output. A glob that targets such a
+The plugin has no Git reader yet, so the rule reads the disk. It counts a file that `.gitignore` covers, such as a build output. A glob that targets such a
 file passes, except a glob below `node_modules` or `.git`, which the walk skips.
 
 The walk of the files:
