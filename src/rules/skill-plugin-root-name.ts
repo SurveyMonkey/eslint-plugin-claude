@@ -24,8 +24,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
   },
   create(context) {
     const file = classifySkillFile(context.filename)
-    // Only a plugin-root skill has no folder name. Its `name` is the only name.
-    if (file === null || file.kind !== 'skill' || !file.plugin || file.names.length > 0) {
+    // Only a plugin-root skill has no name from a folder or a path. Its `name` is the only name.
+    if (file === null || file.names.length > 0) {
       return {}
     }
     return {
