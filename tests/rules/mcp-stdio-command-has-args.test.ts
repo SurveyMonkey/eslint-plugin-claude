@@ -98,3 +98,8 @@ it('reports a command that holds a variable reference after the first word', () 
     'splitCommand',
   ])
 })
+it('reports a server of a declared file on the path in the manifest', () => {
+  const declared = JSON.stringify({ name: 'p', mcpServers: './s.json' })
+  const found = lintManifest(NAME, declared, { 'p/s.json': at({ command: 'npx -y server' }) })
+  expect(found[0]).toMatchObject({ line: 1, column: declared.indexOf('"./s.json"') + 1 })
+})
