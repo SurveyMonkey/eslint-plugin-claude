@@ -19,6 +19,7 @@ import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
+import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
@@ -186,6 +187,7 @@ const modules = [
   claudeMdAgentsMdVariant,
   claudeMdExcludesPattern,
   claudeMdImportExists,
+  claudeMdImportMaxDepth,
   claudeMdMaxBytes,
   memorySettingsSchema,
   rulesFrontmatterSchema,
@@ -302,6 +304,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-agents-md-variant': 'error',
   'claude-md-excludes-pattern': 'error',
   'claude-md-import-exists': 'error',
+  'claude-md-import-max-depth': 'error',
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
   'rules-frontmatter-schema': 'error',

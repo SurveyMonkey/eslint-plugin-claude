@@ -455,6 +455,26 @@ const TREE: Record<string, string> = {
   'packages/ie/.claude/AGENTS.md': '@missing.md\n',
   'packages/ie/docs/notes.md': '@missing.md\n',
   'packages/ie/.claude/rules/r.md': '@missing.md\n',
+  // `claude-md-import-max-depth`: a chain of five hops from each instruction file that Claude
+  // Code expands. The same chain at four hops, and in a file that no rule reads. The file `.git`
+  // makes `packages/md` a repository, so that the imports of `.claude/CLAUDE.md` stay inside it.
+  'packages/md/.git': 'gitdir: ../.git\n',
+  'packages/md/f1.md': '@f2.md\n',
+  'packages/md/f2.md': '@f3.md\n',
+  'packages/md/f3.md': '@f4.md\n',
+  'packages/md/f4.md': '@f5.md\n',
+  'packages/md/f5.md': 'end\n',
+  'packages/mda/f1.md': '@f2.md\n',
+  'packages/mda/f2.md': '@f3.md\n',
+  'packages/mda/f3.md': '@f4.md\n',
+  'packages/mda/f4.md': '@f5.md\n',
+  'packages/mda/f5.md': 'end\n',
+  'packages/md/CLAUDE.md': '@f1.md\n',
+  'packages/md/.claude/CLAUDE.md': '@../f1.md\n',
+  'packages/md/CLAUDE.local.md': '@f1.md\n',
+  'packages/md/ok/CLAUDE.md': '@../f2.md\n',
+  'packages/md/docs/notes.md': '@../f1.md\n',
+  'packages/mda/AGENTS.md': '@f1.md\n',
   // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
   // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
@@ -586,6 +606,7 @@ const MEMORY_RULES = [
   'claude-md-agents-md-variant',
   'claude-md-excludes-pattern',
   'claude-md-import-exists',
+  'claude-md-import-max-depth',
   'claude-md-max-bytes',
   'memory-settings-schema',
   'rules-frontmatter-schema',
@@ -765,6 +786,11 @@ const EXPECTED = [
   'packages/ie/CLAUDE.local.md: claude/claude-md-import-exists@2',
   'packages/ie/AGENTS.md: claude/claude-md-import-exists@2',
   'packages/ie/.claude/AGENTS.md: claude/claude-md-import-exists@2',
+  // `claude-md-import-max-depth` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  'packages/md/CLAUDE.md: claude/claude-md-import-max-depth@2',
+  'packages/md/.claude/CLAUDE.md: claude/claude-md-import-max-depth@2',
+  'packages/md/CLAUDE.local.md: claude/claude-md-import-max-depth@2',
+  'packages/mda/AGENTS.md: claude/claude-md-import-max-depth@2',
   // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
   'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
@@ -1028,6 +1054,9 @@ describe('configs', () => {
       ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
     ])
     expect(blocks('claude-md-import-exists')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
+    ])
+    expect(blocks('claude-md-import-max-depth')).toEqual([
       ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
     ])
     expect(blocks('claude-md-max-bytes')).toEqual([
