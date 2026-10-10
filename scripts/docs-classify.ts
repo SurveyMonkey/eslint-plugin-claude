@@ -110,9 +110,12 @@ export type Tracked = {
 
 export type Output = { model: string; findings: Finding[]; tracked: Tracked[]; results: Result[] }
 
-// Each page URL maps to its headings, each with the inventory rows that cite
-// it.
-export type Inventory = Map<string, Map<string, Rows>>
+// A heading that inventory footnotes cite, with the anchor of their link, and
+// the inventory rows that cite it. `anchor` is null for a link with no anchor.
+export type Cite = { heading: string; anchor: string | null; rows: Rows }
+
+// Each page URL maps to the headings that the inventory cites on it.
+export type Inventory = Map<string, Cite[]>
 
 // A block to ask about, or a removed block that no rule cites.
 export type Item = {
@@ -490,13 +493,15 @@ function addRows(target: Rows, rows: Rows): void {
 // `[^id]: [Page title: Heading](url#anchor)`, as in docs/rules/*.md. The
 // heading is the label after the first colon and space. The whole label is
 // the heading when the link has no anchor, or when the label has no colon and
-// space. Only rule tables count: a table under "## Rules by group" whose
-// header row starts with `| Rule |`. A table in a `####` subsection belongs to
-// the `###` section above it. A footnote that no rule row cites cites nothing.
+// space. The text after `#` is the anchor. Only rule tables count: a table
+// under "## Rules by group" whose header row starts with `| Rule |`. A table
+// in a `####` subsection belongs to the `###` section above it. A footnote
+// that no rule row cites cites nothing. Footnotes with the same page, heading
+// and anchor give one entry.
 export function loadInventory(root: string): Inventory {
   const text = readFileSync(path.join(root, 'docs/rules-inventory.md'), 'utf8')
   const footnote = /^\[\^([^\]]+)\]:\s*\[([^\]]+)\]\((\S+?)\)\s*$/
-  const notes = new Map<string, { url: string; heading: string }>()
+  const notes = new Map<string, { url: string; heading: string; anchor: string | null }>()
   const rows: { section: string; rule: string; ids: string[] }[] = []
   let inGroups = false
   let section: string | undefined
@@ -505,8 +510,10 @@ export function loadInventory(root: string): Inventory {
     const [, id, label, link] = footnote.exec(line) ?? []
     if (id !== undefined && label !== undefined && link !== undefined) {
       const colon = label.indexOf(': ')
-      const heading = link.includes('#') && colon !== -1 ? label.slice(colon + 2) : label
-      notes.set(id, { url: link.split('#')[0] ?? link, heading })
+      const hash = link.indexOf('#')
+      const heading = hash !== -1 && colon !== -1 ? label.slice(colon + 2) : label
+      const anchor = hash === -1 ? null : link.slice(hash + 1)
+      notes.set(id, { url: hash === -1 ? link : link.slice(0, hash), heading, anchor })
       continue
     }
     if (/^##\s/.test(line)) {
@@ -535,11 +542,14 @@ export function loadInventory(root: string): Inventory {
     for (const id of row.ids) {
       const note = notes.get(id)
       if (note === undefined) continue
-      const headings = inventory.get(note.url) ?? new Map<string, Rows>()
-      const cites = headings.get(note.heading) ?? []
-      addRows(cites, [{ section: row.section, rules: [row.rule] }])
-      headings.set(note.heading, cites)
-      inventory.set(note.url, headings)
+      const cites = inventory.get(note.url) ?? []
+      let cite = cites.find((c) => c.heading === note.heading && c.anchor === note.anchor)
+      if (cite === undefined) {
+        cite = { heading: note.heading, anchor: note.anchor, rows: [] }
+        cites.push(cite)
+      }
+      addRows(cite.rows, [{ section: row.section, rules: [row.rule] }])
+      inventory.set(note.url, cites)
     }
   }
   return inventory
@@ -551,14 +561,14 @@ export function loadInventory(root: string): Inventory {
 export function planPage({
   url,
   citations,
-  inventory = new Map(),
+  inventory = [],
   pageText,
   stored,
   links,
 }: {
   url: string
   citations: Map<string, string[]>
-  inventory?: Map<string, Rows>
+  inventory?: Cite[]
   pageText: string
   stored: Snapshot | undefined
   links: Map<string, string>
@@ -654,29 +664,39 @@ export function planPage({
     }
     cite(first.key, heading, rules)
   }
-  // The inventory rows of each block that an inventory heading cites. A
-  // heading finds its block on the page as a mapped heading does. When the
-  // page does not have it, a stored block with its slug as ID is the old
-  // block. These headings track no block:
+  // The inventory rows of each block that an inventory footnote cites. The
+  // anchor of the footnote link finds the block first: a block on the page
+  // with that key, else a stored block with that key. The docs IDs are not
+  // always the slug of the heading. When no block has that key, the heading
+  // finds its block on the page as a mapped heading does. When the page does
+  // not have it, a stored block with its slug as key is the old block. These
+  // track no block:
   // - a heading that is on the page more than once
-  // - a heading that is the page title
-  // - a heading that neither the page nor the snapshot has.
-  const trackedRows = new Map<string, Rows>()
-  for (const [heading, rows] of inventory) {
+  // - an anchor or a heading of the page title, now or in the snapshot
+  // - an anchor and a heading that neither the page nor the snapshot has.
+  const storedTitle = stored.blocks[0]?.id
+  const keyOfCite = ({ heading, anchor }: Cite): string | undefined => {
+    const byAnchor = blocks.find((block) => block.key === anchor)
+    if (byAnchor !== undefined) return byAnchor.level === 1 ? undefined : byAnchor.key
+    if (anchor !== null && before.has(anchor)) return anchor === storedTitle ? undefined : anchor
     const id = slugify(heading)
     const byId = blocks.filter((block) => block.id === id)
     const matches = byId.length > 0 ? byId : blocks.filter((block) => slugify(block.title) === id)
     const [only] = matches
-    let key: string | undefined
-    if (only !== undefined && matches.length === 1 && only.level !== 1) key = only.key
-    if (only === undefined && before.has(id)) key = id
+    if (only !== undefined) return matches.length === 1 && only.level !== 1 ? only.key : undefined
+    return before.has(id) && id !== storedTitle ? id : undefined
+  }
+  const trackedRows = new Map<string, Rows>()
+  for (const cite of inventory) {
+    const key = keyOfCite(cite)
     if (key === undefined) continue
     const list = trackedRows.get(key) ?? []
-    addRows(list, rows)
+    addRows(list, cite.rows)
     trackedRows.set(key, list)
   }
   const tracked: Tracked[] = []
-  // A block that no mapped heading cites, and that an inventory row cites.
+  // A block that an inventory row cites, and that no mapped heading cites
+  // other than the page title.
   const track = (item: ItemBase, cited: string[]) => {
     const sections = cited.length === 0 ? trackedRows.get(item.blockId) : undefined
     if (sections === undefined) return

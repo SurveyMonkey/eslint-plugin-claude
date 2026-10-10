@@ -10,6 +10,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 import type {
   Answers,
+  Cite,
   Inventory,
   Jev,
   JevFetch,
@@ -857,22 +858,35 @@ describe('loadInventory', () => {
     return api.loadInventory(root)
   }
 
-  it('maps each footnote heading to the rule rows that cite it, by section', () => {
+  // The cites of a page, by heading, as [anchor, rows].
+  const byHeading = (cites: Cite[] | undefined) =>
+    new Map((cites ?? []).map((c) => [c.heading, [c.anchor, c.rows]]))
+
+  it('maps each footnote heading and anchor to the rule rows that cite it, by section', () => {
     expect(load(INVENTORY)).toEqual(
       new Map([
         [
           HOOKS,
-          new Map([
-            [
-              'Common fields',
-              [
+          [
+            {
+              heading: 'Common fields',
+              anchor: 'common-fields',
+              rows: [
                 { section: 'Hooks', rules: ['hooks-a', 'hooks-c'] },
                 { section: 'Settings', rules: ['settings-a'] },
               ],
-            ],
-            ['Hook lifecycle', [{ section: 'Hooks', rules: ['hooks-a'] }]],
-            ['Other exit codes', [{ section: 'Hooks', rules: ['hooks-b'] }]],
-          ]),
+            },
+            {
+              heading: 'Hook lifecycle',
+              anchor: 'hook-lifecycle',
+              rows: [{ section: 'Hooks', rules: ['hooks-a'] }],
+            },
+            {
+              heading: 'Other exit codes',
+              anchor: 'other-exit-codes',
+              rows: [{ section: 'Hooks', rules: ['hooks-b'] }],
+            },
+          ],
         ],
       ]),
     )
@@ -880,12 +894,31 @@ describe('loadInventory', () => {
 
   it('takes the whole label as the heading of a link with no anchor, and reads CRLF', () => {
     const text = INVENTORY.replace('[^lifecycle] |', '[^page] [^whole] |').replaceAll('\n', '\r\n')
-    const headings = load(text).get(HOOKS)
-    expect(headings?.get('Hooks reference')).toEqual([{ section: 'Hooks', rules: ['hooks-a'] }])
-    expect(headings?.get('Hooks reference: the page')).toEqual([
-      { section: 'Hooks', rules: ['hooks-a'] },
+    const headings = byHeading(load(text).get(HOOKS))
+    const rows = [{ section: 'Hooks', rules: ['hooks-a'] }]
+    expect(headings.get('Hooks reference')).toEqual([null, rows])
+    expect(headings.get('Hooks reference: the page')).toEqual([null, rows])
+    expect(headings.has('the page')).toBe(false)
+  })
+
+  it('keeps one entry for each heading and anchor, so one label with two anchors gives two', () => {
+    const text = INVENTORY.replace('[^lifecycle] |', '[^lifecycle] [^again] [^other] |').replace(
+      '[^unused]:',
+      `[^again]: [Hooks reference: Common fields](${HOOKS}#common-fields)\n[^other]: [Hooks reference: Common fields](${HOOKS}#common-fields-1)\n[^unused]:`,
+    )
+    const cites = load(text)
+      .get(HOOKS)
+      ?.filter((c) => c.heading === 'Common fields')
+    expect(cites?.map((c) => [c.anchor, c.rows])).toEqual([
+      [
+        'common-fields',
+        [
+          { section: 'Hooks', rules: ['hooks-a', 'hooks-c'] },
+          { section: 'Settings', rules: ['settings-a'] },
+        ],
+      ],
+      ['common-fields-1', [{ section: 'Hooks', rules: ['hooks-a'] }]],
     ])
-    expect(headings?.has('the page')).toBe(false)
   })
 
   it('lists a rule once, keeps an anchored label with no colon, and reads no table above the first section', () => {
@@ -898,28 +931,49 @@ describe('loadInventory', () => {
         '| `hooks-c` | A check. [^common] | [^common] [^bare] |',
       )
       .replace('[^unused]:', `[^bare]: [Matcher patterns](${HOOKS}#matcher-patterns)\n[^unused]:`)
-    const headings = load(text).get(HOOKS)
-    expect(headings?.get('Common fields')).toEqual([
+    const headings = byHeading(load(text).get(HOOKS))
+    expect(headings.get('Common fields')?.[1]).toEqual([
       { section: 'Hooks', rules: ['hooks-a', 'hooks-c'] },
       { section: 'Settings', rules: ['settings-a'] },
     ])
-    expect(headings?.get('Matcher patterns')).toEqual([{ section: 'Hooks', rules: ['hooks-c'] }])
-    expect(headings?.has('Debug hooks')).toBe(false)
+    expect(headings.get('Matcher patterns')).toEqual([
+      'matcher-patterns',
+      [{ section: 'Hooks', rules: ['hooks-c'] }],
+    ])
+    expect(headings.has('Debug hooks')).toBe(false)
   })
 
   it('reads the real inventory, and maps a hooks heading to the Hooks rows', () => {
     const inventory = api.loadInventory(path.join(import.meta.dirname, '..'))
-    const rows = inventory.get(HOOKS)?.get('Common fields')
+    const rows = inventory.get(HOOKS)?.find((c) => c.heading === 'Common fields')?.rows
     expect(rows?.map((r) => r.section)).toEqual(['Hooks'])
     expect(rows?.[0]?.rules).toEqual(
       expect.arrayContaining(['hooks-config-schema', 'hooks-if-condition']),
     )
+    // The label of this footnote is not the slug of its anchor.
+    const memory = inventory
+      .get('https://code.claude.com/docs/en/memory')
+      ?.find((c) => c.heading === 'Rule frontmatter reference')
+    expect(memory?.anchor).toBe('rules-frontmatter-reference')
   })
 })
 
 describe('classify with the inventory', () => {
-  const inventoryOf = (cites: Record<string, { section: string; rules: string[] }[]>) =>
-    new Map([[URL_, new Map(Object.entries(cites))]]) as Inventory
+  // Each heading cites with no anchor, unless `anchors` gives one.
+  const inventoryOf = (
+    cites: Record<string, { section: string; rules: string[] }[]>,
+    anchors: Record<string, string> = {},
+  ): Inventory =>
+    new Map([
+      [
+        URL_,
+        Object.entries(cites).map(([heading, rows]) => ({
+          heading,
+          anchor: anchors[heading] ?? null,
+          rows,
+        })),
+      ],
+    ])
   const pathRows = { 'Path rules': [{ section: 'Hooks', rules: ['hooks-a'] }] }
   const EDIT_PATH = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
   const runPath = (map: SourceMap, edited: string, jev: ReturnType<typeof fakeJev>) =>
@@ -1036,6 +1090,102 @@ describe('classify with the inventory', () => {
       'unrecognized-fields-1',
     ])
     expect(output.tracked).toEqual([])
+  })
+
+  describe('the anchor of a footnote (Mid-round ruling 15)', () => {
+    // The memory case: the label "Rule frontmatter reference" and the anchor
+    // `rules-frontmatter-reference`, which is the block ID that the page serves.
+    const RULES_HEAD = '<h4 id="rules-frontmatter-reference">\n  Rule frontmatter reference\n</h4>'
+    const MEMORY = `${PAGE.trimEnd()}\n\n${RULES_HEAD}\n\nA rule file has frontmatter.\n`
+    const memoryRows = { 'Rule frontmatter reference': [{ section: 'Hooks', rules: ['hooks-a'] }] }
+    const memory = inventoryOf(memoryRows, {
+      'Rule frontmatter reference': 'rules-frontmatter-reference',
+    })
+    const runMemory = (edited: string, inventory = memory) =>
+      run(cited, edited, { fetch: fakeJev(() => 0).fetch, key: KEY }, MEMORY, inventory)
+    const trackedOf = (output: Output) => output.tracked.map((t) => [t.blockId, t.change])
+
+    it('finds a changed block by its anchor (the title slug finds it too)', async () => {
+      const edited = MEMORY.replace('has frontmatter.', 'has YAML frontmatter.')
+      expect(trackedOf(await runMemory(edited))).toEqual([
+        ['rules-frontmatter-reference', 'changed'],
+      ])
+    })
+
+    it('finds a removed block by its anchor, where the slug of the label is not a stored ID', async () => {
+      const edited = MEMORY.replace(RULES_HEAD, 'Rule frontmatter reference')
+      expect(trackedOf(await runMemory(edited))).toEqual([
+        ['rules-frontmatter-reference', 'removed'],
+      ])
+    })
+
+    it('finds a block by its anchor when the page gives it a new title', async () => {
+      const edited = MEMORY.replace('  Rule frontmatter reference', '  Frontmatter for rules')
+      expect(trackedOf(await runMemory(edited))).toEqual([
+        ['rules-frontmatter-reference', 'changed'],
+      ])
+    })
+
+    it('takes the anchor before the label, and a suffix key of a heading on the page twice', async () => {
+      const edited = EDIT_PATH.replace('`commands` takes', 'The `commands` field takes').replace(
+        'An unknown path field',
+        'A path field',
+      )
+      const inventory = inventoryOf(
+        {
+          'Path rules': [{ section: 'Hooks', rules: ['hooks-a'] }],
+          'Unrecognized fields': [{ section: 'Settings', rules: ['settings-a'] }],
+        },
+        { 'Path rules': 'commands', 'Unrecognized fields': 'unrecognized-fields-1' },
+      )
+      const jev = fakeJev(() => 0)
+      const output = await run(cited, edited, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+      expect(output.tracked.map((t) => [t.blockId, t.sections[0]?.section])).toEqual([
+        ['commands', 'Hooks'],
+        ['unrecognized-fields-1', 'Settings'],
+      ])
+    })
+
+    it('falls back to the label when no block has the anchor, now or in the snapshot', async () => {
+      const inventory = inventoryOf(pathRows, { 'Path rules': 'no-such-block' })
+      const jev = fakeJev(() => 0)
+      const output = await run(cited, EDIT_PATH, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+      expect(trackedOf(output)).toEqual([['path-rules', 'changed']])
+    })
+
+    it('finds a label by the block ID before the title slug', async () => {
+      const html = PAGE.replace(
+        '### `commands`',
+        '<h3 id="commands">\n  Command files\n</h3>',
+      ).replace('## Path rules', '<h2 id="path-list">\n  Commands\n</h2>')
+      const edited = html
+        .replace('`commands` takes', 'The `commands` field takes')
+        .replace('</h2>\n', '</h2>\n\nA path must start with `./`.\n')
+      const inventory = inventoryOf({ Commands: [{ section: 'Hooks', rules: ['hooks-a'] }] })
+      const jev = fakeJev(() => 0)
+      const output = await run(cited, edited, { fetch: jev.fetch, key: KEY }, html, inventory)
+      expect(output.results.map((r) => r.blockId).sort()).toEqual(['commands', 'path-list'])
+      expect(trackedOf(output)).toEqual([['commands', 'changed']])
+    })
+
+    it('tracks no page title, by its anchor or its label, when the page gives it a new title', async () => {
+      const edited = EDIT_PATH.replace('# Plugin manifest reference', '# Plugin manifest')
+      const inventory = inventoryOf(
+        {
+          'Plugin manifest reference': [{ section: 'Hooks', rules: ['hooks-a'] }],
+          'The manifest': [{ section: 'Settings', rules: ['settings-a'] }],
+          Manifest: [{ section: 'Hooks', rules: ['hooks-b'] }],
+        },
+        { 'The manifest': 'plugin-manifest-reference', Manifest: 'plugin-manifest' },
+      )
+      const jev = fakeJev(() => 0)
+      const output = await run(cited, edited, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+      expect(output.results.map((r) => [r.blockId, r.change])).toContainEqual([
+        'plugin-manifest-reference',
+        'removed',
+      ])
+      expect(output.tracked).toEqual([])
+    })
   })
 
   it('tracks nothing on a page with no snapshot, or a page that did not change', async () => {
