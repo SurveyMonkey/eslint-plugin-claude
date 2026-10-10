@@ -42,6 +42,9 @@ report rests on the sources that do read:
 - A path that is not a plain `./` path to a `.json` file. A path with `..` is for
   `claude plugin validate`.
 - A file that is not there, that does not parse, or that the process cannot read.
+- A `.lsp.json` with an invalid entry. Claude Code skips the whole file,[^components] and
+  [`lsp-json-schema`](lsp-json-schema.md) reports the fault. The docs name no such rule for a
+  file that `lspServers` names, so the rule reads the names of that file as they are.
 - A link that leads out of the plugin directory, or out of the repository, and a dangling link.
 
 The rule reads the names only. [`lsp-json-schema`](lsp-json-schema.md) checks the shape of each

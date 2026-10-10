@@ -170,3 +170,15 @@ it('claims nothing for a server that has no extension map, or a map that is not 
   })
   expect(ids(found)).toEqual([])
 })
+it('counts no server of a .lsp.json that has an invalid entry, as Claude Code skips the file', () => {
+  const bad = JSON.stringify({ ts: server('.ts'), rs: { command: 'rust-analyzer' } })
+  const files = { 'plugins/a/.lsp.json': bad, 'plugins/b/.lsp.json': lsp({ tsx: ['.ts'] }) }
+  expect(ids(lint(market(entry('a'), entry('b')), files))).toEqual([])
+  // A declared file keeps its servers: the docs do not say that Claude Code skips it.
+  const declared = {
+    'plugins/a/.claude-plugin/plugin.json': manifestOf('a', './lsp.json'),
+    'plugins/a/lsp.json': bad,
+    'plugins/b/.lsp.json': lsp({ tsx: ['.ts'] }),
+  }
+  expect(ids(lint(market(entry('a'), entry('b')), declared))).toEqual(['conflict'])
+})
