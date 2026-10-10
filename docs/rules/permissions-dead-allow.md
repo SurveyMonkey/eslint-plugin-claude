@@ -50,8 +50,8 @@ The rule reads the text of the rules, so these cases get no report:
 - A compound command, a hook or a mode.
 - A rule in a file that the repository does not hold, such as the user file.
 
-The same rule twice in `allow` and `deny` is a dead `allow` rule, and the rule reports it. `permissions-duplicate-rule` is the
-rule for the same rule twice in one list.
+The same rule in `allow` and in `deny` or `ask` is a dead `allow` rule, and this rule reports it. `permissions-duplicate-rule` is
+the rule for the same rule twice in one list, and for an `ask` rule that an equal `deny` rule repeats.
 
 ### One source
 

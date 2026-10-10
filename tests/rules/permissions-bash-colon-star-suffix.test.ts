@@ -16,13 +16,13 @@ const ids = (text: string, file = PROJECT) =>
   lintJson(name, text, file).map((message) => message.messageId)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a trailing :* in every file', () => {
+  it('reports a trailing :* in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(perms({ allow: ['Bash(ls:*)'] }), file), file).toEqual(['suffix'])
     }
   })
 
-  it.fails('reports in allow, ask and deny, and for each command tool', () => {
+  it('reports in allow, ask and deny, and for each command tool', () => {
     for (const list of ['allow', 'ask', 'deny']) {
       expect(ids(perms({ [list]: ['Bash(ls:*)'] })), list).toEqual(['suffix'])
     }
@@ -31,17 +31,17 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('names the rule and the space form', () => {
+  it('names the rule and the space form', () => {
     const [message] = lintJson(name, perms({ allow: ['Bash(git push:*)'] }), PROJECT)
     expect(message?.message).toContain('Bash(git push:*)')
     expect(message?.message).toContain('Bash(git push *)')
   })
 
-  it.fails('reports a rule with a :* in the middle as well, for the end', () => {
+  it('reports a rule with a :* in the middle as well, for the end', () => {
     expect(ids(perms({ allow: ['Bash(git:* push:*)'] }))).toEqual(['suffix'])
   })
 
-  it.fails('reports at the entry, at its line and column', () => {
+  it('reports at the entry, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "allow": ["Bash(ls:*)"]\n  }\n}'
     expect(lintJson(name, text, PROJECT).map(({ line, column }) => [line, column])).toEqual([
       [3, 15],
@@ -50,29 +50,29 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for the space form, and for a rule with no :*', () => {
+  it('is silent for the space form, and for a rule with no :*', () => {
     for (const rule of ['Bash(ls *)', 'Bash(ls)', 'Bash', 'Bash(*)', 'Bash(git:* push)']) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a tool that is not a command tool', () => {
+  it('is silent for a tool that is not a command tool', () => {
     for (const rule of ['Read(./a:*)', 'WebFetch(domain:*)', 'Agent(isolation:*)']) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a :* that stands alone, which Claude Code reads as text', () => {
+  it('is silent for a :* that stands alone, which Claude Code reads as text', () => {
     expect(ids(perms({ allow: ['Bash(:*)'] }))).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse, and for a list that is not an array', () => {
+  it('is silent for a rule that does not parse, and for a list that is not an array', () => {
     expect(ids(perms({ allow: ['Bash(ls:*'] }))).toEqual([])
     expect(ids(JSON.stringify({ permissions: { allow: 'Bash(ls:*)' } }))).toEqual([])
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(perms({ allow: ['Bash(ls:*)'] }), HIDDEN)).toEqual([])
   })
 })

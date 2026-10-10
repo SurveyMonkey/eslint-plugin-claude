@@ -16,26 +16,26 @@ const ids = (text: string, file = PROJECT) =>
   lintJson(name, text, file).map((message) => message.messageId)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports "*" in deny, in every file', () => {
+  it('reports "*" in deny, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(perms({ deny: ['*'] }), file), file).toEqual(['all'])
     }
   })
 
-  it.fails('reports "mcp__*" in deny, in every file', () => {
+  it('reports "mcp__*" in deny, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(perms({ deny: ['mcp__*'] }), file), file).toEqual(['mcp'])
     }
   })
 
-  it.fails('says what each rule removes', () => {
+  it('says what each rule removes', () => {
     const [all] = lintJson(name, perms({ deny: ['*'] }), PROJECT)
     expect(all?.message).toContain('every tool')
     const [mcp] = lintJson(name, perms({ deny: ['mcp__*'] }), PROJECT)
     expect(mcp?.message).toContain('every MCP tool')
   })
 
-  it.fails('reports each entry, at its line and column', () => {
+  it('reports each entry, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "deny": ["Read", "*", "mcp__*"]\n  }\n}'
     expect(lintJson(name, text, PROJECT).map(({ line, column }) => [line, column])).toEqual([
       [3, 22],
@@ -45,25 +45,25 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for a narrower deny rule', () => {
+  it('is silent for a narrower deny rule', () => {
     for (const rule of ['Bash', 'mcp__github', 'mcp__github__*', 'mcp__*__read', 'B*', 'Bash(*)']) {
       expect(ids(perms({ deny: [rule] })), rule).toEqual([])
     }
   })
 
-  it.fails('is silent in allow and ask', () => {
+  it('is silent in allow and ask', () => {
     for (const list of ['allow', 'ask']) {
       expect(ids(perms({ [list]: ['*', 'mcp__*'] })), list).toEqual([])
     }
   })
 
-  it.fails('is silent for a rule that does not parse, and for a list that is not an array', () => {
+  it('is silent for a rule that does not parse, and for a list that is not an array', () => {
     expect(ids(perms({ deny: ['*('] }))).toEqual([])
     expect(ids(JSON.stringify({ permissions: { deny: '*' } }))).toEqual([])
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(perms({ deny: ['*'] }), HIDDEN)).toEqual([])
   })
 })
