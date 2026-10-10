@@ -250,6 +250,18 @@
       "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
     }
   ],
+  "claude-md-import-external": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Import additional files",
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Where AGENTS.md differs from CLAUDE.md",
+      "hash": "f04688bc74ae6de9f4c2005147dfa1eb60d18bbbab2b2613548f2071c9635f6b"
+    }
+  ],
   "claude-md-import-max-depth": [
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -267,6 +279,25 @@
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "My CLAUDE.md is too large",
       "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    }
+  ],
+  "claude-md-max-lines": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Write effective instructions",
+      "hash": "718f387c95271b74a191a607263f01cf7a88e5948098c801a525da993f7c23e7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "My CLAUDE.md is too large",
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    }
+  ],
+  "claude-md-symlink": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Share one file with other coding tools",
+      "hash": "3186e5008a85b3edb177e7fe216e528bfd9e3c4dd1efceef985e709e266f713a"
     }
   ],
   "command-legacy-format": [
@@ -310,7 +341,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
       "heading": "Hook loads but never fires",
-      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
+      "hash": "468bce684f6e3525ac658ee96e4e5155b6447345bee84c145dfd72ef7cc6c9fc"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -508,7 +539,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
+      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -728,6 +759,35 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Relative path plugin source",
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    }
+  ],
+  "memory-auto-memory-directory-committed": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Storage location",
+      "hash": "a02cbbf4972edb765999ac55fe61c7815d720a95433b88793297a83938a38b7e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoMemoryDirectory",
+      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
+    }
+  ],
+  "memory-index-max-size": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Enable persistent memory",
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Memory index is over its read limit",
+      "hash": "105b83ff6fb266ead40be05db044bbba6c18b02ff271d7403e3e0b38ac36dc29"
     }
   ],
   "memory-settings-schema": [
@@ -996,6 +1056,13 @@
       "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
     }
   ],
+  "rules-max-lines": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "My CLAUDE.md is too large",
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    }
+  ],
   "rules-md-extension": [
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -1008,6 +1075,13 @@
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Path-specific rules",
       "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
+    }
+  ],
+  "rules-symlink-external": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Share rules across projects with symlinks",
+      "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
     }
   ],
   "rules-symlink-external-scoped": [
@@ -1147,7 +1221,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -1164,7 +1238,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     }
   ],
   "settings-env-shadowed": [
@@ -1213,7 +1287,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -1287,7 +1361,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
+      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1309,14 +1383,14 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
+      "hash": "6891dd955aeb49b8a22ed247ed945baa26614bfe6e5b14ab3fa3c5e8eafbe104"
     }
   ],
   "settings-key-scope": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "ac1fe1d096f0218a7c4b5d24d6bcf54afa28350e5af89df341bf50d25c5d6dee"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -1622,7 +1696,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "forceLoginMethod",
-      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
+      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

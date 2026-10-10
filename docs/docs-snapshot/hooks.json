@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "ad56e03ba949864cab3346b7d69a896b34a004f1af26f0a7666a9c5bdc44553b",
+  "hash": "db03ca1be8744c87bba0a3786f34110add0f8a324c3d206e0a758450562faeed",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -292,7 +292,7 @@
     },
     {
       "id": "pretooluse-decision-control",
-      "hash": "28f6792385e67de437d8999646911ea565fbe0eb177444b7a240ca90d95b3fe8"
+      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
     },
     {
       "id": "allow-with-updatedinput",
@@ -300,7 +300,7 @@
     },
     {
       "id": "defer-a-tool-call-for-later",
-      "hash": "526c2ae7fbcf06ea07ea6cfdbddba01f4a63945df35c70de5ceff583c9fac860"
+      "hash": "dc87410f68626813d23473aefe0b9657b4f84a0c2a03c49bed66b22ef38c39af"
     },
     {
       "id": "permissionrequest",

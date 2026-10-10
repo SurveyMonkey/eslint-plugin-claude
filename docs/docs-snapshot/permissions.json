@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permissions",
-  "hash": "5968a6bf06e691b55d1e94498bf80b462376bd736f09780dec3f89ac18ed2b9c",
+  "hash": "cd4e5f5e0a87bd6a9bd64e469d9271e796143ebd9caf3e6e009c5c9c7317a71f",
   "blocks": [
     {
       "id": "configure-permissions",
@@ -8,7 +8,7 @@
     },
     {
       "id": "permission-system",
-      "hash": "0fc0d0ea10bba4c46221ce69b4eb0167dae682a53c479815d243fe5fc9a24e32"
+      "hash": "8a98bb9140eaee477296078cbfb34058d07b628240bdabbc1c6dcd62ea72984a"
     },
     {
       "id": "add-a-comment-when-you-answer-a-permission-prompt",
@@ -20,7 +20,7 @@
     },
     {
       "id": "permission-modes",
-      "hash": "c128332c5f5a60d534f16760c6f9286cbe5035e7d1767607ef835df12a1efee0"
+      "hash": "8ad6af7fed7a79909788a967a3b7e593f2761cbe9771895a5a689baceec9d9d8"
     },
     {
       "id": "permission-rule-syntax",
@@ -52,7 +52,7 @@
     },
     {
       "id": "bash",
-      "hash": "d6016876125730d1b139c6fea4fa21ca04aec6bd1a9a62ad18c1173d4c84581e"
+      "hash": "aa665e0f6c866ed55ca6c6bd886ac58e48e34e0ffbc1308246d523577f9eb436"
     },
     {
       "id": "compound-commands",
@@ -60,7 +60,11 @@
     },
     {
       "id": "process-wrappers",
-      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+      "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
+    },
+    {
+      "id": "exec-wrappers-and-find-actions",
+      "hash": "fddc5345565ac62850bb5f1640d21477355eae1d2d9ccc419464ecdce5f722c1"
     },
     {
       "id": "bash-rule-limits",
@@ -68,7 +72,7 @@
     },
     {
       "id": "read-only-commands",
-      "hash": "850a8e2c36842d570d74195b1886fae6e0c0d036fed299c351466f9fac025563"
+      "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e"
     },
     {
       "id": "redirections",
@@ -99,6 +103,10 @@
       "hash": "7a1d71b9c4320662fbe5432e9485047aadc07f5426dd186df63ea6b5274c6aab"
     },
     {
+      "id": "network-paths",
+      "hash": "de2a13a553f7be02a0890738ba5686c276069f95d41ea65ff907c1c9320aa318"
+    },
+    {
       "id": "webfetch",
       "hash": "34f315d4eb30dc7b6e7149d6a1a850903297476471a752edfa885ac250b0d999"
     },
@@ -120,11 +128,11 @@
     },
     {
       "id": "extend-permissions-with-hooks",
-      "hash": "96e6697e6633c398a95990444a67053b034a417f9750e6923e0b5cf8f0bee22f"
+      "hash": "3e73b379d7be863acbd4a94a9c92fae0179aa61966394d0b588640e039a6a15f"
     },
     {
       "id": "working-directories",
-      "hash": "28cc8b8f5de30899574d4004f4388f8f15874e1104d7b96cb134608d540d43f4"
+      "hash": "a5eef13704984e6b63821950c6d4c00ab4f066d9dadb0f3bce59e59aee313dd2"
     },
     {
       "id": "move-the-session-to-another-directory",
