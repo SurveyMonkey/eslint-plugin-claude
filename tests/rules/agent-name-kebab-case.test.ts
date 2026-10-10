@@ -9,14 +9,14 @@ const lint = (name: string, place: string = PLACES.local) =>
   lintAt('agent-name-kebab-case', `---\nname: ${name}\ndescription: d\n---\n\nBody.\n`, place)
 
 describe('agent-name-kebab-case', () => {
-  it.fails('reports a name that is not kebab-case, on the value', () => {
+  it('reports a name that is not kebab-case, on the value', () => {
     expect(lint('My_Agent')).toMatchObject([
       { messageId: 'notKebab', line: 2, column: 7, endLine: 2, endColumn: 15 },
     ])
     expect(lint('My_Agent')[0]?.message).toContain('My_Agent')
   })
 
-  it.fails('reports other shapes', () => {
+  it('reports other shapes', () => {
     for (const name of [
       'MyAgent',
       'my_agent',
@@ -31,40 +31,40 @@ describe('agent-name-kebab-case', () => {
     }
   })
 
-  it.fails('reports each place of an agent', () => {
+  it('reports each place of an agent', () => {
     for (const place of Object.values(PLACES)) {
       expect(lint('My_Agent', place), place).toHaveLength(1)
     }
   })
 
   describe('stays silent', () => {
-    it.fails('for kebab-case, in each place', () => {
+    it('for kebab-case, in each place', () => {
       for (const place of Object.values(PLACES)) {
         expect(lint('my-agent', place), place).toEqual([])
       }
     })
-    it.fails('for the documented examples and digits', () => {
+    it('for the documented examples and digits', () => {
       for (const name of ['code-reviewer', 'reviewer-v2', 'a', 'agent2', '"2fa"', 'v2-reviewer']) {
         expect(lint(name), name).toEqual([])
       }
     })
-    it.fails('for a name that differs from the file name', () => {
+    it('for a name that differs from the file name', () => {
       expect(lint('reviewer')).toEqual([])
       expect(lint('reviewer', 'plugins/p/agents/other-name.md')).toEqual([])
     })
-    it.fails('for the name of a built-in agent', () => {
+    it('for the name of a built-in agent', () => {
       for (const name of ['Explore', 'Plan', 'general-purpose', 'claude', 'claude-code-guide']) {
         expect(lint(name), name).toEqual([])
       }
     })
-    it.fails('for a name that is missing, empty or not a string', () => {
+    it('for a name that is missing, empty or not a string', () => {
       expect(lint('')).toEqual([])
       expect(lint('5')).toEqual([])
       expect(lint('[a]')).toEqual([])
       expect(lint('true')).toEqual([])
       expect(lintAt('agent-name-kebab-case', '---\ndescription: d\n---\n\nBody.\n')).toEqual([])
     })
-    it.fails('for a file with no frontmatter, a bad block, or outside the agent folders', () => {
+    it('for a file with no frontmatter, a bad block, or outside the agent folders', () => {
       expect(lintAt('agent-name-kebab-case', 'Body only.\n')).toEqual([])
       expect(lintAt('agent-name-kebab-case', '---\nname: [My_A\n---\n')).toEqual([])
       expect(lint('My_Agent', 'docs/a.md')).toEqual([])

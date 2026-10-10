@@ -105,6 +105,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/agent-skills-exist`](docs/rules/agent-skills-exist.md) | A `skills` entry of a subagent that names no skill or bundled skill | `off` | `warn` |
 | [`claude/agent-tools-agent-type-list`](docs/rules/agent-tools-agent-type-list.md) | An `Agent(type)` list in an agent that does not run as the main thread, and a type that no agent defines | `off` | `warn` |
 | [`claude/agent-tools-skill-for-preload`](docs/rules/agent-tools-skill-for-preload.md) | `Skill` in the `tools` of a subagent that preloads no skill | `off` | `warn` |
+| [`claude/agent-body-nonempty`](docs/rules/agent-body-nonempty.md) | A subagent file with frontmatter and an empty body, which is its system prompt | `off` | `warn` |
+| [`claude/agent-description-proactive`](docs/rules/agent-description-proactive.md) | A subagent `description` with no phrase such as "use proactively" | `off` | `warn` |
+| [`claude/agent-descriptions-budget`](docs/rules/agent-descriptions-budget.md) | The names and descriptions of one scope fit the limit of 15,000 tokens. Options `maxTokens` and `charsPerToken` | `off` | `warn` |
+| [`claude/agent-name-kebab-case`](docs/rules/agent-name-kebab-case.md) | A subagent `name` that is not kebab-case | `off` | `warn` |
+| [`claude/agent-teammate-ignored-fields`](docs/rules/agent-teammate-ignored-fields.md) | `skills`, `mcpServers` and `background: true` in a local agent while the settings turn agent teams on | `off` | `warn` |
 
 ### Hooks
 

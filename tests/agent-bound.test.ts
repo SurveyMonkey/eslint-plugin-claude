@@ -114,7 +114,7 @@ describe('a walk above the project folder', () => {
     expect(above(root)).toEqual([])
   })
 
-  it.fails('a manifest agents path makes no call above the repository root', () => {
+  it('a manifest agents path makes no call above the repository root', () => {
     const root = repo({
       'plugins/p/.claude-plugin/plugin.json': '{"name":"p","agents":["./c/a.md"]}',
     })
@@ -134,7 +134,7 @@ describe('a walk above the project folder', () => {
     expect(above(root)).toEqual([])
   })
 
-  it.fails('agent-descriptions-budget makes no call above the repository root', () => {
+  it('agent-descriptions-budget makes no call above the repository root', () => {
     const huge = agent('', 'big').replace('description: d', `description: ${'x'.repeat(30000)}`)
     const root = repo({
       '.claude/agents/b.md': huge,

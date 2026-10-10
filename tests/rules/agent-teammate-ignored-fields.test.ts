@@ -9,7 +9,7 @@ import { lintAgent } from '../agent-rules.test-support.ts'
 import { agent, repo } from '../agent-settings.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
-const unreadable = chmodCannotBlock ? it.skip : it.fails
+const unreadable = chmodCannotBlock ? it.skip : it
 const AGENT = '.claude/agents/a.md'
 const PLUGIN = { 'plugins/p/.claude-plugin/plugin.json': '{"name":"p"}' }
 const TEAMS = 'CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS'
@@ -26,19 +26,19 @@ const run = (files: Record<string, string>, fields: string, at = AGENT, options:
   )
 
 describe('agent-teammate-ignored-fields', () => {
-  it.fails('reports skills when the settings turn teams on, on the field', () => {
+  it('reports skills when the settings turn teams on, on the field', () => {
     expect(run({ '.claude/settings.json': on() }, SKILLS)).toMatchObject([
       { messageId: 'skills', line: 4, column: 1, endLine: 5, endColumn: 9 },
     ])
   })
 
-  it.fails('reports mcpServers when the settings turn teams on', () => {
+  it('reports mcpServers when the settings turn teams on', () => {
     expect(run({ '.claude/settings.json': on() }, MCP)).toMatchObject([
       { messageId: 'mcpServers', line: 4, column: 1 },
     ])
   })
 
-  it.fails('reports background when the settings turn teams on', () => {
+  it('reports background when the settings turn teams on', () => {
     for (const value of ['true', 'yes', 'on', '1']) {
       expect(run({ '.claude/settings.json': on() }, `background: ${value}\n`), value).toMatchObject(
         [{ messageId: 'background', line: 4, column: 1, endLine: 4, endColumn: 13 + value.length }],
@@ -46,12 +46,17 @@ describe('agent-teammate-ignored-fields', () => {
     }
   })
 
-  it.fails('reports each field, in the order of the file', () => {
+  it('reports mcpServers written as a map', () => {
+    const fields = 'mcpServers:\n  github:\n    command: x\n'
+    expect(run({ '.claude/settings.json': on() }, fields)).toHaveLength(1)
+  })
+
+  it('reports each field, in the order of the file', () => {
     const messages = run({ '.claude/settings.json': on() }, `background: true\n${MCP}${SKILLS}`)
     expect(messages.map((m) => m.messageId)).toEqual(['background', 'mcpServers', 'skills'])
   })
 
-  it.fails('reads the value true, in any letter case, and the local file', () => {
+  it('reads the value true, in any letter case, and the local file', () => {
     expect(run({ '.claude/settings.json': on('true') }, SKILLS)).toHaveLength(1)
     expect(run({ '.claude/settings.json': on('TRUE') }, SKILLS)).toHaveLength(1)
     expect(run({ '.claude/settings.local.json': on() }, SKILLS)).toHaveLength(1)
@@ -60,13 +65,13 @@ describe('agent-teammate-ignored-fields', () => {
     ).toHaveLength(1)
   })
 
-  it.fails('reports an agent in a subfolder of agents', () => {
+  it('reports an agent in a subfolder of agents', () => {
     expect(run({ '.claude/settings.json': on() }, SKILLS, '.claude/agents/team/a.md')).toHaveLength(
       1,
     )
   })
 
-  it.fails('reports skills and background when teammateMode names split panes', () => {
+  it('reports skills and background when teammateMode names split panes', () => {
     for (const mode of ['tmux', 'iterm2']) {
       const files = { '.claude/settings.json': on('1', { teammateMode: mode }) }
       expect(
@@ -77,7 +82,7 @@ describe('agent-teammate-ignored-fields', () => {
   })
 
   describe('stays silent', () => {
-    it.fails('when the settings do not turn teams on', () => {
+    it('when the settings do not turn teams on', () => {
       const fields = `${SKILLS}${MCP}background: true\n`
       expect(run({}, fields)).toEqual([])
       expect(run({ '.claude/settings.json': '{}' }, fields)).toEqual([])
@@ -89,18 +94,18 @@ describe('agent-teammate-ignored-fields', () => {
         run({ '.claude/settings.json': on(), '.claude/settings.local.json': on('0') }, fields),
       ).toEqual([])
     })
-    it.fails('when teammateMode is in-process, auto, or not a string, for mcpServers', () => {
+    it('when teammateMode is in-process, auto, or not a string, for mcpServers', () => {
       for (const mode of ['in-process', 'auto', 5]) {
         const files = { '.claude/settings.json': on('1', { teammateMode: mode }) }
         expect(run(files, MCP), String(mode)).toHaveLength(1)
       }
     })
-    it.fails('for fields that a teammate keeps', () => {
+    it('for fields that a teammate keeps', () => {
       const files = { '.claude/settings.json': on() }
       expect(run(files, '')).toEqual([])
       expect(run(files, 'tools: Read\nmodel: sonnet\nmemory: project\n')).toEqual([])
     })
-    it.fails('for empty values and background that is not true', () => {
+    it('for empty values and background that is not true', () => {
       const files = { '.claude/settings.json': on() }
       for (const fields of [
         'skills: []\n',
@@ -116,11 +121,11 @@ describe('agent-teammate-ignored-fields', () => {
         expect(run(files, fields), fields).toEqual([])
       }
     })
-    it.fails('for a plugin agent, even when the repository settings turn teams on', () => {
+    it('for a plugin agent, even when the repository settings turn teams on', () => {
       const files = { '.claude/settings.json': on(), 'plugins/p/.claude/settings.json': on() }
       expect(run(files, `${SKILLS}${MCP}background: true\n`, 'plugins/p/agents/a.md')).toEqual([])
     })
-    it.fails('for a file outside the agent folders, or with no frontmatter', () => {
+    it('for a file outside the agent folders, or with no frontmatter', () => {
       const files = { '.claude/settings.json': on() }
       expect(run(files, SKILLS, 'docs/a.md')).toEqual([])
       const root = repo({ ...files })
@@ -135,7 +140,7 @@ describe('agent-teammate-ignored-fields', () => {
         ),
       ).toEqual([])
     })
-    it.fails('when a settings file does not parse', () => {
+    it('when a settings file does not parse', () => {
       expect(run({ '.claude/settings.json': '{' }, SKILLS)).toEqual([])
     })
     unreadable('when a settings file cannot be read', () => {

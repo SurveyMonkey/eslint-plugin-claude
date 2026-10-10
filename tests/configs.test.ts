@@ -1127,7 +1127,16 @@ const AGENT_OFF_RULES = [
   'agent-skills-exist',
   'agent-tools-agent-type-list',
   'agent-tools-skill-for-preload',
+  'agent-body-nonempty',
+  'agent-description-proactive',
+  'agent-descriptions-budget',
+  'agent-name-kebab-case',
+  'agent-teammate-ignored-fields',
 ]
+
+// The last five of the list above. They take every Markdown file, because the manifest key
+// `agents` of a plugin can name an agent file outside `agents/`. The rule asks where the file sits.
+const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(6)
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [
@@ -1148,8 +1157,66 @@ const NEW_RULES = [
   'skill-paths-glob-valid',
 ]
 
+// The trees of the description rules. The repository has a `.git` entry, as a real one has. A rule
+// reads the files of a scope up to the repository root and no further.
+const wide = `Use proactively. ${'x'.repeat(30000)}`
+const agentFile = (name: string, description: string, fields = '', body = 'Body.\n') =>
+  `---\nname: ${name}\ndescription: ${description}\n${fields}---\n\n${body}`
+const OK = agentFile('ok-agent', 'Reviews code. Use proactively.')
+const BARE = agentFile('Bare_Agent', 'Reviews code.', '', '')
+const TEAM_FIELDS = 'skills:\n  - lint\nmcpServers:\n  - github\nbackground: true\n'
+const DESCRIPTION_TREE: Record<string, string> = {
+  '.git/HEAD': 'ref: refs/heads/main\n',
+  // Local agents: one that passes each rule, and one that breaks three.
+  '.claude/agents/ok.md': OK,
+  '.claude/agents/bare.md': BARE,
+  // Agent teams are on here, so the three fields of `team.md` report. The agent `team-ok.md`
+  // sets none of them. The folder `quiet` sets the fields, and its settings leave teams off.
+  'packages/teams/.claude/settings.json': JSON.stringify({
+    env: { CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: '1' },
+  }),
+  'packages/teams/.claude/agents/team.md': agentFile('team', 'Use proactively.', TEAM_FIELDS),
+  'packages/teams/.claude/agents/team-ok.md': agentFile('team-ok', 'Use proactively.'),
+  'packages/quiet/.claude/agents/quiet.md': agentFile('quiet', 'Use proactively.', TEAM_FIELDS),
+  // Two agents of one scope are together over 15,000 tokens. The scope `small` is not.
+  'packages/big/.claude/agents/one.md': agentFile('one', wide),
+  'packages/big/.claude/agents/two.md': agentFile('two', wide),
+  'packages/small/.claude/agents/one.md': agentFile('one', 'Use proactively.'),
+  // A plugin with the default folder, and a plugin whose manifest names its agent files. The
+  // manifest replaces `agents/`, so `agents/unlisted.md` is no agent.
+  'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p' }),
+  'plugins/p/agents/ok.md': OK,
+  'plugins/p/agents/bare.md': BARE,
+  'plugins/q/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'q',
+    agents: ['./custom/ok.md', './custom/bare.md'],
+  }),
+  'plugins/q/custom/ok.md': OK,
+  'plugins/q/custom/bare.md': BARE,
+  'plugins/q/agents/unlisted.md': BARE,
+}
+
+// The reports of the description rules over `DESCRIPTION_TREE`, in `strict` only. A file with a
+// bare agent breaks the three rules of the next three lines.
+const BARE_REPORTS = (file: string) => [
+  `${file}: claude/agent-body-nonempty@1`,
+  `${file}: claude/agent-description-proactive@1`,
+  `${file}: claude/agent-name-kebab-case@1`,
+]
+const DESCRIPTION_REPORTS = [
+  ...BARE_REPORTS('.claude/agents/bare.md'),
+  ...BARE_REPORTS('plugins/p/agents/bare.md'),
+  ...BARE_REPORTS('plugins/q/custom/bare.md'),
+  ...['skills', 'mcpServers', 'background'].map(
+    () => 'packages/teams/.claude/agents/team.md: claude/agent-teammate-ignored-fields@1',
+  ),
+  'packages/big/.claude/agents/one.md: claude/agent-descriptions-budget@1',
+  'packages/big/.claude/agents/two.md: claude/agent-descriptions-budget@1',
+]
+
 let root = ''
 isolateGitConfig()
+let descriptionRoot = ''
 
 beforeAll(() => {
   root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
@@ -1174,23 +1241,31 @@ beforeAll(() => {
   stage(gu, Object.keys(GU_TREE))
   // `stage` adds each file on the disk, so the untracked files come after it.
   writeGu(GU_LOOSE)
+  descriptionRoot = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-description-'))
+  for (const [file, content] of Object.entries(DESCRIPTION_TREE)) {
+    mkdirSync(path.dirname(path.join(descriptionRoot, file)), { recursive: true })
+    writeFileSync(path.join(descriptionRoot, file), content)
+  }
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
   }
 })
 
-afterAll(() => rmSync(root, { recursive: true, force: true }))
+afterAll(() => {
+  rmSync(root, { recursive: true, force: true })
+  rmSync(descriptionRoot, { recursive: true, force: true })
+})
 
 /** Each report over the tree, as `file: rule@severity`, sorted. */
-async function reports(config: Linter.Config[]): Promise<string[]> {
-  const eslint = new ESLint({ cwd: root, overrideConfigFile: true, overrideConfig: config })
+async function reports(config: Linter.Config[], base = root): Promise<string[]> {
+  const eslint = new ESLint({ cwd: base, overrideConfigFile: true, overrideConfig: config })
   const results = await eslint.lintFiles(['.'])
   return results
     .flatMap((r) =>
       r.messages.map(
         (m) =>
-          `${path.relative(root, r.filePath).split(path.sep).join('/')}: ${m.ruleId}@${m.severity}`,
+          `${path.relative(base, r.filePath).split(path.sep).join('/')}: ${m.ruleId}@${m.severity}`,
       ),
     )
     .sort()
@@ -1264,9 +1339,8 @@ describe('configs', () => {
     for (const rule of AGENT_OFF_RULES) {
       expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
-      expect(blocks.map((c) => [c.language, c.files])).toEqual([
-        ['markdown/gfm', ['**/agents/**/*.md']],
-      ])
+      const files = DESCRIPTION_RULES.includes(rule) ? ['**/*.md'] : ['**/agents/**/*.md']
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['markdown/gfm', files]])
     }
   })
 
@@ -1371,7 +1445,21 @@ describe('configs', () => {
     ])
   })
 
+  // The five description rules take every Markdown file and every agent file of the tree reports
+  // for most of them, so `DESCRIPTION_TREE` tests them. This run leaves their reports out.
   it('strict reports the files of recommended, and those of the off rules', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
+    const found = (await reports(plugin.configs.strict)).filter(
+      (report) => !DESCRIPTION_RULES.some((rule) => report.includes(`: claude/${rule}@`)),
+    )
+    expect(found).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
+  }, 30_000)
+
+  it('strict reports the description rules on a tree of its own, and recommended does not', async () => {
+    const blocks = plugin.configs.strict.filter((c) =>
+      DESCRIPTION_RULES.some((rule) => c.name === `claude/strict/${rule}`),
+    )
+    expect(blocks).toHaveLength(DESCRIPTION_RULES.length)
+    expect(await reports(blocks, descriptionRoot)).toEqual([...DESCRIPTION_REPORTS].sort())
+    expect(await reports(plugin.configs.recommended, descriptionRoot)).toEqual([])
   }, 30_000)
 })
