@@ -3,6 +3,12 @@
 // `voiceEnabled` and `disableArtifact`, and the `attribution` entry.
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import {
+  DEPRECATED_KEYS,
+  IGNORED_FALSE_KEYS,
+  NO_EFFECT_KEYS,
+  SUPERSEDED_KEYS,
+} from '../../src/data/settings-keys.ts'
 import plugin from '../../src/index.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -198,5 +204,22 @@ describe('settings-deprecated-key with settings-removed-key', () => {
         rules.map((rule) => `claude/${rule}`),
       )
     }
+  })
+})
+
+describe('DEPRECATED_KEYS', () => {
+  const keys = Object.keys(DEPRECATED_KEYS)
+
+  it('gives each key a test for when Claude Code honors it', () => {
+    for (const key of keys) {
+      expect(IGNORED_FALSE_KEYS.includes(key) || key in SUPERSEDED_KEYS, key).toBe(true)
+    }
+  })
+
+  it('shares no key with the keys that have no effect, and has no ignorePatterns', () => {
+    for (const key of keys) {
+      expect(key in NO_EFFECT_KEYS, key).toBe(false)
+    }
+    expect(keys).not.toContain('ignorePatterns')
   })
 })

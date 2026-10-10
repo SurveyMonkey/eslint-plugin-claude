@@ -3,13 +3,46 @@
 // page gives the built-in names with their letter case. The file name is the style name unless
 // the frontmatter sets `name`. Project styles load from the directories between the working
 // directory and the repository root. The files glob is in tests/configs.test.ts.
+import { mkdirSync, realpathSync } from 'node:fs'
 import path from 'node:path'
 import json from '@eslint/json'
 import { Linter } from 'eslint'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import plugin from '../../src/index.ts'
 import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
+
+// ADR 001, Decision 14: no call reaches a path above the repository. The recorder keeps the first
+// argument of each file system call that the rule can make, while `recorded.on` is true.
+const recorded = vi.hoisted(() => ({ on: false, paths: [] as string[] }))
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>()
+  const names = [
+    'realpathSync',
+    'existsSync',
+    'statSync',
+    'lstatSync',
+    'readdirSync',
+    'readFileSync',
+  ]
+  const wrapped: Record<string, unknown> = {}
+  for (const name of names) {
+    const original = (actual as unknown as Record<string, (...args: unknown[]) => unknown>)[name]
+    if (original === undefined) {
+      continue
+    }
+    wrapped[name] = Object.assign(
+      (file: unknown, ...rest: unknown[]) => {
+        if (recorded.on) {
+          recorded.paths.push(String(file))
+        }
+        return original(file, ...rest)
+      },
+      name === 'realpathSync' ? { native: actual.realpathSync.native } : {},
+    )
+  }
+  return { ...actual, ...wrapped, default: { ...actual, ...wrapped } }
+})
 
 const RULE = 'settings-outputstyle-resolves'
 const PROJECT = '.claude/settings.json'
@@ -72,6 +105,7 @@ describe(RULE, () => {
     it('for a style whose name field is not a string', () => {
       const dir = tree({ [`${STYLES}/numbered.md`]: style('name: 7') })
       expect(lint(dir, settings('numbered'))).toEqual([])
+      expect(ids(dir, settings('Nope'))).toEqual(['unknown'])
     })
 
     it('for a style that the option allow lists', () => {
@@ -222,6 +256,44 @@ describe(RULE, () => {
 
   // A read that fails with `EACCES` is not a file that is absent. The rule cannot see what it cannot
   // read, so it makes no report that rests on it.
+  describe('the repository bound', () => {
+    it('reads no path above the repository root, and uses no style from there', () => {
+      const outer = tree({ [`${STYLES}/clash.md`]: style() }, false)
+      const repo = path.join(outer, 'repo')
+      mkdirSync(path.join(repo, '.git'), { recursive: true })
+      const file = 'repo/.claude/settings.json'
+      recorded.paths = []
+      recorded.on = true
+      try {
+        expect(ids(outer, settings('clash'), file)).toEqual(['unknown'])
+      } finally {
+        recorded.on = false
+      }
+      const inside = (entry: string) =>
+        [repo, realpathSync(repo)].some(
+          (root) => entry === root || entry.startsWith(root + path.sep),
+        )
+      expect(recorded.paths.length).toBeGreaterThan(0)
+      expect(recorded.paths.filter((entry) => !inside(entry))).toEqual([])
+    })
+
+    it('stays silent for a dangling link in place of the styles directory', () => {
+      const dir = tree({})
+      link(dir, STYLES, 'missing-styles')
+      expect(ids(dir, settings('Nope'))).toEqual([])
+    })
+
+    it.skipIf(noLinks)(
+      'stays silent for a link out of the repository below a readable root',
+      () => {
+        const outside = tree({ 'out.md': style() })
+        const dir = tree({ [`${STYLES}/root.md`]: style() })
+        link(dir, 'packages/app/.claude/output-styles', outside)
+        expect(ids(dir, settings('Nope'), 'packages/app/.claude/settings.json')).toEqual([])
+      },
+    )
+  })
+
   describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     it('stays silent for a styles directory that it cannot read, and reports when it can', () => {
       const dir = tree({ [`${STYLES}/review.md`]: style() })

@@ -11,10 +11,12 @@ import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import {
+  danglingOf,
   frontmatterOfFile,
   isInside,
   markdownFiles,
   realDirectory,
+  realOf,
   repositoryRoot,
   UNREADABLE,
 } from '../skill-tree.ts'
@@ -37,16 +39,20 @@ interface Styles {
 
 /** `start` and each directory above it, up to the real path `top`. The walk goes up the path as
  *  given. A directory counts when its real path is at or below `top`. So a link above the project
- *  does not hide `top`. */
+ *  does not hide `top`. The walk stops at `top`, so no call reaches a path above the repository
+ *  (ADR 001, Decision 14). It also stops at the root of the file system. */
 function ancestors(start: string, top: string): string[] {
   const chain: string[] = []
   for (let at = start; ; at = path.dirname(at)) {
-    chain.push(at)
-    if (at === path.parse(at).root) {
+    const real = realDirectory(at)
+    if (isInside(real, top)) {
+      chain.push(at)
+    }
+    if (real === top || at === path.parse(at).root) {
       break
     }
   }
-  return chain.filter((dir) => isInside(realDirectory(dir), top))
+  return chain
 }
 
 /** The names of the custom styles in `.claude/output-styles/` of `start`, and of each directory
@@ -56,8 +62,11 @@ function ancestors(start: string, top: string): string[] {
 function customStyles(start: string, top: string, bound: string): Styles {
   const found: Styles = { names: [], unseen: false }
   for (const dir of ancestors(start, top)) {
-    const scan = markdownFiles(path.join(dir, '.claude', 'output-styles'), bound)
-    found.unseen ||= scan.outside || scan.unreadable
+    const styles = path.join(dir, '.claude', 'output-styles')
+    const scan = markdownFiles(styles, bound)
+    // A dangling link is an entry, and it can lead to styles (ADR 001, Decision 14).
+    found.unseen ||=
+      scan.outside || scan.unreadable || (realOf(styles) === null && danglingOf(styles) !== null)
     for (const file of scan.files) {
       const fields = frontmatterOfFile(file)
       found.unseen ||= fields === UNREADABLE
