@@ -224,6 +224,7 @@ import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
+import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginManifestMetadataFormat from './rules/plugin-manifest-metadata-format.ts'
 import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
@@ -711,6 +712,7 @@ const modules = [
   pluginNpmSourceShrinkwrap,
   pluginSettingsSingleSource,
   pluginUserConfigSensitiveInContent,
+  pluginFeatureMinVersion,
   pluginManifestMetadataFormat,
   pluginManifestNoBom,
   pluginManifestPublishMetadata,
@@ -1089,6 +1091,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-feature-min-version': 'warn',
   'plugin-manifest-metadata-format': 'warn',
   'plugin-manifest-no-bom': 'warn',
   'plugin-manifest-publish-metadata': 'warn',

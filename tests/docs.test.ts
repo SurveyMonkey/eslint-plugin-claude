@@ -240,6 +240,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-dependencies-resolve',
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
+    'plugin-feature-min-version',
     'plugin-manifest-location',
     'plugin-manifest-metadata-format',
     'plugin-manifest-no-bom',
