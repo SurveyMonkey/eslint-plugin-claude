@@ -1,6 +1,6 @@
 // The keys and values of a settings file (docs/rules/settings-schema.md). The key catalog is
 // `src/data/settings-keys.ts`. The value of each key is in `src/data/settings-schema.ts`. The rule
-// makes no report inside `permissions` or `sandbox`: the permissions group owns them. It checks no
+// makes no report inside `permissions` or `sandbox`: the permissions group has them. It checks no
 // value that another rule checks, and the data says which keys these are. A `null` is no value.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { hasListedChildren, settingsKeyScope } from '../data/settings-keys.ts'

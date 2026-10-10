@@ -185,6 +185,32 @@ jsonTester.run('settings-schema (valid)', rule, {
     },
     { code: obj({ policyHelper: { path: '\\\\server\\share\\helper.exe' } }), filename: managed },
     { code: obj({ plansDirectory: 'a..b/c' }), filename: project },
+    { code: obj({ browserExternalPageTools: 'Disable' }), filename: managed },
+    { code: obj({ policyHelper: { path: '/.hidden/h' } }), filename: managed },
+    // Claude Code ignores a surface name that it does not know.
+    {
+      code: obj({ strictPluginOnlyCustomization: ['skills', 'futureSurface'] }),
+      filename: managed,
+    },
+    // The docs give a number for `padding` and `refreshInterval`, and no whole number.
+    {
+      code: obj({
+        statusLine: { type: 'command', command: 'x', padding: 0.5, refreshInterval: 1.5 },
+      }),
+      filename: project,
+    },
+    {
+      code: obj({
+        gatewayInternalNetworks: ['10.0.0.0/8'],
+        appendPlugins: ['p@m'],
+        prependPlugins: ['p@m'],
+        browserExternalPageTools: 'disabled',
+        remote: { defaultEnvironmentId: 'ccpool_x' },
+      }),
+      filename: managed,
+    },
+    // Of two keys of one name in a map, the last counts.
+    { code: '{"skillOverrides": {"s": "bad", "s": "on"}}', filename: project },
     // Each form of `timeFormat` and `theme`.
     ...['auto', '12-hour', '24-hour', '24-hour-utc', '%H:%M', 'at %H'].map((timeFormat) => ({
       code: obj({ timeFormat }),
@@ -251,8 +277,6 @@ jsonTester.run('settings-schema (valid)', rule, {
       code: obj({ additionalMarketplaces: 1, allowedMarketplaces: 1 }),
       filename,
     })),
-    // `timeZone` takes any string here: the rule does not check the name.
-    { code: obj({ timeZone: 5 }), filename: project },
     // A `null` is no value.
     ...ALL.map((filename) => ({
       code: obj({
@@ -381,7 +405,7 @@ jsonTester.run('settings-schema (unknown keys)', rule, {
     bad({ spellcheck: { dictionary: 'x' } }, unknown('spellcheck.dictionary')),
     bad({ worktree: { base: 'head' } }, unknown('worktree.base')),
     bad({ remote: { environmentId: 'env_1' } }, unknown('remote.environmentId')),
-    bad({ policyHelper: { retries: 1 } }, unknown('policyHelper.retries')),
+    bad({ policyHelper: { path: '/p', retries: 1 } }, unknown('policyHelper.retries')),
     bad({ modelPicker: { rows: [] } }, unknown('modelPicker.rows')),
     bad(
       { modelPicker: { options: [{ model: 'x', icon: 'y' }] } },
@@ -523,7 +547,7 @@ jsonTester.run('settings-schema (types)', rule, {
     ),
     bad({ spinnerTipsOverride: { tips: 'a' } }, type('spinnerTipsOverride.tips', 'an array')),
     bad(
-      { policyHelper: { refreshIntervalMs: 'never' } },
+      { policyHelper: { path: '/p', refreshIntervalMs: 'never' } },
       type('policyHelper.refreshIntervalMs', '0 or a whole number of at least 60000'),
     ),
     bad(
@@ -665,10 +689,14 @@ jsonTester.run('settings-schema (enums)', rule, {
       ),
     ),
     bad(
-      { strictPluginOnlyCustomization: ['skills', 'plugins'] },
-      oneOf('strictPluginOnlyCustomization[1]', words(['skills', 'agents', 'hooks', 'mcp'])),
+      { strictPluginOnlyCustomization: ['skills', 5] },
+      type('strictPluginOnlyCustomization[1]', 'a string'),
     ),
     bad({ strictPluginOnlyCustomization: false }, oneOf('strictPluginOnlyCustomization', 'true')),
+    bad({ timeZone: 5 }, type('timeZone', 'a string')),
+    bad({ gatewayInternalNetworks: '10.0.0.0/8' }, type('gatewayInternalNetworks', 'an array')),
+    bad({ appendPlugins: 1 }, type('appendPlugins', 'an array')),
+    bad({ prependPlugins: {} }, type('prependPlugins', 'an array')),
     bad({ attribution: true }, oneOf('attribution', 'false')),
     bad(
       { vimInsertModeRemaps: { jj: '<Tab>' } },
@@ -684,7 +712,7 @@ jsonTester.run('settings-schema (enums)', rule, {
       oneOf('modelSettings.m.autoCompactWindow', '"auto"'),
     ),
     bad(
-      { policyHelper: { refreshIntervalMs: 1 } },
+      { policyHelper: { path: '/p', refreshIntervalMs: 1 } },
       oneOf('policyHelper.refreshIntervalMs', '0 or a whole number of at least 60000'),
     ),
     bad(
@@ -750,8 +778,8 @@ jsonTester.run('settings-schema (ranges)', rule, {
     bad({ feedbackSurveyRate: 1.1 }, range('feedbackSurveyRate', 'a number from 0 to 1')),
     bad(
       { statusLine: { type: 'command', command: 'x', padding: -1, refreshInterval: 0 } },
-      range('statusLine.padding', 'a whole number of at least 0'),
-      range('statusLine.refreshInterval', 'a whole number of at least 1'),
+      range('statusLine.padding', 'a number of at least 0'),
+      range('statusLine.refreshInterval', 'a number of at least 1'),
     ),
     bad(
       { modelPricing: { multiplier: 0 } },
@@ -771,11 +799,11 @@ jsonTester.run('settings-schema (ranges)', rule, {
       range('modelPricing.overrides.m.output', 'a number from 0 to 10000'),
     ),
     bad(
-      { policyHelper: { timeoutMs: 999 } },
+      { policyHelper: { path: '/p', timeoutMs: 999 } },
       range('policyHelper.timeoutMs', 'a whole number of at least 1000'),
     ),
     bad(
-      { policyHelper: { refreshIntervalMs: 59999 } },
+      { policyHelper: { path: '/p', refreshIntervalMs: 59999 } },
       oneOf('policyHelper.refreshIntervalMs', '0 or a whole number of at least 60000'),
     ),
     bad(
@@ -859,7 +887,11 @@ jsonTester.run('settings-schema (forms)', rule, {
       { remote: { defaultEnvironmentId: 'abc' } },
       format('remote.defaultEnvironmentId', 'an ID that starts with env_ or ccpool_'),
     ),
-    bad({ browserExternalPageTools: 'enabled' }, format('browserExternalPageTools', '"disabled"')),
+    bad({ policyHelper: { timeoutMs: 1000 } }, missing('policyHelper', 'path')),
+    bad(
+      { browserExternalPageTools: 'enabled' },
+      format('browserExternalPageTools', '"disabled" or "disable", in either case'),
+    ),
     ...[
       'relative/helper',
       '/a/../b',
@@ -868,6 +900,11 @@ jsonTester.run('settings-schema (forms)', rule, {
       '/a/..',
       'C:\\Tools\\helper',
       'D:\\a\\..\\b.exe',
+      '/../h',
+      '/./h',
+      '/..',
+      'C:\\..\\h.exe',
+      'C:\\.\\h.exe',
       '\\\\server\\a\\.\\b.exe',
       'helper.exe',
     ].map((value) =>
@@ -875,7 +912,7 @@ jsonTester.run('settings-schema (forms)', rule, {
         { policyHelper: { path: value } },
         format(
           'policyHelper.path',
-          'an absolute path in normalized form, ending in .exe on Windows',
+          'an absolute path in normalized form, with a name that ends in .exe on Windows',
         ),
       ),
     ),
@@ -989,6 +1026,46 @@ jsonTester.run('settings-schema (shapes)', rule, {
     bad(
       { allowedChannelPlugins: [{ marketplace: 'm' }] },
       missing('allowedChannelPlugins[0]', 'plugin'),
+    ),
+    // A field named like a property of every object is an unknown field.
+    bad({ attribution: { constructor: 'x' } }, unknown('attribution.constructor')),
+    bad('{"voice": {"__proto__": 1}}', unknown('voice.__proto__')),
+    bad({ _FOO: 1 }, unknown('_FOO')),
+    // Of two keys of one name in a map, the last counts, and the report is one.
+    bad(
+      '{"vimInsertModeRemaps": {"j": "<Esc>", "j": "<Esc>"}}',
+      format('vimInsertModeRemaps.j', 'exactly two printable characters'),
+    ),
+    // Each required field, alone.
+    bad(
+      { allowedChannelPlugins: [{ plugin: 'p' }] },
+      missing('allowedChannelPlugins[0]', 'marketplace'),
+    ),
+    bad(
+      { modelPricing: { overrides: { m: { output: 1, cacheRead: 1, cacheWrite: 1 } } } },
+      missing('modelPricing.overrides.m', 'input'),
+    ),
+    bad({ sshConfigs: [{ name: 'n', sshHost: 'h' }] }, missing('sshConfigs[0]', 'id')),
+    // The whole value must fit the form, not a part of it.
+    bad(
+      { remote: { defaultEnvironmentId: 'xenv_1' } },
+      format('remote.defaultEnvironmentId', 'an ID that starts with env_ or ccpool_'),
+    ),
+    bad(
+      { forceLoginOrgUUID: '123e4567-e89b-12d3-a456-426614174000x' },
+      format('forceLoginOrgUUID', 'a UUID'),
+    ),
+    bad(
+      { requiredMaximumVersion: '2.1.150x' },
+      format('requiredMaximumVersion', 'a version such as 2.1.150'),
+    ),
+    bad(
+      { theme: 'xcustom:a' },
+      oneOf('theme', 'a built-in theme, "custom:<slug>" or "custom:<plugin>:<slug>"'),
+    ),
+    bad(
+      { theme: 'custom:a b' },
+      oneOf('theme', 'a built-in theme, "custom:<slug>" or "custom:<plugin>:<slug>"'),
     ),
   ],
 })

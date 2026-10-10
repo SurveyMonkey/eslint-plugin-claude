@@ -6,15 +6,17 @@
 //
 // A key is in `SETTINGS_VALUES` only when `settings-schema` is the one rule that reports its value.
 // These keys are not in the table:
-// - `permissions`, `sandbox`, `autoMode` and `disableAutoMode`: the permissions group owns them.
+// - `permissions`, `sandbox`, `autoMode` and `disableAutoMode`: the rule makes no report there.
+//   The rules of the permissions group are not built yet.
 // - `env`, `hooks`, `enabledPlugins`, `extraKnownMarketplaces`, `strictKnownMarketplaces`,
 //   `blockedMarketplaces`, `pluginConfigs`, the MCP keys and `claudeMd`, `claudeMdExcludes`
 //   and `autoMemoryDirectory`: a rule of the group that owns the key checks the value.
 // - A key with a rule of its own for any value: the keys of `NO_EFFECT_KEYS`, and the keys with a
 //   `reportedBy` entry in `src/data/settings-keys.ts`.
 // - A Global config key. `settings-key-scope` reports it in every settings file.
-// - `timeZone`. The docs say "an IANA time zone name". The names depend on the ICU data of the
-//   machine that runs the rule, so the rule does not check them.
+// - `allowedHttpHookUrls` and `httpHookAllowedEnvVars`: the hooks group reads them.
+// - The name in `timeZone`. The docs say "an IANA time zone name". The names depend on the ICU
+//   data of the machine that runs the rule. The rule checks that the value is a string.
 
 /** What a value must be. The `kind` is the JSON type of an accepted value. */
 export type ValueSpec =
@@ -184,15 +186,19 @@ const STRING_KEYS = [
   'outputStyle',
   'pluginTrustMessage',
   'processWrapper',
+  'timeZone',
 ]
 
 /** The keys of type array of strings. */
 const STRINGS_KEYS = [
+  'appendPlugins',
   'availableModels',
   'companyAnnouncements',
   'deniedModels',
   'fallbackModel',
+  'gatewayInternalNetworks',
   'pluginSuggestionMarketplaces',
+  'prependPlugins',
   'sshHostAllowlist',
 ]
 
@@ -237,7 +243,7 @@ const SHAPES: Record<string, ValueSpec> = {
   autoUpdatesChannel: words('latest', 'stable'),
   availableModelsMatch: words('prefix', 'exact'),
   bashOutputMaxChars: whole(1),
-  browserExternalPageTools: shaped(/^disabled?$/i, '"disabled"'),
+  browserExternalPageTools: shaped(/^disabled?$/i, '"disabled" or "disable", in either case'),
   cleanupPeriodDays: whole(1),
   crossSessionInbound: words('accept', 'hold', 'refuse'),
   defaultShell: words('bash', 'powershell'),
@@ -326,12 +332,13 @@ const SHAPES: Record<string, ValueSpec> = {
     kind: 'object',
     fields: {
       path: shaped(
-        /^(?:\/(?!.*(?:\/\/|\/\.\.?(?:\/|$)))|(?:[A-Za-z]:[/\\]|\\\\)(?!.*[/\\]\.\.?(?:[/\\]|$)).*\.exe$)/i,
-        'an absolute path in normalized form, ending in .exe on Windows',
+        /^(?:(?!.*(?:\/\/|\/\.\.?(?:\/|$)))\/|(?![\s\S]*[/\\]\.\.?(?:[/\\]|$))(?:[A-Za-z]:[/\\]|\\\\).*\.exe$)/i,
+        'an absolute path in normalized form, with a name that ends in .exe on Windows',
       ),
       timeoutMs: whole(1000),
       refreshIntervalMs: { kind: 'anyOf', options: [{ kind: 'literal', value: 0 }, whole(60000)] },
     },
+    required: ['path'],
   },
   preferredNotifChannel: words(
     'auto',
@@ -424,8 +431,8 @@ const SHAPES: Record<string, ValueSpec> = {
     fields: {
       type: words('command'),
       command: STRING,
-      padding: whole(0),
-      refreshInterval: whole(1),
+      padding: { kind: 'number', min: 0 },
+      refreshInterval: { kind: 'number', min: 1 },
       hideVimModeIndicator: BOOLEAN,
     },
     required: ['type', 'command'],
@@ -434,7 +441,7 @@ const SHAPES: Record<string, ValueSpec> = {
     kind: 'anyOf',
     options: [
       { kind: 'literal', value: true },
-      { kind: 'array', items: words('skills', 'agents', 'hooks', 'mcp') },
+      { kind: 'array', items: STRING },
     ],
   },
   subagentPromptCacheTtl: CACHE_TTL,
@@ -499,8 +506,8 @@ export const SETTINGS_VALUES: Readonly<Record<string, ValueSpec>> = {
 /** The top-level keys that Claude Code reads and that are not in the settings index. `$schema`
  *  points editors to the JSON schema
  *  (https://code.claude.com/docs/en/settings#settings-files-and-who-they-affect). The settings
- *  reference says that `permissions.deny` replaces the deprecated `ignorePatterns`. The
- *  permissions group owns that key. */
+ *  reference says that `permissions.deny` replaces the deprecated `ignorePatterns`. The rule
+ *  makes no report on that key. */
 export const NOT_UNKNOWN_KEYS: readonly string[] = ['$schema', 'ignorePatterns']
 
 /** An environment variable name: capital letters, digits and underscores. Claude Code reads
