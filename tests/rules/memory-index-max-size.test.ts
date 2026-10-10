@@ -112,6 +112,12 @@ describe(`${RULE}: bytes`, () => {
     expect(ids(lint(`${'x'.repeat(24999)}\r\n`))).toEqual(['tooManyBytes'])
   })
 
+  it('ends a line at a lone CR, also after a block comment', () => {
+    expect(ids(lint('- x\r'.repeat(201)))).toEqual(['tooManyLines'])
+    expect(lint('- x\r'.repeat(200))).toEqual([])
+    expect(lint(`<!-- note -->\r${'- x\r'.repeat(200)}`)).toEqual([])
+  })
+
   it('counts bytes, not characters', () => {
     expect(lint(`${'é'.repeat(12499)}\n`)).toEqual([])
     expect(ids(lint(`${'é'.repeat(12500)}\n`))).toEqual(['tooManyBytes'])

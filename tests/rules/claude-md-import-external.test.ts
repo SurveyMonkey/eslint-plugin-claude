@@ -1,7 +1,7 @@
 // An `@path` import in a project memory file is external when its path resolves outside the
 // working directory. Claude Code asks each user to approve such an import, and a decline
 // disables it for good (https://code.claude.com/docs/en/memory#import-additional-files). An
-// `AGENTS.md` file never prompts
+// `AGENTS.md` file that the Project instructions setting reads never prompts
 // (https://code.claude.com/docs/en/memory#where-agents-md-differs-from-claude-md). The rule
 // reads the repository around the file, so each case builds a tree on disk. The globs are in
 // tests/configs.test.ts.
@@ -105,7 +105,7 @@ describe(`${RULE}: the files`, () => {
     expect(lint('@x: note\n')).toEqual([])
   })
 
-  it('makes no report for an AGENTS.md, which never prompts', () => {
+  it('makes no report for an AGENTS.md that the setting reads, which never prompts', () => {
     for (const file of ['AGENTS.md', '.claude/AGENTS.md', 'packages/web/AGENTS.md']) {
       expect(lint('@~/x.md @/etc/hosts @../x.md\n', file), file).toEqual([])
     }
@@ -170,6 +170,39 @@ describe(`${RULE}: the imported files`, () => {
     expect(messages[0]?.message).toContain('`AGENTS.md`')
   })
 
+  it('checks a CLAUDE.local.md and a rule file that an import loads', () => {
+    const own = { ...SHARED, 'CLAUDE.local.md': '@~/a.md\n', '.claude/rules/r.md': '@~/b.md\n' }
+    const messages = lint('@CLAUDE.local.md\n@.claude/rules/r.md\n', 'CLAUDE.md', own)
+    expect(messages.map((m) => [m.messageId, m.line])).toEqual([
+      ['externalInImported', 1],
+      ['externalInImported', 2],
+    ])
+    expect(messages[0]?.message).toContain('`CLAUDE.local.md`')
+    expect(messages[1]?.message).toContain('`.claude/rules/r.md`')
+  })
+
+  it('checks a file at its fewest hops, and reports at the first import that loads it', () => {
+    const own = {
+      ...SHARED,
+      'a.md': '@a2.md\n',
+      'a2.md': '@a3.md\n',
+      'a3.md': '@x.md\n',
+      'x.md': '@~/x.md\n',
+    }
+    const messages = lint('@a.md\n@x.md\n', 'CLAUDE.md', own)
+    expect(messages.map((m) => [m.messageId, m.line])).toEqual([['externalInImported', 2]])
+  })
+
+  it('words the report of an import in an imported file', () => {
+    const messages = lint('x\n@docs/a.md\n', 'CLAUDE.md', {
+      ...SHARED,
+      'docs/a.md': '@~/mine.md\n',
+    })
+    expect(messages[0]?.message).toBe(
+      'This import loads `docs/a.md`, which holds the import `@~/mine.md` out of the repository. Claude Code asks each user to approve it, and a decline disables it for good.',
+    )
+  })
+
   it('checks the imports of a file at hop 3, and not those of a file at hop 4', () => {
     const chain = {
       ...SHARED,
@@ -222,6 +255,14 @@ describe.skipIf(noLinks)(`${RULE}: a link`, () => {
     link(dir, 'sub', 'docs')
     // The import is by name inside the repository, even when the target is out of it.
     expect(lintMemory(RULE, dir, 'CLAUDE.md', '@out.md @sub/git.md\n')).toEqual([])
+  })
+
+  it('does not read a linked file out of the repository for its imports', () => {
+    const outside = tree({ 'x.md': '@~/y.md\n' })
+    const dir = tree(SHARED)
+    link(dir, 'out.md', path.join(outside, 'x.md'))
+    link(dir, 'gone.md', path.join(outside, 'missing.md'))
+    expect(lintMemory(RULE, dir, 'CLAUDE.md', '@out.md @gone.md\n')).toEqual([])
   })
 
   it('reads the path of a CLAUDE.md in a .claude folder that is a link as a path in the repository', () => {

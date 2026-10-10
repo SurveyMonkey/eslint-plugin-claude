@@ -47,6 +47,13 @@ describe(RULE, () => {
     expect(lint(lines(201).replaceAll('\n', '\r\n'))).toHaveLength(1)
   })
 
+  it('ends a line at a lone CR, as Markdown does', () => {
+    expect(lint('x\r'.repeat(200))).toEqual([])
+    expect(ids(lint('x\r'.repeat(201)))).toEqual(['tooLong'])
+    expect(ids(lint('a\r\nb\rc\n'.repeat(67)))).toEqual(['tooLong'])
+    expect(lint(`${'a\r\nb\rc\n'.repeat(66)}a\r\nb\r`)).toEqual([])
+  })
+
   it('counts every line of the file, with its frontmatter and its blank lines', () => {
     expect(lint(`---\nname: x\n---\n${'\n'.repeat(197)}`)).toEqual([])
     expect(lint(`---\nname: x\n---\n${'\n'.repeat(198)}`)).toHaveLength(1)
@@ -139,6 +146,17 @@ describe(`${RULE}: the imported files`, () => {
     const messages = lint('x\n@a.md\n', 'CLAUDE.md', undefined, files)
     expect(messages.map((m) => [m.messageId, m.line, m.column])).toEqual([['importTooLong', 2, 1]])
     expect(messages[0]?.message).toContain('`d.md`')
+  })
+
+  it('reports a long file at the import of the root that starts a deep chain', () => {
+    const files = {
+      'short.md': 'text\n',
+      'a.md': '@b.md\n',
+      'b.md': '@c.md\n',
+      'c.md': lines(201),
+    }
+    const messages = lint('x\n@short.md\n@a.md\n', 'CLAUDE.md', undefined, files)
+    expect(messages.map((m) => [m.messageId, m.line, m.column])).toEqual([['importTooLong', 3, 1]])
   })
 
   it('does not count a file that the chain does not load, past four hops', () => {
