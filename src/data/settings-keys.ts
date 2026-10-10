@@ -371,7 +371,8 @@ export function settingsKeyScope(path: readonly string[]): KeyScope | undefined 
 
 /** True when Claude Code ignores the key at `path` in a project or local file, because it reads
  *  the key from managed settings, or from user and managed settings. `settings-key-scope` reports
- *  the key there, so a rule that checks the value leaves that file alone. */
+ *  the key there, so a rule that checks the value leaves that file alone. No key of `sandbox` or
+ *  `autoMode` is in `REPORTED_BY` or `FLAGGED_VALUE`, which `settings-key-scope` does not report. */
 export function isIgnoredInRepoFile(path: readonly string[]): boolean {
   const scope = settingsKeyScope(path)?.scope
   return scope === 'managed' || scope === 'user-or-managed'
