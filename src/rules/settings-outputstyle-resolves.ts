@@ -43,12 +43,13 @@ interface Styles {
  *  (ADR 001, Decision 14). It also stops at the root of the file system. */
 function ancestors(start: string, top: string): string[] {
   const chain: string[] = []
-  for (let at = start; ; at = path.dirname(at)) {
+  // The loop ends at the root of the file system, where `path.dirname` returns its argument.
+  for (let at = start, last = ''; at !== last; last = at, at = path.dirname(at)) {
     const real = realDirectory(at)
     if (isInside(real, top)) {
       chain.push(at)
     }
-    if (real === top || at === path.parse(at).root) {
+    if (real === top) {
       break
     }
   }

@@ -277,6 +277,14 @@ describe(RULE, () => {
       expect(recorded.paths.filter((entry) => !inside(entry))).toEqual([])
     })
 
+    it.skipIf(noLinks)('finds the root styles for a project that a link reaches', () => {
+      const outside = tree({}, false)
+      const dir = tree({ [`${STYLES}/root.md`]: style() })
+      link(dir, 'linked', outside)
+      expect(ids(dir, settings('root'), 'linked/.claude/settings.json')).toEqual([])
+      expect(ids(dir, settings('Nope'), 'linked/.claude/settings.json')).toEqual(['unknown'])
+    })
+
     it('stays silent for a dangling link in place of the styles directory', () => {
       const dir = tree({})
       link(dir, STYLES, 'missing-styles')
