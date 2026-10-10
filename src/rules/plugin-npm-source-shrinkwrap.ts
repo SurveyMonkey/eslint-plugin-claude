@@ -53,7 +53,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
         // A file that the rule cannot see could be the shrinkwrap.
         if (
           isPluginFile(plugin, 'package.json') === true &&
-          isPluginFile(plugin, 'npm-shrinkwrap.json') === false
+          isPluginFile(plugin, 'npm-shrinkwrap.json') === false &&
+          // Claude Code installs from a `bun.lock`, and npm does not drop it from a package.
+          isPluginFile(plugin, 'bun.lock') === false
         ) {
           context.report({ node: named, messageId: 'missing', data: { name: named.value } })
         }

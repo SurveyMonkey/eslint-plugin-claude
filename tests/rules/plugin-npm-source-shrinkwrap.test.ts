@@ -57,7 +57,6 @@ describe(RULE, () => {
 
   check.each([
     ['yarn.lock', { 'yarn.lock': '' }],
-    ['bun.lock', { 'bun.lock': '' }],
     ['an npm-shrinkwrap.json in a subfolder', { 'sub/npm-shrinkwrap.json': '{}' }],
     ['an npm-shrinkwrap.json that is a folder', { 'npm-shrinkwrap.json/x': '' }],
   ])('reports a plugin with %s and no shrinkwrap', (_title, lockfiles) => {
@@ -91,6 +90,10 @@ describe(RULE, () => {
 })
 
 describe(`${RULE} (silent)`, () => {
+  check('stays silent for a plugin with bun.lock', () => {
+    expect(run([entry(NPM)], { ...PKG, 'bun.lock': '' })).toEqual([])
+  })
+
   check('stays silent for a plugin with npm-shrinkwrap.json', () => {
     expect(run([entry(NPM)], { ...PKG, 'npm-shrinkwrap.json': '{}' })).toEqual([])
   })

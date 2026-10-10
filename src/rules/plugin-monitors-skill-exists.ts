@@ -37,7 +37,9 @@ function addSkill(
   const file = path.join(folder, 'SKILL.md')
   const real = realOf(file)
   if (real === null) {
-    return danglingOf(file) === null ? 'none' : 'blind'
+    // The folder can be a link with no target. Then `lstat` of its `SKILL.md` finds nothing.
+    const folderGone = realOf(folder) === null && danglingOf(folder) !== null
+    return danglingOf(file) === null && !folderGone ? 'none' : 'blind'
   }
   if (real === UNREADABLE || !isInside(real, plugin.bound)) {
     return 'blind'

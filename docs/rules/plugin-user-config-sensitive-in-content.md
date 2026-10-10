@@ -44,7 +44,7 @@ The rule makes no report in these cases:
 - The option is not sensitive, or `sensitive` is not the value `true`.
 - The manifest does not declare the option. That is another fault, and the rule does not check
   it.
-- The file is a local skill or agent in `.claude/`, or a command, or a `SKILL.md` outside `skills/`.
+- The file is a local skill or agent in `.claude/`, or a command, or a `SKILL.md` that is not in `skills/<name>/` and not at the plugin root.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The
   manifest can fail to parse, or not be an object.
