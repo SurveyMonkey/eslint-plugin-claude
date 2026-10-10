@@ -70,6 +70,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/skill-metadata-reserved-keys`](docs/rules/skill-metadata-reserved-keys.md) | A `metadata` key that is the name of a frontmatter field | `warn` | `warn` |
 | [`claude/skill-name-shadows-builtin`](docs/rules/skill-name-shadows-builtin.md) | A skill or command named like a built-in command or a bundled skill | `warn` | `warn` |
 | [`claude/skill-no-bom`](docs/rules/skill-no-bom.md) | A skill or command file that starts with a byte order mark, which Claude Code ignored before v2.1.239. Needs `minVersion` | `warn` | `warn` |
+| [`claude/skill-argument-escape`](docs/rules/skill-argument-escape.md) | A doubled backslash before an argument placeholder, which does not escape it | `warn` | `warn` |
+| [`claude/skill-max-lines`](docs/rules/skill-max-lines.md) | A `SKILL.md` of 500 lines or more. Options `max` and `countFrontmatter` | `warn` | `warn` |
+| [`claude/skill-plugin-name-prefix`](docs/rules/skill-plugin-name-prefix.md) | A plugin skill `name` that starts with the plugin prefix, which Claude Code doubled from v2.1.216 through v2.1.245. Needs `minVersion` | `warn` | `warn` |
+| [`claude/skill-plugin-root-name`](docs/rules/skill-plugin-root-name.md) | A plugin-root `SKILL.md` with no `name` | `warn` | `warn` |
+| [`claude/skill-shell-platform`](docs/rules/skill-shell-platform.md) | A `shell` key that fails or does not apply on a platform that the repository targets. Needs `platforms` | `warn` | `warn` |
 
 ### Subagents and output styles
 

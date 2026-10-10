@@ -1655,6 +1655,13 @@
       "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea"
     }
   ],
+  "skill-argument-escape": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Available string substitutions",
+      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
+    }
+  ],
   "skill-boolean-literal": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -1795,6 +1802,13 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "skill-max-lines": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Add supporting files",
+      "hash": "1f05ca5d141e0f4364fea7275f3c79ca8beb9d6de010b780385e9e677e216948"
+    }
+  ],
   "skill-metadata-reserved-keys": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -1855,6 +1869,25 @@
       "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
     }
   ],
+  "skill-plugin-name-prefix": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How a skill gets its command name",
+      "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    }
+  ],
+  "skill-plugin-root-name": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How a skill gets its command name",
+      "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    }
+  ],
   "skill-plugin-root-shadowed": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -1896,6 +1929,23 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "A skill, command, or workflow wasn't loaded because its name is reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4"
+    }
+  ],
+  "skill-shell-platform": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How injected commands run",
+      "hash": "aa61fb9b73eec8150e95c3fcf1194fc369a21290f21fcc097fac05e2c3849e93"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Shell selection in settings, hooks, and skills",
+      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560"
     }
   ]
 }

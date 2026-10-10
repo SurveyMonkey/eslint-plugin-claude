@@ -70,6 +70,7 @@ import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
+import skillArgumentEscape from './rules/skill-argument-escape.ts'
 import skillBooleanLiteral from './rules/skill-boolean-literal.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
 import skillDescriptionPresent from './rules/skill-description-present.ts'
@@ -80,15 +81,19 @@ import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
 import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
 import skillInvocationRedundantFields from './rules/skill-invocation-redundant-fields.ts'
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import skillMaxLines from './rules/skill-max-lines.ts'
 import skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
 import skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
 import skillNameUnique from './rules/skill-name-unique.ts'
 import skillNoBom from './rules/skill-no-bom.ts'
 import skillPathsGlobValid from './rules/skill-paths-glob-valid.ts'
+import skillPluginNamePrefix from './rules/skill-plugin-name-prefix.ts'
+import skillPluginRootName from './rules/skill-plugin-root-name.ts'
 import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
 import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
+import skillShellPlatform from './rules/skill-shell-platform.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
 // `../package.json` resolves from both `src/` and `dist/`.
@@ -124,6 +129,11 @@ const modules = [
   skillMetadataReservedKeys,
   skillNameShadowsBuiltin,
   skillNoBom,
+  skillArgumentEscape,
+  skillMaxLines,
+  skillPluginNamePrefix,
+  skillPluginRootName,
+  skillShellPlatform,
   agentFrontmatterValid,
   agentFrontmatterSchema,
   agentPluginIgnoredFields,
@@ -238,6 +248,11 @@ const recommended: Record<RuleName, Severity> = {
   'skill-metadata-reserved-keys': 'warn',
   'skill-name-shadows-builtin': 'warn',
   'skill-no-bom': 'warn',
+  'skill-argument-escape': 'warn',
+  'skill-max-lines': 'warn',
+  'skill-plugin-name-prefix': 'warn',
+  'skill-plugin-root-name': 'warn',
+  'skill-shell-platform': 'warn',
   'agent-frontmatter-valid': 'error',
   'agent-frontmatter-schema': 'error',
   'agent-plugin-ignored-fields': 'error',

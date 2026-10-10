@@ -86,6 +86,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-agent-exists',
     'skill-allowed-tools-broad',
     'skill-allowed-tools-ineffective',
+    'skill-argument-escape',
     'skill-boolean-literal',
     'skill-description-max-length',
     'skill-description-present',
@@ -96,15 +97,19 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-inject-bang-position',
     'skill-invocation-redundant-fields',
     'skill-invocation-unreachable',
+    'skill-max-lines',
     'skill-metadata-reserved-keys',
     'skill-name-shadows-builtin',
     'skill-name-unique',
     'skill-no-bom',
     'skill-paths-glob-valid',
+    'skill-plugin-name-prefix',
+    'skill-plugin-root-name',
     'skill-plugin-root-shadowed',
     'skill-plugin-vars-outside-plugin',
     'skill-reference-exists',
     'skill-reserved-name',
+    'skill-shell-platform',
   ])
   for (const [name, rule] of rules) {
     expect(rule.meta?.docs?.url).toBe(docsUrl(name))
