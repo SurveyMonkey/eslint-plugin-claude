@@ -2,12 +2,16 @@
 // (https://code.claude.com/docs/en/memory#path-specific-rules). The rest are the choices of the
 // matcher where the docs are silent.
 import { describe, expect, it } from 'vitest'
-import { globRegExp, matchesPath } from '../src/glob-match.ts'
+import { unmatchedGlobs } from '../src/glob-match.ts'
+import { tree } from './marketplace-tree.test-support.ts'
 
-/** True when the glob matches the path, or a folder above it. */
-const hit = (glob: string, file: string) => matchesPath(globRegExp(glob), file)
+/** True when the glob matches the file, or a folder above it, in a tree that holds the file. */
+function hit(glob: string, file: string) {
+  const dir = tree({ [file]: 'x\n' }, false)
+  return unmatchedGlobs(dir, dir, [glob])?.length === 0
+}
 
-describe('globRegExp', () => {
+describe('unmatchedGlobs', () => {
   it('matches the forms in the docs', () => {
     expect(hit('**/*.ts', 'a.ts')).toBe(true)
     expect(hit('**/*.ts', 'src/deep/a.ts')).toBe(true)

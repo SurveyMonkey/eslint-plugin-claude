@@ -121,13 +121,13 @@ function translate(glob: string): string {
 }
 
 /** A regular expression for `glob`. The glob is relative to the project root. */
-export function globRegExp(glob: string): RegExp {
+function globRegExp(glob: string): RegExp {
   const bare = glob.replace(/^(?:\.?\/)+/, '')
   return new RegExp(`^${translate(bare.endsWith('/') ? `${bare}**` : bare)}$`)
 }
 
 /** True when `matcher` matches the path `relative`, or a folder above it. A path uses `/`. */
-export function matchesPath(matcher: RegExp, relative: string): boolean {
+function matchesPath(matcher: RegExp, relative: string): boolean {
   for (let at = relative.length; at > 0; at = relative.lastIndexOf('/', at - 1)) {
     if (matcher.test(relative.slice(0, at))) {
       return true
