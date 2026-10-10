@@ -888,6 +888,25 @@ describe('loadInventory', () => {
     expect(headings?.has('the page')).toBe(false)
   })
 
+  it('lists a rule once, keeps an anchored label with no colon, and reads no table above the first section', () => {
+    const text = INVENTORY.replace(
+      '## Rules by group\n',
+      '## Rules by group\n\n| Rule | Why |\n|------|-----|\n| `top-rule` | No section. [^late] |\n',
+    )
+      .replace(
+        '| `hooks-c` | A check. | [^common] |',
+        '| `hooks-c` | A check. [^common] | [^common] [^bare] |',
+      )
+      .replace('[^unused]:', `[^bare]: [Matcher patterns](${HOOKS}#matcher-patterns)\n[^unused]:`)
+    const headings = load(text).get(HOOKS)
+    expect(headings?.get('Common fields')).toEqual([
+      { section: 'Hooks', rules: ['hooks-a', 'hooks-c'] },
+      { section: 'Settings', rules: ['settings-a'] },
+    ])
+    expect(headings?.get('Matcher patterns')).toEqual([{ section: 'Hooks', rules: ['hooks-c'] }])
+    expect(headings?.has('Debug hooks')).toBe(false)
+  })
+
   it('reads the real inventory, and maps a hooks heading to the Hooks rows', () => {
     const inventory = api.loadInventory(path.join(import.meta.dirname, '..'))
     const rows = inventory.get(HOOKS)?.get('Common fields')
@@ -963,6 +982,40 @@ describe('classify with the inventory', () => {
     const output = await runPath(whole, EDIT_PATH, jev)
     expect(output.tracked.map((t) => t.blockId)).toEqual(['path-rules'])
     expect(output.findings.map((f) => [f.kind, f.rules])).toEqual([['rule-update', ['b-rule']]])
+  })
+
+  it('finds an inventory heading by its title when the block ID is the id attribute', async () => {
+    const html = PAGE.replace('## Path rules\n', '<h2 id="path-fields">\n  Path rules\n</h2>\n')
+    const edited = html.replace('</h2>\n', '</h2>\n\nA path must start with `./`.\n')
+    const jev = fakeJev(answer({ requirement: 0.1 }))
+    const output = await run(
+      cited,
+      edited,
+      { fetch: jev.fetch, key: KEY },
+      html,
+      inventoryOf(pathRows),
+    )
+    expect(output.tracked.map((t) => [t.blockId, t.heading, t.sections])).toEqual([
+      ['path-fields', 'Path rules', [{ section: 'Hooks', rules: ['hooks-a'] }]],
+    ])
+  })
+
+  it('merges the rows of two inventory headings that find one block', async () => {
+    const inventory = inventoryOf({
+      'Path rules': [{ section: 'Hooks', rules: ['hooks-a'] }],
+      'Path Rules': [
+        { section: 'Hooks', rules: ['hooks-a', 'hooks-b'] },
+        { section: 'Settings', rules: ['settings-a'] },
+      ],
+    })
+    const jev = fakeJev(answer({ requirement: 0.1 }))
+    const output = await run(cited, EDIT_PATH, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+    expect(output.tracked.map((t) => t.sections)).toEqual([
+      [
+        { section: 'Hooks', rules: ['hooks-a', 'hooks-b'] },
+        { section: 'Settings', rules: ['settings-a'] },
+      ],
+    ])
   })
 
   it('tracks no block for a heading on the page twice, the page title, or no block', async () => {

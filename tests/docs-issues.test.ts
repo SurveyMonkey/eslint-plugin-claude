@@ -795,15 +795,14 @@ describe('the group comment path for tracked blocks', () => {
       dryRun: false,
       log: (text) => logs.push(text),
     })
-    expect(gh.calls.slice(0, 2).map((c) => c.args)).toEqual([
-      ['api', `repos/${REPO}/issues/10`, '--jq', '.state'],
-      [
-        'api',
-        '--paginate',
-        `repos/${REPO}/issues/10/comments?per_page=100`,
-        '--jq',
-        '.[] | {body}',
-      ],
+    const reads = gh.calls.map((c) => c.args)
+    expect(reads).toContainEqual(['api', `repos/${REPO}/issues/10`, '--jq', '.state'])
+    expect(reads).toContainEqual([
+      'api',
+      '--paginate',
+      `repos/${REPO}/issues/10/comments?per_page=100`,
+      '--jq',
+      '.[] | {body}',
     ])
     expect(gh.issuePosts()).toEqual([])
     const [post] = gh.commentPosts()
@@ -978,11 +977,13 @@ describe('the group comment path for tracked blocks', () => {
   })
 
   it('fails before it posts for a group issue state that is not open or closed', async () => {
-    const gh = groupGh({ 10: { state: '' } })
-    await expect(live(gh, [common])).rejects.toThrow(
-      'issue #10 has a state that is not open or closed',
-    )
-    expect(gh.posts()).toEqual([])
+    for (const state of ['', 'null', 'OPEN']) {
+      const gh = groupGh({ 10: { state } })
+      await expect(live(gh, [common], [commonRule]), state).rejects.toThrow(
+        'issue #10 has a state that is not open or closed',
+      )
+      expect(gh.posts()).toEqual([])
+    }
   })
 
   it('prints each comment in a dry run, posts none, and does not count comments toward --max', async () => {
@@ -1012,6 +1013,21 @@ describe('the group comment path for tracked blocks', () => {
       log: quiet,
     })
     expect(capped.commented).toHaveLength(1)
+  })
+
+  it('opens no issue for a needs-triage finding that names no rule, on a tracked block with an open group issue', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const triage: Finding = {
+      ...commonRule,
+      kind: 'needs-triage',
+      probability: null,
+      confidence: null,
+      reason: 'The Jev request failed: HTTP 500.',
+    }
+    const result = await live(gh, [common], [triage])
+    expect(gh.issuePosts()).toEqual([])
+    expect(gh.commentPosts()).toHaveLength(1)
+    expect(result.skipped).toBe(1)
   })
 
   it('opens an issue for a finding that names a rule, on a tracked block with an open group issue', async () => {
@@ -1093,6 +1109,12 @@ describe('the group comment path for tracked blocks', () => {
       rules: ['a-rule'],
     }))
     const body = api.commentOf(blocks, 'Hooks')
+    // The markers and the cut text take 60,000 characters. The note of the
+    // cut comes after them.
+    const note =
+      '\n\nThe text is cut at 99,999 of 999,999 characters. Read the page for the rest.\n'
+    expect(api.MAX_COMMENT).toBe(60_000)
+    expect(body.length).toBeLessThanOrEqual(60_000 + note.length)
     expect(body.length).toBeLessThanOrEqual(65_536)
     expect(body.match(/<!-- docs-watch-tracked:/g)).toHaveLength(30)
     expect(body).toContain('Read the page for the rest.')
