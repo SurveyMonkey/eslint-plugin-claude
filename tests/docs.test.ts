@@ -37,6 +37,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-config-schema',
     'hooks-disabled-by-disableallhooks',
     'hooks-event-name-known',
+    'hooks-exec-form-command-spaces',
     'hooks-handler-field-ignored',
     'hooks-handler-type-event-support',
     'hooks-if-condition',

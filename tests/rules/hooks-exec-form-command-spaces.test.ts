@@ -22,17 +22,17 @@ const exec = (executable: string, args: unknown = ['x']) =>
   ids(command({ command: executable, args }))
 
 describe(`${name}: the command`, () => {
-  it.fails('reports a bare name that holds whitespace', () => {
+  it('reports a bare name that holds whitespace', () => {
     for (const text of ['node script.js', 'my tool', 'my\ttool', ' node', 'node ']) {
       expect(exec(text), text).toEqual(['spaces'])
     }
   })
 
-  it.fails('reports with an empty args array, which is exec form too', () => {
+  it('reports with an empty args array, which is exec form too', () => {
     expect(exec('my tool', [])).toEqual(['spaces'])
   })
 
-  it.fails('names the command and reports at the command string', () => {
+  it('names the command and reports at the command string', () => {
     const text =
       '{\n  "hooks": {"Stop": [{"hooks": [{"type": "command", "command": "node a.js", "args": []}]}]}\n}'
     const found = lintJson(name, text, FILES.project)
@@ -44,7 +44,7 @@ describe(`${name}: the command`, () => {
     )
   })
 
-  it.fails('is silent for a name with no whitespace, and for a path', () => {
+  it('is silent for a name with no whitespace, and for a path', () => {
     for (const text of [
       'node',
       'C:\\Program Files\\nodejs\\node.exe',
@@ -58,13 +58,13 @@ describe(`${name}: the command`, () => {
     }
   })
 
-  it.fails('is silent in shell form, where the shell splits the words', () => {
+  it('is silent in shell form, where the shell splits the words', () => {
     expect(ids(command({ command: 'node script.js' }))).toEqual([])
     expect(ids(command({ command: 'node script.js', args: 'x' }))).toEqual([])
     expect(ids(command({ command: 'node script.js', args: null }))).toEqual([])
   })
 
-  it.fails('reads a command handler with a string command only', () => {
+  it('reads a command handler with a string command only', () => {
     expect(ids({ type: 'http', command: 'a b', args: [] })).toEqual([])
     expect(ids({ command: 'a b', args: [] })).toEqual([])
     expect(ids({ type: 'command', command: 5, args: [] })).toEqual([])
@@ -73,14 +73,14 @@ describe(`${name}: the command`, () => {
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(command({ command: 'a b', args: [] }), file), file).toEqual(['spaces'])
       expect(ids(command({ command: 'ab', args: [] }), file), file).toEqual([])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (executable: string) =>
       frontmatter(
         `Stop:\n  - hooks:\n      - type: command\n        command: ${executable}\n        args: []\n`,
@@ -91,14 +91,14 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a plugin agent', () => {
+  it('is silent in a hidden drop-in, and in a plugin agent', () => {
     expect(ids(command({ command: 'a b', args: [] }), FILES.hidden)).toEqual([])
     const yaml =
       'Stop:\n  - hooks:\n      - type: command\n        command: "a b"\n        args: []\n'
     expect(markdownIds(name, frontmatter(yaml), pluginAgent())).toEqual([])
   })
 
-  it.fails('is silent on a config that is malformed', () => {
+  it('is silent on a config that is malformed', () => {
     expect(jsonIds(name, settings([]), FILES.project)).toEqual([])
     expect(
       jsonIds(name, settings({ Stop: [{ hooks: [{ type: 'command' }] }] }), FILES.project),

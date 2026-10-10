@@ -21,6 +21,7 @@ import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.t
 import hooksConfigSchema from './rules/hooks-config-schema.ts'
 import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
 import hooksIfCondition from './rules/hooks-if-condition.ts'
@@ -112,6 +113,7 @@ const modules = [
   hooksCommandRemovedCliFlag,
   hooksConfigSchema,
   hooksDisabledByDisableallhooks,
+  hooksExecFormCommandSpaces,
   hooksHandlerFieldIgnored,
   hooksHandlerTypeEventSupport,
   hooksIfCondition,
@@ -232,6 +234,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-command-removed-cli-flag': 'error',
   'hooks-config-schema': 'error',
   'hooks-disabled-by-disableallhooks': 'error',
+  'hooks-exec-form-command-spaces': 'error',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-type-event-support': 'error',
   'hooks-if-condition': 'error',
