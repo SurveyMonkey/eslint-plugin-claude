@@ -2,7 +2,10 @@
 // https://code.claude.com/docs/en/permission-modes#how-auto-mode-evaluates-actions
 // Auto mode is a runtime choice, so the rule is a heuristic. The tests of a source use files on disk.
 import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { repo } from '../agent-settings.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
@@ -20,34 +23,33 @@ const at = (root: string, file: string, text: string) =>
   lintJson(name, text, path.join(root, file)).map((message) => message.messageId)
 const alone = (text: string, file = PROJECT) => at(repo({}), file, text)
 const allow = (rule: string, file = PROJECT) => alone(perms({ allow: [rule] }), file)
+const withOptions = (options: unknown[], text: string, file = PROJECT) =>
+  new Linter({ cwd: path.parse(path.resolve('/repo', file)).root })
+    .verify(
+      text,
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { [`claude/${name}`]: ['error', ...options] },
+        },
+      ],
+      { filename: path.resolve('/repo', file) },
+    )
+    .map((message) => message.messageId)
 
 describe(`${name}: the report`, () => {
-  it('reports Bash(*) and PowerShell(*), in every file', () => {
+  it('reports a wildcarded python interpreter, in every file', () => {
     for (const file of EVERY_FILE) {
-      expect(allow('Bash(*)', file), file).toEqual(['dropped'])
-      expect(allow('PowerShell(*)', file), file).toEqual(['dropped'])
+      for (const rule of ['Bash(python*)', 'Bash(python *)', 'Bash(python:*)']) {
+        expect(allow(rule, file), `${file} ${rule}`).toEqual(['dropped'])
+      }
     }
   })
 
-  it('reports a bare Bash or PowerShell, which match every command', () => {
-    expect(allow('Bash')).toEqual(['dropped'])
-    expect(allow('PowerShell')).toEqual(['dropped'])
-  })
-
-  it('reports a wildcarded interpreter', () => {
-    for (const rule of [
-      'Bash(python*)',
-      'Bash(python *)',
-      'Bash(python:*)',
-      'Bash(python3 *)',
-      'Bash(node*)',
-      'Bash(node *)',
-      'Bash(ruby *)',
-      'Bash(perl *)',
-      'PowerShell(python*)',
-    ]) {
-      expect(allow(rule), rule).toEqual(['dropped'])
-    }
+  it('reports PowerShell(python*) too', () => {
+    expect(allow('PowerShell(python*)')).toEqual(['dropped'])
   })
 
   it('reports an Agent rule and a Monitor rule, with or without a specifier', () => {
@@ -56,16 +58,26 @@ describe(`${name}: the report`, () => {
     }
   })
 
+  it('reports each dropped entry', () => {
+    expect(alone(perms({ allow: ['Bash(python*)', 'Agent', 'Monitor'] }))).toEqual([
+      'dropped',
+      'dropped',
+      'dropped',
+    ])
+  })
+
   it('names the rule and the reason', () => {
-    const [bash] = lintJson(name, perms({ allow: ['Bash(python*)'] }), `/repo/${PROJECT}`)
-    expect(bash?.message).toContain('Bash(python*)')
-    expect(bash?.message).toContain('interpreter')
-    const [agent] = lintJson(name, perms({ allow: ['Agent'] }), `/repo/${PROJECT}`)
-    expect(agent?.message).toContain('Agent')
+    const message = (rule: string) =>
+      lintJson(name, perms({ allow: [rule] }), `/repo/${PROJECT}`)[0]?.message
+    expect(message('Bash(python*)')).toBe(
+      '`Bash(python*)` is a wildcarded `python` interpreter rule. In auto mode, Claude Code drops this allow rule, and the classifier reviews each action instead. Claude Code restores it when you leave auto mode.',
+    )
+    expect(message('Agent(Explore)')).toContain('`Agent(Explore)` is an allow rule for Agent.')
+    expect(message('Monitor')).toContain('`Monitor` is an allow rule for Monitor.')
   })
 
   it('reports each entry, at its line and column', () => {
-    const text = '{\n  "permissions": {\n    "allow": ["Read", "Bash(*)"]\n  }\n}'
+    const text = '{\n  "permissions": {\n    "allow": ["Read", "Bash(python*)"]\n  }\n}'
     expect(
       lintJson(name, text, `/repo/${PROJECT}`).map(({ line, column }) => [line, column]),
     ).toEqual([[3, 23]])
@@ -73,6 +85,31 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
+  it('is silent for a rule that approves every command, which permissions-allow-unrestricted reports', () => {
+    for (const rule of ['Bash(*)', 'PowerShell(*)', 'Bash', 'PowerShell']) {
+      for (const file of EVERY_FILE) {
+        expect(allow(rule, file), `${file} ${rule}`).toEqual([])
+      }
+    }
+  })
+
+  it('is silent for an interpreter that the docs do not name, unless the option names it', () => {
+    for (const rule of ['Bash(python3 *)', 'Bash(node*)', 'Bash(node *)', 'Bash(ruby *)']) {
+      expect(allow(rule), rule).toEqual([])
+    }
+  })
+
+  it('is silent for an interpreter with a fixed word', () => {
+    for (const rule of [
+      'Bash(python* -m pytest)',
+      'Bash(python foo)',
+      'Bash(python)',
+      'Bash(Python *)',
+    ]) {
+      expect(allow(rule), rule).toEqual([])
+    }
+  })
+
   it('is silent for a narrow rule, which stays in effect', () => {
     for (const rule of [
       'Bash(npm test)',
@@ -114,33 +151,60 @@ describe(`${name}: the silent cases`, () => {
 })
 
 describe(`${name}: a source that turns auto mode off`, () => {
-  const BASH = perms({ allow: ['Bash(*)'] })
+  const BASH = perms({ allow: ['Agent'] })
 
   it('is silent when the file sets disableAutoMode to "disable", at the top or in permissions', () => {
-    expect(alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: 'disable' }))).toEqual([])
-    expect(alone(perms({ allow: ['Bash(*)'], disableAutoMode: 'disable' }))).toEqual([])
+    expect(alone(perms({ allow: ['Agent'] }, { disableAutoMode: 'disable' }))).toEqual([])
+    expect(alone(perms({ allow: ['Agent'], disableAutoMode: 'disable' }))).toEqual([])
   })
 
   it('reports when disableAutoMode has another value in a project file', () => {
     for (const value of [true, 'enable', null]) {
-      expect(
-        alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: value })),
-        String(value),
-      ).toEqual(['dropped'])
+      expect(alone(perms({ allow: ['Agent'] }, { disableAutoMode: value })), String(value)).toEqual(
+        ['dropped'],
+      )
     }
   })
 
   it('is silent for any top-level value but null in a managed file, which Claude Code reads as "disable"', () => {
-    expect(alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: true }), MANAGED)).toEqual([])
-    expect(alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: null }), MANAGED)).toEqual([
+    expect(alone(perms({ allow: ['Agent'] }, { disableAutoMode: true }), MANAGED)).toEqual([])
+    expect(alone(perms({ allow: ['Agent'] }, { disableAutoMode: null }), MANAGED)).toEqual([
       'dropped',
     ])
   })
 
-  it('reads the lock inside permissions as "disable" only, even in a managed file', () => {
-    const nested = (value: unknown) => perms({ allow: ['Bash(*)'], disableAutoMode: value })
-    expect(alone(nested('disable'), MANAGED)).toEqual([])
-    expect(alone(nested(true), MANAGED)).toEqual(['dropped'])
+  it('reads the lock inside permissions as "disable" only, outside a managed file', () => {
+    const nested = (value: unknown) => perms({ allow: ['Agent'], disableAutoMode: value })
+    expect(alone(nested('disable'))).toEqual([])
+    expect(alone(nested(true))).toEqual(['dropped'])
+  })
+
+  it('reads any value but null inside permissions as "disable" in a managed file', () => {
+    const nested = (value: unknown) => perms({ allow: ['Agent'], disableAutoMode: value })
+    for (const file of [MANAGED, DROP_IN]) {
+      for (const value of ['disable', true, false, 0, '', 'enable']) {
+        expect(alone(nested(value), file), `${file} ${String(value)}`).toEqual([])
+      }
+      expect(alone(nested(null), file), file).toEqual(['dropped'])
+    }
+  })
+
+  it('reads any top-level value but null as "disable" in a managed file, and no value but "disable" in a project file', () => {
+    for (const value of [false, 0, '', 'enable']) {
+      expect(
+        alone(perms({ allow: ['Agent'] }, { disableAutoMode: value }), DROP_IN),
+        String(value),
+      ).toEqual([])
+    }
+  })
+
+  it('is not silenced by a lock in a hidden drop-in or in another source', () => {
+    const hidden = repo({
+      'managed-settings.d/.20-b.json': JSON.stringify({ disableAutoMode: 'disable' }),
+    })
+    expect(at(hidden, DROP_IN, perms({ allow: ['Agent'] }))).toEqual(['dropped'])
+    const managed = repo({ [MANAGED]: JSON.stringify({ disableAutoMode: 'disable' }) })
+    expect(at(managed, PROJECT, perms({ allow: ['Agent'] }))).toEqual(['dropped'])
   })
 
   it('reads the other file of the project pair', () => {
@@ -162,5 +226,52 @@ describe(`${name}: a source that turns auto mode off`, () => {
     expect(at(root, PROJECT, BASH)).toEqual([])
     const managed = repo({ 'managed-settings.d/20-b.json': '{' })
     expect(at(managed, DROP_IN, BASH)).toEqual([])
+  })
+})
+
+describe(`${name}: the option interpreters`, () => {
+  const text = (rule: string) => perms({ allow: [rule] })
+
+  it('adds to the default list, in a project file and a managed file', () => {
+    for (const file of [PROJECT, MANAGED]) {
+      const options = [{ interpreters: ['node'] }]
+      expect(withOptions(options, text('Bash(node *)'), file), file).toEqual(['dropped'])
+      expect(withOptions(options, text('Bash(node*)'), file), file).toEqual(['dropped'])
+      expect(withOptions(options, text('Bash(python *)'), file), file).toEqual(['dropped'])
+      expect(withOptions(options, text('Bash(ruby *)'), file), file).toEqual([])
+    }
+  })
+
+  it('names the program of the option in the message', () => {
+    const [message] = new Linter({ cwd: '/' }).verify(
+      text('Bash(node *)'),
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { [`claude/${name}`]: ['error', { interpreters: ['node'] }] },
+        },
+      ],
+      { filename: path.resolve('/repo', PROJECT) },
+    )
+    expect(message?.message).toContain('wildcarded `node` interpreter')
+  })
+
+  it('takes no option, and an empty object, as the default', () => {
+    expect(withOptions([], text('Bash(node *)'))).toEqual([])
+    expect(withOptions([{}], text('Bash(node *)'))).toEqual([])
+    expect(withOptions([{ interpreters: [] }], text('Bash(python *)'))).toEqual(['dropped'])
+  })
+
+  it('refuses an empty name, a repeated name, a string and an unknown key', () => {
+    for (const option of [
+      { interpreters: [''] },
+      { interpreters: ['node', 'node'] },
+      { interpreters: 'node' },
+      { other: true },
+    ]) {
+      expect(() => withOptions([option], text('Bash(node *)')), JSON.stringify(option)).toThrow()
+    }
   })
 })
