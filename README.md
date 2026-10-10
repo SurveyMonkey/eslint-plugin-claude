@@ -161,7 +161,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-json-location`](docs/rules/mcp-json-location.md) | An MCP config is not at `.claude/.mcp.json`, `.claude/mcp.json` or `.claude/config/mcp.json`, where Claude Code does not read it | `error` | `error` |
 | [`claude/mcp-json-servers-key`](docs/rules/mcp-json-servers-key.md) | A project `.mcp.json` has a top-level `mcpServers` object, not VS Code's `servers` key or entries at the top level | `error` | `error` |
 | [`claude/mcp-json-file-size`](docs/rules/mcp-json-file-size.md) | A `.mcp.json` has at most 2 MiB (2097152 bytes); option `max` | `error` | `error` |
-| [`claude/mcp-server-name-reserved`](docs/rules/mcp-server-name-reserved.md) | No server is named `workspace`, `claude-in-chrome`, `computer-use`, `Claude Preview` or `Claude Browser`; option `names` | `error` | `error` |
+| [`claude/mcp-server-name-reserved`](docs/rules/mcp-server-name-reserved.md) | No server is named a reserved name, including `workspace`, `claude-in-chrome`, `computer-use`, `Claude Preview` or `Claude Browser`; option `names` | `error` | `error` |
 | [`claude/mcp-remote-url-empty`](docs/rules/mcp-remote-url-empty.md) | A remote server in a project `.mcp.json` has a `url` that is not empty | `error` | `error` |
 | [`claude/mcp-hidden-whitespace`](docs/rules/mcp-hidden-whitespace.md) | No leading or trailing whitespace in `command`, `url`, an `args` item, or a key or value of `env` and `headers` | `error` | `error` |
 | [`claude/mcp-timeout-min`](docs/rules/mcp-timeout-min.md) | A server `timeout` is in milliseconds and at least 1000; option `min` | `error` | `error` |

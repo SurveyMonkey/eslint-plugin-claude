@@ -57,7 +57,15 @@ export function serverMembers(body: ValueNode, kind: McpFileKind): MemberNode[] 
   } else if (wrapper.value.type === 'Object') {
     members = wrapper.value.members
   }
-  return members.filter(
-    (member) => members.findLast((other) => keyOf(other.name) === keyOf(member.name)) === member,
-  )
+  return lastMembers(members)
+}
+
+/** The members of `members` that stay when two members have one name: the last of each name,
+ *  in file order, as `JSON.parse` keeps it. */
+export function lastMembers(members: readonly MemberNode[]): MemberNode[] {
+  const last = new Map<string, MemberNode>()
+  for (const member of members) {
+    last.set(keyOf(member.name), member)
+  }
+  return members.filter((member) => last.get(keyOf(member.name)) === member)
 }

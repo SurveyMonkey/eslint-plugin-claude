@@ -5,7 +5,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type MemberNode } from '../marketplace-json.ts'
-import { mcpFileKind } from '../mcp-servers.ts'
+import { lastMembers, mcpFileKind } from '../mcp-servers.ts'
 
 const name = 'mcp-json-servers-key' as const
 
@@ -56,7 +56,7 @@ const rule: JSONRuleDefinition<{
           return
         }
         const vscode = lastMember(body, 'servers')
-        const unwrapped = body.members.find(looksLikeServer)
+        const unwrapped = lastMembers(body.members).find(looksLikeServer)
         if (vscode !== undefined) {
           context.report({ node: vscode.name, messageId: 'vscodeServers' })
         } else if (unwrapped !== undefined) {

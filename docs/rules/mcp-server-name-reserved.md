@@ -21,9 +21,9 @@ Do not give an MCP server a name that Claude Code reserves.
 ## Rule details
 
 Claude Code reserves the names of its built-in servers. These include `workspace`,
-`claude-in-chrome`, `computer-use`, `Claude Preview` and `Claude Browser`. A configured server with a reserved name
-is skipped at load time, with a warning that asks for a new name. `claude mcp add` rejects such a
-name with an error.[^warnings]
+`claude-in-chrome`, `computer-use`, `Claude Preview` and `Claude Browser`. Claude Code skips a
+configured server with a reserved name at load time, with a warning that asks for a new name.
+`claude mcp add` rejects such a name with an error.[^warnings]
 
 The rule reads the server names in `.mcp.json` and reports each reserved name. The report is on the
 name. The match is exact, and it is case-sensitive. `Workspace` and `claude-preview` pass.

@@ -5,7 +5,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import { mcpFileKind, serverMembers } from '../mcp-servers.ts'
+import { lastMembers, mcpFileKind, serverMembers } from '../mcp-servers.ts'
 
 const name = 'mcp-hidden-whitespace' as const
 
@@ -53,7 +53,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'value' | 'key' }> = {
             if (map?.type !== 'Object') {
               return
             }
-            for (const entry of map.members) {
+            for (const entry of lastMembers(map.members)) {
               const entryKey = keyOf(entry.name)
               if (hasEdgeWhitespace(entryKey)) {
                 context.report({
