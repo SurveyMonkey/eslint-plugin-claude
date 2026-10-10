@@ -20,7 +20,7 @@ Do not commit `permissions.defaultMode: "bypassPermissions"`.
 
 ## Rule details
 
-`bypassPermissions` mode runs every tool call without a prompt, and it skips the safety checks.
+`bypassPermissions` mode runs tool calls without the usual prompts, and it skips the safety checks.
 Deny rules still apply.[^bypass][^modes] The rule reports the value `bypassPermissions` in each
 file that a repository can commit. The message depends on the kind of file:
 
@@ -28,7 +28,7 @@ file that a repository can commit. The message depends on the kind of file:
   these files, and the session starts in Manual mode.[^mode][^ignored] Earlier versions honor the
   value from any file, so a client that is not up to date starts the session with no checks. The
   message says both.
-- **A managed file.** Claude Code honors the value. Every session starts with no prompt. A
+- **A managed file.** Claude Code honors the value. Every session starts with prompts off. A
   managed file can set it on purpose, for a locked-down container. The rule reports it, so
   that the choice is explicit. Turn the rule off for that file if you mean it.
 
@@ -42,8 +42,9 @@ The rule reads the last of two keys of one name, as `JSON.parse` does. A hidden 
 ### One report for one fault
 
 - A file that also sets `permissions.disableBypassPermissionsMode` to `"disable"` is for
-  `permissions-default-mode-conflict`. The lock stops anyone from entering the mode, so this
-  rule makes no report there.
+  `permissions-default-mode-conflict`. The lock stops anyone from using the mode, so this
+  rule makes no report there. In a managed file, a lock with another value counts too: Claude
+  Code reads it as `"disable"`, and `permissions-disable-mode-value` reports the value.
 - `permissions-default-mode-project-ignored` reports `auto` in a project or local file. It does
   not report `bypassPermissions`, so one line gets one report.
 - The inventory row also names a user settings template. The plugin lints no such file. A

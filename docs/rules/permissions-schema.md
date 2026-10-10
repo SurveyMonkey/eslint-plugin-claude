@@ -49,10 +49,10 @@ settings group, and makes no report inside `permissions`. The rule does not chec
 Claude Code repairs the `permissions` block of a managed file per field. While a `deny` or `ask`
 list cannot be read at all, it withholds `allow` and `additionalDirectories`, so the grants
 never apply without the restrictions that were written beside them.[^closed] The message for a
-`deny` or `ask` list that is not an array says so. It needs Claude Code v2.1.282 or later.
+`deny` or `ask` list that is not an array says so. This repair needs Claude Code v2.1.282 or later.
 
-A project, local or user file with a rejected value is a settings error, and Claude Code skips
-the value or the file.[^broken]
+A project, local or user file with a rejected value is a settings error. Claude Code skips the
+value or the file.[^broken]
 
 The rule reads the last of two keys of one name, as `JSON.parse` does. A `null` value removes
 the key, so the rule takes it as no key. A hidden file in `managed-settings.d/` gets no report,
