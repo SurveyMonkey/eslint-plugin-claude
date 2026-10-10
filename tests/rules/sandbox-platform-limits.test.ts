@@ -238,6 +238,12 @@ describe(`${name}: bracketed IPv6 before v2.1.229`, () => {
     expect(ids(text, [])).toEqual([])
   })
 
+  it('is silent for an ask rule, which the sandbox reads for no domain', () => {
+    expect(ids(JSON.stringify({ permissions: { ask: ['WebFetch(domain:[::1])'] } }), OLD)).toEqual(
+      [],
+    )
+  })
+
   it('is silent for a bracket that does not close or holds nothing', () => {
     expect(
       ids(network({ allowedDomains: ['[::1', '[]', '[]:443', '[::1]x', 'a[::1]'] }), OLD),
@@ -257,7 +263,14 @@ describe(`${name}: bracketed IPv6 before v2.1.229`, () => {
       ids(network({ allowedDomains: ['a.com', '1.2.3.4', '::1', '*.a.com:443'] }), OLD),
     ).toEqual([])
     expect(
-      ids(JSON.stringify({ permissions: { allow: ['WebFetch(domain:a.com)', 'Read'] } }), OLD),
+      ids(
+        JSON.stringify({
+          permissions: {
+            allow: ['WebFetch(domain:a.com)', 'WebFetch', 'WebFetch(other:[::1])', 'Read'],
+          },
+        }),
+        OLD,
+      ),
     ).toEqual([])
   })
 
