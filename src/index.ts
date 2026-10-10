@@ -44,6 +44,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import pluginBinClaudeAi from './rules/plugin-bin-claude-ai.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
@@ -236,6 +237,7 @@ const modules = [
   pluginSettingsAgentExists,
   pluginSkillsKeyRedundantDefault,
   pluginUserConfigFieldApplicability,
+  pluginBinClaudeAi,
   pluginMonitorsCommandQuote,
   pluginPackageLifecycleScripts,
   pluginPackageLockfileChoice,
@@ -376,6 +378,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-settings-agent-exists': 'warn',
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-user-config-field-applicability': 'warn',
+  'plugin-bin-claude-ai': 'warn',
   'plugin-monitors-command-quote': 'warn',
   'plugin-package-lifecycle-scripts': 'warn',
   'plugin-package-lockfile-choice': 'warn',

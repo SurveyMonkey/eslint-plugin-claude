@@ -798,6 +798,8 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  // The rule with the option `targets` gives no report in the config run, which sets no option.
+  { name: 'plugin-bin-claude-ai', files: ['**/.claude-plugin/plugin.json'], severity: 'warn' },
   {
     name: 'plugin-monitors-command-quote',
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],

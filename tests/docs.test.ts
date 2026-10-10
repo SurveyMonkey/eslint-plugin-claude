@@ -60,6 +60,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-specifier-unsupported',
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
+    'plugin-bin-claude-ai',
     'plugin-commands-dir-nonempty',
     'plugin-commands-map-fields',
     'plugin-default-dir-shadowed',

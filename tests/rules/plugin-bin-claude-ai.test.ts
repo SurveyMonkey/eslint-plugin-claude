@@ -13,7 +13,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-bin-claude-ai'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const ON = [{ targets: ['claude-ai'] }]
 
@@ -87,7 +87,9 @@ describe(`${RULE} (silent)`, () => {
   })
 
   check('refuses a target that is not claude-ai', () => {
-    expect(() => run(BIN, [{ targets: ['cowork'] }])).toThrow(/targets/)
+    expect(() => run(BIN, [{ targets: ['cowork'] }])).toThrow(
+      /should be equal to one of the allowed values/,
+    )
   })
 
   check.each([
