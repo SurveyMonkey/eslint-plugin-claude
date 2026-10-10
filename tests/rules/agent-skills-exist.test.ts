@@ -41,6 +41,9 @@ describe('agent-skills-exist', () => {
       expect(run({ '.claude/skills/other/SKILL.md': skill('another') })).toHaveLength(1)
       expect(run({ '.claude/commands/ghost.txt': 'x' })).toHaveLength(1)
     })
+    it('an entry when a loose file sits in the skills folder', () => {
+      expect(run({ '.claude/skills/README.md': 'x' })).toHaveLength(1)
+    })
     it('a name in a skills folder of a nested project, from the root', () => {
       const files = { 'pkg/.claude/skills/ghost/SKILL.md': skill() }
       expect(run(files, list('ghost'), AGENT)).toHaveLength(1)
@@ -149,6 +152,17 @@ describe('agent-skills-exist', () => {
       expect(dangling('gone', '.claude/commands')).toEqual([])
       expect(dangling('gone', '.claude/skills/ghost')).toEqual([])
       expect(dangling('gone', '.claude/skills/other/SKILL.md')).toEqual([])
+    })
+    it('when .claude is a dangling link, in the project folder or above it', () => {
+      const link = (project: string, at: string) => {
+        const root = repo({})
+        mkdirSync(path.join(root, at), { recursive: true })
+        symlinkSync(path.join(root, 'gone'), path.join(root, at, '.claude'))
+        const file = path.join(root, project, AGENT)
+        return lintAgent('agent-skills-exist', agent(list('ghost')), file)
+      }
+      expect(link('.', '.')).toEqual([])
+      expect(link('pkg', '.')).toEqual([])
     })
     it('for a plugin whose manifest sets commands', () => {
       const files = { 'plugins/p/.claude-plugin/plugin.json': '{"name":"p","commands":"./cmds"}' }
