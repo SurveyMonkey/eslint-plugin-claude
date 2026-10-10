@@ -1,4 +1,4 @@
-// With a static `Authorization` header, Claude Code never falls back to OAuth. The rule reads
+// With a static `Authorization` header, Claude Code does not fall back to OAuth. The rule reads
 // `http`, `streamable-http` and `sse` servers. `mcp-oauth-transport` owns the other transports.
 // The files glob is in tests/configs.test.ts.
 import path from 'node:path'

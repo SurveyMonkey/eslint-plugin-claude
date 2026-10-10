@@ -1,6 +1,6 @@
 // An `oauth` object on a server that cannot use it (docs/rules/mcp-oauth-transport.md). OAuth
 // applies to `http` and `sse` servers. A stdio server, a server with no `type` (which is stdio)
-// and a `ws` server never read the object. A `ws` server takes headers only.
+// and a `ws` server do not use the object. A `ws` server takes headers only.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
@@ -18,7 +18,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' }> = {
     schema: [],
     messages: {
       ignored:
-        'The {{transport}} server "{{server}}" has an `oauth` object. OAuth applies to `http` and `sse` servers only, so Claude Code ignores it.',
+        'The {{transport}} server "{{server}}" has an `oauth` object. OAuth applies to `http` and `sse` servers only. Remove the `oauth` object.',
     },
   },
   create(context) {
