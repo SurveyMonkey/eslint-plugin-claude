@@ -63,8 +63,8 @@ function protectedEditPath(specifier: string): string | null {
 /** The protected path of the sandbox that the `allowWrite` entry is at or
  *  under, or null. The rule reads an entry that is relative to the project. A
  *  path with a `/` at the start, and a `~/` path, have other first segments
- *  than a protected path. An entry with a wildcard is skipped, because the
- *  docs do not say which paths it covers. */
+ *  than a protected path. An entry with a wildcard is skipped. Linux and WSL2
+ *  skip it, and on macOS the rule cannot tell which paths it covers. */
 function protectedSandboxPath(entry: string): string | null {
   if (entry.startsWith('/')) {
     return null
@@ -78,7 +78,8 @@ function protectedSandboxPath(entry: string): string | null {
 }
 
 /** A target that the docs name as a critical path: the root, a direct child
- *  of the root, the home directory, the working directory and its parent. */
+ *  of the root, the home directory, and the working directory. The rule reads
+ *  `.` and `..` only, not a longer chain of parents. */
 const CRITICAL_TARGET = /^(?:\/|~\/?|\$HOME\/?|\$\{HOME\}\/?|\.{1,2}\/?|\/[^/]+\/?)$/
 
 /** The first target of an `rm` or `rmdir` rule that is a critical path, or

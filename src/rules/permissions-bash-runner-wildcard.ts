@@ -1,5 +1,5 @@
 // A rule such as `Bash(devbox run *)` matches whatever comes after the runner,
-// with `devbox run rm -rf .`. The wrapper list of Claude Code does not
+// such as `devbox run rm -rf .`. The wrapper list of Claude Code does not
 // hold the runners that run their arguments as a command
 // (docs/rules/permissions-bash-runner-wildcard.md).
 import type { JSONRuleDefinition } from '@eslint/json'

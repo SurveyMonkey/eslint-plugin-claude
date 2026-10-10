@@ -16,7 +16,7 @@ const name = 'permissions-bash-wildcard-before-subcommand' as const
  *  word, or when only options sit between it and the program. A word that is
  *  not an option, as `log` in `git log * main`, is the subcommand, and the
  *  `*` after it is fine. A rule that ends in the `*` has no word after it. A
- *  word that holds a `*` with other text is for `permissions-bash-glued-wildcard`. */
+ *  word that holds a `*` with other text is for the planned rule `permissions-bash-glued-wildcard`. */
 function wildcardBeforeSubcommand(words: readonly string[]): boolean {
   const star = words.indexOf('*')
   if (star === -1 || words.slice(star + 1).every((word) => word === '*')) {

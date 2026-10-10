@@ -946,6 +946,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Sandbox path prefixes",
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.filesystem.allowWrite",
       "hash": "31627177301f27c16c26b011c39a773965443bdfb8c0eeb9c65dba34c8e7c434"
     }

@@ -135,6 +135,7 @@ describe(`${name}: an Edit allow rule`, () => {
       'projects/x/memory',
       'projects/x/memory/notes.md',
       'agent-memory',
+      'agent-memory-local/x',
     ]) {
       expect(ids(allow(`Edit(.claude/${dir}/**)`)), dir).toEqual([])
       expect(ids(allow(`Edit(~/.claude/${dir}/**)`)), dir).toEqual([])

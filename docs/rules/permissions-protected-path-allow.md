@@ -31,12 +31,12 @@ settings. An entry such as `Edit(.claude/**)` does not change the result.[^prote
 
 The protected directories are `.git`, `.config/git`, `.vscode`, `.idea`, `.husky`, `.cargo`, `.devcontainer`, `.yarn`,
 `.mvn` and `.claude`. The protected files include `.gitconfig`, `.bashrc`, `.zshrc`, `.envrc`, `.npmrc`, `lefthook.yml`,
-`.mcp.json` and `.claude.json`. The rule holds the lists of the docs. It cannot hold a directory that you load with `--plugin-dir`.
+`.mcp.json` and `.claude.json`. The rule holds the lists of the docs. It does not list a directory that you load with `--plugin-dir`.
 
 The docs name exceptions under `.claude`, "such as" these. The rule does not report a pattern at or under
-`.claude/worktrees`, `.claude/plans`, `.claude/jobs/<id>/tmp`, `.claude/projects/<project>/memory` or
-`.claude/agent-memory`. The docs limit the memory exceptions to Markdown files, and the rule cannot tell, so it skips
-the whole directory.
+`.claude/worktrees`, `.claude/plans`, `.claude/jobs/<id>/tmp`, `.claude/projects/<project>/memory`,
+`.claude/agent-memory` or `.claude/agent-memory-local`. The docs limit the memory exceptions to Markdown files. The
+rule cannot tell, so it skips the whole directory.
 
 The rule reports an `Edit` entry when the path starts at a protected path. It skips the anchor (`~/`, `/`, `./`) and any
 `**` at the start. These are reports: `Edit(.claude/**)`, `Edit(**/.git/**)`, `Edit(~/.zshrc)` and `Edit(.mcp.json)`.
@@ -63,13 +63,15 @@ these cases:
 
 - The entry is above a protected path, as in `.claude`. It also allows other paths, so it has some effect.
 - The entry starts with `/`, `//` or `~`. The rule cannot tell which directory it names.
-- The entry has a wildcard, other than a final `/**`. The docs do not say which paths such an entry covers.[^allowwrite]
+- The entry has a wildcard, other than a final `/**`. On Linux and WSL2, Claude Code skips it. On macOS it works, and
+  the rule cannot tell which paths it covers.[^prefixes]
 - The file is a managed file. The docs do not say what a relative path means in managed settings.[^allowwrite]
 
 **A `Bash` allow rule for `rm` or `rmdir` on a critical path.** Claude Code never lets an allow rule approve an `rm` or
 `rmdir` command that targets a critical path.[^critical] The rule reads `Bash` rules. It reports a rule with no wildcard whose target is a
-literal critical path: `/`, `~`, `$HOME`, `${HOME}` or `.`. It also reports a direct child of the root such as `/usr`,
-and `..`. The docs do not name these two, so they are a choice of the rule.
+literal critical path. The docs name the root, a direct child of the root such as `/usr`, the home directory, and the
+working directory with its parents. The rule matches the spellings `/`, `/usr`, `~`, `$HOME`, `${HOME}`, `.` and `..`.
+It does not match `../..`.
 
 A rule with a wildcard, such as `Bash(rm -rf /tmp/*)`, also approves other targets, so the rule does not report it. The
 rule does not model a target that holds a command substitution or another variable.
@@ -81,7 +83,7 @@ that does not parse. [`permissions-rule-syntax`](permissions-rule-syntax.md) rep
 
 - `Write(.claude/**)` and `NotebookEdit(...)` rules are for [`permissions-path-rule-tool`](permissions-path-rule-tool.md).
   Claude Code never consults a path rule for those tools. This rule reads `Edit` rules only.
-- A path rule in `deny` or `ask` is not an allow rule. This rule does not read it. A `param:value` specifier names no protected path.
+- A path rule in `deny` or `ask` is not an allow rule. This rule does not read it. In `allow`, a `param:value` specifier is a path pattern. It does not start at a protected path.
 - [`permissions-bypass-mode-committed`](permissions-bypass-mode-committed.md) reports the mode in which protected-path writes
   are allowed.
 - An `allowWrite` entry for a path outside the project, such as `~/.bashrc`, is for the planned heuristic rule
@@ -114,4 +116,5 @@ None.
 [^protected]: [Choose a permission mode: Protected paths](https://code.claude.com/docs/en/permission-modes#protected-paths)
 [^critical]: [Choose a permission mode: Critical paths](https://code.claude.com/docs/en/permission-modes#critical-paths)
 [^sandbox]: [Configure the sandboxed Bash tool: Protected paths](https://code.claude.com/docs/en/sandboxing#protected-paths)
+[^prefixes]: [All settings: Sandbox path prefixes](https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes)
 [^allowwrite]: [All settings: sandbox.filesystem.allowWrite](https://code.claude.com/docs/en/settings-reference#sandboxfilesystemallowwrite)
