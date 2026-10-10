@@ -39,7 +39,7 @@ file system root keeps the path. The rule checks the four lists below `sandbox.f
 
 ### What the rule does not check
 
-The row has two more parts. Both rest on user settings: a `/path` rule in `~/.claude/settings.json` resolves under `~/.claude`, and a
+Issue 15 has two more parts. Both rest on user settings: a `/path` rule in `~/.claude/settings.json` resolves under `~/.claude`, and a
 sandbox `.` or `./` path there resolves under `~/.claude`.[^read][^prefixes] A user file is outside the repository, and the plugin
 does not read it (ADR 001, Decision 14). The rule does not check them.
 

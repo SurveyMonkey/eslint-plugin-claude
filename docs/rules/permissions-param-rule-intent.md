@@ -28,11 +28,12 @@ Deny and ask rules can match a top-level input parameter with `Tool(param:value)
 show that the call is safe, so allow rules keep the specifier syntax of each tool.[^param] So `Agent(model:opus)` in `allow`
 is not a parameter match.
 
-The rule reports an `allow` entry whose specifier starts with a parameter name that the docs give for the tool:
-`model` and `isolation` for `Agent`, `skill` for `Skill`, and `run_in_background`, `description`, `timeout` and
-`dangerouslyDisableSandbox` for the command tools. Space around the colon does not matter.[^param]
+The rule reports an `allow` entry whose specifier starts with a parameter name from this list: `model` and `isolation`
+for `Agent`, `skill` for `Skill`, and `run_in_background`, `description`, `timeout` and `dangerouslyDisableSandbox` for the command
+tools. The page names `run_in_background` and says the match works for any scalar parameter. The plugin adds the other three
+names from the Bash tool input. Space around the colon does not matter.[^param]
 
-The inventory row has a second part: `Agent(model:...)` with an alias where a full ID is sent, or the reverse. The rule drops it.
+Issue 15 has a second part: `Agent(model:...)` with an alias where a full ID is sent, or the reverse. The rule drops it.
 The docs say only that the value is compared with the literal input, so `Agent(model:opus)` matches the alias and not a full model
 ID.[^param] No file shows which form Claude sends, so a report would rest on a guess.
 

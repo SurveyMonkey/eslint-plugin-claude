@@ -32,7 +32,7 @@ sandbox network allowlist when the limit must hold.[^read-only]
 The rule reports an `allow` entry for `Bash`, `Monitor` or `PowerShell`. The first word is `curl` or `wget`, and a later word has
 `://`. The message names the host of the URL, and gives the deny rule and the `WebFetch` rule.
 
-The docs show URLs as the fault. The inventory row says "URLs or arguments". The rule checks URLs only, because the docs give no
+The docs show URLs as the fault. Issue 15 says "URLs or arguments". The rule checks URLs only, because the docs give no
 other argument as an example. A rule such as `Bash(npm run build)` is silent.
 
 The rule is silent for a `deny` or `ask` rule, for a rule with no URL, and for a program other than `curl` and `wget`.
