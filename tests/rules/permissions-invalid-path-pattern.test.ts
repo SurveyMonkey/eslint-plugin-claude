@@ -61,6 +61,7 @@ describe(`${name}: the reports`, () => {
       'Read(!a[b)',
       'Read(~/a[b)',
       'Read(a[b]c[d)',
+      'Read([a][b)',
     ]) {
       expect(ids(list('deny', rule)), rule).toEqual(['guardsLiteralPath'])
     }

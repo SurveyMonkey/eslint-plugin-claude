@@ -62,12 +62,24 @@ describe(`${name}: a network path`, () => {
       'C:\\work',
       '\\\\wsl$\\Ubuntu\\home\\me',
       '\\\\WSL$\\Ubuntu',
+      '\\\\wsl$',
+      '\\\\wsl.localhost',
       '\\\\wsl.localhost\\Ubuntu',
       '\\\\?\\C:\\work',
       '\\\\.\\pipe\\x',
     ]) {
       expect(ids(dirs(entry)), entry).toEqual([])
     }
+  })
+
+  it('reports a host that only starts like an exempt name', () => {
+    for (const entry of ['\\\\.nas\\share', '\\\\wsl.localhost2\\s', '\\\\wsl$x\\s']) {
+      expect(ids(dirs(entry)), entry).toEqual(['networkPath'])
+    }
+  })
+
+  it('is silent for a double backslash that is not at the start', () => {
+    expect(ids(dirs('C:\\work\\\\x'))).toEqual([])
   })
 
   it('is silent for a local path, and for a path that only looks like an automount', () => {

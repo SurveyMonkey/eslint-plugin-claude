@@ -90,6 +90,16 @@ describe(`${name}: the reports`, () => {
   })
 })
 
+describe(`${name}: the edges of the drive and backslash tests`, () => {
+  it('reads a parameter name of two letters as a parameter, not a drive', () => {
+    expect(ids(list('deny', 'Read(CC:\\x)'))).toEqual([])
+  })
+
+  it('reports a backslash before a capital letter', () => {
+    expect(ids(list('allow', 'Read(src\\Components)'))).toEqual(['backslash'])
+  })
+})
+
 describe(`${name}: the paths that it leaves alone`, () => {
   it('is silent for the POSIX forms of the docs', () => {
     for (const rule of [
