@@ -2,8 +2,8 @@
 // past a combined limit at session start. Each CLAUDE.md, rules file and `@path` import counts
 // as a separate file (https://code.claude.com/docs/en/memory#my-claude-md-is-too-large). The
 // docs give no number, so the rule has the option `max` and no default. The rule reads the
-// repository around the file, so each case builds a tree on disk. It makes no report that rests
-// on a file that it cannot read. The globs are in tests/configs.test.ts.
+// repository around the file, so each case builds a tree on disk. A part that the rule
+// cannot read adds nothing. The rule reports when the lines that it read pass max. The globs are in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { link, lintMemory, noLinks, tree } from '../memory-tree.test-support.ts'
@@ -122,6 +122,12 @@ describe(`${RULE}: the folders above`, () => {
     expect(lint(lines(20), over, 50, 'packages/a/CLAUDE.md')).toEqual([])
   })
 
+  it('does not report in the folder above when the sum reaches max only in the folder below', () => {
+    const exact = { 'CLAUDE.md': lines(50), 'packages/a/CLAUDE.md': lines(10) }
+    expect(lint(lines(50), exact, 50, 'CLAUDE.md')).toEqual([])
+    expect(ids(lint(lines(10), exact, 50, 'packages/a/CLAUDE.md'))).toEqual(['tooLong'])
+  })
+
   it('does not read a folder above the repository root', () => {
     const dir = tree({ 'CLAUDE.md': lines(60), 'inner/.git/HEAD': 'ref\n', 'inner/x.md': 'x\n' })
     expect(lintMemory(RULE, dir, 'inner/CLAUDE.md', lines(10), { max: 50 })).toEqual([])
@@ -195,8 +201,20 @@ describe(`${RULE}: the imports`, () => {
   })
 
   it('ends a cycle where the chain meets a file again', () => {
-    const files = { 'a.md': `@CLAUDE.md\n${lines(60)}` }
-    expect(ids(lint('@a.md\n', files))).toEqual(['tooLong'])
+    const files = { 'CLAUDE.md': '@a.md\n', 'a.md': `@CLAUDE.md\n${lines(60)}` }
+    const messages = lint('@a.md\n', files)
+    expect(ids(messages)).toEqual(['tooLong'])
+    expect(messages[0]?.message).toContain('have 62 lines')
+  })
+
+  it('counts a file once when it is a memory file and an import', () => {
+    const files = { 'CLAUDE.local.md': lines(40) }
+    expect(lint('@CLAUDE.local.md\n', files)).toEqual([])
+    const back = {
+      'CLAUDE.local.md': `@CLAUDE.md\n${lines(40)}`,
+      'CLAUDE.md': '@CLAUDE.local.md\n',
+    }
+    expect(lint('@CLAUDE.local.md\n', back)).toEqual([])
   })
 
   it('adds a file that an import of a CLAUDE.local.md loads', () => {
@@ -211,39 +229,70 @@ describe(`${RULE}: the imports`, () => {
 })
 
 describe(`${RULE}: what the rule cannot read`, () => {
-  it('makes no report when an import leaves the repository', () => {
+  // A part that the rule cannot read adds nothing, and the sum only grows. So the rule reports
+  // when the lines that it read pass max, with "at least", and stays silent when they do not.
+  const AT_LEAST = 'have at least 62 lines'
+  const message = (messages: { message: string }[]) => messages.map((m) => m.message)
+
+  it('reports with "at least" when an import leaves the repository and the rest is over max', () => {
     const files = { 'CLAUDE.local.md': lines(60) }
     expect(ids(lint('x\n', files))).toEqual(['tooLong'])
-    expect(lint('x\n@../outside.md\n', files)).toEqual([])
-    expect(lint('x\n@~/mine.md\n', files)).toEqual([])
+    const out = lint('x\n@../outside.md\n', files)
+    expect(ids(out)).toEqual(['tooLong'])
+    expect(message(out)[0]).toContain('have at least 62 lines')
+    expect(ids(lint('x\n@~/mine.md\n', files))).toEqual(['tooLong'])
+    expect(lint('x\n@../outside.md\n@~/mine.md\n', { 'CLAUDE.local.md': lines(5) })).toEqual([])
   })
 
-  it.skipIf(noLinks)('makes no report when an import is a dangling link', () => {
+  it.skipIf(noLinks)('reports on the lines it read when an import is a dangling link', () => {
     const dir = tree({ 'CLAUDE.local.md': lines(60) })
     link(dir, 'gone.md', 'nowhere.md')
-    expect(lintMemory(RULE, dir, 'CLAUDE.md', 'x\n@gone.md\n', { max: 50 })).toEqual([])
+    const out = lintMemory(RULE, dir, 'CLAUDE.md', 'x\n@gone.md\n', { max: 50 })
+    expect(ids(out)).toEqual(['tooLong'])
+    expect(message(out)[0]).toContain(AT_LEAST)
     expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', 'x\n', { max: 50 }))).toEqual(['tooLong'])
+    const small = tree({ 'CLAUDE.local.md': lines(5) })
+    link(small, 'gone.md', 'nowhere.md')
+    expect(lintMemory(RULE, small, 'CLAUDE.md', 'x\n@gone.md\n', { max: 50 })).toEqual([])
   })
 
-  it.skipIf(noLinks)('makes no report when a CLAUDE.md of a folder is a link out', () => {
-    const dir = tree({ 'sub/CLAUDE.local.md': lines(60) })
+  it.skipIf(noLinks)(
+    'reports when a CLAUDE.md of a folder is a link out and the rest is over max',
+    () => {
+      const dir = tree({ 'sub/CLAUDE.local.md': lines(60) })
+      link(dir, 'CLAUDE.md', path.join(tree({ 'file.md': lines(5) }), 'file.md'))
+      expect(ids(lintMemory(RULE, dir, 'sub/CLAUDE.md', 'x\n', { max: 50 }))).toEqual(['tooLong'])
+      const small = tree({ 'sub/CLAUDE.local.md': lines(5) })
+      link(small, 'CLAUDE.md', path.join(tree({ 'file.md': lines(5) }), 'file.md'))
+      expect(lintMemory(RULE, small, 'sub/CLAUDE.md', 'x\n', { max: 50 })).toEqual([])
+    },
+  )
+
+  it.skipIf(noLinks)('lets the next readable file report when the first one is a link out', () => {
+    const dir = tree({ 'CLAUDE.local.md': lines(60) })
     link(dir, 'CLAUDE.md', path.join(tree({ 'file.md': lines(5) }), 'file.md'))
-    expect(lintMemory(RULE, dir, 'sub/CLAUDE.md', 'x\n', { max: 50 })).toEqual([])
+    const out = lintMemory(RULE, dir, '.claude/CLAUDE.md', 'x\n', { max: 50 })
+    expect(ids(out)).toEqual(['tooLong'])
   })
 
-  it.skipIf(noLinks)('makes no report when a rule folder is a link out', () => {
+  it.skipIf(noLinks)('reports when a rule folder is a link out and the rest is over max', () => {
     const dir = tree({ 'CLAUDE.local.md': lines(60) })
     link(dir, '.claude/rules', tree({ 'a.md': lines(5) }))
-    expect(lintMemory(RULE, dir, 'CLAUDE.md', 'x\n', { max: 50 })).toEqual([])
+    expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', 'x\n', { max: 50 }))).toEqual(['tooLong'])
+    const small = tree({ 'CLAUDE.local.md': lines(5) })
+    link(small, '.claude/rules', tree({ 'a.md': lines(5) }))
+    expect(lintMemory(RULE, small, 'CLAUDE.md', 'x\n', { max: 50 })).toEqual([])
   })
 
-  it.skipIf(chmodCannotBlock)('makes no report when a file has no read right', () => {
+  it.skipIf(chmodCannotBlock)('reports on the lines it read when a file has no read right', () => {
     const dir = tree({ 'CLAUDE.local.md': lines(60), 'more.md': lines(5) })
     const file = path.join(dir, 'more.md')
     withoutAccess(file, () => {
-      expect(lintMemory(RULE, dir, 'CLAUDE.md', 'x\n@more.md\n', { max: 50 })).toEqual([])
+      expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', 'x\n@more.md\n', { max: 50 }))).toEqual([
+        'tooLong',
+      ])
     })
-    const rule = { '.claude/rules/a.md': lines(5), 'CLAUDE.local.md': lines(60) }
+    const rule = { '.claude/rules/a.md': lines(5), 'CLAUDE.local.md': lines(5) }
     const ruleDir = tree(rule)
     withoutAccess(path.join(ruleDir, '.claude/rules/a.md'), () => {
       expect(lintMemory(RULE, ruleDir, 'CLAUDE.md', 'x\n', { max: 50 })).toEqual([])

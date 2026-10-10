@@ -12,6 +12,22 @@ function hit(glob: string, file: string) {
 }
 
 describe('unmatchedGlobs', () => {
+  it('matches every file for a glob that names the project root', () => {
+    expect(hit('./', 'src/a.ts')).toBe(true)
+    expect(hit('/', 'a.ts')).toBe(true)
+  })
+
+  it('does not build an expression for a reversed range, and so does not throw', () => {
+    const dir = tree({ 'b.ts': 'x\n' }, false)
+    expect(unmatchedGlobs(dir, dir, ['[z-a].ts'])).toEqual([])
+  })
+
+  it('gives null for a root that is not there and a glob is left', () => {
+    const dir = tree({ 'b.ts': 'x\n' }, false)
+    const gone = `${dir}/none`
+    expect(unmatchedGlobs(gone, dir, ['*.ts'])).toBeNull()
+  })
+
   it('matches the forms in the docs', () => {
     expect(hit('**/*.ts', 'a.ts')).toBe(true)
     expect(hit('**/*.ts', 'src/deep/a.ts')).toBe(true)
