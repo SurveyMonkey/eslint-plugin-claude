@@ -15,11 +15,11 @@ permissions:
 
 # The job commits nothing, and it never changes the snapshot. When a docs
 # page changed, or the check failed, it classifies the pages and opens an
-# issue for a changed block. The uncited new-rule and needs-triage blocks of
-# one page share one digest issue. A block that an inventory row cites, and
-# that no map heading of a section cites, also gets a comment on its group issue,
-# while that issue is open. Then a finding of the block that names no rule
-# opens no issue. A scheduled run opens issues and posts comments. A manual
+# issue for a changed block. Two or more uncited new-rule and needs-triage
+# blocks of one page share a digest issue. A block that an inventory row
+# cites, and that no map heading of a section cites, also gets a comment on
+# its group issue, while that issue is open. Then a finding of the block that
+# names no rule opens no issue. A scheduled run opens issues and posts comments. A manual
 # run does too, unless `dry_run` is set. See CONTRIBUTING.md and the triage runbook.
 jobs:
   check-docs:

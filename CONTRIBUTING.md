@@ -161,15 +161,16 @@ section.
 `node scripts/docs-issues.ts <findings.json>` opens an issue for a changed block, as the org
 GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
 hash and the rules stops a second issue for the same change. For a changed block, the body shows
-a diff, then the full old and new sections in two collapsed parts. When a page has two or more
-`new-rule` or `needs-triage` findings that name no rule, they give one digest issue, with a
-marker and a section for each block (at most 20 blocks). A digest section has no collapsed
-parts, and it cuts each text at 280 characters. A digest counts as one issue toward `--max`. For a moved block, the body
-names the old and new headings, the new anchor and each footnote to change. For tracked blocks,
-it posts at most one comment on each open group issue (`GROUP_ISSUES`), with the blocks that it
-did not post before. While a group issue of a block is open, a finding of the block that names
-no rule opens no issue. `--dry-run` prints each issue and each comment, and opens and posts
-none. A manual run of the workflow takes a `dry_run` input.
+a diff, then the full old and new sections in two collapsed parts. Two or more `new-rule` or
+`needs-triage` findings of one page that name no rule share a digest issue. A digest has a marker
+and a section for each block. It holds at most 20 blocks, and its body takes at most 60,000
+characters. A digest section has no collapsed parts, and it cuts each text at 280 characters. A
+digest counts as one issue toward `--max`. For a moved block, the body names the old and new
+headings, the new anchor and each footnote to change. For tracked blocks, it posts at most one
+comment on each open group issue (`GROUP_ISSUES`), with the blocks that it did not post before.
+While a group issue of a block is open, a finding of the block that names no rule opens no issue.
+`--dry-run` prints each issue and each comment, and opens and posts none. A manual run of the
+workflow takes a `dry_run` input.
 
 To triage the issues and the comments, follow the
 [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).

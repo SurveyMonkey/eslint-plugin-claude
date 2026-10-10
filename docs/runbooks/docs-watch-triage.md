@@ -12,13 +12,13 @@ generated:
 
 # Triage the docs watch issues
 
-The docs watch (`.github/workflows/docs-watch.yml`) opens an issue for a changed block. When one
-page has two or more `new-rule` or `needs-triage` blocks that no rule cites, they share one
-digest issue (see [A digest issue](#a-digest-issue)). A
-block that an inventory row cites, and that no map heading of a section cites, also gets a
-comment on its group issue. While that issue is open, a finding of the block that names no rule
-opens no issue (see [A tracked-block comment](#a-tracked-block-comment)). Each issue has the
-type `Task` and the `claude-docs-change` label. To list the open docs watch issues, run
+The docs watch (`.github/workflows/docs-watch.yml`) opens an issue for a changed block. Two or
+more `new-rule` or `needs-triage` blocks of one page that no rule cites share a digest issue
+(see [A digest issue](#a-digest-issue)). A block that an inventory row cites, and that no map
+heading of a section cites, also gets a comment on its group issue. While that issue is open, a
+finding of the block that names no rule opens no issue (see
+[A tracked-block comment](#a-tracked-block-comment)). Each issue has the type `Task` and the
+`claude-docs-change` label. To list the open docs watch issues, run
 `gh issue list --label claude-docs-change`. The body starts with a hidden marker:
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. Do not edit the marker. When
 one block has findings of two kinds, the issue has the first kind of this list: `moved`,
@@ -68,17 +68,19 @@ only. If you close an issue and the snapshot stays old, the next run opens the i
 ## A digest issue
 
 After the dedupe and the group comments, the job takes each `new-rule` and `needs-triage`
-finding that names no rule. When a page has two or more of them, they give one digest issue,
+finding that names no rule. When a page has two or more of them, they give a digest issue,
 titled `docs(<page>): triage <n> changed blocks`. `<page>` is the page path after `/docs/en/`.
 A finding of a tracked block whose group issues are all closed can be one of them. A page with
 one such finding gets the issue of that block. A `moved`, `rule-update` or `rule-removal` issue,
 and an issue that names a rule, are never in a digest.
 
 The body starts with one hidden marker for each block. Do not edit the markers. Then it has one
-section for each block: its metadata, the line of its inventory rows, and its diff or its quoted
-text. Each text is cut at 280 characters, and a section has no Before and After parts. Read the
-page for the full text. A digest holds at most 20 blocks. A page with more gets more than one
-digest.
+section for each block: its metadata, and its diff or its quoted text. The section of a tracked
+block also has the line of its inventory rows. The job cuts each text at 280 characters, and a
+section has no Before and After parts. Read the page for the full text. A digest holds at most
+20 blocks, and its whole body takes at most 60,000 characters. When a page has more, the job
+opens more than one digest. A block that does not fit in a digest alone gets an issue of its
+own.
 
 Do these steps:
 
@@ -169,6 +171,7 @@ Do these steps:
    Until then, the job sees the same change each day, and posts nothing new.
 
 When every group issue of a tracked block is closed, each finding of the block opens its issue.
+That issue can be one section of a digest.
 This is the same as for a block that no row cites, but the body names the inventory rows. A
 tracked block with no finding gets no issue: a removed block that no whole-page rule cites, or a
 block with a low Jev answer.
@@ -187,8 +190,6 @@ page that a rule cites as a whole, for example the skills page.
 - The issue step stops when a live run would open more than 20 issues. Run the workflow by hand
   with `dry_run` set, read the issues that would open, and triage them in groups. A dry run has
   no limit. A digest issue counts as one issue. Comments do not count toward the limit.
-- The issue step stops before it writes when the markers of a digest do not fit in 60,000
-  characters. This occurs only when the block IDs have thousands of characters. Triage the blocks of that page by hand.
 - The issue step stops before it writes for a tracked block in a section with no group issue.
   Add the section and its group issue to `GROUP_ISSUES` in `scripts/docs-issues.ts`.
 - A manual run with `dry_run` set prints each issue that would open and each comment that would
