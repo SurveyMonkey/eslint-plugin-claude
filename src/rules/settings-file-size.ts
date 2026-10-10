@@ -6,7 +6,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
-import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'settings-file-size' as const
 
@@ -41,6 +41,10 @@ const rule: JSONRuleDefinition<{
     },
   },
   create(context) {
+    // Claude Code does not load a hidden drop-in, so the rule does not check it.
+    if (isHiddenDropIn(context.filename)) {
+      return {}
+    }
     const [{ max }] = context.options
     return {
       Document() {

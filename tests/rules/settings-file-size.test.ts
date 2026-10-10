@@ -29,6 +29,17 @@ jsonTester.run('settings-file-size (valid)', rule, {
     { name: 'at the limit, local file', code: objectOfBytes(LIMIT), filename: local },
     { name: 'at the limit, managed file', code: objectOfBytes(LIMIT), filename: managed },
     { name: 'at the limit, drop-in', code: objectOfBytes(LIMIT), filename: dropIn },
+    // Claude Code does not load a hidden drop-in, so the rule does not report it.
+    {
+      name: 'hidden drop-in over the limit',
+      code: objectOfBytes(LIMIT + 1),
+      filename: 'managed-settings.d/.20-big.json',
+    },
+    {
+      name: 'hidden drop-in over the limit, in a path',
+      code: objectOfBytes(LIMIT + 1),
+      filename: 'etc/managed-settings.d/.20-big.json',
+    },
     // A custom limit: at it, silent.
     { code: objectOfBytes(100), filename: project, options: [{ max: 100 }] },
     { code: '{}', filename: project, options: [{ max: 2 }] },
@@ -70,6 +81,13 @@ jsonTester.run('settings-file-size (invalid)', rule, {
       name: 'one byte over, drop-in',
       code: objectOfBytes(LIMIT + 1),
       filename: dropIn,
+      errors: [{ messageId: 'tooLarge' }],
+    },
+    // A hidden name outside the directory is no drop-in.
+    {
+      name: 'hidden settings file outside managed-settings.d',
+      code: objectOfBytes(LIMIT + 1),
+      filename: '.claude/.settings.local.json',
       errors: [{ messageId: 'tooLarge' }],
     },
     // An explicit limit equal to the default gives the same message as the default.
