@@ -229,11 +229,37 @@
       "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
+  "hooks-agent-stop-event": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hooks in skills and agents",
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Hooks in subagent frontmatter",
+      "hash": "8701fb5db031c0b97a178933492c78f9e0d3135f102bce023f080158a1bb2b04"
+    }
+  ],
+  "hooks-agent-type-experimental": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Agent-based hooks",
+      "hash": "6f955b8187790807b6df275344be5859c1c774a8f5a3906df9f6bfe6b2d6a92a"
+    }
+  ],
+  "hooks-command-deprecated-cli-flag": [
+    {
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "heading": "CLI flags",
+      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+    }
+  ],
   "hooks-command-removed-cli-flag": [
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
+      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -250,7 +276,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook handler fields",
-      "hash": "70591c889437da0e8d2c043d1828c406746a79a43af0c22b223a1b03526e3cbe"
+      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -300,7 +326,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -340,6 +366,28 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "disableAllHooks",
       "hash": "d7b544944c53bc85bda3166f8c09576717929262b3d86ca2ce3e70e376d11bb8"
+    }
+  ],
+  "hooks-duplicate-handler": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Hooks",
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create",
+      "heading": "Convert an existing .claude/ setup",
+      "hash": "c33d118552c8766bedecc3ab7e756d63bc373f335d9d0d25fedf1740c2e64fea"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook handler fields",
+      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca"
     }
   ],
   "hooks-env-var-unavailable": [
@@ -436,7 +484,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook handler fields",
-      "hash": "70591c889437da0e8d2c043d1828c406746a79a43af0c22b223a1b03526e3cbe"
+      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca"
     }
   ],
   "hooks-handler-type-event-support": [
@@ -647,7 +695,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -745,6 +793,13 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "SessionEnd input",
       "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
+    }
+  ],
+  "hooks-worktree-create-without-remove": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "WorktreeRemove",
+      "hash": "d7536d70260b8a7c781b9b904624f9f4ba66a69fbe20d56c3f0e5276d28a9738"
     }
   ],
   "marketplace-command-version-ignored": [
@@ -1661,7 +1716,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
+      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
     }
   ],
   "settings-key-scope": [
