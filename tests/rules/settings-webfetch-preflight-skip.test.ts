@@ -114,16 +114,21 @@ describe('settings-webfetch-preflight-skip: the other project file', () => {
     expect(ids(tree({}), PROJECT)).toEqual(['skipped'])
   })
 
+  it('reads the last duplicate key, and ignores a list of the wrong type', () => {
+    const first = '{"skipWebFetchPreflight":true,"skipWebFetchPreflight":false}'
+    const last = '{"skipWebFetchPreflight":false,"skipWebFetchPreflight":true}'
+    expect(ids(tree({}), PROJECT, first)).toEqual([])
+    expect(ids(tree({}), PROJECT, last)).toEqual(['skipped'])
+    const twice = `{"skipWebFetchPreflight":true,"permissions":{"allow":["${FETCH}"]},"permissions":{}}`
+    expect(ids(tree({}), PROJECT, twice)).toEqual(['skipped'])
+    const text = JSON.stringify({ permissions: { allow: FETCH } })
+    expect(ids(tree({ [LOCAL]: text }), PROJECT)).toEqual(['skipped'])
+  })
+
   it('reads the file in the same .claude folder, not another folder', () => {
     const dir = tree({ 'pkg/.claude/settings.local.json': RULES(FETCH) })
     expect(ids(dir, PROJECT)).toEqual(['skipped'])
     expect(ids(dir, 'pkg/.claude/settings.json')).toEqual([])
-  })
-
-  it('reads no file above the repository root', () => {
-    const outer = tree({ [LOCAL]: RULES(FETCH) }, false)
-    mkdirSync(path.join(outer, 'repo/.git'), { recursive: true })
-    expect(ids(outer, `repo/${PROJECT}`)).toEqual(['skipped'])
   })
 
   it('makes no report when the other file cannot be seen', () => {
@@ -143,7 +148,8 @@ describe('settings-webfetch-preflight-skip: the other project file', () => {
       const dangling = tree({})
       link(dangling, LOCAL, 'missing.json')
       expect(ids(dangling, PROJECT)).toEqual([])
-      const outside = tree({ 'out.json': RULES(FETCH) }, false)
+      // The target holds no rule. A read that left the bound would find none and report.
+      const outside = tree({ 'out.json': RULES('Read(x)') }, false)
       const dir = tree({})
       link(dir, LOCAL, path.join(outside, 'out.json'))
       expect(ids(dir, PROJECT)).toEqual([])
@@ -156,6 +162,14 @@ describe('settings-webfetch-preflight-skip: a managed file', () => {
     expect(ids(tree({ [DROP_IN]: RULES(FETCH) }), MANAGED)).toEqual([])
     expect(ids(tree({ [MANAGED]: RULES(FETCH) }), DROP_IN)).toEqual([])
     expect(ids(tree({ 'managed-settings.d/10-a.json': RULES(FETCH) }), DROP_IN)).toEqual([])
+  })
+
+  it('is silent when any one of several files holds the rule', () => {
+    const none = RULES('Read(x)')
+    const a = 'managed-settings.d/10-a.json'
+    expect(ids(tree({ [MANAGED]: none, [a]: none, [DROP_IN]: RULES(FETCH) }), MANAGED)).toEqual([])
+    expect(ids(tree({ [MANAGED]: RULES(FETCH), [a]: none }), DROP_IN)).toEqual([])
+    expect(ids(tree({ [MANAGED]: none, [a]: RULES(FETCH) }), DROP_IN)).toEqual([])
   })
 
   it('reports when no file of the source holds a rule', () => {

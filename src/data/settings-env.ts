@@ -293,7 +293,7 @@ export function removedEnvVarSince(name: string): string | undefined {
   return REMOVED_ENV_VARS.get(name)
 }
 
-// The variables that other rules read. Sources: the env vars reference, the prompt caching page
+// The variables that the settings env rules read. Sources: the env vars reference, the prompt caching page
 // (https://code.claude.com/docs/en/prompt-caching#disable-prompt-caching) and the server-managed
 // settings page
 // (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
@@ -302,8 +302,9 @@ export function removedEnvVarSince(name: string): string | undefined {
 /** A variable that Claude Code keeps for compatibility, and what to say about it. `summary`
  *  finishes a sentence that starts with the variable name. `value` is set when only that value is
  *  a fault. The env vars reference marks `ANTHROPIC_SMALL_FAST_MODEL` and
- *  `ENABLE_PROMPT_CACHING_1H_BEDROCK` as deprecated, and calls `DISABLE_BUG_COMMAND` and
- *  `SLASH_COMMAND_TOOL_CHAR_BUDGET` older names. It names no replacement for the last one.
+ *  `ENABLE_PROMPT_CACHING_1H_BEDROCK` as deprecated, and calls `DISABLE_BUG_COMMAND` an older
+ *  name and `SLASH_COMMAND_TOOL_CHAR_BUDGET` a legacy name. It names no replacement for
+ *  `SLASH_COMMAND_TOOL_CHAR_BUDGET`.
  *  `CLAUDE_CODE_ENABLE_TASKS` set to `0` selects the legacy `TodoWrite` tool. */
 interface DeprecatedEnvVar {
   summary: string
@@ -345,16 +346,16 @@ export function deprecatedEnvSummary(name: string, value: string): string | unde
 }
 
 /** The variables that send the traffic of Claude Code through a proxy, or add a certificate
- *  authority. The server-managed settings page names the proxy and TLS variables. */
+ *  authority. The server-managed settings page names the proxy and TLS variables.
+ *  The OpenTelemetry endpoint variable is not here: `settings-env-ignored-var` reports it in a
+ *  project file. */
 export const TRAFFIC_ENV_VARS: readonly string[] = [
   'HTTP_PROXY',
   'HTTPS_PROXY',
   'NODE_EXTRA_CA_CERTS',
 ]
 
-/** The variables that select a model provider. Setting one bypasses server-managed settings.
- *  The OpenTelemetry endpoint variable is not here: `settings-env-ignored-var` reports it in a
- *  project file. */
+/** The variables that select a model provider. Setting one bypasses server-managed settings. */
 export const PROVIDER_ENV_VARS: readonly string[] = [
   'CLAUDE_CODE_USE_ANTHROPIC_AWS',
   'CLAUDE_CODE_USE_BEDROCK',
@@ -368,7 +369,7 @@ export const PROVIDER_ENV_VARS: readonly string[] = [
 export const BASE_URL_VAR = 'ANTHROPIC_BASE_URL'
 export const DEFAULT_API_HOST = 'api.anthropic.com'
 
-/** The variables that turn prompt caching off, when set to `1`. */
+/** The variables that turn prompt caching off, when set on. */
 export const PROMPT_CACHING_OFF_VARS: readonly string[] = [
   'DISABLE_PROMPT_CACHING',
   'DISABLE_PROMPT_CACHING_FABLE',
