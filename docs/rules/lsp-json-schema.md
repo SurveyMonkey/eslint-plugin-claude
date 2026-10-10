@@ -19,8 +19,8 @@ Write `.lsp.json` as a map of server names to configs, with the documented field
 | `recommended`, `strict` | `error` | load | `**/.lsp.json` |
 
 The rule lints a `.lsp.json` at the root of a plugin: the directory that holds
-`.claude-plugin/plugin.json`. Claude Code reads LSP servers from that file only. It makes no
-report for a `.lsp.json` in another directory, and none when it cannot read the directory.
+`.claude-plugin/plugin.json`. The rule does not lint `plugin.json`. It makes no report for a
+`.lsp.json` in another directory, and none when it cannot read the directory.
 
 ## Rule details
 
@@ -55,7 +55,7 @@ The rule reports these faults:
 | `env` | An object of strings |
 | `initializationOptions`, `settings` | Any value |
 | `workspaceFolder` | A string |
-| `startupTimeout`, `shutdownTimeout`, `requestTimeout` | A positive integer |
+| `startupTimeout`, `shutdownTimeout`, `requestTimeout` | A positive integer. `requestTimeout` needs Claude Code v2.1.288 or later |
 | `restartOnCrash`, `diagnostics` | A Boolean |
 | `maxRestarts` | An integer of zero or more |
 

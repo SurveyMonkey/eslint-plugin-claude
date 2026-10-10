@@ -24,7 +24,7 @@ type MessageId =
   | 'invisible'
 
 /** The members that name a program to run. A managed settings document never names one. */
-const FORBIDDEN_MEMBERS = ['command', 'args', 'env', 'headersHelper']
+const FORBIDDEN_MEMBERS: readonly string[] = ['command', 'args', 'env', 'headersHelper']
 
 const HTTPS_URL = /^https:\/\//i
 
@@ -47,7 +47,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageId }> = {
         '"managedMcpServers" is an object keyed by server name. Claude Code does not accept an array or another value, and loads no server from it.',
       name: 'The server name "{{server}}" holds a character other than letters, numbers, hyphens and underscores. Claude Code drops the entry.',
       entryNotObject:
-        'The entry "{{server}}" is an object with the members of an http or sse server. Claude Code drops it.',
+        'The entry "{{server}}" must be an object with the members of an http or sse server. Claude Code drops it.',
       type: 'The entry "{{server}}" needs "type" set to http, streamable-http or sse. Claude Code drops the entry.',
       url: 'The entry "{{server}}" needs a "url" that starts with https://. Claude Code refuses a plain http:// URL, also for localhost, and drops the entry.',
       forbidden:
