@@ -63,3 +63,15 @@ export const CACHE_TTL_VALUES = ['5m', '1h'] as const
 /** The `type` values of a server in `.mcp.json`. Claude Code skips an `sdk`
  *  server with a warning. */
 export const MCP_SERVER_TYPES = ['stdio', 'http', 'sse', 'ws', 'sdk'] as const
+
+/** The names of the built-in subagents. Source: the "Built-in subagents"
+ *  section (https://code.claude.com/docs/en/sub-agents#built-in-subagents),
+ *  checked on 2026-10-10. */
+export const BUILT_IN_AGENTS = [
+  'Explore',
+  'Plan',
+  'general-purpose',
+  'claude',
+  'statusline-setup',
+  'claude-code-guide',
+] as const
