@@ -73,6 +73,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-path-rule-tool',
     'permissions-protected-path-allow',
     'permissions-rule-syntax',
+    'permissions-sandbox-bash-ask',
     'permissions-schema',
     'permissions-skill-rule',
     'permissions-specifier-unsupported',

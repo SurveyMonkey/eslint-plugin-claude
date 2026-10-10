@@ -57,6 +57,7 @@ import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
 import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
+import permissionsSandboxBashAsk from './rules/permissions-sandbox-bash-ask.ts'
 import permissionsSchema from './rules/permissions-schema.ts'
 import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
@@ -185,6 +186,7 @@ const modules = [
   sandboxFilesystemDisabledConflict,
   sandboxSchema,
   sandboxScope,
+  permissionsSandboxBashAsk,
   permissionsDeadAllow,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
@@ -318,6 +320,7 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-filesystem-disabled-conflict': 'error',
   'sandbox-schema': 'error',
   'sandbox-scope': 'error',
+  'permissions-sandbox-bash-ask': 'error',
   'permissions-dead-allow': 'error',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
