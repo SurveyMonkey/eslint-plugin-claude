@@ -6,7 +6,14 @@
 import path from 'node:path'
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
-import { HOOKS_TARGET, handlersOf, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
+import {
+  argsOf,
+  HOOKS_TARGET,
+  handlersOf,
+  hooksListener,
+  memberOf,
+  stringOf,
+} from '../hooks-config.ts'
 import { placeholderFolders, scriptsRun, scriptText } from '../hooks-files.ts'
 
 const name = 'hooks-script-shebang' as const
@@ -32,7 +39,6 @@ const rule: Rule.RuleModule = {
       const folders = placeholderFolders(context.filename, source.kind)
       for (const { handler } of handlersOf(source)) {
         const line = memberOf(handler, 'command')?.value
-        const args = memberOf(handler, 'args')?.value
         if (
           stringOf(handler, 'type') !== 'command' ||
           line?.kind !== 'string' ||
@@ -40,10 +46,7 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        const argv =
-          args?.kind === 'array'
-            ? args.items.flatMap((item) => (item.kind === 'string' ? [item.value] : []))
-            : undefined
+        const argv = argsOf(handler)
         for (const script of scriptsRun(line.value, argv, folders, false)) {
           const text = OTHER_SYSTEM.test(script.file) ? undefined : scriptText(script)
           // A binary file is a program that needs no shebang.

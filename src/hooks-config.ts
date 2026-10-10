@@ -144,6 +144,15 @@ export function isTrue(node: HObject, key: string): boolean {
   return value?.kind === 'boolean' && value.value
 }
 
+/** The string items of the `args` of the handler `node`, or undefined when `args` is no array (shell form). An item
+ *  that is no string is left out. */
+export function argsOf(node: HObject): string[] | undefined {
+  const args = memberOf(node, 'args')?.value
+  return args?.kind === 'array'
+    ? args.items.flatMap((item) => (item.kind === 'string' ? [item.value] : []))
+    : undefined
+}
+
 /** The string value of the member `key` of `node`, or undefined. */
 export function stringOf(node: HObject, key: string): string | undefined {
   const value = memberOf(node, key)?.value

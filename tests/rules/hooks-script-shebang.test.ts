@@ -51,6 +51,12 @@ describe(`${name}: the report`, () => {
     ])
   })
 
+  it('reads exec form with an args item that is no string', () => {
+    expect(ids({ 'hooks/b.sh': BAD }, { command: `${P}/hooks/b.sh`, args: [5, null] })).toEqual([
+      'shebang',
+    ])
+  })
+
   it('reports each script of a line', () => {
     expect(
       run(`${P}/hooks/b.sh; ${P}/hooks/c.sh`, { 'hooks/b.sh': BAD, 'hooks/c.sh': '' }),
