@@ -1662,6 +1662,18 @@
       "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
     }
   ],
+  "skill-body-token-budget": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill content lifecycle",
+      "hash": "baa542c2eceb30677c11f3dc8936710b03c8446d953e17f90ea2286cc28e3ad4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/context-window",
+      "heading": "What survives compaction",
+      "hash": "45aa3b77d18b8b6756be978168124f6b41572c00dd5477d80f4309e1f388a049"
+    }
+  ],
   "skill-boolean-literal": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -1773,6 +1785,43 @@
       "hash": "8624acca987b47b44ac3b591bbae431065e1e997cfd1d63ae4a84413538ad79a"
     }
   ],
+  "skill-inject-robustness": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "When an injected command fails",
+      "hash": "620f1b5aab3ae758baead1649eb3645ce6935d9ca9167d47ea8414a747dc6207"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Permission checks on injected commands",
+      "hash": "288b069d9606fd0905f824e3987f8b11de492981579af229210d785613cbc641"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How injected commands run",
+      "hash": "aa61fb9b73eec8150e95c3fcf1194fc369a21290f21fcc097fac05e2c3849e93"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Inject dynamic context",
+      "hash": "8624acca987b47b44ac3b591bbae431065e1e997cfd1d63ae4a84413538ad79a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Compound commands",
+      "hash": "dd8c50ab81c42381d788418cc07dc9cc2c9d22aa6622191e888e75ddc8cf1583"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read-only commands",
+      "hash": "850a8e2c36842d570d74195b1886fae6e0c0d036fed299c351466f9fac025563"
+    }
+  ],
   "skill-invocation-redundant-fields": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -1800,6 +1849,30 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    }
+  ],
+  "skill-listing-budget": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "hash": "c775fcb514225572ec37a8c40da69984ee636217c03de63b497df02486955b30"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Control who invokes a skill",
+      "hash": "130070c7f357fd4fb97105203f16aec7cbd3f9d524349d079ae9fc18bdff01c3"
+    }
+  ],
+  "skill-literal-dollar": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Available string substitutions",
+      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
     }
   ],
   "skill-max-lines": [
@@ -1874,6 +1947,18 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "How a skill gets its command name",
       "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    }
+  ],
+  "skill-plugin-path-vars": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Available string substitutions",
+      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Where each variable resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
     }
   ],
   "skill-plugin-root-name": [

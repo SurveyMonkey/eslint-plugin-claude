@@ -180,6 +180,41 @@ const TREE: Record<string, string> = {
   '.claude/skills/short/SKILL.md': `---\ndescription: d\n---\n${'line\n'.repeat(496)}`,
   'plugins/p/skills/prefixed/SKILL.md': '---\nname: p:prefixed\ndescription: d\n---\n',
   '.claude/skills/shell/SKILL.md': '---\ndescription: d\nshell: powershell\n---\n\n!`date`\n',
+  // The `off` skill rules of #50, layer 3. Each has its own scope under `packages/`, so that the
+  // files above stay out of its count. The rules report in `strict` only. A silent twin sits
+  // beside each bad file, and a file that is no skill or command file sits beside it too.
+  // Six skills of 1,537 characters (a name and a description of 1,536) are over 8,000.
+  ...Object.fromEntries(
+    ['a', 'b', 'c', 'd', 'e', 'f'].map((folder) => [
+      `packages/lb/.claude/skills/${folder}/SKILL.md`,
+      `---\ndescription: ${'a'.repeat(1536)}\n---\n`,
+    ]),
+  ),
+  // A body of 20,001 characters is 5,001 tokens, and 20,000 characters are 5,000.
+  'packages/bt/.claude/skills/big/SKILL.md': `---\ndescription: d\n---\n${'a'.repeat(20001)}`,
+  'packages/bt/.claude/skills/edge/SKILL.md': `---\ndescription: d\n---\n${'a'.repeat(20000)}`,
+  'packages/bt/.claude/commands/cbig.md': `---\ndescription: d\n---\n${'a'.repeat(20001)}`,
+  'packages/bt/docs/SKILL.md': 'a'.repeat(20001),
+  'packages/bt/notes.md': 'a'.repeat(20001),
+  // An amount that Claude Code reads as an argument, and the escaped amount.
+  'packages/ld/.claude/skills/price/SKILL.md': '---\ndescription: d\n---\n\nPrice $1.00\n',
+  'packages/ld/.claude/skills/price-ok/SKILL.md': '---\ndescription: d\n---\n\nPrice \\$1.00\n',
+  'packages/ld/.claude/commands/cprice.md': '---\ndescription: d\n---\n\nPrice $1.00\n',
+  'packages/ld/notes.md': 'Price $1.00\n',
+  // An unbraced plugin variable in a plugin skill. A command file, a skill outside a plugin and
+  // the braced form are silent.
+  'packages/pw/.claude-plugin/plugin.json': JSON.stringify({ name: 'pw' }),
+  'packages/pw/skills/bad/SKILL.md': '---\ndescription: d\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
+  'packages/pw/skills/ok/SKILL.md': `---\ndescription: d\n---\n\nRun ${pluginRoot}/run.sh\n`,
+  'packages/pw/commands/cbad.md': '---\ndescription: d\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
+  'packages/pw/other/.claude/skills/bad/SKILL.md':
+    '---\ndescription: d\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
+  // An injected command that no `allowed-tools` rule matches, and the same command with a rule.
+  'packages/ir/.claude/skills/bad/SKILL.md': '---\ndescription: d\n---\n\n!`npm test`\n',
+  'packages/ir/.claude/skills/ok/SKILL.md':
+    '---\ndescription: d\nallowed-tools: Bash(npm *)\n---\n\n!`npm test`\n',
+  'packages/ir/.claude/commands/cbad.md': '---\ndescription: d\n---\n\n!`npm test`\n',
+  'packages/ir/notes.md': '!`npm test`\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
@@ -777,7 +812,27 @@ const EXPECTED = [
   '.claude/skills/escape/SKILL.md: claude/skill-argument-escape@1',
   '.claude/skills/long/SKILL.md: claude/skill-max-lines@1',
   'plugins/q/SKILL.md: claude/skill-plugin-root-name@1',
+  // The command files of the `off` skill rules of layer 3 are legacy files.
+  'packages/bt/.claude/commands/cbig.md: claude/command-legacy-format@1',
+  'packages/ir/.claude/commands/cbad.md: claude/command-legacy-format@1',
+  'packages/ld/.claude/commands/cprice.md: claude/command-legacy-format@1',
+  'packages/pw/commands/cbad.md: claude/command-legacy-format@1',
 ].sort()
+
+// The reports of the `off` skill rules. They appear in `strict` only, at `warn`. Each of the six
+// skills of the budget scope reports, with its own share.
+const STRICT_ONLY = [
+  ...['a', 'b', 'c', 'd', 'e', 'f'].map(
+    (folder) => `packages/lb/.claude/skills/${folder}/SKILL.md: claude/skill-listing-budget@1`,
+  ),
+  'packages/bt/.claude/skills/big/SKILL.md: claude/skill-body-token-budget@1',
+  'packages/bt/.claude/commands/cbig.md: claude/skill-body-token-budget@1',
+  'packages/ld/.claude/skills/price/SKILL.md: claude/skill-literal-dollar@1',
+  'packages/ld/.claude/commands/cprice.md: claude/skill-literal-dollar@1',
+  'packages/pw/skills/bad/SKILL.md: claude/skill-plugin-path-vars@1',
+  'packages/ir/.claude/skills/bad/SKILL.md: claude/skill-inject-robustness@1',
+  'packages/ir/.claude/commands/cbad.md: claude/skill-inject-robustness@1',
+]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.
@@ -838,6 +893,17 @@ const PLUGIN_SKILL_RULES = [
   'skill-plugin-root-name',
   'skill-shell-platform',
 ]
+
+// The `off` skill rules of #50, layer 3, in the order of the `modules` list. `strict` turns each
+// on at `warn`. `skill-plugin-path-vars` reads a `SKILL.md` only.
+const SKILL_OFF_RULES = [
+  'skill-body-token-budget',
+  'skill-inject-robustness',
+  'skill-listing-budget',
+  'skill-literal-dollar',
+  'skill-plugin-path-vars',
+]
+const PATH_VARS_RULE = 'skill-plugin-path-vars'
 
 let root = ''
 
@@ -907,10 +973,16 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
+  it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const isOff = (rules: Linter.Config['rules']) =>
+      SKILL_OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
+    const strict = rulesOf(plugin.configs.strict)
+    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
+    expect(strict.filter(isOff)).toEqual(
+      SKILL_OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })),
+    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -918,6 +990,7 @@ describe('configs', () => {
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...WARN_SKILL_RULES.map((rule) => `claude/strict/${rule}`),
       ...PLUGIN_SKILL_RULES.map((rule) => `claude/strict/${rule}`),
+      ...SKILL_OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
@@ -970,6 +1043,19 @@ describe('configs', () => {
     }
   })
 
+  it('turns each off skill rule on in strict only, on the files that it reads', () => {
+    for (const rule of SKILL_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        [
+          'markdown/gfm',
+          rule === PATH_VARS_RULE ? ['**/SKILL.md'] : ['**/SKILL.md', '**/commands/**/*.md'],
+        ],
+      ])
+    }
+  })
+
   it('gives each settings rule one JSON block for the two project settings files', () => {
     for (const rule of SETTINGS_RULES) {
       const blocks = plugin.configs.recommended.filter(
@@ -992,11 +1078,11 @@ describe('configs', () => {
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
-  it('strict reports the same files as recommended today', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  it('strict reports the files of recommended, and those of the off rules', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
+  }, 30_000)
 
   it('reports the two option rules on their own files once an option turns them on', async () => {
     const shell = '---\ndescription: d\nshell: bash\n---\n\n!`date`\n'
@@ -1051,6 +1137,59 @@ describe('configs', () => {
         '.claude/commands/c.md: claude/skill-shell-platform',
         '.claude/skills/s/SKILL.md: claude/skill-shell-platform',
         'plugins/p/skills/prefixed/SKILL.md: claude/skill-plugin-name-prefix',
+      ])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('reports the two budget rules on their own files once an option sets a small limit', async () => {
+    const skill = '---\ndescription: d\n---\n\nfive!\n'
+    const files: Record<string, string> = {
+      '.claude/skills/s/SKILL.md': skill,
+      '.claude/commands/c.md': skill,
+      'notes/x.md': skill,
+      'plugins/p/.claude-plugin/plugin.json': '{"name": "p"}',
+      'plugins/p/skills/s/SKILL.md': skill,
+    }
+    // The options go into the shipped `strict` blocks, so each rule keeps its own `files`.
+    const OPTIONS: Record<string, object> = {
+      'claude/skill-listing-budget': { max: 1 },
+      'claude/skill-body-token-budget': { max: 1 },
+    }
+    const dir = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
+    try {
+      for (const [file, content] of Object.entries(files)) {
+        mkdirSync(path.dirname(path.join(dir, file)), { recursive: true })
+        writeFileSync(path.join(dir, file), content)
+      }
+      const eslint = new ESLint({
+        cwd: dir,
+        overrideConfigFile: true,
+        overrideConfig: plugin.configs.strict.map((block): Linter.Config => {
+          const rules: Linter.RulesRecord = {}
+          for (const [id, level] of Object.entries(block.rules ?? {})) {
+            const given = OPTIONS[id]
+            rules[id] = given ? [level as Linter.RuleSeverity, given] : (level as Linter.RuleEntry)
+          }
+          return { ...block, rules }
+        }),
+      })
+      const results = await eslint.lintFiles(['.'])
+      const found = results
+        .flatMap((r) =>
+          r.messages
+            .filter((m) => Object.keys(OPTIONS).includes(m.ruleId ?? ''))
+            .map((m) => `${path.relative(dir, r.filePath).split(path.sep).join('/')}: ${m.ruleId}`),
+        )
+        .sort()
+      expect(found).toEqual([
+        '.claude/commands/c.md: claude/skill-body-token-budget',
+        '.claude/commands/c.md: claude/skill-listing-budget',
+        '.claude/skills/s/SKILL.md: claude/skill-body-token-budget',
+        '.claude/skills/s/SKILL.md: claude/skill-listing-budget',
+        'plugins/p/skills/s/SKILL.md: claude/skill-body-token-budget',
+        'plugins/p/skills/s/SKILL.md: claude/skill-listing-budget',
       ])
     } finally {
       rmSync(dir, { recursive: true, force: true })
