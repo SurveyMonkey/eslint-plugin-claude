@@ -29,8 +29,8 @@ file that a repository can commit. The message depends on the kind of file:
   value from any file, so a client that is not up to date starts the session with no checks. The
   message says both.
 - **A managed file.** Claude Code honors the value. Every session starts without the usual
-  prompts. A managed file can set it on purpose, for a locked-down container. The rule reports it, so
-  that the choice is explicit. Turn the rule off for that file if you mean it.
+  prompts. A managed file can set it on purpose, for a locked-down container. The rule reports
+  it, so that the choice is explicit. Turn the rule off for that file if you mean it.
 
 The mode also makes the allow rules of the file useless: "Allow rules have no effect in
 `bypassPermissions`."[^modes] When the file has a non-empty `permissions.allow` list, the message
