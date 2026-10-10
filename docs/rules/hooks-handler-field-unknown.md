@@ -35,7 +35,7 @@ rule is a warning.
 
 A field of another type is unknown, too. A `url` on a `command` hook is an example.
 
-Two rules own the neighbouring faults, so this rule makes no report for them:
+Two other rules own related faults, so this rule makes no report for them:
 
 - [`hooks-config-schema`](hooks-config-schema.md) reports a handler with no `type` or an unknown `type`, a
   missing required field, and a field of the wrong type. This rule skips a handler with no valid `type`.
