@@ -40,6 +40,11 @@ it('stays silent for a map or a file that is not an object', () => {
 it('skips the reserved names, which mcp-server-name-reserved reports', () => {
   expect(ids(lintProject(NAME, named('Claude Preview', 'Claude Browser', 'workspace')))).toEqual([])
 })
+it('reports a reserved name with a space in plugin.json, which no other rule reports', () => {
+  const found = lintManifest(NAME, manifest({ 'Claude Preview': server, workspace: server }))
+  expect(ids(found)).toEqual(['format'])
+  expect(found[0]?.message).toContain('"Claude Preview"')
+})
 it('does not read a path under .claude/', () => {
   expect(ids(lintProject(NAME, named('a.b'), '.claude/.mcp.json'))).toEqual([])
 })

@@ -18,6 +18,10 @@ it('reports an inline command and a relative path too', () => {
     expect(ids(lintProject(NAME, entry(helper)))).toEqual(['committed'])
   }
 })
+it('reports in a nested project file', () => {
+  const found = lintProject(NAME, entry('/opt/h.sh'), 'packages/app/.mcp.json')
+  expect(ids(found)).toEqual(['committed'])
+})
 it('reports each server that has one', () => {
   const code = mapOf({ a: { headersHelper: 'x' }, b: {}, c: { headersHelper: 'y' } })
   expect(ids(lintProject(NAME, code))).toEqual(['committed', 'committed'])
