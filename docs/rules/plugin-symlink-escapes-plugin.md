@@ -45,7 +45,7 @@ if an in-place load follows a link that leaves the plugin. The rule does not dec
 
 The rule reads the files on disk, not the files that Git tracks. A link that Git ignores can cause
 a report. The walk does not enter a link to a folder, because the link is the item that the
-install handles. It skips `.git` and `node_modules` folders.
+install handles. It skips each entry that is named `.git` or `node_modules`.
 
 A link whose target is out of the marketplace is for
 [`plugin-symlink-escapes-marketplace`](plugin-symlink-escapes-marketplace.md). So one link gets

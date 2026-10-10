@@ -24,7 +24,8 @@ export interface Scopes {
  *  - `outside`: the real path is out of the marketplace and in the repository.
  *  - `missing`: nothing is at the path.
  *  - `unreadable`: the rule cannot see the path. A part of it is a link with
- *    no target, has a real path out of the repository, or fails to read.
+ *    no target. Or a part has a real path out of the repository. Or a part
+ *    fails to read.
  *
  *  `real` is the real path. A rule makes no report that rests on `unreadable`. */
 export type Place =
@@ -54,10 +55,10 @@ export function placeOf(
 /** The real path of the marketplace root of `plugin`: the folder that holds
  *  the nearest `.claude-plugin/marketplace.json`, from the plugin root up to
  *  the repository root. The plugin root is the result when no folder holds one.
- *  The result is undefined when a candidate cannot be read: the file is a link
- *  with no target or out of the repository, or fails to read. A file that does
- *  not parse still marks its folder, because the rule needs only the place. The
- *  catalog need not list the plugin. */
+ *  The result is undefined when a candidate cannot be read. The file can be a
+ *  link with no target, or a link out of the repository. It can also fail to
+ *  read. A file that does not parse still marks its folder, because the rule
+ *  needs only the place. The catalog need not list the plugin. */
 function marketplaceRootOf(plugin: Plugin): string | undefined {
   for (let at = plugin.realRoot; ; at = path.dirname(at)) {
     const found = readJson(path.join(at, '.claude-plugin', 'marketplace.json'), plugin.bound)

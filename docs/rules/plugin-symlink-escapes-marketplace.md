@@ -39,7 +39,7 @@ that leaves the plugin gets this report.
 
 The rule reads the files on disk, not the files that Git tracks. A link that Git ignores can cause
 a report. The walk does not enter a link to a folder, because the link is the item that the
-install handles. It skips `.git` and `node_modules` folders.
+install handles. It skips each entry that is named `.git` or `node_modules`.
 
 A link that leaves the plugin and stays in the marketplace is for
 [`plugin-symlink-escapes-plugin`](plugin-symlink-escapes-plugin.md). So one link gets one report
