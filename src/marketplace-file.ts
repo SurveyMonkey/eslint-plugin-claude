@@ -149,7 +149,9 @@ export function readEntrySources(
   const sources = new Map<string, unknown[]>()
   for (const entry of found.data.plugins as unknown[]) {
     if (isObject(entry) && typeof entry.name === 'string') {
-      sources.set(entry.name, [...(sources.get(entry.name) ?? []), entry.source])
+      const list = sources.get(entry.name) ?? []
+      list.push(entry.source)
+      sources.set(entry.name, list)
     }
   }
   return sources
@@ -231,7 +233,7 @@ function namesIn(data: Record<string, unknown>): string[] {
  *  the other file of the pair. A name in either file counts, because the
  *  settings reference resolves a same-name entry for each name and not for
  *  the whole key. The result is `UNREADABLE` when the rule cannot see a part.
- *  This covers text that does not parse to an object, and an other file that
+ *  This covers text that does not parse to an object, and another file that
  *  is a dangling link, has a real path out of the bound, fails to read, or does
  *  not parse to an object. An other file that is not there, with its path in
  *  the bound, declares nothing. */

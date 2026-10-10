@@ -20,6 +20,8 @@ jsonTester.run('settings-known-marketplaces-pattern-anchored (valid)', rule, {
     // An anchor for each alternative, and an escaped backslash before the closing anchor.
     { code: allow(host('^a\\.example$|^b\\.example$')), filename },
     { code: allow(host('^a\\\\$')), filename },
+    { code: allow(host('^a\\\\\\\\$')), filename },
+    { code: allow(host('^a|b$')), filename },
     // The docs show `".*"` as the pattern that allows every local path.
     { code: allow(path('.*')), filename },
     // The pattern does not compile: `settings-known-marketplaces-policy-schema` reports it.
@@ -100,6 +102,8 @@ jsonTester.run('settings-known-marketplaces-pattern-anchored (invalid)', rule, {
     },
     // An escaped `$` is a literal dollar sign, and no anchor.
     { code: allow(host('^a\\$')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(host('^a\\\\\\$')), filename, errors: [{ messageId: 'unanchored' }] },
+    { code: allow(host('^a$|b')), filename, errors: [{ messageId: 'unanchored' }] },
     { code: allow(host('')), filename, errors: [{ messageId: 'unanchored' }] },
     { code: allow(host('.*')), filename, errors: [{ messageId: 'unanchored' }] },
     // A path needs the start anchor only.

@@ -44,6 +44,7 @@ marketplace is for `settings-enabled-plugins-entry-exists`.
 When two entries share a plugin name, the rule reports only if each of them is external. The
 docs name one other way to install the plugin: a seed directory that already holds it.[^loading]
 The rule cannot see a seed directory, so a team that seeds its machines can leave the rule off.
+The rule reads `extraKnownMarketplaces` only. It does not read the alias `additionalMarketplaces`.
 
 Fail:
 

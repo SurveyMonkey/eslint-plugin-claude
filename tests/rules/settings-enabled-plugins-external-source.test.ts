@@ -47,7 +47,12 @@ describe(`${name} (silent)`, () => {
   })
 
   it('is silent for a plugin set to false, or a value that is not a Boolean', () => {
-    const files = market(entry('p', external))
+    const files = market(
+      entry('p', external),
+      entry('q', external),
+      entry('r', external),
+      entry('s', external),
+    )
     const plugins = { 'p@acme': false, 'q@acme': 'true', 'r@acme': null, 's@acme': 1 }
     expect(idsAt(files, { ...declare(), enabledPlugins: plugins })).toEqual([])
   })

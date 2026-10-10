@@ -41,8 +41,8 @@ set the canonical key. It does not read `blockedMarketplaces`. An unanchored pat
 blocks more sources, and does not widen what users can add. It skips a hidden file in
 `managed-settings.d`.
 
-The rule is a text check. It does not parse the pattern. A pattern with an alternation such as
-`^a$|b` has both anchors, and the rule does not report it. A pattern that does not compile is for
+The rule is a text check. It does not parse the pattern. A pattern with an alternation is checked as text. The rule
+reports `^a$|b`, because the text ends in `b`. It does not report `^a|b$`. A pattern that does not compile is for
 `settings-known-marketplaces-policy-schema`, so the rule does not report it.
 
 Fail:
