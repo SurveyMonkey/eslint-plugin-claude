@@ -26,7 +26,7 @@ first.[^memory] Content past that limit does not load.[^how] After a write to th
 Code returns an error when the file is over a limit.[^error]
 
 Claude Code removes the YAML frontmatter and the block-level HTML comments before it loads the
-index. So they do not count.[^error] The rule removes them too, and then it checks the lines and
+index. So they do not count.[^error] The docs state this for the auto memory index. The rule assumes that the index of a subagent loads in the same way. The rule removes them too, and then it checks the lines and
 the bytes apart. It makes one report for each limit that the index is over, at the start of the
 file. A file of exactly 200 lines, or of exactly 25,000 bytes, passes.
 
@@ -34,10 +34,10 @@ The rule reads the frontmatter and the comments from the Markdown syntax tree:
 
 - The frontmatter is the YAML block that starts on line 1.
 - A block comment starts a block with `<!--` and ends at the line that holds `-->`. The rule
-  removes whole lines. A comment in a block quote or in a list item counts too.
+  removes whole lines. It removes a comment in a block quote or in a list item too.
 - A comment inside a paragraph or a fenced code block is text, and it counts. The docs name block
   comments only.
-- A comment that is never closed runs to the end of the file.
+- A comment that is never closed runs to the end of its block, or to the end of the file.
 
 The docs do not say if 25KB is 25,000 or 25,600 bytes. The rule uses 25,000, the lower number. A file can pass the rule, and still be over a limit of 25,600 bytes by up to 600 bytes. A line end counts as one
 byte, or as two bytes in a CRLF file.

@@ -70,7 +70,7 @@ read right. The rule still counts the files that it can read.
 'claude/claude-md-max-lines': ['warn', { max: 300 }]
 ```
 
-The default is the target in the docs.[^size] The docs say that the threshold of the warning scales with the context window of the model. They show no setting that moves it. So the schema sets
+The default is the target in the docs.[^size] The docs show no setting that moves the target. So the schema sets
 no maximum. A team can set a higher or a lower value. A config that sets only the severity keeps the
 default. At another value, the message gives the configured limit and does not say what the docs
 recommend.
