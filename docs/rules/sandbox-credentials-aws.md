@@ -46,7 +46,7 @@ The proxy detects a SigV4 request by the sentinel of the access key, and re-sign
 is masked, the requests are signed with a placeholder that the proxy cannot detect, and they fail at AWS.[^resign]
 Claude Code links `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` when their whole values are masked.[^resign]
 The rule reports a `mask` entry for one of the first two when the source holds no `mask` entry for the other. The rule
-makes no report when a pair names a conventional variable, because the pair replaces the automatic pairing.[^pairs]
+makes no report when a pair names a conventional variable, because the pair replaces the automatic link.[^pairs]
 
 ### onExtractNoMatch deny
 

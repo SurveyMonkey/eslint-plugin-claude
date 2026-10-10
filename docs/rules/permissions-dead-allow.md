@@ -24,7 +24,7 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 
 Claude Code checks the rules in this order: `deny`, then `ask`, then `allow`. The first match decides, and the
 specificity of a rule does not change the order.[^order] A `deny` rule for `Bash(aws *)` blocks `Bash(aws s3 ls)`, and an
-`allow` rule cannot make an exception. A matching `ask` rule also prompts, although a narrower `allow` rule matches the call.
+`allow` rule cannot make an exception. An `ask` rule that matches the call also prompts, although a narrower `allow` rule matches it too.
 So an `allow` rule that a `deny` or `ask` rule covers never applies.
 
 The rule reports the `allow` entry. The message names the rule that covers it and the list of that rule.

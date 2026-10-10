@@ -24,7 +24,7 @@ type MessageId = 'notWholeMask' | 'reused' | 'unpaired' | 'denyReopened'
 
 const KEY = 'AWS_ACCESS_KEY_ID'
 const SECRET = 'AWS_SECRET_ACCESS_KEY'
-/** The conventional variables. A pair that names one replaces the automatic pairing. */
+/** The conventional variables. A pair that names one replaces the automatic link. */
 const CONVENTIONAL = [KEY, SECRET, 'AWS_SESSION_TOKEN']
 const SLOTS = ['accessKeyIdVar', 'secretAccessKeyVar', 'sessionTokenVar']
 
@@ -97,7 +97,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
             used.add(variable)
           }
         }
-        // A pair that names a conventional variable replaces the automatic pairing.
+        // A pair that names a conventional variable replaces the automatic link.
         const paired = pairs.some(({ entry }) =>
           SLOTS.some((slot) => CONVENTIONAL.includes(entry[slot] as string)),
         )
