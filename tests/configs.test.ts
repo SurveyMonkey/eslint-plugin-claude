@@ -294,6 +294,34 @@ const TREE: Record<string, string> = {
   'plugins/bsc/bin/git': '#!/bin/sh\n',
   'plugins/bsc2/.claude-plugin/plugin.json': JSON.stringify({ name: 'bsc2' }),
   'plugins/bsc2/bin/my-tool': '#!/bin/sh\n',
+  // A range that misses the pre-release version of its dependency reports in `strict` only. The
+  // decoy has the suffix. The marketplace needs a `.git` above it.
+  'packages/pr/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/pr/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'pr',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'user', source: './plugins/user' },
+      { name: 'dep', source: { source: 'npm', package: '@acme/dep' }, version: '2.0.0-beta.1' },
+    ],
+  }),
+  'packages/pr/plugins/user/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'user',
+    dependencies: [{ name: 'dep', version: '^2.0.0' }],
+  }),
+  'packages/pr2/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/pr2/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'pr2',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'user', source: './plugins/user' },
+      { name: 'dep', source: { source: 'npm', package: '@acme/dep' }, version: '2.0.0-beta.1' },
+    ],
+  }),
+  'packages/pr2/plugins/user/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'user',
+    dependencies: [{ name: 'dep', version: '^2.0.0-0' }],
+  }),
   // A command entry with a field that the manifest reference does not list.
   'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
     name: 'cmf',
@@ -852,6 +880,7 @@ const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'plugin-user-config-sensitive', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-channel-server-stdio', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-bin-shadows-system-command', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-dependencies-prerelease-range', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1110,6 +1139,7 @@ const EXPECTED = [
 const STRICT_ONLY = [
   'plugins/ucs/.claude-plugin/plugin.json: claude/plugin-user-config-sensitive@1',
   'plugins/chs/.claude-plugin/plugin.json: claude/plugin-channel-server-stdio@1',
+  'packages/pr/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-prerelease-range@1',
   'plugins/bsc/.claude-plugin/plugin.json: claude/plugin-bin-shadows-system-command@1',
 ]
 

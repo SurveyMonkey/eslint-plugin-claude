@@ -11,7 +11,7 @@ import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-sup
 import { lintPlugin } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-dependencies-prerelease-range'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const BETA = '2.0.0-beta.1'
@@ -205,7 +205,7 @@ describe(`${RULE} (silent)`, () => {
     ['a target that is not semver', 'latest'],
     ['a target with a v prefix', 'v2.0.0-beta.1'],
     ['a target that is not a string', 5],
-    ['no target', undefined],
+    ['a null version', null],
   ])('stays silent for %s', (_title, entry) => {
     expect(ranged('^2.0.0', entry)).toEqual([])
   })
@@ -238,8 +238,13 @@ describe(`${RULE} (silent)`, () => {
     expect(run({ range: '^2.0.0', entry: BETA, dep: '{' })).toEqual([])
   })
 
-  check('stays silent when the source folder is not there', () => {
-    expect(run({ range: '^2.0.0', entry: BETA, source: './plugins/gone' })).toEqual([])
+  check('stays silent when the entry sets no version and the source has no manifest', () => {
+    expect(run({ range: '^2.0.0' })).toEqual([])
+    expect(run({ range: '^2.0.0', source: './plugins/gone' })).toEqual([])
+  })
+
+  check('takes the version of the entry when the source folder is not there', () => {
+    expect(run({ range: '^2.0.0', entry: BETA, source: './plugins/gone' })).toHaveLength(1)
   })
 
   check('stays silent when the source is not a relative path', () => {

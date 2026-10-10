@@ -360,6 +360,29 @@ describe('the off rules of the plugin layer', () => {
     expect(lintPlugin('plugin-channel-server-stdio', dir, manifest)).toEqual([])
   })
 
+  const RANGED = JSON.stringify({ name: 'p', dependencies: [{ name: 'dep', version: '^2.0.0' }] })
+  const CATALOG = JSON.stringify({
+    name: 'acme',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'p', source: './p' },
+      { name: 'dep', source: { source: 'npm', package: 'd' }, version: '2.0.0-beta.1' },
+    ],
+  })
+  it('plugin-dependencies-prerelease-range reports in the plugin in the repository', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': CATALOG,
+      'p/.claude-plugin/plugin.json': RANGED,
+    })
+    expect(
+      lintPlugin('plugin-dependencies-prerelease-range', path.join(top, 'p'), RANGED),
+    ).toHaveLength(1)
+  })
+  linked('plugin-dependencies-prerelease-range stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, RANGED, { '.claude-plugin/marketplace.json': CATALOG })
+    expect(lintPlugin('plugin-dependencies-prerelease-range', dir, RANGED)).toEqual([])
+  })
+
   it('plugin-bin-shadows-system-command reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(MANIFEST, { 'bin/git': '' })
     expect(lintPlugin('plugin-bin-shadows-system-command', dir, code)).toHaveLength(1)

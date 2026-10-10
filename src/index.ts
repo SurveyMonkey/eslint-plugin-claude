@@ -51,6 +51,7 @@ import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
+import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
@@ -249,6 +250,7 @@ const modules = [
   pluginUserConfigSensitive,
   pluginChannelServerStdio,
   pluginBinShadowsSystemCommand,
+  pluginDependenciesPrereleaseRange,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -394,6 +396,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-user-config-sensitive': 'off',
   'plugin-channel-server-stdio': 'off',
   'plugin-bin-shadows-system-command': 'off',
+  'plugin-dependencies-prerelease-range': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
