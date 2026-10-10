@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112, 137, 150]
+related_issues: [25, 112, 137, 149, 150]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -25,6 +25,11 @@ lists 407 releases. Among them:
   checks the list of event names.
 - Many changes are to words only, examples, bug fixes, CLI commands or environment variables. No lint
   rule reads them.
+
+**A block that a planned rule cites is not a new rule.** Four `new-rule` issues (#44, #45, #121,
+#122) and one `needs-triage` issue (#123) were changes to blocks of the hooks page. Rows of the
+Hooks section of `docs/rules-inventory.md` cite each of these blocks (lines 384 to 437 on
+2026-10-10).
 
 **The constraints are these:**
 
@@ -81,6 +86,16 @@ request says that Jev judged the changed lines.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
 confidence value, so a finding reports `|2p - 1|` as its confidence.
+
+**The inventory is a second source map.** `docs/rules-inventory.md` lists the rule candidates,
+built and not built. Each rule row cites footnotes, and each footnote names a page and a
+heading. The classifier reads the rule tables of each `###` section of "Rules by group". A
+table in a `####` subsection belongs to its `###` section. A changed, added or removed block is
+tracked when an inventory footnote cites it and `docs/rule-sources.json` does not.
+The output lists each tracked block in `tracked`, with the rule rows that cite it in each
+section. A tracked block gets the same request and the same findings as before. Decision 8 tells
+what the issue step does with it. Only the pages that the map cites are read, so a page that
+only the inventory cites is not watched.
 
 ### 2. The spike data
 
@@ -225,6 +240,25 @@ with old and new text, the body shows a diff, then the full old section and the 
 in two collapsed parts. Docs text goes in a fence that is longer than any fence in the text. Each `@` and each `<!--` in docs text gets a
 word joiner, so the text makes no mention and no marker.
 
+**A tracked block gives a comment on its group issue.** `GROUP_ISSUES` in
+`scripts/docs-issues.ts` gives the group issue of each section of "Rules by group". A tracked
+block in a section with no group issue stops the step before it writes. While a group issue is
+open, a run posts at most one comment on it. The comment names each new tracked block and the
+rows of that section that cite it. It shows the diff of the block, or its text when the snapshot
+has no old text. Each block has the hidden marker
+`<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`, with the key of Decision 5. The prefix is
+not `docs-watch:`, so the issue dedupe does not read it. The step reads the comments of each open
+group issue. A block whose marker is in a comment is not posted again.
+
+A tracked block opens no issue for a finding with no rule while one of its group issues is open.
+The comment does its work. When all its group issues are closed, the finding opens its
+issue, with a line that names the inventory rows. A finding that names a rule opens its issue as
+before. Docs text in a comment gets the same fence and word joiners as an issue body. The markers
+come first, and the text after them is cut at 60,000 characters, with a note. Comments do not
+count toward the limit of 20 issues. A dry run prints each comment and posts none. The step also
+stops before it writes for three causes. The findings file has no `tracked` list. A tracked block
+is not valid. A group issue has a state that is not `open` or `closed`.
+
 ## Consequences
 
 - Each block costs one request of about 1,400 input tokens. At the price on 2026-09-29
@@ -238,4 +272,8 @@ word joiner, so the text makes no mention and no marker.
 - The snapshot has only the hash of an uncited block. A change to the words only of such a block
   can give a `new-rule` issue, because the question sees the new text only.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
+- `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed. When a
+  group issue closes, the findings of its tracked blocks open issues again.
+- A tracked block has no Jev finding of its own. A person reads the comment when they build the
+  row.
 - A new Jev version needs a new run of the spike before the pin moves.

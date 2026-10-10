@@ -95,7 +95,7 @@ rule that lacks the option that its row names.
 `.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It commits nothing.
 It runs `node scripts/docs-watch.ts check`, which fetches each page that the map cites (URL plus
 `.md`) and compares it with `docs/docs-snapshot/`. When a page changed or the check failed, it
-classifies the change and opens issues (see [Docs classifier](#docs-classifier)).
+classifies the change, opens issues and posts comments (see [Docs classifier](#docs-classifier)).
 
 - `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
   to the run summary. For each changed page, it lists the blocks that changed, were added or were
@@ -137,13 +137,22 @@ no title.
 [ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records the questions, the thresholds
 and the spike data.
 
+The classifier also reads `docs/rules-inventory.md` as a second source map. Each inventory
+footnote uses the one-line form of [Rule source map](#rule-source-map), and the docs watch reads
+it. The classifier reads the rule tables of each `###` section of "Rules by group". A changed,
+added or removed block is tracked when an inventory footnote cites it and the map does not. The
+JSON lists it in `tracked`, with the rule rows that cite it in each section.
+
 `node scripts/docs-issues.ts <findings.json>` opens one issue for each changed block, as the org
 GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
 hash and the rules stops a second issue for the same change. For a changed block, the body shows
-a diff, then the full old and new sections in two collapsed parts. `--dry-run` prints each issue
-and opens none. A manual run of the workflow takes a `dry_run` input.
+a diff, then the full old and new sections in two collapsed parts. For a tracked block, it posts
+one comment on the open group issue of each section (`GROUP_ISSUES`). A finding of the block that
+names no rule then opens no issue. `--dry-run` prints each issue and
+each comment, and opens and posts none. A manual run of the workflow takes a `dry_run` input.
 
-To triage the issues, follow the [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
+To triage the issues and the comments, follow the
+[docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
 
 ## Commits and pull requests
 
