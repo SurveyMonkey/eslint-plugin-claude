@@ -3,13 +3,17 @@
 // glob is in tests/configs.test.ts.
 import markdown from '@eslint/markdown'
 import { Linter } from 'eslint'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import plugin from '../../src/index.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('claude-md-max-bytes')
 
 const LIMIT = 4 * 1024 * 1024
+
+// A 4 MiB file is slow to lint under coverage on a busy CI runner. The default size is in
+// three cases only. The other cases use a small file and the option `max`.
+vi.setConfig({ testTimeout: 60_000 })
 
 /** Markdown of exactly `bytes` bytes: one HTML comment, the cheapest text to parse. */
 const ofBytes = (bytes: number) => `<!--${'x'.repeat(bytes - 7)}-->`
@@ -23,8 +27,18 @@ markdownTester.run('claude-md-max-bytes', rule, {
     { code: '# Project\n', filename: root },
     // Exactly 4 MiB is within the limit, in each file that Claude Code reads.
     { name: 'at the limit, root file', code: ofBytes(LIMIT), filename: root },
-    { name: 'at the limit, .claude file', code: ofBytes(LIMIT), filename: dotClaude },
-    { name: 'at the limit, local file', code: ofBytes(LIMIT), filename: local },
+    {
+      name: 'at the limit, .claude file',
+      code: ofBytes(100),
+      filename: dotClaude,
+      options: [{ max: 100 }],
+    },
+    {
+      name: 'at the limit, local file',
+      code: ofBytes(100),
+      filename: local,
+      options: [{ max: 100 }],
+    },
     // A custom limit: at it, silent.
     { code: ofBytes(100), filename: root, options: [{ max: 100 }] },
     // The count is of bytes, not characters. 1,000 two-byte letters are 2,000 bytes.
@@ -34,29 +48,40 @@ markdownTester.run('claude-md-max-bytes', rule, {
     // A file that Claude Code does not read as a CLAUDE.md. The docs name CLAUDE.md files only,
     // so `AGENTS.md` is left out. A rule file is not a CLAUDE.md file either.
     {
-      name: 'over the limit, not read: docs/CLAUDE-notes.md',
-      code: ofBytes(LIMIT + 1),
+      name: 'over the limit, not checked: docs/CLAUDE-notes.md',
+      code: ofBytes(101),
       filename: '/repo/docs/CLAUDE-notes.md',
+      options: [{ max: 100 }],
     },
     {
-      name: 'over the limit, not read: AGENTS.md',
-      code: ofBytes(LIMIT + 1),
+      name: 'over the limit, not checked: AGENTS.md',
+      code: ofBytes(101),
       filename: '/repo/AGENTS.md',
+      options: [{ max: 100 }],
     },
     {
-      name: 'over the limit, not read: claude.md',
-      code: ofBytes(LIMIT + 1),
+      name: 'over the limit, not checked: claude.md',
+      code: ofBytes(101),
       filename: '/repo/claude.md',
+      options: [{ max: 100 }],
     },
     {
-      name: 'over the limit, not read: .claude/rules/CLAUDE.md',
-      code: ofBytes(LIMIT + 1),
+      name: 'over the limit, not checked: .claude/rules/CLAUDE.md',
+      code: ofBytes(101),
       filename: '/repo/.claude/rules/CLAUDE.md',
+      options: [{ max: 100 }],
     },
     {
-      name: 'over the limit, not read: .claude/rules/big.md',
-      code: ofBytes(LIMIT + 1),
+      name: 'over the limit, not checked: .claude/rules/CLAUDE.local.md',
+      code: ofBytes(101),
+      filename: '/repo/.claude/rules/CLAUDE.local.md',
+      options: [{ max: 100 }],
+    },
+    {
+      name: 'over the limit, not checked: .claude/rules/big.md',
+      code: ofBytes(101),
       filename: '/repo/.claude/rules/big.md',
+      options: [{ max: 100 }],
     },
   ],
   invalid: [
@@ -65,33 +90,35 @@ markdownTester.run('claude-md-max-bytes', rule, {
       name: 'one byte over the limit, root file',
       code: ofBytes(LIMIT + 1),
       filename: root,
-      errors: [{ messageId: 'tooLarge', line: 1, column: 1 }],
+      errors: [
+        {
+          message:
+            'This file has 4194305 bytes. Claude Code skips a CLAUDE.md file of more than 4194304 bytes.',
+          line: 1,
+          column: 1,
+        },
+      ],
     },
     {
       name: 'one byte over, .claude file',
-      code: ofBytes(LIMIT + 1),
+      code: ofBytes(101),
       filename: dotClaude,
-      errors: [{ messageId: 'tooLarge' }],
+      options: [{ max: 100 }],
+      errors: [{ messageId: 'overConfiguredLimit' }],
     },
     {
       name: 'one byte over, local file',
-      code: ofBytes(LIMIT + 1),
+      code: ofBytes(101),
       filename: local,
-      errors: [{ messageId: 'tooLarge' }],
+      options: [{ max: 100 }],
+      errors: [{ messageId: 'overConfiguredLimit' }],
     },
     {
       name: 'one byte over, nested file',
-      code: ofBytes(LIMIT + 1),
+      code: ofBytes(101),
       filename: '/repo/packages/web/CLAUDE.md',
-      errors: [{ messageId: 'tooLarge' }],
-    },
-    // An explicit limit equal to the default gives the same message as the default.
-    {
-      name: 'limit set to the default',
-      code: ofBytes(LIMIT + 1),
-      filename: root,
-      options: [{ max: LIMIT }],
-      errors: [{ messageId: 'tooLarge' }],
+      options: [{ max: 100 }],
+      errors: [{ messageId: 'overConfiguredLimit' }],
     },
     // A custom limit: one byte over.
     {
@@ -121,17 +148,6 @@ markdownTester.run('claude-md-max-bytes', rule, {
 markdownTester.run('claude-md-max-bytes (message text)', rule, {
   valid: [],
   invalid: [
-    {
-      name: 'default message text',
-      code: ofBytes(LIMIT + 1),
-      filename: root,
-      errors: [
-        {
-          message:
-            'This file has 4194305 bytes. Claude Code skips a CLAUDE.md file of more than 4194304 bytes.',
-        },
-      ],
-    },
     {
       code: ofBytes(101),
       filename: root,

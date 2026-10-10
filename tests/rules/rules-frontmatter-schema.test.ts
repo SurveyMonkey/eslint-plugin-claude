@@ -60,6 +60,10 @@ markdownTester.run('rules-frontmatter-schema', rule, {
       ...rulefile('alwaysApply: true\nglobs: "*.ts"'),
       errors: [unknownKey('alwaysApply'), unknownKey('globs')],
     },
+    // A comment or a blank line beside a field does not make the block empty.
+    { ...rulefile('# note\nglobs: "*.ts"'), errors: [unknownKey('globs')] },
+    { ...rulefile('\npaths: 3'), errors: [wrongType] },
+    { ...rulefile('# note\n- src/**'), errors: [{ messageId: 'invalidYaml' }] },
     // One good key and one bad key.
     { ...rulefile('paths: "src/**"\nname: testing'), errors: [unknownKey('name')] },
     // `paths` of the wrong type.
