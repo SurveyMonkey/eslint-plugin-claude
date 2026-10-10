@@ -17,13 +17,13 @@ const ids = (text: string, file = PROJECT) =>
   lintJson(name, text, file).map((message) => message.messageId)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a mid-pattern :* in every file', () => {
+  it('reports a mid-pattern :* in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(perms({ allow: ['Bash(git:* push)'] }), file), file).toEqual(['mid'])
     }
   })
 
-  it.fails('reports in allow, ask and deny, and for each command tool', () => {
+  it('reports in allow, ask and deny, and for each command tool', () => {
     for (const list of ['allow', 'ask', 'deny']) {
       expect(ids(perms({ [list]: ['Bash(git:* push)'] })), list).toEqual(['mid'])
     }
@@ -32,17 +32,17 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('reports a :* in the middle that is followed by a :* at the end, once', () => {
+  it('reports a :* in the middle that is followed by a :* at the end, once', () => {
     expect(ids(perms({ allow: ['Bash(git:* push:*)'] }))).toEqual(['mid'])
   })
 
-  it.fails('names the rule and the form that works', () => {
+  it('names the rule and the form that works', () => {
     const [message] = lintJson(name, perms({ allow: ['Bash(git:* push)'] }), PROJECT)
     expect(message?.message).toContain('Bash(git:* push)')
     expect(message?.message).toContain('Bash(git * push)')
   })
 
-  it.fails('reports at the entry, at its line and column', () => {
+  it('reports at the entry, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "allow": ["Bash(git:* push)"]\n  }\n}'
     expect(lintJson(name, text, PROJECT).map(({ line, column }) => [line, column])).toEqual([
       [3, 15],
@@ -51,31 +51,31 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for :* at the end', () => {
+  it('is silent for :* at the end', () => {
     for (const rule of ['Bash(git:*)', 'Bash(git push:*)', 'Bash(git:* )', 'PowerShell(Get-:*)']) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a pattern with no :*, and for a bare tool', () => {
+  it('is silent for a pattern with no :*, and for a bare tool', () => {
     for (const rule of ['Bash(git * push)', 'Bash(git push)', 'Bash', 'Bash(*)', 'Bash()']) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a tool that is not a command tool', () => {
+  it('is silent for a tool that is not a command tool', () => {
     for (const rule of ['Read(./a:* b)', 'WebFetch(domain:*)', 'mcp__a__b(x:* y)']) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a rule that does not parse, and for a list that is not an array', () => {
+  it('is silent for a rule that does not parse, and for a list that is not an array', () => {
     expect(ids(perms({ allow: ['Bash(git:* push'] }))).toEqual([])
     expect(ids(JSON.stringify({ permissions: { allow: 'Bash(git:* push)' } }))).toEqual([])
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(perms({ allow: ['Bash(git:* push)'] }), HIDDEN)).toEqual([])
   })
 })

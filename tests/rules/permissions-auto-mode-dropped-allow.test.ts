@@ -22,19 +22,19 @@ const alone = (text: string, file = PROJECT) => at(repo({}), file, text)
 const allow = (rule: string, file = PROJECT) => alone(perms({ allow: [rule] }), file)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports Bash(*) and PowerShell(*), in every file', () => {
+  it('reports Bash(*) and PowerShell(*), in every file', () => {
     for (const file of EVERY_FILE) {
       expect(allow('Bash(*)', file), file).toEqual(['dropped'])
       expect(allow('PowerShell(*)', file), file).toEqual(['dropped'])
     }
   })
 
-  it.fails('reports a bare Bash or PowerShell, which match every command', () => {
+  it('reports a bare Bash or PowerShell, which match every command', () => {
     expect(allow('Bash')).toEqual(['dropped'])
     expect(allow('PowerShell')).toEqual(['dropped'])
   })
 
-  it.fails('reports a wildcarded interpreter', () => {
+  it('reports a wildcarded interpreter', () => {
     for (const rule of [
       'Bash(python*)',
       'Bash(python *)',
@@ -50,13 +50,13 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('reports an Agent rule and a Monitor rule, with or without a specifier', () => {
+  it('reports an Agent rule and a Monitor rule, with or without a specifier', () => {
     for (const rule of ['Agent', 'Agent(Explore)', 'Monitor', 'Monitor(tail *)']) {
       expect(allow(rule), rule).toEqual(['dropped'])
     }
   })
 
-  it.fails('names the rule and the reason', () => {
+  it('names the rule and the reason', () => {
     const [bash] = lintJson(name, perms({ allow: ['Bash(python*)'] }), `/repo/${PROJECT}`)
     expect(bash?.message).toContain('Bash(python*)')
     expect(bash?.message).toContain('interpreter')
@@ -64,16 +64,16 @@ describe(`${name}: the report`, () => {
     expect(agent?.message).toContain('Agent')
   })
 
-  it.fails('reports each entry, at its line and column', () => {
+  it('reports each entry, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "allow": ["Read", "Bash(*)"]\n  }\n}'
     expect(
       lintJson(name, text, `/repo/${PROJECT}`).map(({ line, column }) => [line, column]),
-    ).toEqual([[3, 22]])
+    ).toEqual([[3, 23]])
   })
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for a narrow rule, which stays in effect', () => {
+  it('is silent for a narrow rule, which stays in effect', () => {
     for (const rule of [
       'Bash(npm test)',
       'Bash(npm run test)',
@@ -93,7 +93,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent in ask and deny', () => {
+  it('is silent in ask and deny', () => {
     for (const list of ['ask', 'deny']) {
       expect(
         alone(perms({ [list]: ['Bash(*)', 'Bash(python*)', 'Agent', 'Monitor'] })),
@@ -102,13 +102,13 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a rule that does not parse, and for a list that is not an array', () => {
+  it('is silent for a rule that does not parse, and for a list that is not an array', () => {
     expect(allow('Bash(')).toEqual([])
     expect(alone(JSON.stringify({ permissions: { allow: 'Bash(*)' } }))).toEqual([])
     expect(alone('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(allow('Bash(*)', HIDDEN)).toEqual([])
   })
 })
@@ -116,12 +116,12 @@ describe(`${name}: the silent cases`, () => {
 describe(`${name}: a source that turns auto mode off`, () => {
   const BASH = perms({ allow: ['Bash(*)'] })
 
-  it.fails('is silent when the file sets disableAutoMode to "disable", at the top or in permissions', () => {
+  it('is silent when the file sets disableAutoMode to "disable", at the top or in permissions', () => {
     expect(alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: 'disable' }))).toEqual([])
     expect(alone(perms({ allow: ['Bash(*)'], disableAutoMode: 'disable' }))).toEqual([])
   })
 
-  it.fails('reports when disableAutoMode has another value in a project file', () => {
+  it('reports when disableAutoMode has another value in a project file', () => {
     for (const value of [true, 'enable', null]) {
       expect(
         alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: value })),
@@ -130,28 +130,34 @@ describe(`${name}: a source that turns auto mode off`, () => {
     }
   })
 
-  it.fails('is silent for any value but null in a managed file, which Claude Code reads as "disable"', () => {
+  it('is silent for any top-level value but null in a managed file, which Claude Code reads as "disable"', () => {
     expect(alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: true }), MANAGED)).toEqual([])
     expect(alone(perms({ allow: ['Bash(*)'] }, { disableAutoMode: null }), MANAGED)).toEqual([
       'dropped',
     ])
   })
 
-  it.fails('reads the other file of the project pair', () => {
+  it('reads the lock inside permissions as "disable" only, even in a managed file', () => {
+    const nested = (value: unknown) => perms({ allow: ['Bash(*)'], disableAutoMode: value })
+    expect(alone(nested('disable'), MANAGED)).toEqual([])
+    expect(alone(nested(true), MANAGED)).toEqual(['dropped'])
+  })
+
+  it('reads the other file of the project pair', () => {
     const root = repo({ [LOCAL]: JSON.stringify({ disableAutoMode: 'disable' }) })
     expect(at(root, PROJECT, BASH)).toEqual([])
     const plain = repo({ [LOCAL]: JSON.stringify({ permissions: { allow: ['Read'] } }) })
     expect(at(plain, PROJECT, BASH)).toEqual(['dropped'])
   })
 
-  it.fails('reads the other files of a managed source, and no project file', () => {
+  it('reads the other files of a managed source, and no project file', () => {
     const root = repo({ [MANAGED]: JSON.stringify({ disableAutoMode: 'disable' }) })
     expect(at(root, DROP_IN, BASH)).toEqual([])
     const project = repo({ [PROJECT]: JSON.stringify({ disableAutoMode: 'disable' }) })
     expect(at(project, MANAGED, BASH)).toEqual(['dropped'])
   })
 
-  it.fails('is silent when a file of the source does not read, because it can hold the lock', () => {
+  it('is silent when a file of the source does not read, because it can hold the lock', () => {
     const root = repo({ [LOCAL]: '{' })
     expect(at(root, PROJECT, BASH)).toEqual([])
     const managed = repo({ 'managed-settings.d/20-b.json': '{' })

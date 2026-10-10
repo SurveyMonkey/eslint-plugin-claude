@@ -36,33 +36,33 @@ const mode = (defaultMode: unknown) => ({ permissions: { defaultMode } })
 const BELOW = [{ minVersion: '2.1.150' }]
 
 describe(`${name}: the report`, () => {
-  it.fails('reports "manual" when minVersion is below 2.1.200, in every file', () => {
+  it('reports "manual" when minVersion is below 2.1.200, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(mode('manual'), BELOW, file), file).toEqual(['alias'])
     }
   })
 
-  it.fails('reports for each version below 2.1.200', () => {
+  it('reports for each version below 2.1.200', () => {
     for (const minVersion of ['2.1.199', '2.0.0', '1.9.9', '2.0.300', '0.0.1']) {
       expect(ids(mode('manual'), [{ minVersion }]), minVersion).toEqual(['alias'])
     }
   })
 
-  it.fails('names minVersion and the version in the message, and suggests "default"', () => {
+  it('names minVersion and the version in the message, and suggests "default"', () => {
     const [message] = lint(mode('manual'), BELOW)
     expect(message?.message).toContain('2.1.150')
     expect(message?.message).toContain('2.1.200')
     expect(message?.suggestions?.[0]?.fix.text).toBe('"default"')
   })
 
-  it.fails('reports the value, at its line and column', () => {
+  it('reports the value, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "defaultMode": "manual"\n  }\n}'
     expect(lint(text, BELOW).map(({ line, column }) => [line, column])).toEqual([[3, 20]])
   })
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent when minVersion is unset', () => {
+  it('is silent when minVersion is unset', () => {
     for (const options of [[], [{}]]) {
       for (const file of EVERY_FILE) {
         expect(ids(mode('manual'), options, file), file).toEqual([])
@@ -70,13 +70,13 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent when minVersion is 2.1.200 or later', () => {
+  it('is silent when minVersion is 2.1.200 or later', () => {
     for (const minVersion of ['2.1.200', '2.1.201', '2.2.0', '3.0.0', '2.1.1000']) {
       expect(ids(mode('manual'), [{ minVersion }]), minVersion).toEqual([])
     }
   })
 
-  it.fails('is silent for another mode, and for a value that is not a string', () => {
+  it('is silent for another mode, and for a value that is not a string', () => {
     for (const value of ['default', 'plan', 'Manual', 1, null, ['manual']]) {
       expect(ids(mode(value), BELOW), JSON.stringify(value)).toEqual([])
     }
@@ -84,13 +84,13 @@ describe(`${name}: the silent cases`, () => {
     expect(ids({ permissions: [] }, BELOW)).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(mode('manual'), BELOW, HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the option`, () => {
-  it.fails('refuses a minVersion that is not a version', () => {
+  it('refuses a minVersion that is not a version', () => {
     expect(() => lint(mode('manual'), [{ minVersion: '2.1.150' }])).not.toThrow()
     for (const minVersion of ['2.1', 'latest', '2.1.x', '', 2.1]) {
       expect(() => lint(mode('manual'), [{ minVersion }]), String(minVersion)).toThrow()
