@@ -8,7 +8,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-manifest-publish-metadata'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const message = (missing: string) =>
