@@ -126,6 +126,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
+| [`claude/claude-md-agents-md-prose-pointer`](docs/rules/claude-md-agents-md-prose-pointer.md) | A `CLAUDE.md` does not tell Claude in words to read `AGENTS.md` without an `@AGENTS.md` import; use the import, or delete the `CLAUDE.md` | `off` | `warn` |
 | [`claude/claude-md-agents-md-shadowed`](docs/rules/claude-md-agents-md-shadowed.md) | An `AGENTS.md` or `.claude/AGENTS.md` has no `CLAUDE.md` in its folder or above it, or a `CLAUDE.md` that imports it or links to it | `error` | `error` |
 | [`claude/claude-md-agents-md-variant`](docs/rules/claude-md-agents-md-variant.md) | No `AGENTS.local.md`, `AGENTS.override.md` or Markdown file below `.agents/`, which Claude Code never reads; option `allow` | `error` | `error` |
 | [`claude/claude-md-combined-size`](docs/rules/claude-md-combined-size.md) | The CLAUDE.md files of a folder and of each folder above it, the rule files with no `paths`, and the files that they import add up to at most `max` lines; option `max`, no default, and no report without it | `off` | `warn` |

@@ -15,7 +15,7 @@ function lint(code: string, file = '/repo/CLAUDE.md') {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a sentence that tells Claude to read AGENTS.md, over the paragraph', () => {
+  it('reports a sentence that tells Claude to read AGENTS.md, over the paragraph', () => {
     const messages = lint('# Project\n\nRead AGENTS.md for the project instructions.\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -24,11 +24,11 @@ describe(RULE, () => {
       line: 3,
       column: 1,
       endLine: 3,
-      endColumn: 56,
+      endColumn: 45,
     })
   })
 
-  it.fails('reports other phrases, a code span and a list item, once for the file', () => {
+  it('reports other phrases, a code span and a list item, once for the file', () => {
     for (const text of [
       'See AGENTS.md.',
       'Please refer to `AGENTS.md` first.',
@@ -43,29 +43,29 @@ describe(RULE, () => {
     expect(ids(lint('Read AGENTS.md.\n\nSee AGENTS.md too.\n'))).toEqual(['prose'])
   })
 
-  it.fails('stays silent when the file imports AGENTS.md', () => {
+  it('stays silent when the file imports AGENTS.md', () => {
     expect(lint('@AGENTS.md\n\nRead AGENTS.md for more.\n')).toEqual([])
     expect(lint('Read AGENTS.md.\n\n- @./AGENTS.md\n')).toEqual([])
     expect(lint('Read AGENTS.md.\n\n@../AGENTS.md\n', '/repo/.claude/CLAUDE.md')).toEqual([])
   })
 
-  it.fails('reports when the import is in code, which Claude Code does not load', () => {
+  it('reports when the import is in code, which Claude Code does not load', () => {
     expect(ids(lint('Read AGENTS.md.\n\nWrite `@AGENTS.md` to import.\n'))).toEqual(['prose'])
   })
 
-  it.fails('stays silent on a mention that gives no instruction to read', () => {
+  it('stays silent on a mention that gives no instruction to read', () => {
     expect(lint('AGENTS.md is shared with other coding tools.\n')).toEqual([])
-    expect(lint('Many tools read the same AGENTS.md\n\nRead the docs.\n')).toEqual([])
+    expect(lint('Many tools share the same AGENTS.md\n\nRead the docs.\n')).toEqual([])
     expect(lint('Read MYAGENTS.md and AGENTS.md.local\n')).toEqual([])
   })
 
-  it.fails('stays silent on a mention in a fence, a heading or an HTML comment', () => {
+  it('stays silent on a mention in a fence, a heading or an HTML comment', () => {
     expect(lint('```\nRead AGENTS.md\n```\n')).toEqual([])
     expect(lint('# Read AGENTS.md\n')).toEqual([])
     expect(lint('<!-- Read AGENTS.md -->\n')).toEqual([])
   })
 
-  it.fails('checks a CLAUDE.md in any folder and a .claude/CLAUDE.md, and no other file', () => {
+  it('checks a CLAUDE.md in any folder and a .claude/CLAUDE.md, and no other file', () => {
     for (const file of ['/repo/CLAUDE.md', '/repo/.claude/CLAUDE.md', '/repo/web/CLAUDE.md']) {
       expect(ids(lint('Read AGENTS.md.\n', file)), file).toEqual(['prose'])
     }

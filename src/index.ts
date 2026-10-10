@@ -16,6 +16,7 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdProsePointer from './rules/claude-md-agents-md-prose-pointer.ts'
 import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
@@ -216,6 +217,7 @@ const modules = [
   memoryIndexMaxSize,
   rulesMaxLines,
   rulesSymlinkExternal,
+  claudeMdAgentsMdProsePointer,
   claudeMdCombinedSize,
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
@@ -346,6 +348,7 @@ const recommended: Record<RuleName, Severity> = {
   'memory-index-max-size': 'warn',
   'rules-max-lines': 'warn',
   'rules-symlink-external': 'warn',
+  'claude-md-agents-md-prose-pointer': 'off',
   'claude-md-combined-size': 'off',
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',

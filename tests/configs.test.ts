@@ -505,6 +505,14 @@ const TREE: Record<string, string> = {
   'packages/ic/ok/CLAUDE.md': 'Use `@none.md`, and import @../present.md.\n',
   'packages/ica/AGENTS.md': 'Use `@present.md`.\n',
   'packages/ica/present.md': '# Present\n',
+  // `claude-md-agents-md-prose-pointer`: a sentence that tells Claude to read AGENTS.md. The same
+  // sentence where no rule reads it, and beside an import.
+  'packages/pp/.git': 'gitdir: ../.git\n',
+  'packages/pp/CLAUDE.md': 'Read AGENTS.md first.\n',
+  'packages/pp/.claude/CLAUDE.md': 'Read AGENTS.md first.\n',
+  'packages/pp/CLAUDE.local.md': 'Read AGENTS.md first.\n',
+  'packages/pp/ok/CLAUDE.md': '@AGENTS.md\n\nRead AGENTS.md first.\n',
+  'packages/pp/ok/AGENTS.md': '# Agents\n',
   // `claude-md-html-comment-content`: a block comment with an instruction in each file that the
   // rule reads. The same comment where no rule reads it, and inline, in a fence and as a note.
   'packages/hc/.git': 'gitdir: ../.git\n',
@@ -706,6 +714,7 @@ const MEMORY_WARN_RULES = [
 // The rules of #13 that are `off` in `recommended`, in the order of the `modules` list. `strict`
 // turns each on at `warn`.
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
+  'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-import-in-code-span': [
@@ -988,6 +997,9 @@ const EXPECTED = [
 // The reports of the `off` rules of #13. They appear in `strict` only, at `warn`.
 const STRICT_ONLY = [
   // `claude-md-import-in-code-span` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  // `claude-md-agents-md-prose-pointer` reads CLAUDE.md files, and no other file.
+  'packages/pp/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
+  'packages/pp/.claude/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
   // `claude-md-html-comment-content` reads CLAUDE.md and CLAUDE.local.md, and no other file.
   'packages/hc/CLAUDE.md: claude/claude-md-html-comment-content@1',
   'packages/hc/.claude/CLAUDE.md: claude/claude-md-html-comment-content@1',
