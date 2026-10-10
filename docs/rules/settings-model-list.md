@@ -80,8 +80,11 @@ when it cannot read a sibling.
 ### The custom model option
 
 The rule reports the option when the file sets `availableModels` and no entry permits the option.
-An entry permits the option in three cases. It equals the option, is a version prefix of it, or is its family alias. The `[1m]` suffix is removed from both sides.[^custom-match]
-The rule makes no report when a doubt remains.
+An entry permits the option in four cases. It equals the option, is a version prefix of it, or is
+its family alias. The aliases `best`, `opusplan` and `default` permit every option. A version
+prefix must end at a segment: `claude-opus-5` permits `claude-opus-5-5` and not `claude-opus-55`.
+The `[1m]` suffix is removed from both sides.[^custom-match] The rule makes no report when a doubt
+remains.
 
 ### What the rule does not check
 

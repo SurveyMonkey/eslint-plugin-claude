@@ -90,7 +90,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
       overrideKey:
         'The key "{{key}}" of "modelOverrides" is not an Anthropic model ID. Claude Code ignores unknown keys.',
       customOption:
-        'The custom model option "{{value}}" is not in "availableModels". Claude Code hides it from the picker and rejects it.',
+        'The custom model option "{{value}}" is not in "availableModels". Claude Code hides it from the picker and rejects it as a --model value.',
     },
   },
   create(context) {
@@ -219,15 +219,20 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
   },
 }
 
-/** True when the allowlist entry `entry` permits the model `id`. The page says that filtering
- *  matches an alias, a version prefix, or the full ID. A family alias covers the models of its
- *  family. The rule takes a doubt as a yes, so that it reports a certain fault only. */
+/** True when the allowlist entry `entry` permits the model `id`. The page says that an allowlist
+ *  entry matches an alias, a version prefix, or the full ID. A version prefix also matches "later
+ *  model IDs that extend it with another segment". A family alias covers the models of its family.
+ *  The rule takes a doubt as a yes, so that it reports a certain fault only. The aliases `best`,
+ *  `opusplan` and `default` have no one family, so they permit every model. */
 function allows(entry: string, id: string): boolean {
   const [from, model] = [withoutSuffix(entry), withoutSuffix(id)]
   if (isModelAlias(from)) {
-    return familyOf(from) !== undefined && familyOf(from) === familyOf(model)
+    const family = familyOf(from)
+    return family === undefined || family === familyOf(model)
   }
-  return model.startsWith(from)
+  // The next character of the model must start another segment: `claude-opus-5` does not permit
+  // `claude-opus-55`.
+  return model === from || (model.startsWith(from) && !/[a-z0-9]/i.test(model.charAt(from.length)))
 }
 
 export default {

@@ -355,6 +355,39 @@ describe(`${name}: ANTHROPIC_CUSTOM_MODEL_OPTION`, () => {
     ).toEqual([])
   })
 
+  it('reports an entry that is no prefix of the option, and a prefix inside a segment', () => {
+    // The page: a version prefix matches "later model IDs that extend it with another segment".
+    const report = (option: string, entry: string) =>
+      ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option }, availableModels: [entry] })
+    expect(report('claude-opus-5-5', 'claude-sonnet-4-5')).toEqual(['customOption'])
+    expect(report('claude-opus-5-5', 'opus-5')).toEqual(['customOption'])
+    expect(report('claude-opus-55', 'claude-opus-5')).toEqual(['customOption'])
+    expect(report('claude-opus-5', 'claude-opus-5-5')).toEqual(['customOption'])
+    expect(report('claude-opus-5-5', '')).toEqual(['customOption'])
+    expect(report('claude-opus-5-5', 'haiku')).toEqual(['customOption'])
+    // Provider prefixes are not stripped.
+    expect(report('us.anthropic.claude-opus-4-8', 'claude-opus-4-8')).toEqual(['customOption'])
+  })
+
+  it('is silent when the next segment starts after a hyphen, an @ or a dot', () => {
+    for (const option of ['claude-opus-5-5', 'claude-opus-5@20250929', 'claude-opus-5.5']) {
+      const code = {
+        env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option },
+        availableModels: ['claude-opus-5'],
+      }
+      expect(ids(code), option).toEqual([])
+    }
+    const exact = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'claude-opus-5' } }
+    expect(ids({ ...exact, availableModels: ['claude-opus-5'] })).toEqual([])
+  })
+
+  it('is silent for best, opusplan and default: they cover more than one family', () => {
+    for (const entry of ['best', 'opusplan', 'default', 'best[1m]']) {
+      const code = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'my-model' }, availableModels: [entry] }
+      expect(ids(code), entry).toEqual([])
+    }
+  })
+
   it('is silent when availableModels is unset: the list can be in another file', () => {
     expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom } })).toEqual([])
     expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: null })).toEqual(
