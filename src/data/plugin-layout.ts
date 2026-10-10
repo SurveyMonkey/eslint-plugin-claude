@@ -3,7 +3,9 @@
 // (https://code.claude.com/docs/en/plugins/manifest-reference#standard-layout),
 // checked on Claude Code 2.1.296 on 2026-10-10. Review this list on or before
 // 2027-04-10, the `stale_after` date of docs/rules/plugin-manifest-location.md.
-// The manifest and `scripts/` are not here. The manifest has its own place, and
+// The second list is the "How each key combines with its default location"
+// section (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location).
+// The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
 /** The first part of the default location of each component, in name order:
@@ -23,4 +25,21 @@ export const PLUGIN_COMPONENT_NAMES: readonly string[] = [
   'skills',
   'themes',
   'workflows',
+]
+
+/** A manifest key that replaces a default folder. `key` is the path of the key
+ *  in the manifest, and `folder` is the default folder. The key `skills` adds to
+ *  its default and the keys `hooks`, `mcpServers` and `lspServers` merge with
+ *  theirs, so they are not here. The default of `experimental.monitors` is
+ *  the file `monitors/monitors.json`, in the folder `monitors/`. */
+export const REPLACED_DEFAULTS: readonly {
+  readonly key: readonly string[]
+  readonly folder: string
+}[] = [
+  { key: ['commands'], folder: 'commands' },
+  { key: ['agents'], folder: 'agents' },
+  { key: ['outputStyles'], folder: 'output-styles' },
+  { key: ['workflows'], folder: 'workflows' },
+  { key: ['experimental', 'themes'], folder: 'themes' },
+  { key: ['experimental', 'monitors'], folder: 'monitors' },
 ]

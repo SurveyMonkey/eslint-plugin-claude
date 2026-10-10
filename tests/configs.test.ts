@@ -132,6 +132,12 @@ const TREE: Record<string, string> = {
   // A `commands` directory with no command in it.
   'plugins/cmd/.claude-plugin/plugin.json': JSON.stringify({ name: 'cmd', commands: './cmds' }),
   'plugins/cmd/cmds/.gitkeep': '',
+  // A `commands` key that points out of the default `commands/` folder.
+  'plugins/shadow/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'shadow',
+    commands: ['./extras/c.md'],
+  }),
+  'plugins/shadow/commands/c.md': '# C\n',
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -552,6 +558,7 @@ const PLUGIN_RULES = [
     files: ['**/.claude/skills/*/.claude-plugin/plugin.json'],
   },
   { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-default-dir-shadowed', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -602,6 +609,8 @@ const EXPECTED = [
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
+  'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
+  'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
   'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
