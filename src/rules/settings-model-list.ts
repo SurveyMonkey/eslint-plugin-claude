@@ -3,6 +3,7 @@
 // A list in another file is not seen. The aliases and the ID forms are in `src/data/models.ts`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
+  DEFAULT_VALUE,
   FAMILY_ALIASES,
   familyOf,
   IGNORED_IN_LISTS,
@@ -48,7 +49,7 @@ function stringEntries(value: ValueNode | undefined) {
 
 /** True when `value` names a model: a string other than `default`. */
 function namesModel(value: ValueNode | undefined): boolean {
-  return value?.type === 'String' && value.value !== 'default'
+  return value?.type === 'String' && value.value !== DEFAULT_VALUE
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> = {
@@ -121,7 +122,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           const keys = NAMING_KEYS.filter((key) => {
             const value = top(key)
             return value?.type === 'Array'
-              ? stringEntries(value).some(({ text }) => text !== 'default')
+              ? stringEntries(value).some(({ text }) => text !== DEFAULT_VALUE)
               : namesModel(value)
           })
           if (keys.length > 0) {

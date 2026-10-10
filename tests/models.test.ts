@@ -5,7 +5,6 @@
 import { describe, expect, it } from 'vitest'
 import {
   ADVISOR_ALIASES,
-  BASE_ALIASES,
   DEFAULT_VALUE,
   FAMILY_ALIASES,
   familyOf,
@@ -18,9 +17,9 @@ import {
 
 describe('the model aliases', () => {
   it('holds the six aliases of the table, and the special value default', () => {
-    expect([...BASE_ALIASES].sort()).toEqual(
-      ['best', 'fable', 'haiku', 'opus', 'opusplan', 'sonnet'].sort(),
-    )
+    for (const alias of ['best', 'fable', 'haiku', 'opus', 'opusplan', 'sonnet']) {
+      expect(isModelAlias(alias), alias).toBe(true)
+    }
     expect(DEFAULT_VALUE).toBe('default')
     expect([...FAMILY_ALIASES].sort()).toEqual(['fable', 'haiku', 'opus', 'sonnet'])
   })

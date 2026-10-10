@@ -13,7 +13,7 @@ export const FAMILY_ALIASES: readonly string[] = ['fable', 'opus', 'sonnet', 'ha
 /** The six aliases of the "Model aliases" table, apart from `default` and the `[1m]` spellings.
  *  `best` is the model that `fable` resolves to, or else the model of `opus`. `opusplan` uses
  *  `opus` in plan mode and `sonnet` after it. */
-export const BASE_ALIASES: readonly string[] = [...FAMILY_ALIASES, 'best', 'opusplan']
+const BASE_ALIASES: readonly string[] = [...FAMILY_ALIASES, 'best', 'opusplan']
 
 /** The value that clears a model override. The table says it is "not itself a model alias", yet
  *  `model` and `fallbackModel` accept it ("`default` expands to the default model"). */
