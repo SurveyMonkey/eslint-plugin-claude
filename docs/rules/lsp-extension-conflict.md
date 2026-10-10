@@ -26,7 +26,7 @@ when the servers come from one plugin or from two plugins.[^components] Claude C
 warning `LSP server "<name>" is not used for <ext> files` in the `/plugin` **Errors** tab.[^components]
 
 The rule lints the marketplace file of a repository. For each entry with a relative `source`, it
-reads the plugin at that path. The path must resolve inside the repository. A plugin with no
+reads the plugin at that path. The path must resolve inside the directory of the marketplace. A plugin with no
 manifest still counts, and the rule reads its `.lsp.json`.
 
 Then it reads the servers of the plugin. These are in `.lsp.json` at the plugin root, in each
@@ -46,12 +46,15 @@ The rule reads only the files that it can see (ADR 001, Decision 14). It adds no
 
 - An entry with a source that is not a relative path, such as a GitHub or npm source.
 - A plugin directory that is not there, that is a dangling link, or that leads out of the
-  repository.
+  directory of the marketplace.
 - A server file that is not there, does not parse, or cannot be read.
+- A `.lsp.json` with an invalid entry. Claude Code skips the whole file,[^components] and
+  [`lsp-json-schema`](lsp-json-schema.md) reports the fault. The docs name no such rule for a
+  file that `lspServers` names, so the rule counts the servers of that file as they are.
 
 The rule does not read the `lspServers` of the marketplace entry itself. It does not read a plugin
-that no marketplace lists. Two entries that resolve to one directory count as one plugin. The match of an
-extension is exact, with the letter case as written.
+that no marketplace lists. Two entries that resolve to one directory count as one plugin. The
+match of an extension is exact, with the letter case as written.
 
 [`lsp-duplicate-server-name`](lsp-duplicate-server-name.md) checks the names of the servers of one
 plugin. [`lsp-json-schema`](lsp-json-schema.md) checks the shape of each config.
