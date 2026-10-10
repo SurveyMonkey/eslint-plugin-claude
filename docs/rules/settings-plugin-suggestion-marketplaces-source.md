@@ -52,8 +52,8 @@ and ignores the alias, so the rule does the same.[^aliases]
 
 ### When the rule makes no report
 
-- **`managedSourcesBehavior` is `"merge"` in a file of the source.** Claude Code then applies the
-  other admin sources too, and the repository does not hold them.[^merge]
+- **`managedSourcesBehavior` is `"merge"` in a file of the source.** Other admin sources, such as
+  server-managed settings, can then declare the name. The repository does not hold them.[^merge]
 - **A sibling cannot be read.** This covers a failed read, a link out of the repository, a file
   that does not parse to an object, and a directory that cannot be listed. That file can declare
   the name.

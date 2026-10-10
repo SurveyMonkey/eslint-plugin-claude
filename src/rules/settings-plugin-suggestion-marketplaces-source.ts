@@ -75,8 +75,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'undeclared' }> = 
           return
         }
         const source = [own, ...siblings]
-        // With "merge", Claude Code applies other admin sources too. The repository does not
-        // hold them.
+        // With "merge", other admin sources can declare the name. The repository does not hold
+        // them.
         if (source.some(merges)) {
           return
         }

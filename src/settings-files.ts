@@ -111,10 +111,11 @@ export function readSettings(
  *  is not in the result, because the caller holds its text. Claude Code
  *  ignores a hidden file and a file that does not end in `.json`.
  *
- *  A directory or a file that is not there adds nothing. The result is
- *  `UNREADABLE` when the rule cannot see one part: a read that fails, a path
- *  out of the repository, a file that does not parse to an object, or a
- *  drop-in that vanished after the listing. Such a file can hold any key. */
+ *  A directory or a file that is not there in the repository adds nothing.
+ *  The result is `UNREADABLE` when the rule cannot see one part. These cases
+ *  count: a read that fails, and a path out of the repository. A file that
+ *  does not parse to an object counts too. So does a drop-in that vanished
+ *  after the directory read. Such a file can hold any key. */
 export function readManagedSource(filename: string): Record<string, unknown>[] | Unreadable {
   const self = path.resolve(filename)
   const dir =

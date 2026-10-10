@@ -88,10 +88,11 @@ export function lintMarkdown(name: string, code: string, filename: string) {
   )
 }
 
-/** The messages of the rule `name` for the JSON text `code` at `filename`. The
- *  tests use it where a case needs the files glob of the plugin or a path
- *  that RuleTester does not take, and in `it.fails`, where the rule may be
- *  missing. */
+/** The messages of the rule `name` for the JSON text `code` at `filename`. A test
+ *  uses it where RuleTester does not take the path of the case. A test also
+ *  uses it in `it.fails`, where the rule may be missing. It runs the rule on
+ *  every `*.json` file, so it does not test the `files` globs of the plugin.
+ *  `tests/configs.test.ts` tests them. */
 export function lintJson(name: string, code: string, filename: string) {
   const absolute = path.resolve(filename)
   return new Linter({ cwd: path.parse(absolute).root }).verify(
