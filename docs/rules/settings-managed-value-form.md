@@ -39,8 +39,9 @@ and a file can be the source of a server-managed payload. A value of `1` is righ
 
 The managed settings page says that a Boolean key can hold the string `"true"` or `"false"`. It
 reads as that Boolean, and `/status` shows a notice.[^quoted] `settings-schema` already reports a string where a
-top-level key takes a Boolean, in a managed file too. This rule adds no second report. The
-`sandbox.*` keys are for `sandbox-schema`.
+key of its value table takes a Boolean, in a managed file too. This rule adds no second report.
+The `sandbox.*` keys are for `sandbox-schema`. `syncClaudeAiPlugins` has no type report in a
+managed file.
 
 ### What the rule does not check
 
