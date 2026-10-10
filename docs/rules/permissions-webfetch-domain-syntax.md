@@ -24,7 +24,7 @@ It reads no hidden drop-in, because Claude Code ignores it.
 ## Rule details
 
 `WebFetch` rules use a `domain:` prefix and match against the hostname of the requested URL. The match is
-case-insensitive, supports `*` wildcards, and strips a trailing `.` from the rule and the hostname.[^webfetch] The rule
+case-insensitive, supports `*` wildcards, and strips a `.` at the end from the rule and the hostname.[^webfetch] The rule
 format table of the tools reference gives `WebFetch(domain:example.com)` as the form.[^tools]
 
 The rule reads `WebFetch` rules with a specifier in `allow`, `ask` and `deny`. It makes one report for an entry, for
@@ -39,7 +39,7 @@ the first fault in this order:
 The rule is silent in these cases:
 
 - The host is a hostname or a wildcard in any position: `example.com`, `*.example.com`, `*`, `example.*`. The rule does not
-  check where the wildcard stands. Upper case, a trailing `.`, an IPv4 address, a bracketed IPv6 address such as
+  check where the wildcard stands. Upper case, a `.` at the end, an IPv4 address, a bracketed IPv6 address such as
   `[::1]`, and a name with no dot are valid.
 - The rule has no specifier. A bare `WebFetch` rule is valid.[^every]
 - The rule is a parameter rule in `deny` or `ask` whose name is not `domain`, as in `WebFetch(prompt:*)`. A parameter
