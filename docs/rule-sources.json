@@ -484,6 +484,11 @@
       "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4"
     },
     {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PermissionRequest input",
+      "hash": "b0505ae5faf5da99d8b50f9038e66578972e4a67ae6642dc09d110824e68fd5a"
+    },
+    {
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Check which tools are available",
       "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be"

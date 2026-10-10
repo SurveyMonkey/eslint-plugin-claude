@@ -74,8 +74,8 @@ describe(`${name}: the case of a tool name`, () => {
 })
 
 describe(`${name}: EndConversation`, () => {
-  it('reports it on PreToolUse and PostToolUse, which skip that tool', () => {
-    for (const event of ['PreToolUse', 'PostToolUse']) {
+  it('reports it on PreToolUse, PostToolUse and PermissionRequest, which skip that tool', () => {
+    for (const event of ['PreToolUse', 'PostToolUse', 'PermissionRequest']) {
       expect(ids(event, 'EndConversation'), event).toEqual(['endConversation'])
       expect(ids(event, 'Bash|EndConversation'), event).toEqual(['endConversation'])
     }
@@ -88,13 +88,13 @@ describe(`${name}: EndConversation`, () => {
   })
 
   it('is silent on the other tool events, where the docs do not say', () => {
-    for (const event of ['PostToolUseFailure', 'PermissionRequest', 'PermissionDenied']) {
+    for (const event of ['PostToolUseFailure', 'PermissionDenied']) {
       expect(ids(event, 'EndConversation'), event).toEqual([])
     }
   })
 
   it('reports a case variant as EndConversation where the event skips it', () => {
-    // A fix of the case alone still never matches on these two events.
+    // A fix of the case alone still never matches on these events.
     expect(ids('PreToolUse', 'endconversation')).toEqual(['endConversation'])
     expect(ids('PostToolUse', 'ENDCONVERSATION')).toEqual(['endConversation'])
     expect(message('PreToolUse', 'endconversation')).toBe(
@@ -103,7 +103,7 @@ describe(`${name}: EndConversation`, () => {
   })
 
   it('reports a case variant on the other tool events as a case variant', () => {
-    expect(ids('PermissionRequest', 'endconversation')).toEqual(['caseVariant'])
+    expect(ids('PostToolUseFailure', 'endconversation')).toEqual(['caseVariant'])
   })
 
   it('reads a group that has no hooks array', () => {
