@@ -64,6 +64,8 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
 import hooksScriptExists from './rules/hooks-script-exists.ts'
+import lspJsonSchema from './rules/lsp-json-schema.ts'
+import lspTransportSocket from './rules/lsp-transport-socket.ts'
 import marketplaceArchiveSha256 from './rules/marketplace-archive-sha256.ts'
 import marketplaceCommandLinkMode from './rules/marketplace-command-link-mode.ts'
 import marketplaceCommandSource from './rules/marketplace-command-source.ts'
@@ -89,17 +91,20 @@ import marketplaceSelfHostedRootSource from './rules/marketplace-self-hosted-roo
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import mcpAllowlistServernameDead from './rules/mcp-allowlist-servername-dead.ts'
 import mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
 import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
 import mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
 import mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
 import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
+import mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
 import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
 import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
 import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
 import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
 import mcpJsonLocation from './rules/mcp-json-location.ts'
 import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
+import mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
 import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
@@ -497,6 +502,11 @@ const modules = [
   mcpApprovalCommitted,
   mcpDisableConnectorsFalse,
   mcpPolicyEntrySchema,
+  lspJsonSchema,
+  lspTransportSocket,
+  mcpAllowlistServernameDead,
+  mcpEnvClientSecret,
+  mcpManagedServersEntry,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -766,6 +776,11 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-approval-committed': 'error',
   'mcp-disable-connectors-false': 'error',
   'mcp-policy-entry-schema': 'error',
+  'lsp-json-schema': 'error',
+  'lsp-transport-socket': 'error',
+  'mcp-allowlist-servername-dead': 'error',
+  'mcp-env-client-secret': 'error',
+  'mcp-managed-servers-entry': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
