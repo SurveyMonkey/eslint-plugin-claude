@@ -90,8 +90,10 @@ confidence value, so a finding reports `|2p - 1|` as its confidence.
 **The inventory is a second source map.** `docs/rules-inventory.md` lists the rule candidates,
 built and not built. Each rule row cites footnotes, and each footnote names a page and a
 heading. The classifier reads the rule tables of each `###` section of "Rules by group". A
-table in a `####` subsection belongs to its `###` section. The classifier tracks a changed,
-added or removed block when an inventory footnote cites it. A heading of
+table in a `####` subsection belongs to its `###` section. A footnote finds its block by the
+anchor of its link first, because the docs IDs are not always the slug of the heading. When no
+block on the page or in the snapshot has that ID, the heading finds the block. The classifier
+tracks a changed, added or removed block when an inventory footnote cites it. A heading of
 `docs/rule-sources.json` that cites the block stops this. A heading that cites the whole page
 does not. The output lists each tracked block in `tracked`, with the rule rows that cite it in
 each section. A tracked block gets the same request and the same findings as before. Decision 8
@@ -246,8 +248,9 @@ word joiner, so the text makes no mention and no marker.
 block in a section with no group issue stops the step before it writes. While a group issue is
 open, a run posts at most one comment on it. The comment names each new tracked block and the
 rows of that section that cite it. It quotes the block text as an issue body does, but with no
-Before and After parts. It shows a diff, the new text, or the old text of a removed block. When
-no text is available, a note says so. Each block has the hidden marker
+Before and After parts. It shows a diff, or the old and new texts when one has more than 1,000
+lines. Or it shows the new text only, or the old text of a removed block. When no text is
+available, a note says so. Each block has the hidden marker
 `<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`, with the key of Decision 5. The prefix is
 not `docs-watch:`, so the issue dedupe does not read it. The step reads the comments of each open
 group issue. It does not post a block again while its marker is in a comment.
@@ -278,8 +281,8 @@ list twice. A group issue has a state that is not `open` or `closed`.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
 - `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed.
 - When all group issues of a tracked block are closed, each finding of the block opens its issue.
-  A tracked block with no finding gets nothing: a removed block, or a block with a low Jev
-  answer.
+  A tracked block with no finding gets nothing: a removed block that no whole-page rule cites,
+  or a block with a low Jev answer.
 - While a group issue is open, a finding of a tracked block that names no rule opens no issue.
   The finding stays in the classifier output. A person reads the comment when they build the row.
   A finding that names a whole-page rule still opens its issue.

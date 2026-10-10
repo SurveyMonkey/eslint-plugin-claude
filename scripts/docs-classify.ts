@@ -16,11 +16,13 @@
 // docs/rules-inventory.md is a second source map. Its footnotes cite docs
 // headings, and the rule rows of each `###` section of "Rules by group" cite
 // its footnotes. A changed, added or removed block is tracked when an
-// inventory footnote cites it. A heading of docs/rule-sources.json other than
-// the page title stops this. Each tracked block is in `tracked` as { page,
-// heading, blockId, change, oldHash, newHash, oldText, newText, sections },
-// with the rule rows that cite it in each section. The Jev requests do not change: a tracked
-// block gets the same request and the same findings as before.
+// inventory footnote cites it. A footnote finds its block by the anchor of
+// its link first, then by its heading. A heading of docs/rule-sources.json
+// that cites the block stops this, unless that heading is the page title.
+// Each tracked block is in `tracked` as { page, heading, blockId, change,
+// oldHash, newHash, oldText, newText, sections }, with the rule rows that
+// cite it in each section. The Jev requests do not change: a tracked block
+// gets the same request and the same findings as before.
 //
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
@@ -95,7 +97,8 @@ export type Result = {
 // The inventory rows that cite a block, by the `###` section of each row.
 export type Rows = { section: string; rules: string[] }[]
 
-// A changed, added or removed block that only the inventory cites.
+// A changed, added or removed block that an inventory row cites, and that no
+// mapped heading cites other than the page title.
 export type Tracked = {
   page: string
   heading: string

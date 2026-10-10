@@ -1,6 +1,6 @@
 // Opens one GitHub issue for each block change in the findings of
-// scripts/docs-classify.ts. Posts a comment on a group issue for each block
-// that an inventory row tracks.
+// scripts/docs-classify.ts. Posts at most one comment on each open group
+// issue, for the new blocks that inventory rows cite.
 //
 // Usage: node scripts/docs-issues.ts <findings.json> [--dry-run]
 //   [--repo owner/name] [--max n]
@@ -23,11 +23,12 @@
 // the diff, two collapsed sections quote the full old text and the full new
 // text. Past MAX_DIFF_LINES lines, the body quotes the two texts with no diff.
 //
-// The findings file also has a `tracked` list: the blocks that only an
-// inventory row cites. Each section of those rows has a group issue
-// (GROUP_ISSUES). The step reads the state and the comments of each group
-// issue. While a group issue is open, it gets at most one comment for each
-// run. The comment shows each new block, the rows that cite it, and its text.
+// The findings file also has a `tracked` list: the blocks that an inventory
+// row cites, and that no map heading cites other than the page title. Each
+// section of those rows has a group issue (GROUP_ISSUES). The step reads the
+// state and the comments of each group issue. While a group issue is open,
+// it gets at most one comment for each run. The comment shows each new
+// block, the rows that cite it, and its text.
 // Each block in the comment has a hidden marker
 // <!-- docs-watch-tracked:<page>#<blockId>:<hash> -->, with the key of an
 // issue marker. The step does not post a block again while its marker is in
