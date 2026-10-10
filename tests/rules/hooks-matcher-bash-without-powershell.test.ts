@@ -2,7 +2,6 @@
 // at all. A hook that matches `Bash` only never fires there. The hooks reference says to match
 // `Bash|PowerShell` (https://code.claude.com/docs/en/hooks#powershell).
 import { describe, expect, it } from 'vitest'
-import { TOOL_EVENTS } from '../../src/data/hook-events.ts'
 import {
   command,
   FILES,
@@ -16,6 +15,13 @@ import {
 import { lintJson } from '../rule-tester.test-support.ts'
 
 const name = 'hooks-matcher-bash-without-powershell'
+const TOOL_EVENTS = [
+  'PreToolUse',
+  'PostToolUse',
+  'PostToolUseFailure',
+  'PermissionRequest',
+  'PermissionDenied',
+]
 const ids = (event: string, matcher: unknown, file = FILES.project) =>
   jsonIds(name, settings(hooks(event, [command()], matcher)), file)
 
@@ -64,6 +70,14 @@ describe(`${name}: a matcher that names Bash`, () => {
     }
   })
 
+  it('tests a regular expression on the name without anchors, and with case', () => {
+    // Claude Code does not anchor the expression: `ash.*` selects Bash, and `Shell.*` selects PowerShell.
+    expect(ids('PreToolUse', 'ash.*')).toEqual(['bashOnly'])
+    expect(ids('PreToolUse', 'Bash|Shell.*')).toEqual([])
+    expect(ids('PreToolUse', 'Bash|^powershell$')).toEqual(['bashOnly'])
+    expect(ids('PreToolUse', '^bash$')).toEqual([])
+  })
+
   it('is silent for a matcher that does not select Bash', () => {
     for (const matcher of ['Edit|Write', 'PowerShell', 'bash', 'Bashful', '^Edit$', 'Notebook.*']) {
       expect(ids('PreToolUse', matcher), matcher).toEqual([])
@@ -96,7 +110,7 @@ describe(`${name}: a matcher that names Bash`, () => {
       FILES.project,
     )
     expect(message?.message).toBe(
-      'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and this hook never fires there. Write "Bash|PowerShell".',
+      'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and this hook can fire on no Bash call there. Write "Bash|PowerShell".',
     )
   })
 

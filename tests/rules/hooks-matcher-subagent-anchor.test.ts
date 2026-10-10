@@ -41,6 +41,16 @@ describe(`${name}: a plugin-scoped name`, () => {
     expect(ids('SubagentStart', '^(a:b|c:d)$')).toEqual([])
   })
 
+  it('reports a list whose anchors each bind one side only', () => {
+    expect(ids('SubagentStart', '^a:b|c:d$')).toEqual(['unanchored'])
+  })
+
+  it('is silent for a matcher that is no valid regular expression, or whose colon opens a group', () => {
+    for (const matcher of ['plugin:(', 'a:[', '(?:Explore|Plan)']) {
+      expect(ids('SubagentStart', matcher), matcher).toEqual([])
+    }
+  })
+
   it('is silent for a name with no colon', () => {
     for (const matcher of ['reviewer', 'my-agent', 'Explore|Plan', undefined, '', '*']) {
       expect(ids('SubagentStart', matcher), String(matcher)).toEqual([])
@@ -76,6 +86,8 @@ describe(`${name}: a plugin-scoped name`, () => {
     expect(message('a:b|c:d')).toContain('"^(a:b|c:d)$"')
     expect(message('^a:b')).toContain('"^a:b$"')
     expect(message('a:b$')).toContain('"^a:b$"')
+    expect(message('^a:b|c:d$')).toContain('"^(a:b|c:d)$"')
+    expect(message('[|]:x')).toContain('"^[|]:x$"')
   })
 
   it('reports at the matcher value', () => {

@@ -1,5 +1,5 @@
 // A matcher value that Claude Code no longer sends (docs/rules/hooks-matcher-deprecated-value.md).
-// `bypass_permissions_disabled` was a SessionEnd reason until v2.1.234. `hooks-matcher-enum` makes no
+// `bypass_permissions_disabled` was a SessionEnd reason. Claude Code removed it in v2.1.234. `hooks-matcher-enum` makes no
 // report for a removed value, so the two rules do not report the same segment.
 import type { Rule } from 'eslint'
 import { REMOVED_MATCHER_VALUES } from '../data/hook-events.ts'

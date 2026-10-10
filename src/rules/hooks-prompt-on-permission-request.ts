@@ -11,13 +11,13 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Use a command or http hook, not a prompt hook, to decide on PermissionRequest',
+      description: 'Use a command hook, not a prompt hook, to decide on PermissionRequest',
       url: docsUrl(name),
     },
     schema: [],
     messages: {
       promptOnPermissionRequest:
-        'A prompt hook on PermissionRequest cannot deny: "ok": false has no effect. Use a command or http hook that returns a decision.',
+        'A prompt hook on PermissionRequest cannot deny: "ok": false has no effect. Use a command hook that returns a decision.',
     },
   },
   create(context) {

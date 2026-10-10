@@ -34,13 +34,14 @@ const rule: Rule.RuleModule = {
     schema: [],
     messages: {
       bashOnly:
-        'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and this hook never fires there. Write "Bash|PowerShell".',
+        'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and this hook can fire on no Bash call there. Write "Bash|PowerShell".',
     },
   },
   create(context) {
     return hooksListener(context, (source) => {
       for (const { event, matcher } of groupsOf(source)) {
-        // An empty matcher and `*` select every tool, and this rule makes no report for them.
+        // An empty matcher selects every tool. `*` is no valid regular expression, so `selects` gives false
+        // for it. This rule makes no report for either.
         if (
           matcher !== undefined &&
           TOOL_EVENTS.includes(event) &&
