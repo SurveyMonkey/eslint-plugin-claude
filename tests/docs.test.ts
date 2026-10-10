@@ -147,6 +147,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-env-credential',
     'settings-env-deprecated-var',
     'settings-env-ignored-var',
+    'settings-env-numeric-spelling',
     'settings-env-prompt-caching-off',
     'settings-env-routing',
     'settings-env-shadowed',
@@ -155,6 +156,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-extra-known-marketplaces-key-matches-name',
     'settings-extra-known-marketplaces-schema',
     'settings-file-size',
+    'settings-footerlinks-pattern',
     'settings-global-only-file',
     'settings-key-scope',
     'settings-known-marketplaces-pattern-anchored',
@@ -163,6 +165,8 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-local-location',
     'settings-local-untracked',
     'settings-managed-file',
+    'settings-managed-value-form',
+    'settings-managed-version-floor',
     'settings-marketplace-headers-helper-https',
     'settings-marketplace-key-alias',
     'settings-marketplace-key-alias-conflict',
@@ -182,6 +186,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-sync-claude-ai-plugins',
     'settings-valid-json',
     'settings-webfetch-preflight-skip',
+    'settings-worktree-sparse-claude-dir',
     'skill-agent-exists',
     'skill-allowed-tools-broad',
     'skill-allowed-tools-ineffective',
@@ -219,6 +224,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-shell-platform',
     'skill-side-effects-manual-only',
     'statusline-script-exists',
+    'statusline-windows-path',
   ])
   for (const [name, rule] of rules) {
     expect(rule.meta?.docs?.url).toBe(docsUrl(name))
