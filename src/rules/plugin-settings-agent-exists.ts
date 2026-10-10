@@ -22,10 +22,8 @@ function fileDecides(plugin: Plugin): boolean {
   if (file === null) {
     return false
   }
-  if (file === UNREADABLE) {
-    return true
-  }
-  const { data } = file
+  // A file that cannot be read has no data, so it decides, as a file that is not an object does.
+  const data = file === UNREADABLE ? undefined : file.data
   return (
     data === null ||
     typeof data !== 'object' ||
