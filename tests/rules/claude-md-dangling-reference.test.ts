@@ -94,6 +94,8 @@ describe(`${RULE}: paths`, () => {
       'YYYY/MM/DD',
       'github.com/org/repo',
       'release/v1.2',
+      'release/1.x',
+      'node/20.x',
       '/etc/hosts.conf',
       '/usr/local/bin',
       '~/notes/a.md',

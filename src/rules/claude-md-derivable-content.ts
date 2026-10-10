@@ -14,12 +14,14 @@ import { classifyMemoryFile } from '../memory-files.ts'
 const name = 'claude-md-derivable-content' as const
 
 // A tree line has a branch mark: the box characters `├─` and `└─`, or the plain forms `|--`,
-// `+--`, `\--` and "`--". A plain mark starts the line, after any indent, and a name follows it.
-// So a table border such as `+----+` is not a branch.
-const BRANCH = /(?:[├└]─|^[\s│|]*[|+\\`]--[ \t]+\S)/
+// `+--`, `\--` and "`--", and the Windows `tree` forms `+---` and `\---`. A plain mark starts the
+// line, after any indent or tree bars, and a name follows it. So a table border such as `+----+`
+// is not a branch.
+const BRANCH = /(?:[├└]─|^[\s│|]*[|+\\`](?:--[ \t]+\S|-{3}[ \t]*[^\s|+-]))/
 const BRANCHES = 3
 
-// The key `dependencies` or `devDependencies` of a manifest, or a TOML table of dependencies.
+// A double-quoted key `dependencies` or `devDependencies` of a JSON manifest, or a TOML table of
+// dependencies.
 const DEPENDENCY_KEY =
   /^\s*(?:"(?:dev|peer|optional)?[dD]ependencies"\s*:|\[(?:[\w.-]*\.)?(?:dev-)?dependencies\])/m
 // A pinned version, as in `requirements.txt`.

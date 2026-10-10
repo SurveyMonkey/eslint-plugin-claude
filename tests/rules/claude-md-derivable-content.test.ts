@@ -37,6 +37,10 @@ describe(RULE, () => {
   it('reports a tree with plain characters, in a block with or without a language', () => {
     expect(ids(lint('```text\nsrc\n|-- a.ts\n|-- b.ts\n`-- c.ts\n```\n'))).toEqual(['tree'])
     expect(ids(lint('~~~\nsrc\n+-- a.ts\n+-- b.ts\n\\-- c.ts\n~~~\n'))).toEqual(['tree'])
+    expect(ids(lint('```\nC:.\n+---src\n|   +---a\n|   \\---b\n\\---docs\n```\n'))).toEqual([
+      'tree',
+    ])
+    expect(ids(lint('```\nsrc\n|   |-- a\n|   |-- b\n|   `-- c\n```\n'))).toEqual(['tree'])
     expect(ids(lint('    src\n    ├── a.ts\n    ├── b.ts\n    └── c.ts\n'))).toEqual(['tree'])
   })
 
@@ -50,6 +54,8 @@ describe(RULE, () => {
     expect(
       lint('```\n+----+----+\n| id | n  |\n+----+----+\n| 1  | a  |\n+----+----+\n```\n'),
     ).toEqual([])
+    expect(lint('```\nx |-- a\nx |-- b\nx |-- c\n```\n')).toEqual([])
+    expect(lint('```\n+----+\n+----+\n+----+\n```\n')).toEqual([])
     expect(lint('```diff\n+--a\n+--b\n+--c\n```\n')).toEqual([])
     expect(lint('```markdown\nUse `--a` here\nUse `--b` here\nUse `--c` here\n```\n')).toEqual([])
   })
