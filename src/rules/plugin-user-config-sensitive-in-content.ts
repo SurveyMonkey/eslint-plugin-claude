@@ -27,9 +27,10 @@ function pluginRootOf(file: string): string | undefined {
 
 /** True when `options`, the `userConfig` value of a manifest, declares `key` with `sensitive: true`. */
 function isSensitive(options: unknown, key: string): boolean {
-  if (options === null || typeof options !== 'object' || !Object.hasOwn(options, key)) {
+  if (options === null || typeof options !== 'object') {
     return false
   }
+  // A key of the prototype is a function or an object with no `sensitive` member.
   const option = (options as Record<string, unknown>)[key]
   return (
     option !== null &&
