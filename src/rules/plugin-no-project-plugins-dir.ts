@@ -41,7 +41,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'projectPlugins' }> = {
     schema: [],
     messages: {
       projectPlugins:
-        'This plugin is under `.claude/plugins/`. Claude Code does not scan that directory, so the plugin does not load from there. Move it to `.claude/skills/<name>/`, or enable it through `enabledPlugins`.',
+        'This plugin is under `.claude/plugins/`. Claude Code does not scan that directory. A marketplace entry or `--plugin-dir` can still load it. Move it to `.claude/skills/<name>/`, or enable it through `enabledPlugins`.',
     },
   },
   create(context) {

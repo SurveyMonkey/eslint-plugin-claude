@@ -9,9 +9,8 @@
 // `scripts/` is a folder of the plugin author, not a default location.
 
 /** The first part of the default location of each component, in name order:
- *  `skills/`, `commands/`, `agents/`, `hooks/hooks.json`, `.mcp.json`,
- *  `.lsp.json`, `output-styles/`, `workflows/`, `themes/`,
- *  `monitors/monitors.json`, `bin/` and `settings.json`. */
+ *  `.lsp.json`, `.mcp.json`, `agents`, `bin`, `commands`, `hooks`, `monitors`,
+ *  `output-styles`, `settings.json`, `skills`, `themes` and `workflows`. */
 export const PLUGIN_COMPONENT_NAMES: readonly string[] = [
   '.lsp.json',
   '.mcp.json',

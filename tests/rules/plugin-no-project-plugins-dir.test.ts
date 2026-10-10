@@ -15,7 +15,7 @@ const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
 const MESSAGE =
-  'This plugin is under `.claude/plugins/`. Claude Code does not scan that directory, so the plugin does not load from there. Move it to `.claude/skills/<name>/`, or enable it through `enabledPlugins`.'
+  'This plugin is under `.claude/plugins/`. Claude Code does not scan that directory. A marketplace entry or `--plugin-dir` can still load it. Move it to `.claude/skills/<name>/`, or enable it through `enabledPlugins`.'
 const run = (at: string, files: Record<string, string> = {}) => {
   const { dir, code } = pluginTree({ name: 'p' }, files, at)
   return lint(dir, code)

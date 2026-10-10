@@ -34,7 +34,8 @@ The rule makes no report in these cases:
 
 - The path is the default `skills/` directory. The rule [`skill-file-layout`](skill-file-layout.md)
   reports a loose file there, so a second report would repeat it. The rule compares the spelling of
-  the path, so a path that reaches `skills/` through a link is a default directory too.
+  the path. A `skills` that is itself a link is a default directory too. Another spelling that leads
+  to `skills/` is not.
 - The path is the plugin root, as `.` or `./`. The root holds files that are no skills, such as a
   README.
 - The directory holds a `SKILL.md` itself. It is one skill, and its other files are supporting
@@ -50,8 +51,8 @@ The rule makes no report in these cases:
 The rule checks only the files directly in the directory. It does not look for a `skill.md` of the
 wrong letter case, which `skill-file-layout` does for the default directory.
 
-`claude plugin validate` reports a `skills` entry that names a file.[^validate] It does not report a
-loose file in a listed directory.
+`claude plugin validate` reports a `skills` entry that names a file.[^validate] The cited docs list
+no `claude plugin validate` message for a loose file in a listed directory.
 
 Fail: `"skills": ["./extra-skills/"]` with `extra-skills/deploy.md`.
 
