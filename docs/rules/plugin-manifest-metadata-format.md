@@ -56,7 +56,7 @@ The rule makes no report in these cases:
   manifest can fail to parse.
 
 The rule does not check `homepage`. The docs say that a `homepage` that is not a URL makes the
-plugin fail to load, and `claude plugin validate` reports it as an error.[^fields] The rule
+plugin fail to load.[^fields] The rule
 `plugin-manifest-publish-metadata` checks that `homepage` and `repository` are set.
 
 A URL, to this rule, is any text that the WHATWG URL parser accepts with no base. So

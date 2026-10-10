@@ -22,8 +22,8 @@ The rule makes no report until the option `minVersion` is set.
 
 ## Rule details
 
-Some `plugin.json` features need a recent Claude Code. An older version fails to validate or load
-the manifest. `claude plugin validate` checks the manifest against the version that runs it, so it
+Some `plugin.json` features need a recent Claude Code. An older version can reject or ignore a
+feature. `claude plugin validate` checks the manifest against the version that runs it, so it
 cannot tell which older version fails. The rule reports each of these features when `minVersion`
 is older than the version that added it:
 
