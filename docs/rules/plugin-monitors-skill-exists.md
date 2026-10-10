@@ -33,12 +33,18 @@ The rule lists the skills of the plugin from these places:
 
 - Each folder of `skills/` that has a `SKILL.md`. The name of the folder counts, and so does the
   `name` in the frontmatter of the file.
+- A `SKILL.md` at the plugin root. The docs say it loads as one skill when the plugin has no
+  `skills/` folder and no `skills` key.[^skills] The rule counts it in every plugin, so it can
+  report less than Claude Code allows, and never more. The name of the plugin and the `name` in the
+  frontmatter count.
 - Each path in the `skills` key of `plugin.json`. A path can name a folder of skills, or one skill
   folder. A path of `./` is the plugin root. The name of the plugin counts for a skill at the
   plugin root.
 - Each file in `commands/`, at any depth. The docs say that a command runs by name like a skill.[^commands]
   A command in a subfolder has the folders in front of its name, as in `ops:deploy`.
-- Each key of an object in the `commands` key of `plugin.json`.
+- Each key of an object in the `commands` key of `plugin.json`. Such a key replaces the `commands/`
+  folder, but the rule still counts the files of the folder, so it can report less than Claude Code
+  allows.
 
 A name can have the name of the plugin in front, as in `plugin:skill`. The rule accepts it.
 
@@ -77,4 +83,5 @@ None.
 ## Sources
 
 [^monitors]: [Plugin manifest reference: monitors](https://code.claude.com/docs/en/plugins/manifest-reference#monitors)
+[^skills]: [Add components to a plugin: Skills](https://code.claude.com/docs/en/plugins/components#skills)
 [^commands]: [Add components to a plugin: Commands](https://code.claude.com/docs/en/plugins/components#commands)
