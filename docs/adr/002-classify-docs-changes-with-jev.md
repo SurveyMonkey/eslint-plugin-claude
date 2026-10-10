@@ -32,7 +32,8 @@ Rows of the Hooks section of `docs/rules-inventory.md` cite each of these blocks
 437 on 2026-10-10).
 
 **One docs change can touch many blocks of one page.** The `onFailure` field of Claude Code
-v2.1.295 changed five blocks of the hooks page, and the job opened five issues (#121 to #125).
+v2.1.295 changed four blocks of the hooks page and added one. The job opened five issues (#121 to
+#125).
 Each body quotes the `onFailure` text. A person read all five to find one change. No rule cited
 any of the five blocks.
 
@@ -337,7 +338,7 @@ included.
 more gets one digest for each 20 blocks. A part of one block gets the issue of that block. Each
 fence in a section is cut at 280 characters (`MAX_DIGEST_QUOTE`). A fence of a text of
 backticks takes three times its text, and a section can have two fences. The worst body in the
-tests, 20 such sections with a line of inventory rows each, takes 57,813 characters. The step
+tests, 20 such sections with a line of inventory rows each, takes 57,826 characters. The step
 cuts the section text so that the markers, the sections and the last part take
 at most 60,000 characters. A note of the cut follows, so the body stays under 65,536. A cut
 never removes a marker. The step stops before it writes when the markers of a digest do not fit
