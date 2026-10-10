@@ -696,6 +696,8 @@ const PLUGIN_RULES: {
     language: 'markdown/gfm',
     files: ['**/SKILL.md', '**/agents/**/*.md'],
   },
+  // The rules with the option `minVersion` give no report in the config run, which sets no option.
+  { name: 'plugin-manifest-no-bom', files: ['**/.claude-plugin/plugin.json'], severity: 'warn' },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
