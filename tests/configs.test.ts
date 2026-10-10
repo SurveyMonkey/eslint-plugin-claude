@@ -1100,9 +1100,8 @@ const EXPECTED = [
   'plugins/q/.lsp.json: claude/lsp-transport-socket@2',
   'plugins/lx/.claude-plugin/plugin.json: claude/lsp-transport-socket@2',
   // The warn rules of the server names, transport and headers. The project file holds every
-  // fault, and a reserved name gets no format report. `mcp-headershelper-committed` reports both
-  // helpers. The plugin file gets the rules that read a plugin. The three paths under `.claude/`
-  // get none.
+  // fault. `mcp-headershelper-committed` reports both helpers. The plugin file gets the rules
+  // that read a plugin. The three paths under `.claude/` get none.
   'packages/mc/.mcp.json: claude/mcp-headershelper-committed@1',
   'packages/mc/.mcp.json: claude/mcp-headershelper-committed@1',
   ...[

@@ -2,8 +2,8 @@
 // (docs/rules/mcp-stdio-relative-path.md). Claude Code starts the server in the directory where the
 // user started it, not in the directory of `.mcp.json`. So `./server.js` fails when the user
 // starts Claude Code in a subdirectory. The rule reports a string that starts with `./` or `../`.
-// It reads each `args` item as one word, as the file lists them, because this ESLint plugin has
-// no shell word splitter. A `${...}` start is silent. A plugin file is out of scope.
+// It reads each `args` item as one word, as the file lists them. This ESLint plugin has no shell
+// word splitter. A `${...}` start is silent. A plugin file is out of scope.
 // `mcp-project-dir-default` owns a `${CLAUDE_PROJECT_DIR}` with no default.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'

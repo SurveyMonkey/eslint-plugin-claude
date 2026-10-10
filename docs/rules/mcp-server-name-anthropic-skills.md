@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-server-name-anthropic-skills, which reports an MCP server named anthropic-skills, because Claude Code reserves that name for skills synced from claude.ai and lists no prompt of the server as a command.
+description: The ESLint rule claude/mcp-server-name-anthropic-skills reports an MCP server named anthropic-skills. Claude Code reserves that name for skills that it syncs from claude.ai. It lists no prompt of the server as a command.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -34,15 +34,14 @@ reads these places:
 
 The rule leaves these cases alone:
 
-- Another name, also a name with another letter case or a prefix, such as `my-anthropic-skills`.
+- Another name, such as `Anthropic-Skills` or `my-anthropic-skills`.
 - A settings file. Claude Code does not read `mcpServers` there.
 - The `.mcp.json` at the plugin root, when the rule lints `plugin.json`. The rule reads that file as
   a file of its own, so a server gets one report.
 - A path under `.claude/`, which `mcp-json-location` reports.
 
-The name is not a name that Claude Code skips at load. So `mcp-server-name-reserved` does not list
-it, and the two rules never report one server. The name passes the pattern of
-`mcp-server-name-format`.
+Claude Code does not skip this name at load. So the default list of `mcp-server-name-reserved` does
+not hold it. The name also passes the pattern of `mcp-server-name-format`.
 
 Of two keys with one name, the last one counts.
 

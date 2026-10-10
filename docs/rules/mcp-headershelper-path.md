@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-headershelper-path, which reports a headersHelper that starts with a relative path, because Claude Code runs the helper in a directory that depends on where the server is configured.
+description: The ESLint rule claude/mcp-headershelper-path reports a headersHelper that starts with a relative path. Claude Code picks the directory of the helper from the configuration that declares the server.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -20,13 +20,13 @@ Give a `headersHelper` an absolute path, or a command on `PATH`.
 
 ## Rule details
 
-Claude Code runs a `headersHelper` in a shell. The directory of the shell depends on where the
-server is configured. A plugin uses the plugin root. A project `.mcp.json` uses the project
+Claude Code runs a `headersHelper` in a shell. The directory of the shell depends on the
+configuration that declares the server. A plugin uses the plugin root. A project `.mcp.json` uses the project
 directory. Other places use the primary working directory or the configuration directory.[^where]
 The docs say to give the script as an absolute path or to put it on `PATH`.[^headers]
 
-The rule reads the first word of the command, after any `NAME=value` words. It reports a word that has a `/` and does not start
-with `/`, `$` or `~`. So `./h.sh`, `../h.sh` and `scripts/h.sh` fail. The report is on the
+The rule reads the first word of the command, after any `NAME=value` words. It reports a word that
+has a `/` and does not start with `/`, `$` or `~`. So `./h.sh`, `../h.sh` and `scripts/h.sh` fail. The report is on the
 `headersHelper` string. It reads these places:
 
 - A `.mcp.json`, in a project and at the root of a plugin. A project file needs the `mcpServers`
@@ -38,7 +38,8 @@ The rule leaves these cases alone:
 
 - An absolute path, and a bare command such as `get-headers`.
 - A first word that starts with `$` or `~`, such as `${CLAUDE_PLUGIN_ROOT}/h.sh`, `$HOME/h.sh` and
-  `~/h.sh`. Claude Code or the shell expands them to a path that does not depend on the directory.
+  `~/h.sh`. Claude Code or the shell expands most of them to an absolute path. The rule does not check
+  the expansion, so `${CLAUDE_PROJECT_DIR:-.}/h.sh` is also silent.
 - An inline command such as `echo '{...}'`. The first word is `echo`.
 - A relative path that is not the first word, such as `bash ./h.sh`. The rule does not parse the shell.
 - A `headersHelper` that is not a string.

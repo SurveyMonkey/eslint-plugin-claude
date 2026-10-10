@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-stdio-relative-path, which reports a ./ or ../ path in the command or args of a project .mcp.json server, because it resolves against the directory where the user starts Claude Code.
+description: The ESLint rule claude/mcp-stdio-relative-path reports a ./ or ../ path in the command or args of a project .mcp.json server. Such a path resolves against the directory where the user starts Claude Code.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -21,7 +21,7 @@ Do not use a `./` or `../` path in the `command` or `args` of a project MCP serv
 ## Rule details
 
 A relative file path in `command` or `args` resolves against the directory where the user started
-Claude Code, not against the directory of `.mcp.json`. A server that uses one fails to start when a
+Claude Code. It does not resolve against the directory of `.mcp.json`. A server that uses one fails to start when a
 user starts Claude Code in a subdirectory.[^debug] Claude Code sets `CLAUDE_PROJECT_DIR` in the
 environment of the server, so the server can find project files from that variable.[^stdio]
 
@@ -39,13 +39,13 @@ The rule leaves these cases alone:
 - A value that is not a string, and an `args` value that is not a list.
 - A path under `.claude/`, which `mcp-json-location` reports.
 
-The docs for channels use `"args": ["./webhook.ts"]` in a project `.mcp.json`, for a server that
-the user starts from the project directory.[^channels] The debug guide names this form as a
+The docs for channels use `"args": ["./webhook.ts"]` in a project `.mcp.json`. In that example,
+`webhook.ts` is in the same directory as `.mcp.json`.[^channels] The debug guide names this form as a
 frequent cause of a server that fails to start. The rule follows the debug guide. A team that always
 starts Claude Code from one directory can turn the rule off.
 
-The rule `mcp-project-dir-default` reports `${CLAUDE_PROJECT_DIR}` with no default. This rule reports
-the relative path itself. A string cannot fail both rules.
+The rule `mcp-project-dir-default` reports `${CLAUDE_PROJECT_DIR}` with no default. This rule
+reports the relative start of a string. The two rules check different parts of a string.
 
 Fail:
 

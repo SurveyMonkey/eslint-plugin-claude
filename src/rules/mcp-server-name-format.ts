@@ -1,8 +1,8 @@
 // A server name that `claude mcp` and the Claude Desktop import reject
 // (docs/rules/mcp-server-name-format.md). The name has letters, numbers, hyphens and
-// underscores only. The tool name of a plugin server replaces each other character with `_`. The rule skips a
-// reserved name in a `.mcp.json`, which `mcp-server-name-reserved` reports. It reads a `.mcp.json`
-// and the servers that a plugin manifest declares.
+// underscores only. The tool name of a plugin server replaces each other character with `_`.
+// The rule skips a reserved name in a `.mcp.json`, which `mcp-server-name-reserved` reports. It
+// reads a `.mcp.json` and the servers that a plugin manifest declares.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { RESERVED_MCP_SERVER_NAMES } from '../data/mcp-reserved-names.ts'

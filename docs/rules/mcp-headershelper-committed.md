@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-headershelper-committed, which reports each headersHelper in a committed project .mcp.json, because it is an arbitrary shell command that runs once a user trusts the folder.
+description: The ESLint rule claude/mcp-headershelper-committed reports each headersHelper in a committed project .mcp.json. The helper is an arbitrary shell command that runs once a user trusts the folder.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -21,9 +21,9 @@ Check each `headersHelper` in a committed project `.mcp.json`.
 ## Rule details
 
 Claude Code runs a `headersHelper` as an arbitrary shell command. For a server in a project
-`.mcp.json`, it runs the helper after the user accepts the trust dialog for the project
-directory.[^trust] So a repository that commits a `headersHelper` supplies a command that runs on
-the machine of each user who trusts the folder. A review of the repository should see it.
+`.mcp.json`, it runs the helper only after the user accepts the trust dialog.[^trust]
+So a repository that commits a `headersHelper` supplies a command. That command runs on the machine
+of each user who trusts the folder. Each review of the repository must include it.
 
 The rule reports each server that has a `headersHelper` string. The report is on the value. It
 reads the project `.mcp.json` only. It cannot know whether git tracks the file, so it treats each
@@ -31,13 +31,14 @@ project `.mcp.json` as a committed file.
 
 The rule leaves these cases alone:
 
-- A plugin `.mcp.json`, and the servers in `plugin.json`. A user installs a plugin on purpose, and
-  the docs name the project `.mcp.json` and the local scope for the trust rule.
+- A plugin `.mcp.json`, and the servers in `plugin.json`. A user installs a plugin on purpose. The
+  docs name the project `.mcp.json` and the local scope for the trust rule.
 - A `headersHelper` that is not a string.
 - A path under `.claude/`, which `mcp-json-location` reports.
 
-The rule `mcp-headershelper-path` checks the path of a helper, and `mcp-headershelper-credential-env`
-checks the variables that it reads. Each reports on its own question.
+The rule `mcp-headershelper-path` checks the path of a helper. The rule
+`mcp-headershelper-credential-env` checks the variables that it reads. Each rule answers a
+different question.
 
 Of two `headersHelper` members in one entry, the last one counts.
 

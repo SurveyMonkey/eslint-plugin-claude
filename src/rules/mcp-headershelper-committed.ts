@@ -2,7 +2,7 @@
 // value is an arbitrary shell command. Claude Code runs it after a user accepts the trust dialog
 // for the project directory. So a committed file that holds one runs a command that the
 // repository supplies. The rule reads the project file only. A plugin is code that a user
-// installs on purpose, and the docs name the project `.mcp.json` for the trust rule.
+// installs on purpose. The docs name the project `.mcp.json` for the trust rule.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
