@@ -48,8 +48,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'specifier' | 'both' }> = {
             context.report({ loc, messageId: 'specifier', data: { entry: text, tool } })
           }
         }
+        // `Task` is the old name of `Agent`, and Claude Code still reads it.
+        const canonical = (tool: string) => (tool === 'Task' ? 'Agent' : tool)
         for (const { loc, tool } of toolsOf(fm, node.value, 'tools')) {
-          if (denied.some((entry) => entry.tool === tool)) {
+          if (denied.some((entry) => canonical(entry.tool) === canonical(tool))) {
             context.report({ loc, messageId: 'both', data: { tool } })
           }
         }
