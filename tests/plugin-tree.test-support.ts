@@ -49,3 +49,21 @@ export function lintPlugin(name: string, dir: string, code: string) {
     { filename: path.join(dir, '.claude-plugin', 'plugin.json') },
   )
 }
+
+/** The messages of the rule `name` for the text `code` of `filename`, with the
+ *  rule set on `files`. A rule with a few file types gets each one here. The
+ *  rule `name` is the only rule that runs. */
+export function lintPluginFile(name: string, files: string[], filename: string, code: string) {
+  return new Linter({ cwd: path.parse(filename).root }).verify(
+    code,
+    [
+      {
+        files,
+        plugins: { json, claude },
+        language: 'json/json',
+        rules: { [`claude/${name}`]: 'error' },
+      },
+    ],
+    { filename },
+  )
+}
