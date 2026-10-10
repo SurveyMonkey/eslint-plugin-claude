@@ -28,13 +28,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'undeclared' }> = 
     type: 'suggestion',
     docs: {
       description:
-        'Declare the marketplace of each enabled plugin in extraKnownMarketplaces of the committed settings',
+        'Declare the marketplace of each enabled plugin in extraKnownMarketplaces of the project settings',
       url: docsUrl(name),
     },
     schema: [],
     messages: {
       undeclared:
-        'The "enabledPlugins" key "{{key}}" names the marketplace "{{marketplace}}", and no committed settings file declares it in "extraKnownMarketplaces". A teammate who has not added it gets no plugin.',
+        'The "enabledPlugins" key "{{key}}" names the marketplace "{{marketplace}}", and no project settings file declares it in "extraKnownMarketplaces". A teammate who has not added it gets no plugin.',
     },
   },
   create(context) {

@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-enabled-plugins-marketplace-declared, which reports an enabledPlugins key set to true whose marketplace no committed project settings file declares in extraKnownMarketplaces.
+description: The ESLint rule claude/settings-enabled-plugins-marketplace-declared, which reports an enabledPlugins key set to true whose marketplace no project settings file declares in extraKnownMarketplaces.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [12]
@@ -12,7 +12,7 @@ generated:
 
 # `settings-enabled-plugins-marketplace-declared`
 
-Declare the marketplace of each enabled plugin in the committed settings.
+Declare the marketplace of each enabled plugin in the project settings.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -28,7 +28,7 @@ The rule is a heuristic, and it is `off` in `recommended`. A user can add a mark
 that the repository does not hold. The rule cannot see that file. `strict` turns the rule on at
 `warn`.
 
-The rule reports a key set to `true` when no committed file declares the marketplace part. It reads
+The rule reports a key set to `true` when no project settings file declares the marketplace part. It reads
 both project files of the `.claude/` directory. A name in either file counts. It reads
 `additionalMarketplaces` when the file does not set `extraKnownMarketplaces`.[^aliases]
 

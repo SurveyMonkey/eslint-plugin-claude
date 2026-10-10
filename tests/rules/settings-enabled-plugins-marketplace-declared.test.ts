@@ -137,7 +137,7 @@ describe(`${name} (reports)`, () => {
       [
         4,
         5,
-        'The "enabledPlugins" key "q@acme" names the marketplace "acme", and no committed settings file declares it in "extraKnownMarketplaces". A teammate who has not added it gets no plugin.',
+        'The "enabledPlugins" key "q@acme" names the marketplace "acme", and no project settings file declares it in "extraKnownMarketplaces". A teammate who has not added it gets no plugin.',
       ],
     ])
   })
