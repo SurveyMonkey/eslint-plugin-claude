@@ -78,8 +78,21 @@ describe(`${name}: the rules that it leaves alone`, () => {
   })
 
   it('is silent for a deny or ask rule on a parameter of the Bash tool', () => {
-    const code = { permissions: { deny: ['Bash(timeout:*)'], ask: ['Bash(timeout:5)'] } }
+    const code = { permissions: { deny: ['Bash(timeout:*)'], ask: ['Bash(timeout:*)'] } }
     expect(ids(code)).toEqual([])
+  })
+
+  it('is silent for a bare wrapper, which has no inner command', () => {
+    expect(
+      ids(allow('Bash(timeout)', 'Bash(nohup)', 'Bash(time)', 'Bash(command)', 'Bash(nice)')),
+    ).toEqual([])
+  })
+
+  it('reports an allow rule with the :* suffix, and is silent for a spaced parameter rule', () => {
+    expect(ids(allow('Bash(timeout:*)'))).toEqual(['stripped'])
+    expect(
+      ids({ permissions: { deny: ['Bash(timeout : *)'], ask: ['Bash(timeout :*)'] } }),
+    ).toEqual([])
   })
 
   it('reports a wrapper with a flag, and time -v', () => {

@@ -88,6 +88,13 @@ describe(`${name}: a permission rule`, () => {
 })
 
 describe(`${name}: a sandbox path`, () => {
+  it('reports the entry, at its line and column', () => {
+    const [message] = lint(JSON.stringify(sandbox({ allowWrite: ['/output'] })))
+    expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
+      1, 41, 1, 50,
+    ])
+  })
+
   it('reports a single-slash path that is no file system root, in a project or local file', () => {
     for (const file of [PROJECT, LOCAL]) {
       expect(ids(sandbox({ allowWrite: ['/output'] }), file), file).toEqual(['sandboxSlash'])

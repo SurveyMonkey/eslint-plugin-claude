@@ -51,6 +51,21 @@ describe(`${name}: the reports`, () => {
     expect(message?.message).toContain('`WebFetch(domain:<host>)`')
   })
 
+  it('names the tool of the rule in the deny advice', () => {
+    expect(lint(allow('PowerShell(curl https://a.test/ *)'))[0]?.message).toContain(
+      '`PowerShell(curl *)`',
+    )
+    expect(lint(allow('Monitor(curl https://a.test/ *)'))[0]?.message).toContain(
+      '`Monitor(curl *)`',
+    )
+  })
+
+  it('names the host of a URL with a port', () => {
+    expect(lint(allow('Bash(curl http://localhost:8080/ *)'))[0]?.message).toContain(
+      '`WebFetch(domain:localhost)`',
+    )
+  })
+
   it('names wget in the deny advice', () => {
     expect(lint(allow('Bash(wget http://a.test/ *)'))[0]?.message).toContain('`Bash(wget *)`')
   })
@@ -76,6 +91,12 @@ describe(`${name}: the rules that it leaves alone`, () => {
           'Bash(git clone https://a.test/r)',
         ),
       ),
+    ).toEqual([])
+  })
+
+  it('is silent for a tool that is no command tool, and for a bare Bash rule', () => {
+    expect(
+      ids(allow('Read(curl http://a.test/ *)', 'WebFetch(curl http://a.test/)', 'Bash')),
     ).toEqual([])
   })
 

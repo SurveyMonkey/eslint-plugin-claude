@@ -13,13 +13,14 @@ const name = 'permissions-bash-stripped-wrapper' as const
 /** The wrapper that Claude Code strips from the start of a command that `words` match, or
  *  undefined. `command -v` is a query, and Claude Code does not strip it. Bare `xargs` is
  *  stripped, but `xargs` with a flag is not. The rule `xargs *` is silent, because its `*` can
- *  match a flag. The rule `xargs` alone is silent too. */
+ *  match a flag. The rule `xargs` alone is silent too, and so is a bare wrapper such as
+ *  `timeout`: there is no inner command to write the rule for. */
 function strippedWrapper(words: readonly string[]): string | undefined {
   const [first, second] = words
   if (first === 'xargs') {
     return second !== undefined && second !== '*' && !second.startsWith('-') ? first : undefined
   }
-  if (first === undefined || !STRIPPED_WRAPPERS.includes(first)) {
+  if (first === undefined || second === undefined || !STRIPPED_WRAPPERS.includes(first)) {
     return undefined
   }
   return first === 'command' && second === '-v' ? undefined : first

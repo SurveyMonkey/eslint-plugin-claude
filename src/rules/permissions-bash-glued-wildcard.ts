@@ -32,8 +32,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'glued' }> = {
           list === 'allow' && parsed.specifier !== null && COMMAND_RULE_TOOLS.includes(parsed.tool)
             ? GLUED.exec(parsed.specifier.trim())?.[1]
             : undefined
-        // A word that ends in `-`, as `Get-*`, is a family of names and not a program prefix.
-        if (program === undefined || program.endsWith('-')) {
+        // The plugin treats a PowerShell word with a `-`, as `Get-Child*`, as a cmdlet name pattern.
+        // The fix text `Get-Child *` would name no cmdlet. Bash has no such family: `docker-*`
+        // matches `docker-compose` as `ls*` matches `lsof`.
+        if (program === undefined || (parsed.tool === 'PowerShell' && program.includes('-'))) {
           continue
         }
         context.report({

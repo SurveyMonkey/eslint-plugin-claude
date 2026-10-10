@@ -28,7 +28,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'argument' }> = {
     schema: [],
     messages: {
       argument:
-        '`{{rule}}` is fragile: it does not match an option before the URL, another protocol, a redirect or a variable. Deny `Bash({{program}} *)`, and allow `WebFetch(domain:{{host}})`. Pair the deny rule with the sandbox network allowlist when the limit must hold.',
+        '`{{rule}}` is fragile: it does not match an option before the URL, another protocol, a redirect or a variable. Deny `{{tool}}({{program}} *)`, and allow `WebFetch(domain:{{host}})`. Pair the deny rule with the sandbox network allowlist when the limit must hold.',
     },
   },
   create(context) {
@@ -51,6 +51,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'argument' }> = {
             messageId: 'argument',
             data: {
               rule: `${parsed.tool}(${parsed.specifier})`,
+              tool: parsed.tool,
               program,
               host: host === '' ? '<host>' : host,
             },
