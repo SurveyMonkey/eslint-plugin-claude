@@ -6,11 +6,11 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
 import { agent, repo } from '../agent-settings.test-support.ts'
-import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const unreadable = chmodCannotBlock ? it.skip : it
 const AGENT = '.claude/agents/a.md'
+const PLUGIN = { 'plugins/p/.claude-plugin/plugin.json': '{"name":"p"}' }
 const PROMPT = 'initialPrompt: Start with /review\n'
 const named = (name: unknown) => JSON.stringify({ agent: name })
 const run = (
@@ -52,7 +52,8 @@ describe('agent-initial-prompt-main-only', () => {
       expect(run({}, agent(PROMPT), AGENT, [{ allow: ['a'] }])).toEqual([])
     })
     it('for a plugin agent', () => {
-      expect(lintAgent('agent-initial-prompt-main-only', agent(PROMPT), pluginAgent())).toEqual([])
+      // The plugin is in a repository, so a rule that read the settings there would report.
+      expect(run(PLUGIN, agent(PROMPT), 'plugins/p/agents/a.md')).toEqual([])
     })
     it('for an initialPrompt with no text', () => {
       expect(run({}, agent(''))).toEqual([])

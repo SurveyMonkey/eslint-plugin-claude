@@ -8,11 +8,11 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
 import { agent, repo } from '../agent-settings.test-support.ts'
-import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const unreadable = chmodCannotBlock ? it.skip : it
 const AGENT = '.claude/agents/a.md'
+const PLUGIN = { 'plugins/p/.claude-plugin/plugin.json': '{"name":"p"}' }
 const named = (name: string) => JSON.stringify({ agent: name })
 const MAIN = { '.claude/settings.json': named('a') }
 const run = (
@@ -54,9 +54,8 @@ describe('agent-tools-agent-type-list', () => {
       expect(run({}, 'tools: Agent(worker)\n', AGENT, [{ allow: ['a'] }])).toEqual([])
     })
     it('stays silent for a plugin agent', () => {
-      expect(
-        lintAgent('agent-tools-agent-type-list', agent('tools: Agent(worker)\n'), pluginAgent()),
-      ).toEqual([])
+      // The plugin is in a repository, so a rule that read the settings there would report.
+      expect(run(PLUGIN, 'tools: Agent(worker)\n', 'plugins/p/agents/a.md')).toEqual([])
     })
     it('stays silent when a settings file cannot be seen', () => {
       expect(run({ '.claude/settings.json': '{' })).toEqual([])
