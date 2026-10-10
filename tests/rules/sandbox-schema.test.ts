@@ -358,28 +358,35 @@ describe(`${name}: bwrapPath and socatPath`, () => {
 })
 
 describe(`${name}: a key that Claude Code ignores in a project file`, () => {
-  it('is silent on the value, because settings-key-scope reports the key', () => {
+  it('is silent on the value of a managed-only key', () => {
     const code = sandbox({
       bwrapPath: 'bwrap',
       socatPath: 1,
       filesystem: { allowManagedReadPathsOnly: 'yes' },
       network: { allowManagedDomainsOnly: 'yes' },
-      credentials: { sigv4: { streaming: 'allow' } },
     })
     for (const file of PROJECT_FILES) {
       expect(ids(code, file), file).toEqual([])
     }
-    expect(ids(code, MANAGED)).toEqual([
-      'relativePath',
-      'wrongType',
-      'wrongType',
-      'wrongType',
-      'badValue',
-    ])
+    for (const file of MANAGED_FILES) {
+      expect(ids(code, file), file).toEqual(['relativePath', 'wrongType', 'wrongType', 'wrongType'])
+    }
+  })
+
+  it('is silent on the value of a user-or-managed key', () => {
+    const code = sandbox({ credentials: { sigv4: { streaming: 'allow' } } })
+    for (const file of PROJECT_FILES) {
+      expect(ids(code, file), file).toEqual([])
+    }
+    for (const file of MANAGED_FILES) {
+      expect(ids(code, file), file).toEqual(['badValue'])
+    }
   })
 
   it('still reports a key that is not in the list', () => {
-    expect(ids(sandbox({ bwrapPath: 'bwrap', madeUp: 1 }), PROJECT)).toEqual(['unknownKey'])
+    for (const file of PROJECT_FILES) {
+      expect(ids(sandbox({ bwrapPath: 'bwrap', madeUp: 1 }), file), file).toEqual(['unknownKey'])
+    }
   })
 })
 
