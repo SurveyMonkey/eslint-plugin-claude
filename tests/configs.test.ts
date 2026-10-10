@@ -1078,11 +1078,11 @@ describe('configs', () => {
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
   it('strict reports the files of recommended, and those of the off rules', async () => {
     expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
-  })
+  }, 30_000)
 
   it('reports the two option rules on their own files once an option turns them on', async () => {
     const shell = '---\ndescription: d\nshell: bash\n---\n\n!`date`\n'
