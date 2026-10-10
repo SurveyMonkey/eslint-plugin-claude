@@ -163,6 +163,11 @@ describe(`${RULE} (silent)`, () => {
     expect(inManifest({ agent: 'pq:ghost' }, { 'agents/reviewer.md': REVIEWER })).toEqual([])
   })
 
+  check('reports a scoped name when the plugin name has capitals', () => {
+    const { dir, code } = pluginTree({ name: 'Foo', settings: { agent: 'foo:ghost' } })
+    expect(lintPlugin(RULE, dir, code).map((m) => m.messageId)).toEqual(['missing'])
+  })
+
   check('reports a scoped name whose prefix has another case than the plugin name', () => {
     expect(inManifest({ agent: 'P:ghost' }, { 'agents/reviewer.md': REVIEWER })).toHaveLength(1)
   })
