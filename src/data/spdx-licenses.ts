@@ -8,7 +8,7 @@
 // docs/rules/plugin-manifest-metadata-format.md. A new SPDX release adds identifiers, and a stale
 // list reports a valid new identifier.
 
-/** The license identifiers (740), in name order. */
+/** The license identifiers (740), in the order of the SPDX list. */
 export const SPDX_LICENSE_IDS: readonly string[] = [
   '0BSD',
   '3D-Slicer-1.0',
@@ -752,7 +752,7 @@ export const SPDX_LICENSE_IDS: readonly string[] = [
   'ZPL-2.1',
 ]
 
-/** The license exception identifiers (86) for the right side of `WITH`, in name order. */
+/** The license exception identifiers (86) for the right side of `WITH`, in the order of the SPDX list. */
 export const SPDX_EXCEPTION_IDS: readonly string[] = [
   '389-exception',
   'Asterisk-exception',

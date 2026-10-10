@@ -27,12 +27,11 @@ is missing.
 Other features of a plugin do need semver. A dependency on the plugin has a version range, which
 Claude Code resolves against the git tags of the plugin.[^tag] Each release tag reads
 `<plugin-name>--v<version>`, and `<version>` matches the `version` field of `plugin.json` in that
-commit.[^tag] A version such as `1.0` or `latest` gives a tag that no range matches.
+commit.[^tag] A version such as `1.0` or `latest` is not a version for a range to match.
 
-The rule reports the value of `version` when it is a string that is not a semantic version of
-semver.org 2.0.0. That version has three numbers with no leading zero, an optional prerelease
-after `-`, and optional build metadata after `+`. A leading `v` is not part of the version: the
-tag adds it.
+The rule reports a `version` string that is not a semantic version of semver.org 2.0.0. That
+version has three numbers, and a number has no zero at its start. It can have a prerelease after
+`-` and build metadata after `+`. A `v` at the start is not part of the version: the tag adds it.
 
 The report is on the value. The rule makes no report in these cases:
 
