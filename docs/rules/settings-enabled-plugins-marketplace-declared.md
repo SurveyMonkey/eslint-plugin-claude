@@ -42,7 +42,7 @@ The rule makes no report in these cases:
 - The value is `false`. The docs use `false` to block a plugin at every scope, and a block needs no
   marketplace.[^org]
 - The key does not have the form `plugin@marketplace`. `settings-enabled-plugins-schema` reports it.
-- The rule cannot read the other project file, because it is a dangling link, is out of the
+- The rule cannot read the other project file. The file is a dangling link, is out of the
   repository, or does not parse to an object.
 
 Fail:

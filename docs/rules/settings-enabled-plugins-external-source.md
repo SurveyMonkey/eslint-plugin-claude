@@ -20,11 +20,11 @@ Do not rely on `.claude/settings.json` to install a plugin that has an external 
 
 ## Rule details
 
-A plugin that the marketplace lists by a relative path loads from the marketplace copy. A plugin
-whose marketplace entry points at an external source, such as its own GitHub repository, does not
-install from the repository settings alone.[^org] Each teammate sees
-`Plugin "<name>" is enabled in project settings but isn't installed` until they run
-`claude plugin install <name>@<marketplace> --scope project`.[^loading] This holds when the only
+A plugin that the marketplace lists by a relative path loads from the marketplace copy. Some
+entries point at an external source, such as the GitHub repository of the plugin. Such a plugin
+does not install from the repository settings alone.[^org] Each teammate sees
+`Plugin "<name>" is enabled in project settings but isn't installed`. The error stays until they
+run `claude plugin install <name>@<marketplace> --scope project`.[^loading] This holds when the only
 `true` for the plugin is in `.claude/settings.json`.
 
 The rule reports a key of `enabledPlugins` in `.claude/settings.json` in this case:

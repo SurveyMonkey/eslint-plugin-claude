@@ -25,9 +25,7 @@ marketplace that your organization deploys to each machine.[^types] An absolute 
 file exists on one machine. A teammate gets a marketplace that is not there.
 
 A relative path resolves against the repository. The docs describe a `directory` or `file` source
-with a relative path for a repository.[^org] So the rule leaves a relative path. The inventory row
-for this rule says that a committed file does not use a `directory` source. The rule checks less
-than that row, because of this page.
+with a relative path for a repository.[^org] So the rule leaves a relative path.
 
 The rule reports the `path` of a `directory` source in `.claude/settings.json` when the path is
 absolute. A POSIX path, a path that starts with `/`, and a Windows drive path count. The result

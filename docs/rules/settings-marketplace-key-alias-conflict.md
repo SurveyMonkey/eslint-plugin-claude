@@ -21,8 +21,8 @@ Do not set a marketplace key and its alias in one settings file.
 ## Rule details
 
 Claude Code reads `additionalMarketplaces` as `extraKnownMarketplaces`, and `allowedMarketplaces`
-as `strictKnownMarketplaces`. When one file sets both spellings of a key, Claude Code uses the value
-of the canonical key and ignores the alias.[^aliases][^org] So the alias value has no effect.
+as `strictKnownMarketplaces`. A file can set both spellings of a key. Then Claude Code uses the
+canonical key and ignores the alias.[^aliases][^org] So the alias value has no effect.
 
 The rule reports the alias key when the same file sets the canonical key. The report is on the alias
 key, whichever key comes first.

@@ -20,7 +20,7 @@ Anchor the `hostPattern` and `pathPattern` entries of `strictKnownMarketplaces`.
 
 ## Rule details
 
-A `hostPattern` entry is a regular expression that Claude Code matches against the host of a
+A `hostPattern` entry is a regular expression. Claude Code matches it against the host of a
 `github`, `git` or `url` source. The pattern matches anywhere in the host, so the docs say to anchor
 it with `^` and `$`. A `pathPattern` entry is a regular expression for the `path` of a `file` or
 `directory` source. It matches anywhere in the path, so the docs say to start it with `^`.[^types][^org]

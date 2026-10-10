@@ -20,8 +20,8 @@ Add the `skills-dir` source to a `strictKnownMarketplaces` allowlist.
 
 ## Rule details
 
-Skills-directory plugins are plugins that users keep under `~/.claude/skills/` or the
-`.claude/skills/` of a project, in a folder with a `.claude-plugin/plugin.json`. Claude Code does
+Users keep skills-directory plugins under `~/.claude/skills/` or the `.claude/skills/` of a
+project. Each is in a folder with a `.claude-plugin/plugin.json`. Claude Code does
 not load them when any allowlist is set, also an empty one. The entry `{ "source": "skills-dir" }`
 keeps them available. It matches no marketplace.[^org][^types][^policy]
 
