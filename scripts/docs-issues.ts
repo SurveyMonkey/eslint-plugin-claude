@@ -45,7 +45,7 @@
 // an issue of its own. Each other finding gets an issue of its own too: a
 // moved finding, a rule-update or rule-removal finding, and a finding that
 // names a rule. A digest holds at most MAX_DIGEST_BLOCKS blocks, and its
-// whole body fits in MAX_COMMENT. The next block starts a new digest. A
+// whole body fits in MAX_COMMENT. The next block starts a new group. A
 // block that does not fit alone gets an issue of its own. A group of one
 // block gets the issue of that block.
 //
@@ -983,7 +983,7 @@ export async function openIssues({
     }
     // A digest takes the next block while it has fewer than
     // MAX_DIGEST_BLOCKS blocks, and while its whole body then fits in
-    // MAX_COMMENT. Then the next block starts a new digest. A block that does
+    // MAX_COMMENT. Then the next block starts a new group. A block that does
     // not fit alone gets an issue of its own.
     let part: Finding[] = []
     for (const f of list) {
