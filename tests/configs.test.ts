@@ -125,7 +125,7 @@ const credentialMarketplace = JSON.stringify({
 })
 
 // One string value of 2 MiB makes a file over the limit of the size rule.
-const big = JSON.stringify({ a: 'x'.repeat(2097152) })
+const big = JSON.stringify({ language: 'x'.repeat(2097152) })
 
 // The marketplace settings rules of K3 (#12). A marketplace for `settings-enabled-plugins-external-source`
 // has one entry with an external source, and is valid for the marketplace rules.
@@ -1081,6 +1081,18 @@ const TREE: Record<string, string> = {
   'packages/re/.claude/style.txt': '# Not a rule file\n',
   'packages/ms/ok/.claude/settings.json':
     '{"autoMemoryEnabled": false, "autoMemoryDirectory": "~/memory", "claudeMdExcludes": ["**/a/**"]}',
+  // `settings-schema`: an unknown key, an env variable name at the top level, a wrong type and an
+  // unknown field, in each file that it reads. A hidden drop-in is for `settings-managed-file`.
+  // The same content where no rule reads it: another extension, a nested directory, and another
+  // settings file.
+  'packages/ss/.claude/settings.json': '{"modle": "opus"}',
+  'packages/ss/.claude/settings.local.json': '{"DISABLE_TELEMETRY": "1"}',
+  'packages/ss/managed-settings.json': '{"fastMode": "yes"}',
+  'packages/ss/managed-settings.d/10-a.json': '{"worktree": {"base": "head"}}',
+  'packages/ss/managed-settings.d/.20-hidden.json': '{"modle": "opus"}',
+  'packages/ss/managed-settings.d/30-b.txt': '{"modle": "opus"}',
+  'packages/ss/managed-settings.d/sub/40-c.json': '{"modle": "opus"}',
+  'packages/ss/.vscode/settings.json': '{"modle": "opus"}',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -1327,6 +1339,7 @@ const SCOPE_RULES = [
   { name: 'hooks-script-executable', files: HOOKS_FILES },
   { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'statusline-script-exists', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // The rules of #11, #13 and #14 that ask git whether a file is tracked or ignored, in the order of
@@ -1778,6 +1791,14 @@ const EXPECTED = [
   'packages/ms/managed-settings.json: claude/memory-settings-schema@2',
   'packages/ms/managed-settings.d/10-a.json: claude/memory-settings-schema@2',
   'packages/ms/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-schema` reads the project and managed files, and no other file.
+  ...[
+    'packages/ss/.claude/settings.json',
+    'packages/ss/.claude/settings.local.json',
+    'packages/ss/managed-settings.json',
+    'packages/ss/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-schema@2`),
+  'packages/ss/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
