@@ -5,7 +5,10 @@
 // files in a plugin that sits in the repository, so a silent result is not an
 // error of the fixture.
 import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import claude from '../src/index.ts'
 import { readPluginAt } from '../src/plugin-manifest.ts'
 import { link, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from './plugin-tree.test-support.ts'
@@ -293,6 +296,31 @@ describe('the path and settings rules of the plugin layer', () => {
   linked('plugin-path-no-backslash stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, {}, BACKSLASH)
     expect(lintPlugin('plugin-path-no-backslash', dir, BACKSLASH)).toEqual([])
+  })
+})
+
+describe('the bin rule of the plugin layer', () => {
+  const BIN_ON = [{ targets: ['claude-ai'] }]
+  const lintBin = (dir: string) =>
+    new Linter({ cwd: path.parse(dir).root }).verify(
+      MANIFEST,
+      [
+        {
+          files: ['**/.claude-plugin/plugin.json'],
+          plugins: { json, claude },
+          language: 'json/json',
+          rules: { 'claude/plugin-bin-claude-ai': ['error', ...BIN_ON] },
+        },
+      ],
+      { filename: path.join(dir, '.claude-plugin', 'plugin.json') },
+    )
+  it('plugin-bin-claude-ai reports in the plugin in the repository', () => {
+    expect(lintBin(inside({ 'bin/tool': '' }))).toHaveLength(1)
+  })
+  // The folder links back in, so only a look at the folder out of the repository tells the plugin.
+  linked('plugin-bin-claude-ai stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({ 'bin/tool': '' })
+    expect(lintBin(dir)).toEqual([])
   })
 })
 
