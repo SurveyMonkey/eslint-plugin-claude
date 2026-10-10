@@ -165,6 +165,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-remote-url-empty`](docs/rules/mcp-remote-url-empty.md) | A remote server in a project `.mcp.json` has a `url` that is not empty | `error` | `error` |
 | [`claude/mcp-hidden-whitespace`](docs/rules/mcp-hidden-whitespace.md) | No leading or trailing whitespace in `command`, `url`, an `args` item, or a key or value of `env` and `headers` | `error` | `error` |
 | [`claude/mcp-timeout-min`](docs/rules/mcp-timeout-min.md) | A server `timeout` is in milliseconds and at least 1000; option `min` | `error` | `error` |
+| [`claude/mcp-oauth-transport`](docs/rules/mcp-oauth-transport.md) | No `oauth` object on a server of type `stdio`, `ws` or no type; OAuth applies to `http` and `sse` only | `error` | `error` |
+| [`claude/mcp-oauth-values`](docs/rules/mcp-oauth-values.md) | `oauth.authServerMetadataUrl` starts with `https://`, and `oauth.scopes` is one space-separated string | `error` | `error` |
+| [`claude/mcp-authorization-header-with-oauth`](docs/rules/mcp-authorization-header-with-oauth.md) | A server has no `oauth` object beside a static `Authorization` header, because Claude Code does not fall back to OAuth | `error` | `error` |
+| [`claude/mcp-project-dir-default`](docs/rules/mcp-project-dir-default.md) | `${CLAUDE_PROJECT_DIR}` in the `command` or `args` of a project `.mcp.json` has a default, such as `${CLAUDE_PROJECT_DIR:-.}` | `error` | `error` |
+| [`claude/mcp-env-expansion-field`](docs/rules/mcp-env-expansion-field.md) | A `${VAR}` reference is only in `command`, `args`, `env`, `url`, `headers`, the fields that read it, or `headersHelper`, which a shell reads | `error` | `error` |
+| [`claude/mcp-credential-var-remote`](docs/rules/mcp-credential-var-remote.md) | The `url` and `headers` of a remote server do not reference a credential variable that Claude Code reads as empty; option `names` | `error` | `error` |
+| [`claude/mcp-headershelper-credential-env`](docs/rules/mcp-headershelper-credential-env.md) | An inline `headersHelper` does not read a variable that Claude Code removes, such as one with `TOKEN`, `SECRET`, `PASSWORD`, `KEY` or `AUTH` in its name | `error` | `error` |
 
 ## Contributing
 
