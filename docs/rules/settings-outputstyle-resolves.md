@@ -26,6 +26,7 @@ Default style. An example is `explanatory`.[^change] So a wrong name has no effe
 The rule accepts a value that is one of these:
 
 - A built-in name: `default`, `Proactive`, `Concise`, `Explanatory` or `Learning`.[^change]
+  The page lists `default` in the `/output-style` list as the style with no instructions.[^builtin]
 - The name of a custom style. A custom style is a Markdown file in `.claude/output-styles/`.
   Its name is the file name without `.md`. The `name` field of its frontmatter can set another
   name.[^create] The rule accepts both names.
@@ -43,8 +44,9 @@ the project, up to the repository root. A folder below `output-styles/` counts. 
 not.
 
 The rule makes no report when it cannot see a style. It reads no file out of the repository.
-These cases give no report. A link leads out of the repository. The rule cannot read a directory.
-The rule cannot read a style file.
+These cases give no report. A link leads out of the repository. The project is a link out of the
+repository. A link in place of `.claude` or `output-styles/` has no target. The rule cannot read
+a directory. The rule cannot read a style file.
 
 A style from a user directory (`~/.claude/output-styles/`), from a plugin, or from a managed
 policy is not in the repository. Name such a style in the option `allow`.
@@ -83,5 +85,6 @@ Pass:
 
 ## Sources
 
+[^builtin]: [Output styles: Built-in output styles](https://code.claude.com/docs/en/output-styles#built-in-output-styles)
 [^change]: [Output styles: Change your output style](https://code.claude.com/docs/en/output-styles#change-your-output-style)
 [^create]: [Output styles: Create a custom output style](https://code.claude.com/docs/en/output-styles#create-a-custom-output-style)

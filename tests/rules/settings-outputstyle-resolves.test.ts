@@ -254,8 +254,7 @@ describe(RULE, () => {
     })
   })
 
-  // A read that fails with `EACCES` is not a file that is absent. The rule cannot see what it cannot
-  // read, so it makes no report that rests on it.
+  // These cases show that the walk stays in the repository (ADR 001, Decision 14).
   describe('the repository bound', () => {
     it('reads no path above the repository root, and uses no style from there', () => {
       const outer = tree({ [`${STYLES}/clash.md`]: style() }, false)
@@ -277,13 +276,26 @@ describe(RULE, () => {
       expect(recorded.paths.filter((entry) => !inside(entry))).toEqual([])
     })
 
-    it.skipIf(noLinks)('finds the root styles for a project that a link reaches', () => {
-      const outside = tree({}, false)
-      const dir = tree({ [`${STYLES}/root.md`]: style() })
-      link(dir, 'linked', outside)
-      expect(ids(dir, settings('root'), 'linked/.claude/settings.json')).toEqual([])
-      expect(ids(dir, settings('Nope'), 'linked/.claude/settings.json')).toEqual(['unknown'])
-    })
+    it.skipIf(noLinks)(
+      'stays silent for a project that a link out of the repository reaches',
+      () => {
+        const outside = tree({ [`${STYLES}/x.md`]: style() }, false)
+        const dir = tree({ [`${STYLES}/root.md`]: style() })
+        link(dir, 'linked', outside)
+        for (const value of ['x', 'root', 'Nope']) {
+          expect(ids(dir, settings(value), 'linked/.claude/settings.json')).toEqual([])
+        }
+      },
+    )
+
+    it.skipIf(noLinks)(
+      'stays silent for a dangling .claude link in a directory above the project',
+      () => {
+        const dir = tree({ 'packages/app/.claude/settings.json': '{}' })
+        link(dir, 'packages/.claude', 'missing-claude')
+        expect(ids(dir, settings('Nope'), 'packages/app/.claude/settings.json')).toEqual([])
+      },
+    )
 
     it('stays silent for a dangling link in place of the styles directory', () => {
       const dir = tree({})
@@ -302,6 +314,8 @@ describe(RULE, () => {
     )
   })
 
+  // A read that fails with `EACCES` is not a file that is absent. The rule cannot see what it cannot
+  // read, so it makes no report that rests on it.
   describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     it('stays silent for a styles directory that it cannot read, and reports when it can', () => {
       const dir = tree({ [`${STYLES}/review.md`]: style() })

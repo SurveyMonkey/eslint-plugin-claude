@@ -2,7 +2,7 @@
 // can load (docs/rules/settings-outputstyle-resolves.md). Claude Code compares the value with
 // case. A value that matches no style gives the Default style. The rule reads the
 // `.claude/output-styles/` directories of the project. The option `allow` lists the user and
-// plugin styles that a repository cannot show. The rule does not read a managed file. A managed
+// plugin styles that a repository cannot show. The rule does not check a managed file. A managed
 // file applies to every project on a machine. The project styles that it names are not in the
 // repository that holds it.
 import path from 'node:path'
@@ -29,9 +29,10 @@ type Options = [{ allow: string[] }]
  *  `default` is the name that the `/output-style` list shows for the style with no instructions. */
 const BUILT_IN = ['default', 'Proactive', 'Concise', 'Explanatory', 'Learning']
 
-/** The names of the custom styles that a scan found. `unseen` is true in two cases. The scan did
- *  not follow a link out of the repository, or it could not read a path. A style can then be out
- *  of sight. */
+/** The names of the custom styles that a scan found. `unseen` is true when a style can be out of
+ *  sight. These are the cases. A directory of the walk is out of the repository. A link leads out
+ *  of the repository. A path is not readable. A link in place of a directory or of a style file
+ *  has no target. */
 interface Styles {
   names: string[]
   unseen: boolean
@@ -39,21 +40,26 @@ interface Styles {
 
 /** `start` and each directory above it, up to the real path `top`. The walk goes up the path as
  *  given. A directory counts when its real path is at or below `top`. So a link above the project
- *  does not hide `top`. The walk stops at `top`, so no call reaches a path above the repository
- *  (ADR 001, Decision 14). It also stops at the root of the file system. */
-function ancestors(start: string, top: string): string[] {
+ *  does not hide `top`. A directory with a real path out of `top` is not in the chain, and
+ *  `skipped` is true: the rule cannot read its styles. The walk stops at `top`, so no call reaches
+ *  a path above the repository (ADR 001, Decision 14). It also stops at the root of the file
+ *  system. */
+function ancestors(start: string, top: string): { chain: string[]; skipped: boolean } {
   const chain: string[] = []
+  let skipped = false
   // The loop ends at the root of the file system, where `path.dirname` returns its argument.
   for (let at = start, last = ''; at !== last; last = at, at = path.dirname(at)) {
     const real = realDirectory(at)
     if (isInside(real, top)) {
       chain.push(at)
+    } else {
+      skipped = true
     }
     if (real === top) {
       break
     }
   }
-  return chain
+  return { chain, skipped }
 }
 
 /** The names of the custom styles in `.claude/output-styles/` of `start`, and of each directory
@@ -61,13 +67,18 @@ function ancestors(start: string, top: string): string[] {
  *  of its frontmatter. Claude Code uses the field when it is there, and the rule accepts both. The
  *  scans read no file out of `bound`. */
 function customStyles(start: string, top: string, bound: string): Styles {
-  const found: Styles = { names: [], unseen: false }
-  for (const dir of ancestors(start, top)) {
-    const styles = path.join(dir, '.claude', 'output-styles')
+  const walk = ancestors(start, top)
+  const found: Styles = { names: [], unseen: walk.skipped }
+  for (const dir of walk.chain) {
+    const claude = path.join(dir, '.claude')
+    const styles = path.join(claude, 'output-styles')
     const scan = markdownFiles(styles, bound)
-    // A dangling link is an entry, and it can lead to styles (ADR 001, Decision 14).
+    // A dangling link is an entry, and it can lead to styles (ADR 001, Decision 14). The link
+    // can be `.claude` or `output-styles`.
     found.unseen ||=
-      scan.outside || scan.unreadable || (realOf(styles) === null && danglingOf(styles) !== null)
+      scan.outside ||
+      scan.unreadable ||
+      [claude, styles].some((entry) => realOf(entry) === null && danglingOf(entry) !== null)
     for (const file of scan.files) {
       const fields = frontmatterOfFile(file)
       found.unseen ||= fields === UNREADABLE
