@@ -63,6 +63,7 @@ import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
 import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
@@ -229,6 +230,7 @@ const modules = [
   pluginPathNoBackslash,
   pluginCommandsMapFields,
   pluginUserConfigFieldApplicability,
+  pluginSettingsAgentExists,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -364,6 +366,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-path-no-backslash': 'warn',
   'plugin-commands-map-fields': 'warn',
   'plugin-user-config-field-applicability': 'warn',
+  'plugin-settings-agent-exists': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

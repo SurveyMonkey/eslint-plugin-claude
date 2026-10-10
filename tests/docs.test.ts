@@ -79,6 +79,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-path-no-backslash',
     'plugin-path-var-braced',
     'plugin-project-skills-dir-limits',
+    'plugin-settings-agent-exists',
     'plugin-settings-single-source',
     'plugin-skill-dir-layout',
     'plugin-skills-key-redundant-default',

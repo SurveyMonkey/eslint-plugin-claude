@@ -96,6 +96,33 @@ describe('a plugin root that links out of the repository', () => {
 })
 
 describe('the cross-file rules of the plugin layer', () => {
+  const AGENT = JSON.stringify({ name: 'p', settings: { agent: 'ghost' } })
+  it('plugin-settings-agent-exists reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(AGENT)
+    expect(lintPlugin('plugin-settings-agent-exists', dir, code).map((m) => m.messageId)).toEqual([
+      'missing',
+    ])
+  })
+  linked('plugin-settings-agent-exists stays silent for the linked plugin manifest', () => {
+    const { dir } = linkedOut({}, {}, AGENT)
+    expect(lintPlugin('plugin-settings-agent-exists', dir, AGENT)).toEqual([])
+  })
+  linked(
+    'plugin-settings-agent-exists stays silent for the settings.json of the linked plugin',
+    () => {
+      const { dir } = linkedOut({}, { 'settings.json': '{"agent": "ghost"}' })
+      const file = path.join(dir, 'settings.json')
+      expect(
+        lintPluginFile(
+          'plugin-settings-agent-exists',
+          ['**/settings.json'],
+          file,
+          '{"agent": "ghost"}',
+        ),
+      ).toEqual([])
+    },
+  )
+
   const SETTINGS = JSON.stringify({ name: 'p', settings: { agent: 'a' } })
   it('plugin-settings-single-source reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(SETTINGS, { 'settings.json': '{"agent": "b"}' })

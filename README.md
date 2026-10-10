@@ -123,6 +123,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-path-no-backslash`](docs/rules/plugin-path-no-backslash.md) | No component path in `plugin.json` has a backslash, which Claude Code rejects on macOS and Linux | `warn` | `warn` |
 | [`claude/plugin-commands-map-fields`](docs/rules/plugin-commands-map-fields.md) | An entry in the `commands` map of `plugin.json` uses only the documented fields | `warn` | `warn` |
 | [`claude/plugin-user-config-field-applicability`](docs/rules/plugin-user-config-field-applicability.md) | A `userConfig` option sets `min` and `max` only on a `number` option, and `multiple` only on a `string` option | `warn` | `warn` |
+| [`claude/plugin-settings-agent-exists`](docs/rules/plugin-settings-agent-exists.md) | The `agent` key of the default settings of a plugin names a built-in agent or one of the plugin agents | `warn` | `warn` |
 
 ### Marketplace manifest
 
