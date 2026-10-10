@@ -39,6 +39,7 @@ import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import mcpAllowDenyOverlap from './rules/mcp-allow-deny-overlap.ts'
+import mcpAllowlistEmpty from './rules/mcp-allowlist-empty.ts'
 import mcpAllowlistServernameDead from './rules/mcp-allowlist-servername-dead.ts'
 import mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
 import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
@@ -54,6 +55,7 @@ import mcpHeadershelperCommitted from './rules/mcp-headershelper-committed.ts'
 import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
 import mcpHeadershelperPath from './rules/mcp-headershelper-path.ts'
 import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
+import mcpInsecureUrl from './rules/mcp-insecure-url.ts'
 import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
 import mcpJsonLocation from './rules/mcp-json-location.ts'
 import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
@@ -61,8 +63,11 @@ import mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
 import mcpNoSseTransport from './rules/mcp-no-sse-transport.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
+import mcpPluginStdioReach from './rules/mcp-plugin-stdio-reach.ts'
 import mcpPluginToolNameScoped from './rules/mcp-plugin-tool-name-scoped.ts'
 import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
+import mcpPolicyLiteralValues from './rules/mcp-policy-literal-values.ts'
+import mcpPolicyServernameWeak from './rules/mcp-policy-servername-weak.ts'
 import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
 import mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
 import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
@@ -253,6 +258,11 @@ const modules = [
   mcpServerNameAnthropicSkills,
   mcpServerNameFormat,
   mcpStdioRelativePath,
+  mcpAllowlistEmpty,
+  mcpInsecureUrl,
+  mcpPluginStdioReach,
+  mcpPolicyLiteralValues,
+  mcpPolicyServernameWeak,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -394,9 +404,14 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-approval-names-exist': 'error',
   'mcp-approval-conflict': 'error',
   'mcp-allow-deny-overlap': 'error',
+  'mcp-allowlist-empty': 'warn',
   'mcp-headershelper-committed': 'warn',
   'mcp-headershelper-path': 'warn',
+  'mcp-insecure-url': 'warn',
   'mcp-no-sse-transport': 'warn',
+  'mcp-plugin-stdio-reach': 'warn',
+  'mcp-policy-literal-values': 'warn',
+  'mcp-policy-servername-weak': 'warn',
   'mcp-server-name-anthropic-skills': 'warn',
   'mcp-server-name-format': 'warn',
   'mcp-stdio-relative-path': 'warn',
