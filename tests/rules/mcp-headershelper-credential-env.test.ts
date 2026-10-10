@@ -56,13 +56,25 @@ jsonTester.run('mcp-headershelper-credential-env (valid)', rule, {
       filename: project,
     },
     {
-      name: 'a variable that the command sets first',
+      name: 'a variable that an earlier assignment sets',
       code: helper('token=$(get-token); echo "{\\"A\\":\\"Bearer $token\\"}"'),
       filename: project,
     },
     {
-      name: 'an exported variable that the command sets first',
+      name: 'an exported variable that an earlier assignment sets',
       code: helper('export MY_TOKEN=$(get-token) && echo $MY_TOKEN'),
+      filename: project,
+    },
+    {
+      name: 'an assignment after a semicolon, an and-list and a subshell bracket',
+      code: helper(
+        'true;a_token=$(get); b_token=1 && (c_token=2; echo $a_token $b_token $c_token)',
+      ),
+      filename: project,
+    },
+    {
+      name: 'an assignment after a newline',
+      code: helper('true\nmy_token=$(get)\necho $my_token'),
       filename: project,
     },
     { name: 'plugin, silent', code: helper('echo $HOME'), filename: pluginMcp },
@@ -142,7 +154,31 @@ jsonTester.run('mcp-headershelper-credential-env (invalid)', rule, {
     },
     {
       name: 'a flag value is no assignment',
-      code: helper('curl --my-token=$MY_TOKEN x'),
+      code: helper('curl --TOKEN=$TOKEN x'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'TOKEN' } }],
+    },
+    {
+      name: 'an argument that looks like an assignment is no assignment',
+      code: helper('echo TOKEN=$TOKEN'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'TOKEN' } }],
+    },
+    {
+      name: 'an assignment from the same name reads the inherited value',
+      code: helper('MY_TOKEN=$MY_TOKEN get-headers'),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN' } }],
+    },
+    {
+      name: 'an assignment with a default from the same name',
+      code: helper(`export MY_TOKEN=\${MY_TOKEN:-x}`),
+      filename: project,
+      errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN' } }],
+    },
+    {
+      name: 'a read before the assignment',
+      code: helper('echo $MY_TOKEN; MY_TOKEN=x'),
       filename: project,
       errors: [{ messageId: 'removed', data: { server: 'a', variable: 'MY_TOKEN' } }],
     },

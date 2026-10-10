@@ -3,8 +3,8 @@
 // of the user. Claude Code removes each variable with `TOKEN`, `SECRET`, `PASSWORD`, `KEY` or
 // `AUTH` in its name, in either letter case. It keeps `GIT_CONFIG_KEY_<n>`. It also removes
 // `ANTHROPIC_CUSTOM_HEADERS`. The rule finds `$NAME` and `${NAME}` in the command text. It skips a
-// name that the command sets with `NAME=`. The words
-// are in `src/data/mcp-credential-vars.ts`.
+// read that follows a `NAME=` assignment of the same name at the start of a command. The words are
+// in `src/data/mcp-credential-vars.ts`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
   HELPER_CREDENTIAL_WORDS,
@@ -20,9 +20,11 @@ const name = 'mcp-headershelper-credential-env' as const
 /** A read of `$NAME` or `${NAME}`. The match skips `$(command)` and `$1`. */
 const SHELL_VARIABLE = /\$\{?([A-Za-z_][A-Za-z0-9_]*)/g
 
-/** A variable that the command sets before it reads it, such as `token=$(get); echo $token`.
- *  Claude Code removes only the inherited variable, so a variable that the command sets is safe. */
-const SHELL_ASSIGNMENT = /(?:^|[\s;&|(])(?:(?:export|local)\s+)?([A-Za-z_][A-Za-z0-9_]*)=/g
+/** An assignment at the start of a command, such as `token=$(get); echo $token`. Claude Code
+ *  removes only the inherited variable, so a read after the command sets the name is not empty.
+ *  The lookahead refuses `NAME=$NAME` and `NAME=${NAME:-x}`, which read the inherited value. */
+const SHELL_ASSIGNMENT =
+  /(?:^|[;&|(\n])\s*(?:(?:export|local)\s+)?([A-Za-z_][A-Za-z0-9_]*)=(?!\S*\$\{?\1(?![A-Za-z0-9_]))/g
 
 /** True when Claude Code removes the variable `variable` from the environment of the helper. */
 function isRemoved(variable: string): boolean {
@@ -60,13 +62,16 @@ const rule: JSONRuleDefinition<{ MessageIds: 'removed' }> = {
           if (helper?.type !== 'String') {
             continue
           }
-          const assigned = new Set(
-            Array.from(helper.value.matchAll(SHELL_ASSIGNMENT), (match) => String(match[1])),
-          )
+          // The first assignment of each name. A read after it is not an inherited read.
+          const assignedAt = new Map<string, number>()
+          for (const match of helper.value.matchAll(SHELL_ASSIGNMENT)) {
+            assignedAt.set(String(match[1]), assignedAt.get(String(match[1])) ?? match.index)
+          }
           const variables = new Set(
-            Array.from(helper.value.matchAll(SHELL_VARIABLE), (match) => String(match[1])).filter(
-              (variable) => !assigned.has(variable) && isRemoved(variable),
-            ),
+            Array.from(helper.value.matchAll(SHELL_VARIABLE))
+              .filter((match) => (assignedAt.get(String(match[1])) ?? Infinity) > match.index)
+              .map((match) => String(match[1]))
+              .filter(isRemoved),
           )
           for (const variable of variables) {
             context.report({
