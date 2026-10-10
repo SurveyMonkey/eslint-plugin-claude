@@ -16,7 +16,7 @@ import { fetchHost } from '../permission-host.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { isOn, stringEntries, valueAt } from '../permission-sandbox.ts'
 import { isDeadAllow, sourceOf } from '../permission-source.ts'
-import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import { kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'sandbox-platform-limits' as const
 
@@ -87,9 +87,6 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
     },
   },
   create(context) {
-    if (isHiddenDropIn(context.filename)) {
-      return {}
-    }
     const [{ platforms = [], minVersion }] = context.options
     const onPlatform = (names: readonly string[]) =>
       platforms.some((entry) => names.includes(entry))
