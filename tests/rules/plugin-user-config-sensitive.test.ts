@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-user-config-sensitive'
-const check = it.fails
+const check = it
 
 const option = (extra: Record<string, unknown> = {}) => ({
   type: 'string',

@@ -326,6 +326,21 @@ describe('the bin rule of the plugin layer', () => {
   })
 })
 
+describe('the off rules of the plugin layer', () => {
+  const SECRET = JSON.stringify({
+    name: 'p',
+    userConfig: { api_token: { type: 'string', title: 'T', description: 'D' } },
+  })
+  it('plugin-user-config-sensitive reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(SECRET)
+    expect(lintPlugin('plugin-user-config-sensitive', dir, code)).toHaveLength(1)
+  })
+  linked('plugin-user-config-sensitive stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, SECRET)
+    expect(lintPlugin('plugin-user-config-sensitive', dir, SECRET)).toEqual([])
+  })
+})
+
 describe('readPluginAt', () => {
   it('gives the plugin for a root in the repository', () => {
     expect(readPluginAt(inside({}))).toMatchObject({ fields: { name: 'p' } })

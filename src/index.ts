@@ -77,6 +77,7 @@ import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts
 import pluginThemesLayout from './rules/plugin-themes-layout.ts'
 import pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
+import pluginUserConfigSensitive from './rules/plugin-user-config-sensitive.ts'
 import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
@@ -243,6 +244,7 @@ const modules = [
   pluginPackageLifecycleScripts,
   pluginPackageLockfileChoice,
   pluginThemesLayout,
+  pluginUserConfigSensitive,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -385,6 +387,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-package-lifecycle-scripts': 'warn',
   'plugin-package-lockfile-choice': 'warn',
   'plugin-themes-layout': 'warn',
+  'plugin-user-config-sensitive': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

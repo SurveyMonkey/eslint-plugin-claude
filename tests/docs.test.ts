@@ -93,6 +93,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-themes-layout',
     'plugin-user-config-field-applicability',
     'plugin-user-config-no-shell-fields',
+    'plugin-user-config-sensitive',
     'plugin-user-config-sensitive-in-content',
     'settings-conflicting-keys',
     'settings-enabled-plugins-entry-exists',
