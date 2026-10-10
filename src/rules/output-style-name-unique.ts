@@ -74,7 +74,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' | 'shadows' }> = {
       duplicate:
         '`{{name}}` is also the name of {{others}}. The docs do not say which of two styles of one name Claude Code uses. Rename one.',
       shadows:
-        '`{{name}}` is also the name of {{others}}. Claude Code uses the style closest to the working directory, so this style replaces it in a session that starts in or below this folder. Rename one if that is not your intent.',
+        '`{{name}}` is also the name of {{others}}. Claude Code uses the style closest to the working directory. So this style replaces it in a session that starts in or below this folder. Rename one if that is not your intent.',
     },
   },
   create(context) {
