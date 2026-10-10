@@ -191,6 +191,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-approval-names-exist`](docs/rules/mcp-approval-names-exist.md) | Each name in `enabledMcpjsonServers` and `disabledMcpjsonServers` is a key of the `mcpServers` of the project `.mcp.json` | `error` | `error` |
 | [`claude/mcp-approval-conflict`](docs/rules/mcp-approval-conflict.md) | No server is in both `enabledMcpjsonServers` and `disabledMcpjsonServers` across the settings files of one place | `error` | `error` |
 | [`claude/mcp-allow-deny-overlap`](docs/rules/mcp-allow-deny-overlap.md) | No entry is in both `allowedMcpServers` and `deniedMcpServers` across the settings files of one place | `error` | `error` |
+| [`claude/mcp-headershelper-committed`](docs/rules/mcp-headershelper-committed.md) | Each `headersHelper` in a committed project `.mcp.json` gets a review; it is a shell command that runs once a user trusts the folder | `warn` | `warn` |
+| [`claude/mcp-headershelper-path`](docs/rules/mcp-headershelper-path.md) | A `headersHelper` starts with an absolute path or a command on `PATH`, not a relative path | `warn` | `warn` |
+| [`claude/mcp-no-sse-transport`](docs/rules/mcp-no-sse-transport.md) | No server has `type: "sse"`, the deprecated transport; use `http` where the server supports it | `warn` | `warn` |
+| [`claude/mcp-server-name-anthropic-skills`](docs/rules/mcp-server-name-anthropic-skills.md) | No server is named `anthropic-skills`, a name that Claude Code reserves for synced skills | `warn` | `warn` |
+| [`claude/mcp-server-name-format`](docs/rules/mcp-server-name-format.md) | A server name has letters, numbers, hyphens and underscores only | `warn` | `warn` |
+| [`claude/mcp-stdio-relative-path`](docs/rules/mcp-stdio-relative-path.md) | The `command` and `args` of a project `.mcp.json` have no `./` or `../` path; use `${CLAUDE_PROJECT_DIR:-.}/...` | `warn` | `warn` |
 
 ## Contributing
 
