@@ -25,6 +25,10 @@ jsonTester.run('settings-project-autocontinue-off (valid)', rule, {
         filename,
       })),
     ),
+    // A drop-in with the name of a project file is a managed file, so a Boolean is silent there.
+    ...['managed-settings.d/settings.local.json', 'managed-settings.d/settings.json'].map(
+      (filename) => ({ code: '{"autoContinueAtUsageLimit": false}', filename }),
+    ),
     // A `null` is no value, in each file.
     ...[...PROJECT_FILES, ...MANAGED].map((filename) => ({
       code: '{"autoContinueAtUsageLimit": null}',
@@ -85,7 +89,7 @@ jsonTester.run('settings-project-autocontinue-off (invalid)', rule, {
       filename: project,
       errors: [{ messageId: 'turnsOff' as const, line: 1, column: 64 }],
     },
-    // A drop-in with the name of a project file is a managed file, so a Boolean is silent there.
+    // A drop-in with the name of a project file is a managed file, so a type error is reported.
     {
       code: '{"autoContinueAtUsageLimit": 1}',
       filename: 'managed-settings.d/settings.local.json',
