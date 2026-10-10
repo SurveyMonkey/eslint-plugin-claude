@@ -39,6 +39,10 @@ const messages = (code: string, filename: string) =>
   lintMarkdown(RULE, code, filename).map((m) => m.message)
 
 describe(RULE, () => {
+  check('stays silent for an empty file', () => {
+    expect(messages('', skill)).toEqual([])
+  })
+
   check('reports the reference, with the full message and its place', () => {
     const found = lintMarkdown(RULE, `---\nname: s\n---\n\nCall with ${ref('token')} now\n`, skill)
     expect(found).toHaveLength(1)
@@ -124,6 +128,7 @@ describe(`${RULE} (silent)`, () => {
     ['no userConfig', { name: 'p' }],
     ['a userConfig that is an array', { name: 'p', userConfig: ['token'] }],
     ['a userConfig that is a string', { name: 'p', userConfig: 'token' }],
+    ['a userConfig that is null', { name: 'p', userConfig: null }],
     ['an option that is null', { name: 'p', userConfig: { token: null } }],
     ['an option that is a string', { name: 'p', userConfig: { token: 'sensitive' } }],
     ['a manifest that is an array', []],

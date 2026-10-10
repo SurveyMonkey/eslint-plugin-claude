@@ -43,6 +43,21 @@ const run = (
   return lintPlugin(RULE, dir, code).map((m) => m.message)
 }
 
+describe(`${RULE} (unlisted plugin)`, () => {
+  check('stays silent for a plugin that no entry names', () => {
+    expect(run(['ghost'], {}, [{ name: 'other', source: './plugins/other' }])).toEqual([])
+  })
+
+  check('stays silent for a plugin whose manifest has no string name', () => {
+    const code = JSON.stringify({ dependencies: ['ghost'] })
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf(entries),
+      'plugins/p/.claude-plugin/plugin.json': code,
+    })
+    expect(lintPlugin(RULE, path.join(top, 'plugins', 'p'), code)).toEqual([])
+  })
+})
+
 describe(RULE, () => {
   check('reports a bare name that the marketplace does not list, with the full message', () => {
     const { dir, code } = setup(['ghost'])
@@ -213,6 +228,7 @@ describe(`${RULE} (silent)`, () => {
         { source: './x' },
         { name: 7 },
         { name: 'audit-logger', source: './a' },
+        { name: 'p', source: './plugins/p' },
       ]),
     ).toEqual([missing('ghost')])
   })

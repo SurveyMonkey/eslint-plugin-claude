@@ -65,6 +65,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' | 'refused' }> = {
           return
         }
         const listed = new Set(entries.map((entry) => entry.name))
+        const named = lastMember(node.body, 'name')?.value
+        // A plugin that no entry names is in no marketplace: its dependencies resolve nowhere.
+        if (named?.type !== 'String' || !listed.has(named.value)) {
+          return
+        }
         const allowed = marketplace.allowCrossMarketplaceDependenciesOn
         for (const { value } of dependencies.elements) {
           const dependency = dependencyOf(value)

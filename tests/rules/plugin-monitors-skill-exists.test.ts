@@ -213,6 +213,18 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, 'monitors/monitors.json', code)).toEqual([])
   })
 
+  check('stays silent for a commands key that is null', () => {
+    expect(run(invoke('deploy'), {}, { commands: null })).toEqual([])
+  })
+
+  check.each([
+    ['null', null],
+    ['a number', 5],
+    ['an array of numbers', [5]],
+  ])('reports a missing skill for a skills key that is %s', (_title, skills) => {
+    expect(run(invoke('deploy'), {}, { skills })).toEqual([message('deploy')])
+  })
+
   check('stays silent for a commands key that names paths, which the rule does not list', () => {
     expect(run(invoke('deploy'), {}, { commands: './cmds' })).toEqual([])
     expect(run(invoke('deploy'), {}, { commands: ['./cmds'] })).toEqual([])
@@ -257,6 +269,12 @@ describe(`${RULE} (silent)`, () => {
   linked('stays silent for a commands folder that is a link with no target', () => {
     const { dir, code, top } = pluginTree({ name: 'p', monitors: [monitor(invoke('deploy'))] })
     link(top, 'commands', 'ghost')
+    expect(lint(dir, MANIFEST, code)).toEqual([])
+  })
+
+  linked('stays silent for a skill folder that is a link with no target', () => {
+    const { dir, code, top } = pluginTree({ name: 'p', monitors: [monitor(invoke('deploy'))] })
+    link(top, 'skills/deploy', 'ghost')
     expect(lint(dir, MANIFEST, code)).toEqual([])
   })
 

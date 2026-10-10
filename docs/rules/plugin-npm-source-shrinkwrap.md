@@ -33,7 +33,7 @@ all of these are true:
 
 - The `source` of the entry is an object with `"source": "npm"`.
 - The plugin root has a `package.json` file.
-- The plugin root has no `npm-shrinkwrap.json` file.
+- The plugin root has no `npm-shrinkwrap.json` file and no `bun.lock` file.
 
 The report is on the `name` of `plugin.json`. To fix it, run `npm shrinkwrap` and commit the
 file. A plugin that ships `package-lock.json` only is reported, because npm drops that file.
@@ -41,7 +41,7 @@ file. A plugin that ships `package-lock.json` only is reported, because npm drop
 The rule checks less than the row of the inventory. The only link between a plugin in the
 repository and an entry with an `npm` source is the name. The entry does not point at a folder.
 `plugin-package-lockfile` reports a plugin with a lockfile that Claude Code skips. This rule
-reports the missing shrinkwrap of a plugin that an npm source serves, whatever other lockfiles it has.
+reports the missing shrinkwrap of a plugin that an npm source serves, whatever other lockfiles it has, except `bun.lock`. Claude Code installs from `bun.lock`.
 
 The rule makes no report in these cases:
 
