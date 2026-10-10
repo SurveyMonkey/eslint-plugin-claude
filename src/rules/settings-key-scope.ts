@@ -14,12 +14,18 @@ import { type FileKind, isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '.
 
 const name = 'settings-key-scope' as const
 
-type MessageId = 'managedOnly' | 'userOrManaged' | 'userLocalOrManaged' | 'globalConfig'
+type MessageId =
+  | 'managedOnly'
+  | 'userOnly'
+  | 'userOrManaged'
+  | 'userLocalOrManaged'
+  | 'globalConfig'
 
 /** For each scope that has a fault: the message, and the kinds of file that
  *  have the fault. An "any" key has no fault. */
 const FAULTS: Record<KeyScope['scope'], { id: MessageId; kinds: FileKind[] } | undefined> = {
   managed: { id: 'managedOnly', kinds: ['project', 'local'] },
+  user: { id: 'userOnly', kinds: ['project', 'local'] },
   'user-or-managed': { id: 'userOrManaged', kinds: ['project', 'local'] },
   'user-local-or-managed': { id: 'userLocalOrManaged', kinds: ['project'] },
   global: { id: 'globalConfig', kinds: ['project', 'local', 'managed'] },
@@ -37,6 +43,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     messages: {
       managedOnly:
         'Claude Code reads "{{key}}" from managed settings only. It ignores the key in this file.',
+      userOnly:
+        'Claude Code reads "{{key}}" from user settings only. It ignores the key in this file.',
       userOrManaged:
         'Claude Code reads "{{key}}" from user and managed settings. It ignores the key in this file.',
       userLocalOrManaged:

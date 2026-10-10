@@ -27,10 +27,16 @@ rule reports a key that the file cannot set. The report is on the key.
 | Scope | Where Claude Code reads the key | The rule reports it in |
 |-------|---------------------------------|------------------------|
 | `Managed` | Managed settings only[^managed] | `.claude/settings.json`, `.claude/settings.local.json` |
+| `User` | User settings only[^userscope] | `.claude/settings.json`, `.claude/settings.local.json` |
 | `User or managed` | User and managed settings | `.claude/settings.json`, `.claude/settings.local.json` |
 | `User, local, or managed` | User, local and managed settings | `.claude/settings.json` |
 | `Global config` | `~/.claude.json` only[^global] | Each file, a managed file too |
 | `Any file` | Each settings file | No file |
+
+The index lists the `User` Scope as the user file `~/.claude/settings.json`.[^index] The rule treats
+a `User` key as a `User or managed` key. It reports the key in project files and local files. It
+makes no report in a managed file, because the index does not say that Claude Code ignores the key
+there. The key `worktree.location` has this Scope.
 
 The managed files are `managed-settings.json` and the `*.json` files in `managed-settings.d/`.
 User settings files are not in a repository, so the rule does not read them.
@@ -110,6 +116,7 @@ Pass, in `managed-settings.json`:
 ## Sources
 
 [^index]: [All settings: Settings index](https://code.claude.com/docs/en/settings-reference#settings-index)
+[^userscope]: [All settings: worktree.location](https://code.claude.com/docs/en/settings-reference#worktree-location)
 [^committed]: [Settings files and precedence: A committed key doesn't reach teammates](https://code.claude.com/docs/en/settings#a-committed-key-doesnt-reach-teammates)
 [^managed]: [Deploy managed settings: Keys only a managed source can set](https://code.claude.com/docs/en/managed-settings#keys-only-a-managed-source-can-set)
 [^global]: [All settings: Global config settings](https://code.claude.com/docs/en/settings-reference#global-config-settings)

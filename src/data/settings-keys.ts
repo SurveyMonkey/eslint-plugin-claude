@@ -10,8 +10,9 @@
 // `appendPlugins` and `prependPlugins` (User or managed).
 
 /** Where Claude Code reads a key. "user-or-managed" means user and managed
- *  settings, and a `--settings` file. */
-type Scope = 'managed' | 'user-or-managed' | 'user-local-or-managed' | 'global' | 'any'
+ *  settings, and a `--settings` file. "user" means the user file
+ *  `~/.claude/settings.json`. */
+type Scope = 'managed' | 'user' | 'user-or-managed' | 'user-local-or-managed' | 'global' | 'any'
 
 /** What a rule needs to know about a key. */
 export interface KeyScope {
@@ -45,7 +46,6 @@ const MANAGED_ONLY: readonly string[] = [
   'disableDesktopLocalSessions',
   'disableMobileSimulatorTools',
   'disableSideloadFlags',
-  'forceLoginGatewayUrl',
   'forceRemoteSettingsRefresh',
   'gatewayInternalNetworks',
   'managedMcpServers',
@@ -74,6 +74,11 @@ const MANAGED_ONLY: readonly string[] = [
   'wslInheritsWindowsSettings',
 ]
 
+/** Scope "User": the index lists the user file `~/.claude/settings.json` only. Claude Code
+ *  ignores the key in project and local settings. The rule treats the key as it treats a
+ *  "User or managed" key, and makes no report in a managed file. */
+const USER_ONLY: readonly string[] = ['worktree.location']
+
 /** Scope "User or managed": Claude Code ignores the key in project and local settings, apart
  *  from the keys in `REPORTED_BY` and `FLAGGED_VALUE`. */
 const USER_OR_MANAGED: readonly string[] = [
@@ -87,6 +92,7 @@ const USER_OR_MANAGED: readonly string[] = [
   'dialogExpiry',
   'feedbackDrafts',
   'footerLinksRegexes',
+  'forceLoginGatewayUrl',
   'modelPicker',
   'pluginConfigs',
   'prependPlugins',
@@ -337,6 +343,7 @@ const SCOPES = new Map<string, KeyScope>()
 const PARENTS = new Set<string>()
 for (const [scope, keys] of [
   ['managed', MANAGED_ONLY],
+  ['user', USER_ONLY],
   ['user-or-managed', USER_OR_MANAGED],
   ['user-local-or-managed', USER_LOCAL_OR_MANAGED],
   ['global', GLOBAL_CONFIG],
