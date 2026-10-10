@@ -28,7 +28,7 @@ markdownTester.run('skill-max-lines', ruleOf('skill-max-lines'), {
     { code: frontmatter + lines(496), filename: file },
     // `countFrontmatter: false` counts the body only.
     { code: frontmatter + lines(499), filename: file, options: [{ countFrontmatter: false }] },
-    { code: '---\n---\n' + lines(499), filename: file, options: [{ countFrontmatter: false }] },
+    { code: `---\n---\n${lines(499)}`, filename: file, options: [{ countFrontmatter: false }] },
     { code: lines(499), filename: file, options: [{ countFrontmatter: false }] },
     // The frontmatter does not need to parse for the count.
     {
@@ -65,7 +65,7 @@ markdownTester.run('skill-max-lines', ruleOf('skill-max-lines'), {
       errors: [error('overDocsLimit')],
     },
     {
-      code: '---\n---\n' + lines(500),
+      code: `---\n---\n${lines(500)}`,
       filename: file,
       options: [{ countFrontmatter: false }],
       errors: [error('overDocsLimit')],
