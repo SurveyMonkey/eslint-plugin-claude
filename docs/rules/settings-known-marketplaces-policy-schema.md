@@ -37,7 +37,7 @@ The rule reports each of these faults:
   marketplace.[^sources] The rule reports it with its own message.
 - **Fields.** A required field is missing, or a field has the wrong type.[^types]
 - **`path` of `file` and `directory`.** The path must be absolute.[^types] The rule accepts a
-  POSIX path and a Windows path, so the result does not depend on the machine that runs ESLint.
+  POSIX path and a Windows path. The result does not depend on the machine.
 - **`hostPattern` and `pathPattern`.** The value must compile as a JavaScript regular expression.
   The docs say that each is a regex.[^types] The rule does not check whether the pattern is
   anchored.

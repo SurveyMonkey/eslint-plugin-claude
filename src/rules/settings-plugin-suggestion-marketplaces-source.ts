@@ -61,8 +61,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'undeclared' }> = 
         if (names?.type !== 'Array') {
           return
         }
-        // The top level has the key, so it is an object.
-        const own = JSON.parse(context.sourceCode.text) as Fields
+        // The top level has the key, so it is an object. Text that `JSON.parse` rejects, such as a
+        // comment in a JSONC file, is text that the rule cannot see.
+        let own: Fields
+        try {
+          own = JSON.parse(context.sourceCode.text) as Fields
+        } catch {
+          return
+        }
         const siblings = readManagedSource(context.filename)
         // A part that the rule cannot see can declare the name, or set "merge".
         if (siblings === UNREADABLE) {

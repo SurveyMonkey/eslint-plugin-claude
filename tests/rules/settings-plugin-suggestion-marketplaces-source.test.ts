@@ -4,7 +4,10 @@
 // `managed-settings.d/*.json` drop-in into one source. The rule reads the sibling files on disk.
 import { mkdirSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
+import jsonPlugin from '@eslint/json'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { repo } from '../agent-settings.test-support.ts'
 import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-support.ts'
 
@@ -116,6 +119,23 @@ describe(`${name} (silent)`, () => {
     expect(idsAt({}, { pluginSuggestionMarketplaces: 'acme' })).toEqual([])
     expect(idsAt({}, { pluginSuggestionMarketplaces: null })).toEqual([])
     expect(idsAt({}, suggest(1, null, ['acme'], { a: 1 }))).toEqual([])
+  })
+
+  it('is silent for text that JSON.parse rejects, such as a comment in a JSONC file', () => {
+    const root = repo({})
+    const messages = new Linter({ cwd: path.parse(root).root }).verify(
+      '{\n  // comment\n  "pluginSuggestionMarketplaces": ["acme"]\n}',
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json: jsonPlugin, claude: plugin },
+          language: 'json/jsonc',
+          rules: { [`claude/${name}`]: 'error' },
+        },
+      ],
+      { filename: path.join(root, MAIN) },
+    )
+    expect(messages).toEqual([])
   })
 
   it('is silent for a hidden drop-in', () => {

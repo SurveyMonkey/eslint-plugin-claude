@@ -116,7 +116,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
         return
       }
       if (field === 'path' && (type === 'file' || type === 'directory')) {
-        // Both forms of an absolute path, so that the result does not depend on the machine.
+        // `win32.isAbsolute` accepts a POSIX root and a drive path. The result does not depend on the
+        // machine that runs ESLint.
         if (!path.win32.isAbsolute(value.value)) {
           report(value, 'pathRelative', { type, value: value.value })
         }
