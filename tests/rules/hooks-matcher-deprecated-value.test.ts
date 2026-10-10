@@ -29,7 +29,7 @@ describe(`${name}: the removed value`, () => {
 
   it('reports the value in a list, in either separator', () => {
     expect(ids('SessionEnd', 'logout|bypass_permissions_disabled')).toEqual(['removed'])
-    expect(ids('SessionEnd', 'bypass_permissions_disabled, other')).toEqual(['removed'])
+    expect(ids('SessionEnd', 'logout, bypass_permissions_disabled')).toEqual(['removed'])
     expect(ids('SessionEnd', 'clear,bypass_permissions_disabled|resume')).toEqual(['removed'])
   })
 

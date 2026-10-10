@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-matcher-bash-without-powershell, which reports a tool event matcher that selects Bash and not PowerShell, because a Bash-only hook never fires on Windows where Claude Code uses the PowerShell tool.
+description: The ESLint rule claude/hooks-matcher-bash-without-powershell, which reports a tool event matcher that selects Bash and not PowerShell, because a Bash-only hook does not fire on a PowerShell call on Windows.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [10]
@@ -21,7 +21,7 @@ Match PowerShell wherever a tool hook matches Bash.
 ## Rule details
 
 On Windows, Claude Code can run shell commands through the PowerShell tool. Without Git Bash, it does not
-register the Bash tool at all. A hook that matches only `Bash` can fire on no call there. The docs say to match
+register the Bash tool at all. A hook that matches only `Bash` does not fire on a PowerShell call. The docs say to match
 `Bash|PowerShell` in a hook that inspects shell commands.[^hooks][^tools]
 
 The rule reads the `matcher` of a group under `PreToolUse`, `PostToolUse`, `PostToolUseFailure`,

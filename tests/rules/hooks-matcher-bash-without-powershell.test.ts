@@ -1,5 +1,5 @@
 // On Windows, Claude Code can run shell commands through the PowerShell tool and not register Bash
-// at all. A hook that matches `Bash` only never fires there. The hooks reference says to match
+// at all. A hook that matches `Bash` only does not fire on a PowerShell call. The hooks reference says to match
 // `Bash|PowerShell` (https://code.claude.com/docs/en/hooks#powershell).
 import { describe, expect, it } from 'vitest'
 import {
@@ -110,7 +110,7 @@ describe(`${name}: a matcher that names Bash`, () => {
       FILES.project,
     )
     expect(message?.message).toBe(
-      'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and this hook can fire on no Bash call there. Write "Bash|PowerShell".',
+      'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and a hook that matches only Bash does not fire on those calls. Write "Bash|PowerShell".',
     )
   })
 

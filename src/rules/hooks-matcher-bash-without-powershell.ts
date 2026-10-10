@@ -1,5 +1,5 @@
 // On Windows, Claude Code can run shell commands through the PowerShell tool and not register Bash
-// at all, so a hook that matches `Bash` only never fires there
+// at all, so a hook that matches `Bash` only does not fire on a PowerShell call
 // (docs/rules/hooks-matcher-bash-without-powershell.md). The hooks reference says to match
 // `Bash|PowerShell`.
 import type { Rule } from 'eslint'
@@ -34,7 +34,7 @@ const rule: Rule.RuleModule = {
     schema: [],
     messages: {
       bashOnly:
-        'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and this hook can fire on no Bash call there. Write "Bash|PowerShell".',
+        'This matcher selects Bash and not PowerShell. On Windows, Claude Code can run shell commands through PowerShell, and a hook that matches only Bash does not fire on those calls. Write "Bash|PowerShell".',
     },
   },
   create(context) {

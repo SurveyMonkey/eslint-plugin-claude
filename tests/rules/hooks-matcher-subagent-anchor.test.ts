@@ -45,6 +45,28 @@ describe(`${name}: a plugin-scoped name`, () => {
     expect(ids('SubagentStart', '^a:b|c:d$')).toEqual(['unanchored'])
   })
 
+  it('is silent for a list whose alternatives each have both anchors, also in a group', () => {
+    for (const matcher of ['^a:b$|^c:d$', '(^a:b$)', '(?:^a:b$|^c:d$)', '(?i:^a:b$)']) {
+      expect(ids('SubagentStart', matcher), matcher).toEqual([])
+    }
+  })
+
+  it('reports a group with an alternative that lacks an anchor', () => {
+    for (const matcher of ['(^a:b|c:d$)', '(a:b)', '^a:b$|c:d']) {
+      expect(ids('SubagentStart', matcher), matcher).toEqual(['unanchored'])
+    }
+  })
+
+  it('reports a colon that is escaped or in a class, and a dollar that is a literal', () => {
+    for (const matcher of ['a\\:b', '[:]x', '^a:b\\$', '(?=x)a:b', '\\(?:x']) {
+      expect(ids('SubagentStart', matcher), matcher).toEqual(['unanchored'])
+    }
+  })
+
+  it('is silent for a group opener with modifiers', () => {
+    expect(ids('SubagentStart', '(?i:Explore|Plan)')).toEqual([])
+  })
+
   it('is silent for a matcher that is no valid regular expression, or whose colon opens a group', () => {
     for (const matcher of ['plugin:(', 'a:[', '(?:Explore|Plan)']) {
       expect(ids('SubagentStart', matcher), matcher).toEqual([])
@@ -88,6 +110,11 @@ describe(`${name}: a plugin-scoped name`, () => {
     expect(message('a:b$')).toContain('"^a:b$"')
     expect(message('^a:b|c:d$')).toContain('"^(a:b|c:d)$"')
     expect(message('[|]:x')).toContain('"^[|]:x$"')
+    expect(message('^(a)|b:c$')).toContain('"^((a)|b:c)$"')
+    expect(message('[ab]:x|c:d')).toContain('"^([ab]:x|c:d)$"')
+    expect(message('a\\|b:c')).toContain('"^a\\|b:c$"')
+    expect(message('\\[x:y|z')).toContain('"^(\\[x:y|z)$"')
+    expect(message('^a:b\\$')).toContain('"^a:b\\$$"')
   })
 
   it('reports at the matcher value', () => {

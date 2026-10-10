@@ -77,6 +77,11 @@ describe(`${name}: the option`, () => {
 })
 
 describe(`${name}: a hyphenated name, before v2.1.195`, () => {
+  it('is silent for a segment that is a hyphen only', () => {
+    expect(ids('SubagentStart', '-', '2.1.194')).toEqual([])
+    expect(ids('SubagentStart', 'a|-', '2.1.194')).toEqual([])
+  })
+
   it('reports a hyphenated name below the version, and not at it or above', () => {
     expect(ids('SubagentStart', 'code-reviewer', '2.1.194')).toEqual(['hyphen'])
     expect(ids('SubagentStart', 'code-reviewer', '2.1.195')).toEqual([])

@@ -43,8 +43,8 @@ Before v2.1.195, write `^code-reviewer$`. An anchor makes the matcher a regular 
 
 - It reads a matcher that holds exact-match characters only.[^patterns] A regular expression is not a fault.
 - The comma check and the hyphen check apply to the events that read a matcher in the exact-match form. These
-  are the tool events, `SubagentStart` and `SubagentStop`. The comma check also covers an event with a fixed set
-  of values.
+  are the events with matcher support, except the two below. The comma check also covers an event with a fixed
+  set of values.
 - It makes no report for `FileChanged` and `StopFailure` on a comma or a hyphen. Those events read both as a
   regular expression, and [`hooks-matcher-syntax`](hooks-matcher-syntax.md) reports them.
 - It makes no hyphen report on an event with a fixed set of values.
