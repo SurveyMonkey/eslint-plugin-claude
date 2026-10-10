@@ -40,13 +40,15 @@ const badSettings = JSON.stringify({
 // entry sets `strict` to `false` and `skills`, and its source has a `plugin.json`. An eighth entry
 // sets `hooks` for `Stop`, and its `plugin.json` does too. A ninth entry has the marketplace root as
 // its `source`, and lists one of the two skills under `skills/`. A tenth entry
-// sets a `commands` path with `..`.
+// sets a `commands` path with `..`. The command source of the first entry sets `mode` to `link`.
+// An eleventh entry has an `archive` source with no `sha256`, and a twelfth has a relative `source`
+// with a backslash.
 const badMarketplace = JSON.stringify({
   name: 'claude-code-plugins',
   plugins: [
     {
       name: 'a',
-      source: { source: 'command', command: 'my-tool claude-plugin-path' },
+      source: { source: 'command', command: 'my-tool claude-plugin-path', mode: 'link' },
       version: '1.0.0',
       headersHelper: './mint-token',
       hooks: './hooks.json',
@@ -60,6 +62,8 @@ const badMarketplace = JSON.stringify({
     { name: 'h', source: './plugins/h', hooks: { Stop: [] } },
     { name: 'root', source: '.', skills: ['./skills/listed'] },
     { name: 'p', source: './plugins/p', commands: '../c.md' },
+    { name: 'd', source: { source: 'archive', url: 'https://x.test/d.zip' } },
+    { name: 'e', source: './plugins\\e' },
   ],
 })
 
@@ -466,6 +470,19 @@ const MARKETPLACE_RULES = [
   'marketplace-entry-component-paths',
 ]
 
+// The marketplace rules of #12 that are warnings, in the order of the `modules` list.
+// `marketplace-location` reads every `marketplace.json`, and the rest read the
+// `.claude-plugin/marketplace.json` only.
+const LOCATION_RULE = 'marketplace-location'
+const MARKETPLACE_WARN_RULES = [
+  'marketplace-archive-sha256',
+  'marketplace-command-link-mode',
+  'marketplace-command-source',
+  LOCATION_RULE,
+  'marketplace-min-version',
+  'marketplace-relative-source-backslash',
+]
+
 // The settings rules of #12, in the order of the `modules` list. Each is an error.
 const SETTINGS_RULES = [
   'settings-enabled-plugins-schema',
@@ -550,10 +567,18 @@ const EXPECTED = [
   'plugins/p/commands/c.md: claude/command-legacy-format@1',
   'plugins/p/hooks/hooks.json: claude/hooks-event-name-known@2',
   'plugins/p/skills/s/SKILL.md: claude/skill-description-max-length@1',
-  // The marketplace rules read `.claude-plugin/marketplace.json` only.
+  // The marketplace rules read `.claude-plugin/marketplace.json` only, and so do the marketplace
+  // warnings. `marketplace-min-version` reports nothing with no `minVersion`.
   ...MARKETPLACE_RULES.filter((rule) => rule !== ESCAPE_RULE).map(
     (rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`,
   ),
+  ...MARKETPLACE_WARN_RULES.filter(
+    (rule) => rule !== LOCATION_RULE && rule !== 'marketplace-min-version',
+  ).map((rule) => `.claude-plugin/marketplace.json: claude/${rule}@1`),
+  // `marketplace-location` reads each `marketplace.json`, and reports the one out of its folder.
+  'marketplace.json: claude/marketplace-location@1',
+  'docs/marketplace.json: claude/marketplace-location@1',
+  'packages/s/site/docs/marketplace.json: claude/marketplace-location@1',
   'packages/m/.claude-plugin/marketplace.json: claude/marketplace-name-reserved@2',
   ...(LINKS
     ? [
@@ -787,6 +812,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...MARKETPLACE_WARN_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'warn' },
+      ]),
       ...SETTINGS_RULES.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -810,6 +839,7 @@ describe('configs', () => {
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
+      ...MARKETPLACE_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
@@ -857,6 +887,34 @@ describe('configs', () => {
         ['json/json', ['**/.claude-plugin/marketplace.json']],
       ])
     }
+  })
+
+  it('gives each marketplace warning one JSON block for its files', () => {
+    for (const rule of MARKETPLACE_WARN_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${rule}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        [
+          'json/json',
+          [rule === LOCATION_RULE ? '**/marketplace.json' : '**/.claude-plugin/marketplace.json'],
+        ],
+      ])
+    }
+  })
+
+  it('reports a feature above the option minVersion of the version rule only', async () => {
+    const withOption: Linter.Config = {
+      files: ['**/.claude-plugin/marketplace.json'],
+      rules: { 'claude/marketplace-min-version': ['warn', { minVersion: '2.1.0' }] },
+    }
+    const found = (await reports([...plugin.configs.recommended, withOption])).filter((line) =>
+      line.includes('marketplace-min-version'),
+    )
+    // The `archive` source, the `command` source and the `headersHelper` of the bad marketplace.
+    expect(found).toEqual(
+      Array(3).fill('.claude-plugin/marketplace.json: claude/marketplace-min-version@1'),
+    )
   })
 
   it('gives each settings rule one JSON block for the two project settings files', () => {

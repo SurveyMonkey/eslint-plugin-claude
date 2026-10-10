@@ -133,6 +133,12 @@
   ],
   "sources": [
     {
+      "heading": "Serve users who have no git-host account",
+      "id": "serve-users-who-have-no-git-host-account",
+      "hash": "8cb4f50cb63f6c02e0d13a1a48dbdf013814d81b178d626a788d6b1830db55f8",
+      "text": "### Serve users who have no git-host account\n\nUsers without a git-host account can add a marketplace you serve as a `marketplace.json` URL or from a shared directory, but they can install only the plugins whose entry sources they can also reach. An entry that points at a private `github` repository still fails at install for them, because Claude Code fetches it with the same non-interactive `git` it uses for a git-hosted marketplace.\n\nThese entry sources need no git account:\n\n* **`archive`**: a zip downloaded over HTTPS. Users need neither `git` nor an account, only network access to the URL. Requires Claude Code v2.1.224 or later. Pin each archive with `sha256` so Claude Code refuses a changed download. To send credentials with the download, see [Authenticate archive downloads](#authenticate-archive-downloads).\n* **A public git repository**: Claude Code clones a public `url` or `git-subdir` source over HTTPS without credentials when the entry gives an `https://` URL. For a `github` source, or a `git-subdir` source written as `owner/repo`, users without a GitHub SSH key set `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1`.\n\nFor a team on one network, a `directory` marketplace on a shared filesystem also works without git accounts. Users need only read access to the path."
+    },
+    {
       "heading": "Share files within a marketplace with symlinks",
       "id": "share-files-within-a-marketplace-with-symlinks",
       "hash": "da7a34e6622f40c0822470834d2e01b2dc7bc6db81eb290f45e00849421c264f",

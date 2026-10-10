@@ -18,6 +18,9 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import marketplaceArchiveSha256 from './rules/marketplace-archive-sha256.ts'
+import marketplaceCommandLinkMode from './rules/marketplace-command-link-mode.ts'
+import marketplaceCommandSource from './rules/marketplace-command-source.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -26,7 +29,10 @@ import marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manife
 import marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
 import marketplaceEntryRootSkills from './rules/marketplace-entry-root-skills.ts'
 import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
+import marketplaceLocation from './rules/marketplace-location.ts'
+import marketplaceMinVersion from './rules/marketplace-min-version.ts'
 import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
+import marketplaceRelativeSourceBackslash from './rules/marketplace-relative-source-backslash.ts'
 import marketplaceRelativeSourceEscapeSymlink from './rules/marketplace-relative-source-escape-symlink.ts'
 import marketplaceRelativeSourceExists from './rules/marketplace-relative-source-exists.ts'
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
@@ -152,6 +158,12 @@ const modules = [
   marketplaceEntryHooksOverride,
   marketplaceEntryRootSkills,
   marketplaceEntryComponentPaths,
+  marketplaceArchiveSha256,
+  marketplaceCommandLinkMode,
+  marketplaceCommandSource,
+  marketplaceLocation,
+  marketplaceMinVersion,
+  marketplaceRelativeSourceBackslash,
   settingsEnabledPluginsSchema,
   settingsEnabledPluginsEntryExists,
   settingsExtraKnownMarketplacesSchema,
@@ -260,6 +272,12 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-entry-hooks-override': 'error',
   'marketplace-entry-root-skills': 'error',
   'marketplace-entry-component-paths': 'error',
+  'marketplace-archive-sha256': 'warn',
+  'marketplace-command-link-mode': 'warn',
+  'marketplace-command-source': 'warn',
+  'marketplace-location': 'warn',
+  'marketplace-min-version': 'warn',
+  'marketplace-relative-source-backslash': 'warn',
   'settings-enabled-plugins-schema': 'error',
   'settings-enabled-plugins-entry-exists': 'error',
   'settings-extra-known-marketplaces-schema': 'error',
