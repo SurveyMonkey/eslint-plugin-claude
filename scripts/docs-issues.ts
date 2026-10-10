@@ -502,13 +502,13 @@ export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
 }
 
 // The title of a digest issue. The scope is the page path after
-// `/docs/en/`, or the URL with no `https://` when the path has no
-// `/docs/en/`. When the scope is empty, or the title is longer than
-// MAX_TITLE, the title has no scope. The body names the page.
+// `/docs/en/`. The title has no scope in three cases: the page has no
+// `/docs/en/`, the path after it is empty, or the title is longer than
+// MAX_TITLE. The body names the page.
 export function digestTitleOf(page: string, n: number): string {
   const docs = '/docs/en/'
   const at = page.indexOf(docs)
-  const scope = neutralize(at === -1 ? page.slice('https://'.length) : page.slice(at + docs.length))
+  const scope = at === -1 ? '' : neutralize(page.slice(at + docs.length))
   const scoped = `docs(${scope}): triage ${n} changed blocks`
   return scope !== '' && scoped.length <= MAX_TITLE ? scoped : `docs: triage ${n} changed blocks`
 }

@@ -1885,9 +1885,7 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
     expect(api.digestTitleOf('https://code.claude.com/docs/en/agent-sdk/hooks', 2)).toBe(
       'docs(agent-sdk/hooks): triage 2 changed blocks',
     )
-    expect(api.digestTitleOf('https://example.com/x', 2)).toBe(
-      'docs(example.com/x): triage 2 changed blocks',
-    )
+    expect(api.digestTitleOf('https://example.com/x', 2)).toBe('docs: triage 2 changed blocks')
     // "docs(" and "): triage 2 changed blocks" take 31 characters, so a path
     // of 38 characters fills the 69 characters of MAX_TITLE.
     const path38 = `https://code.claude.com/docs/en/${'p'.repeat(38)}`
