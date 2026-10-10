@@ -196,6 +196,26 @@ describe(`${name}: a subagent name`, () => {
     expect(ids(all, subagents('nope'), 'packages/a/.claude/settings.json')).toEqual(['agent'])
   })
 
+  it('reads the agent folder of the settings file and of each folder above it', () => {
+    const root = { '.claude/agents/reviewer.md': agent('', 'reviewer') }
+    const nested = 'packages/a/.claude/settings.json'
+    expect(
+      ids(
+        { ...root, 'packages/a/.claude/agents/own.md': agent('', 'own') },
+        subagents('own'),
+        nested,
+      ),
+    ).toEqual([])
+    expect(
+      ids(
+        { ...root, 'packages/.claude/agents/mid.md': agent('', 'mid') },
+        subagents('mid'),
+        nested,
+      ),
+    ).toEqual([])
+    expect(ids(root, subagents('mid'), nested)).toEqual(['agent'])
+  })
+
   it('is silent for a plugin-scoped name and a regular expression', () => {
     for (const matcher of ['my-plugin:reviewer', '^my-plugin:reviewer$', '^rev', '*', '']) {
       expect(ids(files, subagents(matcher)), matcher).toEqual([])
@@ -301,6 +321,25 @@ describe(`${name}: an MCP server name`, () => {
   it('reads a .mcp.json above the settings file, and reports in settings.local.json', () => {
     expect(ids(files, server('dbx'), 'packages/a/.claude/settings.json')).toEqual(['server'])
     expect(ids(files, server('dbx'), '.claude/settings.local.json')).toEqual(['server'])
+  })
+
+  it('reads the .mcp.json of the settings file and of each folder above it', () => {
+    const nested = 'packages/a/.claude/settings.json'
+    expect(
+      ids(
+        { ...files, 'packages/a/.mcp.json': mcp({ own: { command: 'x' } }) },
+        server('own'),
+        nested,
+      ),
+    ).toEqual([])
+    expect(
+      ids(
+        { ...files, 'packages/.mcp.json': mcp({ mid: { command: 'x' } }) },
+        server('mid'),
+        nested,
+      ),
+    ).toEqual([])
+    expect(ids(files, server('mid'), nested)).toEqual(['server'])
   })
 
   it('reports when .mcp.json has no mcpServers key', () => {
