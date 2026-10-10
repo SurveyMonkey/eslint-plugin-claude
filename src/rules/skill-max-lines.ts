@@ -1,5 +1,5 @@
-// The skills page says to keep `SKILL.md` under 500 lines (docs/rules/skill-max-lines.md). Claude
-// Code does not cut the file at that number, so the option `max` has no schema maximum.
+// The skills page advises to keep `SKILL.md` under 500 lines (docs/rules/skill-max-lines.md). It
+// states no hard limit, so the option `max` has no schema maximum.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
@@ -13,7 +13,7 @@ type Options = [{ max: number; countFrontmatter: boolean }]
 
 const rule: MarkdownRuleDefinition<{
   RuleOptions: Options
-  MessageIds: 'overDocsLimit' | 'overConfiguredLimit'
+  MessageIds: 'overDocsLimit' | 'overConfiguredLimit' | 'overBodyLimit'
 }> = {
   meta: {
     type: 'suggestion',
@@ -35,6 +35,8 @@ const rule: MarkdownRuleDefinition<{
     messages: {
       overDocsLimit:
         'This file has {{count}} lines. The skills page says to keep `SKILL.md` under {{max}} lines. Move reference material to supporting files.',
+      overBodyLimit:
+        'The body of this file has {{count}} lines. The configured limit is under {{max}} lines. Move reference material to supporting files.',
       overConfiguredLimit:
         'This file has {{count}} lines. The configured limit is under {{max}} lines. Move reference material to supporting files.',
     },
@@ -55,9 +57,17 @@ const rule: MarkdownRuleDefinition<{
           !countFrontmatter && first?.type === 'yaml' ? sourceCode.getLoc(first).end.line : 0
         const count = total - skipped
         if (count >= max) {
+          // The skills page counts the whole file, so its message needs the whole count.
+          let messageId: 'overDocsLimit' | 'overConfiguredLimit' | 'overBodyLimit' =
+            'overConfiguredLimit'
+          if (skipped > 0) {
+            messageId = 'overBodyLimit'
+          } else if (max === DOCS_LINES) {
+            messageId = 'overDocsLimit'
+          }
           context.report({
             loc: { start: { line: 1, column: 1 }, end: { line: 1, column: 1 } },
-            messageId: max === DOCS_LINES ? 'overDocsLimit' : 'overConfiguredLimit',
+            messageId,
             data: { count: String(count), max: String(max) },
           })
         }

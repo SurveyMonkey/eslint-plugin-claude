@@ -1,9 +1,8 @@
 // A doubled backslash before an argument placeholder does not escape it. Both backslashes stay,
-// and the placeholder still expands (docs/rules/skill-argument-escape.md). Claude Code
-// substitutes in the whole body, so the rule reads fenced and inline code too.
+// and the placeholder can still expand (docs/rules/skill-argument-escape.md). The docs give no
+// exemption for code, so the rule reads fenced and inline code too.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import { isEmptyBlock } from '../empty-block.ts'
 import { listEntries, SPACE_OR_COMMA } from '../frontmatter-list.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -31,7 +30,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'doubled' }> = {
     schema: [],
     messages: {
       doubled:
-        'A doubled backslash does not escape `{{token}}`. Both backslashes stay, and the placeholder still expands. Use one backslash to keep it as text.',
+        'A doubled backslash does not escape `{{token}}`. Both backslashes stay, and the placeholder can still expand. Use one backslash to keep it as text.',
     },
   },
   create(context) {
@@ -46,11 +45,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'doubled' }> = {
         let start = 0
         if (first?.type === 'yaml') {
           const fm = readFrontmatter(sourceCode, first)
-          // YAML that does not parse is a fault of another rule. The declared names are not known.
-          if (fm === null && !isEmptyBlock(first.value)) {
-            return
-          }
           start = sourceCode.getRange(first)[1]
+          // YAML that does not parse gives no declared names. The built-in placeholders stay.
           if (fm !== null) {
             names = listEntries(fm, first.value, 'arguments', SPACE_OR_COMMA).map((e) => e.text)
           }
