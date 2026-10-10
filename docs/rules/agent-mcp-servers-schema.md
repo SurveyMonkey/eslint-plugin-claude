@@ -30,7 +30,7 @@ faults:
 - **Bad type.** The `type` of an inline server is not `stdio`, `http`, `sse` or `ws`.
 
 An inline server follows the schema of a server in `.mcp.json`. The rule checks only the `type`.
-It does not check `command` or `url`. The rule does not report a server of the type `sdk`. The report is on the value of `mcpServers`, because the rule reads
+It does not check `command` or `url`. The rule does not report a server of the type `sdk`: Claude Code skips such a server with a warning, because only an SDK host application can register it.[^sdk] The report is on the value of `mcpServers`, because the rule reads
 the parsed YAML.
 
 Claude Code ignores `mcpServers` in a plugin agent. So the rule checks only agent files in
@@ -72,3 +72,4 @@ None.
 
 [^mcp]: [Create custom subagents: Scope MCP servers to a subagent](https://code.claude.com/docs/en/sub-agents#scope-mcp-servers-to-a-subagent)
 [^fields]: [Create custom subagents: Frontmatter reference](https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields)
+[^sdk]: [Connect Claude Code to tools via MCP: Option 1: Add a remote HTTP server](https://code.claude.com/docs/en/mcp#option-1-add-a-remote-http-server)
