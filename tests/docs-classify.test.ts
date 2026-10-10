@@ -327,6 +327,8 @@ describe('classify', () => {
     expect(f?.oldText).toContain('an array mixing both')
     expect(f?.newText).toContain('an array of both')
     expect(f?.oldHash).not.toBe(f?.newHash)
+    // A request with the full texts gives no changed-lines note.
+    expect(f?.reason).toBe('Jev gives 0.84 that the change alters what a-rule checks')
     expect(jev.calls.map((c) => c.request.state.docs_block.heading)).toEqual(['hooks'])
   })
 
@@ -649,11 +651,37 @@ describe('classify', () => {
       expect(findings[0]?.reason).toMatch(/\. Jev judged the changed lines, not the whole block\.$/)
     })
 
-    it('gives no finding and no note when the changed row does not alter the rule', async () => {
+    it('gives no finding when the changed row does not alter the rule', async () => {
       const edited = big.replace('| FLAG_7 | Row 7 text', '| FLAG_7 | Row 7 new text')
       const jev = fakeJev(answer({ alters: 0.05, obsolete: 0.01 }))
       const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(jev.calls).toHaveLength(1)
       expect(findings).toEqual([])
+    })
+
+    it('sends the added lines of a block that only gains a row', async () => {
+      const row = '| FLAG_7 | Row 7 text to pad the table. |'
+      const edited = big.replace(row, `${row}\n| FLAG_NEW | A new row. |`)
+      const jev = fakeJev(answer({ alters: 0.84, obsolete: 0.03 }))
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(jev.calls).toHaveLength(1)
+      const block = jev.calls[0]?.request.state.docs_block
+      expect(block?.removed_lines).toEqual([])
+      expect(block?.added_lines).toEqual(['| FLAG_NEW | A new row. |'])
+      expect(findings[0]?.reason).toMatch(/Jev judged the changed lines/)
+    })
+
+    it('sends the removed lines of a block that only loses a row', async () => {
+      const row = '| FLAG_7 | Row 7 text to pad the table. |'
+      const edited = big.replace(`${row}\n`, '')
+      expect(edited).not.toBe(big)
+      const jev = fakeJev(answer({ alters: 0.84, obsolete: 0.03 }))
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(jev.calls).toHaveLength(1)
+      const block = jev.calls[0]?.request.state.docs_block
+      expect(block?.removed_lines).toEqual([row])
+      expect(block?.added_lines).toEqual([])
+      expect(findings[0]?.reason).toMatch(/Jev judged the changed lines/)
     })
 
     it('gives needs-triage with no call for a diff over the limit', async () => {
@@ -842,5 +870,42 @@ describe('main on a temporary tree', () => {
       ],
     })
     expect(text).toContain(`- ${URL_} \`low\` (changed, requirement 0.31)`)
+  })
+
+  it('lists a requirement value of 0, and no value for a block that a rule cites', () => {
+    const quiet = (blockId: string, reason: 'alters' | 'requirement', probability: number) => ({
+      blockId,
+      heading: blockId,
+      change: 'changed',
+      page: URL_,
+      outcomes: [{ kind: 'no-change' as const, rule: null, probability, reason }],
+    })
+    const text = api.renderMarkdown({
+      model: 'jev-1.13.0',
+      findings: [],
+      results: [quiet('zero', 'requirement', 0), quiet('cited', 'alters', 0.05)],
+    })
+    expect(text).toContain(`- ${URL_} \`zero\` (changed, requirement 0)`)
+    expect(text).toContain(`- ${URL_} \`cited\` (changed)`)
+  })
+
+  it('does not list a block with a finding beside a no-change outcome', () => {
+    const text = api.renderMarkdown({
+      model: 'jev-1.13.0',
+      findings: [],
+      results: [
+        {
+          blockId: 'mixed',
+          heading: 'mixed',
+          change: 'changed',
+          page: URL_,
+          outcomes: [
+            { kind: 'no-change', rule: 'a-rule', probability: 0.05, reason: 'alters' },
+            { kind: 'rule-update', rule: 'b-rule', probability: 0.8, reason: 'alters' },
+          ],
+        },
+      ],
+    })
+    expect(text).not.toContain('`mixed`')
   })
 })

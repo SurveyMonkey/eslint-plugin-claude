@@ -70,9 +70,10 @@ Code decides these cases with no model call:
 - A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
-- A block is too large for one request, and its changed lines are also too large, or it has
-  one text only, or its two texts have no changed line: `needs-triage`. A block with one text
-  has no diff. Its text is new, or removed, or it has no stored old text.
+- A block is too large for one request, and no request with its changed lines can go:
+  `needs-triage`. This is the case when the changed lines are too large, the block has one text
+  only, or the two texts have no changed line. A block with one text has no earlier or later
+  text to compare. Its text is new, or removed, or it has no stored old text.
 
 A block that is too large for one request, and has a diff that fits, gets a model call. The
 request has the lines that each side adds and no full text. The Reason of a finding from that
@@ -129,15 +130,18 @@ Accuracy by label, on each of the four runs:
 
 **Why these thresholds.** The `no` values matter most, because a no opens no issue.
 
-- The lowest `alters` for a `rule-update` case is 0.51. The `no` value of 0.2 is far below it.
+- The lowest `alters` for a `rule-update` case in the spike is 0.51. The `no` value of 0.2 is far below it.
   The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
   block is 0.73. The band from 0.2 to 0.5 is empty in this spike data.
-- In the live data, seven blocks that no rule cites had a `requirement` value from 0.21 to
-  0.33 (#104, #105, #110, #111, #123, #125 and #133). All seven needed no change. So the
+- Seven live blocks that no rule cites had a `requirement` value from 0.21 to 0.33. They are
+  #104, #105, #110, #111, #123, #125 and #133. All seven needed no change. So the
   `requirement` `no` value is 0.4. A skipped block is a missed candidate, not a broken rule.
-- The `alters` value stays 0.2. Both cases in its live band were real rule changes (#103 at
-  0.27 and #118 at 0.24). The classifier summary lists each no-change block with its value.
+- The `alters` value stays 0.2. Two live cases fell in its band (#103 at 0.27 and #118 at
+  0.24). Neither changed the rule that it cited, and #118 led to a new rule. Two cases are too
+  few to move the value.
+- The classifier summary lists each block that needs no change. For a block that no rule
+  cites, it adds the `requirement` value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
 - The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56. A
   value below 0.5 gives `needs-triage`, not a silent miss. Both results open an issue.

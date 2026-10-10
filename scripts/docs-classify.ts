@@ -15,9 +15,11 @@
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
 // - an answer that is not valid, or an answer between two thresholds
-// - a block whose changed lines are too large for one request.
-// A block that is too large for one request gets a request with its
-// changed lines only. A finding from that request says so.
+// - a block that is too large for one request, when no request with its
+//   changed lines can go: it has one text only, it has no changed line, or
+//   its changed lines are too large.
+// A block with two texts and a changed line that fits gets a request with
+// its changed lines only. A finding from that request says so.
 // These throw, and the job fails:
 // - a map that cites no page, or a failed docs fetch
 // - a page that splitBlocks cannot read, or a page with no title
@@ -148,9 +150,9 @@ export const ENDPOINT = 'https://api.typesafe.ai/v1/systemone'
 export const TIMEOUT_MS = 30_000
 export const CONCURRENCY = 4
 // Jev takes 32k tokens for the state and the longest question. A block
-// larger than this gets a request with its changed lines only. A block goes
-// to a person with no call when those lines are also larger, or when the
-// block has one text only.
+// larger than this gets a request with its changed lines only. It goes to a
+// person with no call in three cases. Its changed lines are also larger. It
+// has one text only. Its two texts have no changed line.
 export const MAX_STATE_CHARS = 60_000
 const ATTEMPTS = 3
 const RETRY_STATUS = new Set([429, 500, 502, 503, 504, 529])
@@ -643,8 +645,8 @@ type Classified = { findings: Finding[]; result: Result }
 
 // Asks about one block and returns its findings and its result. These give a
 // needs-triage finding: a Jev error, a Jev answer that is not valid, an
-// answer between two thresholds, and a block whose changed lines are too
-// large. A block that is too large gets a request with its changed lines.
+// answer between two thresholds, and a block that is too large when no
+// request with its changed lines can go.
 async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): Promise<Classified> {
   const result = {
     page: item.page,
@@ -669,8 +671,9 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
     result: { ...result, outcomes: [{ kind: 'needs-triage', rule: null, reason }] },
   })
   if (JSON.stringify(body.state).length > MAX_STATE_CHARS) {
-    // A block with one text has no diff: its changed lines are its whole text.
-    // A diff with no line gives Jev nothing to judge, so it stays with a person.
+    // A block with one text has nothing to compare. Its changed lines are its
+    // whole text, so it stays with a person. A diff with no line gives Jev
+    // nothing to judge, so it stays with a person too.
     const diff = lineDiff(item.oldText, item.newText)
     const hasDiff = diff.removed.length > 0 || diff.added.length > 0
     if (item.oldText !== null && item.newText !== null && hasDiff) {
