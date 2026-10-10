@@ -230,7 +230,7 @@ describe('the manifest key agents', () => {
     mkdirSync(at('m12', 'p', '.claude-plugin'), { recursive: true })
     writeFileSync(
       at('m12', 'p', '.claude-plugin', 'plugin.json'),
-      JSON.stringify({ name: 'p', agents: ['./a.md'] }),
+      JSON.stringify({ name: 'p', agents: ['./a.md', './deep/a.md'] }),
     )
     expect(classifyAgentFile(at('m12', 'p', 'a.md'))).toEqual({
       plugin: true,
@@ -260,6 +260,20 @@ describe('the manifest key agents', () => {
       symlinkSync('missing.md', path.join(root, 'custom', 'gone.md'))
       expect(classifyAgentFile(path.join(root, 'custom', 'out.md'))).toBeNull()
       expect(classifyAgentFile(path.join(root, 'custom', 'gone.md'))).toBeNull()
+    })
+  })
+
+  describe.skipIf(chmodCannotBlock)('with no access to a folder', () => {
+    it('does not go on to a plugin root above a plugin root that it cannot see', () => {
+      const outer = manifested('m16', { agents: ['./inner/custom/a.md'] })
+      mkdirSync(path.join(outer, 'inner', 'custom'), { recursive: true })
+      mkdirSync(path.join(outer, 'inner', '.claude-plugin'), { recursive: true })
+      writeFileSync(path.join(outer, 'inner', '.claude-plugin', 'plugin.json'), '{"name":"i"}')
+      // The outer manifest names the file, so the file is an agent unless the inner root hides it.
+      expect(classifyAgentFile(path.join(outer, 'inner', 'custom', 'a.md'))).toBeNull()
+      withoutAccess(path.join(outer, 'inner', '.claude-plugin'), () => {
+        expect(classifyAgentFile(path.join(outer, 'inner', 'custom', 'a.md'))).toBeNull()
+      })
     })
   })
 
