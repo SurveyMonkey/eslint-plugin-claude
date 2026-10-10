@@ -10,7 +10,7 @@ import { parseImports } from '../memory-imports.ts'
 
 const name = 'claude-md-agents-md-prose-pointer' as const
 
-// A verb of reading, then the name of the file in the same sentence. The verb is in any case. The
+// A verb such as `read`, then the name of the file in the same sentence. The verb is in any case. The
 // name is `AGENTS.md` in capitals, and not part of a longer name.
 const POINTER =
   /\b(?:read|see|refer to|follow|consult|check|open|load|look at)\b[^\n.!?]{0,80}?\b(AGENTS\.md)(?![\w-]|\.\w)/gi

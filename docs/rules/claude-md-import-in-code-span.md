@@ -22,7 +22,7 @@ The rule is `off` in `recommended`.
 
 ## Rule details
 
-Claude Code imports the files that `@path` names. Import parsing skips Markdown code spans and
+Claude Code imports the files that `@path` names. The import parser skips Markdown code spans and
 fenced code blocks. To mention a path without an import, the writer puts it in backticks.[^import]
 So an `@path` in code does not load the file.
 

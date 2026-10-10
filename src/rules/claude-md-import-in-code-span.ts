@@ -72,7 +72,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'inCode' }> = {
       },
       code(node) {
         const raw = sourceCode.getText(node)
-        // The first line holds the fence and the info string. The last line holds the closing fence.
+        // The first line holds the fence and the info string. The last line holds the end fence.
         const body = raw.indexOf('\n') + 1
         if (FENCE.test(raw) && body > 0) {
           check(raw.slice(body), sourceCode.getRange(node)[0] + body)
