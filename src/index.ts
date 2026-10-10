@@ -55,6 +55,7 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -197,6 +198,7 @@ const modules = [
   rulesFrontmatterSchema,
   rulesMdExtension,
   rulesPathsGlobValid,
+  rulesSymlinkExternalScoped,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -316,6 +318,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-frontmatter-schema': 'error',
   'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',
+  'rules-symlink-external-scoped': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

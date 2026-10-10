@@ -137,6 +137,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/rules-frontmatter-schema`](docs/rules/rules-frontmatter-schema.md) | A rule file has `paths` as its only frontmatter key, as a list of strings or a string, with YAML that parses and the block on line 1 (a block of comments only passes) | `error` | `error` |
 | [`claude/rules-md-extension`](docs/rules/rules-md-extension.md) | Each file in `.claude/rules/` ends in `.md`, the only extension that Claude Code discovers | `error` | `error` |
 | [`claude/rules-paths-glob-valid`](docs/rules/rules-paths-glob-valid.md) | A `paths` glob of a rule file that Claude Code can use: no `[` without a bracket expression, and brace groups within 1,000 patterns and 4 MiB | `error` | `error` |
+| [`claude/rules-symlink-external-scoped`](docs/rules/rules-symlink-external-scoped.md) | A rule file reached through a link out of the repository has no `paths`, because Claude Code loads such a rule only without it | `error` | `error` |
 
 ### Settings
 

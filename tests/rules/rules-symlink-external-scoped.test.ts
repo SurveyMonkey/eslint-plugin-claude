@@ -28,7 +28,7 @@ function outside(code: string, options: { git?: boolean; file?: string } = {}) {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe.skipIf(noLinks)(RULE, () => {
-  it.fails('reports the paths field of a rule that is a link out of the repository', () => {
+  it('reports the paths field of a rule that is a link out of the repository', () => {
     const messages = outside(SCOPED)
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -41,7 +41,7 @@ describe.skipIf(noLinks)(RULE, () => {
     })
   })
 
-  it.fails('reports a paths field in each form that sets a scope', () => {
+  it('reports a paths field in each form that sets a scope', () => {
     for (const paths of [
       'paths: "src/**/*.ts"',
       'paths: src/**/*.ts, docs/**',
@@ -54,7 +54,7 @@ describe.skipIf(noLinks)(RULE, () => {
     }
   })
 
-  it.fails('stays silent on a rule with no scope', () => {
+  it('stays silent on a rule with no scope', () => {
     for (const code of [
       '# Rule\n',
       '---\n---\n# Rule\n',
@@ -72,14 +72,14 @@ describe.skipIf(noLinks)(RULE, () => {
     }
   })
 
-  it.fails('stays silent when the frontmatter is not read as frontmatter', () => {
+  it('stays silent when the frontmatter is not read as frontmatter', () => {
     // The YAML does not parse, the block is below line 1, or the list is a map.
     expect(outside('---\npaths: *.ts\n---\n# Rule\n')).toEqual([])
     expect(outside('# Rule\n\n---\npaths: "src/**"\n---\n')).toEqual([])
     expect(outside('---\n- paths\n---\n# Rule\n')).toEqual([])
   })
 
-  it.fails('reports a rule below a link to a folder out of the repository, at each level', () => {
+  it('reports a rule below a link to a folder out of the repository, at each level', () => {
     const elsewhere = tree({ 'rules/sub/b.md': SCOPED })
     const dir = tree({})
     link(dir, '.claude/rules/shared', path.join(elsewhere, 'rules'))
@@ -89,12 +89,19 @@ describe.skipIf(noLinks)(RULE, () => {
     const rules = tree({})
     link(rules, '.claude/rules', path.join(elsewhere, 'rules'))
     expect(ids(lintMemory(RULE, rules, '.claude/rules/sub/b.md', SCOPED))).toEqual(['neverLoads'])
+    // A target with a `.git` is a repository of its own, so this one has none.
+    const shared = tree({ 'rules/sub/b.md': SCOPED }, false)
     const claude = tree({})
-    link(claude, '.claude', elsewhere)
+    link(claude, '.claude', shared)
     expect(ids(lintMemory(RULE, claude, '.claude/rules/sub/b.md', SCOPED))).toEqual(['neverLoads'])
+    // A target with its own `.git` is a repository of its own, so the rule reads no link out of it.
+    const repo = tree({ 'rules/sub/b.md': SCOPED })
+    const linked = tree({})
+    link(linked, '.claude', repo)
+    expect(lintMemory(RULE, linked, '.claude/rules/sub/b.md', SCOPED)).toEqual([])
   })
 
-  it.fails('stays silent on a link that leads to a file in the repository', () => {
+  it('stays silent on a link that leads to a file in the repository', () => {
     const dir = tree({ 'shared/a.md': SCOPED, 'shared/rules/b.md': SCOPED })
     link(dir, FILE, '../../shared/a.md')
     link(dir, '.claude/rules/dir', '../../shared/rules')
@@ -102,12 +109,12 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(lintMemory(RULE, dir, '.claude/rules/dir/b.md', SCOPED)).toEqual([])
   })
 
-  it.fails('stays silent on a rule file that is a regular file', () => {
+  it('stays silent on a rule file that is a regular file', () => {
     const dir = tree({ [FILE]: SCOPED })
     expect(lintMemory(RULE, dir, FILE, SCOPED)).toEqual([])
   })
 
-  it.fails('does not check a file that Claude Code does not load as a rule', () => {
+  it('does not check a file that Claude Code does not load as a rule', () => {
     const elsewhere = tree({ 'a.md': SCOPED })
     const dir = tree({})
     link(dir, 'CLAUDE.md', path.join(elsewhere, 'a.md'))
@@ -116,7 +123,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(lintMemory(RULE, dir, 'docs/a.md', SCOPED)).toEqual([])
   })
 
-  it.fails('uses the folder of the file as the bound in a tree with no .git', () => {
+  it('uses the folder of the file as the bound in a tree with no .git', () => {
     expect(ids(outside(SCOPED, { git: false }))).toEqual(['neverLoads'])
     const elsewhere = tree({ 'rules/b.md': SCOPED })
     const dir = tree({}, false)
@@ -127,7 +134,7 @@ describe.skipIf(noLinks)(RULE, () => {
 })
 
 describe.skipIf(noLinks)(`${RULE}: what the rule cannot read`, () => {
-  it.fails('makes no report for a link that leads nowhere', () => {
+  it('makes no report for a link that leads nowhere', () => {
     const dir = tree({})
     link(dir, FILE, '/nowhere/a.md')
     link(dir, '.claude/rules/gone', '/nowhere')
@@ -135,11 +142,11 @@ describe.skipIf(noLinks)(`${RULE}: what the rule cannot read`, () => {
     expect(lintMemory(RULE, dir, '.claude/rules/gone/b.md', SCOPED)).toEqual([])
   })
 
-  it.fails('makes no report for a file that is not on disk', () => {
+  it('makes no report for a file that is not on disk', () => {
     expect(lintMemory(RULE, tree({}), FILE, SCOPED)).toEqual([])
   })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report for a path that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('makes no report for a path that it cannot read', () => {
     const dir = tree({ '.claude/rules/sub/b.md': SCOPED })
     withoutAccess(path.join(dir, '.claude/rules/sub'), () => {
       expect(lintMemory(RULE, dir, '.claude/rules/sub/b.md', SCOPED)).toEqual([])

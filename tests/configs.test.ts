@@ -86,6 +86,8 @@ const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
 // One byte over the 4 MiB that Claude Code loads from a CLAUDE.md file. An HTML comment is
 // the cheapest text for the Markdown parser.
+// A rule file that sets a scope.
+const SCOPED_RULE = '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n'
 const bigMarkdown = `<!--${'x'.repeat(4194305 - 7)}-->`
 
 const TREE: Record<string, string> = {
@@ -454,6 +456,9 @@ const TREE: Record<string, string> = {
   'packages/sh/.claude/rules/AGENTS.md': '# Rule\n',
   'packages/sh/ok/CLAUDE.md': '@AGENTS.md\n',
   'packages/sh/ok/AGENTS.md': '# Agents\n',
+  // `rules-symlink-external-scoped`: a rule file with `paths` that is a link out of the tree. The
+  // links are made in `beforeAll`. The same text in a regular file is not reported.
+  'packages/rx/.claude/rules/local.md': SCOPED_RULE,
   // `claude-md-import-exists`: an import of a missing file in each instruction file that Claude
   // Code expands. The same text where no rule reads it: a Markdown file that is not one of them,
   // and a rule file.
@@ -624,6 +629,7 @@ const MEMORY_RULES = [
   'rules-frontmatter-schema',
   'rules-md-extension',
   'rules-paths-glob-valid',
+  'rules-symlink-external-scoped',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -798,6 +804,8 @@ const EXPECTED = [
   'packages/mb/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
   'packages/ie/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
   'packages/ie/.claude/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  // `rules-symlink-external-scoped` reads the rule files that are links out of the tree.
+  ...(LINKS ? ['packages/rx/.claude/rules/scoped.md: claude/rules-symlink-external-scoped@2'] : []),
   // `claude-md-import-exists` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
   'packages/ie/CLAUDE.md: claude/claude-md-import-exists@2',
   'packages/ie/.claude/CLAUDE.md: claude/claude-md-import-exists@2',
@@ -913,9 +921,12 @@ const NEW_RULES = [
 ]
 
 let root = ''
+// A folder next to the tree, for the files that links in the tree lead to.
+let external = ''
 
 beforeAll(() => {
   root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
+  external = `${root}-external`
   for (const [file, content] of Object.entries(TREE)) {
     mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
     writeFileSync(path.join(root, file), content)
@@ -923,10 +934,24 @@ beforeAll(() => {
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
+    // `rules-symlink-external-scoped`: rule files that are links out of the tree, a scoped one and
+    // one with no scope. The tree of `packages/rx` has no `.git`, so its rules folder is the bound.
+    mkdirSync(external, { recursive: true })
+    writeFileSync(path.join(external, 'scoped.md'), SCOPED_RULE)
+    writeFileSync(path.join(external, 'plain.md'), '# Rule\n')
+    for (const name of ['scoped', 'plain']) {
+      symlinkSync(
+        path.join(external, `${name}.md`),
+        path.join(root, `packages/rx/.claude/rules/${name}.md`),
+      )
+    }
   }
 })
 
-afterAll(() => rmSync(root, { recursive: true, force: true }))
+afterAll(() => {
+  rmSync(root, { recursive: true, force: true })
+  rmSync(external, { recursive: true, force: true })
+})
 
 /** Each report over the tree, as `file: rule@severity`, sorted. */
 async function reports(config: Linter.Config[]): Promise<string[]> {
@@ -1092,6 +1117,9 @@ describe('configs', () => {
     for (const rule of ['rules-frontmatter-schema', 'rules-paths-glob-valid']) {
       expect(blocks(rule)).toEqual([['markdown/gfm', ['**/.claude/rules/**/*.md']]])
     }
+    expect(blocks('rules-symlink-external-scoped')).toEqual([
+      ['markdown/gfm', ['**/.claude/rules/**/*.md']],
+    ])
     expect(blocks('rules-md-extension')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
     ])
