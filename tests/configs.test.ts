@@ -127,8 +127,6 @@ const badLsp = JSON.stringify({
 const goodLsp = JSON.stringify({ go: { command: 'gopls', extensionToLanguage: { '.go': 'go' } } })
 
 // An allowlist with a `serverUrl`, a `serverCommand` and a `serverName` entry.
-// A policy `serverUrl` with a variable reference.
-const variableAllowlist = `{"allowedMcpServers": [{"serverUrl": "https://\${HOST}/*"}]}`
 const deadAllowlist = JSON.stringify({
   allowedMcpServers: [
     { serverUrl: 'https://a.test/*' },
@@ -136,6 +134,8 @@ const deadAllowlist = JSON.stringify({
     { serverName: 'a' },
   ],
 })
+// A policy `serverUrl` with a variable reference.
+const variableAllowlist = `{"allowedMcpServers": [{"serverUrl": "https://\${HOST}/*"}]}`
 
 // A `managedMcpServers` value that is an array, and an object with an entry that has a `command`.
 const badManagedArray = JSON.stringify({ managedMcpServers: [{ name: 'a' }] })

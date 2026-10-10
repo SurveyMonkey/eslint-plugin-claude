@@ -3,6 +3,7 @@
 // URL in the MCP configs of a plugin (v2.1.281 or later), so the rule reads the project
 // `.mcp.json` only. A loopback host is on the machine, so it is silent. A host with a `${`
 // reference is not known, so it is silent too.
+import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -32,8 +33,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' }> = {
     },
   },
   create(context) {
-    // A plugin config gets its warning from `claude plugin validate`.
-    if (mcpFileKind(context.filename) !== 'project') {
+    // A plugin config gets its warning from `claude plugin validate`. A plugin manifest is one.
+    if (
+      mcpFileKind(context.filename) !== 'project' ||
+      path.basename(context.filename) !== '.mcp.json'
+    ) {
       return {}
     }
     return {

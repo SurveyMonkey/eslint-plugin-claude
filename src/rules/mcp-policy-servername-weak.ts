@@ -2,14 +2,16 @@
 // the label that a user gives a server, so a name does not control which server runs. In an
 // allowlist, Claude Code also admits a remote (stdio) server by name only when the allowlist has
 // no `serverUrl` (`serverCommand`) entry. The managed settings page combines the lists of the
-// managed files, so the rule counts the entries of the sibling files too. An allowlist with both
-// kinds is the case of `mcp-allowlist-servername-dead`, which reports each name there. An entry
-// that `mcp-policy-entry-schema` reports is not valid, so the rule skips it.
+// managed files, so the rule counts the entries of the sibling files too. A sibling that the
+// rule cannot read can hold either kind, so the rule then makes no allowlist report. An
+// allowlist with both kinds is the case of `mcp-allowlist-servername-dead`, which reports each
+// name there. An entry that `mcp-policy-entry-schema` reports is not valid, so the rule skips it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { plainOf, policyKey } from '../mcp-servers.ts'
-import { isHiddenDropIn, MANAGED_SETTINGS_FILES, readSiblingSettings } from '../settings-files.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES, readManagedSource } from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'mcp-policy-servername-weak' as const
 
@@ -63,9 +65,12 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageId }> = {
             const server = nameOf(plain, 'allowedMcpServers')
             return server === undefined ? [] : [{ node: entry, server }]
           })
-          if (names.length > 0) {
+          // A sibling that cannot be read can hold entries of either kind. The message would then
+          // be wrong, or the list would be the case of `mcp-allowlist-servername-dead`.
+          const siblings = names.length > 0 ? readManagedSource(context.filename) : UNREADABLE
+          if (siblings !== UNREADABLE) {
             const kinds = new Set(kindsOf(entries.map(({ plain }) => plain)))
-            for (const sibling of readSiblingSettings(context.filename)) {
+            for (const sibling of siblings) {
               const other = sibling.allowedMcpServers
               for (const kind of kindsOf(Array.isArray(other) ? other : [])) {
                 kinds.add(kind)

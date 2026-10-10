@@ -112,7 +112,22 @@ it('ignores a sibling list that is not an array, and an entry that Claude Code s
     'allow',
   ])
 })
-it('reports with the files that read when a sibling cannot be read', () => {
-  expect(run(allow(named('a')), dropIn, { [managed]: '{ not json' })).toEqual(['allow'])
-  expect(run(allow(command, named('a')), dropIn, { [managed]: '[1]' })).toEqual(['allowNoStdio'])
+it('makes no allowlist report when a sibling cannot be read, as it can hold either kind', () => {
+  expect(run(allow(named('a')), dropIn, { [managed]: '{ not json' })).toEqual([])
+  expect(run(allow(command, named('a')), dropIn, { [managed]: '[1]' })).toEqual([])
+  expect(run(allow(named('a')), managed, { [dropIn]: '{ not json' })).toEqual([])
+})
+it('still reports a denylist name when a sibling cannot be read', () => {
+  expect(run(deny(named('a')), dropIn, { [managed]: '{ not json' })).toEqual(['deny'])
+})
+it('merges the kinds of every sibling', () => {
+  const files = { [managed]: allow(url), 'managed-settings.d/30-c.json': allow(command) }
+  expect(run(allow(named('a')), dropIn, files)).toEqual([])
+  const other = { [managed]: allow(named('b')), 'managed-settings.d/30-c.json': allow(command) }
+  expect(run(allow(named('a')), dropIn, other)).toEqual(['allowNoStdio'])
+})
+it('reports a denylist name on the entry, and a literal star', () => {
+  const found = lint(deny(named('x')))
+  expect(found[0]).toMatchObject({ line: 1, column: 22, endColumn: 40 })
+  expect(run(deny(named('*')))).toEqual(['deny'])
 })

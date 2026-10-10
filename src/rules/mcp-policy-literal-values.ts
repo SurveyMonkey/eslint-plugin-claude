@@ -49,7 +49,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'variable' }> = {
               continue
             }
             const key = kind === 'url' ? 'serverUrl' : 'serverCommand'
-            const reference = [plain[key]].flat().join('\n').match(REFERENCE)?.[0]
+            // Claude Code expands each item of a command alone, so a reference does not span items.
+            const reference = [plain[key]]
+              .flat()
+              .map((text) => REFERENCE.exec(String(text))?.[0])
+              .find((found) => found !== undefined)
             if (reference !== undefined) {
               context.report({ node: value, messageId: 'variable', data: { key, reference } })
             }

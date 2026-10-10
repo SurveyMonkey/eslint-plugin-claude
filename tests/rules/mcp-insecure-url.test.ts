@@ -2,7 +2,13 @@
 // clear text. `claude plugin validate` warns for plugin MCP configs (manifest reference,
 // "Validate the manifest"). The rule reads the project `.mcp.json` only.
 import { expect, it } from 'vitest'
-import { ids, lintPluginFile, lintProject, mapOf } from '../mcp-server-rule.test-support.ts'
+import {
+  ids,
+  lintManifest,
+  lintPluginFile,
+  lintProject,
+  mapOf,
+} from '../mcp-server-rule.test-support.ts'
 
 const NAME = 'mcp-insecure-url'
 const at = (url: unknown, type = 'http') => mapOf({ a: { type, url } })
@@ -19,8 +25,25 @@ it('reports http:// and ws:// to a host that is not loopback, on the url', () =>
     'insecure',
   ])
 })
-it('reports a host with a variable only in the port', () => {
+it('names the host and the scheme in the message, without the port or the trailing dot', () => {
+  const http = lintProject(NAME, at('http://Example.COM.:8080/mcp'))[0]?.message
+  expect(http).toContain('connects to example.com over http://. The traffic goes in clear text.')
+  const ws = lintProject(NAME, at('ws://b.test/socket', 'ws'))[0]?.message
+  expect(ws).toContain('connects to b.test over ws://.')
+})
+it('reports a host that only looks like loopback', () => {
+  for (const url of [
+    'http://127.0.0.1.evil.test/mcp',
+    'http://localhost.evil.test/mcp',
+    'http://128.0.0.1/mcp',
+    'http://[::2]/mcp',
+  ]) {
+    expect(ids(lintProject(NAME, at(url)))).toEqual(['insecure'])
+  }
+})
+it('reports a host with a variable only in the port, also without a path', () => {
   expect(ids(lintProject(NAME, at(`http://example.com:\${PORT}/mcp`)))).toEqual(['insecure'])
+  expect(ids(lintProject(NAME, at(`http://example.com:\${PORT}`)))).toEqual(['insecure'])
 })
 it('reports each server', () => {
   const both = mapOf({
@@ -78,7 +101,11 @@ it('reads the last url member', () => {
 })
 it('leaves plugin configs to claude plugin validate', () => {
   expect(ids(lintPluginFile(NAME, at('http://example.com')))).toEqual([])
-  // The files glob leaves out a plugin manifest (tests/configs.test.ts).
+  const manifest = JSON.stringify({
+    name: 'p',
+    mcpServers: { b: { type: 'http', url: 'http://example.com' } },
+  })
+  expect(ids(lintManifest(NAME, manifest))).toEqual([])
 })
 it('does not read a path under .claude/', () => {
   expect(ids(lintProject(NAME, at('http://example.com'), '.claude/.mcp.json'))).toEqual([])
