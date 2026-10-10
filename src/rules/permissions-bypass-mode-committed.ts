@@ -1,7 +1,7 @@
 // `permissions.defaultMode: "bypassPermissions"` in a committed settings file
 // (docs/rules/permissions-bypass-mode-committed.md). Claude Code v2.1.257 and later ignores it
 // in a project or local file, and the session starts in Manual mode. Earlier versions honor it.
-// In a managed file it starts every session with no prompt. Allow rules have no effect in the
+// In a managed file it starts every session with prompts off. Allow rules have no effect in the
 // mode. A file that also locks the mode with `disableBypassPermissionsMode: "disable"` is for
 // `permissions-default-mode-conflict`, so one fault gets one report.
 import type { JSONRuleDefinition } from '@eslint/json'
