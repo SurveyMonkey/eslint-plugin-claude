@@ -3,6 +3,7 @@
 // (ADR 001, Decision 10). A plugin reads `hooks/hooks.json` at its root. Project
 // and user hooks go under the `hooks` key of a settings file, so there is no
 // standalone hooks file for them (docs/rules/hooks-no-standalone-file.md).
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
 import { readManifest, repositoryRoot, UNREADABLE } from './skill-tree.ts'
@@ -56,4 +57,27 @@ export function hooksFileKind(filename: string): HooksFileKind | null {
   }
   // Another hidden folder, such as `.github/hooks/`, holds the hooks of another tool.
   return inHooksDir && !holder.startsWith('.') ? 'plugin' : null
+}
+
+/** The project settings files that apply to a plugin in the folder `root`, nearest folder first. For each
+ *  folder, the list holds `.claude/settings.json` and then `.claude/settings.local.json`. The folders are
+ *  `root` and each folder above it, up to the folder that holds `.git` (the repository root). A project
+ *  can keep a plugin in a sub folder. If the walk finds no `.git`, the list holds the files of `root`
+ *  only (ADR 001, Decision 14). */
+export function settingsFilesAround(root: string): string[] {
+  const start = path.resolve(root)
+  const folders: string[] = []
+  for (let at = start; ; at = path.dirname(at)) {
+    folders.push(at)
+    if (existsSync(path.join(at, '.git'))) {
+      break
+    }
+    if (path.dirname(at) === at) {
+      folders.splice(0, folders.length, start)
+      break
+    }
+  }
+  return folders.flatMap((folder) =>
+    ['settings.json', 'settings.local.json'].map((name) => path.join(folder, '.claude', name)),
+  )
 }

@@ -47,6 +47,12 @@ const hooksFaults = {
       hooks: [{ type: 'command', command: './x.sh' }],
     },
   ],
+  // A WorktreeCreate hook with no WorktreeRemove hook (`hooks-worktree-create-without-remove`).
+  WorktreeCreate: [{ hooks: [{ type: 'command', command: './x.sh' }] }],
+  // An agent hook (`hooks-agent-type-experimental`).
+  PostToolBatch: [{ hooks: [{ type: 'agent', prompt: 'p' }] }],
+  // A deprecated flag (`hooks-command-deprecated-cli-flag`).
+  TaskCompleted: [{ hooks: [{ type: 'command', command: 'claude --remote x' }] }],
   // A field that the docs do not list for the type (`hooks-handler-field-unknown`).
   Setup: [{ hooks: [{ type: 'command', command: './x.sh', bogus: true }] }],
   // A prompt hook, which cannot deny (`hooks-prompt-on-permission-request`).
@@ -90,6 +96,10 @@ const hooksFaults = {
   Notification: [{ matcher: 'nope', hooks: [{ type: 'command', command: './x.sh' }] }],
   UserPromptSubmit: [{ matcher: 'Bash', hooks: [{ type: 'command', command: './x.sh' }] }],
 }
+const dupHooks = JSON.stringify({
+  hooks: { PostToolUse: [{ matcher: 'Write', hooks: [{ type: 'command', command: './fmt.sh' }] }] },
+})
+const dupManifest = JSON.stringify({ name: 'dup', ...JSON.parse(dupHooks) })
 const hooksSettings = JSON.stringify({ disableAllHooks: true, hooks: hooksFaults })
 const hooksDropIn = JSON.stringify({ hooks: hooksFaults })
 const hooksYaml = `---
@@ -111,6 +121,18 @@ hooks:
       hooks:
         - type: command
           command: ./x.sh
+  WorktreeCreate:
+    - hooks:
+        - type: command
+          command: ./x.sh
+  PostToolBatch:
+    - hooks:
+        - type: agent
+          prompt: p
+  TaskCompleted:
+    - hooks:
+        - type: command
+          command: claude --remote x
   Setup:
     - hooks:
         - type: command
@@ -408,6 +430,14 @@ const TREE: Record<string, string> = {
   'packages/hk/plugin/hooks/hooks.json': JSON.stringify({ hooks: hooksFaults }),
   'packages/hk/.claude/skills/hk/SKILL.md': hooksYaml,
   'packages/hk/.claude/agents/hk.md': hooksYaml.replace('name: hk', 'name: hk\ndescription: d'),
+  // `hooks-duplicate-handler`: one handler in a settings file, in `hooks/hooks.json` and in `plugin.json`.
+  // The local settings file holds it too, and is not the later source. A `plugin.json` outside
+  // `.claude-plugin/` is no manifest.
+  'packages/dup/.claude/settings.json': dupHooks,
+  'packages/dup/.claude/settings.local.json': dupHooks,
+  'packages/dup/hooks/hooks.json': dupHooks,
+  'packages/dup/.claude-plugin/plugin.json': dupManifest,
+  'packages/dup/docs/plugin.json': dupManifest,
   // `disableAllHooks: false` is reported in the project file only (`hooks-disable-all-override`).
   'packages/dh/.claude/settings.json': '{"disableAllHooks": false}',
   'packages/dh/.claude/settings.local.json': '{"disableAllHooks": false}',
@@ -1074,6 +1104,30 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-filechanged-star-matcher@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-prefer-exec-form@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/settings.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/settings.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/settings.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/managed-settings.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/managed-settings.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/managed-settings.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-agent-stop-event@1',
+  'packages/dup/.claude-plugin/plugin.json: claude/hooks-duplicate-handler@1',
+  'packages/dup/hooks/hooks.json: claude/hooks-duplicate-handler@1',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1102,11 +1156,33 @@ const AGENT_RULES = [
 // A rule of the hooks config has one JSON block and one Markdown block. Each is an error.
 const HOOKS_JSON = [...PROJECT_FILES, ...MANAGED_FILES, '**/hooks/hooks.json']
 const HOOKS_MARKDOWN = ['**/SKILL.md', '**/agents/**/*.md']
-const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
+// `strictOnly` marks a rule that is `off` in recommended and `warn` in strict.
+const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strictOnly?: true }[] = [
+  {
+    name: 'hooks-agent-stop-event',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
+    name: 'hooks-agent-type-experimental',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
+  {
+    name: 'hooks-command-deprecated-cli-flag',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-disable-all-override', blocks: [['**/.claude/settings.json']], severity: 'warn' },
   { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
+  {
+    name: 'hooks-duplicate-handler',
+    blocks: [['**/hooks/hooks.json', '**/.claude-plugin/plugin.json']],
+    severity: 'warn',
+  },
   { name: 'hooks-env-var-unavailable', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
@@ -1162,6 +1238,11 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
   },
   {
     name: 'hooks-sessionend-default-timeout',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
+  {
+    name: 'hooks-worktree-create-without-remove',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
   },
@@ -1226,7 +1307,7 @@ describe('configs', () => {
       ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
-      ...HOOKS_RULES.flatMap(({ name, blocks, severity }) =>
+      ...HOOKS_RULES.filter(({ strictOnly }) => !strictOnly).flatMap(({ name, blocks, severity }) =>
         blocks.map(() => [
           `claude/recommended/${name}`,
           { [`claude/${name}`]: severity ?? 'error' },
@@ -1253,10 +1334,29 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // Only hooks-agent-stop-event is off in recommended: the sub-agents page shows `Stop` in agent
+  // frontmatter as a pattern that works. Strict turns it on as a warning.
+  it('gives strict the rules of recommended, and the strictOnly rules as warnings', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const strictOnly = HOOKS_RULES.filter((rule) => rule.strictOnly).map(
+      ({ name }) => `claude/${name}`,
+    )
+    expect(
+      rulesOf(plugin.configs.strict).filter(
+        (rules) => !strictOnly.some((id) => id in (rules ?? {})),
+      ),
+    ).toEqual(rulesOf(plugin.configs.recommended))
+    expect(
+      plugin.configs.recommended.some((c) => strictOnly.some((id) => id in (c.rules ?? {}))),
+    ).toBe(false)
+    expect(
+      plugin.configs.strict
+        .filter((c) => 'claude/hooks-agent-stop-event' in (c.rules ?? {}))
+        .map((c) => c.rules),
+    ).toEqual([
+      { 'claude/hooks-agent-stop-event': 'warn' },
+      { 'claude/hooks-agent-stop-event': 'warn' },
+    ])
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1328,9 +1428,9 @@ describe('configs', () => {
   })
 
   it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
-    for (const { name, blocks } of HOOKS_RULES) {
-      const found = plugin.configs.recommended.filter(
-        (c) => c.name === `claude/recommended/${name}`,
+    for (const { name, blocks, strictOnly } of HOOKS_RULES) {
+      const found = (strictOnly ? plugin.configs.strict : plugin.configs.recommended).filter(
+        (c) => c.name === `claude/${strictOnly ? 'strict' : 'recommended'}/${name}`,
       )
       expect(found.map((c) => c.files)).toEqual(blocks)
       expect(found.map((c) => c.language)).toEqual(
@@ -1359,10 +1459,15 @@ describe('configs', () => {
   })
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
-    expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
+    const strictOnly = HOOKS_RULES.filter((rule) => rule.strictOnly).map(
+      ({ name }) => `claude/${name}@`,
+    )
+    expect(await reports(plugin.configs.recommended)).toEqual(
+      EXPECTED.filter((line) => !strictOnly.some((id) => line.includes(id))),
+    )
   }, 30_000)
 
-  it('strict reports the same files as recommended today', async () => {
+  it('strict reports the files of recommended, and the strictOnly rules', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
   }, 30_000)
 })

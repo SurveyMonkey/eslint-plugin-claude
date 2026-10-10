@@ -1,6 +1,7 @@
 // A small reader of a shell line, for the rules that look at the command of a hook. It gives the
 // simple commands of the line and their words. It is not a full shell parser: it finds the words of
 // a line that a person wrote by hand. It does not expand a variable or a glob.
+import path from 'node:path'
 
 const ASSIGNMENT = /^[A-Za-z_][A-Za-z0-9_]*=/
 /** A word that runs the next word as a command. */
@@ -76,4 +77,16 @@ export function commandWordAt(words: string[]): number {
     at++
   }
   return at
+}
+
+/** True when `word` runs Claude Code: `claude`, or a path that ends in it, with an optional `.exe`. */
+export const isClaude = (word: string) =>
+  path.posix.basename(word).replace(/\.exe$/i, '') === 'claude'
+
+/** The arguments of each simple command of `line` that runs `claude`, as lists of words. */
+export function claudeArguments(line: string): string[][] {
+  return commandsOf(line).flatMap((words) => {
+    const at = commandWordAt(words)
+    return at < words.length && isClaude(words[at] as string) ? [words.slice(at + 1)] : []
+  })
 }

@@ -90,10 +90,14 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
+| [`claude/hooks-agent-stop-event`](docs/rules/hooks-agent-stop-event.md) | A subagent uses `SubagentStop` in its frontmatter hooks, not `Stop`, which Claude Code converts to `SubagentStop` | `off` | `warn` |
+| [`claude/hooks-agent-type-experimental`](docs/rules/hooks-agent-type-experimental.md) | No `type: "agent"` hook on an event that runs it, because agent hooks are experimental; prefer a command hook | `warn` | `warn` |
+| [`claude/hooks-command-deprecated-cli-flag`](docs/rules/hooks-command-deprecated-cli-flag.md) | A hook command that runs `claude` uses `--cloud`, not `--remote`, a deprecated alias | `warn` | `warn` |
 | [`claude/hooks-command-removed-cli-flag`](docs/rules/hooks-command-removed-cli-flag.md) | A hook command or `args` that runs `claude` does not pass `--enable-auto-mode`, which Claude Code removed in v2.1.111 | `error` | `error` |
 | [`claude/hooks-config-schema`](docs/rules/hooks-config-schema.md) | The hooks config is events, matcher groups and handlers: a string `matcher`, a known handler `type`, the field each type needs, the field types, and the top-level keys of a plugin `hooks.json` | `error` | `error` |
 | [`claude/hooks-disable-all-override`](docs/rules/hooks-disable-all-override.md) | The committed `.claude/settings.json` does not set `disableAllHooks` to `false`, which turns the hooks of a user back on | `warn` | `warn` |
 | [`claude/hooks-disabled-by-disableallhooks`](docs/rules/hooks-disabled-by-disableallhooks.md) | A settings file does not set `disableAllHooks: true` and also define `hooks` | `error` | `error` |
+| [`claude/hooks-duplicate-handler`](docs/rules/hooks-duplicate-handler.md) | No identical handler in two sources of a plugin (`hooks/hooks.json` with `plugin.json`), or in a project settings file and a plugin (`hooks.json` or `plugin.json`), where the hook runs twice | `warn` | `warn` |
 | [`claude/hooks-env-var-unavailable`](docs/rules/hooks-env-var-unavailable.md) | A hook command reads `CLAUDE_ENV_FILE` only on `SessionStart`, `Setup`, `CwdChanged` and `FileChanged`, and never reads `CLAUDE_MODEL`, which does not exist | `error` | `error` |
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings, `plugin.json` and the frontmatter of a skill or subagent is one that Claude Code knows | `error` | `error` |
 | [`claude/hooks-exec-form-command-spaces`](docs/rules/hooks-exec-form-command-spaces.md) | The `command` of a hook in exec form (with `args`) is the executable only: a bare name holds no whitespace | `error` | `error` |
@@ -119,6 +123,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/hooks-prompt-on-permission-request`](docs/rules/hooks-prompt-on-permission-request.md) | No `prompt` hook on `PermissionRequest`, where `ok: false` has no effect and the hook cannot deny | `warn` | `warn` |
 | [`claude/hooks-ps1-needs-powershell-shell`](docs/rules/hooks-ps1-needs-powershell-shell.md) | With the option `platforms`, a hook command that runs a `.ps1` file sets `shell: "powershell"` | `warn` | `warn` |
 | [`claude/hooks-sessionend-default-timeout`](docs/rules/hooks-sessionend-default-timeout.md) | A `SessionEnd` handler outside a plugin sets `timeout`, because Claude Code cancels it after 1.5 seconds | `warn` | `warn` |
+| [`claude/hooks-worktree-create-without-remove`](docs/rules/hooks-worktree-create-without-remove.md) | A file with a `WorktreeCreate` hook also has a `WorktreeRemove` hook, because Claude Code then removes only a worktree that git knows | `warn` | `warn` |
 
 ### Marketplace manifest
 

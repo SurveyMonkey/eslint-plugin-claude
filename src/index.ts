@@ -17,10 +17,14 @@ import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
+import hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
+import hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
+import hooksCommandDeprecatedCliFlag from './rules/hooks-command-deprecated-cli-flag.ts'
 import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
 import hooksConfigSchema from './rules/hooks-config-schema.ts'
 import hooksDisableAllOverride from './rules/hooks-disable-all-override.ts'
 import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
+import hooksDuplicateHandler from './rules/hooks-duplicate-handler.ts'
 import hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
@@ -46,6 +50,7 @@ import hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
 import hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
 import hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
 import hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
+import hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -125,10 +130,14 @@ const modules = [
   skillDescriptionMaxLength,
   commandLegacyFormat,
   hooksEventNameKnown,
+  hooksAgentStopEvent,
+  hooksAgentTypeExperimental,
+  hooksCommandDeprecatedCliFlag,
   hooksCommandRemovedCliFlag,
   hooksConfigSchema,
   hooksDisableAllOverride,
   hooksDisabledByDisableallhooks,
+  hooksDuplicateHandler,
   hooksEnvVarUnavailable,
   hooksExecFormCommandSpaces,
   hooksFilechangedStarMatcher,
@@ -153,6 +162,7 @@ const modules = [
   hooksPromptOnPermissionRequest,
   hooksPs1NeedsPowershellShell,
   hooksSessionendDefaultTimeout,
+  hooksWorktreeCreateWithoutRemove,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
   skillForkFieldsRequireContext,
@@ -261,10 +271,14 @@ const recommended: Record<RuleName, Severity> = {
   'skill-description-max-length': 'warn',
   'command-legacy-format': 'warn',
   'hooks-event-name-known': 'error',
+  'hooks-agent-stop-event': 'off',
+  'hooks-agent-type-experimental': 'warn',
+  'hooks-command-deprecated-cli-flag': 'warn',
   'hooks-command-removed-cli-flag': 'error',
   'hooks-config-schema': 'error',
   'hooks-disable-all-override': 'warn',
   'hooks-disabled-by-disableallhooks': 'error',
+  'hooks-duplicate-handler': 'warn',
   'hooks-env-var-unavailable': 'error',
   'hooks-exec-form-command-spaces': 'error',
   'hooks-filechanged-star-matcher': 'warn',
@@ -289,6 +303,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-prompt-on-permission-request': 'warn',
   'hooks-ps1-needs-powershell-shell': 'warn',
   'hooks-sessionend-default-timeout': 'warn',
+  'hooks-worktree-create-without-remove': 'warn',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
   'skill-fork-fields-require-context': 'error',
