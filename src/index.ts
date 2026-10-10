@@ -212,6 +212,7 @@ import outputStyleNameUnique from './rules/output-style-name-unique.ts'
 import outputStylePluginNameDescription from './rules/output-style-plugin-name-description.ts'
 import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
+import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
 import permissionsBashExecWrapperPrefix from './rules/permissions-bash-exec-wrapper-prefix.ts'
 import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildcard.ts'
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
@@ -296,6 +297,11 @@ import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
+import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
+import sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
+import sandboxFilesystemDisabledConflict from './rules/sandbox-filesystem-disabled-conflict.ts'
+import sandboxSchema from './rules/sandbox-schema.ts'
+import sandboxScope from './rules/sandbox-scope.ts'
 import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
@@ -568,6 +574,12 @@ const modules = [
   permissionsNegation,
   permissionsWebfetchDomainSyntax,
   permissionsWindowsPath,
+  permissionsAutoModeSchema,
+  sandboxDomainSyntax,
+  sandboxExcludedCommandsSyntax,
+  sandboxFilesystemDisabledConflict,
+  sandboxSchema,
+  sandboxScope,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -992,6 +1004,12 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-negation': 'error',
   'permissions-webfetch-domain-syntax': 'error',
   'permissions-windows-path': 'error',
+  'permissions-auto-mode-schema': 'error',
+  'sandbox-domain-syntax': 'error',
+  'sandbox-excluded-commands-syntax': 'error',
+  'sandbox-filesystem-disabled-conflict': 'error',
+  'sandbox-schema': 'error',
+  'sandbox-scope': 'error',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

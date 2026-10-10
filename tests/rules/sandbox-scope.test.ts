@@ -26,14 +26,14 @@ const VAR = { name: 'GITHUB_TOKEN', mode: 'mask', injectHosts: ['api.github.com'
 const credentials = (fields: object) => ({ sandbox: { credentials: fields } })
 
 describe(`${name}: a mask entry in a repository file`, () => {
-  it.fails('reports a file entry and a variable entry, in each project and local file', () => {
+  it('reports a file entry and a variable entry, in each project and local file', () => {
     for (const file of PROJECT_FILES) {
       expect(ids(credentials({ files: [FILE] }), file), file).toEqual(['mask'])
       expect(ids(credentials({ envVars: [VAR] }), file), file).toEqual(['mask'])
     }
   })
 
-  it.fails('reports each mask entry, and no deny entry', () => {
+  it('reports each mask entry, and no deny entry', () => {
     const code = credentials({
       files: [{ path: '~/.aws', mode: 'deny' }, FILE, FILE],
       envVars: [VAR, { name: 'NPM_TOKEN', mode: 'deny' }],
@@ -41,14 +41,14 @@ describe(`${name}: a mask entry in a repository file`, () => {
     expect(ids(code)).toEqual(['mask', 'mask', 'mask'])
   })
 
-  it.fails('names the list in the message', () => {
+  it('names the list in the message', () => {
     const [file] = lint(credentials({ files: [FILE] }))
     expect(file?.message).toContain('"sandbox.credentials.files"')
     const [variable] = lint(credentials({ envVars: [VAR] }))
     expect(variable?.message).toContain('"sandbox.credentials.envVars"')
   })
 
-  it.fails('reports the value of mode, at its line and column', () => {
+  it('reports the value of mode, at its line and column', () => {
     const text =
       '{\n  "sandbox": {\n    "credentials": {\n      "files": [\n        { "path": "~/x", "mode": "mask" }\n      ]\n    }\n  }\n}'
     expect(
@@ -56,7 +56,7 @@ describe(`${name}: a mask entry in a repository file`, () => {
     ).toEqual([[5, 34, 5, 40]])
   })
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     const first = '{"sandbox": {"credentials": {"files": [{"mode": "mask", "mode": "deny"}]}}}'
     expect(ids(first)).toEqual([])
     const second = '{"sandbox": {"credentials": {"files": [{"mode": "deny", "mode": "mask"}]}}}'
@@ -66,7 +66,7 @@ describe(`${name}: a mask entry in a repository file`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent when a value has another type, or mode is not the word mask', () => {
+  it('is silent when a value has another type, or mode is not the word mask', () => {
     expect(ids({ sandbox: 'x' })).toEqual([])
     expect(ids({ sandbox: { credentials: 'x' } })).toEqual([])
     expect(ids(credentials({ files: FILE, envVars: 'x' }))).toEqual([])
@@ -79,19 +79,19 @@ describe(`${name}: a mask entry in a repository file`, () => {
 })
 
 describe(`${name}: a file that keeps the entry`, () => {
-  it.fails('is silent in each managed file', () => {
+  it('is silent in each managed file', () => {
     for (const file of MANAGED_FILES) {
       expect(ids(credentials({ files: [FILE], envVars: [VAR] }), file), file).toEqual([])
     }
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(credentials({ files: [FILE] }), HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the scope of a key is for settings-key-scope`, () => {
-  it.fails('is silent for each key that the settings index gives a narrow scope', () => {
+  it('is silent for each key that the settings index gives a narrow scope', () => {
     const code = {
       sandbox: {
         bwrapPath: '/opt/bwrap',
