@@ -4,7 +4,7 @@
 // plugin. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
+import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
@@ -287,6 +287,79 @@ describe(`${RULE} (paths that the rule cannot read)`, () => {
     const { dir, code, top } = pluginTree(manifestOf({ agent: 'ghost' }))
     link(top, 'settings.json', path.join(elsewhere, 'settings.json'))
     expect(lintPlugin(RULE, dir, code)).toEqual([])
+  })
+
+  describe('a link with no target in agents/', () => {
+    const dangling = (at: string, settings: unknown, files: Record<string, string> = {}) => {
+      const { dir, code, top } = pluginTree(manifestOf(settings), files)
+      link(top, at, 'gone')
+      return lintPlugin(RULE, dir, code)
+    }
+
+    linked('stays silent for a link that has the name of the agent', () => {
+      expect(dangling('agents/reviewer.md', { agent: 'reviewer' })).toEqual([])
+    })
+
+    linked('stays silent for a link that has another name, as the frontmatter can name it', () => {
+      expect(dangling('agents/other.md', { agent: 'reviewer' })).toEqual([])
+    })
+
+    linked('stays silent for a link that differs from the name in case', () => {
+      expect(dangling('agents/Reviewer.md', { agent: 'reviewer' })).toEqual([])
+    })
+
+    linked('stays silent for a link to a folder that adds folder names', () => {
+      expect(dangling('agents/team', { agent: 'p:team:reviewer' })).toEqual([])
+    })
+
+    linked('stays silent for a link in a subfolder', () => {
+      expect(
+        dangling('agents/team/x.md', { agent: 'reviewer' }, { 'agents/team/y.md': REVIEWER }),
+      ).toEqual([])
+    })
+
+    linked('stays silent for a link in a folder that is a link to a folder', () => {
+      const { dir, code, top } = pluginTree(manifestOf({ agent: 'ghost' }), {
+        'shared/y.md': REVIEWER,
+      })
+      link(top, 'shared/x.md', 'gone')
+      link(top, 'agents', 'shared')
+      expect(lintPlugin(RULE, dir, code)).toEqual([])
+    })
+
+    linked('still reports when the links all have targets', () => {
+      const { dir, code, top } = pluginTree(manifestOf({ agent: 'ghost' }), {
+        'agents/reviewer.md': REVIEWER,
+        'real.md': REVIEWER,
+      })
+      link(top, 'agents/copy.md', path.join(top, 'real.md'))
+      expect(lintPlugin(RULE, dir, code).map((m) => m.messageId)).toEqual(['missing'])
+    })
+  })
+
+  describe('the agents key of a marketplace entry', () => {
+    const run = (entry: Record<string, unknown>, settings: unknown = { agent: 'ghost' }) => {
+      const code = JSON.stringify(manifestOf(settings))
+      const top = tree({
+        '.claude-plugin/marketplace.json': marketplaceOf([entry]),
+        'plugins/p/.claude-plugin/plugin.json': code,
+      })
+      return lintPlugin(RULE, path.join(top, 'plugins', 'p'), code)
+    }
+
+    check('stays silent when the entry of the plugin sets agents', () => {
+      expect(run({ name: 'p', source: './plugins/p', agents: ['./x/ghost.md'] })).toEqual([])
+    })
+
+    check('reports when the entry sets no agents', () => {
+      expect(run({ name: 'p', source: './plugins/p' }).map((m) => m.messageId)).toEqual(['missing'])
+    })
+
+    check('reports when the entry that sets agents is another plugin', () => {
+      expect(
+        run({ name: 'q', source: './plugins/q', agents: ['./x/ghost.md'] }).map((m) => m.messageId),
+      ).toEqual(['missing'])
+    })
   })
 
   describe.skipIf(chmodCannotBlock)('with no access', () => {
