@@ -21,6 +21,7 @@ markdownTester.run('skill-boolean-literal', ruleOf('skill-boolean-literal'), {
   valid: [
     file('disable-model-invocation: true\nuser-invocable: false\n'),
     file('disable-model-invocation: false\nuser-invocable: true\n'),
+    file('user-invocable: false\n', command),
     // YAML reads these as Booleans, as every version of Claude Code does.
     file('disable-model-invocation: True\nuser-invocable: FALSE\n'),
     file('disable-model-invocation: TRUE\nuser-invocable: False\n'),
