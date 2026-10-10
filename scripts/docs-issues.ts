@@ -130,11 +130,12 @@ export const MAX_DIGEST_BLOCKS = 20
 // its fence lines and its cut note, one fence then takes
 // 3 x 280 + 81 = 921 characters. A section with two texts of more than
 // MAX_DIFF_LINES lines has two fences. The worst section in the tests has
-// two fences, a marker, the metadata and a rows line:
-// 2 x 921 + 1,001 = 2,843 characters. 20 sections take 56,860, and the first
-// and last parts of the body take 912. The total of 57,772 leaves 2,228 for
-// longer headings, block IDs and reasons in MAX_COMMENT. Past that, the step
-// cuts the section text, as it does for a comment, and keeps every marker.
+// two fences, a marker, the metadata and a rows line: 2 x 921 + 1,001 =
+// 2,843 characters for block 0. The 20 sections of that test take 56,901,
+// and the first and last parts of the body take 912. The total of 57,813
+// leaves 2,187 for longer headings, block IDs and reasons in MAX_COMMENT.
+// Past that, the step cuts the section text, as it does for a comment, and
+// keeps every marker.
 export const MAX_DIGEST_QUOTE = 280
 
 // The page, the block and the hash of a finding. The block ID comes from

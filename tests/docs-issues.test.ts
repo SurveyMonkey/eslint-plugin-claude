@@ -1949,7 +1949,8 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
       return { finding: f, tracked }
     })
     const body = api.digestOf(HOOKS, blocks, REPO)
-    expect(body.length).toBeLessThanOrEqual(60_000)
+    // The length that the comment on MAX_DIGEST_QUOTE derives.
+    expect(body.length).toBe(57_813)
     expect(body).not.toMatch(outerNote)
     expect(markers(body)).toHaveLength(20)
     expect(sections(body)).toHaveLength(20)
