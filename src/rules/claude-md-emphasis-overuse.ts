@@ -1,5 +1,5 @@
 // Emphasis on many lines of a CLAUDE.md (docs/rules/claude-md-emphasis-overuse.md). The best
-// practices page says to add emphasis such as "IMPORTANT" to a line that Claude keeps skipping,
+// practices page says to add emphasis such as "IMPORTANT" to a line that Claude does not follow,
 // and warns that if you emphasize many lines, none of them stands out. The docs give no number,
 // so the rule has the option `max` and no default. It makes no report when the option is not
 // set. The rule counts lines, not words. The syntax tree decides what is prose, so a word in a

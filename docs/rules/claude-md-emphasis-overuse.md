@@ -22,8 +22,8 @@ The rule is `off` in `recommended`.
 
 ## Rule details
 
-The best practices page says to add emphasis such as "IMPORTANT" to a line that Claude keeps
-skipping. It adds that if you emphasize many lines, none of them stands out.[^emphasis] The docs
+The best practices page says to add emphasis such as "IMPORTANT" to a line that Claude
+ignores. It adds that if you emphasize many lines, none of them stands out.[^emphasis] The docs
 give no number of lines. So the rule has the option `max` and no default. **The rule makes no
 report when `max` is not set.**
 
