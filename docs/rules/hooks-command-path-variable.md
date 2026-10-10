@@ -22,8 +22,7 @@ Reach the files of a plugin hook through the CLAUDE_PLUGIN_ROOT variable.
 
 A plugin does not know where Claude Code installs it. The docs say to refer to its files through
 `${CLAUDE_PLUGIN_ROOT}`, "rather than fixed paths".[^paths] The hooks reference shows the variable in the example
-of a plugin script.[^scripts] A relative path resolves from the working directory. That directory follows Claude when it runs `cd` or enters a
-worktree.[^scripts] The guide tells you to use absolute paths or a variable when a hook fails with "command not
+of a plugin script.[^scripts] The placeholders work "regardless of the working directory when the hook runs".[^scripts] The guide tells you to use absolute paths or a variable when a hook fails with "command not
 found".[^guide]
 
 The rule reads the `command` of a command hook in a plugin `hooks/hooks.json`, and in the frontmatter of a skill
@@ -32,8 +31,9 @@ each handler.
 
 A path starts in the working directory when it has a slash and does not start with a slash, a variable, `~` or a
 drive letter. The rule checks the program of each simple command, such as `./scripts/a.sh`. It checks the first
-argument that is not a flag when the program is `bash`, `sh`, `zsh`, `node`, `python`, `python3`, `ruby`,
-`pwsh` or `powershell`. It reads shell form and exec form.
+argument that is not a flag, and stops at `-c` or `-e`, when the program is `bash`, `sh`, `zsh`, `node`, `python`, `python3`, `ruby`,
+`pwsh` or `powershell`. It reads shell form and exec form. It stops at a `cd`, `pushd` or `Set-Location`, because a path after one can
+resolve inside the plugin.
 
 The rule is `off` in `recommended`, because it is a heuristic. It cannot see where a file really is.
 

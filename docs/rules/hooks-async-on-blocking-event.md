@@ -34,7 +34,7 @@ wants each hook on these events to run in the foreground.
 
 The rule makes no report in these cases:
 
-- The event does not block or decide, such as `PostToolUse`. The docs show `async` on `PostToolUse`.[^background]
+- The event is not in that list, such as `PostToolUse`. The docs show `async` on `PostToolUse`.[^background]
 - The handler is not a command hook. `async` is a field of command hooks only, and
   [`hooks-handler-field-ignored`](hooks-handler-field-ignored.md) reports it on the other types.
 - The flag is not the Boolean `true`.
