@@ -953,6 +953,13 @@
       "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70"
     }
   ],
+  "rules-paths-glob-valid": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Path-specific rules",
+      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
+    }
+  ],
   "settings-conflicting-keys": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

@@ -473,6 +473,11 @@ const TREE: Record<string, string> = {
   'packages/rf/.claude/rules/late.md': '# Rule\n\n---\npaths: "src/**"\n---\n',
   'packages/rf/.claude/rules/ok.md': '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n',
   'packages/rf/docs/rules/globs.md': '---\nglobs: "*.ts"\n---\n# Not a rule file\n',
+  // `rules-paths-glob-valid`: a bad glob in a rule file at each depth. The same content where no
+  // rule reads it.
+  'packages/rg/.claude/rules/bracket.md': '---\npaths: "photos [2024/**"\n---\n# Rule\n',
+  'packages/rg/.claude/rules/sub/ok.md': '---\npaths: "photos \\\\[2024/**"\n---\n# Rule\n',
+  'packages/rg/docs/rules/bracket.md': '---\npaths: "photos [2024/**"\n---\n# Not a rule file\n',
   'packages/ms/ok/.claude/settings.json':
     '{"autoMemoryEnabled": false, "autoMemoryDirectory": "~/memory", "claudeMdExcludes": ["**/a/**"]}',
 }
@@ -563,6 +568,7 @@ const MEMORY_RULES = [
   'claude-md-max-bytes',
   'memory-settings-schema',
   'rules-frontmatter-schema',
+  'rules-paths-glob-valid',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -741,6 +747,8 @@ const EXPECTED = [
   'packages/rf/.claude/rules/globs.md: claude/rules-frontmatter-schema@2',
   'packages/rf/.claude/rules/sub/yaml.md: claude/rules-frontmatter-schema@2',
   'packages/rf/.claude/rules/late.md: claude/rules-frontmatter-schema@2',
+  // `rules-paths-glob-valid` reads Markdown below `.claude/rules/`, and no other file.
+  'packages/rg/.claude/rules/bracket.md: claude/rules-paths-glob-valid@2',
   // `memory-settings-schema` reads the project and managed files, and no other file.
   'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
   'packages/ms/.claude/settings.local.json: claude/memory-settings-schema@2',

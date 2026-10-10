@@ -131,6 +131,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/claude-md-excludes-pattern`](docs/rules/claude-md-excludes-pattern.md) | Each `claudeMdExcludes` pattern starts with `/`, `**/` or a Windows drive, because Claude Code matches absolute paths | `error` | `error` |
 | [`claude/memory-settings-schema`](docs/rules/memory-settings-schema.md) | The types and values of `autoMemoryEnabled`, `autoMemoryDirectory`, `claudeMdExcludes` and the `instructionFiles` option of the `AGENTS.md` plugin | `error` | `error` |
 | [`claude/rules-frontmatter-schema`](docs/rules/rules-frontmatter-schema.md) | A rule file has `paths` as its only frontmatter key, as a list of strings or a string, with YAML that parses and the block on line 1 | `error` | `error` |
+| [`claude/rules-paths-glob-valid`](docs/rules/rules-paths-glob-valid.md) | A `paths` glob of a rule file that Claude Code can use: no `[` without a bracket expression, and brace groups within 1,000 patterns and 4 MiB | `error` | `error` |
 
 ### Settings
 
