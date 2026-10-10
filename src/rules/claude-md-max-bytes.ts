@@ -1,9 +1,11 @@
 // The size of a CLAUDE.md file (docs/rules/claude-md-max-bytes.md). The docs say that
-// Claude Code loads a CLAUDE.md file of up to 4 MiB in full and skips a larger file. The
-// docs show no Claude Code setting that moves that number. So the schema sets it as the
-// maximum of the option `max`. The rule counts the UTF-8 bytes of the text that ESLint gives it. ESLint
-// removes a byte order mark first, so the rule does not count its 3 bytes. The docs name
-// CLAUDE.md files only, so the rule leaves `AGENTS.md` out.
+// Claude Code loads a CLAUDE.md file of up to 4 MiB in full. It skips a larger file.
+// The docs show no setting that moves that number. So the schema sets it as the maximum of
+// the option `max`.
+//
+// The rule counts the UTF-8 bytes of the text that ESLint gives it. ESLint removes a byte
+// order mark first, so the rule does not count its 3 bytes. The docs name CLAUDE.md files
+// only, so the rule leaves `AGENTS.md` out.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifyMemoryFile } from '../memory-files.ts'

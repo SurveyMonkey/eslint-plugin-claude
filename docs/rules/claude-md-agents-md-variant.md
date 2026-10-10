@@ -20,10 +20,10 @@ Do not keep an `AGENTS.md` variant that Claude Code never reads.
 
 ## Rule details
 
-Claude Code can read `AGENTS.md` as project instructions. It reads `AGENTS.md` and
-`.claude/AGENTS.md` when no `CLAUDE.md` file exists. The docs list the files that it does not read: `AGENTS.local.md`,
-`AGENTS.override.md`, and anything under a `.agents/` directory.[^agents] Text in such a file never
-reaches Claude.
+Claude Code can read `AGENTS.md` as project instructions. With the default setting, it reads
+`AGENTS.md` and `.claude/AGENTS.md` when no CLAUDE.md file exists.[^agents] The docs list the files
+that it does not read: `AGENTS.local.md`, `AGENTS.override.md`, and anything under a `.agents/`
+directory.[^agents]
 
 The rule reports each such file once, at the start of the file. It reports these files:
 
@@ -36,7 +36,7 @@ sees the Markdown files below `.agents/` and no other file type there.
 A repository can keep one of these files for another coding tool on purpose. The option `allow`
 lists such paths. The rule then makes no report on them.
 
-The rule makes no report on `AGENTS.md`, `.claude/AGENTS.md` or `CLAUDE.md`. Claude Code reads
+The rule makes no report on `AGENTS.md`, `.claude/AGENTS.md` or `CLAUDE.md`. Claude Code can read
 those. Another Markdown file with a near name, such as `docs/AGENTS-notes.md`, is not read, and the
 rule does not look at it.
 

@@ -1,9 +1,9 @@
 // The memory keys of a settings file (docs/rules/memory-settings-schema.md). The types and
-// values come from the settings reference and the memory page:
-// `autoMemoryEnabled`, `autoMemoryDirectory`, `claudeMdExcludes`, and the option
-// `instructionFiles` of the built-in plugin that reads `AGENTS.md`. A `null` value reads as
-// unset, as in `settings-removed-key`. The patterns of `claudeMdExcludes` are the work of
-// `claude-md-excludes-pattern`.
+// values come from the settings reference and the memory page. The keys are
+// `autoMemoryEnabled`, `autoMemoryDirectory` and `claudeMdExcludes`. The option
+// `instructionFiles` of the built-in plugin that reads `AGENTS.md` is the fourth. The rule
+// reads a `null` value as unset, as `settings-removed-key` does. The rule
+// `claude-md-excludes-pattern` checks the patterns of `claudeMdExcludes`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'

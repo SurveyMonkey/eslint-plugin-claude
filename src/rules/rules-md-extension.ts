@@ -1,11 +1,13 @@
 // A file in `.claude/rules/` that Claude Code does not discover
 // (docs/rules/rules-md-extension.md). The docs say that Claude Code finds all `.md` files in
-// the directory, at any depth. A file with another extension is ignored. The files globs name
-// every file below `.claude/rules/`, because the file to report is by definition not a
-// Markdown file. ESLint lints a file only when a pattern of a config names it and does not
-// end in `/*` or `/**`. So one glob names the files with a dot, and one names the files with
-// none. The rule makes no report on a hidden file such as `.gitkeep`. It reads the extension
-// without case, because the docs do not say that Claude Code tells `.MD` from `.md`.
+// the directory, at any depth. The docs name no other extension.
+//
+// The files globs name every file below `.claude/rules/`, because the file to report is not a
+// Markdown file. ESLint lints a file only when a pattern names it and does not end in `/*` or
+// `/**`. So one glob names the files with a dot, and one names the files with none.
+//
+// The rule makes no report on a hidden file such as `.gitkeep`. It reads the extension without
+// case, because the docs do not say that Claude Code treats `.MD` differently from `.md`.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
