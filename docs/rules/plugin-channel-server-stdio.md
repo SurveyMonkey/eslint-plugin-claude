@@ -23,8 +23,8 @@ Bind a channel to a stdio MCP server, not to a remote server.
 In a plugin, a channel is one of the MCP servers plus a `channels` entry. The `server` field of the
 entry is the key of that server in `mcpServers`.[^binding] The channels reference says that a channel
 is an MCP server that runs on the same machine as Claude Code. Claude Code starts it as a subprocess
-and talks to it over stdio. The server must connect over the stdio transport.[^overview] A server
-with a `url` is a remote server, so it cannot be a channel server.
+and talks to it over stdio.[^overview] A server with a `url` is a remote server, so it cannot be a
+channel server.
 
 The rule reports the `server` string of a channel when the server has a `url` and no `command`. The
 test is a heuristic, so the rule is `off` in `recommended`. A server with a `command` is a stdio
@@ -41,8 +41,8 @@ The rule makes no report in these cases:
 
 - The manifest key `mcpServers` has a string at or after the last inline declaration of the server.
   The string names a file or a bundle that can declare the server, and the rule does not read it.
-- No declaration has the server. `claude plugin validate` checks that `server` matches a key.
-- The server has a `command`, or has no `url`.
+- No declaration has the server.
+- The server has a `command` that is a string, or has no `url` that is a string.
 - The `.mcp.json` is a link with no target, a link that leaves the plugin, a file that fails to read,
   or a file that does not parse to an object.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin root,
