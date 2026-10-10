@@ -197,6 +197,18 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "claude-md-local-untracked": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Import additional files",
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "What's not shown",
+      "hash": "ecbab3d62091c2305b6c8e5a2094ae1c6f3298f3dbeff6296a97c7b90a30dd1d"
+    }
+  ],
   "command-legacy-format": [
     {
       "url": "https://code.claude.com/docs/en/skills",

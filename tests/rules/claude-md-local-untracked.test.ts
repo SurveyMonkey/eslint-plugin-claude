@@ -16,7 +16,7 @@ const lint = (root: string, file = 'CLAUDE.md') =>
   lintMarkdown(RULE, '# Project\n', path.join(root, file)).map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a tracked CLAUDE.local.md, at the start of the file', () => {
+  it('reports a tracked CLAUDE.local.md, at the start of the file', () => {
     const root = repo({ 'CLAUDE.md': '# P\n', [LOCAL]: 'mine\n', '.gitignore': `${LOCAL}\n` })
     const messages = lintMarkdown(RULE, '# P\n', path.join(root, 'CLAUDE.md'))
     expect(messages).toHaveLength(1)
@@ -29,24 +29,24 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('git rm --cached')
   })
 
-  it.fails('reports a tracked file once, even when a pattern covers it', () => {
+  it('reports a tracked file once, even when a pattern covers it', () => {
     const root = repo({ 'CLAUDE.md': '# P\n', [LOCAL]: 'mine\n', '.gitignore': `${LOCAL}\n` })
     expect(lint(root)).toEqual(['tracked'])
   })
 
-  it.fails('reports a CLAUDE.local.md that git does not track and no pattern covers', () => {
+  it('reports a CLAUDE.local.md that git does not track and no pattern covers', () => {
     const root = repo({ 'CLAUDE.md': '# P\n', '.gitignore': 'node_modules\n' }, [], {
       [LOCAL]: 'mine\n',
     })
     expect(lint(root)).toEqual(['notIgnored'])
   })
 
-  it.fails('reports a missing pattern when the file is not on the disk: the repository decides', () => {
+  it('reports a missing pattern when the file is not on the disk: the repository decides', () => {
     const root = repo({ 'CLAUDE.md': '# P\n' })
     expect(lint(root)).toEqual(['notIgnored'])
   })
 
-  it.fails('stays silent when a pattern covers the file and git does not track it', () => {
+  it('stays silent when a pattern covers the file and git does not track it', () => {
     for (const pattern of [LOCAL, '*.local.md', '/CLAUDE.local.md', '**/CLAUDE.local.md']) {
       const root = repo({ 'CLAUDE.md': '# P\n', '.gitignore': `${pattern}\n` }, [], {
         [LOCAL]: 'mine\n',
@@ -55,19 +55,19 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reads a .gitignore in the directory of the file', () => {
+  it('reads a .gitignore in the directory of the file', () => {
     const root = repo({ 'pkg/CLAUDE.md': '# P\n', 'pkg/.gitignore': `${LOCAL}\n` })
     expect(lint(root, 'pkg/CLAUDE.md')).toEqual([])
     const bare = repo({ 'pkg/CLAUDE.md': '# P\n' })
     expect(lint(bare, 'pkg/CLAUDE.md')).toEqual(['notIgnored'])
   })
 
-  it.fails('takes a pattern that a later negation takes back as a missing pattern', () => {
+  it('takes a pattern that a later negation takes back as a missing pattern', () => {
     const root = repo({ 'CLAUDE.md': '# P\n', '.gitignore': `*.md\n!${LOCAL}\n` })
     expect(lint(root)).toEqual(['notIgnored'])
   })
 
-  it.fails('checks the CLAUDE.local.md beside each CLAUDE.md, and not the one of another directory', () => {
+  it('checks the CLAUDE.local.md beside each CLAUDE.md, and not the one of another directory', () => {
     const root = repo({
       'CLAUDE.md': '# P\n',
       'pkg/CLAUDE.md': '# Q\n',
@@ -79,13 +79,13 @@ describe(RULE, () => {
     expect(lint(root, 'pkg/CLAUDE.md')).toEqual(['tracked'])
   })
 
-  it.fails('does not read the CLAUDE.local.md of the root for a CLAUDE.md in .claude/', () => {
+  it('does not read the CLAUDE.local.md of the root for a CLAUDE.md in .claude/', () => {
     // Claude Code loads `CLAUDE.local.md` from the project root, not from `.claude/`.
     const root = repo({ '.claude/CLAUDE.md': '# P\n', '.claude/CLAUDE.local.md': 'x\n' })
     expect(lint(root, '.claude/CLAUDE.md')).toEqual([])
   })
 
-  it.fails('takes a path with a space and a path that starts with a dash as literal', () => {
+  it('takes a path with a space and a path that starts with a dash as literal', () => {
     const root = repo({ 'my dir/-pkg/CLAUDE.md': '# P\n', 'my dir/-pkg/CLAUDE.local.md': 'x\n' })
     expect(lint(root, 'my dir/-pkg/CLAUDE.md')).toEqual(['tracked'])
     const loose = repo({ '-pkg/CLAUDE.md': '# P\n', '-pkg/.gitignore': `${LOCAL}\n` })
@@ -94,7 +94,7 @@ describe(RULE, () => {
     expect(lint(colon, ':(top)pkg/CLAUDE.md')).toEqual(['notIgnored'])
   })
 
-  it.fails('does not count a pattern in the global excludes file or in .git/info/exclude', () => {
+  it('does not count a pattern in the global excludes file or in .git/info/exclude', () => {
     const global = plain({ '.gitignore': `${LOCAL}\n` })
     put(global, { config: `[core]\n\texcludesFile = ${path.join(global, '.gitignore')}\n` })
     const root = repo({ 'CLAUDE.md': '# P\n' })
@@ -107,12 +107,12 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent in a tree with no .git, where git cannot answer', () => {
+  it('stays silent in a tree with no .git, where git cannot answer', () => {
     const root = plain({ 'CLAUDE.md': '# P\n', [LOCAL]: 'x\n' })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent when git cannot run', () => {
+  it('stays silent when git cannot run', () => {
     const root = repo({ 'CLAUDE.md': '# P\n', [LOCAL]: 'x\n' })
     vi.stubEnv('PATH', '')
     try {
@@ -122,23 +122,29 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent when git reads an outer repository', () => {
+  it('stays silent when git reads an outer repository', () => {
     const outer = repo({ 'inner/CLAUDE.md': '# P\n', 'inner/CLAUDE.local.md': 'x\n' })
     put(outer, { 'inner/.git/keep': '' })
     expect(git(path.join(outer, 'inner'), 'rev-parse', '--show-toplevel').trim()).toBe(outer)
     expect(lint(outer, 'inner/CLAUDE.md')).toEqual([])
   })
 
-  it.fails('stays silent for a directory that is a link to a place out of the repository', () => {
-    const root = repo({ 'a.txt': 'x' })
-    const outside = plain({ 'CLAUDE.md': '# P\n', [LOCAL]: 'x\n' })
-    symlinkSync(outside, path.join(root, 'linked'))
-    expect(lint(root, 'linked/CLAUDE.md')).toEqual([])
-  })
+  it.skipIf(process.platform === 'win32')(
+    'stays silent for a directory that is a link to a place out of the repository',
+    () => {
+      const root = repo({ 'a.txt': 'x' })
+      const outside = plain({ 'CLAUDE.md': '# P\n', [LOCAL]: 'x\n' })
+      symlinkSync(outside, path.join(root, 'linked'))
+      expect(lint(root, 'linked/CLAUDE.md')).toEqual([])
+    },
+  )
 
-  it.fails('reads a directory that is a link to a directory of the repository where it leads', () => {
-    const root = repo({ 'shared/CLAUDE.md': '# P\n', 'shared/CLAUDE.local.md': 'x\n' })
-    symlinkSync('shared', path.join(root, 'linked'))
-    expect(lint(root, 'linked/CLAUDE.md')).toEqual(['tracked'])
-  })
+  it.skipIf(process.platform === 'win32')(
+    'reads a directory that is a link to a directory of the repository where it leads',
+    () => {
+      const root = repo({ 'shared/CLAUDE.md': '# P\n', 'shared/CLAUDE.local.md': 'x\n' })
+      symlinkSync('shared', path.join(root, 'linked'))
+      expect(lint(root, 'linked/CLAUDE.md')).toEqual(['tracked'])
+    },
+  )
 })

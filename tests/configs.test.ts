@@ -8,7 +8,7 @@ import path from 'node:path'
 import { ESLint, type Linter } from 'eslint'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
-import { stage } from './git-tree.test-support.ts'
+import { isolateGitConfig, stage } from './git-tree.test-support.ts'
 
 const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
@@ -531,6 +531,27 @@ const GIT_TREE: Record<string, string> = {
     statusLine: { type: 'command', command: `${projectDir}/line.sh` },
   }),
 }
+// The repository `packages/gu`, for the rules of #11, #13 and #14 that ask git whether a file is
+// tracked or ignored. Each area has its own `.gitignore`, so that a pattern covers one area only.
+// `GU_LOOSE` holds files that exist but that git does not track.
+const GU_REPO = 'packages/gu'
+const GU_TREE: Record<string, string> = {
+  '.gitignore': '# No pattern here. Each area has its own.\n',
+  // `claude-md-local-untracked`: git tracks a `CLAUDE.local.md`; no pattern covers a file that is
+  // not there; a pattern covers a file that is there. A file in `.claude/` is not read.
+  'claude/bad/CLAUDE.md': '# Project\n',
+  'claude/bad/CLAUDE.local.md': 'mine\n',
+  'claude/loose/CLAUDE.md': '# Project\n',
+  'claude/ok/CLAUDE.md': '# Project\n',
+  'claude/ok/.gitignore': 'CLAUDE.local.md\n',
+  'claude/dot/.claude/CLAUDE.md': '# Project\n',
+  'claude/dot/.claude/CLAUDE.local.md': 'mine\n',
+  'claude/dot/OTHER.md': '# Other\n',
+}
+const GU_LOOSE: Record<string, string> = {
+  'claude/ok/CLAUDE.local.md': 'mine\n',
+}
+
 const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -615,6 +636,12 @@ const SCOPE_RULES = [
   { name: 'hooks-script-executable', files: HOOKS_FILES },
   { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'statusline-script-exists', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The rules of #11, #13 and #14 that ask git whether a file is tracked or ignored, in the order of
+// the `modules` list, with the language and files of each. Each is a warn.
+const UNTRACKED_RULES = [
+  { name: 'claude-md-local-untracked', language: 'markdown/gfm', files: ['**/CLAUDE.md'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -808,6 +835,9 @@ const EXPECTED = [
     'packages/hx/sl/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/statusline-script-exists@2`),
   'packages/hx/sl/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `claude-md-local-untracked` reads a `CLAUDE.md`, and reports on its `CLAUDE.local.md`.
+  'packages/gu/claude/bad/CLAUDE.md: claude/claude-md-local-untracked@1',
+  'packages/gu/claude/loose/CLAUDE.md: claude/claude-md-local-untracked@1',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -886,6 +916,7 @@ const NEW_RULES = [
 ]
 
 let root = ''
+isolateGitConfig()
 
 beforeAll(() => {
   root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
@@ -899,6 +930,17 @@ beforeAll(() => {
     writeFileSync(path.join(repo, file), content)
   }
   stage(repo, Object.keys(GIT_TREE), GIT_EXECUTABLE)
+  const gu = path.join(root, GU_REPO)
+  const writeGu = (files: Record<string, string>) => {
+    for (const [file, content] of Object.entries(files)) {
+      mkdirSync(path.dirname(path.join(gu, file)), { recursive: true })
+      writeFileSync(path.join(gu, file), content)
+    }
+  }
+  writeGu(GU_TREE)
+  stage(gu, Object.keys(GU_TREE))
+  // `stage` adds each file on the disk, so the untracked files come after it.
+  writeGu(GU_LOOSE)
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -948,6 +990,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...UNTRACKED_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'warn' },
+      ]),
     ])
   })
 
@@ -965,6 +1011,7 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...UNTRACKED_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -1029,6 +1076,15 @@ describe('configs', () => {
         (c) => c.name === `claude/recommended/${name}`,
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each rule that asks git one block with its language and files', () => {
+    for (const { name, language, files } of UNTRACKED_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([[language, files]])
     }
   })
 

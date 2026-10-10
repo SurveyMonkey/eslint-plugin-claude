@@ -16,6 +16,7 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
@@ -183,6 +184,7 @@ const modules = [
   hooksScriptExecutable,
   pluginBinExecutable,
   statuslineScriptExists,
+  claudeMdLocalUntracked,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -295,6 +297,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',
   'statusline-script-exists': 'error',
+  'claude-md-local-untracked': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
