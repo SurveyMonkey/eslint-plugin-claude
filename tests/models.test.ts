@@ -127,9 +127,18 @@ describe('the family of a value', () => {
       'inherit',
       'gpt-5',
       'claude-mythos-1',
-      'us.anthropic.claude-opus-4-8',
+      'my-opus-gateway',
+      'xclaude-opus-5',
     ]) {
       expect(familyOf(value), value).toBeUndefined()
     }
+  })
+
+  it.fails('reads the family of a provider ID that embeds a claude- name', () => {
+    // The page says a provider-form ID "counts as a specific entry for that family".
+    expect(familyOf('us.anthropic.claude-opus-4-8')).toBe('opus')
+    expect(familyOf('my-gateway/claude-opus-5-5')).toBe('opus')
+    expect(familyOf('anthropic.claude-sonnet-4-5-20250929-v1:0')).toBe('sonnet')
+    expect(familyOf('global.anthropic.claude-haiku-4-5[1m]')).toBe('haiku')
   })
 })
