@@ -50,6 +50,11 @@ jsonTester.run('mcp-hidden-whitespace (valid)', rule, {
       code: wrap('{"command": "x ", "command": "y", "url": "u ", "url": "u"}'),
       filename: project,
     },
+    {
+      name: 'later env and headers values are clean',
+      code: wrap('{"env": {"K": "a ", "K": "a"}, "headers": {"H": " b", "H": "b"}}'),
+      filename: project,
+    },
     { name: 'plugin, clean', code: wrap('{"command": "x"}'), filename: pluginMcp },
     // Claude Code reads no file under `.claude/`. `mcp-json-location` reports it.
     { name: 'unread path', code: wrap('{"command": "x "}'), filename: '.claude/.mcp.json' },
@@ -60,6 +65,18 @@ jsonTester.run('mcp-hidden-whitespace (valid)', rule, {
 jsonTester.run('mcp-hidden-whitespace (invalid)', rule, {
   valid: [],
   invalid: [
+    {
+      name: 'later env value is dirty, one report',
+      code: wrap('{"env": {"K": "a", "K": "a "}}'),
+      filename: project,
+      errors: [{ messageId: 'value', data: { field: 'env.K', server: 'a' }, column: 46 }],
+    },
+    {
+      name: 'a key that two members repeat is one key',
+      code: wrap('{"headers": {"H ": "a", "H ": "b"}}'),
+      filename: project,
+      errors: [{ messageId: 'key', data: { field: 'headers', server: 'a' } }],
+    },
     {
       name: 'later command is dirty',
       code: wrap('{"command": "x", "command": "y "}'),
