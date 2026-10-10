@@ -389,7 +389,7 @@ describe('gitIgnores', () => {
     expect(ignores(root, 'a:1:b/z')).toBe(true)
   })
 
-  it('takes a path with a space, a leading dash, a colon and a glob character as a literal', () => {
+  it('takes a path with a space, a dash at the start, a colon and a glob character as a literal', () => {
     const root = repo({
       '.gitignore': 'target\n-x\n',
       'a b/.gitignore': 'z\n',
@@ -403,12 +403,69 @@ describe('gitIgnores', () => {
   })
 
   it.skipIf(process.platform === 'win32')(
-    'names the source of a pattern that git quotes, such as a directory with a tab',
+    'reads the source of a pattern in a directory with a tab or a newline in its name',
     () => {
-      const root = repo({ 'a\tb/.gitignore': 'z\n' })
+      const root = repo({ 'a\tb/.gitignore': 'z\n', 'c\nd/.gitignore': 'z\n' })
       expect(ignores(root, 'a\tb/z')).toBe(true)
+      expect(ignores(root, 'c\nd/z')).toBe(true)
     },
   )
+
+  it('takes a pattern with a "!" inside or an escaped "!" at the start as a pattern, not a negation', () => {
+    const root = repo({ '.gitignore': '\\!x\nfoo!bar\n' })
+    expect(ignores(root, '!x')).toBe(true)
+    expect(ignores(root, 'foo!bar')).toBe(true)
+  })
+
+  it('ignores the inline config and the pathspec mode that the environment sets', () => {
+    // With `core.ignoreCase`, the pattern `Foo` would cover `foo`.
+    const root = repo({ '.gitignore': 'Foo\n' })
+    // A file system that ignores case makes `git init` set the key to true.
+    git(root, 'config', 'core.ignorecase', 'false')
+    const cases: [string, Record<string, string>][] = [
+      ['GIT_CONFIG_PARAMETERS', { GIT_CONFIG_PARAMETERS: "'core.ignorecase=true'" }],
+      [
+        'GIT_CONFIG_COUNT',
+        { GIT_CONFIG_COUNT: '1', GIT_CONFIG_KEY_0: 'core.ignorecase', GIT_CONFIG_VALUE_0: 'true' },
+      ],
+      [
+        'GIT_CONFIG_KEY_10',
+        {
+          GIT_CONFIG_COUNT: '11',
+          ...Object.fromEntries(
+            Array.from({ length: 11 }, (_, n) => [
+              [`GIT_CONFIG_KEY_${n}`, 'core.ignorecase'],
+              [`GIT_CONFIG_VALUE_${n}`, 'true'],
+            ]).flat(),
+          ),
+        },
+      ],
+    ]
+    for (const [name, env] of cases) {
+      for (const [key, value] of Object.entries(env)) {
+        vi.stubEnv(key, value)
+      }
+      try {
+        expect(ignores(root, 'foo'), name).toBe(false)
+        expect(ignores(root, 'Foo'), name).toBe(true)
+      } finally {
+        vi.unstubAllEnvs()
+      }
+    }
+    for (const key of [
+      'GIT_LITERAL_PATHSPECS',
+      'GIT_GLOB_PATHSPECS',
+      'GIT_NOGLOB_PATHSPECS',
+      'GIT_ICASE_PATHSPECS',
+    ]) {
+      vi.stubEnv(key, '1')
+      try {
+        expect(ignores(root, 'Foo'), key).toBe(true)
+      } finally {
+        vi.unstubAllEnvs()
+      }
+    }
+  })
 
   it('gives UNREADABLE for a directory with no .git', () => {
     const root = plain({ '.gitignore': 'a\n' })

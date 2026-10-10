@@ -1,4 +1,4 @@
-// The git index, for a rule that checks the executable bit of a file or the tracking of one. The
+// The git index, for a rule that checks the executable bit of a file or asks if git tracks one. The
 // bit is the index mode `100755`. The mode on the disk is not the bit. The
 // index can keep `100755` while the disk shows `644`. With
 // `core.fileMode=false`, git does not see the disk mode at all. A repository
@@ -11,8 +11,9 @@
 // command fails, and when git finds a repository other than the one in `root`.
 // A rule makes no report that rests on `UNREADABLE`.
 //
-// Two more questions are whether a `.gitignore` file covers a path (`gitIgnores`) and whether
-// the index holds a file below a directory (`gitTracksBelow`). They have the same `UNREADABLE` result.
+// Two more questions exist. One is whether a `.gitignore` file covers a path (`gitIgnores`).
+// The other is whether the index holds a file below a directory (`gitTracksBelow`).
+// They have the same `UNREADABLE` result.
 import { execFileSync } from 'node:child_process'
 import { existsSync, realpathSync, statSync } from 'node:fs'
 import { devNull } from 'node:os'
@@ -38,14 +39,22 @@ const LOCATION = [
   'GIT_NAMESPACE',
 ]
 
+// Variables that change how git reads config or paths. A git hook that runs under `git -c` sets
+// the config ones. `check-ignore` stops with an error when it gets `GIT_LITERAL_PATHSPECS`.
+const AMBIENT =
+  /^GIT_(CONFIG_(PARAMETERS|COUNT|KEY_\d+|VALUE_\d+)|(LITERAL|GLOB|NOGLOB|ICASE)_PATHSPECS)$/
+
 /** The environment of a `git` command: the environment of the process,
- *  without the variables that point git at a repository. */
+ *  without the variables that point git at a repository or change its config or pathspecs. */
 function gitEnv(): NodeJS.ProcessEnv {
-  return Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.includes(key)))
+  return Object.fromEntries(
+    Object.entries(process.env).filter(([key]) => !LOCATION.includes(key) && !AMBIENT.test(key)),
+  )
 }
 
-/** The output of `git` with `args`, run in `root` with no shell. It throws
- *  when `git` is not installed, `root` is not there, or the command fails. */
+/** The output of `git` with `args`, run in `root` with no shell. `input`, when
+ *  given, is the standard input. It throws when `git` is not installed, `root`
+ *  is not there, or the command fails. */
 function run(root: string, args: string[], input?: string): string {
   // `core.fsmonitor` in the config of a repository names a program. Git runs
   // that program when it reads the index. The reader sets the key to false.
@@ -207,7 +216,7 @@ export function gitIgnores(root: string, file: string): boolean | Unreadable {
   }
   // The path starts with `./`, so that git reads no `:` at the start as pathspec
   // magic. `--literal-pathspecs` is not an option here: this command refuses it.
-  // Git reads the path from standard input, so no leading dash is an option.
+  // Git reads the path from standard input, so a dash at the start is not an option.
   const target = `./${path.relative(root, file).split(path.sep).join('/')}`
   try {
     // `-v` names the source and the pattern. With `-z`, the output is the fields
