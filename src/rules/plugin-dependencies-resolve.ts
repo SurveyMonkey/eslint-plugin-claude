@@ -15,7 +15,7 @@ const name = 'plugin-dependencies-resolve' as const
  *  string is `name` or `name@marketplace`. An object has `name` and
  *  `marketplace` members. The result is undefined for a value that is neither,
  *  and for an object with a `name` or `marketplace` that is not a string. */
-function dependencyOf(
+export function dependencyOf(
   value: ValueNode,
 ): { name: string; marketplace: string | undefined } | undefined {
   if (value.type === 'String') {

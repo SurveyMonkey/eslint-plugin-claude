@@ -123,8 +123,9 @@ const TREE: Record<string, string> = {
   // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
   'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
   'plugins/loc/.claude-plugin/bin/tool': '',
-  // The default `skills/` directory is in the `skills` key too. Its loose file is a report of
-  // `skill-file-layout` only. The loose file in `extra/` is a report of the manifest rule.
+  // The default `skills/` directory is in the `skills` key too. That entry is a report of
+  // `plugin-skills-key-redundant-default`. Its loose file is a report of `skill-file-layout` only.
+  // The loose file in `extra/` is a report of the manifest rule.
   'plugins/skl/.claude-plugin/plugin.json': JSON.stringify({
     name: 'skl',
     skills: ['./extra', './skills'],
@@ -206,6 +207,21 @@ const TREE: Record<string, string> = {
   // A plugin that the marketplace serves from npm, with a `package.json` and no shrinkwrap.
   'packages/cx/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
   'packages/cx/plugins/pkg/package.json': '{}',
+  // A plugin that depends on a plugin with a `command` source in the same marketplace, in a
+  // repository with a `.git`.
+  'packages/nai/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/nai/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'nai',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'user', source: './plugins/user' },
+      { name: 'minted', source: { source: 'command', command: 'mint-plugin' } },
+    ],
+  }),
+  'packages/nai/plugins/user/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'user',
+    dependencies: ['minted'],
+  }),
   // A monitor that starts when a skill runs, in the manifest and in the default file. The plugin
   // has no such skill.
   'plugins/msk/.claude-plugin/plugin.json': JSON.stringify({
@@ -216,12 +232,28 @@ const TREE: Record<string, string> = {
   'plugins/msk2/monitors/monitors.json': JSON.stringify([
     { name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' },
   ]),
-  // A plugin that sets `agent` in the manifest and in a root `settings.json`.
+  // A plugin that sets `agent` in the manifest and in a root `settings.json`. The file wins, and
+  // the plugin has no agent `b`.
   'plugins/set/.claude-plugin/plugin.json': JSON.stringify({
     name: 'set',
     settings: { agent: 'a' },
   }),
   'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
+  // A `min` bound on a string option.
+  'plugins/uca/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'uca',
+    userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },
+  }),
+  // A command entry with a field that the manifest reference does not list.
+  'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'cmf',
+    commands: { a: { content: 'x', bogus: 1 } },
+  }),
+  // A plugin with a backslash in a component path.
+  'plugins/bsl/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'bsl',
+    commands: ['./commands\\a.md'],
+  }),
   // A reference to a sensitive option in a skill and an agent of a plugin. A command is not read.
   'plugins/sen/.claude-plugin/plugin.json': JSON.stringify({
     name: 'sen',
@@ -718,6 +750,36 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-commands-map-fields',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-dependencies-not-auto-installed',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-path-no-backslash',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-settings-agent-exists',
+    files: ['**/.claude-plugin/plugin.json', '**/settings.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-skills-key-redundant-default',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-user-config-field-applicability',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -766,6 +828,8 @@ const EXPECTED = [
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
+  'plugins/cmf/.claude-plugin/plugin.json: claude/plugin-commands-map-fields@1',
+  'plugins/bsl/.claude-plugin/plugin.json: claude/plugin-path-no-backslash@1',
   'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
   'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',
   'plugins/msk2/monitors/monitors.json: claude/plugin-monitors-skill-exists@2',
@@ -777,11 +841,13 @@ const EXPECTED = [
   'plugins/env/.claude-plugin/plugin.json: claude/plugin-monitors-command-env@2',
   'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
+  'plugins/uca/.claude-plugin/plugin.json: claude/plugin-user-config-field-applicability@1',
   'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
+  'packages/nai/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-not-auto-installed@1',
   'packages/cx/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
   // `plugin-manifest-publish-metadata` reports each manifest of the tree, because none sets
   // `homepage` and `repository` or has a README.md. It skips a plugin in `.claude/skills/<name>/`.
@@ -802,10 +868,12 @@ const EXPECTED = [
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
   'plugins/set/.claude-plugin/plugin.json: claude/plugin-settings-single-source@2',
+  'plugins/set/settings.json: claude/plugin-settings-agent-exists@1',
   'plugins/sen/agents/a.md: claude/plugin-user-config-sensitive-in-content@2',
   'plugins/sen/commands/c.md: claude/command-legacy-format@1',
   'plugins/sen/skills/s/SKILL.md: claude/plugin-user-config-sensitive-in-content@2',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
+  'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skills-key-redundant-default@1',
   'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
   'plugins/p/agents/ignored.md: claude/agent-plugin-ignored-fields@2',

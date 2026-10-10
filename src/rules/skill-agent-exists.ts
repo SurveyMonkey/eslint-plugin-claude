@@ -20,7 +20,7 @@ const name = 'skill-agent-exists' as const
 type Options = [{ allow: string[] }]
 
 // The built-in agents of https://code.claude.com/docs/en/sub-agents#built-in-subagents.
-const BUILT_IN = [
+export const BUILT_IN = [
   'Explore',
   'Plan',
   'general-purpose',
@@ -32,7 +32,7 @@ const BUILT_IN = [
 /** The agent names that a scan found. `unseen` is true when the scan did not
  *  follow a link out of the repository. It is also true when the scan could
  *  not read a path. An agent can then be out of sight. */
-interface Agents {
+export interface Agents {
   names: string[]
   unseen: boolean
 }
@@ -70,7 +70,7 @@ function projectAgents(start: string, top: string, bound: string): Agents {
 /** The names that a skill in the plugin at `root` can use for each agent of
  *  the plugin. These are the scoped name and, to avoid a false report, the
  *  bare name, which the docs do not confirm. */
-function pluginAgents(root: string, plugin: string, bound: string): Agents {
+export function pluginAgents(root: string, plugin: string, bound: string): Agents {
   const agentsDir = path.join(root, 'agents')
   const scan = markdownFiles(agentsDir, bound)
   let unseen = scan.outside || scan.unreadable
