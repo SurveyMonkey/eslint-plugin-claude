@@ -63,6 +63,10 @@
       "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
     },
     {
+      "id": "exec-wrappers-and-find-actions",
+      "hash": "fddc5345565ac62850bb5f1640d21477355eae1d2d9ccc419464ecdce5f722c1"
+    },
+    {
       "id": "bash-rule-limits",
       "hash": "9b1965d522c4ae266ef97f7a6d889a589ef91515bd0f5669ce5b07668f7fb95b"
     },
@@ -209,6 +213,12 @@
       "id": "process-wrappers",
       "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18",
       "text": "<h4 id=\"process-wrappers\">\n  Wrappers\n</h4>\n\nBefore matching Bash rules, Claude Code strips a fixed set of wrappers, so a rule like `Bash(npm test *)` also matches `timeout 30 npm test`. The stripped wrappers are `timeout`, `time`, `nice`, `nohup`, and `stdbuf`, plus the shell builtins `command` and `builtin`, and zsh's `noglob`. Each runs its argument as the actual command. Two related forms aren't stripped: the query form `command -v`, which looks up a command rather than running one, and zsh's `nocorrect`.\n\nClaude Code also strips a leading assignment of certain known-safe environment variables, so `Bash(npm test *)` matches `NODE_ENV=test npm test`. An allow rule won't match past an assignment of any other variable. A deny or ask rule matches past any leading assignment, so `Bash(rm *)` in deny still matches `FOO=bar rm -rf tmp/`.\n\nBare `xargs` is also stripped, so `Bash(grep *)` matches `xargs grep pattern`. Stripping applies only when `xargs` has no flags: an invocation like `xargs -n1 grep pattern` is matched as an `xargs` command, so rules written for the inner command do not cover it.\n\nThis wrapper list is built in and is not configurable. Development environment runners such as `direnv exec`, `devbox run`, `mise exec`, `npx`, and `docker exec` are not in the list. Because these tools execute their arguments as a command, a rule like `Bash(devbox run *)` matches whatever comes after `run`, including `devbox run rm -rf .`. To approve work inside an environment runner, write a specific rule that includes both the runner and the inner command, such as `Bash(devbox run npm test)`. Add one rule per inner command you want to allow."
+    },
+    {
+      "heading": "Exec wrappers and find actions",
+      "id": "exec-wrappers-and-find-actions",
+      "hash": "fddc5345565ac62850bb5f1640d21477355eae1d2d9ccc419464ecdce5f722c1",
+      "text": "<h4 id=\"exec-wrappers-and-find-actions\">\n  Exec wrappers and `find` actions\n</h4>\n\nA prefix rule like `Bash(watch *)` or `Bash(find *)` can't auto-approve the following commands, so in Manual mode they prompt:\n\n* **Exec wrappers**: such as `watch`, `setsid`, `ionice`, and `flock`\n* **`find`**: with an action that runs commands, deletes files, or writes files, such as `-exec`, `-delete`, or `-fprint`, or with `-files0-from`, which takes the paths to search from a file\n\nTo approve a specific invocation that has no `*` in it, write an exact-match rule for the full command string, such as `Bash(find build -type f -delete)`.\n\nWhen the command has a `*`, as in `find . -name '*.tmp' -delete`, Claude Code reads the rule as a [wildcard pattern](#wildcard-patterns), not an exact match, so the command still prompts. Approve it each time it prompts, or use a [PreToolUse hook](/docs/en/hooks#pretooluse-decision-control) that returns `\"allow\"` for it."
     },
     {
       "heading": "Settings precedence",

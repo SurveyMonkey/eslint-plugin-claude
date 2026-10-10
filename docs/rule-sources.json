@@ -886,6 +886,11 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Read-only commands",
       "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Exec wrappers and find actions",
+      "hash": "fddc5345565ac62850bb5f1640d21477355eae1d2d9ccc419464ecdce5f722c1"
     }
   ],
   "permissions-bash-runner-wildcard": [

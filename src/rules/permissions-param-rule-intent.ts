@@ -12,7 +12,8 @@ import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-param-rule-intent' as const
 
-/** The parameters that the docs name for `tool`. */
+/** The parameters that the rule reads for `tool`. The docs name `model`, `isolation` and `skill`.
+ *  The command tools use `COMMAND_PARAMETERS`. */
 const parametersOf = (tool: string) =>
   COMMAND_RULE_TOOLS.includes(tool) ? COMMAND_PARAMETERS : (INPUT_PARAMETERS.get(tool) ?? [])
 
@@ -41,7 +42,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'intent' }> = {
           // The colon-star rules report a `:*` in a command rule.
           (COMMAND_RULE_TOOLS.includes(parsed.tool) &&
             /:\*(?:\s|$)/.test(parsed.specifier as string)) ||
-          // `permissions-dead-allow` reports an allow rule that a deny or ask rule covers.
+          // `permissions-dead-allow` reports an allow rule with the same text as a deny or ask rule, or
+          // with a deny or ask rule for the bare tool (`isDeadAllow`).
           isDeadAllow(objects, parsed)
         ) {
           continue

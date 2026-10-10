@@ -1,4 +1,5 @@
-// The command names that the permissions page lists for Bash rules. Source: the "Bash" section
+// The command names that the permissions page lists for Bash rules. `ABSOLUTE_ROOTS` is the one
+// exception: it is a choice of the plugin. Source: the "Bash" section
 // (https://code.claude.com/docs/en/permissions#bash), checked on Claude Code 2.1.296 on
 // 2026-10-10. Review these lists on or before 2027-04-10, the `stale_after` date of
 // docs/rules/permissions-bash-stripped-wrapper.md. `tests/bash-commands.test.ts` pins each list to
@@ -22,7 +23,7 @@ export const STRIPPED_WRAPPERS: readonly string[] = [
 /** The commands that the "Read-only commands" part lists: "The set includes `ls`, `cat`, `echo`,
  *  `pwd`, `head`, `tail`, `grep`, `find`, `wc`, `which`, `diff`, `stat`, `du`, `cd`, and read-only
  *  forms of `git`" (https://code.claude.com/docs/en/permissions#read-only-commands). The list
- *  leaves out `git`, because the docs name no form of it. */
+ *  leaves out `git`, because the docs say that some forms are read-only and list none. */
 export const READ_ONLY_COMMANDS: readonly string[] = [
   'ls',
   'cat',
@@ -40,10 +41,12 @@ export const READ_ONLY_COMMANDS: readonly string[] = [
   'cd',
 ]
 
-/** The read-only commands that still prompt for some arguments. `find` prompts for an
- *  unquoted glob, and `cd` prompts for a target out of the working directories
- *  (https://code.claude.com/docs/en/permissions#read-only-commands). A rule for them is not
- *  redundant unless it names the bare command. */
+/** The read-only commands that still prompt for some arguments. In Manual mode `find` prompts for
+ *  an unquoted glob (https://code.claude.com/docs/en/permissions#read-only-commands), and for an
+ *  action such as `-exec`, `-delete` or `-fprint` and for `-files0-from`
+ *  (https://code.claude.com/docs/en/permissions#exec-wrappers-and-find-actions). `cd` prompts for
+ *  a target out of the working directories. The docs do not say how a prefix rule acts on those
+ *  calls, so a rule for them is redundant only when it names the bare command. */
 export const READ_ONLY_WITH_PROMPTS: readonly string[] = ['find', 'cd']
 
 /** The commands that fetch a URL: "use deny rules to stop `curl`, `wget`, and similar commands"

@@ -43,7 +43,7 @@ Issue 15 has two more parts. Both rest on user settings: a `/path` rule in `~/.c
 sandbox `.` or `./` path there resolves under `~/.claude`.[^read][^prefixes] A user file is outside the repository, and the plugin
 does not read it (ADR 001, Decision 14). The rule does not check them.
 
-The docs give a single slash no project meaning in a managed file, so the sandbox part is silent there. The permission part
+The docs do not say how a managed file resolves `./x`, so the sandbox part is silent there. The permission part
 reads managed files, because the warning of the docs holds for every source.[^read]
 
 Fail:

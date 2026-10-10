@@ -51,7 +51,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'singleSlash' | 's
           })
         }
       }
-      // The docs give a single slash no project meaning in a managed file.
+      // The docs do not say how a managed file resolves `./x`, so there is no sandbox report there.
       if (isManaged) {
         return
       }

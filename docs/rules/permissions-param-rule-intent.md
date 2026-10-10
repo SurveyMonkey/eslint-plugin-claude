@@ -30,8 +30,10 @@ is not a parameter match.
 
 The rule reports an `allow` entry whose specifier starts with a parameter name from this list: `model` and `isolation`
 for `Agent`, `skill` for `Skill`, and `run_in_background`, `description`, `timeout` and `dangerouslyDisableSandbox` for the command
-tools. The page names `run_in_background` and says the match works for any scalar parameter. The plugin adds the other three
-names from the Bash tool input. Space around the colon does not matter.[^param]
+tools. The page names `run_in_background` and says the match works for any scalar parameter. The sandboxing and tools pages
+show `dangerouslyDisableSandbox`, `timeout` and `run_in_background` as inputs of Bash. `description` is the choice of the
+plugin. The plugin also applies the four names to `Monitor` and `PowerShell` rules, because the docs list no inputs for those
+tools. Space around the colon does not matter.[^param]
 
 Issue 15 has a second part: `Agent(model:...)` with an alias where a full ID is sent, or the reverse. The rule drops it.
 The docs say only that the value is compared with the literal input, so `Agent(model:opus)` matches the alias and not a full model
@@ -44,8 +46,8 @@ ID.[^param] No file shows which form Claude sends, so a report would rest on a g
 - [`permissions-bash-colon-star-suffix`](permissions-bash-colon-star-suffix.md) and
   [`permissions-bash-colon-star-mid`](permissions-bash-colon-star-mid.md) report a `:*` in a command rule, so this rule is silent for
   `Bash(run_in_background:*)`.
-- [`permissions-dead-allow`](permissions-dead-allow.md) reports an allow rule that a deny or ask rule covers. This rule is silent
-  for it.
+- [`permissions-dead-allow`](permissions-dead-allow.md) reports an allow rule with the same text as a deny or ask rule, or with a
+  deny or ask rule for the bare tool. This rule is silent for it.
 
 Fail:
 
