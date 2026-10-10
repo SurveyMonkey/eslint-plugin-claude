@@ -3,7 +3,7 @@
 // It is a heuristic, not a shell parser.
 
 /** Commands that run without a permission prompt, from the permissions page: "The set includes".
- *  The docs do not list the rest of the set. The rule treats each name as read-only with any
+ *  The docs do not list the rest of the set. A caller treats each name as read-only with any
  *  flags. `git` is here whole, because the docs name only "read-only forms of `git`". */
 export const READ_ONLY = new Set([
   'ls',
@@ -45,7 +45,7 @@ const COMMENT_LINE = /^[ \t]*#.*$/gm
 
 /** The subcommands of `text`. A line break after a backslash does not split. */
 export function subcommands(text: string): string[] {
-  const lines = text.replace(COMMENT_LINE, '').replaceAll('\\\n', ' ')
+  const lines = text.replace(COMMENT_LINE, '').replaceAll(/\\\r?\n/g, ' ')
   const hasCase = /(?:^|\s)case\s/.test(lines)
   // The `|` between the patterns of a `case` arm is not a pipe.
   const joined = hasCase ? lines.replace(ARM_ALTERNATION, '$1x)') : lines

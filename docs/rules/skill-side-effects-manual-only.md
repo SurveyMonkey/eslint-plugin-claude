@@ -37,7 +37,7 @@ such as `deploy-status` does not match. The rule reads two places:
   tool, such as `Bash` or `Bash(*)`, has no pattern, so it does not match. A rule in
   `disallowed-tools` does not match.
 - The injected commands, in the inline form and in a ```` ```! ```` fence. The rule splits a
-  command at `&&`, `||`, `;`, `|`, `&` and a line break. It skips a quoted string, a comment line, and
+  command at `&&`, `||`, `;`, `|`, `|&`, `&` and a line break. It skips a quoted string, a comment line, and
   a command that only prints or reads, such as `echo deploy` or `grep deploy notes.md`.
 
 The report is on the first match in the file. It is on the `allowed-tools` rule or on the
@@ -82,7 +82,7 @@ Push the tag and tell the team.
 
 | Option | Default | Use |
 |--------|---------|-----|
-| `patterns` | `[]` | More patterns. Each has at least one letter or digit. The rule adds them to the default patterns. |
+| `patterns` | `[]` | More patterns. Each has at least one ASCII letter or digit. The rule adds them to the default patterns. A quote mark in a pattern is not part of a word. |
 
 ```js
 'claude/skill-side-effects-manual-only': ['warn', { patterns: ['terraform apply', 'kubectl delete'] }]
