@@ -10,7 +10,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
 import { command, hooks, settings } from '../hooks.test-support.ts'
-import { lintJson, withoutAccess } from '../rule-tester.test-support.ts'
+import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-support.ts'
 
 const name = 'hooks-command-shell-safety'
 const P = `\${CLAUDE_PROJECT_DIR}`
@@ -28,7 +28,7 @@ const script = (text: string, runner = `${P}/hooks/s.sh`) =>
   ids({ command: runner }, { 'hooks/s.sh': text })
 
 describe(`${name}: an unquoted variable in the command`, () => {
-  it.fails('reports a variable outside quotes', () => {
+  it('reports a variable outside quotes', () => {
     for (const text of [
       'cat $FILE',
       `cat \${FILE}`,
@@ -41,11 +41,11 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
-  it.fails('reports once for a handler', () => {
+  it('reports once for a handler', () => {
     expect(line('cat $A $B; cat $C')).toEqual(['unquoted'])
   })
 
-  it.fails('names the variable in the message', () => {
+  it('names the variable in the message', () => {
     const text = settings(hooks('Stop', [command({ command: 'cat $FILE' })]))
     const [message] = lintJson(name, text, '/repo/.claude/settings.json')
     expect(message?.message).toBe(
@@ -53,7 +53,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
     )
   })
 
-  it.fails('is silent for a quoted variable', () => {
+  it('is silent for a quoted variable', () => {
     for (const text of [
       'cat "$FILE"',
       `cat "\${FILE}"`,
@@ -66,7 +66,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
-  it.fails('is silent for an assignment, a test, a substitution, a special parameter and a comment', () => {
+  it('is silent for an assignment, a test, a substitution, a special parameter and a comment', () => {
     for (const text of [
       'A=$B cmd',
       'A+=$B cmd',
@@ -84,22 +84,22 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
-  it.fails('reads a test that ends, and the lines after it', () => {
+  it('reads a test that ends, and the lines after it', () => {
     expect(line('[[ -n "$X" ]]\ncat $FILE')).toEqual(['unquoted'])
   })
 
-  it.fails('is silent for the path placeholders, which hooks-placeholder-quoted reads', () => {
+  it('is silent for the path placeholders, which hooks-placeholder-quoted reads', () => {
     for (const text of [`${P}/a.sh`, '$CLAUDE_PROJECT_DIR/a.sh', `\${CLAUDE_PLUGIN_ROOT}/a.sh`]) {
       expect(line(text), text).toEqual([])
     }
   })
 
-  it.fails('is silent in exec form and in PowerShell, which have no shell', () => {
+  it('is silent in exec form and in PowerShell, which have no shell', () => {
     expect(ids({ command: 'cat', args: ['$FILE'] })).toEqual([])
     expect(ids({ command: 'cat $FILE', shell: 'powershell' })).toEqual([])
   })
 
-  it.fails('reads a shell line after -c again', () => {
+  it('reads a shell line after -c again', () => {
     expect(line("bash -c 'cat $FILE'")).toEqual(['unquoted'])
     expect(line('bash -lc \'cat "$FILE"\'')).toEqual([])
     expect(line('bash -c')).toEqual([])
@@ -108,7 +108,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
 })
 
 describe(`${name}: rm on a variable`, () => {
-  it.fails('reports rm with a recursive flag on an unquoted variable', () => {
+  it('reports rm with a recursive flag on an unquoted variable', () => {
     for (const text of [
       'rm -rf $FILE',
       `rm -fr \${DIR}/x`,
@@ -121,7 +121,7 @@ describe(`${name}: rm on a variable`, () => {
     }
   })
 
-  it.fails('names the variable in the message', () => {
+  it('names the variable in the message', () => {
     const text = settings(hooks('Stop', [command({ command: 'rm -rf $FILE' })]))
     const [message] = lintJson(name, text, '/repo/.claude/settings.json')
     expect(message?.message).toBe(
@@ -129,7 +129,7 @@ describe(`${name}: rm on a variable`, () => {
     )
   })
 
-  it.fails('reports a quoted variable that holds hook input', () => {
+  it('reports a quoted variable that holds hook input', () => {
     for (const text of [
       'FILE=$(jq -r .tool_input.file_path); rm -rf "$FILE"',
       'FILE=$(cat); rm -rf "$FILE"',
@@ -141,7 +141,7 @@ describe(`${name}: rm on a variable`, () => {
     }
   })
 
-  it.fails('is silent for rm on a quoted variable that holds no hook input', () => {
+  it('is silent for rm on a quoted variable that holds no hook input', () => {
     for (const text of [
       'rm -rf "$TMP"',
       'FILE=$(date); rm -rf "$FILE"',
@@ -152,7 +152,7 @@ describe(`${name}: rm on a variable`, () => {
     }
   })
 
-  it.fails('is silent for rm with no recursive flag, rm on a literal path and another command', () => {
+  it('is silent for rm with no recursive flag, rm on a literal path and another command', () => {
     for (const text of [
       'rm -f "$A"',
       'rm "$A"',
@@ -167,16 +167,16 @@ describe(`${name}: rm on a variable`, () => {
 })
 
 describe(`${name}: a repository script`, () => {
-  it.fails('reports an unquoted variable in a script that the command runs', () => {
+  it('reports an unquoted variable in a script that the command runs', () => {
     expect(script('#!/bin/bash\ncat $FILE\n')).toEqual(['unquoted'])
     expect(script('cat $FILE\n')).toEqual(['unquoted'])
   })
 
-  it.fails('reports rm on a derived variable in a script', () => {
+  it('reports rm on a derived variable in a script', () => {
     expect(script('#!/bin/bash\nF=$(jq -r .p)\nrm -rf "$F"\n')).toEqual(['destructive'])
   })
 
-  it.fails('reads a script that bash, sh or zsh runs, and a script in exec form', () => {
+  it('reads a script that bash, sh or zsh runs, and a script in exec form', () => {
     for (const runner of [
       `bash ${P}/hooks/s.sh`,
       `sh -e "${P}/hooks/s.sh"`,
@@ -193,13 +193,13 @@ describe(`${name}: a repository script`, () => {
     ).toEqual(['unquoted'])
   })
 
-  it.fails('reports once when the command and the script both have a fault', () => {
+  it('reports once when the command and the script both have a fault', () => {
     expect(ids({ command: `cat $A; ${P}/hooks/s.sh` }, { 'hooks/s.sh': 'cat $FILE\n' })).toEqual([
       'unquoted',
     ])
   })
 
-  it.fails('names the script in the message', () => {
+  it('names the script in the message', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/s.sh` })]))
     const root = repo({ '.claude/settings.json': text, 'hooks/s.sh': 'cat $FILE\n' })
     const [message] = lintJson(name, text, path.join(root, '.claude/settings.json'))
@@ -208,11 +208,11 @@ describe(`${name}: a repository script`, () => {
     )
   })
 
-  it.fails('is silent for a safe script', () => {
+  it('is silent for a safe script', () => {
     expect(script('#!/bin/bash\ncat "$FILE"\n')).toEqual([])
   })
 
-  it.fails('is silent for a script of another language', () => {
+  it('is silent for a script of another language', () => {
     for (const text of [
       '#!/usr/bin/env python3\ncat $FILE\n',
       '#!/usr/bin/env node\ncat $FILE\n',
@@ -224,13 +224,13 @@ describe(`${name}: a repository script`, () => {
     expect(ids({ command: `${P}/hooks/s.ps1` }, { 'hooks/s.ps1': 'cat $FILE\n' })).toEqual([])
   })
 
-  it.fails('is silent for a script that another program runs, and a path that is not resolved', () => {
+  it('is silent for a script that another program runs, and a path that is not resolved', () => {
     expect(script('cat $FILE\n', `node ${P}/hooks/s.sh`)).toEqual([])
     expect(script('cat $FILE\n', './hooks/s.sh')).toEqual([])
     expect(script('cat $FILE\n', `bash -c ${P}/hooks/s.sh`)).toEqual([])
   })
 
-  it.fails('is silent for a missing script, a binary file, a link out of the repository and a dangling link', () => {
+  it('is silent for a missing script, a binary file, a link out of the repository and a dangling link', () => {
     expect(ids({ command: `${P}/hooks/none.sh` })).toEqual([])
     expect(script('cat $FILE\n\0')).toEqual([])
     const outside = repo({ 'x/s.sh': 'cat $FILE\n' })
@@ -241,7 +241,7 @@ describe(`${name}: a repository script`, () => {
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toEqual([])
   })
 
-  it.fails('is silent for a file that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('is silent for a file that it cannot read', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/s.sh` })]))
     const root = repo({ '.claude/settings.json': text, 'hooks/s.sh': 'cat $FILE\n' })
     const file = path.join(root, 'hooks/s.sh')
@@ -251,7 +251,7 @@ describe(`${name}: a repository script`, () => {
     chmodSync(file, 0o644)
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     const text = settings(hooks('Stop', [command({ command: 'cat $FILE' })]))
     expect(lintJson(name, text, '/repo/managed-settings.d/.10.json')).toEqual([])
   })

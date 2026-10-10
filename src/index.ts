@@ -64,9 +64,11 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
 import hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
 import hooksAsyncOnBlockingEvent from './rules/hooks-async-on-blocking-event.ts'
+import hooksBroadAutoApprove from './rules/hooks-broad-auto-approve.ts'
 import hooksCommandDeprecatedCliFlag from './rules/hooks-command-deprecated-cli-flag.ts'
 import hooksCommandPathVariable from './rules/hooks-command-path-variable.ts'
 import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
+import hooksCommandShellSafety from './rules/hooks-command-shell-safety.ts'
 import hooksCommittedCommandReview from './rules/hooks-committed-command-review.ts'
 import hooksConfigSchema from './rules/hooks-config-schema.ts'
 import hooksDisableAllOverride from './rules/hooks-disable-all-override.ts'
@@ -75,11 +77,14 @@ import hooksDuplicateHandler from './rules/hooks-duplicate-handler.ts'
 import hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
+import hooksExecFormShellSyntax from './rules/hooks-exec-form-shell-syntax.ts'
+import hooksExecFormWindowsShim from './rules/hooks-exec-form-windows-shim.ts'
 import hooksFilechangedStarMatcher from './rules/hooks-filechanged-star-matcher.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerFieldUnknown from './rules/hooks-handler-field-unknown.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
 import hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
+import hooksHttpLiteralSecret from './rules/hooks-http-literal-secret.ts'
 import hooksIfCondition from './rules/hooks-if-condition.ts'
 import hooksIfDirGlobDepth from './rules/hooks-if-dir-glob-depth.ts'
 import hooksMatcherBashWithoutPowershell from './rules/hooks-matcher-bash-without-powershell.ts'
@@ -101,6 +106,7 @@ import hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-r
 import hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
 import hooksScriptExists from './rules/hooks-script-exists.ts'
+import hooksScriptShebang from './rules/hooks-script-shebang.ts'
 import hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
 import hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
 import hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
@@ -335,9 +341,11 @@ const modules = [
   hooksAgentStopEvent,
   hooksAgentTypeExperimental,
   hooksAsyncOnBlockingEvent,
+  hooksBroadAutoApprove,
   hooksCommandDeprecatedCliFlag,
   hooksCommandPathVariable,
   hooksCommandRemovedCliFlag,
+  hooksCommandShellSafety,
   hooksCommittedCommandReview,
   hooksConfigSchema,
   hooksDisableAllOverride,
@@ -345,11 +353,14 @@ const modules = [
   hooksDuplicateHandler,
   hooksEnvVarUnavailable,
   hooksExecFormCommandSpaces,
+  hooksExecFormShellSyntax,
+  hooksExecFormWindowsShim,
   hooksFilechangedStarMatcher,
   hooksHandlerFieldIgnored,
   hooksHandlerFieldUnknown,
   hooksHandlerTypeEventSupport,
   hooksHttpEnvAllowlist,
+  hooksHttpLiteralSecret,
   hooksIfCondition,
   hooksIfDirGlobDepth,
   hooksMatcherBashWithoutPowershell,
@@ -369,6 +380,7 @@ const modules = [
   hooksPreferExecForm,
   hooksPromptOnPermissionRequest,
   hooksPs1NeedsPowershellShell,
+  hooksScriptShebang,
   hooksSessionendDefaultTimeout,
   hooksTimeoutUnits,
   hooksWorktreeCreateWithoutRemove,
@@ -678,9 +690,11 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-agent-stop-event': 'off',
   'hooks-agent-type-experimental': 'warn',
   'hooks-async-on-blocking-event': 'off',
+  'hooks-broad-auto-approve': 'off',
   'hooks-command-deprecated-cli-flag': 'warn',
   'hooks-command-path-variable': 'off',
   'hooks-command-removed-cli-flag': 'error',
+  'hooks-command-shell-safety': 'off',
   'hooks-committed-command-review': 'off',
   'hooks-config-schema': 'error',
   'hooks-disable-all-override': 'warn',
@@ -688,11 +702,14 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-duplicate-handler': 'warn',
   'hooks-env-var-unavailable': 'error',
   'hooks-exec-form-command-spaces': 'error',
+  'hooks-exec-form-shell-syntax': 'off',
+  'hooks-exec-form-windows-shim': 'off',
   'hooks-filechanged-star-matcher': 'warn',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-field-unknown': 'warn',
   'hooks-handler-type-event-support': 'error',
   'hooks-http-env-allowlist': 'error',
+  'hooks-http-literal-secret': 'off',
   'hooks-if-condition': 'error',
   'hooks-if-dir-glob-depth': 'off',
   'hooks-matcher-bash-without-powershell': 'warn',
@@ -712,6 +729,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-prefer-exec-form': 'warn',
   'hooks-prompt-on-permission-request': 'warn',
   'hooks-ps1-needs-powershell-shell': 'warn',
+  'hooks-script-shebang': 'off',
   'hooks-sessionend-default-timeout': 'warn',
   'hooks-timeout-units': 'off',
   'hooks-worktree-create-without-remove': 'warn',

@@ -3,10 +3,12 @@
 // (ADR 001, Decision 10). A plugin reads `hooks/hooks.json` at its root. Project
 // and user hooks go under the `hooks` key of a settings file, so there is no
 // standalone hooks file for them (docs/rules/hooks-no-standalone-file.md).
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
-import { readManifest, repositoryRoot, UNREADABLE } from './skill-tree.ts'
+import { kindOf } from './settings-files.ts'
+import { commandsOf, commandWordAt } from './shell-words.ts'
+import { isInside, readManifest, realOf, repositoryRoot, statOf, UNREADABLE } from './skill-tree.ts'
 
 /** What Claude Code does with a `hooks.json` file. A plugin file is one that it
  *  reads. The other two kinds are files that it does not read: a standalone file in
@@ -80,4 +82,117 @@ export function settingsFilesAround(root: string): string[] {
   return folders.flatMap((folder) =>
     ['settings.json', 'settings.local.json'].map((name) => path.join(folder, '.claude', name)),
   )
+}
+
+/** The folders that the path placeholders name for a hook in the file `filename`. A plugin `hooks.json`
+ *  has a plugin root and no project folder. A project settings file, a skill and a subagent have the project
+ *  folder above the nearest `.claude` folder, and no plugin root. A managed file has neither. */
+export interface PlaceholderFolders {
+  project?: string
+  plugin?: string
+}
+
+export function placeholderFolders(
+  filename: string,
+  kind: 'settings' | 'plugin' | 'skill' | 'agent',
+): PlaceholderFolders {
+  const file = path.resolve(filename)
+  if (kind === 'plugin') {
+    return { plugin: path.dirname(path.dirname(file)) }
+  }
+  if (kind === 'settings' && kindOf(file) === 'managed') {
+    return {}
+  }
+  for (let at = path.dirname(file); path.dirname(at) !== at; at = path.dirname(at)) {
+    if (path.basename(at) === '.claude') {
+      return { project: path.dirname(at) }
+    }
+  }
+  return {}
+}
+
+const PLACEHOLDER_PATH =
+  /^\$(?:\{(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT)\}|(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT))(\/.*)$/
+
+/** A script that a hook runs: its absolute path, and the folder that the placeholder names. */
+export interface HookScript {
+  file: string
+  folder: string
+}
+
+/** The script that the command word `word` names, or undefined. Only a path that starts with
+ *  `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}` has a place that the file shows. A path from the
+ *  working directory has none. */
+function placeholderPath(word: string, folders: PlaceholderFolders): HookScript | undefined {
+  const match = PLACEHOLDER_PATH.exec(word)
+  if (match === null) {
+    return undefined
+  }
+  const folder = (match[1] ?? match[2]) === 'CLAUDE_PROJECT_DIR' ? folders.project : folders.plugin
+  return folder === undefined ? undefined : { file: path.resolve(folder, `.${match[3]}`), folder }
+}
+
+const SHELLS = ['bash', 'sh', 'zsh']
+/** The flags of a shell that take a value. The word after one is not the script. */
+const VALUE_FLAGS = ['-o', '+o', '-O', '+O', '--rcfile', '--init-file']
+
+/** The script that a shell runs, in the words after the shell name: the first word that is no flag. A flag
+ *  cluster with `c` ends the search, because the next word is a command line. */
+function shellScript(rest: string[]): string | undefined {
+  for (let i = 0; i < rest.length; i++) {
+    const word = rest[i] as string
+    if (/^-[A-Za-z]*c[A-Za-z]*$/.test(word)) {
+      return undefined
+    }
+    if (VALUE_FLAGS.includes(word)) {
+      i++
+    } else if (!/^[-+]/.test(word)) {
+      return word
+    }
+  }
+  return undefined
+}
+
+/** The scripts that a command hook runs from the folders that the placeholders
+ *  name. A script is the command word. With `viaShell`, it is also the script of `bash`, `sh` and `zsh`.
+ *  `args` is set for exec form, where `command` is the program. */
+export function scriptsRun(
+  command: string,
+  args: string[] | undefined,
+  folders: PlaceholderFolders,
+  viaShell: boolean,
+): HookScript[] {
+  const lines = args === undefined ? commandsOf(command) : [[command, ...args]]
+  return lines.flatMap((words) => {
+    const at = commandWordAt(words)
+    const program = words[at] ?? ''
+    const named = viaShell && SHELLS.includes(path.posix.basename(program))
+    const script = placeholderPath(
+      named ? (shellScript(words.slice(at + 1)) ?? '') : program,
+      folders,
+    )
+    return script === undefined ? [] : [script]
+  })
+}
+
+/** The largest script that a rule reads, in bytes. */
+const MAX_SCRIPT = 1_000_000
+
+/** The text of the script `script`, or undefined when a rule must not read it. The file must be a regular
+ *  file with a real path in the repository of its folder, of at most one megabyte, and readable. A dangling
+ *  link, a link out of the repository, a folder and a FIFO give undefined (ADR 001, Decision 14). */
+export function scriptText({ file, folder }: HookScript): string | undefined {
+  const real = realOf(file)
+  if (typeof real !== 'string' || !isInside(real, repositoryRoot(folder))) {
+    return undefined
+  }
+  const info = statOf(real)
+  if (info === null || info === UNREADABLE || !info.isFile() || info.size > MAX_SCRIPT) {
+    return undefined
+  }
+  try {
+    return readFileSync(real, 'utf8')
+  } catch {
+    return undefined
+  }
 }

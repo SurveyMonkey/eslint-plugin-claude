@@ -9,7 +9,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
 import { command, frontmatter, hooks, markdownIds, settings } from '../hooks.test-support.ts'
-import { lintJson, withoutAccess } from '../rule-tester.test-support.ts'
+import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-support.ts'
 
 const name = 'hooks-script-shebang'
 const P = `\${CLAUDE_PROJECT_DIR}`
@@ -31,7 +31,7 @@ const run = (line: string, files: Record<string, string> = { 'hooks/b.sh': BAD }
   ids(files, { command: line })
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a script with no shebang, in each form of the placeholder', () => {
+  it('reports a script with no shebang, in each form of the placeholder', () => {
     for (const line of [
       `${P}/hooks/b.sh`,
       `"${P}/hooks/b.sh"`,
@@ -45,19 +45,19 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('reports a script in exec form', () => {
+  it('reports a script in exec form', () => {
     expect(ids({ 'hooks/b.sh': BAD }, { command: `${P}/hooks/b.sh`, args: ['x'] })).toEqual([
       'shebang',
     ])
   })
 
-  it.fails('reports each script of a line', () => {
+  it('reports each script of a line', () => {
     expect(
       run(`${P}/hooks/b.sh; ${P}/hooks/c.sh`, { 'hooks/b.sh': BAD, 'hooks/c.sh': '' }),
     ).toEqual(['shebang', 'shebang'])
   })
 
-  it.fails('reports a script behind a link inside the repository', () => {
+  it('reports a script behind a link inside the repository', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/link.sh` })]))
     const root = repo({ '.claude/settings.json': text, 'real/b.sh': BAD })
     mkdirSync(path.join(root, 'hooks'))
@@ -65,7 +65,7 @@ describe(`${name}: the report`, () => {
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toHaveLength(1)
   })
 
-  it.fails('names the script in the message', () => {
+  it('names the script in the message', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/b.sh` })]))
     const root = repo({ '.claude/settings.json': text, 'hooks/b.sh': BAD })
     const [message] = lintJson(name, text, path.join(root, '.claude/settings.json'))
@@ -74,13 +74,13 @@ describe(`${name}: the report`, () => {
     )
   })
 
-  it.fails('reports in a plugin hooks.json with CLAUDE_PLUGIN_ROOT', () => {
+  it('reports in a plugin hooks.json with CLAUDE_PLUGIN_ROOT', () => {
     const text = settings(hooks('Stop', [command({ command: `"${R}/scripts/b.sh"` })]))
     const root = repo({ 'plugins/p/hooks/hooks.json': text, 'plugins/p/scripts/b.sh': BAD })
     expect(lintJson(name, text, path.join(root, 'plugins/p/hooks/hooks.json'))).toHaveLength(1)
   })
 
-  it.fails('reports in a project skill and a project agent', () => {
+  it('reports in a project skill and a project agent', () => {
     const yaml = `Stop:\n  - hooks:\n      - type: command\n        command: "\${CLAUDE_PROJECT_DIR}/hooks/b.sh"\n`
     for (const file of ['.claude/skills/s/SKILL.md', '.claude/agents/a.md']) {
       const text = frontmatter(yaml)
@@ -91,12 +91,12 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent when the script starts with #!', () => {
+  it('is silent when the script starts with #!', () => {
     expect(run(`${P}/hooks/b.sh`, { 'hooks/b.sh': GOOD })).toEqual([])
     expect(run(`${P}/hooks/b.sh`, { 'hooks/b.sh': '#!/usr/bin/env node\n' })).toEqual([])
   })
 
-  it.fails('is silent when an interpreter runs the script', () => {
+  it('is silent when an interpreter runs the script', () => {
     for (const line of [
       `bash ${P}/hooks/b.sh`,
       `node ${P}/hooks/b.sh`,
@@ -106,7 +106,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a path that the placeholders do not name', () => {
+  it('is silent for a path that the placeholders do not name', () => {
     for (const line of [
       './hooks/b.sh',
       'hooks/b.sh',
@@ -120,7 +120,7 @@ describe(`${name}: the silent cases`, () => {
     expect(ids({ 'hooks/b.sh': BAD }, { command: `${R}/hooks/b.sh` })).toEqual([])
   })
 
-  it.fails('is silent for CLAUDE_PROJECT_DIR in a plugin file and in a managed file', () => {
+  it('is silent for CLAUDE_PROJECT_DIR in a plugin file and in a managed file', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/b.sh` })]))
     const root = repo({
       'plugins/p/hooks/hooks.json': text,
@@ -138,7 +138,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a script that is missing, a folder, a binary file and a script of another system', () => {
+  it('is silent for a script that is missing, a folder, a binary file and a script of another system', () => {
     expect(run(`${P}/hooks/none.sh`)).toEqual([])
     expect(run(`${P}/hooks`, { 'hooks/b.sh': BAD })).toEqual([])
     expect(run(`${P}/hooks/b`, { 'hooks/b': 'ELF\0\u0001' })).toEqual([])
@@ -147,7 +147,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a handler that is no shell-form command of a string', () => {
+  it('is silent for a handler that is no shell-form command of a string', () => {
     const files = { 'hooks/b.sh': BAD }
     expect(ids(files, { type: 'http', url: 'u', command: `${P}/hooks/b.sh` })).toEqual([])
     expect(ids(files, { command: 5 })).toEqual([])
@@ -156,7 +156,7 @@ describe(`${name}: the silent cases`, () => {
     expect(ids(files, { command: `${P}/hooks/b.sh`, args: 'x' })).toEqual(['shebang'])
   })
 
-  it.fails('is silent for a script out of the repository', () => {
+  it('is silent for a script out of the repository', () => {
     const outside = repo({ 'x/b.sh': BAD })
     const text = settings(hooks('Stop', [command({ command: `${P}/link.sh` })]))
     const root = repo({ '.claude/settings.json': text })
@@ -165,21 +165,21 @@ describe(`${name}: the silent cases`, () => {
     expect(run(`${P}/../x/b.sh`, {})).toEqual([])
   })
 
-  it.fails('is silent for a dangling link', () => {
+  it('is silent for a dangling link', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/link.sh` })]))
     const root = repo({ '.claude/settings.json': text })
     symlinkSync(path.join(root, 'gone.sh'), path.join(root, 'link.sh'))
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toEqual([])
   })
 
-  it.fails('is silent for a FIFO', () => {
+  it.skipIf(process.platform === 'win32')('is silent for a FIFO', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/fifo` })]))
     const root = repo({ '.claude/settings.json': text })
     execFileSync('mkfifo', [path.join(root, 'fifo')])
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toEqual([])
   })
 
-  it.fails('is silent for a file that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('is silent for a file that it cannot read', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/b.sh` })]))
     const root = repo({ '.claude/settings.json': text, 'hooks/b.sh': BAD })
     const file = path.join(root, 'hooks/b.sh')
@@ -189,7 +189,7 @@ describe(`${name}: the silent cases`, () => {
     chmodSync(file, 0o644)
   })
 
-  it.fails('is silent for a file of more than one megabyte', () => {
+  it('is silent for a file of more than one megabyte', () => {
     expect(run(`${P}/hooks/b.sh`, { 'hooks/b.sh': `echo ${'x'.repeat(1_100_000)}\n` })).toEqual([])
   })
 })

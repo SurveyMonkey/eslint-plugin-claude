@@ -15,17 +15,17 @@ const exec = (args: unknown[], fields: Record<string, unknown> = {}) =>
   ids(command({ command: 'tool', args, ...fields }))
 
 describe(`${name}: the operators`, () => {
-  it.fails('reports an args item that is a shell operator', () => {
+  it('reports an args item that is a shell operator', () => {
     for (const item of ['|', '||', '&&', ';', '&', '>', '>>', '<', '2>&1', '>&2', '2>/dev/null']) {
       expect(exec(['a', item, 'b']), item).toEqual(['operator'])
     }
   })
 
-  it.fails('reports each operator', () => {
+  it('reports each operator', () => {
     expect(exec(['a', '|', 'b', '>', 'c'])).toEqual(['operator', 'operator'])
   })
 
-  it.fails('names the item in the message', () => {
+  it('names the item in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('Stop', [command({ command: 'tool', args: ['a', '|', 'b'] })])),
@@ -36,7 +36,7 @@ describe(`${name}: the operators`, () => {
     )
   })
 
-  it.fails('is silent for text that only holds an operator character', () => {
+  it('is silent for text that only holds an operator character', () => {
     for (const item of ['a|b', 'x>y', '--filter=a&&b', '>=1.0', '*.ts', 'src/**/*.ts', '']) {
       expect(exec([item]), item).toEqual([])
     }
@@ -44,17 +44,17 @@ describe(`${name}: the operators`, () => {
 })
 
 describe(`${name}: the variables`, () => {
-  it.fails(`reports $NAME and \${NAME} in an args item`, () => {
+  it(`reports $NAME and \${NAME} in an args item`, () => {
     for (const item of ['$HOME', `\${HOME}/x`, '--home=$HOME', '$CLAUDE_PROJECT_DIR/x', '$_A1']) {
       expect(exec([item]), item).toEqual(['variable'])
     }
   })
 
-  it.fails('reports a variable in the command', () => {
+  it('reports a variable in the command', () => {
     expect(ids(command({ command: '$HOME/bin/tool', args: [] }))).toEqual(['variable'])
   })
 
-  it.fails('names the variable in the message', () => {
+  it('names the variable in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('Stop', [command({ command: 'tool', args: ['$HOME'] })])),
@@ -65,7 +65,7 @@ describe(`${name}: the variables`, () => {
     )
   })
 
-  it.fails('is silent for the path placeholders, which Claude Code replaces', () => {
+  it('is silent for the path placeholders, which Claude Code replaces', () => {
     for (const item of [
       `\${CLAUDE_PROJECT_DIR}/a`,
       `\${CLAUDE_PLUGIN_ROOT}/a`,
@@ -76,11 +76,11 @@ describe(`${name}: the variables`, () => {
     }
   })
 
-  it.fails('is silent for the variables that hooks-env-var-unavailable reports', () => {
+  it('is silent for the variables that hooks-env-var-unavailable reports', () => {
     expect(exec(['$CLAUDE_ENV_FILE', `\${CLAUDE_MODEL}`])).toEqual([])
   })
 
-  it.fails('is silent for a lower-case name, a bare dollar and a regular expression', () => {
+  it('is silent for a lower-case name, a bare dollar and a regular expression', () => {
     for (const item of ['.[$x]', '^a$', '$', '$1', 'cost: $5']) {
       expect(exec([item]), item).toEqual([])
     }
@@ -88,7 +88,7 @@ describe(`${name}: the variables`, () => {
 })
 
 describe(`${name}: the handler`, () => {
-  it.fails('is silent in shell form', () => {
+  it('is silent in shell form', () => {
     for (const fields of [{}, { args: 'x' }]) {
       expect(
         ids(command({ command: 'a | b > $HOME/c && d', ...fields })),
@@ -97,21 +97,21 @@ describe(`${name}: the handler`, () => {
     }
   })
 
-  it.fails('ignores an args item that is no string, and a handler that is no command hook', () => {
+  it('ignores an args item that is no string, and a handler that is no command hook', () => {
     expect(exec([1, null, ['|'], { a: '|' }, true])).toEqual([])
     expect(ids({ type: 'http', url: 'u', command: 'a', args: ['|'] })).toEqual([])
     expect(ids({ type: 'command', args: ['|'] })).toEqual([])
     expect(ids({ type: 'command', command: 5, args: ['|'] })).toEqual([])
   })
 
-  it.fails('reports in each file that Claude Code reads', () => {
+  it('reports in each file that Claude Code reads', () => {
     for (const file of [FILES.project, FILES.local, FILES.managed, FILES.dropIn, FILES.plugin]) {
       expect(exec(['|']), file).toEqual(['operator'])
     }
     expect(ids(command({ command: 'tool', args: ['|'] }), FILES.plugin)).toEqual(['operator'])
   })
 
-  it.fails('reports in a skill and a project agent', () => {
+  it('reports in a skill and a project agent', () => {
     const text = frontmatter(
       'Stop:\n  - hooks:\n      - type: command\n        command: tool\n        args: ["a", "|"]\n',
     )
@@ -119,7 +119,7 @@ describe(`${name}: the handler`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['operator'])
   })
 
-  it.fails('is silent in a hidden drop-in and in a plugin agent', () => {
+  it('is silent in a hidden drop-in and in a plugin agent', () => {
     expect(exec(['|'])).toEqual(['operator'])
     expect(ids(command({ command: 'tool', args: ['|'] }), FILES.hidden)).toEqual([])
     const text = frontmatter(

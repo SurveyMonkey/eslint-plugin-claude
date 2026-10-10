@@ -31,19 +31,19 @@ const ids = (
   ).map((message) => message.messageId)
 
 describe(`${name}: an allow decision`, () => {
-  it.fails('reports PermissionRequest allow under an omitted, empty, star or dot-star matcher', () => {
+  it('reports PermissionRequest allow under an omitted, empty, star or dot-star matcher', () => {
     for (const matcher of [undefined, '', '*', '.*']) {
       expect(ids('PermissionRequest', allowRequest, matcher), String(matcher)).toEqual(['allow'])
     }
   })
 
-  it.fails('reports PreToolUse allow under a broad matcher', () => {
+  it('reports PreToolUse allow under a broad matcher', () => {
     for (const matcher of [undefined, '', '*', '.*']) {
       expect(ids('PreToolUse', allowTool, matcher), String(matcher)).toEqual(['allow'])
     }
   })
 
-  it.fails('reads the decision in exec form and with escaped quotes', () => {
+  it('reads the decision in exec form and with escaped quotes', () => {
     expect(
       lintJson(
         name,
@@ -60,7 +60,7 @@ describe(`${name}: an allow decision`, () => {
     expect(ids('PreToolUse', 'echo {\\"permissionDecision\\":\\"allow\\"}', '*')).toEqual(['allow'])
   })
 
-  it.fails('names the event in the message', () => {
+  it('names the event in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('PermissionRequest', [command({ command: allowRequest })])),
@@ -71,41 +71,41 @@ describe(`${name}: an allow decision`, () => {
     )
   })
 
-  it.fails('is silent under a narrow matcher', () => {
+  it('is silent under a narrow matcher', () => {
     for (const matcher of ['Bash', 'ExitPlanMode', 'Edit|Write', '^Bash$']) {
       expect(ids('PermissionRequest', allowRequest, matcher), matcher).toEqual([])
       expect(ids('PreToolUse', allowTool, matcher), matcher).toEqual([])
     }
   })
 
-  it.fails('is silent when the handler sets an if condition', () => {
+  it('is silent when the handler sets an if condition', () => {
     expect(ids('PreToolUse', allowTool, '*', { if: 'Bash(git status)' })).toEqual([])
   })
 
-  it.fails('is silent for the allow of the other event, and for deny', () => {
+  it('is silent for the allow of the other event, and for deny', () => {
     expect(ids('PermissionRequest', allowTool, '*')).toEqual([])
     expect(ids('PreToolUse', allowRequest, '*')).toEqual([])
     expect(ids('PreToolUse', allowTool.replace('allow', 'deny'), '*')).toEqual([])
     expect(ids('PostToolUse', allowTool, '*')).toEqual([])
   })
 
-  it.fails('is silent for a matcher that is no string', () => {
+  it('is silent for a matcher that is no string', () => {
     expect(ids('PreToolUse', allowTool, ['*'])).toEqual([])
   })
 })
 
 describe(`${name}: setMode`, () => {
-  it.fails('reports a setMode entry to bypassPermissions under any matcher', () => {
+  it('reports a setMode entry to bypassPermissions under any matcher', () => {
     expect(ids('PermissionRequest', bypass, 'Bash')).toEqual(['bypass'])
     expect(ids('PermissionRequest', bypass)).toEqual(['bypass'])
   })
 
-  it.fails('reports one message for a broad allow that also sets the mode', () => {
+  it('reports one message for a broad allow that also sets the mode', () => {
     const both = `${allowRequest} ${bypass}`
     expect(ids('PermissionRequest', both, '*')).toEqual(['bypass'])
   })
 
-  it.fails('names the mode in the message', () => {
+  it('names the mode in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('PermissionRequest', [command({ command: bypass })], 'Bash')),
@@ -116,7 +116,7 @@ describe(`${name}: setMode`, () => {
     )
   })
 
-  it.fails('is silent for another mode and for a mode key of another name', () => {
+  it('is silent for another mode and for a mode key of another name', () => {
     expect(
       ids('PermissionRequest', bypass.replace('bypassPermissions', 'acceptEdits'), 'Bash'),
     ).toEqual([])
@@ -128,7 +128,7 @@ describe(`${name}: setMode`, () => {
 })
 
 describe(`${name}: the handler`, () => {
-  it.fails('is silent for a handler that is no command hook', () => {
+  it('is silent for a handler that is no command hook', () => {
     expect(
       lintJson(
         name,
@@ -139,11 +139,11 @@ describe(`${name}: the handler`, () => {
     expect(ids('PreToolUse', 5 as never, '*')).toEqual([])
   })
 
-  it.fails('is silent for a script, which the file does not show', () => {
+  it('is silent for a script, which the file does not show', () => {
     expect(ids('PreToolUse', './approve.sh', '*')).toEqual([])
   })
 
-  it.fails('reports in each file, a skill and a project agent', () => {
+  it('reports in each file, a skill and a project agent', () => {
     for (const file of [FILES.local, FILES.managed, FILES.dropIn, FILES.plugin]) {
       expect(ids('PreToolUse', allowTool, '*', {}, file), file).toEqual(['allow'])
     }
@@ -154,7 +154,7 @@ describe(`${name}: the handler`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['allow'])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids('PreToolUse', allowTool, '*', {}, FILES.hidden)).toEqual([])
   })
 })
