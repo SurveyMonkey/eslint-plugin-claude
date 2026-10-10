@@ -1,6 +1,6 @@
 // A repository with a local agent scope, a plugin with the default `agents/` folder, and a plugin
 // whose manifest key `agents` names its files. The three rules of the description layer lint the
-// same three places, so the places are in one file.
+// same four places, so the places are in one file.
 import path from 'node:path'
 import { lintAgent } from './agent-rules.test-support.ts'
 import { repo } from './agent-settings.test-support.ts'

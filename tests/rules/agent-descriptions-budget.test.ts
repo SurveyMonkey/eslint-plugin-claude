@@ -1,8 +1,7 @@
 // The errors page: "The combined descriptions of your subagents, except the built-in ones, exceed
-// 15,000 tokens as Claude Code estimates them." The sub-agents page: "Each agent counts its name
-// plus its `description` frontmatter." The docs give no characters per
-// token, so the rule estimates. The rule sums the agents of one scope, on disk.
-import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs'
+// 15,000 tokens as Claude Code estimates them." The same page: "Each agent counts its name plus its
+// `description` frontmatter." The docs give no characters per token, so the rule estimates. The rule sums the agents of one scope, on disk.
+import { mkdirSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
@@ -34,7 +33,7 @@ const sibling = (chars: number, at = '.claude/agents/b.md') => ({ [at]: agent('b
 
 describe('agent-descriptions-budget', () => {
   it('reports a scope over 15000 tokens, at line 1 of each agent file', () => {
-    // 30000 + 30001 characters, at 4 characters per token, is 15001 tokens.
+    // 30000 + 30001 + 2 = 60003 characters, at 4 characters per token, is 15001 tokens.
     const files = { ...sibling(30000), '.claude/agents/c.md': agent('c', 1) }
     expect(run(A, LOCAL, files)).toMatchObject([
       { messageId: 'overDefault', line: 1, column: 1, endLine: 1, endColumn: 1 },
@@ -45,7 +44,7 @@ describe('agent-descriptions-budget', () => {
     expect(message).toContain('60003 characters')
     expect(message).toContain('this file adds 30000 characters')
     expect(message).toContain('4 characters per token')
-    expect(message).toContain('15000')
+    expect(message).toContain('limit is 15000 tokens')
   })
 
   it('stays at the limit with exactly 15000 tokens', () => {
@@ -85,6 +84,10 @@ describe('agent-descriptions-budget', () => {
       ])
       const message = run(agent('a', 100), LOCAL, files, [{ maxTokens: 50 }])[0]?.message ?? ''
       expect(message).toContain('configured limit is 50 tokens')
+      // a and b add 101 characters each, so 202 characters is 51 tokens at 4 per token.
+      expect(message).toContain('about 51 tokens')
+      expect(message).toContain('(202 characters at 4 characters per token)')
+      expect(message).toContain('this file adds 101 characters')
       expect(message).not.toContain('startup')
       expect(run(agent('a', 100), LOCAL, files, [{ maxTokens: 51 }])).toEqual([])
     })
@@ -349,6 +352,23 @@ describe('agent-descriptions-budget', () => {
         manifest(['./custom/a.md', './more/out.md']),
       )
       expect(lintAgent('agent-descriptions-budget', agent('a', 90000), self)).toEqual([])
+    })
+    posix('when a listed file is a link out of the plugin root, inside the repository', () => {
+      const root = repo({
+        'plugins/r/.claude-plugin/plugin.json': manifest(['./custom/a.md', './more/link.md']),
+        'plugins/r/more/x': '',
+        'plugins/sibling/real.md': agent('l', 90000),
+      })
+      symlinkSync(
+        path.join(root, 'plugins/sibling/real.md'),
+        path.join(root, 'plugins/r/more/link.md'),
+      )
+      const self = path.join(root, 'plugins/r/custom/a.md')
+      // Claude Code does not load the link, so it adds nothing to the sum.
+      expect(lintAgent('agent-descriptions-budget', agent('a', 1000), self)).toEqual([])
+      unlinkSync(path.join(root, 'plugins/r/more/link.md'))
+      writeFileSync(path.join(root, 'plugins/r/more/link.md'), agent('l', 90000))
+      expect(lintAgent('agent-descriptions-budget', agent('a', 1000), self)).toHaveLength(1)
     })
     it('when the file is no agent file', () => {
       expect(run(agent('a', 90000), 'docs/a.md', sibling(30000))).toEqual([])

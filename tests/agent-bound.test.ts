@@ -1,8 +1,9 @@
 // ADR 001, Decision 14: a rule reads no file out of the repository. The cross-file agent rules
-// (initial prompt, type list, skills and MCP servers) walk up from the project folder. The wrapper below records the path of each file
-// system call and sends it to the real function. A clash is a decoy file above the repository
-// root. A clash silences a rule that reads it, so each case checks both facts: the report stays,
-// and no call reaches the clash.
+// (initial prompt, type list, skills and MCP servers) walk up from the project folder. The
+// manifest key `agents` and the budget scope read the plugin root and the scope. The
+// wrapper below records the path of each file system call and sends it to the real function. A
+// clash is a decoy file above the repository root. A clash silences a rule that reads it, so each
+// case checks both facts: the report stays, and no call reaches the clash.
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'

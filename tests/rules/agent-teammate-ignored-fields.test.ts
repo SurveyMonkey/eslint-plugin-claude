@@ -32,6 +32,13 @@ describe('agent-teammate-ignored-fields', () => {
     ])
   })
 
+  it('reports mcpServers when teammateMode is in-process, auto, or not a string', () => {
+    for (const mode of ['in-process', 'auto', 5]) {
+      const files = { '.claude/settings.json': on('1', { teammateMode: mode }) }
+      expect(run(files, MCP), String(mode)).toHaveLength(1)
+    }
+  })
+
   it('reports mcpServers when the settings turn teams on', () => {
     expect(run({ '.claude/settings.json': on() }, MCP)).toMatchObject([
       { messageId: 'mcpServers', line: 4, column: 1 },
@@ -93,12 +100,6 @@ describe('agent-teammate-ignored-fields', () => {
       expect(
         run({ '.claude/settings.json': on(), '.claude/settings.local.json': on('0') }, fields),
       ).toEqual([])
-    })
-    it('when teammateMode is in-process, auto, or not a string, for mcpServers', () => {
-      for (const mode of ['in-process', 'auto', 5]) {
-        const files = { '.claude/settings.json': on('1', { teammateMode: mode }) }
-        expect(run(files, MCP), String(mode)).toHaveLength(1)
-      }
     })
     it('for fields that a teammate keeps', () => {
       const files = { '.claude/settings.json': on() }

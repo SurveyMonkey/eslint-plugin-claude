@@ -5,7 +5,7 @@ import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { classifyAgentFile, classifyOutputStyle } from '../src/agent-files.ts'
+import { classifyAgentFile, classifyLinted, classifyOutputStyle } from '../src/agent-files.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'agent-files-'))
@@ -316,5 +316,37 @@ describe('the manifest key agents', () => {
         expect(classifyAgentFile(path.join(root, 'custom', 'locked', 'a.md'))).toBeNull()
       })
     })
+  })
+})
+
+describe('classifyLinted', () => {
+  const manifest = (listed: string[]) => JSON.stringify({ agents: listed })
+  const lint = (file: string) => ({ filename: file, sourceCode: {} })
+
+  it('serves one result for one parse, and a new result for a new parse', () => {
+    mkdirSync(at('m20', '.git'), { recursive: true })
+    mkdirSync(at('m20', '.claude-plugin'), { recursive: true })
+    const file = at('m20', 'custom', 'a.md')
+    const json = at('m20', '.claude-plugin', 'plugin.json')
+    writeFileSync(json, manifest(['./custom/a.md']))
+    const first = lint(file)
+    expect(classifyLinted(first)).toMatchObject({ plugin: true })
+    // The manifest drops the file. The same parse keeps its result. A new parse sees the change.
+    writeFileSync(json, manifest(['./custom/b.md']))
+    expect(classifyLinted(first)).toMatchObject({ plugin: true })
+    expect(classifyLinted(lint(file))).toBeNull()
+  })
+
+  it('keeps a null result for one parse', () => {
+    mkdirSync(at('m21', '.git'), { recursive: true })
+    mkdirSync(at('m21', '.claude-plugin'), { recursive: true })
+    const file = at('m21', 'custom', 'a.md')
+    const json = at('m21', '.claude-plugin', 'plugin.json')
+    writeFileSync(json, manifest(['./custom/b.md']))
+    const first = lint(file)
+    expect(classifyLinted(first)).toBeNull()
+    writeFileSync(json, manifest(['./custom/a.md']))
+    expect(classifyLinted(first)).toBeNull()
+    expect(classifyLinted(lint(file))).toMatchObject({ plugin: true })
   })
 })
