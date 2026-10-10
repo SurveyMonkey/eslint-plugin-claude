@@ -16,7 +16,7 @@ const excludes = (...patterns: unknown[]) => JSON.stringify({ claudeMdExcludes: 
 const lint = (code: string, file = project) => lintJson(RULE, code, file)
 
 describe(RULE, () => {
-  it.fails('reports a pattern with the folder of one machine, at the pattern', () => {
+  it('reports a pattern with the folder of one machine, at the pattern', () => {
     const messages = lint('{\n  "claudeMdExcludes": [\n    "/Users/x/work/CLAUDE.md"\n  ]\n}\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -25,12 +25,12 @@ describe(RULE, () => {
       line: 3,
       column: 5,
       endLine: 3,
-      endColumn: 29,
+      endColumn: 30,
     })
     expect(messages[0]?.message).toContain('"/Users/x/work/CLAUDE.md"')
   })
 
-  it.fails('reports a Unix path, a Windows drive with either separator, and a share', () => {
+  it('reports a Unix path, a Windows drive with either separator, and a share', () => {
     const patterns = [
       '/home/user/monorepo/other-team/.claude/rules/**',
       '/abs/CLAUDE.md',
@@ -41,12 +41,12 @@ describe(RULE, () => {
     expect(lint(excludes(...patterns)).map((m) => m.messageId)).toEqual(Array(5).fill('absolute'))
   })
 
-  it.fails('reports each machine path of a list, and not the others', () => {
+  it('reports each machine path of a list, and not the others', () => {
     const messages = lint(excludes('**/vendor/**', '/Users/x/a/**', '**/b/**', '/home/y/c/**'))
     expect(messages.map((m) => m.column)).toEqual([37, 63])
   })
 
-  it.fails('stays silent on a pattern that does not name a machine', () => {
+  it('stays silent on a pattern that does not name a machine', () => {
     for (const pattern of [
       '**/monorepo/CLAUDE.md',
       '**/packages/*/CLAUDE.md',
@@ -63,7 +63,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent on a value that is not a list of strings', () => {
+  it('stays silent on a value that is not a list of strings', () => {
     expect(lint('{}')).toEqual([])
     expect(lint('{"claudeMdExcludes": "/Users/x/a"}')).toEqual([])
     expect(lint('{"claudeMdExcludes": {"a": "/Users/x/a"}}')).toEqual([])
@@ -71,19 +71,19 @@ describe(RULE, () => {
     expect(lint(excludes())).toEqual([])
   })
 
-  it.fails('reads the last of two keys of the same name', () => {
+  it('reads the last of two keys of the same name', () => {
     expect(lint('{"claudeMdExcludes": ["/Users/x/a"], "claudeMdExcludes": ["**/a"]}')).toEqual([])
   })
 })
 
 describe(`${RULE}: which files`, () => {
-  it.fails('checks the committed project file, in any folder', () => {
+  it('checks the committed project file, in any folder', () => {
     for (const file of ['/repo/.claude/settings.json', '/repo/web/.claude/settings.json']) {
       expect(lint(excludes('/Users/x/a'), file), file).toHaveLength(1)
     }
   })
 
-  it.fails('does not check the local file, a managed file or another settings file', () => {
+  it('does not check the local file, a managed file or another settings file', () => {
     for (const file of [
       '/repo/.claude/settings.local.json',
       '/repo/managed-settings.json',
