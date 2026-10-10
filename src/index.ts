@@ -45,6 +45,7 @@ import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsup
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinClaudeAi from './rules/plugin-bin-claude-ai.ts'
+import pluginBinShadowsSystemCommand from './rules/plugin-bin-shadows-system-command.ts'
 import pluginChannelServerStdio from './rules/plugin-channel-server-stdio.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
@@ -247,6 +248,7 @@ const modules = [
   pluginThemesLayout,
   pluginUserConfigSensitive,
   pluginChannelServerStdio,
+  pluginBinShadowsSystemCommand,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -391,6 +393,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-themes-layout': 'warn',
   'plugin-user-config-sensitive': 'off',
   'plugin-channel-server-stdio': 'off',
+  'plugin-bin-shadows-system-command': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

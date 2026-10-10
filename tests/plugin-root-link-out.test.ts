@@ -359,6 +359,16 @@ describe('the off rules of the plugin layer', () => {
     )
     expect(lintPlugin('plugin-channel-server-stdio', dir, manifest)).toEqual([])
   })
+
+  it('plugin-bin-shadows-system-command reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(MANIFEST, { 'bin/git': '' })
+    expect(lintPlugin('plugin-bin-shadows-system-command', dir, code)).toHaveLength(1)
+  })
+  // The folder links back in, so only a look at the folder out of the repository tells the plugin.
+  linked('plugin-bin-shadows-system-command stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({ 'bin/git': '' })
+    expect(lintPlugin('plugin-bin-shadows-system-command', dir, MANIFEST)).toEqual([])
+  })
 })
 
 describe('readPluginAt', () => {

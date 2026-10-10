@@ -7,6 +7,7 @@ import {
   PLUGIN_PATH_KEYS,
   PLUGIN_SETTINGS_KEYS,
   REPLACED_DEFAULTS,
+  SYSTEM_COMMANDS,
   THEME_BASES,
   USER_CONFIG_TYPES,
 } from '../src/data/plugin-layout.ts'
@@ -110,6 +111,29 @@ describe('bases of a custom theme', () => {
       'light-daltonized',
       'dark-ansi',
       'light-ansi',
+    ])
+  })
+})
+
+describe('system commands that a bin file cannot shadow', () => {
+  it('holds the two commands that the docs name, and the choice of the plugin, once', () => {
+    expect(SYSTEM_COMMANDS).toEqual([
+      'awk',
+      'bash',
+      'cat',
+      'cp',
+      'curl',
+      'find',
+      'git',
+      'grep',
+      'ls',
+      'mkdir',
+      'mv',
+      'rm',
+      'sed',
+      'sh',
+      'ssh',
+      'tar',
     ])
   })
 })

@@ -20,6 +20,10 @@
 // The seventh list is the Field table of the "Create a custom theme" section of the terminal
 // configuration page (https://code.claude.com/docs/en/terminal-config#create-a-custom-theme),
 // checked on Claude Code 2.1.296 on 2026-10-10.
+// The eighth list is the choice of this plugin. The "Executables" section of the components page
+// (https://code.claude.com/docs/en/plugins/components#executables), checked on Claude Code 2.1.296
+// on 2026-10-10, says that a plugin cannot shadow `git`, `ls` "or another system command". It
+// names two commands and gives no list.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -116,4 +120,26 @@ export const THEME_BASES: readonly string[] = [
   'light-daltonized',
   'dark-ansi',
   'light-ansi',
+]
+
+/** The names of the system commands that a file in `bin/` cannot shadow. The docs name `git` and
+ *  `ls` only. The other names are the choice of this plugin: common tools of a POSIX shell, and
+ *  `curl` and `ssh`. The list is short on purpose, so that a report is rarely wrong. */
+export const SYSTEM_COMMANDS: readonly string[] = [
+  'awk',
+  'bash',
+  'cat',
+  'cp',
+  'curl',
+  'find',
+  'git',
+  'grep',
+  'ls',
+  'mkdir',
+  'mv',
+  'rm',
+  'sed',
+  'sh',
+  'ssh',
+  'tar',
 ]
