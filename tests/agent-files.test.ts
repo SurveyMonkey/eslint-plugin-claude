@@ -124,3 +124,153 @@ describe.skipIf(process.platform === 'win32')(
     })
   },
 )
+
+// The manifest key `agents` names the agent files of a plugin. It replaces the `agents/`
+// directory scan. A path starts with `./`, ends in `.md`, and stays in the plugin root.
+describe('the manifest key agents', () => {
+  /** A repository with a plugin at `p`. The manifest is `manifest`, with the plugin name added. */
+  const manifested = (name: string, manifest: object | string) => {
+    mkdirSync(at(name, '.git'), { recursive: true })
+    mkdirSync(at(name, 'p', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at(name, 'p', '.claude-plugin', 'plugin.json'),
+      typeof manifest === 'string' ? manifest : JSON.stringify({ name: 'p', ...manifest }),
+    )
+    return at(name, 'p')
+  }
+
+  it.fails('sees a file that the manifest names, outside agents/', () => {
+    const root = manifested('m1', { agents: ['./custom/reviewer.md', './custom/deep/x.md'] })
+    expect(classifyAgentFile(path.join(root, 'custom', 'reviewer.md'))).toEqual({
+      plugin: true,
+      root,
+    })
+    expect(classifyAgentFile(path.join(root, 'custom', 'deep', 'x.md'))).toEqual({
+      plugin: true,
+      root,
+    })
+  })
+
+  it.fails('reads the string form', () => {
+    const root = manifested('m2', { agents: './custom/reviewer.md' })
+    expect(classifyAgentFile(path.join(root, 'custom', 'reviewer.md'))).toEqual({
+      plugin: true,
+      root,
+    })
+  })
+
+  it.fails('sees a file in agents/ that the manifest names, and none that it leaves out', () => {
+    const root = manifested('m3', { agents: ['./agents/team/x.md'] })
+    expect(classifyAgentFile(path.join(root, 'agents', 'team', 'x.md'))).toEqual({
+      plugin: true,
+      root,
+    })
+    expect(classifyAgentFile(path.join(root, 'agents', 'other.md'))).toBeNull()
+    expect(classifyAgentFile(path.join(root, 'custom', 'other.md'))).toBeNull()
+  })
+
+  it('keeps the agents/ directory when the manifest has no agents key', () => {
+    const root = manifested('m4', { skills: ['./extra/'] })
+    expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toEqual({ plugin: true, root })
+    expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
+  })
+
+  it.fails('sees no file for a path that the plugin does not load', () => {
+    const root = manifested('m5', {
+      agents: ['custom/a.md', './custom/b.txt', './custom', './custom/../../c.md'],
+    })
+    for (const file of ['a.md', 'b.txt', 'b.md', 'c.md']) {
+      expect(classifyAgentFile(path.join(root, 'custom', file))).toBeNull()
+    }
+    expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toBeNull()
+  })
+
+  it('sees no file for a path that leaves the plugin', () => {
+    const root = manifested('m6', { agents: ['../outside/a.md'] })
+    expect(classifyAgentFile(path.join(path.dirname(root), 'outside', 'a.md'))).toBeNull()
+  })
+
+  it('keeps agents/ for a manifest that is no list of paths, and sees no other file', () => {
+    for (const [index, agents] of [5, { a: 1 }, ['./custom/a.md', 5], true].entries()) {
+      const root = manifested(`m7-${index}`, { agents })
+      expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toEqual({ plugin: true, root })
+      expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
+    }
+    const text = manifested('m8', '{')
+    expect(classifyAgentFile(path.join(text, 'agents', 'a.md'))).toEqual({
+      plugin: true,
+      root: text,
+    })
+    expect(classifyAgentFile(path.join(text, 'custom', 'a.md'))).toBeNull()
+  })
+
+  it('uses the plugin root nearest to the file', () => {
+    const outer = manifested('m9', { agents: ['./inner/custom/a.md'] })
+    mkdirSync(path.join(outer, 'inner', '.claude-plugin'), { recursive: true })
+    writeFileSync(path.join(outer, 'inner', '.claude-plugin', 'plugin.json'), '{"name":"i"}')
+    expect(classifyAgentFile(path.join(outer, 'inner', 'custom', 'a.md'))).toBeNull()
+  })
+
+  it('sees no file when the plugin root is not a plugin', () => {
+    mkdirSync(at('m10', '.git'), { recursive: true })
+    expect(classifyAgentFile(at('m10', 'p', 'custom', 'a.md'))).toBeNull()
+  })
+
+  it('does not climb above the repository root to a manifest', () => {
+    mkdirSync(at('m11', 'repo', '.git'), { recursive: true })
+    mkdirSync(at('m11', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m11', '.claude-plugin', 'plugin.json'),
+      JSON.stringify({ name: 'o', agents: ['./repo/custom/a.md'] }),
+    )
+    expect(classifyAgentFile(at('m11', 'repo', 'custom', 'a.md'))).toBeNull()
+  })
+
+  it.fails('checks only its own folder when no .git is above', () => {
+    mkdirSync(at('m12', 'p', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m12', 'p', '.claude-plugin', 'plugin.json'),
+      JSON.stringify({ name: 'p', agents: ['./a.md'] }),
+    )
+    expect(classifyAgentFile(at('m12', 'p', 'a.md'))).toEqual({
+      plugin: true,
+      root: at('m12', 'p'),
+    })
+    mkdirSync(at('m12', 'p', 'deep'), { recursive: true })
+    expect(classifyAgentFile(at('m12', 'p', 'deep', 'a.md'))).toBeNull()
+  })
+
+  describe.skipIf(process.platform === 'win32')('with a link', () => {
+    it.fails('sees a file that is a link inside the repository', () => {
+      const root = manifested('m13', { agents: ['./custom/link.md'] })
+      mkdirSync(path.join(root, 'custom'), { recursive: true })
+      writeFileSync(path.join(root, 'real.md'), 'x')
+      symlinkSync(path.join(root, 'real.md'), path.join(root, 'custom', 'link.md'))
+      expect(classifyAgentFile(path.join(root, 'custom', 'link.md'))).toEqual({
+        plugin: true,
+        root,
+      })
+    })
+
+    it('sees no file that is a link out of the repository, or a dangling link', () => {
+      const root = manifested('m14', { agents: ['./custom/out.md', './custom/gone.md'] })
+      mkdirSync(path.join(root, 'custom'), { recursive: true })
+      writeFileSync(at('m14-target.md'), 'x')
+      symlinkSync(at('m14-target.md'), path.join(root, 'custom', 'out.md'))
+      symlinkSync('missing.md', path.join(root, 'custom', 'gone.md'))
+      expect(classifyAgentFile(path.join(root, 'custom', 'out.md'))).toBeNull()
+      expect(classifyAgentFile(path.join(root, 'custom', 'gone.md'))).toBeNull()
+    })
+  })
+
+  describe.skipIf(chmodCannotBlock)('with no access to the file', () => {
+    it('sees no file that it cannot reach', () => {
+      const root = manifested('m15', { agents: ['./custom/locked/a.md'] })
+      mkdirSync(path.join(root, 'custom', 'locked'), { recursive: true })
+      writeFileSync(path.join(root, 'custom', 'locked', 'a.md'), 'x')
+      withoutAccess(path.join(root, 'custom', 'locked'), () => {
+        expect(classifyAgentFile(path.join(root, 'custom', 'locked', 'a.md'))).toBeNull()
+      })
+    })
+  })
+})
