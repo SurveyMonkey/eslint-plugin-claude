@@ -268,8 +268,9 @@ const TREE: Record<string, string> = {
   // Only control keys in `managed-settings.json`, and no policy drop-in beside it.
   'packages/mf3/managed-settings.json': '{"wslInheritsWindowsSettings": true}',
   'packages/mf3/managed-settings.d/10-ctl.json': '{"managedSourcesBehavior": "first-wins"}',
-  'packages/mf2/managed-settings.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
-  'packages/mf2/managed-settings.d/10-m.json': '{"managedSourcesBehavior": "merge", "model": "x"}',
+  'packages/mf2/managed-settings.json': '{"managedSourcesBehavior": "merge", "model": "opus"}',
+  'packages/mf2/managed-settings.d/10-m.json':
+    '{"managedSourcesBehavior": "merge", "model": "opus"}',
   // The settings rules of the env layer of #14. `settings-removed-key`: a key with no effect in
   // each file that it reads. `permissionExplainerEnabled` is also a Global config key, and gets
   // one report, from this rule. `disableArtifact: false` in a managed file, and a key with its
@@ -324,7 +325,7 @@ const TREE: Record<string, string> = {
   // another settings file is silent.
   'packages/pv/.claude/settings.json': '{"remoteControlAtStartup": true}',
   'packages/pv/.claude/settings.local.json': '{"crossSessionInbound": "accept"}',
-  'packages/pv/managed-settings.json': '{"remoteControlAtStartup": true, "model": "m"}',
+  'packages/pv/managed-settings.json': '{"remoteControlAtStartup": true, "model": "opus"}',
   'packages/pv/managed-settings.d/10-a.json': '{"forceLoginMethod": "gateway"}',
   'packages/pv/.vscode/settings.json': '{"remoteControlAtStartup": true}',
   // The grammar rules on the managed files (#14): `managed-settings.json` and a drop-in. A hidden
@@ -357,6 +358,68 @@ const TREE: Record<string, string> = {
   'packages/ps2/managed-settings.json': '{"pluginSuggestionMarketplaces": ["acme"]}',
   'packages/ps2/managed-settings.d/10-a.json':
     '{"strictKnownMarketplaces": [{"source": "github", "repo": "acme/*"}]}',
+  // `settings-conflicting-keys`: a pair of keys in one file, in each file that it reads. The
+  // channels pair is for a managed file. A hidden drop-in is for `settings-managed-file`. The
+  // same content where no rule reads it: another extension, a nested directory, and another
+  // settings file.
+  'packages/ck/.claude/settings.json': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/.claude/settings.local.json':
+    '{"spinnerTipsOverride": {}, "spinnerTipsEnabled": false}',
+  'packages/ck/managed-settings.json': '{"allowedChannelPlugins": []}',
+  'packages/ck/managed-settings.d/10-a.json': '{"timeZone": "UTC", "timeFormat": "24-hour-utc"}',
+  'packages/ck/managed-settings.d/.20-hidden.json': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/managed-settings.d/30-b.txt': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/managed-settings.d/sub/40-c.json': '{"verbose": true, "viewMode": "default"}',
+  'packages/ck/.vscode/settings.json': '{"verbose": true, "viewMode": "default"}',
+  // `settings-model-value`: a model value that is no alias and no ID, in each file that it reads.
+  // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/mv/.claude/settings.json': '{"model": "sonet"}',
+  'packages/mv/.claude/settings.local.json': '{"fallbackModel": ["sonnet", "gpt-5"]}',
+  'packages/mv/managed-settings.json': '{"advisorModel": "haiku"}',
+  'packages/mv/managed-settings.d/10-a.json': '{"env": {"ANTHROPIC_DEFAULT_OPUS_MODEL": "opus"}}',
+  'packages/mv/managed-settings.d/.20-hidden.json': '{"model": "sonet"}',
+  'packages/mv/managed-settings.d/30-b.txt': '{"model": "sonet"}',
+  'packages/mv/managed-settings.d/sub/40-c.json': '{"model": "sonet"}',
+  'packages/mv/.vscode/settings.json': '{"model": "sonet"}',
+  // `settings-model-list`: a fallback chain of four models, a list that a family ID narrows, a
+  // `best` entry in `deniedModels` and an override key that is an alias, in each file that it
+  // reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ml/.claude/settings.json': '{"fallbackModel": ["opus", "sonnet", "haiku", "fable"]}',
+  'packages/ml/.claude/settings.local.json': '{"availableModels": ["sonnet", "claude-sonnet-4-5"]}',
+  'packages/ml/managed-settings.json': '{"deniedModels": ["best"]}',
+  'packages/ml/managed-settings.d/10-a.json': '{"modelOverrides": {"opus": "x"}}',
+  'packages/ml/managed-settings.d/.20-hidden.json': '{"deniedModels": ["best"]}',
+  'packages/ml/managed-settings.d/30-b.txt': '{"deniedModels": ["best"]}',
+  'packages/ml/managed-settings.d/sub/40-c.json': '{"deniedModels": ["best"]}',
+  'packages/ml/.vscode/settings.json': '{"fallbackModel": ["opus", "sonnet", "haiku", "fable"]}',
+  // `settings-skilloverrides-key`: a plugin skill key in each file that it reads, and a bundled
+  // alias key, which a managed file honors. A hidden drop-in is for `settings-managed-file`. The
+  // same content where no rule reads it.
+  'packages/so/.claude/settings.json': '{"skillOverrides": {"review": "off"}}',
+  'packages/so/.claude/settings.local.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off", "checkup": "off"}}',
+  'packages/so/managed-settings.d/10-a.json': '{"skillOverrides": {"proactive": "off"}}',
+  'packages/so/managed-settings.d/.20-hidden.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/30-b.txt':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/sub/40-c.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/.vscode/settings.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  // `settings-env-shadowed`: a voided variable in each file that it reads. A hidden drop-in is for
+  // `settings-managed-file`. The same content where no rule reads it.
+  'packages/es/.claude/settings.json':
+    '{"bashOutputMaxChars": 5000, "env": {"BASH_MAX_OUTPUT_LENGTH": "1000"}}',
+  'packages/es/.claude/settings.local.json': '{"env": {"ANTHROPIC_DEFAULT_MODEL": "haiku"}}',
+  'packages/es/managed-settings.json': '{"env": {"CLAUDE_CODE_SUBAGENT_MODEL": "inherit"}}',
+  'packages/es/managed-settings.d/10-a.json': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/managed-settings.d/.20-hidden.json': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
+  'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -430,6 +493,11 @@ const SCOPE_RULES = [
   { name: 'settings-project-value-ignored', files: PROJECT_FILES },
   { name: 'settings-known-marketplaces-policy-schema', files: MANAGED_FILES },
   { name: 'settings-plugin-suggestion-marketplaces-source', files: MANAGED_FILES },
+  { name: 'settings-conflicting-keys', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-model-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -563,6 +631,36 @@ const EXPECTED = [
   'packages/ps/managed-settings.json: claude/settings-plugin-suggestion-marketplaces-source@2',
   'packages/ps/managed-settings.d/10-a.json: claude/settings-plugin-suggestion-marketplaces-source@2',
   'packages/ps/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-conflicting-keys` reads the project and managed files, and no other file.
+  'packages/ck/.claude/settings.json: claude/settings-conflicting-keys@2',
+  'packages/ck/.claude/settings.local.json: claude/settings-conflicting-keys@2',
+  'packages/ck/managed-settings.json: claude/settings-conflicting-keys@2',
+  'packages/ck/managed-settings.d/10-a.json: claude/settings-conflicting-keys@2',
+  'packages/ck/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-model-value` reads the project and managed files, and no other file.
+  'packages/mv/.claude/settings.json: claude/settings-model-value@2',
+  'packages/mv/.claude/settings.local.json: claude/settings-model-value@2',
+  'packages/mv/managed-settings.json: claude/settings-model-value@2',
+  'packages/mv/managed-settings.d/10-a.json: claude/settings-model-value@2',
+  'packages/mv/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-model-list` reads the project and managed files, and no other file.
+  'packages/ml/.claude/settings.json: claude/settings-model-list@2',
+  'packages/ml/.claude/settings.local.json: claude/settings-model-list@2',
+  'packages/ml/managed-settings.json: claude/settings-model-list@2',
+  'packages/ml/managed-settings.d/10-a.json: claude/settings-model-list@2',
+  'packages/ml/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-skilloverrides-key` reads the project and managed files, and no other file. A
+  // managed file reports a plugin skill key and not an alias key.
+  'packages/so/.claude/settings.json: claude/settings-skilloverrides-key@2',
+  'packages/so/.claude/settings.local.json: claude/settings-skilloverrides-key@2',
+  'packages/so/managed-settings.json: claude/settings-skilloverrides-key@2',
+  'packages/so/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-env-shadowed` reads the project and managed files, and no other file.
+  'packages/es/.claude/settings.json: claude/settings-env-shadowed@2',
+  'packages/es/.claude/settings.local.json: claude/settings-env-shadowed@2',
+  'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
+  'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
+  'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

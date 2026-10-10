@@ -1,0 +1,54 @@
+{
+  "url": "https://code.claude.com/docs/en/channels",
+  "hash": "d735d4da249ca349cb691da09c5db7b85ac55cbc17faf9a4449cbab3d1ace76a",
+  "blocks": [
+    {
+      "id": "push-events-into-a-running-session-with-channels",
+      "hash": "a842893a38ce3dfc5e66e85d590e3bacebe13a7f469f0c489e0c807bba03dfcb"
+    },
+    {
+      "id": "supported-channels",
+      "hash": "820e7274d1b013a936893b9da748c84b4880fe9b235f16f61b908ad965c98220"
+    },
+    {
+      "id": "quickstart",
+      "hash": "33d734d718f25525c7b6f9331f61cd47fca9d332ae9ade43c916e7223fdfa64c"
+    },
+    {
+      "id": "security",
+      "hash": "fa709db931d0d0d160a0f2467afc25d23df640810741e2a041bce0583ae50959"
+    },
+    {
+      "id": "enterprise-controls",
+      "hash": "bc79d5f3636f840cda490ac8fab2c49769cfd5c95f180c94739d0b5f212b8a99"
+    },
+    {
+      "id": "enable-channels-for-your-organization",
+      "hash": "ec30116dda391391ad81dadc7d1430996d52a2bf2b6674f076cb0622b3d056ee"
+    },
+    {
+      "id": "restrict-which-channel-plugins-can-run",
+      "hash": "43d1e4fa703b70785f061ceef00a54a64ff6976540125f9a7175283b3924d1d6"
+    },
+    {
+      "id": "research-preview",
+      "hash": "e6121458d83c77969a5169bc277e6dbadec04f87a77e2533ba68d23de530f77c"
+    },
+    {
+      "id": "how-channels-compare",
+      "hash": "701cda4fd8e77939fb6ce05f3977c35cee1d227d8b7f18cba2dff67d690d66fd"
+    },
+    {
+      "id": "next-steps",
+      "hash": "af589c227d7b20304920aeda22f98555465fe3a5ba4d2b643a24192e0cdef35f"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Restrict which channel plugins can run",
+      "id": "restrict-which-channel-plugins-can-run",
+      "hash": "43d1e4fa703b70785f061ceef00a54a64ff6976540125f9a7175283b3924d1d6",
+      "text": "### Restrict which channel plugins can run\n\nBy default, any plugin on the Anthropic-maintained allowlist can register as a channel. Admins on Team and Enterprise plans can replace that allowlist with their own by setting `allowedChannelPlugins` in managed settings. Use this to restrict which official plugins are allowed, approve channels from your own internal marketplace, or both. Each entry names a plugin and the marketplace it comes from:\n\n```json theme={null}\n{\n  \"channelsEnabled\": true,\n  \"allowedChannelPlugins\": [\n    { \"marketplace\": \"claude-plugins-official\", \"plugin\": \"telegram\" },\n    { \"marketplace\": \"claude-plugins-official\", \"plugin\": \"discord\" },\n    { \"marketplace\": \"acme-corp-plugins\", \"plugin\": \"internal-alerts\" }\n  ]\n}\n```\n\nIf you set an empty array, you block all channel plugins from the allowlist, but `--dangerously-load-development-channels` can still bypass that block for local testing. To block channels entirely including the development flag, leave `channelsEnabled` unset instead.\n\nThis setting requires `channelsEnabled: true`. If a user passes a plugin to `--channels` that isn't on your list, Claude Code starts normally but the channel doesn't register, and the startup notice explains that the plugin isn't on the organization's approved list. On the v2 MCP client runtime, a channel can also fail to register because Claude Code [doesn't register a channel server that negotiates protocol revision 2026-07-28](/docs/en/mcp#push-messages-with-channels)."
+    }
+  ]
+}

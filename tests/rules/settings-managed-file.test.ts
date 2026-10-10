@@ -253,6 +253,25 @@ describe('settings-managed-file control keys with drop-ins on disk', () => {
     symlinkSync(path.join(root, 'gone.json'), path.join(root, 'managed-settings.d/10-p.json'))
     expect(lintMain(root)).toEqual([])
   })
+  // A drop-in directory that is a dangling link, or a link out of
+  // the repository, is a part that exists and that the rule cannot see (ADR 001, Decision 14).
+  // `readManagedSource` gives `UNREADABLE`, so a file of control keys gets no report.
+  it('is silent when the drop-in directory is a dangling link', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    symlinkSync(path.join(root, 'gone-directory'), path.join(root, 'managed-settings.d'))
+    expect(lintMain(root)).toEqual([])
+  })
+  it('is silent when the drop-in directory is a link out of the repository', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repo({})
+    // The target holds control keys only. A rule that followed the link would report.
+    const outside = repo({ 'managed-settings.d/10-ctl.json': CONTROL })
+    symlinkSync(path.join(outside, 'managed-settings.d'), path.join(root, 'managed-settings.d'))
+    expect(lintMain(root)).toEqual([])
+  })
   it('is silent when a drop-in cannot be read', () => {
     if (chmodCannotBlock) {
       return

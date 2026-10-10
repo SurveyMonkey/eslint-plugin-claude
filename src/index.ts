@@ -44,10 +44,12 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
+import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
@@ -57,9 +59,12 @@ import settingsKnownMarketplacesPolicySchema from './rules/settings-known-market
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import settingsModelList from './rules/settings-model-list.ts'
+import settingsModelValue from './rules/settings-model-value.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
+import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
@@ -165,6 +170,11 @@ const modules = [
   settingsProjectValueIgnored,
   settingsKnownMarketplacesPolicySchema,
   settingsPluginSuggestionMarketplacesSource,
+  settingsConflictingKeys,
+  settingsModelValue,
+  settingsModelList,
+  settingsSkilloverridesKey,
+  settingsEnvShadowed,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -268,6 +278,11 @@ const recommended: Record<RuleName, Severity> = {
   'settings-project-value-ignored': 'error',
   'settings-known-marketplaces-policy-schema': 'error',
   'settings-plugin-suggestion-marketplaces-source': 'error',
+  'settings-conflicting-keys': 'error',
+  'settings-model-value': 'error',
+  'settings-model-list': 'error',
+  'settings-skilloverrides-key': 'error',
+  'settings-env-shadowed': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
