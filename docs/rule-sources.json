@@ -411,6 +411,12 @@
       "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
     }
   ],
+  "hooks-matcher-unsupported-event": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns"
+    }
+  ],
   "hooks-no-standalone-file": [
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",

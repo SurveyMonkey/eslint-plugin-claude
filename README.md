@@ -96,6 +96,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings and `plugin.json` is one that Claude Code knows | `error` | `error` |
 | [`claude/hooks-handler-field-ignored`](docs/rules/hooks-handler-field-ignored.md) | A handler sets no field that Claude Code ignores: `async` on a non-command hook, `continueOnBlock` on a non-prompt hook, `shell` with `args`, `once` outside a skill, `timeout` with `async`, a `SessionEnd` `timeout` over the budget, and `onFailure` where it has no effect | `error` | `error` |
 | [`claude/hooks-handler-type-event-support`](docs/rules/hooks-handler-type-event-support.md) | A handler type is one that its event runs: `SessionStart` and `Setup`, `PermissionRequest`, `PermissionDenied`, and the events with no `prompt` or `agent` hook | `error` | `error` |
+| [`claude/hooks-matcher-unsupported-event`](docs/rules/hooks-matcher-unsupported-event.md) | A group on an event with no matcher support (`Stop`, `UserPromptSubmit`, `CwdChanged` and seven more) sets no `matcher` | `error` | `error` |
 | [`claude/hooks-no-standalone-file`](docs/rules/hooks-no-standalone-file.md) | No `.claude/hooks.json` or `.claude/hooks/hooks.json`, and no hooks file under `.claude-plugin/`: Claude Code does not read them | `error` | `error` |
 
 ### Marketplace manifest

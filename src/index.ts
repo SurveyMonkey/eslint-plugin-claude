@@ -23,6 +23,7 @@ import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableall
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
+import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
@@ -108,6 +109,7 @@ const modules = [
   hooksDisabledByDisableallhooks,
   hooksHandlerFieldIgnored,
   hooksHandlerTypeEventSupport,
+  hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
@@ -222,6 +224,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-disabled-by-disableallhooks': 'error',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-type-event-support': 'error',
+  'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
