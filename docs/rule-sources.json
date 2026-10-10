@@ -873,6 +873,18 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "plugin-bin-claude-ai": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Executables",
+      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Standard layout",
+      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+    }
+  ],
   "plugin-commands-dir-nonempty": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -1042,6 +1054,28 @@
       "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
     }
   ],
+  "plugin-monitors-command-quote": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Monitors",
+      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Where each variable resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Quoting and path separators",
+      "hash": "71056ffa1cc9d43a5896dfe3330e47a5ba814e1a88ba665ffb41c32fb4f1ade4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "monitors",
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    }
+  ],
   "plugin-monitors-skill-exists": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -1080,6 +1114,23 @@
       "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
     }
   ],
+  "plugin-package-lifecycle-scripts": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Limits on the dependency install",
+      "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install runs",
+      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install fails or is skipped",
+      "hash": "e9e73986d749ac68cdfca5e3baa46cbd4316c2cba3354985113f8d61bd78638f"
+    }
+  ],
   "plugin-package-lockfile": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
@@ -1095,6 +1146,13 @@
       "url": "https://code.claude.com/docs/en/plugins/loading",
       "heading": "Limits on the dependency install",
       "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
+    }
+  ],
+  "plugin-package-lockfile-choice": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install runs",
+      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
     }
   ],
   "plugin-path-no-backslash": [
@@ -1238,6 +1296,23 @@
       "url": "https://code.claude.com/docs/en/plugins/loading",
       "heading": "In-place and copied plugins",
       "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
+    }
+  ],
+  "plugin-themes-layout": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Themes and output styles",
+      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/terminal-config",
+      "heading": "Create a custom theme",
+      "hash": "d703916c26837c686ee32a41aca398d321b89499a1d4135e44765881313e5157"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Containment and existence",
+      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
     }
   ],
   "plugin-user-config-field-applicability": [
