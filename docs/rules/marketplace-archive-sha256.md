@@ -29,8 +29,8 @@ The rule reports an object `source` with `"source": "archive"` and no `sha256` m
 is on the source object. A `sha256` with a bad value is not this rule's concern. The rule reports
 the missing key only. `marketplace-source-schema` reports a `sha256` that is not 64 hex characters.
 
-`claude plugin validate` warns about a missing pin for one case only: an entry that fetches its
-archive with a `headersHelper`.[^validation] The rule reports an archive source in every case.
+`claude plugin validate` warns about a missing pin in one case only. The case is an entry that
+fetches its archive with a `headersHelper`.[^validation] The rule reports an archive source in every case.
 
 When an entry has two `source` keys, the rule reads the last, as `JSON.parse` does. A `source`
 that is not an object with a string `source` is a fault for `marketplace-schema` and

@@ -1,8 +1,8 @@
 // On macOS and Linux, Claude Code refuses an entry path with a backslash
-// after the leading `./`. `marketplace-relative-source-format` reports each
-// other path with a backslash: a network path, an absolute path, a `..`
-// segment, and a path with no `./`. This rule reports the rest, so that no
-// path has two reports (docs/rules/marketplace-relative-source-backslash.md).
+// after the first `./`. `marketplace-relative-source-format` reports each
+// other path with a backslash. Those are a network path, an absolute path, a
+// `..` segment, and a path with no `./`. This rule reports the rest, so that
+// no path has two reports (docs/rules/marketplace-relative-source-backslash.md).
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, pluginEntries } from '../marketplace-json.ts'

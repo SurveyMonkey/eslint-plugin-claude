@@ -18,7 +18,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'review' }> = {
     schema: [],
     messages: {
       review:
-        'The entry has a "command" source. Claude Code runs its command on the machine of the user, at install, at update, and once for each session. Review the command.',
+        'The entry has a "command" source. Claude Code runs its command on the machine of the user. It runs at install, at update, and once for each session. Review the command.',
     },
   },
   create(context) {

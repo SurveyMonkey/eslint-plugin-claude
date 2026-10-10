@@ -21,7 +21,7 @@ Write a relative plugin source with forward slashes.
 ## Rule details
 
 On macOS and Linux, Claude Code refuses an entry path that has a backslash anywhere after the
-leading `./`.[^path] The plugin then does not install or load.[^error] The path works on Windows.
+first `./`.[^path] The plugin then does not install or load.[^error] The path works on Windows.
 So the fault shows only on the other systems.
 
 The rule reports a string `source` that starts with `./` and has a backslash after it. The report

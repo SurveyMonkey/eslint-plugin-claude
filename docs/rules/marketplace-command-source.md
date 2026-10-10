@@ -20,8 +20,8 @@ Review each `command` plugin source.
 
 ## Rule details
 
-A `command` source is a shell command. Claude Code runs it on the machine of the user, when the
-user installs or updates the plugin, and again once for each session.[^command] The command prints
+A `command` source is a shell command. Claude Code runs it on the machine of the user. It runs
+it when the user installs or updates the plugin, and once for each session.[^command] The command prints
 the path of the plugin directory. Claude Code shows users the whole string for review before it
 runs.[^command] Administrators can turn the source type off with `disableCommandPluginSources`.
 
@@ -29,7 +29,7 @@ The rule reports each entry whose `source` is an object with `"source": "command
 claim that the command is unsafe. The report asks a reviewer to read the command. Turn the rule
 off for a marketplace where `command` sources are expected.
 
-The report is on the `"command"` value. When an entry has two `source` keys, the rule reads the
+The report is on the value of the `source` member. When an entry has two `source` keys, the rule reads the
 last, as `JSON.parse` does. A `source` that is not an object with a string `source` is a fault for
 `marketplace-schema` and `marketplace-source-schema`. The text of the command is for
 `marketplace-source-schema`. The `command` source type is in

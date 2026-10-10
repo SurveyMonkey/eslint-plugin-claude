@@ -30,8 +30,8 @@ The rule reports a `mode` member whose value is the string `link`, in an object 
 Linux users only can turn the rule off.
 
 A `mode` of another type or another word is a fault for `marketplace-source-schema`. The rule does
-not report it. When an entry has two `mode` keys or two `source` keys, the rule reads the last of
-each, as `JSON.parse` does. The `command` source type is in
+not report it. When an entry has two `mode` keys, the rule reads the last. It does the same for
+two `source` keys, as `JSON.parse` does. The `command` source type is in
 `src/data/marketplace-source-types.ts`.
 
 The docs list no `claude plugin validate` message for this case.

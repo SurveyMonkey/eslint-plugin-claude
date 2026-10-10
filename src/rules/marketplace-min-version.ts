@@ -31,7 +31,7 @@ const SOURCE_TYPES: ReadonlyMap<string, string> = new Map([
 ])
 
 /** True when version `a` is older than version `b`. Both are `major.minor.patch`.
- *  The compare is numeric: `2.1.99` is older than `2.1.222`. */
+ *  The comparison is numeric: `2.1.99` is older than `2.1.222`. */
 function older(a: string, b: string): boolean {
   const left = a.split('.').map(Number)
   const right = b.split('.').map(Number)

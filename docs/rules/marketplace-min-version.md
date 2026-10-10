@@ -22,8 +22,8 @@ Use no marketplace field or source type that needs a newer Claude Code than `min
 
 Some fields and source types of a marketplace need a minimum Claude Code version. The rule reports
 each one that needs a version newer than the option `minVersion`. With no `minVersion`, the rule
-makes no report. The `recommended` and `strict` configs set no option, so they turn the rule on
-without effect until a team sets the version that it supports.
+makes no report. The `recommended` and `strict` configs set no option. They turn the rule on, with
+no effect, until a team sets the version that it supports.
 
 The versions are from the marketplace reference.[^top][^entries][^sources]
 

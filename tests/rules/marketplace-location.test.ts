@@ -14,8 +14,6 @@ jsonTester.run('marketplace-location (valid)', rule, {
     { code: '{"plugins": {"name": "p"}}', filename: 'docs/marketplace.json' },
     { code: '{"plugins": null}', filename: 'marketplace.json' },
     { code: '[]', filename: 'marketplace.json' },
-    // A directory named like the folder, but not the folder.
-    { code: '{"name": "acme"}', filename: '.claude-plugin/sub/marketplace.json' },
   ],
   invalid: [],
 })
@@ -23,6 +21,17 @@ jsonTester.run('marketplace-location (valid)', rule, {
 jsonTester.run('marketplace-location (invalid)', rule, {
   valid: [],
   invalid: [
+    // A directory that holds the folder, or is named like it, is not the folder.
+    {
+      code: manifest,
+      filename: '.claude-plugin/sub/marketplace.json',
+      errors: [{ messageId: 'misplaced' }],
+    },
+    {
+      code: manifest,
+      filename: 'my.claude-plugin/marketplace.json',
+      errors: [{ messageId: 'misplaced' }],
+    },
     {
       code: manifest,
       filename: 'marketplace.json',
