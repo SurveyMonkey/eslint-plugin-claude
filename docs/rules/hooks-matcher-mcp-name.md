@@ -33,7 +33,7 @@ these cases:
 - The matcher holds any other character, such as `.` or `*`. Claude Code reads it as a regular
   expression.
 - The value is a full tool name, such as `mcp__memory__create_entities`.
-- The event matches something other than a tool name. The `Elicitation` event matches an MCP server name, and
+- The event matches a value other than a tool name. The `Elicitation` event matches an MCP server name, and
   a bare server name is right there.
 
 A tool of a plugin-bundled MCP server has a scoped server segment, `mcp__plugin_<plugin>_<server>__<tool>`.[^mcp] The

@@ -28,13 +28,13 @@ and `,`.[^patterns] It reports at the `matcher` value, once for each value that 
   `bash` and `WRITE` match no tool. The message names the correct tool. The tool names are in
   `src/data/tool-names.ts`.[^tools]
 - **`EndConversation` on `PreToolUse` and `PostToolUse`.** Claude Code skips both events for a call of that
-  tool.[^pretooluse] The docs state nothing for the other tool events, so the rule makes no report there.
-- **The advisor tool.** It is a server tool that the API runs, and it has no name that a hook matcher can
+  tool.[^pretooluse] The docs say this for these two events only, so the rule makes no report there.
+- **The advisor tool.** It is a server tool that the API runs. It has no name that a hook matcher can
   use.[^tools]
 
-The rule makes no report for a regular expression, for `*`, for an empty matcher, or for a value that is no
-tool name, such as `Foo`. It does not check a name against the list of built-in tools. The list changes
-with each Claude Code release, and an MCP tool or a plugin tool can have any name.
+The rule makes no report for a regular expression, for `*`, or for an empty matcher. It makes no report
+for a value that is not a case variant of a built-in tool, such as `Foo`. An MCP tool or a plugin tool can
+have any name.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, no plugin agent, and no `hooks.json` that Claude Code does not read.

@@ -87,7 +87,7 @@ describe(`${name}: EndConversation`, () => {
     )
   })
 
-  it('is silent on the other tool events, where the docs state nothing', () => {
+  it('is silent on the other tool events, where the docs do not say', () => {
     for (const event of ['PostToolUseFailure', 'PermissionRequest', 'PermissionDenied']) {
       expect(ids(event, 'EndConversation'), event).toEqual([])
     }

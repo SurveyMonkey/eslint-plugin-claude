@@ -53,7 +53,7 @@ directory.[^filechanged] So `.envrc|.env` watches two files. The rule reports tw
 
 - A value with a comma, or with a space at its start or end. Claude Code watches a file with that exact name.
   A hyphen is part of many file names, so the rule does not report it.
-- A value with a character of a regular expression: `\`, `^`, `$`, `*`, `+`, `?`, `(`, `)`, `[`, `]`, `{` or `}`.
+- A value with a character of a regular expression: `\`, `^`, `$`, `*`, `+`, `?`, a parenthesis, a bracket or a brace.
   The docs say that a value such as `^\.env` watches a file with that name.[^filechanged] A dot is part of most file
   names, so the rule does not report it. The value `*` is a match-all that registers a file named `*`.
   `hooks-filechanged-star-matcher` is the rule for it.
