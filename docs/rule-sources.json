@@ -197,6 +197,23 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "claude-md-agents-md-shadowed": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When Claude Code reads AGENTS.md",
+      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Share one file with other coding tools",
+      "hash": "3186e5008a85b3edb177e7fe216e528bfd9e3c4dd1efceef985e709e266f713a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Choose which instruction files load",
+      "hash": "a5bf28053c790e1f870993d51ed44877e47e0528db036df620c2a540fdd9cfa7"
+    }
+  ],
   "claude-md-agents-md-variant": [
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -219,6 +236,25 @@
       "url": "https://code.claude.com/docs/en/large-codebases",
       "heading": "Exclude irrelevant CLAUDE.md files",
       "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
+    }
+  ],
+  "claude-md-import-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Import additional files",
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When Claude Code reads AGENTS.md",
+      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
+    }
+  ],
+  "claude-md-import-max-depth": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Import additional files",
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
     }
   ],
   "claude-md-max-bytes": [
@@ -721,6 +757,13 @@
       "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895"
     }
   ],
+  "memory-symlink-network-target": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Share rules across projects with symlinks",
+      "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",
@@ -961,6 +1004,18 @@
     }
   ],
   "rules-paths-glob-valid": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Path-specific rules",
+      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202"
+    }
+  ],
+  "rules-symlink-external-scoped": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Share rules across projects with symlinks",
+      "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
+    },
     {
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Path-specific rules",
