@@ -1,10 +1,13 @@
 // Claude Code skips a hook under an event name that it does not know, with
 // no error (docs/rules/hooks-event-name-known.md). The same `hooks` object
-// is in `hooks/hooks.json`, in settings, and inline in `plugin.json`. In
-// `plugin.json`, `hooks` can also be an array of paths and inline objects.
-import type { JSONRuleDefinition } from '@eslint/json'
+// is in `hooks/hooks.json`, in settings, in the frontmatter of a skill and of a
+// project subagent, and inline in `plugin.json`. In `plugin.json`, `hooks` can
+// also be an array of paths and inline objects. The reader of `hooks-config.ts`
+// reads each of them, and skips a `hooks.json` that Claude Code does not read.
+import type { Rule } from 'eslint'
 import { HOOK_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
+import { type HNode, HOOKS_TARGET, hooksListener } from '../hooks-config.ts'
 
 const name = 'hooks-event-name-known' as const
 
@@ -13,14 +16,6 @@ type Options = [{ additionalEvents: string[] }]
 /** The ASCII letters and digits of a name, in lowercase. */
 function fold(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, '')
-}
-
-/** The text of a member name: a string in JSON, or a bare identifier in
- *  JSON5. */
-function keyOf(
-  name: { type: 'String'; value: string } | { type: 'Identifier'; name: string },
-): string {
-  return name.type === 'String' ? name.value : name.name
 }
 
 /** The Levenshtein distance between `a` and `b`. */
@@ -62,10 +57,7 @@ function nearMiss(key: string, known: readonly string[]): string | null {
   return best
 }
 
-const rule: JSONRuleDefinition<{
-  RuleOptions: Options
-  MessageIds: 'unknown' | 'nearMiss' | 'rename'
-}> = {
+const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     hasSuggestions: true,
@@ -91,60 +83,58 @@ const rule: JSONRuleDefinition<{
     },
   },
   create(context) {
-    const known = [...HOOK_EVENTS, ...context.options[0].additionalEvents]
-    return {
-      Document(node) {
-        if (node.body.type !== 'Object') {
-          return
-        }
-        // The last `hooks` key, as `JSON.parse` keeps the last of two.
-        const hooks = node.body.members.findLast((member) => keyOf(member.name) === 'hooks')
-        if (hooks === undefined) {
-          return
-        }
-        // An object, or an array of paths and objects. A path holds no names.
-        const { value } = hooks
-        const objects =
-          value.type === 'Array' ? value.elements.map((element) => element.value) : [value]
-        const members = objects.flatMap((object) =>
-          object.type === 'Object' ? object.members : [],
-        )
-        for (const member of members) {
-          const key = keyOf(member.name)
+    const [options] = context.options as [Options[0]]
+    const known = [...HOOK_EVENTS, ...options.additionalEvents]
+    const { sourceCode } = context
+
+    /** Report each event name in `hooks`, which is an object, or an array of paths and objects. */
+    function check(hooks: HNode | undefined, yaml: boolean): void {
+      // A path holds no names.
+      const objects = hooks?.kind === 'array' ? hooks.items : [hooks]
+      for (const object of objects) {
+        for (const { key, keyLoc } of object?.kind === 'object' ? object.members : []) {
           if (known.includes(key)) {
             continue
           }
           const event = nearMiss(key, known)
           if (event === null) {
-            context.report({ node: member.name, messageId: 'unknown', data: { key } })
+            context.report({ loc: keyLoc, messageId: 'unknown', data: { key } })
             continue
           }
           context.report({
-            node: member.name,
+            loc: keyLoc,
             messageId: 'nearMiss',
             data: { key, event },
             suggest: [
               {
                 messageId: 'rename',
                 data: { event },
-                fix: (fixer) => fixer.replaceText(member.name, JSON.stringify(event)),
+                fix: (fixer) =>
+                  fixer.replaceTextRange(
+                    [
+                      sourceCode.getIndexFromLoc(keyLoc.start),
+                      sourceCode.getIndexFromLoc(keyLoc.end),
+                    ],
+                    yaml ? event : JSON.stringify(event),
+                  ),
               },
             ],
           })
         }
-      },
+      }
     }
+
+    return hooksListener(context, (source) =>
+      check(source.hooks, source.kind === 'skill' || source.kind === 'agent'),
+    )
   },
 }
 
 export default {
   name,
   language: 'json' as const,
-  files: [
-    '**/hooks/hooks.json',
-    '**/.claude/settings.json',
-    '**/.claude/settings.local.json',
-    '**/.claude-plugin/plugin.json',
-  ],
+  files: [...HOOKS_TARGET.files, '**/.claude-plugin/plugin.json'],
+  // The same rule, for the frontmatter of a skill and of a project subagent.
+  also: HOOKS_TARGET.also,
   rule,
 }

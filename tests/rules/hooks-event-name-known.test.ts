@@ -130,10 +130,10 @@ const name = 'hooks-event-name-known'
 const yamlOf = (event: string) =>
   frontmatter(`${event}:\n  - hooks:\n      - type: command\n        command: c\n`)
 
-// Red: the rule does not read frontmatter yet, and it still reads `.claude/hooks/hooks.json`. The
-// fix commit changes `it.fails` to `it` (mid-round ruling 23, item 2).
+// Mid-round ruling 23, item 2: the rule reads frontmatter, and skips a `hooks.json` that Claude Code
+// does not read.
 describe(`${name}: frontmatter`, () => {
-  it.fails('reports an unknown event and a near miss in a skill and in a project subagent', () => {
+  it('reports an unknown event and a near miss in a skill and in a project subagent', () => {
     for (const file of [FILES.skill, FILES.agent]) {
       expect(markdownIds(name, yamlOf('Bogus'), file), file).toEqual(['unknown'])
       expect(markdownIds(name, yamlOf('preToolUse'), file), file).toEqual(['nearMiss'])
@@ -141,7 +141,7 @@ describe(`${name}: frontmatter`, () => {
     }
   })
 
-  it.fails('suggests the correct name for a near miss, as a bare YAML key', () => {
+  it('suggests the correct name for a near miss, as a bare YAML key', () => {
     const code = yamlOf('pre_tool_use')
     const [found] = lintMarkdown(name, code, FILES.skill)
     const fix = found?.suggestions?.[0]?.fix
@@ -152,7 +152,7 @@ describe(`${name}: frontmatter`, () => {
     expect(found?.suggestions?.[0]?.messageId).toBe('rename')
   })
 
-  it.fails('reports at the key', () => {
+  it('reports at the key', () => {
     const [found] = lintMarkdown(name, yamlOf('Bogus'), FILES.skill)
     expect([found?.line, found?.column]).toEqual([5, 3])
   })
@@ -166,14 +166,14 @@ describe(`${name}: frontmatter`, () => {
 })
 
 describe(`${name}: files that Claude Code does not read`, () => {
-  it.fails('is silent for .claude/hooks/hooks.json, which hooks-no-standalone-file reports', () => {
+  it('is silent for .claude/hooks/hooks.json, which hooks-no-standalone-file reports', () => {
     const text = JSON.stringify({ hooks: { Bogus: [] } })
     expect(jsonIds(name, text, '/repo/.claude/hooks/hooks.json')).toEqual([])
     expect(jsonIds(name, text, '/repo/.github/hooks/hooks.json')).toEqual([])
     expect(jsonIds(name, text, '/repo/plugins/p/hooks/hooks.json')).toEqual(['unknown'])
   })
 
-  it.fails('reads the managed settings files, and not a hidden drop-in', () => {
+  it('reads the managed settings files, and not a hidden drop-in', () => {
     const text = JSON.stringify({ hooks: { Bogus: [] } })
     expect(jsonIds(name, text, FILES.managed)).toEqual(['unknown'])
     expect(jsonIds(name, text, FILES.dropIn)).toEqual(['unknown'])
