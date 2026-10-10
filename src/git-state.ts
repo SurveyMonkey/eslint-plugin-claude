@@ -157,3 +157,13 @@ export function gitChildren(root: string, dir: string): [string, string][] | Unr
     .map(([file, mode]): [string, string] => [file.slice(prefix.length), mode])
     .sort(([a], [b]) => a.localeCompare(b, 'en'))
 }
+
+/** Stub for the red commit. */
+export function gitIgnores(_root: string, _file: string): boolean | Unreadable {
+  return UNREADABLE
+}
+
+/** Stub for the red commit. */
+export function gitTracksBelow(_root: string, _dir: string): boolean | Unreadable {
+  return UNREADABLE
+}

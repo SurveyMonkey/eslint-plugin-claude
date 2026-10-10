@@ -8,7 +8,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { devNull, tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll } from 'vitest'
+import { afterAll, beforeAll } from 'vitest'
 
 // The real path, so that a bound compares equal where the temporary directory is a link (macOS).
 const scratch = realpathSync(mkdtempSync(path.join(tmpdir(), 'git-tree-')))
@@ -72,4 +72,28 @@ export function stage(root: string, files: string[], executable: string[] = []) 
   if (executable.length > 0) {
     git(root, 'update-index', '--chmod=+x', '--', ...executable)
   }
+}
+
+/** Give the rest of the test file no global or system git config. A rule runs
+ *  `git` itself, so `git` above does not cover it. Without this, a rule reads
+ *  the config of the machine, such as a global excludes file. A test that needs
+ *  a global config sets `GIT_CONFIG_GLOBAL` with `vi.stubEnv`. */
+export function isolateGitConfig() {
+  const saved = { global: process.env.GIT_CONFIG_GLOBAL, system: process.env.GIT_CONFIG_NOSYSTEM }
+  beforeAll(() => {
+    process.env.GIT_CONFIG_GLOBAL = devNull
+    process.env.GIT_CONFIG_NOSYSTEM = '1'
+  })
+  afterAll(() => {
+    for (const [key, value] of [
+      ['GIT_CONFIG_GLOBAL', saved.global],
+      ['GIT_CONFIG_NOSYSTEM', saved.system],
+    ] as const) {
+      if (value === undefined) {
+        delete process.env[key]
+      } else {
+        process.env[key] = value
+      }
+    }
+  })
 }

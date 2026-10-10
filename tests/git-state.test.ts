@@ -1,22 +1,27 @@
 // The reader of the git index. The tests make real repositories with `git init`.
 // The executable bit is the index mode, so some cases make the disk mode and the
 // index mode differ.
+import { execFileSync } from 'node:child_process'
 import {
   chmodSync,
   copyFileSync,
   existsSync,
+  mkdirSync,
   readFileSync,
+  symlinkSync,
   utimesSync,
   writeFileSync,
 } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { gitChildren, gitModeOf, PLAIN_MODE } from '../src/git-state.ts'
+import { gitChildren, gitIgnores, gitModeOf, gitTracksBelow, PLAIN_MODE } from '../src/git-state.ts'
 import { UNREADABLE } from '../src/skill-tree.ts'
-import { git, plain, put, repo } from './git-tree.test-support.ts'
+import { git, isolateGitConfig, plain, put, repo } from './git-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 const at = (root: string, file: string) => path.join(root, file)
+
+isolateGitConfig()
 
 describe('gitModeOf', () => {
   it('gives the mode of a tracked file: 100755 and 100644', () => {
@@ -269,5 +274,164 @@ describe('gitChildren', () => {
   it('gives UNREADABLE for a directory with no .git', () => {
     const root = plain({ 'bin/a': 'x' })
     expect(gitChildren(root, at(root, 'bin'))).toBe(UNREADABLE)
+  })
+})
+
+describe('gitTracksBelow', () => {
+  it.fails('is true when git tracks a file below the directory, at any depth', () => {
+    const root = repo({ 'mem/a/deep/x.md': 'x', 'other/y.md': 'y' })
+    expect(gitTracksBelow(root, at(root, 'mem'))).toBe(true)
+    expect(gitTracksBelow(root, at(root, 'mem/a'))).toBe(true)
+  })
+
+  it.fails('is false for a directory with no tracked file, and for a name that only starts the same', () => {
+    const root = repo({ 'binary/c': 'x', 'a.txt': 'x' }, [], { 'bin/loose': 'x' })
+    expect(gitTracksBelow(root, at(root, 'bin'))).toBe(false)
+    expect(gitTracksBelow(root, at(root, 'gone'))).toBe(false)
+  })
+
+  it.fails('is true for the root of a repository that tracks a file, false for one with none', () => {
+    const root = repo({ 'a.txt': 'x' })
+    expect(gitTracksBelow(root, root)).toBe(true)
+    const empty = repo({})
+    expect(gitTracksBelow(empty, empty)).toBe(false)
+  })
+
+  it('gives UNREADABLE for a directory with no .git', () => {
+    const root = plain({ 'mem/a': 'x' })
+    expect(gitTracksBelow(root, at(root, 'mem'))).toBe(UNREADABLE)
+  })
+})
+
+describe('gitIgnores', () => {
+  const ignores = (root: string, file: string) => gitIgnores(root, at(root, file))
+
+  it.fails('is true for a path that a .gitignore pattern covers, and false for one it does not', () => {
+    const root = repo({ '.gitignore': 'CLAUDE.local.md\n' })
+    expect(ignores(root, 'CLAUDE.local.md')).toBe(true)
+    expect(ignores(root, 'CLAUDE.md')).toBe(false)
+  })
+
+  it.fails('answers for a file that is not there', () => {
+    const root = repo({ '.gitignore': '.claude/settings.local.json\n' })
+    expect(ignores(root, '.claude/settings.local.json')).toBe(true)
+    expect(ignores(root, '.claude/settings.json')).toBe(false)
+  })
+
+  it.fails('is true for a tracked file that a pattern covers: the answer is the pattern only', () => {
+    const root = repo({ '.gitignore': 'a.txt\n', 'a.txt': 'x' })
+    expect(ignores(root, 'a.txt')).toBe(true)
+  })
+
+  it.fails('reads a .gitignore in a directory below the root', () => {
+    const root = repo({ 'sub/.gitignore': 'q\n' })
+    expect(ignores(root, 'sub/q')).toBe(true)
+    expect(ignores(root, 'q')).toBe(false)
+  })
+
+  it.fails('is true for a path below a directory that a directory pattern covers', () => {
+    const root = repo({ '.gitignore': 'results/\n' })
+    expect(ignores(root, 'evals/results/run/out.json')).toBe(true)
+    expect(ignores(root, 'evals/other/run/out.json')).toBe(false)
+  })
+
+  it.fails('is false for a path that a later negation takes back', () => {
+    const root = repo({ '.gitignore': '*.md\n!keep.md\n' })
+    expect(ignores(root, 'drop.md')).toBe(true)
+    expect(ignores(root, 'keep.md')).toBe(false)
+  })
+
+  it.fails('is false for a pattern in .git/info/exclude, which no clone shares', () => {
+    const root = repo({ 'a.txt': 'x' })
+    put(root, { '.git/info/exclude': 'private.md\n' })
+    expect(ignores(root, 'private.md')).toBe(false)
+  })
+
+  it.fails('is false for a pattern in the global excludes file of the machine', () => {
+    const root = repo({ 'a.txt': 'x' })
+    const global = plain({ ignore: 'machine.md\n' })
+    put(global, { config: `[core]\n\texcludesFile = ${path.join(global, 'ignore')}\n` })
+    // The helper `git` reads the same config, so this shows that the config does ignore the path.
+    vi.stubEnv('GIT_CONFIG_GLOBAL', path.join(global, 'config'))
+    try {
+      expect(ignores(root, 'machine.md')).toBe(false)
+      expect(
+        execFileSync('git', ['check-ignore', '--no-index', '--', 'machine.md'], {
+          cwd: root,
+          encoding: 'utf8',
+          env: { ...process.env, GIT_CONFIG_GLOBAL: path.join(global, 'config') },
+        }).trim(),
+      ).toBe('machine.md')
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it.fails('is false for the default global excludes file under XDG_CONFIG_HOME', () => {
+    const root = repo({ 'a.txt': 'x' })
+    const home = plain({ 'git/ignore': 'xdg.md\n' })
+    vi.stubEnv('XDG_CONFIG_HOME', home)
+    try {
+      expect(ignores(root, 'xdg.md')).toBe(false)
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it.fails('takes a path with a space, a leading dash, a colon and a glob character as a literal', () => {
+    const root = repo({
+      '.gitignore': 'target\n-x\n',
+      'a b/.gitignore': 'z\n',
+    })
+    expect(ignores(root, 'a b/z')).toBe(true)
+    expect(ignores(root, '-x')).toBe(true)
+    // A leading colon starts pathspec magic, and git would read the path as `target`.
+    expect(ignores(root, ':(top)target')).toBe(false)
+    expect(ignores(root, 'sub/:(top)target')).toBe(false)
+    expect(ignores(root, 'a*')).toBe(false)
+  })
+
+  const quoted = process.platform === 'win32' ? it.skip : it.fails
+  quoted('names the source of a pattern that git quotes, such as a directory with a tab', () => {
+    const root = repo({ 'a\tb/.gitignore': 'z\n' })
+    expect(ignores(root, 'a\tb/z')).toBe(true)
+  })
+
+  it('gives UNREADABLE for a directory with no .git', () => {
+    const root = plain({ '.gitignore': 'a\n' })
+    expect(ignores(root, 'a')).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE when git is not on the PATH', () => {
+    const root = repo({ '.gitignore': 'a\n' })
+    vi.stubEnv('PATH', '')
+    try {
+      expect(ignores(root, 'a')).toBe(UNREADABLE)
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('gives UNREADABLE when git reads another repository', () => {
+    const outer = repo({ '.gitignore': 'a\n', 'inner/x': 'x' })
+    put(outer, { 'inner/.git/keep': '' })
+    const inner = at(outer, 'inner')
+    expect(ignores(inner, 'a')).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a path beyond a symbolic link, where git stops with a fatal error',
+    () => {
+      const root = repo({ '.gitignore': 'a\n' })
+      const outside = plain()
+      symlinkSync(outside, at(root, '.claude'))
+      mkdirSync(at(outside, 'sub'))
+      expect(ignores(root, '.claude/settings.local.json')).toBe(UNREADABLE)
+    },
+  )
+
+  it.fails('does not stop on the status of a pattern that matches nothing', () => {
+    const root = repo({ '.gitignore': '# only a comment\n' })
+    expect(ignores(root, 'a')).toBe(false)
   })
 })
