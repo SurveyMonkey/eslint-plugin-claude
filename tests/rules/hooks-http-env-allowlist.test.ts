@@ -41,6 +41,7 @@ describe(`${name}: the header variables`, () => {
     expect(header('$MY_TOKEN', [7, null, ['MY_TOKEN']])).toEqual(['unlisted'])
     expect(header('Bearer $MY_TOKEN_2', ['MY_TOKEN'])).toEqual(['unlisted'])
     expect(header('Bearer $my_token', ['MY_TOKEN'])).toEqual(['unlisted'])
+    expect(header('Bearer $_TOKEN', [])).toEqual(['unlisted'])
   })
 
   it('reports a variable when allowedEnvVars is missing, since no variable is then allowed', () => {
@@ -51,6 +52,7 @@ describe(`${name}: the header variables`, () => {
     expect(header('Bearer $MY_TOKEN', ['MY_TOKEN'])).toEqual([])
     expect(header(`Bearer ${brace('MY_TOKEN')}`, ['OTHER', 'MY_TOKEN'])).toEqual([])
     expect(header('$A and $B', ['A', 'B'])).toEqual([])
+    expect(header('Bearer $_TOKEN', ['_TOKEN'])).toEqual([])
   })
 
   it('reports each unlisted variable once, and not a listed one', () => {
@@ -65,7 +67,18 @@ describe(`${name}: the header variables`, () => {
   })
 
   it('is silent for text that is no variable', () => {
-    for (const value of ['Bearer abc', 'cost $5', '$', `\${`, `\${}`, '$ A', 'a$', '', '$-x']) {
+    for (const value of [
+      'Bearer abc',
+      'cost $5',
+      '$',
+      `\${`,
+      `\${}`,
+      `\${MY_TOKEN`,
+      '$ A',
+      'a$',
+      '',
+      '$-x',
+    ]) {
       expect(header(value), value).toEqual([])
     }
   })

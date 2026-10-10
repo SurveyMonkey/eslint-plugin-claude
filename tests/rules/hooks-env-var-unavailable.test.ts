@@ -50,6 +50,8 @@ describe(`${name}: CLAUDE_ENV_FILE`, () => {
       '[ -n "$CLAUDE_ENV_FILE" ]',
       `echo x >> ${brace('CLAUDE_ENV_FILE')}`,
       'Add-Content $env:CLAUDE_ENV_FILE x',
+      'Add-Content $Env:CLAUDE_ENV_FILE x',
+      'Add-Content $ENV:CLAUDE_ENV_FILE x',
       `Add-Content ${brace('env:CLAUDE_ENV_FILE')} x`,
       'echo $CLAUDE_ENV_FILE',
     ]) {
@@ -57,6 +59,7 @@ describe(`${name}: CLAUDE_ENV_FILE`, () => {
     }
     for (const text of [
       'echo $CLAUDE_ENV_FILE_OTHER',
+      'echo $CLAUDE_ENV_FILE2',
       'echo CLAUDE_ENV_FILE',
       'echo $XCLAUDE_ENV_FILE',
       'echo $CLAUDE_ENV',
@@ -92,11 +95,15 @@ describe(`${name}: CLAUDE_MODEL`, () => {
   it('reads the spellings of a variable, and stops at the name', () => {
     expect(shell(`echo ${brace('CLAUDE_MODEL')}`)).toEqual(['model'])
     expect(shell('Write-Host $env:CLAUDE_MODEL')).toEqual(['model'])
+    // PowerShell reads the drive name `env:` in any letter case.
+    expect(shell('Write-Host $Env:CLAUDE_MODEL')).toEqual(['model'])
+    expect(shell(`Write-Host ${brace('ENV:CLAUDE_MODEL')}`)).toEqual(['model'])
     for (const text of [
       'echo $CLAUDE_MODEL_ID',
       'echo $ANTHROPIC_MODEL',
       'echo CLAUDE_MODEL',
       'echo $CLAUDE_MODELS',
+      'echo $CLAUDE_MODEL2',
     ]) {
       expect(shell(text), text).toEqual([])
     }

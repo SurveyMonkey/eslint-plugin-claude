@@ -41,7 +41,7 @@ const hooksFaults = {
   SessionEnd: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
   // A bare executable name with whitespace, in exec form (`hooks-exec-form-command-spaces`).
   SubagentStop: [{ hooks: [{ type: 'command', command: 'my tool', args: ['x'] }] }],
-  // An http hook with a header variable that \`allowedEnvVars\` does not list (\`hooks-http-env-allowlist\`).
+  // An http hook with a header variable that `allowedEnvVars` does not list (`hooks-http-env-allowlist`).
   Elicitation: [{ hooks: [{ type: 'http', url: 'u', headers: { A: '$X' } }] }],
   // `$CLAUDE_MODEL` does not exist (`hooks-env-var-unavailable`).
   PreModelSwitch: [{ hooks: [{ type: 'command', command: 'echo $CLAUDE_MODEL' }] }],
