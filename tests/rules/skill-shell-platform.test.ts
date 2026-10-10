@@ -1,6 +1,9 @@
 // The `shell` key of a skill or command with injected commands. `shell: bash` fails on Windows
 // without Git Bash. `shell: powershell` runs the commands in Bash where the PowerShell tool is off.
 // The rule is inactive until the option `platforms` lists a platform.
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { pluginCommand, pluginSkill } from '../plugin-fixture.test-support.ts'
 import { lintMarkdown, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
@@ -26,6 +29,12 @@ markdownTester.run('skill-shell-platform', ruleOf('skill-shell-platform'), {
     { code: withShell('powershell'), filename: skill },
     { code: withShell('bash'), filename: skill, options: [{}] },
     { code: withShell('powershell'), filename: skill, options: [{ platforms: [] }] },
+    // A placeholder in the frontmatter is no injected command.
+    {
+      code: '---\ndescription: Runs !`date`\nshell: bash\n---\n\nplain body\n',
+      filename: skill,
+      options: NO_BASH,
+    },
     // A platform where the value works.
     { code: withShell('bash'), filename: skill, options: [{ platforms: ['macos', 'linux'] }] },
     { code: withShell('powershell'), filename: skill, options: NO_BASH },
@@ -170,5 +179,31 @@ describe('the option', () => {
 
   it('takes each platform', () => {
     expect(() => lint({ platforms: ['windows-no-git-bash', ...NO_POWERSHELL] })).not.toThrow()
+  })
+})
+
+// A plugin root that is a link out of the repository gives no report.
+describe.skipIf(process.platform === 'win32')('a plugin root that the rule cannot see', () => {
+  it('makes no report for a link out of the repository, and reports for a real root', () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), 'skill-shell-platform-'))
+    try {
+      mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
+      mkdirSync(path.join(scratch, 'repo', 'real', '.claude-plugin'), { recursive: true })
+      mkdirSync(path.join(scratch, 'outside', '.claude-plugin'), { recursive: true })
+      writeFileSync(path.join(scratch, 'repo', 'real', '.claude-plugin', 'plugin.json'), '{}')
+      writeFileSync(path.join(scratch, 'outside', '.claude-plugin', 'plugin.json'), '{}')
+      symlinkSync('../outside', path.join(scratch, 'repo', 'plug'))
+      const lint = (dir: string) =>
+        lintMarkdown(
+          'skill-shell-platform',
+          withShell('bash'),
+          path.join(scratch, 'repo', dir, 'SKILL.md'),
+          NO_BASH,
+        )
+      expect(lint('plug')).toEqual([])
+      expect(lint('real')).toHaveLength(1)
+    } finally {
+      rmSync(scratch, { recursive: true, force: true })
+    }
   })
 })

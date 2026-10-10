@@ -2,22 +2,12 @@
 // The schema rule reports a `description` that is not a string, so this rule
 // is silent for one.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { parse } from 'yaml'
 import { docsUrl } from '../docs-url.ts'
+import { isEmptyBlock } from '../empty-block.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-description-present' as const
-
-/** True when the text is valid YAML with no content, such as an empty block or one with only
- *  comments. Such a block has no `description`. */
-function isEmptyBlock(text: string): boolean {
-  try {
-    return parse(text) === null
-  } catch {
-    return false
-  }
-}
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
   meta: {

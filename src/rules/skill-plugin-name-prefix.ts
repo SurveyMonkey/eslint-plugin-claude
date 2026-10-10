@@ -47,8 +47,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'doubled'
     if (manifest === UNREADABLE) {
       return {}
     }
-    // The prefix is the manifest `name`, or the directory name when the manifest has none.
-    const plugin = typeof manifest?.name === 'string' ? manifest.name : path.basename(root)
+    // The prefix is the manifest `name`, or the directory name when the manifest has none. A
+    // `name` that is not a text value, or is blank, leaves the prefix unknown.
+    const declared = manifest?.name
+    if (declared !== undefined && (typeof declared !== 'string' || declared.trim() === '')) {
+      return {}
+    }
+    const plugin = declared ?? path.basename(root)
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
