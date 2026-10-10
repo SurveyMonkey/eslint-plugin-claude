@@ -104,7 +104,7 @@ function linesOf(command: string): string[] {
       )
       const line = flag === -1 ? undefined : words[flag + 1]
       return line !== undefined &&
-        ['bash', 'sh', 'zsh'].includes(path.posix.basename(words[at] ?? ''))
+        ['bash', 'sh', 'zsh'].includes(path.posix.basename(words[at] as string))
         ? [line]
         : []
     }),
