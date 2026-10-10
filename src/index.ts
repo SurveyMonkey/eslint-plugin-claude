@@ -233,6 +233,7 @@ import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
@@ -677,6 +678,7 @@ const modules = [
   pluginManifestLocation,
   pluginSkillDirLayout,
   pluginNoProjectPluginsDir,
+  pluginProjectSkillsDirLimits,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1036,6 +1038,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-manifest-location': 'error',
   'plugin-skill-dir-layout': 'error',
   'plugin-no-project-plugins-dir': 'error',
+  'plugin-project-skills-dir-limits': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
