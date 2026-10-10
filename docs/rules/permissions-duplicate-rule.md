@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-duplicate-rule, which reports a permission rule that repeats an earlier rule of the same settings file, in one list or as an ask rule behind an equal deny rule, after it reads :* at the end as a final space and * and a trailing dot in a WebFetch domain as no dot.
+description: The ESLint rule claude/permissions-duplicate-rule, which reports a permission rule that repeats an earlier rule of the same settings file, in one list or as an ask rule behind an equal deny rule, after it reads :* at the end as a final space and * and a WebFetch domain without case and trailing dot. It also reports an allow rule behind a deny rule that differs in such a domain.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -28,7 +28,8 @@ compares two rules after it makes them equal in these ways:
 
 - A `:*` at the end of a `Bash`, `Monitor` or `PowerShell` pattern is a final ` *`.[^wildcards] White space between words does not
   matter, and a bare command tool name is the same as `Tool(*)`.
-- A trailing `.` in a `WebFetch(domain:...)` host is no dot.[^webfetch]
+- A trailing `.` in a `WebFetch(domain:...)` host is no dot, and the case of the host does not matter.[^webfetch]
+- A `deny` or `ask` rule on an input parameter, as in `Bash(run_in_background:*)`, is not a command pattern, so the rule compares its text as it is.[^param]
 
 The rule reports each copy, and names the first rule. The first rule is the one that Claude Code checks first: a `deny` rule,
 then an `ask` rule, then an `allow` rule, and then the order of the file.
@@ -42,7 +43,7 @@ skips that pair when both rules are in the file that it reads. So this rule read
 - an `ask` rule that an equal `deny` rule repeats.
 
 One case is left to this rule: an `allow` rule and a `deny` rule for a `WebFetch` domain that differ in a trailing dot. `permissions-dead-allow`
-reads those as two rules, so this rule reports the `allow` rule.
+reads those as two rules, so this rule reports the `allow` rule. The same holds for hosts that differ in case.
 
 ### Limits
 
@@ -80,4 +81,5 @@ None.
 
 [^order]: [Configure permissions: Manage permissions](https://code.claude.com/docs/en/permissions#manage-permissions)
 [^wildcards]: [Configure permissions: Wildcard patterns](https://code.claude.com/docs/en/permissions#wildcard-patterns)
+[^param]: [Configure permissions: Match by input parameter](https://code.claude.com/docs/en/permissions#match-by-input-parameter)
 [^webfetch]: [Configure permissions: WebFetch](https://code.claude.com/docs/en/permissions#webfetch)

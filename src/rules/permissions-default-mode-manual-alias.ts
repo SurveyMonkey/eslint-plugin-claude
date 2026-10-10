@@ -1,12 +1,13 @@
 // `defaultMode: "manual"` is an alias for `default` that Claude Code v2.1.200 added, so an older
 // client rejects it (docs/rules/permissions-default-mode-manual-alias.md). The rule reports only
 // when the option `minVersion` is set, because no file shows which client reads it. It reads the
-// project files only: an older client reads an invalid managed `defaultMode` as `default`, which
-// is what `manual` means, so nothing breaks there.
+// project and managed files. A managed file gets no exemption: the repair of an invalid managed
+// `defaultMode` needs v2.1.282, which is newer than every client that rejects `manual`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-default-mode-manual-alias' as const
 
@@ -52,6 +53,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'alias' | 'us
     }
     return {
       Document(node) {
+        if (isHiddenDropIn(context.filename)) {
+          return
+        }
         const value = lastMember(lastMember(node.body, 'permissions')?.value, 'defaultMode')?.value
         if (value?.type === 'String' && value.value === 'manual') {
           context.report({
@@ -71,6 +75,6 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'alias' | 'us
 export default {
   name,
   language: 'json' as const,
-  files: SETTINGS_FILES,
+  files: [...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES],
   rule,
 }

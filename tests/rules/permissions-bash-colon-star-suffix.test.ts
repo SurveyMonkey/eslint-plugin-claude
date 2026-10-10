@@ -37,6 +37,13 @@ describe(`${name}: the report`, () => {
     expect(message?.message).toContain('Bash(git push *)')
   })
 
+  it('names the tool and writes one space before the star', () => {
+    const [ps] = lintJson(name, perms({ allow: ['PowerShell(Get-Item :*)'] }), PROJECT)
+    expect(ps?.message).toBe(
+      '`PowerShell(Get-Item :*)` is the same as `PowerShell(Get-Item *)`. Write the space form, which the permission dialog writes.',
+    )
+  })
+
   it('reports a one-character command and a trailing space', () => {
     expect(ids(perms({ allow: ['Bash(x:*)'] }))).toEqual(['suffix'])
     expect(ids(perms({ allow: ['Bash(ls:* )'] }))).toEqual(['suffix'])
@@ -55,6 +62,13 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
+  it('is silent for a deny or ask rule on an input parameter, where * is a value wildcard', () => {
+    for (const list of ['deny', 'ask']) {
+      expect(ids(perms({ [list]: ['Bash(run_in_background:*)'] })), list).toEqual([])
+    }
+    expect(ids(perms({ allow: ['Bash(run_in_background:*)'] }))).toEqual(['suffix'])
+  })
+
   it('is silent for the space form, and for a rule with no :*', () => {
     for (const rule of ['Bash(ls *)', 'Bash(ls)', 'Bash', 'Bash(*)', 'Bash(git:* push)']) {
       expect(ids(perms({ allow: [rule] })), rule).toEqual([])

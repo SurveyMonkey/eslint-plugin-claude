@@ -31,7 +31,8 @@ The two forms match the same commands, so the rule is a style rule. It makes one
 that Claude Code writes itself.
 
 A `:*` before the end of a pattern is for [`permissions-bash-colon-star-mid`](permissions-bash-colon-star-mid.md). A `:*` that
-stands alone, as in `Bash(:*)`, is text and gets no report.
+stands alone, as in `Bash(:*)`, is text and gets no report. A `deny` or `ask` rule on an input parameter, as in
+`Bash(run_in_background:*)`, is not a command pattern. The `*` there is the wildcard of a value, and the rule skips it.[^param]
 
 Fail:
 
@@ -59,5 +60,6 @@ None.
 
 ## Sources
 
+[^param]: [Configure permissions: Match by input parameter](https://code.claude.com/docs/en/permissions#match-by-input-parameter)
 [^wildcards]: [Configure permissions: Wildcard patterns](https://code.claude.com/docs/en/permissions#wildcard-patterns)
 [^powershell]: [Configure permissions: PowerShell](https://code.claude.com/docs/en/permissions#powershell)

@@ -27,9 +27,11 @@ The classifier reviews each action in their place. Claude Code restores the rule
 The rule reports these `allow` rules:
 
 - A wildcarded interpreter: the program `python` with only a `*` after it. Examples are `Bash(python*)`,
-  `Bash(python *)` and `Bash(python:*)`.[^dropped] The option `interpreters` adds programs to this list.
+  `Bash(python *)` and `Bash(python:*)`.[^dropped] The option `interpreters` adds programs to this list. A `PowerShell` rule gets
+  the same check, because `autoMode.classifyAllShell` names both shell tools.[^classify]
 - Every `Agent` allow rule.
-- Every `Monitor` allow rule, because Claude Code runs Monitor commands through the shell.[^dropped]
+- Every `Monitor` allow rule, because Claude Code runs Monitor commands through the shell.[^dropped] Before v2.1.236, Claude Code
+  kept `Monitor` allow rules in effect in auto mode. The rule has no version option, so it reports them on every version.[^dropped]
 
 A narrow rule such as `Bash(npm test)` stays in effect in auto mode, and gets no report.[^dropped] The option
 `autoMode.classifyAllShell` makes the classifier review the narrow rules too.[^classify] The rule does not check that option.

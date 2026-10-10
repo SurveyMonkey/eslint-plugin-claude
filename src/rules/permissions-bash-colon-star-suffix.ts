@@ -3,6 +3,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { COMMAND_RULE_TOOLS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
+import { isInputParameterRule } from '../permission-command.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -23,8 +24,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'suffix' }> = {
   },
   create(context) {
     return settingsListener(context, (entries) => {
-      for (const { loc, rule: parsed } of entries) {
+      for (const { list, loc, rule: parsed } of entries) {
         if (parsed.specifier === null || !COMMAND_RULE_TOOLS.includes(parsed.tool)) {
+          continue
+        }
+        // A deny or ask rule on an input parameter has a value, and not a command.
+        if (isInputParameterRule(list, parsed.specifier)) {
           continue
         }
         // The same end as `commandWords`: a `:*` that stands alone is text.
@@ -35,7 +40,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'suffix' }> = {
             messageId: 'suffix',
             data: {
               rule: `${parsed.tool}(${parsed.specifier})`,
-              fixed: `${parsed.tool}(${text.slice(0, -2)} *)`,
+              fixed: `${parsed.tool}(${text.slice(0, -2).trimEnd()} *)`,
             },
           })
         }
