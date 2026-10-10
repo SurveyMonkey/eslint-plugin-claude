@@ -46,8 +46,8 @@
 // moved finding, a rule-update or rule-removal finding, and a finding that
 // names a rule. A digest holds at most MAX_DIGEST_BLOCKS blocks, and its
 // whole body fits in MAX_COMMENT. The next block starts a new digest. A
-// block that does not fit alone gets an issue of its own. A last group of
-// one block gets the issue of that block.
+// block that does not fit alone gets an issue of its own. A group of one
+// block gets the issue of that block.
 //
 // The findings file also has a `tracked` list: the blocks that an inventory
 // row cites, and that no map heading cites other than the page title. Each
@@ -126,7 +126,7 @@ const GROUP_ISSUES: Record<string, number> = {
 export const MAX_COMMENT = 60_000
 
 // The most blocks in one digest issue. A page with more uncited findings
-// gets more than one digest.
+// gets more than one issue.
 export const MAX_DIGEST_BLOCKS = 20
 // The cap for each quoted text in a digest section. A fence can be as long
 // as its text, so a text of backticks takes three times its length. With
@@ -136,8 +136,8 @@ export const MAX_DIGEST_BLOCKS = 20
 // the tests has two fences, a marker, the metadata and a rows line:
 // 2 x 921 + 1,001 = 2,843 characters for block 0. The whole body of 20 such
 // sections takes 57,826, so it fits in MAX_COMMENT. A longer heading, block
-// ID or reason can make a body too long. Then openIssues puts the next
-// block in a new digest, and cuts no section.
+// ID or reason can make a body too long. Then openIssues starts a new
+// group with the next block, and cuts no section.
 export const MAX_DIGEST_QUOTE = 280
 
 // The page, the block and the hash of a finding. The block ID comes from
@@ -973,7 +973,8 @@ export async function openIssues({
         part.map((f) => ({ finding: f, tracked: rowsFor(f) })),
         repo,
       )
-    // A digest of one block is the issue of that block.
+    // A digest of one block is the issue of that block. An empty group
+    // gives nothing.
     const flush = (part: Finding[]) => {
       if (part.length === 1) single(part[0] as Finding)
       if (part.length < 2) return
@@ -987,6 +988,7 @@ export async function openIssues({
     let part: Finding[] = []
     for (const f of list) {
       if (digest([f]).length > MAX_COMMENT) {
+        log(`alone: ${keyOf(f)} does not fit in a digest of ${MAX_COMMENT} characters`)
         single(f)
         continue
       }
