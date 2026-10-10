@@ -182,7 +182,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Choose a model",
-      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+      "hash": "ea006bdc1af80c1cb4fad720394d98e780a1772c5b47fa34eea9e8c07a62e59e"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -307,7 +307,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "a61dbb8d1456e20cc1c2e35f361f1a0870cbcccc645a659ad92e7d60e75d919d"
+      "hash": "c062c399a79edfe1a9968dbe26791d4ea42c04353adb5dc7216d3609972bc758"
     }
   ],
   "agent-skills-preloadable": [
