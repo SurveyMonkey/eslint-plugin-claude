@@ -44,7 +44,9 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
+import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
@@ -54,6 +56,7 @@ import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsFileSize from './rules/settings-file-size.ts'
+import settingsGlobalOnlyFile from './rules/settings-global-only-file.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
@@ -61,10 +64,14 @@ import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
 import settingsModelList from './rules/settings-model-list.ts'
 import settingsModelValue from './rules/settings-model-value.ts'
+import settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
+import settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
+import settingsRedundantValue from './rules/settings-redundant-value.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSchema from './rules/settings-schema.ts'
+import settingsSchemaUrl from './rules/settings-schema-url.ts'
 import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
@@ -177,6 +184,13 @@ const modules = [
   settingsSkilloverridesKey,
   settingsEnvShadowed,
   settingsSchema,
+  settingsAttributionFalse,
+  settingsDeprecatedKey,
+  settingsGlobalOnlyFile,
+  settingsOutputstyleResolves,
+  settingsProjectAutocontinueOff,
+  settingsRedundantValue,
+  settingsSchemaUrl,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -286,6 +300,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
   'settings-schema': 'error',
+  'settings-attribution-false': 'warn',
+  'settings-deprecated-key': 'warn',
+  'settings-global-only-file': 'error',
+  'settings-outputstyle-resolves': 'error',
+  'settings-project-autocontinue-off': 'warn',
+  'settings-redundant-value': 'warn',
+  'settings-schema-url': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

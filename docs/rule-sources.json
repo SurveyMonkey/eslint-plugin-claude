@@ -873,6 +873,13 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "settings-attribution-false": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "attribution",
+      "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e"
+    }
+  ],
   "settings-conflicting-keys": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -923,6 +930,28 @@
       "url": "https://code.claude.com/docs/en/channels",
       "heading": "Restrict which channel plugins can run",
       "hash": "43d1e4fa703b70785f061ceef00a54a64ff6976540125f9a7175283b3924d1d6"
+    }
+  ],
+  "settings-deprecated-key": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "includeCoAuthoredBy",
+      "hash": "1e8ac2eff11dfd01279bb22bad338f3486126dbc8aa8d7110e21c5c5e1d33738"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "attribution",
+      "hash": "d487af7487c02a8ff93ae1edca42837f2e7e8aaca23f5fe507ddb6245d15806e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "voiceEnabled",
+      "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableArtifact",
+      "hash": "9c0e53f6cf784de8ee50b9f191fe6cb8136d1c70942a2742b0d24f8de7a450e2"
     }
   ],
   "settings-enabled-plugins-entry-exists": [
@@ -1161,6 +1190,23 @@
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
       "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
+    }
+  ],
+  "settings-global-only-file": [
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "File reference",
+      "hash": "36de4cf4d978f8bb19073b25041a4b1ac6eb17ce6fa0aca654187f40f3d100c2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/keybindings",
+      "heading": "Customize keyboard shortcuts",
+      "hash": "fe47379bf3b71c92a713875c1cc56642670fc4d70b9f612b6518c4c010d19065"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
     }
   ],
   "settings-key-scope": [
@@ -1417,6 +1463,23 @@
       "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
     }
   ],
+  "settings-outputstyle-resolves": [
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Built-in output styles",
+      "hash": "ae56118af1459ff72b0f65644dce78d05438e9aa33084301762d0481c59e99a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Change your output style",
+      "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Create a custom output style",
+      "hash": "adf86cd9bf3581d4bae2a29f61b8c52f0c45d838419d4beb8395b8f221aaac6f"
+    }
+  ],
   "settings-plugin-suggestion-marketplaces-source": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1442,6 +1505,13 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "managedSourcesBehavior",
       "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    }
+  ],
+  "settings-project-autocontinue-off": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoContinueAtUsageLimit",
+      "hash": "b79213c02f493f0e7cd7db2f9c6c37322011ca98baa4b541564b1e16c71662c8"
     }
   ],
   "settings-project-value-ignored": [
@@ -1494,6 +1564,33 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "forceLoginOrgUUID",
       "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9"
+    }
+  ],
+  "settings-redundant-value": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "alwaysThinkingEnabled",
+      "hash": "9728322c1962dc46af482e03fc08e16dfb1f4ebc666bfb770f1df6c378e16bc0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enableArtifact",
+      "hash": "74b6999db6eab1b71aa85ee88c6a51a2722ae9164f0f6ea4e1768f826c1a3b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "syncClaudeAiSkills",
+      "hash": "ad434b2431cddba2591be161684fdf0f3e98069650e53b46c4eb2fe8ca421c7f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "syncClaudeAiPlugins",
+      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "spinnerVerbs",
+      "hash": "0df8956ff27fe526ab4b3baf11db0b186c768eeed64f2913a4811c7630218e5e"
     }
   ],
   "settings-removed-key": [
@@ -1628,6 +1725,13 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "spinnerTipsOverride",
       "hash": "a5d447375ca6aa720317740fb88c827195bf389f6bea3cc96bc130aa1a1bd44f"
+    }
+  ],
+  "settings-schema-url": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Edit a settings file",
+      "hash": "499813f3fb39099aaca8887927679984bb6940165ac754a6bfb83299e65027bf"
     }
   ],
   "settings-skilloverrides-key": [

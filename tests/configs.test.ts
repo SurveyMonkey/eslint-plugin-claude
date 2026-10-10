@@ -432,6 +432,77 @@ const TREE: Record<string, string> = {
   'packages/ss/managed-settings.d/30-b.txt': '{"modle": "opus"}',
   'packages/ss/managed-settings.d/sub/40-c.json': '{"modle": "opus"}',
   'packages/ss/.vscode/settings.json': '{"modle": "opus"}',
+  // The rules of the global layer of #14. Each group has the files that the rule reads and a
+  // hidden drop-in. It has the same content where no rule reads it: another extension, a nested
+  // directory, and another settings file.
+  // `settings-deprecated-key` reads the project and managed files.
+  'packages/ad/.claude/settings.json': '{"includeCoAuthoredBy": false}',
+  'packages/ad/.claude/settings.local.json': '{"voiceEnabled": true}',
+  'packages/ad/managed-settings.json': '{"disableArtifact": true}',
+  'packages/ad/managed-settings.d/10-a.json': '{"includeCoAuthoredBy": true}',
+  'packages/ad/managed-settings.d/.20-hidden.json': '{"voiceEnabled": true}',
+  'packages/ad/managed-settings.d/30-b.txt': '{"voiceEnabled": true}',
+  'packages/ad/managed-settings.d/sub/40-c.json': '{"voiceEnabled": true}',
+  'packages/ad/.vscode/settings.json': '{"voiceEnabled": true}',
+  // `settings-attribution-false` reads the two project files, and no managed file.
+  'packages/af/.claude/settings.json': '{"attribution": false}',
+  'packages/af/.claude/settings.local.json': '{"attribution": false}',
+  'packages/af/managed-settings.json': '{"attribution": false}',
+  'packages/af/managed-settings.d/10-a.json': '{"attribution": false}',
+  'packages/af/.vscode/settings.json': '{"attribution": false}',
+  // `settings-redundant-value` reads the project and managed files.
+  'packages/rv/.claude/settings.json': '{"alwaysThinkingEnabled": true}',
+  'packages/rv/.claude/settings.local.json': '{"enableArtifact": true}',
+  'packages/rv/managed-settings.json': '{"syncClaudeAiPlugins": true}',
+  'packages/rv/managed-settings.d/10-a.json': '{"spinnerVerbs": {"mode": "replace", "verbs": []}}',
+  'packages/rv/managed-settings.d/.20-hidden.json': '{"enableArtifact": true}',
+  'packages/rv/managed-settings.d/30-b.txt': '{"enableArtifact": true}',
+  'packages/rv/managed-settings.d/sub/40-c.json': '{"enableArtifact": true}',
+  'packages/rv/.vscode/settings.json': '{"enableArtifact": true}',
+  // `settings-project-autocontinue-off` reads the project and managed files. A Boolean in a
+  // managed file is silent, and a value of another type is not.
+  'packages/ac/.claude/settings.json': '{"autoContinueAtUsageLimit": false}',
+  'packages/ac/.claude/settings.local.json': '{"autoContinueAtUsageLimit": true}',
+  'packages/ac/managed-settings.json': '{"autoContinueAtUsageLimit": "no"}',
+  'packages/ac/managed-settings.d/10-a.json': '{"autoContinueAtUsageLimit": 0}',
+  'packages/ac/managed-settings.d/20-ok.json': '{"autoContinueAtUsageLimit": false}',
+  'packages/ac/managed-settings.d/.30-hidden.json': '{"autoContinueAtUsageLimit": 0}',
+  'packages/ac/managed-settings.d/40-c.txt': '{"autoContinueAtUsageLimit": 0}',
+  'packages/ac/managed-settings.d/sub/50-d.json': '{"autoContinueAtUsageLimit": 0}',
+  'packages/ac/.vscode/settings.json': '{"autoContinueAtUsageLimit": 0}',
+  // `settings-schema-url` reads the project and managed files. A file with no `$schema` is
+  // reported too, and the list of those files is computed below.
+  'packages/su/.claude/settings.json': '{"$schema": "https://example.com/s.json"}',
+  'packages/su/.claude/settings.local.json':
+    '{"$schema": "https://json.schemastore.org/claude-code-settings.json"}',
+  'packages/su/managed-settings.json': '{"$schema": 1}',
+  'packages/su/managed-settings.d/10-a.json':
+    '{"$schema": "https://json.schemastore.org/claude-code-settings.json"}',
+  'packages/su/managed-settings.d/.20-hidden.json': '{"$schema": "x"}',
+  'packages/su/managed-settings.d/30-b.txt': '{"$schema": "x"}',
+  'packages/su/managed-settings.d/sub/40-c.json': '{"$schema": "x"}',
+  'packages/su/.vscode/settings.json': '{"$schema": "x"}',
+  // `settings-outputstyle-resolves` reads the two project files, and no managed file. A style
+  // file next to the settings file makes a name silent.
+  'packages/os/.claude/settings.json': '{"outputStyle": "Nope"}',
+  'packages/os/.claude/settings.local.json': '{"outputStyle": "explanatory"}',
+  'packages/os/managed-settings.json': '{"outputStyle": "Nope"}',
+  'packages/os/managed-settings.d/10-a.json': '{"outputStyle": "Nope"}',
+  'packages/os/.vscode/settings.json': '{"outputStyle": "Nope"}',
+  'packages/os2/.claude/settings.json': '{"outputStyle": "team-style"}',
+  'packages/os2/.claude/settings.local.json': '{"outputStyle": "Learning"}',
+  'packages/os2/.claude/output-styles/team-style.md': 'Be brief.\n',
+  // `settings-global-only-file` reads a keybindings file and a theme file in `.claude/`, and a
+  // `.claude.json` with one of the three keys. The same content in other places is silent.
+  'packages/go/.claude/keybindings.json': '{"bindings": []}',
+  'packages/go/.claude/themes/dracula.json': '{"name": "Dracula", "base": "dark"}',
+  'packages/go/.claude.json': '{"permissions": {}}',
+  'packages/go/.claude/themes/sub/other.json': '{"name": "Other"}',
+  'packages/go/.claude/themes/notes.txt': '{"name": "Other"}',
+  'packages/go/keybindings.json': '{"bindings": []}',
+  'packages/go/.vscode/keybindings.json': '{"bindings": []}',
+  'packages/go/themes/dracula.json': '{"name": "Dracula"}',
+  'packages/go2/.claude.json': '{"theme": "dark"}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -493,7 +564,7 @@ const SETTINGS_RULES = [
 // files of each. Each is an error.
 const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
 const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
-const SCOPE_RULES = [
+const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
   { name: 'settings-valid-json', files: PROJECT_FILES },
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-key-scope', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -511,7 +582,42 @@ const SCOPE_RULES = [
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  // The rules of the global layer: five are `warn`, and two are `error`.
+  { name: 'settings-attribution-false', files: PROJECT_FILES, severity: 'warn' },
+  {
+    name: 'settings-deprecated-key',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  {
+    name: 'settings-global-only-file',
+    files: ['**/.claude/keybindings.json', '**/.claude/themes/*.json', '**/.claude.json'],
+  },
+  { name: 'settings-outputstyle-resolves', files: PROJECT_FILES },
+  {
+    name: 'settings-project-autocontinue-off',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  {
+    name: 'settings-redundant-value',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    severity: 'warn',
+  },
+  { name: 'settings-schema-url', files: [...PROJECT_FILES, ...MANAGED_FILES], severity: 'warn' },
 ]
+
+// `settings-schema-url` reports each settings file that is a JSON object with no `$schema`. The
+// tree has many such files, so the list is computed from the tree. A project file, a managed file
+// and a drop-in that is not hidden are settings files. The other files of the tree are not.
+const SETTINGS_FILE =
+  /(^|\/)(\.claude\/settings(\.local)?\.json|managed-settings\.json|managed-settings\.d\/[^./][^/]*\.json)$/
+const SCHEMA_URL_MISSING = Object.entries(TREE)
+  .filter(([file, content]) => {
+    const data: unknown = SETTINGS_FILE.test(file) ? JSON.parse(content) : null
+    return typeof data === 'object' && data !== null && !Array.isArray(data) && !('$schema' in data)
+  })
+  .map(([file]) => file)
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -682,6 +788,49 @@ const EXPECTED = [
     'packages/ss/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-schema@2`),
   'packages/ss/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-deprecated-key` reads the project and managed files, and no other file.
+  ...[
+    'packages/ad/.claude/settings.json',
+    'packages/ad/.claude/settings.local.json',
+    'packages/ad/managed-settings.json',
+    'packages/ad/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-deprecated-key@1`),
+  'packages/ad/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-attribution-false` reads the two project files, and no managed file.
+  ...['packages/af/.claude/settings.json', 'packages/af/.claude/settings.local.json'].map(
+    (file) => `${file}: claude/settings-attribution-false@1`,
+  ),
+  // `settings-redundant-value` reads the project and managed files, and no other file.
+  ...[
+    'packages/rv/.claude/settings.json',
+    'packages/rv/.claude/settings.local.json',
+    'packages/rv/managed-settings.json',
+    'packages/rv/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-redundant-value@1`),
+  'packages/rv/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-project-autocontinue-off` reads the project and managed files. Only the Boolean
+  // values in the managed files are silent.
+  ...[
+    'packages/ac/.claude/settings.json',
+    'packages/ac/.claude/settings.local.json',
+    'packages/ac/managed-settings.json',
+    'packages/ac/managed-settings.d/10-a.json',
+  ].map((file) => `${file}: claude/settings-project-autocontinue-off@1`),
+  'packages/ac/managed-settings.d/.30-hidden.json: claude/settings-managed-file@2',
+  // `settings-schema-url` reports a `$schema` with another value, and each settings file with no
+  // `$schema`. The first group below is the tree files with another value.
+  ...['packages/su/.claude/settings.json', 'packages/su/managed-settings.json'].map(
+    (file) => `${file}: claude/settings-schema-url@1`,
+  ),
+  'packages/su/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  ...SCHEMA_URL_MISSING.map((file) => `${file}: claude/settings-schema-url@1`),
+  // `settings-outputstyle-resolves` reads the two project files, and no managed file.
+  'packages/os/.claude/settings.json: claude/settings-outputstyle-resolves@2',
+  'packages/os/.claude/settings.local.json: claude/settings-outputstyle-resolves@2',
+  // `settings-global-only-file` reads the files of `packages/go`, and no other file.
+  'packages/go/.claude/keybindings.json: claude/settings-global-only-file@2',
+  'packages/go/.claude/themes/dracula.json: claude/settings-global-only-file@2',
+  'packages/go/.claude.json: claude/settings-global-only-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -812,9 +961,9 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
-      ...SCOPE_RULES.map(({ name }) => [
+      ...SCOPE_RULES.map(({ name, severity = 'error' }) => [
         `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
+        { [`claude/${name}`]: severity },
       ]),
     ])
   })
