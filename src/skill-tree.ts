@@ -133,7 +133,7 @@ function frontmatterOf(text: string): Record<string, unknown> | null {
 }
 
 // Directories that hold no agent or command files, and can be very large.
-const SKIPPED = new Set(['.git', 'node_modules'])
+export const SKIPPED = new Set(['.git', 'node_modules'])
 
 /** The `.md` files of a scan. `outside` is true when the scan did not follow
  *  a link because its target is out of the bound. `unreadable` is true when
