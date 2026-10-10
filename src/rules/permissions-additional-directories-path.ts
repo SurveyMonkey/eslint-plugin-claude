@@ -11,10 +11,10 @@ const name = 'permissions-additional-directories-path' as const
 
 type MessageId = 'networkPath' | 'nulByte'
 
-/** A UNC share, as `\\server\share`. The docs say that a `\\wsl$` path is not a network path. A
- *  `\\wsl.localhost` path is the other name of the WSL share, and `\\?\` and `\\.\` start a
- *  Windows device path. The docs name none of these three as a network path. */
-const UNC = /^\\\\(?!(?:wsl\$|wsl\.localhost|[?.])\\)/i
+/** A UNC share, as `\\server\share`. The docs say that a `\\wsl$` path is not a network path. The
+ *  docs name no `\\wsl.localhost` path, `\\?\` path or `\\.\` path as a network path, so the
+ *  rule is silent for them. */
+const UNC = /^\\\\(?!(?:wsl\$|wsl\.localhost|[?.])(?:\\|$))/i
 
 /** An automount path, as `/net/<host>`. */
 const AUTOMOUNT = /^\/net\/[^/]+/

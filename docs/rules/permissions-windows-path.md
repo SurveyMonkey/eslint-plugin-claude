@@ -26,6 +26,8 @@ It reads no hidden drop-in, because Claude Code ignores it.
 On Windows, Claude Code normalizes a path to POSIX form before it matches. `C:\Users\alice` becomes `/c/Users/alice`.
 So a rule uses `//c/**/.env` to match `.env` files anywhere on the `C:` drive, and `//**/.env` to match across all
 drives.[^read] A `Cd` rule shares the `//`, `~/` and `/` anchors of the `Read` and `Edit` rules.[^cd]
+The docs do not say what happens to a rule that has a drive letter or a backslash. The inventory row says the same.
+The docs state the normalization for `Read` and `Edit` rules only. The rule applies the same test to `Cd`.
 
 The rule reads the specifier of a `Read`, `Edit` or `Cd` rule in `allow`, `ask` and `deny`. It makes two reports:
 

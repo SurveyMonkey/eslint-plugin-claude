@@ -45,7 +45,7 @@ The rule is silent in these cases:
 - The rule is a parameter rule in `deny` or `ask` whose name is not `domain`, as in `WebFetch(prompt:*)`. A parameter
   rule for `url`, the primary field, is for [`permissions-param-rule`](permissions-param-rule.md). A rule with another
   parameter is a parameter rule, and no rule reads it.
-- The tool is not `WebFetch`. A skill file is not read, because the row names settings files only.
+- The tool is not `WebFetch`. A skill file is not read, because the rule reads settings files only.
 
 ### One report for one fault
 

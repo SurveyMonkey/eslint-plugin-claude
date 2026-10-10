@@ -30,9 +30,9 @@ directory.[^network] Before v2.1.257, Claude Code accepted a reachable network p
 
 The rule reads the text of each string entry. It makes two reports:
 
-- **A network path.** The entry starts with `\\` and a host, as in `\\server\share`, or with `/net/` and a host, as in
+- **A network path.** The entry starts with `\\` and is not one of the exempt forms below, as in `\\server\share`, or with `/net/` and a host, as in
   `/net/fileserver/home`.
-- **A NUL byte.** The changelog of Claude Code says that it skips such an entry. It records the fix under 2.1.251. The
+- **A NUL byte.** The changelog of Claude Code says that it skips such an entry that came from an SDK host, an IDE or a hook. It records the fix under 2.1.251. The rule applies the same fault to a settings file. The
   live docs page of the changelog is too large to cite. Read the entry in the
   [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md). An entry with a NUL byte gets this
   report only.
