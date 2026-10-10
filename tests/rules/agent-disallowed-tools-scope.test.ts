@@ -80,6 +80,20 @@ markdownTester.run('agent-disallowed-tools-scope', ruleOf('agent-disallowed-tool
       ...file('tools: mcp__github\ndisallowedTools: mcp__github\n'),
       errors: [{ messageId: 'both', data: { tool: 'mcp__github' } }],
     },
+    // A type list in `tools` names the tool too.
+    {
+      ...file('tools: Agent(worker), Read\ndisallowedTools: Agent\n'),
+      errors: [{ messageId: 'both', data: { tool: 'Agent' }, line: 4 }],
+    },
+    // `Task` is the old name of `Agent`, in either field.
+    {
+      ...file('tools: Agent, Read\ndisallowedTools: Task\n'),
+      errors: [{ messageId: 'both', data: { tool: 'Agent' }, line: 4 }],
+    },
+    {
+      ...file('tools: Task, Read\ndisallowedTools: Agent\n'),
+      errors: [{ messageId: 'both', data: { tool: 'Task' }, line: 4 }],
+    },
     // A specifier names the tool too, so the tool is in both lists.
     {
       ...file('tools: Bash\ndisallowedTools: Bash(git push *)\n'),
