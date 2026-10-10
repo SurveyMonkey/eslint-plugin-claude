@@ -2102,8 +2102,8 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
   describe('replay of the five issues of one change (#121 to #125)', () => {
     // From each case file: the kind, the Jev value and the hashes of the
     // marker and the Hashes line. All five are on the hooks page, and none
-    // has ` rules=` in its marker. #124 has a rule-like title only because a
-    // person edited it in triage, so it is an uncited block here.
+    // has ` rules=` in its marker. #124 has a rule-like title, but its marker
+    // names no rule, so it is an uncited block here.
     const CASES = [
       {
         issue: 121,
