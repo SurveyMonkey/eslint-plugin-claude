@@ -2,8 +2,7 @@
 // (docs/rules/settings-defaultshell-powershell-tool.md). The settings reference says that
 // `"powershell"` works only while the PowerShell tool is on, and that macOS, Linux and WSL need
 // `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`. Claude Code then falls back to Bash. The platform is a
-// runtime fact, so the rule takes the option `platforms`, as `hooks-ps1-needs-powershell-shell`
-// does, and makes no report without it. The variable can sit in the other file that Claude Code
+// runtime fact, so the rule takes the option `platforms`. It makes no report without it. The variable can sit in the other file that Claude Code
 // merges with the linted file, so the rule reads it too.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { envIsOn, isEnvOn } from '../data/settings-env.ts'

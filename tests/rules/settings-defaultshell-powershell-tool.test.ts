@@ -18,6 +18,7 @@ const PROJECT = '.claude/settings.json'
 const LOCAL = '.claude/settings.local.json'
 const MANAGED = 'managed-settings.json'
 const DROP_IN = 'managed-settings.d/20-b.json'
+const HIDDEN = 'managed-settings.d/.30-h.json'
 const SHELL = JSON.stringify({ defaultShell: 'powershell' })
 const tool = (value: unknown) => JSON.stringify({ env: { CLAUDE_CODE_USE_POWERSHELL_TOOL: value } })
 
@@ -70,6 +71,7 @@ describe('settings-defaultshell-powershell-tool: the option platforms', () => {
 
   it('refuses a value that is not a platform', () => {
     expect(() => ids(tree({}), PROJECT, SHELL, ['windows'])).toThrow()
+    expect(() => ids(tree({}), PROJECT, SHELL, ['macos', 'macos'])).toThrow()
   })
 })
 
@@ -84,7 +86,15 @@ describe('settings-defaultshell-powershell-tool: the tool variable', () => {
   })
 
   it('reports a file that sets the variable off, or sets another variable', () => {
-    for (const env of [{ CLAUDE_CODE_USE_POWERSHELL_TOOL: '0' }, { OTHER: '1' }, 'x', {}]) {
+    for (const env of [
+      { CLAUDE_CODE_USE_POWERSHELL_TOOL: '0' },
+      { CLAUDE_CODE_USE_POWERSHELL_TOOL: 1 },
+      { CLAUDE_CODE_USE_POWERSHELL_TOOL: true },
+      { CLAUDE_CODE_USE_POWERSHELL_TOOL: null },
+      { OTHER: '1' },
+      'x',
+      {},
+    ]) {
       const code = JSON.stringify({ defaultShell: 'powershell', env })
       expect(ids(tree({}), PROJECT, code, MACOS), JSON.stringify(env)).toEqual(['off'])
     }
@@ -104,6 +114,12 @@ describe('settings-defaultshell-powershell-tool: the tool variable', () => {
     expect(ids(tree({ [LOCAL]: tool('0') }), PROJECT, SHELL, MACOS)).toEqual(['off'])
     expect(ids(tree({ [LOCAL]: '{}' }), PROJECT, SHELL, MACOS)).toEqual(['off'])
     expect(ids(tree({ [MANAGED]: '{"env": 1}' }), DROP_IN, SHELL, MACOS)).toEqual(['off'])
+    expect(ids(tree({ [MANAGED]: '{"env": null}' }), DROP_IN, SHELL, MACOS)).toEqual(['off'])
+    for (const value of [1, true, null]) {
+      const sibling = JSON.stringify({ env: { CLAUDE_CODE_USE_POWERSHELL_TOOL: value } })
+      expect(ids(tree({ [LOCAL]: sibling }), PROJECT, SHELL, MACOS), String(value)).toEqual(['off'])
+    }
+    expect(ids(tree({ [HIDDEN]: tool('1') }), MANAGED, SHELL, MACOS)).toEqual(['off'])
   })
 
   it('is silent when a sibling cannot be read', () => {

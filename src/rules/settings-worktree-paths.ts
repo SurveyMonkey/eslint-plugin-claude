@@ -1,8 +1,8 @@
 // The entries of `worktree.symlinkDirectories` and `worktree.sparsePaths`
 // (docs/rules/settings-worktree-paths.md). The settings reference says that each entry is a
-// directory path relative to the repository root. The rule reports an entry with a leading `/` or
-// a `..` segment, with no read of the disk. It then looks for the entry from the repository root,
-// and reports an entry that is not there or that is a file. A path that the rule cannot see gets no
+// directory path relative to the repository root. The rule reports an entry that starts with `/` or
+// has a `..` segment, with no read of the entry. It then looks for the entry from the repository
+// root, and reports an entry that is not there or that is a file. A `\` counts as `/`. A path that the rule cannot see gets no
 // report (ADR 001, Decision 14): a link that leads out of the repository, a dangling link, and a
 // folder that it cannot read. `settings-worktree-sparse-claude-dir` reports the list as a whole,
 // so the two rules never report the same node. A heuristic, and `off` in `recommended`: a
@@ -32,7 +32,7 @@ function faultOf(text: string, root: string): MessageIds | undefined {
   if (text.split(/[/\\]/).includes('..')) {
     return 'parent'
   }
-  const found = realSource(root, root, root, path.join(root, text))
+  const found = realSource(root, root, root, path.join(root, text.replaceAll('\\', '/')))
   if (typeof found !== 'string') {
     return found.kind === 'missing' ? 'missing' : undefined
   }

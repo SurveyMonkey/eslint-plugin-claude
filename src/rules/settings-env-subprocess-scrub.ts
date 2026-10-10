@@ -1,8 +1,9 @@
 // `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` is not on in the shared settings file
 // (docs/rules/settings-env-subprocess-scrub.md). The variable strips credentials from the
-// environment of Bash commands, hooks and stdio MCP servers. A heuristic, and `off` in
-// `recommended`: a team can set the variable in a managed file or in a shell. The rule reads
-// `.claude/settings.json` only, so the file that lacks the hardening is the file that reports.
+// environment of subprocesses, such as Bash commands, hooks and stdio MCP servers. A heuristic,
+// and `off` in `recommended`: a team can set the variable in a managed file or in a shell. The
+// rule reads `.claude/settings.json` only, so the file without the variable is the file that
+// reports.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { isEnvOn } from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -22,7 +23,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'scrub' }> = {
     schema: [],
     messages: {
       scrub:
-        '"CLAUDE_CODE_SUBPROCESS_ENV_SCRUB" is not "1" in the "env" of this file. Claude Code then passes credentials from its environment to Bash commands, hooks and stdio MCP servers.',
+        '"CLAUDE_CODE_SUBPROCESS_ENV_SCRUB" is not on in the "env" of this file. Claude Code then keeps credentials from its environment in the subprocesses that it starts, such as Bash commands, hooks and stdio MCP servers.',
     },
   },
   create(context) {

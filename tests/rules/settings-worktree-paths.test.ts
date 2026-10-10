@@ -194,3 +194,11 @@ describe('settings-worktree-paths: what it does not read', () => {
     expect(ids(tree(FILES), settings('sparsePaths', 'packages/api'))).toEqual([])
   })
 })
+
+describe('settings-worktree-paths: a backslash separator', () => {
+  it('reads a backslash as a slash', () => {
+    expect(ids(tree(FILES), settings('sparsePaths', 'packages\\api'))).toEqual([])
+    expect(ids(tree(FILES), settings('sparsePaths', 'packages\\gone'))).toEqual(['missing'])
+    expect(ids(tree(FILES), settings('sparsePaths', 'README.md\\'))).toEqual(['file'])
+  })
+})

@@ -5,9 +5,9 @@
 // the call in its text. It reads only a script inside the repository (ADR 001, Decision 14). A
 // script that is missing, out of the repository, or unreadable gets no report.
 //
-// `src/script-refs.ts` on the git execution layer resolves the same script words for
-// `statusline-script-exists`. That module is not in this stack. `scriptWord` below is the small
-// part of it that this rule needs, and `scriptRefs` replaces it when both layers are in one tree.
+// `src/script-refs.ts` on the git execution layer finds the same script words. That module is not
+// in this stack. `scriptWord` below is the small part of it that this rule needs. Use `scriptRefs`
+// in its place when both layers are in one tree.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -36,8 +36,9 @@ const INTERPRETERS = new Set([
   'perl',
 ])
 
-// One word of a shell command: a quoted string, or characters up to a separator or a quote.
-const WORD = /^\s*(?:"([^"]*)"|'([^']*)'|([^\s|&;<>()"']+))/
+// One word of a shell command. A quote joins the characters in it to the word, as `wordsOf` in
+// `src/script-refs.ts` does, so `"$CLAUDE_PROJECT_DIR"/x.sh` is one word.
+const WORD = /^\s*((?:"[^"]*"|'[^']*'|[^\s|&;<>()"'])+)/
 const PLACEHOLDER = /^\$(?:\{CLAUDE_PROJECT_DIR\}|CLAUDE_PROJECT_DIR)\/(.+)$/
 // A path with one of these characters can hold a variable, a substitution, a glob, a brace list, a
 // home path, a Windows path, a history mark, a comment or an assignment. The rule cannot resolve it.
@@ -53,7 +54,7 @@ function scriptWord(command: string): { text: string; first: boolean } | undefin
     if (match === null) {
       break
     }
-    words.push(match[1] ?? match[2] ?? (match[3] as string))
+    words.push((match[1] as string).replaceAll(/["']/g, ''))
     rest = rest.slice(match[0].length)
     if (!INTERPRETERS.has(path.posix.basename(words[0] as string))) {
       break
@@ -65,9 +66,9 @@ function scriptWord(command: string): { text: string; first: boolean } | undefin
 }
 
 /** The word that names the script of `command`, and the text of the script. The result is
- *  undefined when the rule cannot see the script. A
- *  project file resolves a path from the project, which holds `.claude/`. A managed file has no
- *  project of its own, so it resolves a project variable from the repository root only. */
+ *  undefined when the rule cannot see the script. A project file resolves a path from the
+ *  project, which holds `.claude/`. A managed file has no project of its own, so it resolves a
+ *  project variable from the repository root only. */
 function scriptOf(command: string, filename: string): { word: string; text: string } | undefined {
   const word = scriptWord(command)
   if (word === undefined) {
@@ -77,7 +78,8 @@ function scriptOf(command: string, filename: string): { word: string; text: stri
   const managed = kindOf(file) === 'managed'
   const dir = managed && !isDropIn(file) ? path.dirname(file) : path.dirname(path.dirname(file))
   const project = realDirectory(dir)
-  const bound = repositoryRoot(project)
+  // The walk for `.git` starts at `dir` and not at its real path (`repositoryRoot`).
+  const bound = repositoryRoot(dir)
   const from = managed ? bound : project
   const match = PLACEHOLDER.exec(word.text)
   // A bare relative path names a script only for the program, and only when the file has a project.

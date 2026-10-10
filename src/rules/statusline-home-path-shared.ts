@@ -3,7 +3,7 @@
 // the `/statusline` command to `~/.claude/`, a folder of one user. Another reader of the
 // repository has no such script. A heuristic, and `off` in `recommended`: a team can put the
 // script in every home folder. The rule reads the command text for `~/.claude/` and reads no
-// file. `.claude/settings.json` only.
+// file. The rule reads `.claude/settings.json` only.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
