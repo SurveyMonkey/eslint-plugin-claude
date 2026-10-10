@@ -173,3 +173,18 @@ export const BACKGROUND_TOOL_NAMES: readonly string[] = [
   'WebSearch',
   'Write',
 ]
+
+/** The tools whose rule specifier is a command pattern, as `Bash(npm run *)`.
+ *  `Monitor` takes the permission rules of Bash, and a `PowerShell` rule has
+ *  the same shape as a Bash rule. Source: the "Monitor tool" section
+ *  (https://code.claude.com/docs/en/tools-reference#monitor-tool) and the
+ *  "PowerShell" section
+ *  (https://code.claude.com/docs/en/permissions#powershell), checked on
+ *  2026-10-10. */
+export const COMMAND_RULE_TOOLS: readonly string[] = ['Bash', 'Monitor', 'PowerShell']
+
+/** The tools that the "Bash" section of the permissions page covers: `Bash`,
+ *  and `Monitor`, which uses the same rules. The notes on wrappers and
+ *  environment runners are in that section. Source:
+ *  https://code.claude.com/docs/en/permissions#bash, checked on 2026-10-10. */
+export const BASH_RULE_TOOLS: readonly string[] = ['Bash', 'Monitor']
