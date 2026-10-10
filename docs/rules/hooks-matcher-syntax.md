@@ -29,10 +29,15 @@ these faults.
 ### `Tool(specifier)` on a tool event
 
 A hook matcher holds a bare tool name, not the form `Bash(rm *)`.[^tools] The form has a parenthesis, so
-Claude Code reads it as a regular expression, and it matches no tool name. Use the `if` field of the handler
-to match the arguments.[^patterns] The rule reports the form only when the name is a built-in tool or a
-full MCP tool name. `Web(Fetch|Search)` is a valid regular expression, so the rule makes no report for it. The rule reads `PreToolUse`, `PostToolUse`, `PostToolUseFailure`,
-`PermissionRequest` and `PermissionDenied`. [`hooks-if-condition`](hooks-if-condition.md) checks the `if` field.
+Claude Code reads it as a regular expression with a group. Such a matcher does not select the call that
+the author meant. Use the `if` field of the handler to match the arguments.[^patterns]
+
+The rule reports the form only when the name is a built-in tool or a full MCP tool name. `Web(Fetch|Search)`
+and `mcp__memory__(create|delete)` are valid regular expressions, so the rule makes no report for them. It
+reports a value that ends in a parenthesis only, so `Read(a)|Write` gets no report.
+
+The rule reads `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest` and `PermissionDenied`.
+[`hooks-if-condition`](hooks-if-condition.md) checks the `if` field.
 
 ### A regular expression that does not compile
 
@@ -50,7 +55,8 @@ comma keeps the matcher on the regular expression path, and only `|` separates v
 ### `FileChanged`
 
 `FileChanged` splits the matcher at `|`. It watches each value as a literal file name in the current
-directory.[^filechanged] So `.envrc|.env` watches two files. `FileChanged` has the same narrow set. The rule reports two faults:
+directory.[^filechanged] So `.envrc|.env` watches two files. `FileChanged` has the same narrow exact set as `StopFailure`, but the rule
+reports it with different checks. The rule reports two faults:
 
 - A value with a comma, or with a space at its start or end. Claude Code watches a file with that exact name.
   A hyphen is part of many file names, so the rule does not report it.

@@ -48,15 +48,15 @@ rule. A specifier with an unbalanced `)` that is followed by an operator and a n
 The rule uses the parser of the permission rule syntax, the same parser as
 [`permissions-rule-syntax`](permissions-rule-syntax.md).[^syntax] It reports four faults in the `if` value: no tool name,
 unbalanced parentheses, text after the final parenthesis, and a NUL byte. `permissions-rule-syntax` reads
-permission lists and skill fields, not hooks. This rule runs the parser only. It does not run the other checks of the permission rule group, such as the check of the
-tool name or of the specifier.
+permission lists and skill fields, not hooks. This rule runs the parser only. It runs no other check of
+the permission rule group, such as the tool name check or the specifier check.
 
 ### A tool the matcher never selects
 
 The matcher of a group selects the tool, and `if` narrows the call further. The hook runs only when both
-match.[^resolve] A rule for one tool matches that tool's calls only.[^rules] So `Bash(rm *)` in a group with the
-matcher `Edit` never runs. The rule reports it for a built-in tool or a full MCP tool name. A rule such as `mcp__memory` names a whole
-MCP server, so the rule makes no report for it.
+match.[^resolve] A rule names one tool, or the family of tools that share its rule format.[^rules] So `Bash(rm *)`
+in a group with the matcher `Edit` never runs. The rule reports it for a built-in tool or a full MCP tool name.
+A rule such as `mcp__memory` names a whole MCP server, so the rule makes no report for it.
 
 A rule format covers a family of tools:[^rules]
 
