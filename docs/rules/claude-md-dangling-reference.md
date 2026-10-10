@@ -32,8 +32,8 @@ exist, makes an instruction that Claude cannot follow. The rule reads the code s
   placeholder, a URL, a space, `@`, `~` and `$` are not a path. A line suffix such as `:12` is
   removed first.
 - It does not start with `/` or `-`.
-- It ends with a slash, or starts with a dot, or its last part has an extension, or it has three
-  parts. So `and/or` and `src/rules` are not paths. `src/rules/` and `src/a.ts` are.
+- It ends with a slash, or starts with a dot, or its last part has an extension that starts with a
+  letter. So `and/or`, `YYYY/MM/DD` and `src/rules` are not paths. `src/rules/` and `src/a.ts` are.
 
 The rule looks for the path in the folder of the file and in the repository root. It reports the
 span when the path is in neither.
@@ -56,7 +56,7 @@ The rule makes no report in these cases:
 - The file is an `AGENTS.md` or any file other than a `CLAUDE.md`, a `CLAUDE.local.md` or a rule
   file.
 
-The stack has no list of the commands that Claude Code bundles. So `/init`, `/memory` and `/context`
+This plugin has no list of the commands that Claude Code bundles. So `/init`, `/memory` and `/context`
 are reports until you add them to `allow`. The same holds for a command from your user folder or
 from a plugin. A skill whose `name` field differs from its folder name is found by the folder name
 only. The rule is a heuristic, and it reads the disk, not the files that git tracks. A path to a

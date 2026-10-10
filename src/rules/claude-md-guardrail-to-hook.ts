@@ -5,7 +5,8 @@
 // a verb that a hook can check, and "always" with a fixed point. It reads a paragraph, a heading
 // or a table cell of the syntax tree, with each code span and each inline HTML tag hidden. So a
 // code span cannot split a sentence, and a code block and an HTML comment are not read. The rule
-// is a heuristic, because the docs do not define the wording.
+// is a heuristic, because the docs do not define the wording. Emphasis marks do not split a
+// match, so `**Never** edit x` is a guardrail.
 import type { MarkdownRuleDefinition, MarkdownSourceCode } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifyMemoryFile } from '../memory-files.ts'
@@ -64,6 +65,12 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'guardrail' }> = {
         for (const [start, end] of hidden) {
           text = text.slice(0, start - from) + 'x'.repeat(end - start) + text.slice(end - from)
         }
+        // Emphasis marks, a block quote mark and a curly apostrophe must not split a match. Each
+        // change keeps the length of the text, so the offsets stay true.
+        text = text
+          .replaceAll('*', ' ')
+          .replaceAll('\u2019', "'")
+          .replace(/^(?:[ \t]*>)+/gm, (marks) => ' '.repeat(marks.length))
         for (const match of text.matchAll(GUARDRAIL)) {
           context.report({
             loc: {
