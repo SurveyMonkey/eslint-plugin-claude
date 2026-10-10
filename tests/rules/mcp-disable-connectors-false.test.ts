@@ -2,7 +2,10 @@
 // page says that a project `false` cannot re-enable the connectors. The rule reads the managed
 // files. `settings-project-value-ignored` reports the value in the two project files. The files
 // glob is in tests/configs.test.ts.
+
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('mcp-disable-connectors-false')
@@ -79,6 +82,38 @@ describe('mcp-disable-connectors-false on a hidden drop-in', () => {
     expect(
       lintJson('mcp-disable-connectors-false', value(false), 'managed-settings.d/.10-a.json'),
     ).toEqual([])
+  })
+})
+
+// The managed settings page merges the main file and the drop-ins into one source. A later file
+// replaces a single value of an earlier one. So a `false` after a sibling `true` changes the value.
+describe('mcp-disable-connectors-false with sibling managed files', () => {
+  const off = JSON.stringify({ disableClaudeAiConnectors: true })
+  const idsAt = (files: Record<string, string>, file: string) =>
+    lintJson('mcp-disable-connectors-false', value(false), path.join(repo(files), file)).length
+  it('is silent when managed-settings.json holds true and the drop-in holds false', () => {
+    expect(idsAt({ 'managed-settings.json': off }, 'managed-settings.d/20-a.json')).toBe(0)
+  })
+  it('is silent when another drop-in holds true', () => {
+    expect(idsAt({ 'managed-settings.d/10-a.json': off }, 'managed-settings.d/20-b.json')).toBe(0)
+    expect(idsAt({ 'managed-settings.d/30-a.json': off }, 'managed-settings.d/20-b.json')).toBe(0)
+  })
+  it('is silent in the main file when a drop-in holds true', () => {
+    expect(idsAt({ 'managed-settings.d/10-a.json': off }, 'managed-settings.json')).toBe(0)
+  })
+  it('reports when the siblings hold false, another key or nothing', () => {
+    expect(idsAt({ 'managed-settings.d/10-a.json': value(false) }, 'managed-settings.json')).toBe(1)
+    expect(
+      idsAt({ 'managed-settings.json': '{"model":"x"}' }, 'managed-settings.d/20-a.json'),
+    ).toBe(1)
+    expect(idsAt({}, 'managed-settings.json')).toBe(1)
+  })
+  it('ignores a hidden sibling and a sibling that is not a json file', () => {
+    const files = { 'managed-settings.d/.10-a.json': off, 'managed-settings.d/10-b.txt': off }
+    expect(idsAt(files, 'managed-settings.json')).toBe(1)
+  })
+  it('is silent when a sibling cannot be read', () => {
+    expect(idsAt({ 'managed-settings.d/10-a.json': '{' }, 'managed-settings.json')).toBe(0)
   })
 })
 
