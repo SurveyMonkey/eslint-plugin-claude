@@ -110,6 +110,22 @@ describe(`${name}: one file`, () => {
   })
 })
 
+describe(`${name}: the rule that is named`, () => {
+  it('names the deny rule when a deny rule and an ask rule both cover the allow rule', () => {
+    for (const permissions of [
+      { allow: ['Bash(x)'], ask: ['Bash'], deny: ['Bash(x)'] },
+      { allow: ['Bash(x)'], deny: ['Bash(x)'], ask: ['Bash'] },
+    ]) {
+      const [message] = lintJson(
+        name,
+        JSON.stringify({ permissions }),
+        '/repo/.claude/settings.json',
+      )
+      expect(message?.message).toContain('deny rule')
+    }
+  })
+})
+
 describe(`${name}: the project pair, on disk`, () => {
   const ALLOW = perms({ allow: ['Bash(npm test)'] })
   const DENY = perms({ deny: ['Bash'] })

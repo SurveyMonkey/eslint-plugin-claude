@@ -43,7 +43,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     schema: [],
     messages: {
       denyFields:
-        'A "deny" entry ignores {{fields}}. Claude Code accepts them and does nothing. Remove them, or use "mask".',
+        'A "deny" entry ignores its mask fields ({{fields}}). Claude Code accepts them and does nothing. Remove them, or use "mask".',
       noTls:
         'A "mask" entry needs "sandbox.network.tlsTerminate", or "sandbox.credentials.allowPlaintextInject" for plain HTTP, in this managed source. Without one, the proxy sends the placeholder to the server and authentication fails.',
       claimsNeedDecode:
