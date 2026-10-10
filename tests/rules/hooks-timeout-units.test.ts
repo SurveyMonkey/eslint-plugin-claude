@@ -23,12 +23,12 @@ const ids = (timeout: unknown, file = FILES.project, options: unknown[] = []) =>
   )
 
 describe(`${name}: the report`, () => {
-  it.fails('reports 5000, and the default limit of 1000', () => {
+  it('reports 5000, and the default limit of 1000', () => {
     expect(ids(5000)).toEqual(['units'])
     expect(ids(1000)).toEqual(['units'])
   })
 
-  it.fails('reports in every file that holds hooks', () => {
+  it('reports in every file that holds hooks', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(5000, file), file).toEqual(['units'])
     }
@@ -39,31 +39,31 @@ describe(`${name}: the report`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['units'])
   })
 
-  it.fails('reports a handler of any type', () => {
+  it('reports a handler of any type', () => {
     for (const type of ['command', 'http', 'mcp_tool', 'prompt', 'agent']) {
       const text = settings(hooks('PostToolUse', [{ type, timeout: 5000 }]))
       expect(jsonIds(name, text, FILES.project), type).toEqual(['units'])
     }
   })
 
-  it.fails('names the value and the value in seconds, at the number', () => {
+  it('names the value and the value in seconds, at the number', () => {
     const text =
       '{\n  "hooks": {"PostToolUse": [{"hooks": [{"type": "command", "command": "a", "timeout": 5000}]}]}\n}'
     const [message] = lintJson(name, text, FILES.project)
-    expect([message?.messageId, message?.line, message?.column]).toEqual(['units', 2, 85])
+    expect([message?.messageId, message?.line, message?.column]).toEqual(['units', 2, 87])
     expect(message?.message).toBe(
       '"timeout" is in seconds, so 5000 waits for 5000 seconds. For milliseconds, write 5.',
     )
   })
 
-  it.fails('rounds the suggestion, and keeps it at 1 second or more', () => {
+  it('rounds the suggestion, and keeps it at 1 second or more', () => {
     expect(
       lintJson(name, settings(hooks('Stop', [command({ timeout: 1500 })])), FILES.project)[0]
         ?.message,
     ).toContain('write 2.')
   })
 
-  it.fails('reports from the configured limit, and names it', () => {
+  it('reports from the configured limit, and names it', () => {
     expect(ids(300, FILES.project, [{ millisecondsFrom: 300 }])).toEqual(['limit'])
     expect(
       lintJson(name, settings(hooks('Stop', [command({ timeout: 400 })])), FILES.project, [
@@ -74,34 +74,34 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for 30, 600 and 999', () => {
+  it('is silent for 30, 600 and 999', () => {
     for (const value of [30, 600, 999, 0, 1.5]) {
       expect(ids(value), String(value)).toEqual([])
     }
   })
 
-  it.fails('is silent below the configured limit, and at the default when the limit is higher', () => {
+  it('is silent below the configured limit, and at the default when the limit is higher', () => {
     expect(ids(299, FILES.project, [{ millisecondsFrom: 300 }])).toEqual([])
     expect(ids(5000, FILES.project, [{ millisecondsFrom: 10000 }])).toEqual([])
   })
 
-  it.fails('is silent for a timeout that is no number', () => {
+  it('is silent for a timeout that is no number', () => {
     for (const value of ['5000', null, true, [5000]]) {
       expect(ids(value), JSON.stringify(value)).toEqual([])
     }
   })
 
-  it.fails('is silent when the handler has no timeout', () => {
+  it('is silent when the handler has no timeout', () => {
     expect(jsonIds(name, settings(hooks('Stop', [command()])), FILES.project)).toEqual([])
   })
 
-  it.fails('is silent for a hidden drop-in', () => {
+  it('is silent for a hidden drop-in', () => {
     expect(ids(5000, FILES.hidden)).toEqual([])
   })
 })
 
 describe(`${name}: the option`, () => {
-  it.fails('refuses a limit below 1 and an unknown option', () => {
+  it('refuses a limit below 1 and an unknown option', () => {
     expect(() => ids(1, FILES.project, [{ millisecondsFrom: 5 }])).not.toThrow()
     expect(() => ids(1, FILES.project, [{ millisecondsFrom: 0 }])).toThrow()
     expect(() => ids(1, FILES.project, [{ other: 1 }])).toThrow()

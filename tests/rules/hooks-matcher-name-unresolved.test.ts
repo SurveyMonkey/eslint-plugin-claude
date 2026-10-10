@@ -11,7 +11,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { agent, repo } from '../agent-settings.test-support.ts'
 import { command, FILES, frontmatter, hooks, markdownIds, settings } from '../hooks.test-support.ts'
-import { lintJson, withoutAccess } from '../rule-tester.test-support.ts'
+import { chmodCannotBlock, lintJson, withoutAccess } from '../rule-tester.test-support.ts'
 
 const name = 'hooks-matcher-name-unresolved'
 const json = JSON.stringify
@@ -41,7 +41,7 @@ const ids = (
 ) => lint(files, text, target, options).map((message) => message.messageId)
 
 describe(`${name}: a tool name`, () => {
-  it.fails('reports a name that is no tool, on each tool event', () => {
+  it('reports a name that is no tool, on each tool event', () => {
     for (const event of [
       'PreToolUse',
       'PostToolUse',
@@ -53,7 +53,7 @@ describe(`${name}: a tool name`, () => {
     }
   })
 
-  it.fails('reports each unknown segment of a list, and names it', () => {
+  it('reports each unknown segment of a list, and names it', () => {
     const text = settings(hooks('PreToolUse', [command()], 'Bash|Edt, Wrte'))
     expect(ids({}, text)).toEqual(['tool', 'tool'])
     expect(lint({}, text)[0]?.message).toBe(
@@ -61,7 +61,7 @@ describe(`${name}: a tool name`, () => {
     )
   })
 
-  it.fails('reports in a plugin hooks.json, a skill and an agent, which need no sibling', () => {
+  it('reports in a plugin hooks.json, a skill and an agent, which need no sibling', () => {
     expect(
       ids({}, settings(hooks('PreToolUse', [command()], 'Edt')), 'plugins/p/hooks/hooks.json'),
     ).toEqual(['tool'])
@@ -72,7 +72,7 @@ describe(`${name}: a tool name`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['tool'])
   })
 
-  it.fails('is silent for a canonical name, an old name and an MCP name', () => {
+  it('is silent for a canonical name, an old name and an MCP name', () => {
     for (const matcher of [
       'Bash',
       'Task',
@@ -87,13 +87,13 @@ describe(`${name}: a tool name`, () => {
     }
   })
 
-  it.fails('is silent for a case variant and the advisor, which hooks-matcher-never-matches reports', () => {
+  it('is silent for a case variant and the advisor, which hooks-matcher-never-matches reports', () => {
     for (const matcher of ['bash', 'WRITE', 'advisor', 'Advisor']) {
       expect(ids({}, settings(hooks('PreToolUse', [command()], matcher))), matcher).toEqual([])
     }
   })
 
-  it.fails('is silent for a regular expression, a match-all matcher and an event that matches no tool', () => {
+  it('is silent for a regular expression, a match-all matcher and an event that matches no tool', () => {
     for (const matcher of ['^Edt$', 'Edt.*', '*', '']) {
       expect(ids({}, settings(hooks('PreToolUse', [command()], matcher))), matcher).toEqual([])
     }
@@ -103,13 +103,13 @@ describe(`${name}: a tool name`, () => {
     }
   })
 
-  it.fails('is silent for a name in the option allow', () => {
+  it('is silent for a name in the option allow', () => {
     const text = settings(hooks('PreToolUse', [command()], 'Edt|Mine'))
     expect(ids({}, text, SETTINGS_FILE, [{ allow: ['Edt', 'Mine'] }])).toEqual([])
     expect(ids({}, text, SETTINGS_FILE, [{ allow: ['Mine'] }])).toEqual(['tool'])
   })
 
-  it.fails('is silent for a hidden drop-in', () => {
+  it('is silent for a hidden drop-in', () => {
     expect(
       ids({}, settings(hooks('PreToolUse', [command()], 'Edt')), 'managed-settings.d/.a.json'),
     ).toEqual([])
@@ -119,12 +119,12 @@ describe(`${name}: a tool name`, () => {
 describe(`${name}: a subagent name`, () => {
   const files = { '.claude/agents/reviewer.md': agent('', 'reviewer') }
 
-  it.fails('reports an unknown agent name on SubagentStop and SubagentStart', () => {
+  it('reports an unknown agent name on SubagentStop and SubagentStart', () => {
     expect(ids(files, subagents('revewer'))).toEqual(['agent'])
     expect(ids(files, subagents('revewer', 'SubagentStart'))).toEqual(['agent'])
   })
 
-  it.fails('names the agent, and reports each unknown name of a list', () => {
+  it('names the agent, and reports each unknown name of a list', () => {
     const found = lint(files, subagents('reviewer|Explore, nope|zip'))
     expect(found.map((message) => message.messageId)).toEqual(['agent', 'agent'])
     expect(found[0]?.message).toBe(
@@ -132,11 +132,11 @@ describe(`${name}: a subagent name`, () => {
     )
   })
 
-  it.fails('reports in settings.local.json', () => {
+  it('reports in settings.local.json', () => {
     expect(ids(files, subagents('nope'), '.claude/settings.local.json')).toEqual(['agent'])
   })
 
-  it.fails('is silent for a known agent, a built-in agent and a case variant', () => {
+  it('is silent for a known agent, a built-in agent and a case variant', () => {
     for (const matcher of [
       'reviewer',
       'REVIEWER',
@@ -151,30 +151,30 @@ describe(`${name}: a subagent name`, () => {
     }
   })
 
-  it.fails('reads the agent name from the name field, and not from the file name', () => {
+  it('reads the agent name from the name field, and not from the file name', () => {
     expect(ids({ '.claude/agents/x.md': agent('', 'reviewer') }, subagents('reviewer'))).toEqual([])
     expect(
       ids({ '.claude/agents/reviewer.md': agent('', 'other') }, subagents('reviewer')),
     ).toEqual(['agent'])
   })
 
-  it.fails('reads an agent file in a sub folder', () => {
+  it('reads an agent file in a sub folder', () => {
     expect(ids({ '.claude/agents/team/x.md': agent('', 'deep') }, subagents('deep'))).toEqual([])
   })
 
-  it.fails('reads the agents of a folder above the settings file, up to the repository root', () => {
+  it('reads the agents of a folder above the settings file, up to the repository root', () => {
     const all = { '.claude/agents/reviewer.md': agent('', 'reviewer') }
     expect(ids(all, subagents('reviewer'), 'packages/a/.claude/settings.json')).toEqual([])
     expect(ids(all, subagents('nope'), 'packages/a/.claude/settings.json')).toEqual(['agent'])
   })
 
-  it.fails('is silent for a plugin-scoped name and a regular expression', () => {
+  it('is silent for a plugin-scoped name and a regular expression', () => {
     for (const matcher of ['my-plugin:reviewer', '^my-plugin:reviewer$', '^rev', '*', '']) {
       expect(ids(files, subagents(matcher)), matcher).toEqual([])
     }
   })
 
-  it.fails('is silent when the repository has no agent file', () => {
+  it('is silent when the repository has no agent file', () => {
     expect(ids({}, subagents('nope'))).toEqual([])
     expect(ids({ '.claude/agents/README.txt': 'x' }, subagents('nope'))).toEqual([])
     expect(ids({ '.claude/agents/a.md': 'no frontmatter' }, subagents('nope'))).toEqual([])
@@ -183,11 +183,11 @@ describe(`${name}: a subagent name`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent for a name in the option allow', () => {
+  it('is silent for a name in the option allow', () => {
     expect(ids(files, subagents('mine'), SETTINGS_FILE, [{ allow: ['mine'] }])).toEqual([])
   })
 
-  it.fails('is silent in a plugin hooks.json, a managed file, a skill and an agent file', () => {
+  it('is silent in a plugin hooks.json, a managed file, a skill and an agent file', () => {
     expect(ids(files, subagents('nope'), 'plugins/p/hooks/hooks.json')).toEqual([])
     expect(ids(files, subagents('nope'), 'managed-settings.json')).toEqual([])
     const text = frontmatter(
@@ -197,11 +197,11 @@ describe(`${name}: a subagent name`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual([])
   })
 
-  it.fails('is silent when the settings file is not in a .claude folder', () => {
+  it('is silent when the settings file is not in a .claude folder', () => {
     expect(ids(files, subagents('nope'), 'config/settings.json')).toEqual([])
   })
 
-  it.fails('is silent when the agents folder cannot be read', () => {
+  it.skipIf(chmodCannotBlock)('is silent when the agents folder cannot be read', () => {
     const root = repo(files)
     const text = subagents('nope')
     withoutAccess(path.join(root, '.claude/agents'), () => {
@@ -209,14 +209,14 @@ describe(`${name}: a subagent name`, () => {
     })
   })
 
-  it.fails('is silent when one agent file cannot be read', () => {
+  it.skipIf(chmodCannotBlock)('is silent when one agent file cannot be read', () => {
     const root = repo({ ...files, '.claude/agents/b.md': agent('', 'b') })
     withoutAccess(path.join(root, '.claude/agents/b.md'), () => {
       expect(lintJson(name, subagents('nope'), path.join(root, SETTINGS_FILE))).toEqual([])
     })
   })
 
-  it.fails('is silent when the agents folder is a link out of the repository', () => {
+  it('is silent when the agents folder is a link out of the repository', () => {
     const outside = repo({ 'agents/out.md': agent('', 'out') })
     const root = repo({ '.claude/settings.json': '{}' })
     symlinkSync(path.join(outside, 'agents'), path.join(root, '.claude/agents'))
@@ -227,48 +227,48 @@ describe(`${name}: a subagent name`, () => {
 describe(`${name}: an MCP server name`, () => {
   const files = { '.mcp.json': mcp({ db: { command: 'x' } }) }
 
-  it.fails('reports a server that .mcp.json does not define', () => {
+  it('reports a server that .mcp.json does not define', () => {
     expect(ids(files, server('dbx'))).toEqual(['server'])
   })
 
-  it.fails('names the server, at the value', () => {
+  it('names the server, at the value', () => {
     const [message] = lint(files, server('dbx'))
     expect(message?.message).toBe(
       '".mcp.json" defines no MCP server named "dbx", so this hook has no server to call.',
     )
-    expect([message?.line, message?.column]).toEqual([1, 61])
+    expect([message?.line, message?.column]).toEqual([1, 64])
   })
 
-  it.fails('reads a .mcp.json above the settings file, and reports in settings.local.json', () => {
+  it('reads a .mcp.json above the settings file, and reports in settings.local.json', () => {
     expect(ids(files, server('dbx'), 'packages/a/.claude/settings.json')).toEqual(['server'])
     expect(ids(files, server('dbx'), '.claude/settings.local.json')).toEqual(['server'])
   })
 
-  it.fails('reports when .mcp.json has no mcpServers key', () => {
+  it('reports when .mcp.json has no mcpServers key', () => {
     expect(ids({ '.mcp.json': '{}' }, server('db'))).toEqual(['server'])
   })
 
-  it.fails('is silent for a server that .mcp.json defines', () => {
+  it('is silent for a server that .mcp.json defines', () => {
     expect(ids(files, server('db'))).toEqual([])
     expect(ids(files, server('db'), 'packages/a/.claude/settings.json')).toEqual([])
   })
 
-  it.fails('is silent for a plugin-scoped server name and a name in the option allow', () => {
+  it('is silent for a plugin-scoped server name and a name in the option allow', () => {
     expect(ids(files, server('plugin:my-plugin:db'))).toEqual([])
     expect(ids(files, server('mine'), SETTINGS_FILE, [{ allow: ['mine'] }])).toEqual([])
   })
 
-  it.fails('is silent when the repository has no .mcp.json, which a user or local server could replace', () => {
+  it('is silent when the repository has no .mcp.json, which a user or local server could replace', () => {
     expect(ids({}, server('dbx'))).toEqual([])
   })
 
-  it.fails('is silent when .mcp.json does not parse, is no object, or holds a bad mcpServers value', () => {
+  it('is silent when .mcp.json does not parse, is no object, or holds a bad mcpServers value', () => {
     for (const text of ['{', '[]', '"x"', mcp([]), mcp('x'), mcp(null), 'null']) {
       expect(ids({ '.mcp.json': text }, server('dbx')), text).toEqual([])
     }
   })
 
-  it.fails('is silent when one of two .mcp.json files cannot be read', () => {
+  it('is silent when one of two .mcp.json files cannot be read', () => {
     expect(
       ids(
         { '.mcp.json': mcp({}), 'packages/.mcp.json': '{' },
@@ -278,21 +278,21 @@ describe(`${name}: an MCP server name`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent when .mcp.json cannot be read', () => {
+  it.skipIf(chmodCannotBlock)('is silent when .mcp.json cannot be read', () => {
     const root = repo(files)
     withoutAccess(path.join(root, '.mcp.json'), () => {
       expect(lintJson(name, server('dbx'), path.join(root, SETTINGS_FILE))).toEqual([])
     })
   })
 
-  it.fails('is silent when .mcp.json is a link out of the repository', () => {
+  it('is silent when .mcp.json is a link out of the repository', () => {
     const outside = repo({ 'm.json': mcp({ db: {} }) })
     const root = repo({})
     symlinkSync(path.join(outside, 'm.json'), path.join(root, '.mcp.json'))
     expect(lintJson(name, server('dbx'), path.join(root, SETTINGS_FILE))).toEqual([])
   })
 
-  it.fails('is silent for a handler that is not an mcp_tool hook, or a server that is no string', () => {
+  it('is silent for a handler that is not an mcp_tool hook, or a server that is no string', () => {
     for (const handler of [
       { type: 'command', server: 'dbx' },
       { server: 'dbx' },
@@ -303,7 +303,7 @@ describe(`${name}: an MCP server name`, () => {
     }
   })
 
-  it.fails('is silent in a plugin hooks.json, a managed file and a file outside .claude', () => {
+  it('is silent in a plugin hooks.json, a managed file and a file outside .claude', () => {
     expect(ids(files, server('dbx'), 'plugins/p/hooks/hooks.json')).toEqual([])
     expect(ids(files, server('dbx'), 'managed-settings.json')).toEqual([])
     expect(ids(files, server('dbx'), 'config/settings.json')).toEqual([])
