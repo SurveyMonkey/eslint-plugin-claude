@@ -187,4 +187,6 @@ export const COMMAND_RULE_TOOLS: readonly string[] = ['Bash', 'Monitor', 'PowerS
  *  and `Monitor`, which uses the same rules. The notes on wrappers and
  *  environment runners are in that section. Source:
  *  https://code.claude.com/docs/en/permissions#bash, checked on 2026-10-10. */
-export const BASH_RULE_TOOLS: readonly string[] = ['Bash', 'Monitor']
+export const BASH_RULE_TOOLS: readonly string[] = COMMAND_RULE_TOOLS.filter(
+  (tool) => tool !== 'PowerShell',
+)

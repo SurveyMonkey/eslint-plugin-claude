@@ -163,7 +163,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-bash-exec-wrapper-prefix`](docs/rules/permissions-bash-exec-wrapper-prefix.md) | An exec wrapper such as `watch` has an exact-match allow rule, not a prefix rule | `error` | `error` |
 | [`claude/permissions-bash-runner-wildcard`](docs/rules/permissions-bash-runner-wildcard.md) | An environment runner such as `devbox run` has one allow rule for each inner command | `error` | `error` |
 | [`claude/permissions-bash-wildcard-before-subcommand`](docs/rules/permissions-bash-wildcard-before-subcommand.md) | The `*` of a Bash allow rule comes after the subcommand | `error` | `error` |
-| [`claude/permissions-end-conversation`](docs/rules/permissions-end-conversation.md) | A deny or ask rule does not name `EndConversation`, which it cannot block | `error` | `error` |
+| [`claude/permissions-end-conversation`](docs/rules/permissions-end-conversation.md) | A deny or ask rule does not name `EndConversation`, which it cannot block while another tool remains | `error` | `error` |
 | [`claude/permissions-protected-path-allow`](docs/rules/permissions-protected-path-allow.md) | An allow rule does not grant a write to a protected path or the removal of a critical path | `error` | `error` |
 
 ## Contributing

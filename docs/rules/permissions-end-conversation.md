@@ -36,7 +36,7 @@ The rule is silent for these entries:
   Code removes it too.[^behavior] A glob ask rule never prompts for it.[^globs] A file cannot show whether any other tool
   remains. So the rule reads the exact name only.
 - A rule with a specifier, as in `EndConversation(*)`. [`permissions-specifier-unsupported`](permissions-specifier-unsupported.md)
-  reports it.
+  reports it, except for a `param:value` specifier, which no rule reports.
 - A name that is spelled otherwise. [`permissions-unknown-tool`](permissions-unknown-tool.md) reports it.
 - An `allow` rule. The docs say that an allow rule that names `EndConversation` keeps the tool when every other
   tool is removed.[^behavior]

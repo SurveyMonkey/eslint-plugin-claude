@@ -26,15 +26,17 @@ It reads no hidden drop-in, because Claude Code ignores it.
 The rule reports three forms that Claude Code never honors.
 
 **An `Edit` allow rule for a protected path.** Claude Code never auto-approves a write to a small set of paths. The
-exception is `bypassPermissions` mode.[^protected] The safety check runs before Claude Code evaluates allow rules from
+exception is `bypassPermissions` mode, and interactive plan mode when bypass is available.[^protected] The safety check runs before Claude Code evaluates allow rules from
 settings. An entry such as `Edit(.claude/**)` does not change the result.[^protected]
 
 The protected directories are `.git`, `.config/git`, `.vscode`, `.idea`, `.husky`, `.cargo`, `.devcontainer`, `.yarn`,
 `.mvn` and `.claude`. The protected files include `.gitconfig`, `.bashrc`, `.zshrc`, `.envrc`, `.npmrc`, `lefthook.yml`,
-`.mcp.json` and `.claude.json`. The rule holds the full lists of the docs.
+`.mcp.json` and `.claude.json`. The rule holds the lists of the docs. It cannot hold a directory that you load with `--plugin-dir`.
 
-The docs name exceptions under `.claude`: its `worktrees`, `plans`, `jobs`, `projects` and `agent-memory` directories.
-The rule does not report a pattern under them.
+The docs name exceptions under `.claude`, "such as" these. The rule does not report a pattern at or under
+`.claude/worktrees`, `.claude/plans`, `.claude/jobs/<id>/tmp`, `.claude/projects/<project>/memory` or
+`.claude/agent-memory`. The docs limit the memory exceptions to Markdown files, and the rule cannot tell, so it skips
+the whole directory.
 
 The rule reports an `Edit` entry when the path starts at a protected path. It skips the anchor (`~/`, `/`, `./`) and any
 `**` at the start. These are reports: `Edit(.claude/**)`, `Edit(**/.git/**)`, `Edit(~/.zshrc)` and `Edit(.mcp.json)`.
@@ -43,7 +45,7 @@ The rule is silent in these cases:
 
 - The pattern does not start at a protected path, as in `Edit(src/.git/**)`.
 - The pattern is above a protected path, as in `Edit(**)`. It also covers paths that Claude Code can pre-approve.
-- The pattern starts with `//` and has no `**` after it. The rule cannot tell which directory it names.
+- The pattern starts with `//`, and the next segment is not `**`. The rule cannot tell which directory it names.
 
 **An `allowWrite` entry for a protected path of the sandbox.** The sandbox denies writes to the files from which Claude
 Code loads configuration and code. "An `allowWrite` entry can't lift a protected path."[^sandbox][^allowwrite]
@@ -61,15 +63,16 @@ these cases:
 
 - The entry is above a protected path, as in `.claude`. It also allows other paths, so it has some effect.
 - The entry starts with `/`, `//` or `~`. The rule cannot tell which directory it names.
-- The entry has a wildcard. On Linux and WSL2, Claude Code skips such an entry.[^allowwrite]
+- The entry has a wildcard, other than a final `/**`. The docs do not say which paths such an entry covers.[^allowwrite]
 - The file is a managed file. The docs do not say what a relative path means in managed settings.[^allowwrite]
 
 **A `Bash` allow rule for `rm` or `rmdir` on a critical path.** Claude Code never lets an allow rule approve an `rm` or
-`rmdir` command that targets a critical path.[^critical] The rule reports a rule with no wildcard whose target is a
-literal critical path: `/`, a direct child of the root such as `/usr`, `~`, `$HOME`, `.` or `..`.
+`rmdir` command that targets a critical path.[^critical] The rule reads `Bash` rules. It reports a rule with no wildcard whose target is a
+literal critical path: `/`, `~`, `$HOME`, `${HOME}` or `.`. It also reports a direct child of the root such as `/usr`,
+and `..`. The docs do not name these two, so they are a choice of the rule.
 
 A rule with a wildcard, such as `Bash(rm -rf /tmp/*)`, also approves other targets, so the rule does not report it. The
-rule does not model a target that holds a variable or a command substitution.
+rule does not model a target that holds a command substitution or another variable.
 
 The rule reads the last of two keys of one name, as `JSON.parse` does. It reads the `allow` list only. It skips a string
 that does not parse. [`permissions-rule-syntax`](permissions-rule-syntax.md) reports it.
@@ -78,7 +81,7 @@ that does not parse. [`permissions-rule-syntax`](permissions-rule-syntax.md) rep
 
 - `Write(.claude/**)` and `NotebookEdit(...)` rules are for [`permissions-path-rule-tool`](permissions-path-rule-tool.md).
   Claude Code never consults a path rule for those tools. This rule reads `Edit` rules only.
-- A path rule with a `param:value` specifier, or one in `deny` or `ask`, is not an allow rule. This rule does not read it.
+- A path rule in `deny` or `ask` is not an allow rule. This rule does not read it. A `param:value` specifier names no protected path.
 - [`permissions-bypass-mode-committed`](permissions-bypass-mode-committed.md) reports the mode in which protected-path writes
   are allowed.
 - An `allowWrite` entry for a path outside the project, such as `~/.bashrc`, is for the planned heuristic rule

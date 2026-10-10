@@ -25,6 +25,13 @@ const segmentsOf = (path: string) => path.split('/').filter((s) => s !== '' && s
 const startsWith = (segments: readonly string[], path: readonly string[]) =>
   path.every((segment, i) => segments[i] === segment)
 
+/** True when `segments` is at or under `exception`, where a `*` in
+ *  `exception` stands for any one segment. */
+const isUnder = (segments: readonly string[], exception: readonly string[]) =>
+  exception.every(
+    (segment, i) => segments[i] !== undefined && (segment === '*' || segments[i] === segment),
+  )
+
 /** The protected path that the pattern of an `Edit` rule is at or under, or
  *  null. The pattern must start at the protected path, after the anchor and
  *  any `**` at the start. A pattern that starts at a `//` root with no `**` names
@@ -42,9 +49,10 @@ function protectedEditPath(specifier: string): string | null {
   const segments = all.slice(start)
   const directory = PROTECTED_DIRECTORIES.find((path) => startsWith(segments, path))
   if (directory !== undefined) {
-    const next = segments[directory.length]
+    const below = segments.slice(directory.length)
     const isException =
-      directory[0] === '.claude' && next !== undefined && CLAUDE_DIRECTORY_EXCEPTIONS.includes(next)
+      directory[0] === '.claude' &&
+      CLAUDE_DIRECTORY_EXCEPTIONS.some((exception) => isUnder(below, exception))
     return isException ? null : directory.join('/')
   }
   return segments.length === 1
@@ -56,7 +64,7 @@ function protectedEditPath(specifier: string): string | null {
  *  under, or null. The rule reads an entry that is relative to the project. A
  *  path with a `/` at the start, and a `~/` path, have other first segments
  *  than a protected path. An entry with a wildcard is skipped, because the
- *  sandbox skips it on Linux. */
+ *  docs do not say which paths it covers. */
 function protectedSandboxPath(entry: string): string | null {
   if (entry.startsWith('/')) {
     return null

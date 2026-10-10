@@ -35,7 +35,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'wildcard' }> = {
     schema: [],
     messages: {
       wildcard:
-        '`{{rule}}` has a wildcard before the subcommand, so it also matches the options that sit at that position and approves them without a prompt. Write the exact value in place of the `*`, or put every `*` after the subcommand.',
+        '`{{rule}}` has a wildcard before the subcommand. The `*` also matches other text at that position, such as options, so the rule approves more than you intend. Write the exact value in place of the `*`, or put every `*` after the subcommand.',
     },
   },
   create(context) {

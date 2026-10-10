@@ -25,7 +25,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     schema: [],
     messages: {
       command:
-        '`{{rule}}` matches every {{tool}} command, so Claude Code runs each one without manual approval. Allow the commands that you need, such as `{{tool}}(npm test)`.',
+        '`{{rule}}` matches every {{tool}} command, so Claude Code allows each one. Allow the commands that you need, such as `{{tool}}(npm test)`.',
       fetch:
         '`{{rule}}` matches every fetch, so Claude fetches without a prompt, and sandboxed commands can reach any host. Allow the domains that you need.',
     },
