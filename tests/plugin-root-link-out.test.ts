@@ -158,7 +158,7 @@ describe('the cross-file rules of the plugin layer', () => {
     expect(lintPlugin('plugin-dependencies-resolve', dir, DEPENDENT)).toEqual([])
   })
 
-  check('plugin-npm-source-shrinkwrap reports in the plugin in the repository', () => {
+  it('plugin-npm-source-shrinkwrap reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(MANIFEST, {
       '.claude-plugin/marketplace.json': CATALOG,
       'package.json': '{}',
@@ -167,7 +167,7 @@ describe('the cross-file rules of the plugin layer', () => {
       'missing',
     ])
   })
-  checkLinked('plugin-npm-source-shrinkwrap stays silent for the linked plugin', () => {
+  linked('plugin-npm-source-shrinkwrap stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, { 'package.json': '{}' }, MANIFEST, {
       '.claude-plugin/marketplace.json': CATALOG,
     })

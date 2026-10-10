@@ -1,11 +1,19 @@
 // The plugin that holds a `plugin.json`, for a rule that lints the manifest
 // and reads the files around it. `readPlugin` finds the plugin root once. A
 // rule checks the plugin root in code (ADR 001, Decision 10).
+import { Stats } from 'node:fs'
 import path from 'node:path'
 import type { ValueNode } from './marketplace-json.ts'
 import { realSource } from './marketplace-source.ts'
 import { isPluginRoot } from './plugin-root.ts'
-import { isInside, readManifest, realDirectory, repositoryRoot, UNREADABLE } from './skill-tree.ts'
+import {
+  isInside,
+  readManifest,
+  realDirectory,
+  repositoryRoot,
+  statOf,
+  UNREADABLE,
+} from './skill-tree.ts'
 
 /** The plugin of a manifest. `root` is the plugin root as the linted path gives
  *  it, `realRoot` is its real path, and `bound` is the real path of the
@@ -95,6 +103,19 @@ export function lookup(
 export function locate(plugin: Plugin, text: string): string | typeof ESCAPES | undefined {
   const found = lookup(plugin, text)
   return found === MISSING ? undefined : found
+}
+
+/** True when `file` below the plugin root is a file, false when it is not there
+ *  or is another kind of entry, and undefined when the rule cannot see it. A
+ *  part of the path can be a link with no target, or have a real path out of the
+ *  repository. */
+export function isPluginFile(plugin: Plugin, file: string): boolean | undefined {
+  const real = realSource(plugin.root, plugin.realRoot, plugin.bound, path.join(plugin.root, file))
+  if (typeof real !== 'string') {
+    return real.kind === 'missing' ? false : undefined
+  }
+  const stat = statOf(real)
+  return stat instanceof Stats && stat.isFile()
 }
 
 /** A string in the JSON of a manifest. */
