@@ -44,8 +44,8 @@ The rule follows these Git rules:
   it. A line that sets `-filter`, `!filter`, `filter` or another `filter=` value ends the LFS
   filter for the files that it matches.
 - A pattern with no slash matches the name of a file at any depth below its `.gitattributes`.
-  A pattern with a slash is relative to the folder of that file. A slash at the start is
-  optional.
+  A pattern with a slash is relative to the folder of that file. The rule drops a slash at the
+  start, so `/x` matches only in that folder, and `x` matches at any depth.
 - `*` and `?` do not match a slash. `**` matches folders when a slash or the end of the pattern
   bounds it on each side. The start of the pattern is such a bound. A class such as `[a-c]` or `[!a]` matches one character. A backslash
   escapes the next character.

@@ -143,7 +143,7 @@ function globToRegExp(glob: string): RegExp | undefined {
   try {
     return new RegExp(`^${source}$`)
   } catch {
-    // A class with a range out of order, such as `[z-a]`, matches no file in Git.
+    // A range out of order, such as `[z-a]`, makes `RegExp` throw. The rule does not read it.
     return undefined
   }
 }

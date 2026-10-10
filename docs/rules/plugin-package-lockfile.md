@@ -44,7 +44,7 @@ The rule makes no report in these cases:
 - The rule cannot see a supported lockfile or the `package.json`. The real path of the entry can
   be out of the repository. A part of the path can be a link with no target.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
-  `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
+  the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
 
 Only the plugin root counts. The docs say the install runs when the root directory holds both
