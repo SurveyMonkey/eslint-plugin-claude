@@ -25,7 +25,7 @@ type MessageId =
   | 'injectIpv6'
   | 'denyWins'
 
-/** The fields that only a `mask` entry uses. `maskDuplicates` is a field of a file entry. */
+/** The mask fields of both entry kinds, except `mode`. A file entry also has `maskDuplicates`. */
 const MASK_ONLY = Object.keys(MASK_FIELDS).filter((field) => field !== 'mode')
 
 /** True when `host` is an IPv6 address that an `injectHosts` entry can never match: a bracketed
@@ -68,7 +68,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     const isManaged = kindOf(context.filename) === 'managed'
     return {
       Document(document) {
-        const objects = sourceOf(context.filename, context.sourceCode.text)
+        const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
         const own = objects[0] as SettingsObject
         const hasTls = objects.some(
           (object) =>
@@ -79,7 +79,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           objects.flatMap((object) => {
             const list = at(object, ['sandbox', 'credentials', 'envVars'])
             return Array.isArray(list)
-              ? list.flatMap((item) => (isObject(item) && item.mode === 'deny' ? [item.name] : []))
+              ? list.flatMap((item) =>
+                  isObject(item) && item.mode === 'deny' && typeof item.name === 'string'
+                    ? [item.name]
+                    : [],
+                )
               : []
           }),
         )
@@ -108,10 +112,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
               continue
             }
             const modeNode = mode?.value as ValueNode
-            if (!hasTls) {
+            // A file that cannot be read can hold the TLS setting.
+            if (!hasTls && complete) {
               context.report({ node: modeNode, messageId: 'noTls' })
             }
-            if (kind === 'envVars' && denied.has(entry.name)) {
+            if (kind === 'envVars' && typeof entry.name === 'string' && denied.has(entry.name)) {
               context.report({
                 node: modeNode,
                 messageId: 'denyWins',

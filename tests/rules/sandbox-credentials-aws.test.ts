@@ -221,8 +221,52 @@ describe(`${name}: the files that it reads`, () => {
   it('ignores a hidden sibling, and a sibling that does not read adds nothing', () => {
     const hidden = repo({ 'managed-settings.d/.20-b.json': creds({ envVars: [mask(KEY)] }) })
     expect(at(hidden, DROP_IN, BAD)).toEqual(['unpaired'])
+    const absent = repo({})
+    expect(at(absent, DROP_IN, BAD)).toEqual(['unpaired'])
     const bad = repo({ 'managed-settings.d/20-b.json': '[1]' })
-    expect(at(bad, DROP_IN, BAD)).toEqual(['unpaired'])
+    expect(at(bad, DROP_IN, BAD)).toEqual([])
+  })
+
+  it('is silent on an absence check when a file of the source does not read', () => {
+    const bad = repo({ 'managed-settings.d/20-b.json': '{' })
+    const reused = creds({ awsPairs: [pair('K', 'S'), pair('K', 'T')], envVars: [mask('K')] })
+    expect(at(repo({}), DROP_IN, reused)).toEqual(['reused'])
+    expect(at(bad, DROP_IN, reused)).toEqual([])
+    const whole = creds({ awsPairs: [pair('K', 'S')], envVars: [mask('K', { extract: 'x' })] })
+    expect(at(repo({}), DROP_IN, whole)).toEqual(['notWholeMask'])
+    expect(at(bad, DROP_IN, whole)).toEqual([])
+  })
+
+  it('still reports from present values when a file of the source does not read', () => {
+    const bad = repo({ 'managed-settings.d/20-b.json': '{' })
+    const text = creds(
+      {
+        files: [
+          { path: '~/.aws/credentials', mode: 'mask', extract: 'x', onExtractNoMatch: 'deny' },
+        ],
+      },
+      { filesystem: { disabled: true } },
+    )
+    expect(at(bad, DROP_IN, text)).toEqual(['denyReopened'])
+  })
+
+  it('is silent when two files disagree on filesystem.disabled', () => {
+    const files = [
+      { path: '~/.aws/credentials', mode: 'mask', extract: 'x', onExtractNoMatch: 'deny' },
+    ]
+    const root = repo({
+      'managed-settings.d/20-b.json': JSON.stringify({
+        sandbox: { filesystem: { disabled: false } },
+      }),
+    })
+    const text = creds({ files }, { filesystem: { disabled: true } })
+    expect(at(root, DROP_IN, text)).toEqual([])
+    expect(at(repo({}), DROP_IN, text)).toEqual(['denyReopened'])
+  })
+
+  it('does not report onExtractNoMatch deny on a file entry with no extract or decode', () => {
+    const files = [{ path: '~/.aws/credentials', mode: 'mask', onExtractNoMatch: 'deny' }]
+    expect(alone(creds({ files }, { filesystem: { disabled: true } }))).toEqual([])
   })
 
   it('adds nothing for a drop-in directory that is a link out of the repository', {
@@ -231,7 +275,7 @@ describe(`${name}: the files that it reads`, () => {
     const root = repo({})
     const outside = repo({ 'managed-settings.d/20-b.json': creds({ envVars: [mask(KEY)] }) })
     symlinkSync(path.join(outside, 'managed-settings.d'), path.join(root, 'managed-settings.d'))
-    expect(at(root, MANAGED, BAD)).toEqual(['unpaired'])
+    expect(at(root, MANAGED, BAD)).toEqual([])
   })
 
   it('does not read a value that is not an object', () => {

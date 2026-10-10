@@ -34,12 +34,13 @@ The rule is silent in these cases:
 - `sandbox.enabled` is not `true`, or a file of the same source sets it to `false`.
 - A file of the same source sets `autoAllowBashIfSandboxed` to `false`.
 - The ask rule has a specifier other than `*`, or the rule is for another tool.
+- The rule cannot read a file of the same source.
 
 ### What the rule does not check
 
 Claude Code still applies the ask rule in a few cases, and the rule reports the entry in these cases too:
 
-- In plan mode, the rule is not skipped.
+- In plan mode, Claude Code does not skip the ask rule.
 - A command that runs outside the sandbox, such as an excluded command, still prompts.
 - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` turns auto-allow off.
 
@@ -51,7 +52,7 @@ It reads a quoted `"true"` in `sandbox.enabled` as no value. A user file or the 
 
 The rule adds up the files of one source. For a project file, the source is the pair `.claude/settings.json` and
 `.claude/settings.local.json`. For a managed file, the source is `managed-settings.json` with the files of
-`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing.
+`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing to what a value proves. The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
 
 Fail, in `.claude/settings.json`:
 

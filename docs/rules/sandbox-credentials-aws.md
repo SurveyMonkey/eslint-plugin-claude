@@ -25,7 +25,7 @@ The rule lints the managed settings files only. It skips a hidden drop-in, becau
 Claude Code honors `awsPairs` and `mask` entries in user settings, managed settings and the `--settings` flag only.[^pairs]
 [`settings-key-scope`](settings-key-scope.md) reports `awsPairs` in a project file, and [`sandbox-scope`](sandbox-scope.md)
 reports a `mask` entry there. So the rule reads the managed files. The rule adds up the files of one managed source:
-`managed-settings.json` with the files of `managed-settings.d/`. A file that the rule cannot read adds nothing.
+`managed-settings.json` with the files of `managed-settings.d/`. A file that the rule cannot read adds nothing to what a value proves. The rule makes no `awsPairs` report and no lone-key report when it cannot read a file of the source.
 
 ### awsPairs
 
@@ -55,11 +55,11 @@ read block would not be enforced. This happens when filesystem isolation is off,
 re-opens the path.[^files-fields] Sandbox setup then stops when the pattern matches nothing.[^mask-files] The rule reports the
 value of `onExtractNoMatch` when `filesystem.disabled` is `true` in a file of the source, or when an `allowRead` entry equals the
 path or is a directory above it. The rule compares the text of the paths after it removes a final `/` or `/**`. It does not
-resolve `~`, a link or a glob. It does not read a `mask` entry that Claude Code applies as `deny` on macOS.
+resolve `~`, a link or a glob. The rule does not check the platform. On macOS with filesystem isolation on, Claude Code applies a `mask` entry as `deny` before the pattern runs. The report can then have no effect there.
 
 ### Not checked
 
-`sigv4` is for `sandbox-schema`. A name that no file of the repository defines gets no report, because a user file can define it.
+`sigv4` is for `sandbox-schema`. The rule does not check that `extract` or `decode` is set. It makes no report for a file entry that has neither, because no pattern runs then.
 
 Fail, in `managed-settings.json`:
 

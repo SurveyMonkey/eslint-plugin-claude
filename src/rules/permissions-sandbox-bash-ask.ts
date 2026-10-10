@@ -1,8 +1,9 @@
 // A bare `Bash` ask rule, or `Bash(*)`, is skipped for a command that runs in the sandbox while
 // `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is not false
 // (https://code.claude.com/docs/en/permissions#how-permissions-interact-with-sandboxing). The
-// rule adds up the project pair, or one managed source. A file that the rule cannot see adds
-// nothing. It does not read plan mode, an excluded command or `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`
+// rule adds up the project pair, or one managed source. The rule makes no report when it cannot
+// read a file of the source, because that file can set `autoAllowBashIfSandboxed` to `false`. It
+// does not read plan mode, an excluded command or `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`
 // (docs/rules/permissions-sandbox-bash-ask.md).
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -34,7 +35,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'skipped' }> = {
       if (asks.length === 0) {
         return
       }
-      const objects = sourceOf(context.filename, context.sourceCode.text)
+      const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
+      if (!complete) {
+        return
+      }
       const values = (key: string) => objects.map((object) => at(object, ['sandbox', key]))
       // A file that sets `enabled` to false, or `autoAllowBashIfSandboxed` to false, ends the skip.
       if (

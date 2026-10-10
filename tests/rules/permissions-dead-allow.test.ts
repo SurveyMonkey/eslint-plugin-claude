@@ -130,6 +130,12 @@ describe(`${name}: the project pair, on disk`, () => {
   const ALLOW = perms({ allow: ['Bash(npm test)'] })
   const DENY = perms({ deny: ['Bash'] })
 
+  it('names an ask rule of the other file as the cover', () => {
+    const root = repo({ [LOCAL]: perms({ ask: ['Bash'] }) })
+    const [message] = lintJson(name, ALLOW, path.join(root, PROJECT))
+    expect(message?.message).toContain('The ask rule `Bash`')
+  })
+
   it('adds up the deny rules of the other file, whichever file holds the allow rule', () => {
     const root = repo({ [PROJECT]: ALLOW, [LOCAL]: DENY })
     expect(at(root, PROJECT, ALLOW)).toEqual(['dead'])
