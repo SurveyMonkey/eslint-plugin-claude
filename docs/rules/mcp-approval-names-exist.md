@@ -12,7 +12,7 @@ generated:
 
 # `mcp-approval-names-exist`
 
-Name only servers of `.mcp.json` in the project server approval lists.
+Name only servers of `.mcp.json` in the approval lists of the project.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -45,7 +45,7 @@ holds. This rule reports a name that does not exist. A file can get both reports
 also matches a user file `~/.claude/settings.json`. The lists there name servers of any project, so
 turn the rule off for such a file.
 
-Fail, with a `.mcp.json` that declares `memory`, in `.claude/settings.local.json`:
+Fail, with a `.mcp.json` that declares `memory` and `github`, in `.claude/settings.local.json`:
 
 ```json
 {

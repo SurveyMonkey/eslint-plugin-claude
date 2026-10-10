@@ -26,7 +26,8 @@ when the servers come from one plugin or from two plugins.[^components] Claude C
 warning `LSP server "<name>" is not used for <ext> files` in the `/plugin` **Errors** tab.[^components]
 
 The rule lints the marketplace file of a repository. For each entry with a relative `source`, it
-reads the plugin at that path. It uses the reader of the other marketplace rules.
+reads the plugin at that path. The path must resolve inside the repository. A plugin with no
+manifest still counts, and the rule reads its `.lsp.json`.
 
 Then it reads the servers of the plugin. These are in `.lsp.json` at the plugin root, in each
 `.json` file that `lspServers` names, and in each inline map.[^manifest] A server name that a
@@ -49,7 +50,7 @@ The rule reads only the files that it can see (ADR 001, Decision 14). It adds no
 - A server file that is not there, does not parse, or cannot be read.
 
 The rule does not read the `lspServers` of the marketplace entry itself. It does not read a plugin
-that no marketplace lists. Two entries with one source count as one plugin. The match of an
+that no marketplace lists. Two entries that resolve to one directory count as one plugin. The match of an
 extension is exact, with the letter case as written.
 
 [`lsp-duplicate-server-name`](lsp-duplicate-server-name.md) checks the names of the servers of one

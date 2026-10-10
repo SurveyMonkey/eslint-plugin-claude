@@ -27,9 +27,11 @@ earlier server never runs.
 
 The `mcpServers` key takes a `.json` file path, an inline map, or an array that mixes them.[^manifest]
 The rule reads `.mcp.json` at the plugin root, each `.json` file that `mcpServers` names, and each
-inline map. It reports a name that a later source repeats. The report is on the later declaration. This is the name of an inline server, or the path of a file.
+inline map. It reports a name that a later source repeats. The report is on the later
+declaration. This is the name of an inline server, or the path of a file.
 The message names the source of the first declaration.
 
+A file that the manifest names twice, or names with the path of the root file, is read once.
 A source declares a name once. When one file has two keys of one name, the rule reads the last,
 as `JSON.parse` does. So that file alone gives no report. A plugin file may leave out the
 `mcpServers` wrapper, and the rule reads both forms.[^components]

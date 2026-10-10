@@ -44,8 +44,7 @@ the file that holds the allow entry.
 
 The rule reports only from what the repository holds. A user file merges at run time too, and the
 rule does not read it. A sibling that the rule cannot read adds nothing (ADR 001, Decision 14).
-A managed source with one such file gives no sibling, so the rule then reports from the linted
-file alone.
+The other files of the same managed source still count.
 
 The rule reads no hidden drop-in, because Claude Code ignores it. When a file has two lists of one
 name, the rule reads the last, as `JSON.parse` does. It does the same for two keys of one name in
