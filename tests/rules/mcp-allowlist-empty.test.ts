@@ -58,6 +58,14 @@ it('reports when the siblings hold an empty list, no list, or a list that is not
   ])
   expect(run(allow(), managed, {})).toEqual(['empty'])
 })
+it('reports when a sibling list is a string or null, and silent when any sibling has entries', () => {
+  for (const value of ['abc', null]) {
+    const files = { [managed]: JSON.stringify({ allowedMcpServers: value }) }
+    expect(run(allow(), dropIn, files)).toEqual(['empty'])
+  }
+  const files = { [managed]: allow(), 'managed-settings.d/30-c.json': allow({ serverName: 'a' }) }
+  expect(run(allow(), dropIn, files)).toEqual([])
+})
 it('stays silent when a sibling cannot be read, as it can hold entries', () => {
   expect(run(allow(), dropIn, { [managed]: '{ not json' })).toEqual([])
   expect(run(allow(), dropIn, { [managed]: '[1]' })).toEqual([])

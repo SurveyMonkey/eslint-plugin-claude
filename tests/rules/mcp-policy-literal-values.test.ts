@@ -28,6 +28,17 @@ it('reports a variable in a serverCommand, on the entry', () => {
   expect(found.map((m) => m.messageId)).toEqual(['variable'])
   expect(found[0]?.message).toContain(`\${HOME}`)
 })
+it('names the key and the first reference in the message', () => {
+  const url = lint(allow({ serverUrl: `\${A}/\${B}` }))[0]?.message
+  expect(url).toContain(`The serverUrl entry uses \${A}.`)
+  const command = lint(allow({ serverCommand: ['x', `\${C}`] }))[0]?.message
+  expect(command).toContain(`The serverCommand entry uses \${C}.`)
+})
+it('stays silent for an unterminated reference, and for a reference split across items', () => {
+  expect(run(allow({ serverUrl: `https://x.test/\${HOST` }))).toEqual([])
+  expect(run(allow({ serverCommand: [`\${`, '}'] }))).toEqual([])
+  expect(run(allow({ serverCommand: [`a\${`, 'b}'] }))).toEqual([])
+})
 it('reports a variable with a default, in the denylist and in a drop-in', () => {
   expect(run(deny({ serverUrl: `https://\${HOST:-x.test}/*` }))).toEqual(['variable'])
   expect(run(allow({ serverUrl: `\${SCHEME}://x.test` }), dropIn)).toEqual(['variable'])
