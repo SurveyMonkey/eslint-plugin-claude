@@ -1,5 +1,5 @@
-// The split of a shell command into subcommands, for a rule that reads an injected command or a
-// Bash rule as text. The split follows the compound commands of the permissions page.
+// The split of a shell command into subcommands, for a rule that reads an injected command as
+// text. The split follows the compound commands of the permissions page.
 // It is a heuristic, not a shell parser.
 
 /** Commands that run without a permission prompt, from the permissions page: "The set includes".
@@ -23,12 +23,12 @@ export const READ_ONLY = new Set([
   'git',
 ])
 
-/** The words that start a shell block, and the head of a `case`. They are not commands. The rule
+/** The words that start a shell block, and the head of a `case`. They are not commands. The split
  *  drops them from the start of a subcommand and judges the rest. A word alone on its line leaves
  *  nothing. `(` and `{` need no space after them. */
 const OPENING =
   /^(?:(?:if|then|else|elif|do|while|until|!)(?![\w-])|[({]|case\s.*?\sin(?![\w-]))\s*/
-/** The pattern of a `case` arm, such as `a)` or `*)`. The rule drops it only in a text with `case`. */
+/** The pattern of a `case` arm, such as `a)` or `*)`. The split drops it only in a text with `case`. */
 const ARM = /^[\w*.\-"']+\)\s*/
 // The parts of a command that hide a separator: a quoted string, and a redirection such as
 // `2>&1` or `&>`.
@@ -40,7 +40,7 @@ const SEPARATOR = /&&|\|\||\|&|[;|&\n]/g
 // The patterns of a `case` arm that has a `|`, at the start of a line.
 const ARM_ALTERNATION = /^([ \t]*)[\w*."'-]+(?:\|[\w*."'-]+)+\)/gm
 
-// A comment line. The rule drops it first, because its text can hold a quote or a separator.
+// A comment line. The split drops it first, because its text can hold a quote or a separator.
 const COMMENT_LINE = /^[ \t]*#.*$/gm
 
 /** The subcommands of `text`. A line break after a backslash does not split. */

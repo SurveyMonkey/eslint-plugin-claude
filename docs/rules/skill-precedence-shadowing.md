@@ -23,8 +23,8 @@ names a skill.
 
 ## Rule details
 
-When a skill name is in two of the enterprise, personal and project locations, the enterprise
-skill wins over the personal skill, and the personal skill wins over the project skill. With a
+A skill name can be in two of the enterprise, personal and project locations. The enterprise
+skill wins over the personal skill. The personal skill wins over the project skill. With a
 `deploy` in `~/.claude/skills/` and in the project `.claude/skills/`, `/deploy` runs the personal
 skill.[^resolve] A skill wins over a file in `.claude/commands/` of the same name.[^resolve] The
 features page gives the same order.[^layer]

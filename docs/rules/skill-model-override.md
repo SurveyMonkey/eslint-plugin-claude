@@ -25,8 +25,8 @@ session.
 
 The field `model` sets the model for the turn that runs the skill. The override ends at the end
 of the turn, and the session model resumes at the next prompt.[^field] Each model has its own
-prompt cache. When the model of the skill differs from the session model, the turn is a model
-switch, and the next request reads the whole conversation history with no cache hit.[^switch]
+prompt cache. The model of the skill can differ from the session model. Then the turn is a model
+switch. The next request reads the whole conversation history with no cache hit.[^switch]
 
 The rule reports a `model` that is a string and is not `inherit`. The value `inherit` keeps the
 active model. The report is on the key and the value. The rule cannot know the model of the
