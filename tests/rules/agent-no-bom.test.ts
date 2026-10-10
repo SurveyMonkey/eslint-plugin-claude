@@ -1,6 +1,6 @@
 // Claude Code before v2.1.239 silently ignores an agent file that starts with
 // a UTF-8 byte-order mark. ESLint strips the mark before a rule runs, so the
-// rule reads the first bytes of the file on disk. The files are on disk.
+// rule reads the first bytes of the file on disk.
 import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -57,12 +57,12 @@ describe('agent-no-bom', () => {
 
   describe('compares minVersion with 2.1.239', () => {
     const file = write('.claude/agents/a.md', BOM + agentText(''))
-    for (const version of ['1.9.9', '2.0.99', '2.1.238']) {
+    for (const version of ['1.9.9', '2.0.99', '2.1.99', '2.1.238']) {
       it(`reports ${version}`, () => {
         expect(lint([{ minVersion: version }], file)).toHaveLength(1)
       })
     }
-    for (const version of ['2.1.239', '2.1.240', '2.2.0', '3.0.0']) {
+    for (const version of ['2.1.239', '2.1.240', '2.1.1000', '2.2.0', '3.0.0']) {
       it(`stays silent for ${version}`, () => {
         expect(lint([{ minVersion: version }], file)).toEqual([])
       })
@@ -79,6 +79,12 @@ describe('agent-no-bom', () => {
     it('for a file with no BOM', () => {
       const file = write('.claude/agents/a.md', agentText(''))
       expect(lint(OLD, file, agentText(''))).toEqual([])
+    })
+
+    it('for a file that starts like a BOM but is not one', () => {
+      const code = '\ufffe' + agentText('')
+      const file = write('.claude/agents/a.md', code)
+      expect(lint(OLD, file, code)).toEqual([])
     })
 
     it('for a file that is shorter than a BOM', () => {
@@ -119,6 +125,9 @@ describe('agent-no-bom', () => {
   it('rejects a minVersion that is not major.minor.patch', () => {
     const file = write('.claude/agents/a.md', BOM + agentText(''))
     expect(() => lint([{ minVersion: 'latest' }], file)).toThrow(/should match pattern/)
+    for (const bad of ['v2.1.0', '2.1.0-beta', '2.1.0.1']) {
+      expect(() => lint([{ minVersion: bad }], file)).toThrow(/should match pattern/)
+    }
     expect(() => lint([{ other: 1 }], file)).toThrow()
   })
 })

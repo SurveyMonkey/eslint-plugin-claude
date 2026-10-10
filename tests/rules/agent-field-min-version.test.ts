@@ -16,6 +16,7 @@ const file = (fields: string, minVersion?: string, filename = local) => ({
 
 markdownTester.run('agent-field-min-version', ruleOf('agent-field-min-version'), {
   valid: [
+    file('omitClaudeMd: true\n', '2.1.1000'),
     // The rule is inactive with no minVersion.
     file('omitClaudeMd: true\n'),
     { ...file('omitClaudeMd: true\n'), options: [{}] },
@@ -110,6 +111,8 @@ markdownTester.run('agent-field-min-version', ruleOf('agent-field-min-version'),
     },
     // A list entry value is a value, so omitClaudeMd with any value is set.
     { ...file('omitClaudeMd: false\n', '2.1.270'), errors: [{ messageId: 'needsVersion' }] },
+    // The version compare reads numbers, not text: 99 is below 271.
+    { ...file('omitClaudeMd: true\n', '2.1.99'), errors: [{ messageId: 'needsVersion' }] },
     // Each Boolean form below v2.1.218.
     ...['yes', 'no', 'on', 'off', '1', '0', 'Yes', 'OFF'].map((form) => ({
       ...file(`background: ${form}\n`, '2.1.217'),
@@ -154,6 +157,9 @@ describe('agent-field-min-version options', () => {
     const lint = (options: unknown[]) =>
       lintRule('agent-field-min-version', options, agentText(''), '/repo/.claude/agents/a.md')
     expect(() => lint([{ minVersion: '2.1' }])).toThrow(/should match pattern/)
+    for (const bad of ['v2.1.0', '2.1.0-beta', '2.1.0.1']) {
+      expect(() => lint([{ minVersion: bad }])).toThrow(/should match pattern/)
+    }
     expect(() => lint([{ minVersion: 2 }])).toThrow()
     expect(lint([{ minVersion: '2.1.0' }])).toEqual([])
   })
