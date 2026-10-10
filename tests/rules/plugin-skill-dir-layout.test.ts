@@ -89,6 +89,36 @@ describe(RULE, () => {
     expect(messages).toHaveLength(1)
   })
 
+  linked('reports a loose file of a plugin that the lint reaches through a link', () => {
+    const { code, top } = pluginTree(
+      { name: 'p', skills: './extra' },
+      { 'extra/loose.md': '# L\n' },
+      'real/',
+    )
+    link(top, 'alias', 'real')
+    expect(lint(path.join(top, 'alias'), code).map((m) => m.message)).toEqual([
+      message('loose.md', './extra'),
+    ])
+  })
+
+  check('reports a skill.md of the wrong letter case as a loose file', () => {
+    const messages = run('./extra', { 'extra/skill.md': '# S\n' })
+    expect(messages.map((m) => m.message)).toEqual([message('skill.md', './extra')])
+  })
+
+  check('reports loose files in locale order', () => {
+    const messages = run('./extra', {
+      'extra/c.md': '# C\n',
+      'extra/B.md': '# B\n',
+      'extra/a.md': '# A\n',
+    })
+    expect(messages.map((m) => m.message)).toEqual([
+      message('a.md', './extra'),
+      message('B.md', './extra'),
+      message('c.md', './extra'),
+    ])
+  })
+
   linked('reports a directory that is a link inside the plugin', () => {
     const { dir, code, top } = withSkills('./alias', { 'store/loose.md': '# L\n' })
     link(top, 'alias', 'store')

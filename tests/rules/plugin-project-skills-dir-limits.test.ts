@@ -142,6 +142,10 @@ describe(`${RULE} (silent)`, () => {
       { mcpServers: [{ s: {} }, './own.json'] },
     ],
     ['a file that is not on disk, in the plugin', { mcpServers: './ghost.json' }],
+    ['a name that holds a bundle extension and goes on', { mcpServers: './server.mcpb.json' }],
+    ['a name that ends in letters of an extension', { mcpServers: './adxt' }],
+    ['a folder named like a bundle extension', { mcpServers: './mcpb/servers.json' }],
+    ['a URL that is no bundle', { mcpServers: 'https://example.com/servers.json' }],
     ['no components', {}],
     ['a different spelling of the key', { Monitors: [], MCPServers: './a.mcpb' }],
     ['mcpServers as a number', { mcpServers: 3 }],
@@ -200,6 +204,12 @@ describe(`${RULE} (silent)`, () => {
     const elsewhere = tree({ 'monitors.json': '[]' })
     const { dir, code } = pluginTree({ name: 'p' }, {}, AT)
     link(dir, 'monitors/monitors.json', path.join(elsewhere, 'monitors.json'))
+    expect(lint(dir, code)).toEqual([])
+  })
+
+  linked('makes no report for a default monitors file that is a link out of the plugin', () => {
+    const { dir, code, top } = pluginTree({ name: 'p' }, { '../../../shared/m.json': '[]' }, AT)
+    link(dir, 'monitors/monitors.json', path.join(top, 'shared', 'm.json'))
     expect(lint(dir, code)).toEqual([])
   })
 

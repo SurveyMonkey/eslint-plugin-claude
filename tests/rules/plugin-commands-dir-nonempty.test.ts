@@ -73,6 +73,17 @@ describe(RULE, () => {
     expect(lint(dir, code)).toHaveLength(1)
   })
 
+  linked('reports a directory with a link to an empty folder of the repository', () => {
+    const { dir, code, top } = pluginTree(
+      { name: 'p', commands: './cmds' },
+      { 'cmds/.gitkeep': '' },
+      'plugins/p/',
+    )
+    mkdirSync(path.join(top, 'other'))
+    link(dir, 'cmds/sub', '../../../other')
+    expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
+  })
+
   linked('reports a directory that is a link inside the plugin', () => {
     const { dir, code, top } = pluginTree(
       { name: 'p', commands: './alias' },
