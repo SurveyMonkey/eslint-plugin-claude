@@ -37,9 +37,8 @@ const DIRECTORY_COMMANDS = ['cd', 'pushd', 'set-location', 'push-location']
 /** What the word after the flag `flag` of the interpreter `program` is:
  *  - `line`: a shell command line, which the rule reads again;
  *  - `code`: code of another language, which holds no path;
- *  - `file`: a script file;
  *  - undefined: the flag does not take code. */
-function flagKind(program: string, flag: string): 'line' | 'code' | 'file' | undefined {
+function flagKind(program: string, flag: string): 'line' | 'code' | undefined {
   const lower = flag.toLowerCase()
   if (SHELLS.includes(program)) {
     // A short flag cluster that holds `c`, such as `-lc`. `-e` and `-p` are no code flags for a shell.
@@ -48,9 +47,6 @@ function flagKind(program: string, flag: string): 'line' | 'code' | 'file' | und
   if (POWERSHELLS.includes(program)) {
     if (['-c', '-command'].includes(lower)) {
       return 'line'
-    }
-    if (['-file', '-f'].includes(lower)) {
-      return 'file'
     }
     return ['-ec', '-encodedcommand'].includes(lower) ? 'code' : undefined
   }
@@ -88,13 +84,18 @@ function relativeIn(words: string[]): string | undefined {
     return undefined
   }
   const rest = words.slice(at + 1)
+  // A PowerShell `-File` flag names the script, after flags with values such as `-ExecutionPolicy Bypass`.
+  const file = POWERSHELLS.includes(base)
+    ? rest.findIndex((word) => ['-file', '-f'].includes(word.toLowerCase()))
+    : -1
+  if (file !== -1) {
+    const script = rest[file + 1]
+    return script !== undefined && isRelativePath(script) ? script : undefined
+  }
   for (const [index, word] of rest.entries()) {
     if (word.startsWith('-')) {
       const kind = flagKind(base, word)
       const next = rest[index + 1]
-      if (kind === 'file') {
-        return next !== undefined && isRelativePath(next) ? next : undefined
-      }
       if (kind === 'line') {
         return next === undefined ? undefined : relativeInLines(commandsOf(next))
       }

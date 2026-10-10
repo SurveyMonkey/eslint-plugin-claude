@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-matcher-name-unresolved, which reports a hook that names a tool, a subagent or an MCP server that Claude Code or the repository does not define, because the hook never fires.
+description: The ESLint rule claude/hooks-matcher-name-unresolved, which reports a hook that names a tool, a subagent or an MCP server that Claude Code or the repository does not define.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [10]
@@ -21,9 +21,8 @@ Name a tool, a subagent and an MCP server that exist in a hook.
 ## Rule details
 
 A hook that names a tool or a subagent that does not exist never fires, and Claude Code gives no warning. The docs
-say that "a misspelled tool name produces a matcher that matches nothing".[^check] An MCP hook with an unknown
-server does fire, but it has no server to call. The rule checks three names. It reads only
-an exact-match value, so a regular expression gets no report.
+say that "a misspelled tool name produces a matcher that matches nothing".[^check] The rule checks three names. It
+reads only an exact-match value, so a regular expression gets no report.
 
 - **A tool name.** The rule reads the matcher of a group on a tool event. It reports a value that is not a built-in
   tool in `src/data/tool-names.ts`, `Task`, `MultiEdit` or `Cd`. A name that starts with `mcp__` is an MCP tool,
@@ -31,17 +30,20 @@ an exact-match value, so a regular expression gets no report.
 - **A subagent name.** The rule reads the matcher of a group on `SubagentStart` and `SubagentStop`. The matcher
   is the `name` of a subagent.[^subagents] The rule compares it with the built-in agents[^builtin] and with the
   `name` of each file in `.claude/agents/`, in the folder of the settings file and in each folder above it, up to
-  the repository root. The comparison ignores case, because the docs do not say if Claude Code compares agent
+  the repository root. Claude Code skips an agent file with no `name`, a `name` that starts with `-`, holds `:` or
+  is longer than 256 characters, a `name` and no `description`, or YAML that does not parse (see "Subagent files
+  Claude Code skips" on the [subagents page](https://code.claude.com/docs/en/sub-agents)). Such a file defines no
+  agent, so the rule ignores it. The comparison ignores case, because the docs do not say if Claude Code compares agent
   names with case.
-- **An MCP server name.** The rule reads the `server` of an `mcp_tool` handler. It must be "the name of a configured
+- **An MCP server name.** The rule reads the `server` of an `mcp_tool` handler. The docs call it the "Name of a configured
   MCP server".[^mcp] The rule compares it with the `mcpServers` keys of `.mcp.json`, in the same folders. Project
   servers go in `.mcp.json`, because `settings.json` does not read an `mcpServers` key.[^causes] A plugin-scoped
   name such as `plugin:my-plugin:db` gets no report.
 
 The agent and server checks rest on an absence, so they read inside the repository only (ADR 001, Decision 14).
 The rule makes no report for a kind of name when it cannot read one source of that kind. These cases count: a
-folder or a file with no read access, a link that leads out of the repository, an agent file with no frontmatter
-`name`, and a `.mcp.json` that does not parse. The rule also makes no report when the repository has no agent
+folder or a file with no read access, a link that leads out of the repository, a link with no target in the
+agents folder (an agent can hide behind it), and a `.mcp.json` that does not parse. The rule also makes no report when the repository has no agent
 file or no `.mcp.json`, because a user-level agent or a user-scope server can fill the gap.
 
 The rule is `off` in `recommended`, because it is a heuristic. A user-level agent in `~/.claude/agents/`, a server

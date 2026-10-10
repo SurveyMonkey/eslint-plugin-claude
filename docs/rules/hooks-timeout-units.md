@@ -26,8 +26,8 @@ hook. A value of `5000` waits for about 83 minutes. A person who wrote it probab
 The rule reports a numeric `timeout` at or above the option `millisecondsFrom`. It reports at the number. The
 message gives the value in seconds, rounded, for the case that the person meant milliseconds.
 
-The docs set no upper limit for `timeout`. The default of 1000 is the choice of the plugin, not a docs value. A
-value of 1000 seconds is more than any default in the docs, so it is an unusual choice for a hook.
+The docs set no general upper limit for `timeout`. They cap the `SessionEnd` budget at 60 seconds.
+The default of 1000 is the choice of the plugin, not a docs value. A value of 1000 seconds is more than any default in the docs, so it is an unusual choice for a hook.
 
 The rule is `off` in `recommended`, because it is a heuristic. A hook that needs a long wait can set a high
 value, and the rule then reports a correct file. Raise the option, or turn the rule off, for that case.

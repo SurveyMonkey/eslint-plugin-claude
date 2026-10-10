@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-matcher-unanchored-regex, which reports a tool-event matcher that is a regular expression with no leading anchor and that also matches another built-in tool, such as Edit.* and NotebookEdit.
+description: The ESLint rule claude/hooks-matcher-unanchored-regex, which reports a tool-event matcher that is a regular expression with an unanchored branch that also matches another built-in tool, such as Edit.* and NotebookEdit.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [10]
@@ -26,19 +26,20 @@ with `RegExp.prototype.test`, which succeeds on a match anywhere in the value. S
 
 The rule reads the `matcher` of a group on `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`
 and `PermissionDenied`. It tests the pattern against the built-in tool names in `src/data/tool-names.ts`. It
-reports at the `matcher` value when the pattern matches a tool that the same pattern with a leading `^` does not
+reports at the `matcher` value when the pattern matches a tool that the pattern wrapped as `^(?:pattern)` does not
 match. The message names the extra tools.
 
 The rule is `off` in `recommended`. The extra match is the documented behavior, and a person can want it. A
 pattern with `^` before every branch is the docs pattern `^Notebook`, so the rule makes no report for it. A
-pattern such as `^Read|Edit` has a branch without `^`, so the rule reports it. A missing `$` is
-no fault either.
+pattern such as `^Read|Edit` is reported, because its `Edit` branch has no `^` and also matches `NotebookEdit`.
+A pattern such as `^Read|Glob` is not, because no other tool name holds `Glob`. A missing `$` is no fault either.
 
 The rule makes no report in these cases:
 
 - The matcher holds exact-match characters only, such as `Edit|Write`. Claude Code compares those as exact strings.
 - The pattern matches no tool that its form with a leading `^` does not match, such as `mcp__memory__.*`.
-- The matcher is `*`, which matches all, or it is not a valid regular expression, or it has the form `Tool(specifier)`.
+- The matcher is `*`, which the docs define as match all.
+- The matcher is not a valid regular expression, or it has the form `Tool(specifier)`.
   [`hooks-matcher-syntax`](hooks-matcher-syntax.md) reports both.
 - The event does not match on a tool name.
 

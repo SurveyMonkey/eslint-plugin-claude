@@ -1,5 +1,5 @@
-// A hook that names a tool, a subagent or an MCP server that does not exist never fires, and Claude Code does
-// not warn (docs/rules/hooks-matcher-name-unresolved.md). The rule checks three names:
+// A hook that names a tool or a subagent that does not exist never fires, and Claude Code does not warn
+// (docs/rules/hooks-matcher-name-unresolved.md). The rule checks three names:
 // - a value of a tool-event matcher, against the tools of the tools reference;
 // - a value of a `SubagentStart` or `SubagentStop` matcher, against the built-in agents and the agent files of the
 //   repository;

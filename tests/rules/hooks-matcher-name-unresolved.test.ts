@@ -3,7 +3,7 @@
 // (https://code.claude.com/docs/en/debug-your-config#check-hooks). A `SubagentStart` and `SubagentStop`
 // matcher is the `name` of a subagent
 // (https://code.claude.com/docs/en/sub-agents#project-level-hooks-for-subagent-events). The `server` of an
-// `mcp_tool` hook is "the name of a configured MCP server"
+// `mcp_tool` hook is the "Name of a configured MCP server"
 // (https://code.claude.com/docs/en/hooks#mcp-tool-hook-fields). The rule reads the agent files and the
 // `.mcp.json` files of the repository. It reports no name of a kind that it cannot read in full.
 import { symlinkSync } from 'node:fs'
@@ -125,15 +125,38 @@ describe(`${name}: a tool name`, () => {
   })
 
   it('does not take the name of an agent file that Claude Code skips', () => {
-    expect(
-      ids(
-        {
-          '.claude/agents/r.md': agent('', 'reviewer'),
-          '.claude/agents/o.md': '---\nname: gone\n---\n',
-        },
-        subagents('gone'),
-      ),
-    ).toEqual(['agent'])
+    const long = 'b'.repeat(257)
+    for (const [matcher, other] of [
+      ['gone', '---\nname: gone\n---\n'],
+      ['-b', agent('', '-b')],
+      [long, agent('', long)],
+    ] as const) {
+      expect(
+        ids(
+          { '.claude/agents/r.md': agent('', 'reviewer'), '.claude/agents/o.md': other },
+          subagents(matcher),
+        ),
+        matcher,
+      ).toEqual(['agent'])
+    }
+  })
+
+  it('is silent when the only agent files are skipped', () => {
+    for (const other of [
+      '---\nname: gone\n---\n',
+      agent('', '-b'),
+      agent('', 'b:c'),
+      agent('', 'b'.repeat(257)),
+      agent('', 'b'.repeat(256)).replace('d\n', ''),
+    ]) {
+      expect(ids({ '.claude/agents/o.md': other }, subagents('nope')), other).toEqual([])
+    }
+  })
+
+  it('takes a name of 256 characters', () => {
+    const long = 'b'.repeat(256)
+    expect(ids({ '.claude/agents/o.md': agent('', long) }, subagents(long))).toEqual([])
+    expect(ids({ '.claude/agents/o.md': agent('', long) }, subagents('nope'))).toEqual(['agent'])
   })
 
   it('is silent for a name in the option allow', () => {
@@ -475,10 +498,11 @@ describe(`${name}: a link with no target in the agents folder`, () => {
   })
 
   it('is silent when the agents folder is the link', () => {
+    const nested = 'packages/a/.claude/settings.json'
     const text = subagents('nope')
-    const root = repo({ [SETTINGS_FILE]: text })
-    symlinkSync(path.join(root, 'gone'), path.join(root, '.claude/agents'))
-    expect(lintJson(name, text, path.join(root, SETTINGS_FILE))).toEqual([])
+    const root = repo({ ...known, [nested]: text })
+    symlinkSync(path.join(root, 'gone'), path.join(root, 'packages/a/.claude/agents'))
+    expect(lintJson(name, text, path.join(root, nested))).toEqual([])
   })
 
   it('is silent when a .claude folder above the settings file is the link', () => {

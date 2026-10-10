@@ -31,9 +31,16 @@ each handler.
 
 A path starts in the working directory when it has a slash and does not start with a slash, a variable, `~` or a
 drive letter. The rule checks the program of each simple command, such as `./scripts/a.sh`. It checks the first
-argument that is not a flag, and stops at `-c` or `-e`, when the program is `bash`, `sh`, `zsh`, `node`, `python`, `python3`, `ruby`,
-`pwsh` or `powershell`. It reads shell form and exec form. It stops at a `cd`, `pushd` or `Set-Location`, because a path after one can
-resolve inside the plugin.
+argument that is not a flag, when the program is `bash`, `sh`, `zsh`, `node`, `python`, `python3`, `ruby`, `pwsh`
+or `powershell`. It reads shell form and exec form.
+
+A flag that takes inline code ends the check for the interpreters that use it as code: `-e`, `-p` and `--eval` for
+`node`, `-c` for `python`, `-e` for `ruby`, and `-EncodedCommand` for PowerShell. The flag `-c` of a shell
+(`bash -c`, `sh -lc`) and `-Command` of PowerShell take a command line, so the rule reads that line again. A
+PowerShell `-File` flag names the script. A command that changes the directory (`cd`, `pushd`, `Set-Location`,
+`Push-Location`, in any case) ends the check for the rest of the line, because a path after one can resolve inside
+the plugin. The rule still reads the target of that command. A path that starts with `%` is a variable and gets no
+report.
 
 The rule is `off` in `recommended`, because it is a heuristic. It cannot see where a file really is.
 
