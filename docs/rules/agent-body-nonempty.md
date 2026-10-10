@@ -44,8 +44,9 @@ read gives no report for a file outside `agents/`. The rule reads no file out of
 The rule is silent in these cases:
 
 - The body has text. A heading, a comment or a code block is text.
-- The file has no frontmatter, or the frontmatter does not parse. The rule
-  [`agent-frontmatter-valid`](agent-frontmatter-valid.md) reports a local agent of that kind.
+- The file has no frontmatter, or the frontmatter does not parse. No rule reports a file with no
+  frontmatter. The rule [`agent-frontmatter-valid`](agent-frontmatter-valid.md) reports
+  frontmatter that does not parse in a local agent.
 - The file is not an agent file, such as `docs/agents/a.md`.
 
 Fail:

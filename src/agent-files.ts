@@ -67,7 +67,9 @@ function directoriesUp(file: string): string[] {
  *  is `UNREADABLE` when the check cannot tell which files load: the manifest
  *  cannot be read, or `agents` is neither a path nor a list of paths. A path
  *  loads only when it starts with `./`, ends in `.md`, and stays in the plugin
- *  root. The check drops any other path, as Claude Code does. */
+ *  root. The manifest reference says that a path outside the root, or a path that
+ *  does not exist, does not load, and that a path without `./` fails validation.
+ *  The check drops each of them. */
 export function manifestAgents(root: string, bound: string): string[] | null | Unreadable {
   const manifest = readManifest(root, bound)
   if (manifest === UNREADABLE || manifest === null) {

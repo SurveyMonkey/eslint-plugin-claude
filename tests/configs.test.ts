@@ -1175,7 +1175,7 @@ const DESCRIPTION_TREE: Record<string, string> = {
   '.claude/agents/ok.md': OK,
   '.claude/agents/bare.md': BARE,
   // Agent teams are on here, so the three fields of `team.md` report. The agent `team-ok.md`
-  // sets none of them. The folder `quiet` sets the fields, and its settings leave teams off.
+  // sets none of them. The folder `quiet` sets the fields, and no settings file there turns teams on.
   'packages/teams/.claude/settings.json': JSON.stringify({
     env: { CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: '1' },
   }),
