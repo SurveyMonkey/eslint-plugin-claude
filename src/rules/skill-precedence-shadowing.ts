@@ -41,7 +41,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadowed
     defaultOptions: [{ personalNames: [], enterpriseNames: [] }],
     messages: {
       shadowed:
-        'A {{scope}} skill named `{{name}}` wins over this project {{kind}}. Claude Code runs `/{{name}}` from the {{scope}} skill, so this file never runs. Rename it.',
+        'A {{scope}} skill named `{{name}}` wins over this project {{kind}}. Claude Code runs `/{{name}}` from the {{scope}} skill, so `/{{name}}` does not run this file. Rename it.',
     },
   },
   create(context) {

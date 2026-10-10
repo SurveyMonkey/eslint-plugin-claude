@@ -40,8 +40,9 @@ name, the report names the enterprise skill, which wins.
   is `ops:run`. The rule does not read its `name` field.
 
 The rule judges the `.claude/` folder in the root of the repository, the one that holds `.git`. A
-nested `.claude/` folder is not judged, because the docs name no rule for it. A plugin skill and
-a plugin command stay silent, because both load under the namespace `/plugin-name:skill-name`.[^resolve]
+nested `.claude/` folder is not judged, because the docs name no rule for it. A file in a plugin
+stays silent. A plugin skill loads under the namespace `/plugin-name:skill-name`,[^resolve] and the
+rule judges only the project folder.
 The rule reads only the file system path of the repository and the frontmatter of the linted
 file.
 

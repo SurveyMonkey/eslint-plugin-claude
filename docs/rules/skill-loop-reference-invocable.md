@@ -25,8 +25,8 @@ The rule is `off` in `recommended`. The rule is a heuristic, and it reads other 
 The file `.claude/loop.md` is the default prompt of a bare `/loop`. The docs say to write it as
 if you typed the `/loop` prompt directly.[^loop] A prompt can be a skill, such as
 `/loop 20m /review-pr 1234`. But a scheduled fire runs only the skills that Claude can invoke on
-its own. A skill with `disable-model-invocation: true` reaches Claude as plain text and does
-not run.[^loop] The field has the same effect when a scheduled task fires with the skill as its
+its own. As of Claude Code v2.1.196, a skill with `disable-model-invocation: true` reaches
+Claude as plain text and does not run.[^loop] The field has the same effect when a scheduled task fires with the skill as its
 prompt.[^field]
 
 The rule reads the first line that is not blank. The line can start with `/` and a name. Then the
@@ -44,7 +44,9 @@ The rule makes no report in these cases:
 - The name matches no file in the folder. A built-in command, a plugin skill and a skill in
   another folder match none.
 - The rule cannot read a file that may answer to the name. This includes an unreadable file, a
-  link to nothing and a link out of the repository.
+  link to nothing, a link out of the repository, and a `skills/` folder that is a link to nothing.
+- The file that answers to the name has frontmatter that does not parse. The rule reads it as a
+  file that Claude can invoke.
 - Two files answer to the name, and one of them is not manual only.
 - The line starts with other text. A name inside a sentence goes to Claude as text. The rule does
   not judge that case.
