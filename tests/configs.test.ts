@@ -682,6 +682,13 @@ const MEMORY_WARN_RULES = [
   'rules-symlink-external',
 ]
 
+// The rules of #13 that are `off` in `recommended`, in the order of the `modules` list. `strict`
+// turns each on at `warn`.
+const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
+  'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+}
+const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS)
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -952,6 +959,9 @@ const EXPECTED = [
   'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
 ].sort()
 
+// The reports of the `off` rules of #13. They appear in `strict` only, at `warn`.
+const STRICT_ONLY: string[] = []
+
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.
 const AGENT_RULES = [
@@ -1080,10 +1090,16 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
+  it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const isOff = (rules: Linter.Config['rules']) =>
+      MEMORY_OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
+    const strict = rulesOf(plugin.configs.strict)
+    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
+    expect(strict.filter(isOff)).toEqual(
+      MEMORY_OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })),
+    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1096,6 +1112,7 @@ describe('configs', () => {
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
       ...MEMORY_WARN_RULES.map((rule) => `claude/strict/${rule}`),
+      ...MEMORY_OFF_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -1217,11 +1234,19 @@ describe('configs', () => {
     ])
   })
 
+  it('turns each off memory rule on in strict only, on the files that it reads', () => {
+    for (const rule of MEMORY_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([MEMORY_OFF_BLOCKS[rule]])
+    }
+  })
+
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   }, 60000)
 
-  it('strict reports the same files as recommended today', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
+  it('strict reports the files of recommended, and those of the off rules', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
   }, 60000)
 })

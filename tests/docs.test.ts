@@ -34,6 +34,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-tools-unavailable',
     'claude-md-agents-md-shadowed',
     'claude-md-agents-md-variant',
+    'claude-md-combined-size',
     'claude-md-excludes-pattern',
     'claude-md-import-exists',
     'claude-md-import-external',
