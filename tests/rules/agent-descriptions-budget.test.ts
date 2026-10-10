@@ -125,6 +125,22 @@ describe('agent-descriptions-budget', () => {
       expect(run(agent('Explore', 90000), LOCAL, sibling(30000))).toEqual([])
       expect(run(agent('claude-code-guide', 90000), LOCAL)).toEqual([])
     })
+    it('adds nothing for a built-in name or a skipped file, at the limit', () => {
+      // 30000 + 30000 characters is exactly 15000 tokens. Any extra character is over the limit.
+      const files = {
+        ...sibling(29999),
+        '.claude/agents/e.md': agent('Explore', 10),
+        '.claude/agents/skipped.md': '---\nname: x\n---\n',
+      }
+      expect(run(A, LOCAL, files)).toEqual([])
+    })
+    it('ignores a name of white space', () => {
+      // The name of three spaces does not count. With it, the sum is 60001 characters.
+      const files = {
+        '.claude/agents/b.md': `---\nname: "   "\ndescription: ${'x'.repeat(29998)}\n---\n`,
+      }
+      expect(run(A, LOCAL, files)).toEqual([])
+    })
     it('counts a name that only differs in letter case from a built-in name', () => {
       expect(run(A, LOCAL, { '.claude/agents/e.md': agent('explore', 30000) })).toHaveLength(1)
     })
@@ -150,7 +166,7 @@ describe('agent-descriptions-budget', () => {
     it('does not count a local file without a name or a description', () => {
       const files = {
         '.claude/agents/noname.md': `---\ndescription: ${'x'.repeat(30000)}\n---\n`,
-        '.claude/agents/nodesc.md': `---\nname: ${'y'.repeat(30000)}\n---\n`,
+        '.claude/agents/nodesc.md': `---\nname: ${'y'.repeat(30001)}\n---\n`,
         '.claude/agents/bad.md': '---\nname: [x\n---\n',
         '.claude/agents/plain.md': 'x'.repeat(40000),
         '.claude/agents/notes.txt': agent('n', 40000),
@@ -201,6 +217,7 @@ describe('agent-descriptions-budget', () => {
         'plugins/r/.claude-plugin/plugin.json': manifest([
           './custom/a.md',
           '../outside/b.md',
+          './../outside/b.md',
           'more/b.md',
           './more/b.txt',
           './more',
@@ -212,6 +229,18 @@ describe('agent-descriptions-budget', () => {
         'plugins/r/more/b.txt': agent('b', 40000),
       }
       expect(run(A, 'plugins/r/custom/a.md', odd)).toEqual([])
+    })
+    it('adds nothing for a listed file that is not there', () => {
+      // 30000 + 30000 characters is 15000 tokens. The name `missing` would add 7 characters.
+      const absent = {
+        'plugins/r/.claude-plugin/plugin.json': manifest([
+          './custom/a.md',
+          './more/b.md',
+          './missing.md',
+        ]),
+        'plugins/r/more/b.md': agent('b', 29999),
+      }
+      expect(run(A, 'plugins/r/custom/a.md', absent)).toEqual([])
     })
     it('counts a file once when the list names it twice', () => {
       const twice = {
@@ -245,15 +274,21 @@ describe('agent-descriptions-budget', () => {
   })
 
   describe('gives no report when it cannot see the scope', () => {
+    // Each case below has a visible part that is over the limit, so only the part that the rule
+    // cannot see holds back the report.
     unreadable('when an agent file cannot be read', () => {
-      const root = repo({ ...PLUGIN, ...sibling(30000) })
+      const root = repo({ ...PLUGIN, ...sibling(30000), '.claude/agents/c.md': agent('c', 30000) })
       withoutAccess(path.join(root, '.claude/agents/b.md'), () => {
         expect(lintAgent('agent-descriptions-budget', A, path.join(root, LOCAL))).toEqual([])
       })
     })
-    unreadable('when the agents folder cannot be read', () => {
-      const root = repo({ ...PLUGIN, ...sibling(30000), [LOCAL]: A })
-      withoutAccess(path.join(root, '.claude/agents'), () => {
+    unreadable('when a folder in agents cannot be read', () => {
+      const root = repo({
+        ...PLUGIN,
+        ...sibling(30000, '.claude/agents/team/b.md'),
+        '.claude/agents/c.md': agent('c', 30000),
+      })
+      withoutAccess(path.join(root, '.claude/agents/team'), () => {
         expect(lintAgent('agent-descriptions-budget', A, path.join(root, LOCAL))).toEqual([])
       })
     })

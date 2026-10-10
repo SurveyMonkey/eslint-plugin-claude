@@ -59,6 +59,7 @@ describe('agent-name-kebab-case', () => {
     })
     it('for a name that is missing, empty or not a string', () => {
       expect(lint('')).toEqual([])
+      expect(lint('""')).toEqual([])
       expect(lint('5')).toEqual([])
       expect(lint('[a]')).toEqual([])
       expect(lint('true')).toEqual([])
