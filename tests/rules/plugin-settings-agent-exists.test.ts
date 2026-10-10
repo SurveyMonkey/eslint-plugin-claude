@@ -14,7 +14,7 @@ const linked = noLinks ? it.skip : check
 const GLOBS = ['**/.claude-plugin/plugin.json', '**/settings.json']
 
 const message = (agent: string) =>
-  `\`${agent}\` is not a built-in agent, and no file in \`agents/\` of this plugin defines it. The docs set the \`agent\` key to run one of the plugin's own agents.`
+  `\`${agent}\` is not a built-in agent, and no file in \`agents/\` of this plugin defines it. The \`agent\` key runs one of the plugin's own agents.`
 const REVIEWER = '---\nname: reviewer\ndescription: d\n---\n'
 const manifestOf = (settings: unknown, more: Record<string, unknown> = {}) => ({
   name: 'p',
@@ -123,6 +123,7 @@ describe(`${RULE} (silent)`, () => {
     ['the name in another case', 'Reviewer'],
     ['the scoped name', 'p:reviewer'],
     ['the scoped name in another case', 'P:REVIEWER'],
+    ['the scoped name with the name in another case', 'p:REVIEWER'],
   ])('stays silent for an agent given as %s', (_title, agent) => {
     const files = { 'agents/reviewer.md': REVIEWER }
     expect(inManifest({ agent }, files)).toEqual([])
@@ -145,10 +146,25 @@ describe(`${RULE} (silent)`, () => {
   })
 
   check('uses the directory name for a plugin whose manifest has no name', () => {
-    const { dir, code } = pluginTree('{"settings": {"agent": "dir:reviewer"}}', {
-      'agents/reviewer.md': REVIEWER,
-    })
-    expect(lintPlugin(RULE, dir, code)).toEqual([])
+    const files = { 'agents/reviewer.md': REVIEWER }
+    const found = pluginTree('{"settings": {"agent": "dir:reviewer"}}', files, 'dir/')
+    expect(lintPlugin(RULE, found.dir, found.code)).toEqual([])
+    const ghost = pluginTree('{"settings": {"agent": "dir:ghost"}}', files, 'dir/')
+    expect(lintPlugin(RULE, ghost.dir, ghost.code).map((m) => m.messageId)).toEqual(['missing'])
+  })
+
+  check('uses the directory name for a plugin whose manifest name is not a string', () => {
+    const files = { 'agents/reviewer.md': REVIEWER }
+    const { dir, code } = pluginTree({ name: 5, settings: { agent: 'dir:ghost' } }, files, 'dir/')
+    expect(lintPlugin(RULE, dir, code).map((m) => m.messageId)).toEqual(['missing'])
+  })
+
+  check('stays silent for a scoped name whose prefix only starts with the plugin name', () => {
+    expect(inManifest({ agent: 'pq:ghost' }, { 'agents/reviewer.md': REVIEWER })).toEqual([])
+  })
+
+  check('reports a scoped name whose prefix has another case than the plugin name', () => {
+    expect(inManifest({ agent: 'P:ghost' }, { 'agents/reviewer.md': REVIEWER })).toHaveLength(1)
   })
 
   check.each([

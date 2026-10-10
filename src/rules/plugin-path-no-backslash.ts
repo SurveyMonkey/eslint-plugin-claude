@@ -59,9 +59,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'backslash' }> = {
           return
         }
         for (const { key, map } of PLUGIN_PATH_KEYS) {
+          const url = key.join('.') === 'mcpServers'
           const value = memberAt(node.body, key)?.value
           for (const entry of value === undefined ? [] : pathsOf(value, map)) {
-            if (entry.value.includes('\\') && !URL_START.test(entry.value)) {
+            if (entry.value.includes('\\') && !(url && URL_START.test(entry.value))) {
               context.report({
                 node: entry,
                 messageId: 'backslash',

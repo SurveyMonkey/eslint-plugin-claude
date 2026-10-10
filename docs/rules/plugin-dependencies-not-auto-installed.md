@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/plugin-dependencies-not-auto-installed, which reports a dependency in plugin.json whose entry in the marketplace of the plugin has a command source or a headersHelper, because Claude Code never installs such a dependency, with examples and sources.
+description: The ESLint rule claude/plugin-dependencies-not-auto-installed, which reports a dependency in plugin.json whose entry in the marketplace of the plugin has a command source or a headersHelper, because Claude Code never installs a command source and never runs a headersHelper of a dependency, with examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [11]
