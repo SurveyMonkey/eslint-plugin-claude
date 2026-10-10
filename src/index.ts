@@ -6,12 +6,15 @@ import agentDisallowedToolsScope from './rules/agent-disallowed-tools-scope.ts'
 import agentFieldMinVersion from './rules/agent-field-min-version.ts'
 import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
 import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
+import agentInitialPromptMainOnly from './rules/agent-initial-prompt-main-only.ts'
 import agentMcpServersInlineTrust from './rules/agent-mcp-servers-inline-trust.ts'
+import agentMcpServersRefExists from './rules/agent-mcp-servers-ref-exists.ts'
 import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
 import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
 import agentMemoryScopeProject from './rules/agent-memory-scope-project.ts'
 import agentModelForced from './rules/agent-model-forced.ts'
+import agentModelValue from './rules/agent-model-value.ts'
 import agentNameShadowing from './rules/agent-name-shadowing.ts'
 import agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import agentNameUnique from './rules/agent-name-unique.ts'
@@ -21,10 +24,13 @@ import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
+import agentSkillsExist from './rules/agent-skills-exist.ts'
 import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
+import agentToolsAgentTypeList from './rules/agent-tools-agent-type-list.ts'
 import agentToolsConditional from './rules/agent-tools-conditional.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
+import agentToolsSkillForPreload from './rules/agent-tools-skill-for-preload.ts'
 import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
@@ -166,6 +172,12 @@ const modules = [
   outputStyleForceForPlugin,
   outputStyleNameUnique,
   outputStylePluginNameDescription,
+  agentInitialPromptMainOnly,
+  agentMcpServersRefExists,
+  agentModelValue,
+  agentSkillsExist,
+  agentToolsAgentTypeList,
+  agentToolsSkillForPreload,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -298,6 +310,12 @@ const recommended: Record<RuleName, Severity> = {
   'output-style-force-for-plugin': 'warn',
   'output-style-name-unique': 'warn',
   'output-style-plugin-name-description': 'warn',
+  'agent-initial-prompt-main-only': 'off',
+  'agent-mcp-servers-ref-exists': 'off',
+  'agent-model-value': 'off',
+  'agent-skills-exist': 'off',
+  'agent-tools-agent-type-list': 'off',
+  'agent-tools-skill-for-preload': 'off',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',

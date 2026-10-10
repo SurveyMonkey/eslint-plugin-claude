@@ -75,3 +75,31 @@ export const BUILT_IN_AGENTS = [
   'statusline-setup',
   'claude-code-guide',
 ] as const
+
+/** The bundled skills. Source: the rows that the commands reference marks as a bundled skill
+ *  (https://code.claude.com/docs/en/commands#all-commands), checked on Claude Code 2.1.296 on
+ *  2026-10-10. Review this list on or before 2027-04-10, the `stale_after` date of
+ *  docs/rules/agent-skills-exist.md. A subagent can preload a bundled skill that a model can
+ *  invoke. A project does not define one, so `agent-skills-exist` cannot find it on disk. */
+export const BUNDLED_SKILLS = [
+  'artifact-capabilities',
+  'artifact-diagramming',
+  'batch',
+  'claude-api',
+  'claude-in-chrome',
+  'code-review',
+  'dataviz',
+  'debug',
+  'design',
+  'design-sync',
+  'doctor',
+  'fewer-permission-prompts',
+  'loop',
+  'run',
+  'run-skill-generator',
+  'simplify',
+  'slides',
+  'update-config',
+  'verify',
+  'workflow-authoring',
+] as const

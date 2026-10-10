@@ -12,30 +12,30 @@ const lint = (fields: string, filename = AGENT, options: unknown[] = []) =>
   lintAgent('agent-model-value', agent(fields), filename, options)
 
 describe('agent-model-value', () => {
-  it.fails('reports a value that is no alias, no ID and no inherit, on the value', () => {
+  it('reports a value that is no alias, no ID and no inherit, on the value', () => {
     expect(lint('model: sonet\n')).toMatchObject([
       { messageId: 'unknown', line: 4, column: 8, endColumn: 13 },
     ])
     expect(lint('model: sonet\n')[0]?.message).toContain('sonet')
   })
 
-  it.fails('reports other wrong shapes', () => {
+  it('reports other wrong shapes', () => {
     for (const value of ['gpt-4', 'claude-', 'claude opus', 'claude4', '"opus plan"']) {
       expect(lint(`model: ${value}\n`)).toHaveLength(1)
     }
   })
 
-  it.fails('reports a plugin agent', () => {
+  it('reports a plugin agent', () => {
     expect(lint('model: sonet\n', pluginAgent())).toHaveLength(1)
   })
 
-  it.fails('stays silent for each value the docs list', () => {
+  it('stays silent for each value the docs list', () => {
     for (const value of ['sonnet', 'opus', 'haiku', 'fable', 'inherit', 'claude-opus-5-5']) {
       expect(lint(`model: ${value}\n`)).toEqual([])
     }
   })
 
-  it.fails('stays silent for the other aliases and the forms of --model', () => {
+  it('stays silent for the other aliases and the forms of --model', () => {
     for (const value of ['best', 'opusplan', 'default', 'opus[1m]', 'claude-sonnet-5[1m]']) {
       expect(lint(`model: "${value}"\n`)).toEqual([])
     }
@@ -43,7 +43,7 @@ describe('agent-model-value', () => {
     expect(lint('model: INHERIT\n')).toEqual([])
   })
 
-  it.fails('stays silent for a provider ID', () => {
+  it('stays silent for a provider ID', () => {
     for (const value of [
       'us.anthropic.claude-opus-4-8',
       'arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/abc',
@@ -53,13 +53,13 @@ describe('agent-model-value', () => {
     }
   })
 
-  it.fails('stays silent for a value in the option allow', () => {
+  it('stays silent for a value in the option allow', () => {
     expect(lint('model: team-gateway-model\n', AGENT, [{ allow: ['team-gateway-model'] }])).toEqual(
       [],
     )
   })
 
-  it.fails('stays silent when model is absent, empty or not a string', () => {
+  it('stays silent when model is absent, empty or not a string', () => {
     expect(lint('')).toEqual([])
     expect(lint('model:\n')).toEqual([])
     expect(lint('model: ""\n')).toEqual([])

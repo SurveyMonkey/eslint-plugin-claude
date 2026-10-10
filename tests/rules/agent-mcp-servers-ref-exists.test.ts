@@ -11,7 +11,7 @@ import { agent, repo } from '../agent-settings.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
-const unreadable = chmodCannotBlock ? it.skip : it.fails
+const unreadable = chmodCannotBlock ? it.skip : it
 const AGENT = '.claude/agents/a.md'
 const servers = (...names: string[]) =>
   JSON.stringify({ mcpServers: Object.fromEntries(names.map((n) => [n, { command: 'x' }])) })
@@ -25,64 +25,64 @@ const run = (
 
 describe('agent-mcp-servers-ref-exists', () => {
   describe('reports', () => {
-    it.fails('a name that no .mcp.json holds, on the item', () => {
+    it('a name that no .mcp.json holds, on the item', () => {
       expect(run({ '.mcp.json': servers('slack') })).toMatchObject([
         { messageId: 'missing', line: 5, column: 5, endLine: 5, endColumn: 11 },
       ])
       expect(run({ '.mcp.json': servers('slack') })[0]?.message).toContain('github')
     })
-    it.fails('a name when the project has no .mcp.json', () => {
+    it('a name when the project has no .mcp.json', () => {
       expect(run({})).toHaveLength(1)
     })
-    it.fails('a name when .mcp.json has no server map', () => {
+    it('a name when .mcp.json has no server map', () => {
       expect(run({ '.mcp.json': '{}' })).toHaveLength(1)
       expect(run({ '.mcp.json': '{"mcpServers":[]}' })).toHaveLength(1)
     })
-    it.fails('each name that is missing, and not a name that is there', () => {
+    it('each name that is missing, and not a name that is there', () => {
       expect(run({ '.mcp.json': servers('a') }, list('a', 'b', 'c'))).toHaveLength(2)
     })
-    it.fails('a name in a .mcp.json that is not at the project root of a nested project', () => {
+    it('a name in a .mcp.json that is not at the project root of a nested project', () => {
       expect(run({ 'other/.mcp.json': servers('github') })).toHaveLength(1)
     })
   })
 
   describe('stays silent', () => {
-    it.fails('for a name in .mcp.json at the project root, in any letter case', () => {
+    it('for a name in .mcp.json at the project root, in any letter case', () => {
       expect(run({ '.mcp.json': servers('github') })).toEqual([])
       expect(run({ '.mcp.json': servers('GitHub') })).toEqual([])
     })
-    it.fails('for a name in .mcp.json of a folder above the project', () => {
+    it('for a name in .mcp.json of a folder above the project', () => {
       const files = { '.mcp.json': servers('github') }
       expect(run(files, list('github'), 'pkg/.claude/agents/a.md')).toEqual([])
     })
-    it.fails('for a name in the option allow', () => {
+    it('for a name in the option allow', () => {
       expect(run({}, list('hubspot'), AGENT, [{ allow: ['HubSpot'] }])).toEqual([])
     })
-    it.fails('for an inline server, a scoped name and an entry that is not a string', () => {
+    it('for an inline server, a scoped name and an entry that is not a string', () => {
       const inline =
         'mcpServers:\n  - playwright:\n      type: stdio\n      command: npx\n  - plugin:p:db\n  - ""\n  - 5\n'
       expect(run({}, inline)).toEqual([])
     })
-    it.fails('for a plugin agent', () => {
+    it('for a plugin agent', () => {
       expect(
         lintAgent('agent-mcp-servers-ref-exists', agent(list('github')), pluginAgent()),
       ).toEqual([])
     })
-    it.fails('for a value that is no list, and for no field', () => {
+    it('for a value that is no list, and for no field', () => {
       expect(run({}, 'mcpServers: github\n')).toEqual([])
       expect(run({}, 'mcpServers:\n')).toEqual([])
       expect(run({}, '')).toEqual([])
     })
-    it.fails('for a file outside the agents folders, and a file with no frontmatter', () => {
+    it('for a file outside the agents folders, and a file with no frontmatter', () => {
       expect(run({}, list('github'), 'docs/a.md')).toEqual([])
       expect(run({}, 'Body only.\n')).toEqual([])
     })
-    it.fails('when .mcp.json does not parse or is not an object, here or above', () => {
+    it('when .mcp.json does not parse or is not an object, here or above', () => {
       expect(run({ '.mcp.json': '{' })).toEqual([])
       expect(run({ '.mcp.json': '[]' })).toEqual([])
       expect(run({ '.mcp.json': '{' }, list('github'), 'pkg/.claude/agents/a.md')).toEqual([])
     })
-    it.fails('when .mcp.json is a link out of the repository or a dangling link', () => {
+    it('when .mcp.json is a link out of the repository or a dangling link', () => {
       const root = repo({})
       const outside = path.join(path.dirname(root), `${path.basename(root)}-mcp.json`)
       writeFileSync(outside, servers('github'))
