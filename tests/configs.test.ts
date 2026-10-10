@@ -547,9 +547,17 @@ const GU_TREE: Record<string, string> = {
   'claude/dot/.claude/CLAUDE.md': '# Project\n',
   'claude/dot/.claude/CLAUDE.local.md': 'mine\n',
   'claude/dot/OTHER.md': '# Other\n',
+  // `memory-agent-memory-local-untracked`: git tracks a memory file of the local scope. The
+  // project scope, a directory with the same name outside `.claude/`, and a file that is not
+  // Markdown are silent.
+  'mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
+  'mem/project/.claude/agent-memory/reviewer/MEMORY.md': '# Memory\n',
+  'mem/outside/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
+  'mem/json/.claude/agent-memory-local/reviewer/state.json': '{}\n',
 }
 const GU_LOOSE: Record<string, string> = {
   'claude/ok/CLAUDE.local.md': 'mine\n',
+  'mem/ok/.claude/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
 }
 
 const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
@@ -642,6 +650,11 @@ const SCOPE_RULES = [
 // the `modules` list, with the language and files of each. Each is a warn.
 const UNTRACKED_RULES = [
   { name: 'claude-md-local-untracked', language: 'markdown/gfm', files: ['**/CLAUDE.md'] },
+  {
+    name: 'memory-agent-memory-local-untracked',
+    language: 'markdown/gfm',
+    files: ['**/.claude/agent-memory-local/**/*.md'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -838,6 +851,8 @@ const EXPECTED = [
   // `claude-md-local-untracked` reads a `CLAUDE.md`, and reports on its `CLAUDE.local.md`.
   'packages/gu/claude/bad/CLAUDE.md: claude/claude-md-local-untracked@1',
   'packages/gu/claude/loose/CLAUDE.md: claude/claude-md-local-untracked@1',
+  // `memory-agent-memory-local-untracked` reads the local memory directory, and reports a tracked file.
+  'packages/gu/mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md: claude/memory-agent-memory-local-untracked@1',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

@@ -709,6 +709,13 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "memory-agent-memory-local-untracked": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Enable persistent memory",
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",

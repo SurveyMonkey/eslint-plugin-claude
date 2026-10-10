@@ -15,7 +15,7 @@ const lint = (root: string, file = MEMORY) =>
   lintMarkdown(RULE, '# Memory\n', path.join(root, file))
 
 describe(RULE, () => {
-  it.fails('reports a tracked file, at the start, and names its path from the repository', () => {
+  it('reports a tracked file, at the start, and names its path from the repository', () => {
     const root = repo({ [MEMORY]: '# Memory\n' })
     const messages = lint(root)
     expect(messages).toHaveLength(1)
@@ -28,7 +28,7 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain(`"${MEMORY}"`)
   })
 
-  it.fails('reports each tracked file on its own, at any depth', () => {
+  it('reports each tracked file on its own, at any depth', () => {
     const root = repo({
       '.claude/agent-memory-local/reviewer/topic.md': 'x',
       '.claude/agent-memory-local/reviewer/deep/er/note.md': 'x',
@@ -41,18 +41,18 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reports a tracked file that a .gitignore pattern covers', () => {
+  it('reports a tracked file that a .gitignore pattern covers', () => {
     const root = repo({ [MEMORY]: 'x', '.gitignore': '.claude/agent-memory-local/\n' })
     expect(lint(root).map((m) => m.messageId)).toEqual(['tracked'])
   })
 
-  it.fails('reports in a project below the root, and names the path from the repository', () => {
+  it('reports in a project below the root, and names the path from the repository', () => {
     const file = 'packages/a/.claude/agent-memory-local/reviewer/MEMORY.md'
     const root = repo({ [file]: 'x' })
     expect(lint(root, file)[0]?.message).toContain(`"${file}"`)
   })
 
-  it.fails('takes a path with a space, a leading dash and a leading colon as literal', () => {
+  it('takes a path with a space, a leading dash and a leading colon as literal', () => {
     for (const dir of ['my dir', '-pkg', ':(top)pkg']) {
       const file = `${dir}/.claude/agent-memory-local/r/MEMORY.md`
       const root = repo({ [file]: 'x' })
@@ -63,24 +63,24 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent for a file that git does not track', () => {
+  it('stays silent for a file that git does not track', () => {
     const root = repo({ 'a.txt': 'x' }, [], { [MEMORY]: 'x' })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent for a file whose index entry is only a sibling of the same name', () => {
+  it('stays silent for a file whose index entry is only a sibling of the same name', () => {
     const root = repo({ '.claude/agent-memory-local/reviewer/MEMORY.md.bak': 'x' }, [], {
       [MEMORY]: 'x',
     })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent in a tree with no .git, where git cannot answer', () => {
+  it('stays silent in a tree with no .git, where git cannot answer', () => {
     const root = plain({ [MEMORY]: 'x' })
     expect(lint(root)).toEqual([])
   })
 
-  it.fails('stays silent when git cannot run', () => {
+  it('stays silent when git cannot run', () => {
     const root = repo({ [MEMORY]: 'x' })
     vi.stubEnv('PATH', '')
     try {
@@ -90,7 +90,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent when git reads an outer repository', () => {
+  it('stays silent when git reads an outer repository', () => {
     const outer = repo({ [`inner/${MEMORY}`]: 'x' })
     put(outer, { 'inner/.git/keep': '' })
     expect(git(path.join(outer, 'inner'), 'rev-parse', '--show-toplevel').trim()).toBe(outer)
@@ -98,19 +98,25 @@ describe(RULE, () => {
   })
 
   describe('when the memory directory is a link', () => {
-    it.fails('stays silent when its real path is out of the repository', () => {
-      const root = repo({ 'a.txt': 'x' })
-      const outside = plain({ 'reviewer/MEMORY.md': 'x' })
-      put(root, { '.claude/keep': '' })
-      symlinkSync(outside, path.join(root, '.claude/agent-memory-local'))
-      expect(lint(root)).toEqual([])
-    })
+    it.skipIf(process.platform === 'win32')(
+      'stays silent when its real path is out of the repository',
+      () => {
+        const root = repo({ 'a.txt': 'x' })
+        const outside = plain({ 'reviewer/MEMORY.md': 'x' })
+        put(root, { '.claude/keep': '' })
+        symlinkSync(outside, path.join(root, '.claude/agent-memory-local'))
+        expect(lint(root)).toEqual([])
+      },
+    )
 
-    it.fails('reads a link to a directory of the repository where it leads', () => {
-      const root = repo({ 'shared/reviewer/MEMORY.md': 'x' })
-      put(root, { '.claude/keep': '' })
-      symlinkSync('../shared', path.join(root, '.claude/agent-memory-local'))
-      expect(lint(root).map((m) => m.messageId)).toEqual(['tracked'])
-    })
+    it.skipIf(process.platform === 'win32')(
+      'reads a link to a directory of the repository where it leads',
+      () => {
+        const root = repo({ 'shared/reviewer/MEMORY.md': 'x' })
+        put(root, { '.claude/keep': '' })
+        symlinkSync('../shared', path.join(root, '.claude/agent-memory-local'))
+        expect(lint(root).map((m) => m.messageId)).toEqual(['tracked'])
+      },
+    )
   })
 })

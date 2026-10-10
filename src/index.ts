@@ -37,6 +37,7 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -185,6 +186,7 @@ const modules = [
   pluginBinExecutable,
   statuslineScriptExists,
   claudeMdLocalUntracked,
+  memoryAgentMemoryLocalUntracked,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -298,6 +300,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-bin-executable': 'error',
   'statusline-script-exists': 'error',
   'claude-md-local-untracked': 'warn',
+  'memory-agent-memory-local-untracked': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
