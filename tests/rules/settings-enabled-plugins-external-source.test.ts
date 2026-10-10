@@ -115,8 +115,11 @@ describe(`${name} (silent)`, () => {
   })
 
   it('is silent for a key that settings-enabled-plugins-schema reports', () => {
-    const files = market(entry('p', external))
-    expect(idsAt(files, { ...declare(), ...enable('p', '@acme', 'p@', 'p@a@b', '') })).toEqual([])
+    // Each key has parts that name an external entry of the declared marketplace.
+    const files = market(entry('p', external), entry('', external))
+    expect(idsAt(files, { ...declare(), ...enable('p@acme@x', '@acme', 'p@', 'p', '') })).toEqual(
+      [],
+    )
   })
 
   it('is silent for a plugin or marketplace name that is a property of an object', () => {
