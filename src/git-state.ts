@@ -13,12 +13,10 @@ import { statSync } from 'node:fs'
 import path from 'node:path'
 import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 
-/** The index mode of a regular file with the executable bit. */
-export const EXECUTABLE_MODE = '100755'
-
-/** The index mode of a regular file with no executable bit. A rule reports
- *  this mode only. A link, a submodule and a path that git does not track have
- *  other modes, and the executable bit does not apply to them. */
+/** The index mode of a regular file with no executable bit. The executable bit
+ *  is the mode `100755`. A rule reports `100644` only. A link, a submodule and
+ *  a path that git does not track have other modes, and the bit does not apply
+ *  to them. */
 export const PLAIN_MODE = '100644'
 
 // The variables that point git at a repository. A hook that runs git sets
@@ -36,7 +34,7 @@ const LOCATION = [
 
 /** The environment of a `git` command: the environment of the process,
  *  without the variables that point git at a repository. */
-export function gitEnv(): NodeJS.ProcessEnv {
+function gitEnv(): NodeJS.ProcessEnv {
   return Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.includes(key)))
 }
 

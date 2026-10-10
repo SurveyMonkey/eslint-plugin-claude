@@ -113,7 +113,7 @@ export function settingsScope(filename: string): Scope {
 /** The scope of `hooks/hooks.json` in a plugin, or null when `filename` is not
  *  in a plugin root, or the rule cannot see whether it is. Claude Code copies
  *  a plugin to a cache, so a path must stay in the plugin root. */
-export function pluginScope(filename: string): Scope | null {
+function pluginScope(filename: string): Scope | null {
   const root = realDirectory(path.dirname(path.dirname(path.resolve(filename))))
   if (isPluginRoot(root) !== true) {
     return null

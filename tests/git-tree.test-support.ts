@@ -7,11 +7,15 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll } from 'vitest'
-import { gitEnv } from '../src/git-state.ts'
 
 // The real path, so that a bound compares equal where the temporary directory is a link (macOS).
 const scratch = realpathSync(mkdtempSync(path.join(tmpdir(), 'git-tree-')))
 afterAll(() => rmSync(scratch, { recursive: true, force: true }))
+
+// The variables that point git at a repository. A hook that runs the tests sets them.
+const LOCATION = /^GIT_(DIR|WORK_TREE|INDEX_FILE|COMMON_DIR|OBJECT_DIRECTORY|PREFIX|NAMESPACE)$/
+const gitEnv = () =>
+  Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.test(key)))
 
 /** Run `git` with `args` in `root`. */
 export function git(root: string, ...args: string[]): string {
