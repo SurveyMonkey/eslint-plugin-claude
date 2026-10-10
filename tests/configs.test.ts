@@ -732,6 +732,27 @@ const TREE: Record<string, string> = {
     permissions: { allow: ['WebFetch(domain:example.*)'] },
     sandbox: { enabled: true },
   }),
+  // `permissions-auto-mode-defaults`: a `soft_deny` list without "$defaults". The classifier reads
+  // `autoMode` from managed files only.
+  ...settingsFiles('wmd', { autoMode: { soft_deny: ['Never run terraform apply'] } }),
+  // `permissions-ignore-patterns`: the deprecated top-level key.
+  ...settingsFiles('wip', { ignorePatterns: ['secrets/**'] }),
+  // `sandbox-credentials-mask-fallback`: a mask `extract` with no capture group. The entry has TLS
+  // termination, so `sandbox-credentials-mask` stays silent in a managed file.
+  ...settingsFiles('wmf', {
+    sandbox: {
+      network: { tlsTerminate: {} },
+      credentials: {
+        files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask', extract: 'oauth_token' }],
+      },
+    },
+  }),
+  // `sandbox-domain-duplicate`: a domain with and without the final dot.
+  ...settingsFiles('wdu', { sandbox: { network: { allowedDomains: ['a.com', 'a.com.'] } } }),
+  // `sandbox-platform-limits` reports only with its options `platforms` and `minVersion`, and the
+  // configs set no option, so it has no tree.
+  // `sandbox-weakening-options`: a Boolean option that removes isolation.
+  ...settingsFiles('wwo', { sandbox: { enableWeakerNestedSandbox: true } }),
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -883,6 +904,12 @@ const WARN_RULES = [
   { name: 'permissions-read-deny-notebook', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-webfetch-apex', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-webfetch-mid-wildcard', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-auto-mode-defaults', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-ignore-patterns', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-credentials-mask-fallback', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-domain-duplicate', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-platform-limits', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-weakening-options', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1170,6 +1197,10 @@ const EXPECTED = [
   'packages/sfd/managed-settings.json: claude/sandbox-filesystem-disabled-conflict@2',
   'packages/sfd/managed-settings.d/10-a.json: claude/sandbox-filesystem-disabled-conflict@2',
   'packages/sfd/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The `sfd` files set `disabled` with `autoAllowBashIfSandboxed` unset, which
+  // `sandbox-weakening-options` reports in the managed files.
+  'packages/sfd/managed-settings.json: claude/sandbox-weakening-options@1',
+  'packages/sfd/managed-settings.d/10-a.json: claude/sandbox-weakening-options@1',
   // `sandbox-scope` reads the two project files only. A managed file keeps a mask entry.
   'packages/ssc/.claude/settings.json: claude/sandbox-scope@2',
   'packages/ssc/.claude/settings.local.json: claude/sandbox-scope@2',
@@ -1197,6 +1228,9 @@ const EXPECTED = [
     ['wrn', 'permissions-read-deny-notebook'],
     ['wwa', 'permissions-webfetch-apex'],
     ['wwm', 'permissions-webfetch-mid-wildcard'],
+    ['wip', 'permissions-ignore-patterns'],
+    ['wdu', 'sandbox-domain-duplicate'],
+    ['wwo', 'sandbox-weakening-options'],
     ['wcm', 'permissions-bash-colon-star-mid'],
     ['wcs', 'permissions-bash-colon-star-suffix'],
     ['wdr', 'permissions-duplicate-rule'],
@@ -1209,6 +1243,23 @@ const EXPECTED = [
     `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@1`,
     `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
   ]),
+  // `permissions-auto-mode-defaults` reads the managed files only: the classifier does not read
+  // `autoMode` from a project file, and `settings-key-scope` reports the key there.
+  'packages/wmd/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/wmd/.claude/settings.local.json: claude/settings-key-scope@2',
+  'packages/wmd/managed-settings.json: claude/permissions-auto-mode-defaults@1',
+  'packages/wmd/managed-settings.d/10-a.json: claude/permissions-auto-mode-defaults@1',
+  'packages/wmd/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `sandbox-credentials-mask-fallback` reads the `mask` entries of the managed files only. A
+  // project file keeps a mask entry out (`sandbox-scope`) and a `tlsTerminate` key out
+  // (`settings-key-scope`).
+  'packages/wmf/.claude/settings.json: claude/sandbox-scope@2',
+  'packages/wmf/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/wmf/.claude/settings.local.json: claude/sandbox-scope@2',
+  'packages/wmf/.claude/settings.local.json: claude/settings-key-scope@2',
+  'packages/wmf/managed-settings.json: claude/sandbox-credentials-mask-fallback@1',
+  'packages/wmf/managed-settings.d/10-a.json: claude/sandbox-credentials-mask-fallback@1',
+  'packages/wmf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

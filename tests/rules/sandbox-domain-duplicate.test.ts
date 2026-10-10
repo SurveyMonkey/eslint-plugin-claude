@@ -18,7 +18,7 @@ const run = (text: string, file = PROJECT) => lintJson(name, text, file)
 const ids = (text: string, file = PROJECT) => run(text, file).map((message) => message.messageId)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a repeated entry of either list, in every file', () => {
+  it('reports a repeated entry of either list, in every file', () => {
     for (const file of EVERY_FILE) {
       for (const list of ['allowedDomains', 'deniedDomains']) {
         expect(
@@ -29,30 +29,30 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('reports example.com and example.com. once', () => {
+  it('reports example.com and example.com. once', () => {
     expect(ids(network({ allowedDomains: ['example.com', 'example.com.'] }))).toEqual(['duplicate'])
     expect(ids(network({ deniedDomains: ['example.com.', 'example.com'] }))).toEqual(['duplicate'])
   })
 
-  it.fails('counts letter case and a port as part of the entry', () => {
+  it('counts letter case and a port as part of the entry', () => {
     expect(ids(network({ allowedDomains: ['Example.COM', 'example.com'] }))).toEqual(['duplicate'])
     expect(ids(network({ allowedDomains: ['a.com:443', 'a.com.:443'] }))).toEqual(['duplicate'])
     expect(ids(network({ allowedDomains: ['*.a.com', '*.a.com'] }))).toEqual(['duplicate'])
     expect(ids(network({ allowedDomains: ['[::1]', '[::1]'] }))).toEqual(['duplicate'])
   })
 
-  it.fails('reports each later copy, at its line and column, and names the first', () => {
+  it('reports each later copy, at its line and column, and names the first', () => {
     const text =
       '{\n  "sandbox": {\n    "network": {\n      "allowedDomains": ["a.com", "b.com", "a.com", "a.com."]\n    }\n  }\n}'
     const messages = run(text)
     expect(messages.map(({ line, column }) => [line, column])).toEqual([
-      [4, 46],
-      [4, 55],
+      [4, 44],
+      [4, 53],
     ])
     expect(messages[0]?.message).toContain('a.com')
   })
 
-  it.fails('reads each list alone', () => {
+  it('reads each list alone', () => {
     expect(
       ids(network({ allowedDomains: ['a.com', 'a.com'], deniedDomains: ['b.com', 'b.com'] })),
     ).toEqual(['duplicate', 'duplicate'])
@@ -60,30 +60,30 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for distinct domains', () => {
+  it('is silent for distinct domains', () => {
     expect(ids(network({ allowedDomains: ['a.com', 'b.com', '*.a.com'] }))).toEqual([])
   })
 
-  it.fails('is silent for the same host with another port, or with and without a port', () => {
+  it('is silent for the same host with another port, or with and without a port', () => {
     expect(ids(network({ allowedDomains: ['a.com', 'a.com:443', 'a.com:80'] }))).toEqual([])
   })
 
-  it.fails('is silent for a domain in both lists, which sandbox-domain-overlap reports', () => {
+  it('is silent for a domain in both lists, which sandbox-domain-overlap reports', () => {
     expect(ids(network({ allowedDomains: ['a.com'], deniedDomains: ['a.com'] }))).toEqual([])
   })
 
-  it.fails('does not read an entry that is not a string, or a list that is not an array', () => {
+  it('does not read an entry that is not a string, or a list that is not an array', () => {
     expect(ids(network({ allowedDomains: [1, 1, null, null] }))).toEqual([])
     expect(ids(network({ allowedDomains: 'a.com', deniedDomains: { a: 1 } }))).toEqual([])
     expect(ids(network({ allowedDomains: [1, 'a.com', 'a.com'] }))).toEqual(['duplicate'])
   })
 
-  it.fails('is silent with no sandbox, and for a root that is not an object', () => {
+  it('is silent with no sandbox, and for a root that is not an object', () => {
     expect(ids('{}')).toEqual([])
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(network({ allowedDomains: ['a.com', 'a.com'] }), HIDDEN)).toEqual([])
   })
 })

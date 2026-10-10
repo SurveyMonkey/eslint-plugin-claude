@@ -196,6 +196,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-read-deny-notebook`](docs/rules/permissions-read-deny-notebook.md) | A `Read` `deny` rule has an `Edit` `deny` rule, because `NotebookEdit` is not covered | `warn` | `warn` |
 | [`claude/permissions-webfetch-apex`](docs/rules/permissions-webfetch-apex.md) | A `WebFetch(domain:*.example.com)` rule has a rule for `example.com` in the same list | `warn` | `warn` |
 | [`claude/permissions-webfetch-mid-wildcard`](docs/rules/permissions-webfetch-mid-wildcard.md) | A `WebFetch` domain has only a leading `*.` or a bare `*` while the sandbox is on | `warn` | `warn` |
+| [`claude/permissions-auto-mode-defaults`](docs/rules/permissions-auto-mode-defaults.md) | A managed `autoMode` array keeps the built-in rules with `"$defaults"` | `warn` | `warn` |
+| [`claude/permissions-ignore-patterns`](docs/rules/permissions-ignore-patterns.md) | A settings file uses `permissions.deny` `Read` rules, not the deprecated `ignorePatterns` | `warn` | `warn` |
+| [`claude/sandbox-credentials-mask-fallback`](docs/rules/sandbox-credentials-mask-fallback.md) | A managed `mask` entry has an `extract` group and a file path that Claude Code can mask | `warn` | `warn` |
+| [`claude/sandbox-domain-duplicate`](docs/rules/sandbox-domain-duplicate.md) | A sandbox domain list holds each domain once | `warn` | `warn` |
+| [`claude/sandbox-platform-limits`](docs/rules/sandbox-platform-limits.md) | With the options `platforms` and `minVersion`, no sandbox setting that the platform or version does not honor | `warn` | `warn` |
+| [`claude/sandbox-weakening-options`](docs/rules/sandbox-weakening-options.md) | No sandbox option that removes isolation | `warn` | `warn` |
 
 ## Contributing
 

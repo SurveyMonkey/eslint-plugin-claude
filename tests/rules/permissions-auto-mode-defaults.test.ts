@@ -23,7 +23,7 @@ const ids = (text: string, file = MANAGED) =>
   at(repo({}), file, text).map((message) => message.messageId)
 
 describe(`${name}: the report`, () => {
-  it.fails('reports each list without "$defaults", in a managed file and a drop-in', () => {
+  it('reports each list without "$defaults", in a managed file and a drop-in', () => {
     for (const file of [MANAGED, DROP_IN]) {
       for (const list of LISTS) {
         expect(
@@ -34,21 +34,21 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('reports an empty list, which removes every built-in rule of the section', () => {
+  it('reports an empty list, which removes every built-in rule of the section', () => {
     expect(ids(auto({ soft_deny: [] }))).toEqual(['replaced'])
   })
 
-  it.fails('reports each list that lacks "$defaults", and not the list that has it', () => {
+  it('reports each list that lacks "$defaults", and not the list that has it', () => {
     expect(ids(auto({ soft_deny: ['x'], hard_deny: ['$defaults', 'y'], allow: ['z'] }))).toEqual([
       'replaced',
       'replaced',
     ])
   })
 
-  it.fails('reports at the array, and names the list and what it drops', () => {
+  it('reports at the array, and names the list and what it drops', () => {
     const text = '{\n  "autoMode": {\n    "soft_deny": ["a"]\n  }\n}'
     const [message] = at(repo({}), MANAGED, text)
-    expect([message?.line, message?.column]).toEqual([3, 17])
+    expect([message?.line, message?.column]).toEqual([3, 18])
     expect(message?.message).toContain('soft_deny')
     expect(message?.message).toContain('force push')
     const [hard] = at(repo({}), MANAGED, auto({ hard_deny: ['a'] }))
@@ -59,12 +59,12 @@ describe(`${name}: the report`, () => {
     expect(allow?.message).toContain('allow')
   })
 
-  it.fails('reports the last of two keys, as JSON.parse reads them', () => {
+  it('reports the last of two keys, as JSON.parse reads them', () => {
     expect(ids('{"autoMode":{"soft_deny":["$defaults"],"soft_deny":["a"]}}')).toEqual(['replaced'])
     expect(ids('{"autoMode":{"soft_deny":["a"],"soft_deny":["$defaults"]}}')).toEqual([])
   })
 
-  it.fails('counts only the exact string "$defaults"', () => {
+  it('counts only the exact string "$defaults"', () => {
     expect(ids(auto({ soft_deny: ['$default', '$DEFAULTS', ' $defaults', 5] }))).toEqual([
       'replaced',
     ])
@@ -72,7 +72,7 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent when each list holds "$defaults", at any position', () => {
+  it('is silent when each list holds "$defaults", at any position', () => {
     expect(
       ids(
         auto({
@@ -84,7 +84,7 @@ describe(`${name}: the silent cases`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent for a list that is not an array, an unset list, and an autoMode that is not an object', () => {
+  it('is silent for a list that is not an array, an unset list, and an autoMode that is not an object', () => {
     expect(ids(auto({ soft_deny: 'x', hard_deny: null, environment: { a: 1 } }))).toEqual([])
     expect(ids(auto({ classifyAllShell: true }))).toEqual([])
     expect(ids('{ "autoMode": "x" }')).toEqual([])
@@ -93,13 +93,13 @@ describe(`${name}: the silent cases`, () => {
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a project and a local file, where the classifier does not read autoMode', () => {
+  it('is silent in a project and a local file, where the classifier does not read autoMode', () => {
     for (const file of [PROJECT, LOCAL]) {
       expect(ids(auto({ soft_deny: ['a'] }), file), file).toEqual([])
     }
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(auto({ soft_deny: ['a'] }), HIDDEN)).toEqual([])
   })
 })
@@ -108,40 +108,40 @@ describe(`${name}: a managed source, on disk`, () => {
   const LACKS = auto({ soft_deny: ['a'] })
   const HAS = auto({ soft_deny: ['$defaults'] })
 
-  it.fails('is silent when another file of the source holds "$defaults" in the same list', () => {
+  it('is silent when another file of the source holds "$defaults" in the same list', () => {
     const root = repo({ [DROP_IN]: HAS })
     expect(at(root, MANAGED, LACKS)).toEqual([])
     const main = repo({ [MANAGED]: HAS })
     expect(at(main, 'managed-settings.d/20-b.json', LACKS)).toEqual([])
   })
 
-  it.fails('reports when another file holds "$defaults" in another list only', () => {
+  it('reports when another file holds "$defaults" in another list only', () => {
     const root = repo({ [DROP_IN]: auto({ hard_deny: ['$defaults'] }) })
     expect(at(root, MANAGED, LACKS).map((m) => m.messageId)).toEqual(['replaced'])
   })
 
-  it.fails('reports when the other files of the source lack it too', () => {
+  it('reports when the other files of the source lack it too', () => {
     const root = repo({ [DROP_IN]: auto({ soft_deny: ['b'] }) })
     expect(at(root, MANAGED, LACKS).map((m) => m.messageId)).toEqual(['replaced'])
   })
 
-  it.fails('does not read a project file for a managed file', () => {
+  it('does not read a project file for a managed file', () => {
     const root = repo({ [PROJECT]: HAS })
     expect(at(root, MANAGED, LACKS).map((m) => m.messageId)).toEqual(['replaced'])
   })
 
-  it.fails('ignores a hidden sibling', () => {
+  it('ignores a hidden sibling', () => {
     const root = repo({ [HIDDEN]: HAS })
     expect(at(root, MANAGED, LACKS).map((m) => m.messageId)).toEqual(['replaced'])
   })
 
-  it.fails('is silent when a file of the source cannot be read, because it can hold "$defaults"', () => {
+  it('is silent when a file of the source cannot be read, because it can hold "$defaults"', () => {
     const root = repo({ [DROP_IN]: '[1]' })
     expect(at(root, MANAGED, LACKS)).toEqual([])
     expect(at(root, MANAGED, HAS)).toEqual([])
   })
 
-  it.fails('is silent for a drop-in directory that is a link out of the repository', {
+  it('is silent for a drop-in directory that is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})

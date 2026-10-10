@@ -39,6 +39,7 @@ import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.
 import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
 import permissionsAllowDirDepth from './rules/permissions-allow-dir-depth.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
+import permissionsAutoModeDefaults from './rules/permissions-auto-mode-defaults.ts'
 import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
 import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
 import permissionsBashColonStarMid from './rules/permissions-bash-colon-star-mid.ts'
@@ -60,6 +61,7 @@ import permissionsDisableModeValue from './rules/permissions-disable-mode-value.
 import permissionsDuplicateRule from './rules/permissions-duplicate-rule.ts'
 import permissionsEndConversation from './rules/permissions-end-conversation.ts'
 import permissionsGlobGrepAllow from './rules/permissions-glob-grep-allow.ts'
+import permissionsIgnorePatterns from './rules/permissions-ignore-patterns.ts'
 import permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
 import permissionsLegacyToolName from './rules/permissions-legacy-tool-name.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -81,12 +83,16 @@ import permissionsWebfetchMidWildcard from './rules/permissions-webfetch-mid-wil
 import permissionsWindowsPath from './rules/permissions-windows-path.ts'
 import sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
 import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
+import sandboxCredentialsMaskFallback from './rules/sandbox-credentials-mask-fallback.ts'
+import sandboxDomainDuplicate from './rules/sandbox-domain-duplicate.ts'
 import sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
 import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
 import sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
 import sandboxFilesystemDisabledConflict from './rules/sandbox-filesystem-disabled-conflict.ts'
+import sandboxPlatformLimits from './rules/sandbox-platform-limits.ts'
 import sandboxSchema from './rules/sandbox-schema.ts'
 import sandboxScope from './rules/sandbox-scope.ts'
+import sandboxWeakeningOptions from './rules/sandbox-weakening-options.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -222,6 +228,12 @@ const modules = [
   permissionsReadDenyNotebook,
   permissionsWebfetchApex,
   permissionsWebfetchMidWildcard,
+  permissionsAutoModeDefaults,
+  permissionsIgnorePatterns,
+  sandboxCredentialsMaskFallback,
+  sandboxDomainDuplicate,
+  sandboxPlatformLimits,
+  sandboxWeakeningOptions,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -373,6 +385,12 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-read-deny-notebook': 'warn',
   'permissions-webfetch-apex': 'warn',
   'permissions-webfetch-mid-wildcard': 'warn',
+  'permissions-auto-mode-defaults': 'warn',
+  'permissions-ignore-patterns': 'warn',
+  'sandbox-credentials-mask-fallback': 'warn',
+  'sandbox-domain-duplicate': 'warn',
+  'sandbox-platform-limits': 'warn',
+  'sandbox-weakening-options': 'warn',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',
