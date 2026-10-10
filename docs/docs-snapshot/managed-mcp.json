@@ -159,6 +159,12 @@
       "text": "### What an entry can contain\n\nClaude Code loads an entry only when it passes every check below. It drops an entry that fails one, records a notice you can read with `/status`, and still loads the other entries:\n\n* `type` is `http` or `sse`. As in `.mcp.json`, `streamable-http` is accepted as an alias for `http`.\n* `url` is an `https://` URL. Claude Code refuses a plain `http://` URL, including one that points at `localhost`.\n* The entry has no `command`, `args`, `env`, or `headersHelper` member, so a managed settings document never names a program to run on a user's machine.\n* No value contains a `${VAR}` reference. Claude Code doesn't expand environment variables in these entries, so write literal values.\n* The server name contains only letters, numbers, hyphens, and underscores, and no key or value contains control or invisible formatting characters.\n\nClaude Desktop has a managed setting with the same name whose value is an array of a different entry shape, so don't copy one into the other. Claude Code doesn't accept the array form and records a notice instead of loading it.\n\nA Claude apps gateway runs the same checks when it boots; see [MCP servers in a policy](/docs/en/claude-apps-gateway-config#mcp-servers-in-a-policy)."
     },
     {
+      "heading": "Authenticate with per-user credentials",
+      "id": "authenticate-with-per-user-credentials",
+      "hash": "c8f77058987dd077575b7734a3e36ac3c05787a68ba4eec5a3cc47559aa80697",
+      "text": "### Authenticate with per-user credentials\n\nAny user on the machine can read this file, so don't store API keys or other credentials in `env` blocks. Pass per-user credentials with one of these instead:\n\n* [`${VAR}` expansion](/docs/en/mcp#environment-variable-expansion-in-mcp-json) to read secrets from each user's environment.\n* [OAuth or per-user headers](/docs/en/mcp#authenticate-with-remote-mcp-servers) so each user authenticates as themselves.\n* [`headersHelper`](/docs/en/mcp#use-dynamic-headers-for-custom-authentication) to generate credentials at connection time."
+    },
+    {
       "heading": "How policy entries expand",
       "id": "how-policy-entries-expand",
       "hash": "06f370f066111673b25f981f174fc4232cf2f69e5e7c45a2cfe07222146fd1ca",

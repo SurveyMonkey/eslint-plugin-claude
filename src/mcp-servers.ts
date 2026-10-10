@@ -10,7 +10,14 @@ import json from '@eslint/json'
 import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
 import { isPluginRoot } from './plugin-root.ts'
 import { pathFault } from './rules/marketplace-relative-source-format.ts'
-import { isInside, readJson, realOf, repositoryRoot, UNREADABLE } from './skill-tree.ts'
+import {
+  isInside,
+  readJson,
+  realOf,
+  repositoryRoot,
+  UNREADABLE,
+  type Unreadable,
+} from './skill-tree.ts'
 
 /** The `type` values of a server that connects over the network. A `url` belongs to these. */
 export const REMOTE_SERVER_TYPES: readonly string[] = ['http', 'streamable-http', 'sse', 'ws']
@@ -104,13 +111,17 @@ export function declaredMcpStrings(manifest: ValueNode): Extract<ValueNode, { ty
 
 /** The top-level value of the JSON file `file`, read as an AST so that the readers of this file
  *  and of `lsp-servers.ts` serve a file on disk as they serve a linted file. The result is null
- *  when the rule cannot see the file: it is not there, it fails to read, its real path is out of
- *  `bound`, or it does not parse (ADR 001, Decision 14). The AST comes from the parsed value, so
- *  the positions in it are not the positions in the file. A report uses them in no case. */
-export function readJsonBody(file: string, bound: string): ValueNode | null {
+ *  when the file is not there and its path is in `bound`. It is `UNREADABLE` when the rule cannot
+ *  see the file: it fails to read, its real path is out of `bound`, or it does not parse (ADR
+ *  001, Decision 14). The AST comes from the parsed value, so the positions in it are not the
+ *  positions in the file. A report uses them in no case. */
+export function jsonBodyState(file: string, bound: string): ValueNode | null | Unreadable {
   const parsed = readJson(file, bound)
-  if (parsed === null || parsed === UNREADABLE || parsed.data === undefined) {
-    return null
+  if (parsed === null || parsed === UNREADABLE) {
+    return parsed
+  }
+  if (parsed.data === undefined) {
+    return UNREADABLE
   }
   // A value nested deeper than the stringifier or the parser accepts is a file that the rule
   // cannot see. A failed parse has no `ast`, so the read of it throws and ends here too.
@@ -121,8 +132,15 @@ export function readJsonBody(file: string, bound: string): ValueNode | null {
     )
     return (result as { ast: { body: ValueNode } }).ast.body
   } catch {
-    return null
+    return UNREADABLE
   }
+}
+
+/** The top-level value of the JSON file `file`, as `jsonBodyState` reads it. The result is null
+ *  when the rule cannot see the file or the file is not there. */
+export function readJsonBody(file: string, bound: string): ValueNode | null {
+  const state = jsonBodyState(file, bound)
+  return state === UNREADABLE ? null : state
 }
 
 /** The file and the real path of the `.json` file that a plugin manifest names with `declared`.
@@ -169,17 +187,19 @@ export interface DeclarationKind {
   readonly rootMembers: (body: ValueNode) => MemberNode[]
 }
 
-/** The servers that the plugin at `root` declares, in the order that Claude Code loads them: the
- *  file at the plugin root, then each value of the manifest key. A value is a `.json` path, or an
- *  inline map, and an array mixes them. A bundle, a URL and a file that the rule cannot read add
- *  nothing, so a report rests on the files that read. A name that one source repeats is one
- *  server, as `JSON.parse` keeps the last. `manifest` is the top-level value of `plugin.json`,
- *  or null for a plugin with no manifest.
- *  (https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers) */
-export function pluginDeclarations(
+/** Whether `collect` saw every source that the plugin declares. */
+interface Gaps {
+  incomplete: boolean
+}
+
+/** The declarations of `pluginDeclarations`. `gaps.incomplete` turns true when a source did not
+ *  read: the root file cannot be seen, or a string in the manifest key does not lead to a `.json`
+ *  file that reads. A bundle, a URL, a missing file and a path fault are such strings. */
+function collect(
   root: string,
   manifest: ValueNode | null,
   kind: DeclarationKind,
+  gaps: Gaps,
 ): Declaration[] {
   const declarations: Declaration[] = []
   const add = (members: MemberNode[], from: string, at?: ValueNode) => {
@@ -187,8 +207,19 @@ export function pluginDeclarations(
       declarations.push({ name: keyOf(member.name), member, node: at ?? member.name, from })
     }
   }
-  const body = readJsonBody(path.join(root, kind.rootFile), repositoryRoot(root))
-  add(body === null ? [] : kind.rootMembers(body), kind.rootFile)
+  // An MCP file that is not an object, or whose `mcpServers` is not an object, has a shape that
+  // the rule cannot read as a map of servers (ADR 001, Decision 14).
+  const shapeFault = (file: ValueNode | null | typeof UNREADABLE) =>
+    kind.key === 'mcpServers' &&
+    file !== null &&
+    file !== UNREADABLE &&
+    (file.type !== 'Object' ||
+      (lastMember(file, 'mcpServers') !== undefined &&
+        lastMember(file, 'mcpServers')?.value.type !== 'Object'))
+  const bound = repositoryRoot(root)
+  const body = jsonBodyState(path.join(root, kind.rootFile), bound)
+  gaps.incomplete = body === UNREADABLE || shapeFault(body)
+  add(body === null || body === UNREADABLE ? [] : kind.rootMembers(body), kind.rootFile)
   // The rule reads a file once, also when the manifest names it twice, with the path of the root
   // file, or through a link. Only a path that the rule accepts counts as read.
   const read = new Set<string>()
@@ -202,17 +233,37 @@ export function pluginDeclarations(
   for (const item of items) {
     if (item?.type === 'String') {
       const target = declaredFile(root, item.value)
-      if (target === null || read.has(target.real)) {
+      if (target === null) {
+        gaps.incomplete = true
+        continue
+      }
+      if (read.has(target.real)) {
         continue
       }
       read.add(target.real)
-      const file = readJsonBody(target.file, repositoryRoot(root))
-      add(file === null ? [] : kind.fileMembers(file), item.value, item)
+      const file = jsonBodyState(target.file, bound)
+      gaps.incomplete ||= file === null || file === UNREADABLE || shapeFault(file)
+      add(file === null || file === UNREADABLE ? [] : kind.fileMembers(file), item.value, item)
     } else if (item?.type === 'Object') {
       add(lastMembers(item.members), 'an inline map')
     }
   }
   return declarations
+}
+
+/** The servers that the plugin at `root` declares, in the order that Claude Code loads them: the
+ *  file at the plugin root, then each value of the manifest key. A value is a `.json` path, or an
+ *  inline map, and an array mixes them. A bundle, a URL and a file that the rule cannot read add
+ *  nothing, so a report rests on the files that read. A name that one source repeats is one
+ *  server, as `JSON.parse` keeps the last. `manifest` is the top-level value of `plugin.json`,
+ *  or null for a plugin with no manifest.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers) */
+export function pluginDeclarations(
+  root: string,
+  manifest: ValueNode | null,
+  kind: DeclarationKind,
+): Declaration[] {
+  return collect(root, manifest, kind, { incomplete: false })
 }
 
 const MCP_KIND: DeclarationKind = {
@@ -225,6 +276,23 @@ const MCP_KIND: DeclarationKind = {
 /** The MCP servers that the plugin at `root` declares, in load order. */
 export const pluginMcpDeclarations = (root: string, manifest: ValueNode | null): Declaration[] =>
   pluginDeclarations(root, manifest, MCP_KIND)
+
+/** The MCP servers that the plugin at `root` declares, and whether the rule saw every source. The
+ *  result is incomplete when the root `.mcp.json` cannot be seen, or when a string in `mcpServers`
+ *  leads to no `.json` file that reads. A rule that rests on a missing server stays silent then. */
+export function pluginMcpSources(
+  root: string,
+  manifest: ValueNode | null,
+): { declarations: Declaration[]; complete: boolean } {
+  const gaps = { incomplete: false }
+  const declarations = collect(root, manifest, MCP_KIND, gaps)
+  return { declarations, complete: !gaps.incomplete }
+}
+
+/** A name with each character outside `A-Za-z0-9_-` as `_`, as Claude Code writes the name of a
+ *  plugin and of a server in a tool name.
+ *  (https://code.claude.com/docs/en/mcp#plugin-provided-mcp-servers) */
+export const sanitizeName = (text: string): string => text.replaceAll(/[^A-Za-z0-9_-]/g, '_')
 
 /** One server of a file that a rule lints. `member` holds the name and the config. `pinned` is
  *  the node that takes every report for a server of a declared file: the path in the manifest.

@@ -202,6 +202,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-plugin-stdio-reach`](docs/rules/mcp-plugin-stdio-reach.md) | A plugin that targets claude.ai (option `targets`) declares no stdio server; the rule is silent when `targets` is unset | `warn` | `warn` |
 | [`claude/mcp-policy-literal-values`](docs/rules/mcp-policy-literal-values.md) | A `serverUrl` or `serverCommand` policy entry in the managed files has no `${VAR}` reference | `warn` | `warn` |
 | [`claude/mcp-policy-servername-weak`](docs/rules/mcp-policy-servername-weak.md) | A `serverName` policy entry in the managed files gets a review; a name is a label, not a security control | `warn` | `warn` |
+| [`claude/mcp-always-load-count`](docs/rules/mcp-always-load-count.md) | At most `max` servers set `alwaysLoad: true` in a project file or one plugin; option `max`, default 2 | `off` | `warn` |
+| [`claude/mcp-env-var-numbers`](docs/rules/mcp-env-var-numbers.md) | An MCP timeout in the `env` of a settings file is not a plain number from 1 to 999, which is under one second | `off` | `warn` |
+| [`claude/mcp-env-var-syntax`](docs/rules/mcp-env-var-syntax.md) | A reference in a server entry is `${VAR}` or `${VAR:-default}`, not `$VAR`, `%VAR%` or `${VAR-x}` | `off` | `warn` |
+| [`claude/mcp-no-literal-secrets`](docs/rules/mcp-no-literal-secrets.md) | A committed MCP config holds no literal credential in `headers`, `env`, `args` or `url` | `off` | `warn` |
+| [`claude/mcp-project-toggle-keys`](docs/rules/mcp-project-toggle-keys.md) | A settings file does not set `disabledMcpServers` or `enabledMcpServers`, which Claude Code stores in `~/.claude.json` | `off` | `warn` |
+| [`claude/mcp-tool-server-unknown`](docs/rules/mcp-tool-server-unknown.md) | An `mcp__<server>` reference names a server that the `.mcp.json` of the project or the plugin declares | `off` | `warn` |
 
 ## Contributing
 

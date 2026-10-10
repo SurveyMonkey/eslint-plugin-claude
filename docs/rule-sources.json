@@ -757,6 +757,13 @@
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
+  "mcp-always-load-count": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Exempt a server from deferral",
+      "hash": "844c12a04324e4f5cc8be1269dd4afc59b78e52382ab57f1c5638f59a25a0968"
+    }
+  ],
   "mcp-anthropic-hosted-url": [
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -862,7 +869,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -880,6 +887,30 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Use dynamic headers for custom authentication",
       "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    }
+  ],
+  "mcp-env-var-numbers": [
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "MCP output limits and warnings",
+      "hash": "a7be145b597e81241795b548d4f03abd1ccbc5c05b86114e03b80adda114f898"
+    }
+  ],
+  "mcp-env-var-syntax": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Supported syntax",
+      "hash": "77a12b27b16188cc713c1d8ee44a5d18c9ab61c9985c2114c73c8f1fa73375ea"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Expansion locations",
+      "hash": "500945dd95e5abb58fce44477333b79eb14f416a94a1a0f2a7057fac761c4cf6"
     }
   ],
   "mcp-headershelper-committed": [
@@ -978,6 +1009,28 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Split a file-based policy across teams",
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
+  "mcp-no-literal-secrets": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Environment variable expansion in .mcp.json",
+      "hash": "204d1dd6a96f3ea5f736cafd1e78405c6411d73da2e3ae324471615f631e2b17"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Authenticate with per-user credentials",
+      "hash": "c8f77058987dd077575b7734a3e36ac3c05787a68ba4eec5a3cc47559aa80697"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Validate the manifest",
+      "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use pre-configured OAuth credentials",
+      "hash": "d9b10ec6ffc74a77a92136d4b40cd4bdcd48d7d7d8fd6b5a906910241741356e"
     }
   ],
   "mcp-no-sse-transport": [
@@ -1115,6 +1168,23 @@
       "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
     }
   ],
+  "mcp-project-toggle-keys": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Disable a server without removing it",
+      "hash": "b9d51c5a0d299d4a7747d46ea7eb03af778f8c1121bad3b1bef6042a9358821b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledMcpjsonServers",
+      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disabledMcpjsonServers",
+      "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232"
+    }
+  ],
   "mcp-remote-url-empty": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -1194,6 +1264,18 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Match MCP tools",
       "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8"
+    }
+  ],
+  "mcp-tool-server-unknown": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "MCP",
+      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
     }
   ],
   "output-style-frontmatter-schema": [
@@ -1536,7 +1618,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -1553,7 +1635,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
   "settings-env-shadowed": [
@@ -1602,7 +1684,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
