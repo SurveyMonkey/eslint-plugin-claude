@@ -127,6 +127,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-user-config-field-applicability`](docs/rules/plugin-user-config-field-applicability.md) | A `userConfig` option sets `min` and `max` only on a `number` option, and `multiple` only on a `string` option | `warn` | `warn` |
 | [`claude/plugin-monitors-command-quote`](docs/rules/plugin-monitors-command-quote.md) | A monitor `command` writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` inside quotes, because an install path with a space splits the command | `warn` | `warn` |
 | [`claude/plugin-package-lifecycle-scripts`](docs/rules/plugin-package-lifecycle-scripts.md) | The `package.json` at a plugin root has no `preinstall`, `install` or `postinstall` script, because Claude Code installs dependencies with `--ignore-scripts` | `warn` | `warn` |
+| [`claude/plugin-package-lockfile-choice`](docs/rules/plugin-package-lockfile-choice.md) | A plugin ships one lockfile that Claude Code reads, and not `bun.lock` alone, because Claude Code reads the first match and does not fall back to npm | `warn` | `warn` |
 
 ### Marketplace manifest
 

@@ -79,6 +79,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-npm-source-shrinkwrap',
     'plugin-package-lifecycle-scripts',
     'plugin-package-lockfile',
+    'plugin-package-lockfile-choice',
     'plugin-path-no-backslash',
     'plugin-path-var-braced',
     'plugin-project-skills-dir-limits',

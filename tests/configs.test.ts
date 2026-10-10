@@ -202,6 +202,11 @@ const TREE: Record<string, string> = {
   'plugins/lc/.claude-plugin/plugin.json': JSON.stringify({ name: 'lc' }),
   'plugins/lc/package.json': JSON.stringify({ scripts: { postinstall: 'node setup.js' } }),
   'plugins/lc/sub/package.json': JSON.stringify({ scripts: { postinstall: 'node setup.js' } }),
+  // A plugin with two lockfiles that Claude Code reads.
+  'plugins/lch/.claude-plugin/plugin.json': JSON.stringify({ name: 'lch' }),
+  'plugins/lch/package.json': '{}',
+  'plugins/lch/bun.lock': '',
+  'plugins/lch/package-lock.json': '',
   // A marketplace in a repository with a `.git`, and a plugin that depends on a name that the
   // marketplace does not list.
   'packages/cx/.git/HEAD': 'ref: refs/heads/main\n',
@@ -799,6 +804,11 @@ const PLUGIN_RULES: {
     severity: 'warn',
   },
   { name: 'plugin-package-lifecycle-scripts', files: ['**/package.json'], severity: 'warn' },
+  {
+    name: 'plugin-package-lockfile-choice',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -861,6 +871,7 @@ const EXPECTED = [
   'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
   'plugins/lc/package.json: claude/plugin-package-lifecycle-scripts@1',
+  'plugins/lch/.claude-plugin/plugin.json: claude/plugin-package-lockfile-choice@1',
   'plugins/mq/.claude-plugin/plugin.json: claude/plugin-monitors-command-quote@1',
   'plugins/mq2/monitors/monitors.json: claude/plugin-monitors-command-quote@1',
   'plugins/uca/.claude-plugin/plugin.json: claude/plugin-user-config-field-applicability@1',

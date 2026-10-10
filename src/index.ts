@@ -63,6 +63,7 @@ import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.ts'
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
@@ -237,6 +238,7 @@ const modules = [
   pluginUserConfigFieldApplicability,
   pluginMonitorsCommandQuote,
   pluginPackageLifecycleScripts,
+  pluginPackageLockfileChoice,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -376,6 +378,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-user-config-field-applicability': 'warn',
   'plugin-monitors-command-quote': 'warn',
   'plugin-package-lifecycle-scripts': 'warn',
+  'plugin-package-lockfile-choice': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

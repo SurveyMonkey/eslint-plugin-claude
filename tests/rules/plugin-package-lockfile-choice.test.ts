@@ -10,7 +10,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-package-lockfile-choice'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
 
