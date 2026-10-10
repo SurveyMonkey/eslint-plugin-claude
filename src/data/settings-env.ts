@@ -134,6 +134,7 @@ const FORMS = new Map<string, EnvForm>([
   ],
   ['MCP_SDK_GENERATION', oneOf('v1 or v2', ['v1', 'v2'])],
   ['MCP_PROTOCOL_NEGOTIATION', oneOf('auto or legacy', ['auto', 'legacy'])],
+  ['CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH', positiveWhole],
   ['CLAUDE_CODE_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
   ['CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
   [

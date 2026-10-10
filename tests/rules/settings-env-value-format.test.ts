@@ -121,6 +121,13 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'auto or legacy',
   },
   {
+    // "Accepts a positive whole number in plain digits. Anything else is ignored".
+    name: 'CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH',
+    pass: ['1', '2048', '10000'],
+    fail: ['0', '-1', '2.5', '2k', '2e3', '1_000', 'long'],
+    expected: 'a positive whole number in plain digits',
+  },
+  {
     // "Set 5m or 1h, the only values Claude Code accepts".
     name: 'CLAUDE_CODE_PROMPT_CACHE_TTL',
     pass: ['5m', '1h'],
