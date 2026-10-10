@@ -568,6 +568,11 @@ const TREE: Record<string, string> = {
   'packages/mi/.claude/agent-memory/rev/MEMORY.md': LONG,
   'packages/mi/.claude/agent-memory/rev/topic.md': LONG,
   'packages/mi/MEMORY.md': LONG,
+  // `memory-index-entry-format`: an index entry that takes two lines. The same text in a topic
+  // file and in a file that is not below `.claude/agent-memory/<name>/`.
+  'packages/ent/.claude/agent-memory/rev/MEMORY.md': '- [Testing](testing.md): first\n  second\n',
+  'packages/ent/.claude/agent-memory/rev/topic.md': '- [Testing](testing.md): first\n  second\n',
+  'packages/ent/MEMORY.md': '- [Testing](testing.md): first\n  second\n',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
@@ -753,6 +758,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-location': ['markdown/gfm', ['**/*.md']],
   'claude-md-procedure-to-skill': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'memory-agent-memory-orphan': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
+  'memory-index-entry-format': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
   'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
@@ -1051,6 +1057,8 @@ const STRICT_ONLY = [
   'packages/ic/.claude/CLAUDE.md: claude/claude-md-import-in-code-span@1',
   'packages/ic/CLAUDE.local.md: claude/claude-md-import-in-code-span@1',
   'packages/ica/AGENTS.md: claude/claude-md-import-in-code-span@1',
+  // `memory-index-entry-format` reads the `MEMORY.md` index, and no other file.
+  'packages/ent/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-entry-format@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

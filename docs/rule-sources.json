@@ -844,6 +844,13 @@
       "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
     }
   ],
+  "memory-index-entry-format": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+    }
+  ],
   "memory-index-max-size": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",

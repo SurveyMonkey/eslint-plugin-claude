@@ -52,6 +52,7 @@ import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-con
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
 import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
+import memoryIndexEntryFormat from './rules/memory-index-entry-format.ts'
 import memoryIndexMaxSize from './rules/memory-index-max-size.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
@@ -230,6 +231,7 @@ const modules = [
   claudeMdLocation,
   claudeMdProcedureToSkill,
   memoryAgentMemoryOrphan,
+  memoryIndexEntryFormat,
   rulesPathsNoMatch,
 ]
 
@@ -366,6 +368,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-location': 'off',
   'claude-md-procedure-to-skill': 'off',
   'memory-agent-memory-orphan': 'off',
+  'memory-index-entry-format': 'off',
   'rules-paths-no-match': 'off',
 }
 
