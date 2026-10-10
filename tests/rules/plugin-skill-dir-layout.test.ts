@@ -12,7 +12,7 @@ import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, lintMarkdown, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-skill-dir-layout'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
@@ -36,8 +36,8 @@ describe(RULE, () => {
       messageId: 'loose',
       message: message('loose.md', './extra'),
       line: 1,
-      column: 31,
-      endColumn: 40,
+      column: 22,
+      endColumn: 31,
     })
   })
 
