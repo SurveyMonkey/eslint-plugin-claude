@@ -23,13 +23,13 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const allow = (...rules: string[]) => ({ permissions: { allow: rules } })
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports a bare Bash in a project, local or managed file', () => {
+  it('reports a bare Bash in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(allow('Bash'), file), file).toEqual(['command'])
     }
   })
 
-  it.fails('reports each form of the row', () => {
+  it('reports each form of the row', () => {
     expect(ids(allow('Bash'))).toEqual(['command'])
     expect(ids(allow('Bash(*)'))).toEqual(['command'])
     expect(ids(allow('PowerShell'))).toEqual(['command'])
@@ -37,7 +37,7 @@ describe(`${name}: the reports`, () => {
     expect(ids(allow('WebFetch(domain:*)'))).toEqual(['fetch'])
   })
 
-  it.fails('reports each entry once, in file order', () => {
+  it('reports each entry once, in file order', () => {
     expect(ids(allow('Bash', 'Read', 'WebFetch(domain:*)', 'Bash(*)'))).toEqual([
       'command',
       'fetch',
@@ -45,24 +45,24 @@ describe(`${name}: the reports`, () => {
     ])
   })
 
-  it.fails('says that the rule approves every command, without manual approval', () => {
+  it('says that the rule approves every command, without manual approval', () => {
     const [message] = lint(allow('Bash(*)'))
     expect(message?.message).toContain('`Bash(*)`')
     expect(message?.message).toContain('every Bash command')
     expect(message?.message).toContain('without manual approval')
   })
 
-  it.fails('says that the PowerShell rule approves every PowerShell command', () => {
+  it('says that the PowerShell rule approves every PowerShell command', () => {
     expect(lint(allow('PowerShell'))[0]?.message).toContain('every PowerShell command')
   })
 
-  it.fails('says that the fetch rule opens the sandbox network to any host', () => {
+  it('says that the fetch rule opens the sandbox network to any host', () => {
     const [message] = lint(allow('WebFetch(domain:*)'))
     expect(message?.message).toContain('every fetch')
     expect(message?.message).toContain('any host')
   })
 
-  it.fails('reports the entry, at its line, column and end', () => {
+  it('reports the entry, at its line, column and end', () => {
     const [message] = lint(JSON.stringify(allow('Bash(*)')))
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
       1, 26, 1, 35,
@@ -71,7 +71,7 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the rules that it leaves alone`, () => {
-  it.fails('is silent for a scoped grant', () => {
+  it('is silent for a scoped grant', () => {
     for (const rule of [
       'Bash(npm test)',
       'Bash(npm run *)',
@@ -88,21 +88,21 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for the bare WebFetch, which leaves the sandbox allowlist as it is', () => {
+  it('is silent for the bare WebFetch, which leaves the sandbox allowlist as it is', () => {
     expect(ids(allow('WebFetch'))).toEqual([])
   })
 
-  it.fails('is silent for the tools that the row does not name', () => {
+  it('is silent for the tools that the row does not name', () => {
     for (const rule of ['Monitor', 'Monitor(*)', 'Read', 'Edit', 'Write(*)', 'Skill', 'Read(*)']) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a tool-name glob: permissions-tool-name-glob reports it', () => {
+  it('is silent for a tool-name glob: permissions-tool-name-glob reports it', () => {
     expect(ids(allow('*', 'mcp__*'))).toEqual([])
   })
 
-  it.fails('is silent in deny and ask, where the same rule blocks or prompts', () => {
+  it('is silent in deny and ask, where the same rule blocks or prompts', () => {
     expect(
       ids({
         permissions: { deny: ['Bash', 'WebFetch(domain:*)'], ask: ['Bash(*)', 'PowerShell'] },
@@ -110,17 +110,17 @@ describe(`${name}: the rules that it leaves alone`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
+  it('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
     expect(ids(allow('Bash(*'))).toEqual([])
   })
 
-  it.fails('is silent for an entry that is no string, and a list that is no array', () => {
+  it('is silent for an entry that is no string, and a list that is no array', () => {
     expect(ids({ permissions: { allow: [3, null] } })).toEqual([])
     expect(ids({ permissions: { allow: 'Bash' } })).toEqual([])
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash'), HIDDEN)).toEqual([])
   })
 })

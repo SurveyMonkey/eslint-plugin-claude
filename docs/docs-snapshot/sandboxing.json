@@ -1,0 +1,250 @@
+{
+  "url": "https://code.claude.com/docs/en/sandboxing",
+  "hash": "4b3ad95a235ff8ea1c98ce60775c08ef3e8e9b2aa2e2bc39e643967b8747cbbb",
+  "blocks": [
+    {
+      "id": "configure-the-sandboxed-bash-tool",
+      "hash": "8746bb02b343092c166a410114b694040a4a106eee8ec7599e4b481da282b5f6"
+    },
+    {
+      "id": "what-the-sandbox-restricts",
+      "hash": "721d542ca02dc6f2b1a765a131b12ec3270d5ebd073c8472def3725d27377b2c"
+    },
+    {
+      "id": "what-runs-outside-the-sandbox",
+      "hash": "591c53685a628d3219b11dba59ca2c206f33dafe6904fff6a3e73437fcf11af5"
+    },
+    {
+      "id": "get-started",
+      "hash": "3b5133f12ad59bde78125f1c62cc8563197fcd2433fb304d3874bf2c39e98c6c"
+    },
+    {
+      "id": "confirm-commands-run-inside-the-sandbox",
+      "hash": "9fecbc116a10849c5a9b617518390dd141d9a1dc8e31f2b5c10d6998e218595a"
+    },
+    {
+      "id": "set-up-linux-and-wsl2",
+      "hash": "6de934f16aebb93b1e8a2a6bd7083d23562dd57576341f96c350f9dd409714d2"
+    },
+    {
+      "id": "sandbox-modes",
+      "hash": "a2430e02aa2014926ba945d7d1985226f59fac0e14b20cf47d554d0876023cd7"
+    },
+    {
+      "id": "auto-allow-mode",
+      "hash": "1ca60dd90cd8fbac4b10d8e48134c1971f2325ef60629372864efe7491ec72b9"
+    },
+    {
+      "id": "regular-permissions-mode",
+      "hash": "fecc1c055de0447686687f075b7ba7d265cac8dc13fe3b26771cc389c39ceb26"
+    },
+    {
+      "id": "the-unsandboxed-retry-escape-hatch",
+      "hash": "11f649b46c0866c709179eb770020a7cf763235aaca1a2dce70e0b8370ab98d2"
+    },
+    {
+      "id": "turn-off-the-retry-with-strict-sandbox-mode",
+      "hash": "6dfa81735d821091d4e520b857863b4821fbb94a0c19f44888fea06ff77afbe1"
+    },
+    {
+      "id": "temporary-directories",
+      "hash": "e50c042e6eaf4a9065dd6f1da6aa12e827f14061430f87b8e10eb4773b4e597d"
+    },
+    {
+      "id": "configure-sandboxing",
+      "hash": "f47954102875a1fdc8b8c9b85df7a3822f6ced10d13448e56e07b835d9509848"
+    },
+    {
+      "id": "run-commands-outside-the-sandbox-with-excludedcommands",
+      "hash": "00160a18dbf5e6e81f1e4ab8a426694f3e6399c433fca16392035d04963994b0"
+    },
+    {
+      "id": "disable-filesystem-isolation",
+      "hash": "e297b1e1e8385508031d710562f7e70d29f9e93e4dc813f6fe58d319bb839b9e"
+    },
+    {
+      "id": "which-settings-can-disable-it",
+      "hash": "359992e07d5544469ea72032b61ece778eb73166d32be3f315f0b6e3b5880ad3"
+    },
+    {
+      "id": "what-changes-when-filesystem-isolation-is-off",
+      "hash": "f5016435991ef99a08c7b9716f3f29c7993092bdf715c6ab04f74d6ad0f93dd0"
+    },
+    {
+      "id": "protect-credentials",
+      "hash": "7c83a7546e34d95a9373e91efcc871fc0707e611f7fef26633be82780c3913a3"
+    },
+    {
+      "id": "mask-credentials",
+      "hash": "91b57dd88665c2899650d9fba468a2e663a30965726851a8fc966ab6f0ed16e3"
+    },
+    {
+      "id": "mask-environment-variables",
+      "hash": "0de7dc77eac0e8100fa4b8fc6e3d23676ab5c7d264f37f6ea317ac52266365a8"
+    },
+    {
+      "id": "re-sign-aws-requests",
+      "hash": "19109ea519585d9178e0ca872e07d820830541f642ecee3df638e0b487cc51f5"
+    },
+    {
+      "id": "mask-credential-files",
+      "hash": "f710e1f6b094956380fe8fa7d883fe93ef255cb7f0b16e7f6f231bf0b5b0e417"
+    },
+    {
+      "id": "how-sandboxing-works",
+      "hash": "068c2fe243b5749f4e024145b6b8a10a2269be7f7530fff2b8040e582929113c"
+    },
+    {
+      "id": "filesystem-isolation",
+      "hash": "65b7cf9f7f984879e99daeffcc58e508d6f3b7ab01e4b83cddaf888260d48e1e"
+    },
+    {
+      "id": "protected-paths",
+      "hash": "880632f45fd7bc03f173f03ff9e58ea5733bd1777d57c0f4b4322e00d0441390"
+    },
+    {
+      "id": "network-isolation",
+      "hash": "b5d83df90c4e3c59646ae1fe5650a830bd4f82acbd4e1cf3106530573218ef54"
+    },
+    {
+      "id": "hosts-outside-your-allowed-domains",
+      "hash": "90e531d5851038a0c71d58807c07838b3312c2a00ea531a65b6b08a6745e69a3"
+    },
+    {
+      "id": "hostnames-that-resolve-to-local-addresses",
+      "hash": "e22f10516af700aa4c16697deeb7982e46bad1ab86ffb02a7a61bcce6cb39b46"
+    },
+    {
+      "id": "per-command-allowed-domains-in-auto-mode",
+      "hash": "bde631c2809f9a0011c51528a7148ad088ca04b89f2fbfa1a358c04382f8499e"
+    },
+    {
+      "id": "ipv6-addresses-in-domain-lists",
+      "hash": "c62042566fc5f186f5b97861299097ede711bc227f92626bf1b69e1b8e918e50"
+    },
+    {
+      "id": "os-level-enforcement",
+      "hash": "2d8cce12f635556384e5112192cde801a18ec0d15decfad43461ac55ee201877"
+    },
+    {
+      "id": "how-sandboxing-relates-to-permissions-and-permission-modes",
+      "hash": "90d9325e783f1f29e04890bb74b032ff1cad24b78fc506a7b3c4888b09150fee"
+    },
+    {
+      "id": "permission-rules",
+      "hash": "0c8fec51aed28d3792e9e004f75779c51dbaf53a97e4bcadcd5455c75fc25e05"
+    },
+    {
+      "id": "permission-modes",
+      "hash": "bb09a181f047fd1bed1749e0b625588bfcd20ae7bb9362c365145451c6168fbd"
+    },
+    {
+      "id": "configure-the-sandbox-for-your-organization",
+      "hash": "58548df754707d8c1681aec4bb8e75c829cc4d028f811c4663d906e21ff497ae"
+    },
+    {
+      "id": "enforce-sandboxing-with-managed-settings",
+      "hash": "9ed9ca92638f62e06bddb6525ff368abd8c1e4938246336de81e4a4a64394876"
+    },
+    {
+      "id": "keep-developers-from-widening-the-policy",
+      "hash": "a3491981c685464f6686c2c3c191c82c35d7ae081d932010c83573235a5a6984"
+    },
+    {
+      "id": "repository-settings-under-an-admin-required-sandbox",
+      "hash": "222c786eec1c9b5f4c271a19975fdab2b9a734025ed29a3c687128899b694fea"
+    },
+    {
+      "id": "locks-that-apply-without-an-admin-required-sandbox",
+      "hash": "9e2e4d1ed5ce00443cf2a21987aaa83dccc160c4773cbab0fb15b7bdc6850161"
+    },
+    {
+      "id": "custom-proxy-configuration",
+      "hash": "7b0a780fff84f615eed97772f603e8cda254c3747bcbd618b8996ff28ce53e84"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "53676f5b881725093278d204f5a1b49eaacc6f97a44ba0f092b5941c54d41a30"
+    },
+    {
+      "id": "commands-fail-with-a-host-not-allowed-error",
+      "hash": "e9db2675b10eb2d9a1b5e876453b12b988740970b55b3fb38d7bc57656bbb8a4"
+    },
+    {
+      "id": "jest-hangs-or-fails",
+      "hash": "798e7fa994d0c3aeaf8f47145371c5da85aa4addc2cfa1a690b7933b20a796cc"
+    },
+    {
+      "id": "go-based-clis-fail-tls-verification-on-macos",
+      "hash": "16dcf39340f2b48c95daef8d711a401372d9d970689a97bfe7871400242ef981"
+    },
+    {
+      "id": "open-osascript-or-browser-based-auth-flows-fail-with-error--600-on-macos",
+      "hash": "85f1a853f62769afe0abc6271a6c2a3308f9ce5fb6f7c6c3ccda2255e03c0d05"
+    },
+    {
+      "id": "docker-commands-fail",
+      "hash": "71592e5cf42c28becd899cedbc74d069fdee1e452becfbd2a9d8c84bc8c41be5"
+    },
+    {
+      "id": "pbcopy-xclip-or-wl-copy-doesnt-update-the-clipboard",
+      "hash": "72b294adbbec8fb74ef728d41cdbeac661e07be397713c86780ea7dadd1b1146"
+    },
+    {
+      "id": "a-git-command-fails-with-unable-to-unlink-old",
+      "hash": "a99f5f6577c9f670b92f13ec04c428122869998fae5037d520ceebe3e8492a19"
+    },
+    {
+      "id": "bubblewrap-fails-to-start-inside-a-container",
+      "hash": "9fbc22abe88520a2f307de7176d876d13c4c47cf5e345d420b7a648041ee225f"
+    },
+    {
+      "id": "0-byte-read-only-files-appear-at--claude-settings-paths-and-yes-and-dont-ask-again-doesnt-save",
+      "hash": "a1acf40779e963ea2cd08ac1b3fb02adf54832c4507f4be9794e6197ada2b5c6"
+    },
+    {
+      "id": "git-over-ssh-fails-with-the-sandbox-on",
+      "hash": "ba36fb1209bf754e66ea081a15b7a93d816f2bedb7054821dffec01e7fb2dbda"
+    },
+    {
+      "id": "a-database-client-or-other-non-http-tool-fails-to-reach-an-allowed-host",
+      "hash": "cc8e4aa0449c1252776da18ba24e7e36f0a60c6ac9356f8f582ee0b95dcd0b37"
+    },
+    {
+      "id": "a-command-fails-to-reach-a-server-on-localhost",
+      "hash": "2d3fb735e0f00fae8da97193f0fc7cb8de8ad1207d6544580a42804895111b06"
+    },
+    {
+      "id": "an-allowed-hostname-is-refused-with-resolved-to-a-loopback-address",
+      "hash": "132d1809a7bb7139e1cbb0fa0d7de1dbb867f1880c4bac7e091ee592e631c359"
+    },
+    {
+      "id": "sandbox-fails-with-sandbox-settings-are-overridden-by-a-higher-priority-configuration",
+      "hash": "bb39ea4ee8d05e79461a91ad24488779ec4b30616c4d73b631f4119d04d531db"
+    },
+    {
+      "id": "limitations",
+      "hash": "4885be347027fae262068f7744571076a7465b54fcac77a95d53e6c9bd28bcdf"
+    },
+    {
+      "id": "security-limitations",
+      "hash": "38c6b07ead0e26e0d70c8353b2abf4bdcbeaae12ba549740aacda939664645bf"
+    },
+    {
+      "id": "scope",
+      "hash": "3b829becc87c89a973c72ed0fd0fa7ebf7a285c22665491f0f0460727648367b"
+    },
+    {
+      "id": "see-also",
+      "hash": "1c5900b9454c3a0b3d67bc561dcc06de49dcfeccefc153779d01b0f023d59801"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Protected paths",
+      "id": "protected-paths",
+      "hash": "880632f45fd7bc03f173f03ff9e58ea5733bd1777d57c0f4b4322e00d0441390",
+      "text": "### Protected paths\n\nInside the directories that sandboxed commands can write to, the sandbox still denies writes to the files Claude Code loads configuration and code from. A command that could edit those files could grant itself permissions, or add a hook or MCP server that Claude Code runs outside the sandbox. The permission system has its own [protected paths](/docs/en/permission-modes#protected-paths), which control what Claude Code approves before a tool runs; the sandbox's list applies to a command that is already running. It covers four groups of paths:\n\n* **In your working directory and the directories above it**: the `.claude` settings files, the `.claude/skills`, `.claude/agents`, `.claude/commands`, and `.claude/hooks` directories, `.mcp.json`, and the files Claude Code runs on its own, such as `.claude/workflows` and `.claude/scheduled_tasks.json`\n* **In your working directory only**: shell startup files such as `.bashrc` and `.zshrc`, `.gitconfig`, the `.vscode` and `.idea` directories, and `hooks` and `config` inside `.git`\n* **Files that would turn your working directory into a bare git repository**: `HEAD`, `objects`, and `refs` at the top level, plus existing `config` and `hooks` entries there when a `HEAD` sits beside them. A file named `config` is denied even with no `HEAD`. On Linux and WSL2, the sandbox deletes a top-level `HEAD` file or `objects` or `refs` directory that appears while a sandboxed command is running\n* **In `~/.claude`, or the directory `CLAUDE_CONFIG_DIR` points to**: most of its contents, plus `~/.claude.json` and the `.credentials.json` credential store\n\nIf a symlink appears at a protected settings file's path during the session, the sandbox also denies writes to the file it points to, starting with the next command.\n\nThere is no way to exempt one of these paths: an `allowWrite` entry or an `Edit` allow rule that covers the path doesn't lift the protection. The only way to turn the protection off is [`filesystem.disabled`](#disable-filesystem-isolation), which turns off filesystem isolation for every path. To see most of these paths resolved for your machine, run `/sandbox` and open the **Config** tab, which lists them under **Denied within allowed**, mixed in with your own `denyWrite` entries.\n\nIf `git merge` or `git checkout` fails with `unable to unlink old` on one of these paths, see [A git command fails with `unable to unlink old`](#a-git-command-fails-with-unable-to-unlink-old)."
+    }
+  ]
+}

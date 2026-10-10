@@ -4,7 +4,7 @@
 // grammar of the rule itself is in `permission-rule.ts`.
 
 /** The words of `specifier`, split at white space. A `:*` at the end of the
- *  pattern is the same as a trailing ` *`, so it gives the words before it and
+ *  pattern is the same as a final ` *`, so it gives the words before it and
  *  a final `*`. A `:*` anywhere else is part of a word, because Claude Code
  *  reads the colon there as a literal character. */
 export function commandWords(specifier: string): string[] {

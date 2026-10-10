@@ -23,13 +23,13 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const allow = (...rules: string[]) => ({ permissions: { allow: rules } })
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports the example of the docs, in a project, local or managed file', () => {
+  it('reports the example of the docs, in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(allow('Bash(git * main)'), file), file).toEqual(['wildcard'])
     }
   })
 
-  it.fails('reports a * before the subcommand, and a * as the first word', () => {
+  it('reports a * before the subcommand, and a * as the first word', () => {
     for (const rule of [
       'Bash(git * main)',
       'Bash(git -C * status *)',
@@ -43,34 +43,34 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports the tools that take the pattern of a Bash rule', () => {
+  it('reports the tools that take the pattern of a Bash rule', () => {
     for (const tool of ['Monitor', 'PowerShell']) {
       expect(ids(allow(`${tool}(git * main)`)), tool).toEqual(['wildcard'])
     }
   })
 
-  it.fails('reports each entry once', () => {
+  it('reports each entry once', () => {
     expect(ids(allow('Bash(git * main)', 'Bash(npm run *)', 'Bash(* --version)'))).toEqual([
       'wildcard',
       'wildcard',
     ])
   })
 
-  it.fails('names the rule, and says that it matches options without a prompt', () => {
+  it('names the rule, and says that it matches options without a prompt', () => {
     const [message] = lint(allow('Bash(git * main)'))
     expect(message?.message).toContain('`Bash(git * main)`')
     expect(message?.message).toContain('options')
     expect(message?.message).toContain('without a prompt')
   })
 
-  it.fails('reports the entry, at its line, column and end', () => {
+  it('reports the entry, at its line, column and end', () => {
     const [message] = lint(JSON.stringify(allow('Bash(git * main)')))
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
       1, 26, 1, 44,
     ])
   })
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     expect(
       ids('{"permissions": {"allow": ["Bash(git * main)"], "allow": ["Bash(git log *)"]}}'),
     ).toEqual([])
@@ -81,7 +81,7 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the rules that it leaves alone`, () => {
-  it.fails('is silent when the * comes after the subcommand', () => {
+  it('is silent when the * comes after the subcommand', () => {
     for (const rule of [
       'Bash(git log * main)',
       'Bash(npm run *)',
@@ -97,47 +97,47 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for a rule with no word after the first *', () => {
+  it('is silent for a rule with no word after the first *', () => {
     for (const rule of ['Bash(*)', 'Bash(* *)', 'Bash(git * *)', 'Bash', 'Bash()', 'Bash( )']) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a * that is part of a word, and for a :* in the middle', () => {
+  it('is silent for a * that is part of a word, and for a :* in the middle', () => {
     for (const rule of ['Bash(ls*)', 'Bash(git sta* main)', 'Bash(git:* push)']) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
   })
 
-  it.fails('is silent when a word that is not an option comes before the *', () => {
+  it('is silent when a word that is not an option comes before the *', () => {
     expect(ids(allow('Bash(docker -H host * ps)'))).toEqual([])
   })
 
-  it.fails('is silent for a tool that takes no command pattern', () => {
+  it('is silent for a tool that takes no command pattern', () => {
     for (const rule of ['Read(* foo)', 'Edit(* --version)', 'WebFetch(domain:*)', 'Skill(* x)']) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
   })
 
-  it.fails('is silent in deny and ask, which the docs do not warn about', () => {
+  it('is silent in deny and ask, which the docs do not warn about', () => {
     expect(
       ids({ permissions: { deny: ['Bash(git * main)'], ask: ['Bash(* --version)'] } }),
     ).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
+  it('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
     expect(ids(allow('Bash(git * main'))).toEqual([])
     expect(ids(allow('(git * main)'))).toEqual([])
   })
 
-  it.fails('is silent for an entry that is no string, and a list that is no array', () => {
+  it('is silent for an entry that is no string, and a list that is no array', () => {
     expect(ids({ permissions: { allow: [3, null, ['Bash(git * main)']] } })).toEqual([])
     expect(ids({ permissions: { allow: 'Bash(git * main)' } })).toEqual([])
     expect(ids({ permissions: 'Bash(git * main)' })).toEqual([])
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash(git * main)'), HIDDEN)).toEqual([])
   })
 })

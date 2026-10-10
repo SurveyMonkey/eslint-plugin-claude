@@ -21,36 +21,36 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const allow = (...rules: string[]) => ({ permissions: { allow: rules } })
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports the example of the docs, in a project, local or managed file', () => {
+  it('reports the example of the docs, in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(allow('Bash(watch *)'), file), file).toEqual(['prefix'])
     }
   })
 
-  it.fails('reports each wrapper of the docs', () => {
+  it('reports each wrapper of the docs', () => {
     for (const wrapper of ['watch', 'setsid', 'ionice', 'flock']) {
       expect(ids(allow(`Bash(${wrapper} *)`)), wrapper).toEqual(['prefix'])
     }
   })
 
-  it.fails('reports a prefix rule that holds more words, and the :* suffix', () => {
+  it('reports a prefix rule that holds more words, and the :* suffix', () => {
     for (const rule of ['Bash(watch -n 5 *)', 'Bash(flock /tmp/lock *)', 'Bash(watch:*)']) {
       expect(ids(allow(rule)), rule).toEqual(['prefix'])
     }
   })
 
-  it.fails('reports a Monitor rule, which uses the rules of Bash', () => {
+  it('reports a Monitor rule, which uses the rules of Bash', () => {
     expect(ids(allow('Monitor(watch *)'))).toEqual(['prefix'])
   })
 
-  it.fails('reports each entry once', () => {
+  it('reports each entry once', () => {
     expect(ids(allow('Bash(watch *)', 'Bash(watch ls)', 'Bash(setsid *)'))).toEqual([
       'prefix',
       'prefix',
     ])
   })
 
-  it.fails('names the wrapper, and says to write an exact-match rule', () => {
+  it('names the wrapper, and says to write an exact-match rule', () => {
     const [message] = lint(allow('Bash(setsid *)'))
     expect(message?.message).toContain('`Bash(setsid *)`')
     expect(message?.message).toContain('`setsid`')
@@ -58,7 +58,7 @@ describe(`${name}: the reports`, () => {
     expect(message?.message).toContain('exact')
   })
 
-  it.fails('reports the entry, at its line, column and end', () => {
+  it('reports the entry, at its line, column and end', () => {
     const [message] = lint(JSON.stringify(allow('Bash(watch *)')))
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
       1, 26, 1, 41,
@@ -67,7 +67,7 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the rules that it leaves alone`, () => {
-  it.fails('is silent for an exact-match rule, which the docs name as the way to approve one', () => {
+  it('is silent for an exact-match rule, which the docs name as the way to approve one', () => {
     for (const rule of [
       'Bash(watch ls)',
       'Bash(watch -n 5 git status)',
@@ -77,7 +77,7 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for a rule that does not start with the wrapper', () => {
+  it('is silent for a rule that does not start with the wrapper', () => {
     for (const rule of [
       'Bash(npm run watch *)',
       'Bash(watchman *)',
@@ -90,35 +90,35 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for a wrapper that Claude Code strips, and for find', () => {
+  it('is silent for a wrapper that Claude Code strips, and for find', () => {
     for (const rule of ['Bash(nice *)', 'Bash(timeout 30 *)', 'Bash(nohup *)', 'Bash(find *)']) {
       expect(ids(allow(rule)), rule).toEqual([])
     }
   })
 
-  it.fails('is silent for a * in the middle: the rule is no prefix rule', () => {
+  it('is silent for a * in the middle: the rule is no prefix rule', () => {
     expect(ids(allow('Bash(watch * ls)'))).toEqual([])
   })
 
-  it.fails('is silent for a tool that the Bash section does not cover', () => {
+  it('is silent for a tool that the Bash section does not cover', () => {
     expect(ids(allow('PowerShell(watch *)', 'Read(watch *)'))).toEqual([])
   })
 
-  it.fails('is silent in deny and ask, which hold no grant', () => {
+  it('is silent in deny and ask, which hold no grant', () => {
     expect(ids({ permissions: { deny: ['Bash(watch *)'], ask: ['Bash(watch *)'] } })).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
+  it('is silent for a rule that does not parse: permissions-rule-syntax reports it', () => {
     expect(ids(allow('Bash(watch *'))).toEqual([])
   })
 
-  it.fails('is silent for an entry that is no string, and a list that is no array', () => {
+  it('is silent for an entry that is no string, and a list that is no array', () => {
     expect(ids({ permissions: { allow: [3, null] } })).toEqual([])
     expect(ids({ permissions: { allow: 'Bash(watch *)' } })).toEqual([])
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Bash(watch *)'), HIDDEN)).toEqual([])
   })
 })
