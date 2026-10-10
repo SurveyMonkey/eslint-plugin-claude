@@ -61,6 +61,14 @@ export interface HookHandler {
   handler: HObject
 }
 
+/** The path placeholders of the hooks reference, "Reference scripts by path". Claude Code replaces
+ *  each `${NAME}` in a `command`, and exports the variable to the process. */
+export const PATH_VARIABLES = [
+  'CLAUDE_PROJECT_DIR',
+  'CLAUDE_PLUGIN_ROOT',
+  'CLAUDE_PLUGIN_DATA',
+] as const
+
 /** The handler types, from the hooks reference, "Hook handler fields". */
 export const HANDLER_TYPES = ['command', 'http', 'mcp_tool', 'prompt', 'agent'] as const
 export type HandlerType = (typeof HANDLER_TYPES)[number]

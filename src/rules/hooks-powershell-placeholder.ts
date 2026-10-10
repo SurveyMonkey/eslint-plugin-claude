@@ -6,12 +6,19 @@
 // shell form only.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
-import { HOOKS_TARGET, handlersOf, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
+import {
+  HOOKS_TARGET,
+  handlersOf,
+  hooksListener,
+  memberOf,
+  PATH_VARIABLES,
+  stringOf,
+} from '../hooks-config.ts'
 
 const name = 'hooks-powershell-placeholder' as const
 
 const BARE = /\$CLAUDE_PROJECT_DIR(?![A-Za-z0-9_])/
-const PLACEHOLDER = /\$\{CLAUDE_(?:PROJECT_DIR|PLUGIN_ROOT|PLUGIN_DATA)\}/
+const PLACEHOLDER = new RegExp(`\\$\\{(?:${PATH_VARIABLES.join('|')})\\}`)
 
 /** The text of a PowerShell line, in two parts: `single` holds the text inside single quotes, and
  *  `other` holds the rest. In a single-quoted string `''` is one quote, and a backtick is a plain
