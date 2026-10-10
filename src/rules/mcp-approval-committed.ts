@@ -2,7 +2,7 @@
 // (docs/rules/mcp-approval-committed.md). `enableAllProjectMcpServers: true` and
 // `enabledMcpjsonServers` approve repository servers without a prompt in a trusted folder. In an
 // untrusted folder, Claude Code ignores both keys in `.claude/settings.json`. Claude Code writes
-// the keys to `.claude/settings.local.json` when a user approves, so the local file is not read.
+// the keys to `.claude/settings.local.json` when a user approves, so that file gives no report.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'

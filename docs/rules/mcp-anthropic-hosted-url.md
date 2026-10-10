@@ -72,7 +72,7 @@ Pass:
 { "claude/mcp-anthropic-hosted-url": ["error", { "hosts": ["mcp.example.com"] }] }
 ```
 
-| Option | Default | Meaning |
+| Option | Default | Use |
 |--------|---------|---------|
 | `hosts` | `[]` | Host names to report in addition to the three above |
 

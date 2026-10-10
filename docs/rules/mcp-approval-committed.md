@@ -16,7 +16,7 @@ Do not commit an approval of the project MCP servers.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | security | `**/.claude/settings.json` |
+| `recommended`, `strict` | `error` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 
@@ -34,8 +34,9 @@ when its value is a list with at least one item. The report is on the key. A `fa
 empty list, and a value of another type give no report. When a file has two keys of one name, the
 rule reads the last, as `JSON.parse` does.
 
-The rule reads `.claude/settings.json` only. It does not read `.claude/settings.local.json`, which
-is not committed, or a managed settings file, which an administrator owns.
+The rule lints both project files, and reports in `.claude/settings.json` only. The local file is
+not committed, so it gives no report. A managed settings file is not read, because an
+administrator owns it.
 
 Fail, in `.claude/settings.json`:
 

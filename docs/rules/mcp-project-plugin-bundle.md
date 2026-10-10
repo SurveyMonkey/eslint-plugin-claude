@@ -38,7 +38,7 @@ The rule reads the text of the manifest only. It reads no other file. It makes n
 
 ### What the rule does not check
 
-The loading page also skips a server "from a file outside the plugin directory". The rule does
+The plugin loading reference also skips a server "from a file outside the plugin directory". The rule does
 not check this part. A path that leaves the plugin directory fails `claude plugin validate`, which
 reports `Path contains ".." which could be a path traversal attempt`.[^containment]
 
