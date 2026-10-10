@@ -1,6 +1,6 @@
-// A prompt that `/loop` runs on a schedule passes a skill to Claude as plain text when the skill
-// sets `disable-model-invocation: true` (docs/rules/skill-loop-reference-invocable.md). The rule
-// reads `.claude/loop.md`, and the skill or command file that its first line names.
+// A scheduled fire passes the prompt to Claude as plain text. A skill that sets
+// `disable-model-invocation: true` does not run (docs/rules/skill-loop-reference-invocable.md).
+// The rule reads `.claude/loop.md`, and the skill or command file that its first line names.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -9,14 +9,13 @@ import {
   frontmatterOfFile,
   markdownFiles,
   repositoryRoot,
-  skillFiles,
+  skillScan,
   UNREADABLE,
 } from '../skill-tree.ts'
 
 const name = 'skill-loop-reference-invocable' as const
 
-// The first line that is not blank starts with `/` and the name of a skill, at the start of the
-// line. The docs show a prompt that is a skill: `/loop 20m /review-pr 1234`.
+// The first line that is not blank starts with `/` and the name of a skill. The docs show a prompt that is a skill: `/loop 20m /review-pr 1234`.
 const SKILL_PROMPT = /^(?:[ \t]*\r?\n)*\/(\S+)/
 
 /** True when the file `file` sets `disable-model-invocation: true`. False when the file has no
@@ -31,10 +30,12 @@ function manualOnly(file: string): boolean | typeof UNREADABLE {
 
 /** The state of each skill or command file that `/<invoked>` runs, in the `.claude/` folder
  *  `scope`. A skill wins over a command file of the same name. The array is empty when nothing
- *  in the repository has that name. */
+ *  in that folder has the name. It holds `UNREADABLE` when the rule cannot see a file that could
+ *  have the name. */
 function targets(scope: string, invoked: string): (boolean | typeof UNREADABLE)[] {
   const bound = repositoryRoot(scope)
-  const skills = skillFiles(path.join(scope, 'skills'), bound).filter((file) => {
+  const scan = skillScan(path.join(scope, 'skills'), bound)
+  const skills = scan.files.filter((file) => {
     const given = frontmatterOfFile(file)
     // A skill is invoked by its folder name, and by its `name`. A file that the rule cannot read
     // can have any `name`, so it counts as a match.
@@ -44,16 +45,20 @@ function targets(scope: string, invoked: string): (boolean | typeof UNREADABLE)[
       given?.name === invoked
     )
   })
-  if (skills.length > 0) {
-    return skills.map(manualOnly)
+  // A skill that the rule cannot see could have the name, and it would win over a command file.
+  const hidden: (typeof UNREADABLE)[] = scan.skipped ? [UNREADABLE] : []
+  if (skills.length > 0 || hidden.length > 0) {
+    return [...skills.map(manualOnly), ...hidden]
   }
   const commandsDir = path.join(scope, 'commands')
-  return markdownFiles(commandsDir, bound)
-    .files.filter(
+  const commands = markdownFiles(commandsDir, bound)
+  const named = commands.files
+    .filter(
       (file) =>
         path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':') === invoked,
     )
     .map(manualOnly)
+  return commands.unreadable || commands.outside ? [...named, UNREADABLE] : named
 }
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'manualOnly' }> = {
