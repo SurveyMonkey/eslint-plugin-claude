@@ -24,7 +24,7 @@ const SET_BY_CLAUDE_CODE: readonly string[] = [
 
 // A reference with a default. The rule removes it first, so that a reference inside the default is
 // not read.
-const WITH_DEFAULT = /\$\{[A-Za-z_][A-Za-z0-9_]*:-[^}]*\}?/g
+const WITH_DEFAULT = /\$\{[A-Za-z_][A-Za-z0-9_]*:-[^}]*\}/g
 const BARE_REFERENCE = /\$\{([A-Za-z_][A-Za-z0-9_]*)\}/g
 
 const rule: JSONRuleDefinition<{ MessageIds: 'noDefault' }> = {

@@ -69,6 +69,11 @@ it('reports the last of two members with one name', () => {
   expect(ids(lintProject(NAME, silent))).toEqual([])
 })
 
+it('reports an unknown oauth key once, when two members have the name', () => {
+  const code = '{"mcpServers": {"a": {"type": "http", "oauth": {"x": 1, "x": 2}}}}'
+  expect(ids(lintProject(NAME, code))).toEqual(['oauthKey'])
+})
+
 it('stays silent for every documented entry key', () => {
   const entry = {
     type: 'http',

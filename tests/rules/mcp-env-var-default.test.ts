@@ -119,6 +119,14 @@ it('reads a credential variable of a stdio server as any other variable', () => 
   const entry = { command: 'x', env: { A: ref('ANTHROPIC_API_KEY') } }
   expect(ids(lintProject(NAME, at(entry)))).toEqual(['noDefault'])
 })
+it('reports a credential variable in a field other than the url and headers of a remote server', () => {
+  const entry = { type: 'http', url: 'https://x.test', env: { A: ref('ANTHROPIC_API_KEY') } }
+  expect(ids(lintProject(NAME, at(entry)))).toEqual(['noDefault'])
+})
+it('reports a credential variable in the url and headers of a server that is not remote', () => {
+  const entry = { type: 'stdio', command: 'x', headers: { A: ref('NPM_TOKEN') } }
+  expect(ids(lintProject(NAME, at(entry)))).toEqual(['noDefault'])
+})
 it('stays silent for a malformed entry and a file that is not a server map', () => {
   expect(ids(lintProject(NAME, at(ref('A'))))).toEqual([])
   expect(ids(lintProject(NAME, at({ command: 1, args: 'x', env: [], headers: 'x' })))).toEqual([])
