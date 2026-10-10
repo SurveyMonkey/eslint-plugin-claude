@@ -53,13 +53,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }
     const root = path.dirname(path.dirname(path.resolve(context.filename)))
     return {
       Document(node) {
-        const declaredStrings = declaredMcpStrings(node.body)
-        if (declaredStrings.length === 0) {
-          return
-        }
         const realRoot = realOf(root)
         const bound = repositoryRoot(root)
-        for (const declared of declaredStrings) {
+        for (const declared of declaredMcpStrings(node.body)) {
           const text = declared.value
           if (BUNDLE_EXTENSIONS.some((extension) => pathOf(text).endsWith(extension))) {
             context.report({ node: declared, messageId: 'skipped', data: { bundle: text } })
@@ -79,7 +75,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }
           }
           // The rule makes no report for a part that it cannot see, such as a link out of the
           // repository, a dangling link or a path that is not there.
-          if (typeof realRoot !== 'string' || !isInside(realRoot, bound)) {
+          if (typeof realRoot !== 'string') {
             continue
           }
           const real = realSource(root, realRoot, bound, path.resolve(root, text))
