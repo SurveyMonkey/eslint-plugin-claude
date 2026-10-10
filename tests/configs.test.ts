@@ -973,6 +973,10 @@ const AGENT_RULES = [
   'output-style-frontmatter-schema',
 ]
 
+// The subagent field rules of #9 that are `warn`, in the order of the `modules` list. They
+// follow the agent and output style rules.
+const AGENT_WARN_RULES = ['agent-no-bom']
+
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [
   'skill-frontmatter-position',
@@ -1051,6 +1055,10 @@ describe('configs', () => {
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
+      ...AGENT_WARN_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'warn' },
+      ]),
       ...TOOL_LIST_BLOCKS.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -1084,6 +1092,7 @@ describe('configs', () => {
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
+      ...AGENT_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),

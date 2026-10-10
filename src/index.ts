@@ -9,6 +9,7 @@ import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
 import agentModelForced from './rules/agent-model-forced.ts'
 import agentNameUnique from './rules/agent-name-unique.ts'
+import agentNoBom from './rules/agent-no-bom.ts'
 import agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
 import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
@@ -138,6 +139,7 @@ const modules = [
   agentTeamsNoProjectConfig,
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
+  agentNoBom,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -256,6 +258,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-teams-no-project-config': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
+  'agent-no-bom': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',

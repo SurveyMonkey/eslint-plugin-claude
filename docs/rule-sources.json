@@ -103,6 +103,13 @@
       "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
     }
   ],
+  "agent-no-bom": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Subagent files Claude Code skips",
+      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3"
+    }
+  ],
   "agent-omit-claude-md-main": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
