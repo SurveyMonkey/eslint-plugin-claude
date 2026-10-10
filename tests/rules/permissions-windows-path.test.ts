@@ -25,13 +25,13 @@ const list = (key: 'allow' | 'ask' | 'deny', ...rules: string[]) => ({
 })
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports a drive letter in a project, local or managed file', () => {
+  it('reports a drive letter in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(list('deny', 'Read(C:\\Users\\alice\\.env)'), file), file).toEqual(['driveLetter'])
     }
   })
 
-  it.fails('reports a drive letter in allow, ask and deny, for Read, Edit and Cd', () => {
+  it('reports a drive letter in allow, ask and deny, for Read, Edit and Cd', () => {
     for (const key of ['allow', 'ask', 'deny'] as const) {
       for (const tool of ['Read', 'Edit', 'Cd']) {
         expect(ids(list(key, `${tool}(C:\\Users\\alice)`)), `${key} ${tool}`).toEqual([
@@ -41,14 +41,14 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports a drive letter with a slash, in lower and upper case', () => {
+  it('reports a drive letter with a slash, in lower and upper case', () => {
     expect(ids(list('allow', 'Read(c:/Users/alice/**)', 'Edit(D:/work/**)'))).toEqual([
       'driveLetter',
       'driveLetter',
     ])
   })
 
-  it.fails('reports a backslash as a separator, with or without a drive letter', () => {
+  it('reports a backslash as a separator, with or without a drive letter', () => {
     for (const rule of [
       'Read(src\\app\\*.ts)',
       'Edit(.\\src\\**)',
@@ -60,7 +60,7 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('says the drive letter or the backslash, the rule, and the POSIX form', () => {
+  it('says the drive letter or the backslash, the rule, and the POSIX form', () => {
     const [drive] = lint(list('deny', 'Read(C:\\Users\\alice)'))
     expect(drive?.message).toContain('`Read(C:\\Users\\alice)`')
     expect(drive?.message).toContain('/c/Users/alice')
@@ -70,7 +70,7 @@ describe(`${name}: the reports`, () => {
     expect(slash?.message).toContain('backslash')
   })
 
-  it.fails('reports each entry once, at its line, column and end', () => {
+  it('reports each entry once, at its line, column and end', () => {
     const [message, ...rest] = lint(
       JSON.stringify(list('allow', 'Read(C:\\Users)', 'Read(src/**)')),
     )
@@ -80,7 +80,7 @@ describe(`${name}: the reports`, () => {
     ])
   })
 
-  it.fails('reports a drive letter in the form of a parameter, for a deny or ask rule', () => {
+  it('reports a drive letter in the form of a parameter, for a deny or ask rule', () => {
     // `paramName` reads the `C` of `C:\x` as a parameter name. A one-letter name is a drive.
     expect(ids(list('deny', 'Read(C:\\x)'))).toEqual(['driveLetter'])
     expect(ids(list('ask', 'Edit(C:/x)'))).toEqual(['driveLetter'])
@@ -88,7 +88,7 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the paths that it leaves alone`, () => {
-  it.fails('is silent for the POSIX forms of the docs', () => {
+  it('is silent for the POSIX forms of the docs', () => {
     for (const rule of [
       'Read(//c/Users/alice/**)',
       'Read(//c/**/.env)',
@@ -105,7 +105,7 @@ describe(`${name}: the paths that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for a backslash that escapes a character of a gitignore pattern', () => {
+  it('is silent for a backslash that escapes a character of a gitignore pattern', () => {
     for (const rule of [
       'Read(./\\[2024-06\\] Reports/**)',
       'Read(a\\*b)',
@@ -120,37 +120,37 @@ describe(`${name}: the paths that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for a colon that is not a drive letter', () => {
+  it('is silent for a colon that is not a drive letter', () => {
     expect(ids(list('allow', 'Read(a:b)', 'Read(C:)', 'Read(CC:/x)', 'Read(~/C:x)'))).toEqual([])
   })
 
-  it.fails('is silent for a parameter rule, which permissions-param-rule reads', () => {
+  it('is silent for a parameter rule, which permissions-param-rule reads', () => {
     expect(ids(list('deny', 'Read(offset:5)', 'Edit(replace_all:true)'))).toEqual([])
   })
 
-  it.fails('is silent for a tool that the docs give no POSIX path', () => {
+  it('is silent for a tool that the docs give no POSIX path', () => {
     // `Write(path)` is for permissions-path-rule-tool. The others take no path.
     expect(
       ids(list('allow', 'Write(C:\\x)', 'Glob(C:\\x)', 'Bash(dir C:\\x)', 'Grep(C:\\x)')),
     ).toEqual([])
   })
 
-  it.fails('is silent for a bare tool name and an empty specifier', () => {
+  it('is silent for a bare tool name and an empty specifier', () => {
     expect(ids(list('allow', 'Read', 'Edit', 'Cd', 'Read()'))).toEqual([])
   })
 
-  it.fails('is silent for a string that does not parse, which permissions-rule-syntax reads', () => {
+  it('is silent for a string that does not parse, which permissions-rule-syntax reads', () => {
     expect(ids(list('allow', 'Read(C:\\x', 'Read(C:\\x) y', '(C:\\x)'))).toEqual([])
   })
 
-  it.fails('is silent for an entry that is not a string, and for lists that are not arrays', () => {
+  it('is silent for an entry that is not a string, and for lists that are not arrays', () => {
     expect(ids({ permissions: { allow: [3, null, 'Read(C:\\x)'] } })).toEqual(['driveLetter'])
     expect(ids({ permissions: { allow: 'Read(C:\\x)', deny: { a: 1 } } })).toEqual([])
     expect(ids({ permissions: 'Read(C:\\x)' })).toEqual([])
     expect(ids({ allow: ['Read(C:\\x)'] })).toEqual([])
   })
 
-  it.fails('is silent for a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent for a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(list('allow', 'Read(C:\\x)'), HIDDEN)).toEqual([])
   })
 })

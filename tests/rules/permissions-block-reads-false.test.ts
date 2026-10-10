@@ -22,20 +22,20 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const block = (value: unknown) => ({ permissions: { blockReadsOutsideWorkingDirectories: value } })
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports false in a project, local or managed file', () => {
+  it('reports false in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(block(false), file), file).toEqual(['sameAsUnset'])
     }
   })
 
-  it.fails('says that false is the same as unset, and cannot lift a true', () => {
+  it('says that false is the same as unset, and cannot lift a true', () => {
     const [message] = lint(block(false))
     expect(message?.message).toContain('same as unset')
     expect(message?.message).toContain('`true`')
     expect(message?.message).toContain('another file')
   })
 
-  it.fails('reports the value, at its line, column and end', () => {
+  it('reports the value, at its line, column and end', () => {
     const [message, ...rest] = lint('{"permissions":{"blockReadsOutsideWorkingDirectories":false}}')
     expect(rest).toEqual([])
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
@@ -43,7 +43,7 @@ describe(`${name}: the reports`, () => {
     ])
   })
 
-  it.fails('reads the last of two keys, as JSON.parse does', () => {
+  it('reads the last of two keys, as JSON.parse does', () => {
     expect(
       ids(
         '{"permissions":{"blockReadsOutsideWorkingDirectories":true,"blockReadsOutsideWorkingDirectories":false}}',
@@ -58,19 +58,19 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the values that it leaves alone`, () => {
-  it.fails('is silent for true, which turns the block on', () => {
+  it('is silent for true, which turns the block on', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(block(true), file), file).toEqual([])
     }
   })
 
-  it.fails('is silent for a value that is not a Boolean, which permissions-schema reads', () => {
+  it('is silent for a value that is not a Boolean, which permissions-schema reads', () => {
     for (const value of ['false', 0, null, [], {}, 'yes']) {
       expect(ids(block(value)), JSON.stringify(value)).toEqual([])
     }
   })
 
-  it.fails('is silent when the key is missing or sits outside permissions', () => {
+  it('is silent when the key is missing or sits outside permissions', () => {
     expect(ids({ permissions: { allow: [] } })).toEqual([])
     expect(ids({ permissions: 'x' })).toEqual([])
     expect(ids({ blockReadsOutsideWorkingDirectories: false })).toEqual([])
@@ -80,7 +80,7 @@ describe(`${name}: the values that it leaves alone`, () => {
     expect(ids('[]')).toEqual([])
   })
 
-  it.fails('is silent for a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent for a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(block(false), HIDDEN)).toEqual([])
   })
 })

@@ -25,7 +25,7 @@ const list = (key: 'allow' | 'ask' | 'deny', ...rules: string[]) => ({
 })
 
 describe(`${name}: the host forms of the docs`, () => {
-  it.fails('is silent for a hostname, a wildcard, and a bare WebFetch', () => {
+  it('is silent for a hostname, a wildcard, and a bare WebFetch', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(
         ids(
@@ -44,23 +44,23 @@ describe(`${name}: the host forms of the docs`, () => {
     }
   })
 
-  it.fails('is silent for a trailing dot, upper case, a digit, a hyphen and an underscore', () => {
+  it('is silent for a trailing dot, upper case, a digit, a hyphen and an underscore', () => {
     for (const host of ['example.com.', 'Example.COM', 'a-b.example.com', 'a1.b2.io', 'a_b.test']) {
       expect(ids(list('allow', `WebFetch(domain:${host})`)), host).toEqual([])
     }
   })
 
-  it.fails('is silent for an IPv4 address, a bracketed IPv6 address, and a name with no dot', () => {
+  it('is silent for an IPv4 address, a bracketed IPv6 address, and a name with no dot', () => {
     for (const host of ['127.0.0.1', '[::1]', '[2001:db8::1]', 'intranet']) {
       expect(ids(list('allow', `WebFetch(domain:${host})`)), host).toEqual([])
     }
   })
 
-  it.fails('is silent for white space around the prefix and the host', () => {
+  it('is silent for white space around the prefix and the host', () => {
     expect(ids(list('allow', 'WebFetch( domain : example.com )'))).toEqual([])
   })
 
-  it.fails('is silent in deny and ask, where the same forms are valid', () => {
+  it('is silent in deny and ask, where the same forms are valid', () => {
     for (const key of ['deny', 'ask'] as const) {
       expect(
         ids(list(key, 'WebFetch(domain:example.com)', 'WebFetch(domain:*)', 'WebFetch')),
@@ -71,7 +71,7 @@ describe(`${name}: the host forms of the docs`, () => {
 })
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports a URL scheme, in a project, local or managed file', () => {
+  it('reports a URL scheme, in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(list('allow', 'WebFetch(domain:https://example.com)'), file), file).toEqual([
         'scheme',
@@ -79,31 +79,31 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports a path, a query and a fragment', () => {
+  it('reports a path, a query and a fragment', () => {
     for (const host of ['example.com/docs', 'example.com/', 'example.com?q=1', 'example.com#top']) {
       expect(ids(list('allow', `WebFetch(domain:${host})`)), host).toEqual(['path'])
     }
   })
 
-  it.fails('reports a port, for a name, an address and a bracketed IPv6 address', () => {
+  it('reports a port, for a name, an address and a bracketed IPv6 address', () => {
     for (const host of ['example.com:8080', '127.0.0.1:3000', '[::1]:8080', '*.example.com:443']) {
       expect(ids(list('allow', `WebFetch(domain:${host})`)), host).toEqual(['port'])
     }
   })
 
-  it.fails('reports an empty host and a host with a character that no hostname holds', () => {
+  it('reports an empty host and a host with a character that no hostname holds', () => {
     for (const host of ['', 'user@example.com', 'exa mple.com', 'example.com:', 'a\\b', 'a:b']) {
       expect(ids(list('allow', `WebFetch(domain:${host})`)), host).toEqual(['notHost'])
     }
   })
 
-  it.fails('reports a specifier with no domain: prefix, in allow', () => {
+  it('reports a specifier with no domain: prefix, in allow', () => {
     for (const specifier of ['example.com', '*.example.com', 'url:https://example.com', '']) {
       expect(ids(list('allow', `WebFetch(${specifier})`)), specifier).toEqual(['missingPrefix'])
     }
   })
 
-  it.fails('reports a specifier with no domain: prefix, in deny and ask, when it is no parameter', () => {
+  it('reports a specifier with no domain: prefix, in deny and ask, when it is no parameter', () => {
     for (const key of ['deny', 'ask'] as const) {
       expect(ids(list(key, 'WebFetch(example.com)', 'WebFetch(*.example.com)')), key).toEqual([
         'missingPrefix',
@@ -112,7 +112,7 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports a URL as a whole, in allow, deny and ask', () => {
+  it('reports a URL as a whole, in allow, deny and ask', () => {
     for (const key of ['allow', 'deny', 'ask'] as const) {
       expect(
         ids(list(key, 'WebFetch(https://example.com/docs)', 'WebFetch(http://x.io)')),
@@ -121,16 +121,16 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports the prefix of another case as no domain: prefix', () => {
+  it('reports the prefix of another case as no domain: prefix', () => {
     expect(ids(list('allow', 'WebFetch(Domain:example.com)'))).toEqual(['missingPrefix'])
   })
 
-  it.fails('reports one fault for an entry: the scheme before the path and the port', () => {
+  it('reports one fault for an entry: the scheme before the path and the port', () => {
     expect(ids(list('allow', 'WebFetch(domain:https://example.com:8080/docs)'))).toEqual(['scheme'])
     expect(ids(list('allow', 'WebFetch(domain:example.com:8080/docs)'))).toEqual(['path'])
   })
 
-  it.fails('says what is wrong and what the rule takes', () => {
+  it('says what is wrong and what the rule takes', () => {
     const cases: [string, string, string][] = [
       ['WebFetch(domain:https://example.com)', 'scheme', 'https://example.com'],
       ['WebFetch(domain:example.com/docs)', 'path', 'example.com/docs'],
@@ -146,7 +146,7 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports each entry once, at its line, column and end', () => {
+  it('reports each entry once, at its line, column and end', () => {
     const [message, ...rest] = lint(
       JSON.stringify(list('allow', 'WebFetch(domain:a/b)', 'WebFetch(domain:a.b)')),
     )
@@ -158,7 +158,7 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the rules that it leaves alone`, () => {
-  it.fails('is silent for a parameter rule in deny and ask, which permissions-param-rule reads', () => {
+  it('is silent for a parameter rule in deny and ask, which permissions-param-rule reads', () => {
     for (const key of ['deny', 'ask'] as const) {
       expect(
         ids(list(key, 'WebFetch(prompt:*)', 'WebFetch(url:https://example.com)')),
@@ -167,26 +167,26 @@ describe(`${name}: the rules that it leaves alone`, () => {
     }
   })
 
-  it.fails('is silent for other tools, even with a domain: specifier', () => {
+  it('is silent for other tools, even with a domain: specifier', () => {
     expect(
       ids(list('allow', 'Read(domain:https://x.com)', 'Bash(curl https://x.com)', 'WebSearch')),
     ).toEqual([])
   })
 
-  it.fails('is silent for a string that does not parse, which permissions-rule-syntax reads', () => {
+  it('is silent for a string that does not parse, which permissions-rule-syntax reads', () => {
     expect(
       ids(list('allow', 'WebFetch(domain:a/b', 'WebFetch(domain:a/b) c', '(domain:a/b)')),
     ).toEqual([])
   })
 
-  it.fails('is silent for an entry that is not a string, and for lists that are not arrays', () => {
+  it('is silent for an entry that is not a string, and for lists that are not arrays', () => {
     expect(ids({ permissions: { allow: [3, null, 'WebFetch(domain:a/b)'] } })).toEqual(['path'])
     expect(ids({ permissions: { allow: 'WebFetch(domain:a/b)', deny: { a: 1 } } })).toEqual([])
     expect(ids({ permissions: 'WebFetch(domain:a/b)' })).toEqual([])
     expect(ids({ allow: ['WebFetch(domain:a/b)'] })).toEqual([])
   })
 
-  it.fails('is silent for a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent for a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(list('allow', 'WebFetch(domain:a/b)'), HIDDEN)).toEqual([])
   })
 })

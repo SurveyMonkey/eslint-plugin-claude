@@ -25,13 +25,13 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const dirs = (...entries: unknown[]) => ({ permissions: { additionalDirectories: entries } })
 
 describe(`${name}: a network path`, () => {
-  it.fails('reports a UNC share in a project, local or managed file', () => {
+  it('reports a UNC share in a project, local or managed file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(dirs('\\\\server\\share'), file), file).toEqual(['networkPath'])
     }
   })
 
-  it.fails('reports a UNC share with a path below it, and a short host', () => {
+  it('reports a UNC share with a path below it, and a short host', () => {
     expect(ids(dirs('\\\\server\\share\\sub\\dir', '\\\\h\\s', '\\\\10.0.0.1\\data'))).toEqual([
       'networkPath',
       'networkPath',
@@ -39,7 +39,7 @@ describe(`${name}: a network path`, () => {
     ])
   })
 
-  it.fails('reports an automount path, with or without a path below the host', () => {
+  it('reports an automount path, with or without a path below the host', () => {
     expect(ids(dirs('/net/fileserver', '/net/fileserver/', '/net/fileserver/home/me'))).toEqual([
       'networkPath',
       'networkPath',
@@ -47,7 +47,7 @@ describe(`${name}: a network path`, () => {
     ])
   })
 
-  it.fails('says that Claude Code does not add the path, and names it', () => {
+  it('says that Claude Code does not add the path, and names it', () => {
     const [unc] = lint(dirs('\\\\server\\share'))
     expect(unc?.message).toContain('`\\\\server\\share`')
     expect(unc?.message).toContain('network path')
@@ -56,7 +56,7 @@ describe(`${name}: a network path`, () => {
     expect(net?.message).toContain('`/net/fileserver/home`')
   })
 
-  it.fails('is silent for a mapped drive letter, a WSL path and a Windows device path', () => {
+  it('is silent for a mapped drive letter, a WSL path and a Windows device path', () => {
     for (const entry of [
       'Z:\\share',
       'C:\\work',
@@ -70,7 +70,7 @@ describe(`${name}: a network path`, () => {
     }
   })
 
-  it.fails('is silent for a local path, and for a path that only looks like an automount', () => {
+  it('is silent for a local path, and for a path that only looks like an automount', () => {
     for (const entry of [
       '../docs/',
       '/home/me/docs',
@@ -92,25 +92,25 @@ describe(`${name}: a network path`, () => {
 })
 
 describe(`${name}: a NUL byte`, () => {
-  it.fails('reports an entry with a NUL byte, in every file', () => {
+  it('reports an entry with a NUL byte, in every file', () => {
     for (const file of [...PROJECT_FILES, ...MANAGED_FILES]) {
       expect(ids(dirs('/work\0dir'), file), file).toEqual(['nulByte'])
     }
   })
 
-  it.fails('says that Claude Code skips the entry', () => {
+  it('says that Claude Code skips the entry', () => {
     const [message] = lint(dirs('a\0b'))
     expect(message?.message).toContain('NUL byte')
     expect(message?.message).toContain('skips')
   })
 
-  it.fails('makes one report for an entry that also has a network path', () => {
+  it('makes one report for an entry that also has a network path', () => {
     expect(ids(dirs('\\\\server\\share\0'))).toEqual(['nulByte'])
   })
 })
 
 describe(`${name}: the entries and files that it leaves alone`, () => {
-  it.fails('reports each entry once, at its line, column and end', () => {
+  it('reports each entry once, at its line, column and end', () => {
     const [message, ...rest] = lint(JSON.stringify(dirs('/ok', '/net/h', '/ok2')))
     expect(rest).toEqual([])
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
@@ -118,11 +118,11 @@ describe(`${name}: the entries and files that it leaves alone`, () => {
     ])
   })
 
-  it.fails('is silent for an entry that is not a string, which permissions-schema reads', () => {
+  it('is silent for an entry that is not a string, which permissions-schema reads', () => {
     expect(ids(dirs(3, null, { a: '/net/h' }, ['/net/h'], '/net/h'))).toEqual(['networkPath'])
   })
 
-  it.fails('is silent for a value that is not an array, and for a missing key', () => {
+  it('is silent for a value that is not an array, and for a missing key', () => {
     expect(ids({ permissions: { additionalDirectories: '/net/h' } })).toEqual([])
     expect(ids({ permissions: { additionalDirectories: { a: '/net/h' } } })).toEqual([])
     expect(ids({ permissions: { additionalDirectories: null } })).toEqual([])
@@ -132,7 +132,7 @@ describe(`${name}: the entries and files that it leaves alone`, () => {
     expect(ids('[]')).toEqual([])
   })
 
-  it.fails('reads the last of two keys, as JSON.parse does', () => {
+  it('reads the last of two keys, as JSON.parse does', () => {
     expect(
       ids('{"permissions":{"additionalDirectories":["/net/h"],"additionalDirectories":["/ok"]}}'),
     ).toEqual([])
@@ -141,11 +141,11 @@ describe(`${name}: the entries and files that it leaves alone`, () => {
     ).toEqual(['networkPath'])
   })
 
-  it.fails('is silent for a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent for a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(dirs('/net/h'), HIDDEN)).toEqual([])
   })
 
-  it.fails('reads no directory out of the repository', () => {
+  it('reads no directory out of the repository', () => {
     // The rule reads the text only. A path that does not exist gives the same result.
     expect(ids(dirs('/does/not/exist', '../missing'))).toEqual([])
   })
