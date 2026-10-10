@@ -79,7 +79,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/skill-inject-robustness`](docs/rules/skill-inject-robustness.md) | Each injected command has an `allowed-tools` Bash rule, uses a path that does not depend on the working directory, such as `${CLAUDE_SKILL_DIR}`, and prints no placeholder. A check script has a fallback such as `|| true`. Option `allow` lists the rules of a settings file | `off` | `warn` |
 | [`claude/skill-listing-budget`](docs/rules/skill-listing-budget.md) | The names and descriptions of one scope fit the skill listing budget of 8,000 characters. Options `max` and `listingMax` | `off` | `warn` |
 | [`claude/skill-literal-dollar`](docs/rules/skill-literal-dollar.md) | A `$1.00` in a skill or command is escaped, because `$1` is an argument placeholder | `off` | `warn` |
+| [`claude/skill-loop-reference-invocable`](docs/rules/skill-loop-reference-invocable.md) | A `.claude/loop.md` that starts with a skill or command that sets `disable-model-invocation: true`, which a scheduled fire passes to Claude as plain text | `off` | `warn` |
+| [`claude/skill-model-override`](docs/rules/skill-model-override.md) | A `model` other than `inherit` in a skill or command, which can switch the model and miss the prompt cache | `off` | `warn` |
 | [`claude/skill-plugin-path-vars`](docs/rules/skill-plugin-path-vars.md) | A plugin skill writes `${CLAUDE_PLUGIN_ROOT}` with braces, and does not climb out of `${CLAUDE_SKILL_DIR}` with `/..` | `off` | `warn` |
+| [`claude/skill-precedence-shadowing`](docs/rules/skill-precedence-shadowing.md) | A project skill or command named like a personal or enterprise skill, which wins over it. Needs `personalNames` or `enterpriseNames` | `off` | `warn` |
+| [`claude/skill-side-effects-manual-only`](docs/rules/skill-side-effects-manual-only.md) | A skill or command that Claude can invoke and whose `allowed-tools` or injected commands run a side effect such as `git push`. Option `patterns` adds words | `off` | `warn` |
 
 ### Subagents and output styles
 

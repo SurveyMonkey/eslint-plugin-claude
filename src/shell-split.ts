@@ -81,3 +81,10 @@ function closeless(part: string): string {
 export function wordsOf(subcommand: string): string[] {
   return subcommand.split(/\s+/).map((word) => word.replaceAll(/^["']|["']$/g, ''))
 }
+
+/** True when the code span that starts at `start` in `text` has `!` before it, at the start of
+ *  the text or after white space. That is the inline form of an injected command. */
+export function followsBang(text: string, start: number): boolean {
+  const before = text.slice(Math.max(0, start - 2), start)
+  return before === '!' || /^\s!$/.test(before)
+}
