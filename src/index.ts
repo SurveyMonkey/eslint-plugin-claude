@@ -16,6 +16,7 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
@@ -175,6 +176,7 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  claudeMdMaxBytes,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -283,6 +285,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'claude-md-max-bytes': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

@@ -122,6 +122,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-known-marketplaces-policy-schema`](docs/rules/settings-known-marketplaces-policy-schema.md) | In a managed settings file, each `strictKnownMarketplaces` and `blockedMarketplaces` entry is a source object of a known type with its fields, and `pluginTrustMessage` is a string | `error` | `error` |
 | [`claude/settings-plugin-suggestion-marketplaces-source`](docs/rules/settings-plugin-suggestion-marketplaces-source.md) | Each `pluginSuggestionMarketplaces` name other than `claude-plugins-official` has its source in the merged managed settings, in `extraKnownMarketplaces` or `strictKnownMarketplaces` | `error` | `error` |
 
+### CLAUDE.md, rules and memory
+
+| Rule | Checks | `recommended` | `strict` |
+|------|--------|---------------|----------|
+| [`claude/claude-md-max-bytes`](docs/rules/claude-md-max-bytes.md) | A `CLAUDE.md` or `CLAUDE.local.md` file has at most 4 MiB (4194304 bytes), the size above which Claude Code skips it; option `max` | `error` | `error` |
+
 ### Settings
 
 | Rule | Checks | `recommended` | `strict` |

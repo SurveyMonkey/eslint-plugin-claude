@@ -197,6 +197,18 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "claude-md-max-bytes": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "My CLAUDE.md is too large",
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
+    }
+  ],
   "command-legacy-format": [
     {
       "url": "https://code.claude.com/docs/en/skills",
