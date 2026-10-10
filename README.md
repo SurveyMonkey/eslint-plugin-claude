@@ -141,6 +141,11 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-skilloverrides-key`](docs/rules/settings-skilloverrides-key.md) | A `skillOverrides` key is one that Claude Code applies: no plugin skill key (`plugin:skill`), and no bundled alias key (`review`, `checkup`, `proactive`) in a project or local file | `error` | `error` |
 | [`claude/settings-env-shadowed`](docs/rules/settings-env-shadowed.md) | An `env` variable is not voided: `BASH_MAX_OUTPUT_LENGTH` beside `bashOutputMaxChars`, `ANTHROPIC_DEFAULT_MODEL` beside `model` or set to `default`, `inherit`, `opusplan` or `haiku`, `CLAUDE_CODE_SUBAGENT_MODEL: "inherit"`, and `NO_COLOR` or `FORCE_COLOR` | `error` | `error` |
 | [`claude/settings-schema`](docs/rules/settings-schema.md) | A settings key is one that Claude Code knows, an environment variable name is in `env` and not at the top level, and a value has the type, enum value, range, form and shape that the docs give; no report inside `permissions` or `sandbox` | `error` | `error` |
+| [`claude/settings-attribution-false`](docs/rules/settings-attribution-false.md) | `attribution` is not `false` in a project or local file, because Claude Code before v2.1.281 skips the whole file | `warn` | `warn` |
+| [`claude/settings-deprecated-key`](docs/rules/settings-deprecated-key.md) | No deprecated key that Claude Code still honors: `includeCoAuthoredBy`, `voiceEnabled`, and `disableArtifact: true` | `warn` | `warn` |
+| [`claude/settings-project-autocontinue-off`](docs/rules/settings-project-autocontinue-off.md) | `autoContinueAtUsageLimit` is not in a project or local file, where any value turns automatic continue off, and its value is a Boolean | `warn` | `warn` |
+| [`claude/settings-redundant-value`](docs/rules/settings-redundant-value.md) | A value is not the same as an unset key: `alwaysThinkingEnabled`, `enableArtifact`, `syncClaudeAiSkills` and `syncClaudeAiPlugins` set to `true`, and `spinnerVerbs` in replace mode with no verbs | `warn` | `warn` |
+| [`claude/settings-schema-url`](docs/rules/settings-schema-url.md) | `$schema` is present and is the published schema URL for Claude Code settings | `warn` | `warn` |
 
 ### Permissions and sandbox
 

@@ -402,6 +402,17 @@ export const SUPERSEDED_KEYS: Readonly<Record<string, readonly (readonly string[
   voiceEnabled: [['voice', 'enabled']],
 }
 
+/** A deprecated key that Claude Code still honors, with the text that names its replacement. The
+ *  settings reference marks `includeCoAuthoredBy` (since v2.0.62), `voiceEnabled` (since v2.1.92)
+ *  and `disableArtifact`. Only `disableArtifact: true` still works. The value `false` is in
+ *  `IGNORED_FALSE_KEYS`. `ignorePatterns` is also deprecated, and the permissions group owns it
+ *  (`permissions-ignore-patterns`). */
+export const DEPRECATED_KEYS: Readonly<Record<string, string>> = {
+  includeCoAuthoredBy: '"attribution"',
+  voiceEnabled: '"voice.enabled"',
+  disableArtifact: '"enableArtifact": false',
+}
+
 /** Each alias of a bundled skill, with the skill that it names. Source: the rows of the commands reference that
  *  it marks as a bundled skill (https://code.claude.com/docs/en/commands#all-commands), checked on
  *  Claude Code 2.1.296 on 2026-10-09. Review this list with the lists above, on or before the `stale_after` date of
