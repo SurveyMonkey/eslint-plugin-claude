@@ -29,6 +29,10 @@ markdownTester.run('agent-mcp-servers-inline-trust', ruleOf('agent-mcp-servers-i
     file('mcpServers: github\n'),
     file('mcpServers:\n  - playwright: npx\n'),
     file('mcpServers:\n  - [a]\n  - 5\n'),
+    // A null entry, a null config and a nested list hold no inline server.
+    file('mcpServers:\n  -\n'),
+    file('mcpServers:\n  - a:\n'),
+    file('mcpServers:\n  - - a: {command: x}\n'),
     file('mcpServers:\n  a: {command: x}\n'),
     { code: '# No frontmatter\n', filename: local },
     { code: '---\nname: [unclosed\n---\n', filename: local },

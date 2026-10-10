@@ -1,6 +1,6 @@
 // A few subagent fields need a minimum Claude Code version
-// (docs/rules/agent-field-min-version.md). The rule reports each one that the
-// option `minVersion` allows. It is inactive until the option is set, because
+// (docs/rules/agent-field-min-version.md). The rule reports each field that the
+// version in `minVersion` does not support. It is inactive until the option is set, because
 // the file does not show which versions its users run.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
@@ -14,7 +14,9 @@ const name = 'agent-field-min-version' as const
 
 // The first Claude Code version for each check. The frontmatter table of the
 // sub-agents page gives the first two. The changelog gives the other two: the
-// `manual` alias in v2.1.200, and the Boolean forms in v2.1.218.
+// `manual` alias in v2.1.200 (for the CLI and `defaultMode`), and the Boolean
+// forms in v2.1.218 (for skill and plugin files). The rule applies both to
+// agent files by inference.
 const OMIT_CLAUDE_MD = '2.1.271'
 const CACHE_TTL = '2.1.248'
 const MANUAL_ALIAS = '2.1.200'

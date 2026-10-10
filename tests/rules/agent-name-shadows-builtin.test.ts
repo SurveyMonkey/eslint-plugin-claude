@@ -1,6 +1,8 @@
 // The sub-agents page, "Built-in subagents": a project or user subagent named
 // `Explore` overrides the built-in. The page lists six built-in names. A plugin
 // agent has a scoped name, so the rule checks local agents only.
+import { describe, expect, it } from 'vitest'
+import { agentText, lintRule } from '../agent-warn.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -68,4 +70,15 @@ markdownTester.run('agent-name-shadows-builtin', ruleOf('agent-name-shadows-buil
       errors: [{ messageId: 'shadows', data: { name: 'Explore' }, column: 7, endColumn: 16 }],
     },
   ],
+})
+
+describe('agent-name-shadows-builtin options', () => {
+  it('rejects an option that is not a list of unique strings', () => {
+    const lint = (options: unknown[]) =>
+      lintRule('agent-name-shadows-builtin', options, agentText(''), '/repo/.claude/agents/a.md')
+    expect(lint([{ allow: ['Explore'] }])).toEqual([])
+    for (const bad of [{ allow: 'Explore' }, { allow: [1] }, { allow: ['a', 'a'] }, { other: 1 }]) {
+      expect(() => lint([bad])).toThrow()
+    }
+  })
 })
