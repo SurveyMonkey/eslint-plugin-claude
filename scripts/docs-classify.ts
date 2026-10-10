@@ -14,7 +14,10 @@
 //
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
-// - an answer that is not valid, or an answer between two thresholds.
+// - an answer that is not valid, or an answer between two thresholds
+// - a block whose changed lines are too large for one request.
+// A block that is too large for one request gets a request with its
+// changed lines only. Its finding says so.
 // These throw, and the job fails:
 // - a map that cites no page, or a failed docs fetch
 // - a page that splitBlocks cannot read, or a page with no title
@@ -129,13 +132,14 @@ export type Request = {
 export type Citations = Map<string, Map<string, string[]>>
 
 // The spike in docs/adr/002-classify-docs-changes-with-jev.md sets these
-// values. A value at or above `yes` is a yes. A value at or below `no` is a
+// values. The `requirement` no-value is 0.4 because the live band from 0.2
+// to 0.4 held only noise. A value at or above `yes` is a yes. A value at or below `no` is a
 // no. A value between them goes to a person as needs-triage. Change them
 // only with new labeled data, and record the data in the ADR.
 export const THRESHOLDS = {
   alters: { yes: 0.5, no: 0.2 },
   obsolete: { yes: 0.5, no: 0.35 },
-  requirement: { yes: 0.5, no: 0.2 },
+  requirement: { yes: 0.5, no: 0.4 },
 }
 // The ADR tuned the thresholds on this version, so the request pins it and
 // does not use the `jev-latest` alias.
@@ -223,27 +227,33 @@ export function lineDiff(
 }
 
 // One request for one block: all questions over the same state (the
-// speculative fan-out pattern). `rules` is [{ id, checks }].
+// speculative fan-out pattern). `rules` is [{ id, checks }]. With `diffOnly`,
+// the request has the changed lines and no full text.
 export function buildRequest({
   page,
   heading,
   oldText,
   newText,
   rules,
+  diffOnly = false,
 }: {
   page: string
   heading: string
   oldText: string | null
   newText: string | null
   rules: RuleInfo[]
+  diffOnly?: boolean
 }): Request {
   const diff = lineDiff(oldText, newText)
+  const omitted = '(omitted: the block is too large. Judge `removed_lines` and `added_lines`)'
   const state = {
     docs_block: {
       page,
       heading,
-      old_text: oldText ?? '(no earlier text: the block is new, or the snapshot has its hash only)',
-      new_text: newText ?? '(the block is gone)',
+      old_text: diffOnly
+        ? omitted
+        : (oldText ?? '(no earlier text: the block is new, or the snapshot has its hash only)'),
+      new_text: diffOnly ? omitted : (newText ?? '(the block is gone)'),
       removed_lines: diff.removed,
       added_lines: diff.added,
     },
@@ -358,7 +368,7 @@ const REASONS: Record<string, (rule: string | null, p: number) => string> = {
 
 // Joins the outcomes of one block into findings: one for each kind. The kind
 // no-change gives no finding.
-function findingsOf(item: ItemBase, outcomes: Outcome[]): Finding[] {
+function findingsOf(item: ItemBase, outcomes: Outcome[], diffOnly: boolean): Finding[] {
   const byKind = new Map<Kind, Outcome[]>()
   for (const outcome of outcomes) {
     if (outcome.kind === 'no-change') continue
@@ -379,7 +389,8 @@ function findingsOf(item: ItemBase, outcomes: Outcome[]): Finding[] {
             round(outcome.probability ?? 0),
           ),
         )
-        .join('; '),
+        .join('; ')
+        .concat(diffOnly ? '. Jev judged the changed lines, not the whole block.' : ''),
     })
   })
 }
@@ -629,7 +640,8 @@ type Classified = { findings: Finding[]; result: Result }
 
 // Asks about one block and returns its findings and its result. These give a
 // needs-triage finding: a Jev error, a Jev answer that is not valid, an
-// answer between two thresholds, and a block that is too large.
+// answer between two thresholds, and a block whose changed lines are too
+// large. A block that is too large gets a request with its changed lines.
 async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): Promise<Classified> {
   const result = {
     page: item.page,
@@ -640,19 +652,28 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
   if (item.skipped) {
     return { findings: [], result: { ...result, outcomes: [], note: item.skipped } }
   }
-  const body = buildRequest({
+  const input = {
     page: item.page,
     heading: item.heading,
     oldText: item.oldText,
     newText: item.newText,
     rules: item.rules.map((id) => ({ id, checks: rules.get(id) ?? '' })),
-  })
+  }
+  let body = buildRequest(input)
+  let diffOnly = false
   const triage = (reason: string): Classified => ({
     findings: [finding(item, 'needs-triage', { rules: item.rules, reason })],
     result: { ...result, outcomes: [{ kind: 'needs-triage', rule: null, reason }] },
   })
   if (JSON.stringify(body.state).length > MAX_STATE_CHARS) {
-    return triage('The block is too large for one Jev request. No model call.')
+    // A block with one text has no diff: its changed lines are its whole text.
+    if (item.oldText !== null && item.newText !== null) {
+      body = buildRequest({ ...input, diffOnly: true })
+      diffOnly = true
+    }
+    if (JSON.stringify(body.state).length > MAX_STATE_CHARS) {
+      return triage('The block is too large for one Jev request. No model call.')
+    }
   }
   let outcomes: Outcome[]
   try {
@@ -660,7 +681,7 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
   } catch (error) {
     return triage(`The Jev request failed: ${(error as Error).message}.`)
   }
-  return { findings: findingsOf(item, outcomes), result: { ...result, outcomes } }
+  return { findings: findingsOf(item, outcomes, diffOnly), result: { ...result, outcomes } }
 }
 
 // Classifies every page that the map cites. `fetchText` reads a docs page.
@@ -720,7 +741,11 @@ export function renderMarkdown({ findings, results }: Output): string {
   const quiet = results.filter((r) => r.outcomes.every((o) => o.kind === 'no-change'))
   if (quiet.length > 0) {
     lines.push('Blocks that need no change:', '')
-    for (const r of quiet) lines.push(`- ${r.page} \`${r.blockId}\` (${r.change})`)
+    for (const r of quiet) {
+      const value = r.outcomes.find((o) => o.reason === 'requirement')?.probability
+      const detail = value === undefined ? '' : `, requirement ${value}`
+      lines.push(`- ${r.page} \`${r.blockId}\` (${r.change}${detail})`)
+    }
     lines.push('')
   }
   return `${lines.join('\n')}\n`

@@ -53,12 +53,12 @@ const rules = new Map([
 ])
 
 // Stores a snapshot of PAGE for the map, then classifies the edited page.
-async function run(sourceMap: SourceMap, edited: string, jev: Jev) {
+async function run(sourceMap: SourceMap, edited: string, jev: Jev, base = PAGE) {
   const headings = Object.values(sourceMap)
     .flat()
     .map((s) => s.heading)
     .filter((h, i, all) => all.indexOf(h) === i)
-  const stored = await watch.readPage(URL_, headings, serve(PAGE))
+  const stored = await watch.readPage(URL_, headings, serve(base))
   return api.classify({
     map: sourceMap,
     snapshots: new Map([[watch.snapshotName(URL_), stored]]),
@@ -265,7 +265,7 @@ describe('decide', () => {
     expect(api.THRESHOLDS).toEqual({
       alters: { yes: 0.5, no: 0.2 },
       obsolete: { yes: 0.5, no: 0.35 },
-      requirement: { yes: 0.5, no: 0.2 },
+      requirement: { yes: 0.5, no: 0.4 },
     })
     const kind = (a: number, o: number) => api.decide(item, answers(a, o))[0]?.kind
     expect(kind(0.5, 0)).toBe('rule-update')
@@ -275,6 +275,18 @@ describe('decide', () => {
     expect(kind(0.9, 0.5)).toBe('rule-removal')
     expect(kind(0.9, 0.36)).toBe('needs-triage')
     expect(kind(0.9, 0.35)).toBe('rule-update')
+  })
+
+  it('puts a requirement answer in its band, with 0.4 as the no edge', () => {
+    const uncited = { rules: [], askRequirement: true }
+    const kind = (p: number) => api.decide(uncited, { requirement: { type: 'noul', noul: p } })[0]
+    expect(kind(0.4)?.kind).toBe('no-change')
+    expect(kind(0.41)?.kind).toBe('needs-triage')
+    expect(kind(0.49)?.kind).toBe('needs-triage')
+    expect(kind(0.5)?.kind).toBe('new-rule')
+    expect(kind(0.4)).toEqual(
+      expect.objectContaining({ rule: null, probability: 0.4, reason: 'requirement' }),
+    )
   })
 
   it('throws for an answer that is missing, not a Noul, or out of range', () => {
@@ -384,7 +396,7 @@ describe('classify', () => {
     ])
     const low = fakeJev(answer({ requirement: 0.05 }))
     expect((await run(cited, edited, { fetch: low.fetch, key: KEY })).findings).toEqual([])
-    const mid = fakeJev(answer({ requirement: 0.3 }))
+    const mid = fakeJev(answer({ requirement: 0.45 }))
     const triage = await run(cited, edited, { fetch: mid.fetch, key: KEY })
     expect(triage.findings.map((f) => [f.kind, f.rules])).toEqual([['needs-triage', []]])
   })
@@ -582,6 +594,90 @@ describe('classify', () => {
     expect(jev.calls).toEqual([])
   })
 
+  it('replays the seven closed noise cases of #150 as no-change, listed with their values', async () => {
+    // The requirement value of each closed issue, from the triage of 2026-10-10.
+    const closed = { 104: 0.31, 105: 0.21, 110: 0.32, 111: 0.26, 123: 0.33, 125: 0.22, 133: 0.23 }
+    const edited = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
+    for (const [issue, value] of Object.entries(closed)) {
+      const jev = fakeJev(answer({ requirement: value }))
+      const output = await run(cited, edited, { fetch: jev.fetch, key: KEY })
+      expect(output.findings, `#${issue}`).toEqual([])
+      expect(output.results).toContainEqual(
+        expect.objectContaining({
+          blockId: 'path-rules',
+          outcomes: [{ kind: 'no-change', rule: null, probability: value, reason: 'requirement' }],
+        }),
+      )
+      expect(api.renderMarkdown(output), `#${issue}`).toContain(
+        `- ${URL_} \`path-rules\` (changed, requirement ${value})`,
+      )
+    }
+  })
+
+  describe('a block over the request limit', () => {
+    const table = (rows: number) =>
+      Array.from(
+        { length: rows },
+        (_, i) => `| FLAG_${i} | Row ${i} text to pad the table. |`,
+      ).join('\n')
+    const big = PAGE.replace('an array mixing both.', `an array mixing both.\n\n${table(1500)}`)
+
+    it('sends the changed lines and no full texts for a one-row change', async () => {
+      const edited = big.replace('| FLAG_7 | Row 7 text', '| FLAG_7 | Row 7 new text')
+      const jev = fakeJev(answer({ alters: 0.84, obsolete: 0.03 }))
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(jev.calls).toHaveLength(1)
+      const block = jev.calls[0]?.request.state.docs_block
+      expect(block?.removed_lines).toEqual(['| FLAG_7 | Row 7 text to pad the table. |'])
+      expect(block?.added_lines).toEqual(['| FLAG_7 | Row 7 new text to pad the table. |'])
+      expect(block?.old_text).toContain('omitted')
+      expect(block?.new_text).toContain('omitted')
+      expect(JSON.stringify(jev.calls[0]?.request.state).length).toBeLessThan(api.MAX_STATE_CHARS)
+      expect(findings.map((f) => [f.kind, f.probability])).toEqual([['rule-update', 0.84]])
+      expect(findings[0]?.reason).toBe(
+        'Jev gives 0.84 that the change alters what a-rule checks. Jev judged the changed lines, not the whole block.',
+      )
+      // The finding keeps the full texts for the issue.
+      expect(findings[0]?.newText).toContain('Row 7 new text')
+    })
+
+    it('adds the changed-lines note to a needs-triage finding of a diff request', async () => {
+      const edited = big.replace('| FLAG_7 | Row 7 text', '| FLAG_7 | Row 7 new text')
+      const jev = fakeJev(answer({ alters: 0.3 }))
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(findings.map((f) => f.kind)).toEqual(['needs-triage'])
+      expect(findings[0]?.reason).toMatch(/\. Jev judged the changed lines, not the whole block\.$/)
+    })
+
+    it('gives no finding and no note when the changed row does not alter the rule', async () => {
+      const edited = big.replace('| FLAG_7 | Row 7 text', '| FLAG_7 | Row 7 new text')
+      const jev = fakeJev(answer({ alters: 0.05, obsolete: 0.01 }))
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(findings).toEqual([])
+    })
+
+    it('gives needs-triage with no call for a diff over the limit', async () => {
+      const edited = big.replace('| FLAG_7 | Row 7 text', `| FLAG_7 | ${'x'.repeat(70_000)}`)
+      const jev = fakeJev(() => 1)
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(findings.map((f) => f.reason)).toEqual([
+        'The block is too large for one Jev request. No model call.',
+      ])
+      expect(jev.calls).toEqual([])
+    })
+
+    it('gives needs-triage with no call for a large added block, whose diff is its whole text', async () => {
+      // The full texts alone are over the limit, and the changed lines are not.
+      const edited = `${PAGE}\n## Flag table\n\n${table(700)}\n`
+      const jev = fakeJev(() => 1)
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY })
+      expect(findings.map((f) => [f.blockId, f.reason])).toEqual([
+        ['flag-table', 'The block is too large for one Jev request. No model call.'],
+      ])
+      expect(jev.calls).toEqual([])
+    })
+  })
+
   it('fails when a block needs a call and the key is not set, or a fetch fails', async () => {
     const jev = fakeJev(() => 1)
     await expect(run(cited, EDIT_HOOKS, { fetch: jev.fetch })).rejects.toThrow(
@@ -679,5 +775,22 @@ describe('main on a temporary tree', () => {
     })
     expect(text).toContain('0 finding(s).')
     expect(text).toContain(`- ${URL_} \`b\` (changed)`)
+  })
+
+  it('lists a skipped requirement block with its value, and not a block with a finding', () => {
+    const result = (blockId: string, kind: 'no-change' | 'new-rule', probability: number) => ({
+      blockId,
+      heading: blockId,
+      change: 'changed',
+      page: URL_,
+      outcomes: [{ kind, rule: null, probability, reason: 'requirement' }],
+    })
+    const text = api.renderMarkdown({
+      model: 'jev-1.13.0',
+      findings: [],
+      results: [result('low', 'no-change', 0.31), result('high', 'new-rule', 0.8)],
+    })
+    expect(text).toContain(`- ${URL_} \`low\` (changed, requirement 0.31)`)
+    expect(text).not.toContain('`high`')
   })
 })

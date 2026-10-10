@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112]
+related_issues: [25, 112, 137, 150]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -61,7 +61,7 @@ below `no` is a no. A value between them goes to a person.
 | - | - | - | - | - | - |
 | `obsolete_<i>` | 0.5 | 0.35 | `rule-removal` | `needs-triage` | the next row |
 | `alters_<i>` | 0.5 | 0.2 | `rule-update` | `needs-triage` | no finding |
-| `requirement` | 0.5 | 0.2 | `new-rule` | `needs-triage` | no finding |
+| `requirement` | 0.5 | 0.4 | `new-rule` | `needs-triage` | no finding |
 
 Code decides these cases with no model call:
 
@@ -69,7 +69,10 @@ Code decides these cases with no model call:
 - A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
-- A block is too large for one request: `needs-triage`.
+- A block is too large for one request: Jev classifies its changed lines. The request has the
+  lines that each side adds and no full text, and the finding says so in its Reason. The block
+  goes to a person as `needs-triage` only when those lines are too large too. A block with one
+  text only (new, removed, or with no stored old text) has no diff, so it goes to a person.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
 confidence value, so a finding reports `|2p - 1|` as its confidence.
@@ -126,6 +129,11 @@ Accuracy by label, on each of the four runs:
   The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
   block is 0.73. The band from 0.2 to 0.5 is empty in this data.
+- The live band from 0.2 to 0.4 held seven of seven noise cases (#104, #105, #110, #111, #123,
+  #125 and #133, from 0.21 to 0.33). So the `requirement` `no` value is 0.4. A miss on a block
+  that no rule cites is a missed candidate, not a broken rule. The `alters` value stays 0.2,
+  because both cases in its band were real rule changes (#103 at 0.27 and #118 at 0.24). The
+  classifier summary lists each block that this value skips, with its value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
 - The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56. A
   value below 0.5 gives `needs-triage`, not a silent miss. Both results open an issue.
