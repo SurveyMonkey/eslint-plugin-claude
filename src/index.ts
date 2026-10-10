@@ -90,6 +90,7 @@ import pluginBinExecutable from './rules/plugin-bin-executable.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
+import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
@@ -328,6 +329,7 @@ const modules = [
   claudeMdMaxBytes,
   memorySettingsSchema,
   rulesFrontmatterSchema,
+  rulesMdExtension,
   rulesPathsGlobValid,
 ]
 
@@ -513,6 +515,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
   'rules-frontmatter-schema': 'error',
+  'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',
 }
 
