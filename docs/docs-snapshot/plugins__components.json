@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "d6e29a83e653ddb855c42be1ce8bcac953075dda88b8f710bd88784105a97006",
+  "hash": "37a3ce71801730ffdc22cd5e9dcac29f0dab259f395df772af953e192fd888ba",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -40,7 +40,7 @@
     },
     {
       "id": "hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
     },
     {
       "id": "when-plugin-hooks-fire",
@@ -127,8 +127,8 @@
     {
       "heading": "Hooks",
       "id": "hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0",
-      "text": "### Hooks\n\nA [hook](/docs/en/hooks-guide) runs something automatically at a point in Claude Code's lifecycle, such as after every file edit: a shell command, an HTTP request, an MCP tool call, a prompt to a model, or a subagent. Save the plugin's hooks in `hooks/hooks.json` at the plugin root, under a top-level `\"hooks\"` key, in the same shape as the `hooks` object in `settings.json`. That lets you copy an existing settings hook in unchanged.\n\nThis hook runs a bundled script after every `Write` or `Edit`:\n\n```json hooks/hooks.json theme={null}\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\\\"\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\nSave the script at `scripts/format.sh` and make it executable.\n\nLoad the plugin and ask Claude to edit a file. A `PostToolUse` hook that exits 0 shows nothing in the transcript, so confirm it ran with [debug logging](/docs/en/hooks#debug-hooks) or by what the script itself changes.\n\nHooks in `hooks/hooks.json` and in the `hooks` manifest key both load. For every event and its payload, see [Hook events](/docs/en/hooks#hook-events).\n\nTo write hooks as JavaScript functions that run inside Claude Code and can draw in its interface, list a module file under a `modules` key in the same `hooks/hooks.json`. A plugin with one is a mod. See [Create a mod](/docs/en/plugins/mods/create)."
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e",
+      "text": "### Hooks\n\nA [hook](/docs/en/hooks-guide) runs something automatically at a point in Claude Code's lifecycle, such as after every file edit: a shell command, an HTTP request, an MCP tool call, a prompt to a model, or a subagent. Save the plugin's hooks in `hooks/hooks.json` at the plugin root, under a top-level `\"hooks\"` key, in the same shape as the `hooks` object in `settings.json`. That lets you copy an existing settings hook in unchanged.\n\nThis hook runs a bundled script after every `Write` or `Edit`:\n\n```json hooks/hooks.json theme={null}\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\\\"\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\nSave the script at `scripts/format.sh` and make it executable.\n\nLoad the plugin and ask Claude to edit a file. A `PostToolUse` hook that exits 0 shows nothing in the transcript, so confirm it ran with [debug logging](/docs/en/hooks#debug-hooks) or by what the script itself changes.\n\nHooks in `hooks/hooks.json` and in the `hooks` manifest key both load. For every event and its payload, see [Hook events](/docs/en/hooks#hook-events).\n\nWhen another enabled plugin has the same name, one of the two registers its `hooks/hooks.json` hooks and the other's are left out. See [Hooks when two enabled plugins share a name](/docs/en/plugins/loading#hooks-when-two-enabled-plugins-share-a-name) for which one, and for the note in `/plugin` that tells you.\n\nTo write hooks as JavaScript functions that run inside Claude Code and can draw in its interface, list a module file under a `modules` key in the same `hooks/hooks.json`. A plugin with one is a mod. See [Create a mod](/docs/en/plugins/mods/create)."
     },
     {
       "heading": "Agents",

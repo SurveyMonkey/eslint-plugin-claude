@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "2f14b19549d911bdf0797d3e41e7c3d74e0fa0b237778f954019a2bc57e061e3",
+  "hash": "3e2651f47db7ddb00ac76312cf70458137d23ac4d75d86918e1e3a01dd839c3f",
   "blocks": [
     {
       "id": "tools-reference",
@@ -64,7 +64,11 @@
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "9963d3e531649ff4991df88191b104875b04a1bbc31c3956f737251f25f1a802"
+      "hash": "5959ad17b0b3fcfa49e72efe09c1fda2af1e9db717c4aab9fd7ab4f2672c1451"
+    },
+    {
+      "id": "non-utf-8-files",
+      "hash": "ef91575e0191084a46cf3cdbcd16a1b25b7c049fdd5dd93253914ca52ea30fc6"
     },
     {
       "id": "endconversation-tool-behavior",
@@ -92,7 +96,7 @@
     },
     {
       "id": "notebookedit-tool-behavior",
-      "hash": "b7ead44f231450a13e4e85574553387f2ef5e95a475e125202a18390fde84361"
+      "hash": "a1192f6f4e3e60a6a4c18d64850ff2838d2a1f6a6156a6bf5630320ee1475df0"
     },
     {
       "id": "powershell-tool",
@@ -120,7 +124,11 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "67b80a70b1c14493553cd3e48d68411505b5fdd4777886dc4dac0294406c179a"
+      "hash": "934d7f37f6999d1e7f954d8cfe5336f91e8a0b595bf31dd65ae889c1b6fd053a"
+    },
+    {
+      "id": "large-files",
+      "hash": "5f6e4b7ce468b340689d8dd8769c3d982278b2e83d38fb09c9dd34961538e2c5"
     },
     {
       "id": "sendfeedback-tool-behavior",
@@ -172,7 +180,7 @@
     },
     {
       "id": "write-tool-behavior",
-      "hash": "c4355369b955e2360b451bc788d9f874afe5d978e20906434c1f533e1023ecb0"
+      "hash": "046c80c6ffd74866d6249edb5ce86359c9df8f86a88d943e97856c09efe3efce"
     },
     {
       "id": "check-which-tools-are-available",
