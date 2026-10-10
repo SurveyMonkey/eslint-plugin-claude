@@ -39,7 +39,7 @@ the apex rule. The rule reads no user file.
 
 ### One report for one fault
 
-- An `allow` rule that an equal `deny` or `ask` rule, or a bare `WebFetch` rule, covers is for `permissions-dead-allow`. This rule
+- An `allow` rule that an equal `deny` or `ask` rule, or a bare `WebFetch` `deny` or `ask` rule, covers is for `permissions-dead-allow`. This rule
   skips it.
 - `WebFetch(domain:*)` is for `permissions-allow-unrestricted` in `allow`, and it has no `*.` form.
 - The place of a wildcard that is not a leading `*.` is for `permissions-webfetch-mid-wildcard`. This rule skips a host with another `*`.

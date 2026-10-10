@@ -3,7 +3,7 @@
 // each list over one source, and makes no report when it cannot read a file of the source.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { fetchHost } from '../permission-host.ts'
+import { fetchHost, isPlainHost } from '../permission-host.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { isDeadAllow, listRules, sourceOf } from '../permission-source.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
@@ -11,10 +11,16 @@ import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 const name = 'permissions-webfetch-apex' as const
 
 /** The apex of a wildcard host: the text after the leading `*.`. It is null when the host does not
- *  start with `*.`, is empty after it, or holds another `*`. */
+ *  start with `*.`, is empty after it, holds another `*`, or is not a plain host. */
 function apexOf(host: string | null): string | null {
   const apex = host?.startsWith('*.') ? host.slice(2) : ''
-  return apex === '' || apex.includes('*') ? null : apex
+  return apex === '' ||
+    apex.includes('*') ||
+    !isPlainHost(apex) ||
+    apex.includes('/') ||
+    apex.startsWith('.')
+    ? null
+    : apex
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'apex' }> = {
