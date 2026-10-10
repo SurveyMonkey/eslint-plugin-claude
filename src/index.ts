@@ -238,6 +238,7 @@ import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts
 import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
+import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
 import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
@@ -685,6 +686,7 @@ const modules = [
   pluginCommandsDirNonempty,
   pluginDefaultDirShadowed,
   pluginPackageLockfile,
+  pluginUserConfigNoShellFields,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1048,6 +1050,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-commands-dir-nonempty': 'error',
   'plugin-default-dir-shadowed': 'error',
   'plugin-package-lockfile': 'error',
+  'plugin-user-config-no-shell-fields': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
