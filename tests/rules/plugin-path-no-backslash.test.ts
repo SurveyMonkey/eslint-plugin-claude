@@ -115,6 +115,10 @@ describe(`${RULE} (silent)`, () => {
       'an inline monitor with a backslash',
       { experimental: { monitors: [{ name: 'm', command: 'run .\\x', description: 'd' }] } },
     ],
+    [
+      'a source member in an inline server, which is no commands map',
+      { mcpServers: { s: { source: '.\\x' } } },
+    ],
     ['a bundle URL with a backslash', { mcpServers: 'https://example.com/a\\b.mcpb' }],
     [
       'a path of a key that is not a component key',
