@@ -1,6 +1,6 @@
 // A `hostPattern` or `pathPattern` entry of `strictKnownMarketplaces` should be anchored
 // (docs/rules/settings-known-marketplaces-pattern-anchored.md). The docs say that a pattern
-// "matches anywhere" in the host or the path, so an unanchored pattern widens the allowlist. The
+// "matches anywhere" in the host or the path. So an unanchored pattern widens the allowlist. The
 // rule reads managed settings files. It leaves the blocklist: an unanchored pattern there blocks
 // more, and does not widen what users may add. A pattern that does not compile is for
 // `settings-known-marketplaces-policy-schema`.

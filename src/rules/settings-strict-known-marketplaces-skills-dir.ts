@@ -56,8 +56,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
         if (member?.value.type !== 'Array') {
           return
         }
-        // The top level has the key, so it is an object. Text that `JSON.parse` rejects, such as a
-        // comment in a JSONC file, is text that the rule cannot see.
+        // The top level has the key, so it is an object. The rule cannot see text that `JSON.parse`
+        // rejects, such as a comment in a JSONC file.
         let own: Fields
         try {
           own = JSON.parse(context.sourceCode.text) as Fields

@@ -1,8 +1,8 @@
 // A `directory` marketplace source with an absolute path in a committed `.claude/settings.json`
 // (docs/rules/settings-extra-known-marketplaces-directory.md). The path names one machine. The
 // docs name `directory` for development, or for a marketplace that an organization deploys to each
-// machine. A relative path resolves against the repository, and the docs describe it for a
-// repository (plugins/org, "Require plugins per repository"), so the rule leaves it.
+// machine. A relative path resolves against the repository. The docs describe it for a repository
+// (plugins/org, "Require plugins per repository"), so the rule leaves it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'

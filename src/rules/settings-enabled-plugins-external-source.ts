@@ -1,7 +1,7 @@
-// A plugin that `.claude/settings.json` sets to `true`, and whose entry in a repository marketplace
-// has an external source, is not installed for a teammate
+// Claude Code does not install a plugin for a teammate in one case. `.claude/settings.json` sets the
+// plugin to `true`, and the plugin has an external source in a repository marketplace
 // (docs/rules/settings-enabled-plugins-external-source.md). The rule finds the marketplace in the
-// project settings (`declaredSource`), and reads its entries through `readEntrySources`. It makes
+// project settings (`declaredSource`). It reads the entries through `readEntrySources`, and makes
 // no report when it cannot read the file.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'

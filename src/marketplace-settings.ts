@@ -1,6 +1,6 @@
 // The marketplace keys of a settings file, with their aliases. A rule that reads
-// `extraKnownMarketplaces` or `strictKnownMarketplaces` asks here, so that it
-// reads the key as Claude Code reads it.
+// `extraKnownMarketplaces` or `strictKnownMarketplaces` asks here. Then it reads
+// the key as Claude Code does.
 import { MARKETPLACE_KEY_ALIASES } from './data/settings-keys.ts'
 import { lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
 
@@ -13,7 +13,7 @@ const ALIAS_OF = Object.fromEntries(
 
 /** The last member that Claude Code reads for `key` in `body`. It is the member
  *  `key`, or the member of its alias when `key` is not there. With both
- *  spellings in one file, Claude Code uses the canonical key and ignores the
+ *  spellings in one file, Claude Code uses the canonical key. It ignores the
  *  alias (the settings reference, "Marketplace key aliases"). */
 export function marketplaceMember(
   body: ValueNode | undefined,
