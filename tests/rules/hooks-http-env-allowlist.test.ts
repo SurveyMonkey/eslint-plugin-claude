@@ -34,7 +34,7 @@ const header = (value: unknown, allowed?: unknown) =>
   )
 
 describe(`${name}: the header variables`, () => {
-  it.fails('reports a variable that allowedEnvVars does not list', () => {
+  it('reports a variable that allowedEnvVars does not list', () => {
     expect(header('Bearer $MY_TOKEN', ['OTHER'])).toEqual(['unlisted'])
     expect(header(`Bearer ${brace('MY_TOKEN')}`, ['OTHER'])).toEqual(['unlisted'])
     expect(header('Bearer $MY_TOKEN', [])).toEqual(['unlisted'])
@@ -43,34 +43,34 @@ describe(`${name}: the header variables`, () => {
     expect(header('Bearer $my_token', ['MY_TOKEN'])).toEqual(['unlisted'])
   })
 
-  it.fails('reports a variable when allowedEnvVars is missing, since no variable is then allowed', () => {
+  it('reports a variable when allowedEnvVars is missing, since no variable is then allowed', () => {
     expect(header('Bearer $MY_TOKEN')).toEqual(['unlisted'])
   })
 
-  it.fails('is silent for a variable that allowedEnvVars lists', () => {
+  it('is silent for a variable that allowedEnvVars lists', () => {
     expect(header('Bearer $MY_TOKEN', ['MY_TOKEN'])).toEqual([])
     expect(header(`Bearer ${brace('MY_TOKEN')}`, ['OTHER', 'MY_TOKEN'])).toEqual([])
     expect(header('$A and $B', ['A', 'B'])).toEqual([])
   })
 
-  it.fails('reports each unlisted variable once, and not a listed one', () => {
+  it('reports each unlisted variable once, and not a listed one', () => {
     expect(header('$A $B $C $B', ['A'])).toEqual(['unlisted', 'unlisted'])
     expect(header(`$A ${brace('A')} $A`, [])).toEqual(['unlisted'])
   })
 
-  it.fails('reports each header that holds an unlisted variable', () => {
+  it('reports each header that holds an unlisted variable', () => {
     expect(
       ids(http({ headers: { A: '$X', B: 'plain', C: '$Y', D: '$X' }, allowedEnvVars: ['Y'] })),
     ).toEqual(['unlisted', 'unlisted'])
   })
 
-  it.fails('is silent for text that is no variable', () => {
+  it('is silent for text that is no variable', () => {
     for (const value of ['Bearer abc', 'cost $5', '$', `\${`, `\${}`, '$ A', 'a$', '', '$-x']) {
       expect(header(value), value).toEqual([])
     }
   })
 
-  it.fails('reads the last of two headers or lists with one name', () => {
+  it('reads the last of two headers or lists with one name', () => {
     const text =
       '{"hooks": {"Stop": [{"hooks": [{"type": "http", "url": "u", "headers": {"A": "$X", "A": "ok"}, "allowedEnvVars": ["Z"], "allowedEnvVars": ["X"]}]}]}}'
     expect(jsonIds(name, text, FILES.project)).toEqual([])
@@ -81,7 +81,7 @@ describe(`${name}: the header variables`, () => {
 })
 
 describe(`${name}: what the rule leaves to others`, () => {
-  it.fails('is silent when headers or allowedEnvVars has the wrong type', () => {
+  it('is silent when headers or allowedEnvVars has the wrong type', () => {
     expect(ids(http({ headers: 'Bearer $X' }))).toEqual([])
     expect(ids(http({ headers: ['$X'] }))).toEqual([])
     expect(ids(http({ headers: { A: 5, B: null, C: ['$X'] } }))).toEqual([])
@@ -90,12 +90,12 @@ describe(`${name}: what the rule leaves to others`, () => {
     expect(header('$X', null)).toEqual([])
   })
 
-  it.fails('is silent for an http hook with no headers', () => {
+  it('is silent for an http hook with no headers', () => {
     expect(ids(http())).toEqual([])
     expect(ids(http({ allowedEnvVars: ['X'] }))).toEqual([])
   })
 
-  it.fails('does not read the settings key httpHookAllowedEnvVars', () => {
+  it('does not read the settings key httpHookAllowedEnvVars', () => {
     const text = JSON.stringify({
       httpHookAllowedEnvVars: ['OTHER'],
       hooks: hooks('Stop', [http({ headers: { A: '$X' }, allowedEnvVars: ['X'] })]),
@@ -108,7 +108,7 @@ describe(`${name}: what the rule leaves to others`, () => {
     expect(jsonIds(name, missing, FILES.project)).toEqual(['unlisted'])
   })
 
-  it.fails('reads an http handler only', () => {
+  it('reads an http handler only', () => {
     expect(ids({ type: 'command', command: 'x', headers: { A: '$X' } })).toEqual([])
     expect(ids({ type: 'mcp_tool', headers: { A: '$X' } })).toEqual([])
     expect(ids({ headers: { A: '$X' } })).toEqual([])
@@ -116,15 +116,15 @@ describe(`${name}: what the rule leaves to others`, () => {
 })
 
 describe(`${name}: the report`, () => {
-  it.fails('names the variable and the header, and reports at the header value', () => {
+  it('names the variable and the header, and reports at the header value', () => {
     const text =
       '{\n  "hooks": {"Stop": [{"hooks": [{"type": "http", "url": "u", "headers": {"Authorization": "Bearer $MY_TOKEN"}, "allowedEnvVars": ["OTHER"]}]}]}\n}'
     const found = lintJson(name, text, FILES.project)
     expect(found.map(({ messageId, line, column }) => [messageId, line, column])).toEqual([
-      ['unlisted', 2, 81],
+      ['unlisted', 2, 91],
     ])
     expect(found[0]?.message).toBe(
-      'Claude Code replaces $MY_TOKEN in the "Authorization" header with an empty string, because "allowedEnvVars" does not list MY_TOKEN.',
+      'Claude Code replaces the reference to MY_TOKEN in the "Authorization" header with an empty string, because "allowedEnvVars" does not list MY_TOKEN.',
     )
   })
 })
@@ -132,13 +132,13 @@ describe(`${name}: the report`, () => {
 describe(`${name}: the files`, () => {
   const handler = http({ headers: { A: '$X' }, allowedEnvVars: [] })
 
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids(handler, file), file).toEqual(['unlisted'])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (list: string) =>
       `Stop:\n  - hooks:\n      - type: http\n        url: u\n        headers:\n          A: $X\n        allowedEnvVars: ${list}\n`
     for (const file of [FILES.skill, FILES.agent]) {
@@ -147,14 +147,14 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a plugin agent', () => {
+  it('is silent in a hidden drop-in, and in a plugin agent', () => {
     expect(ids(handler, FILES.hidden)).toEqual([])
     const yaml =
       'Stop:\n  - hooks:\n      - type: http\n        url: u\n        headers:\n          A: $X\n'
     expect(markdownIds(name, frontmatter(yaml), pluginAgent())).toEqual([])
   })
 
-  it.fails('is silent on a config that is malformed', () => {
+  it('is silent on a config that is malformed', () => {
     expect(jsonIds(name, settings([]), FILES.project)).toEqual([])
     expect(
       jsonIds(name, settings({ Stop: [{ hooks: [{ type: 'http' }] }] }), FILES.project),
