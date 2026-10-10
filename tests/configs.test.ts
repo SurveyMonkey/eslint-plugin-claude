@@ -697,6 +697,11 @@ const PLUGIN_RULES: {
     files: ['**/SKILL.md', '**/agents/**/*.md'],
   },
   // The rules with the option `minVersion` give no report in the config run, which sets no option.
+  {
+    name: 'plugin-manifest-metadata-format',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
   { name: 'plugin-manifest-no-bom', files: ['**/.claude-plugin/plugin.json'], severity: 'warn' },
   {
     name: 'plugin-manifest-publish-metadata',

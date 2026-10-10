@@ -8,7 +8,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-manifest-metadata-format'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const licenseMessage = (license: string) =>
@@ -29,9 +29,9 @@ describe(RULE, () => {
       messageId: 'license',
       message: licenseMessage('bogus'),
       line: 1,
-      column: 26,
+      column: 23,
       endLine: 1,
-      endColumn: 33,
+      endColumn: 30,
     })
   })
 
@@ -43,9 +43,9 @@ describe(RULE, () => {
       messageId: 'repository',
       message: repositoryMessage('nope'),
       line: 1,
-      column: 29,
+      column: 26,
       endLine: 1,
-      endColumn: 35,
+      endColumn: 32,
     })
   })
 
