@@ -2,7 +2,7 @@
 // `reviewer-v2` (docs/rules/agent-name-kebab-case.md). The docs do not require it, and the file
 // name need not match. The rule is a heuristic of style.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -25,7 +25,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notKebab' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {

@@ -24,6 +24,7 @@ describe('agent-description-proactive', () => {
   it('reports a longer word that holds the phrase, and the word proactive', () => {
     expect(plain('Reviews code. Not proactivelyish.')).toHaveLength(1)
     expect(plain('Be proactive.')).toHaveLength(1)
+    expect(plain('Reviews code. Unproactively.')).toHaveLength(1)
   })
 
   it('reports a description that spans lines, with no phrase', () => {

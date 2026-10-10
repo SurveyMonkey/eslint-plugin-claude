@@ -4,7 +4,7 @@
 // `.claude/` directory or a plugin root, and reads no file out of the repository.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { scopeAgentFiles } from '../agent-project.ts'
 import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -74,7 +74,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null) {
       return {}
     }
