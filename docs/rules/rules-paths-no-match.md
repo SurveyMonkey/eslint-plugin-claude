@@ -46,9 +46,9 @@ The walk of the files:
 The docs do not give the full glob syntax. The matcher is wide where the docs are silent, so
 that a glob is not reported without need:
 
-- A glob is relative to the base. A leading `./` or `/` is dropped.
+- A glob is relative to the base. A `./` or `/` at the start is dropped.
 - `*` and `?` match a dot file, and do not cross a `/`. `**` as a whole part crosses folders.
-- A glob that names a folder, with or without a trailing `/`, matches the files below it.
+- A glob that names a folder, with or without a `/` at the end, matches the files below it.
 - A brace group with a comma is a choice. A brace group without a comma stays as text.
 - A backslash escapes the next character.
 

@@ -4,9 +4,9 @@
 // (https://code.claude.com/docs/en/memory#path-specific-rules). They do not give the full
 // syntax. So the matcher is wide where the docs are silent, and a glob that it takes for a match
 // is not reported. These choices follow:
-// - A glob is relative to the root of the project. A leading `./` or `/` is dropped.
+// - A glob is relative to the root of the project. A `./` or `/` at the start is dropped.
 // - `*` and `?` match a dot file. `*` does not cross a `/`.
-// - A glob that names a folder matches the files below the folder. A trailing `/` is the same.
+// - A glob that names a folder matches the files below the folder. A `/` at the end is the same.
 // - A brace group without a comma stays as text.
 // The walk of the files is bounded at the repository root, skips `.git` and `node_modules`, and
 // follows a link to a folder once.
@@ -63,7 +63,7 @@ function bracket(glob: string, open: number): { source: string; next: number } |
     i++
   }
   let members = ''
-  // A `]` right after the opening is a member.
+  // A `]` right after the `[` is a member.
   for (let first = true; i < glob.length && (glob[i] !== ']' || first); first = false) {
     const ch = glob[i] === '\\' ? (glob[++i] ?? '\\') : (glob[i] as string)
     members += ch === '\\' || ch === ']' || ch === '[' || ch === '^' ? `\\${ch}` : ch
@@ -166,7 +166,7 @@ function walkFiles(root: string, bound: string, visit: (relative: string) => boo
       if (entry.isSymbolicLink()) {
         const target = realOf(full)
         if (typeof target !== 'string') {
-          // A dangling link is no file. A link that fails to read may hide any file.
+          // A broken link is no file. A link that fails to read may hide any file.
           unreadable ||= target === UNREADABLE
           continue
         }
