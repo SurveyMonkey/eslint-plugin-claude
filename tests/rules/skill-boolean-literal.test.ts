@@ -5,7 +5,10 @@ import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
 const command = '.claude/commands/c.md'
-const file = (fields: string, filename = skill, options: object[] = []) => ({
+// The rule is inactive with no `minVersion`, so a case sets a floor before the fix by default.
+// A case passes `[]` to set no option.
+const BEFORE_FIX = [{ minVersion: '2.1.0' }]
+const file = (fields: string, filename = skill, options: object[] = BEFORE_FIX) => ({
   code: `---\n${fields}---\n\n# S\n`,
   filename,
   ...(options.length > 0 ? { options } : {}),
@@ -33,6 +36,10 @@ markdownTester.run('skill-boolean-literal', ruleOf('skill-boolean-literal'), {
     file('disable-model-invocation: [yes]\nuser-invocable: { a: no }\n'),
     // `background` needs v2.1.218 itself, so its form cannot be the fault.
     file('context: fork\nbackground: no\n'),
+    // With no `minVersion`, the rule is inactive.
+    file('disable-model-invocation: yes\nuser-invocable: 0\n', skill, []),
+    file('user-invocable: no\n', command, []),
+    { ...file('user-invocable: no\n', skill, []), options: [{}] },
     // The repository supports a version that reads the forms.
     file('disable-model-invocation: yes\n', skill, [{ minVersion: '2.1.218' }]),
     file('disable-model-invocation: yes\n', skill, [{ minVersion: '2.1.219' }]),
@@ -86,7 +93,7 @@ markdownTester.run('skill-boolean-literal', ruleOf('skill-boolean-literal'), {
     { ...file('user-invocable: no\n', command), errors: [{ messageId: 'nonLiteral' }] },
     { ...file('user-invocable: no\n', pluginCommand()), errors: [{ messageId: 'nonLiteral' }] },
     { ...file('user-invocable: no\n', pluginSkill()), errors: [{ messageId: 'nonLiteral' }] },
-    // A trailing comment is not part of the value.
+    // A comment after the value is not part of the value.
     {
       ...file('user-invocable: no # hidden\n'),
       errors: [{ messageId: 'nonLiteral', data: { key: 'user-invocable', value: 'no' } }],

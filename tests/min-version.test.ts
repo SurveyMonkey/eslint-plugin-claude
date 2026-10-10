@@ -2,10 +2,6 @@
 import { expect, it } from 'vitest'
 import { supportsBefore } from '../src/min-version.ts'
 
-it('supports an older version when minVersion is unset', () => {
-  expect(supportsBefore(undefined, '2.1.239')).toBe(true)
-})
-
 it.each([
   ['2.1.238', true],
   ['2.1.239', false],
@@ -19,4 +15,8 @@ it.each([
   ['2.1.1000', false],
 ])('compares %s with 2.1.239 by number, not by text', (minVersion, before) => {
   expect(supportsBefore(minVersion, '2.1.239')).toBe(before)
+})
+
+it('is false when minVersion is unset, so a rule is inactive', () => {
+  expect(supportsBefore(undefined, '2.1.239')).toBe(false)
 })

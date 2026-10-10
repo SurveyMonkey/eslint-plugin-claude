@@ -27,7 +27,7 @@ field as the author meant.
 
 The rule checks `disable-model-invocation` and `user-invocable`. It does not check `background`.
 That field needs Claude Code v2.1.218 itself,[^reference] so an older client ignores the field
-whatever its form.
+in any form.
 
 The rule reads the parsed value, not the source text. YAML reads `true`, `True` and `TRUE` as a
 Boolean, so the rule accepts them. It reports each other value that the Boolean reader accepts:
@@ -76,9 +76,10 @@ user-invocable: false
 'claude/skill-boolean-literal': ['warn', { minVersion: '2.1.218' }]
 ```
 
-With no `minVersion`, the plugin cannot know the version of the client. So the rule reports.
-When `minVersion` is `2.1.218` or later, the rule makes no report. The value has three numbers,
-such as `2.1.218`. The `recommended` and `strict` configs set no option.
+With no `minVersion`, the rule is inactive and makes no report. The `recommended` and `strict`
+configs set no option, so a team turns the rule on when it sets its floor. When `minVersion` is
+`2.1.218` or later, the rule makes no report. The value has three numbers,
+such as `2.1.218`.
 
 ## Sources
 
