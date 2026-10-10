@@ -123,13 +123,11 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(lintMemory(RULE, dir, 'docs/a.md', SCOPED)).toEqual([])
   })
 
-  it('uses the folder of the file as the bound in a tree with no .git', () => {
-    expect(ids(outside(SCOPED, { git: false }))).toEqual(['neverLoads'])
-    const elsewhere = tree({ 'rules/b.md': SCOPED })
-    const dir = tree({}, false)
-    link(dir, '.claude/rules/shared', path.join(elsewhere, 'rules'))
-    // The folder is the link, and so the bound is its target.
-    expect(lintMemory(RULE, dir, '.claude/rules/shared/b.md', SCOPED)).toEqual([])
+  it('makes no report in a tree with no .git, where the end of the repository is unknown', () => {
+    expect(outside(SCOPED, { git: false })).toEqual([])
+    const dir = tree({ 'docs/a.md': SCOPED }, false)
+    link(dir, FILE, '../../docs/a.md')
+    expect(lintMemory(RULE, dir, FILE, SCOPED)).toEqual([])
   })
 })
 

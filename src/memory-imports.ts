@@ -129,6 +129,10 @@ const TOKEN = /(?<=^|\s)@((?:[^\s\\\uE000`]|\\ )+)/g
 /** The imports in `text`, in order. */
 export function parseImports(text: string): MemoryImport[] {
   const imports: MemoryImport[] = []
+  // Without an `@` there is no import. The masks cost much on a large text.
+  if (!text.includes('@')) {
+    return imports
+  }
   for (const match of maskSpans(maskComments(maskFences(text))).matchAll(TOKEN)) {
     const written = match[1] as string
     // A path in quotes is not imported at all.
@@ -230,7 +234,7 @@ export interface Chain {
   loaded: Map<string, number>
   /** The real path of the file past the limit, for each import of the root that leads to one. The key is the index of the import. */
   tooDeep: Map<number, string>
-  /** True when a file or link in the chain could not be read. */
+  /** True when the chain holds a path that the rule cannot read: a file or link that fails, or an import out of the repository. */
   unreadable: boolean
 }
 
@@ -255,8 +259,9 @@ export function followImports(file: string, text: string, bound: string, limit: 
   for (const step of queue) {
     for (const [index, imported] of parseImports(step.text).entries()) {
       const forms = candidates(imported)
+      // A path out of the repository can lead back into it. The rule cannot read it.
       const found =
-        forms.length === 0 ? 'missing' : findImport(path.dirname(step.file), forms, bound)
+        forms.length === 0 ? UNREADABLE : findImport(path.dirname(step.file), forms, bound)
       if (found === UNREADABLE) {
         chain.unreadable = true
       }

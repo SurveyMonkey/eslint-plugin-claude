@@ -458,6 +458,7 @@ const TREE: Record<string, string> = {
   'packages/sh/ok/AGENTS.md': '# Agents\n',
   // `rules-symlink-external-scoped`: a rule file with `paths` that is a link out of the tree. The
   // links are made in `beforeAll`. The same text in a regular file is not reported.
+  'packages/rx/.git': 'gitdir: ../.git\n',
   'packages/rx/.claude/rules/local.md': SCOPED_RULE,
   // `claude-md-import-exists`: an import of a missing file in each instruction file that Claude
   // Code expands. The same text where no rule reads it: a Markdown file that is not one of them,
@@ -935,7 +936,7 @@ beforeAll(() => {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
     // `rules-symlink-external-scoped`: rule files that are links out of the tree, a scoped one and
-    // one with no scope. The tree of `packages/rx` has no `.git`, so its rules folder is the bound.
+    // one with no scope. The file `.git` makes `packages/rx` a repository.
     mkdirSync(external, { recursive: true })
     writeFileSync(path.join(external, 'scoped.md'), SCOPED_RULE)
     writeFileSync(path.join(external, 'plain.md'), '# Rule\n')

@@ -219,15 +219,41 @@ describe(`${RULE}: what the rule cannot read`, () => {
     })
   })
 
+  it('names the first CLAUDE file of the folder, in the order of the docs', () => {
+    const message = lint({ 'CLAUDE.md': 'x\n', 'CLAUDE.local.md': 'x\n' })[0]?.message
+    expect(message).toContain('`CLAUDE.md`')
+    expect(message).not.toContain('local')
+  })
+
+  it.skipIf(noLinks)(
+    'makes no report when a second CLAUDE file is a link that leads nowhere',
+    () => {
+      const dir = tree({ 'AGENTS.md': '# Agents\n', 'CLAUDE.md': 'x\n' })
+      link(dir, 'CLAUDE.local.md', 'nowhere.md')
+      expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
+    },
+  )
+
+  it.skipIf(chmodCannotBlock)('makes no report when a second CLAUDE file cannot be read', () => {
+    const dir = tree({ 'AGENTS.md': '# Agents\n', 'CLAUDE.md': 'x\n', 'CLAUDE.local.md': 'x\n' })
+    withoutAccess(path.join(dir, 'CLAUDE.local.md'), () => {
+      expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
+    })
+  })
+
   it('makes no report for a file in a folder that is not there', () => {
     const dir = tree({ 'CLAUDE.md': 'x\n' })
     expect(lintMemory(RULE, dir, 'none/AGENTS.md', '# Agents\n')).toEqual([])
   })
 
-  it('ignores an import of a missing file or of the home folder', () => {
-    expect(
-      ids(lint({ 'CLAUDE.md': '@missing.md @~/AGENTS.md @dir\n', 'dir/x.md': 'x\n' })),
-    ).toEqual(['shadowed'])
+  it('ignores an import of a missing file or of a folder', () => {
+    expect(ids(lint({ 'CLAUDE.md': '@missing.md @dir\n', 'dir/x.md': 'x\n' }))).toEqual([
+      'shadowed',
+    ])
+  })
+
+  it('makes no report when an import of the home folder can lead to the file', () => {
+    expect(lint({ 'CLAUDE.md': '@~/AGENTS.md\n' })).toEqual([])
   })
 
   it('makes no report when an import leads out of the repository, where the chain is unknown', () => {

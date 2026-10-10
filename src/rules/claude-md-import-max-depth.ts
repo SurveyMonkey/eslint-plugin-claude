@@ -54,7 +54,11 @@ const rule: MarkdownRuleDefinition<{
       root() {
         const file = path.resolve(context.filename)
         const bound = repositoryRoot(path.dirname(file))
-        const { tooDeep } = followImports(file, sourceCode.text, bound, max)
+        const { tooDeep, unreadable } = followImports(file, sourceCode.text, bound, max)
+        // A path that the rule cannot read can lead to a shorter chain, so it reports nothing.
+        if (unreadable) {
+          return
+        }
         const imports = parseImports(sourceCode.text)
         for (const [index, deep] of tooDeep) {
           const imported = imports[index] as (typeof imports)[number]
