@@ -104,6 +104,17 @@ describe(`${name}: exec form`, () => {
     expect(exec('claude', ['--cloud', '--remote-control'])).toEqual([])
     expect(exec('claude', [1, null, '--remote-x'])).toEqual([])
     expect(exec('claude', [])).toEqual([])
+    expect(exec('claude', ['--remote', 'x', '--remote'])).toEqual(['remote', 'remote'])
+    expect(exec('claude.EXE', ['--remote'])).toEqual(['remote'])
+    expect(exec('claude_exe', ['--remote'])).toEqual([])
+    // An array `args` selects exec form, so the shell words of `command` are not read.
+    expect(ids(command({ command: 'claude --remote x', args: [] }))).toEqual([])
+  })
+
+  it('is silent for a command that holds only assignments or a wrapper', () => {
+    for (const text of ['FOO=1', 'exec', 'env', 'FOO=1 env']) {
+      expect(shell(text), text).toEqual([])
+    }
   })
 
   it('reads the line, not the arguments, when args is no array', () => {
