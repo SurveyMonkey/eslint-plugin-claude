@@ -136,6 +136,18 @@ describe(`${name}: a subagent name`, () => {
     expect(ids(files, subagents('nope'), '.claude/settings.local.json')).toEqual(['agent'])
   })
 
+  it('reads the matcher of a subagent event only', () => {
+    for (const event of [
+      'SessionStart',
+      'Notification',
+      'FileChanged',
+      'PreToolUse',
+      'Elicitation',
+    ]) {
+      expect(ids(files, settings(hooks(event, [command()], 'nope'))), event).not.toContain('agent')
+    }
+  })
+
   it('is silent for a known agent, a built-in agent and a case variant', () => {
     for (const matcher of [
       'reviewer',
