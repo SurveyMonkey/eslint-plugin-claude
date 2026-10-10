@@ -1,13 +1,18 @@
-// The model aliases and the forms of a model ID that Claude Code accepts. Sources: the "Model
-// aliases" table and the "Extended context" section of the model configuration page
-// (https://code.claude.com/docs/en/model-config#model-aliases), the entry for `advisorModel` in
-// the settings reference (https://code.claude.com/docs/en/settings-reference#advisormodel), and
-// "Override model IDs per version" (https://code.claude.com/docs/en/model-config#override-model-ids-per-version).
+// The model aliases and the forms of a model ID that Claude Code accepts. Sources:
+// - The "Model aliases" table and the "Extended context" section of the model configuration page
+//   (https://code.claude.com/docs/en/model-config#model-aliases).
+// - The entry for `advisorModel` in the settings reference
+//   (https://code.claude.com/docs/en/settings-reference#advisormodel).
+// - "Override model IDs per version" (https://code.claude.com/docs/en/model-config#override-model-ids-per-version).
+// - "Merge behavior" and "Pin models for third-party deployments" of the same page, for the family
+//   of an ID and for the `[1m]` suffix.
+// - The errors page, "Model is not a recognized model ID", for the `claude-` prefix
+//   (https://code.claude.com/docs/en/errors#model-is-not-a-recognized-model-id).
 // Checked on Claude Code 2.1.296 on 2026-10-09. Review these lists on or before 2027-04-09, the
 // `stale_after` date of docs/rules/settings-model-value.md.
 
-/** The families that have an alias. The `opus`, `sonnet`, `haiku` and `fable` aliases resolve to
- *  the newest model of the family. */
+/** The families that have an alias. Each alias resolves to a model of its family. The model can
+ *  differ by provider. */
 export const FAMILY_ALIASES: readonly string[] = ['fable', 'opus', 'sonnet', 'haiku']
 
 /** The six aliases of the "Model aliases" table, apart from `default` and the `[1m]` spellings.
@@ -15,15 +20,16 @@ export const FAMILY_ALIASES: readonly string[] = ['fable', 'opus', 'sonnet', 'ha
  *  `opus` in plan mode and `sonnet` after it. */
 const BASE_ALIASES: readonly string[] = [...FAMILY_ALIASES, 'best', 'opusplan']
 
-/** The value that clears a model override. The table says it is "not itself a model alias", yet
- *  `model` and `fallbackModel` accept it ("`default` expands to the default model"). */
+/** The value that clears a model override. The table says it is "not itself a model alias". The
+ *  `fallbackModel` entry says "`default` expands to the default model". The rule accepts it for
+ *  `model` too. */
 export const DEFAULT_VALUE = 'default'
 
 /** The aliases that `advisorModel` accepts. It also accepts a full model ID. */
 export const ADVISOR_ALIASES: readonly string[] = ['fable', 'opus', 'sonnet']
 
-/** The entries that `deniedModels` ignores, and that an `availableModelsMatch` of `"exact"`
- *  ignores in `availableModels`. */
+/** The entries that `deniedModels` ignores. The page says the same of `availableModels` when
+ *  `availableModelsMatch` is `"exact"`. The rules do not check that case. */
 export const IGNORED_IN_LISTS: readonly string[] = ['best', 'opusplan', DEFAULT_VALUE]
 
 // The page says to append `[1m]` "to a model alias or a full model name".
@@ -37,7 +43,9 @@ export function isModelAlias(value: string): boolean {
   return BASE_ALIASES.includes(withoutSuffix(value))
 }
 
-// The errors page says that an ID "starts with `claude-`". An ID has no space, and the only
+// The errors page says that a pick from a Remote Control device must be an alias, a listed model,
+// or an ID that "starts with `claude-`". The rule uses that form for a settings value. A gateway
+// or a provider can accept other forms. An ID has no space, and the only
 // bracket text is the `[1m]` suffix.
 const MODEL_ID = /^claude-[^\s[\]]+(?:\[1m\])?$/
 
@@ -47,8 +55,8 @@ export function isModelId(value: string): boolean {
   return MODEL_ID.test(value)
 }
 
-// "Keys must be Anthropic model IDs as listed in the Models overview. For dated model IDs,
-// include the date suffix exactly." A listed ID has lowercase letters, digits and hyphens.
+// "Keys must be Anthropic model IDs as listed in the Models overview." A listed ID has lowercase
+// letters, digits and hyphens. For a dated ID, the page says to include the date suffix exactly.
 const ANTHROPIC_MODEL_ID = /^claude-[a-z0-9-]+$/
 
 /** True when `value` has the form of an ID in the Anthropic Models overview. A `modelOverrides`
@@ -64,9 +72,12 @@ export function withoutSuffix(value: string): string {
 }
 
 // The family is a word of the ID between hyphens: `claude-opus-5-5`, `claude-3-5-haiku-latest`.
-// A provider ID embeds it: `us.anthropic.claude-opus-4-8`. The page says that such an ID "counts as
-// a specific entry for that family". A letter or a digit before `claude-` is part of another word.
-const ID_FAMILY = /(?:^|[^a-z0-9])claude-(?:\d+-)*(fable|opus|sonnet|haiku)(?:-|[^a-z0-9]|$)/
+// A provider ID embeds it: `us.anthropic.claude-opus-4-8`. The page says that a custom ID that
+// embeds a family name "counts as a specific entry for that family". The rule treats a provider ID
+// the same way. A letter or a digit before `claude-` is part of another word.
+const ID_FAMILY = new RegExp(
+  `(?:^|[^a-z0-9])claude-(?:\\d+-)*(${FAMILY_ALIASES.join('|')})(?:-|[^a-z0-9]|$)`,
+)
 
 /** True when `value` has a provider form that the docs name as valid: an Amazon Bedrock ARN, an
  *  `anthropic.` ID (a Mantle ID), or an ID that embeds a `claude-` model name, such as

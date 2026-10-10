@@ -78,6 +78,9 @@ describe('the model ID forms', () => {
       'claude-',
       'Claude-opus-5',
       'claude opus',
+      'claude-opus 5',
+      'claude-opus-5 ',
+      'claude-opus-5\t',
       'claude-opus-5[1m',
       'claude-opus-5[2m]',
       'us.anthropic.claude-opus-4-8',
@@ -130,9 +133,19 @@ describe('the family of a value', () => {
       'claude-mythos-1',
       'my-opus-gateway',
       'xclaude-opus-5',
+      '9claude-opus-5',
+      '1claude-opus-5',
+      'claude-opusx-1',
+      'claude-sonnetish-2',
+      'us.anthropic.claude-haikuplan',
     ]) {
       expect(familyOf(value), value).toBeUndefined()
     }
+  })
+
+  it('reads a family word that ends the value', () => {
+    expect(familyOf('claude-opus')).toBe('opus')
+    expect(familyOf('claude-opus[1m]')).toBe('opus')
   })
 
   it('reads the family of a provider ID that embeds a claude- name', () => {
