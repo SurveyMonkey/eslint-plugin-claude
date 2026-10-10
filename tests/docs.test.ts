@@ -65,6 +65,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-dependencies-resolve',
     'plugin-manifest-location',
     'plugin-manifest-no-bom',
+    'plugin-manifest-publish-metadata',
     'plugin-manifest-version-semver',
     'plugin-monitors-command-env',
     'plugin-monitors-skill-exists',

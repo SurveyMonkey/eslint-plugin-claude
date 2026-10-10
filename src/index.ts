@@ -49,6 +49,7 @@ import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
+import pluginManifestPublishMetadata from './rules/plugin-manifest-publish-metadata.ts'
 import pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
@@ -214,6 +215,7 @@ const modules = [
   pluginSettingsSingleSource,
   pluginUserConfigSensitiveInContent,
   pluginManifestNoBom,
+  pluginManifestPublishMetadata,
   pluginManifestVersionSemver,
 ]
 
@@ -342,6 +344,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
   'plugin-manifest-no-bom': 'warn',
+  'plugin-manifest-publish-metadata': 'warn',
   'plugin-manifest-version-semver': 'warn',
 }
 
