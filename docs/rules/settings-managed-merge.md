@@ -28,11 +28,12 @@ only the highest one. Claude Code then adds the entries of a lower source to the
 
 Claude Code reads the key from the highest-priority source that carries it or a policy key.[^key] It
 ignores the key in each lower source. The files of `managed-settings.json` and `managed-settings.d/` are
-one source. It ranks below server-managed settings and MDM.[^combine][^split] No source in the repository
-ranks below it, so a `merge` in a drop-in combines nothing. The rule reports the value `"merge"` in a drop-in.
+one source. It ranks below server-managed settings and MDM.[^combine][^split] The settings reference says: "A `managed-settings.json` file is the lowest-ranked admin source, so `"merge"`
+set there has no source below it to combine with."[^key] The same holds for a drop-in. So a `merge` in a
+drop-in combines nothing. The rule reports the value `"merge"` in a drop-in.
 
-`settings-managed-file` owns the same key in `managed-settings.json`. The file globs list that file, but
-the rule reports nothing there, so the two rules never report the same node.
+`settings-managed-file` owns the same key in `managed-settings.json`. The file globs list that file. The rule
+reports nothing there, so the two rules never report the same node.
 
 ### What the rule does not check
 

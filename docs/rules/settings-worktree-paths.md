@@ -26,18 +26,17 @@ a fresh checkout, and the rule then reports it. `strict` turns the rule on at `w
 Each entry of the two lists is a directory path relative to the repository root.[^symlink][^sparse] The
 rule reports an entry in these cases. The report is on the entry.
 
-- `absolute`: the entry starts with `/` or `\`, or with a drive letter. The rule reads `\` as `/` in the other checks.
+- `absolute`: the entry starts with `/` or `\`, or with a drive letter. The rule reads `\` as `/` in the
+  other checks.
 - `parent`: the entry has a `..` segment.
 - `missing`: no such path is in the repository.
-- `file`: the path is a file, and not a directory.
-
-The large codebases page says that sparse checkout writes only the listed directories and the root-level
-files.[^large]
+- `file`: the path is a file, and not a directory. The large codebases page says: "List directories in
+  `sparsePaths`, not individual files."[^large]
 
 The first two reports do not look at the entry on the disk. For the other two, the rule looks for the entry
-from the repository root. The root is the first folder at or above the folder that holds `.claude/` and
-that holds `.git`. The rule looks at
-no path out of the repository (ADR 001, Decision 14).
+from the repository root. The root is the first folder, at or above the folder that holds `.claude/`, that
+holds `.git`. With no `.git`, it is the folder that holds `.claude/`. The rule looks at no path out of the
+repository (ADR 001, Decision 14).
 
 ### What the rule does not check
 

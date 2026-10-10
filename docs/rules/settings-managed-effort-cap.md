@@ -23,8 +23,8 @@ on the server side.[^org] `strict` turns the rule on at `warn`.
 
 ## Rule details
 
-`effortLevel` sets a default level for models that have no saved level. A user can still raise the level
-with `/effort`, the `/model` picker or `--effort`.[^level] `maxEffortLevel` caps the level. The settings
+`effortLevel` sets a default level for models that have no saved level.[^level] A user can still raise the
+level with `/effort`, the `/model` picker or `--effort`.[^max] `maxEffortLevel` caps the level. The settings
 reference says to deploy it in managed settings to enforce a cap for an organization.[^max]
 
 The rule reports a managed `effortLevel` with a string value. It reports when no file of the managed

@@ -31,21 +31,27 @@ The rule finds the script in `statusLine.command` and reads it from the reposito
 when a line of the script calls `tput cols`. A line that starts with `#` is a comment.
 
 Only two words of the command can name a script: the program, and the first argument when the program is
-an interpreter. A quote joins to the characters that follow it, so `"$CLAUDE_PROJECT_DIR"/x.sh` is one word. The interpreters are `bash`, `sh`,
-`zsh`, `node`, `python`, `python3`, `deno`, `bun`, `pwsh`, `powershell`, `ruby` and `perl`. A word names a
-script in two cases.
+an interpreter. A quoted part joins to the characters next to it, so `"$CLAUDE_PROJECT_DIR"/x.sh` is one
+word. The rule removes the quotes and does not tell single quotes from double quotes.
+
+The interpreters are `bash`, `sh`, `zsh`, `node`, `python`, `python3`, `deno`, `bun`, `pwsh`,
+`powershell`, `ruby` and `perl`. A word names a script in two cases.
 
 - It starts with `${CLAUDE_PROJECT_DIR}/` or `$CLAUDE_PROJECT_DIR/`.
-- It is the program, it has a `/`, and it does not start with `/`. A project file resolves it from the
-  folder that holds `.claude/`. A managed file has no project, so it has no such word. For a managed file, `${CLAUDE_PROJECT_DIR}` is the repository root.
+- It is the program, it has a `/`, and it does not start with `/`.
+
+The page does not say how Claude Code resolves a path. The rule resolves a path of a project file from the
+folder that holds `.claude/`. A managed file has no project, so it has no such word. The rule resolves
+`${CLAUDE_PROJECT_DIR}` of a managed file from the repository root.
 
 ### What the rule does not check
 
 - A script that is missing, that is out of the repository, or that the rule cannot read. The rule cannot
   read a link out of the repository, a link to nothing, or a file with no read access (ADR 001, Decision 14).
-- A word that has one of these characters: `$`, `*`, `?`, `[`, `]`, `{`, `}`, `~`, `:`, `=`, `!`, `#`, a
-  backtick or a backslash. The rule cannot resolve such a word.
-- A comment after code, such as `x=1 # tput cols`. The rule reports it as a call.
+- A path that has one of these characters, after the project variable: `$`, `*`, `?`, `[`, `]`, `{`, `}`,
+  `~`, `:`, `=`, `!`, `#`, a backtick or a backslash. The rule cannot resolve such a path.
+- A path that starts with `/` after the project variable, such as `${CLAUDE_PROJECT_DIR}//x.sh`.
+- A comment after code, such as `x=1 # tput cols`, or a comment with `//`. The rule reports it as a call.
 - A fallback such as `${COLUMNS:-$(tput cols)}`. The rule reports it as a call.
 - `tput lines`, and the width detection of a language. The page names only `tput cols` as a command.
 - `subagentStatusLine` and `fileSuggestion`.

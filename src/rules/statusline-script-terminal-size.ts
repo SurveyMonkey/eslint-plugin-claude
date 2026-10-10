@@ -88,7 +88,9 @@ function scriptOf(command: string, filename: string): { word: string; text: stri
     (word.first && !managed && word.text.includes('/') && !word.text.startsWith('/')
       ? word.text
       : undefined)
-  if (rest === undefined || UNRESOLVED.test(rest) || rest.endsWith('/')) {
+  // A leading `/` after the variable is a path that the shell expands to `<dir>//…`, not to the
+  // absolute path, and `path.resolve` would drop `from`.
+  if (rest === undefined || UNRESOLVED.test(rest) || rest.startsWith('/') || rest.endsWith('/')) {
     return undefined
   }
   const script = path.resolve(from, rest)

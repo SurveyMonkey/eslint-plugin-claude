@@ -1,10 +1,11 @@
 // The entries of `worktree.symlinkDirectories` and `worktree.sparsePaths`
 // (docs/rules/settings-worktree-paths.md). The settings reference says that each entry is a
-// directory path relative to the repository root. The rule reports an entry that starts with `/` or
-// has a `..` segment, with no read of the entry. It then looks for the entry from the repository
-// root, and reports an entry that is not there or that is a file. A `\` counts as `/`. A path that the rule cannot see gets no
-// report (ADR 001, Decision 14): a link that leads out of the repository, a dangling link, and a
-// folder that it cannot read. `settings-worktree-sparse-claude-dir` reports the list as a whole,
+// directory path relative to the repository root. The rule reports an absolute entry (a leading
+// `/` or `\`, or a drive letter) or an entry with a `..` segment, with no read of the entry. It
+// then looks for the entry from the repository root. It reports an entry that is not there or that
+// is a file. A `\` counts as `/`. A path that the rule cannot see gets no report (ADR 001,
+// Decision 14): a link that leads out of the repository, a link to nothing, and a folder that it
+// cannot read. `settings-worktree-sparse-claude-dir` reports the list as a whole,
 // so the two rules never report the same node. A heuristic, and `off` in `recommended`: a
 // directory such as `node_modules` is often absent from a fresh checkout.
 import path from 'node:path'
@@ -50,7 +51,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
     schema: [],
     messages: {
       absolute:
-        '"{{path}}" starts with a slash. The entries of "worktree.{{key}}" are paths relative to the repository root.',
+        '"{{path}}" is an absolute path. The entries of "worktree.{{key}}" are paths relative to the repository root.',
       parent:
         '"{{path}}" has a ".." segment. The entries of "worktree.{{key}}" are paths below the repository root.',
       missing:

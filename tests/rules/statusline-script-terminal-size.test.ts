@@ -261,6 +261,42 @@ describe('statusline-script-terminal-size: the command and the project', () => {
     expect(ids(dir, path.join(dir, 'scripts/bar.js'))).toEqual([])
   })
 
+  it('is silent for a character that a shell expands after the project variable', () => {
+    const dir = tree({ 'scripts/a*b.sh': TPUT, 'scripts/x.sh': TPUT })
+    for (const command of [
+      `"\${CLAUDE_PROJECT_DIR}/scripts/a*b.sh"`,
+      `\${CLAUDE_PROJECT_DIR}/scripts/$NAME.sh`,
+      `x$CLAUDE_PROJECT_DIR/scripts/x.sh`,
+    ]) {
+      expect(ids(dir, command), command).toEqual([])
+      expect(ids(dir, command, MANAGED), command).toEqual([])
+    }
+  })
+
+  it('is silent for an absolute path after the project variable', () => {
+    const dir = tree(FILES)
+    expect(ids(dir, `\${CLAUDE_PROJECT_DIR}/${path.join(dir, 'scripts/bar.js')}`)).toEqual([])
+    expect(ids(dir, `\${CLAUDE_PROJECT_DIR}//scripts/bar.js`)).toEqual([])
+  })
+
+  it('ends the program word at a shell operator', () => {
+    const dir = tree(FILES)
+    for (const command of [
+      '.claude/statusline.sh|cat',
+      '.claude/statusline.sh;echo x',
+      '.claude/statusline.sh>/dev/null',
+      '.claude/statusline.sh&',
+      '.claude/statusline.sh<x',
+    ]) {
+      expect(ids(dir, command), command).toEqual(['tput'])
+    }
+  })
+
+  it('reads a script in the repository outside the folder of the project', () => {
+    const dir = tree({ 'scripts/bar.js': TPUT, 'pkg/.claude/settings.json': '{}' })
+    expect(ids(dir, '../scripts/bar.js', 'pkg/.claude/settings.json')).toEqual(['tput'])
+  })
+
   it.skipIf(noLinks)('does not resolve a character that a shell expands', () => {
     // Each file exists under the literal name, so only the guard can make the rule silent.
     const names = [
@@ -276,6 +312,10 @@ describe('statusline-script-terminal-size: the command and the project', () => {
       'a$b',
       'a`b',
       'a\\b',
+      'a[b',
+      'a]b',
+      'a{b',
+      'a}b',
     ]
     const dir = tree(Object.fromEntries(names.map((n) => [`scripts/${n}.sh`, TPUT])))
     for (const n of names) {

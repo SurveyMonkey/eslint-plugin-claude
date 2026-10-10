@@ -129,7 +129,8 @@ describe('settings-defaultshell-powershell-tool: the tool variable', () => {
   })
 
   it.skipIf(noLinks)('is silent when a sibling is a link out of the repository', () => {
-    const outside = tree({ 'settings.local.json': tool('1') }, false)
+    // The outside file holds no tool variable, so a read of it would give a report.
+    const outside = tree({ 'settings.local.json': '{}' }, false)
     const dir = tree({})
     link(dir, LOCAL, path.join(outside, 'settings.local.json'))
     expect(ids(dir, PROJECT, SHELL, MACOS)).toEqual([])
