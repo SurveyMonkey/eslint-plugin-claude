@@ -107,6 +107,18 @@ describe('the cross-file rules of the plugin layer', () => {
     const { dir } = linkedOut({}, {}, AGENT)
     expect(lintPlugin('plugin-settings-agent-exists', dir, AGENT)).toEqual([])
   })
+  it('plugin-settings-agent-exists reports in the settings.json of the plugin in the repository', () => {
+    const { dir } = pluginTree(MANIFEST, { 'settings.json': '{"agent": "ghost"}' })
+    const file = path.join(dir, 'settings.json')
+    expect(
+      lintPluginFile(
+        'plugin-settings-agent-exists',
+        ['**/settings.json'],
+        file,
+        '{"agent": "ghost"}',
+      ).map((m) => m.messageId),
+    ).toEqual(['missing'])
+  })
   linked(
     'plugin-settings-agent-exists stays silent for the settings.json of the linked plugin',
     () => {
