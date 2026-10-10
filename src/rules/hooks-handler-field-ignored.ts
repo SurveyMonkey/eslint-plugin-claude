@@ -27,6 +27,7 @@ type MessageId =
   | 'timeoutAsync'
   | 'timeoutSessionEnd'
   | 'timeoutSessionEndPlugin'
+  | 'timeoutSessionEndLimit'
   | 'onFailureType'
   | 'onFailureEvent'
   | 'onFailureAsync'
@@ -46,9 +47,15 @@ const CONTINUE_IGNORED = ['PostToolUseFailure', 'TaskCreated']
 const ON_FAILURE_IGNORED = ['Stop', 'SubagentStop', 'TaskCompleted', 'TeammateIdle']
 
 /** The most seconds that the SessionEnd budget rises to (the hooks reference, "SessionEnd"),
- *  and the budget that a plugin hook cannot raise. */
+ *  and the budget that a plugin hook cannot raise. The environment variable
+ *  `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` moves the budget, so each number is an option. */
 const SESSION_END_MAX = 60
 const SESSION_END_PLUGIN = 1.5
+
+interface Options {
+  sessionEndMax: number
+  sessionEndPluginMax: number
+}
 
 /** Where Claude Code ignores `once`, by the kind of the source. */
 const ONCE_PLACE = new Map([
@@ -56,7 +63,7 @@ const ONCE_PLACE = new Map([
   ['agent', 'agent frontmatter'],
 ])
 
-function problemsOf({ source, event, handler }: HookHandler): Problem[] {
+function problemsOf({ source, event, handler }: HookHandler, limits: Options): Problem[] {
   const problems: Problem[] = []
   const add = (key: string, messageId: MessageId, data?: Record<string, string>) => {
     const member = memberOf(handler, key)
@@ -89,12 +96,20 @@ function problemsOf({ source, event, handler }: HookHandler): Problem[] {
   if (type === 'command' && async && !isTrue(handler, 'asyncRewake')) {
     add('timeout', 'timeoutAsync')
   } else if (event === 'SessionEnd' && timeout?.kind === 'number') {
-    if (source.kind === 'plugin') {
-      if (timeout.value > SESSION_END_PLUGIN) {
-        add('timeout', 'timeoutSessionEndPlugin')
-      }
-    } else if (timeout.value > SESSION_END_MAX) {
-      add('timeout', 'timeoutSessionEnd')
+    const plugin = source.kind === 'plugin'
+    const max = plugin ? limits.sessionEndPluginMax : limits.sessionEndMax
+    if (timeout.value > max) {
+      const docs = plugin ? SESSION_END_PLUGIN : SESSION_END_MAX
+      // At another value, the message names the configured limit and claims no cut by Claude Code.
+      add(
+        'timeout',
+        max !== docs
+          ? 'timeoutSessionEndLimit'
+          : plugin
+            ? 'timeoutSessionEndPlugin'
+            : 'timeoutSessionEnd',
+        { max: String(max) },
+      )
     }
   }
   if (known && type !== 'command' && type !== 'http') {
@@ -114,7 +129,17 @@ const rule: Rule.RuleModule = {
       description: 'Leave out the hook handler fields that Claude Code ignores',
       url: docsUrl(name),
     },
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          sessionEndMax: { type: 'number', exclusiveMinimum: 0 },
+          sessionEndPluginMax: { type: 'number', exclusiveMinimum: 0 },
+        },
+        additionalProperties: false,
+      },
+    ],
+    defaultOptions: [{ sessionEndMax: SESSION_END_MAX, sessionEndPluginMax: SESSION_END_PLUGIN }],
     messages: {
       asyncType:
         '"{{field}}" works on a command hook only. Claude Code ignores it on a "{{type}}" hook.',
@@ -129,6 +154,8 @@ const rule: Rule.RuleModule = {
         'Claude Code does not enforce "timeout" on a command hook that runs with "async": true.',
       timeoutSessionEnd: `Claude Code raises the SessionEnd budget to ${SESSION_END_MAX} seconds at most. This "timeout" has no effect above ${SESSION_END_MAX}.`,
       timeoutSessionEndPlugin: `A "timeout" on a plugin hook does not raise the SessionEnd budget of ${SESSION_END_PLUGIN} seconds.`,
+      timeoutSessionEndLimit:
+        'This SessionEnd "timeout" is above the configured limit of {{max}} seconds.',
       onFailureType:
         '"onFailure" works on a command or http hook only. Claude Code ignores it on a "{{type}}" hook.',
       onFailureEvent:
@@ -137,9 +164,10 @@ const rule: Rule.RuleModule = {
     },
   },
   create(context) {
+    const [limits] = context.options as [Options]
     return hooksListener(context, (source) => {
       for (const handler of handlersOf(source)) {
-        for (const problem of problemsOf(handler)) {
+        for (const problem of problemsOf(handler, limits)) {
           context.report(problem)
         }
       }

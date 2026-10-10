@@ -13,7 +13,7 @@ import {
   settings,
 } from '../hooks.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
-import { lintJson } from '../rule-tester.test-support.ts'
+import { lintJson, lintMarkdown } from '../rule-tester.test-support.ts'
 
 const name = 'hooks-handler-field-ignored'
 const ids = (event: string, handler: object, file = FILES.project) =>
@@ -101,6 +101,13 @@ describe(`${name}: shell, once and timeout`, () => {
     )
   })
 
+  it('names agent frontmatter as the place', () => {
+    const yaml =
+      'Stop:\n  - hooks:\n      - type: command\n        command: ./a.sh\n        once: true\n'
+    const [message] = lintMarkdown(name, frontmatter(yaml), FILES.agent)
+    expect(message?.message).toContain('ignores it in agent frontmatter')
+  })
+
   it('is silent on once in a skill, in a plugin hooks.json, and when it is false', () => {
     const yaml =
       'Stop:\n  - hooks:\n      - type: command\n        command: ./a.sh\n        once: true\n'
@@ -170,6 +177,31 @@ describe(`${name}: SessionEnd timeout`, () => {
     )
   })
 
+  it('moves each limit with the options, and names the configured limit', () => {
+    const lint = (timeout: number, file: string, options: object) =>
+      lintJson(name, settings(hooks('SessionEnd', [command({ timeout })])), file, [options])
+    expect(lint(61, FILES.project, { sessionEndMax: 120 })).toEqual([])
+    expect(lint(120, FILES.project, { sessionEndMax: 120 })).toEqual([])
+    const [over] = lint(121, FILES.project, { sessionEndMax: 120 })
+    expect(over?.messageId).toBe('timeoutSessionEndLimit')
+    expect(over?.message).toBe(
+      'This SessionEnd "timeout" is above the configured limit of 120 seconds.',
+    )
+    expect(lint(61, FILES.project, { sessionEndMax: 30 })[0]?.messageId).toBe(
+      'timeoutSessionEndLimit',
+    )
+    expect(lint(61, FILES.project, { sessionEndPluginMax: 5 })[0]?.messageId).toBe(
+      'timeoutSessionEnd',
+    )
+    expect(lint(5, FILES.plugin, { sessionEndPluginMax: 10 })).toEqual([])
+    expect(lint(11, FILES.plugin, { sessionEndPluginMax: 10 })[0]?.messageId).toBe(
+      'timeoutSessionEndLimit',
+    )
+    expect(lint(2, FILES.plugin, { sessionEndMax: 120 })[0]?.messageId).toBe(
+      'timeoutSessionEndPlugin',
+    )
+  })
+
   it('is silent on timeout above 60 for another event', () => {
     expect(ids('Stop', command({ timeout: 120 }))).toEqual([])
     expect(ids('Stop', command({ timeout: 120 }), FILES.plugin)).toEqual([])
@@ -207,6 +239,22 @@ describe(`${name}: onFailure`, () => {
     expect(ids('PreToolUse', command({ onFailure: 'block' }))).toEqual([])
     expect(ids('UserPromptSubmit', http({ onFailure: 'continue' }))).toEqual([])
     expect(ids('PreToolUse', command({ onFailure: 'block', async: false }))).toEqual([])
+  })
+})
+
+describe(`${name}: one handler with several faults`, () => {
+  it('reports each field once, on the branch that fits the handler', () => {
+    expect(ids('Stop', http({ async: true, timeout: 5 }))).toEqual(['asyncType'])
+    expect(ids('PreToolUse', http({ async: true, onFailure: 'block' }))).toEqual(['asyncType'])
+    expect(ids('TaskCreated', command({ continueOnBlock: true }))).toEqual(['continueOnBlockType'])
+    expect(ids('PostToolUseFailure', { continueOnBlock: true })).toEqual(['continueOnBlockEvent'])
+    expect(ids('Stop', prompt({ onFailure: 'block' }))).toEqual(['onFailureType'])
+    expect(ids('Stop', command({ async: true, onFailure: 'block' }))).toEqual(['onFailureEvent'])
+  })
+
+  it('reads the last of two events of one name', () => {
+    const text = '{"hooks":{"Stop":[{"hooks":[{"type":"http","url":"u","async":true}]}],"Stop":[]}}'
+    expect(jsonIds(name, text, FILES.project)).toEqual([])
   })
 })
 

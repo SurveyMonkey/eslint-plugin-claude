@@ -66,6 +66,23 @@ describe(`${name}: shell form`, () => {
     }
   })
 
+  it('joins a line that ends in a backslash with the next line', () => {
+    expect(shell('claude \\\n  --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('claude \\\n--enable-auto-mode')).toEqual(['removed'])
+    expect(shell('env \\\n claude --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('claude\\\n--enable-auto-mode')).toEqual([])
+  })
+
+  it('reads a wrapper after an assignment, a tab, and the exe suffix', () => {
+    expect(shell('command claude --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('nohup claude --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('env CI=1 claude --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('-x=1 claude --enable-auto-mode')).toEqual([])
+    expect(shell('claude\t--enable-auto-mode')).toEqual(['removed'])
+    expect(shell('Claude.EXE --enable-auto-mode')).toEqual([])
+    expect(shell('claude.EXE --enable-auto-mode')).toEqual(['removed'])
+  })
+
   it('reads a backslash, a quote that is not closed, and an assignment alone', () => {
     expect(shell('claude \\--enable-auto-mode')).toEqual(['removed'])
     expect(shell('claude --enable-auto-mode "unclosed')).toEqual(['removed'])

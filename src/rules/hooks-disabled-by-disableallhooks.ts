@@ -1,7 +1,7 @@
 // A settings file that sets `disableAllHooks` to true and also defines `hooks` (docs/rules/hooks-
 // disabled-by-disableallhooks.md). Claude Code runs none of those hooks. A file of a higher scope can
-// set the key again, so the rule reads the sibling files first. It reads the project file and the local
-// file on disk, and the files of the managed source.
+// set the key again, so the rule reads the sibling files first. For a project file it reads
+// `settings.local.json` on disk. For a managed file it reads the other files of the managed source.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -20,9 +20,10 @@ const name = 'hooks-disabled-by-disableallhooks' as const
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
-/** True when a file of a higher scope, or a sibling, can set the key again, or the rule cannot
- *  see it. The local file is above the project file. The files of a managed source merge in an
- *  order that the rule does not follow, so a sibling that sets the key settles it. */
+/** True when a sibling file can set the key again, or the rule cannot see it. The rule reads
+ *  no user file or managed file for a project file. The local file is above the project file.
+ *  The files of a managed source merge in an order that the rule does not follow, so a sibling
+ *  that sets the key settles it. */
 function setAgain(filename: string): boolean {
   const kind = kindOf(filename)
   if (kind === 'local') {

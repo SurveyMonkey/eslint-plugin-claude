@@ -258,6 +258,13 @@ describe(`${name}: hooks.json of a plugin`, () => {
   })
 })
 
+describe(`${name}: files of another tool`, () => {
+  it('is silent on a hooks/hooks.json in a hidden folder other than .claude', () => {
+    expect(jsonIds(name, '{"version": 1}', '/repo/.github/hooks/hooks.json')).toEqual([])
+    expect(jsonIds(name, '{"version": 1}', '/repo/plugins/p/hooks/hooks.json')).not.toEqual([])
+  })
+})
+
 describe(`${name}: frontmatter`, () => {
   const yaml = (text: string, file = FILES.skill) => markdownIds(name, frontmatter(text), file)
 
@@ -266,6 +273,11 @@ describe(`${name}: frontmatter`, () => {
       'PreToolUse:\n  - matcher: "Bash"\n    hooks:\n      - type: command\n        command: "./scripts/security-check.sh"\n        once: true\n'
     expect(yaml(valid)).toEqual([])
     expect(yaml(valid, FILES.agent)).toEqual([])
+  })
+
+  it('reads a flow-map entry that has a key and no value, as a null', () => {
+    expect(yaml('Stop:\n  - hooks: [ {type: command, command} ]\n')).toEqual(['fieldType'])
+    expect(yaml('Stop: {x}\n')).toEqual(['eventNotArray'])
   })
 
   it('reports a fault in a skill and in a project subagent, at the place', () => {

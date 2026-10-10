@@ -20,13 +20,15 @@ function manifestNames(hooks: unknown, root: string, file: string): boolean {
   return entries.some((entry) => typeof entry === 'string' && path.resolve(root, entry) === file)
 }
 
-/** What the file `filename` is to Claude Code, or null. The result is null for
- *  a file that is no `hooks.json`, for a `hooks.json` that no part of the
- *  layout names, and when the check cannot see (ADR 001, Decision 14). A rule
- *  makes no report on a null result.
+/** What the file `filename` is to Claude Code, or null. The result is null in three
+ *  cases. The file is no `hooks.json`. No part of the layout names the file. Or the check
+ *  cannot see (ADR 001, Decision 14). A rule makes no report on a null result.
  *
- *  A file under `.claude-plugin/` is read only when the manifest names it. A file
- *  under `.claude/` is read only when `.claude/` is itself a plugin root. */
+ *  A file under `.claude-plugin/` is read only when the manifest names it. The file
+ *  `.claude/hooks/hooks.json` is read only when `.claude/` is itself a plugin root.
+ *  A plugin reads no `hooks.json` at the top of its root, so `.claude/hooks.json` is
+ *  never read. Any other `hooks/hooks.json` is a plugin file, unless a hidden folder
+ *  holds it. */
 export function hooksFileKind(filename: string): HooksFileKind | null {
   const file = path.resolve(filename)
   if (path.basename(file) !== 'hooks.json') {
@@ -52,5 +54,6 @@ export function hooksFileKind(filename: string): HooksFileKind | null {
     const isRoot = isPluginRoot(root)
     return isRoot === UNREADABLE ? null : isRoot ? 'plugin' : 'project'
   }
-  return inHooksDir ? 'plugin' : null
+  // Another hidden folder, such as `.github/hooks/`, holds the hooks of another tool.
+  return inHooksDir && !holder.startsWith('.') ? 'plugin' : null
 }

@@ -1,12 +1,12 @@
 // The `hooks` config of a Claude Code file, for the rules that read it. The same
 // shape is in the `hooks` key of a settings file, in `hooks/hooks.json` of a plugin,
-// and in the `hooks` field of skill and agent frontmatter. The first three are JSON.
-// The frontmatter is YAML. This reader turns each of them into one tree of nodes
-// with a location, so a rule reports at the narrowest part and does not care about
-// the language.
+// and in the `hooks` field of skill and agent frontmatter. A settings file and a
+// plugin `hooks.json` are JSON. The frontmatter of a skill and of an agent is YAML.
+// This reader turns each of them into one tree of nodes with a location. A rule
+// reports at the narrowest part and does not care about the language.
 //
 // The tree is tolerant: a value of the wrong type is still a node. `hooks-config-schema`
-// reports it. The other rules read `handlersOf`, which gives well-formed handlers only.
+// reports it. The other rules read `handlersOf`, which gives the handlers of well-formed groups only.
 import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
@@ -79,7 +79,7 @@ export const HOOKS_TARGET = {
   also: { language: 'markdown' as const, files: ['**/SKILL.md', '**/agents/**/*.md'] },
 }
 
-/** The names `items` as a quoted list for a message: `"a"`, `"a" and "b"`, `"a", "b" and "c"`. */
+/** `items` as a quoted list for a message: `"a"`, `"a" and "b"`, `"a", "b" and "c"`. */
 export function quotedList(items: readonly string[]): string {
   const quoted = items.map((item) => `"${item}"`)
   return quoted.length < 2
@@ -140,7 +140,11 @@ function fromJson(node: ValueNode): HNode {
 type At = (start: number, end: number) => Loc
 
 /** The node for a YAML node. A node that the parser read always has a range. */
-function fromYaml(node: unknown, at: At): HNode {
+function fromYaml(node: unknown, at: At, fallback: Loc): HNode {
+  // A flow-map entry with a key and no value, such as `{ Stop }`, has a null value node.
+  if (node === null) {
+    return { kind: 'null', loc: fallback }
+  }
   const [start, end] = (node as { range: [number, number, number] }).range
   const loc = at(start, end)
   if (isMap(node)) {
@@ -152,14 +156,13 @@ function fromYaml(node: unknown, at: At): HNode {
           return []
         }
         const [keyStart, keyEnd] = pair.key.range as [number, number, number]
-        return [
-          { key: pair.key.value, keyLoc: at(keyStart, keyEnd), value: fromYaml(pair.value, at) },
-        ]
+        const keyLoc = at(keyStart, keyEnd)
+        return [{ key: pair.key.value, keyLoc, value: fromYaml(pair.value, at, keyLoc) }]
       }),
     }
   }
   if (isSeq(node)) {
-    return { kind: 'array', loc, items: node.items.map((item) => fromYaml(item, at)) }
+    return { kind: 'array', loc, items: node.items.map((item) => fromYaml(item, at, loc)) }
   }
   if (isScalar(node)) {
     const value = node.value
@@ -230,7 +233,7 @@ export function hooksListener(
       const value = contents.get('hooks', true)
       check({
         kind,
-        hooks: value === undefined ? undefined : fromYaml(value, fm.at),
+        hooks: value === undefined ? undefined : fromYaml(value, fm.at, fm.at(0, 0)),
         file: undefined,
       })
     },
@@ -239,9 +242,9 @@ export function hooksListener(
   return listener as unknown as Rule.RuleListener
 }
 
-/** The handlers of the source, in file order. A value of the wrong type adds none:
+/** The handlers of the source, in file order. A value of the wrong nesting adds none:
  *  an event whose value is not an array, a group that is not an object or that has no
- *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. */
+ *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
 export function handlersOf(source: HookSource): HookHandler[] {
   const { hooks } = source
   if (hooks?.kind !== 'object') {
