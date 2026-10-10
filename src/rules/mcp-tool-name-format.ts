@@ -2,7 +2,8 @@
 // (docs/rules/mcp-tool-name-format.md). An MCP tool is `mcp__<server>__<tool>`, and a rule can name
 // the server alone as `mcp__<server>`. A name such as `mcp_server_tool` is not one of these forms.
 // `permissions-unknown-tool` reports a name that has no `_` and no `*`, such as `mcp-server`.
-// `permissions-tool-name-glob` owns each name with a `*`. So this rule reports the rest.
+// `permissions-tool-name-glob` reports a glob in an allow rule. So this rule skips a name with a
+// `*` when the name does not start with `mcp__`. It reports `mcp____*`, which has no server name.
 import type { Rule } from 'eslint'
 import { MCP_PREFIX, MCP_SEPARATOR } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -14,11 +15,11 @@ const name = 'mcp-tool-name-format' as const
 
 /** True when the tool name `tool` is an MCP reference that this rule reports. */
 function isFault(tool: string): boolean {
-  if (!tool.startsWith('mcp') || tool.includes('*')) {
+  if (!tool.startsWith('mcp')) {
     return false
   }
   if (!tool.startsWith(MCP_PREFIX)) {
-    return tool.includes('_')
+    return tool.includes('_') && !tool.includes('*')
   }
   // `mcp__` and `mcp____<tool>` have no server name.
   const rest = tool.slice(MCP_PREFIX.length)

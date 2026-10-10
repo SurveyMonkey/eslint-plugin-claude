@@ -40,10 +40,10 @@ jsonTester.run('mcp-tool-name-format (valid)', rule, {
       code: allow('mcp', 'mcp-server', 'mcpserver', 'mcp-a-b'),
       filename: project,
     },
-    // `permissions-tool-name-glob` owns a glob.
+    // `permissions-tool-name-glob` owns a glob that does not start with `mcp__`.
     {
       name: 'a glob',
-      code: allow('mcp*', 'mcp_*', 'mcp_a_*', '*mcp_a', 'mcp____*', 'mcp____x*'),
+      code: allow('mcp*', 'mcp_*', 'mcp_a_*', '*mcp_a'),
       filename: project,
     },
     // A rule that does not parse is for `permissions-rule-syntax`.
@@ -96,6 +96,16 @@ jsonTester.run('mcp-tool-name-format (invalid)', rule, {
       code: allow('mcp____tool'),
       filename: project,
       errors: [{ messageId: 'format', data: { tool: 'mcp____tool' } }],
+    },
+    // `permissions-tool-name-glob` reports an allow rule only, and its check passes this name.
+    {
+      name: 'an empty server with a glob, in allow and in deny',
+      code: settings({ allow: ['mcp____*'], deny: ['mcp____x*'] }),
+      filename: project,
+      errors: [
+        { messageId: 'format', data: { tool: 'mcp____*' } },
+        { messageId: 'format', data: { tool: 'mcp____x*' } },
+      ],
     },
     {
       name: 'a first part that is not mcp, with an underscore later',
