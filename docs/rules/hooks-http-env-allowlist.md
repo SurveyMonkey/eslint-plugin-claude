@@ -28,10 +28,10 @@ The rule reports each variable of a header value that `allowedEnvVars` does not 
 once for each variable in each header value, at the value. The message names the variable and the
 header. A name is case-sensitive, and `$MY_TOKEN_2` is not `MY_TOKEN`.
 
-The rule does not read the settings key `httpHookAllowedEnvVars`. That key sets an outer limit:
-a hook can use a variable only if its own list and the key both name it. Arrays of that key merge
+The rule does not read the settings key `httpHookAllowedEnvVars`. That key sets an outer limit.
+A hook can use a variable only if its own list and the key both name it. Arrays of that key merge
 across settings files.[^key] A user file or a managed file out of the repository can add a
-variable. So a list in a repository file is never the final list, and the rule makes no report
+variable. So a list in a repository file is never final. The rule makes no report
 from it (ADR 001, Decision 14). It reads the list of the hook only. That list is in the same
 handler, so it is final.
 

@@ -21,7 +21,7 @@ Set only the executable in the command of a hook in exec form.
 ## Rule details
 
 A `command` hook runs in exec form when it sets `args`. Claude Code then spawns `command` as an
-executable, with no shell, and passes each item of `args` as one argument.[^exec] A `command` such
+executable with no shell. It passes each item of `args` as one argument.[^exec] A `command` such
 as `node script.js` names no executable. The spawn fails, and the hook does not run.
 
 The rule reports a `command` handler when all of these are true:
@@ -33,7 +33,7 @@ The rule reports a `command` handler when all of these are true:
 The rule reports at the `command` string. The fix is to move the extra words into `args`.
 
 A path is one executable, even with spaces in it. `C:\Program Files\nodejs\node.exe` is a valid
-command in exec form, so the rule makes no report for a `command` with a path separator.[^exec]
+command in exec form.[^exec] So the rule makes no report for a `command` with a path separator.
 A handler with no `args` is in shell form. The shell splits the words, so the rule makes no report
 there.
 
