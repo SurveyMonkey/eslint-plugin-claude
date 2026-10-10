@@ -1317,6 +1317,18 @@
       "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
     }
   ],
+  "settings-local-untracked": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Keep personal settings out of a repository",
+      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "When your local settings file needs trust",
+      "hash": "e92f56891f12f525d75863edf865047dd034ce8ab9e2897599cf107c7fa3884d"
+    }
+  ],
   "settings-managed-file": [
     {
       "url": "https://code.claude.com/docs/en/managed-settings",

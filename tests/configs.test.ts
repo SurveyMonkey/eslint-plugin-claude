@@ -554,10 +554,17 @@ const GU_TREE: Record<string, string> = {
   'mem/project/.claude/agent-memory/reviewer/MEMORY.md': '# Memory\n',
   'mem/outside/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
   'mem/json/.claude/agent-memory-local/reviewer/state.json': '{}\n',
+  // `settings-local-untracked`: git tracks a `settings.local.json`; the local file of another
+  // project is not read.
+  'set/bad/.claude/settings.json': '{}\n',
+  'set/bad/.claude/settings.local.json': '{}\n',
+  'set/ok/.claude/settings.json': '{}\n',
+  'set/ok/other/.claude/settings.local.json': '{}\n',
 }
 const GU_LOOSE: Record<string, string> = {
   'claude/ok/CLAUDE.local.md': 'mine\n',
   'mem/ok/.claude/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
+  'set/ok/.claude/settings.local.json': '{}\n',
 }
 
 const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
@@ -655,6 +662,7 @@ const UNTRACKED_RULES = [
     language: 'markdown/gfm',
     files: ['**/.claude/agent-memory-local/**/*.md'],
   },
+  { name: 'settings-local-untracked', language: 'json/json', files: ['**/.claude/settings.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -853,6 +861,11 @@ const EXPECTED = [
   'packages/gu/claude/loose/CLAUDE.md: claude/claude-md-local-untracked@1',
   // `memory-agent-memory-local-untracked` reads the local memory directory, and reports a tracked file.
   'packages/gu/mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md: claude/memory-agent-memory-local-untracked@1',
+  // `settings-local-untracked` reads the shared file, and reports on its `settings.local.json`.
+  'packages/gu/set/bad/.claude/settings.json: claude/settings-local-untracked@1',
+  // The repository `packages/hx` tracks the local files of the hook and status line trees.
+  'packages/hx/.claude/settings.json: claude/settings-local-untracked@1',
+  'packages/hx/sl/.claude/settings.json: claude/settings-local-untracked@1',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
