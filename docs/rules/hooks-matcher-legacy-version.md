@@ -35,8 +35,8 @@ form. A `minVersion` equal to that version is no fault.
 
 The changelog for v2.1.195 says that a hook matcher with a hyphenated name, such as `code-reviewer`, matched as
 a substring before that version. It matches the whole name from v2.1.195. The current docs do not
-state this version, so the rule cites the [changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)
-in this text and not in a footnote. Before v2.1.195, write `^code-reviewer$`. An anchor makes the matcher a
+state this version. So this text links the
+[changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md), and there is no footnote. Before v2.1.195, write `^code-reviewer$`. An anchor makes the matcher a
 regular expression on every version.
 
 ### What the rule reads
@@ -46,9 +46,10 @@ regular expression on every version.
   `SubagentStart`, `SubagentStop` and the like. The comma check also covers an event with a fixed set of values.
 - It makes no report for `FileChanged` and `StopFailure` on a comma or a hyphen. Those events read both as a
   regular expression, and [`hooks-matcher-syntax`](hooks-matcher-syntax.md) reports them.
-- It makes no report for a hyphen on an event with a fixed set of values, which
-  [`hooks-matcher-enum`](hooks-matcher-enum.md) reports. It makes none on an event without matcher support,
-  which [`hooks-matcher-unsupported-event`](hooks-matcher-unsupported-event.md) reports.
+- It makes no hyphen report on an event with a fixed set of values.
+  [`hooks-matcher-enum`](hooks-matcher-enum.md) reports those.
+- It makes no report on an event without matcher support.
+  [`hooks-matcher-unsupported-event`](hooks-matcher-unsupported-event.md) reports those.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, no plugin agent, and no `hooks.json` that Claude Code does not read.
