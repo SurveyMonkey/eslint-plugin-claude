@@ -148,7 +148,7 @@ const TREE: Record<string, string> = {
   'docs/SKILL.md': `\n---\nmade_up: 1\nagent: Plan\nallowed-tools: AskUserQuestion Bash Skill(anthropic *) Bogus(\n---\nKEY=!\`cmd\` ${pluginRoot}\n`,
   '.claude/agents/a.md': `---\nname: a\ndescription: ${long}\n---\n`,
   // The warn rules of #50, layer 1: one bad file for each, and the same fault where the rule is
-  // silent. The mark is the first character of the two files that start with `\ufeff`.
+  // silent. The mark is the first character of the three files that start with `\ufeff`.
   '.claude/skills/bom/SKILL.md': '\ufeff---\nname: bom\ndescription: d\n---\n',
   '.claude/commands/cbom.md': '\ufeff---\ndescription: d\n---\n',
   'docs/bom/SKILL.md': '\ufeff---\nname: bom\ndescription: d\n---\n',
