@@ -12,7 +12,7 @@ generated:
 
 # `settings-model-value`
 
-Set each model value to an alias or a model ID that Claude Code accepts.
+Set each model value to an alias or a model ID in a known form.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -25,8 +25,9 @@ produces an error on the first request.[^model] The rule finds the typo in the f
 
 The aliases and the ID forms are in `src/data/models.ts`, with the Claude Code version of the
 last review. A model alias is `default`, `best`, `fable`, `sonnet`, `opus`, `haiku` or
-`opusplan`.[^aliases] An alias takes the suffix `[1m]`.[^aliases] A model ID starts with
-`claude-`, as in `claude-opus-5-5`.[^recognized] The rule reports on the value.
+`opusplan`.[^aliases] Every alias except `default` takes the suffix `[1m]`.[^aliases] A model ID starts with
+`claude-`, as in `claude-opus-5-5`.[^recognized] A gateway or a provider can accept other forms,
+so this is a check of the form. The rule reports on the value.
 
 ### Values that the rule checks
 
@@ -48,9 +49,15 @@ For an `ANTHROPIC_DEFAULT_*_MODEL` variable, the rule reports an alias only, suc
 
 `providerIdPatterns` is a list of regular expression sources. A value that matches one passes the
 check of `model`, `fallbackModel`, `availableModels`, `advisorModel`, `env.ANTHROPIC_MODEL` and
-`env.CLAUDE_CODE_SUBAGENT_MODEL`. The default is an empty list.
+`env.CLAUDE_CODE_SUBAGENT_MODEL`. The default is an empty list. A pattern is not empty.
 
-The docs name three provider forms of a model name.[^available-forms] On Amazon Bedrock, it is an inference profile ARN. On Microsoft Foundry, it is a deployment name. On Google Cloud Agent Platform, it is a version name. The rule cannot know the provider of a team. A team that uses one lists its forms:
+A provider form passes without the option. It is an ARN that starts with `arn:`, an ID that
+starts with `anthropic.`, or an ID that embeds a `claude-` name, such as
+`us.anthropic.claude-opus-4-8` or `my-gateway/claude-opus-5-5`.[^available-forms]
+
+The docs name two more forms of a model name. On Microsoft Foundry, it is a deployment name. On
+Google Cloud Agent Platform, it is a version name. These names have no common form. The rule
+cannot know the provider of a team. A team that uses one lists its forms:
 
 ```json
 {

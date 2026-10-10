@@ -1,9 +1,10 @@
 // A model value in a settings file (docs/rules/settings-model-value.md). The aliases and the ID
 // forms are in `src/data/models.ts`. The option `providerIdPatterns` lets a provider ID pass.
-// The rule leaves two values to other rules. `settings-env-shadowed` reports
+// A provider form passes without an option: an ARN, an `anthropic.` ID, and an ID that embeds a
+// `claude-` name. The rule leaves two values to other rules. `settings-env-shadowed` reports
 // `CLAUDE_CODE_SUBAGENT_MODEL: "inherit"` and owns `ANTHROPIC_DEFAULT_MODEL`.
 import type { JSONRuleDefinition } from '@eslint/json'
-import { ADVISOR_ALIASES, isModelAlias, isModelId } from '../data/models.ts'
+import { ADVISOR_ALIASES, hasProviderForm, isModelAlias, isModelId } from '../data/models.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -54,7 +55,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
     schema: [
       {
         type: 'object',
-        properties: { providerIdPatterns: { type: 'array', items: { type: 'string' } } },
+        properties: {
+          providerIdPatterns: { type: 'array', items: { type: 'string', minLength: 1 } },
+        },
         additionalProperties: false,
       },
     ],
@@ -72,7 +75,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
     }
     const [{ providerIdPatterns }] = context.options
     const patterns = compile(providerIdPatterns)
-    const isProviderId = (value: string) => patterns.some((pattern) => pattern.test(value))
+    const isProviderId = (value: string) =>
+      hasProviderForm(value) || patterns.some((pattern) => pattern.test(value))
     const isModel = (value: string) =>
       isModelAlias(value) || isModelId(value) || isProviderId(value)
 

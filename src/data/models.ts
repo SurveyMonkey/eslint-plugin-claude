@@ -68,6 +68,14 @@ export function withoutSuffix(value: string): string {
 // a specific entry for that family". A letter or a digit before `claude-` is part of another word.
 const ID_FAMILY = /(?:^|[^a-z0-9])claude-(?:\d+-)*(fable|opus|sonnet|haiku)(?:-|[^a-z0-9]|$)/
 
+/** True when `value` has a provider form that the docs name as valid: an Amazon Bedrock ARN, an
+ *  `anthropic.` ID (a Mantle ID), or an ID that embeds a `claude-` model name, such as
+ *  `us.anthropic.claude-opus-4-8` or `my-gateway/claude-opus-5-5`. The page says a deployment
+ *  accepts "any string your API endpoint accepts", so the rule cannot judge any other form. */
+export function hasProviderForm(value: string): boolean {
+  return value.startsWith('arn:') || value.startsWith('anthropic.') || ID_FAMILY.test(value)
+}
+
 /** The family of an alias or an ID: `opus`, `sonnet`, `haiku` or `fable`. An ID can be a provider
  *  ID that embeds a `claude-` name. It is undefined for `best`, `opusplan`, `default` and any
  *  other value. */

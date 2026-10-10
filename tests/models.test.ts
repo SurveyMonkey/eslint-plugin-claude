@@ -8,6 +8,7 @@ import {
   DEFAULT_VALUE,
   FAMILY_ALIASES,
   familyOf,
+  hasProviderForm,
   IGNORED_IN_LISTS,
   isAnthropicModelId,
   isModelAlias,
@@ -140,6 +141,28 @@ describe('the family of a value', () => {
     expect(familyOf('my-gateway/claude-opus-5-5')).toBe('opus')
     expect(familyOf('anthropic.claude-sonnet-4-5-20250929-v1:0')).toBe('sonnet')
     expect(familyOf('global.anthropic.claude-haiku-4-5[1m]')).toBe('haiku')
+  })
+})
+
+describe('the provider forms', () => {
+  it('accepts an ARN, an anthropic. ID and an ID that embeds a claude- name', () => {
+    for (const value of [
+      'arn:aws:bedrock:us-east-1:123456789012:inference-profile/x',
+      'anthropic.claude-opus-4-8',
+      'anthropic.some-future-model',
+      'us.anthropic.claude-opus-4-8',
+      'anthropic/claude-opus-4-8',
+      'my-gateway/claude-opus-5-5',
+      'claude-sonnet-4-5@20250929',
+    ]) {
+      expect(hasProviderForm(value), value).toBe(true)
+    }
+  })
+
+  it('refuses a name with none of those forms', () => {
+    for (const value of ['gpt-5', 'sonet', 'arn', 'anthropic', 'xclaude-opus-5', 'claude-', '']) {
+      expect(hasProviderForm(value), value).toBe(false)
+    }
   })
 })
 

@@ -55,7 +55,27 @@ const IDS = [
   'claude-opus-4-6[1m]',
   'claude-sonnet-4-5',
 ]
-const BAD = ['gpt-5', 'Opus', 'sonet', 'claude-', 'opus[2m]', 'us.anthropic.claude-opus-4-8', '']
+const BAD = [
+  'gpt-5',
+  'Opus',
+  'sonet',
+  'claude-',
+  'opus[2m]',
+  'arn',
+  'anthropic',
+  'xclaude-opus',
+  '',
+]
+// The forms that the model configuration page names as valid: a Bedrock ARN, a Mantle ID that
+// starts with `anthropic.`, and an ID that embeds a `claude-` name.
+const PROVIDER = [
+  'arn:aws:bedrock:us-east-1:123456789012:inference-profile/x',
+  'anthropic.claude-opus-4-8',
+  'us.anthropic.claude-opus-4-8',
+  'anthropic/claude-opus-4-8',
+  'my-gateway/claude-opus-5-5',
+  'claude-sonnet-4-5@20250929',
+]
 
 describe(`${name}: model, fallbackModel and availableModels`, () => {
   it('is silent for each alias and each claude- ID, in every key and file', () => {
@@ -82,6 +102,18 @@ describe(`${name}: model, fallbackModel and availableModels`, () => {
           ids({ availableModels: [value, 'opus'] }, file),
           `${file} available ${value}`,
         ).toEqual(['notModel'])
+      }
+    }
+  })
+
+  it('is silent for a provider form, in every key and file', () => {
+    for (const file of EVERY_FILE) {
+      for (const value of PROVIDER) {
+        expect(ids({ model: value }, file), `${file} model ${value}`).toEqual([])
+        expect(ids({ fallbackModel: [value] }, file), `${file} fallback ${value}`).toEqual([])
+        expect(ids({ availableModels: [value, 'opus'] }, file), `${file} list ${value}`).toEqual([])
+        expect(ids({ advisorModel: value }, file), `${file} advisor ${value}`).toEqual([])
+        expect(ids({ env: { ANTHROPIC_MODEL: value } }, file), `${file} env ${value}`).toEqual([])
       }
     }
   })
@@ -285,6 +317,12 @@ describe(`${name}: the providerIdPatterns option`, () => {
   it('refuses a pattern that is no regular expression', () => {
     expect(() => lint({ model: 'x' }, PROJECT, [{ providerIdPatterns: ['('] }])).toThrow(
       /providerIdPatterns/,
+    )
+  })
+
+  it('refuses an empty pattern, which matches every value', () => {
+    expect(() => lint({ model: 'x' }, PROJECT, [{ providerIdPatterns: [''] }])).toThrow(
+      /should NOT be shorter than 1 characters/,
     )
   })
 
