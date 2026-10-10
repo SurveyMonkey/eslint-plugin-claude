@@ -1,4 +1,16 @@
 {
+  "agent-field-min-version": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Permission modes",
+      "hash": "3d8082b6b76c04b1e6dd126251ca535eba14de00c6371e8eeeca041ec6341144"
+    }
+  ],
   "agent-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
