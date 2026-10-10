@@ -513,6 +513,14 @@ const TREE: Record<string, string> = {
   'packages/pp/CLAUDE.local.md': 'Read AGENTS.md first.\n',
   'packages/pp/ok/CLAUDE.md': '@AGENTS.md\n\nRead AGENTS.md first.\n',
   'packages/pp/ok/AGENTS.md': '# Agents\n',
+  // `claude-md-location`: a CLAUDE.local.md in a `.claude` folder, and a case variant. The loaded
+  // names, and a name that only looks like one.
+  'packages/lo/.claude/CLAUDE.local.md': '# Notes\n',
+  'packages/lo/web/claude.md': '# Notes\n',
+  'packages/lo/CLAUDE.md': '# Notes\n',
+  'packages/lo/.claude/CLAUDE.md': '# Notes\n',
+  'packages/lo/CLAUDE.local.md': '# Notes\n',
+  'packages/lo/docs/claude-notes.md': '# Notes\n',
   // `claude-md-html-comment-content`: a block comment with an instruction in each file that the
   // rule reads. The same comment where no rule reads it, and inline, in a fence and as a note.
   'packages/hc/.git': 'gitdir: ../.git\n',
@@ -721,6 +729,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
     'markdown/gfm',
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
   ],
+  'claude-md-location': ['markdown/gfm', ['**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS)
 
@@ -1000,6 +1009,9 @@ const STRICT_ONLY = [
   // `claude-md-agents-md-prose-pointer` reads CLAUDE.md files, and no other file.
   'packages/pp/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
   'packages/pp/.claude/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
+  // `claude-md-location` reads every Markdown file, and reports the two places and names.
+  'packages/lo/.claude/CLAUDE.local.md: claude/claude-md-location@1',
+  'packages/lo/web/claude.md: claude/claude-md-location@1',
   // `claude-md-html-comment-content` reads CLAUDE.md and CLAUDE.local.md, and no other file.
   'packages/hc/CLAUDE.md: claude/claude-md-html-comment-content@1',
   'packages/hc/.claude/CLAUDE.md: claude/claude-md-html-comment-content@1',
