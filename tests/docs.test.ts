@@ -65,6 +65,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'marketplace-source-schema',
     'marketplace-strict-false-conflict',
     'marketplace-version-duplicate',
+    'memory-agent-memory-orphan',
     'memory-auto-memory-directory-committed',
     'memory-index-max-size',
     'memory-settings-schema',

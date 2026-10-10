@@ -519,6 +519,14 @@ const TREE: Record<string, string> = {
   'packages/ea/.claude/settings.local.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
   'packages/ea/managed-settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
   'packages/ea/.vscode/settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  // `memory-agent-memory-orphan`: an index of a folder that no subagent owns, and one that a
+  // project subagent owns. The file `.git` makes `packages/ao` a repository.
+  'packages/ao/.git': 'gitdir: ../.git\n',
+  'packages/ao/.claude/agent-memory/lone/MEMORY.md': '# Lone\n',
+  'packages/ao/.claude/agent-memory/lone/topic.md': '# Topic\n',
+  'packages/ao/.claude/agent-memory/owned/MEMORY.md': '# Owned\n',
+  'packages/ao/.claude/agents/owned.md':
+    '---\nname: owned\ndescription: d\nmemory: project\ntools: Read, Write, Edit\n---\n',
   // `rules-paths-no-match`: a rule with a glob that matches a file, and one that matches none.
   // The same rule where no rule reads it. The file `.git` makes `packages/pn` a repository.
   'packages/pn/.git': 'gitdir: ../.git\n',
@@ -743,6 +751,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
   ],
   'claude-md-location': ['markdown/gfm', ['**/*.md']],
+  'memory-agent-memory-orphan': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
   'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
@@ -1026,6 +1035,8 @@ const STRICT_ONLY = [
   // `claude-md-excludes-absolute-committed` reads the committed project file, and no other file.
   'packages/ea/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
   'packages/ex/ok/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
+  // `memory-agent-memory-orphan` reads the `MEMORY.md` index, and no other file.
+  'packages/ao/.claude/agent-memory/lone/MEMORY.md: claude/memory-agent-memory-orphan@1',
   // `rules-paths-no-match` reads the rule files, and no other file.
   'packages/pn/.claude/rules/miss.md: claude/rules-paths-no-match@1',
   // `claude-md-location` reads every Markdown file, and reports the two places and names.
