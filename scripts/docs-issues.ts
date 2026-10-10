@@ -13,10 +13,11 @@
 // the old one, and the hash is that of the new block. ` rules=<ids>` is not
 // there when the issue names no rule.
 //
-// A moved issue names the old and the new heading, the new anchor, and each
-// footnote to change, in docs/rules/<rule>.md and docs/rules-inventory.md. Its
-// Scope is the steps of "A moved section" in the triage runbook. A removed
-// or an added block can have a line that names a possible move.
+// A moved issue names the old and new headings and the new anchor. It names
+// each footnote to change, in docs/rules/<rule>.md and
+// docs/rules-inventory.md. Its Scope is the steps of "A moved section" in the
+// triage runbook. A removed or an added block can have a line that names a
+// possible move.
 //
 // All findings for one page, block and hash give one issue. An open issue
 // with that page, block and hash stops a new issue, whatever its kind, when

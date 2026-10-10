@@ -26,11 +26,11 @@
 // cite it in each section. The Jev requests do not change: a tracked block
 // gets the same request and the same findings as before.
 //
-// A removed block and an added block on one page with the same body hash
-// (see splitBlocks in docs-watch.ts) are a move. A move gets no Jev call. It
-// gives one moved finding when a rule or an inventory row cites the old
-// block, and no finding when nothing cites it. Neither block of a move gets
-// another finding or a tracked entry.
+// A move is a removed block and an added block on one page with the same
+// body hash. splitBlocks in docs-watch.ts gives the body hash. A move gets no
+// Jev call. It gives one moved finding when a rule or an inventory row cites
+// the old block. It gives no finding when nothing cites it. Neither block of
+// a move gets another finding or a tracked entry.
 //
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
@@ -72,10 +72,10 @@ type Reason = 'alters' | 'obsolete' | 'requirement'
 type Near = { heading: string; blockId: string }
 
 // One classifier finding. The issue step opens one issue for each. For a
-// moved finding, `heading` and `blockId` are those of the old block, and
-// `move` holds the new heading, the new block key and the inventory rows
-// that cite the old block. `possibleMoves` is on a removed or added block
-// whose heading shares three or more words with an added or removed heading.
+// moved finding, `heading` and `blockId` are those of the old block. `move`
+// holds the new heading, the new block key and the inventory rows that cite
+// the old block. `possibleMoves` is on a removed or an added block. It names
+// the blocks on the other side whose headings share three or more words.
 export type Finding = {
   kind: Kind
   page: string
@@ -752,10 +752,10 @@ export function planPage({
   const removed = [...before.keys()].filter((key) => !now.has(key) && key !== storedTitle)
   const added = [...now.values()].filter((block) => !before.has(block.key) && block.level !== 1)
 
-  // A move is a removed block and an added block with the same body hash: the
-  // stored body hash of the old block, and the body hash of the new block. The
-  // page title is never a move. These give no move, and each block keeps the
-  // findings of a removed or an added block:
+  // A move is a removed block and an added block with the same body hash. The
+  // body hash of the old block comes from the snapshot. The page title is
+  // never a move. These give no move, and each block keeps the findings of a
+  // removed or an added block:
   // - two removed blocks with one body hash, or two added blocks with one body
   //   hash, because the code does not guess the pair
   // - a removed block with no stored body hash (an old snapshot, or no body)
@@ -780,11 +780,11 @@ export function planPage({
   }
   const movedTo = new Set([...moves.values()].map((block) => block.key))
 
-  // A possible move: a removed heading and an added heading that share three
-  // or more words, when the two blocks are not a move. A word is a run of
-  // letters and digits, in lowercase. Each word counts once. A word of one or
-  // two characters does not count. Each finding of the two blocks names the
-  // other block.
+  // A possible move is a removed heading and an added heading that share
+  // three or more words. Neither block can be part of a move. A word is a run
+  // of letters and digits, in lowercase. Each word counts once. A word of one
+  // or two characters does not count. Each finding of the two blocks names
+  // the other block.
   const wordsOf = (heading: string) =>
     new Set(
       heading

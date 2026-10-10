@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112, 137, 149, 150]
+related_issues: [25, 112, 137, 149, 150, 152]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -71,7 +71,10 @@ below `no` is a no. A value between them goes to a person.
 
 Code decides these cases with no model call:
 
-- A block that a heading cites is gone: `rule-removal`.
+- A removed block and an added block on one page have the same body hash: `moved`, when a rule
+  or an inventory row cites the old block (Decision 6). When nothing cites the old block: no
+  finding.
+- A block that a heading cites is gone, and it is not a move: `rule-removal`.
 - A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
@@ -194,28 +197,67 @@ dedupe key below stops a second issue for it.
 Each issue body starts with
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. The hash is the new block
 hash. For a removed block, it is `gone:` and the old hash, so a removal never matches an issue
-about the new text of the block. The block ID comes from the docs, so the marker holds it URI
-encoded. ` rules=<ids>` lists the rules of the issue, and is not there when the issue names no
+about the new text of the block. For a moved block, the block ID is the old one. The hash is
+that of the new block. The block ID comes from the docs, so the marker holds it URI encoded. ` rules=<ids>` lists the rules of the issue, and is not there when the issue names no
 rule.
 
 All findings for one page, block and hash in one run give one issue, with all their rules and
-reasons. The first kind in this list names the issue: `rule-removal`, `rule-update`,
-`needs-triage`, `new-rule`. Before it opens an issue, `scripts/docs-issues.ts` reads the
-bodies of all open issues. An open issue for the same page, block and hash stops a new issue
-when the open issues name all its rules. The kind does not count. A Jev answer near a threshold
+reasons. The first kind in this list names the issue: `moved`, `rule-removal`, `rule-update`,
+`needs-triage`, `new-rule`. `moved` is first, because the issue keeps the fields of the first
+kind only. Only a `moved` finding has the new heading. Before it opens an issue,
+`scripts/docs-issues.ts` reads the bodies of all open issues. An open issue for the same page,
+block and hash stops a new issue when the open issues name all its rules. The kind does not count. A Jev answer near a threshold
 can change the kind from one run to the next. A rule that the open issues do not name gives a
 new issue. A block that changes again has a new hash, so it gets a new issue.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
 person closes it first, the next run opens it again.
 
-### 6. A moved section gives two issues, and a person matches them
+### 6. A moved section on one page gives one `moved` issue
 
-Ruling 8 on #25 leaves moved sections to the triage session. When a cited section moves to a new
-heading, the old block is gone and the new block has no rule. The job opens a `rule-removal`
-issue for the old heading. It opens a `new-rule` issue for the new heading when the
-`requirement` answer is a yes. The runbook `docs/runbooks/docs-watch-triage.md` tells a person
-how to match the two issues and keep the rule.
+This decision reverses Ruling 8 on #25, which left moved sections to the triage session. A
+renamed heading gave two issues. One was a `rule-removal` issue for the old heading, and one was
+a `new-rule` issue for the new heading. A person matched them by their texts. The block texts
+of #117 and #129 differ only in the heading line.
+
+**The body hash.** Each block in the snapshot can have a `bodyHash`: the SHA-256 of the block
+text after its heading. The heading of a Markdown block is its first line. The heading of an
+HTML block is all its lines, from the opening tag to the closing tag. Blank lines at the start
+of the body and white space at its end do not count. A block with no body has no body hash.
+`update` writes it. A snapshot file without it stays valid, and the docs watch check does not
+read it.
+
+**The move.** A run can find a removed block and an added block on one page with the same body
+hash. The body hash of the old block comes from the snapshot. The classifier then gives one
+`moved` finding, with no Jev call. The finding names the old heading and block, and the new
+heading and block key. It also names the rules and the inventory rows that cite the old block.
+Neither block gets another finding, a Jev call or a tracked entry.
+A move of a block that no rule and no inventory row cites gives no finding.
+
+These give no move, and each block keeps the findings of a removed or an added block:
+
+- two removed blocks, or two added blocks, with one body hash, because the code does not guess
+  the pair
+- a removed block with no stored body hash, until `update` refreshes the snapshot of its page
+- a block with no body
+- the page title, old or new
+- a move from one page to another page.
+
+**The cross-reference line.** When a removed heading and an added heading on one page share three
+or more words, and the two blocks are not a move, each finding of the two blocks names the other
+block. A word is a run of letters and digits, in lowercase. Each word counts once. A word of one
+or two characters does not count. When the snapshot has no text for the old block, its block
+key is its heading.
+
+**The issue.** A `moved` issue is a Task titled
+`docs(<rules>): move the footnote of <rules> to the renamed heading`. With no rule, the title is
+`docs: move the footnote of the inventory to the renamed heading`. The title length rule of
+every issue applies. The body names the old and new headings and the new anchor. It names each
+footnote to change in `docs/rules/<rule>.md` and `docs/rules-inventory.md`. Its Scope is the
+steps of "A moved section" in `docs/runbooks/docs-watch-triage.md`. The issue step refuses a
+`moved` finding that does not fit its kind (Decision 7). The finding must have both hashes, the
+new text, and the new heading and block. The old text can be absent, because the snapshot
+stores the text of a mapped block only.
 
 ### 7. The job fails closed
 
@@ -286,4 +328,8 @@ list twice. A group issue has a state that is not `open` or `closed`.
 - While a group issue is open, a finding of a tracked block that names no rule opens no issue.
   The finding stays in the classifier output. A person reads the comment when they build the row.
   A finding that names a whole-page rule still opens its issue.
+- A page whose snapshot has no body hash gets no move until `update` refreshes it. An `update`
+  with an older copy of `scripts/docs-watch.ts` writes a page with no body hash.
+- A move to another page, or a move that also changes the body, still gives two issues. The
+  cross-reference line helps a person match them on one page only.
 - A new Jev version needs a new run of the spike before the pin moves.
