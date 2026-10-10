@@ -26,7 +26,7 @@ The rule reports a `metadata` map with such a key.
 
 The docs give no effect for a reused key. So the message states the docs advice and nothing more.
 
-The rule compares each top-level key of the map with the fields of the frontmatter table, and the
+The rule compares each top-level key of the map with the fields of the frontmatter table. The
 match is exact. It does not look into a nested map. One report names every key that matches. The
 report covers the `metadata` value.
 

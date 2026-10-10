@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-no-bom, which reports a SKILL.md or command file that starts with a UTF-8 byte order mark, because Claude Code before v2.1.239 ignores such a file, with its option, examples and sources.
+description: The ESLint rule claude/skill-no-bom, which reports a SKILL.md or command file that starts with a byte order mark, because Claude Code before v2.1.239 ignores such a file, with its option, examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [50]
@@ -20,13 +20,13 @@ Save a skill or command file with no byte order mark.
 
 ## Rule details
 
-Claude Code 2.1.239 fixed agent, skill and command files that start with a UTF-8 byte order mark
-(BOM). Before that version, it silently ignored such a file.[^changelog] The file does not load,
+Claude Code 2.1.239 fixed agent, skill and command files that start with a UTF-8 BOM
+(byte order mark). Before that version, it silently ignored such a file.[^changelog] The file does not load,
 and no error shows. The mark is the three bytes `EF BB BF`.
 
 The live docs page of the changelog is too large to keep as a snapshot in this repository. So the
 source map cites the skills page. It says that Claude Code reads the frontmatter only when the
-opening `---` is the first line of the file.[^reference] Read the 2.1.239 entry in the
+`---` that starts the block is the first line of the file.[^reference] Read the 2.1.239 entry in the
 [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
 
 The rule reports a skill or command file that starts with the mark.
@@ -34,8 +34,9 @@ The rule reports a skill or command file that starts with the mark.
 ESLint removes the mark before a rule sees the text. So the rule reads the first three bytes of
 the file on disk. The rule makes no report in these cases:
 
-- The file is not on disk, as in a lint of text from an editor.
-- The file is a link to a file outside the repository, or the link is dangling or loops.
+- The file is not on disk, as in a lint of text with no saved file.
+- The text differs from the saved file. The rule reads the saved file, not the text in the editor.
+- The file is a link to a file outside the repository, or the link is broken or loops back to itself.
 - The rule has no read access to the file.
 
 The rule checks these files:
