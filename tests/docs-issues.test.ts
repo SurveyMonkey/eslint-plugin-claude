@@ -1113,7 +1113,7 @@ describe('the group comment path for tracked blocks', () => {
       [{ newText: null }, 'do not fit the change changed'],
       [{ change: 'added' }, 'do not fit the change added'],
       [{ change: 'added', oldHash: null, oldText: 'Old.' }, 'do not fit the change added'],
-      [{ change: 'removed' }, 'do not fit the change removed'],
+      [{ change: 'removed', newText: null }, 'do not fit the change removed'],
       [{ change: 'removed', newHash: null }, 'do not fit the change removed'],
       [{ newHash: 'A'.repeat(64) }, 'newHash that is not a SHA-256 hash'],
       [{ oldText: 3 }, 'oldText that is not text'],
