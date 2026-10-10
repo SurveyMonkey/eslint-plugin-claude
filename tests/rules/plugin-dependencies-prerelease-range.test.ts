@@ -104,6 +104,7 @@ describe(RULE, () => {
     ['^2.0.0', '2.0.0-beta.1+build.5'],
     ['^2.0.0', '2.0.0-0.3'],
     ['~2.0.0', '2.0.0-alpha'],
+    ['^2.0.0', '2.0.0-0'],
   ])('reports the range %s for the target %s', (range, target) => {
     expect(ranged(range, target)).toHaveLength(1)
   })
@@ -177,6 +178,7 @@ describe(`${RULE} (silent)`, () => {
     ['a range from below, with a bound', '>=1.0.0 <2.0.0', BETA],
     ['a range up to the minor', '<=2.0', BETA],
     ['a range up to the major', '<=2', BETA],
+    ['a bound above the lowest pre-release', '>2.0.0', '2.0.0-0'],
     ['a range below a minor', '<2', BETA],
     ['a caret range below', '^1', BETA],
   ])('stays silent for %s', (_title, range, target) => {
