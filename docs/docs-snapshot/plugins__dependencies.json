@@ -1,0 +1,82 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/dependencies",
+  "hash": "3f27eab4fb844a86a274cbdbcc6534b600744f637e33cfe0d6959e49b720be5a",
+  "blocks": [
+    {
+      "id": "plugin-dependencies",
+      "hash": "b36d6cfe2f56896769a65ac04da558387d954b02d2c343a1b5db9c6dac0cd7d2"
+    },
+    {
+      "id": "declare-dependencies",
+      "hash": "87571c19b3831c2eefe825048736d256eb725d81b6a1fe03b8251e03c243f990"
+    },
+    {
+      "id": "declare-a-dependency-with-a-version-constraint",
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9"
+    },
+    {
+      "id": "bundle-plugins-for-a-team",
+      "hash": "1b8530f73d9fe5a7a077804894e923e550aa5d104c8efc23fc9920b8cea7ea8d"
+    },
+    {
+      "id": "depend-on-a-plugin-from-another-marketplace",
+      "hash": "8b0d6df8d63383be54639684afde969608c0b2550b4a35c62c64f0679f28f021"
+    },
+    {
+      "id": "test-a-plugin-and-its-dependency-locally",
+      "hash": "19c0781c446421a20843c331659b06e666a16f4fe416473db8f17987d1bf2034"
+    },
+    {
+      "id": "tag-plugin-releases-for-version-resolution",
+      "hash": "25b6eba24bce5c94b52380fc781ff9fe2629f7499460b7265dc7337026367627"
+    },
+    {
+      "id": "create-a-release-tag",
+      "hash": "6206298e81dd4078540d51d0f2bf087de48e066c4969c5aed6911366634aa9d0"
+    },
+    {
+      "id": "constrain-a-dependency-that-has-a-non-git-source",
+      "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa"
+    },
+    {
+      "id": "how-dependencies-behave-for-your-users",
+      "hash": "431ec04f4d07a6af40c82885908ef8b4e50ccd4dae4fa6a0a353e1b610d8e912"
+    },
+    {
+      "id": "how-a-constraint-resolves-against-tags",
+      "hash": "c4deeb4795fe982234c57a4e601bd160a6a938babbb9df7fcae90d8debfb5913"
+    },
+    {
+      "id": "confirm-the-resolved-version",
+      "hash": "d2e629f96e61c260b8d7f19e5d531f1b4e1f34b3dfcd1a977236264ad054b134"
+    },
+    {
+      "id": "combine-constraints-from-several-plugins",
+      "hash": "265022d5ec0c7eaf06e4d3b258300221e8a5881e2b4c7a6497754df466c73446"
+    },
+    {
+      "id": "see-also",
+      "hash": "c5142deaa38bf33fc17598953bea755a11445e1aed51508136d40aaec0d4288f"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Declare a dependency with a version constraint",
+      "id": "declare-a-dependency-with-a-version-constraint",
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9",
+      "text": "### Declare a dependency with a version constraint\n\nList dependencies in the `dependencies` array of your plugin's `.claude-plugin/plugin.json`. The following manifest declares one unversioned dependency and one constrained dependency:\n\n```json .claude-plugin/plugin.json theme={null}\n{\n  \"name\": \"deploy-kit\",\n  \"version\": \"3.1.0\",\n  \"dependencies\": [\n    \"audit-logger\",\n    { \"name\": \"secrets-vault\", \"version\": \"~2.1.0\" }\n  ]\n}\n```\n\nAn entry can be a string: the plugin name alone, such as `\"audit-logger\"` in this manifest, or `\"name@marketplace\"` to resolve it in another marketplace. With a bare string, your plugin depends on whatever version that plugin's marketplace provides.\n\nTo set a version constraint, use an object with these fields, each a string:\n\n| Field | Description |\n| :- | :- |\n| `name` | The dependency's plugin name, as it appears in its marketplace entry. Claude Code looks it up in the same marketplace as the declaring plugin unless you set `marketplace`. Required. |\n| `version` | A [semantic-version range](https://github.com/npm/node-semver#ranges) such as `~2.1.0`, `^2.0`, `>=1.4`, or `=2.1.0`. The dependency installs at the highest git tag that satisfies this range, so the dependency's maintainer must [tag releases](#tag-plugin-releases-for-version-resolution). |\n| `marketplace` | A different marketplace to resolve `name` in. An allowlist controls cross-marketplace dependencies, described in [Depend on a plugin from another marketplace](#depend-on-a-plugin-from-another-marketplace). |\n\nA range doesn't match pre-release versions such as `2.0.0-beta.1` unless you opt in with a pre-release suffix such as `^2.0.0-0`."
+    },
+    {
+      "heading": "Depend on a plugin from another marketplace",
+      "id": "depend-on-a-plugin-from-another-marketplace",
+      "hash": "8b0d6df8d63383be54639684afde969608c0b2550b4a35c62c64f0679f28f021",
+      "text": "### Depend on a plugin from another marketplace\n\nBy default, Claude Code doesn't install a dependency from a different marketplace than the declaring plugin's own, unless the user already has that dependency installed and enabled at the same scope. This default prevents one marketplace from silently installing plugins from a source the user hasn't reviewed.\n\nTo allow the install, add the target marketplace's name to `allowCrossMarketplaceDependenciesOn` in the root marketplace's `marketplace.json`. The root marketplace is the one that hosts the plugin the user is installing. Only the root marketplace's allowlist applies.\n\nThe following `marketplace.json` allows `deploy-kit` to depend on a plugin from `your-shared-marketplace`:\n\n```json .claude-plugin/marketplace.json theme={null}\n{\n  \"name\": \"your-marketplace\",\n  \"owner\": { \"name\": \"Your Org\" },\n  \"allowCrossMarketplaceDependenciesOn\": [\"your-shared-marketplace\"],\n  \"plugins\": [\n    {\n      \"name\": \"deploy-kit\",\n      \"source\": \"./deploy-kit\",\n      \"dependencies\": [\n        { \"name\": \"audit-logger\", \"marketplace\": \"your-shared-marketplace\" }\n      ]\n    }\n  ]\n}\n```\n\nIf `allowCrossMarketplaceDependenciesOn` is missing or doesn't include the target marketplace, Claude Code doesn't install the dependency. When the dependency is declared in the marketplace entry, the install itself is refused with a message that starts `Dependency \"audit-logger@your-shared-marketplace\" (required by deploy-kit@your-marketplace) is in marketplace \"your-shared-marketplace\", which is not in the allowlist` and names the field to set. When it's declared in `plugin.json`, the install completes without the dependency and your plugin then fails to load.\n\nThe allowlist check doesn't apply to a dependency that is already enabled. If a user installs `audit-logger` from `your-shared-marketplace` themselves first, at the same scope, `deploy-kit` then installs without any change to the allowlist."
+    },
+    {
+      "heading": "Constrain a dependency that has a non-git source",
+      "id": "constrain-a-dependency-that-has-a-non-git-source",
+      "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa",
+      "text": "### Constrain a dependency that has a non-git source\n\nTag-based resolution applies only to git-backed sources. For a dependency with an `npm`, `archive`, or `command` [plugin source](/docs/en/plugins/marketplace-reference#plugin-sources), the constraint doesn't control which version is fetched. It's still checked when the plugin loads, and the dependent plugin is disabled if the installed version doesn't satisfy it.\n\nFor `npm`, `archive`, and `command` sources, the version checked is the `version` in the dependency's `plugin.json`. Set one there before you constrain that dependency, because a `plugin.json` that sets no version satisfies no constraint.\n\nClaude Code never installs a dependency with a `command` source itself, so users [install it first](/docs/en/plugins/marketplace-reference#command-plugin-source). It also never runs a dependency's [`headersHelper`](/docs/en/plugins/host-marketplace#authenticate-archive-downloads), so users also install a dependency whose marketplace entry sets one before they install your plugin.\n\nBesides `claude plugin install`, these operations also install any missing declared dependency, and the `command` and `headersHelper` limits apply to them too:\n\n* `/reload-plugins`\n* Auto-update of the dependent plugin's marketplace\n* Re-running `claude plugin install` on the dependent plugin\n* `claude plugin marketplace add`"
+    }
+  ]
+}
