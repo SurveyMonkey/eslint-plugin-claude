@@ -86,7 +86,9 @@ describe(`${name}: a key that is not in the list`, () => {
 
   it('reports the name of the key, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "allowed": []\n  }\n}'
-    expect(lint(text).map(({ line, column }) => [line, column])).toEqual([[3, 5]])
+    expect(
+      lint(text).map(({ line, column, endLine, endColumn }) => [line, column, endLine, endColumn]),
+    ).toEqual([[3, 5, 3, 14]])
   })
 
   it('reports a key whose value is null', () => {

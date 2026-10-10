@@ -1,5 +1,5 @@
 // The value `auto` does not take effect from a project or local file, and it also stops Claude
-// Code from reading the `defaultMode` of the user settings:
+// Code from using the `defaultMode` of the user settings:
 // https://code.claude.com/docs/en/permission-modes#which-mode-a-session-starts-in
 // https://code.claude.com/docs/en/settings#a-value-you-set-is-ignored
 // The value `bypassPermissions` is ignored there too. `permissions-bypass-mode-committed` owns it.
@@ -90,7 +90,7 @@ describe(`${name}: the values that the rule leaves alone`, () => {
     ])
   })
 
-  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in: the managed guard covers it', () => {
     expect(ids(mode('auto'), HIDDEN)).toEqual([])
   })
 })
