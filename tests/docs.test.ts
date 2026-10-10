@@ -77,6 +77,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-no-git-lfs',
     'plugin-no-project-plugins-dir',
     'plugin-npm-source-shrinkwrap',
+    'plugin-package-lifecycle-scripts',
     'plugin-package-lockfile',
     'plugin-path-no-backslash',
     'plugin-path-var-braced',

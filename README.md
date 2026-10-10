@@ -126,6 +126,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-skills-key-redundant-default`](docs/rules/plugin-skills-key-redundant-default.md) | The `skills` key of `plugin.json` does not list the default `skills/` directory, which the key adds to anyway | `warn` | `warn` |
 | [`claude/plugin-user-config-field-applicability`](docs/rules/plugin-user-config-field-applicability.md) | A `userConfig` option sets `min` and `max` only on a `number` option, and `multiple` only on a `string` option | `warn` | `warn` |
 | [`claude/plugin-monitors-command-quote`](docs/rules/plugin-monitors-command-quote.md) | A monitor `command` writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` inside quotes, because an install path with a space splits the command | `warn` | `warn` |
+| [`claude/plugin-package-lifecycle-scripts`](docs/rules/plugin-package-lifecycle-scripts.md) | The `package.json` at a plugin root has no `preinstall`, `install` or `postinstall` script, because Claude Code installs dependencies with `--ignore-scripts` | `warn` | `warn` |
 
 ### Marketplace manifest
 

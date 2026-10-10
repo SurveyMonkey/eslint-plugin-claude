@@ -61,6 +61,7 @@ import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
+import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
@@ -235,6 +236,7 @@ const modules = [
   pluginSkillsKeyRedundantDefault,
   pluginUserConfigFieldApplicability,
   pluginMonitorsCommandQuote,
+  pluginPackageLifecycleScripts,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -373,6 +375,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-user-config-field-applicability': 'warn',
   'plugin-monitors-command-quote': 'warn',
+  'plugin-package-lifecycle-scripts': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
