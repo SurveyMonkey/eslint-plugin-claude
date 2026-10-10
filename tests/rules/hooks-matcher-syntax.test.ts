@@ -44,6 +44,7 @@ describe(`${name}: the Tool(specifier) form`, () => {
       'mcp__memory__x(y)',
       'WebFetch(domain:example.com)',
       'Bash()',
+      'Bash(a)|Edit(b)',
     ]) {
       expect(ids('PreToolUse', matcher), matcher).toEqual(['toolSpec'])
     }
@@ -59,15 +60,25 @@ describe(`${name}: the Tool(specifier) form`, () => {
       'mcp__(github|gitlab)',
       'Notebook(Edit)',
       'Edit|Bash(y)',
+      'mcp__memory__(create_entities|delete_entities)',
+      'mcp__srv__(x)',
+      'mcp__srv(x)',
+      // A valid regular expression that does not end in a parenthesis. A known limit of the rule.
+      'Read(a)|Write',
+      'Read(a)b',
     ]) {
       expect(ids('PreToolUse', matcher), matcher).toEqual([])
     }
   })
 
   it('is silent for a regular expression with a group and for a bare tool name', () => {
-    for (const matcher of ['Bash', '(Edit|Write)', '^(Edit|Write)$', 'Edit.*(ts)$', 'Bash|Edit(']) {
-      expect(ids('PreToolUse', matcher), matcher).not.toContain('toolSpec')
+    for (const matcher of ['Bash', '(Edit|Write)', '^(Edit|Write)$', 'Edit.*(ts)$']) {
+      expect(ids('PreToolUse', matcher), matcher).toEqual([])
     }
+  })
+
+  it('reports only the compile fault of a matcher with an open parenthesis', () => {
+    expect(ids('PreToolUse', 'Bash|Edit(')).toEqual(['invalid'])
   })
 
   it('is silent on an event that does not match a tool name', () => {
@@ -191,6 +202,9 @@ describe(`${name}: FileChanged`, () => {
       '{a}',
       'a\\b',
       'a)b',
+      'a(b',
+      'a[b',
+      'a{b',
       'a]b',
       'a}b',
     ]) {
