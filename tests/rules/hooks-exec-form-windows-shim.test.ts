@@ -37,6 +37,19 @@ const lintMd = (code: string, file: string) =>
 const exec = (executable: string, platforms: string[] | null = WINDOWS) =>
   ids(command({ command: executable, args: ['x'] }), platforms)
 
+describe(`${name}: the option`, () => {
+  it('rejects an option that is no list of the known platforms', () => {
+    const text = settings(hooks('Stop', [command({ command: 'npx', args: [] })]))
+    for (const option of [
+      { platforms: ['windows'] },
+      { platforms: ['windows-git-bash', 'windows-git-bash'] },
+      { other: 1 },
+    ]) {
+      expect(() => lintJson(name, text, FILES.project, [option]), JSON.stringify(option)).toThrow()
+    }
+  })
+})
+
 describe(`${name}: the platforms`, () => {
   it('makes no report without the option, or with an empty list', () => {
     expect(exec('npx', null)).toEqual([])

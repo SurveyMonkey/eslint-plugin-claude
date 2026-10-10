@@ -149,7 +149,11 @@ describe(`${name}: setMode`, () => {
     ).toEqual([])
     expect(ids('PermissionRequest', 'echo defaultMode bypassPermissions', 'Bash')).toEqual([])
     expect(
-      ids('PermissionRequest', 'echo \'{"defaultMode":"bypassPermissions"}\'', 'Bash'),
+      ids(
+        'PermissionRequest',
+        'echo \'{"type":"setMode","defaultMode":"bypassPermissions"}\'',
+        'Bash',
+      ),
     ).toEqual([])
   })
 })

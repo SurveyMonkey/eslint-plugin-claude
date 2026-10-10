@@ -84,6 +84,38 @@ describe(`${name}: the variables`, () => {
     expect(exec(['$CLAUDE_ENV_FILE', `\${CLAUDE_MODEL}`])).toEqual([])
   })
 
+  it('reports CLAUDE_ENV_FILE on an event that sets it, where no other rule reports it', () => {
+    const text = settings(
+      hooks('SessionStart', [command({ command: 'tool', args: ['$CLAUDE_ENV_FILE'] })]),
+    )
+    expect(lintJson(name, text, FILES.project).map((message) => message.messageId)).toEqual([
+      'variable',
+    ])
+  })
+
+  it('is silent for the variable of a shell line after -c, which the shell expands', () => {
+    for (const command of ['bash', 'sh', '/bin/zsh']) {
+      for (const flag of ['-c', '-lc']) {
+        expect(
+          ids({ type: 'command', command, args: [flag, 'echo $HOME'] }),
+          command + flag,
+        ).toEqual([])
+      }
+    }
+    expect(ids({ type: 'command', command: 'bash', args: ['x.sh', '$HOME'] })).toEqual(['variable'])
+    expect(ids({ type: 'command', command: 'python', args: ['-c', '$HOME'] })).toEqual(['variable'])
+    expect(ids({ type: 'command', command: 'bash', args: ['-c', 'echo', '$HOME'] })).toEqual([
+      'variable',
+    ])
+  })
+
+  it('is silent for the ; item that ends -exec of find', () => {
+    expect(
+      ids({ type: 'command', command: 'find', args: ['.', '-exec', 'rm', '{}', ';'] }),
+    ).toEqual([])
+    expect(ids({ type: 'command', command: 'find', args: ['.', '|'] })).toEqual(['operator'])
+  })
+
   it('is silent for a lower-case name, a bare dollar and a regular expression', () => {
     for (const item of ['.[$x]', '^a$', '$', '$1', 'cost: $5']) {
       expect(exec([item]), item).toEqual([])

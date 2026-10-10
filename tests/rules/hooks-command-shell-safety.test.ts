@@ -75,13 +75,46 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo $((1 + 2))',
       'echo $? $$ $# $!',
       'echo ok # $FILE',
-      'echo a#$FILE',
       'echo $',
       'ls',
       '',
     ]) {
-      expect(line(text), text).toEqual(text === 'echo a#$FILE' ? ['unquoted'] : [])
+      expect(line(text), text).toEqual([])
     }
+  })
+
+  it('reports a hash inside a word, which starts no comment', () => {
+    expect(line('echo a#$FILE')).toEqual(['unquoted'])
+  })
+
+  it('reports $@ and $*, which split like any variable', () => {
+    expect(line('cat $@')).toEqual(['unquoted'])
+    expect(line('cat $*')).toEqual(['unquoted'])
+  })
+
+  it('is silent for a quoted variable inside a quoted command substitution', () => {
+    for (const text of [
+      'cd "$(dirname "$0")"',
+      'echo "$(basename "$FILE")"',
+      'source "$(dirname "$0")/lib.sh"',
+      'X="$(echo "$INPUT" | jq -r .a)"',
+    ]) {
+      expect(line(text), text).toEqual([])
+    }
+  })
+
+  it('reads the inside of a command substitution on its own', () => {
+    for (const text of ['echo $(ls $DIR)', 'echo "$(echo $X)"', 'echo $(cat $F']) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+  })
+
+  it('starts a new word after each comment line', () => {
+    expect(script("#!/bin/bash\n# it's a hook\ncat $TARGET\n")).toEqual(['unquoted'])
+    expect(script('#!/bin/bash\n# a hook\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    expect(script('#!/bin/bash\n# uses $FILE\ncat x\n')).toEqual([])
+    expect(script('# c\nX=$Y\n')).toEqual([])
+    expect(script('# c\n# $X\n')).toEqual([])
   })
 
   it('reads a test that ends, and the lines after it', () => {
@@ -100,9 +133,20 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(ids({ command: 'cat $FILE', shell: 'powershell' })).toEqual([])
   })
 
+  it('reads a script of an exec form handler, where shell is ignored', () => {
+    expect(
+      ids(
+        { command: `${P}/hooks/s.sh`, args: [], shell: 'powershell' },
+        { 'hooks/s.sh': 'cat $F\n' },
+      ),
+    ).toEqual(['unquoted'])
+  })
+
   it('reads a shell line after -c again', () => {
     expect(line("bash -c 'cat $FILE'")).toEqual(['unquoted'])
     expect(line('bash -lc \'cat "$FILE"\'')).toEqual([])
+    expect(line("bash -lc 'cat $FILE'")).toEqual(['unquoted'])
+    expect(line("/bin/bash -c 'cat $FILE'")).toEqual(['unquoted'])
     expect(line('bash -c')).toEqual([])
     expect(line("python -c 'cat $FILE'")).toEqual([])
   })

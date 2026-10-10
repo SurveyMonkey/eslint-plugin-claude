@@ -39,14 +39,15 @@ const rule: Rule.RuleModule = {
       const folders = placeholderFolders(context.filename, source.kind)
       for (const { handler } of handlersOf(source)) {
         const line = memberOf(handler, 'command')?.value
+        const argv = argsOf(handler)
+        // The docs say `shell` is ignored when `args` is set.
         if (
           stringOf(handler, 'type') !== 'command' ||
           line?.kind !== 'string' ||
-          stringOf(handler, 'shell') === 'powershell'
+          (stringOf(handler, 'shell') === 'powershell' && argv === undefined)
         ) {
           continue
         }
-        const argv = argsOf(handler)
         for (const script of scriptsRun(line.value, argv, folders, false)) {
           const text = OTHER_SYSTEM.test(script.file) ? undefined : scriptText(script)
           // A binary file is a program that needs no shebang.

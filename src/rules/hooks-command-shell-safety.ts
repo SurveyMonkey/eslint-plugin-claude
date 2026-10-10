@@ -31,8 +31,22 @@ const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
 const DERIVED =
   /(?:^|[\s;])([A-Za-z_]\w*)=\$\([^)\n]*\b(?:cat|jq)\b|\bread\s+(?:-\w+\s+)*([A-Za-z_]\w*)/g
 
+/** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. */
+function closingParen(text: string, open: number): number {
+  let depth = 0
+  for (let i = open; i < text.length; i++) {
+    if (text.charAt(i) === '(') {
+      depth++
+    } else if (text.charAt(i) === ')' && --depth === 0) {
+      return i
+    }
+  }
+  return text.length
+}
+
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
- *  `[[ ]]` test, a command substitution, a comment and a special parameter. */
+ *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a command substitution on its own,
+ *  because a quote in it starts a new quote level. */
 function unquotedVariables(text: string): string[] {
   const names: string[] = []
   let quote = ''
@@ -42,6 +56,10 @@ function unquotedVariables(text: string): string[] {
     const char = text.charAt(i)
     if (quote === "'") {
       quote = char === "'" ? '' : quote
+    } else if (char === '$' && text.startsWith('(', i + 1)) {
+      const end = closingParen(text, i + 1)
+      names.push(...unquotedVariables(text.slice(i + 2, end)))
+      i = end
     } else if (char === '\\') {
       i++
     } else if (quote === '"') {
@@ -49,11 +67,13 @@ function unquotedVariables(text: string): string[] {
     } else if (char === '"' || char === "'") {
       quote = char
     } else if (char === '#' && i === wordStart) {
-      i = text.indexOf('\n', i) === -1 ? text.length : text.indexOf('\n', i)
+      const end = text.indexOf('\n', i)
+      i = end === -1 ? text.length : end
+      wordStart = i + 1
     } else if (text.startsWith('[[', i) || text.startsWith(']]', i)) {
       test = char === '['
       i++
-    } else if (char === '$' && !test && !text.startsWith('(', i + 1)) {
+    } else if (char === '$' && !test) {
       const match = /^\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*|\d|[@*]))/.exec(text.slice(i))
       if (match !== null && !ASSIGNMENT.test(text.slice(wordStart, i))) {
         names.push((match[1] ?? match[2]) as string)
@@ -145,14 +165,15 @@ const rule: Rule.RuleModule = {
       const folders = placeholderFolders(context.filename, source.kind)
       for (const { handler } of handlersOf(source)) {
         const line = memberOf(handler, 'command')?.value
+        const argv = argsOf(handler)
+        // The docs say `shell` is ignored when `args` is set.
         if (
           stringOf(handler, 'type') !== 'command' ||
           line?.kind !== 'string' ||
-          stringOf(handler, 'shell') === 'powershell'
+          (stringOf(handler, 'shell') === 'powershell' && argv === undefined)
         ) {
           continue
         }
-        const argv = argsOf(handler)
         // The path placeholders are for `hooks-placeholder-quoted`. Exec form has no shell to read.
         const found = [
           ...(argv === undefined

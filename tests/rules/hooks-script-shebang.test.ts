@@ -88,6 +88,32 @@ describe(`${name}: the report`, () => {
     expect(lintJson(name, text, path.join(root, 'plugins/p/hooks/hooks.json'))).toHaveLength(1)
   })
 
+  it('reports a script behind a link out of the plugin, but inside the repository', () => {
+    const text = settings(hooks('Stop', [command({ command: `${R}/scripts/l.sh` })]))
+    const root = repo({ 'plugins/p/hooks/hooks.json': text, 'shared/b.sh': BAD })
+    mkdirSync(path.join(root, 'plugins/p/scripts'))
+    symlinkSync(path.join(root, 'shared/b.sh'), path.join(root, 'plugins/p/scripts/l.sh'))
+    expect(lintJson(name, text, path.join(root, 'plugins/p/hooks/hooks.json'))).toHaveLength(1)
+  })
+
+  it('reports a script in each form of the placeholder, with the plugin form unbraced', () => {
+    const text = settings(hooks('Stop', [command({ command: '$CLAUDE_PLUGIN_ROOT/scripts/b.sh' })]))
+    const root = repo({ 'plugins/p/hooks/hooks.json': text, 'plugins/p/scripts/b.sh': BAD })
+    expect(lintJson(name, text, path.join(root, 'plugins/p/hooks/hooks.json'))).toHaveLength(1)
+  })
+
+  it('reports a script in exec form where shell is ignored', () => {
+    expect(
+      ids({ 'hooks/b.sh': BAD }, { command: `${P}/hooks/b.sh`, args: [], shell: 'powershell' }),
+    ).toEqual(['shebang'])
+  })
+
+  it('reports a shebang that is not on the first line', () => {
+    for (const text of ['echo ok\n#!/bin/bash\n', '\n#!/bin/bash\n']) {
+      expect(run(`${P}/hooks/b.sh`, { 'hooks/b.sh': text }), text).toEqual(['shebang'])
+    }
+  })
+
   it('reports in a project skill and a project agent', () => {
     const yaml = `Stop:\n  - hooks:\n      - type: command\n        command: "\${CLAUDE_PROJECT_DIR}/hooks/b.sh"\n`
     for (const file of ['.claude/skills/s/SKILL.md', '.claude/agents/a.md']) {
@@ -167,7 +193,12 @@ describe(`${name}: the silent cases`, () => {
     expect(ids(files, { command: 5 })).toEqual([])
     expect(ids(files, { command: `${P}/hooks/b.sh`, shell: 'powershell' })).toEqual([])
     expect(ids(files, { command: 5, args: [] })).toEqual([])
-    expect(ids(files, { command: `${P}/hooks/b.sh`, args: 'x' })).toEqual(['shebang'])
+  })
+
+  it('reads a script when args is no array, as a command in shell form', () => {
+    expect(ids({ 'hooks/b.sh': BAD }, { command: `${P}/hooks/b.sh`, args: 'x' })).toEqual([
+      'shebang',
+    ])
   })
 
   it('is silent for a script out of the repository', () => {
@@ -176,7 +207,6 @@ describe(`${name}: the silent cases`, () => {
     const root = repo({ '.claude/settings.json': text })
     symlinkSync(path.join(outside, 'x/b.sh'), path.join(root, 'link.sh'))
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toEqual([])
-    expect(run(`${P}/../x/b.sh`, {})).toEqual([])
   })
 
   it('is silent for a dangling link', () => {
