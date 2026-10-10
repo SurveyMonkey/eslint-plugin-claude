@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-auto-mode-dropped-allow, a heuristic that reports an allow rule that auto mode drops, such as Bash(*), a wildcarded interpreter, Agent or Monitor, because the classifier reviews the action in its place, unless the settings source turns auto mode off.
+description: The ESLint rule claude/permissions-auto-mode-dropped-allow, a heuristic that reports an allow rule that auto mode drops, such as a wildcarded interpreter, Agent or Monitor, because the classifier reviews the action in its place, unless the settings source turns auto mode off.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -22,13 +22,12 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 ## Rule details
 
-When a session enters auto mode, Claude Code drops the broad `allow` rules that grant arbitrary code execution.[^dropped] The
-classifier reviews each action in their place. Claude Code restores the rules when the session leaves auto mode.[^dropped]
+When a session enters auto mode, Claude Code drops the broad `allow` rules that grant arbitrary code execution.[^dropped]
+The classifier reviews each action in their place. Claude Code restores the rules when the session leaves auto mode.[^dropped]
 The rule reports these `allow` rules:
 
-- `Bash(*)`, `PowerShell(*)` and the bare names `Bash` and `PowerShell`, which match every command.
-- A wildcarded interpreter: a program from `python`, `python3`, `node`, `ruby` and `perl` with only a `*` after it. Examples
-  are `Bash(python*)`, `Bash(python *)` and `Bash(node:*)`.
+- A wildcarded interpreter: the program `python` with only a `*` after it. Examples are `Bash(python*)`,
+  `Bash(python *)` and `Bash(python:*)`.[^dropped] The option `interpreters` adds programs to this list.
 - Every `Agent` allow rule.
 - Every `Monitor` allow rule, because Claude Code runs Monitor commands through the shell.[^dropped]
 
@@ -41,20 +40,25 @@ Auto mode is a runtime choice. No file shows that a session runs in auto mode, s
 rules that the docs name, and it reads these facts from the files:
 
 - It makes no report when the settings source sets `disableAutoMode` to `"disable"`, at the top level or in `permissions`.
-  Auto mode then never runs.[^key] In managed settings, any top-level value but `null` counts, because Claude Code reads it as
-  `"disable"`.[^lock]
+  Auto mode then never runs.[^key] In managed settings, any value but `null` counts, at both places. Claude Code reads it as
+  `"disable"` on v2.1.282 and later.[^lock]
 - It makes no report when a file of the same source cannot be read, because that file can hold the lock. The source is the
-  project pair, or the merged managed files.
+  project pair, or the merged managed files. A lock in one file counts, even if another file of the source sets the key
+  to another value.
 
 The rule does not check these cases:
 
-- A package-manager run command. The docs name the class and give no list of commands.
-- An interpreter that is not in the list above, and a rule with more words, such as `Bash(python -m pytest *)`.
+- A package-manager run command and a shell-wrapper prefix. The docs name the classes and give no list of commands.
+- An interpreter that is not `python` or in the option `interpreters`, and a rule with more words, such as
+  `Bash(python -m pytest *)`.
 - The `permissions.defaultMode` of the file. A session can enter auto mode with Shift+Tab or a flag, whatever the file sets.
-- A rule in a user file, which the repository does not hold.
+- A rule in a user file, which the repository does not hold. A `disableAutoMode` lock in a user file is also not visible.
 
-[`permissions-allow-unrestricted`](permissions-allow-unrestricted.md) reports `Bash(*)` and the bare names too. It reports that the rule
-approves every command. This rule reports that auto mode drops the rule. The two faults differ, so both rules report.
+### One report for one fault
+
+[`permissions-allow-unrestricted`](permissions-allow-unrestricted.md) reports `Bash(*)`, `PowerShell(*)` and the bare names
+`Bash` and `PowerShell`. It reports that the rule approves every command. Auto mode drops these rules too, but this rule skips
+them, so one rule gets one report.
 
 Fail:
 
@@ -78,7 +82,13 @@ Pass:
 
 ## Options
 
-None.
+| Option | Default | Use |
+|--------|---------|-----|
+| `interpreters` | `[]` | Extra program names, as an array of unique non-empty strings. The rule reports a wildcarded rule for each of them, and for `python`. |
+
+```js
+"claude/permissions-auto-mode-dropped-allow": ["warn", { interpreters: ["node", "ruby"] }]
+```
 
 ## Sources
 

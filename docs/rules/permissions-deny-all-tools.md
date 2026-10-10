@@ -24,13 +24,12 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 A `deny` rule accepts a glob in the tool-name position. `"*"` matches every tool, and `"mcp__*"` matches every MCP tool of
 every server.[^wildcards] Claude Code removes a tool that a bare-name glob `deny` rule matches from the context of Claude, the same as
-a bare tool name.[^wildcards] A rule of `"*"` leaves Claude with no tool, apart from `EndConversation`, which a glob
-cannot remove while any other tool remains.[^deny]
+a bare tool name.[^wildcards] Claude Code ignores a `deny` rule for `EndConversation` while
+any other tool is available, so a rule of `"*"` removes every other tool.[^deny]
 
-Some repositories do want this, for example for a headless run that must not use tools. The rule asks that the choice be
-deliberate: remove the rule, or keep it and turn the report off for that file.
+The rule asks that the choice be deliberate. Remove the rule, or keep it and turn the report off for that file.
 
-The rule reports the `deny` entry. It reads `allow` and `ask` rules never: an `allow` glob is
+The rule reports the `deny` entry. It never reads `allow` and `ask` rules: an `allow` glob is
 [`permissions-tool-name-glob`](permissions-tool-name-glob.md)'s, and an `ask` glob removes no tool. A narrower glob, such as
 `mcp__github__*`, gets no report.
 
