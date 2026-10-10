@@ -27,7 +27,7 @@ Claude Code checks `deny`, then `ask`, then `allow`, and the first match decides
 compares two rules after it makes them equal in these ways:
 
 - A `:*` at the end of a `Bash`, `Monitor` or `PowerShell` pattern is a final ` *`.[^wildcards] White space between words does not
-  matter, and a bare tool name is the same as `Tool(*)`.
+  matter, and a bare command tool name is the same as `Tool(*)`.
 - A trailing `.` in a `WebFetch(domain:...)` host is no dot.[^webfetch]
 
 The rule reports each copy, and names the first rule. The first rule is the one that Claude Code checks first: a `deny` rule,
@@ -36,7 +36,7 @@ then an `ask` rule, then an `allow` rule, and then the order of the file.
 ### One report for one fault
 
 [`permissions-dead-allow`](permissions-dead-allow.md) owns an `allow` rule that an equal `deny` or `ask` rule covers. This rule
-skips that pair, in the same file or in another file of the same source. So this rule reads:
+skips that pair when both rules are in the file that it reads. So this rule reads:
 
 - the same rule twice in one list;
 - an `ask` rule that an equal `deny` rule repeats.
@@ -46,6 +46,8 @@ reads those as two rules, so this rule reports the `allow` rule.
 
 ### Limits
 
+- An `allow` copy that a broader `deny` or `ask` rule covers, as in `Bash(ls)` twice under `deny: ["Bash(*)"]`, also gets a
+  report from `permissions-dead-allow`. This rule skips an equal pair only.
 - The rule reads one file. The same rule in `settings.json` and in `settings.local.json` gets no report.
 - A rule that does not parse is for `permissions-rule-syntax`.
 - A path rule is equal only when its text is equal. `Read(./a)` and `Read(a)` are two rules for this rule.

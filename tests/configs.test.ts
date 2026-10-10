@@ -701,7 +701,7 @@ const TREE: Record<string, string> = {
   ...settingsFiles('psb', { permissions: { ask: ['Bash'] }, sandbox: { enabled: true } }),
   // `permissions-dead-allow`: an allow rule under a bare deny.
   ...settingsFiles('pda', { permissions: { allow: ['Bash(npm test)'], deny: ['Bash'] } }),
-  // The warn rules of the sixth layer. `permissions-default-mode-manual-alias` reports only with
+  // The warn rules for modes and Bash. `permissions-default-mode-manual-alias` reports only with
   // its option `minVersion`, and the configs set no option, so it has no tree.
   // `permissions-default-mode-surface`: a mode that cloud sessions ignore.
   ...settingsFiles('wms', { permissions: { defaultMode: 'dontAsk' } }),
@@ -849,13 +849,14 @@ const SANDBOX_RULES = [
   { name: 'permissions-dead-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
-// The warn rules of the sixth layer of #15, in the order of the `modules` list, with the files of
-// each. Each is a warn and reads the project and managed files.
+// The warn rules of #15 for modes and Bash, in the order of the `modules` list, with the files of
+// each. Each is a warn. Each reads the project and managed files, except `permissions-default-mode-manual-alias`,
+// which reads the project files only.
 const WARN_RULES = [
   { name: 'permissions-auto-mode-dropped-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-bash-colon-star-mid', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-bash-colon-star-suffix', files: [...PROJECT_FILES, ...MANAGED_FILES] },
-  { name: 'permissions-default-mode-manual-alias', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-default-mode-manual-alias', files: PROJECT_FILES },
   { name: 'permissions-default-mode-surface', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-deny-all-tools', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-duplicate-rule', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -1175,11 +1176,6 @@ const EXPECTED = [
     `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@1`,
     `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
   ]),
-  // The tree of `permissions-allow-unrestricted` holds a bare `Bash` allow rule, which auto mode drops.
-  'packages/pau/.claude/settings.json: claude/permissions-auto-mode-dropped-allow@1',
-  'packages/pau/.claude/settings.local.json: claude/permissions-auto-mode-dropped-allow@1',
-  'packages/pau/managed-settings.json: claude/permissions-auto-mode-dropped-allow@1',
-  'packages/pau/managed-settings.d/10-a.json: claude/permissions-auto-mode-dropped-allow@1',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1416,7 +1412,7 @@ describe('configs', () => {
     }
   })
 
-  it('gives each warn rule of the sixth layer one JSON block for its files', () => {
+  it('gives each warn rule for modes and Bash one JSON block for its files', () => {
     for (const { name, files } of WARN_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,

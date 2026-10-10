@@ -23,11 +23,11 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 ## Rule details
 
 Cloud sessions honor only `acceptEdits`, `plan`, `default` and `auto` from this key.[^mode] They ignore `dontAsk` from a settings
-file, with no message, and the session starts in the mode of its dropdown.[^dontask] The rule reports `defaultMode: "dontAsk"` in
+file, with no message, and the session starts in the mode of its dropdown.[^dontask][^bypass] The rule reports `defaultMode: "dontAsk"` in
 every file that it lints.
 
-The VS Code extension reads the mode of a new conversation from user, managed and `--settings` values only. It never reads a project
-or local file.[^vscode] With the option `vscode` set to `true`, the rule also reports any `defaultMode` in a project or local file. The
+The VS Code extension reads the mode of a new conversation from user and managed values.[^vscode] The settings reference adds
+`--settings` values.[^mode] It never reads a project or local file. With the option `vscode` set to `true`, the rule also reports any `defaultMode` in a project or local file. The
 rule reads no managed file for this option, because the extension reads those values.
 
 ### One report for one fault
@@ -38,8 +38,9 @@ These modes have a rule of their own, so this rule makes no report for them:
   too.[^bypass]
 - `auto` in a project or local file: [`permissions-default-mode-project-ignored`](permissions-default-mode-project-ignored.md).
 
-`manual` is an alias for `default`, which cloud sessions honor, so the rule makes no report for it. With `vscode` on, a
-`dontAsk` value in a project file gets both reports, because the two faults differ.
+`manual` is an alias for `default`. The rule makes no cloud report for it. With `vscode` on, a `dontAsk` value in a project
+file gets both reports, because the two faults differ. A value that is no mode also gets the `vscode` report, and
+`permissions-default-mode-value` reports the value itself.
 
 Fail:
 

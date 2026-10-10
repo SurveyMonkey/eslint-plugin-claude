@@ -913,6 +913,11 @@
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Available modes",
       "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
     }
   ],
   "permissions-default-mode-project-ignored": [

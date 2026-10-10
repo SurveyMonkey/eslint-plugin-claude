@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-default-mode-manual-alias, which reports permissions.defaultMode set to the manual alias when the option minVersion is below the first Claude Code version that accepts it, because an older client rejects the value.
+description: The ESLint rule claude/permissions-default-mode-manual-alias, which reports permissions.defaultMode set to the manual alias in a project file when the option minVersion is below the first Claude Code version that accepts it, because an older client rejects the value.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -16,9 +16,10 @@ Write `default` in place of the `manual` alias of `permissions.defaultMode`.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
-The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
+The rule reads no managed file. Claude Code reads an invalid managed `permissions.defaultMode` as `default`, which is what
+`manual` means, so an older client breaks nothing there.[^closed]
 
 ## Rule details
 
@@ -71,3 +72,4 @@ The `recommended` and `strict` configs set no option, so they make no report fro
 
 [^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode)
 [^alias]: [Choose a permission mode: Available modes](https://code.claude.com/docs/en/permission-modes#available-modes)
+[^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)

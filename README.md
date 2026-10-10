@@ -182,7 +182,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/sandbox-filesystem-disabled-conflict`](docs/rules/sandbox-filesystem-disabled-conflict.md) | A managed file does not set `sandbox.filesystem.disabled` with `denyRead` or credentials `deny` entries that it switches off | `error` | `error` |
 | [`claude/sandbox-schema`](docs/rules/sandbox-schema.md) | `sandbox` holds only documented keys, each with a value of its type | `error` | `error` |
 | [`claude/sandbox-scope`](docs/rules/sandbox-scope.md) | A project or local settings file has no credentials `mask` entry, which Claude Code drops there | `error` | `error` |
-| [`claude/permissions-auto-mode-dropped-allow`](docs/rules/permissions-auto-mode-dropped-allow.md) | An `allow` rule is not one that auto mode drops, such as `Bash(*)`, a wildcarded interpreter, `Agent` or `Monitor` (a heuristic) | `warn` | `warn` |
+| [`claude/permissions-auto-mode-dropped-allow`](docs/rules/permissions-auto-mode-dropped-allow.md) | An `allow` rule is not one that auto mode drops, such as a wildcarded interpreter, `Agent` or `Monitor` (a heuristic) | `warn` | `warn` |
 | [`claude/permissions-bash-colon-star-mid`](docs/rules/permissions-bash-colon-star-mid.md) | A `:*` in a Bash rule is at the end of the pattern | `warn` | `warn` |
 | [`claude/permissions-bash-colon-star-suffix`](docs/rules/permissions-bash-colon-star-suffix.md) | A final wildcard in a Bash rule is a space and `*`, not `:*` | `warn` | `warn` |
 | [`claude/permissions-default-mode-manual-alias`](docs/rules/permissions-default-mode-manual-alias.md) | `defaultMode` is not `manual` when the option `minVersion` is below v2.1.200 | `warn` | `warn` |
