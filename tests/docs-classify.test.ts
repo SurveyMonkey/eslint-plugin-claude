@@ -1493,6 +1493,32 @@ describe('a moved section (#152)', () => {
     ])
   })
 
+  it('names no block of a move as a possible move of another block', async () => {
+    const map: SourceMap = {
+      'a-rule': [{ url: URL_, heading: 'Hook event names list' }],
+      'b-rule': [{ url: URL_, heading: 'Hook event names table' }],
+    }
+    const base =
+      '# Title\n\nIntro.\n\n## Hook event names list\n\nBody A.\n\n## Hook event names table\n\nBody B.\n'
+    const edited =
+      '# Title\n\nIntro.\n\n## List of hook event names\n\nBody A.\n\n## Table of hook event names\n\nBody C.\n'
+    const jev = fakeJev(answer({ requirement: 0.9 }))
+    const output = await run(map, edited, { fetch: jev.fetch, key: KEY }, base)
+    const shape = output.findings.map((f) => [f.kind, f.blockId, f.possibleMoves])
+    expect(shape).toHaveLength(3)
+    expect(shape).toContainEqual(['moved', 'hook-event-names-list', undefined])
+    expect(shape).toContainEqual([
+      'rule-removal',
+      'hook-event-names-table',
+      [{ heading: 'Table of hook event names', blockId: 'table-of-hook-event-names' }],
+    ])
+    expect(shape).toContainEqual([
+      'new-rule',
+      'table-of-hook-event-names',
+      [{ heading: 'Hook event names table', blockId: 'hook-event-names-table' }],
+    ])
+  })
+
   it('gives the findings of today when two added or two removed blocks share one body hash', async () => {
     // The code does not guess which pair moved.
     const twice = `${ENV_NEW.trimEnd()}\n\n${ENV_NEW.slice(ENV_NEW.indexOf(NEW_HEAD))
