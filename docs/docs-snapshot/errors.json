@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
+  "hash": "c465532b3cec1a454fa4b6cdd3efd205754115efd240f64bee4776b66bde05cc",
   "blocks": [
     {
       "id": "error-reference",
@@ -276,7 +276,7 @@
     },
     {
       "id": "unable-to-connect-to-anthropic-services",
-      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
+      "hash": "6aea251ad1e99ca65cdb98c28bbe46c3bed22e50fb9e85adcd431dbbec7ec83a"
     },
     {
       "id": "socket-is-closed",

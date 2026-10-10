@@ -71,6 +71,7 @@ import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
 import skillArgumentEscape from './rules/skill-argument-escape.ts'
+import skillBodyTokenBudget from './rules/skill-body-token-budget.ts'
 import skillBooleanLiteral from './rules/skill-boolean-literal.ts'
 import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
 import skillDescriptionPresent from './rules/skill-description-present.ts'
@@ -79,8 +80,11 @@ import skillForkFieldsRequireContext from './rules/skill-fork-fields-require-con
 import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
 import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
 import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
+import skillInjectRobustness from './rules/skill-inject-robustness.ts'
 import skillInvocationRedundantFields from './rules/skill-invocation-redundant-fields.ts'
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import skillListingBudget from './rules/skill-listing-budget.ts'
+import skillLiteralDollar from './rules/skill-literal-dollar.ts'
 import skillMaxLines from './rules/skill-max-lines.ts'
 import skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
 import skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
@@ -88,6 +92,7 @@ import skillNameUnique from './rules/skill-name-unique.ts'
 import skillNoBom from './rules/skill-no-bom.ts'
 import skillPathsGlobValid from './rules/skill-paths-glob-valid.ts'
 import skillPluginNamePrefix from './rules/skill-plugin-name-prefix.ts'
+import skillPluginPathVars from './rules/skill-plugin-path-vars.ts'
 import skillPluginRootName from './rules/skill-plugin-root-name.ts'
 import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
@@ -134,6 +139,11 @@ const modules = [
   skillPluginNamePrefix,
   skillPluginRootName,
   skillShellPlatform,
+  skillBodyTokenBudget,
+  skillInjectRobustness,
+  skillListingBudget,
+  skillLiteralDollar,
+  skillPluginPathVars,
   agentFrontmatterValid,
   agentFrontmatterSchema,
   agentPluginIgnoredFields,
@@ -253,6 +263,11 @@ const recommended: Record<RuleName, Severity> = {
   'skill-plugin-name-prefix': 'warn',
   'skill-plugin-root-name': 'warn',
   'skill-shell-platform': 'warn',
+  'skill-body-token-budget': 'off',
+  'skill-inject-robustness': 'off',
+  'skill-listing-budget': 'off',
+  'skill-literal-dollar': 'off',
+  'skill-plugin-path-vars': 'off',
   'agent-frontmatter-valid': 'error',
   'agent-frontmatter-schema': 'error',
   'agent-plugin-ignored-fields': 'error',

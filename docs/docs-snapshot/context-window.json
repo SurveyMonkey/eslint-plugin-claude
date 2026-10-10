@@ -1,0 +1,38 @@
+{
+  "url": "https://code.claude.com/docs/en/context-window",
+  "hash": "00f311a47ee8217e350b8babf2b18da2336dd0644e3822d037005b43695cd756",
+  "blocks": [
+    {
+      "id": "explore-the-context-window",
+      "hash": "30452717baf7d2f1fde5ad2cfac8b6b56269b508de01c531bc820bdbb82db7df"
+    },
+    {
+      "id": "what-the-timeline-shows",
+      "hash": "6c93d250edfa718a0586f83c768e3fc7a5159811e8f42256801c7b51f4e7c415"
+    },
+    {
+      "id": "what-survives-compaction",
+      "hash": "45aa3b77d18b8b6756be978168124f6b41572c00dd5477d80f4309e1f388a049"
+    },
+    {
+      "id": "when-your-context-fills-up",
+      "hash": "bce69e2e762f54a508a339189de43b5bfa7534c4185719d17b04992431a520d1"
+    },
+    {
+      "id": "check-your-own-session",
+      "hash": "80021c51a85b7bf7708be0e88fb7d193d6f80d6ab6ee9165753c1e2d437e46ae"
+    },
+    {
+      "id": "related-resources",
+      "hash": "1c6ff2be8540b4afbc66cfa9e61ac71278cf16c5f22c6f60e94e0c38bcdca555"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "What survives compaction",
+      "id": "what-survives-compaction",
+      "hash": "45aa3b77d18b8b6756be978168124f6b41572c00dd5477d80f4309e1f388a049",
+      "text": "## What survives compaction\n\nWhen a long session compacts, Claude Code summarizes the conversation history to fit the context window. As of v2.1.198, the summarization request inherits your session's [extended thinking](/docs/en/model-config#extended-thinking) configuration, so it reasons with thinking enabled when your session has it enabled and stays off otherwise. Thinking affects only how the summary is produced; your session settings are unchanged afterward. What happens to each kind of content depends on how it was loaded:\n\n| Mechanism | After compaction |\n| :- | :- |\n| System prompt and output style | Both still apply |\n| Project-root CLAUDE.md and unscoped rules | Re-injected from disk |\n| Auto memory | Re-injected from disk |\n| [Git status snapshot](/docs/en/settings-reference#includegitinstructions) | Claude Code reads a fresh one from your repository |\n| The plan Claude wrote in [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) | Re-injected from disk |\n| Rules with `paths:` frontmatter | Claude Code reloads them [on demand](/docs/en/memory#path-specific-rules) |\n| Nested CLAUDE.md in subdirectories | Claude Code reloads them [on demand](/docs/en/memory#how-claude-md-files-load) |\n| Files Claude read or edited | Claude Code re-reads up to five, most recently modified first |\n| Invoked skill bodies | Re-injected, capped at 5,000 tokens per skill and 25,000 tokens total; oldest dropped first |\n| [Background commands](/docs/en/interactive-mode#background-bash-commands) and background [subagents](/docs/en/sub-agents#run-subagents-in-foreground-or-background) | Keep running. Claude Code reminds Claude which ones are still running so it doesn't start a duplicate |\n| Context that hooks added earlier | Summarized with the rest of the conversation |\n| [SessionStart hooks](/docs/en/hooks-guide#re-inject-context-after-compaction) that match the `compact` source | Claude Code runs them and adds their output to the compacted context |\n\nRight after compaction, Claude Code re-reads up to five of the files Claude has read or edited in the session, choosing the ones modified most recently. A file over 5,000 tokens comes back as a path reference without its content, shown as `Referenced file` instead of `Read`.\n\nPath-scoped rules and nested CLAUDE.md files load into message history when Claude reads, writes, or edits their trigger file, so compaction summarizes them away with everything else. If a rule must persist across compaction, drop the `paths:` frontmatter or move it to the project-root CLAUDE.md.\n\nSkill bodies are re-injected after compaction, but large skills are truncated to fit the per-skill cap, and the oldest invoked skills are dropped once the total budget is exceeded. Truncation keeps the start of the file, so put the most important instructions near the top of `SKILL.md`."
+    }
+  ]
+}
