@@ -39,11 +39,11 @@ The rule reports these faults, each once for a value:
 - **A port that is not a whole number from 1 to 65535.** The docs say "a local TCP port" and state no range. The range is the
   range of a TCP port.
 - **A `bwrapPath` or `socatPath` that is not an absolute path.** Claude Code drops a relative path and finds the binary on `PATH`.
-  The rule reads a path as absolute when it starts with `/`. Both keys are for Linux and WSL2.
+  The rule reads a path as absolute when it starts with `/`. Both keys are for Linux and WSL2.[^bwrap][^socat]
 - **An `allowMachLookup` entry with a `*` that does not end the name,** or with two `*`. A single trailing `*` matches a prefix,
   and `"*"` alone matches every service.
 - **A credentials entry** that lacks `path` (files), `name` (variables) or `mode`, or has a `mode` other than `"deny"` or
-  `"mask"`, an `onExtractNoMatch` other than `"warn"`, `"deny"` or `"error"`, or a `decode` other than `"jwt"`.[^maskfiles] A
+  `"mask"`, an `onExtractNoMatch` other than `"warn"`, `"deny"` or `"error"`, or a `decode` other than `"jwt"`.[^maskfiles][^maskenv] A
   variable `name` must start with a letter or an underscore, and hold letters, digits and underscores only.[^envvars]
   An `awsPairs` entry lacks `accessKeyIdVar` or `secretAccessKeyVar`.
 
@@ -53,7 +53,7 @@ Claude Code validates each field of a managed `sandbox` block on its own and doe
 `"false"` counts as that Boolean, so the rule does not report it in a managed file. It reports it in a project or local file, for a key
 that Claude Code reads there.
 While `network.deniedDomains`, `filesystem.denyRead` or `filesystem.denyWrite`, or an entry of one, is invalid, Claude Code
-withholds the allow lists of the same kind, and the message says so. The per-field repair needs Claude Code v2.1.283 or later.[^managed]
+withholds the allow lists that go with it, and the message says so. `deniedDomains` goes with `allowedDomains`. `denyRead` and `denyWrite` go with `allowRead` and `allowWrite`. The per-field repair needs Claude Code v2.1.283 or later.[^managed]
 
 ### One report for one fault
 
@@ -122,4 +122,5 @@ None.
 [^envvars]: [All settings: sandbox.credentials.envVars](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-envvars)
 [^sigv4]: [All settings: sandbox.credentials.sigv4](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-sigv4)
 [^maskfiles]: [All settings: Mask fields for files](https://code.claude.com/docs/en/settings-reference#mask-fields-for-files)
+[^maskenv]: [All settings: Mask fields for environment variables](https://code.claude.com/docs/en/settings-reference#mask-fields-for-environment-variables)
 [^managed]: [Deploy managed settings: Invalid values inside sandbox](https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox)

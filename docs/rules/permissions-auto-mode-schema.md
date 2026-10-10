@@ -27,7 +27,7 @@ Use only the documented keys in `autoMode`, each with a value of its type.
 | `environment`, `allow`, `soft_deny`, `hard_deny` | array of strings (prose rules) |
 | `classifyAllShell` | Boolean[^classify] |
 
-The string `"$defaults"` in an array keeps the built-in rules at that position.[^defaults] The docs state no limit on how often
+The string `"$defaults"` in an array keeps the built-in rules at that position.[^defaults][^defaultsenv] The docs state no limit on how often
 it can stand in one array, so the rule does not check it.
 
 The rule reports these faults:
@@ -90,5 +90,6 @@ None.
 [^automode]: [All settings: autoMode](https://code.claude.com/docs/en/settings-reference#automode)
 [^classify]: [All settings: autoMode.classifyAllShell](https://code.claude.com/docs/en/settings-reference#automode-classifyallshell)
 [^defaults]: [Configure auto mode: Override the block and allow rules](https://code.claude.com/docs/en/auto-mode-config#override-the-block-and-allow-rules)
+[^defaultsenv]: [Configure auto mode: Define trusted infrastructure](https://code.claude.com/docs/en/auto-mode-config#define-trusted-infrastructure)
 [^where]: [Configure auto mode: Where the classifier reads configuration](https://code.claude.com/docs/en/auto-mode-config#where-the-classifier-reads-configuration)
 [^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)

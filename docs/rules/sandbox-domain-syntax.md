@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/sandbox-domain-syntax, which reports a sandbox.network.allowedDomains or deniedDomains entry that is not a hostname, a wildcard pattern or an IP literal with an optional port, such as one with a URL scheme, a path, user info, a port with a leading zero or an IPv6 address with no brackets.
+description: The ESLint rule claude/sandbox-domain-syntax, which reports a sandbox.network.allowedDomains or deniedDomains entry that is not a hostname, a wildcard pattern or an IP literal with an optional port, such as one with a URL scheme, a path, user info, a bad port or an IPv6 address with no brackets.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -49,8 +49,7 @@ The rule is silent in these cases:
 
 Claude Code drops an invalid entry of a managed list and keeps the rest. While `deniedDomains`, or an entry of it, is invalid,
 Claude Code also withholds `sandbox.network.allowedDomains`, so the managed allow list grants nothing.[^managed] The message for
-an entry of `deniedDomains` in a managed file says so, except for an address with no brackets. The docs say that Claude Code
-reads such an address, so they do not call it invalid. This repair needs Claude Code v2.1.283 or later.
+an entry of `deniedDomains` in a managed file says so, except for an address with no brackets. The docs do not call such an address invalid. This repair needs Claude Code v2.1.283 or later.
 
 The rule reads the last of two keys of one name, as `JSON.parse` does.
 
@@ -63,7 +62,7 @@ wildcard is not checked by either rule.
 Fail:
 
 ```json
-{ "sandbox": { "network": { "allowedDomains": ["https://github.com", "api.example.com:080", "::1"] } } }
+{ "sandbox": { "network": { "allowedDomains": ["https://github.com", "api.example.com:0", "::1"] } } }
 ```
 
 Pass:

@@ -739,6 +739,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Define trusted infrastructure",
+      "hash": "0a18d4f5a20ba5ea6e0fe10a0706785be2882a7a77f77c01268b67d42a7ac7f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
       "heading": "Where the classifier reads configuration",
       "hash": "58f3d954821551614a5f3bed35cbfc959fac2a61f5f37b94bb6c3b7a80775d88"
     },
@@ -1337,6 +1342,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Mask fields for files",
       "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Mask fields for environment variables",
+      "hash": "35d2058fd639400b9d06e4271f53b322b4b279776434ff23078b6ec864f23443"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
