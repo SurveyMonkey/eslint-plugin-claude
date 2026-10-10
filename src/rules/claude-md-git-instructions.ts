@@ -1,9 +1,11 @@
 // Commit and pull request rules in a CLAUDE.md or a rule file, with the built-in git instructions
 // still on (docs/rules/claude-md-git-instructions.md). Claude Code adds its own commit and pull
 // request instructions. The docs say that when a CLAUDE.md sets such rules, you turn the built-in
-// ones off with the setting `includeGitInstructions`. The rule reads the project settings file
-// `.claude/settings.json` of the folder of the instruction file, and of each folder above it, up
-// to the repository root. It reads no file out of the repository. It makes no report when it
+// ones off with the setting `includeGitInstructions`, or with the variable
+// `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS`, which takes precedence. The rule reads the project
+// settings file `.claude/settings.json` of the folder of the instruction file, and of each folder
+// above it, up to the repository root: the setting, and the variable in `env` with the value `1`.
+// It reads no file out of the repository. It makes no report when it
 // cannot read a settings file (ADR 001, Decision 14). A user or local settings file can also set
 // the key, and the rule does not read them, so it is a heuristic. The text check is a heuristic
 // too: a sentence that names a commit or pull request topic and has an instruction cue.
@@ -25,6 +27,9 @@ const CUE =
 // A sentence ends at `.`, `!` or `?` with a space or the end of the block after it, or at a line end.
 const SENTENCE = /(?:[^.!?\n]|[.!?](?!\s|$))+[.!?]?/g
 
+// The variable that removes the built-in git instructions. It takes precedence over the setting.
+const DISABLE_VARIABLE = 'CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS'
+
 const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 
@@ -42,8 +47,9 @@ function homeOf(file: string, kind: MemoryFileKind): string {
 }
 
 /** True when a project settings file of `home`, or of a folder above it up to the repository
- *  root, sets `includeGitInstructions` to `false`. It is also true when a settings file cannot
- *  be read, because that file can hold the key. */
+ *  root, sets `includeGitInstructions` to `false`, or `env.CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS`
+ *  to `1`. It is also true when a settings file cannot be read, because that file can hold the
+ *  key. */
 function turnedOff(home: string): boolean {
   const bound = repositoryRoot(home)
   const top = gitTop(home) ?? home
@@ -55,6 +61,11 @@ function turnedOff(home: string): boolean {
     if (parsed !== null) {
       // A file that does not parse, or is not an object, can hold any key.
       if (!isObject(parsed.data) || parsed.data.includeGitInstructions === false) {
+        return true
+      }
+      // The env variable takes precedence over the setting. The docs give the value `1`.
+      const { env } = parsed.data
+      if (isObject(env) && String(env[DISABLE_VARIABLE]) === '1') {
         return true
       }
     }

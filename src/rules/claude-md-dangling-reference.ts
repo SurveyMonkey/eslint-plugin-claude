@@ -39,7 +39,10 @@ function pathOf(value: string): string | null {
   }
   const parts = text.split('/').filter((part) => part !== '')
   const last = parts[parts.length - 1] as string
-  const shaped = text.endsWith('/') || text.startsWith('.') || /\.[A-Za-z]\w*$/.test(last)
+  const shaped =
+    text.endsWith('/') ||
+    text.startsWith('.') ||
+    (/\.[A-Za-z]\w*$/.test(last) && !/^v?\d[\d.]*\.x$/i.test(last))
   return text.includes('/') && shaped ? text : null
 }
 

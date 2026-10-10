@@ -124,12 +124,27 @@ describe(RULE, () => {
     for (const text of [
       '**NEVER** edit generated files.',
       '*Never* commit to main.',
-      'ALWAYS **run** tests before you commit.',
+      'Do **not** edit generated files.',
+      'You **must not** push to main.',
+      '_Never_ edit generated files.',
+      '__NEVER__ edit generated files.',
+      '> > Never\n> > edit generated files.',
+      '- > Never\n  > edit generated files.',
       '> Never\n> edit generated files.',
       'Don\u2019t edit generated files.',
     ]) {
       expect(ids(lint(`${text}\n`)), text).toEqual(['guardrail'])
     }
+  })
+
+  it('stays silent on an underscore inside a word', () => {
+    expect(lint('Never_edit x.\n')).toEqual([])
+    expect(lint('Do_not edit x.\n')).toEqual([])
+  })
+
+  it('keeps the place of a match after emphasis marks', () => {
+    const messages = lint('Be **kind**. Never edit x.\n')
+    expect(messages.map((m) => [m.column, m.endColumn])).toEqual([[14, 24]])
   })
 
   it('keeps the place of a match after a code span', () => {

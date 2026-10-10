@@ -65,9 +65,34 @@ describe(RULE, () => {
     expect(ids(lint(COMMIT, local))).toEqual(['gitInstructions'])
   })
 
-  it('reports once in a paragraph that has two matching sentences, at the later place', () => {
+  it('reports once in a paragraph that has two matching sentences, at the first matching sentence', () => {
     const messages = lint('Be kind. Write commit messages in English. Open a pull request.\n')
     expect(messages.map((m) => [m.column, m.endColumn])).toEqual([[10, 43]])
+  })
+
+  it('stays silent when env sets CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS to 1', () => {
+    const env = (value: string) => `{"env": {"CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS": ${value}}}`
+    expect(lint(COMMIT, { [SETTINGS]: env('"1"') })).toEqual([])
+    expect(lint(COMMIT, { [SETTINGS]: env('1') })).toEqual([])
+    // The variable takes precedence over the setting.
+    const both =
+      '{"includeGitInstructions": true, "env": {"CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS": "1"}}'
+    expect(lint(COMMIT, { [SETTINGS]: both })).toEqual([])
+  })
+
+  it('reports when the env variable is 0, another value, not set, or env is not an object', () => {
+    const env = (value: string) => `{"env": {"CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS": ${value}}}`
+    for (const settings of [
+      env('"0"'),
+      env('""'),
+      env('"true"'),
+      env('null'),
+      '{"env": {"OTHER": "1"}}',
+      '{"env": "1"}',
+      '{"env": null}',
+    ]) {
+      expect(ids(lint(COMMIT, { [SETTINGS]: settings })), settings).toEqual(['gitInstructions'])
+    }
   })
 
   it('stays silent when the topic and the cue are in two sentences', () => {

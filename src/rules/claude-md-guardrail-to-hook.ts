@@ -5,8 +5,8 @@
 // a verb that a hook can check, and "always" with a fixed point. It reads a paragraph, a heading
 // or a table cell of the syntax tree, with each code span and each inline HTML tag hidden. So a
 // code span cannot split a sentence, and a code block and an HTML comment are not read. The rule
-// is a heuristic, because the docs do not define the wording. Emphasis marks do not split a
-// match, so `**Never** edit x` is a guardrail.
+// is a heuristic, because the docs do not define the wording. Emphasis marks (`*`, and `_` at the
+// edge of a word) do not split a match, so `**Never** edit x` is a guardrail.
 import type { MarkdownRuleDefinition, MarkdownSourceCode } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifyMemoryFile } from '../memory-files.ts'
@@ -15,7 +15,7 @@ const name = 'claude-md-guardrail-to-hook' as const
 
 // A prohibition: a negative, then a verb that a hook or a permission rule can check.
 const PROHIBITION =
-  /\b(?:never|do not|don't|must not|should not|shall not|may not)\s+(?:ever\s+)?(?:edit|modify|overwrite|write to|touch|delete|remove|commit|push|force[- ]push|run|read)\b/
+  /\b(?:never|do\s+not|don't|must\s+not|should\s+not|shall\s+not|may\s+not)\s+(?:ever\s+)?(?:edit|modify|overwrite|write to|touch|delete|remove|commit|push|force[- ]push|run|read)\b/
 
 // A step at a fixed point: "always", then "before" a commit or a finish, or "after" an edit.
 const FIXED_POINT =
@@ -69,6 +69,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'guardrail' }> = {
         // change keeps the length of the text, so the offsets stay true.
         text = text
           .replaceAll('*', ' ')
+          .replace(/(?<![A-Za-z0-9])_+|_+(?![A-Za-z0-9])/g, (marks) => ' '.repeat(marks.length))
           .replaceAll('\u2019', "'")
           .replace(/^(?:[ \t]*>)+/gm, (marks) => ' '.repeat(marks.length))
         for (const match of text.matchAll(GUARDRAIL)) {
