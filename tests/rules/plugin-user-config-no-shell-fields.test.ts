@@ -293,6 +293,28 @@ describe(`${RULE} (silent)`, () => {
     ])
   })
 
+  // The docs merge the default hooks and MCP files with the manifest keys, and
+  // only the monitors file is replaced.
+  check.each([
+    [
+      'hooks/hooks.json',
+      { hooks: hooksOf(shell(`./h.sh ${REF}`)) },
+      { hooks: './other.json' },
+      'hook',
+    ],
+    [
+      '.mcp.json',
+      { mcpServers: { a: { headersHelper: REF } } },
+      { mcpServers: './other.json' },
+      'headersHelper',
+    ],
+  ] as const)(
+    'reports %s when the manifest names another file for the same component',
+    (file, value, fields, id) => {
+      expect(run(file, value, { name: 'p', ...fields })).toEqual([MESSAGES[id]])
+    },
+  )
+
   check('stays silent for a file that sits in no plugin', () => {
     const top = tree({})
     const code = JSON.stringify({ mcpServers: { a: { headersHelper: REF } } })

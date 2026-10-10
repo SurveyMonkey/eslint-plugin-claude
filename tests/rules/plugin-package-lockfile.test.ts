@@ -37,6 +37,11 @@ describe(RULE, () => {
     ['pnpm-lock.yaml', { 'pnpm-lock.yaml': '' }, '`pnpm-lock.yaml`'],
     ['bun.lockb', { 'bun.lockb': '' }, '`bun.lockb`'],
     [
+      'a bunfig.toml beside a bun.lockb, which is not a lockfile',
+      { 'bunfig.toml': '', 'bun.lockb': '' },
+      '`bun.lockb`',
+    ],
+    [
       'each of the three, in name order',
       { 'yarn.lock': '', 'pnpm-lock.yaml': '', 'bun.lockb': '' },
       '`bun.lockb`, `pnpm-lock.yaml`, `yarn.lock`',
@@ -85,7 +90,7 @@ describe(`${RULE} (silent)`, () => {
     ['a package.json that is a folder', { 'package.json/x': '', 'yarn.lock': '' }],
     ['a yarn.lock that is a folder', { 'package.json': '{}', 'yarn.lock/x': '' }],
     [
-      'a bunfig.toml beside a bun.lockb',
+      'a bunfig.toml beside a bun.lock',
       { 'package.json': '{}', 'bunfig.toml': '', 'bun.lock': '' },
     ],
   ])('stays silent for %s', (_title, files) => {
