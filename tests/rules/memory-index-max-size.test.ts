@@ -2,7 +2,8 @@
 // (https://code.claude.com/docs/en/sub-agents#enable-persistent-memory). YAML frontmatter and
 // block-level HTML comments are removed before the index is loaded, so they are not counted
 // (https://code.claude.com/docs/en/errors#memory-index-is-over-its-read-limit). The rule checks
-// the lines and the bytes apart. The globs are in tests/configs.test.ts.
+// the lines and the bytes apart. The files glob names the index files, so the rule checks no
+// path itself. The glob is in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
 import { lintMemory, tree } from '../memory-tree.test-support.ts'
 
@@ -23,7 +24,7 @@ const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m
 const ofBytes = (bytes: number) => `${'x'.repeat(bytes - 1)}\n`
 
 describe(`${RULE}: lines`, () => {
-  it.fails('reports an index of 201 lines, at the start of the file', () => {
+  it('reports an index of 201 lines, at the start of the file', () => {
     const messages = lint(lines(201))
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -36,14 +37,14 @@ describe(`${RULE}: lines`, () => {
     expect(messages[0]?.message).toContain('200 lines')
   })
 
-  it.fails('stays silent on an index of 200 lines', () => {
+  it('stays silent on an index of 200 lines', () => {
     expect(lint(lines(200))).toEqual([])
     expect(lint('')).toEqual([])
     expect(lint(lines(200).slice(0, -1))).toEqual([])
     expect(lint(`${lines(200)}y`)).toHaveLength(1)
   })
 
-  it.fails('does not count the YAML frontmatter', () => {
+  it('does not count the YAML frontmatter', () => {
     const front = '---\nname: reviewer\ndescription: notes\n---\n'
     expect(lint(front + lines(200))).toEqual([])
     expect(lint(front + lines(201))).toHaveLength(1)
@@ -52,7 +53,7 @@ describe(`${RULE}: lines`, () => {
     expect(ids(lint(`---\nname: x\n${lines(199)}`))).toEqual(['tooManyLines'])
   })
 
-  it.fails('does not count a block-level HTML comment, of one line or more', () => {
+  it('does not count a block-level HTML comment, of one line or more', () => {
     expect(lint(`<!-- a note -->\n${lines(200)}`)).toEqual([])
     expect(lint(`<!--\na note\non three lines\n-->\n${lines(200)}`)).toEqual([])
     expect(lint(`${lines(100)}  <!-- indented -->\n${lines(100)}`)).toEqual([])
@@ -63,19 +64,19 @@ describe(`${RULE}: lines`, () => {
     expect(ids(lint(`<!-- a note -->\n${lines(201)}`))).toEqual(['tooManyLines'])
   })
 
-  it.fails('counts a comment that is inline, or in a code fence', () => {
+  it('counts a comment that is inline, or in a code fence', () => {
     expect(ids(lint(`text <!-- inline -->\n${lines(200)}`))).toEqual(['tooManyLines'])
     expect(ids(lint(`\`\`\`\n<!-- code -->\n\`\`\`\n${lines(198)}`))).toEqual(['tooManyLines'])
   })
 
-  it.fails('counts the frontmatter and the comment together', () => {
+  it('counts the frontmatter and the comment together', () => {
     expect(lint(`---\na: 1\n---\n<!-- c -->\n${lines(200)}`)).toEqual([])
     expect(lint(`---\na: 1\n---\n<!-- c -->\n${lines(201)}`)).toHaveLength(1)
   })
 })
 
 describe(`${RULE}: bytes`, () => {
-  it.fails('reports an index of 25001 bytes, once, and says bytes', () => {
+  it('reports an index of 25001 bytes, once, and says bytes', () => {
     const messages = lint(ofBytes(25001))
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({ messageId: 'tooManyBytes', line: 1, column: 1 })
@@ -83,23 +84,23 @@ describe(`${RULE}: bytes`, () => {
     expect(messages[0]?.message).toContain('25000 bytes')
   })
 
-  it.fails('stays silent on an index of 25000 bytes', () => {
+  it('stays silent on an index of 25000 bytes', () => {
     expect(lint(ofBytes(25000))).toEqual([])
   })
 
-  it.fails('counts bytes, not characters', () => {
+  it('counts bytes, not characters', () => {
     expect(lint(`${'é'.repeat(12499)}\n`)).toEqual([])
     expect(ids(lint(`${'é'.repeat(12500)}\n`))).toEqual(['tooManyBytes'])
   })
 
-  it.fails('does not count the frontmatter or a block comment', () => {
+  it('does not count the frontmatter or a block comment', () => {
     const front = `---\nnote: ${'y'.repeat(1000)}\n---\n`
     expect(lint(front + ofBytes(25000))).toEqual([])
     expect(lint(`<!-- ${'y'.repeat(1000)} -->\n${ofBytes(25000)}`)).toEqual([])
     expect(ids(lint(front + ofBytes(25001)))).toEqual(['tooManyBytes'])
   })
 
-  it.fails('checks the lines and the bytes apart, with a report for each', () => {
+  it('checks the lines and the bytes apart, with a report for each', () => {
     expect(ids(lint(`${'x'.repeat(100)}\n`.repeat(260)))).toEqual(['tooManyLines', 'tooManyBytes'])
     expect(ids(lint(`${'x'.repeat(100)}\n`.repeat(200)))).toEqual([])
     expect(ids(lint(`${'x'.repeat(200)}\n`.repeat(150)))).toEqual(['tooManyBytes'])
@@ -107,7 +108,7 @@ describe(`${RULE}: bytes`, () => {
 })
 
 describe(`${RULE}: files and options`, () => {
-  it.fails('checks the MEMORY.md of each subagent, in any folder with .claude/agent-memory', () => {
+  it('checks the MEMORY.md of each subagent, in any folder with .claude/agent-memory', () => {
     for (const file of [
       '.claude/agent-memory/a/MEMORY.md',
       'packages/web/.claude/agent-memory/b-c/MEMORY.md',
@@ -116,20 +117,7 @@ describe(`${RULE}: files and options`, () => {
     }
   })
 
-  it.fails('does not check another file', () => {
-    for (const file of [
-      '.claude/agent-memory/a/topic.md',
-      '.claude/agent-memory/MEMORY.md',
-      '.claude/agent-memory/a/b/MEMORY.md',
-      '.claude/agent-memory-local/a/MEMORY.md',
-      'MEMORY.md',
-      'CLAUDE.md',
-    ]) {
-      expect(lint(lines(201), undefined, file), file).toEqual([])
-    }
-  })
-
-  it.fails('moves each limit with its option, and names it in the message', () => {
+  it('moves each limit with its option, and names it in the message', () => {
     expect(lint(lines(3), { maxLines: 3 })).toEqual([])
     const lineMessages = lint(lines(4), { maxLines: 3 })
     expect(ids(lineMessages)).toEqual(['overConfiguredLines'])
@@ -149,7 +137,7 @@ describe(`${RULE}: files and options`, () => {
     ])
   })
 
-  it.fails('accepts an integer from 1 to the documented limit, and nothing else', () => {
+  it('accepts an integer from 1 to the documented limit, and nothing else', () => {
     expect(() => lint('x\n', { maxLines: 200, maxBytes: 25000 })).not.toThrow()
     expect(() => lint('x\n', { maxLines: 1, maxBytes: 1 })).not.toThrow()
     expect(() => lint('x\n', { maxLines: 201 })).toThrow()

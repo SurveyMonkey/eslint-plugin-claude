@@ -16,7 +16,7 @@ const TEXT = '# Project\n'
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe.skipIf(noLinks)(RULE, () => {
-  it.fails('reports a CLAUDE.md that is a link to AGENTS.md, at the start of the file', () => {
+  it('reports a CLAUDE.md that is a link to AGENTS.md, at the start of the file', () => {
     const dir = tree({ 'AGENTS.md': TEXT })
     link(dir, 'CLAUDE.md', 'AGENTS.md')
     const messages = lintMemory(RULE, dir, 'CLAUDE.md', TEXT)
@@ -31,7 +31,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(messages[0]?.message).toContain('@AGENTS.md')
   })
 
-  it.fails('reports a link in .claude and in a subfolder, to a file anywhere', () => {
+  it('reports a link in .claude and in a subfolder, to a file anywhere', () => {
     const dir = tree({ 'AGENTS.md': TEXT })
     link(dir, '.claude/CLAUDE.md', '../AGENTS.md')
     link(dir, 'packages/web/CLAUDE.md', '../../AGENTS.md')
@@ -42,18 +42,18 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(ids(lintMemory(RULE, dir, 'packages/api/CLAUDE.md', TEXT))).toEqual(['symlink'])
   })
 
-  it.fails('stays silent on a regular file', () => {
+  it('stays silent on a regular file', () => {
     const dir = tree({ 'CLAUDE.md': TEXT, 'AGENTS.md': TEXT })
     expect(lintMemory(RULE, dir, 'CLAUDE.md', TEXT)).toEqual([])
   })
 
-  it.fails('stays silent on a CLAUDE.md in a folder that is a link, because the file is not', () => {
+  it('stays silent on a CLAUDE.md in a folder that is a link, because the file is not', () => {
     const dir = tree({ 'shared/CLAUDE.md': TEXT })
     link(dir, 'linked', 'shared')
     expect(lintMemory(RULE, dir, 'linked/CLAUDE.md', TEXT)).toEqual([])
   })
 
-  it.fails('does not check a file that is not a CLAUDE.md', () => {
+  it('does not check a file that is not a CLAUDE.md', () => {
     const dir = tree({ 'target.md': TEXT })
     for (const file of [
       'CLAUDE.local.md',
@@ -67,7 +67,7 @@ describe.skipIf(noLinks)(RULE, () => {
     }
   })
 
-  it.fails('makes no report for a link to a network path, which the network rule reports', () => {
+  it('makes no report for a link to a network path, which the network rule reports', () => {
     const dir = tree({})
     link(dir, 'CLAUDE.md', '/net/host/CLAUDE.md')
     link(dir, '.claude/CLAUDE.md', '\\\\server\\share\\CLAUDE.md')
@@ -79,17 +79,17 @@ describe.skipIf(noLinks)(RULE, () => {
 })
 
 describe.skipIf(noLinks)(`${RULE}: what the rule cannot read`, () => {
-  it.fails('reports a link that leads nowhere, because the report rests on the link only', () => {
+  it('reports a link that leads nowhere, because the report rests on the link only', () => {
     const dir = tree({})
     link(dir, 'CLAUDE.md', 'nowhere.md')
     expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', TEXT))).toEqual(['symlink'])
   })
 
-  it.fails('makes no report for a file that is not on disk', () => {
+  it('makes no report for a file that is not on disk', () => {
     expect(lintMemory(RULE, tree({}), 'CLAUDE.md', TEXT)).toEqual([])
   })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report for a path that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('makes no report for a path that it cannot read', () => {
     const dir = tree({ 'sub/CLAUDE.md': TEXT })
     withoutAccess(path.join(dir, 'sub'), () => {
       expect(lintMemory(RULE, dir, 'sub/CLAUDE.md', TEXT)).toEqual([])

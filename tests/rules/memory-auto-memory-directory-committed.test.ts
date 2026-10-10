@@ -30,7 +30,7 @@ function lint(code: string, file = '.claude/settings.json') {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports the key in the project file, at the member', () => {
+  it('reports the key in the project file, at the member', () => {
     const messages = lint('{\n  "autoMemoryDirectory": "~/team-memory"\n}\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -45,25 +45,25 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('blockReadsOutsideWorkingDirectories')
   })
 
-  it.fails('reports the key in the local file, and names that file', () => {
+  it('reports the key in the local file, and names that file', () => {
     const messages = lint('{"autoMemoryDirectory": "/srv/memory"}', '.claude/settings.local.json')
     expect(ids(messages)).toEqual(['committed'])
     expect(messages[0]?.message).toContain('`.claude/settings.local.json`')
   })
 
-  it.fails('reports a value of any type except null, since the key is set', () => {
+  it('reports a value of any type except null, since the key is set', () => {
     for (const value of ['"relative/dir"', '""', '5', 'true', '["a"]', '{"a": 1}']) {
       expect(ids(lint(`{"autoMemoryDirectory": ${value}}`)), value).toEqual(['committed'])
     }
   })
 
-  it.fails('reports the last of two keys of one name, once', () => {
+  it('reports the last of two keys of one name, once', () => {
     const messages = lint('{"autoMemoryDirectory": "~/a", "autoMemoryDirectory": "~/b"}')
     expect(messages).toHaveLength(1)
-    expect(messages[0]?.column).toBe(33)
+    expect(messages[0]?.column).toBe(32)
   })
 
-  it.fails('stays silent when the key is not set, or null, which reads as unset', () => {
+  it('stays silent when the key is not set, or null, which reads as unset', () => {
     expect(lint('{}')).toEqual([])
     expect(lint('{"autoMemoryEnabled": true}')).toEqual([])
     expect(lint('{"autoMemoryDirectory": null}')).toEqual([])
@@ -72,7 +72,7 @@ describe(RULE, () => {
     expect(lint('[1]')).toEqual([])
   })
 
-  it.fails('stays silent on a managed file, which is not a repository-supplied project file', () => {
+  it('stays silent on a managed file, which is not a repository-supplied project file', () => {
     const code = '{"autoMemoryDirectory": "/srv/memory"}'
     expect(lint(code, 'managed-settings.json')).toEqual([])
     expect(lint(code, 'managed-settings.d/10-memory.json')).toEqual([])

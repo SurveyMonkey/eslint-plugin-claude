@@ -16,7 +16,7 @@
 //   block is not skipped, because the docs do not name it.
 // - The text of an HTML comment is not an import. Claude Code strips a block
 //   comment before it injects the file.
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { danglingOf, isInside, realOf, UNREADABLE, type Unreadable } from './skill-tree.ts'
 
@@ -237,6 +237,9 @@ export function findImport(dir: string, forms: string[], bound: string): Located
 export interface Chain {
   /** The real path of each file that Claude Code loads, with its hops from the root. The root is at 0. */
   loaded: Map<string, number>
+  /** The text of each file in `loaded` except the root, with the index of the import of the root
+   *  that loads it. */
+  imported: Map<string, { text: string; via: number }>
   /** The real path of the file past the limit, for each import of the root that leads to one. The key is the index of the import. */
   tooDeep: Map<number, string>
   /** True when the chain holds a path that the rule cannot read: a file or link that fails, or an import out of the repository. */
@@ -258,7 +261,12 @@ interface Step {
 export function followImports(file: string, text: string, bound: string, limit: number): Chain {
   const rootReal = realOf(file)
   const rootKey = typeof rootReal === 'string' ? rootReal : path.resolve(file)
-  const chain: Chain = { loaded: new Map([[rootKey, 0]]), tooDeep: new Map(), unreadable: false }
+  const chain: Chain = {
+    loaded: new Map([[rootKey, 0]]),
+    imported: new Map(),
+    tooDeep: new Map(),
+    unreadable: false,
+  }
   const seen = new Set([rootKey])
   const queue: Step[] = [{ file: path.resolve(file), text, hops: 0, top: -1 }]
   for (const step of queue) {
@@ -297,8 +305,22 @@ export function followImports(file: string, text: string, bound: string, limit: 
         continue
       }
       chain.loaded.set(found.real, step.hops + 1)
+      chain.imported.set(found.real, { text: loadedText, via: top })
       queue.push({ file: found.real, text: loadedText, hops: step.hops + 1, top })
     }
   }
   return chain
+}
+
+/** The folder at or above `dir` that holds a `.git`, as a path with no link resolved, or null
+ *  when there is none. */
+export function gitTop(dir: string): string | null {
+  for (let at = path.resolve(dir); ; at = path.dirname(at)) {
+    if (existsSync(path.join(at, '.git'))) {
+      return at
+    }
+    if (path.dirname(at) === at) {
+      return null
+    }
+  }
 }

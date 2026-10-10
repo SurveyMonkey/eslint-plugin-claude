@@ -17,7 +17,7 @@ const lint = (code: string, file = '.claude/rules/a.md', options?: object) =>
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a rule file of 201 lines, at the start of the file', () => {
+  it('reports a rule file of 201 lines, at the start of the file', () => {
     const messages = lint(lines(201))
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -30,19 +30,19 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('200 lines')
   })
 
-  it.fails('stays silent on a rule file of 200 lines', () => {
+  it('stays silent on a rule file of 200 lines', () => {
     expect(lint(lines(200))).toEqual([])
     expect(lint('')).toEqual([])
   })
 
-  it.fails('counts every line, with the frontmatter, and a last line with no line end', () => {
+  it('counts every line, with the frontmatter, and a last line with no line end', () => {
     expect(lint(`---\npaths:\n  - "src/**"\n---\n${lines(196)}`)).toEqual([])
     expect(lint(`---\npaths:\n  - "src/**"\n---\n${lines(197)}`)).toHaveLength(1)
     expect(lint(`${lines(200)}y`)).toHaveLength(1)
     expect(lint(lines(201).replaceAll('\n', '\r\n'))).toHaveLength(1)
   })
 
-  it.fails('checks a rule file at any depth, in any folder that has .claude/rules', () => {
+  it('checks a rule file at any depth, in any folder that has .claude/rules', () => {
     for (const file of [
       '.claude/rules/sub/deep/b.md',
       'packages/web/.claude/rules/c.md',
@@ -53,13 +53,13 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('does not check a file outside .claude/rules', () => {
+  it('does not check a file outside .claude/rules', () => {
     for (const file of ['CLAUDE.md', '.claude/CLAUDE.md', 'AGENTS.md', 'docs/rules/a.md', 'a.md']) {
       expect(lint(lines(201), file), file).toEqual([])
     }
   })
 
-  it.fails('moves the limit with the option max, and names it in the message', () => {
+  it('moves the limit with the option max, and names it in the message', () => {
     expect(lint(lines(3), '.claude/rules/a.md', { max: 3 })).toEqual([])
     const messages = lint(lines(4), '.claude/rules/a.md', { max: 3 })
     expect(ids(messages)).toEqual(['overConfiguredLimit'])
@@ -67,7 +67,7 @@ describe(RULE, () => {
     expect(lint(lines(201), '.claude/rules/a.md', { max: 300 })).toEqual([])
   })
 
-  it.fails('accepts an integer from 1 up, with no maximum, and nothing else', () => {
+  it('accepts an integer from 1 up, with no maximum, and nothing else', () => {
     expect(() => lint('x\n', '.claude/rules/a.md', { max: 1 })).not.toThrow()
     expect(() => lint('x\n', '.claude/rules/a.md', { max: 100000 })).not.toThrow()
     expect(() => lint('x\n', '.claude/rules/a.md', { max: 0 })).toThrow()
