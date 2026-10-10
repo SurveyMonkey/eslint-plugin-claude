@@ -72,6 +72,18 @@
       "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
     }
   ],
+  "agent-mcp-servers-inline-trust": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Scope MCP servers to a subagent",
+      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Trust required for inline MCP servers",
+      "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e"
+    }
+  ],
   "agent-mcp-servers-schema": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",

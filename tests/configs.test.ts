@@ -978,6 +978,7 @@ const AGENT_RULES = [
 const AGENT_WARN_RULES = [
   'agent-disallowed-tools-scope',
   'agent-field-min-version',
+  'agent-mcp-servers-inline-trust',
   'agent-name-shadows-builtin',
   'agent-no-bom',
   'agent-tools-conditional',

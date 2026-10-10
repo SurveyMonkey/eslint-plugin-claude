@@ -22,6 +22,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-field-min-version',
     'agent-frontmatter-schema',
     'agent-frontmatter-valid',
+    'agent-mcp-servers-inline-trust',
     'agent-mcp-servers-schema',
     'agent-memory-auto-memory-off',
     'agent-memory-grants-write',

@@ -6,6 +6,7 @@ import agentDisallowedToolsScope from './rules/agent-disallowed-tools-scope.ts'
 import agentFieldMinVersion from './rules/agent-field-min-version.ts'
 import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
 import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
+import agentMcpServersInlineTrust from './rules/agent-mcp-servers-inline-trust.ts'
 import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
 import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
@@ -146,6 +147,7 @@ const modules = [
   outputStyleFrontmatterSchema,
   agentDisallowedToolsScope,
   agentFieldMinVersion,
+  agentMcpServersInlineTrust,
   agentNameShadowsBuiltin,
   agentNoBom,
   agentToolsConditional,
@@ -270,6 +272,7 @@ const recommended: Record<RuleName, Severity> = {
   'output-style-frontmatter-schema': 'error',
   'agent-disallowed-tools-scope': 'warn',
   'agent-field-min-version': 'warn',
+  'agent-mcp-servers-inline-trust': 'warn',
   'agent-name-shadows-builtin': 'warn',
   'agent-no-bom': 'warn',
   'agent-tools-conditional': 'warn',
