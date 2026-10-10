@@ -84,6 +84,7 @@ import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
+import memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
 import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
 import memoryIndexMaxSize from './rules/memory-index-max-size.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
@@ -368,6 +369,7 @@ const modules = [
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
   claudeMdLocation,
+  memoryAgentMemoryOrphan,
   rulesPathsNoMatch,
 ]
 
@@ -573,6 +575,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
   'claude-md-location': 'off',
+  'memory-agent-memory-orphan': 'off',
   'rules-paths-no-match': 'off',
 }
 

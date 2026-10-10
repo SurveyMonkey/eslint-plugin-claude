@@ -24,7 +24,7 @@ function lint(files: Record<string, string>, options?: object, file = FILE, git 
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a folder that no subagent owns, at the start of the index', () => {
+  it('reports a folder that no subagent owns, at the start of the index', () => {
     const messages = lint({ '.claude/agent-memory/rev/topic.md': 'x\n' })
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -36,11 +36,11 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('`rev`')
   })
 
-  it.fails('stays silent when a project subagent with that name sets memory: project', () => {
+  it('stays silent when a project subagent with that name sets memory: project', () => {
     expect(lint({ '.claude/agents/rev.md': agent('rev') })).toEqual([])
   })
 
-  it.fails('reads a subagent in a subfolder, in another package, and in a plugin', () => {
+  it('reads a subagent in a subfolder, in another package, and in a plugin', () => {
     expect(lint({ '.claude/agents/team/any-file.md': agent('rev') })).toEqual([])
     expect(lint({ 'packages/web/.claude/agents/x.md': agent('rev') })).toEqual([])
     expect(
@@ -48,7 +48,7 @@ describe(RULE, () => {
     ).toEqual([])
   })
 
-  it.fails('reports when the subagent has another name, another memory scope or none', () => {
+  it('reports when the subagent has another name, another memory scope or none', () => {
     expect(ids(lint({ '.claude/agents/other.md': agent('other') }))).toEqual(['orphan'])
     expect(ids(lint({ '.claude/agents/rev.md': agent('rev', 'memory: user\n') }))).toEqual([
       'orphan',
@@ -62,7 +62,7 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails('does not count a file that is not a subagent file, or has no usable frontmatter', () => {
+  it('does not count a file that is not a subagent file, or has no usable frontmatter', () => {
     expect(ids(lint({ 'docs/agents/rev.md': agent('rev') }))).toEqual(['orphan'])
     expect(ids(lint({ 'agents/rev.md': agent('rev') }))).toEqual(['orphan'])
     expect(ids(lint({ '.claude/agents/rev.md': '# no frontmatter\n' }))).toEqual(['orphan'])
@@ -72,17 +72,17 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails('checks the index file only, once for each folder', () => {
+  it('checks the index file only, once for each folder', () => {
     expect(ids(lint({}, undefined, '.claude/agent-memory/rev/MEMORY.md'))).toEqual(['orphan'])
   })
 
-  it.fails('makes no report for memory that is not in a repository', () => {
+  it('makes no report for memory that is not in a repository', () => {
     expect(lint({}, undefined, FILE, false)).toEqual([])
   })
 })
 
 describe(`${RULE}: the option allow`, () => {
-  it.fails('stays silent on a folder whose name is in the list', () => {
+  it('stays silent on a folder whose name is in the list', () => {
     expect(lint({}, { allow: ['rev'] })).toEqual([])
     expect(lint({}, { allow: ['other', 'rev'] })).toEqual([])
     expect(ids(lint({}, { allow: ['other'] }))).toEqual(['orphan'])
@@ -90,7 +90,7 @@ describe(`${RULE}: the option allow`, () => {
     expect(ids(lint({}, {}))).toEqual(['orphan'])
   })
 
-  it.fails('accepts a list of strings and nothing else', () => {
+  it('accepts a list of strings and nothing else', () => {
     expect(() => lint({}, { allow: [] })).not.toThrow()
     expect(() => lint({}, { allow: 'rev' })).toThrow()
     expect(() => lint({}, { allow: [1] })).toThrow()
@@ -99,31 +99,28 @@ describe(`${RULE}: the option allow`, () => {
 })
 
 describe(`${RULE}: what the rule cannot read`, () => {
-  it.skipIf(chmodCannotBlock).fails(
-    'makes no report when a subagent file has no read right',
-    () => {
-      const dir = tree({ '.claude/agents/other.md': agent('other') })
-      withoutAccess(path.join(dir, '.claude/agents/other.md'), () => {
-        expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
-      })
-    },
-  )
+  it.skipIf(chmodCannotBlock)('makes no report when a subagent file has no read right', () => {
+    const dir = tree({ '.claude/agents/other.md': agent('other') })
+    withoutAccess(path.join(dir, '.claude/agents/other.md'), () => {
+      expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
+    })
+  })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report when a folder has no read right', () => {
+  it.skipIf(chmodCannotBlock)('makes no report when a folder has no read right', () => {
     const dir = tree({ 'packages/secret/x.md': 'x\n', '.claude/agents/other.md': agent('other') })
     withoutAccess(path.join(dir, 'packages/secret'), () => {
       expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
     })
   })
 
-  it.skipIf(noLinks).fails('makes no report when a link leads out of the repository', () => {
+  it.skipIf(noLinks)('makes no report when a link leads out of the repository', () => {
     const outside = tree({ 'agents/rev.md': agent('rev') })
     const dir = tree({ '.claude/agents/other.md': agent('other') })
     link(dir, 'out', outside)
     expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('reads a subagent behind a link inside the repository', () => {
+  it.skipIf(noLinks)('reads a subagent behind a link inside the repository', () => {
     const dir = tree({ 'real/agents/x.md': agent('rev'), 'real/.claude-plugin/plugin.json': '{}' })
     link(dir, 'alias', 'real')
     expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
