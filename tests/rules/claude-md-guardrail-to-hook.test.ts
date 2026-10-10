@@ -16,7 +16,7 @@ function lint(code: string, file = '/repo/CLAUDE.md') {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a prohibition, over the words that make it', () => {
+  it('reports a prohibition, over the words that make it', () => {
     const messages = lint('# Files\n\nNever edit `src/generated.ts` by hand.\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -32,7 +32,7 @@ describe(RULE, () => {
     )
   })
 
-  it.fails('reports each verb and each form of the prohibition', () => {
+  it('reports each verb and each form of the prohibition', () => {
     for (const text of [
       'Never edit the lock file.',
       'Do not modify the migrations.',
@@ -51,7 +51,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reports an action that must happen at a fixed point', () => {
+  it('reports an action that must happen at a fixed point', () => {
     for (const text of [
       'Always run the tests before committing.',
       'Always run `pnpm lint` before you push.',
@@ -63,7 +63,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reports each guardrail, in a list item and in a heading, and one more on the same line', () => {
+  it('reports each guardrail, in a list item and in a heading, and one more on the same line', () => {
     const messages = lint(
       '- Never edit a.\n- Do not delete b.\n\n# Never push\n\nNever edit a. Never edit b.\n',
     )
@@ -72,11 +72,11 @@ describe(RULE, () => {
       [2, 3],
       [4, 3],
       [6, 1],
-      [6, 16],
+      [6, 15],
     ])
   })
 
-  it.fails('stays silent on neutral text and on a rule that no hook can enforce', () => {
+  it('stays silent on neutral text and on a rule that no hook can enforce', () => {
     for (const text of [
       'Use 2-space indentation.',
       'Prefer small commits.',
@@ -93,14 +93,14 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent on a guardrail in a fence, a code span or an HTML comment', () => {
+  it('stays silent on a guardrail in a fence, a code span or an HTML comment', () => {
     expect(lint('```\nNever edit the lock file.\n```\n')).toEqual([])
     expect(lint('Write `Never edit the lock file` in the prompt.\n')).toEqual([])
     expect(lint('<!-- Never edit the lock file. -->\n')).toEqual([])
     expect(lint('    Never edit the lock file.\n')).toEqual([])
   })
 
-  it.fails('checks a CLAUDE.md, a CLAUDE.local.md and a rule file, and no other file', () => {
+  it('checks a CLAUDE.md, a CLAUDE.local.md and a rule file, and no other file', () => {
     for (const file of [
       '/repo/CLAUDE.md',
       '/repo/.claude/CLAUDE.md',
