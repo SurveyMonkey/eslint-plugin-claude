@@ -1,0 +1,62 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/security",
+  "hash": "00692b78a21589e73a1740279aa8168429b86c930520860d31573bc4021e2949",
+  "blocks": [
+    {
+      "id": "plugin-security-and-trust",
+      "hash": "cd0ed208f944069c8e06cb48499ab859252741d5f1e73031667e072540c12eb4"
+    },
+    {
+      "id": "understand-what-a-plugin-can-do",
+      "hash": "786239e7c3421cc0b8ef69390202e66beb731f8b022ecbdf9c2b33ac40f8315e"
+    },
+    {
+      "id": "marketplace-tiers",
+      "hash": "0fff8a0b306294a872f7c1fd1351d516d52a8a3a631baf5eae53dea61d8e0863"
+    },
+    {
+      "id": "official-marketplace-names",
+      "hash": "6355ddc5e0677048fb86374362193e5d0728b8fcb5a9ca6fb28db9f664801ebd"
+    },
+    {
+      "id": "review-a-plugin-before-you-install",
+      "hash": "d024bd0ed104b802e3b088e79f1730ce0d74d451fb1cce1eaf8a5f832711390a"
+    },
+    {
+      "id": "remove-a-plugin-you-no-longer-trust",
+      "hash": "eb435d33ec128f5676c061dbd0c64833f049c55de4f6f310c6856cb8bc606054"
+    },
+    {
+      "id": "recognize-when-claude-code-refuses-or-warns",
+      "hash": "d2ce1fbf0fc188823b32f54f16de283768b2c96cb289812d27ceecd11e444187"
+    },
+    {
+      "id": "trust-warning-before-you-install",
+      "hash": "6ac7ecedb6bcfdad0568a00dd1a5cec1950e2d77b5291de2fa0a271a56355770"
+    },
+    {
+      "id": "untrusted-marketplace-sources-and-failed-integrity-checks",
+      "hash": "4153eec4921b705a50a4b944d1de01acd4ac5d5de2ddf9998a6a2368d84038ab"
+    },
+    {
+      "id": "enforce-plugin-controls-for-your-organization",
+      "hash": "886926a9ed062c7a79ec262dc4fa5c26874f16460c09fe2cf07ef0ec02b4fa27"
+    },
+    {
+      "id": "find-plugins-in-telemetry",
+      "hash": "3e2620edbe99dd584a857180da1d8016830ddff6b937631b19a33852e5ebe5b5"
+    },
+    {
+      "id": "next-steps",
+      "hash": "8dd68f390b945f94e1af1398fa998191d0daadd651671eb0477ef8b8e0c0b9de"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Understand what a plugin can do",
+      "id": "understand-what-a-plugin-can-do",
+      "hash": "786239e7c3421cc0b8ef69390202e66beb731f8b022ecbdf9c2b33ac40f8315e",
+      "text": "## Understand what a plugin can do\n\nA plugin can carry content that runs code on your machine with your user privileges and content that enters Claude's context as instructions, so [review a plugin before you install it](#review-a-plugin-before-you-install). Here's what an installed plugin can do:\n\n* **Hooks**: a plugin's [hooks](/docs/en/hooks) run as shell commands at points in Claude Code's lifecycle, such as before or after a tool call.\n* **Monitors**: a plugin's [monitors](/docs/en/plugins/components#monitors) run as background shell commands that Claude Code starts on its own when the session starts, when you reload plugins, or the first time a named skill runs.\n* **Mods**: a plugin's [mod](/docs/en/plugins/mods/overview) runs JavaScript inside Claude Code with your permissions. To list what a mod does before you install it, see [Decide whether to trust a mod](/docs/en/plugins/mods/overview#decide-whether-to-trust-a-mod).\n* **MCP and LSP servers**: Claude Code connects to the [MCP servers](/docs/en/mcp) an enabled plugin declares and gives Claude their tools. A stdio MCP server runs as a process that Claude Code starts on your machine. Claude Code also starts the language servers the plugin declares.\n* **`bin/` directory**: Claude Code adds each enabled plugin's `bin/` directory to the `PATH` of the Bash tool's shell, so Claude's Bash commands can run any executable there.\n* **Skills, commands, and agents**: these enter Claude's context as instructions, so they influence what Claude does with the tools it already has.\n* **Updates**: when auto-update is on for the marketplace you installed a plugin from, Claude Code updates that plugin in the background, so the files you reviewed can change on disk. [When auto-update runs](/docs/en/plugins/loading#when-auto-update-runs) has the timing. To turn auto-update on or off per marketplace, see [Keep plugins updated](/docs/en/plugins/install#keep-plugins-updated).\n\nClaude Code's [permission rules](/docs/en/permissions) and [sandbox](/docs/en/sandboxing) cover the tool calls Claude makes, not the code a plugin runs by itself:\n\n* **Hooks, monitors, and server processes**: command hooks and monitors are shell commands that run with your full user permissions. Claude Code runs hooks, monitors, MCP servers, LSP servers, and the processes a [mod](/docs/en/plugins/mods/overview#what-a-mod-can-reach) starts outside the sandbox.\n* **Claude's tool calls**: a call to one of the plugin's MCP tools, and a Bash command that runs an executable from the plugin's `bin/`, are tool calls, so your permission rules apply to them. For what a mod can do to a tool call, see [Decide whether to trust a mod](/docs/en/plugins/mods/overview#decide-whether-to-trust-a-mod).\n\nInstalling a plugin also enables it, unless its manifest or marketplace entry sets [`defaultEnabled: false`](/docs/en/plugins/install#choose-an-install-scope) and you haven't enabled it yourself.\n\nTo remove a plugin you no longer trust, see [Remove a plugin you no longer trust](#remove-a-plugin-you-no-longer-trust)."
+    }
+  ]
+}

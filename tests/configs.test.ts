@@ -85,6 +85,10 @@ const hooksFaults = {
     { matcher: 'bash', hooks: [{ type: 'command', command: './x.sh' }] },
     // A matcher in the form `Tool(specifier)` (`hooks-matcher-syntax`).
     { matcher: 'Bash(rm *)', hooks: [{ type: 'command', command: './x.sh' }] },
+    // A regular expression that also matches `NotebookEdit` (`hooks-matcher-unanchored-regex`).
+    { matcher: 'Edit.*', hooks: [{ type: 'command', command: './x.sh' }] },
+    // A matcher value that is no tool name (`hooks-matcher-name-unresolved`).
+    { matcher: 'Edt', hooks: [{ type: 'command', command: './x.sh' }] },
   ],
   // A `*` matcher on FileChanged (`hooks-filechanged-star-matcher`).
   FileChanged: [{ matcher: '*', hooks: [{ type: 'command', command: './x.sh' }] }],
@@ -94,7 +98,17 @@ const hooksFaults = {
   InstructionsLoaded: [{ hooks: [{ type: 'command', command: `"${projectDir}"/x.sh` }] }],
   // A matcher value that the event never sends (`hooks-matcher-enum`).
   Notification: [{ matcher: 'nope', hooks: [{ type: 'command', command: './x.sh' }] }],
-  UserPromptSubmit: [{ matcher: 'Bash', hooks: [{ type: 'command', command: './x.sh' }] }],
+  UserPromptSubmit: [
+    { matcher: 'Bash', hooks: [{ type: 'command', command: './x.sh' }] },
+    {
+      hooks: [
+        // A background hook on an event that can block (`hooks-async-on-blocking-event`).
+        { type: 'command', command: './x.sh', async: true },
+        // A timeout in milliseconds (`hooks-timeout-units`).
+        { type: 'command', command: './x.sh', timeout: 5000 },
+      ],
+    },
+  ],
 }
 const dupHooks = JSON.stringify({
   hooks: { PostToolUse: [{ matcher: 'Write', hooks: [{ type: 'command', command: './fmt.sh' }] }] },
@@ -184,6 +198,14 @@ hooks:
       hooks:
         - type: command
           command: ./x.sh
+    - matcher: Edit.*
+      hooks:
+        - type: command
+          command: ./x.sh
+    - matcher: Edt
+      hooks:
+        - type: command
+          command: ./x.sh
   FileChanged:
     - matcher: '*'
       hooks:
@@ -207,6 +229,13 @@ hooks:
       hooks:
         - type: command
           command: ./x.sh
+    - hooks:
+        - type: command
+          command: ./x.sh
+          async: true
+        - type: command
+          command: ./x.sh
+          timeout: 5000
 ---
 `
 
@@ -729,6 +758,47 @@ const SCOPE_RULES = [
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
+// The reports of the rules that are `off` in recommended and `warn` in strict, besides the first one
+// (`hooks-agent-stop-event`). Every report is a warning. `hooks-committed-command-review` reports each command
+// handler of a project settings file, a project skill, an agent and a plugin `hooks.json`, but not of
+// `settings.local.json` or a managed file. `hooks-command-path-variable` reports each command of a plugin
+// `hooks.json` that starts in the working directory. `hooks-if-dir-glob-depth` reports nothing, because the
+// configs set no `minVersion`.
+const times = (count: number, line: string) => Array.from({ length: count }, () => line)
+const NEW_HOOKS_FILES = [
+  'packages/hk/.claude/agents/hk.md',
+  'packages/hk/.claude/settings.json',
+  'packages/hk/.claude/settings.local.json',
+  'packages/hk/.claude/skills/hk/SKILL.md',
+  'packages/hk/managed-settings.d/10-a.json',
+  'packages/hk/managed-settings.json',
+  'packages/hk/plugin/hooks/hooks.json',
+]
+const STRICT_ONLY_EXPECTED = [
+  ...NEW_HOOKS_FILES.flatMap((file) =>
+    [
+      'hooks-async-on-blocking-event',
+      'hooks-matcher-name-unresolved',
+      'hooks-matcher-unanchored-regex',
+      'hooks-timeout-units',
+    ].map((rule) => `${file}: claude/${rule}@1`),
+  ),
+  ...[
+    'packages/hk/.claude/agents/hk.md',
+    'packages/hk/.claude/settings.json',
+    'packages/hk/.claude/skills/hk/SKILL.md',
+    'packages/hk/plugin/hooks/hooks.json',
+  ].flatMap((file) => times(22, `${file}: claude/hooks-committed-command-review@1`)),
+  ...[
+    'packages/dup/.claude/settings.json',
+    'packages/dup/hooks/hooks.json',
+    'packages/hk/.claude/agents/ev.md',
+    'packages/hk/.claude/skills/ev/SKILL.md',
+  ].map((file) => `${file}: claude/hooks-committed-command-review@1`),
+  ...times(15, 'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-path-variable@1'),
+  'packages/dup/hooks/hooks.json: claude/hooks-command-path-variable@1',
+]
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -1128,6 +1198,7 @@ const EXPECTED = [
   'packages/hk/.claude/agents/hk.md: claude/hooks-agent-stop-event@1',
   'packages/dup/.claude-plugin/plugin.json: claude/hooks-duplicate-handler@1',
   'packages/dup/hooks/hooks.json: claude/hooks-duplicate-handler@1',
+  ...STRICT_ONLY_EXPECTED,
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1170,11 +1241,29 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     severity: 'warn',
   },
   {
+    name: 'hooks-async-on-blocking-event',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
     name: 'hooks-command-deprecated-cli-flag',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
   },
+  {
+    name: 'hooks-command-path-variable',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-committed-command-review',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-disable-all-override', blocks: [['**/.claude/settings.json']], severity: 'warn' },
   { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
@@ -1196,6 +1285,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   { name: 'hooks-http-env-allowlist', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-if-condition', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
+    name: 'hooks-if-dir-glob-depth',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
     name: 'hooks-matcher-bash-without-powershell',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
@@ -1208,9 +1303,21 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   { name: 'hooks-matcher-enum', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-matcher-legacy-version', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-matcher-mcp-name', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-matcher-name-unresolved',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   { name: 'hooks-matcher-never-matches', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-matcher-subagent-anchor', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-matcher-syntax', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-matcher-unanchored-regex',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   { name: 'hooks-matcher-unsupported-event', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
     name: 'hooks-no-standalone-file',
@@ -1240,6 +1347,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     name: 'hooks-sessionend-default-timeout',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
+  },
+  {
+    name: 'hooks-timeout-units',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
   },
   {
     name: 'hooks-worktree-create-without-remove',
@@ -1334,8 +1447,7 @@ describe('configs', () => {
     ])
   })
 
-  // Only hooks-agent-stop-event is off in recommended: the sub-agents page shows `Stop` in agent
-  // frontmatter as a pattern that works. Strict turns it on as a warning.
+  // The `strictOnly` rules are off in recommended. Strict turns each on as a warning.
   it('gives strict the rules of recommended, and the strictOnly rules as warnings', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
     const strictOnly = HOOKS_RULES.filter((rule) => rule.strictOnly).map(
@@ -1351,12 +1463,13 @@ describe('configs', () => {
     ).toBe(false)
     expect(
       plugin.configs.strict
-        .filter((c) => 'claude/hooks-agent-stop-event' in (c.rules ?? {}))
+        .filter((c) => strictOnly.some((id) => id in (c.rules ?? {})))
         .map((c) => c.rules),
-    ).toEqual([
-      { 'claude/hooks-agent-stop-event': 'warn' },
-      { 'claude/hooks-agent-stop-event': 'warn' },
-    ])
+    ).toEqual(
+      HOOKS_RULES.filter((rule) => rule.strictOnly).flatMap(({ name, blocks }) =>
+        blocks.map(() => ({ [`claude/${name}`]: 'warn' })),
+      ),
+    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',

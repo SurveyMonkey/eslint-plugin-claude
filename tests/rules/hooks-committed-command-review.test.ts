@@ -23,37 +23,37 @@ const ids = (handler: object, file = FILES.project) =>
 const yaml = 'PostToolUse:\n  - hooks:\n      - type: command\n        command: ./a.sh\n'
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a command hook in .claude/settings.json', () => {
+  it('reports a command hook in .claude/settings.json', () => {
     expect(ids(command())).toEqual(['committed'])
   })
 
-  it.fails('reports a command hook in a plugin hooks.json', () => {
+  it('reports a command hook in a plugin hooks.json', () => {
     expect(ids(command(), FILES.plugin)).toEqual(['plugin'])
   })
 
-  it.fails('reports a command hook in agent frontmatter', () => {
+  it('reports a command hook in agent frontmatter', () => {
     expect(markdownIds(name, frontmatter(yaml), FILES.agent)).toEqual(['agent'])
   })
 
-  it.fails('reports a command hook in skill frontmatter', () => {
+  it('reports a command hook in skill frontmatter', () => {
     expect(markdownIds(name, frontmatter(yaml), FILES.skill)).toEqual(['committed'])
   })
 
-  it.fails('reports a command hook in the skill of a plugin as a plugin hook', () => {
+  it('reports a command hook in the skill of a plugin as a plugin hook', () => {
     expect(markdownIds(name, frontmatter(yaml), pluginSkill())).toEqual(['plugin'])
   })
 
-  it.fails('reports each command handler, at the handler', () => {
+  it('reports each command handler, at the handler', () => {
     const text =
       '{\n  "hooks": {"Stop": [{"hooks": [{"type": "command", "command": "a"}, {"type": "http", "url": "u"}, {"type": "command", "command": "b"}]}]}\n}'
     const found = lintJson(name, text, FILES.project)
     expect(found.map(({ messageId, line, column }) => [messageId, line, column])).toEqual([
-      ['committed', 2, 28],
-      ['committed', 2, 103],
+      ['committed', 2, 33],
+      ['committed', 2, 100],
     ])
   })
 
-  it.fails('names the risk in each message', () => {
+  it('names the risk in each message', () => {
     expect(lintJson(name, settings(hooks('Stop', [command()])), FILES.project)[0]?.message).toBe(
       'This command hook runs with your full user permissions, outside the sandbox. In a "claude -p" or SDK session it runs in a folder that nobody trusted, with no dialog. Review the command.',
     )
@@ -64,28 +64,28 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent in .claude/settings.local.json, which nobody commits', () => {
+  it('is silent in .claude/settings.local.json, which nobody commits', () => {
     expect(ids(command(), FILES.local)).toEqual([])
   })
 
-  it.fails('is silent in a managed settings file, which an administrator sets', () => {
+  it('is silent in a managed settings file, which an administrator sets', () => {
     for (const file of [FILES.managed, FILES.dropIn]) {
       expect(ids(command(), file), file).toEqual([])
     }
   })
 
-  it.fails('is silent for a hidden drop-in', () => {
+  it('is silent for a hidden drop-in', () => {
     expect(ids(command(), FILES.hidden)).toEqual([])
   })
 
-  it.fails('is silent for the other handler types, and a handler with no type', () => {
+  it('is silent for the other handler types, and a handler with no type', () => {
     for (const type of ['http', 'mcp_tool', 'prompt', 'agent', 'other']) {
       expect(ids({ type, command: 'a' }), type).toEqual([])
     }
     expect(ids({ command: 'a' })).toEqual([])
   })
 
-  it.fails('is silent for a file with no hooks', () => {
+  it('is silent for a file with no hooks', () => {
     expect(jsonIds(name, '{}', FILES.project)).toEqual([])
     expect(markdownIds(name, '---\nname: a\ndescription: d\n---\n', FILES.agent)).toEqual([])
   })

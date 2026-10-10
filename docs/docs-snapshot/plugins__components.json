@@ -125,6 +125,12 @@
       "text": "### Commands\n\nA command is a single Markdown file the user runs by name, such as `/my-plugin:about`.\n\n<Note>\n  Commands are the older format, and [skills](#skills) supersede them for new work. A skill runs by name the same way, and it can also carry supporting files in its directory. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>\n\nSave a command at `commands/<file>.md` and it becomes `/<plugin>:<file>`. A subdirectory adds a segment, so `commands/db/migrate.md` is `/my-plugin:db:migrate`.\n\nCommand files take the same frontmatter as skills."
     },
     {
+      "heading": "Reference plugin paths and store data",
+      "id": "path-variables-and-persistent-data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5",
+      "text": "<h2 id=\"path-variables-and-persistent-data\">\n  Reference plugin paths and store data\n</h2>\n\nYou don't know where your plugin will be installed, so refer to its files and data through these variables rather than fixed paths. They're substituted in skill, command, and agent content, in hook and monitor commands, and in MCP and LSP server configurations. They're also exported to hook, MCP, and LSP processes:\n\n* **`${CLAUDE_PLUGIN_ROOT}`**: the plugin's install directory. Each version has its own [cache directory](/docs/en/plugins/loading#find-plugins-on-disk), so the path changes when the plugin updates. Don't write state there\n* **`${CLAUDE_PLUGIN_DATA}`**: a directory that survives updates, for `node_modules`, virtual environments, and caches. It resolves to `~/.claude/plugins/data/<id>/` and is created when first referenced\n* **`${CLAUDE_PROJECT_DIR}`**: the project root, the same value hooks receive\n\nIn the data directory path, `<id>` is the plugin identifier with every character other than letters, digits, `_`, and `-` replaced by `-`, so `my-plugin@my-marketplace` becomes `my-plugin-my-marketplace`.\n\nOn Windows, the substituted paths use forward slashes so a shell doesn't read backslashes as escapes."
+    },
+    {
       "heading": "Hooks",
       "id": "hooks",
       "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e",
