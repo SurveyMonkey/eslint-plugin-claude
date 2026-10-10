@@ -96,6 +96,11 @@ describe(`${name}: ANTHROPIC_DEFAULT_MODEL`, () => {
     }
   })
 
+  it('is silent when model is default or empty: it selects no model', () => {
+    expect(ids({ model: 'default', ...env({ ANTHROPIC_DEFAULT_MODEL: 'sonnet' }) })).toEqual([])
+    expect(ids({ model: '', ...env({ ANTHROPIC_DEFAULT_MODEL: 'sonnet' }) })).toEqual([])
+  })
+
   it('is silent when model is unset or null, or the variable is empty, null or a number', () => {
     expect(ids({ model: null, ...env({ ANTHROPIC_DEFAULT_MODEL: 'sonnet' }) })).toEqual([])
     expect(ids({ model: 'opus', ...env({ ANTHROPIC_DEFAULT_MODEL: '' }) })).toEqual([])
@@ -146,8 +151,12 @@ describe(`${name}: NO_COLOR and FORCE_COLOR`, () => {
     expect(message?.message).toContain('"NO_COLOR"')
   })
 
-  it('reports for any value that is set, and for an empty value', () => {
-    expect(ids(env({ NO_COLOR: '', FORCE_COLOR: '0' }))).toEqual(['shellOnly', 'shellOnly'])
+  it('reports for any value that is set', () => {
+    expect(ids(env({ NO_COLOR: '0', FORCE_COLOR: '0' }))).toEqual(['shellOnly', 'shellOnly'])
+  })
+
+  it('is silent for an empty value: it cancels a value of the shell for subprocesses', () => {
+    expect(ids(env({ NO_COLOR: '', FORCE_COLOR: '' }))).toEqual([])
   })
 
   it('is silent for a null value, and for another color variable', () => {

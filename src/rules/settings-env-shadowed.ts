@@ -36,6 +36,12 @@ function textOf(member: MemberNode | undefined): string | undefined {
     : undefined
 }
 
+/** True when `model` is `default`. That value clears an override, so it selects no model and the
+ *  variable can apply. The rule takes the doubt as no fault. */
+function selectsNothing(body: ValueNode): boolean {
+  return textOf(setMember(body, 'model')) === 'default'
+}
+
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {
     type: 'problem',
@@ -88,7 +94,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
               messageId: 'defaultModelValue',
               data: { value },
             })
-          } else if (setMember(body, 'model')?.value.type === 'String') {
+          } else if (textOf(setMember(body, 'model')) !== undefined && !selectsNothing(body)) {
             context.report({ node: fallback.name, messageId: 'defaultModelSet' })
           }
         }
@@ -99,8 +105,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         }
 
         for (const key of SHELL_ONLY_VARIABLES) {
+          // An empty value cancels a shell value for subprocesses, so it is no fault.
           const member = setMember(env, key)
-          if (member !== undefined) {
+          if (member !== undefined && textOf(member) !== undefined) {
             context.report({ node: member.name, messageId: 'shellOnly', data: { key } })
           }
         }

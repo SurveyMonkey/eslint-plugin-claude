@@ -21,7 +21,7 @@ Do not set an `env` variable that another setting, or its own value, voids.
 ## Rule details
 
 Claude Code reads some `env` variables and does not act on them. The rule reports each such
-variable. The rule reads the linted file only, so a key in another file is not seen. A `null` value
+variable. The rule reads the linted file only. It does not see a key in another file. A `null` value
 removes a key, so the rule takes it as no key. For two keys of one name, the rule reads the last,
 as `JSON.parse` does. A hidden file in `managed-settings.d/` gets no report, because Claude Code
 ignores it.
@@ -29,10 +29,10 @@ ignores it.
 | Variable | Voided when | Report on | The docs say |
 |----------|-------------|-----------|--------------|
 | `BASH_MAX_OUTPUT_LENGTH` | the file also sets `bashOutputMaxChars` | the variable name | "When you set this key, Claude Code ignores the `BASH_MAX_OUTPUT_LENGTH` environment variable."[^bash] |
-| `ANTHROPIC_DEFAULT_MODEL` | the file also sets `model` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
+| `ANTHROPIC_DEFAULT_MODEL` | the file also sets `model` to a value other than `default` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
 | `ANTHROPIC_DEFAULT_MODEL` | its value is `default`, `inherit`, `opusplan` or `haiku` | the value | "Claude Code ignores the variable in these cases ... You set it to `default`, `inherit`, `opusplan`, or `haiku`"[^default] |
 | `CLAUDE_CODE_SUBAGENT_MODEL` | its value is `inherit` | the value | "Setting the variable to `inherit` is the same as leaving it unset."[^subagent] |
-| `NO_COLOR`, `FORCE_COLOR` | always | the variable name | "`NO_COLOR` and `FORCE_COLOR` set here reach only subprocesses."[^shell] |
+| `NO_COLOR`, `FORCE_COLOR` | its value is not empty | the variable name | "`NO_COLOR` and `FORCE_COLOR` set here reach only subprocesses."[^shell] |
 
 A value of `ANTHROPIC_DEFAULT_MODEL` that is one of the four ignored values gets one report. The
 rule does not add the `model` report for it. A variable with an empty string value is not set:
@@ -42,6 +42,8 @@ the empty string cancels a value that the shell exports.[^shell] The rule makes 
 
 `NO_COLOR` and `FORCE_COLOR` in `env` change the colors of the processes that Claude Code starts,
 for example a Bash command. They do not change the colors of Claude Code. To change those, the docs say to set the variables in your shell before you start `claude`.[^shell]
+The variable still reaches the subprocesses, so a team can set it on purpose. The rule cannot know
+that intent.
 A team that sets the variable for its subprocesses on purpose can disable the rule for that line.
 
 ### What the rule does not check
@@ -51,7 +53,8 @@ A team that sets the variable for its subprocesses on purpose can disable the ru
   reports that case, and reads the agent file. This rule makes no second report.
 - `ANTHROPIC_DEFAULT_MODEL` beside `enforceAvailableModels`, or beside a model that the
   organization excludes. The docs name both as reasons that Claude Code ignores the variable.[^default]
-  The first needs a key in the same file. The second needs a file that is not in the repository.
+  The first depends on the managed source, which the rule cannot identify. The second needs a file
+  that is not in the repository.
 - A `model` or a `bashOutputMaxChars` in another file. A user file can set either one, and Claude
   Code then voids the variable in the same way. The rule does not see it.
 - The value of a variable. `settings-env-value-format` and `settings-model-value` are for it.
