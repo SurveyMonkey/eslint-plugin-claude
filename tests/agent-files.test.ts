@@ -139,7 +139,7 @@ describe('the manifest key agents', () => {
     return at(name, 'p')
   }
 
-  it.fails('sees a file that the manifest names, outside agents/', () => {
+  it('sees a file that the manifest names, outside agents/', () => {
     const root = manifested('m1', { agents: ['./custom/reviewer.md', './custom/deep/x.md'] })
     expect(classifyAgentFile(path.join(root, 'custom', 'reviewer.md'))).toEqual({
       plugin: true,
@@ -151,7 +151,7 @@ describe('the manifest key agents', () => {
     })
   })
 
-  it.fails('reads the string form', () => {
+  it('reads the string form', () => {
     const root = manifested('m2', { agents: './custom/reviewer.md' })
     expect(classifyAgentFile(path.join(root, 'custom', 'reviewer.md'))).toEqual({
       plugin: true,
@@ -159,7 +159,7 @@ describe('the manifest key agents', () => {
     })
   })
 
-  it.fails('sees a file in agents/ that the manifest names, and none that it leaves out', () => {
+  it('sees a file in agents/ that the manifest names, and none that it leaves out', () => {
     const root = manifested('m3', { agents: ['./agents/team/x.md'] })
     expect(classifyAgentFile(path.join(root, 'agents', 'team', 'x.md'))).toEqual({
       plugin: true,
@@ -175,7 +175,7 @@ describe('the manifest key agents', () => {
     expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
   })
 
-  it.fails('sees no file for a path that the plugin does not load', () => {
+  it('sees no file for a path that the plugin does not load', () => {
     const root = manifested('m5', {
       agents: ['custom/a.md', './custom/b.txt', './custom', './custom/../../c.md'],
     })
@@ -226,7 +226,7 @@ describe('the manifest key agents', () => {
     expect(classifyAgentFile(at('m11', 'repo', 'custom', 'a.md'))).toBeNull()
   })
 
-  it.fails('checks only its own folder when no .git is above', () => {
+  it('checks only its own folder when no .git is above', () => {
     mkdirSync(at('m12', 'p', '.claude-plugin'), { recursive: true })
     writeFileSync(
       at('m12', 'p', '.claude-plugin', 'plugin.json'),
@@ -241,7 +241,7 @@ describe('the manifest key agents', () => {
   })
 
   describe.skipIf(process.platform === 'win32')('with a link', () => {
-    it.fails('sees a file that is a link inside the repository', () => {
+    it('sees a file that is a link inside the repository', () => {
       const root = manifested('m13', { agents: ['./custom/link.md'] })
       mkdirSync(path.join(root, 'custom'), { recursive: true })
       writeFileSync(path.join(root, 'real.md'), 'x')
