@@ -77,6 +77,8 @@ describe(RULE, () => {
     ['an empty string', { commands: '' }],
     ['an object map of inline content', { commands: { about: { content: 'x' } } }],
     ['an object map with a source out of the folder', { commands: { s: { source: './x/s.md' } } }],
+    ['an object map with a source that is a number', { commands: { s: { source: 3 } } }],
+    ['an object map with a source that is null', { commands: { s: { source: null } } }],
     ['an object map with entries that are no objects', { commands: { s: 'x', t: null } }],
     ['an inline monitors array', { experimental: { monitors: [{ name: 'm', command: 'x' }] } }],
     [
