@@ -186,6 +186,20 @@ describe('the path and settings rules of the plugin layer', () => {
   })
 })
 
+describe('the path rules of the plugin layer', () => {
+  const BACKSLASH = JSON.stringify({ name: 'p', commands: './a\\b.md' })
+  it('plugin-path-no-backslash reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(BACKSLASH)
+    expect(lintPlugin('plugin-path-no-backslash', dir, code).map((m) => m.messageId)).toEqual([
+      'backslash',
+    ])
+  })
+  linked('plugin-path-no-backslash stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, BACKSLASH)
+    expect(lintPlugin('plugin-path-no-backslash', dir, BACKSLASH)).toEqual([])
+  })
+})
+
 describe('readPluginAt', () => {
   it('gives the plugin for a root in the repository', () => {
     expect(readPluginAt(inside({}))).toMatchObject({ fields: { name: 'p' } })

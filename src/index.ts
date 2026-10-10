@@ -236,6 +236,7 @@ import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
@@ -719,6 +720,7 @@ const modules = [
   pluginManifestPublishMetadata,
   pluginManifestVersionSemver,
   pluginSkillsKeyRedundantDefault,
+  pluginPathNoBackslash,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1099,6 +1101,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-manifest-publish-metadata': 'warn',
   'plugin-manifest-version-semver': 'warn',
   'plugin-skills-key-redundant-default': 'warn',
+  'plugin-path-no-backslash': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

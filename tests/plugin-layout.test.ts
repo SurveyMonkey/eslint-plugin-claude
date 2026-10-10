@@ -4,6 +4,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   PLUGIN_COMPONENT_NAMES,
+  PLUGIN_PATH_KEYS,
   PLUGIN_SETTINGS_KEYS,
   REPLACED_DEFAULTS,
 } from '../src/data/plugin-layout.ts'
@@ -49,5 +50,32 @@ describe('keys that replace a default folder', () => {
 describe('plugin settings keys', () => {
   it('holds the two keys that take effect, as the docs name them', () => {
     expect(PLUGIN_SETTINGS_KEYS).toEqual(['agent', 'subagentStatusLine'])
+  })
+})
+
+describe('manifest keys that name component paths', () => {
+  it('holds the component keys of the Fields table that take a path, with the map flag of commands', () => {
+    expect(
+      PLUGIN_PATH_KEYS.map(({ key, map }) => `${key.join('.')}${map ? ' (map)' : ''}`),
+    ).toEqual([
+      'skills',
+      'commands (map)',
+      'agents',
+      'hooks',
+      'mcpServers',
+      'lspServers',
+      'outputStyles',
+      'workflows',
+      'experimental.themes',
+      'experimental.monitors',
+      'themes',
+      'monitors',
+    ])
+  })
+
+  it('has no key that names a path that is not a component', () => {
+    const keys = PLUGIN_PATH_KEYS.map(({ key }) => key.join('.'))
+    expect(keys).not.toContain('types')
+    expect(keys).not.toContain('experimental.evals')
   })
 })
