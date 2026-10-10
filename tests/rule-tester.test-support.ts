@@ -87,3 +87,23 @@ export function lintMarkdown(name: string, code: string, filename: string) {
     { filename },
   )
 }
+
+/** The messages of the rule `name` for the JSON text `code` at `filename`. The
+ *  tests use it where a case needs the files glob of the plugin or a path
+ *  that RuleTester does not take, and in `it.fails`, where the rule may be
+ *  missing. */
+export function lintJson(name: string, code: string, filename: string) {
+  const absolute = path.resolve(filename)
+  return new Linter({ cwd: path.parse(absolute).root }).verify(
+    code,
+    [
+      {
+        files: ['**/*.json'],
+        plugins: { json, claude: plugin },
+        language: 'json/json',
+        rules: { [`claude/${name}`]: 'error' },
+      },
+    ],
+    { filename: absolute },
+  )
+}

@@ -1,8 +1,9 @@
 // The skills page, "Restrict Claude's skill access": "`Skill(anthropic *)`
 // doesn't cover `anthropic-skills:pdf`, because a prefix outside the namespace
 // doesn't match the names inside it." The page names this for an `allow` rule.
+import { describe, expect, it } from 'vitest'
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
-import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-skill-rule')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -102,4 +103,31 @@ markdownTester.run('permissions-skill-rule in skill files', rule, {
       errors: [{ messageId: 'outsideNamespace' }],
     },
   ],
+})
+
+// The managed settings files (#14): the rule lints `managed-settings.json` and each
+// `managed-settings.d/*.json` drop-in. Claude Code ignores a hidden drop-in, so the rule reads none.
+describe('permissions-skill-rule on managed settings files', () => {
+  const managed = ['managed-settings.json', 'etc/claude-code/managed-settings.d/10-a.json']
+  const list = (key: string) => (rule: string) => JSON.stringify({ permissions: { [key]: [rule] } })
+  const allow = list('allow')
+  const bad = allow('Skill(anthropic *)')
+  const good = allow('Skill(anthropic-skills *)')
+
+  jsonTester.run('permissions-skill-rule (managed files)', rule, {
+    valid: managed.map((filename) => ({ code: good, filename })),
+    invalid: managed.map((filename) => ({
+      code: bad,
+      filename,
+      errors: [{ messageId: 'outsideNamespace' as const }],
+    })),
+  })
+
+  it('reports in a drop-in that is not hidden', () => {
+    expect(lintJson('permissions-skill-rule', bad, 'managed-settings.d/10-a.json')).toHaveLength(1)
+  })
+
+  it.fails('is silent in a hidden drop-in', () => {
+    expect(lintJson('permissions-skill-rule', bad, 'managed-settings.d/.10-a.json')).toEqual([])
+  })
 })

@@ -1,7 +1,8 @@
 // The permissions page, "Match by input parameter": a `Tool(param:value)`
 // rule cannot match the primary field of the tool.
+import { describe, expect, it } from 'vitest'
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
-import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-param-rule')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -144,4 +145,31 @@ markdownTester.run('permissions-param-rule in skill files', rule, {
       errors: [{ messageId: 'primaryField' }, { messageId: 'primaryField' }],
     },
   ],
+})
+
+// The managed settings files (#14): the rule lints `managed-settings.json` and each
+// `managed-settings.d/*.json` drop-in. Claude Code ignores a hidden drop-in, so the rule reads none.
+describe('permissions-param-rule on managed settings files', () => {
+  const managed = ['managed-settings.json', 'etc/claude-code/managed-settings.d/10-a.json']
+  const list = (key: string) => (rule: string) => JSON.stringify({ permissions: { [key]: [rule] } })
+  const deny = list('deny')
+  const bad = deny('Bash(command:x)')
+  const good = deny('Bash(run_in_background:true)')
+
+  jsonTester.run('permissions-param-rule (managed files)', rule, {
+    valid: managed.map((filename) => ({ code: good, filename })),
+    invalid: managed.map((filename) => ({
+      code: bad,
+      filename,
+      errors: [{ messageId: 'primaryField' as const }],
+    })),
+  })
+
+  it('reports in a drop-in that is not hidden', () => {
+    expect(lintJson('permissions-param-rule', bad, 'managed-settings.d/10-a.json')).toHaveLength(1)
+  })
+
+  it.fails('is silent in a hidden drop-in', () => {
+    expect(lintJson('permissions-param-rule', bad, 'managed-settings.d/.10-a.json')).toEqual([])
+  })
 })

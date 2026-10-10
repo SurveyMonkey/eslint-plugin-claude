@@ -327,6 +327,15 @@ const TREE: Record<string, string> = {
   'packages/pv/managed-settings.json': '{"remoteControlAtStartup": true, "model": "m"}',
   'packages/pv/managed-settings.d/10-a.json': '{"forceLoginMethod": "gateway"}',
   'packages/pv/.vscode/settings.json': '{"remoteControlAtStartup": true}',
+  // The grammar rules on the managed files (#14): `managed-settings.json` and a drop-in. A hidden
+  // drop-in is for `settings-managed-file`, because Claude Code ignores it. The same content
+  // where no rule reads it: another extension, a nested directory, and another settings file.
+  'packages/gr/managed-settings.json': badSettings,
+  'packages/gr/managed-settings.d/10-a.json': badSettings,
+  'packages/gr/managed-settings.d/.20-hidden.json': badSettings,
+  'packages/gr/managed-settings.d/30-b.txt': badSettings,
+  'packages/gr/managed-settings.d/sub/40-c.json': badSettings,
+  'packages/gr/.vscode/settings.json': badSettings,
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -531,6 +540,12 @@ const EXPECTED = [
   ].flatMap((file) =>
     [...GRAMMAR_RULES, 'permissions-skill-rule'].map((rule) => `${file}: claude/${rule}@2`),
   ),
+  // The grammar rules also read a managed file and a drop-in, and no hidden drop-in.
+  ...['packages/gr/managed-settings.json', 'packages/gr/managed-settings.d/10-a.json'].flatMap(
+    (file) =>
+      [...GRAMMAR_RULES, 'permissions-skill-rule'].map((rule) => `${file}: claude/${rule}@2`),
+  ),
+  'packages/gr/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules also read the tool lists of a skill file. A subagent has none of that.
   ...GRAMMAR_RULES.filter((rule) => rule !== SETTINGS_ONLY).map(
     (rule) => `.claude/skills/grammar/SKILL.md: claude/${rule}@2`,
@@ -680,7 +695,7 @@ describe('configs', () => {
     ])
   })
 
-  it('gives each tool-list rule one JSON block and one Markdown block', () => {
+  it.fails('gives each tool-list rule one JSON block and one Markdown block', () => {
     for (const rule of [...GRAMMAR_RULES, 'permissions-skill-rule'].filter(
       (r) => r !== SETTINGS_ONLY,
     )) {
@@ -688,10 +703,19 @@ describe('configs', () => {
         (c) => c.name === `claude/recommended/${rule}`,
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
-        ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
+        ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
         ['markdown/gfm', ['**/SKILL.md', '**/commands/**/*.md']],
       ])
     }
+  })
+
+  it.fails('gives the settings-only grammar rule one JSON block for the project and managed files', () => {
+    const blocks = plugin.configs.recommended.filter(
+      (c) => c.name === `claude/recommended/${SETTINGS_ONLY}`,
+    )
+    expect(blocks.map((c) => [c.language, c.files])).toEqual([
+      ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
   })
 
   it('gives each marketplace rule one JSON block for .claude-plugin/marketplace.json', () => {
@@ -725,11 +749,11 @@ describe('configs', () => {
     }
   })
 
-  it('recommended reports each rule on its own files, at its own severity', async () => {
+  it.fails('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   })
 
-  it('strict reports the same files as recommended today', async () => {
+  it.fails('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
   })
 })

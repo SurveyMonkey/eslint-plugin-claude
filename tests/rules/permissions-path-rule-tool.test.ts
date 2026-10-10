@@ -1,8 +1,9 @@
 // The permissions page, "Read and Edit": Claude Code checks file permissions
 // against `Edit(path)` and `Read(path)` rules only. The error reference
 // names `Write`, `NotebookEdit`, `MultiEdit` and `Glob`.
+import { describe, expect, it } from 'vitest'
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
-import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('permissions-path-rule-tool')
 const settings = (permissions: unknown) => JSON.stringify({ permissions })
@@ -112,4 +113,33 @@ markdownTester.run('permissions-path-rule-tool in skill files', rule, {
       errors: [{ messageId: 'neverConsulted' }],
     },
   ],
+})
+
+// The managed settings files (#14): the rule lints `managed-settings.json` and each
+// `managed-settings.d/*.json` drop-in. Claude Code ignores a hidden drop-in, so the rule reads none.
+describe('permissions-path-rule-tool on managed settings files', () => {
+  const managed = ['managed-settings.json', 'etc/claude-code/managed-settings.d/10-a.json']
+  const list = (key: string) => (rule: string) => JSON.stringify({ permissions: { [key]: [rule] } })
+  const allow = list('allow')
+  const bad = allow('Write(docs/**)')
+  const good = allow('Edit(docs/**)')
+
+  jsonTester.run('permissions-path-rule-tool (managed files)', rule, {
+    valid: managed.map((filename) => ({ code: good, filename })),
+    invalid: managed.map((filename) => ({
+      code: bad,
+      filename,
+      errors: [{ messageId: 'neverConsulted' as const }],
+    })),
+  })
+
+  it('reports in a drop-in that is not hidden', () => {
+    expect(
+      lintJson('permissions-path-rule-tool', bad, 'managed-settings.d/10-a.json'),
+    ).toHaveLength(1)
+  })
+
+  it.fails('is silent in a hidden drop-in', () => {
+    expect(lintJson('permissions-path-rule-tool', bad, 'managed-settings.d/.10-a.json')).toEqual([])
+  })
 })
