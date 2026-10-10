@@ -127,7 +127,7 @@ export const SANDBOX_SHAPES: Readonly<Record<string, Shape>> = {
 /** A list that a managed file cannot read, and the lists that Claude Code then withholds. Source:
  *  "Invalid values inside `sandbox`" on the managed settings page
  *  (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox). The rule
- *  applies it to a managed file only. The per-field handling needs Claude Code 2.1.283 or later. */
+ *  applies it to a managed file only. The repair of each field needs Claude Code 2.1.283 or later. */
 export const WITHHELD_BY: Readonly<Record<string, readonly string[]>> = {
   'sandbox.network.deniedDomains': ['sandbox.network.allowedDomains'],
   'sandbox.filesystem.denyRead': ['sandbox.filesystem.allowRead', 'sandbox.filesystem.allowWrite'],
