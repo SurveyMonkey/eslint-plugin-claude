@@ -1950,7 +1950,7 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
     })
     const body = api.digestOf(HOOKS, blocks, REPO)
     // The length that the comment on MAX_DIGEST_QUOTE derives.
-    expect(body.length).toBe(57_813)
+    expect(body.length).toBe(57_826)
     expect(body).not.toMatch(outerNote)
     expect(markers(body)).toHaveLength(20)
     expect(sections(body)).toHaveLength(20)

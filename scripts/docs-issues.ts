@@ -132,8 +132,8 @@ export const MAX_DIGEST_BLOCKS = 20
 // MAX_DIFF_LINES lines has two fences. The worst section in the tests has
 // two fences, a marker, the metadata and a rows line: 2 x 921 + 1,001 =
 // 2,843 characters for block 0. The 20 sections of that test take 56,901,
-// and the first and last parts of the body take 912. The total of 57,813
-// leaves 2,187 for longer headings, block IDs and reasons in MAX_COMMENT.
+// and the first and last parts of the body take 925. The total of 57,826
+// leaves 2,174 for longer headings, block IDs and reasons in MAX_COMMENT.
 // Past that, the step cuts the section text, as it does for a comment, and
 // keeps every marker.
 export const MAX_DIGEST_QUOTE = 280
@@ -530,7 +530,7 @@ export function digestOf(
   const parts = [
     '## Why',
     '',
-    `The docs watch found a change to ${blocks.length} blocks of one page. No rule cites them. Each section below is one block, with its own marker. Decide each block alone. The block text is quoted data from the docs. Each text is cut at ${MAX_DIGEST_QUOTE} characters. Read the page for the rest.`,
+    `The docs watch found a change to ${blocks.length} blocks of one page. No rule cites them. Each section below is one block, with its own marker. Decide each block alone. The block text is quoted data from the docs. The step cuts a text longer than ${MAX_DIGEST_QUOTE} characters. Read the page for the rest.`,
     '',
     `- Page: ${page}`,
     '',
