@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/mods/reference",
-  "hash": "a98b2faed6be83fe33f5fb793f6319e2add3abf37a4d33b88fe9fc41de69ed5c",
+  "hash": "b6ff422e7b68cbcb4268e49425312bd1969d968ff512b97c62b7419c73ec12dc",
   "blocks": [
     {
       "id": "mods-reference",
@@ -52,7 +52,7 @@
     },
     {
       "id": "other-mods",
-      "hash": "24bb8c83d8dbd10add9c25326078ae737c00079c4b69ef2ecdef62d2973e65a8"
+      "hash": "931645c41ca98dfe4dc998d18c9e40527b64ae5c23098e9a58ca04fccf00deca"
     },
     {
       "id": "telemetry",
@@ -84,7 +84,7 @@
     },
     {
       "id": "limits",
-      "hash": "e0e5a0dcaa73bb62bc7dbebd1f21b5ce6c6daeb0871e7be4c5ef3b3e1cf6cfcf"
+      "hash": "0606c8ec761aef02ccfd86f8c655243101504c42b4f9b19b9bd17926ab16c43e"
     },
     {
       "id": "settings-and-environment-variables",

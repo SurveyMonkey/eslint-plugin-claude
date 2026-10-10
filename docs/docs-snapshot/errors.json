@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "41aa318de6a2a8d06b0111828c7bd20ef71c6ed50a1897277bc9ad61630e92df",
+  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "ddfdaeca3d344cd3282ce6ab4c2bd9d4f0b9df6df79e6193f3c83a9b612b5155"
+      "hash": "eb4293eed93638852324c848beb5b28b5271e8e694cedcbdc507ae38407789b0"
     },
     {
       "id": "automatic-retries",
@@ -276,7 +276,7 @@
     },
     {
       "id": "unable-to-connect-to-anthropic-services",
-      "hash": "6aea251ad1e99ca65cdb98c28bbe46c3bed22e50fb9e85adcd431dbbec7ec83a"
+      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
     },
     {
       "id": "socket-is-closed",
@@ -797,10 +797,6 @@
     {
       "id": "disk-quota-or-temp-filesystem-is-full",
       "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658"
-    },
-    {
-      "id": "file-is-not-valid-utf-8",
-      "hash": "57a8ff70ce0d53bb4bae8629129cbe2bfd8ba0697713d8e6a537452a0413b72b"
     },
     {
       "id": "the-source-file-is-not-valid-utf-8-text",

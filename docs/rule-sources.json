@@ -300,7 +300,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Hooks",
-      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
+      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -351,7 +351,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
       "heading": "Hook loads but never fires",
-      "hash": "468bce684f6e3525ac658ee96e4e5155b6447345bee84c145dfd72ef7cc6c9fc"
+      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -563,7 +563,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Hooks",
-      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
+      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -783,7 +783,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66"
+      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -1345,7 +1345,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -1362,7 +1362,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     }
   ],
   "settings-env-shadowed": [
@@ -1411,7 +1411,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -1485,7 +1485,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66"
+      "hash": "fb5bd8e7468a5d71a4ce989891a6a5fcbcfe36317f7d9faa791cb0de8ff7d287"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1820,7 +1820,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "forceLoginMethod",
-      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f"
+      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

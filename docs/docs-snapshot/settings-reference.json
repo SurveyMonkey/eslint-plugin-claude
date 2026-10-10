@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "9aac26ab656ac30c96e48ec47007a629263403f03c96a53fc9af580b005403c9",
+  "hash": "e7d592dc8ec3baaeaf3156e764f924874e491ffd9af911d5a743edbdafb8452f",
   "blocks": [
     {
       "id": "all-settings",
@@ -972,7 +972,7 @@
     },
     {
       "id": "forceloginmethod",
-      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f"
+      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45"
     },
     {
       "id": "forcelogingatewayurl",
@@ -1120,7 +1120,7 @@
     },
     {
       "id": "copyfullresponse",
-      "hash": "b003c62c7eeb806567567fb1b73fbd2a4fa9dcbd1c5e84444033d102b859b643"
+      "hash": "36d90279367073969bccf903a9d5aa2374d55e300c0e1cdb3c27c097ae1a835b"
     },
     {
       "id": "copyonselect",
@@ -1433,8 +1433,8 @@
     {
       "heading": "forceLoginMethod",
       "id": "forceloginmethod",
-      "hash": "0e457bc741a84a1aa43dc04b54cb549f790307fe179874208f798ae105f18d4f",
-      "text": "### `forceLoginMethod`\n\nRestrict which kind of account people can log in with. Set `\"claudeai\"` to allow only claude.ai accounts, `\"console\"` to allow only Claude Console accounts, or `\"gateway\"` to send people to a [cloud gateway](/docs/en/claude-apps-gateway) instead of a first-party login. Administrators set it in managed settings and pair it with [`forceLoginOrgUUID`](#forceloginorguuid) to keep developers' claude.ai logins inside one organization. If you set it to `\"claudeai\"` or `\"console\"` in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to.\n\n* **Scope**: [`Any file`](#scopes). Claude Code honors `\"gateway\"` from the same sources as [`forceLoginGatewayUrl`](#forcelogingatewayurl) and treats it as unset everywhere else.\n* **Type**: string, one of:\n  * `\"claudeai\"`: only claude.ai accounts can log in\n  * `\"console\"`: only Claude Console accounts can log in\n  * `\"gateway\"`: Claude Code sends people to a cloud gateway instead of a first-party login\n* **Default**: unset, so people pick a login method\n\n```json settings.json theme={null}\n{\n  \"forceLoginMethod\": \"claudeai\"\n}\n```\n\nEvery first-party login path applies the restriction, including the [VS Code extension](/docs/en/vs-code), the Agent SDK, `claude setup-token`, and `/install-github-app`, except the terminal's interactive login screen, reached by `/login` or first-run onboarding, which pre-selects the method without enforcing it. Before v2.1.212, only terminal logins applied it. See [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how each login path, environment credentials, and third-party providers are handled.\n\nWhen a managed source on the machine sets `\"gateway\"`, Claude Code doesn't use a leftover login, API key, or `apiKeyHelper` credential. See [Administrator policy requires a Cloud gateway sign-in](/docs/en/errors#administrator-policy-requires-a-cloud-gateway-sign-in) for the message each one produces. If you select a cloud provider through `CLAUDE_CODE_USE_BEDROCK` or a similar environment variable, the session doesn't need the gateway sign-in. Before v2.1.261, Claude Code used a leftover login on these machines."
+      "hash": "7c007681c0a140ae12fff5da0b559689ee2de6f6910f106256f4cbae3696cf45",
+      "text": "### `forceLoginMethod`\n\nRestrict which kind of account people can log in with. Set `\"claudeai\"` to allow only claude.ai accounts, `\"console\"` to allow only Claude Console accounts, or `\"gateway\"` to send people to a [cloud gateway](/docs/en/claude-apps-gateway) instead of a first-party login. Administrators set it in managed settings and pair it with [`forceLoginOrgUUID`](#forceloginorguuid) to keep developers' claude.ai logins inside one organization. If you set it to `\"claudeai\"` or `\"console\"` in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to.\n\n* **Scope**: [`Any file`](#scopes). Claude Code honors `\"gateway\"` only from a managed source on the machine: `managed-settings.json`, the macOS plist or Windows HKLM registry, or a policy helper. It treats `\"gateway\"` as unset in user, project, local, HKCU, and server-managed settings, the same rule as [`forceLoginGatewayUrl`](#forcelogingatewayurl).\n* **Type**: string, one of:\n  * `\"claudeai\"`: only claude.ai accounts can log in\n  * `\"console\"`: only Claude Console accounts can log in\n  * `\"gateway\"`: Claude Code sends people to a cloud gateway instead of a first-party login\n* **Default**: unset, so people pick a login method\n\n```json settings.json theme={null}\n{\n  \"forceLoginMethod\": \"claudeai\"\n}\n```\n\nEvery first-party login path applies the restriction, including the [VS Code extension](/docs/en/vs-code), the Agent SDK, `claude setup-token`, and `/install-github-app`, except the terminal's interactive login screen, reached by `/login` or first-run onboarding, which pre-selects the method without enforcing it. Before v2.1.212, only terminal logins applied it. See [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how each login path, environment credentials, and third-party providers are handled.\n\nWhen a managed source on the machine sets `\"gateway\"`, Claude Code doesn't use a leftover login, API key, or `apiKeyHelper` credential. See [Administrator policy requires a Cloud gateway sign-in](/docs/en/errors#administrator-policy-requires-a-cloud-gateway-sign-in) for the message each one produces. If you select a cloud provider through `CLAUDE_CODE_USE_BEDROCK` or a similar environment variable, the session doesn't need the gateway sign-in. Before v2.1.261, Claude Code used a leftover login on these machines."
     },
     {
       "heading": "remote.defaultEnvironmentId",
