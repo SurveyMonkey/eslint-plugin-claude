@@ -20,7 +20,7 @@ const ids = (handler: object, file = FILES.project) =>
 const header = (key: string, value: unknown) => ids(http({ [key]: value }))
 
 describe(`${name}: the report`, () => {
-  it.fails('reports a literal token in a credential header', () => {
+  it('reports a literal token in a credential header', () => {
     for (const [key, value] of [
       ['Authorization', 'Bearer abc123def'],
       ['authorization', 'Basic dXNlcjpwYXNz'],
@@ -35,7 +35,7 @@ describe(`${name}: the report`, () => {
     }
   })
 
-  it.fails('reports each header with a literal value, and names it without the value', () => {
+  it('reports each header with a literal value, and names it without the value', () => {
     const [first, second] = lintJson(
       name,
       settings(
@@ -56,13 +56,13 @@ describe(`${name}: the report`, () => {
     ).toHaveLength(2)
   })
 
-  it.fails('reports in each file that Claude Code reads', () => {
+  it('reports in each file that Claude Code reads', () => {
     for (const file of [FILES.project, FILES.local, FILES.managed, FILES.dropIn, FILES.plugin]) {
       expect(ids(http({ Authorization: 'Bearer abc' }), file), file).toEqual(['literal'])
     }
   })
 
-  it.fails('reports in a skill and a project agent', () => {
+  it('reports in a skill and a project agent', () => {
     const text = frontmatter(
       'Stop:\n  - hooks:\n      - type: http\n        url: https://x.example.com\n        headers:\n          Authorization: Bearer abc\n',
     )
@@ -70,7 +70,7 @@ describe(`${name}: the report`, () => {
     expect(markdownIds(name, text, FILES.agent)).toEqual(['literal'])
   })
 
-  it.fails('reads the last of two headers with one name', () => {
+  it('reads the last of two headers with one name', () => {
     expect(
       lintJson(
         name,
@@ -82,7 +82,7 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for a variable reference', () => {
+  it('is silent for a variable reference', () => {
     for (const value of [
       'Bearer $MY_TOKEN',
       `\${MY_TOKEN}`,
@@ -94,7 +94,7 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a value that cannot be a secret', () => {
+  it('is silent for a value that cannot be a secret', () => {
     for (const value of [
       'true',
       'false',
@@ -115,13 +115,13 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it.fails('is silent for a header that carries no credential', () => {
+  it('is silent for a header that carries no credential', () => {
     for (const key of ['Content-Type', 'X-Request-Id', 'Accept', 'X-Team']) {
       expect(header(key, 'application/json'), key).toEqual([])
     }
   })
 
-  it.fails('is silent for a value that is no string, and headers that is no object', () => {
+  it('is silent for a value that is no string, and headers that is no object', () => {
     expect(header('Authorization', 5)).toEqual([])
     expect(header('Authorization', null)).toEqual([])
     expect(ids(http('Authorization: Bearer abc'))).toEqual([])
@@ -129,7 +129,7 @@ describe(`${name}: the silent cases`, () => {
     expect(ids({ type: 'http', url: 'u' })).toEqual([])
   })
 
-  it.fails('is silent for another handler type, a hidden drop-in and a plugin agent', () => {
+  it('is silent for another handler type, a hidden drop-in and a plugin agent', () => {
     expect(
       ids({ type: 'command', command: 'x', headers: { Authorization: 'Bearer abc' } }),
     ).toEqual([])

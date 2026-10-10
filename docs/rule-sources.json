@@ -265,6 +265,28 @@
       "hash": "30ebda41a34adc421b0a4e8607fd03c71cfc6e5a40c5385a0830357914ab3239"
     }
   ],
+  "hooks-broad-auto-approve": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PermissionRequest decision control",
+      "hash": "4fbb4ef39fbac14018b68c411027e4e35eb66b0e141a7068ad93272670adc8a5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreToolUse decision control",
+      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Permission update entries",
+      "hash": "5fe99f34d79702e8deee20c5b2cc1598c50bc1d462b5cdc50fcd42434085fa70"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Auto-approve specific permission prompts",
+      "hash": "d3ec2849cf937664849ad9ac505b6ba2e736e7875b5f6ac998e80fa10388fcf3"
+    }
+  ],
   "hooks-command-deprecated-cli-flag": [
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
@@ -309,6 +331,18 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exec form and shell form",
       "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    }
+  ],
+  "hooks-command-shell-safety": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Security best practices",
+      "hash": "1e9c34afa1835e410b899e5bd3084d8b410998c5abefe69cc396109f89202878"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Disclaimer",
+      "hash": "ec4c87a681f5047c14cdfbe41ed165054ad95892bb0962fd2f5b88761080d05c"
     }
   ],
   "hooks-committed-command-review": [
@@ -497,6 +531,20 @@
       "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
     }
   ],
+  "hooks-exec-form-shell-syntax": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    }
+  ],
+  "hooks-exec-form-windows-shim": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    }
+  ],
   "hooks-filechanged-star-matcher": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -585,6 +633,13 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "httpHookAllowedEnvVars",
       "hash": "c4cefb3c2edf2f273972438c1ccabc4000768a42ec186816b0926532dde08b0c"
+    }
+  ],
+  "hooks-http-literal-secret": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "HTTP hook fields",
+      "hash": "d8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145"
     }
   ],
   "hooks-if-condition": [
@@ -898,6 +953,13 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Command hook fields",
       "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+    }
+  ],
+  "hooks-script-shebang": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Block edits to protected files",
+      "hash": "89b47ca14e76084d92da70dec31f687bfd52ee74ed2f75ce5414d328deaddf7f"
     }
   ],
   "hooks-sessionend-default-timeout": [

@@ -38,32 +38,32 @@ const exec = (executable: string, platforms: string[] | null = WINDOWS) =>
   ids(command({ command: executable, args: ['x'] }), platforms)
 
 describe(`${name}: the platforms`, () => {
-  it.fails('makes no report without the option, or with an empty list', () => {
+  it('makes no report without the option, or with an empty list', () => {
     expect(exec('npx', null)).toEqual([])
     expect(ids(command({ command: 'npx', args: [] }), null)).toEqual([])
     expect(exec('npx', [])).toEqual([])
   })
 
-  it.fails('reports for each Windows value', () => {
+  it('reports for each Windows value', () => {
     for (const platform of ['windows-git-bash', 'windows-no-git-bash']) {
       expect(exec('npx', [platform]), platform).toEqual(['shim'])
     }
     expect(exec('npx', ['macos', 'windows-no-git-bash'])).toEqual(['shim'])
   })
 
-  it.fails('is silent when no value is Windows', () => {
+  it('is silent when no value is Windows', () => {
     expect(exec('npx', ['macos', 'linux', 'wsl'])).toEqual([])
   })
 })
 
 describe(`${name}: the command`, () => {
-  it.fails('reports a bare name of an npm shim', () => {
+  it('reports a bare name of an npm shim', () => {
     for (const executable of ['npx', 'npm', 'pnpm', 'pnpx', 'yarn', 'eslint', 'prettier', 'tsc']) {
       expect(exec(executable), executable).toEqual(['shim'])
     }
   })
 
-  it.fails('reports a .cmd or .bat file and a node_modules/.bin path', () => {
+  it('reports a .cmd or .bat file and a node_modules/.bin path', () => {
     for (const executable of [
       'tool.cmd',
       'C:\\tools\\Tool.BAT',
@@ -75,7 +75,7 @@ describe(`${name}: the command`, () => {
     }
   })
 
-  it.fails('names the command in the message', () => {
+  it('names the command in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('Stop', [command({ command: 'npx', args: ['eslint'] })])),
@@ -87,7 +87,7 @@ describe(`${name}: the command`, () => {
     )
   })
 
-  it.fails('is silent for a real executable', () => {
+  it('is silent for a real executable', () => {
     for (const executable of [
       'node',
       'node.exe',
@@ -100,14 +100,14 @@ describe(`${name}: the command`, () => {
     }
   })
 
-  it.fails('is silent in shell form, for a command that is no string, and for another handler type', () => {
+  it('is silent in shell form, for a command that is no string, and for another handler type', () => {
     expect(ids(command({ command: 'npx eslint' }))).toEqual([])
     expect(ids(command({ command: 5, args: [] }))).toEqual([])
     expect(ids({ type: 'http', url: 'u', command: 'npx', args: [] })).toEqual([])
     expect(ids(command({ command: 'npx', args: 'x' }))).toEqual([])
   })
 
-  it.fails('reports in a plugin file, a skill and a project agent', () => {
+  it('reports in a plugin file, a skill and a project agent', () => {
     expect(ids(command({ command: 'npx', args: [] }), WINDOWS, FILES.plugin)).toEqual(['shim'])
     const text = frontmatter(
       'Stop:\n  - hooks:\n      - type: command\n        command: npx\n        args: ["x"]\n',
@@ -117,7 +117,7 @@ describe(`${name}: the command`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(command({ command: 'npx', args: [] }), WINDOWS, FILES.hidden)).toEqual([])
   })
 })

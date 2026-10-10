@@ -87,6 +87,24 @@ export const HOOKS_TARGET = {
   also: { language: 'markdown' as const, files: ['**/SKILL.md', '**/agents/**/*.md'] },
 }
 
+/** The platforms that a rule with the option `platforms` knows. Claude Code runs a hook in PowerShell by
+ *  default on `windows-no-git-bash`, and in Bash on the others (the hooks reference, "Command hook fields"). */
+export const PLATFORMS = [
+  'windows-git-bash',
+  'windows-no-git-bash',
+  'macos',
+  'linux',
+  'wsl',
+] as const
+
+/** The schema of the option `platforms`. A rule that depends on the platform of a team takes it, and
+ *  makes no report without it. */
+export const PLATFORMS_SCHEMA = {
+  type: 'object',
+  properties: { platforms: { type: 'array', items: { enum: PLATFORMS }, uniqueItems: true } },
+  additionalProperties: false,
+} as const
+
 /** `items` as a quoted list for a message: `"a"`, `"a" and "b"`, `"a", "b" and "c"`. */
 export function quotedList(items: readonly string[]): string {
   const quoted = items.map((item) => `"${item}"`)

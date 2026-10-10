@@ -56,7 +56,30 @@ const hooksFaults = {
   // A field that the docs do not list for the type (`hooks-handler-field-unknown`).
   Setup: [{ hooks: [{ type: 'command', command: './x.sh', bogus: true }] }],
   // A prompt hook, which cannot deny (`hooks-prompt-on-permission-request`).
-  PermissionRequest: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
+  PermissionRequest: [
+    { hooks: [{ type: 'prompt', prompt: 'p' }] },
+    // An allow decision under no matcher (`hooks-broad-auto-approve`).
+    {
+      hooks: [
+        {
+          type: 'command',
+          command: `echo '{"hookSpecificOutput":{"decision":{"behavior":"allow"}}}'`,
+        },
+      ],
+    },
+  ],
+  // A pipe in the args of an exec-form hook (`hooks-exec-form-shell-syntax`).
+  SessionStart: [{ hooks: [{ type: 'command', command: 'tool', args: ['a', '|', 'b'] }] }],
+  // A literal credential in a header (`hooks-http-literal-secret`).
+  PostToolUseFailure: [
+    { hooks: [{ type: 'http', url: 'u', headers: { Authorization: 'Bearer abc123' } }] },
+  ],
+  // A script with no shebang line (`hooks-script-shebang`), in exec form.
+  ElicitationResult: [
+    {
+      hooks: [{ type: 'command', command: `${projectDir}/scripts/plain.sh`, args: [] }],
+    },
+  ],
   // A bare executable name with whitespace, in exec form (`hooks-exec-form-command-spaces`).
   SubagentStop: [
     { hooks: [{ type: 'command', command: 'my tool', args: ['x'] }] },
@@ -458,6 +481,8 @@ const TREE: Record<string, string> = {
   'packages/hk/.vscode/settings.json': hooksSettings,
   'packages/hk/plugin/hooks/hooks.json': JSON.stringify({ hooks: hooksFaults }),
   'packages/hk/.claude/skills/hk/SKILL.md': hooksYaml,
+  // A script with no shebang line, which the hook of `hooksFaults` runs.
+  'packages/hk/scripts/plain.sh': 'echo hi\n',
   'packages/hk/.claude/agents/hk.md': hooksYaml.replace('name: hk', 'name: hk\ndescription: d'),
   // `hooks-duplicate-handler`: one handler in a settings file, in `hooks/hooks.json` and in `plugin.json`.
   // The local settings file holds it too, and is not the later source. A `plugin.json` outside
@@ -778,17 +803,33 @@ const STRICT_ONLY_EXPECTED = [
   ...NEW_HOOKS_FILES.flatMap((file) =>
     [
       'hooks-async-on-blocking-event',
+      'hooks-command-shell-safety',
       'hooks-matcher-name-unresolved',
       'hooks-matcher-unanchored-regex',
       'hooks-timeout-units',
     ].map((rule) => `${file}: claude/${rule}@1`),
   ),
+  // The JSON files hold three more command handlers than the YAML files: an allow, a pipe in exec form and a script.
+  ...['packages/hk/.claude/agents/hk.md', 'packages/hk/.claude/skills/hk/SKILL.md'].flatMap(
+    (file) => times(22, `${file}: claude/hooks-committed-command-review@1`),
+  ),
+  ...['packages/hk/.claude/settings.json', 'packages/hk/plugin/hooks/hooks.json'].flatMap((file) =>
+    times(25, `${file}: claude/hooks-committed-command-review@1`),
+  ),
   ...[
-    'packages/hk/.claude/agents/hk.md',
     'packages/hk/.claude/settings.json',
-    'packages/hk/.claude/skills/hk/SKILL.md',
+    'packages/hk/.claude/settings.local.json',
+    'packages/hk/managed-settings.d/10-a.json',
+    'packages/hk/managed-settings.json',
     'packages/hk/plugin/hooks/hooks.json',
-  ].flatMap((file) => times(22, `${file}: claude/hooks-committed-command-review@1`)),
+  ].flatMap((file) =>
+    ['hooks-broad-auto-approve', 'hooks-exec-form-shell-syntax', 'hooks-http-literal-secret'].map(
+      (rule) => `${file}: claude/${rule}@1`,
+    ),
+  ),
+  ...['packages/hk/.claude/settings.json', 'packages/hk/.claude/settings.local.json'].map(
+    (file) => `${file}: claude/hooks-script-shebang@1`,
+  ),
   ...[
     'packages/dup/.claude/settings.json',
     'packages/dup/hooks/hooks.json',
@@ -1247,6 +1288,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     strictOnly: true,
   },
   {
+    name: 'hooks-broad-auto-approve',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
     name: 'hooks-command-deprecated-cli-flag',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
@@ -1258,6 +1305,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     strictOnly: true,
   },
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-command-shell-safety',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   {
     name: 'hooks-committed-command-review',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
@@ -1275,6 +1328,18 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   { name: 'hooks-env-var-unavailable', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
+    name: 'hooks-exec-form-shell-syntax',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
+    name: 'hooks-exec-form-windows-shim',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
     name: 'hooks-filechanged-star-matcher',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
@@ -1283,6 +1348,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   { name: 'hooks-handler-field-unknown', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-handler-type-event-support', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-http-env-allowlist', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-http-literal-secret',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
   { name: 'hooks-if-condition', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
     name: 'hooks-if-dir-glob-depth',
@@ -1342,6 +1413,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     name: 'hooks-ps1-needs-powershell-shell',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
+  },
+  {
+    name: 'hooks-script-shebang',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
   },
   {
     name: 'hooks-sessionend-default-timeout',
