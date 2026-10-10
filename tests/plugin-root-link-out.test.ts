@@ -131,13 +131,13 @@ describe('the cross-file rules of the plugin layer', () => {
     name: 'p',
     monitors: [{ name: 'm', command: 'run', description: 'd', when: 'on-skill-invoke:gone' }],
   })
-  check('plugin-monitors-skill-exists reports in the plugin in the repository', () => {
+  it('plugin-monitors-skill-exists reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(MONITOR)
     expect(lintPlugin('plugin-monitors-skill-exists', dir, code).map((m) => m.messageId)).toEqual([
       'missing',
     ])
   })
-  checkLinked('plugin-monitors-skill-exists stays silent for the linked plugin', () => {
+  linked('plugin-monitors-skill-exists stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, {}, MONITOR)
     expect(lintPlugin('plugin-monitors-skill-exists', dir, MONITOR)).toEqual([])
   })

@@ -199,6 +199,16 @@ const TREE: Record<string, string> = {
     name: 'dep',
     dependencies: ['ghost'],
   }),
+  // A monitor that starts when a skill runs, in the manifest and in the default file. The plugin
+  // has no such skill.
+  'plugins/msk/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'msk',
+    monitors: [{ name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' }],
+  }),
+  'plugins/msk2/.claude-plugin/plugin.json': JSON.stringify({ name: 'msk2' }),
+  'plugins/msk2/monitors/monitors.json': JSON.stringify([
+    { name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' },
+  ]),
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -652,6 +662,10 @@ const PLUGIN_RULES: {
     severity: 'warn',
   },
   { name: 'plugin-dependencies-resolve', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-monitors-skill-exists',
+    files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -701,6 +715,8 @@ const EXPECTED = [
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
+  'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',
+  'plugins/msk2/monitors/monitors.json: claude/plugin-monitors-skill-exists@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
   'plugins/bare/commands/c.md: claude/command-legacy-format@1',
