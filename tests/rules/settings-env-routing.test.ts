@@ -88,6 +88,7 @@ jsonTester.run('settings-env-routing (valid)', rule, {
       'api.anthropic.com',
       'https://api.anthropic.com.gateway.example',
       'https://api.anthropic.com@gateway.example',
+      'https://staging.anthropic.com',
       'not a url',
     ].map((value) => ({
       code: env({ ANTHROPIC_BASE_URL: value }),
