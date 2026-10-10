@@ -128,10 +128,100 @@ describe(`${name}: an Edit allow rule`, () => {
   })
 
   it('is silent for the directories that the docs except under .claude', () => {
-    for (const dir of ['worktrees', 'plans', 'jobs/x/tmp', 'projects', 'agent-memory']) {
+    for (const dir of [
+      'worktrees',
+      'plans',
+      'jobs/x/tmp',
+      'projects/x/memory',
+      'projects/x/memory/notes.md',
+      'agent-memory',
+    ]) {
       expect(ids(allow(`Edit(.claude/${dir}/**)`)), dir).toEqual([])
       expect(ids(allow(`Edit(~/.claude/${dir}/**)`)), dir).toEqual([])
     }
+  })
+
+  it('reports a path under .claude that is wider than, or beside, an exception of the docs', () => {
+    for (const path of [
+      '.claude/jobs/**',
+      '.claude/jobs/x/**',
+      '.claude/jobs/x/other/**',
+      '.claude/projects/**',
+      '.claude/projects/x/settings.json',
+      '.claude/projects/x/**',
+      '.claude/worktrees-old/**',
+      '.claude/plans2/**',
+    ]) {
+      expect(ids(allow(`Edit(${path})`)), path).toEqual(['protectedEdit'])
+    }
+  })
+
+  it('applies the exceptions of .claude to .claude only', () => {
+    for (const path of ['.git/worktrees/**', '.vscode/plans/**', '.git/projects/x/memory/**']) {
+      expect(ids(allow(`Edit(${path})`)), path).toEqual(['protectedEdit'])
+    }
+  })
+
+  it('reports every protected file of the docs', () => {
+    // The list is copied from the "Protected files" block of the permission modes page.
+    for (const file of [
+      '.gitconfig',
+      '.gitmodules',
+      '.bashrc',
+      '.bash_profile',
+      '.bash_login',
+      '.bash_aliases',
+      '.bash_logout',
+      '.zshrc',
+      '.zprofile',
+      '.zshenv',
+      '.zlogin',
+      '.zlogout',
+      '.profile',
+      '.envrc',
+      '.npmrc',
+      '.yarnrc',
+      '.yarnrc.yml',
+      '.pnp.cjs',
+      '.pnp.loader.mjs',
+      '.pnpmfile.cjs',
+      'bunfig.toml',
+      '.bunfig.toml',
+      '.bazelrc',
+      '.bazelversion',
+      '.bazeliskrc',
+      '.pre-commit-config.yaml',
+      'lefthook.yml',
+      'lefthook.yaml',
+      '.lefthook.yml',
+      '.lefthook.yaml',
+      'gradle-wrapper.properties',
+      'maven-wrapper.properties',
+      '.devcontainer.json',
+      '.ripgreprc',
+      'pyrightconfig.json',
+      '.mcp.json',
+      '.claude.json',
+    ]) {
+      expect(ids(allow(`Edit(${file})`)), file).toEqual(['protectedEdit'])
+    }
+  })
+
+  it('is silent for a protected file below another directory, and for another case', () => {
+    expect(
+      ids(allow('Edit(src/.npmrc)', 'Edit(**/src/.npmrc)', 'Edit(.GIT/**)', 'Edit(.Claude/**)')),
+    ).toEqual([])
+  })
+
+  it('names the target and the path in the message', () => {
+    expect(lint(allow('Bash(rm -rf build /)'))[0]?.message).toContain('such as `/`')
+    expect(lint(allow('Bash(rm -rf "/usr")'))[0]?.message).toContain('such as `/usr`')
+    expect(lint(allow('Edit(.config/git/**)'))[0]?.message).toContain('`.config/git`')
+    expect(lint(allow('Edit(.npmrc)'))[0]?.message).toContain('`.npmrc`')
+    expect(ids(allow('Bash(rm -rf $HOME/)', `Bash(rm -rf \${HOME}/)`))).toEqual([
+      'criticalRemoval',
+      'criticalRemoval',
+    ])
   })
 
   it('is silent for an absolute path, which names no directory of the project', () => {
@@ -381,6 +471,5 @@ describe(`${name}: the rules that it leaves alone`, () => {
 
   it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(allow('Edit(.git/**)', 'Bash(rm -rf /)'), HIDDEN)).toEqual([])
-    expect(ids(write('.git/hooks'), HIDDEN)).toEqual([])
   })
 })

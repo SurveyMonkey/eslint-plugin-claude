@@ -176,4 +176,14 @@ describe(`${name}: the option runners`, () => {
       )
     }
   })
+
+  it('is silent for a bare tool name', () => {
+    expect(ids(allow('Bash', 'Monitor', 'PowerShell'))).toEqual([])
+  })
+
+  it('names the tool of the rule, and an example, in the message', () => {
+    const message = lint(allow('Monitor(npx *)'))[0]?.message
+    expect(message).toContain('`Monitor(npx *)`')
+    expect(message).toContain('`Monitor(npx npm test)`')
+  })
 })

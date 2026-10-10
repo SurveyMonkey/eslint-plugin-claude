@@ -41,10 +41,10 @@ describe(`${name}: the reports`, () => {
 
   it('says which list, and that the rule has no effect while another tool remains', () => {
     const [deny] = lint({ permissions: { deny: ['EndConversation'] } })
-    expect(deny?.message).toContain('deny')
+    expect(deny?.message).toContain('A deny rule that names')
     expect(deny?.message).toContain('no effect while any other tool remains')
     const [ask] = lint({ permissions: { ask: ['EndConversation'] } })
-    expect(ask?.message).toContain('ask')
+    expect(ask?.message).toContain('A ask rule that names')
   })
 
   it('reports the entry, at its line, column and end', () => {
@@ -86,5 +86,11 @@ describe(`${name}: the rules that it leaves alone`, () => {
 
   it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids({ permissions: { deny: ['EndConversation'] } }, HIDDEN)).toEqual([])
+  })
+
+  it('is silent for an empty specifier and for a name with a prefix', () => {
+    expect(
+      ids({ permissions: { deny: ['EndConversation()', 'mcp__x__EndConversation'] } }),
+    ).toEqual([])
   })
 })

@@ -24,3 +24,8 @@ it('keeps a :* that is not at the end as part of a word', () => {
   expect(commandWords('git:* push')).toEqual(['git:*', 'push'])
   expect(commandWords(':*')).toEqual([':*'])
 })
+
+it('reads a :* after a one-letter word, and trims the pattern before it reads the end', () => {
+  expect(commandWords('a:*')).toEqual(['a', '*'])
+  expect(commandWords('ls:*  ')).toEqual(['ls', '*'])
+})
