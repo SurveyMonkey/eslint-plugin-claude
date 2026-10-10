@@ -98,7 +98,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
         ) {
           return
         }
-        // The name of the plugin is the `name` of the manifest, or the folder when there is none.
+        // The name of the plugin is the `name` of the manifest. With none, the docs give the entry name
+        // or the folder name. The rule guesses the folder name.
         const pluginName =
           typeof plugin.fields.name === 'string' ? plugin.fields.name : path.basename(plugin.root)
         // The docs do not say if Claude Code compares names with case.

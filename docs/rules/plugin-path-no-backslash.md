@@ -40,8 +40,9 @@ names the key and the path.
 
 The rule makes no report in these cases:
 
-- The string is an `http://` or `https://` URL in the `mcpServers` key. That key takes the URL of
-  a bundle.[^path-rules] A URL in another key is a path, and the rule reports a backslash in it.
+- The string is an `https://` URL in the `mcpServers` key. That key takes the URL of a
+  bundle.[^path-rules] The docs name `https://` only. The rule also skips `http://`, to avoid a
+  false report. A URL in another key is a path, and the rule reports a backslash in it.
 - The string is not a path. An inline hook, server, monitor or command entry has strings such as
   `command` and `description`, and the rule skips them. The `content` of a command is also skipped.
 - The key is not a component key. The `icon` and `types` keys are not component paths.[^fields]
