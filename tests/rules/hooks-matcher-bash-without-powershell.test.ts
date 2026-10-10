@@ -30,6 +30,9 @@ describe(`${name}: a matcher that names Bash`, () => {
     expect(ids('PreToolUse', 'Bash|Edit')).toEqual(['bashOnly'])
     expect(ids('PreToolUse', 'Edit, Bash')).toEqual(['bashOnly'])
     expect(ids('PreToolUse', 'Edit,Bash,Write')).toEqual(['bashOnly'])
+    // A list holds whole names: `Power` is not `PowerShell`.
+    expect(ids('PreToolUse', 'Bash|Power')).toEqual(['bashOnly'])
+    expect(ids('PreToolUse', 'Edit|B')).toEqual([])
   })
 
   it('reports a regular expression that selects Bash and not PowerShell', () => {

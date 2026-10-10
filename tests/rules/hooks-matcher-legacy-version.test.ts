@@ -172,6 +172,11 @@ describe(`${name}: a value that a later version sends`, () => {
     expect(ids('StopFailure', 'cloud_credential_error', '2.1.268')).toEqual([])
   })
 
+  it('is silent for a StopFailure matcher with a comma, which is a regular expression', () => {
+    expect(ids('StopFailure', 'rate_limit,cloud_credential_error', '2.1.100')).toEqual([])
+    expect(ids('StopFailure', 'rate_limit, cloud_credential_error', '2.1.100')).toEqual([])
+  })
+
   it('is silent for another StopFailure value, and for the value on another event', () => {
     expect(ids('StopFailure', 'rate_limit', '2.1.100')).toEqual([])
     expect(ids('SessionStart', 'cloud_credential_error', '2.1.100')).toEqual([])
