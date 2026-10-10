@@ -241,6 +241,11 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(root, DROP_IN, claims)).toEqual(['claimsNeedDecode'])
   })
 
+  it('still reports denyWins from a deny entry of the file when a sibling does not read', () => {
+    const root = repo({ 'managed-settings.d/20-b.json': '{' })
+    expect(at(root, DROP_IN, env(mask(), { name: 'T', mode: 'deny' }))).toEqual(['denyWins'])
+  })
+
   it('does not match a nameless mask entry with a nameless deny entry', () => {
     const text = settings({ envVars: [{ mode: 'deny' }, { mode: 'mask' }] })
     expect(
