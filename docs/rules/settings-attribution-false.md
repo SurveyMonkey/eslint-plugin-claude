@@ -24,7 +24,7 @@ The value `false` hides all attribution. It needs Claude Code v2.1.281 or later.
 version rejects the value and skips the whole user, project or local settings file that holds
 it.[^attribution] So one teammate on an older client loses every key of the file.
 
-The docs give the form for a file that earlier versions also read: set `commit` and `pr` to empty
+The docs give a form for a file that earlier versions also read. Set `commit` and `pr` to empty
 strings, and `sessionUrl` to `false`.[^attribution] The message names this form.
 
 The report is on the value `false`. The rule has no option for the version of Claude Code. It

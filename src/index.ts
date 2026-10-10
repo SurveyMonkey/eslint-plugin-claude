@@ -56,6 +56,7 @@ import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsFileSize from './rules/settings-file-size.ts'
+import settingsGlobalOnlyFile from './rules/settings-global-only-file.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
@@ -63,6 +64,7 @@ import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
 import settingsModelList from './rules/settings-model-list.ts'
 import settingsModelValue from './rules/settings-model-value.ts'
+import settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
@@ -184,6 +186,8 @@ const modules = [
   settingsSchema,
   settingsAttributionFalse,
   settingsDeprecatedKey,
+  settingsGlobalOnlyFile,
+  settingsOutputstyleResolves,
   settingsProjectAutocontinueOff,
   settingsRedundantValue,
   settingsSchemaUrl,
@@ -298,6 +302,8 @@ const recommended: Record<RuleName, Severity> = {
   'settings-schema': 'error',
   'settings-attribution-false': 'warn',
   'settings-deprecated-key': 'warn',
+  'settings-global-only-file': 'error',
+  'settings-outputstyle-resolves': 'error',
   'settings-project-autocontinue-off': 'warn',
   'settings-redundant-value': 'warn',
   'settings-schema-url': 'warn',

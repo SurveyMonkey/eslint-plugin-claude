@@ -432,8 +432,8 @@ const TREE: Record<string, string> = {
   'packages/ss/managed-settings.d/30-b.txt': '{"modle": "opus"}',
   'packages/ss/managed-settings.d/sub/40-c.json': '{"modle": "opus"}',
   'packages/ss/.vscode/settings.json': '{"modle": "opus"}',
-  // The warn rules of the global layer of #14. Each group has the files that the rule reads, a
-  // hidden drop-in, and the same content where no rule reads it: another extension, a nested
+  // The rules of the global layer of #14. Each group has the files that the rule reads and a
+  // hidden drop-in. It has the same content where no rule reads it: another extension, a nested
   // directory, and another settings file.
   // `settings-deprecated-key` reads the project and managed files.
   'packages/ad/.claude/settings.json': '{"includeCoAuthoredBy": false}',
@@ -482,6 +482,27 @@ const TREE: Record<string, string> = {
   'packages/su/managed-settings.d/30-b.txt': '{"$schema": "x"}',
   'packages/su/managed-settings.d/sub/40-c.json': '{"$schema": "x"}',
   'packages/su/.vscode/settings.json': '{"$schema": "x"}',
+  // `settings-outputstyle-resolves` reads the two project files, and no managed file. A style
+  // file next to the settings file makes a name silent.
+  'packages/os/.claude/settings.json': '{"outputStyle": "Nope"}',
+  'packages/os/.claude/settings.local.json': '{"outputStyle": "explanatory"}',
+  'packages/os/managed-settings.json': '{"outputStyle": "Nope"}',
+  'packages/os/managed-settings.d/10-a.json': '{"outputStyle": "Nope"}',
+  'packages/os/.vscode/settings.json': '{"outputStyle": "Nope"}',
+  'packages/os2/.claude/settings.json': '{"outputStyle": "team-style"}',
+  'packages/os2/.claude/settings.local.json': '{"outputStyle": "Learning"}',
+  'packages/os2/.claude/output-styles/team-style.md': 'Be brief.\n',
+  // `settings-global-only-file` reads a keybindings file and a theme file in `.claude/`, and a
+  // `.claude.json` with one of the three keys. The same content in other places is silent.
+  'packages/go/.claude/keybindings.json': '{"bindings": []}',
+  'packages/go/.claude/themes/dracula.json': '{"name": "Dracula", "base": "dark"}',
+  'packages/go/.claude.json': '{"permissions": {}}',
+  'packages/go/.claude/themes/sub/other.json': '{"name": "Other"}',
+  'packages/go/.claude/themes/notes.txt': '{"name": "Other"}',
+  'packages/go/keybindings.json': '{"bindings": []}',
+  'packages/go/.vscode/keybindings.json': '{"bindings": []}',
+  'packages/go/themes/dracula.json': '{"name": "Dracula"}',
+  'packages/go2/.claude.json': '{"theme": "dark"}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -561,13 +582,18 @@ const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
-  // The rules of the global layer are `warn`.
+  // The rules of the global layer: five are `warn`, and two are `error`.
   { name: 'settings-attribution-false', files: PROJECT_FILES, severity: 'warn' },
   {
     name: 'settings-deprecated-key',
     files: [...PROJECT_FILES, ...MANAGED_FILES],
     severity: 'warn',
   },
+  {
+    name: 'settings-global-only-file',
+    files: ['**/.claude/keybindings.json', '**/.claude/themes/*.json', '**/.claude.json'],
+  },
+  { name: 'settings-outputstyle-resolves', files: PROJECT_FILES },
   {
     name: 'settings-project-autocontinue-off',
     files: [...PROJECT_FILES, ...MANAGED_FILES],
@@ -798,6 +824,13 @@ const EXPECTED = [
   ),
   'packages/su/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   ...SCHEMA_URL_MISSING.map((file) => `${file}: claude/settings-schema-url@1`),
+  // `settings-outputstyle-resolves` reads the two project files, and no managed file.
+  'packages/os/.claude/settings.json: claude/settings-outputstyle-resolves@2',
+  'packages/os/.claude/settings.local.json: claude/settings-outputstyle-resolves@2',
+  // `settings-global-only-file` reads the files of `packages/go`, and no other file.
+  'packages/go/.claude/keybindings.json: claude/settings-global-only-file@2',
+  'packages/go/.claude/themes/dracula.json: claude/settings-global-only-file@2',
+  'packages/go/.claude.json: claude/settings-global-only-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

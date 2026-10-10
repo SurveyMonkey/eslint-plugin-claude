@@ -21,9 +21,9 @@ Do not set `autoContinueAtUsageLimit` in a project or local settings file.
 ## Rule details
 
 The key `autoContinueAtUsageLimit` makes Claude Code wait after a claude.ai usage limit and
-continue the task after the reset. Its scope is "User or managed". When user settings, `--settings`
-and managed settings leave the key unset, a project or local file that sets it turns the feature
-off. The file is not ignored.[^key] So a committed `true` also turns the feature off, for every
+continue the task after the reset. Its scope is "User or managed". Suppose user settings,
+`--settings` and managed settings leave the key unset. A project or local file that sets it then
+turns the feature off. The file is not ignored.[^key] So a committed `true` also turns the feature off, for every
 teammate who has not set the key.
 
 The rule reports two cases:

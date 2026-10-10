@@ -28,9 +28,9 @@ The docs name editor help as the use of the key, so the rule makes a `warn` repo
 The rule reports two cases:
 
 - **No `$schema` key.** The report is on the first brace of the file.
-- **A `$schema` key with another value.** The report is on the value. The test is exact. A
-  different host, `http`, a final slash, another letter case, a space, an empty string, and a
-  value that is not a string all fail. A `null` is not the URL either.
+- **A `$schema` key with another value.** The report is on the value. The test is exact. These all fail: a
+  different host, `http`, a final slash, another letter case, a space, and an empty string. A value
+  that is not a string fails too, a `null` as well.
 
 The settings page also says that the schema can lag behind the newest Claude Code release.[^edit]
 So an editor can flag a key that the docs list. That does not mean that the file is

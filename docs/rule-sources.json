@@ -1192,6 +1192,23 @@
       "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
     }
   ],
+  "settings-global-only-file": [
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "File reference",
+      "hash": "36de4cf4d978f8bb19073b25041a4b1ac6eb17ce6fa0aca654187f40f3d100c2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/keybindings",
+      "heading": "Customize keyboard shortcuts",
+      "hash": "fe47379bf3b71c92a713875c1cc56642670fc4d70b9f612b6518c4c010d19065"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    }
+  ],
   "settings-key-scope": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1444,6 +1461,18 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Choose a model",
       "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+    }
+  ],
+  "settings-outputstyle-resolves": [
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Change your output style",
+      "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Create a custom output style",
+      "hash": "adf86cd9bf3581d4bae2a29f61b8c52f0c45d838419d4beb8395b8f221aaac6f"
     }
   ],
   "settings-plugin-suggestion-marketplaces-source": [
