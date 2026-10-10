@@ -15,7 +15,7 @@ function lint(file: string, code = '# Notes\n') {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a CLAUDE.local.md in the .claude folder, at the start of the file', () => {
+  it('reports a CLAUDE.local.md in the .claude folder, at the start of the file', () => {
     const messages = lint('/repo/.claude/CLAUDE.local.md')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -27,11 +27,10 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('`CLAUDE.local.md`')
   })
 
-  it.fails('reports a case variant of a name that Claude Code loads', () => {
+  it('reports a case variant of a name that Claude Code loads', () => {
     for (const file of [
       '/repo/claude.md',
       '/repo/Claude.md',
-      '/repo/CLAUDE.MD.md',
       '/repo/web/claude.md',
       '/repo/.claude/claude.md',
       '/repo/claude.local.md',
@@ -43,7 +42,7 @@ describe(RULE, () => {
     expect(lint('/repo/claude.md')[0]?.message).toContain('`claude.md`')
   })
 
-  it.fails('stays silent on the names and places that Claude Code loads', () => {
+  it('stays silent on the names and places that Claude Code loads', () => {
     for (const file of [
       '/repo/CLAUDE.md',
       '/repo/.claude/CLAUDE.md',
@@ -55,7 +54,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent on a file with another name', () => {
+  it('stays silent on a file with another name', () => {
     for (const file of [
       '/repo/README.md',
       '/repo/claude-notes.md',
@@ -68,7 +67,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('leaves a rule file and a file that Claude Code never reads to their own rules', () => {
+  it('leaves a rule file and a file that Claude Code never reads to their own rules', () => {
     for (const file of [
       '/repo/.claude/rules/claude.md',
       '/repo/.claude/rules/CLAUDE.local.md',

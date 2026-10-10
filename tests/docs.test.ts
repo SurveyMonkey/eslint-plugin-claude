@@ -65,6 +65,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'claude-md-import-in-code-span',
     'claude-md-import-max-depth',
     'claude-md-local-untracked',
+    'claude-md-location',
     'claude-md-max-bytes',
     'claude-md-max-lines',
     'claude-md-symlink',
