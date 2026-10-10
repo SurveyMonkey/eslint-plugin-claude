@@ -220,6 +220,7 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
+import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
@@ -721,6 +722,7 @@ const modules = [
   pluginManifestVersionSemver,
   pluginSkillsKeyRedundantDefault,
   pluginPathNoBackslash,
+  pluginCommandsMapFields,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1102,6 +1104,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-manifest-version-semver': 'warn',
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-path-no-backslash': 'warn',
+  'plugin-commands-map-fields': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

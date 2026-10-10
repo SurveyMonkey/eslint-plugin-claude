@@ -187,6 +187,18 @@ describe('the path and settings rules of the plugin layer', () => {
 })
 
 describe('the path rules of the plugin layer', () => {
+  const FIELDS = JSON.stringify({ name: 'p', commands: { a: { content: 'x', bogus: 1 } } })
+  it('plugin-commands-map-fields reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(FIELDS)
+    expect(lintPlugin('plugin-commands-map-fields', dir, code).map((m) => m.messageId)).toEqual([
+      'unknown',
+    ])
+  })
+  linked('plugin-commands-map-fields stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, FIELDS)
+    expect(lintPlugin('plugin-commands-map-fields', dir, FIELDS)).toEqual([])
+  })
+
   const BACKSLASH = JSON.stringify({ name: 'p', commands: './a\\b.md' })
   it('plugin-path-no-backslash reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(BACKSLASH)

@@ -236,6 +236,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-unknown-tool',
     'plugin-bin-executable',
     'plugin-commands-dir-nonempty',
+    'plugin-commands-map-fields',
     'plugin-default-dir-shadowed',
     'plugin-dependencies-resolve',
     'plugin-evals-replay-committed',

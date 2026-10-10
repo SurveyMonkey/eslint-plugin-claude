@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-commands-map-fields'
-const check = it.fails
+const check = it
 
 const message = (field: string) =>
   `\`${field}\` is not a field of a command entry. The manifest reference lists \`source\`, \`content\`, \`description\`, \`argumentHint\`, \`model\` and \`allowedTools\`.`
@@ -24,9 +24,9 @@ describe(RULE, () => {
       messageId: 'unknown',
       message: message('bogus'),
       line: 1,
-      column: 65,
+      column: 67,
       endLine: 1,
-      endColumn: 72,
+      endColumn: 74,
     })
   })
 
