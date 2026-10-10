@@ -18,7 +18,7 @@ const BRACKETED = /^(\[[^\]]*\])(?::(.*))?$/
 const ADDRESS = /^[0-9A-Fa-f:.]+$/
 const PORT = /^[1-9][0-9]{0,4}$/
 
-/** True when `text` is a TCP port: whole digits with no leading zero, from 1 to 65535. */
+/** True when `text` is a TCP port: whole digits that do not start with 0, from 1 to 65535. */
 const isPort = (text: string) => PORT.test(text) && Number(text) <= 65535
 
 /** The fault of `entry`, or null. The first fault in the order of the checks is the one that the

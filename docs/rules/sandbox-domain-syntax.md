@@ -34,7 +34,8 @@ The rule makes one report for an entry, for the first fault in this order:
 3. **Text that is not a host**: an empty host, or a host with white space, `@` or `\`, or text with a `:` that is not a port
    separator. An IPv6 literal with a wildcard inside the brackets, such as `[*::1]`, is in this group.
 4. **A port that is not valid.** A port is a whole number from 1 to 65535 with no leading zero. `a.com:080`, `a.com:0` and
-   `a.com:65536` fail. The docs do not state the range. The range is the range of a TCP port.
+   `a.com:65536` fail. The docs state no range and no rule on leading zeros. The rule reads a port as a TCP port that is a plain
+   number.
 5. **An IPv6 address with no brackets**, as `::1` or `::1:443`. Claude Code cannot tell it from a host and a port. A deny list
    blocks each reading, and an allow list can drop the entry.[^ipv6]
 
