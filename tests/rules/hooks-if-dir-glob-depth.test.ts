@@ -96,6 +96,7 @@ describe(`${name}: the silent cases`, () => {
       'Edit(./**)',
       'Edit(!src/**)',
       'Edit(~/**)',
+      'Edit(ab[c/**)',
       'Edit(ab[c]/**)',
       'Edit(ab{c}/**)',
       'Edit(a\\b/**)',
