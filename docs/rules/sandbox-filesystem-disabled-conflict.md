@@ -27,12 +27,13 @@ Claude Code does not enforce `filesystem.denyRead` or the `deny` entries of `cre
 `credentials.envVars` entries and the `mask` entries that it applies.[^changes] So a file that sets `disabled` and also lists
 `denyRead` paths or a `deny` credential file states a protection that does not hold.
 
-The rule reports the value of `disabled` once for a file. The message names the kinds of entry that the file holds:
+The rule reports the value of `disabled` once for a file. A quoted `"true"` counts as `true` in a managed file, so the rule
+reports it.[^managed] The message names the kinds of entry that the file holds:
 `filesystem.denyRead` entries, `credentials.files` entries with `"mode": "deny"`, or both.
 
 The rule is silent in these cases:
 
-- `disabled` is not `true`. A quoted `"true"` counts as `true` in a managed file, so the rule reports it.[^managed]
+- `disabled` is `false`, is not a Boolean, or is a quoted `"false"`.
 - The file has no entry that `disabled` switches off. An empty `denyRead` list, a `credentials.files` list with `mask` entries
   only, and `allowWrite` or `denyWrite` entries do not count.
 - The file is a project file or a local file. See the next section.

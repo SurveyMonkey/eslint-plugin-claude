@@ -36,7 +36,7 @@ The rule reports these faults:
 - **A key that is not in the list.** Claude Code does not read it. The report is on the key.
 - **A list that is not an array.** The report is on the value.
 - **An entry of a list that is not a string.** The report is on the entry.
-- **A `classifyAllShell` that is not `true` or `false`.**
+- **A `classifyAllShell` that is not `true` or `false`.** A managed file also accepts the quoted form.
 
 The rule owns the value of `autoMode`, so `settings-schema` makes no report there. A `null` removes the key, so the rule takes it
 as no key. The rule reads the last of two keys of one name, as `JSON.parse` does. A hidden file in `managed-settings.d/` gets no
@@ -49,20 +49,22 @@ that lost an invalid entry, makes it withhold `allow` and `environment`, so the 
 were written beside them.[^closed] The messages for such a list and such an entry say so. This repair needs Claude Code v2.1.282
 or later.
 
+In a managed file, a quoted `"true"` or `"false"` in `classifyAllShell` counts as that Boolean, so the rule does not report it.[^closed]
+
 ### A project file
 
 The classifier does not read `autoMode` from `.claude/settings.json` or `.claude/settings.local.json`.[^where]
-[`settings-key-scope`](settings-key-scope.md) reports the key there. This rule reports a fault of type in those files too, because
-the fault stays when the author moves the block to user settings.
+[`settings-key-scope`](settings-key-scope.md) reports the key there. This rule makes no report in those files, so one fault gets one
+report. A fault of type shows when the author moves the block to a managed file.
 
-Fail:
+Fail, in `managed-settings.json`:
 
 ```json
 {
   "autoMode": {
     "allowed": ["Reading the build log"],
     "soft_deny": "Never run terraform apply",
-    "classifyAllShell": "true"
+    "classifyAllShell": "yes"
   }
 }
 ```
