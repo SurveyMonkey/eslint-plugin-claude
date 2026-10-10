@@ -20,6 +20,7 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsConditional from './rules/agent-tools-conditional.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
+import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
@@ -148,6 +149,7 @@ const modules = [
   agentNameShadowsBuiltin,
   agentNoBom,
   agentToolsConditional,
+  agentToolsTaskAlias,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -271,6 +273,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-name-shadows-builtin': 'warn',
   'agent-no-bom': 'warn',
   'agent-tools-conditional': 'warn',
+  'agent-tools-task-alias': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',
