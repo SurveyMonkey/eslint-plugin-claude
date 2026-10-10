@@ -1119,6 +1119,13 @@ describe('classify with the inventory', () => {
       ])
     })
 
+    it('finds an added block by its anchor, where neither slug finds it', async () => {
+      const added = MEMORY.replace('  Rule frontmatter reference', '  Frontmatter for rules')
+      const jev = fakeJev(() => 0)
+      const output = await run(cited, added, { fetch: jev.fetch, key: KEY }, PAGE, memory)
+      expect(trackedOf(output)).toEqual([['rules-frontmatter-reference', 'added']])
+    })
+
     it('finds a block by its anchor when the page gives it a new title', async () => {
       const edited = MEMORY.replace('  Rule frontmatter reference', '  Frontmatter for rules')
       expect(trackedOf(await runMemory(edited))).toEqual([
@@ -1174,9 +1181,10 @@ describe('classify with the inventory', () => {
         {
           'Plugin manifest reference': [{ section: 'Hooks', rules: ['hooks-a'] }],
           'The manifest': [{ section: 'Settings', rules: ['settings-a'] }],
-          Manifest: [{ section: 'Hooks', rules: ['hooks-b'] }],
+          // The label finds the changed block, but the anchor wins.
+          'Path rules': [{ section: 'Hooks', rules: ['hooks-b'] }],
         },
-        { 'The manifest': 'plugin-manifest-reference', Manifest: 'plugin-manifest' },
+        { 'The manifest': 'plugin-manifest-reference', 'Path rules': 'plugin-manifest' },
       )
       const jev = fakeJev(() => 0)
       const output = await run(cited, edited, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
