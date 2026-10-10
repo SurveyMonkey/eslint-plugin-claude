@@ -6,7 +6,14 @@
 // A handler with an `if` condition is narrow, and gets no report.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
-import { groupsOf, HOOKS_TARGET, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
+import {
+  argsOf,
+  groupsOf,
+  HOOKS_TARGET,
+  hooksListener,
+  memberOf,
+  stringOf,
+} from '../hooks-config.ts'
 
 const name = 'hooks-broad-auto-approve' as const
 
@@ -42,18 +49,10 @@ const rule: Rule.RuleModule = {
           matcherValue === undefined || (matcher !== undefined && BROAD.includes(matcher.value))
         for (const handler of handlers) {
           const line = memberOf(handler, 'command')?.value
-          const args = memberOf(handler, 'args')?.value
           if (stringOf(handler, 'type') !== 'command' || line?.kind !== 'string') {
             continue
           }
-          const text = [
-            line.value,
-            ...(args?.kind === 'array'
-              ? args.items.flatMap((item) => (item.kind === 'string' ? [item.value] : []))
-              : []),
-          ]
-            .join(' ')
-            .replace(/[\s"'\\]/g, '')
+          const text = [line.value, ...(argsOf(handler) ?? [])].join(' ').replace(/[\s"'\\]/g, '')
           if (text.includes('setMode') && text.includes('mode:bypassPermissions')) {
             context.report({ loc: line.loc, messageId: 'bypass' })
           } else if (

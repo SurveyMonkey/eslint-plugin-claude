@@ -60,6 +60,22 @@ describe(`${name}: an allow decision`, () => {
     expect(ids('PreToolUse', 'echo {\\"permissionDecision\\":\\"allow\\"}', '*')).toEqual(['allow'])
   })
 
+  it('reads an args item that is a string, and skips one that is not', () => {
+    expect(
+      lintJson(
+        name,
+        settings(
+          hooks(
+            'PreToolUse',
+            [{ type: 'command', command: 'printf', args: [5, '{"permissionDecision":"allow"}'] }],
+            '*',
+          ),
+        ),
+        FILES.project,
+      ),
+    ).toHaveLength(1)
+  })
+
   it('names the event in the message', () => {
     const [message] = lintJson(
       name,

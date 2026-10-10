@@ -193,6 +193,17 @@ describe(`${name}: a repository script`, () => {
     ).toEqual(['unquoted'])
   })
 
+  it('reads the script in the args of a shell, past an item that is no string', () => {
+    expect(
+      ids({ command: 'bash', args: [5, `${P}/hooks/s.sh`] }, { 'hooks/s.sh': 'cat $FILE\n' }),
+    ).toEqual(['unquoted'])
+  })
+
+  it('finds no script in a shell with flags only', () => {
+    expect(script('cat $FILE\n', 'bash -e')).toEqual([])
+    expect(script('cat $FILE\n', 'bash -o')).toEqual([])
+  })
+
   it('reports once when the command and the script both have a fault', () => {
     expect(ids({ command: `cat $A; ${P}/hooks/s.sh` }, { 'hooks/s.sh': 'cat $FILE\n' })).toEqual([
       'unquoted',

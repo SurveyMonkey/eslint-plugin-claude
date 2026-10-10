@@ -9,6 +9,7 @@ import path from 'node:path'
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import {
+  argsOf,
   HOOKS_TARGET,
   handlersOf,
   hooksListener,
@@ -144,7 +145,6 @@ const rule: Rule.RuleModule = {
       const folders = placeholderFolders(context.filename, source.kind)
       for (const { handler } of handlersOf(source)) {
         const line = memberOf(handler, 'command')?.value
-        const args = memberOf(handler, 'args')?.value
         if (
           stringOf(handler, 'type') !== 'command' ||
           line?.kind !== 'string' ||
@@ -152,10 +152,7 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        const argv =
-          args?.kind === 'array'
-            ? args.items.flatMap((item) => (item.kind === 'string' ? [item.value] : []))
-            : undefined
+        const argv = argsOf(handler)
         // The path placeholders are for `hooks-placeholder-quoted`. Exec form has no shell to read.
         const found = [
           ...(argv === undefined
