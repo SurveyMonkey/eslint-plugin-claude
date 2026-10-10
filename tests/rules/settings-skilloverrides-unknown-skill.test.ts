@@ -108,6 +108,10 @@ describe(RULE, () => {
       },
     )
 
+    it('for an alias of a bundled skill in other letter case', () => {
+      expect(lint(tree({}), settings({ Review: 'off', CHECKUP: 'off' }))).toEqual([])
+    })
+
     it('for a skill folder, by its folder name and by the name field of its SKILL.md', () => {
       const dir = tree({ [`${SKILLS}/deploy-staging/SKILL.md`]: skill('name: deploy') })
       expect(lint(dir, settings({ 'deploy-staging': 'off', deploy: 'name-only' }))).toEqual([])
@@ -351,6 +355,16 @@ describe(RULE, () => {
       const dir = tree({ [`${SKILLS}/near/placeholder.txt`]: 'x\n' })
       link(dir, `${SKILLS}/near/SKILL.md`, path.join(outside, 'SKILL.md'))
       expect(ids(dir, settings({ other: 'off' }))).toEqual([])
+    })
+
+    it.skipIf(noLinks)('reads the name of a SKILL.md that is a link inside the repository', () => {
+      const dir = tree({
+        [`${SKILLS}/near/placeholder.txt`]: 'x\n',
+        'shared/SKILL.md': skill('name: far'),
+      })
+      link(dir, `${SKILLS}/near/SKILL.md`, path.join(dir, 'shared/SKILL.md'))
+      expect(ids(dir, settings({ far: 'off' }))).toEqual([])
+      expect(ids(dir, settings({ nothing: 'off' }))).toEqual(['unknown'])
     })
 
     it.skipIf(noLinks)('stays silent for a SKILL.md that is a dangling link', () => {

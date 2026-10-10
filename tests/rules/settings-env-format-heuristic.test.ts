@@ -34,7 +34,7 @@ jsonTester.run('settings-env-format-heuristic (valid)', rule, {
     ]),
     // The env vars reference: a numeric variable accepts scientific and separator spellings,
     // where its row does not say plain digits only. Claude Code reads `2e3` as 2000.
-    ...['1e5', '25_000', '2.5e3'].flatMap((value) =>
+    ...['1e5', '25_000', '2.5e3', '1_000_000', '1e+3'].flatMap((value) =>
       ['MAX_MCP_OUTPUT_TOKENS', ...WHOLE].map((key) => ({
         code: env({ [key]: value }),
         filename: project,

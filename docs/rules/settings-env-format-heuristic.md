@@ -19,7 +19,7 @@ Write the MCP and PowerShell `env` variables in the form that the docs give.
 | `strict` | `warn` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. The docs give a unit and a default for each
-variable, and state the form less firmly than for other variables. `strict` turns it on at `warn`.
+variable. They state the form less firmly than for other variables. `strict` turns it on at `warn`.
 
 ## Rule details
 
@@ -35,9 +35,10 @@ The rule checks six variables of `env`. The report is on the value.
 | `CLAUDE_CODE_USE_POWERSHELL_TOOL` | `0` or `1`[^powershell] |
 
 A value such as `30s`, `1.5`, `-1` or `1e-3` gets a report. So does a value with a space. The
-docs say that a numeric variable accepts a scientific spelling such as `2e3` and a spelling with
-digit separators such as `64_000`, unless its row says plain digits only. These rows do not say
-that, so these spellings pass.[^vars]
+docs say that a numeric variable accepts a scientific spelling, such as `2e3`. It also accepts digit
+separators, such as `64_000`. A row that says plain digits only is an exception. These rows do not
+say that, so these spellings pass.[^vars] For a client before v2.1.211, the rule
+`settings-env-numeric-spelling` reports these spellings when its option `minVersion` is set.
 
 The rule makes no report in these cases:
 

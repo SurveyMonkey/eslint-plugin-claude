@@ -150,6 +150,33 @@ describe(`${name}: the forms of settings-env-value-format`, () => {
   })
 })
 
+describe(`${name}: the forms of settings-env-format-heuristic`, () => {
+  it('leaves a variable whose heuristic form rejects the value to the heuristic rule', () => {
+    for (const [variable, value] of [
+      ['MCP_TIMEOUT', '1e-3'],
+      ['MCP_TIMEOUT', '1.5e0'],
+      ['MAX_MCP_OUTPUT_TOKENS', '0e3'],
+      ['CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT', '1e999'],
+    ] as const) {
+      expect(ids(env({ [variable]: value })), `${variable} ${value}`).toEqual([])
+      expect(
+        lintJson('settings-env-format-heuristic', env({ [variable]: value }), PROJECT).map(
+          (m) => m.messageId,
+        ),
+        `${variable} ${value}`,
+      ).toEqual(['badForm'])
+    }
+  })
+
+  it('reports a variable whose heuristic form accepts the value, once', () => {
+    expect(ids(env({ MCP_TIMEOUT: '1e5' }))).toEqual(['spelling'])
+    expect(ids(env({ MAX_MCP_OUTPUT_TOKENS: '25_000' }))).toEqual(['spelling'])
+    expect(lintJson('settings-env-format-heuristic', env({ MCP_TIMEOUT: '1e5' }), PROJECT)).toEqual(
+      [],
+    )
+  })
+})
+
 describe(`${name}: the option minVersion`, () => {
   const code = env({ API_TIMEOUT_MS: '1e6' })
   const idsAt = (options: object[], file = PROJECT) =>

@@ -36,8 +36,8 @@ has none, and the suffix gives nothing.
 The rule reports a `[1m]` suffix on a full model ID of an older model, such as
 `claude-sonnet-4-5[1m]` or `claude-haiku-4-5[1m]`. It reads these places: `model`, `fallbackModel`,
 each `availableModels` entry, `ANTHROPIC_MODEL`, `CLAUDE_CODE_SUBAGENT_MODEL` and the four
-`ANTHROPIC_DEFAULT_*_MODEL` variables. It makes no report for an alias, because an alias resolves
-to another model on another provider.
+`ANTHROPIC_DEFAULT_*_MODEL` variables. It makes no report for an alias, because an alias can
+resolve to another model on another provider.
 
 ### Thinking that cannot be turned off
 
