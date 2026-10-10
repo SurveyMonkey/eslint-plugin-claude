@@ -701,6 +701,20 @@ const TREE: Record<string, string> = {
   ...settingsFiles('psb', { permissions: { ask: ['Bash'] }, sandbox: { enabled: true } }),
   // `permissions-dead-allow`: an allow rule under a bare deny.
   ...settingsFiles('pda', { permissions: { allow: ['Bash(npm test)'], deny: ['Bash'] } }),
+  // The warn rules for modes and Bash. `permissions-default-mode-manual-alias` reports only with
+  // its option `minVersion`, and the configs set no option, so it has no tree.
+  // `permissions-default-mode-surface`: a mode that cloud sessions ignore.
+  ...settingsFiles('wms', { permissions: { defaultMode: 'dontAsk' } }),
+  // `permissions-bash-colon-star-mid`: a `:*` before the end of the pattern.
+  ...settingsFiles('wcm', { permissions: { allow: ['Bash(git:* push)'] } }),
+  // `permissions-bash-colon-star-suffix`: a `:*` at the end of the pattern.
+  ...settingsFiles('wcs', { permissions: { allow: ['Bash(ls:*)'] } }),
+  // `permissions-duplicate-rule`: one rule twice in a list.
+  ...settingsFiles('wdr', { permissions: { deny: ['Bash(rm *)', 'Bash(rm *)'] } }),
+  // `permissions-deny-all-tools`: a deny rule for every MCP tool.
+  ...settingsFiles('wdt', { permissions: { deny: ['mcp__*'] } }),
+  // `permissions-auto-mode-dropped-allow`: an allow rule for the Agent tool.
+  ...settingsFiles('wad', { permissions: { allow: ['Agent'] } }),
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -833,6 +847,18 @@ const SANDBOX_RULES = [
   { name: 'sandbox-domain-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-sandbox-bash-ask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-dead-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The warn rules of #15 for modes and Bash, in the order of the `modules` list, with the files of
+// each. Each is a warn. Each reads the project and managed files.
+const WARN_RULES = [
+  { name: 'permissions-auto-mode-dropped-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-bash-colon-star-mid', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-bash-colon-star-suffix', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-default-mode-manual-alias', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-default-mode-surface', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-deny-all-tools', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-duplicate-rule', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1133,6 +1159,22 @@ const EXPECTED = [
   // The `ssc` file has a mask entry and no TLS termination, which `sandbox-credentials-mask` reports in a managed source.
   'packages/ssc/managed-settings.json: claude/sandbox-credentials-mask@2',
   'packages/ssc/managed-settings.d/10-a.json: claude/sandbox-credentials-mask@2',
+  // The warn rules report each project and managed file. A hidden drop-in is for
+  // `settings-managed-file`.
+  ...[
+    ['wad', 'permissions-auto-mode-dropped-allow'],
+    ['wcm', 'permissions-bash-colon-star-mid'],
+    ['wcs', 'permissions-bash-colon-star-suffix'],
+    ['wdr', 'permissions-duplicate-rule'],
+    ['wdt', 'permissions-deny-all-tools'],
+    ['wms', 'permissions-default-mode-surface'],
+  ].flatMap(([dir, rule]) => [
+    `packages/${dir}/.claude/settings.json: claude/${rule}@1`,
+    `packages/${dir}/.claude/settings.local.json: claude/${rule}@1`,
+    `packages/${dir}/managed-settings.json: claude/${rule}@1`,
+    `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@1`,
+    `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
+  ]),
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1237,6 +1279,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...WARN_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'warn' },
+      ]),
       ...MARKETPLACE_RULES.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -1267,6 +1313,7 @@ describe('configs', () => {
       ...ALLOW_RULES.map(({ name }) => `claude/strict/${name}`),
       ...PATH_RULES.map(({ name }) => `claude/strict/${name}`),
       ...SANDBOX_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...WARN_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
@@ -1357,6 +1404,15 @@ describe('configs', () => {
 
   it('gives each auto mode and sandbox rule one JSON block for its files', () => {
     for (const { name, files } of SANDBOX_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each warn rule for modes and Bash one JSON block for its files', () => {
+    for (const { name, files } of WARN_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )

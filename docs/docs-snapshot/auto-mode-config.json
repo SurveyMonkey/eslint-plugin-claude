@@ -73,6 +73,12 @@
   ],
   "sources": [
     {
+      "heading": "Route all shell commands through the classifier",
+      "id": "route-all-shell-commands-through-the-classifier",
+      "hash": "b52acf9c05c6e4fa5f0f1580c0db4d42458ee3657e95e956f47182182d10f613",
+      "text": "## Route all shell commands through the classifier\n\nBy default, narrow Bash and PowerShell allow rules such as `Bash(npm test)` stay in effect in auto mode. Claude Code resolves them before the classifier runs, unless the command carries [per-command allowed domains](/docs/en/sandboxing#per-command-allowed-domains-in-auto-mode). Claude Code suspends only the broad rules that grant arbitrary code execution, such as `Bash(*)` or wildcarded interpreters, together with every rule that names [`Monitor`](/docs/en/tools-reference#monitor-tool), because Monitor commands run through the shell. This means a narrow rule can still let a destructive argument through without the classifier seeing it, for example a script path or flag the rule's prefix didn't anticipate.\n\nSet `autoMode.classifyAllShell` to `true` to suspend every Bash and PowerShell allow rule while auto mode is active, so the classifier evaluates every shell command regardless of your allow list, except [critical-path removals](/docs/en/permission-modes#critical-paths).\n\n```json theme={null}\n{\n  \"autoMode\": {\n    \"classifyAllShell\": true\n  }\n}\n```\n\nThis trades latency for coverage: a command that an allow rule would have approved instantly now waits for a classifier decision, and each shell command counts as a classifier call.\n\nThe setting applies only while auto mode is active, and your allow rules behave normally in other permission modes."
+    },
+    {
       "heading": "Override the block and allow rules",
       "id": "override-the-block-and-allow-rules",
       "hash": "8d1869043a9760eb8806df8ba78823d9015f4a1d555b470408bee433bb67d54e",

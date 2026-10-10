@@ -176,7 +176,7 @@
     },
     {
       "id": "permissions-defaultmode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
     },
     {
       "id": "permissions-disablebypasspermissionsmode",
@@ -1161,6 +1161,12 @@
   ],
   "sources": [
     {
+      "heading": "disableAutoMode",
+      "id": "disableautomode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
+      "text": "### `disableAutoMode`\n\nRemove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the `Shift+Tab` cycle. Any session that would otherwise [start in auto mode](/docs/en/permission-modes#which-mode-a-session-starts-in), whether from `--permission-mode auto`, a settings file, or the built-in default, starts in `default` instead. Administrators set it in managed settings to prevent developers in their organization from using auto mode.\n\n* **Scope**: [`Any file`](#scopes). Most useful in [managed settings](/docs/en/managed-settings), where users can't override it. Also accepted under `permissions` as `permissions.disableAutoMode`.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"disableAutoMode\": \"disable\"\n}\n```"
+    },
+    {
       "heading": "autoMode",
       "id": "automode",
       "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522",
@@ -1181,20 +1187,14 @@
     {
       "heading": "permissions.defaultMode",
       "id": "permissions-defaultmode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301",
-      "text": "### `permissions.defaultMode`\n\nSet the [permission mode](/docs/en/permission-modes) new sessions start in. When you leave it unset, sessions start in the [built-in default](/docs/en/permission-modes#which-mode-a-session-starts-in) for your surface.\n\n* **Scope**: [`Any file`](#scopes). `auto` and `bypassPermissions` don't take effect from project or local settings, so set them in `~/.claude/settings.json` instead. Before v2.1.257, `bypassPermissions` took effect from any file. For conversations the VS Code extension starts, Claude Code reads only user, managed, and `--settings` values.\n* **Type**: string, one of:\n  * `\"default\"`: Claude Code runs only reads without asking\n  * `\"acceptEdits\"`: Claude Code also runs file edits and common filesystem commands such as `mkdir` and `mv` without asking\n  * `\"plan\"`: Claude Code reads and plans but blocks edits until you approve a plan\n  * `\"auto\"`: Claude Code runs without routine prompts; before actions such as shell commands and network requests run, a background classifier checks that they align with your request\n  * `\"dontAsk\"`: Claude Code auto-denies every call that would otherwise prompt; reads, other actions that need no approval, and pre-approved tools still run\n  * `\"bypassPermissions\"`: Claude Code runs everything without asking\n  * `\"manual\"`: an alias for `\"default\"`\n* **Default**: unset\n* **Per-session overrides**: `--permission-mode`, and its equivalent `--dangerously-skip-permissions` for `bypassPermissions`, take precedence over this key for one session\n\n```json settings.json theme={null}\n{\n  \"permissions\": {\n    \"defaultMode\": \"acceptEdits\"\n  }\n}\n```\n\nPermission rules layer on top of every mode: `deny` rules block in every mode, including `bypassPermissions`. See [Permission modes](/docs/en/permission-modes). In cloud sessions, Claude Code honors only `acceptEdits`, `plan`, `default`, and `auto` from this key. For conversations the VS Code extension starts, see [which setting the extension reads for the starting permission mode](/docs/en/permission-modes#switch-permission-modes)."
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9",
+      "text": "### `permissions.defaultMode`\n\nSet the [permission mode](/docs/en/permission-modes) new sessions start in. When you leave it unset, sessions start in the [built-in default](/docs/en/permission-modes#which-mode-a-session-starts-in) for your surface.\n\n* **Scope**: [`Any file`](#scopes). `auto` and `bypassPermissions` don't take effect from project or local settings, so set them in `~/.claude/settings.json` instead. Before v2.1.257, `bypassPermissions` took effect from any file. For conversations the VS Code extension starts, Claude Code reads only user, managed, and `--settings` values.\n* **Type**: string, one of:\n  * `\"default\"`: Claude Code runs only reads without asking\n  * `\"acceptEdits\"`: Claude Code also runs file edits and common filesystem commands such as `mkdir` and `mv` without asking\n  * `\"plan\"`: Claude Code reads and plans but blocks edits until you approve a plan\n  * `\"auto\"`: Claude Code runs without routine prompts; before actions such as shell commands and network requests run, a background classifier checks that they align with your request\n  * `\"dontAsk\"`: Claude Code auto-denies every call that would otherwise prompt; file reads inside your working directories, other actions that need no approval, and pre-approved tools still run, apart from reads from [network paths](/docs/en/permissions#network-paths)\n  * `\"bypassPermissions\"`: Claude Code runs everything without asking\n  * `\"manual\"`: an alias for `\"default\"`\n* **Default**: unset\n* **Per-session overrides**: `--permission-mode`, and its equivalent `--dangerously-skip-permissions` for `bypassPermissions`, take precedence over this key for one session\n\n```json settings.json theme={null}\n{\n  \"permissions\": {\n    \"defaultMode\": \"acceptEdits\"\n  }\n}\n```\n\nPermission rules layer on top of every mode: `deny` rules block in every mode, including `bypassPermissions`. See [Permission modes](/docs/en/permission-modes). In cloud sessions, Claude Code honors only `acceptEdits`, `plan`, `default`, and `auto` from this key. For conversations the VS Code extension starts, see [which setting the extension reads for the starting permission mode](/docs/en/permission-modes#switch-permission-modes)."
     },
     {
       "heading": "permissions.disableBypassPermissionsMode",
       "id": "permissions-disablebypasspermissionsmode",
       "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1",
       "text": "### `permissions.disableBypassPermissionsMode`\n\nPrevent anyone from entering `bypassPermissions` mode. Claude Code then rejects the `--dangerously-skip-permissions` flag, and ignores an [agent definition's](/docs/en/sub-agents#permission-modes) `permissionMode: bypassPermissions`, so the subagent runs with the parent session's permission mode.\n\n* **Scope**: [`Any file`](#scopes). Typically set in [managed settings](/docs/en/managed-settings) to enforce organizational policy.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n* **Per-session overrides**: this key takes precedence over `--dangerously-skip-permissions`, which Claude Code rejects while the key is set\n\n```json settings.json theme={null}\n{\n  \"permissions\": {\n    \"disableBypassPermissionsMode\": \"disable\"\n  }\n}\n```\n\nBefore v2.1.223, Claude Code applied the frontmatter permission mode even with bypass disabled."
-    },
-    {
-      "heading": "disableAutoMode",
-      "id": "disableautomode",
-      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
-      "text": "### `disableAutoMode`\n\nRemove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the `Shift+Tab` cycle. Any session that would otherwise [start in auto mode](/docs/en/permission-modes#which-mode-a-session-starts-in), whether from `--permission-mode auto`, a settings file, or the built-in default, starts in `default` instead. Administrators set it in managed settings to prevent developers in their organization from using auto mode.\n\n* **Scope**: [`Any file`](#scopes). Most useful in [managed settings](/docs/en/managed-settings), where users can't override it. Also accepted under `permissions` as `permissions.disableAutoMode`.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"disableAutoMode\": \"disable\"\n}\n```"
     },
     {
       "heading": "permissions.deny",

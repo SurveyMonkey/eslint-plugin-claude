@@ -721,6 +721,28 @@
       "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
     }
   ],
+  "permissions-auto-mode-dropped-allow": [
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "How auto mode evaluates actions",
+      "hash": "9c7e1425c46db6dee7d7b49d95be1ae72782e318e9b31a5a37daa00ba8270d53"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Route all shell commands through the classifier",
+      "hash": "b52acf9c05c6e4fa5f0f1580c0db4d42458ee3657e95e956f47182182d10f613"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableAutoMode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
   "permissions-auto-mode-schema": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -751,6 +773,30 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "permissions-bash-colon-star-mid": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    }
+  ],
+  "permissions-bash-colon-star-suffix": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "PowerShell",
+      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
     }
   ],
   "permissions-bash-exec-wrapper-prefix": [
@@ -810,7 +856,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -820,12 +866,12 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Skip all checks with bypassPermissions mode",
-      "hash": "257ad9c9c074b07dece017046a3485ee91a0e7009a175f236f4a66a75c8dc4e1"
+      "hash": "bb4f84c837824a834ebe180866bfd62c8d0b9dcd31ca6a33099768aec013aca5"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Available modes",
-      "hash": "885716091d8f45331e5217c93d3b3684e0000d205315a7d51c7488afeb10a85f"
+      "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1"
     }
   ],
   "permissions-dead-allow": [
@@ -854,7 +900,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -862,11 +908,28 @@
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
+  "permissions-default-mode-manual-alias": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.defaultMode",
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Available modes",
+      "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
   "permissions-default-mode-project-ignored": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -879,11 +942,33 @@
       "hash": "31afcf301bb31ec53df9202e5bcafb5d13ed08ac7ac8ff22cc84644b8789125d"
     }
   ],
+  "permissions-default-mode-surface": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.defaultMode",
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Allow only pre-approved tools with dontAsk mode",
+      "hash": "3ce526be3e005f95b4640366bed731198fccebbe55e9d573d97387c8d87dfe38"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Skip all checks with bypassPermissions mode",
+      "hash": "bb4f84c837824a834ebe180866bfd62c8d0b9dcd31ca6a33099768aec013aca5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Switch permission modes",
+      "hash": "1e13e015d938b98257bfd5d432e21b27e163c0357cae7e75537f1026a68428b9"
+    }
+  ],
   "permissions-default-mode-value": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -894,6 +979,18 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "permissions-deny-all-tools": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Tool name wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.deny",
+      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
     }
   ],
   "permissions-disable-mode-value": [
@@ -916,6 +1013,28 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "permissions-duplicate-rule": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Manage permissions",
+      "hash": "56ca5f3f083098267cf7701cd02cf10b2b0abebac77946400176734df2526d9d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "WebFetch",
+      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
     }
   ],
   "permissions-end-conversation": [
@@ -1220,7 +1339,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "WebFetch",
-      "hash": "34f315d4eb30dc7b6e7149d6a1a850903297476471a752edfa885ac250b0d999"
+      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",

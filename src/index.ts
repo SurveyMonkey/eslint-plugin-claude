@@ -38,7 +38,10 @@ import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schem
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
+import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
 import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
+import permissionsBashColonStarMid from './rules/permissions-bash-colon-star-mid.ts'
+import permissionsBashColonStarSuffix from './rules/permissions-bash-colon-star-suffix.ts'
 import permissionsBashExecWrapperPrefix from './rules/permissions-bash-exec-wrapper-prefix.ts'
 import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildcard.ts'
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
@@ -46,9 +49,13 @@ import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts
 import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
 import permissionsDeadAllow from './rules/permissions-dead-allow.ts'
 import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
+import permissionsDefaultModeManualAlias from './rules/permissions-default-mode-manual-alias.ts'
 import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
+import permissionsDefaultModeSurface from './rules/permissions-default-mode-surface.ts'
 import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
+import permissionsDenyAllTools from './rules/permissions-deny-all-tools.ts'
 import permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
+import permissionsDuplicateRule from './rules/permissions-duplicate-rule.ts'
 import permissionsEndConversation from './rules/permissions-end-conversation.ts'
 import permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -194,6 +201,13 @@ const modules = [
   sandboxDomainOverlap,
   permissionsSandboxBashAsk,
   permissionsDeadAllow,
+  permissionsAutoModeDroppedAllow,
+  permissionsBashColonStarMid,
+  permissionsBashColonStarSuffix,
+  permissionsDefaultModeManualAlias,
+  permissionsDefaultModeSurface,
+  permissionsDenyAllTools,
+  permissionsDuplicateRule,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -331,6 +345,13 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-domain-overlap': 'error',
   'permissions-sandbox-bash-ask': 'error',
   'permissions-dead-allow': 'error',
+  'permissions-auto-mode-dropped-allow': 'warn',
+  'permissions-bash-colon-star-mid': 'warn',
+  'permissions-bash-colon-star-suffix': 'warn',
+  'permissions-default-mode-manual-alias': 'warn',
+  'permissions-default-mode-surface': 'warn',
+  'permissions-deny-all-tools': 'warn',
+  'permissions-duplicate-rule': 'warn',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',
