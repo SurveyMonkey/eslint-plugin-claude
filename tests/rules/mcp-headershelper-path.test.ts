@@ -42,8 +42,8 @@ it('skips a leading NAME=value word, and reads the word after it', () => {
   expect(found[0]?.message).toContain('"./h.sh"')
   expect(ids(lintProject(NAME, entry('FOO=./x')))).toEqual(['relative'])
 })
-it('reads the first line of a command with more lines', () => {
-  const found = lintProject(NAME, entry('./h.sh\nfoo'))
+it('reads the first word of a command with more lines', () => {
+  const found = lintProject(NAME, entry('./h.sh\nfoo\nbar'))
   expect(found[0]?.message).toContain('"./h.sh"')
   expect(found[0]?.message).not.toContain('foo')
 })
