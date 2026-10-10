@@ -146,10 +146,10 @@
       "text": "#### Frontmatter fields in plugin agents\n\nA plugin agent's frontmatter follows these rules:\n\n* **Supported fields**: `name`, `description`, `model`, `effort`, `maxTurns`, `tools`, `disallowedTools`, `skills`, `memory`, `background`, `omitClaudeMd`, `isolation`, `color`, and the `cacheTtl` key of `experimental`. The only valid `isolation` value is `\"worktree\"`. See [supported frontmatter fields](/docs/en/sub-agents#supported-frontmatter-fields) for what each one does\n* **Ignored fields**: `permissionMode`, `hooks`, `mcpServers`, and `initialPrompt`. An agent file can't add hooks or MCP servers on its own, so add those as plugin [hooks](#hooks) and [MCP servers](#mcp-servers) instead\n* **Frontmatter that doesn't parse**: the agent still loads with every field ignored. It's named after the file, and its description reads `Agent from my-plugin plugin`. Run [`claude plugin validate`](/docs/en/plugins/cli-reference#plugin-validate) in your shell to find these files\n\nFor what each field does and the precedence rules, see [Subagents](/docs/en/sub-agents#supported-frontmatter-fields)."
     },
     {
-      "heading": "Commands",
-      "id": "commands",
-      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c",
-      "text": "### Commands\n\nA command is a single Markdown file the user runs by name, such as `/my-plugin:about`.\n\n<Note>\n  Commands are the older format, and [skills](#skills) supersede them for new work. A skill runs by name the same way, and it can also carry supporting files in its directory. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>\n\nSave a command at `commands/<file>.md` and it becomes `/<plugin>:<file>`. A subdirectory adds a segment, so `commands/db/migrate.md` is `/my-plugin:db:migrate`.\n\nCommand files take the same frontmatter as skills."
+      "heading": "Organize agents in subfolders",
+      "id": "organize-agents-in-subfolders",
+      "hash": "e2ebd4ab3f9e16d7596dc56212ad773f7666dc4835782a3a6f9283c9996b467d",
+      "text": "#### Organize agents in subfolders\n\nYou can put plugin agent files in subfolders of `agents/`. Claude Code [loads them recursively](/docs/en/sub-agents#choose-the-subagent-scope) and joins the plugin name, each subfolder name, and the file name with colons to form the agent's scoped name. For example, `agents/review/security.md` in a plugin named `my-plugin` loads as `my-plugin:review:security`. Two settings change that name:\n\n* Frontmatter `name`: it replaces only the file name, so `name: audit` in `agents/review/security.md` loads as `my-plugin:review:audit`\n* Manifest [`agents`](/docs/en/plugins/manifest-reference#fields) field: a file you list there loads without subfolder names, so `\"agents\": \"./custom/review/security.md\"` loads as `my-plugin:security`"
     },
     {
       "heading": "Hooks",
@@ -168,6 +168,18 @@
       "id": "agents",
       "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a",
       "text": "### Agents\n\nA [subagent](/docs/en/sub-agents) is a separate assistant, with its own instructions and context window, that Claude can delegate a task to. Each Markdown file under `agents/` defines one:\n\n```markdown agents/security-reviewer.md theme={null}\n---\nname: security-reviewer\ndescription: Reviews code changes for security issues. Use after edits to authentication or input handling.\nmodel: sonnet\n---\n\nYou are a security reviewer. Read the changed files and report injection, authentication, and secrets-handling risks.\n```\n\nThis agent is named `my-plugin:security-reviewer`, and the user can [invoke it explicitly](/docs/en/sub-agents#invoke-subagents-explicitly) with `@agent-my-plugin:security-reviewer`. The name form is `<plugin>:<name>`, where `<name>` comes from the frontmatter `name` field, or from the file name when that field is missing.\n\nThe `agents` manifest key replaces the `agents/` scan."
+    },
+    {
+      "heading": "Commands",
+      "id": "commands",
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c",
+      "text": "### Commands\n\nA command is a single Markdown file the user runs by name, such as `/my-plugin:about`.\n\n<Note>\n  Commands are the older format, and [skills](#skills) supersede them for new work. A skill runs by name the same way, and it can also carry supporting files in its directory. Keep `commands/` for files you're moving over from `.claude/commands/`.\n</Note>\n\nSave a command at `commands/<file>.md` and it becomes `/<plugin>:<file>`. A subdirectory adds a segment, so `commands/db/migrate.md` is `/my-plugin:db:migrate`.\n\nCommand files take the same frontmatter as skills."
+    },
+    {
+      "heading": "Themes and output styles",
+      "id": "themes-and-output-styles",
+      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51",
+      "text": "### Themes and output styles\n\nA plugin can include color themes and output styles. Both appear in the same pickers as the user's own. For either one, setting the manifest key replaces the folder scan.\n\n| Component | Save as | Format | Appears in | Manifest key |\n| :- | :- | :- | :- | :- |\n| Theme | `themes/<slug>.json` | The [custom theme file](/docs/en/terminal-config#create-a-custom-theme) format users write in `~/.claude/themes/` | `/theme`, under the file's `name` | `experimental.themes` |\n| Output style | `output-styles/<name>.md` | The [custom output style](/docs/en/output-styles#create-a-custom-output-style) format, with `name` and `description` frontmatter | `/output-style`, as `<plugin>:<name>` | `outputStyles` |\n\nPlugin themes are read-only, so when a user edits one in `/theme`, the edit is saved as a copy in their own themes directory.\n\nThis theme recolors the prompt accent and error text on the dark preset:\n\n```json themes/dracula.json theme={null}\n{\n  \"name\": \"Dracula\",\n  \"base\": \"dark\",\n  \"overrides\": {\n    \"claude\": \"#bd93f9\",\n    \"error\": \"#ff5555\"\n  }\n}\n```"
     },
     {
       "heading": "Skills",

@@ -88,10 +88,17 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/agent-disallowed-tools-scope`](docs/rules/agent-disallowed-tools-scope.md) | A `disallowedTools` entry with a specifier, and a tool that `tools` and `disallowedTools` both list | `warn` | `warn` |
 | [`claude/agent-field-min-version`](docs/rules/agent-field-min-version.md) | A subagent field that needs a newer Claude Code than `minVersion`, and a Boolean form that older versions do not read (inactive until `minVersion` is set) | `warn` | `warn` |
 | [`claude/agent-mcp-servers-inline-trust`](docs/rules/agent-mcp-servers-inline-trust.md) | An inline MCP server in a local subagent, which connects only after you trust the folder | `warn` | `warn` |
+| [`claude/agent-memory-scope-project`](docs/rules/agent-memory-scope-project.md) | `memory: user` or `memory: local` in a subagent, which is not the recommended `project` scope | `warn` | `warn` |
+| [`claude/agent-name-shadowing`](docs/rules/agent-name-shadowing.md) | A local subagent that has the name of an agent in a `.claude/agents/` above it | `warn` | `warn` |
 | [`claude/agent-name-shadows-builtin`](docs/rules/agent-name-shadows-builtin.md) | A local subagent named like a built-in subagent | `warn` | `warn` |
 | [`claude/agent-no-bom`](docs/rules/agent-no-bom.md) | A UTF-8 byte-order mark at the start of an agent file, for Claude Code before v2.1.239 (inactive until `minVersion` is set) | `warn` | `warn` |
+| [`claude/agent-permission-mode-manual`](docs/rules/agent-permission-mode-manual.md) | `permissionMode: manual`, the alias of `default`, in a local subagent | `warn` | `warn` |
+| [`claude/agent-plugin-scoped-name-unique`](docs/rules/agent-plugin-scoped-name-unique.md) | Two plugin agents with the same scoped name | `warn` | `warn` |
 | [`claude/agent-tools-conditional`](docs/rules/agent-tools-conditional.md) | A `tools` entry that a background subagent loses, and a `tools` list of `Agent` alone | `warn` | `warn` |
 | [`claude/agent-tools-task-alias`](docs/rules/agent-tools-task-alias.md) | `Task`, the old name of `Agent`, in the tools of a subagent | `warn` | `warn` |
+| [`claude/output-style-force-for-plugin`](docs/rules/output-style-force-for-plugin.md) | `force-for-plugin: true` in a plugin output style | `warn` | `warn` |
+| [`claude/output-style-name-unique`](docs/rules/output-style-name-unique.md) | Two project output styles with the same name, in one folder or in nested folders | `warn` | `warn` |
+| [`claude/output-style-plugin-name-description`](docs/rules/output-style-plugin-name-description.md) | A plugin output style with no `name` or no `description` | `warn` | `warn` |
 
 ### Hooks
 

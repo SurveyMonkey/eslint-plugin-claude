@@ -10,13 +10,17 @@ import agentMcpServersInlineTrust from './rules/agent-mcp-servers-inline-trust.t
 import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
 import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
+import agentMemoryScopeProject from './rules/agent-memory-scope-project.ts'
 import agentModelForced from './rules/agent-model-forced.ts'
+import agentNameShadowing from './rules/agent-name-shadowing.ts'
 import agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import agentNameUnique from './rules/agent-name-unique.ts'
 import agentNoBom from './rules/agent-no-bom.ts'
 import agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
 import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
+import agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
+import agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
 import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsConditional from './rules/agent-tools-conditional.ts'
@@ -45,8 +49,11 @@ import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
+import outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
+import outputStyleNameUnique from './rules/output-style-name-unique.ts'
+import outputStylePluginNameDescription from './rules/output-style-plugin-name-description.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
@@ -148,10 +155,17 @@ const modules = [
   agentDisallowedToolsScope,
   agentFieldMinVersion,
   agentMcpServersInlineTrust,
+  agentMemoryScopeProject,
+  agentNameShadowing,
   agentNameShadowsBuiltin,
   agentNoBom,
+  agentPermissionModeManual,
+  agentPluginScopedNameUnique,
   agentToolsConditional,
   agentToolsTaskAlias,
+  outputStyleForceForPlugin,
+  outputStyleNameUnique,
+  outputStylePluginNameDescription,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -273,10 +287,17 @@ const recommended: Record<RuleName, Severity> = {
   'agent-disallowed-tools-scope': 'warn',
   'agent-field-min-version': 'warn',
   'agent-mcp-servers-inline-trust': 'warn',
+  'agent-memory-scope-project': 'warn',
+  'agent-name-shadowing': 'warn',
   'agent-name-shadows-builtin': 'warn',
   'agent-no-bom': 'warn',
+  'agent-permission-mode-manual': 'warn',
+  'agent-plugin-scoped-name-unique': 'warn',
   'agent-tools-conditional': 'warn',
   'agent-tools-task-alias': 'warn',
+  'output-style-force-for-plugin': 'warn',
+  'output-style-name-unique': 'warn',
+  'output-style-plugin-name-description': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',
