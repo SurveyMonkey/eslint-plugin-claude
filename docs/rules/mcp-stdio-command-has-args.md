@@ -25,7 +25,8 @@ The rule is `off` in `recommended`. It is a heuristic.
 The docs show a stdio server with a `command` and an `args` list: "`command` and `args` are the
 program it runs."[^edit] The `claude mcp add` command takes the program and its arguments after
 `--`.[^stdio] A `command` such as `npx -y server` holds both in one string. The
-docs do not say what Claude Code does with it. Claude Code may look for a program with that whole name. So the rule is a heuristic.
+docs do not say what Claude Code does with it. Claude Code may look for a program with that
+whole name. So the rule is a heuristic.
 
 The rule reports a server with these properties:
 

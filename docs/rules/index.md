@@ -6,7 +6,7 @@ okf_version: "0.2"
 
 | Doc | Description |
 |-----|-------------|
-| [lsp-json-location.md](lsp-json-location.md) | The ESLint rule claude/lsp-json-location, which reports a .lsp.json file outside the root of a plugin, such as at a repository root with no plugin or under .claude, because Claude Code takes LSP servers from plugins only. |
+| [lsp-json-location.md](lsp-json-location.md) | The ESLint rule claude/lsp-json-location, which reports a .lsp.json file outside a plugin, such as at a repository root with no plugin or under .claude, because the docs name a plugin as the source of LSP servers. |
 | [mcp-env-var-default.md](mcp-env-var-default.md) | The ESLint rule claude/mcp-env-var-default, which reports a ${VAR} reference with no :-default in an MCP server entry, because an unset variable leaves the text ${VAR} as written, as a heuristic. |
 | [mcp-plugin-root-paths.md](mcp-plugin-root-paths.md) | The ESLint rule claude/mcp-plugin-root-paths, which reports a path that starts with ./ or ../ in the command, args or env of a plugin MCP server, because the plugin docs write the files of a plugin server with the plugin root variable, as a heuristic. |
 | [mcp-stdio-command-has-args.md](mcp-stdio-command-has-args.md) | The ESLint rule claude/mcp-stdio-command-has-args, which reports a stdio MCP server whose command holds a space and that has no args, because the docs show the program in command and its arguments in args, as a heuristic. |
