@@ -119,11 +119,20 @@ describe(`${name}: the silent cases`, () => {
       'echo ./a.sh',
       'node -v',
       'bash -c "x"',
+      `bash -c 'cat ${dir('CLAUDE_PLUGIN_ROOT')}/a.sh'`,
+      'node -e "console.log(1/2)"',
+      "python3 -c 'print(1/2)'",
+      `cd "${dir('CLAUDE_PLUGIN_ROOT')}" && ./scripts/a.sh`,
+      `pushd "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
       'FOO=1',
       '',
     ]) {
       expect(shell(line), line).toEqual([])
     }
+  })
+
+  it('is silent for exec form with inline code', () => {
+    expect(ids({ type: 'command', command: 'bash', args: ['-c', 'cat a/b'] })).toEqual([])
   })
 
   it('is silent for exec form with the variable', () => {

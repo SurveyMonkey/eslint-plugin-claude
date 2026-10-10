@@ -27,6 +27,12 @@ const INTERPRETERS = [
   'powershell',
 ]
 
+/** The interpreter flags whose next word is inline code and not a script path. */
+const CODE_FLAGS = ['-c', '-e', '-p', '--eval', '-Command', '-command']
+
+/** The commands that change the working directory. A relative path after one of them can resolve inside the plugin. */
+const DIRECTORY_COMMANDS = ['cd', 'pushd', 'Set-Location']
+
 /** True when `word` is a path that Claude Code resolves from the working directory: it has a slash, and it does
  *  not start with a slash, a variable, `~` or a drive letter. */
 function isRelativePath(word: string): boolean {
@@ -45,10 +51,25 @@ function relativeIn(words: string[]): string | undefined {
     return program
   }
   const base = path.posix.basename(program).replace(/\.exe$/i, '')
-  const script = words.slice(at + 1).find((word) => !word.startsWith('-'))
-  return INTERPRETERS.includes(base) && script !== undefined && isRelativePath(script)
-    ? script
-    : undefined
+  if (!INTERPRETERS.includes(base)) {
+    return undefined
+  }
+  for (const word of words.slice(at + 1)) {
+    if (CODE_FLAGS.includes(word)) {
+      // The next word is code and not a path.
+      return undefined
+    }
+    if (!word.startsWith('-')) {
+      return isRelativePath(word) ? word : undefined
+    }
+  }
+  return undefined
+}
+
+/** True when `words` is a command that changes the working directory. */
+function changesDirectory(words: string[]): boolean {
+  const program = words[commandWordAt(words)]
+  return program !== undefined && DIRECTORY_COMMANDS.includes(program)
 }
 
 const rule: Rule.RuleModule = {
@@ -88,7 +109,10 @@ const rule: Rule.RuleModule = {
                 ],
               ]
             : commandsOf(member.value.value)
-        const found = lines.map(relativeIn).find((value) => value !== undefined)
+        const moved = lines.findIndex(changesDirectory)
+        const found = (moved === -1 ? lines : lines.slice(0, moved))
+          .map(relativeIn)
+          .find((value) => value !== undefined)
         if (found !== undefined) {
           context.report({
             loc: member.value.loc,
