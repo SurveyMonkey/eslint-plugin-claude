@@ -22,7 +22,7 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 ## Rule details
 
-In a `WebFetch(domain:...)` rule, the sandbox honors two wildcard forms: a leading `*.`, such as `*.example.com`, and a bare `*`.
+In a `WebFetch(domain:...)` rule, the sandbox honors two wildcard forms: a leading `*.`, such as `*.example.com`, and a bare `*`.[^sandbox]
 A wildcard in any other position, such as `WebFetch(domain:example.*)`, "still matches fetches but has no effect on sandboxed
 commands".[^sandbox] There the `*` matches only the text between two dots.[^webfetch] Claude Code adds the domain of a `WebFetch(domain:...)` rule in `allow` or
 `deny` to the allowed or denied domain list of the sandbox.[^webfetch]
@@ -32,7 +32,11 @@ whole host, and `sandbox.enabled` is `true` in the same file. These hosts get a 
 and `*example.com`. A person who writes the rule can expect the sandbox to apply it to a command such as `curl`.
 
 The rule reads `sandbox.enabled` in the file that it lints, and in no other file. A value that is not the Boolean `true`,
-including the quoted `"true"`, gives no report. An `ask` rule is not read, because the sandbox adds no domain from it.
+including the quoted `"true"`, gives no report. An `ask` rule is not read, because the sandbox adds no domain from it.[^sandbox]
+
+The sandbox honors the bare `*` form from Claude Code v2.1.186, and a client older than that ignores it. Other versions also differ in
+how they treat these rules. The rule checks the current client, and it has no version option (see the Claude Code
+[`CHANGELOG.md`](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) for the older clients).
 
 ### One report for one fault
 
