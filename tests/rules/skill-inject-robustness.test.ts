@@ -96,6 +96,38 @@ markdownTester.run('skill-inject-robustness', ruleOf('skill-inject-robustness'),
     { code: inline('timeout 5 npm test'), filename: skill },
     { code: inline('NODE_ENV=test npm test'), filename: skill },
     { code: inline('nohup npm start'), filename: skill },
+    ...['time', 'nice', 'stdbuf', 'command', 'builtin', 'noglob', 'xargs'].map((wrapper) => ({
+      code: inline(`${wrapper} npm test`),
+      filename: skill,
+    })),
+    // Every read-only name of the permissions page.
+    ...['tail', 'find', 'which', 'diff', 'stat', 'du', 'head', 'cd'].map((name) => ({
+      code: inline(`${name} x`),
+      filename: skill,
+    })),
+    // The words of a shell block are not commands. The commands inside are still judged.
+    {
+      code: withTools('Bash(npm *)', block('if [ -f x ]; then npm test; fi')),
+      filename: skill,
+    },
+    {
+      code: withTools('Bash(npm *)', block('# run the tests\nfor f in *; do npm test; done')),
+      filename: skill,
+    },
+    {
+      code: withTools('Bash(npm *)', block('while true; do npm test; done\ncase x in a) ;; esac')),
+      filename: skill,
+    },
+    // The characters of a regular expression in a rule are literal text.
+    { code: withTools('Bash(a? *)', inline('a? c')), filename: skill },
+    { code: withTools('Bash(make [x] *)', inline('make [x] y')), filename: skill },
+    { code: withTools('Bash(make $HOME *)', inline('make $HOME c')), filename: skill },
+    { code: withTools('Bash(a{1} *)', inline('a{1} c')), filename: skill },
+    // A check script has no `|| true` form in PowerShell.
+    {
+      code: `---\nshell: powershell\n---\n\n${inline(`${skillDir}/check.sh`)}\n`,
+      filename: skill,
+    },
     // A skill with no frontmatter has no rules, and a read-only command needs none.
     { code: `# Title\n\n${inline('pwd')}\n`, filename: skill },
     // The rule cannot read a block that does not parse, and a `powershell` shell needs other rules.
@@ -165,6 +197,12 @@ markdownTester.run('skill-inject-robustness', ruleOf('skill-inject-robustness'),
     { code: inline('./run.sh'), filename: 'docs/SKILL.md' },
   ],
   invalid: [
+    // The command after a block word is judged.
+    {
+      code: withTools('Bash(gh *)', block('if [ -f x ]; then npm test; fi')),
+      filename: skill,
+      errors: [unmatched('npm test', 5, 1)],
+    },
     // No rule matches. The report is at the code span.
     {
       code: withTools('Bash(gh *)', inline('npm test')),

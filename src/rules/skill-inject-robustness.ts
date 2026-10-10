@@ -34,8 +34,24 @@ const READ_ONLY = new Set([
 const NO_OP = new Set(['true', ':'])
 
 /** The wrappers that Claude Code strips before it matches a rule. The rule does not strip them
- *  and does not judge a command that starts with one. A `NAME=value` at the start is the same. */
-const WRAPPERS = new Set(['timeout', 'time', 'nice', 'nohup', 'stdbuf', 'command', 'builtin'])
+ *  and does not judge a command that starts with one. It also skips any `NAME=value` at the start.
+ *  Claude Code strips only known-safe variables, so this hides some real faults. */
+const WRAPPERS = new Set([
+  'timeout',
+  'time',
+  'nice',
+  'nohup',
+  'stdbuf',
+  'command',
+  'builtin',
+  'noglob',
+  'xargs',
+])
+
+/** The words that start or end a shell block. They are not commands. The rule drops a leading one
+ *  and judges the rest. A subcommand that is only a closing word, or a test, is not judged. */
+const OPENING = /^(?:if|then|else|elif|do|while|until|!|\{|\()\s+/
+const NOT_A_COMMAND = /^(?:fi|done|esac|\}|\)|for\b|case\b|\[|#)/
 
 /** The programs that run a script file given as their first argument. */
 const INTERPRETERS = new Set(['bash', 'sh', 'zsh', 'node', 'python', 'python3', 'ruby', 'perl'])
@@ -63,7 +79,15 @@ function subcommands(text: string): string[] {
     from = match.index + match[0].length
   }
   parts.push(joined.slice(from))
-  return parts.map((part) => part.trim()).filter((part) => part !== '')
+  return parts
+    .map((part) => {
+      let rest = part.trim()
+      while (OPENING.test(rest)) {
+        rest = rest.replace(OPENING, '').trimStart()
+      }
+      return rest
+    })
+    .filter((part) => part !== '')
 }
 
 /** True when the Bash rule `specifier` allows the command `command`. A `*` stands for any text.
@@ -94,6 +118,7 @@ function skipped(subcommand: string): boolean {
   return (
     READ_ONLY.has(program) ||
     NO_OP.has(program) ||
+    NOT_A_COMMAND.test(subcommand) ||
     WRAPPERS.has(program) ||
     /^[A-Za-z_]\w*=/.test(program)
   )
@@ -122,7 +147,11 @@ type MessageId = 'unmatched' | 'relativePath' | 'checkExit' | 'nested'
 
 /** The first fault of each kind in one command. `rules` is null when the rule cannot read the
  *  Bash rules of the skill. Then it makes no `unmatched` report. */
-function faults(text: string, rules: (string | null)[] | null): [MessageId, string][] {
+function faults(
+  text: string,
+  rules: (string | null)[] | null,
+  bash: boolean,
+): [MessageId, string][] {
   const found: [MessageId, string][] = []
   const parts = subcommands(text)
   if (parts.length === 0) {
@@ -144,7 +173,7 @@ function faults(text: string, rules: (string | null)[] | null): [MessageId, stri
   }
   // The exit code of the last subcommand is the exit code of the command.
   const tail = scriptPath(parts.at(-1) as string)
-  if (tail !== null && CHECK_NAME.test(tail.split('/').pop() as string)) {
+  if (bash && tail !== null && CHECK_NAME.test(tail.split('/').pop() as string)) {
     found.push(['checkExit', tail])
   }
   if (text.includes('!`')) {
@@ -180,11 +209,16 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageId }> = {
     // The Bash rules of `allowed-tools`. Null when the rule cannot read them. A skill with no
     // frontmatter has none.
     let rules: (string | null)[] | null = []
+    // False for a `powershell` shell. The `|| true` fallback is a Bash form.
+    let bash = true
     const commands: { text: string; loc: ReturnType<typeof sourceCode.getLoc> }[] = []
     return {
       yaml(node) {
         const fm = readFrontmatter(sourceCode, node)
         // A bad block hides the rules. A `powershell` shell needs `PowerShell` rules instead.
+        if (fm !== null && fm.data.shell === 'powershell') {
+          bash = false
+        }
         if (fm === null || fm.data.shell === 'powershell') {
           rules = null
           return
@@ -209,7 +243,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageId }> = {
       },
       'root:exit'() {
         for (const { text, loc } of commands) {
-          for (const [messageId, found] of faults(text, rules)) {
+          for (const [messageId, found] of faults(text, rules, bash)) {
             context.report({
               loc,
               messageId,

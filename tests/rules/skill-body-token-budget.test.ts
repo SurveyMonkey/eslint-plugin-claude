@@ -38,6 +38,8 @@ markdownTester.run('skill-body-token-budget', ruleOf('skill-body-token-budget'),
     // The frontmatter is not in the count.
     { code: frontmatter + chars(20000), filename: skill },
     { code: `---\ndescription: ${chars(30000)}\n---\n${chars(100)}`, filename: skill },
+    // A CRLF file: the line break that ends the block is not in the count.
+    { code: `---\r\ndescription: d\r\n---\r\n${chars(20000)}`, filename: skill },
     // The count does not need the YAML to parse.
     { code: `---\nname: [unclosed\n---\n${chars(100)}`, filename: skill },
     // A command file and a plugin skill are checked the same way.
@@ -54,6 +56,11 @@ markdownTester.run('skill-body-token-budget', ruleOf('skill-body-token-budget'),
     { code: chars(30000), filename: 'README.md' },
   ],
   invalid: [
+    {
+      code: `---\r\ndescription: d\r\n---\r\n${chars(20001)}`,
+      filename: skill,
+      errors: [over(5001)],
+    },
     // One character more than 5,000 tokens is 5,001 tokens.
     { code: chars(20001), filename: skill, errors: [over(5001)] },
     { code: chars(20004), filename: skill, errors: [over(5001)] },
