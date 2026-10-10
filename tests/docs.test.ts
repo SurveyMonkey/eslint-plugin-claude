@@ -315,6 +315,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'rules-paths-no-match',
     'rules-symlink-external',
     'rules-symlink-external-scoped',
+    'sandbox-credentials-mask',
     'sandbox-domain-overlap',
     'sandbox-domain-syntax',
     'sandbox-excluded-commands-syntax',
