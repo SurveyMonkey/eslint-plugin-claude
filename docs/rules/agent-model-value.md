@@ -37,7 +37,9 @@ The rule accepts these values:
 - A value in the option `allow`.
 
 The docs do not say if Claude Code compares an alias with letter case. The rule ignores case for
-`inherit` and for the aliases.
+`inherit` and for the aliases. It does not ignore case for a `claude-` model ID.
+[`settings-model-value`](settings-model-value.md) ignores no case, so `Sonnet` is silent here and
+reported there.
 
 The sub-agents page lists four aliases and `inherit`. The rule also accepts the other aliases of the
 model configuration page, because the page says a subagent takes the values of `--model`. The rule
