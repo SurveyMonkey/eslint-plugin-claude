@@ -6,7 +6,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { parsedEntries, skillEntries } from '../permission-entries.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
-import { READ_ONLY, subcommands, wordsOf } from '../shell-split.ts'
+import { followsBang, READ_ONLY, subcommands, wordsOf } from '../shell-split.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
@@ -205,9 +205,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId
       },
       // The inline form: `!` at the start of a line or after whitespace, then a code span.
       inlineCode(node) {
-        const [start] = sourceCode.getRange(node)
-        const before = sourceCode.text.slice(Math.max(0, start - 2), start)
-        if (before === '!' || /^\s!$/.test(before)) {
+        if (followsBang(sourceCode.text, sourceCode.getRange(node)[0])) {
           commands.push({ text: node.value, loc: sourceCode.getLoc(node) })
         }
       },
