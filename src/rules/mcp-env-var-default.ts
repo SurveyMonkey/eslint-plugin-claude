@@ -14,7 +14,7 @@ import { expandedStrings, lintedServers, REMOTE_SERVER_TYPES } from '../mcp-serv
 
 const name = 'mcp-env-var-default' as const
 
-/** The variables that Claude Code substitutes in a plugin configuration, or sets itself.
+/** The variables that a plugin configuration substitutes directly.
  *  (https://code.claude.com/docs/en/mcp#plugin-provided-mcp-servers) */
 const SET_BY_CLAUDE_CODE: readonly string[] = [
   'CLAUDE_PLUGIN_ROOT',

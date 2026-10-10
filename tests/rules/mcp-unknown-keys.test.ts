@@ -121,3 +121,16 @@ it('stays silent for a file that is not a server map, and a path Claude Code ski
   expect(ids(lintProject(NAME, '{"servers": {"a": {"cwd": 1}}}'))).toEqual([])
   expect(ids(lintProject(NAME, at({ cwd: 1 }), '.claude/mcp.json'))).toEqual([])
 })
+it('reports an oauth key and a port of a declared file on the path in the manifest', () => {
+  const declared = JSON.stringify({ name: 'p', mcpServers: './s.json' })
+  const files = (oauth: unknown) => ({ 'p/s.json': at({ ...http, oauth }) })
+  for (const oauth of [{ clientSecret: 's' }, { callbackPort: 70000 }]) {
+    const found = lintManifest(NAME, declared, files(oauth))
+    expect(ids(found).length).toBe(1)
+    expect(found[0]).toMatchObject({ line: 1, column: declared.indexOf('"./s.json"') + 1 })
+  }
+})
+it('skips an sdk entry with an unknown oauth key and a bad port', () => {
+  const entry = { type: 'sdk', oauth: { clientSecret: 's', callbackPort: 70000 } }
+  expect(ids(lintProject(NAME, at(entry)))).toEqual([])
+})

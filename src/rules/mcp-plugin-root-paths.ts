@@ -2,7 +2,7 @@
 // (docs/rules/mcp-plugin-root-paths.md). The plugin docs show the files of a plugin server through
 // `${CLAUDE_PLUGIN_ROOT}`. The docs do not say where a plugin server starts, so a path that starts
 // with `./` or `../` depends on a directory that the plugin does not control. The rule is a
-// heuristic. It reads no file on disk. An absolute path, a bare program name and a path that starts
+// heuristic. It does not look for the target of the path. An absolute path, a bare program name and a path that starts
 // with a variable are silent. `mcp-stdio-relative-path` owns a project `.mcp.json`.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'

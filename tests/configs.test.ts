@@ -1302,11 +1302,10 @@ const STRICT_ONLY = [
   'packages/tu/.claude/settings.json: claude/mcp-tool-server-unknown@1',
   'packages/tu/.claude/settings.local.json: claude/mcp-tool-server-unknown@1',
   'packages/tu/.claude/skills/s/SKILL.md: claude/mcp-tool-server-unknown@1',
-  // The `.lsp.json` files with no plugin root: the new ones, and two of the schema fixtures.
+  // The `.lsp.json` files with no plugin root: the new ones, and one of the schema fixtures.
   'packages/ll/.lsp.json: claude/lsp-json-location@1',
   'packages/ll/.claude/.lsp.json: claude/lsp-json-location@1',
   'packages/lp/.lsp.json: claude/lsp-json-location@1',
-  'plugins/q/sub/.lsp.json: claude/lsp-json-location@1',
   'packages/ek/.mcp.json: claude/mcp-env-var-default@1',
   'packages/ek/.mcp.json: claude/mcp-stdio-command-has-args@1',
   'packages/ek/.mcp.json: claude/mcp-unknown-keys@1',

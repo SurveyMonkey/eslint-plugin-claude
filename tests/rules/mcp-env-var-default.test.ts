@@ -133,6 +133,22 @@ it('stays silent for a malformed entry and a file that is not a server map', () 
   expect(ids(lintProject(NAME, at({ env: { K: 1 } })))).toEqual([])
   expect(ids(lintProject(NAME, '[]'))).toEqual([])
 })
-it('stays silent for a file whose plugin root cannot be read, and a path Claude Code skips', () => {
+it('stays silent for a path that Claude Code skips', () => {
   expect(ids(lintProject(NAME, at({ command: ref('A') }), '.claude/mcp.json'))).toEqual([])
+})
+it('reports a server of a declared file on the path in the manifest', () => {
+  const declared = JSON.stringify({ name: 'p', mcpServers: './s.json' })
+  const found = lintManifest(NAME, declared, { 'p/s.json': at({ command: ref('BIN') }) })
+  expect(found[0]).toMatchObject({ line: 1, column: declared.indexOf('"./s.json"') + 1 })
+})
+it('reads the last of two members with one name inside env and headers', () => {
+  const entry = (first: string, second: string) =>
+    `{"mcpServers": {"a": {"type": "http", "url": "https://x.test", "env": {"K": "${first}", "K": "${second}"}, "headers": {"H": "${first}", "H": "${second}"}}}}`
+  expect(ids(lintProject(NAME, entry(ref('A'), 'x')))).toEqual([])
+  expect(ids(lintProject(NAME, entry('x', ref('A'))))).toEqual(['noDefault', 'noDefault'])
+})
+it('reports a credential variable in the url of an entry with no type', () => {
+  expect(ids(lintProject(NAME, at({ url: `https://x.test/${ref('ANTHROPIC_API_KEY')}` })))).toEqual(
+    ['noDefault'],
+  )
 })
