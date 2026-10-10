@@ -1,7 +1,7 @@
 // Claude Code drops a `mode: "mask"` entry of `sandbox.credentials.files` and `envVars` from the
 // project file and the local file (docs/rules/sandbox-scope.md). `settings-key-scope` reports a
-// key of the sandbox that the settings index limits to user or managed settings, such as
-// `sandbox.bwrapPath`. It cannot see the value of `mode`, so this rule reads the entries.
+// key of the sandbox that the settings index limits to managed settings, or to user and managed
+// settings, such as `sandbox.bwrapPath`. It cannot see the value of `mode`, so this rule reads the entries.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'

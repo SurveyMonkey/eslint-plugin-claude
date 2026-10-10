@@ -5,7 +5,7 @@
 // for the rules of that content.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { ENV_NAME, SANDBOX_SHAPES, type Shape } from '../data/sandbox-keys.ts'
-import { hasListedChildren, listedChildren } from '../data/settings-keys.ts'
+import { hasListedChildren, isIgnoredInRepoFile, listedChildren } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ObjectNode, type ValueNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -224,6 +224,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         const dotted = child.join('.')
         if (!known.includes(key)) {
           context.report({ node: member.name, messageId: 'unknownKey', data: { key: dotted } })
+          continue
+        }
+        // Claude Code ignores the key in a project or local file, and `settings-key-scope`
+        // reports it there. A report on its value would be a second report on the same line.
+        if (!isManaged && isIgnoredInRepoFile(child)) {
           continue
         }
         const value = member.value

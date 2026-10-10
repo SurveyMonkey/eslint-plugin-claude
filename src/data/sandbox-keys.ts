@@ -17,7 +17,7 @@ export type Shape =
   | { readonly type: 'machNames' }
   /** A string that is an absolute path. Claude Code drops a relative path. */
   | { readonly type: 'absolutePath' }
-  /** A number that is a TCP port. The docs say "a local TCP port", so the range is 1 to 65535. */
+  /** A number that is a TCP port. The docs state no range. The rule reads a TCP port as 1 to 65535. */
   | { readonly type: 'port' }
   | { readonly type: 'enum'; readonly values: readonly string[] }
   /** A string that is the name of an environment variable. */

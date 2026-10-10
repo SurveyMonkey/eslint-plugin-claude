@@ -16,10 +16,11 @@ type MessageId = 'scheme' | 'path' | 'port' | 'unbracketedIpv6' | 'notHost'
 const LISTS = ['allowedDomains', 'deniedDomains']
 const BRACKETED = /^(\[[^\]]*\])(?::(.*))?$/
 const ADDRESS = /^[0-9A-Fa-f:.]+$/
-const PORT = /^[1-9][0-9]{0,4}$/
+const PORT = /^[0-9]{1,5}$/
 
-/** True when `text` is a TCP port: whole digits that do not start with 0, from 1 to 65535. */
-const isPort = (text: string) => PORT.test(text) && Number(text) <= 65535
+/** True when `text` is a TCP port: whole digits, from 1 to 65535. The docs state no range and no
+ *  rule on a leading zero, so the rule reports neither. */
+const isPort = (text: string) => PORT.test(text) && Number(text) >= 1 && Number(text) <= 65535
 
 /** The fault of `entry`, or null. The first fault in the order of the checks is the one that the
  *  rule reports. The host part is read before the port. A wildcard is valid in any position. This
@@ -67,7 +68,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       scheme:
         '`{{entry}}` has a URL scheme. Write the host only, as `example.com`, with an optional `:port`.{{note}}',
       path: '`{{entry}}` has a path, a query or a fragment. Write the host only, with an optional `:port`.{{note}}',
-      port: '`{{entry}}` has a port that is not valid. A port is a whole number from 1 to 65535 with no leading zero.{{note}}',
+      port: '`{{entry}}` has a port that is not valid. A port is a whole number from 1 to 65535.{{note}}',
       unbracketedIpv6:
         '`{{entry}}` is an IPv6 address with no brackets, and Claude Code cannot tell it from a host and a port. Write `[::1]` for every port or `[::1]:443` for one port.{{note}}',
       notHost:
@@ -87,7 +88,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           for (const entry of stringEntries(valueAt(node, ['sandbox', 'network', list]))) {
             const messageId = fault(entry.value)
             if (messageId !== null) {
-              context.report({ node: entry, messageId, data: { entry: entry.value, note } })
+              // The sandboxing docs say that Claude Code reads an unbracketed address, so the docs do
+              // not call it invalid, and the note would claim too much.
+              const withheld = messageId === 'unbracketedIpv6' ? '' : note
+              context.report({
+                node: entry,
+                messageId,
+                data: { entry: entry.value, note: withheld },
+              })
             }
           }
         }
