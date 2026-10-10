@@ -885,6 +885,13 @@
       "hash": "2cb2897b72750eeaceb4ddf915b05564fc36ae62a53463abe7638854864a0836"
     }
   ],
+  "plugin-commands-map-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "commands",
+      "hash": "66e4002f473fe00465b948897872b99da8d374345506c4f0fabdf66764b4bdd5"
+    }
+  ],
   "plugin-default-dir-shadowed": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -895,6 +902,18 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Themes and output styles",
       "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
+    }
+  ],
+  "plugin-dependencies-not-auto-installed": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Constrain a dependency that has a non-git source",
+      "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "dependencies",
+      "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05"
     }
   ],
   "plugin-dependencies-resolve": [
@@ -1078,6 +1097,33 @@
       "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
     }
   ],
+  "plugin-path-no-backslash": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Paths that escape the plugin directory",
+      "hash": "8cda23d96a189f7d236c5a4358a1331bf976125f12431fe6d47e7ce7a9a46c5e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Path escapes plugin directory",
+      "hash": "5681f5051584c16f8699c406342cad59c118d93e078e0217361ef469c8e5f346"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "commands",
+      "hash": "66e4002f473fe00465b948897872b99da8d374345506c4f0fabdf66764b4bdd5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Path rules",
+      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
+    }
+  ],
   "plugin-path-var-braced": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -1100,6 +1146,23 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "monitors",
       "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    }
+  ],
+  "plugin-settings-agent-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Default settings",
+      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Agents",
+      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
   "plugin-settings-single-source": [
@@ -1170,6 +1233,18 @@
       "url": "https://code.claude.com/docs/en/plugins/loading",
       "heading": "In-place and copied plugins",
       "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
+    }
+  ],
+  "plugin-user-config-field-applicability": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "User configuration",
+      "hash": "1ff2573d6b69b32c13752fc9d94c33c6d5a13963c5130f4e4f0348b732cfb8c9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Channels",
+      "hash": "6404424037691afe9aac7c4392269d0c1a9d01da3d0700b3c8314876ea5094e0"
     }
   ],
   "plugin-user-config-no-shell-fields": [
