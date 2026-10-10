@@ -49,10 +49,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadows' }> = {
         const bound = repositoryRoot(scope.root)
         const others: string[] = []
         // Each folder from the parent of this project folder up to the repository root. The
-        // walk ends at the root of the repository, or at the first folder out of it.
+        // walk ends at the first folder out of the repository, or at the root of the file system.
         for (
           let dir = path.dirname(project);
-          isInside(realDirectory(dir), bound);
+          dir !== path.dirname(dir) && isInside(realDirectory(dir), bound);
           dir = path.dirname(dir)
         ) {
           // A scan that is `unreadable` or `outside` has fewer files. That can only hide a
@@ -64,9 +64,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadows' }> = {
             if (fields !== UNREADABLE && fields?.name === own) {
               others.push(path.relative(project, file).split(path.sep).join('/'))
             }
-          }
-          if (realDirectory(dir) === bound) {
-            break
           }
         }
         if (others.length > 0) {

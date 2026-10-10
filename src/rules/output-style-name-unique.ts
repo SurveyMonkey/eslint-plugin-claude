@@ -119,19 +119,16 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' | 'shadows' }> = {
           })
         }
         // Each folder from the parent of this project folder up to the repository root. The
-        // walk ends at the root of the repository, or at the first folder out of it.
+        // walk ends at the first folder out of the repository, or at the root of the file system.
         const above: string[] = []
         for (
           let dir = path.dirname(project);
-          isInside(realDirectory(dir), bound);
+          dir !== path.dirname(dir) && isInside(realDirectory(dir), bound);
           dir = path.dirname(dir)
         ) {
           above.push(
             ...sameName(stylesIn(path.join(dir, '.claude', 'output-styles'), bound), own, self),
           )
-          if (realDirectory(dir) === bound) {
-            break
-          }
         }
         if (above.length > 0) {
           context.report({
