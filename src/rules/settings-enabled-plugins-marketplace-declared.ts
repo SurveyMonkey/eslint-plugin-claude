@@ -61,7 +61,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'undeclared' }> = 
           ) {
             continue
           }
-          const marketplace = key.split('@')[1] ?? ''
+          // `keyForm` gives one `@`.
+          const marketplace = key.slice(key.indexOf('@') + 1)
           if (!NEEDS_NO_DECLARATION.includes(marketplace) && !declared.has(marketplace)) {
             context.report({
               node: member.name,
