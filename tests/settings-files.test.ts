@@ -226,6 +226,21 @@ describe('readManagedSource', () => {
     expect(readManagedSource(at(root, MAIN))).toEqual([{ a: 1 }])
   })
 
+  it('bounds a drop-in directory link by the repository, not by the managed directory', () => {
+    const root = repository({ 'pkg/managed-settings.json': '{}', 'shared/10-a.json': '{"a":1}' })
+    symlinkSync(at(root, 'shared'), at(root, `pkg/${DROP}`))
+    expect(readManagedSource(at(root, 'pkg/managed-settings.json'))).toEqual([{ a: 1 }])
+  })
+
+  it('gives UNREADABLE for a drop-in that links to a file out of the repository', () => {
+    const root = repository({})
+    const outside = mkdtempSync(path.join(scratch, 'outside-'))
+    writeFileSync(path.join(outside, 'x.json'), '{"a":1}')
+    mkdirSync(at(root, DROP))
+    symlinkSync(path.join(outside, 'x.json'), at(root, `${DROP}/10-a.json`))
+    expect(readManagedSource(at(root, MAIN))).toBe(UNREADABLE)
+  })
+
   it('gives an empty list when managed-settings.d is a file', () => {
     const root = repository({ [DROP]: 'x' })
     expect(readManagedSource(at(root, MAIN))).toEqual([])
