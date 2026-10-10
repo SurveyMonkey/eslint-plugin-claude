@@ -26,9 +26,9 @@ reports an option that has the word `token` or `password` in its key or in its `
 set `sensitive`.
 
 The test is a heuristic, so the rule is `off` in `recommended`. It matches whole words. The words of
-a key or a title end at a character that is not a letter or a digit, and at a change from lower case
-to upper case. So `api_token`, `botToken`, `APIToken` and `Admin Password` match. `tokenizer`,
-`secretary` and `passwordless` do not. A plural, such as `tokens`, matches.
+a key or a title end at a character that is not an ASCII letter or digit, and at a change from
+lower case to upper case. So `api_token`, `botToken`, `APIToken` and `Admin Password` match.
+`tokenizer` and `passwordless` do not. A plural, such as `tokens`, matches.
 
 The docs name a token and a password only. The rule does not check `secret` or `api_key`. An option
 that holds an API key can still set `sensitive`, but no docs text asks for it.
@@ -39,7 +39,9 @@ The report is on the key of the option. The rule reads the top-level `userConfig
 The rule makes no report in these cases:
 
 - The option sets `sensitive`, with any value. A `false` is a choice of the author.
-- The option is not an object, or its `title` is not a string. The `title` adds no word then.
+- The option is not an object.
+- The option has a `type` other than `string`, such as `number`, `boolean`, `file` or `directory`.
+  `sensitive` masks text, so a count such as `max_tokens` is not a secret.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin root,
   of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
@@ -47,6 +49,8 @@ The rule makes no report in these cases:
 Fail: `"api_token": { "type": "string", "title": "API token", "description": "d" }`.
 
 Pass: the same option with `"sensitive": true`, or `"tokenizer": { ... }`.
+
+A `title` that is not a string adds no word. The key is still checked.
 
 ## Sources
 

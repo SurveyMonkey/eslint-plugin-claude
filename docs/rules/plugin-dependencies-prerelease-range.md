@@ -32,11 +32,12 @@ pre-release of the same numbers. A range that no suffix can fix gets no report. 
 and the target `2.0.0-beta.1` get none, and neither do `<2.0.0` and the same target.
 
 The target version is a heuristic, so the rule is `off` in `recommended`. Claude Code resolves a
-dependency with a git source by git tag, and checks the range against the version of the tag. It
-does not use the `plugin.json` of the checkout for that.[^tags] Tags are not files in the repository.
-So the rule reads the version that the files give, in the order of the loading page: the `version`
-in the `plugin.json` of the dependency, then the `version` in its marketplace entry.[^version] The
-manifest is read when the entry has a relative source that starts with `./`.
+dependency with a git source by git tag, and checks the range against the version of the tag.[^tags]
+Tags are not files in the repository. A dependency with a relative path is checked at load against
+the installed copy, and that copy is in the files. So the rule reads the version that the files
+give, in the order of the loading page: the `version` in the `plugin.json` of the dependency, then
+the `version` in its marketplace entry.[^version] The manifest is read when the entry has a relative source that starts with `./`. A source that is `.` or
+a bare name under `pluginRoot` gets no report, because the rule does not read that manifest.
 
 The rule reads the dependencies in the same marketplace only. It reads the `marketplace.json` that
 encloses the plugin, and finds the entry by name, as `plugin-dependencies-resolve` does.
