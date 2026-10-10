@@ -27,6 +27,10 @@ put('repo/plugins/p/.claude-plugin/plugin.json')
 writeFileSync(at('repo/plugins/p/.claude-plugin/plugin.json'), '{}')
 const pluginSkill = put('repo/plugins/p/skills/deploy/SKILL.md')
 const pluginCommand = put('repo/plugins/p/commands/deploy.md')
+// A plugin one level below the root of the repository: its parent folder is the root.
+writeFileSync(put('repo/shallow/.claude-plugin/plugin.json'), '{}')
+const shallowSkill = put('repo/shallow/skills/deploy/SKILL.md')
+const shallowCommand = put('repo/shallow/commands/deploy.md')
 // A tree with no `.git`: the repository root is not above it.
 const noGit = put('nogit/.claude/skills/deploy/SKILL.md')
 
@@ -66,6 +70,8 @@ markdownTester.run('skill-precedence-shadowing', ruleOf('skill-precedence-shadow
     // A plugin skill and a plugin command are namespaced, so both load.
     { code: bare, filename: pluginSkill, options: [{ personalNames: ['deploy'] }] },
     { code: bare, filename: pluginCommand, options: [{ personalNames: ['deploy'] }] },
+    { code: bare, filename: shallowSkill, options: [{ personalNames: ['deploy'] }] },
+    { code: bare, filename: shallowCommand, options: [{ personalNames: ['deploy'] }] },
     // A nested folder is not the project folder. The docs name no rule for it.
     { code: bare, filename: nested, options: [{ personalNames: ['deploy'] }] },
     // Without a repository root above it, no folder is the project folder.
