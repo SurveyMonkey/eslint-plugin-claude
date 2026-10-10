@@ -24,16 +24,22 @@ import hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
+import hooksHandlerFieldUnknown from './rules/hooks-handler-field-unknown.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
 import hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
 import hooksIfCondition from './rules/hooks-if-condition.ts'
+import hooksMatcherBashWithoutPowershell from './rules/hooks-matcher-bash-without-powershell.ts'
+import hooksMatcherDeprecatedValue from './rules/hooks-matcher-deprecated-value.ts'
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
+import hooksMatcherLegacyVersion from './rules/hooks-matcher-legacy-version.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
 import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
+import hooksMatcherSubagentAnchor from './rules/hooks-matcher-subagent-anchor.ts'
 import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
 import hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
+import hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -119,16 +125,22 @@ const modules = [
   hooksEnvVarUnavailable,
   hooksExecFormCommandSpaces,
   hooksHandlerFieldIgnored,
+  hooksHandlerFieldUnknown,
   hooksHandlerTypeEventSupport,
   hooksHttpEnvAllowlist,
   hooksIfCondition,
+  hooksMatcherBashWithoutPowershell,
+  hooksMatcherDeprecatedValue,
   hooksMatcherEnum,
+  hooksMatcherLegacyVersion,
   hooksMatcherMcpName,
   hooksMatcherNeverMatches,
+  hooksMatcherSubagentAnchor,
   hooksMatcherSyntax,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
   hooksPowershellPlaceholder,
+  hooksPromptOnPermissionRequest,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
   skillForkFieldsRequireContext,
@@ -243,16 +255,22 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-env-var-unavailable': 'error',
   'hooks-exec-form-command-spaces': 'error',
   'hooks-handler-field-ignored': 'error',
+  'hooks-handler-field-unknown': 'warn',
   'hooks-handler-type-event-support': 'error',
   'hooks-http-env-allowlist': 'error',
   'hooks-if-condition': 'error',
+  'hooks-matcher-bash-without-powershell': 'warn',
+  'hooks-matcher-deprecated-value': 'warn',
   'hooks-matcher-enum': 'error',
+  'hooks-matcher-legacy-version': 'warn',
   'hooks-matcher-mcp-name': 'error',
   'hooks-matcher-never-matches': 'error',
+  'hooks-matcher-subagent-anchor': 'warn',
   'hooks-matcher-syntax': 'error',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
   'hooks-powershell-placeholder': 'error',
+  'hooks-prompt-on-permission-request': 'warn',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
   'skill-fork-fields-require-context': 'error',

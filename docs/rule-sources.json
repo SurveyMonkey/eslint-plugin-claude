@@ -413,6 +413,13 @@
       "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
     }
   ],
+  "hooks-handler-field-unknown": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook handler fields",
+      "hash": "70591c889437da0e8d2c043d1828c406746a79a43af0c22b223a1b03526e3cbe"
+    }
+  ],
   "hooks-handler-type-event-support": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -469,6 +476,35 @@
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
     }
   ],
+  "hooks-matcher-bash-without-powershell": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PowerShell",
+      "hash": "772ad0da372957840d6f80dfc04b6f1ee14a26fae50007edc83d8d708dca1b6e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "PowerShell tool",
+      "hash": "fc70eca3bfc62aaf1ddd47b39a1bd82fc2bf4ce560e0a148b3ed70328e671c5c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    }
+  ],
+  "hooks-matcher-deprecated-value": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionEnd",
+      "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    }
+  ],
   "hooks-matcher-enum": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -479,6 +515,23 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "SessionEnd",
       "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef"
+    }
+  ],
+  "hooks-matcher-legacy-version": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check hooks",
+      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Notification",
+      "hash": "3edf71c73301b39990090267d4068b6bd141be1345cace6d009e8b818a534811"
     }
   ],
   "hooks-matcher-mcp-name": [
@@ -523,6 +576,18 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Check which tools are available",
       "hash": "0abd8b33b33dfdd7412cda42bfb6a5fc03bbcc60d0d10a2fa68044ab04bc72be"
+    }
+  ],
+  "hooks-matcher-subagent-anchor": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SubagentStart",
+      "hash": "c37942bc3355357947ddf6f22c5fea53ad42c021f400c26ea791b0ee88d1a20b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Project-level hooks for subagent events",
+      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f"
     }
   ],
   "hooks-matcher-syntax": [
@@ -591,6 +656,18 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Command hook fields",
       "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+    }
+  ],
+  "hooks-prompt-on-permission-request": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Response schema",
+      "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PermissionRequest decision control",
+      "hash": "4fbb4ef39fbac14018b68c411027e4e35eb66b0e141a7068ad93272670adc8a5"
     }
   ],
   "marketplace-command-version-ignored": [
