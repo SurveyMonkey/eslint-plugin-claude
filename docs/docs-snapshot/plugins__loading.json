@@ -135,6 +135,18 @@
       "id": "entry-name-and-manifest-name",
       "hash": "37d9429e2b2e7dadd8d9c3b0527355a2057b9d5ddd8f65024f39756f575e5afc",
       "text": "### Entry name and manifest name\n\nA marketplace plugin has two names, and they can differ:\n\n* **The entry name in `marketplace.json`**: the install and enable key. It's what you write in `enabledPlugins`, what the cache directory is named after, and what `claude plugin list` shows\n* **The `name` in the manifest**: what the plugin's components are namespaced under, and what [name conflicts](#name-conflicts) compare"
+    },
+    {
+      "heading": "Enabled in project settings but not installed",
+      "id": "enabled-in-project-settings-but-not-installed",
+      "hash": "f4befea69a0ac2aecb8118be6ebf2752c16ea7c87ffa21956e28bce5b2feb7bb",
+      "text": "### Enabled in project settings but not installed\n\nWhen a plugin's only `true` is in the project's `.claude/settings.json`, Claude Code doesn't fetch it onto a machine where it isn't installed, unless its marketplace entry has a [relative-path source](/docs/en/plugins/marketplace-reference#plugin-sources) or a [seed directory](/docs/en/plugins/org#seed-containers-and-ci) already holds it. Instead, the `/plugin` **Errors** tab shows `Plugin \"<name>\" is enabled in project settings but isn't installed here`.\n\nA relative-path plugin needs no install record because it loads from the marketplace itself.\n\nClaude Code fetches a plugin with an external source only when one of these sources sets it to `true`:\n\n* Your user settings\n* A `.claude/settings.local.json` that git doesn't track\n* The `--settings` flag\n* Managed settings"
+    },
+    {
+      "heading": "Find where a plugin came from",
+      "id": "find-where-a-plugin-came-from",
+      "hash": "00e7387adcc4279a1bbc9d47c7c0db90da2b7c56b4773bf5ad92c8a13fd90090",
+      "text": "## Find where a plugin came from\n\nEvery plugin has an id of the form `<name>@<origin>`, which is what you see in settings files and in `claude plugin list --json`. The part after `@` tells you where Claude Code found the plugin:\n\n| ID ends in | How the plugin got there | How you turn it on or off |\n| :- | :- | :- |\n| `@<marketplace>` | You installed it from a marketplace you added | `\"<name>@<marketplace>\": true` or `false` under `enabledPlugins` in a settings file |\n| `@inline` | You started Claude Code with `--plugin-dir` or `--plugin-url`, set [`CLAUDE_CODE_PLUGIN_DIRS`](/docs/en/env-vars#variables), or an Agent SDK app passed the `plugins` option. It loads for that session only | On for the session unless the manifest sets `defaultEnabled: false` or a settings file sets `\"<name>@inline\": false` |\n| `@skills-dir` | You saved a plugin directory that has a `.claude-plugin/plugin.json` under `~/.claude/skills/` or the project's `.claude/skills/` | The manifest's `defaultEnabled`, unless a settings file sets `\"<name>@skills-dir\"` to `true` or `false` |\n| `@synced` | You or your organization turned it on for your claude.ai account, and Claude Code [downloaded it](#synced-plugins) | On unless the manifest sets `defaultEnabled: false` or a settings file sets `\"<name>@synced\": false`. A plugin your organization marks as required loads regardless |\n\nFor a marketplace plugin, `<name>` is the entry name in `marketplace.json`; for `@inline` and `@skills-dir` it's the `name` in the plugin's manifest.\n\nThe origin names in this table are reserved, so no marketplace can be named `inline`, `skills-dir`, or `synced`."
     }
   ]
 }
