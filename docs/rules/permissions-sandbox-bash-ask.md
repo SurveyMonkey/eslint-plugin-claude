@@ -22,7 +22,7 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 
 ## Rule details
 
-When `sandbox.enabled` is `true` and `autoAllowBashIfSandboxed` keeps its default of `true`, Claude Code runs a sandboxed Bash
+Assume `sandbox.enabled` is `true` and `autoAllowBashIfSandboxed` keeps its default of `true`. Then Claude Code runs a sandboxed Bash
 command with no prompt. This holds although the permissions hold a bare `Bash` ask rule or the same rule as `Bash(*)`. The
 sandbox boundary replaces the prompt for the whole tool.[^interact][^auto] So the ask rule does not prompt for a sandboxed command.
 
@@ -38,7 +38,7 @@ The rule is silent in these cases:
 
 ### What the rule does not check
 
-Claude Code still applies the ask rule in a few cases, and the rule reports the entry in these cases too:
+Claude Code still applies the ask rule in a few cases. The rule reports the entry in these cases too:
 
 - In plan mode, Claude Code does not skip the ask rule.
 - A command that runs outside the sandbox, such as an excluded command, still prompts.
@@ -52,7 +52,9 @@ It reads a quoted `"true"` in `sandbox.enabled` as no value. A user file or the 
 
 The rule adds up the files of one source. For a project file, the source is the pair `.claude/settings.json` and
 `.claude/settings.local.json`. For a managed file, the source is `managed-settings.json` with the files of
-`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing to what a value proves. The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
+`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing to what a value proves.
+
+The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
 
 Fail, in `.claude/settings.json`:
 
