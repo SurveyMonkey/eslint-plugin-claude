@@ -1491,6 +1491,16 @@ describe('a moved section (#152)', () => {
     expect(none.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
       ['the-hook-names-names', undefined],
     ])
+    // A word of three characters counts: "add", "mcp" and "server".
+    const short = await run(
+      map,
+      edited.replace('## The Hook, EVENT names', '## MCP server: add'),
+      { fetch: jev.fetch, key: KEY },
+      base.replace('## Hook event names', '## Add MCP server'),
+    )
+    expect(short.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
+      ['mcp-server-add', [{ heading: 'add-mcp-server', blockId: 'add-mcp-server' }]],
+    ])
   })
 
   it('names no block of a move as a possible move of another block', async () => {

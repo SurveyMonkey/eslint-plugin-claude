@@ -326,7 +326,7 @@ describe('the body hash', () => {
       '',
       '## One',
       '',
-      '',
+      ' \t',
       'First line.',
       '',
       'Second line.  ',
