@@ -124,12 +124,12 @@ export function readJsonBody(file: string, bound: string): ValueNode | null {
   }
 }
 
-/** The top-level value of the `.json` file that a plugin manifest names with `declared`. The
- *  result is null when the path is not a plain `./` path to a `.json` file, and when the file is
- *  not there or cannot be read. A link to a file out of the plugin directory is not read, as
- *  Claude Code loads no path that leaves the plugin.
+/** The file and the real path of the `.json` file that a plugin manifest names with `declared`.
+ *  The result is null when the path is not a plain `./` path to a `.json` file, and when the
+ *  file is not there. A link to a file out of the plugin directory is not read, as Claude Code
+ *  loads no path that leaves the plugin.
  *  (https://code.claude.com/docs/en/plugins/manifest-reference#path-rules) */
-function readDeclaredJson(root: string, declared: string): ValueNode | null {
+function declaredFile(root: string, declared: string): { file: string; real: string } | null {
   if (
     pathFault(declared) !== undefined ||
     declared.includes('\\') ||
@@ -144,7 +144,7 @@ function readDeclaredJson(root: string, declared: string): ValueNode | null {
   if (typeof realRoot !== 'string' || typeof real !== 'string' || !isInside(real, realRoot)) {
     return null
   }
-  return readJsonBody(file, repositoryRoot(root))
+  return { file, real }
 }
 
 /** One server that a plugin declares. `member` holds the name and the config. `node` is where a
@@ -164,6 +164,8 @@ export interface DeclarationKind {
   readonly key: 'mcpServers' | 'lspServers'
   readonly rootFile: string
   readonly fileMembers: (body: ValueNode) => MemberNode[]
+  /** The members of the map in the file at the plugin root. */
+  readonly rootMembers: (body: ValueNode) => MemberNode[]
 }
 
 /** The servers that the plugin at `root` declares, in the order that Claude Code loads them: the
@@ -185,9 +187,9 @@ export function pluginDeclarations(
     }
   }
   const body = readJsonBody(path.join(root, kind.rootFile), repositoryRoot(root))
-  add(body === null ? [] : kind.fileMembers(body), kind.rootFile)
-  // A file that the manifest names twice, or names with the path of the root file, loads again
-  // with the same servers. It declares no second server, so it is read once.
+  add(body === null ? [] : kind.rootMembers(body), kind.rootFile)
+  // The rule reads a file once, also when the manifest names it twice, with the path of the root
+  // file, or through a link. Only a path that the rule accepts counts as read.
   const read = new Set<string>()
   const rootReal = realOf(path.join(root, kind.rootFile))
   if (typeof rootReal === 'string') {
@@ -198,14 +200,12 @@ export function pluginDeclarations(
     declared?.type === 'Array' ? declared.elements.map(({ value }) => value) : [declared]
   for (const item of items) {
     if (item?.type === 'String') {
-      const real = realOf(path.resolve(root, item.value))
-      if (typeof real === 'string') {
-        if (read.has(real)) {
-          continue
-        }
-        read.add(real)
+      const target = declaredFile(root, item.value)
+      if (target === null || read.has(target.real)) {
+        continue
       }
-      const file = readDeclaredJson(root, item.value)
+      read.add(target.real)
+      const file = readJsonBody(target.file, repositoryRoot(root))
       add(file === null ? [] : kind.fileMembers(file), item.value, item)
     } else if (item?.type === 'Object') {
       add(lastMembers(item.members), 'an inline map')
@@ -218,6 +218,7 @@ const MCP_KIND: DeclarationKind = {
   key: 'mcpServers',
   rootFile: '.mcp.json',
   fileMembers: (body) => serverMembers(body, 'plugin'),
+  rootMembers: (body) => serverMembers(body, 'plugin'),
 }
 
 /** The MCP servers that the plugin at `root` declares, in load order. */
@@ -262,7 +263,7 @@ export function plainOf(node: ValueNode): unknown {
  *  Code strips. A valid entry is an object with one key: `serverName` with a string that matches
  *  the allowlist pattern, `serverUrl` with a string, or `serverCommand` with an array of strings.
  *  A name that the pattern rejects is no allowlist entry, so it cannot overlap with a denylist
- *  entry. The rule applies the same pattern to a denylist name for that reason. `mcp-policy-entry-schema` reports it.
+ *  entry. `mcp-policy-entry-schema` reports it.
  *  (https://code.claude.com/docs/en/settings-reference#allowedmcpservers) */
 export function policyKey(entry: unknown): string | undefined {
   if (entry === null || typeof entry !== 'object' || Array.isArray(entry)) {
