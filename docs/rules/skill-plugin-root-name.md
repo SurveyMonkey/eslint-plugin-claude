@@ -23,7 +23,7 @@ Set a name on the `SKILL.md` at the root of a plugin.
 A plugin can hold one skill at its root, in `<plugin>/SKILL.md`. The `name` field gives the
 command name. Without a `name`, a marketplace install names the skill after its cache directory.
 The plugin does not give the name.[^components][^name] The skills page says the skill then uses
-the plugin directory name. The two pages differ, and either way the name is not the plugin name.
+the plugin directory name. The plugins page says the cache directory.
 
 The rule reports a plugin-root `SKILL.md` in these cases:
 
@@ -37,12 +37,14 @@ cases:
 - A skill in `skills/<name>/SKILL.md`. Its folder gives the name.
 - A `SKILL.md` in a directory that has no manifest.
 - A frontmatter block that does not parse. The `name` is not known then.
-- A `name` that is not a string. [`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports it.
+- A `name` that is not a string and is not null.
+  [`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports it.
 - A plugin root that the rule cannot see. For example, `.claude-plugin/` cannot be read, or it is
   a link out of the repository.
 
 A plugin-root `SKILL.md` that [`skill-plugin-root-shadowed`](skill-plugin-root-shadowed.md)
-reports also gets this report if it has no `name`. One fault is a shadowed skill. The other is a missing name.
+reports also gets this report if it has no `name`. One fault is a shadowed skill. The other is
+a missing name.
 
 Fail, `my-plugin/SKILL.md`:
 

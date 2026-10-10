@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-argument-escape, which reports a doubled backslash before an argument placeholder in the body of a skill or command, because both backslashes stay and the placeholder can still expand, with examples and sources.
+description: The ESLint rule claude/skill-argument-escape, which reports a doubled backslash before an argument placeholder in the body of a skill or command, because both backslashes stay and the placeholder still expands, with examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [50]
@@ -22,7 +22,7 @@ Escape an argument placeholder with one backslash, not two.
 
 A backslash before an argument placeholder keeps it as text. `\$1.00` stays `$1.00`. Only one
 backslash directly before the token escapes it. A doubled backslash, as in `\\$1`, leaves both
-backslashes in place, and `$1` can still expand to the argument value.[^substitutions]
+backslashes in place, and `$1` still expands to the argument value.[^substitutions]
 
 The rule reports two backslashes and then one of these tokens:
 
@@ -33,15 +33,16 @@ The rule reports two backslashes and then one of these tokens:
 The report points at the backslashes and the token. It makes no report for a token that is
 followed by a word character, such as `$1st`.
 
-The docs give no exemption for code. So the rule reads fenced code and inline code too. It does not read the frontmatter. The rule checks a skill or command file in a
-project or in a plugin.
+The docs give no exemption for code. So the rule reads fenced code and inline code too. It does
+not scan the frontmatter for placeholders. The rule checks a skill or command file in a project
+or in a plugin.
 
 The rule is silent in these cases:
 
 - A single backslash, or no backslash.
 - Three backslashes or more. The docs do not say what Claude Code does with a longer run.
 - A name that a frontmatter block declares, when the block does not parse. The names are not
-  known then. The two built-in tokens still get a report.
+  known then. The rule still checks the two built-in tokens.
 - A file that is not a skill or command file.
 
 Fail:

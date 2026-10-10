@@ -22,12 +22,16 @@ put('bare/.claude-plugin/plugin.json', '{}')
 put('broken/.claude-plugin/plugin.json', '{')
 put('numeric/.claude-plugin/plugin.json', '{"name": 5}')
 put('blank/.claude-plugin/plugin.json', '{"name": ""}')
+put('spaces/.claude-plugin/plugin.json', '{"name": "  "}')
+put('nul/.claude-plugin/plugin.json', '{"name": null}')
 const skill = put('plug/skills/s/SKILL.md', '')
 const rootSkill = put('plug/SKILL.md', '')
 const bareSkill = put('bare/skills/s/SKILL.md', '')
 const brokenSkill = put('broken/skills/s/SKILL.md', '')
 const numericSkill = put('numeric/skills/s/SKILL.md', '')
 const blankSkill = put('blank/skills/s/SKILL.md', '')
+const spacesSkill = put('spaces/skills/s/SKILL.md', '')
+const nullSkill = put('nul/skills/s/SKILL.md', '')
 const command = put('plug/commands/c.md', '')
 // A file with this name below `commands/` is a command file, not a skill.
 const commandNamedSkill = put('plug/commands/SKILL.md', '')
@@ -74,6 +78,9 @@ markdownTester.run('skill-plugin-name-prefix', ruleOf('skill-plugin-name-prefix'
     { code: named('numeric:fancy'), filename: numericSkill, options: BEFORE_FIX },
     { code: named('5:fancy'), filename: numericSkill, options: BEFORE_FIX },
     { code: named(':fancy'), filename: blankSkill, options: BEFORE_FIX },
+    { code: named('"  :fancy"'), filename: spacesSkill, options: BEFORE_FIX },
+    // A `null` name is present and unusable, so the directory name is not the prefix.
+    { code: named('nul:fancy'), filename: nullSkill, options: BEFORE_FIX },
     // Not a skill file.
     { code: named('my-plugin:fancy'), filename: decoy, options: BEFORE_FIX },
   ],

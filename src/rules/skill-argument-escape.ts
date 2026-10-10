@@ -1,5 +1,5 @@
 // A doubled backslash before an argument placeholder does not escape it. Both backslashes stay,
-// and the placeholder can still expand (docs/rules/skill-argument-escape.md). The docs give no
+// and the placeholder still expands (docs/rules/skill-argument-escape.md). The docs give no
 // exemption for code, so the rule reads fenced and inline code too.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -30,7 +30,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'doubled' }> = {
     schema: [],
     messages: {
       doubled:
-        'A doubled backslash does not escape `{{token}}`. Both backslashes stay, and the placeholder can still expand. Use one backslash to keep it as text.',
+        'A doubled backslash does not escape `{{token}}`. Both backslashes stay, and the placeholder still expands. Use one backslash to keep it as text.',
     },
   },
   create(context) {
