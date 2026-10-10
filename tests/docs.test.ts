@@ -108,6 +108,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'memory-settings-schema',
     'memory-symlink-network-target',
     'output-style-force-for-plugin',
+    'memory-topic-frontmatter',
     'output-style-frontmatter-schema',
     'output-style-frontmatter-valid',
     'output-style-name-unique',

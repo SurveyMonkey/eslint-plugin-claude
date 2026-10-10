@@ -16,7 +16,7 @@ const lint = (code: string, file = '.claude/agent-memory/reviewer/feedback_testi
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a type that is none of the four kinds, over the value', () => {
+  it('reports a type that is none of the four kinds, over the value', () => {
     const messages = lint('---\nname: testing\ntype: note\n---\nBody\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -32,7 +32,7 @@ describe(RULE, () => {
     )
   })
 
-  it.fails('reports a modified value that is not an ISO 8601 date or timestamp', () => {
+  it('reports a modified value that is not an ISO 8601 date or timestamp', () => {
     const messages = lint('---\ntype: user\nmodified: Oct 14, 2026\n---\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -40,7 +40,7 @@ describe(RULE, () => {
       line: 3,
       column: 11,
       endLine: 3,
-      endColumn: 24,
+      endColumn: 23,
     })
     expect(messages[0]?.message).toBe(
       '`modified` is "Oct 14, 2026". Claude Code writes an ISO 8601 timestamp, such as 2026-10-14T09:30:00Z.',
@@ -52,7 +52,7 @@ describe(RULE, () => {
       '2026-10-14T25:00:00Z',
       '2026-10-14T09:61:00Z',
       '2026-10-14 09:30:00',
-      '2026-10-14T09:30',
+      '2026-10-14T09',
       'yesterday',
       '"2026-10-14T09:30:00 Z"',
     ]) {
@@ -60,18 +60,18 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reports a value that is not a string, with the value as it reads', () => {
+  it('reports a value that is not a string, with the value as it reads', () => {
     expect(lint('---\ntype: 3\n---\n')[0]?.message).toContain('`type` is 3.')
     expect(lint('---\ntype: [user]\n---\n')[0]?.message).toContain('`type` is ["user"].')
     expect(lint('---\nmodified: 20261014\n---\n')[0]?.message).toContain('`modified` is 20261014.')
     expect(ids(lint('---\ntype:\n---\n'))).toEqual(['badType'])
   })
 
-  it.fails('reports both fields, each once, in the order of the file', () => {
+  it('reports both fields, each once, in the order of the file', () => {
     expect(ids(lint('---\nmodified: soon\ntype: note\n---\n'))).toEqual(['badModified', 'badType'])
   })
 
-  it.fails('stays silent on each kind and on ISO 8601 values', () => {
+  it('stays silent on each kind and on ISO 8601 values', () => {
     for (const kind of ['user', 'feedback', 'project', 'reference']) {
       expect(lint(`---\ntype: ${kind}\n---\n`), kind).toEqual([])
     }
@@ -90,19 +90,19 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent on a file with no frontmatter, no field or other fields', () => {
+  it('stays silent on a file with no frontmatter, no field or other fields', () => {
     expect(lint('# Testing\n\nRun the suite first.\n')).toEqual([])
     expect(lint('---\nname: testing\ndescription: d\n---\n')).toEqual([])
     expect(lint('---\n---\nBody\n')).toEqual([])
     expect(lint('Body\n\n---\ntype: note\n---\n')).toEqual([])
   })
 
-  it.fails('stays silent on frontmatter that is not YAML that gives a map', () => {
+  it('stays silent on frontmatter that is not YAML that gives a map', () => {
     expect(lint('---\ntype: [\n---\n')).toEqual([])
     expect(lint('---\n- type: note\n---\n')).toEqual([])
   })
 
-  it.fails('does not check the MEMORY.md index', () => {
+  it('does not check the MEMORY.md index', () => {
     expect(
       lint('---\ntype: note\nmodified: soon\n---\n', '.claude/agent-memory/reviewer/MEMORY.md'),
     ).toEqual([])
