@@ -36,10 +36,10 @@ not parse is named after the file.[^fields]
 
 The manifest key `agents` replaces the `agents/` scan.[^agents] A file that the key lists loads
 without its subfolders, so `"./custom/review/security.md"` loads as `my-plugin:security`.[^subfolders]
-Two listed files with one file name then clash. When the manifest sets `agents`, the rule compares
+Two listed files with one scoped name then clash. When the manifest sets `agents`, the rule compares
 the listed files. A file in `agents/` that the key does not list does not load, so it gets no
 report. The key takes a path or a list of paths. The rule reads `.md` files inside the plugin. It
-ignores other entries.[^combine] A key of another form gives no report.
+ignores other entries, such as a folder, so a key that lists only folders gives no report.[^combine] A key of another form gives no report.
 
 The rule reads no file out of the repository. It makes no report when it cannot read the manifest,
 or when the manifest is out of the repository. A file that it cannot read has no name to compare.
