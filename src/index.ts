@@ -29,6 +29,7 @@ import marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manife
 import marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
 import marketplaceEntryRootSkills from './rules/marketplace-entry-root-skills.ts'
 import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
+import marketplaceHeadersLiteralCredential from './rules/marketplace-headers-literal-credential.ts'
 import marketplaceLocation from './rules/marketplace-location.ts'
 import marketplaceMinVersion from './rules/marketplace-min-version.ts'
 import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
@@ -36,7 +37,9 @@ import marketplaceRelativeSourceBackslash from './rules/marketplace-relative-sou
 import marketplaceRelativeSourceEscapeSymlink from './rules/marketplace-relative-source-escape-symlink.ts'
 import marketplaceRelativeSourceExists from './rules/marketplace-relative-source-exists.ts'
 import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
+import marketplaceRelativeSourceUrlHosted from './rules/marketplace-relative-source-url-hosted.ts'
 import marketplaceSchema from './rules/marketplace-schema.ts'
+import marketplaceSelfHostedRootSource from './rules/marketplace-self-hosted-root-source.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
@@ -164,6 +167,9 @@ const modules = [
   marketplaceLocation,
   marketplaceMinVersion,
   marketplaceRelativeSourceBackslash,
+  marketplaceSelfHostedRootSource,
+  marketplaceRelativeSourceUrlHosted,
+  marketplaceHeadersLiteralCredential,
   settingsEnabledPluginsSchema,
   settingsEnabledPluginsEntryExists,
   settingsExtraKnownMarketplacesSchema,
@@ -278,6 +284,9 @@ const recommended: Record<RuleName, Severity> = {
   'marketplace-location': 'warn',
   'marketplace-min-version': 'warn',
   'marketplace-relative-source-backslash': 'warn',
+  'marketplace-self-hosted-root-source': 'warn',
+  'marketplace-relative-source-url-hosted': 'off',
+  'marketplace-headers-literal-credential': 'off',
   'settings-enabled-plugins-schema': 'error',
   'settings-enabled-plugins-entry-exists': 'error',
   'settings-extra-known-marketplaces-schema': 'error',

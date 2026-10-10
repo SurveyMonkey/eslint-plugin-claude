@@ -463,6 +463,23 @@
       "hash": "cbb63aa73ae5b743c90209ddbab7c84b7d733b1055cbdffeb99186fb514c0fee"
     }
   ],
+  "marketplace-headers-literal-credential": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Authenticate archive downloads",
+      "hash": "0f911c139520dfff6ae7339a555f06609159af0b81daf8acc5a795cb9735ac91"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Marketplace source types",
+      "hash": "363fb1066a33cc332460d5ed0860bb5833bf9e2560dfbfc5d293b9c7d5d89cdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Allowed source types",
+      "hash": "3d9ea023e8dc13b94922214da221572f96ab480b116d82fb0a34a668f4c9b418"
+    }
+  ],
   "marketplace-location": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -602,6 +619,33 @@
       "hash": "56e9457d774964408e07c36de00c23333db1973fe539a20d3f117760860fd81a"
     }
   ],
+  "marketplace-relative-source-url-hosted": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Fields by type",
+      "hash": "e6d304bc3e028137273b69824e9845f5ac409274183f08c8260e26d2b923358b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Avoid relative-path entries in a URL-hosted marketplace",
+      "hash": "f7e91a0e03a030456ff0dfde543bde7c25e6de534fa86b567ff4d7e9673eb1db"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Plugins with relative paths fail in URL-based marketplaces",
+      "hash": "85b2429427e2464f7921bb9daeb6b420551ceb4985e52444c65d0f0107da4cf5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "extraKnownMarketplaces",
+      "hash": "8688dc4975baa5c58b0fea76a5236f215ed3a18c77c94ff30b7ce49e34cba1d3"
+    }
+  ],
   "marketplace-schema": [
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -622,6 +666,18 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Marketplace file",
       "hash": "237f4a62a7dfab12edef8c2b041729aeffe6fe9d6f13bf593ec5bb18431b515b"
+    }
+  ],
+  "marketplace-self-hosted-root-source": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/publish",
+      "heading": "Add the marketplace file to your repository",
+      "hash": "604b9dde91fc912432a1daf5c6ab14357f4f5633c618bd45c599e8fd4f9db25f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Relative path plugin source",
+      "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
   "marketplace-source-schema": [
