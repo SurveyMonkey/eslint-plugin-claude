@@ -4,6 +4,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { parameterOf } from '../permission-entries.ts'
+import { hasScheme, isIpv6Literal, isPlainHost, leadingFault } from '../permission-host.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -11,27 +12,23 @@ const name = 'permissions-webfetch-domain-syntax' as const
 
 type MessageId = 'missingPrefix' | 'scheme' | 'path' | 'port' | 'notHost'
 
-const SCHEME = /^[A-Za-z][A-Za-z0-9+.-]*:\/\//
 const DOMAIN_PREFIX = /^\s*domain\s*:/
-const IPV6_LITERAL = /^\[[0-9A-Fa-f:.]+\]$/
 
 /** The fault of `host`, the text after `domain:`, or null. The first fault in the order of the
  *  checks is the one that the rule reports. A wildcard is valid in any position. This
  *  rule does not read where it stands. */
 function hostFault(host: string): MessageId | null {
-  if (SCHEME.test(host)) {
-    return 'scheme'
+  const leading = leadingFault(host)
+  if (leading !== null) {
+    return leading
   }
-  if (/[/?#]/.test(host)) {
-    return 'path'
-  }
-  if (IPV6_LITERAL.test(host)) {
+  if (isIpv6Literal(host)) {
     return null
   }
   if (/:\d+$/.test(host)) {
     return 'port'
   }
-  return host === '' || /[\s@:\\]/.test(host) ? 'notHost' : null
+  return isPlainHost(host) ? null : 'notHost'
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
@@ -66,7 +63,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         if (prefix !== null) {
           text = specifier.slice(prefix[0].length).trim()
           messageId = hostFault(text)
-        } else if (SCHEME.test(text)) {
+        } else if (hasScheme(text)) {
           messageId = 'scheme'
         } else {
           // A deny or ask rule can name another parameter, as `prompt:*`. That is a parameter
