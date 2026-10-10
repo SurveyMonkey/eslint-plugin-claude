@@ -8,7 +8,7 @@
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import { classifyMemoryFile, isAgentsMd } from '../memory-files.ts'
+import { classifyMemoryFile } from '../memory-files.ts'
 import {
   candidates,
   followImports,
@@ -55,7 +55,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'external' | 'externalInImporte
     },
   },
   create(context) {
-    // An `AGENTS.md` never prompts, and a `CLAUDE.local.md` is not committed.
+    // An `AGENTS.md` that the setting reads never prompts, and a `CLAUDE.local.md` is not committed.
     if (classifyMemoryFile(context.filename) !== 'claude-md') {
       return {}
     }
@@ -83,10 +83,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'external' | 'externalInImporte
             })
           }
         }
-        const { imported: loaded } = followImports(file, sourceCode.text, bound, DEPTH)
-        for (const [real, { text, via }] of loaded) {
-          // A CLAUDE.md is checked on its own, and an AGENTS.md never prompts.
-          if (classifyMemoryFile(real) === 'claude-md' || isAgentsMd(real)) {
+        const chain = followImports(file, sourceCode.text, bound, DEPTH)
+        for (const [real, { text, via }] of chain.imported) {
+          // A CLAUDE.md is checked on its own. The imports of a file at the last hop do not load.
+          if (classifyMemoryFile(real) === 'claude-md' || chain.loaded.get(real) === DEPTH) {
             continue
           }
           for (const imported of parseImports(text)) {

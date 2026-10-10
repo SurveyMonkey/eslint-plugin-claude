@@ -78,6 +78,29 @@ describe.skipIf(noLinks)(RULE, () => {
   })
 })
 
+describe.skipIf(noLinks)(`${RULE}: the test for a network path`, () => {
+  it('reports a link to a local path that looks like a share, and leaves a share', () => {
+    const local = [
+      '\\\\wsl$\\Ubuntu\\x',
+      '\\\\wsl.localhost\\Ubuntu\\x',
+      '\\\\?\\C:\\x',
+      '\\\\.\\pipe\\x',
+      '/netfoo',
+    ]
+    const shares = ['\\\\?\\UNC\\srv\\share\\x', '\\\\SERVER\\share', '/net', '/Network']
+    for (const target of local) {
+      const dir = tree({})
+      link(dir, 'CLAUDE.md', target)
+      expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', TEXT)), target).toEqual(['symlink'])
+    }
+    for (const target of shares) {
+      const dir = tree({})
+      link(dir, 'CLAUDE.md', target)
+      expect(lintMemory(RULE, dir, 'CLAUDE.md', TEXT), target).toEqual([])
+    }
+  })
+})
+
 describe.skipIf(noLinks)(`${RULE}: what the rule cannot read`, () => {
   it('reports a link that leads nowhere, because the report rests on the link only', () => {
     const dir = tree({})

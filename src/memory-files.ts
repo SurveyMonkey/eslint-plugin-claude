@@ -48,7 +48,7 @@ export function isAgentsMd(file: string): boolean {
 
 /** The number of lines in `text`. A line end ends a line, and does not start a new one. */
 export function lineCount(text: string): number {
-  const lines = text.split(/\r\n|[\r\n\u2028\u2029]/)
+  const lines = text.split(/\r\n|[\r\n]/)
   return lines[lines.length - 1] === '' ? lines.length - 1 : lines.length
 }
 
