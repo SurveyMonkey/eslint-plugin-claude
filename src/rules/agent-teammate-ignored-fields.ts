@@ -4,7 +4,7 @@
 // Claude names launches as a teammate. So the rule is a heuristic. It checks local agents only.
 // A plugin cannot turn teams on, and `agent-plugin-ignored-fields` owns `mcpServers` there.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { envOf, isOn, localAgentSettings } from '../agent-settings.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
@@ -19,11 +19,14 @@ const TEAMS = 'CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS'
 // applies `mcpServers`.
 const SPLIT_PANES = ['tmux', 'iterm2']
 
-/** True when a field has a value that sets it: a list with an entry, a string with text, or
- *  any other value that is not null. */
+/** True when a field has a value that sets it: a list with an entry, a string with text, a
+ *  mapping with a key, or any other value that is not null. */
 function isSet(value: unknown): boolean {
   if (Array.isArray(value)) {
     return value.length > 0
+  }
+  if (typeof value === 'object' && value !== null) {
+    return Object.keys(value).length > 0
   }
   return typeof value === 'string' ? value.trim() !== '' : value !== null
 }
@@ -57,7 +60,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageId }> = {
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null || scope.plugin) {
       return {}
     }

@@ -263,6 +263,36 @@ describe('the manifest key agents', () => {
     })
   })
 
+  describe.skipIf(process.platform === 'win32')('with a link out of the plugin', () => {
+    it('sees no file that is a link out of the plugin root, inside the repository', () => {
+      // The target is in the repository, so the bound does not hide it. The plugin root does.
+      mkdirSync(at('m18', '.git'), { recursive: true })
+      mkdirSync(at('m18', 'p', 'custom'), { recursive: true })
+      mkdirSync(at('m18', 'p', '.claude-plugin'), { recursive: true })
+      writeFileSync(
+        at('m18', 'p', '.claude-plugin', 'plugin.json'),
+        JSON.stringify({ agents: ['./custom/link.md'] }),
+      )
+      mkdirSync(at('m18', 'sibling'), { recursive: true })
+      writeFileSync(at('m18', 'sibling', 'real.md'), 'x')
+      symlinkSync(at('m18', 'sibling', 'real.md'), at('m18', 'p', 'custom', 'link.md'))
+      expect(classifyAgentFile(at('m18', 'p', 'custom', 'link.md'))).toBeNull()
+    })
+  })
+
+  it('sees a file of a plugin whose root is the root of the repository', () => {
+    mkdirSync(at('m19', '.git'), { recursive: true })
+    mkdirSync(at('m19', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m19', '.claude-plugin', 'plugin.json'),
+      JSON.stringify({ agents: ['./custom/a.md'] }),
+    )
+    expect(classifyAgentFile(at('m19', 'custom', 'a.md'))).toEqual({
+      plugin: true,
+      root: at('m19'),
+    })
+  })
+
   describe.skipIf(chmodCannotBlock)('with no access to a folder', () => {
     it('does not go on to a plugin root above a plugin root that it cannot see', () => {
       const outer = manifested('m16', { agents: ['./inner/custom/a.md'] })

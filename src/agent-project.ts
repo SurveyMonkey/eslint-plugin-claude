@@ -81,7 +81,7 @@ export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
   if (named !== null) {
     const files: string[] = []
     for (const file of named) {
-      const state = agentFileState(file, bound)
+      const state = agentFileState(file, bound, scope.root)
       if (state === UNREADABLE) {
         return UNREADABLE
       }

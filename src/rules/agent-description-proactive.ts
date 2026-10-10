@@ -2,7 +2,7 @@
 // encourage delegation (docs/rules/agent-description-proactive.md). The rule is a heuristic: it
 // looks for the word, and cannot tell if an agent is meant for explicit use only.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
@@ -25,7 +25,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {

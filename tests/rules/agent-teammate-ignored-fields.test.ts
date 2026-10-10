@@ -114,6 +114,7 @@ describe('agent-teammate-ignored-fields', () => {
         'skills: "  "\n',
         'mcpServers: "  "\n',
         'mcpServers: []\n',
+        'mcpServers: {}\n',
         'mcpServers:\n',
         'background: false\n',
         'background: no\n',

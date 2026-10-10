@@ -1136,7 +1136,7 @@ const AGENT_OFF_RULES = [
 
 // The last five of the list above. They take every Markdown file, because the manifest key
 // `agents` of a plugin can name an agent file outside `agents/`. The rule asks where the file sits.
-const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(6)
+const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(-5)
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [

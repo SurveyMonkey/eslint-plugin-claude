@@ -41,6 +41,9 @@ describe('agent-descriptions-budget', () => {
     ])
     const message = run(A, LOCAL, files)[0]?.message ?? ''
     expect(message).toContain('15001')
+    // a: 1 + 29999, b: 1 + 30000, c: 1 + 1. The file under test adds 30000.
+    expect(message).toContain('60003 characters')
+    expect(message).toContain('this file adds 30000 characters')
     expect(message).toContain('4 characters per token')
     expect(message).toContain('15000')
   })
@@ -167,6 +170,7 @@ describe('agent-descriptions-budget', () => {
       const files = {
         '.claude/agents/noname.md': `---\ndescription: ${'x'.repeat(30000)}\n---\n`,
         '.claude/agents/nodesc.md': `---\nname: ${'y'.repeat(30001)}\n---\n`,
+        '.claude/agents/blank.md': `---\nname: ${'z'.repeat(30001)}\ndescription: "   "\n---\n`,
         '.claude/agents/bad.md': '---\nname: [x\n---\n',
         '.claude/agents/plain.md': 'x'.repeat(40000),
         '.claude/agents/notes.txt': agent('n', 40000),
@@ -178,7 +182,7 @@ describe('agent-descriptions-budget', () => {
         '.claude/agents/list.md': '---\nname: [a, b]\ndescription: [c, d]\n---\n',
         '.claude/agents/number.md': '---\nname: 5\ndescription: 7\n---\n',
       }
-      expect(run(agent('a', 30000), LOCAL, { ...files, ...sibling(29996) })).toEqual([])
+      expect(run(agent('a', 30000), LOCAL, { ...files, ...sibling(29998) })).toEqual([])
     })
     it('does not count the agents of another scope', () => {
       const files = {
