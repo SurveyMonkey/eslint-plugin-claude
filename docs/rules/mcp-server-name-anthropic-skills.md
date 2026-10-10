@@ -27,7 +27,8 @@ The docs say to rename the server to list its prompts.
 The rule reports a server whose name is exactly `anthropic-skills`. The report is on the name. It
 reads these places:
 
-- A `.mcp.json`, in a project and at the root of a plugin, with or without the `mcpServers` wrapper.
+- A `.mcp.json`, in a project and at the root of a plugin. A project file needs the `mcpServers`
+  wrapper. A plugin file may omit it.
 - The servers that `plugin.json` declares: the inline maps, and each `.json` file that `mcpServers`
   names. A report for a declared file is on the path in the manifest.
 

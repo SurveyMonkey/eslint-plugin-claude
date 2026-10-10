@@ -26,22 +26,23 @@ SSE when the server does not accept it. That fallback needs Claude Code v2.1.265
 
 The rule reports `"type": "sse"`. The report is on the value. It reads these places:
 
-- A `.mcp.json`, in a project and at the root of a plugin, with or without the `mcpServers` wrapper.
+- A `.mcp.json`, in a project and at the root of a plugin. A project file needs the `mcpServers`
+  wrapper. A plugin file may omit it.
 - The servers that `plugin.json` declares: the inline maps, and each `.json` file that `mcpServers`
   names. A report for a declared file is on the path in the manifest.
 
 The rule leaves these cases alone:
 
-- A `type` value other than the exact string `sse`, such as `SSE`. A rule for
-  the server schema owns a `type` value that is not a known transport.
+- A `type` value other than the exact string `sse`, such as `SSE`. The rule
+  `mcp-server-schema` owns a `type` value that is not a known transport.
 - An `sse` entry of `managedMcpServers`. Managed MCP accepts the type, and
   `mcp-managed-servers-entry` owns that list.
 - The `.mcp.json` at the plugin root, when the rule lints `plugin.json`. The rule reads that file as
   a file of its own, so a server gets one report.
 - A path under `.claude/`, which `mcp-json-location` reports.
 
-A server that must stay on SSE, because its endpoint has no HTTP transport, can turn the rule off for
-that file.
+A team can turn the rule off for a file with a server that must stay on SSE. This holds when the
+endpoint has no HTTP transport.
 
 Of two `type` members in one entry, the last one counts.
 

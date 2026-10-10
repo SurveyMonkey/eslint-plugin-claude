@@ -20,16 +20,17 @@ Give a `headersHelper` an absolute path, or a command on `PATH`.
 
 ## Rule details
 
-Claude Code runs a `headersHelper` in a shell. It picks the working directory from the place where
-the server is configured: the plugin root for a plugin, the project directory for a project
-`.mcp.json`, and the primary working directory or the configuration directory for other places.[^where]
+Claude Code runs a `headersHelper` in a shell. The directory of the shell depends on where the
+server is configured. A plugin uses the plugin root. A project `.mcp.json` uses the project
+directory. Other places use the primary working directory or the configuration directory.[^where]
 The docs say to give the script as an absolute path or to put it on `PATH`.[^headers]
 
-The rule reads the first word of the command. It reports a word that has a `/` and does not start
+The rule reads the first word of the command, after any `NAME=value` words. It reports a word that has a `/` and does not start
 with `/`, `$` or `~`. So `./h.sh`, `../h.sh` and `scripts/h.sh` fail. The report is on the
 `headersHelper` string. It reads these places:
 
-- A `.mcp.json`, in a project and at the root of a plugin, with or without the `mcpServers` wrapper.
+- A `.mcp.json`, in a project and at the root of a plugin. A project file needs the `mcpServers`
+  wrapper. A plugin file may omit it.
 - The servers that `plugin.json` declares: the inline maps, and each `.json` file that `mcpServers`
   names. A report for a declared file is on the path in the manifest.
 
@@ -37,7 +38,7 @@ The rule leaves these cases alone:
 
 - An absolute path, and a bare command such as `get-headers`.
 - A first word that starts with `$` or `~`, such as `${CLAUDE_PLUGIN_ROOT}/h.sh`, `$HOME/h.sh` and
-  `~/h.sh`. The shell expands them to a path that does not depend on the working directory.
+  `~/h.sh`. Claude Code or the shell expands them to a path that does not depend on the directory.
 - An inline command such as `echo '{...}'`. The first word is `echo`.
 - A relative path that is not the first word, such as `bash ./h.sh`. The rule does not parse the shell.
 - A `headersHelper` that is not a string.
