@@ -35,7 +35,7 @@ cause:
 - **Wrong type.** The `mcpServers` member is not an object. The report is on its value.
 
 The rule skips the `.mcp.json` at the root of a plugin. The docs say that such a file can omit the
-`mcpServers` wrapper and put the servers at the top level.[^plugin] A directory counts as a plugin
+`mcpServers` wrapper. Then the servers are at the top level.[^plugin] A directory counts as a plugin
 root when it holds `.claude-plugin/plugin.json`. The rule makes no report when it cannot read that
 directory.
 

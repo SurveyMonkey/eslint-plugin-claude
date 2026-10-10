@@ -20,16 +20,16 @@ Do not give an MCP server a name that Claude Code reserves.
 
 ## Rule details
 
-Claude Code reserves the names of its built-in servers: `workspace`, `claude-in-chrome`,
-`computer-use`, `Claude Preview` and `Claude Browser`. A configured server with a reserved name
+Claude Code reserves the names of its built-in servers. These include `workspace`,
+`claude-in-chrome`, `computer-use`, `Claude Preview` and `Claude Browser`. A configured server with a reserved name
 is skipped at load time, with a warning that asks for a new name. `claude mcp add` rejects such a
 name with an error.[^warnings]
 
 The rule reads the server names in `.mcp.json` and reports each reserved name. The report is on the
 name. The match is exact, and it is case-sensitive. `Workspace` and `claude-preview` pass.
 
-The rule reads the `mcpServers` object. In a plugin `.mcp.json` the wrapper is optional, so the
-rule also reads the top-level names of a plugin file that has no `mcpServers` member. A directory
+The rule reads the `mcpServers` object. A plugin `.mcp.json` may omit that wrapper. Then the
+rule reads the top-level names of the file. A directory
 counts as a plugin root when it holds `.claude-plugin/plugin.json`. The rule makes no report when
 it cannot read that directory. It skips the paths under `.claude/`, which `mcp-json-location`
 reports.
