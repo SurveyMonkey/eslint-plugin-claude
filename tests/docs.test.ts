@@ -248,6 +248,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-attribution-false',
     'settings-committed-helper-command',
     'plugin-commands-dir-nonempty',
+    'plugin-default-dir-shadowed',
     'plugin-manifest-location',
     'plugin-no-project-plugins-dir',
     'plugin-project-skills-dir-limits',

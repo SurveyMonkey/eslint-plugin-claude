@@ -10,7 +10,7 @@ import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-default-dir-shadowed'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
@@ -41,8 +41,8 @@ describe(RULE, () => {
         messageId: 'shadowed',
         message: message('commands', 'commands'),
         line: 1,
-        column: 14,
-        endColumn: 36,
+        column: 13,
+        endColumn: 35,
       })
     },
   )
