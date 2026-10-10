@@ -1,5 +1,5 @@
-// A `commands` path in a manifest that names a directory with no command in it
-// gives a warning in the debug log of Claude Code and nothing in the session
+// A `commands` path in a manifest can name a directory with no command in it.
+// Claude Code then writes a warning in the debug log, and nothing in the session
 // (docs/rules/plugin-commands-dir-nonempty.md). The rule reports such a path.
 // A command is a `.md` file at any depth, which includes a `SKILL.md` in a
 // subdirectory. The rule makes no report when it cannot read the directory,

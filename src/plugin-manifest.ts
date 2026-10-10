@@ -19,8 +19,9 @@ export interface Plugin {
 /** The plugin of the manifest at `file`, which is `.claude-plugin/plugin.json`.
  *  The result is undefined when the rule cannot see the plugin, so a rule makes
  *  no report. The rule cannot see it in these cases: the root is not a plugin
- *  root, or `isPluginRoot` cannot see it. The manifest is out of the repository,
- *  is a dangling link, does not parse to an object, or fails to read. */
+ *  root, or `isPluginRoot` cannot see it. The manifest can be out of the
+ *  repository, or a link with no target. It can fail to parse to an object, or
+ *  fail to read. */
 export function readPlugin(file: string): Plugin | undefined {
   const root = path.dirname(path.dirname(path.resolve(file)))
   if (isPluginRoot(root) !== true) {
@@ -39,10 +40,11 @@ export const ESCAPES: unique symbol = Symbol('escapes')
 
 /** The real path that the manifest path `text` names, from the plugin root.
  *  The result is `ESCAPES` when the path leaves the plugin root, in its spelling
- *  or through a link. The result is undefined when the path is not there, or the
- *  rule cannot see it: a part of it is a dangling link, has a real path out of
- *  the repository, or fails to read. `text` is not checked for a `./` prefix.
- *  That is for the rules of the path format. */
+ *  or through a link. The result is undefined when the path is not there. It is
+ *  also undefined when the rule cannot see the path. A part of the path can be
+ *  a link with no target, can have a real path out of the repository, or can
+ *  fail to read. `text` is not checked for a `./` prefix. That is for the rules
+ *  of the path format. */
 export function locate(plugin: Plugin, text: string): string | typeof ESCAPES | undefined {
   const dir = path.resolve(plugin.root, text)
   if (!isInside(dir, plugin.root)) {

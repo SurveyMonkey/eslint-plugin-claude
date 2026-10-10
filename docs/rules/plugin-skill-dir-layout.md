@@ -41,6 +41,8 @@ The rule makes no report in these cases:
 - The directory holds a `SKILL.md` itself. It is one skill, and its other files are supporting
   files.
 - The file is a `README.md`, in any letter case. It does not claim to be a skill.
+- The file is a `.md` link whose target is not there or is out of the repository. The rule cannot
+  see such a file.
 - The path is not a string, is not there, names a file, or leaves the plugin root. The rules for
   paths report such a path.
 - The rule cannot see the plugin or the directory. The plugin root can be unseen. The real path of
