@@ -35,8 +35,8 @@ subagent.[^frontmatter] These use the same event names. It reads the managed set
 Claude Code ignores the `hooks` field of a plugin subagent.
 
 The rule reads a `hooks/hooks.json` only when Claude Code reads it. It makes no report on
-`.claude/hooks/hooks.json` or `.claude-plugin/hooks/hooks.json`, unless `.claude/` is a plugin root or
-the plugin manifest names the file. It makes no report on a file in a hidden folder such
+`.claude/hooks/hooks.json`, unless `.claude/` is a plugin root. It makes no report on a
+`.claude-plugin/` file, unless the plugin manifest names the file. It makes no report on a file in a hidden folder such
 as `.github/hooks/hooks.json`. [`hooks-no-standalone-file`](hooks-no-standalone-file.md) reports the first
 two, so a file gets one report.
 
