@@ -54,6 +54,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-tools-skill-for-preload',
     'agent-tools-task-alias',
     'agent-tools-unavailable',
+    'claude-md-agents-md-shadowed',
     'claude-md-agents-md-variant',
     'claude-md-excludes-pattern',
     'claude-md-local-untracked',

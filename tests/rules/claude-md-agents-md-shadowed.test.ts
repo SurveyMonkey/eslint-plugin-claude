@@ -21,7 +21,7 @@ function lint(files: Record<string, string>, file = 'AGENTS.md', git = true) {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports an AGENTS.md beside a CLAUDE.md that does not import it, at the start', () => {
+  it('reports an AGENTS.md beside a CLAUDE.md that does not import it, at the start', () => {
     const messages = lint({ 'CLAUDE.md': '# Rules\n' })
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -35,19 +35,19 @@ describe(RULE, () => {
     )
   })
 
-  it.fails('reports for a .claude/CLAUDE.md and a CLAUDE.local.md, and names the file', () => {
+  it('reports for a .claude/CLAUDE.md and a CLAUDE.local.md, and names the file', () => {
     expect(lint({ '.claude/CLAUDE.md': '# Rules\n' })[0]?.message).toContain('`.claude/CLAUDE.md`')
     expect(lint({ 'CLAUDE.local.md': '# Rules\n' })[0]?.message).toContain('`CLAUDE.local.md`')
   })
 
-  it.fails('reports a .claude/AGENTS.md for a CLAUDE.md in the folder above .claude', () => {
+  it('reports a .claude/AGENTS.md for a CLAUDE.md in the folder above .claude', () => {
     expect(ids(lint({ 'CLAUDE.md': '# Rules\n' }, '.claude/AGENTS.md'))).toEqual(['shadowed'])
     expect(ids(lint({ '.claude/CLAUDE.md': '# Rules\n' }, '.claude/AGENTS.md'))).toEqual([
       'shadowed',
     ])
   })
 
-  it.fails('reports for a CLAUDE.md in a folder above, up to the repository root', () => {
+  it('reports for a CLAUDE.md in a folder above, up to the repository root', () => {
     expect(ids(lint({ 'CLAUDE.md': '# Rules\n' }, 'packages/web/AGENTS.md'))).toEqual(['shadowed'])
     expect(ids(lint({ 'packages/CLAUDE.local.md': 'x\n' }, 'packages/web/AGENTS.md'))).toEqual([
       'shadowed',
@@ -57,22 +57,22 @@ describe(RULE, () => {
     ])
   })
 
-  it.fails('names the nearest file when two exist', () => {
+  it('names the nearest file when two exist', () => {
     const files = { 'CLAUDE.md': 'x\n', 'packages/CLAUDE.md': 'x\n' }
     expect(lint(files, 'packages/web/AGENTS.md')[0]?.message).toContain('`packages/CLAUDE.md`')
   })
 
-  it.fails('stays silent on an AGENTS.md with no CLAUDE.md in its folder or above it', () => {
+  it('stays silent on an AGENTS.md with no CLAUDE.md in its folder or above it', () => {
     expect(lint({})).toEqual([])
     expect(lint({ 'README.md': '# R\n' }, '.claude/AGENTS.md')).toEqual([])
   })
 
-  it.fails('stays silent when the CLAUDE.md is below or beside the folder, not above it', () => {
+  it('stays silent when the CLAUDE.md is below or beside the folder, not above it', () => {
     expect(lint({ 'packages/web/CLAUDE.md': 'x\n' })).toEqual([])
     expect(lint({ 'packages/api/CLAUDE.md': 'x\n' }, 'packages/web/AGENTS.md')).toEqual([])
   })
 
-  it.fails('does not see a folder above the repository root', () => {
+  it('does not see a folder above the repository root', () => {
     const outer = tree(
       { 'CLAUDE.md': 'x\n', 'repo/.git/HEAD': '', 'repo/AGENTS.md': '# A\n' },
       false,
@@ -86,19 +86,19 @@ describe(RULE, () => {
     expect(ids(lintMemory(RULE, inner, 'repo/AGENTS.md', '# A\n'))).toEqual(['shadowed'])
   })
 
-  it.fails('does not see a folder above a tree with no .git', () => {
+  it('does not see a folder above a tree with no .git', () => {
     expect(lint({ 'CLAUDE.md': 'x\n' }, 'packages/web/AGENTS.md', false)).toEqual([])
     expect(ids(lint({ 'packages/web/CLAUDE.md': 'x\n' }, 'packages/web/AGENTS.md', false))).toEqual(
       ['shadowed'],
     )
   })
 
-  it.fails('reads a file that is not on disk as an AGENTS.md of its folder', () => {
+  it('reads a file that is not on disk as an AGENTS.md of its folder', () => {
     const dir = tree({ 'CLAUDE.md': 'x\n' })
     expect(ids(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n'))).toEqual(['shadowed'])
   })
 
-  it.fails('does not check a file that Claude Code does not read as AGENTS.md', () => {
+  it('does not check a file that Claude Code does not read as AGENTS.md', () => {
     const files = { 'CLAUDE.md': 'x\n', '.claude/rules/CLAUDE.md': 'x\n' }
     expect(lint(files, '.claude/rules/AGENTS.md')).toEqual([])
     expect(lint(files, '.agents/AGENTS.md')).toEqual([])
@@ -107,25 +107,25 @@ describe(RULE, () => {
 })
 
 describe(`${RULE}: the import that loads the file`, () => {
-  it.fails('stays silent when the CLAUDE.md imports the AGENTS.md', () => {
+  it('stays silent when the CLAUDE.md imports the AGENTS.md', () => {
     expect(lint({ 'CLAUDE.md': '@AGENTS.md\n\n## Claude Code\n\nUse plan mode.\n' })).toEqual([])
     expect(lint({ 'CLAUDE.md': 'See @./AGENTS.md.\n' })).toEqual([])
     expect(lint({ 'CLAUDE.local.md': '@AGENTS.md\n' })).toEqual([])
   })
 
-  it.fails('resolves the path against the folder of the file that imports', () => {
+  it('resolves the path against the folder of the file that imports', () => {
     expect(lint({ '.claude/CLAUDE.md': '@../AGENTS.md\n' })).toEqual([])
     expect(ids(lint({ '.claude/CLAUDE.md': '@AGENTS.md\n' }))).toEqual(['shadowed'])
     expect(lint({ 'CLAUDE.md': '@packages/web/AGENTS.md\n' }, 'packages/web/AGENTS.md')).toEqual([])
     expect(lint({ '.claude/CLAUDE.md': '@AGENTS.md\n' }, '.claude/AGENTS.md')).toEqual([])
   })
 
-  it.fails('reports an AGENTS.md of another folder, which the CLAUDE.md does not import', () => {
+  it('reports an AGENTS.md of another folder, which the CLAUDE.md does not import', () => {
     const files = { 'CLAUDE.md': '@AGENTS.md\n', 'AGENTS.md': '# Root\n' }
     expect(ids(lint(files, 'packages/web/AGENTS.md'))).toEqual(['shadowed'])
   })
 
-  it.fails('follows an import through other files, to the depth of four hops', () => {
+  it('follows an import through other files, to the depth of four hops', () => {
     const chain = (n: number) => ({
       'CLAUDE.md': '@f1.md\n',
       ...Object.fromEntries(
@@ -140,24 +140,24 @@ describe(`${RULE}: the import that loads the file`, () => {
     expect(ids(lint(chain(4)))).toEqual(['shadowed'])
   })
 
-  it.fails('stays silent when one of two CLAUDE.md files imports the AGENTS.md', () => {
+  it('stays silent when one of two CLAUDE.md files imports the AGENTS.md', () => {
     expect(lint({ 'CLAUDE.md': '# Other\n', 'CLAUDE.local.md': '@AGENTS.md\n' })).toEqual([])
     expect(lint({ 'CLAUDE.md': '@AGENTS.md\n', 'CLAUDE.local.md': '# Other\n' })).toEqual([])
   })
 
-  it.fails('does not count an import in a code span, a fenced block or an HTML comment', () => {
+  it('does not count an import in a code span, a fenced block or an HTML comment', () => {
     const text = 'Write `@AGENTS.md`.\n\n```\n@AGENTS.md\n```\n\n<!-- @AGENTS.md -->\n'
     expect(ids(lint({ 'CLAUDE.md': text }))).toEqual(['shadowed'])
   })
 
-  it.fails('does not count a prose pointer, or an import of a file with the same name elsewhere', () => {
+  it('does not count a prose pointer, or an import of a file with the same name elsewhere', () => {
     expect(ids(lint({ 'CLAUDE.md': 'Read AGENTS.md first.\n' }))).toEqual(['shadowed'])
     expect(ids(lint({ 'CLAUDE.md': '@docs/AGENTS.md\n', 'docs/AGENTS.md': 'x\n' }))).toEqual([
       'shadowed',
     ])
   })
 
-  it.skipIf(noLinks).fails('stays silent when the CLAUDE.md is a link to the AGENTS.md', () => {
+  it.skipIf(noLinks)('stays silent when the CLAUDE.md is a link to the AGENTS.md', () => {
     const dir = tree({ 'AGENTS.md': '# Agents\n' })
     link(dir, 'CLAUDE.md', 'AGENTS.md')
     expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
@@ -166,7 +166,7 @@ describe(`${RULE}: the import that loads the file`, () => {
     expect(lintMemory(RULE, nested, 'packages/web/AGENTS.md', '# Agents\n')).toEqual([])
   })
 
-  it.skipIf(noLinks).fails('reports a CLAUDE.md that is a link to another file', () => {
+  it.skipIf(noLinks)('reports a CLAUDE.md that is a link to another file', () => {
     const dir = tree({ 'AGENTS.md': '# Agents\n', 'OTHER.md': 'x\n' })
     link(dir, 'CLAUDE.md', 'OTHER.md')
     expect(ids(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n'))).toEqual(['shadowed'])
@@ -174,11 +174,11 @@ describe(`${RULE}: the import that loads the file`, () => {
 })
 
 describe(`${RULE}: what the rule cannot read`, () => {
-  it.fails('does not count a CLAUDE.md that is a folder', () => {
+  it('does not count a CLAUDE.md that is a folder', () => {
     expect(lint({ 'CLAUDE.md/x.md': 'x\n' })).toEqual([])
   })
 
-  it.skipIf(noLinks).fails(
+  it.skipIf(noLinks)(
     'makes no report for a CLAUDE.md that is a dangling link or a link out of the repository',
     () => {
       const outside = tree({ 'x.md': '@AGENTS.md\n' })
@@ -191,40 +191,46 @@ describe(`${RULE}: what the rule cannot read`, () => {
     },
   )
 
-  it.skipIf(noLinks).fails(
-    'makes no report when the AGENTS.md is a link out of the repository',
-    () => {
-      const outside = tree({ 'AGENTS.md': '# Agents\n' })
-      const dir = tree({ 'CLAUDE.md': 'x\n' })
-      link(dir, 'AGENTS.md', path.join(outside, 'AGENTS.md'))
-      expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
-    },
-  )
+  it.skipIf(noLinks)('makes no report when the AGENTS.md is a link out of the repository', () => {
+    const outside = tree({ 'AGENTS.md': '# Agents\n' })
+    const dir = tree({ 'CLAUDE.md': 'x\n' })
+    link(dir, 'AGENTS.md', path.join(outside, 'AGENTS.md'))
+    expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
+  })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report for a CLAUDE.md that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('makes no report for a CLAUDE.md that it cannot read', () => {
     const dir = tree({ 'AGENTS.md': '# Agents\n', 'CLAUDE.md': 'x\n' })
     withoutAccess(path.join(dir, 'CLAUDE.md'), () => {
       expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
     })
   })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report when an imported file cannot be read', () => {
+  it.skipIf(chmodCannotBlock)('makes no report when an imported file cannot be read', () => {
     const dir = tree({ 'AGENTS.md': '# Agents\n', 'CLAUDE.md': '@a.md\n', 'a.md': '@AGENTS.md\n' })
     withoutAccess(path.join(dir, 'a.md'), () => {
       expect(lintMemory(RULE, dir, 'AGENTS.md', '# Agents\n')).toEqual([])
     })
   })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report for a folder that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('makes no report for a folder that it cannot read', () => {
     const dir = tree({ 'packages/web/AGENTS.md': '# Agents\n', 'packages/CLAUDE.md': 'x\n' })
     withoutAccess(path.join(dir, 'packages'), () => {
       expect(lintMemory(RULE, dir, 'packages/web/AGENTS.md', '# Agents\n')).toEqual([])
     })
   })
 
-  it.fails('ignores an import that leads out of the repository, or to nothing', () => {
-    expect(ids(lint({ 'CLAUDE.md': '@../AGENTS.md @~/AGENTS.md @missing.md\n' }))).toEqual([
-      'shadowed',
-    ])
+  it('makes no report for a file in a folder that is not there', () => {
+    const dir = tree({ 'CLAUDE.md': 'x\n' })
+    expect(lintMemory(RULE, dir, 'none/AGENTS.md', '# Agents\n')).toEqual([])
+  })
+
+  it('ignores an import of a missing file or of the home folder', () => {
+    expect(
+      ids(lint({ 'CLAUDE.md': '@missing.md @~/AGENTS.md @dir\n', 'dir/x.md': 'x\n' })),
+    ).toEqual(['shadowed'])
+  })
+
+  it('makes no report when an import leads out of the repository, where the chain is unknown', () => {
+    expect(lint({ 'CLAUDE.md': '@../AGENTS.md\n' })).toEqual([])
   })
 })

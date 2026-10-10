@@ -38,6 +38,7 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsSkillForPreload from './rules/agent-tools-skill-for-preload.ts'
 import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
@@ -326,6 +327,7 @@ const modules = [
   settingsMarketplaceKeyAlias,
   settingsMarketplaceSkipLfs,
   settingsStrictKnownMarketplacesSkillsDir,
+  claudeMdAgentsMdShadowed,
   claudeMdAgentsMdVariant,
   claudeMdExcludesPattern,
   claudeMdImportExists,
@@ -514,6 +516,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-key-alias': 'warn',
   'settings-marketplace-skip-lfs': 'warn',
   'settings-strict-known-marketplaces-skills-dir': 'warn',
+  'claude-md-agents-md-shadowed': 'error',
   'claude-md-agents-md-variant': 'error',
   'claude-md-excludes-pattern': 'error',
   'claude-md-import-exists': 'error',
