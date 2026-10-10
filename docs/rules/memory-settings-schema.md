@@ -32,8 +32,8 @@ reference and the memory page.
 - `instructionFiles` in the options of the built-in plugin that reads `AGENTS.md` is
   `claude-md-or-agents-md`, `claude-md-and-agents-md`, `claude-md` or `managed-only`.[^load] The
   setting is `pluginConfigs["cc-plugin-agents-md@builtin"].options.instructionFiles`. Before
-  Claude Code v2.1.285, the plugin ID was `agents-md@builtin`. Later versions read an entry under
-  either ID, so the rule checks both.[^plugin]
+  Claude Code v2.1.285, the plugin ID was `agents-md@builtin`. Version 2.1.285 and later read an
+  entry under either ID, so the rule checks both.[^plugin]
 
 The report is on the value. A key with the value `null` reads as unset, and the rule makes no
 report on it. If a file sets a key twice, the rule reads the last one, as `JSON.parse` does. The
