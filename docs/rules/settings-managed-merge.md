@@ -16,7 +16,7 @@ Set `managedSourcesBehavior` in the highest-priority managed source.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/managed-settings.d/*.json` |
+| `strict` | `warn` | no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. `strict` turns it on at `warn`.
 
@@ -31,8 +31,8 @@ it in each source below.[^key] The files of `managed-settings.json` and `managed
 source. It ranks below server-managed settings and MDM.[^combine][^split] So a `merge` in a drop-in
 combines nothing from a lower source of the repository. The rule reports the value `"merge"` in a drop-in.
 
-`settings-managed-file` owns the same key in `managed-settings.json`. This rule does not read that file,
-so the two rules never report the same node.
+`settings-managed-file` owns the same key in `managed-settings.json`. The file globs list that file, but
+the rule reports nothing there, so the two rules never report the same node.
 
 ### What the rule does not check
 
