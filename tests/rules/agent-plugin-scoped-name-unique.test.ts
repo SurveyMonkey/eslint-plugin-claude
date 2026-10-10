@@ -82,6 +82,13 @@ describe('agent-plugin-scoped-name-unique', () => {
     expect(messages).toMatchObject([{ messageId: 'duplicate', line: 1, column: 1 }])
   })
 
+  it('names a file with an empty name field after the file', () => {
+    const other = repo({ ...PLUGIN, 'agents/b.md': agent('', '""') })
+    expect(lint(other, 'agents/a.md', agent('', 'b'))).toHaveLength(1)
+    const own = repo({ ...PLUGIN, 'agents/b.md': agent('', 'a') })
+    expect(lint(own, 'agents/a.md', agent('', '""'))).toHaveLength(1)
+  })
+
   it('uses the file name for an empty name, or a name that is not a string', () => {
     const root = repo({ ...PLUGIN, 'agents/b.md': agent('', '""') })
     expect(lint(root, 'agents/a.md', agent('', '""'))).toEqual([])
