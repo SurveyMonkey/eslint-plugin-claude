@@ -168,6 +168,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/settings-model-pin-version`](docs/rules/settings-model-pin-version.md) | Shared `.claude/settings.json` `model` is not an alias that moves with releases; a Bedrock `availableModels` entry has the provider prefix | `off` | `warn` |
 | [`claude/settings-nested-project-file`](docs/rules/settings-nested-project-file.md) | `.claude/settings.json` is at the repository root, not in a subdirectory that Claude Code reads only when a session starts there | `off` | `warn` |
 | [`claude/settings-skilloverrides-unknown-skill`](docs/rules/settings-skilloverrides-unknown-skill.md) | Each `skillOverrides` key names a bundled skill or a skill or command under `.claude/`; option `allow` | `off` | `warn` |
+| [`claude/settings-defaultshell-powershell-tool`](docs/rules/settings-defaultshell-powershell-tool.md) | `defaultShell: "powershell"` goes with `CLAUDE_CODE_USE_POWERSHELL_TOOL` on, on the platforms that the option `platforms` names (`macos`, `linux`, `wsl`); no report without the option | `off` | `warn` |
+| [`claude/settings-env-subprocess-scrub`](docs/rules/settings-env-subprocess-scrub.md) | Shared `.claude/settings.json` `env` sets `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` to `1`, so Bash commands, hooks and stdio MCP servers get no credentials | `off` | `warn` |
+| [`claude/settings-managed-effort-cap`](docs/rules/settings-managed-effort-cap.md) | A managed `effortLevel` goes with a `maxEffortLevel` in a file of the managed source, so users cannot raise the level | `off` | `warn` |
+| [`claude/settings-managed-merge`](docs/rules/settings-managed-merge.md) | No `managedSourcesBehavior: "merge"` in a `managed-settings.d` drop-in, where it combines nothing; set it in the highest-priority managed source | `off` | `warn` |
+| [`claude/settings-worktree-paths`](docs/rules/settings-worktree-paths.md) | Each `worktree.symlinkDirectories` and `worktree.sparsePaths` entry is a directory of the repository, with no leading `/` and no `..` | `off` | `warn` |
+| [`claude/statusline-home-path-shared`](docs/rules/statusline-home-path-shared.md) | Shared `.claude/settings.json` `statusLine.command` does not point at `~/.claude/`, a folder of one user | `off` | `warn` |
+| [`claude/statusline-script-terminal-size`](docs/rules/statusline-script-terminal-size.md) | A status line script in the repository reads `COLUMNS` and `LINES`, and does not call `tput cols` | `off` | `warn` |
 
 ### Permissions and sandbox
 

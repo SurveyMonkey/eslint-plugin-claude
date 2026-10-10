@@ -571,6 +571,60 @@ const TREE: Record<string, string> = {
   'packages/oa-format/.claude/settings.local.json': '{"env": {"MCP_TIMEOUT": "30000"}}',
   'packages/oa-format/managed-settings.json':
     '{"availableModels": ["opus"], "env": {"MCP_TIMEOUT": "30s"}}',
+  // `settings-env-subprocess-scrub` reports each `.claude/settings.json` that does not turn the
+  // scrub on, so the list is computed from the tree (SCRUB_MISSING). The files below are silent:
+  // the shared file with the scrub, the local file, and the managed files.
+  'packages/oa-scrub/.claude/settings.json': '{"env": {"CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1"}}',
+  'packages/oa-scrub/.claude/settings.local.json': '{}',
+  'packages/oa-scrub/managed-settings.json': '{"availableModels": ["opus"]}',
+  'packages/oa-scrub/managed-settings.d/10-a.json': '{"availableModels": ["opus"]}',
+  // `settings-defaultshell-powershell-tool` reports only with the option `platforms`, and the
+  // configs set no option, so the files below get no report.
+  'packages/oa-shell/.claude/settings.json': '{"defaultShell": "powershell"}',
+  'packages/oa-shell/.claude/settings.local.json': '{"defaultShell": "powershell"}',
+  'packages/oa-shell/managed-settings.json': '{"defaultShell": "powershell"}',
+  // `settings-worktree-paths` reads the two project files. A managed file has no project, and a
+  // folder that is there gets no report.
+  'packages/oa-wt/.claude/settings.json': '{"worktree": {"symlinkDirectories": ["/node_modules"]}}',
+  'packages/oa-wt/.claude/settings.local.json': '{"worktree": {"symlinkDirectories": ["gone"]}}',
+  'packages/oa-wt/managed-settings.json': '{"worktree": {"symlinkDirectories": ["/node_modules"]}}',
+  'packages/oa-wt/managed-settings.d/10-a.json':
+    '{"worktree": {"symlinkDirectories": ["/node_modules"]}}',
+  'packages/oa-wt/.vscode/settings.json': '{"worktree": {"symlinkDirectories": ["/node_modules"]}}',
+  'packages/oa-wt2/.claude/settings.json': '{"worktree": {"sparsePaths": [".claude", "src"]}}',
+  'packages/oa-wt2/.claude/settings.local.json':
+    '{"worktree": {"symlinkDirectories": [".claude"]}}',
+  'packages/oa-wt2/src/main.ts': '',
+  // `settings-managed-merge` reads the drop-ins. `settings-managed-file` owns the key in
+  // `managed-settings.json`.
+  'packages/oa-merge/managed-settings.json': '{"availableModels": ["opus"]}',
+  'packages/oa-merge/managed-settings.d/10-a.json': '{"managedSourcesBehavior": "merge"}',
+  'packages/oa-merge/managed-settings.d/20-b.json': '{"managedSourcesBehavior": "first-wins"}',
+  // `settings-managed-effort-cap` reads the merged managed source. A cap in a drop-in makes the
+  // main file silent.
+  'packages/oa-effort/managed-settings.json': '{"effortLevel": "high"}',
+  'packages/oa-effort/managed-settings.d/10-a.json': '{"availableModels": ["opus"]}',
+  'packages/oa-effort/.claude/settings.json': '{"effortLevel": "high"}',
+  'packages/oa-effort2/managed-settings.json': '{"effortLevel": "high"}',
+  'packages/oa-effort2/managed-settings.d/10-a.json': '{"maxEffortLevel": "high"}',
+  // `statusline-home-path-shared` reads the shared file only. The committed-helper rule reports
+  // the command in the shared file too.
+  'packages/oa-home/.claude/settings.json':
+    '{"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}',
+  'packages/oa-home/.claude/settings.local.json':
+    '{"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}',
+  'packages/oa-home/managed-settings.json':
+    '{"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}',
+  // `statusline-script-terminal-size` reads the script of the project and managed files. The script
+  // of the local file reads COLUMNS.
+  'packages/oa-size/.claude/settings.json':
+    '{"statusLine": {"type": "command", "command": ".claude/statusline.sh"}}',
+  'packages/oa-size/.claude/settings.local.json':
+    '{"statusLine": {"type": "command", "command": ".claude/columns.sh"}}',
+  'packages/oa-size/.claude/statusline.sh': '#!/bin/bash\necho "$(tput cols)"\n',
+  'packages/oa-size/.claude/columns.sh': `#!/bin/bash\necho "\${COLUMNS}"\n`,
+  'packages/oa-size/managed-settings.json': `{"statusLine": {"type": "command", "command": "\${CLAUDE_PROJECT_DIR}/.claude/statusline.sh"}}`,
+  'packages/oa-size/managed-settings.d/10-a.json': `{"statusLine": {"type": "command", "command": "\${CLAUDE_PROJECT_DIR}/.claude/columns.sh"}}`,
   // `settings-webfetch-preflight-skip` reads the project files and the managed files. A
   // `WebFetch(...)` rule in the other file of the folder, or of the managed source, is silent.
   'packages/wf/.claude/settings.json': '{"skipWebFetchPreflight": true}',
@@ -804,17 +858,24 @@ const SCOPE_RULES: { name: string; files: string[]; severity?: 'warn' }[] = [
   },
 ]
 
-// The settings rules of the model and env layer of #14 are `off` in `recommended`. `strict` turns
+// The settings rules of the model, env, worktree, managed and status line layers of #14 are `off` in `recommended`. `strict` turns
 // each on at `warn`. They come last in the `modules` list, with the files of each.
 const SETTINGS_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'settings-agent-exists', files: PROJECT_FILES },
+  { name: 'settings-defaultshell-powershell-tool', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-context-cost', files: SHARED_FILE },
   { name: 'settings-env-format-heuristic', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-secret-heuristic', files: SHARED_FILE },
+  { name: 'settings-env-subprocess-scrub', files: SHARED_FILE },
+  { name: 'settings-managed-effort-cap', files: MANAGED_FILES },
+  { name: 'settings-managed-merge', files: MANAGED_FILES },
   { name: 'settings-model-capability', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-model-pin-version', files: [...SHARED_FILE, ...MANAGED_FILES] },
   { name: 'settings-nested-project-file', files: SHARED_FILE },
   { name: 'settings-skilloverrides-unknown-skill', files: PROJECT_FILES },
+  { name: 'settings-worktree-paths', files: PROJECT_FILES },
+  { name: 'statusline-home-path-shared', files: SHARED_FILE },
+  { name: 'statusline-script-terminal-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // `settings-schema-url` reports each settings file that is a JSON object with no `$schema`. The
@@ -826,6 +887,22 @@ const SCHEMA_URL_MISSING = Object.entries(TREE)
   .filter(([file, content]) => {
     const data: unknown = SETTINGS_FILE.test(file) ? JSON.parse(content) : null
     return typeof data === 'object' && data !== null && !Array.isArray(data) && !('$schema' in data)
+  })
+  .map(([file]) => file)
+
+// `settings-env-subprocess-scrub` reports each `.claude/settings.json` that is a JSON object and
+// does not turn the scrub on. The tree has many such files, so the list is computed from the tree.
+const SHARED_SETTINGS_FILE = /(^|\/)\.claude\/settings\.json$/
+const SCRUB_MISSING = Object.entries(TREE)
+  .filter(([file, content]) => {
+    const data: unknown = SHARED_SETTINGS_FILE.test(file) ? JSON.parse(content) : null
+    const env = (data as { env?: Record<string, unknown> } | null)?.env
+    return (
+      typeof data === 'object' &&
+      data !== null &&
+      !Array.isArray(data) &&
+      env?.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB !== '1'
+    )
   })
   .map(([file]) => file)
 
@@ -1056,6 +1133,8 @@ const EXPECTED = [
   // `settings-committed-helper-command` reads the shared project file only.
   'packages/hc/.claude/settings.json: claude/settings-committed-helper-command@1',
   'packages/hc2/.claude/settings.json: claude/settings-committed-helper-command@1',
+  'packages/oa-home/.claude/settings.json: claude/settings-committed-helper-command@1',
+  'packages/oa-size/.claude/settings.json: claude/settings-committed-helper-command@1',
   // `settings-local-location` reports the local file below the root of a repository.
   'packages/ll/pkg/.claude/settings.local.json: claude/settings-local-location@1',
   // `settings-webfetch-preflight-skip` reads the project files and the managed source. A rule in
@@ -1160,6 +1239,19 @@ const STRICT_ONLY = [
   'packages/oa-pin/managed-settings.json: claude/settings-model-pin-version@1',
   'packages/ll/pkg/.claude/settings.json: claude/settings-nested-project-file@1',
   'packages/oa-skill/.claude/settings.json: claude/settings-skilloverrides-unknown-skill@1',
+  ...SCRUB_MISSING.map((file) => `${file}: claude/settings-env-subprocess-scrub@1`),
+  // The sparse paths of the `settings-worktree-sparse-claude-dir` fixtures are not in the tree.
+  'packages/sparse/.claude/settings.json: claude/settings-worktree-paths@1',
+  'packages/sparse/.claude/settings.local.json: claude/settings-worktree-paths@1',
+  'packages/sparse2/.claude/settings.json: claude/settings-worktree-paths@1',
+  'packages/mf2/managed-settings.d/10-m.json: claude/settings-managed-merge@1',
+  'packages/oa-wt/.claude/settings.json: claude/settings-worktree-paths@1',
+  'packages/oa-wt/.claude/settings.local.json: claude/settings-worktree-paths@1',
+  'packages/oa-merge/managed-settings.d/10-a.json: claude/settings-managed-merge@1',
+  'packages/oa-effort/managed-settings.json: claude/settings-managed-effort-cap@1',
+  'packages/oa-home/.claude/settings.json: claude/statusline-home-path-shared@1',
+  'packages/oa-size/.claude/settings.json: claude/statusline-script-terminal-size@1',
+  'packages/oa-size/managed-settings.json: claude/statusline-script-terminal-size@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

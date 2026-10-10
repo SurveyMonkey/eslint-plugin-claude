@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings",
-  "hash": "0da9be3c724c42a996b9e5354fc7e7d3fd13b401e916b337077d2da56cdaa4f4",
+  "hash": "a8cc395af5e0938659ddfd38a703bdc8a5151640216c5230098408e30625e380",
   "blocks": [
     {
       "id": "settings-files-and-precedence",
@@ -28,7 +28,7 @@
     },
     {
       "id": "where-claude-code-keeps-the-local-file-in-a-git-repository",
-      "hash": "d22a9454f31f12a55265c52b63d2ca836a279059a83b925ee0d7184814a16d47"
+      "hash": "7b7c6a0690c26c486ca5d66873d1547926e265ae8abf4017e9c4c9583cbb05b2"
     },
     {
       "id": "check-what-your-organization-enforces",
@@ -108,7 +108,7 @@
     },
     {
       "id": "a-committed-key-doesnt-reach-teammates",
-      "hash": "e348522d20cb922191e150ed492df47faf117f981786729476bc77ccb1f2981e"
+      "hash": "f07548e73f84dc0f8fb4437e53240b10f963237d3122a8208f5b97824bc96879"
     },
     {
       "id": "permission-rules-combine-differently-than-you-expected",
@@ -143,8 +143,8 @@
     {
       "heading": "A committed key doesn't reach teammates",
       "id": "a-committed-key-doesnt-reach-teammates",
-      "hash": "e348522d20cb922191e150ed492df47faf117f981786729476bc77ccb1f2981e",
-      "text": "#### A committed key doesn't reach teammates\n\nTwo things keep a key in `.claude/settings.json` from applying for everyone who clones it:\n\n* **Claude Code ignores the key in a repository file.** Look for `User, local, or managed`, `User or managed`, `Managed`, or `Global config` in the Scope column of the [settings index](/docs/en/settings-reference#settings-index). Those keys never apply from the shared file, apart from a few that a repository file can still switch off. Each of those entries says so on its Scope line. `Global config` keys apply only from `~/.claude.json`.\n\n  Inside the `env` key, the telemetry export variables never apply from the shared file either, apart from a few off values; see [Variables Claude Code ignores in `env`](/docs/en/settings-reference#variables-claude-code-ignores-in-env).\n* **The key waits for trust.** `permissions.allow` rules, `permissions.additionalDirectories`, `extraKnownMarketplaces`, and most [`env`](/docs/en/settings-reference#env) values apply only after each teammate [trusts the folder](/docs/en/permissions#project-allow-rules-and-workspace-trust). Until then they still see prompts and don't get plugins from a marketplace the file declares. `deny` and `ask` rules apply right away."
+      "hash": "f07548e73f84dc0f8fb4437e53240b10f963237d3122a8208f5b97824bc96879",
+      "text": "#### A committed key doesn't reach teammates\n\nTwo things keep a key in `.claude/settings.json` from applying for everyone who clones it:\n\n* **Claude Code ignores the key in a repository file.** Look for `User, local, or managed`, `User or managed`, `User`, `Managed`, or `Global config` in the Scope column of the [settings index](/docs/en/settings-reference#settings-index). Those keys never apply from the shared file, apart from a few that a repository file can still switch off. Each of those entries says so on its Scope line. `Global config` keys apply only from `~/.claude.json`.\n\n  Inside the `env` key, the telemetry export variables never apply from the shared file either, apart from a few off values; see [Variables Claude Code ignores in `env`](/docs/en/settings-reference#variables-claude-code-ignores-in-env).\n* **The key waits for trust.** `permissions.allow` rules, `permissions.additionalDirectories`, `extraKnownMarketplaces`, and most [`env`](/docs/en/settings-reference#env) values apply only after each teammate [trusts the folder](/docs/en/permissions#project-allow-rules-and-workspace-trust). Until then they still see prompts and don't get plugins from a marketplace the file declares. `deny` and `ask` rules apply right away."
     },
     {
       "heading": "Exceptions to managed settings precedence",
@@ -155,8 +155,8 @@
     {
       "heading": "Where Claude Code keeps the local file in a git repository",
       "id": "where-claude-code-keeps-the-local-file-in-a-git-repository",
-      "hash": "d22a9454f31f12a55265c52b63d2ca836a279059a83b925ee0d7184814a16d47",
-      "text": "#### Where Claude Code keeps the local file in a git repository\n\nWhen Claude asks permission to run a Bash command and you choose \"Yes, and don't ask again\", Claude Code saves that approval as an `allow` rule in `.claude/settings.local.json`. If you start Claude Code in a subdirectory of a git repository, it reads and writes that file at the repository root and applies the approval across the whole repository. In a [worktree](/docs/en/worktrees), it uses the file at the main checkout's root.\n\nTwo rules qualify the root location:\n\n* **When the file stays with `.claude/settings.json` instead**: outside a git repository, when the repository root is your home directory, on Windows, or when the repository root or its `.git` or `.claude` entry isn't owned by your user.\n* **Paths in the file don't anchor at the repository root**: a permission rule that starts with `/` or a relative sandbox path [anchors at the session's primary working directory](/docs/en/permissions#read-and-edit) instead.\n\nBefore v2.1.211, Claude Code kept the file in the starting directory. It still reads a file an earlier version left there alongside the root file; where both set the same key, the root's value applies, and permission rules from both files apply. The Agent SDK's [`resolveSettings()`](/docs/en/agent-sdk/typescript#resolvesettings) helper always reads the file from the starting directory.\n\nClaude Code reads the shared `.claude/settings.json` from the session's [primary working directory](/docs/en/permissions#working-directories), so to use a file committed at the repository root, start Claude Code there. After you [move the session with `/cd`](/docs/en/permissions#move-the-session-to-another-directory), Claude Code reads both project files from the new directory instead, placing the local file by the same rules. Reading them from the directory you moved to requires Claude Code v2.1.246 or later.\n\n<span id=\"managed-settings-delivery\" />\n\n<span id=\"precedence-within-the-managed-tier\" />\n\n<span id=\"parent-settings-from-embedding-hosts\" />\n\n<span id=\"enforce-settings-for-an-organization\" />\n\n<span id=\"settings-your-organization-manages\" />"
+      "hash": "7b7c6a0690c26c486ca5d66873d1547926e265ae8abf4017e9c4c9583cbb05b2",
+      "text": "#### Where Claude Code keeps the local file in a git repository\n\nWhen Claude asks permission to run a Bash command and you choose \"Yes, and don't ask again\", Claude Code saves that approval as an `allow` rule in `.claude/settings.local.json`. If you start Claude Code in a subdirectory of a git repository, it reads and writes that file at the repository root and applies the approval across the whole repository. In a [worktree](/docs/en/worktrees), it uses the file at the main checkout's root.\n\nTwo rules qualify the root location:\n\n* **When the file stays with `.claude/settings.json` instead**: outside a git repository, when the repository root is your home directory, on Windows, or when the repository root or its `.git` or `.claude` entry isn't owned by your user.\n* **Paths in the file don't anchor at the repository root**: a permission rule that starts with `/` or a relative sandbox path [anchors at the session's primary working directory](/docs/en/permissions#read-and-edit) instead.\n\nBefore v2.1.211, Claude Code kept the file in the starting directory. It still reads a file an earlier version left there alongside the root file; where both set the same key, the root's value applies, and permission rules from both files apply. The Agent SDK's [`resolveSettings()`](/docs/en/agent-sdk/typescript#resolvesettings) helper always reads the file from the starting directory.\n\nClaude Code reads the shared `.claude/settings.json` from the session's [primary working directory](/docs/en/permissions#working-directories), so to use a file committed at the repository root, start Claude Code there. After you [move the session with `/cd`](/docs/en/permissions#move-the-session-to-another-directory), Claude Code reads both project files from the new directory instead, placing the local file by the same rules. Reading them from the directory you moved to requires Claude Code v2.1.246 or later. For a worktree session that you start from the desktop app, see [What worktrees share with the main checkout](/docs/en/worktrees#what-worktrees-share-with-the-main-checkout).\n\n<span id=\"managed-settings-delivery\" />\n\n<span id=\"precedence-within-the-managed-tier\" />\n\n<span id=\"parent-settings-from-embedding-hosts\" />\n\n<span id=\"enforce-settings-for-an-organization\" />\n\n<span id=\"settings-your-organization-manages\" />"
     },
     {
       "heading": "Edit a settings file",

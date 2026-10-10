@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "c465532b3cec1a454fa4b6cdd3efd205754115efd240f64bee4776b66bde05cc",
+  "hash": "41f2e746a21c3107ac5705286bf792792c74926c5de9e2b9ebe443609e5e3a81",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "eb4293eed93638852324c848beb5b28b5271e8e694cedcbdc507ae38407789b0"
+      "hash": "b6b9911854c6e3a457377eb11394691635eb2c579ecd91e8e414ee97c0f5e45e"
     },
     {
       "id": "automatic-retries",
@@ -48,7 +48,7 @@
     },
     {
       "id": "auto-mode-cannot-determine-the-safety-of-an-action",
-      "hash": "a7dc210299031e563b5371bfcd87bd51a5410d45a4b03a84c84c60a405f3df28"
+      "hash": "54c9c246922f35cee898a56a1e873197596904658ebe69582896840de739e220"
     },
     {
       "id": "the-server-returned-no-safety-verdict",
@@ -636,7 +636,7 @@
     },
     {
       "id": "no-conversation-found-with-the-session-id",
-      "hash": "43d7493bdded679b27ac5e6f0f9391fb4b93e850c94619f7c9b8f9d298cc6c94"
+      "hash": "d94446e67c0ad9ca81303c01f6e262c40da1c5a6b0366cde2dd77a7ad320b826"
     },
     {
       "id": "windows-reported-an-error-ebadf",
@@ -797,6 +797,10 @@
     {
       "id": "disk-quota-or-temp-filesystem-is-full",
       "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658"
+    },
+    {
+      "id": "file-is-not-valid-utf-8",
+      "hash": "57a8ff70ce0d53bb4bae8629129cbe2bfd8ba0697713d8e6a537452a0413b72b"
     },
     {
       "id": "the-source-file-is-not-valid-utf-8-text",
@@ -964,7 +968,7 @@
     },
     {
       "id": "working-directory-is-a-network-path",
-      "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56"
+      "hash": "f5bb8ce4eba1e1e76e5ea53bb4de634f71040a091fb85f1ef4c0274646df18b9"
     },
     {
       "id": "remote-managed-settings-failed-to-load",

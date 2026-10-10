@@ -83,6 +83,14 @@ const BOOLEAN_WORDS = [...ON_WORDS, ...OFF_WORDS]
 /** True when `value` turns a behavior on: `1`, `true`, `yes` or `on`, with any letter case. */
 export const isEnvOn = (value: string) => ON_WORDS.includes(value.toLowerCase())
 
+/** True when the settings object `fields` sets the `env` variable `variable` to an on value. */
+export function envIsOn(fields: Record<string, unknown>, variable: string): boolean {
+  const { env } = fields
+  const value =
+    env !== null && typeof env === 'object' ? (env as Record<string, unknown>)[variable] : undefined
+  return typeof value === 'string' && isEnvOn(value)
+}
+
 const PROMPT_CACHE_TTL = oneOf('5m or 1h', ['5m', '1h'])
 
 const FORMS = new Map<string, EnvForm>([
