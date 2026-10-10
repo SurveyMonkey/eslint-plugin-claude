@@ -34,7 +34,7 @@ const READ_ONLY = new Set([
 const NO_OP = new Set(['true', ':'])
 
 /** The wrappers that Claude Code strips before it matches a rule. The rule does not strip them
- *  and does not judge a command that starts with one. A leading `NAME=value` is the same. */
+ *  and does not judge a command that starts with one. A `NAME=value` at the start is the same. */
 const WRAPPERS = new Set(['timeout', 'time', 'nice', 'nohup', 'stdbuf', 'command', 'builtin'])
 
 /** The programs that run a script file given as their first argument. */
@@ -67,7 +67,7 @@ function subcommands(text: string): string[] {
 }
 
 /** True when the Bash rule `specifier` allows the command `command`. A `*` stands for any text.
- *  A trailing ` *` that is the only `*` also allows the bare command. `:*` at the end is the same
+ *  A ` *` at the end that is the only `*` also allows the bare command. `:*` at the end is the same
  *  as ` *`. */
 function allows(specifier: string | null, command: string): boolean {
   if (specifier === null) {
@@ -88,7 +88,7 @@ function wordsOf(subcommand: string): string[] {
 }
 
 /** True when the subcommand is one that the rule does not judge: a read-only command, a no-op, a
- *  command with a wrapper, or a command with a leading variable. */
+ *  command with a wrapper, or a command that starts with a variable. */
 function skipped(subcommand: string): boolean {
   const program = wordsOf(subcommand)[0] as string
   return (

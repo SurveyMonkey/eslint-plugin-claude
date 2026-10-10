@@ -90,7 +90,7 @@ markdownTester.run('skill-inject-robustness', ruleOf('skill-inject-robustness'),
     { code: inline('grep -r todo .'), filename: skill },
     { code: inline('wc -l file'), filename: skill },
     { code: inline('cd src && ls'), filename: skill },
-    // The rule does not judge `git`, a wrapper or a leading variable.
+    // The rule does not judge `git`, a wrapper or a variable at the start.
     { code: inline('git status --short'), filename: skill },
     { code: inline('git push origin main'), filename: skill },
     { code: inline('timeout 5 npm test'), filename: skill },

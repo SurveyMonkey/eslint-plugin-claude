@@ -52,7 +52,7 @@ separators that the permissions page names.[^compound] A separator in a quoted s
 redirection such as `2>&1`, does not split. A line break after a backslash does not split.
 
 For `unmatched`, each subcommand needs a rule. A rule matches the whole subcommand. A `*` stands
-for any text. A trailing ` *` that is the only `*` also matches the bare command, and `:*` at the
+for any text. A ` *` at the end that is the only `*` also matches the bare command, and `:*` at the
 end is the same as ` *`.[^wildcard] A bare `Bash` or `Bash(*)` matches every command. The rule reads the
 `allowed-tools` field only, as a string or a YAML list. It does not read `disallowed-tools` or a
 settings file.

@@ -351,7 +351,7 @@ describe('the messages', () => {
 
   it('names the fallback budget at the default', () => {
     expect(messages(skillIn('six', 'a'), described(1500))).toEqual([
-      'The skills and commands of this scope list 9006 characters of names and descriptions, and this file adds 1501. The documented fallback budget is 8000 characters. Claude Code drops descriptions past the budget, starting with the skills that you invoke least.',
+      'The skills and commands of this scope list 9006 characters of names and descriptions, and this file adds 1501. The documented fallback budget is 8000 characters. Claude Code drops descriptions past the budget. The skills that you invoke least lose theirs first.',
     ])
   })
 
@@ -385,7 +385,7 @@ describe('the options', () => {
   })
 })
 
-// A read that fails is not a file that is missing. The rule makes no report that rests on a file
+// A read that fails is not a file that is not there. The rule makes no report that rests on a file
 // that it cannot read.
 describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
   const lint = (file: string, code: string, options: unknown[] = [{ max: 150 }]) =>
