@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-defaultshell-powershell-tool, which reports defaultShell powershell with no CLAUDE_CODE_USE_POWERSHELL_TOOL in env, for the platforms that the option platforms names. It is off in recommended.
+description: The ESLint rule claude/settings-defaultshell-powershell-tool, which reports defaultShell powershell when no settings file turns on CLAUDE_CODE_USE_POWERSHELL_TOOL, for the platforms that the option platforms names. It is off in recommended.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -27,6 +27,8 @@ report until you set the option `platforms`.
 turn the tool on with `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`. When the tool is off, Claude Code runs your
 `!` commands in Bash.[^default][^shell][^vars] The rule reports the value `"powershell"` when no file sets
 the variable to an on value.
+
+On those platforms the tool also needs PowerShell 7 or later (`pwsh`) on `PATH`.[^powershell] The rule does not check this.
 
 The rule reads the linted file. It also reads the files that Claude Code merges with it: the other
 project file of the same `.claude/` folder, or the other files of the managed source. The rule makes no

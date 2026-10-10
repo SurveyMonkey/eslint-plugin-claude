@@ -24,8 +24,11 @@ in a shell. `strict` turns it on at `warn`.
 ## Rule details
 
 `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` strips credentials from the environment of the subprocesses that Claude
-Code starts. These are Bash commands, hooks and stdio MCP servers.[^vars] The scrub finds a credential by
+Code starts, such as Bash commands, hooks and stdio MCP servers.[^vars] The scrub finds a credential by
 its variable name or by its value.[^scrub]
+
+The scrub is one layer and not the only control. It keeps `GITHUB_TOKEN` and the proxy settings in
+place. On Linux, it also runs Bash in an isolated PID namespace.[^scrub]
 
 The rule reports a `.claude/settings.json` file in two cases.
 
@@ -38,8 +41,8 @@ An on value is `1`, `true`, `yes` or `on`, with any letter case.[^vars]
 
 - A value that is not a string. `settings-env-value-format` reports it.
 - `.claude/settings.local.json`. It belongs to one user.
-- A managed file. A policy for an organization can set the variable there, and the rule does not
-  read a file other than the linted file.
+- A managed file. A policy for an organization can set the variable there. The rule reads only the
+  linted file.
 - A variable that you set in your shell, or in a CI workflow. `claude-code-action` sets it when
   `allowed_non_write_users` is set.[^vars]
 

@@ -22,14 +22,14 @@ The rule is `off` in `recommended`. It is a heuristic. `strict` turns it on at `
 
 ## Rule details
 
-`managedSourcesBehavior: "merge"` makes Claude Code apply every managed source that you deliver, and not
+`managedSourcesBehavior: "merge"` makes Claude Code apply every managed source that delivers a policy, not
 only the highest one. Claude Code then adds the entries of a lower source to the policy, such as
 `permissions.allow` rules and hooks. Use it only when an administrator controls every lower source.[^key][^compose]
 
-Claude Code reads the key from the highest-priority source that carries it or a policy key, and ignores
-it in each source below.[^key] The files of `managed-settings.json` and `managed-settings.d/` are one
-source. It ranks below server-managed settings and MDM.[^combine][^split] So a `merge` in a drop-in
-combines nothing from a lower source of the repository. The rule reports the value `"merge"` in a drop-in.
+Claude Code reads the key from the highest-priority source that carries it or a policy key.[^key] It
+ignores the key in each lower source. The files of `managed-settings.json` and `managed-settings.d/` are
+one source. It ranks below server-managed settings and MDM.[^combine][^split] No source in the repository
+ranks below it, so a `merge` in a drop-in combines nothing. The rule reports the value `"merge"` in a drop-in.
 
 `settings-managed-file` owns the same key in `managed-settings.json`. The file globs list that file, but
 the rule reports nothing there, so the two rules never report the same node.

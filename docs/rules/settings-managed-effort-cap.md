@@ -18,7 +18,7 @@ Set `maxEffortLevel` beside `effortLevel` in managed settings.
 |--------|----------|----------|-------|
 | `strict` | `warn` | practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
-The rule is `off` in `recommended`. It is a heuristic. Your organization can also set an effort limit
+The rule is `off` in `recommended`. It is a heuristic. On a Claude Enterprise plan, your organization can also set an effort limit
 on the server side.[^org] `strict` turns the rule on at `warn`.
 
 ## Rule details
@@ -27,12 +27,12 @@ on the server side.[^org] `strict` turns the rule on at `warn`.
 with `/effort`, the `/model` picker or `--effort`.[^level] `maxEffortLevel` caps the level. The settings
 reference says to deploy it in managed settings to enforce a cap for an organization.[^max]
 
-The rule reports a managed `effortLevel` with a string value when no file of the managed source sets
-`maxEffortLevel` to a string. The report is on the `effortLevel` value. The managed source is
+The rule reports a managed `effortLevel` with a string value. It reports when no file of the managed
+source sets `maxEffortLevel` to a string. The report is on the `effortLevel` value. The managed source is
 `managed-settings.json` and each `*.json` file in `managed-settings.d/` that is not hidden.[^split]
 
-The rule rests on an absence. So it makes no report when it cannot read a file of the source. This
-includes a file that is not valid JSON, a link out of the repository, and a file with no read access.
+The rule reports an absence. So it makes no report when it cannot read a file of the source. The rule
+cannot read a file that is not valid JSON, a link out of the repository, or a file with no read access.
 
 ### What the rule does not check
 
