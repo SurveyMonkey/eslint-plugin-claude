@@ -41,7 +41,7 @@ const rule: JSONRuleDefinition<{
     },
   },
   create(context) {
-    // Claude Code ignores a hidden drop-in, so its size is of no matter.
+    // Claude Code does not load a hidden drop-in, so the rule does not check it.
     if (isHiddenDropIn(context.filename)) {
       return {}
     }

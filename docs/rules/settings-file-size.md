@@ -33,9 +33,9 @@ at the start of the file. A file of exactly 2097152 bytes passes.
 ESLint removes a byte order mark before the rule runs, so the rule does not count its 3 bytes. A file
 that is within 3 bytes of the limit can pass the rule and still be too large.
 
-The rule makes no report for a hidden file in `managed-settings.d/`, such as `.20-big.json`.
-Claude Code ignores hidden files and files that do not end in `.json`, so their size is of no
-matter.[^split]
+The rule does not report a hidden file in `managed-settings.d/`, such as `.20-big.json`.
+Claude Code does not load a hidden file as a drop-in.[^split] The rule does not check the case
+where a script passes such a file with `--settings`.
 
 A file that is not valid JSON gets a fatal parse error from the `json/json` language, and no rule
 runs on it. So a file with a syntax error gets no size report.

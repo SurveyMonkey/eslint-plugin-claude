@@ -29,7 +29,7 @@ jsonTester.run('settings-file-size (valid)', rule, {
     { name: 'at the limit, local file', code: objectOfBytes(LIMIT), filename: local },
     { name: 'at the limit, managed file', code: objectOfBytes(LIMIT), filename: managed },
     { name: 'at the limit, drop-in', code: objectOfBytes(LIMIT), filename: dropIn },
-    // Claude Code ignores a hidden drop-in, so the rule makes no report on it.
+    // Claude Code does not load a hidden drop-in, so the rule does not report it.
     {
       name: 'hidden drop-in over the limit',
       code: objectOfBytes(LIMIT + 1),
