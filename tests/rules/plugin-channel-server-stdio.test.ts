@@ -24,8 +24,10 @@ const mcp = (servers: unknown) => JSON.stringify({ mcpServers: servers })
 
 describe(RULE, () => {
   check('reports the server string of the channel, with the full message', () => {
-    const found = run({ mcpServers: { tg: REMOTE } })
+    const { dir, code } = pluginTree({ name: 'p', channels: CHANNELS, mcpServers: { tg: REMOTE } })
+    const found = lintPlugin(RULE, dir, code)
     expect(found).toHaveLength(1)
+    expect(found[0]?.column).toBe(code.indexOf('"tg"') + 1)
     expect(found[0]).toMatchObject({
       ruleId: `claude/${RULE}`,
       messageId: 'remote',
@@ -45,6 +47,23 @@ describe(RULE, () => {
 
   check('lets a manifest server replace the one of .mcp.json', () => {
     expect(run({ mcpServers: { tg: REMOTE } }, { '.mcp.json': mcp({ tg: STDIO }) })).toHaveLength(1)
+  })
+
+  check('reads .mcp.json when the manifest declares other servers only', () => {
+    expect(
+      run({ mcpServers: { other: STDIO } }, { '.mcp.json': mcp({ tg: REMOTE }) }),
+    ).toHaveLength(1)
+  })
+
+  check.each([
+    ['a number', 5],
+    ['null', null],
+  ])('reads .mcp.json when mcpServers is %s', (_title, value) => {
+    expect(run({ mcpServers: value }, { '.mcp.json': mcp({ tg: REMOTE }) })).toHaveLength(1)
+  })
+
+  check('reports a command that is not a string, with a url', () => {
+    expect(run({ mcpServers: { tg: { command: 5, ...REMOTE } } })).toHaveLength(1)
   })
 
   check('reads an inline server in an array', () => {
@@ -81,6 +100,10 @@ describe(`${RULE} (silent)`, () => {
 
   check('stays silent for a server with a command and a url', () => {
     expect(run({ mcpServers: { tg: { ...STDIO, ...REMOTE } } })).toEqual([])
+  })
+
+  check('stays silent for a url that is not a string', () => {
+    expect(run({ mcpServers: { tg: { url: 5 } } })).toEqual([])
   })
 
   check('stays silent for a server with neither', () => {

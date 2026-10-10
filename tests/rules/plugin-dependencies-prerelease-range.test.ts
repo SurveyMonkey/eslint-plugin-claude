@@ -255,8 +255,34 @@ describe(`${RULE} (silent)`, () => {
     expect(run({ range: '^2.0.0', entry: BETA, source: './plugins/gone' })).toHaveLength(1)
   })
 
-  check('stays silent when the source is not a relative path', () => {
-    expect(run({ range: '^2.0.0', source: 'plugins/dep' })).toEqual([])
+  check.each([['plugins/dep'], ['.']])('stays silent when the source is %s', (source) => {
+    expect(
+      run({
+        range: '^2.0.0',
+        entry: BETA,
+        source,
+        files: { 'plugins/dep/.claude-plugin/plugin.json': JSON.stringify({ version: '2.0.0' }) },
+      }),
+    ).toEqual([])
+  })
+
+  check('uses the entry version when the manifest version is not a string', () => {
+    expect(
+      run({ range: '^2.0.0', entry: BETA, dep: JSON.stringify({ name: 'dep', version: 5 }) }),
+    ).toHaveLength(1)
+  })
+
+  check.each([
+    ['<=2.0.0', '2.0.0-0', 1],
+    ['<2.0.0', '2.0.0-0', 0],
+    ['>=2.0.0', '2.0.0-0', 1],
+    ['^2.0.0', '3.0.0-0', 0],
+    ['^0.0 >=0.1.0', '0.1.0-beta.1', 0],
+    ['^0 >=1.0.0', '1.0.0-beta.1', 0],
+    ['~>2.0.0', BETA, 1],
+    ['^2.0.0 || 2.x', BETA, 0],
+  ])('range %s against %s gives %i reports', (range, target, count) => {
+    expect(ranged(range, target)).toHaveLength(count)
   })
 
   check('stays silent when the source leaves the repository', () => {

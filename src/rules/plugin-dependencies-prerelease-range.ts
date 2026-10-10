@@ -3,7 +3,7 @@
 // The rule reports the `version` range of a dependency object when a `-0` suffix on the versions of
 // the range that have the major, minor and patch of the target would make the range match it.
 // The target is the pre-release version of the dependency in its own `plugin.json`, or else in
-// its entry in the `marketplace.json` that encloses the plugin, as the manifest reference gives
+// its entry in the `marketplace.json` that encloses the plugin, as the loading reference gives
 // the order. Claude Code resolves a git source by tag, so the rule is a heuristic over the files.
 // It makes no report when it cannot see the plugin, the marketplace or the manifest of the source.
 import path from 'node:path'
@@ -112,7 +112,7 @@ function prereleaseOf(text: string): { version: Triple; zero: boolean } | undefi
 
 const sameTriple = (a: Triple, b: Triple) => a.every((n, i) => n === b[i])
 
-/** True when `comparator` holds for the target. The target is a pre-release of `version`. It is
+/** True when `comparator` holds for the target. The target has the numbers `target.version`. It is
  *  above that pre-release `-0` only when its own pre-release is not exactly `0`. A comparator with
  *  the numbers of the target must have the suffix. */
 function holds(comparator: Comparator, target: { version: Triple; zero: boolean }): boolean {
@@ -192,7 +192,12 @@ const rule: JSONRuleDefinition<{ MessageIds: 'prerelease' }> = {
           }
           let text = typeof entry.version === 'string' ? entry.version : undefined
           const source = entry.source
-          if (typeof source === 'string' && source.startsWith('./')) {
+          // A path that is `.` or a bare name under `pluginRoot` has a manifest that this rule does
+          // not read. The entry `version` would then be the wrong target, so the rule is silent.
+          if (typeof source === 'string' && !source.startsWith('./')) {
+            continue
+          }
+          if (typeof source === 'string') {
             const dir = path.resolve(root, source)
             const real = realOf(dir)
             // A source folder that is not there has no manifest, and the entry gives the version. A
