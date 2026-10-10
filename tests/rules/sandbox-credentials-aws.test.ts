@@ -245,9 +245,40 @@ describe(`${name}: the files that it reads`, () => {
           { path: '~/.aws/credentials', mode: 'mask', extract: 'x', onExtractNoMatch: 'deny' },
         ],
       },
-      { filesystem: { disabled: true } },
+      { filesystem: { allowRead: ['~/.aws'] } },
     )
     expect(at(bad, DROP_IN, text)).toEqual(['denyReopened'])
+  })
+
+  it('is silent on filesystem.disabled when a file of the source does not read', () => {
+    const bad = repo({ 'managed-settings.d/20-b.json': '{' })
+    const text = creds(
+      {
+        files: [
+          { path: '~/.aws/credentials', mode: 'mask', extract: 'x', onExtractNoMatch: 'deny' },
+        ],
+      },
+      { filesystem: { disabled: true } },
+    )
+    expect(at(repo({}), DROP_IN, text)).toEqual(['denyReopened'])
+    expect(at(bad, DROP_IN, text)).toEqual([])
+  })
+
+  it('reports a decode-only entry, and allowRead when the disabled values disagree', () => {
+    const root = repo({
+      'managed-settings.d/05-a.json': JSON.stringify({
+        sandbox: { filesystem: { disabled: true } },
+      }),
+    })
+    const decode = [
+      { path: '~/.aws/credentials', mode: 'mask', decode: 'base64', onExtractNoMatch: 'deny' },
+    ]
+    expect(
+      at(root, DROP_IN, creds({ files: decode }, { filesystem: { disabled: false } })),
+    ).toEqual([])
+    expect(at(root, DROP_IN, creds({ files: decode }))).toEqual(['denyReopened'])
+    const reopen = { filesystem: { disabled: false, allowRead: ['~/.aws'] } }
+    expect(at(root, DROP_IN, creds({ files: decode }, reopen))).toEqual(['denyReopened'])
   })
 
   it('is silent when two files disagree on filesystem.disabled', () => {

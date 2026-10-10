@@ -1,10 +1,10 @@
-// The AWS rules of `sandbox.credentials` (docs/rules/sandbox-credentials-aws.md): `awsPairs` names
-// whole-value `mask` entries of `envVars` and each name fills one slot, the conventional access key
-// and secret key are masked together, and `onExtractNoMatch: "deny"` acts as `error` when the read
-// block does not hold. Claude Code honors `awsPairs` and `mask` entries in user and managed
-// settings only, so the rule reads the managed files. `settings-key-scope` reports `awsPairs` in a
-// project file, and `sandbox-scope` reports a `mask` entry there. A source is the managed files
-// that `src/permission-source.ts` adds up.
+// The AWS rules of `sandbox.credentials` (docs/rules/sandbox-credentials-aws.md). `awsPairs` names
+// whole-value `mask` entries of `envVars`, and each name fills one slot. The conventional access
+// key and secret key need a `mask` entry together. `onExtractNoMatch: "deny"` acts as `error` when
+// the read block does not hold. Claude Code honors `awsPairs` and `mask` entries in user and
+// managed settings only, so the rule reads the managed files. `settings-key-scope` reports
+// `awsPairs` in a project file, and `sandbox-scope` reports a `mask` entry there. A source is the
+// managed files that `src/permission-source.ts` adds up.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
@@ -122,9 +122,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           }
         }
         const allowRead = stringsAt(objects, ['sandbox', 'filesystem', 'allowRead'])
-        // Scalars override, so two files that disagree leave the value unknown.
+        // A scalar overrides. Two files that disagree leave the value unknown. A file that cannot be
+        // read can set `false`, so an unreadable file does the same.
         const disabled = objects.map((object) => at(object, ['sandbox', 'filesystem', 'disabled']))
-        const isOff = disabled.includes(true) && !disabled.includes(false)
+        const isOff = complete && disabled.includes(true) && !disabled.includes(false)
         for (const { entry, node } of objectEntries(document, own, [...path, 'files'])) {
           if (
             entry.mode !== 'mask' ||

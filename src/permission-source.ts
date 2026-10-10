@@ -2,7 +2,8 @@
 // over the files of one source: the project pair (`.claude/settings.json` and
 // `.claude/settings.local.json`), or the merged managed source. The two sources never mix.
 // A sibling file that the rule cannot read adds nothing to a check that a present value proves.
-// A check that rests on an absence must make no report when `complete` is false.
+// A check that rests on an absence must make no report when `complete` is false. A scalar value
+// is such a check, because an unreadable file can override it.
 import type { DocumentNode, ObjectNode } from './marketplace-json.ts'
 import { valueAt } from './permission-sandbox.ts'
 import { kindOf, readManagedSource, readSiblingSettings } from './settings-files.ts'
