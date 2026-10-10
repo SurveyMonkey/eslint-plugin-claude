@@ -251,10 +251,11 @@ not `docs-watch:`, so the issue dedupe does not read it. The step reads the comm
 group issue. A block whose marker is in a comment is not posted again.
 
 A tracked block opens no issue for a finding with no rule while one of its group issues is open.
-The comment does its work. When all its group issues are closed, the finding opens its
+The comment takes its place. When all its group issues are closed, the finding opens its
 issue, with a line that names the inventory rows. A finding that names a rule opens its issue as
 before. Docs text in a comment gets the same fence and word joiners as an issue body. The markers
-come first, and the text after them is cut at 60,000 characters, with a note. Comments do not
+come first. The text after them is cut, with a note, so that the comment stays at 60,000
+characters or fewer. A cut never removes a marker. Comments do not
 count toward the limit of 20 issues. A dry run prints each comment and posts none. The step also
 stops before it writes for three causes. The findings file has no `tracked` list. A tracked block
 is not valid. A group issue has a state that is not `open` or `closed`.
@@ -274,6 +275,6 @@ is not valid. A group issue has a state that is not `open` or `closed`.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
 - `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed. When a
   group issue closes, the findings of its tracked blocks open issues again.
-- A tracked block has no Jev finding of its own. A person reads the comment when they build the
-  row.
+- A tracked block gets no issue of its own while a group issue is open. Its Jev finding stays in
+  the classifier output. A person reads the comment when they build the row.
 - A new Jev version needs a new run of the spike before the pin moves.
