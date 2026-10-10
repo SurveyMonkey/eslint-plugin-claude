@@ -16,7 +16,7 @@ import { lintPlugin } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-symlink-escapes-plugin'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const MANIFEST = manifestOf({ name: 'p' })
@@ -200,8 +200,8 @@ describe(`${RULE} (silent)`, () => {
 
   locked('stays silent for a folder that it cannot list, and keeps the other links', () => {
     const top = repo()
-    link(dirOf(top), 'closed/s', '../../../q/skills/s')
-    link(dirOf(top), 'open/s', '../../../q/skills/s')
+    link(dirOf(top), 'closed/s', '../../q/skills/s')
+    link(dirOf(top), 'open/s', '../../q/skills/s')
     withoutAccess(path.join(dirOf(top), 'closed'), () => {
       expect(lint(dirOf(top)).map((m) => m.message)).toEqual([
         message('open/s', 'site/plugins/q/skills/s'),

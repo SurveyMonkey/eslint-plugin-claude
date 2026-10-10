@@ -3,7 +3,7 @@
 // have their own tests, and so does the entry path rule.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { escapingLinks, marketplaceRootOf, placeOf } from '../src/plugin-links.ts'
+import { escapingLinks, placeOf } from '../src/plugin-links.ts'
 import { type Plugin, readPluginAt } from '../src/plugin-manifest.ts'
 import { link, manifestOf, marketplaceOf, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
@@ -81,70 +81,79 @@ describe('placeOf', () => {
   })
 })
 
-describe('marketplaceRootOf', () => {
-  it('gives the folder of the catalog above the plugin', () => {
-    const top = repo()
-    expect(marketplaceRootOf(pluginAt(path.join(top, 'plugins/p')))).toBe(top)
+describe('the marketplace root of a plugin', () => {
+  /** The reach of a link from `plugins/p` to the sibling plugin `plugins/q`, or undefined when
+   *  `escapingLinks` lists no link. */
+  const reachOfSibling = (top: string, plugin = 'plugins/p') => {
+    const dir = path.join(top, plugin)
+    link(dir, 'sibling', path.relative(dir, path.join(top, 'plugins/q')))
+    return escapingLinks(pluginAt(dir))[0]?.reach
+  }
+
+  linked('is the folder of the catalog above the plugin', () => {
+    expect(reachOfSibling(repo())).toBe('marketplace')
   })
 
-  it('gives the nearest folder when two hold a catalog', () => {
+  linked('is the nearest folder when two hold a catalog', () => {
     const top = repo({ 'plugins/.claude-plugin/marketplace.json': CATALOG })
-    expect(marketplaceRootOf(pluginAt(path.join(top, 'plugins/p')))).toBe(path.join(top, 'plugins'))
+    link(path.join(top, 'plugins/p'), 'shared', '../../shared')
+    expect(escapingLinks(pluginAt(path.join(top, 'plugins/p')))[0]?.reach).toBe('outside')
   })
 
-  it('gives the plugin root when it holds a catalog', () => {
+  linked('is the plugin root when the plugin holds the catalog', () => {
     const top = repo({ 'plugins/p/.claude-plugin/marketplace.json': CATALOG })
-    const dir = path.join(top, 'plugins/p')
-    expect(marketplaceRootOf(pluginAt(dir))).toBe(dir)
+    expect(reachOfSibling(top)).toBe('outside')
   })
 
-  it('gives the plugin root when no folder holds a catalog', () => {
-    const top = tree({ 'plugins/p/.claude-plugin/plugin.json': MANIFEST })
-    const dir = path.join(top, 'plugins/p')
-    expect(marketplaceRootOf(pluginAt(dir))).toBe(dir)
+  linked('is the plugin root when no folder holds a catalog', () => {
+    const top = tree({
+      'plugins/p/.claude-plugin/plugin.json': MANIFEST,
+      'plugins/q/x.md': '',
+    })
+    expect(reachOfSibling(top)).toBe('outside')
   })
 
-  it('counts a catalog that does not parse', () => {
-    const top = repo({ '.claude-plugin/marketplace.json': '{' })
-    expect(marketplaceRootOf(pluginAt(path.join(top, 'plugins/p')))).toBe(top)
+  linked('is the folder of a catalog that does not parse', () => {
+    expect(reachOfSibling(repo({ '.claude-plugin/marketplace.json': '{' }))).toBe('marketplace')
   })
 
-  it('does not look above the repository root', () => {
+  linked('does not reach above the repository root', () => {
     const outer = tree(
       {
         '.claude-plugin/marketplace.json': CATALOG,
         'repo/.git/HEAD': '',
         'repo/plugins/p/.claude-plugin/plugin.json': MANIFEST,
+        'repo/plugins/q/x.md': '',
       },
       false,
     )
-    const dir = path.join(outer, 'repo/plugins/p')
-    expect(marketplaceRootOf(pluginAt(dir))).toBe(dir)
+    expect(reachOfSibling(path.join(outer, 'repo'))).toBe('outside')
   })
 
-  it('does not look above a plugin in a tree with no .git', () => {
+  linked('does not reach above a plugin in a tree with no .git', () => {
     const outer = tree(
       {
         '.claude-plugin/marketplace.json': CATALOG,
         'plugins/p/.claude-plugin/plugin.json': MANIFEST,
+        'plugins/q/x.md': '',
       },
       false,
     )
-    const dir = path.join(outer, 'plugins/p')
-    expect(marketplaceRootOf(pluginAt(dir))).toBe(dir)
+    // The sibling is out of the plugin, which is the bound, so the link has no result.
+    expect(reachOfSibling(outer)).toBeUndefined()
   })
 
-  linked('gives undefined for a catalog that is a link with no target', () => {
+  linked('gives no link for a catalog that is a link with no target', () => {
     const top = repo()
     link(top, 'plugins/.claude-plugin/marketplace.json', 'gone.json')
-    expect(marketplaceRootOf(pluginAt(path.join(top, 'plugins/p')))).toBeUndefined()
+    expect(reachOfSibling(top)).toBeUndefined()
   })
 
-  linked('gives undefined for a catalog that is a link out of the repository', () => {
+  linked('gives no link for a catalog that is a link out of the repository', () => {
     const outside = tree({ 'm.json': CATALOG }, false)
-    const top = repo({ '.claude-plugin/marketplace.json': '' })
+    const top = repo()
     link(top, 'plugins/.claude-plugin/marketplace.json', path.join(outside, 'm.json'))
-    expect(marketplaceRootOf(pluginAt(path.join(top, 'plugins/p')))).toBeUndefined()
+    expect(reachOfSibling(top)).toBeUndefined()
   })
 })
 

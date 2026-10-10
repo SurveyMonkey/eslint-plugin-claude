@@ -11,7 +11,7 @@ import { lintPlugin } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-symlink-escapes-marketplace'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const MANIFEST = manifestOf({ name: 'p' })
@@ -56,14 +56,14 @@ describe(RULE, () => {
     expect(lint(dirOf(top)).map((m) => m.message)).toEqual([message('skills', 'out')])
   })
 
-  linked('reports each link, in name order, at any depth', () => {
+  linked('reports each link, depth first in name order', () => {
     const top = repo()
     link(dirOf(top), 'z.md', '../../../out/o.md')
     link(dirOf(top), 'a/b/c.md', '../../../../../out/o.md')
     link(dirOf(top), 'a.md', '../../../out/o.md')
     expect(lint(dirOf(top)).map((m) => m.message)).toEqual([
-      message('a.md', 'out/o.md'),
       message('a/b/c.md', 'out/o.md'),
+      message('a.md', 'out/o.md'),
       message('z.md', 'out/o.md'),
     ])
   })
