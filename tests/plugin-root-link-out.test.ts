@@ -172,6 +172,20 @@ describe('the cross-file rules of the plugin layer', () => {
   })
 })
 
+describe('the path and settings rules of the plugin layer', () => {
+  const SKILLS = JSON.stringify({ name: 'p', skills: './skills' })
+  it('plugin-skills-key-redundant-default reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(SKILLS)
+    expect(
+      lintPlugin('plugin-skills-key-redundant-default', dir, code).map((m) => m.messageId),
+    ).toEqual(['redundant'])
+  })
+  linked('plugin-skills-key-redundant-default stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, SKILLS)
+    expect(lintPlugin('plugin-skills-key-redundant-default', dir, SKILLS)).toEqual([])
+  })
+})
+
 describe('readPluginAt', () => {
   it('gives the plugin for a root in the repository', () => {
     expect(readPluginAt(inside({}))).toMatchObject({ fields: { name: 'p' } })

@@ -119,6 +119,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-manifest-no-bom`](docs/rules/plugin-manifest-no-bom.md) | `plugin.json` has no byte order mark, which fails the install on Claude Code before v2.1.246 (option `minVersion`; inactive without it) | `warn` | `warn` |
 | [`claude/plugin-manifest-publish-metadata`](docs/rules/plugin-manifest-publish-metadata.md) | The plugin sets `homepage` and `repository` in `plugin.json` and has a `README.md` at the plugin root | `warn` | `warn` |
 | [`claude/plugin-manifest-version-semver`](docs/rules/plugin-manifest-version-semver.md) | When set, `version` in `plugin.json` is a semantic version, which a dependency range needs | `warn` | `warn` |
+| [`claude/plugin-skills-key-redundant-default`](docs/rules/plugin-skills-key-redundant-default.md) | The `skills` key of `plugin.json` does not list the default `skills/` directory, which the key adds to anyway | `warn` | `warn` |
 
 ### Marketplace manifest
 

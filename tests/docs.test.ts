@@ -79,6 +79,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-project-skills-dir-limits',
     'plugin-settings-single-source',
     'plugin-skill-dir-layout',
+    'plugin-skills-key-redundant-default',
     'plugin-symlink-escapes-marketplace',
     'plugin-symlink-escapes-plugin',
     'plugin-user-config-no-shell-fields',

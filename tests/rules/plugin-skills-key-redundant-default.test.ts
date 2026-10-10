@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-skills-key-redundant-default'
-const check = it.fails
+const check = it
 
 const message = (entry: string) =>
   `The \`skills\` entry "${entry}" names the default \`skills/\` directory. The \`skills\` key adds to the default scan, so Claude Code scans that directory without this entry.`
@@ -23,9 +23,9 @@ describe(RULE, () => {
       messageId: 'redundant',
       message: message('./skills'),
       line: 1,
-      column: 25,
+      column: 22,
       endLine: 1,
-      endColumn: 35,
+      endColumn: 32,
     })
   })
 
@@ -41,7 +41,7 @@ describe(RULE, () => {
   check('reports the entry in an array and leaves the others alone', () => {
     const found = run(['./extra-skills', './skills/', '.'])
     expect(found.map((m) => m.message)).toEqual([message('./skills/')])
-    expect(found[0]).toMatchObject({ line: 1, column: 44 })
+    expect(found[0]).toMatchObject({ line: 1, column: 40 })
   })
 
   check('reports each entry that names skills/', () => {

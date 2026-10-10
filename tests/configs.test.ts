@@ -123,8 +123,9 @@ const TREE: Record<string, string> = {
   // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
   'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
   'plugins/loc/.claude-plugin/bin/tool': '',
-  // The default `skills/` directory is in the `skills` key too. Its loose file is a report of
-  // `skill-file-layout` only. The loose file in `extra/` is a report of the manifest rule.
+  // The default `skills/` directory is in the `skills` key too. That entry is a report of
+  // `plugin-skills-key-redundant-default`. Its loose file is a report of `skill-file-layout` only.
+  // The loose file in `extra/` is a report of the manifest rule.
   'plugins/skl/.claude-plugin/plugin.json': JSON.stringify({
     name: 'skl',
     skills: ['./extra', './skills'],
@@ -718,6 +719,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-skills-key-redundant-default',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -806,6 +812,7 @@ const EXPECTED = [
   'plugins/sen/commands/c.md: claude/command-legacy-format@1',
   'plugins/sen/skills/s/SKILL.md: claude/plugin-user-config-sensitive-in-content@2',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
+  'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skills-key-redundant-default@1',
   'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
   'plugins/p/agents/ignored.md: claude/agent-plugin-ignored-fields@2',
