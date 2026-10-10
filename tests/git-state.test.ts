@@ -4,7 +4,7 @@
 import { chmodSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { EXECUTABLE_MODE, gitChildren, gitEnv, gitModeOf } from '../src/git-state.ts'
+import { EXECUTABLE_MODE, gitChildren, gitEnv, gitModeOf, PLAIN_MODE } from '../src/git-state.ts'
 import { UNREADABLE } from '../src/skill-tree.ts'
 import { git, plain, put, repo } from './git-tree.test-support.ts'
 
@@ -14,6 +14,7 @@ describe('gitModeOf', () => {
   it('gives the mode of a tracked file: 100755 and 100644', () => {
     const root = repo({ 'run.sh': '#!/bin/sh\n', 'plain.txt': 'x\n' }, ['run.sh'])
     expect(EXECUTABLE_MODE).toBe('100755')
+    expect(PLAIN_MODE).toBe('100644')
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100755')
     expect(gitModeOf(root, at(root, 'plain.txt'))).toBe('100644')
   })

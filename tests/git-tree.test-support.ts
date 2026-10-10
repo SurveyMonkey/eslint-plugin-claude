@@ -45,14 +45,21 @@ export function repo(
   untracked: Record<string, string> = {},
 ): string {
   const root = plain(tracked)
+  stage(root, Object.keys(tracked), executable)
+  put(root, untracked)
+  return root
+}
+
+/** Make `root` a repository, and stage the files `files` in it, which are on
+ *  disk. The files in `executable` get index mode `100755`, and the others get
+ *  `100644`. */
+export function stage(root: string, files: string[], executable: string[] = []) {
   git(root, 'init', '--quiet')
-  if (Object.keys(tracked).length > 0) {
-    git(root, 'add', '--all')
-    git(root, 'update-index', '--chmod=-x', '--', ...Object.keys(tracked))
+  if (files.length > 0) {
+    git(root, 'add', '--force', '--all')
+    git(root, 'update-index', '--chmod=-x', '--', ...files)
   }
   if (executable.length > 0) {
     git(root, 'update-index', '--chmod=+x', '--', ...executable)
   }
-  put(root, untracked)
-  return root
 }

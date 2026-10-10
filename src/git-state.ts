@@ -16,6 +16,11 @@ import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 /** The index mode of a regular file with the executable bit. */
 export const EXECUTABLE_MODE = '100755'
 
+/** The index mode of a regular file with no executable bit. A rule reports
+ *  this mode only. A link, a submodule and a path that git does not track have
+ *  other modes, and the executable bit does not apply to them. */
+export const PLAIN_MODE = '100644'
+
 // The variables that point git at a repository. A hook that runs git sets
 // them, and they would make git read another index.
 const LOCATION = [

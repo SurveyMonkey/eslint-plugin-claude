@@ -8,6 +8,7 @@ import path from 'node:path'
 import { ESLint, type Linter } from 'eslint'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
+import { stage } from './git-tree.test-support.ts'
 
 const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
@@ -452,6 +453,40 @@ const TREE: Record<string, string> = {
   'packages/hs/loose/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
 }
 
+// The files that the test stages in the repository `packages/hx`, for the rules that read the git
+// index mode. Every script has index mode `100644`, except `ok.sh`. Git does not track `loose.sh`.
+const GIT_REPO = 'packages/hx'
+const GIT_TREE: Record<string, string> = {
+  'tools/run.sh': '#!/bin/sh\n',
+  'scripts/run.sh': '#!/bin/sh\n',
+  'ok/tools/ok.sh': '#!/bin/sh\n',
+  '.claude/settings.json': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  '.claude/settings.local.json': JSON.stringify(hookOf('./tools/run.sh')),
+  'managed-settings.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/tools/run.sh`),
+  }),
+  'managed-settings.d/10-a.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/tools/run.sh`),
+  }),
+  'managed-settings.d/.20-hidden.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/tools/run.sh`),
+  }),
+  'managed-settings.d/30-b.txt': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  'managed-settings.d/sub/40-c.json': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  '.vscode/settings.json': JSON.stringify(hookOf(`${projectDir}/tools/run.sh`)),
+  'ok/.claude/settings.json': JSON.stringify(hookOf(`${projectDir}/tools/ok.sh`)),
+  'plugin/.claude-plugin/plugin.json': JSON.stringify({ name: 'hx' }),
+  'plugin/scripts/run.sh': '#!/bin/sh\n',
+  'plugin/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+  'plugin/hooks/other.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+  'loose/scripts/run.sh': '#!/bin/sh\n',
+  'loose/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/scripts/run.sh`)),
+}
+const GIT_EXECUTABLE = ['ok/tools/ok.sh']
+
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
 const ESCAPE_RULE = 'marketplace-relative-source-escape-symlink'
 // A link needs a privilege on Windows, so the test makes the one link elsewhere only.
@@ -511,6 +546,7 @@ const SETTINGS_RULES = [
 // files of each. Each is an error.
 const PROJECT_FILES = ['**/.claude/settings.json', '**/.claude/settings.local.json']
 const MANAGED_FILES = ['**/managed-settings.json', '**/managed-settings.d/*.json']
+const HOOKS_FILES = ['**/hooks/hooks.json', ...PROJECT_FILES, ...MANAGED_FILES]
 const SCOPE_RULES = [
   { name: 'settings-valid-json', files: PROJECT_FILES },
   { name: 'settings-file-size', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -529,10 +565,8 @@ const SCOPE_RULES = [
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   // The git layer of #10, #11 and #14. The rules that read the index mode need a repository.
-  {
-    name: 'hooks-script-exists',
-    files: ['**/hooks/hooks.json', ...PROJECT_FILES, ...MANAGED_FILES],
-  },
+  { name: 'hooks-script-exists', files: HOOKS_FILES },
+  { name: 'hooks-script-executable', files: HOOKS_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -705,6 +739,16 @@ const EXPECTED = [
     'packages/hs/plugin/hooks/hooks.json',
   ].map((file) => `${file}: claude/hooks-script-exists@2`),
   'packages/hs/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `hooks-script-executable` reads the same files. Only `tools/run.sh` and `scripts/run.sh`
+  // have index mode `100644`, and `ok.sh` has `100755`.
+  ...[
+    'packages/hx/.claude/settings.json',
+    'packages/hx/.claude/settings.local.json',
+    'packages/hx/managed-settings.json',
+    'packages/hx/managed-settings.d/10-a.json',
+    'packages/hx/plugin/hooks/hooks.json',
+  ].map((file) => `${file}: claude/hooks-script-executable@2`),
+  'packages/hx/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -790,6 +834,12 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
     writeFileSync(path.join(root, file), content)
   }
+  const repo = path.join(root, GIT_REPO)
+  for (const [file, content] of Object.entries(GIT_TREE)) {
+    mkdirSync(path.dirname(path.join(repo, file)), { recursive: true })
+    writeFileSync(path.join(repo, file), content)
+  }
+  stage(repo, Object.keys(GIT_TREE), GIT_EXECUTABLE)
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))

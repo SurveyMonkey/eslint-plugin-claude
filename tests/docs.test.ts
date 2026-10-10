@@ -34,6 +34,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-tools-unavailable',
     'command-legacy-format',
     'hooks-event-name-known',
+    'hooks-script-executable',
     'hooks-script-exists',
     'marketplace-command-version-ignored',
     'marketplace-entry-component-paths',

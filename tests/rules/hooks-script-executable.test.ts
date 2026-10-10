@@ -24,7 +24,7 @@ const SETTINGS = '.claude/settings.json'
 const MANIFEST = { '.claude-plugin/plugin.json': '{"name":"p"}' }
 
 describe(RULE, () => {
-  it.fails('reports a script with mode 100644, on the command', () => {
+  it('reports a script with mode 100644, on the command', () => {
     const root = repo({ '.claude/hooks/check.sh': '#!/bin/sh\n' })
     const code = `{
   "hooks": {
@@ -48,12 +48,12 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain(`"${PROJECT}/.claude/hooks/check.sh"`)
   })
 
-  it.fails('stays silent for a script with mode 100755', () => {
+  it('stays silent for a script with mode 100755', () => {
     const root = repo({ '.claude/hooks/check.sh': '#!/bin/sh\n' }, ['.claude/hooks/check.sh'])
     expect(lint(root, SETTINGS, settings(`${PROJECT}/.claude/hooks/check.sh`))).toEqual([])
   })
 
-  it.fails('reads the forms of the path, as the program', () => {
+  it('reads the forms of the path, as the program', () => {
     const root = repo({ 'tools/run.sh': 'x' })
     for (const command of [
       `${PROJECT}/tools/run.sh`,
@@ -72,7 +72,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('stays silent when the script is an argument of another program', () => {
+  it('stays silent when the script is an argument of another program', () => {
     const root = repo({ 'tools/run.js': 'x', 'tools/run.sh': 'x' })
     for (const command of [
       `node ${PROJECT}/tools/run.js`,
@@ -87,7 +87,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reads the exec form: the command is the program, and args are not', () => {
+  it('reads the exec form: the command is the program, and args are not', () => {
     const root = repo({ 'tools/run.sh': 'x', 'tools/run.js': 'x' })
     const exec = (command: string, args: unknown) => settings(command, { args })
     expect(
@@ -97,7 +97,7 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, exec('node', [`${PROJECT}/tools/run.js`, 1, null]))).toEqual([])
   })
 
-  it.fails('reports in settings.local.json, and below a nested project', () => {
+  it('reports in settings.local.json, and below a nested project', () => {
     const root = repo({ 'packages/x/tools/run.sh': 'x' })
     const code = settings(`${PROJECT}/tools/run.sh`)
     expect(
@@ -106,7 +106,7 @@ describe(RULE, () => {
     expect(lint(root, 'packages/x/.claude/settings.json', code)).toHaveLength(1)
   })
 
-  it.fails('stays silent for a script that is not there, and for one that git does not track', () => {
+  it('stays silent for a script that is not there, and for one that git does not track', () => {
     const root = repo({ 'a.txt': 'x' }, [], { 'tools/loose.sh': '#!/bin/sh\n' })
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/loose.sh`))).toEqual([])
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/gone.sh`))).toEqual([])
@@ -114,12 +114,12 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools`))).toEqual([])
   })
 
-  it.fails('stays silent in a tree with no .git, where the mode cannot be read', () => {
+  it('stays silent in a tree with no .git, where the mode cannot be read', () => {
     const root = plain({ 'tools/run.sh': 'x' })
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/run.sh`))).toEqual([])
   })
 
-  it.fails('stays silent when git cannot run', () => {
+  it('stays silent when git cannot run', () => {
     const root = repo({ 'tools/run.sh': 'x' })
     vi.stubEnv('PATH', '')
     try {
@@ -129,7 +129,7 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('reads the index mode, not the disk mode', () => {
+  it('reads the index mode, not the disk mode', () => {
     // The index keeps 100755 while the disk shows 644: no report.
     const root = repo({ 'tools/a.sh': 'x', 'tools/b.sh': 'x' }, ['tools/a.sh'])
     chmodSync(path.join(root, 'tools/a.sh'), 0o644)
@@ -139,14 +139,14 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/b.sh`))).toHaveLength(1)
   })
 
-  it.fails('reads the mode that a new git add records', () => {
+  it('reads the mode that a new git add records', () => {
     const root = repo({ 'tools/run.sh': 'x' })
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/run.sh`))).toHaveLength(1)
     git(root, 'update-index', '--chmod=+x', 'tools/run.sh')
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/run.sh`))).toEqual([])
   })
 
-  it.fails('reads the mode of the file that a link points at', () => {
+  it('reads the mode of the file that a link points at', () => {
     const root = repo({ 'tools/real.sh': 'x', 'tools/ok.sh': 'x' }, ['tools/ok.sh'])
     symlinkSync('real.sh', path.join(root, 'tools/alias.sh'))
     symlinkSync('ok.sh', path.join(root, 'tools/ok-alias.sh'))
@@ -154,7 +154,7 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, settings(`${PROJECT}/tools/ok-alias.sh`))).toEqual([])
   })
 
-  it.fails('stays silent for a path out of the repository, and for a link out of it', () => {
+  it('stays silent for a path out of the repository, and for a link out of it', () => {
     const root = repo({ 'a.txt': 'x' })
     const outside = repo({ 'real.sh': 'x' })
     symlinkSync(path.join(outside, 'real.sh'), path.join(root, 'link.sh'))
@@ -165,7 +165,7 @@ describe(RULE, () => {
     ).toEqual([])
   })
 
-  it.fails('stays silent for a command that is not a repository path', () => {
+  it('stays silent for a command that is not a repository path', () => {
     const root = repo({ 'tools/run.sh': 'x' })
     for (const command of [
       'jq -r .name',
@@ -181,12 +181,12 @@ describe(RULE, () => {
     }
   })
 
-  it.fails('does not read the plugin variable in a settings file', () => {
+  it('does not read the plugin variable in a settings file', () => {
     const root = repo({ 'tools/run.sh': 'x' })
     expect(lint(root, SETTINGS, settings(`${PLUGIN}/tools/run.sh`))).toEqual([])
   })
 
-  it.fails('stays silent for a handler that is not a command hook', () => {
+  it('stays silent for a handler that is not a command hook', () => {
     const root = repo({ 'tools/run.sh': 'x' })
     for (const handler of [
       { type: 'http', command: `${PROJECT}/tools/run.sh` },
@@ -200,7 +200,7 @@ describe(RULE, () => {
   })
 
   describe('managed settings files', () => {
-    it.fails('resolves the project variable from the repository root', () => {
+    it('resolves the project variable from the repository root', () => {
       const root = repo({ 'tools/run.sh': 'x' })
       for (const file of [
         'managed-settings.json',
@@ -211,12 +211,12 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('does not read a path from the project in a managed file', () => {
+    it('does not read a path from the project in a managed file', () => {
       const root = repo({ 'tools/run.sh': 'x' })
       expect(lint(root, 'managed-settings.json', settings('tools/run.sh'))).toEqual([])
     })
 
-    it.fails('skips a hidden drop-in, which Claude Code ignores', () => {
+    it('skips a hidden drop-in, which Claude Code ignores', () => {
       const root = repo({ 'tools/run.sh': 'x' })
       const file = 'managed-settings.d/.20-hidden.json'
       expect(lint(root, file, settings(`${PROJECT}/tools/run.sh`))).toEqual([])
@@ -226,7 +226,7 @@ describe(RULE, () => {
   describe('hooks.json in a plugin', () => {
     const FILE = 'hooks/hooks.json'
 
-    it.fails('reports a plugin script with mode 100644', () => {
+    it('reports a plugin script with mode 100644', () => {
       const root = repo({ ...MANIFEST, 'scripts/a.sh': 'x', 'scripts/b.sh': 'x' }, ['scripts/b.sh'])
       expect(lint(root, FILE, settings(`${PLUGIN}/scripts/a.sh`)).map((m) => m.messageId)).toEqual([
         'notExecutable',
@@ -235,13 +235,13 @@ describe(RULE, () => {
       expect(lint(root, FILE, settings('node', { args: [`${PLUGIN}/scripts/a.sh`] }))).toEqual([])
     })
 
-    it.fails('does not read the project variable, or a path from the project', () => {
+    it('does not read the project variable, or a path from the project', () => {
       const root = repo({ ...MANIFEST, 'scripts/a.sh': 'x' })
       expect(lint(root, FILE, settings(`${PROJECT}/scripts/a.sh`))).toEqual([])
       expect(lint(root, FILE, settings('scripts/a.sh'))).toEqual([])
     })
 
-    it.fails('stays silent for a file that is in no plugin, and for a path out of the plugin', () => {
+    it('stays silent for a file that is in no plugin, and for a path out of the plugin', () => {
       const bare = repo({ 'scripts/a.sh': 'x' })
       expect(lint(bare, FILE, settings(`${PLUGIN}/scripts/a.sh`))).toEqual([])
       const root = repo({ 'plugins/p/.claude-plugin/plugin.json': '{}', 'shared/a.sh': 'x' })
@@ -249,13 +249,13 @@ describe(RULE, () => {
       expect(lint(root, file, settings(`${PLUGIN}/../../shared/a.sh`))).toEqual([])
     })
 
-    it.fails('resolves the plugin root from the parent of hooks/', () => {
+    it('resolves the plugin root from the parent of hooks/', () => {
       const root = repo({ 'plugins/p/.claude-plugin/plugin.json': '{}', 'plugins/p/run.sh': 'x' })
       expect(lint(root, 'plugins/p/hooks/hooks.json', settings(`${PLUGIN}/run.sh`))).toHaveLength(1)
     })
   })
 
-  it.fails('puts the plugin and the repository apart when the plugin has its own .git', () => {
+  it('puts the plugin and the repository apart when the plugin has its own .git', () => {
     const root = repo({ 'a.txt': 'x' })
     put(root, { 'inner/.claude-plugin/plugin.json': '{}', 'inner/run.sh': 'x' })
     const inner = path.join(root, 'inner')
