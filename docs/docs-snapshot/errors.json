@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "514590c7cbbc553215e649b6c3dd68acbe690872b89a27e43fee376f9fe9a1ec",
+  "hash": "4e7188667e990a8cd85490b6f9f6774261deb855133338851f183ea919745e47",
   "blocks": [
     {
       "id": "error-reference",
@@ -8,7 +8,7 @@
     },
     {
       "id": "find-your-error",
-      "hash": "eb4293eed93638852324c848beb5b28b5271e8e694cedcbdc507ae38407789b0"
+      "hash": "b6b9911854c6e3a457377eb11394691635eb2c579ecd91e8e414ee97c0f5e45e"
     },
     {
       "id": "automatic-retries",
@@ -48,7 +48,7 @@
     },
     {
       "id": "auto-mode-cannot-determine-the-safety-of-an-action",
-      "hash": "a7dc210299031e563b5371bfcd87bd51a5410d45a4b03a84c84c60a405f3df28"
+      "hash": "54c9c246922f35cee898a56a1e873197596904658ebe69582896840de739e220"
     },
     {
       "id": "the-server-returned-no-safety-verdict",
@@ -276,7 +276,7 @@
     },
     {
       "id": "unable-to-connect-to-anthropic-services",
-      "hash": "2e682bb8222712d2abb51a4481cf96f50febd0d40abf22b9062bdcd3efe40c51"
+      "hash": "6aea251ad1e99ca65cdb98c28bbe46c3bed22e50fb9e85adcd431dbbec7ec83a"
     },
     {
       "id": "socket-is-closed",
@@ -799,6 +799,10 @@
       "hash": "6bd6895ab110a000abb3da869473bb2b073b0a863cbb0b3c2539eaf7f81c7658"
     },
     {
+      "id": "file-is-not-valid-utf-8",
+      "hash": "57a8ff70ce0d53bb4bae8629129cbe2bfd8ba0697713d8e6a537452a0413b72b"
+    },
+    {
       "id": "the-source-file-is-not-valid-utf-8-text",
       "hash": "df455bb21ca40e7dbbbd52b0a613280362380959eb69f0a7763ffc7312fbdb0a"
     },
@@ -964,7 +968,7 @@
     },
     {
       "id": "working-directory-is-a-network-path",
-      "hash": "2ff64ed2f728d04e8c301748b7f3f20e41954e5b49fa5862e6a38407f4a55f56"
+      "hash": "f5bb8ce4eba1e1e76e5ea53bb4de634f71040a091fb85f1ef4c0274646df18b9"
     },
     {
       "id": "remote-managed-settings-failed-to-load",
@@ -1077,6 +1081,12 @@
       "id": "marketplace-entry-path-does-not-stay-inside-the-marketplace-directory",
       "hash": "129be67ecae339de6de02d8a19abf6e08f1a30f4c25bdd599581a3fca22ad5c0",
       "text": "### Marketplace entry path does not stay inside the marketplace directory\n\nThe plugin's [marketplace entry](/docs/en/plugins/marketplace-reference#plugin-entries) declares a source path that Claude Code can't resolve to a location inside the marketplace's own directory, so the plugin doesn't install or load. The refusal covers:\n\n* An entry path that is absolute, climbs out of the marketplace with `..`, or is spelled like a network path\n* On macOS and Linux, an entry path that contains a backslash anywhere after the leading `./`\n* An entry in a marketplace fetched from a remote source, such as git or a URL, that reaches its target through a symlink resolving outside the marketplace directory\n* A relative entry in a marketplace added from a direct URL to its `marketplace.json`: Claude Code downloads only that file, so no local plugin files exist for the path to name. See [Plugins with relative paths fail in URL-based marketplaces](/docs/en/plugins/troubleshooting#plugins-with-relative-paths-fail-in-url-based-marketplaces)\n\n`claude plugin install` reports the refusal like this:\n\n```text theme={null}\nCannot install my-plugin@my-marketplace: its marketplace entry path does not stay inside the marketplace directory (an absolute, climbing, network-shaped, backslash-containing or link-traversing entry, an entry of a fetched marketplace that resolves or opens outside its tree — or a relative entry in a url-catalog marketplace, which has no local directory)\n```\n\nWhen an already-installed plugin's entry fails the same check, `claude plugin list` shows the plugin as `failed to load` with:\n\n```text theme={null}\nPlugin source path refused: ./my-plugin does not stay inside its marketplace directory. Check that the marketplace entry has a plain relative path.\n```\n\n**What to do:**\n\n* If you maintain the marketplace, write the entry's `source` as a plain relative path with forward slashes, such as `./plugins/my-plugin`, and keep any symlink it crosses pointed inside the marketplace directory\n* If you added the marketplace from a direct URL, relative entries can't resolve. Ask the marketplace author to use [another plugin source](/docs/en/plugins/marketplace-reference#plugin-sources), or add the marketplace from its git repository instead"
+    },
+    {
+      "heading": "Memory index is over its read limit",
+      "id": "memory-index-is-over-its-read-limit",
+      "hash": "105b83ff6fb266ead40be05db044bbba6c18b02ff271d7403e3e0b38ac36dc29",
+      "text": "### Memory index is over its read limit\n\nClaude wrote to the [auto memory](/docs/en/memory#auto-memory) index `MEMORY.md` and left it over one of its read limits: 200 lines or 25KB. The write succeeded, but only the first 200 lines or 25KB, whichever comes first, load at the start of a session, so everything past the limit is dropped each time the index is read. Before v2.1.210, an over-limit index was silently truncated on the next load with no write-time signal.\n\n```text theme={null}\nError: this write left the memory index at MEMORY.md at 214 lines, over its 200-line read limit. The write succeeded, but everything past the limit is silently dropped each time the index is loaded — entries at the end are already invisible to readers. Rewrite it to under 140 lines now: keep one line per entry, move detail into topic files, and merge or drop stale entries.\n```\n\nOnly the content that loads counts toward the limits. YAML frontmatter and block-level HTML comments are stripped before the index is loaded, so they're excluded from the measurement. Before v2.1.211, Claude Code measured the raw file, and frontmatter or comments could trigger this error even when the loaded content fit.\n\nClaude Code delivers the error to Claude after the write rather than printing it as a banner in your terminal, so you may notice it only in the transcript.\n\nWhen Claude's write brings the file near a limit without crossing it, Claude Code returns a milder reminder to compact the index instead of this error.\n\n**What to do:**\n\n* Let Claude rewrite `MEMORY.md`, or ask it to: keep one line per entry, move detail into topic files, and merge or drop stale entries\n* To trim the index yourself, see [Audit and edit your memory](/docs/en/memory#audit-and-edit-your-memory)"
     },
     {
       "heading": "Is not matched by file permission checks",

@@ -45,3 +45,32 @@ export function classifyMemoryFile(file: string): MemoryFileKind | null {
 export function isAgentsMd(file: string): boolean {
   return path.basename(file) === 'AGENTS.md' && classifyMemoryFile(file) === null
 }
+
+/** The number of lines in `text`. A line end ends a line, and does not start a new one. */
+export function lineCount(text: string): number {
+  const lines = text.split(/\r\n|[\r\n]/)
+  return lines[lines.length - 1] === '' ? lines.length - 1 : lines.length
+}
+
+// A UNC share: two backslashes and a host. The hosts `\\wsl$` and `\\wsl.localhost` lead to a
+// Linux distribution on the same machine. The docs say that `\\wsl$` paths are not network
+// paths. A long path (`\\?\C:\`) and a device path (`\\.\pipe\`) are local. A long UNC path
+// (`\\?\UNC\server\share`) is a share. The rule `memory-symlink-network-target` has the
+// same test.
+const UNC = /^\\\\(?:\?\\UNC\\|(?![?.]\\)(?!wsl\$(?:\\|$))(?!wsl\.localhost(?:\\|$)))/i
+// A path under `/net` or `/Network`, or the folder itself.
+const MOUNT = /^\/(?:net|Network)(?:\/|$)/
+
+/** True when `target`, the text of a link, is a network path. Claude Code does not follow such
+ *  a link, and `memory-symlink-network-target` reports it. So a rule about links leaves it. */
+export function isNetworkTarget(target: string): boolean {
+  return UNC.test(target) || MOUNT.test(target)
+}
+
+/** True when the value of `paths` sets a scope: a string, or a list, with one glob that is
+ *  not empty. An empty value is the same as an absent field. The rule
+ *  `rules-symlink-external-scoped` has the same test. */
+export function isScopedRule(paths: unknown): boolean {
+  const globs = typeof paths === 'string' ? paths.split(',') : Array.isArray(paths) ? paths : []
+  return globs.some((glob) => typeof glob === 'string' && glob.trim() !== '')
+}

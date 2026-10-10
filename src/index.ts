@@ -20,8 +20,11 @@ import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
+import claudeMdImportExternal from './rules/claude-md-import-external.ts'
 import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
+import claudeMdMaxLines from './rules/claude-md-max-lines.ts'
+import claudeMdSymlink from './rules/claude-md-symlink.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
@@ -40,6 +43,8 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
+import memoryIndexMaxSize from './rules/memory-index-max-size.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
@@ -53,8 +58,10 @@ import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsup
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
+import rulesMaxLines from './rules/rules-max-lines.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
@@ -199,6 +206,13 @@ const modules = [
   rulesMdExtension,
   rulesPathsGlobValid,
   rulesSymlinkExternalScoped,
+  claudeMdImportExternal,
+  claudeMdMaxLines,
+  claudeMdSymlink,
+  memoryAutoMemoryDirectoryCommitted,
+  memoryIndexMaxSize,
+  rulesMaxLines,
+  rulesSymlinkExternal,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -319,6 +333,13 @@ const recommended: Record<RuleName, Severity> = {
   'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',
   'rules-symlink-external-scoped': 'error',
+  'claude-md-import-external': 'warn',
+  'claude-md-max-lines': 'warn',
+  'claude-md-symlink': 'warn',
+  'memory-auto-memory-directory-committed': 'warn',
+  'memory-index-max-size': 'warn',
+  'rules-max-lines': 'warn',
+  'rules-symlink-external': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
