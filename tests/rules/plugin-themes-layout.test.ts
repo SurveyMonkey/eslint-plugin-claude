@@ -9,7 +9,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-themes-layout'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = ['**/themes/*.json']
 const lint = (dir: string, file: string, code: string) =>
@@ -141,8 +141,10 @@ describe(`${RULE} (silent)`, () => {
     ['sub/themes/t.json', 'sub/themes/t.json'],
     ['.claude-plugin/themes/t.json', '.claude-plugin/themes/t.json'],
     ['themes.json', 'themes.json'],
-  ])('stays silent for a file at %s', (_title, file) => {
-    expect(run({ name: 1 }, { name: 'p' }, file)).toEqual([])
+  ])('stays silent for a file at %s, when the glob lets it in', (_title, file) => {
+    const { dir } = pluginTree({ name: 'p' })
+    const found = lintPluginFile(RULE, ['**/*.json'], path.join(dir, file), '{"name": 1}')
+    expect(found.map((m) => m.message)).toEqual([])
   })
 
   check('stays silent for a file that sits in no plugin', () => {

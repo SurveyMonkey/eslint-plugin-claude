@@ -129,6 +129,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-monitors-command-quote`](docs/rules/plugin-monitors-command-quote.md) | A monitor `command` writes `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` inside quotes, because an install path with a space splits the command | `warn` | `warn` |
 | [`claude/plugin-package-lifecycle-scripts`](docs/rules/plugin-package-lifecycle-scripts.md) | The `package.json` at a plugin root has no `preinstall`, `install` or `postinstall` script, because Claude Code installs dependencies with `--ignore-scripts` | `warn` | `warn` |
 | [`claude/plugin-package-lockfile-choice`](docs/rules/plugin-package-lockfile-choice.md) | A plugin ships one lockfile that Claude Code reads, and not `bun.lock` alone, because Claude Code reads the first match and does not fall back to npm | `warn` | `warn` |
+| [`claude/plugin-themes-layout`](docs/rules/plugin-themes-layout.md) | A theme file in `themes/` uses the custom theme format: `name` is a string, `base` is a built-in preset, and `overrides` is an object | `warn` | `warn` |
 
 ### Marketplace manifest
 

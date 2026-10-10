@@ -207,6 +207,9 @@ const TREE: Record<string, string> = {
   'plugins/lch/package.json': '{}',
   'plugins/lch/bun.lock': '',
   'plugins/lch/package-lock.json': '',
+  // A plugin with a theme file whose `base` is no preset.
+  'plugins/th/.claude-plugin/plugin.json': JSON.stringify({ name: 'th' }),
+  'plugins/th/themes/t.json': JSON.stringify({ name: 'T', base: 'bogus' }),
   // A marketplace in a repository with a `.git`, and a plugin that depends on a name that the
   // marketplace does not list.
   'packages/cx/.git/HEAD': 'ref: refs/heads/main\n',
@@ -811,6 +814,7 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -876,6 +880,7 @@ const EXPECTED = [
   'plugins/lch/.claude-plugin/plugin.json: claude/plugin-package-lockfile-choice@1',
   'plugins/mq/.claude-plugin/plugin.json: claude/plugin-monitors-command-quote@1',
   'plugins/mq2/monitors/monitors.json: claude/plugin-monitors-command-quote@1',
+  'plugins/th/themes/t.json: claude/plugin-themes-layout@1',
   'plugins/uca/.claude-plugin/plugin.json: claude/plugin-user-config-field-applicability@1',
   'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',

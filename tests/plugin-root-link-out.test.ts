@@ -47,6 +47,7 @@ const SHELL = JSON.stringify({
 })
 const MONITORS = JSON.stringify([{ name: 'm', command: 'run $CLAUDE_PLUGIN_ROOT/x' }])
 const LIFECYCLE = JSON.stringify({ scripts: { postinstall: 'node setup.js' } })
+const THEME = JSON.stringify({ base: 'bogus' })
 const QUOTE = JSON.stringify([{ name: 'm', command: `run \${CLAUDE_PLUGIN_ROOT}/x` }])
 
 describe('a plugin root that links out of the repository', () => {
@@ -60,6 +61,7 @@ describe('a plugin root that links out of the repository', () => {
     ],
     ['plugin-monitors-command-quote', 'monitors/monitors.json', '**/monitors/monitors.json', QUOTE],
     ['plugin-package-lifecycle-scripts', 'package.json', '**/package.json', LIFECYCLE],
+    ['plugin-themes-layout', 'themes/t.json', '**/themes/*.json', THEME],
   ]
   it.each(jsonCases)('%s reports in the plugin in the repository', (rule, file, glob, code) => {
     expect(lintPluginFile(rule, [glob], path.join(inside({}), file), code)).toHaveLength(1)
