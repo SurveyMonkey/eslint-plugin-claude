@@ -919,6 +919,28 @@
       "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa"
     }
   ],
+  "plugin-feature-min-version": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Path rules",
+      "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "metadata",
+      "hash": "ee3f58518039ea24dec82c79f0224ea75af369cbaf6494f2ec5d8cb7a48f9a99"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Limit a field to fixed options",
+      "hash": "c4d761fb39ce76f46b40622daff6ec9628d568295b8beee32d3306a107a57ed9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Directory listing fields",
+      "hash": "5be06b2ff9ea2d2e2bb755322ec4fce85d391ad224b581dfeeadb0b04ee4e38c"
+    }
+  ],
   "plugin-manifest-location": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -939,6 +961,49 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Standard layout",
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+    }
+  ],
+  "plugin-manifest-metadata-format": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+    }
+  ],
+  "plugin-manifest-no-bom": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Manifest file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
+    }
+  ],
+  "plugin-manifest-publish-metadata": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/publish",
+      "heading": "Prepare your plugin for release",
+      "hash": "9de39a9a3c45c1bce089b935877c35b38082e5a3894e22e1fb5963e3a12043ea"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+    }
+  ],
+  "plugin-manifest-version-semver": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "version",
+      "hash": "768db8e5ebe000b91b7732a5aa6efc8c1ce0308a215f44365b499e734bb5ab70"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Declare a dependency with a version constraint",
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Create a release tag",
+      "hash": "6206298e81dd4078540d51d0f2bf087de48e066c4969c5aed6911366634aa9d0"
     }
   ],
   "plugin-monitors-command-env": [

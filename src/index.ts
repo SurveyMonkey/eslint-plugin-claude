@@ -47,7 +47,12 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
+import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
+import pluginManifestMetadataFormat from './rules/plugin-manifest-metadata-format.ts'
+import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
+import pluginManifestPublishMetadata from './rules/plugin-manifest-publish-metadata.ts'
+import pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
@@ -211,6 +216,11 @@ const modules = [
   pluginNpmSourceShrinkwrap,
   pluginSettingsSingleSource,
   pluginUserConfigSensitiveInContent,
+  pluginFeatureMinVersion,
+  pluginManifestMetadataFormat,
+  pluginManifestNoBom,
+  pluginManifestPublishMetadata,
+  pluginManifestVersionSemver,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -337,6 +347,11 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-feature-min-version': 'warn',
+  'plugin-manifest-metadata-format': 'warn',
+  'plugin-manifest-no-bom': 'warn',
+  'plugin-manifest-publish-metadata': 'warn',
+  'plugin-manifest-version-semver': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

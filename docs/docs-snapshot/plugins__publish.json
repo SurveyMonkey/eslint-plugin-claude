@@ -1,0 +1,86 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/publish",
+  "hash": "9d4dc32f6cd4f29aff651686d8ef32900a67e70ceae45f20ebf0311ddda80a02",
+  "blocks": [
+    {
+      "id": "publish-and-distribute-a-plugin",
+      "hash": "4fdbb915ac3f865f0bb68243f1fc8a78caf6fa62df640880340057baa30b1a46"
+    },
+    {
+      "id": "choose-how-to-distribute",
+      "hash": "33636600d3d8127bb26956ef90192cfb17caf7cd427f059ad3da7b5585304390"
+    },
+    {
+      "id": "prepare-your-plugin-for-release",
+      "hash": "9de39a9a3c45c1bce089b935877c35b38082e5a3894e22e1fb5963e3a12043ea"
+    },
+    {
+      "id": "share-a-plugin-without-a-marketplace",
+      "hash": "8f7dbc36164545da022bf5774cdde11d85d1ab193c592357a000f1bc6b6901af"
+    },
+    {
+      "id": "ship-a-plugin-with-your-own-tool",
+      "hash": "c297dec1879617da6ec2972ce7c7166b6f9993b842a9d0ac8616eccbf61c222d"
+    },
+    {
+      "id": "publish-through-your-own-marketplace",
+      "hash": "130b7c0b8db6a92b4f3478ac2be6fb07225cb6aaebdaeb89ec740c5c7b47a391"
+    },
+    {
+      "id": "add-the-marketplace-file-to-your-repository",
+      "hash": "604b9dde91fc912432a1daf5c6ab14357f4f5633c618bd45c599e8fd4f9db25f"
+    },
+    {
+      "id": "control-who-can-install",
+      "hash": "528447beee54d681e67f3bfb6578793b014ba0a70ec3b4c9ea075376a8fe6017"
+    },
+    {
+      "id": "tell-users-how-to-install",
+      "hash": "b621236ac833d85fd61fe62689009b54e5cf5fdf45f14f07099bbd00831b2c9c"
+    },
+    {
+      "id": "ship-updates-to-users",
+      "hash": "3c7d18725db0219a85ebf8f56fed0ee77ccb4df2478bae84a1aeb417c3b72410"
+    },
+    {
+      "id": "submit-to-anthropics-directory",
+      "hash": "c7a7e2952f06654b1921d790d7fa5c6b14631d2efe23f0595b7d310d9c4acf3f"
+    },
+    {
+      "id": "how-a-listed-plugin-reaches-claude-code-users",
+      "hash": "0a4e39f26c5cafbcad013bcce005d53ab5d2b4b49f1b89bf7371021960bab31e"
+    },
+    {
+      "id": "ship-updates-renames-and-removals",
+      "hash": "ddc98379f3c12371bba99fd6d955775d18d990c47e3f88ac39c018de9a6fe652"
+    },
+    {
+      "id": "release-a-new-version",
+      "hash": "34e9a7c62e292ddc7564a8881d78531f11458bfb0ac2cc12ac31bed940a3e9c7"
+    },
+    {
+      "id": "tag-a-release",
+      "hash": "153bf0ff71eebf2dba71c20d92ffe0ea1491f71a72c840b5253595358595f999"
+    },
+    {
+      "id": "rename-or-remove-a-plugin",
+      "hash": "48554974e39c9e53e01ee788892f57f3afc367eb897c07ecaaa7f2ee19c17d53"
+    },
+    {
+      "id": "declare-dependencies",
+      "hash": "0b720e06a9c1e9012eb9fadfe785855bd7cfddb8ecbeb786732a893ebb556be0"
+    },
+    {
+      "id": "next-steps",
+      "hash": "4b5b81b5cb43a1160e740157f4be25dda939d96cd220e1d0462692c06a4b1392"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Prepare your plugin for release",
+      "id": "prepare-your-plugin-for-release",
+      "hash": "9de39a9a3c45c1bce089b935877c35b38082e5a3894e22e1fb5963e3a12043ea",
+      "text": "## Prepare your plugin for release\n\nThe name, the version, validation, and an install from a marketplace decide whether a release works for the people who install it. Check them before the first release and again before each later one.\n\n<Steps>\n  <Step title=\"Choose a permanent name\">\n    Users install, enable, and configure your plugin by `name@marketplace`, so a renamed plugin is a different plugin to every existing install. Choose a kebab-case name such as `deploy-helper`, because `claude plugin validate` warns on other forms, and treat it as permanent. Set `displayName` in `plugin.json` for the label users see.\n  </Step>\n\n  <Step title=\"Decide how you'll version\">\n    If you set `version` in `plugin.json` and later push commits without changing it, `claude plugin update` prints `<name> is already at the latest version (1.0.0).` and users keep the old copy. Either increment `version` on every release, or omit it in a git-hosted marketplace so Claude Code uses the commit SHA instead. See [Versions and updates](/docs/en/plugins/loading#versions-and-updates).\n  </Step>\n\n  <Step title=\"Validate\">\n    In your shell, run `claude plugin validate --strict ./your-plugin`. A clean run prints `✔ Validation passed`.\n\n    * **In CI**: keep `--strict`, which also fails the run with exit code 1 on warnings such as an unknown manifest field or a missing `version`. Drop `--strict` if you chose to omit `version` in the previous step.\n    * **Paths**: validation reports component paths that don't start with `./`. Inside hook commands and MCP server configs, refer to files as `${CLAUDE_PLUGIN_ROOT}/...`. See [path rules](/docs/en/plugins/manifest-reference#path-rules).\n  </Step>\n\n  <Step title=\"Install it from a local marketplace\">\n    In your shell, add a local marketplace that lists the plugin with `claude plugin marketplace add ./path-to-marketplace`, install the plugin from it, and start a session to confirm it loads.\n\n    * For the smallest marketplace that works, see [Create a marketplace](/docs/en/plugins/create-marketplace).\n    * To know whether an install loads your source directory or a cached copy, see [In-place and copied plugins](/docs/en/plugins/loading#in-place-and-copied-plugins).\n  </Step>\n\n  <Step title=\"Fill in the metadata users see\">\n    Set `description`, `author`, `homepage`, and `repository` in `plugin.json`, and add a `README.md` at the plugin root. `homepage` must parse as a URL. The [manifest reference](/docs/en/plugins/manifest-reference#fields) lists every field.\n  </Step>\n\n  <Step title=\"Run your eval suite\">\n    If you have an eval suite, run `claude plugin eval` in your shell. It runs the plugin's test cases and scores the results, which catches regressions when you change the plugin. See [Test plugins with evals](/docs/en/plugin-evals).\n  </Step>\n</Steps>"
+    }
+  ]
+}

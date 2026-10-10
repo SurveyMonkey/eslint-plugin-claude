@@ -696,6 +696,28 @@ const PLUGIN_RULES: {
     language: 'markdown/gfm',
     files: ['**/SKILL.md', '**/agents/**/*.md'],
   },
+  // The rules with the option `minVersion` give no report in the config run, which sets no option.
+  {
+    name: 'plugin-feature-min-version',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-manifest-metadata-format',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  { name: 'plugin-manifest-no-bom', files: ['**/.claude-plugin/plugin.json'], severity: 'warn' },
+  {
+    name: 'plugin-manifest-publish-metadata',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-manifest-version-semver',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -761,6 +783,15 @@ const EXPECTED = [
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
   'packages/cx/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
+  // `plugin-manifest-publish-metadata` reports each manifest of the tree, because none sets
+  // `homepage` and `repository` or has a README.md. It skips a plugin in `.claude/skills/<name>/`.
+  ...Object.keys(TREE)
+    .filter(
+      (file) =>
+        file.endsWith('.claude-plugin/plugin.json') &&
+        !/(^|\/)\.claude\/skills\/[^/]+\/\.claude-plugin\//.test(file),
+    )
+    .map((file) => `${file}: claude/plugin-manifest-publish-metadata@1`),
   ...(LINKS
     ? [
         'packages/l/site/plugins/m/.claude-plugin/plugin.json: claude/plugin-symlink-escapes-marketplace@2',
