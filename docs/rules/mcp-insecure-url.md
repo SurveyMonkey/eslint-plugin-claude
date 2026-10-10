@@ -30,7 +30,7 @@ So the rule reads the project `.mcp.json` only. It makes no report for a plugin 
 the servers of a `plugin.json`.
 
 The rule reports a server whose `type` is `http`, `streamable-http`, `sse` or `ws`, and whose
-`url` starts with `http://` or `ws://`. The report is on the `url`. The scheme and the host match
+`url` has the scheme `http` or `ws`. The report is on the `url`. The scheme and the host match
 ignore letter case, and the host ignores a trailing dot.
 
 The rule makes no report in these cases:

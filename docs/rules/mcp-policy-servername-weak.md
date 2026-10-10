@@ -51,8 +51,9 @@ The rule does not report these cases:
 
 The managed settings page combines the lists of `managed-settings.json` and of the drop-ins into
 one list.[^merge] So the rule counts the `serverUrl` and `serverCommand` entries of the sibling
-files too. The rule skips a sibling that it cannot read. Another entry in that file could add a
-kind, but the claim of each message stays true.
+files too. A sibling that the rule cannot read can hold entries of either kind. The message
+would then be wrong about what the name admits. So the rule makes no allowlist report. It still
+reports a denylist name, because that message does not depend on the siblings.
 
 Of two lists with one name, or two keys with one name, the last one counts, as `JSON.parse` keeps
 it. The rule reads the managed files. Project and user settings add entries to the same lists at
