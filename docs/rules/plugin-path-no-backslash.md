@@ -23,7 +23,7 @@ Write the component paths of `plugin.json` with forward slashes.
 On macOS and Linux, Claude Code rejects a component path that has a backslash anywhere in it.
 This holds even when the path stays inside the plugin. The component then does not load. A plugin
 whose component paths use Windows separators therefore loads on Windows only.[^loading] The
-`/plugin` interface shows a `path escapes plugin directory` error.[^errors] The error ends with `its
+plugin then reports a `path escapes plugin directory` error.[^errors] The error ends with `its
 path contains a backslash, which is not resolved reliably on this platform`.
 
 `claude plugin validate` covers this in part (checked on Claude Code 2.1.296). It fails the manifest
@@ -40,12 +40,12 @@ names the key and the path.
 
 The rule makes no report in these cases:
 
-- The string is an `http://` or `https://` URL. The `mcpServers` key takes the URL of a
-  bundle.[^path-rules]
+- The string is an `http://` or `https://` URL in the `mcpServers` key. That key takes the URL of
+  a bundle.[^path-rules] A URL in another key is a path, and the rule reports a backslash in it.
 - The string is not a path. An inline hook, server, monitor or command entry has strings such as
   `command` and `description`, and the rule skips them. The `content` of a command is also skipped.
-- The key is not a component key. The `icon` and `types` keys are not component paths, and
-  `experimental.evals` is not a component path.[^path-rules]
+- The key is not a component key. The `icon` and `types` keys are not component paths.[^fields]
+  The `experimental.evals` key is not a component path.[^path-rules]
 - The path is in a marketplace entry. `marketplace-entry-component-paths` owns the paths of an
   entry in `marketplace.json`.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin

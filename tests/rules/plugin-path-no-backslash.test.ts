@@ -61,6 +61,21 @@ describe(RULE, () => {
     ])
   })
 
+  check.each([
+    ['a URL under a key that is not mcpServers', { commands: 'https://example.com/a\\b.md' }],
+    ['a URL that is not at the start', { mcpServers: './x/https://a\\b' }],
+    ['a name that only starts with http', { mcpServers: 'https-tools\\a.md' }],
+  ])('reports %s', (_title, fields) => {
+    expect(run(fields).map((m) => m.messageId)).toEqual(['backslash'])
+  })
+
+  check('leaves a source that is not a string in the object map of commands', () => {
+    const found = run({
+      commands: { a: { source: 3 }, b: { source: { x: '.\\y' } }, c: { source: null }, d: 'x' },
+    })
+    expect(found).toEqual([])
+  })
+
   check('reports each path of an array and leaves the others alone', () => {
     const found = run({ commands: ['./a.md', './b\\c.md', './d.md', './e\\f.md'] })
     expect(found.map((m) => m.message)).toEqual([
@@ -120,6 +135,7 @@ describe(`${RULE} (silent)`, () => {
       { mcpServers: { s: { source: '.\\x' } } },
     ],
     ['a bundle URL with a backslash', { mcpServers: 'https://example.com/a\\b.mcpb' }],
+    ['an http bundle URL with a backslash', { mcpServers: 'http://example.com/a\\b.mcpb' }],
     [
       'a path of a key that is not a component key',
       { icon: './logo\\a.png', types: './t\\a.d.ts' },

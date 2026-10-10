@@ -42,7 +42,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
     schema: [],
     messages: {
       missing:
-        "`{{agent}}` is not a built-in agent, and no file in `agents/` of this plugin defines it. The docs set the `agent` key to run one of the plugin's own agents.",
+        "`{{agent}}` is not a built-in agent, and no file in `agents/` of this plugin defines it. The `agent` key runs one of the plugin's own agents.",
     },
   },
   create(context) {
@@ -66,12 +66,13 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
         // The name of the plugin is the `name` of the manifest, or the folder when there is none.
         const pluginName =
           typeof plugin.fields.name === 'string' ? plugin.fields.name : path.basename(plugin.root)
+        // The docs do not say if Claude Code compares names with case.
+        const wanted = agent.value.toLowerCase()
+        const same = (other: string) => other.toLowerCase() === wanted
         // A scoped name holds `:`. One that does not start with this plugin names another plugin.
-        if (agent.value.includes(':') && !agent.value.startsWith(`${pluginName}:`)) {
+        if (wanted.includes(':') && !wanted.startsWith(`${pluginName.toLowerCase()}:`)) {
           return
         }
-        // The docs do not say if Claude Code compares names with case.
-        const same = (other: string) => other.toLowerCase() === agent.value.toLowerCase()
         if (BUILT_IN.some(same)) {
           return
         }

@@ -60,7 +60,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'command' | 'headersHelper' }> = {
             continue
           }
           const [entry, second] = entries.filter((other) => other.name === dependency.name)
-          // Two entries of one name are for the marketplace rules. The rule cannot tell which one counts.
+          // With two entries of one name, the rule cannot tell which one counts.
           if (entry === undefined || second !== undefined) {
             continue
           }

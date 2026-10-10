@@ -42,8 +42,8 @@ The rule reads two places and reports on the value:
   `plugin-settings-single-source` reports that conflict.
 
 The rule lists the agents with the reader of `skill-agent-exists`, and skips the same built-in
-agents. The `agent` setting takes the name of a built-in agent too. The rule reads the agents of
-the plugin only. A name that only a user or project agent defines is reported. The docs give this
+agents. The docs do not list the built-in agents for this key. The rule accepts them, to avoid a
+false report. The rule reads the agents of the plugin only. A name that only a user or project agent defines is reported. The docs give this
 key as the way to run an agent of the plugin.
 
 The rule makes no report in these cases:
