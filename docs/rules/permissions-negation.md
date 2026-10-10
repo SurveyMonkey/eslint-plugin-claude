@@ -42,7 +42,7 @@ The rule reports a `!` rule in four cases. Each report names the rule:
 - **A `!` inside a directory that an earlier rule blocks whole.** With `Read(secrets/**)` and
   `Read(!secrets/public/**)`, Claude Code still blocks `secrets/public`.[^read] The rule reports a `!` path that is
   inside the directory of an earlier `<directory>/**` rule. It drops a `./` at the start of each path. It does not build a
-  gitignore matcher, so `**/secrets/**` and `secrets/*.md` are not directories that it can name.
+  gitignore matcher, so it compares the text of the paths. It names a directory by the text before `/**`, and it does not read `secrets/*.md` as a directory.
 
 A `!` rule after a rule it can carve is silent. That includes `Read(*.env)` then `Read(!sample.env)`, the example of the
 docs. The rule reads the list of the rule, so a rule in `ask` does not count for a `!` rule in `deny`. A `Read` rule and an

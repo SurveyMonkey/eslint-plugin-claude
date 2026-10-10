@@ -16,8 +16,8 @@ const DOMAIN_PREFIX = /^\s*domain\s*:/
 const IPV6_LITERAL = /^\[[0-9A-Fa-f:.]+\]$/
 
 /** The fault of `host`, the text after `domain:`, or null. The first fault in the order of the
- *  checks is the one that the rule reports. A wildcard is valid in any position, and
- *  `permissions-webfetch-mid-wildcard` reads where it stands. */
+ *  checks is the one that the rule reports. A wildcard is valid in any position. This
+ *  rule does not read where it stands. */
 function hostFault(host: string): MessageId | null {
   if (SCHEME.test(host)) {
     return 'scheme'
