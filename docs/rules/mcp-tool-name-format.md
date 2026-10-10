@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-tool-name-format, which reports a tool reference that starts with mcp and is not in the mcp__<server> or mcp__<server>__<tool> form, such as mcp_server_tool, because it matches no tool.
+description: The ESLint rule claude/mcp-tool-name-format, which reports a tool reference that starts with mcp and is not in the mcp__<server> or mcp__<server>__<tool> form, such as mcp_server_tool, because the docs list no such form.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -25,8 +25,8 @@ The rule also lints the managed settings files: `managed-settings.json` and each
 
 A permission rule names an MCP tool as `mcp__<server>__<tool>`. It can name all tools of a server
 as `mcp__<server>` or `mcp__<server>__*`.[^permissions] A tool of a plugin server has the server
-segment `plugin_<plugin>_<server>`, and a tool of a connector has the segment
-`claude_ai_<server>`.[^hooks] A name in another form matches no tool, so the rule has no effect.
+segment `plugin_<plugin>_<server>`.[^hooks] A tool of a connector has the segment
+`claude_ai_<server>`.[^permissions] The docs list no other form of an MCP tool name.
 
 The rule reads the tool name of each rule in `permissions.allow`, `permissions.ask` and
 `permissions.deny`, and of `allowed-tools` and `disallowed-tools` in a skill or command file. It
@@ -43,11 +43,11 @@ Other rules own the rest:
 - A name that starts with `mcp`, and has no underscore and no `*`, such as `mcp-server`. The rule
   `permissions-unknown-tool` reports it, so this rule does not report it twice.
 - A name that has a `*`. The rule `permissions-tool-name-glob` owns the place of a glob in an
-  allow rule.
+  allow rule. This rule reports no name with a `*`, as in `mcp____*`.
 - A rule with parentheses on an `mcp__` name. The rule `permissions-mcp-rule-parens` owns it.
 - A server name that no `.mcp.json` declares. The docs state no set of characters for a server
   name, so the rule does not check the characters of the server segment.
-- The `matcher` of a hook. The rule `hooks-matcher-mcp-name` owns it.
+- The `matcher` of a hook. The inventory plans the rule `hooks-matcher-mcp-name` for it.
 
 Fail:
 

@@ -24,7 +24,7 @@ Some connector hosts of Anthropic sign in through a third-party identity provide
 include `microsoft365.mcp.claude.com`, `gmail.mcp.claude.com` and `gcal.mcp.claude.com`. Claude
 Code refuses to start a local OAuth flow for them. The sign-in works through claude.ai only.[^error]
 The fix is to remove the entry, and to connect the service on claude.ai. The connector then
-appears in Claude Code. An entry at the same URL can hide that connector.[^error]
+appears in Claude Code for a claude.ai subscription login. An entry at the same URL can hide that connector.[^error]
 
 The rule reports a server whose `type` is `http`, `streamable-http`, `sse` or `ws`, and whose `url`
 has one of these hosts. The report is on the `url`. The host match ignores letter case and a
@@ -37,7 +37,8 @@ adds hosts. It is a list of host names. The default is an empty list.
 The rule makes no report in these cases:
 
 - A server with no `type`. Claude Code reads it as a stdio server, which has no `url`.
-- A `url` with a `${` reference, or one that does not parse as a URL. The host is not known.
+- A `url` that does not parse as a URL, or a host with a `${` reference. The host is not known.
+  A `${` in the path or query does not stop a report.
 
 The rule reads the `mcpServers` object of a project `.mcp.json` and of a plugin `.mcp.json`. A
 plugin file may omit that wrapper. Then the rule reads the top-level names of the file. Of two

@@ -42,8 +42,8 @@ The rule reports one fault for each entry, on the entry or on the part that is w
   such as `claude.ai Slack`.[^match]
 
 A `*` in a `serverName` is a literal character. A `serverName` entry matches the name exactly and
-expands no wildcard.[^match] The rule makes no report for it, because it is valid. A `*` is for
-`serverUrl`.
+expands no wildcard.[^match] The rule makes no report for it in a denylist. The allowlist pattern
+above rejects it. A `*` is for `serverUrl`.
 
 The rule makes no report for a list that is not an array, and it does not check the text of a
 `serverCommand` or a `serverUrl`. When an entry has two keys of one name, or a file has two lists

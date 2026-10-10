@@ -38,13 +38,14 @@ The rule reads the text of the manifest only. It reads no other file. It makes n
 
 ### What the rule does not check
 
-The plugin loading reference also skips a server "from a file outside the plugin directory". The rule does
-not check this part. A path that leaves the plugin directory fails `claude plugin validate`, which
-reports `Path contains ".." which could be a path traversal attempt`.[^containment]
+The plugin loading reference also skips a server "from a file outside the plugin directory". The
+rule does not check this part. A path with `..` fails `claude plugin validate`. It reports
+`Path contains ".." which could be a path traversal attempt`.[^containment]
 
 The rule reads the directory `.claude/skills/<plugin>/` only. This is the place where the docs name
 a skills-directory plugin of a project. A plugin in `~/.claude/skills/` is personal, and the
-restrictions do not apply to it.
+restrictions do not apply to it. The files glob also matches a `.claude` folder in a home
+directory. The rule cannot tell it from a project folder. Turn the rule off for such a file.
 
 Fail, in `.claude/skills/deploy/.claude-plugin/plugin.json`:
 
