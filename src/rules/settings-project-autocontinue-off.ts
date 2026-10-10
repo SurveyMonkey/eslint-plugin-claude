@@ -1,8 +1,9 @@
 // `autoContinueAtUsageLimit` (docs/rules/settings-project-autocontinue-off.md). The settings
-// reference gives the scope "User or managed". Suppose user, `--settings` and managed settings
+// reference gives the scope "User or managed". If user, `--settings` and managed settings
 // leave the key unset. A project or local file that sets it then turns the feature off. Claude
-// Code does not ignore the file. `settings-key-scope` skips the key, and `settings-schema` checks no type for it. So
-// this rule checks the type in every file that it reads, a managed file too.
+// Code does not ignore the file. `settings-key-scope` skips the key, and `settings-schema`
+// checks no type for it. So this rule checks the type in every file that it reads, a managed
+// file too.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'

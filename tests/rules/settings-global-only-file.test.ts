@@ -37,7 +37,7 @@ jsonTester.run('settings-global-only-file (valid)', rule, {
 jsonTester.run('settings-global-only-file (invalid)', rule, {
   valid: [],
   invalid: [
-    // A keybindings file or a theme file: one report, at the first character of the file.
+    // A keybindings file or a theme file: one report, at the first character of the top-level value.
     ...['.claude/keybindings.json', 'packages/x/.claude/keybindings.json'].map((filename) => ({
       code: KEYBINDINGS,
       filename,
