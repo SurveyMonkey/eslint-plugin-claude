@@ -15,7 +15,7 @@ import { type Plugin, readPluginAt, type StringNode } from './plugin-manifest.ts
 
 /** What a command is: a shell-form hook `command`, a monitor `command`, or an
  *  MCP `headersHelper`. */
-export type CommandKind = 'hook' | 'monitor' | 'headersHelper'
+type CommandKind = 'hook' | 'monitor' | 'headersHelper'
 
 export interface PluginCommand {
   readonly kind: CommandKind
