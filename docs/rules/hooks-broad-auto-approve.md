@@ -32,7 +32,8 @@ backslashes and white space in that text. It reports two faults, at the `command
 
 - `allow`: a `PermissionRequest` handler with `behavior: "allow"`, or a `PreToolUse` handler with
   `permissionDecision: "allow"`, in a group with no matcher, an empty matcher, `*` or `.*`.
-- `bypass`: a `setMode` entry with `mode: "bypassPermissions"`, under any matcher and on any event. The docs say
+- `bypass`: text that holds `setMode` and `mode: "bypassPermissions"`, under any matcher and on any event. The
+  rule does not check that both are in one entry. The docs say
   that the update takes effect only when the session already allows the mode. The rule cannot see that, so it
   reports the entry.
 

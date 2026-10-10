@@ -20,14 +20,14 @@ Start a hook script that runs directly with a shebang line.
 
 ## Rule details
 
-The hooks guide shows each hook script with a `#!/bin/bash` first line, and says that hook scripts must be
+The hooks guide shows its example hook script with a `#!/bin/bash` first line, and says that hook scripts must be
 executable.[^guide] A script that a hook runs directly has no program to read it, so the system needs a shebang
 line to pick the interpreter. The docs do not state this as a rule. The rule is a practice check from the
 example of the guide.
 
 The rule reads a command hook and finds each script that it runs directly. A script is the command word of a
 shell-form `command`, or the `command` of an exec-form handler, when the path starts with `${CLAUDE_PROJECT_DIR}`
-or `${CLAUDE_PLUGIN_ROOT}`. Then it reads the file. It reports at the `command` string when the file does not
+or `${CLAUDE_PLUGIN_ROOT}`, with braces or without. Then it reads the file. It reports at the `command` string when the file does not
 start with `#!`.
 
 The folders follow the place of the hook file:

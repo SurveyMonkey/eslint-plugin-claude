@@ -1,4 +1,4 @@
-// The hooks guide shows each hook script with a `#!/bin/bash` first line, and says that "Hook scripts must be
+// The hooks guide shows its example hook script with a `#!/bin/bash` first line, and says that "Hook scripts must be
 // executable" (https://code.claude.com/docs/en/hooks-guide#block-edits-to-protected-files). A script that a
 // hook runs directly needs a shebang line to name its interpreter. The docs do not state that rule, so it is a
 // practice check. The rule reads the first line of a repository script that `${CLAUDE_PROJECT_DIR}` or
