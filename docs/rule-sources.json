@@ -120,6 +120,23 @@
       "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
     }
   ],
+  "agent-memory-scope-project": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Persistent memory tips",
+      "hash": "092ff2d1ba59805d02281760049a88ebfa85b4434d4da8aeb9f17d02a6702693"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Enable persistent memory",
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Frontmatter fields in plugin agents",
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+    }
+  ],
   "agent-model-forced": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -130,6 +147,13 @@
       "url": "https://code.claude.com/docs/en/settings",
       "heading": "Settings precedence",
       "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
+    }
+  ],
+  "agent-name-shadowing": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose the subagent scope",
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
     }
   ],
   "agent-name-shadows-builtin": [
@@ -182,6 +206,18 @@
       "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
     }
   ],
+  "agent-permission-mode-manual": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Permission modes",
+      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    }
+  ],
   "agent-plugin-ignored-fields": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -192,6 +228,28 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Choose the subagent scope",
       "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
+    }
+  ],
+  "agent-plugin-scoped-name-unique": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Organize agents in subfolders",
+      "hash": "e2ebd4ab3f9e16d7596dc56212ad773f7666dc4835782a3a6f9283c9996b467d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Agents",
+      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Frontmatter fields in plugin agents",
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
   "agent-skills-preloadable": [
@@ -795,6 +853,18 @@
       "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
     }
   ],
+  "output-style-force-for-plugin": [
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Frontmatter reference",
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",
@@ -822,6 +892,35 @@
       "url": "https://code.claude.com/docs/en/glossary",
       "heading": "Frontmatter",
       "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
+    }
+  ],
+  "output-style-name-unique": [
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Create a custom output style",
+      "hash": "adf86cd9bf3581d4bae2a29f61b8c52f0c45d838419d4beb8395b8f221aaac6f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Frontmatter reference",
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Change your output style",
+      "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407"
+    }
+  ],
+  "output-style-plugin-name-description": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Themes and output styles",
+      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Frontmatter reference",
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
     }
   ],
   "permissions-mcp-rule-parens": [
