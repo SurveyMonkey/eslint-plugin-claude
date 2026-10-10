@@ -2,8 +2,8 @@
 // configuration from a plugin: `.lsp.json` at the plugin root, and the `lspServers` key of the
 // manifest. That key can name a `.json` file in a folder of the plugin, so a file below a plugin
 // root gets no report. A `.lsp.json` at a repository root with no plugin, or under `.claude/`,
-// may have no effect. The plugin manifest is optional, so a plugin with no manifest gets a report
-// in error. The rule reads the place of the file and not its content. A folder with an ancestor
+// may have no effect. The plugin manifest is optional, so a plugin with no manifest gets a false
+// report. The rule reads the place of the file and not its content. A folder with an ancestor
 // whose plugin root the check cannot read gets no report (ADR 001, Decision 14).
 // `lsp-json-schema` reads the content.
 import { existsSync } from 'node:fs'
@@ -13,6 +13,19 @@ import { docsUrl } from '../docs-url.ts'
 import { isPluginRoot } from '../plugin-root.ts'
 
 const name = 'lsp-json-location' as const
+
+/** The nearest folder at or above `start` that holds `.git`. With no `.git`, the bound is
+ *  `start`, and the rule reads nothing above it (ADR 001, Decision 14). */
+function repositoryTop(start: string): string {
+  for (let at = start; ; at = path.dirname(at)) {
+    if (existsSync(path.join(at, '.git'))) {
+      return at
+    }
+    if (path.dirname(at) === at) {
+      return start
+    }
+  }
+}
 
 const rule: JSONRuleDefinition<{ MessageIds: 'outside' }> = {
   meta: {
@@ -28,13 +41,15 @@ const rule: JSONRuleDefinition<{ MessageIds: 'outside' }> = {
     },
   },
   create(context) {
+    const start = path.dirname(path.resolve(context.filename))
+    const top = repositoryTop(start)
     // `isPluginRoot` is true, false, or `UNREADABLE`, which is truthy. Only `false` at the
     // folder and at each folder above it, up to the repository root, is a report.
-    for (let at = path.dirname(path.resolve(context.filename)); ; at = path.dirname(at)) {
+    for (let at = start; ; at = path.dirname(at)) {
       if (isPluginRoot(at) !== false) {
         return {}
       }
-      if (existsSync(path.join(at, '.git')) || path.dirname(at) === at) {
+      if (at === top) {
         break
       }
     }
