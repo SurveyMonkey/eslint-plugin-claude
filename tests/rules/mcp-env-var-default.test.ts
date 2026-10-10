@@ -15,7 +15,7 @@ const NAME = 'mcp-env-var-default'
 const at = (entry: unknown) => mapOf({ a: entry })
 const ref = (name: string) => `\${${name}}`
 
-it.fails('reports a reference with no default, in each field that expands', () => {
+it('reports a reference with no default, in each field that expands', () => {
   const text = `Bearer ${ref('API_KEY')}`
   expect(ids(lintProject(NAME, at({ command: ref('BIN') })))).toEqual(['noDefault'])
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['-a', text] })))).toEqual(['noDefault'])
@@ -27,7 +27,7 @@ it.fails('reports a reference with no default, in each field that expands', () =
     ids(lintProject(NAME, at({ type: 'http', url: 'https://x.test', headers: { H: text } }))),
   ).toEqual(['noDefault'])
 })
-it.fails('reports on the string, and the message names the variable, the field and the server', () => {
+it('reports on the string, and the message names the variable, the field and the server', () => {
   const code = at({ command: 'x', args: ['--k', `Bearer ${ref('API_KEY')}`] })
   const found = lintProject(NAME, code)
   expect(found[0]).toMatchObject({ line: 1, column: code.indexOf('"Bearer') + 1 })
@@ -35,12 +35,12 @@ it.fails('reports on the string, and the message names the variable, the field a
   expect(found[0]?.message).toContain('`args`')
   expect(found[0]?.message).toContain('"a"')
 })
-it.fails('says the risk, and does not call the form wrong', () => {
+it('says the risk, and does not call the form wrong', () => {
   const message = lintProject(NAME, at({ command: ref('BIN') }))[0]?.message ?? ''
   expect(message).toContain('unset')
   expect(message).not.toMatch(/invalid|wrong|not valid/i)
 })
-it.fails('reports each variable of a string once, and each string', () => {
+it('reports each variable of a string once, and each string', () => {
   const both = `${ref('A')} ${ref('B')} ${ref('A')}`
   expect(ids(lintProject(NAME, at({ command: both })))).toEqual(['noDefault', 'noDefault'])
   expect(ids(lintProject(NAME, at({ command: ref('A'), args: [ref('A')] })))).toEqual([
@@ -48,7 +48,7 @@ it.fails('reports each variable of a string once, and each string', () => {
     'noDefault',
   ])
 })
-it.fails('reports in a plugin file and in the servers of a manifest', () => {
+it('reports in a plugin file and in the servers of a manifest', () => {
   expect(ids(lintPluginFile(NAME, at({ command: ref('BIN') })))).toEqual(['noDefault'])
   const manifest = JSON.stringify({ name: 'p', mcpServers: { a: { command: ref('BIN') } } })
   expect(ids(lintManifest(NAME, manifest))).toEqual(['noDefault'])
@@ -57,19 +57,19 @@ it.fails('reports in a plugin file and in the servers of a manifest', () => {
     'noDefault',
   ])
 })
-it.fails('reports a reference to a variable that is not a path variable of a plugin', () => {
+it('reports a reference to a variable that is not a path variable of a plugin', () => {
   expect(ids(lintPluginFile(NAME, at({ command: 'x', env: { DB_URL: ref('DB_URL') } })))).toEqual([
     'noDefault',
   ])
 })
-it.fails('reports the last of two members with one name', () => {
+it('reports the last of two members with one name', () => {
   const code = `{"mcpServers": {"a": {"command": "x", "command": "${ref('BIN')}"}}}`
   expect(ids(lintProject(NAME, code))).toEqual(['noDefault'])
   const silent = `{"mcpServers": {"a": {"command": "${ref('BIN')}", "command": "x"}}}`
   expect(ids(lintProject(NAME, silent))).toEqual([])
 })
 
-it.fails('stays silent for a default, also an empty one', () => {
+it('stays silent for a default, also an empty one', () => {
   for (const text of [`\${API_KEY:-x}`, `\${API_KEY:-}`, `a/\${API_KEY:-b}/c`]) {
     expect(
       ids(lintProject(NAME, at({ command: text, args: [text], env: { K: text } }))),
@@ -77,28 +77,28 @@ it.fails('stays silent for a default, also an empty one', () => {
     ).toEqual([])
   }
 })
-it.fails('stays silent for a reference inside a default', () => {
+it('stays silent for a reference inside a default', () => {
   const text = `\${A:-\${B}}`
   expect(ids(lintProject(NAME, at({ command: text })))).toEqual([])
 })
-it.fails('stays silent for the variables that Claude Code sets', () => {
+it('stays silent for the variables that Claude Code sets', () => {
   for (const name of ['CLAUDE_PLUGIN_ROOT', 'CLAUDE_PLUGIN_DATA', 'CLAUDE_PROJECT_DIR']) {
     const text = `${ref(name)}/bin/x`
     expect(ids(lintPluginFile(NAME, at({ command: text, env: { K: text } }))), name).toEqual([])
     expect(ids(lintProject(NAME, at({ command: text, args: [text] }))), name).toEqual([])
   }
 })
-it.fails('stays silent for user_config references, which is no environment variable', () => {
+it('stays silent for user_config references, which is no environment variable', () => {
   expect(
     ids(lintPluginFile(NAME, at({ command: 'x', args: [`\${user_config.api_key}`] }))),
   ).toEqual([])
 })
-it.fails('stays silent for the forms that mcp-env-var-syntax owns', () => {
+it('stays silent for the forms that mcp-env-var-syntax owns', () => {
   for (const text of ['$HOME/x', '%HOME%/x', `\${VAR-x}`, `\${VAR:=x}`, '${VAR']) {
     expect(ids(lintProject(NAME, at({ command: text }))), text).toEqual([])
   }
 })
-it.fails('stays silent in a field where Claude Code expands nothing', () => {
+it('stays silent in a field where Claude Code expands nothing', () => {
   const entry = {
     type: 'http',
     url: 'https://x.test',
@@ -108,23 +108,23 @@ it.fails('stays silent in a field where Claude Code expands nothing', () => {
   }
   expect(ids(lintProject(NAME, at(entry)))).toEqual([])
 })
-it.fails('stays silent for a credential variable in the url or headers of a remote server', () => {
+it('stays silent for a credential variable in the url or headers of a remote server', () => {
   // `mcp-credential-var-remote` owns it. A default would not help, as the variable reads as empty.
   const entry = { type: 'http', url: `https://x.test/${ref('ANTHROPIC_API_KEY')}`, headers: {} }
   expect(ids(lintProject(NAME, at(entry)))).toEqual([])
   const header = { type: 'sse', url: 'https://x.test', headers: { A: ref('NPM_TOKEN') } }
   expect(ids(lintProject(NAME, at(header)))).toEqual([])
 })
-it.fails('reads a credential variable of a stdio server as any other variable', () => {
+it('reads a credential variable of a stdio server as any other variable', () => {
   const entry = { command: 'x', env: { A: ref('ANTHROPIC_API_KEY') } }
   expect(ids(lintProject(NAME, at(entry)))).toEqual(['noDefault'])
 })
-it.fails('stays silent for a malformed entry and a file that is not a server map', () => {
+it('stays silent for a malformed entry and a file that is not a server map', () => {
   expect(ids(lintProject(NAME, at(ref('A'))))).toEqual([])
   expect(ids(lintProject(NAME, at({ command: 1, args: 'x', env: [], headers: 'x' })))).toEqual([])
   expect(ids(lintProject(NAME, at({ env: { K: 1 } })))).toEqual([])
   expect(ids(lintProject(NAME, '[]'))).toEqual([])
 })
-it.fails('stays silent for a file whose plugin root cannot be read, and a path Claude Code skips', () => {
+it('stays silent for a file whose plugin root cannot be read, and a path Claude Code skips', () => {
   expect(ids(lintProject(NAME, at({ command: ref('A') }), '.claude/mcp.json'))).toEqual([])
 })
