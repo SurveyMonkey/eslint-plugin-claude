@@ -433,6 +433,17 @@ const TREE: Record<string, string> = {
   'packages/mb/docs/CLAUDE-notes.md': bigMarkdown,
   'packages/mb/AGENTS.md': bigMarkdown,
   'packages/mb/.claude/rules/CLAUDE.md': bigMarkdown,
+  // `claude-md-agents-md-variant`: the variants that Claude Code never reads, and a Markdown file
+  // below `.agents/`. The same text where Claude Code reads it or where no rule reads it.
+  'packages/av/AGENTS.local.md': '# Notes\n',
+  'packages/av/AGENTS.override.md': '# Notes\n',
+  'packages/av/.agents/notes.md': '# Notes\n',
+  'packages/av/.agents/skills/x/SKILL.md': '# Notes\n',
+  'packages/av/.agents/config.json': '{}',
+  'packages/av/AGENTS.md': '# Notes\n',
+  'packages/av/.claude/AGENTS.md': '# Notes\n',
+  'packages/av/docs/agents/notes.md': '# Notes\n',
+  'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -515,7 +526,7 @@ const SCOPE_RULES = [
 
 // The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
 // error, and each has one block for its own language.
-const MEMORY_RULES = ['claude-md-max-bytes']
+const MEMORY_RULES = ['claude-md-agents-md-variant', 'claude-md-max-bytes']
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -678,6 +689,11 @@ const EXPECTED = [
   'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `claude-md-agents-md-variant` reads the two variant names and Markdown below `.agents/`.
+  'packages/av/AGENTS.local.md: claude/claude-md-agents-md-variant@2',
+  'packages/av/AGENTS.override.md: claude/claude-md-agents-md-variant@2',
+  'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
+  'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
   // `claude-md-max-bytes` reads CLAUDE.md and CLAUDE.local.md, and no other file.
   'packages/mb/CLAUDE.md: claude/claude-md-max-bytes@2',
   'packages/mb/.claude/CLAUDE.md: claude/claude-md-max-bytes@2',

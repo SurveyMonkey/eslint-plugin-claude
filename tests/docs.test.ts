@@ -32,6 +32,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-teams-no-project-config',
     'agent-tools-known',
     'agent-tools-unavailable',
+    'claude-md-agents-md-variant',
     'claude-md-max-bytes',
     'command-legacy-format',
     'hooks-event-name-known',

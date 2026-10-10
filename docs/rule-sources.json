@@ -197,6 +197,13 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "claude-md-agents-md-variant": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When Claude Code reads AGENTS.md",
+      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
+    }
+  ],
   "claude-md-max-bytes": [
     {
       "url": "https://code.claude.com/docs/en/memory",
