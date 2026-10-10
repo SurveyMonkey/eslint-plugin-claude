@@ -33,6 +33,10 @@ severity is `warn`.
 | `prompt` | `prompt`, `model`, `continueOnBlock` |
 | `agent` | `prompt`, `model` |
 
+The hook handler fields table does not list `continueOnBlock`. The Response schema section of the hooks page
+names it for a `prompt` hook. A docs refresh would add that section as a source. It would also take in other
+changes to the cited pages, so a later pull request does it.
+
 A field of another type is unknown, too. A `url` on a `command` hook is an example.
 
 Two other rules own related faults, so this rule makes no report for them:
