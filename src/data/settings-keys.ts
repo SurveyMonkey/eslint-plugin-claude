@@ -402,9 +402,11 @@ export const SUPERSEDED_KEYS: Readonly<Record<string, readonly (readonly string[
   voiceEnabled: [['voice', 'enabled']],
 }
 
-/** The alias of a bundled skill, and the skill. Source: the rows of the commands reference that
+/** Each alias of a bundled skill, with the skill that it names. Source: the rows of the commands reference that
  *  it marks as a bundled skill (https://code.claude.com/docs/en/commands#all-commands), checked on
- *  Claude Code 2.1.296 on 2026-10-09. Review this list with the lists above. In managed settings
+ *  Claude Code 2.1.296 on 2026-10-09. Review this list with the lists above, on or before the `stale_after` date of
+ *  `docs/rules/settings-skilloverrides-key.md`. No docs footnote cites the page, so the docs watch
+ *  does not report a change to it. In managed settings
  *  and in a `--settings` file, a `skillOverrides` entry under an alias applies to the skill. In
  *  user, project and local settings, Claude Code matches names only
  *  (https://code.claude.com/docs/en/skills#override-skill-visibility-from-settings). */

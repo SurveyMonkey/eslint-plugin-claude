@@ -396,13 +396,19 @@ const TREE: Record<string, string> = {
   // alias key, which a managed file honors. A hidden drop-in is for `settings-managed-file`. The
   // same content where no rule reads it.
   'packages/so/.claude/settings.json': '{"skillOverrides": {"review": "off"}}',
-  'packages/so/.claude/settings.local.json': '{"skillOverrides": {"a:b": "off"}}',
-  'packages/so/managed-settings.json': '{"skillOverrides": {"a:b": "off", "checkup": "off"}}',
+  'packages/so/.claude/settings.local.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off", "checkup": "off"}}',
   'packages/so/managed-settings.d/10-a.json': '{"skillOverrides": {"proactive": "off"}}',
-  'packages/so/managed-settings.d/.20-hidden.json': '{"skillOverrides": {"a:b": "off"}}',
-  'packages/so/managed-settings.d/30-b.txt': '{"skillOverrides": {"a:b": "off"}}',
-  'packages/so/managed-settings.d/sub/40-c.json': '{"skillOverrides": {"a:b": "off"}}',
-  'packages/so/.vscode/settings.json': '{"skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/.20-hidden.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/30-b.txt':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/sub/40-c.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
+  'packages/so/.vscode/settings.json':
+    '{"enabledPlugins": {"a@m": true}, "skillOverrides": {"a:b": "off"}}',
   // `settings-env-shadowed`: a voided variable in each file that it reads. A hidden drop-in is for
   // `settings-managed-file`. The same content where no rule reads it.
   'packages/es/.claude/settings.json':

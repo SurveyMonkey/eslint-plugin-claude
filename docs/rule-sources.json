@@ -1553,11 +1553,6 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "How a skill gets its command name",
       "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/commands",
-      "heading": "All commands",
-      "hash": "a61dbb8d1456e20cc1c2e35f361f1a0870cbcccc645a659ad92e7d60e75d919d"
     }
   ],
   "settings-sync-claude-ai-plugins": [
