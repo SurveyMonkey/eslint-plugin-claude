@@ -1008,6 +1008,11 @@ describe('configs', () => {
       'plugins/p/skills/prefixed/SKILL.md': '---\nname: p:prefixed\ndescription: d\n---\n',
       'plugins/p/commands/c.md': '---\nname: p:c\ndescription: d\n---\n',
     }
+    // The options go into the shipped blocks, so each rule keeps its own `files`.
+    const OPTIONS: Record<string, object> = {
+      'claude/skill-shell-platform': { platforms: ['windows-no-git-bash'] },
+      'claude/skill-plugin-name-prefix': { minVersion: '2.1.230' },
+    }
     const dir = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
     try {
       for (const [file, content] of Object.entries(files)) {
@@ -1018,13 +1023,16 @@ describe('configs', () => {
         cwd: dir,
         overrideConfigFile: true,
         overrideConfig: [
-          ...plugin.configs.recommended,
-          {
-            rules: {
-              'claude/skill-shell-platform': ['warn', { platforms: ['windows-no-git-bash'] }],
-              'claude/skill-plugin-name-prefix': ['warn', { minVersion: '2.1.230' }],
-            },
-          },
+          ...plugin.configs.recommended.map((block): Linter.Config => {
+            const rules: Linter.RulesRecord = {}
+            for (const [id, level] of Object.entries(block.rules ?? {})) {
+              const given = OPTIONS[id]
+              rules[id] = given
+                ? [level as Linter.RuleSeverity, given]
+                : (level as Linter.RuleEntry)
+            }
+            return { ...block, rules }
+          }),
         ],
       })
       const results = await eslint.lintFiles(['.'])
