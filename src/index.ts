@@ -49,6 +49,7 @@ import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
+import pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
@@ -213,6 +214,7 @@ const modules = [
   pluginSettingsSingleSource,
   pluginUserConfigSensitiveInContent,
   pluginManifestNoBom,
+  pluginManifestVersionSemver,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -340,6 +342,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
   'plugin-manifest-no-bom': 'warn',
+  'plugin-manifest-version-semver': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

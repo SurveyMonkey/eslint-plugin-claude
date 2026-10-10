@@ -115,6 +115,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-settings-single-source`](docs/rules/plugin-settings-single-source.md) | A plugin sets its default settings in a root `settings.json` or in the manifest `settings` key, not in both, because the file wins | `error` | `error` |
 | [`claude/plugin-user-config-sensitive-in-content`](docs/rules/plugin-user-config-sensitive-in-content.md) | The body of a plugin skill or agent does not reference a `sensitive` option as `${user_config.KEY}`, because Claude Code writes a placeholder there | `error` | `error` |
 | [`claude/plugin-manifest-no-bom`](docs/rules/plugin-manifest-no-bom.md) | `plugin.json` has no byte order mark, which fails the install on Claude Code before v2.1.246 (option `minVersion`; inactive without it) | `warn` | `warn` |
+| [`claude/plugin-manifest-version-semver`](docs/rules/plugin-manifest-version-semver.md) | When set, `version` in `plugin.json` is a semantic version, which a dependency range and a release tag need | `warn` | `warn` |
 
 ### Marketplace manifest
 
