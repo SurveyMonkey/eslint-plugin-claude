@@ -10,7 +10,7 @@ import { lintPlugin } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-no-git-lfs'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const MANIFEST = '{"name": "p"}'
@@ -195,6 +195,7 @@ describe(`${RULE} (silent)`, () => {
       { '.gitattributes': `data/** ${LFS}\n`, data: '' },
     ],
     ['an escaped dot', { '.gitattributes': `a\\.bin ${LFS}\n`, axbin: '' }],
+    ['a class that ends with a backslash', { '.gitattributes': `[a\\ ${LFS}\n`, 'a.bin': '' }],
     ['a class that is not closed', { '.gitattributes': `[ab.bin ${LFS}\n`, 'a.bin': '' }],
     [
       'a backslash at the end of the pattern',
@@ -274,10 +275,44 @@ describe(`${RULE} (silent)`, () => {
     })
   })
 
-  locked('stays silent for a folder that it cannot list', () => {
-    const { top } = lintTree({ '.gitattributes': `*.bin ${LFS}\n`, 'a.bin': '', 'sub/b.txt': '' })
+  locked('stays silent for a .gitattributes above the plugin that it cannot read', () => {
+    const files = { '.gitattributes': `*.bin ${LFS}\n`, 'plugins/p/a.bin': '' }
+    const { top } = lintTree(files, 'plugins/p/')
+    const plugin = path.join(top, 'plugins', 'p')
+    expect(lintPlugin(RULE, plugin, MANIFEST)).toHaveLength(1)
+    withoutAccess(path.join(top, '.gitattributes'), () => {
+      expect(lintPlugin(RULE, plugin, MANIFEST)).toEqual([])
+    })
+  })
+
+  locked('stays silent for the files of a folder that it cannot list', () => {
+    const { top } = lintTree({ '.gitattributes': `*.bin ${LFS}\n`, 'sub/b.bin': '' })
+    expect(lintPlugin(RULE, top, MANIFEST)).toHaveLength(1)
     withoutAccess(path.join(top, 'sub'), () => {
       expect(lintPlugin(RULE, top, MANIFEST)).toEqual([])
+    })
+  })
+
+  locked('stays silent for the files of a folder with a .gitattributes that it cannot read', () => {
+    const files = {
+      '.gitattributes': `*.bin ${LFS}\n`,
+      'sub/.gitattributes': '-text\n',
+      'sub/b.bin': '',
+    }
+    const { top } = lintTree(files)
+    expect(lintPlugin(RULE, top, MANIFEST)).toHaveLength(1)
+    withoutAccess(path.join(top, 'sub', '.gitattributes'), () => {
+      expect(lintPlugin(RULE, top, MANIFEST)).toEqual([])
+    })
+  })
+
+  locked('reports a file that is not below the folder that it cannot list', () => {
+    const files = { '.gitattributes': `*.bin ${LFS}\n`, 'a.bin': '', 'sub/b.txt': '' }
+    const { top } = lintTree(files)
+    withoutAccess(path.join(top, 'sub'), () => {
+      expect(lintPlugin(RULE, top, MANIFEST).map((m) => m.message)).toEqual([
+        message('*.bin', '.gitattributes', 'a.bin'),
+      ])
     })
   })
 
