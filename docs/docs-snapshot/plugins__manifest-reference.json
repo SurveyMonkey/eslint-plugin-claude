@@ -261,6 +261,12 @@
       "text": "### `mcpServers`\n\n`mcpServers` takes a `.json` file path, an MCP bundle path or URL, an inline map, or an array mixing them. For server config fields, see [plugin-provided MCP servers](/docs/en/mcp#plugin-provided-mcp-servers).\n\nClaude Code loads `.mcp.json` at the plugin root first, then each declared shape in order. A server name declared later replaces an earlier one.\n\nAn `mcpServers` value takes one of these shapes:\n\n| Shape | Example value | What Claude Code does |\n| :- | :- | :- |\n| `.json` file path | `\"./mcp/servers.json\"` | Reads the file as an `mcpServers` map |\n| MCP bundle path | `\"./bundle.mcpb\"` | Extracts the `.mcpb` or `.dxt` bundle into `.mcpb-cache/` under the plugin root and reads its server config |\n| MCP bundle URL | `\"https://example.com/server.mcpb\"` | Downloads the bundle into `.mcpb-cache/`, then reads it |\n| Inline map | `{ \"deploy-api\": { \"command\": \"node\", \"args\": [\"${CLAUDE_PLUGIN_ROOT}/server.js\"] } }` | Uses the map as server configs keyed by name |\n\nA bundle path or URL must end in `.mcpb` or `.dxt`. Any other extension fails validation."
     },
     {
+      "heading": "Path-only fields",
+      "id": "path-only-fields",
+      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059",
+      "text": "### Path-only fields\n\n`agents`, `skills`, `outputStyles`, `workflows`, and `experimental.themes` take one path or an array of paths. `agents` entries must be `.md` files, and `skills` entries must be directories. The other three accept a directory or a file.\n\n```json theme={null}\n{\n  \"agents\": [\"./custom-agents/reviewer.md\", \"./custom-agents/tester.md\"],\n  \"skills\": [\"./extra-skills/\", \".\"],\n  \"outputStyles\": \"./styles/\"\n}\n```"
+    },
+    {
       "heading": "Reference a saved value",
       "id": "reference-a-saved-value",
       "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf",

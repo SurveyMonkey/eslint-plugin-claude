@@ -1131,6 +1131,23 @@
       "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
     }
   ],
+  "plugin-skills-key-redundant-default": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Path-only fields",
+      "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+    }
+  ],
   "plugin-symlink-escapes-marketplace": [
     {
       "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
