@@ -10,7 +10,7 @@ import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-manifest-location'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const locked = chmodCannotBlock ? it.skip : check
 const lint = (dir: string, code: string) => lintPlugin(RULE, dir, code)
@@ -131,13 +131,14 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(top, '{"name": "p"}')).toEqual([])
   })
 
+  // The text on disk differs from the text that the linter gets, so that the linter parses it.
   check.each([
     ['a manifest that does not parse', '{'],
     ['a manifest that is an array', '[]'],
     ['a manifest that is null', 'null'],
-  ])('makes no report for %s', (_title, text) => {
-    const { dir, code } = pluginTree(text, { '.claude-plugin/skills/s/SKILL.md': '# S\n' })
-    expect(lint(dir, code)).toEqual([])
+  ])('makes no report for %s on disk', (_title, text) => {
+    const { dir } = pluginTree(text, { '.claude-plugin/skills/s/SKILL.md': '# S\n' })
+    expect(lint(dir, '{"name": "p"}')).toEqual([])
   })
 
   linked('makes no report for a .claude-plugin directory out of the repository', () => {

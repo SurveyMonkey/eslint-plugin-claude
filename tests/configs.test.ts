@@ -117,6 +117,10 @@ const TREE: Record<string, string> = {
   'skills/listed/SKILL.md': '---\nname: listed\ndescription: d\n---\n',
   'skills/omitted/SKILL.md': '---\nname: omitted\ndescription: d\n---\n',
   'plugins/q/SKILL.md': '# Q\n',
+  // One plugin for each rule of the manifest and layout layer (#11).
+  // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
+  'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
+  'plugins/loc/.claude-plugin/bin/tool': '',
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
   '.claude/skills/ref/SKILL.md': '[a](missing.md)\n',
@@ -500,6 +504,12 @@ const SCOPE_RULES = [
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
+// The plugin manifest and layout rules of #11, in the order of the `modules` list. Each is an
+// error, with one JSON block for its files.
+const PLUGIN_RULES = [
+  { name: 'plugin-manifest-location', files: ['**/.claude-plugin/plugin.json'] },
+]
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -542,6 +552,7 @@ const EXPECTED = [
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
+  'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
   'plugins/p/agents/ignored.md: claude/agent-plugin-ignored-fields@2',
@@ -795,6 +806,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...PLUGIN_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
     ])
   })
 
@@ -812,6 +827,7 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...PLUGIN_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -872,6 +888,15 @@ describe('configs', () => {
 
   it('gives each rule of the scope layer one JSON block for its files', () => {
     for (const { name, files } of SCOPE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each rule of the plugin layout layer one JSON block for its files', () => {
+    for (const { name, files } of PLUGIN_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )

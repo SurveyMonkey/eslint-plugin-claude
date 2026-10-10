@@ -44,6 +44,7 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -175,6 +176,7 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  pluginManifestLocation,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -283,6 +285,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'plugin-manifest-location': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
