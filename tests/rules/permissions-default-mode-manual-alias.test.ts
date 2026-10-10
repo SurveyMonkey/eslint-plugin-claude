@@ -10,10 +10,8 @@ import plugin from '../../src/index.ts'
 const name = 'permissions-default-mode-manual-alias'
 const PROJECT = '/repo/.claude/settings.json'
 const LOCAL = '/repo/.claude/settings.local.json'
-const MANAGED = '/repo/managed-settings.json'
-const DROP_IN = '/repo/managed-settings.d/10-a.json'
-const HIDDEN = '/repo/managed-settings.d/.10-a.json'
-const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
+// The `files` globs of the rule name the two project files. `tests/configs.test.ts` tests them.
+const EVERY_FILE = [PROJECT, LOCAL]
 
 function lint(code: unknown, options: unknown[], file = PROJECT) {
   const text = typeof code === 'string' ? code : JSON.stringify(code)
@@ -82,10 +80,6 @@ describe(`${name}: the silent cases`, () => {
     }
     expect(ids({}, BELOW)).toEqual([])
     expect(ids({ permissions: [] }, BELOW)).toEqual([])
-  })
-
-  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
-    expect(ids(mode('manual'), BELOW, HIDDEN)).toEqual([])
   })
 })
 
