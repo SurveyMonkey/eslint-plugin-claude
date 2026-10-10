@@ -76,7 +76,11 @@ const CAPABILITIES_VARIABLE =
 
 // The env vars reference: a variable that turns a behavior on or off takes one of these, in any
 // casing.
-const BOOLEAN_WORDS = ['1', 'true', 'yes', 'on', '0', 'false', 'no', 'off']
+const ON_WORDS = ['1', 'true', 'yes', 'on']
+const BOOLEAN_WORDS = [...ON_WORDS, '0', 'false', 'no', 'off']
+
+/** True when `value` turns a behavior on: `1`, `true`, `yes` or `on`, in any casing. */
+export const isEnvOn = (value: string) => ON_WORDS.includes(value.toLowerCase())
 
 const PROMPT_CACHE_TTL = oneOf('5m or 1h', ['5m', '1h'])
 
@@ -288,3 +292,87 @@ export function turnsTelemetryOff(name: string, value: string): boolean {
 export function removedEnvVarSince(name: string): string | undefined {
   return REMOVED_ENV_VARS.get(name)
 }
+
+// The variables that other rules read. Sources: the env vars reference, the prompt caching page
+// (https://code.claude.com/docs/en/prompt-caching#disable-prompt-caching) and the server-managed
+// settings page
+// (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
+// checked on Claude Code 2.1.296 on 2026-10-10.
+
+/** A variable that Claude Code keeps for compatibility, and what to say about it. `summary`
+ *  finishes a sentence that starts with the variable name. `value` is set when only that value is
+ *  a fault. The env vars reference marks `ANTHROPIC_SMALL_FAST_MODEL` and
+ *  `ENABLE_PROMPT_CACHING_1H_BEDROCK` as deprecated, and calls `DISABLE_BUG_COMMAND` and
+ *  `SLASH_COMMAND_TOOL_CHAR_BUDGET` older names. It names no replacement for the last one.
+ *  `CLAUDE_CODE_ENABLE_TASKS` set to `0` selects the legacy `TodoWrite` tool. */
+interface DeprecatedEnvVar {
+  summary: string
+  value?: string
+}
+
+const DEPRECATED_ENV_VARS = new Map<string, DeprecatedEnvVar>([
+  [
+    'ANTHROPIC_SMALL_FAST_MODEL',
+    { summary: 'is deprecated. Use "ANTHROPIC_DEFAULT_HAIKU_MODEL".' },
+  ],
+  [
+    'ENABLE_PROMPT_CACHING_1H_BEDROCK',
+    { summary: 'is deprecated. Use "ENABLE_PROMPT_CACHING_1H".' },
+  ],
+  ['DISABLE_BUG_COMMAND', { summary: 'is an older name. Use "DISABLE_FEEDBACK_COMMAND".' }],
+  [
+    'SLASH_COMMAND_TOOL_CHAR_BUDGET',
+    { summary: 'is a legacy name that Claude Code keeps for backward compatibility.' },
+  ],
+  [
+    'CLAUDE_CODE_ENABLE_TASKS',
+    {
+      summary:
+        'set to "0" selects the legacy "TodoWrite" tool in place of the Task tools. Remove the variable to get the Task tools.',
+      value: '0',
+    },
+  ],
+])
+
+/** The text that finishes a sentence about the variable `name` set to `value`, when Claude Code
+ *  deprecates the variable or keeps it as a legacy name. It is undefined for another variable,
+ *  and for a variable whose entry names a value other than `value`. */
+export function deprecatedEnvSummary(name: string, value: string): string | undefined {
+  const entry = DEPRECATED_ENV_VARS.get(name)
+  return entry !== undefined && (entry.value === undefined || entry.value === value)
+    ? entry.summary
+    : undefined
+}
+
+/** The variables that send the traffic of Claude Code through a proxy, or add a certificate
+ *  authority. The server-managed settings page names the proxy and TLS variables. */
+export const TRAFFIC_ENV_VARS: readonly string[] = [
+  'HTTP_PROXY',
+  'HTTPS_PROXY',
+  'NODE_EXTRA_CA_CERTS',
+]
+
+/** The variables that select a model provider. Setting one bypasses server-managed settings.
+ *  The OpenTelemetry endpoint variable is not here: `settings-env-ignored-var` reports it in a
+ *  project file. */
+export const PROVIDER_ENV_VARS: readonly string[] = [
+  'CLAUDE_CODE_USE_ANTHROPIC_AWS',
+  'CLAUDE_CODE_USE_BEDROCK',
+  'CLAUDE_CODE_USE_FOUNDRY',
+  'CLAUDE_CODE_USE_MANTLE',
+  'CLAUDE_CODE_USE_VERTEX',
+]
+
+/** The variable that sets the API endpoint, and the host that is the default. A base URL with
+ *  another host bypasses server-managed settings. */
+export const BASE_URL_VAR = 'ANTHROPIC_BASE_URL'
+export const DEFAULT_API_HOST = 'api.anthropic.com'
+
+/** The variables that turn prompt caching off, when set to `1`. */
+export const PROMPT_CACHING_OFF_VARS: readonly string[] = [
+  'DISABLE_PROMPT_CACHING',
+  'DISABLE_PROMPT_CACHING_FABLE',
+  'DISABLE_PROMPT_CACHING_HAIKU',
+  'DISABLE_PROMPT_CACHING_OPUS',
+  'DISABLE_PROMPT_CACHING_SONNET',
+]

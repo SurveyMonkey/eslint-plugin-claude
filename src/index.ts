@@ -121,6 +121,7 @@ import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
+import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
@@ -128,7 +129,10 @@ import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugi
 import settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
 import settingsEnvCredential from './rules/settings-env-credential.ts'
+import settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
 import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
+import settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off.ts'
+import settingsEnvRouting from './rules/settings-env-routing.ts'
 import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
 import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
 import settingsExtraKnownMarketplacesDirectory from './rules/settings-extra-known-marketplaces-directory.ts'
@@ -140,6 +144,7 @@ import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPatternAnchored from './rules/settings-known-marketplaces-pattern-anchored.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
 import settingsLocalGitignored from './rules/settings-local-gitignored.ts'
+import settingsLocalLocation from './rules/settings-local-location.ts'
 import settingsLocalUntracked from './rules/settings-local-untracked.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
@@ -160,6 +165,7 @@ import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
+import settingsWebfetchPreflightSkip from './rules/settings-webfetch-preflight-skip.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
 import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
@@ -351,6 +357,12 @@ const modules = [
   settingsProjectAutocontinueOff,
   settingsRedundantValue,
   settingsSchemaUrl,
+  settingsCommittedHelperCommand,
+  settingsEnvDeprecatedVar,
+  settingsEnvPromptCachingOff,
+  settingsEnvRouting,
+  settingsLocalLocation,
+  settingsWebfetchPreflightSkip,
   hooksScriptExists,
   hooksScriptExecutable,
   pluginBinExecutable,
@@ -573,6 +585,12 @@ const recommended: Record<RuleName, Severity> = {
   'settings-project-autocontinue-off': 'warn',
   'settings-redundant-value': 'warn',
   'settings-schema-url': 'warn',
+  'settings-committed-helper-command': 'warn',
+  'settings-env-deprecated-var': 'warn',
+  'settings-env-prompt-caching-off': 'warn',
+  'settings-env-routing': 'warn',
+  'settings-local-location': 'warn',
+  'settings-webfetch-preflight-skip': 'warn',
   'hooks-script-exists': 'error',
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',
