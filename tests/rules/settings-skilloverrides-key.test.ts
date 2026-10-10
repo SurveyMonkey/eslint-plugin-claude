@@ -75,6 +75,16 @@ describe(`${name}: a plugin skill key`, () => {
     ).toEqual(['pluginSkill'])
   })
 
+  it('is silent when enabledPlugins is no object', () => {
+    for (const enabledPlugins of [null, ['acme@m'], 'acme@m']) {
+      const code = { enabledPlugins, skillOverrides: { 'acme:a': 'off' } }
+      expect(ids(code), JSON.stringify(enabledPlugins)).toEqual([])
+    }
+    expect(ids({ enabledPlugins: { acme: true }, skillOverrides: { 'acme:a': 'off' } })).toEqual([
+      'pluginSkill',
+    ])
+  })
+
   it('reads the last of two enabledPlugins keys of one name', () => {
     const text = (first: string, second: string) =>
       `{"enabledPlugins": {"acme@m": ${first}, "acme@m": ${second}}, "skillOverrides": {"acme:a": "off"}}`
@@ -206,6 +216,19 @@ describe(`${name}: a bundled alias key beside a skill of that name, on disk`, ()
     mkdirSync(path.join(root, '.claude/skills'), { recursive: true })
     symlinkSync(path.join(root, 'gone'), path.join(root, '.claude/skills/review'))
     expect(at(root)).toEqual([])
+  })
+
+  it('is silent when the skills folder is a dangling link or a link loop', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const dangling = repo({})
+    mkdirSync(path.join(dangling, '.claude'), { recursive: true })
+    symlinkSync(path.join(dangling, 'gone'), path.join(dangling, '.claude/skills'))
+    expect(at(dangling)).toEqual([])
+    const loop = repo({})
+    mkdirSync(path.join(loop, '.claude'), { recursive: true })
+    symlinkSync(path.join(loop, '.claude/skills'), path.join(loop, '.claude/skills'))
+    expect(at(loop)).toEqual([])
   })
 
   it('looks for the skill of the alias that the file names, and for no other', () => {

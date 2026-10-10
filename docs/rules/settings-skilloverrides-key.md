@@ -53,7 +53,8 @@ managed file or a drop-in, where the key applies.
 
 If the repository has a skill named `review`, the key applies to that skill. The rule makes no
 report when `.claude/skills/<alias>`, `.claude/commands/<alias>` or `.claude/commands/<alias>.md`
-exists next to the settings file. It cannot see a skill of the user or of a plugin. In that case,
+exists next to the settings file. It makes no report for a link that leads nowhere, or a path
+that it cannot read. It cannot see a skill of the user or of a plugin. In that case,
 name the skill in the key, or disable the rule for that line.
 
 ### What the rule does not check

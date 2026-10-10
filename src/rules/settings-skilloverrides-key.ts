@@ -1,7 +1,7 @@
 // A `skillOverrides` key that Claude Code does not apply
 // (docs/rules/settings-skilloverrides-key.md). The aliases are in `src/data/settings-keys.ts`.
 // A key with a colon is a plugin skill only when `enabledPlugins` of the file enables that plugin.
-import { lstatSync } from 'node:fs'
+import { existsSync, lstatSync } from 'node:fs'
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { BUNDLED_SKILL_ALIASES } from '../data/settings-keys.ts'
@@ -33,15 +33,29 @@ function pluginNames(settings: ValueNode | undefined): Set<string> {
   return names
 }
 
-/** True when `base` holds a skill or a command of the name `key`: a path that exists, or a link
- *  that leads nowhere. The rule cannot see a link that leads nowhere, so it counts as present. */
+/** True when `path` is a link that leads nowhere. */
+function isDangling(target: string): boolean {
+  try {
+    return lstatSync(target).isSymbolicLink() && !existsSync(target)
+  } catch {
+    return false
+  }
+}
+
+/** True when `base` may hold a skill or a command of the name `key`: a path that exists, a link
+ *  that leads nowhere, or a path that the rule cannot read. Only a missing path is absent. */
 function hasLocalSkill(base: string, key: string): boolean {
   return [`skills/${key}`, `commands/${key}`, `commands/${key}.md`].some((entry) => {
     try {
       lstatSync(path.join(base, entry))
       return true
-    } catch {
-      return false
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code
+      // A missing path is absent, unless its folder is a link that leads nowhere.
+      return (
+        (code !== 'ENOENT' && code !== 'ENOTDIR') ||
+        isDangling(path.dirname(path.join(base, entry)))
+      )
     }
   })
 }
