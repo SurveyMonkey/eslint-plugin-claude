@@ -964,8 +964,8 @@ export async function openIssues({
   const issues: { title: string; body: string; type: string; labels: string[] }[] = []
   const add = (title: string, body: string) =>
     issues.push({ title, body, type: 'Task', labels: [LABEL] })
-  for (const f of alone) add(titleOf(f), bodyOf(f, repo, rowsFor(f)))
   const single = (f: Finding) => add(titleOf(f), bodyOf(f, repo, rowsFor(f)))
+  for (const f of alone) single(f)
   for (const [page, list] of byPage) {
     const digest = (part: Finding[]) =>
       digestOf(
