@@ -21,8 +21,8 @@ Keep a `SKILL.md` under a number of lines.
 ## Rule details
 
 The skills page says to keep `SKILL.md` under 500 lines, and to move detailed reference material
-to separate files.[^supporting] Claude Code does not cut the file at that number. The number is
-advice. The rule reports a file with 500 lines or more. A file of 499 lines passes.
+to separate files.[^supporting] The docs give the number as advice and state no hard limit. The
+rule reports a file with 500 lines or more. A file of 499 lines passes.
 
 The rule counts the lines of the file as an editor does. The line break at the end of the file
 does not start a line. By default, the count includes the frontmatter. The rule reports at line 1.
@@ -31,8 +31,8 @@ The rule checks a `SKILL.md` in a project, in a plugin, and at a plugin root. It
 command file. The rule does not read the frontmatter, so a block that does not parse changes
 nothing.
 
-Fail: a `SKILL.md` of 500 lines. Pass: a `SKILL.md` of 499 lines, with the reference material in
-`reference.md`.
+Fail: a `SKILL.md` of 500 lines, with all the reference material in the file. Pass: a `SKILL.md` of
+499 lines, with the reference material in `reference.md`.
 
 ## Options
 
@@ -46,10 +46,13 @@ Fail: a `SKILL.md` of 500 lines. Pass: a `SKILL.md` of 499 lines, with the refer
 ```
 
 The default of `max` is the number from the skills page.[^supporting] The schema sets no maximum,
-because Claude Code does not cut the file. The `recommended` and `strict` configs set no option.
+because the number is advice. The `recommended` and `strict` configs set no option.
 
-At the default, the message names the 500 lines of the skills page. At another value, the message
-says "The configured limit is under 300 lines", and does not say that the docs give that number.
+When `max` is 500, the message names the skills page. At another value, the message says "The
+configured limit is under 300 lines". It does not say that the docs give that number.
+
+With `countFrontmatter: false` and a frontmatter block, the message says "The body of this file has
+N lines". It then names the configured limit, because the skills page counts the whole file.
 
 ## Sources
 
