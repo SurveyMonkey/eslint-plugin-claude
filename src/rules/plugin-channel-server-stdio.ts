@@ -34,7 +34,8 @@ function serverOf(plugin: Plugin, key: string): unknown {
   if (file === null || file === UNREADABLE || !isObject(file.data)) {
     return undefined
   }
-  // The docs say a `.mcp.json` can omit the `mcpServers` wrapper (components reference, "MCP servers").
+  // The docs say a `.mcp.json` can omit the `mcpServers` wrapper (components reference,
+  // "MCP servers").
   const servers = isObject(file.data.mcpServers) ? file.data.mcpServers : file.data
   return Object.hasOwn(servers, key) ? servers[key] : undefined
 }

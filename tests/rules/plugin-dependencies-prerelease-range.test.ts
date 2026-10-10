@@ -80,6 +80,11 @@ describe(RULE, () => {
 
   check.each([
     ['^2.0.0', BETA],
+    ['>= 2.0.0', BETA],
+    ['^ 2.0.0', BETA],
+    ['~  2.0.0', BETA],
+    ['^1.2.3 >=1.5.0', '1.5.0-beta.1'],
+    ['>2.0.0', '2.0.0-0.3'],
     ['^2.0', BETA],
     ['^2', BETA],
     ['~2.0.0', '2.0.0-rc.1'],
@@ -198,7 +203,6 @@ describe(`${RULE} (silent)`, () => {
     ['a v prefix', 'v2.0.0'],
     ['a tag', 'latest'],
     ['a hyphen range', '1.0.0 - 2.0.0'],
-    ['a space after the operator', '^ 2.0.0'],
     ['an operator that does not exist', '!2.0.0'],
     ['four parts', '^2.0.0.0'],
     ['a build in the range', '^2.0.0+b'],
@@ -255,14 +259,35 @@ describe(`${RULE} (silent)`, () => {
     expect(run({ range: '^2.0.0', entry: BETA, source: './plugins/gone' })).toHaveLength(1)
   })
 
-  check.each([['plugins/dep'], ['.']])('stays silent when the source is %s', (source) => {
+  // The manifest of a bare name has the pre-release and the entry does not: a rule that read it
+  // would report.
+  check.each([['plugins/dep'], ['.dep']])('stays silent when the source is %s', (source) => {
     expect(
       run({
         range: '^2.0.0',
-        entry: BETA,
+        entry: '2.0.0',
         source,
-        files: { 'plugins/dep/.claude-plugin/plugin.json': JSON.stringify({ version: '2.0.0' }) },
+        files: {
+          [`${source}/.claude-plugin/plugin.json`]: JSON.stringify({ version: BETA }),
+        },
       }),
+    ).toEqual([])
+  })
+
+  check('reads the plugin.json at the marketplace root for the source "."', () => {
+    expect(
+      run({
+        range: '^2.0.0',
+        entry: '2.0.0',
+        source: '.',
+        files: { '.claude-plugin/plugin.json': JSON.stringify({ version: BETA }) },
+      }),
+    ).toHaveLength(1)
+  })
+
+  check('stays silent for a command source, whose entry version Claude Code ignores', () => {
+    expect(
+      run({ range: '^2.0.0', entry: BETA, source: { source: 'command', command: 'tool' } }),
     ).toEqual([])
   })
 
@@ -281,6 +306,11 @@ describe(`${RULE} (silent)`, () => {
     ['^0 >=1.0.0', '1.0.0-beta.1', 0],
     ['~>2.0.0', BETA, 1],
     ['^2.0.0 || 2.x', BETA, 0],
+    ['<=2.0.0', '2.0.0-0.3', 0],
+    ['^2.0.0', '2.0.0+build-1', 0],
+    ['>2.0.0', '2.0.0-0+b', 0],
+    ['<=2.0', '2.0.0-0', 0],
+    ['<=2', '2.0.0-0', 0],
   ])('range %s against %s gives %i reports', (range, target, count) => {
     expect(ranged(range, target)).toHaveLength(count)
   })

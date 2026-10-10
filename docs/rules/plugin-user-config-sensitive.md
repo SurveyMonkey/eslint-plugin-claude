@@ -40,8 +40,11 @@ The rule makes no report in these cases:
 
 - The option sets `sensitive`, with any value. A `false` is a choice of the author.
 - The option is not an object.
-- The option has a `type` other than `string`, such as `number`, `boolean`, `file` or `directory`.
-  `sensitive` masks text, so a count such as `max_tokens` is not a secret.
+- The option has a `type` string other than `string`, such as `number`, `boolean`, `file` or
+  `directory`. The docs name a token and a password, which are text, so a count such as
+  `max_tokens` is not reported. This is a choice of the rule. An option with no `type` is checked.
+- The option has `options`. The docs bar `options` on a `sensitive` field, so the fix would stop
+  the plugin from loading.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin root,
   of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.

@@ -2,8 +2,8 @@
 // and keeps the value in secure storage (docs/rules/plugin-user-config-sensitive.md). The docs name
 // a token and a password only. The rule matches whole words of the key and of the `title`. It
 // reads the top-level `userConfig` and the `userConfig` of each channel. It skips an option that
-// sets `sensitive`, with any value, and an option with a `type` other than `string`. It makes no
-// report when it cannot see the plugin.
+// sets `sensitive`, with any value, an option with a `type` string other than `string`, and an
+// option with `options`. It makes no report when it cannot see the plugin.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
@@ -15,8 +15,8 @@ const name = 'plugin-user-config-sensitive' as const
 // The words of the docs: "Set `"sensitive": true` for a token or password".
 const SECRET_WORD = /^(?:token|password)s?$/
 
-/** The lower case words of a key or a title. A word ends at a character that is not a letter or
- *  a digit, and at a change from lower case to upper case. `APIToken` has the words `api` and
+/** The lower case words of a key or a title. A word ends at a character that is not an ASCII letter
+ *  or a digit, and at a change from lower case to upper case. `APIToken` has the words `api` and
  *  `token`. */
 function wordsOf(text: string): string[] {
   return text
@@ -51,7 +51,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'sensitive' }> = {
             if (option.value.type !== 'Object' || lastMember(option.value, 'sensitive')) {
               continue
             }
-            // `sensitive` masks text. A number, a boolean, a file or a directory has no use for it.
+            // The docs name a token and a password, which are text. This rule skips the other types.
+            // The docs also bar `options` on a `sensitive` field, so the fix would break the plugin.
+            if (lastMember(option.value, 'options')) {
+              continue
+            }
             const kind = lastMember(option.value, 'type')?.value
             if (kind?.type === 'String' && kind.value !== 'string') {
               continue
