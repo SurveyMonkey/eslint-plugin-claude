@@ -33,11 +33,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'notIgnored' }> = {
         const dir = path.dirname(path.resolve(context.filename))
         const bound = repositoryRoot(dir)
         // The real path of the parent, so that a link `.claude` stays a link in the path.
-        const file = path.join(
-          realDirectory(path.dirname(dir)),
-          path.basename(dir),
-          'settings.local.json',
-        )
+        const file = path.join(realDirectory(path.dirname(dir)), '.claude', 'settings.local.json')
         if (gitIgnores(bound, file) === false) {
           const data = { file: path.relative(bound, file).split(path.sep).join('/') }
           context.report({ node, messageId: 'notIgnored', data })

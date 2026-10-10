@@ -124,6 +124,18 @@ describe(RULE, () => {
   })
 
   it.skipIf(process.platform === 'win32')(
+    'reads a repository that the linted path reaches through a link',
+    () => {
+      const root = repo({ 'sub/.claude/settings.json': '{}' })
+      const alias = path.join(plain(), 'alias')
+      symlinkSync(root, alias)
+      expect(lint(alias, 'sub/.claude/settings.json').map((m) => m.messageId)).toEqual([
+        'notIgnored',
+      ])
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
     'stays silent when .claude is a link: git refuses a path behind a link',
     () => {
       // `settings-local-untracked` reports the link.
