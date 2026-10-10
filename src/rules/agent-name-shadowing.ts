@@ -7,14 +7,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
-import {
-  frontmatterOfFile,
-  isInside,
-  markdownFiles,
-  realDirectory,
-  repositoryRoot,
-  UNREADABLE,
-} from '../skill-tree.ts'
+import { frontmatterOfFile, markdownFiles, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'agent-name-shadowing' as const
 
@@ -49,12 +42,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadows' }> = {
         const bound = repositoryRoot(scope.root)
         const others: string[] = []
         // Each folder from the parent of this project folder up to the repository root. The
-        // walk ends at the first folder out of the repository, or at the root of the file system.
-        for (
-          let dir = path.dirname(project);
-          dir !== path.dirname(dir) && isInside(realDirectory(dir), bound);
-          dir = path.dirname(dir)
-        ) {
+        // walk ends at the root of the file system. The scan reads no folder out of the repository.
+        for (let dir = path.dirname(project); dir !== path.dirname(dir); dir = path.dirname(dir)) {
           // A scan that is `unreadable` or `outside` has fewer files. That can only hide a
           // match, never add one, so the rule ignores both flags.
           const { files } = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
