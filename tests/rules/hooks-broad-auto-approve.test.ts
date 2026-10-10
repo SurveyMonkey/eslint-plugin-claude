@@ -132,6 +132,17 @@ describe(`${name}: setMode`, () => {
     )
   })
 
+  it('is silent for a mode value with no setMode entry, and for a setMode entry of another mode', () => {
+    expect(ids('PermissionRequest', 'echo \'{"mode":"bypassPermissions"}\'', 'Bash')).toEqual([])
+    expect(
+      ids(
+        'PermissionRequest',
+        'echo \'{"type":"setMode","mode":"default"} bypassPermissions\'',
+        'Bash',
+      ),
+    ).toEqual([])
+  })
+
   it('is silent for another mode and for a mode key of another name', () => {
     expect(
       ids('PermissionRequest', bypass.replace('bypassPermissions', 'acceptEdits'), 'Bash'),

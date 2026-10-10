@@ -21,6 +21,10 @@ describe(`${name}: the operators`, () => {
     }
   })
 
+  it('reports an operator as the command', () => {
+    expect(ids(command({ command: '&&', args: [] }))).toEqual(['operator'])
+  })
+
   it('reports each operator', () => {
     expect(exec(['a', '|', 'b', '>', 'c'])).toEqual(['operator', 'operator'])
   })
