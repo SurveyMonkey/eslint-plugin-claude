@@ -23,15 +23,14 @@ Set only the settings keys that Claude Code knows, with the values that it accep
 Claude Code shows a Settings Error for a user, project or local file with a value that the schema
 rejects.[^broken] The rule finds such a value before the file reaches a teammate. It also finds
 a key that Claude Code does not know. The key catalog is the settings index.[^index] The rule
-reads the index, and does not use the published JSON schema, which can be older than the newest
+reads the index. It does not use the published JSON schema, which can be older than the newest
 release.
 
 ### Unknown keys
 
 - **A top-level key that the index does not list** gets `unknownKey`. The report is on the key.
   `$schema` and `ignorePatterns` are the two exceptions. `$schema` points an editor to the JSON
-  schema. `ignorePatterns` is a deprecated key that Claude Code still reads. The permissions group
-  owns it.
+  schema. `ignorePatterns` is a deprecated key. The rule makes no report on it.
 - **An environment variable name at the top level** gets `envKey`. The switches that turn off
   usage metrics, error reports and the auto-updater are environment variables, not
   keys.[^privacy][^channel] Set them in `env`. A name is a capital letter, then capital letters,
@@ -88,8 +87,9 @@ last review. The kinds of value are below.
   `modelPricing` rows need `input`, `output`, `cacheRead` and `cacheWrite`.
   `footerLinksRegexes` rows need `type`, `pattern` and `url`. `sshConfigs` rows need `id`, `name`
   and `sshHost`. `allowedChannelPlugins` rows are `{marketplace, plugin}`, or a
-  `plugin@marketplace` string. `strictPluginOnlyCustomization` is `true` or an array of `skills`,
-  `agents`, `hooks` and `mcp`. `forceLoginOrgUUID` is a UUID or an array of UUIDs.[^statusline][^picker][^pricing][^footer][^strict]
+  `plugin@marketplace` string. `strictPluginOnlyCustomization` is `true` or an array of strings,
+  because Claude Code ignores a name that it does not know. `policyHelper` needs `path`.
+  `forceLoginOrgUUID` is a UUID or an array of UUIDs.[^statusline][^picker][^pricing][^footer][^strict]
 - **Forms.** `theme`, `timeFormat`, `minimumVersion`, `requiredMinimumVersion`,
   `requiredMaximumVersion`, `plansDirectory`, `prUrlTemplate`, `remote.defaultEnvironmentId`,
   `browserExternalPageTools`, `policyHelper.path`, `vimInsertModeRemaps` and the tips of
@@ -103,18 +103,17 @@ entry says.
 
 One fault gets one report. The rule makes no report in these places.
 
-- **Inside `permissions` or `sandbox`.** The permissions group owns both keys, and its rules
-  `permissions-schema` and `sandbox-schema` check them. The rule reads neither key. It also
-  leaves `autoMode`, `disableAutoMode` and `ignorePatterns` to that group. It makes no report on
-  these three keys or on anything inside them, whatever the type (mid-round ruling 19).
+- **Inside `permissions` or `sandbox`.** The rule reads neither key. The rules for them are in
+  the permissions group, and are not built yet. The rule also makes no report on `autoMode`,
+  `disableAutoMode` and `ignorePatterns`, or on anything inside them, whatever the type.
 - **A scope fault.** `settings-key-scope` reports a key in a file that Claude Code does not read
-  it from. This rule still checks the value of that key, except for a Global config key, which
-  the scope rule reports in every settings file.
+  it from. This rule still checks the value of that key. A Global config key is the exception:
+  the scope rule reports it in every settings file.
 - **A key with a rule of its own.** The rule checks no value of `taskOutputMaxChars`,
   `keybindingFlavor`, `permissionExplainerEnabled` and `teammateDefaultModel`, which
   `settings-removed-key` reports for any value. It also skips `syncClaudeAiPlugins` and
-  `autoContinueAtUsageLimit`, which `settings-sync-claude-ai-plugins` and
-  `settings-project-autocontinue-off` report.
+  `autoContinueAtUsageLimit`, which `settings-sync-claude-ai-plugins` reports. The rule
+  `settings-project-autocontinue-off` is not built yet.
 - **The text of a model.** `settings-model-value` checks the alias or ID in `model` and
   `advisorModel`. `settings-model-list` checks the lists. This rule checks the types only.
 - **A value of another group.** The inventory gives these keys to the group that owns them. This
@@ -127,11 +126,13 @@ One fault gets one report. The rule makes no report in these places.
 ### What the rule does not check
 
 - A hidden file in `managed-settings.d/`. Claude Code ignores it, so the rule reads no key in it.
-- `timeZone`. The docs say "an IANA time zone name". The names that a machine knows depend on its
-  ICU data, so the rule gives the same result on each machine only if it does not check them.
+- The name in `timeZone`. The docs say "an IANA time zone name". The names depend on the ICU data
+  of the machine. The rule checks only that the value is a string.
+- A backslash in `plansDirectory`. Claude Code uses the default directory for it on macOS, Linux
+  and WSL. The path works on Windows.
 - The `{name}` placeholders of `footerLinksRegexes` against the named groups of `pattern`, the
   uniqueness of tip IDs (Claude Code uses the first of two), and the normal form of a Windows
-  `policyHelper.path`.
+  `policyHelper.path`, apart from `.` and `..` segments.
 - A model alias that a version of Claude Code does not know. See `settings-model-value`.
 
 When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.
