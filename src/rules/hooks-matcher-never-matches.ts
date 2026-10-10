@@ -1,5 +1,5 @@
-// A tool-event matcher is case-sensitive, and two cases never reach a hook:
-// `EndConversation` on `PreToolUse` and `PostToolUse`, and the advisor tool
+// A tool-event matcher is case-sensitive, and two more values never reach a hook:
+// `EndConversation` on `PreToolUse`, `PostToolUse` and `PermissionRequest`, and the advisor tool
 // (docs/rules/hooks-matcher-never-matches.md). The rule reports a value that can never match.
 import type { Rule } from 'eslint'
 import { TOOL_EVENTS } from '../data/hook-events.ts'
@@ -9,9 +9,9 @@ import { exactValues, groupsOf, HOOKS_TARGET, hooksListener } from '../hooks-con
 
 const name = 'hooks-matcher-never-matches' as const
 
-/** The tool that the hooks reference says `PreToolUse` and `PostToolUse` skip. */
+/** The tool that the hooks reference says `PreToolUse`, `PostToolUse` and `PermissionRequest` skip. */
 const END_CONVERSATION = 'EndConversation'
-const SKIPS_END_CONVERSATION = ['PreToolUse', 'PostToolUse']
+const SKIPS_END_CONVERSATION = ['PreToolUse', 'PostToolUse', 'PermissionRequest']
 
 /** The tool name that `segment` is a case variant of, or undefined. */
 function caseVariantOf(segment: string): string | undefined {
