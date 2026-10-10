@@ -345,6 +345,11 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hooks in skills and agents",
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
     }
   ],
   "hooks-handler-field-ignored": [
@@ -409,6 +414,28 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Response schema",
       "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    }
+  ],
+  "hooks-if-condition": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common fields",
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "How a hook resolves",
+      "hash": "9704adcedd9cd358d6315406fce305120ef7220db13be9e61fc6e8ad8e398dfc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Permission rule syntax",
+      "hash": "8e27af6d30bfc45f5dc9b063931ac4e37cae06739ead5563f4d317ea63bafd4c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
     }
   ],
   "hooks-matcher-enum": [

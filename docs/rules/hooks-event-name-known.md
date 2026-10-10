@@ -1,13 +1,13 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-event-name-known, which reports a hook event name that Claude Code does not know in hooks.json, settings or plugin.json, and suggests the correct name for a near miss.
+description: The ESLint rule claude/hooks-event-name-known, which reports a hook event name that Claude Code does not know in hooks.json, settings, plugin.json or the frontmatter of a skill or subagent, and suggests the correct name for a near miss.
 owner: brianespinosa
 created: 2026-09-29
 related_issues: [6]
 stale_after: 2027-03-29
 generated:
   by: claude-code
-  at: 2026-09-29T00:00:00Z
+  at: 2026-10-10T00:00:00Z
 ---
 
 # `hooks-event-name-known`
@@ -16,7 +16,7 @@ Use a hook event name that Claude Code knows.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/hooks/hooks.json`, `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/.claude-plugin/plugin.json` |
+| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/.claude-plugin/plugin.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -29,12 +29,20 @@ path, or an array of paths and objects.[^manifest] The rule reads each object, a
 path. It checks each key against the 33 events in the hooks reference, as of Claude Code
 2.1.285. The list is in `src/data/hook-events.ts`.
 
+The rule also reads the `hooks` field in the frontmatter of a skill (`SKILL.md`) and of a project
+subagent.[^frontmatter] These use the same event names. It reads the managed settings files too: `managed-settings.json` and each
+`managed-settings.d/*.json` drop-in. It reads no hidden drop-in, and no plugin subagent, because
+Claude Code ignores the `hooks` field of a plugin subagent.
+
+The rule reads a `hooks/hooks.json` only when Claude Code reads it. It makes no report on
+`.claude/hooks/hooks.json` or `.claude-plugin/hooks/hooks.json`, or on a file in a hidden folder such
+as `.github/hooks/hooks.json`. [`hooks-no-standalone-file`](hooks-no-standalone-file.md) reports the first
+two, so a file gets one report.
+
 A key that is a near miss gets a suggestion with the correct name. A near miss has the same
 letters with a different case or separator (`preToolUse`, `pre_tool_use`). It can also be two
 edits or fewer from a known name. The edit count ignores case and separators. The suggestion is
 not an autofix. A rename changes what runs, because a hook that never ran starts to run.
-
-Hooks in skill and agent frontmatter use the same names. This rule does not check them yet.
 
 Fail:
 
@@ -46,6 +54,19 @@ Pass:
 
 ```json
 { "hooks": { "PreToolUse": [] } }
+```
+
+Fail, in the frontmatter of a skill:
+
+```yaml
+---
+name: example
+hooks:
+  preToolUse:
+    - hooks:
+        - type: command
+          command: ./check.sh
+---
 ```
 
 ## Options
@@ -63,3 +84,4 @@ Pass:
 [^lifecycle]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)
 [^never]: [Troubleshoot plugins: Hook loads but never fires](https://code.claude.com/docs/en/plugins/troubleshooting#hook-loads-but-never-fires)
 [^manifest]: [Plugin manifest reference: hooks](https://code.claude.com/docs/en/plugins/manifest-reference#hooks)
+[^frontmatter]: [Hooks reference: Hooks in skills and agents](https://code.claude.com/docs/en/hooks#hooks-in-skills-and-agents)
