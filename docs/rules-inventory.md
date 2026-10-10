@@ -1650,4 +1650,3 @@ Other names a rule may contain:
 [^tools-reference-task-tool-availability]: [Tools reference: Task tool availability](https://code.claude.com/docs/en/tools-reference#task-tool-availability)
 [^tools-reference-webfetch-tool-behavior]: [Tools reference: WebFetch tool behavior](https://code.claude.com/docs/en/tools-reference#webfetch-tool-behavior)
 [^settings-reference-httphookallowedenvvars]: [All settings: httpHookAllowedEnvVars](https://code.claude.com/docs/en/settings-reference#httphookallowedenvvars)
-[^managed-settings-keys-that-fail-closed]: [Managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)
