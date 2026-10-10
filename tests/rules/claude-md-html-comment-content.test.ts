@@ -17,7 +17,7 @@ function lint(code: string, file = '/repo/CLAUDE.md') {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe(RULE, () => {
-  it.fails('reports a block comment with a modal word in capitals, over the whole comment', () => {
+  it('reports a block comment with a modal word in capitals, over the whole comment', () => {
     const messages = lint('# Notes\n\n<!-- MUST run tests -->\n')
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -26,12 +26,12 @@ describe(RULE, () => {
       line: 3,
       column: 1,
       endLine: 3,
-      endColumn: 25,
+      endColumn: 24,
     })
     expect(messages[0]?.message).toContain('`MUST`')
   })
 
-  it.fails('reports each word of the list, and a comment of several lines, once', () => {
+  it('reports each word of the list, and a comment of several lines, once', () => {
     for (const word of ['MUST', 'NEVER', 'ALWAYS', 'IMPORTANT', 'SHALL', 'REQUIRED']) {
       expect(ids(lint(`<!-- ${word} do it -->\n`)), word).toEqual(['instruction'])
     }
@@ -40,7 +40,7 @@ describe(RULE, () => {
     expect(messages[0]?.message).toContain('`MUST`')
   })
 
-  it.fails('reports an imperative at the start of the comment or of a sentence', () => {
+  it('reports an imperative at the start of the comment or of a sentence', () => {
     for (const text of [
       'Always use pnpm',
       'Never commit secrets',
@@ -61,13 +61,13 @@ describe(RULE, () => {
     expect(lint('<!-- Never commit -->\n')[0]?.message).toContain('`Never`')
   })
 
-  it.fails('reports an @path that has a slash or a dot', () => {
+  it('reports an @path that has a slash or a dot', () => {
     expect(ids(lint('<!-- see @docs/a.md -->\n'))).toEqual(['instruction'])
     expect(ids(lint('<!-- @README.md -->\n'))).toEqual(['instruction'])
     expect(lint('<!-- see @docs/a.md -->\n')[0]?.message).toContain('`@docs/a.md`')
   })
 
-  it.fails('stays silent on a note for maintainers', () => {
+  it('stays silent on a note for maintainers', () => {
     for (const text of [
       'maintainer: jo',
       'TODO update this in 2027',
@@ -84,43 +84,43 @@ describe(RULE, () => {
 })
 
 describe(`${RULE}: which comments`, () => {
-  it.fails('reports a block comment in a list item or a quote', () => {
+  it('reports a block comment in a list item or a quote', () => {
     expect(ids(lint('- item\n\n  <!-- MUST run tests -->\n'))).toEqual(['instruction'])
     expect(ids(lint('> <!-- MUST run tests -->\n'))).toEqual(['instruction'])
   })
 
-  it.fails('reports a comment that is never closed, which runs to the end of the file', () => {
+  it('reports a comment that is never closed, which runs to the end of the file', () => {
     expect(ids(lint('<!-- MUST run tests\n'))).toEqual(['instruction'])
   })
 
-  it.fails('stays silent on an inline comment, which is part of a paragraph', () => {
+  it('stays silent on an inline comment, which is part of a paragraph', () => {
     expect(lint('Text <!-- MUST run tests --> more text.\n')).toEqual([])
     expect(lint('- item <!-- MUST run tests -->\n')).toEqual([])
   })
 
-  it.fails('stays silent on a comment in a code span, a fence or an indented block', () => {
+  it('stays silent on a comment in a code span, a fence or an indented block', () => {
     expect(lint('Write `<!-- MUST run tests -->` here.\n')).toEqual([])
     expect(lint('```html\n<!-- MUST run tests -->\n```\n')).toEqual([])
     expect(lint('~~~\n<!-- MUST run tests -->\n~~~\n')).toEqual([])
     expect(lint('Example:\n\n    <!-- MUST run tests -->\n')).toEqual([])
   })
 
-  it.fails('stays silent on a comment inside another HTML block', () => {
+  it('stays silent on a comment inside another HTML block', () => {
     expect(lint('<div>\n<!-- MUST run tests -->\n</div>\n')).toEqual([])
   })
 
-  it.fails('reports each of two comments', () => {
+  it('reports each of two comments', () => {
     const messages = lint('<!-- MUST run tests -->\n\ntext\n\n<!-- NEVER skip -->\n')
     expect(messages.map((m) => m.line)).toEqual([1, 5])
   })
 
-  it.fails('reads a comment after other blocks, with frontmatter above it', () => {
+  it('reads a comment after other blocks, with frontmatter above it', () => {
     expect(ids(lint('---\nname: x\n---\n\n<!-- MUST run tests -->\n'))).toEqual(['instruction'])
   })
 })
 
 describe(`${RULE}: which files`, () => {
-  it.fails('checks a CLAUDE.md and a CLAUDE.local.md, in any folder', () => {
+  it('checks a CLAUDE.md and a CLAUDE.local.md, in any folder', () => {
     for (const file of [
       '/repo/CLAUDE.md',
       '/repo/.claude/CLAUDE.md',
@@ -131,7 +131,7 @@ describe(`${RULE}: which files`, () => {
     }
   })
 
-  it.fails('does not check a file that the docs do not name for this strip', () => {
+  it('does not check a file that the docs do not name for this strip', () => {
     for (const file of [
       '/repo/AGENTS.md',
       '/repo/.claude/rules/CLAUDE.md',

@@ -42,6 +42,7 @@ import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
 import claudeMdImportExternal from './rules/claude-md-import-external.ts'
 import claudeMdImportInCodeSpan from './rules/claude-md-import-in-code-span.ts'
@@ -358,6 +359,7 @@ const modules = [
   rulesMaxLines,
   rulesSymlinkExternal,
   claudeMdCombinedSize,
+  claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
 ]
 
@@ -558,6 +560,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-max-lines': 'warn',
   'rules-symlink-external': 'warn',
   'claude-md-combined-size': 'off',
+  'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
 }
 
