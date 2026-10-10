@@ -16,7 +16,7 @@ const PLACEHOLDER = /\$\{CLAUDE_(?:PROJECT_DIR|PLUGIN_ROOT|PLUGIN_DATA)\}/
 /** The text of a PowerShell line, in two parts: `single` holds the text inside single quotes, and
  *  `other` holds the rest. In a single-quoted string `''` is one quote, and a backtick is a plain
  *  character. In a double-quoted string `""` is one quote. Outside a single-quoted string, a backtick
- *  escapes the next character. A string that is not closed runs to the end of the line. */
+ *  escapes the next character. A string that is not closed runs to the end of the text. */
 function split(line: string): { single: string; other: string } {
   let single = ''
   let other = ''
