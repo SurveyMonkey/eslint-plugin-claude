@@ -42,9 +42,11 @@ describe('settings-webfetch-preflight-skip: the linted file', () => {
       })
       expect(ids(tree({}), PROJECT, code), list).toEqual([])
     }
-    expect(
-      ids(tree({}), MANAGED, RULES(FETCH).replace('{', '{"skipWebFetchPreflight":true,')),
-    ).toEqual([])
+    const managed = JSON.stringify({
+      skipWebFetchPreflight: true,
+      permissions: { allow: [FETCH] },
+    })
+    expect(ids(tree({}), MANAGED, managed)).toEqual([])
   })
 
   it('is silent for a value that is not true', () => {
