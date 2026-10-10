@@ -594,8 +594,8 @@ describe('classify', () => {
     expect(jev.calls).toEqual([])
   })
 
-  it('replays the seven closed noise cases of #150 as no-change, listed with their values', async () => {
-    // The requirement value of each closed issue, from the triage of 2026-10-10.
+  it('gives no finding for the requirement value of each closed noise case of #150', async () => {
+    // The requirement value of each closed issue. The ADR holds the evidence.
     const closed = { 104: 0.31, 105: 0.21, 110: 0.32, 111: 0.26, 123: 0.33, 125: 0.22, 133: 0.23 }
     const edited = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
     for (const [issue, value] of Object.entries(closed)) {
@@ -667,12 +667,43 @@ describe('classify', () => {
     })
 
     it('gives needs-triage with no call for a large added block, whose diff is its whole text', async () => {
-      // The full texts alone are over the limit, and the changed lines are not.
+      // A request with the changed lines would fit. A block with one text has
+      // no diff to send, so it goes to a person.
       const edited = `${PAGE}\n## Flag table\n\n${table(700)}\n`
       const jev = fakeJev(() => 1)
       const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY })
       expect(findings.map((f) => [f.blockId, f.reason])).toEqual([
         ['flag-table', 'The block is too large for one Jev request. No model call.'],
+      ])
+      expect(jev.calls).toEqual([])
+    })
+
+    it('gives needs-triage with no call for a large removed block, which has no new text', async () => {
+      const whole: SourceMap = {
+        'a-rule': [{ url: URL_, heading: 'hooks' }],
+        'b-rule': [{ url: URL_, heading: 'Plugin manifest reference' }],
+      }
+      const base = PAGE.replace('an array mixing both.', `an array mixing both.\n\n${table(700)}`)
+      const edited = base.replace('### `hooks`', '### `hook files`')
+      const jev = fakeJev(() => 1)
+      const { findings } = await run(whole, edited, { fetch: jev.fetch, key: KEY }, base)
+      expect(findings.map((f) => [f.kind, f.blockId, f.reason])).toContainEqual([
+        'needs-triage',
+        'hooks',
+        'The block is too large for one Jev request. No model call.',
+      ])
+      expect(jev.calls).toEqual([])
+    })
+
+    it('gives needs-triage with no call when the rows only change their order', async () => {
+      const seven = '| FLAG_7 | Row 7 text to pad the table. |'
+      const eight = '| FLAG_8 | Row 8 text to pad the table. |'
+      const edited = big.replace(`${seven}\n${eight}`, `${eight}\n${seven}`)
+      expect(edited).not.toBe(big)
+      const jev = fakeJev(() => 1)
+      const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY }, big)
+      expect(findings.map((f) => f.reason)).toEqual([
+        'The block is too large for one Jev request. No model call.',
       ])
       expect(jev.calls).toEqual([])
     })
@@ -792,5 +823,24 @@ describe('main on a temporary tree', () => {
     })
     expect(text).toContain(`- ${URL_} \`low\` (changed, requirement 0.31)`)
     expect(text).not.toContain('`high`')
+  })
+
+  it('rounds the listed requirement value to two places', () => {
+    const text = api.renderMarkdown({
+      model: 'jev-1.13.0',
+      findings: [],
+      results: [
+        {
+          blockId: 'low',
+          heading: 'low',
+          change: 'changed',
+          page: URL_,
+          outcomes: [
+            { kind: 'no-change', rule: null, probability: 0.3123456, reason: 'requirement' },
+          ],
+        },
+      ],
+    })
+    expect(text).toContain(`- ${URL_} \`low\` (changed, requirement 0.31)`)
   })
 })

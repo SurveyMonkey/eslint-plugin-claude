@@ -17,7 +17,7 @@
 // - an answer that is not valid, or an answer between two thresholds
 // - a block whose changed lines are too large for one request.
 // A block that is too large for one request gets a request with its
-// changed lines only. Its finding says so.
+// changed lines only. A finding from that request says so.
 // These throw, and the job fails:
 // - a map that cites no page, or a failed docs fetch
 // - a page that splitBlocks cannot read, or a page with no title
@@ -132,8 +132,8 @@ export type Request = {
 export type Citations = Map<string, Map<string, string[]>>
 
 // The spike in docs/adr/002-classify-docs-changes-with-jev.md sets these
-// values. The `requirement` no-value is 0.4 because the live band from 0.2
-// to 0.4 held only noise. A value at or above `yes` is a yes. A value at or below `no` is a
+// values for `alters` and `obsolete`. Live data sets the `requirement` `no`
+// value. A value at or above `yes` is a yes. A value at or below `no` is a
 // no. A value between them goes to a person as needs-triage. Change them
 // only with new labeled data, and record the data in the ADR.
 export const THRESHOLDS = {
@@ -148,7 +148,9 @@ export const ENDPOINT = 'https://api.typesafe.ai/v1/systemone'
 export const TIMEOUT_MS = 30_000
 export const CONCURRENCY = 4
 // Jev takes 32k tokens for the state and the longest question. A block
-// larger than this goes to a person without a call.
+// larger than this gets a request with its changed lines only. A block goes
+// to a person with no call when those lines are also larger, or when the
+// block has one text only.
 export const MAX_STATE_CHARS = 60_000
 const ATTEMPTS = 3
 const RETRY_STATUS = new Set([429, 500, 502, 503, 504, 529])
@@ -367,7 +369,8 @@ const REASONS: Record<string, (rule: string | null, p: number) => string> = {
 }
 
 // Joins the outcomes of one block into findings: one for each kind. The kind
-// no-change gives no finding.
+// no-change gives no finding. With `diffOnly`, each reason ends with a note
+// that says Jev judged the changed lines.
 function findingsOf(item: ItemBase, outcomes: Outcome[], diffOnly: boolean): Finding[] {
   const byKind = new Map<Kind, Outcome[]>()
   for (const outcome of outcomes) {
@@ -667,7 +670,10 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
   })
   if (JSON.stringify(body.state).length > MAX_STATE_CHARS) {
     // A block with one text has no diff: its changed lines are its whole text.
-    if (item.oldText !== null && item.newText !== null) {
+    // A diff with no line gives Jev nothing to judge, so it stays with a person.
+    const diff = lineDiff(item.oldText, item.newText)
+    const hasDiff = diff.removed.length > 0 || diff.added.length > 0
+    if (item.oldText !== null && item.newText !== null && hasDiff) {
       body = buildRequest({ ...input, diffOnly: true })
       diffOnly = true
     }
@@ -743,7 +749,7 @@ export function renderMarkdown({ findings, results }: Output): string {
     lines.push('Blocks that need no change:', '')
     for (const r of quiet) {
       const value = r.outcomes.find((o) => o.reason === 'requirement')?.probability
-      const detail = value === undefined ? '' : `, requirement ${value}`
+      const detail = value === undefined ? '' : `, requirement ${round(value)}`
       lines.push(`- ${r.page} \`${r.blockId}\` (${r.change}${detail})`)
     }
     lines.push('')
