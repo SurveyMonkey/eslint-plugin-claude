@@ -1,7 +1,7 @@
 // Claude Code puts the name and description of each skill in a listing with a character budget
 // (docs/rules/skill-listing-budget.md). The documented fallback is 8,000 characters. The rule is
 // a heuristic: the live budget is 1% of the context window, and two settings move it. It sums
-// the entries of one scope, a `.claude/` directory or a plugin root, and reads no file out of
+// the entries of one scope, a `.claude/` directory or a plugin root. It reads no file out of
 // the repository.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
@@ -51,8 +51,8 @@ function listedChars(
 }
 
 /** The skill and command files of the scope at `root`, as paths with a fallback name. Returns
- *  null when the scope has a part that the rule cannot see: a manifest that it cannot read, a
- *  `skills` key that moves the folder, or a directory that it cannot read in full. */
+ *  null when the rule cannot see a part of the scope. These are a manifest that it cannot read,
+ *  a `skills` key that moves the folder, and a `commands/` folder that it cannot read. */
 function scopeFiles(
   root: string,
   plugin: boolean,

@@ -1,17 +1,19 @@
 // An injected command aborts the whole skill invocation when it fails or when no permission rule
 // allows it (docs/rules/skill-inject-robustness.md). The rule is a heuristic. It reads the
-// commands as text, and it reads no settings file.
+// commands as text, and it reads no settings file. The option `allow` gives it the rules that a
+// settings file holds.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { parsedEntries, skillEntries } from '../permission-entries.ts'
+import { parsePermissionRule } from '../permission-rule.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-inject-robustness' as const
 
 /** Commands that run without a permission prompt, from the permissions page: "The set includes".
- *  The docs do not list the rest of the set, and the rule treats each name as read-only whatever
- *  its flags. `git` is here whole, because the docs name only "read-only forms of `git`". */
+ *  The docs do not list the rest of the set. The rule treats each name as read-only with any
+ *  flags. `git` is here whole, because the docs name only "read-only forms of `git`". */
 const READ_ONLY = new Set([
   'ls',
   'cat',
@@ -34,8 +36,9 @@ const READ_ONLY = new Set([
 const NO_OP = new Set(['true', ':'])
 
 /** The wrappers that Claude Code strips before it matches a rule. The rule does not strip them
- *  and does not judge a command that starts with one. It also skips any `NAME=value` at the start.
- *  Claude Code strips only known-safe variables, so this hides some real faults. */
+ *  and does not judge a command that starts with one. The rule also skips a command that starts
+ *  with a `NAME=value`. Claude Code strips only known-safe variables, so this hides some real
+ *  faults. */
 const WRAPPERS = new Set([
   'timeout',
   'time',
@@ -48,10 +51,15 @@ const WRAPPERS = new Set([
   'xargs',
 ])
 
-/** The words that start or end a shell block. They are not commands. The rule drops a leading one
- *  and judges the rest. A subcommand that is only a closing word, or a test, is not judged. */
-const OPENING = /^(?:if|then|else|elif|do|while|until|!|\{|\()\s+/
-const NOT_A_COMMAND = /^(?:fi|done|esac|\}|\)|for\b|case\b|\[|#)/
+/** The words that start a shell block, and the head of a `case`. They are not commands. The rule
+ *  drops them from the start of a subcommand and judges the rest. A word alone on its line leaves
+ *  nothing. `(` and `{` need no space after them. */
+const OPENING =
+  /^(?:(?:if|then|else|elif|do|while|until|!)(?![\w-])|[({]|case\s.*?\sin(?![\w-]))\s*/
+/** The pattern of a `case` arm, such as `a)` or `*)`. The rule drops it only in a text with `case`. */
+const ARM = /^[\w*.\-"']+\)\s*/
+/** The words that end a block, a `for` head and a test. The rule does not judge them. */
+const NOT_A_COMMAND = /^(?:(?:fi|done|esac|for)(?![\w-])|[[\])}])/
 
 /** The programs that run a script file given as their first argument. */
 const INTERPRETERS = new Set(['bash', 'sh', 'zsh', 'node', 'python', 'python3', 'ruby', 'perl'])
@@ -68,9 +76,18 @@ const HIDDEN = /"(?:[^"\\]|\\.)*"|'[^']*'|\d*[<>]&\d*-?|&>>?/gs
 // The separators of the permissions page: `&&`, `||`, `;`, `|`, `|&`, `&` and a line break.
 const SEPARATOR = /&&|\|\||\|&|[;|&\n]/g
 
+// The patterns of a `case` arm that has a `|`, at the start of a line.
+const ARM_ALTERNATION = /^([ \t]*)[\w*."'-]+(?:\|[\w*."'-]+)+\)/gm
+
+// A comment line. The rule drops it first, because its text can hold a quote or a separator.
+const COMMENT_LINE = /^[ \t]*#.*$/gm
+
 /** The subcommands of `text`. A line break after a backslash does not split. */
 function subcommands(text: string): string[] {
-  const joined = text.replaceAll('\\\n', ' ')
+  const lines = text.replace(COMMENT_LINE, '').replaceAll('\\\n', ' ')
+  const hasCase = /(?:^|\s)case\s/.test(lines)
+  // The `|` between the patterns of a `case` arm is not a pipe.
+  const joined = hasCase ? lines.replace(ARM_ALTERNATION, '$1x)') : lines
   const masked = joined.replace(HIDDEN, (part) => 'x'.repeat(part.length))
   const parts: string[] = []
   let from = 0
@@ -79,15 +96,24 @@ function subcommands(text: string): string[] {
     from = match.index + match[0].length
   }
   parts.push(joined.slice(from))
+  const heads = hasCase ? [OPENING, ARM] : [OPENING]
   return parts
     .map((part) => {
       let rest = part.trim()
-      while (OPENING.test(rest)) {
-        rest = rest.replace(OPENING, '').trimStart()
+      for (let head = heads.find((h) => h.test(rest)); head !== undefined; ) {
+        rest = rest.replace(head, '')
+        head = heads.find((h) => h.test(rest))
       }
-      return rest
+      return closeless(rest)
     })
     .filter((part) => part !== '')
+}
+
+/** `part` without the `)` at its end that closes a group the part did not open. */
+function closeless(part: string): string {
+  const opens = part.split('(').length - 1
+  const closes = part.split(')').length - 1
+  return closes > opens ? part.replace(/\s*\)+$/, '') : part
 }
 
 /** True when the Bash rule `specifier` allows the command `command`. A `*` stands for any text.
@@ -106,13 +132,13 @@ function allows(specifier: string | null, command: string): boolean {
   )
 }
 
-/** The first word of a subcommand, with no quote around it. */
+/** The words of a subcommand, each with no quote around it. */
 function wordsOf(subcommand: string): string[] {
   return subcommand.split(/\s+/).map((word) => word.replaceAll(/^["']|["']$/g, ''))
 }
 
-/** True when the subcommand is one that the rule does not judge: a read-only command, a no-op, a
- *  command with a wrapper, or a command that starts with a variable. */
+/** True when the rule does not judge the subcommand. These are a read-only command, a no-op, a
+ *  word that ends a block, a test, a command with a wrapper, and a command with a variable. */
 function skipped(subcommand: string): boolean {
   const program = wordsOf(subcommand)[0] as string
   return (
@@ -124,8 +150,8 @@ function skipped(subcommand: string): boolean {
   )
 }
 
-/** The script path of a subcommand: its program when that holds a `/`, or the first argument of
- *  an interpreter when that is not a flag and holds a `/` or a script extension. Null otherwise. */
+/** The script path of a subcommand, or null. It is the program when that holds a `/`. It is the
+ *  first argument of an interpreter when that is no flag and holds a `/` or a script extension. */
 function scriptPath(subcommand: string): string | null {
   const [program, argument] = wordsOf(subcommand) as [string, string | undefined]
   if (INTERPRETERS.has(program)) {
@@ -141,6 +167,17 @@ function scriptPath(subcommand: string): string | null {
 /** True for a path that depends on the working directory: it does not start with `/`, `~` or `$`. */
 function isRelative(file: string): boolean {
   return !/^[/~$]/.test(file)
+}
+
+type Options = [{ allow: string[] }]
+
+/** The specifiers of the Bash rules in the option `allow`. A string that is not a Bash rule gives
+ *  none. */
+function allowed(option: string[]): (string | null)[] {
+  return option.flatMap((text) => {
+    const parsed = parsePermissionRule(text)
+    return parsed.ok && parsed.tool === 'Bash' ? [parsed.specifier] : []
+  })
 }
 
 type MessageId = 'unmatched' | 'relativePath' | 'checkExit' | 'nested'
@@ -172,7 +209,9 @@ function faults(
     found.push(['relativePath', relative])
   }
   // The exit code of the last subcommand is the exit code of the command.
-  const tail = scriptPath(parts.at(-1) as string)
+  // A word that ends a block, such as `fi`, does not set the exit code of its own.
+  const last = parts.findLast((part) => !NOT_A_COMMAND.test(part)) ?? ''
+  const tail = scriptPath(last)
   if (bash && tail !== null && CHECK_NAME.test(tail.split('/').pop() as string)) {
     found.push(['checkExit', tail])
   }
@@ -182,14 +221,25 @@ function faults(
   return found
 }
 
-const rule: MarkdownRuleDefinition<{ MessageIds: MessageId }> = {
+const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> = {
   meta: {
     type: 'suggestion',
     docs: {
       description: 'Make the injected commands of a skill robust',
       url: docsUrl(name),
     },
-    schema: [],
+    // The option `allow` lists permission rules that the rule cannot see, such as the rules in the
+    // user settings. They have the grammar of `allowed-tools`.
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          allow: { type: 'array', items: { type: 'string', minLength: 1 }, uniqueItems: true },
+        },
+        additionalProperties: false,
+      },
+    ],
+    defaultOptions: [{ allow: [] }],
     messages: {
       unmatched:
         'No `allowed-tools` Bash rule matches `{{found}}`. Outside auto mode, Claude Code aborts the skill invocation for a command that no rule allows. Add a `Bash(...)` rule to `allowed-tools`.',
@@ -206,16 +256,18 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageId }> = {
       return {}
     }
     const { sourceCode } = context
+    const [{ allow }] = context.options
+    const extra = allowed(allow)
     // The Bash rules of `allowed-tools`. Null when the rule cannot read them. A skill with no
     // frontmatter has none.
-    let rules: (string | null)[] | null = []
+    let rules: (string | null)[] | null = extra
     // False for a `powershell` shell. The `|| true` fallback is a Bash form.
     let bash = true
     const commands: { text: string; loc: ReturnType<typeof sourceCode.getLoc> }[] = []
     return {
       yaml(node) {
         const fm = readFrontmatter(sourceCode, node)
-        // A bad block hides the rules. A `powershell` shell needs `PowerShell` rules instead.
+        // A bad block hides the rules. A `powershell` shell can need `PowerShell` rules instead.
         if (fm !== null && fm.data.shell === 'powershell') {
           bash = false
         }
@@ -223,9 +275,12 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageId }> = {
           rules = null
           return
         }
-        rules = parsedEntries(skillEntries(fm, node.value)).flatMap(({ list, rule: entry }) =>
-          list === 'allow' && entry.tool === 'Bash' ? [entry.specifier] : [],
-        )
+        rules = [
+          ...extra,
+          ...parsedEntries(skillEntries(fm, node.value)).flatMap(({ list, rule: entry }) =>
+            list === 'allow' && entry.tool === 'Bash' ? [entry.specifier] : [],
+          ),
+        ]
       },
       // The inline form: `!` at the start of a line or after whitespace, then a code span.
       inlineCode(node) {
