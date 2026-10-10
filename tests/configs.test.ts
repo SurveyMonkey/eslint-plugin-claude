@@ -84,6 +84,20 @@ const badMarketSettings = JSON.stringify({
 // One string value of 2 MiB makes a file over the limit of the size rule.
 const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
+// A `.mcp.json` of 2 MiB and a few bytes. It has an `mcpServers` object, so only the size rule
+// reports it.
+const bigMcp = JSON.stringify({ mcpServers: {}, a: 'x'.repeat(2097152) })
+
+// A server list with one fault for each content rule of #16: a reserved name, a remote server with
+// an empty `url`, a header value with a trailing line break, and a `timeout` in seconds.
+const badMcpServers = {
+  workspace: { command: 'x' },
+  docs: { type: 'http', url: '' },
+  api: { type: 'http', url: 'https://x.test/mcp', headers: { Authorization: 'Bearer t\n' } },
+  build: { command: 'x', timeout: 60 },
+}
+const badMcp = JSON.stringify({ mcpServers: badMcpServers })
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -420,6 +434,27 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // The `.mcp.json` rules of #16. A project file with one fault for each content rule, a file
+  // with the VS Code key, a file over the size limit, and a clean file.
+  'packages/mc/.mcp.json': badMcp,
+  'packages/mk2/.mcp.json': '{"servers": {"db": {"command": "x"}}}',
+  'packages/mbig/.mcp.json': bigMcp,
+  'packages/mok/.mcp.json': '{"mcpServers": {"db": {"command": "x", "timeout": 5000}}}',
+  // The three paths under `.claude/` that Claude Code does not read. Only `mcp-json-location`
+  // reports them, and the content rules skip them. A nearby path is silent for every rule.
+  'packages/mu/.claude/.mcp.json': badMcp,
+  'packages/mu/.claude/mcp.json': badMcp,
+  'packages/mu/.claude/config/mcp.json': badMcp,
+  'packages/mu/.claude/other/mcp.json': badMcp,
+  // A plugin `.mcp.json` may omit the wrapper, and may hold a placeholder with an empty `url`.
+  // The plugin root is `plugins/p`, which has a manifest above. The servers-key and URL rules skip
+  // it. The name, whitespace and timeout rules read it.
+  'plugins/p/.mcp.json': JSON.stringify(badMcpServers),
+  // The same content where no rule reads it: other names and other directories.
+  'packages/mc/mcp.json': badMcp,
+  'packages/mc/.mcp.json.bak': badMcp,
+  'packages/mc/sub/mcp.json': '{"servers": {}}',
+  '.vscode/mcp.json': '{"servers": {"db": {"command": "x"}}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -498,6 +533,19 @@ const SCOPE_RULES = [
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The rules of #16 on `.mcp.json`, in the order of the `modules` list, with the files of each.
+// Each is an error.
+const MCP_PATHS = ['**/.claude/.mcp.json', '**/.claude/mcp.json', '**/.claude/config/mcp.json']
+const MCP_RULES = [
+  { name: 'mcp-json-location', files: MCP_PATHS },
+  { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
+  { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
+  { name: 'mcp-server-name-reserved', files: ['**/.mcp.json'] },
+  { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
+  { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
+  { name: 'mcp-timeout-min', files: ['**/.mcp.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -695,6 +743,23 @@ const EXPECTED = [
   'packages/z/.claude/agents/dup1.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/dup2.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
+  // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`, and no other file.
+  // The paths under `.claude/` get the location report only.
+  ...[
+    'mcp-server-name-reserved',
+    'mcp-remote-url-empty',
+    'mcp-hidden-whitespace',
+    'mcp-timeout-min',
+  ].map((rule) => `packages/mc/.mcp.json: claude/${rule}@2`),
+  'packages/mk2/.mcp.json: claude/mcp-json-servers-key@2',
+  'packages/mbig/.mcp.json: claude/mcp-json-file-size@2',
+  ...['.claude/.mcp.json', '.claude/mcp.json', '.claude/config/mcp.json'].map(
+    (file) => `packages/mu/${file}: claude/mcp-json-location@2`,
+  ),
+  // The plugin file has no wrapper. The URL rule skips the placeholder.
+  ...['mcp-server-name-reserved', 'mcp-hidden-whitespace', 'mcp-timeout-min'].map(
+    (rule) => `plugins/p/.mcp.json: claude/${rule}@2`,
+  ),
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -795,6 +860,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...MCP_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
     ])
   })
 
@@ -812,6 +881,7 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...MCP_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -872,6 +942,15 @@ describe('configs', () => {
 
   it('gives each rule of the scope layer one JSON block for its files', () => {
     for (const { name, files } of SCOPE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each .mcp.json rule one JSON block for its files', () => {
+    for (const { name, files } of MCP_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )
