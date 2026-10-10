@@ -375,7 +375,7 @@ function movedBodyOf(f: Finding, move: NonNullable<Finding['move']>, blob: strin
     '',
     '## Scope',
     '',
-    `1. In each file above, change the footnote to the new heading and the anchor \`${encodeURIComponent(move.blockId)}\`. Keep the one-line form \`[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)\`.`,
+    `1. In each file above, change the footnote to the new heading and the anchor \`${encodeURIComponent(move.blockId)}\`. Keep the one-line form \`[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)\`. Compare the anchor with the anchor on the page, because the site anchor is not always the slug of the heading.`,
     '2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.',
     '3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.',
     '4. Close this issue with the pull request.',
@@ -542,8 +542,8 @@ export function validate(value: unknown): asserts value is Finding {
   }
 }
 
-// True for a list of inventory rows by section: each section has a name, is
-// in the list once, and has one valid rule ID or more, each once.
+// True for a list of inventory rows by section. Each section has a name, and
+// is in the list once. It has one valid rule ID or more, each once.
 function rowsFit(sections: unknown[]): boolean {
   const names = new Set<string>()
   return sections.every((s) => {

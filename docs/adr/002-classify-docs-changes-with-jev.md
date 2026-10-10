@@ -71,8 +71,8 @@ below `no` is a no. A value between them goes to a person.
 
 Code decides these cases with no model call:
 
-- A removed block and an added block on one page have the same body hash: `moved`, when a rule
-  or an inventory row cites the old block (Decision 6). When nothing cites the old block: no
+- A removed block and an added block on one page have the same body hash, and a rule or an
+  inventory row cites the old block: `moved` (Decision 6). When nothing cites the old block: no
   finding.
 - A block that a heading cites is gone, and it is not a move: `rule-removal`.
 - A block that no rule cites is gone: no finding.
@@ -198,17 +198,18 @@ Each issue body starts with
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. The hash is the new block
 hash. For a removed block, it is `gone:` and the old hash, so a removal never matches an issue
 about the new text of the block. For a moved block, the block ID is the old one. The hash is
-that of the new block. The block ID comes from the docs, so the marker holds it URI encoded. ` rules=<ids>` lists the rules of the issue, and is not there when the issue names no
-rule.
+that of the new block. The block ID comes from the docs, so the marker holds it URI encoded.
+` rules=<ids>` lists the rules of the issue, and is not there when the issue names no rule.
 
 All findings for one page, block and hash in one run give one issue, with all their rules and
 reasons. The first kind in this list names the issue: `moved`, `rule-removal`, `rule-update`,
 `needs-triage`, `new-rule`. `moved` is first, because the issue keeps the fields of the first
 kind only. Only a `moved` finding has the new heading. Before it opens an issue,
 `scripts/docs-issues.ts` reads the bodies of all open issues. An open issue for the same page,
-block and hash stops a new issue when the open issues name all its rules. The kind does not count. A Jev answer near a threshold
-can change the kind from one run to the next. A rule that the open issues do not name gives a
-new issue. A block that changes again has a new hash, so it gets a new issue.
+block and hash stops a new issue when the open issues name all its rules. The kind does not
+count. A Jev answer near a threshold can change the kind from one run to the next. A rule that
+the open issues do not name gives a new issue. A block that changes again has a new hash, so it
+gets a new issue.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
 person closes it first, the next run opens it again.
@@ -243,11 +244,11 @@ These give no move, and each block keeps the findings of a removed or an added b
 - the page title, old or new
 - a move from one page to another page.
 
-**The cross-reference line.** When a removed heading and an added heading on one page share three
-or more words, and the two blocks are not a move, each finding of the two blocks names the other
-block. A word is a run of letters and digits, in lowercase. Each word counts once. A word of one
-or two characters does not count. When the snapshot has no text for the old block, its block
-key is its heading.
+**The cross-reference line.** A removed heading and an added heading on one page can share three
+or more words. When neither block is part of a move, each finding of the two blocks names the
+other block. A word is a run of letters and digits, in lowercase. Each word counts once. A word
+of one or two characters does not count. The old heading is the mapped heading, else the title
+in the stored page text. Without these, it is the inventory heading, else the block key.
 
 **The issue.** A `moved` issue is a Task titled
 `docs(<rules>): move the footnote of <rules> to the renamed heading`. With no rule, the title is

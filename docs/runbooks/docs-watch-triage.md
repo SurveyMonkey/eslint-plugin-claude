@@ -1,6 +1,6 @@
 ---
 type: Runbook
-description: How a person or a Claude Code session triages the issues that the docs watch opens after a Claude Code docs change, refreshes the snapshot, and matches the two issues of a moved section.
+description: How a person or a Claude Code session triages the issues that the docs watch opens after a Claude Code docs change, refreshes the snapshot, resolves a `moved` issue, and matches the two issues of a move that the job does not see.
 owner: brianespinosa
 created: 2026-09-29
 stale_after: 2027-03-29
@@ -32,7 +32,7 @@ kind.
 | `rule-removal` | A block that a rule cites is gone, or Jev says the rule has no purpose left. | Remove the rule, or find the new place of the text and move the map entry. |
 | `new-rule` | A block that no heading cites states a requirement that a lint check can measure. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Add a row to `docs/rules-inventory.md` and open a rule issue, or close the issue. For named rows, check each row against the new text instead. |
 | `needs-triage` | The classifier could not decide. The Jev answer was between two thresholds, a call failed, the block or its changed lines were too large, a mapped heading appears twice or cannot be found, the snapshot has no source for a mapped heading, or a page has no snapshot. When the body names inventory rows, those rows cite the block, and their group issues are closed. | Read the block, and treat the issue as one of the other kinds. |
-| `moved` | A block that a rule or an inventory row cites moved to a new heading on the same page, and its body did not change. | Change each footnote that the issue names to the new heading (see [A moved section](#a-moved-section)). |
+| `moved` | A block that a rule or an inventory row cites moved to a new heading on the same page. Its body did not change. | Change each footnote that the issue names to the new heading (see [A moved section](#a-moved-section)). |
 
 An issue of any kind can name inventory rows. A `rule-update` or `rule-removal` issue names them
 when a whole-page rule cites the page of the block.
@@ -75,7 +75,9 @@ Do these steps for a `moved` issue. They are the Scope of the issue.
 
 1. In each file that the issue names, change the footnote. Use the new heading and the anchor
    that the issue gives. Keep the one-line form
-   `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`.
+   `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`. The
+   anchor in the issue is the block key. Compare it with the anchor on the page, because the
+   site anchor is not always the slug of the heading.
 2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.
 3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.
 4. Close the issue with the pull request.
@@ -89,7 +91,7 @@ These cases still give two issues, and a person matches them:
 - The snapshot of the page has no body hash. A snapshot file from before the body hash does not
   have it. The next `update` of the page writes it.
 - Two removed blocks, or two added blocks, have the same body. The job does not guess the pair.
-- The block has no body: its heading is followed at once by the next heading.
+- The block has no body: the next heading follows its heading at once.
 
 The two issues are a `rule-removal` issue for the old heading and a `new-rule` issue for the new
 heading. The job opens the `new-rule` issue only when Jev says that the new block states a

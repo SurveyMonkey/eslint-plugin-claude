@@ -1374,7 +1374,8 @@ describe('the moved kind (#152)', () => {
     expect(api.titleOf({ ...moved, rules: ['a'] })).toBe(
       'docs(a): move the footnote of a to the renamed heading',
     )
-    // The title of #117 is too long, so the cut rule of every title applies.
+    // The moved title for the rule of #117 is too long, so the cut rule of
+    // every title applies.
     expect(api.titleOf(moved)).toBe(
       'docs(settings-env-value-format): move the footnote of settings-env...',
     )
@@ -1397,7 +1398,7 @@ describe('the moved kind (#152)', () => {
       `- Hashes: old \`${'c'.repeat(64)}\`, new \`${'d'.repeat(64)}\``,
       '- `docs/rules/settings-env-value-format.md`: the footnote that cites `In settings files`',
       '- `docs/rules-inventory.md`: the footnote that cites `In settings files`, for the Settings rows `settings-env-ignored-var`',
-      '1. In each file above, change the footnote to the new heading and the anchor `set-variables-in-settings-files`. Keep the one-line form `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`.',
+      '1. In each file above, change the footnote to the new heading and the anchor `set-variables-in-settings-files`. Keep the one-line form `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`. Compare the anchor with the anchor on the page, because the site anchor is not always the slug of the heading.',
       '2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.',
       '3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.',
       '4. Close this issue with the pull request.',
@@ -1482,6 +1483,8 @@ describe('the moved kind (#152)', () => {
         { section: 'Settings', rules: ['b'] },
       ],
       [null],
+      [{ section: 3, rules: ['a'] }],
+      [{ section: 'Settings', rules: [3] }],
     ]) {
       expect(() => api.validate({ ...moved, move: { ...move, sections } })).toThrow(
         'a moved finding has no sections list, or a section that is not valid',
@@ -1511,6 +1514,8 @@ describe('the moved kind (#152)', () => {
       [{ heading: '', blockId: 'a' }],
       [{ heading: 'A', blockId: '' }],
       [{ heading: 'A' }],
+      [{ blockId: 'a' }],
+      [{ heading: 3, blockId: 'a' }],
       [null],
     ]) {
       expect(() => api.validate({ ...removal, possibleMoves })).toThrow(

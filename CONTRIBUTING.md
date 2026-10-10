@@ -142,8 +142,8 @@ call. It prints the findings as JSON: `rule-update`, `rule-removal`, `new-rule`,
 `needs-triage` or `moved`. An error or an unclear answer gives `needs-triage`. A removed block
 and an added block on one page with the same `bodyHash` are a move. A move gets no Jev call. It
 gives one `moved` finding when a rule or an inventory row cites the old block. A removed heading
-and an added heading can share three or more words and not be a move. Then each finding of the
-two blocks names the other block as a possible move. These fail the job: a map
+and an added heading can share three or more words. When neither block is part of a move, each
+finding of the two blocks names the other block as a possible move. These fail the job: a map
 that cites no page, a failed docs fetch, a page that the block split cannot read, and a page with
 no title.
 [ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records the questions, the thresholds
@@ -164,9 +164,9 @@ hash and the rules stops a second issue for the same change. For a changed block
 a diff, then the full old and new sections in two collapsed parts. For a moved block, the body
 names the old and new headings, the new anchor and each footnote to change. For tracked blocks,
 it posts at most one comment on each open group issue (`GROUP_ISSUES`), with the blocks that it
-did not post before. While a group issue of a block is open, a finding of the block that names no rule
-opens no issue. `--dry-run` prints each issue and each comment, and opens and posts none. A
-manual run of the workflow takes a `dry_run` input.
+did not post before. While a group issue of a block is open, a finding of the block that names
+no rule opens no issue. `--dry-run` prints each issue and each comment, and opens and posts
+none. A manual run of the workflow takes a `dry_run` input.
 
 To triage the issues and the comments, follow the
 [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
