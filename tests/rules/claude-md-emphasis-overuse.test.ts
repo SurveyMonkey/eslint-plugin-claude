@@ -1,5 +1,5 @@
-// The best-practices page says to add emphasis such as "IMPORTANT" to a line that Claude keeps
-// skipping, and warns that "if you emphasize many lines, none of them stands out"
+// The best-practices page says to add emphasis such as "IMPORTANT" to a line that Claude
+// does not follow, and warns that "if you emphasize many lines, none of them stands out"
 // (https://code.claude.com/docs/en/best-practices#write-an-effective-claude-md). The docs give no
 // number, so the rule has the option `max` and no default. It makes no report when the option is
 // not set. The globs are in tests/configs.test.ts.
