@@ -43,7 +43,7 @@ The rule checks a plugin skill in `<plugin>/skills/<name>/SKILL.md` and a plugin
 
 The rule reads the repository files only (ADR 001, Decision 14).
 
-Fail, in the plugin `my-plugin`:
+Fail, in the plugin `my-plugin`, with `minVersion: '2.1.230'`:
 
 ```markdown
 ---
@@ -72,7 +72,7 @@ description: Reviews a change.
 ```
 
 With no `minVersion`, the rule is inactive and makes no report. The `recommended` and `strict`
-configs set no option, so a team turns the rule on when it sets its floor. The example turns the
+configs set no option. A team turns the rule on when it sets its floor. The example turns the
 rule on for a floor older than 2.1.246. When `minVersion` is `2.1.246` or later, the rule makes
 no report. The value has three numbers, such as `2.1.246`.
 

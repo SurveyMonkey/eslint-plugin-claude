@@ -74,7 +74,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/skill-max-lines`](docs/rules/skill-max-lines.md) | A `SKILL.md` of 500 lines or more. Option `max` | `warn` | `warn` |
 | [`claude/skill-plugin-name-prefix`](docs/rules/skill-plugin-name-prefix.md) | A plugin skill `name` that starts with the plugin prefix, which Claude Code doubled from v2.1.216 through v2.1.245. Needs `minVersion` | `warn` | `warn` |
 | [`claude/skill-plugin-root-name`](docs/rules/skill-plugin-root-name.md) | A plugin-root `SKILL.md` with no `name` | `warn` | `warn` |
-| [`claude/skill-shell-platform`](docs/rules/skill-shell-platform.md) | A `shell` key that fails or does not take on a platform that the repository targets. Needs `platforms` | `warn` | `warn` |
+| [`claude/skill-shell-platform`](docs/rules/skill-shell-platform.md) | A `shell` key that fails or does not apply on a platform that the repository targets. Needs `platforms` | `warn` | `warn` |
 
 ### Subagents and output styles
 
