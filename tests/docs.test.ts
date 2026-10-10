@@ -91,6 +91,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-matcher-syntax',
     'hooks-matcher-unsupported-event',
     'hooks-no-standalone-file',
+    'hooks-powershell-placeholder',
     'hooks-script-executable',
     'hooks-script-exists',
     'lsp-duplicate-server-name',
