@@ -8,6 +8,7 @@ import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyOutputStyle } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
+import { foldersAbove } from '../folders-above.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
   entriesOf,
@@ -84,7 +85,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' | 'shadows' }> = {
     const self = path.resolve(context.filename)
     const styles = path.dirname(self)
     const project = path.dirname(path.dirname(styles))
-    const bound = repositoryRoot(styles)
+    const bound = repositoryRoot(path.dirname(styles))
     const relative = (files: string[]) =>
       files
         .map((file) => `\`${path.relative(project, file).split(path.sep).join('/')}\``)
@@ -117,10 +118,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' | 'shadows' }> = {
             data: { name: own, others: relative(same) },
           })
         }
-        // Each folder from the parent of this project folder up to the repository root. The
-        // walk ends at the root of the file system. The scan reads no folder out of the repository.
+        // Each folder from the parent of this project folder up to the repository root.
         const above: string[] = []
-        for (let dir = path.dirname(project); dir !== path.dirname(dir); dir = path.dirname(dir)) {
+        for (const dir of foldersAbove(path.dirname(styles))) {
           above.push(
             ...sameName(stylesIn(path.join(dir, '.claude', 'output-styles'), bound), own, self),
           )
