@@ -22,7 +22,7 @@ Use only the handler fields that the docs list for the hook type.
 
 The docs list the fields of each handler type.[^fields] The rule reports the key of a field that is not in the
 list of the type of the handler. The docs do not say what Claude Code does with an unknown field. So the
-rule is a warning.
+severity is `warn`.
 
 | Type | Fields |
 |------|--------|
@@ -38,7 +38,7 @@ A field of another type is unknown, too. A `url` on a `command` hook is an examp
 Two other rules own related faults, so this rule makes no report for them:
 
 - [`hooks-config-schema`](hooks-config-schema.md) reports a handler with no `type` or an unknown `type`, a
-  missing required field, and a field of the wrong type. This rule skips a handler with no valid `type`.
+  required field that is absent, and a field of the wrong type. This rule skips a handler with no valid `type`.
 - [`hooks-handler-field-ignored`](hooks-handler-field-ignored.md) reports `async`, `asyncRewake`,
   `continueOnBlock` and `onFailure` on a hook where Claude Code ignores them. This rule makes no second report
   for these four fields.
