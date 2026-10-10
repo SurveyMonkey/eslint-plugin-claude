@@ -88,6 +88,8 @@ const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 // the cheapest text for the Markdown parser.
 // A rule file that sets a scope.
 const SCOPED_RULE = '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n'
+// A file of 201 lines, one over the limit of the line rules.
+const LONG = 'x\n'.repeat(201)
 const bigMarkdown = `<!--${'x'.repeat(4194305 - 7)}-->`
 
 const TREE: Record<string, string> = {
@@ -491,6 +493,41 @@ const TREE: Record<string, string> = {
   'packages/md/ok/CLAUDE.md': '@../f2.md\n',
   'packages/md/docs/notes.md': '@../f1.md\n',
   'packages/mda/AGENTS.md': '@f1.md\n',
+  // `claude-md-max-lines`: a file of 201 lines in each place that it lints, and an import of a long
+  // file. The same text where no rule reads it: a Markdown file that is not an instruction file.
+  'packages/lm/CLAUDE.md': LONG,
+  'packages/lm/.claude/CLAUDE.md': LONG,
+  'packages/lm/CLAUDE.local.md': LONG,
+  'packages/lm/docs/notes.md': LONG,
+  'packages/lma/AGENTS.md': LONG,
+  'packages/lmi/CLAUDE.md': '@long.md\n',
+  'packages/lmi/long.md': LONG,
+  // `rules-max-lines`: a rule file of 201 lines. The same text outside `.claude/rules/`.
+  'packages/rm/.claude/rules/long.md': LONG,
+  'packages/rm/docs/long.md': LONG,
+  // `memory-index-max-size`: the index of a subagent. The same text in a topic file and in a
+  // file that is not below `.claude/agent-memory/<name>/`.
+  'packages/mi/.claude/agent-memory/rev/MEMORY.md': LONG,
+  'packages/mi/.claude/agent-memory/rev/topic.md': LONG,
+  'packages/mi/MEMORY.md': LONG,
+  // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
+  // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
+  // file, which the rule does not lint.
+  'packages/ix/.git': 'gitdir: ../.git\n',
+  'packages/ix/docs/in.md': '# In\n',
+  'packages/ix/CLAUDE.md': '@docs/in.md @~/mine.md\n',
+  'packages/ix/.claude/CLAUDE.md': '@/nowhere/x.md\n',
+  'packages/ix/CLAUDE.local.md': '@~/mine.md\n',
+  'packages/ixa/.git': 'gitdir: ../.git\n',
+  'packages/ixa/AGENTS.md': '@~/mine.md\n',
+  // `claude-md-symlink`: a CLAUDE.md that is a link, made in `beforeAll`. A regular file passes.
+  'packages/cs/notes.md': '# Notes\n',
+  'packages/cs/sub/CLAUDE.md': '# Sub\n',
+  // `memory-auto-memory-directory-committed`: the key in each project settings file. A managed file
+  // passes.
+  'packages/ad/.claude/settings.json': '{"autoMemoryDirectory": "~/mem"}',
+  'packages/ad/.claude/settings.local.json': '{"autoMemoryDirectory": "~/mem"}',
+  'packages/ad/managed-settings.json': '{"autoMemoryDirectory": "~/mem"}',
   // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
   // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
@@ -631,6 +668,18 @@ const MEMORY_RULES = [
   'rules-md-extension',
   'rules-paths-glob-valid',
   'rules-symlink-external-scoped',
+]
+
+// The warn rules of #13 that follow, in the order of the `modules` list. Each has one block for its
+// own language.
+const MEMORY_WARN_RULES = [
+  'claude-md-import-external',
+  'claude-md-max-lines',
+  'claude-md-symlink',
+  'memory-auto-memory-directory-committed',
+  'memory-index-max-size',
+  'rules-max-lines',
+  'rules-symlink-external',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -818,6 +867,29 @@ const EXPECTED = [
   'packages/md/.claude/CLAUDE.md: claude/claude-md-import-max-depth@2',
   'packages/md/CLAUDE.local.md: claude/claude-md-import-max-depth@2',
   'packages/mda/AGENTS.md: claude/claude-md-import-max-depth@2',
+  // `claude-md-max-lines` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and the files they import.
+  'packages/lm/CLAUDE.md: claude/claude-md-max-lines@1',
+  'packages/lm/.claude/CLAUDE.md: claude/claude-md-max-lines@1',
+  'packages/lm/CLAUDE.local.md: claude/claude-md-max-lines@1',
+  'packages/lma/AGENTS.md: claude/claude-md-max-lines@1',
+  'packages/lmi/CLAUDE.md: claude/claude-md-max-lines@1',
+  // `rules-max-lines` reads Markdown below `.claude/rules/`, and no other file.
+  'packages/rm/.claude/rules/long.md: claude/rules-max-lines@1',
+  // `memory-index-max-size` reads the `MEMORY.md` of a subagent, and no other file.
+  'packages/mi/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-max-size@1',
+  // `claude-md-import-external` reads CLAUDE.md files, and no other file.
+  'packages/ix/CLAUDE.md: claude/claude-md-import-external@1',
+  'packages/ix/.claude/CLAUDE.md: claude/claude-md-import-external@1',
+  // `claude-md-symlink` reads the CLAUDE.md files that are links.
+  ...(LINKS ? ['packages/cs/CLAUDE.md: claude/claude-md-symlink@1'] : []),
+  // `rules-symlink-external` reads the rule files that are links out of the tree, and no scoped one.
+  ...(LINKS ? ['packages/rx/.claude/rules/plain.md: claude/rules-symlink-external@1'] : []),
+  // `memory-auto-memory-directory-committed` reads the two project files, and no managed file.
+  'packages/ad/.claude/settings.json: claude/memory-auto-memory-directory-committed@1',
+  'packages/ad/.claude/settings.local.json: claude/memory-auto-memory-directory-committed@1',
+  // The tree of `memory-settings-schema` sets the key too, in the two project files.
+  'packages/ms/.claude/settings.local.json: claude/memory-auto-memory-directory-committed@1',
+  'packages/ms/ok/.claude/settings.json: claude/memory-auto-memory-directory-committed@1',
   // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
   'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
@@ -940,6 +1012,8 @@ beforeAll(() => {
     mkdirSync(external, { recursive: true })
     writeFileSync(path.join(external, 'scoped.md'), SCOPED_RULE)
     writeFileSync(path.join(external, 'plain.md'), '# Rule\n')
+    // `claude-md-symlink`: a CLAUDE.md that is a link to a file in its folder.
+    symlinkSync('notes.md', path.join(root, 'packages/cs/CLAUDE.md'))
     for (const name of ['scoped', 'plain']) {
       symlinkSync(
         path.join(external, `${name}.md`),
@@ -999,6 +1073,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...MEMORY_WARN_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'warn' },
+      ]),
     ])
   })
 
@@ -1017,6 +1095,7 @@ describe('configs', () => {
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
+      ...MEMORY_WARN_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -1121,6 +1200,18 @@ describe('configs', () => {
     expect(blocks('rules-symlink-external-scoped')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.md']],
     ])
+    expect(blocks('claude-md-import-external')).toEqual([['markdown/gfm', ['**/CLAUDE.md']]])
+    expect(blocks('claude-md-max-lines')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
+    ])
+    expect(blocks('claude-md-symlink')).toEqual([['markdown/gfm', ['**/CLAUDE.md']]])
+    expect(blocks('memory-auto-memory-directory-committed')).toEqual([['json/json', PROJECT_FILES]])
+    expect(blocks('memory-index-max-size')).toEqual([
+      ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
+    ])
+    for (const rule of ['rules-max-lines', 'rules-symlink-external']) {
+      expect(blocks(rule)).toEqual([['markdown/gfm', ['**/.claude/rules/**/*.md']]])
+    }
     expect(blocks('rules-md-extension')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
     ])

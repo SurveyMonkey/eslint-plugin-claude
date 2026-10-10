@@ -28,7 +28,7 @@ function outside(code: string, options: { git?: boolean; file?: string } = {}) {
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe.skipIf(noLinks)(RULE, () => {
-  it.fails('reports a rule file that is a link out of the repository, at the start', () => {
+  it('reports a rule file that is a link out of the repository, at the start', () => {
     const messages = outside(PLAIN)
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -40,12 +40,12 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(messages[0]?.message).toContain('`.claude/rules/a.md`')
   })
 
-  it.fails('reports a rule file in a folder below .claude/rules, and in a nested .claude', () => {
+  it('reports a rule file in a folder below .claude/rules, and in a nested .claude', () => {
     expect(ids(outside(PLAIN, { file: '.claude/rules/sub/deep/b.md' }))).toEqual(['external'])
     expect(ids(outside(PLAIN, { file: 'packages/web/.claude/rules/c.md' }))).toEqual(['external'])
   })
 
-  it.fails('reports a link to a folder, at the link, for a file below it', () => {
+  it('reports a link to a folder, at the link, for a file below it', () => {
     const elsewhere = tree({ 'rules/sub/b.md': PLAIN })
     const dir = tree({})
     link(dir, '.claude/rules/shared', path.join(elsewhere, 'rules'))
@@ -55,7 +55,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(messages[0]?.message).not.toContain('b.md')
   })
 
-  it.fails('reports the .claude/rules folder when it is a link', () => {
+  it('reports the .claude/rules folder when it is a link', () => {
     const elsewhere = tree({ 'rules/sub/b.md': PLAIN })
     const dir = tree({})
     link(dir, '.claude/rules', path.join(elsewhere, 'rules'))
@@ -64,7 +64,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(messages[0]?.message).toContain('`.claude/rules`')
   })
 
-  it.fails('reports the .claude folder when it is a link', () => {
+  it('reports the .claude folder when it is a link', () => {
     const shared = tree({ 'rules/sub/b.md': PLAIN }, false)
     const dir = tree({})
     link(dir, '.claude', shared)
@@ -73,7 +73,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(messages[0]?.message).toContain('`.claude`')
   })
 
-  it.fails('reports the first link out on the way, and no more', () => {
+  it('reports the first link out on the way, and no more', () => {
     const other = tree({ 'b.md': PLAIN })
     const elsewhere = tree({})
     link(elsewhere, 'rules/b.md', path.join(other, 'b.md'))
@@ -82,7 +82,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(lintMemory(RULE, dir, '.claude/rules/b.md', PLAIN)).toHaveLength(1)
   })
 
-  it.fails('reports a link out that sits below a link inside the repository', () => {
+  it('reports a link out that sits below a link inside the repository', () => {
     const elsewhere = tree({ 'b.md': PLAIN })
     const dir = tree({})
     link(dir, '.claude/rules/dir', '../../shared')
@@ -92,7 +92,7 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(messages[0]?.message).toContain('`.claude/rules/dir/b.md`')
   })
 
-  it.fails('stays silent on a link that leads to a file or a folder in the repository', () => {
+  it('stays silent on a link that leads to a file or a folder in the repository', () => {
     const dir = tree({ 'shared/a.md': PLAIN, 'shared/rules/b.md': PLAIN })
     link(dir, FILE, '../../shared/a.md')
     link(dir, '.claude/rules/dir', '../../shared/rules')
@@ -100,20 +100,20 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(lintMemory(RULE, dir, '.claude/rules/dir/b.md', PLAIN)).toEqual([])
   })
 
-  it.fails('stays silent on a link to a folder that holds a .git, a repository of its own', () => {
+  it('stays silent on a link to a folder that holds a .git, a repository of its own', () => {
     const repo = tree({ 'rules/sub/b.md': PLAIN })
     const linked = tree({})
     link(linked, '.claude', repo)
     expect(lintMemory(RULE, linked, '.claude/rules/sub/b.md', PLAIN)).toEqual([])
   })
 
-  it.fails('stays silent on a regular file, and on a file that is not on disk', () => {
+  it('stays silent on a regular file, and on a file that is not on disk', () => {
     const dir = tree({ [FILE]: PLAIN })
     expect(lintMemory(RULE, dir, FILE, PLAIN)).toEqual([])
     expect(lintMemory(RULE, tree({}), FILE, PLAIN)).toEqual([])
   })
 
-  it.fails('does not check a file that Claude Code does not load as a rule', () => {
+  it('does not check a file that Claude Code does not load as a rule', () => {
     const elsewhere = tree({ 'a.md': PLAIN })
     const dir = tree({})
     link(dir, 'CLAUDE.md', path.join(elsewhere, 'a.md'))
@@ -122,13 +122,13 @@ describe.skipIf(noLinks)(RULE, () => {
     expect(lintMemory(RULE, dir, 'docs/a.md', PLAIN)).toEqual([])
   })
 
-  it.fails('makes no report in a tree with no .git, where the end of the repository is unknown', () => {
+  it('makes no report in a tree with no .git, where the end of the repository is unknown', () => {
     expect(outside(PLAIN, { git: false })).toEqual([])
   })
 })
 
 describe.skipIf(noLinks)(`${RULE}: the split with rules-symlink-external-scoped`, () => {
-  it.fails('makes no report for a rule with paths, which the scoped rule reports', () => {
+  it('makes no report for a rule with paths, which the scoped rule reports', () => {
     expect(outside(SCOPED)).toEqual([])
     for (const paths of [
       'paths: src/**/*.ts, docs/**',
@@ -139,7 +139,7 @@ describe.skipIf(noLinks)(`${RULE}: the split with rules-symlink-external-scoped`
     }
   })
 
-  it.fails('reports a rule with no scope, or with frontmatter that sets none', () => {
+  it('reports a rule with no scope, or with frontmatter that sets none', () => {
     for (const code of [
       '# Rule\n',
       '---\n---\n# Rule\n',
@@ -159,7 +159,7 @@ describe.skipIf(noLinks)(`${RULE}: the split with rules-symlink-external-scoped`
     }
   })
 
-  it.fails('makes no report for a link out that leads back into the repository', () => {
+  it('makes no report for a link out that leads back into the repository', () => {
     // The real path of the folder is inside the repository, so nothing is external.
     const dir = tree({ 'shared/b.md': PLAIN })
     const elsewhere = tree({})
@@ -168,7 +168,15 @@ describe.skipIf(noLinks)(`${RULE}: the split with rules-symlink-external-scoped`
     expect(lintMemory(RULE, dir, '.claude/rules/dir/b.md', PLAIN)).toEqual([])
   })
 
-  it.fails('makes no report for a link to a network path, which the network rule reports', () => {
+  it('reports a rule with paths when the file is not on disk behind a link out', () => {
+    // The scoped rule needs the real path of the file. The folder link is out of the repository.
+    const elsewhere = tree({}, false)
+    const dir = tree({})
+    link(dir, '.claude/rules/shared', elsewhere)
+    expect(ids(lintMemory(RULE, dir, '.claude/rules/shared/b.md', SCOPED))).toEqual(['external'])
+  })
+
+  it('makes no report for a link to a network path, which the network rule reports', () => {
     const dir = tree({})
     link(dir, FILE, '/net/host/a.md')
     link(dir, '.claude/rules/unc', '\\\\server\\share\\rules')
@@ -180,7 +188,7 @@ describe.skipIf(noLinks)(`${RULE}: the split with rules-symlink-external-scoped`
 })
 
 describe.skipIf(noLinks)(`${RULE}: what the rule cannot read`, () => {
-  it.fails('makes no report for a link that leads nowhere', () => {
+  it('makes no report for a link that leads nowhere', () => {
     const dir = tree({})
     link(dir, FILE, '/nowhere/a.md')
     link(dir, '.claude/rules/gone', '/nowhere')
@@ -188,7 +196,7 @@ describe.skipIf(noLinks)(`${RULE}: what the rule cannot read`, () => {
     expect(lintMemory(RULE, dir, '.claude/rules/gone/b.md', PLAIN)).toEqual([])
   })
 
-  it.skipIf(chmodCannotBlock).fails('makes no report for a path that it cannot read', () => {
+  it.skipIf(chmodCannotBlock)('makes no report for a path that it cannot read', () => {
     const dir = tree({ '.claude/rules/sub/b.md': PLAIN })
     withoutAccess(path.join(dir, '.claude/rules/sub'), () => {
       expect(lintMemory(RULE, dir, '.claude/rules/sub/b.md', PLAIN)).toEqual([])
