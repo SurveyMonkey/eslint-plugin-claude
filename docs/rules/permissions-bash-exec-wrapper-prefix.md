@@ -27,8 +27,8 @@ Exec wrappers such as `watch`, `setsid`, `ionice` and `flock` cannot be auto-app
 `Bash(watch *)`. In Manual mode they always prompt.[^wrappers] To approve one invocation, write an exact-match rule for the
 full command string.[^wrappers] A prefix rule for a wrapper is a no-op.
 
-The rule reports an `allow` entry for `Bash` or `Monitor` when its first word is `watch`, `setsid`, `ionice` or
-`flock`, and its last word is `*`. The `:*` suffix counts as a final ` *`.[^wildcards] `Monitor` uses the permission
+The rule reports an `allow` entry for `Bash` or `Monitor`. Its first word is `watch`, `setsid`, `ionice` or `flock`,
+and its last word is `*`. The `:*` suffix counts as a final ` *`.[^wildcards] `Monitor` uses the permission
 rules of Bash.[^monitor] The rule does not read `PowerShell`, because the docs state the note in the Bash section.
 
 The rule is silent for these rules:

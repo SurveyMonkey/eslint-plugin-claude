@@ -29,8 +29,8 @@ is the subcommand. A `*` in the place of the subcommand matches every git subcom
 `Bash(git * main)` also approves `git -c core.fsmonitor=<script> diff main`, where `-c` makes git run a program.[^wildcards]
 Claude Code warns about such an allow rule at startup, and it keeps the rule.[^warning]
 
-The rule reports an `allow` entry for `Bash`, `Monitor` or `PowerShell` when a word that is a bare `*` has a word after
-it, and one of these holds:
+The rule reports an `allow` entry for `Bash`, `Monitor` or `PowerShell` with a bare `*` word. A word must follow it,
+and one of these holds:
 
 - The `*` is the first word, as in `Bash(* --version)`. It stands in for the program, so any program matches.[^wildcards]
 - Only options sit between the program and the `*`, as in `Bash(git * main)` and `Bash(git -C * status *)`.
@@ -50,7 +50,7 @@ The rule skips a string that does not parse. [`permissions-rule-syntax`](permiss
 
 - A bare `Bash` and `Bash(*)` have no word after the `*`. [`permissions-allow-unrestricted`](permissions-allow-unrestricted.md)
   reports them.
-- A `*` that is part of a word, as in `Bash(ls*)`, is not a bare `*`, so this rule leaves it alone. A `:*` in the middle
+- A `*` in a longer word, as in `Bash(ls*)`, is not a bare `*`. This rule leaves it alone. A `:*` in the middle
   of a pattern, as in `Bash(git:* push)`, is literal text to Claude Code. This rule leaves it alone too.
 - A prefix rule for an environment runner or an exec wrapper is for
   [`permissions-bash-runner-wildcard`](permissions-bash-runner-wildcard.md) and
