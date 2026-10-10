@@ -5300,5 +5300,12 @@ describe('configs', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
+  // A slow CI runner needs more than the default 5 s for a run over the whole tree.
+  it('recommended reports each rule on its own files, at its own severity', async () => {
+    expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
+  }, 30_000)
+
+  it('strict reports the same files as recommended today', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
   }, 30_000)
 })
