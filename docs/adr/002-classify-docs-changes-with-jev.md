@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112]
+related_issues: [25, 112, 137, 150]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -45,8 +45,9 @@ model, and TypeSafe Jev.
 
 `scripts/docs-classify.ts` sends one request for each changed, added or removed block. All
 questions share one `state`: the page, the heading, the old text, the new text, the lines that
-each side adds, and each rule that cites the block. The questions are constants. Docs text goes
-only into the `state`, as data.
+each side adds, and each rule that cites the block. A block that is too large for one request
+has a placeholder in place of each full text. The questions are constants. Docs text goes only
+into the `state`, as data.
 
 | Question | Asked for | Yes means |
 | - | - | - |
@@ -61,7 +62,7 @@ below `no` is a no. A value between them goes to a person.
 | - | - | - | - | - | - |
 | `obsolete_<i>` | 0.5 | 0.35 | `rule-removal` | `needs-triage` | the next row |
 | `alters_<i>` | 0.5 | 0.2 | `rule-update` | `needs-triage` | no finding |
-| `requirement` | 0.5 | 0.2 | `new-rule` | `needs-triage` | no finding |
+| `requirement` | 0.5 | 0.4 | `new-rule` | `needs-triage` | no finding |
 
 Code decides these cases with no model call:
 
@@ -69,7 +70,14 @@ Code decides these cases with no model call:
 - A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
-- A block is too large for one request: `needs-triage`.
+- A block is too large for one request, and no request with its changed lines can go:
+  `needs-triage`. This is the case when the changed lines are too large, the block has one text
+  only, or the two texts have no changed line. A block with one text has no earlier or later
+  text to compare. Its text is new, or removed, or it has no stored old text.
+
+A block that is too large for one request, and has a diff that fits, gets a model call. The
+request has the lines that each side adds and no full text. The Reason of a finding from that
+request says that Jev judged the changed lines.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
 confidence value, so a finding reports `|2p - 1|` as its confidence.
@@ -122,10 +130,18 @@ Accuracy by label, on each of the four runs:
 
 **Why these thresholds.** The `no` values matter most, because a no opens no issue.
 
-- The lowest `alters` for a `rule-update` case is 0.51. The `no` value of 0.2 is far below it.
-  The two `no-change` cases between 0.2 and 0.5 go to a person.
+- The lowest `alters` for a `rule-update` case in the spike is 0.51. The `no` value of 0.2 is far
+  below it. The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
-  block is 0.73. The band from 0.2 to 0.5 is empty in this data.
+  block is 0.73. The band from 0.2 to 0.5 is empty in this spike data.
+- Seven live blocks that no rule cites had a `requirement` value from 0.21 to 0.33. They are
+  #104, #105, #110, #111, #123, #125 and #133. All seven needed no change. So the
+  `requirement` `no` value is 0.4. A skipped block is a missed candidate, not a broken rule.
+- The `alters` value stays 0.2. Two live cases fell in its band (#103 at 0.27 and #118 at
+  0.24). Neither changed the rule that it cited, and #118 led to a new rule. Two cases are too
+  few to move the value.
+- The classifier summary lists each block that needs no change. For a block that no rule
+  cites, it adds the `requirement` value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
 - The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56. A
   value below 0.5 gives `needs-triage`, not a silent miss. Both results open an issue.
@@ -144,8 +160,9 @@ One case was also rebuilt, because its old text did not agree with the current r
 
 No Anthropic API key exists in this environment, so no Claude model classified the cases. The
 labels are the reference. The Claude Code session that wrote this change set them by hand from
-the docs, and a person has not checked them yet. The thresholds come from the same 24 cases, and
-no held-out set exists. Record new cases and their results here before you change a threshold.
+the docs, and a person has not checked them yet. The `alters` and `obsolete` values come from the
+same 24 cases, and no held-out set exists. The `requirement` `no` value also uses seven live
+cases. Record new cases and their results here before you change a threshold.
 
 ### 4. The state lives in `docs/`, and only a reviewed pull request changes it
 
