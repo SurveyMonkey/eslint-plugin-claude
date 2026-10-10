@@ -47,6 +47,7 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
+import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
@@ -189,6 +190,7 @@ const modules = [
   pluginProjectSkillsDirLimits,
   pluginCommandsDirNonempty,
   pluginDefaultDirShadowed,
+  pluginMonitorsCommandEnv,
   pluginPackageLockfile,
   pluginUserConfigNoShellFields,
 ]
@@ -305,6 +307,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-project-skills-dir-limits': 'error',
   'plugin-commands-dir-nonempty': 'error',
   'plugin-default-dir-shadowed': 'error',
+  'plugin-monitors-command-env': 'error',
   'plugin-package-lockfile': 'error',
   'plugin-user-config-no-shell-fields': 'error',
 }

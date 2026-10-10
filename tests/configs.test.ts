@@ -154,6 +154,15 @@ const TREE: Record<string, string> = {
   }),
   'plugins/ucf/.mcp.json': JSON.stringify({ mcpServers: { a: { headersHelper: userConfigRef } } }),
   'plugins/ucf/monitors/monitors.json': JSON.stringify([{ name: 'm', command: userConfigRef }]),
+  // A monitor that reads a bare variable, in the manifest and in the default file.
+  'plugins/env/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'env',
+    monitors: [{ name: 'm', description: 'd', command: '$CLAUDE_PLUGIN_ROOT/m.sh' }],
+  }),
+  'plugins/env2/.claude-plugin/plugin.json': JSON.stringify({ name: 'env2' }),
+  'plugins/env2/monitors/monitors.json': JSON.stringify([
+    { name: 'm', description: 'd', command: 'tail -F $CLAUDE_PLUGIN_DATA/log' },
+  ]),
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -575,6 +584,10 @@ const PLUGIN_RULES = [
   },
   { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-default-dir-shadowed', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-monitors-command-env',
+    files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
+  },
   { name: 'plugin-package-lockfile', files: ['**/.claude-plugin/plugin.json'] },
   {
     name: 'plugin-user-config-no-shell-fields',
@@ -634,6 +647,8 @@ const EXPECTED = [
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
+  'plugins/env/.claude-plugin/plugin.json: claude/plugin-monitors-command-env@2',
+  'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
   'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',

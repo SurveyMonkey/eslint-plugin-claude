@@ -919,6 +919,23 @@
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
     }
   ],
+  "plugin-monitors-command-env": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Monitors",
+      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Where each variable resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields that run through a shell",
+      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
+    }
+  ],
   "plugin-no-project-plugins-dir": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",

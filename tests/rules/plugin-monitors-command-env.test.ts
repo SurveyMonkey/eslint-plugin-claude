@@ -9,7 +9,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-monitors-command-env'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json']
 const MANIFEST = '.claude-plugin/plugin.json'
@@ -48,8 +48,8 @@ describe(RULE, () => {
       messageId: 'pathVariable',
       message: path_('CLAUDE_PLUGIN_DATA'),
       line: 1,
-      column: 40,
-      endColumn: 76,
+      column: 44,
+      endColumn: 77,
     })
   })
 
@@ -195,6 +195,7 @@ describe(`${RULE} (silent)`, () => {
     ['monitors/other.json', 'monitors/other.json'],
     ['.claude-plugin/other.json', '.claude-plugin/other.json'],
     ['hooks/hooks.json', 'hooks/hooks.json'],
+    ['.mcp.json', '.mcp.json'],
   ])('stays silent for a file with the name %s', (_title, file) => {
     const { dir } = pluginTree({ name: 'p' })
     const code = JSON.stringify({ monitors: monitorOf('$CLAUDE_PLUGIN_ROOT') })
