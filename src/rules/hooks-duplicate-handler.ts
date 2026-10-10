@@ -1,4 +1,4 @@
-// A handler that is in a plugin and in the project settings, or twice in a plugin
+// A handler that is in a plugin and in the project settings, or in two sources of one plugin
 // (docs/rules/hooks-duplicate-handler.md). The plugins reference says that `hooks/hooks.json` and the
 // `hooks` key of `plugin.json` both load. The plugin guide says that a hook in a settings file and in a
 // plugin `hooks.json` runs twice. The hooks reference says that a handler in two settings files runs once.
@@ -111,7 +111,7 @@ const rule: Rule.RuleModule = {
     type: 'suggestion',
     docs: {
       description:
-        'Do not define one hook handler in a plugin and in the project settings, or twice in a plugin',
+        'Do not define one hook handler in a plugin and in the project settings, or in two sources of one plugin',
       url: docsUrl(name),
     },
     schema: [],

@@ -25,10 +25,10 @@ configuration may change. It says to prefer command hooks for production workflo
 the `type` of each agent handler.
 
 Agent hooks run on the events that run prompt hooks, except `PermissionRequest`.[^agent] The rule reports an
-agent handler on those events, except `PermissionDenied`. Claude Code runs an agent hook there and discards
-its output. [`hooks-handler-type-event-support`](hooks-handler-type-event-support.md) owns the rest. It reports
-an agent handler on an event that does not run it, or that discards its output. So each agent handler gets one
-report from one of the two rules.
+agent handler on each event that runs it, except `PermissionDenied`. Claude Code runs an agent hook there and
+discards its output. [`hooks-handler-type-event-support`](hooks-handler-type-event-support.md) owns the rest.
+It reports an agent handler on an event that does not run it, or that discards its output. The two rules never
+report the same handler.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, no plugin agent, and no `hooks.json` that Claude Code does not read.

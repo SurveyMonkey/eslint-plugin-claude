@@ -1,7 +1,9 @@
 // A WorktreeCreate hook creates the worktree. Without a WorktreeRemove hook, Claude Code removes only a
 // worktree that git knows. A worktree of another version control system stays on disk
 // (https://code.claude.com/docs/en/hooks#worktreeremove). The rule reads one file at a time.
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import {
   command,
   FILES,
@@ -105,8 +107,17 @@ describe(`${name}: the silent cases`, () => {
 })
 
 describe(`${name}: one file at a time`, () => {
-  it('reports a create hook whose remove hook is in another settings file', () => {
-    expect(ids(create, FILES.project)).toEqual(['noRemove'])
+  it('reports a create hook whose remove hook is in another settings file on disk', () => {
+    const text = settings(create)
+    const root = repo({
+      '.claude/settings.json': text,
+      '.claude/settings.local.json': settings(remove),
+    })
+    const found = lintJson(name, text, path.join(root, '.claude/settings.json'))
+    expect(found.map((message) => message.messageId)).toEqual(['noRemove'])
+  })
+
+  it('is silent for the remove file, which holds no create hook', () => {
     expect(ids(remove, FILES.local)).toEqual([])
   })
 })

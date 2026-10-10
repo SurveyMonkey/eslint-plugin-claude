@@ -31,11 +31,12 @@ flags and commands.
 - **Exec form** (the handler sets `args`). The executable is `claude`, a path that ends in `claude`, or
   `claude.exe`. The rule reports an item of `args` that is the flag, at the item.
 - **Shell form** (no `args`). The rule splits the line into simple commands and reads quotes and backslashes.
-  It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`. It reports at the
-  string when the command word is `claude`, or a path that ends in it, and a later word is the flag.
+  It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`.
+  It reports at the string. The command word must be `claude`, or a path that ends in it. A later word must be
+  the flag.
 
-The rule does not check `--system-prompt` and `--append-system-prompt`. The CLI reference lists no system
-prompt flag as deprecated. A check for self-hosted runners would need a runtime condition, which the files
+The rule does not check `--system-prompt`, `--append-system-prompt` or their `-file` forms. The CLI reference
+lists no system prompt flag as deprecated. A check for self-hosted runners would need a runtime condition, which the files
 cannot show.
 
 Fail, in `.claude/settings.json`:

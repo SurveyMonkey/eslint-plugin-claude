@@ -12,7 +12,7 @@ generated:
 
 # `hooks-duplicate-handler`
 
-Do not define one hook handler in a plugin and in the project settings, or twice in a plugin.
+Do not define one hook handler in a plugin and in the project settings, or in two sources of one plugin.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -28,8 +28,9 @@ files define runs once.[^fields] So the rule never pairs two settings files.
 The rule compares each handler of the linted file with the handlers of the earlier sources. Two handlers are
 identical when the event, the `matcher` and every field of the handler are equal. The order of the keys does
 not matter. An omitted `matcher`, `""` and `"*"` count as one matcher, because each matches every
-occurrence of the event. The docs do not say what makes two handlers the same. A handler that differs in one field, such as
-`timeout`, is no match.
+occurrence of the event. The exception is `FileChanged`. There `"*"` joins the watch list as a file name, and
+an omitted matcher adds nothing, so they are two matchers. The docs do not say what makes two handlers the
+same. A handler that differs in one field, such as `timeout`, is no match.
 
 One pair gets one report, on the later source. The order is:
 
@@ -49,7 +50,9 @@ repository root. If it finds no `.git`, it reads the plugin folder only. A proje
 folder, as in the plugin guide.[^convert]
 
 The rule reads no file outside the repository. A file that is not there, that does not parse, or that the
-rule cannot read gives no report. The rule does not read a user settings file or a managed settings file.
+rule cannot read gives no report. A settings file that the rule cannot read is the one exception in scope: it
+can set `disableAllHooks`, so it stops every settings pair. A settings file that is not there, or that does
+not parse, does not. The rule does not read a user settings file or a managed settings file.
 
 `disableAllHooks` merges across the settings files. The nearest file that sets it wins, and
 `settings.local.json` wins over `settings.json`. When the merged value is `true`, no settings handler counts.
