@@ -18,6 +18,7 @@ it('points docsUrl at docs/rules in this repository', () => {
 it('gives each rule a doc and a URL that names it', () => {
   const rules = Object.entries(plugin.rules)
   expect(rules.map(([name]) => name).sort()).toEqual([
+    'agent-field-min-version',
     'agent-frontmatter-schema',
     'agent-frontmatter-valid',
     'agent-mcp-servers-schema',

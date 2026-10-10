@@ -2,6 +2,7 @@ import { createRequire } from 'node:module'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
+import agentFieldMinVersion from './rules/agent-field-min-version.ts'
 import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
 import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
 import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
@@ -139,6 +140,7 @@ const modules = [
   agentTeamsNoProjectConfig,
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
+  agentFieldMinVersion,
   agentNoBom,
   permissionsRuleSyntax,
   permissionsUnknownTool,
@@ -258,6 +260,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-teams-no-project-config': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
+  'agent-field-min-version': 'warn',
   'agent-no-bom': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
