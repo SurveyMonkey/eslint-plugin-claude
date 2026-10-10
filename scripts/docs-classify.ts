@@ -709,7 +709,8 @@ export function planPage({
     return before.has(id) && id !== storedTitle ? id : undefined
   }
   const trackedRows = new Map<string, Rows>()
-  // The first inventory heading that finds each block.
+  // An inventory heading that finds each block. When two headings find one
+  // block, the last one stays.
   const citeHeading = new Map<string, string>()
   for (const cite of inventory) {
     const key = keyOfCite(cite)
@@ -717,7 +718,7 @@ export function planPage({
     const list = trackedRows.get(key) ?? []
     addRows(list, cite.rows)
     trackedRows.set(key, list)
-    if (!citeHeading.has(key)) citeHeading.set(key, cite.heading)
+    citeHeading.set(key, cite.heading)
   }
   const tracked: Tracked[] = []
   // A block that an inventory row cites, and that no mapped heading cites
