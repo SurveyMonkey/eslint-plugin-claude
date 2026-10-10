@@ -9,7 +9,7 @@ import { pluginTree } from '../plugin-tree.test-support.ts'
 import { lintMarkdown } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-user-config-sensitive-in-content'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const option = (extra: Record<string, unknown> = {}) => ({

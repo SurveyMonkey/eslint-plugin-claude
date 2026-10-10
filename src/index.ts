@@ -248,6 +248,7 @@ import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts
 import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
+import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
 import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
@@ -705,6 +706,7 @@ const modules = [
   pluginMonitorsSkillExists,
   pluginNpmSourceShrinkwrap,
   pluginSettingsSingleSource,
+  pluginUserConfigSensitiveInContent,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1078,6 +1080,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-monitors-skill-exists': 'error',
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
+  'plugin-user-config-sensitive-in-content': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
