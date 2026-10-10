@@ -20,7 +20,7 @@ const DRIVE = /^[A-Za-z]:/
  *  path from the plugin root with `/` separators. The result is `evals` when
  *  the value is not there, is not a string, or is not a relative path of
  *  plain directory names. */
-export function evalDirName(document: DocumentNode): string {
+function evalDirName(document: DocumentNode): string {
   const value = lastMember(lastMember(document.body, 'experimental')?.value, 'evals')?.value
   return value?.type === 'String' &&
     !DRIVE.test(value.value) &&
