@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/mcp",
-  "hash": "7ef0c97a0e48229b972a97db9adef998f9cf4e22a86223b861b324d28cef21cb",
+  "hash": "3b8b9783292cd6516679e2a0ab32e6de707526a0297196bc94b959d40b9b5c6f",
   "blocks": [
     {
       "id": "connect-claude-code-to-tools-via-mcp",
@@ -60,7 +60,7 @@
     },
     {
       "id": "project-server-approvals-and-workspace-trust",
-      "hash": "1a22572e8875db0366c846bbda15cb867e2f11fbf32afb6725f8fb740478bcf6"
+      "hash": "797327fe677dd36d57b98ee0fd3f878f2035814bd5e2173e5ccf82d27297b255"
     },
     {
       "id": "server-status-detail",
@@ -188,7 +188,7 @@
     },
     {
       "id": "authenticate-with-remote-mcp-servers",
-      "hash": "d4d72826a429059a4c0f8070822b649e883f4167610c3bb799db31b2cb2f6180"
+      "hash": "7cfc4f7df94ca472ee4e0b442534e310f11ecd6068098bf20b25617e6f71553a"
     },
     {
       "id": "authenticate-from-the-command-line",
@@ -208,7 +208,7 @@
     },
     {
       "id": "restrict-oauth-scopes",
-      "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
+      "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
     },
     {
       "id": "use-dynamic-headers-for-custom-authentication",

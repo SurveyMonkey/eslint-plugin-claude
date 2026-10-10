@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "1869e5bf299ee0b1a1e3732d5e26f85aa6d44b9a99ffdb116a2b587b5bc2a02e",
+  "hash": "632ca58b63afeac3dde90eef93e55f4b91039dc49d8c39754e31760de7f74e1c",
   "blocks": [
     {
       "id": "all-settings",
@@ -176,7 +176,7 @@
     },
     {
       "id": "permissions-defaultmode",
-      "hash": "5b102b8dbee9706b9f162be5862b977997f8d18c96ead5e65daaf508f7a69301"
+      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
     },
     {
       "id": "permissions-disablebypasspermissionsmode",
@@ -284,7 +284,7 @@
     },
     {
       "id": "invalid-credential-entries-in-managed-settings",
-      "hash": "bd0f8bfa4a80bdf4d22a431dd1fb66a306454466c38e8ca85a7158fcf5d92de1"
+      "hash": "c4997cd8ee1c15271277fcfd9c652c012e6841c99d21e566c0a517adb71cbe47"
     },
     {
       "id": "sandbox-credentials-files",
@@ -891,6 +891,10 @@
       "hash": "aeb67466138ce8a2f07d188ee54ec73d6fe3d154835409014f3b68a9de3ec274"
     },
     {
+      "id": "worktree-location",
+      "hash": "9fdadfe5018be165d0d4f935190f2ca9828ff4974f80e8adacd34a616ae23acf"
+    },
+    {
       "id": "remote-desktop-and-notifications",
       "hash": "af234a20440b27c1c91c92483708dc1c8582d3e5bcbe9264161be875d74dc9ba"
     },
@@ -920,7 +924,7 @@
     },
     {
       "id": "enableartifact",
-      "hash": "74b6999db6eab1b71aa85ee88c6a51a2722ae9164f0f6ea4e1768f826c1a3b74"
+      "hash": "e117748af17cbe4ab1e9dec130e6f0144be9f15e882ef495b47307855fd60233"
     },
     {
       "id": "inputneedednotifenabled",
@@ -940,7 +944,7 @@
     },
     {
       "id": "sshconfigs",
-      "hash": "722e745a4ff8919bb901747acb7cad7e6716809d10d66d45ef8296bbe902f17e"
+      "hash": "91f3aff3cb0349e5c060e2ba6bd85230d1931d48bde429952de4b3bb47f96684"
     },
     {
       "id": "sshhostallowlist",
@@ -980,7 +984,7 @@
     },
     {
       "id": "forceloginorguuid",
-      "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9"
+      "hash": "0c84d4cf19830e18cdecb7181a57dd6598c68920f436bc5a19a78ecda86df313"
     },
     {
       "id": "gatewayinternalnetworks",
@@ -1120,7 +1124,7 @@
     },
     {
       "id": "copyfullresponse",
-      "hash": "36d90279367073969bccf903a9d5aa2374d55e300c0e1cdb3c27c097ae1a835b"
+      "hash": "b003c62c7eeb806567567fb1b73fbd2a4fa9dcbd1c5e84444033d102b859b643"
     },
     {
       "id": "copyonselect",
@@ -1287,6 +1291,12 @@
       "text": "### `timeZone`\n\nShow the times in the interface in a time zone other than your system's. Set it to an [IANA time zone name](https://www.iana.org/time-zones), such as `\"UTC\"` or `\"Europe/Dublin\"`. The times that [`timeFormat`](#timeformat) controls then show in this zone. If `timeFormat` is `\"24-hour-utc\"`, times stay in UTC and Claude Code ignores this key. `/config` has no row for this key, so set it in a settings file. Requires Claude Code v2.1.257 or later.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: string, an IANA time zone name. When Claude Code doesn't recognize the name, it uses your system time zone\n* **Default**: unset, so times show in your system time zone\n\n```json settings.json theme={null}\n{\n  \"timeZone\": \"Europe/Dublin\"\n}\n```"
     },
     {
+      "heading": "defaultShell",
+      "id": "defaultshell",
+      "hash": "952236e781b8f672c75a8efbd94ebed80d2664cac9aeea378c58c97ee9f32198",
+      "text": "### `defaultShell`\n\nChoose whether Bash or PowerShell runs the shell commands you type with the [`!` prefix](/docs/en/interactive-mode#shell-mode-with-prefix) in the input box, the ones Claude Code runs directly and adds to the session.\n\n`\"powershell\"` works only while the [PowerShell tool](/docs/en/tools-reference#powershell-tool) is on. The tool is on by default on Windows without Git Bash, and on Windows with Git Bash for claude.ai and Console accounts. In Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry sessions, and on macOS, Linux, and WSL, set `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` to turn the tool on. Set that variable to `0` to turn the tool off.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: string, one of:\n  * `\"bash\"`: Claude Code runs your `!` commands in Bash\n  * `\"powershell\"`: Claude Code runs your `!` commands in PowerShell\n* **Default**: `\"bash\"`, or `\"powershell\"` on Windows when Bash isn't available\n\n```json settings.json theme={null}\n{\n  \"defaultShell\": \"powershell\"\n}\n```\n\nIf the shell you name isn't available, Claude Code uses the other one: `\"powershell\"` falls back to Bash when the PowerShell tool is off, and `\"bash\"` falls back to PowerShell when Bash isn't installed."
+    },
+    {
       "heading": "includeCoAuthoredBy",
       "id": "includecoauthoredby",
       "hash": "1e8ac2eff11dfd01279bb22bad338f3486126dbc8aa8d7110e21c5c5e1d33738",
@@ -1419,6 +1429,18 @@
       "text": "### `pluginTrustMessage`\n\nAdd your organization's own text to the plugin trust warning Claude Code shows before installation, for example to confirm that plugins from your internal marketplace are vetted.\n\n* **Scope**: [`Managed`](#scopes)\n* **Type**: string\n* **Default**: unset, so Claude Code shows the standard warning alone\n\n```json managed-settings.json theme={null}\n{\n  \"pluginTrustMessage\": \"All plugins from our marketplace are approved by IT\"\n}\n```"
     },
     {
+      "heading": "effortLevel",
+      "id": "effortlevel",
+      "hash": "c48649f2902e054f8aee91c23b860b0f1c468db5fd3e0e6b9300db95bb761d45",
+      "text": "### `effortLevel`\n\nSet a default [effort level](/docs/en/model-config#adjust-effort-level) for models you haven't saved a level for. Lower levels are faster and cheaper on straightforward tasks, and higher levels reason more deeply on complex problems.\n\nWhen you run `/effort low`, `medium`, `high`, or `xhigh` in an interactive session on your machine, Claude Code saves the level for the active model under [`modelSettings`](#modelsettings) rather than writing this key. Before v2.1.251, `/effort` wrote this key.\n\nWithin the same settings file, Claude Code uses a model's saved level rather than this key. [`modelSettings`](#modelsettings) states the cross-file precedence.\n\nIn a session attached to a remote worker, in a `-p` run, and in the Agent SDK, `/effort` applies to that session only. [Adjust effort level](/docs/en/model-config#adjust-effort-level) lists the interactive picks that also apply to that session only. The message that `/effort` prints says which happened.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: string, one of:\n  * `\"low\"`: the least reasoning, for short, scoped, latency-sensitive tasks that aren't intelligence-sensitive\n  * `\"medium\"`: reduces token usage for cost-sensitive work that can trade off some intelligence\n  * `\"high\"`: balances token usage and intelligence\n  * `\"xhigh\"`: deeper reasoning at higher token spend\n* **Default**: unset\n* **Per-session overrides**: `--effort` takes precedence over this key for one session, and [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/en/env-vars) takes precedence over both\n\n```json settings.json theme={null}\n{\n  \"effortLevel\": \"xhigh\"\n}\n```\n\nIn your user settings file, `~/.claude/settings.json`, this key is the older form `/effort` wrote before it saved levels per model, and it keeps applying where it applied before, on Opus 5, Fable 5.1, and earlier models. Opus 5.5 and models released after it ignore it and start at their own default until you save a level for them, which `/effort` writes under [`modelSettings`](#modelsettings). In project, local, and managed settings, and with `--settings`, this key applies to every model."
+    },
+    {
+      "heading": "maxEffortLevel",
+      "id": "maxeffortlevel",
+      "hash": "9300ac5a4a77a5e131ebbc90540f3d4efbabb6e35574557786d256b3739eba93",
+      "text": "### `maxEffortLevel`\n\nCap the [effort level](/docs/en/model-config#adjust-effort-level) a session can use, leaving lower levels available. Any higher level runs at the cap instead, including one from `/effort`, the `/model` picker, `--effort`, [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/en/env-vars), a skill's or subagent's `effort` frontmatter, or the model's own default. Claude Code applies the cap itself before each request, so it holds on every provider, including Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry. Requires Claude Code v2.1.267 or later.\n\n* **Scope**: [`Any file`](#scopes). Deploy it in managed settings to enforce it for an organization. When several scopes set a cap, the lowest applies, so a cap set in one scope can't be raised from another\n* **Type**: string, one of `\"low\"`, `\"medium\"`, `\"high\"`, `\"xhigh\"`, or `\"max\"`. A `\"max\"` value sets no cap\n* **Default**: unset, so no cap applies\n* **Per-model caps**: add `maxEffortLevel` to a model's [`modelSettings`](#modelsettings) entry. That entry replaces this key for the model only within the settings source that sets both, such as your user settings or one [managed source](/docs/en/managed-settings#how-claude-code-combines-managed-sources). Set `\"max\"` there to exempt the model from that source's cap; Claude Code still applies caps from other sources\n\nThis example caps every model at `medium` and exempts Sonnet 4.6:\n\n```json settings.json theme={null}\n{\n  \"maxEffortLevel\": \"medium\",\n  \"modelSettings\": {\n    \"claude-sonnet-4-6\": {\n      \"maxEffortLevel\": \"max\"\n    }\n  }\n}\n```\n\nWhen your organization also sets an [effort limit](/docs/en/model-config#organization-effort-limits) for a model, the lower of the two caps applies."
+    },
+    {
       "heading": "managedSourcesBehavior",
       "id": "managedsourcesbehavior",
       "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3",
@@ -1505,8 +1527,8 @@
     {
       "heading": "forceLoginOrgUUID",
       "id": "forceloginorguuid",
-      "hash": "551970c7e2afeb8c2856d70d2e057cbd3f28f5ac97024500d3ad67f949d3b2e9",
-      "text": "### `forceLoginOrgUUID`\n\nFrom a managed source, require claude.ai account logins to belong to one Anthropic organization, given as a single UUID, or to any of several organizations, given as an array. From any settings file, Claude Code also uses a single UUID to pre-select that organization during a claude.ai or Claude Console login, and pre-selects nothing for an array. If you set the key in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to and creates an API key instead.\n\n* **Scope**: [`Any file`](#scopes). Only a managed source enforces the restriction; a single UUID in any other settings file pre-selects the organization during login without restricting it.\n* **Type**: string, one UUID, or array of strings, several UUIDs\n* **Default**: unset, so any organization can log in\n\nThis example accepts logins from either of two organizations without pre-selecting one:\n\n```json managed-settings.json theme={null}\n{\n  \"forceLoginOrgUUID\": [\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\", \"yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy\"]\n}\n```\n\nIf a managed source sets an empty array, or a value Claude Code can't parse, Claude Code blocks every login with a misconfiguration message.\n\nSee [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how Claude Code treats Claude Console logins, the other login paths, and environment credentials."
+      "hash": "0c84d4cf19830e18cdecb7181a57dd6598c68920f436bc5a19a78ecda86df313",
+      "text": "### `forceLoginOrgUUID`\n\nFrom a managed source, require claude.ai account logins to belong to one Anthropic organization, given as a single UUID, or to any of several organizations, given as an array. From any settings file, Claude Code also uses a single UUID to pre-select that organization during a claude.ai or Claude Console login, and pre-selects nothing for an array. If you set the key in any settings file, Claude Code also stops offering the [keyless Console sign-in](/docs/en/authentication#sign-in-without-an-api-key) in the sessions that file applies to and creates an API key instead.\n\n* **Scope**: [`Any file`](#scopes). Only a managed source enforces the restriction; a single UUID in any other settings file pre-selects the organization during login without restricting it.\n* **Type**: string, one UUID, or array of strings, several UUIDs\n* **Default**: unset, so any organization can log in\n\nThis example accepts logins from either of two organizations without pre-selecting one:\n\n```json managed-settings.json theme={null}\n{\n  \"forceLoginOrgUUID\": [\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\", \"yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy\"]\n}\n```\n\nIf a managed source sets an empty array, or a value that isn't a string or an array of strings, users who sign in with an Anthropic account can't start Claude Code or complete a login. They see a message that names `forceLoginOrgUUID` and tells them to contact their administrator. A [`policyHelper`](#policyhelper) that emits a value of the wrong type [fails its run](#helper-failures) instead.\n\nSee [Restrict login to your organization](/docs/en/authentication#restrict-login-to-your-organization) for how Claude Code treats Claude Console logins, the other login paths, and environment credentials."
     },
     {
       "heading": "alwaysThinkingEnabled",
@@ -1517,8 +1539,8 @@
     {
       "heading": "enableArtifact",
       "id": "enableartifact",
-      "hash": "74b6999db6eab1b71aa85ee88c6a51a2722ae9164f0f6ea4e1768f826c1a3b74",
-      "text": "### `enableArtifact`\n\nTurn off the [Artifact](/docs/en/artifacts) tool, which publishes session output as a private web page on claude.ai. When you turn the **Artifacts** row off in `/config`, Claude Code writes this key to your user settings, so you don't usually edit it by hand. Requires Claude Code v2.1.196 or later.\n\n* **Scope**: [`Any file`](#scopes). Every file can turn the tool off, and none can turn it back on.\n* **Type**: Boolean\n  * `false`: Claude Code turns the Artifact tool off for every session the file applies to\n  * `true`: the same as leaving the key unset, because it never overrides a `false` from another file, from [`CLAUDE_CODE_DISABLE_ARTIFACT`](/docs/en/env-vars), or from your organization's [admin setting](/docs/en/artifacts#manage-artifacts-for-your-organization)\n* **Default**: unset, so the tool follows your account's [availability](/docs/en/artifacts#availability)\n\n```json settings.json theme={null}\n{\n  \"enableArtifact\": false\n}\n```\n\nWhile a source other than your own user settings keeps the tool turned off, Claude Code hides the **Artifacts** row in `/config`, because turning it on there wouldn't change anything. [Disable artifacts](/docs/en/artifacts#disable-artifacts) lists every way to turn the tool off."
+      "hash": "e117748af17cbe4ab1e9dec130e6f0144be9f15e882ef495b47307855fd60233",
+      "text": "### `enableArtifact`\n\nTurn off the [Artifact](/docs/en/artifacts) tool, which publishes session output as a private web page on claude.ai. When you turn the **Artifacts** row off in `/config`, Claude Code writes this key to your user settings, so you don't usually edit it by hand.\n\n* **Scope**: [`Any file`](#scopes). Every file can turn the tool off, and none can turn it back on.\n* **Type**: Boolean\n  * `false`: Claude Code turns the Artifact tool off for every session the file applies to\n  * `true`: the same as leaving the key unset, because it never overrides a `false` from another file, from [`CLAUDE_CODE_DISABLE_ARTIFACT`](/docs/en/env-vars), or from your organization's [admin setting](/docs/en/artifacts#manage-artifacts-for-your-organization)\n* **Default**: unset, so the tool follows your account's [availability](/docs/en/artifacts#availability)\n\n```json settings.json theme={null}\n{\n  \"enableArtifact\": false\n}\n```\n\nWhile a source other than your own user settings keeps the tool turned off, Claude Code hides the **Artifacts** row in `/config`, because turning it on there wouldn't change anything. [Disable artifacts](/docs/en/artifacts#disable-artifacts) lists every way to turn the tool off."
     },
     {
       "heading": "syncClaudeAiSkills",
@@ -1645,6 +1667,18 @@
       "id": "skipwebfetchpreflight",
       "hash": "021426c8a118c8d6539cc66e87ed582be06be390e0d7d5917dedf966bbfc3215",
       "text": "### `skipWebFetchPreflight`\n\nSkip the [WebFetch domain safety check](/docs/en/data-usage#webfetch-domain-safety-check), which sends each requested hostname to `api.anthropic.com` before fetching. Set `true` in environments that block traffic to Anthropic, such as Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foundry deployments with restrictive egress.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: Boolean\n  * `true`: Claude Code skips the WebFetch domain safety check\n  * `false`: the check runs before the first fetch to each hostname in a session, and again for a hostname whose earlier check was blocked or failed\n* **Default**: unset, so the check runs before the first fetch to each hostname in a session\n\n```json settings.json theme={null}\n{\n  \"skipWebFetchPreflight\": true\n}\n```\n\nWith the check skipped, WebFetch attempts any URL without consulting the blocklist, so pair it with [`WebFetch` permission rules](/docs/en/permissions#webfetch) if you need to restrict which domains Claude can reach.\n\n<span id=\"managed-policy\" />"
+    },
+    {
+      "heading": "worktree.symlinkDirectories",
+      "id": "worktree-symlinkdirectories",
+      "hash": "f41fd4d6e3be197621898f9215099a954755b7766f81c8c8bc975a30a2132704",
+      "text": "### `worktree.symlinkDirectories`\n\nSymlink directories from the main repository into each worktree so you don't duplicate large directories on disk.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: array of strings, directory paths relative to the repository root\n* **Default**: unset, so Claude Code symlinks no directories\n\nThis example symlinks `node_modules` and `.cache` from the main repository into every new worktree:\n\n```json settings.json theme={null}\n{\n  \"worktree\": {\n    \"symlinkDirectories\": [\"node_modules\", \".cache\"]\n  }\n}\n```"
+    },
+    {
+      "heading": "worktree.sparsePaths",
+      "id": "worktree-sparsepaths",
+      "hash": "95c97176ceae0c1b5bd5d87755a6a9489f949cbadb854c1bb767666bfd6250c7",
+      "text": "### `worktree.sparsePaths`\n\nCheck out only the listed directories in each worktree through git sparse-checkout. Claude Code writes only those directories plus root-level files to disk, which is faster in large monorepos; see [Check out only the directories you need](/docs/en/large-codebases#check-out-only-the-directories-you-need).\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: array of strings, directory paths relative to the repository root\n* **Default**: unset, so each worktree checks out the whole tree\n\nThis example checks out only `packages/my-app` and `shared/utils`, plus root-level files, in each worktree:\n\n```json settings.json theme={null}\n{\n  \"worktree\": {\n    \"sparsePaths\": [\"packages/my-app\", \"shared/utils\"]\n  }\n}\n```\n\nWhile a sparse worktree exists, git enables `extensions.worktreeConfig` in the repository's shared `.git/config`."
     }
   ]
 }

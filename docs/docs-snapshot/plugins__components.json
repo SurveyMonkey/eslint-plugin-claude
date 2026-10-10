@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "d6e29a83e653ddb855c42be1ce8bcac953075dda88b8f710bd88784105a97006",
+  "hash": "37a3ce71801730ffdc22cd5e9dcac29f0dab259f395df772af953e192fd888ba",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -40,7 +40,7 @@
     },
     {
       "id": "hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e"
     },
     {
       "id": "when-plugin-hooks-fire",

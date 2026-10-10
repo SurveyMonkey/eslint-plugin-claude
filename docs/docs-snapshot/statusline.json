@@ -149,6 +149,24 @@
   ],
   "sources": [
     {
+      "heading": "Use the /statusline command",
+      "id": "use-the-statusline-command",
+      "hash": "44e446be0845c7bd451d32181623431219f3ddbe134f1792f5d9057adb6532f0",
+      "text": "### Use the /statusline command\n\nThe `/statusline` command accepts natural language instructions describing what you want displayed. Claude Code generates a script file in `~/.claude/` and updates your settings automatically:\n\n```text theme={null}\n/statusline show model name and context percentage with a progress bar\n```\n\nApprove the file edit prompts if Claude Code asks for permission during setup."
+    },
+    {
+      "heading": "Manually configure a status line",
+      "id": "manually-configure-a-status-line",
+      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26",
+      "text": "### Manually configure a status line\n\nAdd a `statusLine` field to your user settings (`~/.claude/settings.json`, where `~` is your home directory) or [project settings](/docs/en/settings#where-settings-live). Set `type` to `\"command\"` and point `command` to a script path or an inline shell command. For a full walkthrough of creating a script, see [Build a status line step by step](#build-a-status-line-step-by-step).\n\n```json theme={null}\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"~/.claude/statusline.sh\",\n    \"padding\": 2\n  }\n}\n```\n\nThe `command` field runs in a shell, so you can also use inline commands instead of a script file. This example uses `jq` to parse the JSON input and display the model name and context percentage:\n\n```json theme={null}\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"jq -r '\\\"[\\\\(.model.display_name)] \\\\(.context_window.used_percentage // 0)% context\\\"'\"\n  }\n}\n```\n\nThe optional `padding` field adds extra horizontal spacing (in characters) to the status line content. Defaults to `0`. This padding is in addition to the interface's built-in spacing, so it controls relative indentation rather than absolute distance from the terminal edge.\n\nThe optional `refreshInterval` field re-runs your command every N seconds in addition to the [event-driven updates](#how-status-lines-work). The minimum is `1`. Set this when your status line shows time-based data such as a clock, or when background subagents change git state while the main session is idle. Leave it unset to run only on events.\n\nThe optional `hideVimModeIndicator` field suppresses the built-in `-- INSERT --` text below the prompt. Set this to `true` when your script renders [`vim.mode`](#available-data) itself, so the mode is not shown twice."
+    },
+    {
+      "heading": "Size output to the terminal",
+      "id": "size-output-to-the-terminal",
+      "hash": "cab76d0ce094ae1adcf8be564ca053080286ef8d290cda6306c0c8459a333158",
+      "text": "### Size output to the terminal\n\nClaude Code captures your script's output instead of connecting it directly to the terminal, so `tput cols` and language-level width detection cannot read the terminal size from inside the script. Read the `COLUMNS` and `LINES` environment variables instead. Claude Code sets these to the current terminal dimensions before running your script."
+    },
+    {
       "heading": "Windows configuration",
       "id": "windows-configuration",
       "hash": "cf11b740fddf26d96b3cf6ebd9ca43b9bf1954c1a5fd14240efea2109beed74f",

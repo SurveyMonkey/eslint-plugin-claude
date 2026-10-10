@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "8ee8806f2183fc83439d9d71564b274ce021b2c20ea54afec2be0581ea77dafb",
+  "hash": "f1e8f6fdee70ecbf5271d21f3dc34a8edf80b20dd2ad6a57cb729fa713fb3ab9",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -65,6 +65,10 @@
     {
       "id": "cannot-install-plugins-from-a-marketplace-with-this-name",
       "hash": "f66be0668c04e969ccda71c53e0961b1565383fbc5202ca554158be0a6a077bd"
+    },
+    {
+      "id": "claude-code-reserves-this-name",
+      "hash": "c72804a931e94091ca9235259643099523f267e72a698c7be83a78fe02612d6d"
     },
     {
       "id": "ssh-authentication-failed-or-https-authentication-failed",
@@ -236,7 +240,7 @@
     },
     {
       "id": "hook-loads-but-never-fires",
-      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
+      "hash": "468bce684f6e3525ac658ee96e4e5155b6447345bee84c145dfd72ef7cc6c9fc"
     },
     {
       "id": "plugin-directory-does-not-exist",
@@ -379,8 +383,8 @@
     {
       "heading": "Hook loads but never fires",
       "id": "hook-loads-but-never-fires",
-      "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426",
-      "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
+      "hash": "468bce684f6e3525ac658ee96e4e5155b6447345bee84c145dfd72ef7cc6c9fc",
+      "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, first run `/plugin` in your session and open the plugin's details. A note there that begins `Its hooks.json hooks do not run` means another enabled plugin with the same name registered its hooks instead, and [Hooks when two enabled plugins share a name](/docs/en/plugins/loading#hooks-when-two-enabled-plugins-share-a-name) says which copy that is and how to switch. Otherwise, check the hook's definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
     },
     {
       "heading": "Plugin <name> has conflicting manifests",

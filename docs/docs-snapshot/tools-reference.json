@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "2f14b19549d911bdf0797d3e41e7c3d74e0fa0b237778f954019a2bc57e061e3",
+  "hash": "64b179bbd125a9fa55717b755e956f4067f1e4ec5f27a8860742a6a24dfd7993",
   "blocks": [
     {
       "id": "tools-reference",
@@ -64,7 +64,11 @@
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "9963d3e531649ff4991df88191b104875b04a1bbc31c3956f737251f25f1a802"
+      "hash": "5e046e4380c1d67c674f347680698bcc270a573f2acf767c51969c9225875d44"
+    },
+    {
+      "id": "non-utf-8-files",
+      "hash": "9bc7627e2650e21f78124216596778b11e442dfbd6451deec8f4cfa1b8ac2955"
     },
     {
       "id": "endconversation-tool-behavior",
@@ -92,7 +96,7 @@
     },
     {
       "id": "notebookedit-tool-behavior",
-      "hash": "b7ead44f231450a13e4e85574553387f2ef5e95a475e125202a18390fde84361"
+      "hash": "a1192f6f4e3e60a6a4c18d64850ff2838d2a1f6a6156a6bf5630320ee1475df0"
     },
     {
       "id": "powershell-tool",
@@ -108,7 +112,7 @@
     },
     {
       "id": "shell-selection-in-settings-hooks-and-skills",
-      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560"
+      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f"
     },
     {
       "id": "windows-encoding-and-exit-codes",
@@ -120,7 +124,11 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "67b80a70b1c14493553cd3e48d68411505b5fdd4777886dc4dac0294406c179a"
+      "hash": "934d7f37f6999d1e7f954d8cfe5336f91e8a0b595bf31dd65ae889c1b6fd053a"
+    },
+    {
+      "id": "large-files",
+      "hash": "5f6e4b7ce468b340689d8dd8769c3d982278b2e83d38fb09c9dd34961538e2c5"
     },
     {
       "id": "sendfeedback-tool-behavior",
@@ -172,7 +180,7 @@
     },
     {
       "id": "write-tool-behavior",
-      "hash": "c4355369b955e2360b451bc788d9f874afe5d978e20906434c1f533e1023ecb0"
+      "hash": "046c80c6ffd74866d6249edb5ce86359c9df8f86a88d943e97856c09efe3efce"
     },
     {
       "id": "check-which-tools-are-available",
@@ -189,6 +197,12 @@
       "id": "configure-tools-with-permission-rules-and-hooks",
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",
       "text": "## Configure tools with permission rules and hooks\n\nFor the most part, Claude decides when to use these tools and you don't need to name them yourself when interacting with Claude. You reference tool names directly when defining permissions and other configuration:\n\n* in [`permissions.allow`](/docs/en/settings-reference#permissions-allow) and [`permissions.deny`](/docs/en/settings-reference#permissions-deny) in settings, and the `/permissions` interface\n* in the `--allowedTools` and `--disallowedTools` [CLI flags](/docs/en/cli-reference)\n* in the Agent SDK's [`allowedTools` and `disallowedTools`](/docs/en/agent-sdk/permissions#allow-and-deny-rules) options\n* in a [skill's `allowed-tools`](/docs/en/skills#frontmatter-reference) frontmatter\n* in a hook's [`if` condition](/docs/en/hooks-guide#filter-by-tool-name-and-arguments-with-the-if-field)\n\nAll of these accept the same rule format, `ToolName(specifier)`. The specifier depends on the tool, and several tools share a format:\n\n| Rule format | Applies to | Details |\n| :- | :- | :- |\n| `Bash(npm run *)` | Bash, Monitor | [Command pattern matching](/docs/en/permissions#bash) |\n| `PowerShell(Get-ChildItem *)` | PowerShell | [Command pattern matching](/docs/en/permissions#powershell) |\n| `Read(~/secrets/**)` | Read, Grep, Glob, LSP | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Edit(/src/**)` | Edit, Write, NotebookEdit | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Skill(deploy *)` | Skill | [Skill name matching](/docs/en/skills#restrict-claude’s-skill-access) |\n| `Agent(Explore)` | Agent | [Subagent type matching](/docs/en/permissions#agent-subagents) |\n| `WebFetch(domain:example.com)` | WebFetch | [Domain matching](/docs/en/permissions#webfetch) |\n| `WebSearch` | WebSearch | No specifier; allow or deny the tool as a whole |\n\nTools not listed here, such as `ExitPlanMode` or `ShareOnboardingGuide`, accept only the bare tool name with no specifier.\n\nAn `Edit(...)` allow rule also grants read access to the same path, so you don't need a matching `Read(...)` rule. A `Read(...)` deny rule also blocks the Edit and Write tools on the same path, including creating a new file there, because both tools change content Claude has to be able to read back. The `Read` deny check requires Claude Code v2.1.208 or later on edits, and v2.1.228 or later on writes.\n\nHook `matcher` fields use bare tool names, not the parenthesized rule format. See [matcher patterns](/docs/en/hooks#matcher-patterns) for the matching rules. For the field names each tool passes to `tool_input` in hooks, see the [PreToolUse input reference](/docs/en/hooks#pretooluse-input)."
+    },
+    {
+      "heading": "Shell selection in settings, hooks, and skills",
+      "id": "shell-selection-in-settings-hooks-and-skills",
+      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f",
+      "text": "### Shell selection in settings, hooks, and skills\n\nThree additional settings control where PowerShell is used:\n\n* `\"defaultShell\": \"powershell\"` in [`settings.json`](/docs/en/settings-reference#all-settings): routes interactive `!` commands through PowerShell. Requires the PowerShell tool to be enabled.\n* `\"shell\": \"powershell\"` on individual [command hooks](/docs/en/hooks#command-hook-fields): runs that hook in PowerShell. Hooks spawn PowerShell directly, so this works regardless of `CLAUDE_CODE_USE_POWERSHELL_TOOL`.\n* `shell: powershell` in [skill frontmatter](/docs/en/skills#frontmatter-reference): runs `` !`command` `` blocks in PowerShell. Requires the PowerShell tool to be enabled.\n\nPowerShell commands follow the [same main-session working-directory reset behavior](#what-persists-between-commands) as Bash commands, including the `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR` environment variable.\n\nPowerShell commands also receive the variables hooks persist through `CLAUDE_ENV_FILE`, under the conditions in [Persisted variables in PowerShell commands](/docs/en/hooks#persisted-variables-in-powershell-commands). Requires Claude Code v2.1.296 or later.\n\nExit code 1 from `grep`, `rg`, `egrep`, `fgrep`, `findstr`, and `git grep` means no matches. Exit code 1 from `git diff` means differences exist. Neither result is reported to Claude as a command failure. For `robocopy`, exit codes 0 through 7 are informational results, such as files copied or extra files detected. Exit codes of 8 or higher count as failures."
     },
     {
       "heading": "Enable the PowerShell tool",
