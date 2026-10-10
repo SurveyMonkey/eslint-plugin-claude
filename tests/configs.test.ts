@@ -86,6 +86,8 @@ const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
 // One byte over the 4 MiB that Claude Code loads from a CLAUDE.md file. An HTML comment is
 // the cheapest text for the Markdown parser.
+// A rule file that sets a scope.
+const SCOPED_RULE = '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n'
 const bigMarkdown = `<!--${'x'.repeat(4194305 - 7)}-->`
 
 const TREE: Record<string, string> = {
@@ -444,6 +446,51 @@ const TREE: Record<string, string> = {
   'packages/av/.claude/AGENTS.md': '# Notes\n',
   'packages/av/docs/agents/notes.md': '# Notes\n',
   'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
+  // `claude-md-agents-md-shadowed`: an AGENTS.md in a folder that holds a CLAUDE.md file, in
+  // either place. The same files where the CLAUDE.md imports the AGENTS.md, and where no rule
+  // reads the file as an AGENTS.md. The AGENTS.md files of the trees of other rules sit beside a
+  // CLAUDE.md too, and are reported here (see the reports below).
+  'packages/sh/CLAUDE.md': '# Rules\n',
+  'packages/sh/AGENTS.md': '# Agents\n',
+  'packages/sh/.claude/AGENTS.md': '# Agents\n',
+  'packages/sh/.claude/rules/AGENTS.md': '# Rule\n',
+  'packages/sh/ok/CLAUDE.md': '@AGENTS.md\n',
+  'packages/sh/ok/AGENTS.md': '# Agents\n',
+  // `rules-symlink-external-scoped`: a rule file with `paths` that is a link out of the tree. The
+  // links are made in `beforeAll`. The same text in a regular file is not reported.
+  'packages/rx/.git': 'gitdir: ../.git\n',
+  'packages/rx/.claude/rules/local.md': SCOPED_RULE,
+  // `claude-md-import-exists`: an import of a missing file in each instruction file that Claude
+  // Code expands. The same text where no rule reads it: a Markdown file that is not one of them,
+  // and a rule file.
+  'packages/ie/present.md': '# Present\n',
+  'packages/ie/CLAUDE.md': '@present.md @missing.md\n',
+  'packages/ie/.claude/CLAUDE.md': '@missing.md\n',
+  'packages/ie/CLAUDE.local.md': '@missing.md\n',
+  'packages/ie/AGENTS.md': '@missing.md\n',
+  'packages/ie/.claude/AGENTS.md': '@missing.md\n',
+  'packages/ie/docs/notes.md': '@missing.md\n',
+  'packages/ie/.claude/rules/r.md': '@missing.md\n',
+  // `claude-md-import-max-depth`: a chain of five hops from each instruction file that Claude
+  // Code expands. The same chain at four hops, and in a file that no rule reads. The file `.git`
+  // makes `packages/md` a repository, so that the imports of `.claude/CLAUDE.md` stay inside it.
+  'packages/md/.git': 'gitdir: ../.git\n',
+  'packages/md/f1.md': '@f2.md\n',
+  'packages/md/f2.md': '@f3.md\n',
+  'packages/md/f3.md': '@f4.md\n',
+  'packages/md/f4.md': '@f5.md\n',
+  'packages/md/f5.md': 'end\n',
+  'packages/mda/f1.md': '@f2.md\n',
+  'packages/mda/f2.md': '@f3.md\n',
+  'packages/mda/f3.md': '@f4.md\n',
+  'packages/mda/f4.md': '@f5.md\n',
+  'packages/mda/f5.md': 'end\n',
+  'packages/md/CLAUDE.md': '@f1.md\n',
+  'packages/md/.claude/CLAUDE.md': '@../f1.md\n',
+  'packages/md/CLAUDE.local.md': '@f1.md\n',
+  'packages/md/ok/CLAUDE.md': '@../f2.md\n',
+  'packages/md/docs/notes.md': '@../f1.md\n',
+  'packages/mda/AGENTS.md': '@f1.md\n',
   // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
   // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
@@ -572,13 +619,18 @@ const SCOPE_RULES = [
 // The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
 // error, and each has one block for its own language.
 const MEMORY_RULES = [
+  'claude-md-agents-md-shadowed',
   'claude-md-agents-md-variant',
   'claude-md-excludes-pattern',
+  'claude-md-import-exists',
+  'claude-md-import-max-depth',
   'claude-md-max-bytes',
   'memory-settings-schema',
+  'memory-symlink-network-target',
   'rules-frontmatter-schema',
   'rules-md-extension',
   'rules-paths-glob-valid',
+  'rules-symlink-external-scoped',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -747,6 +799,25 @@ const EXPECTED = [
   'packages/av/AGENTS.override.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
+  // `claude-md-agents-md-shadowed` reads AGENTS.md and .claude/AGENTS.md, and no other file.
+  'packages/sh/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/sh/.claude/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/mb/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/ie/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  'packages/ie/.claude/AGENTS.md: claude/claude-md-agents-md-shadowed@2',
+  // `rules-symlink-external-scoped` reads the rule files that are links out of the tree.
+  ...(LINKS ? ['packages/rx/.claude/rules/scoped.md: claude/rules-symlink-external-scoped@2'] : []),
+  // `claude-md-import-exists` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  'packages/ie/CLAUDE.md: claude/claude-md-import-exists@2',
+  'packages/ie/.claude/CLAUDE.md: claude/claude-md-import-exists@2',
+  'packages/ie/CLAUDE.local.md: claude/claude-md-import-exists@2',
+  'packages/ie/AGENTS.md: claude/claude-md-import-exists@2',
+  'packages/ie/.claude/AGENTS.md: claude/claude-md-import-exists@2',
+  // `claude-md-import-max-depth` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  'packages/md/CLAUDE.md: claude/claude-md-import-max-depth@2',
+  'packages/md/.claude/CLAUDE.md: claude/claude-md-import-max-depth@2',
+  'packages/md/CLAUDE.local.md: claude/claude-md-import-max-depth@2',
+  'packages/mda/AGENTS.md: claude/claude-md-import-max-depth@2',
   // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
   'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
   'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
@@ -851,9 +922,12 @@ const NEW_RULES = [
 ]
 
 let root = ''
+// A folder next to the tree, for the files that links in the tree lead to.
+let external = ''
 
 beforeAll(() => {
   root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
+  external = `${root}-external`
   for (const [file, content] of Object.entries(TREE)) {
     mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
     writeFileSync(path.join(root, file), content)
@@ -861,10 +935,24 @@ beforeAll(() => {
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
+    // `rules-symlink-external-scoped`: rule files that are links out of the tree, a scoped one and
+    // one with no scope. The file `.git` makes `packages/rx` a repository.
+    mkdirSync(external, { recursive: true })
+    writeFileSync(path.join(external, 'scoped.md'), SCOPED_RULE)
+    writeFileSync(path.join(external, 'plain.md'), '# Rule\n')
+    for (const name of ['scoped', 'plain']) {
+      symlinkSync(
+        path.join(external, `${name}.md`),
+        path.join(root, `packages/rx/.claude/rules/${name}.md`),
+      )
+    }
   }
 })
 
-afterAll(() => rmSync(root, { recursive: true, force: true }))
+afterAll(() => {
+  rmSync(root, { recursive: true, force: true })
+  rmSync(external, { recursive: true, force: true })
+})
 
 /** Each report over the tree, as `file: rule@severity`, sorted. */
 async function reports(config: Linter.Config[]): Promise<string[]> {
@@ -1003,11 +1091,18 @@ describe('configs', () => {
       plugin.configs.recommended
         .filter((c) => c.name === `claude/recommended/${rule}`)
         .map((c) => [c.language, c.files])
+    expect(blocks('claude-md-agents-md-shadowed')).toEqual([['markdown/gfm', ['**/AGENTS.md']]])
     expect(blocks('claude-md-agents-md-variant')).toEqual([
       ['markdown/gfm', ['**/AGENTS.local.md', '**/AGENTS.override.md', '**/.agents/**/*.md']],
     ])
     expect(blocks('claude-md-excludes-pattern')).toEqual([
       ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    expect(blocks('claude-md-import-exists')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
+    ])
+    expect(blocks('claude-md-import-max-depth')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
     ])
     expect(blocks('claude-md-max-bytes')).toEqual([
       ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
@@ -1015,9 +1110,17 @@ describe('configs', () => {
     expect(blocks('memory-settings-schema')).toEqual([
       ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
     ])
+    // The tree has no report for this rule. ESLint stops with an error at a link that leads
+    // nowhere, as a link to a network path does here, before any rule runs.
+    expect(blocks('memory-symlink-network-target')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/.claude/rules/**/*.md']],
+    ])
     for (const rule of ['rules-frontmatter-schema', 'rules-paths-glob-valid']) {
       expect(blocks(rule)).toEqual([['markdown/gfm', ['**/.claude/rules/**/*.md']]])
     }
+    expect(blocks('rules-symlink-external-scoped')).toEqual([
+      ['markdown/gfm', ['**/.claude/rules/**/*.md']],
+    ])
     expect(blocks('rules-md-extension')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
     ])

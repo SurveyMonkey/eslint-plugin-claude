@@ -16,8 +16,11 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdImportExists from './rules/claude-md-import-exists.ts'
+import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
@@ -38,6 +41,7 @@ import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
+import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -51,6 +55,7 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -182,13 +187,18 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  claudeMdAgentsMdShadowed,
   claudeMdAgentsMdVariant,
   claudeMdExcludesPattern,
+  claudeMdImportExists,
+  claudeMdImportMaxDepth,
   claudeMdMaxBytes,
   memorySettingsSchema,
+  memorySymlinkNetworkTarget,
   rulesFrontmatterSchema,
   rulesMdExtension,
   rulesPathsGlobValid,
+  rulesSymlinkExternalScoped,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -297,13 +307,18 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'claude-md-agents-md-shadowed': 'error',
   'claude-md-agents-md-variant': 'error',
   'claude-md-excludes-pattern': 'error',
+  'claude-md-import-exists': 'error',
+  'claude-md-import-max-depth': 'error',
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
+  'memory-symlink-network-target': 'error',
   'rules-frontmatter-schema': 'error',
   'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',
+  'rules-symlink-external-scoped': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
