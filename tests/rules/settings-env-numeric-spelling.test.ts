@@ -2,7 +2,11 @@
 // (https://code.claude.com/docs/en/env-vars#variables): a numeric variable accepts scientific
 // notation and digit separators, as in `2e3` and `64_000`, and "before v2.1.211, these spellings
 // could silently set a much smaller value, such as `1e6` setting a timeout to 1".
+import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
 const name = 'settings-env-numeric-spelling'
@@ -14,7 +18,25 @@ const HIDDEN = '/repo/managed-settings.d/.10-a.json'
 const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
 
 const env = (variables: object) => JSON.stringify({ env: variables })
-const lint = (code: string, file = PROJECT) => lintJson(name, code, file)
+/** The messages of the rule for `code` at `file`, with the options `options`. */
+function lintWith(code: string, file: string, options: object[]) {
+  const absolute = path.resolve(file)
+  return new Linter({ cwd: path.parse(absolute).root }).verify(
+    code,
+    [
+      {
+        files: ['**/*.json'],
+        plugins: { json, claude: plugin },
+        language: 'json/json',
+        rules: { [`claude/${name}`]: ['error', ...options] },
+      },
+    ],
+    { filename: absolute },
+  )
+}
+// The rule reports nothing without `minVersion`, so each test sets a client below v2.1.211.
+const OLD = [{ minVersion: '2.1.210' }]
+const lint = (code: string, file = PROJECT) => lintWith(code, file, OLD)
 const ids = (code: string, file = PROJECT) => lint(code, file).map((m) => m.messageId)
 
 describe(`${name}: spellings`, () => {
@@ -83,7 +105,15 @@ describe(`${name}: silent cases`, () => {
   })
 
   it('is silent for a credential variable', () => {
-    expect(ids(env({ ANTHROPIC_API_KEY: '1e6', ANTHROPIC_AUTH_TOKEN: '64_000' }))).toEqual([])
+    expect(
+      ids(
+        env({
+          ANTHROPIC_API_KEY: '1e6',
+          ANTHROPIC_AUTH_TOKEN: '64_000',
+          CLAUDE_CODE_OAUTH_TOKEN: '1e6',
+        }),
+      ),
+    ).toEqual([])
   })
 
   it('is silent for a hidden drop-in', () => {
@@ -117,5 +147,41 @@ describe(`${name}: the forms of settings-env-value-format`, () => {
     expect(
       lintJson('settings-env-value-format', env({ BASH_MAX_OUTPUT_LENGTH: '1e5' }), PROJECT),
     ).toEqual([])
+  })
+})
+
+describe(`${name}: the option minVersion`, () => {
+  const code = env({ API_TIMEOUT_MS: '1e6' })
+  const idsAt = (options: object[], file = PROJECT) =>
+    lintWith(code, file, options).map((m) => m.messageId)
+
+  it('reports nothing when minVersion is unset', () => {
+    expect(idsAt([])).toEqual([])
+    expect(idsAt([{}])).toEqual([])
+  })
+
+  it('reports when minVersion is below 2.1.211', () => {
+    for (const minVersion of ['2.1.210', '2.0.999', '1.9.9', '2.1.0', '0.0.0']) {
+      expect(idsAt([{ minVersion }]), minVersion).toEqual(['spelling'])
+    }
+  })
+
+  it('reports nothing when minVersion is 2.1.211 or later', () => {
+    for (const minVersion of ['2.1.211', '2.1.212', '2.2.0', '3.0.0', '10.0.0']) {
+      expect(idsAt([{ minVersion }]), minVersion).toEqual([])
+    }
+  })
+
+  it('reads minVersion in every settings file and skips a hidden drop-in', () => {
+    for (const file of EVERY_FILE) {
+      expect(idsAt(OLD, file), file).toEqual(['spelling'])
+    }
+    expect(idsAt(OLD, HIDDEN)).toEqual([])
+  })
+
+  it('rejects a minVersion that is not three numbers', () => {
+    for (const minVersion of ['2.1', 'latest', '2.1.211-rc1', '']) {
+      expect(() => idsAt([{ minVersion }]), minVersion).toThrow()
+    }
   })
 })
