@@ -1163,6 +1163,11 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "How each key combines with its default location",
       "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "heading": "Strict mode",
+      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
     }
   ],
   "plugin-settings-single-source": [
