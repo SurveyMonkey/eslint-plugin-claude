@@ -37,6 +37,8 @@ one list.[^merge] So the rule reads the sibling files:
 - A sibling with at least one entry makes the list not empty, so the rule makes no report.
 - A sibling with an empty list, no list, or a list that is not an array adds no entry.
 - A sibling that the rule cannot read can hold entries, so the rule makes no report.
+- Project and user settings add entries to the same list when Claude Code runs. The rule does
+  not read them, so the empty list may not block every server.
 
 The rule does not read a list that is not an array, or an `allowedMcpServers` in a project or
 user settings file. Of two lists with one name, the last one counts, as `JSON.parse` keeps it.

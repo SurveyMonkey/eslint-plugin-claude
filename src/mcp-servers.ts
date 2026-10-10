@@ -2,7 +2,7 @@
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
 // may omit that wrapper, so its map is the top-level object. The module also holds the reader of
 // the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
-// reader of the approval and allow lists.
+// reader of the allow and deny lists, and the reader of a URL that holds a reference in its port.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
 import json from '@eslint/json'

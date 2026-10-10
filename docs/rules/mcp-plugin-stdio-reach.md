@@ -31,8 +31,9 @@ Whether a plugin targets claude.ai is a choice of the plugin author. The plugin 
 marketplace entry have no field that says it.[^fields][^entries] So the option `targets` carries the choice.
 With `targets` unset, empty, or without `claude-ai`, the rule makes no report.
 
-With `claude-ai` in `targets`, the rule reports each stdio server of a plugin, on the server
-name. A server is stdio when its `type` is `stdio`, or when it has no `type` and has a `command`.
+With `claude-ai` in `targets`, the rule reports each stdio server of a plugin. The report is on the
+server name. For a server in a `.json` file that `plugin.json` names, it is on that path in
+`plugin.json`. A server is stdio when its `type` is `stdio`, or when it has no `type` and has a `command`.
 The rule reads the `.mcp.json` at a plugin root, and the servers that `plugin.json` declares
 inline or in a `.json` file. A project `.mcp.json` is not a plugin config, so it gets no report.
 The rule makes no report for a remote server, or for a bundle (`.mcpb`, `.dxt`).
