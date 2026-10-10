@@ -108,6 +108,13 @@ describe('mcp-disable-connectors-false with sibling managed files', () => {
     ).toBe(1)
     expect(idsAt({}, 'managed-settings.json')).toBe(1)
   })
+  it('reports when a sibling holds a value that is not the Boolean true', () => {
+    for (const other of ['true', 1, ['true']]) {
+      expect(idsAt({ 'managed-settings.d/10-a.json': value(other) }, 'managed-settings.json')).toBe(
+        1,
+      )
+    }
+  })
   it('ignores a hidden sibling and a sibling that is not a json file', () => {
     const files = { 'managed-settings.d/.10-a.json': off, 'managed-settings.d/10-b.txt': off }
     expect(idsAt(files, 'managed-settings.json')).toBe(1)

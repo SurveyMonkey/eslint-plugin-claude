@@ -14,10 +14,12 @@ type Options = [{ hosts: string[] }]
 
 /** The host of `url` with no trailing dot. `URL` gives it in lower case. The result is null
  *  when `url` does not parse, because the host is then not known. A host that holds a `${`
- *  reference parses, but it is not a covered host. */
+ *  reference parses, but it is not a covered host. A reference in the port, as in
+ *  `host:${PORT}/path`, does not parse. The parser reads the URL without that port, because the
+ *  port is not part of the host. */
 function hostOf(url: string): string | null {
   try {
-    return new URL(url).hostname.replace(/\.$/, '')
+    return new URL(url.replace(/:\$\{[^}]*\}(?=[/?#]|$)/, '')).hostname.replace(/\.$/, '')
   } catch {
     return null
   }
