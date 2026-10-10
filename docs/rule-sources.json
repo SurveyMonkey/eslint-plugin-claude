@@ -1606,6 +1606,21 @@
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "policyHelper.path",
+      "hash": "5308974c74dfb207534d9ca06efde9b21649f0e6ae6380e16d0ef9118cddec37"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "appendPlugins",
+      "hash": "68a42d4f3c2783690f816e20b473cb093f440c54fbdabf81e564a468a099bb5b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "gatewayInternalNetworks",
+      "hash": "1530a1dd8cf5eab6344e4f83cfbe6fa7b2519eba2d992cf57ec57c8930d0b32a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "vimInsertModeRemaps",
       "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181"
     },

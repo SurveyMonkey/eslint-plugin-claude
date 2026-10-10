@@ -62,7 +62,7 @@ The data is in `src/data/settings-schema.ts`, with the Claude Code version and t
 last review. The kinds of value are below.
 
 - **Boolean keys.** Each key that the Type line gives as Boolean. A managed key that "takes the
-  JSON Boolean `true` only" is a Boolean key too, so the string `"true"` is a `wrongType`
+  JSON Boolean `true` only" is a Boolean key too. The string `"true"` is a `wrongType`
   report.[^index]
 - **String and array keys.** `model`, `advisorModel`, `language`, `outputStyle`, `agent` and the
   helper commands are strings. `availableModels`, `fallbackModel`, `deniedModels`,
@@ -89,11 +89,13 @@ last review. The kinds of value are below.
   and `sshHost`. `allowedChannelPlugins` rows are `{marketplace, plugin}`, or a
   `plugin@marketplace` string. `strictPluginOnlyCustomization` is `true` or an array of strings,
   because Claude Code ignores a name that it does not know. `policyHelper` needs `path`.
-  `forceLoginOrgUUID` is a UUID or an array of UUIDs.[^statusline][^picker][^pricing][^footer][^strict]
+  `forceLoginOrgUUID` is a UUID or an array of UUIDs. `appendPlugins`, `prependPlugins` and the
+  string rows of `allowedChannelPlugins` fit `plugin@marketplace`. `gatewayInternalNetworks` has
+  at most four IPv4 CIDR blocks, each `/8` to `/32`.[^statusline][^picker][^pricing][^footer][^strict][^plugins][^gateway]
 - **Forms.** `theme`, `timeFormat`, `minimumVersion`, `requiredMinimumVersion`,
   `requiredMaximumVersion`, `plansDirectory`, `prUrlTemplate`, `remote.defaultEnvironmentId`,
   `browserExternalPageTools`, `policyHelper.path`, `vimInsertModeRemaps` and the tips of
-  `spinnerTipsOverride`. The message names the form.[^theme][^time][^plans][^policy][^vim][^tips]
+  `spinnerTipsOverride`. The message names the form.[^theme][^time][^plans][^policy][^policypath][^vim][^tips]
 
 A version fits the form `N.N.N`, with an optional pre-release or build part. The rule accepts the
 two spellings `disabled` and `disable` for `browserExternalPageTools`, in either case, as the
@@ -103,17 +105,18 @@ entry says.
 
 One fault gets one report. The rule makes no report in these places.
 
-- **Inside `permissions` or `sandbox`.** The rule reads neither key. The rules for them are in
-  the permissions group, and are not built yet. The rule also makes no report on `autoMode`,
-  `disableAutoMode` and `ignorePatterns`, or on anything inside them, whatever the type.
+- **Inside `permissions` or `sandbox`.** The rule reads neither key. The permissions group has
+  the rules for them. `permissions-schema` and `sandbox-schema` are not built yet. The rule also
+  makes no report on `autoMode`, `disableAutoMode` and `ignorePatterns`, or on anything inside
+  them, whatever the type.
 - **A scope fault.** `settings-key-scope` reports a key in a file that Claude Code does not read
   it from. This rule still checks the value of that key. A Global config key is the exception:
   the scope rule reports it in every settings file.
 - **A key with a rule of its own.** The rule checks no value of `taskOutputMaxChars`,
   `keybindingFlavor`, `permissionExplainerEnabled` and `teammateDefaultModel`, which
-  `settings-removed-key` reports for any value. It also skips `syncClaudeAiPlugins` and
-  `autoContinueAtUsageLimit`, which `settings-sync-claude-ai-plugins` reports. The rule
-  `settings-project-autocontinue-off` is not built yet.
+  `settings-removed-key` reports for any value. It also skips `syncClaudeAiPlugins`, which
+  `settings-sync-claude-ai-plugins` reports. It skips `autoContinueAtUsageLimit` too. The rule
+  `settings-project-autocontinue-off` owns that key, and is not built yet.
 - **The text of a model.** `settings-model-value` checks the alias or ID in `model` and
   `advisorModel`. `settings-model-list` checks the lists. This rule checks the types only.
 - **A value of another group.** The inventory gives these keys to the group that owns them. This
@@ -128,11 +131,12 @@ One fault gets one report. The rule makes no report in these places.
 - A hidden file in `managed-settings.d/`. Claude Code ignores it, so the rule reads no key in it.
 - The name in `timeZone`. The docs say "an IANA time zone name". The names depend on the ICU data
   of the machine. The rule checks only that the value is a string.
-- A backslash in `plansDirectory`. Claude Code uses the default directory for it on macOS, Linux
-  and WSL. The path works on Windows.
-- The `{name}` placeholders of `footerLinksRegexes` against the named groups of `pattern`, the
-  uniqueness of tip IDs (Claude Code uses the first of two), and the normal form of a Windows
-  `policyHelper.path`, apart from `.` and `..` segments.
+- A backslash inside a segment of `plansDirectory`. Claude Code uses the default directory for it
+  on macOS, Linux and WSL. The path works on Windows.
+- The `{name}` placeholders of `footerLinksRegexes` against the named groups of `pattern`.
+- The uniqueness of tip IDs. Claude Code uses the first of two.
+- The normal form of a Windows `policyHelper.path`, apart from `.` and `..` segments.
+- Overlap between the blocks of `gatewayInternalNetworks`, and overlap with private space.
 - A model alias that a version of Claude Code does not know. See `settings-model-value`.
 
 When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.
@@ -179,5 +183,8 @@ Pass:
 [^time]: [All settings: timeFormat](https://code.claude.com/docs/en/settings-reference#timeformat)
 [^plans]: [All settings: plansDirectory](https://code.claude.com/docs/en/settings-reference#plansdirectory)
 [^policy]: [All settings: policyHelper](https://code.claude.com/docs/en/settings-reference#policyhelper)
+[^policypath]: [All settings: policyHelper.path](https://code.claude.com/docs/en/settings-reference#policyhelper-path)
+[^plugins]: [All settings: appendPlugins](https://code.claude.com/docs/en/settings-reference#appendplugins)
+[^gateway]: [All settings: gatewayInternalNetworks](https://code.claude.com/docs/en/settings-reference#gatewayinternalnetworks)
 [^vim]: [All settings: vimInsertModeRemaps](https://code.claude.com/docs/en/settings-reference#viminsertmoderemaps)
 [^tips]: [All settings: spinnerTipsOverride](https://code.claude.com/docs/en/settings-reference#spinnertipsoverride)
