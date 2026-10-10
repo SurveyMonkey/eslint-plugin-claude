@@ -501,7 +501,7 @@ export function loadInventory(root: string): Inventory {
   let inGroups = false
   let section: string | undefined
   let ruleTable = false
-  for (const line of text.replace(/\r\n?/g, '\n').split('\n')) {
+  for (const line of text.split('\n')) {
     const [, id, label, link] = footnote.exec(line) ?? []
     if (id !== undefined && label !== undefined && link !== undefined) {
       const colon = label.indexOf(': ')

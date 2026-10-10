@@ -794,6 +794,12 @@ describe('loadInventory', () => {
     '|------|-----|',
     '| `early-rule` | Not a group table. [^common] |',
     '',
+    '### A subsection of another part',
+    '',
+    '| Rule | Why |',
+    '|------|-----|',
+    '| `other-rule` | Not a group table. [^common] |',
+    '',
     '## Rules by group',
     '',
     '### Hooks',
@@ -835,6 +841,7 @@ describe('loadInventory', () => {
     `[^lifecycle]: [Hooks reference: Hook lifecycle](${HOOKS}#hook-lifecycle)`,
     `[^exit]: [Hooks reference: Other exit codes](${HOOKS}#other-exit-codes)`,
     `[^page]: [Hooks reference](${HOOKS})`,
+    `[^whole]: [Hooks reference: the page](${HOOKS})`,
     `[^note]: [Hooks reference: Matcher patterns](${HOOKS}#matcher-patterns)`,
     `[^tool]: [Hooks reference: Hook events](${HOOKS}#hook-events)`,
     `[^late]: [Hooks reference: Debug hooks](${HOOKS}#debug-hooks)`,
@@ -871,11 +878,14 @@ describe('loadInventory', () => {
     )
   })
 
-  it('reads a page link with no anchor, and CRLF line ends', () => {
-    const text = INVENTORY.replace('[^lifecycle] |', '[^page] |').replaceAll('\n', '\r\n')
-    expect(load(text).get(HOOKS)?.get('Hooks reference')).toEqual([
+  it('takes the whole label as the heading of a link with no anchor, and reads CRLF', () => {
+    const text = INVENTORY.replace('[^lifecycle] |', '[^page] [^whole] |').replaceAll('\n', '\r\n')
+    const headings = load(text).get(HOOKS)
+    expect(headings?.get('Hooks reference')).toEqual([{ section: 'Hooks', rules: ['hooks-a'] }])
+    expect(headings?.get('Hooks reference: the page')).toEqual([
       { section: 'Hooks', rules: ['hooks-a'] },
     ])
+    expect(headings?.has('the page')).toBe(false)
   })
 
   it('reads the real inventory, and maps a hooks heading to the Hooks rows', () => {
@@ -956,10 +966,9 @@ describe('classify with the inventory', () => {
   })
 
   it('tracks no block for a heading on the page twice, the page title, or no block', async () => {
-    const edited = PAGE.replace('An unknown path field', 'A path field').replace(
-      '> Complete reference',
-      '> The reference',
-    )
+    const edited = PAGE.replace('An unknown path field', 'A path field')
+      .replace('An unknown field is', 'A field is')
+      .replace('> Complete reference', '> The reference')
     const inventory = inventoryOf({
       'Unrecognized fields': [{ section: 'Hooks', rules: ['hooks-a'] }],
       'Plugin manifest reference': [{ section: 'Hooks', rules: ['hooks-b'] }],
@@ -967,9 +976,10 @@ describe('classify with the inventory', () => {
     })
     const jev = fakeJev(() => 0)
     const output = await run(cited, edited, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
-    // Two blocks changed: the title block and the second "Unrecognized fields".
+    // Three blocks changed: the title block and each "Unrecognized fields".
     expect(output.results.map((r) => r.blockId).sort()).toEqual([
       'plugin-manifest-reference',
+      'unrecognized-fields',
       'unrecognized-fields-1',
     ])
     expect(output.tracked).toEqual([])
