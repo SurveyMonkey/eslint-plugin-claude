@@ -39,10 +39,10 @@ these files as components that fail to load.
 
 The rule makes no report in these cases:
 
-- The plugin root is not a plugin root, or the rule cannot see it. A `plugin.json` that is a link
-  still makes a plugin root, even when the link has no target.
+- The plugin root is not a plugin root, or the rule cannot see it.
 - The real path of `.claude-plugin/` or of `plugin.json` is out of the repository.
-- The manifest does not parse to a JSON object, or the rule cannot read it.
+- The manifest is a link with no target, does not parse to a JSON object, or the rule cannot read
+  it. A `plugin.json` that is a link still makes a plugin root.
 - The rule cannot list `.claude-plugin/`.
 
 The rule cannot see a manifest that sits in the wrong place. A `plugin.json` at the plugin root

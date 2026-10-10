@@ -28,7 +28,7 @@ code.[^repository] The rule reports the three restrictions that it can see in th
   `monitors` key, and an `experimental.monitors` key. The `monitors` key at the top level still
   loads in a plugin, so it counts. With neither key, the rule reports the default file
   `monitors/monitors.json` when it is there.[^monitors] A key replaces the default file, so a manifest
-  with a key and the file gets one report, on the key. The report for the default file is on the
+  with one key and the file gets one report, on the key. The report for the default file is on the
   first line.
 - `bundle`: Claude Code skips an MCP bundle. A bundle is a path or URL in `mcpServers` that ends in
   `.mcpb` or `.dxt`.[^mcp] The rule reports the string.
@@ -48,15 +48,16 @@ makes no report in these cases:
   a path that is not there.
 - The rule cannot see the plugin or the file. The plugin root can be unseen. The real path of
   `.claude-plugin/`, of `plugin.json` or of the default monitors file can be out of the repository.
-  The manifest can fail to parse. A part of the path can be a dangling link.
+  The manifest can fail to parse. A part of the path can be a link with no target.
 
 The rule does not report a `.claude/skills/` directory that is not at the repository root. The row
 in the rule inventory names this case. The docs say that such a plugin loads only from the
-`.claude/skills/` of the session's primary working directory, and not from a parent directory. The rule cannot see the working directory. A session that starts there loads the plugin. So the
-rule cannot tell a wrong place from a place that a team chose.[^repository]
+`.claude/skills/` of the primary directory of the session, and not from a parent directory. The
+rule cannot see that directory. A session that starts there loads the plugin. So the rule cannot
+tell a wrong place from a place that a team chose.[^repository]
 
-A plugin in `~/.claude/skills/` has none of these restrictions. The rule judges the files of a repository only, so it does not see such a
-plugin.
+A plugin in `~/.claude/skills/` has none of these restrictions. The rule judges the files of a
+repository only, so it does not see such a plugin.
 
 Fail: `.claude/skills/p/.claude-plugin/plugin.json` with `"mcpServers": "./server.mcpb"`.
 
