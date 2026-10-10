@@ -1,7 +1,7 @@
 // Agent hooks (`type: "agent"`) are experimental (docs/rules/hooks-agent-type-experimental.md). The
 // hooks reference, "Agent-based hooks", says that they may change and that production work should prefer
 // command hooks. The rule reports an agent hook on an event that runs it. `hooks-handler-type-event-support`
-// owns the events that do not.
+// owns the events that do not run an agent hook, or that discard its output.
 import type { Rule } from 'eslint'
 import { AGENT_HOOK_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'

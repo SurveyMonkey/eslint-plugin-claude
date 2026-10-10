@@ -1,7 +1,7 @@
-// A WorktreeCreate hook replaces the default git behavior (docs/rules/hooks-worktree-create-without-remove.md).
+// A WorktreeCreate hook creates the worktree (docs/rules/hooks-worktree-create-without-remove.md).
 // The hooks reference, "WorktreeRemove", says to pair it with a WorktreeRemove hook. Without one, Claude
-// Code removes a worktree that git knows, and leaves any other worktree on disk. The rule reads one file at
-// a time, because "the same source" is one file.
+// Code removes a worktree that git knows, and leaves any other worktree on disk.
+// The rule reads one file at a time, because "the same source" is one file.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import { eventMember, HOOKS_TARGET, handlersOf, hooksListener } from '../hooks-config.ts'

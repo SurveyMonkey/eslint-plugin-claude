@@ -1,6 +1,6 @@
 // Agent hooks (`type: "agent"`) are experimental and may change. The hooks reference says to prefer
 // command hooks for production workflows (https://code.claude.com/docs/en/hooks#agent-based-hooks).
-// `hooks-handler-type-event-support` owns the events that do not run an agent hook.
+// `hooks-handler-type-event-support` owns the events that do not run an agent hook, or that discard its output.
 import { describe, expect, it } from 'vitest'
 import { HOOK_EVENTS } from '../../src/data/hook-events.ts'
 import {
