@@ -8,7 +8,7 @@ import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-sup
 import { lintPlugin } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-dependencies-resolve'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const missing = (name: string) =>
@@ -237,7 +237,8 @@ describe(`${RULE} (silent)`, () => {
       '.claude-plugin/marketplace.json': marketplaceOf(entries),
       'plugins/p/.claude-plugin/plugin.json': '{',
     })
-    expect(lintPlugin(RULE, path.join(top, 'plugins', 'p'), '{')).toEqual([])
+    const valid = JSON.stringify({ name: 'p', dependencies: ['ghost'] })
+    expect(lintPlugin(RULE, path.join(top, 'plugins', 'p'), valid)).toEqual([])
   })
 
   linked('stays silent when the marketplace.json is a link with no target', () => {

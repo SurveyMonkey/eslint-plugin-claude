@@ -239,6 +239,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-default-dir-shadowed',
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
+    'plugin-dependencies-resolve',
     'plugin-manifest-location',
     'plugin-monitors-command-env',
     'plugin-no-git-lfs',

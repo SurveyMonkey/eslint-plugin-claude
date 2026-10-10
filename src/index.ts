@@ -223,6 +223,7 @@ import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
+import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
@@ -697,6 +698,7 @@ const modules = [
   pluginUserConfigNoShellFields,
   pluginSymlinkEscapesMarketplace,
   pluginSymlinkEscapesPlugin,
+  pluginDependenciesResolve,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1066,6 +1068,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-user-config-no-shell-fields': 'error',
   'plugin-symlink-escapes-marketplace': 'error',
   'plugin-symlink-escapes-plugin': 'warn',
+  'plugin-dependencies-resolve': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
