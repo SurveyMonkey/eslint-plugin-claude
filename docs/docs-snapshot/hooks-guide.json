@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks-guide",
-  "hash": "171ff56657069588300e4b85c8c094d59577ab0ad96b541b2f891b75471ef679",
+  "hash": "23c91d7cbe6086c6bd5c789554cfef6649785fafe71f1fadc510f3572994a083",
   "blocks": [
     {
       "id": "automate-actions-with-hooks",
@@ -137,6 +137,12 @@
       "id": "hook-not-firing",
       "hash": "9e1447393024785b239935c51f5bba3dbba37ebcac4fdcf9c04bbe8121b0d062",
       "text": "### Hook not firing\n\nThe hook is configured but never executes.\n\n* Run `/hooks` and confirm the hook appears under the correct event\n* Check that the matcher pattern matches the tool name exactly. Matchers are case-sensitive\n* Verify you're triggering the right event type: `PreToolUse` fires before tool execution, `PostToolUse` fires after. A `PermissionRequest` hook fires when Claude Code is about to ask you for permission; see the [limitations](#limitations) for the non-interactive cases"
+    },
+    {
+      "heading": "Hook error in output",
+      "id": "hook-error-in-output",
+      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6",
+      "text": "### Hook error in output\n\nYou see a message like \"PreToolUse hook error: ...\" in the transcript.\n\n* Your script exited with a non-zero code unexpectedly. Test it manually by piping sample JSON:\n  ```bash theme={null}\n  echo '{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"ls\"}}' | ./my-hook.sh\n  echo $?  # Check the exit code\n  ```\n* If you see \"command not found\", use absolute paths or `${CLAUDE_PROJECT_DIR}` to reference scripts. To avoid shell quoting entirely, add `\"args\": []` to switch to [exec form](/docs/en/hooks#exec-form-and-shell-form), which spawns the script directly without a shell\n* If you see \"jq: command not found\", install `jq` or use Python/Node.js for JSON parsing\n* If the notice shows a JSON validation message, your hook's stdout parsed as JSON but failed schema validation. If it shows a JSON parse message, the stdout looked like a JSON object but wasn't valid JSON. Both happen even on exit 0.\n\n  To fix a parse failure, build the payload with a JSON encoder such as `jq` instead of string concatenation, so quotes and backslashes inside values are escaped. The reference's [Exit code output](/docs/en/hooks#exit-code-output) section covers the exit-code and JSON combinations\n* If the script isn't running at all, make it executable: `chmod +x ./my-hook.sh`"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "8ee8806f2183fc83439d9d71564b274ce021b2c20ea54afec2be0581ea77dafb",
+  "hash": "f1e8f6fdee70ecbf5271d21f3dc34a8edf80b20dd2ad6a57cb729fa713fb3ab9",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -387,6 +387,12 @@
       "id": "hook-loads-but-never-fires",
       "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426",
       "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
+    },
+    {
+      "heading": "hook error notices in the transcript",
+      "id": "hook-error-notices-in-the-transcript",
+      "hash": "5da573ad04fa565698fc1e197fea521dd22b1dc4e7548f5633e5baaa901e7acd",
+      "text": "#### `hook error` notices in the transcript\n\nA notice of the form `... hook error: Failed with non-blocking status code: <stderr>` means the hook ran and its command failed. For example, `Stop hook error: Failed with non-blocking status code: /bin/sh: node: command not found` means the shell Claude Code spawned couldn't find `node`. Install it, or make sure it's on the `PATH` of the terminal you start `claude` from.\n\nIf the stderr shows the plugin's path cut off at a space, the hook's shell-form command uses `${CLAUDE_PLUGIN_ROOT}` outside quotes and the install path contains a space. Wrap the variable in double quotes or use [exec form](/docs/en/hooks#exec-form-and-shell-form). To find the unquoted variable, run `claude plugin validate` on the plugin's directory and look for its [quoting warning](/docs/en/plugins/manifest-reference#quoting-and-path-separators).\n\nIf the notice reads `Failed to run: Plugin directory does not exist: <path>`, see [`Plugin directory does not exist`](#plugin-directory-does-not-exist).\n\nFor any other error, run the hook's command yourself from the plugin directory to see the full output, or capture the full stderr with [debug logging](/docs/en/hooks#debug-hooks)."
     },
     {
       "heading": "Plugin <name> has conflicting manifests",

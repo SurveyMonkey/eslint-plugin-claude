@@ -318,6 +318,18 @@
       "hash": "ce3d96b14679f96134ec81f14e42ec1440ae007a13fa04b6f96e08fb602cef08"
     }
   ],
+  "hooks-disable-all-override": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Disable or remove hooks",
+      "hash": "07c2742ce0fb8b69c603d08c4d41493120a00315407c5e56648b6b7a6e7e1ed8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "What runs before you trust a folder",
+      "hash": "173e436b56ea35918c15cdfb5702e5e4aec9f31c032c1a61418b13f07e6efe26"
+    }
+  ],
   "hooks-disabled-by-disableallhooks": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -369,6 +381,13 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exec form and shell form",
       "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    }
+  ],
+  "hooks-filechanged-star-matcher": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "FileChanged",
+      "hash": "f9ad6cc54673edfc3eaa4b8a92d8e94269c11e6a08c3f131002f24c3f8b30c8d"
     }
   ],
   "hooks-handler-field-ignored": [
@@ -646,6 +665,23 @@
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
+  "hooks-placeholder-quoted": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Reference scripts by path",
+      "hash": "73d3a437a1f052d0656a5575974552a41eef3368efef087f6c4c1be8486146c1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Quoting and path separators",
+      "hash": "71056ffa1cc9d43a5896dfe3330e47a5ba814e1a88ba665ffb41c32fb4f1ade4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "hook error notices in the transcript",
+      "hash": "5da573ad04fa565698fc1e197fea521dd22b1dc4e7548f5633e5baaa901e7acd"
+    }
+  ],
   "hooks-powershell-placeholder": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -658,6 +694,28 @@
       "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
     }
   ],
+  "hooks-prefer-exec-form": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Reference scripts by path",
+      "hash": "73d3a437a1f052d0656a5575974552a41eef3368efef087f6c4c1be8486146c1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Windows PowerShell tool",
+      "hash": "a8d8d0cf696e9590a4bf712072cea52147f8c779c460efd53304772ad87bb510"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Hook error in output",
+      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+    }
+  ],
   "hooks-prompt-on-permission-request": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -668,6 +726,25 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PermissionRequest decision control",
       "hash": "4fbb4ef39fbac14018b68c411027e4e35eb66b0e141a7068ad93272670adc8a5"
+    }
+  ],
+  "hooks-ps1-needs-powershell-shell": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Conditional rules with hooks",
+      "hash": "d2a6706c321b3564a76122e05951cfbb10284130a4ece6885db49a7a97f778c1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+    }
+  ],
+  "hooks-sessionend-default-timeout": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionEnd input",
+      "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
     }
   ],
   "marketplace-command-version-ignored": [
