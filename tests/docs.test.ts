@@ -57,6 +57,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'marketplace-strict-false-conflict',
     'marketplace-version-duplicate',
     'memory-settings-schema',
+    'memory-symlink-network-target',
     'output-style-frontmatter-schema',
     'output-style-frontmatter-valid',
     'permissions-mcp-rule-parens',

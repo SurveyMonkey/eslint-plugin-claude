@@ -41,6 +41,7 @@ import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
+import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -192,6 +193,7 @@ const modules = [
   claudeMdImportMaxDepth,
   claudeMdMaxBytes,
   memorySettingsSchema,
+  memorySymlinkNetworkTarget,
   rulesFrontmatterSchema,
   rulesMdExtension,
   rulesPathsGlobValid,
@@ -310,6 +312,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-import-max-depth': 'error',
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
+  'memory-symlink-network-target': 'error',
   'rules-frontmatter-schema': 'error',
   'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',
