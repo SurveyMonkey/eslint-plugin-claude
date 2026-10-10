@@ -15,13 +15,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'approval' }> = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Set a privacy toggle in the env block of a managed settings file to 1',
+      description:
+        'Give a privacy toggle in the env block of a managed settings file a truthy value',
       url: docsUrl(name),
     },
     schema: [],
     messages: {
       approval:
-        'Server-managed settings show the user an approval dialog for the value "{{value}}" of "{{name}}". Only a truthy value such as 1 or true applies without it. Write "1".',
+        'Server-managed settings can show the user an approval dialog for the value "{{value}}" of "{{name}}". Only a truthy value such as 1 or true applies without it.',
     },
   },
   create(context) {

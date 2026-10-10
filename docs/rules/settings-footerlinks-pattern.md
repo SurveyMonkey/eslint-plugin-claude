@@ -21,7 +21,7 @@ Keep each `footerLinksRegexes` entry of a managed settings file within the limit
 ## Rule details
 
 `footerLinksRegexes` turns IDs in the output of a turn into badges below the input box. The
-settings reference gives three limits for each entry.[^badges]
+settings reference gives limits for each entry. The rule checks three of them.[^badges]
 
 - **Pattern.** Claude Code matches each `pattern` on the main thread, so a slow regex blocks the
   UI. A nested quantifier such as `(a+)+$` can take exponentially long and freeze the session. The
@@ -38,8 +38,9 @@ regex text gets no report and causes no error.
 The rule reports a `url` or a `label` string when its literal text is over the limit. The literal
 text is the string without its `{name}` placeholders, because Claude Code fills each one from a
 capture group. The constructed URL or label is not shorter than the literal text, so the report is
-a certain fault. Most characters take one display column. A wide East Asian character or an emoji takes two. An
-accent mark takes none. The docs give no table of widths, so the count is an approximation.
+a certain fault. Most characters take one display column. A wide East Asian character or an emoji
+takes two. An accent mark takes none. The docs give no table of widths, so the count is an
+approximation.
 
 Each report is on the string. When an entry has two keys of one name, the rule reads the last, as
 `JSON.parse` does.

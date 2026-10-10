@@ -43,7 +43,6 @@ This rule checks the text only, so the two rules share no state.
 ### What the rule does not check
 
 - `subagentStatusLine` and `fileSuggestion`. The statusline page names the `statusLine` command.
-- A path that has only a backslash at the start, such as `\\server\share`.
 - A command that runs in PowerShell. Claude Code uses PowerShell when Git Bash is absent.
 - A hidden drop-in, which Claude Code ignores.
 

@@ -48,7 +48,7 @@ describe(`${name}: the privacy toggles`, () => {
   it('names the variable and the value', () => {
     const [message] = lint(env({ DO_NOT_TRACK: 'off' }))
     expect(message?.message).toBe(
-      'Server-managed settings show the user an approval dialog for the value "off" of "DO_NOT_TRACK". Only a truthy value such as 1 or true applies without it. Write "1".',
+      'Server-managed settings can show the user an approval dialog for the value "off" of "DO_NOT_TRACK". Only a truthy value such as 1 or true applies without it.',
     )
   })
 

@@ -12,7 +12,7 @@ generated:
 
 # `settings-managed-value-form`
 
-Set a privacy toggle in the `env` block of a managed settings file to `1`.
+Give a privacy toggle in the `env` block of a managed settings file a truthy value, such as `1`.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
@@ -37,7 +37,7 @@ and a file can be the source of a server-managed payload. A value of `1` is righ
 
 ### Quoted Booleans
 
-The managed settings page says that a Boolean key can hold the string `"true"` or `"false"`. It
+The managed settings page says that most Boolean keys can hold the string `"true"` or `"false"`. It
 reads as that Boolean, and `/status` shows a notice.[^quoted] `settings-schema` already reports a string where a
 key of its value table takes a Boolean, in a managed file too. This rule adds no second report.
 The `sandbox.*` keys are for `sandbox-schema`. `syncClaudeAiPlugins` has no type report in a
@@ -57,7 +57,7 @@ Fail:
 ```json
 {
   "env": {
-    "DISABLE_TELEMETRY": "0"
+    "DISABLE_TELEMETRY": "off"
   }
 }
 ```
