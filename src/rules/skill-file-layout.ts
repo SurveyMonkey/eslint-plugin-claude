@@ -11,7 +11,7 @@ const name = 'skill-file-layout' as const
 
 /** True when `dir` is `.claude/skills/` or the `skills/` directory of a plugin.
  *  A plugin root that the rule cannot see gives false, so the rule makes no report. */
-function isSkillsDir(dir: string): boolean {
+export function isSkillsDir(dir: string): boolean {
   const parent = path.dirname(dir)
   return (
     path.basename(dir) === 'skills' &&
