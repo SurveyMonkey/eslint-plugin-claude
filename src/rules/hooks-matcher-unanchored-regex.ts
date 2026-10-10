@@ -50,7 +50,7 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        // A pattern that does not compile is for `hooks-matcher-syntax`. The `*` match-all matcher is one.
+        // `hooks-matcher-syntax` owns a pattern that does not compile. The `*` match-all matcher does not compile as a pattern, so it gets no report here.
         const loose = compile(value)
         if (loose === undefined) {
           continue

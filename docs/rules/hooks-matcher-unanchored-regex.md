@@ -30,14 +30,15 @@ reports at the `matcher` value when the pattern matches a tool that the same pat
 match. The message names the extra tools.
 
 The rule is `off` in `recommended`. The extra match is the documented behavior, and a person can want it. A
-pattern that starts with `^` is the docs pattern `^Notebook`, so the rule makes no report for it. A missing `$` is
+pattern with `^` before every branch is the docs pattern `^Notebook`, so the rule makes no report for it. A
+pattern such as `^Read|Edit` has a branch without `^`, so the rule reports it. A missing `$` is
 no fault either.
 
 The rule makes no report in these cases:
 
 - The matcher holds exact-match characters only, such as `Edit|Write`. Claude Code compares those as exact strings.
 - The pattern matches no tool that its form with a leading `^` does not match, such as `mcp__memory__.*`.
-- The matcher is not a valid regular expression, or it has the form `Tool(specifier)`.
+- The matcher is `*`, which matches all, or it is not a valid regular expression, or it has the form `Tool(specifier)`.
   [`hooks-matcher-syntax`](hooks-matcher-syntax.md) reports both.
 - The event does not match on a tool name.
 

@@ -20,8 +20,9 @@ Name a tool, a subagent and an MCP server that exist in a hook.
 
 ## Rule details
 
-A hook that names a thing that does not exist never fires, and Claude Code gives no warning. The docs say that "a
-misspelled tool name produces a matcher that matches nothing".[^check] The rule checks three names. It reads only
+A hook that names a tool or a subagent that does not exist never fires, and Claude Code gives no warning. The docs
+say that "a misspelled tool name produces a matcher that matches nothing".[^check] An MCP hook with an unknown
+server does fire, but it has no server to call. The rule checks three names. It reads only
 an exact-match value, so a regular expression gets no report.
 
 - **A tool name.** The rule reads the matcher of a group on a tool event. It reports a value that is not a built-in
