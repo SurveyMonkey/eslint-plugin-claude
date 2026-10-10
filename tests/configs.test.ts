@@ -519,6 +519,13 @@ const TREE: Record<string, string> = {
   'packages/ea/.claude/settings.local.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
   'packages/ea/managed-settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
   'packages/ea/.vscode/settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  // `rules-paths-no-match`: a rule with a glob that matches a file, and one that matches none.
+  // The same rule where no rule reads it. The file `.git` makes `packages/pn` a repository.
+  'packages/pn/.git': 'gitdir: ../.git\n',
+  'packages/pn/src/a.ts': 'x\n',
+  'packages/pn/.claude/rules/hit.md': '---\npaths:\n  - "src/**/*.ts"\n---\n# Hit\n',
+  'packages/pn/.claude/rules/miss.md': '---\npaths:\n  - "nope/**/*.ts"\n---\n# Miss\n',
+  'packages/pn/docs/miss.md': '---\npaths:\n  - "nope/**/*.ts"\n---\n# Miss\n',
   // `claude-md-location`: a CLAUDE.local.md in a `.claude` folder, and a case variant. The loaded
   // names, and a name that only looks like one.
   'packages/lo/.claude/CLAUDE.local.md': '# Notes\n',
@@ -736,6 +743,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
   ],
   'claude-md-location': ['markdown/gfm', ['**/*.md']],
+  'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
 
@@ -1018,6 +1026,8 @@ const STRICT_ONLY = [
   // `claude-md-excludes-absolute-committed` reads the committed project file, and no other file.
   'packages/ea/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
   'packages/ex/ok/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
+  // `rules-paths-no-match` reads the rule files, and no other file.
+  'packages/pn/.claude/rules/miss.md: claude/rules-paths-no-match@1',
   // `claude-md-location` reads every Markdown file, and reports the two places and names.
   'packages/lo/.claude/CLAUDE.local.md: claude/claude-md-location@1',
   'packages/lo/web/claude.md: claude/claude-md-location@1',

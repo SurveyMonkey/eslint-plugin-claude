@@ -67,6 +67,7 @@ import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMaxLines from './rules/rules-max-lines.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
@@ -225,6 +226,7 @@ const modules = [
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
   claudeMdLocation,
+  rulesPathsNoMatch,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -358,6 +360,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
   'claude-md-location': 'off',
+  'rules-paths-no-match': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

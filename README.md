@@ -149,6 +149,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/rules-max-lines`](docs/rules/rules-max-lines.md) | A rule file below `.claude/rules/` has at most 200 lines, the length over which Claude Code shows a warning; option `max` | `warn` | `warn` |
 | [`claude/rules-md-extension`](docs/rules/rules-md-extension.md) | Each file in `.claude/rules/` ends in `.md`, the only extension that Claude Code discovers | `error` | `error` |
 | [`claude/rules-paths-glob-valid`](docs/rules/rules-paths-glob-valid.md) | A `paths` glob of a rule file that Claude Code can use: no `[` without a bracket expression, and brace groups within 1,000 patterns and 4 MiB | `error` | `error` |
+| [`claude/rules-paths-no-match`](docs/rules/rules-paths-no-match.md) | Each `paths` glob of a rule file matches at least one file on disk below the folder that holds `.claude/`, inside the repository; `*.md` matches root files only | `off` | `warn` |
 | [`claude/rules-symlink-external`](docs/rules/rules-symlink-external.md) | No `.claude/rules/` entry and no `.claude` folder is a link to a target out of the repository, because each user must approve such rules | `warn` | `warn` |
 | [`claude/rules-symlink-external-scoped`](docs/rules/rules-symlink-external-scoped.md) | A rule file reached through a link out of the repository has no `paths`, because Claude Code loads such a rule only without it | `error` | `error` |
 

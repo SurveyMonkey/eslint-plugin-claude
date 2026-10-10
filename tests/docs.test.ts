@@ -83,6 +83,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'rules-max-lines',
     'rules-md-extension',
     'rules-paths-glob-valid',
+    'rules-paths-no-match',
     'rules-symlink-external',
     'rules-symlink-external-scoped',
     'settings-conflicting-keys',
