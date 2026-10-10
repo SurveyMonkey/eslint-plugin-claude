@@ -27,7 +27,7 @@ recommended length add up past a combined limit. Each CLAUDE.md, rules file and 
 counts as a separate file.[^large] The docs do not give the limit. So the rule has the option `max`
 and no default. **The rule makes no report when `max` is not set.**
 
-The rule adds the lines of this set, as `lineCount` counts them:
+The rule adds the lines of this set. A line end ends a line and does not start one:
 
 - The `CLAUDE.md`, `.claude/CLAUDE.md` and `CLAUDE.local.md` files of the folder of the linted file,
   and of each folder above it, up to the repository root.
@@ -47,12 +47,14 @@ conditions keep the reports few:
   `CLAUDE.local.md`.
 
 The rule is a heuristic. It treats the folder of the linted file as the folder where a session
-starts. It does not read a file outside the repository, such as the user file `~/.claude/CLAUDE.md`
+starts. For a file in `.claude/`, that is the folder that holds `.claude/`. Where no `.git` entry
+exists above it, only that folder counts. It does not read a file outside the repository, such as the user file `~/.claude/CLAUDE.md`
 or a managed policy file. So the sum that Claude Code sees can be larger.
 
-The rule makes no report that rests on a path that it cannot read (ADR 001, Decision 14). It makes
-no report when a part of the set is out of the repository, a link that leads nowhere, or a file with
-no read right. The sum would then be a lower bound.
+A part of the set can be out of the repository, a link that leads nowhere, or a file with no read
+right. The rule does not read it and adds nothing for it. A sum only grows, so a report that the
+lines it read support is sound (ADR 001, Decision 14). The rule reports when those lines pass `max`,
+and the message says "at least". It stays silent when they do not pass `max`.
 
 Fail, with `max` set to 400, when the files of the folder add up to 450 lines:
 

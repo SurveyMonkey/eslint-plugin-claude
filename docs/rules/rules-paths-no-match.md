@@ -30,17 +30,17 @@ The rule matches each glob against the files on disk. The base is the folder tha
 `.claude/` directory of the rule file. It reports each glob that matches no file, at the `paths`
 field, once for each glob.
 
-The inventory row says "tracked file". The plugin has no Git reader yet, so the rule reads the disk.
-It counts a file that `.gitignore` covers, such as a build output. A glob that targets such a file
-passes.
+The inventory row said "tracked file". The plugin has no Git reader yet, so the rule reads the
+disk. It counts a file that `.gitignore` covers, such as a build output. A glob that targets such a
+file passes, except a glob below `node_modules` or `.git`, which the walk skips.
 
 The walk of the files:
 
 - It stays inside the repository. It does not read a folder above the repository root, and the
   rule makes no report for a rule file that is not in a repository.
 - It skips `.git` and `node_modules`.
-- It follows a link to a folder once, when the real path is in the repository, so a cycle of links
-  ends. A link that leads out of the repository, and a folder with no read right, may hide a file.
+- It follows a link to a folder when the real path is in the repository. A folder behind a link has
+  both names. A link to a folder above the link ends the walk there, so a cycle of links ends. A link that leads out of the repository, and a folder with no read right, may hide a file.
   The rule then makes no report for a glob that is left (ADR 001, Decision 14).
 
 The docs do not give the full glob syntax. The matcher is wide where the docs are silent, so
@@ -54,6 +54,7 @@ that a glob is not reported without need:
 
 The rule makes no report for a glob that `rules-paths-glob-valid` reports: a glob with a `[` that
 starts no bracket expression, and every glob of a list that is past the budget of brace groups. It
+makes no report for a glob that builds no expression, such as a reversed range in a bracket. It
 makes no report for a rule without `paths`, or with a `paths` field that is empty or that does not
 parse.
 

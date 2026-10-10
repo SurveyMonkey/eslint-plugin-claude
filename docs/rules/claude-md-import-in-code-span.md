@@ -38,7 +38,7 @@ The rule reads the token as the import parser does:
 
 - An `@` starts a token at the start of the text, or after white space. An email address is not a
   token.
-- The path ends at the first white space or backtick. A backslash before a space keeps the space.
+- The path ends at the first white space, backtick or backslash. A backslash before a space keeps the space.
 - A path that starts with a quote is not a token.
 - A path with `~`, a URL scheme or a drive letter is out of the repository. The rule makes no
   report for it.

@@ -35,10 +35,12 @@ The rule reports a file once, at the start of the file, in two cases:
   in capitals and do not say that Claude Code ignores case. A file system that ignores case, such
   as the default on macOS and Windows, cannot hold both `claude.md` and `CLAUDE.md`.
 
-The glob is `**/*.md`, because a case variant cannot be matched by a narrower glob. The rule reads
-the path only. It skips these files:
+The glob is `**/*.md`, so that the rule sees a name in any case. The rule reads the path only. It
+skips these files:
 
 - A file below `.claude/rules/`. Claude Code loads every Markdown file there as a rule.
+- A file below `.claude/commands/`, `.claude/agents/`, `.claude/skills/` or
+  `.claude/output-styles/`. Such a file can have any name.
 - A file that Claude Code never reads, such as a Markdown file below `.agents/`.
   `claude-md-agents-md-variant` owns those files.
 

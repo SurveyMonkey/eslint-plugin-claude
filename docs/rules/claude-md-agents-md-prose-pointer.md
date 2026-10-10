@@ -27,16 +27,16 @@ decides to open the file. The docs give two fixes. Delete the `CLAUDE.md`, so th
 `AGENTS.md` directly. Or replace the sentence with an `@AGENTS.md` import.[^workaround]
 
 The rule reports the first paragraph of a `CLAUDE.md` file that has a verb such as `read` and then
-`AGENTS.md` in the same sentence. The verbs are `read`, `see`, `refer to`, `follow`, `consult`,
-`check`, `open`, `load` and `look at`, in any case. The name `AGENTS.md` must be in capitals, and
-not part of a longer name. The rule reports once for each file.
+`AGENTS.md` on the same line, with at most 80 characters and no full stop between them. The verbs are `read`, `see`, `refer to`, `follow`, `consult`,
+`check`, `open`, `load` and `look at`, in any case. The name `AGENTS.md` must be in capitals. A longer name that follows it, such as
+`AGENTS.md-old`, does not count. The rule reports once for each file.
 
 The rule makes no report in these cases:
 
 - The file has a real import of an `AGENTS.md`, for example `@AGENTS.md` or `@../AGENTS.md`. An
   import in a code span or a fenced block does not load, so it does not count.
-- The mention is in a heading, a fenced block, a code block or an HTML comment. The rule reads
-  paragraphs only.
+- The mention is in a heading, a fenced block, a code block or a block-level HTML comment. The rule
+  reads paragraphs only.
 - The sentence has no such verb, for example `AGENTS.md is shared with other tools`.
 - The file is not a `CLAUDE.md` or `.claude/CLAUDE.md`. The rule does not read `CLAUDE.local.md`,
   and it does not read a `CLAUDE.md` below `.claude/rules/`, which is a rule file.
