@@ -14,13 +14,13 @@ import path from 'node:path'
 import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 
 /** The index mode of a regular file with no executable bit. The executable bit
- *  is the mode `100755`. A rule reports `100644` only. A link, a submodule and
- *  a path that git does not track have other modes, and the bit does not apply
- *  to them. */
+ *  is the mode `100755`. A rule reports `100644` only. A link and a submodule
+ *  have other modes, and the bit does not apply to them. A path that git does
+ *  not track has no mode. */
 export const PLAIN_MODE = '100644'
 
-// The variables that point git at a repository. A hook that runs git sets
-// them, and they would make git read another index.
+// The variables that point git at a repository. Git sets them when it runs a
+// git hook. They would make git read another index.
 const LOCATION = [
   'GIT_DIR',
   'GIT_WORK_TREE',
@@ -41,7 +41,9 @@ function gitEnv(): NodeJS.ProcessEnv {
 /** The output of `git` with `args`, run in `root` with no shell. It throws
  *  when `git` is missing, `root` is not there, or the command fails. */
 function run(root: string, args: string[]): string {
-  return execFileSync('git', args, {
+  // `core.fsmonitor` in the config of a repository names a program. Git runs
+  // that program when it reads the index. The reader sets the key to false.
+  return execFileSync('git', ['-c', 'core.fsmonitor=false', ...args], {
     cwd: root,
     env: gitEnv(),
     encoding: 'utf8',
@@ -60,14 +62,19 @@ const cache = new Map<
   { gitDir: string; stamp: string; modes: ReadonlyMap<string, string> }
 >()
 
-/** The stamp of the index file in `gitDir`. A repository with no index yet,
- *  such as one just after `git init`, has no tracked file. */
+/** The stamp of the index file in `gitDir`. Git replaces the index with a new
+ *  file, so the inode changes. A change of mode keeps the size, so the stamp
+ *  also holds the times. A repository with no index yet, such as one just
+ *  after `git init`, has no tracked file. Any other error throws. */
 function stampOf(gitDir: string): string {
   try {
     const stat = statSync(path.join(gitDir, 'index'), { bigint: true })
-    return `${stat.mtimeNs}:${stat.size}`
-  } catch {
-    return 'no index'
+    return `${stat.mtimeNs}:${stat.ctimeNs}:${stat.ino}:${stat.size}`
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return 'no index'
+    }
+    throw error
   }
 }
 
@@ -81,10 +88,15 @@ function modesOf(root: string): ReadonlyMap<string, string> | Unreadable {
     if (hit?.stamp === stamp) {
       return hit.modes
     }
-    // Each entry is `<mode> <object> <stage>\t<path>`, and ends with a NUL.
+    // Each entry is `<mode> <object> <stage>\t<path>`, and ends with a NUL. A
+    // path in conflict has an entry for each stage 1 to 3, and none for stage 0.
+    // It has no mode here.
     const modes = new Map<string, string>()
     for (const entry of run(root, ['ls-files', '--stage', '-z']).split('\0')) {
-      modes.set(entry.slice(entry.indexOf('\t') + 1), entry.slice(0, 6))
+      const tab = entry.indexOf('\t')
+      if (tab !== -1 && entry.slice(tab - 1, tab) === '0') {
+        modes.set(entry.slice(tab + 1), entry.slice(0, 6))
+      }
     }
     cache.set(root, { gitDir, stamp, modes })
     return modes

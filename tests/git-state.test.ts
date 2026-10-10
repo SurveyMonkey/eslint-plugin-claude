@@ -1,7 +1,15 @@
 // The reader of the git index. The tests make real repositories with `git init`.
 // The executable bit is the index mode, so some cases make the disk mode and the
 // index mode differ.
-import { chmodSync } from 'node:fs'
+import {
+  chmodSync,
+  copyFileSync,
+  existsSync,
+  readFileSync,
+  statSync,
+  utimesSync,
+  writeFileSync,
+} from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { gitChildren, gitModeOf, PLAIN_MODE } from '../src/git-state.ts'
@@ -115,6 +123,83 @@ describe('gitModeOf', () => {
     git(main, 'worktree', 'add', '--quiet', '-b', 'other', linked)
     expect(gitModeOf(linked, at(linked, 'run.sh'))).toBe('100755')
   })
+
+  it('reads a linked worktree again after its index changes', () => {
+    const main = repo({ 'run.sh': 'x' })
+    git(main, '-c', 'user.name=t', '-c', 'user.email=t@t.test', 'commit', '--quiet', '-m', 'm')
+    const linked = path.join(plain(), 'linked')
+    git(main, 'worktree', 'add', '--quiet', '-b', 'other', linked)
+    expect(gitModeOf(linked, at(linked, 'run.sh'))).toBe('100644')
+    git(linked, 'update-index', '--chmod=+x', 'run.sh')
+    expect(gitModeOf(linked, at(linked, 'run.sh'))).toBe('100755')
+  })
+
+  it('reads the index again when only the file identity changes', () => {
+    // The old index has the same size and the same time of the last write.
+    const root = repo({ 'run.sh': 'x' })
+    const index = path.join(root, '.git', 'index')
+    const old = path.join(root, 'old-index')
+    copyFileSync(index, old)
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
+    git(root, 'update-index', '--chmod=+x', 'run.sh')
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100755')
+    const { mtime } = statSync(index)
+    writeFileSync(index, readFileSync(old))
+    utimesSync(index, mtime, mtime)
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
+  })
+
+  it('does not run the program of core.fsmonitor', () => {
+    const root = repo({ 'run.sh': 'x' })
+    const mark = path.join(root, 'ran')
+    const hook = path.join(root, 'fsmonitor.sh')
+    writeFileSync(hook, `#!/bin/sh\ntouch '${mark}'\n`)
+    chmodSync(hook, 0o755)
+    git(root, 'config', 'core.fsmonitor', hook)
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
+    expect(existsSync(mark)).toBe(false)
+  })
+
+  it('gives null for a path in conflict', () => {
+    const root = repo({ 'run.sh': 'base\n' })
+    const commit = (message: string) =>
+      git(
+        root,
+        '-c',
+        'user.name=t',
+        '-c',
+        'user.email=t@t.test',
+        'commit',
+        '--quiet',
+        '-am',
+        message,
+      )
+    commit('base')
+    const main = git(root, 'rev-parse', '--abbrev-ref', 'HEAD').trim()
+    git(root, 'checkout', '--quiet', '-b', 'side')
+    put(root, { 'run.sh': 'side\n' })
+    commit('side')
+    git(root, 'checkout', '--quiet', main)
+    put(root, { 'run.sh': 'main\n' })
+    commit('main')
+    expect(() => git(root, 'merge', 'side')).toThrow()
+    expect(git(root, 'ls-files', '--unmerged')).toContain('run.sh')
+    expect(gitModeOf(root, at(root, 'run.sh'))).toBeNull()
+  })
+
+  it.each(['GIT_WORK_TREE', 'GIT_COMMON_DIR', 'GIT_OBJECT_DIRECTORY', 'GIT_NAMESPACE'])(
+    'ignores %s of a calling hook',
+    (name) => {
+      const root = repo({ 'run.sh': 'x' }, ['run.sh'])
+      const other = repo({ 'other.sh': 'x' })
+      vi.stubEnv(name, name === 'GIT_NAMESPACE' ? 'other' : path.join(other, '.git'))
+      try {
+        expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100755')
+      } finally {
+        vi.unstubAllEnvs()
+      }
+    },
+  )
 
   it('ignores the git variables of a calling hook', () => {
     const root = repo({ 'run.sh': 'x' }, ['run.sh'])
