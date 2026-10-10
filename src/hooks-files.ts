@@ -3,12 +3,12 @@
 // (ADR 001, Decision 10). A plugin reads `hooks/hooks.json` at its root. Project
 // and user hooks go under the `hooks` key of a settings file, so there is no
 // standalone hooks file for them (docs/rules/hooks-no-standalone-file.md).
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
 import { kindOf } from './settings-files.ts'
 import { commandsOf, commandWordAt } from './shell-words.ts'
-import { isInside, readManifest, realOf, repositoryRoot, statOf, UNREADABLE } from './skill-tree.ts'
+import { isInside, readManifest, realOf, repositoryRoot, UNREADABLE } from './skill-tree.ts'
 
 /** What Claude Code does with a `hooks.json` file. A plugin file is one that it
  *  reads. The other two kinds are files that it does not read: a standalone file in
@@ -186,12 +186,9 @@ export function scriptText({ file, folder }: HookScript): string | undefined {
   if (typeof real !== 'string' || !isInside(real, repositoryRoot(folder))) {
     return undefined
   }
-  const info = statOf(real)
-  if (info === null || info === UNREADABLE || !info.isFile() || info.size > MAX_SCRIPT) {
-    return undefined
-  }
   try {
-    return readFileSync(real, 'utf8')
+    const info = statSync(real)
+    return info.isFile() && info.size <= MAX_SCRIPT ? readFileSync(real, 'utf8') : undefined
   } catch {
     return undefined
   }

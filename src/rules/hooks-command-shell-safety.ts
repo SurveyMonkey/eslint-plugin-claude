@@ -102,10 +102,10 @@ function linesOf(command: string): string[] {
       const flag = words.findIndex(
         (word, index) => index > at && /^-[A-Za-z]*c[A-Za-z]*$/.test(word),
       )
-      return ['bash', 'sh', 'zsh'].includes(path.posix.basename(words[at] ?? '')) &&
-        flag !== -1 &&
-        words[flag + 1] !== undefined
-        ? [words[flag + 1] as string]
+      const line = flag === -1 ? undefined : words[flag + 1]
+      return line !== undefined &&
+        ['bash', 'sh', 'zsh'].includes(path.posix.basename(words[at] ?? ''))
+        ? [line]
         : []
     }),
   ]

@@ -52,17 +52,13 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        const items = [
-          { node: executable, operators: false },
-          ...args.items.map((node) => ({ node, operators: true })),
-        ]
-        for (const { node, operators } of items) {
+        for (const node of [executable, ...args.items]) {
           if (node.kind !== 'string') {
             continue
           }
           const text = node.value
           const variable = VARIABLE.exec(text.replace(PLACEHOLDER, '').replace(OTHER_RULE, ''))
-          if (operators && OPERATOR.test(text)) {
+          if (OPERATOR.test(text)) {
             context.report({ loc: node.loc, messageId: 'operator', data: { text } })
           } else if (variable !== null) {
             context.report({ loc: node.loc, messageId: 'variable', data: { text: variable[0] } })

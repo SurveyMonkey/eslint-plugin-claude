@@ -126,6 +126,12 @@ describe(`${name}: the silent cases`, () => {
     expect(ids({ 'hooks/b.sh': BAD }, { command: `${R}/hooks/b.sh` })).toEqual([])
   })
 
+  it('is silent for CLAUDE_PROJECT_DIR in a managed file inside a .claude folder', () => {
+    const text = settings(hooks('Stop', [command({ command: `${P}/hooks/b.sh` })]))
+    const root = repo({ '.claude/managed-settings.json': text, 'hooks/b.sh': BAD })
+    expect(lintJson(name, text, path.join(root, '.claude/managed-settings.json'))).toEqual([])
+  })
+
   it('is silent for CLAUDE_PROJECT_DIR in a plugin file and in a managed file', () => {
     const text = settings(hooks('Stop', [command({ command: `${P}/hooks/b.sh` })]))
     const root = repo({

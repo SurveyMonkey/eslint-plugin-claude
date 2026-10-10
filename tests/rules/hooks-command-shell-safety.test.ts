@@ -96,6 +96,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
 
   it('is silent in exec form and in PowerShell, which have no shell', () => {
     expect(ids({ command: 'cat', args: ['$FILE'] })).toEqual([])
+    expect(ids({ command: 'cat $FILE', args: [] })).toEqual([])
     expect(ids({ command: 'cat $FILE', shell: 'powershell' })).toEqual([])
   })
 
