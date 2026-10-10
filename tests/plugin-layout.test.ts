@@ -8,6 +8,7 @@ import {
   PLUGIN_PATH_KEYS,
   PLUGIN_SETTINGS_KEYS,
   REPLACED_DEFAULTS,
+  USER_CONFIG_TYPES,
 } from '../src/data/plugin-layout.ts'
 
 describe('plugin component names', () => {
@@ -91,5 +92,11 @@ describe('fields of a command entry', () => {
       'model',
       'allowedTools',
     ])
+  })
+})
+
+describe('types of a userConfig option', () => {
+  it('holds the five types of the table, in its order', () => {
+    expect(USER_CONFIG_TYPES).toEqual(['string', 'number', 'boolean', 'directory', 'file'])
   })
 })
