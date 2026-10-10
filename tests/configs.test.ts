@@ -191,12 +191,25 @@ const MCP_SIZE_TREE: Record<string, string> = {
 }
 
 // A server list with one fault for each content rule of #16: a reserved name, a remote server with
-// an empty `url`, a header value with a trailing line break, and a `timeout` in seconds.
+// an empty `url`, a header value with a trailing line break, and a `timeout` in seconds. Seven
+// more servers each break one OAuth or environment rule.
 const badMcpServers = {
   workspace: { command: 'x' },
   docs: { type: 'http', url: '' },
   api: { type: 'http', url: 'https://x.test/mcp', headers: { Authorization: 'Bearer t\n' } },
   build: { command: 'x', timeout: 60 },
+  stdioOauth: { command: 'x', oauth: { clientId: 'id' } },
+  arrayScopes: { type: 'http', url: 'https://x.test/mcp', oauth: { scopes: ['a'] } },
+  shadowed: {
+    type: 'http',
+    url: 'https://x.test/mcp',
+    headers: { Authorization: 'Bearer t' },
+    oauth: {},
+  },
+  projectDir: { command: `\${CLAUDE_PROJECT_DIR}/s.sh` },
+  literal: { command: 'x', label: `\${NAME}` },
+  credential: { type: 'http', url: 'https://x.test/mcp', headers: { Key: `\${NPM_TOKEN}` } },
+  helper: { type: 'http', url: 'https://x.test/mcp', headersHelper: 'echo $MY_TOKEN' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
 
@@ -1404,7 +1417,7 @@ const TREE: Record<string, string> = {
   'packages/mu/.claude/other/mcp.json': badMcp,
   // A plugin `.mcp.json` may omit the wrapper, and may hold a placeholder with an empty `url`.
   // The plugin root is `plugins/p`, which has a manifest above. The servers-key and URL rules skip
-  // it. The name, whitespace and timeout rules read it.
+  // it. The other content rules read it.
   'plugins/p/.mcp.json': JSON.stringify(badMcpServers),
   // The same content where no rule reads it: other names and other directories.
   'packages/mc/mcp.json': badMcp,
@@ -1877,6 +1890,13 @@ const MCP_RULES = [
   { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
   { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
   { name: 'mcp-timeout-min', files: ['**/.mcp.json'] },
+  { name: 'mcp-oauth-transport', files: ['**/.mcp.json'] },
+  { name: 'mcp-oauth-values', files: ['**/.mcp.json'] },
+  { name: 'mcp-authorization-header-with-oauth', files: ['**/.mcp.json'] },
+  { name: 'mcp-project-dir-default', files: ['**/.mcp.json'] },
+  { name: 'mcp-env-expansion-field', files: ['**/.mcp.json'] },
+  { name: 'mcp-credential-var-remote', files: ['**/.mcp.json'] },
+  { name: 'mcp-headershelper-credential-env', files: ['**/.mcp.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -2475,15 +2495,31 @@ const EXPECTED = [
     'mcp-remote-url-empty',
     'mcp-hidden-whitespace',
     'mcp-timeout-min',
+    'mcp-oauth-transport',
+    'mcp-oauth-values',
+    'mcp-authorization-header-with-oauth',
+    'mcp-project-dir-default',
+    'mcp-env-expansion-field',
+    'mcp-credential-var-remote',
+    'mcp-headershelper-credential-env',
   ].map((rule) => `packages/mc/.mcp.json: claude/${rule}@2`),
   'packages/mk2/.mcp.json: claude/mcp-json-servers-key@2',
   ...['.claude/.mcp.json', '.claude/mcp.json', '.claude/config/mcp.json'].map(
     (file) => `packages/mu/${file}: claude/mcp-json-location@2`,
   ),
-  // The plugin file has no wrapper. The URL rule skips the placeholder.
-  ...['mcp-server-name-reserved', 'mcp-hidden-whitespace', 'mcp-timeout-min'].map(
-    (rule) => `plugins/p/.mcp.json: claude/${rule}@2`,
-  ),
+  // The plugin file has no wrapper. The URL rule skips the placeholder. The project directory
+  // rule skips a plugin file.
+  ...[
+    'mcp-server-name-reserved',
+    'mcp-hidden-whitespace',
+    'mcp-timeout-min',
+    'mcp-oauth-transport',
+    'mcp-oauth-values',
+    'mcp-authorization-header-with-oauth',
+    'mcp-env-expansion-field',
+    'mcp-credential-var-remote',
+    'mcp-headershelper-credential-env',
+  ].map((rule) => `plugins/p/.mcp.json: claude/${rule}@2`),
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
