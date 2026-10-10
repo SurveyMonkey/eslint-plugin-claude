@@ -1164,6 +1164,10 @@ const agentFile = (name: string, description: string, fields = '', body = 'Body.
   `---\nname: ${name}\ndescription: ${description}\n${fields}---\n\n${body}`
 const OK = agentFile('ok-agent', 'Reviews code. Use proactively.')
 const BARE = agentFile('Bare_Agent', 'Reviews code.', '', '')
+// The file in `agents/` that the manifest of the plugin `q` leaves out. It sets `permissionMode`,
+// which `agent-plugin-ignored-fields` reports in a plugin agent, so a report would show that the
+// rule still sees the file as an agent.
+const UNLISTED = agentFile('Bare_Agent', 'Reviews code.', 'permissionMode: plan\n', '')
 const TEAM_FIELDS = 'skills:\n  - lint\nmcpServers:\n  - github\nbackground: true\n'
 const DESCRIPTION_TREE: Record<string, string> = {
   '.git/HEAD': 'ref: refs/heads/main\n',
@@ -1193,7 +1197,7 @@ const DESCRIPTION_TREE: Record<string, string> = {
   }),
   'plugins/q/custom/ok.md': OK,
   'plugins/q/custom/bare.md': BARE,
-  'plugins/q/agents/unlisted.md': BARE,
+  'plugins/q/agents/unlisted.md': UNLISTED,
 }
 
 // The reports of the description rules over `DESCRIPTION_TREE`, in `strict` only. A file with a
@@ -1448,10 +1452,19 @@ describe('configs', () => {
   // The five description rules take every Markdown file and every agent file of the tree reports
   // for most of them, so `DESCRIPTION_TREE` tests them. This run leaves their reports out.
   it('strict reports the files of recommended, and those of the off rules', async () => {
-    const found = (await reports(plugin.configs.strict)).filter(
-      (report) => !DESCRIPTION_RULES.some((rule) => report.includes(`: claude/${rule}@`)),
+    const isDescription = (report: string) =>
+      DESCRIPTION_RULES.some((rule) => report.includes(`: claude/${rule}@`))
+    const all = await reports(plugin.configs.strict)
+    expect(all.filter((report) => !isDescription(report))).toEqual(
+      [...EXPECTED, ...STRICT_ONLY].sort(),
     )
-    expect(found).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
+    // The glob of these rules is `**/*.md`. The tree holds skills, commands, a plugin skill and
+    // `docs/agents/*.md`, which are no agent files. Each report must be on an agent file.
+    const own = all.filter(isDescription)
+    expect(own.length).toBeGreaterThan(0)
+    for (const report of own) {
+      expect(report).toMatch(/^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/p\/agents\//)
+    }
   }, 30_000)
 
   it('strict reports the description rules on a tree of its own, and recommended does not', async () => {
@@ -1460,6 +1473,8 @@ describe('configs', () => {
     )
     expect(blocks).toHaveLength(DESCRIPTION_RULES.length)
     expect(await reports(blocks, descriptionRoot)).toEqual([...DESCRIPTION_REPORTS].sort())
+    // The manifest of `q` replaces `agents/`, so the rules of A1 to A3 are silent on `unlisted.md`
+    // too: `agent-plugin-ignored-fields` would report its `permissionMode` in a plugin agent.
     expect(await reports(plugin.configs.recommended, descriptionRoot)).toEqual([])
   }, 30_000)
 })
