@@ -53,6 +53,7 @@ import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import claudeMdLocation from './rules/claude-md-location.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import claudeMdMaxLines from './rules/claude-md-max-lines.ts'
+import claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
 import claudeMdSymlink from './rules/claude-md-symlink.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
@@ -369,6 +370,7 @@ const modules = [
   claudeMdHtmlCommentContent,
   claudeMdImportInCodeSpan,
   claudeMdLocation,
+  claudeMdProcedureToSkill,
   memoryAgentMemoryOrphan,
   rulesPathsNoMatch,
 ]
@@ -575,6 +577,7 @@ const recommended: Record<RuleName, Severity> = {
   'claude-md-html-comment-content': 'off',
   'claude-md-import-in-code-span': 'off',
   'claude-md-location': 'off',
+  'claude-md-procedure-to-skill': 'off',
   'memory-agent-memory-orphan': 'off',
   'rules-paths-no-match': 'off',
 }
