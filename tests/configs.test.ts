@@ -88,6 +88,25 @@ const badMarketSettings = JSON.stringify({
 // One string value of 2 MiB makes a file over the limit of the size rule.
 const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
+/** The same `content` in every place that a settings rule might read: the two project files, the
+ *  managed file, a drop-in, a hidden drop-in, a drop-in that does not end in `.json`, a drop-in in a
+ *  subfolder, and a file of another tool. A hidden drop-in is for `settings-managed-file`. */
+function settingsFiles(dir: string, content: object): Record<string, string> {
+  const text = JSON.stringify(content)
+  return Object.fromEntries(
+    [
+      '.claude/settings.json',
+      '.claude/settings.local.json',
+      'managed-settings.json',
+      'managed-settings.d/10-a.json',
+      'managed-settings.d/.20-hidden.json',
+      'managed-settings.d/30-b.txt',
+      'managed-settings.d/sub/40-c.json',
+      '.vscode/settings.json',
+    ].map((file) => [`packages/${dir}/${file}`, text]),
+  )
+}
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -643,6 +662,21 @@ const TREE: Record<string, string> = {
   'packages/pwp/managed-settings.d/sub/40-c.json':
     '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
   'packages/pwp/.vscode/settings.json': '{"permissions": {"allow": ["Read(C:/Users/alice)"]}}',
+  // The auto mode and sandbox rules. The same content in every place, and each rule reads its own files.
+  // `permissions-auto-mode-schema`: a list that is not an array.
+  ...settingsFiles('pas', { autoMode: { allow: 'x' } }),
+  // `sandbox-domain-syntax`: a URL scheme in an allowed domain.
+  ...settingsFiles('sdx', { sandbox: { network: { allowedDomains: ['https://example.com'] } } }),
+  // `sandbox-excluded-commands-syntax`: an entry that starts with `sudo`.
+  ...settingsFiles('sec', { sandbox: { excludedCommands: ['sudo make'] } }),
+  // `sandbox-filesystem-disabled-conflict`: `disabled` with a `denyRead` entry.
+  ...settingsFiles('sfd', { sandbox: { filesystem: { disabled: true, denyRead: ['~/.aws'] } } }),
+  // `sandbox-schema`: a key that the docs do not list.
+  ...settingsFiles('ssm', { sandbox: { madeUp: 1 } }),
+  // `sandbox-scope`: a mask entry in a credentials list.
+  ...settingsFiles('ssc', {
+    sandbox: { credentials: { files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask' }] } },
+  }),
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -757,6 +791,19 @@ const PATH_RULES = [
   { name: 'permissions-negation', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-webfetch-domain-syntax', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-windows-path', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The auto mode and sandbox rules of the fourth layer of #15, in the order of the `modules` list,
+// with the files of each. Each is an error. The conflict rule reads the managed files only, because
+// a project file cannot set `filesystem.disabled`. The scope rule reads the two project files only,
+// because a managed file keeps a mask entry.
+const SANDBOX_RULES = [
+  { name: 'permissions-auto-mode-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-domain-syntax', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-excluded-commands-syntax', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-filesystem-disabled-conflict', files: MANAGED_FILES },
+  { name: 'sandbox-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-scope', files: PROJECT_FILES },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1006,6 +1053,35 @@ const EXPECTED = [
     'packages/ppa/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/permissions-protected-path-allow@2`),
   'packages/ppa/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The auto mode and sandbox rules read the project and managed files, and no other file. A hidden
+  // drop-in is for `settings-managed-file`.
+  ...[
+    ['pas', 'permissions-auto-mode-schema'],
+    ['sdx', 'sandbox-domain-syntax'],
+    ['sec', 'sandbox-excluded-commands-syntax'],
+    ['ssm', 'sandbox-schema'],
+  ].flatMap(([dir, rule]) => [
+    `packages/${dir}/.claude/settings.json: claude/${rule}@2`,
+    `packages/${dir}/.claude/settings.local.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
+  ]),
+  // `autoMode` is a key that Claude Code reads from user and managed settings, so
+  // `settings-key-scope` also reports it in the two project files: a different fault.
+  'packages/pas/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/pas/.claude/settings.local.json: claude/settings-key-scope@2',
+  // `sandbox-filesystem-disabled-conflict` reads the managed files only. A project file cannot set
+  // `filesystem.disabled`, and `settings-key-scope` reports the key there.
+  'packages/sfd/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/sfd/.claude/settings.local.json: claude/settings-key-scope@2',
+  'packages/sfd/managed-settings.json: claude/sandbox-filesystem-disabled-conflict@2',
+  'packages/sfd/managed-settings.d/10-a.json: claude/sandbox-filesystem-disabled-conflict@2',
+  'packages/sfd/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `sandbox-scope` reads the two project files only. A managed file keeps a mask entry.
+  'packages/ssc/.claude/settings.json: claude/sandbox-scope@2',
+  'packages/ssc/.claude/settings.local.json: claude/sandbox-scope@2',
+  'packages/ssc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1106,6 +1182,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...SANDBOX_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
       ...MARKETPLACE_RULES.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -1135,6 +1215,7 @@ describe('configs', () => {
       ...MODE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...ALLOW_RULES.map(({ name }) => `claude/strict/${name}`),
       ...PATH_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...SANDBOX_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
@@ -1216,6 +1297,15 @@ describe('configs', () => {
 
   it('gives each path and WebFetch rule one JSON block for its files', () => {
     for (const { name, files } of PATH_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('gives each auto mode and sandbox rule one JSON block for its files', () => {
+    for (const { name, files } of SANDBOX_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )

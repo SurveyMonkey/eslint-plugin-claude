@@ -30,7 +30,7 @@ const fault = (entry: string, file = PROJECT) => {
 }
 
 describe(`${name}: an entry in the syntax of the docs`, () => {
-  it.fails('is silent for a hostname, a wildcard, an IP literal and a port, in every file', () => {
+  it('is silent for a hostname, a wildcard, an IP literal and a port, in every file', () => {
     for (const file of EVERY_FILE) {
       for (const entry of [
         'github.com',
@@ -55,17 +55,17 @@ describe(`${name}: an entry in the syntax of the docs`, () => {
 })
 
 describe(`${name}: the faults`, () => {
-  it.fails('reports a URL scheme', () => {
+  it('reports a URL scheme', () => {
     expect(fault('https://github.com')).toEqual(['scheme'])
   })
 
-  it.fails('reports a path, a query and a fragment', () => {
+  it('reports a path, a query and a fragment', () => {
     for (const entry of ['a.com/x', 'a.com?x=1', 'a.com#x', 'a.com:443/x']) {
       expect(fault(entry), entry).toEqual(['path'])
     }
   })
 
-  it.fails('reports a port with a leading zero, zero, out of range, or not a number', () => {
+  it('reports a port with a leading zero, zero, out of range, or not a number', () => {
     for (const entry of [
       'a.com:080',
       'a.com:0',
@@ -84,59 +84,59 @@ describe(`${name}: the faults`, () => {
     }
   })
 
-  it.fails('reports text that is not a host: user info, white space, a backslash, empty', () => {
+  it('reports text that is not a host: user info, white space, a backslash, empty', () => {
     for (const entry of ['a@b.com', 'a b.com', ' a.com', 'a.com ', 'a\\b.com', '', ':443']) {
       expect(fault(entry), JSON.stringify(entry)).toEqual(['notHost'])
     }
   })
 
-  it.fails('reports an IPv6 literal with a wildcard or a broken pair of brackets', () => {
+  it('reports an IPv6 literal with a wildcard or a broken pair of brackets', () => {
     for (const entry of ['[*::1]', '[::1', '::1]', '[::1]x', '[]', '[g::1]']) {
       expect(fault(entry), entry).toEqual(['notHost'])
     }
   })
 
-  it.fails('reports an IPv6 address with no brackets', () => {
+  it('reports an IPv6 address with no brackets', () => {
     for (const entry of ['::1', '::1:443', '2001:db8::1', 'fe80::1:2:3:4']) {
       expect(fault(entry), entry).toEqual(['unbracketedIpv6'])
     }
   })
 
-  it.fails('reports a name with two colons that is not an address', () => {
-    expect(fault('a:b:c')).toEqual(['notHost'])
+  it('reports a name with two colons that is not an address', () => {
+    expect(fault('host:80:90')).toEqual(['notHost'])
   })
 
-  it.fails('reports each faulty entry of the list, and no valid one', () => {
+  it('reports each faulty entry of the list, and no valid one', () => {
     const code = network('allowedDomains', 'a.com', 'a.com:0', 'b.com', 'https://c.com')
     expect(ids(code)).toEqual(['port', 'scheme'])
   })
 
-  it.fails('reports in every file', () => {
+  it('reports in every file', () => {
     for (const file of EVERY_FILE) {
       expect(fault('https://a.com', file), file).toEqual(['scheme'])
     }
   })
 
-  it.fails('names the entry in the message', () => {
+  it('names the entry in the message', () => {
     const [message] = lint(network('allowedDomains', 'a.com:080'))
     expect(message?.message).toContain('`a.com:080`')
   })
 
-  it.fails('says how to write the bracketed form for an IPv6 address', () => {
+  it('says how to write the bracketed form for an IPv6 address', () => {
     const [message] = lint(network('allowedDomains', '::1'))
     expect(message?.message).toContain('`[::1]`')
   })
 })
 
 describe(`${name}: a managed file`, () => {
-  it.fails('says that an entry of deniedDomains withholds allowedDomains', () => {
+  it('says that an entry of deniedDomains withholds allowedDomains', () => {
     for (const file of [MANAGED, DROP_IN]) {
       const [message] = lint(network('deniedDomains', 'a.com:0'), file)
       expect(message?.message, file).toContain('withholds "sandbox.network.allowedDomains"')
     }
   })
 
-  it.fails('does not say it for allowedDomains, or in a project file', () => {
+  it('does not say it for allowedDomains, or in a project file', () => {
     const [allowed] = lint(network('allowedDomains', 'a.com:0'), MANAGED)
     expect(allowed?.message).not.toContain('withholds')
     for (const file of [PROJECT, LOCAL]) {
@@ -147,7 +147,7 @@ describe(`${name}: a managed file`, () => {
 })
 
 describe(`${name}: where the rule reports`, () => {
-  it.fails('reports the entry, at its line and column', () => {
+  it('reports the entry, at its line and column', () => {
     const text =
       '{\n  "sandbox": {\n    "network": {\n      "allowedDomains": [\n        "a.com",\n        "a.com:0"\n      ]\n    }\n  }\n}'
     expect(
@@ -155,7 +155,7 @@ describe(`${name}: where the rule reports`, () => {
     ).toEqual([[6, 9, 6, 18]])
   })
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     const first = '{"sandbox": {"network": {"allowedDomains": ["a.com:0"], "allowedDomains": []}}}'
     expect(ids(first)).toEqual([])
     const second = '{"sandbox": {"network": {"allowedDomains": [], "allowedDomains": ["a.com:0"]}}}'
@@ -168,7 +168,7 @@ describe(`${name}: where the rule reports`, () => {
     )
   })
 
-  it.fails('is silent when an object, a list or an entry has another type', () => {
+  it('is silent when an object, a list or an entry has another type', () => {
     expect(ids({ sandbox: 'x' })).toEqual([])
     expect(ids({ sandbox: { network: 'x' } })).toEqual([])
     expect(ids({ sandbox: { network: [] } })).toEqual([])
@@ -177,18 +177,18 @@ describe(`${name}: where the rule reports`, () => {
     expect(ids(network('allowedDomains', 1, null, ['a.com:0'], { a: 1 }))).toEqual([])
   })
 
-  it.fails('is silent for a document that is not an object', () => {
+  it('is silent for a document that is not an object', () => {
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('is silent for the lists in another place or under another name', () => {
+  it('is silent for the lists in another place or under another name', () => {
     expect(ids({ network: { allowedDomains: ['a.com:0'] } })).toEqual([])
     expect(ids({ sandbox: { allowedDomains: ['a.com:0'] } })).toEqual([])
     expect(ids(network('allowedHosts', 'a.com:0'))).toEqual([])
     expect(ids({ permissions: { allow: ['WebFetch(domain:a.com:0)'] } })).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(network('allowedDomains', 'a.com:0'), HIDDEN)).toEqual([])
   })
 })

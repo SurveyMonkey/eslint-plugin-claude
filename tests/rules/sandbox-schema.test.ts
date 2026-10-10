@@ -89,13 +89,13 @@ const VALID = sandbox({
 })
 
 describe(`${name}: a valid object`, () => {
-  it.fails('is silent for each key with a value of its type, in every file', () => {
+  it('is silent for each key with a value of its type, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(VALID, file), file).toEqual([])
     }
   })
 
-  it.fails('is silent for an empty block, empty lists and null', () => {
+  it('is silent for an empty block, empty lists and null', () => {
     expect(ids(sandbox({}))).toEqual([])
     expect(ids({ sandbox: null })).toEqual([])
     expect(ids(sandbox({ filesystem: {}, network: {}, credentials: {} }))).toEqual([])
@@ -104,7 +104,7 @@ describe(`${name}: a valid object`, () => {
     expect(ids(creds({ files: [], envVars: [], awsPairs: [], sigv4: {} }))).toEqual([])
   })
 
-  it.fails('is silent for a document with no sandbox, or one that is not an object', () => {
+  it('is silent for a document with no sandbox, or one that is not an object', () => {
     expect(ids({})).toEqual([])
     expect(ids('[1]')).toEqual([])
     expect(ids({ permissions: { sandbox: 'x' } })).toEqual([])
@@ -112,7 +112,7 @@ describe(`${name}: a valid object`, () => {
 })
 
 describe(`${name}: a key that is not in the list`, () => {
-  it.fails('reports a key at each of the four levels, in every file', () => {
+  it('reports a key at each of the four levels, in every file', () => {
     const code = sandbox({
       madeUp: 1,
       filesystem: { madeUp: 1 },
@@ -124,7 +124,7 @@ describe(`${name}: a key that is not in the list`, () => {
     }
   })
 
-  it.fails('reports a key of another level, and a dotted key', () => {
+  it('reports a key of another level, and a dotted key', () => {
     expect(ids(sandbox({ allowedDomains: [], 'network.allowedDomains': [] }))).toEqual([
       'unknownKey',
       'unknownKey',
@@ -133,30 +133,30 @@ describe(`${name}: a key that is not in the list`, () => {
     expect(ids(net({ denyRead: [] }))).toEqual(['unknownKey'])
   })
 
-  it.fails('names the key in the message', () => {
+  it('names the key in the message', () => {
     const [message] = lint(net({ allowDomains: [] }))
     expect(message?.message).toContain('"sandbox.network.allowDomains"')
   })
 
-  it.fails('reports the name of the key, at its line and column', () => {
+  it('reports the name of the key, at its line and column', () => {
     const text = '{\n  "sandbox": {\n    "enabeld": true\n  }\n}'
     expect(
       lint(text).map(({ line, column, endLine, endColumn }) => [line, column, endLine, endColumn]),
     ).toEqual([[3, 5, 3, 14]])
   })
 
-  it.fails('reports a key whose value is null, and the last of two keys of one name only', () => {
+  it('reports a key whose value is null, and the last of two keys of one name only', () => {
     expect(ids(sandbox({ madeUp: null }))).toEqual(['unknownKey'])
     expect(ids('{"sandbox": {"madeUp": 1, "madeUp": 2}}')).toEqual(['unknownKey'])
   })
 
-  it.fails('reads the last sandbox object and the last object at each level', () => {
+  it('reads the last sandbox object and the last object at each level', () => {
     expect(ids('{"sandbox": {"madeUp": 1}, "sandbox": {}}')).toEqual([])
     expect(ids('{"sandbox": {"network": {"madeUp": 1}, "network": {}}}')).toEqual([])
     expect(ids('{"sandbox": {"network": {}, "network": {"madeUp": 1}}}')).toEqual(['unknownKey'])
   })
 
-  it.fails('does not check the keys inside a value of an object key', () => {
+  it('does not check the keys inside a value of an object key', () => {
     const code = sandbox({
       ripgrep: { command: 'rg', madeUp: 1 },
       ignoreViolations: { madeUp: [] },
@@ -168,7 +168,7 @@ describe(`${name}: a key that is not in the list`, () => {
 })
 
 describe(`${name}: a value that is not an object`, () => {
-  it.fails('reports sandbox and each sub-object, on the value', () => {
+  it('reports sandbox and each sub-object, on the value', () => {
     for (const value of ['x', 1, true, []]) {
       const label = JSON.stringify(value)
       expect(ids({ sandbox: value }), label).toEqual(['wrongType'])
@@ -178,7 +178,7 @@ describe(`${name}: a value that is not an object`, () => {
     }
   })
 
-  it.fails('says that an object is needed, and where the value is', () => {
+  it('says that an object is needed, and where the value is', () => {
     const text = '{\n  "sandbox": {\n    "network": "x"\n  }\n}'
     const [message] = lint(text)
     expect(message?.message).toContain('"sandbox.network" must be an object')
@@ -208,7 +208,7 @@ describe(`${name}: a Boolean`, () => {
       ? sandbox({ [path[0] as string]: value })
       : at(path[0] as never, { [path[1] as string]: value })
 
-  it.fails('reports a value that is not a Boolean, for each Boolean key, in a project file', () => {
+  it('reports a value that is not a Boolean, for each Boolean key, in a project file', () => {
     for (const path of BOOLEANS) {
       for (const value of ['yes', 1, [], {}, '', 'True']) {
         expect(ids(shaped(path, value)), `${path.join('.')} ${JSON.stringify(value)}`).toEqual([
@@ -218,13 +218,13 @@ describe(`${name}: a Boolean`, () => {
     }
   })
 
-  it.fails('reports a quoted true or false in a project file', () => {
+  it('reports a quoted true or false in a project file', () => {
     for (const value of ['true', 'false']) {
       expect(ids(sandbox({ enabled: value }))).toEqual(['wrongType'])
     }
   })
 
-  it.fails('reads a quoted true or false as that Boolean in a managed file', () => {
+  it('reads a quoted true or false as that Boolean in a managed file', () => {
     for (const file of MANAGED_FILES) {
       for (const path of BOOLEANS) {
         expect(ids(shaped(path, 'true'), file), `${file} ${path.join('.')}`).toEqual([])
@@ -234,7 +234,7 @@ describe(`${name}: a Boolean`, () => {
     }
   })
 
-  it.fails('names the key and the type in the message', () => {
+  it('names the key and the type in the message', () => {
     const [message] = lint(sandbox({ enabled: 'yes' }))
     expect(message?.message).toContain('"sandbox.enabled" must be true or false')
   })
@@ -257,7 +257,7 @@ describe(`${name}: a list of strings`, () => {
       ? sandbox({ [path[0] as string]: value })
       : at(path[0] as never, { [path[1] as string]: value })
 
-  it.fails('reports a value that is not an array, for each list, in every file', () => {
+  it('reports a value that is not an array, for each list, in every file', () => {
     for (const file of PROJECT_FILES) {
       for (const path of LISTS) {
         for (const value of ['x', 1, true, {}]) {
@@ -267,7 +267,7 @@ describe(`${name}: a list of strings`, () => {
     }
   })
 
-  it.fails('reports each entry that is not a string, with its index', () => {
+  it('reports each entry that is not a string, with its index', () => {
     for (const path of LISTS) {
       const messages = lint(shaped(path, ['a', 3, null, { a: 1 }, ['x']]))
       expect(
@@ -278,7 +278,7 @@ describe(`${name}: a list of strings`, () => {
     }
   })
 
-  it.fails('says what Claude Code withholds for a deny list in a managed file', () => {
+  it('says what Claude Code withholds for a deny list in a managed file', () => {
     for (const file of MANAGED_FILES) {
       const [network] = lint(net({ deniedDomains: 'x' }), file)
       expect(network?.message, file).toContain('withholds "sandbox.network.allowedDomains"')
@@ -291,7 +291,7 @@ describe(`${name}: a list of strings`, () => {
     }
   })
 
-  it.fails('does not say it for another list, or in a project file', () => {
+  it('does not say it for another list, or in a project file', () => {
     const [allowed] = lint(net({ allowedDomains: 'x' }), MANAGED)
     expect(allowed?.message).not.toContain('withholds')
     for (const file of PROJECT_FILES) {
@@ -302,7 +302,7 @@ describe(`${name}: a list of strings`, () => {
 })
 
 describe(`${name}: a port`, () => {
-  it.fails('reports 0, 65536, a negative number and a fraction, on both keys', () => {
+  it('reports 0, 65536, a negative number and a fraction, on both keys', () => {
     for (const key of ['httpProxyPort', 'socksProxyPort']) {
       for (const value of [0, 65536, -1, 1.5, 100000]) {
         expect(ids(net({ [key]: value })), `${key} ${value}`).toEqual(['badPort'])
@@ -310,17 +310,17 @@ describe(`${name}: a port`, () => {
     }
   })
 
-  it.fails('is silent for the lowest and the highest port', () => {
+  it('is silent for the lowest and the highest port', () => {
     expect(ids(net({ httpProxyPort: 1, socksProxyPort: 65535 }))).toEqual([])
   })
 
-  it.fails('reports a value that is not a number', () => {
+  it('reports a value that is not a number', () => {
     for (const value of ['8080', true, [], {}]) {
       expect(ids(net({ httpProxyPort: value })), JSON.stringify(value)).toEqual(['wrongType'])
     }
   })
 
-  it.fails('names the key in the message', () => {
+  it('names the key in the message', () => {
     const [message] = lint(net({ socksProxyPort: 0 }))
     expect(message?.message).toContain('"sandbox.network.socksProxyPort"')
     expect(message?.message).toContain('1 to 65535')
@@ -328,7 +328,7 @@ describe(`${name}: a port`, () => {
 })
 
 describe(`${name}: bwrapPath and socatPath`, () => {
-  it.fails('reports a relative path, which Claude Code drops', () => {
+  it('reports a relative path, which Claude Code drops', () => {
     for (const key of ['bwrapPath', 'socatPath']) {
       for (const value of ['bwrap', './bwrap', '../bin/bwrap', '~/bwrap', '']) {
         expect(ids(sandbox({ [key]: value })), `${key} ${value}`).toEqual(['relativePath'])
@@ -336,7 +336,7 @@ describe(`${name}: bwrapPath and socatPath`, () => {
     }
   })
 
-  it.fails('is silent for an absolute path, in every file', () => {
+  it('is silent for an absolute path, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(
         ids(sandbox({ bwrapPath: '/opt/admin/bwrap', socatPath: '/usr/bin/socat' }), file),
@@ -344,13 +344,13 @@ describe(`${name}: bwrapPath and socatPath`, () => {
     }
   })
 
-  it.fails('reports a value that is not a string', () => {
+  it('reports a value that is not a string', () => {
     for (const value of [1, true, [], {}]) {
       expect(ids(sandbox({ bwrapPath: value })), JSON.stringify(value)).toEqual(['wrongType'])
     }
   })
 
-  it.fails('names the key in the message', () => {
+  it('names the key in the message', () => {
     const [message] = lint(sandbox({ bwrapPath: 'bwrap' }))
     expect(message?.message).toContain('"sandbox.bwrapPath"')
     expect(message?.message).toContain('`bwrap`')
@@ -358,28 +358,28 @@ describe(`${name}: bwrapPath and socatPath`, () => {
 })
 
 describe(`${name}: allowMachLookup`, () => {
-  it.fails('is silent for a name, a trailing star and a lone star', () => {
+  it('is silent for a name, a trailing star and a lone star', () => {
     expect(ids(net({ allowMachLookup: ['com.apple.x', 'com.apple.*', '*'] }))).toEqual([])
   })
 
-  it.fails('reports a star that does not end the name, and a second star', () => {
+  it('reports a star that does not end the name, and a second star', () => {
     for (const entry of ['*.apple', 'com.*.x', 'a*b', '**', 'a**', '*a*']) {
       expect(ids(net({ allowMachLookup: [entry] })), entry).toEqual(['machWildcard'])
     }
   })
 
-  it.fails('names the entry in the message', () => {
+  it('names the entry in the message', () => {
     const [message] = lint(net({ allowMachLookup: ['*.apple'] }))
     expect(message?.message).toContain('`*.apple`')
   })
 
-  it.fails('does not read a star in another list', () => {
+  it('does not read a star in another list', () => {
     expect(ids(net({ allowedDomains: ['*.a.*'], allowUnixSockets: ['/tmp/*.sock'] }))).toEqual([])
   })
 })
 
 describe(`${name}: ignoreViolations`, () => {
-  it.fails('reports a value that is not an object', () => {
+  it('reports a value that is not an object', () => {
     for (const value of ['x', ['a'], 1]) {
       expect(ids(sandbox({ ignoreViolations: value })), JSON.stringify(value)).toEqual([
         'wrongType',
@@ -387,7 +387,7 @@ describe(`${name}: ignoreViolations`, () => {
     }
   })
 
-  it.fails('reports a command whose value is not an array of strings', () => {
+  it('reports a command whose value is not an array of strings', () => {
     const code = sandbox({ ignoreViolations: { a: 'x', b: ['y', 1], c: [], d: null } })
     const messages = lint(code)
     expect(messages.map((message) => message.messageId)).toEqual(['wrongType', 'wrongType'])
@@ -399,24 +399,24 @@ describe(`${name}: ignoreViolations`, () => {
 })
 
 describe(`${name}: ripgrep and tlsTerminate`, () => {
-  it.fails('reports a value that is not an object', () => {
+  it('reports a value that is not an object', () => {
     expect(ids(sandbox({ ripgrep: 'rg' }))).toEqual(['wrongType'])
     expect(ids(net({ tlsTerminate: true }))).toEqual(['wrongType'])
   })
 
-  it.fails('reports ripgrep with no command, a command that is not a string, and bad args', () => {
+  it('reports ripgrep with no command, a command that is not a string, and bad args', () => {
     expect(ids(sandbox({ ripgrep: {} }))).toEqual(['missingField'])
     expect(ids(sandbox({ ripgrep: { command: 1 } }))).toEqual(['wrongType'])
     expect(ids(sandbox({ ripgrep: { command: 'rg', args: '--hidden' } }))).toEqual(['wrongType'])
     expect(ids(sandbox({ ripgrep: { command: 'rg', args: ['a', 1] } }))).toEqual(['wrongType'])
   })
 
-  it.fails('names the missing field and its object', () => {
+  it('names the missing field and its object', () => {
     const [message] = lint(sandbox({ ripgrep: {} }))
     expect(message?.message).toContain('"sandbox.ripgrep" needs "command"')
   })
 
-  it.fails('reports a certificate path that is not a string', () => {
+  it('reports a certificate path that is not a string', () => {
     expect(ids(net({ tlsTerminate: { caCertPath: 1, caKeyPath: ['x'] } }))).toEqual([
       'wrongType',
       'wrongType',
@@ -425,7 +425,7 @@ describe(`${name}: ripgrep and tlsTerminate`, () => {
 })
 
 describe(`${name}: credentials`, () => {
-  it.fails('reports a list that is not an array, and an entry that is not an object', () => {
+  it('reports a list that is not an array, and an entry that is not an object', () => {
     expect(ids(creds({ files: 'x', envVars: {}, awsPairs: 1 }))).toEqual([
       'wrongType',
       'wrongType',
@@ -434,7 +434,7 @@ describe(`${name}: credentials`, () => {
     expect(ids(creds({ files: ['x', 1, null, []] }))).toEqual(Array(4).fill('wrongType'))
   })
 
-  it.fails('reports an entry with no path, no name or no mode', () => {
+  it('reports an entry with no path, no name or no mode', () => {
     expect(ids(creds({ files: [{ mode: 'deny' }, { path: 'x' }, {}] }))).toEqual([
       'missingField',
       'missingField',
@@ -447,7 +447,7 @@ describe(`${name}: credentials`, () => {
     ])
   })
 
-  it.fails('reports a mode, onExtractNoMatch or decode that is not in the list', () => {
+  it('reports a mode, onExtractNoMatch or decode that is not in the list', () => {
     const files = [
       { path: 'x', mode: 'allow' },
       { path: 'x', mode: 'mask', onExtractNoMatch: 'ignore' },
@@ -458,13 +458,13 @@ describe(`${name}: credentials`, () => {
     expect(ids(creds({ envVars: [{ name: 'X', mode: 'MASK' }] }))).toEqual(['badValue'])
   })
 
-  it.fails('lists the allowed values in the message', () => {
+  it('lists the allowed values in the message', () => {
     const [message] = lint(creds({ files: [{ path: 'x', mode: 'allow' }] }))
     expect(message?.message).toContain('"sandbox.credentials.files[0].mode"')
     expect(message?.message).toContain('"deny", "mask"')
   })
 
-  it.fails('reports a mask field of the wrong type', () => {
+  it('reports a mask field of the wrong type', () => {
     const entry = {
       path: 'x',
       mode: 'mask',
@@ -476,14 +476,14 @@ describe(`${name}: credentials`, () => {
     expect(ids(creds({ files: [entry] }))).toEqual(Array(4).fill('wrongType'))
   })
 
-  it.fails('reports a variable name that is not a name', () => {
+  it('reports a variable name that is not a name', () => {
     for (const value of ['1A', 'A-B', 'A B', '', 'É']) {
       expect(ids(creds({ envVars: [{ name: value, mode: 'deny' }] })), value).toEqual(['badName'])
     }
     expect(ids(creds({ envVars: [{ name: 1, mode: 'deny' }] }))).toEqual(['wrongType'])
   })
 
-  it.fails('reports an awsPairs entry with no key variable, or a variable that is not a string', () => {
+  it('reports an awsPairs entry with no key variable, or a variable that is not a string', () => {
     expect(
       ids(creds({ awsPairs: [{ accessKeyIdVar: 'A' }, { secretAccessKeyVar: 'B' }] })),
     ).toEqual(['missingField', 'missingField'])
@@ -494,7 +494,7 @@ describe(`${name}: credentials`, () => {
     ).toEqual(['wrongType', 'wrongType'])
   })
 
-  it.fails('reports a sigv4 value that is not deny or passthrough', () => {
+  it('reports a sigv4 value that is not deny or passthrough', () => {
     expect(ids(creds({ sigv4: { streaming: 'allow', presigned: 1, sigv4a: 'deny' } }))).toEqual([
       'badValue',
       'badValue',
@@ -504,13 +504,25 @@ describe(`${name}: credentials`, () => {
 })
 
 describe(`${name}: what the rule leaves alone`, () => {
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('treats a required field that is null as missing, and reads a null field as removed', () => {
+    expect(ids(creds({ files: [{ path: null, mode: 'deny' }] }))).toEqual(['missingField'])
+    expect(ids(sandbox({ ripgrep: { command: 'rg', args: null } }))).toEqual([])
+  })
+
+  it('reads the last of two keys of one name inside an object value', () => {
+    const first = '{"sandbox": {"ignoreViolations": {"a": "x", "a": []}}}'
+    expect(ids(first)).toEqual([])
+    const second = '{"sandbox": {"ignoreViolations": {"a": [], "a": "x"}}}'
+    expect(ids(second)).toEqual(['wrongType'])
+  })
+
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(
       ids(sandbox({ madeUp: 1, enabled: 'x', network: { httpProxyPort: 0 } }), HIDDEN),
     ).toEqual([])
   })
 
-  it.fails('leaves the content of a domain, a command and a path to other rules', () => {
+  it('leaves the content of a domain, a command and a path to other rules', () => {
     const code = sandbox({
       excludedCommands: ['Bash(x)', 'sudo x'],
       network: { allowedDomains: ['https://a.com', 'a.com:0'] },

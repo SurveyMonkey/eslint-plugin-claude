@@ -171,6 +171,12 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-negation`](docs/rules/permissions-negation.md) | A `!` rule comes after the path rule that it carves, and not before an anchor or inside a blocked directory | `error` | `error` |
 | [`claude/permissions-webfetch-domain-syntax`](docs/rules/permissions-webfetch-domain-syntax.md) | A `WebFetch` rule is `domain:<host>`, with no scheme, path or port | `error` | `error` |
 | [`claude/permissions-windows-path`](docs/rules/permissions-windows-path.md) | A `Read`, `Edit` or `Cd` path is in POSIX form, with no drive letter or backslash | `error` | `error` |
+| [`claude/permissions-auto-mode-schema`](docs/rules/permissions-auto-mode-schema.md) | `autoMode` holds only documented keys, each with a value of its type | `error` | `error` |
+| [`claude/sandbox-domain-syntax`](docs/rules/sandbox-domain-syntax.md) | A sandbox allowed or denied domain is a host with an optional port, in the form of the docs | `error` | `error` |
+| [`claude/sandbox-excluded-commands-syntax`](docs/rules/sandbox-excluded-commands-syntax.md) | An `excludedCommands` entry is a command pattern with no `Bash(` wrapper, and does not start with a word that Claude Code keeps sandboxed | `error` | `error` |
+| [`claude/sandbox-filesystem-disabled-conflict`](docs/rules/sandbox-filesystem-disabled-conflict.md) | A managed file does not set `sandbox.filesystem.disabled` with `denyRead` or credentials `deny` entries that it switches off | `error` | `error` |
+| [`claude/sandbox-schema`](docs/rules/sandbox-schema.md) | `sandbox` holds only documented keys, each with a value of its type | `error` | `error` |
+| [`claude/sandbox-scope`](docs/rules/sandbox-scope.md) | A project or local settings file has no credentials `mask` entry, which Claude Code drops there | `error` | `error` |
 
 ## Contributing
 

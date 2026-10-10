@@ -335,6 +335,7 @@ const idOfDotted = (dotted: string) => idOf(dotted.split('.'))
 
 const SCOPES = new Map<string, KeyScope>()
 const PARENTS = new Set<string>()
+const CHILDREN = new Map<string, string[]>()
 for (const [scope, keys] of [
   ['managed', MANAGED_ONLY],
   ['user-or-managed', USER_OR_MANAGED],
@@ -352,6 +353,8 @@ for (const [scope, keys] of [
     for (let end = 1; end < parts.length; end++) {
       PARENTS.add(idOf(parts.slice(0, end)))
     }
+    const parent = idOf(parts.slice(0, -1))
+    CHILDREN.set(parent, [...(CHILDREN.get(parent) ?? []), parts.at(-1) as string])
   }
 }
 
@@ -371,6 +374,19 @@ export function settingsKeyScope(path: readonly string[]): KeyScope | undefined 
 export function hasListedChildren(path: readonly string[]): boolean {
   return PARENTS.has(idOf(path))
 }
+
+/** The keys that the index lists directly below `path`, in index order. It is empty for a key that
+ *  has no listed child. The top level is the path `[]`. */
+export function listedChildren(path: readonly string[]): readonly string[] {
+  return CHILDREN.get(idOf(path)) ?? []
+}
+
+/** The four arrays of prose rules in `autoMode`. Source: the entry for `autoMode` in the settings
+ *  reference (https://code.claude.com/docs/en/settings-reference#automode), checked on Claude Code
+ *  2.1.296 on 2026-10-10. The index lists `autoMode` and `autoMode.classifyAllShell` only, so these
+ *  four keys are not in the lists above. Review this list with the lists above, on or before the
+ *  `stale_after` date of `docs/rules/permissions-auto-mode-schema.md`. */
+export const AUTO_MODE_LISTS: readonly string[] = ['environment', 'allow', 'soft_deny', 'hard_deny']
 
 // Keys that Claude Code reads and does not act on. Source: the entries of the
 // settings reference (https://code.claude.com/docs/en/settings-reference), checked on Claude
