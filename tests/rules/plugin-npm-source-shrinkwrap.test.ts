@@ -8,7 +8,7 @@ import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-sup
 import { lintPlugin } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-npm-source-shrinkwrap'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const message = (name: string) =>
@@ -138,7 +138,8 @@ describe(`${RULE} (silent)`, () => {
   })
 
   check('stays silent for a manifest that does not parse', () => {
-    expect(run([entry(NPM)], PKG, '{')).toEqual([])
+    const { dir } = setup([entry(NPM)], PKG, '{')
+    expect(lintPlugin(RULE, dir, JSON.stringify({ name: 'p' }))).toEqual([])
   })
 
   check('stays silent for a marketplace plugins value that is not an array', () => {

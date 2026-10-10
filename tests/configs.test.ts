@@ -193,12 +193,18 @@ const TREE: Record<string, string> = {
   'packages/cx/.claude-plugin/marketplace.json': JSON.stringify({
     name: 'cx',
     owner: { name: 'o' },
-    plugins: [{ name: 'dep', source: './plugins/dep' }],
+    plugins: [
+      { name: 'dep', source: './plugins/dep' },
+      { name: 'pkg', source: { source: 'npm', package: '@acme/pkg' } },
+    ],
   }),
   'packages/cx/plugins/dep/.claude-plugin/plugin.json': JSON.stringify({
     name: 'dep',
     dependencies: ['ghost'],
   }),
+  // A plugin that the marketplace serves from npm, with a `package.json` and no shrinkwrap.
+  'packages/cx/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
+  'packages/cx/plugins/pkg/package.json': '{}',
   // A monitor that starts when a skill runs, in the manifest and in the default file. The plugin
   // has no such skill.
   'plugins/msk/.claude-plugin/plugin.json': JSON.stringify({
@@ -666,6 +672,7 @@ const PLUGIN_RULES: {
     name: 'plugin-monitors-skill-exists',
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
   },
+  { name: 'plugin-npm-source-shrinkwrap', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -730,6 +737,7 @@ const EXPECTED = [
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
+  'packages/cx/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
   ...(LINKS
     ? [
         'packages/l/site/plugins/m/.claude-plugin/plugin.json: claude/plugin-symlink-escapes-marketplace@2',

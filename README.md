@@ -111,6 +111,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-symlink-escapes-plugin`](docs/rules/plugin-symlink-escapes-plugin.md) | The target of a link under a plugin is inside the plugin, because a local-path install and a `command` copy-mode install skip a link that leads out of it | `warn` | `warn` |
 | [`claude/plugin-dependencies-resolve`](docs/rules/plugin-dependencies-resolve.md) | A dependency in `plugin.json` is in the `plugins` of the marketplace of the plugin, or in a marketplace that `allowCrossMarketplaceDependenciesOn` names | `error` | `error` |
 | [`claude/plugin-monitors-skill-exists`](docs/rules/plugin-monitors-skill-exists.md) | A monitor that starts with `on-skill-invoke:` names a skill that the plugin has | `error` | `error` |
+| [`claude/plugin-npm-source-shrinkwrap`](docs/rules/plugin-npm-source-shrinkwrap.md) | A plugin that a marketplace entry serves from an `npm` source ships `npm-shrinkwrap.json`, because npm leaves `package-lock.json` out of a published package | `error` | `error` |
 
 ### Marketplace manifest
 
