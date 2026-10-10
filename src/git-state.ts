@@ -65,16 +65,13 @@ const cache = new Map<
 /** The stamp of the index file in `gitDir`. Git replaces the index with a new
  *  file, so the inode changes. A change of mode keeps the size, so the stamp
  *  also holds the times. A repository with no index yet, such as one just
- *  after `git init`, has no tracked file. Any other error throws. */
+ *  after `git init`, has no tracked file. */
 function stampOf(gitDir: string): string {
   try {
     const stat = statSync(path.join(gitDir, 'index'), { bigint: true })
     return `${stat.mtimeNs}:${stat.ctimeNs}:${stat.ino}:${stat.size}`
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-      return 'no index'
-    }
-    throw error
+  } catch {
+    return 'no index'
   }
 }
 

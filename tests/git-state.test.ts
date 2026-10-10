@@ -6,7 +6,6 @@ import {
   copyFileSync,
   existsSync,
   readFileSync,
-  statSync,
   utimesSync,
   writeFileSync,
 } from 'node:fs'
@@ -142,10 +141,11 @@ describe('gitModeOf', () => {
     copyFileSync(index, old)
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
     git(root, 'update-index', '--chmod=+x', 'run.sh')
+    // A whole second is the same time on both files, at any clock resolution.
+    utimesSync(index, 1e9, 1e9)
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100755')
-    const { mtime } = statSync(index)
     writeFileSync(index, readFileSync(old))
-    utimesSync(index, mtime, mtime)
+    utimesSync(index, 1e9, 1e9)
     expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100644')
   })
 
@@ -186,20 +186,6 @@ describe('gitModeOf', () => {
     expect(git(root, 'ls-files', '--unmerged')).toContain('run.sh')
     expect(gitModeOf(root, at(root, 'run.sh'))).toBeNull()
   })
-
-  it.each(['GIT_WORK_TREE', 'GIT_COMMON_DIR', 'GIT_OBJECT_DIRECTORY', 'GIT_NAMESPACE'])(
-    'ignores %s of a calling hook',
-    (name) => {
-      const root = repo({ 'run.sh': 'x' }, ['run.sh'])
-      const other = repo({ 'other.sh': 'x' })
-      vi.stubEnv(name, name === 'GIT_NAMESPACE' ? 'other' : path.join(other, '.git'))
-      try {
-        expect(gitModeOf(root, at(root, 'run.sh'))).toBe('100755')
-      } finally {
-        vi.unstubAllEnvs()
-      }
-    },
-  )
 
   it('ignores the git variables of a calling hook', () => {
     const root = repo({ 'run.sh': 'x' }, ['run.sh'])
