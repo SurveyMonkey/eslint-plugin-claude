@@ -26,9 +26,10 @@ whose component paths use Windows separators therefore loads on Windows only.[^l
 `/plugin` interface shows a `path escapes plugin directory` error that ends with `its path
 contains a backslash, which is not resolved reliably on this platform`.[^errors]
 
-`claude plugin validate` does not report such a path when the file is there, so the plugin
-passes on the machine of the author. When the path also lacks the `./` prefix, validate fails the
-manifest, with a message that does not name the backslash (checked on Claude Code 2.1.296).
+`claude plugin validate` covers this in part (checked on Claude Code 2.1.296). It fails the manifest
+with `Path not found`, because no file has the literal name with the backslash. It does not name
+the backslash. It passes a path when a file with that literal name exists. The rule names the
+cause.
 
 The rule reads the paths of these keys of the manifest: `skills`, `commands`, `agents`, `hooks`,
 `mcpServers`, `lspServers`, `outputStyles`, `workflows`, `experimental.themes` and
