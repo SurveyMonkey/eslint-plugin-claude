@@ -36,6 +36,7 @@ jsonTester.run('settings-env-routing (valid)', rule, {
       'https://api.anthropic.com',
       'https://api.anthropic.com/v1',
       'http://api.anthropic.com:443',
+      'https://API.ANTHROPIC.COM',
     ].map((value) => ({ code: env({ ANTHROPIC_BASE_URL: value }), filename: project })),
     // An off value for a provider does not select the provider.
     ...PROVIDERS.flatMap((key) =>
@@ -55,6 +56,8 @@ jsonTester.run('settings-env-routing (valid)', rule, {
     // No `env` block, or a block that is no object.
     { code: '{}', filename: project },
     { code: JSON.stringify({ env: [] }), filename: project },
+    // Two `env` blocks: the last counts.
+    { code: '{"env": {"HTTPS_PROXY": "http://p:1"}, "env": {}}', filename: project },
     // Two keys of one name: the last counts, as in `JSON.parse`.
     { code: '{"env": {"HTTPS_PROXY": "http://p:1", "HTTPS_PROXY": ""}}', filename: project },
   ],
@@ -83,6 +86,8 @@ jsonTester.run('settings-env-routing (valid)', rule, {
       'https://gateway.example.com',
       'http://localhost:4000',
       'api.anthropic.com',
+      'https://api.anthropic.com.gateway.example',
+      'https://api.anthropic.com@gateway.example',
       'not a url',
     ].map((value) => ({
       code: env({ ANTHROPIC_BASE_URL: value }),

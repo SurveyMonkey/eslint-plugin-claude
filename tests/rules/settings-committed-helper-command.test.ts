@@ -45,6 +45,8 @@ jsonTester.run('settings-committed-helper-command (valid)', rule, {
       code: JSON.stringify({ apiKeyHelperX: 'x.sh', hooks: { statusLine: 'x' } }),
       filename: project,
     },
+    // Two `command` fields: the last counts.
+    { code: '{"statusLine": {"command": "x", "command": ""}}', filename: project },
     // The top-level value is no object.
     { code: '[]', filename: project },
     // Two keys of one name: the last counts, as in `JSON.parse`.
