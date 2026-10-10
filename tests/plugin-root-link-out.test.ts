@@ -339,6 +339,26 @@ describe('the off rules of the plugin layer', () => {
     const { dir } = linkedOut({}, {}, SECRET)
     expect(lintPlugin('plugin-user-config-sensitive', dir, SECRET)).toEqual([])
   })
+
+  const CHANNEL = JSON.stringify({
+    name: 'p',
+    mcpServers: { tg: { url: 'https://chat.example.com/mcp' } },
+    channels: [{ server: 'tg' }],
+  })
+  it('plugin-channel-server-stdio reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(CHANNEL)
+    expect(lintPlugin('plugin-channel-server-stdio', dir, code)).toHaveLength(1)
+  })
+  // The `.mcp.json` links back in, so only a look at the folder out of the repository tells the plugin.
+  linked('plugin-channel-server-stdio stays silent for the linked plugin', () => {
+    const manifest = JSON.stringify({ name: 'p', channels: [{ server: 'tg' }] })
+    const { dir } = linkedOut(
+      {},
+      { '.mcp.json': JSON.stringify({ tg: { url: 'https://chat.example.com/mcp' } }) },
+      manifest,
+    )
+    expect(lintPlugin('plugin-channel-server-stdio', dir, manifest)).toEqual([])
+  })
 })
 
 describe('readPluginAt', () => {
