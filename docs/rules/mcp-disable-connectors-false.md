@@ -29,7 +29,10 @@ fetches the connectors unless another settings file or `ENABLE_CLAUDEAI_MCP_SERV
 off.[^key] So a `false` cannot turn the connectors back on after a `true` in another scope.[^guide]
 To turn the connectors off, set `true`. To leave them on, remove the key.
 
-The rule reports a `false` value. The report is on the value. A value of another type gives no
+The rule reports a `false` value. The report is on the value. The managed settings page merges
+`managed-settings.json` and each drop-in into one source. A later file replaces a single
+value.[^merge] So the rule reads the sibling files. It makes no report when a sibling holds `true`,
+or when it cannot read a sibling. A value of another type gives no
 report. When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.
 
 The rule `settings-project-value-ignored` reports the same value in `.claude/settings.json` and
@@ -56,3 +59,4 @@ Pass:
 
 [^key]: [All settings: disableClaudeAiConnectors](https://code.claude.com/docs/en/settings-reference#disableclaudeaiconnectors)
 [^guide]: [Connect Claude Code to tools via MCP: Disable claude.ai connectors](https://code.claude.com/docs/en/mcp#disable-claude-ai-connectors)
+[^merge]: [Deploy managed settings: Split a file-based policy across teams](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams)

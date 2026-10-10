@@ -711,6 +711,11 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Disable claude.ai connectors",
       "hash": "f5cfaaf96dbb64796c1367ff809a5aa977914b425888707d1c75e9542aaa7de1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
   "mcp-env-expansion-field": [

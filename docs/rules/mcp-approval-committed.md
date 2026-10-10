@@ -27,15 +27,17 @@ folder, a committed file with either key lets a cloned repository start its own 
 untrusted folder, Claude Code ignores both keys in the committed project file.[^trust]
 
 Claude Code writes both keys to `.claude/settings.local.json` when a user approves servers in the
-dialog.[^all] The approval then stays with that user.
+dialog.[^all][^listed] The approval then stays with that user.
 
 The rule reports `enableAllProjectMcpServers` when its value is `true`, and `enabledMcpjsonServers`
 when its value is a list with at least one item. The report is on the key. A `false` value, an
 empty list, and a value of another type give no report. When a file has two keys of one name, the
 rule reads the last, as `JSON.parse` does.
 
-The rule lints both project files, and reports in `.claude/settings.json` only. The local file is
-not committed, so it gives no report. A managed settings file is not read, because an
+The rule lints both project files, and reports in `.claude/settings.json` only. Git normally
+ignores the local file, so the rule gives no report there. The files glob also matches a user file
+`~/.claude/settings.json`, where these keys are valid. Turn the rule off for such a file. A managed
+settings file is not read, because an
 administrator owns it.
 
 Fail, in `.claude/settings.json`:
@@ -46,7 +48,7 @@ Fail, in `.claude/settings.json`:
 }
 ```
 
-Pass: leave the key out of `.claude/settings.json`. Each user approves the servers from `/mcp`.
+Pass: leave the key out of `.claude/settings.json`. Each user approves the servers in the approval prompt.
 
 ## Sources
 
