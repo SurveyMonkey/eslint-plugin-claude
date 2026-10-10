@@ -16,12 +16,18 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdProsePointer from './rules/claude-md-agents-md-prose-pointer.ts'
 import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
+import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
+import claudeMdExcludesAbsoluteCommitted from './rules/claude-md-excludes-absolute-committed.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
 import claudeMdImportExists from './rules/claude-md-import-exists.ts'
 import claudeMdImportExternal from './rules/claude-md-import-external.ts'
+import claudeMdImportInCodeSpan from './rules/claude-md-import-in-code-span.ts'
 import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
+import claudeMdLocation from './rules/claude-md-location.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import claudeMdMaxLines from './rules/claude-md-max-lines.ts'
 import claudeMdSymlink from './rules/claude-md-symlink.ts'
@@ -43,6 +49,7 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
 import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
 import memoryIndexMaxSize from './rules/memory-index-max-size.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
@@ -61,6 +68,7 @@ import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMaxLines from './rules/rules-max-lines.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
@@ -213,6 +221,14 @@ const modules = [
   memoryIndexMaxSize,
   rulesMaxLines,
   rulesSymlinkExternal,
+  claudeMdAgentsMdProsePointer,
+  claudeMdCombinedSize,
+  claudeMdExcludesAbsoluteCommitted,
+  claudeMdHtmlCommentContent,
+  claudeMdImportInCodeSpan,
+  claudeMdLocation,
+  memoryAgentMemoryOrphan,
+  rulesPathsNoMatch,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -340,6 +356,14 @@ const recommended: Record<RuleName, Severity> = {
   'memory-index-max-size': 'warn',
   'rules-max-lines': 'warn',
   'rules-symlink-external': 'warn',
+  'claude-md-agents-md-prose-pointer': 'off',
+  'claude-md-combined-size': 'off',
+  'claude-md-excludes-absolute-committed': 'off',
+  'claude-md-html-comment-content': 'off',
+  'claude-md-import-in-code-span': 'off',
+  'claude-md-location': 'off',
+  'memory-agent-memory-orphan': 'off',
+  'rules-paths-no-match': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
