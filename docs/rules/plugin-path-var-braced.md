@@ -47,7 +47,7 @@ The rule makes no report in these cases:
 - A `$CLAUDE_PLUGIN_ROOT` in a hook, an MCP server or a monitor. A hook and an MCP stdio server
   get the variables in their environment. `plugin-monitors-command-env` owns the monitor case.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
-  `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
+  the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
 
 Fail: `Run $CLAUDE_PLUGIN_ROOT/scripts/check.sh` in `skills/check/SKILL.md` of a plugin.

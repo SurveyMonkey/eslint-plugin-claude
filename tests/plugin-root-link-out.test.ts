@@ -6,6 +6,7 @@
 // error of the fixture.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { readPluginAt } from '../src/plugin-manifest.ts'
 import { link, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from './plugin-tree.test-support.ts'
 import { lintMarkdown } from './rule-tester.test-support.ts'
@@ -86,5 +87,14 @@ describe('a plugin root that links out of the repository', () => {
   linked('plugin-package-lockfile stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, { 'package.json': '{}', 'yarn.lock': '' })
     expect(lintPlugin('plugin-package-lockfile', dir, MANIFEST)).toEqual([])
+  })
+})
+
+describe('readPluginAt', () => {
+  it('gives the plugin for a root in the repository', () => {
+    expect(readPluginAt(inside({}))).toMatchObject({ fields: { name: 'p' } })
+  })
+  linked('gives no plugin for a root that links out of the repository', () => {
+    expect(readPluginAt(linkedOut({}).dir)).toBeUndefined()
   })
 })

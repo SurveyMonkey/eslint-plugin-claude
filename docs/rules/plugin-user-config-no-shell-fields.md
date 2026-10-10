@@ -66,7 +66,7 @@ The rule makes no report in these cases:
   that file.
 - The file is in no plugin, such as a `.mcp.json` of a project that has no `plugin.json`.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
-  `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
+  the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
 
 This rule holds the hook and `headersHelper` checks of the rule inventory. The hooks group and

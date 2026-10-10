@@ -55,7 +55,7 @@ The rule makes no report in these cases:
 - A hook command or an MCP server. The rule reads monitors only.
 - A monitors file that the manifest names with a path other than the default file.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
-  `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
+  the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
 
 Fail: `"command": "$CLAUDE_PLUGIN_ROOT/scripts/poll.sh"`.

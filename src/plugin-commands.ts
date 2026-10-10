@@ -59,7 +59,7 @@ function monitorsOf(value: ValueNode | undefined): PluginCommand[] {
 }
 
 /** The shell-form command hooks of an event map. A hook is in shell form when it
- *  has no `args` member. */
+ *  has no `args` member and its `type` is `command`. */
 function hooksOf(value: ValueNode | undefined): PluginCommand[] {
   if (value?.type !== 'Object') {
     return []

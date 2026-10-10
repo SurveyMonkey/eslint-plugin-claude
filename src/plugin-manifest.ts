@@ -1,6 +1,6 @@
 // The plugin that holds a `plugin.json`, for a rule that lints the manifest
 // and reads the files around it. `readPlugin` finds the plugin root once. A
-// rule does not find a plugin root again (ADR 001, Decision 10).
+// rule checks the plugin root in code (ADR 001, Decision 10).
 import path from 'node:path'
 import type { ValueNode } from './marketplace-json.ts'
 import { realSource } from './marketplace-source.ts'
