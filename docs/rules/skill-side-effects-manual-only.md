@@ -29,7 +29,7 @@ features page gives the same advice.[^load]
 
 The rule reports a skill or command that has a side effect and does not set the field. It looks
 for the default patterns `git push`, `git commit`, `deploy` and `send message`. Each pattern is
-a run of words, in order. The match ignores letter case. A path or a name joins words with
+a run of words in order, and the match ignores letter case. A path or a name joins words with
 `/`, `:`, `=`, `.` or `_`, so `./scripts/deploy.sh` and `send_message` both match. A longer word
 such as `deploy-status` does not match. The rule reads two places:
 
@@ -37,7 +37,7 @@ such as `deploy-status` does not match. The rule reads two places:
   tool, such as `Bash` or `Bash(*)`, has no pattern, so it does not match. A rule in
   `disallowed-tools` does not match.
 - The injected commands, in the inline form and in a ```` ```! ```` fence. The rule splits a
-  command at `&&`, `||`, `;`, `|` and a line break. It skips a quoted string, a comment line, and
+  command at `&&`, `||`, `;`, `|`, `&` and a line break. It skips a quoted string, a comment line, and
   a command that only prints or reads, such as `echo deploy` or `grep deploy notes.md`.
 
 The report is on the first match in the file. It is on the `allowed-tools` rule or on the

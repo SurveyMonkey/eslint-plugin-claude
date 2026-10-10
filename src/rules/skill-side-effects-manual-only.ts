@@ -1,6 +1,6 @@
 // A skill with side effects sets `disable-model-invocation: true`, so that only the user starts it
 // (docs/rules/skill-side-effects-manual-only.md). The rule is a heuristic. It reads the `Bash`
-// rules of `allowed-tools` and the injected commands as text, and it looks for the words of a
+// rules of `allowed-tools` and the injected commands as text. It looks for the words of a
 // pattern.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import type { AST } from 'eslint'
@@ -14,8 +14,7 @@ import { readFrontmatter } from '../skill-frontmatter.ts'
 const name = 'skill-side-effects-manual-only' as const
 
 /** The patterns that the rule looks for. The option `patterns` adds to them. The skills page
- *  names `/commit` and `/deploy` as the skills with side effects, and the features page names a
- *  skill that sends a message. */
+ *  names `/commit`, `/deploy` and `/send-slack-message` as skills with side effects. */
 const DEFAULT_PATTERNS = ['git push', 'git commit', 'deploy', 'send message']
 
 // The parts of a command that split it into words: white space, a path separator, and the
@@ -66,7 +65,8 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'sideEffe
       description: 'Let only the user invoke a skill that has side effects',
       url: docsUrl(name),
     },
-    // Each item needs a letter or a digit, so that its words are never empty.
+    // Each item needs a letter or a digit. A quoted item can still give no word, so `create`
+    // drops it.
     schema: [
       {
         type: 'object',
@@ -92,10 +92,9 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'sideEffe
     }
     const { sourceCode } = context
     const [{ patterns: extra }] = context.options
-    const patterns = [...DEFAULT_PATTERNS, ...extra].map((text) => ({
-      text,
-      words: wordsIn(text),
-    }))
+    const patterns = [...DEFAULT_PATTERNS, ...extra]
+      .map((text) => ({ text, words: wordsIn(text) }))
+      .filter((pattern) => pattern.words.length > 0)
     // True when the skill cannot be invoked by Claude, or when the rule cannot read the block.
     let exempt = false
     // The evidence in file order: a rule of `allowed-tools` first, then an injected command.

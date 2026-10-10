@@ -73,6 +73,10 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
       filename: skill,
     },
     { code: withFields('description: d', inline("echo 'git push' | wc -l")), filename: skill },
+    {
+      code: withFields('description: d', inline("gh issue comment 1 -b 'please deploy now'")),
+      filename: skill,
+    },
     // A comment line of a block is not a command.
     { code: withFields('description: d', block('# git push\nnpm test')), filename: skill },
     // Prose and a code span that follow no `!` are not injected commands.
@@ -210,6 +214,33 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
       filename: skill,
       errors: [found('git push')],
     },
+    // Each separator makes a subcommand. A read-only first word does not hide the next one.
+    {
+      code: withFields('description: d', inline('ls && git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    {
+      code: withFields('description: d', inline('echo done; git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    {
+      code: withFields('description: d', inline('cat x | git push')),
+      filename: skill,
+      errors: [found('git push')],
+    },
+    // A colon and an equals sign break a word.
+    {
+      code: withFields('description: d', inline('npm run ci:deploy')),
+      filename: skill,
+      errors: [found('deploy')],
+    },
+    {
+      code: withFields('description: d', inline('ENV=deploy ./run')),
+      filename: skill,
+      errors: [found('deploy')],
+    },
     // A skill that sets the fields but not to the exempt value.
     {
       code: withFields('disable-model-invocation: false', inline('git push')),
@@ -270,6 +301,13 @@ describe('the option patterns', () => {
 
   it('refuses a pattern that is listed twice', () => {
     expect(() => lint(['x', 'x'])).toThrow(/duplicate items/)
+  })
+
+  it('ignores a pattern that has only quoted text, because it has no word', () => {
+    const text = withFields('description: d', inline('npm test'))
+    expect(
+      lintMarkdown('skill-side-effects-manual-only', text, skill, [{ patterns: ['"x"'] }]),
+    ).toEqual([])
   })
 
   it('accepts a list with a pattern', () => {

@@ -29,7 +29,7 @@ its own. A skill with `disable-model-invocation: true` reaches Claude as plain t
 not run.[^loop] The field has the same effect when a scheduled task fires with the skill as its
 prompt.[^field]
 
-The rule reads the first line that is not blank. When that line starts with `/` and a name, the
+The rule reads the first line that is not blank. The line can start with `/` and a name. Then the
 rule looks for the skill or command file of that name in the same `.claude/` folder. It reports
 when that file sets `disable-model-invocation: true`. The report is on the `/name` token.
 
