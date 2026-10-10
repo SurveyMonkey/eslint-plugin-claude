@@ -475,6 +475,8 @@ const TREE: Record<string, string> = {
   // silent.
   'packages/pb/.claude/skills/p/.claude-plugin/plugin.json': '{"mcpServers": "./server.mcpb"}',
   'packages/pb/.claude/skills/q/.claude-plugin/plugin.json': '{"mcpServers": "./servers.json"}',
+  // An absolute path leaves the plugin directory.
+  'packages/pb/.claude/skills/r/.claude-plugin/plugin.json': '{"mcpServers": "/opt/servers.json"}',
   'packages/pb/.claude/skills/p/sub/.claude-plugin/plugin.json': '{"mcpServers": "./server.mcpb"}',
   'packages/pb/.claude-plugin/plugin.json': '{"mcpServers": "./server.mcpb"}',
   // `mcp-tool-name-format`: a tool reference with one underscore, in each file that the rule reads.
@@ -853,6 +855,7 @@ const EXPECTED = [
   'packages/ms/.claude/settings.json: claude/mcp-settings-mcpservers@2',
   'packages/ms/.claude/settings.local.json: claude/mcp-settings-mcpservers@2',
   'packages/pb/.claude/skills/p/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
+  'packages/pb/.claude/skills/r/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
   'packages/tn/.claude/settings.json: claude/mcp-tool-name-format@2',
   'packages/tn/.claude/settings.local.json: claude/mcp-tool-name-format@2',
   'packages/tn/managed-settings.json: claude/mcp-tool-name-format@2',

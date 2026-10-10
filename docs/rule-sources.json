@@ -845,6 +845,11 @@
       "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
     },
     {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Paths that escape the plugin directory",
+      "hash": "8cda23d96a189f7d236c5a4358a1331bf976125f12431fe6d47e7ce7a9a46c5e"
+    },
+    {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Containment and existence",
       "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"

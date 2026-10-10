@@ -4,7 +4,8 @@
 // `settings-project-value-ignored` reports the same value in the two project files, so this rule
 // reads the managed files only. The managed settings page merges `managed-settings.json` and the
 // drop-ins into one source, and a later file replaces a single value of an earlier one. So a
-// `false` after a `true` in a sibling file changes the value, and the rule makes no report then.
+// `false` after a `true` in a sibling file changes the value. A `false` before a `true` is
+// replaced. The rule does not model the order, and makes no report when any sibling holds `true`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'

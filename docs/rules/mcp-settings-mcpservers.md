@@ -29,8 +29,9 @@ has two such keys, the rule reads the last, as `JSON.parse` does. A key in a nes
 the key. The keys `enabledMcpjsonServers` and `disabledMcpjsonServers` are real settings. They
 approve or reject servers of `.mcp.json`, and the rule does not read them.
 
-The rule reads the two project settings files. It does not read a managed settings file or a user
-settings file.
+The rule reads the two project settings files. It does not read a managed settings file. The files
+glob also matches a user file `~/.claude/settings.json`. The rule cannot tell it from a project
+file. Turn the rule off for such a file.
 
 Fail, in `.claude/settings.json`:
 
