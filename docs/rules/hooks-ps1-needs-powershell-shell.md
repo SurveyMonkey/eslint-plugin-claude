@@ -21,7 +21,7 @@ Set `shell` to `"powershell"` on a hook command that runs a `.ps1` file.
 ## Rule details
 
 The `shell` field of a command hook defaults to `"bash"`. It defaults to `"powershell"` on Windows when Git Bash
-is not installed.[^fields] Bash cannot run a PowerShell script. It runs the file as a shell script, or refuses it. The
+is not installed.[^fields] A PowerShell script is not a shell script, so it fails in Bash. The
 docs say to write the hook script in PowerShell and to add `shell: powershell` to the hook entry.[^subagents]
 
 The rule reports a shell-form `command` with a simple command whose command word ends in `.ps1`. It skips the
@@ -33,7 +33,7 @@ the `command` string.
 
 The result depends on the platform of your team, and the rule cannot know it. Windows without Git Bash runs the
 command in PowerShell, where it works. The other platforms run it in Bash. So the rule makes no report unless the
-option `platforms` is set. It has the shape of `minVersion` in other rules.
+option `platforms` is set.
 
 | Value | The hook shell by default |
 |-------|---------------------------|

@@ -17,7 +17,7 @@ const rule: Rule.RuleModule = {
     },
     schema: [],
     messages: {
-      star: 'A "*" matcher on FileChanged also adds a file named "*" to the watch list. Omit the matcher to match every watched file.',
+      star: 'A "*" matcher segment on FileChanged also adds a file named "*" to the watch list. To match every watched file, use a group with no matcher.',
     },
   },
   create(context) {
