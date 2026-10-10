@@ -1,6 +1,10 @@
 // Claude Code refuses a local OAuth flow for an Anthropic-hosted connector host. The errors page
 // names three hosts. The option `hosts` adds more. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
+import { describe, expect, it } from 'vitest'
+import plugin from '../../src/index.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -41,6 +45,16 @@ jsonTester.run('mcp-anthropic-hosted-url (valid)', rule, {
     },
     // A host that is not known.
     { name: 'a reference', code: at(`https://\${HOST}/mcp`), filename: project },
+    {
+      name: 'a reference in the port, host unknown',
+      code: at(`https://\${H}:\${P}/mcp`),
+      filename: project,
+    },
+    {
+      name: 'a reference after the host name',
+      code: at(`https://gmail.mcp.claude.com\${S}/mcp`),
+      filename: project,
+    },
     {
       name: 'a reference with a default',
       code: at(`\${URL:-https://gmail.mcp.claude.com}`),
@@ -149,15 +163,19 @@ jsonTester.run('mcp-anthropic-hosted-url (invalid)', rule, {
       filename: project,
       errors: [{ messageId: 'hosted' }],
     },
-    // A reference after the host does not change the host.
-    ...[`https://gmail.mcp.claude.com/\${PATH}`, `https://gmail.mcp.claude.com/?x=\${Y}`].map(
-      (url) => ({
-        name: `a reference in the path or query ${url}`,
-        code: at(url),
-        filename: project,
-        errors: [{ messageId: 'hosted' as const }],
-      }),
-    ),
+    // A reference after the host does not change the host. This holds for the port too.
+    ...[
+      `https://gmail.mcp.claude.com/\${PATH}`,
+      `https://gmail.mcp.claude.com/?x=\${Y}`,
+      `https://gmail.mcp.claude.com:\${PORT}/mcp`,
+      `https://gmail.mcp.claude.com:\${PORT}`,
+      `https://\${USER}@gmail.mcp.claude.com/mcp`,
+    ].map((url) => ({
+      name: `a reference in the path or query ${url}`,
+      code: at(url),
+      filename: project,
+      errors: [{ messageId: 'hosted' as const }],
+    })),
     {
       name: 'no path',
       code: at('https://gmail.mcp.claude.com'),
@@ -277,4 +295,32 @@ jsonTester.run('mcp-anthropic-hosted-url (message text)', rule, {
       ],
     },
   ],
+})
+
+// The schema of the option `hosts`: a list of strings with one character or more, and no other key.
+describe('mcp-anthropic-hosted-url option schema', () => {
+  const lint = (options: object[]) =>
+    new Linter().verify(
+      at('https://mcp.example.com/mcp'),
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { 'claude/mcp-anthropic-hosted-url': ['error', ...options] },
+        },
+      ],
+      { filename: project },
+    )
+
+  it('accepts an empty object and a list of host names', () => {
+    expect(lint([{}])).toEqual([])
+    expect(lint([{ hosts: ['mcp.example.com'] }])).toHaveLength(1)
+  })
+  it('refuses an empty name, a string, a number in the list, and an unknown key', () => {
+    expect(() => lint([{ hosts: [''] }])).toThrow()
+    expect(() => lint([{ hosts: 'x' }])).toThrow()
+    expect(() => lint([{ hosts: [1] }])).toThrow()
+    expect(() => lint([{ other: 1 }])).toThrow()
+  })
 })
