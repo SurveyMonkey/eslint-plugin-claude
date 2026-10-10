@@ -200,6 +200,17 @@ describe(`${name}: a value that a later version sends`, () => {
     ).toEqual(['value', 'value'])
   })
 
+  it('reads a comma list on Notification, where the exact set is not narrow', () => {
+    expect(ids('Notification', 'idle_prompt,quota_auto_resume_fired', '2.1.190')).toEqual([
+      'comma',
+      'value',
+    ])
+    expect(ids('Notification', 'idle_prompt, quota_auto_resume_fired', '2.1.190')).toEqual([
+      'comma',
+      'value',
+    ])
+  })
+
   it('is silent for another Notification value', () => {
     expect(ids('Notification', 'idle_prompt', '2.1.100')).toEqual([])
     expect(ids('PreToolUse', 'quota_auto_resume_fired', '2.1.100')).toEqual([])

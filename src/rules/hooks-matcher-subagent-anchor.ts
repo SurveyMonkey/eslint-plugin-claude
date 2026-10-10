@@ -10,6 +10,39 @@ const name = 'hooks-matcher-subagent-anchor' as const
 
 const SUBAGENT_EVENTS = ['SubagentStart', 'SubagentStop']
 
+/** True when the pattern has a `|` outside a group or a class. */
+function hasTopLevelPipe(pattern: string): boolean {
+  let depth = 0
+  let inClass = false
+  for (let at = 0; at < pattern.length; at += 1) {
+    const char = pattern[at]
+    if (char === '\\') {
+      at += 1
+    } else if (inClass) {
+      inClass = char !== ']'
+    } else if (char === '[') {
+      inClass = true
+    } else if (char === '(') {
+      depth += 1
+    } else if (char === ')') {
+      depth -= 1
+    } else if (char === '|' && depth === 0) {
+      return true
+    }
+  }
+  return false
+}
+
+/** True when the pattern is a valid regular expression. `hooks-matcher-syntax` reports the others. */
+function compiles(pattern: string): boolean {
+  try {
+    new RegExp(pattern)
+    return true
+  } catch {
+    return false
+  }
+}
+
 const rule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
@@ -29,15 +62,21 @@ const rule: Rule.RuleModule = {
         if (
           matcher !== undefined &&
           SUBAGENT_EVENTS.includes(event) &&
-          matcher.value.includes(':') &&
-          !(matcher.value.startsWith('^') && matcher.value.endsWith('$'))
+          // A colon in a group opener, such as `(?:`, is not the colon of a plugin name.
+          matcher.value.replaceAll('(?:', '').includes(':') &&
+          compiles(matcher.value)
         ) {
-          // A list needs a group, because `^a|b$` anchors one end of each side only.
           const bare = matcher.value.replace(/^\^/, '').replace(/\$$/, '')
+          // A list needs a group, because `^a|b$` anchors one end of each side only.
+          const list = hasTopLevelPipe(bare)
+          const anchored = matcher.value.startsWith('^') && matcher.value.endsWith('$') && !list
+          if (anchored) {
+            continue
+          }
           context.report({
             loc: matcher.loc,
             messageId: 'unanchored',
-            data: { matcher: bare.includes('|') ? `(${bare})` : bare },
+            data: { matcher: list ? `(${bare})` : bare },
           })
         }
       }

@@ -21,7 +21,7 @@ Match PowerShell wherever a tool hook matches Bash.
 ## Rule details
 
 On Windows, Claude Code can run shell commands through the PowerShell tool. Without Git Bash, it does not
-register the Bash tool at all. A hook that matches only `Bash` never fires there. The docs say to match
+register the Bash tool at all. A hook that matches only `Bash` can fire on no call there. The docs say to match
 `Bash|PowerShell` in a hook that inspects shell commands.[^hooks][^tools]
 
 The rule reads the `matcher` of a group under `PreToolUse`, `PostToolUse`, `PostToolUseFailure`,
@@ -36,8 +36,7 @@ The rule reads the `matcher` of a group under `PreToolUse`, `PostToolUse`, `Post
 - The rule makes no report for an omitted, empty or `*` matcher, which selects every tool. It makes none for
   `bash` in lower case, which [`hooks-matcher-never-matches`](hooks-matcher-never-matches.md) reports.
 
-The rule does not read the command of the hook. A `Bash` hook that must run on a Unix shell only is rare, and
-the rule cannot tell it from the common case.
+The rule does not read the command of the hook. It cannot tell a hook for a Unix shell only from other hooks.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, no plugin agent, and no `hooks.json` that Claude Code does not read.

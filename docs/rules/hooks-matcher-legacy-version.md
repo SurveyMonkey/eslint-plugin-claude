@@ -33,17 +33,18 @@ form. A `minVersion` equal to that version is no fault.
 
 ### The hyphenated name
 
-The changelog for v2.1.195 says that a hook matcher with a hyphenated name, such as `code-reviewer`, matched as
-a substring before that version. It matches the whole name from v2.1.195. The current docs do not
-state this version. So this text links the
-[changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md), and there is no footnote. Before v2.1.195, write `^code-reviewer$`. An anchor makes the matcher a
-regular expression on every version.
+Before v2.1.195, a hook matcher with a hyphenated name matched as a substring. An example is `code-reviewer`.
+From v2.1.195, it matches the whole name. The current docs do not state this version. This text links the
+[changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md), and there is no footnote.
+
+Before v2.1.195, write `^code-reviewer$`. An anchor makes the matcher a regular expression on every version.
 
 ### What the rule reads
 
 - It reads a matcher that holds exact-match characters only.[^patterns] A regular expression is not a fault.
-- The comma check and the hyphen check apply to the events that read a free matcher: the tool events,
-  `SubagentStart`, `SubagentStop` and the like. The comma check also covers an event with a fixed set of values.
+- The comma check and the hyphen check apply to the events that read a matcher in the exact-match form. These
+  are the tool events, `SubagentStart` and `SubagentStop`. The comma check also covers an event with a fixed set
+  of values.
 - It makes no report for `FileChanged` and `StopFailure` on a comma or a hyphen. Those events read both as a
   regular expression, and [`hooks-matcher-syntax`](hooks-matcher-syntax.md) reports them.
 - It makes no hyphen report on an event with a fixed set of values.

@@ -53,7 +53,7 @@ describe(`${name}: the event`, () => {
   it('says what to use instead', () => {
     const [message] = lintJson(name, settings(hooks('PermissionRequest', [prompt])), FILES.project)
     expect(message?.message).toBe(
-      'A prompt hook on PermissionRequest cannot deny: "ok": false has no effect. Use a command or http hook that returns a decision.',
+      'A prompt hook on PermissionRequest cannot deny: "ok": false has no effect. Use a command hook that returns a decision.',
     )
   })
 

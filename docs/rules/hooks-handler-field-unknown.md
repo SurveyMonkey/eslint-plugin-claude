@@ -40,8 +40,7 @@ Two other rules own related faults, so this rule makes no report for them:
 - [`hooks-config-schema`](hooks-config-schema.md) reports a handler with no `type` or an unknown `type`, a
   required field that is absent, and a field of the wrong type. This rule skips a handler with no valid `type`.
 - [`hooks-handler-field-ignored`](hooks-handler-field-ignored.md) reports `async`, `asyncRewake`,
-  `continueOnBlock` and `onFailure` on a hook where Claude Code ignores them. This rule makes no second report
-  for these four fields.
+  `continueOnBlock` and `onFailure` on a hook where Claude Code ignores them. This rule skips these four fields.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md). It reads no hidden file in
 `managed-settings.d/`, no plugin agent, and no `hooks.json` that Claude Code does not read.

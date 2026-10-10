@@ -12,7 +12,7 @@ generated:
 
 # `hooks-prompt-on-permission-request`
 
-Use a command or http hook, not a prompt hook, to decide on PermissionRequest.
+Use a command hook, not a prompt hook, to decide on PermissionRequest.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
