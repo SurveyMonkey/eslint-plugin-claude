@@ -677,6 +677,18 @@ const TREE: Record<string, string> = {
   ...settingsFiles('ssc', {
     sandbox: { credentials: { files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask' }] } },
   }),
+  // `sandbox-credentials-aws`: a deny mask file that allowRead re-opens.
+  ...settingsFiles('sca', {
+    sandbox: {
+      network: { tlsTerminate: {} },
+      filesystem: { allowRead: ['~/.aws'] },
+      credentials: {
+        files: [
+          { path: '~/.aws/credentials', mode: 'mask', extract: '(a)', onExtractNoMatch: 'deny' },
+        ],
+      },
+    },
+  }),
   // `sandbox-credentials-mask`: a deny entry that holds a mask field.
   ...settingsFiles('scm', {
     sandbox: { credentials: { envVars: [{ name: 'T', mode: 'deny', extract: '(a)' }] } },
@@ -816,6 +828,7 @@ const SANDBOX_RULES = [
   { name: 'sandbox-filesystem-disabled-conflict', files: MANAGED_FILES },
   { name: 'sandbox-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-scope', files: PROJECT_FILES },
+  { name: 'sandbox-credentials-aws', files: MANAGED_FILES },
   { name: 'sandbox-credentials-mask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-domain-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-sandbox-bash-ask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -1108,6 +1121,15 @@ const EXPECTED = [
   'packages/ssc/.claude/settings.json: claude/sandbox-scope@2',
   'packages/ssc/.claude/settings.local.json: claude/sandbox-scope@2',
   'packages/ssc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `sandbox-credentials-aws` reads the managed files only. A project file keeps a mask entry out
+  // (`sandbox-scope`) and a `tlsTerminate` key out (`settings-key-scope`).
+  'packages/sca/.claude/settings.json: claude/sandbox-scope@2',
+  'packages/sca/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/sca/.claude/settings.local.json: claude/sandbox-scope@2',
+  'packages/sca/.claude/settings.local.json: claude/settings-key-scope@2',
+  'packages/sca/managed-settings.json: claude/sandbox-credentials-aws@2',
+  'packages/sca/managed-settings.d/10-a.json: claude/sandbox-credentials-aws@2',
+  'packages/sca/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The `ssc` file has a mask entry and no TLS termination, which `sandbox-credentials-mask` reports in a managed source.
   'packages/ssc/managed-settings.json: claude/sandbox-credentials-mask@2',
   'packages/ssc/managed-settings.d/10-a.json: claude/sandbox-credentials-mask@2',

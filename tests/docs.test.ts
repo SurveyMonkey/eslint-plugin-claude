@@ -81,6 +81,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-unknown-tool',
     'permissions-webfetch-domain-syntax',
     'permissions-windows-path',
+    'sandbox-credentials-aws',
     'sandbox-credentials-mask',
     'sandbox-domain-overlap',
     'sandbox-domain-syntax',

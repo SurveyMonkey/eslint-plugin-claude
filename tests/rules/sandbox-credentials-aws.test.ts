@@ -39,12 +39,12 @@ const alone = (text: string, file = MANAGED) => at(repo({}), file, text)
 describe(`${name}: awsPairs`, () => {
   const MASKED = [mask('K'), mask('S'), mask('T')]
 
-  it.fails('is silent for pairs that name whole-value mask entries', () => {
+  it('is silent for pairs that name whole-value mask entries', () => {
     const text = creds({ envVars: MASKED, awsPairs: [pair('K', 'S', { sessionTokenVar: 'T' })] })
     expect(alone(text)).toEqual([])
   })
 
-  it.fails('reports a named variable whose entry is not a whole-value mask', () => {
+  it('reports a named variable whose entry is not a whole-value mask', () => {
     for (const bad of [
       mask('K', { extract: '(a)' }),
       mask('K', { decode: 'jwt' }),
@@ -55,7 +55,7 @@ describe(`${name}: awsPairs`, () => {
     }
   })
 
-  it.fails('reports the variable name, at its line and column', () => {
+  it('reports the variable name, at its line and column', () => {
     const text =
       '{\n  "sandbox": {\n    "credentials": {\n      "envVars": [{ "name": "K", "mode": "deny" }],\n      "awsPairs": [{ "accessKeyIdVar": "K", "secretAccessKeyVar": "S" }]\n    }\n  }\n}'
     const [message] = lintJson(name, text, '/repo/managed-settings.json')
@@ -63,7 +63,7 @@ describe(`${name}: awsPairs`, () => {
     expect(message?.message).toContain('K')
   })
 
-  it.fails('reports a variable that is a deny entry and a mask entry', () => {
+  it('reports a variable that is a deny entry and a mask entry', () => {
     const text = creds({
       envVars: [mask('K'), { name: 'K', mode: 'deny' }, mask('S')],
       awsPairs: [pair('K', 'S')],
@@ -71,11 +71,11 @@ describe(`${name}: awsPairs`, () => {
     expect(alone(text)).toEqual(['notWholeMask'])
   })
 
-  it.fails('is silent for a named variable with no entry: another file can supply it', () => {
+  it('is silent for a named variable with no entry: another file can supply it', () => {
     expect(alone(creds({ awsPairs: [pair('K', 'S')] }))).toEqual([])
   })
 
-  it.fails('reports a variable that fills a second slot, in one pair or in two', () => {
+  it('reports a variable that fills a second slot, in one pair or in two', () => {
     expect(alone(creds({ envVars: MASKED, awsPairs: [pair('K', 'K')] }))).toEqual(['reused'])
     const two = creds({ envVars: MASKED, awsPairs: [pair('K', 'S'), pair('S', 'T')] })
     expect(alone(two)).toEqual(['reused'])
@@ -83,19 +83,19 @@ describe(`${name}: awsPairs`, () => {
     expect(alone(session)).toEqual(['reused'])
   })
 
-  it.fails('does not read a slot that is not a string, or a pair that is not an object', () => {
+  it('does not read a slot that is not a string, or a pair that is not an object', () => {
     const text = creds({ envVars: MASKED, awsPairs: [pair('K', 'S', { sessionTokenVar: 3 }), 'x'] })
     expect(alone(text)).toEqual([])
     expect(alone(creds({ awsPairs: 'x' }))).toEqual([])
   })
 
-  it.fails('is silent when another file of the source sets awsPairs: the key is taken whole', () => {
+  it('is silent when another file of the source sets awsPairs: the key is taken whole', () => {
     const bad = creds({ envVars: [{ name: 'K', mode: 'deny' }], awsPairs: [pair('K', 'S')] })
     const root = repo({ 'managed-settings.d/20-b.json': creds({ awsPairs: [pair('X', 'Y')] }) })
     expect(at(root, DROP_IN, bad)).toEqual([])
   })
 
-  it.fails('reads an entry of another file of the source', () => {
+  it('reads an entry of another file of the source', () => {
     const root = repo({ [MANAGED]: creds({ envVars: [mask('K'), mask('S')] }) })
     expect(at(root, DROP_IN, creds({ awsPairs: [pair('K', 'S')] }))).toEqual([])
     const bad = repo({ [MANAGED]: creds({ envVars: [{ name: 'K', mode: 'deny' }] }) })
@@ -104,12 +104,12 @@ describe(`${name}: awsPairs`, () => {
 })
 
 describe(`${name}: the access key and the secret key`, () => {
-  it.fails('reports a masked secret key with no masked access key, and the reverse', () => {
+  it('reports a masked secret key with no masked access key, and the reverse', () => {
     expect(alone(creds({ envVars: [mask(SECRET)] }))).toEqual(['unpaired'])
     expect(alone(creds({ envVars: [mask(KEY)] }))).toEqual(['unpaired'])
   })
 
-  it.fails('names the lone variable, and the one that is missing', () => {
+  it('names the lone variable, and the one that is missing', () => {
     const [message] = lintJson(
       name,
       creds({ envVars: [mask(SECRET)] }),
@@ -119,23 +119,23 @@ describe(`${name}: the access key and the secret key`, () => {
     expect(message?.message).toContain(KEY)
   })
 
-  it.fails('is silent when both are masked, or neither', () => {
+  it('is silent when both are masked, or neither', () => {
     expect(alone(creds({ envVars: [mask(KEY), mask(SECRET)] }))).toEqual([])
     expect(alone(creds({ envVars: [mask('OTHER')] }))).toEqual([])
     expect(alone(creds({ envVars: [{ name: KEY, mode: 'deny' }] }))).toEqual([])
   })
 
-  it.fails('counts a mask entry of another file of the source', () => {
+  it('counts a mask entry of another file of the source', () => {
     const root = repo({ [MANAGED]: creds({ envVars: [mask(KEY)] }) })
     expect(at(root, DROP_IN, creds({ envVars: [mask(SECRET)] }))).toEqual([])
   })
 
-  it.fails('is silent when a pair names a conventional variable: the pair replaces the automatic one', () => {
+  it('is silent when a pair names a conventional variable: the pair replaces the automatic one', () => {
     const text = creds({ envVars: [mask(SECRET)], awsPairs: [pair('K', SECRET)] })
     expect(alone(text)).toEqual([])
   })
 
-  it.fails('is silent when another file sets awsPairs: the rule cannot tell which pairs hold', () => {
+  it('is silent when another file sets awsPairs: the rule cannot tell which pairs hold', () => {
     const root = repo({ 'managed-settings.d/20-b.json': creds({ awsPairs: [pair('K', 'S')] }) })
     expect(at(root, DROP_IN, creds({ envVars: [mask(SECRET)] }))).toEqual([])
   })
@@ -151,13 +151,13 @@ describe(`${name}: onExtractNoMatch deny with a read block that does not hold`, 
   const withRead = (allowRead: string[], entry: Entry = FILE) =>
     creds({ files: [entry] }, { filesystem: { allowRead } })
 
-  it.fails('reports when allowRead re-opens the path: the same path, or a directory above it', () => {
+  it('reports when allowRead re-opens the path: the same path, or a directory above it', () => {
     for (const allowed of ['~/.aws/credentials', '~/.aws', '~/.aws/', '~/.aws/**', '~']) {
       expect(alone(withRead([allowed])), allowed).toEqual(['denyReopened'])
     }
   })
 
-  it.fails('reports the onExtractNoMatch value, and names the cause', () => {
+  it('reports the onExtractNoMatch value, and names the cause', () => {
     const [message] = lintJson(name, withRead(['~/.aws']), '/repo/managed-settings.json')
     expect(message?.message).toContain('allowRead')
     const off = lintJson(
@@ -168,13 +168,13 @@ describe(`${name}: onExtractNoMatch deny with a read block that does not hold`, 
     expect(off[0]?.message).toContain('filesystem.disabled')
   })
 
-  it.fails('reports when filesystem.disabled is true', () => {
+  it('reports when filesystem.disabled is true', () => {
     expect(alone(creds({ files: [FILE] }, { filesystem: { disabled: true } }))).toEqual([
       'denyReopened',
     ])
   })
 
-  it.fails('is silent for another path, another value, or an entry that is not a mask', () => {
+  it('is silent for another path, another value, or an entry that is not a mask', () => {
     expect(alone(withRead(['~/.ssh', '~/.awsx', '~/.aws/credentials/x']))).toEqual([])
     for (const value of ['warn', 'error', undefined]) {
       expect(alone(withRead(['~/.aws'], { ...FILE, onExtractNoMatch: value }))).toEqual([])
@@ -185,7 +185,7 @@ describe(`${name}: onExtractNoMatch deny with a read block that does not hold`, 
     expect(alone(creds({ files: [FILE] }))).toEqual([])
   })
 
-  it.fails('reads allowRead and disabled in another file of the source', () => {
+  it('reads allowRead and disabled in another file of the source', () => {
     const allow = repo({
       [MANAGED]: JSON.stringify({ sandbox: { filesystem: { allowRead: ['~'] } } }),
     })
@@ -198,34 +198,34 @@ describe(`${name}: onExtractNoMatch deny with a read block that does not hold`, 
 describe(`${name}: the files that it reads`, () => {
   const BAD = creds({ envVars: [mask(SECRET)] })
 
-  it.fails('reads a managed file and a drop-in', () => {
+  it('reads a managed file and a drop-in', () => {
     expect(alone(BAD, MANAGED)).toEqual(['unpaired'])
     expect(alone(BAD, DROP_IN)).toEqual(['unpaired'])
   })
 
-  it.fails('is silent in a project or local file: the keys are for managed settings', () => {
+  it('is silent in a project or local file: the keys are for managed settings', () => {
     for (const file of [PROJECT, LOCAL]) {
       expect(alone(BAD, file), file).toEqual([])
     }
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(alone(BAD, 'managed-settings.d/.10-a.json')).toEqual([])
   })
 
-  it.fails('does not read a project file for a managed file', () => {
+  it('does not read a project file for a managed file', () => {
     const root = repo({ [PROJECT]: creds({ envVars: [mask(KEY)] }) })
     expect(at(root, MANAGED, BAD)).toEqual(['unpaired'])
   })
 
-  it.fails('ignores a hidden sibling, and a sibling that does not read adds nothing', () => {
+  it('ignores a hidden sibling, and a sibling that does not read adds nothing', () => {
     const hidden = repo({ 'managed-settings.d/.20-b.json': creds({ envVars: [mask(KEY)] }) })
     expect(at(hidden, DROP_IN, BAD)).toEqual(['unpaired'])
     const bad = repo({ 'managed-settings.d/20-b.json': '[1]' })
     expect(at(bad, DROP_IN, BAD)).toEqual(['unpaired'])
   })
 
-  it.fails('adds nothing for a drop-in directory that is a link out of the repository', {
+  it('adds nothing for a drop-in directory that is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})
@@ -234,7 +234,7 @@ describe(`${name}: the files that it reads`, () => {
     expect(at(root, MANAGED, BAD)).toEqual(['unpaired'])
   })
 
-  it.fails('does not read a value that is not an object', () => {
+  it('does not read a value that is not an object', () => {
     expect(alone('{}')).toEqual([])
     expect(alone('[1]')).toEqual([])
     expect(alone(creds({ envVars: [1, null], files: ['x'] }))).toEqual([])
