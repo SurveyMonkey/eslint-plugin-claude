@@ -30,6 +30,11 @@ describe(`${name}: the report`, () => {
       ['Proxy-Authorization', 'Bearer abc'],
       ['X-Password', 'hunter2'],
       ['Api_Key', 'k'],
+      ['X-Token', 'k'],
+      ['X-Credential', 'k'],
+      ['ApiKey', 'k'],
+      ['X-Api-Key', '1a2b3c4d'],
+      ['X-Api-Key', 'nonce-9f3'],
     ]) {
       expect(header(key as string, value), `${key}: ${value}`).toEqual(['literal'])
     }
