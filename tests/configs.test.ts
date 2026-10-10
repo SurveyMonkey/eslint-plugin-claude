@@ -698,6 +698,11 @@ const PLUGIN_RULES: {
   },
   // The rules with the option `minVersion` give no report in the config run, which sets no option.
   {
+    name: 'plugin-feature-min-version',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
     name: 'plugin-manifest-metadata-format',
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',

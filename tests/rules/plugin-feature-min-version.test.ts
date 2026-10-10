@@ -11,7 +11,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-feature-min-version'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 /** The messages of the rule for the manifest `code` of the plugin `dir`. `options` is the option

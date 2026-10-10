@@ -63,6 +63,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-commands-dir-nonempty',
     'plugin-default-dir-shadowed',
     'plugin-dependencies-resolve',
+    'plugin-feature-min-version',
     'plugin-manifest-location',
     'plugin-manifest-metadata-format',
     'plugin-manifest-no-bom',
