@@ -440,7 +440,7 @@ export function validateTracked(value: unknown): asserts value is Tracked {
     if (typeof t[field] !== 'string' || t[field] === '') fail(`has no ${field}`)
   }
   if (!URL_.test(String(t.page))) fail('has a page that is not an https URL')
-  if (!TRACKED_CHANGES.includes(String(t.change)))
+  if (typeof t.change !== 'string' || !TRACKED_CHANGES.includes(t.change))
     fail(`has an unknown change: ${String(t.change)}`)
   if (typeof t.newHash !== 'string' && typeof t.oldHash !== 'string') fail('has no hash')
   for (const field of ['oldHash', 'newHash']) {

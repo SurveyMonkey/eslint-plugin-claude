@@ -950,6 +950,15 @@ describe('the group comment path for tracked blocks', () => {
       'Permissions and sandbox': 15,
       'MCP and LSP servers': 16,
     }
+    // The `###` sections of "Rules by group" in the real inventory are these
+    // nine, so a new or renamed section fails here and not in the daily run.
+    const inventory = readFileSync(
+      path.join(import.meta.dirname, '../docs/rules-inventory.md'),
+      'utf8',
+    )
+    const part = inventory.split(/^## /m).find((p) => p.startsWith('Rules by group\n')) ?? ''
+    const sections = [...part.matchAll(/^### (.+)$/gm)].map((m) => m[1]?.trim())
+    expect(sections).toEqual(Object.keys(groups))
     for (const [section, issue] of Object.entries(groups)) {
       const gh = groupGh({ [issue]: { state: 'open' } })
       const t = { ...common, sections: [{ section, rules: ['a-rule'] }] }
@@ -1109,12 +1118,11 @@ describe('the group comment path for tracked blocks', () => {
       rules: ['a-rule'],
     }))
     const body = api.commentOf(blocks, 'Hooks')
-    // The markers and the cut text take 60,000 characters. The note of the
-    // cut comes after them.
-    const note =
-      '\n\nThe text is cut at 99,999 of 999,999 characters. Read the page for the rest.\n'
+    // The markers and the cut text take exactly 60,000 characters. The note of
+    // the cut comes after them.
+    const note = /\n\nThe text is cut at \d+ of \d+ characters\. Read the page for the rest\.\n$/
     expect(api.MAX_COMMENT).toBe(60_000)
-    expect(body.length).toBeLessThanOrEqual(60_000 + note.length)
+    expect(body.length - (note.exec(body)?.[0].length ?? 0)).toBe(60_000)
     expect(body.length).toBeLessThanOrEqual(65_536)
     expect(body.match(/<!-- docs-watch-tracked:/g)).toHaveLength(30)
     expect(body).toContain('Read the page for the rest.')
@@ -1128,6 +1136,7 @@ describe('the group comment path for tracked blocks', () => {
       [{ blockId: 3 }, 'has no blockId'],
       [{ page: 'http://x' }, 'page that is not an https URL'],
       [{ change: 'moved' }, 'unknown change: moved'],
+      [{ change: ['removed'], newHash: null, newText: null }, 'unknown change: removed'],
       [{ oldHash: null, newHash: null }, 'has no hash'],
       [{ oldHash: 'x -->' }, 'oldHash that is not a SHA-256 hash'],
       [{ oldHash: undefined }, 'oldHash that is not a SHA-256 hash'],
