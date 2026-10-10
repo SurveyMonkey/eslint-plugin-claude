@@ -1,0 +1,110 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/create",
+  "hash": "6b5c435d8f053dbec7634b7b0c72f71c9ae1b2f8f80af86aa76f49c093081ca4",
+  "blocks": [
+    {
+      "id": "create-a-claude-code-plugin",
+      "hash": "c948817baecad10482d17933fabfa8baa6560ec2355b7cfe13382b53021a56b6"
+    },
+    {
+      "id": "decide-when-to-use-a-plugin",
+      "hash": "3b2610c37e7e195060ad012677d8564df7704cc2b8ccc952a73fc08f97c92c39"
+    },
+    {
+      "id": "create-your-first-plugin",
+      "hash": "fdf645d2f382d7b5f53de5fd7271a9e1adba2f06780e1748a655cf7d492b5f05"
+    },
+    {
+      "id": "share-the-plugin",
+      "hash": "8c4e6531af56642b6fcf8a7fd7b91ab0c57a8f24f20037091bf691e554802f74"
+    },
+    {
+      "id": "plugin-layout",
+      "hash": "0823a83e4b31d35e49aa0a9a05509041e8226c4cb0eab50301e89c1260f4cb66"
+    },
+    {
+      "id": "develop-without-a-marketplace",
+      "hash": "a3d0b09ac9f38b6ed0dd2ea80cb020b339b35ffecbe194995633809463f977e0"
+    },
+    {
+      "id": "load-a-directory-or-archive-for-one-session",
+      "hash": "0a61a653e793a68b80138af790b4119c2e7e9a87fff35353887ead30016caeaf"
+    },
+    {
+      "id": "load-a-plugin-from-a-directory-or--zip",
+      "hash": "a628b50961a59f9e326889e453a4947d6526c6600e4cee1f56ca630cb356c237"
+    },
+    {
+      "id": "load-a-folder-of-plugins",
+      "hash": "400e467073556666a10cf294781c7edee050669d8ef0dc7558fd86e0fbc34a07"
+    },
+    {
+      "id": "load-a-plugin-from-a-url",
+      "hash": "9208e1770e1661b08105dcf35129732d085dc9aeea760353ed6380f1c31ad23a"
+    },
+    {
+      "id": "load-plugins-from-an-environment-variable",
+      "hash": "f9175397a218107daa34f76a7d1a16a863fa399528b1346cf300d55bcffbcdbf"
+    },
+    {
+      "id": "scaffold-a-plugin-that-loads-every-session",
+      "hash": "aa78b1c5a963502171568b427bee35cf655bebcdcf1692d90f5d4f5b961e40fc"
+    },
+    {
+      "id": "scaffold-the-plugin-with-claude-plugin-init",
+      "hash": "174804378eb7b430b6b470afed7c3cddce2c0e5e8dcc993dcdc4a3f7d9e9c75d"
+    },
+    {
+      "id": "skill-names-in-a-scaffolded-plugin",
+      "hash": "48e6cfdecb8734c5ff1daf381a8c51bbe4c4405dfabdd99cf964856a784afa6f"
+    },
+    {
+      "id": "stop-loading-the-plugin",
+      "hash": "6294e577e016cbe9401d8ab381a6670e5efc9d81a3a9a17e5228571c0850d819"
+    },
+    {
+      "id": "load-a-plugin-for-everyone-in-one-repository",
+      "hash": "9d4e0acb7bb41cc98088d2dd90f2dffd1a7754548b1f251bb96ac9aeb01d95e0"
+    },
+    {
+      "id": "test-and-debug",
+      "hash": "70381be6c7f43999af4a182d1a87158535901f07c54862beba5120bcccf64e82"
+    },
+    {
+      "id": "a-component-path-isnt-found",
+      "hash": "9aa125b8843ca7ecc9912055788dd15f4b029340455d7417f0ab947282b8428c"
+    },
+    {
+      "id": "--plugin-dir-at-a-marketplace-root-doesnt-load-the-plugins-under-plugins",
+      "hash": "22f6260c86d685310b183fc44919e7e300e6b9b07d9aed5939fc7346d55b7933"
+    },
+    {
+      "id": "the-plugin-loads-but-its-skills-are-missing",
+      "hash": "536422e1174e322527b80c6e3779864b6315b5ebace227956366131f33d5220f"
+    },
+    {
+      "id": "the-userconfig-dialog-never-appears",
+      "hash": "da6ee4ee29924fc695db066b412a074798bba0e3a572ebd38832f6f3b819305e"
+    },
+    {
+      "id": "check-that-the-plugin-changes-claudes-behavior",
+      "hash": "f22ca4ff79f08994549e56ccac93b898e02ad4e0063b11ca15cddd5f90f88238"
+    },
+    {
+      "id": "convert-an-existing-claude-setup",
+      "hash": "c33d118552c8766bedecc3ab7e756d63bc373f335d9d0d25fedf1740c2e64fea"
+    },
+    {
+      "id": "next-steps",
+      "hash": "ad73e6e6a9e7fe277d4ccae1efee99e1f684b1747aaf302e4bdbaa3492b237f5"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Convert an existing .claude/ setup",
+      "id": "convert-an-existing-claude-setup",
+      "hash": "c33d118552c8766bedecc3ab7e756d63bc373f335d9d0d25fedf1740c2e64fea",
+      "text": "<h2 id=\"convert-an-existing-claude-setup\">\n  Convert an existing `.claude/` setup\n</h2>\n\nIf you already have skills, agents, or hooks under a project's `.claude/` directory, you can move them into a plugin without rewriting them.\n\nRun the commands in these steps from the project root, which is the directory that contains `.claude/`, because the `cp` paths are relative to it.\n\n<Steps>\n  <Step title=\"Create the plugin structure\">\n    Create the plugin directory and its `.claude-plugin/` folder alongside `.claude/`. You can move the plugin anywhere afterwards.\n\n    ```bash theme={null}\n    mkdir -p my-plugin/.claude-plugin\n    ```\n\n    Create `my-plugin/.claude-plugin/plugin.json`:\n\n    ```json my-plugin/.claude-plugin/plugin.json theme={null}\n    {\n      \"name\": \"my-plugin\",\n      \"description\": \"Migrated from standalone configuration\",\n      \"version\": \"1.0.0\"\n    }\n    ```\n  </Step>\n\n  <Step title=\"Copy your existing files\">\n    Copy each configuration directory you have to the plugin root, and skip the command for any directory you don't have.\n\n    ```bash theme={null}\n    cp -r .claude/commands my-plugin/\n    ```\n\n    ```bash theme={null}\n    cp -r .claude/agents my-plugin/\n    ```\n\n    ```bash theme={null}\n    cp -r .claude/skills my-plugin/\n    ```\n\n    Run `ls -a my-plugin` to confirm that each directory you copied appears next to `.claude-plugin`.\n  </Step>\n\n  <Step title=\"Move your hooks\">\n    If you have hooks in `.claude/settings.json` or `.claude/settings.local.json`, create a hooks directory:\n\n    ```bash theme={null}\n    mkdir -p my-plugin/hooks\n    ```\n\n    Create `my-plugin/hooks/hooks.json` and copy the `hooks` object from your settings file into it. The format is the same.\n\n    This example shows the shape with one hook that runs a linter on each file Claude writes or edits. Replace the example with your own `hooks` object.\n\n    ```json my-plugin/hooks/hooks.json theme={null}\n    {\n      \"hooks\": {\n        \"PostToolUse\": [\n          {\n            \"matcher\": \"Write|Edit\",\n            \"hooks\": [{ \"type\": \"command\", \"command\": \"jq -r '.tool_input.file_path' | xargs npm run lint:fix\" }]\n          }\n        ]\n      }\n    }\n    ```\n  </Step>\n\n  <Step title=\"Test the migrated plugin\">\n    Load the plugin for a session:\n\n    ```bash theme={null}\n    claude --plugin-dir ./my-plugin\n    ```\n\n    Check each component under its new name:\n\n    * **Skills**: run `/my-plugin:deploy` for a skill that was `/deploy`.\n    * **Subagents**: ask Claude to use the `my-plugin:reviewer` agent for an agent that was `reviewer`.\n    * **Hooks**: trigger the event each hook matches.\n\n    If something is missing, work through [Test and debug](#test-and-debug).\n  </Step>\n</Steps>\n\nWhile the originals are still under `.claude/`, they stay loaded alongside the plugin's copies:\n\n* **Skills and agents**: the two sets don't collide, because the plugin's skills and agents carry the `my-plugin:` prefix. `/deploy` and `/my-plugin:deploy` both work, and Claude sees `reviewer` and `my-plugin:reviewer` as two subagents.\n* **Hooks**: hooks have no prefix, so a hook that is in both your settings file and `hooks/hooks.json` runs twice each time its event fires.\n\nAfter you've confirmed the plugin works, delete the originals from `.claude/` and remove the `hooks` object from your settings file."
+    }
+  ]
+}
