@@ -59,7 +59,7 @@ describe(`${name}: the event`, () => {
 
   it('is silent for an empty string, where the docs do not say', () => {
     expect(run('PreToolUse', '')).toEqual([])
-    expect(run('Stop', '')).toEqual(['event'])
+    expect(run('Stop', '')).toEqual([])
   })
 })
 
@@ -119,6 +119,9 @@ describe(`${name}: one rule only`, () => {
       'Bash(git *) && Edit',
       'Bash && Edit(*.ts)',
       'Bash(git *) && Edit && Read',
+      'Bash(a) || Edit || Read',
+      'Bash(a), Edit, Read',
+      'Bash(a) && mcp__brave-search__x',
     ]) {
       expect(run('PreToolUse', condition), condition).toEqual(['multiple'])
     }
@@ -184,6 +187,21 @@ describe(`${name}: the matcher of the group`, () => {
   it('is silent for a match-all matcher, and for a handler of a group with no matcher', () => {
     for (const matcher of ['', '*', undefined]) {
       expect(run('PreToolUse', 'Bash(rm *)', matcher), String(matcher)).toEqual([])
+    }
+  })
+
+  it('reads each tool of each family', () => {
+    expect(run('PreToolUse', 'Write(*.ts)', 'Edit')).toEqual([])
+    expect(run('PreToolUse', 'NotebookEdit(x)', 'Write')).toEqual([])
+    expect(run('PreToolUse', 'Grep(x)', 'Read')).toEqual([])
+    expect(run('PreToolUse', 'Glob(x)', 'LSP')).toEqual([])
+    expect(run('PreToolUse', 'LSP(x)', 'Grep')).toEqual([])
+    expect(run('PreToolUse', 'Write(*.ts)', 'Read')).toEqual(['toolNotMatched'])
+  })
+
+  it('reports toolNotMatched on each tool event', () => {
+    for (const event of TOOL_EVENTS) {
+      expect(run(event, 'Bash(rm *)', 'Edit'), event).toEqual(['toolNotMatched'])
     }
   })
 

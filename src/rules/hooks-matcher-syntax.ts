@@ -9,13 +9,14 @@ import {
   NO_MATCHER_EVENTS,
   TOOL_EVENTS,
 } from '../data/hook-events.ts'
+import { MCP_PREFIX, MCP_SEPARATOR, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { exactValues, groupsOf, HOOKS_TARGET, hooksListener, type Loc } from '../hooks-config.ts'
 
 const name = 'hooks-matcher-syntax' as const
 
-/** A tool name with a specifier in parentheses, such as `Bash(rm *)`. */
-const TOOL_SPEC = /^[A-Za-z_][\w-]*\(.*\)$/
+/** A tool name with a specifier in parentheses, such as `Bash(rm *)`. The name is the capture. */
+const TOOL_SPEC = /^([A-Za-z_][\w-]*)\(.*\)$/
 /** A character that makes a `FileChanged` value a pattern. The hooks reference says that Claude Code
  *  watches each value as a literal file name. A dot is part of most file names. */
 const PATTERN_CHARACTER = /[\\^$*+?()[\]{}]/
@@ -26,13 +27,24 @@ const REGEX_EVENTS = HOOK_EVENTS.filter(
   (event) => event !== 'FileChanged' && !NO_MATCHER_EVENTS.includes(event),
 )
 
-/** The separator characters that someone may mean as a separator, with the name of each. A hyphen
- *  is part of many file names, so only `StopFailure` counts it. */
+/** The characters that a `StopFailure` matcher may use as a wrong separator, with a name for each
+ *  message. `FileChanged` reads its own characters, because a hyphen is part of many file names. */
 const STRAY: readonly (readonly [string, 'comma' | 'space' | 'hyphen'])[] = [
   [',', 'comma'],
   [' ', 'space'],
   ['-', 'hyphen'],
 ]
+
+/** True for a built-in or full MCP tool name with a specifier. A regular expression such as
+ *  `Web(Fetch|Search)` has a group after a name that is no tool, and it is valid. */
+function isToolSpec(value: string): boolean {
+  const tool = TOOL_SPEC.exec(value)?.[1]
+  return (
+    tool !== undefined &&
+    (TOOL_NAMES.includes(tool) ||
+      (tool.startsWith(MCP_PREFIX) && tool.slice(MCP_PREFIX.length).includes(MCP_SEPARATOR)))
+  )
+}
 
 /** The reason `pattern` is not a regular expression, or undefined when it is one. */
 function regexError(pattern: string): string | undefined {
@@ -106,7 +118,7 @@ const rule: Rule.RuleModule = {
         if (!REGEX_EVENTS.includes(event) || exactValues(value, false) !== null) {
           continue
         }
-        if (TOOL_EVENTS.includes(event) && TOOL_SPEC.test(value)) {
+        if (TOOL_EVENTS.includes(event) && isToolSpec(value)) {
           context.report({ loc, messageId: 'toolSpec' })
           continue
         }

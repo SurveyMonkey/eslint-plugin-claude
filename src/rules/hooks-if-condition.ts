@@ -98,11 +98,12 @@ const rule: Rule.RuleModule = {
           continue
         }
         const { loc, value } = node
-        if (!TOOL_EVENTS.includes(event)) {
-          context.report({ loc, messageId: 'event', data: { event } })
+        // The docs do not say what an empty string does, on any event.
+        if (value === '') {
           continue
         }
-        if (value === '') {
+        if (!TOOL_EVENTS.includes(event)) {
+          context.report({ loc, messageId: 'event', data: { event } })
           continue
         }
         const operator = operatorOf(value)

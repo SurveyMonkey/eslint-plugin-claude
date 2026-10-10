@@ -37,7 +37,7 @@ describe(`${name}: the case of a tool name`, () => {
       expect(
         ids('PreToolUse', tool.toLowerCase() === tool ? tool.toUpperCase() : tool.toLowerCase()),
         tool,
-      ).toEqual(['caseVariant'])
+      ).toEqual([tool === 'EndConversation' ? 'endConversation' : 'caseVariant'])
       expect(ids('PreToolUse', tool), tool).toEqual(
         tool === 'EndConversation' ? ['endConversation'] : [],
       )
@@ -93,8 +93,27 @@ describe(`${name}: EndConversation`, () => {
     }
   })
 
-  it('reports the lowercase form as a case variant', () => {
-    expect(ids('PreToolUse', 'endconversation')).toEqual(['caseVariant'])
+  it('reports a case variant as EndConversation where the event skips it', () => {
+    // A fix of the case alone still never matches on these two events.
+    expect(ids('PreToolUse', 'endconversation')).toEqual(['endConversation'])
+    expect(ids('PostToolUse', 'ENDCONVERSATION')).toEqual(['endConversation'])
+    expect(message('PreToolUse', 'endconversation')).toBe(
+      'Claude Code runs no PreToolUse hook for EndConversation, so "endconversation" never matches.',
+    )
+  })
+
+  it('reports a case variant on the other tool events as a case variant', () => {
+    expect(ids('PermissionRequest', 'endconversation')).toEqual(['caseVariant'])
+  })
+
+  it('reads a group that has no hooks array', () => {
+    expect(jsonIds(name, settings({ PreToolUse: [{ matcher: 'bash' }] }), FILES.project)).toEqual([
+      'caseVariant',
+    ])
+  })
+
+  it('takes no option', () => {
+    expect(() => lintJson(name, settings({}), FILES.project, [{}])).toThrow()
   })
 })
 
