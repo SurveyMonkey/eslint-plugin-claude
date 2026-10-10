@@ -1,4 +1,5 @@
-// The server names that Claude Code reserves for its built-in MCP servers. Source: the
+// The server names that the docs list as reserved for the built-in MCP servers of Claude Code.
+// The docs say "including", so other names can exist. Source: the
 // "Configuration warnings" block of the MCP page
 // (https://code.claude.com/docs/en/mcp#configuration-warnings), checked on Claude Code 2.1.295.
 // Review this list on or before 2027-04-10, the `stale_after` date of

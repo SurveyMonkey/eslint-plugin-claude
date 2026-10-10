@@ -29,8 +29,8 @@ export function isUnreadMcpPath(filename: string): boolean {
 }
 
 /** The kind of the `.mcp.json` at `filename`. The result is null when no report can rest on
- *  the file. That is the case for a path that Claude Code never reads, and for a directory
- *  where the plugin-root check cannot see (ADR 001, Decision 14). */
+ *  the file. This is true for a path that Claude Code never reads. It is also true for a
+ *  directory that the plugin-root check cannot read (ADR 001, Decision 14). */
 export function mcpFileKind(filename: string): McpFileKind | null {
   if (isUnreadMcpPath(filename)) {
     return null

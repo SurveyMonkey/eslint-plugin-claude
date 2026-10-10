@@ -33,8 +33,8 @@ The rule leaves these cases alone:
 - A `timeout` key in `env`, `oauth` or any other object. Only the key of the server counts.
 - The value of `MCP_TOOL_TIMEOUT`. It is an `env` variable of settings, not a key of `.mcp.json`.
 
-The rule reads the `mcpServers` object. In a plugin `.mcp.json` the wrapper is optional, so the
-rule also reads the top-level entries of a plugin file that has no `mcpServers` member. A directory
+The rule reads the `mcpServers` object. A plugin `.mcp.json` may omit that wrapper. Then the
+rule reads the top-level entries of the file. A directory
 counts as a plugin root when it holds `.claude-plugin/plugin.json`. The rule makes no report when
 it cannot read that directory. It skips the paths under `.claude/`, which `mcp-json-location`
 reports.

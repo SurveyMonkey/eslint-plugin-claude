@@ -1,7 +1,7 @@
 // Hidden whitespace in a server entry (docs/rules/mcp-hidden-whitespace.md). Claude Code
-// warns about leading or trailing whitespace in `command`, `url`, each `args` item, and the
+// warns about whitespace at the start or end of `command`, `url`, each `args` item, and the
 // keys and values of `env` and `headers`. It uses the values as written. A pasted token with
-// a trailing newline is the usual cause. The message names the field and never echoes a value.
+// a trailing newline is the usual cause. The message names the field, not the value.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'

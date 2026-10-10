@@ -1,8 +1,8 @@
 // The size of a `.mcp.json` (docs/rules/mcp-json-file-size.md). The docs fix 2 MiB as the
-// most bytes that `claude mcp add`, `add-json --scope project` and `remove` read from the
-// file, and no Claude Code setting moves it. So the schema sets that number as the maximum
-// of the option `max`. The rule counts the UTF-8 bytes of the text that ESLint gives it. The
-// parser removes a byte order mark before that, so the rule does not count its 3 bytes.
+// size limit of the file for `claude mcp add`, `add-json --scope project` and `remove`.
+// No Claude Code setting moves it. So the schema sets that number as the maximum of the
+// option `max`. The rule counts the UTF-8 bytes of the text that ESLint gives it. ESLint
+// removes a byte order mark before that, so the rule does not count its 3 bytes.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { mcpFileKind } from '../mcp-servers.ts'

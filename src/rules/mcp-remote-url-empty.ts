@@ -1,7 +1,7 @@
 // A remote server with an empty `url` in a project `.mcp.json`
 // (docs/rules/mcp-remote-url-empty.md). Claude Code shows such a server as `not configured`
-// and never connects it. A plugin can ship a placeholder entry like this for a connector
-// that the user configures later, so the rule skips plugin files.
+// and never connects it. A plugin can ship such a placeholder for a connector. The user
+// configures it later. So the rule skips plugin files.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
