@@ -1,0 +1,78 @@
+{
+  "url": "https://code.claude.com/docs/en/channels-reference",
+  "hash": "ff2e4cd795e64681828d44593718164676f82e492c37b81bee7e2ba03268daba",
+  "blocks": [
+    {
+      "id": "channels-reference",
+      "hash": "50612a78e9752534f6bd1d68bcc4468dd88b6e3942f1734c77a884cbd0beea1d"
+    },
+    {
+      "id": "overview",
+      "hash": "f3d9742d092ea9b4c2cfd63889e667ebc3eda6a091860e06714344c2905cf244"
+    },
+    {
+      "id": "what-you-need",
+      "hash": "032f7fb63f5f53cacdd9cfe29e777c303e1a41b4491979a747252fbb77c0638d"
+    },
+    {
+      "id": "example-build-a-webhook-receiver",
+      "hash": "4d988e3412b3bbf78b852de67126eb5556ebb626ef26dc67bae9ca23b9dbaba2"
+    },
+    {
+      "id": "test-during-the-research-preview",
+      "hash": "85acca16f558b4e65b1e536c257a4e5a54b0d45d66f78fd8e2df720b9dd717ea"
+    },
+    {
+      "id": "server-options",
+      "hash": "2801c8afe9f73079d4d07ee063c76cbc2bb4da1437bfb746518d1bdd647ca41d"
+    },
+    {
+      "id": "notification-format",
+      "hash": "49155c2700032962da2f35e0d4aefc9ccc24eb83de47c728b91538530a1b4eb3"
+    },
+    {
+      "id": "expose-a-reply-tool",
+      "hash": "91a4069bd7d1a20c636efc6ec4aafbc5a2586075e4447919e67d7ecf3f553a61"
+    },
+    {
+      "id": "gate-inbound-messages",
+      "hash": "690ab7b48c5d648b425c9d0c951f8275a8b02d20b9a2a0b8e416583d58637416"
+    },
+    {
+      "id": "relay-permission-prompts",
+      "hash": "03767a63db37a3ad30a5257a91fac7ea12b4bdac2065137ca548bdff1b70d9ad"
+    },
+    {
+      "id": "how-relay-works",
+      "hash": "d3c3d32800fd8768071e96a1cdf635e8ce5c7f7fe9ced39abead01b797e493e0"
+    },
+    {
+      "id": "permission-request-fields",
+      "hash": "fe262568fd8ea279bfa6963aff6842e8bc4e682b39f52e8771ade582cf2674a9"
+    },
+    {
+      "id": "add-relay-to-a-chat-bridge",
+      "hash": "02c501e9ddf215038431bf781a68b7ef3fce094bd40dd6916b0b0e594c58d6f3"
+    },
+    {
+      "id": "full-example",
+      "hash": "c04144d3b54b859cbf4e9eb689a9daebdeecfa771550837b04c504d836d3aacf"
+    },
+    {
+      "id": "package-as-a-plugin",
+      "hash": "5840dffb1cbb54328926f62816d3655291eaf592e4f236a405a18a8b175e70a6"
+    },
+    {
+      "id": "see-also",
+      "hash": "a2de860ea178a9b50f37eda45d314475e3a7676ceb4e59bd27a771297680c613"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Overview",
+      "id": "overview",
+      "hash": "f3d9742d092ea9b4c2cfd63889e667ebc3eda6a091860e06714344c2905cf244",
+      "text": "## Overview\n\nA channel is an [MCP](https://modelcontextprotocol.io) server that runs on the same machine as Claude Code. Claude Code spawns it as a subprocess and communicates over stdio. Your channel server is the bridge between external systems and the Claude Code session:\n\n* **Chat platforms** (Telegram, Discord): your plugin runs locally and polls the platform's API for new messages. When someone DMs your bot, the plugin receives the message and forwards it to Claude. No URL to expose.\n* **Webhooks** (CI, monitoring): your server listens on a local HTTP port. External systems POST to that port, and your server pushes the payload to Claude.\n\n<img src=\"https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f\" className=\"dark:hidden\" alt=\"Architecture diagram showing external systems connecting to your local channel server, which communicates with Claude Code over stdio\" width=\"600\" height=\"220\" data-path=\"images/channel-architecture.svg\" />\n\n<img src=\"https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-architecture-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=ae1e494440806a6a5d74a1279e22e162\" className=\"hidden dark:block\" alt=\"Architecture diagram showing external systems connecting to your local channel server, which communicates with Claude Code over stdio\" width=\"600\" height=\"220\" data-path=\"images/channel-architecture-dark.svg\" />"
+    }
+  ]
+}

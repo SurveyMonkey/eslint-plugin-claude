@@ -885,6 +885,35 @@
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
     }
   ],
+  "plugin-bin-shadows-system-command": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Executables",
+      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
+    }
+  ],
+  "plugin-channel-server-stdio": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Channels",
+      "hash": "eb0e80e27d22500287150337d4c09956ed1dbf2a824e04449335e6b54ba9d141"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/channels-reference",
+      "heading": "Overview",
+      "hash": "f3d9742d092ea9b4c2cfd63889e667ebc3eda6a091860e06714344c2905cf244"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "mcpServers",
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "MCP servers",
+      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    }
+  ],
   "plugin-commands-dir-nonempty": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -926,6 +955,23 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "dependencies",
       "hash": "84a1b0e5de3d8c53e0564e68cd573d3ad725c4f09215fd9eae363f2dbaaa9f05"
+    }
+  ],
+  "plugin-dependencies-prerelease-range": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "Declare a dependency with a version constraint",
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/dependencies",
+      "heading": "How a constraint resolves against tags",
+      "hash": "c4deeb4795fe982234c57a4e601bd160a6a938babbb9df7fcae90d8debfb5913"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "How Claude Code computes the version",
+      "hash": "4f6d0641506dc5f6ebf4f9d7a0e10856f9495ba9a866466123ae3d5e232c301b"
     }
   ],
   "plugin-dependencies-resolve": [
@@ -1357,6 +1403,23 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Use dynamic headers for custom authentication",
       "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
+    }
+  ],
+  "plugin-user-config-sensitive": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Ask the user for configuration values",
+      "hash": "7985992b6f5d23c85f453f43e8d61a1fa4fd945d7b177315416bf88b15745129"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "User configuration",
+      "hash": "1ff2573d6b69b32c13752fc9d94c33c6d5a13963c5130f4e4f0348b732cfb8c9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Channels",
+      "hash": "6404424037691afe9aac7c4392269d0c1a9d01da3d0700b3c8314876ea5094e0"
     }
   ],
   "plugin-user-config-sensitive-in-content": [
