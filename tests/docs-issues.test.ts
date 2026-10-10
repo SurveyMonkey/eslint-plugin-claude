@@ -1,5 +1,6 @@
-// The issue step opens one issue for each changed block. These tests inject
-// the gh runner, so no test calls GitHub.
+// The issue step opens issues for the changed blocks. Two or more uncited
+// blocks of one page share a digest issue. These tests inject the gh runner,
+// so no test calls GitHub.
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -1630,6 +1631,647 @@ describe('the moved kind (#152)', () => {
         '- `docs/rules-inventory.md`: the footnote that cites `From an mcpServers JSON block`, for the MCP and LSP servers rows `mcp-server-name-format`',
       )
       expect(issue.body).not.toContain('docs/rules/')
+    })
+  })
+})
+
+describe('the digest issue for the uncited blocks of a page (#151)', () => {
+  const hash = (i: number) => (i + 1).toString(16).padStart(64, '0')
+  // A new-rule finding that names no rule, for block i of a page.
+  const uncited = (i: number, page = HOOKS): Finding => ({
+    ...newRule,
+    page,
+    link: page,
+    heading: `Block ${i}`,
+    blockId: `block-${i}`,
+    newHash: hash(i),
+    newText: `#### Block ${i}\n\nThe text of block ${i}.`,
+  })
+  const sent = (gh: { posts: () => { input?: string }[] }) =>
+    gh.posts().map((p) => JSON.parse(p.input ?? '{}') as { title: string; body: string })
+  const markers = (body: string) => body.match(/<!-- docs-watch:[^\n]*? -->/g) ?? []
+  const sections = (body: string) => body.match(/^### /gm) ?? []
+  const cuts = (body: string) => body.match(/The text is cut at /g) ?? []
+  // The contract of each live run: every body fits in MAX_COMMENT, each
+  // digest has a section for each of its markers, and each marker of the
+  // findings is in exactly one issue.
+  const packed = (issues: { body: string }[], findings: Finding[]) => {
+    for (const { body } of issues) {
+      expect(body.length).toBeLessThanOrEqual(60_000)
+      if (markers(body).length > 1) expect(sections(body)).toHaveLength(markers(body).length)
+    }
+    const all = issues.flatMap((s) => markers(s.body))
+    expect(all.sort()).toEqual(findings.map(api.markerOf).sort())
+  }
+
+  it('opens one issue with three sections and three markers, and nothing on a repeat run', async () => {
+    const three = [uncited(0), uncited(1), uncited(2)]
+    const gh = fakeGh()
+    const logs: string[] = []
+    const result = await api.openIssues({
+      findings: three,
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    expect(result.opened).toHaveLength(1)
+    const [issue] = sent(gh)
+    expect(issue?.title).toBe('docs(hooks): triage 3 changed blocks')
+    const body = issue?.body ?? ''
+    // The three markers come first, one on each line, before any text.
+    expect(new Set(body.split('\n').slice(0, 3))).toEqual(new Set(three.map(api.markerOf)))
+    expect(body.split('\n')[3]).toBe('')
+    expect(markers(body)).toHaveLength(3)
+    expect(sections(body)).toHaveLength(3)
+    for (const i of [0, 1, 2]) {
+      expect(body).toContain(
+        `### \`Block ${i}\`\n\n- Heading: \`Block ${i}\` (block \`block-${i}\`)`,
+      )
+      expect(body).toContain(`The text of block ${i}.`)
+    }
+    expect(body).toContain(`- Page: ${HOOKS}`)
+    expect(body).not.toContain('<details>')
+    expect(cuts(body)).toEqual([])
+    for (const heading of ['## Why', '## Scope', '## Acceptance', '## References']) {
+      expect(body).toContain(`\n${heading}\n`)
+    }
+    expect(body).toContain('section "A digest issue"')
+    expect(logs).toContain(`digest: 3 blocks of ${HOOKS} in one issue`)
+    // The next run finds the same three blocks, and the digest is open.
+    const again = fakeGh([{ number: 140, body }])
+    const repeat = await api.openIssues({
+      findings: three,
+      repo: REPO,
+      run: again.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(again.posts()).toEqual([])
+    expect(repeat.skipped).toBe(3)
+  })
+
+  it('opens a single-block issue for a fourth block while the digest of the first three is open', async () => {
+    const first = fakeGh()
+    await live(first, [], [uncited(0), uncited(1), uncited(2)])
+    const digest = sent(first)[0]?.body ?? ''
+    const gh = fakeGh([{ number: 140, body: digest }])
+    const result = await live(gh, [], [uncited(0), uncited(1), uncited(2), uncited(3)])
+    expect(result.opened).toHaveLength(1)
+    expect(result.skipped).toBe(3)
+    // A digest of one block is the issue of that block, with today's shape.
+    expect(sent(gh)).toHaveLength(1)
+    expect(sent(gh)[0]?.title).toBe('feat: new rule candidate from Block 3')
+    expect(sent(gh)[0]?.body).toBe(api.bodyOf(uncited(3), REPO))
+  })
+
+  it("keeps today's title and body for one uncited finding on a page, and digests two", async () => {
+    const one = fakeGh()
+    await live(one, [], [uncited(0), uncited(1, URL_)])
+    const bodies = sent(one)
+    expect(bodies).toHaveLength(2)
+    expect(bodies).toContainEqual(
+      expect.objectContaining({
+        title: 'feat: new rule candidate from Block 0',
+        body: api.bodyOf(uncited(0), REPO),
+      }),
+    )
+    expect(bodies).toContainEqual(
+      expect.objectContaining({ body: api.bodyOf(uncited(1, URL_), REPO) }),
+    )
+    const two = fakeGh()
+    await live(two, [], [uncited(0), uncited(1)])
+    expect(sent(two).map((s) => s.title)).toEqual(['docs(hooks): triage 2 changed blocks'])
+  })
+
+  it('gives a moved, a rule-update, a rule-removal and a whole-page rule finding their own issues beside the digest', async () => {
+    const own: Finding[] = [
+      // A moved finding that only an inventory row cites names no rule.
+      { ...moved, page: HOOKS, link: `${HOOKS}#in-settings-files`, rules: [] },
+      { ...update, page: HOOKS, link: HOOKS, blockId: 'b-update', rules: ['hooks-config-schema'] },
+      {
+        ...update,
+        kind: 'rule-removal',
+        page: HOOKS,
+        link: HOOKS,
+        blockId: 'b-removal',
+        newHash: null,
+        newText: null,
+        change: 'removed',
+        rules: ['hooks-config-schema'],
+      },
+      // A rule that cites the whole hooks page names this block.
+      {
+        ...uncited(9),
+        kind: 'needs-triage',
+        rules: ['hooks-event-name-known'],
+        probability: 0.3,
+      },
+    ]
+    // An uncited needs-triage finding with no text enters the digest too.
+    const quietTriage: Finding = {
+      ...uncited(1),
+      kind: 'needs-triage',
+      newText: null,
+      probability: null,
+      confidence: null,
+    }
+    const gh = fakeGh()
+    const result = await live(gh, [], [...own, uncited(0), quietTriage])
+    expect(result.opened).toHaveLength(5)
+    const issues = sent(gh)
+    const digest = issues.find((s) => s.title === 'docs(hooks): triage 2 changed blocks')
+    expect(new Set(markers(digest?.body ?? ''))).toEqual(
+      new Set([api.markerOf(uncited(0)), api.markerOf(quietTriage)]),
+    )
+    expect(digest?.body).toContain('No block text is available for this change. See the page.')
+    for (const f of own) {
+      const issue = issues.find((s) => s.title === api.titleOf(f))
+      expect(issue?.body, f.kind).toBe(api.bodyOf(f, REPO))
+      expect(markers(issue?.body ?? '')).toEqual([api.markerOf(f)])
+    }
+  })
+
+  it('puts a fallback finding of a tracked block, with its rows line, in the digest when its group issue is closed', async () => {
+    const closed = groupGh({ 10: { state: 'closed' } })
+    await live(closed, [common], [commonRule, uncited(0)])
+    expect(closed.commentPosts()).toEqual([])
+    const [issue] = closed
+      .issuePosts()
+      .map((p) => JSON.parse(p.input ?? '{}') as { title: string; body: string })
+    expect(closed.issuePosts()).toHaveLength(1)
+    expect(issue?.title).toBe('docs(hooks): triage 2 changed blocks')
+    expect(issue?.body).toContain(api.markerOf(commonRule))
+    expect(issue?.body).toContain(
+      '- Hashes: old `' +
+        'c'.repeat(64) +
+        '`, new `' +
+        'd'.repeat(64) +
+        '`\n- Inventory rows that cite the block: Hooks: `hooks-config-schema`, `hooks-if-condition`. Their group issues are closed.',
+    )
+    expect(issue?.body.match(/- Inventory rows that cite the block/g)).toHaveLength(1)
+    // While #10 is open, the comment covers the tracked block. The other
+    // block is then alone on its page, and keeps its own issue.
+    const open = groupGh({ 10: { state: 'open' } })
+    await live(open, [common], [commonRule, uncited(0)])
+    expect(open.commentPosts()).toHaveLength(1)
+    const [alone] = open.issuePosts().map((p) => JSON.parse(p.input ?? '{}') as { body: string })
+    expect(open.issuePosts()).toHaveLength(1)
+    expect(alone?.body).toBe(api.bodyOf(uncited(0), REPO))
+  })
+
+  it('opens one digest for each page, and counts a digest once toward --max', async () => {
+    const PLUGINS = 'https://code.claude.com/docs/en/plugins-reference'
+    const two = fakeGh()
+    await live(two, [], [uncited(0), uncited(1, PLUGINS), uncited(2), uncited(3, PLUGINS)])
+    expect(
+      sent(two)
+        .map((s) => s.title)
+        .sort(),
+    ).toEqual([
+      'docs(hooks): triage 2 changed blocks',
+      'docs(plugins-reference): triage 2 changed blocks',
+    ])
+    // 25 uncited blocks on two pages are two issues, under the limit of 20.
+    const many = Array.from({ length: 25 }, (_, i) => uncited(i, i < 13 ? HOOKS : PLUGINS))
+    const gh = fakeGh()
+    const result = await live(gh, [], many)
+    expect(result.opened).toHaveLength(2)
+    expect(
+      sent(gh)
+        .map((s) => s.title)
+        .sort(),
+    ).toEqual([
+      'docs(hooks): triage 13 changed blocks',
+      'docs(plugins-reference): triage 12 changed blocks',
+    ])
+    expect(sent(gh).flatMap((s) => markers(s.body))).toHaveLength(25)
+    const dry = await api.openIssues({
+      findings: many,
+      repo: REPO,
+      run: fakeGh().run,
+      dryRun: true,
+      log: quiet,
+    })
+    expect(dry.wouldOpen).toBe(2)
+    // 20 rule-update issues and one digest are 21 issues.
+    const updates = Array.from({ length: 20 }, (_, i) => ({ ...update, newHash: hash(100 + i) }))
+    const over = fakeGh()
+    await expect(live(over, [], [...updates, uncited(0), uncited(1)])).rejects.toThrow(
+      '21 new issues is more than the limit of 20',
+    )
+    expect(over.posts()).toEqual([])
+  })
+
+  it('splits a page with more than 20 uncited blocks into digests of at most 20', async () => {
+    expect(api.MAX_DIGEST_BLOCKS).toBe(20)
+    const gh = fakeGh()
+    await live(
+      gh,
+      [],
+      Array.from({ length: 21 }, (_, i) => uncited(i)),
+    )
+    expect(
+      sent(gh)
+        .map((s) => s.title)
+        .sort(),
+    ).toEqual(['docs(hooks): triage 20 changed blocks', 'feat: new rule candidate from Block 20'])
+    const more = fakeGh()
+    await live(
+      more,
+      [],
+      Array.from({ length: 42 }, (_, i) => uncited(i)),
+    )
+    expect(
+      sent(more)
+        .map((s) => s.title)
+        .sort(),
+    ).toEqual([
+      'docs(hooks): triage 2 changed blocks',
+      'docs(hooks): triage 20 changed blocks',
+      'docs(hooks): triage 20 changed blocks',
+    ])
+  })
+
+  it('opens one digest for a page of exactly 20 uncited blocks', async () => {
+    const twenty = Array.from({ length: 20 }, (_, i) => uncited(i))
+    const gh = fakeGh()
+    await live(gh, [], twenty)
+    expect(sent(gh).map((s) => s.title)).toEqual(['docs(hooks): triage 20 changed blocks'])
+    packed(sent(gh), twenty)
+  })
+
+  it('titles a digest with the page path, and drops the scope when it does not fit', () => {
+    expect(api.digestTitleOf(HOOKS, 3)).toBe('docs(hooks): triage 3 changed blocks')
+    expect(api.digestTitleOf('https://code.claude.com/docs/en/agent-sdk/hooks', 2)).toBe(
+      'docs(agent-sdk/hooks): triage 2 changed blocks',
+    )
+    expect(api.digestTitleOf('https://example.com/x', 2)).toBe('docs: triage 2 changed blocks')
+    // "docs(" and "): triage 2 changed blocks" take 31 characters, so a path
+    // of 38 characters fills the 69 characters of MAX_TITLE.
+    const path38 = `https://code.claude.com/docs/en/${'p'.repeat(38)}`
+    expect(api.digestTitleOf(path38, 2)).toBe(`docs(${'p'.repeat(38)}): triage 2 changed blocks`)
+    expect(api.digestTitleOf(path38, 2)).toHaveLength(69)
+    expect(api.digestTitleOf(`${path38}p`, 2)).toBe('docs: triage 2 changed blocks')
+    expect(api.digestTitleOf('https://code.claude.com/docs/en/', 2)).toBe(
+      'docs: triage 2 changed blocks',
+    )
+    expect(api.digestTitleOf('https://code.claude.com/docs/en/@x<!--', 2)).toBe(
+      'docs(@⁠x<⁠!--): triage 2 changed blocks',
+    )
+  })
+
+  // A section with a text of backticks of more than MAX_DIFF_LINES lines on
+  // each side: two fences, each three times the cap.
+  const worstFinding = (i: number, extra: Partial<Finding> = {}): Finding => {
+    const text = (word: string) =>
+      ['`'.repeat(2000), ...Array.from({ length: 1001 }, (_, n) => `${word} ${n} \`\``)].join('\n')
+    return {
+      ...uncited(i),
+      kind: 'needs-triage',
+      heading: `A long heading for block number ${i} of the page`,
+      blockId: `a-long-heading-for-block-number-${i}-of-the-page`,
+      change: 'changed',
+      oldHash: hash(500 + i),
+      probability: 0.45,
+      confidence: 0.1,
+      reason: 'Jev gives 0.45 that the block states a requirement a lint check can measure',
+      oldText: text('old'),
+      newText: text('new'),
+      ...extra,
+    }
+  }
+
+  it('keeps the worst-case body of 20 sections in 60,000 characters, with every marker and no cut', () => {
+    expect(api.MAX_DIGEST_QUOTE).toBe(280)
+    expect(api.MAX_COMMENT).toBe(60_000)
+    // The rows of the common-fields block on 2026-10-10, the longest of the
+    // replay of #44, #45, #121, #122 and #123.
+    const rows = [
+      'hooks-config-schema',
+      'hooks-handler-field-ignored',
+      'hooks-if-condition',
+      'hooks-timeout-units',
+      'hooks-if-dir-glob-depth',
+    ]
+    const blocks = Array.from({ length: 20 }, (_, i) => {
+      const f = worstFinding(i)
+      const tracked: Tracked = {
+        page: f.page,
+        heading: f.heading,
+        blockId: f.blockId,
+        change: f.change,
+        oldHash: f.oldHash,
+        newHash: f.newHash,
+        oldText: f.oldText,
+        newText: f.newText,
+        sections: [{ section: 'Hooks', rules: rows }],
+      }
+      return { finding: f, tracked }
+    })
+    const body = api.digestOf(HOOKS, blocks, REPO)
+    // The length that the comment on MAX_DIGEST_QUOTE derives.
+    expect(body.length).toBe(57_826)
+    expect(markers(body)).toHaveLength(20)
+    expect(sections(body)).toHaveLength(20)
+    expect(body.match(/- Inventory rows that cite the block: /g)).toHaveLength(20)
+    // Each section has two fences of 281 backticks. The step cuts the text
+    // in each fence at the cap, and cuts nothing else.
+    expect(cuts(body)).toHaveLength(40)
+    expect(body.match(/The text is cut at 280 of /g)).toHaveLength(40)
+    expect(body.match(/^`{281}text$/gm)).toHaveLength(40)
+    expect(body.endsWith('section "A digest issue"\n')).toBe(true)
+  })
+
+  it('splits 20 blocks into more digests when their whole body does not fit, and cuts no section', async () => {
+    // A reason of 3,000 characters makes each section about 5,800
+    // characters, so 20 sections do not fit in 60,000.
+    const big = Array.from({ length: 20 }, (_, i) => worstFinding(i, { reason: 'r'.repeat(3000) }))
+    const gh = fakeGh()
+    const result = await live(gh, [], big)
+    const issues = sent(gh)
+    expect(issues.length).toBeGreaterThan(1)
+    expect(result.opened).toHaveLength(issues.length)
+    packed(issues, big)
+    // Only the fences have a cut note: two for each block.
+    expect(issues.flatMap((s) => cuts(s.body))).toHaveLength(40)
+    // A repeat run with these issues open opens nothing.
+    const open = issues.map((s, i) => ({ number: 300 + i, body: s.body }))
+    const again = fakeGh(open)
+    expect((await live(again, [], big)).skipped).toBe(20)
+    expect(again.posts()).toEqual([])
+    // The split issues count toward --max: with enough rule-update issues
+    // to make 21 issues in all, the run fails before any write.
+    const updates = Array.from({ length: 21 - issues.length }, (_, i) => ({
+      ...update,
+      newHash: hash(100 + i),
+    }))
+    const over = fakeGh()
+    await expect(live(over, [], [...updates, ...big])).rejects.toThrow(
+      '21 new issues is more than the limit of 20',
+    )
+    expect(over.posts()).toEqual([])
+  })
+
+  it('splits a digest when long block IDs make the markers long', async () => {
+    const long = Array.from({ length: 20 }, (_, i) => ({
+      ...uncited(i),
+      blockId: `${i}-${'b'.repeat(3000)}`,
+    }))
+    const gh = fakeGh()
+    await live(gh, [], long)
+    expect(sent(gh).length).toBeGreaterThan(1)
+    packed(sent(gh), long)
+  })
+
+  it('opens one digest whose body is exactly 60,000 characters, and splits one character past it', async () => {
+    const pad = (n: number): Finding => ({ ...uncited(1), reason: 'r'.repeat(n) })
+    const size = (n: number) =>
+      api.digestOf(HOOKS, [{ finding: uncited(0) }, { finding: pad(n) }], REPO).length
+    const fill = 1 + 60_000 - size(1)
+    expect(size(fill)).toBe(60_000)
+    const fits = fakeGh()
+    await live(fits, [], [uncited(0), pad(fill)])
+    expect(sent(fits).map((s) => s.title)).toEqual(['docs(hooks): triage 2 changed blocks'])
+    expect(sent(fits)[0]?.body).toHaveLength(60_000)
+    // One character more: each block gets the issue of that block.
+    const over = fakeGh()
+    await live(over, [], [uncited(0), pad(fill + 1)])
+    expect(
+      sent(over)
+        .map((s) => s.body)
+        .sort(),
+    ).toEqual([api.bodyOf(uncited(0), REPO), api.bodyOf(pad(fill + 1), REPO)].sort())
+  })
+
+  it('gives a block that does not fit alone its own issue, and keeps the other blocks in one digest', async () => {
+    const huge = (i: number): Finding => ({ ...uncited(i), reason: 'r'.repeat(61_000) })
+    const gh = fakeGh()
+    const logs: string[] = []
+    await api.openIssues({
+      findings: [uncited(0), huge(1), uncited(2), uncited(3)],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    expect(logs).toContain(
+      `alone: ${HOOKS}#block-1:${hash(1)} does not fit in a digest of 60000 characters`,
+    )
+    expect(logs.filter((l) => l.startsWith('alone: '))).toHaveLength(1)
+    const issues = sent(gh)
+    expect(issues).toHaveLength(2)
+    expect(issues.map((s) => s.body)).toContain(api.bodyOf(huge(1), REPO))
+    const digest = issues.find((s) => s.title === 'docs(hooks): triage 3 changed blocks')
+    expect(new Set(markers(digest?.body ?? ''))).toEqual(
+      new Set([uncited(0), uncited(2), uncited(3)].map(api.markerOf)),
+    )
+    // Two blocks that do not fit alone give two issues, and no empty digest.
+    const two = fakeGh()
+    await live(two, [], [huge(0), huge(1)])
+    expect(
+      sent(two)
+        .map((s) => s.body)
+        .sort(),
+    ).toEqual([api.bodyOf(huge(0), REPO), api.bodyOf(huge(1), REPO)].sort())
+  })
+
+  it('puts a block whose digest alone is exactly 60,000 characters in a group, and gives one character more its own issue', async () => {
+    const pad = (n: number): Finding => ({ ...uncited(1), reason: 'r'.repeat(n) })
+    const size = (n: number) => api.digestOf(HOOKS, [{ finding: pad(n) }], REPO).length
+    const fill = 1 + 60_000 - size(1)
+    expect(size(fill)).toBe(60_000)
+    const bodies = (gh: ReturnType<typeof fakeGh>) => sent(gh).map((s) => s.body)
+    // The block fits alone, so it joins the group. It fits with no
+    // neighbour, so each of the three blocks gets the issue of that block.
+    const fits = fakeGh()
+    await live(fits, [], [uncited(0), pad(fill), uncited(2)])
+    expect(bodies(fits).sort()).toEqual(
+      [uncited(0), pad(fill), uncited(2)].map((f) => api.bodyOf(f, REPO)).sort(),
+    )
+    // One character more: the block does not fit alone, so it gets its own
+    // issue at once, and its two neighbours share a digest.
+    const over = fakeGh()
+    await live(over, [], [uncited(0), pad(fill + 1), uncited(2)])
+    expect(bodies(over)).toHaveLength(2)
+    expect(bodies(over)).toContain(api.bodyOf(pad(fill + 1), REPO))
+    const digest = sent(over).find((s) => s.title === 'docs(hooks): triage 2 changed blocks')
+    expect(new Set(markers(digest?.body ?? ''))).toEqual(
+      new Set([uncited(0), uncited(2)].map(api.markerOf)),
+    )
+  })
+
+  it('cuts the text of each kind of fence in a digest section at 280 characters', async () => {
+    const line = (c: string) => c.repeat(500)
+    const blocks: Finding[] = [
+      // Two texts of one line each give a diff.
+      {
+        ...uncited(0),
+        change: 'changed',
+        oldHash: hash(700),
+        oldText: line('o'),
+        newText: line('n'),
+      },
+      // The new text only.
+      { ...uncited(1), newText: line('a') },
+      // The old text only, of a removed block.
+      {
+        ...uncited(2),
+        kind: 'needs-triage',
+        change: 'removed',
+        oldHash: hash(701),
+        newHash: null,
+        oldText: line('g'),
+        newText: null,
+      },
+    ]
+    const gh = fakeGh()
+    await live(gh, [], blocks)
+    const [digest] = sent(gh)
+    expect(digest?.title).toBe('docs(hooks): triage 3 changed blocks')
+    expect(digest?.body.match(/The text is cut at 280 of /g)).toHaveLength(3)
+    expect(digest?.body).toContain('The diff of the block text, old to new, as quoted data:')
+    expect(digest?.body).toContain('The block is gone. Its old text, as quoted data:')
+    expect(digest?.body).not.toContain('<details>')
+  })
+
+  describe('replay of the five issues of one change (#121 to #125)', () => {
+    // From each case file: the kind, the Jev value and the hashes of the
+    // marker and the Hashes line. All five are on the hooks page, and none
+    // has ` rules=` in its marker. #124 has a rule-like title, but its marker
+    // names no rule, so it is an uncited block here.
+    const CASES = [
+      {
+        issue: 121,
+        kind: 'new-rule',
+        heading: 'Command hook fields',
+        blockId: 'command-hook-fields',
+        change: 'changed',
+        p: 0.67,
+        c: 0.34,
+        old: '0985903a8f04aa02ef2a3d2297e6dcc762192d9bc7995a5189d4327d4ded2d56',
+        new: 'f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec',
+      },
+      {
+        issue: 122,
+        kind: 'new-rule',
+        heading: 'HTTP hook fields',
+        blockId: 'http-hook-fields',
+        change: 'changed',
+        p: 0.75,
+        c: 0.5,
+        old: '55f69008271efe7c2b0ae85a002496755d748bf1f3c7fb9d636af62537086385',
+        new: 'd8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145',
+      },
+      {
+        issue: 123,
+        kind: 'needs-triage',
+        heading: 'Other exit codes',
+        blockId: 'other-exit-codes',
+        change: 'changed',
+        p: 0.33,
+        c: 0.34,
+        old: '73247f97fdf080acedc2ef0d6a4989329dbddbe594d5debc91204e69a8425823',
+        new: '7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43',
+      },
+      {
+        issue: 124,
+        kind: 'new-rule',
+        heading: 'Block the action when a hook fails',
+        blockId: 'block-the-action-when-a-hook-fails',
+        change: 'added',
+        p: 0.66,
+        c: 0.32,
+        old: null,
+        new: 'eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7',
+      },
+      {
+        issue: 125,
+        kind: 'needs-triage',
+        heading: 'UserPromptSubmit',
+        blockId: 'userpromptsubmit',
+        change: 'changed',
+        p: 0.22,
+        c: 0.56,
+        old: 'f850fa297e8c0ccc6759045faee9cd770738c6a9dff5406679da31d29f57b6e9',
+        new: '3523a1638d31ad3fb28e5b8cc3778224dbca7e005c8f926e564de00fa8685df2',
+      },
+    ] as const
+    const findings: Finding[] = CASES.map((c) => ({
+      kind: c.kind,
+      page: HOOKS,
+      heading: c.heading,
+      blockId: c.blockId,
+      oldHash: c.old,
+      newHash: c.new,
+      rules: [],
+      probability: c.p,
+      confidence: c.c,
+      reason: `Jev gives ${c.p} that the block states a requirement a lint check can measure`,
+      link: HOOKS,
+      change: c.change,
+      oldText: null,
+      newText: `#### ${c.heading}\n\nThe new text of #${c.issue}.`,
+    }))
+    // The tracked entries from the footnotes of docs/rules-inventory.md that
+    // cite each block by its anchor.
+    const cites = classify.loadInventory(path.join(import.meta.dirname, '..')).get(HOOKS) ?? []
+    const tracked: Tracked[] = findings.flatMap((f) => {
+      const cite = cites.find((one) => one.anchor === f.blockId)
+      if (cite === undefined) return []
+      const { page, heading, blockId, change, oldHash, newHash, oldText, newText } = f
+      const block = { page, heading, blockId, change, oldHash, newHash, oldText, newText }
+      return [{ ...block, sections: cite.rows }]
+    })
+
+    it('tracks #121, #122 and #123 from the real inventory, and not #124 or #125', () => {
+      // The footnotes at docs/rules-inventory.md lines 1138, 1139 and 1180 on
+      // 2026-10-10. No footnote cites the blocks of #124 and #125.
+      expect(tracked.map((t) => t.blockId).sort()).toEqual([
+        'command-hook-fields',
+        'http-hook-fields',
+        'other-exit-codes',
+      ])
+      for (const t of tracked) expect(t.sections.map((s) => s.section)).toEqual(['Hooks'])
+    })
+
+    it('comments on #10 for the tracked blocks, and digests #124 and #125, while #10 is open', async () => {
+      const gh = groupGh({ 10: { state: 'open' } })
+      const result = await live(gh, tracked, findings)
+      expect(gh.commentPosts()).toHaveLength(1)
+      const comment = (JSON.parse(gh.commentPosts()[0]?.input ?? '{}') as { body: string }).body
+      expect(comment.match(/<!-- docs-watch-tracked:/g)).toHaveLength(3)
+      expect(result.skipped).toBe(3)
+      expect(gh.issuePosts()).toHaveLength(1)
+      const issue = JSON.parse(gh.issuePosts()[0]?.input ?? '{}') as { title: string; body: string }
+      expect(issue.title).toBe('docs(hooks): triage 2 changed blocks')
+      expect(markers(issue.body).sort()).toEqual(
+        [
+          `<!-- docs-watch:needs-triage:${HOOKS}#userpromptsubmit:${CASES[4].new} -->`,
+          `<!-- docs-watch:new-rule:${HOOKS}#block-the-action-when-a-hook-fails:${CASES[3].new} -->`,
+        ].sort(),
+      )
+      expect(issue.body).not.toContain('Inventory rows that cite the block')
+    })
+
+    it('opens one digest of the five blocks, three with the rows line, when #10 is closed', async () => {
+      const gh = groupGh({ 10: { state: 'closed' } })
+      const result = await live(gh, tracked, findings)
+      expect(gh.commentPosts()).toEqual([])
+      expect(result.opened).toHaveLength(1)
+      const issue = JSON.parse(gh.issuePosts()[0]?.input ?? '{}') as { title: string; body: string }
+      expect(issue.title).toBe('docs(hooks): triage 5 changed blocks')
+      expect(markers(issue.body)).toHaveLength(5)
+      for (const c of CASES) expect(issue.body, `#${c.issue}`).toContain(`#${c.blockId}:${c.new}`)
+      expect(issue.body.match(/- Inventory rows that cite the block: Hooks: /g)).toHaveLength(3)
+      // The five old issues have the five markers, so the next run opens none.
+      const bodies = CASES.map((c, i) => ({
+        number: c.issue,
+        body: api.markerOf(findings[i] as Finding),
+      }))
+      const again = groupGh({ 10: { state: 'closed' } }, bodies)
+      expect((await live(again, tracked, findings)).skipped).toBe(5)
+      expect(again.posts()).toEqual([])
     })
   })
 })
