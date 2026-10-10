@@ -101,6 +101,33 @@ describe(`${name} (reports)`, () => {
     ],
     ['a home path', strict({ source: 'directory', path: '~/plugins' }), ['pathRelative']],
     ['a missing hostPattern', strict({ source: 'hostPattern' }), ['missingField']],
+    ['a missing path in a directory entry', strict({ source: 'directory' }), ['missingField']],
+    ['a missing pathPattern', strict({ source: 'pathPattern' }), ['missingField']],
+    [
+      'a ref that is not a string in a github entry',
+      strict({ source: 'github', repo: 'a/b', ref: 1 }),
+      ['fieldType'],
+    ],
+    [
+      'a path that is not a string in a github entry',
+      strict({ source: 'github', repo: 'a/b', path: 1 }),
+      ['fieldType'],
+    ],
+    [
+      'a path that is not a string in a git entry',
+      strict({ source: 'git', url: 'u', path: 1 }),
+      ['fieldType'],
+    ],
+    [
+      'a repo with a star after the name start',
+      strict({ source: 'github', repo: 'acme/*foo' }),
+      ['repoWildcard'],
+    ],
+    [
+      'a repo with a star and two slashes',
+      strict({ source: 'github', repo: 'a/b/*' }),
+      ['repoWildcard'],
+    ],
     [
       'a hostPattern that does not compile',
       strict({ source: 'hostPattern', hostPattern: '(' }),
