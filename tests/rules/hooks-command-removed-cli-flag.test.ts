@@ -71,6 +71,7 @@ describe(`${name}: shell form`, () => {
     expect(shell('claude \\\n--enable-auto-mode')).toEqual(['removed'])
     expect(shell('env \\\n claude --enable-auto-mode')).toEqual(['removed'])
     expect(shell('claude\\\n--enable-auto-mode')).toEqual([])
+    expect(shell('claude \\\r\n--enable-auto-mode')).toEqual(['removed'])
   })
 
   it('reads a wrapper after an assignment, a tab, and the exe suffix', () => {

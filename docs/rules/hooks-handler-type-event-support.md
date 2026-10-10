@@ -43,8 +43,8 @@ event that it does not know.
   expression.
 - **`mcp_tool` on `Setup`.** The prompt-based hooks page lists `mcp_tool` for `Setup`. The `Setup` section
   says that Claude Code always skips such a hook.[^setup] The rule follows the `Setup` section.
-- **`agent` on `PermissionRequest`.** The hooks reference says that Claude Code skips the hook.[^types] The
-  changelog for v2.1.280 says that it shows an error. Both are a hook that does not run.
+- **`agent` on `PermissionRequest`.** The hooks reference says that Claude Code skips the hook.[^types] The rule
+  reports it.
 - **`prompt` and `agent` on `PermissionDenied`.** The reference lists the event among those that run all five
   types. Claude Code runs a prompt or agent hook there and discards its output. The only output the event
   reads is `retry`, which these hooks cannot set.[^response] The rule reports such a hook with a message that

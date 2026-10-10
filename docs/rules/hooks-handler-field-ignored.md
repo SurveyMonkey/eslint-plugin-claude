@@ -33,8 +33,8 @@ the same files as [`hooks-config-schema`](hooks-config-schema.md). It skips a ha
 | `shell` | The handler sets `args` | The field is "ignored when `args` is set".[^command] |
 | `once: true` | The file is a settings file or agent frontmatter | The field is "only honored for hooks declared in skill frontmatter".[^common] |
 | `timeout` | A command hook sets `async: true` and no `asyncRewake: true` | Claude Code "doesn't enforce it on a command hook you run with `async: true`". It still enforces `timeout` with `asyncRewake`.[^common][^async] |
-| `timeout` | The event is `SessionEnd`, and the value is over 60 | The budget rises to match the highest `timeout`, "up to 60 seconds".[^sessionend] |
-| `timeout` | The event is `SessionEnd` in a plugin `hooks.json`, and the value is over 1.5 | "Timeouts set on plugin-provided hooks don't raise the budget."[^sessionend] |
+| `timeout` | The event is `SessionEnd`, and the value is over 60 (the default of `sessionEndMax`) | The budget rises to match the highest `timeout`, "up to 60 seconds".[^sessionend] |
+| `timeout` | The event is `SessionEnd` in a plugin `hooks.json`, and the value is over 1.5 (the default of `sessionEndPluginMax`) | "Timeouts set on plugin-provided hooks don't raise the budget."[^sessionend] |
 | `onFailure` | The handler is not a `command` or `http` hook | The field is for a `command` or `http` hook.[^onfailure] |
 | `onFailure` | The event is `Stop`, `SubagentStop`, `TaskCompleted` or `TeammateIdle` | Exit code 2 on these events sends Claude back to work, so the field "has no effect".[^onfailure] |
 | `onFailure` | A command hook sets `async` or `asyncRewake` to `true` | The field has no effect on a background command hook.[^onfailure] |
@@ -84,8 +84,8 @@ Pass:
 
 | Option | Default | Use |
 |--------|---------|-----|
-| `sessionEndMax` | `60` | The most seconds that a `SessionEnd` `timeout` can have. Optional. |
-| `sessionEndPluginMax` | `1.5` | The most seconds that a `SessionEnd` `timeout` can have in a plugin `hooks.json`. Optional. |
+| `sessionEndMax` | `60` | The rule reports a `SessionEnd` `timeout` above this number of seconds. Optional. |
+| `sessionEndPluginMax` | `1.5` | The rule reports a `SessionEnd` `timeout` above this number of seconds in a plugin `hooks.json`. Optional. |
 
 ```js
 'claude/hooks-handler-field-ignored': ['error', { sessionEndMax: 120 }]

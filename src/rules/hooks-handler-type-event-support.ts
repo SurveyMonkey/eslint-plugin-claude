@@ -51,7 +51,7 @@ const SUPPORT = new Map<string, readonly HandlerType[]>([
 ])
 
 /** The `SessionStart` matcher values that Claude Code sends at launch. It skips an `mcp_tool` hook
- *  there, because the servers are not up yet. `clear`, `compact` and `fork` fire later. */
+ *  there, because the servers are not up yet. `clear` and `compact` fire later. */
 const LAUNCH_SOURCES = ['startup', 'resume']
 
 /** True when the matcher selects launch sources only. A matcher with a character outside the exact
