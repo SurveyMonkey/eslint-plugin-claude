@@ -26,6 +26,7 @@ import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-suppo
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
 import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
+import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
@@ -115,6 +116,7 @@ const modules = [
   hooksMatcherEnum,
   hooksMatcherMcpName,
   hooksMatcherNeverMatches,
+  hooksMatcherSyntax,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
   skillFrontmatterPosition,
@@ -233,6 +235,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-matcher-enum': 'error',
   'hooks-matcher-mcp-name': 'error',
   'hooks-matcher-never-matches': 'error',
+  'hooks-matcher-syntax': 'error',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
   'skill-frontmatter-position': 'error',
