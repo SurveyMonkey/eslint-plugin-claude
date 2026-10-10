@@ -20,8 +20,8 @@ Review the inline MCP servers of a project subagent before you trust the folder.
 
 ## Rule details
 
-An agent file can define an MCP server inline. The server starts when the subagent starts, and its `command` runs on the
-machine of the user.[^scope] Claude Code connects an inline server from a project `.claude/agents/` directory only after
+An agent file can define an MCP server inline. Claude Code connects the server when the subagent starts.[^scope] A `stdio` server also runs
+its `command` on the machine of the user. Claude Code connects an inline server from a project `.claude/agents/` directory only after
 the user trusts the folder that the agent file came from.[^trust] Before v2.1.238, Claude Code connected these
 servers with no check.[^trust]
 
@@ -31,9 +31,9 @@ The trust does not come from two sources:
 - The automatic trust of a `-p` or SDK session does not count.
 
 Until the user trusts the folder, Claude Code skips each inline server of the file.[^trust] So a person who accepts the
-trust dialog for a cloned repository also accepts each inline command in its agent files. The rule reports the
+trust dialog for a cloned repository also accepts each inline server in its agent files. The rule reports the
 `mcpServers` value of a local agent file that has an inline server. The report names each inline server. One file gets one
-report. The reader of the pull request can then review the commands.
+report. The reader of the pull request can then review the servers.
 
 A name that references a server is not a report. Claude Code loads it with no check on the folder.[^trust] A plugin agent
 is not a report. Claude Code ignores `mcpServers` in a plugin agent, and

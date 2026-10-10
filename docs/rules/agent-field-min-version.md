@@ -36,9 +36,8 @@ The docs of the sub-agents page give the first two versions.[^fields] The page n
 `manual` alias under v2.1.200 for the CLI flag and for `defaultMode`. The rule applies the same version to the
 subagent field.
 
-The Boolean forms are a gap that the follow-up after round 2 of the issue records. The changelog of v2.1.218 adds
-`yes`, `no`, `on`, `off`, `1` and `0` as values for skill and plugin frontmatter Booleans, besides `true`
-and `false`. No agent page lists these forms. The Boolean rules in this plugin accept them, and this rule reports
+The changelog of v2.1.218 adds `yes`, `no`, `on`, `off`, `1` and `0` as values for skill and plugin
+frontmatter Booleans, besides `true` and `false`. No agent page lists these forms, so the rule applies the version to agent files by inference. The Boolean rules in this plugin accept them, and this rule reports
 them when `minVersion` is below v2.1.218. The rule reads a quoted `"true"` or `"false"` as a form that it does not
 report, because no source says how older versions read it.
 

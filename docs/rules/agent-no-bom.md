@@ -21,9 +21,9 @@ Start an agent file with no byte-order mark, for older Claude Code versions.
 ## Rule details
 
 A byte-order mark (BOM) is the three bytes `EF BB BF` at the start of a file. An editor can add it with no sign in
-the text. Before Claude Code v2.1.239, an agent file with a BOM was silently ignored.[^skips] The
-[changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records the fix under v2.1.239. The docs give no
-other source for this fix, so the rule does not cite a changelog heading in its sources.
+the text. Before Claude Code v2.1.239, an agent file with a BOM was silently ignored. The
+[changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records the fix under v2.1.239. The sub-agents page
+lists other files that Claude Code skips without a report.[^skips] It does not name a BOM.
 
 The rule reports the first character of the file when the file starts with a BOM. The rule applies only when the
 option `minVersion` is set and is lower than `2.1.239`. With no `minVersion`, the rule is inactive. The file
@@ -33,13 +33,13 @@ ESLint removes the BOM from the text before a rule runs. So the rule reads the f
 on disk. This has two results:
 
 - The rule reports the saved file, not an unsaved editor buffer.
-- The rule makes no report for a file that it cannot read, such as text from standard input, or a file with no access
-  mode.
+- The rule makes no report for a file that it cannot read, such as text from standard input, or a file that
+  the process cannot open.
 
 The rule checks local agents and plugin agents. The fix of v2.1.239 names agents, skills and commands without a
 distinction.
 
-Fail, with `minVersion` set to `2.1.200` (the first byte of the file is the BOM):
+Fail, with `minVersion` set to `2.1.200` (the first three bytes of the file are the BOM):
 
 ```markdown
 <U+FEFF>---
