@@ -79,6 +79,8 @@ describe(RULE, () => {
     ['X-Custom', 'bearer abc123'],
     ['X-Custom', `Bearer abc123\${SUFFIX}`],
     ['X-Custom', `Basic \${PREFIX}abc123`],
+    ['X-Custom', `Bearer \${A}x\${B}`],
+    ['X-Custom', 'Bearer {abc}'],
   ])('reports the header %s with the value %s', (header, value) => {
     expect(inEntry({ [header]: value }).map((m) => m.messageId)).toEqual(['literal'])
     expect(inSettings({ headers: { [header]: value } }).map((m) => m.messageId)).toEqual([
@@ -183,6 +185,9 @@ describe(`${RULE} (silent)`, () => {
     ['the scheme word Token with no token', 'Token'],
     ['the scheme word Digest with no token', 'Digest'],
     ['a scheme word and two references', `Bearer \${A}\${B}`],
+    ['references joined by dots, as in a JWT', `Bearer \${H}.\${P}.\${S}`],
+    ['references joined by a colon', `Basic \${USER}:\${PASS}`],
+    ['a nested reference', `Bearer \${A:-\${B}}`],
     ['an empty value', ''],
     ['a blank value', '   '],
     ['a scheme word with no token', 'Bearer'],
@@ -198,6 +203,8 @@ describe(`${RULE} (silent)`, () => {
     ['X-Request-Id', 'abc123'],
     ['X-Custom', 'abc123'],
     ['X-Custom', 'Bearerabc'],
+    ['X-Custom', 'see Bearer docs'],
+    ['X-Custom', 'a Basic abc'],
   ])('stays silent for the header %s with the value %s', (header, value) => {
     expect(inEntry({ [header]: value })).toEqual([])
     expect(inSettings({ headers: { [header]: value } })).toEqual([])

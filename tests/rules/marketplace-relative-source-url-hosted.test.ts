@@ -159,9 +159,14 @@ describe(`${RULE} (silent)`, () => {
   })
 
   it('stays silent for a key of the prototype', () => {
-    const dir = tree({ '.claude/settings.json': registers(URL_SOURCE, 'other') })
     const code = marketplaceOf([{ name: 'p', source: './p' }], { name: 'constructor' })
-    expect(lint(dir, code)).toEqual([])
+    const dir = tree({
+      '.claude/settings.json': registers(URL_SOURCE, 'constructor'),
+      '.claude/settings.local.json': '{"extraKnownMarketplaces": {}}',
+    })
+    expect(lint(dir, code)).toHaveLength(1)
+    const none = tree({ '.claude/settings.json': registers(URL_SOURCE, 'other') })
+    expect(lint(none, code)).toEqual([])
   })
 
   it('stays silent when the entries have no string source', () => {
@@ -175,6 +180,8 @@ describe(`${RULE} (silent)`, () => {
     const dir = tree({ '.claude/settings.json': registers(URL_SOURCE) })
     expect(lint(dir, '{"plugins": [{"name": "p", "source": "./p"}]}')).toEqual([])
     expect(lint(dir, '{"name": 3, "plugins": [{"name": "p", "source": "./p"}]}')).toEqual([])
+    const numeric = tree({ '.claude/settings.json': registers(URL_SOURCE, '3') })
+    expect(lint(numeric, '{"name": 3, "plugins": [{"name": "p", "source": "./p"}]}')).toEqual([])
   })
 
   it.each([

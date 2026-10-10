@@ -41,7 +41,7 @@ describe(RULE, () => {
     expect(lint(manifest(), marketplaceOf([])).map((m) => m.messageId)).toEqual(['noRootEntry'])
   })
 
-  it('reports an entry with an object source, and a name equal to the manifest name', () => {
+  it('reports an entry with an object source', () => {
     const source = { source: 'github', repo: 'acme/deploy-helper' }
     expect(lint(manifest(), withSource(source))).toHaveLength(1)
   })
@@ -63,6 +63,15 @@ describe(RULE, () => {
   it('reports in a tree with no .git', () => {
     expect(lint(manifest(false), withSource('./plugins/p'))).toHaveLength(1)
   })
+
+  it.skipIf(noLinks)(
+    'follows a plugin.json link inside the repository, below a subdirectory',
+    () => {
+      const dir = tree({ 'shared/plugin.json': manifestOf({ name: 'deploy-helper' }) })
+      link(dir, 'sub/.claude-plugin/plugin.json', '../../shared/plugin.json')
+      expect(lint(path.join(dir, 'sub'), withSource('./plugins/p'))).toHaveLength(1)
+    },
+  )
 
   it('reads the last of two source keys, as JSON.parse does', () => {
     const code = '{"plugins": [{"name": "p", "source": ".", "source": "./plugins/p"}]}'
