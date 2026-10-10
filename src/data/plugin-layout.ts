@@ -11,6 +11,9 @@
 // The fourth list is the Type column of the "Fields" table of the manifest reference
 // (https://code.claude.com/docs/en/plugins/manifest-reference#fields), checked on Claude Code
 // 2.1.296 on 2026-10-10.
+// The fifth list is the table of the "commands" section of the manifest reference
+// (https://code.claude.com/docs/en/plugins/manifest-reference#commands), checked on Claude Code
+// 2.1.296 on 2026-10-10.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -77,4 +80,14 @@ export const PLUGIN_PATH_KEYS: readonly {
   { key: ['experimental', 'monitors'], map: false },
   { key: ['themes'], map: false },
   { key: ['monitors'], map: false },
+]
+
+/** The fields of an entry in the object map of `commands`, in the order of the table. */
+export const PLUGIN_COMMAND_FIELDS: readonly string[] = [
+  'source',
+  'content',
+  'description',
+  'argumentHint',
+  'model',
+  'allowedTools',
 ]

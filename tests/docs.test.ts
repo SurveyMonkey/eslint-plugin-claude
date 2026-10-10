@@ -61,6 +61,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-tool-name-glob',
     'permissions-unknown-tool',
     'plugin-commands-dir-nonempty',
+    'plugin-commands-map-fields',
     'plugin-default-dir-shadowed',
     'plugin-dependencies-resolve',
     'plugin-feature-min-version',

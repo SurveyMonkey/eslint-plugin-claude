@@ -223,6 +223,11 @@ const TREE: Record<string, string> = {
     settings: { agent: 'a' },
   }),
   'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
+  // A command entry with a field that the manifest reference does not list.
+  'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'cmf',
+    commands: { a: { content: 'x', bogus: 1 } },
+  }),
   // A plugin with a backslash in a component path.
   'plugins/bsl/.claude-plugin/plugin.json': JSON.stringify({
     name: 'bsl',
@@ -734,6 +739,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-commands-map-fields',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -782,6 +792,7 @@ const EXPECTED = [
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
+  'plugins/cmf/.claude-plugin/plugin.json: claude/plugin-commands-map-fields@1',
   'plugins/bsl/.claude-plugin/plugin.json: claude/plugin-path-no-backslash@1',
   'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
   'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',

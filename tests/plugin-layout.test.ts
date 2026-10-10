@@ -3,6 +3,7 @@
 // reference.
 import { describe, expect, it } from 'vitest'
 import {
+  PLUGIN_COMMAND_FIELDS,
   PLUGIN_COMPONENT_NAMES,
   PLUGIN_PATH_KEYS,
   PLUGIN_SETTINGS_KEYS,
@@ -77,5 +78,18 @@ describe('manifest keys that name component paths', () => {
     const keys = PLUGIN_PATH_KEYS.map(({ key }) => key.join('.'))
     expect(keys).not.toContain('types')
     expect(keys).not.toContain('experimental.evals')
+  })
+})
+
+describe('fields of a command entry', () => {
+  it('holds the six fields of the table, in its order', () => {
+    expect(PLUGIN_COMMAND_FIELDS).toEqual([
+      'source',
+      'content',
+      'description',
+      'argumentHint',
+      'model',
+      'allowedTools',
+    ])
   })
 })
