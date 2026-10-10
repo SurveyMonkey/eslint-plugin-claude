@@ -44,6 +44,31 @@ const newRule: Finding = {
   newText: '### Agent frontmatter\n\nA plugin agent accepts `effort`.',
 }
 
+const ENV = 'https://code.claude.com/docs/en/env-vars'
+// The shape of #117: a renamed heading that a rule and an inventory row cite.
+const moved: Finding = {
+  kind: 'moved',
+  page: ENV,
+  heading: 'In settings files',
+  blockId: 'in-settings-files',
+  oldHash: 'c'.repeat(64),
+  newHash: 'd'.repeat(64),
+  rules: ['settings-env-value-format'],
+  probability: null,
+  confidence: null,
+  reason:
+    'The block moved to a new heading on the same page, and its body did not change. No model call.',
+  link: `${ENV}#in-settings-files`,
+  change: 'moved',
+  oldText: '### In settings files\n\nAdd variables under the `env` key.',
+  newText: '### Set variables in settings files\n\nAdd variables under the `env` key.',
+  move: {
+    heading: 'Set variables in settings files',
+    blockId: 'set-variables-in-settings-files',
+    sections: [{ section: 'Settings', rules: ['settings-env-ignored-var'] }],
+  },
+}
+
 // A fake gh: it serves `open` as the open issues and records every call.
 function fakeGh(open: { number: number; body: string | null }[] = []) {
   const calls: { args: string[]; input?: string }[] = []
@@ -436,7 +461,7 @@ describe('openIssues', () => {
 
   it('reads the marker of an open issue of each kind', async () => {
     for (const kind of api.KINDS) {
-      const f = { ...update, kind }
+      const f = kind === 'moved' ? moved : { ...update, kind }
       const gh = fakeGh([{ number: 7, body: api.markerOf(f) }])
       await api.openIssues({ findings: [f], repo: REPO, run: gh.run, dryRun: false, log: quiet })
       expect(gh.posts()).toEqual([])
@@ -1318,6 +1343,289 @@ describe('replay of the five tracked hooks blocks (#44, #45, #121, #122, #123)',
     }
     expect(body.length).toBeLessThanOrEqual(65_536)
     expect(result.skipped).toBe(4)
+  })
+})
+
+describe('the moved kind (#152)', () => {
+  it('is in every kind table: the kinds, the marker, the order, the title and the reason', async () => {
+    expect(api.KINDS).toContain('moved')
+    const gh = fakeGh([{ number: 7, body: api.markerOf(moved) }])
+    await api.openIssues({ findings: [moved], repo: REPO, run: gh.run, dryRun: false, log: quiet })
+    expect(gh.posts()).toEqual([])
+    // A moved finding names the issue, and keeps its move, beside another kind.
+    const removal = { ...moved, kind: 'rule-removal' as const, change: 'removed', move: undefined }
+    const merged = api.merge([removal, moved])
+    expect([merged.kind, merged.move?.blockId]).toEqual([
+      'moved',
+      'set-variables-in-settings-files',
+    ])
+    expect(api.bodyOf(moved, REPO)).toContain(
+      'A block that a rule or an inventory row cites moved to a new heading on the same page. Its body did not change.',
+    )
+  })
+
+  it('has a marker with the old block and the new hash', () => {
+    expect(api.markerOf(moved)).toBe(
+      `<!-- docs-watch:moved:${ENV}#in-settings-files:${'d'.repeat(64)} rules=settings-env-value-format -->`,
+    )
+  })
+
+  it('titles the issue with the rule, or with the inventory when no rule cites the block', () => {
+    expect(api.titleOf({ ...moved, rules: ['a'] })).toBe(
+      'docs(a): move the footnote of a to the renamed heading',
+    )
+    // The title of #117 is too long, so the cut rule of every title applies.
+    expect(api.titleOf(moved)).toBe(
+      'docs(settings-env-value-format): move the footnote of settings-env...',
+    )
+    expect(api.titleOf({ ...moved, rules: [] })).toBe(
+      'docs: move the footnote of the inventory to the renamed heading',
+    )
+    const many = { ...moved, rules: ['a'.repeat(30), 'b'.repeat(30)] }
+    expect(api.titleOf(many)).toBe(`docs: move the footnote of ${'a'.repeat(30)},bbbbbbbb...`)
+  })
+
+  it('names the headings, the new anchor and each footnote, with the runbook steps as its Scope', () => {
+    const body = api.bodyOf(moved, REPO)
+    expect(body.startsWith(`${api.markerOf(moved)}\n\n## Why\n`)).toBe(true)
+    for (const line of [
+      '- Old heading: `In settings files` (block `in-settings-files`)',
+      '- New heading: `Set variables in settings files` (block `set-variables-in-settings-files`)',
+      `- New anchor: ${ENV}#set-variables-in-settings-files`,
+      '- Change: moved',
+      '- Classifier result: `moved`, with no model answer',
+      `- Hashes: old \`${'c'.repeat(64)}\`, new \`${'d'.repeat(64)}\``,
+      '- `docs/rules/settings-env-value-format.md`: the footnote that cites `In settings files`',
+      '- `docs/rules-inventory.md`: the footnote that cites `In settings files`, for the Settings rows `settings-env-ignored-var`',
+      '1. In each file above, change the footnote to the new heading and the anchor `set-variables-in-settings-files`. Keep the one-line form `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`.',
+      '2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.',
+      '3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.',
+      '4. Close this issue with the pull request.',
+      '- [ ] No footnote cites the old block `in-settings-files` of this page.',
+      `- ${ENV}#set-variables-in-settings-files`,
+    ]) {
+      expect(body.split('\n'), line).toContain(line)
+    }
+    expect(body).toContain('```text\n### Set variables in settings files\n')
+    expect(body).not.toContain('A person decides')
+    const sections = body.split('\n').filter((line) => line.startsWith('## '))
+    expect(sections).toEqual(['## Why', '## Scope', '## Acceptance', '## References'])
+  })
+
+  it('names only the inventory footnote when no rule cites the block, and makes docs text inert', () => {
+    const inventoryOnly = {
+      ...moved,
+      rules: [],
+      move: { heading: 'Ping @octocat', blockId: 'a b', sections: moved.move?.sections ?? [] },
+    }
+    const body = api.bodyOf(inventoryOnly, REPO)
+    expect(body).not.toContain('docs/rules/')
+    expect(body).toContain('`docs/rules-inventory.md`: the footnote that cites')
+    expect(body).toContain('- New heading: `Ping @⁠octocat` (block `a b`)')
+    expect(body).toContain(`- New anchor: ${ENV}#a%20b`)
+  })
+
+  it('shows the cross-reference line in the body of a removed or an added block', () => {
+    const near = [
+      { heading: 'Set variables in settings files', blockId: 'set-variables-in-settings-files' },
+    ]
+    const removal: Finding = {
+      ...update,
+      kind: 'rule-removal',
+      change: 'removed',
+      newHash: null,
+      newText: null,
+      possibleMoves: near,
+    }
+    expect(api.bodyOf(removal, REPO).split('\n')).toContain(
+      '- Possible move: `Set variables in settings files` (block `set-variables-in-settings-files`) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.',
+    )
+    expect(api.bodyOf(update, REPO)).not.toContain('Possible move')
+  })
+
+  it('refuses a moved finding whose hashes, texts or move do not fit its kind', () => {
+    const fit = 'change or a move that does not fit its kind'
+    expect(() => api.validate({ ...moved, move: undefined })).toThrow(
+      `a moved finding has a ${fit}`,
+    )
+    expect(() => api.validate({ ...moved, change: 'removed' })).toThrow(fit)
+    expect(() => api.validate({ ...update, move: moved.move })).toThrow(
+      `a rule-update finding has a ${fit}`,
+    )
+    expect(() => api.validate({ ...update, change: 'moved' })).toThrow(fit)
+    for (const field of ['oldHash', 'newHash', 'newText']) {
+      expect(() => api.validate({ ...moved, [field]: null })).toThrow(
+        'a moved finding has no old hash, no new hash or no new text',
+      )
+    }
+    const move = moved.move as NonNullable<Finding['move']>
+    for (const bad of [
+      { ...move, heading: '' },
+      { ...move, heading: 3 },
+      { ...move, blockId: '' },
+      { ...move, blockId: 3 },
+      { ...move, blockId: 'in-settings-files' },
+    ]) {
+      expect(() => api.validate({ ...moved, move: bad })).toThrow(
+        'a moved finding has no new heading or new block, or its old block again',
+      )
+    }
+    for (const sections of [
+      undefined,
+      [{ section: '', rules: ['a'] }],
+      [{ section: 'Settings', rules: [] }],
+      [{ section: 'Settings', rules: ['a b'] }],
+      [{ section: 'Settings', rules: ['a', 'a'] }],
+      [{ section: 'Settings', rules: 'a' }],
+      [
+        { section: 'Settings', rules: ['a'] },
+        { section: 'Settings', rules: ['b'] },
+      ],
+      [null],
+    ]) {
+      expect(() => api.validate({ ...moved, move: { ...move, sections } })).toThrow(
+        'a moved finding has no sections list, or a section that is not valid',
+      )
+    }
+    expect(() => api.validate({ ...moved, rules: [], move: { ...move, sections: [] } })).toThrow(
+      'a moved finding names no rule and no inventory row',
+    )
+    expect(() => api.validate({ ...moved, move: null })).toThrow('no new heading or new block')
+    for (const f of [
+      moved,
+      { ...moved, oldText: null },
+      { ...moved, rules: [] },
+      { ...moved, move: { ...move, sections: [] } },
+    ]) {
+      expect(() => api.validate(f)).not.toThrow()
+    }
+  })
+
+  it('refuses a possible move that is not valid, or on a block that is not removed or added', () => {
+    const near = [{ heading: 'A heading', blockId: 'a-heading' }]
+    const removal = { ...update, kind: 'rule-removal', change: 'removed', newHash: null }
+    const added = { ...newRule, possibleMoves: near }
+    for (const possibleMoves of [
+      [],
+      'x',
+      [{ heading: '', blockId: 'a' }],
+      [{ heading: 'A', blockId: '' }],
+      [{ heading: 'A' }],
+      [null],
+    ]) {
+      expect(() => api.validate({ ...removal, possibleMoves })).toThrow(
+        'a rule-removal finding has a possible move that is not valid',
+      )
+    }
+    expect(() => api.validate({ ...update, possibleMoves: near })).toThrow('possible move')
+    expect(() => api.validate({ ...moved, possibleMoves: near })).toThrow('possible move')
+    expect(() => api.validate({ ...removal, possibleMoves: near })).not.toThrow()
+    expect(() => api.validate(added)).not.toThrow()
+  })
+
+  describe('replay of #117 and #129, and of #131', () => {
+    const MCP = 'https://code.claude.com/docs/en/mcp'
+    const fixture = (name: string) =>
+      readFileSync(path.join(import.meta.dirname, 'fixtures/docs-classify', name), 'utf8')
+    // Jev gave #129 a requirement value of 0.57, and #131 a value of 0.63. A
+    // call with this fake would give a new-rule finding.
+    const fetch: JevFetch = async () =>
+      new Response(
+        JSON.stringify({
+          model: 'jev-1.13.0',
+          answers: { requirement: { type: 'noul', noul: 0.6 } },
+        }),
+        { status: 200 },
+      )
+    const classifyPage = async (
+      url: string,
+      map: SourceMap,
+      base: string,
+      edited: string,
+      inventory: classify.Cite[],
+    ) => {
+      const headings = Object.values(map).flatMap((list) => list.map((s) => s.heading))
+      const stored = await watch.readPage(url, headings, async () => base)
+      return classify.classify({
+        map,
+        inventory: new Map([[url, inventory]]),
+        snapshots: new Map([[watch.snapshotName(url), stored]]),
+        rules: new Map(),
+        links: new Map(),
+        fetchText: async () => edited,
+        jev: { fetch, key: 'test-key-not-real' },
+      })
+    }
+
+    it('opens one moved issue for #117 and #129, and no rule-removal or new-rule issue', async () => {
+      const page = fixture('env-vars-moved.md')
+      const before = page.replace('### Set variables in settings files', '### In settings files')
+      const map: SourceMap = {
+        'settings-env-value-format': [{ url: ENV, heading: 'In settings files' }],
+      }
+      const inventory = [
+        {
+          heading: 'In settings files',
+          anchor: 'in-settings-files',
+          rows: [{ section: 'Settings', rules: ['settings-env-ignored-var'] }],
+        },
+      ]
+      const output = await classifyPage(ENV, map, before, page, inventory)
+      const gh = fakeGh()
+      await api.openIssues({
+        findings: output.findings,
+        tracked: output.tracked,
+        repo: REPO,
+        run: gh.run,
+        dryRun: false,
+        log: quiet,
+      })
+      expect(gh.posts()).toHaveLength(1)
+      const issue = JSON.parse(gh.posts()[0]?.input ?? '{}') as { title: string; body: string }
+      expect(issue.title).toBe(
+        'docs(settings-env-value-format): move the footnote of settings-env...',
+      )
+      expect(issue.body).toContain(
+        `<!-- docs-watch:moved:${ENV}#in-settings-files:83d7638f1288ac12bf078291fad8e9ee752d87a2ba81348b37ad0f73bd8142d6 rules=settings-env-value-format -->`,
+      )
+      expect(issue.body).toContain(`- New anchor: ${ENV}#set-variables-in-settings-files`)
+      expect(issue.body).toContain('for the Settings rows `settings-env-ignored-var`')
+    })
+
+    it('opens one moved issue for #131 that names the inventory footnote', async () => {
+      const page = fixture('mcp-moved.md')
+      const before = page.replace(
+        '#### Add a server from an `mcpServers` JSON block',
+        '#### From an `mcpServers` JSON block',
+      )
+      const map: SourceMap = {
+        'settings-env-value-format': [{ url: MCP, heading: 'Configure tool search' }],
+      }
+      const inventory = [
+        {
+          heading: 'From an mcpServers JSON block',
+          anchor: 'from-an-mcpservers-json-block',
+          rows: [{ section: 'MCP and LSP servers', rules: ['mcp-server-name-format'] }],
+        },
+      ]
+      const output = await classifyPage(MCP, map, before, page, inventory)
+      const gh = fakeGh()
+      await api.openIssues({
+        findings: output.findings,
+        tracked: output.tracked,
+        repo: REPO,
+        run: gh.run,
+        dryRun: false,
+        log: quiet,
+      })
+      expect(gh.posts()).toHaveLength(1)
+      const issue = JSON.parse(gh.posts()[0]?.input ?? '{}') as { title: string; body: string }
+      expect(issue.title).toBe('docs: move the footnote of the inventory to the renamed heading')
+      expect(issue.body).toContain(
+        '- `docs/rules-inventory.md`: the footnote that cites `From an mcpServers JSON block`, for the MCP and LSP servers rows `mcp-server-name-format`',
+      )
+      expect(issue.body).not.toContain('docs/rules/')
+    })
   })
 })
 

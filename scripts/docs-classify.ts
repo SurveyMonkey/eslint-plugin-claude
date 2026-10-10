@@ -10,8 +10,10 @@
 //
 // A finding is { kind, page, heading, blockId, oldHash, newHash, rules,
 // probability, confidence, reason, link, change, oldText, newText }. kind is
-// rule-update, rule-removal, new-rule or needs-triage. A result is the
-// outcome for each block, and includes the blocks that need no change.
+// rule-update, rule-removal, new-rule, needs-triage or moved. A moved finding
+// also has `move`, and other findings can have `possibleMoves` (see planPage).
+// A result is the outcome for each block, and includes the blocks that need
+// no change.
 //
 // docs/rules-inventory.md is a second source map. Its footnotes cite docs
 // headings, and the rule rows of each `###` section of "Rules by group" cite
@@ -23,6 +25,12 @@
 // oldHash, newHash, oldText, newText, sections }, with the rule rows that
 // cite it in each section. The Jev requests do not change: a tracked block
 // gets the same request and the same findings as before.
+//
+// A removed block and an added block on one page with the same body hash
+// (see splitBlocks in docs-watch.ts) are a move. A move gets no Jev call. It
+// gives one moved finding when a rule or an inventory row cites the old
+// block, and no finding when nothing cites it. Neither block of a move gets
+// another finding or a tracked entry.
 //
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
@@ -56,11 +64,18 @@ import {
   splitBlocks,
 } from './docs-watch.ts'
 
-export type Kind = 'rule-update' | 'rule-removal' | 'new-rule' | 'needs-triage'
+export type Kind = 'rule-update' | 'rule-removal' | 'new-rule' | 'needs-triage' | 'moved'
 type OutcomeKind = Kind | 'no-change'
 type Reason = 'alters' | 'obsolete' | 'requirement'
 
-// One classifier finding. The issue step opens one issue for each.
+// A block on the same page that can be the other half of a move.
+type Near = { heading: string; blockId: string }
+
+// One classifier finding. The issue step opens one issue for each. For a
+// moved finding, `heading` and `blockId` are those of the old block, and
+// `move` holds the new heading, the new block key and the inventory rows
+// that cite the old block. `possibleMoves` is on a removed or added block
+// whose heading shares three or more words with an added or removed heading.
 export type Finding = {
   kind: Kind
   page: string
@@ -76,6 +91,8 @@ export type Finding = {
   change: string
   oldText: string | null
   newText: string | null
+  move?: { heading: string; blockId: string; sections: Rows }
+  possibleMoves?: Near[]
 }
 
 export type Outcome = {
@@ -134,6 +151,7 @@ export type Item = {
   rules: string[]
   askRequirement: boolean
   skipped?: string
+  possibleMoves?: Near[]
 }
 
 type ItemBase = Omit<Item, 'rules' | 'askRequirement' | 'skipped'>
@@ -451,6 +469,7 @@ const finding = (item: ItemBase, kind: Kind, fields: Partial<Finding>): Finding 
   change: item.change,
   oldText: item.oldText,
   newText: item.newText,
+  ...(item.possibleMoves === undefined ? {} : { possibleMoves: item.possibleMoves }),
   ...fields,
 })
 
@@ -690,12 +709,15 @@ export function planPage({
     return before.has(id) && id !== storedTitle ? id : undefined
   }
   const trackedRows = new Map<string, Rows>()
+  // The first inventory heading that finds each block.
+  const citeHeading = new Map<string, string>()
   for (const cite of inventory) {
     const key = keyOfCite(cite)
     if (key === undefined) continue
     const list = trackedRows.get(key) ?? []
     addRows(list, cite.rows)
     trackedRows.set(key, list)
+    if (!citeHeading.has(key)) citeHeading.set(key, cite.heading)
   }
   const tracked: Tracked[] = []
   // A block that an inventory row cites, and that no mapped heading cites
@@ -722,11 +744,104 @@ export function planPage({
     if (source !== wholeStored && key !== undefined) oldText.set(key, source.text)
   }
 
+  // The heading of a block that is gone: the mapped heading, else the title in
+  // the stored page text, else the inventory heading, else the block key.
+  const oldHeadingOf = (key: string) =>
+    headingOf.get(key) ?? oldBlocks.get(key)?.title ?? citeHeading.get(key) ?? key
+  const removed = [...before.keys()].filter((key) => !now.has(key) && key !== storedTitle)
+  const added = [...now.values()].filter((block) => !before.has(block.key) && block.level !== 1)
+
+  // A move is a removed block and an added block with the same body hash: the
+  // stored body hash of the old block, and the body hash of the new block. The
+  // page title is never a move. These give no move, and each block keeps the
+  // findings of a removed or an added block:
+  // - two removed blocks with one body hash, or two added blocks with one body
+  //   hash, because the code does not guess the pair
+  // - a removed block with no stored body hash (an old snapshot, or no body)
+  // - an added block with no body.
+  const storedBody = new Map<string, string>()
+  for (const block of stored.blocks) {
+    if (block.bodyHash !== undefined) storedBody.set(block.id, block.bodyHash)
+  }
+  const countOf = (hashes: (string | null | undefined)[]) => {
+    const counts = new Map<string, number>()
+    for (const hash of hashes) if (hash) counts.set(hash, (counts.get(hash) ?? 0) + 1)
+    return counts
+  }
+  const oldCounts = countOf(removed.map((key) => storedBody.get(key)))
+  const newCounts = countOf(added.map((block) => block.bodyHash))
+  const moves = new Map<string, Block>()
+  for (const key of removed) {
+    const body = storedBody.get(key)
+    const target = added.find((block) => block.bodyHash === body)
+    if (body === undefined || target === undefined) continue
+    if (oldCounts.get(body) === 1 && newCounts.get(body) === 1) moves.set(key, target)
+  }
+  const movedTo = new Set([...moves.values()].map((block) => block.key))
+
+  // A possible move: a removed heading and an added heading that share three
+  // or more words, when the two blocks are not a move. A word is a run of
+  // letters and digits, in lowercase. Each word counts once. A word of one or
+  // two characters does not count. Each finding of the two blocks names the
+  // other block.
+  const wordsOf = (heading: string) =>
+    new Set(
+      heading
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/u)
+        .filter((word) => word.length > 2),
+    )
+  const near = new Map<string, Near[]>()
+  const addNear = (key: string, other: Near) => near.set(key, [...(near.get(key) ?? []), other])
+  for (const key of removed) {
+    if (moves.has(key)) continue
+    const words = wordsOf(oldHeadingOf(key))
+    for (const block of added) {
+      if (movedTo.has(block.key)) continue
+      const shared = [...wordsOf(block.title)].filter((word) => words.has(word))
+      if (shared.length < 3) continue
+      addNear(key, { heading: block.title, blockId: block.key })
+      addNear(block.key, { heading: oldHeadingOf(key), blockId: key })
+    }
+  }
+  const nearOf = (key: string) => {
+    const list = near.get(key)
+    return list === undefined ? {} : { possibleMoves: list }
+  }
+
   const items: Item[] = []
   for (const [key, oldHash] of before) {
     if (now.has(key)) continue
     const cited = byBlock.get(key) ?? []
-    const heading = headingOf.get(key) ?? oldBlocks.get(key)?.title ?? key
+    const heading = oldHeadingOf(key)
+    const target = moves.get(key)
+    if (target !== undefined) {
+      // A move consumes both blocks: no rule-removal, no Jev call, no tracked
+      // entry. The footnotes to change are those of the rules and of the
+      // inventory rows that cite the old block.
+      const sections = trackedRows.get(key) ?? []
+      const item: ItemBase = {
+        page: url,
+        heading,
+        blockId: key,
+        link: links.get(`${url}\n${heading}`) ?? url,
+        oldHash,
+        newHash: target.hash,
+        change: 'moved',
+        oldText: oldText.get(key) ?? null,
+        newText: target.text,
+      }
+      if (cited.length === 0 && sections.length === 0) {
+        const skipped = 'moved, and no rule or inventory row cites it'
+        items.push({ ...item, rules: [], askRequirement: false, skipped })
+        continue
+      }
+      const reason =
+        'The block moved to a new heading on the same page, and its body did not change. No model call.'
+      const move = { heading: target.title, blockId: target.key, sections }
+      findings.push(finding(item, 'moved', { rules: cited, reason, move }))
+      continue
+    }
     const item: ItemBase = {
       page: url,
       heading,
@@ -737,6 +852,7 @@ export function planPage({
       change: 'removed',
       oldText: oldText.get(key) ?? null,
       newText: null,
+      ...nearOf(key),
     }
     track(item, cited)
     if (cited.length > 0) {
@@ -751,7 +867,7 @@ export function planPage({
   }
   for (const [key, block] of now) {
     const oldHash = before.get(key) ?? null
-    if (oldHash === block.hash) continue
+    if (oldHash === block.hash || movedTo.has(key)) continue
     const cited = byBlock.get(key) ?? []
     const whole = wholePage.filter((rule) => !cited.includes(rule))
     const item: ItemBase = {
@@ -762,6 +878,7 @@ export function planPage({
       change: oldHash === null ? 'added' : 'changed',
       oldText: oldHash === null ? null : (oldText.get(key) ?? null),
       newText: block.text,
+      ...nearOf(key),
     }
     track(item, cited)
     items.push({ ...item, rules: [...cited, ...whole], askRequirement: cited.length === 0 })

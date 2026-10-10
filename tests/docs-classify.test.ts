@@ -61,18 +61,23 @@ const rules = new Map([
 ])
 
 // Stores a snapshot of PAGE for the map, then classifies the edited page.
+// With `noBody`, the snapshot has no body hash, as a file from before it.
 async function run(
   sourceMap: SourceMap,
   edited: string,
   jev: Jev,
   base = PAGE,
   inventory: Inventory = new Map(),
+  noBody = false,
 ) {
   const headings = Object.values(sourceMap)
     .flat()
     .map((s) => s.heading)
     .filter((h, i, all) => all.indexOf(h) === i)
-  const stored = await watch.readPage(URL_, headings, serve(base))
+  const read = await watch.readPage(URL_, headings, serve(base))
+  const stored = noBody
+    ? { ...read, blocks: read.blocks.map(({ id, hash }) => ({ id, hash })) }
+    : read
   return api.classify({
     map: sourceMap,
     inventory,
@@ -392,10 +397,11 @@ describe('classify', () => {
     expect(three.findings[0]?.reason).toContain('is missing or is not a Noul')
   })
 
-  it('gives rule-removal for a removed cited block with no model call for it', async () => {
+  it('gives rule-removal for a removed cited block with no model call for it, on a snapshot with no body hash', async () => {
     const moved = PAGE.replace('### `hooks`', '### `hook files`')
     const jev = fakeJev(answer({ requirement: 0.73 }))
-    const { findings } = await run(cited, moved, { fetch: jev.fetch, key: KEY })
+    const jevCall = { fetch: jev.fetch, key: KEY }
+    const { findings } = await run(cited, moved, jevCall, PAGE, new Map(), true)
     expect(findings.map((f) => [f.kind, f.blockId, f.rules, f.probability])).toEqual([
       ['rule-removal', 'hooks', ['a-rule'], null],
       ['new-rule', 'hook-files', [], 0.73],
@@ -731,7 +737,8 @@ describe('classify', () => {
       const base = PAGE.replace('an array mixing both.', `an array mixing both.\n\n${table(700)}`)
       const edited = base.replace('### `hooks`', '### `hook files`')
       const jev = fakeJev(() => 1)
-      const { findings } = await run(whole, edited, { fetch: jev.fetch, key: KEY }, base)
+      const jevCall = { fetch: jev.fetch, key: KEY }
+      const { findings } = await run(whole, edited, jevCall, base, new Map(), true)
       expect(findings.map((f) => [f.kind, f.blockId, f.reason])).toContainEqual([
         'needs-triage',
         'hooks',
@@ -1241,6 +1248,311 @@ describe('classify with the inventory', () => {
     )
     const empty = api.renderMarkdown({ model: 'm', findings: [], results: [], tracked: [] })
     expect(empty).not.toContain('inventory row')
+  })
+})
+
+describe('a moved section (#152)', () => {
+  const ENV = 'https://code.claude.com/docs/en/env-vars'
+  const MCP = 'https://code.claude.com/docs/en/mcp'
+  const fixture = (name: string) => readFileSync(path.join(FIXTURES, 'docs-classify', name), 'utf8')
+  // The live pages after the rename. The texts of the renamed blocks are those
+  // of #129 and #131, so their hashes are the hashes in those issues.
+  const ENV_NEW = fixture('env-vars-moved.md')
+  const MCP_NEW = fixture('mcp-moved.md')
+  const NEW_HEAD = '### Set variables in settings files'
+  const ENV_OLD = ENV_NEW.replace(NEW_HEAD, '### In settings files')
+  const MCP_OLD = MCP_NEW.replace(
+    '#### Add a server from an `mcpServers` JSON block',
+    '#### From an `mcpServers` JSON block',
+  )
+  const ENV_MAP: SourceMap = {
+    'settings-env-value-format': [
+      { url: ENV, heading: 'In settings files' },
+      { url: ENV, heading: 'Variables' },
+    ],
+  }
+  const ENV_INVENTORY: Cite[] = [
+    {
+      heading: 'In settings files',
+      anchor: 'in-settings-files',
+      rows: [{ section: 'Settings', rules: ['settings-env-ignored-var'] }],
+    },
+  ]
+
+  // Stores the snapshot of `base`, then classifies `edited`, on one page.
+  async function classifyPage(
+    url: string,
+    map: SourceMap,
+    base: string,
+    edited: string,
+    { inventory = [], noBody = false }: { inventory?: Cite[]; noBody?: boolean } = {},
+  ) {
+    const headings = [...new Set(Object.values(map).flatMap((list) => list.map((s) => s.heading)))]
+    const read = await watch.readPage(url, headings, serve(base))
+    const stored = noBody
+      ? { ...read, blocks: read.blocks.map(({ id, hash }) => ({ id, hash })) }
+      : read
+    const jev = fakeJev(answer({ requirement: 0.57 }))
+    const output = await api.classify({
+      map,
+      inventory: new Map([[url, inventory]]),
+      snapshots: new Map([[watch.snapshotName(url), stored]]),
+      rules,
+      links: new Map([[`${ENV}\nIn settings files`, `${ENV}#in-settings-files`]]),
+      fetchText: serve(edited),
+      jev: { fetch: jev.fetch, key: KEY },
+    })
+    return { output, calls: jev.calls }
+  }
+
+  it('replays #117 and #129: one moved finding, and no rule-removal, new-rule, call or tracked entry', async () => {
+    const { output, calls } = await classifyPage(ENV, ENV_MAP, ENV_OLD, ENV_NEW, {
+      inventory: ENV_INVENTORY,
+    })
+    expect(output.findings).toEqual([
+      {
+        kind: 'moved',
+        page: ENV,
+        heading: 'In settings files',
+        blockId: 'in-settings-files',
+        // The hashes of #117 (old) and #129 (new).
+        oldHash: 'fd3b871f4d83a62d90dce594b4a4e4c327781f57e420e4c0d4f7c42b73aa61f3',
+        newHash: '83d7638f1288ac12bf078291fad8e9ee752d87a2ba81348b37ad0f73bd8142d6',
+        rules: ['settings-env-value-format'],
+        probability: null,
+        confidence: null,
+        reason:
+          'The block moved to a new heading on the same page, and its body did not change. No model call.',
+        link: `${ENV}#in-settings-files`,
+        change: 'moved',
+        oldText: expect.stringMatching(
+          /^### In settings files\n\nAdd variables under the `env` key/,
+        ),
+        newText: expect.stringMatching(/^### Set variables in settings files\n\nAdd variables/),
+        move: {
+          heading: 'Set variables in settings files',
+          blockId: 'set-variables-in-settings-files',
+          sections: [{ section: 'Settings', rules: ['settings-env-ignored-var'] }],
+        },
+      },
+    ])
+    expect(calls).toEqual([])
+    expect(output.tracked).toEqual([])
+    expect(output.results).toEqual([])
+  })
+
+  it('replays #131: a heading that only an inventory footnote cites gives a moved finding that names it', async () => {
+    const map: SourceMap = {
+      'settings-env-value-format': [{ url: MCP, heading: 'Configure tool search' }],
+    }
+    const inventory: Cite[] = [
+      {
+        heading: 'From an mcpServers JSON block',
+        anchor: 'from-an-mcpservers-json-block',
+        rows: [{ section: 'MCP and LSP servers', rules: ['mcp-server-name-format'] }],
+      },
+    ]
+    const { output, calls } = await classifyPage(MCP, map, MCP_OLD, MCP_NEW, { inventory })
+    expect(
+      output.findings.map((f) => [f.kind, f.heading, f.blockId, f.rules, f.oldText, f.move]),
+    ).toEqual([
+      [
+        'moved',
+        'From an mcpServers JSON block',
+        'from-an-mcpservers-json-block',
+        [],
+        // The snapshot stores the text of a mapped block only.
+        null,
+        {
+          heading: 'Add a server from an mcpServers JSON block',
+          blockId: 'add-a-server-from-an-mcpservers-json-block',
+          sections: [{ section: 'MCP and LSP servers', rules: ['mcp-server-name-format'] }],
+        },
+      ],
+    ])
+    expect(output.findings[0]?.newHash).toBe(
+      'af1aff3b152c63100d59efe68121f3d45037e80bda64d494e8bc61926e63b295',
+    )
+    expect(calls).toEqual([])
+    expect(output.tracked).toEqual([])
+  })
+
+  it('names the heading of a removed block that only the inventory cites, in its tracked entry', async () => {
+    const map: SourceMap = {
+      'settings-env-value-format': [{ url: MCP, heading: 'Configure tool search' }],
+    }
+    const inventory: Cite[] = [
+      {
+        heading: 'From an mcpServers JSON block',
+        anchor: 'from-an-mcpservers-json-block',
+        rows: [{ section: 'MCP and LSP servers', rules: ['mcp-server-name-format'] }],
+      },
+    ]
+    const gone = MCP_OLD.replace('#### From an `mcpServers` JSON block\n', '')
+    const { output } = await classifyPage(MCP, map, MCP_OLD, gone, { inventory })
+    expect(output.tracked.map((t) => [t.heading, t.blockId, t.change])).toEqual([
+      ['From an mcpServers JSON block', 'from-an-mcpservers-json-block', 'removed'],
+    ])
+  })
+
+  it('asks no whole-page rule about either block of a move', async () => {
+    const whole: SourceMap = {
+      'a-rule': [{ url: URL_, heading: 'hooks' }],
+      'b-rule': [{ url: URL_, heading: 'Plugin manifest reference' }],
+    }
+    const moved = PAGE.replace('### `hooks`', '### `hook files`')
+    const jev = fakeJev(() => 1)
+    const output = await run(whole, moved, { fetch: jev.fetch, key: KEY })
+    expect(output.findings.map((f) => [f.kind, f.blockId, f.rules, f.move?.blockId])).toEqual([
+      ['moved', 'hooks', ['a-rule'], 'hook-files'],
+    ])
+    expect(jev.calls).toEqual([])
+  })
+
+  it('gives no finding and no call for a move of a block that nothing cites', async () => {
+    const moved = PAGE.replace('### `commands`', '### `command files`')
+    const jev = fakeJev(() => 1)
+    const output = await run(cited, moved, { fetch: jev.fetch, key: KEY })
+    expect(output.findings).toEqual([])
+    expect(jev.calls).toEqual([])
+    expect(output.results).toEqual([
+      {
+        page: URL_,
+        heading: 'commands',
+        blockId: 'commands',
+        change: 'moved',
+        outcomes: [],
+        note: 'moved, and no rule or inventory row cites it',
+      },
+    ])
+  })
+
+  it('gives the findings of today for a renamed heading with a changed body, each with the cross-reference line', async () => {
+    const map: SourceMap = {
+      'settings-env-value-format': [{ url: ENV, heading: 'Variables in settings files' }],
+    }
+    const base = ENV_NEW.replace(NEW_HEAD, '### Variables in settings files')
+    const edited = ENV_NEW.replace('"1200000"', '"600000"')
+    const { output, calls } = await classifyPage(ENV, map, base, edited)
+    const shape = output.findings.map((f) => [f.kind, f.blockId, f.possibleMoves])
+    expect(shape).toHaveLength(2)
+    expect(shape).toContainEqual([
+      'rule-removal',
+      'variables-in-settings-files',
+      [{ heading: 'Set variables in settings files', blockId: 'set-variables-in-settings-files' }],
+    ])
+    expect(shape).toContainEqual([
+      'new-rule',
+      'set-variables-in-settings-files',
+      [{ heading: 'Variables in settings files', blockId: 'variables-in-settings-files' }],
+    ])
+    expect(calls).toHaveLength(1)
+  })
+
+  it('adds the cross-reference line when the snapshot has no body hash, and the body is the same', async () => {
+    const map: SourceMap = {
+      'settings-env-value-format': [{ url: ENV, heading: 'Variables in settings files' }],
+    }
+    const base = ENV_NEW.replace(NEW_HEAD, '### Variables in settings files')
+    const { output } = await classifyPage(ENV, map, base, ENV_NEW, { noBody: true })
+    expect(output.findings.map((f) => [f.kind, f.possibleMoves?.[0]?.blockId])).toEqual([
+      ['rule-removal', 'set-variables-in-settings-files'],
+      ['new-rule', 'variables-in-settings-files'],
+    ])
+  })
+
+  it('gives no cross-reference line for headings that share two words, or a short word as the third', async () => {
+    // "In settings files" and "Set variables in settings files" share
+    // "settings" and "files". The word "in" has two characters, so it does
+    // not count.
+    const edited = ENV_NEW.replace('"1200000"', '"600000"')
+    const { output } = await classifyPage(ENV, ENV_MAP, ENV_OLD, edited)
+    expect(output.findings.map((f) => [f.kind, f.possibleMoves])).toEqual([
+      ['rule-removal', undefined],
+      ['new-rule', undefined],
+    ])
+  })
+
+  it('counts words in lowercase, split at punctuation, each word once', async () => {
+    const map: SourceMap = { 'a-rule': [{ url: URL_, heading: 'Keep' }] }
+    // The snapshot has no text for a block that no rule cites, so the old
+    // heading is its key.
+    const base = '# Title\n\nIntro.\n\n## Keep\n\nKeep text.\n\n## Hook event names\n\nOld text.\n'
+    const edited =
+      '# Title\n\nIntro.\n\n## Keep\n\nKeep text.\n\n## The Hook, EVENT names\n\nNew text.\n'
+    const jev = fakeJev(answer({ requirement: 0.9 }))
+    const output = await run(map, edited, { fetch: jev.fetch, key: KEY }, base)
+    expect(output.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
+      ['the-hook-event-names', [{ heading: 'hook-event-names', blockId: 'hook-event-names' }]],
+    ])
+    // "names" twice is one word, so the headings share two words.
+    const two = edited.replace('## The Hook, EVENT names', '## The hook names, names')
+    const none = await run(map, two, { fetch: jev.fetch, key: KEY }, base)
+    expect(none.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
+      ['the-hook-names-names', undefined],
+    ])
+  })
+
+  it('gives the findings of today when two added or two removed blocks share one body hash', async () => {
+    // The code does not guess which pair moved.
+    const twice = `${ENV_NEW.trimEnd()}\n\n${ENV_NEW.slice(ENV_NEW.indexOf(NEW_HEAD))
+      .replace(NEW_HEAD, '### A copy of the settings block')
+      .replace(/\n## Variables[\s\S]*$/, '\n')}`
+    const added = await classifyPage(ENV, ENV_MAP, ENV_OLD, twice)
+    expect(added.output.findings.map((f) => [f.kind, f.blockId]).sort()).toEqual([
+      ['new-rule', 'a-copy-of-the-settings-block'],
+      ['new-rule', 'set-variables-in-settings-files'],
+      ['rule-removal', 'in-settings-files'],
+    ])
+    const map: SourceMap = { 'a-rule': [{ url: URL_, heading: 'One' }] }
+    const base = '# Title\n\nIntro.\n\n## One\n\nSame body.\n\n## Two\n\nSame body.\n'
+    const edited = '# Title\n\nIntro.\n\n## Three\n\nSame body.\n'
+    const jev = fakeJev(answer({ requirement: 0.9 }))
+    const removed = await run(map, edited, { fetch: jev.fetch, key: KEY }, base)
+    expect(removed.findings.map((f) => [f.kind, f.blockId]).sort()).toEqual([
+      ['new-rule', 'three'],
+      ['rule-removal', 'one'],
+    ])
+  })
+
+  it('gives no move for a renamed heading with no body', async () => {
+    const map: SourceMap = { 'a-rule': [{ url: URL_, heading: 'Empty' }] }
+    const base = '# Title\n\nIntro.\n\n## Empty\n### Child\n\nChild text.\n'
+    const edited = base.replace('## Empty', '## Vacant')
+    const jev = fakeJev(answer({ requirement: 0.9 }))
+    const output = await run(map, edited, { fetch: jev.fetch, key: KEY }, base)
+    expect(output.findings.map((f) => [f.kind, f.blockId])).toEqual([
+      ['rule-removal', 'empty'],
+      ['new-rule', 'vacant'],
+    ])
+  })
+
+  it('never makes a move of the page title, old or new', async () => {
+    const map: SourceMap = { 'a-rule': [{ url: URL_, heading: 'Keep' }] }
+    const keep = '## Keep\n\nKeep text.\n'
+    const jev = fakeJev(answer({ requirement: 0.9 }))
+    const call = { fetch: jev.fetch, key: KEY }
+    // The old title has the body of a new block.
+    const oldTitle = await run(
+      map,
+      `# Other title\n\nNew intro.\n\n${keep}\n## Moved here\n\nShared body.\n`,
+      call,
+      `# Title\n\nShared body.\n\n${keep}`,
+    )
+    expect(oldTitle.findings.map((f) => [f.kind, f.blockId]).sort()).toEqual([
+      ['new-rule', 'moved-here'],
+      ['new-rule', 'other-title'],
+    ])
+    // The new title has the body of an old block.
+    const newTitle = await run(
+      map,
+      `# Shared title\n\nShared body.\n\n${keep}`,
+      call,
+      `# Title\n\nIntro.\n\n${keep}\n## Old part\n\nShared body.\n`,
+    )
+    expect(newTitle.findings.map((f) => [f.kind, f.blockId])).toEqual([
+      ['new-rule', 'shared-title'],
+    ])
   })
 })
 
