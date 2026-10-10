@@ -68,6 +68,10 @@ describe(RULE, () => {
     expect(run(dependencies)).toEqual([missing('ghost')])
   })
 
+  check('reports a string that starts with @ as one name, with no marketplace', () => {
+    expect(run(['@ghost'])).toEqual([missing('@ghost')])
+  })
+
   check('reports each dependency in file order, and not the ones that are listed', () => {
     expect(run(['b', 'audit-logger', { name: 'a' }, 'secrets-vault'])).toEqual([
       missing('b'),

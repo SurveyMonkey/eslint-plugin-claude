@@ -157,6 +157,12 @@ describe(`${RULE} (silent)`, () => {
     expect(run(invoke('p'), { 'SKILL.md': SKILL() }, { skills: './' })).toEqual([])
   })
 
+  check('stays silent for a command name that starts with the plugin name', () => {
+    expect(
+      run('on-skill-invoke:ops:deploy', { 'commands/ops/deploy.md': '' }, { name: 'ops' }),
+    ).toEqual([])
+  })
+
   check('stays silent for a plugin-qualified name of a skill that exists', () => {
     expect(run('on-skill-invoke:p:deploy', { 'skills/deploy/SKILL.md': SKILL() })).toEqual([])
   })

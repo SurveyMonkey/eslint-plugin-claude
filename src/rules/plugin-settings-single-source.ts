@@ -48,10 +48,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' }> = {
           return
         }
         const data = file.data
-        const keys =
-          data !== null && typeof data === 'object' && !Array.isArray(data)
-            ? supported(Object.keys(data))
-            : []
+        const keys = data !== null && typeof data === 'object' ? supported(Object.keys(data)) : []
         if (keys.length > 0) {
           context.report({
             node: member,
