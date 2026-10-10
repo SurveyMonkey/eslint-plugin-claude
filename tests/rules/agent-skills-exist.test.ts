@@ -128,7 +128,7 @@ describe('agent-skills-exist', () => {
       const outside = path.join(path.dirname(root), `${path.basename(root)}-folders`)
       mkdirSync(path.join(outside, 'commands'), { recursive: true })
       mkdirSync(path.join(outside, 'skills'), { recursive: true })
-      writeFileSync(path.join(outside, 'commands', 'ghost.md'), skill())
+      writeFileSync(path.join(outside, 'commands', 'other.md'), skill())
       mkdirSync(path.join(root, '.claude'), { recursive: true })
       const code = agent(list('ghost'))
       const lint = () => lintAgent('agent-skills-exist', code, path.join(root, AGENT))
