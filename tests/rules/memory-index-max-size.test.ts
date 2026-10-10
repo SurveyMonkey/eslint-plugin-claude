@@ -64,6 +64,19 @@ describe(`${RULE}: lines`, () => {
     expect(ids(lint(`<!-- a note -->\n${lines(201)}`))).toEqual(['tooManyLines'])
   })
 
+  it('counts a block of HTML that is not a comment', () => {
+    expect(ids(lint(`<div>x</div>\n${lines(200)}`))).toEqual(['tooManyLines'])
+    expect(ids(lint(`<details>\nx\n</details>\n${lines(198)}`))).toEqual(['tooManyLines'])
+  })
+
+  it('counts a line separator as text, and does not crash', () => {
+    // Markdown ends a line at CR and LF only. U+2028 and U+2029 are text.
+    const separator = String.fromCharCode(0x2028, 0x2029)
+    expect(lint(`a${separator}b\n`)).toEqual([])
+    expect(lint(`a${separator}b${separator}c\n${lines(199)}`)).toEqual([])
+    expect(ids(lint(`a${separator}b\n${lines(200)}`))).toEqual(['tooManyLines'])
+  })
+
   it('counts a comment that is inline, or in a code fence', () => {
     expect(ids(lint(`text <!-- inline -->\n${lines(200)}`))).toEqual(['tooManyLines'])
     expect(ids(lint(`\`\`\`\n<!-- code -->\n\`\`\`\n${lines(198)}`))).toEqual(['tooManyLines'])
@@ -79,13 +92,24 @@ describe(`${RULE}: bytes`, () => {
   it('reports an index of 25001 bytes, once, and says bytes', () => {
     const messages = lint(ofBytes(25001))
     expect(messages).toHaveLength(1)
-    expect(messages[0]).toMatchObject({ messageId: 'tooManyBytes', line: 1, column: 1 })
+    expect(messages[0]).toMatchObject({
+      messageId: 'tooManyBytes',
+      line: 1,
+      column: 1,
+    })
     expect(messages[0]?.message).toContain('25001 bytes')
     expect(messages[0]?.message).toContain('25000 bytes')
   })
 
   it('stays silent on an index of 25000 bytes', () => {
     expect(lint(ofBytes(25000))).toEqual([])
+  })
+
+  it('counts the last line with no line end, and counts CR LF as two bytes', () => {
+    expect(lint('x'.repeat(25000))).toEqual([])
+    expect(ids(lint('x'.repeat(25001)))).toEqual(['tooManyBytes'])
+    expect(lint(`${'x'.repeat(24998)}\r\n`)).toEqual([])
+    expect(ids(lint(`${'x'.repeat(24999)}\r\n`))).toEqual(['tooManyBytes'])
   })
 
   it('counts bytes, not characters', () => {

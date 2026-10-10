@@ -100,6 +100,11 @@ describe(`${RULE}: the files`, () => {
     }
   })
 
+  it('reads a drive path with a slash as external, and a word with a colon as text', () => {
+    expect(ids(lint('@d:/x.md\n'))).toEqual(['external'])
+    expect(lint('@x: note\n')).toEqual([])
+  })
+
   it('makes no report for an AGENTS.md, which never prompts', () => {
     for (const file of ['AGENTS.md', '.claude/AGENTS.md', 'packages/web/AGENTS.md']) {
       expect(lint('@~/x.md @/etc/hosts @../x.md\n', file), file).toEqual([])
@@ -146,21 +151,58 @@ describe(`${RULE}: the imported files`, () => {
 
   it('stays silent when the imported files import files in the repository', () => {
     expect(
-      lint('@docs/git.md\n', 'CLAUDE.md', { ...SHARED, 'docs/git.md': '@../README.md\n' }),
+      lint('@docs/git.md\n', 'CLAUDE.md', {
+        ...SHARED,
+        'docs/git.md': '@../README.md\n',
+      }),
     ).toEqual([])
   })
 
-  it('leaves a CLAUDE.md or an AGENTS.md that an import loads to its own check', () => {
-    const own = {
+  it('leaves a CLAUDE.md that an import loads to its own check', () => {
+    const own = { ...SHARED, 'sub/CLAUDE.md': '@~/x.md\n' }
+    expect(lint('@sub/CLAUDE.md\n', 'CLAUDE.md', own)).toEqual([])
+  })
+
+  it('checks an AGENTS.md that an import loads, which prompts as a part of a CLAUDE.md chain', () => {
+    const own = { ...SHARED, 'AGENTS.md': '@~/x.md\n' }
+    const messages = lint('x\n@AGENTS.md\n', 'CLAUDE.md', own)
+    expect(messages.map((m) => [m.messageId, m.line])).toEqual([['externalInImported', 2]])
+    expect(messages[0]?.message).toContain('`AGENTS.md`')
+  })
+
+  it('checks the imports of a file at hop 3, and not those of a file at hop 4', () => {
+    const chain = {
       ...SHARED,
-      'sub/CLAUDE.md': '@~/x.md\n',
-      'AGENTS.md': '@~/x.md\n',
+      'a.md': '@b.md\n',
+      'b.md': '@c.md\n',
+      'c.md': '@d.md\n',
+      'd.md': '@~/x.md\n',
     }
-    expect(lint('@sub/CLAUDE.md @AGENTS.md\n', 'CLAUDE.md', own)).toEqual([])
+    // The import in d.md is at hop 5, and Claude Code does not load it.
+    expect(lint('@a.md\n', 'CLAUDE.md', chain)).toEqual([])
+    // The same import in c.md is at hop 4.
+    expect(ids(lint('@a.md\n', 'CLAUDE.md', { ...chain, 'c.md': '@~/x.md\n' }))).toEqual([
+      'externalInImported',
+    ])
+  })
+
+  it('reports at the root import that starts the chain, not at the first import', () => {
+    const chain = {
+      ...SHARED,
+      'a.md': '@b.md\n',
+      'b.md': '@c.md\n',
+      'c.md': '@~/x.md\n',
+      'd.md': 'text\n',
+    }
+    const messages = lint('@d.md\n@a.md\n', 'CLAUDE.md', chain)
+    expect(messages.map((m) => [m.messageId, m.line])).toEqual([['externalInImported', 2]])
   })
 
   it('ends a cycle at the root, and reports the file once', () => {
-    const cycle = { 'CLAUDE.md': '@docs/a.md\n', 'docs/a.md': '@../CLAUDE.md @~/x.md\n' }
+    const cycle = {
+      'CLAUDE.md': '@docs/a.md\n',
+      'docs/a.md': '@../CLAUDE.md @~/x.md\n',
+    }
     expect(ids(lint('@docs/a.md\n', 'CLAUDE.md', cycle))).toEqual(['externalInImported'])
   })
 })

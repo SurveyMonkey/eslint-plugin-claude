@@ -32,6 +32,8 @@ describe(RULE, () => {
 
   it('stays silent on a rule file of 200 lines', () => {
     expect(lint(lines(200))).toEqual([])
+    // U+2028 and U+2029 do not end a line in Markdown.
+    expect(lint(`${lines(199)}a${String.fromCharCode(0x2028, 0x2029)}b\n`)).toEqual([])
     expect(lint('')).toEqual([])
   })
 
