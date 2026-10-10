@@ -50,12 +50,15 @@ import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
 import mcpDuplicateServerName from './rules/mcp-duplicate-server-name.ts'
 import mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
 import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
+import mcpHeadershelperCommitted from './rules/mcp-headershelper-committed.ts'
 import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
+import mcpHeadershelperPath from './rules/mcp-headershelper-path.ts'
 import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
 import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
 import mcpJsonLocation from './rules/mcp-json-location.ts'
 import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
 import mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
+import mcpNoSseTransport from './rules/mcp-no-sse-transport.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
 import mcpPluginToolNameScoped from './rules/mcp-plugin-tool-name-scoped.ts'
@@ -63,8 +66,11 @@ import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
 import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
 import mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
 import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
+import mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skills.ts'
+import mcpServerNameFormat from './rules/mcp-server-name-format.ts'
 import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
 import mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
+import mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
 import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
 import mcpToolNameFormat from './rules/mcp-tool-name-format.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
@@ -241,6 +247,12 @@ const modules = [
   mcpApprovalNamesExist,
   mcpApprovalConflict,
   mcpAllowDenyOverlap,
+  mcpHeadershelperCommitted,
+  mcpHeadershelperPath,
+  mcpNoSseTransport,
+  mcpServerNameAnthropicSkills,
+  mcpServerNameFormat,
+  mcpStdioRelativePath,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -382,6 +394,12 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-approval-names-exist': 'error',
   'mcp-approval-conflict': 'error',
   'mcp-allow-deny-overlap': 'error',
+  'mcp-headershelper-committed': 'warn',
+  'mcp-headershelper-path': 'warn',
+  'mcp-no-sse-transport': 'warn',
+  'mcp-server-name-anthropic-skills': 'warn',
+  'mcp-server-name-format': 'warn',
+  'mcp-stdio-relative-path': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
