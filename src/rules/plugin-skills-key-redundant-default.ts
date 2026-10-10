@@ -9,6 +9,22 @@ import { pathNodes, readPlugin } from '../plugin-manifest.ts'
 
 const name = 'plugin-skills-key-redundant-default' as const
 
+/** True when a `..` part of `text` goes above the folder where `text` starts. */
+function goesAbove(text: string): boolean {
+  let depth = 0
+  for (const part of text.split(/[\\/]/)) {
+    if (part === '..') {
+      depth -= 1
+    } else if (part !== '' && part !== '.') {
+      depth += 1
+    }
+    if (depth < 0) {
+      return true
+    }
+  }
+  return false
+}
+
 const rule: JSONRuleDefinition<{ MessageIds: 'redundant' }> = {
   meta: {
     type: 'suggestion',
@@ -31,7 +47,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'redundant' }> = {
         }
         const standard = path.join(plugin.root, 'skills')
         for (const entry of pathNodes(lastMember(node.body, 'skills')?.value)) {
-          if (path.resolve(plugin.root, entry.value) === standard) {
+          // A path that is absolute, or that goes above the plugin root at some part, can leave
+          // the plugin and come back. Claude Code rejects such a path, so it is not redundant.
+          const leaves = path.isAbsolute(entry.value) || goesAbove(entry.value)
+          if (!leaves && path.resolve(plugin.root, entry.value) === standard) {
             context.report({ node: entry, messageId: 'redundant', data: { entry: entry.value } })
           }
         }

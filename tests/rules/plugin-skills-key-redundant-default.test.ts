@@ -1,6 +1,7 @@
 // The manifest key `skills` adds to the default `skills/` scan (manifest reference, "How each key
 // combines with its default location"). An entry that names `skills/` again adds nothing. The rule
 // reads the spelling of each entry. The files glob is in tests/configs.test.ts.
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
@@ -85,6 +86,15 @@ describe(`${RULE} (silent)`, () => {
     ['an array with a non-string entry', [3, { a: './skills' }]],
   ])('stays silent for %s', (_title, skills) => {
     expect(run(skills)).toEqual([])
+  })
+
+  check.each([
+    ['a path that leaves the plugin and comes back', () => '../p/skills'],
+    ['the absolute path of skills/', (dir: string) => path.join(dir, 'skills')],
+  ])('stays silent for %s', (_title, entry) => {
+    const { dir } = pluginTree({ name: 'p' }, {}, 'plugins/p/')
+    const code = JSON.stringify({ name: 'p', skills: entry(dir) })
+    expect(lintPlugin(RULE, dir, code)).toEqual([])
   })
 
   check('stays silent for a skills key in another object', () => {
