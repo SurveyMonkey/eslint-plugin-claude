@@ -109,7 +109,8 @@ export function stringOf(node: HObject, key: string): string | undefined {
   return value?.kind === 'string' ? value.value : undefined
 }
 
-function fromJson(node: ValueNode): HNode {
+/** The tree for a JSON value. */
+export function fromJson(node: ValueNode): HNode {
   switch (node.type) {
     case 'Object':
       return {
@@ -242,10 +243,21 @@ export function hooksListener(
   return listener as unknown as Rule.RuleListener
 }
 
-/** The handlers of the source, in file order. A value of the wrong nesting adds none:
- *  an event whose value is not an array, a group that is not an object or that has no
- *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
-export function handlersOf(source: HookSource): HookHandler[] {
+/** A matcher group in its place: the event and the group object. `matcher` is the `matcher` of the
+ *  group when it is a string, with the location of the value. `handlers` is the inner `hooks`
+ *  array when it is an array, with the objects in it. */
+export interface HookGroup {
+  source: HookSource
+  event: string
+  group: HObject
+  matcher: { value: string; loc: Loc } | undefined
+  handlers: HObject[]
+}
+
+/** The matcher groups of the source, in file order. A value of the wrong nesting adds none: an
+ *  event whose value is not an array, and a group that is not an object. A group that has no
+ *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. */
+export function groupsOf(source: HookSource): HookGroup[] {
   const { hooks } = source
   if (hooks?.kind !== 'object') {
     return []
@@ -258,14 +270,30 @@ export function handlersOf(source: HookSource): HookHandler[] {
       if (group.kind !== 'object') {
         return []
       }
-      const handlers = memberOf(group, 'hooks')?.value
-      if (handlers?.kind !== 'array') {
-        return []
-      }
-      const matcher = stringOf(group, 'matcher')
-      return handlers.items.flatMap((handler) =>
-        handler.kind === 'object' ? [{ source, event, matcher, handler }] : [],
-      )
+      const inner = memberOf(group, 'hooks')?.value
+      const matcher = memberOf(group, 'matcher')?.value
+      return [
+        {
+          source,
+          event,
+          group,
+          matcher:
+            matcher?.kind === 'string' ? { value: matcher.value, loc: matcher.loc } : undefined,
+          handlers:
+            inner?.kind === 'array'
+              ? inner.items.filter((item): item is HObject => item.kind === 'object')
+              : [],
+        },
+      ]
     })
   })
+}
+
+/** The handlers of the source, in file order. A value of the wrong nesting adds none:
+ *  an event whose value is not an array, a group that is not an object or that has no
+ *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
+export function handlersOf(source: HookSource): HookHandler[] {
+  return groupsOf(source).flatMap(({ event, matcher, handlers }) =>
+    handlers.map((handler) => ({ source, event, matcher: matcher?.value, handler })),
+  )
 }
