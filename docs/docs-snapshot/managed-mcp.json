@@ -1,0 +1,138 @@
+{
+  "url": "https://code.claude.com/docs/en/managed-mcp",
+  "hash": "45a53673fa9e07f69610a79437bb4c0cc477090311097772bf740c0e7dbbb6ad",
+  "blocks": [
+    {
+      "id": "control-mcp-server-access-for-your-organization",
+      "hash": "8b681a94556c5826cb88cfa15f46c4f03ea707d425f3cb397f59750c0a497bd5"
+    },
+    {
+      "id": "choose-a-pattern",
+      "hash": "a93e94327b70579268b642d9d3127021296085ed585c0f3e91d3be280e7ee00b"
+    },
+    {
+      "id": "exclusive-control-with-managed-mcp-json",
+      "hash": "ac2d72806f3c6b13d020a3db13ccb7826116286f75e6878baffe8e451b62d7ee"
+    },
+    {
+      "id": "deploy-managed-mcp-json",
+      "hash": "69d9fe59b8186fd22ef47148b8aa7a7c85c99d25d779c7fe9d7d6ccff77009cf"
+    },
+    {
+      "id": "authenticate-with-per-user-credentials",
+      "hash": "c8f77058987dd077575b7734a3e36ac3c05787a68ba4eec5a3cc47559aa80697"
+    },
+    {
+      "id": "servers-passed-with---mcp-config-or---strict-mcp-config",
+      "hash": "bfaf8c5d4433ab2915e3254fb42168a7704fbc6e9e0dee307e117d3bc0e96517"
+    },
+    {
+      "id": "how-allowlists-and-denylists-apply-to-the-managed-set",
+      "hash": "74b6eba8a45683de99c6daf6db2032f488c2a842ed5f113feb52e6988e96d41f"
+    },
+    {
+      "id": "validate-the-configuration",
+      "hash": "46e32a6b5fcf773f9678a0cf8e2eaae8ccd87281004715ce091f71e44869f9bb"
+    },
+    {
+      "id": "disable-mcp-entirely",
+      "hash": "42b0ab22b0c6fea745c44350765c16ac84c980d29ae31f420594a2d480209bb5"
+    },
+    {
+      "id": "allow-claude-ai-connectors-alongside-the-managed-set",
+      "hash": "cc3a998b7fde83bc47efb5f51731949f79c218eb742755a00e4817b3a361a6a9"
+    },
+    {
+      "id": "allow-claude-in-chrome-alongside-the-managed-set",
+      "hash": "27874af43bdf3578d319a3c027604dc2221676dcb59935177c491b5dea55486d"
+    },
+    {
+      "id": "provide-servers-through-managed-settings",
+      "hash": "20be94a7ff43e277e4b14a0153c69041bf76347410a5ac199d77000e3e4314bf"
+    },
+    {
+      "id": "what-an-entry-can-contain",
+      "hash": "e5b712c2002f398d3c0c2ff68af5367aed555d07cd9759d7c737d5aa6d236d79"
+    },
+    {
+      "id": "how-provided-servers-load",
+      "hash": "4415ba46073ae21b4766f22ae9fe0705ca035f3406da5b3dd7c8b36a542153d1"
+    },
+    {
+      "id": "what-users-can-see-and-change",
+      "hash": "ecc028fc77a03089d36b01cebff86772de89be42bfdf9e69c8bf9d1e10cf32f0"
+    },
+    {
+      "id": "where-managedmcpservers-applies",
+      "hash": "166c1e3b50abeeb50b72f8228703aecc83f035036a92fa7f635eab19056848ef"
+    },
+    {
+      "id": "when-provided-servers-connect",
+      "hash": "bebc883f27ece1f4471094daf047cfcb95fe4d77f7b0d9cb0758844b2112e490"
+    },
+    {
+      "id": "policy-based-control-with-allowlists-and-denylists",
+      "hash": "648980ccfb31aae117ad362729596b33b36248344fbd86d1c57324eaf6a991c8"
+    },
+    {
+      "id": "match-servers-by-url-command-or-name",
+      "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c"
+    },
+    {
+      "id": "how-servername-entries-match",
+      "hash": "5ee30752e3cdc17b0b7efee043509e138766c2fc917eb60dadd1d7a3aa75fdb6"
+    },
+    {
+      "id": "how-servercommand-entries-match",
+      "hash": "e5888ae62f3566c069e288755df8ae20f36ce7820543d7f72f3e9de05ac00275"
+    },
+    {
+      "id": "how-serverurl-entries-match",
+      "hash": "f9c4088b626a08227855eaf229527585646372ee75f76dd69d828ad5260a3b4a"
+    },
+    {
+      "id": "how-policy-entries-expand",
+      "hash": "06f370f066111673b25f981f174fc4232cf2f69e5e7c45a2cfe07222146fd1ca"
+    },
+    {
+      "id": "how-a-server-is-evaluated",
+      "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb"
+    },
+    {
+      "id": "servers-that-skip-the-allowlist-check",
+      "hash": "a657f99dc10f070e490a1cad4aa4520c4a36895aea8c700fd179f2e535200d06"
+    },
+    {
+      "id": "example-configuration",
+      "hash": "98bf92d06d77f89d36abc68e4d6697ae4b6f00b8ef96fff67c5080ddf51f2fc8"
+    },
+    {
+      "id": "restrict-the-allowlist-to-managed-settings-only",
+      "hash": "40d7714f510c071e7d11d43e5688a53fe66d807a5b7e637131d033c246d2cb89"
+    },
+    {
+      "id": "how-restrictions-appear-to-users",
+      "hash": "4ceefa8f5c58fbcf666d1af51a1b979ceb873cb40f3ac2a559a6dce6acf4f4b0"
+    },
+    {
+      "id": "monitor-mcp-usage",
+      "hash": "dcfa080de0d4d42aae69d47e0e4db975b19e8c20b17a68eca8a8770a8e6e51c5"
+    },
+    {
+      "id": "configuration-summary",
+      "hash": "d934c154eedfeb0eb425eb5b117adecf456b8c643e257c98c18c25673971559a"
+    },
+    {
+      "id": "related-resources",
+      "hash": "09ece822be8b9ca02663f45483a91e5581adec5ba78aae2aa4fe11937ae7f8f2"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Match servers by URL, command, or name",
+      "id": "match-servers-by-url-command-or-name",
+      "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c",
+      "text": "### Match servers by URL, command, or name\n\n`allowedMcpServers` and `deniedMcpServers` are lists of entries. Each entry is an object with a single key that identifies servers by their URL, their command, or their name:\n\n| Key | Matches | Use for |\n| :- | :- | :- |\n| `serverUrl` | A remote server URL, exact or with `*` wildcards | HTTP and SSE servers |\n| `serverCommand` | The exact command and arguments that start a stdio server | Stdio servers |\n| `serverName` | The user-assigned label. Exact match only; wildcards are not expanded | Either type, but see [How `serverName` entries match](#how-servername-entries-match) |\n\nLeaving `allowedMcpServers` unset is different from setting it to an empty array:\n\n| Setting | Unset (default) | Empty array `[]` | Populated |\n| :- | :- | :- | :- |\n| `allowedMcpServers` | All servers allowed | No servers allowed, apart from [those that skip the allowlist check](#servers-that-skip-the-allowlist-check) | Only matching servers allowed, apart from [those that skip the allowlist check](#servers-that-skip-the-allowlist-check) |\n| `deniedMcpServers` | No servers blocked | No servers blocked | Matching servers blocked |\n\nSee [Invalid entries in managed settings](/docs/en/managed-settings#invalid-entries-in-managed-settings) for what happens when an entry fails schema validation."
+    }
+  ]
+}
