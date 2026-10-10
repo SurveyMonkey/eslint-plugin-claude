@@ -1,4 +1,4 @@
-// `disableBypassPermissionsMode: "disable"` stops anyone from using bypassPermissions mode:
+// `disableBypassPermissionsMode: "disable"` blocks bypassPermissions mode:
 // https://code.claude.com/docs/en/settings-reference#permissionsdisablebypasspermissionsmode
 // In a managed source, the later file replaces a single value of an earlier file, so a sibling
 // can change either key:
@@ -159,12 +159,14 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(at(root, 'managed-settings.json')).toEqual([])
   })
 
-  it('does not read the siblings for a project file', () => {
+  it('does not read the siblings for a project or local file', () => {
     const root = repo({
       '.claude/managed-settings.json': '{"permissions": {"defaultMode": "plan"}}',
       '.claude/managed-settings.d/20-b.json': '{"permissions": {"defaultMode": "plan"}}',
     })
-    expect(at(root, '.claude/settings.json')).toEqual(['bypass'])
+    for (const file of ['.claude/settings.json', '.claude/settings.local.json']) {
+      expect(at(root, file), file).toEqual(['bypass'])
+    }
   })
 
   it('reports when a sibling has a permissions value that is not an object', () => {
