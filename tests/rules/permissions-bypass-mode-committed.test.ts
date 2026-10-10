@@ -42,9 +42,9 @@ describe(`${name}: the value`, () => {
     expect(message?.message).toContain('Manual')
   })
 
-  it('says that the value skips every prompt, and that deny rules still apply', () => {
+  it('says that the value skips the usual prompts, and that deny rules still apply', () => {
     const [message] = lint(mode(BYPASS), MANAGED)
-    expect(message?.message).toContain('without a prompt')
+    expect(message?.message).toContain('without the usual prompts')
     expect(message?.message).toContain('Deny rules')
   })
 
@@ -95,6 +95,18 @@ describe(`${name}: a lock in the same file`, () => {
       const code = mode(BYPASS, { disableBypassPermissionsMode: 'disable' })
       expect(ids(code, file), file).toEqual([])
     }
+  })
+
+  it('is silent in a managed file when the lock has another value: Claude Code reads "disable"', () => {
+    for (const file of [MANAGED, DROP_IN]) {
+      for (const lock of [true, 'Disable', 'off']) {
+        expect(ids(mode(BYPASS, { disableBypassPermissionsMode: lock }), file), file).toEqual([])
+      }
+    }
+  })
+
+  it('reports in a managed file when the lock is null', () => {
+    expect(ids(mode(BYPASS, { disableBypassPermissionsMode: null }), MANAGED)).toEqual(['managed'])
   })
 
   it('reports when the lock is another value, null or unset', () => {
