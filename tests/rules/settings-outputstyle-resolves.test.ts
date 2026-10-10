@@ -220,7 +220,7 @@ describe(RULE, () => {
     })
   })
 
-  // A read that fails with `EACCES` is not a missing file. The rule cannot see what it cannot
+  // A read that fails with `EACCES` is not a file that is absent. The rule cannot see what it cannot
   // read, so it makes no report that rests on it.
   describe.skipIf(chmodCannotBlock)('a path that the rule cannot read', () => {
     it('stays silent for a styles directory that it cannot read, and reports when it can', () => {

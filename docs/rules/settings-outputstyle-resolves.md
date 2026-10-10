@@ -57,8 +57,9 @@ policy is not in the repository. Name such a style in the option `allow`.
 
 ### What the rule does not check
 
-- A managed file. A managed policy can name a style from any source, so the rule cannot show
-  that a style is absent.
+- A managed file. The row for this rule names no managed file. A managed file applies to every
+  project on a machine, so the project styles that it can name are not in the repository that
+  holds the file. The rule cannot show that a style is absent.
 - A value that is not a string. `settings-schema` reports it.
 - The frontmatter of a style file. The `output-style-frontmatter-*` rules check it.
 
