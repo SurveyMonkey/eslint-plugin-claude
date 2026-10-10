@@ -96,6 +96,15 @@ jsonTester.run('settings-model-pin-version (valid)', rule, {
       code: settings({ env: { CLAUDE_CODE_USE_BEDROCK: 1 }, availableModels: ['claude-opus-4-8'] }),
       filename: managed,
     },
+    // The suffix of an entry does not hide its override.
+    {
+      code: settings({
+        env: bedrock,
+        availableModels: ['claude-opus-4-8[1m]'],
+        modelOverrides: { 'claude-opus-4-8': 'arn:aws:bedrock:us-east-2:123456789012:x' },
+      }),
+      filename: managed,
+    },
     // An entry that is no string, or a list that is no array.
     { code: settings({ env: bedrock, availableModels: [7, null] }), filename: managed },
     { code: settings({ env: bedrock, availableModels: 'claude-opus-4-8' }), filename: managed },

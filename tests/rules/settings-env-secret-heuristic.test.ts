@@ -39,6 +39,10 @@ jsonTester.run('settings-env-secret-heuristic (valid)', rule, {
       }),
       filename: project,
     },
+    // The header variable is skipped by name: its value has the shape of a credential here.
+    { code: env({ ANTHROPIC_CUSTOM_HEADERS: SECRET }), filename: project },
+    // `mcp-env-client-secret` owns this variable.
+    { code: env({ MCP_CLIENT_SECRET: 'abc' }), filename: project },
     // A variable that holds the path to a key file, and not a key.
     {
       code: env({
@@ -80,7 +84,6 @@ jsonTester.run('settings-env-secret-heuristic (valid)', rule, {
       'NPM_TOKEN',
       'my_token',
       'ANTHROPIC_FOUNDRY_API_KEY',
-      'MCP_CLIENT_SECRET',
     ].map((key) => ({
       code: env({ [key]: 'abc' }),
       filename: project,

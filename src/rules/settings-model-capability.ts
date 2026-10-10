@@ -1,9 +1,9 @@
 // A model setting that its model does not support (docs/rules/settings-model-capability.md). A
 // heuristic, and `off` in `recommended`. The rule reads the model of the same file, and the
-// versions in `src/data/models.ts`. It judges a full model ID. It judges an alias only for the
-// Anthropic API, and only when the file sets no provider and does not pin the alias, because an
-// alias resolves to another model on another provider. A model that the file does not set is
-// the default model of the account, and the rule cannot see it.
+// versions in `src/data/models.ts`. It judges a full model ID. It judges an alias in one case
+// only: the file sets no provider and does not pin the alias. On another provider, an alias
+// resolves to another model. A model that the file does not set is the default model of the
+// account. The rule cannot see it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
   ALIAS_FAMILIES,

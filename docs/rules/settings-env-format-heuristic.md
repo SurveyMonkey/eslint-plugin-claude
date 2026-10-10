@@ -19,7 +19,7 @@ Write the MCP and PowerShell `env` variables in the form that the docs give.
 | `strict` | `warn` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. The docs give a unit and a default for each
-variable, and no rule for other spellings. `strict` turns it on at `warn`.
+variable, and state the form less firmly than for other variables. `strict` turns it on at `warn`.
 
 ## Rule details
 
@@ -27,14 +27,17 @@ The rule checks six variables of `env`. The report is on the value.
 
 | Variable | Form |
 |----------|------|
-| `MAX_MCP_OUTPUT_TOKENS` | A positive whole number in plain digits[^output] |
-| `MCP_TIMEOUT` | A whole number of milliseconds in plain digits[^vars] |
-| `MCP_TOOL_TIMEOUT` | A whole number of milliseconds in plain digits[^vars] |
-| `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT` | A whole number of milliseconds in plain digits. `0` turns the check off[^vars] |
-| `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` | A whole number of milliseconds in plain digits. `0` turns it off[^vars] |
+| `MAX_MCP_OUTPUT_TOKENS` | A positive whole number[^output][^vars] |
+| `MCP_TIMEOUT` | A whole number of milliseconds[^vars] |
+| `MCP_TOOL_TIMEOUT` | A whole number of milliseconds[^vars] |
+| `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT` | A whole number of milliseconds. `0` turns the check off[^vars] |
+| `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` | A whole number of milliseconds. `0` turns it off[^vars] |
 | `CLAUDE_CODE_USE_POWERSHELL_TOOL` | `0` or `1`[^powershell] |
 
-A value such as `30s`, `1.5`, `-1`, `1e5` or `25_000` gets a report. So does a value with a space.
+A value such as `30s`, `1.5`, `-1` or `1e-3` gets a report. So does a value with a space. The
+docs say that a numeric variable accepts a scientific spelling such as `2e3` and a spelling with
+digit separators such as `64_000`, unless its row says plain digits only. These rows do not say
+that, so these spellings pass.[^vars]
 
 The rule makes no report in these cases:
 

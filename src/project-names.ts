@@ -37,8 +37,9 @@ function isUnseen(entry: string, bound: string): boolean {
 
 /** `start` and each directory above it, up to the real path `top`. The walk goes up the path as
  *  given. A directory counts when its real path is at or below `top`. A directory with a real
- *  path out of `top` is not in the chain, and `skipped` is true. The walk stops at `top`, so no
- *  call reaches a path above the repository. It also stops at the root of the file system. */
+ *  path out of `top` is not in the chain, and `skipped` is true. The walk stops at `top`. When
+ *  the path as given leaves `top` by a link, the walk goes on up to the root of the file system.
+ *  Each step only resolves a path, and reads no file. */
 function ancestors(start: string, top: string): { chain: string[]; skipped: boolean } {
   const chain: string[] = []
   let skipped = false
@@ -111,10 +112,10 @@ export function agentNames(claudeDir: string): Names {
   })
 }
 
-/** The names of the skills and commands in the project and above it. A skill folder of
- *  `.claude/skills/` has two names: the folder name, and the `name` field of its `SKILL.md`. A
- *  command file of `.claude/commands/` has its file name. A file in a subfolder has a name with a
- *  colon, which the caller does not look up. */
+/** The names of the skills and commands in the project and above it. Each entry of
+ *  `.claude/skills/` has its own name, a plain file included. A skill folder also has the `name`
+ *  field of its `SKILL.md`. A command file of `.claude/commands/` has its file name. A file in a
+ *  subfolder of `commands/` gives no name, as the caller does not look up a name with a colon. */
 export function skillNames(claudeDir: string): Names {
   return collect(claudeDir, (claude, bound, found) => {
     const skills = path.join(claude, 'skills')
@@ -127,7 +128,14 @@ export function skillNames(claudeDir: string): Names {
         continue
       }
       found.names.push(entry.name)
-      const given = givenName(path.join(folder, 'SKILL.md'), found)
+      const file = path.join(folder, 'SKILL.md')
+      // A `SKILL.md` that is a link out of the repository, or a link with no target, can hold a
+      // name that the rule cannot see.
+      if (isUnseen(file, bound)) {
+        found.unseen = true
+        continue
+      }
+      const given = givenName(file, found)
       if (given !== undefined) {
         found.names.push(given)
       }

@@ -234,6 +234,7 @@ describe(RULE, () => {
     it('a file in the skills directory that is not a folder with a SKILL.md, by name only', () => {
       const dir = tree({ [`${SKILLS}/notes.txt`]: 'x\n' })
       expect(ids(dir, settings({ other: 'off' }))).toEqual(['unknown'])
+      expect(ids(dir, settings({ 'notes.txt': 'off' }))).toEqual([])
     })
 
     it('a skill of another project, and a skill below the project', () => {
@@ -344,6 +345,19 @@ describe(RULE, () => {
         expect(ids(dir, settings({ nothing: 'off' }))).toEqual([])
       },
     )
+
+    it.skipIf(noLinks)('stays silent for a SKILL.md that is a link out of the repository', () => {
+      const outside = tree({ 'SKILL.md': skill('name: far') }, false)
+      const dir = tree({ [`${SKILLS}/near/placeholder.txt`]: 'x\n' })
+      link(dir, `${SKILLS}/near/SKILL.md`, path.join(outside, 'SKILL.md'))
+      expect(ids(dir, settings({ other: 'off' }))).toEqual([])
+    })
+
+    it.skipIf(noLinks)('stays silent for a SKILL.md that is a dangling link', () => {
+      const dir = tree({ [`${SKILLS}/near/placeholder.txt`]: 'x\n' })
+      link(dir, `${SKILLS}/near/SKILL.md`, 'missing-file')
+      expect(ids(dir, settings({ other: 'off' }))).toEqual([])
+    })
 
     it.skipIf(noLinks)('stays silent for a skill folder that is a dangling link', () => {
       const dir = tree({ [`${SKILLS}/near/SKILL.md`]: skill() })
