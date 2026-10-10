@@ -1,8 +1,8 @@
 // A tool reference that starts with `mcp` and is not in the `mcp__<server>` form
 // (docs/rules/mcp-tool-name-format.md). An MCP tool is `mcp__<server>__<tool>`, and a rule can name
-// the server alone as `mcp__<server>`. A name such as `mcp_server_tool` matches no tool.
+// the server alone as `mcp__<server>`. A name such as `mcp_server_tool` is not one of these forms.
 // `permissions-unknown-tool` reports a name that has no `_` and no `*`, such as `mcp-server`.
-// `permissions-tool-name-glob` reports a glob. So this rule reports the rest.
+// `permissions-tool-name-glob` owns each name with a `*`. So this rule reports the rest.
 import type { Rule } from 'eslint'
 import { MCP_PREFIX, MCP_SEPARATOR } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -14,11 +14,11 @@ const name = 'mcp-tool-name-format' as const
 
 /** True when the tool name `tool` is an MCP reference that this rule reports. */
 function isFault(tool: string): boolean {
-  if (!tool.startsWith('mcp')) {
+  if (!tool.startsWith('mcp') || tool.includes('*')) {
     return false
   }
   if (!tool.startsWith(MCP_PREFIX)) {
-    return tool.includes('_') && !tool.includes('*')
+    return tool.includes('_')
   }
   // `mcp__` and `mcp____<tool>` have no server name.
   const rest = tool.slice(MCP_PREFIX.length)
@@ -35,7 +35,7 @@ const rule: Rule.RuleModule = {
     schema: [],
     messages: {
       format:
-        'The tool name "{{tool}}" matches no tool. An MCP tool reference is "mcp__<server>" or "mcp__<server>__<tool>".',
+        'The tool name "{{tool}}" is not an MCP tool form. Use "mcp__<server>" or "mcp__<server>__<tool>".',
     },
   },
   create(context) {

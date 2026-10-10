@@ -43,7 +43,7 @@ jsonTester.run('mcp-tool-name-format (valid)', rule, {
     // `permissions-tool-name-glob` owns a glob.
     {
       name: 'a glob',
-      code: allow('mcp*', 'mcp_*', 'mcp_a_*', '*mcp_a'),
+      code: allow('mcp*', 'mcp_*', 'mcp_a_*', '*mcp_a', 'mcp____*', 'mcp____x*'),
       filename: project,
     },
     // A rule that does not parse is for `permissions-rule-syntax`.
@@ -96,6 +96,15 @@ jsonTester.run('mcp-tool-name-format (invalid)', rule, {
       code: allow('mcp____tool'),
       filename: project,
       errors: [{ messageId: 'format', data: { tool: 'mcp____tool' } }],
+    },
+    {
+      name: 'a first part that is not mcp, with an underscore later',
+      code: allow('mcp-server_tool', 'mcpserver_tool'),
+      filename: project,
+      errors: [
+        { messageId: 'format', data: { tool: 'mcp-server_tool' } },
+        { messageId: 'format', data: { tool: 'mcpserver_tool' } },
+      ],
     },
     {
       name: 'a specifier is not part of the tool name',
@@ -179,7 +188,7 @@ jsonTester.run('mcp-tool-name-format (message text)', rule, {
       errors: [
         {
           message:
-            'The tool name "mcp_server_tool" matches no tool. An MCP tool reference is "mcp__<server>" or "mcp__<server>__<tool>".',
+            'The tool name "mcp_server_tool" is not an MCP tool form. Use "mcp__<server>" or "mcp__<server>__<tool>".',
         },
       ],
     },

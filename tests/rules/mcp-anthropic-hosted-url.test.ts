@@ -85,6 +85,12 @@ jsonTester.run('mcp-anthropic-hosted-url (valid)', rule, {
       code: at('https://gmail.mcp.claude.com/mcp'),
       filename: '.claude/.mcp.json',
     },
+    // A project file may not omit the wrapper.
+    {
+      name: 'no wrapper in a project file',
+      code: JSON.stringify({ a: { type: 'http', url: 'https://gmail.mcp.claude.com/mcp' } }),
+      filename: project,
+    },
     { name: 'plugin, another host', code: at('https://x.test/mcp'), filename: pluginMcp },
   ],
   invalid: [],
@@ -143,6 +149,15 @@ jsonTester.run('mcp-anthropic-hosted-url (invalid)', rule, {
       filename: project,
       errors: [{ messageId: 'hosted' }],
     },
+    // A reference after the host does not change the host.
+    ...[`https://gmail.mcp.claude.com/\${PATH}`, `https://gmail.mcp.claude.com/?x=\${Y}`].map(
+      (url) => ({
+        name: `a reference in the path or query ${url}`,
+        code: at(url),
+        filename: project,
+        errors: [{ messageId: 'hosted' as const }],
+      }),
+    ),
     {
       name: 'no path',
       code: at('https://gmail.mcp.claude.com'),
