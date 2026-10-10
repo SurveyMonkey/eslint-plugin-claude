@@ -329,6 +329,12 @@
   ],
   "sources": [
     {
+      "heading": "Option 1: Add a remote HTTP server",
+      "id": "option-1-add-a-remote-http-server",
+      "hash": "8621821eb444c49ade0a15684e8e40fe711933cb83a6c80477f0a109efc27401",
+      "text": "### Option 1: Add a remote HTTP server\n\nHTTP servers are the recommended option for connecting to remote MCP servers. This is the most widely supported transport for cloud-based services.\n\n```bash theme={null}\n# Basic syntax\nclaude mcp add --transport http <name> <url>\n\n# Real example: Connect to Notion\nclaude mcp add --transport http notion https://mcp.notion.com/mcp\n\n# Example with Bearer token\nclaude mcp add --transport http secure-api https://api.example.com/mcp \\\n  --header \"Authorization: Bearer your-token\"\n```\n\nWhen configuring MCP servers via JSON in `.mcp.json`, `~/.claude.json`, or `claude mcp add-json`, the `type` field accepts `streamable-http` as an alias for `http`. The MCP specification uses the name `streamable-http` for this transport, so configurations copied from server documentation work without modification.\n\nA JSON entry that has a `url` but no `type` is a configuration error, because Claude Code reads an entry with no `type` as a stdio server. Claude Code skips that server and reports `MCP server \"<name>\" has a \"url\" but no \"type\"; add \"type\": \"http\" (or \"sse\" / \"ws\") to this entry`. Before v2.1.202, Claude Code reported this misconfiguration as `command: expected string, received undefined`.\n\nOnly an SDK host application, such as an [Agent SDK](/docs/en/agent-sdk/mcp) application or the [desktop app](/docs/en/desktop), can register an in-process `\"type\": \"sdk\"` server. Claude Code skips a `\"type\": \"sdk\"` entry in `.mcp.json`, `~/.claude.json`, or settings and reports `Skipped — MCP server \"<name>\" declares type \"sdk\", which only an SDK host application can register`.\n\nIn `--output-format stream-json` runs, Claude Code also reports a skipped `--mcp-config` entry in the `system/init` event's [`mcp_server_errors` field](/docs/en/headless#stream-responses), so scripts can detect that the server never loaded. This requires Claude Code v2.1.219 or later."
+    },
+    {
       "heading": "Configure tool search",
       "id": "configure-tool-search",
       "hash": "8ffdacb36d969ffd0191b805a239308fb10e8fbb702bb7dca0f473aa611ba17d",

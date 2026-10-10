@@ -94,6 +94,11 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
       "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 1: Add a remote HTTP server",
+      "hash": "8621821eb444c49ade0a15684e8e40fe711933cb83a6c80477f0a109efc27401"
     }
   ],
   "agent-memory-auto-memory-off": [
