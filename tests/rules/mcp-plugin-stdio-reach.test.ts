@@ -50,6 +50,12 @@ it('reports an inline server and a server of a declared file', () => {
   expect(ids(found)).toEqual(['stdio'])
   expect(found[0]).toMatchObject({ line: 1, column: 26 })
 })
+it('reports an inline server on its name, and each stdio server after a remote one', () => {
+  const found = manifest({ db: stdio })
+  expect(found[0]).toMatchObject({ line: 1, column: 27, endColumn: 31 })
+  const mixed = mapOf({ a: stdio, b: { type: 'http', url: 'https://x.test/mcp' }, c: stdio })
+  expect(ids(pluginFile(mixed))).toEqual(['stdio', 'stdio'])
+})
 it('leaves the .mcp.json at the plugin root to its own lint', () => {
   expect(ids(manifest({}, ON, { 'p/.mcp.json': mapOf({ db: stdio }) }))).toEqual([])
 })

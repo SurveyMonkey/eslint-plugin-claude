@@ -33,7 +33,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' }> = {
     },
   },
   create(context) {
-    // A plugin config gets its warning from `claude plugin validate`. A plugin manifest is one.
+    // `claude plugin validate` warns for a plugin config. `mcpFileKind` reads a `plugin.json` in
+    // `.claude-plugin/` as a project file, so the rule also checks the file name.
     if (
       mcpFileKind(context.filename) !== 'project' ||
       path.basename(context.filename) !== '.mcp.json'

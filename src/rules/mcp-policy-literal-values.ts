@@ -49,7 +49,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'variable' }> = {
               continue
             }
             const key = kind === 'url' ? 'serverUrl' : 'serverCommand'
-            // Claude Code expands each item of a command alone, so a reference does not span items.
+            // The docs state no expansion across items, so the rule checks each item alone.
             const reference = [plain[key]]
               .flat()
               .map((text) => REFERENCE.exec(String(text))?.[0])

@@ -38,7 +38,8 @@ The rule makes no report in these cases:
 - The host is on the machine: `localhost`, an address from `127.0.0.0/8`, or `[::1]`.
 - The `url` does not parse, or a `${` reference hides the scheme or the host. The rule does not
   know the host. A `${` in the port does not hide the host, so a report stays.
-- The server has no `type`. Claude Code reads it as a stdio server, which has no `url`.
+- The server has no `type`. Claude Code reads it as a stdio server. It skips a server that has a
+  `url` and no `type`, so the URL is never used.
 
 Of two servers with one name, or two keys with one name, the last one counts, as `JSON.parse`
 keeps it. The rule skips the paths under `.claude/`, which `mcp-json-location` reports.

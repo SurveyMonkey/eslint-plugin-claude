@@ -56,8 +56,9 @@ would then be wrong about what the name admits. So the rule makes no allowlist r
 reports a denylist name, because that message does not depend on the siblings.
 
 Of two lists with one name, or two keys with one name, the last one counts, as `JSON.parse` keeps
-it. The rule reads the managed files. Project and user settings add entries to the same lists at
-run time, and the rule does not read them.
+it. The rule reads the managed files. Project and user settings add entries to the same denylist
+at run time. They add entries to the allowlist too, unless `allowManagedMcpServersOnly` is `true`.
+The rule does not read them.
 
 Fail:
 
