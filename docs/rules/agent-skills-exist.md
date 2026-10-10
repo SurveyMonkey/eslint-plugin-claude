@@ -27,9 +27,14 @@ The docs say: "If a listed skill is missing or disabled, Claude Code skips it an
 the debug log". The warning is only in the debug log, so a misspelled name goes unseen.
 
 The rule reports a `skills` entry that matches no skill that it can see. The report is on the entry.
-The rule is a heuristic. These skills are not in the repository: skills in `~/.claude/skills/`,
-in managed settings, in an enabled plugin, and in a directory added with `--add-dir`. Name such a
-skill in the option `allow`.
+The rule is a heuristic. It cannot see these skills:
+
+- Skills in `~/.claude/skills/`.
+- Skills in managed settings.
+- Skills in an enabled plugin.
+- Skills in a directory added with `--add-dir`.
+
+Name such a skill in the option `allow`.
 
 An entry matches in these places:
 
@@ -39,7 +44,8 @@ An entry matches in these places:
   the file name, without `.md`, of a command file in `commands/`. The skills page says that a command
   file and a skill create the same command.[^where]
 - A plugin agent sees `skills/` and `commands/` of its plugin root. A plugin manifest that sets
-  `skills` or `commands` adds other directories, so the rule gives no report for that plugin.
+  `skills` adds other directories. One that sets `commands` replaces `commands/`. The rule gives no
+  report for that plugin in both cases.
 - A bundled skill. The commands reference marks each bundled skill.[^commands] A project does not
   define one, so the rule accepts the name.
 

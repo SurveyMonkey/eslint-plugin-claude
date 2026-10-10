@@ -80,9 +80,9 @@ export const BUILT_IN_AGENTS = [
 /** The bundled skills. Source: the rows that the commands reference marks as a bundled skill
  *  (https://code.claude.com/docs/en/commands#all-commands), checked on Claude Code 2.1.296 on
  *  2026-10-10. Review this list on or before 2027-04-10, the `stale_after` date of
- *  docs/rules/agent-skills-exist.md. A project does not define a bundled skill, so
- *  `agent-skills-exist` cannot find it on disk. The list holds `verify`. `agent-skills-preloadable`
- *  gives it no report. */
+ *  docs/rules/agent-skills-exist.md. A bundled skill has no
+ *  file on disk, so `agent-skills-exist` cannot find it there. A project can define a skill of the
+ *  same name, and then the rule finds that file. */
 export const BUNDLED_SKILLS = [
   'artifact-capabilities',
   'artifact-diagramming',

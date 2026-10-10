@@ -15,6 +15,7 @@ import {
   entriesOf,
   frontmatterOfFile,
   isInside,
+  missingOf,
   readManifest,
   realOf,
   repositoryRoot,
@@ -35,13 +36,14 @@ interface Skills {
 
 /** True when the rule can list the directory `dir`. A link that leads out of the repository, a
  *  link whose target is not there, and a path that cannot be resolved are a directory that the
- *  rule cannot see. The scan is then `unseen`. A directory that is not there has no entries. */
+ *  rule cannot see. This holds for a link in any part of the path, such as `.claude`. The scan is
+ *  then `unseen`. A directory that is not there has no entries. */
 function visible(dir: string, bound: string, found: Skills): boolean {
   const real = realOf(dir)
   if (
     typeof real === 'string'
       ? !isInside(real, bound)
-      : real === UNREADABLE || danglingOf(dir) === UNREADABLE
+      : real === UNREADABLE || missingOf(dir, bound) === UNREADABLE
   ) {
     found.unseen = true
     return false
@@ -89,8 +91,9 @@ function skillsIn(dir: string, commands: string, bound: string, found: Skills): 
 
 /** The skills that an agent in `scope` can preload from the repository. A local agent sees the
  *  `.claude/` directory of each project folder. A plugin agent sees its own plugin. The names are
- *  null when the rule cannot know them: a plugin manifest that sets `skills` or `commands` adds
- *  directories, and a manifest that the rule cannot read can set them. */
+ *  null when the rule cannot know them: a plugin manifest that sets `skills` adds directories, and
+ *  one that sets `commands` replaces `commands/`. A manifest that the rule cannot read can set
+ *  either key. */
 function skillsOf(scope: AgentFile, bound: string): Skills | null {
   const found: Skills = { names: [], unseen: false }
   if (scope.plugin) {
