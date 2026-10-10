@@ -27,12 +27,12 @@ managed source. A key in any other file is not seen. The aliases and the ID form
 | Check | Files | The docs say |
 |-------|-------|--------------|
 | `fallbackModel` has more than 3 distinct entries | every file | "Claude Code caps chains at three models after duplicate removal and ignores extra entries."[^chains] |
-| `availableModels` is `[]` and the file names a model | every file | "With `availableModels: []`, named model selections are blocked and `enforceAvailableModels` has no effect."[^behavior] |
+| `availableModels` is `[]` and the file names a model | managed files | "With `availableModels: []`, named model selections are blocked and `enforceAvailableModels` has no effect."[^behavior] |
 | `enforceAvailableModels: true` with no non-empty `availableModels` | managed files | "This key has no effect when `availableModels` is unset or empty."[^enforce] |
 | An `availableModels` family alias with a same-family ID | every file | "an entry naming a specific model in a family ... disables that family's wildcard entry: `["sonnet", "claude-sonnet-4-5"]` allows only Sonnet 4.5 versions, not every Sonnet model."[^merge] |
 | `best`, `opusplan` or `default` in `deniedModels` | managed files | "`best`, `opusplan`, and `default` entries are ignored"[^denied] |
 | A `modelOverrides` key that is no Anthropic model ID | every file | "Keys must be Anthropic model IDs ... Unknown keys are ignored."[^overrides] |
-| `env.ANTHROPIC_CUSTOM_MODEL_OPTION` that `availableModels` omits | every file | "include the custom model ID in the allowlist as well. Otherwise Claude Code filters the custom entry from the picker and rejects a `--model` selection of it"[^custom] |
+| `env.ANTHROPIC_CUSTOM_MODEL_OPTION` that `availableModels` omits | managed files | "include the custom model ID in the allowlist as well. Otherwise Claude Code filters the custom entry from the picker and rejects a `--model` selection of it"[^custom] |
 
 The report is on the entry, the key or the value that Claude Code does not act on. A `null`
 value removes a key, so the rule takes it as no key. For two keys of one name, the rule reads the
@@ -53,38 +53,41 @@ Claude Code acts at that number.
 ### An empty `availableModels`
 
 The rule reports `availableModels: []` only when the same file sets `model`, `advisorModel` or a
-`fallbackModel` entry, none of them `default`. Such a key names a model that the empty list blocks.
-An empty list alone can be a lock-down on purpose, so it gets no report.
+`fallbackModel` entry, none of them `default` or empty. Such a key names a model that the empty
+list blocks. An empty list alone can be a lock-down on purpose, so it gets no report. The rule
+checks a managed file only. Lists of the user, project and local files are "concatenated and
+deduplicated",[^merge] so a project file can pair with a list in the user file.
 
 ### A family alias and a same-family ID
 
 `["sonnet", "claude-sonnet-4-5"]` allows Sonnet 4.5 and not the other Sonnet models.[^merge] The
 rule reports the alias entry. The ID can be a dated ID, an ID with `[1m]`, or a provider ID that
-embeds a `claude-` name.[^custom] A provider ID with another form, such as an ARN, has no family
-for the rule.
+embeds a `claude-` name.[^custom] An ID with no `claude-` name, such as an ARN of an inference
+profile, has no family for the rule.
 
 ### Managed keys
 
 `deniedModels` is a managed-only key. Claude Code reads `enforceAvailableModels` from the managed
 source when an organization deploys managed settings. The docs say to deploy `availableModels` and
 `enforceAvailableModels` together in the highest-ranked managed source.[^enforce-pair] So the rule
-checks these two keys in a managed file only. In a project or local file, a pair can use a list in
-a user file. The rule does not see that file. `settings-key-scope` reports `deniedModels` in a
+checks these two keys in a managed file only. A project or local file can pair with a list in a
+user file. The rule does not see that file. `settings-key-scope` reports `deniedModels` in a
 project file, so this rule makes no second report.
 
 A managed source is `managed-settings.json` and its drop-ins. Lists combine across the files.
 Three checks need the whole list: the empty list, `enforceAvailableModels` and the custom option.
-The rule reads the sibling files for them. It makes no report when a sibling holds an entry, or
-when it cannot read a sibling.
+The rule runs them in a managed file and reads the sibling files for them. It makes no report when
+a sibling holds an entry, or when it cannot read a sibling.
 
 ### The custom model option
 
 The rule reports the option when the file sets `availableModels` and no entry permits the option.
-An entry permits the option in four cases. It equals the option, is a version prefix of it, or is
-its family alias. The aliases `best`, `opusplan` and `default` permit every option. A version
-prefix must end at a segment: `claude-opus-5` permits `claude-opus-5-5` and not `claude-opus-55`.
-The `[1m]` suffix is removed from both sides.[^custom-match] The rule makes no report when a doubt
-remains.
+An entry permits the option when it equals the option, is a version prefix of it, or is its
+family alias. The aliases `best`, `opusplan` and `default` permit every option. The settings
+reference says that `claude-opus-5` also permits later versions that extend it, such as Opus 5.5.
+The rule reads "extend" as "add a segment": `claude-opus-5` permits `claude-opus-5-5` and not
+`claude-opus-55`. The `[1m]` suffix is removed from both sides.[^custom-match] The rule makes no
+report when a doubt remains.
 
 ### What the rule does not check
 

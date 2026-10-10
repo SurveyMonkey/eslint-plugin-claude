@@ -54,9 +54,12 @@ function stringEntries(value: ValueNode | undefined) {
   )
 }
 
-/** True when `value` names a model: a string other than `default`. */
+/** True when `text` names a model: it is not `default` and it is not empty. */
+const isNamed = (text: string) => text !== DEFAULT_VALUE && text !== ''
+
+/** True when `value` is a string that names a model. */
 function namesModel(value: ValueNode | undefined): boolean {
-  return value?.type === 'String' && value.value !== DEFAULT_VALUE
+  return value?.type === 'String' && isNamed(value.value)
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> = {
@@ -139,11 +142,18 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           }
         }
 
-        if (available?.type === 'Array' && available.elements.length === 0 && !listUnknown) {
+        // A list in the user file joins the lists of a project file, so only a managed source holds
+        // the whole list.
+        if (
+          isManaged &&
+          available?.type === 'Array' &&
+          available.elements.length === 0 &&
+          !listUnknown
+        ) {
           const keys = NAMING_KEYS.filter((key) => {
             const value = top(key)
             return value?.type === 'Array'
-              ? stringEntries(value).some(({ text }) => text !== DEFAULT_VALUE)
+              ? stringEntries(value).some(({ text }) => isNamed(text))
               : namesModel(value)
           })
           if (keys.length > 0) {
@@ -163,12 +173,16 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           enforce?.value.type === 'Boolean' &&
           enforce.value.value &&
           !listUnknown &&
-          !(available?.type === 'Array' && available.elements.length > 0)
+          // A value of another type is for `settings-schema`.
+          (available === undefined ||
+            available.type === 'Null' ||
+            (available.type === 'Array' && available.elements.length === 0))
         ) {
           context.report({ node: enforce.name, messageId: 'enforceNeedsList' })
         }
 
         for (const { text: alias, node: entry } of entries) {
+          // Only an alias has a family here. A provider ID that embeds a family is a specific entry.
           const family = FAMILY_ALIASES.includes(withoutSuffix(alias)) ? familyOf(alias) : undefined
           const specific = entries.find(
             ({ text }) => !isModelAlias(text) && family !== undefined && familyOf(text) === family,
@@ -204,6 +218,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
 
         const option = lastMember(top('env'), 'ANTHROPIC_CUSTOM_MODEL_OPTION')?.value
         if (
+          isManaged &&
           option?.type === 'String' &&
           option.value !== '' &&
           available?.type === 'Array' &&
@@ -220,14 +235,16 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
 }
 
 /** True when the allowlist entry `entry` permits the model `id`. The page says that an allowlist
- *  entry matches an alias, a version prefix, or the full ID. A version prefix also matches "later
- *  model IDs that extend it with another segment". A family alias covers the models of its family.
+ *  entry matches an alias, a version prefix, or the full ID. It also says that `claude-opus-5`
+ *  permits later versions that extend it, such as Opus 5.5. The rule reads "extend" as "add a
+ *  segment". A family alias covers the models of its family.
  *  The rule takes a doubt as a yes, so that it reports a certain fault only. The aliases `best`,
  *  `opusplan` and `default` have no one family, so they permit every model. */
 function allows(entry: string, id: string): boolean {
   const [from, model] = [withoutSuffix(entry), withoutSuffix(id)]
   if (isModelAlias(from)) {
     const family = familyOf(from)
+    // `best`, `opusplan` and `default` have no family, so they permit every model.
     return family === undefined || family === familyOf(model)
   }
   // The next character of the model must start another segment: `claude-opus-5` does not permit

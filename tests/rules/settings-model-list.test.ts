@@ -44,6 +44,13 @@ function lint(code: unknown, file = PROJECT, options: unknown[] = []) {
 const ids = (code: unknown, file = PROJECT, options: unknown[] = []) =>
   lint(code, file, options).map((message) => message.messageId)
 
+// The empty list and the custom option need the whole list. A project file can pair with a list
+// in the user file, so the tests of those two checks lint a managed file.
+const lintManaged = (code: unknown, file = MANAGED, options: unknown[] = []) =>
+  lint(code, file, options)
+const idsManaged = (code: unknown, file = MANAGED, options: unknown[] = []) =>
+  ids(code, file, options)
+
 describe(`${name}: fallbackModel`, () => {
   it('reports the fourth distinct entry, in every file', () => {
     for (const file of EVERY_FILE) {
@@ -97,6 +104,12 @@ describe(`${name}: fallbackModel`, () => {
     expect(ids({ fallbackModel: ['a', 'b', 'c', 'd'] }, PROJECT, [{ max: 3 }])).toEqual(['tooMany'])
   })
 
+  it('accepts a max of 1', () => {
+    expect(ids({ fallbackModel: ['a', 'b'] }, PROJECT, [{ max: 1 }])).toEqual([
+      'overConfiguredLimit',
+    ])
+  })
+
   it('refuses a max above 3 or below 1, or of another type', () => {
     for (const max of [4, 0, 1.5, '3']) {
       expect(() => lint({}, PROJECT, [{ max }]), String(max)).toThrow(
@@ -108,38 +121,55 @@ describe(`${name}: fallbackModel`, () => {
 })
 
 describe(`${name}: availableModels: []`, () => {
-  it('reports the empty list when the file names a model, in every file', () => {
-    for (const file of EVERY_FILE) {
-      expect(ids({ availableModels: [], model: 'opus' }, file), file).toEqual(['emptyList'])
-      expect(ids({ availableModels: [], fallbackModel: ['sonnet'] }, file), file).toEqual([
+  it('reports the empty list when the file names a model, in a managed file', () => {
+    for (const file of MANAGED_FILES) {
+      expect(idsManaged({ availableModels: [], model: 'opus' }, file), file).toEqual(['emptyList'])
+      expect(idsManaged({ availableModels: [], fallbackModel: ['sonnet'] }, file), file).toEqual([
         'emptyList',
       ])
-      expect(ids({ availableModels: [], advisorModel: 'opus' }, file), file).toEqual(['emptyList'])
+      expect(idsManaged({ availableModels: [], advisorModel: 'opus' }, file), file).toEqual([
+        'emptyList',
+      ])
     }
   })
 
   it('names each key that the empty list blocks, and reports on the list', () => {
     const text = '{\n  "model": "opus",\n  "advisorModel": "sonnet",\n  "availableModels": []\n}'
-    const [message] = lint(text)
+    const [message] = lintManaged(text)
     expect([message?.messageId, message?.line, message?.column]).toEqual(['emptyList', 4, 22])
     expect(message?.message).toContain('"model", "advisorModel"')
   })
 
+  it('does not count the empty string as a model name', () => {
+    expect(idsManaged({ availableModels: [], model: '' })).toEqual([])
+    expect(idsManaged({ availableModels: [], fallbackModel: [''] })).toEqual([])
+  })
+
   it('is silent for an empty list alone: a lock-down can be the intent', () => {
-    expect(ids({ availableModels: [] })).toEqual([])
-    expect(ids({ availableModels: [], model: 'default' })).toEqual([])
-    expect(ids({ availableModels: [], model: null })).toEqual([])
-    expect(ids({ availableModels: [], fallbackModel: ['default'] })).toEqual([])
-    expect(ids({ availableModels: [], fallbackModel: [] })).toEqual([])
-    expect(ids({ availableModels: [], fallbackModel: [1] })).toEqual([])
-    expect(ids({ availableModels: [], model: 3 })).toEqual([])
+    expect(idsManaged({ availableModels: [] })).toEqual([])
+    expect(idsManaged({ availableModels: [], model: 'default' })).toEqual([])
+    expect(idsManaged({ availableModels: [], model: null })).toEqual([])
+    expect(idsManaged({ availableModels: [], fallbackModel: ['default'] })).toEqual([])
+    expect(idsManaged({ availableModels: [], fallbackModel: [] })).toEqual([])
+    expect(idsManaged({ availableModels: [], fallbackModel: [1] })).toEqual([])
+    expect(idsManaged({ availableModels: [], model: 3 })).toEqual([])
   })
 
   it('is silent for a list with entries, or an unset or null list', () => {
-    expect(ids({ availableModels: ['opus'], model: 'opus' })).toEqual([])
-    expect(ids({ model: 'opus' })).toEqual([])
-    expect(ids({ availableModels: null, model: 'opus' })).toEqual([])
-    expect(ids({ availableModels: 'x', model: 'opus' })).toEqual([])
+    expect(idsManaged({ availableModels: ['opus'], model: 'opus' })).toEqual([])
+    expect(idsManaged({ model: 'opus' })).toEqual([])
+    expect(idsManaged({ availableModels: null, model: 'opus' })).toEqual([])
+    expect(idsManaged({ availableModels: 'x', model: 'opus' })).toEqual([])
+  })
+})
+
+describe(`${name}: the empty list and the custom option, in a project file`, () => {
+  it('is silent: the user file can hold the rest of the list', () => {
+    for (const file of PROJECT_FILES) {
+      expect(ids({ availableModels: [], model: 'opus' }, file), file).toEqual([])
+      const option = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'my-model' }, availableModels: ['a'] }
+      expect(ids(option, file), file).toEqual([])
+    }
   })
 })
 
@@ -312,56 +342,62 @@ describe(`${name}: modelOverrides`, () => {
 describe(`${name}: ANTHROPIC_CUSTOM_MODEL_OPTION`, () => {
   const custom = 'my-gateway/claude-opus-5-5'
 
-  it('reports a custom option that availableModels does not list, in every file', () => {
-    for (const file of EVERY_FILE) {
+  it('reports a custom option that availableModels does not list, in a managed file', () => {
+    for (const file of MANAGED_FILES) {
       const code = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: ['sonnet'] }
-      expect(ids(code, file), file).toEqual(['customOption'])
+      expect(idsManaged(code, file), file).toEqual(['customOption'])
     }
   })
 
   it('reports on the value, and names it', () => {
     const text =
       '{\n  "env": {\n    "ANTHROPIC_CUSTOM_MODEL_OPTION": "x"\n  },\n  "availableModels": ["sonnet"]\n}'
-    const [message] = lint(text)
+    const [message] = lintManaged(text)
     expect([message?.messageId, message?.line, message?.column]).toEqual(['customOption', 3, 38])
     expect(message?.message).toContain('"x"')
   })
 
   it('reports for an empty list, which blocks every named model', () => {
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: [] })).toEqual([
-      'customOption',
-    ])
+    expect(
+      idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: [] }),
+    ).toEqual(['customOption'])
   })
 
   it('is silent when an entry is the option, with or without [1m]', () => {
     for (const list of [[custom], [`${custom}[1m]`], ['sonnet', custom]]) {
       const code = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: list }
-      expect(ids(code), list.join()).toEqual([])
+      expect(idsManaged(code), list.join()).toEqual([])
     }
     const suffixed = {
       env: { ANTHROPIC_CUSTOM_MODEL_OPTION: `${custom}[1m]` },
       availableModels: [custom],
     }
-    expect(ids(suffixed)).toEqual([])
+    expect(idsManaged(suffixed)).toEqual([])
   })
 
   it('is silent when an entry covers the option as a version prefix or a family alias', () => {
     const option = 'claude-opus-5-5'
     expect(
-      ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option }, availableModels: ['claude-opus-5'] }),
+      idsManaged({
+        env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option },
+        availableModels: ['claude-opus-5'],
+      }),
     ).toEqual([])
     expect(
-      ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: ['opus'] }),
+      idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: ['opus'] }),
     ).toEqual([])
   })
 
   it('reports an entry that is no prefix of the option, and a prefix inside a segment', () => {
-    // The page: a version prefix matches "later model IDs that extend it with another segment".
+    // The settings reference: `claude-opus-5` permits later versions that extend it. The rule
+    // reads "extend" as "add a segment".
     const report = (option: string, entry: string) =>
-      ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option }, availableModels: [entry] })
+      idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option }, availableModels: [entry] })
     expect(report('claude-opus-5-5', 'claude-sonnet-4-5')).toEqual(['customOption'])
     expect(report('claude-opus-5-5', 'opus-5')).toEqual(['customOption'])
     expect(report('claude-opus-55', 'claude-opus-5')).toEqual(['customOption'])
+    expect(report('claude-opusx', 'claude-opus')).toEqual(['customOption'])
+    expect(report('claude-opusX', 'claude-opus')).toEqual(['customOption'])
     expect(report('claude-opus-5', 'claude-opus-5-5')).toEqual(['customOption'])
     expect(report('claude-opus-5-5', '')).toEqual(['customOption'])
     expect(report('claude-opus-5-5', 'haiku')).toEqual(['customOption'])
@@ -375,38 +411,48 @@ describe(`${name}: ANTHROPIC_CUSTOM_MODEL_OPTION`, () => {
         env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option },
         availableModels: ['claude-opus-5'],
       }
-      expect(ids(code), option).toEqual([])
+      expect(idsManaged(code), option).toEqual([])
     }
     const exact = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'claude-opus-5' } }
-    expect(ids({ ...exact, availableModels: ['claude-opus-5'] })).toEqual([])
+    expect(idsManaged({ ...exact, availableModels: ['claude-opus-5'] })).toEqual([])
+  })
+
+  it('is silent for best, opusplan and default beside an option with a family', () => {
+    for (const entry of ['best', 'opusplan', 'default']) {
+      const code = {
+        env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'claude-opus-5-5' },
+        availableModels: [entry],
+      }
+      expect(idsManaged(code), entry).toEqual([])
+    }
   })
 
   it('is silent for best, opusplan and default: they cover more than one family', () => {
     for (const entry of ['best', 'opusplan', 'default', 'best[1m]']) {
       const code = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'my-model' }, availableModels: [entry] }
-      expect(ids(code), entry).toEqual([])
+      expect(idsManaged(code), entry).toEqual([])
     }
   })
 
   it('is silent when availableModels is unset: the list can be in another file', () => {
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom } })).toEqual([])
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: null })).toEqual(
-      [],
-    )
+    expect(idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom } })).toEqual([])
     expect(
-      ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: 'sonnet' }),
+      idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: null }),
+    ).toEqual([])
+    expect(
+      idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: 'sonnet' }),
     ).toEqual([])
   })
 
   it('is silent for an unset, empty, null or non-string option, and a bad env', () => {
     const list = { availableModels: ['sonnet'] }
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: '' }, ...list })).toEqual([])
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: null }, ...list })).toEqual([])
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 3 }, ...list })).toEqual([])
-    expect(ids({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION_NAME: 'x' }, ...list })).toEqual([])
-    expect(ids({ env: {}, ...list })).toEqual([])
-    expect(ids({ env: [], ...list })).toEqual([])
-    expect(ids({ env: null, ...list })).toEqual([])
+    expect(idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: '' }, ...list })).toEqual([])
+    expect(idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: null }, ...list })).toEqual([])
+    expect(idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 3 }, ...list })).toEqual([])
+    expect(idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION_NAME: 'x' }, ...list })).toEqual([])
+    expect(idsManaged({ env: {}, ...list })).toEqual([])
+    expect(idsManaged({ env: [], ...list })).toEqual([])
+    expect(idsManaged({ env: null, ...list })).toEqual([])
   })
 
   it('ignores an entry of availableModels that is no string', () => {
@@ -414,9 +460,9 @@ describe(`${name}: ANTHROPIC_CUSTOM_MODEL_OPTION`, () => {
       env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom },
       availableModels: [1, null, custom],
     }
-    expect(ids(code)).toEqual([])
+    expect(idsManaged(code)).toEqual([])
     const other = { env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: [1, null] }
-    expect(ids(other)).toEqual(['customOption'])
+    expect(idsManaged(other)).toEqual(['customOption'])
   })
 })
 
@@ -437,8 +483,8 @@ describe(`${name}: files`, () => {
   })
 })
 
-// The managed settings page merges `managed-settings.json` and its drop-ins into one source
-// (round 10 mid-round ruling 22). Lists of the files combine.
+// The managed settings page merges `managed-settings.json` and its drop-ins into one source.
+// Lists of the files combine.
 describe(`${name}: the sibling files of a managed source, on disk`, () => {
   /** The message ids for `code` at `file` of the repository `root`. */
   const at = (root: string, file: string, code: unknown) =>
@@ -484,6 +530,19 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(at(listed, 'managed-settings.d/20-b.json', code)).toEqual([])
   })
 
+  it('ignores an entry of a sibling list that is no string', () => {
+    const root = repo({ 'managed-settings.d/10-a.json': '{"availableModels": [1]}' })
+    const code = { availableModels: [], model: 'opus' }
+    expect(at(root, 'managed-settings.d/20-b.json', code)).toEqual(['emptyList'])
+    const option = { availableModels: ['sonnet'], env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'x' } }
+    expect(at(root, 'managed-settings.d/20-b.json', option)).toEqual(['customOption'])
+  })
+
+  it('is silent for enforceAvailableModels beside a list of another type', () => {
+    expect(ids({ enforceAvailableModels: true, availableModels: 'x' }, MANAGED)).toEqual([])
+    expect(ids({ enforceAvailableModels: 'true' }, MANAGED)).toEqual([])
+  })
+
   it('is silent for all three when a sibling does not parse to an object', () => {
     const root = repo({ 'managed-settings.d/10-a.json': '[1]' })
     const codes = [
@@ -503,7 +562,7 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
       '.claude/managed-settings.d/a.json': LIST,
     })
     const code = { availableModels: [], model: 'opus' }
-    expect(at(root, '.claude/settings.json', code)).toEqual(['emptyList'])
+    expect(at(root, '.claude/settings.json', { ...code, enforceAvailableModels: true })).toEqual([])
     expect(at(root, '.claude/managed-settings.d/b.json', code)).toEqual([])
   })
 })
