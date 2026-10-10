@@ -1,6 +1,6 @@
 // The expected values come from the `autoContinueAtUsageLimit` entry of the settings reference
-// (https://code.claude.com/docs/en/settings-reference#autocontinueatusagelimit): the type is
-// Boolean, the scope is "User or managed", and a project or local file that sets the key turns
+// (https://code.claude.com/docs/en/settings-reference#autocontinueatusagelimit). The type is
+// Boolean, and the scope is "User or managed". A project or local file that sets the key turns
 // the feature off.
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
