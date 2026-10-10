@@ -1,6 +1,6 @@
 // A matcher on the regular expression path matches anywhere in the tool name, so `Edit.*` also matches
 // `NotebookEdit` (docs/rules/hooks-matcher-unanchored-regex.md). The rule reports a tool-event regular
-// expression that matches a built-in tool which its form with a leading `^` does not. `hooks-matcher-syntax` owns a
+// expression that matches a built-in tool which the pattern wrapped as `^(?:pattern)` does not. `hooks-matcher-syntax` owns a
 // pattern that does not compile and the `Tool(specifier)` form, and this rule skips both.
 import type { Rule } from 'eslint'
 import { TOOL_EVENTS } from '../data/hook-events.ts'
@@ -50,7 +50,8 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        // `hooks-matcher-syntax` owns a pattern that does not compile. The `*` match-all matcher does not compile as a pattern, so it gets no report here.
+        // `hooks-matcher-syntax` owns a pattern that does not compile. `*` means match all in the docs. It is no
+        // pattern, and it does not compile, so it gets no report here.
         const loose = compile(value)
         if (loose === undefined) {
           continue

@@ -61,6 +61,10 @@ describe(`${name}: the report`, () => {
       lintJson(name, settings(hooks('Stop', [command({ timeout: 1200 })])), FILES.project)[0]
         ?.message,
     ).toContain('write 1.')
+    expect(
+      lintJson(name, settings(hooks('Stop', [command({ timeout: 1800 })])), FILES.project)[0]
+        ?.message,
+    ).toContain('write 2.')
   })
 
   it('reports from the configured limit, and names it', () => {

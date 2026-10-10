@@ -2,7 +2,7 @@
 // Claude Code tests with `RegExp.prototype.test`, which "succeeds on a match anywhere in the value". So
 // `Edit.*` matches `Edit` and `NotebookEdit`; "wrap the pattern in `^` and `$`, as in `^Edit$`, when you need a
 // whole-string match" (https://code.claude.com/docs/en/hooks#matcher-patterns). The rule reports a tool-event
-// regular expression that matches a built-in tool which its form with a leading `^` does not.
+// regular expression that matches a built-in tool which the pattern wrapped as `^(?:pattern)` does not.
 // `hooks-matcher-syntax` owns a pattern that does not compile and the `Tool(specifier)` form.
 import { describe, expect, it } from 'vitest'
 import { NO_MATCHER_EVENTS, TOOL_EVENTS } from '../../src/data/hook-events.ts'
@@ -36,6 +36,7 @@ describe(`${name}: the report`, () => {
       'Edit$',
       '(Edit|Write)',
       'Edit.*|Write',
+      '^Read|Edit',
       'Agent.*',
       'Edit\\w*',
     ]) {
@@ -80,10 +81,12 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
-  it('is silent for a pattern that starts with ^, as ^Notebook in the docs', () => {
+  it('is silent for a pattern whose branches add no other tool, as ^Notebook in the docs', () => {
     for (const matcher of [
       '^Edit.*$',
       '^Edit.*',
+      '^Read|Glob',
+      '^Read|^Edit',
       '^Notebook',
       'mcp__memory__.*',
       '.*',

@@ -3,7 +3,7 @@
 // (https://code.claude.com/docs/en/plugins/components#path-variables-and-persistent-data). The hooks
 // reference shows the same variable in the example of a plugin script
 // (https://code.claude.com/docs/en/hooks#reference-scripts-by-path). The rule reads a plugin `hooks.json`
-// only. The subagents page shows `./scripts/...` in a project settings file as a working hook
+// and the skills of a plugin. The subagents page shows `./scripts/...` in a project settings file as a working hook
 // (https://code.claude.com/docs/en/sub-agents#project-level-hooks-for-subagent-events), and the hooks
 // reference says "Use absolute paths", so a project hook and an absolute path get no report.
 import { describe, expect, it } from 'vitest'
@@ -39,9 +39,13 @@ describe(`${name}: the report after round 1`, () => {
       'pwsh -Command "./scripts/a.ps1"',
       'powershell -NoProfile -File ./hooks/a.ps1',
       'pwsh -f ./hooks/a.ps1',
+      'pwsh -ExecutionPolicy Bypass -File ./hooks/a.ps1',
+      'powershell -ExecutionPolicy Bypass -f ./hooks/a.ps1',
+      "zsh -c './scripts/a.sh'",
       `./x.sh && cd "${dir('CLAUDE_PLUGIN_ROOT')}" && ./y.sh`,
       'cd ./scripts && ./a.sh',
       'zsh scripts/a.sh',
+      'pwsh -NoProfile scripts/a.ps1',
       'ruby scripts/a.rb',
       'python scripts/a.py',
       'pwsh scripts/a.ps1',
@@ -160,6 +164,11 @@ describe(`${name}: the silent cases`, () => {
       'node -e "console.log(1/2)"',
       'node -p "1/2"',
       'node --eval "1/2"',
+      'node --print "1/2"',
+      'node -pe "1/2"',
+      'powershell -EncodedCommand 1/2',
+      `pwsh -Command 'cd "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.ps1'`,
+      `powershell -c 'cd "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.ps1'`,
       "python3 -c 'print(1/2)'",
       "python -c 'print(1/2)'",
       "ruby -e 'puts 1/2'",
@@ -167,6 +176,7 @@ describe(`${name}: the silent cases`, () => {
       'powershell -command "Get-Date"',
       'pwsh -EncodedCommand 1/2',
       'pwsh -File',
+      'bash -c',
       `Set-Location "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
       `set-location "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
       `Push-Location "${dir('CLAUDE_PLUGIN_ROOT')}"; ./a.sh`,
