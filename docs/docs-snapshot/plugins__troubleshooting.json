@@ -377,6 +377,12 @@
   ],
   "sources": [
     {
+      "heading": "Hooks fail to load",
+      "id": "hooks-fail-to-load",
+      "hash": "dedea885a6b4285a5b7b3f43f2c84abc670bf41e85d9286bbc2a08a11f1bc70e",
+      "text": "#### Hooks fail to load\n\nThe **Errors** tab shows one of these messages:\n\n* **`Failed to load hooks from <path>: <reason>`**: `hooks/hooks.json` isn't valid JSON or fails the hooks schema. The reason names the parse or validation error. Fix the file. To catch a JSON syntax problem in `hooks/hooks.json` before you publish the plugin, run `claude plugin validate <plugin-directory>` in your shell\n* **`hooks path not found: <path>`**: the manifest's `hooks` field names a file that doesn't exist at that path relative to the plugin root. Fix the path or add the file"
+    },
+    {
       "heading": "Hook loads but never fires",
       "id": "hook-loads-but-never-fires",
       "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426",

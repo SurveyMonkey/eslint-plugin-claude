@@ -229,6 +229,107 @@
       "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
+  "hooks-command-removed-cli-flag": [
+    {
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "heading": "CLI flags",
+      "hash": "a4ebacff688cde897e3c8eefbe0942fb452378e438942235ecaa891f5d89625c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    }
+  ],
+  "hooks-config-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Configuration",
+      "hash": "c814ca263eb4d93dd7e59da8be540127d589f64d0844ee294a2c9d68dce43907"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook handler fields",
+      "hash": "70591c889437da0e8d2c043d1828c406746a79a43af0c22b223a1b03526e3cbe"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common fields",
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "HTTP hook fields",
+      "hash": "d8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "MCP tool hook fields",
+      "hash": "544de1e46b4d56711c8e3d2fe14c74e2a0dac09df6c36120f0c557603ac75c1d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Prompt and agent hook fields",
+      "hash": "f1a9bf8f2472c41cbc860fce1ee2eaf8020e4c4784e6c458b1f57b7fac7fc002"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Block the action when a hook fails",
+      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hooks in skills and agents",
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "hooks",
+      "hash": "f3da96774a6b94fdcfade98d240aa080a092ef1f62a0f4dde5977000d96f3440"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check hooks",
+      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Hooks",
+      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Hooks fail to load",
+      "hash": "dedea885a6b4285a5b7b3f43f2c84abc670bf41e85d9286bbc2a08a11f1bc70e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/mods/reference",
+      "heading": "Files",
+      "hash": "ce3d96b14679f96134ec81f14e42ec1440ae007a13fa04b6f96e08fb602cef08"
+    }
+  ],
+  "hooks-disabled-by-disableallhooks": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Disable or remove hooks",
+      "hash": "07c2742ce0fb8b69c603d08c4d41493120a00315407c5e56648b6b7a6e7e1ed8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableAllHooks",
+      "hash": "d7b544944c53bc85bda3166f8c09576717929262b3d86ca2ce3e70e376d11bb8"
+    }
+  ],
   "hooks-event-name-known": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -239,6 +340,102 @@
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
       "heading": "Hook loads but never fires",
       "hash": "a32c44e88787108842b19f47f3e9080c6f8a8ef51bf180ba30f13afb38e4f426"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "hooks",
+      "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "hooks-handler-field-ignored": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common fields",
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Configure an async hook",
+      "hash": "be3065cb0690ded4c7196acc84c4be91ead707a5a6cae30af02e5c1ba309337d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Agent hook configuration",
+      "hash": "90b75f3c85bf43a3dd0486077ce95ed9ebc254876bc94f171e113459cfe930b3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Response schema",
+      "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionEnd input",
+      "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Block the action when a hook fails",
+      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hooks in skills and agents",
+      "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
+    }
+  ],
+  "hooks-handler-type-event-support": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Prompt-based hooks",
+      "hash": "2cbc1bf7b0f0d5412128234c17ef6f1f4a5aa34d66574aec1b3348930d6564c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Setup decision control",
+      "hash": "a7d24a46c8e10e69833a92d4f32f743a1f58437d7cfd1354b409097b3475c0c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Events that fire before MCP servers are available",
+      "hash": "9e142b73c480a3bbf7c93c9bc803af807e37d744908959b7fb0531b5efb993cd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Response schema",
+      "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    }
+  ],
+  "hooks-no-standalone-file": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check hooks",
+      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Hooks",
+      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook locations",
+      "hash": "b52987a21c34ce141fe1e5b1db52ed257bb89a50955f068bbeaf81aa17ec7b2b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Manifest file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",

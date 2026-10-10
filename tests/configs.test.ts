@@ -31,6 +31,35 @@ const badSettings = JSON.stringify({
   },
 })
 
+// The hooks rules of #10, layer 1. One config with a fault for each rule that reads it: a matcher
+// array (`hooks-config-schema`), `async` on an http hook (`hooks-handler-field-ignored`), a prompt hook
+// on `SessionEnd` (`hooks-handler-type-event-support`), and a removed flag
+// (`hooks-command-removed-cli-flag`). `disableAllHooks` adds the fifth, in a settings file.
+const hookGroups = [{ matcher: ['a'], hooks: [{ type: 'http', url: 'u', async: true }] }]
+const hooksFaults = {
+  Stop: [...hookGroups, { hooks: [{ type: 'command', command: 'claude --enable-auto-mode' }] }],
+  SessionEnd: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
+}
+const hooksSettings = JSON.stringify({ disableAllHooks: true, hooks: hooksFaults })
+const hooksDropIn = JSON.stringify({ hooks: hooksFaults })
+const hooksYaml = `---
+name: hk
+hooks:
+  Stop:
+    - matcher: [a]
+      hooks:
+        - type: http
+          url: u
+          async: true
+        - type: command
+          command: claude --enable-auto-mode
+  SessionEnd:
+    - hooks:
+        - type: prompt
+          prompt: p
+---
+`
+
 // One entry with a `command` source and a `version`, a `headersHelper` that starts with a
 // relative path, and `hooks` as a path, under a reserved name with no `owner`. A second entry has
 // a `github` source with a bad `repo`, and a third has a relative `source` with no `./`. A fourth
@@ -226,6 +255,27 @@ const TREE: Record<string, string> = {
   'packages/mk/settings.json': badMarketSettings,
   '.claude-plugin/other.json': badMarketplace,
   'other.json': badHooks,
+  // The hooks rules of layer 1 read the settings files, the managed files, the `hooks.json` of a
+  // plugin, and the frontmatter of a skill and a project subagent. The same content where no rule
+  // reads it: a hidden drop-in, another extension, a nested directory, and another settings file.
+  'packages/hk/.claude/settings.json': hooksSettings,
+  'packages/hk/.claude/settings.local.json': hooksSettings,
+  'packages/hk/managed-settings.json': hooksSettings,
+  'packages/hk/managed-settings.d/10-a.json': hooksDropIn,
+  'packages/hk/managed-settings.d/.20-hidden.json': hooksSettings,
+  'packages/hk/managed-settings.d/30-b.txt': hooksSettings,
+  'packages/hk/managed-settings.d/sub/40-c.json': hooksSettings,
+  'packages/hk/.vscode/settings.json': hooksSettings,
+  'packages/hk/plugin/hooks/hooks.json': JSON.stringify({ hooks: hooksFaults }),
+  'packages/hk/.claude/skills/hk/SKILL.md': hooksYaml,
+  'packages/hk/.claude/agents/hk.md': hooksYaml.replace('name: hk', 'name: hk\ndescription: d'),
+  'packages/hk/docs/SKILL.md': hooksYaml,
+  'packages/hk/docs/agents/hk.md': hooksYaml,
+  // Hooks files that Claude Code does not read, and a decoy that is no hooks file.
+  'packages/hk/.claude/hooks.json': '{}',
+  'packages/hk/.claude/hooks/hooks.json': '{}',
+  'packages/hk/.claude-plugin/hooks.json': '{}',
+  'packages/hk/docs/hooks.json': '{}',
   'hooks.json': badHooks,
   '.vscode/settings.json': badSettings,
   '.vscode/settings.local.json': badSettings,
@@ -539,6 +589,41 @@ const EXPECTED = [
   '.claude/teams/sub/x.json: claude/agent-teams-no-project-config@2',
   '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
+  'packages/hk/.claude-plugin/hooks.json: claude/hooks-no-standalone-file@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-config-schema@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-handler-field-ignored@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/hooks.json: claude/hooks-no-standalone-file@2',
+  'packages/hk/.claude/hooks/hooks.json: claude/hooks-no-standalone-file@2',
+  'packages/hk/.claude/settings.json: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/.claude/settings.json: claude/hooks-config-schema@2',
+  'packages/hk/.claude/settings.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/.claude/settings.json: claude/hooks-handler-field-ignored@2',
+  'packages/hk/.claude/settings.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-config-schema@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-handler-field-ignored@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-config-schema@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-field-ignored@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-type-event-support@2',
+  'packages/hk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-config-schema@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-field-ignored@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/managed-settings.json: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/managed-settings.json: claude/hooks-config-schema@2',
+  'packages/hk/managed-settings.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/managed-settings.json: claude/hooks-handler-field-ignored@2',
+  'packages/hk/managed-settings.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-removed-cli-flag@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-config-schema@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-field-ignored@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-type-event-support@2',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
@@ -719,6 +804,29 @@ const AGENT_RULES = [
   'output-style-frontmatter-schema',
 ]
 
+// The hooks rules of layer 1 of #10, in the order of the `modules` list, with the blocks of each.
+// A rule of the hooks config has one JSON block and one Markdown block. Each is an error.
+const HOOKS_JSON = [...PROJECT_FILES, ...MANAGED_FILES, '**/hooks/hooks.json']
+const HOOKS_MARKDOWN = ['**/SKILL.md', '**/agents/**/*.md']
+const HOOKS_RULES = [
+  { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
+  { name: 'hooks-handler-field-ignored', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-handler-type-event-support', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  {
+    name: 'hooks-no-standalone-file',
+    blocks: [
+      [
+        '**/.claude/hooks.json',
+        '**/.claude/hooks/hooks.json',
+        '**/.claude-plugin/hooks.json',
+        '**/.claude-plugin/hooks/hooks.json',
+      ],
+    ],
+  },
+]
+
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [
   'skill-frontmatter-position',
@@ -777,6 +885,9 @@ describe('configs', () => {
       ],
       ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
+      ...HOOKS_RULES.flatMap(({ name, blocks }) =>
+        blocks.map(() => [`claude/recommended/${name}`, { [`claude/${name}`]: 'error' }]),
+      ),
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...TOOL_LIST_BLOCKS.map((rule) => [
@@ -806,6 +917,7 @@ describe('configs', () => {
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
       'claude/strict/hooks-event-name-known',
+      ...HOOKS_RULES.flatMap(({ name, blocks }) => blocks.map(() => `claude/strict/${name}`)),
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
@@ -867,6 +979,18 @@ describe('configs', () => {
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude/settings.json', '**/.claude/settings.local.json']],
       ])
+    }
+  })
+
+  it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
+    for (const { name, blocks } of HOOKS_RULES) {
+      const found = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(found.map((c) => c.files)).toEqual(blocks)
+      expect(found.map((c) => c.language)).toEqual(
+        blocks.map((_, i) => (i === 0 ? 'json/json' : 'markdown/gfm')),
+      )
     }
   })
 

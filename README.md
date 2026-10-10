@@ -90,7 +90,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
+| [`claude/hooks-command-removed-cli-flag`](docs/rules/hooks-command-removed-cli-flag.md) | A hook command or `args` that runs `claude` does not pass `--enable-auto-mode`, which Claude Code removed in v2.1.111 | `error` | `error` |
+| [`claude/hooks-config-schema`](docs/rules/hooks-config-schema.md) | The hooks config is events, matcher groups and handlers: a string `matcher`, a known handler `type`, the field each type needs, the field types, and the top-level keys of a plugin `hooks.json` | `error` | `error` |
+| [`claude/hooks-disabled-by-disableallhooks`](docs/rules/hooks-disabled-by-disableallhooks.md) | A settings file does not set `disableAllHooks: true` and also define `hooks` | `error` | `error` |
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings and `plugin.json` is one that Claude Code knows | `error` | `error` |
+| [`claude/hooks-handler-field-ignored`](docs/rules/hooks-handler-field-ignored.md) | A handler sets no field that Claude Code ignores: `async` on a non-command hook, `continueOnBlock` on a non-prompt hook, `shell` with `args`, `once` outside a skill, `timeout` with `async`, a `SessionEnd` `timeout` over the budget, and `onFailure` where it has no effect | `error` | `error` |
+| [`claude/hooks-handler-type-event-support`](docs/rules/hooks-handler-type-event-support.md) | A handler type is one that its event runs: `SessionStart` and `Setup`, `PermissionRequest`, `PermissionDenied`, and the events with no `prompt` or `agent` hook | `error` | `error` |
+| [`claude/hooks-no-standalone-file`](docs/rules/hooks-no-standalone-file.md) | No `.claude/hooks.json` or `.claude/hooks/hooks.json`, and no hooks file under `.claude-plugin/`: Claude Code does not read them | `error` | `error` |
 
 ### Marketplace manifest
 

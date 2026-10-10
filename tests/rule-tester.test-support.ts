@@ -93,7 +93,7 @@ export function lintMarkdown(name: string, code: string, filename: string) {
  *  uses it in `it.fails`, where the rule may be missing. It runs the rule on
  *  every `*.json` file, so it does not test the `files` globs of the plugin.
  *  `tests/configs.test.ts` tests them. */
-export function lintJson(name: string, code: string, filename: string) {
+export function lintJson(name: string, code: string, filename: string, options: unknown[] = []) {
   const absolute = path.resolve(filename)
   return new Linter({ cwd: path.parse(absolute).root }).verify(
     code,
@@ -102,7 +102,7 @@ export function lintJson(name: string, code: string, filename: string) {
         files: ['**/*.json'],
         plugins: { json, claude: plugin },
         language: 'json/json',
-        rules: { [`claude/${name}`]: 'error' },
+        rules: { [`claude/${name}`]: ['error', ...options] },
       },
     ],
     { filename: absolute },
