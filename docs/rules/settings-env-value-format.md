@@ -95,7 +95,7 @@ Pass:
 
 [^env]: [All settings: env](https://code.claude.com/docs/en/settings-reference#env)
 [^shell]: [All settings: How env values interact with your shell](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell)
-[^files]: [Environment variables: In settings files](https://code.claude.com/docs/en/env-vars#in-settings-files)
+[^files]: [Environment variables: Set variables in settings files](https://code.claude.com/docs/en/env-vars#in-settings-files)
 [^vars]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)
 [^memory]: [Tools reference: Memory limit on Linux and WSL](https://code.claude.com/docs/en/tools-reference#memory-limit-on-linux-and-wsl)
 [^search]: [Connect Claude Code to tools via MCP: Configure tool search](https://code.claude.com/docs/en/mcp#configure-tool-search)
