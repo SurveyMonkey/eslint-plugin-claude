@@ -117,6 +117,8 @@ describe(`${name}: the silent cases`, () => {
       'echo ./a.sh',
       'node -v',
       'bash -c "x"',
+      'FOO=1',
+      '',
     ]) {
       expect(shell(line), line).toEqual([])
     }
