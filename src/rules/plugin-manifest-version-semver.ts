@@ -9,7 +9,7 @@ import { readPlugin } from '../plugin-manifest.ts'
 const name = 'plugin-manifest-version-semver' as const
 
 // The pattern of https://semver.org/ (version 2.0.0), which has no leading `v`.
-const SEMVER =
+export const SEMVER =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/
 
 const rule: JSONRuleDefinition<{ MessageIds: 'notSemver' }> = {
