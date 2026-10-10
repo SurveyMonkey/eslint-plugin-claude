@@ -383,6 +383,12 @@
       "text": "#### Hook loads but never fires\n\nIf a hook loads without error but never fires, check its definition and then watch it run:\n\n<Steps>\n  <Step title=\"Check the event name\">\n    Event names are case-sensitive, so confirm yours matches exactly, for example `PostToolUse`.\n  </Step>\n\n  <Step title=\"Check the matcher\">\n    Confirm the hook's `matcher` matches the tool name.\n  </Step>\n\n  <Step title=\"Trigger the event on purpose\">\n    For a `PostToolUse` hook, ask Claude to edit a file.\n  </Step>\n\n  <Step title=\"Read the debug log\">\n    Open the [debug log](/docs/en/hooks#debug-hooks), which records which hooks matched. A hook that ran shows up there with its exit code.\n  </Step>\n</Steps>"
     },
     {
+      "heading": "Plugins with relative paths fail in URL-based marketplaces",
+      "id": "plugins-with-relative-paths-fail-in-url-based-marketplaces",
+      "hash": "85b2429427e2464f7921bb9daeb6b420551ceb4985e52444c65d0f0107da4cf5",
+      "text": "<h3 id=\"plugins-with-relative-paths-fail-in-url-based-marketplaces\">\n  Plugins with relative paths fail in URL-based marketplaces\n</h3>\n\nUsers added your marketplace with an `https://example.com/marketplace.json` URL. Installs of plugins whose `source` is a relative path, such as `./plugins/my-plugin`, fail with `its marketplace entry path does not stay inside the marketplace directory`. Already-installed plugins fail to load with `Plugin source path refused`. Both messages have an [error reference entry](/docs/en/errors#marketplace-entry-path-does-not-stay-inside-the-marketplace-directory).\n\nWhen a user adds a URL-based marketplace, Claude Code downloads only the `marketplace.json` file itself. It doesn't fetch plugin files by relative path from that server, so a relative path in an entry points at a directory that was never fetched. Give each entry a source Claude Code can fetch on its own, such as a GitHub repository:\n\n```json theme={null}\n{ \"name\": \"my-plugin\", \"source\": { \"source\": \"github\", \"repo\": \"owner/repo\" } }\n```\n\nAlternatively, host the marketplace in a git repository and tell users to add it with the repository URL. For a git source, Claude Code clones the whole repository, so relative paths resolve. Source types are on the [marketplace reference](/docs/en/plugins/marketplace-reference)."
+    },
+    {
       "heading": "Plugin <name> has conflicting manifests",
       "id": "plugin-has-conflicting-manifests",
       "hash": "58f8b1731c63b3f2d79e3f9a447088a7e6d0059944e6e516f5530c2a022a20e4",
