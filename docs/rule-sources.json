@@ -687,6 +687,74 @@
       "hash": "cdf875232a686cfb4723f815972b2115daae9ad2f51d6949cb78aad9af2c07db"
     }
   ],
+  "permissions-allow-unrestricted": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Manage permissions",
+      "hash": "56ca5f3f083098267cf7701cd02cf10b2b0abebac77946400176734df2526d9d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "8a5b44ee4d880d824ce8de288d9a07e55aabbcb8c756d10d2c864c0eeccb7339"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "PowerShell",
+      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Allow or deny every fetch",
+      "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
+    }
+  ],
+  "permissions-bash-exec-wrapper-prefix": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wrappers",
+      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Monitor tool",
+      "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0"
+    }
+  ],
+  "permissions-bash-runner-wildcard": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wrappers",
+      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Monitor tool",
+      "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0"
+    }
+  ],
+  "permissions-bash-wildcard-before-subcommand": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Has a wildcard before the rest of the command",
+      "hash": "8b7d60bb29de9a85d524939f5c6f1c213208eb33b97719fb66303eb31af17924"
+    }
+  ],
   "permissions-bypass-mode-committed": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -782,6 +850,28 @@
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
     }
   ],
+  "permissions-end-conversation": [
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "EndConversation tool behavior",
+      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Manage permissions",
+      "hash": "56ca5f3f083098267cf7701cd02cf10b2b0abebac77946400176734df2526d9d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Tool name wildcards",
+      "hash": "ed86d84bce842855686bd5f04b8328d75c89f65d17555aab1e0df8223a2c5286"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.deny",
+      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
+    }
+  ],
   "permissions-mcp-rule-parens": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -836,6 +926,33 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    }
+  ],
+  "permissions-protected-path-allow": [
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Protected paths",
+      "hash": "54ad52474b555dca43e1cafa4339c5c091f46f3e684b74d7bc7626ac3d6456c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Critical paths",
+      "hash": "5b06ffb48b7080ed2d663e29e03bc3383c1fe20859db8ff878bd9ab6aaed8a2b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Protected paths",
+      "hash": "880632f45fd7bc03f173f03ff9e58ea5733bd1777d57c0f4b4322e00d0441390"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Sandbox path prefixes",
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.filesystem.allowWrite",
+      "hash": "31627177301f27c16c26b011c39a773965443bdfb8c0eeb9c65dba34c8e7c434"
     }
   ],
   "permissions-rule-syntax": [
