@@ -165,6 +165,10 @@ const TREE: Record<string, string> = {
   '.claude/skills/shadow/SKILL.md': '---\nname: clear\ndescription: d\n---\n',
   '.claude/skills/shadow-ok/SKILL.md': '---\nname: shadow-ok\ndescription: d\n---\n',
   'plugins/p/skills/clear/SKILL.md': '---\ndescription: d\n---\n',
+  // The command files of the same rules. `model` is a built-in command, and `model` is a frontmatter
+  // field.
+  '.claude/commands/model.md': '---\ndescription: d\n---\n',
+  '.claude/commands/cmeta.md': '---\ndescription: d\nmetadata:\n  model: x\n---\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
@@ -719,6 +723,10 @@ const EXPECTED = [
   '.claude/commands/c.md: claude/skill-description-present@1',
   '.claude/commands/cbom.md: claude/command-legacy-format@1',
   '.claude/commands/ghost.md: claude/skill-description-present@1',
+  '.claude/commands/cmeta.md: claude/command-legacy-format@1',
+  '.claude/commands/cmeta.md: claude/skill-metadata-reserved-keys@1',
+  '.claude/commands/model.md: claude/command-legacy-format@1',
+  '.claude/commands/model.md: claude/skill-name-shadows-builtin@1',
   '.claude/commands/ns/c.md: claude/skill-description-present@1',
   '.claude/commands/schema.md: claude/skill-description-present@1',
   '.claude/skills/agent-ok/SKILL.md: claude/skill-description-present@1',

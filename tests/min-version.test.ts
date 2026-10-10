@@ -1,6 +1,7 @@
 // The comparison behind the option `minVersion`.
 import { expect, it } from 'vitest'
 import { supportsBefore } from '../src/min-version.ts'
+import { lintMarkdown } from './rule-tester.test-support.ts'
 
 it.each([
   ['2.1.238', true],
@@ -20,3 +21,16 @@ it.each([
 it('is false when minVersion is unset, so a rule is inactive', () => {
   expect(supportsBefore(undefined, '2.1.239')).toBe(false)
 })
+
+// A value that is not three numbers would compare as NaN or undefined, and turn the rule off
+// with no sign. The schema must refuse it.
+it.each(['2.1', 'v2.1.239', '2.1.239-beta', '2.1.x', ''])(
+  'refuses the minVersion %j in the rules that take it',
+  (minVersion) => {
+    for (const name of ['skill-no-bom', 'skill-boolean-literal']) {
+      expect(() =>
+        lintMarkdown(name, '# S\n', '.claude/skills/s/SKILL.md', [{ minVersion }]),
+      ).toThrow()
+    }
+  },
+)
