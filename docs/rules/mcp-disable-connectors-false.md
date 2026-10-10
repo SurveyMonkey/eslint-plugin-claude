@@ -26,14 +26,19 @@ The rule lints the managed settings files: `managed-settings.json` and each
 The key `disableClaudeAiConnectors` turns off the claude.ai connectors that Claude Code fetches
 itself. A `true` in any settings file applies. The value `false` is the same as unset: Claude Code
 fetches the connectors unless another settings file or `ENABLE_CLAUDEAI_MCP_SERVERS` turns them
-off.[^key] So a `false` cannot turn the connectors back on after a `true` in another scope.[^guide]
+off.[^key] So a `false` cannot turn the connectors back on after a `true` in another settings scope.[^guide]
 To turn the connectors off, set `true`. To leave them on, remove the key.
 
 The rule reports a `false` value. The report is on the value. The managed settings page merges
 `managed-settings.json` and each drop-in into one source. A later file replaces a single
-value.[^merge] So the rule reads the sibling files. It makes no report when a sibling holds `true`,
-or when it cannot read a sibling. A value of another type gives no
-report. When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.
+value.[^merge] So a `false` in a later file does replace a `true` in an earlier file of the managed
+source. The rule reads the sibling files. It makes no report when a sibling holds `true`, in any
+order of the files. A `false` before a later `true` has no effect, and a `false` after a `true`
+changes the value. The rule does not model the order, so it stays silent in both cases. It also
+makes no report when it cannot read a sibling.
+
+A value of another type gives no report. When a file has two keys of one name, the rule reads the
+last, as `JSON.parse` does.
 
 The rule `settings-project-value-ignored` reports the same value in `.claude/settings.json` and
 `.claude/settings.local.json`. This rule reads the managed files only, so a `false` in a project

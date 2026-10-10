@@ -37,8 +37,7 @@ rule reads the last, as `JSON.parse` does.
 The rule lints both project files, and reports in `.claude/settings.json` only. Git normally
 ignores the local file, so the rule gives no report there. The files glob also matches a user file
 `~/.claude/settings.json`, where these keys are valid. Turn the rule off for such a file. A managed
-settings file is not read, because an
-administrator owns it.
+settings file is not read, because an administrator owns it.
 
 Fail, in `.claude/settings.json`:
 
@@ -48,7 +47,7 @@ Fail, in `.claude/settings.json`:
 }
 ```
 
-Pass: leave the key out of `.claude/settings.json`. Each user approves the servers in the approval prompt.
+Pass: leave the key out of `.claude/settings.json`. Each user approves the servers in the approval dialog.
 
 ## Sources
 
