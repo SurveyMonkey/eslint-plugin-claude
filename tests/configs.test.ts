@@ -13,7 +13,12 @@ const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
 const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
+const projectDir = `\${CLAUDE_PROJECT_DIR}`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
+/** A hooks object with one command hook. */
+const hookOf = (command: string) => ({
+  hooks: { PreToolUse: [{ matcher: 'Bash', hooks: [{ type: 'command', command }] }] },
+})
 // One bad permission rule for each grammar rule, in the order of GRAMMAR_RULES.
 const badSettings = JSON.stringify({
   hooks: { preToolUse: [] },
@@ -420,6 +425,31 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // `hooks-script-exists`: a hook script that is not there, in each file that it reads. A managed
+  // file holds a policy key. A hidden drop-in is for `settings-managed-file`. The same content
+  // where no rule reads it: another extension, a nested directory, another settings file, and
+  // a `hooks/hooks.json` that is in no plugin.
+  'packages/hs/.claude/settings.json': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/.claude/settings.local.json': JSON.stringify(hookOf('tools/gone.sh')),
+  'packages/hs/managed-settings.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/gone.sh`),
+  }),
+  'packages/hs/managed-settings.d/10-a.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/gone.sh`),
+  }),
+  'packages/hs/managed-settings.d/.20-hidden.json': JSON.stringify({
+    model: 'opus',
+    ...hookOf(`${projectDir}/gone.sh`),
+  }),
+  'packages/hs/managed-settings.d/30-b.txt': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/managed-settings.d/sub/40-c.json': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/.vscode/settings.json': JSON.stringify(hookOf(`${projectDir}/gone.sh`)),
+  'packages/hs/plugin/.claude-plugin/plugin.json': JSON.stringify({ name: 'hs' }),
+  'packages/hs/plugin/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
+  'packages/hs/plugin/hooks/other.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
+  'packages/hs/loose/hooks/hooks.json': JSON.stringify(hookOf(`${pluginRoot}/gone.sh`)),
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -498,6 +528,11 @@ const SCOPE_RULES = [
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  // The git layer of #10, #11 and #14. The rules that read the index mode need a repository.
+  {
+    name: 'hooks-script-exists',
+    files: ['**/hooks/hooks.json', ...PROJECT_FILES, ...MANAGED_FILES],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -661,6 +696,15 @@ const EXPECTED = [
   'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `hooks-script-exists` reads the project and managed files, and a `hooks.json` in a plugin.
+  ...[
+    'packages/hs/.claude/settings.json',
+    'packages/hs/.claude/settings.local.json',
+    'packages/hs/managed-settings.json',
+    'packages/hs/managed-settings.d/10-a.json',
+    'packages/hs/plugin/hooks/hooks.json',
+  ].map((file) => `${file}: claude/hooks-script-exists@2`),
+  'packages/hs/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

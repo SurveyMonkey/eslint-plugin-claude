@@ -24,11 +24,11 @@ const PLUGIN = `\${CLAUDE_PLUGIN_ROOT}`
 const MANIFEST = { '.claude-plugin/plugin.json': '{"name":"p"}' }
 const SETTINGS = '.claude/settings.json'
 // A test that locks a directory runs where `chmod 000` blocks a read.
-const lockedIt = chmodCannotBlock ? it.skip : it.fails
+const lockedIt = it.skipIf(chmodCannotBlock)
 
 describe(RULE, () => {
   describe('settings files', () => {
-    it.fails('reports a project script that is not there, on the command', () => {
+    it('reports a project script that is not there, on the command', () => {
       const root = plain()
       const code = `{
   "hooks": {
@@ -53,26 +53,26 @@ describe(RULE, () => {
       expect(messages[0]?.message).toContain(`"${PROJECT}/.claude/hooks/gone.sh"`)
     })
 
-    it.fails('stays silent for a project script that is there', () => {
+    it('stays silent for a project script that is there', () => {
       const root = plain({ '.claude/hooks/ok.sh': '#!/bin/sh\n' })
       expect(lint(root, SETTINGS, settings(`${PROJECT}/.claude/hooks/ok.sh`))).toEqual([])
     })
 
-    it.fails('reports in settings.local.json', () => {
+    it('reports in settings.local.json', () => {
       const root = plain()
       expect(
         lint(root, '.claude/settings.local.json', settings(`${PROJECT}/gone.sh`)),
       ).toHaveLength(1)
     })
 
-    it.fails('resolves the project from the parent of .claude, at any depth', () => {
+    it('resolves the project from the parent of .claude, at any depth', () => {
       const root = plain({ 'packages/x/tools/ok.sh': 'x' })
       const file = 'packages/x/.claude/settings.json'
       expect(lint(root, file, settings(`${PROJECT}/tools/ok.sh`))).toEqual([])
       expect(lint(root, file, settings(`${PROJECT}/tools/gone.sh`))).toHaveLength(1)
     })
 
-    it.fails('reads the forms of the project variable, quoted or not', () => {
+    it('reads the forms of the project variable, quoted or not', () => {
       const root = plain({ 'ok.sh': 'x' })
       for (const command of [
         `${PROJECT}/ok.sh`,
@@ -88,7 +88,7 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('reads a path from the project, with or without ./, as the first word', () => {
+    it('reads a path from the project, with or without ./, as the first word', () => {
       const root = plain({ 'tools/ok.sh': 'x' })
       for (const command of ['tools/ok.sh', './tools/ok.sh', 'tools/ok.sh --flag a b']) {
         expect(lint(root, SETTINGS, settings(command)), command).toEqual([])
@@ -98,14 +98,14 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('reads a script that follows another word', () => {
+    it('reads a script that follows another word', () => {
       const root = plain({ 'ok.js': 'x' })
       expect(lint(root, SETTINGS, settings(`node ${PROJECT}/ok.js --fix`))).toEqual([])
       const messages = lint(root, SETTINGS, settings(`node "${PROJECT}/gone.js" --fix`))
       expect(messages.map((m) => m.messageId)).toEqual(['missing'])
     })
 
-    it.fails('reads each script of a command with an operator', () => {
+    it('reads each script of a command with an operator', () => {
       const root = plain({ 'ok.sh': 'x' })
       const command = `${PROJECT}/ok.sh && ${PROJECT}/a.sh; ${PROJECT}/b.sh | ${PROJECT}/ok.sh`
       expect(lint(root, SETTINGS, settings(command)).map((m) => m.messageId)).toEqual([
@@ -114,7 +114,7 @@ describe(RULE, () => {
       ])
     })
 
-    it.fails('does not read the target of a redirect, or a word that is not a path', () => {
+    it('does not read the target of a redirect, or a word that is not a path', () => {
       const root = plain()
       for (const command of [
         `echo hi > ${PROJECT}/out.log`,
@@ -140,12 +140,12 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('does not read the plugin variable in a settings file', () => {
+    it('does not read the plugin variable in a settings file', () => {
       const root = plain()
       expect(lint(root, SETTINGS, settings(`${PLUGIN}/gone.sh`))).toEqual([])
     })
 
-    it.fails('reads an exec form hook: the command and each args element', () => {
+    it('reads an exec form hook: the command and each args element', () => {
       const root = plain({ 'ok.js': 'x', 'bin/ok': 'x' })
       const exec = (command: string, args: unknown) => settings(command, { args })
       expect(lint(root, SETTINGS, exec('node', [`${PROJECT}/ok.js`, '--fix']))).toEqual([])
@@ -159,21 +159,21 @@ describe(RULE, () => {
       expect(lint(root, SETTINGS, exec('node', [1, null, `${PROJECT}/ok.js`]))).toEqual([])
     })
 
-    it.fails('reports on the args element in an exec form hook', () => {
+    it('reports on the args element in an exec form hook', () => {
       const root = plain()
       const code = `{"hooks":{"Stop":[{"hooks":[{"type":"command","command":"node","args":["${PROJECT}/gone.js"]}]}]}}`
       const messages = lint(root, SETTINGS, code)
       expect(messages).toHaveLength(1)
-      expect(messages[0]).toMatchObject({ line: 1, column: 77 })
+      expect(messages[0]).toMatchObject({ line: 1, column: 72 })
     })
 
-    it.fails('reads a command with a spaced script path in exec form as one path', () => {
+    it('reads a command with a spaced script path in exec form as one path', () => {
       const root = plain({ 'my tools/ok.sh': 'x' })
       const code = settings(`${PROJECT}/my tools/ok.sh`, { args: [] })
       expect(lint(root, SETTINGS, code)).toEqual([])
     })
 
-    it.fails('treats args that is not an array as the shell form', () => {
+    it('treats args that is not an array as the shell form', () => {
       const root = plain({ 'ok.js': 'x' })
       const code = settings(`node ${PROJECT}/ok.js`, { args: 'x' })
       expect(lint(root, SETTINGS, code)).toEqual([])
@@ -182,7 +182,7 @@ describe(RULE, () => {
       )
     })
 
-    it.fails('reports each hook of each event and group', () => {
+    it('reports each hook of each event and group', () => {
       const root = plain()
       const code = JSON.stringify({
         hooks: {
@@ -202,7 +202,7 @@ describe(RULE, () => {
       expect(lint(root, SETTINGS, code)).toHaveLength(4)
     })
 
-    it.fails('reads the last of two hooks keys, as JSON.parse does', () => {
+    it('reads the last of two hooks keys, as JSON.parse does', () => {
       const root = plain({ 'ok.sh': 'x' })
       const one = settings(`${PROJECT}/gone.sh`)
       const two = settings(`${PROJECT}/ok.sh`)
@@ -211,7 +211,7 @@ describe(RULE, () => {
       expect(lint(root, SETTINGS, join(two, one))).toHaveLength(1)
     })
 
-    it.fails('stays silent for a handler that is not a command hook', () => {
+    it('stays silent for a handler that is not a command hook', () => {
       const root = plain()
       for (const handler of [
         { type: 'http', url: 'https://x.test', command: `${PROJECT}/gone.sh` },
@@ -227,7 +227,7 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('stays silent for a hooks value of another shape', () => {
+    it('stays silent for a hooks value of another shape', () => {
       const root = plain()
       for (const code of [
         '{}',
@@ -244,19 +244,19 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('stays silent for a path out of the repository', () => {
+    it('stays silent for a path out of the repository', () => {
       const root = repo({ 'a.txt': 'x' })
       expect(lint(root, SETTINGS, settings(`${PROJECT}/../outside.sh`))).toEqual([])
       expect(lint(root, SETTINGS, settings('../outside.sh'))).toEqual([])
     })
 
-    it.fails('stays inside the project directory without a .git', () => {
+    it('stays inside the project directory without a .git', () => {
       const root = plain({ 'tools/ok.sh': 'x', 'packages/x/a.txt': 'x' })
       const file = 'packages/x/.claude/settings.json'
       expect(lint(root, file, settings(`${PROJECT}/../../tools/ok.sh`))).toEqual([])
     })
 
-    it.fails('stays silent for a link that leads out of the repository', () => {
+    it('stays silent for a link that leads out of the repository', () => {
       const root = repo({ 'a.txt': 'x' })
       const outside = plain({ 'real.sh': 'x' })
       symlinkSync(path.join(outside, 'real.sh'), path.join(root, 'link.sh'))
@@ -266,7 +266,7 @@ describe(RULE, () => {
       expect(lint(root, SETTINGS, settings(`${PROJECT}/linked-dir/gone.sh`))).toEqual([])
     })
 
-    it.fails('stays silent for a dangling link, and finds a link to a file in the repository', () => {
+    it('stays silent for a dangling link, and finds a link to a file in the repository', () => {
       const root = repo({ 'real.sh': 'x' })
       symlinkSync('missing.sh', path.join(root, 'dangling.sh'))
       symlinkSync('real.sh', path.join(root, 'alias.sh'))
@@ -274,7 +274,7 @@ describe(RULE, () => {
       expect(lint(root, SETTINGS, settings(`${PROJECT}/alias.sh`))).toEqual([])
     })
 
-    it.fails('reports a path below a file, where nothing is', () => {
+    it('reports a path below a file, where nothing is', () => {
       const root = plain({ 'file.sh': 'x' })
       expect(lint(root, SETTINGS, settings(`${PROJECT}/file.sh/inner.sh`))).toHaveLength(1)
     })
@@ -286,13 +286,13 @@ describe(RULE, () => {
       })
     })
 
-    it.fails('uses the .git directory as the bound', () => {
+    it('uses the .git directory as the bound', () => {
       const root = repo({ 'ok.sh': 'x' })
       expect(lint(root, SETTINGS, settings(`${PROJECT}/ok.sh`))).toEqual([])
       expect(lint(root, SETTINGS, settings(`${PROJECT}/gone.sh`))).toHaveLength(1)
     })
 
-    it.fails('reads a script below a project directory that is a link', () => {
+    it('reads a script below a project directory that is a link', () => {
       const root = repo({ 'real/ok.sh': 'x', 'real/.claude/a.txt': 'x' })
       mkdirSync(path.join(root, 'site'))
       symlinkSync('../real', path.join(root, 'site', 'proj'))
@@ -303,7 +303,7 @@ describe(RULE, () => {
   })
 
   describe('managed settings files', () => {
-    it.fails('resolves the project variable from the repository root', () => {
+    it('resolves the project variable from the repository root', () => {
       const root = repo({ 'tools/ok.sh': 'x' })
       for (const file of [
         'managed-settings.json',
@@ -315,29 +315,29 @@ describe(RULE, () => {
       }
     })
 
-    it.fails('does not read a path from the project in a managed file', () => {
+    it('does not read a path from the project in a managed file', () => {
       const root = repo({ 'tools/gone.sh': 'x' })
       expect(lint(root, 'managed-settings.json', settings('tools/other.sh'))).toEqual([])
     })
 
-    it.fails('does not read the plugin variable in a managed file', () => {
+    it('does not read the plugin variable in a managed file', () => {
       const root = repo({ 'a.txt': 'x' })
       expect(lint(root, 'managed-settings.json', settings(`${PLUGIN}/gone.sh`))).toEqual([])
     })
 
-    it.fails('reads a drop-in with the name of a project file', () => {
+    it('reads a drop-in with the name of a project file', () => {
       const root = repo({ 'a.txt': 'x' })
       const file = 'managed-settings.d/settings.local.json'
       expect(lint(root, file, settings(`${PROJECT}/gone.sh`))).toHaveLength(1)
     })
 
-    it.fails('skips a hidden drop-in, which Claude Code ignores', () => {
+    it('skips a hidden drop-in, which Claude Code ignores', () => {
       const root = repo({ 'a.txt': 'x' })
       const file = 'managed-settings.d/.20-hidden.json'
       expect(lint(root, file, settings(`${PROJECT}/gone.sh`))).toEqual([])
     })
 
-    it.fails('reads a managed file with no .git, from its directory', () => {
+    it('reads a managed file with no .git, from its directory', () => {
       const root = plain({ 'ok.sh': 'x' })
       expect(lint(root, 'managed-settings.json', settings(`${PROJECT}/ok.sh`))).toEqual([])
       expect(lint(root, 'managed-settings.json', settings(`${PROJECT}/gone.sh`))).toHaveLength(1)
@@ -347,21 +347,21 @@ describe(RULE, () => {
   describe('hooks.json in a plugin', () => {
     const FILE = 'hooks/hooks.json'
 
-    it.fails('reports a plugin script that is not there', () => {
+    it('reports a plugin script that is not there', () => {
       const root = plain({ ...MANIFEST, 'scripts/ok.sh': 'x' })
       expect(lint(root, FILE, settings(`${PLUGIN}/scripts/ok.sh`))).toEqual([])
       const messages = lint(root, FILE, settings(`${PLUGIN}/scripts/gone.sh`))
       expect(messages.map((m) => m.messageId)).toEqual(['missing'])
     })
 
-    it.fails('reads the form with no braces, and the exec form', () => {
+    it('reads the form with no braces, and the exec form', () => {
       const root = plain({ ...MANIFEST, 'scripts/ok.sh': 'x' })
       expect(lint(root, FILE, settings('$CLAUDE_PLUGIN_ROOT/scripts/gone.sh'))).toHaveLength(1)
       const code = settings('node', { args: [`${PLUGIN}/scripts/gone.sh`] })
       expect(lint(root, FILE, code)).toHaveLength(1)
     })
 
-    it.fails('resolves the plugin root from the parent of hooks/', () => {
+    it('resolves the plugin root from the parent of hooks/', () => {
       const root = plain({ 'plugins/p/.claude-plugin/plugin.json': '{}', 'plugins/p/run.sh': 'x' })
       expect(lint(root, 'plugins/p/hooks/hooks.json', settings(`${PLUGIN}/run.sh`))).toEqual([])
       expect(lint(root, 'plugins/p/hooks/hooks.json', settings(`${PLUGIN}/gone.sh`))).toHaveLength(
@@ -369,26 +369,26 @@ describe(RULE, () => {
       )
     })
 
-    it.fails('does not read the project variable, or a relative path', () => {
+    it('does not read the project variable, or a relative path', () => {
       const root = plain(MANIFEST)
       expect(lint(root, FILE, settings(`${PROJECT}/gone.sh`))).toEqual([])
       expect(lint(root, FILE, settings('scripts/gone.sh'))).toEqual([])
     })
 
-    it.fails('stays silent for a file that is not in a plugin', () => {
+    it('stays silent for a file that is not in a plugin', () => {
       const root = plain()
       expect(lint(root, FILE, settings(`${PLUGIN}/gone.sh`))).toEqual([])
       expect(lint(root, '.claude/hooks/hooks.json', settings(`${PLUGIN}/gone.sh`))).toEqual([])
     })
 
-    it.fails('stays silent for a path out of the plugin', () => {
+    it('stays silent for a path out of the plugin', () => {
       const root = plain({ ...MANIFEST, 'outside.sh': 'x' })
       const sibling = lint(root, FILE, settings(`${PLUGIN}/../outside.sh`))
       expect(sibling).toEqual([])
       expect(lint(root, FILE, settings(`${PLUGIN}/../gone.sh`))).toEqual([])
     })
 
-    it.fails('stays silent when .claude-plugin has a real path out of the repository', () => {
+    it('stays silent when .claude-plugin has a real path out of the repository', () => {
       const root = repo({ 'a.txt': 'x' })
       const outside = plain({ 'plugin.json': '{}' })
       symlinkSync(outside, path.join(root, '.claude-plugin'))

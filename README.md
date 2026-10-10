@@ -91,6 +91,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
 | [`claude/hooks-event-name-known`](docs/rules/hooks-event-name-known.md) | Each hook event name in `hooks.json`, settings and `plugin.json` is one that Claude Code knows | `error` | `error` |
+| [`claude/hooks-script-exists`](docs/rules/hooks-script-exists.md) | A repository script that a hook command names, with the project or plugin variable or by a path from the project, exists | `error` | `error` |
 
 ### Marketplace manifest
 
