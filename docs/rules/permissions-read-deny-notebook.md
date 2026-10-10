@@ -24,7 +24,7 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 A `Read` deny rule also blocks the Edit and Write tools on the same path. "NotebookEdit isn't covered, so add an `Edit` deny rule
 for paths no tool may change."[^read] The block of Edit needs v2.1.208 or later, and the block of Write needs v2.1.228 or later.
-The gap of NotebookEdit holds for every version.
+The docs give no version for the gap of NotebookEdit.
 
 The rule reports a `Read(<path>)` rule in `deny` when the source has no `Edit` deny rule for the path. The path match is on text:
 `./path` and `path` are the same path, and white space around the path does not matter. A bare `Edit` deny rule, or a bare

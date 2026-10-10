@@ -36,7 +36,7 @@ including the quoted `"true"`, gives no report. An `ask` rule is not read, becau
 
 ### One report for one fault
 
-- An `allow` rule that an equal `deny` or `ask` rule, or a bare `WebFetch` rule, covers is for `permissions-dead-allow`. This rule
+- An `allow` rule that an equal `deny` or `ask` rule, or a bare `WebFetch` `deny` or `ask` rule, covers is for `permissions-dead-allow`. This rule
   skips it.
 - A host that is not a hostname is for `permissions-webfetch-domain-syntax`. That rule accepts a wildcard in any position.
 

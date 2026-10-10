@@ -25,7 +25,7 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 A relative pattern with one directory segment, such as `src/**`, matches at a different depth for each rule type.[^read]
 In an `allow` rule, `Edit(src/**)` matches only `<cwd>/src` and the files under it. In a `deny` or `ask` rule, the same
 pattern matches a directory named `src` at any depth under the current directory. To allow a directory name at any depth,
-write `Edit(**/src/**)`.[^read] To name one directory, write `Edit(/src/**)`.[^read]
+write `Edit(**/src/**)`.[^read] To name one directory, write `Edit(/src/**)`.[^read] A path with a `/` start is relative to the settings source. It is the project root only in a project or local file.[^read]
 
 The rule reports a `Read` or `Edit` rule in `allow` whose pattern is one directory name and a final `/**`. A person who writes
 `Edit(src/**)` in `allow` can expect the depth of the same pattern in `deny`. The message offers `/src/**` and `**/src/**`.

@@ -40,6 +40,21 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
+  it('is silent for a name that is a drive letter or holds a pattern character', () => {
+    for (const dir of ['C:', 'sr?', 'a[b', 'a]b', 'a\\b']) {
+      expect(ids(perms({ allow: [`Edit(${dir}/**)`] })), dir).toEqual([])
+    }
+  })
+
+  it('reports a pattern with white space around it', () => {
+    expect(ids(perms({ allow: ['Edit( src/** )'] }))).toEqual(['depth'])
+  })
+
+  it('names the tool of the rule in the message', () => {
+    const [message] = lintJson(name, perms({ allow: ['Read(src/**)'] }), PROJECT)
+    expect(message?.message).toContain('Read(/src/**)')
+  })
+
   it('is silent in deny and ask, where the pattern matches at any depth', () => {
     for (const list of ['deny', 'ask']) {
       expect(ids(perms({ [list]: ['Edit(src/**)', 'Read(src/**)'] })), list).toEqual([])

@@ -20,6 +20,28 @@ const run = (text: string, file = PROJECT, files: Record<string, string> = {}) =
 const ids = (text: string, file = PROJECT, files: Record<string, string> = {}) =>
   run(text, file, files).map((message) => message.messageId)
 
+describe(`${name}: the host of the wildcard`, () => {
+  it('is silent for a host that is not a plain host', () => {
+    for (const host of [
+      'example.com:443',
+      'example.com/p',
+      'https://x',
+      ' x.com',
+      '.example.com',
+    ]) {
+      expect(ids(perms({ allow: [`WebFetch(domain:*.${host})`] })), host).toEqual([])
+    }
+  })
+
+  it('looks for the apex rule in the list of the wildcard rule', () => {
+    const wild = 'WebFetch(domain:*.example.com)'
+    expect(ids(perms({ allow: [wild], deny: ['WebFetch(domain:example.com)'] }))).toEqual(['apex'])
+    expect(ids(perms({ deny: [wild, 'WebFetch(domain:example.com)'] }))).toEqual([])
+    expect(ids(perms({ ask: [wild, 'WebFetch'] }))).toEqual([])
+    expect(ids(perms({ ask: [wild, 'WebFetch(domain:*)'] }))).toEqual([])
+  })
+})
+
 describe(`${name}: the reports`, () => {
   it('reports a wildcard subdomain rule alone in its list, in every file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {

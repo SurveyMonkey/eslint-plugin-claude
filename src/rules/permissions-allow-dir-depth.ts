@@ -19,7 +19,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'depth' }> = {
     schema: [],
     messages: {
       depth:
-        '`{{tool}}({{pattern}})` in allow matches only `<cwd>/{{directory}}`, not a `{{directory}}` directory at a deeper level. Write `{{tool}}(/{{pattern}})` for that one directory, or `{{tool}}(**/{{pattern}})` for any depth.',
+        '`{{tool}}({{pattern}})` in allow matches only `<cwd>/{{directory}}`, not a `{{directory}}` directory at a deeper level. Write `{{tool}}(/{{pattern}})` for that one directory in a project file, or `{{tool}}(**/{{pattern}})` for any depth.',
     },
   },
   create(context) {
