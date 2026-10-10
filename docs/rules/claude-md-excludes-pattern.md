@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/claude-md-excludes-pattern, which reports a claudeMdExcludes pattern that does not start with a slash, a Windows drive or **/, because Claude Code matches the patterns against absolute file paths and the pattern matches none.
+description: The ESLint rule claude/claude-md-excludes-pattern, which reports a claudeMdExcludes pattern that does not start with a slash, a Windows drive, two backslashes or **/ and is not **, because Claude Code matches the patterns against absolute file paths and the pattern matches none.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [13]
@@ -24,7 +24,7 @@ Start each `claudeMdExcludes` pattern at the root or with `**/`.
 or an absolute path. Claude Code matches the patterns against absolute file paths.[^memory][^ref]
 A pattern such as `packages/web/**` starts with a name, so it matches no absolute path. Claude
 Code loads the files that you meant to skip. The docs show no error. The large codebases guide says
-to start a relative-style pattern with `**/`.[^guide]
+to start a relative pattern with `**/`.[^guide]
 
 The rule reports a string entry that does not start in one of these ways:
 
@@ -33,11 +33,11 @@ The rule reports a string entry that does not start in one of these ways:
 - A Windows drive and a separator, such as `C:\` or `C:/`.
 - Two backslashes, for a Windows share.
 
-The pattern `**` alone matches every absolute path, so the rule accepts it. The docs do not say that
-Claude Code expands `~/` in these patterns, so the rule reports an entry that starts with `~/`.
+The pattern `**` alone matches every absolute path, so the rule accepts it. The docs do not say
+that Claude Code expands `~/` here. So the rule reports an entry that starts with `~/`.
 
-The report is on the entry. The rule ignores a `claudeMdExcludes` value that is not an array, and an
-entry that is not a string. [`memory-settings-schema`](memory-settings-schema.md) reports those.
+The report is on the entry. The rule ignores a `claudeMdExcludes` value that is not an array. It
+also ignores an entry that is not a string. [`memory-settings-schema`](memory-settings-schema.md) reports those.
 If a file sets the key twice, the rule reads the last one, as `JSON.parse` does. It makes no report
 on a hidden drop-in in `managed-settings.d/`, because Claude Code ignores that file.
 
@@ -64,5 +64,5 @@ None.
 ## Sources
 
 [^memory]: [How Claude remembers your project: Exclude specific CLAUDE.md files](https://code.claude.com/docs/en/memory#exclude-specific-claude-md-files)
-[^ref]: [Settings reference: claudeMdExcludes](https://code.claude.com/docs/en/settings-reference#claudemdexcludes)
-[^guide]: [Monorepos and large repos: Exclude irrelevant CLAUDE.md files](https://code.claude.com/docs/en/large-codebases#exclude-irrelevant-claude-md-files)
+[^ref]: [All settings: claudeMdExcludes](https://code.claude.com/docs/en/settings-reference#claudemdexcludes)
+[^guide]: [Set up Claude Code in a monorepo or large codebase: Exclude irrelevant CLAUDE.md files](https://code.claude.com/docs/en/large-codebases#exclude-irrelevant-claude-md-files)

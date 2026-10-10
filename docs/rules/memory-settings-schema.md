@@ -29,19 +29,19 @@ reference and the memory page.
   two backslashes (a Windows share).
 - `claudeMdExcludes` is an array of strings.[^excludes] The rule reports each entry that is not a
   string. [`claude-md-excludes-pattern`](claude-md-excludes-pattern.md) checks the patterns.
-- `instructionFiles` in the options of the built-in plugin that reads `AGENTS.md` is
+- `instructionFiles` in the options of the built-in plugin that reads `AGENTS.md` is one of
   `claude-md-or-agents-md`, `claude-md-and-agents-md`, `claude-md` or `managed-only`.[^load] The
   setting is `pluginConfigs["cc-plugin-agents-md@builtin"].options.instructionFiles`. Before
   Claude Code v2.1.285, the plugin ID was `agents-md@builtin`. Version 2.1.285 and later read an
   entry under either ID, so the rule checks both.[^plugin]
 
-The report is on the value. A key with the value `null` reads as unset, and the rule makes no
-report on it. If a file sets a key twice, the rule reads the last one, as `JSON.parse` does. The
+The report is on the value. The rule makes no report on a key with the value `null`, as for an
+unset key. If a file sets a key twice, the rule reads the last one, as `JSON.parse` does. The
 rule makes no report on a hidden drop-in in `managed-settings.d/`, because Claude Code ignores that
 file.
 
 The rule does not check where a key is allowed. Claude Code ignores a `pluginConfigs` entry in a
-project or local settings file.[^plugin] The settings group reports a key in a file that does not
+project or local settings file.[^plugin] The settings rules report a key in a file that does not
 read it.
 
 Fail:
@@ -70,8 +70,8 @@ None.
 
 ## Sources
 
-[^enabled]: [Settings reference: autoMemoryEnabled](https://code.claude.com/docs/en/settings-reference#automemoryenabled)
-[^directory]: [Settings reference: autoMemoryDirectory](https://code.claude.com/docs/en/settings-reference#automemorydirectory)
-[^excludes]: [Settings reference: claudeMdExcludes](https://code.claude.com/docs/en/settings-reference#claudemdexcludes)
+[^enabled]: [All settings: autoMemoryEnabled](https://code.claude.com/docs/en/settings-reference#automemoryenabled)
+[^directory]: [All settings: autoMemoryDirectory](https://code.claude.com/docs/en/settings-reference#automemorydirectory)
+[^excludes]: [All settings: claudeMdExcludes](https://code.claude.com/docs/en/settings-reference#claudemdexcludes)
 [^load]: [How Claude remembers your project: Choose which instruction files load](https://code.claude.com/docs/en/memory#choose-which-instruction-files-load)
-[^plugin]: [Settings reference: pluginConfigs](https://code.claude.com/docs/en/settings-reference#pluginconfigs)
+[^plugin]: [All settings: pluginConfigs](https://code.claude.com/docs/en/settings-reference#pluginconfigs)

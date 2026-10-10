@@ -29,8 +29,8 @@ once, at the start of the file. A file of exactly 4194304 bytes passes.
 The rule reads `CLAUDE.md` and `CLAUDE.local.md` in any directory, and `.claude/CLAUDE.md`. The
 docs name CLAUDE.md files for this limit. They do not say that it applies to `AGENTS.md`, so the
 rule makes no report on `AGENTS.md`. It makes no report on a file in `.claude/rules/`, even when
-the file is named `CLAUDE.md`. Any other Markdown file, such as `docs/CLAUDE-notes.md`, is not
-read.
+the file is named `CLAUDE.md`. The rule does not check any other Markdown file, such as
+`docs/CLAUDE-notes.md`.
 
 ESLint removes a byte order mark before the rule runs, so the rule does not count its 3 bytes. A
 file that is within 3 bytes of the limit can pass the rule and still be too large.
@@ -61,13 +61,13 @@ Build with `pnpm build`.
 'claude/claude-md-max-bytes': ['error', { max: 1048576 }]
 ```
 
-The default is the limit in the docs.[^how] The schema sets 4194304 as the maximum, because the
-docs show no Claude Code setting that moves that limit. A team can set a lower value. A config that sets only the
-severity keeps the default. The `recommended` and `strict` configs set no option.
+The default is the limit in the docs.[^how] The docs show no Claude Code setting that moves the
+limit. So the schema sets 4194304 as the maximum. A team can set a lower value. A config that sets
+only the severity keeps the default. The `recommended` and `strict` configs set no option.
 
 At the default, the message says that Claude Code skips a CLAUDE.md file of more than 4194304
-bytes. At another value, the message says "The configured limit is 1048576 bytes", and it does not
-say what the docs allow.
+bytes. At another value, the message gives the configured limit and does not say what the docs
+allow.
 
 ## Sources
 
