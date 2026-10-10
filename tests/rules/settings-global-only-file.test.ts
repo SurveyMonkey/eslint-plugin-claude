@@ -50,7 +50,7 @@ jsonTester.run('settings-global-only-file (invalid)', rule, {
         errors: [{ messageId: 'theme' as const, line: 1, column: 1, endLine: 1, endColumn: 2 }],
       }),
     ),
-    // The content does not matter: an empty object, an array, and a file with leading blank lines.
+    // The content does not matter: an empty object, an array, and a file that starts with blank lines.
     {
       code: '{}',
       filename: '.claude/keybindings.json',

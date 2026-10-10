@@ -3,7 +3,8 @@
 // case. A value that matches no style gives the Default style. The rule reads the
 // `.claude/output-styles/` directories of the project. The option `allow` lists the user and
 // plugin styles that a repository cannot show. The rule does not read a managed file. A managed
-// policy can name a style from any source, so the rule cannot show that a style is absent.
+// file applies to every project on a machine. The project styles that it names are not in the
+// repository that holds it.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
