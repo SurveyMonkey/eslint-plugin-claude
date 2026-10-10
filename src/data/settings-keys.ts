@@ -317,13 +317,21 @@ const REPORTED_BY: Record<string, string> = {
  *  that it reads there for the other value. */
 const FLAGGED_VALUE: Record<string, boolean> = { bashEditDiffEnabled: true }
 
+/** The two marketplace keys that have an alias, as alias to canonical key. Claude Code reads an
+ *  alias from v2.1.232 on, in each file that accepts the canonical key
+ *  (https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases). With both
+ *  spellings in one file, it uses the canonical key. */
+export const MARKETPLACE_KEY_ALIASES = {
+  additionalMarketplaces: 'extraKnownMarketplaces',
+  allowedMarketplaces: 'strictKnownMarketplaces',
+} as const
+
 /** An alias and the key it stands for. Claude Code reads an alias in each file
  *  that accepts the canonical key, as it reads the canonical key
  *  (https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases
  *  and the entry for `disableAutoMode`). */
 const ALIASES: Record<string, string> = {
-  additionalMarketplaces: 'extraKnownMarketplaces',
-  allowedMarketplaces: 'strictKnownMarketplaces',
+  ...MARKETPLACE_KEY_ALIASES,
   'permissions.disableAutoMode': 'disableAutoMode',
 }
 

@@ -1,13 +1,15 @@
-// The rule reads the top-level keys of `.claude/settings.json` and
-// `.claude/settings.local.json`. The files glob and the decoy files are in
+// The rule reads the top-level keys of `.claude/settings.json`, `.claude/settings.local.json` and
+// the managed settings files. A project file gets the `extraKnownMarketplaces` pair only, because
+// `strictKnownMarketplaces` is a managed key. The files globs and the decoy files are in
 // tests/configs.test.ts.
-import { expect, it } from 'vitest'
-import { json5Tester, jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
+import { json5Tester, jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-marketplace-key-alias-conflict')
 
 const filename = '.claude/settings.json'
 const local = '.claude/settings.local.json'
+const managed = 'managed-settings.json'
+const dropIn = 'managed-settings.d/10-a.json'
 const source = { 'acme-tools': { source: { source: 'github', repo: 'acme-corp/claude-plugins' } } }
 const policy = [{ source: 'github', repo: 'acme-corp/claude-plugins' }]
 
@@ -18,7 +20,7 @@ jsonTester.run('settings-marketplace-key-alias-conflict (valid)', rule, {
     { code: JSON.stringify({ additionalMarketplaces: source }), filename },
     { code: JSON.stringify({ strictKnownMarketplaces: policy }), filename: local },
     { code: JSON.stringify({ allowedMarketplaces: policy }), filename: local },
-    // The policy pair is not checked: `strictKnownMarketplaces` has the scope "Managed".
+    // A project file does not get the policy pair: `strictKnownMarketplaces` has the scope "Managed".
     {
       code: JSON.stringify({ strictKnownMarketplaces: policy, allowedMarketplaces: policy }),
       filename,
@@ -28,6 +30,22 @@ jsonTester.run('settings-marketplace-key-alias-conflict (valid)', rule, {
       filename: local,
     },
     { code: '{"strictKnownMarketplaces": [], "allowedMarketplaces": []}', filename },
+    // A managed file with one spelling of each pair.
+    { code: JSON.stringify({ strictKnownMarketplaces: policy }), filename: managed },
+    { code: JSON.stringify({ allowedMarketplaces: policy }), filename: dropIn },
+    {
+      code: JSON.stringify({ extraKnownMarketplaces: source, allowedMarketplaces: policy }),
+      filename: managed,
+    },
+    {
+      code: JSON.stringify({ additionalMarketplaces: source, strictKnownMarketplaces: policy }),
+      filename: dropIn,
+    },
+    // Claude Code ignores a hidden drop-in, so it reads no key there.
+    {
+      code: JSON.stringify({ strictKnownMarketplaces: policy, allowedMarketplaces: policy }),
+      filename: 'managed-settings.d/.10-a.json',
+    },
     // One spelling of the pair with a policy key is no conflict.
     {
       code: JSON.stringify({ extraKnownMarketplaces: source, allowedMarketplaces: policy }),
@@ -89,6 +107,58 @@ jsonTester.run('settings-marketplace-key-alias-conflict (invalid)', rule, {
         },
       ],
     },
+    // The managed files get the policy pair, and the other pair too.
+    {
+      code: JSON.stringify({ strictKnownMarketplaces: policy, allowedMarketplaces: policy }),
+      filename: managed,
+      errors: [
+        {
+          messageId: 'conflict',
+          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
+          line: 1,
+          column: 84,
+          endColumn: 105,
+        },
+      ],
+    },
+    {
+      code: JSON.stringify({ allowedMarketplaces: policy, strictKnownMarketplaces: policy }),
+      filename: dropIn,
+      errors: [
+        {
+          messageId: 'conflict',
+          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
+          line: 1,
+          column: 2,
+          endColumn: 23,
+        },
+      ],
+    },
+    {
+      code: JSON.stringify({ extraKnownMarketplaces: source, additionalMarketplaces: source }),
+      filename: managed,
+      errors: [{ messageId: 'conflict' }],
+    },
+    // A managed file with both pairs: one report for each pair.
+    {
+      code: JSON.stringify({
+        extraKnownMarketplaces: source,
+        additionalMarketplaces: source,
+        strictKnownMarketplaces: policy,
+        allowedMarketplaces: policy,
+      }),
+      filename: managed,
+      errors: [
+        {
+          messageId: 'conflict',
+          data: { alias: 'additionalMarketplaces', canonical: 'extraKnownMarketplaces' },
+        },
+        {
+          messageId: 'conflict',
+          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
+        },
+      ],
+    },
     // A key counts as set for any value.
     {
       code: '{"extraKnownMarketplaces": null, "additionalMarketplaces": {}}',
@@ -145,15 +215,4 @@ jsonTester.run('settings-marketplace-key-alias-conflict (message text)', rule, {
       ],
     },
   ],
-})
-
-// Red first: the managed files do not get the policy pair yet. The `.fails` mark goes away with the
-// rule change.
-it.fails('reports the policy pair in a managed file', () => {
-  const messages = lintJson(
-    'settings-marketplace-key-alias-conflict',
-    '{"strictKnownMarketplaces":[],"allowedMarketplaces":[]}',
-    'managed-settings.json',
-  )
-  expect(messages.map((m) => m.messageId)).toEqual(['conflict'])
 })
