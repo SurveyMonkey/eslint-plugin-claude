@@ -187,6 +187,37 @@ jsonTester.run('settings-schema (valid)', rule, {
     { code: obj({ plansDirectory: 'a..b/c' }), filename: project },
     { code: obj({ browserExternalPageTools: 'Disable' }), filename: managed },
     { code: obj({ policyHelper: { path: '/.hidden/h' } }), filename: managed },
+    { code: obj({ policyHelper: { path: 'C:/Tools/helper.exe' } }), filename: managed },
+    // Each scheme and each path form that the docs allow.
+    ...[
+      'https',
+      'http',
+      'vscode',
+      'vscode-insiders',
+      'cursor',
+      'windsurf',
+      'zed',
+      'jetbrains',
+      'idea',
+      'slack',
+      'linear',
+      'notion',
+      'figma',
+    ].map((scheme) => ({
+      code: obj({ footerLinksRegexes: [{ ...REGEX_ROW, url: `${scheme}://x/{a}` }] }),
+      filename: project,
+    })),
+    ...['C:\\tips.json', 'C:/tips.json', '\\\\srv\\share\\t.json'].map((tipsFile) => ({
+      code: obj({ spinnerTipsOverride: { tipsFile } }),
+      filename: project,
+    })),
+    {
+      code: obj({
+        gatewayInternalNetworks: ['0.0.0.0/8', '255.255.255.255/32', '203.0.113.0/24', '1.2.3.4/9'],
+        allowedChannelPlugins: ['a@b'],
+      }),
+      filename: managed,
+    },
     // Claude Code ignores a surface name that it does not know.
     {
       code: obj({ strictPluginOnlyCustomization: ['skills', 'futureSurface'] }),
@@ -552,8 +583,8 @@ jsonTester.run('settings-schema (types)', rule, {
     ),
     bad(
       { allowedChannelPlugins: [5, [], { marketplace: 1, plugin: 'p' }] },
-      type('allowedChannelPlugins[0]', 'an object or a string'),
-      type('allowedChannelPlugins[1]', 'an object or a string'),
+      type('allowedChannelPlugins[0]', 'an object or a "plugin@marketplace" string'),
+      type('allowedChannelPlugins[1]', 'an object or a "plugin@marketplace" string'),
       type('allowedChannelPlugins[2].marketplace', 'a string'),
     ),
     bad({ footerLinksRegexes: {} }, type('footerLinksRegexes', 'an array')),
@@ -907,6 +938,11 @@ jsonTester.run('settings-schema (forms)', rule, {
       'C:\\.\\h.exe',
       '\\\\server\\a\\.\\b.exe',
       'helper.exe',
+      'C:\\Tools\\helper.exe.txt',
+      'C:\\Tools\\helperexe',
+      'C:/a/../b.exe',
+      'C:/a/./b.exe',
+      '/a\n/../b',
     ].map((value) =>
       bad(
         { policyHelper: { path: value } },
@@ -936,9 +972,29 @@ jsonTester.run('settings-schema (forms)', rule, {
       { footerLinksRegexes: [{ ...REGEX_ROW, type: 'glob' }] },
       oneOf('footerLinksRegexes[0].type', words(['regex'])),
     ),
+    ...['tips.json', '~x/t.json', '~tips.json'].map((tipsFile) =>
+      bad(
+        { spinnerTipsOverride: { tipsFile } },
+        format('spinnerTipsOverride.tipsFile', 'an absolute path or a path that starts with ~/'),
+      ),
+    ),
+    ...['p', '@m', 'p@', 'p@m@n', 'p @m'].flatMap((id) => [
+      bad({ appendPlugins: [id] }, format('appendPlugins[0]', 'a "plugin@marketplace" string')),
+      bad({ prependPlugins: [id] }, format('prependPlugins[0]', 'a "plugin@marketplace" string')),
+      bad(
+        { allowedChannelPlugins: [id] },
+        format('allowedChannelPlugins[0]', 'a "plugin@marketplace" string'),
+      ),
+    ]),
+    ...['1.0.0.0/7', '1.0.0.0/33', '1.0.0.0', '256.0.0.0/8', '1.2.3/8', 'a'].map((block) =>
+      bad(
+        { gatewayInternalNetworks: [block] },
+        format('gatewayInternalNetworks[0]', 'an IPv4 CIDR block with a prefix from /8 to /32'),
+      ),
+    ),
     bad(
-      { spinnerTipsOverride: { tipsFile: 'tips.json' } },
-      format('spinnerTipsOverride.tipsFile', 'an absolute path or a path that starts with ~/'),
+      { gatewayInternalNetworks: Array(5).fill('1.0.0.0/8') },
+      range('gatewayInternalNetworks', 'an array of at most 4 entries'),
     ),
     bad(
       {
