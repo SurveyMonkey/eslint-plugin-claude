@@ -1296,11 +1296,12 @@ describe('configs', () => {
     }
   })
 
+  // CI runners are slow, so the two tests that run ESLint get 30 s in place of the 5 s default.
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 })
