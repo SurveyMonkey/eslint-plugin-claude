@@ -18,7 +18,7 @@ const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m
 const TREE = '```\nsrc/\n├── index.ts\n├── rules/\n│   └── a.ts\n└── data/\n```\n'
 
 describe(RULE, () => {
-  it.fails('reports a directory tree in a fenced block, over the whole block', () => {
+  it('reports a directory tree in a fenced block, over the whole block', () => {
     const messages = lint(`# Layout\n\n${TREE}`)
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
@@ -34,24 +34,24 @@ describe(RULE, () => {
     )
   })
 
-  it.fails('reports a tree with plain characters, in a block with or without a language', () => {
+  it('reports a tree with plain characters, in a block with or without a language', () => {
     expect(ids(lint('```text\nsrc\n|-- a.ts\n|-- b.ts\n`-- c.ts\n```\n'))).toEqual(['tree'])
     expect(ids(lint('~~~\nsrc\n+-- a.ts\n+-- b.ts\n\\-- c.ts\n~~~\n'))).toEqual(['tree'])
     expect(ids(lint('    src\n    ├── a.ts\n    ├── b.ts\n    └── c.ts\n'))).toEqual(['tree'])
   })
 
-  it.fails('stays silent on a block with fewer than three branches, and on other blocks', () => {
+  it('stays silent on a block with fewer than three branches, and on other blocks', () => {
     expect(lint('```\nsrc\n├── a.ts\n└── b.ts\n```\n')).toEqual([])
     expect(lint('```bash\npnpm install\npnpm test\n```\n')).toEqual([])
     expect(lint('```\nsrc/a.ts\nsrc/b.ts\nsrc/c.ts\n```\n')).toEqual([])
   })
 
-  it.fails('stays silent on a tree outside a code block', () => {
+  it('stays silent on a tree outside a code block', () => {
     expect(lint('├── a.ts\n├── b.ts\n└── c.ts\n')).toEqual([])
     expect(lint('<!--\n├── a.ts\n├── b.ts\n└── c.ts\n-->\n')).toEqual([])
   })
 
-  it.fails('reports a list of dependencies in a code block', () => {
+  it('reports a list of dependencies in a code block', () => {
     for (const text of [
       '```json\n{\n  "dependencies": {\n    "react": "^18.2.0"\n  }\n}\n```\n',
       '```json\n  "devDependencies": {\n    "vitest": "^5.0.0"\n  }\n```\n',
@@ -67,14 +67,14 @@ describe(RULE, () => {
     )
   })
 
-  it.fails('stays silent on a block with one pinned line, or on the word in prose', () => {
+  it('stays silent on a block with one pinned line, or on the word in prose', () => {
     expect(lint('```\nflask==3.0.0\nrun it\n```\n')).toEqual([])
     expect(lint('```json\n{ "name": "a", "scripts": {} }\n```\n')).toEqual([])
     expect(lint('Install the dependencies with pnpm.\n')).toEqual([])
     expect(lint('Use `"dependencies"` only for runtime code.\n')).toEqual([])
   })
 
-  it.fails('reports a list that describes files one by one, over the whole list', () => {
+  it('reports a list that describes files one by one, over the whole list', () => {
     const list =
       '- `src/index.ts`: the entry point\n- `src/rules/`: the rules\n- `package.json` - the manifest\n'
     const messages = lint(`## Files\n\n${list}`)
@@ -84,15 +84,20 @@ describe(RULE, () => {
       line: 3,
       column: 1,
       endLine: 5,
-      endColumn: 34,
+      endColumn: 32,
     })
     expect(messages[0]?.message).toBe(
       'This list describes the code file by file. Claude can read each file. Cut it, or keep only what the code does not show.',
     )
-    expect(ids(lint(list.replaceAll('- ', '* ')))).toEqual(['fileList'])
+    expect(ids(lint('* `a.ts`: one\n* `b.ts`: two\n* `c.ts` is three\n'))).toEqual(['fileList'])
+    // A dash with a space after it separates the path from the text, whatever the dash is.
+    expect(ids(lint('- `a.ts` \u2013 one\n- `b.ts` \u2014 two\n- `c.ts` - three\n'))).toEqual([
+      'fileList',
+    ])
+    expect(lint('- `a.ts` -one\n- `b.ts` -two\n- `c.ts` -three\n')).toEqual([])
   })
 
-  it.fails('stays silent on a short list, a list of other items and one that mixes shapes', () => {
+  it('stays silent on a short list, a list of other items and one that mixes shapes', () => {
     expect(lint('- `src/index.ts`: the entry point\n- `src/rules/`: the rules\n')).toEqual([])
     expect(
       lint('- `pnpm test`: run the tests\n- `pnpm lint`: run the linter\n- `pnpm build`: build\n'),
@@ -101,12 +106,15 @@ describe(RULE, () => {
     expect(
       lint('- `src/a.ts`: one\n- `src/b.ts`: two\n- note\n- `src/c.ts`: three\n- more\n'),
     ).toEqual([])
+    // An item with no text, and an item that starts with a code block.
+    expect(lint('-\n- `src/a.ts`: one\n- `src/b.ts`: two\n')).toEqual([])
+    expect(lint('- ```\n  x\n  ```\n- `src/a.ts`: one\n- `src/b.ts`: two\n')).toEqual([])
     expect(lint('```\n- `src/a.ts`: one\n- `src/b.ts`: two\n- `src/c.ts`: three\n```\n')).toEqual(
       [],
     )
   })
 
-  it.fails('checks a CLAUDE.md and a CLAUDE.local.md, and no other file', () => {
+  it('checks a CLAUDE.md and a CLAUDE.local.md, and no other file', () => {
     for (const file of ['/repo/CLAUDE.md', '/repo/.claude/CLAUDE.md', '/repo/CLAUDE.local.md']) {
       expect(ids(lint(TREE, file)), file).toEqual(['tree'])
     }
