@@ -130,7 +130,19 @@ describe(`${name}: SessionStart and Setup`, () => {
     }
   })
 
-  it('says that the hook runs after clear and compaction', () => {
+  it('keeps the matcher of one group inside that group', () => {
+    const text = JSON.stringify({
+      hooks: {
+        SessionStart: [
+          { matcher: 'startup', hooks: [mcp] },
+          { matcher: 'clear', hooks: [mcp] },
+        ],
+      },
+    })
+    expect(jsonIds(name, text, FILES.project)).toEqual(['launch'])
+  })
+
+  it('names the launch-only matcher in the message', () => {
     const [message] = lintJson(
       name,
       settings(hooks('SessionStart', [mcp], 'startup')),

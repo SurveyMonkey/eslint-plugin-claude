@@ -52,6 +52,33 @@ describe(`${name}: the report`, () => {
   })
 })
 
+describe(`${name}: the files that the rule reads`, () => {
+  it('reads the last of two hooks keys', () => {
+    expect(idsAt({}, '{"disableAllHooks": true, "hooks": {"Stop": []}, "hooks": {}}')).toEqual([])
+    expect(idsAt({}, '{"disableAllHooks": true, "hooks": {}, "hooks": {"Stop": []}}')).toEqual([
+      'off',
+    ])
+  })
+
+  it('reads no sibling for the local file, which is the top of the project scopes', () => {
+    expect(idsAt({ [LOCAL]: '{"disableAllHooks": false}' }, OFF, LOCAL)).toEqual(['off'])
+    expect(idsAt({ [LOCAL]: '{' }, OFF, LOCAL)).toEqual(['off'])
+  })
+
+  it('is silent when a managed sibling sets the key, whatever its value', () => {
+    expect(idsAt({ [DROP]: '{"disableAllHooks": true}' }, OFF, MAIN)).toEqual([])
+    expect(idsAt({ [MAIN]: '{"disableAllHooks": false}' }, OFF, DROP)).toEqual([])
+  })
+
+  it('reports when the local file sets a value that is not the Boolean false', () => {
+    for (const value of [0, '', null, 'false']) {
+      expect(idsAt({ [LOCAL]: json({ disableAllHooks: value }) }, OFF), String(value)).toEqual([
+        'off',
+      ])
+    }
+  })
+})
+
 describe(`${name}: silent cases`, () => {
   it('is silent when disableAllHooks is false, unset or not true', () => {
     expect(idsAt({}, { disableAllHooks: false, hooks: HOOKS })).toEqual([])

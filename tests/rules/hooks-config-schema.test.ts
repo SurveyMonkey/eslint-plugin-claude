@@ -258,6 +258,34 @@ describe(`${name}: hooks.json of a plugin`, () => {
   })
 })
 
+describe(`${name}: the type of each field`, () => {
+  it('reports a value of the wrong type for each field that has a type', () => {
+    const wrong: [string, unknown][] = [
+      ['if', 1],
+      ['timeout', 'x'],
+      ['statusMessage', 1],
+      ['once', 'x'],
+      ['command', 1],
+      ['args', 'x'],
+      ['async', 'x'],
+      ['asyncRewake', 'x'],
+      ['url', 5],
+      ['headers', 'x'],
+      ['allowedEnvVars', 'x'],
+      ['server', 5],
+      ['tool', 5],
+      ['input', 'x'],
+      ['prompt', 5],
+      ['model', 1],
+      ['continueOnBlock', 'x'],
+    ]
+    for (const [field, value] of wrong) {
+      const handler = { type: 'command', command: './a.sh', [field]: value }
+      expect(ids(hooks('Stop', [handler])), field).toEqual(['fieldType'])
+    }
+  })
+})
+
 describe(`${name}: files of another tool`, () => {
   it('is silent on a hooks/hooks.json in a hidden folder other than .claude', () => {
     expect(jsonIds(name, '{"version": 1}', '/repo/.github/hooks/hooks.json')).toEqual([])
