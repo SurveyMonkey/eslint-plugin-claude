@@ -330,6 +330,18 @@
       "hash": "d7b544944c53bc85bda3166f8c09576717929262b3d86ca2ce3e70e376d11bb8"
     }
   ],
+  "hooks-env-var-unavailable": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Persist environment variables",
+      "hash": "8b3007d6b0adb35ca8813a3aaeacf004935a0695af9c3048096d194c972ebc69"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common input fields",
+      "hash": "7a0641dab6a9fe405cbd1ec0b173c2a25f9d43e5d812659a31c966244dd5dc46"
+    }
+  ],
   "hooks-event-name-known": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -350,6 +362,13 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hooks in skills and agents",
       "hash": "a4c03bc876cb3ca2fcd2ef8192158d7aa5e2ed4f4c5a66c5cc6c0e9ec258cefc"
+    }
+  ],
+  "hooks-exec-form-command-spaces": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
     }
   ],
   "hooks-handler-field-ignored": [
@@ -414,6 +433,18 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Response schema",
       "hash": "77f33dd00bdad1fde02c8b5c324ff37f3266b1819ff9d8af9195b8408976b054"
+    }
+  ],
+  "hooks-http-env-allowlist": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "HTTP hook fields",
+      "hash": "d8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "httpHookAllowedEnvVars",
+      "hash": "c4cefb3c2edf2f273972438c1ccabc4000768a42ec186816b0926532dde08b0c"
     }
   ],
   "hooks-if-condition": [
@@ -548,6 +579,18 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "hooks-powershell-placeholder": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Windows PowerShell tool",
+      "hash": "a8d8d0cf696e9590a4bf712072cea52147f8c779c460efd53304772ad87bb510"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
     }
   ],
   "marketplace-command-version-ignored": [
@@ -1471,7 +1514,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "ac1fe1d096f0218a7c4b5d24d6bcf54afa28350e5af89df341bf50d25c5d6dee"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",

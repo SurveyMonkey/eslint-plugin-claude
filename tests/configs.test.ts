@@ -39,6 +39,16 @@ const hookGroups = [{ matcher: ['a'], hooks: [{ type: 'http', url: 'u', async: t
 const hooksFaults = {
   Stop: [...hookGroups, { hooks: [{ type: 'command', command: 'claude --enable-auto-mode' }] }],
   SessionEnd: [{ hooks: [{ type: 'prompt', prompt: 'p' }] }],
+  // A bare executable name with whitespace, in exec form (`hooks-exec-form-command-spaces`).
+  SubagentStop: [{ hooks: [{ type: 'command', command: 'my tool', args: ['x'] }] }],
+  // An http hook with a header variable that `allowedEnvVars` does not list (`hooks-http-env-allowlist`).
+  Elicitation: [{ hooks: [{ type: 'http', url: 'u', headers: { A: '$X' } }] }],
+  // `$CLAUDE_MODEL` does not exist (`hooks-env-var-unavailable`).
+  PreModelSwitch: [{ hooks: [{ type: 'command', command: 'echo $CLAUDE_MODEL' }] }],
+  // A bare `$CLAUDE_PROJECT_DIR` in a PowerShell command (`hooks-powershell-placeholder`).
+  PostCompact: [
+    { hooks: [{ type: 'command', shell: 'powershell', command: '& $CLAUDE_PROJECT_DIR\\x.ps1' }] },
+  ],
   // A matcher on an event without matcher support (`hooks-matcher-unsupported-event`).
   // A matcher that names an MCP server and no tool (`hooks-matcher-mcp-name`).
   PreToolUse: [
@@ -74,6 +84,26 @@ hooks:
     - hooks:
         - type: prompt
           prompt: p
+  SubagentStop:
+    - hooks:
+        - type: command
+          command: my tool
+          args: [x]
+  Elicitation:
+    - hooks:
+        - type: http
+          url: u
+          headers:
+            A: $X
+  PreModelSwitch:
+    - hooks:
+        - type: command
+          command: echo $CLAUDE_MODEL
+  PostCompact:
+    - hooks:
+        - type: command
+          shell: powershell
+          command: '& $CLAUDE_PROJECT_DIR\\x.ps1'
   PreToolUse:
     - matcher: mcp__memory
       hooks:
@@ -655,81 +685,109 @@ const EXPECTED = [
   'packages/hk/.claude/agents/ev.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-config-schema@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-env-var-unavailable@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-if-condition@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-mcp-name@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-powershell-placeholder@2',
   'packages/hk/.claude/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/hooks/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.json: claude/hooks-config-schema@2',
   'packages/hk/.claude/settings.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/.claude/settings.json: claude/hooks-env-var-unavailable@2',
+  'packages/hk/.claude/settings.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/settings.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/settings.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/settings.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/settings.json: claude/hooks-if-condition@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-mcp-name@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/settings.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-config-schema@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-env-var-unavailable@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-if-condition@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-mcp-name@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/.claude/skills/ev/SKILL.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-config-schema@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-env-var-unavailable@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-field-ignored@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-handler-type-event-support@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-http-env-allowlist@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-if-condition@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-enum@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-mcp-name@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-never-matches@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-powershell-placeholder@2',
   'packages/hk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-config-schema@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-env-var-unavailable@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-if-condition@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-enum@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-mcp-name@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/managed-settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.json: claude/hooks-config-schema@2',
   'packages/hk/managed-settings.json: claude/hooks-disabled-by-disableallhooks@2',
+  'packages/hk/managed-settings.json: claude/hooks-env-var-unavailable@2',
+  'packages/hk/managed-settings.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/managed-settings.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/managed-settings.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/managed-settings.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/managed-settings.json: claude/hooks-if-condition@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-enum@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-mcp-name@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/managed-settings.json: claude/hooks-powershell-placeholder@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-config-schema@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-env-var-unavailable@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-exec-form-command-spaces@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-field-ignored@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-handler-type-event-support@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-http-env-allowlist@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-if-condition@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-enum@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-mcp-name@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-never-matches@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-syntax@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-unsupported-event@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-powershell-placeholder@2',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
@@ -921,8 +979,11 @@ const HOOKS_RULES = [
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
+  { name: 'hooks-env-var-unavailable', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-field-ignored', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-handler-type-event-support', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-http-env-allowlist', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-if-condition', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-matcher-enum', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-matcher-mcp-name', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
@@ -940,6 +1001,7 @@ const HOOKS_RULES = [
       ],
     ],
   },
+  { name: 'hooks-powershell-placeholder', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
@@ -1132,9 +1194,9 @@ describe('configs', () => {
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 })

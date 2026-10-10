@@ -20,9 +20,12 @@ import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
 import hooksConfigSchema from './rules/hooks-config-schema.ts'
 import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
+import hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
 import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
+import hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
 import hooksIfCondition from './rules/hooks-if-condition.ts'
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
@@ -30,6 +33,7 @@ import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
 import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
+import hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
 import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
 import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
@@ -112,8 +116,11 @@ const modules = [
   hooksCommandRemovedCliFlag,
   hooksConfigSchema,
   hooksDisabledByDisableallhooks,
+  hooksEnvVarUnavailable,
+  hooksExecFormCommandSpaces,
   hooksHandlerFieldIgnored,
   hooksHandlerTypeEventSupport,
+  hooksHttpEnvAllowlist,
   hooksIfCondition,
   hooksMatcherEnum,
   hooksMatcherMcpName,
@@ -121,6 +128,7 @@ const modules = [
   hooksMatcherSyntax,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
+  hooksPowershellPlaceholder,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
   skillForkFieldsRequireContext,
@@ -232,8 +240,11 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-command-removed-cli-flag': 'error',
   'hooks-config-schema': 'error',
   'hooks-disabled-by-disableallhooks': 'error',
+  'hooks-env-var-unavailable': 'error',
+  'hooks-exec-form-command-spaces': 'error',
   'hooks-handler-field-ignored': 'error',
   'hooks-handler-type-event-support': 'error',
+  'hooks-http-env-allowlist': 'error',
   'hooks-if-condition': 'error',
   'hooks-matcher-enum': 'error',
   'hooks-matcher-mcp-name': 'error',
@@ -241,6 +252,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-matcher-syntax': 'error',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
+  'hooks-powershell-placeholder': 'error',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
   'skill-fork-fields-require-context': 'error',
