@@ -513,6 +513,12 @@ const TREE: Record<string, string> = {
   'packages/pp/CLAUDE.local.md': 'Read AGENTS.md first.\n',
   'packages/pp/ok/CLAUDE.md': '@AGENTS.md\n\nRead AGENTS.md first.\n',
   'packages/pp/ok/AGENTS.md': '# Agents\n',
+  // `claude-md-excludes-absolute-committed`: a machine path in the committed file. The same path
+  // in the local file, in a managed file and in another settings file.
+  'packages/ea/.claude/settings.json': '{"claudeMdExcludes": ["/Users/x/work/**", "**/ok/**"]}',
+  'packages/ea/.claude/settings.local.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  'packages/ea/managed-settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  'packages/ea/.vscode/settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
   // `claude-md-location`: a CLAUDE.local.md in a `.claude` folder, and a case variant. The loaded
   // names, and a name that only looks like one.
   'packages/lo/.claude/CLAUDE.local.md': '# Notes\n',
@@ -719,19 +725,19 @@ const MEMORY_WARN_RULES = [
   'rules-symlink-external',
 ]
 
-// The rules of #13 that are `off` in `recommended`, in the order of the `modules` list. `strict`
-// turns each on at `warn`.
+// The rules of #13 that are `off` in `recommended`, X// turns each on at `warn`.
 const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
   'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-excludes-absolute-committed': ['json/json', ['**/.claude/settings.json']],
   'claude-md-import-in-code-span': [
     'markdown/gfm',
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
   ],
   'claude-md-location': ['markdown/gfm', ['**/*.md']],
 }
-const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS)
+const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -1009,6 +1015,9 @@ const STRICT_ONLY = [
   // `claude-md-agents-md-prose-pointer` reads CLAUDE.md files, and no other file.
   'packages/pp/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
   'packages/pp/.claude/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
+  // `claude-md-excludes-absolute-committed` reads the committed project file, and no other file.
+  'packages/ea/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
+  'packages/ex/ok/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
   // `claude-md-location` reads every Markdown file, and reports the two places and names.
   'packages/lo/.claude/CLAUDE.local.md: claude/claude-md-location@1',
   'packages/lo/web/claude.md: claude/claude-md-location@1',
