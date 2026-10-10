@@ -10,7 +10,7 @@ import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { readPlugin } from '../plugin-manifest.ts'
-import { entriesOf, failure, isInside, SKIPPED, UNREADABLE } from '../skill-tree.ts'
+import { entriesOf, failure, SKIPPED, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'plugin-no-git-lfs' as const
 
@@ -138,7 +138,12 @@ function globToRegExp(glob: string): RegExp | undefined {
       source += literal(ch)
     }
   }
-  return new RegExp(`^${source}$`)
+  try {
+    return new RegExp(`^${source}$`)
+  } catch {
+    // A class with a range out of order, such as `[z-a]`, matches no file in Git.
+    return undefined
+  }
 }
 
 /** The rules of the text of a `.gitattributes`, in file order. A line with no
@@ -147,8 +152,7 @@ function parse(text: string): AttributeRule[] {
   return text.split(/\r?\n/).flatMap((line) => {
     const [pattern, ...attributes] = line.trim().split(/\s+/) as [string, ...string[]]
     const last = attributes.findLast((attribute) => FILTER.test(attribute))
-    // A pattern with a slash at the end names a folder, and Git matches no file with it.
-    if (last === undefined || NO_FILE.test(pattern) || pattern.endsWith('/')) {
+    if (last === undefined || NO_FILE.test(pattern)) {
       return []
     }
     const byName = !pattern.includes('/')
@@ -219,8 +223,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'lfs' }> = {
     const plugin = readPlugin(context.filename)
     return {
       Document(node) {
-        // A plugin root with a real path out of the repository is not a place to read.
-        if (plugin === undefined || !isInside(plugin.realRoot, plugin.bound)) {
+        if (plugin === undefined) {
           return
         }
         // The attribute files above the plugin root, from the top of the repository.

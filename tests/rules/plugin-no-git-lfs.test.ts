@@ -3,6 +3,7 @@
 // marketplace, "Keep plugin files out of Git LFS"). The trees are on disk,
 // because the rule reads the `.gitattributes` files and lists the plugin. The
 // files glob is in tests/configs.test.ts.
+import { mkdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
@@ -163,10 +164,10 @@ describe(`${RULE} (silent)`, () => {
     ['a filter that is unset', { '.gitattributes': '*.bin -filter\n', 'a.bin': '' }],
     ['a filter that is unspecified', { '.gitattributes': `*.bin ${LFS} !filter\n`, 'a.bin': '' }],
     ['a pattern that matches no file', { '.gitattributes': `*.png ${LFS}\n`, 'a.bin': '' }],
-    ['a commented line', { '.gitattributes': `# *.bin ${LFS}\n`, 'a.bin': '' }],
-    ['a negative pattern', { '.gitattributes': `!*.bin ${LFS}\n`, 'a.bin': '' }],
-    ['a macro line', { '.gitattributes': `[attr]big ${LFS}\n`, 'a.bin': '' }],
-    ['a quoted pattern', { '.gitattributes': `"a b.bin" ${LFS}\n`, 'a b.bin': '' }],
+    ['a commented line', { '.gitattributes': `#a.bin ${LFS}\n`, '#a.bin': '' }],
+    ['a negative pattern', { '.gitattributes': `!a.bin ${LFS}\n`, '!a.bin': '' }],
+    ['a macro line', { '.gitattributes': `[attr]big ${LFS}\n`, tbig: '' }],
+    ['a quoted pattern', { '.gitattributes': `"a b.bin" ${LFS}\n`, '"a': '' }],
     [
       'a folder pattern with a trailing slash',
       { '.gitattributes': `data/ ${LFS}\n`, 'data/a.bin': '' },
@@ -201,7 +202,32 @@ describe(`${RULE} (silent)`, () => {
       'a backslash at the end of the pattern',
       { '.gitattributes': `a.bin\\ ${LFS}\n`, 'a.bin': '' },
     ],
-    ['a class with a POSIX name', { '.gitattributes': `[[:alpha:]].bin ${LFS}\n`, 'a.bin': '' }],
+    ['a class with a POSIX name', { '.gitattributes': `[[:alpha:]].bin ${LFS}\n`, 'a].bin': '' }],
+    ['a class with a range out of order', { '.gitattributes': `*.[z-a] ${LFS}\n`, 'a.b': '' }],
+    [
+      'a filter value that starts with lfs',
+      { '.gitattributes': `*.bin filter=lfsx\n`, 'a.bin': '' },
+    ],
+    [
+      'a bare filter that follows the lfs filter',
+      { '.gitattributes': `*.bin ${LFS}\n*.bin filter\n`, 'a.bin': '' },
+    ],
+    [
+      'a question mark that matches one character',
+      { '.gitattributes': `?.bin ${LFS}\n`, 'ab.bin': '', '.bin': '' },
+    ],
+    [
+      'a double star folder that is not a star',
+      { '.gitattributes': `a/**/b.bin ${LFS}\n`, 'a/xb.bin': '' },
+    ],
+    [
+      'a negated class that does not match a slash',
+      { '.gitattributes': `a[!x]b/c ${LFS}\n`, 'a/b/c': '' },
+    ],
+    [
+      'a pattern with a special character of a regular expression',
+      { '.gitattributes': `a|b.bin ${LFS}\n`, 'a.bin': '' },
+    ],
     ['a file in node_modules', { '.gitattributes': `*.bin ${LFS}\n`, 'node_modules/x/a.bin': '' }],
     [
       'a file in a nested .git folder',
@@ -217,6 +243,55 @@ describe(`${RULE} (silent)`, () => {
     ['a later line that makes the filter unspecified', `*.bin ${LFS}\n*.bin !filter\n`],
   ])('stays silent for %s', (_title, attrs) => {
     expect(run(attrs, 'a.bin')).toEqual([])
+  })
+
+  check.each([
+    ['a pattern after white space', `  *.bin ${LFS}\n`, 'a.bin', '*.bin'],
+    ['a line with trailing white space', `*.bin ${LFS}  \n`, 'a.bin', '*.bin'],
+    ['a star that matches no character', `*.bin ${LFS}\n`, '.bin', '*.bin'],
+    ['a negated class in a path', `d/[!x].bin ${LFS}\n`, 'd/b.bin', 'd/[!x].bin'],
+    ['a later line that sets the filter again', `*.bin -filter\n*.bin ${LFS}\n`, 'a.bin', '*.bin'],
+    ['a filter attribute that follows others', `*.bin text eol=lf ${LFS}\n`, 'a.bin', '*.bin'],
+  ])('reports %s', (_title, attrs, file, pattern) => {
+    expect(run(attrs, file)).toEqual([message(pattern, '.gitattributes', file)])
+  })
+
+  check('reports a line whose later attribute only ends with the name filter', () => {
+    expect(run(`*.bin ${LFS}\n*.bin xfilter=a\n`, 'a.bin')).toHaveLength(1)
+  })
+
+  check(
+    'lets the .gitattributes nearest to the plugin decide, from the top of the repository',
+    () => {
+      const files = {
+        '.gitattributes': `*.bin ${LFS}\n`,
+        'plugins/.gitattributes': '*.bin -filter\n',
+        'plugins/p/a.bin': '',
+      }
+      expect(lintTree(files, 'plugins/p/').found).toEqual([])
+    },
+  )
+
+  check('reads no .gitattributes above the repository', () => {
+    const outer = tree({ '.gitattributes': `*.bin ${LFS}\n` })
+    const inner = path.join(outer, 'repo')
+    mkdirSync(path.join(inner, '.git'), { recursive: true })
+    mkdirSync(path.join(inner, '.claude-plugin'))
+    writeFileSync(path.join(inner, '.claude-plugin', 'plugin.json'), MANIFEST)
+    writeFileSync(path.join(inner, 'a.bin'), '')
+    expect(lintPlugin(RULE, inner, MANIFEST)).toEqual([])
+  })
+
+  check('reads no .gitattributes above a plugin in a tree with no .git', () => {
+    const top = tree(
+      {
+        '.gitattributes': `*.bin ${LFS}\n`,
+        'plugins/p/.claude-plugin/plugin.json': MANIFEST,
+        'plugins/p/a.bin': '',
+      },
+      false,
+    )
+    expect(lintPlugin(RULE, path.join(top, 'plugins', 'p'), MANIFEST)).toEqual([])
   })
 
   check('stays silent when a deeper .gitattributes unsets the filter', () => {
