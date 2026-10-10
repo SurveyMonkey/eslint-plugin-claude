@@ -21,14 +21,14 @@ Do not give a skill the name of a built-in command or a bundled skill.
 ## Rule details
 
 A skill with the name of a bundled skill replaces it. In a local terminal session, a skill with the
-name of a built-in command replaces the command. In both cases, the aliases of the command or
-skill keep it. A project `code-review` skill replaces `/code-review`, and the alias `/review`
-never runs the skill.[^resolve] The rule reports a skill or command with such a name. The effect
+name of a built-in command replaces the command. In both cases, an alias keeps its target. A
+project `code-review` skill replaces `/code-review`, and the alias `/review` never runs the
+skill.[^resolve] The rule reports a skill or command with such a name. The effect
 can surprise the team, because a command that people know then runs other steps.
 
-The effective name is the same as in the docs:[^name]
+The folder of a skill invokes it, so the rule checks that name:[^name]
 
-- For a skill, the `name` field when it is a non-empty string. Otherwise the folder of the skill.
+- For a skill, the name of the skill folder.
 - For a command file, the path below `commands/`, with `:` between the parts. Only a file directly
   in `commands/` can match a name.
 
@@ -40,16 +40,17 @@ case. The lists leave out these names:
 - The workflow `deep-research`. It is not a skill, and the docs do not say what a skill of that
   name does.
 - `verify` and `simplify`. The skills page describes a project skill with either name as a
-  supported setup. `/verify` records its recipe in `.claude/skills/verify/SKILL.md`, and Claude Code
-  runs a skill with either name before each commit.
+  supported setup. `/verify` records its recipe in `.claude/skills/verify/SKILL.md`. From v2.1.286,
+  Claude Code runs a skill with either name before a commit, except for changes to docs or tests.
 
 The rule checks skills and commands outside a plugin. A plugin skill has the namespace
-`/plugin-name:skill-name`, so it does not take the bare name.[^resolve] The rule skips plugin
+`/plugin-name:skill-name`, so it cannot replace a built-in command.[^resolve] The rule skips plugin
 files.
 
 A `name` field does not take a name that another command already uses.[^name] The folder name
-still invokes the skill. The message states the effect that the docs give for the skill that takes
-the name.
+still invokes the skill. So a `name` field that holds such a name gets its own report. It says
+that the field does not take the name. A skill in the folder `shadow` with `name: clear` stays
+`/shadow`, and `/clear` stays the built-in command.
 
 In a non-interactive session, `help` and `feedback` are not reserved. The rule still reports them,
 because a local terminal session reserves them.[^name]
@@ -57,20 +58,18 @@ because a local terminal session reserves them.[^name]
 Names change between Claude Code versions. The data module records the version it came from.
 Add a name that the repository means to replace to the option `allow`.
 
-Fail:
+Fail (the file is `.claude/skills/clear/SKILL.md`):
 
 ```markdown
 ---
-name: clear
 description: Clear the working tree.
 ---
 ```
 
-Pass:
+Pass (the file is `.claude/skills/clean-tree/SKILL.md`):
 
 ```markdown
 ---
-name: clean-tree
 description: Clear the working tree.
 ---
 ```

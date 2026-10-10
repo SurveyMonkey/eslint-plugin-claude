@@ -11,7 +11,7 @@ const file = (fields: string, filename = skill) => ({
 })
 
 const MESSAGE =
-  '`description` is missing or empty. Claude Code uses the first non-empty line of the file instead, and the SDK lists a skill only if it has a `description` or `when_to_use`.'
+  '`description` is missing or empty. Claude Code uses the first non-empty line of the content instead. The SDK omits a skill that has neither `description` nor `when_to_use`.'
 
 markdownTester.run('skill-description-present', ruleOf('skill-description-present'), {
   valid: [
@@ -26,6 +26,9 @@ markdownTester.run('skill-description-present', ruleOf('skill-description-presen
     file('description: [a, b]\n'),
     file('description: { a: b }\n'),
     file('description: false\n'),
+    // A block whose top level is a list or a scalar is a fault of the schema rule.
+    file('- a\n- b\n'),
+    file('just text\n'),
     // Frontmatter that does not parse is a fault of another rule.
     file('description: [unclosed\n'),
     // Not a skill or command file.
@@ -47,6 +50,17 @@ markdownTester.run('skill-description-present', ruleOf('skill-description-presen
     // A block below line 1 is content, so the file has no description.
     {
       code: '\n---\ndescription: d\n---\n',
+      filename: skill,
+      errors: [{ messageId: 'missing', line: 1, column: 1 }],
+    },
+    // A block with no field is valid YAML with no description.
+    {
+      code: '---\n---\n\n# S\n',
+      filename: skill,
+      errors: [{ messageId: 'missing', line: 1, column: 1 }],
+    },
+    {
+      code: '---\n# only a comment\n---\n\n# S\n',
       filename: skill,
       errors: [{ messageId: 'missing', line: 1, column: 1 }],
     },

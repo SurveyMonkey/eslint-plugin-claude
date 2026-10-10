@@ -1,6 +1,6 @@
-// A skill or command named like a built-in command or a bundled skill. The effective name is
-// the `name` field, else the folder of the skill, else the path of the command file. A plugin
-// file has a namespace, so the rule skips it.
+// A skill or command named like a built-in command or a bundled skill. The folder of a skill
+// and the path of a command file give the name that replaces a command. A `name` field that is
+// such a name does not take. A plugin file has a namespace, so the rule skips it.
 import { pluginCommand, pluginSkill } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -12,8 +12,8 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
   valid: [
     { code: named('deploy'), filename: inFolder('deploy') },
     { code: bare, filename: inFolder('deploy') },
-    // The `name` field wins over the folder.
-    { code: named('deploy'), filename: inFolder('clear') },
+    // `allow` covers a `name` field that does not take.
+    { code: named('clear'), filename: inFolder('s'), options: [{ allow: ['clear'] }] },
     // An alias keeps its command. The skills page says a skill replaces the name, not its aliases.
     { code: bare, filename: inFolder('review') },
     { code: bare, filename: inFolder('cost') },
@@ -49,9 +49,9 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
       filename: inFolder('s'),
       errors: [
         {
-          // The message says no more than the docs.
+          // The docs say that the name does not take and the folder name invokes the skill.
           message:
-            '`clear` is the name of a built-in command. In a local terminal session, a skill with this name replaces the command, but not its aliases. Rename the skill, or add the name to the option `allow`.',
+            '`clear` is the name of a command that Claude Code owns, so the field `name` does not take it. The folder name `s` still invokes the skill. Use another name, or add the name to the option `allow`.',
           line: 2,
           column: 7,
           endLine: 2,
@@ -59,13 +59,52 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
         },
       ],
     },
+    // The folder invokes the skill, so the folder name replaces the command.
+    {
+      code: named('deploy'),
+      filename: inFolder('clear'),
+      errors: [
+        {
+          message:
+            '`clear` is the name of a built-in command. In a local terminal session, a skill with this name replaces the command, but not its aliases. Rename the skill, or add the name to the option `allow`.',
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
+    // A non-string `name` is the fault of the schema rule, and the folder still gives the name.
+    {
+      code: '---\nname: 5\n---\n',
+      filename: inFolder('clear'),
+      errors: [{ messageId: 'builtIn' }],
+    },
+    {
+      code: '---\nname: [clear]\n---\n',
+      filename: inFolder('batch'),
+      errors: [{ messageId: 'bundled' }],
+    },
+    // The `name` field and the folder are both names that Claude Code owns.
+    {
+      code: named('batch'),
+      filename: inFolder('clear'),
+      errors: [
+        { messageId: 'builtIn', data: { name: 'clear' }, line: 1, column: 1 },
+        { messageId: 'notTaken', data: { name: 'batch', folder: 'clear' }, line: 2, column: 7 },
+      ],
+    },
+    // The `name` field equals the folder: one report, on the field.
+    {
+      code: named('clear'),
+      filename: inFolder('clear'),
+      errors: [{ messageId: 'builtIn', line: 2, column: 7, endLine: 2, endColumn: 12 }],
+    },
     {
       code: named('batch'),
       filename: inFolder('s'),
       errors: [
         {
           message:
-            '`batch` is the name of a bundled skill. A skill with this name replaces the bundled skill, but not its aliases. Rename the skill, or add the name to the option `allow`.',
+            '`batch` is the name of a command that Claude Code owns, so the field `name` does not take it. The folder name `s` still invokes the skill. Use another name, or add the name to the option `allow`.',
           line: 2,
           column: 7,
         },
@@ -82,7 +121,7 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
       filename: inFolder('code-review'),
       errors: [{ messageId: 'bundled', data: { name: 'code-review' } }],
     },
-    // An empty `name` falls back to the folder.
+    // An empty `name` gives no second name.
     {
       code: '---\nname: ""\n---\n',
       filename: inFolder('help'),
