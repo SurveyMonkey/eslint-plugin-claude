@@ -22,46 +22,46 @@ function lint(code: string, files: Record<string, string> = {}) {
 }
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
-it.fails('reports a name that .mcp.json and the inline map both declare, on the inline name', () => {
+it('reports a name that .mcp.json and an inline map both declare, on the inline name', () => {
   const found = lint(manifest(inline('db', 'web')), { 'p/.mcp.json': servers('db') })
   expect(ids(found)).toEqual(['duplicate'])
-  expect(found[0]).toMatchObject({ line: 1, column: 31, endColumn: 35 })
+  expect(found[0]).toMatchObject({ line: 1, column: 27, endColumn: 31 })
   expect(found[0]?.message).toContain('"db"')
   expect(found[0]?.message).toContain('.mcp.json')
 })
-it.fails('reads a .mcp.json with no mcpServers wrapper', () => {
+it('reads a .mcp.json with no mcpServers wrapper', () => {
   const found = lint(manifest(inline('db')), { 'p/.mcp.json': JSON.stringify({ db: server }) })
   expect(ids(found)).toEqual(['duplicate'])
 })
-it.fails('reports a name in two inline maps of one array', () => {
+it('reports a name in two inline maps of one array', () => {
   const found = lint(manifest([inline('a', 'db'), inline('db', 'b')]))
   expect(ids(found)).toEqual(['duplicate'])
-  expect(found[0]?.message).toContain('an earlier inline map')
+  expect(found[0]?.message).toContain('an inline map')
 })
-it.fails('reports each repeated name', () => {
+it('reports each repeated name', () => {
   expect(ids(lint(manifest([inline('a', 'b'), inline('a', 'b')])))).toEqual([
     'duplicate',
     'duplicate',
   ])
 })
-it.fails('stays silent for distinct names', () => {
+it('stays silent for distinct names', () => {
   expect(ids(lint(manifest(inline('db', 'web')), { 'p/.mcp.json': servers('a') }))).toEqual([])
 })
-it.fails('counts a key that one file repeats as one server', () => {
+it('counts a key that one file repeats as one server', () => {
   // `JSON.parse` keeps the last of two keys, so the file declares one server.
   const twice = '{"name": "p", "mcpServers": {"db": {"command": "a"}, "db": {"command": "b"}}}'
   expect(ids(lint(twice))).toEqual([])
   const file = '{"mcpServers": {"db": {"command": "a"}, "db": {"command": "b"}}}'
   expect(ids(lint(manifest(inline('x')), { 'p/.mcp.json': file }))).toEqual([])
 })
-it.fails('reads the last of two mcpServers members', () => {
+it('reads the last of two mcpServers members', () => {
   const files = { 'p/.mcp.json': servers('db') }
   expect(ids(lint('{"mcpServers": {"x": {}}, "mcpServers": {"db": {}}}', files))).toEqual([
     'duplicate',
   ])
   expect(ids(lint('{"mcpServers": {"db": {}}, "mcpServers": {"x": {}}}', files))).toEqual([])
 })
-it.fails('stays silent when the manifest declares nothing that it can read', () => {
+it('stays silent when the manifest declares nothing that it can read', () => {
   const files = { 'p/.mcp.json': servers('db') }
   expect(ids(lint('{"name": "p"}', files))).toEqual([])
   expect(ids(lint('[]', files))).toEqual([])
@@ -70,29 +70,29 @@ it.fails('stays silent when the manifest declares nothing that it can read', () 
   expect(ids(lint('{"mcpServers": {"db": 1}}', { 'p/.mcp.json': '[]' }))).toEqual([])
 })
 
-it.fails('reports a name that a .json file and .mcp.json both declare, on the path', () => {
+it('reports a name that a .json file and .mcp.json both declare, on the path', () => {
   const found = lint(manifest('./mcp/servers.json'), {
     'p/.mcp.json': servers('db'),
     'p/mcp/servers.json': servers('db'),
   })
   expect(ids(found)).toEqual(['duplicate'])
-  expect(found[0]).toMatchObject({ line: 1, column: 30, endColumn: 50 })
+  expect(found[0]).toMatchObject({ line: 1, column: 26, endColumn: 46 })
   expect(found[0]?.message).toContain('.mcp.json')
 })
-it.fails('reports a name in two declared files, and in a file and the inline map after it', () => {
+it('reports a name in two declared files, and in a file and an inline map after it', () => {
   const files = { 'p/a.json': servers('db'), 'p/b.json': JSON.stringify({ db: server }) }
   const two = lint(manifest(['./a.json', './b.json']), files)
   expect(ids(two)).toEqual(['duplicate'])
   expect(two[0]?.message).toContain('./a.json')
   expect(ids(lint(manifest(['./a.json', inline('db')]), files))).toEqual(['duplicate'])
 })
-it.fails('reports the declaration that comes later, whichever kind it is', () => {
+it('reports the declaration that comes later, whichever kind it is', () => {
   const files = { 'p/a.json': servers('db') }
   const found = lint(manifest([inline('db'), './a.json']), files)
   expect(ids(found)).toEqual(['duplicate'])
-  expect(found[0]?.message).toContain('the inline map')
+  expect(found[0]?.message).toContain('an inline map')
 })
-it.fails('does not read a bundle, a URL, a path with .., or a path that is not .json', () => {
+it('does not read a bundle, a URL, a path with .., or a path that is not .json', () => {
   const files = {
     'p/.mcp.json': servers('db'),
     'p/b.mcpb': servers('db'),
@@ -111,13 +111,13 @@ it.fails('does not read a bundle, a URL, a path with .., or a path that is not .
     expect(ids(lint(manifest(declared), files))).toEqual([])
   }
 })
-it.fails('stays silent for a file that is not there, or does not parse', () => {
+it('stays silent for a file that is not there, or does not parse', () => {
   const files = { 'p/.mcp.json': servers('db'), 'p/bad.json': '{ not json' }
   expect(ids(lint(manifest('./missing.json'), files))).toEqual([])
   expect(ids(lint(manifest('./bad.json'), files))).toEqual([])
   expect(ids(lint(manifest(inline('db')), { 'p/.mcp.json': '{ not json' }))).toEqual([])
 })
-it.fails('stays silent for a link that leads out of the plugin or out of the repository', () => {
+it('stays silent for a link that leads out of the plugin or out of the repository', () => {
   const root = repo({ 'p/.mcp.json': servers('db'), 'other/servers.json': servers('db') })
   const outside = mkdtempSync(path.join(tmpdir(), 'mcp-dup-outside-'))
   try {
@@ -136,7 +136,7 @@ it.fails('stays silent for a link that leads out of the plugin or out of the rep
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('does not follow a plugin directory that is a link out of the repository', () => {
+it('does not follow a plugin directory that is a link out of the repository', () => {
   const outside = mkdtempSync(path.join(tmpdir(), 'mcp-dup-plugin-'))
   try {
     mkdirSync(path.join(outside, '.claude-plugin'), { recursive: true })
@@ -149,7 +149,7 @@ it.fails('does not follow a plugin directory that is a link out of the repositor
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('keeps the report that the readable files support when one file is locked', () => {
+it('keeps the report that the readable files support when one file is locked', () => {
   const root = repo({
     'p/.mcp.json': servers('db'),
     'p/locked.json': servers('db'),

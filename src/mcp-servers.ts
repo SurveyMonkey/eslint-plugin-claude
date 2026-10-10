@@ -3,9 +3,11 @@
 // may omit that wrapper, so its map is the top-level object.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
+import json from '@eslint/json'
 import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
 import { isPluginRoot } from './plugin-root.ts'
-import { UNREADABLE } from './skill-tree.ts'
+import { pathFault } from './rules/marketplace-relative-source-format.ts'
+import { isInside, readJson, realOf, repositoryRoot, UNREADABLE } from './skill-tree.ts'
 
 /** The `type` values of a server that connects over the network. A `url` belongs to these. */
 export const REMOTE_SERVER_TYPES: readonly string[] = ['http', 'streamable-http', 'sse', 'ws']
@@ -96,3 +98,107 @@ export function declaredMcpStrings(manifest: ValueNode): Extract<ValueNode, { ty
     (item): item is Extract<ValueNode, { type: 'String' }> => item.type === 'String',
   )
 }
+
+/** The top-level value of the JSON file `file`, read as an AST so that the readers of this file
+ *  and of `lsp-servers.ts` serve a file on disk as they serve a linted file. The result is null
+ *  when the rule cannot see the file: it is not there, it fails to read, its real path is out of
+ *  `bound`, or it does not parse (ADR 001, Decision 14). The AST comes from the parsed value, so
+ *  the positions in it are not the positions in the file. A report uses them in no case. */
+export function readJsonBody(file: string, bound: string): ValueNode | null {
+  const parsed = readJson(file, bound)
+  if (parsed === null || parsed === UNREADABLE || parsed.data === undefined) {
+    return null
+  }
+  // The text is the output of `JSON.stringify`, so it parses.
+  const result = json.languages.json.parse(
+    { body: JSON.stringify(parsed.data), path: file, physicalPath: file, bom: false },
+    { languageOptions: {} },
+  )
+  return (result as { ast: { body: ValueNode } }).ast.body
+}
+
+/** The top-level value of the `.json` file that a plugin manifest names with `declared`. The
+ *  result is null when the path is not a plain `./` path to a `.json` file, and when the file is
+ *  not there or cannot be read. A link to a file out of the plugin directory is not read, as
+ *  Claude Code loads no path that leaves the plugin.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#path-rules) */
+export function readDeclaredJson(root: string, declared: string): ValueNode | null {
+  if (
+    pathFault(declared) !== undefined ||
+    declared.includes('\\') ||
+    !declared.startsWith('./') ||
+    !declared.endsWith('.json')
+  ) {
+    return null
+  }
+  const realRoot = realOf(root)
+  const file = path.resolve(root, declared)
+  const real = realOf(file)
+  if (typeof realRoot !== 'string' || typeof real !== 'string' || !isInside(real, realRoot)) {
+    return null
+  }
+  return readJsonBody(file, repositoryRoot(root))
+}
+
+/** One server that a plugin declares. `member` holds the name and the config. `node` is where a
+ *  report goes: the name in the manifest for an inline server, the path for a server of a
+ *  declared file, and the name in the file for a server of the root file. `from` tells where the
+ *  server is declared, for a message. */
+export interface Declaration {
+  readonly name: string
+  readonly member: MemberNode
+  readonly node: ValueNode | MemberNode['name']
+  readonly from: string
+}
+
+/** What differs between the server kinds of a plugin: the manifest key, the file at the plugin
+ *  root, and the members of the map in a file. */
+export interface DeclarationKind {
+  readonly key: 'mcpServers' | 'lspServers'
+  readonly rootFile: string
+  readonly fileMembers: (body: ValueNode) => MemberNode[]
+}
+
+/** The servers that the plugin at `root` declares, in the order that Claude Code loads them: the
+ *  file at the plugin root, then each value of the manifest key. A value is a `.json` path, or an
+ *  inline map, and an array mixes them. A bundle, a URL and a file that the rule cannot read add
+ *  nothing, so a report rests on the files that read. A name that one source repeats is one
+ *  server, as `JSON.parse` keeps the last. `manifest` is the top-level value of `plugin.json`,
+ *  or null for a plugin with no manifest.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers) */
+export function pluginDeclarations(
+  root: string,
+  manifest: ValueNode | null,
+  kind: DeclarationKind,
+): Declaration[] {
+  const declarations: Declaration[] = []
+  const add = (members: MemberNode[], from: string, at?: ValueNode) => {
+    for (const member of members) {
+      declarations.push({ name: keyOf(member.name), member, node: at ?? member.name, from })
+    }
+  }
+  const body = readJsonBody(path.join(root, kind.rootFile), repositoryRoot(root))
+  add(body === null ? [] : kind.fileMembers(body), kind.rootFile)
+  const declared = manifest === null ? undefined : lastMember(manifest, kind.key)?.value
+  const items =
+    declared?.type === 'Array' ? declared.elements.map(({ value }) => value) : [declared]
+  for (const item of items) {
+    if (item?.type === 'String') {
+      const file = readDeclaredJson(root, item.value)
+      add(file === null ? [] : kind.fileMembers(file), item.value, item)
+    } else if (item?.type === 'Object') {
+      add(lastMembers(item.members), 'an inline map')
+    }
+  }
+  return declarations
+}
+
+const MCP_KIND: DeclarationKind = {
+  key: 'mcpServers',
+  rootFile: '.mcp.json',
+  fileMembers: (body) => serverMembers(body, 'plugin'),
+}
+
+/** The MCP servers that the plugin at `root` declares, in load order. */
+export const pluginMcpDeclarations = (root: string, manifest: ValueNode | null): Declaration[] =>
+  pluginDeclarations(root, manifest, MCP_KIND)
