@@ -1653,7 +1653,7 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
   const sections = (body: string) => body.match(/^### /gm) ?? []
   const cuts = (body: string) => body.match(/The text is cut at /g) ?? []
   // The contract of each live run: every body fits in MAX_COMMENT, each
-  // issue has a section for each of its markers, and each marker of the
+  // digest has a section for each of its markers, and each marker of the
   // findings is in exactly one issue.
   const packed = (issues: { body: string }[], findings: Finding[]) => {
     for (const { body } of issues) {
@@ -2000,8 +2000,8 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
     const again = fakeGh(open)
     expect((await live(again, [], big)).skipped).toBe(20)
     expect(again.posts()).toEqual([])
-    // The split issues count toward --max: with the rest of 20 as
-    // rule-update issues, the run has 21 and fails before any write.
+    // The split issues count toward --max: with enough rule-update issues
+    // to make 21 issues in all, the run fails before any write.
     const updates = Array.from({ length: 21 - issues.length }, (_, i) => ({
       ...update,
       newHash: hash(100 + i),
@@ -2047,7 +2047,18 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
   it('gives a block that does not fit alone its own issue, and keeps the other blocks in one digest', async () => {
     const huge = (i: number): Finding => ({ ...uncited(i), reason: 'r'.repeat(61_000) })
     const gh = fakeGh()
-    await live(gh, [], [uncited(0), huge(1), uncited(2), uncited(3)])
+    const logs: string[] = []
+    await api.openIssues({
+      findings: [uncited(0), huge(1), uncited(2), uncited(3)],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    expect(logs).toContain(
+      `alone: ${HOOKS}#block-1:${hash(1)} does not fit in a digest of 60000 characters`,
+    )
+    expect(logs.filter((l) => l.startsWith('alone: '))).toHaveLength(1)
     const issues = sent(gh)
     expect(issues).toHaveLength(2)
     expect(issues.map((s) => s.body)).toContain(api.bodyOf(huge(1), REPO))
@@ -2063,6 +2074,31 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
         .map((s) => s.body)
         .sort(),
     ).toEqual([api.bodyOf(huge(0), REPO), api.bodyOf(huge(1), REPO)].sort())
+  })
+
+  it('puts a block whose digest alone is exactly 60,000 characters in a group, and gives one character more its own issue', async () => {
+    const pad = (n: number): Finding => ({ ...uncited(1), reason: 'r'.repeat(n) })
+    const size = (n: number) => api.digestOf(HOOKS, [{ finding: pad(n) }], REPO).length
+    const fill = 1 + 60_000 - size(1)
+    expect(size(fill)).toBe(60_000)
+    const bodies = (gh: ReturnType<typeof fakeGh>) => sent(gh).map((s) => s.body)
+    // The block fits alone, so it joins the group. It fits with no
+    // neighbour, so each of the three blocks gets the issue of that block.
+    const fits = fakeGh()
+    await live(fits, [], [uncited(0), pad(fill), uncited(2)])
+    expect(bodies(fits).sort()).toEqual(
+      [uncited(0), pad(fill), uncited(2)].map((f) => api.bodyOf(f, REPO)).sort(),
+    )
+    // One character more: the block does not fit alone, so it gets its own
+    // issue at once, and its two neighbours share a digest.
+    const over = fakeGh()
+    await live(over, [], [uncited(0), pad(fill + 1), uncited(2)])
+    expect(bodies(over)).toHaveLength(2)
+    expect(bodies(over)).toContain(api.bodyOf(pad(fill + 1), REPO))
+    const digest = sent(over).find((s) => s.title === 'docs(hooks): triage 2 changed blocks')
+    expect(new Set(markers(digest?.body ?? ''))).toEqual(
+      new Set([uncited(0), uncited(2)].map(api.markerOf)),
+    )
   })
 
   it('cuts the text of each kind of fence in a digest section at 280 characters', async () => {
