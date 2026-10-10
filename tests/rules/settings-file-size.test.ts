@@ -172,3 +172,24 @@ describe('settings-file-size option schema', () => {
     expect(() => lint([{ min: 1 }])).toThrow()
   })
 })
+
+// Claude Code ignores a hidden drop-in, so the rule makes no report on it.
+describe('settings-file-size hidden drop-in', () => {
+  const lint = (filename: string) =>
+    new Linter().verify(
+      objectOfBytes(LIMIT + 1),
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: { 'claude/settings-file-size': 'error' },
+        },
+      ],
+      { filename },
+    )
+
+  it.fails('makes no report on a hidden drop-in over the limit', () => {
+    expect(lint('managed-settings.d/.20-big.json')).toEqual([])
+  })
+})
