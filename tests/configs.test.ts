@@ -1029,14 +1029,8 @@ const EXPECTED = [
     'packages/wf/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/settings-webfetch-preflight-skip@1`),
   'packages/wf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
-  // `settings-env-numeric-spelling` reads the project and managed files. `settings-env-value-format`
-  // owns a variable that has a form.
-  ...[
-    'packages/numeric/.claude/settings.json',
-    'packages/numeric/.claude/settings.local.json',
-    'packages/numeric/managed-settings.json',
-    'packages/numeric/managed-settings.d/10-a.json',
-  ].map((file) => `${file}: claude/settings-env-numeric-spelling@1`),
+  // `settings-env-numeric-spelling` reports nothing in the presets, which set no `minVersion`.
+  // `settings-env-value-format` owns a variable that has a form.
   'packages/numeric/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/numeric2/.claude/settings.json: claude/settings-env-value-format@2',
   // `settings-worktree-sparse-claude-dir` reads the project and managed files. A list with

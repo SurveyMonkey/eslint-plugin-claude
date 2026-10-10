@@ -31,8 +31,18 @@ The rule reports a string value that has one of these two shapes:
 - Groups of digits that underscores join. Examples: `64_000`, `1_000_000`.
 
 The report is on the value. When a file has two keys of one name, the rule reads the last, as
-`JSON.parse` does. A fault shows only on a client older than v2.1.211. The rule has no option for
-the version of the client, so it reports for every client.
+`JSON.parse` does.
+
+### Option
+
+A fault shows only on a client older than v2.1.211. The rule cannot know which clients a team
+runs. So it reports nothing until the option `minVersion` names the oldest client of the team. It
+reports when that version is below 2.1.211. `recommended` and `strict` set no option, so the rule
+is off there until a team sets `minVersion`.
+
+```json
+{ "claude/settings-env-numeric-spelling": ["warn", { "minVersion": "2.1.200" }] }
+```
 
 ### What the rule does not check
 
@@ -42,7 +52,7 @@ the version of the client, so it reports for every client.
   `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` with `9e5`. That rule reports it, so the fault gets one
   report. The env vars reference says that these variables take plain digits only.
 - A credential variable.
-- A value that is not a string, and a value with a sign, a space, or a comma.
+- A value that is not a string, and a value with a leading sign, a space, or a comma.
 - A hidden drop-in, which Claude Code ignores.
 
 Fail:

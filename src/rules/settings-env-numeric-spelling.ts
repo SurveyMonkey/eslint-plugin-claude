@@ -2,6 +2,8 @@
 // Claude Code before v2.1.211 reads `1e6` or `64_000` as a much smaller number. The rule reads the
 // shape of the value, because the docs name no list of numeric variables. A variable that has a
 // form in `src/data/settings-env.ts` and rejects the value is for `settings-env-value-format`.
+// The fault shows only on a client before v2.1.211. So the rule reports nothing unless the option
+// `minVersion` names a client below that version (round 12, mid-round ruling 20).
 import type { JSONRuleDefinition } from '@eslint/json'
 import { CREDENTIAL_ENV_VARS, envValueForm } from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -16,21 +18,49 @@ const name = 'settings-env-numeric-spelling' as const
 const SCIENTIFIC = /^\d+(?:\.\d+)?[eE][+-]?\d+$/
 const SEPARATED = /^\d+(?:_\d+)+$/
 
-const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'spelling' }> = {
+/** The first client version that reads these spellings. */
+const FIRST_VERSION = [2, 1, 211] as const
+
+type Options = [{ minVersion?: string }?]
+
+/** True when the version `text` is below 2.1.211. The schema allows only three numbers. */
+function isBeforeFirst(text: string): boolean {
+  const parts = text.split('.').map(Number)
+  for (const [index, first] of FIRST_VERSION.entries()) {
+    const part = parts[index] ?? 0
+    if (part !== first) {
+      return part < first
+    }
+  }
+  return false
+}
+
+const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }> = {
   meta: {
     type: 'suggestion',
     docs: {
       description: 'Write a number in the env block of a settings file in plain digits',
       url: docsUrl(name),
     },
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: { minVersion: { type: 'string', pattern: '^\\d+\\.\\d+\\.\\d+$' } },
+        additionalProperties: false,
+      },
+    ],
     messages: {
       spelling:
-        'The value "{{value}}" of "{{name}}" is not in plain digits. Claude Code before v2.1.211 reads this spelling as a much smaller number, such as 1. Write plain digits.',
+        'The value "{{value}}" of "{{name}}" is not in plain digits. Claude Code before v2.1.211 reads this spelling as a much smaller number, such as 1, and the option "minVersion" names such a client. Write plain digits.',
     },
   },
   create(context) {
-    if (isHiddenDropIn(context.filename)) {
+    const minVersion = context.options[0]?.minVersion
+    if (
+      minVersion === undefined ||
+      !isBeforeFirst(minVersion) ||
+      isHiddenDropIn(context.filename)
+    ) {
       return {}
     }
     return {
