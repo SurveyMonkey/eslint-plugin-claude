@@ -103,6 +103,22 @@ describe(`${name}: a tool name`, () => {
     }
   })
 
+  it('is silent when another agent file has no name or does not parse', () => {
+    for (const other of [
+      'no frontmatter',
+      agent('').replace('name: a', 'name: 5'),
+      '---\nname: b\ndescription: Use when: x\n---\n',
+    ]) {
+      expect(
+        ids(
+          { '.claude/agents/reviewer.md': agent('', 'reviewer'), '.claude/agents/other.md': other },
+          subagents('nope'),
+        ),
+        other,
+      ).toEqual([])
+    }
+  })
+
   it('is silent for a name in the option allow', () => {
     const text = settings(hooks('PreToolUse', [command()], 'Edt|Mine'))
     expect(ids({}, text, SETTINGS_FILE, [{ allow: ['Edt', 'Mine'] }])).toEqual([])

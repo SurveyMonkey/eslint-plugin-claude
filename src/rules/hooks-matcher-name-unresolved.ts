@@ -54,7 +54,8 @@ function ancestors(dir: string, top: string): string[] {
 }
 
 /** The `name` of each agent file in `.claude/agents/` of `project` and of each folder above it. The result is
- *  undefined when a path cannot be read, or when no agent file has a name. */
+ *  undefined when a path cannot be read, when an agent file has no name or does not parse, or when no agent file
+ *  exists. */
 function agentNames(project: string, claude: string): string[] | undefined {
   const top = repositoryRoot(project)
   const bound = repositoryRoot(claude)
@@ -69,9 +70,11 @@ function agentNames(project: string, claude: string): string[] | undefined {
       if (fields === UNREADABLE) {
         return undefined
       }
-      if (typeof fields?.name === 'string') {
-        names.push(fields.name)
+      if (typeof fields?.name !== 'string') {
+        // A file that does not parse, or has no name, can define an agent that the rule cannot see.
+        return undefined
       }
+      names.push(fields.name)
     }
   }
   return names.length > 0 ? names : undefined
