@@ -16,6 +16,9 @@ markdownTester.run('agent-disallowed-tools-scope', ruleOf('agent-disallowed-tool
     file('tools: Read, Grep\ndisallowedTools: Write, Edit\n'),
     // A specifier in `tools` is for agent-tools-known, and `Agent(type)` lists a type.
     file('tools: Bash(git status), Agent(worker)\n'),
+    // Only `Task` is an alias of `Agent`, not a tool that starts with `Task`.
+    file('tools: TaskCreate\ndisallowedTools: Agent\n'),
+    file('tools: Agent\ndisallowedTools: TaskCreate\n'),
     // The server pattern of `disallowedTools` is a whole-server entry, not a specifier.
     file('disallowedTools: mcp__github, mcp__*\n'),
     // A tool name that only starts like the other one.
@@ -92,6 +95,10 @@ markdownTester.run('agent-disallowed-tools-scope', ruleOf('agent-disallowed-tool
     },
     {
       ...file('tools: Task, Read\ndisallowedTools: Agent\n'),
+      errors: [{ messageId: 'both', data: { tool: 'Task' }, line: 4 }],
+    },
+    {
+      ...file('tools: Task(worker)\ndisallowedTools: Agent\n'),
       errors: [{ messageId: 'both', data: { tool: 'Task' }, line: 4 }],
     },
     // A specifier names the tool too, so the tool is in both lists.

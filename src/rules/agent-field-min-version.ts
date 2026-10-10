@@ -15,8 +15,8 @@ const name = 'agent-field-min-version' as const
 // The first Claude Code version for each check. The frontmatter table of the
 // sub-agents page gives the first two. The changelog gives the other two: the
 // `manual` alias in v2.1.200 (for the CLI and `defaultMode`), and the Boolean
-// forms in v2.1.218 (for skill and plugin files). The rule applies both to
-// agent files by inference.
+// forms in v2.1.218 (for skill and plugin files). The rule applies the last two
+// versions to agent files by inference.
 const OMIT_CLAUDE_MD = '2.1.271'
 const CACHE_TTL = '2.1.248'
 const MANUAL_ALIAS = '2.1.200'
