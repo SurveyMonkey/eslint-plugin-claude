@@ -37,8 +37,8 @@ markdownTester.run('skill-side-effects-manual-only', ruleOf('skill-side-effects-
     },
     { code: withFields('disable-model-invocation: yes', inline('git push')), filename: skill },
     { code: withFields('disable-model-invocation: true', inline('git push')), filename: command },
-    // Adding `disable-model-invocation` to a skill that only Claude can invoke would make it
-    // unreachable, so the rule skips it.
+    // A skill that only Claude can invoke would become unreachable with
+    // `disable-model-invocation`, so the rule skips it.
     { code: withFields('user-invocable: false', inline('git push')), filename: skill },
     // A rule of `allowed-tools` that is no side effect, or that names no command.
     { code: withFields('allowed-tools: Bash(git *)'), filename: skill },

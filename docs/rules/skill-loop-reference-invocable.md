@@ -48,7 +48,6 @@ The rule makes no report in these cases:
 - Two files answer to the name, and one of them is not manual only.
 - The line starts with other text. A name inside a sentence goes to Claude as text. The rule does
   not judge that case.
-- The file is `~/.claude/loop.md`. The plugin does not check the files of a user.
 
 Fail, in `.claude/loop.md`, with `.claude/skills/deploy/SKILL.md` that sets
 `disable-model-invocation: true`:
