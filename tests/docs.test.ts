@@ -270,6 +270,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-themes-layout',
     'plugin-user-config-field-applicability',
     'plugin-user-config-no-shell-fields',
+    'plugin-user-config-sensitive',
     'plugin-user-config-sensitive-in-content',
     'rules-frontmatter-schema',
     'rules-max-lines',

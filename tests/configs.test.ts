@@ -712,6 +712,19 @@ const TREE: Record<string, string> = {
     name: 'uca',
     userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },
   }),
+  // The `off` plugin rules read these trees. A token option without `sensitive` reports in `strict`
+  // only. The decoy sets it, or has no word of a token or a password.
+  'plugins/ucs/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ucs',
+    userConfig: { api_token: { type: 'string', title: 'T', description: 'D' } },
+  }),
+  'plugins/ucs2/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ucs2',
+    userConfig: {
+      api_token: { type: 'string', title: 'T', description: 'D', sensitive: true },
+      tokenizer: { type: 'string', title: 'T', description: 'D' },
+    },
+  }),
   // A command entry with a field that the manifest reference does not list.
   'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
     name: 'cmf',
@@ -3022,6 +3035,12 @@ const PLUGIN_RULES: {
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
 ]
 
+// The plugin rules of #11 that are `off` in `recommended`, in the order of the `modules` list.
+// `strict` turns each on at `warn`.
+const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
+  { name: 'plugin-user-config-sensitive', files: ['**/.claude-plugin/plugin.json'] },
+]
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -4250,6 +4269,9 @@ const STRICT_ONLY = [
   'packages/mc/.mcp.json: claude/mcp-unknown-keys@1',
   'plugins/p/.mcp.json: claude/mcp-plugin-root-paths@1',
   'plugins/p/.mcp.json: claude/mcp-unknown-keys@1',
+// The reports of the `off` plugin rules. They appear in `strict` only, at `warn`.
+const STRICT_ONLY = [
+  'plugins/ucs/.claude-plugin/plugin.json: claude/plugin-user-config-sensitive@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -4849,6 +4871,12 @@ describe('configs', () => {
     const strict = rulesOf(plugin.configs.strict)
     expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
     expect(strict.filter(isOff)).toEqual(OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })))
+      PLUGIN_OFF_RULES.some(({ name }) => rules?.[`claude/${name}`] !== undefined)
+    const strict = rulesOf(plugin.configs.strict)
+    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
+    expect(strict.filter(isOff)).toEqual(
+      PLUGIN_OFF_RULES.map(({ name }) => ({ [`claude/${name}`]: 'warn' })),
+    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -4881,6 +4909,7 @@ describe('configs', () => {
         (markdown ? [name, name] : [name]).map((block) => `claude/strict/${block}`),
       ),
       ...PLUGIN_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...PLUGIN_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -5083,6 +5112,11 @@ describe('configs', () => {
         (c) => c.name === `claude/recommended/${name}`,
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([[language, files]])
+  it('turns each off plugin rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of PLUGIN_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
   })
 
@@ -5447,5 +5481,7 @@ describe('configs', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
+  it('strict reports the files of recommended, and those of the off rules', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
   }, 30_000)
 })
