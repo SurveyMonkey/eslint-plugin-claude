@@ -246,6 +246,35 @@
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
+  "lsp-json-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "LSP servers",
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "lspServers",
+      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Unrecognized fields",
+      "hash": "643fcafc254118c50bf3c76ab46f15f2ee75e622597bfa00c67966597062f2fc"
+    }
+  ],
+  "lsp-transport-socket": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "lspServers",
+      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "LSP servers",
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+    }
+  ],
   "marketplace-command-version-ignored": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
@@ -658,6 +687,23 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "mcp-allowlist-servername-dead": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "How a server is evaluated",
+      "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Example configuration",
+      "hash": "98bf92d06d77f89d36abc68e4d6697ae4b6f00b8ef96fff67c5080ddf51f2fc8"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
   "mcp-anthropic-hosted-url": [
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -716,6 +762,18 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Split a file-based policy across teams",
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
+  "mcp-env-client-secret": [
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use pre-configured OAuth credentials",
+      "hash": "d9b10ec6ffc74a77a92136d4b40cd4bdcd48d7d7d8fd6b5a906910241741356e"
     }
   ],
   "mcp-env-expansion-field": [
@@ -778,6 +836,28 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "MCP servers",
       "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    }
+  ],
+  "mcp-managed-servers-entry": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "managedMcpServers",
+      "hash": "8a01589555ca94338b9d81496f7f7d994c539c46eaa28e99670e4a2fe8fbd427"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Provide servers through managed settings",
+      "hash": "20be94a7ff43e277e4b14a0153c69041bf76347410a5ac199d77000e3e4314bf"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "What an entry can contain",
+      "hash": "e5b712c2002f398d3c0c2ff68af5367aed555d07cd9759d7c737d5aa6d236d79"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
   "mcp-oauth-transport": [
@@ -1235,7 +1315,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -1252,7 +1332,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     }
   ],
   "settings-env-shadowed": [
@@ -1301,7 +1381,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -1404,7 +1484,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "9665826891c03f9049d5b01221c46c620454d8ea347fac56f8f49ce1e091410c"
+      "hash": "ac1fe1d096f0218a7c4b5d24d6bcf54afa28350e5af89df341bf50d25c5d6dee"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
