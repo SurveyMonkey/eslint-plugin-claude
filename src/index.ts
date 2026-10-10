@@ -98,6 +98,13 @@ import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
 import memoryTopicFrontmatter from './rules/memory-topic-frontmatter.ts'
 import outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
+import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
+import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
+import mcpJsonLocation from './rules/mcp-json-location.ts'
+import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
+import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
+import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
+import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import outputStyleNameUnique from './rules/output-style-name-unique.ts'
@@ -455,6 +462,13 @@ const modules = [
   settingsWorktreePaths,
   statuslineHomePathShared,
   statuslineScriptTerminalSize,
+  mcpJsonLocation,
+  mcpJsonServersKey,
+  mcpJsonFileSize,
+  mcpServerNameReserved,
+  mcpRemoteUrlEmpty,
+  mcpHiddenWhitespace,
+  mcpTimeoutMin,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -703,6 +717,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-worktree-paths': 'off',
   'statusline-home-path-shared': 'off',
   'statusline-script-terminal-size': 'off',
+  'mcp-json-location': 'error',
+  'mcp-json-servers-key': 'error',
+  'mcp-json-file-size': 'error',
+  'mcp-server-name-reserved': 'error',
+  'mcp-remote-url-empty': 'error',
+  'mcp-hidden-whitespace': 'error',
+  'mcp-timeout-min': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

@@ -1,0 +1,74 @@
+{
+  "url": "https://code.claude.com/docs/en/mcp-quickstart",
+  "hash": "71d7664eb76d2bce30138f14b948b3771b4366786b1d77b0ee0a7715989d556b",
+  "blocks": [
+    {
+      "id": "connect-to-mcp-servers",
+      "hash": "b841beef4629dc1f4321edd97ce745008355fded336f8658a2fd72a2920b9e09"
+    },
+    {
+      "id": "before-you-begin",
+      "hash": "08fb1585dd2b5c74ea10f8fddc411dc493209a510cefb06ec3555d664c0ba962"
+    },
+    {
+      "id": "add-and-verify-a-server",
+      "hash": "479b221ea6f62d2ebbb9a5bdedb816e7cbef2c65aaba2c6ef971825aaf75cf2a"
+    },
+    {
+      "id": "where-servers-are-saved",
+      "hash": "1c357b3e451fc2a045fb6b0fd0f354c2b9e4c0f0aeef8bd5c689abf760f77250"
+    },
+    {
+      "id": "find-your-configuration-on-disk",
+      "hash": "40c10fc91cf026d02648e43c4e005877383b0f7f1bcc7f82ad1b06ec81bc5bc8"
+    },
+    {
+      "id": "change-server-scope",
+      "hash": "4abe31653bf856e61f2c90a4e0cb5208815823137a80857a1af71cac677161ba"
+    },
+    {
+      "id": "use-a-server-in-all-your-projects",
+      "hash": "ae00471858ef4917604329abdf5dc617a00478c3baa207833d24ac635a9e9d1c"
+    },
+    {
+      "id": "share-a-server-with-your-team",
+      "hash": "9b611b5d587a842021ef240f4748a1975bf34c917ec1b0394c10e6f5b1257ed2"
+    },
+    {
+      "id": "additional-mcp-server-examples",
+      "hash": "fb8cb9e1a8e80bda41de0b47faa8106c656b27cdb251c03d7d00236359bfcb11"
+    },
+    {
+      "id": "add-a-local-server",
+      "hash": "3ee06a3e66f369260290fb05774ba12d9be2d45400df76a96b5bdb8fbc40482c"
+    },
+    {
+      "id": "connect-a-server-that-requires-sign-in",
+      "hash": "9593553a420bf5abbffc0c9acd4f4b246fdaa5530e267c9bb4be2f163768b848"
+    },
+    {
+      "id": "edit--mcp-json-directly",
+      "hash": "88406efc430301191bc23167781d27b91135ce461933513e18f092d8da8c216c"
+    },
+    {
+      "id": "connect-from-other-surfaces",
+      "hash": "60d5d43c7013cbffd442d2661887816cde114a2e632b8149a4adfae5ac6aa6f0"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "1dc08c26dfb4f19bbb5cc4e1e442e5e776b7ecd61679f4754af5dd35aeea5939"
+    },
+    {
+      "id": "next-steps",
+      "hash": "b0a60c199a957482fb810e3e19190fa672a42d617172fbe558b97ca6ffe98828"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Troubleshooting",
+      "id": "troubleshooting",
+      "hash": "1dc08c26dfb4f19bbb5cc4e1e442e5e776b7ecd61679f4754af5dd35aeea5939",
+      "text": "## Troubleshooting\n\nIf a server doesn't connect, check its status with `/mcp` inside a session or `claude mcp list` from your shell, then match the symptom below. The `/mcp` panel also lets you reconnect or authenticate without leaving the session.\n\n<AccordionGroup>\n  <Accordion title=\"/mcp shows No MCP servers configured\">\n    Claude Code didn't find any servers for the current directory. The most common causes:\n\n    * You ran `claude mcp add` from a different project. Local-scoped servers are tied to the project where you added them: the repository root, or the exact directory if you weren't in a git repository. Re-add the server from the project you're in now, or add it with `--scope user` so it isn't tied to a project.\n    * You edited a configuration file at the wrong path. The correct files are `~/.claude.json` and `<project>/.mcp.json`. Claude Code doesn't read paths such as `~/.claude/.mcp.json`, `~/.claude/config/mcp.json`, `~/.claude/mcp.json`, or `%APPDATA%\\Claude\\mcp.json`. For user-scoped servers, run `claude mcp add --scope user`, which writes to the `mcpServers` key in `~/.claude.json`; for project-scoped servers, edit `.mcp.json` at the project root.\n    * You wrote a malformed entry in `.mcp.json`. Claude Code skips that entry and still loads the others. Run `claude mcp list` from your shell and look for the parse warning, which names the offending field.\n  </Accordion>\n\n  <Accordion title=\"Status shows Failed to connect or Connection error\">\n    Both statuses mean the server didn't start or the URL didn't respond. They can also appear for HTTP servers that reject the token you configured in `headers.Authorization`; a server that wants a token you haven't configured shows `! Needs authentication` instead, covered in [Connect a server that requires sign-in](#connect-a-server-that-requires-sign-in).\n\n    Your first step depends on which status you see:\n\n    * `Failed to connect`: start with the failure detail on the status itself. `claude mcp list` and `claude mcp get <name>` show the HTTP status or error code and any error text the server returned, which often names the problem directly, such as a missing header or a rejected token. Before v2.1.219, `Failed to connect` showed only the bare status, and you needed the curl and command checks later in this section to find the cause.\n    * `Connection error`: Claude Code appends no detail to this status on any version, so go straight to the curl and command checks later in this section.\n\n    If the detail points to a credential or URL, also check the warnings in the `claude mcp list` output. Claude Code flags config values with hidden leading or trailing whitespace, a common cause of authentication failures after pasting a token.\n\n    If an HTTP server returns `404 Not Found`, Claude Code shows `MCP endpoint not found at <origin>. Check the URL in your MCP config.` when you select the server in `/mcp`. The message names the URL's origin, such as `https://mcp.example.com`, without its path, so run `claude mcp get <name>` to see the full URL you configured. Compare its path to the server's documented MCP endpoint path, then run `claude mcp remove <name>` and re-add with the correct URL. Before v2.1.219, the message included the URL's path as well, and before v2.1.191, a `404` showed a generic `Error POSTing to endpoint` message without the URL.\n\n    For HTTP servers, confirm the URL is reachable from your machine:\n\n    ```bash theme={null}\n    curl -I https://mcp.sentry.dev/mcp\n    ```\n\n    In PowerShell, use `curl.exe` instead of `curl` so the request goes to the real curl binary rather than the `Invoke-WebRequest` alias.\n\n    The response tells you which kind of problem you have:\n\n    * A `404` or `405`: the server is up. Many MCP endpoints answer only POST requests, so this still confirms the URL is reachable from your machine.\n    * A `401` or `403`: the server is up and you need to authenticate. Use the browser sign-in in [Connect a server that requires sign-in](#connect-a-server-that-requires-sign-in), or for servers that take a token instead, like GitHub's, pass it with `--header \"Authorization: Bearer <token>\"` on the `claude mcp add` command.\n    * No response at all: check the URL and your network.\n\n    For stdio servers, run the configured command directly in your terminal to see the underlying error. For the Playwright server from this guide, run:\n\n    ```bash theme={null}\n    npx -y @playwright/mcp@latest\n    ```\n\n    What happens next tells you where the problem is:\n\n    * The command starts and waits for input: the server itself works.\n\n      Run `claude mcp get <name>` and confirm the command shown there matches what you just ran. If the command shown differs from what you typed, you likely omitted the `--` separator before the server command. Remove the server and re-add it with `--` in place. If you wrote `.mcp.json` by hand, check its syntax and location. Before v2.1.285, `claude mcp get` printed no `Command` line for a stdio entry saved without a `type` field, such as a hand-written `.mcp.json` entry. On those versions, run `claude mcp list` instead, which prints the command line either way.\n    * The command errors: the message names what's missing, such as Node.js or a browser.\n  </Accordion>\n\n  <Accordion title=\"Connection timed out at startup\">\n    The server took longer than the default 30-second startup timeout. A stdio server's first run can be slow while `npx` downloads the package. Increase the limit with the [`MCP_TIMEOUT`](/docs/en/env-vars) environment variable, in milliseconds:\n\n    ```bash theme={null}\n    MCP_TIMEOUT=60000 claude\n    ```\n\n    In PowerShell, set the variable before the command on the same line:\n\n    ```powershell theme={null}\n    $env:MCP_TIMEOUT = \"60000\"; claude\n    ```\n  </Accordion>\n\n  <Accordion title=\"Server already exists\">\n    You've already added a server with that name at the same scope. Either remove the existing entry first or choose a different name:\n\n    ```bash theme={null}\n    claude mcp remove claude-code-docs\n    ```\n\n    If the name exists at more than one scope, `remove` reports `exists in multiple scopes`. Pass `--scope` to choose which copy to delete, for example `claude mcp remove claude-code-docs --scope local`.\n  </Accordion>\n\n  <Accordion title=\"Server connects but no tools appear\">\n    Run `/mcp` inside a session and select the server to see its tool list. If the list is empty, the server started but didn't register any tools, which usually means it's missing a required environment variable such as an API key.\n\n    Pass the variable with `--env KEY=value` on `claude mcp add`, or in the `env` field of the server's `.mcp.json` entry. The server's documentation lists the variables it needs.\n  </Accordion>\n\n  <Accordion title=\"Changes to .mcp.json don't take effect\">\n    Claude Code reads `.mcp.json` at session start. Exit and restart the session after editing the file.\n\n    If your servers still don't appear, run `claude mcp list` and look for a parse warning. Claude Code skips malformed entries and shows the offending field there.\n\n    If you previously rejected the server when prompted, reset project approvals:\n\n    ```bash theme={null}\n    claude mcp reset-project-choices\n    ```\n  </Accordion>\n\n  <Accordion title=\"OAuth sign-in fails or browser doesn't open\">\n    Run `/mcp`, select the server, and choose `Authenticate` again. If the browser doesn't open automatically, copy the URL shown in the terminal and open it manually. See [Authenticate with remote MCP servers](/docs/en/mcp#authenticate-with-remote-mcp-servers) for fixed callback ports and pre-configured credentials.\n  </Accordion>\n</AccordionGroup>"
+    }
+  ]
+}
