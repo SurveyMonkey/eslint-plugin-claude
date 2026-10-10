@@ -28,10 +28,10 @@ in the list at these four levels. The report is on the key, and the message give
 
 | Level | Keys and types |
 |-------|----------------|
-| `sandbox` | Booleans: `enabled`, `failIfUnavailable`, `autoAllowBashIfSandboxed`, `allowUnsandboxedCommands`, `enableWeakerNestedSandbox`, `enableWeakerNetworkIsolation`, `allowAppleEvents`. `excludedCommands`: array of strings. `bwrapPath`, `socatPath`: absolute path.[^bwrap] `ignoreViolations`: object that maps a string to an array of strings.[^ignore] `ripgrep`: object with `command` (required) and `args`. |
+| `sandbox` | Booleans: `enabled`, `failIfUnavailable`, `autoAllowBashIfSandboxed`, `allowUnsandboxedCommands`, `enableWeakerNestedSandbox`, `enableWeakerNetworkIsolation`, `allowAppleEvents`. `excludedCommands`: array of strings. `bwrapPath`, `socatPath`: absolute path.[^bwrap][^socat] `ignoreViolations`: object that maps a string to an array of strings.[^ignore] `ripgrep`: object with `command` (required) and `args`.[^ripgrep] |
 | `sandbox.filesystem` | Arrays of strings: `allowWrite`, `denyWrite`, `denyRead`, `allowRead`. Booleans: `allowManagedReadPathsOnly`, `disabled`.[^filesystem] |
-| `sandbox.network` | Arrays of strings: `allowUnixSockets`, `allowedDomains`, `deniedDomains`. `allowMachLookup`: array of strings with a `*` only at the end.[^mach] Booleans: `allowAllUnixSockets`, `allowLocalBinding`, `strictAllowlist`, `allowManagedDomainsOnly`. `httpProxyPort`, `socksProxyPort`: a TCP port.[^network] `tlsTerminate`: object with `caCertPath` and `caKeyPath` strings. |
-| `sandbox.credentials` | `files`: array of objects with `path` and `mode`. `envVars`: array of objects with `name` and `mode`. `allowPlaintextInject`: Boolean. `awsPairs`: array of objects with `accessKeyIdVar` and `secretAccessKeyVar`, and an optional `sessionTokenVar`. `sigv4`: object with `streaming`, `presigned` and `sigv4a`, each `"deny"` or `"passthrough"`.[^sigv4] |
+| `sandbox.network` | Arrays of strings: `allowUnixSockets`, `allowedDomains`, `deniedDomains`. `allowMachLookup`: array of strings with a `*` only at the end.[^mach] Booleans: `allowAllUnixSockets`, `allowLocalBinding`, `strictAllowlist`, `allowManagedDomainsOnly`. `httpProxyPort`, `socksProxyPort`: a TCP port.[^network] `tlsTerminate`: object with `caCertPath` and `caKeyPath` strings.[^tls] |
+| `sandbox.credentials` | `files`: array of objects with `path` and `mode`.[^files] `envVars`: array of objects with `name` and `mode`. `allowPlaintextInject`: Boolean.[^plaintext] `awsPairs`: array of objects with `accessKeyIdVar` and `secretAccessKeyVar`, and an optional `sessionTokenVar`.[^aws] `sigv4`: object with `streaming`, `presigned` and `sigv4a`, each `"deny"` or `"passthrough"`.[^sigv4] |
 
 The rule reports these faults, each once for a value:
 
@@ -111,6 +111,12 @@ None.
 [^ignore]: [All settings: sandbox.ignoreViolations](https://code.claude.com/docs/en/settings-reference#sandbox-ignoreviolations)
 [^bwrap]: [All settings: sandbox.bwrapPath](https://code.claude.com/docs/en/settings-reference#sandbox-bwrappath)
 [^mach]: [All settings: sandbox.network.allowMachLookup](https://code.claude.com/docs/en/settings-reference#sandbox-network-allowmachlookup)
+[^socat]: [All settings: sandbox.socatPath](https://code.claude.com/docs/en/settings-reference#sandbox-socatpath)
+[^ripgrep]: [All settings: sandbox.ripgrep](https://code.claude.com/docs/en/settings-reference#sandbox-ripgrep)
+[^tls]: [All settings: sandbox.network.tlsTerminate](https://code.claude.com/docs/en/settings-reference#sandbox-network-tlsterminate)
+[^files]: [All settings: sandbox.credentials.files](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-files)
+[^plaintext]: [All settings: sandbox.credentials.allowPlaintextInject](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-allowplaintextinject)
+[^aws]: [All settings: sandbox.credentials.awsPairs](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-awspairs)
 [^envvars]: [All settings: sandbox.credentials.envVars](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-envvars)
 [^sigv4]: [All settings: sandbox.credentials.sigv4](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-sigv4)
 [^maskfiles]: [All settings: Mask fields for files](https://code.claude.com/docs/en/settings-reference#mask-fields-for-files)

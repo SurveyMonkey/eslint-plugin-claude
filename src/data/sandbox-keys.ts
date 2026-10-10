@@ -4,7 +4,7 @@
 // date of docs/rules/sandbox-schema.md.
 //
 // The names of the keys are in `src/data/settings-keys.ts`, with the scope of each. This module
-// holds the types only. `tests/data/sandbox-keys.test.ts` checks that every key of `sandbox` in
+// holds the types only. `tests/sandbox-keys.test.ts` checks that every key of `sandbox` in
 // the index has a type here, and that no type here lacks a key.
 
 /** The type of a value. A rule reads a value by its type, and reports the first fault. */

@@ -1295,6 +1295,36 @@
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.socatPath",
+      "hash": "eb0ab1176a884ac2217b3108ba455df7269d3f781ccb0fe82fd98401a176f19c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.ripgrep",
+      "hash": "51ecdb50e87aa5192a7f7971013283d7168a2456500453a82b3390427dc559c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.tlsTerminate",
+      "hash": "c7bcb2a65558324a4cd22ae053f5fe008483ed7a6407d0941a70e4b1b7004c49"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.files",
+      "hash": "7bcf139a71ace917bc629bd1fd985eceacfa3a8a6ed87960df716a5c424f578d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.allowPlaintextInject",
+      "hash": "e577b06f3af62d1a15cb5ca93e99ef85af47f4d9795eb3bda10e93ab97e4094a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.awsPairs",
+      "hash": "ca206977e839b2896dcaa4acc6d0c697b8c039d52c9bd325550c268cff688c55"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.credentials.envVars",
       "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b"
     },
