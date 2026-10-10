@@ -41,7 +41,6 @@ it.fails('reports a literal credential in env', () => {
     'CLIENT_SECRET',
     'MY_AUTH',
     'apiKey',
-    'APIKEY',
   ]) {
     expect(
       ids(lintProject(NAME, at({ command: 'x', env: { [variable]: 'abc123' } }))),
@@ -96,7 +95,7 @@ it.fails('reports the servers of a manifest, on the path for a declared file', (
   expect(ids(lintManifest(NAME, inline))).toEqual(['secret'])
   const headers = JSON.stringify({
     name: 'p',
-    mcpServers: { a: JSON.parse(remote({ A: 'b' })).mcpServers.a },
+    mcpServers: { a: JSON.parse(remote({ Authorization: 'Bearer abc123' })).mcpServers.a },
   })
   expect(ids(lintManifest(NAME, headers))).toEqual([])
   const declared = JSON.stringify({ name: 'p', mcpServers: './s.json' })

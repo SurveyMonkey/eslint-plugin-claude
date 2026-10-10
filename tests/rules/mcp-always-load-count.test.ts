@@ -85,9 +85,14 @@ it.fails('counts the sources of one plugin, and reports in each file with an own
   const root = lint(files['p/.mcp.json'] as string, 'p/.mcp.json', files)
   expect(ids(root)).toEqual(['tooMany'])
   expect(root[0]?.message).toContain('At least 4')
-  // A file with no own server has nothing to point at.
-  const bare = manifest({ mcpServers: './more.json' })
-  expect(ids(lint(bare, PLUGIN, { ...files, [PLUGIN]: bare }))).toEqual([])
+  // A server of a declared file reports on the path in the manifest.
+  const declared = manifest({ mcpServers: './more.json' })
+  const found = lint(declared, PLUGIN, { ...files, [PLUGIN]: declared })
+  expect(ids(found)).toEqual(['tooMany'])
+  expect(found[0]).toMatchObject({ column: declared.indexOf('"./more.json"') + 1 })
+  // A file with no own server with alwaysLoad has nothing to point at.
+  const plain = manifest({ mcpServers: { e: { command: 'x' } } })
+  expect(ids(lint(plain, PLUGIN, { ...files, [PLUGIN]: plain }))).toEqual([])
 })
 it.fails('reads the linted text of the root file, and not the text on disk', () => {
   const files = {

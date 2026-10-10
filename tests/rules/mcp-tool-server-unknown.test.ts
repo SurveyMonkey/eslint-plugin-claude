@@ -8,8 +8,13 @@ import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { expect, it } from 'vitest'
-import { repo } from '../agent-settings.test-support.ts'
-import { lintJson, lintMarkdown } from '../rule-tester.test-support.ts'
+import { agent, repo } from '../agent-settings.test-support.ts'
+import {
+  chmodCannotBlock,
+  lintJson,
+  lintMarkdown,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const NAME = 'mcp-tool-server-unknown'
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
@@ -32,7 +37,7 @@ it.fails('reports a server that .mcp.json lacks, on the entry', () => {
   expect(ids(found)).toEqual(['unknown'])
   expect(found[0]).toMatchObject({ line: 1, column: code.indexOf('"mcp__nope') + 1 })
   expect(found[0]?.message).toContain('"nope"')
-  expect(found[0]?.message).toContain('.mcp.json')
+  expect(found[0]?.message).toContain('the .mcp.json of the project')
 })
 it.fails('reports the bare form, a glob and a specifier, in each list and in the local file', () => {
   const files = { '.mcp.json': servers('db') }
@@ -81,9 +86,9 @@ it.fails('stays silent for the servers that no repository file declares', () => 
   expect(ids(settings(code, files))).toEqual([])
 })
 it.fails('stays silent for an inline server of a local agent', () => {
-  const agent =
+  const inlineAgent =
     '---\nname: a\ndescription: d\nmcpServers:\n  - inline:\n      command: x\n  - db\n---\n'
-  const files = { '.mcp.json': servers('db'), '.claude/agents/a.md': agent }
+  const files = { '.mcp.json': servers('db'), '.claude/agents/a.md': inlineAgent }
   expect(ids(settings(allow('mcp__inline__t', 'mcp__nope__t'), files))).toEqual(['unknown'])
   const nested = {
     ...files,
@@ -92,17 +97,35 @@ it.fails('stays silent for an inline server of a local agent', () => {
   }
   expect(ids(settings(allow('mcp__deep__t'), nested))).toEqual([])
 })
-it.fails('stays silent when a local agent cannot be read', () => {
+it.fails('stays silent when the local agents cannot be read', () => {
+  const root = repo({ '.mcp.json': servers('db'), '.claude/agents/a.md': agent('') })
+  const outside = mkdtempSync(path.join(tmpdir(), 'mcp-unknown-agents-'))
+  try {
+    const file = path.join(root, '.claude', 'settings.json')
+    expect(ids(lintJson(NAME, allow('mcp__nope__t'), file))).toEqual(['unknown'])
+    symlinkSync(outside, path.join(root, '.claude', 'agents', 'ext'))
+    expect(ids(lintJson(NAME, allow('mcp__nope__t'), file))).toEqual([])
+  } finally {
+    rmSync(outside, { recursive: true, force: true })
+  }
+})
+it.fails('stays silent when an agent file cannot be read', () => {
+  const root = repo({ '.mcp.json': servers('db'), '.claude/agents/a.md': agent('') })
+  const file = path.join(root, '.claude', 'settings.json')
+  if (!chmodCannotBlock) {
+    withoutAccess(path.join(root, '.claude', 'agents', 'a.md'), () => {
+      expect(ids(lintJson(NAME, allow('mcp__nope__t'), file))).toEqual([])
+    })
+  }
+})
+it.fails('reads a file without a frontmatter block, or with one that does not parse, as no server', () => {
+  const broken = '---\nname: [\nmcpServers: x\n---\n'
   const files = {
     '.mcp.json': servers('db'),
-    '.claude/agents/a.md': '---\nname: [\nmcpServers: x\n---\n',
+    '.claude/agents/a.md': broken,
+    '.claude/agents/b.md': 'No block.\n',
   }
-  expect(ids(settings(allow('mcp__nope__t'), files))).toEqual([])
-  const plain = {
-    '.mcp.json': servers('db'),
-    '.claude/agents/a.md': 'No frontmatter, and no servers.\n',
-  }
-  expect(ids(settings(allow('mcp__nope__t'), plain))).toEqual(['unknown'])
+  expect(ids(settings(allow('mcp__nope__t'), files))).toEqual(['unknown'])
 })
 it.fails('stays silent when there is no .mcp.json, or the rule cannot read it', () => {
   const code = allow('mcp__nope__t')
@@ -157,7 +180,7 @@ it.fails('reports a scoped name of its own plugin for a server that the plugin l
   const found = inPlugin('mcp__plugin_my-plugin_nope__t, mcp__plugin_my-plugin_db__t', PLUGIN)
   expect(ids(found)).toEqual(['unknown'])
   expect(found[0]?.message).toContain('"nope"')
-  expect(found[0]?.message).toContain('my-plugin')
+  expect(found[0]?.message).toContain('the plugin "my-plugin"')
   expect(ids(inPlugin('mcp__plugin_my-plugin_nope__t', PLUGIN, 'p/commands/c.md'))).toEqual([
     'unknown',
   ])
