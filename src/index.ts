@@ -231,6 +231,7 @@ import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts
 import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
+import pluginManifestLocation from './rules/plugin-manifest-location.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
 import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
@@ -671,6 +672,7 @@ const modules = [
   mcpPluginRootPaths,
   mcpStdioCommandHasArgs,
   mcpUnknownKeys,
+  pluginManifestLocation,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1027,6 +1029,7 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-plugin-root-paths': 'off',
   'mcp-stdio-command-has-args': 'off',
   'mcp-unknown-keys': 'off',
+  'plugin-manifest-location': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

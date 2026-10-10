@@ -247,6 +247,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-agent-exists',
     'settings-attribution-false',
     'settings-committed-helper-command',
+    'plugin-manifest-location',
     'settings-conflicting-keys',
     'settings-defaultshell-powershell-tool',
     'settings-deprecated-key',
