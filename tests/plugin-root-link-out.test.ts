@@ -230,9 +230,7 @@ describe('the path and settings rules of the plugin layer', () => {
     const { dir } = linkedOut({}, {}, SKILLS)
     expect(lintPlugin('plugin-skills-key-redundant-default', dir, SKILLS)).toEqual([])
   })
-})
 
-describe('the path rules of the plugin layer', () => {
   const APPLIES = JSON.stringify({
     name: 'p',
     userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },

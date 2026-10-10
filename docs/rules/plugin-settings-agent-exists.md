@@ -26,8 +26,8 @@ agents as the main thread.[^settings]
 
 `claude plugin validate` does not check the agent (checked on Claude Code 2.1.296).
 
-The rule reports an `agent` value that is not a built-in agent and that no agent file of the plugin
-defines. An agent of a plugin has the scoped name `<plugin>:<name>`. The `<name>` is the frontmatter
+The rule reports an `agent` value that is not a built-in agent. It also reports a value that no
+agent file of the plugin defines. An agent of a plugin has the scoped name `<plugin>:<name>`. The `<name>` is the frontmatter
 `name`, or the file name when there is no `name`. A file in a subfolder of `agents/` adds the folder
 names, as in `<plugin>:review:security`.[^agents] The docs show the bare name in the `settings.json`
 of a plugin.[^settings] So the rule accepts the bare name and the scoped name. The check ignores
@@ -43,8 +43,8 @@ The rule reads two places and reports on the value:
 
 The rule lists the agents with the reader of `skill-agent-exists`, and skips the same built-in
 agents. The `agent` setting takes the name of a built-in agent too. The rule reads the agents of
-the plugin only. A name that only a user or project agent
-defines is reported, because the docs give this key as the way to run an agent of the plugin.
+the plugin only. A name that only a user or project agent defines is reported. The docs give this
+key as the way to run an agent of the plugin.
 
 The rule makes no report in these cases:
 

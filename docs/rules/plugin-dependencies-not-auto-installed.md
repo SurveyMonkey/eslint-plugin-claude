@@ -28,9 +28,10 @@ dependency are the exception:[^non-git]
 - Claude Code never runs a dependency's `headersHelper`. Users install a dependency whose
   marketplace entry sets one before they install the plugin that needs it.
 
-`/reload-plugins`, the auto-update of the marketplace, a repeat of `claude plugin install` and
-`claude plugin marketplace add` follow the same limits.[^non-git] `claude plugin validate` reads one
-plugin and not its marketplace, so it does not report this (checked on Claude Code 2.1.296).
+These operations follow the same limits: `/reload-plugins`, the auto-update of the marketplace, a
+repeat of `claude plugin install` and `claude plugin marketplace add`.[^non-git] `claude plugin
+validate` reads one plugin. It does not read its marketplace, so it does not report this (checked on
+Claude Code 2.1.296).
 
 The rule reads the `dependencies` array of `plugin.json`. It finds the `marketplace.json` that
 encloses the plugin: the nearest `.claude-plugin/marketplace.json`, from the plugin root up to the

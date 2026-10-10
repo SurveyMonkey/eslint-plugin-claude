@@ -2958,7 +2958,12 @@ const PLUGIN_RULES: {
     severity: 'warn',
   },
   {
-    name: 'plugin-skills-key-redundant-default',
+    name: 'plugin-commands-map-fields',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-dependencies-not-auto-installed',
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
@@ -2968,22 +2973,17 @@ const PLUGIN_RULES: {
     severity: 'warn',
   },
   {
-    name: 'plugin-commands-map-fields',
-    files: ['**/.claude-plugin/plugin.json'],
-    severity: 'warn',
-  },
-  {
-    name: 'plugin-user-config-field-applicability',
-    files: ['**/.claude-plugin/plugin.json'],
-    severity: 'warn',
-  },
-  {
     name: 'plugin-settings-agent-exists',
     files: ['**/.claude-plugin/plugin.json', '**/settings.json'],
     severity: 'warn',
   },
   {
-    name: 'plugin-dependencies-not-auto-installed',
+    name: 'plugin-skills-key-redundant-default',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
+  {
+    name: 'plugin-user-config-field-applicability',
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
