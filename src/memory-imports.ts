@@ -9,8 +9,8 @@
 // They do not define a token any further. The parser uses these limits:
 // - An `@` starts an import at the start of the text, or after white space.
 //   An email address is not an import.
-// - The path ends at the first white space. A backslash before a space keeps
-//   the space in the path.
+// - The path ends at the first white space, backtick or backslash. A backslash
+//   before a space keeps the space in the path.
 // - A path that starts with a quote is not an import.
 // - Only a fence of backticks or tildes counts as a fenced block. An indented
 //   block is not skipped, because the docs do not name it.
@@ -129,7 +129,7 @@ const TOKEN = /(?<=^|\s)@((?:[^\s\\\uE000`]|\\ )+)/g
 /** The imports in `text`, in order. */
 export function parseImports(text: string): MemoryImport[] {
   const imports: MemoryImport[] = []
-  // Without an `@` there is no import. The masks cost much on a large text.
+  // Without an `@` there is no import. The masks are slow on a large text.
   if (!text.includes('@')) {
     return imports
   }
@@ -149,6 +149,11 @@ export function parseImports(text: string): MemoryImport[] {
 
 // A URL, `mailto:` and the like. A drive letter has the same form.
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i
+
+/** A path that starts with `~`, or a URL with `//` or a `mailto:` link. */
+function opaque(imported: string): boolean {
+  return imported.startsWith('~') || /^(?:[a-z][a-z0-9+.-]*:\/\/|mailto:)/i.test(imported)
+}
 
 /** The paths to try for `imported`, or none when the rule does not check it.
  *  The docs do not say how Claude Code treats an end mark or a `#` part.
@@ -260,6 +265,10 @@ export function followImports(file: string, text: string, bound: string, limit: 
     for (const [index, imported] of parseImports(step.text).entries()) {
       const forms = candidates(imported)
       // A path out of the repository can lead back into it. The rule cannot read it.
+      if (forms.length === 0 && !opaque(imported.path)) {
+        // A word with a colon, such as `@alice:`, is text and not a path to read.
+        continue
+      }
       const found =
         forms.length === 0 ? UNREADABLE : findImport(path.dirname(step.file), forms, bound)
       if (found === UNREADABLE) {
@@ -270,12 +279,19 @@ export function followImports(file: string, text: string, bound: string, limit: 
       }
       seen.add(found.real)
       const loadedText = readImported(found.real)
+      const top = step.hops === 0 ? index : step.top
+      if (loadedText === UNREADABLE && step.hops + 1 > limit) {
+        // The file does not load at this depth, so what it holds does not matter.
+        if (!chain.tooDeep.has(top)) {
+          chain.tooDeep.set(top, found.real)
+        }
+        continue
+      }
       if (typeof loadedText !== 'string') {
         // A directory loads nothing. A file that fails to read can hold any import.
         chain.unreadable ||= loadedText === UNREADABLE
         continue
       }
-      const top = step.hops === 0 ? index : step.top
       if (step.hops + 1 > limit) {
         if (!chain.tooDeep.has(top)) {
           chain.tooDeep.set(top, found.real)

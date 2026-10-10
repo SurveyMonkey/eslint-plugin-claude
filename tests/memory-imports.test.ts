@@ -327,6 +327,11 @@ describe('followImports', () => {
     // An import out of the repository can lead back into it, so the chain is not known.
     expect(follow(root, 4, '@~/x.md').unreadable).toBe(true)
     expect(follow(root, 4, '@https://example.com/x.md').unreadable).toBe(true)
+    // A word with a colon is text, such as a name in a note.
+    expect(follow(root, 4, '@alice: see @todo: fix').unreadable).toBe(false)
+    // The mark holds for an import in a file below the root too.
+    const nested = tree({ 'CLAUDE.md': 'x', 'a.md': '@b.md\n', 'b.md': '@~/x.md\n' })
+    expect(follow(nested, 4, '@a.md\n').unreadable).toBe(true)
   })
 
   it('uses the path of a file that is not on disk as the root', () => {

@@ -153,6 +153,20 @@ describe(`${RULE}: what the rule skips`, () => {
     expect(lint('@f1.md @https://example.com/x.md\n', chainOf(5))).toEqual([])
   })
 
+  it('still reports when a word with a colon is in the text', () => {
+    expect(ids(lint('@f1.md @alice: hi\n', chainOf(5)))).toEqual(['tooDeep'])
+  })
+
+  it('makes no report when an unreadable path is deep in the chain', () => {
+    const files = { ...chainOf(5), 'f2.md': '@f3.md @~/x.md\n' }
+    expect(lint('@f1.md\n', files)).toEqual([])
+  })
+
+  it('does not parse a file past the limit, so a path in it hides nothing', () => {
+    const files = { ...chainOf(5), 'f5.md': '@~/x.md\n' }
+    expect(ids(lint('@f1.md\n', files))).toEqual(['tooDeep'])
+  })
+
   it('checks a CLAUDE.md below .claude/rules, which is a rule file', () => {
     expect(ids(lint('@../../f1.md\n', chainOf(5), undefined, '.claude/rules/CLAUDE.md'))).toEqual([
       'tooDeep',
@@ -181,6 +195,20 @@ describe(`${RULE}: what the rule skips`, () => {
     expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', '@f1.md\n', { max: 3 }))).toEqual([
       'overConfiguredLimit',
     ])
+  })
+
+  it.skipIf(chmodCannotBlock)('makes no report beside a file that it cannot read', () => {
+    const dir = tree({ ...chainOf(5), 'locked.md': 'x\n' })
+    withoutAccess(path.join(dir, 'locked.md'), () => {
+      expect(lintMemory(RULE, dir, 'CLAUDE.md', '@f1.md @locked.md\n')).toEqual([])
+    })
+  })
+
+  it.skipIf(chmodCannotBlock)('reports a file past the limit that it cannot read', () => {
+    const dir = tree(chainOf(5))
+    withoutAccess(path.join(dir, 'f5.md'), () => {
+      expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', '@f1.md\n'))).toEqual(['tooDeep'])
+    })
   })
 
   it.skipIf(chmodCannotBlock)('ends the chain at a file that it cannot read', () => {

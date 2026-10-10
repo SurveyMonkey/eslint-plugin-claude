@@ -89,7 +89,7 @@ describe.skipIf(noLinks)(RULE, () => {
     const rules = tree({})
     link(rules, '.claude/rules', path.join(elsewhere, 'rules'))
     expect(ids(lintMemory(RULE, rules, '.claude/rules/sub/b.md', SCOPED))).toEqual(['neverLoads'])
-    // A target with a `.git` is a repository of its own, so this one has none.
+    // This target has no `.git`, so the bound is the linking tree.
     const shared = tree({ 'rules/sub/b.md': SCOPED }, false)
     const claude = tree({})
     link(claude, '.claude', shared)
