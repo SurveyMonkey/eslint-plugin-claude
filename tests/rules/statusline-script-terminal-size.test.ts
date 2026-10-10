@@ -6,7 +6,7 @@
 // repository, so each case builds a tree on disk. The script path follows `statusline-script-exists`:
 // the program, or the first argument of an interpreter, with a path from the project or with
 // `${CLAUDE_PROJECT_DIR}`. The file globs are in `tests/configs.test.ts`.
-import { chmodSync, mkdirSync } from 'node:fs'
+import { chmodSync, mkdirSync, rmSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
@@ -38,6 +38,9 @@ describe('statusline-script-terminal-size: reports', () => {
     '.claude/statusline.sh | tee x',
     `bash \${CLAUDE_PROJECT_DIR}/.claude/statusline.sh`,
     `bash "\${CLAUDE_PROJECT_DIR}/scripts/bar.js"`,
+    `"$CLAUDE_PROJECT_DIR"/.claude/statusline.sh`,
+    `bash "\${CLAUDE_PROJECT_DIR}"/scripts/bar.js`,
+    `/bin/bash \${CLAUDE_PROJECT_DIR}/scripts/bar.js`,
     `node \${CLAUDE_PROJECT_DIR}/scripts/bar.js`,
   ])('a script that calls tput cols: %s', (command) => {
     expect(ids(tree(FILES), command), command).toEqual(['tput'])
@@ -234,4 +237,80 @@ describe('statusline-script-terminal-size: stays silent', () => {
       lintJson(name, twice('scripts/ok.sh', 'scripts/bar.js'), path.join(dir, PROJECT)),
     ).toHaveLength(1)
   })
+})
+
+describe('statusline-script-terminal-size: the command and the project', () => {
+  it.each(['sh', 'zsh', 'python', 'python3', 'deno', 'bun', 'pwsh', 'powershell', 'ruby', 'perl'])(
+    'takes the first argument of the interpreter %s',
+    (program) => {
+      expect(ids(tree(FILES), `${program} scripts/bar.js`), program).toEqual([])
+      expect(ids(tree(FILES), `${program} \${CLAUDE_PROJECT_DIR}/scripts/bar.js`), program).toEqual(
+        ['tput'],
+      )
+    },
+  )
+
+  it('is silent for an empty quoted word', () => {
+    for (const command of ['""', "''", 'bash ""', 'bash "" scripts/bar.js']) {
+      expect(ids(tree(FILES), command), command).toEqual([])
+    }
+  })
+
+  it('is silent for an absolute path, even when it is in the repository', () => {
+    const dir = tree(FILES)
+    expect(ids(dir, path.join(dir, 'scripts/bar.js'))).toEqual([])
+  })
+
+  it.skipIf(noLinks)('does not resolve a character that a shell expands', () => {
+    // Each file exists under the literal name, so only the guard can make the rule silent.
+    const names = [
+      'a=b',
+      'a{b}',
+      'a[1]',
+      'a#b',
+      'a!b',
+      'a?b',
+      'a:b',
+      'a*b',
+      'a~b',
+      'a$b',
+      'a`b',
+      'a\\b',
+    ]
+    const dir = tree(Object.fromEntries(names.map((n) => [`scripts/${n}.sh`, TPUT])))
+    for (const n of names) {
+      expect(ids(dir, `'scripts/${n}.sh'`), n).toEqual([])
+    }
+  })
+
+  it('resolves a project variable of a nested managed file from the repository root', () => {
+    const dir = tree({
+      [SCRIPT]: TPUT,
+      'pkg/.claude/other.sh': TPUT,
+      'pkg/managed-settings.json': '{}',
+    })
+    const command = `\${CLAUDE_PROJECT_DIR}/.claude/statusline.sh`
+    expect(ids(dir, command, 'pkg/managed-settings.json')).toEqual(['tput'])
+    expect(
+      ids(dir, `\${CLAUDE_PROJECT_DIR}/.claude/other.sh`, 'pkg/managed-settings.json'),
+    ).toEqual([])
+  })
+
+  it('finds the project of a managed file in a tree with no .git', () => {
+    const dir = tree(FILES, false)
+    const command = `\${CLAUDE_PROJECT_DIR}/.claude/statusline.sh`
+    expect(ids(dir, command, MANAGED)).toEqual(['tput'])
+    expect(ids(dir, command, DROP_IN)).toEqual(['tput'])
+  })
+
+  it.skipIf(noLinks)(
+    'bounds the read at the repository of the project, not of its link target',
+    () => {
+      const elsewhere = tree({ '.claude/settings.json': '{}', 's.sh': TPUT }, false)
+      const dir = tree({ 'pkg/.keep': '' })
+      rmSync(path.join(dir, 'pkg'), { recursive: true })
+      link(dir, 'pkg', elsewhere)
+      expect(ids(dir, `\${CLAUDE_PROJECT_DIR}/s.sh`, 'pkg/.claude/settings.json')).toEqual([])
+    },
+  )
 })
