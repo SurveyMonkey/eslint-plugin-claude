@@ -415,3 +415,26 @@ export const BUNDLED_SKILL_ALIASES: ReadonlyMap<string, string> = new Map([
   ['checkup', 'doctor'],
   ['proactive', 'loop'],
 ])
+
+/** The values of `permissions.defaultMode`. Source: the entry for `permissions.defaultMode` in
+ *  the settings reference
+ *  (https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode), checked on Claude
+ *  Code 2.1.296 on 2026-10-10. `manual` is an alias for `default`. Review this list with the
+ *  lists above, on or before the `stale_after` date of
+ *  `docs/rules/permissions-default-mode-value.md`. */
+export const PERMISSION_MODES: readonly string[] = [
+  'default',
+  'acceptEdits',
+  'plan',
+  'auto',
+  'dontAsk',
+  'bypassPermissions',
+  'manual',
+]
+
+/** True when Claude Code reads `key` inside `permissions`. The lists above hold the keys, so
+ *  this is not a second list. It includes `disableAutoMode`, which Claude Code also accepts
+ *  under `permissions`. */
+export function isPermissionsKey(key: string): boolean {
+  return settingsKeyScope(['permissions', key]) !== undefined
+}

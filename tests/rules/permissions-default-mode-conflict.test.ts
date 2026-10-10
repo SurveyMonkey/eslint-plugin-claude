@@ -1,8 +1,8 @@
 // `disableBypassPermissionsMode: "disable"` stops anyone from entering bypassPermissions mode:
 // https://code.claude.com/docs/en/settings-reference#permissionsdisablebypasspermissionsmode
-// The lock takes the strictest value of any source. `defaultMode` comes from the highest source
-// that sets it, so a sibling file of a managed source can change it:
-// https://code.claude.com/docs/en/settings-reference#managed-settings-precedence
+// In a managed source, the later file replaces a single value of an earlier file, so a sibling
+// can change either key:
+// https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams
 // The pair `disableAutoMode` with `defaultMode: "auto"` is for `settings-conflicting-keys`.
 // The tests of a managed source use files on disk.
 import { symlinkSync } from 'node:fs'
@@ -26,31 +26,31 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const permissions = (fields: object) => ({ permissions: fields })
 
 describe(`${name}: bypassPermissions with the lock`, () => {
-  it.fails('reports defaultMode when the lock is disable, in every file', () => {
+  it('reports defaultMode when the lock is disable, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(permissions(LOCKED), file), file).toEqual(['bypass'])
     }
   })
 
-  it.fails('reports the key defaultMode, at its line and column', () => {
+  it('reports the key defaultMode, at its line and column', () => {
     const text =
       '{\n  "permissions": {\n    "disableBypassPermissionsMode": "disable",\n    "defaultMode": "bypassPermissions"\n  }\n}'
     expect(lint(text).map(({ line, column }) => [line, column])).toEqual([[4, 5]])
   })
 
-  it.fails('says that Claude Code never enters the mode', () => {
+  it('says that Claude Code never enters the mode', () => {
     const [message] = lint(permissions(LOCKED))
     expect(message?.message).toContain('never enters')
   })
 
-  it.fails('is silent for another defaultMode', () => {
+  it('is silent for another defaultMode', () => {
     for (const value of ['default', 'acceptEdits', 'plan', 'auto', 'dontAsk', 'manual', true]) {
       const code = permissions({ ...LOCKED, defaultMode: value })
       expect(ids(code), String(value)).toEqual([])
     }
   })
 
-  it.fails('is silent for a lock that is not disable, or unset', () => {
+  it('is silent for a lock that is not disable, or unset', () => {
     for (const value of [true, 'enable', 'Disable', null]) {
       const code = permissions({ ...LOCKED, disableBypassPermissionsMode: value })
       expect(ids(code), String(value)).toEqual([])
@@ -59,18 +59,18 @@ describe(`${name}: bypassPermissions with the lock`, () => {
     expect(ids(permissions({ disableBypassPermissionsMode: 'disable' }))).toEqual([])
   })
 
-  it.fails('is silent when defaultMode is null', () => {
+  it('is silent when defaultMode is null', () => {
     expect(ids(permissions({ ...LOCKED, defaultMode: null }))).toEqual([])
   })
 
-  it.fails('is silent for the pair of auto: settings-conflicting-keys reports it', () => {
+  it('is silent for the pair of auto: settings-conflicting-keys reports it', () => {
     const code = { disableAutoMode: 'disable', permissions: { defaultMode: 'auto' } }
     const nested = permissions({ disableAutoMode: 'disable', defaultMode: 'auto' })
     expect(ids(code)).toEqual([])
     expect(ids(nested)).toEqual([])
   })
 
-  it.fails('is silent for a lock at the top level: it is no key there', () => {
+  it('is silent for a lock at the top level: it is no key there', () => {
     const code = {
       disableBypassPermissionsMode: 'disable',
       permissions: { defaultMode: 'bypassPermissions' },
@@ -80,17 +80,17 @@ describe(`${name}: bypassPermissions with the lock`, () => {
 })
 
 describe(`${name}: what the rule leaves alone`, () => {
-  it.fails('is silent when permissions is not an object', () => {
+  it('is silent when permissions is not an object', () => {
     expect(ids({ permissions: 'x' })).toEqual([])
     expect(ids({ permissions: null })).toEqual([])
     expect(ids({})).toEqual([])
   })
 
-  it.fails('is silent for a document that is not an object', () => {
+  it('is silent for a document that is not an object', () => {
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     const lock = '"disableBypassPermissionsMode": "disable"'
     const mode = '"defaultMode": "bypassPermissions"'
     expect(ids(`{"permissions": {${lock}, ${mode}, "defaultMode": "plan"}}`)).toEqual([])
@@ -100,7 +100,7 @@ describe(`${name}: what the rule leaves alone`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(permissions(LOCKED), HIDDEN)).toEqual([])
   })
 })
@@ -112,7 +112,7 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
   const at = (root: string, file: string, text = TEXT) =>
     lintJson(name, text, path.join(root, file)).map((message) => message.messageId)
 
-  it.fails('reports when no sibling sets defaultMode', () => {
+  it('reports when no sibling sets defaultMode', () => {
     const root = repo({
       'managed-settings.d/20-b.json': '{"model": "opus", "permissions": {"deny": ["Bash"]}}',
       'managed-settings.d/30-c.json': '{"permissions": "x"}',
@@ -121,10 +121,11 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(at(root, 'managed-settings.d/10-a.json')).toEqual(['bypass'])
   })
 
-  it.fails('is silent when a sibling sets defaultMode again: the source decides the mode', () => {
+  it('is silent when a sibling sets defaultMode or the lock again: the source decides', () => {
     for (const sibling of [
       '{"permissions": {"defaultMode": "plan"}}',
       '{"permissions": {"defaultMode": null}}',
+      '{"permissions": {"disableBypassPermissionsMode": null}}',
     ]) {
       const dropIn = repo({ 'managed-settings.d/20-b.json': sibling })
       expect(at(dropIn, 'managed-settings.d/10-a.json'), sibling).toEqual([])
@@ -134,7 +135,7 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     }
   })
 
-  it.fails('ignores a hidden sibling and a sibling that does not end in .json', () => {
+  it('ignores a hidden sibling and a sibling that does not end in .json', () => {
     const root = repo({
       'managed-settings.d/.20-b.json': '{"permissions": {"defaultMode": "plan"}}',
       'managed-settings.d/30-c.txt': '{"permissions": {"defaultMode": "plan"}}',
@@ -142,12 +143,12 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(at(root, 'managed-settings.d/10-a.json')).toEqual(['bypass'])
   })
 
-  it.fails('is silent when a sibling does not parse to an object', () => {
+  it('is silent when a sibling does not parse to an object', () => {
     const root = repo({ 'managed-settings.d/20-b.json': '[1]' })
     expect(at(root, 'managed-settings.d/10-a.json')).toEqual([])
   })
 
-  it.fails('is silent when the drop-in directory is a link out of the repository', {
+  it('is silent when the drop-in directory is a link out of the repository', {
     skip: process.platform === 'win32',
   }, () => {
     const root = repo({})
@@ -156,7 +157,7 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(at(root, 'managed-settings.json')).toEqual([])
   })
 
-  it.fails('does not read the siblings for a project file', () => {
+  it('does not read the siblings for a project file', () => {
     const root = repo({ 'managed-settings.json': '{"permissions": {"defaultMode": "plan"}}' })
     expect(at(root, '.claude/settings.json')).toEqual(['bypass'])
   })
