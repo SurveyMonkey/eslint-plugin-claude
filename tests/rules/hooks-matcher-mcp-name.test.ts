@@ -1,7 +1,7 @@
 // An MCP tool is named `mcp__<server>__<tool>`. A matcher with exact-match characters only is an
 // exact string, so a bare server name matches no tool. The docs are the hooks reference, "Match MCP
 // tools" (https://code.claude.com/docs/en/hooks#match-mcp-tools).
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { TOOL_EVENTS } from '../../src/data/hook-events.ts'
 import {
   command,
@@ -14,9 +14,6 @@ import {
   settings,
 } from '../hooks.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
-
-// Red: the rule does not exist yet. The fix commit removes this line and the alias.
-const it = realIt.fails
 
 const name = 'hooks-matcher-mcp-name'
 const ids = (event: string, matcher: unknown, file = FILES.project) =>

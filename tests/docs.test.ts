@@ -84,6 +84,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-handler-field-ignored',
     'hooks-handler-type-event-support',
     'hooks-matcher-enum',
+    'hooks-matcher-mcp-name',
     'hooks-matcher-unsupported-event',
     'hooks-no-standalone-file',
     'hooks-script-executable',
