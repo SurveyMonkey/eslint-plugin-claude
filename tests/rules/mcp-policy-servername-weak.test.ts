@@ -1,6 +1,6 @@
 // A `serverName` entry matches a label that a user assigns, so it does not control which server
-// runs (managed MCP page, "How serverName entries match"). In an allowlist, a name also stops
-// admitting a stdio (remote) server once a `serverCommand` (`serverUrl`) entry exists ("How a
+// runs (managed MCP page, "How serverName entries match"). In an allowlist, a name does not
+// admit a stdio (remote) server once a `serverCommand` (`serverUrl`) entry exists ("How a
 // server is evaluated"). The lists of the managed files combine. `mcp-allowlist-servername-dead`
 // reports a name in an allowlist with both kinds. `mcp-policy-entry-schema` reports an invalid
 // entry.
@@ -38,17 +38,17 @@ it.fails('reports a denylist name, also one that the allowlist pattern rejects',
 })
 it.fails('reports each name of both lists', () => {
   const code = JSON.stringify({
-    allowedMcpServers: [named('a'), url, named('b')],
+    allowedMcpServers: [named('a'), named('b')],
     deniedMcpServers: [named('c')],
   })
   expect(run(code)).toEqual(['allow', 'allow', 'deny'])
 })
-it.fails('says that a name stops admitting stdio servers once a command entry exists', () => {
+it.fails('says that a name does not admit stdio servers once a command entry exists', () => {
   const found = lint(allow(command, named('a')))
   expect(found.map((m) => m.messageId)).toEqual(['allowNoStdio'])
   expect(found[0]?.message).toContain('"a"')
 })
-it.fails('says that a name stops admitting remote servers once a URL entry exists', () => {
+it.fails('says that a name does not admit remote servers once a URL entry exists', () => {
   expect(run(allow(url, named('a')))).toEqual(['allowNoRemote'])
 })
 it.fails('leaves a name in an allowlist with both kinds to mcp-allowlist-servername-dead', () => {
