@@ -246,6 +246,30 @@
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
     }
   ],
+  "lsp-duplicate-server-name": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "lspServers",
+      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "LSP servers",
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+    }
+  ],
+  "lsp-extension-conflict": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "LSP servers",
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "lspServers",
+      "hash": "7f9b488492dfcb845be50542e9cddcc885a6bb0869e5ec4fb27f3ad196383731"
+    }
+  ],
   "lsp-json-schema": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -687,6 +711,18 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "mcp-allow-deny-overlap": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "allowedMcpServers",
+      "hash": "ca2cbd69d3e5a19b4663667cf24cb66de92fc6222f8a990f24d6b3ab66c0ef2b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "deniedMcpServers",
+      "hash": "e703d5859f59901bdedec8cbe836523e1b3b6121369151c25dba68e0f66fede7"
+    }
+  ],
   "mcp-allowlist-servername-dead": [
     {
       "url": "https://code.claude.com/docs/en/managed-mcp",
@@ -725,7 +761,31 @@
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Project server approvals and workspace trust",
-      "hash": "1a22572e8875db0366c846bbda15cb867e2f11fbf32afb6725f8fb740478bcf6"
+      "hash": "797327fe677dd36d57b98ee0fd3f878f2035814bd5e2173e5ccf82d27297b255"
+    }
+  ],
+  "mcp-approval-conflict": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disabledMcpjsonServers",
+      "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Project server approvals and workspace trust",
+      "hash": "797327fe677dd36d57b98ee0fd3f878f2035814bd5e2173e5ccf82d27297b255"
+    }
+  ],
+  "mcp-approval-names-exist": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledMcpjsonServers",
+      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disabledMcpjsonServers",
+      "hash": "c023af67b97412445ddca153ff604b347f68f8aae9980dc7c71a2af1cb90d232"
     }
   ],
   "mcp-authorization-header-with-oauth": [
@@ -762,6 +822,23 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Split a file-based policy across teams",
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
+  "mcp-duplicate-server-name": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "mcpServers",
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "MCP servers",
+      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
     }
   ],
   "mcp-env-client-secret": [
@@ -882,6 +959,18 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Restrict OAuth scopes",
       "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
+    }
+  ],
+  "mcp-plugin-tool-name-scoped": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers",
+      "hash": "ff97e0b409a0442d6fa9bd649205d1187e6c22472be8c1b36d832c2680b39a0b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Server names, tool names, and reloads",
+      "hash": "22612bdc79e35256932fec70a4acde5aeb73c2b697bb72c84eddebb32c19b9bd"
     }
   ],
   "mcp-policy-entry-schema": [

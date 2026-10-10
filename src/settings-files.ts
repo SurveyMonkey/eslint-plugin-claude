@@ -115,8 +115,14 @@ export function readSettings(
  *  The result is `UNREADABLE` when the rule cannot see one part. These cases
  *  count: a read that fails, and a path out of the repository. A file that
  *  does not parse to an object counts too. So does a drop-in that vanished
- *  after the directory read. Such a file can hold any key. */
-export function readManagedSource(filename: string): Record<string, unknown>[] | Unreadable {
+ *  after the directory read. Such a file can hold any key.
+ *
+ *  With `skipUnreadable`, a file that cannot be read adds nothing and the others stay. The
+ *  directory that cannot be seen still gives `UNREADABLE`. */
+export function readManagedSource(
+  filename: string,
+  skipUnreadable = false,
+): Record<string, unknown>[] | Unreadable {
   const self = path.resolve(filename)
   const dir =
     path.basename(path.dirname(self)) === DROP_IN_DIRECTORY
@@ -147,9 +153,37 @@ export function readManagedSource(filename: string): Record<string, unknown>[] |
       continue
     }
     if (parsed === null || parsed === UNREADABLE || !isObject(parsed.data)) {
+      if (skipUnreadable) {
+        continue
+      }
       return UNREADABLE
     }
     objects.push(parsed.data)
   }
   return objects
+}
+
+/** The parsed objects of the settings files that merge with the file `filename` for a list key
+ *  such as `enabledMcpjsonServers`. The lists of every file add up, so a rule that sums a list
+ *  reads the key of each file. For a managed file, these are the other files of the managed
+ *  source. For a project file, this is the other project file of the same `.claude/` directory.
+ *  The linted file is not in the result, because the caller holds its text.
+ *
+ *  A file that is not there adds nothing. A file that the rule cannot read adds nothing either:
+ *  the read fails, the real path is out of the repository, or the text does not parse to an
+ *  object. So a report rests on the files that read (ADR 001, Decision 14). A managed source
+ *  gives the files that read. When the drop-in directory itself cannot be seen, it gives none. */
+export function readSiblingSettings(filename: string): Record<string, unknown>[] {
+  if (kindOf(filename) === 'managed') {
+    const others = readManagedSource(filename, true)
+    return others === UNREADABLE ? [] : others
+  }
+  const self = path.resolve(filename)
+  const dir = path.dirname(self)
+  const other = path.join(
+    dir,
+    path.basename(self) === 'settings.json' ? 'settings.local.json' : 'settings.json',
+  )
+  const fields = fieldsOf(other, repositoryRoot(dir))
+  return fields === null || fields === UNREADABLE ? [] : [fields]
 }

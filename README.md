@@ -184,6 +184,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-managed-servers-entry`](docs/rules/mcp-managed-servers-entry.md) | Each `managedMcpServers` entry is one that Claude Code loads: a valid name, `type`, `https://` `url`, no `command`, `${VAR}` or invisible character | `error` | `error` |
 | [`claude/lsp-json-schema`](docs/rules/lsp-json-schema.md) | A `.lsp.json` at a plugin root maps names to configs with the documented fields, so that Claude Code does not skip the file | `error` | `error` |
 | [`claude/lsp-transport-socket`](docs/rules/lsp-transport-socket.md) | No LSP server sets `transport` to `socket`, which Claude Code runs over stdio | `error` | `error` |
+| [`claude/mcp-duplicate-server-name`](docs/rules/mcp-duplicate-server-name.md) | One plugin declares each MCP server name once across `.mcp.json`, each `mcpServers` `.json` file and the inline maps | `error` | `error` |
+| [`claude/lsp-extension-conflict`](docs/rules/lsp-extension-conflict.md) | No two LSP servers of the plugins of a marketplace claim the same `extensionToLanguage` key | `error` | `error` |
+| [`claude/lsp-duplicate-server-name`](docs/rules/lsp-duplicate-server-name.md) | One plugin declares each LSP server name once across `.lsp.json`, each `lspServers` `.json` file and the inline maps | `error` | `error` |
+| [`claude/mcp-plugin-tool-name-scoped`](docs/rules/mcp-plugin-tool-name-scoped.md) | A plugin skill, command or agent names a tool of its own MCP server as `mcp__plugin_<plugin>_<server>__<tool>`, not `mcp__<server>__<tool>` | `error` | `error` |
+| [`claude/mcp-approval-names-exist`](docs/rules/mcp-approval-names-exist.md) | Each name in `enabledMcpjsonServers` and `disabledMcpjsonServers` is a key of the `mcpServers` of the project `.mcp.json` | `error` | `error` |
+| [`claude/mcp-approval-conflict`](docs/rules/mcp-approval-conflict.md) | No server is in both `enabledMcpjsonServers` and `disabledMcpjsonServers` across the settings files of one place | `error` | `error` |
+| [`claude/mcp-allow-deny-overlap`](docs/rules/mcp-allow-deny-overlap.md) | No entry is in both `allowedMcpServers` and `deniedMcpServers` across the settings files of one place | `error` | `error` |
 
 ## Contributing
 

@@ -1,6 +1,6 @@
 // The reader that the `.mcp.json` rules share: where a file sits, and the members of its
 // server map. The map holds the servers, with or without the `mcpServers` wrapper.
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import json from '@eslint/json'
@@ -13,7 +13,11 @@ import {
   MANAGED_SERVER_TYPES,
   type McpFileKind,
   mcpFileKind,
+  pluginMcpDeclarations,
+  policyKey,
   REMOTE_SERVER_TYPES,
+  readJsonBody,
+  repeatedDeclarations,
   SERVER_NAME_PATTERN,
   serverMembers,
 } from '../src/mcp-servers.ts'
@@ -200,5 +204,81 @@ describe('declaredMcpStrings', () => {
     expect(stringsOf('{"name": "p"}')).toEqual([])
     expect(stringsOf('["./a.json"]')).toEqual([])
     expect(stringsOf('"./a.json"')).toEqual([])
+  })
+})
+
+// The real path of the repository, so that a bound compares equal on macOS, where the
+// temporary directory is a link.
+const rp = (...parts: string[]) => path.join(realpathSync(repo()), ...parts)
+
+describe('readJsonBody', () => {
+  it('gives the top-level value of a file that parses', () => {
+    expect(readJsonBody(put(rp('a.json'), '{"x": 1}'), rp())?.type).toBe('Object')
+  })
+  it('gives null for a file that is not there, does not parse, or has a link out', () => {
+    expect(readJsonBody(rp('none.json'), rp())).toBeNull()
+    expect(readJsonBody(put(rp('bad.json'), '{ no'), rp())).toBeNull()
+    expect(
+      readJsonBody(put(rp('deep.json'), `${'['.repeat(200_000)}${']'.repeat(200_000)}`), rp()),
+    ).toBeNull()
+    put(path.join(realpathSync(scratch), 'outside', 'o.json'), '{}')
+    symlinkSync(path.join(realpathSync(scratch), 'outside', 'o.json'), rp('link.json'))
+    expect(readJsonBody(rp('link.json'), rp())).toBeNull()
+  })
+})
+
+describe('pluginMcpDeclarations', () => {
+  const names = (root: string, manifest: string | null) =>
+    pluginMcpDeclarations(
+      root,
+      manifest === null ? null : (readJsonBody(put(rp('m.json'), manifest), rp()) ?? null),
+    ).map((d) => `${d.name}@${d.from}`)
+
+  it('lists .mcp.json first, then each manifest value in order', () => {
+    put(rp('p', '.mcp.json'), '{"mcpServers": {"a": {}}}')
+    put(rp('p', 'f.json'), '{"b": {}}')
+    const manifest = '{"mcpServers": ["./f.json", {"c": {}}, "x.mcpb", 7]}'
+    expect(names(rp('p'), manifest)).toEqual(['a@.mcp.json', 'b@./f.json', 'c@an inline map'])
+  })
+  it('reads the root file alone for a plugin with no manifest', () => {
+    put(rp('q', '.mcp.json'), '{"a": {}}')
+    expect(names(rp('q'), null)).toEqual(['a@.mcp.json'])
+  })
+  it('keeps the last of two members of one name in one source', () => {
+    const manifest = '{"mcpServers": {"a": {"command": "x"}, "a": {"command": "y"}}}'
+    expect(names(rp('r'), manifest)).toEqual(['a@an inline map'])
+  })
+})
+
+describe('repeatedDeclarations', () => {
+  it('gives each later declaration of a name with the source of the first', () => {
+    put(rp('p', '.mcp.json'), '{"a": {}, "b": {}}')
+    const manifest = readJsonBody(put(rp('m.json'), '{"mcpServers": {"b": {}, "c": {}}}'), rp())
+    const found = repeatedDeclarations(pluginMcpDeclarations(rp('p'), manifest ?? null))
+    expect(found.map(({ declaration, earlier }) => [declaration.name, earlier])).toEqual([
+      ['b', '.mcp.json'],
+    ])
+  })
+})
+
+describe('policyKey', () => {
+  it('tells entries apart by kind and value', () => {
+    expect(policyKey({ serverName: 'a' })).toBe('name:a')
+    expect(policyKey({ serverUrl: 'https://a' })).toBe('url:https://a')
+    expect(policyKey({ serverCommand: ['a', 'b'] })).toBe('command:["a","b"]')
+  })
+  it('gives undefined for an entry that Claude Code strips', () => {
+    for (const entry of [
+      { serverName: 'a b' },
+      { serverName: 1 },
+      { serverCommand: ['a', 1] },
+      { serverName: 'a', serverUrl: 'b' },
+      {},
+      [],
+      null,
+      'a',
+    ]) {
+      expect(policyKey(entry)).toBeUndefined()
+    }
   })
 })
