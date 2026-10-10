@@ -24,13 +24,13 @@ function idsAt(files: Record<string, string>, code: unknown, file = PROJECT) {
 }
 
 describe(`${name}: the report`, () => {
-  it.fails('reports hooks in each settings file that also sets disableAllHooks to true', () => {
+  it('reports hooks in each settings file that also sets disableAllHooks to true', () => {
     for (const file of [PROJECT, LOCAL, MAIN, DROP]) {
       expect(idsAt({}, OFF, file), file).toEqual(['off'])
     }
   })
 
-  it.fails('reports at the hooks key, and names the key that turns them off', () => {
+  it('reports at the hooks key, and names the key that turns them off', () => {
     const root = repo({})
     const text = '{\n  "disableAllHooks": true,\n  "hooks": {"Stop": []}\n}'
     const found = lintJson(name, text, path.join(root, PROJECT))
@@ -42,7 +42,7 @@ describe(`${name}: the report`, () => {
     )
   })
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     expect(
       idsAt({}, '{"disableAllHooks": false, "disableAllHooks": true, "hooks": {"Stop": []}}'),
     ).toEqual(['off'])
@@ -53,14 +53,14 @@ describe(`${name}: the report`, () => {
 })
 
 describe(`${name}: silent cases`, () => {
-  it.fails('is silent when disableAllHooks is false, unset or not true', () => {
+  it('is silent when disableAllHooks is false, unset or not true', () => {
     expect(idsAt({}, { disableAllHooks: false, hooks: HOOKS })).toEqual([])
     expect(idsAt({}, { hooks: HOOKS })).toEqual([])
     expect(idsAt({}, { disableAllHooks: 'true', hooks: HOOKS })).toEqual([])
     expect(idsAt({}, { disableAllHooks: null, hooks: HOOKS })).toEqual([])
   })
 
-  it.fails('is silent when the file defines no hooks', () => {
+  it('is silent when the file defines no hooks', () => {
     expect(idsAt({}, { disableAllHooks: true })).toEqual([])
     expect(idsAt({}, { disableAllHooks: true, hooks: {} })).toEqual([])
     expect(idsAt({}, { disableAllHooks: true, hooks: null })).toEqual([])
@@ -68,40 +68,46 @@ describe(`${name}: silent cases`, () => {
     expect(idsAt({}, '[1]')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(idsAt({}, OFF, 'managed-settings.d/.10-a.json')).toEqual([])
   })
 })
 
 describe(`${name}: the scope that sets the key again`, () => {
-  it.fails('is silent when the local file sets disableAllHooks to false', () => {
+  it('is silent when the local file sets disableAllHooks to false', () => {
     const files = { [LOCAL]: json({ disableAllHooks: false }) }
     expect(idsAt(files, OFF, PROJECT)).toEqual([])
   })
 
-  it.fails('reports when the local file sets disableAllHooks to true, or sets nothing', () => {
+  it('is silent when the local file does not parse to an object', () => {
+    expect(idsAt({ [LOCAL]: '{' }, OFF, PROJECT)).toEqual([])
+    expect(idsAt({ [LOCAL]: '[1]' }, OFF, PROJECT)).toEqual([])
+    expect(idsAt({ [LOCAL]: 'null' }, OFF, PROJECT)).toEqual([])
+  })
+
+  it('reports when the local file sets disableAllHooks to true, or sets nothing', () => {
     expect(idsAt({ [LOCAL]: json({ disableAllHooks: true }) }, OFF, PROJECT)).toEqual(['off'])
     expect(idsAt({ [LOCAL]: json({ model: 'opus' }) }, OFF, PROJECT)).toEqual(['off'])
   })
 
-  it.fails('reports a local file whose project file sets false, as the local file wins', () => {
+  it('reports a local file whose project file sets false, as the local file wins', () => {
     const files = { [PROJECT]: json({ disableAllHooks: false }) }
     expect(idsAt(files, OFF, LOCAL)).toEqual(['off'])
   })
 
-  it.fails('is silent when a sibling of the managed source sets the key', () => {
+  it('is silent when a sibling of the managed source sets the key', () => {
     const files = { [DROP]: json({ disableAllHooks: false }) }
     expect(idsAt(files, OFF, MAIN)).toEqual([])
     const base = { [MAIN]: json({ disableAllHooks: false }) }
     expect(idsAt(base, OFF, 'managed-settings.d/20-b.json')).toEqual([])
   })
 
-  it.fails('reports when no sibling of the managed source sets the key', () => {
+  it('reports when no sibling of the managed source sets the key', () => {
     const files = { [DROP]: json({ model: 'opus' }) }
     expect(idsAt(files, OFF, MAIN)).toEqual(['off'])
   })
 
-  it.fails('is silent when a sibling cannot be read', { skip: chmodCannotBlock }, () => {
+  it('is silent when a sibling cannot be read', { skip: chmodCannotBlock }, () => {
     const root = repo({ [LOCAL]: '{}', [PROJECT]: '{}' })
     withoutAccess(path.join(root, LOCAL), () => {
       expect(lintJson(name, json(OFF), path.join(root, PROJECT))).toEqual([])
