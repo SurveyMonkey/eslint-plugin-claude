@@ -25,8 +25,8 @@ import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-model-list' as const
 
-// The docs cap a fallback chain at three models, and no Claude Code setting moves the cap. So
-// the schema sets that number as the maximum of the option `max` (CONTRIBUTING.md, "Rule
+// The docs cap a fallback chain at three models and name no setting that moves the cap. So the
+// schema sets that number as the maximum of the option `max` (CONTRIBUTING.md, "Rule
 // thresholds").
 const CHAIN_MAX = 3
 
@@ -155,8 +155,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           }
         }
 
-        // Both keys go together in the managed source. A project file can pair with a list in the
-        // user file, which the rule does not see.
+        // The docs say to deploy the two keys together in the managed source. A project file can pair
+        // with a list in the user file, which the rule does not see.
         const enforce = lastMember(body, 'enforceAvailableModels')
         if (
           isManaged &&

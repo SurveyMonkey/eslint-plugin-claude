@@ -30,8 +30,8 @@ const PIN_VARIABLES = [
 /** The value of `CLAUDE_CODE_SUBAGENT_MODEL` that `settings-env-shadowed` reports. */
 const INHERIT = 'inherit'
 
-/** The regular expressions of the option. A pattern that does not compile is a fault of the
- *  configuration, not of the linted file, so it stops the run with a message. */
+/** The regular expressions of the option `providerIdPatterns`. A pattern that does not compile is
+ *  a fault of the configuration. It stops the run with a message. */
 function compile(patterns: readonly string[]): RegExp[] {
   return patterns.map((pattern) => {
     try {

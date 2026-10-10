@@ -1,5 +1,6 @@
 // A `skillOverrides` key that Claude Code does not apply
 // (docs/rules/settings-skilloverrides-key.md). The aliases are in `src/data/settings-keys.ts`.
+// A key with a colon is a plugin skill only when `enabledPlugins` of the file enables that plugin.
 import { lstatSync } from 'node:fs'
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'

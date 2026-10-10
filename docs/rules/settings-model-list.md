@@ -53,7 +53,7 @@ Claude Code acts at that number.
 ### An empty `availableModels`
 
 The rule reports `availableModels: []` only when the same file sets `model`, `advisorModel` or a
-`fallbackModel` entry other than `default`. Such a key names a model that the empty list blocks.
+`fallbackModel` entry, none of them `default`. Such a key names a model that the empty list blocks.
 An empty list alone can be a lock-down on purpose, so it gets no report.
 
 ### A family alias and a same-family ID
