@@ -73,6 +73,27 @@ jsonTester.run('settings-marketplace-key-alias (invalid)', rule, {
       filename: local,
       errors: [{ messageId: 'alias' }],
     },
+    // The canonical key of one pair does not stand for the alias of the other, in a managed file.
+    {
+      code: json({ strictKnownMarketplaces: policy, additionalMarketplaces: source }),
+      filename: managed,
+      errors: [
+        {
+          messageId: 'alias',
+          data: { alias: 'additionalMarketplaces', canonical: 'extraKnownMarketplaces' },
+        },
+      ],
+    },
+    {
+      code: json({ extraKnownMarketplaces: source, allowedMarketplaces: policy }),
+      filename: managed,
+      errors: [
+        {
+          messageId: 'alias',
+          data: { alias: 'allowedMarketplaces', canonical: 'strictKnownMarketplaces' },
+        },
+      ],
+    },
     // A managed file also gets `allowedMarketplaces`.
     {
       code: json({ additionalMarketplaces: source }),

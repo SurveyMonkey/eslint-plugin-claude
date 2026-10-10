@@ -42,6 +42,14 @@ jsonTester.run('settings-extra-known-marketplaces-directory (valid)', rule, {
       }),
       filename,
     },
+    // A canonical key set to `null` is set, so the alias is ignored.
+    {
+      code: json({
+        extraKnownMarketplaces: null,
+        additionalMarketplaces: entry(directory('/opt/m')).extraKnownMarketplaces,
+      }),
+      filename,
+    },
     // Only the entry of the last member of a key counts.
     {
       code: `{"extraKnownMarketplaces": {"acme": ${json({ source: directory('/opt/m') })}, "acme": ${json({ source: directory('./m') })}}}`,

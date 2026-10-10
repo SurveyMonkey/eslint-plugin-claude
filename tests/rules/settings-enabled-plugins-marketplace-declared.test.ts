@@ -123,7 +123,7 @@ describe(`${name} (silent)`, () => {
 })
 
 describe(`${name} (reports)`, () => {
-  it('reports a marketplace that no committed file declares', () => {
+  it('reports a marketplace that no project file declares', () => {
     expect(idsAt({}, enable('p@acme'))).toEqual(['undeclared'])
     expect(idsAt({}, enable('p@acme'), LOCAL)).toEqual(['undeclared'])
   })
@@ -168,6 +168,16 @@ describe(`${name} (reports)`, () => {
     expect(idsAt({}, { ...enable('p@toString'), extraKnownMarketplaces: null })).toEqual([
       'undeclared',
     ])
+  })
+
+  it('reads a null canonical key as set, so the alias declares nothing', () => {
+    const both = {
+      ...enable('p@acme'),
+      extraKnownMarketplaces: null,
+      additionalMarketplaces: declare('acme').extraKnownMarketplaces,
+    }
+    expect(idsAt({}, both)).toEqual(['undeclared'])
+    expect(idsAt({ [LOCAL]: json(both) }, enable('p@acme'))).toEqual(['undeclared'])
   })
 
   it('reads the canonical key and not the alias when a file sets both', () => {

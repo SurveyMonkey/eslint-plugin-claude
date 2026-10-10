@@ -38,10 +38,9 @@ that Claude Code reads differently. When a file has two members with one key, th
 last, as `JSON.parse` does. It reports the last alias member only.
 
 The rule reads one file. Claude Code reads settings files of several scopes. A conflict between
-two files is not a conflict in one file. The rule does not check that case. This holds for the
-drop-in files of one managed source too. A file that sets an
-alias without the canonical key gets no report here. `settings-marketplace-key-alias`
-covers the choice of the canonical spelling.
+two files is not a conflict in one file. The rule does not check that case. This is also true for
+the drop-in files of one managed source. A file that sets an alias without the canonical key gets
+no report here. `settings-marketplace-key-alias` covers the choice of the canonical spelling.
 
 Fail:
 

@@ -22,8 +22,8 @@ Remove `skipLfs` from a marketplace source.
 
 Before v2.1.274, Claude Code downloaded Git LFS content unless the source set `"skipLfs": true`.
 Now Claude Code never downloads LFS content when it clones a marketplace. It checks LFS files out
-as pointer files. It accepts the `skipLfs` field and the field has no effect.[^types][^fields] The
-field does nothing. A reader can think that it controls LFS.
+as pointer files. It accepts the `skipLfs` field, and the field has no effect.[^types][^fields] A reader can
+think that the field controls LFS.
 
 The rule reports the `skipLfs` key in the `source` of an `extraKnownMarketplaces` entry, for a
 `github` or `git` source. The docs list the field for those two types.[^fields] The rule reads

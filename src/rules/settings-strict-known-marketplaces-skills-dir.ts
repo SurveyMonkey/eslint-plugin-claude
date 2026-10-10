@@ -19,7 +19,7 @@ type Fields = Record<string, unknown>
  *  `blockedMarketplaces`. In the blocklist the entry stops skills-directory plugins on purpose
  *  (plugins/org, "Blocklist with `blockedMarketplaces`"). */
 function listsSkillsDir(fields: Fields): boolean {
-  // Claude Code uses the canonical key when it is set, with any value, and then ignores the alias.
+  // The rule counts the canonical key as set with any value, as the conflict rule does.
   const allowed = Object.hasOwn(fields, 'strictKnownMarketplaces')
     ? fields.strictKnownMarketplaces
     : fields.allowedMarketplaces

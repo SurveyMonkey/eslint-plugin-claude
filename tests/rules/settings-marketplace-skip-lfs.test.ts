@@ -44,6 +44,14 @@ jsonTester.run('settings-marketplace-skip-lfs (valid)', rule, {
       }),
       filename,
     },
+    // A canonical key set to `null` is set, so the alias is ignored.
+    {
+      code: json({
+        extraKnownMarketplaces: null,
+        additionalMarketplaces: entry({ ...github, skipLfs: true }).extraKnownMarketplaces,
+      }),
+      filename,
+    },
     // Only the entry of the last member of a key counts.
     {
       code: `{"extraKnownMarketplaces": {"acme": ${json({ source: { ...github, skipLfs: true } })}, "acme": ${json({ source: github })}}}`,

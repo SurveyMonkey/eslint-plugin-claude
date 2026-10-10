@@ -235,7 +235,7 @@ function namesIn(data: Record<string, unknown>): string[] {
  *  the whole key. The result is `UNREADABLE` when the rule cannot see a part.
  *  This covers text that does not parse to an object, and another file that
  *  is a dangling link, has a real path out of the bound, fails to read, or does
- *  not parse to an object. An other file that is not there, with its path in
+ *  not parse to an object. Another file that is not there, with its path in
  *  the bound, declares nothing. */
 export function declaredMarketplaces(settingsFile: string, text: string): Set<string> | Unreadable {
   let own: unknown
