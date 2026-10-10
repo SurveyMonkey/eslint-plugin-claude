@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112]
+related_issues: [25, 112, 137, 149, 150, 152]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -26,6 +26,11 @@ lists 407 releases. Among them:
 - Many changes are to words only, examples, bug fixes, CLI commands or environment variables. No lint
   rule reads them.
 
+**A block that a planned rule cites is not a new rule.** Five issues were changes to blocks of the
+hooks page: four `new-rule` issues (#44, #45, #121, #122) and one `needs-triage` issue (#123).
+Rows of the Hooks section of `docs/rules-inventory.md` cite each of these blocks (lines 384 to
+437 on 2026-10-10).
+
 **The constraints are these:**
 
 - The job runs each day with no person present.
@@ -45,8 +50,9 @@ model, and TypeSafe Jev.
 
 `scripts/docs-classify.ts` sends one request for each changed, added or removed block. All
 questions share one `state`: the page, the heading, the old text, the new text, the lines that
-each side adds, and each rule that cites the block. The questions are constants. Docs text goes
-only into the `state`, as data.
+each side adds, and each rule that cites the block. A block that is too large for one request
+has a placeholder in place of each full text. The questions are constants. Docs text goes only
+into the `state`, as data.
 
 | Question | Asked for | Yes means |
 | - | - | - |
@@ -61,18 +67,41 @@ below `no` is a no. A value between them goes to a person.
 | - | - | - | - | - | - |
 | `obsolete_<i>` | 0.5 | 0.35 | `rule-removal` | `needs-triage` | the next row |
 | `alters_<i>` | 0.5 | 0.2 | `rule-update` | `needs-triage` | no finding |
-| `requirement` | 0.5 | 0.2 | `new-rule` | `needs-triage` | no finding |
+| `requirement` | 0.5 | 0.4 | `new-rule` | `needs-triage` | no finding |
 
 Code decides these cases with no model call:
 
-- A block that a heading cites is gone: `rule-removal`.
+- A removed block and an added block on one page have the same body hash, and a rule or an
+  inventory row cites the old block: `moved` (Decision 6). When nothing cites the old block: no
+  finding.
+- A block that a heading cites is gone, and it is not a move: `rule-removal`.
 - A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
-- A block is too large for one request: `needs-triage`.
+- A block is too large for one request, and no request with its changed lines can go:
+  `needs-triage`. This is the case when the changed lines are too large, the block has one text
+  only, or the two texts have no changed line. A block with one text has no earlier or later
+  text to compare. Its text is new, or removed, or it has no stored old text.
+
+A block that is too large for one request, and has a diff that fits, gets a model call. The
+request has the lines that each side adds and no full text. The Reason of a finding from that
+request says that Jev judged the changed lines.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
 confidence value, so a finding reports `|2p - 1|` as its confidence.
+
+**The inventory is a second source map.** `docs/rules-inventory.md` lists the rule candidates,
+built and not built. Each rule row cites footnotes, and each footnote names a page and a
+heading. The classifier reads the rule tables of each `###` section of "Rules by group". A
+table in a `####` subsection belongs to its `###` section. A footnote finds its block by the
+anchor of its link first, because the docs IDs are not always the slug of the heading. When no
+block on the page or in the snapshot has that ID, the heading finds the block. The classifier
+tracks a changed, added or removed block when an inventory footnote cites it. A heading of
+`docs/rule-sources.json` that cites the block stops this. A heading that cites the whole page
+does not. The output lists each tracked block in `tracked`, with the rule rows that cite it in
+each section. A tracked block gets the same request and the same findings as before. Decision 8
+tells what the issue step does with it. The classifier reads only the pages that the map cites.
+The job does not watch a page that only the inventory cites.
 
 ### 2. The spike data
 
@@ -122,10 +151,18 @@ Accuracy by label, on each of the four runs:
 
 **Why these thresholds.** The `no` values matter most, because a no opens no issue.
 
-- The lowest `alters` for a `rule-update` case is 0.51. The `no` value of 0.2 is far below it.
-  The two `no-change` cases between 0.2 and 0.5 go to a person.
+- The lowest `alters` for a `rule-update` case in the spike is 0.51. The `no` value of 0.2 is far
+  below it. The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
-  block is 0.73. The band from 0.2 to 0.5 is empty in this data.
+  block is 0.73. The band from 0.2 to 0.5 is empty in this spike data.
+- Seven live blocks that no rule cites had a `requirement` value from 0.21 to 0.33. They are
+  #104, #105, #110, #111, #123, #125 and #133. All seven needed no change. So the
+  `requirement` `no` value is 0.4. A skipped block is a missed candidate, not a broken rule.
+- The `alters` value stays 0.2. Two live cases fell in its band (#103 at 0.27 and #118 at
+  0.24). Neither changed the rule that it cited, and #118 led to a new rule. Two cases are too
+  few to move the value.
+- The classifier summary lists each block that needs no change. For a block that no rule
+  cites, it adds the `requirement` value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
 - The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56. A
   value below 0.5 gives `needs-triage`, not a silent miss. Both results open an issue.
@@ -144,8 +181,9 @@ One case was also rebuilt, because its old text did not agree with the current r
 
 No Anthropic API key exists in this environment, so no Claude model classified the cases. The
 labels are the reference. The Claude Code session that wrote this change set them by hand from
-the docs, and a person has not checked them yet. The thresholds come from the same 24 cases, and
-no held-out set exists. Record new cases and their results here before you change a threshold.
+the docs, and a person has not checked them yet. The `alters` and `obsolete` values come from the
+same 24 cases, and no held-out set exists. The `requirement` `no` value also uses seven live
+cases. Record new cases and their results here before you change a threshold.
 
 ### 4. The state lives in `docs/`, and only a reviewed pull request changes it
 
@@ -159,28 +197,68 @@ dedupe key below stops a second issue for it.
 Each issue body starts with
 `<!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->`. The hash is the new block
 hash. For a removed block, it is `gone:` and the old hash, so a removal never matches an issue
-about the new text of the block. The block ID comes from the docs, so the marker holds it URI
-encoded. ` rules=<ids>` lists the rules of the issue, and is not there when the issue names no
-rule.
+about the new text of the block. For a moved block, the block ID is the old one. The hash is
+that of the new block. The block ID comes from the docs, so the marker holds it URI encoded.
+` rules=<ids>` lists the rules of the issue, and is not there when the issue names no rule.
 
 All findings for one page, block and hash in one run give one issue, with all their rules and
-reasons. The first kind in this list names the issue: `rule-removal`, `rule-update`,
-`needs-triage`, `new-rule`. Before it opens an issue, `scripts/docs-issues.ts` reads the
-bodies of all open issues. An open issue for the same page, block and hash stops a new issue
-when the open issues name all its rules. The kind does not count. A Jev answer near a threshold
-can change the kind from one run to the next. A rule that the open issues do not name gives a
-new issue. A block that changes again has a new hash, so it gets a new issue.
+reasons. The first kind in this list names the issue: `moved`, `rule-removal`, `rule-update`,
+`needs-triage`, `new-rule`. `moved` is first, because the issue keeps the fields of the first
+kind only. Only a `moved` finding has the new heading. Before it opens an issue,
+`scripts/docs-issues.ts` reads the bodies of all open issues. An open issue for the same page,
+block and hash stops a new issue when the open issues name all its rules. The kind does not
+count. A Jev answer near a threshold can change the kind from one run to the next. A rule that
+the open issues do not name gives a new issue. A block that changes again has a new hash, so it
+gets a new issue.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
 person closes it first, the next run opens it again.
 
-### 6. A moved section gives two issues, and a person matches them
+### 6. A moved section on one page gives one `moved` issue
 
-Ruling 8 on #25 leaves moved sections to the triage session. When a cited section moves to a new
-heading, the old block is gone and the new block has no rule. The job opens a `rule-removal`
-issue for the old heading. It opens a `new-rule` issue for the new heading when the
-`requirement` answer is a yes. The runbook `docs/runbooks/docs-watch-triage.md` tells a person
-how to match the two issues and keep the rule.
+This decision reverses Ruling 8 on #25, which left moved sections to the triage session. A
+renamed heading gave two issues. One was a `rule-removal` issue for the old heading, and one was
+a `new-rule` issue for the new heading. A person matched them by their texts. The block texts
+of #117 and #129 differ only in the heading line.
+
+**The body hash.** Each block in the snapshot can have a `bodyHash`: the SHA-256 of the block
+text after its heading. The heading of a Markdown block is its first line. The heading of an
+HTML block is all its lines, from the opening tag to the closing tag. Blank lines at the start
+of the body and white space at its end do not count. A block with no body has no body hash.
+`update` writes it. A snapshot file without it stays valid, and the docs watch check does not
+read it.
+
+**The move.** A run can find a removed block and an added block on one page with the same body
+hash. The body hash of the old block comes from the snapshot. The classifier then gives one
+`moved` finding, with no Jev call. The finding names the old heading and block, and the new
+heading and block key. It also names the rules and the inventory rows that cite the old block.
+Neither block gets another finding, a Jev call or a tracked entry.
+A move of a block that no rule and no inventory row cites gives no finding.
+
+These give no move, and each block keeps the findings of a removed or an added block:
+
+- two removed blocks, or two added blocks, with one body hash, because the code does not guess
+  the pair
+- a removed block with no stored body hash, until `update` refreshes the snapshot of its page
+- a block with no body
+- the page title, old or new
+- a move from one page to another page.
+
+**The cross-reference line.** A removed heading and an added heading on one page can share three
+or more words. When neither block is part of a move, each finding of the two blocks names the
+other block. A word is a run of letters and digits, in lowercase. Each word counts once. A word
+of one or two characters does not count. The old heading is the mapped heading, else the title
+in the stored page text. Without these, it is the inventory heading, else the block key.
+
+**The issue.** A `moved` issue is a Task titled
+`docs(<rules>): move the footnote of <rules> to the renamed heading`. With no rule, the title is
+`docs: move the footnote of the inventory to the renamed heading`. The title length rule of
+every issue applies. The body names the old and new headings and the new anchor. It names each
+footnote to change in `docs/rules/<rule>.md` and `docs/rules-inventory.md`. Its Scope is the
+steps of "A moved section" in `docs/runbooks/docs-watch-triage.md`. The issue step refuses a
+`moved` finding that does not fit its kind (Decision 7). The finding must have both hashes, the
+new text, and the new heading and block. The old text can be absent, because the snapshot
+stores the text of a mapped block only.
 
 ### 7. The job fails closed
 
@@ -208,6 +286,29 @@ with old and new text, the body shows a diff, then the full old section and the 
 in two collapsed parts. Docs text goes in a fence that is longer than any fence in the text. Each `@` and each `<!--` in docs text gets a
 word joiner, so the text makes no mention and no marker.
 
+**A tracked block gives a comment on its group issue.** `GROUP_ISSUES` in
+`scripts/docs-issues.ts` gives the group issue of each section of "Rules by group". A tracked
+block in a section with no group issue stops the step before it writes. While a group issue is
+open, a run posts at most one comment on it. The comment names each new tracked block and the
+rows of that section that cite it. It quotes the block text as an issue body does, but with no
+Before and After parts. It shows a diff, or the old and new texts when one has more than 1,000
+lines. Or it shows the new text only, or the old text of a removed block. When no text is
+available, a note says so. Each block has the hidden marker
+`<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`, with the key of Decision 5. The prefix is
+not `docs-watch:`, so the issue dedupe does not read it. The step reads the comments of each open
+group issue. It does not post a block again while its marker is in a comment.
+
+A tracked block opens no issue for a finding with no rule while one of its group issues is open.
+The comment takes its place. When all its group issues are closed, the finding opens its
+issue, with a line that names the inventory rows. A finding that names a rule opens its issue as
+before. Docs text in a comment gets the same fence and word joiners as an issue body. The markers
+come first. The step cuts the text after them so that the markers and the text take at most
+60,000 characters. A note of the cut follows, so the comment stays under the GitHub limit of
+65,536. A cut never removes a marker. Comments do not count toward the limit of 20 issues. A dry
+run prints each comment and posts none. The step also stops before it writes for four causes.
+The findings file has no `tracked` list. A tracked block is not valid. A tracked block is in the
+list twice. A group issue has a state that is not `open` or `closed`.
+
 ## Consequences
 
 - Each block costs one request of about 1,400 input tokens. At the price on 2026-09-29
@@ -221,4 +322,15 @@ word joiner, so the text makes no mention and no marker.
 - The snapshot has only the hash of an uncited block. A change to the words only of such a block
   can give a `new-rule` issue, because the question sees the new text only.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
+- `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed.
+- When all group issues of a tracked block are closed, each finding of the block opens its issue.
+  A tracked block with no finding gets nothing: a removed block that no whole-page rule cites,
+  or a block with a low Jev answer.
+- While a group issue is open, a finding of a tracked block that names no rule opens no issue.
+  The finding stays in the classifier output. A person reads the comment when they build the row.
+  A finding that names a whole-page rule still opens its issue.
+- A page whose snapshot has no body hash gets no move until `update` refreshes it. An `update`
+  with an older copy of `scripts/docs-watch.ts` writes a page with no body hash.
+- A move to another page, or a move that also changes the body, still gives two issues. The
+  cross-reference line helps a person match them on one page only.
 - A new Jev version needs a new run of the spike before the pin moves.

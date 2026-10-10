@@ -11,6 +11,10 @@
 //   cannot read. Both modes exit 1 on any failure.
 // update writes the snapshot, and sets `hash` on each source in the map. A
 //   person runs it, in a pull request. The scheduled job does not.
+// A snapshot file holds { url, hash, blocks, sources }. Each block is
+//   { id, hash, bodyHash }. bodyHash is the hash of the block text after its
+//   heading (see splitBlocks). It is optional: an old snapshot file, or a block
+//   with no body, does not have it. check does not read it.
 // root defaults to this repository.
 import { createHash } from 'node:crypto'
 import {
@@ -25,7 +29,8 @@ import {
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// One block of a page: a heading and its text.
+// One block of a page: a heading and its text. `bodyHash` is the hash of the
+// body (see splitBlocks). It is null when the block has no body.
 export type Block = {
   id: string
   key: string
@@ -33,16 +38,19 @@ export type Block = {
   title: string
   text: string
   hash: string
+  bodyHash: string | null
 }
 
 // A mapped source, resolved on its page.
 export type SnapshotSource = { heading: string; id: string; hash: string; text: string }
 
-// The stored state of one page.
+// The stored state of one page. `id` of a block is its key. `bodyHash` is
+// optional: a snapshot from before the body hash, or a block with no body,
+// does not have it.
 export type Snapshot = {
   url: string
   hash: string
-  blocks: { id: string; hash: string }[]
+  blocks: { id: string; hash: string; bodyHash?: string }[]
   sources: SnapshotSource[]
 }
 
@@ -133,9 +141,15 @@ function readHtmlHeading(lines: string[], start: number) {
 // It throws for a code fence that is not closed, and for a line that looks
 // like an HTML heading but is not in the form above. Setext headings and
 // indented Markdown headings are not supported.
+//
+// The body of a block is its text after the heading. The heading of a
+// Markdown block is its first line. The heading of an HTML block is all its
+// lines from the opening tag to the closing tag. The body has no blank lines
+// at its start and no white space at its end. `bodyHash` is the SHA-256 of the
+// body, or null when the body is empty.
 export function splitBlocks(markdown: string): Block[] {
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n')
-  const blocks: { level: number; title: string; id?: string; lines: string[] }[] = []
+  const blocks: { level: number; title: string; id?: string; head: number; lines: string[] }[] = []
   let fence: string | null = null
   for (let index = 0; index < lines.length; index++) {
     const line = lines[index] ?? ''
@@ -151,6 +165,7 @@ export function splitBlocks(markdown: string): Block[] {
           level: html.level,
           title: html.title,
           id: html.id,
+          head: html.end + 1 - index,
           lines: lines.slice(index, html.end + 1),
         })
         index = html.end
@@ -161,6 +176,7 @@ export function splitBlocks(markdown: string): Block[] {
         blocks.push({
           level: match[1]?.length ?? 1,
           title: stripInline(match[2] ?? ''),
+          head: 1,
           lines: [line],
         })
         continue
@@ -173,12 +189,25 @@ export function splitBlocks(markdown: string): Block[] {
   }
   if (fence) throw new Error('a code fence is not closed')
   const seen = new Map<string, number>()
-  return blocks.map(({ level, title, id: explicit, lines: own }) => {
+  return blocks.map(({ level, title, id: explicit, head, lines: own }) => {
     const id = explicit || slugify(title)
     const count = seen.get(id) ?? 0
     seen.set(id, count + 1)
     const text = own.join('\n').trimEnd()
-    return { id, key: count === 0 ? id : `${id}-${count}`, level, title, text, hash: sha256(text) }
+    const body = own
+      .slice(head)
+      .join('\n')
+      .replace(/^(?:[ \t]*\n)+/, '')
+      .trimEnd()
+    return {
+      id,
+      key: count === 0 ? id : `${id}-${count}`,
+      level,
+      title,
+      text,
+      hash: sha256(text),
+      bodyHash: body === '' ? null : sha256(body),
+    }
   })
 }
 
@@ -231,8 +260,9 @@ export const snapshotName = (url: string): string =>
     .replaceAll('/', '__')}.json`
 
 // Fetches, hashes and splits one page. Returns the state that update writes.
-// It throws when the page has no title heading, or when a mapped heading is
-// not on the page or is on it twice.
+// Each block has its key, its hash and, when its body is not empty, its body
+// hash. It throws when the page has no title heading, or when a mapped heading
+// is not on the page or is on it twice.
 export async function readPage(
   url: string,
   headings: string[],
@@ -250,7 +280,9 @@ export async function readPage(
   return {
     url,
     hash: sha256(pageText),
-    blocks: blocks.map(({ key, hash }) => ({ id: key, hash })),
+    blocks: blocks.map(({ key, hash, bodyHash }) =>
+      bodyHash === null ? { id: key, hash } : { id: key, hash, bodyHash },
+    ),
     sources: headings.map((heading) => resolveSource(url, heading, blocks, pageText)),
   }
 }

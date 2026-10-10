@@ -3,18 +3,43 @@
 // Usage: node scripts/docs-classify.ts [root]
 // It fetches each page that docs/rule-sources.json cites, compares it with
 // docs/docs-snapshot/, and asks TypeSafe Jev about each changed, added or
-// removed block. It prints a JSON object { model, findings, results } to
-// stdout, and a Markdown table to $GITHUB_STEP_SUMMARY when that variable is
-// set. It writes no file in the repository. root defaults to this repository.
+// removed block. It prints a JSON object { model, findings, tracked, results }
+// to stdout, and a Markdown table to $GITHUB_STEP_SUMMARY when that variable
+// is set. It writes no file in the repository. root defaults to this
+// repository.
 //
 // A finding is { kind, page, heading, blockId, oldHash, newHash, rules,
 // probability, confidence, reason, link, change, oldText, newText }. kind is
-// rule-update, rule-removal, new-rule or needs-triage. A result is the
-// outcome for each block, and includes the blocks that need no change.
+// rule-update, rule-removal, new-rule, needs-triage or moved. A moved finding
+// also has `move`, and other findings can have `possibleMoves` (see planPage).
+// A result is the outcome for each block, and includes the blocks that need
+// no change.
+//
+// docs/rules-inventory.md is a second source map. Its footnotes cite docs
+// headings, and the rule rows of each `###` section of "Rules by group" cite
+// its footnotes. A changed, added or removed block is tracked when an
+// inventory footnote cites it. A footnote finds its block by the anchor of
+// its link first, then by its heading. A heading of docs/rule-sources.json
+// that cites the block stops this, unless that heading is the page title.
+// Each tracked block is in `tracked` as { page, heading, blockId, change,
+// oldHash, newHash, oldText, newText, sections }, with the rule rows that
+// cite it in each section. The Jev requests do not change: a tracked block
+// gets the same request and the same findings as before.
+//
+// A move is a removed block and an added block on one page with the same
+// body hash. splitBlocks in docs-watch.ts gives the body hash. A move gets no
+// Jev call. It gives one moved finding when a rule or an inventory row cites
+// the old block. It gives no finding when nothing cites it. Neither block of
+// a move gets another finding or a tracked entry.
 //
 // The script fails closed. These give a needs-triage finding:
 // - a failed call to Jev, or a timeout
-// - an answer that is not valid, or an answer between two thresholds.
+// - an answer that is not valid, or an answer between two thresholds
+// - a block that is too large for one request, when no request with its
+//   changed lines can go: it has one text only, it has no changed line, or
+//   its changed lines are too large.
+// A block with two texts and a changed line that fits gets a request with
+// its changed lines only. A finding from that request says so.
 // These throw, and the job fails:
 // - a map that cites no page, or a failed docs fetch
 // - a page that splitBlocks cannot read, or a page with no title
@@ -39,11 +64,18 @@ import {
   splitBlocks,
 } from './docs-watch.ts'
 
-export type Kind = 'rule-update' | 'rule-removal' | 'new-rule' | 'needs-triage'
+export type Kind = 'rule-update' | 'rule-removal' | 'new-rule' | 'needs-triage' | 'moved'
 type OutcomeKind = Kind | 'no-change'
 type Reason = 'alters' | 'obsolete' | 'requirement'
 
-// One classifier finding. The issue step opens one issue for each.
+// A block on the same page that can be the other half of a move.
+type Near = { heading: string; blockId: string }
+
+// One classifier finding. The issue step opens one issue for each. For a
+// moved finding, `heading` and `blockId` are those of the old block. `move`
+// holds the new heading, the new block key and the inventory rows that cite
+// the old block. `possibleMoves` is on a removed or an added block. It names
+// the blocks on the other side whose headings share three or more words.
 export type Finding = {
   kind: Kind
   page: string
@@ -59,6 +91,8 @@ export type Finding = {
   change: string
   oldText: string | null
   newText: string | null
+  move?: { heading: string; blockId: string; sections: Rows }
+  possibleMoves?: Near[]
 }
 
 export type Outcome = {
@@ -77,7 +111,31 @@ export type Result = {
   note?: string
 }
 
-export type Output = { model: string; findings: Finding[]; results: Result[] }
+// The inventory rows that cite a block, by the `###` section of each row.
+export type Rows = { section: string; rules: string[] }[]
+
+// A changed, added or removed block that an inventory row cites, and that no
+// mapped heading cites other than the page title.
+export type Tracked = {
+  page: string
+  heading: string
+  blockId: string
+  change: string
+  oldHash: string | null
+  newHash: string | null
+  oldText: string | null
+  newText: string | null
+  sections: Rows
+}
+
+export type Output = { model: string; findings: Finding[]; tracked: Tracked[]; results: Result[] }
+
+// A heading that inventory footnotes cite, with the anchor of their link, and
+// the inventory rows that cite it. `anchor` is null for a link with no anchor.
+export type Cite = { heading: string; anchor: string | null; rows: Rows }
+
+// Each page URL maps to the headings that the inventory cites on it.
+export type Inventory = Map<string, Cite[]>
 
 // A block to ask about, or a removed block that no rule cites.
 export type Item = {
@@ -93,6 +151,7 @@ export type Item = {
   rules: string[]
   askRequirement: boolean
   skipped?: string
+  possibleMoves?: Near[]
 }
 
 type ItemBase = Omit<Item, 'rules' | 'askRequirement' | 'skipped'>
@@ -129,13 +188,14 @@ export type Request = {
 export type Citations = Map<string, Map<string, string[]>>
 
 // The spike in docs/adr/002-classify-docs-changes-with-jev.md sets these
-// values. A value at or above `yes` is a yes. A value at or below `no` is a
+// values for `alters` and `obsolete`. Live data sets the `requirement` `no`
+// value. A value at or above `yes` is a yes. A value at or below `no` is a
 // no. A value between them goes to a person as needs-triage. Change them
 // only with new labeled data, and record the data in the ADR.
 export const THRESHOLDS = {
   alters: { yes: 0.5, no: 0.2 },
   obsolete: { yes: 0.5, no: 0.35 },
-  requirement: { yes: 0.5, no: 0.2 },
+  requirement: { yes: 0.5, no: 0.4 },
 }
 // The ADR tuned the thresholds on this version, so the request pins it and
 // does not use the `jev-latest` alias.
@@ -144,7 +204,9 @@ export const ENDPOINT = 'https://api.typesafe.ai/v1/systemone'
 export const TIMEOUT_MS = 30_000
 export const CONCURRENCY = 4
 // Jev takes 32k tokens for the state and the longest question. A block
-// larger than this goes to a person without a call.
+// larger than this gets a request with its changed lines only. It goes to a
+// person with no call in three cases. Its changed lines are also larger. It
+// has one text only. Its two texts have no changed line.
 export const MAX_STATE_CHARS = 60_000
 const ATTEMPTS = 3
 const RETRY_STATUS = new Set([429, 500, 502, 503, 504, 529])
@@ -223,27 +285,33 @@ export function lineDiff(
 }
 
 // One request for one block: all questions over the same state (the
-// speculative fan-out pattern). `rules` is [{ id, checks }].
+// speculative fan-out pattern). `rules` is [{ id, checks }]. With `diffOnly`,
+// the request has the changed lines and no full text.
 export function buildRequest({
   page,
   heading,
   oldText,
   newText,
   rules,
+  diffOnly = false,
 }: {
   page: string
   heading: string
   oldText: string | null
   newText: string | null
   rules: RuleInfo[]
+  diffOnly?: boolean
 }): Request {
   const diff = lineDiff(oldText, newText)
+  const omitted = '(omitted: the block is too large. Judge `removed_lines` and `added_lines`)'
   const state = {
     docs_block: {
       page,
       heading,
-      old_text: oldText ?? '(no earlier text: the block is new, or the snapshot has its hash only)',
-      new_text: newText ?? '(the block is gone)',
+      old_text: diffOnly
+        ? omitted
+        : (oldText ?? '(no earlier text: the block is new, or the snapshot has its hash only)'),
+      new_text: diffOnly ? omitted : (newText ?? '(the block is gone)'),
       removed_lines: diff.removed,
       added_lines: diff.added,
     },
@@ -357,8 +425,9 @@ const REASONS: Record<string, (rule: string | null, p: number) => string> = {
 }
 
 // Joins the outcomes of one block into findings: one for each kind. The kind
-// no-change gives no finding.
-function findingsOf(item: ItemBase, outcomes: Outcome[]): Finding[] {
+// no-change gives no finding. With `diffOnly`, each reason ends with a note
+// that says Jev judged the changed lines.
+function findingsOf(item: ItemBase, outcomes: Outcome[], diffOnly: boolean): Finding[] {
   const byKind = new Map<Kind, Outcome[]>()
   for (const outcome of outcomes) {
     if (outcome.kind === 'no-change') continue
@@ -379,7 +448,8 @@ function findingsOf(item: ItemBase, outcomes: Outcome[]): Finding[] {
             round(outcome.probability ?? 0),
           ),
         )
-        .join('; '),
+        .join('; ')
+        .concat(diffOnly ? '. Jev judged the changed lines, not the whole block.' : ''),
     })
   })
 }
@@ -399,6 +469,7 @@ const finding = (item: ItemBase, kind: Kind, fields: Partial<Finding>): Finding 
   change: item.change,
   oldText: item.oldText,
   newText: item.newText,
+  ...(item.possibleMoves === undefined ? {} : { possibleMoves: item.possibleMoves }),
   ...fields,
 })
 
@@ -428,22 +499,102 @@ export function loadRules(root: string): {
   return { rules, links }
 }
 
-// Compares one page with its snapshot. Returns the blocks to ask about and
-// the findings that need no call. Throws for a page that splitBlocks cannot
-// read, and for a page with no title.
+// Adds rows to a list of rows, with no section or rule twice.
+function addRows(target: Rows, rows: Rows): void {
+  for (const { section, rules } of rows) {
+    let entry = target.find((one) => one.section === section)
+    if (entry === undefined) {
+      entry = { section, rules: [] }
+      target.push(entry)
+    }
+    for (const rule of rules) if (!entry.rules.includes(rule)) entry.rules.push(rule)
+  }
+}
+
+// Reads docs/rules-inventory.md as a second source map. A footnote line is
+// `[^id]: [Page title: Heading](url#anchor)`, as in docs/rules/*.md. The
+// heading is the label after the first colon and space. The whole label is
+// the heading when the link has no anchor, or when the label has no colon and
+// space. The text after `#` is the anchor. Only rule tables count: a table
+// under "## Rules by group" whose header row starts with `| Rule |`. A table
+// in a `####` subsection belongs to the `###` section above it. A footnote
+// that no rule row cites cites nothing. Footnotes with the same page, heading
+// and anchor give one entry.
+export function loadInventory(root: string): Inventory {
+  const text = readFileSync(path.join(root, 'docs/rules-inventory.md'), 'utf8')
+  const footnote = /^\[\^([^\]]+)\]:\s*\[([^\]]+)\]\((\S+?)\)\s*$/
+  const notes = new Map<string, { url: string; heading: string; anchor: string | null }>()
+  const rows: { section: string; rule: string; ids: string[] }[] = []
+  let inGroups = false
+  let section: string | undefined
+  let ruleTable = false
+  for (const line of text.split('\n')) {
+    const [, id, label, link] = footnote.exec(line) ?? []
+    if (id !== undefined && label !== undefined && link !== undefined) {
+      const colon = label.indexOf(': ')
+      const hash = link.indexOf('#')
+      const heading = hash !== -1 && colon !== -1 ? label.slice(colon + 2) : label
+      const anchor = hash === -1 ? null : link.slice(hash + 1)
+      notes.set(id, { url: hash === -1 ? link : link.slice(0, hash), heading, anchor })
+      continue
+    }
+    if (/^##\s/.test(line)) {
+      inGroups = line.trim() === '## Rules by group'
+      section = undefined
+    } else if (/^###\s/.test(line)) {
+      section = line.slice(4).trim()
+    }
+    // A heading or a line that is not a table row ends a table.
+    if (!line.startsWith('|')) {
+      ruleTable = false
+      continue
+    }
+    if (/^\|\s*Rule\s*\|/.test(line)) {
+      ruleTable = true
+      continue
+    }
+    const rule = /^\|\s*`([a-z0-9-]+)`\s*\|/.exec(line)?.[1]
+    if (inGroups && ruleTable && section !== undefined && rule !== undefined) {
+      const ids = [...line.matchAll(/\[\^([^\]]+)\](?!:)/g)].map((m) => m[1] ?? '')
+      rows.push({ section, rule, ids })
+    }
+  }
+  const inventory: Inventory = new Map()
+  for (const row of rows) {
+    for (const id of row.ids) {
+      const note = notes.get(id)
+      if (note === undefined) continue
+      const cites = inventory.get(note.url) ?? []
+      let cite = cites.find((c) => c.heading === note.heading && c.anchor === note.anchor)
+      if (cite === undefined) {
+        cite = { heading: note.heading, anchor: note.anchor, rows: [] }
+        cites.push(cite)
+      }
+      addRows(cite.rows, [{ section: row.section, rules: [row.rule] }])
+      inventory.set(note.url, cites)
+    }
+  }
+  return inventory
+}
+
+// Compares one page with its snapshot. Returns the blocks to ask about, the
+// findings that need no call, and the tracked blocks. Throws for a page that
+// splitBlocks cannot read, and for a page with no title.
 export function planPage({
   url,
   citations,
+  inventory = [],
   pageText,
   stored,
   links,
 }: {
   url: string
   citations: Map<string, string[]>
+  inventory?: Cite[]
   pageText: string
   stored: Snapshot | undefined
   links: Map<string, string>
-}): { items: Item[]; findings: Finding[] } {
+}): { items: Item[]; findings: Finding[]; tracked: Tracked[] } {
   const text = pageText.replace(/\r\n?/g, '\n')
   let blocks: Block[]
   try {
@@ -465,7 +616,7 @@ export function planPage({
   if (!stored) {
     const reason = 'The page has no snapshot. Run the update to store it, then classify again.'
     const item = { ...base(title), oldHash: null, newHash: pageHash, change: 'new page' }
-    return { items: [], findings: [finding(item, 'needs-triage', { reason })] }
+    return { items: [], findings: [finding(item, 'needs-triage', { reason })], tracked: [] }
   }
   const before = new Map(stored.blocks.map((block) => [block.id, block.hash]))
   // The stored source of each mapped heading, and the key of its old block.
@@ -535,9 +686,52 @@ export function planPage({
     }
     cite(first.key, heading, rules)
   }
+  // The inventory rows of each block that an inventory footnote cites. The
+  // anchor of the footnote link finds the block first: a block on the page
+  // with that key, else a stored block with that key. The docs IDs are not
+  // always the slug of the heading. When no block has that key, the heading
+  // finds its block on the page as a mapped heading does. When the page does
+  // not have it, a stored block with its slug as key is the old block. These
+  // track no block:
+  // - a heading that is on the page more than once
+  // - an anchor or a heading of the page title, now or in the snapshot
+  // - an anchor and a heading that neither the page nor the snapshot has.
+  const storedTitle = stored.blocks[0]?.id
+  const keyOfCite = ({ heading, anchor }: Cite): string | undefined => {
+    const byAnchor = blocks.find((block) => block.key === anchor)
+    if (byAnchor !== undefined) return byAnchor.level === 1 ? undefined : byAnchor.key
+    if (anchor !== null && before.has(anchor)) return anchor === storedTitle ? undefined : anchor
+    const id = slugify(heading)
+    const byId = blocks.filter((block) => block.id === id)
+    const matches = byId.length > 0 ? byId : blocks.filter((block) => slugify(block.title) === id)
+    const [only] = matches
+    if (only !== undefined) return matches.length === 1 && only.level !== 1 ? only.key : undefined
+    return before.has(id) && id !== storedTitle ? id : undefined
+  }
+  const trackedRows = new Map<string, Rows>()
+  // An inventory heading that finds each block. When two headings find one
+  // block, the last one stays.
+  const citeHeading = new Map<string, string>()
+  for (const cite of inventory) {
+    const key = keyOfCite(cite)
+    if (key === undefined) continue
+    const list = trackedRows.get(key) ?? []
+    addRows(list, cite.rows)
+    trackedRows.set(key, list)
+    citeHeading.set(key, cite.heading)
+  }
+  const tracked: Tracked[] = []
+  // A block that an inventory row cites, and that no mapped heading cites
+  // other than the page title.
+  const track = (item: ItemBase, cited: string[]) => {
+    const sections = cited.length === 0 ? trackedRows.get(item.blockId) : undefined
+    if (sections === undefined) return
+    const { page, heading, blockId, change, oldHash, newHash, oldText, newText } = item
+    tracked.push({ page, heading, blockId, change, oldHash, newHash, oldText, newText, sections })
+  }
   // A map entry that the page cannot resolve gives a finding even when the
   // page did not change.
-  if (stored.hash === pageHash) return { items: [], findings }
+  if (stored.hash === pageHash) return { items: [], findings, tracked }
 
   const now = new Map(blocks.map((block) => [block.key, block]))
   // The whole-page source has the ID of the title block.
@@ -551,11 +745,104 @@ export function planPage({
     if (source !== wholeStored && key !== undefined) oldText.set(key, source.text)
   }
 
+  // The heading of a block that is gone: the mapped heading, else the title in
+  // the stored page text, else the inventory heading, else the block key.
+  const oldHeadingOf = (key: string) =>
+    headingOf.get(key) ?? oldBlocks.get(key)?.title ?? citeHeading.get(key) ?? key
+  const removed = [...before.keys()].filter((key) => !now.has(key) && key !== storedTitle)
+  const added = [...now.values()].filter((block) => !before.has(block.key) && block.level !== 1)
+
+  // A move is a removed block and an added block with the same body hash. The
+  // body hash of the old block comes from the snapshot. The page title is
+  // never a move. These give no move, and each block keeps the findings of a
+  // removed or an added block:
+  // - two removed blocks with one body hash, or two added blocks with one body
+  //   hash, because the code does not guess the pair
+  // - a removed block with no stored body hash (an old snapshot, or no body)
+  // - an added block with no body.
+  const storedBody = new Map<string, string>()
+  for (const block of stored.blocks) {
+    if (block.bodyHash !== undefined) storedBody.set(block.id, block.bodyHash)
+  }
+  const countOf = (hashes: (string | null | undefined)[]) => {
+    const counts = new Map<string, number>()
+    for (const hash of hashes) if (hash) counts.set(hash, (counts.get(hash) ?? 0) + 1)
+    return counts
+  }
+  const oldCounts = countOf(removed.map((key) => storedBody.get(key)))
+  const newCounts = countOf(added.map((block) => block.bodyHash))
+  const moves = new Map<string, Block>()
+  for (const key of removed) {
+    const body = storedBody.get(key)
+    const target = added.find((block) => block.bodyHash === body)
+    if (body === undefined || target === undefined) continue
+    if (oldCounts.get(body) === 1 && newCounts.get(body) === 1) moves.set(key, target)
+  }
+  const movedTo = new Set([...moves.values()].map((block) => block.key))
+
+  // A possible move is a removed heading and an added heading that share
+  // three or more words. Neither block can be part of a move. A word is a run
+  // of letters and digits, in lowercase. Each word counts once. A word of one
+  // or two characters does not count. Each finding of the two blocks names
+  // the other block.
+  const wordsOf = (heading: string) =>
+    new Set(
+      heading
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/u)
+        .filter((word) => word.length > 2),
+    )
+  const near = new Map<string, Near[]>()
+  const addNear = (key: string, other: Near) => near.set(key, [...(near.get(key) ?? []), other])
+  for (const key of removed) {
+    if (moves.has(key)) continue
+    const words = wordsOf(oldHeadingOf(key))
+    for (const block of added) {
+      if (movedTo.has(block.key)) continue
+      const shared = [...wordsOf(block.title)].filter((word) => words.has(word))
+      if (shared.length < 3) continue
+      addNear(key, { heading: block.title, blockId: block.key })
+      addNear(block.key, { heading: oldHeadingOf(key), blockId: key })
+    }
+  }
+  const nearOf = (key: string) => {
+    const list = near.get(key)
+    return list === undefined ? {} : { possibleMoves: list }
+  }
+
   const items: Item[] = []
   for (const [key, oldHash] of before) {
     if (now.has(key)) continue
     const cited = byBlock.get(key) ?? []
-    const heading = headingOf.get(key) ?? oldBlocks.get(key)?.title ?? key
+    const heading = oldHeadingOf(key)
+    const target = moves.get(key)
+    if (target !== undefined) {
+      // A move consumes both blocks: no rule-removal, no Jev call, no tracked
+      // entry. The footnotes to change are those of the rules and of the
+      // inventory rows that cite the old block.
+      const sections = trackedRows.get(key) ?? []
+      const item: ItemBase = {
+        page: url,
+        heading,
+        blockId: key,
+        link: links.get(`${url}\n${heading}`) ?? url,
+        oldHash,
+        newHash: target.hash,
+        change: 'moved',
+        oldText: oldText.get(key) ?? null,
+        newText: target.text,
+      }
+      if (cited.length === 0 && sections.length === 0) {
+        const skipped = 'moved, and no rule or inventory row cites it'
+        items.push({ ...item, rules: [], askRequirement: false, skipped })
+        continue
+      }
+      const reason =
+        'The block moved to a new heading on the same page, and its body did not change. No model call.'
+      const move = { heading: target.title, blockId: target.key, sections }
+      findings.push(finding(item, 'moved', { rules: cited, reason, move }))
+      continue
+    }
     const item: ItemBase = {
       page: url,
       heading,
@@ -566,7 +853,9 @@ export function planPage({
       change: 'removed',
       oldText: oldText.get(key) ?? null,
       newText: null,
+      ...nearOf(key),
     }
+    track(item, cited)
     if (cited.length > 0) {
       const reason = 'A block that a rule cites is gone from the page. No model call.'
       findings.push(finding(item, 'rule-removal', { rules: cited, reason }))
@@ -579,10 +868,10 @@ export function planPage({
   }
   for (const [key, block] of now) {
     const oldHash = before.get(key) ?? null
-    if (oldHash === block.hash) continue
+    if (oldHash === block.hash || movedTo.has(key)) continue
     const cited = byBlock.get(key) ?? []
     const whole = wholePage.filter((rule) => !cited.includes(rule))
-    items.push({
+    const item: ItemBase = {
       ...base(block),
       link: cited.length > 0 ? (links.get(`${url}\n${headingOf.get(key)}`) ?? url) : url,
       oldHash,
@@ -590,11 +879,12 @@ export function planPage({
       change: oldHash === null ? 'added' : 'changed',
       oldText: oldHash === null ? null : (oldText.get(key) ?? null),
       newText: block.text,
-      rules: [...cited, ...whole],
-      askRequirement: cited.length === 0,
-    })
+      ...nearOf(key),
+    }
+    track(item, cited)
+    items.push({ ...item, rules: [...cited, ...whole], askRequirement: cited.length === 0 })
   }
-  return { items, findings }
+  return { items, findings, tracked }
 }
 
 // Maps each page URL to its headings, each with the rules that cite it.
@@ -629,7 +919,8 @@ type Classified = { findings: Finding[]; result: Result }
 
 // Asks about one block and returns its findings and its result. These give a
 // needs-triage finding: a Jev error, a Jev answer that is not valid, an
-// answer between two thresholds, and a block that is too large.
+// answer between two thresholds, and a block that is too large when no
+// request with its changed lines can go.
 async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): Promise<Classified> {
   const result = {
     page: item.page,
@@ -640,19 +931,32 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
   if (item.skipped) {
     return { findings: [], result: { ...result, outcomes: [], note: item.skipped } }
   }
-  const body = buildRequest({
+  const input = {
     page: item.page,
     heading: item.heading,
     oldText: item.oldText,
     newText: item.newText,
     rules: item.rules.map((id) => ({ id, checks: rules.get(id) ?? '' })),
-  })
+  }
+  let body = buildRequest(input)
+  let diffOnly = false
   const triage = (reason: string): Classified => ({
     findings: [finding(item, 'needs-triage', { rules: item.rules, reason })],
     result: { ...result, outcomes: [{ kind: 'needs-triage', rule: null, reason }] },
   })
   if (JSON.stringify(body.state).length > MAX_STATE_CHARS) {
-    return triage('The block is too large for one Jev request. No model call.')
+    // A block with one text has nothing to compare. Its changed lines are its
+    // whole text, so it stays with a person. A diff with no line gives Jev
+    // nothing to judge, so it stays with a person too.
+    const diff = lineDiff(item.oldText, item.newText)
+    const hasDiff = diff.removed.length > 0 || diff.added.length > 0
+    if (item.oldText !== null && item.newText !== null && hasDiff) {
+      body = buildRequest({ ...input, diffOnly: true })
+      diffOnly = true
+    }
+    if (JSON.stringify(body.state).length > MAX_STATE_CHARS) {
+      return triage('The block is too large for one Jev request. No model call.')
+    }
   }
   let outcomes: Outcome[]
   try {
@@ -660,13 +964,16 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
   } catch (error) {
     return triage(`The Jev request failed: ${(error as Error).message}.`)
   }
-  return { findings: findingsOf(item, outcomes), result: { ...result, outcomes } }
+  return { findings: findingsOf(item, outcomes, diffOnly), result: { ...result, outcomes } }
 }
 
 // Classifies every page that the map cites. `fetchText` reads a docs page.
-// `jev` is { fetch, key, timeoutMs, wait } for askJev.
+// `jev` is { fetch, key, timeoutMs, wait } for askJev. `inventory` is the
+// output of loadInventory. It finds tracked blocks on the pages that the map
+// cites. A page that only the inventory cites is not read.
 export async function classify({
   map,
+  inventory = new Map(),
   snapshots,
   rules,
   links,
@@ -674,6 +981,7 @@ export async function classify({
   jev,
 }: {
   map: SourceMap
+  inventory?: Inventory
   snapshots: Map<string, Snapshot>
   rules: Map<string, string>
   links: Map<string, string>
@@ -682,6 +990,7 @@ export async function classify({
 }): Promise<Output> {
   const citations = citationsOf(map)
   const findings: Finding[] = []
+  const tracked: Tracked[] = []
   const items: Item[] = []
   const pages = pagesOf(map)
   // The check reports this as an error. The classifier must fail too, or the
@@ -691,11 +1000,13 @@ export async function classify({
     const planned = planPage({
       url,
       citations: citations.get(url) ?? new Map(),
+      inventory: inventory.get(url),
       pageText: await fetchText(`${url}.md`),
       stored: snapshots.get(snapshotName(url)),
       links,
     })
     findings.push(...planned.findings)
+    tracked.push(...planned.tracked)
     items.push(...planned.items)
   }
   if (items.some((item) => !item.skipped) && !jev.key) {
@@ -703,10 +1014,10 @@ export async function classify({
   }
   const done = await pool(items, CONCURRENCY, (item) => classifyItem(item, rules, jev))
   for (const one of done) findings.push(...one.findings)
-  return { model: MODEL, findings, results: done.map((one) => one.result) }
+  return { model: MODEL, findings, tracked, results: done.map((one) => one.result) }
 }
 
-export function renderMarkdown({ findings, results }: Output): string {
+export function renderMarkdown({ findings, tracked, results }: Output): string {
   const lines = ['# Docs classifier', '', `${findings.length} finding(s).`, '']
   if (findings.length > 0) {
     lines.push('| Kind | Page | Block | Rules | Probability |', '| - | - | - | - | - |')
@@ -720,7 +1031,19 @@ export function renderMarkdown({ findings, results }: Output): string {
   const quiet = results.filter((r) => r.outcomes.every((o) => o.kind === 'no-change'))
   if (quiet.length > 0) {
     lines.push('Blocks that need no change:', '')
-    for (const r of quiet) lines.push(`- ${r.page} \`${r.blockId}\` (${r.change})`)
+    for (const r of quiet) {
+      const value = r.outcomes.find((o) => o.reason === 'requirement')?.probability
+      const detail = value === undefined ? '' : `, requirement ${round(value)}`
+      lines.push(`- ${r.page} \`${r.blockId}\` (${r.change}${detail})`)
+    }
+    lines.push('')
+  }
+  if (tracked.length > 0) {
+    lines.push('Blocks that an inventory row cites:', '')
+    for (const t of tracked) {
+      const rows = t.sections.map((s) => `${s.section}: ${s.rules.join(', ')}`).join('; ')
+      lines.push(`- ${t.page} \`${t.blockId}\` (${t.change}): ${rows}`)
+    }
     lines.push('')
   }
   return `${lines.join('\n')}\n`
@@ -742,6 +1065,7 @@ export async function main(
   const { rules, links } = loadRules(root)
   const output = await classify({
     map: loadMap(root),
+    inventory: loadInventory(root),
     snapshots: loadSnapshots(root),
     rules,
     links,

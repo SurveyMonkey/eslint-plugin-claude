@@ -1,14 +1,17 @@
 // The issue step opens one issue for each changed block. These tests inject
 // the gh runner, so no test calls GitHub.
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
-import type { Finding } from '../scripts/docs-classify.ts'
+import type { Finding, JevFetch, Tracked } from '../scripts/docs-classify.ts'
+import * as classify from '../scripts/docs-classify.ts'
 import type { Run } from '../scripts/docs-issues.ts'
 import * as api from '../scripts/docs-issues.ts'
+import type { SourceMap } from '../scripts/docs-watch.ts'
+import * as watch from '../scripts/docs-watch.ts'
 
 const URL_ = 'https://code.claude.com/docs/en/skills'
 const REPO = 'SurveyMonkey/eslint-plugin-claude'
@@ -39,6 +42,31 @@ const newRule: Finding = {
   change: 'added',
   oldText: null,
   newText: '### Agent frontmatter\n\nA plugin agent accepts `effort`.',
+}
+
+const ENV = 'https://code.claude.com/docs/en/env-vars'
+// The shape of #117: a renamed heading that a rule and an inventory row cite.
+const moved: Finding = {
+  kind: 'moved',
+  page: ENV,
+  heading: 'In settings files',
+  blockId: 'in-settings-files',
+  oldHash: 'c'.repeat(64),
+  newHash: 'd'.repeat(64),
+  rules: ['settings-env-value-format'],
+  probability: null,
+  confidence: null,
+  reason:
+    'The block moved to a new heading on the same page, and its body did not change. No model call.',
+  link: `${ENV}#in-settings-files`,
+  change: 'moved',
+  oldText: '### In settings files\n\nAdd variables under the `env` key.',
+  newText: '### Set variables in settings files\n\nAdd variables under the `env` key.',
+  move: {
+    heading: 'Set variables in settings files',
+    blockId: 'set-variables-in-settings-files',
+    sections: [{ section: 'Settings', rules: ['settings-env-ignored-var'] }],
+  },
 }
 
 // A fake gh: it serves `open` as the open issues and records every call.
@@ -382,7 +410,13 @@ describe('openIssues', () => {
       log: (text) => logs.push(text),
     })
     expect(gh.posts()).toEqual([])
-    expect(result).toEqual({ opened: [], skipped: 2, wouldOpen: 0 })
+    expect(result).toEqual({
+      opened: [],
+      skipped: 2,
+      wouldOpen: 0,
+      commented: [],
+      wouldComment: 0,
+    })
     expect(logs[0]).toContain('skip: #7')
     const twice = await api.openIssues({
       findings: [update, { ...update, reason: 'another reason' }],
@@ -391,7 +425,13 @@ describe('openIssues', () => {
       dryRun: false,
       log: quiet,
     })
-    expect(twice).toEqual({ opened: [], skipped: 2, wouldOpen: 0 })
+    expect(twice).toEqual({
+      opened: [],
+      skipped: 2,
+      wouldOpen: 0,
+      commented: [],
+      wouldComment: 0,
+    })
   })
 
   it('reads the open issues of the repository, not its pull requests', async () => {
@@ -421,7 +461,7 @@ describe('openIssues', () => {
 
   it('reads the marker of an open issue of each kind', async () => {
     for (const kind of api.KINDS) {
-      const f = { ...update, kind }
+      const f = kind === 'moved' ? moved : { ...update, kind }
       const gh = fakeGh([{ number: 7, body: api.markerOf(f) }])
       await api.openIssues({ findings: [f], repo: REPO, run: gh.run, dryRun: false, log: quiet })
       expect(gh.posts()).toEqual([])
@@ -701,6 +741,899 @@ describe('openIssues', () => {
   })
 })
 
+const HOOKS = 'https://code.claude.com/docs/en/hooks'
+const common: Tracked = {
+  page: HOOKS,
+  heading: 'Common fields',
+  blockId: 'common-fields',
+  change: 'changed',
+  oldHash: 'c'.repeat(64),
+  newHash: 'd'.repeat(64),
+  oldText: null,
+  newText: '#### Common fields\n\nThese fields apply to all hook types.',
+  sections: [{ section: 'Hooks', rules: ['hooks-config-schema', 'hooks-if-condition'] }],
+}
+const exits: Tracked = {
+  ...common,
+  heading: 'Other exit codes',
+  blockId: 'other-exit-codes',
+  newHash: 'e'.repeat(64),
+  newText: '#### Other exit codes\n\nExit code 1 is a non-blocking error.',
+  sections: [{ section: 'Hooks', rules: ['hooks-script-exists'] }],
+}
+// The new-rule finding that the classifier gives for the `common` block.
+const commonRule: Finding = {
+  ...newRule,
+  page: HOOKS,
+  heading: 'Common fields',
+  blockId: 'common-fields',
+  oldHash: common.oldHash,
+  newHash: common.newHash,
+  change: 'changed',
+  link: HOOKS,
+  probability: 0.79,
+  confidence: 0.58,
+  reason: 'Jev gives 0.79 that the block states a requirement a lint check can measure',
+  newText: common.newText,
+}
+
+// A fake gh for the comment path: `groups` gives the state and the comment
+// bodies of each group issue, and `open` gives the open issues.
+function groupGh(
+  groups: Record<number, { state: string; comments?: (string | null)[] }>,
+  open: { number: number; body: string | null }[] = [],
+) {
+  const calls: { args: string[]; input?: string }[] = []
+  const run: Run = (args, input) => {
+    calls.push({ args, input })
+    const endpoint = args.find((arg) => arg.startsWith('repos/')) ?? ''
+    const comments = /^repos\/[^/]+\/[^/]+\/issues\/(\d+)\/comments/.exec(endpoint)
+    const issue = /^repos\/[^/]+\/[^/]+\/issues\/(\d+)$/.exec(endpoint)
+    if (args.includes('POST')) return `https://github.com/${REPO}/issues/${comments?.[1] ?? 1}\n`
+    if (comments) {
+      const bodies = groups[Number(comments[1])]?.comments ?? []
+      return bodies.map((body) => JSON.stringify({ body })).join('\n')
+    }
+    if (issue) return `${groups[Number(issue[1])]?.state}\n`
+    if (args.includes('--paginate')) return open.map((one) => JSON.stringify(one)).join('\n')
+    throw new Error(`unexpected gh call: ${args.join(' ')}`)
+  }
+  const posts = () => calls.filter((call) => call.args.includes('POST'))
+  const commentPosts = () =>
+    posts().filter((call) => call.args.some((a) => a.endsWith('/comments')))
+  const issuePosts = () => posts().filter((call) => call.args.includes(`repos/${REPO}/issues`))
+  return { run, calls, posts, commentPosts, issuePosts }
+}
+// A live run of the issue step on a fake gh, with no log.
+const live = (gh: { run: Run }, tracked: unknown[], findings: unknown[] = []) =>
+  api.openIssues({ findings, tracked, repo: REPO, run: gh.run, dryRun: false, log: quiet })
+
+describe('the group comment path for tracked blocks', () => {
+  it('posts one comment on the open group issue, with a marker for each block, and opens no issue', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const logs: string[] = []
+    const result = await api.openIssues({
+      findings: [commonRule],
+      tracked: [common, exits],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    const reads = gh.calls.map((c) => c.args)
+    expect(reads).toContainEqual(['api', `repos/${REPO}/issues/10`, '--jq', '.state'])
+    expect(reads).toContainEqual([
+      'api',
+      '--paginate',
+      `repos/${REPO}/issues/10/comments?per_page=100`,
+      '--jq',
+      '.[] | {body}',
+    ])
+    expect(gh.issuePosts()).toEqual([])
+    const [post] = gh.commentPosts()
+    expect(gh.commentPosts()).toHaveLength(1)
+    expect(post?.args).toEqual([
+      'api',
+      '--method',
+      'POST',
+      `repos/${REPO}/issues/10/comments`,
+      '--input',
+      '-',
+      '--jq',
+      '.html_url',
+    ])
+    const { body } = JSON.parse(post?.input ?? '{}') as { body: string }
+    expect(body.split('\n').slice(0, 3)).toEqual([
+      `<!-- docs-watch-tracked:${HOOKS}#common-fields:${'d'.repeat(64)} -->`,
+      `<!-- docs-watch-tracked:${HOOKS}#other-exit-codes:${'e'.repeat(64)} -->`,
+      '',
+    ])
+    expect(body.match(/<!-- docs-watch-tracked:/g)).toHaveLength(2)
+    expect(body).toContain('- Rows: `hooks-config-schema`, `hooks-if-condition`')
+    expect(body).toContain('- Rows: `hooks-script-exists`')
+    expect(body).toContain('These fields apply to all hook types.')
+    expect(body).toContain('The snapshot holds only the hash of this block')
+    expect(result).toEqual({
+      opened: [],
+      skipped: 1,
+      wouldOpen: 0,
+      commented: [`https://github.com/${REPO}/issues/10`],
+      wouldComment: 0,
+    })
+    expect(logs.some((l) => l.startsWith('comment: ') && l.includes('common-fields'))).toBe(true)
+  })
+
+  it('posts nothing and opens nothing on a second run, when the comment has the markers', async () => {
+    const first = groupGh({ 10: { state: 'open' } })
+    await api.openIssues({
+      findings: [commonRule],
+      tracked: [common, exits],
+      repo: REPO,
+      run: first.run,
+      dryRun: false,
+      log: quiet,
+    })
+    const posted = (JSON.parse(first.commentPosts()[0]?.input ?? '{}') as { body: string }).body
+    const comments = [null, 'A person wrote this.', posted]
+    const second = groupGh({ 10: { state: 'open', comments } })
+    const logs: string[] = []
+    const result = await api.openIssues({
+      findings: [commonRule],
+      tracked: [common, exits],
+      repo: REPO,
+      run: second.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    expect(second.posts()).toEqual([])
+    expect(result.commented).toEqual([])
+    expect(logs).toContain('skip: #10 already has 2 tracked block(s)')
+    // Only the new block of a later run goes in the next comment.
+    const later = { ...exits, newHash: 'f'.repeat(64) }
+    const third = groupGh({ 10: { state: 'open', comments: [posted] } })
+    await api.openIssues({
+      findings: [],
+      tracked: [common, later],
+      repo: REPO,
+      run: third.run,
+      dryRun: false,
+      log: quiet,
+    })
+    const next = (JSON.parse(third.commentPosts()[0]?.input ?? '{}') as { body: string }).body
+    expect(next.match(/<!-- docs-watch-tracked:/g)).toHaveLength(1)
+    expect(next).toContain(api.trackedMarkerOf(later))
+  })
+
+  it('opens the new-rule issue with the rows line when the group issue is closed', async () => {
+    const gh = groupGh({ 10: { state: 'closed' } })
+    const logs: string[] = []
+    const result = await api.openIssues({
+      findings: [commonRule],
+      tracked: [common],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: (text) => logs.push(text),
+    })
+    expect(gh.commentPosts()).toEqual([])
+    expect(gh.calls.some((c) => c.args.some((a) => a.includes('/comments')))).toBe(false)
+    expect(result.opened).toHaveLength(1)
+    const sent = JSON.parse(gh.issuePosts()[0]?.input ?? '{}') as { title: string; body: string }
+    expect(sent.title).toBe('feat: new rule candidate from Common fields')
+    expect(sent.body).toContain(api.markerOf(commonRule))
+    expect(sent.body).toContain(
+      '- Inventory rows that cite the block: Hooks: `hooks-config-schema`, `hooks-if-condition`. Their group issues are closed.',
+    )
+    expect(logs).toContain('closed: #10, so no comment for 1 tracked block(s)')
+    // A tracked block with no finding and a closed group issue gets nothing.
+    const none = groupGh({ 10: { state: 'closed' } })
+    await live(none, [common])
+    expect(none.posts()).toEqual([])
+  })
+
+  it('posts on the open group issue and opens no issue when one of two group issues is closed', async () => {
+    const both: Tracked = {
+      ...common,
+      sections: [
+        { section: 'Hooks', rules: ['hooks-config-schema'] },
+        { section: 'Settings', rules: ['settings-schema'] },
+      ],
+    }
+    const gh = groupGh({ 10: { state: 'open' }, 14: { state: 'closed' } })
+    const result = await api.openIssues({
+      findings: [commonRule],
+      tracked: [both],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(gh.issuePosts()).toEqual([])
+    expect(gh.commentPosts().map((c) => c.args[3])).toEqual([`repos/${REPO}/issues/10/comments`])
+    const { body } = JSON.parse(gh.commentPosts()[0]?.input ?? '{}') as { body: string }
+    expect(body).toContain('- Rows: `hooks-config-schema`')
+    expect(body).not.toContain('settings-schema')
+    expect(result.skipped).toBe(1)
+    // Each section posts on its own group issue.
+    const open = groupGh({ 10: { state: 'open' }, 14: { state: 'open' } })
+    await live(open, [both])
+    expect(open.commentPosts().map((c) => c.args[3])).toEqual([
+      `repos/${REPO}/issues/10/comments`,
+      `repos/${REPO}/issues/14/comments`,
+    ])
+  })
+
+  it('maps each inventory section to its group issue', async () => {
+    const groups = {
+      'Skills and commands': 50,
+      'Subagents and output styles': 9,
+      Hooks: 10,
+      'Plugin manifest and layout': 11,
+      'Marketplace manifest': 12,
+      'CLAUDE.md, rules and memory': 13,
+      Settings: 14,
+      'Permissions and sandbox': 15,
+      'MCP and LSP servers': 16,
+    }
+    // The `###` sections of "Rules by group" in the real inventory are these
+    // nine, so a new or renamed section fails here and not in the daily run.
+    const inventory = readFileSync(
+      path.join(import.meta.dirname, '../docs/rules-inventory.md'),
+      'utf8',
+    )
+    const part = inventory.split(/^## /m).find((p) => p.startsWith('Rules by group\n')) ?? ''
+    const sections = [...part.matchAll(/^### (.+)$/gm)].map((m) => m[1]?.trim())
+    expect(sections).toEqual(Object.keys(groups))
+    for (const [section, issue] of Object.entries(groups)) {
+      const gh = groupGh({ [issue]: { state: 'open' } })
+      const t = { ...common, sections: [{ section, rules: ['a-rule'] }] }
+      await live(gh, [t])
+      const endpoints = gh.commentPosts().map((c) => c.args[3])
+      expect(endpoints, section).toEqual([`repos/${REPO}/issues/${issue}/comments`])
+    }
+  })
+
+  it('fails before any gh call for a section with no group issue', async () => {
+    for (const section of ['Agent teams', 'toString', 'hooks']) {
+      const gh = groupGh({ 10: { state: 'open' } })
+      await expect(
+        api.openIssues({
+          findings: [commonRule],
+          tracked: [common, { ...exits, sections: [{ section, rules: ['a-rule'] }] }],
+          repo: REPO,
+          run: gh.run,
+          dryRun: false,
+          log: quiet,
+        }),
+      ).rejects.toThrow(`the inventory section "${section}" has no group issue`)
+      expect(gh.calls).toEqual([])
+    }
+  })
+
+  it('fails before it posts for a group issue state that is not open or closed', async () => {
+    for (const state of ['', 'null', 'OPEN']) {
+      const gh = groupGh({ 10: { state } })
+      await expect(live(gh, [common], [commonRule]), state).rejects.toThrow(
+        'issue #10 has a state that is not open or closed',
+      )
+      expect(gh.posts()).toEqual([])
+    }
+  })
+
+  it('prints each comment in a dry run, posts none, and does not count comments toward --max', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const logs: string[] = []
+    const result = await api.openIssues({
+      findings: [commonRule],
+      tracked: [common],
+      repo: REPO,
+      run: gh.run,
+      dryRun: true,
+      log: (text) => logs.push(text),
+    })
+    expect(gh.posts()).toEqual([])
+    expect(result.wouldComment).toBe(1)
+    expect(result.wouldOpen).toBe(0)
+    const printed = logs.find((l) => l.startsWith('would comment on #10:'))
+    expect(printed).toContain(api.trackedMarkerOf(common))
+    const live = groupGh({ 10: { state: 'open' } })
+    const capped = await api.openIssues({
+      findings: [],
+      tracked: [common, exits],
+      repo: REPO,
+      run: live.run,
+      dryRun: false,
+      max: 0,
+      log: quiet,
+    })
+    expect(capped.commented).toHaveLength(1)
+  })
+
+  it('opens no issue for a needs-triage finding that names no rule, on a tracked block with an open group issue', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const triage: Finding = {
+      ...commonRule,
+      kind: 'needs-triage',
+      probability: null,
+      confidence: null,
+      reason: 'The Jev request failed: HTTP 500.',
+    }
+    const result = await live(gh, [common], [triage])
+    expect(gh.issuePosts()).toEqual([])
+    expect(gh.commentPosts()).toHaveLength(1)
+    expect(result.skipped).toBe(1)
+  })
+
+  it('opens an issue for a finding that names a rule, on a tracked block with an open group issue', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const update: Finding = { ...commonRule, kind: 'rule-update', rules: ['hooks-config-schema'] }
+    const result = await api.openIssues({
+      findings: [update, commonRule],
+      tracked: [common],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(result.opened).toHaveLength(1)
+    const sent = JSON.parse(gh.issuePosts()[0]?.input ?? '{}') as { body: string }
+    expect(sent.body).toContain(api.markerOf(update))
+    expect(sent.body).not.toContain('Inventory rows')
+    expect(gh.commentPosts()).toHaveLength(1)
+  })
+
+  it('does not read a tracked marker in an open issue as an issue marker', async () => {
+    const gh = fakeGh([{ number: 7, body: api.trackedMarkerOf(common) }])
+    const result = await api.openIssues({
+      findings: [commonRule],
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(result.opened).toHaveLength(1)
+  })
+
+  it('shows a diff, a gone block, or no text, and makes docs text inert', () => {
+    const diff = api.commentOf(
+      [{ tracked: { ...common, oldText: '#### Common fields\n\nOld text.' }, rules: ['a-rule'] }],
+      'Hooks',
+    )
+    expect(diff).toContain('```diff\n  #### Common fields')
+    expect(diff).toContain('- Old text.\n+ These fields apply to all hook types.')
+    expect(diff).not.toContain('<details>')
+    const gone = api.commentOf(
+      [
+        {
+          tracked: { ...common, change: 'removed', newHash: null, newText: null, oldText: 'Old.' },
+          rules: ['a-rule'],
+        },
+      ],
+      'Hooks',
+    )
+    const goneMarker = `<!-- docs-watch-tracked:${HOOKS}#common-fields:gone:${'c'.repeat(64)} -->`
+    expect(gone).toContain(goneMarker)
+    expect(gone).toContain('The block is gone. Its old text, as quoted data:')
+    const empty = api.commentOf(
+      [{ tracked: { ...common, newText: null }, rules: ['a-rule'] }],
+      'Hooks',
+    )
+    expect(empty).toContain('No block text is available for this change. See the page.')
+    const hostile = api.commentOf(
+      [
+        {
+          tracked: {
+            ...common,
+            heading: 'Fields @team <!-- x -->',
+            newText: '@team\n<!-- docs-watch-tracked:fake -->\n````\nend',
+          },
+          rules: ['a-rule'],
+        },
+      ],
+      'Hooks',
+    )
+    expect(hostile).not.toMatch(/@team/)
+    expect(hostile.match(/<!--/g)).toHaveLength(1)
+    expect(hostile).toContain('`````text')
+  })
+
+  it('keeps a long comment under the GitHub limit, cuts it with a note, and keeps every marker', () => {
+    const blocks = Array.from({ length: 30 }, (_, i) => ({
+      tracked: { ...common, blockId: `b${i}`, newText: '`'.repeat(5000) },
+      rules: ['a-rule'],
+    }))
+    const body = api.commentOf(blocks, 'Hooks')
+    // The markers and the cut text take exactly 60,000 characters. The note of
+    // the cut comes after them.
+    const note = /\n\nThe text is cut at \d+ of \d+ characters\. Read the page for the rest\.\n$/
+    expect(api.MAX_COMMENT).toBe(60_000)
+    expect(body.length - (note.exec(body)?.[0].length ?? 0)).toBe(60_000)
+    expect(body.length).toBeLessThanOrEqual(65_536)
+    expect(body.match(/<!-- docs-watch-tracked:/g)).toHaveLength(30)
+    expect(body).toContain('Read the page for the rest.')
+    expect(api.commentOf(blocks.slice(0, 1), 'Hooks')).not.toContain('Read the page for the rest.')
+  })
+
+  it('fails before any gh call for a tracked block that is not valid', async () => {
+    const bad: [Record<string, unknown>, string][] = [
+      [{ page: '' }, 'has no page'],
+      [{ heading: '' }, 'has no heading'],
+      [{ blockId: 3 }, 'has no blockId'],
+      [{ page: 'http://x' }, 'page that is not an https URL'],
+      [{ change: 'moved' }, 'unknown change: moved'],
+      [{ change: ['removed'], newHash: null, newText: null }, 'unknown change: removed'],
+      [{ oldHash: null, newHash: null }, 'has no hash'],
+      [{ oldHash: 'x -->' }, 'oldHash that is not a SHA-256 hash'],
+      [{ oldHash: undefined }, 'oldHash that is not a SHA-256 hash'],
+      [{ oldHash: null }, 'do not fit the change changed'],
+      [{ newText: null }, 'do not fit the change changed'],
+      [{ change: 'added' }, 'do not fit the change added'],
+      [{ change: 'added', oldHash: null, oldText: 'Old.' }, 'do not fit the change added'],
+      [{ change: 'removed', newText: null }, 'do not fit the change removed'],
+      [{ change: 'removed', newHash: null }, 'do not fit the change removed'],
+      [{ newHash: 'A'.repeat(64) }, 'newHash that is not a SHA-256 hash'],
+      [{ oldText: 3 }, 'oldText that is not text'],
+      [{ newText: undefined }, 'newText that is not text'],
+      [{ sections: [] }, 'has no sections list'],
+      [{ sections: 'Hooks' }, 'has no sections list'],
+      [{ sections: [{ section: '', rules: ['a'] }] }, 'a section with no name'],
+      [{ sections: [null] }, 'a section with no name'],
+      [
+        {
+          sections: [
+            { section: 'Hooks', rules: ['a'] },
+            { section: 'Hooks', rules: ['b'] },
+          ],
+        },
+        'a section twice',
+      ],
+      [{ sections: [{ section: 'Hooks', rules: [] }] }, 'a section with no rules'],
+      [{ sections: [{ section: 'Hooks', rules: 'a' }] }, 'a section with no rules'],
+      [{ sections: [{ section: 'Hooks', rules: ['a b'] }] }, 'a rule ID that is not valid'],
+      [{ sections: [{ section: 'Hooks', rules: ['a', 'a'] }] }, 'or twice'],
+    ]
+    for (const [fields, message] of bad) {
+      const gh = groupGh({ 10: { state: 'open' } })
+      await expect(
+        api.openIssues({
+          findings: [],
+          tracked: [{ ...common, ...fields }],
+          repo: REPO,
+          run: gh.run,
+          dryRun: false,
+          log: quiet,
+        }),
+        JSON.stringify(fields),
+      ).rejects.toThrow(message)
+      expect(gh.calls).toEqual([])
+    }
+    expect(() => api.validateTracked(null)).toThrow('has no page')
+    const gh = groupGh({ 10: { state: 'open' } })
+    await expect(live(gh, [common, { ...common }])).rejects.toThrow(
+      'a tracked block is in the list twice',
+    )
+    expect(gh.calls).toEqual([])
+    const removed = { ...common, change: 'removed', newHash: null, newText: null }
+    for (const t of [common, removed, { ...common, change: 'added', oldHash: null }]) {
+      expect(() => api.validateTracked(t)).not.toThrow()
+    }
+  })
+})
+
+describe('replay of the five tracked hooks blocks (#44, #45, #121, #122, #123)', () => {
+  // The old hash, the new hash and the Jev requirement value from each
+  // closed issue. The page fixture holds the new text from each issue body.
+  const CASES = [
+    {
+      issue: 44,
+      blockId: 'common-fields',
+      old: '892963d2890197af43a611978c907486221b02fa3c83962698d46060588af86e',
+      new: 'c21a7787217a5b4e5c5074eedfd88f10f1df8e4aede1ab757553356697fca91a',
+      requirement: 0.79,
+    },
+    {
+      issue: 45,
+      blockId: 'pretooluse-decision-control',
+      old: '2abd3fb95446b2de1a36731fc51ff9e2b0635c6da7a67c3898ee295b30e42f29',
+      new: 'ed7e5ac643b7d34787c39bbe41f8f9549fafb4decd52952ab9bde1568a04b1ef',
+      requirement: 0.58,
+    },
+    {
+      issue: 121,
+      blockId: 'command-hook-fields',
+      old: '0985903a8f04aa02ef2a3d2297e6dcc762192d9bc7995a5189d4327d4ded2d56',
+      new: 'f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec',
+      requirement: 0.67,
+    },
+    {
+      issue: 122,
+      blockId: 'http-hook-fields',
+      old: '55f69008271efe7c2b0ae85a002496755d748bf1f3c7fb9d636af62537086385',
+      new: 'd8e1e284e3dbb58bf90b86b9ea65f7d6c44dbd9fa43326907502f1c0084d6145',
+      requirement: 0.75,
+    },
+    {
+      issue: 123,
+      blockId: 'other-exit-codes',
+      old: '73247f97fdf080acedc2ef0d6a4989329dbddbe594d5debc91204e69a8425823',
+      new: '7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43',
+      requirement: 0.33,
+    },
+  ]
+  // The rows that cite each block in docs/rules-inventory.md on 2026-10-10.
+  const ROWS: Record<string, string[]> = {
+    'common-fields': [
+      'hooks-config-schema',
+      'hooks-handler-field-ignored',
+      'hooks-if-condition',
+      'hooks-timeout-units',
+      'hooks-if-dir-glob-depth',
+    ],
+    'pretooluse-decision-control': ['hooks-broad-auto-approve', 'hooks-output-deprecated-fields'],
+    'command-hook-fields': ['hooks-config-schema', 'hooks-handler-field-ignored'],
+    'http-hook-fields': [
+      'hooks-config-schema',
+      'hooks-http-env-allowlist',
+      'hooks-http-literal-secret',
+    ],
+    'other-exit-codes': ['hooks-script-exists', 'hooks-output-blocking-exit-code'],
+  }
+
+  it('tracks each block under Hooks, posts one comment on #10, and opens no issue', async () => {
+    const fixture = path.join(import.meta.dirname, 'fixtures/docs-classify/hooks-replay.md')
+    const page = readFileSync(fixture, 'utf8')
+    const map: SourceMap = { 'hooks-event-name-known': [{ url: HOOKS, heading: 'Hook lifecycle' }] }
+    const stored = await watch.readPage(HOOKS, ['Hook lifecycle'], async () => page)
+    const newHash = new Map(stored.blocks.map((b) => [b.id, b.hash]))
+    for (const c of CASES) expect(newHash.get(c.blockId), `#${c.issue}`).toBe(c.new)
+    const before = {
+      ...stored,
+      hash: '0'.repeat(64),
+      blocks: stored.blocks.map((b) => {
+        const c = CASES.find((one) => one.blockId === b.id)
+        return c ? { id: b.id, hash: c.old } : b
+      }),
+    }
+    const value = new Map(CASES.map((c) => [c.blockId, c.requirement]))
+    const fetch: JevFetch = async (_url, init) => {
+      const request = JSON.parse(init.body) as { state: { docs_block: { heading: string } } }
+      const id = request.state.docs_block.heading.toLowerCase().replaceAll(' ', '-')
+      const answers = { requirement: { type: 'noul', noul: value.get(id) ?? 0 } }
+      return new Response(JSON.stringify({ model: 'jev-1.13.0', answers }), { status: 200 })
+    }
+    const output = await classify.classify({
+      map,
+      inventory: classify.loadInventory(path.join(import.meta.dirname, '..')),
+      snapshots: new Map([[watch.snapshotName(HOOKS), before]]),
+      rules: new Map(),
+      links: new Map(),
+      fetchText: async () => page,
+      jev: { fetch, key: 'test-key-not-real' },
+    })
+    expect(output.tracked.map((t) => t.blockId).sort()).toEqual(CASES.map((c) => c.blockId).sort())
+    for (const t of output.tracked) {
+      const rows = ROWS[t.blockId] ?? ['none']
+      expect(t.sections.map((s) => s.section)).toEqual(['Hooks'])
+      expect(t.sections[0]?.rules, t.blockId).toEqual(expect.arrayContaining(rows))
+      expect(t.oldHash).toBe(CASES.find((c) => c.blockId === t.blockId)?.old)
+    }
+    // Four new-rule findings, as on the day. #123 is below the 0.4 no value.
+    expect(output.findings.map((f) => [f.kind, f.blockId]).sort()).toEqual([
+      ['new-rule', 'command-hook-fields'],
+      ['new-rule', 'common-fields'],
+      ['new-rule', 'http-hook-fields'],
+      ['new-rule', 'pretooluse-decision-control'],
+    ])
+    const gh = groupGh({ 10: { state: 'open' } })
+    const result = await api.openIssues({
+      findings: output.findings,
+      tracked: output.tracked,
+      repo: REPO,
+      run: gh.run,
+      dryRun: false,
+      log: quiet,
+    })
+    expect(gh.issuePosts()).toEqual([])
+    expect(gh.commentPosts()).toHaveLength(1)
+    const { body } = JSON.parse(gh.commentPosts()[0]?.input ?? '{}') as { body: string }
+    for (const c of CASES) {
+      expect(body, `#${c.issue}`).toContain(
+        `<!-- docs-watch-tracked:${HOOKS}#${c.blockId}:${c.new} -->`,
+      )
+    }
+    expect(body.length).toBeLessThanOrEqual(65_536)
+    expect(result.skipped).toBe(4)
+  })
+})
+
+describe('the moved kind (#152)', () => {
+  it('is in every kind table: the kinds, the marker, the order, the title and the reason', async () => {
+    expect(api.KINDS).toContain('moved')
+    const gh = fakeGh([{ number: 7, body: api.markerOf(moved) }])
+    await api.openIssues({ findings: [moved], repo: REPO, run: gh.run, dryRun: false, log: quiet })
+    expect(gh.posts()).toEqual([])
+    // A moved finding names the issue, and keeps its move, beside another kind.
+    const removal = { ...moved, kind: 'rule-removal' as const, change: 'removed', move: undefined }
+    const merged = api.merge([removal, moved])
+    expect([merged.kind, merged.move?.blockId]).toEqual([
+      'moved',
+      'set-variables-in-settings-files',
+    ])
+    expect(api.bodyOf(moved, REPO)).toContain(
+      'A block that a rule or an inventory row cites moved to a new heading on the same page. Its body did not change.',
+    )
+  })
+
+  it('has a marker with the old block and the new hash', () => {
+    expect(api.markerOf(moved)).toBe(
+      `<!-- docs-watch:moved:${ENV}#in-settings-files:${'d'.repeat(64)} rules=settings-env-value-format -->`,
+    )
+  })
+
+  it('titles the issue with the rule, or with the inventory when no rule cites the block', () => {
+    expect(api.titleOf({ ...moved, rules: ['a'] })).toBe(
+      'docs(a): move the footnote of a to the renamed heading',
+    )
+    // The moved title for the rule of #117 is too long, so the cut rule of
+    // every title applies.
+    expect(api.titleOf(moved)).toBe(
+      'docs(settings-env-value-format): move the footnote of settings-env...',
+    )
+    expect(api.titleOf({ ...moved, rules: [] })).toBe(
+      'docs: move the footnote of the inventory to the renamed heading',
+    )
+    const many = { ...moved, rules: ['a'.repeat(30), 'b'.repeat(30)] }
+    expect(api.titleOf(many)).toBe(`docs: move the footnote of ${'a'.repeat(30)},bbbbbbbb...`)
+  })
+
+  it('names the headings, the new anchor and each footnote, with the runbook steps as its Scope', () => {
+    const body = api.bodyOf(moved, REPO)
+    expect(body.startsWith(`${api.markerOf(moved)}\n\n## Why\n`)).toBe(true)
+    for (const line of [
+      '- Old heading: `In settings files` (block `in-settings-files`)',
+      '- New heading: `Set variables in settings files` (block `set-variables-in-settings-files`)',
+      `- New anchor: ${ENV}#set-variables-in-settings-files`,
+      '- Change: moved',
+      '- Classifier result: `moved`, with no model answer',
+      `- Hashes: old \`${'c'.repeat(64)}\`, new \`${'d'.repeat(64)}\``,
+      '- `docs/rules/settings-env-value-format.md`: the footnote that cites `In settings files`',
+      '- `docs/rules-inventory.md`: the footnote that cites `In settings files`, for the Settings rows `settings-env-ignored-var`',
+      '1. In each file above, change the footnote to the new heading and the anchor `set-variables-in-settings-files`. Keep the one-line form `[^id]: [Page title: New heading](https://code.claude.com/docs/en/<page>#<anchor>)`. Compare the anchor with the anchor on the page, because the site anchor is not always the slug of the heading.',
+      '2. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`.',
+      '3. Make sure that the rule stays in `src/rules/` and that `pnpm test` passes.',
+      '4. Close this issue with the pull request.',
+      '- [ ] No footnote cites the old block `in-settings-files` of this page.',
+      `- ${ENV}#set-variables-in-settings-files`,
+    ]) {
+      expect(body.split('\n'), line).toContain(line)
+    }
+    expect(body).toContain('```text\n### Set variables in settings files\n')
+    expect(body).not.toContain('A person decides')
+    const sections = body.split('\n').filter((line) => line.startsWith('## '))
+    expect(sections).toEqual(['## Why', '## Scope', '## Acceptance', '## References'])
+  })
+
+  it('names only the inventory footnote when no rule cites the block, and makes docs text inert', () => {
+    const inventoryOnly = {
+      ...moved,
+      rules: [],
+      move: { heading: 'Ping @octocat', blockId: 'a b', sections: moved.move?.sections ?? [] },
+    }
+    const body = api.bodyOf(inventoryOnly, REPO)
+    expect(body).not.toContain('docs/rules/')
+    expect(body).toContain('`docs/rules-inventory.md`: the footnote that cites')
+    expect(body).toContain('- New heading: `Ping @⁠octocat` (block `a b`)')
+    expect(body).toContain(`- New anchor: ${ENV}#a%20b`)
+  })
+
+  it('shows the cross-reference line in the body of a removed or an added block', () => {
+    const near = [
+      { heading: 'Set variables in settings files', blockId: 'set-variables-in-settings-files' },
+    ]
+    const removal: Finding = {
+      ...update,
+      kind: 'rule-removal',
+      change: 'removed',
+      newHash: null,
+      newText: null,
+      possibleMoves: near,
+    }
+    expect(api.bodyOf(removal, REPO).split('\n')).toContain(
+      '- Possible move: `Set variables in settings files` (block `set-variables-in-settings-files`) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.',
+    )
+    expect(api.bodyOf(update, REPO)).not.toContain('Possible move')
+  })
+
+  it('refuses a moved finding whose hashes, texts or move do not fit its kind', () => {
+    const fit = 'change or a move that does not fit its kind'
+    expect(() => api.validate({ ...moved, move: undefined })).toThrow(
+      `a moved finding has a ${fit}`,
+    )
+    expect(() => api.validate({ ...moved, change: 'removed' })).toThrow(fit)
+    expect(() => api.validate({ ...update, move: moved.move })).toThrow(
+      `a rule-update finding has a ${fit}`,
+    )
+    expect(() => api.validate({ ...update, change: 'moved' })).toThrow(fit)
+    for (const field of ['oldHash', 'newHash', 'newText']) {
+      expect(() => api.validate({ ...moved, [field]: null })).toThrow(
+        'a moved finding has no old hash, no new hash or no new text',
+      )
+    }
+    const move = moved.move as NonNullable<Finding['move']>
+    for (const bad of [
+      { ...move, heading: '' },
+      { ...move, heading: 3 },
+      { ...move, blockId: '' },
+      { ...move, blockId: 3 },
+      { ...move, blockId: 'in-settings-files' },
+    ]) {
+      expect(() => api.validate({ ...moved, move: bad })).toThrow(
+        'a moved finding has no new heading or new block, or its old block again',
+      )
+    }
+    for (const sections of [
+      undefined,
+      [{ section: '', rules: ['a'] }],
+      [{ section: 'Settings', rules: [] }],
+      [{ section: 'Settings', rules: ['a b'] }],
+      [{ section: 'Settings', rules: ['a', 'a'] }],
+      [{ section: 'Settings', rules: 'a' }],
+      [
+        { section: 'Settings', rules: ['a'] },
+        { section: 'Settings', rules: ['b'] },
+      ],
+      [null],
+      [{ section: 3, rules: ['a'] }],
+      [{ section: 'Settings', rules: [3] }],
+    ]) {
+      expect(() => api.validate({ ...moved, move: { ...move, sections } })).toThrow(
+        'a moved finding has no sections list, or a section that is not valid',
+      )
+    }
+    expect(() => api.validate({ ...moved, rules: [], move: { ...move, sections: [] } })).toThrow(
+      'a moved finding names no rule and no inventory row',
+    )
+    expect(() => api.validate({ ...moved, move: null })).toThrow('no new heading or new block')
+    for (const f of [
+      moved,
+      { ...moved, oldText: null },
+      { ...moved, rules: [] },
+      { ...moved, move: { ...move, sections: [] } },
+    ]) {
+      expect(() => api.validate(f)).not.toThrow()
+    }
+  })
+
+  it('refuses a possible move that is not valid, or on a block that is not removed or added', () => {
+    const near = [{ heading: 'A heading', blockId: 'a-heading' }]
+    const removal = { ...update, kind: 'rule-removal', change: 'removed', newHash: null }
+    const added = { ...newRule, possibleMoves: near }
+    for (const possibleMoves of [
+      [],
+      'x',
+      [{ heading: '', blockId: 'a' }],
+      [{ heading: 'A', blockId: '' }],
+      [{ heading: 'A' }],
+      [{ blockId: 'a' }],
+      [{ heading: 3, blockId: 'a' }],
+      [null],
+    ]) {
+      expect(() => api.validate({ ...removal, possibleMoves })).toThrow(
+        'a rule-removal finding has a possible move that is not valid',
+      )
+    }
+    expect(() => api.validate({ ...update, possibleMoves: near })).toThrow('possible move')
+    expect(() => api.validate({ ...moved, possibleMoves: near })).toThrow('possible move')
+    expect(() => api.validate({ ...removal, possibleMoves: near })).not.toThrow()
+    expect(() => api.validate(added)).not.toThrow()
+  })
+
+  describe('replay of #117 and #129, and of #131', () => {
+    const MCP = 'https://code.claude.com/docs/en/mcp'
+    const fixture = (name: string) =>
+      readFileSync(path.join(import.meta.dirname, 'fixtures/docs-classify', name), 'utf8')
+    // Jev gave #129 a requirement value of 0.57, and #131 a value of 0.63. A
+    // call with this fake would give a new-rule finding.
+    const fetch: JevFetch = async () =>
+      new Response(
+        JSON.stringify({
+          model: 'jev-1.13.0',
+          answers: { requirement: { type: 'noul', noul: 0.6 } },
+        }),
+        { status: 200 },
+      )
+    const classifyPage = async (
+      url: string,
+      map: SourceMap,
+      base: string,
+      edited: string,
+      inventory: classify.Cite[],
+    ) => {
+      const headings = Object.values(map).flatMap((list) => list.map((s) => s.heading))
+      const stored = await watch.readPage(url, headings, async () => base)
+      return classify.classify({
+        map,
+        inventory: new Map([[url, inventory]]),
+        snapshots: new Map([[watch.snapshotName(url), stored]]),
+        rules: new Map(),
+        links: new Map(),
+        fetchText: async () => edited,
+        jev: { fetch, key: 'test-key-not-real' },
+      })
+    }
+
+    it('opens one moved issue for #117 and #129, and no rule-removal or new-rule issue', async () => {
+      const page = fixture('env-vars-moved.md')
+      const before = page.replace('### Set variables in settings files', '### In settings files')
+      const map: SourceMap = {
+        'settings-env-value-format': [{ url: ENV, heading: 'In settings files' }],
+      }
+      const inventory = [
+        {
+          heading: 'In settings files',
+          anchor: 'in-settings-files',
+          rows: [{ section: 'Settings', rules: ['settings-env-ignored-var'] }],
+        },
+      ]
+      const output = await classifyPage(ENV, map, before, page, inventory)
+      const gh = fakeGh()
+      await api.openIssues({
+        findings: output.findings,
+        tracked: output.tracked,
+        repo: REPO,
+        run: gh.run,
+        dryRun: false,
+        log: quiet,
+      })
+      expect(gh.posts()).toHaveLength(1)
+      const issue = JSON.parse(gh.posts()[0]?.input ?? '{}') as { title: string; body: string }
+      expect(issue.title).toBe(
+        'docs(settings-env-value-format): move the footnote of settings-env...',
+      )
+      expect(issue.body).toContain(
+        `<!-- docs-watch:moved:${ENV}#in-settings-files:83d7638f1288ac12bf078291fad8e9ee752d87a2ba81348b37ad0f73bd8142d6 rules=settings-env-value-format -->`,
+      )
+      expect(issue.body).toContain(`- New anchor: ${ENV}#set-variables-in-settings-files`)
+      expect(issue.body).toContain('for the Settings rows `settings-env-ignored-var`')
+    })
+
+    it('opens one moved issue for #131 that names the inventory footnote', async () => {
+      const page = fixture('mcp-moved.md')
+      const before = page.replace(
+        '#### Add a server from an `mcpServers` JSON block',
+        '#### From an `mcpServers` JSON block',
+      )
+      const map: SourceMap = {
+        'settings-env-value-format': [{ url: MCP, heading: 'Configure tool search' }],
+      }
+      const inventory = [
+        {
+          heading: 'From an mcpServers JSON block',
+          anchor: 'from-an-mcpservers-json-block',
+          rows: [{ section: 'MCP and LSP servers', rules: ['mcp-server-name-format'] }],
+        },
+      ]
+      const output = await classifyPage(MCP, map, before, page, inventory)
+      const gh = fakeGh()
+      await api.openIssues({
+        findings: output.findings,
+        tracked: output.tracked,
+        repo: REPO,
+        run: gh.run,
+        dryRun: false,
+        log: quiet,
+      })
+      expect(gh.posts()).toHaveLength(1)
+      const issue = JSON.parse(gh.posts()[0]?.input ?? '{}') as { title: string; body: string }
+      expect(issue.title).toBe('docs: move the footnote of the inventory to the renamed heading')
+      expect(issue.body).toContain(
+        '- `docs/rules-inventory.md`: the footnote that cites `From an mcpServers JSON block`, for the MCP and LSP servers rows `mcp-server-name-format`',
+      )
+      expect(issue.body).not.toContain('docs/rules/')
+    })
+  })
+})
+
 describe('main', () => {
   const dirs: string[] = []
   afterEach(() => {
@@ -717,13 +1650,13 @@ describe('main', () => {
   it('reads the findings file and takes the repository from the environment', async () => {
     const gh = fakeGh()
     const logs: string[] = []
-    const file = findingsFile({ findings: [update] })
+    const file = findingsFile({ findings: [update], tracked: [] })
     const code = await api.main([file, '--dry-run'], { GITHUB_REPOSITORY: REPO }, gh.run, (t) =>
       logs.push(t),
     )
     expect(code).toBe(0)
     expect(gh.posts()).toEqual([])
-    expect(logs.at(-1)).toBe('0 opened, 1 would open, 0 skipped')
+    expect(logs.at(-1)).toBe('0 opened, 1 would open, 0 skipped, 0 commented, 0 would comment')
     const other = fakeGh()
     await api.main(['--repo', 'o/r', '--max', '5', file], {}, other.run, quiet)
     expect(other.posts()[0]?.args).toContain('repos/o/r/issues')
@@ -738,9 +1671,9 @@ describe('main', () => {
     expect(result.stderr).toContain('usage')
   })
 
-  it('fails with no file, no repository, a bad --max or no findings list', async () => {
+  it('fails with no file, no repository, a bad --max, no findings list or no tracked list', async () => {
     const gh = fakeGh()
-    const file = findingsFile({ findings: [] })
+    const file = findingsFile({ findings: [], tracked: [] })
     await expect(api.main([], { GITHUB_REPOSITORY: REPO }, gh.run, quiet)).rejects.toThrow('usage')
     await expect(api.main([file], {}, gh.run, quiet)).rejects.toThrow('set --repo')
     await expect(
@@ -749,5 +1682,12 @@ describe('main', () => {
     await expect(
       api.main([findingsFile({})], { GITHUB_REPOSITORY: REPO }, gh.run, quiet),
     ).rejects.toThrow('has no findings list')
+    for (const tracked of [undefined, {}, 'x']) {
+      const bad = findingsFile({ findings: [], tracked })
+      await expect(api.main([bad], { GITHUB_REPOSITORY: REPO }, gh.run, quiet)).rejects.toThrow(
+        'has no tracked list',
+      )
+    }
+    expect(gh.calls).toEqual([])
   })
 })

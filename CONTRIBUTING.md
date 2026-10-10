@@ -95,7 +95,7 @@ rule that lacks the option that its row names.
 `.github/workflows/docs-watch.yml` runs every day and on `workflow_dispatch`. It commits nothing.
 It runs `node scripts/docs-watch.ts check`, which fetches each page that the map cites (URL plus
 `.md`) and compares it with `docs/docs-snapshot/`. When a page changed or the check failed, it
-classifies the change and opens issues (see [Docs classifier](#docs-classifier)).
+classifies the change, opens issues and posts comments (see [Docs classifier](#docs-classifier)).
 
 - `check` (the default) writes no file. It prints a JSON report to stdout, and a Markdown report
   to the run summary. For each changed page, it lists the blocks that changed, were added or were
@@ -122,6 +122,14 @@ starts no block. A heading at level 1 makes the whole page the source. A mapped 
 title that the page shows, for example "Choose where skills load". The script finds its block by
 the ID. When no block has that ID, it finds the block by the slug of the title.
 
+A snapshot file holds `url`, `hash`, `blocks` and `sources` for one page. Each block has `id`
+(its key), `hash` (the hash of its text) and an optional `bodyHash`. `bodyHash` is the SHA-256
+of the block text after its heading. The heading of a Markdown block is its first line. The
+heading of an HTML block is all its lines, from the opening tag to the closing tag. Blank lines
+at the start of the body and white space at its end do not count. A block with no body has no
+`bodyHash`. `update` writes it. A file with no `bodyHash` stays valid, and `check` does not read
+it. The classifier uses it to find a moved section (see [Docs classifier](#docs-classifier)).
+
 To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts update`. Read the
 diff of `docs/docs-snapshot/` and `docs/rule-sources.json`. Commit both in a pull request. The
 command makes read-only network calls.
@@ -130,20 +138,38 @@ command makes read-only network calls.
 
 `node scripts/docs-classify.ts` reads each cited page again and asks TypeSafe Jev about each
 changed, added or removed block. It needs the `TYPESAFE_API_KEY` secret when a block needs a
-call. It prints the findings as JSON: `rule-update`, `rule-removal`, `new-rule` or
-`needs-triage`. An error or an unclear answer gives `needs-triage`. These fail the job: a map
+call. It prints the findings as JSON: `rule-update`, `rule-removal`, `new-rule`,
+`needs-triage` or `moved`. An error or an unclear answer gives `needs-triage`. A removed block
+and an added block on one page with the same `bodyHash` are a move. A move gets no Jev call. It
+gives one `moved` finding when a rule or an inventory row cites the old block. A removed heading
+and an added heading can share three or more words. When neither block is part of a move, each
+finding of the two blocks names the other block as a possible move. These fail the job: a map
 that cites no page, a failed docs fetch, a page that the block split cannot read, and a page with
 no title.
 [ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records the questions, the thresholds
 and the spike data.
 
+The classifier also reads `docs/rules-inventory.md` as a second source map. Each inventory
+footnote uses the one-line form of [Rule source map](#rule-source-map), and the classifier reads
+it. The classifier reads the rule tables of each `###` section of "Rules by group". A footnote
+finds its block by the anchor of its link first. When no block has that ID, the heading finds
+the block. The classifier tracks a changed, added or removed block when an inventory footnote
+cites it. A map heading that cites the block stops this, but a heading that cites the whole page
+does not. The JSON lists each tracked block in `tracked`, with the rule rows that cite it in each
+section.
+
 `node scripts/docs-issues.ts <findings.json>` opens one issue for each changed block, as the org
 GitHub App. It uses a token with `permission-issues: write` only. A hidden marker with the block
 hash and the rules stops a second issue for the same change. For a changed block, the body shows
-a diff, then the full old and new sections in two collapsed parts. `--dry-run` prints each issue
-and opens none. A manual run of the workflow takes a `dry_run` input.
+a diff, then the full old and new sections in two collapsed parts. For a moved block, the body
+names the old and new headings, the new anchor and each footnote to change. For tracked blocks,
+it posts at most one comment on each open group issue (`GROUP_ISSUES`), with the blocks that it
+did not post before. While a group issue of a block is open, a finding of the block that names
+no rule opens no issue. `--dry-run` prints each issue and each comment, and opens and posts
+none. A manual run of the workflow takes a `dry_run` input.
 
-To triage the issues, follow the [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
+To triage the issues and the comments, follow the
+[docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
 
 ## Commits and pull requests
 
