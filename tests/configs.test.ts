@@ -90,7 +90,7 @@ const bigMcp = JSON.stringify({ mcpServers: {}, a: 'x'.repeat(2097152) })
 
 // A server list with one fault for each content rule of #16: a reserved name, a remote server with
 // an empty `url`, a header value with a trailing line break, and a `timeout` in seconds. Seven
-// more servers each break one OAuth or environment rule.
+// more servers each break one OAuth or environment rule. The last one is at an Anthropic-hosted host.
 const badMcpServers = {
   workspace: { command: 'x' },
   docs: { type: 'http', url: '' },
@@ -108,6 +108,7 @@ const badMcpServers = {
   literal: { command: 'x', label: `\${NAME}` },
   credential: { type: 'http', url: 'https://x.test/mcp', headers: { Key: `\${NPM_TOKEN}` } },
   helper: { type: 'http', url: 'https://x.test/mcp', headersHelper: 'echo $MY_TOKEN' },
+  hosted: { type: 'http', url: 'https://gmail.mcp.claude.com/mcp' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
 
@@ -463,6 +464,62 @@ const TREE: Record<string, string> = {
   // The plugin root is `plugins/p`, which has a manifest above. The servers-key and URL rules skip
   // it. The other content rules read it.
   'plugins/p/.mcp.json': JSON.stringify(badMcpServers),
+  // `mcp-settings-mcpservers`: the key in the two project files. The rule does not read a managed
+  // file. The same content where no rule reads it.
+  'packages/ms/.claude/settings.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'packages/ms/.claude/settings.local.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'packages/ms/managed-settings.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'packages/ms/.vscode/settings.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  // `mcp-project-plugin-bundle`: an MCP bundle in a plugin directly under `.claude/skills/`. A
+  // JSON file in such a plugin, a bundle in a plugin at another place, and a deeper directory are
+  // silent.
+  'packages/pb/.claude/skills/p/.claude-plugin/plugin.json': '{"mcpServers": "./server.mcpb"}',
+  'packages/pb/.claude/skills/q/.claude-plugin/plugin.json': '{"mcpServers": "./servers.json"}',
+  'packages/pb/.claude/skills/p/sub/.claude-plugin/plugin.json': '{"mcpServers": "./server.mcpb"}',
+  'packages/pb/.claude-plugin/plugin.json': '{"mcpServers": "./server.mcpb"}',
+  // `mcp-tool-name-format`: a tool reference with one underscore, in each file that the rule reads.
+  // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/tn/.claude/settings.json': '{"permissions": {"allow": ["mcp_server_tool"]}}',
+  'packages/tn/.claude/settings.local.json': '{"permissions": {"deny": ["mcp_server_tool"]}}',
+  'packages/tn/managed-settings.json': '{"permissions": {"ask": ["mcp_server_tool"]}}',
+  'packages/tn/managed-settings.d/10-a.json': '{"permissions": {"allow": ["mcp_server_tool"]}}',
+  'packages/tn/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"allow": ["mcp_server_tool"]}}',
+  'packages/tn/managed-settings.d/30-b.txt': '{"permissions": {"allow": ["mcp_server_tool"]}}',
+  'packages/tn/managed-settings.d/sub/40-c.json': '{"permissions": {"allow": ["mcp_server_tool"]}}',
+  'packages/tn/.vscode/settings.json': '{"permissions": {"allow": ["mcp_server_tool"]}}',
+  'packages/tn/.claude/skills/s/SKILL.md': '---\nallowed-tools: mcp_server_tool\n---\n',
+  'packages/tn/docs/SKILL.md': '---\nallowed-tools: mcp_server_tool\n---\n',
+  // `mcp-approval-committed`: an approval key in the committed project file. The local file and the
+  // managed files are silent. The same content where no rule reads it.
+  'packages/ma/.claude/settings.json': '{"enableAllProjectMcpServers": true}',
+  'packages/ma/.claude/settings.local.json': '{"enableAllProjectMcpServers": true}',
+  'packages/ma/managed-settings.json': '{"enableAllProjectMcpServers": true}',
+  'packages/ma/.vscode/settings.json': '{"enableAllProjectMcpServers": true}',
+  'packages/ma2/.claude/settings.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/ma2/.claude/settings.local.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/ma2/managed-settings.d/10-a.json': '{"enabledMcpjsonServers": ["db"]}',
+  // `mcp-disable-connectors-false`: `false` in a managed file and in a drop-in. The project files
+  // are for `settings-project-value-ignored`, so the value gets one report there. A hidden
+  // drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/dc/managed-settings.json': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/managed-settings.d/10-a.json': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/managed-settings.d/.20-hidden.json': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/managed-settings.d/30-b.txt': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/managed-settings.d/sub/40-c.json': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/.claude/settings.json': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/.claude/settings.local.json': '{"disableClaudeAiConnectors": false}',
+  'packages/dc/.vscode/settings.json': '{"disableClaudeAiConnectors": false}',
+  // `mcp-policy-entry-schema`: an invalid policy entry in each file that the rule reads. A hidden
+  // drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pe/.claude/settings.json': '{"allowedMcpServers": [1]}',
+  'packages/pe/.claude/settings.local.json': '{"deniedMcpServers": [{}]}',
+  'packages/pe/managed-settings.json': '{"allowedMcpServers": [{"serverName": "a b"}]}',
+  'packages/pe/managed-settings.d/10-a.json': '{"deniedMcpServers": [{"serverName": " x"}]}',
+  'packages/pe/managed-settings.d/.20-hidden.json': '{"allowedMcpServers": [1]}',
+  'packages/pe/managed-settings.d/30-b.txt': '{"allowedMcpServers": [1]}',
+  'packages/pe/managed-settings.d/sub/40-c.json': '{"allowedMcpServers": [1]}',
+  'packages/pe/.vscode/settings.json': '{"allowedMcpServers": [1]}',
   // The same content where no rule reads it: other names and other directories.
   'packages/mc/mcp.json': badMcp,
   'packages/mc/.mcp.json.bak': badMcp,
@@ -551,7 +608,7 @@ const SCOPE_RULES = [
 // The rules of #16 on `.mcp.json`, in the order of the `modules` list, with the files of each.
 // Each is an error.
 const MCP_PATHS = ['**/.claude/.mcp.json', '**/.claude/mcp.json', '**/.claude/config/mcp.json']
-const MCP_RULES = [
+const MCP_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
   { name: 'mcp-json-location', files: MCP_PATHS },
   { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
@@ -566,6 +623,18 @@ const MCP_RULES = [
   { name: 'mcp-env-expansion-field', files: ['**/.mcp.json'] },
   { name: 'mcp-credential-var-remote', files: ['**/.mcp.json'] },
   { name: 'mcp-headershelper-credential-env', files: ['**/.mcp.json'] },
+  { name: 'mcp-settings-mcpservers', files: PROJECT_FILES },
+  { name: 'mcp-anthropic-hosted-url', files: ['**/.mcp.json'] },
+  { name: 'mcp-project-plugin-bundle', files: ['**/.claude/skills/*/.claude-plugin/plugin.json'] },
+  {
+    name: 'mcp-tool-name-format',
+    files: [...PROJECT_FILES, ...MANAGED_FILES],
+    // The same rule, for the tool lists of skills and commands.
+    markdown: ['**/SKILL.md', '**/commands/**/*.md'],
+  },
+  { name: 'mcp-approval-committed', files: PROJECT_FILES },
+  { name: 'mcp-disable-connectors-false', files: MANAGED_FILES },
+  { name: 'mcp-policy-entry-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -777,8 +846,31 @@ const EXPECTED = [
     'mcp-env-expansion-field',
     'mcp-credential-var-remote',
     'mcp-headershelper-credential-env',
+    'mcp-anthropic-hosted-url',
   ].map((rule) => `packages/mc/.mcp.json: claude/${rule}@2`),
   'packages/mk2/.mcp.json: claude/mcp-json-servers-key@2',
+  // The settings and approval rules of #16. The hidden drop-ins are for `settings-managed-file`.
+  'packages/ms/.claude/settings.json: claude/mcp-settings-mcpservers@2',
+  'packages/ms/.claude/settings.local.json: claude/mcp-settings-mcpservers@2',
+  'packages/pb/.claude/skills/p/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
+  'packages/tn/.claude/settings.json: claude/mcp-tool-name-format@2',
+  'packages/tn/.claude/settings.local.json: claude/mcp-tool-name-format@2',
+  'packages/tn/managed-settings.json: claude/mcp-tool-name-format@2',
+  'packages/tn/managed-settings.d/10-a.json: claude/mcp-tool-name-format@2',
+  'packages/tn/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/tn/.claude/skills/s/SKILL.md: claude/mcp-tool-name-format@2',
+  'packages/ma/.claude/settings.json: claude/mcp-approval-committed@2',
+  'packages/ma2/.claude/settings.json: claude/mcp-approval-committed@2',
+  'packages/dc/managed-settings.json: claude/mcp-disable-connectors-false@2',
+  'packages/dc/managed-settings.d/10-a.json: claude/mcp-disable-connectors-false@2',
+  'packages/dc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/dc/.claude/settings.json: claude/settings-project-value-ignored@2',
+  'packages/dc/.claude/settings.local.json: claude/settings-project-value-ignored@2',
+  'packages/pe/.claude/settings.json: claude/mcp-policy-entry-schema@2',
+  'packages/pe/.claude/settings.local.json: claude/mcp-policy-entry-schema@2',
+  'packages/pe/managed-settings.json: claude/mcp-policy-entry-schema@2',
+  'packages/pe/managed-settings.d/10-a.json: claude/mcp-policy-entry-schema@2',
+  'packages/pe/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/mbig/.mcp.json: claude/mcp-json-file-size@2',
   ...['.claude/.mcp.json', '.claude/mcp.json', '.claude/config/mcp.json'].map(
     (file) => `packages/mu/${file}: claude/mcp-json-location@2`,
@@ -795,6 +887,7 @@ const EXPECTED = [
     'mcp-env-expansion-field',
     'mcp-credential-var-remote',
     'mcp-headershelper-credential-env',
+    'mcp-anthropic-hosted-url',
   ].map((rule) => `plugins/p/.mcp.json: claude/${rule}@2`),
 ].sort()
 
@@ -896,10 +989,12 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
-      ...MCP_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
-      ]),
+      ...MCP_RULES.flatMap(({ name, markdown }) =>
+        (markdown ? [name, name] : [name]).map((block) => [
+          `claude/recommended/${block}`,
+          { [`claude/${block}`]: 'error' },
+        ]),
+      ),
     ])
   })
 
@@ -917,7 +1012,9 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
-      ...MCP_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...MCP_RULES.flatMap(({ name, markdown }) =>
+        (markdown ? [name, name] : [name]).map((block) => `claude/strict/${block}`),
+      ),
     ])
   })
 
@@ -985,12 +1082,15 @@ describe('configs', () => {
     }
   })
 
-  it('gives each .mcp.json rule one JSON block for its files', () => {
-    for (const { name, files } of MCP_RULES) {
+  it('gives each MCP rule one JSON block for its files, and one Markdown block if it has a second target', () => {
+    for (const { name, files, markdown } of MCP_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )
-      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['json/json', files],
+        ...(markdown ? [['markdown/gfm', markdown]] : []),
+      ])
     }
   })
 

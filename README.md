@@ -172,6 +172,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/mcp-env-expansion-field`](docs/rules/mcp-env-expansion-field.md) | A `${VAR}` reference is only in `command`, `args`, `env`, `url`, `headers`, the fields that read it, or `headersHelper`, which a shell reads | `error` | `error` |
 | [`claude/mcp-credential-var-remote`](docs/rules/mcp-credential-var-remote.md) | The `url` and `headers` of a remote server do not reference a credential variable that Claude Code reads as empty; option `names` | `error` | `error` |
 | [`claude/mcp-headershelper-credential-env`](docs/rules/mcp-headershelper-credential-env.md) | An inline `headersHelper` does not read a variable that Claude Code removes, such as one with `TOKEN`, `SECRET`, `PASSWORD`, `KEY` or `AUTH` in its name | `error` | `error` |
+| [`claude/mcp-settings-mcpservers`](docs/rules/mcp-settings-mcpservers.md) | A project settings file has no `mcpServers` key, which Claude Code does not read there | `error` | `error` |
+| [`claude/mcp-anthropic-hosted-url`](docs/rules/mcp-anthropic-hosted-url.md) | No server at an Anthropic-hosted connector host such as `gmail.mcp.claude.com`; option `hosts` | `error` | `error` |
+| [`claude/mcp-project-plugin-bundle`](docs/rules/mcp-project-plugin-bundle.md) | A plugin under `.claude/skills/` declares no MCP server as a `.mcpb` or `.dxt` bundle | `error` | `error` |
+| [`claude/mcp-tool-name-format`](docs/rules/mcp-tool-name-format.md) | A tool reference that starts with `mcp` is `mcp__<server>` or `mcp__<server>__<tool>` | `error` | `error` |
+| [`claude/mcp-approval-committed`](docs/rules/mcp-approval-committed.md) | A committed `.claude/settings.json` does not approve the servers of `.mcp.json` | `error` | `error` |
+| [`claude/mcp-disable-connectors-false`](docs/rules/mcp-disable-connectors-false.md) | A managed settings file does not set `disableClaudeAiConnectors` to `false` | `error` | `error` |
+| [`claude/mcp-policy-entry-schema`](docs/rules/mcp-policy-entry-schema.md) | Each `allowedMcpServers` and `deniedMcpServers` entry has exactly one valid key | `error` | `error` |
 
 ## Contributing
 

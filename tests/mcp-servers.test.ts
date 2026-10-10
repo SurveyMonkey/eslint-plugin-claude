@@ -8,6 +8,7 @@ import { Linter } from 'eslint'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { keyOf } from '../src/marketplace-json.ts'
 import {
+  declaredMcpStrings,
   isUnreadMcpPath,
   type McpFileKind,
   mcpFileKind,
@@ -132,4 +133,57 @@ describe('serverMembers', () => {
 
 it('lists the remote server types', () => {
   expect([...REMOTE_SERVER_TYPES].sort()).toEqual(['http', 'sse', 'streamable-http', 'ws'])
+})
+
+describe('declaredMcpStrings', () => {
+  /** The strings that `declaredMcpStrings` reads from the manifest text `code`. */
+  function stringsOf(code: string): string[] {
+    const values: string[] = []
+    const probe = {
+      rules: {
+        probe: {
+          create: () => ({
+            Document(node: { body: Parameters<typeof declaredMcpStrings>[0] }) {
+              values.push(...declaredMcpStrings(node.body).map(({ value }) => value))
+            },
+          }),
+        },
+      },
+    }
+    new Linter().verify(
+      code,
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, probe },
+          language: 'json/json',
+          rules: { 'probe/probe': 'error' },
+        },
+      ],
+      { filename: 'x.json' },
+    )
+    return values
+  }
+
+  it('reads a string value', () => {
+    expect(stringsOf('{"mcpServers": "./a.mcpb"}')).toEqual(['./a.mcpb'])
+  })
+  it('reads the string items of an array, and skips the other items', () => {
+    expect(stringsOf('{"mcpServers": ["./a.json", {"db": {}}, 1, null, "./b.dxt", []]}')).toEqual([
+      './a.json',
+      './b.dxt',
+    ])
+  })
+  it('reads the last mcpServers member', () => {
+    expect(stringsOf('{"mcpServers": "./a.json", "mcpServers": "./b.json"}')).toEqual(['./b.json'])
+    expect(stringsOf('{"mcpServers": "./a.json", "mcpServers": {}}')).toEqual([])
+  })
+  it('gives nothing for an inline map, a scalar, a missing key or a body that is no object', () => {
+    expect(stringsOf('{"mcpServers": {"a": "./a.json"}}')).toEqual([])
+    expect(stringsOf('{"mcpServers": 1}')).toEqual([])
+    expect(stringsOf('{"mcpServers": null}')).toEqual([])
+    expect(stringsOf('{"name": "p"}')).toEqual([])
+    expect(stringsOf('["./a.json"]')).toEqual([])
+    expect(stringsOf('"./a.json"')).toEqual([])
+  })
 })

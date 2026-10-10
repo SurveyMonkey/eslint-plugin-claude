@@ -658,6 +658,30 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "mcp-anthropic-hosted-url": [
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Server is Anthropic-hosted and doesn't support local OAuth",
+      "hash": "9bc11fdf30f8a56c58272ef55303938cda39199e98c56b6c8546e37274ea4577"
+    }
+  ],
+  "mcp-approval-committed": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enableAllProjectMcpServers",
+      "hash": "bd1f5be1083d2c379fb8009da3964e3f60ee0cedf7f664fe139cb4192a5a27bd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledMcpjsonServers",
+      "hash": "77a36a39fd26c3683ecf3beddf4b04dec98035f39fc44b83061e655ab784ac24"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Project server approvals and workspace trust",
+      "hash": "1a22572e8875db0366c846bbda15cb867e2f11fbf32afb6725f8fb740478bcf6"
+    }
+  ],
   "mcp-authorization-header-with-oauth": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -675,6 +699,18 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Credential variables that read as empty",
       "hash": "8313023272a9ec82b3e4788b2e1469b08b6ea3cd85c57a9a8b829331a09ffcec"
+    }
+  ],
+  "mcp-disable-connectors-false": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableClaudeAiConnectors",
+      "hash": "28e1de63bf8382604df73704202b00ff34e0a6ccb3f518894111c669fbe793a3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Disable claude.ai connectors",
+      "hash": "f5cfaaf96dbb64796c1367ff809a5aa977914b425888707d1c75e9542aaa7de1"
     }
   ],
   "mcp-env-expansion-field": [
@@ -763,11 +799,50 @@
       "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
     }
   ],
+  "mcp-policy-entry-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "allowedMcpServers",
+      "hash": "ca2cbd69d3e5a19b4663667cf24cb66de92fc6222f8a990f24d6b3ab66c0ef2b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "deniedMcpServers",
+      "hash": "e703d5859f59901bdedec8cbe836523e1b3b6121369151c25dba68e0f66fede7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Find entries Claude Code dropped",
+      "hash": "89145fe5c80324f843eb18722091ac5cb9165bc6a8c1594fec3566051ebb7b27"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Match servers by URL, command, or name",
+      "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c"
+    }
+  ],
   "mcp-project-dir-default": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Option 3: Add a local stdio server",
       "hash": "a5a82c6934bf4d14831e55e5fd801986344c53038f4010ddfe9cdb5a2347f664"
+    }
+  ],
+  "mcp-project-plugin-bundle": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Plugins shared through a repository",
+      "hash": "83c964091287b63057f43bf3c1b19a3185cec14a58cc3ab1aa3ef66a21cee8fb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "mcpServers",
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Containment and existence",
+      "hash": "f4f1d092910bbad72497a1700cf7664947129613d7fb0a90aa3198e75843b8e8"
     }
   ],
   "mcp-remote-url-empty": [
@@ -784,11 +859,30 @@
       "hash": "30a7b267d3cf703e1c1038d207472a346adfa5e0d2d6223cb3accbc7ec943a38"
     }
   ],
+  "mcp-settings-mcpservers": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    }
+  ],
   "mcp-timeout-min": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Push messages with channels",
       "hash": "aa6ba95bd64d1420826d0aa9749a2e0b6abd049464bb7767a97c5bb030d55c35"
+    }
+  ],
+  "mcp-tool-name-format": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "MCP",
+      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Match MCP tools",
+      "hash": "0226fb9d9f46ba4ec58f198722067d5176d9ee0394766f931e3c0224f170b1a8"
     }
   ],
   "output-style-frontmatter-schema": [
