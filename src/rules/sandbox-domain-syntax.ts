@@ -88,8 +88,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           for (const entry of stringEntries(valueAt(node, ['sandbox', 'network', list]))) {
             const messageId = fault(entry.value)
             if (messageId !== null) {
-              // The sandboxing docs say that Claude Code reads an unbracketed address, so the docs do
-              // not call it invalid, and the note would claim too much.
+              // The sandboxing docs do not call an unbracketed address invalid, so the note would
+              // claim too much.
               const withheld = messageId === 'unbracketedIpv6' ? '' : note
               context.report({
                 node: entry,
