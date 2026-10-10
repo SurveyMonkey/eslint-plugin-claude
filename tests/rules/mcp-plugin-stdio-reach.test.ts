@@ -37,7 +37,7 @@ const stdio = { command: 'node', args: ['server.js'] }
 it.fails('reports a stdio server of a plugin .mcp.json, on the name', () => {
   const found = pluginFile(mapOf({ db: { type: 'stdio', ...stdio } }))
   expect(ids(found)).toEqual(['stdio'])
-  expect(found[0]).toMatchObject({ line: 1, column: 17, endColumn: 21 })
+  expect(found[0]).toMatchObject({ line: 1, column: 16, endColumn: 20 })
   expect(found[0]?.message).toContain('"db"')
 })
 it.fails('reads a server with a command and no type as stdio', () => {

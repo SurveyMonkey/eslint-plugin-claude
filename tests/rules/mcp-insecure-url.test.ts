@@ -16,7 +16,7 @@ const at = (url: unknown, type = 'http') => mapOf({ a: { type, url } })
 it.fails('reports http:// and ws:// to a host that is not loopback, on the url', () => {
   const found = lintProject(NAME, at('http://example.com/mcp'))
   expect(ids(found)).toEqual(['insecure'])
-  expect(found[0]).toMatchObject({ line: 1, column: 49, endColumn: 71 })
+  expect(found[0]).toMatchObject({ line: 1, column: 41, endColumn: 65 })
   expect(found[0]?.message).toContain('"a"')
   expect(found[0]?.message).toContain('example.com')
   expect(ids(lintProject(NAME, at('ws://example.com/socket', 'ws')))).toEqual(['insecure'])
