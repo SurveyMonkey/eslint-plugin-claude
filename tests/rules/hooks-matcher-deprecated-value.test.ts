@@ -23,24 +23,24 @@ describe(`${name}: the removed value`, () => {
     expect([...REMOVED_MATCHER_VALUES]).toEqual([['SessionEnd', ['bypass_permissions_disabled']]])
   })
 
-  it.fails('reports bypass_permissions_disabled on SessionEnd', () => {
+  it('reports bypass_permissions_disabled on SessionEnd', () => {
     expect(ids('SessionEnd', 'bypass_permissions_disabled')).toEqual(['removed'])
   })
 
-  it.fails('reports the value in a list, in either separator', () => {
+  it('reports the value in a list, in either separator', () => {
     expect(ids('SessionEnd', 'logout|bypass_permissions_disabled')).toEqual(['removed'])
     expect(ids('SessionEnd', 'bypass_permissions_disabled, other')).toEqual(['removed'])
     expect(ids('SessionEnd', 'clear,bypass_permissions_disabled|resume')).toEqual(['removed'])
   })
 
-  it.fails('reports once for each removed segment', () => {
+  it('reports once for each removed segment', () => {
     expect(ids('SessionEnd', 'bypass_permissions_disabled|bypass_permissions_disabled')).toEqual([
       'removed',
       'removed',
     ])
   })
 
-  it.fails('is silent for a documented value, a match-all matcher and a value that is no match', () => {
+  it('is silent for a documented value, a match-all matcher and a value that is no match', () => {
     for (const matcher of [
       'logout',
       'other|clear',
@@ -54,18 +54,18 @@ describe(`${name}: the removed value`, () => {
     }
   })
 
-  it.fails('is silent for a regular expression, which the rule cannot read', () => {
+  it('is silent for a regular expression, which the rule cannot read', () => {
     expect(ids('SessionEnd', '^bypass_permissions_disabled$')).toEqual([])
     expect(ids('SessionEnd', 'bypass_.*')).toEqual([])
   })
 
-  it.fails('is silent for the value on another event, and for a matcher that is no string', () => {
+  it('is silent for the value on another event, and for a matcher that is no string', () => {
     expect(ids('SessionStart', 'bypass_permissions_disabled')).toEqual([])
     expect(ids('PreToolUse', 'bypass_permissions_disabled')).toEqual([])
     expect(ids('SessionEnd', ['bypass_permissions_disabled'])).toEqual([])
   })
 
-  it.fails('names the version and the event', () => {
+  it('names the version and the event', () => {
     const [message] = lintJson(
       name,
       settings(hooks('SessionEnd', [command()], 'bypass_permissions_disabled')),
@@ -76,23 +76,23 @@ describe(`${name}: the removed value`, () => {
     )
   })
 
-  it.fails('reports at the matcher value', () => {
+  it('reports at the matcher value', () => {
     const text =
       '{\n  "hooks": {\n    "SessionEnd": [{"matcher": "bypass_permissions_disabled", "hooks": []}]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
-    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 30]])
+    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 32]])
   })
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids('SessionEnd', 'bypass_permissions_disabled', file), file).toEqual(['removed'])
       expect(ids('SessionEnd', 'logout', file), file).toEqual([])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (matcher: string) =>
       frontmatter(
         `SessionEnd:\n  - matcher: ${matcher}\n    hooks:\n      - type: command\n        command: c\n`,
@@ -105,7 +105,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
+  it('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
     expect(ids('SessionEnd', 'bypass_permissions_disabled', FILES.hidden)).toEqual([])
     expect(
       ids('SessionEnd', 'bypass_permissions_disabled', '/repo/.github/hooks/hooks.json'),

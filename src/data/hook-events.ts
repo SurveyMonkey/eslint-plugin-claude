@@ -1,3 +1,5 @@
+import type { HandlerType } from '../hooks-config.ts'
+
 // The hook event names that Claude Code knows. Source: the hooks reference,
 // "Hook lifecycle" (https://code.claude.com/docs/en/hooks#hook-lifecycle),
 // checked on Claude Code 2.1.285. Review this list on or before 2027-03-29,
@@ -125,6 +127,22 @@ export const REMOVED_MATCHER_VALUES: ReadonlyMap<string, readonly string[]> = ne
   ['SessionEnd', ['bypass_permissions_disabled']],
 ])
 
+/** A matcher value that only a later Claude Code sends, with the first version. Source: the hooks
+ *  reference, "Matcher patterns" for `cloud_credential_error` and "Notification" for the three
+ *  `quota_auto_resume_*` values. */
+export const MATCHER_VALUE_SINCE: readonly {
+  event: string
+  values: readonly string[]
+  version: string
+}[] = [
+  { event: 'StopFailure', values: ['cloud_credential_error'], version: '2.1.267' },
+  {
+    event: 'Notification',
+    values: ['quota_auto_resume_fired', 'quota_auto_resume_stale', 'quota_auto_resume_disabled'],
+    version: '2.1.234',
+  },
+]
+
 /** The events whose matcher is a list of exact values with `|` as the one separator. Every other
  *  event with matcher support also accepts `,`, a space and `-`. */
 export const NARROW_MATCHER_EVENTS: readonly string[] = ['FileChanged', 'StopFailure']
@@ -140,3 +158,26 @@ export const ENV_FILE_EVENTS: readonly string[] = [
   'CwdChanged',
   'FileChanged',
 ]
+
+// The fields of a hook handler. Source: the hooks reference, "Hook handler fields"
+// (https://code.claude.com/docs/en/hooks#hook-handler-fields), checked on 2026-10-10. Review this
+// section on or before 2027-04-10.
+
+/** The fields of every handler type. */
+export const COMMON_HANDLER_FIELDS: readonly string[] = [
+  'type',
+  'if',
+  'timeout',
+  'statusMessage',
+  'once',
+]
+
+/** The fields that only one handler type lists, by type. `onFailure` is on `command` and `http` hooks, and
+ *  `continueOnBlock` on `prompt` hooks. */
+export const HANDLER_FIELDS: Readonly<Record<HandlerType, readonly string[]>> = {
+  command: ['command', 'args', 'async', 'asyncRewake', 'shell', 'onFailure'],
+  http: ['url', 'headers', 'allowedEnvVars', 'onFailure'],
+  mcp_tool: ['server', 'tool', 'input'],
+  prompt: ['prompt', 'model', 'continueOnBlock'],
+  agent: ['prompt', 'model'],
+}

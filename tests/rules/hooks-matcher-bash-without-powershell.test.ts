@@ -20,25 +20,25 @@ const ids = (event: string, matcher: unknown, file = FILES.project) =>
   jsonIds(name, settings(hooks(event, [command()], matcher)), file)
 
 describe(`${name}: a matcher that names Bash`, () => {
-  it.fails('reports Bash alone on each tool event', () => {
+  it('reports Bash alone on each tool event', () => {
     for (const event of TOOL_EVENTS) {
       expect(ids(event, 'Bash'), event).toEqual(['bashOnly'])
     }
   })
 
-  it.fails('reports Bash in a list without PowerShell', () => {
+  it('reports Bash in a list without PowerShell', () => {
     expect(ids('PreToolUse', 'Bash|Edit')).toEqual(['bashOnly'])
     expect(ids('PreToolUse', 'Edit, Bash')).toEqual(['bashOnly'])
     expect(ids('PreToolUse', 'Edit,Bash,Write')).toEqual(['bashOnly'])
   })
 
-  it.fails('reports a regular expression that selects Bash and not PowerShell', () => {
+  it('reports a regular expression that selects Bash and not PowerShell', () => {
     for (const matcher of ['^Bash$', 'Bash.*', '(Bash)', '^(Bash|Edit)$', 'Ba.h']) {
       expect(ids('PreToolUse', matcher), matcher).toEqual(['bashOnly'])
     }
   })
 
-  it.fails('is silent when PowerShell is named too', () => {
+  it('is silent when PowerShell is named too', () => {
     for (const matcher of [
       'Bash|PowerShell',
       'PowerShell|Bash',
@@ -49,44 +49,44 @@ describe(`${name}: a matcher that names Bash`, () => {
     }
   })
 
-  it.fails('is silent for a regular expression that selects both tools', () => {
+  it('is silent for a regular expression that selects both tools', () => {
     for (const matcher of [
       '.*',
       'Bash|PowerShell.*',
       '^(Bash|PowerShell)$',
       '.+Shell|Bash',
-      'Bash|Power',
+      'Bash|Power.*',
     ]) {
       expect(ids('PreToolUse', matcher), matcher).toEqual([])
     }
   })
 
-  it.fails('is silent for a matcher that does not select Bash', () => {
+  it('is silent for a matcher that does not select Bash', () => {
     for (const matcher of ['Edit|Write', 'PowerShell', 'bash', 'Bashful', '^Edit$', 'Notebook.*']) {
       expect(ids('PreToolUse', matcher), matcher).toEqual([])
     }
   })
 
-  it.fails('is silent for a match-all matcher, or none', () => {
+  it('is silent for a match-all matcher, or none', () => {
     for (const matcher of [undefined, '', '*']) {
       expect(ids('PreToolUse', matcher), String(matcher)).toEqual([])
     }
   })
 
-  it.fails('is silent for a matcher that is no string, and for one that is no regular expression', () => {
+  it('is silent for a matcher that is no string, and for one that is no regular expression', () => {
     expect(ids('PreToolUse', ['Bash'])).toEqual([])
     expect(ids('PreToolUse', 7)).toEqual([])
     expect(ids('PreToolUse', 'Bash(')).toEqual([])
     expect(ids('PreToolUse', '[Bash')).toEqual([])
   })
 
-  it.fails('is silent for an event that is no tool event', () => {
+  it('is silent for an event that is no tool event', () => {
     for (const event of ['SessionStart', 'SubagentStart', 'Stop', 'FileChanged', 'Notification']) {
       expect(ids(event, 'Bash'), event).toEqual([])
     }
   })
 
-  it.fails('says what to write', () => {
+  it('says what to write', () => {
     const [message] = lintJson(
       name,
       settings(hooks('PreToolUse', [command()], 'Bash')),
@@ -97,22 +97,22 @@ describe(`${name}: a matcher that names Bash`, () => {
     )
   })
 
-  it.fails('reports at the matcher value', () => {
+  it('reports at the matcher value', () => {
     const text = '{\n  "hooks": {\n    "PreToolUse": [{"matcher": "Bash", "hooks": []}]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
-    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 30]])
+    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 32]])
   })
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids('PreToolUse', 'Bash', file), file).toEqual(['bashOnly'])
       expect(ids('PreToolUse', 'Bash|PowerShell', file), file).toEqual([])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = (matcher: string) =>
       frontmatter(
         `PreToolUse:\n  - matcher: ${matcher}\n    hooks:\n      - type: command\n        command: c\n`,
@@ -123,7 +123,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
+  it('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
     expect(ids('PreToolUse', 'Bash', FILES.hidden)).toEqual([])
     expect(ids('PreToolUse', 'Bash', '/repo/.github/hooks/hooks.json')).toEqual([])
   })
