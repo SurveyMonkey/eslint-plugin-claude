@@ -1,8 +1,8 @@
-// By default Claude Code reads an `AGENTS.md` only when no `CLAUDE.md`, `.claude/CLAUDE.md` or
-// `CLAUDE.local.md` exists in the working directory or above it. A CLAUDE.md file that imports
+// By default Claude Code reads an `AGENTS.md` in one case. No `CLAUDE.md`, `.claude/CLAUDE.md` or
+// `CLAUDE.local.md` may exist in the working directory or above it. A CLAUDE.md file that imports
 // the `AGENTS.md`, or links to it, loads it
 // (https://code.claude.com/docs/en/memory#when-claude-code-reads-agents-md). The rule looks at
-// the folder of the linted file and each folder above it, up to the repository root, so each
+// the folder of the linted file and each folder above it, up to the repository root. So each
 // case builds a tree on disk. A file that it cannot read, a dangling link and a link out of the
 // repository give no report. The globs are in tests/configs.test.ts.
 import path from 'node:path'

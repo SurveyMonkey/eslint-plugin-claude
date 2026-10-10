@@ -1,8 +1,8 @@
 // The `@path` imports of an instruction file, for each rule that reads them
 // (https://code.claude.com/docs/en/memory#import-additional-files). The module
-// has three parts: the parser, the lookup of a target in the repository bound,
-// and the walk along the chain of imports. A rule reads no file out of the
-// repository, and makes no report that rests on a file that it cannot read
+// has three parts. These are the parser, the lookup of a target in the
+// bound, and the walk along the chain of imports. A rule reads no file out of the
+// repository. It makes no report that rests on a file that it cannot read
 // (ADR 001, Decision 14).
 //
 // The docs say that the parser skips code spans and fenced code blocks.
@@ -14,8 +14,8 @@
 // - A path that starts with a quote is not an import.
 // - Only a fence of backticks or tildes counts as a fenced block. An indented
 //   block is not skipped, because the docs do not name it.
-// - The text of an HTML comment is not an import, because Claude Code strips
-//   a block comment before it injects the file.
+// - The text of an HTML comment is not an import. Claude Code strips a block
+//   comment before it injects the file.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { danglingOf, isInside, realOf, UNREADABLE, type Unreadable } from './skill-tree.ts'
@@ -147,8 +147,8 @@ export function parseImports(text: string): MemoryImport[] {
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i
 
 /** The paths to try for `imported`, or none when the rule does not check it.
- *  The docs do not say how Claude Code treats a mark at the end of a path, or
- *  a `#` part. So a path is there when any of its forms is there. A path that
+ *  The docs do not say how Claude Code treats an end mark or a `#` part.
+ *  So a path is there when any of its forms is there. A path that
  *  starts with `~` is in the home directory, out of the repository. */
 export function candidates(imported: MemoryImport): string[] {
   if (imported.path.startsWith('~') || SCHEME.test(imported.path)) {
@@ -167,9 +167,9 @@ export function candidates(imported: MemoryImport): string[] {
 export type Located = { real: string } | 'missing' | Unreadable
 
 /** The result for a path where `realOf` gives null. The helper walks up to the
- *  nearest part that exists. The result is `UNREADABLE` when it meets an
- *  entry that is a dangling link, a part that it cannot read, or a real path
- *  out of `bound`. Otherwise the path is missing. */
+ *  nearest part that exists. The result is `UNREADABLE` in three cases. The
+ *  helper meets a dangling link. It meets a part that it cannot read. The
+ *  real path is out of `bound`. Otherwise the path is missing. */
 function missingOf(file: string, bound: string): 'missing' | Unreadable {
   const rest: string[] = []
   let at = path.resolve(file)
@@ -187,8 +187,8 @@ function missingOf(file: string, bound: string): 'missing' | Unreadable {
     : UNREADABLE
 }
 
-/** Find `file`. A real path out of `bound` is `UNREADABLE`, as is a dangling
- *  link and a path that the rule cannot read. */
+/** Find `file`. A real path out of `bound` is `UNREADABLE`. So is a dangling
+ *  link, and so is a path that the rule cannot read. */
 export function locate(file: string, bound: string): Located {
   const real = realOf(file)
   if (typeof real === 'string') {
@@ -208,8 +208,8 @@ export function readImported(real: string): string | null | Unreadable {
 }
 
 /** The first of `forms`, resolved in `dir`, that is a file or directory in
- *  `bound`; or `'missing'` when none is there and all could be read; or
- *  `UNREADABLE` when none is there and some could not be read. */
+ *  `bound`. The result is `'missing'` when none is there and all could be
+ *  read. It is `UNREADABLE` when none is there and some could not be read. */
 export function findImport(dir: string, forms: string[], bound: string): Located {
   let result: Located = 'missing'
   for (const form of forms) {
@@ -228,7 +228,7 @@ export function findImport(dir: string, forms: string[], bound: string): Located
 export interface Chain {
   /** The real path of each file that Claude Code loads, with its hops from the root. The root is at 0. */
   loaded: Map<string, number>
-  /** For each import of the root, by index, that leads to a file past the limit: the real path of that file. */
+  /** The real path of the file past the limit, for each import of the root that leads to one. The key is the index of the import. */
   tooDeep: Map<number, string>
   /** True when a file or link in the chain could not be read. */
   unreadable: boolean

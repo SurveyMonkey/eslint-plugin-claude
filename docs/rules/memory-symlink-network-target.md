@@ -20,10 +20,10 @@ Do not link a `CLAUDE.md` or a rule to a network path.
 
 ## Rule details
 
-Claude Code reads a `CLAUDE.md` or a file in `.claude/rules/` through a link. If the link leads to
-a network path, it does not follow the link, because a lookup of such a path can contact the host
-that it names. The instructions in the target do not load.[^symlinks] The docs name two kinds of
-network path: the UNC share `\\server\share`, and a path under `/net` or `/Network`. They say that
+Claude Code reads a `CLAUDE.md`, or a file in `.claude/rules/`, through a link. It does not follow
+a link to a network path. A lookup of such a path can contact the host that it names. The
+instructions in the target do not load.[^symlinks] The docs name two kinds of network path. One is
+the UNC share `\\server\share`. The other is a path under `/net` or `/Network`. The docs say that
 `\\wsl$` paths do not count as network paths.[^symlinks]
 
 The rule reports a file when one of these is a link with such a target:
@@ -34,8 +34,7 @@ The rule reports a file when one of these is a link with such a target:
   folder moves the files below it.
 
 The rule reads the text of the link and nothing else. It never follows the link, so it contacts no
-host. It stops at the first link of that kind, because a look at a path below it would follow the
-link.
+host. It stops at the first link of that kind. A look at a path below it would follow the link.
 
 Fail:
 
@@ -59,8 +58,8 @@ The rule reads a target as a network path in these cases:
 
 It does not read these as network paths:
 
-- `\\wsl$` and `\\wsl.localhost`. The docs name the first one. The second one is the other name of
-  the same machine-local path, and the docs do not name it, so the rule makes no report for it.
+- `\\wsl$` and `\\wsl.localhost`. The docs name the first one. The second one is another name for
+  the same local path. The docs do not name it, so the rule makes no report for it.
 - `\\?\C:\...` and `\\.\pipe\...`. They are local.
 - `//server/share`. The docs name the backslash form. On Linux and macOS, `//server` is the same
   as `/server`.

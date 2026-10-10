@@ -2,7 +2,7 @@
 // (https://code.claude.com/docs/en/memory#import-additional-files). Claude Code resolves a
 // relative path against the folder of the file that holds the import. The rule reads the
 // repository around the file, so each case builds a tree on disk. The rule reports only what
-// it can read inside the repository: a path out of it, a dangling link or a folder that it
+// it can read inside the repository. A path out of it, a dangling link or a folder that it
 // cannot read gets no report. The globs are in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -75,6 +75,12 @@ describe(`${RULE}: where a relative path starts`, () => {
     expect(ids(lint('@none.md\n', SHARED, '.claude/AGENTS.md'))).toEqual(['missing'])
     expect(ids(lint('@none.md\n', SHARED, 'CLAUDE.local.md'))).toEqual(['missing'])
     expect(ids(lint('@README.md\n', SHARED, 'AGENTS.md'))).toEqual([])
+  })
+
+  it('checks a CLAUDE.md or an AGENTS.md below .claude/rules, which is a rule file', () => {
+    expect(ids(lint('@none.md\n', SHARED, '.claude/rules/CLAUDE.md'))).toEqual(['missing'])
+    expect(ids(lint('@none.md\n', SHARED, '.claude/rules/AGENTS.md'))).toEqual(['missing'])
+    expect(lint('@../../README.md\n', SHARED, '.claude/rules/CLAUDE.md')).toEqual([])
   })
 
   it('does not check a file that Claude Code never reads', () => {

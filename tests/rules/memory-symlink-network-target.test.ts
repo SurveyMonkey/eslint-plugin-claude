@@ -1,8 +1,8 @@
 // A `CLAUDE.md` or `.claude/rules/` symlink, a file or a folder, that leads to a network path is
-// not followed: the UNC share `\\server\share`, or a path under `/net` or `/Network`. `\\wsl$`
-// paths do not count as network paths
+// not followed. The network paths are the UNC share `\\server\share`, and a path under `/net` or
+// `/Network`. The `\\wsl$` paths do not count as network paths
 // (https://code.claude.com/docs/en/memory#share-rules-across-projects-with-symlinks). The rule
-// reads the text of the link only. It never follows the link, because a lookup of such a path can
+// reads the text of the link only. It never follows the link. A lookup of such a path can
 // contact the host. Each case makes a real link on disk, which leads nowhere on this machine. The
 // globs are in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'

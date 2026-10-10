@@ -1,6 +1,6 @@
 // A chain of `@path` imports loads to a depth of four hops
 // (docs/rules/claude-md-import-max-depth.md). A file at hop five, and each file past it, does
-// not load. The rule follows the chain on disk from the linted file, and reports the import of
+// not load. The rule follows the chain on disk from the linted file. It reports the import of
 // that file that starts a chain which is too long. A path that the rule cannot read ends the
 // chain there, and gives no report (ADR 001, Decision 14).
 import path from 'node:path'

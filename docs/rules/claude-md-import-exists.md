@@ -37,36 +37,37 @@ See @docs/git-instructions.md for the workflow.
 Use `@docs/missing.md` to write a path as text.
 ```
 
-The rule reads a token as the docs and Claude Code read it:
+The rule finds a token in these steps:
 
 - An `@` starts an import at the start of the text or after white space. An email address is not
   an import.[^import]
 - The path ends at the first white space. A backslash before a space keeps the space in the
   path.[^import]
 - A path in quotes is not an import.[^import]
-- A code span and a fenced block are not text. Only a fence of backticks or tildes counts. An
-  indented block is not skipped, because the docs do not name it.[^import]
-- The text of an HTML comment is not an import. Claude Code strips a block comment before it
-  loads the file. The docs do not say what happens to an import in it, so the rule makes no report
-  there.
+- A code span and a fenced block hold no import. Only a fence of backticks or tildes counts. The
+  rule does not skip an indented block, because the docs do not name it.[^import]
+- The text of an HTML comment holds no import. Claude Code strips a block comment before it loads
+  the file. The docs do not say what happens to an import in it, so the rule makes no report there.
 
-The docs do not say how Claude Code treats a mark at the end of a path, such as a full stop, or a
-`#` part. So the rule accepts a path when the path as written, the path without the end marks, or
-the path without the `#` part names a file. An import of a folder passes, because the rule checks
-only that the path exists.
+The docs do not say how Claude Code treats an end mark, such as a full stop. They do not say how
+it treats a `#` part either. So the rule tries three forms of the path. These are
+the path as written, without the end marks, and without the `#` part. One of them must name a
+file or a folder. An import of a folder passes, because the rule checks only that the path exists.
 
 The rule makes no report for a path that it cannot check:
 
 - A path that starts with `~`, or with a URL scheme. It is out of the repository.
-- A path with a real path out of the repository, an absolute path out of it, or a `../` path that
-  leaves it. The rule reads no file out of the repository.
+- A path with a real path out of the repository. This holds for an absolute path and for a `../`
+  path too. The rule reads no file out of the repository.
 - A path below a link that leads nowhere, and a folder that the rule has no right to read.
 
 The rule lints `CLAUDE.md`, `CLAUDE.local.md` and `AGENTS.md`, because Claude Code expands the
-imports of all three.[^agents] A file below `.agents/` is not read by Claude Code, so the rule
-skips it. The rule checks the imports of the linted file only. It does not follow an imported
-file. To check the imports of an imported Markdown file, add its path to the `files` of a config
-block for this rule.
+imports of all three.[^agents] It also lints a `CLAUDE.md` or `AGENTS.md` below `.claude/rules/`.
+Claude Code expands the imports of a rule file too. The docs name `~/.claude/rules/`.[^import] A
+file below `.agents/` is not read by Claude Code, so the rule skips it.
+
+The rule checks the imports of the linted file only. It does not follow an imported file. To check
+an imported Markdown file, add its path to the `files` of a config block for this rule.
 
 ## Options
 
@@ -74,9 +75,8 @@ block for this rule.
 |--------|---------|-----|
 | `ignorePattern` | none | A regular expression. The rule skips a token when the expression matches `@` and the path. Optional. |
 
-The docs do not define a token any further than the rules above. So a word such as `@scope/pkg` or
-`@types/node` in the text is read as an import, and the rule reports it. Use the option for such
-text.
+The docs define a token no further than the steps above. So the rule reports a word such as
+`@scope/pkg` or `@types/node` in the text. Use the option for such text.
 
 ```js
 'claude/claude-md-import-exists': ['error', { ignorePattern: '^@(types|scope)/' }]

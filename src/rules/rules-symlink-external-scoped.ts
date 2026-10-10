@@ -1,9 +1,10 @@
 // A rule file with `paths` that Claude Code reaches through a link out of the repository
 // (docs/rules/rules-symlink-external-scoped.md). Claude Code treats such a link as an external
-// import. The linked rules do not load until you approve external imports, and after that only
-// the rules with no `paths` load. So a rule with `paths` never loads. The rule asks where the real
-// path of the linted file is, and reads nothing in the target: ESLint gave it the text. It makes
-// no report for a link that leads nowhere or a path that it cannot read (ADR 001, Decision 14).
+// import. The linked rules do not load until you approve external imports. After that, only the
+// rules with no `paths` load. So a rule with `paths` never loads. The rule asks where the real
+// path of the linted file is. It reads nothing in the target, because ESLint gave it the text.
+// It makes no report for a link that leads nowhere. It makes none for a path that it cannot read
+// (ADR 001, Decision 14).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -36,7 +37,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'neverLoads' }> = {
     schema: [],
     messages: {
       neverLoads:
-        'This rule is reached through a link that leads out of the repository. Claude Code loads such a rule only after you approve external imports, and only if it has no `paths`. So this rule never loads. Remove `paths`, or move the file into the repository.',
+        'Claude Code reaches this rule through a link that leads out of the repository. It loads such a rule only after you approve external imports, and only if the rule has no `paths`. So this rule never loads. Remove `paths`, or move the file into the repository.',
     },
   },
   create(context) {
