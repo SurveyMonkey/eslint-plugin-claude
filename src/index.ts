@@ -96,6 +96,7 @@ import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.t
 import mcpAllowDenyOverlap from './rules/mcp-allow-deny-overlap.ts'
 import mcpAllowlistEmpty from './rules/mcp-allowlist-empty.ts'
 import mcpAllowlistServernameDead from './rules/mcp-allowlist-servername-dead.ts'
+import mcpAlwaysLoadCount from './rules/mcp-always-load-count.ts'
 import mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
 import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
 import mcpApprovalConflict from './rules/mcp-approval-conflict.ts'
@@ -106,6 +107,8 @@ import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
 import mcpDuplicateServerName from './rules/mcp-duplicate-server-name.ts'
 import mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
 import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
+import mcpEnvVarNumbers from './rules/mcp-env-var-numbers.ts'
+import mcpEnvVarSyntax from './rules/mcp-env-var-syntax.ts'
 import mcpHeadershelperCommitted from './rules/mcp-headershelper-committed.ts'
 import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
 import mcpHeadershelperPath from './rules/mcp-headershelper-path.ts'
@@ -115,6 +118,7 @@ import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
 import mcpJsonLocation from './rules/mcp-json-location.ts'
 import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
 import mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
+import mcpNoLiteralSecrets from './rules/mcp-no-literal-secrets.ts'
 import mcpNoSseTransport from './rules/mcp-no-sse-transport.ts'
 import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
 import mcpOauthValues from './rules/mcp-oauth-values.ts'
@@ -125,6 +129,7 @@ import mcpPolicyLiteralValues from './rules/mcp-policy-literal-values.ts'
 import mcpPolicyServernameWeak from './rules/mcp-policy-servername-weak.ts'
 import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
 import mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
+import mcpProjectToggleKeys from './rules/mcp-project-toggle-keys.ts'
 import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
 import mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skills.ts'
 import mcpServerNameFormat from './rules/mcp-server-name-format.ts'
@@ -133,6 +138,7 @@ import mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
 import mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
 import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
 import mcpToolNameFormat from './rules/mcp-tool-name-format.ts'
+import mcpToolServerUnknown from './rules/mcp-tool-server-unknown.ts'
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
 import memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
 import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
@@ -543,6 +549,12 @@ const modules = [
   mcpPluginStdioReach,
   mcpPolicyLiteralValues,
   mcpPolicyServernameWeak,
+  mcpAlwaysLoadCount,
+  mcpEnvVarNumbers,
+  mcpEnvVarSyntax,
+  mcpNoLiteralSecrets,
+  mcpProjectToggleKeys,
+  mcpToolServerUnknown,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -835,6 +847,12 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-server-name-anthropic-skills': 'warn',
   'mcp-server-name-format': 'warn',
   'mcp-stdio-relative-path': 'warn',
+  'mcp-always-load-count': 'off',
+  'mcp-env-var-numbers': 'off',
+  'mcp-env-var-syntax': 'off',
+  'mcp-no-literal-secrets': 'off',
+  'mcp-project-toggle-keys': 'off',
+  'mcp-tool-server-unknown': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

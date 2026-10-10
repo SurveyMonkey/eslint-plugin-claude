@@ -10,18 +10,22 @@ import { keyOf } from '../src/marketplace-json.ts'
 import {
   declaredMcpStrings,
   isUnreadMcpPath,
+  jsonBodyState,
   MANAGED_SERVER_TYPES,
   type McpFileKind,
   mcpFileKind,
   parseUrl,
   pluginMcpDeclarations,
+  pluginMcpSources,
   policyKey,
   REMOTE_SERVER_TYPES,
   readJsonBody,
   repeatedDeclarations,
   SERVER_NAME_PATTERN,
+  sanitizeName,
   serverMembers,
 } from '../src/mcp-servers.ts'
+import { UNREADABLE } from '../src/skill-tree.ts'
 
 // `repo/` is the repository. `outside/` is a sibling that holds the target of a link.
 let scratch = ''
@@ -228,6 +232,30 @@ describe('readJsonBody', () => {
   })
 })
 
+describe('jsonBodyState', () => {
+  it('gives the value of a file that parses, and null for a file that is not there', () => {
+    expect((jsonBodyState(put(rp('s.json'), '{"x": 1}'), rp()) as { type: string }).type).toBe(
+      'Object',
+    )
+    expect(jsonBodyState(rp('none.json'), rp())).toBeNull()
+  })
+  it('gives UNREADABLE for a file that does not parse, is too deep, or has a link out', () => {
+    expect(jsonBodyState(put(rp('bad.json'), '{ no'), rp())).toBe(UNREADABLE)
+    expect(
+      jsonBodyState(put(rp('deep.json'), `${'['.repeat(200_000)}${']'.repeat(200_000)}`), rp()),
+    ).toBe(UNREADABLE)
+    put(path.join(realpathSync(scratch), 'outside', 'o.json'), '{}')
+    symlinkSync(path.join(realpathSync(scratch), 'outside', 'o.json'), rp('link.json'))
+    expect(jsonBodyState(rp('link.json'), rp())).toBe(UNREADABLE)
+  })
+})
+
+describe('sanitizeName', () => {
+  it('replaces each character outside A-Za-z0-9_- with an underscore', () => {
+    expect(sanitizeName('my.plugin name-1_x')).toBe('my_plugin_name-1_x')
+  })
+})
+
 describe('pluginMcpDeclarations', () => {
   const names = (root: string, manifest: string | null) =>
     pluginMcpDeclarations(
@@ -248,6 +276,50 @@ describe('pluginMcpDeclarations', () => {
   it('keeps the last of two members of one name in one source', () => {
     const manifest = '{"mcpServers": {"a": {"command": "x"}, "a": {"command": "y"}}}'
     expect(names(rp('r'), manifest)).toEqual(['a@an inline map'])
+  })
+})
+
+describe('pluginMcpSources', () => {
+  const sources = (root: string, manifest: string | null) =>
+    pluginMcpSources(
+      root,
+      manifest === null ? null : (readJsonBody(put(rp('m.json'), manifest), rp()) ?? null),
+    )
+
+  it('gives the declarations of pluginMcpDeclarations, and complete for readable sources', () => {
+    put(rp('p', '.mcp.json'), '{"mcpServers": {"a": {}}}')
+    put(rp('p', 'f.json'), '{"b": {}}')
+    const found = sources(rp('p'), '{"mcpServers": ["./f.json", {"c": {}}]}')
+    expect(found.declarations.map((d) => d.name)).toEqual(['a', 'b', 'c'])
+    expect(found.complete).toBe(true)
+  })
+  it('is complete for a plugin with no root file and no manifest, and for a file named twice', () => {
+    expect(sources(rp('q'), null).complete).toBe(true)
+    put(rp('r', 'f.json'), '{"b": {}}')
+    expect(sources(rp('r'), '{"mcpServers": ["./f.json", "./f.json", {"c": {}}]}').complete).toBe(
+      true,
+    )
+  })
+  it('is incomplete for a root file that cannot be seen', () => {
+    put(rp('s', '.mcp.json'), '{ no')
+    expect(sources(rp('s'), null).complete).toBe(false)
+  })
+  it('is incomplete for each string that leads to no .json file that reads', () => {
+    put(rp('t', 'bad.json'), '{ no')
+    for (const value of [
+      '"./gone.json"',
+      '"./b.mcpb"',
+      '"https://x.test/b.mcpb"',
+      '"../o.json"',
+      '"./bad.json"',
+    ]) {
+      expect(sources(rp('t'), `{"mcpServers": [${value}]}`).complete, value).toBe(false)
+    }
+  })
+  it('is incomplete when a later string fails, after an earlier one that read', () => {
+    put(rp('u', 'ok.json'), '{"b": {}}')
+    expect(sources(rp('u'), '{"mcpServers": ["./ok.json", "./gone.json"]}').complete).toBe(false)
+    expect(sources(rp('u'), '{"mcpServers": ["./gone.json", "./ok.json"]}').complete).toBe(false)
   })
 })
 

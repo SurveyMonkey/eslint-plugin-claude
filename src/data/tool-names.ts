@@ -122,6 +122,20 @@ export const MCP_PREFIX = 'mcp__'
 /** The separator between the server and the tool in an MCP tool name. */
 export const MCP_SEPARATOR = '__'
 
+/** The start of the server name in the tool of a claude.ai connector that Claude Code fetches
+ *  itself: `mcp__claude_ai_<server>__<tool>`. Source: the "MCP" section
+ *  (https://code.claude.com/docs/en/permissions#mcp). */
+export const MCP_CONNECTOR_PREFIX = 'claude_ai_'
+
+/** The start of the server name in the tool of a plugin server:
+ *  `mcp__plugin_<plugin>_<server>__<tool>`. Source: "Plugin-provided MCP servers"
+ *  (https://code.claude.com/docs/en/mcp#plugin-provided-mcp-servers). */
+export const MCP_PLUGIN_PREFIX = 'plugin_'
+
+/** The server name of the tools that Cowork provides, such as `mcp__workspace__bash`. Source:
+ *  the "MCP" section (https://code.claude.com/docs/en/permissions#mcp). */
+export const MCP_COWORK_SERVER = 'workspace'
+
 /** The tools that Claude Code removes from every subagent, even when the
  *  `tools` field lists them. `Agent` at the depth limit and `ExitPlanMode`
  *  outside plan mode are conditional, so they are not here. Source: the first

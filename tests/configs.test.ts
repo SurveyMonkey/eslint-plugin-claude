@@ -1640,6 +1640,49 @@ const TREE: Record<string, string> = {
   'plugins/ts/agents/a.md': '---\nname: a\ndescription: d\ntools: mcp__db__q\n---\n',
   'plugins/ts/skills/o/SKILL.md': '---\nallowed-tools: mcp__other__q mcp__plugin_ts_db__q\n---\n',
   'plugins/ts/docs/SKILL.md': '---\nallowed-tools: mcp__db__q\n---\n',
+  // The `off` rules of #16 read these trees. `mcp-tool-server-unknown`: a server that `.mcp.json`
+  // lacks, in each project file, a skill and a command. A managed file and a skill outside a
+  // skills folder are silent.
+  'packages/tu/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
+  'packages/tu/.claude/settings.json': '{"permissions": {"allow": ["mcp__nope__t"]}}',
+  'packages/tu/.claude/settings.local.json': '{"permissions": {"deny": ["mcp__nope__t"]}}',
+  'packages/tu/.claude/skills/s/SKILL.md': '---\nallowed-tools: mcp__nope__t\n---\n',
+  'packages/tu/.claude/commands/c.md': '---\nallowed-tools: mcp__nope__t\n---\n',
+  'packages/tu/managed-settings.json': '{"permissions": {"allow": ["mcp__nope__t"]}}',
+  'packages/tu/docs/SKILL.md': '---\nallowed-tools: mcp__nope__t\n---\n',
+  // `mcp-project-toggle-keys` and `mcp-env-var-numbers`: the key and the value in each settings
+  // file. A hidden drop-in is for `settings-managed-file`.
+  'packages/tk/.claude/settings.json':
+    '{"disabledMcpServers": ["a"], "env": {"MCP_TIMEOUT": "30"}}',
+  'packages/tk/.claude/settings.local.json': '{"enabledMcpServers": ["a"]}',
+  'packages/tk/managed-settings.json': '{"env": {"MCP_TOOL_TIMEOUT": "30"}}',
+  'packages/tk/managed-settings.d/10-a.json': '{"disabledMcpServers": ["a"]}',
+  'packages/tk/managed-settings.d/.20-hidden.json':
+    '{"disabledMcpServers": ["a"], "env": {"MCP_TIMEOUT": "30"}}',
+  'packages/tk/.vscode/settings.json':
+    '{"disabledMcpServers": ["a"], "env": {"MCP_TIMEOUT": "30"}}',
+  // `mcp-always-load-count`: three servers with `alwaysLoad`, and a project with two.
+  'packages/al/.mcp.json': JSON.stringify({
+    mcpServers: {
+      a: { command: 'x', alwaysLoad: true },
+      b: { command: 'x', alwaysLoad: true },
+      c: { command: 'x', alwaysLoad: true },
+    },
+  }),
+  'packages/al/two/.mcp.json': JSON.stringify({
+    mcpServers: { a: { command: 'x', alwaysLoad: true }, b: { command: 'x', alwaysLoad: true } },
+  }),
+  // `mcp-no-literal-secrets` and `mcp-env-var-syntax`: a literal token and a `$VAR`, in
+  // `.mcp.json` and `managed-mcp.json`. The same content in another file is silent.
+  'packages/sk/.mcp.json': JSON.stringify({
+    mcpServers: { a: { command: '$HOME/bin/x', env: { API_KEY: 'abc123' } } },
+  }),
+  'packages/sk/managed-mcp.json': JSON.stringify({
+    mcpServers: { a: { command: 'x', env: { API_KEY: 'abc123' } } },
+  }),
+  'packages/sk/other.json': JSON.stringify({
+    mcpServers: { a: { command: '$HOME/bin/x', env: { API_KEY: 'abc123' } } },
+  }),
   // `mcp-approval-names-exist`: a name that `.mcp.json` does not declare, in each project file.
   // The managed files are silent.
   'packages/an/.mcp.json': '{"mcpServers": {"db": {"command": "x"}}}',
@@ -2208,6 +2251,23 @@ const MCP_RULES: {
   },
   { name: 'mcp-policy-literal-values', files: MANAGED_FILES, severity: 'warn' },
   { name: 'mcp-policy-servername-weak', files: MANAGED_FILES, severity: 'warn' },
+]
+
+// The `off` rules of #16, in the order of the `modules` list. `strict` turns each on at `warn`.
+const MCP_OFF_RULES: { name: string; files: string[]; markdown?: string[] }[] = [
+  { name: 'mcp-always-load-count', files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'] },
+  { name: 'mcp-env-var-numbers', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'mcp-env-var-syntax', files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'] },
+  {
+    name: 'mcp-no-literal-secrets',
+    files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
+  },
+  { name: 'mcp-project-toggle-keys', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  {
+    name: 'mcp-tool-server-unknown',
+    files: PROJECT_FILES,
+    markdown: ['**/SKILL.md', '**/commands/**/*.md'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -2904,6 +2964,9 @@ const EXPECTED = [
   'plugins/ts/skills/o/SKILL.md: claude/skill-description-present@1',
   'plugins/ts/skills/s/SKILL.md: claude/skill-description-present@1',
   'plugins/ts/agents/a.md: claude/mcp-plugin-tool-name-scoped@2',
+  // The `off` rules report in `strict` only. These files get the reports of other rules.
+  'packages/tk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/tu/.claude/commands/c.md: claude/command-legacy-format@1',
   'packages/an/.claude/settings.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.local.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.json: claude/mcp-approval-committed@2',
@@ -3040,6 +3103,23 @@ const STRICT_ONLY = [
   'packages/oa-home/.claude/settings.json: claude/statusline-home-path-shared@1',
   'packages/oa-size/.claude/settings.json: claude/statusline-script-terminal-size@1',
   'packages/oa-size/managed-settings.json: claude/statusline-script-terminal-size@1',
+  // The reports of the `off` MCP rules.
+  'packages/al/.mcp.json: claude/mcp-always-load-count@1',
+  // The two servers of the bad project file that hold a literal header credential.
+  'packages/mc/.mcp.json: claude/mcp-no-literal-secrets@1',
+  'packages/mc/.mcp.json: claude/mcp-no-literal-secrets@1',
+  'packages/sk/.mcp.json: claude/mcp-env-var-syntax@1',
+  'packages/sk/.mcp.json: claude/mcp-no-literal-secrets@1',
+  'packages/sk/managed-mcp.json: claude/mcp-no-literal-secrets@1',
+  'packages/tk/.claude/settings.json: claude/mcp-env-var-numbers@1',
+  'packages/tk/.claude/settings.json: claude/mcp-project-toggle-keys@1',
+  'packages/tk/.claude/settings.local.json: claude/mcp-project-toggle-keys@1',
+  'packages/tk/managed-settings.json: claude/mcp-env-var-numbers@1',
+  'packages/tk/managed-settings.d/10-a.json: claude/mcp-project-toggle-keys@1',
+  'packages/tu/.claude/commands/c.md: claude/mcp-tool-server-unknown@1',
+  'packages/tu/.claude/settings.json: claude/mcp-tool-server-unknown@1',
+  'packages/tu/.claude/settings.local.json: claude/mcp-tool-server-unknown@1',
+  'packages/tu/.claude/skills/s/SKILL.md: claude/mcp-tool-server-unknown@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -3230,6 +3310,8 @@ const OFF_RULES = [
   ...MARKET_SETTINGS_OFF_RULES,
   ...MEMORY_OFF_RULES,
   ...SETTINGS_OFF_RULES.map(({ name }) => name),
+  // A rule with a Markdown target has two blocks, so it appears twice.
+  ...MCP_OFF_RULES.flatMap(({ name, markdown }) => (markdown ? [name, name] : [name])),
 ]
 
 let root = ''
@@ -3421,6 +3503,9 @@ describe('configs', () => {
       ...MCP_RULES.flatMap(({ name, markdown }) =>
         (markdown ? [name, name] : [name]).map((block) => `claude/strict/${block}`),
       ),
+      ...MCP_OFF_RULES.flatMap(({ name, markdown }) =>
+        (markdown ? [name, name] : [name]).map((block) => `claude/strict/${block}`),
+      ),
     ])
   })
 
@@ -3430,6 +3515,17 @@ describe('configs', () => {
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       const files = DESCRIPTION_RULES.includes(rule) ? ['**/*.md'] : ['**/agents/**/*.md']
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['markdown/gfm', files]])
+    }
+  })
+
+  it('turns each off MCP rule on in strict only, on the files that it reads', () => {
+    for (const { name, files, markdown } of MCP_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['json/json', files],
+        ...(markdown ? [['markdown/gfm', markdown]] : []),
+      ])
     }
   })
 
