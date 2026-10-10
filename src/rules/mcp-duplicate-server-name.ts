@@ -7,7 +7,7 @@
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { pluginMcpDeclarations } from '../mcp-servers.ts'
+import { pluginMcpDeclarations, repeatedDeclarations } from '../mcp-servers.ts'
 
 const name = 'mcp-duplicate-server-name' as const
 
@@ -29,18 +29,14 @@ const rule: JSONRuleDefinition<{ MessageIds: 'duplicate' }> = {
     const root = path.dirname(path.dirname(path.resolve(context.filename)))
     return {
       Document(node) {
-        const seen = new Map<string, string>()
-        for (const declaration of pluginMcpDeclarations(root, node.body)) {
-          const earlier = seen.get(declaration.name)
-          if (earlier === undefined) {
-            seen.set(declaration.name, declaration.from)
-          } else {
-            context.report({
-              node: declaration.node,
-              messageId: 'duplicate',
-              data: { server: declaration.name, from: earlier },
-            })
-          }
+        for (const { declaration, earlier } of repeatedDeclarations(
+          pluginMcpDeclarations(root, node.body),
+        )) {
+          context.report({
+            node: declaration.node,
+            messageId: 'duplicate',
+            data: { server: declaration.name, from: earlier },
+          })
         }
       },
     }

@@ -22,19 +22,19 @@ function lint(code: string, files: Record<string, string> = {}) {
 }
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
-it.fails('reports a name that .lsp.json and the inline map both declare, on the inline name', () => {
+it('reports a name that .lsp.json and the inline map both declare, on the inline name', () => {
   const found = lint(manifest(inline('go', 'rs')), { 'p/.lsp.json': lspFile('go') })
   expect(ids(found)).toEqual(['duplicate'])
   expect(found[0]).toMatchObject({ line: 1, column: 27, endColumn: 31 })
   expect(found[0]?.message).toContain('"go"')
   expect(found[0]?.message).toContain('.lsp.json')
 })
-it.fails('reports a name in two inline maps of one array', () => {
+it('reports a name in two inline maps of one array', () => {
   const found = lint(manifest([inline('a', 'go'), inline('go', 'b')]))
   expect(ids(found)).toEqual(['duplicate'])
   expect(found[0]?.message).toContain('an inline map')
 })
-it.fails('reports a name in a declared file and .lsp.json, on the path', () => {
+it('reports a name in a declared file and .lsp.json, on the path', () => {
   const found = lint(manifest('./lsp/servers.json'), {
     'p/.lsp.json': lspFile('go'),
     'p/lsp/servers.json': lspFile('go'),
@@ -42,21 +42,21 @@ it.fails('reports a name in a declared file and .lsp.json, on the path', () => {
   expect(ids(found)).toEqual(['duplicate'])
   expect(found[0]).toMatchObject({ line: 1, column: 26, endColumn: 46 })
 })
-it.fails('reports the declaration that comes later, whichever kind it is', () => {
+it('reports the declaration that comes later, whichever kind it is', () => {
   const found = lint(manifest([inline('go'), './a.json']), { 'p/a.json': lspFile('go') })
   expect(ids(found)).toEqual(['duplicate'])
   expect(found[0]?.message).toContain('an inline map')
 })
-it.fails('stays silent for distinct names', () => {
+it('stays silent for distinct names', () => {
   expect(ids(lint(manifest(inline('go', 'rs')), { 'p/.lsp.json': lspFile('c') }))).toEqual([])
 })
-it.fails('counts a key that one file repeats as one server', () => {
+it('counts a key that one file repeats as one server', () => {
   const twice = '{"go": {"command": "a"}, "go": {"command": "b"}}'
   expect(ids(lint(manifest(inline('x')), { 'p/.lsp.json': twice }))).toEqual([])
   const inlineTwice = '{"lspServers": {"go": {"command": "a"}, "go": {"command": "b"}}}'
   expect(ids(lint(inlineTwice))).toEqual([])
 })
-it.fails('stays silent when the manifest declares nothing that it can read', () => {
+it('stays silent when the manifest declares nothing that it can read', () => {
   const files = { 'p/.lsp.json': lspFile('go') }
   expect(ids(lint('{"name": "p"}', files))).toEqual([])
   expect(ids(lint('[]', files))).toEqual([])
@@ -64,7 +64,7 @@ it.fails('stays silent when the manifest declares nothing that it can read', () 
   expect(ids(lint(manifest([7, null, ['./a.json']]), files))).toEqual([])
   expect(ids(lint(manifest(inline('go')), { 'p/.lsp.json': '[]' }))).toEqual([])
 })
-it.fails('does not read a path with .., a path that is not .json, or an absolute path', () => {
+it('does not read a path with .., a path that is not .json, or an absolute path', () => {
   const files = {
     'p/.lsp.json': lspFile('go'),
     'p/x.txt': lspFile('go'),
@@ -74,13 +74,13 @@ it.fails('does not read a path with .., a path that is not .json, or an absolute
     expect(ids(lint(manifest(declared), files))).toEqual([])
   }
 })
-it.fails('stays silent for a file that is not there, or does not parse', () => {
+it('stays silent for a file that is not there, or does not parse', () => {
   const files = { 'p/.lsp.json': lspFile('go'), 'p/bad.json': '{ not json' }
   expect(ids(lint(manifest('./missing.json'), files))).toEqual([])
   expect(ids(lint(manifest('./bad.json'), files))).toEqual([])
   expect(ids(lint(manifest(inline('go')), { 'p/.lsp.json': '{ not json' }))).toEqual([])
 })
-it.fails('stays silent for a link that leads out of the plugin or out of the repository', () => {
+it('stays silent for a link that leads out of the plugin or out of the repository', () => {
   const root = repo({ 'p/.lsp.json': lspFile('go'), 'other/s.json': lspFile('go') })
   const outside = mkdtempSync(path.join(tmpdir(), 'lsp-dup-outside-'))
   try {
@@ -96,7 +96,7 @@ it.fails('stays silent for a link that leads out of the plugin or out of the rep
     rmSync(outside, { recursive: true, force: true })
   }
 })
-it.fails('keeps the report that the readable files support when one file is locked', () => {
+it('keeps the report that the readable files support when one file is locked', () => {
   const root = repo({
     'p/.lsp.json': lspFile('go'),
     'p/locked.json': lspFile('go'),

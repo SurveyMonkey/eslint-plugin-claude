@@ -80,6 +80,8 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-event-name-known',
     'hooks-script-executable',
     'hooks-script-exists',
+    'lsp-duplicate-server-name',
+    'lsp-extension-conflict',
     'lsp-json-schema',
     'lsp-transport-socket',
     'marketplace-archive-sha256',
