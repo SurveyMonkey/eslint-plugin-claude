@@ -49,10 +49,8 @@ function hasDanglingLink(dir: string, bound: string, seen = new Set<string>()): 
       .filter((entry) => !SKIPPED.has(entry.name))
       .some((entry) => {
         const full = path.join(dir, entry.name)
-        if (entry.isSymbolicLink() && realOf(full) === null) {
-          return true
-        }
-        return hasDanglingLink(full, bound, seen)
+        // `realOf` gives null for an entry that is listed and has no target.
+        return realOf(full) === null || hasDanglingLink(full, bound, seen)
       })
   )
 }

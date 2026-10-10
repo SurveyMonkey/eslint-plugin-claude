@@ -314,7 +314,7 @@ describe(`${RULE} (paths that the rule cannot read)`, () => {
 
     linked('stays silent for a link in a subfolder', () => {
       expect(
-        dangling('agents/team/x.md', { agent: 'reviewer' }, { 'agents/team/y.md': REVIEWER }),
+        dangling('agents/team/x.md', { agent: 'ghost' }, { 'agents/team/y.md': REVIEWER }),
       ).toEqual([])
     })
 
@@ -325,6 +325,14 @@ describe(`${RULE} (paths that the rule cannot read)`, () => {
       link(top, 'shared/x.md', 'gone')
       link(top, 'agents', 'shared')
       expect(lintPlugin(RULE, dir, code)).toEqual([])
+    })
+
+    linked('ends on a link that loops back to the plugin root', () => {
+      const { dir, code, top } = pluginTree(manifestOf({ agent: 'ghost' }), {
+        'agents/reviewer.md': REVIEWER,
+      })
+      link(top, 'agents/loop', top)
+      expect(lintPlugin(RULE, dir, code).map((m) => m.messageId)).toEqual(['missing'])
     })
 
     linked('still reports when the links all have targets', () => {
