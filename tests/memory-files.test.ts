@@ -33,6 +33,7 @@ describe('classifyMemoryFile', () => {
 
   it('reads a CLAUDE.md in .claude/rules as a rule, not as a CLAUDE.md', () => {
     expect(at('.claude', 'rules', 'CLAUDE.md')).toBe('rule')
+    expect(at('.claude', 'rules', 'CLAUDE.local.md')).toBe('rule')
   })
 
   it('reads the AGENTS.md files that Claude Code never reads', () => {
@@ -50,5 +51,6 @@ describe('classifyMemoryFile', () => {
     expect(at('rules', 'a.md')).toBeNull()
     expect(at('.claude', 'agents', 'a.md')).toBeNull()
     expect(at('.claude', 'skills', 'rules', 'a.md')).toBeNull()
+    expect(at('.claude', 'rules')).toBeNull()
   })
 })
