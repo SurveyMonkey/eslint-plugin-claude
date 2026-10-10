@@ -13,10 +13,10 @@ Decision 14).
   docs source. A rule enters the plugin in its own pull request.
 - A check that `claude plugin validate` covers fully is not a rule. A check that it covers in
   part is a rule, for the cases that it misses.
-- `docs/adr/002-classify-docs-changes-with-jev.md` records the docs watch. A daily job finds a
-  change to a docs block that a rule or an inventory row cites, classifies it, and opens an
-  issue. It posts a comment on a group issue for a tracked block. It opens a `moved` issue for a
-  renamed section. It opens a digest for the uncited blocks of one page.
+- `docs/adr/002-classify-docs-changes-with-jev.md` records the docs watch. A daily job finds each
+  changed block of a page that a rule cites. It classifies the block and opens an issue. It posts
+  a comment on a group issue for a tracked block. It opens a `moved` issue for a renamed section.
+  It opens a digest for the uncited blocks of one page.
 - `docs/rule-sources.json` maps each rule to its docs sources. `docs/docs-snapshot/` holds the
   last docs text. Only a reviewed pull request changes them.
 - `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
