@@ -194,6 +194,23 @@
       "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615"
     }
   ],
+  "agent-tools-conditional": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Available tools",
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Agent would be spawned with zero tools",
+      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+    }
+  ],
   "agent-tools-known": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",

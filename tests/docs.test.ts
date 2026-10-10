@@ -33,6 +33,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-plugin-ignored-fields',
     'agent-skills-preloadable',
     'agent-teams-no-project-config',
+    'agent-tools-conditional',
     'agent-tools-known',
     'agent-tools-unavailable',
     'claude-md-local-untracked',

@@ -17,6 +17,7 @@ import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
+import agentToolsConditional from './rules/agent-tools-conditional.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
@@ -144,6 +145,7 @@ const modules = [
   agentFieldMinVersion,
   agentNameShadowsBuiltin,
   agentNoBom,
+  agentToolsConditional,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -265,6 +267,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-field-min-version': 'warn',
   'agent-name-shadows-builtin': 'warn',
   'agent-no-bom': 'warn',
+  'agent-tools-conditional': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',
