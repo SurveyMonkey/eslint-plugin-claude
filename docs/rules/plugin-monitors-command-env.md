@@ -30,8 +30,8 @@ The rule reports each of these variables in a monitor `command`:
 
 - `$CLAUDE_PLUGIN_ROOT` and `$CLAUDE_PLUGIN_DATA`. The fix is the braced form, such as
   `"${CLAUDE_PLUGIN_ROOT}"/scripts/poll.sh`.
-- `$CLAUDE_PLUGIN_OPTION_<KEY>`, for any key. A monitor has no way to read a plugin option from
-  Claude Code, so the fix is to have the monitor script read the value from a config file.[^shell]
+- `$CLAUDE_PLUGIN_OPTION_<KEY>`, for any key. A monitor cannot read a plugin option from Claude
+  Code. The fix is to have the monitor script read the value from a config file.[^shell]
 
 The report is on the `command` string. The rule makes one report for each distinct variable in a
 command. A name that continues the variable, such as `$CLAUDE_PLUGIN_ROOT_DIR`, is another
@@ -41,13 +41,13 @@ The rule reads the monitors in these places:
 
 - The inline array of `experimental.monitors` or `monitors` in `plugin.json`.
 - `monitors/monitors.json`. A `monitors` or `experimental.monitors` key in the manifest replaces
-  this file, so the rule skips the file when the key names no path or names another file.[^monitors]
+  this file.[^monitors] The rule skips the file when the key names no path, or names another file.
 
 The rule makes no report in these cases:
 
 - The braced form `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_DATA}`. The rule does not read the
-  braced form of `CLAUDE_PLUGIN_OPTION_<KEY>`. The docs say that a monitor `command` gets the path
-  variables and `${ENV_VAR}` from the environment, and the rule makes no claim about it.
+  braced form of `CLAUDE_PLUGIN_OPTION_<KEY>`. The docs say that a monitor `command` gets `${ENV_VAR}`
+  from the environment. The rule makes no claim about it.
 - `$CLAUDE_PROJECT_DIR`. The docs do not say that Claude Code leaves it out of the monitor
   environment.
 - A `${user_config.KEY}` reference. `plugin-user-config-no-shell-fields` reports it.

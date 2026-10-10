@@ -20,14 +20,14 @@ Keep `${user_config.*}` out of the fields that a shell runs.
 
 ## Rule details
 
-A plugin can ask the user for values with `userConfig`, and reference a saved value as
-`${user_config.KEY}`. Claude Code substitutes the reference in MCP server config, in LSP server
-config, in the `args` of an exec-form hook, and in skill and agent content.[^reference] Three
-fields pass their value to a shell, which would parse the substituted value again. These fields
-reject `${user_config.*}`: the `command` of a shell-form hook, the `command` of a monitor, and
-the `headersHelper` of an MCP server.[^shell] A component with such a reference fails with an
-error and does not run. The check runs on the command template, so the error appears before the
-user sets a value.[^error]
+A plugin can ask the user for values with `userConfig`. It references a saved value as
+`${user_config.KEY}`. Claude Code substitutes the reference in MCP server config and in LSP server
+config. It also substitutes it in the `args` of an exec-form hook, and in skill and agent
+content.[^reference] Three fields pass their value to a shell, which would parse the substituted
+value again. These fields reject `${user_config.*}`. They are the `command` of a shell-form hook,
+the `command` of a monitor, and the `headersHelper` of an MCP server.[^shell] A component with
+such a reference fails with an error and does not run. The check runs on the command template. So
+the error appears before the user sets a value.[^error]
 
 The rule reports a string that holds `${user_config.` in one of these fields:
 
@@ -44,29 +44,30 @@ have the script read the value from a config file. For a `headersHelper`, put th
 
 The rule reads these places:
 
-- `plugin.json`: the inline `hooks` object or the objects in a `hooks` array, the inline
-  `mcpServers` map or the maps in an `mcpServers` array, and the inline array of
+- `plugin.json`, in three keys. The inline `hooks` object, or the objects in a `hooks` array.
+  The inline `mcpServers` map, or the maps in an `mcpServers` array. The inline array of
   `experimental.monitors` or `monitors`.
 - `hooks/hooks.json`, under its top-level `hooks` key.
 - `.mcp.json` at the plugin root, under its top-level `mcpServers` key.
 - `monitors/monitors.json`. A `monitors` or `experimental.monitors` key in the manifest replaces
-  this file, so the rule skips the file when the key names no path or names another file.
+  this file. The rule skips the file when the key names no path, or names another file.
 
 The rule makes no report in these cases:
 
 - A file that the manifest names, such as `"hooks": "./config/hooks.json"` or
   `"mcpServers": "./servers.json"`. The rule reads files at their default names only.
 - A `.mcpb` or `.dxt` bundle.
-- A `${user_config.KEY}` in a field that is not a shell field, such as `headers`, `env`, `args`
-  of a server, or the `description` of a monitor.
+- A `${user_config.KEY}` in a field that is not a shell field. Examples are `headers`, `env`, the
+  `args` of a server, and the `description` of a monitor.
 - A hooks or MCP file with no wrapper key. The rule reads the commands under the wrapper only.
+- A hook handler with no `type`. The docs make `type` a required field.[^exec]
 - The file is in no plugin, such as a `.mcp.json` of a project that has no `plugin.json`.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
 
-This rule holds the hook and `headersHelper` checks of the hooks and MCP groups of the rule
-inventory, so those groups have no rule of their own for them.
+This rule holds the hook and `headersHelper` checks of the rule inventory. The hooks group and
+the MCP group have no rule of their own for them.
 
 Fail: `{"type": "command", "command": "./notify.sh ${user_config.webhook_url}"}`.
 

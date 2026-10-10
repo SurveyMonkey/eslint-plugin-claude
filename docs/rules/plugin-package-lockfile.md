@@ -42,7 +42,7 @@ The rule makes no report in these cases:
 - The plugin has no `package.json`, or has a `package.json` and no lockfile.
 - A name is a folder, and not a file.
 - The rule cannot see a supported lockfile or the `package.json`. The real path of the entry can
-  be out of the repository, or a part of the path can be a link with no target.
+  be out of the repository. A part of the path can be a link with no target.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.
