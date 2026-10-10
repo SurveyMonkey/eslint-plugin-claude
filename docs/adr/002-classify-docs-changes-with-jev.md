@@ -130,8 +130,8 @@ Accuracy by label, on each of the four runs:
 
 **Why these thresholds.** The `no` values matter most, because a no opens no issue.
 
-- The lowest `alters` for a `rule-update` case in the spike is 0.51. The `no` value of 0.2 is far below it.
-  The two `no-change` cases between 0.2 and 0.5 go to a person.
+- The lowest `alters` for a `rule-update` case in the spike is 0.51. The `no` value of 0.2 is far
+  below it. The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
   block is 0.73. The band from 0.2 to 0.5 is empty in this spike data.
 - Seven live blocks that no rule cites had a `requirement` value from 0.21 to 0.33. They are

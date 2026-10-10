@@ -122,6 +122,8 @@ describe('lineDiff', () => {
   it('lists the lines that only one side has, and counts repeated lines', () => {
     expect(api.lineDiff('a\nb\nb\n\nc', 'a\nb\nd')).toEqual({ removed: ['b', 'c'], added: ['d'] })
     expect(api.lineDiff(null, 'x')).toEqual({ removed: [], added: ['x'] })
+    // Each copy beyond the other text's count is a changed line.
+    expect(api.lineDiff('x', 'x\nx\nx')).toEqual({ removed: [], added: ['x', 'x'] })
   })
 })
 
