@@ -47,6 +47,12 @@ const hooksFaults = {
       hooks: [{ type: 'command', command: './x.sh' }],
     },
   ],
+  // A WorktreeCreate hook with no WorktreeRemove hook (`hooks-worktree-create-without-remove`).
+  WorktreeCreate: [{ hooks: [{ type: 'command', command: './x.sh' }] }],
+  // An agent hook (`hooks-agent-type-experimental`).
+  PostToolBatch: [{ hooks: [{ type: 'agent', prompt: 'p' }] }],
+  // A deprecated flag (`hooks-command-deprecated-cli-flag`).
+  TaskCompleted: [{ hooks: [{ type: 'command', command: 'claude --remote x' }] }],
   // A field that the docs do not list for the type (`hooks-handler-field-unknown`).
   Setup: [{ hooks: [{ type: 'command', command: './x.sh', bogus: true }] }],
   // A prompt hook, which cannot deny (`hooks-prompt-on-permission-request`).
@@ -90,6 +96,10 @@ const hooksFaults = {
   Notification: [{ matcher: 'nope', hooks: [{ type: 'command', command: './x.sh' }] }],
   UserPromptSubmit: [{ matcher: 'Bash', hooks: [{ type: 'command', command: './x.sh' }] }],
 }
+const dupHooks = JSON.stringify({
+  hooks: { PostToolUse: [{ matcher: 'Write', hooks: [{ type: 'command', command: './fmt.sh' }] }] },
+})
+const dupManifest = JSON.stringify({ name: 'dup', ...JSON.parse(dupHooks) })
 const hooksSettings = JSON.stringify({ disableAllHooks: true, hooks: hooksFaults })
 const hooksDropIn = JSON.stringify({ hooks: hooksFaults })
 const hooksYaml = `---
@@ -111,6 +121,18 @@ hooks:
       hooks:
         - type: command
           command: ./x.sh
+  WorktreeCreate:
+    - hooks:
+        - type: command
+          command: ./x.sh
+  PostToolBatch:
+    - hooks:
+        - type: agent
+          prompt: p
+  TaskCompleted:
+    - hooks:
+        - type: command
+          command: claude --remote x
   Setup:
     - hooks:
         - type: command
@@ -408,6 +430,14 @@ const TREE: Record<string, string> = {
   'packages/hk/plugin/hooks/hooks.json': JSON.stringify({ hooks: hooksFaults }),
   'packages/hk/.claude/skills/hk/SKILL.md': hooksYaml,
   'packages/hk/.claude/agents/hk.md': hooksYaml.replace('name: hk', 'name: hk\ndescription: d'),
+  // `hooks-duplicate-handler`: one handler in a settings file, in `hooks/hooks.json` and in `plugin.json`.
+  // The local settings file holds it too, and is not the later source. A `plugin.json` outside
+  // `.claude-plugin/` is no manifest.
+  'packages/dup/.claude/settings.json': dupHooks,
+  'packages/dup/.claude/settings.local.json': dupHooks,
+  'packages/dup/hooks/hooks.json': dupHooks,
+  'packages/dup/.claude-plugin/plugin.json': dupManifest,
+  'packages/dup/docs/plugin.json': dupManifest,
   // `disableAllHooks: false` is reported in the project file only (`hooks-disable-all-override`).
   'packages/dh/.claude/settings.json': '{"disableAllHooks": false}',
   'packages/dh/.claude/settings.local.json': '{"disableAllHooks": false}',
@@ -1074,6 +1104,30 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-filechanged-star-matcher@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-prefer-exec-form@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-prefer-exec-form@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/settings.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/settings.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/settings.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/settings.local.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-agent-type-experimental@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/managed-settings.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/managed-settings.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/managed-settings.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-agent-type-experimental@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-deprecated-cli-flag@1',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-worktree-create-without-remove@1',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-agent-stop-event@1',
+  'packages/dup/.claude-plugin/plugin.json: claude/hooks-duplicate-handler@1',
+  'packages/dup/hooks/hooks.json: claude/hooks-duplicate-handler@1',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1103,10 +1157,26 @@ const AGENT_RULES = [
 const HOOKS_JSON = [...PROJECT_FILES, ...MANAGED_FILES, '**/hooks/hooks.json']
 const HOOKS_MARKDOWN = ['**/SKILL.md', '**/agents/**/*.md']
 const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
+  { name: 'hooks-agent-stop-event', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
+  {
+    name: 'hooks-agent-type-experimental',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
+  {
+    name: 'hooks-command-deprecated-cli-flag',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
   { name: 'hooks-command-removed-cli-flag', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-config-schema', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-disable-all-override', blocks: [['**/.claude/settings.json']], severity: 'warn' },
   { name: 'hooks-disabled-by-disableallhooks', blocks: [[...PROJECT_FILES, ...MANAGED_FILES]] },
+  {
+    name: 'hooks-duplicate-handler',
+    blocks: [['**/hooks/hooks.json', '**/.claude-plugin/plugin.json']],
+    severity: 'warn',
+  },
   { name: 'hooks-env-var-unavailable', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-exec-form-command-spaces', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
@@ -1162,6 +1232,11 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn' }[] = [
   },
   {
     name: 'hooks-sessionend-default-timeout',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+  },
+  {
+    name: 'hooks-worktree-create-without-remove',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
   },
