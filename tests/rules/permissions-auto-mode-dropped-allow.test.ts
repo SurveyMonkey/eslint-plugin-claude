@@ -93,6 +93,12 @@ describe(`${name}: the silent cases`, () => {
     }
   })
 
+  it('is silent for an interpreter rule with a word after the star', () => {
+    for (const rule of ['Bash(python * foo)', 'Bash(python * *)']) {
+      expect(allow(rule, PROJECT), rule).toEqual([])
+    }
+  })
+
   it('is silent for an interpreter that the docs do not name, unless the option names it', () => {
     for (const rule of ['Bash(python3 *)', 'Bash(node*)', 'Bash(node *)', 'Bash(ruby *)']) {
       expect(allow(rule), rule).toEqual([])
@@ -146,7 +152,7 @@ describe(`${name}: the silent cases`, () => {
   })
 
   it('is silent in a hidden drop-in, which Claude Code ignores', () => {
-    expect(allow('Bash(*)', HIDDEN)).toEqual([])
+    expect(allow('Agent', HIDDEN)).toEqual([])
   })
 })
 

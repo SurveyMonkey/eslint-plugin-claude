@@ -6,7 +6,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { COMMAND_RULE_TOOLS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
-import { commandWords } from '../permission-command.ts'
+import { commandWords, isInputParameterRule } from '../permission-command.ts'
 import type { ParsedEntry } from '../permission-entries.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import type { ParsedRule } from '../permission-rule.ts'
@@ -18,13 +18,22 @@ const name = 'permissions-duplicate-rule' as const
 const textOf = (rule: ParsedRule) =>
   rule.specifier === null ? rule.tool : `${rule.tool}(${rule.specifier})`
 
-/** The text that two equal rules share. A bare command tool is the same as `Tool(*)`. */
-function keyOf({ tool, specifier }: ParsedRule): string {
+/** The text that two equal rules share. A bare command tool is the same as `Tool(*)`. A WebFetch
+ *  domain ignores case and a trailing `.`
+ *  (https://code.claude.com/docs/en/permissions#webfetch). */
+function keyOf({ list, rule: { tool, specifier } }: ParsedEntry): string {
+  if (
+    specifier !== null &&
+    COMMAND_RULE_TOOLS.includes(tool) &&
+    isInputParameterRule(list, specifier)
+  ) {
+    return `${tool}(${specifier.trim()})`
+  }
   if (COMMAND_RULE_TOOLS.includes(tool)) {
     return `${tool}(${commandWords(specifier ?? '*').join(' ')})`
   }
   if (tool === 'WebFetch' && specifier?.startsWith('domain:')) {
-    return `${tool}(${specifier.replace(/\.$/, '')})`
+    return `${tool}(${specifier.replace(/\.$/, '').toLowerCase()})`
   }
   return specifier === null ? tool : `${tool}(${specifier})`
 }
@@ -56,12 +65,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'duplicate' }> = {
         const isDead =
           entry.list === 'allow' &&
           covering.some(
-            ({ rule: cover }) =>
-              keyOf(cover) === keyOf(entry.rule) &&
-              (COMMAND_RULE_TOOLS.includes(cover.tool) || cover.specifier === entry.rule.specifier),
+            (cover) =>
+              keyOf(cover) === keyOf(entry) &&
+              (COMMAND_RULE_TOOLS.includes(cover.rule.tool) ||
+                cover.rule.specifier === entry.rule.specifier),
           )
         if (!isDead) {
-          const key = keyOf(entry.rule)
+          const key = keyOf(entry)
           groups.set(key, [...(groups.get(key) ?? []), entry])
         }
       }

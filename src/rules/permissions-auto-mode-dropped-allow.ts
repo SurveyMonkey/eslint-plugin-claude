@@ -35,7 +35,7 @@ function reasonOf({ tool, specifier }: ParsedRule, interpreters: string[]): stri
   if (!SHELL_TOOLS.includes(tool)) {
     return null
   }
-  if (specifier === null || specifier === '*') {
+  if (specifier === null) {
     return null
   }
   const [program = '', ...rest] = commandWords(specifier)

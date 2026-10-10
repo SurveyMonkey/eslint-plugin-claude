@@ -99,6 +99,30 @@ describe(`${name}: more than one list`, () => {
     expect(message?.message).toContain('deny')
   })
 
+  it('names the deny rule as the first, when the ask rule comes first in the file', () => {
+    const text = '{\n  "permissions": {\n    "ask": ["Edit"],\n    "deny": ["Edit"]\n  }\n}'
+    const [message] = lintJson(name, text, PROJECT)
+    expect([message?.line, message?.message]).toEqual([
+      3,
+      '`Edit` repeats `Edit` in the deny list, at line 4. Remove the copy.',
+    ])
+  })
+
+  it('compares WebFetch domains without case', () => {
+    expect(
+      ids(perms({ deny: ['WebFetch(domain:Example.com)', 'WebFetch(domain:example.com.)'] })),
+    ).toEqual(['duplicate'])
+  })
+
+  it('does not read a deny rule on an input parameter as a command', () => {
+    expect(
+      ids(perms({ deny: ['Bash(run_in_background:*)', 'Bash(run_in_background *)'] })),
+    ).toEqual([])
+    expect(
+      ids(perms({ deny: ['Bash(run_in_background:*)', 'Bash(run_in_background:*)'] })),
+    ).toEqual(['duplicate'])
+  })
+
   it('reports the ask rule, which the deny rule makes useless', () => {
     const text = '{\n  "permissions": {\n    "deny": ["Edit"],\n    "ask": ["Edit"]\n  }\n}'
     expect(lintJson(name, text, PROJECT).map(({ line }) => line)).toEqual([4])

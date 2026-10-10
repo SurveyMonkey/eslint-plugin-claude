@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-default-mode-manual-alias, which reports permissions.defaultMode set to the manual alias in a project file when the option minVersion is below the first Claude Code version that accepts it, because an older client rejects the value.
+description: The ESLint rule claude/permissions-default-mode-manual-alias, which reports permissions.defaultMode set to the manual alias in a settings file when the option minVersion is below the first Claude Code version that accepts it, because an older client rejects the value.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -16,10 +16,10 @@ Write `default` in place of the `manual` alias of `permissions.defaultMode`.
 
 | Config | Severity | Category | Files |
 |--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
-The rule reads no managed file. Claude Code reads an invalid managed `permissions.defaultMode` as `default`, which is what
-`manual` means, so an older client breaks nothing there.[^closed]
+The rule reads managed files too. A hidden drop-in in `managed-settings.d` gets no report, because Claude Code ignores it.
+Claude Code reads an invalid managed `permissions.defaultMode` as `default` only from v2.1.282.[^closed] Every client that rejects `manual` is older, so a managed file has no exemption.
 
 ## Rule details
 

@@ -850,13 +850,12 @@ const SANDBOX_RULES = [
 ]
 
 // The warn rules of #15 for modes and Bash, in the order of the `modules` list, with the files of
-// each. Each is a warn. Each reads the project and managed files, except `permissions-default-mode-manual-alias`,
-// which reads the project files only.
+// each. Each is a warn. Each reads the project and managed files.
 const WARN_RULES = [
   { name: 'permissions-auto-mode-dropped-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-bash-colon-star-mid', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-bash-colon-star-suffix', files: [...PROJECT_FILES, ...MANAGED_FILES] },
-  { name: 'permissions-default-mode-manual-alias', files: PROJECT_FILES },
+  { name: 'permissions-default-mode-manual-alias', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-default-mode-surface', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-deny-all-tools', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-duplicate-rule', files: [...PROJECT_FILES, ...MANAGED_FILES] },

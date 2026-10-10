@@ -785,6 +785,11 @@
   "permissions-bash-colon-star-suffix": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Wildcard patterns",
       "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
     },
@@ -1020,6 +1025,11 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Wildcard patterns",
       "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",

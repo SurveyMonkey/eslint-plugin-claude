@@ -46,7 +46,16 @@ describe(`${name}: the report`, () => {
 
 describe(`${name}: the silent cases`, () => {
   it('is silent for a narrower deny rule', () => {
-    for (const rule of ['Bash', 'mcp__github', 'mcp__github__*', 'mcp__*__read', 'B*', 'Bash(*)']) {
+    for (const rule of [
+      'Bash',
+      'mcp__github',
+      'mcp__github__*',
+      'mcp__*__read',
+      'B*',
+      'Bash(*)',
+      '*(x)',
+      'mcp__*(x)',
+    ]) {
       expect(ids(perms({ deny: [rule] })), rule).toEqual([])
     }
   })
