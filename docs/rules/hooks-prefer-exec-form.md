@@ -28,8 +28,9 @@ when the hook needs shell features, such as pipes or `&&`.[^form] The hooks guid
 
 The rule reports a `command` hook in shell form that holds `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` or
 `${CLAUDE_PLUGIN_DATA}`. It reports once for each handler, at the `command` string. A `command` with a `shell`
-value of `"powershell"` is out of scope. The docs show the placeholder in a PowerShell shell-form command, and exec
-form there needs the shell as the executable.[^ps]
+value of `"powershell"` is out of scope. The docs show the placeholder in a PowerShell shell-form command.[^ps]
+The rule leaves such a hook to its author. The rule reads `${NAME}` only. A bare `$CLAUDE_PROJECT_DIR` gets no
+report here, and [`hooks-placeholder-quoted`](hooks-placeholder-quoted.md) reads it.
 
 The rule makes no report when the line needs a shell. That is the case when the line, without the placeholders,
 holds one of these:
@@ -37,7 +38,7 @@ holds one of these:
 - a pipe, a list or a group: `|`, `&`, `;`, `(`, `)`, or a new line
 - a redirect: `<` or `>`
 - a command substitution, or another variable: `$` or a backtick
-- a glob: `*` or `?`
+- a glob, or a character that exec form reads in another way: `*`, `?`, `[`, `{`, `}`, `~`, `#` or `!`
 - a variable assignment before the command, such as `FOO=1 ./a.sh`
 
 The rule cannot tell a `.cmd` or `.bat` shim from another script. On Windows, the docs say to run such a shim
