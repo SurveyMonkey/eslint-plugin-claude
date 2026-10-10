@@ -101,6 +101,9 @@ const SCHEMES = [
   'notion',
   'figma',
 ]
+const OCTET = '(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)'
+const CIDR = new RegExp(`^(?:${OCTET}\\.){3}${OCTET}/(?:[89]|[12]\\d|3[0-2])$`)
+const PLUGIN_ID = shaped(/^[^@\s]+@[^@\s]+$/, 'a "plugin@marketplace" string')
 const TIP_ID = /^[A-Za-z0-9._-]{1,64}$/
 
 /** The keys of type Boolean, in the Type line of the settings reference. */
@@ -191,14 +194,11 @@ const STRING_KEYS = [
 
 /** The keys of type array of strings. */
 const STRINGS_KEYS = [
-  'appendPlugins',
   'availableModels',
   'companyAnnouncements',
   'deniedModels',
   'fallbackModel',
-  'gatewayInternalNetworks',
   'pluginSuggestionMarketplaces',
-  'prependPlugins',
   'sshHostAllowlist',
 ]
 
@@ -214,9 +214,16 @@ const SHAPES: Record<string, ValueSpec> = {
           fields: { marketplace: STRING, plugin: STRING },
           required: ['marketplace', 'plugin'],
         },
-        STRING,
+        PLUGIN_ID,
       ],
     },
+  },
+  appendPlugins: { kind: 'array', items: PLUGIN_ID },
+  prependPlugins: { kind: 'array', items: PLUGIN_ID },
+  gatewayInternalNetworks: {
+    kind: 'array',
+    maxItems: 4,
+    items: shaped(CIDR, 'an IPv4 CIDR block with a prefix from /8 to /32'),
   },
   allowedProviders: {
     kind: 'array',
@@ -332,7 +339,7 @@ const SHAPES: Record<string, ValueSpec> = {
     kind: 'object',
     fields: {
       path: shaped(
-        /^(?:(?!.*(?:\/\/|\/\.\.?(?:\/|$)))\/|(?![\s\S]*[/\\]\.\.?(?:[/\\]|$))(?:[A-Za-z]:[/\\]|\\\\).*\.exe$)/i,
+        /^(?:(?![\s\S]*(?:\/\/|\/\.\.?(?:\/|$)))\/|(?![\s\S]*[/\\]\.\.?(?:[/\\]|$))(?:[A-Za-z]:[/\\]|\\\\).*\.exe$)/i,
         'an absolute path in normalized form, with a name that ends in .exe on Windows',
       ),
       timeoutMs: whole(1000),
