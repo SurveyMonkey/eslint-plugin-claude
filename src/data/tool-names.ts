@@ -183,3 +183,15 @@ export const BACKGROUND_TOOL_NAMES: readonly string[] = [
   'WebSearch',
   'Write',
 ]
+
+/** The built-in subagents. A hook matcher on `SubagentStart` and `SubagentStop` can name them. Source: the
+ *  "Built-in subagents" section
+ *  (https://code.claude.com/docs/en/sub-agents#built-in-subagents), checked on 2026-10-10. */
+export const BUILT_IN_AGENTS: readonly string[] = [
+  'Explore',
+  'Plan',
+  'general-purpose',
+  'claude',
+  'statusline-setup',
+  'claude-code-guide',
+]

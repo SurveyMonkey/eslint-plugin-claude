@@ -248,11 +248,55 @@
       "hash": "6f955b8187790807b6df275344be5859c1c774a8f5a3906df9f6bfe6b2d6a92a"
     }
   ],
+  "hooks-async-on-blocking-event": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Run hooks in the background",
+      "hash": "7b66770780396f453654f868eea190b035dc4271882b6ff3feafd528ba9a582f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exit code 2 behavior per event",
+      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Decision control",
+      "hash": "30ebda41a34adc421b0a4e8607fd03c71cfc6e5a40c5385a0830357914ab3239"
+    }
+  ],
   "hooks-command-deprecated-cli-flag": [
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
       "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+    }
+  ],
+  "hooks-command-path-variable": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Reference plugin paths and store data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Reference scripts by path",
+      "hash": "73d3a437a1f052d0656a5575974552a41eef3368efef087f6c4c1be8486146c1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Hook error in output",
+      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Security best practices",
+      "hash": "1e9c34afa1835e410b899e5bd3084d8b410998c5abefe69cc396109f89202878"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Project-level hooks for subagent events",
+      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f"
     }
   ],
   "hooks-command-removed-cli-flag": [
@@ -265,6 +309,28 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exec form and shell form",
       "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    }
+  ],
+  "hooks-committed-command-review": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Disclaimer",
+      "hash": "ec4c87a681f5047c14cdfbe41ed165054ad95892bb0962fd2f5b88761080d05c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Workspace trust",
+      "hash": "0c020c6a9188b86f027a94c136720af98d831a2a00eac35be07aa6c4ca3f4d6e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/security",
+      "heading": "Understand what a plugin can do",
+      "hash": "786239e7c3421cc0b8ef69390202e66beb731f8b022ecbdf9c2b33ac40f8315e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "What runs before you trust a folder",
+      "hash": "173e436b56ea35918c15cdfb5702e5e4aec9f31c032c1a61418b13f07e6efe26"
     }
   ],
   "hooks-config-schema": [
@@ -543,6 +609,18 @@
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
     }
   ],
+  "hooks-if-dir-glob-depth": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common fields",
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    }
+  ],
   "hooks-matcher-bash-without-powershell": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -613,6 +691,33 @@
       "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
     }
   ],
+  "hooks-matcher-name-unresolved": [
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check hooks",
+      "hash": "5c27c352e9ceaa1d001f4d7b267ebdba9be37dea5abbfaae1168e783729556da"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Project-level hooks for subagent events",
+      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Built-in subagents",
+      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "MCP tool hook fields",
+      "hash": "544de1e46b4d56711c8e3d2fe14c74e2a0dac09df6c36120f0c557603ac75c1d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    }
+  ],
   "hooks-matcher-never-matches": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -672,6 +777,13 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Configure tools with permission rules and hooks",
       "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    }
+  ],
+  "hooks-matcher-unanchored-regex": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Matcher patterns",
+      "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
     }
   ],
   "hooks-matcher-unsupported-event": [
@@ -793,6 +905,13 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "SessionEnd input",
       "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
+    }
+  ],
+  "hooks-timeout-units": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Common fields",
+      "hash": "d75999c58da4cf4cfb87aa3297b3862fd77daefc39a1c0e5b63890ecea8815a9"
     }
   ],
   "hooks-worktree-create-without-remove": [
