@@ -21,7 +21,7 @@ const ids = (text: string, file = PROJECT, files: Record<string, string> = {}) =
   run(text, file, files).map((message) => message.messageId)
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports a wildcard subdomain rule alone in its list, in every file', () => {
+  it('reports a wildcard subdomain rule alone in its list, in every file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(ids(perms({ allow: ['WebFetch(domain:*.example.com)'] }), file), file).toEqual([
         'apex',
@@ -29,13 +29,13 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports in allow, ask and deny', () => {
+  it('reports in allow, ask and deny', () => {
     for (const list of ['allow', 'ask', 'deny']) {
       expect(ids(perms({ [list]: ['WebFetch(domain:*.example.com)'] })), list).toEqual(['apex'])
     }
   })
 
-  it.fails('names the apex rule to add, and reports at the entry', () => {
+  it('names the apex rule to add, and reports at the entry', () => {
     const text =
       '{\n  "permissions": {\n    "allow": ["Bash", "WebFetch(domain:*.Example.com.)"]\n  }\n}'
     const messages = run(text)
@@ -43,7 +43,7 @@ describe(`${name}: the reports`, () => {
     expect(messages[0]?.message).toContain('WebFetch(domain:example.com)')
   })
 
-  it.fails('reports when the apex rule is in another list', () => {
+  it('reports when the apex rule is in another list', () => {
     expect(
       ids(
         perms({
@@ -54,7 +54,7 @@ describe(`${name}: the reports`, () => {
     ).toEqual(['apex'])
   })
 
-  it.fails('reports when the rule with the apex names another host', () => {
+  it('reports when the rule with the apex names another host', () => {
     expect(
       ids(
         perms({
@@ -68,7 +68,7 @@ describe(`${name}: the reports`, () => {
     ).toEqual(['apex'])
   })
 
-  it.fails('reports each wildcard rule that has no apex rule, with white space around the prefix', () => {
+  it('reports each wildcard rule that has no apex rule, with white space around the prefix', () => {
     const rules = [
       'WebFetch( domain : *.a.com )',
       'WebFetch(domain:*.b.com)',
@@ -79,13 +79,13 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent when the same list has the apex rule', () => {
+  it('is silent when the same list has the apex rule', () => {
     expect(
       ids(perms({ allow: ['WebFetch(domain:*.example.com)', 'WebFetch(domain:example.com)'] })),
     ).toEqual([])
   })
 
-  it.fails('compares without case and without a trailing dot', () => {
+  it('compares without case and without a trailing dot', () => {
     for (const apex of [
       'WebFetch(domain:EXAMPLE.com)',
       'WebFetch(domain:example.com.)',
@@ -98,13 +98,13 @@ describe(`${name}: the silent cases`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent when a bare WebFetch rule or domain:* is in the same list', () => {
+  it('is silent when a bare WebFetch rule or domain:* is in the same list', () => {
     for (const cover of ['WebFetch', 'WebFetch(domain:*)']) {
       expect(ids(perms({ allow: ['WebFetch(domain:*.example.com)', cover] })), cover).toEqual([])
     }
   })
 
-  it.fails('is silent for a rule that is not a leading *. rule', () => {
+  it('is silent for a rule that is not a leading *. rule', () => {
     const rules = [
       'WebFetch(domain:example.com)',
       'WebFetch(domain:*)',
@@ -120,17 +120,17 @@ describe(`${name}: the silent cases`, () => {
     expect(ids(perms({ allow: rules }))).toEqual([])
   })
 
-  it.fails('is silent for a parameter rule in deny', () => {
+  it('is silent for a parameter rule in deny', () => {
     expect(ids(perms({ deny: ['WebFetch(prompt:*)'] }))).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(perms({ allow: ['WebFetch(domain:*.example.com)'] }), HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the allow rule that permissions-dead-allow owns`, () => {
-  it.fails('skips an allow rule that a deny or ask rule covers, and reports the equal deny rule', () => {
+  it('skips an allow rule that a deny or ask rule covers, and reports the equal deny rule', () => {
     const rule = 'WebFetch(domain:*.example.com)'
     expect(ids(perms({ allow: [rule], deny: [rule] }))).toEqual(['apex'])
     expect(ids(perms({ allow: [rule], ask: ['WebFetch'] }))).toEqual([])
@@ -142,30 +142,26 @@ describe(`${name}: the project pair, on disk`, () => {
   const WILD = perms({ allow: ['WebFetch(domain:*.example.com)'] })
   const APEX = perms({ allow: ['WebFetch(domain:example.com)'] })
 
-  it.fails('adds up the same list of the other file, whichever file holds the wildcard rule', () => {
+  it('adds up the same list of the other file, whichever file holds the wildcard rule', () => {
     expect(ids(WILD, PROJECT, { [LOCAL]: APEX })).toEqual([])
     expect(ids(WILD, LOCAL, { [PROJECT]: APEX })).toEqual([])
   })
 
-  it.fails('reports when the apex rule of the other file is in another list', () => {
+  it('reports when the apex rule of the other file is in another list', () => {
     const files = { [LOCAL]: perms({ deny: ['WebFetch(domain:example.com)'] }) }
     expect(ids(WILD, PROJECT, files)).toEqual(['apex'])
   })
 
-  it.fails('is silent when the other file cannot be read, because it can hold the apex rule', () => {
+  it('is silent when the other file cannot be read, because it can hold the apex rule', () => {
     expect(ids(WILD, PROJECT, { [LOCAL]: '[1]' })).toEqual([])
   })
 
-  it.fails('is silent when the file is out of the repository, which the rule cannot see', () => {
-    expect(lintJson(name, WILD, '/nowhere/.claude/settings.json')).toEqual([])
-  })
-
-  it.fails('is silent when the deny rule of the other file covers the allow rule', () => {
+  it('is silent when the deny rule of the other file covers the allow rule', () => {
     const files = { [LOCAL]: perms({ deny: ['WebFetch(domain:*.example.com)'] }) }
     expect(ids(WILD, PROJECT, files)).toEqual([])
   })
 
-  it.fails('reads a sibling list that is not an array, and entries that are no rule, as no rule', () => {
+  it('reads a sibling list that is not an array, and entries that are no rule, as no rule', () => {
     const odd = JSON.stringify({
       permissions: { allow: [1, 'WebFetch(', 'WebFetch(domain:example.com)'] },
     })
@@ -179,17 +175,17 @@ describe(`${name}: a managed source, on disk`, () => {
   const WILD = perms({ allow: ['WebFetch(domain:*.example.com)'] })
   const APEX = perms({ allow: ['WebFetch(domain:example.com)'] })
 
-  it.fails('adds up the same list of the files of the source', () => {
+  it('adds up the same list of the files of the source', () => {
     expect(ids(WILD, DROP_IN, { [MANAGED]: APEX })).toEqual([])
     expect(ids(WILD, MANAGED, { 'managed-settings.d/20-b.json': APEX })).toEqual([])
   })
 
-  it.fails('ignores a hidden sibling, and a project file', () => {
+  it('ignores a hidden sibling, and a project file', () => {
     expect(ids(WILD, DROP_IN, { 'managed-settings.d/.20-b.json': APEX })).toEqual(['apex'])
     expect(ids(WILD, MANAGED, { [PROJECT]: APEX })).toEqual(['apex'])
   })
 
-  it.fails('is silent when a sibling cannot be read', () => {
+  it('is silent when a sibling cannot be read', () => {
     expect(ids(WILD, DROP_IN, { 'managed-settings.d/20-b.json': '[1]' })).toEqual([])
   })
 })

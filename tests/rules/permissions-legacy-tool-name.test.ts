@@ -19,7 +19,7 @@ const ids = (text: string, file = PROJECT) =>
   lintJson(name, text, file).map((message) => message.messageId)
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports MultiEdit and Task(x), in every file', () => {
+  it('reports MultiEdit and Task(x), in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(perms({ allow: ['MultiEdit', 'Task(x)'] }), file), file).toEqual([
         'multiEdit',
@@ -28,29 +28,29 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports a bare Task, and Task in allow, ask and deny', () => {
+  it('reports a bare Task, and Task in allow, ask and deny', () => {
     for (const list of ['allow', 'ask', 'deny']) {
       expect(ids(perms({ [list]: ['Task', 'Task(Explore)'] })), list).toEqual(['task', 'task'])
     }
   })
 
-  it.fails('names the new tool and keeps the specifier in the advice', () => {
+  it('names the new tool and keeps the specifier in the advice', () => {
     const [task, multi] = lintJson(name, perms({ deny: ['Task(Explore)', 'MultiEdit'] }), PROJECT)
     expect(task?.message).toContain('Agent(Explore)')
     expect(task?.message).toContain('2.1.63')
     expect(multi?.message).toContain('Edit')
   })
 
-  it.fails('names the bare Agent for a bare Task', () => {
+  it('names the bare Agent for a bare Task', () => {
     const [task] = lintJson(name, perms({ deny: ['Task'] }), PROJECT)
     expect(task?.message).toContain('`Agent`')
   })
 
-  it.fails('reports a MultiEdit parameter rule, which no path rule rule reads', () => {
+  it('reports a MultiEdit parameter rule, which no path rule rule reads', () => {
     expect(ids(perms({ deny: ['MultiEdit(edits:*)'] }))).toEqual(['multiEdit'])
   })
 
-  it.fails('reports at the entry, at its line and column', () => {
+  it('reports at the entry, at its line and column', () => {
     const text = '{\n  "permissions": {\n    "deny": ["Bash", "Task(x)"]\n  }\n}'
     expect(lintJson(name, text, PROJECT).map(({ line, column }) => [line, column])).toEqual([
       [3, 22],
@@ -59,21 +59,21 @@ describe(`${name}: the reports`, () => {
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent for Edit and Agent(x)', () => {
+  it('is silent for Edit and Agent(x)', () => {
     expect(
       ids(perms({ allow: ['Edit', 'Agent(x)', 'Agent', 'Edit(src/**)', 'Taskx', 'task'] })),
     ).toEqual([])
   })
 
-  it.fails('is silent for MultiEdit(path), which permissions-path-rule-tool reports', () => {
+  it('is silent for MultiEdit(path), which permissions-path-rule-tool reports', () => {
     expect(ids(perms({ deny: ['MultiEdit(docs/**)', 'MultiEdit(./a)'] }))).toEqual([])
   })
 
-  it.fails('is silent for other tools whose names start like the legacy names', () => {
+  it('is silent for other tools whose names start like the legacy names', () => {
     expect(ids(perms({ deny: ['TaskStop', 'TaskCreate', 'Multi', 'mcp__a__Task'] }))).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(perms({ allow: ['Task', 'MultiEdit'] }), HIDDEN)).toEqual([])
   })
 })

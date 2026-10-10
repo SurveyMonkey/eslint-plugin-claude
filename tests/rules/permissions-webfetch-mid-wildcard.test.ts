@@ -22,7 +22,7 @@ const ids = (text: string, file = PROJECT) =>
   lintJson(name, text, file).map((message) => message.messageId)
 
 describe(`${name}: the reports`, () => {
-  it.fails('reports domain:example.* with sandbox.enabled true, in every file', () => {
+  it('reports domain:example.* with sandbox.enabled true, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(settings({ allow: ['WebFetch(domain:example.*)'] }), file), file).toEqual([
         'inert',
@@ -30,13 +30,13 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reports in allow and deny, which the sandbox reads as its domain lists', () => {
+  it('reports in allow and deny, which the sandbox reads as its domain lists', () => {
     for (const list of ['allow', 'deny']) {
       expect(ids(settings({ [list]: ['WebFetch(domain:example.*)'] })), list).toEqual(['inert'])
     }
   })
 
-  it.fails('reports a wildcard in the middle or in a label, and one after a leading *.', () => {
+  it('reports a wildcard in the middle or in a label, and one after a leading *.', () => {
     const rules = [
       'a.*.com',
       'ex*.com',
@@ -51,11 +51,11 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it.fails('reads white space and a trailing dot around the host', () => {
+  it('reads white space and a trailing dot around the host', () => {
     expect(ids(settings({ allow: ['WebFetch( domain : example.*. )'] }))).toEqual(['inert'])
   })
 
-  it.fails('reports each entry, at its line and column, and names the rule', () => {
+  it('reports each entry, at its line and column, and names the rule', () => {
     const text = JSON.stringify(
       {
         permissions: { allow: ['Bash', 'WebFetch(domain:example.*)'] },
@@ -65,25 +65,25 @@ describe(`${name}: the reports`, () => {
       2,
     )
     const messages = lintJson(name, text, PROJECT)
-    expect(messages.map(({ line, column }) => [line, column])).toEqual([[4, 15]])
+    expect(messages.map(({ line, column }) => [line, column])).toEqual([[5, 7]])
     expect(messages[0]?.message).toContain('WebFetch(domain:example.*)')
   })
 })
 
 describe(`${name}: the silent cases`, () => {
-  it.fails('is silent without sandbox.enabled, or with it false or not a Boolean', () => {
+  it('is silent without sandbox.enabled, or with it false or not a Boolean', () => {
     const rules = { allow: ['WebFetch(domain:example.*)'] }
-    for (const sandbox of [undefined, {}, { enabled: false }, { enabled: 'true' }, 'on', []]) {
+    for (const sandbox of [null, {}, { enabled: false }, { enabled: 'true' }, 'on', []]) {
       expect(ids(settings(rules, sandbox)), JSON.stringify(sandbox)).toEqual([])
     }
   })
 
-  it.fails('is silent for the two forms that the sandbox honors', () => {
+  it('is silent for the two forms that the sandbox honors', () => {
     const rules = ['WebFetch(domain:*.example.com)', 'WebFetch(domain:*)', 'WebFetch( domain : * )']
     expect(ids(settings({ allow: rules, deny: rules }))).toEqual([])
   })
 
-  it.fails('is silent for a host with no wildcard, a bare WebFetch, and another tool', () => {
+  it('is silent for a host with no wildcard, a bare WebFetch, and another tool', () => {
     const rules = [
       'WebFetch(domain:example.com)',
       'WebFetch',
@@ -93,15 +93,15 @@ describe(`${name}: the silent cases`, () => {
     expect(ids(settings({ allow: rules }))).toEqual([])
   })
 
-  it.fails('is silent in ask, which the sandbox does not read', () => {
+  it('is silent in ask, which the sandbox does not read', () => {
     expect(ids(settings({ ask: ['WebFetch(domain:example.*)'] }))).toEqual([])
   })
 
-  it.fails('is silent for a parameter rule in deny', () => {
+  it('is silent for a parameter rule in deny', () => {
     expect(ids(settings({ deny: ['WebFetch(prompt:example.*)'] }))).toEqual([])
   })
 
-  it.fails('reads sandbox.enabled in the same file only', () => {
+  it('reads sandbox.enabled in the same file only', () => {
     const root = repo({
       '.claude/settings.local.json': JSON.stringify({ sandbox: { enabled: true } }),
     })
@@ -109,11 +109,11 @@ describe(`${name}: the silent cases`, () => {
     expect(lintJson(name, text, path.join(root, '.claude/settings.json'))).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(settings({ allow: ['WebFetch(domain:example.*)'] }), HIDDEN)).toEqual([])
   })
 
-  it.fails('is silent when a list or an entry is not a string', () => {
+  it('is silent when a list or an entry is not a string', () => {
     const text = JSON.stringify({
       permissions: { allow: [1, 'WebFetch(domain:example.*'] },
       sandbox: { enabled: true },
@@ -127,16 +127,16 @@ describe(`${name}: the allow rule that permissions-dead-allow owns`, () => {
   const rootWith = (files: Record<string, string>) =>
     path.join(repo(files), '.claude/settings.json')
 
-  it.fails('is silent for an allow rule that an equal deny or ask rule, or a bare deny, covers', () => {
+  it('is silent for an allow rule that an equal deny or ask rule, or a bare deny, covers', () => {
     expect(ids(settings({ allow: [RULE], ask: [RULE] }))).toEqual([])
     expect(ids(settings({ allow: [RULE], deny: ['WebFetch'] }))).toEqual([])
   })
 
-  it.fails('reports the deny rule that covers the allow rule', () => {
+  it('reports the deny rule that covers the allow rule', () => {
     expect(ids(settings({ allow: [RULE], deny: [RULE] }))).toEqual(['inert'])
   })
 
-  it.fails('is silent when the other file of the pair holds the covering rule', () => {
+  it('is silent when the other file of the pair holds the covering rule', () => {
     const file = rootWith({ '.claude/settings.local.json': settings({ deny: [RULE] }) })
     expect(lintJson(name, settings({ allow: [RULE] }), file)).toEqual([])
     const open = rootWith({ '.claude/settings.local.json': settings({ deny: ['Bash'] }) })
