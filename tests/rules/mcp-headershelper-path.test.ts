@@ -42,10 +42,26 @@ it('skips a leading NAME=value word, and reads the word after it', () => {
   expect(found[0]?.message).toContain('"./h.sh"')
   expect(ids(lintProject(NAME, entry('FOO=./x')))).toEqual(['relative'])
 })
+it('skips each leading NAME=value word, in any case and with any space', () => {
+  const silent = ['foo=/abs/x h', 'Foo_1=/abs/x h', '_X=/abs/x h', 'A=1 B_2=/abs/y get-headers']
+  for (const helper of [...silent, 'OPTS="--config conf/a.json" get-headers']) {
+    expect(ids(lintProject(NAME, entry(helper)))).toEqual([])
+  }
+  const reported = ['A=1 B=/abs/y ./h.sh --x', 'FOO=1  ./h.sh', 'FOO=1\n./h.sh', 'FOO= ./h.sh']
+  for (const helper of [...reported, 'PROFILE="dev team" ./h.sh', "P='a b' ./h.sh"]) {
+    const found = lintProject(NAME, entry(helper))
+    expect(ids(found)).toEqual(['relative'])
+    expect(found[0]?.message).toContain('path "./h.sh". Claude')
+  }
+})
+it('names the first word without its quotes or later lines', () => {
+  for (const helper of ['"./h.sh" x', "'./h.sh'", './h.sh\nfoo\nbar']) {
+    expect(lintProject(NAME, entry(helper))[0]?.message).toContain('path "./h.sh". Claude')
+  }
+})
 it('reads the first word of a command with more lines', () => {
   const found = lintProject(NAME, entry('./h.sh\nfoo\nbar'))
-  expect(found[0]?.message).toContain('"./h.sh"')
-  expect(found[0]?.message).not.toContain('foo')
+  expect(found[0]?.message).toContain('path "./h.sh". Claude')
 })
 it('stays silent for an inline command and a variable path', () => {
   const inline = `echo '{"Authorization": "Bearer '"$(get-token)"'"}'`

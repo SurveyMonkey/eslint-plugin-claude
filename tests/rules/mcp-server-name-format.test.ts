@@ -1,6 +1,7 @@
 // A server name has letters, numbers, hyphens and underscores only. `claude mcp` commands and the
-// Claude Desktop import reject other names, and a tool name replaces them with `_`. The rule
-// skips a reserved name, which `mcp-server-name-reserved` owns.
+// Claude Desktop import reject other names, and the tool name of a plugin server replaces them
+// with `_`. The rule skips a reserved name in a `.mcp.json`, which `mcp-server-name-reserved`
+// reports there.
 import { expect, it } from 'vitest'
 import {
   ids,
@@ -39,6 +40,10 @@ it('stays silent for a map or a file that is not an object', () => {
 })
 it('skips the reserved names, which mcp-server-name-reserved reports', () => {
   expect(ids(lintProject(NAME, named('Claude Preview', 'Claude Browser', 'workspace')))).toEqual([])
+})
+it('reports a near miss of a reserved name, which the reserved rule does not report', () => {
+  const found = lintProject(NAME, named('claude preview', 'Claude Preview ', 'Claude  Browser'))
+  expect(ids(found)).toEqual(['format', 'format', 'format'])
 })
 it('reports a reserved name with a space in plugin.json, which no other rule reports', () => {
   const found = lintManifest(NAME, manifest({ 'Claude Preview': server, workspace: server }))
