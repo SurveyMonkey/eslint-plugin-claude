@@ -392,6 +392,17 @@ const TREE: Record<string, string> = {
   'packages/ml/managed-settings.d/30-b.txt': '{"deniedModels": ["best"]}',
   'packages/ml/managed-settings.d/sub/40-c.json': '{"deniedModels": ["best"]}',
   'packages/ml/.vscode/settings.json': '{"fallbackModel": ["opus", "sonnet", "haiku", "fable"]}',
+  // `settings-skilloverrides-key`: a plugin skill key in each file that it reads, and a bundled
+  // alias key, which a managed file honors. A hidden drop-in is for `settings-managed-file`. The
+  // same content where no rule reads it.
+  'packages/so/.claude/settings.json': '{"skillOverrides": {"review": "off"}}',
+  'packages/so/.claude/settings.local.json': '{"skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.json': '{"skillOverrides": {"a:b": "off", "checkup": "off"}}',
+  'packages/so/managed-settings.d/10-a.json': '{"skillOverrides": {"proactive": "off"}}',
+  'packages/so/managed-settings.d/.20-hidden.json': '{"skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/30-b.txt': '{"skillOverrides": {"a:b": "off"}}',
+  'packages/so/managed-settings.d/sub/40-c.json': '{"skillOverrides": {"a:b": "off"}}',
+  'packages/so/.vscode/settings.json': '{"skillOverrides": {"a:b": "off"}}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -468,6 +479,7 @@ const SCOPE_RULES = [
   { name: 'settings-conflicting-keys', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-model-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -619,6 +631,12 @@ const EXPECTED = [
   'packages/ml/managed-settings.json: claude/settings-model-list@2',
   'packages/ml/managed-settings.d/10-a.json: claude/settings-model-list@2',
   'packages/ml/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `settings-skilloverrides-key` reads the project and managed files, and no other file. A
+  // managed file reports a plugin skill key and not an alias key.
+  'packages/so/.claude/settings.json: claude/settings-skilloverrides-key@2',
+  'packages/so/.claude/settings.local.json: claude/settings-skilloverrides-key@2',
+  'packages/so/managed-settings.json: claude/settings-skilloverrides-key@2',
+  'packages/so/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',

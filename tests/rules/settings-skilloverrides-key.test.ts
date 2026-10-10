@@ -22,13 +22,13 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const overrides = (map: Record<string, unknown>) => ({ skillOverrides: map })
 
 describe(`${name}: a plugin skill key`, () => {
-  it.fails('reports a plugin:skill key, in every file', () => {
+  it('reports a plugin:skill key, in every file', () => {
     for (const file of EVERY_FILE) {
       expect(ids(overrides({ 'formatter:lint': 'off' }), file), file).toEqual(['pluginSkill'])
     }
   })
 
-  it.fails('reports on the key, and names it', () => {
+  it('reports on the key, and names it', () => {
     const text = '{\n  "skillOverrides": {\n    "deploy": "off",\n    "acme:deploy": "off"\n  }\n}'
     const [message] = lint(text)
     expect([message?.messageId, message?.line, message?.column]).toEqual(['pluginSkill', 4, 5])
@@ -36,14 +36,14 @@ describe(`${name}: a plugin skill key`, () => {
     expect(message?.message).toContain('/plugin')
   })
 
-  it.fails('reports each plugin key once', () => {
+  it('reports each plugin key once', () => {
     expect(ids(overrides({ 'a:b': 'off', 'c:d': 'name-only', deploy: 'on' }))).toEqual([
       'pluginSkill',
       'pluginSkill',
     ])
   })
 
-  it.fails('is silent for a skill name, and for a key of the synced claude.ai namespace', () => {
+  it('is silent for a skill name, and for a key of the synced claude.ai namespace', () => {
     expect(ids(overrides({ deploy: 'off', 'legacy-context': 'name-only' }))).toEqual([])
     expect(ids(overrides({ 'anthropic-skills:pdf': 'off' }))).toEqual([])
   })
@@ -56,7 +56,7 @@ describe(`${name}: a bundled alias key`, () => {
     ['proactive', 'loop'],
   ]
 
-  it.fails('reports each alias in a project or local file', () => {
+  it('reports each alias in a project or local file', () => {
     for (const file of PROJECT_FILES) {
       for (const [alias] of ALIASES) {
         expect(ids(overrides({ [alias]: 'off' }), file), `${file} ${alias}`).toEqual([
@@ -66,7 +66,7 @@ describe(`${name}: a bundled alias key`, () => {
     }
   })
 
-  it.fails('names the alias and the skill, and reports on the key', () => {
+  it('names the alias and the skill, and reports on the key', () => {
     const text = '{\n  "skillOverrides": {\n    "checkup": "off"\n  }\n}'
     const [message] = lint(text)
     expect([message?.messageId, message?.line, message?.column]).toEqual(['bundledAlias', 3, 5])
@@ -74,7 +74,7 @@ describe(`${name}: a bundled alias key`, () => {
     expect(message?.message).toContain('"doctor"')
   })
 
-  it.fails('is silent in a managed file and a drop-in, where an alias key applies', () => {
+  it('is silent in a managed file and a drop-in, where an alias key applies', () => {
     for (const file of MANAGED_FILES) {
       for (const [alias] of ALIASES) {
         expect(ids(overrides({ [alias]: 'off' }), file), `${file} ${alias}`).toEqual([])
@@ -82,7 +82,7 @@ describe(`${name}: a bundled alias key`, () => {
     }
   })
 
-  it.fails('is silent for the name of the bundled skill, which every file honors', () => {
+  it('is silent for the name of the bundled skill, which every file honors', () => {
     for (const file of EVERY_FILE) {
       for (const [, skill] of ALIASES) {
         expect(ids(overrides({ [skill]: 'off' }), file), `${file} ${skill}`).toEqual([])
@@ -90,7 +90,7 @@ describe(`${name}: a bundled alias key`, () => {
     }
   })
 
-  it.fails('is silent for a name that is no alias, and for a wrong letter case', () => {
+  it('is silent for a name that is no alias, and for a wrong letter case', () => {
     expect(
       ids(overrides({ ultrareview: 'off', Review: 'off', cost: 'off', constructor: 'off' })),
     ).toEqual([])
@@ -98,18 +98,18 @@ describe(`${name}: a bundled alias key`, () => {
 })
 
 describe(`${name}: values and structure`, () => {
-  it.fails('is silent for a null entry: a null removes the key', () => {
+  it('is silent for a null entry: a null removes the key', () => {
     expect(ids(overrides({ review: null, 'a:b': null }))).toEqual([])
   })
 
-  it.fails('reads the last of two keys of one name', () => {
+  it('reads the last of two keys of one name', () => {
     expect(ids('{"skillOverrides": {"review": null, "review": "off"}}')).toEqual(['bundledAlias'])
     expect(ids('{"skillOverrides": {"review": "off", "review": null}}')).toEqual([])
     expect(ids('{"skillOverrides": {"a:b": "off"}, "skillOverrides": {}}')).toEqual([])
     expect(ids('{"skillOverrides": {}, "skillOverrides": {"a:b": "off"}}')).toEqual(['pluginSkill'])
   })
 
-  it.fails('is silent when skillOverrides is unset, null, or not an object', () => {
+  it('is silent when skillOverrides is unset, null, or not an object', () => {
     expect(ids({})).toEqual([])
     expect(ids({ skillOverrides: null })).toEqual([])
     expect(ids({ skillOverrides: [] })).toEqual([])
@@ -117,11 +117,11 @@ describe(`${name}: values and structure`, () => {
     expect(ids({ skillOverrides: {} })).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in, which Claude Code ignores', () => {
+  it('is silent in a hidden drop-in, which Claude Code ignores', () => {
     expect(ids(overrides({ 'a:b': 'off', review: 'off' }), HIDDEN)).toEqual([])
   })
 
-  it.fails('is silent for a document that is not an object', () => {
+  it('is silent for a document that is not an object', () => {
     expect(ids('[1]')).toEqual([])
     expect(ids('"x"')).toEqual([])
   })

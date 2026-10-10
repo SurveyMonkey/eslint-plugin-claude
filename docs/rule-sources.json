@@ -1511,6 +1511,28 @@
       "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3"
     }
   ],
+  "settings-skilloverrides-key": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "skillOverrides",
+      "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Override skill visibility from settings",
+      "hash": "26efad2df92f3a3a46b6f73f874c142188e85a984d264ccb37277b4c131cdd90"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How a skill gets its command name",
+      "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/commands",
+      "heading": "All commands",
+      "hash": "a61dbb8d1456e20cc1c2e35f361f1a0870cbcccc645a659ad92e7d60e75d919d"
+    }
+  ],
   "settings-sync-claude-ai-plugins": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

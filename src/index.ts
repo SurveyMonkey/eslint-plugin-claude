@@ -63,6 +63,7 @@ import settingsModelValue from './rules/settings-model-value.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
+import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
@@ -171,6 +172,7 @@ const modules = [
   settingsConflictingKeys,
   settingsModelValue,
   settingsModelList,
+  settingsSkilloverridesKey,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -277,6 +279,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-conflicting-keys': 'error',
   'settings-model-value': 'error',
   'settings-model-list': 'error',
+  'settings-skilloverrides-key': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

@@ -1471,6 +1471,12 @@
       "id": "voiceenabled",
       "hash": "6e3f42e47d5ec4f211858dd483b97bab31dac175aaf94e2acf436c31f1d934b3",
       "text": "### `voiceEnabled`\n\n<Warning>\n  Deprecated since v2.1.92, when the [`voice`](#voice) object replaced it. Claude Code still reads it so older settings files keep working, but new configurations should set `voice.enabled`.\n</Warning>\n\nTurn voice dictation on with the single Boolean form that predates the `voice` object. When both are set, `voice.enabled` applies.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: Boolean\n  * `true`: voice dictation is on when you're logged in with a claude.ai account and your organization's policy allows voice, unless `voice.enabled` is set\n  * `false`: voice dictation is off, unless `voice.enabled` is set\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"voiceEnabled\": true\n}\n```"
+    },
+    {
+      "heading": "skillOverrides",
+      "id": "skilloverrides",
+      "hash": "d043cf4bb5f8b5908997850110c702f0d71cd1ab92c903dd1ac0bf332aec76fc",
+      "text": "### `skillOverrides`\n\nHide or collapse a [skill](/docs/en/skills#override-skill-visibility-from-settings) without editing its `SKILL.md`. Claude Code applies the value under each skill's name to the skill list Claude sees and to your `/` autocomplete.\n\n* **Scope**: [`Any file`](#scopes). The `/skills` menu writes to `.claude/settings.local.json`.\n* **Type**: object mapping skill name to one of:\n  * `\"on\"`: Claude sees the skill and you can type `/name`\n  * `\"name-only\"`: Claude sees the skill by name without its description\n  * `\"user-invocable-only\"`: Claude doesn't see the skill, but you can still type `/name`\n  * `\"off\"`: Claude doesn't see the skill and `/name` is hidden from autocomplete\n* **Default**: unset, so every skill is `\"on\"`\n\nThis example lists `legacy-context` to Claude by name only and hides `deploy` from Claude and from `/` autocomplete:\n\n```json settings.json theme={null}\n{\n  \"skillOverrides\": {\n    \"legacy-context\": \"name-only\",\n    \"deploy\": \"off\"\n  }\n}\n```\n\nOverrides don't apply to plugin skills, which you manage through `/plugin`.\n\nIn managed settings and files passed with `--settings`, a key on a bundled skill's alias, such as `checkup` for `/doctor`, also applies to the skill; see [how alias keys combine with keys on the skill's own name](/docs/en/skills#override-skill-visibility-from-settings)."
     }
   ]
 }

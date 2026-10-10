@@ -79,6 +79,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-plugin-suggestion-marketplaces-source',
     'settings-project-value-ignored',
     'settings-removed-key',
+    'settings-skilloverrides-key',
     'settings-sync-claude-ai-plugins',
     'settings-valid-json',
     'skill-agent-exists',
