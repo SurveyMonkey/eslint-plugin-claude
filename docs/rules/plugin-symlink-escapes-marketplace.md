@@ -33,7 +33,7 @@ out. The walk goes depth first, with the names of each folder in alphabetical or
 
 The marketplace root is the folder that holds the nearest `.claude-plugin/marketplace.json`. The
 search starts at the plugin root and goes up to the top of the repository. The catalog need not
-list the plugin, and the rule does not read it. A catalog that does not parse still marks its
+list the plugin. The rule reads the file only to find its folder. A catalog that does not parse still marks its
 folder. When no folder holds a catalog, the plugin root is the marketplace root. Then each link
 that leaves the plugin gets this report.
 
