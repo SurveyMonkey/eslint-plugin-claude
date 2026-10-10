@@ -166,6 +166,25 @@ describe('the cross-file rules of the plugin layer', () => {
     expect(lintPlugin('plugin-monitors-skill-exists', dir, MONITOR)).toEqual([])
   })
 
+  const MINTED = JSON.stringify({
+    name: 'acme',
+    plugins: [
+      { name: 'p', source: './p' },
+      { name: 'minted', source: { source: 'command', command: 'mint-plugin' } },
+    ],
+  })
+  const MINTER = JSON.stringify({ name: 'p', dependencies: ['minted'] })
+  it('plugin-dependencies-not-auto-installed reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(MINTER, { '.claude-plugin/marketplace.json': MINTED })
+    expect(
+      lintPlugin('plugin-dependencies-not-auto-installed', dir, code).map((m) => m.messageId),
+    ).toEqual(['command'])
+  })
+  linked('plugin-dependencies-not-auto-installed stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, MINTER, { '.claude-plugin/marketplace.json': MINTED })
+    expect(lintPlugin('plugin-dependencies-not-auto-installed', dir, MINTER)).toEqual([])
+  })
+
   const CATALOG = JSON.stringify({
     name: 'acme',
     plugins: [{ name: 'p', source: { source: 'npm', package: '@acme/p' } }],

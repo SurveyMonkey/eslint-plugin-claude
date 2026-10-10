@@ -8,7 +8,7 @@ import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-sup
 import { lintPlugin } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-dependencies-not-auto-installed'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const command = (name: string) =>
@@ -52,9 +52,9 @@ describe(RULE, () => {
       messageId: 'command',
       message: command('minted'),
       line: 1,
-      column: 31,
+      column: 29,
       endLine: 1,
-      endColumn: 39,
+      endColumn: 37,
     })
   })
 
@@ -72,7 +72,7 @@ describe(RULE, () => {
     const { dir, code } = setup(['fetched'])
     const found = lintPlugin(RULE, dir, code)
     expect(found.map((m) => m.message)).toEqual([helper('fetched')])
-    expect(found[0]).toMatchObject({ messageId: 'headersHelper', line: 1, column: 31 })
+    expect(found[0]).toMatchObject({ messageId: 'headersHelper', line: 1, column: 29 })
   })
 
   check('reports both faults of one dependency, command first', () => {

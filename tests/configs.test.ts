@@ -654,6 +654,23 @@ const TREE: Record<string, string> = {
   // A plugin that the marketplace serves from npm, with a `package.json` and no shrinkwrap.
   'packages/cxd/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
   'packages/cxd/plugins/pkg/package.json': '{}',
+  'packages/cx/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
+  'packages/cx/plugins/pkg/package.json': '{}',
+  // A plugin that depends on a plugin with a `command` source in the same marketplace, in a
+  // repository with a `.git`.
+  'packages/nai/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/nai/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'nai',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'user', source: './plugins/user' },
+      { name: 'minted', source: { source: 'command', command: 'mint-plugin' } },
+    ],
+  }),
+  'packages/nai/plugins/user/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'user',
+    dependencies: ['minted'],
+  }),
   // A monitor that starts when a skill runs, in the manifest and in the default file. The plugin
   // has no such skill.
   'plugins/msk/.claude-plugin/plugin.json': JSON.stringify({
@@ -2965,6 +2982,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json', '**/settings.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-dependencies-not-auto-installed',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -3253,6 +3275,10 @@ const EXPECTED = [
   'packages/cxd/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
   'packages/cxd/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
   // `plugin-manifest-publish-metadata` reports each manifest of the trees, because none sets
+  'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
+  'packages/nai/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-not-auto-installed@1',
+  'packages/cx/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
+  // `plugin-manifest-publish-metadata` reports each manifest of the tree, because none sets
   // `homepage` and `repository` or has a README.md. It skips a plugin in `.claude/skills/<name>/`.
   ...SCHEMA_URL_TREES.map(([file]) => file)
     .filter(
