@@ -1,5 +1,5 @@
-// A scheduled fire passes the prompt to Claude as plain text. A skill that sets
-// `disable-model-invocation: true` does not run (docs/rules/skill-loop-reference-invocable.md).
+// A scheduled fire does not run a skill that sets `disable-model-invocation: true`. Claude gets
+// the prompt as plain text (docs/rules/skill-loop-reference-invocable.md).
 // The rule reads `.claude/loop.md`, and the skill or command file that its first line names.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'

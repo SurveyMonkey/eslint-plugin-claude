@@ -1,6 +1,6 @@
 // A `model` in the frontmatter of a skill or command switches the model for the turn that runs
-// it (docs/rules/skill-model-override.md). Each model has its own prompt cache, so the switch
-// reads the whole conversation again with no cache hit.
+// it (docs/rules/skill-model-override.md). Each model has its own prompt cache. When the model
+// differs from the session model, the switch reads the whole conversation again with no cache hit.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
