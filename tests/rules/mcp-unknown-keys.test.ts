@@ -22,6 +22,7 @@ it('reports an unknown entry key, on the key', () => {
   expect(found[0]).toMatchObject({ line: 1, column: code.indexOf('"cwd"') + 1 })
   expect(found[0]?.message).toContain('"cwd"')
   expect(found[0]?.message).toContain('"a"')
+  expect(found[0]?.message).toContain('alwaysLoad')
 })
 it('reports each unknown entry key, and the key of a capital letter', () => {
   expect(ids(lintProject(NAME, at({ command: 'x', cwd: 1, Command: 'y' })))).toEqual([
@@ -36,6 +37,7 @@ it('reports an unknown oauth key, on the key', () => {
   expect(found[0]).toMatchObject({ line: 1, column: code.indexOf('"clientSecret"') + 1 })
   expect(found[0]?.message).toContain('"clientSecret"')
   expect(found[0]?.message).not.toContain('"s"')
+  expect(found[0]?.message).toContain('callbackPort')
 })
 it('reports callbackPort that is 70000, 0, negative or not an integer', () => {
   for (const port of [70000, 65536, 0, -1, 80.5]) {
@@ -113,6 +115,7 @@ it('stays silent for an sdk entry, whose keys the docs do not list', () => {
 })
 it('stays silent for an entry or an oauth value that is not an object', () => {
   expect(ids(lintProject(NAME, at('x')))).toEqual([])
+  expect(ids(lintProject(NAME, at([])))).toEqual([])
   expect(ids(lintProject(NAME, at({ ...http, oauth: 'x' })))).toEqual([])
   expect(ids(lintProject(NAME, at({ ...http, oauth: [] })))).toEqual([])
 })
@@ -126,11 +129,24 @@ it('reports an oauth key and a port of a declared file on the path in the manife
   const files = (oauth: unknown) => ({ 'p/s.json': at({ ...http, oauth }) })
   for (const oauth of [{ clientSecret: 's' }, { callbackPort: 70000 }]) {
     const found = lintManifest(NAME, declared, files(oauth))
-    expect(ids(found).length).toBe(1)
+    expect(ids(found)).toEqual(['clientSecret' in oauth ? 'oauthKey' : 'port'])
     expect(found[0]).toMatchObject({ line: 1, column: declared.indexOf('"./s.json"') + 1 })
   }
 })
 it('skips an sdk entry with an unknown oauth key and a bad port', () => {
   const entry = { type: 'sdk', oauth: { clientSecret: 's', callbackPort: 70000 } }
   expect(ids(lintProject(NAME, at(entry)))).toEqual([])
+})
+it('reads the last of two members with one name, for type, oauth and callbackPort', () => {
+  const raw = (entry: string) => `{"mcpServers": {"a": ${entry}}}`
+  expect(ids(lintProject(NAME, raw('{"type": "sdk", "type": "http", "cwd": 1}')))).toEqual([
+    'entryKey',
+  ])
+  expect(ids(lintProject(NAME, raw('{"type": "http", "type": "sdk", "cwd": 1}')))).toEqual([])
+  const port = (first: number, second: number) =>
+    raw(`{"oauth": {"callbackPort": ${first}, "callbackPort": ${second}}}`)
+  expect(ids(lintProject(NAME, port(8080, 70000)))).toEqual(['port'])
+  expect(ids(lintProject(NAME, port(70000, 8080)))).toEqual([])
+  const oauth = '{"oauth": {"clientSecret": "s"}, "oauth": {"clientId": "i"}}'
+  expect(ids(lintProject(NAME, raw(oauth)))).toEqual([])
 })

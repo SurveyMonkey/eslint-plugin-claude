@@ -1,7 +1,7 @@
 // The plugin docs show the files of a plugin server through `${CLAUDE_PLUGIN_ROOT}` (MCP page,
 // "Plugin-provided MCP servers"). The docs do not say where a plugin server starts. A path that
 // starts with `./` or `../` depends on that directory, so the rule is a heuristic. A project
-// `.mcp.json` is `mcp-stdio-relative-path`. The rule reads no file on disk.
+// `.mcp.json` is `mcp-stdio-relative-path`. The rule does not look for the target of a path.
 import { expect, it } from 'vitest'
 import {
   ids,
