@@ -243,8 +243,8 @@ export function skillScan(dir: string, bound: string): { files: string[]; skippe
       // A folder with no `SKILL.md` is not a skill. A dead link, or a link out of the bound, is
       // a skill that the rule cannot see.
       if (real === null) {
-        const linked = entry.isSymbolicLink() ? realOf(path.join(dir, entry.name)) : undefined
-        skipped ||= linked === null || linked === UNREADABLE || danglingOf(file) === UNREADABLE
+        // The entry is a link to nothing, or the `SKILL.md` is.
+        skipped ||= realOf(path.join(dir, entry.name)) === null || danglingOf(file) === UNREADABLE
       } else {
         skipped = true
       }
