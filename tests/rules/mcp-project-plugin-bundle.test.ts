@@ -252,6 +252,11 @@ describe('mcp-project-plugin-bundle (links and absolute paths on disk)', () => {
   it.skipIf(noLinks)('is silent for a path with .., which claude plugin validate reports', () => {
     expect(lint(tree(base), plugin('../../../shared/s.json'))).toEqual([])
   })
+  it.skipIf(noLinks)('does not read a URL as a path', () => {
+    const dir = tree({ ...base, 'shared/example.com/s.json': '{}' })
+    link(dir, '.claude/skills/p/https:', '../../../shared')
+    expect(lint(dir, plugin('https://example.com/s.json'))).toEqual([])
+  })
   it('is silent for a path in the plugin and a URL', () => {
     expect(lint(tree(base), plugin(['./ok.json', 'https://example.com/s.json']))).toEqual([])
   })
