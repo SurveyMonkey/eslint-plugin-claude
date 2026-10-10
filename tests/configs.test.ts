@@ -736,6 +736,11 @@ const TREE: Record<string, string> = {
     mcpServers: { tg: { command: 'node' } },
     channels: [{ server: 'tg' }],
   }),
+  // A `bin/` file with the name of a system command reports in `strict` only. The decoy does not.
+  'plugins/bsc/.claude-plugin/plugin.json': JSON.stringify({ name: 'bsc' }),
+  'plugins/bsc/bin/git': '#!/bin/sh\n',
+  'plugins/bsc2/.claude-plugin/plugin.json': JSON.stringify({ name: 'bsc2' }),
+  'plugins/bsc2/bin/my-tool': '#!/bin/sh\n',
   // A command entry with a field that the manifest reference does not list.
   'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
     name: 'cmf',
@@ -3051,6 +3056,7 @@ const PLUGIN_RULES: {
 const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'plugin-user-config-sensitive', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-channel-server-stdio', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-bin-shadows-system-command', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4285,6 +4291,7 @@ const STRICT_ONLY = [
 const STRICT_ONLY = [
   'plugins/ucs/.claude-plugin/plugin.json: claude/plugin-user-config-sensitive@1',
   'plugins/chs/.claude-plugin/plugin.json: claude/plugin-channel-server-stdio@1',
+  'plugins/bsc/.claude-plugin/plugin.json: claude/plugin-bin-shadows-system-command@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
