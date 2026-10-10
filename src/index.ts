@@ -240,6 +240,7 @@ import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
+import pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
@@ -717,6 +718,7 @@ const modules = [
   pluginManifestNoBom,
   pluginManifestPublishMetadata,
   pluginManifestVersionSemver,
+  pluginSkillsKeyRedundantDefault,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1096,6 +1098,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-manifest-no-bom': 'warn',
   'plugin-manifest-publish-metadata': 'warn',
   'plugin-manifest-version-semver': 'warn',
+  'plugin-skills-key-redundant-default': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
