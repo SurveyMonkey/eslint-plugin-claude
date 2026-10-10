@@ -21,7 +21,7 @@ Do not set an `env` variable that another setting, or its own value, voids.
 ## Rule details
 
 Claude Code reads some `env` variables and does not act on them. The rule reports each such
-variable. The rule reads the linted file only. A key in another file is not seen. A `null` value
+variable. The rule reads the linted file only, so a key in another file is not seen. A `null` value
 removes a key, so the rule takes it as no key. For two keys of one name, the rule reads the last,
 as `JSON.parse` does. A hidden file in `managed-settings.d/` gets no report, because Claude Code
 ignores it.

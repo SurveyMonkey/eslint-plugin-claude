@@ -77,7 +77,7 @@ settle a report of this rule.
 ### The custom model option
 
 The rule reports the option when the file sets `availableModels` and no entry permits the option.
-An entry permits the option in three cases. It equals the option. It is a version prefix of the option. It is the family alias of the option. The `[1m]` suffix is removed from both sides.[^custom-match]
+An entry permits the option in three cases. It equals the option, it is a version prefix of the option, or it is the family alias of the option. The `[1m]` suffix is removed from both sides.[^custom-match]
 The rule makes no report when a doubt remains.
 
 ### What the rule does not check

@@ -38,9 +38,7 @@ disable the rule for that line.
 
 ### A bundled alias key
 
-"In user, project, and local settings, Claude Code matches entries against skill names only. If
-you set an entry for `review` there, it applies to a skill named `review`, not to the bundled
-`/code-review` through its `/review` alias."[^skills] In managed settings, a key under an alias applies to the skill behind it. The same is true in a file that a `--settings` flag passes.[^skills]
+The docs say: "In user, project, and local settings, Claude Code matches entries against skill names only."[^skills] An entry for `review` there applies to a skill named `review`. It does not reach the bundled `/code-review` through its `/review` alias. In managed settings, a key under an alias applies to the skill behind it. The same is true in a file that a `--settings` flag passes.[^skills]
 
 | Alias key | Bundled skill |
 |-----------|---------------|
