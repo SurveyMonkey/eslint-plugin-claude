@@ -1,6 +1,9 @@
 // After compaction, Claude Code keeps the first 5,000 tokens of each invoked skill. No setting
 // moves that number, so the option `max` has a schema maximum of 5000. The rule estimates a token
 // as 4 characters, and it counts the body, not the frontmatter.
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { pluginCommand, pluginSkill } from '../plugin-fixture.test-support.ts'
 import { lintMarkdown, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
@@ -139,5 +142,30 @@ describe('the options', () => {
   it('accepts the largest limit and the smallest', () => {
     expect(() => lint({ max: 5000 })).not.toThrow()
     expect(() => lint({ max: 1 })).not.toThrow()
+  })
+})
+
+// A plugin root that is a link out of the repository gives no report.
+describe.skipIf(process.platform === 'win32')('a plugin root that the rule cannot see', () => {
+  it('makes no report for a link out of the repository, and reports for a real root', () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), 'skill-body-token-budget-'))
+    try {
+      mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
+      mkdirSync(path.join(scratch, 'repo', 'real', '.claude-plugin'), { recursive: true })
+      mkdirSync(path.join(scratch, 'outside', '.claude-plugin'), { recursive: true })
+      writeFileSync(path.join(scratch, 'repo', 'real', '.claude-plugin', 'plugin.json'), '{}')
+      writeFileSync(path.join(scratch, 'outside', '.claude-plugin', 'plugin.json'), '{}')
+      symlinkSync('../outside', path.join(scratch, 'repo', 'plug'))
+      const lint = (dir: string) =>
+        lintMarkdown(
+          'skill-body-token-budget',
+          chars(20001),
+          path.join(scratch, 'repo', dir, 'SKILL.md'),
+        )
+      expect(lint('plug')).toEqual([])
+      expect(lint('real')).toHaveLength(1)
+    } finally {
+      rmSync(scratch, { recursive: true, force: true })
+    }
   })
 })

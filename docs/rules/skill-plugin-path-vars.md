@@ -38,8 +38,8 @@ The rule reports two faults in the body of a plugin skill:
   plugin. The report is on the variable and the `/..`. A name that starts with two dots, such as
   `/..hidden`, is not a climb.
 
-The rule reads the whole body, fenced code too, because Claude Code substitutes the variables
-anywhere in the Markdown body.[^resolve] It does not read the frontmatter. A frontmatter block
+The rule reads the whole body, fenced code too. Claude Code substitutes the variables anywhere in
+the Markdown body.[^resolve] The rule does not read the frontmatter. A frontmatter block
 that does not parse does not change the result.
 
 The rule checks a `SKILL.md` in a plugin: `<plugin>/skills/<name>/SKILL.md` and

@@ -104,7 +104,7 @@ const rule: MarkdownRuleDefinition<{
     defaultOptions: [{ max: LISTING_BUDGET, listingMax: ENTRY_CUT }],
     messages: {
       overFallbackBudget:
-        'The skills and commands of this scope list {{total}} characters of names and descriptions, and this file adds {{own}}. The documented fallback budget is {{max}} characters. Claude Code drops descriptions past the budget, starting with the skills that you invoke least.',
+        'The skills and commands of this scope list {{total}} characters of names and descriptions, and this file adds {{own}}. The documented fallback budget is {{max}} characters. Claude Code drops descriptions past the budget. The skills that you invoke least lose theirs first.',
       overConfiguredLimit:
         'The skills and commands of this scope list {{total}} characters of names and descriptions, and this file adds {{own}}. The configured limit is {{max}} characters.',
     },

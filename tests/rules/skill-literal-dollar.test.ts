@@ -2,6 +2,9 @@
 // as an amount: digits, then a decimal point or a comma and a digit, such as `$1.00`. The docs
 // give no exemption for code, so the rule reads fenced and inline code too. It does not report
 // `$ARGUMENTS`, which has no static tell.
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { pluginCommand, pluginSkill } from '../plugin-fixture.test-support.ts'
 import { lintMarkdown, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
@@ -98,5 +101,30 @@ describe('the message', () => {
     expect(found.map((m) => m.message)).toEqual([
       'Claude Code replaces `$1` with an argument. Write `\\$1` to keep it as text.',
     ])
+  })
+})
+
+// A plugin root that is a link out of the repository gives no report.
+describe.skipIf(process.platform === 'win32')('a plugin root that the rule cannot see', () => {
+  it('makes no report for a link out of the repository, and reports for a real root', () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), 'skill-literal-dollar-'))
+    try {
+      mkdirSync(path.join(scratch, 'repo', '.git'), { recursive: true })
+      mkdirSync(path.join(scratch, 'repo', 'real', '.claude-plugin'), { recursive: true })
+      mkdirSync(path.join(scratch, 'outside', '.claude-plugin'), { recursive: true })
+      writeFileSync(path.join(scratch, 'repo', 'real', '.claude-plugin', 'plugin.json'), '{}')
+      writeFileSync(path.join(scratch, 'outside', '.claude-plugin', 'plugin.json'), '{}')
+      symlinkSync('../outside', path.join(scratch, 'repo', 'plug'))
+      const lint = (dir: string) =>
+        lintMarkdown(
+          'skill-literal-dollar',
+          'Pay $1.00.\n',
+          path.join(scratch, 'repo', dir, 'SKILL.md'),
+        )
+      expect(lint('plug')).toEqual([])
+      expect(lint('real')).toHaveLength(1)
+    } finally {
+      rmSync(scratch, { recursive: true, force: true })
+    }
   })
 })
