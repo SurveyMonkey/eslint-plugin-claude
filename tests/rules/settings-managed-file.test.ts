@@ -253,7 +253,7 @@ describe('settings-managed-file control keys with drop-ins on disk', () => {
     symlinkSync(path.join(root, 'gone.json'), path.join(root, 'managed-settings.d/10-p.json'))
     expect(lintMain(root)).toEqual([])
   })
-  // Round 11 mid-round ruling 18: a drop-in directory that is a dangling link, or a link out of
+  // A drop-in directory that is a dangling link, or a link out of
   // the repository, is a part that exists and that the rule cannot see (ADR 001, Decision 14).
   // `readManagedSource` gives `UNREADABLE`, so a file of control keys gets no report.
   it('is silent when the drop-in directory is a dangling link', {

@@ -315,8 +315,8 @@ describe(`${name}: files`, () => {
   })
 })
 
-// The managed settings page merges `managed-settings.json` and its drop-ins into one source
-// (round 10 mid-round ruling 22). A single value of a later file replaces an earlier one.
+// The managed settings page merges `managed-settings.json` and its drop-ins into one source.
+// A single value of a later file replaces an earlier one.
 describe(`${name}: the sibling files of a managed source, on disk`, () => {
   const plugins = [{ marketplace: 'claude-plugins-official', plugin: 'telegram' }]
   const CHANNELS = JSON.stringify({ allowedChannelPlugins: plugins })
@@ -387,5 +387,31 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(at(root, 'managed-settings.json', REMAPS)).toEqual([])
     const main = repo({ 'managed-settings.json': '{"editorMode": "vim"}' })
     expect(at(main, 'managed-settings.d/20-a.json', REMAPS)).toEqual([])
+  })
+
+  it('is silent for a pair of one file when a sibling sets a key of the pair again', () => {
+    const focus = '{"viewMode": "focus", "tui": "default"}'
+    const auto = '{"disableAutoMode": "disable", "permissions": {"defaultMode": "auto"}}'
+    for (const sibling of [
+      '{"tui": "fullscreen"}',
+      '{"permissions": {"defaultMode": "default"}}',
+      '{"permissions": {"disableAutoMode": "x"}}',
+    ]) {
+      const root = repo({ 'managed-settings.d/20-b.json': sibling })
+      expect(at(root, 'managed-settings.d/10-a.json', focus), sibling).toEqual([])
+      expect(at(root, 'managed-settings.d/10-a.json', auto), sibling).toEqual([])
+    }
+  })
+
+  it('reports a pair of one file when a sibling sets no key of a pair', () => {
+    const root = repo({ 'managed-settings.d/20-b.json': '{"permissions": "x", "model": "opus"}' })
+    const focus = '{"viewMode": "focus", "tui": "default"}'
+    expect(at(root, 'managed-settings.d/10-a.json', focus)).toEqual(['focus'])
+  })
+
+  it('is silent for a pair of one file when a sibling does not parse to an object', () => {
+    const root = repo({ 'managed-settings.d/20-b.json': '[1]' })
+    const focus = '{"viewMode": "focus", "tui": "default"}'
+    expect(at(root, 'managed-settings.d/10-a.json', focus)).toEqual([])
   })
 })

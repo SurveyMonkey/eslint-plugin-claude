@@ -51,6 +51,28 @@ function isBoolean(object: ValueNode | undefined, key: string, expected: boolean
   return value?.type === 'Boolean' && value.value === expected
 }
 
+/** The keys that decide a pair of the same file. A sibling of the managed source can set one of
+ *  them again. Claude Code takes a single value from the later file. */
+const PAIR_KEYS = [
+  'viewMode',
+  'tui',
+  'spinnerTipsEnabled',
+  'disableWorkflows',
+  'disableAllHooks',
+  'disableAutoMode',
+  'timeFormat',
+]
+
+/** True when the object `fields` sets a key that decides a pair, at the top level or in
+ *  `permissions`. */
+function setsPairKey(fields: Record<string, unknown>): boolean {
+  const { permissions } = fields
+  const inner = typeof permissions === 'object' && permissions !== null ? permissions : {}
+  return (
+    PAIR_KEYS.some((key) => key in fields) || 'disableAutoMode' in inner || 'defaultMode' in inner
+  )
+}
+
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {
     type: 'problem',
@@ -103,27 +125,32 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         // the rule cannot read can set any key, so the two checks that need a sibling stay silent.
         const siblings = isManaged ? readManagedSource(context.filename) : []
 
+        // A sibling can set a key of a pair again, and the later file wins. The rule cannot tell
+        // which file is later in every case, so the pairs of one file stay silent then.
+        const settled = siblings === UNREADABLE || siblings.some(setsPairKey)
+        const pair = settled ? () => undefined : report
+
         const view = stringOf(body, 'viewMode')
         if (view !== undefined && VIEWS.includes(view)) {
-          report(setMember(body, 'verbose'), 'verbose')
+          pair(setMember(body, 'verbose'), 'verbose')
         }
 
         if (isBoolean(body, 'spinnerTipsEnabled', false)) {
-          report(setMember(body, 'spinnerTipsOverride'), 'tipsHidden')
+          pair(setMember(body, 'spinnerTipsOverride'), 'tipsHidden')
         }
 
         if (isBoolean(body, 'disableWorkflows', true) && isBoolean(body, 'enableWorkflows', true)) {
-          report(setMember(body, 'enableWorkflows'), 'workflows')
+          pair(setMember(body, 'enableWorkflows'), 'workflows')
         }
 
         if (isBoolean(body, 'disableAllHooks', true)) {
           for (const key of COMMAND_KEYS) {
-            report(setMember(body, key), 'hooksOff', { key })
+            pair(setMember(body, key), 'hooksOff', { key })
           }
         }
 
         if (view === 'focus' && stringOf(body, 'tui') === 'default') {
-          report(setMember(body, 'viewMode'), 'focus')
+          pair(setMember(body, 'viewMode'), 'focus')
         }
 
         // Claude Code reads the remaps from user and managed settings. `settings-key-scope`
@@ -145,12 +172,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           stringOf(permissions, 'disableAutoMode') === 'disable'
         ) {
           if (stringOf(permissions, 'defaultMode') === 'auto') {
-            report(setMember(permissions, 'defaultMode'), 'autoMode')
+            pair(setMember(permissions, 'defaultMode'), 'autoMode')
           }
         }
 
         if (stringOf(body, 'timeFormat') === '24-hour-utc') {
-          report(setMember(body, 'timeZone'), 'timeZone')
+          pair(setMember(body, 'timeZone'), 'timeZone')
         }
 
         // Both keys are managed-only. `settings-key-scope` reports them in a project file. A
