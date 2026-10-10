@@ -1,4 +1,11 @@
 {
+  "agent-disallowed-tools-scope": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Available tools",
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+    }
+  ],
   "agent-field-min-version": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",

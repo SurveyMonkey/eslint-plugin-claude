@@ -976,6 +976,7 @@ const AGENT_RULES = [
 // The subagent field rules of #9 that are `warn`, in the order of the `modules` list. They
 // follow the agent and output style rules.
 const AGENT_WARN_RULES = [
+  'agent-disallowed-tools-scope',
   'agent-field-min-version',
   'agent-name-shadows-builtin',
   'agent-no-bom',
