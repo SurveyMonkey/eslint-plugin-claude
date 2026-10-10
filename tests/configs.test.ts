@@ -2699,6 +2699,10 @@ const TREE: Record<string, string> = {
   ...settingsFiles('ssc', {
     sandbox: { credentials: { files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask' }] } },
   }),
+  // `sandbox-domain-overlap`: a domain in both lists.
+  ...settingsFiles('sdo', {
+    sandbox: { network: { allowedDomains: ['a.com'], deniedDomains: ['a.com'] } },
+  }),
   // `permissions-sandbox-bash-ask`: a bare Bash ask rule with the sandbox on.
   ...settingsFiles('psb', { permissions: { ask: ['Bash'] }, sandbox: { enabled: true } }),
   // `permissions-dead-allow`: an allow rule under a bare deny.
@@ -3551,6 +3555,7 @@ const SANDBOX_RULES = [
   { name: 'sandbox-filesystem-disabled-conflict', files: MANAGED_FILES },
   { name: 'sandbox-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-scope', files: PROJECT_FILES },
+  { name: 'sandbox-domain-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-sandbox-bash-ask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-dead-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
@@ -4686,6 +4691,7 @@ const EXPECTED = [
     ['sdx', 'sandbox-domain-syntax'],
     ['sec', 'sandbox-excluded-commands-syntax'],
     ['ssm', 'sandbox-schema'],
+    ['sdo', 'sandbox-domain-overlap'],
     ['psb', 'permissions-sandbox-bash-ask'],
     ['pda', 'permissions-dead-allow'],
   ].flatMap(([dir, rule]) => [
