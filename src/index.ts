@@ -44,6 +44,7 @@ import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildc
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
 import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
 import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
+import permissionsDeadAllow from './rules/permissions-dead-allow.ts'
 import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
 import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
 import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
@@ -56,6 +57,7 @@ import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
 import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
+import permissionsSandboxBashAsk from './rules/permissions-sandbox-bash-ask.ts'
 import permissionsSchema from './rules/permissions-schema.ts'
 import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
@@ -63,6 +65,9 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import permissionsWebfetchDomainSyntax from './rules/permissions-webfetch-domain-syntax.ts'
 import permissionsWindowsPath from './rules/permissions-windows-path.ts'
+import sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
+import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
+import sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
 import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
 import sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
 import sandboxFilesystemDisabledConflict from './rules/sandbox-filesystem-disabled-conflict.ts'
@@ -184,6 +189,11 @@ const modules = [
   sandboxFilesystemDisabledConflict,
   sandboxSchema,
   sandboxScope,
+  sandboxCredentialsAws,
+  sandboxCredentialsMask,
+  sandboxDomainOverlap,
+  permissionsSandboxBashAsk,
+  permissionsDeadAllow,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -316,6 +326,11 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-filesystem-disabled-conflict': 'error',
   'sandbox-schema': 'error',
   'sandbox-scope': 'error',
+  'sandbox-credentials-aws': 'error',
+  'sandbox-credentials-mask': 'error',
+  'sandbox-domain-overlap': 'error',
+  'permissions-sandbox-bash-ask': 'error',
+  'permissions-dead-allow': 'error',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

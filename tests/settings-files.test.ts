@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSyn
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { readManagedSource, readSettings } from '../src/settings-files.ts'
+import { readManagedSource, readSettings, readSiblingSettings } from '../src/settings-files.ts'
 import { UNREADABLE } from '../src/skill-tree.ts'
 import { repo as repository } from './agent-settings.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
@@ -267,5 +267,36 @@ describe('readManagedSource', () => {
         expect(readManagedSource(at(root, `${DROP}/10-a.json`))).toBe(UNREADABLE),
       )
     })
+  })
+})
+
+describe('readSiblingSettings', () => {
+  const PROJECT = '.claude/settings.json'
+  const LOCAL = '.claude/settings.local.json'
+  const file = (root: string, name: string) => path.join(root, name)
+
+  it('gives the local file for the project file, and the project file for the local file', () => {
+    const root = repository({ [PROJECT]: '{"a":1}', [LOCAL]: '{"b":2}' })
+    expect(readSiblingSettings(file(root, PROJECT))).toEqual({ b: 2 })
+    expect(readSiblingSettings(file(root, LOCAL))).toEqual({ a: 1 })
+  })
+
+  it('gives null when the other file is not there', () => {
+    const root = repository({ [PROJECT]: '{}' })
+    expect(readSiblingSettings(file(root, PROJECT))).toBeNull()
+  })
+
+  it('gives UNREADABLE when the other file is not an object', () => {
+    const root = repository({ [PROJECT]: '{}', [LOCAL]: '[1]' })
+    expect(readSiblingSettings(file(root, PROJECT))).toBe(UNREADABLE)
+  })
+
+  it('gives UNREADABLE for a link that leads out of the repository', {
+    skip: process.platform === 'win32',
+  }, () => {
+    const root = repository({ [PROJECT]: '{}' })
+    const outside = repository({ 'x.json': '{}' })
+    symlinkSync(path.join(outside, 'x.json'), file(root, LOCAL))
+    expect(readSiblingSettings(file(root, PROJECT))).toBe(UNREADABLE)
   })
 })

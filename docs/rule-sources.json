@@ -828,6 +828,23 @@
       "hash": "885716091d8f45331e5217c93d3b3684e0000d205315a7d51c7488afeb10a85f"
     }
   ],
+  "permissions-dead-allow": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Manage permissions",
+      "hash": "56ca5f3f083098267cf7701cd02cf10b2b0abebac77946400176734df2526d9d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "8a5b44ee4d880d824ce8de288d9a07e55aabbcb8c756d10d2c864c0eeccb7339"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Settings precedence",
+      "hash": "6878c78544a4f7b4a830a40b5df948396418330baae60c8f89abe72d0a1eea1d"
+    }
+  ],
   "permissions-default-mode-conflict": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1062,6 +1079,18 @@
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
     }
   ],
+  "permissions-sandbox-bash-ask": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "How permissions interact with sandboxing",
+      "hash": "7e140cbfceabbc5e61e03cb5d84695a2b853d1bbeec3f8dc41a3ff55bb348a75"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.autoAllowBashIfSandboxed",
+      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d"
+    }
+  ],
   "permissions-schema": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -1214,6 +1243,82 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Cd",
       "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    }
+  ],
+  "sandbox-credentials-aws": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.awsPairs",
+      "hash": "ca206977e839b2896dcaa4acc6d0c697b8c039d52c9bd325550c268cff688c55"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.envVars",
+      "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Mask fields for files",
+      "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Re-sign AWS requests",
+      "hash": "19109ea519585d9178e0ca872e07d820830541f642ecee3df638e0b487cc51f5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Mask credential files",
+      "hash": "f710e1f6b094956380fe8fa7d883fe93ef255cb7f0b16e7f6f231bf0b5b0e417"
+    }
+  ],
+  "sandbox-credentials-mask": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.files",
+      "hash": "7bcf139a71ace917bc629bd1fd985eceacfa3a8a6ed87960df716a5c424f578d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials.envVars",
+      "hash": "85d277118e049142b1df9e7e6ed636b31e9d345148bfc7b061e5943b36ab393b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.credentials",
+      "hash": "2b7d793ea0796150e42acfa04c07c754ab8e0147cb437765a56a7c2a78815672"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Mask fields for files",
+      "hash": "e0a6775e40bf1fa2961aad9115d8d1b11ca5ff44d169511ae8b9b3a050aef906"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Mask fields for environment variables",
+      "hash": "35d2058fd639400b9d06e4271f53b322b4b279776434ff23078b6ec864f23443"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Mask credentials",
+      "hash": "91b57dd88665c2899650d9fba468a2e663a30965726851a8fc966ab6f0ed16e3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Mask environment variables",
+      "hash": "0de7dc77eac0e8100fa4b8fc6e3d23676ab5c7d264f37f6ea317ac52266365a8"
+    }
+  ],
+  "sandbox-domain-overlap": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.deniedDomains",
+      "hash": "e8fd871e032980f6e3d6d564cde48dc595fbdeca971b595e498f4eafc3f97ccf"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.network.allowedDomains",
+      "hash": "557ebf0a27e224290a75e5a5bb43bd41d4c25c443258d17e0405af3da5096dfa"
     }
   ],
   "sandbox-domain-syntax": [

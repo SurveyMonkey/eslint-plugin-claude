@@ -104,6 +104,19 @@ export function readSettings(
   return merged
 }
 
+/** The parsed object of the other file of the project pair of `filename`: `settings.local.json`
+ *  for the project file, and `settings.json` for the local file. The result is null when the
+ *  other file is not there and its path is in the repository. It is `UNREADABLE` when the rule
+ *  cannot see the file, as `readSettings` defines. A caller sums a list key over the two files
+ *  and never reads across the pair and a managed source. */
+export function readSiblingSettings(filename: string): Record<string, unknown> | null | Unreadable {
+  const self = path.resolve(filename)
+  const dir = path.dirname(self)
+  const partner =
+    path.basename(self) === 'settings.local.json' ? 'settings.json' : 'settings.local.json'
+  return fieldsOf(path.join(dir, partner), repositoryRoot(dir))
+}
+
 /** The parsed objects of the other files of the merged managed source of the
  *  managed file `filename`: the sibling `managed-settings.json`, and each
  *  `*.json` file in the sibling `managed-settings.d/` that is not hidden. The
