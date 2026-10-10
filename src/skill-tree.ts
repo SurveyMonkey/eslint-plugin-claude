@@ -215,17 +215,36 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
  *  a folder that the rule cannot read. It is empty for a `dir` that the rule
  *  cannot list. The caller then compares no name that it cannot read. */
 export function skillFiles(dir: string, bound: string): string[] {
+  return skillScan(dir, bound).files
+}
+
+/** The same files as `skillFiles`, and `skipped`. It is true when a folder is left out that
+ *  could hold a skill: the rule cannot list `dir`, or a `SKILL.md` is a link to nothing, a link
+ *  out of `bound`, or a file that the rule cannot resolve. */
+export function skillScan(dir: string, bound: string): { files: string[]; skipped: boolean } {
   const entries = entriesOf(dir)
   if (!Array.isArray(entries)) {
-    return []
+    return { files: [], skipped: entries === UNREADABLE }
   }
-  return entries
+  let skipped = false
+  const files = entries
     .sort((a, b) => a.name.localeCompare(b.name, 'en'))
-    .map((entry) => path.join(dir, entry.name, 'SKILL.md'))
-    .filter((file) => {
+    .map((entry) => ({ entry, file: path.join(dir, entry.name, 'SKILL.md') }))
+    .filter(({ entry, file }) => {
       const real = realOf(file)
-      return typeof real === 'string' && isInside(real, bound)
+      if (typeof real === 'string' && isInside(real, bound)) {
+        return true
+      }
+      // A folder with no `SKILL.md` is not a skill. A dead link, or a link out of the bound, is
+      // a skill that the rule cannot see.
+      skipped ||=
+        real === UNREADABLE ||
+        typeof real === 'string' ||
+        (real === null && (entry.isSymbolicLink() || danglingOf(file) === UNREADABLE))
+      return false
     })
+    .map(({ file }) => file)
+  return { files, skipped }
 }
 
 // The fields of each file that was read, by path. An entry is current while

@@ -48,9 +48,8 @@ put('a/.claude/commands/rev.md', open)
 put('a/.claude/commands/cmd.md', manual)
 put('a/.claude/commands/ops/run.md', manual)
 put('a/.claude/commands/ok.md', open)
-// A skill folder without a `SKILL.md`, a link to a skill that is not there, and a file.
+// A skill folder without a `SKILL.md`, and a file.
 mkdirSync(at('a/.claude/skills/empty'), { recursive: true })
-symlinkSync('missing', at('a/.claude/skills/dead'))
 put('a/.claude/skills/README.md', 'Notes\n')
 // A plugin skill is not in the project folder.
 put('a/plugins/p/skills/deploy/SKILL.md', manual)
@@ -67,6 +66,21 @@ mkdirSync(at('c/.git'), { recursive: true })
 // A `skills` entry that is a file, and a tree with no `skills/` folder.
 put('d/.claude/skills', 'not a folder\n')
 mkdirSync(at('e/.claude'), { recursive: true })
+// A skill that the rule cannot see could have the name, and it would win over a command file.
+// A link to nothing:
+put('hid-dead/.claude/skills/deploy/SKILL.md', manual)
+put('hid-dead/.claude/commands/ship.md', manual)
+symlinkSync('missing', at('hid-dead/.claude/skills/dead'))
+mkdirSync(at('hid-dead/.git'), { recursive: true })
+// A link out of the repository, and a command file of the same name:
+put('hid-out/.claude/commands/deploy.md', manual)
+mkdirSync(at('hid-out/.claude/skills'), { recursive: true })
+symlinkSync('../../../outside/deploy', at('hid-out/.claude/skills/other'))
+mkdirSync(at('hid-out/.git'), { recursive: true })
+// A link out of the repository below `commands/`:
+put('hid-cmd/.claude/commands/cmd.md', manual)
+symlinkSync('../../../outside', at('hid-cmd/.claude/commands/ext'))
+mkdirSync(at('hid-cmd/.git'), { recursive: true })
 
 const manualOnly = (name: string, line = 1, column = 1) => ({
   messageId: 'manualOnly' as const,
@@ -93,7 +107,12 @@ markdownTester.run('skill-loop-reference-invocable', ruleOf('skill-loop-referenc
     { code: '/nothing-here\n', filename: loop('a') },
     // A folder with no `SKILL.md`, a link to nothing, and a file in `skills/`.
     { code: '/empty\n', filename: loop('a') },
-    { code: '/dead\n', filename: loop('a') },
+    // A link to nothing, a link out of the repository, and a scan that left a file out.
+    { code: '/dead\n', filename: loop('hid-dead') },
+    { code: '/deploy\n', filename: loop('hid-dead') },
+    { code: '/ship\n', filename: loop('hid-dead') },
+    { code: '/deploy\n', filename: loop('hid-out') },
+    { code: '/cmd\n', filename: loop('hid-cmd') },
     { code: '/README.md\n', filename: loop('a') },
     // Two skills answer to `dup`, and one of them has no `disable-model-invocation`.
     { code: '/dup\n', filename: loop('a') },
