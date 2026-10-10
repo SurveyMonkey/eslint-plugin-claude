@@ -1,6 +1,6 @@
 // Ten events match on a fixed set of values. The sets are in the hooks reference, "Matcher
 // patterns" (https://code.claude.com/docs/en/hooks#matcher-patterns).
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { MATCHER_VALUES } from '../../src/data/hook-events.ts'
 import {
   command,
@@ -14,16 +14,12 @@ import {
 } from '../hooks.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-// Red: the rule does not exist yet. The fix commit removes this line and the alias.
-const it = realIt.fails
-
 const name = 'hooks-matcher-enum'
 const ids = (event: string, matcher: unknown, file = FILES.project) =>
   jsonIds(name, settings(hooks(event, [command()], matcher)), file)
 
 describe(`${name}: the value sets`, () => {
-  // Green already: the data is in the base of this rule. A pinning test.
-  realIt('holds ten events', () => {
+  it('holds ten events', () => {
     expect([...MATCHER_VALUES.keys()].sort()).toEqual([
       'ConfigChange',
       'DirectoryAdded',
@@ -79,7 +75,7 @@ describe(`${name}: the value sets`, () => {
   it('reports at the matcher value', () => {
     const text = '{\n  "hooks": {\n    "Setup": [{"matcher": "x", "hooks": []}]\n  }\n}'
     const found = lintJson(name, text, FILES.project)
-    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 25]])
+    expect(found.map(({ line, column }) => [line, column])).toEqual([[3, 27]])
   })
 })
 

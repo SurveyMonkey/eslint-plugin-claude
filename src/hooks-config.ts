@@ -87,6 +87,21 @@ export function quotedList(items: readonly string[]): string {
     : `${quoted.slice(0, -1).join(', ')} and ${quoted[quoted.length - 1]}`
 }
 
+/** The values of a matcher that holds exact-match characters only, or null when Claude Code reads
+ *  the matcher as a regular expression. Letters, digits, `_`, `-`, spaces, `,` and `|` are the exact
+ *  set, and `|` or `,` separates values. `narrow` is the set of `FileChanged` and `StopFailure`: letters,
+ *  digits, `_` and `|`, with `|` as the one separator (the hooks reference, "Matcher patterns").
+ *  A match-all matcher has no value, and `*` is not an exact-match character. */
+export function exactValues(matcher: string, narrow: boolean): string[] | null {
+  if (!(narrow ? /^[\w|]*$/ : /^[\w\- ,|]*$/).test(matcher)) {
+    return null
+  }
+  return matcher
+    .split(narrow ? '|' : /[|,]/)
+    .map((value) => value.trim())
+    .filter((value) => value !== '')
+}
+
 /** The last member `key` of the object `node`, as `JSON.parse` keeps the last of two. */
 export function memberOf(node: HObject, key: string): HMember | undefined {
   return node.members.findLast((member) => member.key === key)

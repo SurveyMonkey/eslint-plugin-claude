@@ -39,6 +39,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-event-name-known',
     'hooks-handler-field-ignored',
     'hooks-handler-type-event-support',
+    'hooks-matcher-enum',
     'hooks-matcher-unsupported-event',
     'hooks-no-standalone-file',
     'marketplace-command-version-ignored',
