@@ -21,8 +21,9 @@ Do not set `oauth` beside a static `Authorization` header on an MCP server.
 ## Rule details
 
 A server with a `headers.Authorization` value uses that credential. If the server rejects the
-header, Claude Code reports the connection as failed. It does not fall back to OAuth.[^auth] A `headersHelper` that returns an `Authorization`
-header gives the same result.[^helper] The rule cannot read the output of a helper, so it reads `headers` only.
+header, Claude Code reports the connection as failed. It does not fall back to OAuth.[^auth] A
+`headersHelper` that returns an `Authorization` header gives the same result.[^helper] The rule
+cannot read the output of a helper, so it reads `headers` only.
 
 The rule reports the `oauth` key of a server that has an `oauth` object and a `headers` object with
 an `Authorization` key. HTTP header names do not depend on letter case, so `authorization` counts.
