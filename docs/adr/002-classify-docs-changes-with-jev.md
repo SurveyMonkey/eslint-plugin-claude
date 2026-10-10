@@ -45,8 +45,9 @@ model, and TypeSafe Jev.
 
 `scripts/docs-classify.ts` sends one request for each changed, added or removed block. All
 questions share one `state`: the page, the heading, the old text, the new text, the lines that
-each side adds, and each rule that cites the block. The questions are constants. Docs text goes
-only into the `state`, as data.
+each side adds, and each rule that cites the block. A block that is too large for one request
+has a placeholder in place of each full text. The questions are constants. Docs text goes only
+into the `state`, as data.
 
 | Question | Asked for | Yes means |
 | - | - | - |
@@ -69,10 +70,13 @@ Code decides these cases with no model call:
 - A block that no rule cites is gone: no finding.
 - A mapped heading appears twice, a mapped heading is on neither the page nor the snapshot, the
   snapshot has no source for a mapped heading, or a page has no snapshot: `needs-triage`.
-- A block is too large for one request: Jev classifies its changed lines. The request has the
-  lines that each side adds and no full text, and the finding says so in its Reason. The block
-  goes to a person as `needs-triage` only when those lines are too large too. A block with one
-  text only (new, removed, or with no stored old text) has no diff, so it goes to a person.
+- A block is too large for one request, and its changed lines are also too large, or it has
+  one text only, or its two texts have no changed line: `needs-triage`. A block with one text
+  has no diff. Its text is new, or removed, or it has no stored old text.
+
+A block that is too large for one request, and has a diff that fits, gets a model call. The
+request has the lines that each side adds and no full text. The Reason of a finding from that
+request says that Jev judged the changed lines.
 
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
 confidence value, so a finding reports `|2p - 1|` as its confidence.
@@ -128,12 +132,12 @@ Accuracy by label, on each of the four runs:
 - The lowest `alters` for a `rule-update` case is 0.51. The `no` value of 0.2 is far below it.
   The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
-  block is 0.73. The band from 0.2 to 0.5 is empty in this data.
-- The live band from 0.2 to 0.4 held seven of seven noise cases (#104, #105, #110, #111, #123,
-  #125 and #133, from 0.21 to 0.33). So the `requirement` `no` value is 0.4. A miss on a block
-  that no rule cites is a missed candidate, not a broken rule. The `alters` value stays 0.2,
-  because both cases in its band were real rule changes (#103 at 0.27 and #118 at 0.24). The
-  classifier summary lists each block that this value skips, with its value.
+  block is 0.73. The band from 0.2 to 0.5 is empty in this spike data.
+- In the live data, seven blocks that no rule cites had a `requirement` value from 0.21 to
+  0.33 (#104, #105, #110, #111, #123, #125 and #133). All seven needed no change. So the
+  `requirement` `no` value is 0.4. A skipped block is a missed candidate, not a broken rule.
+- The `alters` value stays 0.2. Both cases in its live band were real rule changes (#103 at
+  0.27 and #118 at 0.24). The classifier summary lists each no-change block with its value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
 - The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56. A
   value below 0.5 gives `needs-triage`, not a silent miss. Both results open an issue.
@@ -152,8 +156,9 @@ One case was also rebuilt, because its old text did not agree with the current r
 
 No Anthropic API key exists in this environment, so no Claude model classified the cases. The
 labels are the reference. The Claude Code session that wrote this change set them by hand from
-the docs, and a person has not checked them yet. The thresholds come from the same 24 cases, and
-no held-out set exists. Record new cases and their results here before you change a threshold.
+the docs, and a person has not checked them yet. The `alters` and `obsolete` values come from the
+same 24 cases, and no held-out set exists. The `requirement` `no` value also uses seven live
+cases. Record new cases and their results here before you change a threshold.
 
 ### 4. The state lives in `docs/`, and only a reviewed pull request changes it
 
