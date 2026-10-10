@@ -354,6 +354,11 @@ describe(`${name}: the sibling files of a managed source, on disk`, () => {
     expect(ids(text, MANAGED)).toEqual([])
   })
 
+  it('reports when a sibling sets channelsEnabled to a value that is not true', () => {
+    const root = repo({ 'managed-settings.d/10-b.json': '{"channelsEnabled": "true"}' })
+    expect(at(root, 'managed-settings.d/20-a.json', CHANNELS)).toEqual(['channels'])
+  })
+
   it('ignores a hidden sibling and a sibling that does not end in .json', () => {
     const root = repo({
       'managed-settings.d/.10-b.json': '{"channelsEnabled": true}',

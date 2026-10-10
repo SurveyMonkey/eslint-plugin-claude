@@ -3,7 +3,7 @@
 // and the commands reference (https://code.claude.com/docs/en/commands), which marks each bundled
 // skill and names its alias: `/review` for `/code-review`, `/checkup` for `/doctor` and
 // `/proactive` for `/loop`.
-import { mkdirSync, symlinkSync } from 'node:fs'
+import { chmodSync, mkdirSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
@@ -229,6 +229,19 @@ describe(`${name}: a bundled alias key beside a skill of that name, on disk`, ()
     mkdirSync(path.join(loop, '.claude'), { recursive: true })
     symlinkSync(path.join(loop, '.claude/skills'), path.join(loop, '.claude/skills'))
     expect(at(loop)).toEqual([])
+  })
+
+  it('is silent when the skills folder cannot be read', {
+    skip: process.platform === 'win32' || process.getuid?.() === 0,
+  }, () => {
+    const root = repo({ '.claude/skills/review/SKILL.md': 'x' })
+    const folder = path.join(root, '.claude/skills')
+    chmodSync(folder, 0o000)
+    try {
+      expect(at(root)).toEqual([])
+    } finally {
+      chmodSync(folder, 0o755)
+    }
   })
 
   it('looks for the skill of the alias that the file names, and for no other', () => {
