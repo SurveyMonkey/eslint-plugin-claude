@@ -108,7 +108,7 @@ describe(`${name}: a regular expression that does not compile`, () => {
 })
 
 describe(`${name}: StopFailure`, () => {
-  it('reports a comma, a space or a hyphen, which keep the matcher from splitting', () => {
+  it('reports a comma, a space or a hyphen, which do not split the matcher', () => {
     expect(ids('StopFailure', 'rate_limit, overloaded')).toEqual(['separator'])
     expect(ids('StopFailure', 'rate_limit,overloaded')).toEqual(['separator'])
     expect(ids('StopFailure', 'rate_limit overloaded')).toEqual(['separator'])

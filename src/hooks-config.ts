@@ -124,8 +124,7 @@ export function stringOf(node: HObject, key: string): string | undefined {
   return value?.kind === 'string' ? value.value : undefined
 }
 
-/** The tree for a JSON value. */
-export function fromJson(node: ValueNode): HNode {
+function fromJson(node: ValueNode): HNode {
   switch (node.type) {
     case 'Object':
       return {
