@@ -129,6 +129,12 @@ const TREE: Record<string, string> = {
   }),
   'plugins/skl/extra/loose.md': '# Loose\n',
   'plugins/skl/skills/loose.md': '# Loose\n',
+  // A repository with a `.git`, because the rule counts the directories below the repository.
+  // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
+  'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'pp' }),
+  'packages/pp/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'pp' }),
+  '.claude/plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
   '.claude/skills/ref/SKILL.md': '[a](missing.md)\n',
@@ -517,6 +523,10 @@ const SCOPE_RULES = [
 const PLUGIN_RULES = [
   { name: 'plugin-manifest-location', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-skill-dir-layout', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-no-project-plugins-dir',
+    files: ['**/.claude/plugins/**/.claude-plugin/plugin.json'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -561,6 +571,7 @@ const EXPECTED = [
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
+  'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
