@@ -41,6 +41,7 @@ describe(`${name}: the bare variable`, () => {
       '& "$env:CLAUDE_PROJECT_DIR\\check.ps1"',
       '& "$($env:CLAUDE_PROJECT_DIR)\\check.ps1"',
       'Write-Host $CLAUDE_PROJECT_DIR_OTHER',
+      'Write-Host $CLAUDE_PROJECT_DIR1',
       'Write-Host $CLAUDE_PLUGIN_ROOT',
       'Write-Host CLAUDE_PROJECT_DIR',
       'Write-Host `$CLAUDE_PROJECT_DIR',
@@ -77,6 +78,10 @@ describe(`${name}: a placeholder in single quotes`, () => {
     // Text between two strings is outside both.
     expect(power(`Write-Host 'a' ${p} 'b'`)).toEqual([])
     expect(power(`Write-Host '${p}' "${p}"`)).toEqual(['quoted'])
+    // A string that closes ends the quote state, so a later string starts fresh.
+    expect(power(`Write-Host "a" '${p}'`)).toEqual(['quoted'])
+    // Two single-quoted strings do not join into one placeholder.
+    expect(power(`Write-Host '\${CLAUDE_PROJECT_' "x" 'DIR}'`)).toEqual([])
     // A backtick is literal in single quotes.
     expect(power(`Write-Host 'a\`' ${p} 'b'`)).toEqual([])
   })

@@ -17,8 +17,9 @@ import {
 
 const name = 'hooks-env-var-unavailable' as const
 
-/** A reference to the variable `variable`: `$NAME`, `${NAME}`, `$env:NAME` or `${env:NAME}`. */
-const reference = (variable: string) => new RegExp(`\\$\\{?(?:env:)?${variable}(?![A-Za-z0-9_])`)
+/** A reference to the variable `variable`: `$NAME`, `${NAME}`, `$env:NAME` or `${env:NAME}`. The `env:` prefix has any letter case. */
+const reference = (variable: string) =>
+  new RegExp(`\\$\\{?(?:[Ee][Nn][Vv]:)?${variable}(?![A-Za-z0-9_])`)
 
 const ENV_FILE = reference('CLAUDE_ENV_FILE')
 const MODEL = reference('CLAUDE_MODEL')
