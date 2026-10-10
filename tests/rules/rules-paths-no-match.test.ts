@@ -194,6 +194,22 @@ describe(`${RULE}: what the rule cannot read`, () => {
     expect(run('aaa/deep/*.ts', 'real/deep/*.ts', 'zzz/deep/*.ts')).toEqual([])
   })
 
+  it.skipIf(noLinks)('stops at a limit of links, and makes no report past it', () => {
+    // Two links from each level to the next: 2^20 paths to the last level, 40 links.
+    const files: Record<string, string> = { 'a.md': 'a\n', 'd20/x.ts': 'x\n' }
+    for (let level = 1; level < 20; level++) {
+      files[`d${level}/.keep`] = '\n'
+    }
+    const dir = tree(files)
+    for (let level = 1; level < 20; level++) {
+      link(dir, `d${level}/l1`, `../d${level + 1}`)
+      link(dir, `d${level}/l2`, `../d${level + 1}`)
+    }
+    const started = Date.now()
+    expect(patterns(lintMemory(RULE, dir, '.claude/rules/r.md', listOf('nope/*')))).toEqual([])
+    expect(Date.now() - started).toBeLessThan(20000)
+  })
+
   it.skipIf(noLinks)('makes no report when a link leads out of the repository', () => {
     const outside = tree({ 'o.ts': 'x\n' })
     const dir = tree({ 'a.md': 'a\n' })
