@@ -177,6 +177,17 @@ describe(`${name}: SessionEnd timeout`, () => {
     )
   })
 
+  it('refuses an option that is not a positive number, or not known', () => {
+    const lint = (options: object) =>
+      lintJson(name, settings(hooks('SessionEnd', [command({ timeout: 5 })])), FILES.project, [
+        options,
+      ])
+    expect(() => lint({ sessionEndMax: 0 })).toThrow()
+    expect(() => lint({ sessionEndPluginMax: -1 })).toThrow()
+    expect(() => lint({ sessionEndMax: '60' })).toThrow()
+    expect(() => lint({ typo: 1 })).toThrow()
+  })
+
   it('moves each limit with the options, and names the configured limit', () => {
     const lint = (timeout: number, file: string, options: object) =>
       lintJson(name, settings(hooks('SessionEnd', [command({ timeout })])), file, [options])

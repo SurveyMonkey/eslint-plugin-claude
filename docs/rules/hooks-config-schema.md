@@ -54,8 +54,8 @@ under `modules`. The docs show an array with one path. The rule accepts an array
 needs no `hooks` key.[^mods]
 
 The rule reads a `hooks.json` at the root of a plugin. It skips a file that Claude Code does not read (see
-[`hooks-no-standalone-file`](hooks-no-standalone-file.md)). It skips a `hooks/hooks.json` in a hidden folder other
-than `.claude`, such as `.github/hooks/`, because that file is for another tool.
+[`hooks-no-standalone-file`](hooks-no-standalone-file.md)). It skips a `hooks/hooks.json` in a hidden folder that holds
+`hooks/` (other than `.claude`), such as `.github/hooks/`, because that file is for another tool.
 
 ### What the rule does not check
 

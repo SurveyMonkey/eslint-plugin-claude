@@ -289,6 +289,7 @@ describe(`${name}: the type of each field`, () => {
 describe(`${name}: files of another tool`, () => {
   it('is silent on a hooks/hooks.json in a hidden folder other than .claude', () => {
     expect(jsonIds(name, '{"version": 1}', '/repo/.github/hooks/hooks.json')).toEqual([])
+    expect(jsonIds(name, '{"version": 1}', '/repo/.vscode/hooks/hooks.json')).toEqual([])
     expect(jsonIds(name, '{"version": 1}', '/repo/plugins/p/hooks/hooks.json')).not.toEqual([])
   })
 })

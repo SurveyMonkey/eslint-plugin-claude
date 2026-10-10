@@ -139,7 +139,7 @@ function fromJson(node: ValueNode): HNode {
 
 type At = (start: number, end: number) => Loc
 
-/** The node for a YAML node. A node that the parser read always has a range. */
+/** The node for a YAML node. A null node has no range, so it takes `fallback`. Any other node has a range. */
 function fromYaml(node: unknown, at: At, fallback: Loc): HNode {
   // A flow-map entry with a key and no value, such as `{ Stop }`, has a null value node.
   if (node === null) {

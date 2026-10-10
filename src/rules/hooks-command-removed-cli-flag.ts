@@ -19,7 +19,7 @@ const ASSIGNMENT = /^[A-Za-z_][A-Za-z0-9_]*=/
 const WRAPPERS = ['exec', 'env', 'command', 'nohup']
 
 /** The simple commands of a shell line, each as its words. A command ends at `;`, `&`, `|`, a
- *  parenthesis, a backtick or a new line. A quote or a backslash joins characters into one word. The
+ *  parenthesis, a backtick or a new line that no backslash joins. A quote or a backslash joins characters into one word. The
  *  split does not expand a variable or a glob. It is not a full shell parser: it finds the words of a
  *  line that a person wrote by hand. */
 function commandsOf(line: string): string[][] {
@@ -47,11 +47,11 @@ function commandsOf(line: string): string[][] {
     if (quote === "'" && char !== "'") {
       word += char
     } else if (char === '\\' && quote !== "'") {
-      if (line.charAt(i + 1) === '\n') {
+      if (line.startsWith('\n', i + 1) || line.startsWith('\r\n', i + 1)) {
         // A backslash before a new line joins the two lines, and adds nothing to the word.
-        i++
+        i += line.charAt(i + 1) === '\r' ? 2 : 1
       } else {
-        // The next character is part of the word. A backslash at the end of the line adds nothing.
+        // The next character is part of the word. A backslash at the end of the string adds nothing.
         word += line.charAt(++i)
         open = true
       }
