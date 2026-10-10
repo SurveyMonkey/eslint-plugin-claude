@@ -26,7 +26,7 @@ reports a reference to one of two variables. A reference is `$NAME`, `${NAME}`, 
 
 - **`CLAUDE_ENV_FILE`.** This variable holds the path of a file. A hook writes `export`
   lines there to persist variables for later Bash commands. Claude Code sets it for `SessionStart`,
-  `Setup`, `CwdChanged` and `FileChanged` hooks only. Other hook types do not have it.[^persist]
+  `Setup`, `CwdChanged` and `FileChanged` hooks only. Hooks on other events do not have it.[^persist]
   The rule reports a reference on any other event. On an event that Claude Code does not know, the
   rule makes no report, because [`hooks-event-name-known`](hooks-event-name-known.md) reports the
   name.

@@ -131,7 +131,7 @@ export const NARROW_MATCHER_EVENTS: readonly string[] = ['FileChanged', 'StopFai
 
 // The events that set `CLAUDE_ENV_FILE`. Source: the hooks reference, "Persist environment
 // variables" (https://code.claude.com/docs/en/hooks#persist-environment-variables), checked on
-// 2026-10-10. Other hook types do not have the variable. Review this section on or before 2027-04-10.
+// 2026-10-10. Hooks on other events do not have the variable. Review this section on or before 2027-04-10.
 
 /** The events whose hooks get the `CLAUDE_ENV_FILE` environment variable. */
 export const ENV_FILE_EVENTS: readonly string[] = [

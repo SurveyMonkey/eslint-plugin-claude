@@ -2,7 +2,7 @@
 // (docs/rules/hooks-env-var-unavailable.md). `CLAUDE_ENV_FILE` is set for `SessionStart`, `Setup`,
 // `CwdChanged` and `FileChanged` hooks only. No `CLAUDE_MODEL` variable exists. The rule reads
 // the `command` string and each string item of `args`. It makes no `CLAUDE_ENV_FILE` report on an
-// event that Claude Code does not know, because `hooks-event-name-known` reports the name.
+// unknown event. `hooks-event-name-known` reports the name.
 import type { Rule } from 'eslint'
 import { ENV_FILE_EVENTS, HOOK_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'

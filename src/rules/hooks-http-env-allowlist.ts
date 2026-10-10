@@ -1,7 +1,7 @@
 // A header of an `http` hook can hold `$VAR` or `${VAR}`. Claude Code replaces the reference with the
 // value of the variable only when `allowedEnvVars` of the same hook lists it. It replaces any other
 // reference with an empty string (docs/rules/hooks-http-env-allowlist.md). The rule reads that list
-// only. The settings key `httpHookAllowedEnvVars` also limits the list, but its entries merge across
+// only. The settings key `httpHookAllowedEnvVars` also limits the list. Its entries merge across
 // settings files, so a file out of the repository can widen it. The rule does not read it.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'

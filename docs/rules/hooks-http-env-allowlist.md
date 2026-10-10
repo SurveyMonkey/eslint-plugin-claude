@@ -31,9 +31,10 @@ header. A name is case-sensitive, and `$MY_TOKEN_2` is not `MY_TOKEN`.
 The rule does not read the settings key `httpHookAllowedEnvVars`. That key sets an outer limit.
 A hook can use a variable only if its own list and the key both name it. Arrays of that key merge
 across settings files.[^key] A user file or a managed file out of the repository can add a
-variable. So a list in a repository file is never final. The rule makes no report
-from it (ADR 001, Decision 14). It reads the list of the hook only. That list is in the same
-handler, so it is final.
+variable. So a list in a repository file is never final.
+
+The rule makes no report from the key (ADR 001, Decision 14). It reads the list of the hook only.
+That list is in the same handler, so it is final.
 
 The rule makes no report in these cases. `hooks-config-schema` reports the wrong type.
 
