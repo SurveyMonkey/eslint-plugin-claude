@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "2f14b19549d911bdf0797d3e41e7c3d74e0fa0b237778f954019a2bc57e061e3",
+  "hash": "6e8da76b851056004f634945889b4ce247edbbe39f07230d1768e54a3bdfee20",
   "blocks": [
     {
       "id": "tools-reference",
@@ -64,7 +64,11 @@
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "9963d3e531649ff4991df88191b104875b04a1bbc31c3956f737251f25f1a802"
+      "hash": "5959ad17b0b3fcfa49e72efe09c1fda2af1e9db717c4aab9fd7ab4f2672c1451"
+    },
+    {
+      "id": "non-utf-8-files",
+      "hash": "ef91575e0191084a46cf3cdbcd16a1b25b7c049fdd5dd93253914ca52ea30fc6"
     },
     {
       "id": "endconversation-tool-behavior",
@@ -92,7 +96,7 @@
     },
     {
       "id": "notebookedit-tool-behavior",
-      "hash": "b7ead44f231450a13e4e85574553387f2ef5e95a475e125202a18390fde84361"
+      "hash": "a1192f6f4e3e60a6a4c18d64850ff2838d2a1f6a6156a6bf5630320ee1475df0"
     },
     {
       "id": "powershell-tool",
@@ -108,7 +112,7 @@
     },
     {
       "id": "shell-selection-in-settings-hooks-and-skills",
-      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560"
+      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f"
     },
     {
       "id": "windows-encoding-and-exit-codes",
@@ -120,7 +124,11 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "67b80a70b1c14493553cd3e48d68411505b5fdd4777886dc4dac0294406c179a"
+      "hash": "934d7f37f6999d1e7f954d8cfe5336f91e8a0b595bf31dd65ae889c1b6fd053a"
+    },
+    {
+      "id": "large-files",
+      "hash": "5f6e4b7ce468b340689d8dd8769c3d982278b2e83d38fb09c9dd34961538e2c5"
     },
     {
       "id": "sendfeedback-tool-behavior",
@@ -172,7 +180,7 @@
     },
     {
       "id": "write-tool-behavior",
-      "hash": "c4355369b955e2360b451bc788d9f874afe5d978e20906434c1f533e1023ecb0"
+      "hash": "046c80c6ffd74866d6249edb5ce86359c9df8f86a88d943e97856c09efe3efce"
     },
     {
       "id": "check-which-tools-are-available",
@@ -205,8 +213,8 @@
     {
       "heading": "Shell selection in settings, hooks, and skills",
       "id": "shell-selection-in-settings-hooks-and-skills",
-      "hash": "b2d1ca4a52e196f3fd937a2af68a2983f9eb9f16509ea5e0a47de66c95af4560",
-      "text": "### Shell selection in settings, hooks, and skills\n\nThree additional settings control where PowerShell is used:\n\n* `\"defaultShell\": \"powershell\"` in [`settings.json`](/docs/en/settings-reference#all-settings): routes interactive `!` commands through PowerShell. Requires the PowerShell tool to be enabled.\n* `\"shell\": \"powershell\"` on individual [command hooks](/docs/en/hooks#command-hook-fields): runs that hook in PowerShell. Hooks spawn PowerShell directly, so this works regardless of `CLAUDE_CODE_USE_POWERSHELL_TOOL`.\n* `shell: powershell` in [skill frontmatter](/docs/en/skills#frontmatter-reference): runs `` !`command` `` blocks in PowerShell. Requires the PowerShell tool to be enabled.\n\nThe same main-session working-directory reset behavior described under the Bash tool section applies to PowerShell commands, including the `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR` environment variable.\n\nExit code 1 from `grep`, `rg`, `egrep`, `fgrep`, `findstr`, and `git grep` means no matches. Exit code 1 from `git diff` means differences exist. Neither result is reported to Claude as a command failure. For `robocopy`, exit codes 0 through 7 are informational results, such as files copied or extra files detected. Exit codes of 8 or higher count as failures."
+      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f",
+      "text": "### Shell selection in settings, hooks, and skills\n\nThree additional settings control where PowerShell is used:\n\n* `\"defaultShell\": \"powershell\"` in [`settings.json`](/docs/en/settings-reference#all-settings): routes interactive `!` commands through PowerShell. Requires the PowerShell tool to be enabled.\n* `\"shell\": \"powershell\"` on individual [command hooks](/docs/en/hooks#command-hook-fields): runs that hook in PowerShell. Hooks spawn PowerShell directly, so this works regardless of `CLAUDE_CODE_USE_POWERSHELL_TOOL`.\n* `shell: powershell` in [skill frontmatter](/docs/en/skills#frontmatter-reference): runs `` !`command` `` blocks in PowerShell. Requires the PowerShell tool to be enabled.\n\nPowerShell commands follow the [same main-session working-directory reset behavior](#what-persists-between-commands) as Bash commands, including the `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR` environment variable.\n\nPowerShell commands also receive the variables hooks persist through `CLAUDE_ENV_FILE`, under the conditions in [Persisted variables in PowerShell commands](/docs/en/hooks#persisted-variables-in-powershell-commands). Requires Claude Code v2.1.296 or later.\n\nExit code 1 from `grep`, `rg`, `egrep`, `fgrep`, `findstr`, and `git grep` means no matches. Exit code 1 from `git diff` means differences exist. Neither result is reported to Claude as a command failure. For `robocopy`, exit codes 0 through 7 are informational results, such as files copied or extra files detected. Exit codes of 8 or higher count as failures."
     }
   ]
 }

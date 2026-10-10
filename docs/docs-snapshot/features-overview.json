@@ -1,0 +1,64 @@
+{
+  "url": "https://code.claude.com/docs/en/features-overview",
+  "hash": "b5a7d0ad57b45975e478922ddf8ce1572375f51747b7a53e641f4c4a1308e2e4",
+  "blocks": [
+    {
+      "id": "extend-claude-code",
+      "hash": "283d445e3b0955e269a8e3ba44ad03d238284f8b08e3452f8def28df817b87aa"
+    },
+    {
+      "id": "overview",
+      "hash": "fb235123532d1478fb903dc8fd55e0104c28b455fb039a08aea9c21506f38017"
+    },
+    {
+      "id": "match-features-to-your-goal",
+      "hash": "4b68c6858fdfd799525d582c3d94b11083fd554db1fed210bbbf17784df8e08b"
+    },
+    {
+      "id": "build-your-setup-over-time",
+      "hash": "62dcf019c65aec8095ce62b1b7995b44ae00414ed4d7824e1389b6bf9a8d64de"
+    },
+    {
+      "id": "compare-similar-features",
+      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772"
+    },
+    {
+      "id": "understand-how-features-layer",
+      "hash": "57c10ac99dc60ea62a58253d2eeea45a693ced02ff165ce5c3ec4e683d9cb25b"
+    },
+    {
+      "id": "combine-features",
+      "hash": "e289fa93726f8d2b88a2a2be2813c377b566c090d25e3785e2e5243d6ccd9624"
+    },
+    {
+      "id": "understand-context-costs",
+      "hash": "afa1b5858402e3b4bbde0a6872be24da149ba5b384cbdb9619592bba7770a2d4"
+    },
+    {
+      "id": "context-cost-by-feature",
+      "hash": "8061a9ac6519e236bab65c1fb111c0e93dafd6b75492c2415745e769f71714eb"
+    },
+    {
+      "id": "understand-how-features-load",
+      "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279"
+    },
+    {
+      "id": "learn-more",
+      "hash": "0020d89de5b5302efa07f5acf9e3cfaec11afb064f4fe656e872443607d687ff"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Understand how features layer",
+      "id": "understand-how-features-layer",
+      "hash": "57c10ac99dc60ea62a58253d2eeea45a693ced02ff165ce5c3ec4e683d9cb25b",
+      "text": "### Understand how features layer\n\nFeatures can be defined at multiple levels: user-wide, per-project, via plugins, or through managed policies. You can also nest CLAUDE.md files in subdirectories or place skills in specific packages of a monorepo. When the same feature exists at multiple levels, here's how they layer:\n\n* **CLAUDE.md files** are additive: all levels contribute content to Claude's context simultaneously. Files from your working directory and above load at launch; subdirectories load as you work in them. When instructions conflict, Claude uses judgment to reconcile them. See [how CLAUDE.md files load](/docs/en/memory#how-claude-md-files-load).\n* **Skills and subagents** override by name: when the same name exists at multiple levels, one definition wins based on priority (managed > user > project for skills; managed > CLI flag > project > user > plugin for subagents). Plugin skills are [namespaced](/docs/en/plugins/components#skills) to avoid conflicts. See [skill discovery](/docs/en/skills#resolve-skills-that-share-a-name) and [subagent scope](/docs/en/sub-agents#choose-the-subagent-scope).\n* **MCP servers** override by name: local > project > user. See [MCP scope](/docs/en/mcp#scope-hierarchy-and-precedence).\n* **Hooks** merge: all registered hooks fire for their matching events regardless of source. See [hooks](/docs/en/hooks)."
+    },
+    {
+      "heading": "Understand how features load",
+      "id": "understand-how-features-load",
+      "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279",
+      "text": "### Understand how features load\n\nEach feature loads at different points in your session. The tabs below explain when each one loads and what goes into context.\n\n<img src=\"https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/context-loading.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=aab139e750494a237ae2e0c8f9139b0a\" className=\"dark:hidden\" alt=\"Context loading: CLAUDE.md loads at session start and stays in every request. MCP tool names load at start with full schemas deferred until use. Skills load descriptions at start, full content on invocation. Subagents get isolated context. Hooks run externally.\" width=\"720\" height=\"382\" data-path=\"images/context-loading.svg\" />\n\n<img src=\"https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/context-loading-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=b274089ef9612d9c760bca9838557626\" className=\"hidden dark:block\" alt=\"Context loading: CLAUDE.md loads at session start and stays in every request. MCP tool names load at start with full schemas deferred until use. Skills load descriptions at start, full content on invocation. Subagents get isolated context. Hooks run externally.\" width=\"720\" height=\"382\" data-path=\"images/context-loading-dark.svg\" />\n\n<Tabs>\n  <Tab title=\"CLAUDE.md\">\n    **When:** Session start\n\n    **What loads:** Full content of all CLAUDE.md files (managed, user, and project levels).\n\n    **Inheritance:** Claude reads CLAUDE.md files from your working directory up to the root, and discovers nested ones in subdirectories as it accesses those files. See [How CLAUDE.md files load](/docs/en/memory#how-claude-md-files-load) for details.\n\n    <Tip>Keep CLAUDE.md under 200 lines. Move reference material to skills, which load on demand. To get [trim proposals for a checked-in CLAUDE.md](/docs/en/memory#my-claude-md-is-too-large), run `/doctor`.</Tip>\n  </Tab>\n\n  <Tab title=\"Skills\">\n    Skills are extra capabilities in Claude's toolkit. They can be reference material (like an API style guide) or invocable workflows you trigger with `/<name>` (like `/deploy`). Claude Code includes [bundled skills](/docs/en/commands) like `/code-review`, `/batch`, and `/debug` that work without setup. You can also create your own.\n\n    **When:** Depends on the skill's configuration. By default, descriptions load at session start and full content loads when used. For user-only skills (`disable-model-invocation: true`), nothing loads until you invoke them.\n\n    **What loads:** For model-invocable skills, Claude sees names and descriptions in every request. When you invoke a skill with `/<name>` or Claude loads it automatically, the full content loads into your conversation.\n\n    **How Claude chooses skills:** Claude matches your task against skill descriptions to decide which are relevant. If descriptions are vague or overlap, Claude may load the wrong skill or miss one that would help. To tell Claude to use a specific skill, invoke it with `/<name>`.\n\n    **Context cost:** Low until used. User-only skills have zero cost until invoked.\n\n    **In subagents:** Skills work differently in subagents. Instead of on-demand loading, skills listed in the subagent's `skills` field are fully preloaded into its context at launch. Subagents can still discover and invoke unlisted project, user, and plugin skills through the Skill tool.\n\n    <Tip>Use `disable-model-invocation: true` for skills with side effects. This saves context and ensures they run only when you name them.</Tip>\n  </Tab>\n\n  <Tab title=\"MCP servers\">\n    **When:** Session start.\n\n    **What loads:** Tool names and server instructions from connected servers. Full JSON schemas stay deferred until Claude needs a specific tool.\n\n    **Context cost:** [Tool search](/docs/en/mcp#scale-with-mcp-tool-search) is on by default, so idle MCP tools consume minimal context.\n\n    <Tip>Run `/mcp` to see each server's connection status. Run `/context all` to see how many tokens each loaded MCP tool uses. Claude Code [reconnects to remote servers automatically](/docs/en/mcp#automatic-reconnection) if they drop, and you can disconnect servers you're not actively using.</Tip>\n  </Tab>\n\n  <Tab title=\"Code intelligence\">\n    **When:** After file edits, and on demand when Claude navigates code.\n\n    **What loads:** Type errors and warnings after each file edit. Definition, reference, and type information when Claude looks up a symbol.\n\n    **Context cost:** Low. Symbol lookups often replace broad file reads, so net context use can go down.\n\n    <Tip>The LSP tool is inactive until you install a [code intelligence plugin](/docs/en/plugins/code-intelligence) for your language.</Tip>\n  </Tab>\n\n  <Tab title=\"Subagents\">\n    **When:** On demand, when you or Claude spawns one for a task.\n\n    **What loads:** Fresh, isolated context containing:\n\n    * The agent's own system prompt, not the Claude Code system prompt\n    * Full content of skills listed in the agent's `skills:` field\n    * CLAUDE.md and git status, except the built-in Explore and Plan agents [omit both](/docs/en/sub-agents#what-loads-at-startup), and an agent whose definition sets [`omitClaudeMd`](/docs/en/sub-agents#supported-frontmatter-fields) skips the user, project, and local CLAUDE.md files\n    * Whatever context the lead agent passes in the prompt\n\n    For a [fork](/docs/en/sub-agents#fork-the-current-conversation), Claude Code loads the parent's conversation so far, system prompt, and tools instead.\n\n    **Context cost:** Isolated from main session.\n\n    <Tip>Use subagents for work that doesn't need your full conversation context. Their isolation prevents bloating your main session.</Tip>\n  </Tab>\n\n  <Tab title=\"Hooks\">\n    **When:** On trigger. Claude Code runs hooks at specific lifecycle events like tool execution, session boundaries, prompt submission, permission requests, and compaction. See [Hooks](/docs/en/hooks) for the full list.\n\n    **What loads:** Nothing by default. Hooks execute outside the main conversation.\n\n    **Context cost:** Zero, unless the hook returns output that gets added as messages to your conversation.\n\n    <Tip>Hooks are ideal for side effects (linting, logging) that don't need to affect Claude's context.</Tip>\n  </Tab>\n</Tabs>"
+    }
+  ]
+}
