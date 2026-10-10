@@ -37,6 +37,11 @@ describe(RULE, () => {
     expect(lint('')).toEqual([])
   })
 
+  it('ends a line at a lone CR', () => {
+    expect(lint('x\r'.repeat(200))).toEqual([])
+    expect(lint('x\r'.repeat(201))).toHaveLength(1)
+  })
+
   it('counts every line, with the frontmatter, and a last line with no line end', () => {
     expect(lint(`---\npaths:\n  - "src/**"\n---\n${lines(196)}`)).toEqual([])
     expect(lint(`---\npaths:\n  - "src/**"\n---\n${lines(197)}`)).toHaveLength(1)

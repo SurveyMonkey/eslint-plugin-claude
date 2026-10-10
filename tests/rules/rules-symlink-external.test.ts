@@ -25,6 +25,10 @@ function outside(code: string, options: { git?: boolean; file?: string } = {}) {
   return lintMemory(RULE, dir, file, code)
 }
 
+/** The text of the report for the link `linkPath`, which leads to `target`. */
+const message = (linkPath: string, target: string) =>
+  `\`${linkPath}\` is a link to \`${target}\`, which is outside the repository. Claude Code loads the linked rules only after each user approves external imports. Copy the rules into the repository, or keep them in \`~/.claude/rules/\`.`
+
 const ids = (messages: { messageId?: string | null }[]) => messages.map((m) => m.messageId)
 
 describe.skipIf(noLinks)(RULE, () => {
@@ -79,7 +83,35 @@ describe.skipIf(noLinks)(RULE, () => {
     link(elsewhere, 'rules/b.md', path.join(other, 'b.md'))
     const dir = tree({})
     link(dir, '.claude/rules', path.join(elsewhere, 'rules'))
-    expect(lintMemory(RULE, dir, '.claude/rules/b.md', PLAIN)).toHaveLength(1)
+    const messages = lintMemory(RULE, dir, '.claude/rules/b.md', PLAIN)
+    expect(messages).toHaveLength(1)
+    expect(messages[0]?.message).toBe(message('.claude/rules', path.join(elsewhere, 'rules')))
+  })
+
+  it('does not check a link above the .claude folder', () => {
+    const elsewhere = tree({ '.claude/rules/b.md': PLAIN }, false)
+    const dir = tree({})
+    link(dir, 'packages', elsewhere)
+    expect(lintMemory(RULE, dir, 'packages/.claude/rules/b.md', PLAIN)).toEqual([])
+  })
+
+  it('starts the walk at the first .claude/rules of the path', () => {
+    const elsewhere = tree({ 'rules/b/.claude/rules/c.md': PLAIN }, false)
+    const dir = tree({})
+    link(dir, '.claude/rules', path.join(elsewhere, 'rules'))
+    const messages = lintMemory(RULE, dir, '.claude/rules/b/.claude/rules/c.md', PLAIN)
+    expect(ids(messages)).toEqual(['external'])
+    expect(messages[0]?.message).toContain('`.claude/rules` is a link to')
+  })
+
+  it('gives the target of the link as it is read, and the path from the repository top', () => {
+    const elsewhere = tree({ 'shared/a.md': PLAIN })
+    const dir = tree({})
+    const file = 'packages/web/.claude/rules/c.md'
+    link(dir, file, path.join(elsewhere, 'shared/a.md'))
+    expect(lintMemory(RULE, dir, file, PLAIN)[0]?.message).toBe(
+      message(file, path.join(elsewhere, 'shared/a.md')),
+    )
   })
 
   it('reports a link out that sits below a link inside the repository', () => {
