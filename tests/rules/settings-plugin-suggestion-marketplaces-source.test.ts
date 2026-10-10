@@ -187,6 +187,27 @@ describe(`${name} (reports)`, () => {
     expect(idsAt({}, both)).toEqual(['undeclared'])
   })
 
+  it('reports a name whose entry is null, because null removes the entry', () => {
+    const code = { ...suggest('acme'), extraKnownMarketplaces: { acme: null } }
+    expect(idsAt({}, code)).toEqual(['undeclared'])
+  })
+
+  it('reports a name that only an inherited property of the entry map has', () => {
+    expect(idsAt({}, { ...suggest('constructor'), extraKnownMarketplaces: {} })).toEqual([
+      'undeclared',
+    ])
+    expect(idsAt({}, { ...suggest('length'), extraKnownMarketplaces: [] })).toEqual(['undeclared'])
+  })
+
+  it('reads the canonical strictKnownMarketplaces and not the alias when a file sets both', () => {
+    const both = {
+      ...suggest('acme'),
+      strictKnownMarketplaces: [],
+      allowedMarketplaces: strictEntry.strictKnownMarketplaces,
+    }
+    expect(idsAt({}, both)).toEqual(['undeclared'])
+  })
+
   it('reports when managedSourcesBehavior is another value', () => {
     expect(idsAt({}, { ...suggest('acme'), managedSourcesBehavior: 'first-wins' })).toEqual([
       'undeclared',

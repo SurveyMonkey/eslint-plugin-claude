@@ -24,14 +24,14 @@ const isObject = (value: unknown): value is Fields =>
 const merges = (fields: Fields) => fields.managedSourcesBehavior === 'merge'
 
 /** True when `fields` declares the marketplace `market`: an `extraKnownMarketplaces` key of that
- *  name, or any `strictKnownMarketplaces` entry. A policy entry is a source pattern, so the rule
+ *  name with a value other than null, or any `strictKnownMarketplaces` entry. A policy entry is a source pattern, so the rule
  *  cannot tell which entry matches a name. With both spellings of a key, Claude Code uses the
  *  canonical key and ignores the alias. */
 function declares(fields: Fields, market: string): boolean {
   const registered = fields.extraKnownMarketplaces ?? fields.additionalMarketplaces
   const allowed = fields.strictKnownMarketplaces ?? fields.allowedMarketplaces
   return (
-    (isObject(registered) && Object.hasOwn(registered, market)) ||
+    (isObject(registered) && Object.hasOwn(registered, market) && registered[market] !== null) ||
     (Array.isArray(allowed) && allowed.length > 0)
   )
 }
