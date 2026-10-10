@@ -14,7 +14,9 @@ Decision 14).
 - A check that `claude plugin validate` covers fully is not a rule. A check that it covers in
   part is a rule, for the cases that it misses.
 - `docs/adr/002-classify-docs-changes-with-jev.md` records the docs watch. A daily job finds a
-  change to a docs block that a rule cites, classifies it, and opens an issue.
+  change to a docs block that a rule or an inventory row cites, classifies it, and opens an
+  issue. It posts a comment on a group issue for a tracked block. It opens a `moved` issue for a
+  renamed section. It opens a digest for the uncited blocks of one page.
 - `docs/rule-sources.json` maps each rule to its docs sources. `docs/docs-snapshot/` holds the
   last docs text. Only a reviewed pull request changes them.
 - `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
@@ -22,7 +24,8 @@ Decision 14).
 ## Code
 
 - Source is TypeScript in `src/`, built by `tsc` to `dist/` (`.claude/rules/type-ts.md`). Tests
-  are in `tests/`, and follow the `testing` skill.
+  are in `tests/`, and follow the `testing` skill. The `docs-watch-triage` skill decides a batch
+  of docs watch issues.
 - `CONTRIBUTING.md` has the commands, the hooks and the release flow. Run `pnpm lint`,
   `pnpm typecheck`, `pnpm test` and `pnpm knip` before you push.
 - A new rule needs footnotes in `docs/rules/<rule>.md` that link to its docs sources. The form
