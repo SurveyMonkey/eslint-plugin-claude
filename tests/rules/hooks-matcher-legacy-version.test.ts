@@ -45,7 +45,7 @@ const lintMd = (code: string, file: string, minVersion: string) =>
     .map((message) => message.messageId)
 
 describe(`${name}: the option`, () => {
-  it.fails('reports nothing when minVersion is unset', () => {
+  it('reports nothing when minVersion is unset', () => {
     expect(ids('SubagentStart', 'code-reviewer')).toEqual([])
     expect(ids('PreToolUse', 'Edit,Write')).toEqual([])
     expect(ids('StopFailure', 'cloud_credential_error')).toEqual([])
@@ -55,16 +55,18 @@ describe(`${name}: the option`, () => {
     ).toEqual([])
   })
 
-  it.fails('refuses a value that is no version, and an option that is not known', () => {
+  it('refuses a value that is no version, and an option that is not known', () => {
     const lint = (options: object) =>
       lintJson(name, settings(hooks('Stop', [command()])), FILES.project, [options])
     for (const minVersion of ['abc', '2.1', '2.1.x', 'v2.1.100', '2.1.100-beta', 7, '']) {
-      expect(() => lint({ minVersion }), String(minVersion)).toThrow(/is invalid/)
+      expect(() => lint({ minVersion }), String(minVersion)).toThrow(
+        /Key "claude\/hooks-matcher-legacy-version"/,
+      )
     }
-    expect(() => lint({ typo: '2.1.1' })).toThrow(/is invalid/)
+    expect(() => lint({ typo: '2.1.1' })).toThrow(/Key "claude\/hooks-matcher-legacy-version"/)
   })
 
-  it.fails('compares each part of the version as a number', () => {
+  it('compares each part of the version as a number', () => {
     expect(ids('SubagentStart', 'a-b', '2.1.9')).toEqual(['hyphen'])
     expect(ids('SubagentStart', 'a-b', '2.0.999')).toEqual(['hyphen'])
     expect(ids('SubagentStart', 'a-b', '1.9.9')).toEqual(['hyphen'])
@@ -75,34 +77,34 @@ describe(`${name}: the option`, () => {
 })
 
 describe(`${name}: a hyphenated name, before v2.1.195`, () => {
-  it.fails('reports a hyphenated name below the version, and not at it or above', () => {
+  it('reports a hyphenated name below the version, and not at it or above', () => {
     expect(ids('SubagentStart', 'code-reviewer', '2.1.194')).toEqual(['hyphen'])
     expect(ids('SubagentStart', 'code-reviewer', '2.1.195')).toEqual([])
     expect(ids('SubagentStop', 'code-reviewer', '2.1.196')).toEqual([])
   })
 
-  it.fails('reads the tool events, and any other event with a free matcher', () => {
+  it('reads the tool events, and any other event with a free matcher', () => {
     expect(ids('PreToolUse', 'mcp__brave-search__search', '2.1.194')).toEqual(['hyphen'])
     expect(ids('PermissionDenied', 'my-tool', '2.1.194')).toEqual(['hyphen'])
     expect(ids('UserPromptExpansion', 'my-command', '2.1.194')).toEqual(['hyphen'])
   })
 
-  it.fails('reports each hyphenated segment of a list', () => {
+  it('reports each hyphenated segment of a list', () => {
     expect(ids('SubagentStart', 'a-b|plain|c-d', '2.1.194')).toEqual(['hyphen', 'hyphen'])
   })
 
-  it.fails('is silent for an anchored name, which is a regular expression', () => {
+  it('is silent for an anchored name, which is a regular expression', () => {
     expect(ids('SubagentStart', '^code-reviewer$', '2.1.194')).toEqual([])
     expect(ids('PreToolUse', 'mcp__brave-search__.*', '2.1.194')).toEqual([])
   })
 
-  it.fails('is silent for a name with no hyphen, and for a match-all matcher', () => {
+  it('is silent for a name with no hyphen, and for a match-all matcher', () => {
     for (const matcher of ['reviewer', undefined, '', '*']) {
       expect(ids('SubagentStart', matcher, '2.1.194'), String(matcher)).toEqual([])
     }
   })
 
-  it.fails('is silent where another rule owns the hyphen', () => {
+  it('is silent where another rule owns the hyphen', () => {
     // The events with a fixed set: hooks-matcher-enum. FileChanged and StopFailure: hooks-matcher-syntax.
     // The events without matcher support: hooks-matcher-unsupported-event.
     for (const event of ['SessionStart', 'Notification', 'FileChanged', 'StopFailure', 'Stop']) {
@@ -110,7 +112,7 @@ describe(`${name}: a hyphenated name, before v2.1.195`, () => {
     }
   })
 
-  it.fails('names the segment, the version and the option', () => {
+  it('names the segment, the version and the option', () => {
     const [message] = lintJson(
       name,
       settings(hooks('SubagentStart', [command()], 'code-reviewer')),
@@ -124,32 +126,32 @@ describe(`${name}: a hyphenated name, before v2.1.195`, () => {
 })
 
 describe(`${name}: a comma, before v2.1.191`, () => {
-  it.fails('reports a comma list below the version, and not at it or above', () => {
+  it('reports a comma list below the version, and not at it or above', () => {
     expect(ids('PreToolUse', 'Bash,PowerShell', '2.1.190')).toEqual(['comma'])
     expect(ids('PreToolUse', 'Bash, PowerShell', '2.1.190')).toEqual(['comma'])
     expect(ids('PreToolUse', 'Bash,PowerShell', '2.1.191')).toEqual([])
     expect(ids('PreToolUse', 'Bash,PowerShell', '2.1.192')).toEqual([])
   })
 
-  it.fails('reports one comma list once, and also on an event with a fixed set', () => {
+  it('reports one comma list once, and also on an event with a fixed set', () => {
     expect(ids('PreToolUse', 'A,B,C', '2.1.190')).toEqual(['comma'])
     expect(ids('SessionStart', 'startup,resume', '2.1.190')).toEqual(['comma'])
     expect(ids('SubagentStart', 'a,b', '2.1.190')).toEqual(['comma'])
   })
 
-  it.fails('is silent for a "|" list, a regular expression and a match-all matcher', () => {
+  it('is silent for a "|" list, a regular expression and a match-all matcher', () => {
     for (const matcher of ['Bash|PowerShell', 'Bash.*,x', undefined, '', '*']) {
       expect(ids('PreToolUse', matcher, '2.1.190'), String(matcher)).toEqual([])
     }
   })
 
-  it.fails('is silent where another rule owns the comma', () => {
+  it('is silent where another rule owns the comma', () => {
     for (const event of ['FileChanged', 'StopFailure', 'Stop', 'CwdChanged']) {
       expect(ids(event, 'a,b', '2.1.190'), event).toEqual([])
     }
   })
 
-  it.fails('names the version and the option', () => {
+  it('names the version and the option', () => {
     const [message] = lintJson(
       name,
       settings(hooks('PreToolUse', [command()], 'Bash,PowerShell')),
@@ -163,19 +165,19 @@ describe(`${name}: a comma, before v2.1.191`, () => {
 })
 
 describe(`${name}: a value that a later version sends`, () => {
-  it.fails('reports cloud_credential_error on StopFailure before v2.1.267', () => {
+  it('reports cloud_credential_error on StopFailure before v2.1.267', () => {
     expect(ids('StopFailure', 'cloud_credential_error', '2.1.266')).toEqual(['value'])
     expect(ids('StopFailure', 'rate_limit|cloud_credential_error', '2.1.266')).toEqual(['value'])
     expect(ids('StopFailure', 'cloud_credential_error', '2.1.267')).toEqual([])
     expect(ids('StopFailure', 'cloud_credential_error', '2.1.268')).toEqual([])
   })
 
-  it.fails('is silent for another StopFailure value, and for the value on another event', () => {
+  it('is silent for another StopFailure value, and for the value on another event', () => {
     expect(ids('StopFailure', 'rate_limit', '2.1.100')).toEqual([])
     expect(ids('SessionStart', 'cloud_credential_error', '2.1.100')).toEqual([])
   })
 
-  it.fails('reports each quota_auto_resume value on Notification before v2.1.234', () => {
+  it('reports each quota_auto_resume value on Notification before v2.1.234', () => {
     for (const value of [
       'quota_auto_resume_fired',
       'quota_auto_resume_stale',
@@ -187,24 +189,24 @@ describe(`${name}: a value that a later version sends`, () => {
     }
   })
 
-  it.fails('reports each such value of a list', () => {
+  it('reports each such value of a list', () => {
     expect(
       ids('Notification', 'idle_prompt|quota_auto_resume_fired|quota_auto_resume_stale', '2.1.233'),
     ).toEqual(['value', 'value'])
   })
 
-  it.fails('is silent for another Notification value', () => {
+  it('is silent for another Notification value', () => {
     expect(ids('Notification', 'idle_prompt', '2.1.100')).toEqual([])
     expect(ids('PreToolUse', 'quota_auto_resume_fired', '2.1.100')).toEqual([])
   })
 
-  it.fails('is silent for a regular expression and for a match-all matcher', () => {
+  it('is silent for a regular expression and for a match-all matcher', () => {
     expect(ids('Notification', 'quota_auto_resume_.*', '2.1.100')).toEqual([])
     expect(ids('StopFailure', undefined, '2.1.100')).toEqual([])
     expect(ids('StopFailure', '*', '2.1.100')).toEqual([])
   })
 
-  it.fails('names the value, the event, the version and the option', () => {
+  it('names the value, the event, the version and the option', () => {
     const [message] = lintJson(
       name,
       settings(hooks('StopFailure', [command()], 'cloud_credential_error')),
@@ -218,14 +220,14 @@ describe(`${name}: a value that a later version sends`, () => {
 })
 
 describe(`${name}: the files`, () => {
-  it.fails('reads every settings file and the hooks.json of a plugin', () => {
+  it('reads every settings file and the hooks.json of a plugin', () => {
     for (const file of [...SETTINGS, FILES.plugin]) {
       expect(ids('SubagentStart', 'a-b', '2.1.1', file), file).toEqual(['hyphen'])
       expect(ids('SubagentStart', 'a-b', '2.1.195', file), file).toEqual([])
     }
   })
 
-  it.fails('reads the frontmatter of a skill and of a project subagent', () => {
+  it('reads the frontmatter of a skill and of a project subagent', () => {
     const yaml = frontmatter(
       'SubagentStart:\n  - matcher: a-b\n    hooks:\n      - type: command\n        command: c\n',
     )
@@ -236,7 +238,7 @@ describe(`${name}: the files`, () => {
     }
   })
 
-  it.fails('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
+  it('is silent in a hidden drop-in, and in a hooks.json of a hidden folder', () => {
     expect(ids('SubagentStart', 'a-b', '2.1.1', FILES.hidden)).toEqual([])
     expect(ids('SubagentStart', 'a-b', '2.1.1', '/repo/.github/hooks/hooks.json')).toEqual([])
   })
