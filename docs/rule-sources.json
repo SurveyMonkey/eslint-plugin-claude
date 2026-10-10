@@ -350,6 +350,13 @@
       "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
     }
   ],
+  "claude-md-procedure-to-skill": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When to add to CLAUDE.md",
+      "hash": "06566c0d4316d723c30e526170d1eb6e6e33abb3d8f69c129b96cd42f2b7ccc1"
+    }
+  ],
   "claude-md-symlink": [
     {
       "url": "https://code.claude.com/docs/en/memory",

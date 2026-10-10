@@ -751,6 +751,7 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
     ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
   ],
   'claude-md-location': ['markdown/gfm', ['**/*.md']],
+  'claude-md-procedure-to-skill': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
   'memory-agent-memory-orphan': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
   'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
