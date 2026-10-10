@@ -114,8 +114,14 @@ describe(`${name}: the project pair, on disk`, () => {
 
   it('adds nothing for a sibling that does not read', () => {
     const root = repo({ [LOCAL]: '[1]' })
-    expect(at(root, PROJECT, file(REPORTING))).toEqual(['skipped'])
     expect(at(root, PROJECT, file(ASK))).toEqual([])
+  })
+
+  it('is silent when the other file does not read, and reports when it is absent', () => {
+    for (const text of ['[1]', '{', '{"sandbox":']) {
+      expect(at(repo({ [LOCAL]: text }), PROJECT, file(REPORTING)), text).toEqual([])
+    }
+    expect(at(repo({}), PROJECT, file(REPORTING))).toEqual(['skipped'])
   })
 })
 
@@ -138,8 +144,10 @@ describe(`${name}: a managed source, on disk`, () => {
   it('ignores a hidden sibling and a sibling that does not read', () => {
     const hidden = repo({ 'managed-settings.d/.20-b.json': file({ sandbox: { enabled: false } }) })
     expect(at(hidden, DROP_IN, file(REPORTING))).toEqual(['skipped'])
+    const text = repo({ 'managed-settings.d/20-b.txt': '{' })
+    expect(at(text, DROP_IN, file(REPORTING))).toEqual(['skipped'])
     const bad = repo({ 'managed-settings.d/20-b.json': '[1]' })
-    expect(at(bad, DROP_IN, file(REPORTING))).toEqual(['skipped'])
+    expect(at(bad, DROP_IN, file(REPORTING))).toEqual([])
   })
 
   it('adds nothing for a drop-in directory that is a link out of the repository', {
@@ -150,6 +158,6 @@ describe(`${name}: a managed source, on disk`, () => {
       'managed-settings.d/20-b.json': file({ sandbox: { autoAllowBashIfSandboxed: false } }),
     })
     symlinkSync(path.join(outside, 'managed-settings.d'), path.join(root, 'managed-settings.d'))
-    expect(at(root, MANAGED, file(REPORTING))).toEqual(['skipped'])
+    expect(at(root, MANAGED, file(REPORTING))).toEqual([])
   })
 })

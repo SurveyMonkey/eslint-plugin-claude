@@ -12,7 +12,8 @@ import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'sandbox-domain-overlap' as const
 
-/** The host and the port of a domain entry. The host is in lower case, with no trailing dot. */
+/** The host and the port of a domain entry. The port keeps its colon, and is empty when absent.
+ *  The host is in lower case, with no trailing dot. */
 function parts(entry: string): { host: string; port: string } {
   const match = /^(.*?)(:\d+)?$/.exec(entry) as RegExpExecArray
   return { host: (match[1] as string).replace(/\.$/, '').toLowerCase(), port: match[2] ?? '' }
@@ -41,7 +42,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'overlap' }> = {
         if (allowed.length === 0) {
           return
         }
-        const objects = sourceOf(context.filename, context.sourceCode.text)
+        const { objects } = sourceOf(context.filename, context.sourceCode.text)
         const denied = stringsAt(objects, ['sandbox', 'network', 'deniedDomains']).map(parts)
         for (const entry of allowed) {
           const { host, port } = parts(entry.value)

@@ -230,8 +230,26 @@ describe(`${name}: a managed source, on disk`, () => {
 
   it('adds nothing for a sibling that does not read', () => {
     const root = repo({ 'managed-settings.d/20-b.json': '[1]' })
-    expect(at(root, DROP_IN, BARE)).toEqual(['noTls'])
+    expect(at(root, DROP_IN, BARE)).toEqual([])
     expect(at(root, DROP_IN, env(mask()))).toEqual([])
+    expect(at(repo({}), DROP_IN, BARE)).toEqual(['noTls'])
+  })
+
+  it('still reports from present values when a sibling does not read', () => {
+    const root = repo({ 'managed-settings.d/20-b.json': '{' })
+    const claims = env(mask({ maskClaims: ['sub'] }))
+    expect(at(root, DROP_IN, claims)).toEqual(['claimsNeedDecode'])
+  })
+
+  it('does not match a nameless mask entry with a nameless deny entry', () => {
+    const text = settings({ envVars: [{ mode: 'deny' }, { mode: 'mask' }] })
+    expect(
+      at(
+        repo({ 'managed-settings.d/20-b.json': JSON.stringify({ sandbox: { network: TLS } }) }),
+        DROP_IN,
+        text,
+      ),
+    ).toEqual([])
   })
 
   it('adds nothing for a drop-in directory that is a link out of the repository', {
@@ -242,7 +260,7 @@ describe(`${name}: a managed source, on disk`, () => {
       'managed-settings.d/20-b.json': JSON.stringify({ sandbox: { network: TLS } }),
     })
     symlinkSync(path.join(outside, 'managed-settings.d'), path.join(root, 'managed-settings.d'))
-    expect(at(root, MANAGED, BARE)).toEqual(['noTls'])
+    expect(at(root, MANAGED, BARE)).toEqual([])
   })
 
   it('does not read the other file of a project pair for a deny entry', () => {

@@ -32,15 +32,15 @@ port, so `example.com` in `deniedDomains` covers `example.com:443` in `allowedDo
 
 ### Limits
 
-A wildcard is not read. A denied `*.example.com` also blocks an allowed `api.example.com`, and the rule gives no report for
-the pair. The reverse is the use that the docs state: a denied host inside an allowed wildcard.[^denied]
+The rule compares a wildcard as text. It reports an equal `*.example.com` in both lists. It gives no report for a denied
+`*.example.com` with an allowed `api.example.com`, although Claude Code blocks that host.[^denied]
 The rule does not read the domains of `WebFetch` rules or a user file.
 
 ### One source
 
 The rule adds up the lists of one source. For a project file, the source is the pair `.claude/settings.json` and
 `.claude/settings.local.json`. For a managed file, the source is `managed-settings.json` with the files of
-`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing.
+`managed-settings.d/`. The rule never reads across the two. A file that the rule cannot read adds nothing. A denied entry that it holds is the only proof, so the rule reports on the files that it can read.
 [`sandbox-domain-syntax`](sandbox-domain-syntax.md) reports an entry that is not a valid domain.
 
 Fail, in `.claude/settings.json`:

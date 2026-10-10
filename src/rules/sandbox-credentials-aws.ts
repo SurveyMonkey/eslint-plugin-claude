@@ -65,7 +65,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     }
     return {
       Document(document) {
-        const objects = sourceOf(context.filename, context.sourceCode.text)
+        const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
         const own = objects[0] as SettingsObject
         const path = ['sandbox', 'credentials']
         const entries = objects.flatMap((object) => {
@@ -76,7 +76,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         const otherPairs = objects
           .slice(1)
           .some((object) => at(object, [...path, 'awsPairs']) !== undefined)
-        const pairs = otherPairs ? [] : objectEntries(document, own, [...path, 'awsPairs'])
+        // A file that cannot be read can hold `awsPairs`, or the entry that a check misses.
+        const silent = otherPairs || !complete
+        const pairs = silent ? [] : objectEntries(document, own, [...path, 'awsPairs'])
         const used = new Set<string>()
         for (const { entry, node } of pairs) {
           for (const slot of SLOTS) {
@@ -103,7 +105,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         )
         const masked = (variable: string) =>
           entries.some((item) => item.name === variable && item.mode === 'mask')
-        if (!otherPairs && !paired) {
+        if (!silent && !paired) {
           for (const { entry, node } of objectEntries(document, own, [...path, 'envVars'])) {
             const other = entry.name === KEY ? SECRET : KEY
             if (
@@ -120,13 +122,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
           }
         }
         const allowRead = stringsAt(objects, ['sandbox', 'filesystem', 'allowRead'])
-        const isOff = objects.some(
-          (object) => at(object, ['sandbox', 'filesystem', 'disabled']) === true,
-        )
+        // Scalars override, so two files that disagree leave the value unknown.
+        const disabled = objects.map((object) => at(object, ['sandbox', 'filesystem', 'disabled']))
+        const isOff = disabled.includes(true) && !disabled.includes(false)
         for (const { entry, node } of objectEntries(document, own, [...path, 'files'])) {
           if (
             entry.mode !== 'mask' ||
             entry.onExtractNoMatch !== 'deny' ||
+            (entry.extract === undefined && entry.decode === undefined) ||
             typeof entry.path !== 'string'
           ) {
             continue

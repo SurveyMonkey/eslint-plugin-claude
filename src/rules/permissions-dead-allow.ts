@@ -1,8 +1,8 @@
 // An `allow` rule that a `deny` or `ask` rule covers never applies: Claude Code checks deny, then
 // ask, then allow, and specificity does not change the order
 // (https://code.claude.com/docs/en/permissions#manage-permissions). The rule adds up the lists
-// of one source: the project pair, or one managed source (`src/permission-source.ts`). Each case
-// below is a limit of the rule (docs/rules/permissions-dead-allow.md).
+// of one source: the project pair, or one managed source (`src/permission-source.ts`). The limits
+// of the rule are in docs/rules/permissions-dead-allow.md.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { COMMAND_RULE_TOOLS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -70,7 +70,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'dead' }> = {
   create(context) {
     return settingsListener(context, (entries, document) => {
       const covering = entries.filter(({ list }) => list !== 'allow')
-      const others = sourceOf(context.filename, context.sourceCode.text).slice(1)
+      const others = sourceOf(context.filename, context.sourceCode.text).objects.slice(1)
       for (const list of ['deny', 'ask'] as const) {
         for (const object of others) {
           const texts = at(object, ['permissions', list])

@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/sandbox-credentials-mask, which reports a sandbox.credentials mask entry in a managed source whose fields disagree or lack what masking needs, and a deny entry that holds mask fields.
+description: The ESLint rule claude/sandbox-credentials-mask, which reports a sandbox.credentials mask entry in a managed source whose fields disagree or lack what a mask entry needs, and a deny entry that holds mask fields.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -28,7 +28,7 @@ The rule checks the rules between the fields of an entry. [`sandbox-schema`](san
 
 Claude Code honors a `mask` entry only in user settings, managed settings and the `--settings` flag. It drops the entry in
 `.claude/settings.json` and `.claude/settings.local.json`.[^files-scope] [`sandbox-scope`](sandbox-scope.md) reports it there. So the rule
-reads the `mask` entries of a managed source only. The rule reports on the value of `mode`, or on the key that it names, in these cases:
+reads the `mask` entries of a managed source only. The rule reports each case on the field that is wrong, or on the `mode` value when the whole entry is wrong:
 
 - **No TLS termination.** The source holds neither `network.tlsTerminate` nor `credentials.allowPlaintextInject: true`.
   Substitution runs only through the proxy. Without TLS termination, the placeholder reaches the server and authentication
@@ -57,7 +57,7 @@ value of `mode`, and names the fields. This check applies to every file kind, be
 - A `mask` entry that Claude Code degrades to `deny` is for `sandbox-credentials-mask-fallback`.
 
 The rule adds up the files of one managed source: `managed-settings.json` with the files of `managed-settings.d/`. A file that the rule
-cannot read adds nothing. The rule never reads a project file for a managed file.
+cannot read adds nothing to what a value proves. The check for `tlsTerminate` and `allowPlaintextInject` rests on an absence. So the rule makes no TLS report when it cannot read a file of the source. The rule never reads a project file for a managed file.
 
 Fail, in `managed-settings.json`:
 
