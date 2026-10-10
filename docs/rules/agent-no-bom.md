@@ -22,7 +22,7 @@ Start an agent file with no byte-order mark, for older Claude Code versions.
 
 A byte-order mark (BOM) is the three bytes `EF BB BF` at the start of a file. An editor can add it with no sign in
 the text. Before Claude Code v2.1.239, an agent file with a BOM was silently ignored.[^skips] The
-[changelog](https://code.claude.com/docs/en/changelog) records the fix under v2.1.239. The docs give no
+[changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records the fix under v2.1.239. The docs give no
 other source for this fix, so the rule does not cite a changelog heading in its sources.
 
 The rule reports the first character of the file when the file starts with a BOM. The rule applies only when the

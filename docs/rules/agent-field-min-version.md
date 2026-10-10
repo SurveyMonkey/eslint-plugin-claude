@@ -32,7 +32,7 @@ the version that added the field:
 | `background` or `omitClaudeMd` is `yes`, `no`, `on`, `off`, `1` or `0` | v2.1.218 | Local and plugin agents. |
 
 The docs of the sub-agents page give the first two versions.[^fields] The page names `manual` as an alias for
-`default`, and gives no version.[^modes] The [changelog](https://code.claude.com/docs/en/changelog) records the
+`default`, and gives no version.[^modes] The [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records the
 `manual` alias under v2.1.200 for the CLI flag and for `defaultMode`. The rule applies the same version to the
 subagent field.
 

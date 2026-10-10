@@ -6,8 +6,8 @@
 import { closeSync, openSync, readSync } from 'node:fs'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
+import { isBelow, MIN_VERSION_SCHEMA, type MinVersionOptions } from '../agent-min-version.ts'
 import { docsUrl } from '../docs-url.ts'
-import { isBelow, MIN_VERSION_SCHEMA, type MinVersionOptions } from '../min-version.ts'
 
 const name = 'agent-no-bom' as const
 
