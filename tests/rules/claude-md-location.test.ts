@@ -54,6 +54,17 @@ describe(RULE, () => {
     }
   })
 
+  it('stays silent on a command, subagent, skill or output style named claude.md', () => {
+    for (const file of [
+      '/repo/.claude/commands/claude.md',
+      '/repo/.claude/agents/claude.md',
+      '/repo/.claude/skills/x/claude.md',
+      '/repo/.claude/output-styles/Claude.md',
+    ]) {
+      expect(lint(file), file).toEqual([])
+    }
+  })
+
   it('stays silent on a file with another name', () => {
     for (const file of [
       '/repo/README.md',

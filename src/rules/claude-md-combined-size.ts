@@ -3,8 +3,9 @@
 // past a combined limit at session start. The docs give no number, so the rule has the option
 // `max` and no default. It makes no report when `max` is not set. The set is the CLAUDE.md files
 // of the folder of the linted file and of each folder above it, up to the repository root, the
-// rule files with no `paths`, and the files that their imports load. A file counts once. The rule
-// makes no report when it cannot read a part of the set (ADR 001, Decision 14).
+// rule files with no `paths`, and the files that their imports load. A file counts once. A part
+// that the rule cannot read adds nothing. A sum can only grow, so the rule reports when the lines
+// that it did read pass `max`, and stays silent when they do not (ADR 001, Decision 14).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -35,7 +36,7 @@ interface Linted {
   text: string
 }
 
-/** The lines that a folder adds to the set, and the files it holds. */
+/** What `addFolder` finds in a folder. */
 interface Folder {
   /** The file that reports for the folder, or null when the folder holds none. */
   first: string | null
@@ -98,10 +99,12 @@ function addFolder(dir: string, bound: string, linted: Linted, total: Total): Fo
   for (const memory of MEMORY_FILES) {
     const candidate = path.join(dir, memory)
     const found = load(candidate, bound, linted)
-    if (found !== null) {
+    // A file that the rule cannot read is not the one that reports: ESLint cannot lint it.
+    if (found !== null && found !== UNREADABLE) {
       folder.first ??= path.resolve(candidate)
     }
-    folder.unreadable ||= !add(candidate, found, bound, total)
+    // `add` runs first: a part that fails to read must not stop the count of the next one.
+    folder.unreadable = !add(candidate, found, bound, total) || folder.unreadable
   }
   const scan = markdownFiles(path.join(dir, '.claude', 'rules'), bound)
   folder.unreadable ||= scan.unreadable || scan.outside
@@ -110,7 +113,7 @@ function addFolder(dir: string, bound: string, linted: Linted, total: Total): Fo
     if (fields === UNREADABLE) {
       folder.unreadable = true
     } else if (!isScopedRule(fields?.paths)) {
-      folder.unreadable ||= !add(file, load(file, bound, linted), bound, total)
+      folder.unreadable = !add(file, load(file, bound, linted), bound, total) || folder.unreadable
     }
   }
   return folder
@@ -169,13 +172,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooLong'
           unreadable ||= last.unreadable
         }
         // The folder that takes the sum past `max` reports. The folders below it do not.
-        if (unreadable || last.first !== file || before > max || total.lines <= max) {
+        if (last.first !== file || before > max || total.lines <= max) {
           return
         }
         context.report({
           loc: { start: { line: 1, column: 1 }, end: { line: 1, column: 2 } },
           messageId: 'tooLong',
-          data: { size: String(total.lines), max: String(max) },
+          data: { size: `${unreadable ? 'at least ' : ''}${total.lines}`, max: String(max) },
         })
       },
     }

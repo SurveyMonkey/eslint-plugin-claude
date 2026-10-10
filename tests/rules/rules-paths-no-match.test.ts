@@ -184,12 +184,27 @@ describe(`${RULE}: what the rule cannot read`, () => {
     expect(run('nope/*', 'gone.ts')).toEqual(['nope/*', 'gone.ts'])
   })
 
+  it.skipIf(noLinks)('matches a folder under the name of the link and under its own name', () => {
+    // `aaa` sorts before `real`, and `zzz` after it: the order of the walk must not matter.
+    const dir = tree({ 'real/deep/x.ts': 'x\n', 'a.md': 'a\n' })
+    link(dir, 'aaa', 'real')
+    link(dir, 'zzz', 'real')
+    const run = (...globs: string[]) =>
+      patterns(lintMemory(RULE, dir, '.claude/rules/r.md', listOf(...globs)))
+    expect(run('aaa/deep/*.ts', 'real/deep/*.ts', 'zzz/deep/*.ts')).toEqual([])
+  })
+
   it.skipIf(noLinks)('makes no report when a link leads out of the repository', () => {
     const outside = tree({ 'o.ts': 'x\n' })
     const dir = tree({ 'a.md': 'a\n' })
     link(dir, 'out', outside)
     expect(lintMemory(RULE, dir, '.claude/rules/r.md', listOf('out/*.ts'))).toEqual([])
     expect(lintMemory(RULE, dir, '.claude/rules/r.md', listOf('a.md'))).toEqual([])
+  })
+
+  it('makes no report for a glob that builds no expression', () => {
+    const dir = tree({ 'a.md': 'a\n' })
+    expect(lintMemory(RULE, dir, '.claude/rules/r.md', listOf('[z-a].ts'))).toEqual([])
   })
 
   it.skipIf(chmodCannotBlock)('makes no report below a folder that it cannot read', () => {

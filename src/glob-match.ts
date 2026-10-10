@@ -9,7 +9,7 @@
 // - A glob that names a folder matches the files below the folder. A `/` at the end is the same.
 // - A brace group without a comma stays as text.
 // The walk of the files is bounded at the repository root, skips `.git` and `node_modules`, and
-// follows a link to a folder once.
+// follows a link to a folder under each name, and ends a link cycle.
 import { Stats } from 'node:fs'
 import path from 'node:path'
 import { entriesOf, isInside, realOf, statOf, UNREADABLE } from './skill-tree.ts'
@@ -120,10 +120,19 @@ function translate(glob: string): string {
   return out
 }
 
-/** A regular expression for `glob`. The glob is relative to the project root. */
-function globRegExp(glob: string): RegExp {
+/** A regular expression for `glob`, or null when the glob builds none, such as a reversed range
+ *  in a bracket. The glob is relative to the project root. */
+function globRegExp(glob: string): RegExp | null {
   const bare = glob.replace(/^(?:\.?\/)+/, '')
-  return new RegExp(`^${translate(bare.endsWith('/') ? `${bare}**` : bare)}$`)
+  if (bare === '') {
+    // The project root holds every file.
+    return /^/
+  }
+  try {
+    return new RegExp(`^${translate(bare.endsWith('/') ? `${bare}**` : bare)}$`)
+  } catch {
+    return null
+  }
 }
 
 /** True when `matcher` matches the path `relative`, or a folder above it. A path uses `/`. */
@@ -137,20 +146,22 @@ function matchesPath(matcher: RegExp, relative: string): boolean {
 }
 
 /** Walk the files below `root`. `visit` gets the path of each file, relative to `root`, with
- *  `/` as separator. It returns true to stop the walk. A link to a folder is followed once, when
- *  its real path is in `bound`. The result is true when the walk could not see a part of the
+ *  `/` as separator. It returns true to stop the walk. A link to a folder is followed when its
+ *  real path is in `bound`, and when it is not one of the folders above it (a cycle). The result is true when the walk could not see a part of the
  *  tree: a folder that cannot be read, or a link that leads out of `bound`. */
 function walkFiles(root: string, bound: string, visit: (relative: string) => boolean) {
-  const seen = new Set<string>()
   let unreadable = false
   let stopped = false
-  const walk = (dir: string, relative: string): void => {
+  const walk = (dir: string, relative: string, above: string[]): void => {
     const real = realOf(dir)
-    if (typeof real !== 'string' || seen.has(real)) {
-      unreadable ||= real === UNREADABLE
+    if (typeof real !== 'string') {
+      // A folder that is gone or cannot be read may hide any file.
+      unreadable = true
       return
     }
-    seen.add(real)
+    if (above.includes(real)) {
+      return
+    }
     const entries = entriesOf(dir)
     if (!Array.isArray(entries)) {
       unreadable ||= entries === UNREADABLE
@@ -178,20 +189,24 @@ function walkFiles(root: string, bound: string, visit: (relative: string) => boo
         isDirectory = info instanceof Stats && info.isDirectory()
       }
       if (isDirectory) {
-        walk(full, rel)
+        walk(full, rel, [...above, real])
       } else {
         stopped = visit(rel)
       }
     }
   }
-  walk(root, '')
+  walk(root, '', [])
   return unreadable
 }
 
 /** The globs of `globs` that match no file below `root`, or null when the walk could not see
  *  all of the tree and a glob is left. */
 export function unmatchedGlobs(root: string, bound: string, globs: string[]): string[] | null {
-  let left = globs.map((glob) => ({ glob, matcher: globRegExp(glob) }))
+  // A glob that builds no expression is not reported: the rule cannot tell what it matches.
+  let left = globs.flatMap((glob) => {
+    const matcher = globRegExp(glob)
+    return matcher === null ? [] : [{ glob, matcher }]
+  })
   const unreadable = walkFiles(root, bound, (relative) => {
     left = left.filter(({ matcher }) => !matchesPath(matcher, relative))
     return left.length === 0
