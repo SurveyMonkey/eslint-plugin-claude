@@ -28,7 +28,7 @@ provider, and that you leave caching on for normal use.[^disable]
 
 A variable in `.claude/settings.json` applies to everyone who opens the repository. The rule
 reports a variable of the list with a value that turns a variable on: `1`, `true`, `yes` or
-`on`, in any casing.[^vars] The report is on the variable name. When a file has two keys of one
+`on`, with any letter case.[^vars] The report is on the variable name. When a file has two keys of one
 name, the rule reads the last, as `JSON.parse` does.
 
 ### What the rule does not check
