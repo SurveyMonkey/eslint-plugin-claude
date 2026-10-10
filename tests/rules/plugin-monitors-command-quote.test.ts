@@ -10,7 +10,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-monitors-command-quote'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json']
 const MANIFEST = '.claude-plugin/plugin.json'
@@ -50,7 +50,7 @@ describe(RULE, () => {
       message: message(ROOT),
       line: 1,
       column: 44,
-      endColumn: 74,
+      endColumn: 77,
     })
   })
 

@@ -72,6 +72,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-manifest-publish-metadata',
     'plugin-manifest-version-semver',
     'plugin-monitors-command-env',
+    'plugin-monitors-command-quote',
     'plugin-monitors-skill-exists',
     'plugin-no-git-lfs',
     'plugin-no-project-plugins-dir',

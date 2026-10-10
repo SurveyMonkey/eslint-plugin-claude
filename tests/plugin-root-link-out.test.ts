@@ -43,6 +43,7 @@ const SHELL = JSON.stringify({
   hooks: { Stop: [{ hooks: [{ type: 'command', command: `run \${user_config.key}` }] }] },
 })
 const MONITORS = JSON.stringify([{ name: 'm', command: 'run $CLAUDE_PLUGIN_ROOT/x' }])
+const QUOTE = JSON.stringify([{ name: 'm', command: `run \${CLAUDE_PLUGIN_ROOT}/x` }])
 
 describe('a plugin root that links out of the repository', () => {
   const jsonCases: [string, string, string, string][] = [
@@ -53,6 +54,7 @@ describe('a plugin root that links out of the repository', () => {
       '**/monitors/monitors.json',
       MONITORS,
     ],
+    ['plugin-monitors-command-quote', 'monitors/monitors.json', '**/monitors/monitors.json', QUOTE],
   ]
   it.each(jsonCases)('%s reports in the plugin in the repository', (rule, file, glob, code) => {
     expect(lintPluginFile(rule, [glob], path.join(inside({}), file), code)).toHaveLength(1)

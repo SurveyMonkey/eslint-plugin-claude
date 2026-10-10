@@ -56,6 +56,7 @@ import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
 import pluginManifestPublishMetadata from './rules/plugin-manifest-publish-metadata.ts'
 import pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
 import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
+import pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
@@ -233,6 +234,7 @@ const modules = [
   pluginSettingsAgentExists,
   pluginSkillsKeyRedundantDefault,
   pluginUserConfigFieldApplicability,
+  pluginMonitorsCommandQuote,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -370,6 +372,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-settings-agent-exists': 'warn',
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-user-config-field-applicability': 'warn',
+  'plugin-monitors-command-quote': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
