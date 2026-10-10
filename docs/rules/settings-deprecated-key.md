@@ -50,7 +50,7 @@ A replacement key counts as set when its value is not `null`, as in `settings-re
 - `ignorePatterns`. The key is deprecated too, and the permissions group owns it
   (`permissions-ignore-patterns`, which suggests `permissions.deny` `Read` rules).
 - A hidden file in `managed-settings.d/`. Claude Code ignores it.
-- A value of another type. `settings-schema` reports it.
+- A `disableArtifact` value that is not a Boolean. `settings-schema` reports it.
 
 When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.
 
