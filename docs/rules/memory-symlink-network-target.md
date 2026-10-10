@@ -33,8 +33,8 @@ The rule reports a file when one of these is a link with such a target:
 - The `.claude/rules` folder, and each folder below it, when the file is a rule file. A link to a
   folder moves the files below it.
 
-The rule reads the text of the link and nothing else. It never follows the link, so it contacts no
-host. It stops at the first link of that kind. A look at a path below it would follow the link.
+The rule reads the text of the link and nothing else. It never follows the link at the end of the
+path. It asks for no data of the host. It stops at the first link of that kind. A look at a path below it would follow the link.
 
 Fail:
 

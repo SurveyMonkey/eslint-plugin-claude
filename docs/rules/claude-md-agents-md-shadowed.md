@@ -64,7 +64,7 @@ that loads the file:
 
 - A CLAUDE.md file that is a link out of the repository, or a link that leads nowhere.
 - A file or a folder with no read right.
-- An import that leaves the repository.
+- An import that leaves the repository, such as a path that starts with `~`.
 
 A CLAUDE.md that is a folder does not count.
 

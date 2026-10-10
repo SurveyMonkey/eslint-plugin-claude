@@ -41,17 +41,17 @@ The rule finds a token in these steps:
 
 - An `@` starts an import at the start of the text or after white space. An email address is not
   an import.[^import]
-- The path ends at the first white space. A backslash before a space keeps the space in the
-  path.[^import]
+- The path ends at the first white space, backtick or backslash. A backslash before a space keeps
+  the space in the path.[^import]
 - A path in quotes is not an import.[^import]
 - A code span and a fenced block hold no import. Only a fence of backticks or tildes counts. The
   rule does not skip an indented block, because the docs do not name it.[^import]
-- The text of an HTML comment holds no import. Claude Code strips a block comment before it loads
-  the file. The docs do not say what happens to an import in it, so the rule makes no report there.
+- The text of an HTML comment holds no import. The docs name a block-level comment. The rule
+  skips each comment. The docs do not say what happens to an import in it, so the rule makes no report there.
 
 The docs do not say how Claude Code treats an end mark, such as a full stop. They do not say how
-it treats a `#` part either. So the rule tries three forms of the path. These are
-the path as written, without the end marks, and without the `#` part. One of them must name a
+it treats a `#` part either. So the rule tries up to four forms of the path. These are
+the path as written, without the `#` part, and each of these without the end marks. One of them must name a
 file or a folder. An import of a folder passes, because the rule checks only that the path exists.
 
 The rule makes no report for a path that it cannot check:
