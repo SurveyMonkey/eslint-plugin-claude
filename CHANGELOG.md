@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.9.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.8.0...v0.9.0) (2026-10-10)
+
+
+### Features
+
+* add the script path and executable bit rules ([#146](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/146)) ([fc9eb74](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/fc9eb74a4929bf038f9cb6712b36e23c3ceb15c1))
+* add the untracked and gitignored file rules ([#176](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/176)) ([28b9562](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/28b9562bab17daddbc530c771d55550d7d6ddd45))
+* **docs-watch:** detect a moved section and open one issue for its footnotes ([#200](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/200)) ([68f8c0a](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/68f8c0a11c3dc178c26bcc2b6f0b858533eaed46)), closes [#152](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/152)
+* **docs-watch:** raise the requirement no-threshold and classify a large block by its diff ([#171](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/171)) ([cce153b](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/cce153bce6b3179729121f28acedb9473aa3a010)), closes [#150](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/150) [#137](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/137)
+* **docs-watch:** treat a block that an inventory row cites as tracked ([#182](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/182)) ([1e34d33](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/1e34d33883910b86dddb62b7cc5bf684782e9f5b)), closes [#149](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/149)
+* **settings:** add the model and conflicting key rules ([#115](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/115)) ([2a47e2f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/2a47e2fb91d8eecc732a57d95e08b89de9109064))
+* **settings:** lint the managed settings files with the policy and grammar rules ([#114](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/114)) ([ecb4504](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/ecb45046c1436f18a59665f0481c21a76f452f36))
+
+
+### Bug Fixes
+
+* **settings:** read the User scope in settings-key-scope ([#216](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/216)) ([07965dc](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/07965dc94f0cb45757e1686c2219703ce544b21f))
+* **settings:** skip a hidden drop-in in settings-file-size ([#136](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/136)) ([de380f9](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/de380f9064b30d785266e33870bdbe978a580818))
+
 ## [0.8.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.7.0...v0.8.0) (2026-10-09)
 
 
