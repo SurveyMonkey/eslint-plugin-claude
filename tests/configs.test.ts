@@ -753,6 +753,17 @@ const TREE: Record<string, string> = {
   // configs set no option, so it has no tree.
   // `sandbox-weakening-options`: a Boolean option that removes isolation.
   ...settingsFiles('wwo', { sandbox: { enableWeakerNestedSandbox: true } }),
+  // The off rules of #15 for Bash and paths. They report in `strict` only.
+  ...settingsFiles('ogw', { permissions: { allow: ['Bash(ls*)'] } }),
+  ...settingsFiles('osw', { permissions: { allow: ['Bash(timeout 30 npm test)'] } }),
+  ...settingsFiles('odb', { permissions: { deny: ['Bash(rm *)'] } }),
+  ...settingsFiles('oac', { permissions: { allow: ['Bash(curl http://github.com/ *)'] } }),
+  ...settingsFiles('oro', { permissions: { allow: ['Bash(ls)'] } }),
+  ...settingsFiles('opa', {
+    permissions: { allow: ['Read(/Users/me/x)'] },
+    sandbox: { filesystem: { allowWrite: ['/output'] } },
+  }),
+  ...settingsFiles('opi', { permissions: { allow: ['Bash(run_in_background:true)'] } }),
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -910,6 +921,18 @@ const WARN_RULES = [
   { name: 'sandbox-domain-duplicate', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-platform-limits', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-weakening-options', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The off rules of #15 for Bash and paths, in the order of the `modules` list. `strict` turns each
+// on at `warn`. Each reads the project and managed files.
+const OFF_RULES = [
+  'permissions-bash-glued-wildcard',
+  'permissions-bash-stripped-wrapper',
+  'permissions-bash-deny-not-boundary',
+  'permissions-bash-argument-constraint',
+  'permissions-bash-readonly-redundant',
+  'permissions-path-anchor',
+  'permissions-param-rule-intent',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -1243,6 +1266,11 @@ const EXPECTED = [
     `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@1`,
     `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
   ]),
+  // The off rules of #15 report in `strict` only, so a hidden drop-in is the one report of their
+  // trees in `recommended`.
+  ...['ogw', 'osw', 'odb', 'oac', 'oro', 'opa', 'opi'].map(
+    (dir) => `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
+  ),
   // `permissions-auto-mode-defaults` reads the managed files only: the classifier does not read
   // `autoMode` from a project file, and `settings-key-scope` reports the key there.
   'packages/wmd/.claude/settings.json: claude/settings-key-scope@2',
@@ -1261,6 +1289,66 @@ const EXPECTED = [
   'packages/wmf/managed-settings.d/10-a.json: claude/sandbox-credentials-mask-fallback@1',
   'packages/wmf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
 ].sort()
+
+// The reports of the off rules of #15. They appear in `strict` only, at `warn`. The trees of the
+// other rules report too, where their content fits an off rule: the deny rules of the Bash and path
+// trees for `permissions-bash-deny-not-boundary`, and `Bash(ls:*)` of `wcs` for
+// `permissions-bash-readonly-redundant`. The `opa` trees report twice in a project file: once for
+// the `Read` rule and once for the sandbox path.
+const STRICT_ONLY = [
+  '.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
+  '.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/gr/managed-settings.d/10-a.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/gr/managed-settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/oac/.claude/settings.json: claude/permissions-bash-argument-constraint@1',
+  'packages/oac/.claude/settings.local.json: claude/permissions-bash-argument-constraint@1',
+  'packages/oac/managed-settings.d/10-a.json: claude/permissions-bash-argument-constraint@1',
+  'packages/oac/managed-settings.json: claude/permissions-bash-argument-constraint@1',
+  'packages/odb/.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/odb/.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/odb/managed-settings.d/10-a.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/odb/managed-settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/ogw/.claude/settings.json: claude/permissions-bash-glued-wildcard@1',
+  'packages/ogw/.claude/settings.local.json: claude/permissions-bash-glued-wildcard@1',
+  'packages/ogw/managed-settings.d/10-a.json: claude/permissions-bash-glued-wildcard@1',
+  'packages/ogw/managed-settings.json: claude/permissions-bash-glued-wildcard@1',
+  'packages/opa/.claude/settings.json: claude/permissions-path-anchor@1',
+  'packages/opa/.claude/settings.json: claude/permissions-path-anchor@1',
+  'packages/opa/.claude/settings.local.json: claude/permissions-path-anchor@1',
+  'packages/opa/.claude/settings.local.json: claude/permissions-path-anchor@1',
+  'packages/opa/managed-settings.d/10-a.json: claude/permissions-path-anchor@1',
+  'packages/opa/managed-settings.json: claude/permissions-path-anchor@1',
+  'packages/opi/.claude/settings.json: claude/permissions-param-rule-intent@1',
+  'packages/opi/.claude/settings.local.json: claude/permissions-param-rule-intent@1',
+  'packages/opi/managed-settings.d/10-a.json: claude/permissions-param-rule-intent@1',
+  'packages/opi/managed-settings.json: claude/permissions-param-rule-intent@1',
+  'packages/oro/.claude/settings.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/oro/.claude/settings.local.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/oro/managed-settings.d/10-a.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/oro/managed-settings.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/osw/.claude/settings.json: claude/permissions-bash-stripped-wrapper@1',
+  'packages/osw/.claude/settings.local.json: claude/permissions-bash-stripped-wrapper@1',
+  'packages/osw/managed-settings.d/10-a.json: claude/permissions-bash-stripped-wrapper@1',
+  'packages/osw/managed-settings.json: claude/permissions-bash-stripped-wrapper@1',
+  'packages/pne/.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/pne/.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/pne/managed-settings.d/10-a.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/pne/managed-settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wcs/.claude/settings.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/wcs/.claude/settings.local.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/wcs/managed-settings.d/10-a.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/wcs/managed-settings.json: claude/permissions-bash-readonly-redundant@1',
+  'packages/wdr/.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wdr/.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wdr/managed-settings.d/10-a.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wdr/managed-settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wrn/.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wrn/.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wrn/managed-settings.d/10-a.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/wrn/managed-settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/x/.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
+  'packages/x/.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
 // error. The team rule has one block for Markdown and one for JSON.
@@ -1383,10 +1471,14 @@ describe('configs', () => {
     ])
   })
 
-  // No rule is off in recommended yet, so strict holds the same rules.
-  it('gives strict the same rules and severities as recommended today', () => {
+  // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
+  it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
-    expect(rulesOf(plugin.configs.strict)).toEqual(rulesOf(plugin.configs.recommended))
+    const isOff = (rules: Linter.Config['rules']) =>
+      OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
+    const strict = rulesOf(plugin.configs.strict)
+    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
+    expect(strict.filter(isOff)).toEqual(OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })))
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1399,6 +1491,7 @@ describe('configs', () => {
       ...PATH_RULES.map(({ name }) => `claude/strict/${name}`),
       ...SANDBOX_RULES.map(({ name }) => `claude/strict/${name}`),
       ...WARN_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
@@ -1445,6 +1538,16 @@ describe('configs', () => {
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', ['**/.claude-plugin/marketplace.json']],
+      ])
+    }
+  })
+
+  it('turns each off rule on in strict only, on the project and managed files', () => {
+    for (const rule of OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
       ])
     }
   })
@@ -1519,7 +1622,7 @@ describe('configs', () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   }, 30_000)
 
-  it('strict reports the same files as recommended today', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
+  it('strict reports the files of recommended, and those of the off rules', async () => {
+    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
   }, 30_000)
 })

@@ -19,13 +19,13 @@ const deny = (...rules: string[]) => ({ permissions: { deny: rules } })
 const sandbox = (fields: object) => ({ sandbox: { filesystem: fields } })
 
 describe(`${name}: a permission rule`, () => {
-  it.fails('reports the example of the task, in a project, local or managed file', () => {
+  it('reports the example of the task, in a project, local or managed file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(ids(deny('Read(/Users/me/x)'), file), file).toEqual(['singleSlash'])
     }
   })
 
-  it.fails('reports Read, Edit and Cd, in each list', () => {
+  it('reports Read, Edit and Cd, in each list', () => {
     expect(
       ids({
         permissions: {
@@ -37,13 +37,13 @@ describe(`${name}: a permission rule`, () => {
     ).toEqual(['singleSlash', 'singleSlash', 'singleSlash'])
   })
 
-  it.fails('names the rule, and gives the rule with two slashes', () => {
+  it('names the rule, and gives the rule with two slashes', () => {
     const [message] = lint(deny('Read(/Users/me/x)'))
     expect(message?.message).toContain('`Read(/Users/me/x)`')
     expect(message?.message).toContain('`Read(//Users/me/x)`')
   })
 
-  it.fails('gives a fix with two slashes for each reported form', () => {
+  it('gives a fix with two slashes for each reported form', () => {
     for (const [rule, fixed] of [
       ['Read(/tmp)', 'Read(//tmp)'],
       ['Edit(/var/log/**)', 'Edit(//var/log/**)'],
@@ -53,7 +53,7 @@ describe(`${name}: a permission rule`, () => {
     }
   })
 
-  it.fails('is silent for the other anchors, and for a project directory', () => {
+  it('is silent for the other anchors, and for a project directory', () => {
     expect(
       ids(
         deny(
@@ -70,31 +70,31 @@ describe(`${name}: a permission rule`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent for a tool with no path, a bare tool, a parameter rule and a drive letter', () => {
+  it('is silent for a tool with no path, a bare tool, a parameter rule and a drive letter', () => {
     expect(ids(deny('Bash(/tmp/x)', 'Read', 'Read(offset:5)', 'Read(C:\\Users\\me)'))).toEqual([])
   })
 
-  it.fails('is silent for a rule that does not parse, and in a hidden drop-in', () => {
+  it('is silent for a rule that does not parse, and in a hidden drop-in', () => {
     expect(ids(deny('Read(/tmp/x'))).toEqual([])
     expect(ids(deny('Read(/tmp/x)'), HIDDEN)).toEqual([])
   })
 
-  it.fails('reports the entry, at its line and column', () => {
+  it('reports the entry, at its line and column', () => {
     const [message] = lint(JSON.stringify(deny('Read(/tmp/x)')))
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
-      1, 25, 1, 38,
+      1, 25, 1, 39,
     ])
   })
 })
 
 describe(`${name}: a sandbox path`, () => {
-  it.fails('reports a single-slash path that is no file system root, in a project or local file', () => {
+  it('reports a single-slash path that is no file system root, in a project or local file', () => {
     for (const file of [PROJECT, LOCAL]) {
       expect(ids(sandbox({ allowWrite: ['/output'] }), file), file).toEqual(['sandboxSlash'])
     }
   })
 
-  it.fails('reads the four lists', () => {
+  it('reads the four lists', () => {
     expect(
       ids(
         sandbox({
@@ -107,13 +107,13 @@ describe(`${name}: a sandbox path`, () => {
     ).toEqual(['sandboxSlash', 'sandboxSlash', 'sandboxSlash', 'sandboxSlash'])
   })
 
-  it.fails('names the path, and gives the path with ./', () => {
+  it('names the path, and gives the path with ./', () => {
     const [message] = lint(sandbox({ allowWrite: ['/output/cache'] }))
     expect(message?.message).toContain('"/output/cache"')
     expect(message?.message).toContain('"./output/cache"')
   })
 
-  it.fails('is silent for a path in the file system roots, and the other prefixes', () => {
+  it('is silent for a path in the file system roots, and the other prefixes', () => {
     expect(
       ids(
         sandbox({
@@ -124,19 +124,19 @@ describe(`${name}: a sandbox path`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent in a managed file: the docs give the single slash no project meaning there', () => {
+  it('is silent in a managed file: the docs give the single slash no project meaning there', () => {
     expect(ids(sandbox({ allowWrite: ['/output'] }), MANAGED)).toEqual([])
     expect(ids(sandbox({ allowWrite: ['/output'] }), DROP_IN)).toEqual([])
   })
 
-  it.fails('is silent for an entry that is no string, a list that is no array, and a wrong shape', () => {
+  it('is silent for an entry that is no string, a list that is no array, and a wrong shape', () => {
     expect(ids(sandbox({ allowWrite: [1, null, { path: '/output' }] }))).toEqual([])
     expect(ids(sandbox({ allowWrite: '/output' }))).toEqual([])
     expect(ids({ sandbox: { filesystem: [1] } })).toEqual([])
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(sandbox({ allowWrite: ['/output'] }), HIDDEN)).toEqual([])
   })
 })

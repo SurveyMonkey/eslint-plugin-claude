@@ -202,6 +202,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/sandbox-domain-duplicate`](docs/rules/sandbox-domain-duplicate.md) | A sandbox domain list holds each domain once | `warn` | `warn` |
 | [`claude/sandbox-platform-limits`](docs/rules/sandbox-platform-limits.md) | With the options `platforms` and `minVersion`, no sandbox setting that the platform or version does not honor | `warn` | `warn` |
 | [`claude/sandbox-weakening-options`](docs/rules/sandbox-weakening-options.md) | No sandbox option that removes isolation | `warn` | `warn` |
+| [`claude/permissions-bash-glued-wildcard`](docs/rules/permissions-bash-glued-wildcard.md) | No Bash allow rule with a `*` glued to the program name (`Bash(ls*)`) | `off` | `warn` |
+| [`claude/permissions-bash-stripped-wrapper`](docs/rules/permissions-bash-stripped-wrapper.md) | A Bash rule is for the inner command, not for a wrapper that Claude Code strips (`timeout`, `nice`) | `off` | `warn` |
+| [`claude/permissions-bash-deny-not-boundary`](docs/rules/permissions-bash-deny-not-boundary.md) | A Bash deny or ask rule, or a `Read` deny rule, has a sandbox or a `PreToolUse` hook beside it | `off` | `warn` |
+| [`claude/permissions-bash-argument-constraint`](docs/rules/permissions-bash-argument-constraint.md) | No Bash allow rule that limits `curl` or `wget` to a URL | `off` | `warn` |
+| [`claude/permissions-bash-readonly-redundant`](docs/rules/permissions-bash-readonly-redundant.md) | No Bash allow rule for a built-in read-only command such as `ls` | `off` | `warn` |
+| [`claude/permissions-path-anchor`](docs/rules/permissions-path-anchor.md) | A path rule starts with `//` for an absolute path, and a project sandbox path starts with `./` | `off` | `warn` |
+| [`claude/permissions-param-rule-intent`](docs/rules/permissions-param-rule-intent.md) | A `Tool(param:value)` rule is in `deny` or `ask`, not in `allow` | `off` | `warn` |
 
 ## Contributing
 

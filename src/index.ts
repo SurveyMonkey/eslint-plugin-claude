@@ -42,10 +42,15 @@ import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted
 import permissionsAutoModeDefaults from './rules/permissions-auto-mode-defaults.ts'
 import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
 import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
+import permissionsBashArgumentConstraint from './rules/permissions-bash-argument-constraint.ts'
 import permissionsBashColonStarMid from './rules/permissions-bash-colon-star-mid.ts'
 import permissionsBashColonStarSuffix from './rules/permissions-bash-colon-star-suffix.ts'
+import permissionsBashDenyNotBoundary from './rules/permissions-bash-deny-not-boundary.ts'
 import permissionsBashExecWrapperPrefix from './rules/permissions-bash-exec-wrapper-prefix.ts'
+import permissionsBashGluedWildcard from './rules/permissions-bash-glued-wildcard.ts'
+import permissionsBashReadonlyRedundant from './rules/permissions-bash-readonly-redundant.ts'
 import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildcard.ts'
+import permissionsBashStrippedWrapper from './rules/permissions-bash-stripped-wrapper.ts'
 import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
 import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
 import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
@@ -67,6 +72,8 @@ import permissionsLegacyToolName from './rules/permissions-legacy-tool-name.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
 import permissionsNegation from './rules/permissions-negation.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
+import permissionsParamRuleIntent from './rules/permissions-param-rule-intent.ts'
+import permissionsPathAnchor from './rules/permissions-path-anchor.ts'
 import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
 import permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
 import permissionsReadDenyNotebook from './rules/permissions-read-deny-notebook.ts'
@@ -234,6 +241,13 @@ const modules = [
   sandboxDomainDuplicate,
   sandboxPlatformLimits,
   sandboxWeakeningOptions,
+  permissionsBashGluedWildcard,
+  permissionsBashStrippedWrapper,
+  permissionsBashDenyNotBoundary,
+  permissionsBashArgumentConstraint,
+  permissionsBashReadonlyRedundant,
+  permissionsPathAnchor,
+  permissionsParamRuleIntent,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -391,6 +405,13 @@ const recommended: Record<RuleName, Severity> = {
   'sandbox-domain-duplicate': 'warn',
   'sandbox-platform-limits': 'warn',
   'sandbox-weakening-options': 'warn',
+  'permissions-bash-glued-wildcard': 'off',
+  'permissions-bash-stripped-wrapper': 'off',
+  'permissions-bash-deny-not-boundary': 'off',
+  'permissions-bash-argument-constraint': 'off',
+  'permissions-bash-readonly-redundant': 'off',
+  'permissions-path-anchor': 'off',
+  'permissions-param-rule-intent': 'off',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

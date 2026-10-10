@@ -804,6 +804,13 @@
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
     }
   ],
+  "permissions-bash-argument-constraint": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read-only commands",
+      "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e"
+    }
+  ],
   "permissions-bash-colon-star-mid": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -828,11 +835,33 @@
       "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
     }
   ],
+  "permissions-bash-deny-not-boundary": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "What a Bash rule doesn't match",
+      "hash": "9b1965d522c4ae266ef97f7a6d889a589ef91515bd0f5669ce5b07668f7fb95b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.deny",
+      "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/debug-your-config",
+      "heading": "Check common causes",
+      "hash": "63aa5463822a4fc575d231907bb2ffd100e2d310694729c6b3fc82d220695996"
+    }
+  ],
   "permissions-bash-exec-wrapper-prefix": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Wrappers",
-      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+      "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -845,11 +874,25 @@
       "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0"
     }
   ],
+  "permissions-bash-glued-wildcard": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns",
+      "hash": "2c692c50ac13984395b3b25c6d093448d40f014ff74c1a9f6257984a06def81f"
+    }
+  ],
+  "permissions-bash-readonly-redundant": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read-only commands",
+      "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e"
+    }
+  ],
   "permissions-bash-runner-wildcard": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Wrappers",
-      "hash": "c9a49bfee708dc261e2a14db133bdcf38ec854acfddbbbb5a3383be15468bf76"
+      "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -860,6 +903,13 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Monitor tool",
       "hash": "23d21256a4e2929d1b3b3866823ff05b2d6c54b3e57c1980afc70aef4911bfb0"
+    }
+  ],
+  "permissions-bash-stripped-wrapper": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wrappers",
+      "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
     }
   ],
   "permissions-bash-wildcard-before-subcommand": [
@@ -1172,6 +1222,25 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "2e7a4c59ae4722a81b02761d868f539c6bac0e89aacf5419aab565b9b5c15bfc"
+    }
+  ],
+  "permissions-param-rule-intent": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
+    }
+  ],
+  "permissions-path-anchor": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Sandbox path prefixes",
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
     }
   ],
   "permissions-path-rule-tool": [
