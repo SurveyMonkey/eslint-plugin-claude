@@ -594,7 +594,7 @@ const SCOPE_RULES = [
 ]
 
 // The plugin manifest and layout rules of #11, in the order of the `modules` list. Each is an
-// error, with one JSON block for its files.
+// error, except where `severity` says `warn`, with one JSON block for its files.
 const PLUGIN_RULES: {
   name: string
   files: string[]

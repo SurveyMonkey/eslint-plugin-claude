@@ -26,20 +26,20 @@ installed from a local path skips the link. A plugin from a `command` source in 
 mode skips it too. Both keep only the links that resolve inside the plugin.[^symlinks] So the
 plugin works after one install and breaks after another.
 
-The rule walks the plugin on disk and reports each link whose real target is out of the plugin and
+The rule walks the plugin on disk. It reports each link whose real target is out of the plugin and
 inside the marketplace root. The report is on the manifest. The message names the link from the
 plugin root, and the target from the repository root. A chain of links gets one report for each
 link that leaves. The walk goes depth first, with the names of each folder in alphabetical order.
 
 The marketplace root is the folder that holds the nearest `.claude-plugin/marketplace.json`. The
 search starts at the plugin root and goes up to the top of the repository. The catalog need not
-list the plugin. The rule reads the file only to find its folder. When no folder holds a catalog, the plugin root is
-the marketplace root. Then no link can leave the plugin and stay in the marketplace, so the rule
+list the plugin. The rule reads the file only to find its folder. When no folder holds a catalog,
+the plugin root is the marketplace root. Then no link can leave the plugin and stay in the marketplace, so the rule
 makes no report.
 
 The rule cannot know how a user installs the plugin, so it is a warning. The pages also differ
 for a plugin that loads in place. The loading page says that a relative-path plugin of a
-marketplace that a user added from a local path loads in place and is never copied.[^loading] The
+marketplace that a user added from a local path loads in place.[^loading] The
 marketplace page says that a local-path install skips these links.[^symlinks] The docs do not say
 if an in-place load follows a link that leaves the plugin. The rule does not decide this.
 
@@ -63,8 +63,8 @@ The rule makes no report in these cases:
   root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can
   fail to parse.
 
-Fail: a plugin in `site/plugins/p/` with a link `skills/s` to `../../q/skills/s`, a skill of the
-plugin `q` in the same marketplace.
+Fail: a plugin in `site/plugins/p/` with a link `skills/s` to `../../q/skills/s`. The target is a
+skill of the plugin `q` in the same marketplace.
 
 Pass: the same skill copied into the plugin `p`, or a link to a file inside `p`.
 

@@ -96,8 +96,8 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
             const text = item.value
             let messageId = textFault(text, field)
             if (messageId === undefined) {
-              // A link to another place in the marketplace is allowed. The symlink rules of the
-              // marketplace skip a link that leads out of it.
+              // A link to another place in the marketplace is allowed. Claude Code skips a link
+              // that leads out of the marketplace.
               const { reach } = placeOf(dir, dir, bound, scopes, path.resolve(dir, text))
               if (reach === 'outside') {
                 messageId = 'escapes'

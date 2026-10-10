@@ -1,8 +1,8 @@
 // A link under a plugin whose target is out of the marketplace is skipped when
 // Claude Code copies the plugin (host a marketplace, "Share files within a
 // marketplace with symlinks"). The marketplace root is the folder of the
-// nearest `.claude-plugin/marketplace.json` above the plugin, and the plugin
-// root when there is none. The trees are on disk, because the rule walks the
+// nearest `.claude-plugin/marketplace.json` at or above the plugin root, and the
+// plugin root when there is none. The trees are on disk, because the rule walks the
 // plugin. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
