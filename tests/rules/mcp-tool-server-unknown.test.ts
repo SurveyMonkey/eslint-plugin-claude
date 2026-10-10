@@ -118,14 +118,25 @@ it('stays silent when an agent file cannot be read', () => {
     })
   }
 })
-it('reads a file without a frontmatter block, or with one that does not parse, as no server', () => {
-  const broken = '---\nname: [\nmcpServers: x\n---\n'
-  const files = {
-    '.mcp.json': servers('db'),
-    '.claude/agents/a.md': broken,
-    '.claude/agents/b.md': 'No block.\n',
-  }
+it('reads a file without a frontmatter block as no server', () => {
+  const files = { '.mcp.json': servers('db'), '.claude/agents/b.md': 'No block.\n' }
   expect(ids(settings(allow('mcp__nope__t'), files))).toEqual(['unknown'])
+})
+it('stays silent when an agent file has a block that does not parse', () => {
+  const broken = '---\nname: [\nmcpServers:\n  - inline: {}\n---\n'
+  const files = { '.mcp.json': servers('db'), '.claude/agents/a.md': broken }
+  expect(ids(settings(allow('mcp__inline__t'), files))).toEqual([])
+})
+it('stays silent when a block that does not parse cannot be read a second time', () => {
+  const broken = '---\nname: [\nmcpServers:\n  - inline: {}\n---\n'
+  const root = repo({ '.mcp.json': servers('db'), '.claude/agents/a.md': broken })
+  const file = path.join(root, '.claude', 'settings.json')
+  expect(ids(lintJson(NAME, allow('mcp__nope__t'), file))).toEqual([])
+  if (!chmodCannotBlock) {
+    withoutAccess(path.join(root, '.claude', 'agents', 'a.md'), () => {
+      expect(ids(lintJson(NAME, allow('mcp__nope__t'), file))).toEqual([])
+    })
+  }
 })
 it('stays silent when there is no .mcp.json, or the rule cannot read it', () => {
   const code = allow('mcp__nope__t')
