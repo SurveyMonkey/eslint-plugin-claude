@@ -41,11 +41,11 @@ The rule reports these faults:
   are not valid. The report is on the value, or on the entry when `type` is not there.
 - `url` does not start with `https://`, or it is not there. Claude Code refuses a plain `http://`
   URL, also for `localhost`. The report is on the value, or on the entry.
-- The entry has a `command`, `args`, `env` or `headersHelper` member, so that a managed settings
-  document never names a program to run on a user machine. The report is on the key.
+- The entry has a `command`, `args`, `env` or `headersHelper` member. A managed settings
+  document must not name a program to run. The report is on the key.
 - A string value has a `${VAR}` reference. Claude Code does not expand variables in these
   entries. The report is on the string.
-- A key or a string value has a control character or an invisible formatting character, such as a
+- A key or a string value has a control character or an invisible character, such as a
   zero-width space or a line break. The report is on the key or on the string.
 
 When two entries have one name, or two members of an entry have one name, the rule reads the last,

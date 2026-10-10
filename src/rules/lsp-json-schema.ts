@@ -52,7 +52,8 @@ const KEYS: ReadonlyMap<string, { expected: string; ok: (value: ValueNode) => bo
     'env',
     {
       expected: 'an object of strings',
-      ok: (value) => value.type === 'Object' && value.members.every((m) => isString(m.value)),
+      ok: (value) =>
+        value.type === 'Object' && lastMembers(value.members).every((m) => isString(m.value)),
     },
   ],
   ['initializationOptions', { expected: 'any value', ok: () => true }],
@@ -78,9 +79,9 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageId }> = {
     schema: [],
     messages: {
       notObject:
-        '.lsp.json is an object that maps a server name to its config. Claude Code skips the whole file.',
+        '.lsp.json must be an object that maps a server name to its config. Claude Code skips the whole file.',
       entryNotObject:
-        'The config of the LSP server "{{server}}" is an object. Claude Code skips the whole file.',
+        'The config of the LSP server "{{server}}" must be an object. Claude Code skips the whole file.',
       unknownKey:
         'The key "{{key}}" in the config of the LSP server "{{server}}" is not a documented field. A config is a strict object, so Claude Code skips the whole file.',
       missing:

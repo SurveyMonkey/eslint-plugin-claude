@@ -84,6 +84,11 @@ jsonTester.run('lsp-json-schema (valid)', rule, {
       code: '{"go": {"command": "gopls", "command": "gopls", "extensionToLanguage": {".go": "go", ".go": "go"}, "args": 1, "args": []}}',
       filename: file,
     },
+    {
+      name: 'duplicate env variable, the last is a string',
+      code: '{"go": {"command": "gopls", "extensionToLanguage": {".go": "go"}, "env": {"A": 1, "A": "x"}}}',
+      filename: file,
+    },
   ],
   invalid: [],
 })
@@ -191,6 +196,17 @@ jsonTester.run('lsp-json-schema (invalid)', rule, {
       filename: file,
       errors: [{ messageId: 'valueType' as const, data: { server: 'go', key, expected } }],
     })),
+    {
+      name: 'duplicate env variable, the last is not a string',
+      code: '{"go": {"command": "gopls", "extensionToLanguage": {".go": "go"}, "env": {"A": "x", "A": 1}}}',
+      filename: file,
+      errors: [
+        {
+          messageId: 'valueType' as const,
+          data: { server: 'go', key: 'env', expected: 'an object of strings' },
+        },
+      ],
+    },
     // The command.
     ...['gopls serve', 'gopls\tserve', ' gopls', 'gopls ', 'C:/tools/my gopls'].map((command) => ({
       name: `command "${command}", on the value`,

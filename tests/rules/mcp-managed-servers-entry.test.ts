@@ -211,6 +211,12 @@ jsonTester.run('mcp-managed-servers-entry (invalid)', rule, {
       errors: [{ messageId: 'forbidden' as const, data: { server: 'search', key: key as string } }],
     })),
     {
+      name: 'a forbidden member twice in one entry, one report',
+      code: '{"managedMcpServers": {"a": {"type": "http", "url": "https://a.test", "command": "x", "command": "y"}}}',
+      filename: managed,
+      errors: [{ messageId: 'forbidden' as const, data: { server: 'a', key: 'command' } }],
+    },
+    {
       name: 'a forbidden member of the last of two entries',
       code: `{"managedMcpServers": {"a": ${JSON.stringify(good)}, "a": {"type": "http", "url": "https://a.test", "command": "x"}}}`,
       filename: managed,

@@ -99,7 +99,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'dead' }> = {
         if (names.length === 0) {
           return
         }
-        const kinds = new Set(entries.map(({ kept }) => kept?.kind))
+        const kinds = new Set<string>(
+          entries.flatMap(({ kept }) => (kept === undefined ? [] : [kept.kind])),
+        )
         if (!(kinds.has('url') && kinds.has('command'))) {
           // The lists of the sibling files combine with this one. A sibling that cannot be read
           // adds no kind here, so the rule stays silent if this file alone is not enough.
@@ -107,7 +109,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'dead' }> = {
           for (const sibling of siblings === UNREADABLE ? [] : siblings) {
             const other = sibling.allowedMcpServers
             for (const entry of Array.isArray(other) ? other : []) {
-              kinds.add(keptOf(entry)?.kind)
+              const kept = keptOf(entry)
+              if (kept !== undefined) {
+                kinds.add(kept.kind)
+              }
             }
           }
         }
