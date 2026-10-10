@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-path-no-backslash'
-const check = it.fails
+const check = it
 
 const message = (key: string, entry: string) =>
   `The \`${key}\` path "${entry}" has a backslash. On macOS and Linux, Claude Code rejects it, so the component loads on Windows only. Write the path with forward slashes, such as ./commands/deploy.md.`

@@ -223,6 +223,11 @@ const TREE: Record<string, string> = {
     settings: { agent: 'a' },
   }),
   'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
+  // A plugin with a backslash in a component path.
+  'plugins/bsl/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'bsl',
+    commands: ['./commands\\a.md'],
+  }),
   // A reference to a sensitive option in a skill and an agent of a plugin. A command is not read.
   'plugins/sen/.claude-plugin/plugin.json': JSON.stringify({
     name: 'sen',
@@ -724,6 +729,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  {
+    name: 'plugin-path-no-backslash',
+    files: ['**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -772,6 +782,7 @@ const EXPECTED = [
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
+  'plugins/bsl/.claude-plugin/plugin.json: claude/plugin-path-no-backslash@1',
   'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
   'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',
   'plugins/msk2/monitors/monitors.json: claude/plugin-monitors-skill-exists@2',

@@ -8,6 +8,9 @@
 // The third list is the "Default settings" section of the components page
 // (https://code.claude.com/docs/en/plugins/components#default-settings), checked on Claude Code
 // 2.1.296 on 2026-10-10.
+// The fourth list is the Type column of the "Fields" table of the manifest reference
+// (https://code.claude.com/docs/en/plugins/manifest-reference#fields), checked on Claude Code
+// 2.1.296 on 2026-10-10.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -50,3 +53,28 @@ export const REPLACED_DEFAULTS: readonly {
  *  `settings.json` or in the manifest key `settings`. Claude Code drops every
  *  other key. */
 export const PLUGIN_SETTINGS_KEYS: readonly string[] = ['agent', 'subagentStatusLine']
+
+/** A manifest key whose value names component paths. `key` is the path of the key in the
+ *  manifest. `map` is true for `commands`, whose object map names a path in the `source` of each
+ *  entry. The list holds the component keys of the Fields table, with the Type "Path" in whole
+ *  or in part. `types` has that Type too, but it names a `.d.ts` file of a mod, not a component.
+ *  `experimental.evals` names a directory that is not a component path (manifest reference,
+ *  "Path rules"). The top-level `themes` and `monitors` keys still load, with a validate warning
+ *  (Fields table, `experimental.themes`). */
+export const PLUGIN_PATH_KEYS: readonly {
+  readonly key: readonly string[]
+  readonly map: boolean
+}[] = [
+  { key: ['skills'], map: false },
+  { key: ['commands'], map: true },
+  { key: ['agents'], map: false },
+  { key: ['hooks'], map: false },
+  { key: ['mcpServers'], map: false },
+  { key: ['lspServers'], map: false },
+  { key: ['outputStyles'], map: false },
+  { key: ['workflows'], map: false },
+  { key: ['experimental', 'themes'], map: false },
+  { key: ['experimental', 'monitors'], map: false },
+  { key: ['themes'], map: false },
+  { key: ['monitors'], map: false },
+]
