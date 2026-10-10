@@ -12,14 +12,14 @@ const name = 'mcp-anthropic-hosted-url' as const
 
 type Options = [{ hosts: string[] }]
 
-/** The host of `url` in lower case with no trailing dot. The result is null when `url` has a
- *  `${` reference or does not parse, because the host is then not known. */
+/** The host of `url` with no trailing dot. `URL` gives it in lower case. The result is null
+ *  when `url` has a `${` reference or does not parse, because the host is then not known. */
 function hostOf(url: string): string | null {
   if (url.includes('${')) {
     return null
   }
   try {
-    return new URL(url).hostname.toLowerCase().replace(/\.$/, '')
+    return new URL(url).hostname.replace(/\.$/, '')
   } catch {
     return null
   }
