@@ -161,28 +161,17 @@ describe('gitModeOf', () => {
   })
 
   it('gives null for a path in conflict', () => {
+    // Each command sets what it needs, so the test needs no global git config.
+    const who = ['-c', 'user.name=t', '-c', 'user.email=t@t.test']
     const root = repo({ 'run.sh': 'base\n' })
-    const commit = (message: string) =>
-      git(
-        root,
-        '-c',
-        'user.name=t',
-        '-c',
-        'user.email=t@t.test',
-        'commit',
-        '--quiet',
-        '-am',
-        message,
-      )
-    commit('base')
-    const main = git(root, 'rev-parse', '--abbrev-ref', 'HEAD').trim()
-    git(root, 'checkout', '--quiet', '-b', 'side')
+    git(root, ...who, 'commit', '--quiet', '-am', 'base')
+    git(root, 'checkout', '--quiet', '-B', 'side')
     put(root, { 'run.sh': 'side\n' })
-    commit('side')
-    git(root, 'checkout', '--quiet', main)
-    put(root, { 'run.sh': 'main\n' })
-    commit('main')
-    expect(() => git(root, 'merge', 'side')).toThrow()
+    git(root, ...who, 'commit', '--quiet', '-am', 'side')
+    git(root, 'checkout', '--quiet', '-B', 'trunk', 'HEAD~1')
+    put(root, { 'run.sh': 'trunk\n' })
+    git(root, ...who, 'commit', '--quiet', '-am', 'trunk')
+    expect(() => git(root, ...who, 'merge', '--no-edit', 'side')).toThrow()
     expect(git(root, 'ls-files', '--unmerged')).toContain('run.sh')
     expect(gitModeOf(root, at(root, 'run.sh'))).toBeNull()
   })
