@@ -16,6 +16,7 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
@@ -36,6 +37,7 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -47,6 +49,8 @@ import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsup
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
+import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
+import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -59,6 +63,8 @@ import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-m
 import settingsFileSize from './rules/settings-file-size.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
+import settingsLocalGitignored from './rules/settings-local-gitignored.ts'
+import settingsLocalUntracked from './rules/settings-local-untracked.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
 import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
@@ -183,6 +189,12 @@ const modules = [
   hooksScriptExecutable,
   pluginBinExecutable,
   statuslineScriptExists,
+  claudeMdLocalUntracked,
+  memoryAgentMemoryLocalUntracked,
+  pluginEvalsReplayCommitted,
+  pluginEvalsResultsGitignored,
+  settingsLocalGitignored,
+  settingsLocalUntracked,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -295,6 +307,12 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',
   'statusline-script-exists': 'error',
+  'claude-md-local-untracked': 'warn',
+  'memory-agent-memory-local-untracked': 'warn',
+  'plugin-evals-replay-committed': 'warn',
+  'plugin-evals-results-gitignored': 'warn',
+  'settings-local-gitignored': 'warn',
+  'settings-local-untracked': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

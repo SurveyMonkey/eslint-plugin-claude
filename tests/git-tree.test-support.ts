@@ -8,7 +8,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { devNull, tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll } from 'vitest'
+import { afterAll, beforeAll } from 'vitest'
 
 // The real path, so that a bound compares equal where the temporary directory is a link (macOS).
 const scratch = realpathSync(mkdtempSync(path.join(tmpdir(), 'git-tree-')))
@@ -17,8 +17,12 @@ afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 // The variables that point git at a repository. Git sets some of them when it runs a git hook.
 const LOCATION =
   /^GIT_(DIR|WORK_TREE|INDEX_FILE|COMMON_DIR|OBJECT_DIRECTORY|ALTERNATE_OBJECT_DIRECTORIES|PREFIX|NAMESPACE)$/
+// Git sets these inside a hook that runs under `git -c`. They add config that the test did not choose.
+const INLINE_CONFIG = /^GIT_CONFIG_(PARAMETERS|COUNT|KEY_\d+|VALUE_\d+)$/
 const gitEnv = () => ({
-  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.test(key))),
+  ...Object.fromEntries(
+    Object.entries(process.env).filter(([key]) => !LOCATION.test(key) && !INLINE_CONFIG.test(key)),
+  ),
   GIT_CONFIG_GLOBAL: devNull,
   GIT_CONFIG_NOSYSTEM: '1',
 })
@@ -72,4 +76,28 @@ export function stage(root: string, files: string[], executable: string[] = []) 
   if (executable.length > 0) {
     git(root, 'update-index', '--chmod=+x', '--', ...executable)
   }
+}
+
+/** Give the rest of the test file no global or system git config. A rule runs
+ *  `git` itself, so `git` above does not cover it. Without this, a rule reads
+ *  the config of the machine, such as a global excludes file. A test that needs
+ *  a global config sets `GIT_CONFIG_GLOBAL` with `vi.stubEnv`. */
+export function isolateGitConfig() {
+  const saved = { global: process.env.GIT_CONFIG_GLOBAL, system: process.env.GIT_CONFIG_NOSYSTEM }
+  beforeAll(() => {
+    process.env.GIT_CONFIG_GLOBAL = devNull
+    process.env.GIT_CONFIG_NOSYSTEM = '1'
+  })
+  afterAll(() => {
+    for (const [key, value] of [
+      ['GIT_CONFIG_GLOBAL', saved.global],
+      ['GIT_CONFIG_NOSYSTEM', saved.system],
+    ] as const) {
+      if (value === undefined) {
+        delete process.env[key]
+      } else {
+        process.env[key] = value
+      }
+    }
+  })
 }

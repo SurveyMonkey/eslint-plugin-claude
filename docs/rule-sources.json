@@ -197,6 +197,18 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "claude-md-local-untracked": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Import additional files",
+      "hash": "47675d7bbe605841e98037431caf428ee302365ece31b620b48d98b890bdb14b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "What's not shown",
+      "hash": "ecbab3d62091c2305b6c8e5a2094ae1c6f3298f3dbeff6296a97c7b90a30dd1d"
+    }
+  ],
   "command-legacy-format": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -697,6 +709,13 @@
       "hash": "70f24dedac01f56742db0e1f5b50af81d0152e68578d866f4720dfa15ddd330f"
     }
   ],
+  "memory-agent-memory-local-untracked": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Enable persistent memory",
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    }
+  ],
   "output-style-frontmatter-schema": [
     {
       "url": "https://code.claude.com/docs/en/output-styles",
@@ -917,6 +936,30 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Executables",
       "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
+    }
+  ],
+  "plugin-evals-replay-committed": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Replay agent mock answers",
+      "hash": "5de9b0e4820bd48bdd6142fc79548a00888737a466249e0880dea782867dc7a2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-results-gitignored": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Eval suite reference",
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
     }
   ],
   "settings-conflicting-keys": [
@@ -1296,6 +1339,35 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Marketplace sources",
       "hash": "f14d3392a733d1adc7dd492d932059f3cd72d974c88a5ca9950aad460d8ed557"
+    }
+  ],
+  "settings-local-gitignored": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Settings files and who they affect",
+      "hash": "354339bf540672253eee313dfaba622fefad8515511e08206b29f13abd61f672"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Keep personal settings out of a repository",
+      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "File reference",
+      "hash": "36de4cf4d978f8bb19073b25041a4b1ac6eb17ce6fa0aca654187f40f3d100c2"
+    }
+  ],
+  "settings-local-untracked": [
+    {
+      "url": "https://code.claude.com/docs/en/settings",
+      "heading": "Keep personal settings out of a repository",
+      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "When your local settings file needs trust",
+      "hash": "e92f56891f12f525d75863edf865047dd034ce8ab9e2897599cf107c7fa3884d"
     }
   ],
   "settings-managed-file": [

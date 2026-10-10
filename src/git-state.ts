@@ -1,4 +1,4 @@
-// The git index, for a rule that checks the executable bit of a file. The
+// The git index, for a rule that checks the executable bit of a file or asks if git tracks one. The
 // bit is the index mode `100755`. The mode on the disk is not the bit. The
 // index can keep `100755` while the disk shows `644`. With
 // `core.fileMode=false`, git does not see the disk mode at all. A repository
@@ -10,8 +10,13 @@
 // result when there is no `.git`, when `git` is not installed, when a `git`
 // command fails, and when git finds a repository other than the one in `root`.
 // A rule makes no report that rests on `UNREADABLE`.
+//
+// Two more questions exist. One is whether a `.gitignore` file covers a path (`gitIgnores`).
+// The other is whether the index holds a file below a directory (`gitTracksBelow`).
+// They have the same `UNREADABLE` result.
 import { execFileSync } from 'node:child_process'
 import { existsSync, realpathSync, statSync } from 'node:fs'
+import { devNull } from 'node:os'
 import path from 'node:path'
 import { UNREADABLE, type Unreadable } from './skill-tree.ts'
 
@@ -34,22 +39,33 @@ const LOCATION = [
   'GIT_NAMESPACE',
 ]
 
+// Variables that change how git reads config or paths. A git hook that runs under `git -c` sets
+// the config ones. `check-ignore` stops with an error when it gets `GIT_LITERAL_PATHSPECS`.
+const AMBIENT =
+  /^GIT_(CONFIG_(PARAMETERS|COUNT|KEY_\d+|VALUE_\d+)|(LITERAL|GLOB|NOGLOB|ICASE)_PATHSPECS)$/
+
 /** The environment of a `git` command: the environment of the process,
- *  without the variables that point git at a repository. */
+ *  without the variables that point git at a repository or change its config or pathspecs. */
 function gitEnv(): NodeJS.ProcessEnv {
-  return Object.fromEntries(Object.entries(process.env).filter(([key]) => !LOCATION.includes(key)))
+  return Object.fromEntries(
+    Object.entries(process.env).filter(([key]) => !LOCATION.includes(key) && !AMBIENT.test(key)),
+  )
 }
 
-/** The output of `git` with `args`, run in `root` with no shell. It throws
- *  when `git` is not installed, `root` is not there, or the command fails. */
-function run(root: string, args: string[]): string {
+/** The output of `git` with `args`, run in `root` with no shell. `input`, when
+ *  given, is the standard input. It throws when `git` is not installed, `root`
+ *  is not there, or the command fails. */
+function run(root: string, args: string[], input?: string): string {
   // `core.fsmonitor` in the config of a repository names a program. Git runs
   // that program when it reads the index. The reader sets the key to false.
   return execFileSync('git', ['-c', 'core.fsmonitor=false', ...args], {
     cwd: root,
     env: gitEnv(),
     encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'ignore'],
+    // With `input`, git reads it from standard input.
+    ...(input === undefined
+      ? { stdio: ['ignore', 'pipe', 'ignore'] }
+      : { input, stdio: ['pipe', 'pipe', 'ignore'] }),
     // A large repository lists more than the default 1 MiB.
     maxBuffer: 1 << 30,
     timeout: 30_000,
@@ -85,9 +101,14 @@ function stampOf(gitDir: string): string | null {
 }
 
 /** The git directory of `root`. It throws when git reads a repository other
- *  than the one in `root`. This is the case for a `.git` directory that is
- *  not a repository, inside another repository. */
+ *  than the one in `root`, or when `root` has no `.git`. The first case is a
+ *  `.git` directory that is not a repository, inside another repository. */
 function gitDirOf(root: string): string {
+  // With no `.git` in `root`, git finds an outer repository or none. Both give no answer
+  // for `root`, and the check saves a process.
+  if (!existsSync(path.join(root, '.git'))) {
+    throw new Error('no .git')
+  }
   const [gitDir = '', top = ''] = run(root, [
     'rev-parse',
     '--absolute-git-dir',
@@ -142,6 +163,13 @@ export function gitModeOf(root: string, file: string): string | null | Unreadabl
   return modes.get(path.relative(root, file).split(path.sep).join('/')) ?? null
 }
 
+/** The start of the index path of each file below `dir`. It is `dir` from
+ *  `root` with `/` separators and a final `/`. For `root` itself it is empty. */
+function prefixOf(root: string, dir: string): string {
+  const below = path.relative(root, dir).split(path.sep).join('/')
+  return below === '' ? '' : `${below}/`
+}
+
 /** The name and the index mode of each tracked file directly in `dir`, in the
  *  order of the names. `dir` is below `root`. A tracked file in a directory
  *  below `dir` is not in the list. */
@@ -150,10 +178,61 @@ export function gitChildren(root: string, dir: string): [string, string][] | Unr
   if (modes === UNREADABLE) {
     return UNREADABLE
   }
-  const below = path.relative(root, dir).split(path.sep).join('/')
-  const prefix = below === '' ? '' : `${below}/`
+  const prefix = prefixOf(root, dir)
   return [...modes]
     .filter(([file]) => file.startsWith(prefix) && !file.slice(prefix.length).includes('/'))
     .map(([file, mode]): [string, string] => [file.slice(prefix.length), mode])
     .sort(([a], [b]) => a.localeCompare(b, 'en'))
+}
+
+/** True when git tracks a file at any depth below `dir`, and false when it
+ *  tracks none. `dir` is below `root`, or is `root`. The result is
+ *  `UNREADABLE` when git cannot read the index. */
+export function gitTracksBelow(root: string, dir: string): boolean | Unreadable {
+  const modes = modesOf(root)
+  if (modes === UNREADABLE) {
+    return UNREADABLE
+  }
+  const prefix = prefixOf(root, dir)
+  return [...modes.keys()].some((file) => file.startsWith(prefix))
+}
+
+/** True when a `.gitignore` file has a pattern that covers `file`, and false
+ *  when none does. `root` is the directory that holds `.git`, and `file` is a
+ *  path in it. The file need not be there. The answer comes from the patterns
+ *  only: git tracks the file or not, and the answer is the same. A negated
+ *  pattern that takes the file back gives false.
+ *
+ *  Two other sources of patterns give false. A pattern in `.git/info/exclude`
+ *  stays in one clone. A pattern in the global excludes file stays on one
+ *  machine. A team shares only a `.gitignore` file. The result is
+ *  `UNREADABLE` when git cannot answer, as for `gitModeOf`. It is also
+ *  `UNREADABLE` for a path below a link, where git stops with an error. */
+export function gitIgnores(root: string, file: string): boolean | Unreadable {
+  try {
+    gitDirOf(root)
+  } catch {
+    return UNREADABLE
+  }
+  // The path starts with `./`, so that git reads no `:` at the start as pathspec
+  // magic. `--literal-pathspecs` is not an option here: this command refuses it.
+  // Git reads the path from standard input, so a dash at the start is not an option.
+  const target = `./${path.relative(root, file).split(path.sep).join('/')}`
+  try {
+    // `-v` names the source and the pattern. With `-z`, the output is the fields
+    // `source`, `line`, `pattern` and `path`, each ended by a NUL, with no quotes.
+    // `-z` needs `--stdin`. With `-c core.excludesFile`, git reads no global excludes
+    // file, not even the default one. A global file can have the name `.gitignore`,
+    // so the name is not enough.
+    const out = run(
+      root,
+      ['-c', `core.excludesFile=${devNull}`, 'check-ignore', '--no-index', '--stdin', '-z', '-v'],
+      `${target}\0`,
+    )
+    const [source = '', , pattern = ''] = out.split('\0')
+    return !pattern.startsWith('!') && path.posix.basename(source) === '.gitignore'
+  } catch (error) {
+    // Status 1 is the answer "no path is ignored". Another status is a failure.
+    return (error as { status?: number }).status === 1 ? false : UNREADABLE
+  }
 }

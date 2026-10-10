@@ -8,7 +8,7 @@ import path from 'node:path'
 import { ESLint, type Linter } from 'eslint'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
-import { stage } from './git-tree.test-support.ts'
+import { isolateGitConfig, stage } from './git-tree.test-support.ts'
 
 const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
@@ -531,6 +531,66 @@ const GIT_TREE: Record<string, string> = {
     statusLine: { type: 'command', command: `${projectDir}/line.sh` },
   }),
 }
+// The repository `packages/gu`, for the rules of #11, #13 and #14 that ask git whether a file is
+// tracked or ignored. Each area has its own `.gitignore`, so that a pattern covers one area only.
+// `GU_LOOSE` holds files that exist but that git does not track.
+const GU_REPO = 'packages/gu'
+const GU_TREE: Record<string, string> = {
+  // The root pattern covers each `settings.local.json`. The area `set/open` takes it back.
+  '.gitignore': '**/.claude/settings.local.json\n',
+  // `claude-md-local-untracked`: git tracks a `CLAUDE.local.md`; no pattern covers a file that is
+  // not there; a pattern covers a file that is there. A file in `.claude/` is not read.
+  'claude/bad/CLAUDE.md': '# Project\n',
+  'claude/bad/CLAUDE.local.md': 'mine\n',
+  'claude/loose/CLAUDE.md': '# Project\n',
+  'claude/ok/CLAUDE.md': '# Project\n',
+  'claude/ok/.gitignore': 'CLAUDE.local.md\n',
+  'claude/dot/.claude/CLAUDE.md': '# Project\n',
+  'claude/dot/.claude/CLAUDE.local.md': 'mine\n',
+  'claude/dot/OTHER.md': '# Other\n',
+  // `memory-agent-memory-local-untracked`: git tracks a memory file of the local scope. The
+  // project scope, a directory with the same name outside `.claude/`, and a file that is not
+  // Markdown are silent.
+  'mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
+  'mem/project/.claude/agent-memory/reviewer/MEMORY.md': '# Memory\n',
+  'mem/outside/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
+  'mem/json/.claude/agent-memory-local/reviewer/state.json': '{}\n',
+  // `settings-local-untracked`: git tracks a `settings.local.json`; the local file of another
+  // project is not read.
+  'set/bad/.claude/settings.json': '{}\n',
+  'set/bad/.claude/settings.local.json': '{}\n',
+  'set/ok/.claude/settings.json': '{}\n',
+  'set/ok/other/.claude/settings.local.json': '{}\n',
+  // `settings-local-gitignored`: a pattern of a deeper `.gitignore` takes the root pattern back.
+  'set/open/.claude/settings.json': '{}\n',
+  'set/open/.gitignore': '!.claude/settings.local.json\n',
+  // `plugin-evals-results-gitignored`: a plugin with an eval suite and no pattern for its
+  // results; the same plugin with a pattern; a plugin with no eval directory.
+  'ev/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'ev/bad/evals/first/prompt.md': '# Case\n',
+  'ev/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'ev/ok/evals/first/prompt.md': '# Case\n',
+  'ev/ok/.gitignore': 'evals/results/\n',
+  'ev/none/.claude-plugin/plugin.json': JSON.stringify({ name: 'none' }),
+  // `plugin-evals-replay-committed`: a pattern that covers `mocks/.replay/`; recordings that git
+  // does not track; recordings that git tracks.
+  'rp/ignored/.claude-plugin/plugin.json': JSON.stringify({ name: 'ignored' }),
+  'rp/ignored/evals/first/prompt.md': '# Case\n',
+  'rp/ignored/.gitignore': 'evals/results/\n.replay/\n',
+  'rp/loose/.claude-plugin/plugin.json': JSON.stringify({ name: 'loose' }),
+  'rp/loose/evals/first/prompt.md': '# Case\n',
+  'rp/loose/.gitignore': 'evals/results/\n',
+  'rp/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'rp/ok/evals/mocks/.replay/github/answer.md': 'answer\n',
+  'rp/ok/.gitignore': 'evals/results/\n',
+}
+const GU_LOOSE: Record<string, string> = {
+  'claude/ok/CLAUDE.local.md': 'mine\n',
+  'mem/ok/.claude/agent-memory-local/reviewer/MEMORY.md': '# Memory\n',
+  'set/ok/.claude/settings.local.json': '{}\n',
+  'rp/loose/evals/mocks/.replay/github/answer.md': 'answer\n',
+}
+
 const GIT_EXECUTABLE = ['ok/tools/ok.sh', 'plugin/bin/ok', 'ok/bin/tool', 'sl/ok/line.sh']
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -615,6 +675,29 @@ const SCOPE_RULES = [
   { name: 'hooks-script-executable', files: HOOKS_FILES },
   { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'statusline-script-exists', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The rules of #11, #13 and #14 that ask git whether a file is tracked or ignored, in the order of
+// the `modules` list, with the language and files of each. Each is a warn.
+const UNTRACKED_RULES = [
+  { name: 'claude-md-local-untracked', language: 'markdown/gfm', files: ['**/CLAUDE.md'] },
+  {
+    name: 'memory-agent-memory-local-untracked',
+    language: 'markdown/gfm',
+    files: ['**/.claude/agent-memory-local/**/*.md'],
+  },
+  {
+    name: 'plugin-evals-replay-committed',
+    language: 'json/json',
+    files: ['**/.claude-plugin/plugin.json'],
+  },
+  {
+    name: 'plugin-evals-results-gitignored',
+    language: 'json/json',
+    files: ['**/.claude-plugin/plugin.json'],
+  },
+  { name: 'settings-local-gitignored', language: 'json/json', files: ['**/.claude/settings.json'] },
+  { name: 'settings-local-untracked', language: 'json/json', files: ['**/.claude/settings.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -808,6 +891,30 @@ const EXPECTED = [
     'packages/hx/sl/managed-settings.d/10-a.json',
   ].map((file) => `${file}: claude/statusline-script-exists@2`),
   'packages/hx/sl/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `claude-md-local-untracked` reads a `CLAUDE.md`, and reports on its `CLAUDE.local.md`.
+  'packages/gu/claude/bad/CLAUDE.md: claude/claude-md-local-untracked@1',
+  'packages/gu/claude/loose/CLAUDE.md: claude/claude-md-local-untracked@1',
+  // `memory-agent-memory-local-untracked` reads the local memory directory, and reports a tracked file.
+  'packages/gu/mem/bad/.claude/agent-memory-local/reviewer/MEMORY.md: claude/memory-agent-memory-local-untracked@1',
+  // `plugin-evals-results-gitignored` reads the manifest of a plugin that has an eval directory.
+  'packages/gu/ev/bad/.claude-plugin/plugin.json: claude/plugin-evals-results-gitignored@1',
+  // `plugin-evals-replay-committed` reports a pattern, and files that git does not track.
+  'packages/gu/rp/ignored/.claude-plugin/plugin.json: claude/plugin-evals-replay-committed@1',
+  'packages/gu/rp/loose/.claude-plugin/plugin.json: claude/plugin-evals-replay-committed@1',
+  // `settings-local-untracked` reads the shared file, and reports on its `settings.local.json`.
+  'packages/gu/set/bad/.claude/settings.json: claude/settings-local-untracked@1',
+  // `settings-local-gitignored` reads the shared file. The pattern of the root covers the files
+  // of the other areas. The repository `packages/hx` has no `.gitignore`.
+  'packages/gu/set/open/.claude/settings.json: claude/settings-local-gitignored@1',
+  ...[
+    'packages/hx/.claude/settings.json',
+    'packages/hx/ok/.claude/settings.json',
+    'packages/hx/sl/.claude/settings.json',
+    'packages/hx/sl/ok/.claude/settings.json',
+  ].map((file) => `${file}: claude/settings-local-gitignored@1`),
+  // The repository `packages/hx` tracks the local files of the hook and status line trees.
+  'packages/hx/.claude/settings.json: claude/settings-local-untracked@1',
+  'packages/hx/sl/.claude/settings.json: claude/settings-local-untracked@1',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -886,6 +993,7 @@ const NEW_RULES = [
 ]
 
 let root = ''
+isolateGitConfig()
 
 beforeAll(() => {
   root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
@@ -899,6 +1007,17 @@ beforeAll(() => {
     writeFileSync(path.join(repo, file), content)
   }
   stage(repo, Object.keys(GIT_TREE), GIT_EXECUTABLE)
+  const gu = path.join(root, GU_REPO)
+  const writeGu = (files: Record<string, string>) => {
+    for (const [file, content] of Object.entries(files)) {
+      mkdirSync(path.dirname(path.join(gu, file)), { recursive: true })
+      writeFileSync(path.join(gu, file), content)
+    }
+  }
+  writeGu(GU_TREE)
+  stage(gu, Object.keys(GU_TREE))
+  // `stage` adds each file on the disk, so the untracked files come after it.
+  writeGu(GU_LOOSE)
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -948,6 +1067,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...UNTRACKED_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'warn' },
+      ]),
     ])
   })
 
@@ -965,6 +1088,7 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...UNTRACKED_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -1032,11 +1156,22 @@ describe('configs', () => {
     }
   })
 
+  it('gives each rule that asks git one block with its language and files', () => {
+    for (const { name, language, files } of UNTRACKED_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([[language, files]])
+    }
+  })
+
+  // The run starts a `git` process for each file that a git rule reads, so it needs more than the
+  // default time on a busy machine.
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  }, 30_000)
 })
