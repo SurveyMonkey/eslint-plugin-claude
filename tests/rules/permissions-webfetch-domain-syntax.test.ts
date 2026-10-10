@@ -132,6 +132,20 @@ describe(`${name}: the reports`, () => {
     expect(ids(list('allow', 'WebFetch(Domain:example.com)'))).toEqual(['missingPrefix'])
   })
 
+  it('reads a scheme of any case or form, and a path before a port', () => {
+    expect(
+      ids(list('allow', 'WebFetch(domain:HTTPS://x.io)', 'WebFetch(domain:git+ssh://h)')),
+    ).toEqual(['scheme', 'scheme'])
+    expect(ids(list('allow', 'WebFetch(domain:example.com/docs:8080)'))).toEqual(['path'])
+  })
+
+  it('accepts an upper case or dotted IPv6 literal, and rejects a non-hex one', () => {
+    expect(
+      ids(list('allow', 'WebFetch(domain:[FE80::1])', 'WebFetch(domain:[::ffff:1.2.3.4])')),
+    ).toEqual([])
+    expect(ids(list('allow', 'WebFetch(domain:[::g])'))).toEqual(['notHost'])
+  })
+
   it('reports one fault for an entry: the scheme before the path and the port', () => {
     expect(ids(list('allow', 'WebFetch(domain:https://example.com:8080/docs)'))).toEqual(['scheme'])
     expect(ids(list('allow', 'WebFetch(domain:example.com:8080/docs)'))).toEqual(['path'])

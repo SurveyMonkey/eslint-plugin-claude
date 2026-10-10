@@ -96,6 +96,10 @@ describe(`${name}: a bare !`, () => {
     }
   })
 
+  it('reports a lone bare ! as bare, not as a carve-out of nothing', () => {
+    expect(ids(list('deny', 'Read(!)'))).toEqual(['bare'])
+  })
+
   it('says that Claude Code ignores it', () => {
     const [message] = lint(list('deny', 'Read(*.env)', 'Read(!)'))
     expect(message?.message).toContain('`Read(!)`')
@@ -168,6 +172,13 @@ describe(`${name}: a directory that a rule blocks whole`, () => {
     for (const earlier of ['Read(secrets/*.md)', 'Read(**/secrets/**)', 'Read(secrets)']) {
       expect(ids(list('deny', earlier, 'Read(!secrets/public)')), earlier).toEqual([])
     }
+  })
+})
+
+describe(`${name}: a rule in another list`, () => {
+  it('does not count an allow rule before a deny rule', () => {
+    const code = { permissions: { allow: ['Read(*.env)'], deny: ['Read(!sample.env)'] } }
+    expect(ids(code)).toEqual(['carvesNothing'])
   })
 })
 
