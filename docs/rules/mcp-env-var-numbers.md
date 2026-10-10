@@ -49,7 +49,7 @@ The rule does not report these cases:
   tokens, and no floor.[^output]
 - A hidden file in `managed-settings.d`. Claude Code ignores it.
 
-`settings-env-value-format` has no form for these six variables, so no value gets two reports. It
+`settings-env-value-format` has no form for these variables, so no value gets two reports. It
 reads the forms of `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH`, `ENABLE_TOOL_SEARCH`,
 `MCP_SDK_GENERATION` and `MCP_PROTOCOL_NEGOTIATION`. This rule reads none of those.
 

@@ -45,7 +45,8 @@ Decision 14):
 - A project `.mcp.json` that is not there, does not parse, is a link out of the repository, or has
   no `mcpServers` object. `mcp-json-servers-key` reports the last case.
 - A local agent file that cannot be read, or a link in `.claude/agents/` out of the repository. An
-  agent file with no frontmatter or with YAML that does not parse declares no server.
+  agent file with no frontmatter block declares no server. An agent file with a block that does not
+  parse can hold any server, so the rule makes no report.
 - In a plugin: a `.mcp.json` that cannot be read, and each string in `mcpServers` that leads to no
   `.json` file that reads, such as a `.mcpb` bundle, a URL or a file that is not there.
 
@@ -54,12 +55,11 @@ The rule does not report these names, because no repository file can hold them:
 - A connector: `mcp__claude_ai_<server>`.[^mcp]
 - A server of Cowork: `mcp__workspace__...`.[^mcp]
 - A scoped name of another plugin, and any `mcp__plugin_...` name in a project file.
-- A name with `*` in the server part, a name with no server, and a name from the settings of a
-  managed file. A managed file applies to many projects.
+- A name with `*` in the server part, and a name with no server.
 - A bare name in a plugin file. `mcp-plugin-tool-name-scoped` reports a bare name of its own server.
 
-A server of user scope in `~/.claude.json` is not in the repository either, and the rule cannot see
-it. So a report can be right and still not apply, and the rule is `off` in `recommended`. The rule
+A server of user scope or local scope in `~/.claude.json`, a managed MCP server, a server from
+`--mcp-config` and a connector are not in the repository either, and the rule cannot see them. So a report can be right and still not apply, and the rule is `off` in `recommended`. The rule
 does not read the `tools` of an agent file.
 
 Fail:

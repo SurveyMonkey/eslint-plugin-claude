@@ -1,11 +1,11 @@
 // The number of servers with `alwaysLoad: true` (docs/rules/mcp-always-load-count.md). Each loads
-// all its tools upfront and holds startup for up to five seconds. The MCP page says to use it for
+// all its tools upfront and can hold startup for up to five seconds by default. The MCP page says to use it for
 // "a small number of tools" and gives no number, so the option `max` has the default 2 of the
 // inventory row, and the message names the configured limit and claims no docs number.
 // A plugin declares servers in `.mcp.json`, in `.json` files that the manifest names and inline,
 // and the sources add up. The rule counts the sources that it can read. A source that it cannot
-// read can only add servers, so a count that the readable sources pass is a report that holds
-// (ADR 001, Decision 14). The report is on an `alwaysLoad: true` of the linted file.
+// read can add servers, or replace a server of an earlier source (the last name wins). So the
+// count is a lower bound in the usual case, and the message says "At least". The report is on an `alwaysLoad: true` of the linted file.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -75,7 +75,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooMany' }> 
     defaultOptions: [{ max: DEFAULT_MAX }],
     messages: {
       tooMany:
-        'At least {{count}} servers set `alwaysLoad: true` in the configs that the rule read. The configured limit is {{max}}. Each of these servers loads all its tools upfront, and startup waits for it for up to 5 seconds.',
+        'At least {{count}} servers set `alwaysLoad: true` in the configs that the rule read. The configured limit is {{max}}. Each of these servers loads all its tools upfront, and startup can wait for it for up to 5 seconds by default.',
     },
   },
   create(context) {
