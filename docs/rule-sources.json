@@ -919,11 +919,59 @@
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
     }
   ],
+  "plugin-monitors-command-env": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Monitors",
+      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Where each variable resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields that run through a shell",
+      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
+    }
+  ],
+  "plugin-no-git-lfs": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
+      "heading": "Keep plugin files out of Git LFS",
+      "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810"
+    }
+  ],
   "plugin-no-project-plugins-dir": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
       "heading": "Plugins shared through a repository",
       "hash": "83c964091287b63057f43bf3c1b19a3185cec14a58cc3ab1aa3ef66a21cee8fb"
+    }
+  ],
+  "plugin-package-lockfile": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install runs",
+      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "When the dependency install fails or is skipped",
+      "hash": "e9e73986d749ac68cdfca5e3baa46cbd4316c2cba3354985113f8d61bd78638f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Limits on the dependency install",
+      "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
+    }
+  ],
+  "plugin-path-var-braced": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Where each variable resolves",
+      "hash": "1d530f10097c03b7004aa3ebc699fffe015a59b1db1c17da8c615c4aa05b13c0"
     }
   ],
   "plugin-project-skills-dir-limits": [
@@ -963,6 +1011,38 @@
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
       "heading": "claude plugin validate reports errors",
       "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
+    }
+  ],
+  "plugin-user-config-no-shell-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Reference a saved value",
+      "hash": "525b9cf81327034ee37f05b1d3c15854aebed424f5c87a2aca9b5e62076e87bf"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields that run through a shell",
+      "hash": "4443943ce662d434a981a8554474a3622fea653f7aaedf6a191c6042dfaed2dd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Plugin command references user_config in a shell command",
+      "hash": "4039daeaeeab00fdabf642e951381a48a0a28c66570e104c88a54b23f0baf7c6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exec form and shell form",
+      "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Monitors",
+      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Use dynamic headers for custom authentication",
+      "hash": "37366b5a68cbf233f7fe92e1088957ed69a6956cff70ac48faca89f69c25fe84"
     }
   ],
   "settings-conflicting-keys": [

@@ -151,6 +151,12 @@
       "text": "### Release a new version\n\nTo release a new version to users, change the plugin's `version`. Users get a new copy only when the plugin's computed version differs from the one they have. That version comes from `plugin.json` first, then from the marketplace entry, per [Versions and updates](/docs/en/plugins/loading#versions-and-updates).\n\nA plugin that users [load in place](/docs/en/plugins/loading#find-plugins-on-disk) from a marketplace they added from a local path isn't controlled by `version`. It loads your current files at every session start, whatever its version string says.\n\nFor every install other than an in-place load or one from a `command` source, either increase `version` on each release or omit it:\n\n* **Bump `version` on each release**: users stay on their cached copy until the string changes. If you set `\"version\": \"1.0.0\"` and push new commits without changing it, users don't receive them.\n* **Omit `version`**: users track your commits instead. Leave `version` out of both `plugin.json` and the marketplace entry.\n\nDon't set `version` in both `plugin.json` and the marketplace entry. If you do, Claude Code uses the `plugin.json` value without warning, and `claude plugin validate` reports the mismatch as `Entry declares version \"<a>\" but <path>/plugin.json says \"<b>\"`."
     },
     {
+      "heading": "Keep plugin files out of Git LFS",
+      "id": "keep-plugin-files-out-of-git-lfs",
+      "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810",
+      "text": "### Keep plugin files out of Git LFS\n\nKeep the files your plugins need out of [Git LFS](https://git-lfs.com). When users add a marketplace hosted in a git repository, or install a git-based plugin it lists, Claude Code clones that marketplace or plugin repository onto their machine. The clone never downloads LFS content, so LFS-tracked files arrive as pointer files."
+    },
+    {
       "heading": "When Claude Code skips a headersHelper command or drops its output",
       "id": "when-claude-code-skips-a-headershelper-command-or-drops-its-output",
       "hash": "d78f0d8d3886c618560a615a0c65a5e8d42e9e1b23886665f8fb3f0b0589f338",

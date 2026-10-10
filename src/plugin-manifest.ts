@@ -1,6 +1,6 @@
 // The plugin that holds a `plugin.json`, for a rule that lints the manifest
 // and reads the files around it. `readPlugin` finds the plugin root once. A
-// rule does not find a plugin root again (ADR 001, Decision 10).
+// rule checks the plugin root in code (ADR 001, Decision 10).
 import path from 'node:path'
 import type { ValueNode } from './marketplace-json.ts'
 import { realSource } from './marketplace-source.ts'
@@ -9,9 +9,12 @@ import { isInside, readManifest, realDirectory, repositoryRoot, UNREADABLE } fro
 
 /** The plugin of a manifest. `root` is the plugin root as the linted path gives
  *  it, `realRoot` is its real path, and `bound` is the real path of the
- *  repository (ADR 001, Decision 14). */
+ *  repository (ADR 001, Decision 14). `fields` are the keys of the manifest on
+ *  disk. They are always an object: a manifest that is absent or not an object
+ *  gives no plugin. */
 export interface Plugin {
   readonly bound: string
+  readonly fields: Readonly<Record<string, unknown>>
   readonly realRoot: string
   readonly root: string
 }
@@ -20,19 +23,29 @@ export interface Plugin {
  *  The result is undefined when the rule cannot see the plugin, so a rule makes
  *  no report. The rule cannot see it in these cases: the root is not a plugin
  *  root, or `isPluginRoot` cannot see it. The manifest can be out of the
- *  repository, or a link with no target. It can fail to parse to an object, or
+ *  repository, or a link with no target. The real path of the root can be out
+ *  of the repository. It can fail to parse to an object, or
  *  fail to read. */
 export function readPlugin(file: string): Plugin | undefined {
-  const root = path.dirname(path.dirname(path.resolve(file)))
+  return readPluginAt(path.dirname(path.dirname(path.resolve(file))))
+}
+
+/** The plugin at the plugin root `root`, for a rule that lints a file of the
+ *  plugin other than the manifest. The result is undefined in the cases of
+ *  `readPlugin`. */
+export function readPluginAt(root: string): Plugin | undefined {
   if (isPluginRoot(root) !== true) {
     return undefined
   }
   const bound = repositoryRoot(root)
-  const manifest = readManifest(root, bound)
-  if (manifest === UNREADABLE || manifest === null) {
+  const fields = readManifest(root, bound)
+  if (fields === UNREADABLE || fields === null) {
     return undefined
   }
-  return { bound, realRoot: realDirectory(root), root }
+  const realRoot = realDirectory(root)
+  // A root that links out of the repository, with a `.claude-plugin` that links
+  // back in, is a plugin that a rule must not look at (ADR 001, Decision 14).
+  return isInside(realRoot, bound) ? { bound, fields, realRoot, root } : undefined
 }
 
 /** The result of `locate` for a path that leaves the plugin root. */

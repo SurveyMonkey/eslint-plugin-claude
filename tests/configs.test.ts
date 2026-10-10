@@ -13,6 +13,7 @@ const long = 'a'.repeat(1537)
 // The plugin variables, escaped so that the template literal keeps them as text.
 const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
+const userConfigRef = `./run.sh \${user_config.token}`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 // One bad permission rule for each grammar rule, in the order of GRAMMAR_RULES.
 const badSettings = JSON.stringify({
@@ -138,6 +139,40 @@ const TREE: Record<string, string> = {
     commands: ['./extras/c.md'],
   }),
   'plugins/shadow/commands/c.md': '# C\n',
+  // A `package.json` with a lockfile that Claude Code skips.
+  'plugins/lock/.claude-plugin/plugin.json': JSON.stringify({ name: 'lock' }),
+  'plugins/lock/package.json': '{}',
+  'plugins/lock/yarn.lock': '',
+  // A file that a `.gitattributes` pattern sends to Git LFS.
+  'plugins/lfs/.claude-plugin/plugin.json': JSON.stringify({ name: 'lfs' }),
+  'plugins/lfs/.gitattributes': '*.bin filter=lfs diff=lfs merge=lfs -text\n',
+  'plugins/lfs/model.bin': '',
+  // A bare plugin variable in the body of a plugin skill, command and agent.
+  'plugins/bare/.claude-plugin/plugin.json': JSON.stringify({ name: 'bare' }),
+  'plugins/bare/skills/s/SKILL.md': '---\nname: s\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
+  'plugins/bare/commands/c.md': 'Run $CLAUDE_PLUGIN_DATA/run.sh\n',
+  'plugins/bare/agents/a.md':
+    '---\nname: a\ndescription: d\n---\n\nRun $CLAUDE_PLUGIN_ROOT/run.sh\n',
+  // A `${user_config.*}` reference in each field that a shell runs, in the manifest and in the
+  // three default files.
+  'plugins/ucf/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ucf',
+    hooks: { Stop: [{ hooks: [{ type: 'command', command: userConfigRef }] }] },
+  }),
+  'plugins/ucf/hooks/hooks.json': JSON.stringify({
+    hooks: { Stop: [{ hooks: [{ type: 'command', command: userConfigRef }] }] },
+  }),
+  'plugins/ucf/.mcp.json': JSON.stringify({ mcpServers: { a: { headersHelper: userConfigRef } } }),
+  'plugins/ucf/monitors/monitors.json': JSON.stringify([{ name: 'm', command: userConfigRef }]),
+  // A monitor that reads a bare variable, in the manifest and in the default file.
+  'plugins/env/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'env',
+    monitors: [{ name: 'm', description: 'd', command: '$CLAUDE_PLUGIN_ROOT/m.sh' }],
+  }),
+  'plugins/env2/.claude-plugin/plugin.json': JSON.stringify({ name: 'env2' }),
+  'plugins/env2/monitors/monitors.json': JSON.stringify([
+    { name: 'm', description: 'd', command: 'tail -F $CLAUDE_PLUGIN_DATA/log' },
+  ]),
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/pp/.git/HEAD': 'ref: refs/heads/main\n',
@@ -546,7 +581,7 @@ const SCOPE_RULES = [
 
 // The plugin manifest and layout rules of #11, in the order of the `modules` list. Each is an
 // error, with one JSON block for its files.
-const PLUGIN_RULES = [
+const PLUGIN_RULES: { name: string; files: string[]; language?: string }[] = [
   { name: 'plugin-manifest-location', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-skill-dir-layout', files: ['**/.claude-plugin/plugin.json'] },
   {
@@ -559,6 +594,26 @@ const PLUGIN_RULES = [
   },
   { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-default-dir-shadowed', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-monitors-command-env',
+    files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
+  },
+  { name: 'plugin-no-git-lfs', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-package-lockfile', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-path-var-braced',
+    language: 'markdown/gfm',
+    files: ['**/SKILL.md', '**/commands/**/*.md', '**/agents/**/*.md'],
+  },
+  {
+    name: 'plugin-user-config-no-shell-fields',
+    files: [
+      '**/.claude-plugin/plugin.json',
+      '**/hooks/hooks.json',
+      '**/.mcp.json',
+      '**/monitors/monitors.json',
+    ],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -607,7 +662,19 @@ const EXPECTED = [
   '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pp/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
+  'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
+  'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
+  'plugins/bare/commands/c.md: claude/command-legacy-format@1',
+  'plugins/bare/commands/c.md: claude/plugin-path-var-braced@2',
+  'plugins/bare/skills/s/SKILL.md: claude/plugin-path-var-braced@2',
+  'plugins/env/.claude-plugin/plugin.json: claude/plugin-monitors-command-env@2',
+  'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
+  'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
+  'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
@@ -954,12 +1021,12 @@ describe('configs', () => {
     }
   })
 
-  it('gives each rule of the plugin layout layer one JSON block for its files', () => {
-    for (const { name, files } of PLUGIN_RULES) {
+  it('gives each rule of the plugin layout layer one block for its files', () => {
+    for (const { name, files, language = 'json/json' } of PLUGIN_RULES) {
       const blocks = plugin.configs.recommended.filter(
         (c) => c.name === `claude/recommended/${name}`,
       )
-      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([[language, files]])
     }
   })
 
