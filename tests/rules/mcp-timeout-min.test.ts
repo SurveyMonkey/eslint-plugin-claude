@@ -38,6 +38,14 @@ jsonTester.run('mcp-timeout-min (valid)', rule, {
     { code: '{"mcpServers": {}, "timeout": 5}', filename: project },
     // The last member counts, as `JSON.parse` keeps the last one.
     { code: wrap('{"command": "x", "timeout": 5, "timeout": 5000}'), filename: project },
+    // A server map with no wrapper is read in a plugin file only.
+    { name: 'project, no wrapper', code: '{"a": {"timeout": 60}}', filename: project },
+    // Of two servers with one name, the last counts.
+    {
+      name: 'shadowed server',
+      code: '{"mcpServers": {"a": {"timeout": 5}, "a": {"timeout": 5000}}}',
+      filename: project,
+    },
     // A config that is not an object, and a map that is not an object.
     { code: wrap('5'), filename: project },
     { code: '{"mcpServers": [{"timeout": 5}]}', filename: project },

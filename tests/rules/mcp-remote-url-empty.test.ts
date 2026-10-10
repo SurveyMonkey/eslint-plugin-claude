@@ -17,6 +17,7 @@ jsonTester.run('mcp-remote-url-empty (valid)', rule, {
     { code: wrap('{"type": "sse", "url": "https://x.test/sse"}'), filename: project },
     { code: wrap('{"type": "ws", "url": "wss://x.test/ws"}'), filename: project },
     { code: '{"mcpServers": {}}', filename: project },
+    { name: 'project, no wrapper', code: '{"a": {"type": "http", "url": ""}}', filename: project },
     // A stdio server does not use `url`, and an entry with no `type` is not a remote one.
     { code: wrap('{"type": "stdio", "command": "x", "url": ""}'), filename: project },
     { code: wrap('{"command": "x", "url": ""}'), filename: project },

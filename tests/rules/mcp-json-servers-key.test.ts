@@ -79,7 +79,11 @@ jsonTester.run('mcp-json-servers-key (invalid)', rule, {
     },
     // Nothing that looks like a server.
     { code: '{}', filename: project, errors: [{ messageId: 'missing', line: 1, column: 1 }] },
-    { code: '{"other": 1}', filename: project, errors: [{ messageId: 'missing' }] },
+    {
+      code: '{"other": 1}',
+      filename: project,
+      errors: [{ messageId: 'missing', line: 1, column: 1 }],
+    },
     { code: '{"a": {"b": 1}}', filename: project, errors: [{ messageId: 'missing' }] },
     { code: '{"a": "command"}', filename: project, errors: [{ messageId: 'missing' }] },
     { code: '[]', filename: project, errors: [{ messageId: 'missing' }] },

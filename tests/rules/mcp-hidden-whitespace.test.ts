@@ -43,6 +43,13 @@ jsonTester.run('mcp-hidden-whitespace (valid)', rule, {
     // A config that is not an object, and a map that is not an object.
     { code: wrap('" x "'), filename: project },
     { code: '{"mcpServers": [" x "]}', filename: project },
+    { name: 'project, no wrapper', code: '{"a": {"command": "x "}}', filename: project },
+    // The last member counts, as `JSON.parse` keeps the last one.
+    {
+      name: 'later command is clean',
+      code: wrap('{"command": "x ", "command": "y", "url": "u ", "url": "u"}'),
+      filename: project,
+    },
     { name: 'plugin, clean', code: wrap('{"command": "x"}'), filename: pluginMcp },
     // Claude Code reads no file under `.claude/`. `mcp-json-location` reports it.
     { name: 'unread path', code: wrap('{"command": "x "}'), filename: '.claude/.mcp.json' },
@@ -53,6 +60,12 @@ jsonTester.run('mcp-hidden-whitespace (valid)', rule, {
 jsonTester.run('mcp-hidden-whitespace (invalid)', rule, {
   valid: [],
   invalid: [
+    {
+      name: 'later command is dirty',
+      code: wrap('{"command": "x", "command": "y "}'),
+      filename: project,
+      errors: [{ messageId: 'value', data: { field: 'command', server: 'a' } }],
+    },
     // The report is on the value.
     {
       code: wrap('{"command": "npx "}'),
