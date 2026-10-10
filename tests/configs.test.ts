@@ -84,6 +84,10 @@ const badMarketSettings = JSON.stringify({
 // One string value of 2 MiB makes a file over the limit of the size rule.
 const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
+// One byte over the 4 MiB that Claude Code loads from a CLAUDE.md file. An HTML comment is
+// the cheapest text for the Markdown parser.
+const bigMarkdown = `<!--${'x'.repeat(4194305 - 7)}-->`
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -420,6 +424,71 @@ const TREE: Record<string, string> = {
   'packages/es/managed-settings.d/30-b.txt': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/managed-settings.d/sub/40-c.json': '{"env": {"NO_COLOR": "1"}}',
   'packages/es/.vscode/settings.json': '{"env": {"NO_COLOR": "1"}}',
+  // The CLAUDE.md, rules and memory rules of #13. `claude-md-max-bytes`: a CLAUDE.md file over
+  // 4 MiB in each place that Claude Code reads one. The same text where it reads none: a Markdown
+  // file with a near name, `AGENTS.md`, and a rule file (a size rule for rules is not this one).
+  'packages/mb/CLAUDE.md': bigMarkdown,
+  'packages/mb/.claude/CLAUDE.md': bigMarkdown,
+  'packages/mb/CLAUDE.local.md': bigMarkdown,
+  'packages/mb/docs/CLAUDE-notes.md': bigMarkdown,
+  'packages/mb/AGENTS.md': bigMarkdown,
+  'packages/mb/.claude/rules/CLAUDE.md': bigMarkdown,
+  // `claude-md-agents-md-variant`: the variants that Claude Code never reads, and a Markdown file
+  // below `.agents/`. The same text where Claude Code reads it or where no rule reads it.
+  'packages/av/AGENTS.local.md': '# Notes\n',
+  'packages/av/AGENTS.override.md': '# Notes\n',
+  'packages/av/.agents/notes.md': '# Notes\n',
+  'packages/av/.agents/skills/x/SKILL.md': '# Notes\n',
+  'packages/av/.agents/config.json': '{}',
+  'packages/av/AGENTS.md': '# Notes\n',
+  'packages/av/.claude/AGENTS.md': '# Notes\n',
+  'packages/av/docs/agents/notes.md': '# Notes\n',
+  'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
+  // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
+  // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
+  'packages/ex/.claude/settings.local.json': '{"claudeMdExcludes": ["*/CLAUDE.md", "**/ok/**"]}',
+  'packages/ex/managed-settings.json': '{"claudeMdExcludes": ["a/**"]}',
+  'packages/ex/managed-settings.d/10-a.json': '{"claudeMdExcludes": ["b/**"]}',
+  'packages/ex/managed-settings.d/.20-hidden.json': '{"claudeMdExcludes": ["c/**"]}',
+  'packages/ex/managed-settings.d/30-b.txt': '{"claudeMdExcludes": ["d/**"]}',
+  'packages/ex/managed-settings.d/sub/40-c.json': '{"claudeMdExcludes": ["e/**"]}',
+  'packages/ex/.vscode/settings.json': '{"claudeMdExcludes": ["f/**"]}',
+  'packages/ex/ok/.claude/settings.json': '{"claudeMdExcludes": ["**/web/**", "/abs/CLAUDE.md"]}',
+  // `memory-settings-schema`: a memory key of the wrong type in each settings file that it reads.
+  // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/ms/.claude/settings.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/.claude/settings.local.json': '{"autoMemoryDirectory": "memory"}',
+  'packages/ms/managed-settings.json': '{"claudeMdExcludes": "**/a/**"}',
+  'packages/ms/managed-settings.d/10-a.json':
+    '{"pluginConfigs": {"cc-plugin-agents-md@builtin": {"options": {"instructionFiles": "both"}}}}',
+  'packages/ms/managed-settings.d/.20-hidden.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/managed-settings.d/30-b.txt': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/managed-settings.d/sub/40-c.json': '{"autoMemoryEnabled": "no"}',
+  'packages/ms/.vscode/settings.json': '{"autoMemoryEnabled": "no"}',
+  // `rules-frontmatter-schema`: a bad frontmatter in a rule file at each depth, and a block below
+  // line 1. The same content where no rule reads it: a Markdown file that is not a rule file.
+  'packages/rf/.claude/rules/globs.md': '---\nglobs: "*.ts"\n---\n# Rule\n',
+  'packages/rf/.claude/rules/sub/yaml.md': '---\npaths: *.ts\n---\n# Rule\n',
+  'packages/rf/.claude/rules/late.md': '# Rule\n\n---\npaths: "src/**"\n---\n',
+  'packages/rf/.claude/rules/ok.md': '---\npaths:\n  - "src/**/*.ts"\n---\n# Rule\n',
+  'packages/rf/docs/rules/globs.md': '---\nglobs: "*.ts"\n---\n# Not a rule file\n',
+  // `rules-paths-glob-valid`: a bad glob in a rule file at each depth. The same content where no
+  // rule reads it.
+  'packages/rg/.claude/rules/bracket.md': '---\npaths: "photos [2024/**"\n---\n# Rule\n',
+  'packages/rg/.claude/rules/sub/ok.md': '---\npaths: "photos \\\\[2024/**"\n---\n# Rule\n',
+  'packages/rg/docs/rules/bracket.md': '---\npaths: "photos [2024/**"\n---\n# Not a rule file\n',
+  // `rules-md-extension`: a file below `.claude/rules/` with another extension, at each depth. A
+  // hidden file, a file with the extension `.md`, and the same names where no rule reads them.
+  'packages/re/.claude/rules/style.txt': '# Rule\n',
+  'packages/re/.claude/rules/sub/react.markdown': '# Rule\n',
+  'packages/re/.claude/rules/noextension': '# Rule\n',
+  'packages/re/.claude/rules/.gitkeep': '',
+  'packages/re/.claude/rules/ok.md': '# Rule\n',
+  'packages/re/docs/rules/style.txt': '# Not a rule file\n',
+  'packages/re/.claude/style.txt': '# Not a rule file\n',
+  'packages/ms/ok/.claude/settings.json':
+    '{"autoMemoryEnabled": false, "autoMemoryDirectory": "~/memory", "claudeMdExcludes": ["**/a/**"]}',
 }
 
 // The one marketplace rule that needs a `.git` and a link, and so has its own tree above.
@@ -498,6 +567,18 @@ const SCOPE_RULES = [
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
+// error, and each has one block for its own language.
+const MEMORY_RULES = [
+  'claude-md-agents-md-variant',
+  'claude-md-excludes-pattern',
+  'claude-md-max-bytes',
+  'memory-settings-schema',
+  'rules-frontmatter-schema',
+  'rules-md-extension',
+  'rules-paths-glob-valid',
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -661,6 +742,37 @@ const EXPECTED = [
   'packages/es/managed-settings.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/10-a.json: claude/settings-env-shadowed@2',
   'packages/es/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `claude-md-agents-md-variant` reads the two variant names and Markdown below `.agents/`.
+  'packages/av/AGENTS.local.md: claude/claude-md-agents-md-variant@2',
+  'packages/av/AGENTS.override.md: claude/claude-md-agents-md-variant@2',
+  'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
+  'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
+  // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
+  'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/managed-settings.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/managed-settings.d/10-a.json: claude/claude-md-excludes-pattern@2',
+  'packages/ex/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `rules-frontmatter-schema` reads Markdown below `.claude/rules/`, and no other file.
+  'packages/rf/.claude/rules/globs.md: claude/rules-frontmatter-schema@2',
+  'packages/rf/.claude/rules/sub/yaml.md: claude/rules-frontmatter-schema@2',
+  'packages/rf/.claude/rules/late.md: claude/rules-frontmatter-schema@2',
+  // `rules-paths-glob-valid` reads Markdown below `.claude/rules/`, and no other file.
+  'packages/rg/.claude/rules/bracket.md: claude/rules-paths-glob-valid@2',
+  // `rules-md-extension` reads every file below `.claude/rules/`, and no other file.
+  'packages/re/.claude/rules/style.txt: claude/rules-md-extension@2',
+  'packages/re/.claude/rules/sub/react.markdown: claude/rules-md-extension@2',
+  'packages/re/.claude/rules/noextension: claude/rules-md-extension@2',
+  // `memory-settings-schema` reads the project and managed files, and no other file.
+  'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
+  'packages/ms/.claude/settings.local.json: claude/memory-settings-schema@2',
+  'packages/ms/managed-settings.json: claude/memory-settings-schema@2',
+  'packages/ms/managed-settings.d/10-a.json: claude/memory-settings-schema@2',
+  'packages/ms/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `claude-md-max-bytes` reads CLAUDE.md and CLAUDE.local.md, and no other file.
+  'packages/mb/CLAUDE.md: claude/claude-md-max-bytes@2',
+  'packages/mb/.claude/CLAUDE.md: claude/claude-md-max-bytes@2',
+  'packages/mb/CLAUDE.local.md: claude/claude-md-max-bytes@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -795,6 +907,10 @@ describe('configs', () => {
         `claude/recommended/${name}`,
         { [`claude/${name}`]: 'error' },
       ]),
+      ...MEMORY_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'error' },
+      ]),
     ])
   })
 
@@ -812,6 +928,7 @@ describe('configs', () => {
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -879,11 +996,38 @@ describe('configs', () => {
     }
   })
 
+  // The tree holds files of 4 MiB for the size rule, so these two runs need more than 5 seconds
+  // on a busy machine.
+  it('gives each rule of the memory layer one block for its own language and files', () => {
+    const blocks = (rule: string) =>
+      plugin.configs.recommended
+        .filter((c) => c.name === `claude/recommended/${rule}`)
+        .map((c) => [c.language, c.files])
+    expect(blocks('claude-md-agents-md-variant')).toEqual([
+      ['markdown/gfm', ['**/AGENTS.local.md', '**/AGENTS.override.md', '**/.agents/**/*.md']],
+    ])
+    expect(blocks('claude-md-excludes-pattern')).toEqual([
+      ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    expect(blocks('claude-md-max-bytes')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+    ])
+    expect(blocks('memory-settings-schema')).toEqual([
+      ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
+    ])
+    for (const rule of ['rules-frontmatter-schema', 'rules-paths-glob-valid']) {
+      expect(blocks(rule)).toEqual([['markdown/gfm', ['**/.claude/rules/**/*.md']]])
+    }
+    expect(blocks('rules-md-extension')).toEqual([
+      ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
+    ])
+  })
+
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
-  })
+  }, 60000)
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)
-  })
+  }, 60000)
 })

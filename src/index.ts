@@ -16,6 +16,9 @@ import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
+import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
@@ -34,6 +37,7 @@ import marketplaceSchema from './rules/marketplace-schema.ts'
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
@@ -44,6 +48,9 @@ import permissionsSkillRule from './rules/permissions-skill-rule.ts'
 import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
+import rulesMdExtension from './rules/rules-md-extension.ts'
+import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
@@ -175,6 +182,13 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  claudeMdAgentsMdVariant,
+  claudeMdExcludesPattern,
+  claudeMdMaxBytes,
+  memorySettingsSchema,
+  rulesFrontmatterSchema,
+  rulesMdExtension,
+  rulesPathsGlobValid,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -283,6 +297,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'claude-md-agents-md-variant': 'error',
+  'claude-md-excludes-pattern': 'error',
+  'claude-md-max-bytes': 'error',
+  'memory-settings-schema': 'error',
+  'rules-frontmatter-schema': 'error',
+  'rules-md-extension': 'error',
+  'rules-paths-glob-valid': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

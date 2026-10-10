@@ -1,20 +1,20 @@
-// A `paths` glob of a skill must be one that Claude Code can use
-// (docs/rules/skill-paths-glob-valid.md). The rule checks the two faults that
-// the docs name. These are a `[` with no bracket expression, and brace groups
-// that expand past the budget.
+// A `paths` glob of a rule file must be one that Claude Code can use
+// (docs/rules/rules-paths-glob-valid.md). A rule file takes the same `paths` as a skill, so
+// the checks are the ones of `skill-paths-glob-valid`, in `src/paths-glob.ts`. These are a `[`
+// with no bracket expression, and brace groups that expand past the budget.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
+import { classifyMemoryFile } from '../memory-files.ts'
 import { checkGlobs } from '../paths-glob.ts'
-import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
-const name = 'skill-paths-glob-valid' as const
+const name = 'rules-paths-glob-valid' as const
 
 const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Use valid globs in the `paths` field of a skill',
+      description: 'Use valid globs in the `paths` field of a rule file',
       url: docsUrl(name),
     },
     schema: [],
@@ -26,17 +26,14 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
     },
   },
   create(context) {
-    if (classifySkillFile(context.filename)?.kind !== 'skill') {
+    if (classifyMemoryFile(context.filename) !== 'rule') {
       return {}
     }
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
-        if (fm === null) {
-          return
-        }
-        const field = fm.fields.get('paths')
-        if (field === undefined) {
+        const field = fm?.fields.get('paths')
+        if (fm === null || field === undefined) {
           return
         }
         const loc = fm.at(field.valueStart, field.valueEnd)
@@ -59,6 +56,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
 export default {
   name,
   language: 'markdown' as const,
-  files: ['**/SKILL.md'],
+  files: ['**/.claude/rules/**/*.md'],
   rule,
 }

@@ -1161,6 +1161,30 @@
   ],
   "sources": [
     {
+      "heading": "claudeMdExcludes",
+      "id": "claudemdexcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c",
+      "text": "### `claudeMdExcludes`\n\nSkip specific `CLAUDE.md` files when Claude Code loads [memory](/docs/en/memory#exclude-specific-claude-md-files). In a large monorepo, use it to skip CLAUDE.md files from other teams that aren't relevant to your work; [Exclude irrelevant CLAUDE.md files](/docs/en/large-codebases#exclude-irrelevant-claude-md-files) in the large-codebases guide walks through that case. Patterns match against absolute file paths.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: array of strings, each a glob pattern or absolute path\n* **Default**: unset, so Claude Code loads every CLAUDE.md it finds\n\n```json settings.json theme={null}\n{\n  \"claudeMdExcludes\": [\"**/vendor/**/CLAUDE.md\"]\n}\n```\n\nExclusions apply only to user, project, and local memory files; managed policy CLAUDE.md files can't be excluded.\n\n<span id=\"environment-variables\" />"
+    },
+    {
+      "heading": "autoMemoryEnabled",
+      "id": "automemoryenabled",
+      "hash": "3c2e520f5512c7975ccb059aa4d2422547f9c3771fbb6d407202929c560ef8e0",
+      "text": "### `autoMemoryEnabled`\n\nTurn [auto memory](/docs/en/memory#enable-or-disable-auto-memory) on or off. When `false`, Claude doesn't read from or write to the auto memory directory. You can also toggle it with `/memory` during a session, which writes this key to your user settings.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: Boolean\n  * `true`: the same as unset; auto memory stays on unless something that outranks this key turns it off for the session, such as `--bare`, safe mode, or `CLAUDE_CODE_DISABLE_AUTO_MEMORY`\n  * `false`: Claude doesn't read from or write to the auto memory directory\n* **Default**: `true`\n* **Per-session overrides**: [`CLAUDE_CODE_DISABLE_AUTO_MEMORY`](/docs/en/env-vars) takes precedence over this key for one session, in either direction\n\n```json settings.json theme={null}\n{\n  \"autoMemoryEnabled\": false\n}\n```"
+    },
+    {
+      "heading": "autoMemoryDirectory",
+      "id": "automemorydirectory",
+      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f",
+      "text": "### `autoMemoryDirectory`\n\nStore [auto memory](/docs/en/memory#storage-location) in a directory of your choice instead of the per-project default.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: string, an absolute or `~/`-prefixed directory path\n* **Default**: unset, so Claude Code uses `~/.claude/projects/<project>/memory/`\n\n```json settings.json theme={null}\n{\n  \"autoMemoryDirectory\": \"~/my-memory-dir\"\n}\n```\n\nFrom project or local settings, Claude Code honors this key under the same [workspace trust rule as hooks](/docs/en/permissions#what-runs-before-you-trust-a-folder), since a cloned repository can supply those files."
+    },
+    {
+      "heading": "pluginConfigs",
+      "id": "pluginconfigs",
+      "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895",
+      "text": "### `pluginConfigs`\n\nStore the non-sensitive answers you give a plugin's [`userConfig`](/docs/en/plugins/manifest-reference#user-configuration) configuration dialog, keyed by plugin ID. Claude Code writes this key to your user settings when you fill in the dialog, so you don't need to edit it by hand. Claude Code stores sensitive options in the macOS Keychain instead, falling back to `~/.claude/.credentials.json` when the Keychain rejects the write; on platforms without a supported keychain, it stores them in `~/.claude/.credentials.json`.\n\n* **Scope**: [`User or managed`](#scopes)\n* **Type**: object mapping a plugin ID to an object with an `options` field, mapping each option name to a string, number, Boolean, or array of strings, and an optional `mcpServers` field holding per-server user configuration values in the same shape\n* **Default**: unset\n\nThis example stores the `api_endpoint` option for the `deployer` plugin from `acme-tools`:\n\n```json settings.json theme={null}\n{\n  \"pluginConfigs\": {\n    \"deployer@acme-tools\": {\n      \"options\": {\n        \"api_endpoint\": \"https://api.example.com\"\n      }\n    }\n  }\n}\n```\n\nBuilt-in plugins store their options under the same key with an `@builtin` suffix. For example, the [**Project instructions**](/docs/en/memory#choose-which-instruction-files-load) setting that controls whether Claude Code reads `AGENTS.md` files is `pluginConfigs[\"cc-plugin-agents-md@builtin\"].options.instructionFiles`. Before v2.1.285, the plugin's ID was `agents-md@builtin`. Later versions read an entry under either ID.\n\nClaude Code ignores project and local entries because it substitutes these values into plugin hook, MCP, and LSP configurations, and a cloned repository must not be able to supply them. Before v2.1.207, project and local settings were also read."
+    },
+    {
       "heading": "Permission rule syntax",
       "id": "permission-rule-syntax",
       "hash": "32a285f301ac397ec07db78dfa98a8dcc94199e5410eeab24a613a70d3f5dc7d",
