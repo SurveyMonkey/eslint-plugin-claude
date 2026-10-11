@@ -130,6 +130,19 @@ describe(RULE, () => {
     expect(run({ dev: 'claude --plugin-dir ./plugins' }, files)).toEqual([])
   })
 
+  check('stays silent for an empty value at a marketplace root', () => {
+    expect(run({ dev: 'claude --plugin-dir=' })).toEqual([])
+    expect(run({ dev: 'claude --plugin-dir ""' })).toEqual([])
+  })
+
+  check('reads only the word after the flag', () => {
+    const files = {
+      '.claude-plugin/marketplace.json': MARKET,
+      'plugins/p/.claude-plugin/plugin.json': MANIFEST,
+    }
+    expect(run({ dev: 'claude --plugin-dir ./plugins/p .' }, files)).toEqual([])
+  })
+
   check('reports a marketplace.json that does not parse, as the file marks the folder', () => {
     expect(
       run({ dev: 'claude --plugin-dir .' }, { '.claude-plugin/marketplace.json': '{' }),

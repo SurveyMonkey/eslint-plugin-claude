@@ -52,6 +52,7 @@ function isMarketplaceRoot(base: string, bound: string, value: string): boolean 
     return false
   }
   const target = path.resolve(base, value)
+  // The walk of `realSource` would look at a folder above the repository to refuse it.
   if (!isInside(target, bound)) {
     return false
   }
