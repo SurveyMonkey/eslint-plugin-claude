@@ -7,7 +7,7 @@
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { lastMember } from '../marketplace-json.ts'
+import { keyOf, lastMember } from '../marketplace-json.ts'
 import { realSource } from '../marketplace-source.ts'
 import { lastMembers } from '../mcp-servers.ts'
 import { isPluginRoot } from '../plugin-root.ts'
@@ -90,7 +90,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'marketplaceRoot' }> = {
           }
           for (const { value, source } of pluginDirs(command.value)) {
             if (isMarketplaceRoot(base, bound, value)) {
-              const script = member.name.type === 'String' ? member.name.value : member.name.name
+              const script = keyOf(member.name)
               context.report({
                 node: command,
                 messageId: 'marketplaceRoot',
