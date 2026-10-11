@@ -5367,6 +5367,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "8a5b44ee4d880d824ce8de288d9a07e55aabbcb8c756d10d2c864c0eeccb7339"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Match by input parameter",
       "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
     },

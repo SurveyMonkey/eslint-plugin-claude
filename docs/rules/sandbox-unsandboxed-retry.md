@@ -32,7 +32,8 @@ The rule reports a file that sets `sandbox.enabled` to `true` when neither setti
 value of the file. The other file of the pair, or of the managed source, does not report if it does not set `enabled`. A file
 that sets `enabled` to `true` reports for itself. A `deny` rule for the parameter is the choice of the plugin: the docs
 describe only the ask rule, and a deny rule stops the retry too.[^params] A `PowerShell` or `Monitor` rule counts as well as
-a `Bash` rule. The value of the parameter is `true` or a wildcard.
+a `Bash` rule. The value of the parameter is `true` or a wildcard. A bare `Bash` ask or deny rule, or `Bash(*)`,
+matches every Bash call, the retry included, so it closes the retry too.[^all-uses]
 
 ### A minimal sandbox example reports
 
@@ -72,6 +73,7 @@ None.
 [^retry]: [All settings: sandbox.allowUnsandboxedCommands](https://code.claude.com/docs/en/settings-reference#sandbox-allowunsandboxedcommands)
 [^hatch]: [Configure the sandboxed Bash tool: The unsandboxed retry escape hatch](https://code.claude.com/docs/en/sandboxing#the-unsandboxed-retry-escape-hatch)
 [^strict]: [Configure the sandboxed Bash tool: Turn off the retry with strict sandbox mode](https://code.claude.com/docs/en/sandboxing#turn-off-the-retry-with-strict-sandbox-mode)
+[^all-uses]: [Permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)
 [^params]: [Permissions: Match by input parameter](https://code.claude.com/docs/en/permissions#match-by-input-parameter)
 [^enforce]: [Configure the sandboxed Bash tool: Enforce sandboxing with managed settings](https://code.claude.com/docs/en/sandboxing#enforce-sandboxing-with-managed-settings)
 [^invalid]: [Managed settings: Invalid values inside sandbox](https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox)

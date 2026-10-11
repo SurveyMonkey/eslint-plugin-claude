@@ -2,9 +2,12 @@
 // `dangerouslyDisableSandbox` (docs/rules/sandbox-unsandboxed-retry.md). Two settings stop that:
 // `allowUnsandboxedCommands: false`, and an ask rule for `Bash(dangerouslyDisableSandbox:true)`
 // (https://code.claude.com/docs/en/sandboxing#the-unsandboxed-retry-escape-hatch). A deny rule for
-// the parameter stops it too. The rule adds up the project pair, or one managed source. It makes
-// no report when it cannot read a file of the source. A user file is outside the repository (ADR
-// 001, Decision 14) and can hold the setting. For this reason the rule is `off` in `recommended`.
+// the parameter stops it too. A bare `Bash` rule, or `Bash(*)`, matches every Bash call, the
+// retry included, so a bare ask or deny rule stops it too
+// (https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool). The rule adds up the
+// project pair, or one managed source. It makes no report when it cannot read a file of the
+// source. A user file is outside the repository (ADR 001, Decision 14) and can hold the setting.
+// For this reason the rule is `off` in `recommended`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { COMMAND_RULE_TOOLS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -16,8 +19,9 @@ import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-file
 
 const name = 'sandbox-unsandboxed-retry' as const
 
-/** The parameter rule of the docs, with the value `true` or a wildcard. */
-const RETRY_PARAMETER = /^dangerouslyDisableSandbox:\s*(?:true|\*)$/
+/** The parameter rule of the docs, with the value `true` or a wildcard, or a lone star: the
+ *  permissions page makes `Bash(*)` equal to `Bash`. */
+const RETRY_PARAMETER = /^(?:\*|dangerouslyDisableSandbox:\s*(?:true|\*))$/
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'retry' }> = {
   meta: {
@@ -59,7 +63,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'retry' }> = {
           listRules(objects, list).some(
             (rule_) =>
               COMMAND_RULE_TOOLS.includes(rule_.tool) &&
-              RETRY_PARAMETER.test(rule_.specifier?.trim() ?? ''),
+              (rule_.specifier === null || RETRY_PARAMETER.test(rule_.specifier.trim())),
           ),
         )
         if (!closed && !ruled) {

@@ -53,13 +53,28 @@ describe(`${name}: one file`, () => {
   it('reports when the ask rule is for another command, another parameter, or is an allow rule', () => {
     for (const permissions of [
       { ask: ['Bash(git push *)'] },
-      { ask: ['Bash'] },
       { ask: ['Bash(run_in_background:true)'] },
       { ask: ['Bash(dangerouslyDisableSandbox:false)'] },
       { allow: ['Bash(dangerouslyDisableSandbox:true)'] },
       { ask: ['Read(dangerouslyDisableSandbox:true)'] },
       { ask: [1, null] },
     ]) {
+      expect(alone({ ...ON, permissions }), JSON.stringify(permissions)).toEqual(['retry'])
+    }
+  })
+
+  it('is silent for a bare Bash rule, which matches every Bash call, the retry included', () => {
+    for (const permissions of [
+      { ask: ['Bash'] },
+      { deny: ['Bash'] },
+      { ask: ['Bash(*)'] },
+      { deny: ['PowerShell'] },
+      { ask: ['Monitor'] },
+      { ask: ['Bash( * )'] },
+    ]) {
+      expect(alone({ ...ON, permissions }), JSON.stringify(permissions)).toEqual([])
+    }
+    for (const permissions of [{ allow: ['Bash'] }, { ask: ['Read'] }, { ask: ['WebFetch'] }]) {
       expect(alone({ ...ON, permissions }), JSON.stringify(permissions)).toEqual(['retry'])
     }
   })
