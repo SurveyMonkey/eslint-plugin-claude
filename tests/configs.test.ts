@@ -2958,6 +2958,7 @@ const EXPECTED = [
   '.claude/skills/twin-b/SKILL.md: claude/skill-description-present@1',
   '.claude/skills/unreachable/SKILL.md: claude/skill-description-present@1',
   '.claude/skills/vars/SKILL.md: claude/skill-description-present@1',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/skill-description-present@1',
   'packages/x/.claude/skills/twin/SKILL.md: claude/skill-description-present@1',
   'plugins/p/commands/allowed.md: claude/skill-description-present@1',
   'plugins/p/commands/c.md: claude/skill-description-present@1',
