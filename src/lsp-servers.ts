@@ -1,11 +1,19 @@
 // The reader that the LSP rules share. A rule asks for the server configs of a file, and gets
 // the members of its map: a server name and its config. Claude Code reads LSP servers from
 // `.lsp.json` at the plugin root, and from the `lspServers` key of `plugin.json`. The key takes
-// an inline map, a path to a `.json` file, or an array of those. A path is not read here.
-// (https://code.claude.com/docs/en/plugins-reference#lspservers)
+// an inline map, a path to a `.json` file, or an array of those. `lspServerMembers` reads no
+// path. `pluginLspDeclarations` reads the whole plugin: the root file, each declared `.json` file
+// and the inline maps.
+// (https://code.claude.com/docs/en/plugins/manifest-reference#lspservers)
 import path from 'node:path'
-import { lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
-import { lastMembers } from './mcp-servers.ts'
+import { lspJsonFaults } from './lsp-json-faults.ts'
+import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
+import {
+  type Declaration,
+  type DeclarationKind,
+  lastMembers,
+  pluginDeclarations,
+} from './mcp-servers.ts'
 import { isPluginRoot } from './plugin-root.ts'
 
 /** The members of an inline map of server name to config. The result is empty for a value
@@ -32,4 +40,31 @@ export function lspServerMembers(body: ValueNode, filename: string): MemberNode[
       : mapMembers(declared)
   }
   return atPluginRoot(filename) ? mapMembers(body) : []
+}
+
+const LSP_KIND: DeclarationKind = {
+  key: 'lspServers',
+  rootFile: '.lsp.json',
+  fileMembers: mapMembers,
+  // Claude Code skips a `.lsp.json` with one invalid entry as a whole file, and
+  // `lsp-json-schema` reports the fault. The docs name no such rule for a file that
+  // `lspServers` names, so the other sources keep every server.
+  rootMembers: (body) => (lspJsonFaults(body).length === 0 ? mapMembers(body) : []),
+}
+
+/** The LSP servers that the plugin at `root` declares, in the order that Claude Code loads
+ *  them: `.lsp.json` at the plugin root, then each value of `lspServers` in the manifest. The
+ *  manifest value, a path to a `.json` file or an inline map, may be an array of those. A server
+ *  of an unreadable source is not in the result. A `.lsp.json` with an invalid entry gives no
+ *  server, as Claude Code skips the whole file. `manifest` is the top-level value of
+ *  `plugin.json`, or null for a plugin with no manifest.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#lspservers) */
+export const pluginLspDeclarations = (root: string, manifest: ValueNode | null): Declaration[] =>
+  pluginDeclarations(root, manifest, LSP_KIND)
+
+/** The file extensions that the LSP server `config` claims: the keys of its `extensionToLanguage`
+ *  object. The result is empty when the config has no such object. */
+export function claimedExtensions(config: ValueNode): string[] {
+  const map = lastMember(config, 'extensionToLanguage')?.value
+  return map === undefined ? [] : mapMembers(map).map(({ name }) => keyOf(name))
 }

@@ -9,8 +9,8 @@
 // rule neither counts it nor reports it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import { lastMembers, SERVER_NAME_PATTERN } from '../mcp-servers.ts'
+import { lastMember } from '../marketplace-json.ts'
+import { plainOf, SERVER_NAME_PATTERN } from '../mcp-servers.ts'
 import { isHiddenDropIn, MANAGED_SETTINGS_FILES, readManagedSource } from '../settings-files.ts'
 import { UNREADABLE } from '../skill-tree.ts'
 
@@ -18,24 +18,6 @@ const name = 'mcp-allowlist-servername-dead' as const
 
 /** An allowlist entry that Claude Code keeps. A name entry holds its `serverName`. */
 type Kept = { kind: 'url' | 'command' } | { kind: 'name'; server: string }
-
-/** The parsed value of the string, array or object `node`. Another value is undefined, because
- *  the entry check reads strings, arrays and objects only. Of two members with one name, the
- *  last stays, as `JSON.parse` keeps it. */
-function plainOf(node: ValueNode): unknown {
-  if (node.type === 'String') {
-    return node.value
-  }
-  if (node.type === 'Array') {
-    return node.elements.map(({ value }) => plainOf(value))
-  }
-  if (node.type === 'Object') {
-    return Object.fromEntries(
-      lastMembers(node.members).map((m) => [keyOf(m.name), plainOf(m.value)]),
-    )
-  }
-  return undefined
-}
 
 /** The kept form of an allowlist entry: an object with one key, `serverUrl`
  *  or `serverName` with a string, or `serverCommand` with an array of strings. A name must

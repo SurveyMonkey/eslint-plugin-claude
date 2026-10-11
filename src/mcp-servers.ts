@@ -1,11 +1,15 @@
 // The reader that the `.mcp.json` rules share. A rule asks where the file is, and gets
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
-// may omit that wrapper, so its map is the top-level object.
+// may omit that wrapper, so its map is the top-level object. The module also holds the reader of
+// the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
+// reader of the approval and allow lists.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import path from 'node:path'
+import json from '@eslint/json'
 import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
 import { isPluginRoot } from './plugin-root.ts'
-import { UNREADABLE } from './skill-tree.ts'
+import { pathFault } from './rules/marketplace-relative-source-format.ts'
+import { isInside, readJson, realOf, repositoryRoot, UNREADABLE } from './skill-tree.ts'
 
 /** The `type` values of a server that connects over the network. A `url` belongs to these. */
 export const REMOTE_SERVER_TYPES: readonly string[] = ['http', 'streamable-http', 'sse', 'ws']
@@ -95,4 +99,192 @@ export function declaredMcpStrings(manifest: ValueNode): Extract<ValueNode, { ty
   return items.filter(
     (item): item is Extract<ValueNode, { type: 'String' }> => item.type === 'String',
   )
+}
+
+/** The top-level value of the JSON file `file`, read as an AST so that the readers of this file
+ *  and of `lsp-servers.ts` serve a file on disk as they serve a linted file. The result is null
+ *  when the rule cannot see the file: it is not there, it fails to read, its real path is out of
+ *  `bound`, or it does not parse (ADR 001, Decision 14). The AST comes from the parsed value, so
+ *  the positions in it are not the positions in the file. A report uses them in no case. */
+export function readJsonBody(file: string, bound: string): ValueNode | null {
+  const parsed = readJson(file, bound)
+  if (parsed === null || parsed === UNREADABLE || parsed.data === undefined) {
+    return null
+  }
+  // A value nested deeper than the stringifier or the parser accepts is a file that the rule
+  // cannot see. A failed parse has no `ast`, so the read of it throws and ends here too.
+  try {
+    const result = json.languages.json.parse(
+      { body: JSON.stringify(parsed.data), path: file, physicalPath: file, bom: false },
+      { languageOptions: {} },
+    )
+    return (result as { ast: { body: ValueNode } }).ast.body
+  } catch {
+    return null
+  }
+}
+
+/** The file and the real path of the `.json` file that a plugin manifest names with `declared`.
+ *  The result is null when the path is not a plain `./` path to a `.json` file, and when the
+ *  file is not there. A link to a file out of the plugin directory is not read, as Claude Code
+ *  loads no path that leaves the plugin.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#path-rules) */
+function declaredFile(root: string, declared: string): { file: string; real: string } | null {
+  if (
+    pathFault(declared) !== undefined ||
+    declared.includes('\\') ||
+    !declared.startsWith('./') ||
+    !declared.endsWith('.json')
+  ) {
+    return null
+  }
+  const realRoot = realOf(root)
+  const file = path.resolve(root, declared)
+  const real = realOf(file)
+  if (typeof realRoot !== 'string' || typeof real !== 'string' || !isInside(real, realRoot)) {
+    return null
+  }
+  return { file, real }
+}
+
+/** One server that a plugin declares. `member` holds the name and the config. `node` is where a
+ *  report goes: the name in the manifest for an inline server, the path for a server of a
+ *  declared file, and the name in the file for a server of the root file. `from` tells where the
+ *  server is declared, for a message. */
+export interface Declaration {
+  readonly name: string
+  readonly member: MemberNode
+  readonly node: ValueNode | MemberNode['name']
+  readonly from: string
+}
+
+/** What differs between the server kinds of a plugin: the manifest key, the file at the plugin
+ *  root, and the members of the map in a file. */
+export interface DeclarationKind {
+  readonly key: 'mcpServers' | 'lspServers'
+  readonly rootFile: string
+  readonly fileMembers: (body: ValueNode) => MemberNode[]
+  /** The members of the map in the file at the plugin root. */
+  readonly rootMembers: (body: ValueNode) => MemberNode[]
+}
+
+/** The servers that the plugin at `root` declares, in the order that Claude Code loads them: the
+ *  file at the plugin root, then each value of the manifest key. A value is a `.json` path, or an
+ *  inline map, and an array mixes them. A bundle, a URL and a file that the rule cannot read add
+ *  nothing, so a report rests on the files that read. A name that one source repeats is one
+ *  server, as `JSON.parse` keeps the last. `manifest` is the top-level value of `plugin.json`,
+ *  or null for a plugin with no manifest.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers) */
+export function pluginDeclarations(
+  root: string,
+  manifest: ValueNode | null,
+  kind: DeclarationKind,
+): Declaration[] {
+  const declarations: Declaration[] = []
+  const add = (members: MemberNode[], from: string, at?: ValueNode) => {
+    for (const member of members) {
+      declarations.push({ name: keyOf(member.name), member, node: at ?? member.name, from })
+    }
+  }
+  const body = readJsonBody(path.join(root, kind.rootFile), repositoryRoot(root))
+  add(body === null ? [] : kind.rootMembers(body), kind.rootFile)
+  // The rule reads a file once, also when the manifest names it twice, with the path of the root
+  // file, or through a link. Only a path that the rule accepts counts as read.
+  const read = new Set<string>()
+  const rootReal = realOf(path.join(root, kind.rootFile))
+  if (typeof rootReal === 'string') {
+    read.add(rootReal)
+  }
+  const declared = manifest === null ? undefined : lastMember(manifest, kind.key)?.value
+  const items =
+    declared?.type === 'Array' ? declared.elements.map(({ value }) => value) : [declared]
+  for (const item of items) {
+    if (item?.type === 'String') {
+      const target = declaredFile(root, item.value)
+      if (target === null || read.has(target.real)) {
+        continue
+      }
+      read.add(target.real)
+      const file = readJsonBody(target.file, repositoryRoot(root))
+      add(file === null ? [] : kind.fileMembers(file), item.value, item)
+    } else if (item?.type === 'Object') {
+      add(lastMembers(item.members), 'an inline map')
+    }
+  }
+  return declarations
+}
+
+const MCP_KIND: DeclarationKind = {
+  key: 'mcpServers',
+  rootFile: '.mcp.json',
+  fileMembers: (body) => serverMembers(body, 'plugin'),
+  rootMembers: (body) => serverMembers(body, 'plugin'),
+}
+
+/** The MCP servers that the plugin at `root` declares, in load order. */
+export const pluginMcpDeclarations = (root: string, manifest: ValueNode | null): Declaration[] =>
+  pluginDeclarations(root, manifest, MCP_KIND)
+
+/** The declarations that repeat a name which an earlier source declares, each with the `from` of
+ *  the first declaration of that name. */
+export function repeatedDeclarations(
+  declarations: readonly Declaration[],
+): { declaration: Declaration; earlier: string }[] {
+  const first = new Map<string, string>()
+  return declarations.flatMap((declaration) => {
+    const earlier = first.get(declaration.name)
+    if (earlier === undefined) {
+      first.set(declaration.name, declaration.from)
+      return []
+    }
+    return [{ declaration, earlier }]
+  })
+}
+
+/** The parsed value of the string, array or object `node`. Another value is undefined, because
+ *  the policy and approval lists hold strings, arrays and objects only. Of two members with one
+ *  name, the last stays, as `JSON.parse` keeps it. */
+export function plainOf(node: ValueNode): unknown {
+  if (node.type === 'String') {
+    return node.value
+  }
+  if (node.type === 'Array') {
+    return node.elements.map(({ value }) => plainOf(value))
+  }
+  if (node.type === 'Object') {
+    return Object.fromEntries(
+      lastMembers(node.members).map((m) => [keyOf(m.name), plainOf(m.value)]),
+    )
+  }
+  return undefined
+}
+
+/** A key that tells one valid policy entry from another, or undefined for an entry that Claude
+ *  Code strips. A valid entry is an object with one key: `serverName` with a string that matches
+ *  the allowlist pattern, `serverUrl` with a string, or `serverCommand` with an array of strings.
+ *  A name that the pattern rejects is no allowlist entry, so it cannot overlap with a denylist
+ *  entry. `mcp-policy-entry-schema` reports it.
+ *  (https://code.claude.com/docs/en/settings-reference#allowedmcpservers) */
+export function policyKey(entry: unknown): string | undefined {
+  if (entry === null || typeof entry !== 'object' || Array.isArray(entry)) {
+    return undefined
+  }
+  const [pair, ...others] = Object.entries(entry)
+  if (pair === undefined || others.length > 0) {
+    return undefined
+  }
+  const [key, value] = pair
+  if (key === 'serverUrl' && typeof value === 'string') {
+    return `url:${value}`
+  }
+  if (
+    key === 'serverCommand' &&
+    Array.isArray(value) &&
+    value.every((v) => typeof v === 'string')
+  ) {
+    return `command:${JSON.stringify(value)}`
+  }
+  return key === 'serverName' && typeof value === 'string' && SERVER_NAME_PATTERN.test(value)
+    ? `name:${value}`
+    : undefined
 }

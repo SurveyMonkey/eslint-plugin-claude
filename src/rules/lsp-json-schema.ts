@@ -7,69 +7,12 @@
 // `socket` is valid here. `lsp-transport-socket` reports it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
+import { type LspFaultId, lspJsonFaults } from '../lsp-json-faults.ts'
 import { atPluginRoot } from '../lsp-servers.ts'
-import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import { lastMembers } from '../mcp-servers.ts'
 
 const name = 'lsp-json-schema' as const
 
-type MessageId =
-  | 'notObject'
-  | 'entryNotObject'
-  | 'unknownKey'
-  | 'missing'
-  | 'valueType'
-  | 'commandSpace'
-  | 'emptyMap'
-  | 'extensionKey'
-  | 'extensionValue'
-
-const isString = (value: ValueNode) => value.type === 'String'
-const isBoolean = (value: ValueNode) => value.type === 'Boolean'
-const isWhole = (value: ValueNode, least: number) =>
-  value.type === 'Number' && Number.isInteger(value.value) && value.value >= least
-
-/** The documented keys of a config, each with what its value must be and the check. A key with
- *  no check takes any value. The plugins reference gives no type for it. */
-const KEYS: ReadonlyMap<string, { expected: string; ok: (value: ValueNode) => boolean }> = new Map([
-  ['command', { expected: 'a string', ok: isString }],
-  ['extensionToLanguage', { expected: 'an object', ok: (value) => value.type === 'Object' }],
-  [
-    'args',
-    {
-      expected: 'an array of strings',
-      ok: (value) => value.type === 'Array' && value.elements.every((item) => isString(item.value)),
-    },
-  ],
-  [
-    'transport',
-    {
-      expected: 'stdio or socket',
-      ok: (value) => value.type === 'String' && ['stdio', 'socket'].includes(value.value),
-    },
-  ],
-  [
-    'env',
-    {
-      expected: 'an object of strings',
-      ok: (value) =>
-        value.type === 'Object' && lastMembers(value.members).every((m) => isString(m.value)),
-    },
-  ],
-  ['initializationOptions', { expected: 'any value', ok: () => true }],
-  ['settings', { expected: 'any value', ok: () => true }],
-  ['workspaceFolder', { expected: 'a string', ok: isString }],
-  ['startupTimeout', { expected: 'a positive integer', ok: (value) => isWhole(value, 1) }],
-  ['shutdownTimeout', { expected: 'a positive integer', ok: (value) => isWhole(value, 1) }],
-  ['requestTimeout', { expected: 'a positive integer', ok: (value) => isWhole(value, 1) }],
-  ['restartOnCrash', { expected: 'a Boolean', ok: isBoolean }],
-  ['maxRestarts', { expected: 'an integer of zero or more', ok: (value) => isWhole(value, 0) }],
-  ['diagnostics', { expected: 'a Boolean', ok: isBoolean }],
-])
-
-const REQUIRED = ['command', 'extensionToLanguage']
-
-const rule: JSONRuleDefinition<{ MessageIds: MessageId }> = {
+const rule: JSONRuleDefinition<{ MessageIds: LspFaultId }> = {
   meta: {
     type: 'problem',
     docs: {
@@ -105,62 +48,8 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageId }> = {
     }
     return {
       Document(node) {
-        if (node.body.type !== 'Object') {
-          context.report({ node: node.body, messageId: 'notObject' })
-          return
-        }
-        for (const member of lastMembers(node.body.members)) {
-          const server = keyOf(member.name)
-          const config = member.value
-          if (config.type !== 'Object') {
-            context.report({ node: config, messageId: 'entryNotObject', data: { server } })
-            continue
-          }
-          for (const key of REQUIRED) {
-            if (lastMember(config, key) === undefined) {
-              context.report({ node: config, messageId: 'missing', data: { server, key } })
-            }
-          }
-          for (const field of lastMembers(config.members)) {
-            const key = keyOf(field.name)
-            const value = field.value
-            const documented = KEYS.get(key)
-            if (documented === undefined) {
-              context.report({ node: field.name, messageId: 'unknownKey', data: { server, key } })
-            } else if (!documented.ok(value)) {
-              const { expected } = documented
-              context.report({
-                node: value,
-                messageId: 'valueType',
-                data: { server, key, expected },
-              })
-            } else if (value.type === 'String' && key === 'command') {
-              if (/\s/.test(value.value) && !value.value.startsWith('/')) {
-                context.report({ node: value, messageId: 'commandSpace', data: { server } })
-              }
-            } else if (value.type === 'Object' && key === 'extensionToLanguage') {
-              if (value.members.length === 0) {
-                context.report({ node: value, messageId: 'emptyMap', data: { server } })
-              }
-              for (const extension of lastMembers(value.members)) {
-                const text = keyOf(extension.name)
-                if (!text.startsWith('.')) {
-                  context.report({
-                    node: extension.name,
-                    messageId: 'extensionKey',
-                    data: { server, extension: text },
-                  })
-                }
-                if (extension.value.type !== 'String') {
-                  context.report({
-                    node: extension.value,
-                    messageId: 'extensionValue',
-                    data: { server, extension: text },
-                  })
-                }
-              }
-            }
-          }
+        for (const { node: at, messageId, data } of lspJsonFaults(node.body)) {
+          context.report({ node: at, messageId, data })
         }
       },
     }
