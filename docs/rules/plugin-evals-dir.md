@@ -33,8 +33,8 @@ The rule reports the value of `experimental.evals`, on the value. These values g
 - An empty string.
 - A value that is not a string.
 
-The rule reads the value that `JSON.parse` keeps when the key occurs twice. The docs say "an
-absolute path or one containing `..` isn't accepted". The other values are "unusable" in the same
+The rule reads the value that `JSON.parse` keeps when the key occurs twice. The docs say that an
+absolute path, or a path with `..`, is not accepted. The other values are "unusable" in the same
 sense: the docs name a relative path of plain directory names as the only form that they give.[^dir]
 The rule uses the same test as `plugin-evals-results-gitignored`, which falls back to `evals/` for
 the same values.
