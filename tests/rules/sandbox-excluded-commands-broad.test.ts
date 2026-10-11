@@ -56,6 +56,11 @@ describe(`${name}: reports`, () => {
     }
   })
 
+  it('names the entry without the white space around it', () => {
+    const [message] = lintJson(name, excluded('  bash *  '), PROJECT)
+    expect(message?.message).toContain('`bash *` takes')
+  })
+
   it('reports each broad entry, at its line and column, and names it', () => {
     const text = '{\n  "sandbox": {\n    "excludedCommands": ["docker *", "bash *"]\n  }\n}'
     const messages = lintJson(name, text, PROJECT)

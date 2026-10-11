@@ -31,7 +31,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
       {
         type: 'object',
         properties: {
-          broad: { type: 'array', items: { type: 'string', minLength: 1 }, uniqueItems: true },
+          broad: { type: 'array', items: { type: 'string', minLength: 1 } },
         },
         additionalProperties: false,
       },

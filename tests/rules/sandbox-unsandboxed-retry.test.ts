@@ -82,6 +82,7 @@ describe(`${name}: one file`, () => {
       { deny: ['Bash(dangerouslyDisableSandbox:true)'] },
       { ask: ['Bash(dangerouslyDisableSandbox:*)'] },
       { ask: ['PowerShell(dangerouslyDisableSandbox:true)'] },
+      { ask: ['Bash( dangerouslyDisableSandbox:true )'] },
     ]) {
       expect(alone({ ...ON, permissions }), JSON.stringify(permissions)).toEqual([])
     }

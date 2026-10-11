@@ -113,6 +113,14 @@ describe(`${name}: the option broad`, () => {
     expect(lint(allowed('github.com'), PROJECT, options)[0]?.message).toContain('`github.com`')
   })
 
+  it('reads a listed host in any letter case, and drops its port and final dot', () => {
+    const options = { broad: ['GitHub.com:443', 'example.org.'] }
+    expect(ids(allowed('github.com', 'EXAMPLE.org'), PROJECT, options)).toEqual([
+      'listed',
+      'listed',
+    ])
+  })
+
   it('does not report a host that the list does not hold, or a subdomain of a listed host', () => {
     const options = { broad: ['github.com'] }
     for (const entry of ['gist.github.com', '*.github.com', 'example.com']) {
