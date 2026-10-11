@@ -776,6 +776,15 @@ const TREE: Record<string, string> = {
     scripts: { dev: 'claude --plugin-dir ./plugins/p' },
   }),
   'packages/dnm2/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'dnm2' }),
+  // A monitor with a relative command reports in `strict` only. The decoy uses the variable.
+  'plugins/pup/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'pup',
+    monitors: [{ name: 'm', description: 'd', command: './bin/m' }],
+  }),
+  'plugins/pup2/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'pup2',
+    monitors: [{ name: 'm', description: 'd', command: `"\${CLAUDE_PLUGIN_ROOT}/bin/m"` }],
+  }),
   // A monitor that names a path above the plugin root reports in `strict` only. The decoy stays in
   // the root.
   'plugins/npe/.claude-plugin/plugin.json': JSON.stringify({
@@ -3163,6 +3172,10 @@ const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
       '**/monitors/monitors.json',
     ],
   },
+  {
+    name: 'plugin-path-uses-plugin-root',
+    files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json', '**/.lsp.json'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4400,6 +4413,9 @@ const STRICT_ONLY = [
   'packages/rsh/.claude-plugin/marketplace.json: claude/plugin-relevance-signal-hints@1',
   'packages/dnm/package.json: claude/plugin-dir-not-marketplace-root@1',
   'plugins/npe/.claude-plugin/plugin.json: claude/plugin-no-parent-path-escape@1',
+  'plugins/pup/.claude-plugin/plugin.json: claude/plugin-path-uses-plugin-root@1',
+  // The monitor of the shared fixture `plugins/ucf` has a relative command.
+  'plugins/ucf/monitors/monitors.json: claude/plugin-path-uses-plugin-root@1',
   'plugins/nsr/.claude-plugin/plugin.json: claude/plugin-no-state-in-plugin-root@1',
 ]
 

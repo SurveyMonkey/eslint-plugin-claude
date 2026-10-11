@@ -249,6 +249,7 @@ import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scri
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.ts'
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
+import pluginPathUsesPluginRoot from './rules/plugin-path-uses-plugin-root.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
@@ -755,6 +756,7 @@ const modules = [
   pluginDirNotMarketplaceRoot,
   pluginNoStateInPluginRoot,
   pluginNoParentPathEscape,
+  pluginPathUsesPluginRoot,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1153,6 +1155,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-dir-not-marketplace-root': 'off',
   'plugin-no-state-in-plugin-root': 'off',
   'plugin-no-parent-path-escape': 'off',
+  'plugin-path-uses-plugin-root': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

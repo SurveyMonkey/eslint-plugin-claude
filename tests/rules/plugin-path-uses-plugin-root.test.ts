@@ -14,7 +14,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-path-uses-plugin-root'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json', '**/.lsp.json']
 
@@ -107,7 +107,7 @@ describe(RULE, () => {
       path.join(dir, '.claude-plugin/plugin.json'),
       manifest,
     )
-    expect(found.map((m) => m.message)).toEqual([monitorMessage('./b'), monitorMessage('./a')])
+    expect(found.map((m) => m.message)).toEqual([monitorMessage('./a'), monitorMessage('./b')])
   })
 
   check('stays silent for a hook and an MCP server of the manifest, which other rules own', () => {

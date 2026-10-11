@@ -265,6 +265,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-package-lockfile',
     'plugin-package-lockfile-choice',
     'plugin-path-no-backslash',
+    'plugin-path-uses-plugin-root',
     'plugin-path-var-braced',
     'plugin-project-skills-dir-limits',
     'plugin-relevance-signal-hints',
