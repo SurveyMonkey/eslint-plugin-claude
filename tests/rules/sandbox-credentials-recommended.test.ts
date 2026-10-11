@@ -115,6 +115,14 @@ describe(`${name}: one file`, () => {
     expect(alone({ ...ON, permissions: { allow: ['Read'] } })).toEqual(['open'])
   })
 
+  it('counts a Read deny rule that starts with two slashes, and not a path below the home', () => {
+    const permissions = { deny: ['Read(//Users/me/.aws/**)', 'Read(//home/me/.ssh)'] }
+    expect(alone({ ...ON, permissions })).toEqual([])
+    expect(message(deny('/Users/me/work/.aws', '/Users/me/work/.ssh'))).toContain(
+      '`~/.aws` and `~/.ssh`',
+    )
+  })
+
   it('counts the entries of both lists together', () => {
     const credentials = { files: [{ path: '~/.aws', mode: 'deny' }] }
     expect(

@@ -59,6 +59,16 @@ describe(`${name}: reports`, () => {
       { 'package.json': file({ scripts: { up: 'npm test; docker ps' } }) },
       { 'package.json': file({ scripts: { up: 'cat x | docker load' } }) },
       { 'package.json': file({ scripts: { up: '(docker ps)' } }) },
+      { 'package.json': file({ scripts: { up: 'COMPOSE_FILE=ci.yml docker compose up' } }) },
+      { 'package.json': file({ scripts: { up: 'cross-env X=1 docker build .' } }) },
+      { 'package.json': file({ scripts: { up: 'env X=1 docker ps' } }) },
+      { 'package.json': file({ scripts: { up: 'exec docker run x' } }) },
+      { 'package.json': file({ scripts: { up: 'time docker build .' } }) },
+      { 'package.json': file({ scripts: { up: 'if true; then docker ps' } }) },
+      { 'package.json': file({ scripts: { up: 'dotenv -e .env -- docker compose up' } }) },
+      { 'package.json': file({ scripts: { up: 'ls | xargs docker rm' } }) },
+      { 'package.json': file({ scripts: { up: "sh -c 'docker'" } }) },
+      { 'package.json': file({ scripts: { up: 'echo `docker ps`' } }) },
     ]
     for (const tracked of SHOWING) {
       expect(ids(tracking(tracked), ON), JSON.stringify(tracked)).toEqual(['docker'])
@@ -120,6 +130,7 @@ describe(`${name}: silent`, () => {
       'ls docker',
       'echo docker-compose',
       'npm run docker',
+      'FOO=docker npm test',
     ]) {
       const tracked = { 'package.json': file({ scripts: { up } }) }
       expect(ids(tracking(tracked), ON), up).toEqual([])

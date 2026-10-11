@@ -124,6 +124,14 @@ describe(`${name}: silent`, () => {
       '/var/tmp',
       '/tmp/Users/me/.zshrc',
       '/mnt/home/me/.bashrc',
+      '/tmp/etc',
+      'sub/bin',
+      '/tmp/usr/bin',
+      '/tmp/usr',
+      '/tmp/usr/local',
+      '/Users/me/projects',
+      '/Users/me/work/.zshrc',
+      '/home/me/work/.bashrc',
     ]) {
       expect(ids(write(entry)), entry).toEqual([])
     }

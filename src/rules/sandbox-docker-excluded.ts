@@ -18,9 +18,11 @@ import { UNREADABLE } from '../skill-tree.ts'
 const name = 'sandbox-docker-excluded' as const
 
 const FILES = ['Dockerfile', 'docker-compose.yml', 'docker-compose.yaml']
-/** A `docker` command at the start of a script, after a shell operator or a quote, or after
- *  `sudo`. A word `docker` that is an argument (`cd docker`) does not match. */
-const DOCKER_COMMAND = /(?:^|[;&|(`"'])\s*(?:sudo\s+)?docker(?:-compose)?(?=[\s;&|)`"']|$)/
+/** A `docker` command at the start of a script, after a shell operator, a quote or ` -- `, with
+ *  only `NAME=value` words, `sudo`, `env`, `cross-env`, `exec`, `time`, `xargs` or a shell
+ *  keyword (`then`, `do`, `else`) before it. A word `docker` that is an argument (`cd docker`) does not match. */
+const DOCKER_COMMAND =
+  /(?:^|[;&|(`"']|\s--\s)\s*(?:(?:sudo|env|cross-env|exec|time|xargs|then|do|else)\s+|[A-Za-z_]\w*=\S*\s+)*docker(?:-compose)?(?=[\s;&|)`"']|$)/
 
 /** True when the entry `text` takes `docker` out of the sandbox: it starts with `docker` or
  *  `docker-compose`, or it is a star. */
