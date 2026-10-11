@@ -3094,6 +3094,7 @@ const EXPECTED = [
   'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
   'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/.claude-plugin/plugin.json: claude/hooks-duplicate-handler@1',
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/.mcp.json: claude/mcp-headershelper-path@1',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
@@ -3860,6 +3861,10 @@ const STRICT_ONLY = [
   'packages/hx/ok/.claude/settings.json: claude/hooks-committed-command-review@1',
   'packages/hx/plugin/hooks/hooks.json: claude/hooks-committed-command-review@1',
   ...STRICT_ONLY_EXPECTED,
+  // The hooks rules of #10 report the `ucf` plugin hooks.
+  'plugins/ucf/hooks/hooks.json: claude/hooks-command-path-variable@1',
+  'plugins/ucf/hooks/hooks.json: claude/hooks-command-shell-safety@1',
+  'plugins/ucf/hooks/hooks.json: claude/hooks-committed-command-review@1',
   'packages/hk/.claude/agents/hk.md: claude/hooks-agent-stop-event@1',
   '.claude/agents/task-alias.md: claude/agent-tools-agent-type-list@1',
   'packages/o/.claude/agents/skill-tool.md: claude/agent-tools-skill-for-preload@1',
