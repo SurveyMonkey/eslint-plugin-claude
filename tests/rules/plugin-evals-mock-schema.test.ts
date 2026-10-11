@@ -82,6 +82,15 @@ describe(RULE, () => {
     expect(messages('type: agent\nerror: "true"')).toEqual([])
   })
 
+  check('reports a falsy type that is set, and reads no abort_when beside it', () => {
+    expect(messages('type: ""\nabort_when: x')).toEqual([BAD_TYPE('""')])
+    expect(messages('type: 0')).toEqual([BAD_TYPE('0')])
+  })
+
+  check('reports an abort_when that is an empty string on a fixed mock', () => {
+    expect(messages('type: fixed\nabort_when: ""')).toEqual([ABORT])
+  })
+
   check('stays silent for a type that is empty', () => {
     expect(messages('type:')).toEqual([])
     expect(messages('type:\nerror: true\nabort_when: x')).toEqual([ABORT])

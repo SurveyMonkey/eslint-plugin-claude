@@ -75,6 +75,16 @@ describe(RULE, () => {
     expect(lintEval(RULE, top, FILE, '')).toHaveLength(1)
   })
 
+  check('reports a falsy value that is set, not a missing one', () => {
+    expect(messages('type: ""')).toEqual([BAD_TYPE('""')])
+    expect(messages('type: 0')).toEqual([BAD_TYPE('0')])
+    expect(messages('type: llm\narm: ""')).toEqual([ARM('""')])
+    expect(messages('type: llm\narm: false')).toEqual([ARM('false')])
+    expect(messages('type: regex\ntarget: ""')).toEqual([TARGET('target', '""')])
+    expect(messages('type: regex\ntarget: 0')).toEqual([TARGET('target', '0')])
+    expect(messages('type: regex\ntarget: false')).toEqual([TARGET('target', 'false')])
+  })
+
   check('reports a weight that is not a positive number', () => {
     const found = lint('type: llm\nweight: 0')
     expect(found.map((m) => m.message)).toEqual([WEIGHT('0')])

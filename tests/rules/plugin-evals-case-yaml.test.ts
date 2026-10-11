@@ -39,13 +39,24 @@ const MISSING = (key: string, value: string) =>
 describe(RULE, () => {
   check('stays silent for YAML that throws when it becomes data', () => {
     const many = `a: &x v\nl: [${Array.from({ length: 101 }, () => '*x').join(', ')}]\n`
-    expect(yaml(`${GOOD}${many}`)).toEqual([])
-    expect(yaml(`${GOOD}l: *missing\n`)).toEqual([])
+    // No `name`: a file that was read would report it, so `[]` shows that the file was skipped.
+    expect(yaml(`schema_version: "1.1"\n${many}`)).toEqual([])
+    expect(yaml('schema_version: "1.1"\nl: *missing\n')).toEqual([])
   })
 
   check('places a version that a merge key supplies without a crash', () => {
     const merged = '%YAML 1.1\n---\nbase: &b {schema_version: 2.0}\n<<: *b\nname: x\n'
     expect(yaml(merged)).toEqual([BAD_VERSION('2')])
+  })
+
+  check('writes a version that a merge key supplies as a map in JSON', () => {
+    const merged = '%YAML 1.1\n---\nbase: &b {schema_version: {a: 1}}\n<<: *b\nname: x\n'
+    expect(yaml(merged)).toEqual([BAD_VERSION('{"a":1}')])
+  })
+
+  check('reports a version that is empty or 0 as a wrong version, not a missing one', () => {
+    expect(yaml('schema_version: ""\nname: first\n')).toEqual([BAD_VERSION('""')])
+    expect(yaml('schema_version: 0\nname: first\n')).toEqual([BAD_VERSION('0')])
   })
 
   check('reports a missing schema_version, at the start of the manifest', () => {

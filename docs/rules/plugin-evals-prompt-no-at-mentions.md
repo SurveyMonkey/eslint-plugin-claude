@@ -25,8 +25,7 @@ is not expanded into a file attachment. If Claude needs to read a file, the case
 for it in `allowed_tools`.[^limits]
 
 The rule reports each `@path` mention in the body, on the mention. A mention is an `@` at the start
-of the text or after white space, with a path after it. The path ends at white space or a backtick. A `\` before a space keeps the space in the path. A path that starts with a quote is no mention.
-A `\` before a space keeps the space in the path. The rule reads the mention in the same way as
+of the text or after white space, with a path after it. The path ends at white space or a backtick. A `\` before a space keeps the space in the path. A path that starts with a quote is no mention. The rule reads the mention in the same way as
 the import rules for instruction files. It skips code spans, fenced code blocks, and HTML
 comments. It reads the body only, so an `@` in the frontmatter gets no report. The end marks of a
 sentence, such as `.` and `,`, are not part of the path.

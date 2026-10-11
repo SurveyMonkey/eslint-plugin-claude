@@ -122,6 +122,13 @@ describe('evalFileOf', () => {
     ).toMatchObject({ kind: 'grader' })
   })
 
+  it('reads a prompt.md in a mocks folder as a mock', () => {
+    expect(seen({ 'evals/mocks/gh/prompt.md': 'x' }, 'evals/mocks/gh/prompt.md')).toMatchObject({
+      kind: 'mock',
+      server: 'gh',
+    })
+  })
+
   it('reads a mock of the suite and a mock of a case, with the server', () => {
     expect(seen({ 'evals/mocks/gh/issue.md': 'x' }, 'evals/mocks/gh/issue.md')).toEqual({
       kind: 'mock',

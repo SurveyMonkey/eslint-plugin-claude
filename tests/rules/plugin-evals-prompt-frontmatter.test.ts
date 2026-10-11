@@ -110,7 +110,10 @@ describe(RULE, () => {
   })
 
   check('stays silent for a number field that is not a number', () => {
-    expect(messages('runs: many\nmax_turns: "300"\ntimeout_seconds: [1]\nruns: null')).toEqual([])
+    expect(messages('runs: many')).toEqual([])
+    expect(messages('max_turns: "300"')).toEqual([])
+    expect(messages('timeout_seconds: [1]')).toEqual([])
+    expect(messages('runs: null')).toEqual([])
     expect(messages('runs:')).toEqual([])
   })
 
@@ -122,7 +125,8 @@ describe(RULE, () => {
 
   check('stays silent for env keys that match, and for an env that is no map', () => {
     expect(messages('env: { EVAL_: 1, EVAL_A1_B: 2, EVAL_9: 3 }')).toEqual([])
-    expect(messages('env: [PATH]\nenv:')).toEqual([])
+    expect(messages('env: [PATH]')).toEqual([])
+    expect(messages('env:')).toEqual([])
     expect(messages('env: PATH')).toEqual([])
     expect(messages('env: {}')).toEqual([])
   })

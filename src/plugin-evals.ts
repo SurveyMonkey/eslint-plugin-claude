@@ -290,7 +290,11 @@ export function readCaseYaml(file: string, bound: string): CaseYaml | null {
       // A key that a merge or an alias supplies has no node in this map, and so no text.
       const node = map.get(key, true) as Node | undefined
       const range = node?.range
-      return range ? text.slice(range[0], range[1]) : String(data[key])
+      if (range) {
+        return text.slice(range[0], range[1])
+      }
+      const value = data[key]
+      return typeof value === 'object' ? JSON.stringify(value) : String(value)
     },
   }
 }

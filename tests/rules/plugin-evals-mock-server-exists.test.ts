@@ -110,6 +110,12 @@ describe(RULE, () => {
     ])
   })
 
+  check('names a server once when two sources declare it', () => {
+    const files = { '.mcp.json': SERVERS, 'evals/mocks/gh/t.md': 'x' }
+    const manifest = { name: 'p', mcpServers: { github: { command: 'y' } } }
+    expect(messages(files, manifest)).toEqual([UNKNOWN('evals/mocks/gh', 'gh', KNOWN('github'))])
+  })
+
   check('stays silent for the saved answers, files in mocks, and folders below a server', () => {
     const files = {
       'evals/mocks/.replay/gh/answer.md': 'x',

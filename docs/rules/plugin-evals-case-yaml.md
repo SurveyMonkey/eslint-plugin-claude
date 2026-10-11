@@ -60,7 +60,7 @@ The rule makes no report in these cases:
   with no target (ADR 001, Decision 14). A part of a context path that is a link out of the
   repository, or a link with no target, gets no report either.
 - A `case.yaml` cannot be read, is not a regular file, is larger than 1 MiB, does not parse, repeats
-  a key, or is not a map.
+  a key, is not a map, or holds an alias with no anchor or more than 100 aliases.
 - A case directory cannot be listed.
 
 `claude plugin validate` passes a plugin with these faults (checked on Claude Code 2.1.296).

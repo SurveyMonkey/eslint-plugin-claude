@@ -34,6 +34,7 @@ describe(RULE, () => {
   check.each([
     ['an absolute path', '/etc/evals', '"/etc/evals"'],
     ['a path with a drive letter', 'C:\\evals', '"C:\\\\evals"'],
+    ['a path with a drive letter and no separator', 'C:evals', '"C:evals"'],
     ['a path with a backslash', 'qa\\evals', '"qa\\\\evals"'],
     ['a path with a dot segment', './qa', '"./qa"'],
     ['a path with a parent segment in the middle', 'a/../b', '"a/../b"'],
