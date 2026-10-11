@@ -1,0 +1,91 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/relevance",
+  "hash": "bcbe647fd4e587be1dcaf436077181c1a863f9a4ddd18833d96b7862aeed17e9",
+  "blocks": [
+    {
+      "id": "recommend-plugins-for-your-org",
+      "hash": "a0f1c037726cc6bc2cb4dba77c566ba8e69c6acca36cfb70b1b9971cd758d0c4",
+      "bodyHash": "8f12726f459843cc6e8eb5f5936a9dcde006d9e6c56d3c47d02cb1a3f44c3e6a"
+    },
+    {
+      "id": "understand-how-plugin-relevance-works",
+      "hash": "a8a35b3252c8ee9842839b22a2bcce8d7aa4c49adf4f1bdbc9b17454e0cce969",
+      "bodyHash": "af6733999e356c805bf7aadcd69830d8960866fd76fa9bf625745b2e96f20c8e"
+    },
+    {
+      "id": "add-relevance-to-a-plugin-entry",
+      "hash": "069358bc45a495a1ecd8f1fc3bc9b61fc95ee84306b449cc4d1793d3295375e0",
+      "bodyHash": "547df475f667791d2e23ab5a971416666b8006b2ed6d4eb1b5ea003621ff32a7"
+    },
+    {
+      "id": "field-reference",
+      "hash": "fa062b6f83c1275de2fb180d23a46bb8d1c6366aaae0a10b50b9db4c5008bb0a",
+      "bodyHash": "a9a49773122d0e22958f9c578e858cf17495c094e572060a3fd006015ebb31ad"
+    },
+    {
+      "id": "relevance",
+      "hash": "27e2b668a2e8e77ac5e90a259ff7e7c99f6f32204d228698a903d97c719930fd",
+      "bodyHash": "56c52d55edb32119ce290c35f3e93532fa74e63cd2c31659c59234b2e6546fee"
+    },
+    {
+      "id": "relevance-signals",
+      "hash": "2aa124c2b54b75cbe4c50a787b33185efdd46fc67af6bb5ad8f0d2885caead25",
+      "bodyHash": "c94d780ce41907506a1130abf6c37695903d520859736fed31a7e437a3835d4e"
+    },
+    {
+      "id": "working-directory-matching",
+      "hash": "ab073f5f49efdc30e844924e0a35892358ebfb8bc09f29b3a483e433e4d0acb7",
+      "bodyHash": "8fa7bdf7197fb68e26cedef63b0f895eb98c6fd31f7c92966075c15a074b0f57"
+    },
+    {
+      "id": "command-name-matching",
+      "hash": "414604a929b4ec117ab86f4469f261e5025af4e5c861648419845ea99b7209f6",
+      "bodyHash": "c2507841c6c48cd91e34744573efa5f91a4d362cef2b67680b7bc35c5603cc2c"
+    },
+    {
+      "id": "manifest-dependency-matching",
+      "hash": "cb2aced873feea0df706274a79bbb69050dfceae065ec414c5c27118b439d54c",
+      "bodyHash": "e6ebf4f57c0766f48d2b0ed82bfcd8bcaca4a133c1b833f79335d4606291980e"
+    },
+    {
+      "id": "validate-your-marketplace",
+      "hash": "c532e379e3e592ef7ac01e1aa2d2ac08f8d405f17389ddc671143636794f6d8c",
+      "bodyHash": "fb39164ca04a37904f3a50fe6da78a75ab00997f2ff083fac424a4cc01b7cc9b"
+    },
+    {
+      "id": "enable-suggestions-in-managed-settings",
+      "hash": "b93cf39152553b29af382b06afec2345532a9b0b29cb02e9d721ae0599dd0cb6",
+      "bodyHash": "fe299f65614b5c7444842348fecfbccf482db7a5a7c6bc4598f2e61d1a64d5c4"
+    },
+    {
+      "id": "preview-what-the-user-sees",
+      "hash": "b234da5b51af5444a188c3ba474a7f32d9b196b739e04e19d288868db8892ea5",
+      "bodyHash": "afca8c106ab6957ece9ba549b272543ce018536e6385e8e5775b0d3e8d79133f"
+    },
+    {
+      "id": "see-also",
+      "hash": "0c432db6b4d17101f29f4d020584805be2e49da988e34b8992ffd00edce2a5a6",
+      "bodyHash": "d3e80d91414276adef723685951f2d27d61a96bdf874bff627e1213b7c52f43b"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Command name matching",
+      "id": "command-name-matching",
+      "hash": "414604a929b4ec117ab86f4469f261e5025af4e5c861648419845ea99b7209f6",
+      "text": "#### Command name matching\n\nClaude Code records one command name for each shell command Claude runs: the first token after any leading environment variable assignments and `sudo`. Compound commands contribute only their leading command, so `cd infra && terraform plan` records `cd`, not `terraform`."
+    },
+    {
+      "heading": "relevance.signals",
+      "id": "relevance-signals",
+      "hash": "2aa124c2b54b75cbe4c50a787b33185efdd46fc67af6bb5ad8f0d2885caead25",
+      "text": "### `relevance.signals`\n\nThe `signals` object accepts the following fields.\n\n| Field | Type | Description | Limit |\n| :- | :- | :- | :- |\n| `cwd` | array of strings | Glob patterns matched against the session's working directory. See [working directory matching](#working-directory-matching). | 10 patterns of 256 characters each |\n| `cli` | array of strings | Command names from shell commands Claude has run this session, for example `[\"terraform\"]`. Exact match. See [command name matching](#command-name-matching). | 10 entries of 64 characters each |\n| `hosts` | array of strings | Hostnames seen in `http://` or `https://` URLs in Bash commands this session, for example `[\"registry.terraform.io\"]`. Bare lowercase hostname only: no scheme, port, or path. Exact case-insensitive match. | 20 entries of 128 characters each |\n| `filesRead` | array of strings | Glob patterns matched against the paths of files Claude has read this session, for example `[\"**/*.tf\"]`. Forward-slash normalized and case-insensitive. | 10 patterns of 256 characters each |\n| `manifestDeps` | array of objects | Dependencies declared in package manifests Claude has read this session. Each entry is `{ \"file\": \"...\", \"pattern\": \"...\" }`, where both values are regular expressions. See [manifest dependency matching](#manifest-dependency-matching). | 10 entries, each value at most 256 characters. Manifest files larger than 512 KB are skipped |\n\nThe `filesRead` and `manifestDeps` signals also match against files Claude has written or edited this session and against the project's auto-loaded `CLAUDE.md` memory files."
+    },
+    {
+      "heading": "Manifest dependency matching",
+      "id": "manifest-dependency-matching",
+      "hash": "cb2aced873feea0df706274a79bbb69050dfceae065ec414c5c27118b439d54c",
+      "text": "#### Manifest dependency matching\n\nEach `manifestDeps` entry pairs two JavaScript `RegExp` source strings:\n\n* `file`: matched case-insensitively against the manifest file's path. The path is typically absolute, so anchor the pattern at the end rather than the start. Paths aren't separator-normalized for this signal, so Windows paths use backslashes.\n* `pattern`: matched case-sensitively against that file's contents.\n\nThe following example uses `manifestDeps` to suggest your plugin once Claude has read a `package.json` that depends on your SDK's npm package, named `your-sdk` here.\n\n```json theme={null}\n{\n  \"name\": \"your-plugin\",\n  \"source\": \"./plugins/your-plugin\",\n  \"relevance\": {\n    \"signals\": {\n      \"manifestDeps\": [\n        {\n          \"file\": \"[/\\\\\\\\]package\\\\.json$\",\n          \"pattern\": \"\\\"your-sdk\\\"\\\\s*:\"\n        }\n      ]\n    }\n  }\n}\n```\n\nIn this example, the `file` pattern uses `[/\\\\\\\\]` so it matches both forward-slash and backslash path separators, and `\\\\.` so the dot is literal. In JSON, each backslash in the regular expression is written twice."
+    }
+  ]
+}

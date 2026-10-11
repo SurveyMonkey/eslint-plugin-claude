@@ -56,4 +56,4 @@ Pass: `"dev": "claude --plugin-dir ./plugins/my-plugin"`.
 ## Sources
 
 [^marketplace-root]: [Troubleshoot plugins: --plugin-dir at a marketplace root doesn't load the plugins under plugins/](https://code.claude.com/docs/en/plugins/troubleshooting#plugin-dir-loads-a-plugin-with-no-components)
-[^env]: [Environment variables: CLAUDE_CODE_PLUGIN_DIRS](https://code.claude.com/docs/en/env-vars)
+[^env]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)
