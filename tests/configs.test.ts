@@ -831,15 +831,15 @@ const TREE: Record<string, string> = {
   'packages/av/docs/AGENTS.local.md.bak': '# Notes\n',
   // `claude-md-excludes-pattern`: a relative-style pattern in each settings file that it reads.
   // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
-  'packages/ex/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
-  'packages/ex/.claude/settings.local.json': '{"claudeMdExcludes": ["*/CLAUDE.md", "**/ok/**"]}',
-  'packages/ex/managed-settings.json': '{"claudeMdExcludes": ["a/**"]}',
-  'packages/ex/managed-settings.d/10-a.json': '{"claudeMdExcludes": ["b/**"]}',
-  'packages/ex/managed-settings.d/.20-hidden.json': '{"claudeMdExcludes": ["c/**"]}',
-  'packages/ex/managed-settings.d/30-b.txt': '{"claudeMdExcludes": ["d/**"]}',
-  'packages/ex/managed-settings.d/sub/40-c.json': '{"claudeMdExcludes": ["e/**"]}',
-  'packages/ex/.vscode/settings.json': '{"claudeMdExcludes": ["f/**"]}',
-  'packages/ex/ok/.claude/settings.json': '{"claudeMdExcludes": ["**/web/**", "/abs/CLAUDE.md"]}',
+  'packages/cx/.claude/settings.json': '{"claudeMdExcludes": ["packages/web/**"]}',
+  'packages/cx/.claude/settings.local.json': '{"claudeMdExcludes": ["*/CLAUDE.md", "**/ok/**"]}',
+  'packages/cx/managed-settings.json': '{"claudeMdExcludes": ["a/**"]}',
+  'packages/cx/managed-settings.d/10-a.json': '{"claudeMdExcludes": ["b/**"]}',
+  'packages/cx/managed-settings.d/.20-hidden.json': '{"claudeMdExcludes": ["c/**"]}',
+  'packages/cx/managed-settings.d/30-b.txt': '{"claudeMdExcludes": ["d/**"]}',
+  'packages/cx/managed-settings.d/sub/40-c.json': '{"claudeMdExcludes": ["e/**"]}',
+  'packages/cx/.vscode/settings.json': '{"claudeMdExcludes": ["f/**"]}',
+  'packages/cx/ok/.claude/settings.json': '{"claudeMdExcludes": ["**/web/**", "/abs/CLAUDE.md"]}',
   // `memory-settings-schema`: a memory key of the wrong type in each settings file that it reads.
   // A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/ms/.claude/settings.json': '{"autoMemoryEnabled": "no"}',
@@ -1462,11 +1462,11 @@ const EXPECTED = [
   'packages/av/.agents/notes.md: claude/claude-md-agents-md-variant@2',
   'packages/av/.agents/skills/x/SKILL.md: claude/claude-md-agents-md-variant@2',
   // `claude-md-excludes-pattern` reads the project and managed files, and no other file.
-  'packages/ex/.claude/settings.json: claude/claude-md-excludes-pattern@2',
-  'packages/ex/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
-  'packages/ex/managed-settings.json: claude/claude-md-excludes-pattern@2',
-  'packages/ex/managed-settings.d/10-a.json: claude/claude-md-excludes-pattern@2',
-  'packages/ex/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/cx/.claude/settings.json: claude/claude-md-excludes-pattern@2',
+  'packages/cx/.claude/settings.local.json: claude/claude-md-excludes-pattern@2',
+  'packages/cx/managed-settings.json: claude/claude-md-excludes-pattern@2',
+  'packages/cx/managed-settings.d/10-a.json: claude/claude-md-excludes-pattern@2',
+  'packages/cx/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   // `rules-frontmatter-schema` reads Markdown below `.claude/rules/`, and no other file.
   'packages/rf/.claude/rules/globs.md: claude/rules-frontmatter-schema@2',
   'packages/rf/.claude/rules/sub/yaml.md: claude/rules-frontmatter-schema@2',
