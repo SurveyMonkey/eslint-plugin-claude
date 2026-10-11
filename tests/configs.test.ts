@@ -2041,9 +2041,17 @@ const EXPECTED = [
   'packages/pc/.claude/settings.json: claude/settings-env-prompt-caching-off@1',
   // `settings-committed-helper-command` reads the shared project file only.
   'packages/ch/.claude/settings.json: claude/settings-committed-helper-command@1',
+  // The git trees have a local file below the root of a repository, and a shared file with a
+  // status line command.
+  'packages/hx/sl/.claude/settings.json: claude/settings-committed-helper-command@1',
+  'packages/hx/sl/ok/.claude/settings.json: claude/settings-committed-helper-command@1',
   'packages/hc2/.claude/settings.json: claude/settings-committed-helper-command@1',
   // `settings-local-location` reports the local file below the root of a repository.
   'packages/ll/pkg/.claude/settings.local.json: claude/settings-local-location@1',
+  'packages/gu/set/bad/.claude/settings.local.json: claude/settings-local-location@1',
+  'packages/gu/set/ok/.claude/settings.local.json: claude/settings-local-location@1',
+  'packages/gu/set/ok/other/.claude/settings.local.json: claude/settings-local-location@1',
+  'packages/hx/sl/.claude/settings.local.json: claude/settings-local-location@1',
   // `settings-webfetch-preflight-skip` reads the project files and the managed source. A rule in
   // the other file makes the key silent.
   ...[
