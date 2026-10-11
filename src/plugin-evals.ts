@@ -208,7 +208,7 @@ export function evalFileOf(file: string): EvalFile | null {
   }
 }
 
-/** The case directories of the eval directory `evalDir`, as absolute paths. A
+/** The case directories of the eval directory `evalDir`, as absolute paths, in name order. A
  *  directory is a case when it holds a `prompt.md` or a `case.yaml`. Everything
  *  below a case belongs to it, so the walk goes no deeper. The walk skips `.git`,
  *  `node_modules`, and the directories `mocks` and `results` at the top. It does
@@ -225,7 +225,10 @@ export function caseDirectories(evalDir: string): string[] {
       found.push(dir)
       return
     }
-    for (const entry of entries) {
+    // Sorted, so that the result does not depend on the order of the listing.
+    for (const entry of entries.toSorted((a, b) =>
+      a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+    )) {
       const reserved = top && (entry.name === 'mocks' || entry.name === 'results')
       if (entry.isDirectory() && !SKIPPED.has(entry.name) && !reserved) {
         visit(path.join(dir, entry.name), false)

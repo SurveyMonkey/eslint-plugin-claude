@@ -217,7 +217,7 @@ describe('caseDirectories', () => {
     return caseDirectories(path.join(top, 'evals')).map((dir) => path.relative(top, dir))
   }
 
-  it('lists the directories that hold a prompt.md or a case.yaml, in listing order', () => {
+  it('lists the directories that hold a prompt.md or a case.yaml, in name order', () => {
     expect(
       cases({
         'evals/a/prompt.md': 'x',
@@ -225,7 +225,7 @@ describe('caseDirectories', () => {
         'evals/g/c/prompt.md': 'x',
         'evals/g/d/case.yaml': 'x',
         'evals/notes/readme.md': 'x',
-      }).sort(),
+      }),
     ).toEqual(['evals/a', 'evals/b', 'evals/g/c', 'evals/g/d'])
   })
 
