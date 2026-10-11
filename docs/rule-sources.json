@@ -3180,18 +3180,6 @@
       "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
     }
   ],
-  "permissions-auto-mode-allow-overrides": [
-    {
-      "url": "https://code.claude.com/docs/en/auto-mode-config",
-      "heading": "Where the classifier reads configuration",
-      "hash": "58f3d954821551614a5f3bed35cbfc959fac2a61f5f37b94bb6c3b7a80775d88"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/auto-mode-config",
-      "heading": "Override the block and allow rules",
-      "hash": "8d1869043a9760eb8806df8ba78823d9015f4a1d555b470408bee433bb67d54e"
-    }
-  ],
   "permissions-auto-mode-defaults": [
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",

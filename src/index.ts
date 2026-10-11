@@ -215,7 +215,6 @@ import permissionsAdditionalDirectoriesPath from './rules/permissions-additional
 import permissionsAgentRuleExists from './rules/permissions-agent-rule-exists.ts'
 import permissionsAllowDirDepth from './rules/permissions-allow-dir-depth.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
-import permissionsAutoModeAllowOverrides from './rules/permissions-auto-mode-allow-overrides.ts'
 import permissionsAutoModeDefaults from './rules/permissions-auto-mode-defaults.ts'
 import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
 import permissionsAutoModePushAsk from './rules/permissions-auto-mode-push-ask.ts'
@@ -659,7 +658,6 @@ const modules = [
   permissionsDenySecretFiles,
   permissionsAutoModePushAsk,
   permissionsAutoModeRuleSyntax,
-  permissionsAutoModeAllowOverrides,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -1129,7 +1127,6 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-deny-secret-files': 'off',
   'permissions-auto-mode-push-ask': 'off',
   'permissions-auto-mode-rule-syntax': 'off',
-  'permissions-auto-mode-allow-overrides': 'off',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

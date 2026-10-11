@@ -231,7 +231,6 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-agent-rule-exists',
     'permissions-allow-dir-depth',
     'permissions-allow-unrestricted',
-    'permissions-auto-mode-allow-overrides',
     'permissions-auto-mode-defaults',
     'permissions-auto-mode-dropped-allow',
     'permissions-auto-mode-push-ask',

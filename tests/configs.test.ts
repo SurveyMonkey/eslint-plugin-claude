@@ -3688,7 +3688,6 @@ const CROSS_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'permissions-deny-secret-files', files: SHARED_FILE },
   { name: 'permissions-auto-mode-push-ask', files: MANAGED_FILES },
   { name: 'permissions-auto-mode-rule-syntax', files: MANAGED_FILES },
-  { name: 'permissions-auto-mode-allow-overrides', files: MANAGED_FILES },
 ]
 
 // A tree of its own for these rules. The file `.env` and the folder `packages/shared` need git,
@@ -3738,10 +3737,6 @@ const Q10_TREE: Record<string, string> = {
   'packages/syntax-ok/managed-settings.json': settingsOf({
     autoMode: { allow: ['Listing files is allowed'] },
   }),
-  'packages/over/managed-settings.json': settingsOf({ autoMode: { soft_deny: ['Never x'] } }),
-  'packages/over-ok/managed-settings.json': settingsOf({
-    autoMode: { soft_deny: ['Prefer a review'] },
-  }),
 }
 
 // The reports of the tree above. Each rule reports one file. `dir` reports twice, because its
@@ -3755,7 +3750,6 @@ const Q10_REPORTS = [
   'packages/sec/.claude/settings.json: claude/permissions-deny-secret-files@1',
   'packages/push/managed-settings.json: claude/permissions-auto-mode-push-ask@1',
   'packages/syntax/managed-settings.json: claude/permissions-auto-mode-rule-syntax@1',
-  'packages/over/managed-settings.json: claude/permissions-auto-mode-allow-overrides@1',
 ].sort()
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -5201,9 +5195,6 @@ const STRICT_ONLY = [
   // The tree of `pdi` sets `defaultMode` to `auto` in its managed files, and holds no push rule.
   'packages/pdi/managed-settings.d/10-a.json: claude/permissions-auto-mode-push-ask@1',
   'packages/pdi/managed-settings.json: claude/permissions-auto-mode-push-ask@1',
-  // The managed files of `wmd` hold a `soft_deny` entry that states a rule without exception.
-  'packages/wmd/managed-settings.d/10-a.json: claude/permissions-auto-mode-allow-overrides@1',
-  'packages/wmd/managed-settings.json: claude/permissions-auto-mode-allow-overrides@1',
   'packages/oro/.claude/settings.json: claude/permissions-bash-readonly-redundant@1',
   'packages/oro/.claude/settings.local.json: claude/permissions-bash-readonly-redundant@1',
   'packages/oro/managed-settings.d/10-a.json: claude/permissions-bash-readonly-redundant@1',
