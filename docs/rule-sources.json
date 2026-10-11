@@ -1369,11 +1369,13 @@
   "hooks-multiple-updatedinput": [
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
-      "heading": "Limitations"
+      "heading": "Limitations",
+      "hash": "47be14633fbf2c285ad4862831a1e7cea78c9567015f4abf6cd4eb5b69014694"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "PreToolUse decision control"
+      "heading": "PreToolUse decision control",
+      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
     }
   ],
   "hooks-no-standalone-file": [
@@ -1411,85 +1413,104 @@
   "hooks-output-blocking-exit-code": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Other exit codes"
+      "heading": "Other exit codes",
+      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Exit code 2 behavior per event"
+      "heading": "Exit code 2 behavior per event",
+      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Block the action when a hook fails"
+      "heading": "Block the action when a hook fails",
+      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Exit code output"
+      "heading": "Exit code output",
+      "hash": "9abbcf1e1ea280971a8e063d82df3f136c0a7277228ed1d8c2c4cceced0d0598"
     }
   ],
   "hooks-output-deprecated-fields": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "PreToolUse decision control"
+      "heading": "PreToolUse decision control",
+      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "PostToolUse decision control"
+      "heading": "PostToolUse decision control",
+      "hash": "271abc0c250645bcd170f25440514299dab1aabd8376718db1a854df04eb13b0"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "TaskCreated input"
+      "heading": "TaskCreated input",
+      "hash": "18f9350b5b2c46428cec0979e42d590951ea4220378735b357c9cccecec169bd"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "TaskCompleted input"
+      "heading": "TaskCompleted input",
+      "hash": "00a46c27bbeba8ce867e2a69064723ca8bf1608136a6590795a727a19a39f8e8"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "TeammateIdle input"
+      "heading": "TeammateIdle input",
+      "hash": "d68ada7a6826ef805179834a6d8878fb744b5b7da7a7534fb32ee2e08bcd8a05"
     }
   ],
   "hooks-output-schema": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "JSON output"
+      "heading": "JSON output",
+      "hash": "78baa86b335ff7b55ddee0ec0608c1db4e9e00b29dd7f875b5e886537e7b999d"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
-      "heading": "Fields at the wrong level"
+      "heading": "Fields at the wrong level",
+      "hash": "3b437e830b9de9f26cf46d57e544295dcc01aa80154538531615f94571dbc968"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Decision control"
+      "heading": "Decision control",
+      "hash": "30ebda41a34adc421b0a4e8607fd03c71cfc6e5a40c5385a0830357914ab3239"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "PreModelSwitch decision control"
+      "heading": "PreModelSwitch decision control",
+      "hash": "2c384de0259af549ecbc40242dde4b6853651e86c89e7ed06fd9eeca431fb977"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Annotate a result for the auto mode classifier"
+      "heading": "Annotate a result for the auto mode classifier",
+      "hash": "0eea0f0fe74937ab6a3c5537563370b10812592fbbca099fcf21cd7799c2c0ed"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "ConfigChange decision control"
+      "heading": "ConfigChange decision control",
+      "hash": "ef7c4162c133f2bba0375c8dfe2a4f78cd88723419851be053c8892eba230f61"
     }
   ],
   "hooks-output-size": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "JSON output"
+      "heading": "JSON output",
+      "hash": "78baa86b335ff7b55ddee0ec0608c1db4e9e00b29dd7f875b5e886537e7b999d"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Add context for Claude"
+      "heading": "Add context for Claude",
+      "hash": "7247c174169e87d40a14ca3e8af8fe8beae4425157a3bd557ecd382dbd108522"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Exit code 0"
+      "heading": "Exit code 0",
+      "hash": "9bd747d426e0b256983e46f526ad1c84dad5020321ca5d6fb3e8e3c4fddcd2e6"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Annotate a result for the auto mode classifier"
+      "heading": "Annotate a result for the auto mode classifier",
+      "hash": "0eea0f0fe74937ab6a3c5537563370b10812592fbbca099fcf21cd7799c2c0ed"
     }
   ],
   "hooks-placeholder-quoted": [
@@ -1623,29 +1644,35 @@
   "hooks-sessionstart-static-context": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Add context for Claude"
+      "heading": "Add context for Claude",
+      "hash": "7247c174169e87d40a14ca3e8af8fe8beae4425157a3bd557ecd382dbd108522"
     },
     {
       "url": "https://code.claude.com/docs/en/memory",
-      "heading": "Remove an earlier AGENTS.md workaround"
+      "heading": "Remove an earlier AGENTS.md workaround",
+      "hash": "e57233c8a4fa29f7d36dbdf04038688e32b84b255afa62f61d709ec6720d3339"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "SessionStart decision control"
+      "heading": "SessionStart decision control",
+      "hash": "bed960cefefcef7d2719e381b396bfcc435bacc9308cfe296130ea2c1b27c145"
     }
   ],
   "hooks-stop-loop-guard": [
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
-      "heading": "Stop hook hits the block cap"
+      "heading": "Stop hook hits the block cap",
+      "hash": "bb11101aa19099459c20b0cbb582f595299e5f54ee40be8d1b616af28d83d2e5"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Stop input"
+      "heading": "Stop input",
+      "hash": "48ddafe90e91b478da929959035deb77c66d3d60be1e1d8c546e8b357f155685"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Stop decision control"
+      "heading": "Stop decision control",
+      "hash": "287b86688424db62968b1a1d3ddc520e26991daff37ac075d6431ab1b5ba3da9"
     }
   ],
   "hooks-timeout-units": [
