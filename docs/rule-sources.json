@@ -1342,7 +1342,7 @@
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Authenticate with remote MCP servers",
-      "hash": "d4d72826a429059a4c0f8070822b649e883f4167610c3bb799db31b2cb2f6180"
+      "hash": "7cfc4f7df94ca472ee4e0b442534e310f11ecd6068098bf20b25617e6f71553a"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -1440,7 +1440,7 @@
     {
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Restrict OAuth scopes",
-      "hash": "dbccf3ccdefc615da7d3910ca7131214dce56e2fc6003f7a53c453ef042114ae"
+      "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
     }
   ],
   "mcp-project-dir-default": [
