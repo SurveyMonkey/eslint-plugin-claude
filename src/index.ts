@@ -248,6 +248,7 @@ import pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
 import pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
 import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
@@ -747,6 +748,7 @@ const modules = [
   pluginChannelServerStdio,
   pluginBinShadowsSystemCommand,
   pluginDependenciesPrereleaseRange,
+  pluginRelevanceSignalHints,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1141,6 +1143,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-channel-server-stdio': 'off',
   'plugin-bin-shadows-system-command': 'off',
   'plugin-dependencies-prerelease-range': 'off',
+  'plugin-relevance-signal-hints': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

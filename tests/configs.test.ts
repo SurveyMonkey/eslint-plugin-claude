@@ -741,6 +741,29 @@ const TREE: Record<string, string> = {
   'plugins/bsc/bin/git': '#!/bin/sh\n',
   'plugins/bsc2/.claude-plugin/plugin.json': JSON.stringify({ name: 'bsc2' }),
   'plugins/bsc2/bin/my-tool': '#!/bin/sh\n',
+  // A `cli` entry with a space reports in `strict` only. The decoy has one command name.
+  'packages/rsh/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'rsh',
+    owner: { name: 'o' },
+    plugins: [
+      {
+        name: 'tf',
+        source: { source: 'github', repo: 'a/b' },
+        relevance: { signals: { cli: ['terraform plan'] } },
+      },
+    ],
+  }),
+  'packages/rsh2/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'rsh2',
+    owner: { name: 'o' },
+    plugins: [
+      {
+        name: 'tf',
+        source: { source: 'github', repo: 'a/b' },
+        relevance: { signals: { cli: ['terraform'] } },
+      },
+    ],
+  }),
   // A range that misses the pre-release version of its dependency reports in `strict` only. The
   // decoy has the suffix. The marketplace needs a `.git` above it.
   'packages/pr/.git/HEAD': 'ref: refs/heads/main\n',
@@ -3086,6 +3109,7 @@ const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'plugin-channel-server-stdio', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-bin-shadows-system-command', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-dependencies-prerelease-range', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-relevance-signal-hints', files: ['**/.claude-plugin/marketplace.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4320,6 +4344,7 @@ const STRICT_ONLY = [
   'plugins/chs/.claude-plugin/plugin.json: claude/plugin-channel-server-stdio@1',
   'packages/pr/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-prerelease-range@1',
   'plugins/bsc/.claude-plugin/plugin.json: claude/plugin-bin-shadows-system-command@1',
+  'packages/rsh/.claude-plugin/marketplace.json: claude/plugin-relevance-signal-hints@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

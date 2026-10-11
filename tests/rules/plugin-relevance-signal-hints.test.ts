@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest'
 import { lintMarketplace, marketplaceOf, tree } from '../marketplace-tree.test-support.ts'
 
 const RULE = 'plugin-relevance-signal-hints'
-const check = it.fails
+const check = it
 
 const cliMessage = (entry: string) =>
   `The \`cli\` entry "${entry}" has white space. Claude Code records one command name for each shell command: the first token after any environment variable assignments and \`sudo\`. The entry is an exact match, so it never matches. Write the command name only.`

@@ -242,6 +242,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-bin-shadows-system-command`](docs/rules/plugin-bin-shadows-system-command.md) | A file in `bin/` is not named like a system command, such as `git` or `ls`, because the `bin/` of a plugin comes after the user's own `PATH` entries and cannot shadow it | `off` | `warn` |
 | [`claude/plugin-channel-server-stdio`](docs/rules/plugin-channel-server-stdio.md) | A channel binds to a server with a `command`, which Claude Code starts as a subprocess and talks to over stdio, and not to a remote server with a `url` | `off` | `warn` |
 | [`claude/plugin-user-config-sensitive`](docs/rules/plugin-user-config-sensitive.md) | A `userConfig` option whose key or `title` has the word `token` or `password` sets `sensitive`, so that Claude Code masks the input and keeps the value in secure storage | `off` | `warn` |
+| [`claude/plugin-relevance-signal-hints`](docs/rules/plugin-relevance-signal-hints.md) | A `relevance` `cli` entry is one command name, and a `manifestDeps` `file` pattern does not start with `^`, because neither can match | `off` | `warn` |
 
 ### Marketplace manifest
 
