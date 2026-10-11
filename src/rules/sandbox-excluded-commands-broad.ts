@@ -17,9 +17,8 @@ const name = 'sandbox-excluded-commands-broad' as const
 
 type MessageId = 'everything' | 'interpreter'
 
-/** The shells and interpreters. The docs warn about "a pattern that covers an interpreter" and
- *  name `sh` and `bash` in the permissions page, but list no more names. The rest is the choice of
- *  the plugin. */
+/** The shells and interpreters. The docs warn about "a pattern that covers an interpreter", but
+ *  they name none for `excludedCommands`. The whole list is the choice of the plugin. */
 const INTERPRETERS = [
   'sh',
   'bash',

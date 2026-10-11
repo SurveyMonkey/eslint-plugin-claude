@@ -31,22 +31,29 @@ on the `enabled` value of the file, and names the directories that are open. The
 These count as protection of a directory:
 
 - a `sandbox.filesystem.denyRead` path[^denyread]
-- a `sandbox.credentials.files` entry with `"mode": "deny"` or `"mode": "mask"`[^credentials]
-- a `Read` deny rule, because Claude Code adds those rules to `denyRead`[^filesystem]
+- a `sandbox.credentials.files` entry with `"mode": "deny"`, or with `"mode": "mask"` in a managed file[^credentials]
+- a `Read` deny rule that starts with `~` or `//`, because Claude Code adds those rules to `denyRead`[^filesystem]
 
-A path protects a directory when it is the directory, a path in it, or a directory above it that is the home directory or the
-root. The docs example `"denyRead": ["~/"]` protects both. A `Read` rule with no specifier protects both. `~/.aws/credentials`
-protects `~/.aws`.
+Claude Code drops a `mask` entry from the two project files, so a `mask` entry there protects nothing.[^credentials]
+
+A path protects a directory when it is the directory or a path in it. A path also protects it when it is the home directory
+or the root above it. The docs example `"denyRead": ["~/"]` protects both. A `Read` rule with no specifier protects both.
+`~/.aws/credentials` protects `~/.aws`.
+
+A path with no prefix, or with `./`, is relative to the project root in a project file.[^prefixes] So `./.aws` and `.ssh`
+protect nothing in the home directory. In a `Read` rule, a single `/path` is relative to the project, so only `~` and `//`
+forms count. The rule does not read `allowRead`, which can open a part of a denied path again.[^fs-isolation]
 
 ### What the rule does not read
 
 - A user settings file. It is outside the repository (ADR 001, Decision 14), and a user `denyRead` or `credentials` entry
   applies to every project.[^credentials] The rule is `off` in `recommended` for that reason.
 - A source with a file that the rule cannot read. That file can hold the entries, so the rule gives no report.
-- A source with `filesystem.disabled` on, because Claude Code enforces no read entry then. `sandbox-filesystem-disabled-conflict`
-  and `sandbox-weakening-options` own that value.
+- A managed source with `filesystem.disabled` on. Claude Code then does not enforce `denyRead` or `credentials.files` `deny`
+  entries.[^credentials] Claude Code ignores `disabled` in a project file, so the rule still reports there.
+  `sandbox-filesystem-disabled-conflict` and `sandbox-weakening-options` own that value.
 - A source with `permissions.blockReadsOutsideWorkingDirectories` on. The docs say sandboxed commands then lose read access to
-  the home directory.[^fs-isolation]
+  the home directory, with the exceptions that the docs list.[^fs-isolation]
 
 ### Docs examples
 
@@ -85,5 +92,6 @@ None.
 [^credentials]: [All settings: sandbox.credentials](https://code.claude.com/docs/en/settings-reference#sandbox-credentials)
 [^filesystem]: [All settings: sandbox.filesystem](https://code.claude.com/docs/en/settings-reference#sandbox-filesystem)
 [^enforce]: [Configure the sandboxed Bash tool: Enforce sandboxing with managed settings](https://code.claude.com/docs/en/sandboxing#enforce-sandboxing-with-managed-settings)
+[^prefixes]: [All settings: Sandbox path prefixes](https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes)
 [^protect]: [Configure the sandboxed Bash tool: Protect credentials](https://code.claude.com/docs/en/sandboxing#protect-credentials)
 [^fs-isolation]: [Configure the sandboxed Bash tool: Filesystem isolation](https://code.claude.com/docs/en/sandboxing#filesystem-isolation)

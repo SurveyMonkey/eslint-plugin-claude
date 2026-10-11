@@ -5,9 +5,10 @@
 // `.claude/`) in the git index: a tracked `Dockerfile`, `docker-compose.yml` or
 // `docker-compose.yaml`, or a `docker` command in a script of a tracked `package.json`. The
 // repositories are real, made with `git init`.
+import { symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { isolateGitConfig, plain, repo } from '../git-tree.test-support.ts'
+import { isolateGitConfig, plain, repo, stage } from '../git-tree.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
 const name = 'sandbox-docker-excluded'
@@ -52,6 +53,12 @@ describe(`${name}: reports`, () => {
       { 'package.json': file({ scripts: { up: 'npm ci && docker build .' } }) },
       { 'package.json': file({ scripts: { up: 'docker-compose up' } }) },
       { 'package.json': file({ scripts: { up: 'docker' } }) },
+      { 'package.json': file({ scripts: { up: 'sh -c "docker build ."' } }) },
+      { 'package.json': file({ scripts: { up: "bash -c 'docker ps'" } }) },
+      { 'package.json': file({ scripts: { up: 'sudo docker ps' } }) },
+      { 'package.json': file({ scripts: { up: 'npm test; docker ps' } }) },
+      { 'package.json': file({ scripts: { up: 'cat x | docker load' } }) },
+      { 'package.json': file({ scripts: { up: '(docker ps)' } }) },
     ]
     for (const tracked of SHOWING) {
       expect(ids(tracking(tracked), ON), JSON.stringify(tracked)).toEqual(['docker'])
@@ -105,6 +112,39 @@ describe(`${name}: silent`, () => {
     const untracked = repo({ [PROJECT]: '{}' }, [], DOCKERFILE)
     expect(ids(untracked, ON)).toEqual([])
     expect(ids(tracking({ 'docker/Dockerfile': 'FROM x\n' }), ON)).toEqual([])
+  })
+
+  it('is silent for a script that names a docker folder as an argument', () => {
+    for (const up of [
+      'cd docker && npm test',
+      'ls docker',
+      'echo docker-compose',
+      'npm run docker',
+    ]) {
+      const tracked = { 'package.json': file({ scripts: { up } }) }
+      expect(ids(tracking(tracked), ON), up).toEqual([])
+    }
+  })
+
+  it('reads the folder that holds .claude, not the top of the repository', () => {
+    const sub = 'apps/web/.claude/settings.json'
+    const rooted = repo({ [sub]: '{}', ...DOCKERFILE })
+    expect(ids(rooted, ON, sub)).toEqual([])
+    const inside = repo({ [sub]: '{}', 'apps/web/Dockerfile': 'FROM x\n' })
+    expect(ids(inside, ON, sub)).toEqual(['docker'])
+    const script = { scripts: { up: 'docker compose up' } }
+    const rootScript = repo({ [sub]: '{}', 'package.json': file(script) })
+    expect(ids(rootScript, ON, sub)).toEqual([])
+    const subScript = repo({ [sub]: '{}', 'apps/web/package.json': file(script) })
+    expect(ids(subScript, ON, sub)).toEqual(['docker'])
+  })
+
+  it('is silent when a tracked package.json is a link to a file outside the repository', () => {
+    const outside = plain({ 'out/package.json': file({ scripts: { up: 'docker compose up' } }) })
+    const root = plain({ [PROJECT]: '{}' })
+    symlinkSync(path.join(outside, 'out/package.json'), path.join(root, 'package.json'))
+    stage(root, [PROJECT])
+    expect(ids(root, ON)).toEqual([])
   })
 
   it('is silent for a script that only ends in the name, or a scripts value of another type', () => {

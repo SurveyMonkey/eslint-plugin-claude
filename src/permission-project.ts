@@ -1,7 +1,8 @@
-// What the git index shows about the project of a settings file: the project is the folder that
-// holds `.claude/`. A rule that asks "does this project use Docker?" or "does a script start
-// claude?" reads the names of the tracked files in that folder, and the `scripts` of a tracked
-// `package.json`. A file that git does not track is not in the repository (ADR 001, Decision 14).
+// What the git index shows about the project of a settings file. The project is the folder that
+// holds `.claude/`. A rule can ask "does this project use Docker?" or "does a script start
+// claude?". It reads the names of the tracked files in that folder. It also reads the `scripts` of
+// a tracked `package.json`. A file that git does not track is not in the repository (ADR 001,
+// Decision 14).
 import path from 'node:path'
 import { gitChildren } from './git-state.ts'
 import { isObject } from './permission-source.ts'
@@ -23,7 +24,8 @@ export interface ProjectFacts {
 }
 
 /** The facts of the project that holds the settings file `filename`, or `UNREADABLE` when git
- *  cannot answer. A `package.json` that does not read adds no script. */
+ *  cannot answer. A `package.json` that does not read adds no script. A project folder that is a
+ *  link out of the repository gives empty lists, so the rules stay silent. */
 export function projectFacts(filename: string): ProjectFacts | Unreadable {
   const project = realDirectory(path.dirname(path.dirname(path.resolve(filename))))
   const bound = repositoryRoot(project)

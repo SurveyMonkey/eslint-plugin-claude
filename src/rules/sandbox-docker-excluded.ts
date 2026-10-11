@@ -1,11 +1,11 @@
-// `docker` does not work inside the sandbox, and the docs advise an `excludedCommands` pattern such
-// as `docker compose *` (https://code.claude.com/docs/en/sandboxing#docker-commands-fail). The
-// rule lints the shared project file. It asks the git index (`src/permission-project.ts`) for the
-// signs of Docker use in the project folder: a tracked `Dockerfile`, `docker-compose.yml` or
-// `docker-compose.yaml`, and a `docker` command in a script of a tracked `package.json`
-// (docs/rules/sandbox-docker-excluded.md). It adds up the project pair and makes no report when it
-// cannot read a file, when git cannot answer, or for a managed file, which belongs to no project.
-// A user file can hold the entry, which is why the rule is `off` in `recommended`.
+// `docker` does not work inside the sandbox. The docs advise an `excludedCommands` pattern such as
+// `docker compose *` (https://code.claude.com/docs/en/sandboxing#docker-commands-fail). The rule
+// lints the shared project file. It asks the git index (`src/permission-project.ts`) for the signs
+// of Docker use in the project folder (docs/rules/sandbox-docker-excluded.md). The signs are a
+// tracked `Dockerfile`, `docker-compose.yml` or `docker-compose.yaml`, and a `docker` command in a
+// script of a tracked `package.json`. The rule adds up the project pair. It makes no report when
+// it cannot read a file, when git cannot answer, or for a managed file, which has no project. A
+// user file can hold the entry. For this reason the rule is `off` in `recommended`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { commandWords } from '../permission-command.ts'
@@ -18,8 +18,9 @@ import { UNREADABLE } from '../skill-tree.ts'
 const name = 'sandbox-docker-excluded' as const
 
 const FILES = ['Dockerfile', 'docker-compose.yml', 'docker-compose.yaml']
-/** A `docker` command at the start of a script or after a shell operator. */
-const DOCKER_COMMAND = /(?:^|[\s;&|(])docker(?:-compose)?(?=[\s;&|)]|$)/
+/** A `docker` command at the start of a script, after a shell operator or a quote, or after
+ *  `sudo`. A word `docker` that is an argument (`cd docker`) does not match. */
+const DOCKER_COMMAND = /(?:^|[;&|(`"'])\s*(?:sudo\s+)?docker(?:-compose)?(?=[\s;&|)`"']|$)/
 
 /** True when the entry `text` takes `docker` out of the sandbox: it starts with `docker` or
  *  `docker-compose`, or it is a star. */

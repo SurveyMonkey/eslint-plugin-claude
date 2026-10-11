@@ -2,9 +2,9 @@
 // `dangerouslyDisableSandbox` (docs/rules/sandbox-unsandboxed-retry.md). Two settings stop that:
 // `allowUnsandboxedCommands: false`, and an ask rule for `Bash(dangerouslyDisableSandbox:true)`
 // (https://code.claude.com/docs/en/sandboxing#the-unsandboxed-retry-escape-hatch). A deny rule for
-// the parameter stops it too. The rule adds up the project pair, or one managed source, and makes
+// the parameter stops it too. The rule adds up the project pair, or one managed source. It makes
 // no report when it cannot read a file of the source. A user file is outside the repository (ADR
-// 001, Decision 14) and can hold the setting, which is why the rule is `off` in `recommended`.
+// 001, Decision 14) and can hold the setting. For this reason the rule is `off` in `recommended`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { COMMAND_RULE_TOOLS } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -41,7 +41,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'retry' }> = {
       Document(node) {
         const enabled = valueAt(node, ['sandbox', 'enabled'])
         const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
-        // The file that turns the sandbox on speaks for the source, so the other file is silent.
+        // A file that does not turn the sandbox on is silent. A file that does turn it on reports
+        // for itself, so two files of a source can both report.
         if (
           boolOf(at(objects[0], ['sandbox', 'enabled']), isManaged, true) !== true ||
           !complete ||

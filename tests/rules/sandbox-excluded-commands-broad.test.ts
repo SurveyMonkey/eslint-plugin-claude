@@ -41,6 +41,12 @@ describe(`${name}: reports`, () => {
     for (const entry of [
       'bash *',
       'sh *',
+      'dash *',
+      'ksh *',
+      'fish *',
+      'deno *',
+      'bun *',
+      'php *',
       'zsh *',
       'python3 *',
       'python *',

@@ -31,17 +31,20 @@ and `.claude/settings.local.json`), the project shows Docker use, and no `exclud
 `docker` or `docker-compose`. An entry that is only a star counts too (`sandbox-excluded-commands-broad` reports it). The report is on
 the `enabled` value, or on the top of the file when the other file turns the sandbox on.
 
-The project is the folder that holds `.claude/`. The rule asks the git index (`src/git-state.ts`) for the tracked files in that
-folder. These show Docker use:
+The project is the folder that holds `.claude/`. The rule asks the git index (`src/permission-project.ts`) for the tracked
+files in that folder. These show Docker use:
 
 - a tracked `Dockerfile`, `docker-compose.yml` or `docker-compose.yaml`
 - a `docker` or `docker-compose` command in a script of a tracked `package.json`
 
+A command is `docker` at the start of the script, after `;`, `&`, `|`, `(` or a quote, or after `sudo`. A word `docker` as an
+argument, as in `cd docker`, is not a command.
+
 ### What the rule does not read
 
 - A file that git does not track, a file in a folder below the project folder, and shell scripts, a `Makefile` and CI files.
-  Only the file names above, and `package.json`, count.
-- A user settings file. It is outside the repository (ADR 001, Decision 14), and the docs show `docker *` in
+  Only the file names above, and `package.json`, count. `compose.yaml` and `Dockerfile.dev` are not read.
+- A user settings file. It is outside the repository (ADR 001, Decision 14), and the docs save `docker compose *` in
   `~/.claude/settings.json`.[^excluded] The rule is `off` in `recommended` for that reason.
 - A project with no `.git`, or one where git cannot answer. A `package.json` that does not read adds no script. A sibling settings
   file that does not read stops the report, because that file can hold the entry.

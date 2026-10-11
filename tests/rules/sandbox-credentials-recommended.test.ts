@@ -4,7 +4,8 @@
 // https://code.claude.com/docs/en/settings-reference#sandbox-filesystem-denyread
 // The rule reads the project pair, or one managed source, from disk. A `filesystem.denyRead`
 // entry, a `credentials.files` entry and a `Read` deny rule all count. The `sandbox` example of
-// the settings reference denies `~/.aws/credentials` only, so it reports for `~/.ssh`.
+// the settings reference denies `~/.aws/credentials` only, so it reports for `~/.ssh`. Claude Code
+// drops a `mask` entry and the key `filesystem.disabled` from the two project files.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
@@ -77,12 +78,35 @@ describe(`${name}: one file`, () => {
     }
   })
 
-  it('is silent when credentials.files denies or masks both directories', () => {
+  it('is silent when credentials.files denies or masks both directories, in a managed file', () => {
     const files = [
       { path: '~/.aws/credentials', mode: 'deny' },
       { path: '~/.ssh', mode: 'mask' },
     ]
-    expect(alone({ sandbox: { enabled: true, credentials: { files } } })).toEqual([])
+    expect(alone({ sandbox: { enabled: true, credentials: { files } } }, MANAGED)).toEqual([])
+  })
+
+  it('does not count a mask entry in a project file, which Claude Code drops', () => {
+    const files = [
+      { path: '~/.aws', mode: 'mask' },
+      { path: '~/.ssh', mode: 'deny' },
+    ]
+    for (const name_ of [PROJECT, LOCAL]) {
+      expect(alone({ sandbox: { enabled: true, credentials: { files } } }, name_), name_).toEqual([
+        'open',
+      ])
+    }
+    expect(message({ sandbox: { enabled: true, credentials: { files } } })).toContain('`~/.aws`')
+  })
+
+  it('does not count a path that is relative to the project or inside another directory', () => {
+    for (const entry of ['./.aws', '.ssh', 'secrets/.ssh', '/tmp/.aws', '~/work/.ssh']) {
+      expect(alone(deny(entry)), entry).toEqual(['open'])
+    }
+    const rules = ['Read(./.aws/**)', 'Read(/Users/me/.ssh)', 'Read(.ssh)', 'Read(/)']
+    for (const rule of rules) {
+      expect(alone({ ...ON, permissions: { deny: [rule] } }), rule).toEqual(['open'])
+    }
   })
 
   it('is silent when a Read deny rule covers both directories', () => {
@@ -111,6 +135,17 @@ describe(`${name}: one file`, () => {
     expect(alone({ sandbox: { enabled: true, filesystem: { denyRead: [1, null] } } })).toEqual([
       'open',
     ])
+    for (const credentials of [
+      'x',
+      5,
+      { files: 'x' },
+      { files: { path: '~/.aws', mode: 'deny' } },
+    ]) {
+      expect(
+        alone({ sandbox: { enabled: true, credentials } }),
+        JSON.stringify(credentials),
+      ).toEqual(['open'])
+    }
     const files = [
       { path: '~/.aws', mode: 'allow' },
       { path: '~/.ssh', mode: 'deny' },
@@ -123,8 +158,24 @@ describe(`${name}: one file`, () => {
     expect(message({ sandbox: { enabled: true, credentials } })).not.toContain('`~/.ssh`')
   })
 
-  it('is silent when filesystem isolation is off, or reads outside the working directory are blocked', () => {
-    expect(alone({ sandbox: { enabled: true, filesystem: { disabled: true } } })).toEqual([])
+  it('is silent when filesystem isolation is off in a managed file', () => {
+    const disabled = (value: unknown) => ({
+      sandbox: { enabled: true, filesystem: { disabled: value } },
+    })
+    expect(alone(disabled(true), MANAGED)).toEqual([])
+    expect(alone(disabled('true'), MANAGED)).toEqual([])
+    expect(alone(disabled(5), MANAGED)).toEqual(['open'])
+    expect(alone(disabled(false), MANAGED)).toEqual(['open'])
+    // Claude Code ignores `disabled` in a project file, so the entries stay in force.
+    for (const name_ of [PROJECT, LOCAL]) {
+      expect(alone(disabled(true), name_), name_).toEqual(['open'])
+    }
+    // A sibling of the managed source speaks for it.
+    const root = repo({ [DROP_IN]: file(disabled(true)) })
+    expect(ids(root, MANAGED, ON)).toEqual([])
+  })
+
+  it('is silent when reads outside the working directory are blocked', () => {
     expect(alone({ ...ON, permissions: { blockReadsOutsideWorkingDirectories: true } })).toEqual([])
     expect(alone({ ...ON, permissions: { blockReadsOutsideWorkingDirectories: false } })).toEqual([
       'open',

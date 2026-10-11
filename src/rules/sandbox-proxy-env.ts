@@ -1,13 +1,14 @@
 // A script that starts `claude` with `HTTPS_PROXY`, `HTTP_PROXY` or `NO_PROXY` puts the variable in
-// the shell. A background agent does not run in that shell, so the docs say to set the proxy
-// variables in the `env` block of settings (docs/rules/sandbox-proxy-env.md):
+// the shell. A background agent does not run in that shell, so the network page says to set the
+// proxy variables in the `env` block of settings (docs/rules/sandbox-proxy-env.md):
 // https://code.claude.com/docs/en/sandboxing#network-isolation
 // https://code.claude.com/docs/en/network-config#set-network-variables-in-settings-not-the-shell
-// The rule lints the shared project file with the sandbox on. A script is a string of the `scripts`
-// of a tracked `package.json` in the project folder (`src/permission-project.ts`). The rule adds
-// up the project pair and makes no report when it cannot read a file or when git cannot answer. A
-// user or managed `env` block is not visible, and the network page names those two files, which is
-// why the rule is `off` in `recommended`.
+// The sandboxing page also allows the environment that launches Claude Code. The rule follows the
+// network page. It lints the shared project file with the sandbox on. A script is a string of the
+// `scripts` of a tracked `package.json` in the project folder (`src/permission-project.ts`). The
+// rule adds up the project pair. It makes no report when it cannot read a file or when git cannot
+// answer. A user or managed `env` block is not visible, and the network page names those two
+// files. For this reason the rule is `off` in `recommended`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { projectFacts } from '../permission-project.ts'

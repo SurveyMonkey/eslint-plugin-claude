@@ -3,8 +3,8 @@
 // opens a path for exfiltration and domain fronting
 // (https://code.claude.com/docs/en/sandboxing#security-limitations). That warning names
 // `github.com`, and two docs examples use it, so the option `broad` lists the other hosts to
-// report. `sandbox-domain-syntax` owns an entry with a scheme, a path or a bad port: such an entry
-// does not match the two forms below.
+// report. `sandbox-domain-syntax` owns an entry with a scheme or a path: such an entry does not
+// match the two forms below. A wildcard with a bad numeric port still reports here too.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -31,7 +31,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
       {
         type: 'object',
         properties: {
-          broad: { type: 'array', items: { type: 'string', minLength: 1 } },
+          broad: { type: 'array', items: { type: 'string', minLength: 1 }, uniqueItems: true },
         },
         additionalProperties: false,
       },

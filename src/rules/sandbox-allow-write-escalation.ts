@@ -6,7 +6,8 @@
 // (https://code.claude.com/docs/en/sandboxing#security-limitations). The rule cannot read
 // `$PATH`, so it uses the usual directories. Both examples of the docs, `~/.kube` and
 // `/tmp/build`, stay silent. A project path is relative, and the sandbox already protects a
-// startup file of the working directory, so those get no report.
+// startup file of the working directory, so those get no report. The prefix table of the docs has
+// no `$HOME` form, so `$HOME/.zshrc` is a path relative to the project.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -18,7 +19,7 @@ const name = 'sandbox-allow-write-escalation' as const
 type MessageId = 'startup' | 'system' | 'executables' | 'broad'
 
 /** A home directory, in the forms of the sandbox path prefixes. */
-const HOME = String.raw`(?:~|\$HOME|/Users/[^/]+|/home/[^/]+|/root)`
+const HOME = `(?:~|/Users/[^/]+|/home/[^/]+|/root)`
 /** The startup files of the usual shells. The docs name `.bashrc` and `.zshrc` and say "such as". */
 const STARTUP = new RegExp(
   String.raw`^${HOME}/(?:\.bashrc|\.bash_profile|\.bash_login|\.profile|\.zshrc|\.zshenv|\.zprofile|\.zlogin|\.config/fish/config\.fish)$`,

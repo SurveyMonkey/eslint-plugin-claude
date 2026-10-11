@@ -3,7 +3,8 @@
 // domain fronting: https://code.claude.com/docs/en/sandboxing#security-limitations
 // The docs name `github.com` as an example of a broad domain, and also use it in two examples of
 // `allowedDomains`. So the rule reports it only when the option `broad` lists it.
-// `sandbox-domain-syntax` owns an entry with a URL scheme, a path or a bad port.
+// `sandbox-domain-syntax` owns an entry with a URL scheme or a path. A wildcard with a bad
+// numeric port still reports here too.
 import path from 'node:path'
 import json from '@eslint/json'
 import { Linter } from 'eslint'
@@ -141,7 +142,13 @@ describe(`${name}: the option broad`, () => {
   })
 
   it('refuses an option that is not a list of non-empty strings', () => {
-    for (const options of [{ broad: 'github.com' }, { broad: [''] }, { broad: [1] }, { x: 1 }]) {
+    for (const options of [
+      { broad: 'github.com' },
+      { broad: [''] },
+      { broad: [1] },
+      { broad: ['github.com', 'github.com'] },
+      { x: 1 },
+    ]) {
       expect(() => lint(allowed('*'), PROJECT, options), JSON.stringify(options)).toThrow(/should/)
     }
   })

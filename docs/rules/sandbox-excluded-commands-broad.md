@@ -31,7 +31,8 @@ The rule reports two shapes of entry:
 - `everything`: an entry that is only a star (`*`, `* *`, `*:*`). It matches every command.
 - `interpreter`: a shell or an interpreter, followed by a star and flags only, as `bash *`, `python3 *`, `node *`,
   `bash -c *` and the old form `sh:*`. The names are `sh`, `bash`, `zsh`, `dash`, `ksh`, `fish`, `python`, `python3`, `node`,
-  `deno`, `bun`, `ruby`, `perl` and `php`. The docs name `sh` and `bash` and no more, so the rest is the choice of the plugin.
+  `deno`, `bun`, `ruby`, `perl` and `php`. The docs name no interpreter for `excludedCommands`, so the whole list is the choice
+  of the plugin.
 
 ### What the rule does not report
 

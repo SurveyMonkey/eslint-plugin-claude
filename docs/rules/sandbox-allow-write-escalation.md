@@ -35,8 +35,9 @@ contexts".[^limits] The rule reads `sandbox.filesystem.allowWrite` and reports f
   list is the choice of the plugin.
 - `broad`: a directory that holds those: `~`, `/`, `/usr`, `/usr/local`, and a home directory such as `/Users/me`.
 
-A home directory is `~`, `$HOME`, `/Users/<name>`, `/home/<name>` or `/root`. A trailing `/` or `/**` does not change the
-result.[^prefixes]
+A home directory is `~`, `/Users/<name>`, `/home/<name>` or `/root`. The list of home forms is the choice of the plugin. A
+trailing `/` or `/**` does not change the result.[^prefixes] The prefix table has no `$HOME` form, so `$HOME/.zshrc` is a path
+relative to the project and gets no report.
 
 ### What the rule does not report
 

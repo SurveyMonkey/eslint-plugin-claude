@@ -5028,6 +5028,11 @@
       "hash": "9ed9ca92638f62e06bddb6525ff368abd8c1e4938246336de81e4a4a64394876"
     },
     {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Sandbox path prefixes",
+      "hash": "4e5d2288fb7ecf68d36d223f56d0e7b676a4d6276b40452e66e7c69b358c84f5"
+    },
+    {
       "url": "https://code.claude.com/docs/en/sandboxing",
       "heading": "Protect credentials",
       "hash": "7c83a7546e34d95a9373e91efcc871fc0707e611f7fef26633be82780c3913a3"
@@ -5359,6 +5364,11 @@
       "url": "https://code.claude.com/docs/en/sandboxing",
       "heading": "Turn off the retry with strict sandbox mode",
       "hash": "6dfa81735d821091d4e520b857863b4821fbb94a0c19f44888fea06ff77afbe1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match by input parameter",
+      "hash": "f17022d809a56a63c5685ea5945ddd9df0242f9083a92238e66aa6563c2b9bdb"
     },
     {
       "url": "https://code.claude.com/docs/en/sandboxing",

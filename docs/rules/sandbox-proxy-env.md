@@ -28,12 +28,17 @@ background agent only when that shell started the supervisor first, because the 
 shell that starts it. The docs say to put the variables in the `env` block of `~/.claude/settings.json` or managed
 settings.[^background]
 
+The two pages differ. The sandboxing page also allows "the environment you launch Claude Code from", which is what a script
+does. The network page says that settings are the only configuration that reaches every background session. The rule follows the
+network page. The rule needs the sandbox on, because the proxy advice sits on the sandboxing page. That limit is the choice of
+the plugin.
+
 The rule lints the shared file `.claude/settings.json`. It reports when the sandbox is on in the project pair, a script starts
-`claude` with a proxy variable set, and no `env` block of the pair sets that variable. The report names the missing variables. It
+`claude` with a proxy variable set, and no `env` block of the pair sets that variable. The report names the variables that are not set. It
 is on the `enabled` value, or on the top of the file when the other file turns the sandbox on.
 
 A script is a string in the `scripts` of a tracked `package.json` in the folder that holds `.claude/` (the rule asks the git index,
-`src/git-state.ts`). The script must hold the word `claude`, and an assignment such as `HTTPS_PROXY=...`, `export HTTP_PROXY=...`
+`src/permission-project.ts`). The script must hold the word `claude`, and an assignment such as `HTTPS_PROXY=...`, `export HTTP_PROXY=...`
 or `cross-env NO_PROXY=...`. The lower-case names work too, because the network page says so.[^network-config]
 
 ### What the rule does not read
@@ -41,7 +46,7 @@ or `cross-env NO_PROXY=...`. The lower-case names work too, because the network 
 - Shell scripts, `.envrc`, a `Makefile` and CI files. Only `package.json` is read.
 - A script that sets a proxy variable but does not start `claude`: that proxy serves another tool.
 - A user or managed settings file. The docs name those two files for the `env` block, and the rule cannot see them
-  (ADR 001, Decision 14). A project `env` block counts as set here, although the docs name the user and managed files. In a
+  (ADR 001, Decision 14). A project `env` key counts as set here, even with an empty value, although the docs name the user and managed files. In a
   Claude Desktop session that the app manages, Claude Code ignores these variables in a repository file.[^network-config] The rule
   is `off` in `recommended` for these reasons.
 - A project with no `.git`, or one where git cannot answer, a `package.json` that does not read, and a sibling settings file that

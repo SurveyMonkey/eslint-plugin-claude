@@ -23,7 +23,7 @@ The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on a
 ## Rule details
 
 `sandbox.enabled` is `false` by default, and then Claude Code runs Bash commands unsandboxed.[^enabled] The other `sandbox` keys
-limit commands only while the sandbox runs. `failIfUnavailable` acts only when `enabled` is `true`.[^fail]
+do nothing while the sandbox is off. `failIfUnavailable` acts only when `enabled` is `true`.[^fail]
 
 The rule reports a file that has a `sandbox` object with a key other than `enabled`, when no file of its source sets `enabled`
 to `true`. It reports once for the file, on the `sandbox` value. A source is the project pair (`.claude/settings.json` and
@@ -35,6 +35,7 @@ to `true`. It reports once for the file, on the `sandbox` value. A source is the
   enable the sandbox for every project.[^enabled] A report here can be wrong for that reason, which is why the rule is `off` in
   `recommended`.
 - A source with a file that the rule cannot read. That file can set `enabled`, so the rule gives no report.
+- A hidden managed drop-in (a name that starts with a dot). Claude Code ignores it, so the rule is silent there.
 - A managed `enabled` that is not a Boolean. Claude Code reads a quoted `"true"` as `true`, and any other invalid value as
   `true` too.[^invalid]
 

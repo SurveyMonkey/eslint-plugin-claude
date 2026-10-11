@@ -5,9 +5,10 @@
 // https://code.claude.com/docs/en/network-config#set-network-variables-in-settings-not-the-shell
 // The rule lints the shared project file, with the sandbox on. A script is a command of the
 // `scripts` of a tracked `package.json` in the project folder. The repositories are real.
+import { symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { isolateGitConfig, plain, repo } from '../git-tree.test-support.ts'
+import { isolateGitConfig, plain, repo, stage } from '../git-tree.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
 const name = 'sandbox-proxy-env'
@@ -149,6 +150,21 @@ describe(`${name}: silent`, () => {
     const root = repo({ [PROJECT]: '{}', [LOCAL]: '{}', [MANAGED]: '{}', ...PROXY })
     expect(ids(root, ON, LOCAL)).toEqual([])
     expect(ids(root, ON, MANAGED)).toEqual([])
+  })
+
+  it('reads the folder that holds .claude, not the top of the repository', () => {
+    const sub = 'apps/web/.claude/settings.json'
+    expect(ids(repo({ [sub]: '{}', ...PROXY }), ON, sub)).toEqual([])
+    const inside = repo({ [sub]: '{}', 'apps/web/package.json': PROXY['package.json'] })
+    expect(ids(inside, ON, sub)).toEqual(['env'])
+  })
+
+  it('is silent when a tracked package.json is a link to a file outside the repository', () => {
+    const outside = plain({ 'out/package.json': PROXY['package.json'] })
+    const root = plain({ [PROJECT]: '{}' })
+    symlinkSync(path.join(outside, 'out/package.json'), path.join(root, 'package.json'))
+    stage(root, [PROJECT])
+    expect(ids(root, ON)).toEqual([])
   })
 
   it('is silent with no .git', () => {

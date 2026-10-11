@@ -82,10 +82,30 @@ describe(`${name}: one file`, () => {
       { deny: ['Bash(dangerouslyDisableSandbox:true)'] },
       { ask: ['Bash(dangerouslyDisableSandbox:*)'] },
       { ask: ['PowerShell(dangerouslyDisableSandbox:true)'] },
+      { ask: ['Monitor(dangerouslyDisableSandbox:true)'] },
+      { ask: ['Bash(dangerouslyDisableSandbox: true)'] },
       { ask: ['Bash( dangerouslyDisableSandbox:true )'] },
     ]) {
       expect(alone({ ...ON, permissions }), JSON.stringify(permissions)).toEqual([])
     }
+  })
+
+  it('reports a rule that only looks like the parameter rule', () => {
+    for (const rule of [
+      'Bash(dangerouslyDisableSandbox:truex)',
+      'Bash(foo dangerouslyDisableSandbox:true)',
+      'Bash(dangerouslyDisableSandbox:false)',
+      'Read(dangerouslyDisableSandbox:true)',
+    ]) {
+      expect(alone({ ...ON, permissions: { ask: [rule] } }), rule).toEqual(['retry'])
+    }
+  })
+
+  it('does not close the retry with an explicit true, or an allow rule for the parameter', () => {
+    expect(alone({ sandbox: { enabled: true, allowUnsandboxedCommands: true } })).toEqual(['retry'])
+    expect(
+      alone({ ...ON, permissions: { allow: ['Bash(dangerouslyDisableSandbox:true)'] } }),
+    ).toEqual(['retry'])
   })
 
   it('is silent when the sandbox is off, unset, or not true', () => {

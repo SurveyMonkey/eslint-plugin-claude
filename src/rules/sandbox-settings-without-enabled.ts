@@ -1,9 +1,9 @@
 // `sandbox` keys in a file where no file of the source sets `sandbox.enabled` to `true`. The
 // default is `false`, and then Claude Code runs commands unsandboxed
 // (docs/rules/sandbox-settings-without-enabled.md). The rule adds up the project pair, or one
-// managed source, and makes no report when it cannot read a file of the source, because that file
+// managed source. It makes no report when it cannot read a file of the source, because that file
 // can set `enabled`. A user file is outside the repository (ADR 001, Decision 14) and can set it
-// too, which is why the rule is `off` in `recommended`.
+// too. For this reason the rule is `off` in `recommended`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf } from '../marketplace-json.ts'
@@ -24,7 +24,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noEnabled' }> = {
     schema: [],
     messages: {
       noEnabled:
-        'This file sets "sandbox" keys, but no file of its source sets "sandbox.enabled" to `true`. The default is `false`, and then Claude Code runs commands unsandboxed, so the other keys limit nothing. Set "enabled" to `true`. A user settings file can enable the sandbox, and this rule cannot see it.',
+        'This file sets "sandbox" keys, but no file of its source sets "sandbox.enabled" to `true`. The default is `false`, and then Claude Code runs commands unsandboxed, so the other keys do nothing. Set "enabled" to `true`. A user settings file can enable the sandbox, and this rule cannot see it.',
     },
   },
   create(context) {

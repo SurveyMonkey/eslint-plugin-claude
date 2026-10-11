@@ -39,7 +39,8 @@ describe(`${name}: reports`, () => {
       '/home/me/.bashrc',
       '/root/.bashrc',
       '//home/me/.bashrc',
-      '$HOME/.zshrc',
+      '~/.bash_login',
+      '~/.zlogin',
     ]) {
       expect(ids(write(entry)), entry).toEqual(['startup'])
     }
@@ -57,7 +58,11 @@ describe(`${name}: reports`, () => {
       '/usr/bin',
       '/bin',
       '/usr/sbin',
+      '/sbin',
+      '/usr/local/sbin',
       '/opt/homebrew/bin',
+      '/opt/homebrew/sbin',
+      '/Users/me/bin',
       '~/bin',
       '~/.local/bin',
       '~/.local/bin/',
@@ -78,7 +83,6 @@ describe(`${name}: reports`, () => {
       '/Users/me',
       '/home/me',
       '/root',
-      '$HOME',
     ]) {
       expect(ids(write(entry)), entry).toEqual(['broad'])
     }
@@ -105,6 +109,9 @@ describe(`${name}: silent`, () => {
 
   it('is silent for a project path, a temp path and a similar name', () => {
     for (const entry of [
+      // The prefix table of the docs has no `$HOME` form, so these are paths in the project.
+      '$HOME/.zshrc',
+      '$HOME',
       'build',
       './.zshrc',
       '~/projects',

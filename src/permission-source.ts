@@ -53,9 +53,11 @@ export function sourceOf(
 
 /** The Boolean that Claude Code reads from `value`, or undefined when it reads none. A managed
  *  file reads the string "true" or "false" as that Boolean. Any other invalid value of a managed
- *  file counts as the value that keeps the sandbox strictest: `strict` is that value for the key
- *  (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox). A null, or
- *  any non-Boolean in another file, is not read: `sandbox-schema` reports it. */
+ *  file counts as `strict`, the value that keeps the sandbox strictest for this key: `true` for
+ *  `enabled`, `false` for `allowUnsandboxedCommands`
+ *  (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox). A null is
+ *  not read. A non-Boolean in a file that is not managed is not read either: `sandbox-schema`
+ *  reports it. */
 export function boolOf(value: unknown, isManaged: boolean, strict: boolean): boolean | undefined {
   if (typeof value === 'boolean') {
     return value
