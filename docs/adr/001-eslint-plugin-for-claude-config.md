@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99]
+related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99, 235]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -115,9 +115,14 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
 6. **The frontmatter parser is `yaml`.** `@eslint/markdown` gives the frontmatter as raw text.
    `yaml` parses it, in one helper that each rule calls. A hand-written parser would fail on
    folded, block and quoted scalars.
-7. **Biome lints this repository's source, and ESLint is the product.** Biome checks the
-   TypeScript and JSON in this repository. The plugin's rules lint Claude Code configuration files
-   in the repositories that install it.
+7. **Biome lints this repository's source, ESLint lints the rule definitions, and ESLint is the
+   product.** Biome checks the TypeScript and JSON in this repository. ESLint, with
+   `eslint-plugin-eslint-plugin` and a parser that removes the TypeScript types, checks the rule
+   definitions in `src/rules/` ([#235](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/235)).
+   Biome cannot check the `meta` of a rule, such as a schema option with no description. A docs
+   generator reads `meta.defaultOptions`, so a default that only `create` applies is not in the
+   docs ([#236](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/236)). The plugin's
+   rules lint Claude Code configuration files in the repositories that install it.
 8. **`@eslint/markdown` and `@eslint/json` are `peerDependencies`, and `yaml` is a
    `dependency`.**
    - The two language plugins are peers, at `^8.0.0` and `^2.0.0`. The consumer installs one
@@ -184,6 +189,10 @@ These items were open, and are now settled:
   `tests/limit-options.test.ts` fails for a built rule that lacks the option its row names.
 - **One install covers every file type and every venue.** A team adds one package and what it
   needs to run. It then gets the same rules in the editor, in a hook and in CI.
+- **The `lint` check of this repository runs two tools.** A failure needs its log to tell Biome
+  from ESLint. The parser of the rule definitions calls `stripTypeScriptTypes` from `node:module`.
+  This function is experimental on Node 22. If Node changes it, the lint can stop before the
+  product does.
 - **A consuming repository may run two linters.** A repository that uses Biome keeps it for its
   code and adds ESLint for its Claude Code files. The file globs keep them apart, but a
   contributor installs both editor extensions.

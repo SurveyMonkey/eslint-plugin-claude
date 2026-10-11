@@ -14,7 +14,7 @@ ships JavaScript only. The CI test jobs run on 22.13.0, 24 and 26.
 pnpm install     # also installs the lefthook git hooks
 pnpm test        # vitest, 100% coverage required
 pnpm typecheck   # tsc, no emit
-pnpm lint        # biome ci
+pnpm lint        # biome ci, then eslint on src/rules/
 pnpm knip        # builds, then finds unused files, exports and dependencies
 pnpm build       # tsc -p tsconfig.build.json, writes dist/
 pnpm publint     # builds, then checks the packed package.json and exports
@@ -22,6 +22,12 @@ pnpm publint     # builds, then checks the packed package.json and exports
 
 Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build rewrites it to
 `.js`. Only `dist/`, `README.md`, `LICENSE` and `package.json` are published.
+
+`pnpm lint` runs Biome on the source. Then ESLint, with `eslint-plugin-eslint-plugin`, checks the
+rule definitions in `src/rules/` (`eslint.config.mjs`, ADR 001 Decision 7). Each schema option
+needs a `description`. A rule with a schema option needs `meta.defaultOptions`, and `create`
+reads each default from it. `tests/default-options.test.ts` compares `meta.defaultOptions` with
+the Options table of the rule doc.
 
 The pre-commit hooks (`lefthook.yml`) sort a staged `package.json`, then run Biome, tsc and the
 Vitest tests related to the staged files. CI runs every check again, and the "Require CI" and
