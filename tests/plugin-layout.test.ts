@@ -2,6 +2,14 @@
 // source of each list is in src/data/plugin-layout.ts.
 import { describe, expect, it } from 'vitest'
 import {
+  EVAL_CASE_SCHEMA_VERSION,
+  EVAL_ENV_KEY,
+  EVAL_GRADER_ARMS,
+  EVAL_GRADER_TARGETS,
+  EVAL_GRADER_TYPES,
+  EVAL_MOCK_TYPES,
+  EVAL_PROMPT_FIELDS,
+  EVAL_PROMPT_LIMITS,
   PLUGIN_COMMAND_FIELDS,
   PLUGIN_COMPONENT_NAMES,
   PLUGIN_PATH_KEYS,
@@ -135,5 +143,58 @@ describe('system commands that a bin file cannot shadow', () => {
       'ssh',
       'tar',
     ])
+  })
+})
+
+describe('formats of an eval suite', () => {
+  it('holds the thirteen fields of prompt.md, in the order of the table', () => {
+    expect(EVAL_PROMPT_FIELDS).toEqual([
+      'schema_version',
+      'name',
+      'description',
+      'tags',
+      'plugins',
+      'runs',
+      'expected_outcome',
+      'model',
+      'max_turns',
+      'timeout_seconds',
+      'allowed_tools',
+      'append_system_prompt',
+      'env',
+    ])
+  })
+
+  it('holds the limits that the docs give, and no lower bound that they do not give', () => {
+    expect([...EVAL_PROMPT_LIMITS]).toEqual([
+      ['runs', { min: 1, max: 50 }],
+      ['max_turns', { max: 200 }],
+      ['timeout_seconds', { max: 3600 }],
+    ])
+  })
+
+  it('holds the version of case.yaml and the pattern of an env key', () => {
+    expect(EVAL_CASE_SCHEMA_VERSION).toBe('1.1')
+    expect(EVAL_ENV_KEY.test('EVAL_A1')).toBe(true)
+    expect(EVAL_ENV_KEY.test('EVAL_')).toBe(true)
+    expect(EVAL_ENV_KEY.test('PATH')).toBe(false)
+    expect(EVAL_ENV_KEY.test('EVAL_a')).toBe(false)
+    expect(EVAL_ENV_KEY.test('XEVAL_A')).toBe(false)
+    expect(EVAL_ENV_KEY.test('EVAL_A-B')).toBe(false)
+    expect(EVAL_ENV_KEY.test('EVAL_A\n')).toBe(false)
+  })
+
+  it('holds the grader types, arms and targets, and the mock types, of the tables', () => {
+    expect(EVAL_GRADER_TYPES).toEqual([
+      'regex',
+      'tool_used',
+      'tool_order',
+      'file_exists',
+      'llm',
+      'baseline',
+    ])
+    expect(EVAL_GRADER_ARMS).toEqual(['with-only', 'both'])
+    expect(EVAL_GRADER_TARGETS).toEqual(['last_message', 'trace', 'files', 'mock_calls'])
+    expect(EVAL_MOCK_TYPES).toEqual(['fixed', 'agent'])
   })
 })
