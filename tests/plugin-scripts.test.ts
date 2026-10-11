@@ -11,6 +11,8 @@ import { pluginTree } from './plugin-tree.test-support.ts'
 
 // The largest script that the reader reads, in bytes.
 const LIMIT = 1_048_576
+// The system tool that makes a FIFO. Node has no call for it.
+const MAKE_FIFO = 'mkfifo'
 const linked = noLinks ? it.skip : it
 const unreadable = noLinks || process.getuid?.() === 0 ? it.skip : it
 
@@ -111,7 +113,7 @@ describe('pluginScripts', () => {
 
   linked('gives no script for a named pipe, which a read would wait on', () => {
     const { dir, top } = pluginTree({ name: 'p' })
-    execFileSync('mkfifo', [path.join(top, 'pipe')])
+    execFileSync(MAKE_FIFO, [path.join(top, 'pipe')])
     const plugin = readPluginAt(dir) as NonNullable<ReturnType<typeof readPluginAt>>
     expect(pluginScripts(plugin, `\${CLAUDE_PLUGIN_ROOT}/pipe`)).toEqual([])
   })
