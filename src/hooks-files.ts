@@ -7,7 +7,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
 import { kindOf } from './settings-files.ts'
-import { commandsOf, commandWordAt } from './shell-words.ts'
+import { type Command, commandsOf, commandWordAt, scanCommands } from './shell-words.ts'
 import { isInside, readManifest, realOf, repositoryRoot, UNREADABLE } from './skill-tree.ts'
 
 /** What Claude Code does with a `hooks.json` file. A plugin file is one that it
@@ -196,11 +196,11 @@ export function scriptText({ file, folder }: HookScript): string | undefined {
 
 /** A text that a command handler runs, for the rules that read what a hook prints. `script` is the file name of
  *  a repository script, and undefined for the inline command. `text` is the text without comment lines. `commands`
- *  are its simple commands, and they are empty for a script of another language, which `commandsOf` cannot read. */
+ *  are its simple commands, and they are empty for a script of another language, which the shell reader cannot read. */
 export interface HandlerText {
   script: string | undefined
   text: string
-  commands: string[][]
+  commands: Command[]
 }
 
 /** A script of another language, by its extension. */
@@ -219,8 +219,12 @@ export function handlerTexts(
 ): HandlerText[] {
   const inline: HandlerText =
     args === undefined
-      ? { script: undefined, text: line, commands: commandsOf(line) }
-      : { script: undefined, text: [line, ...args].join(' '), commands: [[line, ...args]] }
+      ? { script: undefined, text: line, commands: scanCommands(line) }
+      : {
+          script: undefined,
+          text: [line, ...args].join(' '),
+          commands: [{ words: [line, ...args], stdout: true }],
+        }
   const scripts = scriptsRun(line, args, folders, true).flatMap((script) => {
     const raw = scriptText(script)
     if (raw === undefined || raw.includes('\0')) {
@@ -229,7 +233,7 @@ export function handlerTexts(
     const text = raw.replace(COMMENT_LINE, '')
     const shell =
       !OTHER_LANGUAGE.test(script.file) && (!raw.startsWith('#!') || SHELL_SHEBANG.test(raw))
-    return [{ script: path.basename(script.file), text, commands: shell ? commandsOf(text) : [] }]
+    return [{ script: path.basename(script.file), text, commands: shell ? scanCommands(text) : [] }]
   })
   return [inline, ...scripts]
 }

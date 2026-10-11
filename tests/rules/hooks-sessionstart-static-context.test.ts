@@ -111,6 +111,8 @@ describe(`${name}: silent`, () => {
       'echo "Home: $HOME"',
       'echo $(date)',
       'echo "static" | tee /tmp/x',
+      'x=$(echo static)',
+      'echo "static" | cat',
       'echo "static"; git status',
       'echo "static" >> "$CLAUDE_ENV_FILE"',
       'echo "static" > file',

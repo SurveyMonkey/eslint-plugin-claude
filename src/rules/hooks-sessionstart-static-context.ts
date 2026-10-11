@@ -16,7 +16,7 @@ import {
   objectField,
 } from '../hooks-config.ts'
 import { type HandlerText, placeholderFolders } from '../hooks-files.ts'
-import { commandWordAt, isPrinter, printedBy, sinkOf } from '../shell-words.ts'
+import { type Command, commandWordAt, isPrinter, printedBy, sinkOf } from '../shell-words.ts'
 
 const name = 'hooks-sessionstart-static-context' as const
 
@@ -24,8 +24,8 @@ const name = 'hooks-sessionstart-static-context' as const
 const FILE_PRINTERS = ['cat', 'head', 'tail', 'less', 'more', 'bat']
 
 /** True when a command of `commands` prints a file named `AGENTS.md`. */
-function printsAgentsFile(commands: string[][]): boolean {
-  return commands.some((words, index) => {
+function printsAgentsFile(commands: Command[]): boolean {
+  return commands.some(({ words }, index) => {
     const at = commandWordAt(words)
     return (
       FILE_PRINTERS.includes(path.posix.basename(words[at] ?? '')) &&
@@ -52,7 +52,9 @@ function onlyContext(json: Record<string, unknown>): boolean {
 function onlyStaticText({ commands }: HandlerText): boolean {
   return (
     commands.length > 0 &&
-    commands.every((words, index) => isPrinter(words) && sinkOf(commands, index) === 'stdout') &&
+    commands.every(
+      ({ words }, index) => isPrinter(words) && sinkOf(commands, index) === 'stdout',
+    ) &&
     printedBy(commands).every(
       ({ json, text }) =>
         !/[$`]/.test(text) && (json === undefined ? text !== '' : onlyContext(json)),

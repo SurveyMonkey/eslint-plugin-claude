@@ -7,6 +7,7 @@ import {
   isAssignment,
   isPrinter,
   printedBy,
+  scanCommands,
   sinkOf,
 } from '../src/shell-words.ts'
 
@@ -60,7 +61,7 @@ describe('commandWordAt', () => {
 })
 
 describe('sinkOf', () => {
-  const sink = (line: string, index = 0) => sinkOf(commandsOf(line), index)
+  const sink = (line: string, index = 0) => sinkOf(scanCommands(line), index)
 
   it('gives stdout for a command with no redirect of standard output', () => {
     expect(sink('echo a')).toBe('stdout')
@@ -93,7 +94,7 @@ describe('sinkOf', () => {
 })
 
 describe('printedBy', () => {
-  const printed = (line: string) => printedBy(commandsOf(line))
+  const printed = (line: string) => printedBy(scanCommands(line))
 
   it('gives the JSON object of an argument, and the text of any other print', () => {
     expect(printed(`echo '{"a": 1}'`)).toEqual([{ json: { a: 1 }, text: '{"a": 1}' }])
@@ -127,5 +128,65 @@ describe('printedBy', () => {
     expect(isPrinter(['/bin/echo'])).toBe(true)
     expect(isPrinter(['cat'])).toBe(false)
     expect(isPrinter([])).toBe(false)
+  })
+})
+
+describe('scanCommands', () => {
+  const streams = (line: string) =>
+    scanCommands(line).map(({ words, stdout }) => `${words.join(' ')}:${stdout ? 'out' : 'taken'}`)
+
+  it('gives the same words as commandsOf', () => {
+    const line = 'a b; c | d && e & f\ng `h` (i)'
+    expect(scanCommands(line).map(({ words }) => words)).toEqual(commandsOf(line))
+  })
+
+  it('marks a command that a pipe takes, and not a list operator', () => {
+    expect(streams('a | b')).toEqual(['a:taken', 'b:out'])
+    expect(streams('a |& b')).toEqual(['a:taken', 'b:out'])
+    expect(streams('a || b && c; d & e')).toEqual(['a:out', 'b:out', 'c:out', 'd:out', 'e:out'])
+  })
+
+  it('marks a command in a command substitution or a backtick pair, at any depth', () => {
+    expect(streams('x=$(a b) c')).toEqual(['x=$:out', 'a b:taken', 'c:out'])
+    expect(streams('echo `a b` c')).toEqual(['echo:out', 'a b:taken', 'c:out'])
+    expect(streams('$(a $(b) c) d')).toEqual(['$:out', 'a $:taken', 'b:taken', 'c:taken', 'd:out'])
+  })
+
+  it('does not mark a command in a group, and leaves the substitution level at the close', () => {
+    expect(streams('(a; b) c')).toEqual(['a:out', 'b:out', 'c:out'])
+    expect(streams('$(a) (b)')).toEqual(['$:out', 'a:taken', 'b:out'])
+    expect(streams(')a')).toEqual(['a:out'])
+  })
+
+  it('keeps a command substitution in double quotes in the word, with the quotes of its own', () => {
+    expect(scanCommands('echo "$(echo "it\'s")" x').map(({ words }) => words)).toEqual([
+      ['echo', `$(echo "it's")`, 'x'],
+    ])
+    expect(commandsOf('echo "a $(f "b" \'c)\' d) e" f')).toEqual([
+      ['echo', 'a $(f "b" \'c)\' d) e', 'f'],
+    ])
+    expect(commandsOf('echo "a `echo "b"` c" d')).toEqual([['echo', 'a `echo "b"` c', 'd']])
+    expect(commandsOf('echo "$(a $(b ")") c)" d')).toEqual([['echo', '$(a $(b ")") c)', 'd']])
+    expect(commandsOf('echo "$(echo \\) \\" x)" y')).toEqual([['echo', '$(echo \\) \\" x)', 'y']])
+    expect(commandsOf('echo "a `echo \\` b` c" d')).toEqual([['echo', 'a `echo \\` b` c', 'd']])
+  })
+
+  it('reads a backslash, a substitution and a backtick pair inside a quote inside a substitution', () => {
+    expect(commandsOf('echo "$(echo "a\\"b" c)" d')).toEqual([['echo', '$(echo "a\\"b" c)', 'd']])
+    expect(commandsOf('echo "$(echo "x $(y ")") z")" d')).toEqual([
+      ['echo', '$(echo "x $(y ")") z")', 'd'],
+    ])
+    expect(commandsOf('echo "$(echo "x `y ")` z")" d')).toEqual([
+      ['echo', '$(echo "x `y ")` z")', 'd'],
+    ])
+  })
+
+  it('reads to the end of the line for a substitution that does not close', () => {
+    expect(commandsOf('echo "$(echo "a" b')).toEqual([['echo', '$(echo "a" b']])
+    expect(commandsOf('echo "$(echo \'a b')).toEqual([['echo', "$(echo 'a b"]])
+    expect(commandsOf('echo "$(echo `a b")')).toEqual([['echo', '$(echo `a b")']])
+    expect(commandsOf('echo "$(echo "a b')).toEqual([['echo', '$(echo "a b']])
+    expect(commandsOf('echo "a `b')).toEqual([['echo', 'a `b']])
+    expect(commandsOf('echo "a $(b \\')).toEqual([['echo', 'a $(b \\']])
   })
 })

@@ -19,7 +19,7 @@ import {
   stringOf,
 } from '../hooks-config.ts'
 import { placeholderFolders } from '../hooks-files.ts'
-import { commandWordAt, printedBy, sinkOf } from '../shell-words.ts'
+import { type Command, commandWordAt, printedBy, sinkOf } from '../shell-words.ts'
 
 const name = 'hooks-output-blocking-exit-code' as const
 
@@ -27,12 +27,12 @@ const name = 'hooks-output-blocking-exit-code' as const
 const BLOCK_WORDS = ['then', 'else', 'do', '{', '!']
 
 /** True when the commands write to stderr and then run `exit 1`, and print no JSON. */
-function exitsOneAfterMessage(commands: string[][]): boolean {
+function exitsOneAfterMessage(commands: Command[]): boolean {
   if (printedBy(commands).some(({ json }) => json !== undefined)) {
     return false
   }
   let wrote = false
-  return commands.some((words, index) => {
+  return commands.some(({ words }, index) => {
     wrote ||= sinkOf(commands, index) === 'stderr'
     const rest = words.slice(commandWordAt(words))
     while (BLOCK_WORDS.includes(rest[0] as string)) {

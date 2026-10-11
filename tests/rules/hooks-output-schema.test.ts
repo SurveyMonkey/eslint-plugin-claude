@@ -249,6 +249,22 @@ describe(`${name}: what it reads`, () => {
     expect(ids(`echo '{"suppressOutput":true}' 2>/dev/null`, 'Stop')).toEqual(['suppress'])
   })
 
+  it('is silent for JSON that a pipe or a command substitution takes', () => {
+    for (const text of [
+      `echo '{"suppressOutput":true}' | jq .`,
+      `echo '{"suppressOutput":true}' |& cat`,
+      `x=$(echo '{"suppressOutput":true}' | jq -r .a)`,
+      `x=$(echo '{"suppressOutput":true}')`,
+      `x=\`echo '{"suppressOutput":true}'\``,
+      `echo "$(echo "it's")" ; x=$(echo '{"suppressOutput":true}')`,
+    ]) {
+      expect(ids(text, 'Stop'), text).toEqual([])
+    }
+    expect(ids(`false || echo '{"suppressOutput":true}'`, 'Stop')).toEqual(['suppress'])
+    expect(ids(`(echo '{"suppressOutput":true}')`, 'Stop')).toEqual(['suppress'])
+    expect(ids(`echo "$(echo "it's")" '{"suppressOutput":true}'`, 'Stop')).toEqual(['suppress'])
+  })
+
   it('is silent for a command that is not echo or printf', () => {
     expect(ids(`jq -n '{"suppressOutput":true}'`, 'Stop')).toEqual([])
     expect(ids(`cat '{"suppressOutput":true}'`, 'Stop')).toEqual([])

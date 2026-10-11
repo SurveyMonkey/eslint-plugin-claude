@@ -10,15 +10,82 @@ const WRAPPERS = ['exec', 'env', 'command', 'nohup']
 /** True when `word` is a `NAME=value` word, which sets a variable for the command. */
 export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 
-/** The simple commands of a shell line, each as its words. A command ends at `;`, `&`, `|`, a
- *  parenthesis, a backtick or a new line that no backslash joins. A quote or a backslash joins
- *  characters into one word. A quote is not part of the word. */
-export function commandsOf(line: string): string[][] {
-  const commands: string[][] = []
+/** The index of the `)` that closes the `(` at `open` in `line`, or the last index. A quote, a backslash, a
+ *  backtick and a nested substitution inside keep their own level. */
+function closingParen(line: string, open: number): number {
+  let depth = 0
+  for (let i = open; i < line.length; i++) {
+    const char = line.charAt(i)
+    if (char === "'") {
+      const end = line.indexOf("'", i + 1)
+      if (end === -1) {
+        return line.length - 1
+      }
+      i = end
+    } else if (char === '"') {
+      i = closingQuote(line, i)
+    } else if (char === '`') {
+      i = closingTick(line, i)
+    } else if (char === '\\') {
+      i++
+    } else if (char === '(') {
+      depth++
+    } else if (char === ')' && --depth === 0) {
+      return i
+    }
+  }
+  return line.length - 1
+}
+
+/** The index of the double quote that closes the one at `start` in `line`, or the last index. A command
+ *  substitution or a backtick pair inside holds quotes of its own. */
+function closingQuote(line: string, start: number): number {
+  for (let i = start + 1; i < line.length; i++) {
+    const char = line.charAt(i)
+    if (char === '\\') {
+      i++
+    } else if (char === '$' && line.startsWith('(', i + 1)) {
+      i = closingParen(line, i + 1)
+    } else if (char === '`') {
+      i = closingTick(line, i)
+    } else if (char === '"') {
+      return i
+    }
+  }
+  return line.length - 1
+}
+
+/** The index of the backtick that closes the one at `start` in `line`, or the last index. */
+function closingTick(line: string, start: number): number {
+  for (let i = start + 1; i < line.length; i++) {
+    if (line.charAt(i) === '\\') {
+      i++
+    } else if (line.charAt(i) === '`') {
+      return i
+    }
+  }
+  return line.length - 1
+}
+
+/** A simple command: its words, and whether its standard output is the output of the line. It is not when a
+ *  pipe takes it, or when a command substitution captures it. */
+export interface Command {
+  words: string[]
+  stdout: boolean
+}
+
+/** The simple commands of a shell line. A command ends at `;`, `&`, `|`, a parenthesis, a backtick or a new line
+ *  that no backslash joins. A quote or a backslash joins characters into one word. A quote is not part of the
+ *  word. A command substitution in double quotes is part of the word, and holds quotes of its own. */
+export function scanCommands(line: string): Command[] {
+  const commands: Command[] = []
   let words: string[] = []
   let word = ''
   let open = false
   let quote = ''
+  // For each open parenthesis: true when `$` comes before it, which makes it a command substitution.
+  const levels: boolean[] = []
+  let ticks = false
   const endWord = () => {
     if (open) {
       words.push(word)
@@ -26,10 +93,10 @@ export function commandsOf(line: string): string[][] {
       open = false
     }
   }
-  const endCommand = () => {
+  const endCommand = (piped = false) => {
     endWord()
     if (words.length > 0) {
-      commands.push(words)
+      commands.push({ words, stdout: !piped && !ticks && !levels.includes(true) })
       words = []
     }
   }
@@ -48,12 +115,32 @@ export function commandsOf(line: string): string[][] {
       }
     } else if (quote !== '' && char === quote) {
       quote = ''
+    } else if (quote === '"' && char === '$' && line.startsWith('(', i + 1)) {
+      const end = closingParen(line, i + 1)
+      word += line.slice(i, end + 1)
+      i = end
+    } else if (quote === '"' && char === '`') {
+      const end = closingTick(line, i)
+      word += line.slice(i, end + 1)
+      i = end
     } else if (quote !== '') {
       word += char
     } else if (char === "'" || char === '"') {
       quote = char
       open = true
-    } else if (/[;&|()`\n]/.test(char)) {
+    } else if (char === '(') {
+      endCommand()
+      levels.push(line.charAt(i - 1) === '$')
+    } else if (char === ')') {
+      endCommand()
+      levels.pop()
+    } else if (char === '`') {
+      endCommand()
+      ticks = !ticks
+    } else if (char === '|') {
+      // `||` is a list operator, and `|` or `|&` is a pipe.
+      endCommand(line.charAt(i + 1) !== '|' && line.charAt(i - 1) !== '|')
+    } else if (/[;&\n]/.test(char)) {
       endCommand()
     } else if (/\s/.test(char)) {
       endWord()
@@ -65,6 +152,9 @@ export function commandsOf(line: string): string[][] {
   endCommand()
   return commands
 }
+
+/** The simple commands of a shell line, each as its words. */
+export const commandsOf = (line: string): string[][] => scanCommands(line).map(({ words }) => words)
 
 /** The index of the command word in the words of a simple command. A variable assignment and a
  *  wrapper such as `exec` come before it. The index is the length of `words` when no word is left. */
@@ -97,12 +187,13 @@ export type Sink = 'stdout' | 'stderr' | 'other'
 /** A word that holds a redirect of an output: an optional file descriptor, `>` or `>>`, and a target. */
 const REDIRECT = /^(\d*)>>?(.*)$/
 
-/** Where the simple command `commands[index]` sends its standard output. A redirect of file descriptor 1
+/** Where the simple command `commands[index]` sends its standard output. A pipe or a command substitution
+ *  takes it, which gives `other`. A redirect of file descriptor 1
  *  moves it: to stderr for `>&2` and `>/dev/stderr`, and to a file for any other target. The scanner ends a
  *  command at `&`, so the `2` of `>&2` is the first word of the next command. A redirect of another descriptor,
  *  such as `2>/dev/null`, leaves standard output where it is. */
-export function sinkOf(commands: string[][], index: number): Sink {
-  const words = commands[index] as string[]
+export function sinkOf(commands: Command[], index: number): Sink {
+  const { words, stdout } = commands[index] as Command
   for (const [at, word] of words.entries()) {
     const match = REDIRECT.exec(word)
     if (match === null || (match[1] !== '' && match[1] !== '1')) {
@@ -112,12 +203,12 @@ export function sinkOf(commands: string[][], index: number): Sink {
     if (target !== undefined) {
       return target === '/dev/stderr' ? 'stderr' : 'other'
     }
-    const next = commands[index + 1]?.[0]
+    const next = commands[index + 1]?.words[0]
     if (next !== '1') {
       return next === '2' ? 'stderr' : 'other'
     }
   }
-  return 'stdout'
+  return stdout ? 'stdout' : 'other'
 }
 
 /** What an `echo` or `printf` command prints to standard output. `json` is the object of an argument that is a
@@ -165,8 +256,8 @@ function objectIn(word: string): Record<string, unknown> | undefined {
 /** What the `echo` and `printf` commands of `commands` print to standard output. A command that prints a JSON
  *  object gives one item for each object. Any other gives one item with `json` undefined. A command that
  *  sends its output to stderr or a file prints nothing here. */
-export function printedBy(commands: string[][]): Printed[] {
-  return commands.flatMap((words, index): Printed[] => {
+export function printedBy(commands: Command[]): Printed[] {
+  return commands.flatMap(({ words }, index): Printed[] => {
     if (!isPrinter(words) || sinkOf(commands, index) !== 'stdout') {
       return []
     }

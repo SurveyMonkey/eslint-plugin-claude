@@ -55,7 +55,7 @@ const rule: Rule.RuleModule = {
           continue
         }
         const exits = output.texts.some(({ commands }) =>
-          commands.some((words) => {
+          commands.some(({ words }) => {
             const at = commandWordAt(words)
             return words[at] === 'exit' && words[at + 1] === '2'
           }),

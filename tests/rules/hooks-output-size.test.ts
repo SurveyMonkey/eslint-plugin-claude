@@ -108,6 +108,11 @@ describe(`${name}: plain stdout`, () => {
     expect(ids(`echo "${long}" >&2`)).toEqual([])
   })
 
+  it('is silent for text that a pipe or a command substitution takes', () => {
+    expect(ids(`echo "${long}" | wc -c`)).toEqual([])
+    expect(ids(`x=$(echo "${long}")`)).toEqual([])
+  })
+
   it('names the stdout in the message', () => {
     const [message] = lintJson(
       name,

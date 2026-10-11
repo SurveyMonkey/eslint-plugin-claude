@@ -38,7 +38,7 @@ report there. [`hooks-output-schema`](hooks-output-schema.md) checks the values 
 ### JSON that the rule reads
 
 The rule reads JSON that an `echo` or `printf` command prints to standard output, as one argument that is a JSON
-object. It ignores JSON that goes to stderr or a file. It reads no JSON that a tool builds, such as `jq -n`, and no
+object. It ignores JSON that goes to stderr or a file, and JSON that a pipe or a command substitution takes. It reads no JSON that a tool builds, such as `jq -n`, and no
 here-document. A script can print JSON at run time that the text does not show, so the rule reports what the text
 proves.
 
