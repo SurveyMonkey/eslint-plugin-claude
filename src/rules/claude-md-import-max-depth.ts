@@ -33,7 +33,7 @@ const rule: MarkdownRuleDefinition<{
         type: 'object',
         properties: {
           max: {
-            description: 'The most import hops from the file that Claude Code loads.',
+            description: 'The most import hops from the linted file.',
             type: 'integer',
             minimum: 1,
             maximum: DEPTH,

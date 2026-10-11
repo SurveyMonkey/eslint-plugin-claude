@@ -60,7 +60,8 @@ const rule: MarkdownRuleDefinition<{
         type: 'object',
         properties: {
           maxTokens: {
-            description: 'The most tokens that the agent descriptions of one scope can have.',
+            description:
+              'The most tokens in the names and descriptions of the agents of one scope.',
             type: 'integer',
             minimum: 1,
           },
