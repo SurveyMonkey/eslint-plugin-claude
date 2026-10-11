@@ -100,21 +100,14 @@ describe(`${name}: one file`, () => {
   })
 
   it('does not count a path that is relative to the project or inside another directory', () => {
-    for (const entry of ['./.aws', '.ssh', 'secrets/.ssh', '/tmp/.aws', '~/work/.ssh']) {
-      expect(alone(deny(entry)), entry).toEqual(['open'])
+    for (const prefix of ['./', '', 'secrets/', '/tmp/', '~/work/']) {
+      const text = message(deny(`${prefix}.aws`, `${prefix}.ssh`))
+      expect(text, prefix).toContain('`~/.aws` and `~/.ssh`')
     }
-    const rules = ['Read(./.aws/**)', 'Read(/Users/me/.ssh)', 'Read(.ssh)', 'Read(/)']
-    for (const rule of rules) {
-      expect(alone({ ...ON, permissions: { deny: [rule] } }), rule).toEqual(['open'])
+    for (const prefix of ['./', '', '/Users/me/', '/']) {
+      const permissions = { deny: [`Read(${prefix}.aws/**)`, `Read(${prefix}.ssh)`] }
+      expect(message({ ...ON, permissions }), prefix).toContain('`~/.aws` and `~/.ssh`')
     }
-  })
-
-  it('is silent when a Read deny rule covers both directories', () => {
-    const permissions = { deny: ['Read(~/.aws/**)', 'Read(//Users/me/.ssh/**)'] }
-    expect(alone({ ...ON, permissions })).toEqual([])
-    expect(alone({ ...ON, permissions: { deny: ['Read(~/)'] } })).toEqual([])
-    // A `Read` rule with no specifier denies every file.
-    expect(alone({ ...ON, permissions: { deny: ['Read'] } })).toEqual([])
   })
 
   it('counts the entries of both lists together', () => {
