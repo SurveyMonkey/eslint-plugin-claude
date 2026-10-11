@@ -29,11 +29,11 @@ const ids = (root: string, fields: object | string, name_ = PROJECT) =>
 const tracking = (files: Record<string, string> = {}) => repo({ [PROJECT]: '{}', ...files })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a proxy variable in a script that runs claude, with no env entry', () => {
+  it('reports a proxy variable in a script that runs claude, with no env entry', () => {
     expect(ids(tracking(PROXY), ON)).toEqual(['env'])
   })
 
-  it.fails('reports at the value of enabled, and names the variable and the docs advice', () => {
+  it('reports at the value of enabled, and names the variable and the docs advice', () => {
     const text = '{\n  "sandbox": {\n    "enabled": true\n  }\n}'
     const [message] = lint(tracking(PROXY), text)
     expect([message?.line, message?.column]).toEqual([3, 16])
@@ -41,7 +41,7 @@ describe(`${name}: reports`, () => {
     expect(message?.message).toContain('"env"')
   })
 
-  it.fails('reads the forms of an assignment', () => {
+  it('reads the forms of an assignment', () => {
     for (const command of [
       'HTTPS_PROXY=http://p:1 claude',
       'export HTTPS_PROXY=http://p:1; claude',
@@ -55,7 +55,7 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('names each variable that the env block lacks, once', () => {
+  it('names each variable that the env block lacks, once', () => {
     const command = 'HTTPS_PROXY=a HTTP_PROXY=b NO_PROXY=c claude'
     const [message] = lint(tracking(scripts(command)), { ...ON, env: { HTTPS_PROXY: 'a' } })
     expect(message?.message).toContain('`HTTP_PROXY`')
@@ -63,26 +63,26 @@ describe(`${name}: reports`, () => {
     expect(message?.message).not.toContain('`HTTPS_PROXY`')
   })
 
-  it.fails('reports at the file when the sandbox is on in the other project file only', () => {
+  it('reports at the file when the sandbox is on in the other project file only', () => {
     const root = repo({ [PROJECT]: '{}', [LOCAL]: file(ON), ...PROXY })
     expect(lint(root, '{}')[0]).toMatchObject({ messageId: 'env', line: 1, column: 1 })
   })
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('is silent when the env block of the source sets the variable, in any letter case', () => {
+  it('is silent when the env block of the source sets the variable, in any letter case', () => {
     expect(ids(tracking(PROXY), { ...ON, env: { HTTPS_PROXY: 'http://p:1' } })).toEqual([])
     expect(ids(tracking(PROXY), { ...ON, env: { https_proxy: 'http://p:1' } })).toEqual([])
     const root = repo({ [PROJECT]: '{}', [LOCAL]: file({ env: { HTTPS_PROXY: 'x' } }), ...PROXY })
     expect(ids(root, ON)).toEqual([])
   })
 
-  it.fails('reports when the env block names other variables, or is not an object', () => {
+  it('reports when the env block names other variables, or is not an object', () => {
     expect(ids(tracking(PROXY), { ...ON, env: { FOO: '1' } })).toEqual(['env'])
     expect(ids(tracking(PROXY), { ...ON, env: 'HTTPS_PROXY' })).toEqual(['env'])
   })
 
-  it.fails('is silent for a script that does not run claude, or sets no proxy variable', () => {
+  it('is silent for a script that does not run claude, or sets no proxy variable', () => {
     for (const command of [
       'HTTPS_PROXY=http://p:1 npm ci',
       'claude --resume',
@@ -95,7 +95,7 @@ describe(`${name}: silent`, () => {
     }
   })
 
-  it.fails('is silent when the project has no tracked package.json, or it does not read', () => {
+  it('is silent when the project has no tracked package.json, or it does not read', () => {
     expect(ids(tracking(), ON)).toEqual([])
     const untracked = repo({ [PROJECT]: '{}' }, [], PROXY)
     expect(ids(untracked, ON)).toEqual([])
@@ -110,7 +110,7 @@ describe(`${name}: silent`, () => {
     }
   })
 
-  it.fails('is silent when the sandbox is off, unset or not true', () => {
+  it('is silent when the sandbox is off, unset or not true', () => {
     for (const sandbox of [{ enabled: false }, {}, { enabled: 'true' }, { enabled: null }]) {
       expect(ids(tracking(PROXY), { sandbox }), JSON.stringify(sandbox)).toEqual([])
     }
@@ -118,7 +118,7 @@ describe(`${name}: silent`, () => {
     expect(ids(tracking(PROXY), '[1]')).toEqual([])
   })
 
-  it.fails('is silent when the other project file turns the sandbox off or does not read', () => {
+  it('is silent when the other project file turns the sandbox off or does not read', () => {
     const off = repo({ [PROJECT]: '{}', [LOCAL]: file({ sandbox: { enabled: false } }), ...PROXY })
     expect(ids(off, ON)).toEqual([])
     for (const text of ['[1]', '{']) {
@@ -126,13 +126,13 @@ describe(`${name}: silent`, () => {
     }
   })
 
-  it.fails('lints the shared file only, not the local or a managed file', () => {
+  it('lints the shared file only, not the local or a managed file', () => {
     const root = repo({ [PROJECT]: '{}', [LOCAL]: '{}', [MANAGED]: '{}', ...PROXY })
     expect(ids(root, ON, LOCAL)).toEqual([])
     expect(ids(root, ON, MANAGED)).toEqual([])
   })
 
-  it.fails('is silent with no .git', () => {
+  it('is silent with no .git', () => {
     expect(ids(plain({ [PROJECT]: '{}', ...PROXY }), ON)).toEqual([])
   })
 })

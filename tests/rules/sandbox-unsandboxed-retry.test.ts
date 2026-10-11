@@ -29,13 +29,13 @@ const ids = (root: string, name_: string, fields: object | string) =>
 const alone = (fields: object | string, name_ = PROJECT) => ids(repo({}), name_, fields)
 
 describe(`${name}: one file`, () => {
-  it.fails('reports the sandbox on with the retry unset, in every kind of file', () => {
+  it('reports the sandbox on with the retry unset, in every kind of file', () => {
     for (const name_ of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(alone(ON, name_), name_).toEqual(['retry'])
     }
   })
 
-  it.fails('reports at the value of enabled', () => {
+  it('reports at the value of enabled', () => {
     const text = '{\n  "sandbox": {\n    "enabled": true\n  }\n}'
     const [message] = lintJson(name, text, '/repo/.claude/settings.json')
     expect([message?.line, message?.column]).toEqual([3, 16])
@@ -43,14 +43,14 @@ describe(`${name}: one file`, () => {
     expect(message?.message).toContain('Bash(dangerouslyDisableSandbox:true)')
   })
 
-  it.fails('reports when the retry is true, null, or not a Boolean, in a project file', () => {
+  it('reports when the retry is true, null, or not a Boolean, in a project file', () => {
     for (const value of [true, null, 'false', 0]) {
       const sandbox = { enabled: true, allowUnsandboxedCommands: value }
       expect(alone({ sandbox }), JSON.stringify(value)).toEqual(['retry'])
     }
   })
 
-  it.fails('reports when the ask rule is for another command, another parameter, or is an allow rule', () => {
+  it('reports when the ask rule is for another command, another parameter, or is an allow rule', () => {
     for (const permissions of [
       { ask: ['Bash(git push *)'] },
       { ask: ['Bash(run_in_background:true)'] },
@@ -63,11 +63,11 @@ describe(`${name}: one file`, () => {
     }
   })
 
-  it.fails('is silent when the retry is false', () => {
+  it('is silent when the retry is false', () => {
     expect(alone({ sandbox: { enabled: true, allowUnsandboxedCommands: false } })).toEqual([])
   })
 
-  it.fails('is silent for the managed example of the docs', () => {
+  it('is silent for the managed example of the docs', () => {
     expect(
       alone({
         sandbox: { enabled: true, failIfUnavailable: true, allowUnsandboxedCommands: false },
@@ -75,7 +75,7 @@ describe(`${name}: one file`, () => {
     ).toEqual([])
   })
 
-  it.fails('is silent when an ask or deny rule names the parameter', () => {
+  it('is silent when an ask or deny rule names the parameter', () => {
     for (const permissions of [
       ASK.permissions,
       { deny: ['Bash(dangerouslyDisableSandbox:true)'] },
@@ -86,7 +86,7 @@ describe(`${name}: one file`, () => {
     }
   })
 
-  it.fails('is silent when the sandbox is off, unset, or not true', () => {
+  it('is silent when the sandbox is off, unset, or not true', () => {
     for (const sandbox of [{ enabled: false }, {}, { enabled: 'true' }, { enabled: null }]) {
       expect(alone({ sandbox }), JSON.stringify(sandbox)).toEqual([])
     }
@@ -94,7 +94,7 @@ describe(`${name}: one file`, () => {
     expect(alone('[1]')).toEqual([])
   })
 
-  it.fails('counts managed values as the managed settings page says', () => {
+  it('counts managed values as the managed settings page says', () => {
     // A quoted "true" is true. A quoted "false", and any other invalid value of the retry, is false.
     expect(alone({ sandbox: { enabled: 'true' } }, MANAGED)).toEqual(['retry'])
     expect(alone({ sandbox: { enabled: 1 } }, MANAGED)).toEqual(['retry'])
@@ -107,36 +107,36 @@ describe(`${name}: one file`, () => {
     ).toEqual(['retry'])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(alone(ON, HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the project pair, on disk`, () => {
-  it.fails('reports in the file that enables the sandbox, and not in the other', () => {
+  it('reports in the file that enables the sandbox, and not in the other', () => {
     const root = repo({ [LOCAL]: file({}) })
     expect(ids(root, PROJECT, ON)).toEqual(['retry'])
     expect(ids(repo({ [PROJECT]: file(ON) }), LOCAL, {})).toEqual([])
   })
 
-  it.fails('is silent when the other file turns the retry off or holds the rule', () => {
+  it('is silent when the other file turns the retry off or holds the rule', () => {
     const off = repo({ [LOCAL]: file({ sandbox: { allowUnsandboxedCommands: false } }) })
     expect(ids(off, PROJECT, ON)).toEqual([])
     expect(ids(repo({ [LOCAL]: file(ASK) }), PROJECT, ON)).toEqual([])
     expect(ids(repo({ [PROJECT]: file(ASK) }), LOCAL, ON)).toEqual([])
   })
 
-  it.fails('is silent when the other file turns the sandbox off', () => {
+  it('is silent when the other file turns the sandbox off', () => {
     const root = repo({ [LOCAL]: file({ sandbox: { enabled: false } }) })
     expect(ids(root, PROJECT, ON)).toEqual([])
   })
 
-  it.fails('does not read a managed file for a project file', () => {
+  it('does not read a managed file for a project file', () => {
     const root = repo({ [MANAGED]: file({ sandbox: { allowUnsandboxedCommands: false } }) })
     expect(ids(root, PROJECT, ON)).toEqual(['retry'])
   })
 
-  it.fails('is silent when the other file does not read', () => {
+  it('is silent when the other file does not read', () => {
     for (const text of ['[1]', '{', '{"sandbox":']) {
       expect(ids(repo({ [LOCAL]: text }), PROJECT, ON), text).toEqual([])
     }
@@ -144,18 +144,18 @@ describe(`${name}: the project pair, on disk`, () => {
 })
 
 describe(`${name}: a managed source, on disk`, () => {
-  it.fails('is silent when a file of the source turns the retry off or holds the rule', () => {
+  it('is silent when a file of the source turns the retry off or holds the rule', () => {
     const off = repo({ [MANAGED]: file({ sandbox: { allowUnsandboxedCommands: false } }) })
     expect(ids(off, DROP_IN, ON)).toEqual([])
     expect(ids(repo({ [DROP_IN]: file(ASK) }), MANAGED, ON)).toEqual([])
   })
 
-  it.fails('does not read a project file for a managed file', () => {
+  it('does not read a project file for a managed file', () => {
     const root = repo({ [PROJECT]: file({ sandbox: { allowUnsandboxedCommands: false } }) })
     expect(ids(root, MANAGED, ON)).toEqual(['retry'])
   })
 
-  it.fails('ignores a hidden sibling, and is silent when a sibling does not read', () => {
+  it('ignores a hidden sibling, and is silent when a sibling does not read', () => {
     const hidden = repo({
       'managed-settings.d/.20-b.json': file({ sandbox: { allowUnsandboxedCommands: false } }),
     })

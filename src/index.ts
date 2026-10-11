@@ -329,17 +329,25 @@ import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
+import sandboxAllowWriteEscalation from './rules/sandbox-allow-write-escalation.ts'
 import sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
 import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
 import sandboxCredentialsMaskFallback from './rules/sandbox-credentials-mask-fallback.ts'
+import sandboxCredentialsRecommended from './rules/sandbox-credentials-recommended.ts'
+import sandboxDockerExcluded from './rules/sandbox-docker-excluded.ts'
+import sandboxDomainBroad from './rules/sandbox-domain-broad.ts'
 import sandboxDomainDuplicate from './rules/sandbox-domain-duplicate.ts'
 import sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
 import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
+import sandboxExcludedCommandsBroad from './rules/sandbox-excluded-commands-broad.ts'
 import sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
 import sandboxFilesystemDisabledConflict from './rules/sandbox-filesystem-disabled-conflict.ts'
 import sandboxPlatformLimits from './rules/sandbox-platform-limits.ts'
+import sandboxProxyEnv from './rules/sandbox-proxy-env.ts'
 import sandboxSchema from './rules/sandbox-schema.ts'
 import sandboxScope from './rules/sandbox-scope.ts'
+import sandboxSettingsWithoutEnabled from './rules/sandbox-settings-without-enabled.ts'
+import sandboxUnsandboxedRetry from './rules/sandbox-unsandboxed-retry.ts'
 import sandboxWeakeningOptions from './rules/sandbox-weakening-options.ts'
 import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
@@ -897,6 +905,14 @@ const modules = [
   pluginNoStateInPluginRoot,
   pluginNoParentPathEscape,
   pluginPathUsesPluginRoot,
+  sandboxAllowWriteEscalation,
+  sandboxCredentialsRecommended,
+  sandboxDockerExcluded,
+  sandboxDomainBroad,
+  sandboxExcludedCommandsBroad,
+  sandboxProxyEnv,
+  sandboxSettingsWithoutEnabled,
+  sandboxUnsandboxedRetry,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1366,6 +1382,14 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-no-state-in-plugin-root': 'off',
   'plugin-no-parent-path-escape': 'off',
   'plugin-path-uses-plugin-root': 'off',
+  'sandbox-allow-write-escalation': 'off',
+  'sandbox-credentials-recommended': 'off',
+  'sandbox-docker-excluded': 'off',
+  'sandbox-domain-broad': 'off',
+  'sandbox-excluded-commands-broad': 'off',
+  'sandbox-proxy-env': 'off',
+  'sandbox-settings-without-enabled': 'off',
+  'sandbox-unsandboxed-retry': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

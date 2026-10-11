@@ -55,3 +55,16 @@ export function isOn(value: ValueNode | undefined, isManaged: boolean): boolean 
     (isManaged && value?.type === 'String' && value.value === 'true')
   )
 }
+
+/** A path entry of a sandbox list or a `Read` rule, as the docs match it: no `/**` at the end, no
+ *  slash at the end, and one slash at the start in place of `//`
+ *  (https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes). The root `/` stays
+ *  as it is, and `~/` becomes `~`. */
+export function sandboxPath(entry: string): string {
+  const path = entry
+    .trim()
+    .replace(/\/\*\*$/, '')
+    .replace(/^\/\/+/, '/')
+    .replace(/\/+$/, '')
+  return path === '' && entry.trim().startsWith('/') ? '/' : path
+}

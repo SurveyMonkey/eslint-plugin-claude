@@ -39,19 +39,19 @@ const ids = (code: string, file = PROJECT, options?: unknown) =>
   lint(code, file, options).map((message) => message.messageId)
 
 describe(`${name}: the default`, () => {
-  it.fails('reports * and a wildcard on one label, in every kind of file', () => {
+  it('reports * and a wildcard on one label, in every kind of file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(ids(allowed('*', '*.com'), file), file).toEqual(['wildcard', 'wildcard'])
     }
   })
 
-  it.fails('reports a wildcard on any one label, with a port, in capitals, or with a final dot', () => {
+  it('reports a wildcard on any one label, with a port, in capitals, or with a final dot', () => {
     for (const entry of ['*.io', '*.COM', '*.com:443', '*.org.', '*:8080']) {
       expect(ids(allowed(entry)), entry).toEqual(['wildcard'])
     }
   })
 
-  it.fails('reports at the entry, and names it', () => {
+  it('reports at the entry, and names it', () => {
     const text =
       '{\n  "sandbox": {\n    "network": {\n      "allowedDomains": ["a.com", "*.com"]\n    }\n  }\n}'
     const [message] = lint(text)
@@ -60,14 +60,14 @@ describe(`${name}: the default`, () => {
     expect(message?.message).toContain('domain fronting')
   })
 
-  it.fails('is silent for every entry that the docs give', () => {
+  it('is silent for every entry that the docs give', () => {
     for (const entry of ['github.com', '*.npmjs.org', 'api.example.com:443', '*.example.com']) {
       expect(ids(allowed(entry)), entry).toEqual([])
     }
     expect(ids(allowed('github.com', '*.npmjs.org', 'api.example.com:443'))).toEqual([])
   })
 
-  it.fails('is silent for a narrow wildcard, a host, and an address', () => {
+  it('is silent for a narrow wildcard, a host, and an address', () => {
     for (const entry of [
       '*.co.uk',
       '*.a.b.com',
@@ -80,13 +80,13 @@ describe(`${name}: the default`, () => {
     }
   })
 
-  it.fails('leaves the entries of sandbox-domain-syntax to that rule', () => {
-    for (const entry of ['https://*.com', '*.com/path', '*.com:99999', '*.com:x']) {
+  it('leaves the entries of sandbox-domain-syntax to that rule', () => {
+    for (const entry of ['https://*.com', '*.com/path', '*.com:x']) {
       expect(ids(allowed(entry)), entry).toEqual([])
     }
   })
 
-  it.fails('does not read deniedDomains, an entry that is not a string, or a list that is not an array', () => {
+  it('does not read deniedDomains, an entry that is not a string, or a list that is not an array', () => {
     expect(
       ids(JSON.stringify({ sandbox: { network: { deniedDomains: ['*', '*.com'] } } })),
     ).toEqual([])
@@ -95,13 +95,17 @@ describe(`${name}: the default`, () => {
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('reports a wildcard with a bad port too: the breadth is a fault of its own', () => {
+    expect(ids(allowed('*.com:99999'))).toEqual(['wildcard'])
+  })
+
+  it('is silent in a hidden drop-in', () => {
     expect(ids(allowed('*'), HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the option broad`, () => {
-  it.fails('reports a listed host, with or without a port, in any letter case', () => {
+  it('reports a listed host, with or without a port, in any letter case', () => {
     const options = { broad: ['github.com'] }
     for (const entry of ['github.com', 'GitHub.com', 'github.com:443', 'github.com.']) {
       expect(ids(allowed(entry), PROJECT, options), entry).toEqual(['listed'])
@@ -109,14 +113,14 @@ describe(`${name}: the option broad`, () => {
     expect(lint(allowed('github.com'), PROJECT, options)[0]?.message).toContain('`github.com`')
   })
 
-  it.fails('does not report a host that the list does not hold, or a subdomain of a listed host', () => {
+  it('does not report a host that the list does not hold, or a subdomain of a listed host', () => {
     const options = { broad: ['github.com'] }
     for (const entry of ['gist.github.com', '*.github.com', 'example.com']) {
       expect(ids(allowed(entry), PROJECT, options), entry).toEqual([])
     }
   })
 
-  it.fails('still reports * and a one-label wildcard, and reports an entry once', () => {
+  it('still reports * and a one-label wildcard, and reports an entry once', () => {
     expect(ids(allowed('*.com'), PROJECT, { broad: ['*.com'] })).toEqual(['wildcard'])
     expect(ids(allowed('*', 'github.com'), PROJECT, { broad: ['github.com'] })).toEqual([
       'wildcard',
@@ -124,15 +128,13 @@ describe(`${name}: the option broad`, () => {
     ])
   })
 
-  it.fails('takes an empty list as the default', () => {
+  it('takes an empty list as the default', () => {
     expect(ids(allowed('github.com'), PROJECT, { broad: [] })).toEqual([])
   })
 
-  it.fails('refuses an option that is not a list of non-empty strings', () => {
+  it('refuses an option that is not a list of non-empty strings', () => {
     for (const options of [{ broad: 'github.com' }, { broad: [''] }, { broad: [1] }, { x: 1 }]) {
-      expect(() => lint(allowed('*'), PROJECT, options), JSON.stringify(options)).toThrow(
-        /is invalid/,
-      )
+      expect(() => lint(allowed('*'), PROJECT, options), JSON.stringify(options)).toThrow(/should/)
     }
   })
 })

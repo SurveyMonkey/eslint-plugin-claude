@@ -32,11 +32,11 @@ const tracking = (files: Record<string, string> = {}) => repo({ [PROJECT]: '{}',
 const DOCKERFILE = { Dockerfile: 'FROM node:22\n' }
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a tracked Dockerfile with the sandbox on and no docker entry', () => {
+  it('reports a tracked Dockerfile with the sandbox on and no docker entry', () => {
     expect(ids(tracking(DOCKERFILE), ON)).toEqual(['docker'])
   })
 
-  it.fails('reports at the value of enabled, and names the file and the advice', () => {
+  it('reports at the value of enabled, and names the file and the advice', () => {
     const text = '{\n  "sandbox": {\n    "enabled": true\n  }\n}'
     const [message] = lint(tracking(DOCKERFILE), text)
     expect([message?.line, message?.column]).toEqual([3, 16])
@@ -44,7 +44,7 @@ describe(`${name}: reports`, () => {
     expect(message?.message).toContain('`docker compose *`')
   })
 
-  it.fails('reports each file that shows Docker use', () => {
+  it('reports each file that shows Docker use', () => {
     const SHOWING: Record<string, string>[] = [
       { 'docker-compose.yml': 'services: {}\n' },
       { 'docker-compose.yaml': 'services: {}\n' },
@@ -58,11 +58,11 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports when excludedCommands holds other entries', () => {
+  it('reports when excludedCommands holds other entries', () => {
     expect(ids(tracking(DOCKERFILE), excluding('gh *', 'npm run *'))).toEqual(['docker'])
   })
 
-  it.fails('reports at the file when the sandbox is on in the other project file only', () => {
+  it('reports at the file when the sandbox is on in the other project file only', () => {
     const root = repo({ [PROJECT]: '{}', [LOCAL]: file(ON), ...DOCKERFILE })
     const [message] = lint(root, '{}')
     expect([message?.messageId, message?.line, message?.column]).toEqual(['docker', 1, 1])
@@ -71,13 +71,13 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('is silent when a docker entry is in the source, in any form', () => {
+  it('is silent when a docker entry is in the source, in any form', () => {
     for (const entry of ['docker *', 'docker compose *', 'docker', 'docker-compose *', '*']) {
       expect(ids(tracking(DOCKERFILE), excluding(entry)), entry).toEqual([])
     }
   })
 
-  it.fails('is silent when the other project file holds the entry', () => {
+  it('is silent when the other project file holds the entry', () => {
     const root = repo({
       [PROJECT]: '{}',
       [LOCAL]: file({ sandbox: { excludedCommands: ['docker compose *'] } }),
@@ -86,11 +86,11 @@ describe(`${name}: silent`, () => {
     expect(ids(root, ON)).toEqual([])
   })
 
-  it.fails('reports an entry that only looks like docker', () => {
+  it('reports an entry that only looks like docker', () => {
     expect(ids(tracking(DOCKERFILE), excluding('dockerize *', 'podman *'))).toEqual(['docker'])
   })
 
-  it.fails('is silent when the project shows no Docker use', () => {
+  it('is silent when the project shows no Docker use', () => {
     expect(ids(tracking({ 'README.md': 'docker\n' }), ON)).toEqual([])
     expect(
       ids(tracking({ 'package.json': file({ scripts: { test: 'vitest', d: 'dockerless' } }) }), ON),
@@ -101,19 +101,19 @@ describe(`${name}: silent`, () => {
     expect(ids(tracking({ 'package.json': file({ scripts: { up: 5 } }) }), ON)).toEqual([])
   })
 
-  it.fails('is silent for a Dockerfile that git does not track, or one in a folder below', () => {
+  it('is silent for a Dockerfile that git does not track, or one in a folder below', () => {
     const untracked = repo({ [PROJECT]: '{}' }, [], DOCKERFILE)
     expect(ids(untracked, ON)).toEqual([])
     expect(ids(tracking({ 'docker/Dockerfile': 'FROM x\n' }), ON)).toEqual([])
   })
 
-  it.fails('is silent when package.json does not read as an object', () => {
+  it('is silent when package.json does not read as an object', () => {
     for (const text of ['{', '[1]', 'null']) {
       expect(ids(tracking({ 'package.json': text }), ON), text).toEqual([])
     }
   })
 
-  it.fails('is silent when the sandbox is off, unset or not true', () => {
+  it('is silent when the sandbox is off, unset or not true', () => {
     for (const sandbox of [{ enabled: false }, {}, { enabled: 'true' }, { enabled: null }]) {
       expect(ids(tracking(DOCKERFILE), { sandbox }), JSON.stringify(sandbox)).toEqual([])
     }
@@ -121,7 +121,7 @@ describe(`${name}: silent`, () => {
     expect(ids(tracking(DOCKERFILE), '[1]')).toEqual([])
   })
 
-  it.fails('is silent when the other project file turns the sandbox off', () => {
+  it('is silent when the other project file turns the sandbox off', () => {
     const root = repo({
       [PROJECT]: '{}',
       [LOCAL]: file({ sandbox: { enabled: false } }),
@@ -130,21 +130,21 @@ describe(`${name}: silent`, () => {
     expect(ids(root, ON)).toEqual([])
   })
 
-  it.fails('is silent when the other project file does not read', () => {
+  it('is silent when the other project file does not read', () => {
     for (const text of ['[1]', '{']) {
       const root = repo({ [PROJECT]: '{}', [LOCAL]: text, ...DOCKERFILE })
       expect(ids(root, ON), text).toEqual([])
     }
   })
 
-  it.fails('lints the shared file only, not the local or a managed file', () => {
+  it('lints the shared file only, not the local or a managed file', () => {
     const root = repo({ [PROJECT]: '{}', [LOCAL]: '{}', [MANAGED]: '{}', ...DOCKERFILE })
     expect(ids(root, ON, LOCAL)).toEqual([])
     expect(ids(root, ON, MANAGED)).toEqual([])
     expect(ids(root, ON, 'managed-settings.d/10-a.json')).toEqual([])
   })
 
-  it.fails('is silent with no .git, or when the folder is not the repository', () => {
+  it('is silent with no .git, or when the folder is not the repository', () => {
     expect(ids(plain({ [PROJECT]: '{}', ...DOCKERFILE }), ON)).toEqual([])
   })
 })

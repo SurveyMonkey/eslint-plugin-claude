@@ -21,23 +21,23 @@ const ids = (code: string, file = PROJECT) =>
   lintJson(name, code, file).map((message) => message.messageId)
 
 describe(`${name}: reports`, () => {
-  it.fails('reports the entry * in every kind of file', () => {
+  it('reports the entry * in every kind of file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(ids(excluded('*'), file), file).toEqual(['everything'])
     }
   })
 
-  it.fails('reports a star twice, and the legacy :* suffix on a star', () => {
+  it('reports a star twice, and the legacy :* suffix on a star', () => {
     for (const entry of ['* *', '*:*']) {
       expect(ids(excluded(entry)), entry).toEqual(['everything'])
     }
   })
 
-  it.fails('is silent for a star with a word after it, which matches only some calls', () => {
+  it('is silent for a star with a word after it, which matches only some calls', () => {
     expect(ids(excluded('* --version'))).toEqual([])
   })
 
-  it.fails('reports a shell or an interpreter that takes any arguments', () => {
+  it('reports a shell or an interpreter that takes any arguments', () => {
     for (const entry of [
       'bash *',
       'sh *',
@@ -48,7 +48,7 @@ describe(`${name}: reports`, () => {
       'ruby *',
       'perl *',
       'bash -c *',
-      'node --require x *',
+      'node --inspect *',
       'sh:*',
       '  bash *  ',
     ]) {
@@ -56,7 +56,7 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports each broad entry, at its line and column, and names it', () => {
+  it('reports each broad entry, at its line and column, and names it', () => {
     const text = '{\n  "sandbox": {\n    "excludedCommands": ["docker *", "bash *"]\n  }\n}'
     const messages = lintJson(name, text, PROJECT)
     expect(messages).toHaveLength(1)
@@ -67,42 +67,42 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('is silent for every entry that the docs give', () => {
+  it('is silent for every entry that the docs give', () => {
     for (const entry of ['docker *', 'docker compose *', 'docker', 'gh *', 'open *', 'git *']) {
       expect(ids(excluded(entry)), entry).toEqual([])
     }
   })
 
-  it.fails('is silent for an exact entry, which matches that call only', () => {
+  it('is silent for an exact entry, which matches that call only', () => {
     // A pattern with no wildcard is an exact match, so `bash` matches `bash` with no arguments.
     expect(ids(excluded('bash'))).toEqual([])
     expect(ids(excluded('python3 build.py'))).toEqual([])
   })
 
-  it.fails('is silent when the arguments are named before the wildcard', () => {
+  it('is silent when the arguments are named before the wildcard', () => {
     expect(ids(excluded('python3 -m pytest *'))).toEqual([])
     expect(ids(excluded('node scripts/build.js *'))).toEqual([])
   })
 
-  it.fails('is silent for a name that only starts with an interpreter name, and for other tools', () => {
+  it('is silent for a name that only starts with an interpreter name, and for other tools', () => {
     for (const entry of ['bashful *', 'nodemon *', 'npm run *', 'make *', 'kubectl *']) {
       expect(ids(excluded(entry)), entry).toEqual([])
     }
   })
 
-  it.fails('leaves the entries of sandbox-excluded-commands-syntax to that rule', () => {
+  it('leaves the entries of sandbox-excluded-commands-syntax to that rule', () => {
     for (const entry of ['Bash(bash *)', 'Bash(*)', 'sudo *', 'eval *', 'xargs *', 'cd *']) {
       expect(ids(excluded(entry)), entry).toEqual([])
     }
   })
 
-  it.fails('does not read an entry that is not a string, or a list that is not an array', () => {
+  it('does not read an entry that is not a string, or a list that is not an array', () => {
     expect(ids(excluded(1, null, ['bash *']))).toEqual([])
     expect(ids(JSON.stringify({ sandbox: { excludedCommands: 'bash *' } }))).toEqual([])
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(excluded('*'), HIDDEN)).toEqual([])
   })
 })

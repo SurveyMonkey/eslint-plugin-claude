@@ -32,13 +32,13 @@ const alone = (fields: object | string, name_ = PROJECT) => ids(repo({}), name_,
 const message = (fields: object) => at(repo({}), PROJECT, file(fields))[0]?.message ?? ''
 
 describe(`${name}: one file`, () => {
-  it.fails('reports the sandbox on with no entry, in every kind of file', () => {
+  it('reports the sandbox on with no entry, in every kind of file', () => {
     for (const name_ of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(alone(ON, name_), name_).toEqual(['open'])
     }
   })
 
-  it.fails('names the missing directories, at the value of enabled', () => {
+  it('names the missing directories, at the value of enabled', () => {
     const text = '{\n  "sandbox": {\n    "enabled": true\n  }\n}'
     const [report] = lintJson(name, text, '/repo/.claude/settings.json')
     expect([report?.line, report?.column]).toEqual([3, 16])
@@ -46,14 +46,14 @@ describe(`${name}: one file`, () => {
     expect(report?.message).toContain('`~/.ssh`')
   })
 
-  it.fails('names only the directory that is missing', () => {
+  it('names only the directory that is missing', () => {
     expect(message(deny('~/.aws/credentials'))).toContain('`~/.ssh`')
     expect(message(deny('~/.aws/credentials'))).not.toContain('`~/.aws`')
     expect(message(deny('~/.ssh'))).toContain('`~/.aws`')
     expect(message(deny('~/.ssh'))).not.toContain('`~/.ssh`')
   })
 
-  it.fails('reports the sandbox example of the settings reference, for the ssh directory', () => {
+  it('reports the sandbox example of the settings reference, for the ssh directory', () => {
     expect(
       message({
         sandbox: {
@@ -64,20 +64,20 @@ describe(`${name}: one file`, () => {
     ).toContain('`~/.ssh`')
   })
 
-  it.fails('is silent when denyRead names both directories, or a path below them', () => {
+  it('is silent when denyRead names both directories, or a path below them', () => {
     expect(alone(deny('~/.aws', '~/.ssh'))).toEqual([])
     expect(alone(deny('~/.aws/credentials', '~/.ssh/id_ed25519'))).toEqual([])
     expect(alone(deny('~/.aws/', '~/.ssh/**'))).toEqual([])
     expect(alone(deny('/home/me/.aws', '/Users/me/.ssh'))).toEqual([])
   })
 
-  it.fails('is silent when denyRead denies the home directory, as the docs example does', () => {
+  it('is silent when denyRead denies the home directory, as the docs example does', () => {
     for (const entry of ['~/', '~', '/Users/me', '/home/me', '/']) {
       expect(alone(deny(entry)), entry).toEqual([])
     }
   })
 
-  it.fails('is silent when credentials.files denies or masks both directories', () => {
+  it('is silent when credentials.files denies or masks both directories', () => {
     const files = [
       { path: '~/.aws/credentials', mode: 'deny' },
       { path: '~/.ssh', mode: 'mask' },
@@ -85,20 +85,20 @@ describe(`${name}: one file`, () => {
     expect(alone({ sandbox: { enabled: true, credentials: { files } } })).toEqual([])
   })
 
-  it.fails('is silent when a Read deny rule covers both directories', () => {
+  it('is silent when a Read deny rule covers both directories', () => {
     const permissions = { deny: ['Read(~/.aws/**)', 'Read(//Users/me/.ssh/**)'] }
     expect(alone({ ...ON, permissions })).toEqual([])
     expect(alone({ ...ON, permissions: { deny: ['Read(~/)'] } })).toEqual([])
   })
 
-  it.fails('counts the entries of both lists together', () => {
+  it('counts the entries of both lists together', () => {
     const credentials = { files: [{ path: '~/.aws', mode: 'deny' }] }
     expect(
       alone({ sandbox: { enabled: true, credentials, filesystem: { denyRead: ['~/.ssh'] } } }),
     ).toEqual([])
   })
 
-  it.fails('reports an entry that names another directory, or is not a string or a deny rule', () => {
+  it('reports an entry that names another directory, or is not a string or a deny rule', () => {
     expect(alone(deny('~/.config', '~/.awsome', '~/.sshd'))).toEqual(['open'])
     expect(alone({ ...ON, permissions: { deny: ['Read(~/.aws/**)', 'Edit(~/.ssh/**)'] } })).toEqual(
       ['open'],
@@ -113,7 +113,7 @@ describe(`${name}: one file`, () => {
     expect(alone({ sandbox: { enabled: true, credentials: { files } } })).toEqual(['open'])
   })
 
-  it.fails('is silent when filesystem isolation is off, or reads outside the working directory are blocked', () => {
+  it('is silent when filesystem isolation is off, or reads outside the working directory are blocked', () => {
     expect(alone({ sandbox: { enabled: true, filesystem: { disabled: true } } })).toEqual([])
     expect(alone({ ...ON, permissions: { blockReadsOutsideWorkingDirectories: true } })).toEqual([])
     expect(alone({ ...ON, permissions: { blockReadsOutsideWorkingDirectories: false } })).toEqual([
@@ -121,7 +121,7 @@ describe(`${name}: one file`, () => {
     ])
   })
 
-  it.fails('is silent when the sandbox is off, unset, or not true', () => {
+  it('is silent when the sandbox is off, unset, or not true', () => {
     for (const sandbox of [{ enabled: false }, {}, { enabled: 'true' }, { enabled: null }]) {
       expect(alone({ sandbox }), JSON.stringify(sandbox)).toEqual([])
     }
@@ -129,22 +129,22 @@ describe(`${name}: one file`, () => {
     expect(alone('[1]')).toEqual([])
   })
 
-  it.fails('counts a quoted true in a managed file', () => {
+  it('counts a quoted true in a managed file', () => {
     expect(alone({ sandbox: { enabled: 'true' } }, MANAGED)).toEqual(['open'])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(alone(ON, HIDDEN)).toEqual([])
   })
 })
 
 describe(`${name}: the project pair, on disk`, () => {
-  it.fails('reports in the file that enables the sandbox, and not in the other', () => {
+  it('reports in the file that enables the sandbox, and not in the other', () => {
     expect(ids(repo({ [LOCAL]: file({}) }), PROJECT, ON)).toEqual(['open'])
     expect(ids(repo({ [PROJECT]: file(ON) }), LOCAL, {})).toEqual([])
   })
 
-  it.fails('is silent when the other file holds the entries or turns the sandbox off', () => {
+  it('is silent when the other file holds the entries or turns the sandbox off', () => {
     const entries = repo({
       [LOCAL]: file({ sandbox: { filesystem: { denyRead: ['~/.aws', '~/.ssh'] } } }),
     })
@@ -155,19 +155,19 @@ describe(`${name}: the project pair, on disk`, () => {
     expect(ids(off, PROJECT, ON)).toEqual([])
   })
 
-  it.fails('adds the entries of the two files', () => {
+  it('adds the entries of the two files', () => {
     const root = repo({ [LOCAL]: file({ sandbox: { filesystem: { denyRead: ['~/.ssh'] } } }) })
     expect(ids(root, PROJECT, deny('~/.aws'))).toEqual([])
     const half = repo({ [LOCAL]: file({ sandbox: { filesystem: { denyRead: ['~/.config'] } } }) })
     expect(ids(half, PROJECT, deny('~/.aws'))).toEqual(['open'])
   })
 
-  it.fails('does not read a managed file for a project file', () => {
+  it('does not read a managed file for a project file', () => {
     const root = repo({ [MANAGED]: file(deny('~/')) })
     expect(ids(root, PROJECT, ON)).toEqual(['open'])
   })
 
-  it.fails('is silent when the other file does not read', () => {
+  it('is silent when the other file does not read', () => {
     for (const text of ['[1]', '{', '{"sandbox":']) {
       expect(ids(repo({ [LOCAL]: text }), PROJECT, ON), text).toEqual([])
     }
@@ -175,18 +175,18 @@ describe(`${name}: the project pair, on disk`, () => {
 })
 
 describe(`${name}: a managed source, on disk`, () => {
-  it.fails('is silent when a file of the source holds the entries', () => {
+  it('is silent when a file of the source holds the entries', () => {
     const root = repo({ [MANAGED]: file(deny('~/.aws', '~/.ssh')) })
     expect(ids(root, DROP_IN, ON)).toEqual([])
     expect(ids(repo({ [DROP_IN]: file(deny('~/')) }), MANAGED, ON)).toEqual([])
   })
 
-  it.fails('does not read a project file for a managed file', () => {
+  it('does not read a project file for a managed file', () => {
     const root = repo({ [PROJECT]: file(deny('~/')) })
     expect(ids(root, MANAGED, ON)).toEqual(['open'])
   })
 
-  it.fails('ignores a hidden sibling, and is silent when a sibling does not read', () => {
+  it('ignores a hidden sibling, and is silent when a sibling does not read', () => {
     const hidden = repo({ 'managed-settings.d/.20-b.json': file(deny('~/')) })
     expect(ids(hidden, DROP_IN, ON)).toEqual(['open'])
     const bad = repo({ 'managed-settings.d/20-b.json': '[1]' })

@@ -21,13 +21,13 @@ const ids = (code: string, file = PROJECT) =>
   lintJson(name, code, file).map((message) => message.messageId)
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a shell startup file, in every kind of file', () => {
+  it('reports a shell startup file, in every kind of file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(ids(write('~/.zshrc'), file), file).toEqual(['startup'])
     }
   })
 
-  it.fails('reports each usual startup file, by its home forms', () => {
+  it('reports each usual startup file, by its home forms', () => {
     for (const entry of [
       '~/.bashrc',
       '~/.bash_profile',
@@ -44,13 +44,13 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports a system configuration directory and a path below it', () => {
+  it('reports a system configuration directory and a path below it', () => {
     for (const entry of ['/etc', '/etc/', '/etc/**', '/etc/profile.d', '/etc/zshrc']) {
       expect(ids(write(entry)), entry).toEqual(['system'])
     }
   })
 
-  it.fails('reports a directory of executables and a path below it', () => {
+  it('reports a directory of executables and a path below it', () => {
     for (const entry of [
       '/usr/local/bin',
       '/usr/bin',
@@ -66,13 +66,13 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports a directory that holds a startup file or an executables directory', () => {
+  it('reports a directory that holds a startup file or an executables directory', () => {
     for (const entry of ['~', '~/', '/', '/usr', '/usr/local', '/Users/me', '/home/me']) {
       expect(ids(write(entry)), entry).toEqual(['broad'])
     }
   })
 
-  it.fails('reports each entry, at its line and column, and names the entry', () => {
+  it('reports each entry, at its line and column, and names the entry', () => {
     const text =
       '{\n  "sandbox": {\n    "filesystem": {\n      "allowWrite": ["./build", "~/.zshrc"]\n    }\n  }\n}'
     const messages = lintJson(name, text, PROJECT)
@@ -84,14 +84,14 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('is silent for every entry that the docs give', () => {
+  it('is silent for every entry that the docs give', () => {
     for (const entry of ['~/.kube', '/tmp/build', './build']) {
       expect(ids(write(entry)), entry).toEqual([])
     }
     expect(ids(write('/tmp/build', '~/.kube'))).toEqual([])
   })
 
-  it.fails('is silent for a project path, a temp path and a similar name', () => {
+  it('is silent for a project path, a temp path and a similar name', () => {
     for (const entry of [
       'build',
       './.zshrc',
@@ -108,7 +108,7 @@ describe(`${name}: silent`, () => {
     }
   })
 
-  it.fails('does not read denyWrite, allowRead or Edit rules', () => {
+  it('does not read denyWrite, allowRead or Edit rules', () => {
     const code = JSON.stringify({
       sandbox: { filesystem: { denyWrite: ['~/.zshrc'], allowRead: ['/etc'], denyRead: ['~'] } },
       permissions: { allow: ['Edit(~/.zshrc)'] },
@@ -116,13 +116,13 @@ describe(`${name}: silent`, () => {
     expect(ids(code)).toEqual([])
   })
 
-  it.fails('does not read an entry that is not a string, or a list that is not an array', () => {
+  it('does not read an entry that is not a string, or a list that is not an array', () => {
     expect(ids(write(1, null))).toEqual([])
     expect(ids(JSON.stringify({ sandbox: { filesystem: { allowWrite: '~/.zshrc' } } }))).toEqual([])
     expect(ids('{}')).toEqual([])
   })
 
-  it.fails('is silent in a hidden drop-in', () => {
+  it('is silent in a hidden drop-in', () => {
     expect(ids(write('/etc'), HIDDEN)).toEqual([])
   })
 })
