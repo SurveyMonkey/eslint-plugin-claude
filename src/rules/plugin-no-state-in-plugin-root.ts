@@ -16,7 +16,7 @@ const name = 'plugin-no-state-in-plugin-root' as const
 const ROOT_VARIABLE = String.raw`\$(?:\{CLAUDE_PLUGIN_ROOT\}|CLAUDE_PLUGIN_ROOT(?![A-Za-z0-9_]))`
 const HAS_ROOT = new RegExp(ROOT_VARIABLE)
 // A `>` or `>>` whose target starts with the variable. `>&` and `<` are not writes to a file.
-const REDIRECT = new RegExp(String.raw`(?<![<>])>>?\s*["']?${ROOT_VARIABLE}`)
+const REDIRECT = new RegExp(String.raw`>>?\s*["']?${ROOT_VARIABLE}`)
 const ASSIGNMENT = /^[A-Za-z_][A-Za-z0-9_]*=/
 
 // The programs that write to the last word, and to any path word.

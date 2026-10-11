@@ -77,6 +77,8 @@ describe(RULE, () => {
     ['touch', `touch ${ROOT}/ready`, '`touch`'],
     ['mkdir', `mkdir -p ${ROOT}/cache`, '`mkdir`'],
     ['a program after an assignment', `LC_ALL=C cp a ${ROOT}/b`, '`cp`'],
+    ['a flag after the target', `cp a ${ROOT}/b -v`, '`cp`'],
+    ['a program with a folder', `/bin/cp a ${ROOT}/b`, '`cp`'],
     ['a program after sudo', `sudo cp a ${ROOT}/b`, '`cp`'],
   ])('reports %s into the root', (_title, command, action) => {
     expect(run(command)).toEqual([commandMessage(action)])

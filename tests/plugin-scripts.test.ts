@@ -1,5 +1,6 @@
 // The reader of the scripts that a command of a plugin runs. A script is a regular text file with a
 // real path in the plugin root. The trees are on disk.
+import { execFileSync } from 'node:child_process'
 import { chmodSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -108,6 +109,13 @@ describe('pluginScripts', () => {
     const plugin = readPluginAt(dir) as NonNullable<ReturnType<typeof readPluginAt>>
     expect(pluginScripts(plugin, `\${CLAUDE_PLUGIN_ROOT}/out.sh`)).toEqual([])
     expect(pluginScripts(plugin, `\${CLAUDE_PLUGIN_ROOT}/gone.sh`)).toEqual([])
+  })
+
+  linked('gives no script for a named pipe, which a read would wait on', () => {
+    const { dir, top } = pluginTree({ name: 'p' })
+    execFileSync('mkfifo', [path.join(top, 'pipe')])
+    const plugin = readPluginAt(dir) as NonNullable<ReturnType<typeof readPluginAt>>
+    expect(pluginScripts(plugin, `\${CLAUDE_PLUGIN_ROOT}/pipe`)).toEqual([])
   })
 
   unreadable('gives no script for a file that cannot be read', () => {
