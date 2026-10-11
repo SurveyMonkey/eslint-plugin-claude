@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/statusline",
-  "hash": "70800ec65a20b6d025fae667157751e5b44678784f64511be1f5fbb4552d5fc0",
+  "hash": "961458b05ed18ec520f3f77269668262829844c914f42dd64f4c78438c06a472",
   "blocks": [
     {
       "id": "customize-your-status-line",
@@ -179,8 +179,8 @@
     },
     {
       "id": "notifications-share-the-status-line-row",
-      "hash": "c838da1b1e9ce9279ef12908dbc7063f30408cbe21665655f83f894404475430",
-      "bodyHash": "88fc4f523f1d19ac30807f451ace1881e023ded442eaf24c8066a777cb0fc91c"
+      "hash": "0c7b1391e9689d8a739748c8d54ef3f927a9fa2b0ae60c4bd85d84f942cdfb98",
+      "bodyHash": "076c27beee7ab967034cd02eb99e52bd214a0b95430767e3337884338f523479"
     }
   ],
   "sources": [
