@@ -93,7 +93,7 @@ export function holdsFile(dir: string): boolean {
 }
 
 /** The kinds of a file in an eval suite that a rule lints as Markdown. */
-export type EvalFileKind = 'prompt' | 'grader' | 'mock'
+type EvalFileKind = 'prompt' | 'grader' | 'mock'
 
 /** A Markdown file of an eval suite. `evalDir` is the eval directory of the
  *  plugin as an absolute path. `caseDir` is the directory of the case that owns
@@ -210,7 +210,7 @@ export function evalFileOf(file: string): EvalFile | null {
 }
 
 /** Order two directory entries by name, in code unit order. */
-const byName = (a: Dirent, b: Dirent): number => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+const byName = (a: Dirent, b: Dirent): number => Number(a.name > b.name) - Number(a.name < b.name)
 
 /** The case directories of the eval directory `evalDir`, as absolute paths, in name order. A
  *  directory is a case when it holds a `prompt.md` or a `case.yaml`. Everything

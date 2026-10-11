@@ -171,6 +171,11 @@ describe(RULE, () => {
     expect(messages('type: regex\ntarget: __proto__')).toEqual([TARGET('target', '__proto__')])
   })
 
+  check('stays silent for a key that an alias writes, because the rule cannot place it', () => {
+    expect(messages('k: &k type\n*k : nope')).toEqual([])
+    expect(messages('type: llm\nk: &k weight\n*k : 0')).toEqual([])
+  })
+
   check('stays silent for a block that does not parse or is not a map', () => {
     expect(messages('type: [')).toEqual([])
     expect(lintEval(RULE, top, FILE, '---\n- a\n---\n')).toEqual([])

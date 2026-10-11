@@ -41,12 +41,18 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'errorAgent' | 'abo
           return
         }
         const { type, error, abort_when: abortWhen } = fm.data
-        const typeField = fm.fields.get('type')
-        if (type !== null && type !== undefined && !EVAL_MOCK_TYPES.includes(type as string)) {
-          const field = typeField as NonNullable<typeof typeField>
+        // A key that an alias writes is in the data and has no field, so the rule cannot place it.
+        const report = (key: string, messageId: 'badType' | 'errorAgent' | 'abortFixed') => {
+          const field = fm.fields.get(key)
+          if (field === undefined) {
+            return
+          }
+          const onValue = messageId === 'badType'
           context.report({
-            loc: fm.at(field.valueStart, field.valueEnd),
-            messageId: 'badType',
+            loc: onValue
+              ? fm.at(field.valueStart, field.valueEnd)
+              : fm.at(field.keyStart, field.keyEnd),
+            messageId,
             data: {
               value: context.sourceCode.text.slice(
                 fm.base + field.valueStart,
@@ -54,18 +60,17 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'errorAgent' | 'abo
               ),
             },
           })
+        }
+        if (type !== null && type !== undefined && !EVAL_MOCK_TYPES.includes(type as string)) {
+          report('type', 'badType')
           return
         }
         const effective = type ?? (isServerFile ? undefined : 'fixed')
-        const keyOf = (key: string) => {
-          const field = fm.fields.get(key) as NonNullable<typeof typeField>
-          return fm.at(field.keyStart, field.keyEnd)
-        }
         if (effective === 'agent' && error === true) {
-          context.report({ loc: keyOf('error'), messageId: 'errorAgent' })
+          report('error', 'errorAgent')
         }
         if (effective === 'fixed' && abortWhen !== null && abortWhen !== undefined) {
-          context.report({ loc: keyOf('abort_when'), messageId: 'abortFixed' })
+          report('abort_when', 'abortFixed')
         }
       },
     }

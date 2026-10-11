@@ -121,6 +121,12 @@ describe(RULE, () => {
     },
   )
 
+  check('stays silent for a key that an alias writes, because the rule cannot place it', () => {
+    expect(messages('k: &k type\n*k : dynamic')).toEqual([])
+    expect(messages('k: &k error\n*k : true\ntype: agent')).toEqual([])
+    expect(messages('k: &k abort_when\n*k : x\ntype: fixed')).toEqual([])
+  })
+
   check('does not read an inherited name as a type', () => {
     expect(messages('type: constructor')).toEqual([BAD_TYPE('constructor')])
     expect(messages('type: toString')).toEqual([BAD_TYPE('toString')])
