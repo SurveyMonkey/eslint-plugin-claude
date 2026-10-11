@@ -110,6 +110,11 @@ describe(`${name}: one file`, () => {
     }
   })
 
+  it('counts a Read deny rule with no specifier, which denies every file', () => {
+    expect(alone({ ...ON, permissions: { deny: ['Read'] } })).toEqual([])
+    expect(alone({ ...ON, permissions: { allow: ['Read'] } })).toEqual(['open'])
+  })
+
   it('counts the entries of both lists together', () => {
     const credentials = { files: [{ path: '~/.aws', mode: 'deny' }] }
     expect(
