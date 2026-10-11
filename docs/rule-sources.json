@@ -3728,6 +3728,11 @@
       "url": "https://code.claude.com/docs/en/plugins/publish",
       "heading": "Prepare your plugin for release",
       "hash": "9de39a9a3c45c1bce089b935877c35b38082e5a3894e22e1fb5963e3a12043ea"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "monitors",
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
     }
   ],
   "plugin-path-var-braced": [

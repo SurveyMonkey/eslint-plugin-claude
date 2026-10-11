@@ -31,7 +31,8 @@ Two other rules read the hook and MCP parts, so this rule does not read them:
 - `hooks-command-path-variable` reads the commands of plugin hooks.
 - `mcp-plugin-root-paths` reads the `command`, `args` and `env` of plugin MCP servers.
 
-This rule reads the monitors and the LSP servers:
+This rule reads the monitors and the LSP servers. Claude Code runs a monitor command in the session
+working directory, so a relative path in it does not point into the plugin.[^monitors]
 
 - The `command` of a monitor in `monitors/monitors.json`, and in the inline `monitors` and
   `experimental.monitors` of `plugin.json`. The rule reports the first relative path of the command:
@@ -61,3 +62,4 @@ Pass: a monitor `command` `"${CLAUDE_PLUGIN_ROOT}/bin/watch" --all`.
 
 [^paths]: [Add components to a plugin: Reference plugin paths and store data](https://code.claude.com/docs/en/plugins/components#path-variables-and-persistent-data)
 [^publish]: [Publish and distribute a plugin: Prepare your plugin for release](https://code.claude.com/docs/en/plugins/publish#prepare-your-plugin-for-release)
+[^monitors]: [Plugin manifest reference: monitors](https://code.claude.com/docs/en/plugins/manifest-reference#monitors)
