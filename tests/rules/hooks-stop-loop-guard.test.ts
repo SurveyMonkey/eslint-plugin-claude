@@ -41,6 +41,17 @@ describe(`${name}: the report`, () => {
     expect(script(UNGUARDED, 'Stop', { args: [] })).toEqual(['noGuard'])
   })
 
+  it('reads an exit 2 after then, else, do or a brace', () => {
+    for (const line of [
+      'if true; then exit 2; fi',
+      'if true; then :; else exit 2; fi',
+      'while true; do exit 2; done',
+      'x || { exit 2; }',
+    ]) {
+      expect(inline(line), line).toEqual(['noGuard'])
+    }
+  })
+
   it('reports once for a handler', () => {
     expect(inline(`echo '{"decision":"block","reason":"x"}'; exit 2`)).toEqual(['noGuard'])
   })

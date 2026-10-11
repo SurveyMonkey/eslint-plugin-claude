@@ -17,7 +17,7 @@ import {
   printedJson,
 } from '../hooks-config.ts'
 import { placeholderFolders } from '../hooks-files.ts'
-import { commandWordAt } from '../shell-words.ts'
+import { statementAt } from '../shell-words.ts'
 
 const name = 'hooks-stop-loop-guard' as const
 
@@ -56,7 +56,7 @@ const rule: Rule.RuleModule = {
         }
         const exits = output.texts.some(({ commands }) =>
           commands.some(({ words }) => {
-            const at = commandWordAt(words)
+            const at = statementAt(words)
             return words[at] === 'exit' && words[at + 1] === '2'
           }),
         )

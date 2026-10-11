@@ -19,12 +19,9 @@ import {
   stringOf,
 } from '../hooks-config.ts'
 import { placeholderFolders } from '../hooks-files.ts'
-import { type Command, commandWordAt, printedBy, sinkOf } from '../shell-words.ts'
+import { type Command, printedBy, sinkOf, statementAt } from '../shell-words.ts'
 
 const name = 'hooks-output-blocking-exit-code' as const
-
-/** The words that start a branch of a shell block. They come before the command word. */
-const BLOCK_WORDS = ['then', 'else', 'do', '{', '!']
 
 /** True when the commands write to stderr and then run `exit 1`, and print no JSON. */
 function exitsOneAfterMessage(commands: Command[]): boolean {
@@ -34,11 +31,8 @@ function exitsOneAfterMessage(commands: Command[]): boolean {
   let wrote = false
   return commands.some(({ words }, index) => {
     wrote ||= sinkOf(commands, index) === 'stderr'
-    const rest = words.slice(commandWordAt(words))
-    while (BLOCK_WORDS.includes(rest[0] as string)) {
-      rest.shift()
-    }
-    return wrote && rest[0] === 'exit' && rest[1] === '1'
+    const at = statementAt(words)
+    return wrote && words[at] === 'exit' && words[at + 1] === '1'
   })
 }
 

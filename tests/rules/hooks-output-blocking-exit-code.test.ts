@@ -150,6 +150,13 @@ describe(`${name}: silent`, () => {
     }
   })
 
+  it('reports an exit 1 after a brace, and ignores onFailure on each event that ignores it', () => {
+    expect(inline('echo "no" >&2\ncmd || { exit 1; }')).toEqual(['exit1'])
+    for (const event of ['Stop', 'SubagentStop', 'TaskCompleted', 'TeammateIdle']) {
+      expect(inline('echo no >&2; exit 1', event, { onFailure: 'block' }), event).toEqual(['exit1'])
+    }
+  })
+
   it('is silent when onFailure is block, except on the events that ignore it', () => {
     expect(inline('echo no >&2; exit 1', 'PreToolUse', { onFailure: 'block' })).toEqual([])
     expect(inline('echo no >&2; exit 1', 'Stop', { onFailure: 'block' })).toEqual(['exit1'])

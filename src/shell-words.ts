@@ -208,6 +208,10 @@ export function sinkOf(commands: Command[], index: number): Sink {
       return next === '2' ? 'stderr' : 'other'
     }
   }
+  // The scanner ends the command of `&>file` at the `&`. The next command then starts with the redirect.
+  if (commands[index + 1]?.words[0]?.startsWith('>')) {
+    return 'other'
+  }
   return stdout ? 'stdout' : 'other'
 }
 
@@ -220,9 +224,27 @@ export interface Printed {
 
 const PRINTERS = ['echo', 'printf']
 
+/** The words that start a branch of a shell block. They come before the command word. */
+const BLOCK_WORDS = ['then', 'else', 'do', '{', '!']
+
+/** The index of the command word in the words of a simple command, like `commandWordAt`, but a word that
+ *  starts a branch of a shell block (`then`, `else`, `do`, `{`, `!`) comes before it too. */
+export function statementAt(words: string[]): number {
+  let at = 0
+  for (;;) {
+    at += commandWordAt(words.slice(at))
+    if (!BLOCK_WORDS.includes(words[at] as string)) {
+      return at
+    }
+    at++
+  }
+}
+
+/** The name of the command of the simple command `words`, without its path. */
+const nameOf = (words: string[]) => path.posix.basename(words[statementAt(words)] ?? '')
+
 /** True when the command word of the simple command `words` is `echo` or `printf`. */
-export const isPrinter = (words: string[]) =>
-  PRINTERS.includes(path.posix.basename(words[commandWordAt(words)] ?? ''))
+export const isPrinter = (words: string[]) => PRINTERS.includes(nameOf(words))
 
 /** The arguments of a printer that it prints: no option such as `-n`, and no redirect with its target. */
 function printedArguments(words: string[]): string[] {
@@ -261,9 +283,11 @@ export function printedBy(commands: Command[]): Printed[] {
     if (!isPrinter(words) || sinkOf(commands, index) !== 'stdout') {
       return []
     }
-    const args = printedArguments(words.slice(commandWordAt(words) + 1))
+    const args = printedArguments(words.slice(statementAt(words) + 1))
+    // `printf` turns a `\n` of its format into a new line. `echo` prints the two characters.
+    const end = nameOf(words) === 'printf' ? /(?:\\n)+$/ : /$^/
     const objects = args.flatMap((arg) => {
-      const json = objectIn(arg)
+      const json = objectIn(arg.replace(end, ''))
       return json === undefined ? [] : [{ json, text: arg }]
     })
     return objects.length > 0 ? objects : [{ json: undefined, text: args.join(' ') }]

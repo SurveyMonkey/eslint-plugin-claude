@@ -9,6 +9,7 @@ import {
   printedBy,
   scanCommands,
   sinkOf,
+  statementAt,
 } from '../src/shell-words.ts'
 
 describe('commandsOf', () => {
@@ -93,6 +94,12 @@ describe('sinkOf', () => {
     expect(sink('echo a | cat', 1)).toBe('stdout')
   })
 
+  it('gives other for a redirect of both streams with &>, which the scanner splits at the &', () => {
+    for (const line of ['echo a &>/dev/null', 'echo a &>> f', 'echo a &> f']) {
+      expect(sink(line), line).toBe('other')
+    }
+  })
+
   it('reads the command at the index', () => {
     expect(sink('echo a >&2; echo b', 2)).toBe('stdout')
     expect(sink('echo a; echo b >&2', 1)).toBe('stderr')
@@ -129,11 +136,43 @@ describe('printedBy', () => {
     expect(printed(`echo '[1]'`)).toEqual([{ json: undefined, text: '[1]' }])
   })
 
+  it('reads a printer after a word that starts a branch of a block', () => {
+    for (const line of [
+      `if x; then echo '{"a":1}'; fi`,
+      `if x; then :; else echo '{"a":1}'; fi`,
+      `for i in 1; do echo '{"a":1}'; done`,
+      `x || { echo '{"a":1}'; }`,
+      `! echo '{"a":1}'`,
+    ]) {
+      expect(
+        printed(line).map(({ json }) => json),
+        line,
+      ).toEqual([{ a: 1 }])
+    }
+  })
+
+  it('drops a \\n at the end of the format of printf, and not of echo', () => {
+    expect(printed(`printf '{"a":1}\\n'`).map(({ json }) => json)).toEqual([{ a: 1 }])
+    expect(printed(`printf '{"a":1}\\n\\n'`).map(({ json }) => json)).toEqual([{ a: 1 }])
+    expect(printed(`echo '{"a":1}\\n'`).map(({ json }) => json)).toEqual([undefined])
+  })
+
   it('tells a printer by the command word', () => {
     expect(isPrinter(['A=1', 'echo', 'a'])).toBe(true)
     expect(isPrinter(['/bin/echo'])).toBe(true)
     expect(isPrinter(['cat'])).toBe(false)
     expect(isPrinter([])).toBe(false)
+  })
+})
+
+describe('statementAt', () => {
+  it('skips assignments, wrappers and the words that start a branch of a block', () => {
+    expect(statementAt(['exit', '2'])).toBe(0)
+    expect(statementAt(['then', 'exit', '2'])).toBe(1)
+    expect(statementAt(['{', 'A=1', 'exec', 'exit'])).toBe(3)
+    expect(statementAt(['else', '!', 'echo'])).toBe(2)
+    expect(statementAt([])).toBe(0)
+    expect(statementAt(['then'])).toBe(1)
   })
 })
 

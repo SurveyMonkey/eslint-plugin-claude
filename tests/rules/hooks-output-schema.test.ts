@@ -342,3 +342,15 @@ describe(`${name}: what it reads`, () => {
     ).toEqual(['decision'])
   })
 })
+
+describe(`${name}: where the print sits`, () => {
+  it('reads a print in a branch of a block, and a printf with a new line', () => {
+    const wrong = JSON.stringify({ permissionDecision: 'deny' })
+    expect(ids(`if true; then echo '${wrong}'; fi`)).toEqual(['level'])
+    expect(ids(`printf '${wrong}\\n'`)).toEqual(['level'])
+  })
+
+  it('does not read a print that both streams send to a file', () => {
+    expect(ids(`echo '${JSON.stringify({ permissionDecision: 'deny' })}' &>/dev/null`)).toEqual([])
+  })
+})
