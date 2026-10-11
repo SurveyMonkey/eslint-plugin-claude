@@ -1,7 +1,16 @@
 // The words of a shell line, as the hooks rules read them. The tests of `hooks-command-removed-cli-flag`
 // also reach this module.
 import { describe, expect, it } from 'vitest'
-import { commandsOf, commandWordAt, isAssignment } from '../src/shell-words.ts'
+import {
+  commandsOf,
+  commandWordAt,
+  isAssignment,
+  isPrinter,
+  printedBy,
+  scanCommands,
+  sinkOf,
+  statementAt,
+} from '../src/shell-words.ts'
 
 describe('commandsOf', () => {
   it('splits a line at the separators of a shell', () => {
@@ -49,5 +58,214 @@ describe('commandWordAt', () => {
     expect(isAssignment('A_1=x')).toBe(true)
     expect(isAssignment('1A=x')).toBe(false)
     expect(isAssignment('--a=b')).toBe(false)
+  })
+})
+
+describe('sinkOf', () => {
+  const sink = (line: string, index = 0) => sinkOf(scanCommands(line), index)
+
+  it('gives stdout for a command with no redirect of standard output', () => {
+    expect(sink('echo a')).toBe('stdout')
+    expect(sink('echo a 2>/dev/null')).toBe('stdout')
+    expect(sink('echo a 2>&1')).toBe('stdout')
+    expect(sink('echo a >&1')).toBe('stdout')
+  })
+
+  it('gives stderr for a redirect to descriptor 2 or to /dev/stderr', () => {
+    for (const line of [
+      'echo a >&2',
+      'echo a 1>&2',
+      'echo a >/dev/stderr',
+      'echo a > /dev/stderr',
+    ]) {
+      expect(sink(line), line).toBe('stderr')
+    }
+  })
+
+  it('gives other for a redirect to a file or to another descriptor', () => {
+    for (const line of ['echo a > f', 'echo a >f', 'echo a >> f', 'echo a 1>f', 'echo a >&3']) {
+      expect(sink(line), line).toBe('other')
+    }
+  })
+
+  it('gives other for a command that a pipe or a command substitution takes', () => {
+    expect(sink('echo a | cat')).toBe('other')
+    expect(sink('x=$(echo a)', 1)).toBe('other')
+    expect(sink('echo a | cat', 1)).toBe('stdout')
+  })
+
+  it('gives other for a redirect of both streams with &>, which the scanner splits at the &', () => {
+    for (const line of ['echo a &>/dev/null', 'echo a &>> f', 'echo a &> f']) {
+      expect(sink(line), line).toBe('other')
+    }
+  })
+
+  it('reads the command at the index', () => {
+    expect(sink('echo a >&2; echo b', 2)).toBe('stdout')
+    expect(sink('echo a; echo b >&2', 1)).toBe('stderr')
+  })
+})
+
+describe('printedBy', () => {
+  const printed = (line: string) => printedBy(scanCommands(line))
+
+  it('gives the JSON object of an argument, and the text of any other print', () => {
+    expect(printed(`echo '{"a": 1}'`)).toEqual([{ json: { a: 1 }, text: '{"a": 1}' }])
+    expect(printed('echo -n a b')).toEqual([{ json: undefined, text: 'a b' }])
+    expect(printed(`printf '%s' '{"a":1}'`)).toEqual([{ json: { a: 1 }, text: '{"a":1}' }])
+  })
+
+  it('gives one item for each object, and nothing for a command that is not a printer', () => {
+    expect(printed(`echo '{"a":1}' '{"b":2}'; ls`).map(({ json }) => json)).toEqual([
+      { a: 1 },
+      { b: 2 },
+    ])
+    expect(printed('ls; cat a')).toEqual([])
+  })
+
+  it('gives nothing for a print to stderr or a file, and drops the redirect from the text', () => {
+    expect(printed('echo a >&2')).toEqual([])
+    expect(printed('echo a > f')).toEqual([])
+    expect(printed('echo a 2> f')).toEqual([{ json: undefined, text: 'a' }])
+    expect(printed('echo a 2>/dev/null')).toEqual([{ json: undefined, text: 'a' }])
+    expect(printed('echo a 2>/dev/null b')).toEqual([{ json: undefined, text: 'a b' }])
+  })
+
+  it('does not take text that fails to parse, or that is not an object, for JSON', () => {
+    expect(printed(`echo '{x'`)).toEqual([{ json: undefined, text: '{x' }])
+    expect(printed(`echo '[1]'`)).toEqual([{ json: undefined, text: '[1]' }])
+  })
+
+  it('reads a printer after a word that starts a branch of a block', () => {
+    for (const line of [
+      `if x; then echo '{"a":1}'; fi`,
+      `if x; then :; else echo '{"a":1}'; fi`,
+      `for i in 1; do echo '{"a":1}'; done`,
+      `x || { echo '{"a":1}'; }`,
+      `! echo '{"a":1}'`,
+    ]) {
+      expect(
+        printed(line).map(({ json }) => json),
+        line,
+      ).toEqual([{ a: 1 }])
+    }
+  })
+
+  it('drops a \\n at the end of the format of printf, and not of echo', () => {
+    expect(printed(`printf '{"a":1}\\n'`).map(({ json }) => json)).toEqual([{ a: 1 }])
+    expect(printed(`printf '{"a":1}\\n\\n'`).map(({ json }) => json)).toEqual([{ a: 1 }])
+    expect(printed(`echo '{"a":1}\\n'`).map(({ json }) => json)).toEqual([undefined])
+  })
+
+  it('reads the JSON of a printf format in double quotes, and a \\n at its end', () => {
+    expect(printed('printf "{\\"a\\":1}\\n"').map(({ json }) => json)).toEqual([{ a: 1 }])
+  })
+
+  it('keeps a printer that a later redirect-only command does not take', () => {
+    for (const line of [`echo '{"a":1}' && >f`, `echo '{"a":1}'; >f`, `echo '{"a":1}'\n>f`]) {
+      expect(
+        printed(line).map(({ json }) => json),
+        line,
+      ).toEqual([{ a: 1 }])
+    }
+    expect(printed(`echo '{"a":1}' &>f`)).toEqual([])
+  })
+
+  it('takes the text of a printer after a word that starts a branch', () => {
+    expect(printed('if x; then echo a; fi')).toEqual([{ json: undefined, text: 'a' }])
+  })
+
+  it('tells a printer by the command word', () => {
+    expect(isPrinter(['A=1', 'echo', 'a'])).toBe(true)
+    expect(isPrinter(['/bin/echo'])).toBe(true)
+    expect(isPrinter(['cat'])).toBe(false)
+    expect(isPrinter([])).toBe(false)
+  })
+})
+
+describe('statementAt', () => {
+  it('skips assignments, wrappers and the words that start a branch of a block', () => {
+    expect(statementAt(['exit', '2'])).toBe(0)
+    expect(statementAt(['then', 'exit', '2'])).toBe(1)
+    expect(statementAt(['{', 'A=1', 'exec', 'exit'])).toBe(3)
+    expect(statementAt(['else', '!', 'echo'])).toBe(2)
+    expect(statementAt([])).toBe(0)
+    expect(statementAt(['then'])).toBe(1)
+  })
+})
+
+describe('scanCommands', () => {
+  const streams = (line: string) =>
+    scanCommands(line).map(({ words, stdout }) => `${words.join(' ')}:${stdout ? 'out' : 'taken'}`)
+
+  it('marks a command that a lone & ended the command before', () => {
+    const ampAfter = (line: string) => scanCommands(line).map(({ afterAmp }) => afterAmp === true)
+    expect(ampAfter('a & b')).toEqual([false, true])
+    expect(ampAfter('a &b; c')).toEqual([false, true, false])
+    expect(ampAfter('a && b')).toEqual([false, false])
+    expect(ampAfter('a; >f')).toEqual([false, false])
+  })
+
+  it('keeps the backslash in double quotes, but before $, a backtick, a quote and a backslash', () => {
+    expect(commandsOf('echo "a\\nb" "c\\$d" "e\\"f" "g\\\\h" i\\nj')).toEqual([
+      ['echo', 'a\\nb', 'c$d', 'e"f', 'g\\h', 'inj'],
+    ])
+  })
+
+  it('stops at a depth, and does not throw or hang on a line of unclosed groups', () => {
+    const start = Date.now()
+    expect(scanCommands(`echo ${'"$('.repeat(20_000)}`)).toHaveLength(1)
+    expect(scanCommands('a('.repeat(100_000))).toHaveLength(100_000)
+    expect(Date.now() - start).toBeLessThan(5000)
+  })
+
+  it('marks a command that a pipe takes, and not a list operator', () => {
+    expect(streams('a | b')).toEqual(['a:taken', 'b:out'])
+    expect(streams('a |& b')).toEqual(['a:taken', 'b:out'])
+    expect(streams('a || b && c; d & e')).toEqual(['a:out', 'b:out', 'c:out', 'd:out', 'e:out'])
+  })
+
+  it('marks a command in a command substitution or a backtick pair, at any depth', () => {
+    expect(streams('x=$(a b) c')).toEqual(['x=$:out', 'a b:taken', 'c:out'])
+    expect(streams('echo `a b` c')).toEqual(['echo:out', 'a b:taken', 'c:out'])
+    expect(streams('$(a $(b) c) d')).toEqual(['$:out', 'a $:taken', 'b:taken', 'c:taken', 'd:out'])
+  })
+
+  it('does not mark a command in a group, and leaves the substitution level at the close', () => {
+    expect(streams('(a; b) c')).toEqual(['a:out', 'b:out', 'c:out'])
+    expect(streams('$(a) (b)')).toEqual(['$:out', 'a:taken', 'b:out'])
+    expect(streams(')a')).toEqual(['a:out'])
+  })
+
+  it('keeps a command substitution in double quotes in the word, with the quotes of its own', () => {
+    expect(scanCommands('echo "$(echo "it\'s")" x').map(({ words }) => words)).toEqual([
+      ['echo', `$(echo "it's")`, 'x'],
+    ])
+    expect(commandsOf('echo "a $(f "b" \'c)\' d) e" f')).toEqual([
+      ['echo', 'a $(f "b" \'c)\' d) e', 'f'],
+    ])
+    expect(commandsOf('echo "a `echo "b"` c" d')).toEqual([['echo', 'a `echo "b"` c', 'd']])
+    expect(commandsOf('echo "$(a $(b ")") c)" d')).toEqual([['echo', '$(a $(b ")") c)', 'd']])
+    expect(commandsOf('echo "$(echo \\) \\" x)" y')).toEqual([['echo', '$(echo \\) \\" x)', 'y']])
+    expect(commandsOf('echo "a `echo \\` b` c" d')).toEqual([['echo', 'a `echo \\` b` c', 'd']])
+  })
+
+  it('reads a backslash, a substitution and a backtick pair inside a quote inside a substitution', () => {
+    expect(commandsOf('echo "$(echo "a\\"b" c)" d')).toEqual([['echo', '$(echo "a\\"b" c)', 'd']])
+    expect(commandsOf('echo "$(echo "x $(y ")") z")" d')).toEqual([
+      ['echo', '$(echo "x $(y ")") z")', 'd'],
+    ])
+    expect(commandsOf('echo "$(echo "x `y ")` z")" d')).toEqual([
+      ['echo', '$(echo "x `y ")` z")', 'd'],
+    ])
+  })
+
+  it('reads to the end of the line for a substitution that does not close', () => {
+    expect(commandsOf('echo "$(echo "a" b')).toEqual([['echo', '$(echo "a" b']])
+    expect(commandsOf('echo "$(echo \'a b')).toEqual([['echo', "$(echo 'a b"]])
+    expect(commandsOf('echo "$(echo `a b")')).toEqual([['echo', '$(echo `a b")']])
+    expect(commandsOf('echo "$(echo "a b')).toEqual([['echo', '$(echo "a b']])
+    expect(commandsOf('echo "a `b')).toEqual([['echo', 'a `b']])
+    expect(commandsOf('echo "a $(b \\')).toEqual([['echo', 'a $(b \\']])
   })
 })

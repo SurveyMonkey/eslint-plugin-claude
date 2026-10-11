@@ -142,6 +142,51 @@ const dupHooks = JSON.stringify({
   hooks: { PostToolUse: [{ matcher: 'Write', hooks: [{ type: 'command', command: './fmt.sh' }] }] },
 })
 const dupManifest = JSON.stringify({ name: 'dup', ...JSON.parse(dupHooks) })
+// The hooks output rules of layer H9, one fault for each. A handler prints JSON with `echo`, or runs a script of
+// the folder. `hooks-output-size` has a tree of its own, so no large file is in the shared tree.
+const printJson = (value: unknown) => `echo '${JSON.stringify(value)}'`
+const rewriteInput = (input: string) =>
+  printJson({
+    hookSpecificOutput: {
+      hookEventName: 'PreToolUse',
+      permissionDecision: 'allow',
+      updatedInput: { command: input },
+    },
+  })
+const outputHooks = {
+  PreToolUse: [
+    { matcher: 'Edit', hooks: [{ type: 'command', command: rewriteInput('ls') }] },
+    // A second rewrite for the same tool (`hooks-multiple-updatedinput`).
+    { matcher: 'Edit', hooks: [{ type: 'command', command: rewriteInput('pwd') }] },
+    // The old top-level decision (`hooks-output-deprecated-fields`).
+    { matcher: 'Read', hooks: [{ type: 'command', command: printJson({ decision: 'approve' }) }] },
+    // A script that exits 1 after a message to stderr (`hooks-output-blocking-exit-code`).
+    {
+      matcher: 'Write',
+      hooks: [{ type: 'command', command: `${projectDir}/scripts/deny.sh`, args: [] }],
+    },
+  ],
+  // A field with no effect (`hooks-output-schema`).
+  PostToolUse: [
+    { matcher: 'Read', hooks: [{ type: 'command', command: printJson({ suppressOutput: true }) }] },
+  ],
+  // A script that blocks and never reads `stop_hook_active` (`hooks-stop-loop-guard`).
+  Stop: [{ hooks: [{ type: 'command', command: `${projectDir}/scripts/stop.sh`, args: [] }] }],
+  // Text that never changes (`hooks-sessionstart-static-context`).
+  SessionStart: [{ hooks: [{ type: 'command', command: 'echo "Use bun test"' }] }],
+}
+// `hooks-output-size`: a literal over a small limit that the test sets.
+const OUTPUT_SIZE_LIMIT = 50
+const OUTPUT_SIZE_TREE: Record<string, string> = {
+  'packages/osz/.claude/settings.json': JSON.stringify({
+    $schema: 'https://json.schemastore.org/claude-code-settings.json',
+    hooks: {
+      SessionStart: [
+        { hooks: [{ type: 'command', command: printJson({ systemMessage: 'x'.repeat(60) }) }] },
+      ],
+    },
+  }),
+}
 const hooksSettings = JSON.stringify({ disableAllHooks: true, hooks: hooksFaults })
 const hooksDropIn = JSON.stringify({ hooks: hooksFaults })
 const hooksYaml = `---
@@ -867,6 +912,9 @@ const TREE: Record<string, string> = {
   'packages/hk/.claude/hooks/hooks.json': badHooks,
   'packages/hk/.claude-plugin/hooks.json': '{}',
   'packages/hk/docs/hooks.json': '{}',
+  'packages/ho/.claude/settings.json': JSON.stringify({ hooks: outputHooks }),
+  'packages/ho/scripts/deny.sh': '#!/bin/bash\necho "Blocked" >&2\nexit 1\n',
+  'packages/ho/scripts/stop.sh': '#!/bin/bash\necho "Run the tests" >&2\nexit 2\n',
   'hooks.json': badHooks,
   '.vscode/settings.json': badSettings,
   '.vscode/settings.local.json': badSettings,
@@ -2626,13 +2674,27 @@ const STRICT_ONLY_EXPECTED = [
     'packages/hk/managed-settings.json',
     'packages/hk/plugin/hooks/hooks.json',
   ].flatMap((file) =>
-    ['hooks-broad-auto-approve', 'hooks-exec-form-shell-syntax', 'hooks-http-literal-secret'].map(
-      (rule) => `${file}: claude/${rule}@1`,
-    ),
+    [
+      'hooks-broad-auto-approve',
+      'hooks-exec-form-shell-syntax',
+      'hooks-http-literal-secret',
+      // The allow in `hooksFaults` has no `hookEventName`.
+      'hooks-output-schema',
+    ].map((rule) => `${file}: claude/${rule}@1`),
   ),
   ...['packages/hk/.claude/settings.json', 'packages/hk/.claude/settings.local.json'].map(
     (file) => `${file}: claude/hooks-script-shebang@1`,
   ),
+  // The hooks output rules: one fault for each, in `outputHooks`, and one review report for each of its seven handlers.
+  ...[
+    'hooks-multiple-updatedinput',
+    'hooks-output-blocking-exit-code',
+    'hooks-output-deprecated-fields',
+    'hooks-output-schema',
+    'hooks-sessionstart-static-context',
+    'hooks-stop-loop-guard',
+  ].map((rule) => `packages/ho/.claude/settings.json: claude/${rule}@1`),
+  ...times(7, 'packages/ho/.claude/settings.json: claude/hooks-committed-command-review@1'),
   ...[
     'packages/dup/.claude/settings.json',
     'packages/dup/hooks/hooks.json',
@@ -3987,6 +4049,12 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   },
   { name: 'hooks-matcher-unsupported-event', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   {
+    name: 'hooks-multiple-updatedinput',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
     name: 'hooks-no-standalone-file',
     blocks: [
       [
@@ -3996,6 +4064,30 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
         '**/.claude-plugin/hooks/hooks.json',
       ],
     ],
+  },
+  {
+    name: 'hooks-output-blocking-exit-code',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
+    name: 'hooks-output-deprecated-fields',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
+    name: 'hooks-output-schema',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
+    name: 'hooks-output-size',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
   },
   { name: 'hooks-placeholder-quoted', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-powershell-placeholder', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
@@ -4020,6 +4112,18 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     name: 'hooks-sessionend-default-timeout',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
     severity: 'warn',
+  },
+  {
+    name: 'hooks-sessionstart-static-context',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
+  },
+  {
+    name: 'hooks-stop-loop-guard',
+    blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
+    severity: 'warn',
+    strictOnly: true,
   },
   {
     name: 'hooks-timeout-units',
@@ -4176,6 +4280,7 @@ isolateGitConfig()
 let descriptionRoot = ''
 let maxBytesRoot = ''
 let mcpSizeRoot = ''
+let outputSizeRoot = ''
 // A folder next to the tree, for the files that links in the tree lead to.
 let external = ''
 
@@ -4218,6 +4323,11 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(mcpSizeRoot, file)), { recursive: true })
     writeFileSync(path.join(mcpSizeRoot, file), content)
   }
+  outputSizeRoot = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-output-size-'))
+  for (const [file, content] of Object.entries(OUTPUT_SIZE_TREE)) {
+    mkdirSync(path.dirname(path.join(outputSizeRoot, file)), { recursive: true })
+    writeFileSync(path.join(outputSizeRoot, file), content)
+  }
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -4242,6 +4352,7 @@ afterAll(() => {
   rmSync(descriptionRoot, { recursive: true, force: true })
   rmSync(maxBytesRoot, { recursive: true, force: true })
   rmSync(mcpSizeRoot, { recursive: true, force: true })
+  rmSync(outputSizeRoot, { recursive: true, force: true })
   rmSync(external, { recursive: true, force: true })
 })
 
@@ -4741,6 +4852,22 @@ describe('configs', () => {
     ] as Linter.Config[]
     expect(await reports(config, mcpSizeRoot)).toEqual([
       'packages/mbig/.mcp.json: claude/mcp-json-file-size@2',
+    ])
+  }, 30_000)
+  it('reports the hooks output size rule on a tree of its own, in strict only', async () => {
+    // The rule is `off` in recommended. The override sets a small limit and the severity of strict.
+    const withLimit = (preset: Linter.Config[]) =>
+      [
+        ...preset,
+        {
+          files: ['**/.claude/settings.json'],
+          rules: { 'claude/hooks-output-size': ['warn', { maxOutputChars: OUTPUT_SIZE_LIMIT }] },
+        },
+      ] as Linter.Config[]
+    expect(await reports(plugin.configs.recommended, outputSizeRoot)).toEqual([])
+    expect(await reports(withLimit(plugin.configs.strict), outputSizeRoot)).toEqual([
+      'packages/osz/.claude/settings.json: claude/hooks-committed-command-review@1',
+      'packages/osz/.claude/settings.json: claude/hooks-output-size@1',
     ])
   }, 30_000)
   it('reports the two option rules on their own files once an option turns them on', async () => {

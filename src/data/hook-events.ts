@@ -231,3 +231,36 @@ export const BLOCKING_EVENTS: readonly string[] = [
   'WorktreeCreate',
   'WorktreeRemove',
 ]
+
+// The output facts that the hooks output rules use. Source: the hooks reference, "Exit code 2 behavior per
+// event" (https://code.claude.com/docs/en/hooks#exit-code-2-behavior-per-event), "Block the action when a hook
+// fails" (https://code.claude.com/docs/en/hooks#block-the-action-when-a-hook-fails), "Exit code 0"
+// (https://code.claude.com/docs/en/hooks#exit-code-0) and the "input" section of each event, checked on
+// 2026-10-10. Review this section on or before 2027-04-10.
+
+/** The events in `BLOCKING_EVENTS` where exit code 2 is not the way to block. `PermissionRequest` does not honor
+ *  it and decides through JSON. On `WorktreeCreate` and `WorktreeRemove`, any non-zero code acts. */
+export const EXIT_CODE_TWO_NOT_THE_WAY: readonly string[] = [
+  'PermissionRequest',
+  'WorktreeCreate',
+  'WorktreeRemove',
+]
+
+/** The events where `onFailure: "block"` has no effect, because exit code 2 there sends Claude back to work. */
+export const ON_FAILURE_IGNORED: readonly string[] = [
+  'Stop',
+  'SubagentStop',
+  'TaskCompleted',
+  'TeammateIdle',
+]
+
+/** The events where Claude Code adds the plain-text stdout of a hook to the context of Claude. */
+export const PLAIN_STDOUT_EVENTS: readonly string[] = [
+  'UserPromptSubmit',
+  'UserPromptExpansion',
+  'SessionStart',
+  'PostModelSwitch',
+]
+
+/** The events whose input has the deprecated field `team_name`. */
+export const TEAM_NAME_EVENTS: readonly string[] = ['TaskCreated', 'TaskCompleted', 'TeammateIdle']

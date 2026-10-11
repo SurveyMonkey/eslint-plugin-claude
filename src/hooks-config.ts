@@ -12,10 +12,16 @@ import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
 import { isMap, isScalar, isSeq, parseDocument, type YAMLMap } from 'yaml'
 import { classifyAgentFile } from './agent-files.ts'
-import { hooksFileKind } from './hooks-files.ts'
+import {
+  type HandlerText,
+  handlerTexts,
+  hooksFileKind,
+  type PlaceholderFolders,
+} from './hooks-files.ts'
 import { type DocumentNode, keyOf, lastMember, type ValueNode } from './marketplace-json.ts'
 import { SETTINGS_FILES } from './permission-listener.ts'
 import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from './settings-files.ts'
+import { printedBy } from './shell-words.ts'
 import { classifySkillFile } from './skill-files.ts'
 import { readFrontmatter } from './skill-frontmatter.ts'
 
@@ -380,4 +386,47 @@ export function handlersOf(source: HookSource): HookHandler[] {
  *  the location of the event name. */
 export function eventMember(source: HookSource, event: string): HMember | undefined {
   return source.hooks?.kind === 'object' ? memberOf(source.hooks, event) : undefined
+}
+
+/** True when the command handler `node` runs in the background: `async` or `asyncRewake` is `true`. A background
+ *  hook cannot block or decide (the hooks reference, "Run hooks in the background"). */
+export function inBackground(node: HObject): boolean {
+  return isTrue(node, 'async') || isTrue(node, 'asyncRewake')
+}
+
+/** What a rule needs to read the output of the handler `node`: the place to report and the texts that it
+ *  runs. The result is undefined for a handler that is not a command, and for shell form with
+ *  `shell: "powershell"`, which no rule reads as shell text. The docs say `shell` is ignored when `args` is set. */
+export function commandOutput(
+  node: HObject,
+  folders: PlaceholderFolders,
+): { loc: Loc; texts: HandlerText[] } | undefined {
+  const line = memberOf(node, 'command')?.value
+  const args = argsOf(node)
+  if (
+    stringOf(node, 'type') !== 'command' ||
+    line?.kind !== 'string' ||
+    (stringOf(node, 'shell') === 'powershell' && args === undefined)
+  ) {
+    return undefined
+  }
+  return { loc: line.loc, texts: handlerTexts(line.value, args, folders) }
+}
+
+/** A JSON object that a hook prints. */
+export type Json = Record<string, unknown>
+
+/** The JSON objects that the command handler texts `texts` print to standard output as literals. */
+export function printedJson(texts: HandlerText[]): Json[] {
+  return texts.flatMap(({ commands }) =>
+    printedBy(commands).flatMap(({ json }) => (json === undefined ? [] : [json])),
+  )
+}
+
+/** The value of `key` in `json` when it is a JSON object, or undefined. An array is no object. */
+export function objectField(json: Json, key: string): Json | undefined {
+  const value = json[key]
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+    ? (value as Json)
+    : undefined
 }

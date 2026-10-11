@@ -2213,9 +2213,26 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
       oldText: null,
       newText: `#### ${c.heading}\n\nThe new text of #${c.issue}.`,
     }))
-    // The tracked entries from the footnotes of docs/rules-inventory.md that
-    // cite each block by its anchor.
-    const cites = classify.loadInventory(path.join(import.meta.dirname, '..')).get(HOOKS) ?? []
+    // A fixed inventory of the three footnotes that cite the blocks of #121,
+    // #122 and #123, with one row each. It is not the real inventory: a later
+    // layer that cites more hooks blocks must not change this replay.
+    const cites: classify.Cite[] = [
+      {
+        heading: 'Command hook fields',
+        anchor: 'command-hook-fields',
+        rows: [{ section: 'Hooks', rules: ['hooks-command-field'] }],
+      },
+      {
+        heading: 'HTTP hook fields',
+        anchor: 'http-hook-fields',
+        rows: [{ section: 'Hooks', rules: ['hooks-http-field'] }],
+      },
+      {
+        heading: 'Other exit codes',
+        anchor: 'other-exit-codes',
+        rows: [{ section: 'Hooks', rules: ['hooks-exit-code'] }],
+      },
+    ]
     const tracked: Tracked[] = findings.flatMap((f) => {
       const cite = cites.find((one) => one.anchor === f.blockId)
       if (cite === undefined) return []
@@ -2224,9 +2241,9 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
       return [{ ...block, sections: cite.rows }]
     })
 
-    it('tracks #121, #122 and #123 from the real inventory, and not #124 or #125', () => {
-      // The footnotes at docs/rules-inventory.md lines 1138, 1139 and 1180 on
-      // 2026-10-10. No footnote cites the blocks of #124 and #125.
+    it('tracks #121, #122 and #123 from a fixed inventory, and not #124 or #125', () => {
+      // The fixed inventory above cites only these three blocks, not the
+      // blocks of #124 and #125.
       expect(tracked.map((t) => t.blockId).sort()).toEqual([
         'command-hook-fields',
         'http-hook-fields',

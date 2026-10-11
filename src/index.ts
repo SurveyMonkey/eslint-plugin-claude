@@ -98,7 +98,12 @@ import hooksMatcherSubagentAnchor from './rules/hooks-matcher-subagent-anchor.ts
 import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
 import hooksMatcherUnanchoredRegex from './rules/hooks-matcher-unanchored-regex.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
+import hooksMultipleUpdatedinput from './rules/hooks-multiple-updatedinput.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
+import hooksOutputBlockingExitCode from './rules/hooks-output-blocking-exit-code.ts'
+import hooksOutputDeprecatedFields from './rules/hooks-output-deprecated-fields.ts'
+import hooksOutputSchema from './rules/hooks-output-schema.ts'
+import hooksOutputSize from './rules/hooks-output-size.ts'
 import hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
 import hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
 import hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
@@ -108,6 +113,8 @@ import hooksScriptExecutable from './rules/hooks-script-executable.ts'
 import hooksScriptExists from './rules/hooks-script-exists.ts'
 import hooksScriptShebang from './rules/hooks-script-shebang.ts'
 import hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
+import hooksSessionstartStaticContext from './rules/hooks-sessionstart-static-context.ts'
+import hooksStopLoopGuard from './rules/hooks-stop-loop-guard.ts'
 import hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
 import hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
 import lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
@@ -374,7 +381,12 @@ const modules = [
   hooksMatcherSyntax,
   hooksMatcherUnanchoredRegex,
   hooksMatcherUnsupportedEvent,
+  hooksMultipleUpdatedinput,
   hooksNoStandaloneFile,
+  hooksOutputBlockingExitCode,
+  hooksOutputDeprecatedFields,
+  hooksOutputSchema,
+  hooksOutputSize,
   hooksPlaceholderQuoted,
   hooksPowershellPlaceholder,
   hooksPreferExecForm,
@@ -382,6 +394,8 @@ const modules = [
   hooksPs1NeedsPowershellShell,
   hooksScriptShebang,
   hooksSessionendDefaultTimeout,
+  hooksSessionstartStaticContext,
+  hooksStopLoopGuard,
   hooksTimeoutUnits,
   hooksWorktreeCreateWithoutRemove,
   skillFrontmatterPosition,
@@ -723,7 +737,12 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-matcher-syntax': 'error',
   'hooks-matcher-unanchored-regex': 'off',
   'hooks-matcher-unsupported-event': 'error',
+  'hooks-multiple-updatedinput': 'off',
   'hooks-no-standalone-file': 'error',
+  'hooks-output-blocking-exit-code': 'off',
+  'hooks-output-deprecated-fields': 'off',
+  'hooks-output-schema': 'off',
+  'hooks-output-size': 'off',
   'hooks-placeholder-quoted': 'warn',
   'hooks-powershell-placeholder': 'error',
   'hooks-prefer-exec-form': 'warn',
@@ -731,6 +750,8 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-ps1-needs-powershell-shell': 'warn',
   'hooks-script-shebang': 'off',
   'hooks-sessionend-default-timeout': 'warn',
+  'hooks-sessionstart-static-context': 'off',
+  'hooks-stop-loop-guard': 'off',
   'hooks-timeout-units': 'off',
   'hooks-worktree-create-without-remove': 'warn',
   'skill-frontmatter-position': 'error',
