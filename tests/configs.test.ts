@@ -3207,11 +3207,9 @@ const EXPECTED = [
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'packages/cxd/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
   'packages/cxd/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
-  'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
-  'packages/cx/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
-  // `plugin-manifest-publish-metadata` reports each manifest of the tree, because none sets
+  // `plugin-manifest-publish-metadata` reports each manifest of the trees, because none sets
   // `homepage` and `repository` or has a README.md. It skips a plugin in `.claude/skills/<name>/`.
-  ...Object.keys(TREE)
+  ...SCHEMA_URL_TREES.map(([file]) => file)
     .filter(
       (file) =>
         file.endsWith('.claude-plugin/plugin.json') &&
@@ -5125,7 +5123,9 @@ describe('configs', () => {
     // too: `agent-plugin-ignored-fields` would report its `permissionMode` in a plugin agent.
     // The manifest of `q` also replaces `agents/`, so `plugin-default-dir-shadowed` reports it.
     expect(await reports(plugin.configs.recommended, descriptionRoot)).toEqual([
+      'plugins/p/.claude-plugin/plugin.json: claude/plugin-manifest-publish-metadata@1',
       'plugins/q/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
+      'plugins/q/.claude-plugin/plugin.json: claude/plugin-manifest-publish-metadata@1',
     ])
   }, 30_000)
   it('reports the max-bytes rule on the files that it reads, on a tree of its own', async () => {
