@@ -17,6 +17,10 @@ const pluginData = `\${CLAUDE_PLUGIN_DATA}`
 const projectDir = `\${CLAUDE_PROJECT_DIR}`
 const userConfigRef = `./run.sh \${user_config.token}`
 const tokenRef = `Use \${user_config.token}\n`
+// The lock with the mode that it removes, for `permissions-default-mode-conflict`.
+const PAIR = JSON.stringify({
+  permissions: { disableBypassPermissionsMode: 'disable', defaultMode: 'bypassPermissions' },
+})
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 /** A hooks object with one command hook. */
 const hookOf = (command: string) => ({
@@ -2442,6 +2446,72 @@ const TREE: Record<string, string> = {
   'packages/evs/sv/ok/.mcp.json': JSON.stringify({ mcpServers: { github: { command: 'x' } } }),
   'packages/evs/sv/ok/evals/mocks/github/create_issue.md': 'Created.\n',
   'packages/evs/sv/ok/evals/mocks/.replay/tracker/answer.md': 'Created.\n',
+  // `permissions-schema`: a bad key, list or Boolean in `permissions`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pms/.claude/settings.json': '{"permissions": {"allowed": []}}',
+  'packages/pms/.claude/settings.local.json': '{"permissions": {"allow": "Bash"}}',
+  'packages/pms/managed-settings.json': '{"permissions": {"deny": "Bash"}}',
+  'packages/pms/managed-settings.d/10-a.json':
+    '{"permissions": {"blockReadsOutsideWorkingDirectories": "yes"}}',
+  'packages/pms/managed-settings.d/.20-hidden.json': '{"permissions": {"allowed": []}}',
+  'packages/pms/managed-settings.d/30-b.txt': '{"permissions": {"allowed": []}}',
+  'packages/pms/managed-settings.d/sub/40-c.json': '{"permissions": {"allowed": []}}',
+  'packages/pms/.vscode/settings.json': '{"permissions": {"allowed": []}}',
+  // `permissions-default-mode-value`: a `defaultMode` that is no mode, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pdv/.claude/settings.json': '{"permissions": {"defaultMode": "ask"}}',
+  'packages/pdv/.claude/settings.local.json': '{"permissions": {"defaultMode": true}}',
+  'packages/pdv/managed-settings.json': '{"permissions": {"defaultMode": "Plan"}}',
+  'packages/pdv/managed-settings.d/10-a.json': '{"permissions": {"defaultMode": 3}}',
+  'packages/pdv/managed-settings.d/.20-hidden.json': '{"permissions": {"defaultMode": "ask"}}',
+  'packages/pdv/managed-settings.d/30-b.txt': '{"permissions": {"defaultMode": "ask"}}',
+  'packages/pdv/managed-settings.d/sub/40-c.json': '{"permissions": {"defaultMode": "ask"}}',
+  'packages/pdv/.vscode/settings.json': '{"permissions": {"defaultMode": "ask"}}',
+  // `permissions-disable-mode-value`: a lock that is not the string "disable", in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pdm/.claude/settings.json': '{"permissions": {"disableBypassPermissionsMode": true}}',
+  'packages/pdm/.claude/settings.local.json': '{"disableAutoMode": true}',
+  'packages/pdm/managed-settings.json': '{"permissions": {"disableAutoMode": "yes"}}',
+  'packages/pdm/managed-settings.d/10-a.json': '{"disableAutoMode": false}',
+  'packages/pdm/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"disableBypassPermissionsMode": true}}',
+  'packages/pdm/managed-settings.d/30-b.txt':
+    '{"permissions": {"disableBypassPermissionsMode": true}}',
+  'packages/pdm/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"disableBypassPermissionsMode": true}}',
+  'packages/pdm/.vscode/settings.json': '{"permissions": {"disableBypassPermissionsMode": true}}',
+  // `permissions-default-mode-project-ignored`: `auto` in the two project files. A managed file can
+  // set it, so it is silent there. The same content where no rule reads it.
+  'packages/pdi/.claude/settings.json': '{"permissions": {"defaultMode": "auto"}}',
+  'packages/pdi/.claude/settings.local.json': '{"permissions": {"defaultMode": "auto"}}',
+  'packages/pdi/managed-settings.json': '{"permissions": {"defaultMode": "auto"}}',
+  'packages/pdi/managed-settings.d/10-a.json': '{"permissions": {"defaultMode": "auto"}}',
+  'packages/pdi/managed-settings.d/30-b.txt': '{"permissions": {"defaultMode": "auto"}}',
+  'packages/pdi/.vscode/settings.json': '{"permissions": {"defaultMode": "auto"}}',
+  // `permissions-bypass-mode-committed`: `bypassPermissions` in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pbc/.claude/settings.json': '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/.claude/settings.local.json':
+    '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/managed-settings.json': '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/managed-settings.d/10-a.json':
+    '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/managed-settings.d/30-b.txt':
+    '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  'packages/pbc/.vscode/settings.json': '{"permissions": {"defaultMode": "bypassPermissions"}}',
+  // `permissions-default-mode-conflict`: the lock with `bypassPermissions`, in each file that it
+  // reads. `permissions-bypass-mode-committed` is silent for the pair. A sibling file of a managed
+  // source that sets either key again makes the rule silent, so `managed-settings.json` and the
+  // drop-in are in two packages. A hidden drop-in is for `settings-managed-file`. The same content
+  // where no rule reads it.
+  'packages/pdc/.claude/settings.json': PAIR,
+  'packages/pdc/.claude/settings.local.json': PAIR,
+  'packages/pdc/managed-settings.json': PAIR,
+  'packages/pdc/managed-settings.d/.20-hidden.json': PAIR,
+  'packages/pdc/managed-settings.d/30-b.txt': PAIR,
+  'packages/pdc/managed-settings.d/sub/40-c.json': PAIR,
+  'packages/pdc/.vscode/settings.json': PAIR,
+  'packages/pdc2/managed-settings.d/10-a.json': PAIR,
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3241,6 +3311,17 @@ const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
     name: 'plugin-path-uses-plugin-root',
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json', '**/.lsp.json'],
   },
+]
+
+// The permission mode rules of the first layer of #15, in the order of the `modules` list, with the
+// files of each. Each is an error. The project rule reads the two project files only.
+const MODE_RULES = [
+  { name: 'permissions-bypass-mode-committed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-default-mode-conflict', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-default-mode-project-ignored', files: PROJECT_FILES },
+  { name: 'permissions-default-mode-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-disable-mode-value', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4315,6 +4396,28 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-worktree-create-without-remove@1',
   'packages/dup/.claude-plugin/plugin.json: claude/hooks-duplicate-handler@1',
   'packages/dup/hooks/hooks.json: claude/hooks-duplicate-handler@1',
+  // The permission mode rules read the project and managed files, and no other file. A hidden
+  // drop-in is for `settings-managed-file`. The rule for a project value reads the two project
+  // files only.
+  ...[
+    ['pbc', 'permissions-bypass-mode-committed'],
+    ['pdm', 'permissions-disable-mode-value'],
+    ['pdv', 'permissions-default-mode-value'],
+    ['pms', 'permissions-schema'],
+  ].flatMap(([dir, rule]) => [
+    `packages/${dir}/.claude/settings.json: claude/${rule}@2`,
+    `packages/${dir}/.claude/settings.local.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.d/10-a.json: claude/${rule}@2`,
+    `packages/${dir}/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2`,
+  ]),
+  'packages/pdi/.claude/settings.json: claude/permissions-default-mode-project-ignored@2',
+  'packages/pdi/.claude/settings.local.json: claude/permissions-default-mode-project-ignored@2',
+  'packages/pdc/.claude/settings.json: claude/permissions-default-mode-conflict@2',
+  'packages/pdc/.claude/settings.local.json: claude/permissions-default-mode-conflict@2',
+  'packages/pdc/managed-settings.json: claude/permissions-default-mode-conflict@2',
+  'packages/pdc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/pdc2/managed-settings.d/10-a.json: claude/permissions-default-mode-conflict@2',
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
@@ -5039,6 +5142,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
       ]),
+      ...MODE_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
       ...MARKETPLACE_RULES.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -5105,6 +5212,7 @@ describe('configs', () => {
       ...AGENT_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
+      ...MODE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_OFF_RULES.map((rule) => `claude/strict/${rule}`),
@@ -5309,6 +5417,15 @@ describe('configs', () => {
       ['json/json', [...HOOKS_JSON, '**/.claude-plugin/plugin.json']],
       ['markdown/gfm', HOOKS_MARKDOWN],
     ])
+  })
+
+  it('gives each permission mode rule one JSON block for its files', () => {
+    for (const { name, files } of MODE_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
   })
 
   it('gives each rule of the scope layer one JSON block for its files', () => {
