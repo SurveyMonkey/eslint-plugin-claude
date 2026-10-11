@@ -185,6 +185,12 @@
   ],
   "sources": [
     {
+      "heading": "Use the /statusline command",
+      "id": "use-the-statusline-command",
+      "hash": "44e446be0845c7bd451d32181623431219f3ddbe134f1792f5d9057adb6532f0",
+      "text": "### Use the /statusline command\n\nThe `/statusline` command accepts natural language instructions describing what you want displayed. Claude Code generates a script file in `~/.claude/` and updates your settings automatically:\n\n```text theme={null}\n/statusline show model name and context percentage with a progress bar\n```\n\nApprove the file edit prompts if Claude Code asks for permission during setup."
+    },
+    {
       "heading": "Manually configure a status line",
       "id": "manually-configure-a-status-line",
       "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26",
@@ -201,6 +207,12 @@
       "id": "subagent-status-lines",
       "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d",
       "text": "## Subagent status lines\n\nThe `subagentStatusLine` setting renders a custom row body for each [subagent](/docs/en/sub-agents) shown in the agent panel below the prompt. Use it to replace the default `name · description · token count` row with your own formatting.\n\n```json theme={null}\n{\n  \"subagentStatusLine\": {\n    \"type\": \"command\",\n    \"command\": \"~/.claude/subagent-statusline.sh\"\n  }\n}\n```\n\nThe command runs once per refresh tick and receives all visible subagent rows as a single JSON object on stdin. The input includes the [base hook fields](/docs/en/hooks#common-input-fields), a `columns` field with the usable row width, and a `tasks` array with one entry per row, described in [Task fields](#task-fields).\n\nWrite one JSON line to stdout per row you want to override, in the form `{\"id\": \"<task id>\", \"content\": \"<row body>\"}`. The `content` string is rendered as-is, including ANSI colors and OSC 8 hyperlinks. Omit a task's `id` to keep the default rendering for that row; emit an empty `content` string to hide it.\n\nThe same trust, `disableAllHooks`, and [`allowManagedHooksOnly`](/docs/en/settings-reference#allowmanagedhooksonly) gates that apply to `statusLine` apply here. Plugins can ship a default `subagentStatusLine` in their [`settings.json`](/docs/en/plugins/manifest-reference#standard-layout), but unlike hooks, plugin values don't run under `allowManagedHooksOnly` even when the plugin is force-enabled in managed settings `enabledPlugins`."
+    },
+    {
+      "heading": "Size output to the terminal",
+      "id": "size-output-to-the-terminal",
+      "hash": "cab76d0ce094ae1adcf8be564ca053080286ef8d290cda6306c0c8459a333158",
+      "text": "### Size output to the terminal\n\nClaude Code captures your script's output instead of connecting it directly to the terminal, so `tput cols` and language-level width detection cannot read the terminal size from inside the script. Read the `COLUMNS` and `LINES` environment variables instead. Claude Code sets these to the current terminal dimensions before running your script."
     },
     {
       "heading": "Windows configuration",
