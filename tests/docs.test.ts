@@ -151,8 +151,10 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-invocation-unreachable',
     'skill-listing-budget',
     'skill-literal-dollar',
+    'skill-loop-reference-invocable',
     'skill-max-lines',
     'skill-metadata-reserved-keys',
+    'skill-model-override',
     'skill-name-shadows-builtin',
     'skill-name-unique',
     'skill-no-bom',
@@ -162,9 +164,11 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-plugin-root-name',
     'skill-plugin-root-shadowed',
     'skill-plugin-vars-outside-plugin',
+    'skill-precedence-shadowing',
     'skill-reference-exists',
     'skill-reserved-name',
     'skill-shell-platform',
+    'skill-side-effects-manual-only',
     'statusline-script-exists',
   ])
   for (const [name, rule] of rules) {

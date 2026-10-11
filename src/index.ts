@@ -135,8 +135,10 @@ import skillInvocationRedundantFields from './rules/skill-invocation-redundant-f
 import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
 import skillListingBudget from './rules/skill-listing-budget.ts'
 import skillLiteralDollar from './rules/skill-literal-dollar.ts'
+import skillLoopReferenceInvocable from './rules/skill-loop-reference-invocable.ts'
 import skillMaxLines from './rules/skill-max-lines.ts'
 import skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
+import skillModelOverride from './rules/skill-model-override.ts'
 import skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
 import skillNameUnique from './rules/skill-name-unique.ts'
 import skillNoBom from './rules/skill-no-bom.ts'
@@ -146,9 +148,11 @@ import skillPluginPathVars from './rules/skill-plugin-path-vars.ts'
 import skillPluginRootName from './rules/skill-plugin-root-name.ts'
 import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
 import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
+import skillPrecedenceShadowing from './rules/skill-precedence-shadowing.ts'
 import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
 import skillShellPlatform from './rules/skill-shell-platform.ts'
+import skillSideEffectsManualOnly from './rules/skill-side-effects-manual-only.ts'
 import statuslineScriptExists from './rules/statusline-script-exists.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
@@ -194,7 +198,11 @@ const modules = [
   skillInjectRobustness,
   skillListingBudget,
   skillLiteralDollar,
+  skillLoopReferenceInvocable,
+  skillModelOverride,
   skillPluginPathVars,
+  skillPrecedenceShadowing,
+  skillSideEffectsManualOnly,
   agentFrontmatterValid,
   agentFrontmatterSchema,
   agentPluginIgnoredFields,
@@ -369,7 +377,11 @@ const recommended: Record<RuleName, Severity> = {
   'skill-inject-robustness': 'off',
   'skill-listing-budget': 'off',
   'skill-literal-dollar': 'off',
+  'skill-loop-reference-invocable': 'off',
+  'skill-model-override': 'off',
   'skill-plugin-path-vars': 'off',
+  'skill-precedence-shadowing': 'off',
+  'skill-side-effects-manual-only': 'off',
   'agent-frontmatter-valid': 'error',
   'agent-frontmatter-schema': 'error',
   'agent-plugin-ignored-fields': 'error',

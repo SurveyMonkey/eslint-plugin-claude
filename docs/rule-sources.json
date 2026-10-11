@@ -2575,6 +2575,18 @@
       "hash": "30f30e2a1ed8c72a5112f38bd716f717813b61772746282c5c7cc3f581b88093"
     }
   ],
+  "skill-loop-reference-invocable": [
+    {
+      "url": "https://code.claude.com/docs/en/scheduled-tasks",
+      "heading": "Run a prompt repeatedly with /loop",
+      "hash": "8f01b2142185b56861d214ce48748b24363d77c2a61ceae2b60e9fb2727989d0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+    }
+  ],
   "skill-max-lines": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -2587,6 +2599,18 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+    }
+  ],
+  "skill-model-override": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/prompt-caching",
+      "heading": "Switching models",
+      "hash": "c80b1a82c987c26029dbd4c44b5d63dde6536d9ec44543dbd5d23e383e677181"
     }
   ],
   "skill-name-shadows-builtin": [
@@ -2687,6 +2711,23 @@
       "hash": "30f30e2a1ed8c72a5112f38bd716f717813b61772746282c5c7cc3f581b88093"
     }
   ],
+  "skill-precedence-shadowing": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Resolve skills that share a name",
+      "hash": "8e3457b5a533ae29dee95a38415d08ef9df72d28e5892bda6b01c17e014a8d16"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "How a skill gets its command name",
+      "hash": "84499a0c929036580aac21c5176f8cb2230196b8184732b5e7011341ac096ac1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/features-overview",
+      "heading": "Understand how features layer",
+      "hash": "57c10ac99dc60ea62a58253d2eeea45a693ced02ff165ce5c3ec4e683d9cb25b"
+    }
+  ],
   "skill-reference-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -2731,6 +2772,18 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Shell selection in settings, hooks, and skills",
       "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f"
+    }
+  ],
+  "skill-side-effects-manual-only": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Control who invokes a skill",
+      "hash": "130070c7f357fd4fb97105203f16aec7cbd3f9d524349d079ae9fc18bdff01c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/features-overview",
+      "heading": "Understand how features load",
+      "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279"
     }
   ],
   "statusline-script-exists": [
