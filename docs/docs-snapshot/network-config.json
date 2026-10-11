@@ -1,0 +1,109 @@
+{
+  "url": "https://code.claude.com/docs/en/network-config",
+  "hash": "5d68a5a22f75e626aafca1e5a2530b3b6cdca502e4d036f9f487398614fe6d8f",
+  "blocks": [
+    {
+      "id": "enterprise-network-configuration",
+      "hash": "2517ac1eddf9939d5d9599d9e7bbdfdb054674de85ba9df28133b031adef464d",
+      "bodyHash": "d2a3131ad440860e93b3694a5648a17582cc72a9bd0335eaf3b6baaf107b9af3"
+    },
+    {
+      "id": "proxy-configuration",
+      "hash": "1250242334959aa4ce68f422b04d9d5b5e8c8e954fb7cc4163aef2ccf0acbbad"
+    },
+    {
+      "id": "environment-variables",
+      "hash": "98331dfae8f7a6369ee04dcc2a514cf0c2c37cdcddf2eb1046a7ebdfb8e78a3d",
+      "bodyHash": "402b13515b21f1c256246841b0de9022c4e5290002c78a4e68d17dfe7e3a2dc7"
+    },
+    {
+      "id": "basic-authentication",
+      "hash": "fcc675eb084ae2f41b8b8a863589f8f3a0a9a4d7d55dc3282439a5781e376830",
+      "bodyHash": "6c4a6a2e489166cbc80ebc79341ebc38a0e5bd61d1416dc698772f8b6a0f0682"
+    },
+    {
+      "id": "ca-certificate-store",
+      "hash": "f5eda94009274edd94da934c82e34312a387d77135fd4b2baa4f93f95e9a488e",
+      "bodyHash": "796a60a80054a6047f191ff98aa42ebf3abb597393767dd450776ce256483d37"
+    },
+    {
+      "id": "custom-ca-certificates",
+      "hash": "dfa4ce060fb67bb427c78b1c469991ecf7d61d03bfd68f86c3176fc7c149e6d2",
+      "bodyHash": "4e08e7c08db94a02e1a589feb65b10d93f2be0900771dfaa81921c60dd4cdefc"
+    },
+    {
+      "id": "mtls-authentication",
+      "hash": "a027ef83b4bd2293daafdda642c3b213b5fcb7928edc19c37f3cafdce38598af",
+      "bodyHash": "456feea011d3196c10045642554d30ebae320b56c2011898137ceec2fb9f0599"
+    },
+    {
+      "id": "verify-your-configuration",
+      "hash": "5b75d3c777cbbcfcd26adc87459ae3ce68627ff67448143115dfdc3c25b4ea3e",
+      "bodyHash": "72b77d5f46b0dfe18d6864d056d567cf763a076e5ffb24b03ca3c869a09fa72b"
+    },
+    {
+      "id": "apply-network-settings-to-background-agents",
+      "hash": "5e21909daaac90e12043a283facd91532568314ac6a76dfd7e2d381077e011a1",
+      "bodyHash": "8dc7f1383455b49728cd21d19ebbaccfe2910ccc358e86c8f83eeec23a80cee9"
+    },
+    {
+      "id": "set-network-variables-in-settings-not-the-shell",
+      "hash": "ee9864d8c7a3d5e4054058917840256d8c86f809ae169f5a48bfdb104b85aa2d",
+      "bodyHash": "b345ceaf6d61f31831cac97b1b286f7cd4a7788ce5c3cf51c265017f1265a4b1"
+    },
+    {
+      "id": "configure-a-corporate-launcher-as-a-setting",
+      "hash": "d8cea2cca1a1b47e8d91976b21c7b797f45f2f836ce62701b11debb29b4819b9",
+      "bodyHash": "ed012cf127f73ee75e492502725d0a1930b3df6c70c63dc2a74c26bdad85f2c2"
+    },
+    {
+      "id": "streaming-idle-watchdogs",
+      "hash": "fb8ed9ab975ea6055fd089a10e4e94de938e4fdec61027ad4e1afb241568debf",
+      "bodyHash": "4f8c8d704faf29f334f54a95909c9cc4296fcad0effe520e1b173aba0411c368"
+    },
+    {
+      "id": "network-access-requirements",
+      "hash": "6e9c2973d780d409ce000fb0b659a522794cc422ed207e38d3a4e2e0b8847d89",
+      "bodyHash": "e6042c273c57c7c495b3c2f3d747d393710c13db707c0a24db48778240c26c8e"
+    },
+    {
+      "id": "organization-ip-allowlists-and-proxy-egress",
+      "hash": "ffb584a76d3904bbcd3dc9b0022acffe39c812051f3b34b237ac3072a90cc333",
+      "bodyHash": "bc298ac556385cf865445c25afcc7c2f32d5c45ddf2d22871d7b8b833efe4aba"
+    },
+    {
+      "id": "github-allow-lists-and-firewalls",
+      "hash": "6df57c39270449e7914779a3752bf17a38c0c31e73c83e7b40c9c44ce5a62124",
+      "bodyHash": "14755d9419220d8f38f7b23ef74564678f9d689ad8322a8976f3209e4a8303ca"
+    },
+    {
+      "id": "desktop-and-claude-ai",
+      "hash": "6cb17f4642d8abe226f8953158e3a97558de7d99670ca3b1e3e9e671b730c52b",
+      "bodyHash": "24a2443d1caa0e4db90aeac0fc13c9c82c87ede6d8961216cc81a9ee5ac09098"
+    },
+    {
+      "id": "third-party-hosts-for-artifact-fonts-and-libraries",
+      "hash": "6939166771b81575317d9484446db2f75f6f8d3a41e1c3b1fa99f5f311045c94",
+      "bodyHash": "6af84414e51bf5dc1f0c1b0b2ea8da150e3019895fde3ef9d50283bb32a3cc63"
+    },
+    {
+      "id": "additional-resources",
+      "hash": "df841ca830163dda992a335196d7bd42dfb7c712649bd164019b7e06061cffc8",
+      "bodyHash": "ec4f8bfdaa5a0a30fca600942fa11e64b1eec508b065783ef3f8983160528bca"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Set network variables in settings, not the shell",
+      "id": "set-network-variables-in-settings-not-the-shell",
+      "hash": "ee9864d8c7a3d5e4054058917840256d8c86f809ae169f5a48bfdb104b85aa2d",
+      "text": "### Set network variables in settings, not the shell\n\nThe supervisor is one process shared by every terminal. It inherits the environment of whichever shell starts it first. If you export a proxy, CA path, or mTLS variable only in your shell, it reaches background agents when that shell happened to cold-start the supervisor, and silently doesn't when a different shell did.\n\nPut the same variables in the `env` block of `~/.claude/settings.json` or [managed settings](/docs/en/settings) instead. Every variable on this page can be set there, and settings are the only configuration that reaches every background session on every machine."
+    },
+    {
+      "heading": "Environment variables",
+      "id": "environment-variables",
+      "hash": "98331dfae8f7a6369ee04dcc2a514cf0c2c37cdcddf2eb1046a7ebdfb8e78a3d",
+      "text": "### Environment variables\n\nClaude Code respects standard proxy environment variables. In Claude Desktop sessions where the app manages the provider connection, Claude Code reads them only from managed settings and `~/.claude/settings.json`; see [mTLS authentication](#mtls-authentication) for the scope rules.\n\n```bash theme={null}\n# HTTPS proxy (recommended)\nexport HTTPS_PROXY=https://proxy.example.com:8080\n\n# HTTP proxy (if HTTPS not available)\nexport HTTP_PROXY=http://proxy.example.com:8080\n\n# Bypass proxy for specific requests - space-separated format\nexport NO_PROXY=\"localhost 192.168.1.1 example.com .example.com\"\n# Bypass proxy for specific requests - comma-separated format\nexport NO_PROXY=\"localhost,192.168.1.1,example.com,.example.com\"\n# Bypass proxy for all requests\nexport NO_PROXY=\"*\"\n```\n\nLowercase variants also work, and Claude Code uses the first one that's set in the order `https_proxy`, `HTTPS_PROXY`, `http_proxy`, `HTTP_PROXY`.\n\nClaude Code never sends its WebSocket connections to `localhost`, `::1`, or `127.0.0.0/8` through the proxy, so you don't need a loopback entry in `NO_PROXY` for them.\n\n<Note>\n  Claude Code does not support SOCKS proxies.\n</Note>"
+    }
+  ]
+}
