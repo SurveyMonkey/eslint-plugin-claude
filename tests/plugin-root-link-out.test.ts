@@ -96,6 +96,45 @@ describe('a plugin root that links out of the repository', () => {
 })
 
 describe('the cross-file rules of the plugin layer', () => {
+  const AGENT = JSON.stringify({ name: 'p', settings: { agent: 'ghost' } })
+  it('plugin-settings-agent-exists reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(AGENT)
+    expect(lintPlugin('plugin-settings-agent-exists', dir, code).map((m) => m.messageId)).toEqual([
+      'missing',
+    ])
+  })
+  linked('plugin-settings-agent-exists stays silent for the linked plugin manifest', () => {
+    const { dir } = linkedOut({}, {}, AGENT)
+    expect(lintPlugin('plugin-settings-agent-exists', dir, AGENT)).toEqual([])
+  })
+  it('plugin-settings-agent-exists reports in the settings.json of the plugin in the repository', () => {
+    const { dir } = pluginTree(MANIFEST, { 'settings.json': '{"agent": "ghost"}' })
+    const file = path.join(dir, 'settings.json')
+    expect(
+      lintPluginFile(
+        'plugin-settings-agent-exists',
+        ['**/settings.json'],
+        file,
+        '{"agent": "ghost"}',
+      ).map((m) => m.messageId),
+    ).toEqual(['missing'])
+  })
+  linked(
+    'plugin-settings-agent-exists stays silent for the settings.json of the linked plugin',
+    () => {
+      const { dir } = linkedOut({}, { 'settings.json': '{"agent": "ghost"}' })
+      const file = path.join(dir, 'settings.json')
+      expect(
+        lintPluginFile(
+          'plugin-settings-agent-exists',
+          ['**/settings.json'],
+          file,
+          '{"agent": "ghost"}',
+        ),
+      ).toEqual([])
+    },
+  )
+
   const SETTINGS = JSON.stringify({ name: 'p', settings: { agent: 'a' } })
   it('plugin-settings-single-source reports in the plugin in the repository', () => {
     const { dir, code } = pluginTree(SETTINGS, { 'settings.json': '{"agent": "b"}' })
@@ -139,6 +178,25 @@ describe('the cross-file rules of the plugin layer', () => {
     expect(lintPlugin('plugin-monitors-skill-exists', dir, MONITOR)).toEqual([])
   })
 
+  const MINTED = JSON.stringify({
+    name: 'acme',
+    plugins: [
+      { name: 'p', source: './p' },
+      { name: 'minted', source: { source: 'command', command: 'mint-plugin' } },
+    ],
+  })
+  const MINTER = JSON.stringify({ name: 'p', dependencies: ['minted'] })
+  it('plugin-dependencies-not-auto-installed reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(MINTER, { '.claude-plugin/marketplace.json': MINTED })
+    expect(
+      lintPlugin('plugin-dependencies-not-auto-installed', dir, code).map((m) => m.messageId),
+    ).toEqual(['command'])
+  })
+  linked('plugin-dependencies-not-auto-installed stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, MINTER, { '.claude-plugin/marketplace.json': MINTED })
+    expect(lintPlugin('plugin-dependencies-not-auto-installed', dir, MINTER)).toEqual([])
+  })
+
   const CATALOG = JSON.stringify({
     name: 'acme',
     plugins: [{ name: 'p', source: { source: 'npm', package: '@acme/p' } }],
@@ -169,6 +227,59 @@ describe('the cross-file rules of the plugin layer', () => {
       '.claude-plugin/marketplace.json': CATALOG,
     })
     expect(lintPlugin('plugin-npm-source-shrinkwrap', dir, MANIFEST)).toEqual([])
+  })
+})
+
+describe('the path and settings rules of the plugin layer', () => {
+  const SKILLS = JSON.stringify({ name: 'p', skills: './skills' })
+  it('plugin-skills-key-redundant-default reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(SKILLS)
+    expect(
+      lintPlugin('plugin-skills-key-redundant-default', dir, code).map((m) => m.messageId),
+    ).toEqual(['redundant'])
+  })
+  linked('plugin-skills-key-redundant-default stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, SKILLS)
+    expect(lintPlugin('plugin-skills-key-redundant-default', dir, SKILLS)).toEqual([])
+  })
+
+  const APPLIES = JSON.stringify({
+    name: 'p',
+    userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },
+  })
+  it('plugin-user-config-field-applicability reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(APPLIES)
+    expect(
+      lintPlugin('plugin-user-config-field-applicability', dir, code).map((m) => m.messageId),
+    ).toEqual(['bound'])
+  })
+  linked('plugin-user-config-field-applicability stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, APPLIES)
+    expect(lintPlugin('plugin-user-config-field-applicability', dir, APPLIES)).toEqual([])
+  })
+
+  const FIELDS = JSON.stringify({ name: 'p', commands: { a: { content: 'x', bogus: 1 } } })
+  it('plugin-commands-map-fields reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(FIELDS)
+    expect(lintPlugin('plugin-commands-map-fields', dir, code).map((m) => m.messageId)).toEqual([
+      'unknown',
+    ])
+  })
+  linked('plugin-commands-map-fields stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, FIELDS)
+    expect(lintPlugin('plugin-commands-map-fields', dir, FIELDS)).toEqual([])
+  })
+
+  const BACKSLASH = JSON.stringify({ name: 'p', commands: './a\\b.md' })
+  it('plugin-path-no-backslash reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(BACKSLASH)
+    expect(lintPlugin('plugin-path-no-backslash', dir, code).map((m) => m.messageId)).toEqual([
+      'backslash',
+    ])
+  })
+  linked('plugin-path-no-backslash stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, BACKSLASH)
+    expect(lintPlugin('plugin-path-no-backslash', dir, BACKSLASH)).toEqual([])
   })
 })
 

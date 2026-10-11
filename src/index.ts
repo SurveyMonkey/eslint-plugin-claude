@@ -220,7 +220,9 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
+import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
+import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
@@ -236,12 +238,16 @@ import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
 import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
+import pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
 import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
 import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
+import pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
@@ -717,6 +723,12 @@ const modules = [
   pluginManifestNoBom,
   pluginManifestPublishMetadata,
   pluginManifestVersionSemver,
+  pluginCommandsMapFields,
+  pluginDependenciesNotAutoInstalled,
+  pluginPathNoBackslash,
+  pluginSettingsAgentExists,
+  pluginSkillsKeyRedundantDefault,
+  pluginUserConfigFieldApplicability,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1096,6 +1108,12 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-manifest-no-bom': 'warn',
   'plugin-manifest-publish-metadata': 'warn',
   'plugin-manifest-version-semver': 'warn',
+  'plugin-commands-map-fields': 'warn',
+  'plugin-dependencies-not-auto-installed': 'warn',
+  'plugin-path-no-backslash': 'warn',
+  'plugin-settings-agent-exists': 'warn',
+  'plugin-skills-key-redundant-default': 'warn',
+  'plugin-user-config-field-applicability': 'warn',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
