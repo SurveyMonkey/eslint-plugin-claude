@@ -1557,6 +1557,12 @@
       "text": "### `pluginConfigs`\n\nStore the non-sensitive answers you give a plugin's [`userConfig`](/docs/en/plugins/manifest-reference#user-configuration) configuration dialog, keyed by plugin ID. Claude Code writes this key to your user settings when you fill in the dialog, so you don't need to edit it by hand. Claude Code stores sensitive options in the macOS Keychain instead, falling back to `~/.claude/.credentials.json` when the Keychain rejects the write; on platforms without a supported keychain, it stores them in `~/.claude/.credentials.json`.\n\n* **Scope**: [`User or managed`](#scopes)\n* **Type**: object mapping a plugin ID to an object with an `options` field, mapping each option name to a string, number, Boolean, or array of strings, and an optional `mcpServers` field holding per-server user configuration values in the same shape\n* **Default**: unset\n\nThis example stores the `api_endpoint` option for the `deployer` plugin from `acme-tools`:\n\n```json settings.json theme={null}\n{\n  \"pluginConfigs\": {\n    \"deployer@acme-tools\": {\n      \"options\": {\n        \"api_endpoint\": \"https://api.example.com\"\n      }\n    }\n  }\n}\n```\n\nBuilt-in plugins store their options under the same key with an `@builtin` suffix. For example, the [**Project instructions**](/docs/en/memory#choose-which-instruction-files-load) setting that controls whether Claude Code reads `AGENTS.md` files is `pluginConfigs[\"cc-plugin-agents-md@builtin\"].options.instructionFiles`. Before v2.1.285, the plugin's ID was `agents-md@builtin`. Later versions read an entry under either ID.\n\nClaude Code ignores project and local entries because it substitutes these values into plugin hook, MCP, and LSP configurations, and a cloned repository must not be able to supply them. Before v2.1.207, project and local settings were also read."
     },
     {
+      "heading": "disableAutoMode",
+      "id": "disableautomode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
+      "text": "### `disableAutoMode`\n\nRemove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the `Shift+Tab` cycle. Any session that would otherwise [start in auto mode](/docs/en/permission-modes#which-mode-a-session-starts-in), whether from `--permission-mode auto`, a settings file, or the built-in default, starts in `default` instead. Administrators set it in managed settings to prevent developers in their organization from using auto mode.\n\n* **Scope**: [`Any file`](#scopes). Most useful in [managed settings](/docs/en/managed-settings), where users can't override it. Also accepted under `permissions` as `permissions.disableAutoMode`.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"disableAutoMode\": \"disable\"\n}\n```"
+    },
+    {
       "heading": "autoMode",
       "id": "automode",
       "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522",
@@ -1585,12 +1591,6 @@
       "id": "permissions-disablebypasspermissionsmode",
       "hash": "b0cd405ab2318f7a05388470335992622b09443dd255bf839313e36a3f512cb1",
       "text": "### `permissions.disableBypassPermissionsMode`\n\nPrevent anyone from entering `bypassPermissions` mode. Claude Code then rejects the `--dangerously-skip-permissions` flag, and ignores an [agent definition's](/docs/en/sub-agents#permission-modes) `permissionMode: bypassPermissions`, so the subagent runs with the parent session's permission mode.\n\n* **Scope**: [`Any file`](#scopes). Typically set in [managed settings](/docs/en/managed-settings) to enforce organizational policy.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n* **Per-session overrides**: this key takes precedence over `--dangerously-skip-permissions`, which Claude Code rejects while the key is set\n\n```json settings.json theme={null}\n{\n  \"permissions\": {\n    \"disableBypassPermissionsMode\": \"disable\"\n  }\n}\n```\n\nBefore v2.1.223, Claude Code applied the frontmatter permission mode even with bypass disabled."
-    },
-    {
-      "heading": "disableAutoMode",
-      "id": "disableautomode",
-      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
-      "text": "### `disableAutoMode`\n\nRemove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the `Shift+Tab` cycle. Any session that would otherwise [start in auto mode](/docs/en/permission-modes#which-mode-a-session-starts-in), whether from `--permission-mode auto`, a settings file, or the built-in default, starts in `default` instead. Administrators set it in managed settings to prevent developers in their organization from using auto mode.\n\n* **Scope**: [`Any file`](#scopes). Most useful in [managed settings](/docs/en/managed-settings), where users can't override it. Also accepted under `permissions` as `permissions.disableAutoMode`.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"disableAutoMode\": \"disable\"\n}\n```"
     },
     {
       "heading": "permissions.deny",
