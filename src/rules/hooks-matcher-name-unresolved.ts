@@ -9,13 +9,9 @@
 // that kind of name. The `allow` option names what lives outside the repository, such as a user-level agent.
 import path from 'node:path'
 import type { Rule } from 'eslint'
+import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { TOOL_EVENTS } from '../data/hook-events.ts'
-import {
-  BUILT_IN_AGENTS,
-  MCP_PREFIX,
-  OTHER_RULE_TOOL_NAMES,
-  TOOL_NAMES,
-} from '../data/tool-names.ts'
+import { MCP_PREFIX, OTHER_RULE_TOOL_NAMES, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import {
   exactValues,
