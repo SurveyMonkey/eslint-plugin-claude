@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-symlink-escapes-marketplace`
@@ -66,6 +66,15 @@ Fail: a plugin in `site/plugins/p/` with a link `skills/shared` to `../../../../
 repository where the marketplace root is `site/`. The target is `shared` at the repository root.
 
 Pass: the same link, with the target `site/shared`. Then the other rule reports it, as a warning.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-symlink-escapes-marketplace': 'error'
+```
 
 ## Options
 

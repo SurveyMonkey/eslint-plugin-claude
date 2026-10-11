@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-01
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `agent-plugin-scoped-name-unique`
@@ -57,6 +57,15 @@ Fail, `agents/a.md` with `name: b` and `agents/b.md` with no `name`.
 
 Pass: `agents/review/security.md` and `agents/security.md`. They load as `my-plugin:review:security`
 and `my-plugin:security`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/agent-plugin-scoped-name-unique': 'warn'
+```
 
 ## Options
 

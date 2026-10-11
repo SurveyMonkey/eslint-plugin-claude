@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-dir-not-marketplace-root`
@@ -52,6 +52,15 @@ report, because the docs do not say what Claude Code does with it.
 Fail: `"dev": "claude --plugin-dir ."` in the `package.json` of a marketplace root.
 
 Pass: `"dev": "claude --plugin-dir ./plugins/my-plugin"`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-dir-not-marketplace-root': 'warn'
+```
 
 ## Sources
 

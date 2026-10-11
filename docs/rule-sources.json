@@ -1686,7 +1686,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "WorktreeRemove",
-      "hash": "d7536d70260b8a7c781b9b904624f9f4ba66a69fbe20d56c3f0e5276d28a9738"
+      "hash": "48cfed6f83b7a80b85ddeaff7571c3caee385d117a8ce0a87ebbd41e175ba1da"
     }
   ],
   "lsp-duplicate-server-name": [
@@ -2021,7 +2021,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66"
+      "hash": "7f28494dbcd03887a8ada56bf362e2a9b9f298a6379995f89aee38ea67bc87a9"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -3366,6 +3366,11 @@
   "permissions-bash-exec-wrapper-prefix": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Exec wrappers and find actions",
+      "hash": "fddc5345565ac62850bb5f1640d21477355eae1d2d9ccc419464ecdce5f722c1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Wrappers",
       "hash": "3e79617873481813ea71f0bef00318ae54adc2324544e8ef96cf912d3fdc0a18"
     },
@@ -3892,12 +3897,12 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "How permissions interact with sandboxing",
-      "hash": "7e140cbfceabbc5e61e03cb5d84695a2b853d1bbeec3f8dc41a3ff55bb348a75"
+      "hash": "f77b9fd8f16f623118b1476aa2a4857dcfc90597c38611311c5f0f33867e061e"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.autoAllowBashIfSandboxed",
-      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d"
+      "hash": "d6345f3609afd0de5d9704f0c78fe772bd9f7f9719ddb3080a4807da11c18b6b"
     }
   ],
   "permissions-schema": [
@@ -5973,7 +5978,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Reserved names",
-      "hash": "a1e34278d2ba0db84cfc21febec35742597ffc8e2f12dd92542fbe9686fd2f66"
+      "hash": "7f28494dbcd03887a8ada56bf362e2a9b9f298a6379995f89aee38ea67bc87a9"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

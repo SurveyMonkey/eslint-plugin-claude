@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `agent-tools-task-alias`
@@ -48,6 +48,15 @@ name: coordinator
 description: Coordinates work across specialized agents
 tools: Agent(worker, researcher), Read, Bash
 ---
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/agent-tools-task-alias': 'warn'
 ```
 
 ## Options

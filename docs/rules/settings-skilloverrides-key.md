@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-09
 generated:
   by: claude-code
-  at: 2026-10-09T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-skilloverrides-key`
@@ -89,6 +89,15 @@ Pass, in `.claude/settings.json`:
     "deploy": "name-only"
   }
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-skilloverrides-key': 'error'
 ```
 
 ## Sources

@@ -7,7 +7,7 @@ related_issues: [8]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-09-30T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-name-unique`
@@ -99,6 +99,15 @@ name: Deploy
 ```
 
 Pass: `.claude/skills/deploy/SKILL.md` and `.claude/skills/ship/SKILL.md` with `name: ship`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-name-unique': 'error'
+```
 
 ## Options
 

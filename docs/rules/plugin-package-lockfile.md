@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-package-lockfile`
@@ -54,6 +54,15 @@ its own, so Bun does not read that file.[^limits]
 Fail: a plugin root with `package.json` and `yarn.lock`.
 
 Pass: a plugin root with `package.json` and `package-lock.json`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-package-lockfile': 'error'
+```
 
 ## Options
 

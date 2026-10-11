@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "41f2e746a21c3107ac5705286bf792792c74926c5de9e2b9ebe443609e5e3a81",
+  "hash": "7248dc1713497131db6c68a1f721b9ebaec4393f3d8b93434149023338e0f4f3",
   "blocks": [
     {
       "id": "error-reference",
@@ -864,8 +864,8 @@
     },
     {
       "id": "claude-code-refuses-the-marketplace-name",
-      "hash": "3ffc9df4f0a0331230a32e28ddb69c236e69bb13fa4bc585411fa8f87d6f8067",
-      "bodyHash": "5565db5e50300dad5fd1e7a6db70971da36f9fc23699dc4783e2e87e56c9caa8"
+      "hash": "c40cd08d39b521eff57f2d62b12660c450473661732b26e0e7f61cd9e5acee7e",
+      "bodyHash": "1bbd23348046229b24c6de78e225a498c4445db4cc95c91d3d74e8029fcb6fb9"
     },
     {
       "id": "marketplace-is-already-added-from-a-different-source",

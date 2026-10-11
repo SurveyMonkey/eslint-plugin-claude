@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `marketplace-self-hosted-root-source`
@@ -62,6 +62,15 @@ Pass:
   "owner": { "name": "Acme" },
   "plugins": [{ "name": "deploy-helper", "source": "./" }]
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/marketplace-self-hosted-root-source': 'warn'
 ```
 
 ## Options

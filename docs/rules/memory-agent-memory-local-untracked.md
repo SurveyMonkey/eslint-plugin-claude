@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `memory-agent-memory-local-untracked`
@@ -53,6 +53,15 @@ Fail: `.claude/agent-memory-local/reviewer/MEMORY.md` in the index.
 
 Pass: the same file after `git rm --cached`, with `.claude/agent-memory-local/` in `.gitignore`.
 A file in `.claude/agent-memory/` is not read.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/memory-agent-memory-local-untracked': 'warn'
+```
 
 ## Options
 

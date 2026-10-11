@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-09
 generated:
   by: claude-code
-  at: 2026-10-09T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-model-list`
@@ -120,6 +120,15 @@ Pass:
   "modelOverrides": { "claude-opus-4-7": "arn:aws:bedrock:us-east-1:123456789012:inference-profile/x" },
   "enforceAvailableModels": true
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-model-list': 'error'
 ```
 
 ## Options

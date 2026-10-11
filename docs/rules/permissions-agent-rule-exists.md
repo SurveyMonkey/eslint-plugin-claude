@@ -7,7 +7,7 @@ related_issues: [15]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `permissions-agent-rule-exists`
@@ -57,6 +57,15 @@ Pass, with the file `.claude/agents/reviewer.md` that has `name: reviewer`:
 
 ```json
 { "permissions": { "deny": ["Agent(Explore)", "Agent(reviewer)"] } }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/permissions-agent-rule-exists': 'warn'
 ```
 
 ## Options

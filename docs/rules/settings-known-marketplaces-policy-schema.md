@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-09
 generated:
   by: claude-code
-  at: 2026-10-09T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-known-marketplaces-policy-schema`
@@ -100,6 +100,15 @@ Pass:
   ],
   "pluginTrustMessage": "All plugins from our marketplace are approved by IT"
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-known-marketplaces-policy-schema': 'error'
 ```
 
 ## Sources

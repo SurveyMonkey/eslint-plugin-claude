@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-08
 generated:
   by: claude-code
-  at: 2026-10-08T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-env-ignored-var`
@@ -127,6 +127,15 @@ Pass, in `.claude/settings.json`:
     "OTEL_METRIC_EXPORT_INTERVAL": "60000"
   }
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-env-ignored-var': 'error'
 ```
 
 ## Sources

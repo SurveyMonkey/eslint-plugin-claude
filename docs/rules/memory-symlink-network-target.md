@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `memory-symlink-network-target`
@@ -77,6 +77,15 @@ The rule looks at the `CLAUDE.md` and the rule files that ESLint lints. It check
 path from `.claude/rules` down. It does not check `CLAUDE.local.md`, `AGENTS.md` or a link above
 `.claude/rules`, because the docs name the other two places only. A local link that leads to
 another link, and then to the network, is not seen.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/memory-symlink-network-target': 'error'
+```
 
 ## Sources
 

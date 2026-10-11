@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-import-external`
@@ -75,6 +75,15 @@ The split with other rules:
   imports. The docs do not state this. The rule assumes it.
 - The rule does not lint a rule file as a root. A `CLAUDE.local.md` or a rule file that a
   `CLAUDE.md` imports is checked as an imported file.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-import-external': 'warn'
+```
 
 ## Sources
 

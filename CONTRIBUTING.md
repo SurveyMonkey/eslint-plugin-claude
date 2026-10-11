@@ -36,7 +36,12 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 
 The Rules section of `README.md` has one table for each group of the rule inventory. Add a new
 rule to the table of its group. The first rule of a group adds a `###` heading and a table for
-that group. Keep the groups in the order of the inventory.
+that group. Keep the groups in the order of the inventory. Leave the Options cell of a rule
+empty when the rule has no option.
+
+Each rule doc has a `## Usage` section before `## Options`, or before `## Sources` when there is
+no Options section. It gives the `rules` entry of the rule at its `recommended` severity. For a
+rule that is off in `recommended`, it gives the `strict` severity.
 
 ## Rule source map
 
@@ -85,7 +90,8 @@ A new rule that checks a number takes the number as a rule option (ADR 001, Deci
   use a second message that names the value as the configured limit. Do not say that Claude Code
   acts at that value.
 - Name the option and its default in the rule row of `docs/rules-inventory.md`. Name them in the
-  Options section of the rule doc too. The `recommended` and `strict` configs set no option.
+  Options section of the rule doc and in the Options column of the README rule table too. The
+  `recommended` and `strict` configs set no option.
 
 `tests/limit-options.test.ts` reads the `limit` rows of the inventory. It fails for a built
 rule that lacks the option that its row names.

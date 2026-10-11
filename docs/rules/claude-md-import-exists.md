@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-import-exists`
@@ -68,6 +68,15 @@ file below `.agents/` is not read by Claude Code, so the rule skips it.
 
 The rule checks the imports of the linted file only. It does not follow an imported file. To check
 an imported Markdown file, add its path to the `files` of a config block for this rule.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-import-exists': 'error'
+```
 
 ## Options
 

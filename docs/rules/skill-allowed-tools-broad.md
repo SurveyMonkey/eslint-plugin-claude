@@ -7,7 +7,7 @@ related_issues: [9, 15]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-10-02T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-allowed-tools-broad`
@@ -66,6 +66,15 @@ Pass:
 ---
 allowed-tools: Read Bash(git add *) Bash(git commit *) Edit(docs/**)
 ---
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-allowed-tools-broad': 'error'
 ```
 
 ## Options

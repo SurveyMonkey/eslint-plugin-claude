@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permission-modes",
-  "hash": "ab7d5ffbac699350d2130f9250b8ec6d3e36402b5d911119967076992b6a554a",
+  "hash": "ec8b259a2e4c7ded7b58b3f245cef057f2070bc697a224f724f2691f011a2b71",
   "blocks": [
     {
       "id": "choose-a-permission-mode",
@@ -19,8 +19,8 @@
     },
     {
       "id": "common-setups",
-      "hash": "f6ab40696e8277de10ebf1b0635d193482178d3116d784c07282632b2b75a864",
-      "bodyHash": "8bbf8ed48622ed7df06ee2ecf46afa5757f7361847e2400c709d31603f0109e7"
+      "hash": "9f71d0c69b06bf4ac2f03ef999d41aeaa9df23f909418cab0aa841a730e7d577",
+      "bodyHash": "04f857ba93ca222a6168bdd68fbffc31cb3f9fd85cb5b4ddb250f30e9bc74cf4"
     },
     {
       "id": "which-mode-a-session-starts-in",

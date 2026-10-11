@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-local-gitignored`
@@ -63,6 +63,15 @@ The rule makes no report when `git` cannot answer (ADR 001, Decision 14):
 Fail: a repository whose `.gitignore` has no pattern for `.claude/settings.local.json`.
 
 Pass: a `.gitignore` with `**/.claude/settings.local.json`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-local-gitignored': 'warn'
+```
 
 ## Options
 

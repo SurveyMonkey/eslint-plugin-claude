@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `agent-tools-agent-type-list`
@@ -73,6 +73,15 @@ tools: Agent(worker, researcher), Read, Bash
 
 Pass: the same agent with `{"agent": "coordinator"}` in `.claude/settings.json`, and the files
 `worker.md` and `researcher.md` in `.claude/agents/`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/agent-tools-agent-type-list': 'warn'
+```
 
 ## Options
 

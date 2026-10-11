@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-import-max-depth`
@@ -55,6 +55,15 @@ The rule counts the hops in these ways:
 The rule lints `CLAUDE.md`, `CLAUDE.local.md` and `AGENTS.md`. It lints such a file below
 `.claude/rules/` too, because Claude Code expands the imports of a rule file. It skips a file below
 `.agents/`, which Claude Code never reads.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-import-max-depth': 'error'
+```
 
 ## Options
 

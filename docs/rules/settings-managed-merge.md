@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-managed-merge`
@@ -54,6 +54,15 @@ Fail:
 ```
 
 Pass: set the key in the highest-priority source that you deploy, such as server-managed settings.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-managed-merge': 'warn'
+```
 
 ## Sources
 

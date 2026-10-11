@@ -7,7 +7,7 @@ related_issues: [50]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-listing-budget`
@@ -71,6 +71,15 @@ plugin-root `SKILL.md`, which has no folder name.
 
 Fail, with `max: 150`: two skills with entries of 100 characters each. Pass: the same skills with
 `max: 200`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-listing-budget': 'warn'
+```
 
 ## Options
 

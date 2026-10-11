@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-user-config-no-shell-fields`
@@ -75,6 +75,15 @@ the MCP group have no rule of their own for them.
 Fail: `{"type": "command", "command": "./notify.sh ${user_config.webhook_url}"}`.
 
 Pass: `{"type": "command", "command": "./notify.sh", "args": ["${user_config.webhook_url}"]}`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-user-config-no-shell-fields': 'error'
+```
 
 ## Options
 
