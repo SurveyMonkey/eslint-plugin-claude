@@ -95,6 +95,25 @@ describe(`${name}: silent`, () => {
     }
   })
 
+  it('is silent for a variable that only ends in the name, or a scripts value of another type', () => {
+    expect(ids(tracking(scripts('MY_HTTPS_PROXY=x claude')), ON)).toEqual([])
+    const other = (value: unknown) => ({ 'package.json': file({ scripts: value }) })
+    expect(ids(tracking(other(['HTTPS_PROXY=x claude'])), ON)).toEqual([])
+    expect(ids(tracking(other({ claude: ['HTTPS_PROXY=x claude'] })), ON)).toEqual([])
+    expect(ids(tracking(other('HTTPS_PROXY=x claude')), ON)).toEqual([])
+  })
+
+  it('is silent for a project file that is not an object, even when the other file enables', () => {
+    const root = repo({ [PROJECT]: '[1]', [LOCAL]: file(ON), ...PROXY })
+    expect(ids(root, '[1]')).toEqual([])
+  })
+
+  it('reports at the file, not at an enabled value that is not true, when the other file enables', () => {
+    const root = repo({ [PROJECT]: '{}', [LOCAL]: file(ON), ...PROXY })
+    const [message] = lint(root, '{"sandbox": {"enabled": null}}')
+    expect([message?.line, message?.column]).toEqual([1, 1])
+  })
+
   it('is silent when the project has no tracked package.json, or it does not read', () => {
     expect(ids(tracking(), ON)).toEqual([])
     const untracked = repo({ [PROJECT]: '{}' }, [], PROXY)

@@ -20,8 +20,9 @@ const name = 'sandbox-proxy-env' as const
 
 /** The variables of the corporate proxy entry, in the order of the docs. */
 const PROXY_VARS = ['HTTPS_PROXY', 'HTTP_PROXY', 'NO_PROXY']
-/** An assignment of a proxy variable. The docs say that the lower-case names work too. */
-const ASSIGNMENT = /(?:^|[\s;&|(])(?:export\s+)?(https?_proxy|no_proxy)=/gi
+/** An assignment of a proxy variable, bare or after `export`. The docs say that the lower-case
+ *  names work too. */
+const ASSIGNMENT = /(?:^|[\s;&|(])(https?_proxy|no_proxy)=/gi
 const CLAUDE_COMMAND = /(?:^|[\s;&|(])claude(?=[\s;&|)]|$)/
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'env' }> = {

@@ -107,6 +107,29 @@ describe(`${name}: silent`, () => {
     expect(ids(tracking({ 'docker/Dockerfile': 'FROM x\n' }), ON)).toEqual([])
   })
 
+  it('is silent for a script that only ends in the name, or a scripts value of another type', () => {
+    const scripts = (value: unknown) => ({ 'package.json': file({ scripts: value }) })
+    expect(ids(tracking(scripts({ up: 'mydocker up' })), ON)).toEqual([])
+    expect(ids(tracking(scripts(['docker compose up'])), ON)).toEqual([])
+    expect(ids(tracking(scripts({ up: ['docker compose up'] })), ON)).toEqual([])
+    expect(ids(tracking(scripts('docker compose up')), ON)).toEqual([])
+  })
+
+  it('reports an empty entry as no docker entry', () => {
+    expect(ids(tracking(DOCKERFILE), excluding('', '  '))).toEqual(['docker'])
+  })
+
+  it('is silent for a project file that is not an object, even when the other file enables', () => {
+    const root = repo({ [PROJECT]: '[1]', [LOCAL]: file(ON), ...DOCKERFILE })
+    expect(ids(root, '[1]')).toEqual([])
+  })
+
+  it('reports at the file, not at an enabled value that is not true, when the other file enables', () => {
+    const root = repo({ [PROJECT]: '{}', [LOCAL]: file(ON), ...DOCKERFILE })
+    const [message] = lint(root, '{"sandbox": {"enabled": null}}')
+    expect([message?.line, message?.column]).toEqual([1, 1])
+  })
+
   it('is silent when package.json does not read as an object', () => {
     for (const text of ['{', '[1]', 'null']) {
       expect(ids(tracking({ 'package.json': text }), ON), text).toEqual([])
