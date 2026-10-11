@@ -131,11 +131,12 @@ function pluginRootAbove(start: string): string | null {
   const bound = repositoryRoot(start)
   for (let at = start; ; at = path.dirname(at)) {
     const root = isPluginRoot(at)
-    if (root === UNREADABLE) {
-      return null
+    if (root === true) {
+      return at
     }
-    if (root || realDirectory(at) === bound || path.dirname(at) === at) {
-      return root ? at : null
+    // A root that cannot be seen is not skipped, because the plugin above it is not its plugin.
+    if (root === UNREADABLE || realDirectory(at) === bound || path.dirname(at) === at) {
+      return null
     }
   }
 }
@@ -252,7 +253,7 @@ export interface CaseYaml {
 }
 
 /** The map in the `case.yaml` at `file`, or null. The result is null in these cases: the file is
- *  not a regular file of at most 1 MiB; its real path is out of `bound` (ADR 001, Decision 14); it
+ *  not a file of at most 1 MiB; its real path is out of `bound` (ADR 001, Decision 14); it
  *  cannot be read; the YAML does not parse, repeats a key, or is not a map. */
 export function readCaseYaml(file: string, bound: string): CaseYaml | null {
   const real = realOf(file)
@@ -262,7 +263,8 @@ export function readCaseYaml(file: string, bound: string): CaseYaml | null {
   let text: string
   try {
     const info = statSync(real)
-    if (!info.isFile() || info.size > MAX_YAML_BYTES) {
+    // A directory has a size too, and its read throws, so it ends in the catch below.
+    if (info.size > MAX_YAML_BYTES) {
       return null
     }
     text = readFileSync(real, 'utf8')

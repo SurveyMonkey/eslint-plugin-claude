@@ -87,7 +87,7 @@ const rule: MarkdownRuleDefinition<{
         const { type } = fm.data
         if (type === null || type === undefined) {
           context.report({ loc: sourceCode.getLoc(node), messageId: 'noType' })
-        } else if (typeof type !== 'string' || !EVAL_GRADER_TYPES.includes(type)) {
+        } else if (!EVAL_GRADER_TYPES.includes(type as string)) {
           onValue('type', 'badType')
         }
         const { weight, arm } = fm.data

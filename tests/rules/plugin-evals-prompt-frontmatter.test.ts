@@ -101,8 +101,10 @@ describe(RULE, () => {
     ['max_turns', '200'],
     ['max_turns', '1'],
     ['max_turns', '0'],
+    ['max_turns', '-5'],
     ['timeout_seconds', '3600'],
     ['timeout_seconds', '0'],
+    ['timeout_seconds', '-5'],
   ])('stays silent for %s: %s', (key, value) => {
     expect(messages(`${key}: ${value}`)).toEqual([])
   })

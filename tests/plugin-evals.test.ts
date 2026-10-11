@@ -1,10 +1,12 @@
 // The files of an eval suite: which Markdown file is a prompt, a grader or a mock, and which
 // directories are cases. The layout is the tree in the "Eval suite reference" section of the plugin
 // evals page. The trees are on disk, because the check finds the plugin around the file.
+import { chmodSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { caseDirectories, evalFileOf } from '../src/plugin-evals.ts'
 import { link, noLinks, tree } from './marketplace-tree.test-support.ts'
+import { chmodCannotBlock } from './rule-tester.test-support.ts'
 
 const MANIFEST = '.claude-plugin/plugin.json'
 const PLUGIN = JSON.stringify({ name: 'p' })
@@ -208,6 +210,49 @@ describe('evalFileOf', () => {
     const top = tree({ [MANIFEST]: PLUGIN, 'evals/c/graders/g.md': 'x', 'src/p.md': 'x' })
     link(top, 'evals/c/prompt.md', '../../src/p.md')
     expect(evalFileOf(path.join(top, 'evals/c/graders/g.md'))).toMatchObject({ kind: 'grader' })
+  })
+})
+
+/** Run `fn` while the directory `dir` can be entered but not listed. */
+function unlisted<T>(dir: string, fn: () => T): T {
+  const mode = statSync(dir).mode
+  chmodSync(dir, 0o311)
+  try {
+    return fn()
+  } finally {
+    chmodSync(dir, mode)
+  }
+}
+
+describe('evalFileOf with a case that cannot be listed', () => {
+  const blind = chmodCannotBlock ? it.skip : it
+
+  blind('reads no grader of a case that it cannot list', () => {
+    const top = tree({ [MANIFEST]: PLUGIN, 'evals/c/prompt.md': 'x', 'evals/c/graders/g.md': 'x' })
+    const file = path.join(top, 'evals/c/graders/g.md')
+    expect(evalFileOf(file)).toMatchObject({ kind: 'grader' })
+    expect(unlisted(path.join(top, 'evals/c'), () => evalFileOf(file))).toBeNull()
+  })
+
+  blind('reads no prompt.md below a folder that it cannot list', () => {
+    const top = tree({ [MANIFEST]: PLUGIN, 'evals/g/c/prompt.md': 'x' })
+    const file = path.join(top, 'evals/g/c/prompt.md')
+    expect(evalFileOf(file)).toMatchObject({ kind: 'prompt' })
+    expect(unlisted(path.join(top, 'evals/g'), () => evalFileOf(file))).toBeNull()
+  })
+})
+
+describe('evalFileOf with a plugin that it cannot see', () => {
+  const linkedIt = noLinks ? it.skip : it
+
+  linkedIt('does not read the plugin above a plugin root that it cannot see', () => {
+    const file = 'evals/group/inner/evals/c/prompt.md'
+    const top = tree({ [MANIFEST]: PLUGIN, [file]: 'x' })
+    expect(evalFileOf(path.join(top, file))).toMatchObject({ kind: 'prompt' })
+    // The folder has no `.git`, so it is out of the repository of `top`.
+    const outside = tree({ 'plugin.json': PLUGIN }, false)
+    link(top, 'evals/group/inner/.claude-plugin', outside)
+    expect(evalFileOf(path.join(top, file))).toBeNull()
   })
 })
 

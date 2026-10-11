@@ -155,6 +155,8 @@ describe(RULE, () => {
     expect(messages('type: regex\npattern: "(?:i)hello"')).toEqual([])
     expect(messages('type: tool_used\ntool: Skill\ninput_match: "(?i)x"')).toEqual([])
     expect(messages('type: regex\npattern: 5')).toEqual([])
+    expect(messages('type: llm\npattern: "(?i)x"')).toEqual([])
+    expect(messages('type: baseline\npattern: "(?i)x"')).toEqual([])
   })
 
   check('reports each fault of one file', () => {

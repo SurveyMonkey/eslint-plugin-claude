@@ -63,8 +63,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'errorAgent' | 'abo
         }
         if (type !== null && type !== undefined && !EVAL_MOCK_TYPES.includes(type as string)) {
           report('type', 'badType')
-          return
         }
+        // A type that the rule cannot read matches none of the two branches below.
         const effective = type ?? (isServerFile ? undefined : 'fixed')
         if (effective === 'agent' && error === true) {
           report('error', 'errorAgent')

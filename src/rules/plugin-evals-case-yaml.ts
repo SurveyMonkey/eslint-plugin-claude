@@ -80,9 +80,10 @@ const rule: JSONRuleDefinition<{
             const value = paths[key]
             const entries = isList ? (Array.isArray(value) ? value : []) : [value]
             for (const entry of entries) {
-              if (typeof entry !== 'string' || entry === '') {
+              if (typeof entry !== 'string') {
                 continue
               }
+              // An empty path stands for the case directory, so it passes the checks below.
               const target = path.resolve(caseDir, entry)
               let fault: 'outside' | 'missing' | null = null
               if (!isInside(target, caseDir)) {
