@@ -23,13 +23,13 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **477 candidate rules** in 9 groups. 355 rules go in `recommended`: 212 at `error` and 143 at
-  `warn`. 122 rules ship `off`, and `strict` turns them on at `warn`.
-- **Silent failure is the largest category.** 148 rules have the category `no-op`. The file loads,
-  but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
+- **454 candidate rules** in 9 groups. 337 rules go in `recommended`: 203 at `error` and 134 at
+  `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
+- **Silent failure is the largest category.** 141 rules have the category `no-op`. The file loads,
+  but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
-- **`claude plugin validate` covers little of this.** 15 rules are `partial`: validate reports
-  some of their cases. The other 462 it does not report at all. Validate runs only on plugin and
+- **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
+  some of their cases. The other 438 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -113,14 +113,14 @@ below covers one kind of configuration file, and each rule name starts with its 
 
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
-| `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
-| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 148 |
-| `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 49 |
-| `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 38 |
-| `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
-| `limit` | `problem` | A size, count or length limit, or a truncation. | 21 |
-| `deprecated` | `suggestion` | A legacy or renamed form that still works. | 14 |
-| `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 88 |
+| `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 77 |
+| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 141 |
+| `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
+| `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
+| `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 40 |
+| `limit` | `problem` | A size, count or length limit, or a truncation. | 20 |
+| `deprecated` | `suggestion` | A legacy or renamed form that still works. | 12 |
+| `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 85 |
 
 A `limit` rule with a number takes it as an optional rule option, with the docs value as its default. Its row names the option and the default. Where the docs give no number, the row says so. Claude Code can cut or skip the file at a number. If no setting moves that number, the row also names the schema maximum (ADR 001, Decision 2). A `limit` row that compares no number says so.
 
@@ -132,7 +132,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 477 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 454 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -162,19 +162,19 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
-| Skills and commands | 15 | 13 | 10 | 38 |
+| Skills and commands | 15 | 13 | 9 | 37 |
 | Subagents and output styles | 16 | 14 | 12 | 42 |
-| Hooks | 20 | 17 | 21 | 58 |
-| Plugin manifest and layout | 28 | 20 | 10 | 58 |
-| Marketplace manifest | 25 | 14 | 3 | 42 |
+| Hooks | 19 | 16 | 21 | 56 |
+| Plugin manifest and layout | 27 | 19 | 9 | 55 |
+| Marketplace manifest | 25 | 13 | 3 | 41 |
 | CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
-| Settings | 23 | 24 | 16 | 63 |
-| Permissions and sandbox | 38 | 20 | 23 | 81 |
-| MCP and LSP servers | 35 | 12 | 11 | 58 |
-| **Total** | **212** | **143** | **122** | **477** |
+| Settings | 18 | 19 | 14 | 51 |
+| Permissions and sandbox | 37 | 20 | 22 | 79 |
+| MCP and LSP servers | 34 | 11 | 11 | 56 |
+| **Total** | **203** | **134** | **117** | **454** |
 
-By severity, 212 rules are `error` and 265 are `warn`: the 143 `recommended` `warn` rules and
-the 122 `off` rules that `strict` turns on at `warn`.
+By severity, 203 rules are `error` and 251 are `warn`: the 134 `recommended` `warn` rules and
+the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
 of the check for plugins (`partial`) or none of it (`–`).
@@ -244,7 +244,7 @@ Decisions on the open questions, made in review of this document:
 
 ### Skills and commands
 
-Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 38 rules: 15 error and 13 warn in `recommended`, and 10 heuristic or opt-in rules `off`.
+Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 37 rules: 15 error and 13 warn in `recommended`, and 9 heuristic or opt-in rules `off`.
 
 Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKILL.md`, `<plugin>/SKILL.md`. CMD = `**/.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`. A rule applies to SKILL only unless its Checks cell names CMD.
 
@@ -375,7 +375,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 
 ### Hooks
 
-These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 58 rules: 20 error and 17 warn in `recommended`, and 21 `off`.
+These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 56 rules: 19 error and 16 warn in `recommended`, and 21 `off`.
 
 Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *handler* is one object in a group's inner `hooks` array. *Shell form* is a `command` handler with no `args`. *Exec form* is a handler with `args`. *Placeholder* means `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}` or `${CLAUDE_PROJECT_DIR}`. Unless a row says otherwise, a rule applies to all five sources.
 
@@ -457,7 +457,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 - Placeholder quoting is warn, not error. The failure needs a space in the install or project path (troubleshooting). The plugins-marketplaces findings called it breaks. [^plugins-troubleshooting-hook-error-notices-in-the-transcript]
 - `once`. hooks.md says it is ignored "in settings files and agent frontmatter" and does not name plugin `hooks.json`. The rule flags settings and agent frontmatter only. [^hooks-common-fields]
 - Unknown handler fields. The docs list the fields per type but do not say what happens to an unknown one, so `hooks-handler-field-unknown` is warn, not error. [^hooks-hook-handler-fields]
-- `hooks-committed-command-review` flags every committed command hook, including a plugin's own hooks. The policy table puts it in `recommended` warn. It is a candidate to move to `off`, because it reports no misconfiguration. [^hooks-workspace-trust]
+- `hooks-committed-command-review` flags every committed command hook, including a plugin's own hooks. It is `off`, because it reports no misconfiguration. `strict` turns it on at `warn`. [^hooks-workspace-trust]
 - `async: true` on a decision event was an exact finding (degraded). I moved it to `off` as a heuristic, because an async logging hook on `PreToolUse` is valid, and the docs name no error. [^hooks-run-hooks-in-the-background]
 - Profile echo. hooks-guide.md says a shell profile `echo` can corrupt a shell-form hook's JSON. This is a second reason for `hooks-prefer-exec-form`. The repo cannot see the profile, so there is no separate rule. [^hooks-guide-hook-json-has-no-effect]
 - `shell: "powershell"` on a hook works without `CLAUDE_CODE_USE_POWERSHELL_TOOL`, unlike `defaultShell` and skill `shell`. So `hooks-config-schema` needs no env-var check. [^tools-reference-shell-selection-in-settings-hooks-and-skills]
@@ -466,7 +466,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 
 ### Plugin manifest and layout
 
-Covers `.claude-plugin/plugin.json` (every field except inline `mcpServers`, `lspServers` and `hooks`), the plugin directory layout, `bin/`, symlinks, component path rules, plugin `settings.json`, `userConfig`, `dependencies`, `channels`, `monitors`, `themes`, Node.js lockfiles, marketplace-entry `relevance`, and plugin eval suites. 58 rules: 28 error and 20 warn in `recommended`, and 10 `off`. 49 are plugin rules, and 9 are eval-suite rules in their own subsection.
+Covers `.claude-plugin/plugin.json` (every field except inline `mcpServers`, `lspServers` and `hooks`), the plugin directory layout, `bin/`, symlinks, component path rules, plugin `settings.json`, `userConfig`, `dependencies`, `channels`, `monitors`, `themes`, Node.js lockfiles, marketplace-entry `relevance`, and plugin eval suites. 55 rules: 27 error and 19 warn in `recommended`, and 9 `off`. 46 are plugin rules, and 9 are eval-suite rules in their own subsection.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -551,7 +551,7 @@ These rules lint `claude plugin eval` suites (`evals/` or the `experimental.eval
 
 ### Marketplace manifest
 
-Covers `.claude-plugin/marketplace.json` (top level, entries, plugin sources, reserved names, cross-file checks against each entry's `plugin.json`), and the marketplace and plugin keys in committed settings files (`extraKnownMarketplaces`, `enabledPlugins`, the policy lists, and related keys). 42 rules: 25 error and 14 warn in `recommended`, and 3 `off`. In the Validate column, `partial` means the docs say `claude plugin validate` reports some of the sub-checks (Notes say which), and `–` means it reports none.
+Covers `.claude-plugin/marketplace.json` (top level, entries, plugin sources, reserved names, cross-file checks against each entry's `plugin.json`), and the marketplace and plugin keys in committed settings files (`extraKnownMarketplaces`, `enabledPlugins`, the policy lists, and related keys). 41 rules: 25 error and 13 warn in `recommended`, and 3 `off`. In the Validate column, `partial` means the docs say `claude plugin validate` reports some of the sub-checks (Notes say which), and `–` means it reports none.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -677,7 +677,7 @@ Rules for instruction files: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`
 
 ### Settings
 
-Covers `.claude/settings.json`, `.claude/settings.local.json`, committed `managed-settings.json` and `managed-settings.d/*.json`, files passed to `--settings`, the `env` block, model and output-style selection keys, and statusline config; a repository `keybindings.json` is left to `settings-global-only-file`: 53 rules: 18 error and 20 warn in `recommended`, and 15 `off`. The ten `keybindings-` rows are dropped (round 12 ruling 3) and are not counted. Keys owned by the permissions, sandbox, hooks, MCP, marketplace, and memory groups are checked there, except for scope (`settings-key-scope`) and unknown-key detection (`settings-schema`).
+Covers `.claude/settings.json`, `.claude/settings.local.json`, committed `managed-settings.json` and `managed-settings.d/*.json`, files passed to `--settings`, the `env` block, model and output-style selection keys, and statusline config; a repository `keybindings.json` is left to `settings-global-only-file`: 51 rules: 18 error and 19 warn in `recommended`, and 14 `off`. The ten `keybindings-` rows and two other rows are dropped (round 12) and are not counted. Keys owned by the permissions, sandbox, hooks, MCP, marketplace, and memory groups are checked there, except for scope (`settings-key-scope`) and unknown-key detection (`settings-schema`).
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -751,8 +751,9 @@ Covers `.claude/settings.json`, `.claude/settings.local.json`, committed `manage
 
 Source: the Scope column of the settings index [^settings-reference-settings-index]. Nested keys are dotted. A key in no list, other than `$schema` and `ignorePatterns`, is unknown to `settings-schema`.
 
-- **Managed only** (flag in every non-managed file), 43: allowAllClaudeAiMcps, allowManagedHooksOnly, allowManagedMcpServersOnly, allowManagedPermissionRulesOnly, allowedChannelPlugins, availableModelsMatch, blockedMarketplaces, browserExternalPageTools, channelsEnabled, claudeMd, deniedModels, disableBrowserExternalNavigation, disableCommandPluginSources, disableDesktopLocalSessions, disableMobileSimulatorTools, disableSideloadFlags, forceLoginGatewayUrl, forceRemoteSettingsRefresh, gatewayInternalNetworks, managedMcpServers, managedSourcesBehavior, modelPricing, parentSettingsBehavior, pluginSuggestionMarketplaces, pluginTrustMessage, policyHelper (.path, .refreshIntervalMs, .timeoutMs), requiredMaximumVersion, requiredMinimumVersion, sandbox.bwrapPath, sandbox.filesystem.allowManagedReadPathsOnly, sandbox.network.allowManagedDomainsOnly, sandbox.socatPath, sshHostAllowlist, strictKnownMarketplaces, strictPluginOnlyCustomization (.agents, .hooks, .mcp, .skills), wslInheritsWindowsSettings.
-- **User or managed** (flag in project and local), 24: askUserQuestionTimeout, autoMode, autoMode.classifyAllShell, bashEditDiffEnabled (flag `true` only; a project `false` is honored), desktopSessionCleanupPeriodDays, dialogExpiry, feedbackDrafts, footerLinksRegexes, modelPicker, pluginConfigs, processWrapper, sandbox.allowAppleEvents, sandbox.credentials.allowPlaintextInject, sandbox.credentials.awsPairs, sandbox.credentials.sigv4, sandbox.filesystem.disabled, sandbox.network.strictAllowlist, sandbox.network.tlsTerminate, sandbox.ripgrep, skipAutoPermissionPrompt, spellcheck, sshConfigs, vimInsertModeRemaps. autoContinueAtUsageLimit is excluded here and handled by `settings-project-autocontinue-off`.
+- **Managed only** (flag in every non-managed file), 42: allowAllClaudeAiMcps, allowManagedHooksOnly, allowManagedMcpServersOnly, allowManagedPermissionRulesOnly, allowedChannelPlugins, availableModelsMatch, blockedMarketplaces, browserExternalPageTools, channelsEnabled, claudeMd, deniedModels, disableBrowserExternalNavigation, disableCommandPluginSources, disableDesktopLocalSessions, disableMobileSimulatorTools, disableSideloadFlags, forceRemoteSettingsRefresh, gatewayInternalNetworks, managedMcpServers, managedSourcesBehavior, modelPricing, parentSettingsBehavior, pluginSuggestionMarketplaces, pluginTrustMessage, policyHelper (.path, .refreshIntervalMs, .timeoutMs), requiredMaximumVersion, requiredMinimumVersion, sandbox.bwrapPath, sandbox.filesystem.allowManagedReadPathsOnly, sandbox.network.allowManagedDomainsOnly, sandbox.socatPath, sshHostAllowlist, strictKnownMarketplaces, strictPluginOnlyCustomization (.agents, .hooks, .mcp, .skills), wslInheritsWindowsSettings.
+- **User or managed** (flag in project and local), 25: askUserQuestionTimeout, autoMode, autoMode.classifyAllShell, bashEditDiffEnabled (flag `true` only; a project `false` is honored), desktopSessionCleanupPeriodDays, dialogExpiry, feedbackDrafts, footerLinksRegexes, forceLoginGatewayUrl, modelPicker, pluginConfigs, processWrapper, sandbox.allowAppleEvents, sandbox.credentials.allowPlaintextInject, sandbox.credentials.awsPairs, sandbox.credentials.sigv4, sandbox.filesystem.disabled, sandbox.network.strictAllowlist, sandbox.network.tlsTerminate, sandbox.ripgrep, skipAutoPermissionPrompt, spellcheck, sshConfigs, vimInsertModeRemaps. autoContinueAtUsageLimit is excluded here and handled by `settings-project-autocontinue-off`.
+- **User** (`~/.claude/settings.json` only; flag in project and local, no report in a managed file), 1: worktree.location.
 - **User, local, or managed** (flag in `.claude/settings.json` only), 4: skipDangerousModePermissionPrompt, syncClaudeAiPlugins, syncClaudeAiSkills, useAutoModeDuringPlan.
 - **Global config** (`~/.claude.json` only; flag in any settings file), 12: autoConnectIde, autoInstallIdeExtension, claudeInChromeDefaultEnabled, copyFullResponse, copyOnSelect, defaultToAgentsView, diffTool, externalEditorContext, leftArrowOpensAgents, permissionExplainerEnabled, prStatusFooterEnabled, teammateDefaultModel.
 - **Any file**, 156: advisorModel, agent, agentPushNotifEnabled, allowedHttpHookUrls, allowedMcpServers, alwaysThinkingEnabled, apiKeyHelper, attribution (.commit, .pr, .sessionUrl), autoCompactEnabled, autoCompactWindow, autoMemoryDirectory, autoMemoryEnabled, autoScrollEnabled, autoUpdatesChannel, availableModels, awaySummaryEnabled, awsAuthRefresh, awsCredentialExport, axScreenReader, bashOutputMaxChars, claudeMdExcludes, cleanupPeriodDays, companyAnnouncements, crossSessionInbound, defaultShell, deniedMcpServers, disableAgentView, disableAllHooks, disableArtifact, disableAutoMode, disableBundledSkills, disableClaudeAiConnectors, disableDeepLinkRegistration, disableRemoteControl, disableSkillShellExecution, disableWorkflows, disabledMcpjsonServers, editorMode, effortLevel, emojiCompletionEnabled, enableAllProjectMcpServers, enableArtifact, enableWorkflows, enabledMcpjsonServers, enabledPlugins, enforceAvailableModels, env, extraKnownMarketplaces, fallbackModel, fastMode, fastModePerSessionOptIn, feedbackSurveyRate, fileCheckpointingEnabled, fileSuggestion, forceLoginMethod, forceLoginOrgUUID, gcpAuthRefresh, hooks, httpHookAllowedEnvVars, includeCoAuthoredBy, includeGitInstructions, inputNeededNotifEnabled, isolatePeerMachines, keybindingFlavor, language, maxEffortLevel, maxProseWidth, minimumVersion, model, modelOverrides, modelSettings, otelHeadersHelper, outputStyle, permissions (.additionalDirectories, .allow, .ask, .blockReadsOutsideWorkingDirectories, .defaultMode, .deny, .disableBypassPermissionsMode), plansDirectory, prUrlTemplate, preferredNotifChannel, prefersReducedMotion, promptCacheTtl, promptSuggestionEnabled, remote.defaultEnvironmentId, remoteControlAtStartup, respectGitignore, respondToBashCommands, sandbox (.allowUnsandboxedCommands, .autoAllowBashIfSandboxed, .credentials, .credentials.envVars, .credentials.files, .enableWeakerNestedSandbox, .enableWeakerNetworkIsolation, .enabled, .excludedCommands, .failIfUnavailable, .filesystem, .filesystem.allowRead, .filesystem.allowWrite, .filesystem.denyRead, .filesystem.denyWrite, .ignoreViolations, .network, .network.allowAllUnixSockets, .network.allowLocalBinding, .network.allowMachLookup, .network.allowUnixSockets, .network.allowedDomains, .network.deniedDomains, .network.httpProxyPort, .network.socksProxyPort), showClearContextOnPlanAccept, showThinkingSummaries, showTurnDuration, skillListingBudgetFraction, skillListingMaxDescChars, skillOverrides, skipWebFetchPreflight, spinnerTipsEnabled, spinnerTipsOverride, spinnerVerbs, statusLine, subagentPromptCacheTtl, subagentStatusLine, switchModelsOnFlag, syntaxHighlightingDisabled, taskOutputMaxChars, teammateMode, terminalProgressBarEnabled, terminalTitleFromRename, theme, timeFormat, timeZone, tui, ultracode, verbose, viewMode, voice, voiceEnabled, wheelScrollAccelerationEnabled, workflowKeywordTriggerEnabled, workflowSizeGuideline, worktree (.baseRef, .bgIsolation, .sparsePaths, .symlinkDirectories).
@@ -816,7 +817,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 ### Permissions and sandbox
 
-Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 81 rules: 58 in `recommended` (38 error, 20 warn) and 23 `off`.
+Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 79 rules: 57 in `recommended` (37 error, 20 warn) and 22 `off`.
 
 The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list). `permissions-mcp-rule-parens` stays on settings files, because the docs state the skip for a settings file only (ruling 17). A managed settings file is a settings file. So the grammar rules, `permissions-mcp-rule-parens` and `permissions-skill-rule` also lint `managed-settings.json` and each `managed-settings.d/*.json` drop-in (round 11 ruling 3). They do not lint a hidden drop-in. The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). `hooks-if-condition` runs the shared parser for hook `if` itself. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-available-tools]. So `agent-tools-known` owns both agent fields.
 
@@ -841,7 +842,7 @@ The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permi
 | `permissions-bash-colon-star-mid` | `:*` before the end of a `Bash`, `Monitor` or `PowerShell` pattern (`Bash(git:* push)`) is a literal colon and does not match as intended [^permissions-wildcard-patterns]. The docs give no version for this, so the rule reports on every version and has no option. The changelog says v2.1.282 and later accept such a rule with a startup warning; the docs win (see the notes). It reads `allow`, `ask` and `deny`. The rule reports a `:*` that ends a word, so `localhost:*/x` and a lone `Bash(:*)` get no report. The message tells the user to put the wildcard at the end, after the subcommand, because `Bash(git * main)` matches more than expected [^permissions-wildcard-patterns]. A `:*` at the end is for `permissions-bash-colon-star-suffix`, and a rule with both gets one report from each. | recommended | warn | portability | – | [^permissions-wildcard-patterns] |
 | `permissions-bash-colon-star-suffix` | Trailing `:*` (`Bash(ls:*)`) equals ` *`; prefer the space form that the permission dialog writes. It reads `Bash`, `Monitor` and `PowerShell` rules in `allow`, `ask` and `deny`. A `:*` that stands alone (`Bash(:*)`) is text and gets no report. A deny or ask rule on an input parameter (`Bash(run_in_background:*)`) is skipped [^permissions-match-by-input-parameter]. | recommended | warn | practice | – | [^permissions-wildcard-patterns] [^permissions-powershell] [^permissions-match-by-input-parameter] |
 | `permissions-bash-runner-wildcard` | `allow` rules of the form `<runner> *` for `direnv exec`, `devbox run`, `mise exec`, `npx`, `docker exec` (`Bash(devbox run *)`) approve any inner command. Write one rule per inner command. Checks the runner followed by the final `*` only, for `Bash` and `Monitor` in settings files. Option `runners` (replaces the list). | recommended | error | security | – | [^permissions-wrappers] |
-| `permissions-bash-exec-wrapper-prefix` | Prefix `allow` rules for `watch`, `setsid`, `ionice`, `flock` (`Bash(watch *)`) do not auto-approve in Manual mode. Only exact-match rules work for these wrappers. Checks `Bash` and `Monitor` in settings files. A `Bash(find *)` rule still covers plain `find`, so it is not checked. | recommended | error | no-op | – | [^permissions-wrappers] |
+| `permissions-bash-exec-wrapper-prefix` | Prefix `allow` rules for `watch`, `setsid`, `ionice`, `flock` (`Bash(watch *)`) do not auto-approve in Manual mode. Only exact-match rules work for these wrappers. Checks `Bash` and `Monitor` in settings files. A `Bash(find *)` rule still covers plain `find`, so it is not checked. | recommended | error | no-op | – | [^permissions-exec-wrappers-and-find-actions] [^permissions-wrappers] |
 | `permissions-allow-unrestricted` | `allow` holds `Bash`, `Bash(*)`, `PowerShell`, `PowerShell(*)`, or `WebFetch(domain:*)`. These approve every command or fetch; `WebFetch(domain:*)` also opens sandboxed network to any host. Settings files only: `skill-allowed-tools-broad` reports the bare forms in skill `allowed-tools`. A bare `WebFetch` is not checked. | recommended | error | security | – | [^permissions-match-all-uses-of-a-tool] [^permissions-allow-or-deny-every-fetch] [^permissions-powershell] |
 | `permissions-dead-allow` | (cross-file) An `allow` rule that a `deny` or `ask` rule of the same settings source covers (deny, then ask, then allow; specificity ignored): a bare tool name, or `Tool(*)` for `Bash`, `Monitor` and `PowerShell`, covers every `allow` rule of the tool; a command pattern of those tools covers an `allow` rule that it matches in full (`Bash(npm *)` covers `Bash(npm test)`), with `:*` read as a final ` *`; any other tool needs an equal specifier. Not checked: a `deny` pattern with a mid-pattern wildcard that covers an `allow` rule with fewer words, a path or domain pattern that covers another, a tool-name glob (`permissions-deny-all-tools`), and the user file. The source is the project pair, or one managed source, and the rule never reads across the two. An equal `allow` rule under a `deny` or `ask` rule is reported here; `permissions-duplicate-rule` reads the same rule twice in one list, and an `ask` rule that an equal `deny` rule repeats. | recommended | error | no-op | – | [^permissions-manage-permissions] [^permissions-match-all-uses-of-a-tool] [^settings-reference-permission-rule-syntax] |
 | `permissions-duplicate-rule` | The same rule twice in one list of a file, or an `ask` rule that an equal `deny` rule of the file repeats. Compares after it reads a final `:*` as ` *`, ignores white space between words, reads a bare command tool as `Tool(*)`, and drops a trailing `.` and the case in `domain:`. A deny or ask rule on an input parameter (`Bash(run_in_background:*)`) is compared as text. It reads one file. An `allow` rule that an equal `deny` or `ask` rule covers is for `permissions-dead-allow` (row 846), so one fault gets one report. One case is left here: `WebFetch` hosts that differ in a trailing dot or in case, which `permissions-dead-allow` reads as two rules. | recommended | warn | consistency | – | [^permissions-manage-permissions] [^permissions-webfetch] [^permissions-match-by-input-parameter] |
@@ -906,7 +907,7 @@ The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permi
 
 #### Permissions and sandbox: notes
 
-- **Scope split with the settings group.** This file owns scope checks for keys under `permissions.*`, `sandbox.*`, `autoMode`, and `disableAutoMode`. The settings group's generic key-scope catalog should skip those prefixes. The other top-level keys in the settings-reference "Permission settings" section (`allowManagedPermissionRulesOnly`, `skipAutoPermissionPrompt`, `skipDangerousModePermissionPrompt`, `useAutoModeDuringPlan`) and permission-adjacent keys (`skipWebFetchPreflight`, `disableAllHooks`, env vars `CLAUDE_CODE_ENABLE_AUTO_MODE`, `CLAUDE_CODE_DISABLE_POWERSHELL_CMD_RM_DENY`) stay with settings. [^settings-reference-permissions]
+- **Scope split with the settings group.** `settings-key-scope` owns the scope check for the `autoMode` and `sandbox.*` keys. It reads the scope of each key from `src/data/settings-keys.ts`. It reports `autoMode` and `autoMode.classifyAllShell` (User or managed) in `.claude/settings.json` and `.claude/settings.local.json`. It reports there the `sandbox.*` keys with the scope Managed or User or managed. It makes no report on the other `sandbox.*` keys, on `permissions.*` or on `disableAutoMode`: their scope is Any file. This group owns no scope check. A rule here can take over a key only with a `reportedBy` entry in the data module. The other top-level keys in the settings-reference "Permission settings" section (`allowManagedPermissionRulesOnly`, `skipAutoPermissionPrompt`, `skipDangerousModePermissionPrompt`, `useAutoModeDuringPlan`) and permission-adjacent keys (`skipWebFetchPreflight`, `disableAllHooks`, env vars `CLAUDE_CODE_ENABLE_AUTO_MODE`, `CLAUDE_CODE_DISABLE_POWERSHELL_CMD_RM_DENY`) stay with settings. [^settings-reference-permissions]
 - **Mid-pattern `:*` conflict.** permissions.md says `Bash(git:* push)` treats the colon as literal and never matches. The changelog (v2.1.282) says such rules now work from every source with a startup warning. The docs win: `permissions-bash-colon-star-mid` reports on every version and is a warn. [^permissions-wildcard-patterns] [^changelog-claude-code-changelog]
 - **Non-MCP globs in `allow`.** permissions.md says an unanchored allow glob is skipped with a warning; the changelog (v2.1.166) says allow rules reject non-MCP globs. Both make the rule dead, so `permissions-tool-name-glob` is an error. [^permissions-tool-name-wildcards]
 - **Path-rule tool list.** The docs name `Write`, `NotebookEdit`, `Glob`, `MultiEdit` as never consulted. tools-reference maps `Grep` and `LSP` to `Read(...)` too, and lists no specifier format for them. It does not say that Claude Code never consults a path rule for them, so `permissions-path-rule-tool` does not report `Grep(path)` or `LSP(path)`. [^tools-reference-configure-tools-with-permission-rules-and-hooks]
@@ -921,7 +922,7 @@ The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permi
 
 ### MCP and LSP servers
 
-Covers the root `.mcp.json`, plugin `.mcp.json` and `plugin.json` `mcpServers`, `managed-mcp.json` and `managedMcpServers` when a config repo commits them, `.lsp.json` and `plugin.json` `lspServers`, the MCP keys and MCP `env` variables in `.claude/settings*.json`, and MCP tool names wherever a tool is named. 58 rules (35 error and 12 warn in `recommended`, and 11 `off`), plus an appendix of canonical built-in tool names that the permissions, skills, agents and hooks groups reference.
+Covers the root `.mcp.json`, plugin `.mcp.json` and `plugin.json` `mcpServers`, `managed-mcp.json` and `managedMcpServers` when a config repo commits them, `.lsp.json` and `plugin.json` `lspServers`, the MCP keys and MCP `env` variables in `.claude/settings*.json`, and MCP tool names wherever a tool is named. 56 rules (34 error and 11 warn in `recommended`, and 11 `off`), plus an appendix of canonical built-in tool names that the permissions, skills, agents and hooks groups reference.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|

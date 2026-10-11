@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "632ca58b63afeac3dde90eef93e55f4b91039dc49d8c39754e31760de7f74e1c",
+  "hash": "4bec5505c7f33da3284848047b7e0c90148d777daf90b4cfda9da0a64878de08",
   "blocks": [
     {
       "id": "all-settings",
@@ -259,8 +259,8 @@
     },
     {
       "id": "sandbox-autoallowbashifsandboxed",
-      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d",
-      "bodyHash": "b047dc91e27613f89c2e15c7b21333aa65480681466682bbc7b063381f235624"
+      "hash": "d6345f3609afd0de5d9704f0c78fe772bd9f7f9719ddb3080a4807da11c18b6b",
+      "bodyHash": "ceeeb4bddea1f9b2a7fb95b242f05fd107e54887dc184d228520a58c029c61c5"
     },
     {
       "id": "sandbox-excludedcommands",
@@ -1625,8 +1625,8 @@
     {
       "heading": "sandbox.autoAllowBashIfSandboxed",
       "id": "sandbox-autoallowbashifsandboxed",
-      "hash": "f4a3bf6fffe3402211d3d69cb5c4b0f06b8a6f7ec02113ae816a65a202ed5a3d",
-      "text": "### `sandbox.autoAllowBashIfSandboxed`\n\nLet Claude Code run sandboxed Bash commands without a permission prompt. Commands that can't run in the sandbox still go through the regular permission flow, and `deny` rules and content-scoped `ask` rules such as `Bash(git push *)` still apply; a bare `Bash` ask rule is skipped for sandboxed commands. Set it to `false` to send sandboxed commands through the regular permission flow too, which the `/sandbox` **Mode** tab calls regular permissions mode.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: Boolean\n  * `true`: Claude Code runs sandboxed Bash commands without a permission prompt, subject to `deny` rules and content-scoped `ask` rules; `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` turns auto-allow off\n  * `false`: sandboxed commands go through the regular permission flow, so your allow rules and permission mode decide. The `/sandbox` **Mode** tab calls this regular permissions mode\n* **Default**: `true`\n\nThis keeps the sandbox on and sends sandboxed commands through the regular permission flow:\n\n```json settings.json theme={null}\n{\n  \"sandbox\": {\n    \"enabled\": true,\n    \"autoAllowBashIfSandboxed\": false\n  }\n}\n```\n\nSee [Sandbox modes](/docs/en/sandboxing#sandbox-modes) for what auto-allow mode still prompts on and how it behaves in plan mode."
+      "hash": "d6345f3609afd0de5d9704f0c78fe772bd9f7f9719ddb3080a4807da11c18b6b",
+      "text": "### `sandbox.autoAllowBashIfSandboxed`\n\nLet Claude Code run sandboxed Bash commands without a permission prompt. Commands that can't run in the sandbox still go through the regular permission flow, and `deny` rules and content-scoped `ask` rules such as `Bash(git push *)` still apply; a bare `Bash` ask rule is skipped for sandboxed commands. Set it to `false` to send sandboxed commands through the regular permission flow too, which the `/sandbox` **Mode** tab calls regular permissions mode.\n\n* **Scope**: [`Any file`](#scopes)\n* **Type**: Boolean\n  * `true`: Claude Code runs sandboxed Bash commands without a permission prompt, except in the cases that [Auto-allow mode](/docs/en/sandboxing#auto-allow-mode) describes; `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` turns auto-allow off\n  * `false`: sandboxed commands go through the regular permission flow, so your allow rules and permission mode decide. The `/sandbox` **Mode** tab calls this regular permissions mode\n* **Default**: `true`\n\nThis keeps the sandbox on and sends sandboxed commands through the regular permission flow:\n\n```json settings.json theme={null}\n{\n  \"sandbox\": {\n    \"enabled\": true,\n    \"autoAllowBashIfSandboxed\": false\n  }\n}\n```\n\nSee [Auto-allow mode](/docs/en/sandboxing#auto-allow-mode) for what auto-allow mode still prompts on and how it behaves in plan mode."
     },
     {
       "heading": "permissions",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/debug-your-config",
-  "hash": "9c8252be1571e49f5e8b7743725a92f5584836577342bc2cbb55fa0e85e8c0b2",
+  "hash": "690e4e7645da3c3b59b630994c598666c6491ce7f6ab6e6bed1829f9aef0025a",
   "blocks": [
     {
       "id": "debug-your-configuration",
@@ -29,8 +29,8 @@
     },
     {
       "id": "test-against-a-clean-configuration",
-      "hash": "81de51a255fc5f0a2bcc1451d86494d95fc4f00f3d71b59265fccaad054d671e",
-      "bodyHash": "c62cb9b6416f173c17cb41f7bd31860da0fb9752e3214c1cc61d30355f89464c"
+      "hash": "d1e8a60a39318ff899f3f244787b9cbb6a4d70ff36ccc77198b2031b79998b03",
+      "bodyHash": "673f9fa3d18a10561bcb5f69e68edf0c6923d4b7f66f8f8d328985002e61b06e"
     },
     {
       "id": "check-common-causes",

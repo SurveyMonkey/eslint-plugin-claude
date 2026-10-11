@@ -24,8 +24,8 @@ It reads no hidden drop-in, because Claude Code ignores it.
 ## Rule details
 
 Exec wrappers such as `watch`, `setsid`, `ionice` and `flock` cannot be auto-approved by a prefix rule like
-`Bash(watch *)`. In Manual mode they always prompt.[^wrappers] To approve one invocation, write an exact-match rule for the
-full command string.[^wrappers] In Manual mode, a prefix rule for a wrapper does not approve it.
+`Bash(watch *)`. In Manual mode they always prompt.[^exec-wrappers] To approve one invocation, write an exact-match rule for the
+full command string.[^exec-wrappers] In Manual mode, a prefix rule for a wrapper does not approve it.
 
 The rule reports an `allow` entry for `Bash` or `Monitor`. Its first word is `watch`, `setsid`, `ionice` or `flock`,
 and its last word is `*`. The `:*` suffix counts as a final ` *`.[^wildcards] `Monitor` uses the permission
@@ -38,7 +38,7 @@ The rule is silent for these rules:
   Claude Code does with it.
 - A rule for a wrapper that Claude Code strips, such as `Bash(nice *)`. The stripped wrappers are `timeout`, `time`,
   `nice`, `nohup` and `stdbuf`.[^wrappers]
-- `Bash(find *)`. The same paragraph says that a `find *` rule does not cover `find` with `-exec` or `-delete`.[^wrappers]
+- `Bash(find *)`. The same paragraph says that a `find *` rule does not cover `find` with `-exec` or `-delete`.[^exec-wrappers]
   The rule still approves plain `find`, so it is not a no-op. This rule leaves it alone.
 
 The rule reads the last of two keys of one name, as `JSON.parse` does. It reads `permissions.allow` of a settings file. It
@@ -70,6 +70,7 @@ None.
 
 ## Sources
 
+[^exec-wrappers]: [Configure permissions: Exec wrappers and find actions](https://code.claude.com/docs/en/permissions#exec-wrappers-and-find-actions)
 [^wrappers]: [Configure permissions: Wrappers](https://code.claude.com/docs/en/permissions#process-wrappers)
 [^wildcards]: [Configure permissions: Wildcard patterns](https://code.claude.com/docs/en/permissions#wildcard-patterns)
 [^monitor]: [Tools reference: Monitor tool](https://code.claude.com/docs/en/tools-reference#monitor-tool)
