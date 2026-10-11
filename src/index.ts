@@ -233,6 +233,7 @@ import pluginEvalsCaseYaml from './rules/plugin-evals-case-yaml.ts'
 import pluginEvalsDir from './rules/plugin-evals-dir.ts'
 import pluginEvalsGrader from './rules/plugin-evals-grader.ts'
 import pluginEvalsMockSchema from './rules/plugin-evals-mock-schema.ts'
+import pluginEvalsMockServerExists from './rules/plugin-evals-mock-server-exists.ts'
 import pluginEvalsPromptFrontmatter from './rules/plugin-evals-prompt-frontmatter.ts'
 import pluginEvalsPromptNoAtMentions from './rules/plugin-evals-prompt-no-at-mentions.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
@@ -758,6 +759,7 @@ const modules = [
   pluginEvalsDir,
   pluginEvalsGrader,
   pluginEvalsMockSchema,
+  pluginEvalsMockServerExists,
   pluginEvalsPromptFrontmatter,
   pluginEvalsPromptNoAtMentions,
   pluginUserConfigSensitive,
@@ -1147,6 +1149,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-evals-dir': 'error',
   'plugin-evals-grader': 'error',
   'plugin-evals-mock-schema': 'error',
+  'plugin-evals-mock-server-exists': 'error',
   'plugin-evals-prompt-frontmatter': 'error',
   'plugin-evals-prompt-no-at-mentions': 'error',
   'plugin-feature-min-version': 'warn',

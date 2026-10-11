@@ -3501,6 +3501,23 @@
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
     }
   ],
+  "plugin-evals-mock-server-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Mock MCP servers",
+      "hash": "156c24365742283311eea11699ea9cb047104abb76f3f11fb796ec3b7829c90b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Score against the no-plugin baseline",
+      "hash": "86640c862ad36c360291b6d7f501d5858facd175606476b50c03b66536cfd27d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-prompt-frontmatter": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",

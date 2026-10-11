@@ -2420,8 +2420,10 @@ const TREE: Record<string, string> = {
   // `plugin-evals-mock-schema`: an agent mock that returns an error; a fixed mock that does; a
   // saved answer, which is no mock file.
   'packages/evs/ms/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'packages/evs/ms/bad/.mcp.json': JSON.stringify({ mcpServers: { gh: { command: 'x' } } }),
   'packages/evs/ms/bad/evals/mocks/gh/issue.md': '---\ntype: agent\nerror: true\n---\n\nNo.\n',
   'packages/evs/ms/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'packages/evs/ms/ok/.mcp.json': JSON.stringify({ mcpServers: { gh: { command: 'x' } } }),
   'packages/evs/ms/ok/evals/mocks/gh/issue.md': '---\nerror: true\n---\n\nNo.\n',
   'packages/evs/ms/ok/evals/mocks/.replay/gh/issue.md': '---\ntype: agent\nerror: true\n---\n',
   // `plugin-evals-case-yaml`: a case.yaml with no version and a script that is not there; a valid
@@ -2430,7 +2432,16 @@ const TREE: Record<string, string> = {
   'packages/evs/cy/bad/evals/first/case.yaml': 'name: first\ncontext:\n  scaffold_script: run.sh\n',
   'packages/evs/cy/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
   'packages/evs/cy/ok/evals/first/case.yaml': 'schema_version: "1.1"\nname: first\n',
-  'packages/evs/cy/ok/evals/mocks/x/case.yaml': 'name: x\n',
+  'packages/evs/cy/ok/evals/results/t/case.yaml': 'name: x\n',
+  // `plugin-evals-mock-server-exists`: a mock directory for a server that the plugin does not
+  // declare; one for a server that it declares; a saved answer, which is no server.
+  'packages/evs/sv/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'packages/evs/sv/bad/.mcp.json': JSON.stringify({ mcpServers: { github: { command: 'x' } } }),
+  'packages/evs/sv/bad/evals/mocks/tracker/create_issue.md': 'Created.\n',
+  'packages/evs/sv/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'packages/evs/sv/ok/.mcp.json': JSON.stringify({ mcpServers: { github: { command: 'x' } } }),
+  'packages/evs/sv/ok/evals/mocks/github/create_issue.md': 'Created.\n',
+  'packages/evs/sv/ok/evals/mocks/.replay/tracker/answer.md': 'Created.\n',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3194,6 +3205,7 @@ const PLUGIN_RULES: {
   { name: 'plugin-evals-dir', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-evals-grader', language: 'markdown/gfm', files: ['**/graders/*.md'] },
   { name: 'plugin-evals-mock-schema', language: 'markdown/gfm', files: ['**/mocks/*/*.md'] },
+  { name: 'plugin-evals-mock-server-exists', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-evals-prompt-frontmatter', language: 'markdown/gfm', files: ['**/prompt.md'] },
   { name: 'plugin-evals-prompt-no-at-mentions', language: 'markdown/gfm', files: ['**/prompt.md'] },
 ]
@@ -3278,6 +3290,7 @@ const EXPECTED = [
   'packages/evs/gr/bad/evals/first/graders/g.md: claude/plugin-evals-grader@2',
   'packages/evs/ms/bad/evals/mocks/gh/issue.md: claude/plugin-evals-mock-schema@2',
   'packages/evs/pf/bad/evals/first/prompt.md: claude/plugin-evals-prompt-frontmatter@2',
+  'packages/evs/sv/bad/.claude-plugin/plugin.json: claude/plugin-evals-mock-server-exists@2',
   'packages/hk/.claude-plugin/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/agents/ev.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-command-removed-cli-flag@2',

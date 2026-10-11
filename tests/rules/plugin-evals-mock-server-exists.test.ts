@@ -10,7 +10,7 @@ import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-evals-mock-server-exists'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const MOCK = 'evals/mocks/tracker/create_issue.md'
 const SERVERS = JSON.stringify({ mcpServers: { github: { command: 'x' } } })
