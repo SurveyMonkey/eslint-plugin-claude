@@ -776,6 +776,16 @@ const TREE: Record<string, string> = {
     scripts: { dev: 'claude --plugin-dir ./plugins/p' },
   }),
   'packages/dnm2/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'dnm2' }),
+  // A monitor that writes under the plugin root reports in `strict` only. The decoy writes to the
+  // data folder.
+  'plugins/nsr/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'nsr',
+    monitors: [{ name: 'm', description: 'd', command: `touch "\${CLAUDE_PLUGIN_ROOT}/x"` }],
+  }),
+  'plugins/nsr2/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'nsr2',
+    monitors: [{ name: 'm', description: 'd', command: `touch "\${CLAUDE_PLUGIN_DATA}/x"` }],
+  }),
   // A range that misses the pre-release version of its dependency reports in `strict` only. The
   // decoy has the suffix. The marketplace needs a `.git` above it.
   'packages/pr/.git/HEAD': 'ref: refs/heads/main\n',
@@ -3123,6 +3133,15 @@ const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'plugin-dependencies-prerelease-range', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-relevance-signal-hints', files: ['**/.claude-plugin/marketplace.json'] },
   { name: 'plugin-dir-not-marketplace-root', files: ['**/package.json'] },
+  {
+    name: 'plugin-no-state-in-plugin-root',
+    files: [
+      '**/.claude-plugin/plugin.json',
+      '**/hooks/hooks.json',
+      '**/.mcp.json',
+      '**/monitors/monitors.json',
+    ],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4359,6 +4378,7 @@ const STRICT_ONLY = [
   'plugins/bsc/.claude-plugin/plugin.json: claude/plugin-bin-shadows-system-command@1',
   'packages/rsh/.claude-plugin/marketplace.json: claude/plugin-relevance-signal-hints@1',
   'packages/dnm/package.json: claude/plugin-dir-not-marketplace-root@1',
+  'plugins/nsr/.claude-plugin/plugin.json: claude/plugin-no-state-in-plugin-root@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an

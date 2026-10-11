@@ -10,7 +10,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-no-state-in-plugin-root'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILES = [
   '**/.claude-plugin/plugin.json',
@@ -77,6 +77,7 @@ describe(RULE, () => {
     ['touch', `touch ${ROOT}/ready`, '`touch`'],
     ['mkdir', `mkdir -p ${ROOT}/cache`, '`mkdir`'],
     ['a program after an assignment', `LC_ALL=C cp a ${ROOT}/b`, '`cp`'],
+    ['a program after sudo', `sudo cp a ${ROOT}/b`, '`cp`'],
   ])('reports %s into the root', (_title, command, action) => {
     expect(run(command)).toEqual([commandMessage(action)])
   })
@@ -137,6 +138,8 @@ describe(RULE, () => {
     ['another variable', 'echo x > $CLAUDE_PLUGIN_ROOT_DIR/log'],
     ['the root in an argument of tee', `echo ${ROOT} | tee /tmp/log`],
     ['a name that holds cp', `mycp a ${ROOT}/b`],
+    ['an assignment alone', `X=${ROOT}`],
+    ['cp with flags only', 'cp -r'],
   ])('stays silent for %s', (_title, command) => {
     expect(run(command)).toEqual([])
   })
@@ -180,7 +183,7 @@ describe(RULE, () => {
   check('reports a shell-form hook and a monitor of the manifest', () => {
     const manifest = JSON.stringify({
       name: 'p',
-      hooks: hooksOf(`touch ${ROOT}/x`),
+      hooks: hooksOf(`touch ${ROOT}/x`).hooks,
       monitors: monitorOf(`mkdir ${ROOT}/d`),
     })
     const { dir } = pluginTree(manifest)

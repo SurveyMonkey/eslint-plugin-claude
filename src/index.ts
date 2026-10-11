@@ -242,6 +242,7 @@ import pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginNoStateInPluginRoot from './rules/plugin-no-state-in-plugin-root.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
@@ -751,6 +752,7 @@ const modules = [
   pluginDependenciesPrereleaseRange,
   pluginRelevanceSignalHints,
   pluginDirNotMarketplaceRoot,
+  pluginNoStateInPluginRoot,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1147,6 +1149,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-dependencies-prerelease-range': 'off',
   'plugin-relevance-signal-hints': 'off',
   'plugin-dir-not-marketplace-root': 'off',
+  'plugin-no-state-in-plugin-root': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
