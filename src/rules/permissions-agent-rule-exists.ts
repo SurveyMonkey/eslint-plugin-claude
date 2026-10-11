@@ -3,7 +3,8 @@
 // built-in agents are in `src/data/agent-fields.ts`. The rule reads the `.claude/agents/` folders
 // of the project and of each directory above it, up to the repository root, as
 // `settings-agent-exists` does, and makes no report when it cannot see one of them. The option
-// `allow` lists the user and plugin agents that a repository cannot show. A managed file applies
+// `allow` lists the user and plugin agents that a repository cannot show. A file with no
+// `description` defines no agent, as Claude Code skips it. A managed file applies
 // to every project on a machine, so the rule does not check it.
 
 import path from 'node:path'
@@ -60,7 +61,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown' }> 
         if (BUILT_IN_AGENTS.some(same) || allow.some(same)) {
           continue
         }
-        found ??= agentNames(path.dirname(path.resolve(context.filename)))
+        found ??= agentNames(path.dirname(path.resolve(context.filename)), true)
         // A path that the rule cannot read can hold the agent.
         if (!found.unseen && !found.names.some(same)) {
           context.report({ loc, messageId: 'unknown', data: { agent } })

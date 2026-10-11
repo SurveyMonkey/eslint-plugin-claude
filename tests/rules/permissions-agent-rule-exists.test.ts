@@ -51,6 +51,22 @@ describe(`${name}: reports`, () => {
     }
   })
 
+  // The sub-agents page, "Subagent files Claude Code skips": a file with a `name` and no
+  // `description` is skipped, so it defines no agent.
+  it.each([
+    ['no description', '---\nname: reviewer\n---\nReview.\n'],
+    ['an empty description', '---\nname: reviewer\ndescription:\n---\nReview.\n'],
+    ['a null description', '---\nname: reviewer\ndescription: null\n---\nReview.\n'],
+  ])('reports a name whose agent file has %s', (_label, file) => {
+    const dir = tree({ [`${AGENTS}/reviewer.md`]: file })
+    expect(ids(dir, settings('Agent(reviewer)'))).toEqual(['unknown'])
+  })
+
+  it('stays silent for the same file with a description', () => {
+    const dir = tree({ [`${AGENTS}/reviewer.md`]: agent() })
+    expect(ids(dir, settings('Agent(reviewer)'))).toEqual([])
+  })
+
   it('names the agent and the option, at the rule', () => {
     const [message] = lintJson(name, settings('Agent(Ghost)'), path.join(tree({}), PROJECT))
     expect(message).toMatchObject({ messageId: 'unknown', line: 1 })

@@ -79,10 +79,14 @@ function collect(claudeDir: string, visit: (claude: string, bound: string, found
 
 /** The `name` field of the frontmatter of `file`, if it is a string. A file that the rule cannot
  *  read sets `unseen`. */
-function givenName(file: string, found: Names): string | undefined {
+function givenName(file: string, found: Names, needsDescription = false): string | undefined {
   const fields = frontmatterOfFile(file)
   if (fields === UNREADABLE) {
     found.unseen = true
+    return undefined
+  }
+  // The sub-agents page says that Claude Code skips a file with a `name` and no `description`.
+  if (needsDescription && (fields?.description === undefined || fields.description === null)) {
     return undefined
   }
   return typeof fields?.name === 'string' ? fields.name : undefined
@@ -106,10 +110,13 @@ function addMarkdown(
 }
 
 /** The names of the agents of `.claude/agents/` in the project and above it. The name of an agent
- *  is the `name` field of its frontmatter. */
-export function agentNames(claudeDir: string): Names {
+ *  is the `name` field of its frontmatter. With `defined`, a file with no `description` gives no
+ *  name, as Claude Code skips it. */
+export function agentNames(claudeDir: string, defined = false): Names {
   return collect(claudeDir, (claude, bound, found) => {
-    addMarkdown(path.join(claude, 'agents'), bound, found, (file) => givenName(file, found))
+    addMarkdown(path.join(claude, 'agents'), bound, found, (file) =>
+      givenName(file, found, defined),
+    )
   })
 }
 
