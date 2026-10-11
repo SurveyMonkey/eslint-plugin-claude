@@ -2967,6 +2967,11 @@ const EXPECTED = [
   // The `off` rules report in `strict` only. These files get the reports of other rules.
   'packages/tk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/tu/.claude/commands/c.md: claude/command-legacy-format@1',
+  'packages/tu/.claude/commands/c.md: claude/skill-description-present@1',
+  'packages/tu/.claude/skills/s/SKILL.md: claude/skill-description-present@1',
+  'packages/tk/.claude/settings.json: claude/settings-schema@2',
+  'packages/tk/.claude/settings.local.json: claude/settings-schema@2',
+  'packages/tk/managed-settings.d/10-a.json: claude/settings-schema@2',
   'packages/an/.claude/settings.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.local.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.json: claude/mcp-approval-committed@2',
