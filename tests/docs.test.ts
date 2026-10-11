@@ -235,8 +235,8 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-reserved-name',
     'skill-shell-platform',
     'skill-side-effects-manual-only',
-    'statusline-script-exists',
     'statusline-home-path-shared',
+    'statusline-script-exists',
     'statusline-script-terminal-size',
     'statusline-windows-path',
   ])
