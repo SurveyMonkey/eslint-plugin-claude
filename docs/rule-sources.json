@@ -3467,6 +3467,18 @@
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
     }
   ],
+  "plugin-evals-mock-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Mock files",
+      "hash": "8cc4a7cc4186f7accda5e5479c32ecae2013a57cb42d9e581d44fcaa8b642d6f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-prompt-frontmatter": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",

@@ -247,6 +247,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-dir-not-marketplace-root',
     'plugin-evals-dir',
     'plugin-evals-grader',
+    'plugin-evals-mock-schema',
     'plugin-evals-prompt-frontmatter',
     'plugin-evals-prompt-no-at-mentions',
     'plugin-evals-replay-committed',
