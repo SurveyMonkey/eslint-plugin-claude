@@ -8,7 +8,7 @@
 // reads the full command.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { commandPatternMatches, isInputParameterRule } from '../permission-command.ts'
+import { commandPatternMatches } from '../permission-command.ts'
 import { valueAt } from '../permission-sandbox.ts'
 import {
   at,
@@ -35,8 +35,7 @@ function coversPush(objects: readonly SettingsObject[]): boolean {
     listRules(objects, list).some(
       ({ tool, specifier }) =>
         SHELL_TOOLS.includes(tool) &&
-        (specifier === null ||
-          (!isInputParameterRule(list, specifier) && commandPatternMatches(specifier, PUSH))),
+        (specifier === null || commandPatternMatches(specifier, PUSH)),
     ),
   )
 }
@@ -51,7 +50,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noPushAsk' }> = {
     schema: [],
     messages: {
       noPushAsk:
-        'This managed source sets "defaultMode" to "auto" and holds no "ask" rule for `git push`. In auto mode, Claude pushes to most branches of the repository without a prompt. Add "Bash(git push *)" to "permissions.ask" for a checkpoint. A push that Claude writes another way, such as `git -C <dir> push`, does not match the rule. A PreToolUse hook can inspect the full command.',
+        'This managed source sets "defaultMode" to "auto" and holds no "ask" or "deny" rule for `git push`. In auto mode, Claude pushes to most branches of the repository without a prompt. Add "Bash(git push *)" to "permissions.ask" for a checkpoint. A push that Claude writes another way, such as `git -C <dir> push`, does not match the rule. A PreToolUse hook can inspect the full command.',
     },
   },
   create(context) {

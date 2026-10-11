@@ -3728,7 +3728,7 @@ const Q10_TREE: Record<string, string> = {
   // Claude Code ignores a hidden drop-in, so the rules make no report there.
   'packages/push/managed-settings.d/.20-hidden.json': settingsOf({
     permissions: { defaultMode: 'auto' },
-    autoMode: { allow: ['Bash(ls)'], soft_deny: ['Never x'] },
+    autoMode: { allow: ['Bash(ls)'] },
   }),
   'packages/push-ok/managed-settings.json': settingsOf({
     permissions: { defaultMode: 'auto', ask: ['Bash(git push *)'] },

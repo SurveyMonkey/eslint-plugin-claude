@@ -121,12 +121,19 @@ describe(`${name}: silent`, () => {
   })
 
   it('stays silent when the source locks auto mode off', () => {
-    for (const lock of [
-      { disableAutoMode: 'disable' },
-      { permissions: { disableAutoMode: 'disable' } },
-      { disableAutoMode: 'anything' },
+    const inner = (value: unknown) => ({
+      permissions: { defaultMode: 'auto', disableAutoMode: value },
+    })
+    for (const code of [
+      { ...auto(), disableAutoMode: 'disable' },
+      inner('disable'),
+      { ...auto(), disableAutoMode: 'anything' },
+      // A value that Claude Code cannot read reads as the restrictive value.
+      { ...auto(), disableAutoMode: false },
+      inner(0),
+      inner(''),
     ]) {
-      expect(ids(repo({}), MANAGED, { ...auto(), ...lock })).toEqual([])
+      expect(ids(repo({}), MANAGED, code), JSON.stringify(code)).toEqual([])
     }
     const root = repo({ [OTHER]: text({ disableAutoMode: 'disable' }) })
     expect(ids(root, DROP_IN, auto())).toEqual([])

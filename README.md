@@ -467,7 +467,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-additional-directories-no-config`](docs/rules/permissions-additional-directories-no-config.md) | No `additionalDirectories` entry names a directory with CLAUDE.md, rules, skills, commands or agents, which load from none of them | `off` | `warn` |
 | [`claude/permissions-deny-dir-listable`](docs/rules/permissions-deny-dir-listable.md) | A `Read` deny rule for `dist`, `build` or `vendor` ends in `/**/*`, not `/**` | `off` | `warn` |
 | [`claude/permissions-deny-secret-files`](docs/rules/permissions-deny-secret-files.md) | A tracked `.env`, `.env.*` file or `secrets/` folder has a `Read` deny rule | `off` | `warn` |
-| [`claude/permissions-auto-mode-push-ask`](docs/rules/permissions-auto-mode-push-ask.md) | A managed file with auto mode on has an `ask` rule for `git push` | `off` | `warn` |
+| [`claude/permissions-auto-mode-push-ask`](docs/rules/permissions-auto-mode-push-ask.md) | A managed file with auto mode on has an `ask` or `deny` rule for `git push` | `off` | `warn` |
 | [`claude/permissions-auto-mode-rule-syntax`](docs/rules/permissions-auto-mode-rule-syntax.md) | An `autoMode` entry is prose, not a permission rule such as `Bash(...)` | `off` | `warn` |
 
 ### MCP and LSP servers

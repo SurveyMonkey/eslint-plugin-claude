@@ -69,7 +69,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noConfig' }> = {
     schema: [],
     messages: {
       noConfig:
-        '"{{directory}}" holds {{items}}. Claude Code loads none of it from a directory in "additionalDirectories", which grants file access only. Add the directory with --add-dir to load skills, commands and agents. CLAUDE.md and rules also need CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1. Or start Claude Code in that directory.',
+        '"{{directory}}" holds {{items}}. Claude Code loads none of it from a directory in "additionalDirectories", which grants file access only. Add the directory with --add-dir to load skills, commands and agents. CLAUDE.md, CLAUDE.local.md and rules also need CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1. Or start Claude Code in that directory.',
     },
   },
   create(context) {

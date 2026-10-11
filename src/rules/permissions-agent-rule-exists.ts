@@ -39,7 +39,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown' }> 
     defaultOptions: [{ allow: [] }],
     messages: {
       unknown:
-        'The rule names the agent "{{agent}}". It is not a built-in agent, and no file in .claude/agents/ defines it. If the agent is a user or plugin agent, name it in the option "allow".',
+        'The rule names the agent "{{agent}}". It is not a built-in agent, and no file in .claude/agents/ defines it. A file with no "description" defines no agent. If the agent is a user or plugin agent, name it in the option "allow".',
     },
   },
   create(context) {
@@ -52,8 +52,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown' }> 
       for (const { loc, rule: parsed } of entries) {
         const agent = parsed.specifier?.trim() ?? ''
         // A name with a colon is a plugin agent, and a `param:value` specifier is a parameter
-        // rule. A glob is not a name. The docs do not say if Claude Code compares names with
-        // case, so the rule does not.
+        // rule. A glob is not a name. The docs do not say that Claude Code compares names
+        // with case, so the rule matches names without regard to case.
         if (parsed.tool !== 'Agent' || agent === '' || /[:*?[]/.test(agent)) {
           continue
         }

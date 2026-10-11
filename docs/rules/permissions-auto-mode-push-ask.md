@@ -40,8 +40,8 @@ does not, because it matches the bare command only.
 
 ### Silent cases
 
-- The managed source locks auto mode off with `disableAutoMode`, at the top level or in `permissions`. Any value but `null`
-  counts.[^lock]
+- The managed source locks auto mode off with `disableAutoMode`, at the top level or in `permissions`. The docs
+  lock is `"disable"`. A value that Claude Code cannot read also locks, and only `null` removes the key.[^lock]
 - A file of the source holds a `hooks.PreToolUse` entry. The docs name a hook as the checkpoint that reads the full command.[^checkpoint]
 - Another file of the source sets `defaultMode` to a value other than `auto`. The docs do not say which file wins.
 - The rule cannot read a file of the source.

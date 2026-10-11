@@ -36,7 +36,7 @@ The rule reads the text of the pattern. It reads `deny` rules only, because an `
 ### What the rule does not read
 
 - Other directory names. The docs advice is for generated and vendored code. The permissions page gives `Read(./secrets/**)` as the
-  way to block a secrets directory,[^read] and a hidden directory is the aim there.
+  way to block a secrets directory,[^read] and the rule leaves other names alone.
 - A pattern that does not end in `/**`: `Read(./build/**/*.js)`, `Read(./build/*)` and `Read(./build)`.
 - A negation that starts with `!`, and a `Read` rule with a parameter, as in `Read(offset:5)`.
 

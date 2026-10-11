@@ -46,8 +46,10 @@ plugin, and so can a managed file. That is the reason the rule is `off` in `reco
 
 - No project file holds an `enabledPlugins` object. The project then names no plugin, and the rule has no list to compare with.
 - The rule cannot read the other project file. That file can enable the plugin.
-- A plugin can set `defaultEnabled` in its manifest, so a plugin with no entry can be on. The rule cannot read the manifest.
 - The file is a managed file. It applies to every project on a machine, and not to one project.
+
+The rule reports a plugin with no entry, although a plugin with no entry follows its `defaultEnabled` value and can be on.[^enabled]
+The rule cannot read the manifest. A project server in `.mcp.json` with a name that starts with `plugin_` is not read here either.
 
 The rule does not read the plugin itself, so it does not check the server name inside the plugin. The files of a plugin that
 comes from a marketplace are out of the repository (ADR 001, Decision 14).

@@ -41,7 +41,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'unknown' }> = {
     schema: [],
     messages: {
       unknown:
-        'The tool "{{tool}}" names the server "{{server}}" of a plugin, and no "enabledPlugins" entry of the two project settings files enables a plugin with a matching name. If the plugin comes from user or managed settings, the rule cannot see it. Otherwise enable the plugin, or fix the name.',
+        'The tool "{{tool}}" names the server "{{server}}" of a plugin, and no "enabledPlugins" entry of the two project settings files enables a plugin with a matching name. If the plugin comes from user or managed settings, the rule cannot see it. A plugin with no entry can also be on through "defaultEnabled" in its manifest. Otherwise enable the plugin, or fix the name.',
     },
   },
   create(context) {
