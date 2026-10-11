@@ -2578,6 +2578,9 @@ const EXPECTED = [
   'packages/mk2/.mcp.json: claude/mcp-json-servers-key@2',
   // The settings and approval rules of #16. The hidden drop-ins are for `settings-managed-file`.
   'packages/mcs/.claude/settings.json: claude/mcp-settings-mcpservers@2',
+  'packages/mcs/.claude/settings.json: claude/settings-schema@2',
+  'packages/mcs/.claude/settings.local.json: claude/settings-schema@2',
+  'packages/mcs/managed-settings.json: claude/settings-schema@2',
   'packages/mcs/.claude/settings.local.json: claude/mcp-settings-mcpservers@2',
   'packages/pb/.claude/skills/p/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
   'packages/pb/.claude/skills/r/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
@@ -2587,6 +2590,7 @@ const EXPECTED = [
   'packages/tn/managed-settings.d/10-a.json: claude/mcp-tool-name-format@2',
   'packages/tn/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/tn/.claude/skills/s/SKILL.md: claude/mcp-tool-name-format@2',
+  'packages/tn/.claude/skills/s/SKILL.md: claude/skill-description-present@1',
   'packages/ma/.claude/settings.json: claude/mcp-approval-committed@2',
   'packages/ma2/.claude/settings.json: claude/mcp-approval-committed@2',
   'packages/dc/managed-settings.json: claude/mcp-disable-connectors-false@2',
