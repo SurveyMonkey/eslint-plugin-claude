@@ -1,156 +1,190 @@
 {
   "url": "https://code.claude.com/docs/en/permission-modes",
-  "hash": "b6c78ae3ef22a18d2ec6e4f9b2d42bd3299890be23c65f3c57d3712869cb44e2",
+  "hash": "ab7d5ffbac699350d2130f9250b8ec6d3e36402b5d911119967076992b6a554a",
   "blocks": [
     {
       "id": "choose-a-permission-mode",
-      "hash": "b243470ae425066b29628a254183b301b7034fdf5f3c96c8e41bf21502f68dd5"
+      "hash": "b243470ae425066b29628a254183b301b7034fdf5f3c96c8e41bf21502f68dd5",
+      "bodyHash": "40c9da5695e5cd8f39bd7b4d531f47c0bb2ceac293b14153b30d95edd4b3a4de"
     },
     {
       "id": "available-modes",
-      "hash": "885716091d8f45331e5217c93d3b3684e0000d205315a7d51c7488afeb10a85f"
+      "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1",
+      "bodyHash": "24e43d613fe148de8e797e49968133775fc9c36b4e83c5dc9b5782bd0a474bbb"
     },
     {
       "id": "actions-no-mode-auto-approves",
-      "hash": "09ebcfa27401bfbdd5b9f0df39c849d560ce0ed2b8782515837033e982af2a7e"
+      "hash": "09ebcfa27401bfbdd5b9f0df39c849d560ce0ed2b8782515837033e982af2a7e",
+      "bodyHash": "d8b443622765df06f83ee37d0db1d1431c477ee6023634e4059479289d2e0663"
     },
     {
       "id": "common-setups",
-      "hash": "f6ab40696e8277de10ebf1b0635d193482178d3116d784c07282632b2b75a864"
+      "hash": "f6ab40696e8277de10ebf1b0635d193482178d3116d784c07282632b2b75a864",
+      "bodyHash": "8bbf8ed48622ed7df06ee2ecf46afa5757f7361847e2400c709d31603f0109e7"
     },
     {
       "id": "which-mode-a-session-starts-in",
-      "hash": "31afcf301bb31ec53df9202e5bcafb5d13ed08ac7ac8ff22cc84644b8789125d"
+      "hash": "31afcf301bb31ec53df9202e5bcafb5d13ed08ac7ac8ff22cc84644b8789125d",
+      "bodyHash": "f7914c63e58fa1e76a00e0c853f949e6d701bb5351d5d0b7b75413a617744913"
     },
     {
       "id": "start-in-a-different-mode",
-      "hash": "395db261843543ad562c8d9c5609a4b911b129667b9d59dc9799577b911a7c76"
+      "hash": "395db261843543ad562c8d9c5609a4b911b129667b9d59dc9799577b911a7c76",
+      "bodyHash": "b0e786ddbe0be6391df9dbe790301081bb26272f94d5ff0ee993161f330fa771"
     },
     {
       "id": "hipaa-configuration",
-      "hash": "3337ec33dfd81e01db1b1ba1d25da9be0ef9249a6b519c5255dbb06e85ca7c70"
+      "hash": "3337ec33dfd81e01db1b1ba1d25da9be0ef9249a6b519c5255dbb06e85ca7c70",
+      "bodyHash": "dabab38c15216ee4915b8553b74547b391baa5d7dbe428979dfdb590a191c61a"
     },
     {
       "id": "switch-permission-modes",
-      "hash": "1e13e015d938b98257bfd5d432e21b27e163c0357cae7e75537f1026a68428b9"
+      "hash": "1e13e015d938b98257bfd5d432e21b27e163c0357cae7e75537f1026a68428b9",
+      "bodyHash": "682455ae07cb9e497003c5ac94bae647d6135781f23a8ba1ab946d4e956e2927"
     },
     {
       "id": "auto-approve-file-edits-with-acceptedits-mode",
-      "hash": "a7e792fb33b4652a805d04463c1e04790012f88f117fbf1cb5866917fc3fffc4"
+      "hash": "a7e792fb33b4652a805d04463c1e04790012f88f117fbf1cb5866917fc3fffc4",
+      "bodyHash": "e7dd84f8a04da0934a727c1fc9fdb81ed0e1174d6db3b00d620293a5d4e85a18"
     },
     {
       "id": "analyze-before-you-edit-with-plan-mode",
-      "hash": "944662f5147fd6681edf7c8d811a2cc40c383a86ed2a1846476814cd833dd134"
+      "hash": "944662f5147fd6681edf7c8d811a2cc40c383a86ed2a1846476814cd833dd134",
+      "bodyHash": "fcf38116f81b2f259ac750b68cd87090300ac02a68d24ccf278b079bbd3474ae"
     },
     {
       "id": "review-and-approve-a-plan",
-      "hash": "a013b3e929672a881ed3573445605203bee5cba477528964f0e7134bb577db81"
+      "hash": "a013b3e929672a881ed3573445605203bee5cba477528964f0e7134bb577db81",
+      "bodyHash": "651e2718461ee0104c6cdf263b60b1b32eee4d5947a1bb1278ba6edb1d9131c0"
     },
     {
       "id": "set-plan-mode-as-the-default",
-      "hash": "b094c3a17690c02b00fd0464063064edeeb95f733e23512b7bbe0c3d8ca5647c"
+      "hash": "b094c3a17690c02b00fd0464063064edeeb95f733e23512b7bbe0c3d8ca5647c",
+      "bodyHash": "be251546787b83ac795e8f97491f703132d128e547018fcecca05131375870a3"
     },
     {
       "id": "eliminate-prompts-with-auto-mode",
-      "hash": "70575dc2462c9a37ab594b3aece5fa4d1c86747bb015b25df89467282b4be90f"
+      "hash": "70575dc2462c9a37ab594b3aece5fa4d1c86747bb015b25df89467282b4be90f",
+      "bodyHash": "6abd54a87e6ed3a43d3dfdac35ae3257675fc92cf76c067f3f2e9b29b7c1a969"
     },
     {
       "id": "enable-auto-mode-on-bedrock-agent-platform-or-foundry",
-      "hash": "31157389191d7c9a0c613cd01e18c93cc3a14ce80481e356c85ab804da01276f"
+      "hash": "31157389191d7c9a0c613cd01e18c93cc3a14ce80481e356c85ab804da01276f",
+      "bodyHash": "cd7a2aeca506a29a4779a062fa0ea82d01820ed6e1136af97e00d6e3eae1c442"
     },
     {
       "id": "server-side-classifier-review",
-      "hash": "ba56b6fb9131f15c3d76591460295b362a41916bc974da4be97e67d77e516e3b"
+      "hash": "ba56b6fb9131f15c3d76591460295b362a41916bc974da4be97e67d77e516e3b",
+      "bodyHash": "d16c022ad869719d576dda47403c35888d7ffedd4963b331e6b88c17045f5528"
     },
     {
       "id": "what-the-classifier-blocks-by-default",
-      "hash": "646d3cde1bbb4daa377f73bebf9119ddf6958a16c1c6001f6acc1daaa119dfc1"
+      "hash": "646d3cde1bbb4daa377f73bebf9119ddf6958a16c1c6001f6acc1daaa119dfc1",
+      "bodyHash": "81327d5829d2ddf1cd32969101ba344333663126e9cf66ca205da392678a9bd0"
     },
     {
       "id": "first-read-outside-the-working-directories",
-      "hash": "b6d8d7b338129131b1f15905d8a46fadcfc5bda657b9a77271b31017e0b39f8c"
+      "hash": "19055a6e1440ca73d18f893921a35d3741521c3cc685d8e4b763776c01a1d443",
+      "bodyHash": "4635ce9321c0ef1e20572ba0a2e4dc3e63663243ef40416268de2df154a0c9be"
     },
     {
       "id": "boundaries-you-state-in-conversation",
-      "hash": "1dc075b26e2197476bf6ba73f88c16151ad03d989b3b5df5ba4d03ddf40f0e51"
+      "hash": "1dc075b26e2197476bf6ba73f88c16151ad03d989b3b5df5ba4d03ddf40f0e51",
+      "bodyHash": "133515754fa06361b941a5c16c985ac1d0253572e0d7999aaa73eddb8bba303d"
     },
     {
       "id": "approvals-you-state-in-conversation",
-      "hash": "3e6eca15569002a2a888a5186ba47809552ceada202061ae50fbbcb3f2b5d1ac"
+      "hash": "3e6eca15569002a2a888a5186ba47809552ceada202061ae50fbbcb3f2b5d1ac",
+      "bodyHash": "279672f994100c3641a20a011329a2c4379117ffd4fa81bb203682cc7868c77f"
     },
     {
       "id": "when-auto-mode-falls-back",
-      "hash": "fb5b84247b60f82d5cc37e389931c6f2de5bbd1e5386939a1c14c1eac9d85a89"
+      "hash": "fb5b84247b60f82d5cc37e389931c6f2de5bbd1e5386939a1c14c1eac9d85a89",
+      "bodyHash": "dc784d1e5ff9af2822b6abe0f9d8240c479bf37288e610bf882bff764a6ef3aa"
     },
     {
       "id": "repeated-block-thresholds",
-      "hash": "c3df2a1d00db770247014e9bd199a8f647543b8a2447ecd425ae8c9e849ee2b7"
+      "hash": "c3df2a1d00db770247014e9bd199a8f647543b8a2447ecd425ae8c9e849ee2b7",
+      "bodyHash": "7d2d9e040c06dae4e7104030af6a5a3e5da86e104f4d52401bc398f70221aef1"
     },
     {
       "id": "how-auto-mode-evaluates-actions",
-      "hash": "a45cfe9bddf4e195a6560121459eeb5bae25097a731883758ed6d4cebdb702e8"
+      "hash": "9c7e1425c46db6dee7d7b49d95be1ae72782e318e9b31a5a37daa00ba8270d53",
+      "bodyHash": "d99e6788703665cf4a64db0e0ec0c3e711593c725537f7a2f12836feddbc153f"
     },
     {
       "id": "allow-only-pre-approved-tools-with-dontask-mode",
-      "hash": "e19dda5311b1a1d6e85f82acf6fcc0aca4c1ef1af1341a6fa7c52d8254d82ac2"
+      "hash": "3ce526be3e005f95b4640366bed731198fccebbe55e9d573d97387c8d87dfe38",
+      "bodyHash": "a0faf96d31c60eb4de5ca1ba995bd748b0b21415325180ebdbad2e11b5fd2251"
     },
     {
       "id": "skip-all-checks-with-bypasspermissions-mode",
-      "hash": "257ad9c9c074b07dece017046a3485ee91a0e7009a175f236f4a66a75c8dc4e1"
+      "hash": "bb4f84c837824a834ebe180866bfd62c8d0b9dcd31ca6a33099768aec013aca5",
+      "bodyHash": "8951f4734301bc52632a4b4d58efc0037ce38622e86d47c5252ebf39babf4e4d"
     },
     {
       "id": "protected-paths",
-      "hash": "54ad52474b555dca43e1cafa4339c5c091f46f3e684b74d7bc7626ac3d6456c3"
+      "hash": "086b2fd4ad0c226ba292bbd269aec663843be0630bbadda8000fa935c2ac424c",
+      "bodyHash": "b8427e8e0c468cf39e17d6955b603a8ca0046e77952a339ee37ccd76f4752d0d"
     },
     {
       "id": "critical-paths",
-      "hash": "5b06ffb48b7080ed2d663e29e03bc3383c1fe20859db8ff878bd9ab6aaed8a2b"
+      "hash": "5b06ffb48b7080ed2d663e29e03bc3383c1fe20859db8ff878bd9ab6aaed8a2b",
+      "bodyHash": "abb66909e8b3619f65e260b37bd6fe82f0ea116c5700b294deb9b0f176367040"
     },
     {
       "id": "which-paths-are-critical",
-      "hash": "7250c58ed6f6522ce2e42cdcdd261358e0089fe43f5cdb1a7225a693c62bbcd8"
+      "hash": "2121c3e9cf3628b5043832979ba36852fe460614a86364f1d31153ba51e27702",
+      "bodyHash": "9942a33366ffef06b5c58e0553669e41bf5898c3cb3bd1de602b3e6af7749928"
     },
     {
       "id": "other-targets-that-count-as-critical-paths",
-      "hash": "012d57b2b0a290de72b91d350121a767e69c07996a5d6a3cfd617dbe363fcfd4"
+      "hash": "b9ffc5cb9ddec98badb498e50137d9ec8f8b2091037f38db3d457c54a9e4b9fc",
+      "bodyHash": "5530d973eb1a72d454334f305945c9bcbbe04a75804b1225ff8609499a739764"
     },
     {
       "id": "removals-inside-nested-commands-and-inline-scripts",
-      "hash": "d769f0279dfd819f0fbb2f1910b3bb4192a3fea85dbdf03e4bc7b82db7273b14"
+      "hash": "d769f0279dfd819f0fbb2f1910b3bb4192a3fea85dbdf03e4bc7b82db7273b14",
+      "bodyHash": "d70ef8fc2e1752966eb6be02ca9fbaf533588b1a3afc469af18ae9a50196782f"
     },
     {
       "id": "rewrite-a-flagged-command",
-      "hash": "f38668231c3f6478796f54c323cf4662809e8d6975b88bdda83e01161561dbc0"
+      "hash": "f38668231c3f6478796f54c323cf4662809e8d6975b88bdda83e01161561dbc0",
+      "bodyHash": "9c5d606baf009da84214c64c2eee5bcd387aab41cf931e20d366534eb7bfd6f6"
     },
     {
       "id": "critical-path-removals-in-each-permission-mode",
-      "hash": "5ceafecd0f910f3df7fc32b36f8306ac8a6df56fb1dd41753bb50b4bf6621b0a"
+      "hash": "5ceafecd0f910f3df7fc32b36f8306ac8a6df56fb1dd41753bb50b4bf6621b0a",
+      "bodyHash": "1c19e89574dfd34ed62e7c21c88cb335907457799c30a9ee2b80a65b6a396ad1"
     },
     {
       "id": "time-limits-and-denials-in-auto-and-bypasspermissions-modes",
-      "hash": "2b8abc648ac136408ed66dd7df378591d9c6277414254896d41c007b7e2354ba"
+      "hash": "2b8abc648ac136408ed66dd7df378591d9c6277414254896d41c007b7e2354ba",
+      "bodyHash": "34a9d09a57f8ee15c037677422eddf9c4cad2c325a45fdc2b8ae581fa2928bd4"
     },
     {
       "id": "remove-item-in-powershell",
-      "hash": "350e938601c229b52eaf03dec6c6c094138b8f5ea41670b6846f8faf212d8faf"
+      "hash": "350e938601c229b52eaf03dec6c6c094138b8f5ea41670b6846f8faf212d8faf",
+      "bodyHash": "aba81bdf439d9a7bf4051d9886e855e1f7fcfc594d3e78157ee97c612a4f6673"
     },
     {
       "id": "see-also",
-      "hash": "afeba9168fc35bddb3b3b050e5689f0cd8b8d900359a6e21483e10d836fcbaf7"
+      "hash": "afeba9168fc35bddb3b3b050e5689f0cd8b8d900359a6e21483e10d836fcbaf7",
+      "bodyHash": "7038e613b104dd62d649ceebdc0934a1cb67f0f83eec03f6a21a4a27ceb8b130"
     }
   ],
   "sources": [
     {
       "heading": "Skip all checks with bypassPermissions mode",
       "id": "skip-all-checks-with-bypasspermissions-mode",
-      "hash": "257ad9c9c074b07dece017046a3485ee91a0e7009a175f236f4a66a75c8dc4e1",
-      "text": "## Skip all checks with bypassPermissions mode\n\n`bypassPermissions` mode disables permission prompts and safety checks so tool calls execute immediately, including writes to [protected paths](#protected-paths).\n\nThe [actions no mode auto-approves](#actions-no-mode-auto-approves) still prompt in this mode. Reading [another organization's public artifact](/docs/en/artifacts#read-an-artifact-shared-with-you) needs your approval, and this mode doesn't ask for it, so Claude can't read one. The [Remove-Item in PowerShell](#remove-item-in-powershell) denies also apply in this mode.\n\nTwo [cross-session messaging](/docs/en/cross-session-messaging) safeguards still apply in this mode, and in interactive terminal plan-mode sessions where bypass permissions are available:\n\n* The [`isolatePeerMachines`](/docs/en/settings-reference#isolatepeermachines) approval prompt for messages to your sessions beyond this machine still appears.\n* When no [`crossSessionInbound`](/docs/en/cross-session-messaging#control-inbound-messages) value applies, Claude Code holds an inbound message from another of your sessions for your approval, and delivers without asking only when the sending session identifies itself as also bypassing permission prompts. If you leave the permission mode while messages are held, Claude Code re-applies the inbound rules and delivers any held message they now accept.\n\nIn interactive terminal sessions with bypass permissions available, Claude Code also doesn't enforce [plan mode's](#analyze-before-you-edit-with-plan-mode) blocks. Claude is still instructed to plan without editing, but a file edit or shell command it attempts during planning runs without prompting. Explicit [ask rules](/docs/en/permissions#manage-permissions) and `rm` and `rmdir` removals targeting a [critical path](#critical-paths) still prompt.\n\nPlan mode keeps its blocks wherever Claude Code runs without an interactive terminal, including [non-interactive runs](/docs/en/headless) with `-p`, [Agent SDK](/docs/en/agent-sdk/permissions#plan-mode-plan) sessions, and conversations in the [VS Code extension](/docs/en/vs-code)'s chat panel. There, `--allow-dangerously-skip-permissions` makes `bypassPermissions` selectable later.\n\n<Warning>\n  Only use this mode in isolated environments like containers, VMs, or dev containers without internet access, where Claude Code cannot damage your host system.\n</Warning>\n\nYou can't enter `bypassPermissions` from a session you started without it enabled. Enable it at launch with [`permissions.defaultMode: \"bypassPermissions\"`](/docs/en/settings-reference#permissions-defaultmode) or with an enabling flag:\n\n```bash theme={null}\nclaude --permission-mode bypassPermissions\n```\n\nThe `--dangerously-skip-permissions` flag is equivalent.\n\nClaude Code refuses `bypassPermissions` in a session you start with [`--restricted`](/docs/en/cli-reference#cli-flags). `--restricted` requires Claude Code v2.1.248 or later.\n\nThe first time you start an interactive session with this mode enabled, Claude Code shows a warning dialog asking you to accept responsibility for actions taken without permission checks:\n\n* **If you accept**: Claude Code sets `skipDangerousModePermissionPrompt` to `true` in `~/.claude/settings.json`, so later sessions skip the dialog. To see the dialog again, remove the key from that file or set it to `false`. The [`skipDangerousModePermissionPrompt` reference](/docs/en/settings-reference#skipdangerousmodepermissionprompt) lists the other settings files where you or your organization can set it.\n* **If you decline**: Claude Code exits.\n\nIn [non-interactive mode](/docs/en/headless) no dialog is shown, and a [background session](/docs/en/agent-view) started with `--bg` is refused until you've accepted the dialog in an interactive session.\n\nOn Linux and macOS, Claude Code refuses to start in this mode when running as root or under `sudo`:\n\n```text theme={null}\n--dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons\n```\n\nThe check is skipped automatically inside a recognized sandbox. To run autonomously in a container, use the [dev container](/docs/en/devcontainer) configuration, which runs Claude Code as a non-root user.\n\n[Cloud sessions](/docs/en/claude-code-on-the-web) don't honor `defaultMode: \"bypassPermissions\"` or `\"dontAsk\"` from your settings files, so a repository's checked-in settings can't start a cloud session in bypass-permissions mode. The setting is ignored silently and the session starts in the permission mode shown in the mode dropdown instead. See [Switch permission modes](#switch-permission-modes) for which modes cloud sessions offer.\n\n<Warning>\n  `bypassPermissions` offers no protection against prompt injection or unintended actions. For background safety checks with far fewer permission prompts, use [auto mode](#eliminate-prompts-with-auto-mode) instead. Administrators can block this mode by setting `permissions.disableBypassPermissionsMode` to `\"disable\"` in [managed settings](/docs/en/managed-settings).\n</Warning>"
+      "hash": "bb4f84c837824a834ebe180866bfd62c8d0b9dcd31ca6a33099768aec013aca5",
+      "text": "## Skip all checks with bypassPermissions mode\n\n`bypassPermissions` mode disables permission prompts and safety checks so tool calls execute immediately, including writes to [protected paths](#protected-paths).\n\nThe [actions no mode auto-approves](#actions-no-mode-auto-approves) still prompt in this mode. Reading [another organization's public artifact](/docs/en/artifacts#read-an-artifact-shared-with-you) needs your approval, and this mode doesn't ask for it, so Claude can't read one. The [Remove-Item in PowerShell](#remove-item-in-powershell) denies also apply in this mode.\n\nTwo [cross-session messaging](/docs/en/cross-session-messaging) safeguards still apply in this mode, and in interactive terminal plan-mode sessions where bypass permissions are available:\n\n* The [`isolatePeerMachines`](/docs/en/settings-reference#isolatepeermachines) approval prompt for messages to your sessions beyond this machine still appears.\n* When no [`crossSessionInbound`](/docs/en/cross-session-messaging#control-inbound-messages) value applies, Claude Code holds an inbound message from another of your sessions for your approval, and delivers without asking only when the sending session identifies itself as also bypassing permission prompts. If you leave the permission mode while messages are held, Claude Code re-applies the inbound rules and delivers any held message they now accept.\n\nIn interactive terminal sessions with bypass permissions available, Claude Code also doesn't enforce [plan mode's](#analyze-before-you-edit-with-plan-mode) blocks. Claude is still instructed to plan without editing, but a file edit or shell command it attempts during planning runs without prompting. Explicit [ask rules](/docs/en/permissions#manage-permissions) and `rm` and `rmdir` removals targeting a [critical path](#critical-paths) still prompt.\n\nPlan mode keeps its blocks wherever Claude Code runs without an interactive terminal, including [non-interactive runs](/docs/en/headless) with `-p`, [Agent SDK](/docs/en/agent-sdk/permissions#plan-mode-plan) sessions, and conversations in the [VS Code extension](/docs/en/vs-code)'s chat panel. There, `--allow-dangerously-skip-permissions` makes `bypassPermissions` selectable later.\n\n<Warning>\n  Only use this mode in isolated environments like containers, VMs, or dev containers without internet access, where Claude Code cannot damage your host system.\n</Warning>\n\nYou can't enter `bypassPermissions` from a session you started without it enabled. Enable it at launch with [`permissions.defaultMode: \"bypassPermissions\"`](/docs/en/settings-reference#permissions-defaultmode) or with an enabling flag:\n\n```bash theme={null}\nclaude --permission-mode bypassPermissions\n```\n\nThe `--dangerously-skip-permissions` flag is equivalent.\n\nClaude Code refuses `bypassPermissions` in a session you start with [`--restricted`](/docs/en/cli-reference#cli-flags). `--restricted` requires Claude Code v2.1.248 or later.\n\nThe first time you start an interactive session with this mode enabled, Claude Code shows a warning dialog asking you to accept responsibility for actions taken without permission checks:\n\n* **If you accept**: Claude Code sets `skipDangerousModePermissionPrompt` to `true` in `~/.claude/settings.json`, so later sessions skip the dialog. To see the dialog again, remove the key from that file or set it to `false`. The [`skipDangerousModePermissionPrompt` reference](/docs/en/settings-reference#skipdangerousmodepermissionprompt) lists the other settings files where you or your organization can set it.\n* **If you decline**: Claude Code exits.\n\nIn [non-interactive mode](/docs/en/headless) no dialog is shown. A [background session](/docs/en/agent-view) honors your acceptance when it's recorded in user or managed settings:\n\n* With no acceptance recorded, `claude --bg --permission-mode bypassPermissions` is refused until you accept the dialog in an interactive session.\n* With `skipDangerousModePermissionPrompt` set only in `.claude/settings.local.json`, the background session starts with the bypass request ignored and pins the notice `Bypass permissions was requested at launch and ignored · if that was you, ~/.claude/settings.json needs \"skipDangerousModePermissionPrompt\": true`. To get bypass honored, add that key to `~/.claude/settings.json`, then start a new background session.\n\nOn Linux and macOS, Claude Code refuses to start in this mode when running as root or under `sudo`:\n\n```text theme={null}\n--dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons\n```\n\nThe check is skipped automatically inside a recognized sandbox. To run autonomously in a container, use the [dev container](/docs/en/devcontainer) configuration, which runs Claude Code as a non-root user.\n\n[Cloud sessions](/docs/en/claude-code-on-the-web) don't honor `defaultMode: \"bypassPermissions\"` or `\"dontAsk\"` from your settings files, so a repository's checked-in settings can't start a cloud session in bypass-permissions mode. The setting is ignored silently and the session starts in the permission mode shown in the mode dropdown instead. See [Switch permission modes](#switch-permission-modes) for which modes cloud sessions offer.\n\n<Warning>\n  `bypassPermissions` offers no protection against prompt injection or unintended actions. For background safety checks with far fewer permission prompts, use [auto mode](#eliminate-prompts-with-auto-mode) instead. Administrators can block this mode by setting `permissions.disableBypassPermissionsMode` to `\"disable\"` in [managed settings](/docs/en/managed-settings).\n</Warning>"
     },
     {
       "heading": "Available modes",
       "id": "available-modes",
-      "hash": "885716091d8f45331e5217c93d3b3684e0000d205315a7d51c7488afeb10a85f",
-      "text": "## Available modes\n\nEach mode makes a different tradeoff between convenience and oversight. The table below shows what Claude can do without a permission prompt in each mode. Manual mode appears under its config value, `default`.\n\n| Mode | What runs without asking | Best for |\n| :- | :- | :- |\n| `default` | Reads only | Reviewing every action yourself, sensitive work |\n| [`acceptEdits`](#auto-approve-file-edits-with-acceptedits-mode) | Reads, file edits, and common filesystem commands (`mkdir`, `touch`, `mv`, `cp`, etc.) | Iterating on code you're reviewing |\n| [`plan`](#analyze-before-you-edit-with-plan-mode) | Reads, plus classifier-approved commands when [auto mode](#eliminate-prompts-with-auto-mode) is available | Exploring a codebase before changing it |\n| [`auto`](#eliminate-prompts-with-auto-mode) | Everything, with background safety checks | Long tasks, reducing prompt fatigue |\n| [`dontAsk`](#allow-only-pre-approved-tools-with-dontask-mode) | Reads and pre-approved tools; anything that would prompt is denied | Locked-down CI and scripts |\n| [`bypassPermissions`](#skip-all-checks-with-bypasspermissions-mode) | Everything | Isolated containers and VMs only |\n\nThe mode that reviews every action is named **Manual** in the CLI, in `claude --help`, in the VS Code and JetBrains extensions, and in the desktop app. Its config value is `default`, which is what hooks and SDK integrations use. The CLI accepts `manual` as an alias wherever you type the value, for example `claude --permission-mode manual` or `\"defaultMode\": \"manual\"`.\n\nWrites to [protected paths](#protected-paths) are never auto-approved except in `bypassPermissions` mode and in plan-mode sessions where bypass permissions are available, meaning interactive terminal sessions started in a way that [puts `bypassPermissions` in the mode cycle](#switch-permission-modes).\n\nModes set the baseline. Layer [permission rules](/docs/en/permissions#manage-permissions) on top to pre-approve or block specific tools. Deny rules block in every mode, including `bypassPermissions`. Deny and ask rules don't apply to [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) as long as Claude still has at least one other tool it can call. Allow rules have no effect in `bypassPermissions`."
+      "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1",
+      "text": "## Available modes\n\nEach mode makes a different tradeoff between convenience and oversight. The table below shows what Claude can do without a permission prompt in each mode. Manual mode appears under its config value, `default`.\n\n| Mode | What runs without asking | Best for |\n| :- | :- | :- |\n| `default` | Reads only | Reviewing every action yourself, sensitive work |\n| [`acceptEdits`](#auto-approve-file-edits-with-acceptedits-mode) | Reads, file edits, and common filesystem commands (`mkdir`, `touch`, `mv`, `cp`, etc.) | Iterating on code you're reviewing |\n| [`plan`](#analyze-before-you-edit-with-plan-mode) | Reads, plus classifier-approved commands when [auto mode](#eliminate-prompts-with-auto-mode) is available | Exploring a codebase before changing it |\n| [`auto`](#eliminate-prompts-with-auto-mode) | Everything, with background safety checks | Long tasks, reducing prompt fatigue |\n| [`dontAsk`](#allow-only-pre-approved-tools-with-dontask-mode) | File reads inside your working directories and pre-approved tools; anything that would prompt is denied | Locked-down CI and scripts |\n| [`bypassPermissions`](#skip-all-checks-with-bypasspermissions-mode) | Everything | Isolated containers and VMs only |\n\nThe mode that reviews every action is named **Manual** in the CLI, in `claude --help`, in the VS Code and JetBrains extensions, and in the desktop app. Its config value is `default`, which is what hooks and SDK integrations use. The CLI accepts `manual` as an alias wherever you type the value, for example `claude --permission-mode manual` or `\"defaultMode\": \"manual\"`.\n\nWrites to [protected paths](#protected-paths) are never auto-approved except in `bypassPermissions` mode and in plan-mode sessions where bypass permissions are available, meaning interactive terminal sessions started in a way that [puts `bypassPermissions` in the mode cycle](#switch-permission-modes).\n\nModes set the baseline. Layer [permission rules](/docs/en/permissions#manage-permissions) on top to pre-approve or block specific tools. Deny rules block in every mode, including `bypassPermissions`. Deny and ask rules don't apply to [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) as long as Claude still has at least one other tool it can call. Allow rules have no effect in `bypassPermissions`."
     },
     {
       "heading": "Which mode a session starts in",
