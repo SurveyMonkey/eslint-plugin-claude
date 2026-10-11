@@ -203,3 +203,31 @@ export const AGENT_HOOK_EVENTS: readonly string[] = [
   'Stop',
   'TeammateIdle',
 ]
+
+// The events whose hooks can block or decide. Source: the hooks reference, "Exit code 2 behavior per
+// event" (https://code.claude.com/docs/en/hooks#exit-code-2-behavior-per-event), the rows that say
+// "Yes" under "Can block?", checked on 2026-10-10. `PermissionRequest` says "No" there, because it
+// decides through the `decision` object of its JSON output
+// (https://code.claude.com/docs/en/hooks#decision-control). A background hook can do none of this.
+// Review this section on or before 2027-04-10.
+
+/** The events whose output can block an action or decide it. */
+export const BLOCKING_EVENTS: readonly string[] = [
+  'PreToolUse',
+  'PermissionRequest',
+  'UserPromptSubmit',
+  'UserPromptExpansion',
+  'Stop',
+  'SubagentStop',
+  'TeammateIdle',
+  'TaskCreated',
+  'TaskCompleted',
+  'ConfigChange',
+  'PostToolBatch',
+  'PreCompact',
+  'PreModelSwitch',
+  'Elicitation',
+  'ElicitationResult',
+  'WorktreeCreate',
+  'WorktreeRemove',
+]

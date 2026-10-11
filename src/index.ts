@@ -63,8 +63,11 @@ import claudeMdSymlink from './rules/claude-md-symlink.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
 import hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
+import hooksAsyncOnBlockingEvent from './rules/hooks-async-on-blocking-event.ts'
 import hooksCommandDeprecatedCliFlag from './rules/hooks-command-deprecated-cli-flag.ts'
+import hooksCommandPathVariable from './rules/hooks-command-path-variable.ts'
 import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
+import hooksCommittedCommandReview from './rules/hooks-committed-command-review.ts'
 import hooksConfigSchema from './rules/hooks-config-schema.ts'
 import hooksDisableAllOverride from './rules/hooks-disable-all-override.ts'
 import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
@@ -78,14 +81,17 @@ import hooksHandlerFieldUnknown from './rules/hooks-handler-field-unknown.ts'
 import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
 import hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
 import hooksIfCondition from './rules/hooks-if-condition.ts'
+import hooksIfDirGlobDepth from './rules/hooks-if-dir-glob-depth.ts'
 import hooksMatcherBashWithoutPowershell from './rules/hooks-matcher-bash-without-powershell.ts'
 import hooksMatcherDeprecatedValue from './rules/hooks-matcher-deprecated-value.ts'
 import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
 import hooksMatcherLegacyVersion from './rules/hooks-matcher-legacy-version.ts'
 import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
+import hooksMatcherNameUnresolved from './rules/hooks-matcher-name-unresolved.ts'
 import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
 import hooksMatcherSubagentAnchor from './rules/hooks-matcher-subagent-anchor.ts'
 import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
+import hooksMatcherUnanchoredRegex from './rules/hooks-matcher-unanchored-regex.ts'
 import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
 import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
 import hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
@@ -96,6 +102,7 @@ import hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-she
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
 import hooksScriptExists from './rules/hooks-script-exists.ts'
 import hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
+import hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
 import hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
 import lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
 import lspExtensionConflict from './rules/lsp-extension-conflict.ts'
@@ -327,8 +334,11 @@ const modules = [
   hooksEventNameKnown,
   hooksAgentStopEvent,
   hooksAgentTypeExperimental,
+  hooksAsyncOnBlockingEvent,
   hooksCommandDeprecatedCliFlag,
+  hooksCommandPathVariable,
   hooksCommandRemovedCliFlag,
+  hooksCommittedCommandReview,
   hooksConfigSchema,
   hooksDisableAllOverride,
   hooksDisabledByDisableallhooks,
@@ -341,14 +351,17 @@ const modules = [
   hooksHandlerTypeEventSupport,
   hooksHttpEnvAllowlist,
   hooksIfCondition,
+  hooksIfDirGlobDepth,
   hooksMatcherBashWithoutPowershell,
   hooksMatcherDeprecatedValue,
   hooksMatcherEnum,
   hooksMatcherLegacyVersion,
   hooksMatcherMcpName,
+  hooksMatcherNameUnresolved,
   hooksMatcherNeverMatches,
   hooksMatcherSubagentAnchor,
   hooksMatcherSyntax,
+  hooksMatcherUnanchoredRegex,
   hooksMatcherUnsupportedEvent,
   hooksNoStandaloneFile,
   hooksPlaceholderQuoted,
@@ -357,6 +370,7 @@ const modules = [
   hooksPromptOnPermissionRequest,
   hooksPs1NeedsPowershellShell,
   hooksSessionendDefaultTimeout,
+  hooksTimeoutUnits,
   hooksWorktreeCreateWithoutRemove,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
@@ -663,8 +677,11 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-event-name-known': 'error',
   'hooks-agent-stop-event': 'off',
   'hooks-agent-type-experimental': 'warn',
+  'hooks-async-on-blocking-event': 'off',
   'hooks-command-deprecated-cli-flag': 'warn',
+  'hooks-command-path-variable': 'off',
   'hooks-command-removed-cli-flag': 'error',
+  'hooks-committed-command-review': 'off',
   'hooks-config-schema': 'error',
   'hooks-disable-all-override': 'warn',
   'hooks-disabled-by-disableallhooks': 'error',
@@ -677,14 +694,17 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-handler-type-event-support': 'error',
   'hooks-http-env-allowlist': 'error',
   'hooks-if-condition': 'error',
+  'hooks-if-dir-glob-depth': 'off',
   'hooks-matcher-bash-without-powershell': 'warn',
   'hooks-matcher-deprecated-value': 'warn',
   'hooks-matcher-enum': 'error',
   'hooks-matcher-legacy-version': 'warn',
   'hooks-matcher-mcp-name': 'error',
+  'hooks-matcher-name-unresolved': 'off',
   'hooks-matcher-never-matches': 'error',
   'hooks-matcher-subagent-anchor': 'warn',
   'hooks-matcher-syntax': 'error',
+  'hooks-matcher-unanchored-regex': 'off',
   'hooks-matcher-unsupported-event': 'error',
   'hooks-no-standalone-file': 'error',
   'hooks-placeholder-quoted': 'warn',
@@ -693,6 +713,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-prompt-on-permission-request': 'warn',
   'hooks-ps1-needs-powershell-shell': 'warn',
   'hooks-sessionend-default-timeout': 'warn',
+  'hooks-timeout-units': 'off',
   'hooks-worktree-create-without-remove': 'warn',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
