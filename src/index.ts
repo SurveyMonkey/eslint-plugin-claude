@@ -61,7 +61,13 @@ import claudeMdMaxLines from './rules/claude-md-max-lines.ts'
 import claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
 import claudeMdSymlink from './rules/claude-md-symlink.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
+import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
+import hooksConfigSchema from './rules/hooks-config-schema.ts'
+import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
+import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
+import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
 import hooksScriptExists from './rules/hooks-script-exists.ts'
 import lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
@@ -292,6 +298,12 @@ const modules = [
   skillDescriptionMaxLength,
   commandLegacyFormat,
   hooksEventNameKnown,
+  hooksCommandRemovedCliFlag,
+  hooksConfigSchema,
+  hooksDisabledByDisableallhooks,
+  hooksHandlerFieldIgnored,
+  hooksHandlerTypeEventSupport,
+  hooksNoStandaloneFile,
   skillFrontmatterPosition,
   skillFrontmatterSchema,
   skillForkFieldsRequireContext,
@@ -595,6 +607,12 @@ const recommended: Record<RuleName, Severity> = {
   'skill-description-max-length': 'warn',
   'command-legacy-format': 'warn',
   'hooks-event-name-known': 'error',
+  'hooks-command-removed-cli-flag': 'error',
+  'hooks-config-schema': 'error',
+  'hooks-disabled-by-disableallhooks': 'error',
+  'hooks-handler-field-ignored': 'error',
+  'hooks-handler-type-event-support': 'error',
+  'hooks-no-standalone-file': 'error',
   'skill-frontmatter-position': 'error',
   'skill-frontmatter-schema': 'error',
   'skill-fork-fields-require-context': 'error',
