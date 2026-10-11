@@ -274,10 +274,34 @@
       "text": "### `dependencies`\n\nPlugins that must be enabled for this one to work. Each entry is `\"name\"`, `\"name@marketplace\"`, or `{ \"name\": \"...\", \"marketplace\": \"...\", \"version\": \"...\" }`. Bare names resolve against this plugin's own marketplace. See [dependency constraints](/docs/en/plugins/dependencies)."
     },
     {
+      "heading": "metadata",
+      "id": "metadata",
+      "hash": "ee3f58518039ea24dec82c79f0224ea75af369cbaf6494f2ec5d8cb7a48f9a99",
+      "text": "### `metadata`\n\nA free-form object for your own data, such as catalog or entitlement fields. Claude Code doesn't read it. Requires Claude Code v2.1.222 or later."
+    },
+    {
+      "heading": "Limit a field to fixed options",
+      "id": "limit-a-field-to-fixed-options",
+      "hash": "c4d761fb39ce76f46b40622daff6ec9628d568295b8beee32d3306a107a57ed9",
+      "text": "### Limit a field to fixed options\n\nSet `options` on a `userConfig` field to make users pick its value from a fixed list.\n\nTo limit a `tone` field to three options, list them in `options` and set `default` to one of them:\n\n```json theme={null}\n{\n  \"userConfig\": {\n    \"tone\": {\n      \"type\": \"string\",\n      \"title\": \"Tone\",\n      \"description\": \"Voice for generated replies\",\n      \"options\": [\"neutral\", \"warm\", \"formal\"],\n      \"default\": \"neutral\"\n    }\n  }\n}\n```\n\nIf you declare `options` on any field, users on Claude Code versions before v2.1.271 can't load the plugin.\n\n`options` applies to a `string` field that isn't `multiple` or `sensitive`. Set `default` to one of the listed values, or set `required: true` so the user must pick one. Each option is a plain label of 1 to 64 characters, and `claude plugin validate`, which you run in your shell, reports anything else it rejects. A plugin whose `options` break these rules fails to load."
+    },
+    {
+      "heading": "Directory listing fields",
+      "id": "directory-listing-fields",
+      "hash": "5be06b2ff9ea2d2e2bb755322ec4fce85d391ad224b581dfeeadb0b04ee4e38c",
+      "text": "### Directory listing fields\n\nAnthropic's directory reads the `icon`, `documentationUrl`, `supportUrl`, `privacyPolicyUrl`, and `termsOfServiceUrl` fields from `plugin.json` for your plugin's listing when you [submit the plugin](/docs/en/plugins/publish#submit-to-anthropics-directory). Claude Code ignores them at load time. Set them only in `plugin.json`. In a [marketplace entry](#marketplace-entries-and-the-manifest), `claude plugin validate` reports each one as an unknown field.\n\nSet `icon` to the path of an image file inside the plugin, such as `./logo.png`, and each of the four URL fields to an `https://` URL.\n\n`claude plugin validate` accepts these fields without a warning on Claude Code v2.1.281 or later. Earlier versions print an `Unknown field` warning for each one, so a `--strict` run fails on those versions."
+    },
+    {
       "heading": "Standard layout",
       "id": "standard-layout",
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e",
       "text": "## Standard layout\n\nEach component type has a default location under the plugin root, used when the manifest doesn't point elsewhere.\n\n| Component | Default location | Contents |\n| :- | :- | :- |\n| Manifest | `.claude-plugin/plugin.json` | Plugin metadata and configuration. Optional |\n| Skills | `skills/` | One `<name>/SKILL.md` per skill. A plugin with `SKILL.md` at its root, no `skills/`, and no `skills` key loads as a single skill |\n| Commands | `commands/` | Flat Markdown command files. Prefer `skills/` for new plugins |\n| Agents | `agents/` | Agent Markdown files. Subfolders are part of the [agent name](/docs/en/plugins/components#agents) |\n| Hooks | `hooks/hooks.json` | Hook configuration |\n| MCP servers | `.mcp.json` | MCP server definitions |\n| LSP servers | `.lsp.json` | LSP server configurations |\n| Output styles | `output-styles/` | Output style Markdown files |\n| Workflows | `workflows/` | Workflow `.js` files |\n| Themes | `themes/` | Theme JSON files |\n| Monitors | `monitors/monitors.json` | The monitors array |\n| Executables | `bin/` | Files here are on the Bash tool's `PATH` while the plugin is enabled, so Claude runs them as bare commands. claude.ai and Cowork don't install a plugin that has this directory, including one you [distribute through claude.ai organization settings](https://claude.com/docs/plugins/org-sync#keep-executables-out-of-the-top-level-bin-directory) |\n| Settings | `settings.json` | `agent` and `subagentStatusLine` defaults applied while the plugin is enabled |\n\nA plugin that uses every default location, plus a `scripts/` folder that its hooks call, is laid out like this:\n\n```text theme={null}\ndeploy-tools/\n├── .claude-plugin/\n│   └── plugin.json\n├── skills/\n│   └── deploy/\n│       └── SKILL.md\n├── commands/\n│   └── status.md\n├── agents/\n│   └── reviewer.md\n├── hooks/\n│   └── hooks.json\n├── monitors/\n│   └── monitors.json\n├── output-styles/\n│   └── terse.md\n├── themes/\n│   └── dracula.json\n├── workflows/\n│   └── release-audit.js\n├── bin/\n│   └── deploy-tool\n├── scripts/\n│   └── format.sh\n├── settings.json\n├── .mcp.json\n└── .lsp.json\n```\n\nTo click through this layout and read what each file does, open the [plugin explorer](/docs/en/plugins/components#explore-the-plugin-directory).\n\nA `CLAUDE.md` at the plugin root isn't loaded as context, and `claude plugin validate` warns when it finds one. To include instructions that load into Claude's context, put them in a skill."
+    },
+    {
+      "heading": "version",
+      "id": "version",
+      "hash": "768db8e5ebe000b91b7732a5aa6efc8c1ce0308a215f44365b499e734bb5ab70",
+      "text": "### `version`\n\nA version string, not checked against semver. Setting it pins the plugin to that version until you change it; see [Versions and updates](/docs/en/plugins/loading#versions-and-updates). A plugin with a [`command` source](/docs/en/plugins/marketplace-reference), a plugin from a [marketplace hosted on claude.ai](/docs/en/plugins/install#add-from-claude-ai), and a plugin [loaded in place](/docs/en/plugins/loading#find-plugins-on-disk) from a marketplace added from a local path aren't pinned by this field."
     },
     {
       "heading": "Where each variable resolves",
