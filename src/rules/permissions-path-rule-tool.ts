@@ -17,6 +17,7 @@ const rule: Rule.RuleModule = {
       description: 'Write a path rule as Edit(path) or Read(path)',
       url: docsUrl(name),
     },
+    schema: [],
     messages: {
       neverConsulted:
         'Claude Code never consults a path rule for {{tool}}. Use {{replacement}}(path) instead.',

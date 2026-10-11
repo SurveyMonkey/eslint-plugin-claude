@@ -17,6 +17,7 @@ const rule: Rule.RuleModule = {
       description: 'Do not match the primary input field with a parameter rule',
       url: docsUrl(name),
     },
+    schema: [],
     messages: {
       primaryField:
         'A parameter rule cannot match {{field}} of {{tool}}. Claude Code ignores this rule.',

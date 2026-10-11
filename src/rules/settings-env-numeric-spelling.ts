@@ -22,7 +22,7 @@ const SEPARATED = /^\d+(?:_\d+)+$/
 /** The first client version that reads these spellings. */
 const FIRST_VERSION = [2, 1, 211] as const
 
-type Options = [{ minVersion?: string }?]
+type Options = [{ minVersion?: string }]
 
 /** True when the version `text` is below 2.1.211. The schema allows only three numbers. */
 function isBeforeFirst(text: string): boolean {
@@ -50,13 +50,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }>
         additionalProperties: false,
       },
     ],
+    defaultOptions: [{}],
     messages: {
       spelling:
         'The value "{{value}}" of "{{name}}" is not in plain digits. Claude Code before v2.1.211 reads this spelling as a much smaller number, such as 1, and the option "minVersion" names such a client. Write plain digits.',
     },
   },
   create(context) {
-    const minVersion = context.options[0]?.minVersion
+    const [{ minVersion }] = context.options
     if (
       minVersion === undefined ||
       !isBeforeFirst(minVersion) ||

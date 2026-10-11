@@ -26,6 +26,7 @@ const rule: Rule.RuleModule = {
       description: 'Put a tool-name glob in an allow rule only after mcp__<server>__',
       url: docsUrl(name),
     },
+    schema: [],
     messages: {
       unanchored:
         'An allow rule takes a tool-name glob only after a literal "mcp__<server>__" prefix. Claude Code skips this rule.',
