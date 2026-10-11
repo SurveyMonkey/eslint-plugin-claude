@@ -3087,12 +3087,15 @@ const EXPECTED = [
   'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
   'plugins/bare/commands/c.md: claude/command-legacy-format@1',
   'plugins/bare/commands/c.md: claude/plugin-path-var-braced@2',
+  'plugins/bare/commands/c.md: claude/skill-description-present@1',
   'plugins/bare/skills/s/SKILL.md: claude/plugin-path-var-braced@2',
+  'plugins/bare/skills/s/SKILL.md: claude/skill-description-present@1',
   'plugins/env/.claude-plugin/plugin.json: claude/plugin-monitors-command-env@2',
   'plugins/env2/monitors/monitors.json: claude/plugin-monitors-command-env@2',
   'plugins/lock/.claude-plugin/plugin.json: claude/plugin-package-lockfile@2',
   'plugins/ucf/.claude-plugin/plugin.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/.mcp.json: claude/plugin-user-config-no-shell-fields@2',
+  'plugins/ucf/.mcp.json: claude/mcp-headershelper-path@1',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
@@ -3650,6 +3653,8 @@ const EXPECTED = [
   'packages/ld/.claude/commands/cprice.md: claude/command-legacy-format@1',
   'packages/mo/.claude/commands/cmodel.md: claude/command-legacy-format@1',
   'packages/pw/commands/cbad.md: claude/command-legacy-format@1',
+  'packages/pw/commands/cbad.md: claude/plugin-path-var-braced@2',
+  'packages/pw/skills/bad/SKILL.md: claude/plugin-path-var-braced@2',
   'packages/se/.claude/commands/cpush.md: claude/command-legacy-format@1',
   // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`, and no other file.
   // The paths under `.claude/` get the location report only.
@@ -3883,6 +3888,7 @@ const STRICT_ONLY = [
   'packages/ld/.claude/skills/price/SKILL.md: claude/skill-literal-dollar@1',
   'packages/ld/.claude/commands/cprice.md: claude/skill-literal-dollar@1',
   'packages/pw/skills/bad/SKILL.md: claude/skill-plugin-path-vars@1',
+  'plugins/bare/skills/s/SKILL.md: claude/skill-plugin-path-vars@1',
   'packages/ir/.claude/skills/bad/SKILL.md: claude/skill-inject-robustness@1',
   'packages/ir/.claude/commands/cbad.md: claude/skill-inject-robustness@1',
   'packages/se/.claude/skills/push/SKILL.md: claude/skill-side-effects-manual-only@1',
@@ -4832,8 +4838,6 @@ describe('configs', () => {
     }
   })
 
-  it('gives each rule of the plugin layout layer one JSON block for its files', () => {
-    for (const { name, files } of PLUGIN_RULES) {
   it('gives each rule of the plugin layout layer one block for its files', () => {
     for (const { name, files, language = 'json/json' } of PLUGIN_RULES) {
       const blocks = plugin.configs.recommended.filter(
@@ -4968,7 +4972,7 @@ describe('configs', () => {
     expect(own.length).toBeGreaterThan(0)
     for (const report of own) {
       expect(report).toMatch(
-        /^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/(?:p|ts)\/agents\//,
+        /^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/(?:p|ts|bare)\/agents\//,
       )
     }
   }, 30_000)
