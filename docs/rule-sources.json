@@ -2519,7 +2519,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Read-only commands",
-      "hash": "850a8e2c36842d570d74195b1886fae6e0c0d036fed299c351466f9fac025563"
+      "hash": "be00eac04a9b2fe178d42f937237f016ed174172805fec1fd87287ab43929b5e"
     }
   ],
   "skill-invocation-redundant-fields": [
@@ -2560,7 +2560,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "300ccf38c2d0cd09e6a001e66fc328e0ffd60698330c48d8d0972219b8bf2d48"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -2572,7 +2572,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Available string substitutions",
-      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
+      "hash": "30f30e2a1ed8c72a5112f38bd716f717813b61772746282c5c7cc3f581b88093"
     }
   ],
   "skill-max-lines": [
@@ -2653,7 +2653,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Available string substitutions",
-      "hash": "c6034b86185f46c80a62d990cb6d883dcaaa0b0f1383418886a4fdd4e50050a2"
+      "hash": "30f30e2a1ed8c72a5112f38bd716f717813b61772746282c5c7cc3f581b88093"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",

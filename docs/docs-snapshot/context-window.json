@@ -4,27 +4,33 @@
   "blocks": [
     {
       "id": "explore-the-context-window",
-      "hash": "30452717baf7d2f1fde5ad2cfac8b6b56269b508de01c531bc820bdbb82db7df"
+      "hash": "30452717baf7d2f1fde5ad2cfac8b6b56269b508de01c531bc820bdbb82db7df",
+      "bodyHash": "f702b8d043c46e4df1d53e20f36baa2034cc21bfcb82eda0a37f8f997f8138f1"
     },
     {
       "id": "what-the-timeline-shows",
-      "hash": "6c93d250edfa718a0586f83c768e3fc7a5159811e8f42256801c7b51f4e7c415"
+      "hash": "6c93d250edfa718a0586f83c768e3fc7a5159811e8f42256801c7b51f4e7c415",
+      "bodyHash": "48998fb60de40908f6b5d18cd6cf76848ad03f441098362cdf121c956cc0effd"
     },
     {
       "id": "what-survives-compaction",
-      "hash": "45aa3b77d18b8b6756be978168124f6b41572c00dd5477d80f4309e1f388a049"
+      "hash": "45aa3b77d18b8b6756be978168124f6b41572c00dd5477d80f4309e1f388a049",
+      "bodyHash": "939b6c0b02432e781591e9e632a48544f3314cc8e36cf41d8f60350dab93c6a8"
     },
     {
       "id": "when-your-context-fills-up",
-      "hash": "bce69e2e762f54a508a339189de43b5bfa7534c4185719d17b04992431a520d1"
+      "hash": "bce69e2e762f54a508a339189de43b5bfa7534c4185719d17b04992431a520d1",
+      "bodyHash": "e7a3cdfd82235cbeaf2e427ce819b9d0f8be5c0dbacfc7d7ec56b756b38720a5"
     },
     {
       "id": "check-your-own-session",
-      "hash": "80021c51a85b7bf7708be0e88fb7d193d6f80d6ab6ee9165753c1e2d437e46ae"
+      "hash": "80021c51a85b7bf7708be0e88fb7d193d6f80d6ab6ee9165753c1e2d437e46ae",
+      "bodyHash": "32d7e0ab4c4592330d6f510d4f8ecb60a4ddc8638b505f5b5688cd05cb6c5588"
     },
     {
       "id": "related-resources",
-      "hash": "1c6ff2be8540b4afbc66cfa9e61ac71278cf16c5f22c6f60e94e0c38bcdca555"
+      "hash": "1c6ff2be8540b4afbc66cfa9e61ac71278cf16c5f22c6f60e94e0c38bcdca555",
+      "bodyHash": "4f7c6f36fb6429ff43fcab742f858c9c5fa5150c161c86a1b79c848a100d34f3"
     }
   ],
   "sources": [
