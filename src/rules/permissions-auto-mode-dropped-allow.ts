@@ -15,7 +15,7 @@ const name = 'permissions-auto-mode-dropped-allow' as const
 
 const SHELL_TOOLS = ['Bash', 'PowerShell']
 
-type Options = [{ interpreters?: string[] }]
+type Options = [{ interpreters: string[] }]
 
 /** The interpreter that the docs name: "Wildcarded interpreters like `Bash(python*)`". The option
  *  `interpreters` adds to it. */
@@ -68,14 +68,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'dropped' }> 
         additionalProperties: false,
       },
     ],
-    defaultOptions: [{}],
+    defaultOptions: [{ interpreters: [] }],
     messages: {
       dropped:
         '`{{rule}}` {{reason}}. In auto mode, Claude Code drops this allow rule, and the classifier reviews each action instead. Claude Code restores it when you leave auto mode.',
     },
   },
   create(context) {
-    const [{ interpreters: extra = [] }] = context.options
+    const [{ interpreters: extra }] = context.options
     const interpreters = [...INTERPRETERS, ...extra]
     const isManaged = kindOf(context.filename) === 'managed'
     return settingsListener(context, (entries) => {

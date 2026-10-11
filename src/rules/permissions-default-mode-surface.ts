@@ -11,7 +11,7 @@ import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-file
 
 const name = 'permissions-default-mode-surface' as const
 
-type Options = [{ vscode?: boolean }]
+type Options = [{ vscode: boolean }]
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'cloud' | 'vscode' }> = {
   meta: {
@@ -32,7 +32,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'cloud' | 'vs
         additionalProperties: false,
       },
     ],
-    defaultOptions: [{}],
+    defaultOptions: [{ vscode: false }],
     messages: {
       cloud:
         'Cloud sessions ignore "defaultMode": "dontAsk" from a settings file. They honor only acceptEdits, plan, default and auto.',
@@ -44,7 +44,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'cloud' | 'vs
     if (isHiddenDropIn(context.filename)) {
       return {}
     }
-    const [{ vscode = false }] = context.options
+    const [{ vscode }] = context.options
     const reportsVscode = vscode && kindOf(context.filename) !== 'managed'
     return {
       Document(node) {
