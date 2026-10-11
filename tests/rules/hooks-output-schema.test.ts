@@ -169,6 +169,12 @@ describe(`${name}: ConfigChange and policy_settings`, () => {
     expect(ids(block, 'ConfigChange', {}, 'policy_settings')).toEqual(['policyBlock'])
   })
 
+  it('reports only the decision when the value is not block', () => {
+    expect(ids({ decision: 'approve' }, 'ConfigChange', {}, 'policy_settings')).toEqual([
+      'decision',
+    ])
+  })
+
   it('is silent for another matcher, a list, no matcher and a non-string matcher', () => {
     for (const matcher of [
       'user_settings',

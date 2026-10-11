@@ -82,7 +82,7 @@ function faultsOf(
   if ('suppressOutput' in json) {
     faults.push({ messageId: 'suppress', data: {} })
   }
-  const values = matcher === undefined ? null : exactValues(matcher, false)
+  const values = exactValues(matcher ?? '', false)
   if (
     event === 'ConfigChange' &&
     json.decision === 'block' &&

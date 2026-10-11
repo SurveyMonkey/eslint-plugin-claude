@@ -43,6 +43,18 @@ describe(`${name}: JSON fields`, () => {
     ).toEqual([])
   })
 
+  it('reports a field once, however many times the command prints it', () => {
+    const long = 'x'.repeat(10_001)
+    expect(ids(`${context(long)}; ${context(long)}`)).toEqual(['overCap'])
+    expect(
+      ids(echo({ additionalContext: long, hookSpecificOutput: { additionalContext: long } })),
+    ).toEqual(['overCap'])
+    expect(ids(echo({ systemMessage: long, additionalContext: long }))).toEqual([
+      'overCap',
+      'overCap',
+    ])
+  })
+
   it('measures each string on its own', () => {
     const half = 'x'.repeat(6_000)
     expect(

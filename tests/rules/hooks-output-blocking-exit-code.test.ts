@@ -36,6 +36,9 @@ describe(`${name}: the report`, () => {
       'cmd || { echo "no" >&2; exit 1; }',
       'if true; then echo "no" >&2; exit 1; fi',
       'echo "no" >&2 && exit 1',
+      'echo "no" >&2\nif x; then exit 1; fi',
+      'echo "no" >&2\nif x; then :; else exit 1; fi',
+      'echo "no" >&2\nwhile x; do exit 1; done',
     ]) {
       expect(inline(text), text).toEqual(['exit1'])
     }
