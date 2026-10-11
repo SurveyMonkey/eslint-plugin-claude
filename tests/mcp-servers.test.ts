@@ -13,6 +13,7 @@ import {
   MANAGED_SERVER_TYPES,
   type McpFileKind,
   mcpFileKind,
+  parseUrl,
   pluginMcpDeclarations,
   policyKey,
   REMOTE_SERVER_TYPES,
@@ -280,5 +281,35 @@ describe('policyKey', () => {
     ]) {
       expect(policyKey(entry)).toBeUndefined()
     }
+  })
+})
+
+describe('policyKey for a denylist', () => {
+  it('accepts a name that the allowlist pattern rejects', () => {
+    expect(policyKey({ serverName: 'a b' }, 'deniedMcpServers')).toBe('name:a b')
+    expect(policyKey({ serverName: '*' }, 'deniedMcpServers')).toBe('name:*')
+    expect(policyKey({ serverName: 'a b' })).toBeUndefined()
+  })
+  it('rejects an empty name and a name with outer whitespace', () => {
+    for (const serverName of ['', ' a', 'a ']) {
+      expect(policyKey({ serverName }, 'deniedMcpServers')).toBeUndefined()
+    }
+  })
+})
+
+describe('parseUrl', () => {
+  it('reads a URL with a variable in the port', () => {
+    for (const url of [
+      `http://h.test:\${PORT}`,
+      `http://h.test:\${PORT}?q=1`,
+      `http://h.test:\${PORT:-80}/x`,
+      `http://h.test:\${PORT}#f`,
+    ]) {
+      expect(parseUrl(url)?.hostname).toBe('h.test')
+    }
+  })
+  it('gives null for a text that does not parse', () => {
+    expect(parseUrl(`http://h.test:\${P}x`)).toBeNull()
+    expect(parseUrl('')).toBeNull()
   })
 })

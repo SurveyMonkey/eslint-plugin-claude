@@ -6,7 +6,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { ANTHROPIC_CONNECTOR_HOSTS } from '../data/mcp-connector-hosts.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
-import { mcpFileKind, REMOTE_SERVER_TYPES, serverMembers } from '../mcp-servers.ts'
+import { mcpFileKind, parseUrl, REMOTE_SERVER_TYPES, serverMembers } from '../mcp-servers.ts'
 
 const name = 'mcp-anthropic-hosted-url' as const
 
@@ -14,16 +14,8 @@ type Options = [{ hosts: string[] }]
 
 /** The host of `url` with no trailing dot. `URL` gives it in lower case. The result is null
  *  when `url` does not parse, because the host is then not known. A host that holds a `${`
- *  reference parses, but it is not a covered host. A reference in the port, as in
- *  `host:${PORT}/path`, does not parse. The parser reads the URL without that port, because the
- *  port is not part of the host. */
-function hostOf(url: string): string | null {
-  try {
-    return new URL(url.replace(/:\$\{[^}]*\}(?=[/?#]|$)/, '')).hostname.replace(/\.$/, '')
-  } catch {
-    return null
-  }
-}
+ *  reference parses, but it is not a covered host. */
+const hostOf = (url: string) => parseUrl(url)?.hostname.replace(/\.$/, '') ?? null
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'hosted' }> = {
   meta: {
