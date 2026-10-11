@@ -2699,6 +2699,30 @@ const TREE: Record<string, string> = {
   ...settingsFiles('ssc', {
     sandbox: { credentials: { files: [{ path: '~/.config/gh/hosts.yml', mode: 'mask' }] } },
   }),
+  // `sandbox-credentials-aws`: a deny mask file that allowRead re-opens.
+  ...settingsFiles('sca', {
+    sandbox: {
+      network: { tlsTerminate: {} },
+      filesystem: { allowRead: ['~/.aws'] },
+      credentials: {
+        files: [
+          { path: '~/.aws/credentials', mode: 'mask', extract: '(a)', onExtractNoMatch: 'deny' },
+        ],
+      },
+    },
+  }),
+  // `sandbox-credentials-mask`: a deny entry that holds a mask field.
+  ...settingsFiles('scm', {
+    sandbox: { credentials: { envVars: [{ name: 'T', mode: 'deny', extract: '(a)' }] } },
+  }),
+  // `sandbox-domain-overlap`: a domain in both lists.
+  ...settingsFiles('sdo', {
+    sandbox: { network: { allowedDomains: ['a.com'], deniedDomains: ['a.com'] } },
+  }),
+  // `permissions-sandbox-bash-ask`: a bare Bash ask rule with the sandbox on.
+  ...settingsFiles('psb', { permissions: { ask: ['Bash'] }, sandbox: { enabled: true } }),
+  // `permissions-dead-allow`: an allow rule under a bare deny.
+  ...settingsFiles('pda', { permissions: { allow: ['Bash(npm test)'], deny: ['Bash'] } }),
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3547,6 +3571,11 @@ const SANDBOX_RULES = [
   { name: 'sandbox-filesystem-disabled-conflict', files: MANAGED_FILES },
   { name: 'sandbox-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'sandbox-scope', files: PROJECT_FILES },
+  { name: 'sandbox-credentials-aws', files: MANAGED_FILES },
+  { name: 'sandbox-credentials-mask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-domain-overlap', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-sandbox-bash-ask', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-dead-allow', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4460,9 +4489,12 @@ const EXPECTED = [
   'packages/pb/.claude/skills/r/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
   'packages/pb/.claude/skills/r/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/tn/.claude/settings.json: claude/mcp-tool-name-format@2',
+  'packages/tn/.claude/settings.json: claude/permissions-dead-allow@2',
+  'packages/tu/.claude/settings.json: claude/permissions-dead-allow@2',
   'packages/tn/.claude/settings.local.json: claude/mcp-tool-name-format@2',
   'packages/tn/managed-settings.json: claude/mcp-tool-name-format@2',
   'packages/tn/managed-settings.d/10-a.json: claude/mcp-tool-name-format@2',
+  'packages/tn/managed-settings.d/10-a.json: claude/permissions-dead-allow@2',
   'packages/tn/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/tn/.claude/skills/s/SKILL.md: claude/mcp-tool-name-format@2',
   'packages/tn/.claude/skills/s/SKILL.md: claude/skill-description-present@1',
@@ -4680,6 +4712,10 @@ const EXPECTED = [
     ['sdx', 'sandbox-domain-syntax'],
     ['sec', 'sandbox-excluded-commands-syntax'],
     ['ssm', 'sandbox-schema'],
+    ['scm', 'sandbox-credentials-mask'],
+    ['sdo', 'sandbox-domain-overlap'],
+    ['psb', 'permissions-sandbox-bash-ask'],
+    ['pda', 'permissions-dead-allow'],
   ].flatMap(([dir, rule]) => [
     // `settings-key-scope` reports `autoMode` in a project file, so
     // `permissions-auto-mode-schema` leaves that file alone.
@@ -4708,6 +4744,18 @@ const EXPECTED = [
   'packages/ssc/.claude/settings.json: claude/sandbox-scope@2',
   'packages/ssc/.claude/settings.local.json: claude/sandbox-scope@2',
   'packages/ssc/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // `sandbox-credentials-aws` reads the managed files only. A project file keeps a mask entry out
+  // (`sandbox-scope`) and a `tlsTerminate` key out (`settings-key-scope`).
+  'packages/sca/.claude/settings.json: claude/sandbox-scope@2',
+  'packages/sca/.claude/settings.json: claude/settings-key-scope@2',
+  'packages/sca/.claude/settings.local.json: claude/sandbox-scope@2',
+  'packages/sca/.claude/settings.local.json: claude/settings-key-scope@2',
+  'packages/sca/managed-settings.json: claude/sandbox-credentials-aws@2',
+  'packages/sca/managed-settings.d/10-a.json: claude/sandbox-credentials-aws@2',
+  'packages/sca/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  // The `ssc` file has a mask entry and no TLS termination, which `sandbox-credentials-mask` reports in a managed source.
+  'packages/ssc/managed-settings.json: claude/sandbox-credentials-mask@2',
+  'packages/ssc/managed-settings.d/10-a.json: claude/sandbox-credentials-mask@2',
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.

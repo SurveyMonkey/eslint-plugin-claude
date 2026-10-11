@@ -41,7 +41,7 @@ const object: Shape = { type: 'object' }
 const mode: Shape = { type: 'enum', values: ['deny', 'mask'] }
 
 /** The fields that a `mask` entry of `credentials.files` and of `credentials.envVars` share. */
-const MASK_FIELDS: Readonly<Record<string, Shape>> = {
+export const MASK_FIELDS: Readonly<Record<string, Shape>> = {
   mode,
   extract: string,
   onExtractNoMatch: { type: 'enum', values: ['warn', 'deny', 'error'] },
