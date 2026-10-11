@@ -5,7 +5,10 @@
 // files in a plugin that sits in the repository, so a silent result is not an
 // error of the fixture.
 import path from 'node:path'
+import json from '@eslint/json'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import claude from '../src/index.ts'
 import { readPluginAt } from '../src/plugin-manifest.ts'
 import { link, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from './plugin-tree.test-support.ts'
@@ -43,6 +46,9 @@ const SHELL = JSON.stringify({
   hooks: { Stop: [{ hooks: [{ type: 'command', command: `run \${user_config.key}` }] }] },
 })
 const MONITORS = JSON.stringify([{ name: 'm', command: 'run $CLAUDE_PLUGIN_ROOT/x' }])
+const LIFECYCLE = JSON.stringify({ scripts: { postinstall: 'node setup.js' } })
+const THEME = JSON.stringify({ base: 'bogus' })
+const QUOTE = JSON.stringify([{ name: 'm', command: `run \${CLAUDE_PLUGIN_ROOT}/x` }])
 
 describe('a plugin root that links out of the repository', () => {
   const jsonCases: [string, string, string, string][] = [
@@ -53,6 +59,9 @@ describe('a plugin root that links out of the repository', () => {
       '**/monitors/monitors.json',
       MONITORS,
     ],
+    ['plugin-monitors-command-quote', 'monitors/monitors.json', '**/monitors/monitors.json', QUOTE],
+    ['plugin-package-lifecycle-scripts', 'package.json', '**/package.json', LIFECYCLE],
+    ['plugin-themes-layout', 'themes/t.json', '**/themes/*.json', THEME],
   ]
   it.each(jsonCases)('%s reports in the plugin in the repository', (rule, file, glob, code) => {
     expect(lintPluginFile(rule, [glob], path.join(inside({}), file), code)).toHaveLength(1)
@@ -92,6 +101,15 @@ describe('a plugin root that links out of the repository', () => {
   linked('plugin-package-lockfile stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, { 'package.json': '{}', 'yarn.lock': '' })
     expect(lintPlugin('plugin-package-lockfile', dir, MANIFEST)).toEqual([])
+  })
+
+  it('plugin-package-lockfile-choice reports in the plugin in the repository', () => {
+    const files = { 'package.json': '{}', 'bun.lock': '', 'package-lock.json': '' }
+    expect(lintPlugin('plugin-package-lockfile-choice', inside(files), MANIFEST)).toHaveLength(1)
+  })
+  linked('plugin-package-lockfile-choice stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, { 'package.json': '{}', 'bun.lock': '', 'package-lock.json': '' })
+    expect(lintPlugin('plugin-package-lockfile-choice', dir, MANIFEST)).toEqual([])
   })
 })
 
@@ -280,6 +298,31 @@ describe('the path and settings rules of the plugin layer', () => {
   linked('plugin-path-no-backslash stays silent for the linked plugin', () => {
     const { dir } = linkedOut({}, {}, BACKSLASH)
     expect(lintPlugin('plugin-path-no-backslash', dir, BACKSLASH)).toEqual([])
+  })
+})
+
+describe('the bin rule of the plugin layer', () => {
+  const BIN_ON = [{ targets: ['claude-ai'] }]
+  const lintBin = (dir: string) =>
+    new Linter({ cwd: path.parse(dir).root }).verify(
+      MANIFEST,
+      [
+        {
+          files: ['**/.claude-plugin/plugin.json'],
+          plugins: { json, claude },
+          language: 'json/json',
+          rules: { 'claude/plugin-bin-claude-ai': ['error', ...BIN_ON] },
+        },
+      ],
+      { filename: path.join(dir, '.claude-plugin', 'plugin.json') },
+    )
+  it('plugin-bin-claude-ai reports in the plugin in the repository', () => {
+    expect(lintBin(inside({ 'bin/tool': '' }))).toHaveLength(1)
+  })
+  // The folder links back in, so only a look at the folder out of the repository tells the plugin.
+  linked('plugin-bin-claude-ai stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({ 'bin/tool': '' })
+    expect(lintBin(dir)).toEqual([])
   })
 })
 

@@ -17,6 +17,9 @@
 // The sixth list is the table of the "User configuration" section of the manifest reference
 // (https://code.claude.com/docs/en/plugins/manifest-reference#user-configuration), checked on
 // Claude Code 2.1.296 on 2026-10-10.
+// The seventh list is the Field table of the "Create a custom theme" section of the terminal
+// configuration page (https://code.claude.com/docs/en/terminal-config#create-a-custom-theme),
+// checked on Claude Code 2.1.296 on 2026-10-10.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -102,4 +105,15 @@ export const USER_CONFIG_TYPES: readonly string[] = [
   'boolean',
   'directory',
   'file',
+]
+
+/** The built-in presets that the `base` field of a custom theme names, in the order of the
+ *  table. A plugin theme is a custom theme file in `themes/`. */
+export const THEME_BASES: readonly string[] = [
+  'dark',
+  'light',
+  'dark-daltonized',
+  'light-daltonized',
+  'dark-ansi',
+  'light-ansi',
 ]

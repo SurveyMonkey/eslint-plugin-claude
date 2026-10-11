@@ -7,6 +7,7 @@ import {
   PLUGIN_PATH_KEYS,
   PLUGIN_SETTINGS_KEYS,
   REPLACED_DEFAULTS,
+  THEME_BASES,
   USER_CONFIG_TYPES,
 } from '../src/data/plugin-layout.ts'
 
@@ -97,5 +98,18 @@ describe('fields of a command entry', () => {
 describe('types of a userConfig option', () => {
   it('holds the five types of the table, in its order', () => {
     expect(USER_CONFIG_TYPES).toEqual(['string', 'number', 'boolean', 'directory', 'file'])
+  })
+})
+
+describe('bases of a custom theme', () => {
+  it('holds the six presets of the table, in its order', () => {
+    expect(THEME_BASES).toEqual([
+      'dark',
+      'light',
+      'dark-daltonized',
+      'light-daltonized',
+      'dark-ansi',
+      'light-ansi',
+    ])
   })
 })
