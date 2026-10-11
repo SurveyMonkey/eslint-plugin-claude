@@ -30,7 +30,7 @@ export function repo(files: Record<string, string>) {
 export const agent = (fields: string, name = 'a') =>
   `---\nname: ${name}\ndescription: d\n${fields}---\n\nBody.\n`
 
-/** The messages of the rule `module` for `code` at `filename`. */
+/** The messages of the rule module `module` (its `target` and default export) for `code` at `filename`. */
 export function lintWith(
   module: { target: { name: string }; default: unknown },
   code: string,
