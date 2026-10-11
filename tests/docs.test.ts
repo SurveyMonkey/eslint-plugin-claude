@@ -18,6 +18,9 @@ it('points docsUrl at docs/rules in this repository', () => {
 it('gives each rule a doc and a URL that names it', () => {
   const rules = Object.entries(plugin.rules)
   expect(rules.map(([name]) => name).sort()).toEqual([
+    'agent-body-nonempty',
+    'agent-description-proactive',
+    'agent-descriptions-budget',
     'agent-disallowed-tools-scope',
     'agent-field-min-version',
     'agent-frontmatter-schema',
@@ -31,6 +34,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-memory-scope-project',
     'agent-model-forced',
     'agent-model-value',
+    'agent-name-kebab-case',
     'agent-name-shadowing',
     'agent-name-shadows-builtin',
     'agent-name-unique',
@@ -42,6 +46,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-plugin-scoped-name-unique',
     'agent-skills-exist',
     'agent-skills-preloadable',
+    'agent-teammate-ignored-fields',
     'agent-teams-no-project-config',
     'agent-tools-agent-type-list',
     'agent-tools-conditional',

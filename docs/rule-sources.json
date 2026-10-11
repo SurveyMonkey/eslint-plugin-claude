@@ -1,4 +1,45 @@
 {
+  "agent-body-nonempty": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Write subagent files",
+      "hash": "365d563dc5a8b404417649185c198c9dbaf4ea7de9c9b880c31efccd9d2b8e28"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    }
+  ],
+  "agent-description-proactive": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Understand automatic delegation",
+      "hash": "4232b0e8ef80c8dd0bcd1e3207ce7d342db34301900e3c594c89bb14a806e71f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    }
+  ],
+  "agent-descriptions-budget": [
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Agent descriptions are over the 15.0k-token limit",
+      "hash": "9a0bbae323aed2dc5a7faf8077bf424d901c4d60fe7bd768558b2d0f493694a0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Understand automatic delegation",
+      "hash": "4232b0e8ef80c8dd0bcd1e3207ce7d342db34301900e3c594c89bb14a806e71f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    }
+  ],
   "agent-disallowed-tools-scope": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -190,6 +231,18 @@
       "hash": "a09e1c9b1762d03557790bd6d2bff27c741d3881a2fb9c76d1c2379d1949c324"
     }
   ],
+  "agent-name-kebab-case": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    }
+  ],
   "agent-name-shadowing": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -325,6 +378,23 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+    }
+  ],
+  "agent-teammate-ignored-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/agent-teams",
+      "heading": "Use subagent definitions for teammates",
+      "hash": "617e2befd80358b21c9104a2ed554186b21453ab4b6ea05eff1ab5a8d707e0e9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/agent-teams",
+      "heading": "Limitations",
+      "hash": "c47aac4c2ce3bc835f798eb7bbf3d24674f490f876cd1230a1873f0d5758cfe7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/agent-teams",
+      "heading": "Enable agent teams",
+      "hash": "c2c7f93bd280719787e1bf328e63702b910fc05c2e2824c538ff12216206b351"
     }
   ],
   "agent-teams-no-project-config": [

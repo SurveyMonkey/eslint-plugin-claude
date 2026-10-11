@@ -1315,6 +1315,12 @@
   ],
   "sources": [
     {
+      "heading": "Agent descriptions are over the 15.0k-token limit",
+      "id": "agent-descriptions-are-over-the-15000-token-limit",
+      "hash": "9a0bbae323aed2dc5a7faf8077bf424d901c4d60fe7bd768558b2d0f493694a0",
+      "text": "<h3 id=\"agent-descriptions-are-over-the-15000-token-limit\">\n  Agent descriptions are over the 15.0k-token limit\n</h3>\n\nClaude Code shows this warning as a startup notice in the conversation view rather than on stderr. The combined descriptions of your [subagents](/docs/en/sub-agents), except the built-in ones, exceed 15,000 tokens as Claude Code estimates them. Each agent counts its name plus its `description` frontmatter. Claude Code loads every agent whether or not the total is over the limit, so the warning doesn't change what loads.\n\n```text theme={null}\nAgent descriptions are over the 15.0k-token limit (~16.2k tokens) · ask Claude to trim agent descriptions in .claude/agents/\n```\n\n**What to do:**\n\n* Shorten the `description` frontmatter of your agent files, or ask Claude to trim them for you.\n* Remove agent files you no longer use."
+    },
+    {
       "heading": "Agent would be spawned with zero tools",
       "id": "agent-would-be-spawned-with-zero-tools",
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923",
