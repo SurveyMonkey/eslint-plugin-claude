@@ -38,8 +38,11 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsSkillForPreload from './rules/agent-tools-skill-for-preload.ts'
 import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
 import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
 import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import claudeMdImportExists from './rules/claude-md-import-exists.ts'
+import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
@@ -73,6 +76,7 @@ import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-con
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
 import memorySettingsSchema from './rules/memory-settings-schema.ts'
+import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
 import outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
@@ -92,6 +96,7 @@ import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignore
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
 import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
@@ -324,13 +329,18 @@ const modules = [
   settingsMarketplaceKeyAlias,
   settingsMarketplaceSkipLfs,
   settingsStrictKnownMarketplacesSkillsDir,
+  claudeMdAgentsMdShadowed,
   claudeMdAgentsMdVariant,
   claudeMdExcludesPattern,
+  claudeMdImportExists,
+  claudeMdImportMaxDepth,
   claudeMdMaxBytes,
   memorySettingsSchema,
+  memorySymlinkNetworkTarget,
   rulesFrontmatterSchema,
   rulesMdExtension,
   rulesPathsGlobValid,
+  rulesSymlinkExternalScoped,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -510,13 +520,18 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-key-alias': 'warn',
   'settings-marketplace-skip-lfs': 'warn',
   'settings-strict-known-marketplaces-skills-dir': 'warn',
+  'claude-md-agents-md-shadowed': 'error',
   'claude-md-agents-md-variant': 'error',
   'claude-md-excludes-pattern': 'error',
+  'claude-md-import-exists': 'error',
+  'claude-md-import-max-depth': 'error',
   'claude-md-max-bytes': 'error',
   'memory-settings-schema': 'error',
+  'memory-symlink-network-target': 'error',
   'rules-frontmatter-schema': 'error',
   'rules-md-extension': 'error',
   'rules-paths-glob-valid': 'error',
+  'rules-symlink-external-scoped': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
