@@ -3110,6 +3110,18 @@
       "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
     }
   ],
+  "permissions-additional-directories-path": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Working directories",
+      "hash": "a5eef13704984e6b63821950c6d4c00ab4f066d9dadb0f3bce59e59aee313dd2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Working directory is a network path",
+      "hash": "f5bb8ce4eba1e1e76e5ea53bb4de634f71040a091fb85f1ef4c0274646df18b9"
+    }
+  ],
   "permissions-allow-unrestricted": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -3176,6 +3188,13 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Has a wildcard before the rest of the command",
       "hash": "8b7d60bb29de9a85d524939f5c6f1c213208eb33b97719fb66303eb31af17924"
+    }
+  ],
+  "permissions-block-reads-false": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.blockReadsOutsideWorkingDirectories",
+      "hash": "f1ce276060f50bcee16f3211f33e323cc2b413dd50ef3b2aeade19b1d266d0ba"
     }
   ],
   "permissions-bypass-mode-committed": [
@@ -3295,6 +3314,18 @@
       "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
     }
   ],
+  "permissions-invalid-path-pattern": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
+    }
+  ],
   "permissions-mcp-rule-parens": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -3305,6 +3336,18 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
       "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    }
+  ],
+  "permissions-negation": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
     }
   ],
   "permissions-param-rule": [
@@ -3533,6 +3576,35 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
       "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+    }
+  ],
+  "permissions-webfetch-domain-syntax": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "WebFetch",
+      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Allow or deny every fetch",
+      "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Configure tools with permission rules and hooks",
+      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53"
+    }
+  ],
+  "permissions-windows-path": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit",
+      "hash": "a45a7d9f9e3a788dc3f15948998374ceb9672d6ec91d8da0ac019e71c61a38f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Cd",
+      "hash": "812fd678b9781f8810e87dc5d7537496e442390723b0158428dbe8b0ecdf5a53"
     }
   ],
   "plugin-bin-claude-ai": [
