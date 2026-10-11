@@ -225,6 +225,37 @@ const MCP_KIND: DeclarationKind = {
 export const pluginMcpDeclarations = (root: string, manifest: ValueNode | null): Declaration[] =>
   pluginDeclarations(root, manifest, MCP_KIND)
 
+/** One server of a file that a rule lints. `member` holds the name and the config. `pinned` is
+ *  the node that takes every report for a server of a declared file: the path in the manifest.
+ *  It is undefined when the node of the server can take the report. */
+export interface LintedServer {
+  readonly name: string
+  readonly member: MemberNode
+  readonly pinned?: ValueNode | MemberNode['name']
+}
+
+/** The servers of the file `filename`, whose top-level value is `body`. A `.mcp.json` gives the
+ *  members of its map. A `plugin.json` gives the servers that it declares, inline or in a `.json`
+ *  file. It leaves out the `.mcp.json` at the plugin root. That file has its own lint run, so no
+ *  server gets two reports. A `.mcp.json` path that Claude Code never reads gives an empty result.
+ *  A source that the rule cannot read gives none too (ADR 001, Decision 14). */
+export function lintedServers(filename: string, body: ValueNode): LintedServer[] {
+  if (path.basename(filename) === 'plugin.json') {
+    const root = path.dirname(path.dirname(path.resolve(filename)))
+    return pluginMcpDeclarations(root, body)
+      .filter(({ from }) => from !== MCP_KIND.rootFile)
+      .map(({ name, member, node }) => ({
+        name,
+        member,
+        pinned: node === member.name ? undefined : node,
+      }))
+  }
+  const kind = mcpFileKind(filename)
+  return kind === null
+    ? []
+    : serverMembers(body, kind).map((member) => ({ name: keyOf(member.name), member }))
+}
+
 /** The declarations that repeat a name which an earlier source declares, each with the `from` of
  *  the first declaration of that name. */
 export function repeatedDeclarations(
