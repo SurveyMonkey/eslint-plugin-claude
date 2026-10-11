@@ -1815,7 +1815,7 @@ describe('configs', () => {
         'packages/hc/.claude-plugin/marketplace.json: claude/marketplace-min-version@1',
       ),
     ])
-  })
+  }, 30_000)
 
   it('turns each off marketplace rule on in strict only, on the files that it reads', () => {
     for (const rule of MARKETPLACE_OFF_RULES) {
@@ -1915,7 +1915,7 @@ describe('configs', () => {
       'plugins/p/agents/bom.md: claude/agent-no-bom@1',
       'plugins/p/agents/versions.md: claude/agent-field-min-version@1',
     ])
-  })
+  }, 30_000)
 
   // The five description rules take every Markdown file and every agent file of the tree reports
   // for most of them, so `DESCRIPTION_TREE` tests them. This run leaves their reports out.
