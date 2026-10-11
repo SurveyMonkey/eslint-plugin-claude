@@ -1,0 +1,103 @@
+{
+  "url": "https://code.claude.com/docs/en/plugins/publish",
+  "hash": "9d4dc32f6cd4f29aff651686d8ef32900a67e70ceae45f20ebf0311ddda80a02",
+  "blocks": [
+    {
+      "id": "publish-and-distribute-a-plugin",
+      "hash": "4fdbb915ac3f865f0bb68243f1fc8a78caf6fa62df640880340057baa30b1a46",
+      "bodyHash": "e29c4bbdb26fcb7d92f446880ac088b4fa7008c4225ae653d0c02e63ca044ada"
+    },
+    {
+      "id": "choose-how-to-distribute",
+      "hash": "33636600d3d8127bb26956ef90192cfb17caf7cd427f059ad3da7b5585304390",
+      "bodyHash": "c6ead896e073095b7ce15e5d3ea9ecad7d5f25de6b55edf4e6cc2274d5a8d618"
+    },
+    {
+      "id": "prepare-your-plugin-for-release",
+      "hash": "9de39a9a3c45c1bce089b935877c35b38082e5a3894e22e1fb5963e3a12043ea",
+      "bodyHash": "8e4515d48091adda22faedf1ebf8c6959f528a3596560ab5f54159ba428e1d03"
+    },
+    {
+      "id": "share-a-plugin-without-a-marketplace",
+      "hash": "8f7dbc36164545da022bf5774cdde11d85d1ab193c592357a000f1bc6b6901af",
+      "bodyHash": "592ceac31ceaee503a3b63f6dc87ae8edcc52d09638e60217b39f17599f87246"
+    },
+    {
+      "id": "ship-a-plugin-with-your-own-tool",
+      "hash": "c297dec1879617da6ec2972ce7c7166b6f9993b842a9d0ac8616eccbf61c222d",
+      "bodyHash": "bfe713cf90d22b5bd12d82c703cd6baf5c3c75b2915b18c5ebdd88d6db009757"
+    },
+    {
+      "id": "publish-through-your-own-marketplace",
+      "hash": "130b7c0b8db6a92b4f3478ac2be6fb07225cb6aaebdaeb89ec740c5c7b47a391",
+      "bodyHash": "537f505d7fa2888d82cd77d7f00ad036e19983c478dfcdbce723e605ecf72c36"
+    },
+    {
+      "id": "add-the-marketplace-file-to-your-repository",
+      "hash": "604b9dde91fc912432a1daf5c6ab14357f4f5633c618bd45c599e8fd4f9db25f",
+      "bodyHash": "887e8d69fb774e74ac2685715b527d22129482364c0df7fd97c2735fbab31682"
+    },
+    {
+      "id": "control-who-can-install",
+      "hash": "528447beee54d681e67f3bfb6578793b014ba0a70ec3b4c9ea075376a8fe6017",
+      "bodyHash": "16d83ec634d3045324de71d37600c12df0f082f00f8fa375c6b24077a44014e4"
+    },
+    {
+      "id": "tell-users-how-to-install",
+      "hash": "b621236ac833d85fd61fe62689009b54e5cf5fdf45f14f07099bbd00831b2c9c",
+      "bodyHash": "ac4e05f13eafe32c2897fd3d4dfd362c67b25799afcda27cf1ce4f3f0e780f6e"
+    },
+    {
+      "id": "ship-updates-to-users",
+      "hash": "3c7d18725db0219a85ebf8f56fed0ee77ccb4df2478bae84a1aeb417c3b72410",
+      "bodyHash": "a82543a74bc0898a289272e0a44c548d36e4c248050060c7f26d539dbe80e112"
+    },
+    {
+      "id": "submit-to-anthropics-directory",
+      "hash": "c7a7e2952f06654b1921d790d7fa5c6b14631d2efe23f0595b7d310d9c4acf3f",
+      "bodyHash": "2df5b7917b939e4b4073eaa91700d05b4f04cf353e5f77c6b030564fa6c85e21"
+    },
+    {
+      "id": "how-a-listed-plugin-reaches-claude-code-users",
+      "hash": "0a4e39f26c5cafbcad013bcce005d53ab5d2b4b49f1b89bf7371021960bab31e",
+      "bodyHash": "32fdbfc2ae062d634bbf5c78f0ebcba217d527971b9d569108a01a9d7aa843aa"
+    },
+    {
+      "id": "ship-updates-renames-and-removals",
+      "hash": "ddc98379f3c12371bba99fd6d955775d18d990c47e3f88ac39c018de9a6fe652"
+    },
+    {
+      "id": "release-a-new-version",
+      "hash": "34e9a7c62e292ddc7564a8881d78531f11458bfb0ac2cc12ac31bed940a3e9c7",
+      "bodyHash": "ad175540699d09364275160b6819eb29f9e3582b67b6a51c078226cec16da03c"
+    },
+    {
+      "id": "tag-a-release",
+      "hash": "153bf0ff71eebf2dba71c20d92ffe0ea1491f71a72c840b5253595358595f999",
+      "bodyHash": "5802e1f9881fe8643e024138f9068d9f6c0dd3daff7c8e2495736247307a7eba"
+    },
+    {
+      "id": "rename-or-remove-a-plugin",
+      "hash": "48554974e39c9e53e01ee788892f57f3afc367eb897c07ecaaa7f2ee19c17d53",
+      "bodyHash": "68ab76c6f4e8469200420d911d249fee731055b68e4b7189aedd9e27a43add4d"
+    },
+    {
+      "id": "declare-dependencies",
+      "hash": "0b720e06a9c1e9012eb9fadfe785855bd7cfddb8ecbeb786732a893ebb556be0",
+      "bodyHash": "c88931a08727bd149242b77c1f89ba0a021024d0f585712d4a9457498384df9d"
+    },
+    {
+      "id": "next-steps",
+      "hash": "4b5b81b5cb43a1160e740157f4be25dda939d96cd220e1d0462692c06a4b1392",
+      "bodyHash": "02c3da4206a8d1359d9b07360b030c4eb90ac531d9ffa11af7792c41433f735a"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Add the marketplace file to your repository",
+      "id": "add-the-marketplace-file-to-your-repository",
+      "hash": "604b9dde91fc912432a1daf5c6ab14357f4f5633c618bd45c599e8fd4f9db25f",
+      "text": "### Add the marketplace file to your repository\n\nTo publish from the plugin's own repository, save the marketplace file beside `plugin.json` in `.claude-plugin/`, with one entry whose `source` is `\"./\"`, the repository root. Give the entry the same `name` as `plugin.json`, per [Keep the entry name and the manifest name the same](/docs/en/plugins/create-marketplace#keep-the-entry-name-and-the-manifest-name-the-same):\n\n```json .claude-plugin/marketplace.json theme={null}\n{\n  \"name\": \"your-marketplace\",\n  \"owner\": { \"name\": \"Your Name\" },\n  \"plugins\": [\n    { \"name\": \"deploy-helper\", \"source\": \"./\" }\n  ]\n}\n```\n\nIn your shell, run `claude plugin validate .` in the repository before you push. For what the run checks, see [Validate a directory](/docs/en/plugins/cli-reference#validate-a-directory).\n\n[Create a marketplace](/docs/en/plugins/create-marketplace) covers the layout with several plugins in one repository."
+    }
+  ]
+}

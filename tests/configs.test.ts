@@ -91,6 +91,39 @@ const badMarketSettings = JSON.stringify({
   },
 })
 
+// The two `off` marketplace rules of #12 read these trees. Four files report in `strict` only.
+// Decoy files report nowhere. This is a settings file that registers the marketplace `hosted`
+// as a `url` source.
+const hostedSettings = JSON.stringify({
+  extraKnownMarketplaces: {
+    hosted: { source: { source: 'url', url: 'https://plugins.example.com/marketplace.json' } },
+  },
+})
+// A settings file whose `url` source holds a literal header credential, and a marketplace whose
+// archive entry does the same.
+const credentialSettings = JSON.stringify({
+  extraKnownMarketplaces: {
+    creds: {
+      source: {
+        source: 'url',
+        url: 'https://plugins.example.com/marketplace.json',
+        headers: { Authorization: 'Bearer abc123' },
+      },
+    },
+  },
+})
+const credentialMarketplace = JSON.stringify({
+  name: 'creds',
+  owner: { name: 'hc' },
+  plugins: [
+    {
+      name: 'p',
+      source: { source: 'archive', url: 'https://x.test/p.zip', sha256: 'a'.repeat(64) },
+      headers: { Authorization: 'Bearer abc123' },
+    },
+  ],
+})
+
 // One string value of 2 MiB makes a file over the limit of the size rule.
 const big = JSON.stringify({ a: 'x'.repeat(2097152) })
 
@@ -284,6 +317,33 @@ const TREE: Record<string, string> = {
     owner: { name: 'm' },
     plugins: [],
   }),
+  // A `plugin.json` beside that marketplace, which lists no entry for the root.
+  'packages/m/.claude-plugin/plugin.json': JSON.stringify({ name: 'inline' }),
+  // A marketplace that the project settings register as a `url` source, with a relative source.
+  'packages/uh/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'hosted',
+    owner: { name: 'uh' },
+    plugins: [{ name: 'p', source: './p' }],
+  }),
+  'packages/uh/p/README.md': '# P\n',
+  'packages/uh/.claude/settings.json': hostedSettings,
+  'packages/uh/.claude/settings.local.json': hostedSettings,
+  // The same registration where no rule reads it: the settings of another directory.
+  'packages/uh/other/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'hosted',
+    owner: { name: 'uh' },
+    plugins: [{ name: 'p', source: './p' }],
+  }),
+  'packages/uh/other/p/README.md': '# P\n',
+  // A literal header credential in an entry and in a `url` source. Only the files named in the
+  // glob are read.
+  'packages/hc/.claude-plugin/marketplace.json': credentialMarketplace,
+  'packages/hc/other.json': credentialMarketplace,
+  'packages/hc/.claude/settings.json': credentialSettings,
+  'packages/hc/.claude/settings.local.json': credentialSettings,
+  'packages/hc/.claude/nested/settings.json': credentialSettings,
+  'packages/hc/.vscode/settings.json': credentialSettings,
+  'packages/hc/settings.json': credentialSettings,
   // A marketplace in a repository with a `.git`, where `plugins/p` is a link to a directory out of
   // the marketplace root. The test makes the link. The tree above has no `.git`, so no link there
   // gives a report.
@@ -734,7 +794,16 @@ const MARKETPLACE_WARN_RULES = [
   LOCATION_RULE,
   'marketplace-min-version',
   'marketplace-relative-source-backslash',
+  'marketplace-self-hosted-root-source',
 ]
+
+// The marketplace rules of #12 that are `off` in `recommended`, in the order of the `modules`
+// list. `strict` turns each on at `warn`. The credential rule also reads the project settings.
+const MARKETPLACE_OFF_RULES = [
+  'marketplace-relative-source-url-hosted',
+  'marketplace-headers-literal-credential',
+]
+const CREDENTIAL_RULE = 'marketplace-headers-literal-credential'
 
 // The settings rules of #12, in the order of the `modules` list. Each is an error.
 const SETTINGS_RULES = [
@@ -855,8 +924,13 @@ const EXPECTED = [
     (rule) => `.claude-plugin/marketplace.json: claude/${rule}@2`,
   ),
   ...MARKETPLACE_WARN_RULES.filter(
-    (rule) => rule !== LOCATION_RULE && rule !== 'marketplace-min-version',
+    (rule) =>
+      rule !== LOCATION_RULE &&
+      rule !== 'marketplace-min-version' &&
+      rule !== 'marketplace-self-hosted-root-source',
   ).map((rule) => `.claude-plugin/marketplace.json: claude/${rule}@1`),
+  // `marketplace-self-hosted-root-source` reads a marketplace beside a `plugin.json`.
+  'packages/m/.claude-plugin/marketplace.json: claude/marketplace-self-hosted-root-source@1',
   // `marketplace-location` reads each `marketplace.json`, and reports the one out of its folder.
   'marketplace.json: claude/marketplace-location@1',
   'docs/marketplace.json: claude/marketplace-location@1',
@@ -1088,8 +1162,9 @@ const EXPECTED = [
   'plugins/p/output-styles/bare.md: claude/output-style-plugin-name-description@1',
 ].sort()
 
-// The reports of the `off` agent rules. They appear in `strict` only, at `warn`. `task-alias.md`
-// is an agent that no setting runs as the main thread, so its type list is ignored.
+// The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`. `task-alias.md`
+// is an agent that no setting runs as the main thread, so its type list is ignored. The marketplace
+// credential rule reads the project settings files and the marketplace, and no other file.
 const STRICT_ONLY = [
   '.claude/agents/task-alias.md: claude/agent-tools-agent-type-list@1',
   'packages/o/.claude/agents/skill-tool.md: claude/agent-tools-skill-for-preload@1',
@@ -1100,6 +1175,10 @@ const STRICT_ONLY = [
   'packages/o/.claude/agents/typelist.md: claude/agent-tools-agent-type-list@1',
   'packages/o/.claude/agents/skills.md: claude/agent-skills-exist@1',
   'packages/o/.claude/agents/mcp-ref.md: claude/agent-mcp-servers-ref-exists@1',
+  'packages/uh/.claude-plugin/marketplace.json: claude/marketplace-relative-source-url-hosted@1',
+  'packages/hc/.claude-plugin/marketplace.json: claude/marketplace-headers-literal-credential@1',
+  'packages/hc/.claude/settings.json: claude/marketplace-headers-literal-credential@1',
+  'packages/hc/.claude/settings.local.json: claude/marketplace-headers-literal-credential@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1162,6 +1241,9 @@ const AGENT_OFF_RULES = [
 // The last five of the list above. They take every Markdown file, because the manifest key
 // `agents` of a plugin can name an agent file outside `agents/`. The rule asks where the file sits.
 const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(-5)
+
+// The `off` rules of `strict`, in the order of its blocks.
+const OFF_RULES = [...AGENT_OFF_RULES, ...MARKETPLACE_OFF_RULES]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [
@@ -1346,12 +1428,10 @@ describe('configs', () => {
   it('gives strict the rules of recommended, and each off rule at warn', () => {
     const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
     const isOff = (rules: Linter.Config['rules']) =>
-      AGENT_OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
+      OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
     const strict = rulesOf(plugin.configs.strict)
     expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
-    expect(strict.filter(isOff)).toEqual(
-      AGENT_OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })),
-    )
+    expect(strict.filter(isOff)).toEqual(OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })))
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -1363,6 +1443,7 @@ describe('configs', () => {
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_WARN_RULES.map((rule) => `claude/strict/${rule}`),
+      ...MARKETPLACE_OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
       ...SCOPE_RULES.map(({ name }) => `claude/strict/${name}`),
       ...UNTRACKED_RULES.map(({ name }) => `claude/strict/${name}`),
@@ -1444,10 +1525,29 @@ describe('configs', () => {
     const found = (await reports([...plugin.configs.recommended, withOption])).filter((line) =>
       line.includes('marketplace-min-version'),
     )
-    // The `archive` source, the `command` source and the `headersHelper` of the bad marketplace.
-    expect(found).toEqual(
-      Array(3).fill('.claude-plugin/marketplace.json: claude/marketplace-min-version@1'),
-    )
+    // The `archive` source, the `command` source and the `headersHelper` of the bad marketplace,
+    // and the `archive` source and the `headers` of the credential marketplace.
+    expect(found).toEqual([
+      ...Array(3).fill('.claude-plugin/marketplace.json: claude/marketplace-min-version@1'),
+      ...Array(2).fill(
+        'packages/hc/.claude-plugin/marketplace.json: claude/marketplace-min-version@1',
+      ),
+    ])
+  })
+
+  it('turns each off marketplace rule on in strict only, on the files that it reads', () => {
+    for (const rule of MARKETPLACE_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([
+        [
+          'json/json',
+          rule === CREDENTIAL_RULE
+            ? ['**/.claude-plugin/marketplace.json', ...PROJECT_FILES]
+            : ['**/.claude-plugin/marketplace.json'],
+        ],
+      ])
+    }
   })
 
   it('gives each settings rule one JSON block for the two project settings files', () => {
