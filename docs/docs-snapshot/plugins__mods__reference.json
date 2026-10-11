@@ -1,98 +1,121 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/mods/reference",
-  "hash": "b6ff422e7b68cbcb4268e49425312bd1969d968ff512b97c62b7419c73ec12dc",
+  "hash": "da442642a2f73be64e881d27d99c15202c37ed7361b2766be6366a0c20efb378",
   "blocks": [
     {
       "id": "mods-reference",
-      "hash": "3026cb0caebf11e412cfd732352f22828f73190ee6ccee5b02d7968aee3c2cb6"
+      "hash": "3026cb0caebf11e412cfd732352f22828f73190ee6ccee5b02d7968aee3c2cb6",
+      "bodyHash": "b9e6b8a178d1e055f00dac292e0d68a2cbbafc0eb9b39ad1c38cc5eb3518dcab"
     },
     {
       "id": "files",
-      "hash": "ce3d96b14679f96134ec81f14e42ec1440ae007a13fa04b6f96e08fb602cef08"
+      "hash": "ce3d96b14679f96134ec81f14e42ec1440ae007a13fa04b6f96e08fb602cef08",
+      "bodyHash": "d615348e09bc91b3448cbaf52ed0d68322cfffeeb9fd4a659e95f6f4f7c23804"
     },
     {
       "id": "the-hook-function",
-      "hash": "0ae47fe97598ae830024e3fc0fa6555987646265c34b8d9dcd431f4ab88f9e8b"
+      "hash": "0ae47fe97598ae830024e3fc0fa6555987646265c34b8d9dcd431f4ab88f9e8b",
+      "bodyHash": "5e2ae5fc191a7dfe9bd551777165f9043461c5e70f569a65469879863e709680"
     },
     {
       "id": "events",
-      "hash": "0a7abc85d98de224db7e308ff2ccec53964fac2d941aaf6fd1f1270509994ec5"
+      "hash": "0a7abc85d98de224db7e308ff2ccec53964fac2d941aaf6fd1f1270509994ec5",
+      "bodyHash": "362d4ffd8a8fd9190cf04bff27e64cf58adc703d9c6965857e391a140494f33e"
     },
     {
       "id": "tools",
-      "hash": "cbbc1558ca7334c5bb86fe3d777b45af33639dd675f243dde3591260cf15a270"
+      "hash": "cbbc1558ca7334c5bb86fe3d777b45af33639dd675f243dde3591260cf15a270",
+      "bodyHash": "1624af1e427d26852ea0a345a43f50b1a2827d2e21b5e909d6a0fa2b6e71bfce"
     },
     {
       "id": "agent-and-organization-fields-on-tool-check",
-      "hash": "974c125c56524ba48c95b27d826e50579f3d690db34c28f4c0eb4376d129768c"
+      "hash": "974c125c56524ba48c95b27d826e50579f3d690db34c28f4c0eb4376d129768c",
+      "bodyHash": "47633c27302633f01dc496fb7dc14939cf273dbdebe1ef24cad2c9c149d40792"
     },
     {
       "id": "prompts-and-what-claude-reads",
-      "hash": "f83828d16e7c8101a1ec8cec9ae1150de3125bd05a89b0d890ee6f381c5829a8"
+      "hash": "f83828d16e7c8101a1ec8cec9ae1150de3125bd05a89b0d890ee6f381c5829a8",
+      "bodyHash": "3bcfd30ec3dc172dc2e8837ad1b73d04f8ff8565267041a56bb9193562562fa6"
     },
     {
       "id": "commands-and-configuration",
-      "hash": "e08adad0439ff4dea511e20b218ff963e93dd8ea479e1e3a4bb5782e59ef6542"
+      "hash": "e08adad0439ff4dea511e20b218ff963e93dd8ea479e1e3a4bb5782e59ef6542",
+      "bodyHash": "72b589c797231cbb319abdb2be7dbcf65e81ebbfdf550f6686acbd6c6db0bf87"
     },
     {
       "id": "turns",
-      "hash": "fc4940532cdd0ec406d66bb816355edb70f18743c9ff350f5ad788617ac11bff"
+      "hash": "fc4940532cdd0ec406d66bb816355edb70f18743c9ff350f5ad788617ac11bff",
+      "bodyHash": "8f14f74df3f912417e85a66a7fb31eeadff5c5a78f2a8f830792e89faa8be0bb"
     },
     {
       "id": "session",
-      "hash": "ba6d23b143e5998df55f8044bc87ebf2837ab9afe578989a0545774a0eb1a723"
+      "hash": "ba6d23b143e5998df55f8044bc87ebf2837ab9afe578989a0545774a0eb1a723",
+      "bodyHash": "8e341ef97f677ae350fa6f209a108a14290c0824944c266a26491d4862842530"
     },
     {
       "id": "subagents",
-      "hash": "7b1cec5719e92699ead660db19959ea0a420653053a349a3c5408cb8ff364d0c"
+      "hash": "724e5d8ff8141715576633403ad9d5775a21e54d1ed2a4eb710e80e4edd98c19",
+      "bodyHash": "b9b69cb0c1382f7e22bed183297a94e0d0e6593f98dde9736cd539fb8798f008"
     },
     {
       "id": "interface",
-      "hash": "6c69e4764d40803c97a97c646a69b75e90c4ffbb4cb28ff151cd4a7037ebc58e"
+      "hash": "6c69e4764d40803c97a97c646a69b75e90c4ffbb4cb28ff151cd4a7037ebc58e",
+      "bodyHash": "eb104aa6c72127e6e7cd7405088be36db0b8037d29da39c06518b20abe7f742a"
     },
     {
       "id": "other-mods",
-      "hash": "931645c41ca98dfe4dc998d18c9e40527b64ae5c23098e9a58ca04fccf00deca"
+      "hash": "f6eb191f8f58bdeda1e12f04171dfd475461756eef64124667f955448b80751e",
+      "bodyHash": "61648bfeeca2af8c72de3d52de90e82a348a65b92b0e15a976d71f20e42409a3"
     },
     {
       "id": "telemetry",
-      "hash": "94731b25dd331f475535b45b715964899e768f832f898272da6cec3952b8735c"
+      "hash": "94731b25dd331f475535b45b715964899e768f832f898272da6cec3952b8735c",
+      "bodyHash": "befa0b3a4406031b9f41f082b4335d69af93c7e9cc4791346cd629512411d0e8"
     },
     {
       "id": "settings-hook-events",
-      "hash": "231c40e09408832b74877b33e4fb2a32c834ee6ba232e6325de8e4c29bf1d887"
+      "hash": "231c40e09408832b74877b33e4fb2a32c834ee6ba232e6325de8e4c29bf1d887",
+      "bodyHash": "4bf78030dba430569514f823151fbff1c7339c2091011d00abfe10d9898b268a"
     },
     {
       "id": "mods-api-calls",
-      "hash": "6b098a1da67c329a5791c85e45a238427ddc4736e0668ba1be89bd769c3a690c"
+      "hash": "6b098a1da67c329a5791c85e45a238427ddc4736e0668ba1be89bd769c3a690c",
+      "bodyHash": "cac2c9e6bae2644007bac50237f61030cdd3e65eaaeb1efde4542540bcdd3356"
     },
     {
       "id": "mods-api-methods",
-      "hash": "4bc83f7a6bc69032a60e98172753c396c645a2a31a6e7aee6352b15e9f963edb"
+      "hash": "4bc83f7a6bc69032a60e98172753c396c645a2a31a6e7aee6352b15e9f963edb",
+      "bodyHash": "53de50058b3867675b924b22294c041d6b29a1319688d26fa9bbe1dacf67af2a"
     },
     {
       "id": "render-sites",
-      "hash": "6df9e1f6ff8b94a99e6abd55a066e8e9bbf92941f035bab8194a71cce0356221"
+      "hash": "6df9e1f6ff8b94a99e6abd55a066e8e9bbf92941f035bab8194a71cce0356221",
+      "bodyHash": "c8c8b9ec1b8caad28b0f4bd77bb4e895275b1e69d5afae74b8851b031d6885e1"
     },
     {
       "id": "elements",
-      "hash": "860cf1236b3e6a68d0ff8591c7332f4942040dd04dc758be3872ce33e2adc2ee"
+      "hash": "860cf1236b3e6a68d0ff8591c7332f4942040dd04dc758be3872ce33e2adc2ee",
+      "bodyHash": "e7bdc9e42a2977e6c4628c7be9a253ee962ad9aeaedc4637352bef2c2a9abc3a"
     },
     {
       "id": "box-border-styles",
-      "hash": "3058446d0fa6706eb331ea928344873356441367c10c6477aba1fcf03b90e402"
+      "hash": "3058446d0fa6706eb331ea928344873356441367c10c6477aba1fcf03b90e402",
+      "bodyHash": "13d50dbe93f25760fd909f5828bf61fd1c169fc40823d920dba97182a1a0292e"
     },
     {
       "id": "limits",
-      "hash": "0606c8ec761aef02ccfd86f8c655243101504c42b4f9b19b9bd17926ab16c43e"
+      "hash": "e0e5a0dcaa73bb62bc7dbebd1f21b5ce6c6daeb0871e7be4c5ef3b3e1cf6cfcf",
+      "bodyHash": "a17f50ea3c60d6103e5306551502a89b54ab9951e89a668e7574ed0868cf39ae"
     },
     {
       "id": "settings-and-environment-variables",
-      "hash": "aa93412f26f64ca2c0fa0b953da4a5515d0a8ccde83e8b5c75151c09f9d9fdd3"
+      "hash": "aa93412f26f64ca2c0fa0b953da4a5515d0a8ccde83e8b5c75151c09f9d9fdd3",
+      "bodyHash": "a00f01b9af14d9ab4aa5fa742e833c5096ae3812d0b8df63e7d75ef592708be4"
     },
     {
       "id": "commands",
-      "hash": "23e7a48b8b238790ce88fdef0ad848d4f777e3f0fac417dbb5fa05bec7de5ca3"
+      "hash": "23e7a48b8b238790ce88fdef0ad848d4f777e3f0fac417dbb5fa05bec7de5ca3",
+      "bodyHash": "f27d97599996c7e3e7c20f0d76c272e3afb72b1288ac986613e6b59bbbf09139"
     }
   ],
   "sources": [
