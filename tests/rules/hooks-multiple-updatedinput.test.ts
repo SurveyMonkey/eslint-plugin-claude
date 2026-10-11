@@ -74,6 +74,15 @@ describe(`${name}: the report`, () => {
     )
   })
 
+  it('says every tool when both matchers select every tool', () => {
+    const [message] = lintJson(
+      name,
+      settings({ PreToolUse: [group(undefined, handler()), group('*', handler(rewrite('x')))] }),
+      FILES.project,
+    )
+    expect(message?.message).toContain('for every tool.')
+  })
+
   it('reads a literal in a script', () => {
     const files = { 'hooks/s.sh': `#!/bin/bash\n${rewrite('x')}\n` }
     expect(lintScript(name, files, { event: 'PreToolUse', text: WITH_SCRIPT })).toEqual([

@@ -74,6 +74,8 @@ describe(`${name}: silent`, () => {
     expect(script('#!/bin/bash\necho no >&2\nexit 1\n')).toEqual([])
     expect(inline(`echo '{"decision":"approve"}'`)).toEqual([])
     expect(inline(`echo '{"systemMessage":"x"}'`)).toEqual([])
+    expect(inline('echo 2')).toEqual([])
+    expect(inline('sleep 2')).toEqual([])
   })
 
   it('is silent for another event', () => {

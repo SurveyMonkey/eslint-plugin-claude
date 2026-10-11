@@ -114,6 +114,7 @@ describe('printedBy', () => {
     expect(printed('echo a > f')).toEqual([])
     expect(printed('echo a 2> f')).toEqual([{ json: undefined, text: 'a' }])
     expect(printed('echo a 2>/dev/null')).toEqual([{ json: undefined, text: 'a' }])
+    expect(printed('echo a 2>/dev/null b')).toEqual([{ json: undefined, text: 'a b' }])
   })
 
   it('does not take text that fails to parse, or that is not an object, for JSON', () => {

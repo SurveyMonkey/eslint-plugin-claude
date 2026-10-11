@@ -91,6 +91,7 @@ describe(`${name}: hookEventName`, () => {
     expect(ids(specific('PreToolUse'))).toEqual([])
     expect(ids({ hookSpecificOutput: 'x' })).toEqual([])
     expect(ids({ hookSpecificOutput: null })).toEqual([])
+    expect(ids({ hookSpecificOutput: [{ permissionDecision: 'deny' }] })).toEqual([])
   })
 })
 
@@ -272,6 +273,22 @@ describe(`${name}: what it reads`, () => {
     for (const [what, found] of unreadable(name, body, { event: 'Stop' })) {
       expect(found, what).toEqual([])
     }
+  })
+
+  it('reads a script by its extension and its shebang', () => {
+    const line = `echo '{"suppressOutput": true}'\n`
+    const run = (text: string, file = 'hooks/s.sh') =>
+      lintScript(name, { [file]: text }, { event: 'Stop', fields: { command: `${P}/${file}` } })
+    for (const shebang of ['#!/bin/bash', '#!/bin/sh', '#!/usr/bin/env zsh', '#!/bin/dash']) {
+      expect(run(`${shebang}\n${line}`), shebang).toEqual(['suppress'])
+    }
+    for (const shebang of ['#!/usr/bin/env python3', '#!/usr/bin/env node', '#!/usr/bin/perl']) {
+      expect(run(`${shebang}\n${line}`), shebang).toEqual([])
+    }
+    for (const file of ['hooks/s.py', 'hooks/s.JS', 'hooks/s.ps1', 'hooks/s.rb']) {
+      expect(run(line, file), file).toEqual([])
+    }
+    expect(run(line, 'hooks/s')).toEqual(['suppress'])
   })
 
   it('reads a script that a shell runs', () => {

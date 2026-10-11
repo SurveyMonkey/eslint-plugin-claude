@@ -137,6 +137,7 @@ describe(`${name}: silent`, () => {
       inline(`echo '{"systemMessage":"x","hookSpecificOutput":{"additionalContext":"y"}}'`),
     ).toEqual([])
     expect(inline(`echo '{"hookSpecificOutput":{"additionalContext":5}}'`)).toEqual([])
+    expect(inline(`echo '{"hookSpecificOutput":{"additionalContext":""}}'`)).toEqual([])
     expect(inline(`echo '{"hookSpecificOutput":"x"}'`)).toEqual([])
     expect(inline(`echo '{"hookSpecificOutput":{"hookEventName":"SessionStart"}}'`)).toEqual([])
   })
