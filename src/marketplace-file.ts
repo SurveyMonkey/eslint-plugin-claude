@@ -12,7 +12,13 @@
 // 14).
 import { existsSync } from 'node:fs'
 import path from 'node:path'
-import { readJson, realDirectory, repositoryRoot, UNREADABLE } from './skill-tree.ts'
+import {
+  readJson,
+  realDirectory,
+  repositoryRoot,
+  UNREADABLE,
+  type Unreadable,
+} from './skill-tree.ts'
 
 /** What a rule sees at a local marketplace source. A rule makes no report
  *  except for `marketplace`.
@@ -42,9 +48,12 @@ export type MarketplaceRead =
       readonly entries: readonly string[] | undefined
     }
 
-const NOT_LOCAL: MarketplaceRead = { kind: 'not-local' }
-const MISSING: MarketplaceRead = { kind: 'missing' }
-const CANNOT_SEE: MarketplaceRead = { kind: 'unreadable' }
+/** The results of `MarketplaceRead` that stop the read. */
+type Stop = Exclude<MarketplaceRead, { readonly kind: 'marketplace' }>
+
+const NOT_LOCAL: Stop = { kind: 'not-local' }
+const MISSING: Stop = { kind: 'missing' }
+const CANNOT_SEE: Stop = { kind: 'unreadable' }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -66,15 +75,19 @@ function boundOf(file: string): string {
 
 /** True when `text` is an absolute path on any platform. The Windows form
  *  covers a path that starts with `/` too. */
-const absolute = (text: string) => path.win32.isAbsolute(text)
+export const absolute = (text: string) => path.win32.isAbsolute(text)
 
-/** Read the `marketplace.json` that `source` points at. `source` is the
- *  `source` value of an `extraKnownMarketplaces` entry in the settings file
+/** What the reader finds at a local marketplace source: a result that stops the
+ *  read, or the parsed object of the file. */
+type Located = Stop | { readonly kind: 'data'; readonly data: Record<string, unknown> }
+
+/** Find and parse the `marketplace.json` that `source` points at. `source` is
+ *  the `source` value of an `extraKnownMarketplaces` entry in the settings file
  *  `settingsFile`, as `JSON.parse` gives it. A `file` source names the
  *  `marketplace.json` itself. A `directory` source names the marketplace
  *  root, the directory that holds `.claude-plugin/marketplace.json`
  *  (marketplace reference, "Fields by type"). */
-export function readMarketplaceFile(settingsFile: string, source: unknown): MarketplaceRead {
+function locate(settingsFile: string, source: unknown): Located {
   if (!isObject(source)) {
     return NOT_LOCAL
   }
@@ -99,7 +112,16 @@ export function readMarketplaceFile(settingsFile: string, source: unknown): Mark
   if (parsed === UNREADABLE || !isObject(parsed.data)) {
     return CANNOT_SEE
   }
-  const { name, plugins } = parsed.data
+  return { kind: 'data', data: parsed.data }
+}
+
+/** Read the `marketplace.json` that `source` points at (see `locate`). */
+export function readMarketplaceFile(settingsFile: string, source: unknown): MarketplaceRead {
+  const found = locate(settingsFile, source)
+  if (found.kind !== 'data') {
+    return found
+  }
+  const { name, plugins } = found.data
   return {
     kind: 'marketplace',
     name: typeof name === 'string' ? name : undefined,
@@ -109,6 +131,30 @@ export function readMarketplaceFile(settingsFile: string, source: unknown): Mark
         )
       : undefined,
   }
+}
+
+/** The `source` value of each entry of `plugins` in the `marketplace.json` that
+ *  `source` points at, by entry `name`. A name that two entries share has both
+ *  values, in file order. The result is undefined when the reader cannot see a
+ *  marketplace there, as in `readMarketplaceFile`, and when `plugins` is not an
+ *  array. An entry with no string `name` is not in the result. */
+export function readEntrySources(
+  settingsFile: string,
+  source: unknown,
+): ReadonlyMap<string, readonly unknown[]> | undefined {
+  const found = locate(settingsFile, source)
+  if (found.kind !== 'data' || !Array.isArray(found.data.plugins)) {
+    return undefined
+  }
+  const sources = new Map<string, unknown[]>()
+  for (const entry of found.data.plugins as unknown[]) {
+    if (isObject(entry) && typeof entry.name === 'string') {
+      const list = sources.get(entry.name) ?? []
+      list.push(entry.source)
+      sources.set(entry.name, list)
+    }
+  }
+  return sources
 }
 
 /** The `extraKnownMarketplaces` object of parsed settings, or undefined. */
@@ -170,6 +216,46 @@ export function declaredSource(settingsFile: string, text: string, market: strin
   }
   // `sourceOf` gives undefined for a key of the prototype, which is no object with a `source`.
   return sourceOf(there?.[market])
+}
+
+/** The marketplace names that `data`, the parsed settings of one file, declares in
+ *  `extraKnownMarketplaces`, or in `additionalMarketplaces` when the canonical key
+ *  is not there. A `null` value declares nothing. */
+function namesIn(data: Record<string, unknown>): string[] {
+  const key = Object.hasOwn(data, 'extraKnownMarketplaces')
+    ? data.extraKnownMarketplaces
+    : data.additionalMarketplaces
+  return isObject(key) ? Object.keys(key).filter((name) => key[name] !== null) : []
+}
+
+/** The marketplace names that the project settings files of one `.claude/`
+ *  declare together: the linted file `settingsFile` with the text `text`, and
+ *  the other file of the pair. A name in either file counts, because the
+ *  settings reference resolves a same-name entry for each name and not for
+ *  the whole key. The result is `UNREADABLE` when the rule cannot see a part.
+ *  This covers text that does not parse to an object, and another file that
+ *  is a dangling link, has a real path out of the bound, fails to read, or does
+ *  not parse to an object. Another file that is not there, with its path in
+ *  the bound, declares nothing. */
+export function declaredMarketplaces(settingsFile: string, text: string): Set<string> | Unreadable {
+  let own: unknown
+  try {
+    own = JSON.parse(text)
+  } catch {
+    return UNREADABLE
+  }
+  const other = path.join(
+    path.dirname(settingsFile),
+    path.basename(settingsFile) === 'settings.json' ? 'settings.local.json' : 'settings.json',
+  )
+  const parsed = readJson(other, boundOf(settingsFile))
+  if (!isObject(own) || parsed === UNREADABLE) {
+    return UNREADABLE
+  }
+  if (parsed === null) {
+    return new Set(namesIn(own))
+  }
+  return isObject(parsed.data) ? new Set([...namesIn(own), ...namesIn(parsed.data)]) : UNREADABLE
 }
 
 /** The `source.source` value that the project settings files in `root`
