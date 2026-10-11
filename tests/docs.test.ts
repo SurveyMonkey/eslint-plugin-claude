@@ -247,6 +247,8 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-path-var-braced',
     'plugin-project-skills-dir-limits',
     'plugin-skill-dir-layout',
+    'plugin-symlink-escapes-marketplace',
+    'plugin-symlink-escapes-plugin',
     'plugin-user-config-no-shell-fields',
     'rules-frontmatter-schema',
     'rules-max-lines',

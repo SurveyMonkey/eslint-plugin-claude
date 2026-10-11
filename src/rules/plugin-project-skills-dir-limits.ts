@@ -3,25 +3,15 @@
 // background monitor from it. It skips an MCP server that comes from a `.mcpb`
 // or `.dxt` bundle, or from a file out of the plugin directory. The rule
 // reports each such declaration in the manifest.
-import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { ESCAPES, locate, type Plugin, pathNodes, readPlugin } from '../plugin-manifest.ts'
+import { ESCAPES, locate, pathNodes, skillsPlugin } from '../plugin-manifest.ts'
 
 const name = 'plugin-project-skills-dir-limits' as const
 
 // An MCP bundle path or URL ends in one of these (manifest reference, "mcpServers").
 const BUNDLE = /\.(?:mcpb|dxt)$/
-
-/** The plugin of the manifest at `file` when its root is `.claude/skills/<name>`. */
-function skillsPlugin(file: string): Plugin | undefined {
-  const root = path.dirname(path.dirname(path.resolve(file)))
-  const skills = path.dirname(root)
-  const isSkillsPlugin =
-    path.basename(skills) === 'skills' && path.basename(path.dirname(skills)) === '.claude'
-  return isSkillsPlugin ? readPlugin(file) : undefined
-}
 
 const rule: JSONRuleDefinition<{ MessageIds: 'monitors' | 'bundle' | 'outside' }> = {
   meta: {
