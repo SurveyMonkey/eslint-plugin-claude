@@ -250,13 +250,6 @@ The rules are in groups by the type of file that they check. The groups follow t
 
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
-| [`claude/claude-md-local-untracked`](docs/rules/claude-md-local-untracked.md) | The `CLAUDE.local.md` beside a `CLAUDE.md` is not tracked by git, and a `.gitignore` pattern covers it | `warn` | `warn` |
-| [`claude/memory-agent-memory-local-untracked`](docs/rules/memory-agent-memory-local-untracked.md) | No Markdown file in `.claude/agent-memory-local/` is tracked by git | `warn` | `warn` |
-
-### CLAUDE.md, rules and memory
-
-| Rule | Checks | `recommended` | `strict` |
-|------|--------|---------------|----------|
 | [`claude/claude-md-agents-md-prose-pointer`](docs/rules/claude-md-agents-md-prose-pointer.md) | A `CLAUDE.md` does not tell Claude in words to read `AGENTS.md` without an `@AGENTS.md` import; use the import, or delete the `CLAUDE.md` | `off` | `warn` |
 | [`claude/claude-md-agents-md-shadowed`](docs/rules/claude-md-agents-md-shadowed.md) | An `AGENTS.md` or `.claude/AGENTS.md` has no `CLAUDE.md` in its folder or above it, or a `CLAUDE.md` that imports it or links to it | `error` | `error` |
 | [`claude/claude-md-agents-md-variant`](docs/rules/claude-md-agents-md-variant.md) | No `AGENTS.local.md`, `AGENTS.override.md` or Markdown file below `.agents/`, which Claude Code never reads; option `allow` | `error` | `error` |
@@ -273,11 +266,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/claude-md-import-external`](docs/rules/claude-md-import-external.md) | No `@path` import in a `CLAUDE.md` file, or in a file that it imports, leads out of the repository by a home, absolute or `../` path, because each user must approve it | `warn` | `warn` |
 | [`claude/claude-md-import-in-code-span`](docs/rules/claude-md-import-in-code-span.md) | An `@path` in a code span or a fenced block of a `CLAUDE.md`, `CLAUDE.local.md` or `AGENTS.md` file does not name a file that exists, because Claude Code skips code when it parses imports | `off` | `warn` |
 | [`claude/claude-md-import-max-depth`](docs/rules/claude-md-import-max-depth.md) | A chain of `@path` imports from a `CLAUDE.md`, `CLAUDE.local.md` or `AGENTS.md` file is at most 4 hops, the depth that Claude Code loads; option `max` | `error` | `error` |
+| [`claude/claude-md-local-untracked`](docs/rules/claude-md-local-untracked.md) | The `CLAUDE.local.md` beside a `CLAUDE.md` is not tracked by git, and a `.gitignore` pattern covers it | `warn` | `warn` |
 | [`claude/claude-md-location`](docs/rules/claude-md-location.md) | No `CLAUDE.local.md` sits in a `.claude` folder, and no Markdown file has a name that differs from `CLAUDE.md` or `CLAUDE.local.md` only in case, because the docs list neither | `off` | `warn` |
 | [`claude/claude-md-max-bytes`](docs/rules/claude-md-max-bytes.md) | A `CLAUDE.md` or `CLAUDE.local.md` file has at most 4 MiB (4194304 bytes), the size above which Claude Code skips it; option `max` | `error` | `error` |
 | [`claude/claude-md-max-lines`](docs/rules/claude-md-max-lines.md) | A `CLAUDE.md`, `CLAUDE.local.md` or `AGENTS.md` file, and each file that it imports, has at most 200 lines, the length over which Claude Code shows a warning; option `max` | `warn` | `warn` |
 | [`claude/claude-md-procedure-to-skill`](docs/rules/claude-md-procedure-to-skill.md) | A numbered list in a `CLAUDE.md` or `CLAUDE.local.md` file has at most `maxSteps` items, because the docs say to move a multi-step procedure into a skill or a path-scoped rule; option `maxSteps`, no default, and no report without it | `off` | `warn` |
 | [`claude/claude-md-symlink`](docs/rules/claude-md-symlink.md) | A `CLAUDE.md` is a regular file and not a symlink, because a Windows clone without `core.symlinks` gets a one-line file; the rule reads the link on disk, not the Git mode | `warn` | `warn` |
+| [`claude/memory-agent-memory-local-untracked`](docs/rules/memory-agent-memory-local-untracked.md) | No Markdown file in `.claude/agent-memory-local/` is tracked by git | `warn` | `warn` |
 | [`claude/memory-agent-memory-orphan`](docs/rules/memory-agent-memory-orphan.md) | Each `.claude/agent-memory/<name>/` matches a project or plugin subagent in the repository whose `name` is `<name>` and that sets `memory: project`; option `allow` for user subagents | `off` | `warn` |
 | [`claude/memory-auto-memory-directory-committed`](docs/rules/memory-auto-memory-directory-committed.md) | `.claude/settings.json` and `.claude/settings.local.json` do not set `autoMemoryDirectory`, which needs workspace trust and is ignored while `permissions.blockReadsOutsideWorkingDirectories` is on | `warn` | `warn` |
 | [`claude/memory-index-entry-format`](docs/rules/memory-index-entry-format.md) | Each entry of a `MEMORY.md` index in `.claude/agent-memory/<name>/` takes one line; detail goes in topic files | `off` | `warn` |
