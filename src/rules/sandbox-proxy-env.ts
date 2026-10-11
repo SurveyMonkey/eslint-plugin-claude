@@ -70,9 +70,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'env' }> = {
         )
         const missing = PROXY_VARS.filter((variable) => set.has(variable) && !inEnv.has(variable))
         if (missing.length > 0) {
+          // The report is on `enabled` when this file turns the sandbox on, else on the file.
           const own = boolOf(at(objects[0], ['sandbox', 'enabled']), false, true) === true
+          const enabled = own ? valueAt(node, ['sandbox', 'enabled']) : undefined
           context.report({
-            node: own ? (valueAt(node, ['sandbox', 'enabled']) ?? node.body) : node.body,
+            node: enabled ?? node.body,
             messageId: 'env',
             data: { variables: missing.map((variable) => `\`${variable}\``).join(', ') },
           })

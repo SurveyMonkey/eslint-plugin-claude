@@ -53,6 +53,7 @@ describe(`${name}: one file`, () => {
   it('reports when the ask rule is for another command, another parameter, or is an allow rule', () => {
     for (const permissions of [
       { ask: ['Bash(git push *)'] },
+      { ask: ['Bash'] },
       { ask: ['Bash(run_in_background:true)'] },
       { ask: ['Bash(dangerouslyDisableSandbox:false)'] },
       { allow: ['Bash(dangerouslyDisableSandbox:true)'] },

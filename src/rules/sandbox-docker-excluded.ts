@@ -70,9 +70,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'docker' }> = {
           FILES.find((file) => facts.names.includes(file)) ??
           (facts.scripts.some((script) => DOCKER_COMMAND.test(script)) ? 'package.json' : null)
         if (sign !== null) {
+          // The report is on `enabled` when this file turns the sandbox on, else on the file.
           const own = boolOf(at(objects[0], ['sandbox', 'enabled']), false, true) === true
+          const enabled = own ? valueAt(node, ['sandbox', 'enabled']) : undefined
           context.report({
-            node: own ? (valueAt(node, ['sandbox', 'enabled']) ?? node.body) : node.body,
+            node: enabled ?? node.body,
             messageId: 'docker',
             data: { sign },
           })

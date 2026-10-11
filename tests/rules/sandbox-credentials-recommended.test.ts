@@ -89,6 +89,8 @@ describe(`${name}: one file`, () => {
     const permissions = { deny: ['Read(~/.aws/**)', 'Read(//Users/me/.ssh/**)'] }
     expect(alone({ ...ON, permissions })).toEqual([])
     expect(alone({ ...ON, permissions: { deny: ['Read(~/)'] } })).toEqual([])
+    // A `Read` rule with no specifier denies every file.
+    expect(alone({ ...ON, permissions: { deny: ['Read'] } })).toEqual([])
   })
 
   it('counts the entries of both lists together', () => {
