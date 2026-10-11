@@ -20,7 +20,7 @@ const ids = (code: unknown, file = MANAGED) => lint(code, file).map((message) =>
 const softDeny = (...entries: string[]) => ({ autoMode: { soft_deny: entries } })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a soft_deny entry that states a rule without exception, at the entry', () => {
+  it('reports a soft_deny entry that states a rule without exception, at the entry', () => {
     const messages = lint(
       '{\n"autoMode": {"soft_deny": [\n"$defaults",\n"Never push to the release branch"]}}',
     )
@@ -31,13 +31,13 @@ describe(`${name}: reports`, () => {
     expect(messages[0]?.message).toContain('permissions.deny')
   })
 
-  it.fails('reports in a managed file and in a drop-in', () => {
+  it('reports in a managed file and in a drop-in', () => {
     for (const file of [MANAGED, DROP_IN]) {
       expect(ids(softDeny('Never touch prod'), file), file).toEqual(['overridable'])
     }
   })
 
-  it.fails('reports each wording of a rule without exception, in any letter case', () => {
+  it('reports each wording of a rule without exception, in any letter case', () => {
     const entries = [
       'NEVER deploy on Friday',
       'Claude must never read the vault',
@@ -48,7 +48,7 @@ describe(`${name}: reports`, () => {
     expect(ids(softDeny(...entries))).toEqual(entries.map(() => 'overridable'))
   })
 
-  it.fails('reports each such entry', () => {
+  it('reports each such entry', () => {
     expect(ids(softDeny('Never a', '$defaults', 'Never b', 'Prefer c'))).toEqual([
       'overridable',
       'overridable',
@@ -57,7 +57,7 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for a soft_deny entry that states no rule without exception', () => {
+  it('stays silent for a soft_deny entry that states no rule without exception', () => {
     expect(
       ids(
         softDeny(
@@ -70,13 +70,13 @@ describe(`${name}: silent`, () => {
     ).toEqual([])
   })
 
-  it.fails('stays silent for the words in the other lists', () => {
+  it('stays silent for the words in the other lists', () => {
     const entry = ['Never push to the release branch']
     const code = { autoMode: { allow: entry, hard_deny: entry, environment: entry } }
     expect(ids(code)).toEqual([])
   })
 
-  it.fails('stays silent for values that are not lists of strings', () => {
+  it('stays silent for values that are not lists of strings', () => {
     expect(ids({ autoMode: { soft_deny: 'Never x' } })).toEqual([])
     expect(ids(softDeny())).toEqual([])
     expect(ids({ autoMode: { soft_deny: [7, null, ['Never x']] } })).toEqual([])
@@ -85,7 +85,7 @@ describe(`${name}: silent`, () => {
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('stays silent in a hidden drop-in, and in a project file', () => {
+  it('stays silent in a hidden drop-in, and in a project file', () => {
     expect(ids(softDeny('Never x'), HIDDEN)).toEqual([])
     expect(ids(softDeny('Never x'), PROJECT)).toEqual([])
   })

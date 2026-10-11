@@ -43,8 +43,8 @@ vi.mock('node:fs', async (importOriginal) => {
   return { ...actual, ...wrapped, default: { ...actual, ...wrapped } }
 })
 
-const onLinks = noLinks ? it.skip : it.fails
-const onChmod = chmodCannotBlock ? it.skip : it.fails
+const onLinks = noLinks ? it.skip : it
+const onChmod = chmodCannotBlock ? it.skip : it
 const name = 'permissions-additional-directories-no-config'
 const API = 'packages/api/.claude/settings.json'
 const LOCAL = 'packages/api/.claude/settings.local.json'
@@ -57,7 +57,7 @@ const ids = (dir: string, code: string, file = API) =>
 const SHARED_CLAUDE = 'packages/shared/CLAUDE.md'
 
 describe(`${name}: reports`, () => {
-  it.fails('reports the sibling package of the docs, which holds a CLAUDE.md', () => {
+  it('reports the sibling package of the docs, which holds a CLAUDE.md', () => {
     const dir = tree({ [SHARED_CLAUDE]: '# Shared\n' })
     const messages = lint(dir, settings('../shared', '../web'))
     expect(messages).toHaveLength(1)
@@ -77,13 +77,13 @@ describe(`${name}: reports`, () => {
     '.claude/commands/c.md',
     '.claude/agents/a.md',
   ]) {
-    it.fails(`reports a directory that holds ${held}`, () => {
+    it(`reports a directory that holds ${held}`, () => {
       const dir = tree({ [`packages/shared/${held}`]: 'x\n' })
       expect(ids(dir, settings('../shared'))).toEqual(['noConfig'])
     })
   }
 
-  it.fails('names every item that the directory holds', () => {
+  it('names every item that the directory holds', () => {
     const dir = tree({
       [SHARED_CLAUDE]: 'x\n',
       'packages/shared/.claude/skills/s/SKILL.md': 'x\n',
@@ -93,14 +93,14 @@ describe(`${name}: reports`, () => {
     expect(message?.message).toContain('.claude/skills')
   })
 
-  it.fails('reports an absolute entry that is inside the repository', () => {
+  it('reports an absolute entry that is inside the repository', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
     const entry = path.join(dir, 'packages/shared')
     expect(ids(dir, settings(entry))).toEqual(['noConfig'])
     expect(ids(dir, settings(entry), LOCAL)).toEqual(['noConfig'])
   })
 
-  it.fails('reports each entry, at the entry', () => {
+  it('reports each entry, at the entry', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n', 'packages/web/CLAUDE.md': 'x\n' })
     const messages = lint(
       dir,
@@ -109,14 +109,14 @@ describe(`${name}: reports`, () => {
     expect(messages.map((message) => message.line)).toEqual([2, 3])
   })
 
-  it.fails('reports a project file at the root, with a sibling folder inside the repository', () => {
+  it('reports a folder beside the project that is not below or above it', () => {
     const dir = tree({ 'docs/CLAUDE.md': 'x\n' })
-    expect(ids(dir, settings('docs'), '.claude/settings.json')).toEqual(['noConfig'])
+    expect(ids(dir, settings('../../docs'))).toEqual(['noConfig'])
   })
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for a plain folder, a folder with other files, and one that is not there', () => {
+  it('stays silent for a plain folder, a folder with other files, and one that is not there', () => {
     const dir = tree({
       'packages/shared/src/index.ts': 'x\n',
       'packages/docs/.claude/output-styles/o.md': 'x\n',
@@ -125,12 +125,12 @@ describe(`${name}: silent`, () => {
     expect(ids(dir, settings('../shared', '../docs', '../missing'))).toEqual([])
   })
 
-  it.fails('stays silent for an entry that is a file, not a directory', () => {
+  it('stays silent for an entry that is a file, not a directory', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
     expect(ids(dir, settings('../shared/CLAUDE.md'))).toEqual([])
   })
 
-  it.fails('stays silent for the project directory, a directory above it, and one below it', () => {
+  it('stays silent for the project directory, a directory above it, and one below it', () => {
     const dir = tree({
       'packages/api/CLAUDE.md': 'x\n',
       'CLAUDE.md': 'x\n',
@@ -139,30 +139,30 @@ describe(`${name}: silent`, () => {
     expect(ids(dir, settings('.', './', '..', '../..', 'sub', './sub/'))).toEqual([])
   })
 
-  it.fails('stays silent for a home path, a path above the repository and one out of it', () => {
+  it('stays silent for a home path, a path above the repository and one out of it', () => {
     const outside = tree({ 'CLAUDE.md': 'x\n' }, false)
     const dir = tree({})
     expect(ids(dir, settings('~/shared', '../../../escape', outside))).toEqual([])
   })
 
-  it.fails('stays silent for an entry with a NUL byte, a Windows path and a variable', () => {
+  it('stays silent for an entry with a NUL byte, a Windows path and a variable', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
-    expect(ids(dir, settings('../shared\0', 'C:\\work\\shared', '$HOME/shared'))).toEqual([])
+    expect(ids(dir, settings('../shared\0', 'C:\\work\\shared', '$HOME/shared', ''))).toEqual([])
   })
 
-  it.fails('stays silent for a relative entry of the local file, whose start folder is unknown', () => {
+  it('stays silent for a relative entry of the local file, whose start folder is unknown', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
     expect(ids(dir, settings('../shared'), LOCAL)).toEqual([])
   })
 
-  it.fails('stays silent in a managed file, whose relative paths have no base', () => {
+  it('stays silent in a managed file, whose relative paths have no base', () => {
     const dir = tree({ 'shared/CLAUDE.md': 'x\n' })
     const absolute = path.join(dir, 'shared')
     expect(ids(dir, settings('shared', absolute), 'managed-settings.json')).toEqual([])
     expect(ids(dir, settings(absolute), 'managed-settings.d/10-a.json')).toEqual([])
   })
 
-  it.fails('stays silent for an entry that is not a string, a key that is not a list, or no key', () => {
+  it('stays silent for an entry that is not a string, a key that is not a list, or no key', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
     const code = (value: unknown) =>
       JSON.stringify({ permissions: { additionalDirectories: value } })
@@ -174,7 +174,7 @@ describe(`${name}: silent`, () => {
 })
 
 describe(`${name}: a path that the rule cannot see`, () => {
-  it.fails('reads no path above the repository root, and uses no folder from there', () => {
+  it('reads no path above the repository root, and uses no folder from there', () => {
     const outer = tree({ 'CLAUDE.md': 'x\n', 'api/CLAUDE.md': 'x\n' }, false)
     const repo = path.join(outer, 'repo')
     mkdirSync(path.join(repo, '.git'), { recursive: true })
@@ -214,6 +214,12 @@ describe(`${name}: a path that the rule cannot see`, () => {
     const outside = tree({ 'rules/r.md': 'x\n' }, false)
     const dir = tree({ 'packages/shared/src/a.ts': 'x\n' })
     link(dir, 'packages/shared/.claude', outside)
+    expect(ids(dir, settings('../shared'))).toEqual([])
+  })
+
+  onLinks('stays silent for a CLAUDE.md that is a link with no target', () => {
+    const dir = tree({ 'packages/shared/src/a.ts': 'x\n' })
+    link(dir, 'packages/shared/CLAUDE.md', 'missing.md')
     expect(ids(dir, settings('../shared'))).toEqual([])
   })
 

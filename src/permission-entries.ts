@@ -105,7 +105,7 @@ export function parsedEntries(entries: readonly PermissionEntry[]): ParsedEntry[
 /** The parameter name of a deny or ask rule in the `param:value` form, or
  *  null. An allow rule has no such form: its specifier is the syntax of its
  *  tool. */
-export function parameterOf(entry: ParsedEntry): string | null {
+export function parameterOf(entry: Pick<ParsedEntry, 'list' | 'rule'>): string | null {
   const { list, rule } = entry
   return list === 'allow' || rule.specifier === null ? null : paramName(rule.specifier)
 }

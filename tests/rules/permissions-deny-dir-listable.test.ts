@@ -19,13 +19,13 @@ const ids = (code: unknown, file = PROJECT) => lint(code, file).map((message) =>
 const deny = (...rules: string[]) => ({ permissions: { deny: rules } })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports the build directory of the docs, in a project, local or managed file', () => {
+  it('reports the build directory of the docs, in a project, local or managed file', () => {
     for (const file of [PROJECT, LOCAL, MANAGED, DROP_IN]) {
       expect(ids(deny('Read(./build/**)'), file), file).toEqual(['listable'])
     }
   })
 
-  it.fails('reports each directory name of the docs example, in each pattern form', () => {
+  it('reports each directory name of the docs example, in each pattern form', () => {
     const rules = [
       'Read(./dist/**)',
       'Read(vendor/**)',
@@ -39,14 +39,14 @@ describe(`${name}: reports`, () => {
     expect(ids(deny(...rules))).toEqual(rules.map(() => 'listable'))
   })
 
-  it.fails('names the rule and gives the rule that keeps the directory listable', () => {
+  it('names the rule and gives the rule that keeps the directory listable', () => {
     const [message] = lint(deny('Read(./**/dist/**)'))
     expect(message).toMatchObject({ line: 1 })
     expect(message?.message).toContain('`Read(./**/dist/**)`')
     expect(message?.message).toContain('`Read(./**/dist/**/*)`')
   })
 
-  it.fails('gives a replacement that appends /* for each reported form', () => {
+  it('gives a replacement that appends /* for each reported form', () => {
     for (const rule of ['./build/**', 'vendor/**', '//opt/dist/**', '~/x/build/**']) {
       const [message] = lint(deny(`Read(${rule})`))
       expect(message?.message, rule).toContain(`\`Read(${rule}/*)\``)
@@ -55,7 +55,7 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for the form that the docs give', () => {
+  it('stays silent for the form that the docs give', () => {
     const rules = [
       'Read(./**/dist/**/*)',
       'Read(./**/build/**/*)',
@@ -65,17 +65,17 @@ describe(`${name}: silent`, () => {
     expect(ids(deny(...rules))).toEqual([])
   })
 
-  it.fails('stays silent for a directory that the docs do not name, and for secrets', () => {
+  it('stays silent for a directory that the docs do not name, and for secrets', () => {
     expect(
       ids(deny('Read(./secrets/**)', 'Read(./src/gen/**)', 'Read(./node_modules/**)')),
     ).toEqual([])
   })
 
-  it.fails('stays silent for a name that only ends in a listed name', () => {
+  it('stays silent for a name that only ends in a listed name', () => {
     expect(ids(deny('Read(./rebuild/**)', 'Read(./my-dist/**)', 'Read(./build2/**)'))).toEqual([])
   })
 
-  it.fails('stays silent for a pattern that is not a directory rule', () => {
+  it('stays silent for a pattern that is not a directory rule', () => {
     const rules = [
       'Read(**)',
       'Read(/**)',
@@ -92,7 +92,7 @@ describe(`${name}: silent`, () => {
     expect(ids(deny(...rules))).toEqual([])
   })
 
-  it.fails('stays silent for an allow rule, an ask rule and a tool that is not Read', () => {
+  it('stays silent for an allow rule, an ask rule and a tool that is not Read', () => {
     const code = {
       permissions: {
         allow: ['Read(./build/**)'],
@@ -103,7 +103,7 @@ describe(`${name}: silent`, () => {
     expect(ids(code)).toEqual([])
   })
 
-  it.fails('stays silent in a hidden drop-in, with no rules, and with a file that is no object', () => {
+  it('stays silent in a hidden drop-in, with no rules, and with a file that is no object', () => {
     expect(ids(deny('Read(./build/**)'), HIDDEN)).toEqual([])
     expect(ids('{}')).toEqual([])
     expect(ids('[1]')).toEqual([])

@@ -27,7 +27,7 @@ const auto = (permissions: object = {}) => ({
 })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a managed file with auto mode on and no push rule, at the defaultMode value', () => {
+  it('reports a managed file with auto mode on and no push rule, at the defaultMode value', () => {
     for (const file of [MANAGED, DROP_IN]) {
       const messages = lint(repo({}), file, '{"permissions": {\n"defaultMode": "auto"}}')
       expect(messages, file).toHaveLength(1)
@@ -37,7 +37,7 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports when the rules cover other commands, or only the bare push', () => {
+  it('reports when the rules cover other commands, or only the bare push', () => {
     const rules = {
       ask: ['Bash(git commit *)', 'Bash(git push)', 'Bash(gh pr create *)', 'Read(./git push *)'],
       allow: ['Bash(git push *)'],
@@ -46,17 +46,21 @@ describe(`${name}: reports`, () => {
     expect(ids(repo({}), MANAGED, auto(rules))).toEqual(['noPushAsk'])
   })
 
-  it.fails('reports when a rule is a parameter rule, not a command pattern', () => {
+  it('reports when a rule has no command words', () => {
+    expect(ids(repo({}), MANAGED, auto({ ask: ['Bash()', 'Bash(  )'] }))).toEqual(['noPushAsk'])
+  })
+
+  it('reports when a rule is a parameter rule, not a command pattern', () => {
     const ask = ['Bash(run_in_background:true)', 'PowerShell(timeout: *)']
     expect(ids(repo({}), MANAGED, auto({ ask }))).toEqual(['noPushAsk'])
   })
 
-  it.fails('reports when every file that sets defaultMode says auto', () => {
+  it('reports when every file that sets defaultMode says auto', () => {
     const root = repo({ [OTHER]: text(auto()) })
     expect(ids(root, DROP_IN, auto())).toEqual(['noPushAsk'])
   })
 
-  it.fails('reports a file of the source that lacks the rule when another file has a hook-free policy', () => {
+  it('reports a file of the source that lacks the rule when another file has a hook-free policy', () => {
     const root = repo({
       [OTHER]: text({ hooks: { PostToolUse: [{}] }, sandbox: { enabled: true } }),
     })
@@ -65,7 +69,7 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for each rule that covers a push, in ask or deny, in Bash or PowerShell', () => {
+  it('stays silent for each rule that covers a push, in ask or deny, in Bash or PowerShell', () => {
     const covers = [
       'Bash(git push *)',
       'Bash(git push:*)',
@@ -85,7 +89,7 @@ describe(`${name}: silent`, () => {
     }
   })
 
-  it.fails('stays silent when auto mode is not on', () => {
+  it('stays silent when auto mode is not on', () => {
     const root = repo({})
     for (const mode of ['default', 'acceptEdits', 'plan', 'Auto', 7, null]) {
       expect(ids(root, MANAGED, { permissions: { defaultMode: mode } }), String(mode)).toEqual([])
@@ -95,20 +99,20 @@ describe(`${name}: silent`, () => {
     expect(ids(root, MANAGED, '[1]')).toEqual([])
   })
 
-  it.fails('stays silent when another file of the source sets another mode', () => {
+  it('stays silent when another file of the source sets another mode', () => {
     const root = repo({ [OTHER]: text({ permissions: { defaultMode: 'default' } }) })
     expect(ids(root, DROP_IN, auto())).toEqual([])
     expect(ids(root, MANAGED, auto())).toEqual([])
   })
 
-  it.fails('stays silent when another file of the source holds the rule', () => {
+  it('stays silent when another file of the source holds the rule', () => {
     const root = repo({ [OTHER]: text({ permissions: { ask: ['Bash(git push *)'] } }) })
     expect(ids(root, DROP_IN, auto())).toEqual([])
     const main = repo({ [MANAGED]: text({ permissions: { deny: ['Bash(git push *)'] } }) })
     expect(ids(main, DROP_IN, auto())).toEqual([])
   })
 
-  it.fails('stays silent with a PreToolUse hook, which can inspect the full command', () => {
+  it('stays silent with a PreToolUse hook, which can inspect the full command', () => {
     const hook = { PreToolUse: [{ matcher: 'Bash', hooks: [{ type: 'command', command: 'x' }] }] }
     expect(ids(repo({}), MANAGED, { ...auto(), hooks: hook })).toEqual([])
     const root = repo({ [OTHER]: text({ hooks: hook }) })
@@ -116,10 +120,11 @@ describe(`${name}: silent`, () => {
     expect(ids(repo({}), MANAGED, { ...auto(), hooks: { PreToolUse: [] } })).toEqual(['noPushAsk'])
   })
 
-  it.fails('stays silent when the source locks auto mode off', () => {
+  it('stays silent when the source locks auto mode off', () => {
     for (const lock of [
       { disableAutoMode: 'disable' },
       { permissions: { disableAutoMode: 'disable' } },
+      { disableAutoMode: 'anything' },
     ]) {
       expect(ids(repo({}), MANAGED, { ...auto(), ...lock })).toEqual([])
     }
@@ -127,18 +132,18 @@ describe(`${name}: silent`, () => {
     expect(ids(root, DROP_IN, auto())).toEqual([])
   })
 
-  it.fails('stays silent in a hidden drop-in, and in a project file where auto has no effect', () => {
+  it('stays silent in a hidden drop-in, and in a project file where auto has no effect', () => {
     expect(ids(repo({}), HIDDEN, auto())).toEqual([])
     expect(ids(repo({}), PROJECT, auto())).toEqual([])
   })
 
-  it.fails('stays silent when a file of the source cannot be read', () => {
+  it('stays silent when a file of the source cannot be read', () => {
     for (const other of ['[1]', '{']) {
       expect(ids(repo({ [OTHER]: other }), DROP_IN, auto()), other).toEqual([])
     }
   })
 
-  it.fails('reads no project file for a managed file', () => {
+  it('reads no project file for a managed file', () => {
     const root = repo({ [PROJECT]: text({ permissions: { ask: ['Bash(git push *)'] } }) })
     expect(ids(root, MANAGED, auto())).toEqual(['noPushAsk'])
   })

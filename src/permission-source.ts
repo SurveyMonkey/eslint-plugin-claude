@@ -95,3 +95,26 @@ export function isDeadAllow(objects: readonly SettingsObject[], rule: ParsedRule
     ),
   )
 }
+
+/** True when a file of `objects` holds a `PreToolUse` hook. An empty list holds no hook. */
+export function hasPreToolUseHook(objects: readonly SettingsObject[]): boolean {
+  return objects.some((object) => {
+    const hooks = at(object, ['hooks', 'PreToolUse'])
+    return hooks !== undefined && !(Array.isArray(hooks) && hooks.length === 0)
+  })
+}
+
+/** The places of the lock that turns auto mode off, as the docs give them
+ *  (https://code.claude.com/docs/en/settings-reference#disableautomode). */
+const AUTO_MODE_LOCKS = [['disableAutoMode'], ['permissions', 'disableAutoMode']]
+
+/** True when a file of the managed source `objects` turns auto mode off. In a managed file, any
+ *  value but null reads as "disable" (https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed). */
+export function isAutoModeLocked(objects: readonly SettingsObject[]): boolean {
+  return objects.some((object) =>
+    AUTO_MODE_LOCKS.some((path) => {
+      const value = at(object, path)
+      return value !== undefined && value !== null
+    }),
+  )
+}

@@ -24,14 +24,14 @@ const enabled = (plugins: Record<string, boolean>, ...allow: string[]) => ({
 })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a plugin tool when the project enables other plugins only', () => {
+  it('reports a plugin tool when the project enables other plugins only', () => {
     const code = enabled({ 'lint@acme': true }, 'mcp__plugin_ghost_search__query')
     for (const file of [PROJECT, LOCAL]) {
       expect(ids(repo({}), file, code), file).toEqual(['unknown'])
     }
   })
 
-  it.fails('reports a deny rule and an ask rule, and a rule for the server alone', () => {
+  it('reports a deny rule and an ask rule, and a rule for the server alone', () => {
     const code = {
       enabledPlugins: { 'lint@acme': true },
       permissions: {
@@ -42,12 +42,12 @@ describe(`${name}: reports`, () => {
     expect(ids(repo({}), PROJECT, code)).toEqual(['unknown', 'unknown'])
   })
 
-  it.fails('reports a plugin that the project sets to false', () => {
+  it('reports a plugin that the project sets to false', () => {
     const code = enabled({ 'ghost@acme': false }, 'mcp__plugin_ghost_search__query')
     expect(ids(repo({}), PROJECT, code)).toEqual(['unknown'])
   })
 
-  it.fails('names the tool and the server, at the rule', () => {
+  it('names the tool and the server, at the rule', () => {
     const code = enabled({ 'lint@acme': true }, 'mcp__plugin_ghost_search__query')
     const [message] = lint(repo({}), PROJECT, code)
     expect(message).toMatchObject({ line: 1, messageId: 'unknown' })
@@ -58,38 +58,45 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for a plugin that the same file enables', () => {
+  it('stays silent for a plugin that the same file enables', () => {
     const code = enabled({ 'ghost@acme': true }, 'mcp__plugin_ghost_search__query')
     expect(ids(repo({}), PROJECT, code)).toEqual([])
   })
 
-  it.fails('stays silent for a plugin that the other project file enables', () => {
+  it('stays silent for a plugin that the other project file enables', () => {
     const other = repo({ [LOCAL]: text({ enabledPlugins: { 'ghost@acme': true } }) })
     expect(ids(other, PROJECT, enabled({}, 'mcp__plugin_ghost_search__query'))).toEqual([])
     const first = repo({ [PROJECT]: text({ enabledPlugins: { 'ghost@acme': true } }) })
     expect(ids(first, LOCAL, rules('mcp__plugin_ghost_search__query'))).toEqual([])
   })
 
-  it.fails('reads the plugin part as the docs write it: other characters become underscores', () => {
+  it('reads the plugin part as the docs write it: other characters become underscores', () => {
     const code = enabled({ 'my.plugin@acme': true }, 'mcp__plugin_my_plugin_db-tools__query')
     expect(ids(repo({}), PROJECT, code)).toEqual([])
   })
 
-  it.fails('stays silent when an enabled plugin name can start the server part', () => {
+  it('stays silent when an enabled plugin name can start the server part', () => {
     // `my` and `plugin_srv` is one reading of the name. The rule cannot tell the plugin part
     // from the server part, so it accepts every plugin name that fits.
     const code = enabled({ 'my@acme': true }, 'mcp__plugin_my_plugin_srv__tool')
     expect(ids(repo({}), PROJECT, code)).toEqual([])
   })
 
-  it.fails('stays silent when no project file lists enabledPlugins', () => {
+  it('reads a key with no marketplace as a plugin name, and a key with no name as none', () => {
+    const named = enabled({ ghost: true }, 'mcp__plugin_ghost_search__query')
+    expect(ids(repo({}), PROJECT, named)).toEqual([])
+    const empty = enabled({ '@acme': true }, 'mcp__plugin_ghost_search__query')
+    expect(ids(repo({}), PROJECT, empty)).toEqual(['unknown'])
+  })
+
+  it('stays silent when no project file lists enabledPlugins', () => {
     expect(ids(repo({}), PROJECT, rules('mcp__plugin_ghost_search__query'))).toEqual([])
     expect(ids(repo({}), PROJECT, { enabledPlugins: [], ...rules('mcp__plugin_ghost_x') })).toEqual(
       [],
     )
   })
 
-  it.fails('stays silent for the names that mcp-tool-server-unknown owns, and for others', () => {
+  it('stays silent for the names that mcp-tool-server-unknown owns, and for others', () => {
     const code = enabled(
       { 'lint@acme': true },
       'mcp__github__search',
@@ -104,7 +111,7 @@ describe(`${name}: silent`, () => {
     expect(ids(repo({}), PROJECT, code)).toEqual([])
   })
 
-  it.fails('stays silent in a managed file, which is not for one project', () => {
+  it('stays silent in a managed file, which is not for one project', () => {
     const code = enabled({ 'lint@acme': true }, 'mcp__plugin_ghost_search__query')
     expect(ids(repo({}), MANAGED, code)).toEqual([])
     expect(ids(repo({}), 'managed-settings.d/10-a.json', code)).toEqual([])
@@ -114,13 +121,13 @@ describe(`${name}: silent`, () => {
 describe(`${name}: a file that the rule cannot read`, () => {
   const code = enabled({ 'lint@acme': true }, 'mcp__plugin_ghost_search__query')
 
-  it.fails('stays silent when the other project file is not an object, or does not parse', () => {
+  it('stays silent when the other project file is not an object, or does not parse', () => {
     expect(ids(repo({ [LOCAL]: '[1]' }), PROJECT, code)).toEqual([])
     expect(ids(repo({ [LOCAL]: '{' }), PROJECT, code)).toEqual([])
     expect(ids(repo({ [PROJECT]: '{' }), LOCAL, code)).toEqual([])
   })
 
-  it.fails('reports when the other project file is readable and enables nothing that fits', () => {
+  it('reports when the other project file is readable and enables nothing that fits', () => {
     expect(ids(repo({ [LOCAL]: '{}' }), PROJECT, code)).toEqual(['unknown'])
   })
 })

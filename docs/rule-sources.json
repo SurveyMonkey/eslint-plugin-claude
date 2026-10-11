@@ -3110,6 +3110,16 @@
       "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
     }
   ],
+  "permissions-additional-directories-no-config": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Additional directories grant file access, not configuration"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Grant access across packages or repositories"
+    }
+  ],
   "permissions-additional-directories-path": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -3120,6 +3130,20 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Working directory is a network path",
       "hash": "f5bb8ce4eba1e1e76e5ea53bb4de634f71040a091fb85f1ef4c0274646df18b9"
+    }
+  ],
+  "permissions-agent-rule-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Agent (subagents)"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Disable specific subagents"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Built-in subagents"
     }
   ],
   "permissions-allow-dir-depth": [
@@ -3149,6 +3173,16 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Allow or deny every fetch",
       "hash": "625d03380b9ef8e39057de23d106a5d7798ab210d63914c73db2f331509cc33e"
+    }
+  ],
+  "permissions-auto-mode-allow-overrides": [
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Where the classifier reads configuration"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Override the block and allow rules"
     }
   ],
   "permissions-auto-mode-defaults": [
@@ -3193,6 +3227,46 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "permissions-auto-mode-push-ask": [
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Common boundaries"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Add a human checkpoint"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Which mode a session starts in"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Wildcard patterns"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "What a Bash rule doesn't match"
+    }
+  ],
+  "permissions-auto-mode-rule-syntax": [
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Define trusted infrastructure"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Override the block and allow rules"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/auto-mode-config",
+      "heading": "Where the classifier reads configuration"
     }
   ],
   "permissions-auto-mode-schema": [
@@ -3507,6 +3581,26 @@
       "hash": "c3a72d1ca47850c3846cee7ebec78a8d4eb47c7362b56e885dfb0ea85d1a28bc"
     }
   ],
+  "permissions-deny-dir-listable": [
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Block reads of generated and vendored code"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit"
+    }
+  ],
+  "permissions-deny-secret-files": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.deny"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Read and Edit"
+    }
+  ],
   "permissions-disable-mode-value": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -3621,6 +3715,20 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
       "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+    }
+  ],
+  "permissions-mcp-server-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "MCP"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Plugin-provided MCP servers"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "enabledPlugins"
     }
   ],
   "permissions-negation": [

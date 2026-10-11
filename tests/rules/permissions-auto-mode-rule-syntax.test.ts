@@ -20,7 +20,7 @@ const ids = (code: unknown, file = MANAGED) => lint(code, file).map((message) =>
 const mode = (autoMode: object) => ({ autoMode })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports an entry shaped like a permission rule, in each list', () => {
+  it('reports an entry shaped like a permission rule, in each list', () => {
     for (const list of ['environment', 'allow', 'soft_deny', 'hard_deny']) {
       const messages = lint(mode({ [list]: ['$defaults', 'Bash(git push *)'] }))
       expect(messages, list).toHaveLength(1)
@@ -31,13 +31,13 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports in a managed file and in a drop-in', () => {
+  it('reports in a managed file and in a drop-in', () => {
     for (const file of [MANAGED, DROP_IN]) {
       expect(ids(mode({ allow: ['Bash(ls)'] }), file), file).toEqual(['ruleShaped'])
     }
   })
 
-  it.fails('reports each tool name of the docs, an MCP rule and a legacy name', () => {
+  it('reports each tool name of the docs, an MCP rule and a legacy name', () => {
     const entries = [
       'Read(./.env)',
       'Edit(src/**)',
@@ -51,12 +51,12 @@ describe(`${name}: reports`, () => {
     expect(ids(mode({ soft_deny: entries }))).toEqual(entries.map(() => 'ruleShaped'))
   })
 
-  it.fails('reports an entry with white space around it, at the entry', () => {
+  it('reports an entry with white space around it, at the entry', () => {
     const messages = lint('{\n"autoMode": {"allow": [\n"  Bash(ls)  "]}}')
     expect(messages.map((message) => message.line)).toEqual([3])
   })
 
-  it.fails('reports each entry', () => {
+  it('reports each entry', () => {
     expect(ids(mode({ allow: ['Bash(ls)', 'Bash(pwd)'], hard_deny: ['Read(./.env)'] }))).toEqual([
       'ruleShaped',
       'ruleShaped',
@@ -66,7 +66,7 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for prose, the default marker and the entries of the docs examples', () => {
+  it('stays silent for prose, the default marker and the entries of the docs examples', () => {
     const entries = [
       '$defaults',
       'Source control: github.example.com/acme-corp and all repos under it',
@@ -79,7 +79,7 @@ describe(`${name}: silent`, () => {
     ).toEqual([])
   })
 
-  it.fails('stays silent for prose that holds a call in parentheses', () => {
+  it('stays silent for prose that holds a call in parentheses', () => {
     const entries = [
       'Git Destructive [named+specifics]: Force pushing (`git push --force`), deleting remote branches',
       'Never run Bash(rm -rf) on a shared host',
@@ -97,7 +97,7 @@ describe(`${name}: silent`, () => {
     expect(ids(mode({ allow: entries }))).toEqual([])
   })
 
-  it.fails('stays silent for values that are not lists of strings', () => {
+  it('stays silent for values that are not lists of strings', () => {
     expect(ids(mode({ allow: 'Bash(ls)' }))).toEqual([])
     expect(ids(mode({ allow: [7, null, { a: 'Bash(ls)' }] }))).toEqual([])
     expect(ids(mode({ classifyAllShell: true, extra: ['Bash(ls)'] }))).toEqual([])
@@ -107,7 +107,7 @@ describe(`${name}: silent`, () => {
     expect(ids('[1]')).toEqual([])
   })
 
-  it.fails('stays silent in a hidden drop-in, and in a project or local file', () => {
+  it('stays silent in a hidden drop-in, and in a project or local file', () => {
     const code = mode({ allow: ['Bash(ls)'] })
     expect(ids(code, HIDDEN)).toEqual([])
     expect(ids(code, PROJECT)).toEqual([])

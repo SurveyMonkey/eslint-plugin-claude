@@ -25,7 +25,7 @@ const tracking = (...files: string[]) =>
   repo({ [PROJECT]: '{}', ...Object.fromEntries(files.map((file) => [file, 'KEY=1\n'])) })
 
 describe(`${name}: reports`, () => {
-  it.fails('reports a tracked .env with no deny rule, at the permissions block or the file', () => {
+  it('reports a tracked .env with no deny rule, at the permissions block or the file', () => {
     const root = tracking('.env')
     const messages = lint(root, '{}')
     expect(messages).toHaveLength(1)
@@ -34,12 +34,12 @@ describe(`${name}: reports`, () => {
     expect(messages[0]?.message).toContain('`Read(./.env)`')
   })
 
-  it.fails('reports at the permissions value when the file has one', () => {
+  it('reports at the permissions value when the file has one', () => {
     const [message] = lint(tracking('.env'), '{\n  "permissions": {\n    "allow": []\n  }\n}')
     expect(message).toMatchObject({ line: 2 })
   })
 
-  it.fails('reports a tracked .env.local, a tracked secrets folder, and gives the rule for each', () => {
+  it('reports a tracked .env.local, a tracked secrets folder, and gives the rule for each', () => {
     const root = tracking('.env.local', 'secrets/key.pem')
     const [message] = lint(root, '{}')
     expect(message?.message).toContain('`.env.local`')
@@ -49,7 +49,7 @@ describe(`${name}: reports`, () => {
     expect(message?.message).not.toContain('`Read(./.env)`')
   })
 
-  it.fails('names every uncovered item in one report', () => {
+  it('names every uncovered item in one report', () => {
     const root = tracking('.env', '.env.production', 'secrets/a/b.txt')
     const messages = lint(root, '{}')
     expect(messages).toHaveLength(1)
@@ -58,14 +58,14 @@ describe(`${name}: reports`, () => {
     }
   })
 
-  it.fails('reports the part that no rule covers', () => {
+  it('reports the part that no rule covers', () => {
     const root = tracking('.env', 'secrets/key.pem')
     const [message] = lint(root, deny('Read(./.env)'))
     expect(message?.message).toContain('`secrets/`')
     expect(message?.message).not.toContain('`.env`')
   })
 
-  it.fails('reports a deny rule that covers other files, and rules that are not Read deny rules', () => {
+  it('reports a deny rule that covers other files, and rules that are not Read deny rules', () => {
     const root = tracking('.env')
     const code = JSON.stringify({
       permissions: {
@@ -77,13 +77,16 @@ describe(`${name}: reports`, () => {
           'Read(//etc/.env)',
           'Read(~/.env)',
           'Read(offset:5)',
+          'Read(./)',
+          'Read(/)',
+          'Read(!./.env)',
         ],
       },
     })
     expect(ids(root, code)).toEqual(['open'])
   })
 
-  it.fails('reports a project below the root for the files of that project only', () => {
+  it('reports a project below the root for the files of that project only', () => {
     const root = repo({
       'packages/a/.claude/settings.json': '{}',
       'packages/a/.env': 'K=1\n',
@@ -97,12 +100,12 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
-  it.fails('stays silent for the deny list of the docs example', () => {
+  it('stays silent for the deny list of the docs example', () => {
     const root = tracking('.env', '.env.local', 'secrets/key.pem')
     expect(ids(root, deny('Read(./.env)', 'Read(./.env.*)', 'Read(./secrets/**)'))).toEqual([])
   })
 
-  it.fails('stays silent for each other form that covers a file', () => {
+  it('stays silent for each other form that covers a file', () => {
     const forms: [string[], string[]][] = [
       [['Read(.env)'], ['.env']],
       [['Read(**/.env)'], ['.env']],
@@ -111,6 +114,7 @@ describe(`${name}: silent`, () => {
       [['Read(**/.env*)'], ['.env', '.env.local']],
       [['Read(.env*)'], ['.env', '.env.local']],
       [['Read(./.env.l?cal)'], ['.env.local']],
+      [['Read(./.en[v])'], ['.env']],
       [['Read(secrets)'], ['secrets/k']],
       [['Read(secrets/)'], ['secrets/k']],
       [['Read(/secrets/**)'], ['secrets/k']],
@@ -125,18 +129,18 @@ describe(`${name}: silent`, () => {
     }
   })
 
-  it.fails('stays silent when the local file holds the deny rule', () => {
+  it('stays silent when the local file holds the deny rule', () => {
     const root = repo({ [PROJECT]: '{}', [LOCAL]: deny('Read(./.env)'), '.env': 'K=1\n' })
     expect(ids(root, '{}')).toEqual([])
   })
 
-  it.fails('stays silent for a file that git does not track, and for one that is not there', () => {
+  it('stays silent for a file that git does not track, and for one that is not there', () => {
     const loose = repo({ [PROJECT]: '{}' }, [], { '.env': 'K=1\n', 'secrets/key.pem': 'x\n' })
     expect(ids(loose, '{}')).toEqual([])
     expect(ids(repo({ [PROJECT]: '{}' }), '{}')).toEqual([])
   })
 
-  it.fails('stays silent for placeholder files, and for names that only look alike', () => {
+  it('stays silent for placeholder files, and for names that only look alike', () => {
     const root = tracking(
       '.env.example',
       '.env.sample',
@@ -153,26 +157,26 @@ describe(`${name}: silent`, () => {
     expect(ids(root, '{}')).toEqual([])
   })
 
-  it.fails('stays silent when git cannot answer: no repository', () => {
+  it('stays silent when git cannot answer: no repository', () => {
     const root = plain({ [PROJECT]: '{}', '.env': 'K=1\n' })
     expect(ids(root, '{}')).toEqual([])
   })
 
-  it.fails('stays silent when the other project file cannot be read', () => {
+  it('stays silent when the other project file cannot be read', () => {
     for (const other of ['[1]', '{']) {
       const root = repo({ [PROJECT]: '{}', [LOCAL]: other, '.env': 'K=1\n' })
       expect(ids(root, '{}'), other).toEqual([])
     }
   })
 
-  it.fails('stays silent in the local file and in a managed file', () => {
+  it('stays silent in the local file and in a managed file', () => {
     const root = repo({ [PROJECT]: '{}', '.env': 'K=1\n', 'managed-settings.json': '{}' })
     expect(ids(root, '{}', LOCAL)).toEqual([])
     expect(ids(root, '{}', 'managed-settings.json')).toEqual([])
     expect(ids(root, '{}', 'managed-settings.d/10-a.json')).toEqual([])
   })
 
-  it.fails('stays silent for a file that is no object', () => {
+  it('stays silent for a file that is no object', () => {
     expect(ids(tracking('.env'), '[1]')).toEqual([])
   })
 })
