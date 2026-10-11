@@ -224,9 +224,14 @@ import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import pluginManifestLocation from './rules/plugin-manifest-location.ts'
+import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
+import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
+import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMaxLines from './rules/rules-max-lines.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
@@ -683,6 +688,11 @@ const modules = [
   pluginProjectSkillsDirLimits,
   pluginCommandsDirNonempty,
   pluginDefaultDirShadowed,
+  pluginMonitorsCommandEnv,
+  pluginNoGitLfs,
+  pluginPackageLockfile,
+  pluginPathVarBraced,
+  pluginUserConfigNoShellFields,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1045,6 +1055,11 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-project-skills-dir-limits': 'error',
   'plugin-commands-dir-nonempty': 'error',
   'plugin-default-dir-shadowed': 'error',
+  'plugin-monitors-command-env': 'error',
+  'plugin-no-git-lfs': 'error',
+  'plugin-package-lockfile': 'error',
+  'plugin-path-var-braced': 'error',
+  'plugin-user-config-no-shell-fields': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
