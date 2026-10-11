@@ -89,6 +89,10 @@ describe(RULE, () => {
     expect(run(command)).toEqual([])
   })
 
+  check('reports a command that names a sibling of the root', () => {
+    expect(run(`cat ${ROOT}/../rootx/y`)).toEqual([commandMessage(`${ROOT}/../rootx/y`)])
+  })
+
   check('reports a script that names a path above the root, with the full message', () => {
     expect(runScript('set -e\ncat ../shared/x\n')).toEqual([
       scriptMessage(`${ROOT}/run.sh`, '../shared/x'),
