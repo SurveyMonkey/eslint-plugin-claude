@@ -130,11 +130,12 @@ const rule: Rule.RuleModule = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [...HOOKS_TARGET.files, '**/.claude-plugin/plugin.json'],
   // The same rule, for the frontmatter of a skill and of a project subagent.
   also: HOOKS_TARGET.also,
-  rule,
 }
+
+export default rule

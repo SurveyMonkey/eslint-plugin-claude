@@ -5,10 +5,9 @@ import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
-import sourceSchema from '../../src/rules/marketplace-source-schema.ts'
+import rule, { target } from '../../src/rules/marketplace-source-schema.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
 
-const { rule } = sourceSchema
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (...plugins: unknown[]) => JSON.stringify({ name: 'acme', plugins })
 const withSource = (source: unknown) => manifest({ name: 'p', source })
@@ -650,7 +649,7 @@ json5Tester.run('marketplace-source-schema (JSON5 invalid)', rule, {
 
 describe('marketplace-source-schema options', () => {
   // The rule alone, so that the test does not depend on the plugin list.
-  const plugin = { rules: { [sourceSchema.name]: rule } }
+  const plugin = { rules: { [target.name]: rule } }
   const lint = (length: number, options: unknown[]) =>
     new Linter({ cwd: '/' }).verify(
       command(text(length)),

@@ -58,4 +58,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'legacy' }> = {
   },
 }
 
-export default { name, language: 'markdown' as const, files: ['**/commands/**/*.md'], rule }
+export const target = { name, language: 'markdown' as const, files: ['**/commands/**/*.md'] }
+
+export default rule

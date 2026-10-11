@@ -58,9 +58,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' | 'untracked' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude-plugin/plugin.json'],
-  rule,
 }
+
+export default rule

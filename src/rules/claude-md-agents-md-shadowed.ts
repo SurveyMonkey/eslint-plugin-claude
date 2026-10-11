@@ -100,9 +100,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadowed' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/AGENTS.md'],
-  rule,
 }
+
+export default rule

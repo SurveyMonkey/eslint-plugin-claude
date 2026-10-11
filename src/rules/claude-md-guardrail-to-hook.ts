@@ -86,9 +86,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'guardrail' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md'],
-  rule,
 }
+
+export default rule

@@ -33,9 +33,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unread' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: SETTINGS_FILES,
-  rule,
 }
+
+export default rule

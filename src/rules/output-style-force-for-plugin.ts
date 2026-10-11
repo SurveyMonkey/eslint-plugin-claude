@@ -43,9 +43,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'forced' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/output-styles/*.md'],
-  rule,
 }
+
+export default rule

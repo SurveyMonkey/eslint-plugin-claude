@@ -117,4 +117,6 @@ const rule: Rule.RuleModule = {
   },
 }
 
-export default { name, ...HOOKS_TARGET, rule }
+export const target = { name, ...HOOKS_TARGET }
+
+export default rule

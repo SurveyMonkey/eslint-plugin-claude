@@ -68,9 +68,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'missing' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/output-styles/*.md'],
-  rule,
 }
+
+export default rule

@@ -116,9 +116,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noConfig' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: SETTINGS_FILES,
-  rule,
 }
+
+export default rule

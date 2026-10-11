@@ -91,9 +91,10 @@ const rule: MarkdownRuleDefinition<{
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/prompt.md'],
-  rule,
 }
+
+export default rule

@@ -108,9 +108,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'dead' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: MANAGED_SETTINGS_FILES,
-  rule,
 }
+
+export default rule

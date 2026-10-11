@@ -45,7 +45,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'hook' | 'monitor' | 'headersHelper
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [
@@ -54,5 +54,6 @@ export default {
     '**/.mcp.json',
     '**/monitors/monitors.json',
   ],
-  rule,
 }
+
+export default rule

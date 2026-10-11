@@ -78,9 +78,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'errorAgent' | 'abo
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/mocks/*/*.md'],
-  rule,
 }
+
+export default rule

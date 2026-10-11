@@ -54,9 +54,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' | 'invalidYaml' }> =
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/output-styles/*.md'],
-  rule,
 }
+
+export default rule

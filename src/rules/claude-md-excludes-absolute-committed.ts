@@ -57,9 +57,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'absolute' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [PROJECT_FILE],
-  rule,
 }
+
+export default rule

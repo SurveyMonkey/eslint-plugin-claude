@@ -60,9 +60,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'shadowed' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.mcp.json'],
-  rule,
 }
+
+export default rule

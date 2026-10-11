@@ -52,9 +52,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'directory' | 'manifest' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/SKILL.md'],
-  rule,
 }
+
+export default rule

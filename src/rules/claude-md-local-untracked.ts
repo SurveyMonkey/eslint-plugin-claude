@@ -56,4 +56,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'tracked' | 'notIgnored' }> = {
   },
 }
 
-export default { name, language: 'markdown' as const, files: ['**/CLAUDE.md'], rule }
+export const target = { name, language: 'markdown' as const, files: ['**/CLAUDE.md'] }
+
+export default rule

@@ -3,7 +3,7 @@
 import { mkdirSync, rmSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import rule from '../../src/rules/agent-name-unique.ts'
+import * as rule from '../../src/rules/agent-name-unique.ts'
 import { agent, lintWith, repo } from '../agent-settings.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 

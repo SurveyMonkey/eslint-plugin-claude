@@ -37,9 +37,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'leftover' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude/settings.local.json'],
-  rule,
 }
+
+export default rule

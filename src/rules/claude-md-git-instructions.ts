@@ -125,9 +125,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'gitInstructions' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/CLAUDE.md', '**/.claude/rules/**/*.md'],
-  rule,
 }
+
+export default rule

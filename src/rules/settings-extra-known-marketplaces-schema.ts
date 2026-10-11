@@ -269,9 +269,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: SETTINGS_FILES,
-  rule,
 }
+
+export default rule

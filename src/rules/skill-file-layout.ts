@@ -74,9 +74,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'loose' | 'wrongCase' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/skills/*.md', '**/skills/*/*.md'],
-  rule,
 }
+
+export default rule

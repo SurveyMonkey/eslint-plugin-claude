@@ -87,9 +87,10 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'broad' }
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: SKILL_TARGET.files,
-  rule,
 }
+
+export default rule

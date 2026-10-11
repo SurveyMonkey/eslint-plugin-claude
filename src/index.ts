@@ -2,456 +2,456 @@ import { createRequire } from 'node:module'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
-import agentBodyNonempty from './rules/agent-body-nonempty.ts'
-import agentDescriptionProactive from './rules/agent-description-proactive.ts'
-import agentDescriptionsBudget from './rules/agent-descriptions-budget.ts'
-import agentDisallowedToolsScope from './rules/agent-disallowed-tools-scope.ts'
-import agentFieldMinVersion from './rules/agent-field-min-version.ts'
-import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
-import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
-import agentInitialPromptMainOnly from './rules/agent-initial-prompt-main-only.ts'
-import agentMcpServersInlineTrust from './rules/agent-mcp-servers-inline-trust.ts'
-import agentMcpServersRefExists from './rules/agent-mcp-servers-ref-exists.ts'
-import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
-import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
-import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
-import agentMemoryScopeProject from './rules/agent-memory-scope-project.ts'
-import agentModelForced from './rules/agent-model-forced.ts'
-import agentModelValue from './rules/agent-model-value.ts'
-import agentNameKebabCase from './rules/agent-name-kebab-case.ts'
-import agentNameShadowing from './rules/agent-name-shadowing.ts'
-import agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
-import agentNameUnique from './rules/agent-name-unique.ts'
-import agentNoBom from './rules/agent-no-bom.ts'
-import agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
-import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
-import agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
-import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
-import agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
-import agentSkillsExist from './rules/agent-skills-exist.ts'
-import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
-import agentTeammateIgnoredFields from './rules/agent-teammate-ignored-fields.ts'
-import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
-import agentToolsAgentTypeList from './rules/agent-tools-agent-type-list.ts'
-import agentToolsConditional from './rules/agent-tools-conditional.ts'
-import agentToolsKnown from './rules/agent-tools-known.ts'
-import agentToolsSkillForPreload from './rules/agent-tools-skill-for-preload.ts'
-import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
-import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
-import claudeMdAgentsMdProsePointer from './rules/claude-md-agents-md-prose-pointer.ts'
-import claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
-import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
-import claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
-import claudeMdDanglingReference from './rules/claude-md-dangling-reference.ts'
-import claudeMdDerivableContent from './rules/claude-md-derivable-content.ts'
-import claudeMdEmphasisOveruse from './rules/claude-md-emphasis-overuse.ts'
-import claudeMdExcludesAbsoluteCommitted from './rules/claude-md-excludes-absolute-committed.ts'
-import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
-import claudeMdGitInstructions from './rules/claude-md-git-instructions.ts'
-import claudeMdGuardrailToHook from './rules/claude-md-guardrail-to-hook.ts'
-import claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
-import claudeMdImportExists from './rules/claude-md-import-exists.ts'
-import claudeMdImportExternal from './rules/claude-md-import-external.ts'
-import claudeMdImportInCodeSpan from './rules/claude-md-import-in-code-span.ts'
-import claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
-import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
-import claudeMdLocation from './rules/claude-md-location.ts'
-import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
-import claudeMdMaxLines from './rules/claude-md-max-lines.ts'
-import claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
-import claudeMdSymlink from './rules/claude-md-symlink.ts'
-import commandLegacyFormat from './rules/command-legacy-format.ts'
-import hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
-import hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
-import hooksAsyncOnBlockingEvent from './rules/hooks-async-on-blocking-event.ts'
-import hooksBroadAutoApprove from './rules/hooks-broad-auto-approve.ts'
-import hooksCommandDeprecatedCliFlag from './rules/hooks-command-deprecated-cli-flag.ts'
-import hooksCommandPathVariable from './rules/hooks-command-path-variable.ts'
-import hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
-import hooksCommandShellSafety from './rules/hooks-command-shell-safety.ts'
-import hooksCommittedCommandReview from './rules/hooks-committed-command-review.ts'
-import hooksConfigSchema from './rules/hooks-config-schema.ts'
-import hooksDisableAllOverride from './rules/hooks-disable-all-override.ts'
-import hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
-import hooksDuplicateHandler from './rules/hooks-duplicate-handler.ts'
-import hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
-import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
-import hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
-import hooksExecFormShellSyntax from './rules/hooks-exec-form-shell-syntax.ts'
-import hooksExecFormWindowsShim from './rules/hooks-exec-form-windows-shim.ts'
-import hooksFilechangedStarMatcher from './rules/hooks-filechanged-star-matcher.ts'
-import hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
-import hooksHandlerFieldUnknown from './rules/hooks-handler-field-unknown.ts'
-import hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
-import hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
-import hooksHttpLiteralSecret from './rules/hooks-http-literal-secret.ts'
-import hooksIfCondition from './rules/hooks-if-condition.ts'
-import hooksIfDirGlobDepth from './rules/hooks-if-dir-glob-depth.ts'
-import hooksMatcherBashWithoutPowershell from './rules/hooks-matcher-bash-without-powershell.ts'
-import hooksMatcherDeprecatedValue from './rules/hooks-matcher-deprecated-value.ts'
-import hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
-import hooksMatcherLegacyVersion from './rules/hooks-matcher-legacy-version.ts'
-import hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
-import hooksMatcherNameUnresolved from './rules/hooks-matcher-name-unresolved.ts'
-import hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
-import hooksMatcherSubagentAnchor from './rules/hooks-matcher-subagent-anchor.ts'
-import hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
-import hooksMatcherUnanchoredRegex from './rules/hooks-matcher-unanchored-regex.ts'
-import hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
-import hooksMultipleUpdatedinput from './rules/hooks-multiple-updatedinput.ts'
-import hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
-import hooksOutputBlockingExitCode from './rules/hooks-output-blocking-exit-code.ts'
-import hooksOutputDeprecatedFields from './rules/hooks-output-deprecated-fields.ts'
-import hooksOutputSchema from './rules/hooks-output-schema.ts'
-import hooksOutputSize from './rules/hooks-output-size.ts'
-import hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
-import hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
-import hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
-import hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
-import hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
-import hooksScriptExecutable from './rules/hooks-script-executable.ts'
-import hooksScriptExists from './rules/hooks-script-exists.ts'
-import hooksScriptShebang from './rules/hooks-script-shebang.ts'
-import hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
-import hooksSessionstartStaticContext from './rules/hooks-sessionstart-static-context.ts'
-import hooksStopLoopGuard from './rules/hooks-stop-loop-guard.ts'
-import hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
-import hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
-import lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
-import lspExtensionConflict from './rules/lsp-extension-conflict.ts'
-import lspJsonLocation from './rules/lsp-json-location.ts'
-import lspJsonSchema from './rules/lsp-json-schema.ts'
-import lspTransportSocket from './rules/lsp-transport-socket.ts'
-import marketplaceArchiveSha256 from './rules/marketplace-archive-sha256.ts'
-import marketplaceCommandLinkMode from './rules/marketplace-command-link-mode.ts'
-import marketplaceCommandSource from './rules/marketplace-command-source.ts'
-import marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
-import marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
-import marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
-import marketplaceEntryHooksOverride from './rules/marketplace-entry-hooks-override.ts'
-import marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manifest-only-fields.ts'
-import marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
-import marketplaceEntryRootSkills from './rules/marketplace-entry-root-skills.ts'
-import marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
-import marketplaceHeadersLiteralCredential from './rules/marketplace-headers-literal-credential.ts'
-import marketplaceLocation from './rules/marketplace-location.ts'
-import marketplaceMinVersion from './rules/marketplace-min-version.ts'
-import marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
-import marketplaceRelativeSourceBackslash from './rules/marketplace-relative-source-backslash.ts'
-import marketplaceRelativeSourceEscapeSymlink from './rules/marketplace-relative-source-escape-symlink.ts'
-import marketplaceRelativeSourceExists from './rules/marketplace-relative-source-exists.ts'
-import marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
-import marketplaceRelativeSourceUrlHosted from './rules/marketplace-relative-source-url-hosted.ts'
-import marketplaceSchema from './rules/marketplace-schema.ts'
-import marketplaceSelfHostedRootSource from './rules/marketplace-self-hosted-root-source.ts'
-import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
-import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
-import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
-import mcpAllowDenyOverlap from './rules/mcp-allow-deny-overlap.ts'
-import mcpAllowlistEmpty from './rules/mcp-allowlist-empty.ts'
-import mcpAllowlistServernameDead from './rules/mcp-allowlist-servername-dead.ts'
-import mcpAlwaysLoadCount from './rules/mcp-always-load-count.ts'
-import mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
-import mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
-import mcpApprovalConflict from './rules/mcp-approval-conflict.ts'
-import mcpApprovalNamesExist from './rules/mcp-approval-names-exist.ts'
-import mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
-import mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
-import mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
-import mcpDuplicateServerName from './rules/mcp-duplicate-server-name.ts'
-import mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
-import mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
-import mcpEnvVarDefault from './rules/mcp-env-var-default.ts'
-import mcpEnvVarNumbers from './rules/mcp-env-var-numbers.ts'
-import mcpEnvVarSyntax from './rules/mcp-env-var-syntax.ts'
-import mcpHeadershelperCommitted from './rules/mcp-headershelper-committed.ts'
-import mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
-import mcpHeadershelperPath from './rules/mcp-headershelper-path.ts'
-import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
-import mcpInsecureUrl from './rules/mcp-insecure-url.ts'
-import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
-import mcpJsonLocation from './rules/mcp-json-location.ts'
-import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
-import mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
-import mcpNoLiteralSecrets from './rules/mcp-no-literal-secrets.ts'
-import mcpNoSseTransport from './rules/mcp-no-sse-transport.ts'
-import mcpOauthTransport from './rules/mcp-oauth-transport.ts'
-import mcpOauthValues from './rules/mcp-oauth-values.ts'
-import mcpPluginRootPaths from './rules/mcp-plugin-root-paths.ts'
-import mcpPluginStdioReach from './rules/mcp-plugin-stdio-reach.ts'
-import mcpPluginToolNameScoped from './rules/mcp-plugin-tool-name-scoped.ts'
-import mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
-import mcpPolicyLiteralValues from './rules/mcp-policy-literal-values.ts'
-import mcpPolicyServernameWeak from './rules/mcp-policy-servername-weak.ts'
-import mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
-import mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
-import mcpProjectToggleKeys from './rules/mcp-project-toggle-keys.ts'
-import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
-import mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skills.ts'
-import mcpServerNameFormat from './rules/mcp-server-name-format.ts'
-import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
-import mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
-import mcpStdioCommandHasArgs from './rules/mcp-stdio-command-has-args.ts'
-import mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
-import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
-import mcpToolNameFormat from './rules/mcp-tool-name-format.ts'
-import mcpToolServerUnknown from './rules/mcp-tool-server-unknown.ts'
-import mcpUnknownKeys from './rules/mcp-unknown-keys.ts'
-import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
-import memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
-import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
-import memoryIndexEntryFormat from './rules/memory-index-entry-format.ts'
-import memoryIndexMaxSize from './rules/memory-index-max-size.ts'
-import memorySettingsSchema from './rules/memory-settings-schema.ts'
-import memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
-import memoryTopicFrontmatter from './rules/memory-topic-frontmatter.ts'
-import outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
-import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
-import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
-import outputStyleNameUnique from './rules/output-style-name-unique.ts'
-import outputStylePluginNameDescription from './rules/output-style-plugin-name-description.ts'
-import permissionsAdditionalDirectoriesNoConfig from './rules/permissions-additional-directories-no-config.ts'
-import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
-import permissionsAgentRuleExists from './rules/permissions-agent-rule-exists.ts'
-import permissionsAllowDirDepth from './rules/permissions-allow-dir-depth.ts'
-import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
-import permissionsAutoModeDefaults from './rules/permissions-auto-mode-defaults.ts'
-import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
-import permissionsAutoModePushAsk from './rules/permissions-auto-mode-push-ask.ts'
-import permissionsAutoModeRuleSyntax from './rules/permissions-auto-mode-rule-syntax.ts'
-import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
-import permissionsBashArgumentConstraint from './rules/permissions-bash-argument-constraint.ts'
-import permissionsBashColonStarMid from './rules/permissions-bash-colon-star-mid.ts'
-import permissionsBashColonStarSuffix from './rules/permissions-bash-colon-star-suffix.ts'
-import permissionsBashDenyNotBoundary from './rules/permissions-bash-deny-not-boundary.ts'
-import permissionsBashExecWrapperPrefix from './rules/permissions-bash-exec-wrapper-prefix.ts'
-import permissionsBashGluedWildcard from './rules/permissions-bash-glued-wildcard.ts'
-import permissionsBashReadonlyRedundant from './rules/permissions-bash-readonly-redundant.ts'
-import permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildcard.ts'
-import permissionsBashStrippedWrapper from './rules/permissions-bash-stripped-wrapper.ts'
-import permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
-import permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
-import permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
-import permissionsCdAllowlist from './rules/permissions-cd-allowlist.ts'
-import permissionsDeadAllow from './rules/permissions-dead-allow.ts'
-import permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
-import permissionsDefaultModeManualAlias from './rules/permissions-default-mode-manual-alias.ts'
-import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
-import permissionsDefaultModeSurface from './rules/permissions-default-mode-surface.ts'
-import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
-import permissionsDenyAllTools from './rules/permissions-deny-all-tools.ts'
-import permissionsDenyDirListable from './rules/permissions-deny-dir-listable.ts'
-import permissionsDenySecretFiles from './rules/permissions-deny-secret-files.ts'
-import permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
-import permissionsDuplicateRule from './rules/permissions-duplicate-rule.ts'
-import permissionsEndConversation from './rules/permissions-end-conversation.ts'
-import permissionsGlobGrepAllow from './rules/permissions-glob-grep-allow.ts'
-import permissionsIgnorePatterns from './rules/permissions-ignore-patterns.ts'
-import permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
-import permissionsLegacyToolName from './rules/permissions-legacy-tool-name.ts'
-import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
-import permissionsMcpServerExists from './rules/permissions-mcp-server-exists.ts'
-import permissionsNegation from './rules/permissions-negation.ts'
-import permissionsParamRule from './rules/permissions-param-rule.ts'
-import permissionsParamRuleIntent from './rules/permissions-param-rule-intent.ts'
-import permissionsPathAnchor from './rules/permissions-path-anchor.ts'
-import permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
-import permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
-import permissionsReadDenyNotebook from './rules/permissions-read-deny-notebook.ts'
-import permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
-import permissionsSandboxBashAsk from './rules/permissions-sandbox-bash-ask.ts'
-import permissionsSchema from './rules/permissions-schema.ts'
-import permissionsSkillRule from './rules/permissions-skill-rule.ts'
-import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
-import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
-import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
-import permissionsWebfetchApex from './rules/permissions-webfetch-apex.ts'
-import permissionsWebfetchDomainSyntax from './rules/permissions-webfetch-domain-syntax.ts'
-import permissionsWebfetchMidWildcard from './rules/permissions-webfetch-mid-wildcard.ts'
-import permissionsWindowsPath from './rules/permissions-windows-path.ts'
-import pluginBinClaudeAi from './rules/plugin-bin-claude-ai.ts'
-import pluginBinExecutable from './rules/plugin-bin-executable.ts'
-import pluginBinShadowsSystemCommand from './rules/plugin-bin-shadows-system-command.ts'
-import pluginChannelServerStdio from './rules/plugin-channel-server-stdio.ts'
-import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
-import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
-import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
-import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
-import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
-import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
-import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
-import pluginEvalsCaseYaml from './rules/plugin-evals-case-yaml.ts'
-import pluginEvalsDir from './rules/plugin-evals-dir.ts'
-import pluginEvalsGrader from './rules/plugin-evals-grader.ts'
-import pluginEvalsMockSchema from './rules/plugin-evals-mock-schema.ts'
-import pluginEvalsMockServerExists from './rules/plugin-evals-mock-server-exists.ts'
-import pluginEvalsPromptFrontmatter from './rules/plugin-evals-prompt-frontmatter.ts'
-import pluginEvalsPromptNoAtMentions from './rules/plugin-evals-prompt-no-at-mentions.ts'
-import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
-import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
-import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
-import pluginManifestLocation from './rules/plugin-manifest-location.ts'
-import pluginManifestMetadataFormat from './rules/plugin-manifest-metadata-format.ts'
-import pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
-import pluginManifestPublishMetadata from './rules/plugin-manifest-publish-metadata.ts'
-import pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
-import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
-import pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts'
-import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
-import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
-import pluginNoParentPathEscape from './rules/plugin-no-parent-path-escape.ts'
-import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
-import pluginNoStateInPluginRoot from './rules/plugin-no-state-in-plugin-root.ts'
-import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
-import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
-import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
-import pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.ts'
-import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
-import pluginPathUsesPluginRoot from './rules/plugin-path-uses-plugin-root.ts'
-import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
-import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
-import pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
-import pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
-import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
-import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
-import pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
-import pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
-import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
-import pluginThemesLayout from './rules/plugin-themes-layout.ts'
-import pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
-import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
-import pluginUserConfigSensitive from './rules/plugin-user-config-sensitive.ts'
-import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
-import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
-import rulesMaxLines from './rules/rules-max-lines.ts'
-import rulesMdExtension from './rules/rules-md-extension.ts'
-import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
-import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
-import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
-import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
-import sandboxAllowWriteEscalation from './rules/sandbox-allow-write-escalation.ts'
-import sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
-import sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
-import sandboxCredentialsMaskFallback from './rules/sandbox-credentials-mask-fallback.ts'
-import sandboxCredentialsRecommended from './rules/sandbox-credentials-recommended.ts'
-import sandboxDockerExcluded from './rules/sandbox-docker-excluded.ts'
-import sandboxDomainBroad from './rules/sandbox-domain-broad.ts'
-import sandboxDomainDuplicate from './rules/sandbox-domain-duplicate.ts'
-import sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
-import sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
-import sandboxExcludedCommandsBroad from './rules/sandbox-excluded-commands-broad.ts'
-import sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
-import sandboxFilesystemDisabledConflict from './rules/sandbox-filesystem-disabled-conflict.ts'
-import sandboxPlatformLimits from './rules/sandbox-platform-limits.ts'
-import sandboxProxyEnv from './rules/sandbox-proxy-env.ts'
-import sandboxSchema from './rules/sandbox-schema.ts'
-import sandboxScope from './rules/sandbox-scope.ts'
-import sandboxSettingsWithoutEnabled from './rules/sandbox-settings-without-enabled.ts'
-import sandboxUnsandboxedRetry from './rules/sandbox-unsandboxed-retry.ts'
-import sandboxWeakeningOptions from './rules/sandbox-weakening-options.ts'
-import settingsAgentExists from './rules/settings-agent-exists.ts'
-import settingsAttributionFalse from './rules/settings-attribution-false.ts'
-import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
-import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
-import settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
-import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
-import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
-import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
-import settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
-import settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
-import settingsEnvContextCost from './rules/settings-env-context-cost.ts'
-import settingsEnvCredential from './rules/settings-env-credential.ts'
-import settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
-import settingsEnvFormatHeuristic from './rules/settings-env-format-heuristic.ts'
-import settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
-import settingsEnvNumericSpelling from './rules/settings-env-numeric-spelling.ts'
-import settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off.ts'
-import settingsEnvRouting from './rules/settings-env-routing.ts'
-import settingsEnvSecretHeuristic from './rules/settings-env-secret-heuristic.ts'
-import settingsEnvShadowed from './rules/settings-env-shadowed.ts'
-import settingsEnvValueFormat from './rules/settings-env-value-format.ts'
-import settingsExtraKnownMarketplacesDirectory from './rules/settings-extra-known-marketplaces-directory.ts'
-import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
-import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
-import settingsFileSize from './rules/settings-file-size.ts'
-import settingsFooterlinksPattern from './rules/settings-footerlinks-pattern.ts'
-import settingsGlobalOnlyFile from './rules/settings-global-only-file.ts'
-import settingsKeyScope from './rules/settings-key-scope.ts'
-import settingsKnownMarketplacesPatternAnchored from './rules/settings-known-marketplaces-pattern-anchored.ts'
-import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
-import settingsLocalGitignored from './rules/settings-local-gitignored.ts'
-import settingsLocalLocation from './rules/settings-local-location.ts'
-import settingsLocalUntracked from './rules/settings-local-untracked.ts'
-import settingsManagedEffortCap from './rules/settings-managed-effort-cap.ts'
-import settingsManagedFile from './rules/settings-managed-file.ts'
-import settingsManagedMerge from './rules/settings-managed-merge.ts'
-import settingsManagedValueForm from './rules/settings-managed-value-form.ts'
-import settingsManagedVersionFloor from './rules/settings-managed-version-floor.ts'
-import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
-import settingsMarketplaceKeyAlias from './rules/settings-marketplace-key-alias.ts'
-import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
-import settingsMarketplaceSkipLfs from './rules/settings-marketplace-skip-lfs.ts'
-import settingsModelCapability from './rules/settings-model-capability.ts'
-import settingsModelList from './rules/settings-model-list.ts'
-import settingsModelPinVersion from './rules/settings-model-pin-version.ts'
-import settingsModelValue from './rules/settings-model-value.ts'
-import settingsNestedProjectFile from './rules/settings-nested-project-file.ts'
-import settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
-import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
-import settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
-import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
-import settingsRedundantValue from './rules/settings-redundant-value.ts'
-import settingsRemovedKey from './rules/settings-removed-key.ts'
-import settingsSchema from './rules/settings-schema.ts'
-import settingsSchemaUrl from './rules/settings-schema-url.ts'
-import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
-import settingsSkilloverridesUnknownSkill from './rules/settings-skilloverrides-unknown-skill.ts'
-import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
-import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
-import settingsValidJson from './rules/settings-valid-json.ts'
-import settingsWebfetchPreflightSkip from './rules/settings-webfetch-preflight-skip.ts'
-import settingsWorktreePaths from './rules/settings-worktree-paths.ts'
-import settingsWorktreeSparseClaudeDir from './rules/settings-worktree-sparse-claude-dir.ts'
-import skillAgentExists from './rules/skill-agent-exists.ts'
-import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
-import skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
-import skillArgumentEscape from './rules/skill-argument-escape.ts'
-import skillBodyTokenBudget from './rules/skill-body-token-budget.ts'
-import skillBooleanLiteral from './rules/skill-boolean-literal.ts'
-import skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
-import skillDescriptionPresent from './rules/skill-description-present.ts'
-import skillFileLayout from './rules/skill-file-layout.ts'
-import skillForkFieldsRequireContext from './rules/skill-fork-fields-require-context.ts'
-import skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
-import skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
-import skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
-import skillInjectRobustness from './rules/skill-inject-robustness.ts'
-import skillInvocationRedundantFields from './rules/skill-invocation-redundant-fields.ts'
-import skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
-import skillListingBudget from './rules/skill-listing-budget.ts'
-import skillLiteralDollar from './rules/skill-literal-dollar.ts'
-import skillLoopReferenceInvocable from './rules/skill-loop-reference-invocable.ts'
-import skillMaxLines from './rules/skill-max-lines.ts'
-import skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
-import skillModelOverride from './rules/skill-model-override.ts'
-import skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
-import skillNameUnique from './rules/skill-name-unique.ts'
-import skillNoBom from './rules/skill-no-bom.ts'
-import skillPathsGlobValid from './rules/skill-paths-glob-valid.ts'
-import skillPluginNamePrefix from './rules/skill-plugin-name-prefix.ts'
-import skillPluginPathVars from './rules/skill-plugin-path-vars.ts'
-import skillPluginRootName from './rules/skill-plugin-root-name.ts'
-import skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
-import skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
-import skillPrecedenceShadowing from './rules/skill-precedence-shadowing.ts'
-import skillReferenceExists from './rules/skill-reference-exists.ts'
-import skillReservedName from './rules/skill-reserved-name.ts'
-import skillShellPlatform from './rules/skill-shell-platform.ts'
-import skillSideEffectsManualOnly from './rules/skill-side-effects-manual-only.ts'
-import statuslineHomePathShared from './rules/statusline-home-path-shared.ts'
-import statuslineScriptExists from './rules/statusline-script-exists.ts'
-import statuslineScriptTerminalSize from './rules/statusline-script-terminal-size.ts'
-import statuslineWindowsPath from './rules/statusline-windows-path.ts'
+import * as agentBodyNonempty from './rules/agent-body-nonempty.ts'
+import * as agentDescriptionProactive from './rules/agent-description-proactive.ts'
+import * as agentDescriptionsBudget from './rules/agent-descriptions-budget.ts'
+import * as agentDisallowedToolsScope from './rules/agent-disallowed-tools-scope.ts'
+import * as agentFieldMinVersion from './rules/agent-field-min-version.ts'
+import * as agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
+import * as agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
+import * as agentInitialPromptMainOnly from './rules/agent-initial-prompt-main-only.ts'
+import * as agentMcpServersInlineTrust from './rules/agent-mcp-servers-inline-trust.ts'
+import * as agentMcpServersRefExists from './rules/agent-mcp-servers-ref-exists.ts'
+import * as agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
+import * as agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
+import * as agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
+import * as agentMemoryScopeProject from './rules/agent-memory-scope-project.ts'
+import * as agentModelForced from './rules/agent-model-forced.ts'
+import * as agentModelValue from './rules/agent-model-value.ts'
+import * as agentNameKebabCase from './rules/agent-name-kebab-case.ts'
+import * as agentNameShadowing from './rules/agent-name-shadowing.ts'
+import * as agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
+import * as agentNameUnique from './rules/agent-name-unique.ts'
+import * as agentNoBom from './rules/agent-no-bom.ts'
+import * as agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
+import * as agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
+import * as agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
+import * as agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
+import * as agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
+import * as agentSkillsExist from './rules/agent-skills-exist.ts'
+import * as agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
+import * as agentTeammateIgnoredFields from './rules/agent-teammate-ignored-fields.ts'
+import * as agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
+import * as agentToolsAgentTypeList from './rules/agent-tools-agent-type-list.ts'
+import * as agentToolsConditional from './rules/agent-tools-conditional.ts'
+import * as agentToolsKnown from './rules/agent-tools-known.ts'
+import * as agentToolsSkillForPreload from './rules/agent-tools-skill-for-preload.ts'
+import * as agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
+import * as agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import * as claudeMdAgentsMdProsePointer from './rules/claude-md-agents-md-prose-pointer.ts'
+import * as claudeMdAgentsMdShadowed from './rules/claude-md-agents-md-shadowed.ts'
+import * as claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
+import * as claudeMdCombinedSize from './rules/claude-md-combined-size.ts'
+import * as claudeMdDanglingReference from './rules/claude-md-dangling-reference.ts'
+import * as claudeMdDerivableContent from './rules/claude-md-derivable-content.ts'
+import * as claudeMdEmphasisOveruse from './rules/claude-md-emphasis-overuse.ts'
+import * as claudeMdExcludesAbsoluteCommitted from './rules/claude-md-excludes-absolute-committed.ts'
+import * as claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
+import * as claudeMdGitInstructions from './rules/claude-md-git-instructions.ts'
+import * as claudeMdGuardrailToHook from './rules/claude-md-guardrail-to-hook.ts'
+import * as claudeMdHtmlCommentContent from './rules/claude-md-html-comment-content.ts'
+import * as claudeMdImportExists from './rules/claude-md-import-exists.ts'
+import * as claudeMdImportExternal from './rules/claude-md-import-external.ts'
+import * as claudeMdImportInCodeSpan from './rules/claude-md-import-in-code-span.ts'
+import * as claudeMdImportMaxDepth from './rules/claude-md-import-max-depth.ts'
+import * as claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
+import * as claudeMdLocation from './rules/claude-md-location.ts'
+import * as claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
+import * as claudeMdMaxLines from './rules/claude-md-max-lines.ts'
+import * as claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
+import * as claudeMdSymlink from './rules/claude-md-symlink.ts'
+import * as commandLegacyFormat from './rules/command-legacy-format.ts'
+import * as hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
+import * as hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
+import * as hooksAsyncOnBlockingEvent from './rules/hooks-async-on-blocking-event.ts'
+import * as hooksBroadAutoApprove from './rules/hooks-broad-auto-approve.ts'
+import * as hooksCommandDeprecatedCliFlag from './rules/hooks-command-deprecated-cli-flag.ts'
+import * as hooksCommandPathVariable from './rules/hooks-command-path-variable.ts'
+import * as hooksCommandRemovedCliFlag from './rules/hooks-command-removed-cli-flag.ts'
+import * as hooksCommandShellSafety from './rules/hooks-command-shell-safety.ts'
+import * as hooksCommittedCommandReview from './rules/hooks-committed-command-review.ts'
+import * as hooksConfigSchema from './rules/hooks-config-schema.ts'
+import * as hooksDisableAllOverride from './rules/hooks-disable-all-override.ts'
+import * as hooksDisabledByDisableallhooks from './rules/hooks-disabled-by-disableallhooks.ts'
+import * as hooksDuplicateHandler from './rules/hooks-duplicate-handler.ts'
+import * as hooksEnvVarUnavailable from './rules/hooks-env-var-unavailable.ts'
+import * as hooksEventNameKnown from './rules/hooks-event-name-known.ts'
+import * as hooksExecFormCommandSpaces from './rules/hooks-exec-form-command-spaces.ts'
+import * as hooksExecFormShellSyntax from './rules/hooks-exec-form-shell-syntax.ts'
+import * as hooksExecFormWindowsShim from './rules/hooks-exec-form-windows-shim.ts'
+import * as hooksFilechangedStarMatcher from './rules/hooks-filechanged-star-matcher.ts'
+import * as hooksHandlerFieldIgnored from './rules/hooks-handler-field-ignored.ts'
+import * as hooksHandlerFieldUnknown from './rules/hooks-handler-field-unknown.ts'
+import * as hooksHandlerTypeEventSupport from './rules/hooks-handler-type-event-support.ts'
+import * as hooksHttpEnvAllowlist from './rules/hooks-http-env-allowlist.ts'
+import * as hooksHttpLiteralSecret from './rules/hooks-http-literal-secret.ts'
+import * as hooksIfCondition from './rules/hooks-if-condition.ts'
+import * as hooksIfDirGlobDepth from './rules/hooks-if-dir-glob-depth.ts'
+import * as hooksMatcherBashWithoutPowershell from './rules/hooks-matcher-bash-without-powershell.ts'
+import * as hooksMatcherDeprecatedValue from './rules/hooks-matcher-deprecated-value.ts'
+import * as hooksMatcherEnum from './rules/hooks-matcher-enum.ts'
+import * as hooksMatcherLegacyVersion from './rules/hooks-matcher-legacy-version.ts'
+import * as hooksMatcherMcpName from './rules/hooks-matcher-mcp-name.ts'
+import * as hooksMatcherNameUnresolved from './rules/hooks-matcher-name-unresolved.ts'
+import * as hooksMatcherNeverMatches from './rules/hooks-matcher-never-matches.ts'
+import * as hooksMatcherSubagentAnchor from './rules/hooks-matcher-subagent-anchor.ts'
+import * as hooksMatcherSyntax from './rules/hooks-matcher-syntax.ts'
+import * as hooksMatcherUnanchoredRegex from './rules/hooks-matcher-unanchored-regex.ts'
+import * as hooksMatcherUnsupportedEvent from './rules/hooks-matcher-unsupported-event.ts'
+import * as hooksMultipleUpdatedinput from './rules/hooks-multiple-updatedinput.ts'
+import * as hooksNoStandaloneFile from './rules/hooks-no-standalone-file.ts'
+import * as hooksOutputBlockingExitCode from './rules/hooks-output-blocking-exit-code.ts'
+import * as hooksOutputDeprecatedFields from './rules/hooks-output-deprecated-fields.ts'
+import * as hooksOutputSchema from './rules/hooks-output-schema.ts'
+import * as hooksOutputSize from './rules/hooks-output-size.ts'
+import * as hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
+import * as hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
+import * as hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
+import * as hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
+import * as hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
+import * as hooksScriptExecutable from './rules/hooks-script-executable.ts'
+import * as hooksScriptExists from './rules/hooks-script-exists.ts'
+import * as hooksScriptShebang from './rules/hooks-script-shebang.ts'
+import * as hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
+import * as hooksSessionstartStaticContext from './rules/hooks-sessionstart-static-context.ts'
+import * as hooksStopLoopGuard from './rules/hooks-stop-loop-guard.ts'
+import * as hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
+import * as hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
+import * as lspDuplicateServerName from './rules/lsp-duplicate-server-name.ts'
+import * as lspExtensionConflict from './rules/lsp-extension-conflict.ts'
+import * as lspJsonLocation from './rules/lsp-json-location.ts'
+import * as lspJsonSchema from './rules/lsp-json-schema.ts'
+import * as lspTransportSocket from './rules/lsp-transport-socket.ts'
+import * as marketplaceArchiveSha256 from './rules/marketplace-archive-sha256.ts'
+import * as marketplaceCommandLinkMode from './rules/marketplace-command-link-mode.ts'
+import * as marketplaceCommandSource from './rules/marketplace-command-source.ts'
+import * as marketplaceCommandVersionIgnored from './rules/marketplace-command-version-ignored.ts'
+import * as marketplaceEntryComponentPaths from './rules/marketplace-entry-component-paths.ts'
+import * as marketplaceEntryHooksInline from './rules/marketplace-entry-hooks-inline.ts'
+import * as marketplaceEntryHooksOverride from './rules/marketplace-entry-hooks-override.ts'
+import * as marketplaceEntryManifestOnlyFields from './rules/marketplace-entry-manifest-only-fields.ts'
+import * as marketplaceEntryNameMatchesManifest from './rules/marketplace-entry-name-matches-manifest.ts'
+import * as marketplaceEntryRootSkills from './rules/marketplace-entry-root-skills.ts'
+import * as marketplaceHeadersHelperCommand from './rules/marketplace-headers-helper-command.ts'
+import * as marketplaceHeadersLiteralCredential from './rules/marketplace-headers-literal-credential.ts'
+import * as marketplaceLocation from './rules/marketplace-location.ts'
+import * as marketplaceMinVersion from './rules/marketplace-min-version.ts'
+import * as marketplaceNameReserved from './rules/marketplace-name-reserved.ts'
+import * as marketplaceRelativeSourceBackslash from './rules/marketplace-relative-source-backslash.ts'
+import * as marketplaceRelativeSourceEscapeSymlink from './rules/marketplace-relative-source-escape-symlink.ts'
+import * as marketplaceRelativeSourceExists from './rules/marketplace-relative-source-exists.ts'
+import * as marketplaceRelativeSourceFormat from './rules/marketplace-relative-source-format.ts'
+import * as marketplaceRelativeSourceUrlHosted from './rules/marketplace-relative-source-url-hosted.ts'
+import * as marketplaceSchema from './rules/marketplace-schema.ts'
+import * as marketplaceSelfHostedRootSource from './rules/marketplace-self-hosted-root-source.ts'
+import * as marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
+import * as marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
+import * as marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import * as mcpAllowDenyOverlap from './rules/mcp-allow-deny-overlap.ts'
+import * as mcpAllowlistEmpty from './rules/mcp-allowlist-empty.ts'
+import * as mcpAllowlistServernameDead from './rules/mcp-allowlist-servername-dead.ts'
+import * as mcpAlwaysLoadCount from './rules/mcp-always-load-count.ts'
+import * as mcpAnthropicHostedUrl from './rules/mcp-anthropic-hosted-url.ts'
+import * as mcpApprovalCommitted from './rules/mcp-approval-committed.ts'
+import * as mcpApprovalConflict from './rules/mcp-approval-conflict.ts'
+import * as mcpApprovalNamesExist from './rules/mcp-approval-names-exist.ts'
+import * as mcpAuthorizationHeaderWithOauth from './rules/mcp-authorization-header-with-oauth.ts'
+import * as mcpCredentialVarRemote from './rules/mcp-credential-var-remote.ts'
+import * as mcpDisableConnectorsFalse from './rules/mcp-disable-connectors-false.ts'
+import * as mcpDuplicateServerName from './rules/mcp-duplicate-server-name.ts'
+import * as mcpEnvClientSecret from './rules/mcp-env-client-secret.ts'
+import * as mcpEnvExpansionField from './rules/mcp-env-expansion-field.ts'
+import * as mcpEnvVarDefault from './rules/mcp-env-var-default.ts'
+import * as mcpEnvVarNumbers from './rules/mcp-env-var-numbers.ts'
+import * as mcpEnvVarSyntax from './rules/mcp-env-var-syntax.ts'
+import * as mcpHeadershelperCommitted from './rules/mcp-headershelper-committed.ts'
+import * as mcpHeadershelperCredentialEnv from './rules/mcp-headershelper-credential-env.ts'
+import * as mcpHeadershelperPath from './rules/mcp-headershelper-path.ts'
+import * as mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
+import * as mcpInsecureUrl from './rules/mcp-insecure-url.ts'
+import * as mcpJsonFileSize from './rules/mcp-json-file-size.ts'
+import * as mcpJsonLocation from './rules/mcp-json-location.ts'
+import * as mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
+import * as mcpManagedServersEntry from './rules/mcp-managed-servers-entry.ts'
+import * as mcpNoLiteralSecrets from './rules/mcp-no-literal-secrets.ts'
+import * as mcpNoSseTransport from './rules/mcp-no-sse-transport.ts'
+import * as mcpOauthTransport from './rules/mcp-oauth-transport.ts'
+import * as mcpOauthValues from './rules/mcp-oauth-values.ts'
+import * as mcpPluginRootPaths from './rules/mcp-plugin-root-paths.ts'
+import * as mcpPluginStdioReach from './rules/mcp-plugin-stdio-reach.ts'
+import * as mcpPluginToolNameScoped from './rules/mcp-plugin-tool-name-scoped.ts'
+import * as mcpPolicyEntrySchema from './rules/mcp-policy-entry-schema.ts'
+import * as mcpPolicyLiteralValues from './rules/mcp-policy-literal-values.ts'
+import * as mcpPolicyServernameWeak from './rules/mcp-policy-servername-weak.ts'
+import * as mcpProjectDirDefault from './rules/mcp-project-dir-default.ts'
+import * as mcpProjectPluginBundle from './rules/mcp-project-plugin-bundle.ts'
+import * as mcpProjectToggleKeys from './rules/mcp-project-toggle-keys.ts'
+import * as mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
+import * as mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skills.ts'
+import * as mcpServerNameFormat from './rules/mcp-server-name-format.ts'
+import * as mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
+import * as mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
+import * as mcpStdioCommandHasArgs from './rules/mcp-stdio-command-has-args.ts'
+import * as mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
+import * as mcpTimeoutMin from './rules/mcp-timeout-min.ts'
+import * as mcpToolNameFormat from './rules/mcp-tool-name-format.ts'
+import * as mcpToolServerUnknown from './rules/mcp-tool-server-unknown.ts'
+import * as mcpUnknownKeys from './rules/mcp-unknown-keys.ts'
+import * as memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
+import * as memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
+import * as memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
+import * as memoryIndexEntryFormat from './rules/memory-index-entry-format.ts'
+import * as memoryIndexMaxSize from './rules/memory-index-max-size.ts'
+import * as memorySettingsSchema from './rules/memory-settings-schema.ts'
+import * as memorySymlinkNetworkTarget from './rules/memory-symlink-network-target.ts'
+import * as memoryTopicFrontmatter from './rules/memory-topic-frontmatter.ts'
+import * as outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
+import * as outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
+import * as outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
+import * as outputStyleNameUnique from './rules/output-style-name-unique.ts'
+import * as outputStylePluginNameDescription from './rules/output-style-plugin-name-description.ts'
+import * as permissionsAdditionalDirectoriesNoConfig from './rules/permissions-additional-directories-no-config.ts'
+import * as permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
+import * as permissionsAgentRuleExists from './rules/permissions-agent-rule-exists.ts'
+import * as permissionsAllowDirDepth from './rules/permissions-allow-dir-depth.ts'
+import * as permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
+import * as permissionsAutoModeDefaults from './rules/permissions-auto-mode-defaults.ts'
+import * as permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
+import * as permissionsAutoModePushAsk from './rules/permissions-auto-mode-push-ask.ts'
+import * as permissionsAutoModeRuleSyntax from './rules/permissions-auto-mode-rule-syntax.ts'
+import * as permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
+import * as permissionsBashArgumentConstraint from './rules/permissions-bash-argument-constraint.ts'
+import * as permissionsBashColonStarMid from './rules/permissions-bash-colon-star-mid.ts'
+import * as permissionsBashColonStarSuffix from './rules/permissions-bash-colon-star-suffix.ts'
+import * as permissionsBashDenyNotBoundary from './rules/permissions-bash-deny-not-boundary.ts'
+import * as permissionsBashExecWrapperPrefix from './rules/permissions-bash-exec-wrapper-prefix.ts'
+import * as permissionsBashGluedWildcard from './rules/permissions-bash-glued-wildcard.ts'
+import * as permissionsBashReadonlyRedundant from './rules/permissions-bash-readonly-redundant.ts'
+import * as permissionsBashRunnerWildcard from './rules/permissions-bash-runner-wildcard.ts'
+import * as permissionsBashStrippedWrapper from './rules/permissions-bash-stripped-wrapper.ts'
+import * as permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
+import * as permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
+import * as permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
+import * as permissionsCdAllowlist from './rules/permissions-cd-allowlist.ts'
+import * as permissionsDeadAllow from './rules/permissions-dead-allow.ts'
+import * as permissionsDefaultModeConflict from './rules/permissions-default-mode-conflict.ts'
+import * as permissionsDefaultModeManualAlias from './rules/permissions-default-mode-manual-alias.ts'
+import * as permissionsDefaultModeProjectIgnored from './rules/permissions-default-mode-project-ignored.ts'
+import * as permissionsDefaultModeSurface from './rules/permissions-default-mode-surface.ts'
+import * as permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
+import * as permissionsDenyAllTools from './rules/permissions-deny-all-tools.ts'
+import * as permissionsDenyDirListable from './rules/permissions-deny-dir-listable.ts'
+import * as permissionsDenySecretFiles from './rules/permissions-deny-secret-files.ts'
+import * as permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
+import * as permissionsDuplicateRule from './rules/permissions-duplicate-rule.ts'
+import * as permissionsEndConversation from './rules/permissions-end-conversation.ts'
+import * as permissionsGlobGrepAllow from './rules/permissions-glob-grep-allow.ts'
+import * as permissionsIgnorePatterns from './rules/permissions-ignore-patterns.ts'
+import * as permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
+import * as permissionsLegacyToolName from './rules/permissions-legacy-tool-name.ts'
+import * as permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
+import * as permissionsMcpServerExists from './rules/permissions-mcp-server-exists.ts'
+import * as permissionsNegation from './rules/permissions-negation.ts'
+import * as permissionsParamRule from './rules/permissions-param-rule.ts'
+import * as permissionsParamRuleIntent from './rules/permissions-param-rule-intent.ts'
+import * as permissionsPathAnchor from './rules/permissions-path-anchor.ts'
+import * as permissionsPathRuleTool from './rules/permissions-path-rule-tool.ts'
+import * as permissionsProtectedPathAllow from './rules/permissions-protected-path-allow.ts'
+import * as permissionsReadDenyNotebook from './rules/permissions-read-deny-notebook.ts'
+import * as permissionsRuleSyntax from './rules/permissions-rule-syntax.ts'
+import * as permissionsSandboxBashAsk from './rules/permissions-sandbox-bash-ask.ts'
+import * as permissionsSchema from './rules/permissions-schema.ts'
+import * as permissionsSkillRule from './rules/permissions-skill-rule.ts'
+import * as permissionsSpecifierUnsupported from './rules/permissions-specifier-unsupported.ts'
+import * as permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
+import * as permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
+import * as permissionsWebfetchApex from './rules/permissions-webfetch-apex.ts'
+import * as permissionsWebfetchDomainSyntax from './rules/permissions-webfetch-domain-syntax.ts'
+import * as permissionsWebfetchMidWildcard from './rules/permissions-webfetch-mid-wildcard.ts'
+import * as permissionsWindowsPath from './rules/permissions-windows-path.ts'
+import * as pluginBinClaudeAi from './rules/plugin-bin-claude-ai.ts'
+import * as pluginBinExecutable from './rules/plugin-bin-executable.ts'
+import * as pluginBinShadowsSystemCommand from './rules/plugin-bin-shadows-system-command.ts'
+import * as pluginChannelServerStdio from './rules/plugin-channel-server-stdio.ts'
+import * as pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
+import * as pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
+import * as pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
+import * as pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
+import * as pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
+import * as pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
+import * as pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
+import * as pluginEvalsCaseYaml from './rules/plugin-evals-case-yaml.ts'
+import * as pluginEvalsDir from './rules/plugin-evals-dir.ts'
+import * as pluginEvalsGrader from './rules/plugin-evals-grader.ts'
+import * as pluginEvalsMockSchema from './rules/plugin-evals-mock-schema.ts'
+import * as pluginEvalsMockServerExists from './rules/plugin-evals-mock-server-exists.ts'
+import * as pluginEvalsPromptFrontmatter from './rules/plugin-evals-prompt-frontmatter.ts'
+import * as pluginEvalsPromptNoAtMentions from './rules/plugin-evals-prompt-no-at-mentions.ts'
+import * as pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
+import * as pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
+import * as pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
+import * as pluginManifestLocation from './rules/plugin-manifest-location.ts'
+import * as pluginManifestMetadataFormat from './rules/plugin-manifest-metadata-format.ts'
+import * as pluginManifestNoBom from './rules/plugin-manifest-no-bom.ts'
+import * as pluginManifestPublishMetadata from './rules/plugin-manifest-publish-metadata.ts'
+import * as pluginManifestVersionSemver from './rules/plugin-manifest-version-semver.ts'
+import * as pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
+import * as pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts'
+import * as pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
+import * as pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
+import * as pluginNoParentPathEscape from './rules/plugin-no-parent-path-escape.ts'
+import * as pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import * as pluginNoStateInPluginRoot from './rules/plugin-no-state-in-plugin-root.ts'
+import * as pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
+import * as pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
+import * as pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
+import * as pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.ts'
+import * as pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
+import * as pluginPathUsesPluginRoot from './rules/plugin-path-uses-plugin-root.ts'
+import * as pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
+import * as pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import * as pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
+import * as pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
+import * as pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
+import * as pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
+import * as pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
+import * as pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
+import * as pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts'
+import * as pluginThemesLayout from './rules/plugin-themes-layout.ts'
+import * as pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
+import * as pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
+import * as pluginUserConfigSensitive from './rules/plugin-user-config-sensitive.ts'
+import * as pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
+import * as rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
+import * as rulesMaxLines from './rules/rules-max-lines.ts'
+import * as rulesMdExtension from './rules/rules-md-extension.ts'
+import * as rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
+import * as rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
+import * as rulesSymlinkExternal from './rules/rules-symlink-external.ts'
+import * as rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
+import * as sandboxAllowWriteEscalation from './rules/sandbox-allow-write-escalation.ts'
+import * as sandboxCredentialsAws from './rules/sandbox-credentials-aws.ts'
+import * as sandboxCredentialsMask from './rules/sandbox-credentials-mask.ts'
+import * as sandboxCredentialsMaskFallback from './rules/sandbox-credentials-mask-fallback.ts'
+import * as sandboxCredentialsRecommended from './rules/sandbox-credentials-recommended.ts'
+import * as sandboxDockerExcluded from './rules/sandbox-docker-excluded.ts'
+import * as sandboxDomainBroad from './rules/sandbox-domain-broad.ts'
+import * as sandboxDomainDuplicate from './rules/sandbox-domain-duplicate.ts'
+import * as sandboxDomainOverlap from './rules/sandbox-domain-overlap.ts'
+import * as sandboxDomainSyntax from './rules/sandbox-domain-syntax.ts'
+import * as sandboxExcludedCommandsBroad from './rules/sandbox-excluded-commands-broad.ts'
+import * as sandboxExcludedCommandsSyntax from './rules/sandbox-excluded-commands-syntax.ts'
+import * as sandboxFilesystemDisabledConflict from './rules/sandbox-filesystem-disabled-conflict.ts'
+import * as sandboxPlatformLimits from './rules/sandbox-platform-limits.ts'
+import * as sandboxProxyEnv from './rules/sandbox-proxy-env.ts'
+import * as sandboxSchema from './rules/sandbox-schema.ts'
+import * as sandboxScope from './rules/sandbox-scope.ts'
+import * as sandboxSettingsWithoutEnabled from './rules/sandbox-settings-without-enabled.ts'
+import * as sandboxUnsandboxedRetry from './rules/sandbox-unsandboxed-retry.ts'
+import * as sandboxWeakeningOptions from './rules/sandbox-weakening-options.ts'
+import * as settingsAgentExists from './rules/settings-agent-exists.ts'
+import * as settingsAttributionFalse from './rules/settings-attribution-false.ts'
+import * as settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
+import * as settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
+import * as settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
+import * as settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
+import * as settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
+import * as settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
+import * as settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
+import * as settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import * as settingsEnvContextCost from './rules/settings-env-context-cost.ts'
+import * as settingsEnvCredential from './rules/settings-env-credential.ts'
+import * as settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
+import * as settingsEnvFormatHeuristic from './rules/settings-env-format-heuristic.ts'
+import * as settingsEnvIgnoredVar from './rules/settings-env-ignored-var.ts'
+import * as settingsEnvNumericSpelling from './rules/settings-env-numeric-spelling.ts'
+import * as settingsEnvPromptCachingOff from './rules/settings-env-prompt-caching-off.ts'
+import * as settingsEnvRouting from './rules/settings-env-routing.ts'
+import * as settingsEnvSecretHeuristic from './rules/settings-env-secret-heuristic.ts'
+import * as settingsEnvShadowed from './rules/settings-env-shadowed.ts'
+import * as settingsEnvValueFormat from './rules/settings-env-value-format.ts'
+import * as settingsExtraKnownMarketplacesDirectory from './rules/settings-extra-known-marketplaces-directory.ts'
+import * as settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
+import * as settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
+import * as settingsFileSize from './rules/settings-file-size.ts'
+import * as settingsFooterlinksPattern from './rules/settings-footerlinks-pattern.ts'
+import * as settingsGlobalOnlyFile from './rules/settings-global-only-file.ts'
+import * as settingsKeyScope from './rules/settings-key-scope.ts'
+import * as settingsKnownMarketplacesPatternAnchored from './rules/settings-known-marketplaces-pattern-anchored.ts'
+import * as settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
+import * as settingsLocalGitignored from './rules/settings-local-gitignored.ts'
+import * as settingsLocalLocation from './rules/settings-local-location.ts'
+import * as settingsLocalUntracked from './rules/settings-local-untracked.ts'
+import * as settingsManagedEffortCap from './rules/settings-managed-effort-cap.ts'
+import * as settingsManagedFile from './rules/settings-managed-file.ts'
+import * as settingsManagedMerge from './rules/settings-managed-merge.ts'
+import * as settingsManagedValueForm from './rules/settings-managed-value-form.ts'
+import * as settingsManagedVersionFloor from './rules/settings-managed-version-floor.ts'
+import * as settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
+import * as settingsMarketplaceKeyAlias from './rules/settings-marketplace-key-alias.ts'
+import * as settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-key-alias-conflict.ts'
+import * as settingsMarketplaceSkipLfs from './rules/settings-marketplace-skip-lfs.ts'
+import * as settingsModelCapability from './rules/settings-model-capability.ts'
+import * as settingsModelList from './rules/settings-model-list.ts'
+import * as settingsModelPinVersion from './rules/settings-model-pin-version.ts'
+import * as settingsModelValue from './rules/settings-model-value.ts'
+import * as settingsNestedProjectFile from './rules/settings-nested-project-file.ts'
+import * as settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
+import * as settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
+import * as settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
+import * as settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
+import * as settingsRedundantValue from './rules/settings-redundant-value.ts'
+import * as settingsRemovedKey from './rules/settings-removed-key.ts'
+import * as settingsSchema from './rules/settings-schema.ts'
+import * as settingsSchemaUrl from './rules/settings-schema-url.ts'
+import * as settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
+import * as settingsSkilloverridesUnknownSkill from './rules/settings-skilloverrides-unknown-skill.ts'
+import * as settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
+import * as settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
+import * as settingsValidJson from './rules/settings-valid-json.ts'
+import * as settingsWebfetchPreflightSkip from './rules/settings-webfetch-preflight-skip.ts'
+import * as settingsWorktreePaths from './rules/settings-worktree-paths.ts'
+import * as settingsWorktreeSparseClaudeDir from './rules/settings-worktree-sparse-claude-dir.ts'
+import * as skillAgentExists from './rules/skill-agent-exists.ts'
+import * as skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
+import * as skillAllowedToolsIneffective from './rules/skill-allowed-tools-ineffective.ts'
+import * as skillArgumentEscape from './rules/skill-argument-escape.ts'
+import * as skillBodyTokenBudget from './rules/skill-body-token-budget.ts'
+import * as skillBooleanLiteral from './rules/skill-boolean-literal.ts'
+import * as skillDescriptionMaxLength from './rules/skill-description-max-length.ts'
+import * as skillDescriptionPresent from './rules/skill-description-present.ts'
+import * as skillFileLayout from './rules/skill-file-layout.ts'
+import * as skillForkFieldsRequireContext from './rules/skill-fork-fields-require-context.ts'
+import * as skillFrontmatterPosition from './rules/skill-frontmatter-position.ts'
+import * as skillFrontmatterSchema from './rules/skill-frontmatter-schema.ts'
+import * as skillInjectBangPosition from './rules/skill-inject-bang-position.ts'
+import * as skillInjectRobustness from './rules/skill-inject-robustness.ts'
+import * as skillInvocationRedundantFields from './rules/skill-invocation-redundant-fields.ts'
+import * as skillInvocationUnreachable from './rules/skill-invocation-unreachable.ts'
+import * as skillListingBudget from './rules/skill-listing-budget.ts'
+import * as skillLiteralDollar from './rules/skill-literal-dollar.ts'
+import * as skillLoopReferenceInvocable from './rules/skill-loop-reference-invocable.ts'
+import * as skillMaxLines from './rules/skill-max-lines.ts'
+import * as skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
+import * as skillModelOverride from './rules/skill-model-override.ts'
+import * as skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
+import * as skillNameUnique from './rules/skill-name-unique.ts'
+import * as skillNoBom from './rules/skill-no-bom.ts'
+import * as skillPathsGlobValid from './rules/skill-paths-glob-valid.ts'
+import * as skillPluginNamePrefix from './rules/skill-plugin-name-prefix.ts'
+import * as skillPluginPathVars from './rules/skill-plugin-path-vars.ts'
+import * as skillPluginRootName from './rules/skill-plugin-root-name.ts'
+import * as skillPluginRootShadowed from './rules/skill-plugin-root-shadowed.ts'
+import * as skillPluginVarsOutsidePlugin from './rules/skill-plugin-vars-outside-plugin.ts'
+import * as skillPrecedenceShadowing from './rules/skill-precedence-shadowing.ts'
+import * as skillReferenceExists from './rules/skill-reference-exists.ts'
+import * as skillReservedName from './rules/skill-reserved-name.ts'
+import * as skillShellPlatform from './rules/skill-shell-platform.ts'
+import * as skillSideEffectsManualOnly from './rules/skill-side-effects-manual-only.ts'
+import * as statuslineHomePathShared from './rules/statusline-home-path-shared.ts'
+import * as statuslineScriptExists from './rules/statusline-script-exists.ts'
+import * as statuslineScriptTerminalSize from './rules/statusline-script-terminal-size.ts'
+import * as statuslineWindowsPath from './rules/statusline-windows-path.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
 // `../package.json` resolves from both `src/` and `dist/`.
@@ -460,477 +460,484 @@ const { name, version } = createRequire(import.meta.url)('../package.json') as {
   version: string
 }
 
+// A call lets Knip count the members of each namespace import as used. Knip
+// does not follow a namespace that sits bare in an array.
+const entry = <T>(module: T) => module
+
 // Each rule module names its own files and language, so a new rule adds no
 // entry to a central glob list.
 const modules = [
-  skillDescriptionMaxLength,
-  commandLegacyFormat,
-  hooksEventNameKnown,
-  hooksAgentStopEvent,
-  hooksAgentTypeExperimental,
-  hooksAsyncOnBlockingEvent,
-  hooksBroadAutoApprove,
-  hooksCommandDeprecatedCliFlag,
-  hooksCommandPathVariable,
-  hooksCommandRemovedCliFlag,
-  hooksCommandShellSafety,
-  hooksCommittedCommandReview,
-  hooksConfigSchema,
-  hooksDisableAllOverride,
-  hooksDisabledByDisableallhooks,
-  hooksDuplicateHandler,
-  hooksEnvVarUnavailable,
-  hooksExecFormCommandSpaces,
-  hooksExecFormShellSyntax,
-  hooksExecFormWindowsShim,
-  hooksFilechangedStarMatcher,
-  hooksHandlerFieldIgnored,
-  hooksHandlerFieldUnknown,
-  hooksHandlerTypeEventSupport,
-  hooksHttpEnvAllowlist,
-  hooksHttpLiteralSecret,
-  hooksIfCondition,
-  hooksIfDirGlobDepth,
-  hooksMatcherBashWithoutPowershell,
-  hooksMatcherDeprecatedValue,
-  hooksMatcherEnum,
-  hooksMatcherLegacyVersion,
-  hooksMatcherMcpName,
-  hooksMatcherNameUnresolved,
-  hooksMatcherNeverMatches,
-  hooksMatcherSubagentAnchor,
-  hooksMatcherSyntax,
-  hooksMatcherUnanchoredRegex,
-  hooksMatcherUnsupportedEvent,
-  hooksMultipleUpdatedinput,
-  hooksNoStandaloneFile,
-  hooksOutputBlockingExitCode,
-  hooksOutputDeprecatedFields,
-  hooksOutputSchema,
-  hooksOutputSize,
-  hooksPlaceholderQuoted,
-  hooksPowershellPlaceholder,
-  hooksPreferExecForm,
-  hooksPromptOnPermissionRequest,
-  hooksPs1NeedsPowershellShell,
-  hooksScriptShebang,
-  hooksSessionendDefaultTimeout,
-  hooksSessionstartStaticContext,
-  hooksStopLoopGuard,
-  hooksTimeoutUnits,
-  hooksWorktreeCreateWithoutRemove,
-  skillFrontmatterPosition,
-  skillFrontmatterSchema,
-  skillForkFieldsRequireContext,
-  skillInvocationUnreachable,
-  skillReservedName,
-  skillPluginVarsOutsidePlugin,
-  skillInjectBangPosition,
-  skillAllowedToolsIneffective,
-  skillAllowedToolsBroad,
-  skillPluginRootShadowed,
-  skillFileLayout,
-  skillReferenceExists,
-  skillAgentExists,
-  skillNameUnique,
-  skillPathsGlobValid,
-  skillBooleanLiteral,
-  skillDescriptionPresent,
-  skillInvocationRedundantFields,
-  skillMetadataReservedKeys,
-  skillNameShadowsBuiltin,
-  skillNoBom,
-  skillArgumentEscape,
-  skillMaxLines,
-  skillPluginNamePrefix,
-  skillPluginRootName,
-  skillShellPlatform,
-  skillBodyTokenBudget,
-  skillInjectRobustness,
-  skillListingBudget,
-  skillLiteralDollar,
-  skillLoopReferenceInvocable,
-  skillModelOverride,
-  skillPluginPathVars,
-  skillPrecedenceShadowing,
-  skillSideEffectsManualOnly,
-  agentFrontmatterValid,
-  agentFrontmatterSchema,
-  agentPluginIgnoredFields,
-  agentMcpServersSchema,
-  agentPermissionModeBypass,
-  agentMemoryGrantsWrite,
-  agentToolsKnown,
-  agentToolsUnavailable,
-  agentNameUnique,
-  agentSkillsPreloadable,
-  agentMemoryAutoMemoryOff,
-  agentOmitClaudeMdMain,
-  agentModelForced,
-  agentTeamsNoProjectConfig,
-  outputStyleFrontmatterValid,
-  outputStyleFrontmatterSchema,
-  agentDisallowedToolsScope,
-  agentFieldMinVersion,
-  agentMcpServersInlineTrust,
-  agentMemoryScopeProject,
-  agentNameShadowing,
-  agentNameShadowsBuiltin,
-  agentNoBom,
-  agentPermissionModeManual,
-  agentPluginScopedNameUnique,
-  agentToolsConditional,
-  agentToolsTaskAlias,
-  outputStyleForceForPlugin,
-  outputStyleNameUnique,
-  outputStylePluginNameDescription,
-  agentInitialPromptMainOnly,
-  agentMcpServersRefExists,
-  agentModelValue,
-  agentSkillsExist,
-  agentToolsAgentTypeList,
-  agentToolsSkillForPreload,
-  agentBodyNonempty,
-  agentDescriptionProactive,
-  agentDescriptionsBudget,
-  agentNameKebabCase,
-  agentTeammateIgnoredFields,
-  permissionsRuleSyntax,
-  permissionsUnknownTool,
-  permissionsToolNameGlob,
-  permissionsSpecifierUnsupported,
-  permissionsPathRuleTool,
-  permissionsMcpRuleParens,
-  permissionsParamRule,
-  permissionsSkillRule,
-  permissionsBypassModeCommitted,
-  permissionsDefaultModeConflict,
-  permissionsDefaultModeProjectIgnored,
-  permissionsDefaultModeValue,
-  permissionsDisableModeValue,
-  permissionsSchema,
-  permissionsAllowUnrestricted,
-  permissionsBashExecWrapperPrefix,
-  permissionsBashRunnerWildcard,
-  permissionsBashWildcardBeforeSubcommand,
-  permissionsEndConversation,
-  permissionsProtectedPathAllow,
-  permissionsAdditionalDirectoriesPath,
-  permissionsBlockReadsFalse,
-  permissionsInvalidPathPattern,
-  permissionsNegation,
-  permissionsWebfetchDomainSyntax,
-  permissionsWindowsPath,
-  permissionsAutoModeSchema,
-  sandboxDomainSyntax,
-  sandboxExcludedCommandsSyntax,
-  sandboxFilesystemDisabledConflict,
-  sandboxSchema,
-  sandboxScope,
-  sandboxCredentialsAws,
-  sandboxCredentialsMask,
-  sandboxDomainOverlap,
-  permissionsSandboxBashAsk,
-  permissionsDeadAllow,
-  permissionsAutoModeDroppedAllow,
-  permissionsBashColonStarMid,
-  permissionsBashColonStarSuffix,
-  permissionsDefaultModeManualAlias,
-  permissionsDefaultModeSurface,
-  permissionsDenyAllTools,
-  permissionsDuplicateRule,
-  permissionsAllowDirDepth,
-  permissionsCdAllowlist,
-  permissionsGlobGrepAllow,
-  permissionsLegacyToolName,
-  permissionsReadDenyNotebook,
-  permissionsWebfetchApex,
-  permissionsWebfetchMidWildcard,
-  permissionsAutoModeDefaults,
-  permissionsIgnorePatterns,
-  sandboxCredentialsMaskFallback,
-  sandboxDomainDuplicate,
-  sandboxPlatformLimits,
-  sandboxWeakeningOptions,
-  permissionsBashGluedWildcard,
-  permissionsBashStrippedWrapper,
-  permissionsBashDenyNotBoundary,
-  permissionsBashArgumentConstraint,
-  permissionsBashReadonlyRedundant,
-  permissionsPathAnchor,
-  permissionsParamRuleIntent,
-  permissionsMcpServerExists,
-  permissionsAgentRuleExists,
-  permissionsAdditionalDirectoriesNoConfig,
-  permissionsDenyDirListable,
-  permissionsDenySecretFiles,
-  permissionsAutoModePushAsk,
-  permissionsAutoModeRuleSyntax,
-  marketplaceNameReserved,
-  marketplaceCommandVersionIgnored,
-  marketplaceHeadersHelperCommand,
-  marketplaceEntryHooksInline,
-  marketplaceSourceSchema,
-  marketplaceRelativeSourceFormat,
-  marketplaceSchema,
-  marketplaceEntryNameMatchesManifest,
-  marketplaceRelativeSourceExists,
-  marketplaceRelativeSourceEscapeSymlink,
-  marketplaceVersionDuplicate,
-  marketplaceEntryManifestOnlyFields,
-  marketplaceStrictFalseConflict,
-  marketplaceEntryHooksOverride,
-  marketplaceEntryRootSkills,
-  marketplaceEntryComponentPaths,
-  marketplaceArchiveSha256,
-  marketplaceCommandLinkMode,
-  marketplaceCommandSource,
-  marketplaceLocation,
-  marketplaceMinVersion,
-  marketplaceRelativeSourceBackslash,
-  marketplaceSelfHostedRootSource,
-  marketplaceRelativeSourceUrlHosted,
-  marketplaceHeadersLiteralCredential,
-  settingsEnabledPluginsSchema,
-  settingsEnabledPluginsEntryExists,
-  settingsExtraKnownMarketplacesSchema,
-  settingsExtraKnownMarketplacesKeyMatchesName,
-  settingsMarketplaceHeadersHelperHttps,
-  settingsMarketplaceKeyAliasConflict,
-  settingsSyncClaudeAiPlugins,
-  settingsValidJson,
-  settingsFileSize,
-  settingsKeyScope,
-  settingsManagedFile,
-  settingsRemovedKey,
-  settingsEnvCredential,
-  settingsEnvValueFormat,
-  settingsEnvIgnoredVar,
-  settingsProjectValueIgnored,
-  settingsKnownMarketplacesPolicySchema,
-  settingsPluginSuggestionMarketplacesSource,
-  settingsConflictingKeys,
-  settingsModelValue,
-  settingsModelList,
-  settingsSkilloverridesKey,
-  settingsEnvShadowed,
-  settingsSchema,
-  settingsAttributionFalse,
-  settingsDeprecatedKey,
-  settingsGlobalOnlyFile,
-  settingsOutputstyleResolves,
-  settingsProjectAutocontinueOff,
-  settingsRedundantValue,
-  settingsSchemaUrl,
-  settingsCommittedHelperCommand,
-  settingsEnvDeprecatedVar,
-  settingsEnvPromptCachingOff,
-  settingsEnvRouting,
-  settingsLocalLocation,
-  settingsWebfetchPreflightSkip,
-  settingsEnvNumericSpelling,
-  settingsFooterlinksPattern,
-  settingsManagedValueForm,
-  settingsManagedVersionFloor,
-  settingsWorktreeSparseClaudeDir,
-  statuslineWindowsPath,
-  hooksScriptExists,
-  hooksScriptExecutable,
-  pluginBinExecutable,
-  statuslineScriptExists,
-  claudeMdLocalUntracked,
-  memoryAgentMemoryLocalUntracked,
-  pluginEvalsReplayCommitted,
-  pluginEvalsResultsGitignored,
-  settingsLocalGitignored,
-  settingsLocalUntracked,
-  settingsEnabledPluginsExternalSource,
-  settingsEnabledPluginsMarketplaceDeclared,
-  settingsExtraKnownMarketplacesDirectory,
-  settingsKnownMarketplacesPatternAnchored,
-  settingsMarketplaceKeyAlias,
-  settingsMarketplaceSkipLfs,
-  settingsStrictKnownMarketplacesSkillsDir,
-  claudeMdAgentsMdShadowed,
-  claudeMdAgentsMdVariant,
-  claudeMdExcludesPattern,
-  claudeMdImportExists,
-  claudeMdImportMaxDepth,
-  claudeMdMaxBytes,
-  memorySettingsSchema,
-  memorySymlinkNetworkTarget,
-  rulesFrontmatterSchema,
-  rulesMdExtension,
-  rulesPathsGlobValid,
-  rulesSymlinkExternalScoped,
-  claudeMdImportExternal,
-  claudeMdMaxLines,
-  claudeMdSymlink,
-  memoryAutoMemoryDirectoryCommitted,
-  memoryIndexMaxSize,
-  rulesMaxLines,
-  rulesSymlinkExternal,
-  claudeMdAgentsMdProsePointer,
-  claudeMdCombinedSize,
-  claudeMdDanglingReference,
-  claudeMdDerivableContent,
-  claudeMdEmphasisOveruse,
-  claudeMdExcludesAbsoluteCommitted,
-  claudeMdGitInstructions,
-  claudeMdGuardrailToHook,
-  claudeMdHtmlCommentContent,
-  claudeMdImportInCodeSpan,
-  claudeMdLocation,
-  claudeMdProcedureToSkill,
-  memoryAgentMemoryOrphan,
-  memoryIndexEntryFormat,
-  memoryTopicFrontmatter,
-  rulesPathsNoMatch,
-  settingsAgentExists,
-  settingsDefaultshellPowershellTool,
-  settingsEnvContextCost,
-  settingsEnvFormatHeuristic,
-  settingsEnvSecretHeuristic,
-  settingsManagedEffortCap,
-  settingsManagedMerge,
-  settingsModelCapability,
-  settingsModelPinVersion,
-  settingsNestedProjectFile,
-  settingsSkilloverridesUnknownSkill,
-  settingsWorktreePaths,
-  statuslineHomePathShared,
-  statuslineScriptTerminalSize,
-  mcpJsonLocation,
-  mcpJsonServersKey,
-  mcpJsonFileSize,
-  mcpServerNameReserved,
-  mcpRemoteUrlEmpty,
-  mcpHiddenWhitespace,
-  mcpTimeoutMin,
-  mcpOauthTransport,
-  mcpOauthValues,
-  mcpAuthorizationHeaderWithOauth,
-  mcpProjectDirDefault,
-  mcpEnvExpansionField,
-  mcpCredentialVarRemote,
-  mcpHeadershelperCredentialEnv,
-  mcpSettingsMcpservers,
-  mcpAnthropicHostedUrl,
-  mcpProjectPluginBundle,
-  mcpToolNameFormat,
-  mcpApprovalCommitted,
-  mcpDisableConnectorsFalse,
-  mcpPolicyEntrySchema,
-  lspJsonSchema,
-  lspTransportSocket,
-  mcpAllowlistServernameDead,
-  mcpEnvClientSecret,
-  mcpManagedServersEntry,
-  mcpDuplicateServerName,
-  lspExtensionConflict,
-  lspDuplicateServerName,
-  mcpPluginToolNameScoped,
-  mcpApprovalNamesExist,
-  mcpApprovalConflict,
-  mcpAllowDenyOverlap,
-  mcpHeadershelperCommitted,
-  mcpHeadershelperPath,
-  mcpNoSseTransport,
-  mcpServerNameAnthropicSkills,
-  mcpServerNameFormat,
-  mcpStdioRelativePath,
-  mcpAllowlistEmpty,
-  mcpInsecureUrl,
-  mcpPluginStdioReach,
-  mcpPolicyLiteralValues,
-  mcpPolicyServernameWeak,
-  mcpAlwaysLoadCount,
-  mcpEnvVarNumbers,
-  mcpEnvVarSyntax,
-  mcpNoLiteralSecrets,
-  mcpProjectToggleKeys,
-  mcpToolServerUnknown,
-  lspJsonLocation,
-  mcpEnvVarDefault,
-  mcpPluginRootPaths,
-  mcpStdioCommandHasArgs,
-  mcpUnknownKeys,
-  pluginManifestLocation,
-  pluginSkillDirLayout,
-  pluginNoProjectPluginsDir,
-  pluginProjectSkillsDirLimits,
-  pluginCommandsDirNonempty,
-  pluginDefaultDirShadowed,
-  pluginMonitorsCommandEnv,
-  pluginNoGitLfs,
-  pluginPackageLockfile,
-  pluginPathVarBraced,
-  pluginUserConfigNoShellFields,
-  pluginSymlinkEscapesMarketplace,
-  pluginSymlinkEscapesPlugin,
-  pluginDependenciesResolve,
-  pluginMonitorsSkillExists,
-  pluginNpmSourceShrinkwrap,
-  pluginSettingsSingleSource,
-  pluginUserConfigSensitiveInContent,
-  pluginFeatureMinVersion,
-  pluginManifestMetadataFormat,
-  pluginManifestNoBom,
-  pluginManifestPublishMetadata,
-  pluginManifestVersionSemver,
-  pluginCommandsMapFields,
-  pluginDependenciesNotAutoInstalled,
-  pluginPathNoBackslash,
-  pluginSettingsAgentExists,
-  pluginSkillsKeyRedundantDefault,
-  pluginUserConfigFieldApplicability,
-  pluginBinClaudeAi,
-  pluginMonitorsCommandQuote,
-  pluginPackageLifecycleScripts,
-  pluginPackageLockfileChoice,
-  pluginThemesLayout,
-  pluginEvalsCaseYaml,
-  pluginEvalsDir,
-  pluginEvalsGrader,
-  pluginEvalsMockSchema,
-  pluginEvalsMockServerExists,
-  pluginEvalsPromptFrontmatter,
-  pluginEvalsPromptNoAtMentions,
-  pluginUserConfigSensitive,
-  pluginChannelServerStdio,
-  pluginBinShadowsSystemCommand,
-  pluginDependenciesPrereleaseRange,
-  pluginRelevanceSignalHints,
-  pluginDirNotMarketplaceRoot,
-  pluginNoStateInPluginRoot,
-  pluginNoParentPathEscape,
-  pluginPathUsesPluginRoot,
-  sandboxAllowWriteEscalation,
-  sandboxCredentialsRecommended,
-  sandboxDockerExcluded,
-  sandboxDomainBroad,
-  sandboxExcludedCommandsBroad,
-  sandboxProxyEnv,
-  sandboxSettingsWithoutEnabled,
-  sandboxUnsandboxedRetry,
+  entry(skillDescriptionMaxLength),
+  entry(commandLegacyFormat),
+  entry(hooksEventNameKnown),
+  entry(hooksAgentStopEvent),
+  entry(hooksAgentTypeExperimental),
+  entry(hooksAsyncOnBlockingEvent),
+  entry(hooksBroadAutoApprove),
+  entry(hooksCommandDeprecatedCliFlag),
+  entry(hooksCommandPathVariable),
+  entry(hooksCommandRemovedCliFlag),
+  entry(hooksCommandShellSafety),
+  entry(hooksCommittedCommandReview),
+  entry(hooksConfigSchema),
+  entry(hooksDisableAllOverride),
+  entry(hooksDisabledByDisableallhooks),
+  entry(hooksDuplicateHandler),
+  entry(hooksEnvVarUnavailable),
+  entry(hooksExecFormCommandSpaces),
+  entry(hooksExecFormShellSyntax),
+  entry(hooksExecFormWindowsShim),
+  entry(hooksFilechangedStarMatcher),
+  entry(hooksHandlerFieldIgnored),
+  entry(hooksHandlerFieldUnknown),
+  entry(hooksHandlerTypeEventSupport),
+  entry(hooksHttpEnvAllowlist),
+  entry(hooksHttpLiteralSecret),
+  entry(hooksIfCondition),
+  entry(hooksIfDirGlobDepth),
+  entry(hooksMatcherBashWithoutPowershell),
+  entry(hooksMatcherDeprecatedValue),
+  entry(hooksMatcherEnum),
+  entry(hooksMatcherLegacyVersion),
+  entry(hooksMatcherMcpName),
+  entry(hooksMatcherNameUnresolved),
+  entry(hooksMatcherNeverMatches),
+  entry(hooksMatcherSubagentAnchor),
+  entry(hooksMatcherSyntax),
+  entry(hooksMatcherUnanchoredRegex),
+  entry(hooksMatcherUnsupportedEvent),
+  entry(hooksMultipleUpdatedinput),
+  entry(hooksNoStandaloneFile),
+  entry(hooksOutputBlockingExitCode),
+  entry(hooksOutputDeprecatedFields),
+  entry(hooksOutputSchema),
+  entry(hooksOutputSize),
+  entry(hooksPlaceholderQuoted),
+  entry(hooksPowershellPlaceholder),
+  entry(hooksPreferExecForm),
+  entry(hooksPromptOnPermissionRequest),
+  entry(hooksPs1NeedsPowershellShell),
+  entry(hooksScriptShebang),
+  entry(hooksSessionendDefaultTimeout),
+  entry(hooksSessionstartStaticContext),
+  entry(hooksStopLoopGuard),
+  entry(hooksTimeoutUnits),
+  entry(hooksWorktreeCreateWithoutRemove),
+  entry(skillFrontmatterPosition),
+  entry(skillFrontmatterSchema),
+  entry(skillForkFieldsRequireContext),
+  entry(skillInvocationUnreachable),
+  entry(skillReservedName),
+  entry(skillPluginVarsOutsidePlugin),
+  entry(skillInjectBangPosition),
+  entry(skillAllowedToolsIneffective),
+  entry(skillAllowedToolsBroad),
+  entry(skillPluginRootShadowed),
+  entry(skillFileLayout),
+  entry(skillReferenceExists),
+  entry(skillAgentExists),
+  entry(skillNameUnique),
+  entry(skillPathsGlobValid),
+  entry(skillBooleanLiteral),
+  entry(skillDescriptionPresent),
+  entry(skillInvocationRedundantFields),
+  entry(skillMetadataReservedKeys),
+  entry(skillNameShadowsBuiltin),
+  entry(skillNoBom),
+  entry(skillArgumentEscape),
+  entry(skillMaxLines),
+  entry(skillPluginNamePrefix),
+  entry(skillPluginRootName),
+  entry(skillShellPlatform),
+  entry(skillBodyTokenBudget),
+  entry(skillInjectRobustness),
+  entry(skillListingBudget),
+  entry(skillLiteralDollar),
+  entry(skillLoopReferenceInvocable),
+  entry(skillModelOverride),
+  entry(skillPluginPathVars),
+  entry(skillPrecedenceShadowing),
+  entry(skillSideEffectsManualOnly),
+  entry(agentFrontmatterValid),
+  entry(agentFrontmatterSchema),
+  entry(agentPluginIgnoredFields),
+  entry(agentMcpServersSchema),
+  entry(agentPermissionModeBypass),
+  entry(agentMemoryGrantsWrite),
+  entry(agentToolsKnown),
+  entry(agentToolsUnavailable),
+  entry(agentNameUnique),
+  entry(agentSkillsPreloadable),
+  entry(agentMemoryAutoMemoryOff),
+  entry(agentOmitClaudeMdMain),
+  entry(agentModelForced),
+  entry(agentTeamsNoProjectConfig),
+  entry(outputStyleFrontmatterValid),
+  entry(outputStyleFrontmatterSchema),
+  entry(agentDisallowedToolsScope),
+  entry(agentFieldMinVersion),
+  entry(agentMcpServersInlineTrust),
+  entry(agentMemoryScopeProject),
+  entry(agentNameShadowing),
+  entry(agentNameShadowsBuiltin),
+  entry(agentNoBom),
+  entry(agentPermissionModeManual),
+  entry(agentPluginScopedNameUnique),
+  entry(agentToolsConditional),
+  entry(agentToolsTaskAlias),
+  entry(outputStyleForceForPlugin),
+  entry(outputStyleNameUnique),
+  entry(outputStylePluginNameDescription),
+  entry(agentInitialPromptMainOnly),
+  entry(agentMcpServersRefExists),
+  entry(agentModelValue),
+  entry(agentSkillsExist),
+  entry(agentToolsAgentTypeList),
+  entry(agentToolsSkillForPreload),
+  entry(agentBodyNonempty),
+  entry(agentDescriptionProactive),
+  entry(agentDescriptionsBudget),
+  entry(agentNameKebabCase),
+  entry(agentTeammateIgnoredFields),
+  entry(permissionsRuleSyntax),
+  entry(permissionsUnknownTool),
+  entry(permissionsToolNameGlob),
+  entry(permissionsSpecifierUnsupported),
+  entry(permissionsPathRuleTool),
+  entry(permissionsMcpRuleParens),
+  entry(permissionsParamRule),
+  entry(permissionsSkillRule),
+  entry(permissionsBypassModeCommitted),
+  entry(permissionsDefaultModeConflict),
+  entry(permissionsDefaultModeProjectIgnored),
+  entry(permissionsDefaultModeValue),
+  entry(permissionsDisableModeValue),
+  entry(permissionsSchema),
+  entry(permissionsAllowUnrestricted),
+  entry(permissionsBashExecWrapperPrefix),
+  entry(permissionsBashRunnerWildcard),
+  entry(permissionsBashWildcardBeforeSubcommand),
+  entry(permissionsEndConversation),
+  entry(permissionsProtectedPathAllow),
+  entry(permissionsAdditionalDirectoriesPath),
+  entry(permissionsBlockReadsFalse),
+  entry(permissionsInvalidPathPattern),
+  entry(permissionsNegation),
+  entry(permissionsWebfetchDomainSyntax),
+  entry(permissionsWindowsPath),
+  entry(permissionsAutoModeSchema),
+  entry(sandboxDomainSyntax),
+  entry(sandboxExcludedCommandsSyntax),
+  entry(sandboxFilesystemDisabledConflict),
+  entry(sandboxSchema),
+  entry(sandboxScope),
+  entry(sandboxCredentialsAws),
+  entry(sandboxCredentialsMask),
+  entry(sandboxDomainOverlap),
+  entry(permissionsSandboxBashAsk),
+  entry(permissionsDeadAllow),
+  entry(permissionsAutoModeDroppedAllow),
+  entry(permissionsBashColonStarMid),
+  entry(permissionsBashColonStarSuffix),
+  entry(permissionsDefaultModeManualAlias),
+  entry(permissionsDefaultModeSurface),
+  entry(permissionsDenyAllTools),
+  entry(permissionsDuplicateRule),
+  entry(permissionsAllowDirDepth),
+  entry(permissionsCdAllowlist),
+  entry(permissionsGlobGrepAllow),
+  entry(permissionsLegacyToolName),
+  entry(permissionsReadDenyNotebook),
+  entry(permissionsWebfetchApex),
+  entry(permissionsWebfetchMidWildcard),
+  entry(permissionsAutoModeDefaults),
+  entry(permissionsIgnorePatterns),
+  entry(sandboxCredentialsMaskFallback),
+  entry(sandboxDomainDuplicate),
+  entry(sandboxPlatformLimits),
+  entry(sandboxWeakeningOptions),
+  entry(permissionsBashGluedWildcard),
+  entry(permissionsBashStrippedWrapper),
+  entry(permissionsBashDenyNotBoundary),
+  entry(permissionsBashArgumentConstraint),
+  entry(permissionsBashReadonlyRedundant),
+  entry(permissionsPathAnchor),
+  entry(permissionsParamRuleIntent),
+  entry(permissionsMcpServerExists),
+  entry(permissionsAgentRuleExists),
+  entry(permissionsAdditionalDirectoriesNoConfig),
+  entry(permissionsDenyDirListable),
+  entry(permissionsDenySecretFiles),
+  entry(permissionsAutoModePushAsk),
+  entry(permissionsAutoModeRuleSyntax),
+  entry(marketplaceNameReserved),
+  entry(marketplaceCommandVersionIgnored),
+  entry(marketplaceHeadersHelperCommand),
+  entry(marketplaceEntryHooksInline),
+  entry(marketplaceSourceSchema),
+  entry(marketplaceRelativeSourceFormat),
+  entry(marketplaceSchema),
+  entry(marketplaceEntryNameMatchesManifest),
+  entry(marketplaceRelativeSourceExists),
+  entry(marketplaceRelativeSourceEscapeSymlink),
+  entry(marketplaceVersionDuplicate),
+  entry(marketplaceEntryManifestOnlyFields),
+  entry(marketplaceStrictFalseConflict),
+  entry(marketplaceEntryHooksOverride),
+  entry(marketplaceEntryRootSkills),
+  entry(marketplaceEntryComponentPaths),
+  entry(marketplaceArchiveSha256),
+  entry(marketplaceCommandLinkMode),
+  entry(marketplaceCommandSource),
+  entry(marketplaceLocation),
+  entry(marketplaceMinVersion),
+  entry(marketplaceRelativeSourceBackslash),
+  entry(marketplaceSelfHostedRootSource),
+  entry(marketplaceRelativeSourceUrlHosted),
+  entry(marketplaceHeadersLiteralCredential),
+  entry(settingsEnabledPluginsSchema),
+  entry(settingsEnabledPluginsEntryExists),
+  entry(settingsExtraKnownMarketplacesSchema),
+  entry(settingsExtraKnownMarketplacesKeyMatchesName),
+  entry(settingsMarketplaceHeadersHelperHttps),
+  entry(settingsMarketplaceKeyAliasConflict),
+  entry(settingsSyncClaudeAiPlugins),
+  entry(settingsValidJson),
+  entry(settingsFileSize),
+  entry(settingsKeyScope),
+  entry(settingsManagedFile),
+  entry(settingsRemovedKey),
+  entry(settingsEnvCredential),
+  entry(settingsEnvValueFormat),
+  entry(settingsEnvIgnoredVar),
+  entry(settingsProjectValueIgnored),
+  entry(settingsKnownMarketplacesPolicySchema),
+  entry(settingsPluginSuggestionMarketplacesSource),
+  entry(settingsConflictingKeys),
+  entry(settingsModelValue),
+  entry(settingsModelList),
+  entry(settingsSkilloverridesKey),
+  entry(settingsEnvShadowed),
+  entry(settingsSchema),
+  entry(settingsAttributionFalse),
+  entry(settingsDeprecatedKey),
+  entry(settingsGlobalOnlyFile),
+  entry(settingsOutputstyleResolves),
+  entry(settingsProjectAutocontinueOff),
+  entry(settingsRedundantValue),
+  entry(settingsSchemaUrl),
+  entry(settingsCommittedHelperCommand),
+  entry(settingsEnvDeprecatedVar),
+  entry(settingsEnvPromptCachingOff),
+  entry(settingsEnvRouting),
+  entry(settingsLocalLocation),
+  entry(settingsWebfetchPreflightSkip),
+  entry(settingsEnvNumericSpelling),
+  entry(settingsFooterlinksPattern),
+  entry(settingsManagedValueForm),
+  entry(settingsManagedVersionFloor),
+  entry(settingsWorktreeSparseClaudeDir),
+  entry(statuslineWindowsPath),
+  entry(hooksScriptExists),
+  entry(hooksScriptExecutable),
+  entry(pluginBinExecutable),
+  entry(statuslineScriptExists),
+  entry(claudeMdLocalUntracked),
+  entry(memoryAgentMemoryLocalUntracked),
+  entry(pluginEvalsReplayCommitted),
+  entry(pluginEvalsResultsGitignored),
+  entry(settingsLocalGitignored),
+  entry(settingsLocalUntracked),
+  entry(settingsEnabledPluginsExternalSource),
+  entry(settingsEnabledPluginsMarketplaceDeclared),
+  entry(settingsExtraKnownMarketplacesDirectory),
+  entry(settingsKnownMarketplacesPatternAnchored),
+  entry(settingsMarketplaceKeyAlias),
+  entry(settingsMarketplaceSkipLfs),
+  entry(settingsStrictKnownMarketplacesSkillsDir),
+  entry(claudeMdAgentsMdShadowed),
+  entry(claudeMdAgentsMdVariant),
+  entry(claudeMdExcludesPattern),
+  entry(claudeMdImportExists),
+  entry(claudeMdImportMaxDepth),
+  entry(claudeMdMaxBytes),
+  entry(memorySettingsSchema),
+  entry(memorySymlinkNetworkTarget),
+  entry(rulesFrontmatterSchema),
+  entry(rulesMdExtension),
+  entry(rulesPathsGlobValid),
+  entry(rulesSymlinkExternalScoped),
+  entry(claudeMdImportExternal),
+  entry(claudeMdMaxLines),
+  entry(claudeMdSymlink),
+  entry(memoryAutoMemoryDirectoryCommitted),
+  entry(memoryIndexMaxSize),
+  entry(rulesMaxLines),
+  entry(rulesSymlinkExternal),
+  entry(claudeMdAgentsMdProsePointer),
+  entry(claudeMdCombinedSize),
+  entry(claudeMdDanglingReference),
+  entry(claudeMdDerivableContent),
+  entry(claudeMdEmphasisOveruse),
+  entry(claudeMdExcludesAbsoluteCommitted),
+  entry(claudeMdGitInstructions),
+  entry(claudeMdGuardrailToHook),
+  entry(claudeMdHtmlCommentContent),
+  entry(claudeMdImportInCodeSpan),
+  entry(claudeMdLocation),
+  entry(claudeMdProcedureToSkill),
+  entry(memoryAgentMemoryOrphan),
+  entry(memoryIndexEntryFormat),
+  entry(memoryTopicFrontmatter),
+  entry(rulesPathsNoMatch),
+  entry(settingsAgentExists),
+  entry(settingsDefaultshellPowershellTool),
+  entry(settingsEnvContextCost),
+  entry(settingsEnvFormatHeuristic),
+  entry(settingsEnvSecretHeuristic),
+  entry(settingsManagedEffortCap),
+  entry(settingsManagedMerge),
+  entry(settingsModelCapability),
+  entry(settingsModelPinVersion),
+  entry(settingsNestedProjectFile),
+  entry(settingsSkilloverridesUnknownSkill),
+  entry(settingsWorktreePaths),
+  entry(statuslineHomePathShared),
+  entry(statuslineScriptTerminalSize),
+  entry(mcpJsonLocation),
+  entry(mcpJsonServersKey),
+  entry(mcpJsonFileSize),
+  entry(mcpServerNameReserved),
+  entry(mcpRemoteUrlEmpty),
+  entry(mcpHiddenWhitespace),
+  entry(mcpTimeoutMin),
+  entry(mcpOauthTransport),
+  entry(mcpOauthValues),
+  entry(mcpAuthorizationHeaderWithOauth),
+  entry(mcpProjectDirDefault),
+  entry(mcpEnvExpansionField),
+  entry(mcpCredentialVarRemote),
+  entry(mcpHeadershelperCredentialEnv),
+  entry(mcpSettingsMcpservers),
+  entry(mcpAnthropicHostedUrl),
+  entry(mcpProjectPluginBundle),
+  entry(mcpToolNameFormat),
+  entry(mcpApprovalCommitted),
+  entry(mcpDisableConnectorsFalse),
+  entry(mcpPolicyEntrySchema),
+  entry(lspJsonSchema),
+  entry(lspTransportSocket),
+  entry(mcpAllowlistServernameDead),
+  entry(mcpEnvClientSecret),
+  entry(mcpManagedServersEntry),
+  entry(mcpDuplicateServerName),
+  entry(lspExtensionConflict),
+  entry(lspDuplicateServerName),
+  entry(mcpPluginToolNameScoped),
+  entry(mcpApprovalNamesExist),
+  entry(mcpApprovalConflict),
+  entry(mcpAllowDenyOverlap),
+  entry(mcpHeadershelperCommitted),
+  entry(mcpHeadershelperPath),
+  entry(mcpNoSseTransport),
+  entry(mcpServerNameAnthropicSkills),
+  entry(mcpServerNameFormat),
+  entry(mcpStdioRelativePath),
+  entry(mcpAllowlistEmpty),
+  entry(mcpInsecureUrl),
+  entry(mcpPluginStdioReach),
+  entry(mcpPolicyLiteralValues),
+  entry(mcpPolicyServernameWeak),
+  entry(mcpAlwaysLoadCount),
+  entry(mcpEnvVarNumbers),
+  entry(mcpEnvVarSyntax),
+  entry(mcpNoLiteralSecrets),
+  entry(mcpProjectToggleKeys),
+  entry(mcpToolServerUnknown),
+  entry(lspJsonLocation),
+  entry(mcpEnvVarDefault),
+  entry(mcpPluginRootPaths),
+  entry(mcpStdioCommandHasArgs),
+  entry(mcpUnknownKeys),
+  entry(pluginManifestLocation),
+  entry(pluginSkillDirLayout),
+  entry(pluginNoProjectPluginsDir),
+  entry(pluginProjectSkillsDirLimits),
+  entry(pluginCommandsDirNonempty),
+  entry(pluginDefaultDirShadowed),
+  entry(pluginMonitorsCommandEnv),
+  entry(pluginNoGitLfs),
+  entry(pluginPackageLockfile),
+  entry(pluginPathVarBraced),
+  entry(pluginUserConfigNoShellFields),
+  entry(pluginSymlinkEscapesMarketplace),
+  entry(pluginSymlinkEscapesPlugin),
+  entry(pluginDependenciesResolve),
+  entry(pluginMonitorsSkillExists),
+  entry(pluginNpmSourceShrinkwrap),
+  entry(pluginSettingsSingleSource),
+  entry(pluginUserConfigSensitiveInContent),
+  entry(pluginFeatureMinVersion),
+  entry(pluginManifestMetadataFormat),
+  entry(pluginManifestNoBom),
+  entry(pluginManifestPublishMetadata),
+  entry(pluginManifestVersionSemver),
+  entry(pluginCommandsMapFields),
+  entry(pluginDependenciesNotAutoInstalled),
+  entry(pluginPathNoBackslash),
+  entry(pluginSettingsAgentExists),
+  entry(pluginSkillsKeyRedundantDefault),
+  entry(pluginUserConfigFieldApplicability),
+  entry(pluginBinClaudeAi),
+  entry(pluginMonitorsCommandQuote),
+  entry(pluginPackageLifecycleScripts),
+  entry(pluginPackageLockfileChoice),
+  entry(pluginThemesLayout),
+  entry(pluginEvalsCaseYaml),
+  entry(pluginEvalsDir),
+  entry(pluginEvalsGrader),
+  entry(pluginEvalsMockSchema),
+  entry(pluginEvalsMockServerExists),
+  entry(pluginEvalsPromptFrontmatter),
+  entry(pluginEvalsPromptNoAtMentions),
+  entry(pluginUserConfigSensitive),
+  entry(pluginChannelServerStdio),
+  entry(pluginBinShadowsSystemCommand),
+  entry(pluginDependenciesPrereleaseRange),
+  entry(pluginRelevanceSignalHints),
+  entry(pluginDirNotMarketplaceRoot),
+  entry(pluginNoStateInPluginRoot),
+  entry(pluginNoParentPathEscape),
+  entry(pluginPathUsesPluginRoot),
+  entry(sandboxAllowWriteEscalation),
+  entry(sandboxCredentialsRecommended),
+  entry(sandboxDockerExcluded),
+  entry(sandboxDomainBroad),
+  entry(sandboxExcludedCommandsBroad),
+  entry(sandboxProxyEnv),
+  entry(sandboxSettingsWithoutEnabled),
+  entry(sandboxUnsandboxedRetry),
 ]
 
-type RuleName = (typeof modules)[number]['name']
-type Language = (typeof modules)[number]['language'] | 'json'
+type RuleName = (typeof modules)[number]['target']['name']
+type Language = (typeof modules)[number]['target']['language'] | 'json'
 // A rule for files of two languages adds its second language and files in
 // `also`. The config then has one block for each.
 interface Module {
-  name: string
-  language: Language
-  files: string[]
-  also?: { language: Language; files: string[] }
+  target: {
+    name: string
+    language: Language
+    files: string[]
+    also?: { language: Language; files: string[] }
+  }
+  default: unknown
 }
 type Severity = 'off' | 'warn' | 'error'
 
 // Language settings only, so the spread in `configFor` cannot replace a
 // block's `files` or `plugins`.
 const LANGUAGES: Record<
-  (typeof modules)[number]['language'],
+  (typeof modules)[number]['target']['language'],
   Pick<Linter.Config, 'language' | 'languageOptions'>
 > = {
   markdown: { language: 'markdown/gfm', languageOptions: { frontmatter: 'yaml' } },
@@ -1415,7 +1422,7 @@ type Plugin = Omit<ESLint.Plugin, 'meta' | 'configs'> & {
 
 const plugin: Plugin = {
   meta: { name, version, namespace: 'claude' },
-  rules: Object.fromEntries(modules.map((m) => [m.name, m.rule])),
+  rules: Object.fromEntries(modules.map((m) => [m.target.name, m.default])),
   // Filled in below, once `plugin` exists to reference itself.
   configs: { recommended: [], strict: [] },
 }
@@ -1425,14 +1432,17 @@ const plugin: Plugin = {
  *  consumer needs no other setup. */
 function configFor(config: string, severity: (rule: RuleName) => Severity): Linter.Config[] {
   return modules
-    .filter((m) => severity(m.name) !== 'off')
+    .filter((m) => severity(m.target.name) !== 'off')
     .flatMap((m: Module) =>
-      [{ language: m.language, files: m.files }, ...(m.also ? [m.also] : [])].map((target) => ({
-        name: `claude/${config}/${m.name}`,
-        files: target.files,
+      [
+        { language: m.target.language, files: m.target.files },
+        ...(m.target.also ? [m.target.also] : []),
+      ].map((block) => ({
+        name: `claude/${config}/${m.target.name}`,
+        files: block.files,
         plugins: { claude: plugin, markdown, json },
-        ...LANGUAGES[target.language],
-        rules: { [`claude/${m.name}`]: severity(m.name as RuleName) },
+        ...LANGUAGES[block.language],
+        rules: { [`claude/${m.target.name}`]: severity(m.target.name as RuleName) },
       })),
     )
 }

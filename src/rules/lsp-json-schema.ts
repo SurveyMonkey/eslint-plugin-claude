@@ -56,9 +56,10 @@ const rule: JSONRuleDefinition<{ MessageIds: LspFaultId }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.lsp.json'],
-  rule,
 }
+
+export default rule

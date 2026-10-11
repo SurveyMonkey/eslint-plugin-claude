@@ -52,9 +52,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'reserved' }>
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.mcp.json'],
-  rule,
 }
+
+export default rule

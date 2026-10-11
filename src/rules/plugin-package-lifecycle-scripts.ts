@@ -55,9 +55,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/package.json'],
-  rule,
 }
+
+export default rule

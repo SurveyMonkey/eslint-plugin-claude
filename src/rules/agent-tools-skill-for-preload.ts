@@ -53,4 +53,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'skillTool' }> = {
   },
 }
 
-export default { name, language: 'markdown' as const, files: ['**/agents/**/*.md'], rule }
+export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+
+export default rule

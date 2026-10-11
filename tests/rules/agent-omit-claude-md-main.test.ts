@@ -3,7 +3,7 @@
 // disk, because the rule reads `.claude/settings.json` and `.claude/settings.local.json`.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import rule from '../../src/rules/agent-omit-claude-md-main.ts'
+import * as rule from '../../src/rules/agent-omit-claude-md-main.ts'
 import { agent, lintWith, repo } from '../agent-settings.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'

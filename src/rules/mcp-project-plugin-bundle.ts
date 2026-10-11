@@ -88,9 +88,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude/skills/*/.claude-plugin/plugin.json'],
-  rule,
 }
+
+export default rule
