@@ -4,59 +4,73 @@
   "blocks": [
     {
       "id": "plugin-dependencies",
-      "hash": "b36d6cfe2f56896769a65ac04da558387d954b02d2c343a1b5db9c6dac0cd7d2"
+      "hash": "b36d6cfe2f56896769a65ac04da558387d954b02d2c343a1b5db9c6dac0cd7d2",
+      "bodyHash": "3eea751f50c291d7ab021084821e4c02727d00f0a2873562f8d989d3225bdbe3"
     },
     {
       "id": "declare-dependencies",
-      "hash": "87571c19b3831c2eefe825048736d256eb725d81b6a1fe03b8251e03c243f990"
+      "hash": "87571c19b3831c2eefe825048736d256eb725d81b6a1fe03b8251e03c243f990",
+      "bodyHash": "72364ebd64ec76322a2381c3074585ae6e8dc1e396b1f9dcbc10c8abafd5c49b"
     },
     {
       "id": "declare-a-dependency-with-a-version-constraint",
-      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9"
+      "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9",
+      "bodyHash": "be04320071d7c130f97ca5a0810da0c127bed3608c6c6ca91c12d07102778e8d"
     },
     {
       "id": "bundle-plugins-for-a-team",
-      "hash": "1b8530f73d9fe5a7a077804894e923e550aa5d104c8efc23fc9920b8cea7ea8d"
+      "hash": "1b8530f73d9fe5a7a077804894e923e550aa5d104c8efc23fc9920b8cea7ea8d",
+      "bodyHash": "897d32c8f3af8ae59b384bcd417be331b97c97121e62cc8af0cf2722ca401a3e"
     },
     {
       "id": "depend-on-a-plugin-from-another-marketplace",
-      "hash": "8b0d6df8d63383be54639684afde969608c0b2550b4a35c62c64f0679f28f021"
+      "hash": "8b0d6df8d63383be54639684afde969608c0b2550b4a35c62c64f0679f28f021",
+      "bodyHash": "afd979ea5fb457a7c11bfbbe7960beae8e2cf910adddcf0f362b80de2b78458a"
     },
     {
       "id": "test-a-plugin-and-its-dependency-locally",
-      "hash": "19c0781c446421a20843c331659b06e666a16f4fe416473db8f17987d1bf2034"
+      "hash": "19c0781c446421a20843c331659b06e666a16f4fe416473db8f17987d1bf2034",
+      "bodyHash": "98591b40c6c833a7514b24a4b657d8e27836c54444777bed4499e4294ed73a25"
     },
     {
       "id": "tag-plugin-releases-for-version-resolution",
-      "hash": "25b6eba24bce5c94b52380fc781ff9fe2629f7499460b7265dc7337026367627"
+      "hash": "25b6eba24bce5c94b52380fc781ff9fe2629f7499460b7265dc7337026367627",
+      "bodyHash": "dd3aee61ed2326ab739534c17b6e42f2a55ae6e48dc9c0846836453899322d7c"
     },
     {
       "id": "create-a-release-tag",
-      "hash": "6206298e81dd4078540d51d0f2bf087de48e066c4969c5aed6911366634aa9d0"
+      "hash": "6206298e81dd4078540d51d0f2bf087de48e066c4969c5aed6911366634aa9d0",
+      "bodyHash": "4b737ca46795138b1aa64c1f1162dad9217f5e7ef86b675ba6a6513a95093c27"
     },
     {
       "id": "constrain-a-dependency-that-has-a-non-git-source",
-      "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa"
+      "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa",
+      "bodyHash": "f162618482a11f214d0293ef540a2d6663b10cdb57d49cac336731a809d1f809"
     },
     {
       "id": "how-dependencies-behave-for-your-users",
-      "hash": "431ec04f4d07a6af40c82885908ef8b4e50ccd4dae4fa6a0a353e1b610d8e912"
+      "hash": "431ec04f4d07a6af40c82885908ef8b4e50ccd4dae4fa6a0a353e1b610d8e912",
+      "bodyHash": "16e9c0edcb6594eefcdf5b9cb894b0c917c319d9f338fc1d67121cfd84a251aa"
     },
     {
       "id": "how-a-constraint-resolves-against-tags",
-      "hash": "c4deeb4795fe982234c57a4e601bd160a6a938babbb9df7fcae90d8debfb5913"
+      "hash": "c4deeb4795fe982234c57a4e601bd160a6a938babbb9df7fcae90d8debfb5913",
+      "bodyHash": "f1d89c2fb59d29728e07fad4ca56d97dcbb2085c49985628df61c030ef86bec6"
     },
     {
       "id": "confirm-the-resolved-version",
-      "hash": "d2e629f96e61c260b8d7f19e5d531f1b4e1f34b3dfcd1a977236264ad054b134"
+      "hash": "d2e629f96e61c260b8d7f19e5d531f1b4e1f34b3dfcd1a977236264ad054b134",
+      "bodyHash": "bf5a865e7c309d824e2367e1733d160bce9d581846af964d8bbfe24b32a8b7f7"
     },
     {
       "id": "combine-constraints-from-several-plugins",
-      "hash": "265022d5ec0c7eaf06e4d3b258300221e8a5881e2b4c7a6497754df466c73446"
+      "hash": "265022d5ec0c7eaf06e4d3b258300221e8a5881e2b4c7a6497754df466c73446",
+      "bodyHash": "e380a586bf563457a5bfa411160d6cc5c243302f4cf078b7088a177e57b96b4a"
     },
     {
       "id": "see-also",
-      "hash": "c5142deaa38bf33fc17598953bea755a11445e1aed51508136d40aaec0d4288f"
+      "hash": "c5142deaa38bf33fc17598953bea755a11445e1aed51508136d40aaec0d4288f",
+      "bodyHash": "825d099d0891f5c0d8e2074b24571adceed9b83ca2275506fe86e97ec4f58238"
     }
   ],
   "sources": [
