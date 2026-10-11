@@ -7,7 +7,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintEval, MANIFEST, PLUGIN, suite } from '../plugin-evals.test-support.ts'
 
 const RULE = 'plugin-evals-grader'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILE = 'evals/first/graders/g.md'
 const top = suite({ 'evals/first/prompt.md': 'x', [FILE]: 'x', 'evals/mocks/gh/t.md': 'x' })

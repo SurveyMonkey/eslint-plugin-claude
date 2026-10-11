@@ -3445,6 +3445,28 @@
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
     }
   ],
+  "plugin-evals-grader": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Grader frontmatter",
+      "hash": "db226c1e2665ae3f2961e2d6d0352a072180fbadebede9a21cba90d157c750dd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "What a grader can look at",
+      "hash": "bc92624bd1b81f596300598f8759ab0df738037a558c01f2f5362f43b2779bbe"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Grader types",
+      "hash": "e5de5b56f8fd6e23fb9ad61b20700549c2eb5ccfe5088ed65ef1f2344f35408e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-prompt-frontmatter": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",

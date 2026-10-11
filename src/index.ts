@@ -230,6 +230,7 @@ import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prere
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
 import pluginEvalsDir from './rules/plugin-evals-dir.ts'
+import pluginEvalsGrader from './rules/plugin-evals-grader.ts'
 import pluginEvalsPromptFrontmatter from './rules/plugin-evals-prompt-frontmatter.ts'
 import pluginEvalsPromptNoAtMentions from './rules/plugin-evals-prompt-no-at-mentions.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
@@ -752,6 +753,7 @@ const modules = [
   pluginPackageLockfileChoice,
   pluginThemesLayout,
   pluginEvalsDir,
+  pluginEvalsGrader,
   pluginEvalsPromptFrontmatter,
   pluginEvalsPromptNoAtMentions,
   pluginUserConfigSensitive,
@@ -1138,6 +1140,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
   'plugin-evals-dir': 'error',
+  'plugin-evals-grader': 'error',
   'plugin-evals-prompt-frontmatter': 'error',
   'plugin-evals-prompt-no-at-mentions': 'error',
   'plugin-feature-min-version': 'warn',

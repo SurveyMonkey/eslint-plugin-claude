@@ -286,6 +286,24 @@
       "text": "### Use a different eval directory\n\nIf `evals/` is already taken by another tool, keep the suite in a different directory. You can record that directory in the plugin's `plugin.json` so every run and every collaborator uses it, or pass it on the command line for a single run:\n\n* **In `plugin.json`**: add `\"experimental\": { \"evals\": \"quality/evals\" }`.\n* **On the command line**: pass `--eval-dir quality/evals` to both `claude plugin eval` and `claude plugin eval init`.\n\nIf you set both, the flag's directory is used. Give a relative path of plain directory names such as `qa` or `quality/evals`. An absolute path or one containing `..` isn't accepted: as a flag value it's an error, while an unusable manifest value prints a `Warning:` line and the run uses `evals/` instead. Cases, results, and `init` output all move to that directory."
     },
     {
+      "heading": "Grader frontmatter",
+      "id": "grader-frontmatter",
+      "hash": "db226c1e2665ae3f2961e2d6d0352a072180fbadebede9a21cba90d157c750dd",
+      "text": "### Grader frontmatter\n\nEvery grader file under `graders/` takes these keys in frontmatter, plus the options for its type. The grader's name is the filename without `.md`:\n\n| Key | Default | Purpose |\n| :- | :- | :- |\n| `type` | required | One of the [grader types](#grader-types) |\n| `weight` | `1` | Relative weight in the run's score. Any positive number |\n| `arm` | unset | `with-only` excludes the grader from scoring in a [two-arm run](#compare-against-a-no-plugin-baseline); `both` forces a grader Claude Code would otherwise exclude to be scored in both arms |"
+    },
+    {
+      "heading": "What a grader can look at",
+      "id": "what-a-grader-can-look-at",
+      "hash": "bc92624bd1b81f596300598f8759ab0df738037a558c01f2f5362f43b2779bbe",
+      "text": "#### What a grader can look at\n\n`regex` graders take a `target` and `llm` graders take a `focus`. Both accept the same values:\n\n| Value | What the grader sees |\n| :- | :- |\n| `last_message` | Claude's final response text. This is the default |\n| `trace` | The session as JSON, one message per line. A `regex` grader sees every message; an `llm` judge sees the first 12 and the last 12. Quotes and newlines inside it are JSON-escaped, so a regex matches `\\\"` rather than `\"` |\n| `files` | The list of paths Claude created during the run, one per line. Not their contents, and not files that a scaffold created or that Claude only modified |\n| `{ source: file, path: <path> }` | The contents of one file in the workspace after the run. Use this to grade what the plugin produced. A PNG, JPEG, GIF, or WebP file is shown to an `llm` judge as an image. An `llm` judge refuses other binary files such as `.pptx` or PDF; render them to an image or write them out as text and grade that |\n| `mock_calls` | Each call Claude made to a [mocked MCP tool](#mock-mcp-servers), with its input and the mock's answer |"
+    },
+    {
+      "heading": "Grader types",
+      "id": "grader-types",
+      "hash": "e5de5b56f8fd6e23fb9ad61b20700549c2eb5ccfe5088ed65ef1f2344f35408e",
+      "text": "#### Grader types\n\nEach grader type below lists its options and when it passes:\n\n| Type | Options | Passes when |\n| :- | :- | :- |\n| `regex` | `pattern`, `flags`, `match`, `target` | The JavaScript regex `pattern` is found in the target. Set `match: not_contains` to require absence or `match: \"count:N\"` to require exactly N matches. Put case-insensitivity in `flags: i`; inline `(?i)` isn't supported |\n| `tool_used` | `tool`, `input_match`, `min`, `max` | The number of calls to `tool` whose JSON-encoded input matches the optional `input_match` regex is between `min`, default 1, and `max`, default unlimited. To assert a tool was never called, set both `min: 0` and `max: 0` |\n| `tool_order` | `before`, `after` | Both tools were called and the first matching `before` call precedes the first matching `after` call. Each is a tool name or `{ tool, input_match }` |\n| `file_exists` | `path`, `exists` | A file Claude created matches the `path` glob, or none does with `exists: false`. Only files created during the run count |\n| `llm` | `criteria`, `focus` | A judge model votes PASS on the rubric in at least two of three votes. In the `.md` layout the file body is the criteria |\n| `baseline` | `baseline_file`, `criteria` | A judge finds the run satisfies the criteria at least as well as the reference transcript at `baseline_file`, a `.jsonl` in the case directory |"
+    },
+    {
       "heading": "prompt.md frontmatter",
       "id": "prompt-md-fields",
       "hash": "5f96edf31109ddc50b9167f50c9015b5fe016d674b53fbdc8633c1453c848dc3",

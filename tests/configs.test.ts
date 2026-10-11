@@ -2408,6 +2408,15 @@ const TREE: Record<string, string> = {
   'packages/evs/am/bad/evals/first/prompt.md': 'Summarize @src/app.ts.\n',
   'packages/evs/am/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
   'packages/evs/am/ok/evals/first/prompt.md': 'Summarize `@src/app.ts`.\n',
+  // `plugin-evals-grader`: a grader with a type that does not exist; a valid grader; a file in
+  // `graders/` of a folder that is no case.
+  'packages/evs/gr/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'packages/evs/gr/bad/evals/first/prompt.md': 'Write a message.\n',
+  'packages/evs/gr/bad/evals/first/graders/g.md': '---\ntype: contains\n---\n',
+  'packages/evs/gr/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'packages/evs/gr/ok/evals/first/prompt.md': 'Write a message.\n',
+  'packages/evs/gr/ok/evals/first/graders/g.md': '---\ntype: llm\n---\n',
+  'packages/evs/gr/ok/evals/graders/g.md': '---\ntype: contains\n---\n',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3168,6 +3177,7 @@ const PLUGIN_RULES: {
   },
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
   { name: 'plugin-evals-dir', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-evals-grader', language: 'markdown/gfm', files: ['**/graders/*.md'] },
   { name: 'plugin-evals-prompt-frontmatter', language: 'markdown/gfm', files: ['**/prompt.md'] },
   { name: 'plugin-evals-prompt-no-at-mentions', language: 'markdown/gfm', files: ['**/prompt.md'] },
 ]
@@ -3246,6 +3256,7 @@ const EXPECTED = [
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
   'packages/evs/am/bad/evals/first/prompt.md: claude/plugin-evals-prompt-no-at-mentions@2',
   'packages/evs/dir/bad/.claude-plugin/plugin.json: claude/plugin-evals-dir@2',
+  'packages/evs/gr/bad/evals/first/graders/g.md: claude/plugin-evals-grader@2',
   'packages/evs/pf/bad/evals/first/prompt.md: claude/plugin-evals-prompt-frontmatter@2',
   'packages/hk/.claude-plugin/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/agents/ev.md: claude/hooks-event-name-known@2',
