@@ -124,6 +124,7 @@ import settingsAgentExists from './rules/settings-agent-exists.ts'
 import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsCommittedHelperCommand from './rules/settings-committed-helper-command.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
+import settingsDefaultshellPowershellTool from './rules/settings-defaultshell-powershell-tool.ts'
 import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
@@ -152,7 +153,9 @@ import settingsKnownMarketplacesPolicySchema from './rules/settings-known-market
 import settingsLocalGitignored from './rules/settings-local-gitignored.ts'
 import settingsLocalLocation from './rules/settings-local-location.ts'
 import settingsLocalUntracked from './rules/settings-local-untracked.ts'
+import settingsManagedEffortCap from './rules/settings-managed-effort-cap.ts'
 import settingsManagedFile from './rules/settings-managed-file.ts'
+import settingsManagedMerge from './rules/settings-managed-merge.ts'
 import settingsManagedValueForm from './rules/settings-managed-value-form.ts'
 import settingsManagedVersionFloor from './rules/settings-managed-version-floor.ts'
 import settingsMarketplaceHeadersHelperHttps from './rules/settings-marketplace-headers-helper-https.ts'
@@ -178,6 +181,7 @@ import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-kn
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
 import settingsValidJson from './rules/settings-valid-json.ts'
 import settingsWebfetchPreflightSkip from './rules/settings-webfetch-preflight-skip.ts'
+import settingsWorktreePaths from './rules/settings-worktree-paths.ts'
 import settingsWorktreeSparseClaudeDir from './rules/settings-worktree-sparse-claude-dir.ts'
 import skillAgentExists from './rules/skill-agent-exists.ts'
 import skillAllowedToolsBroad from './rules/skill-allowed-tools-broad.ts'
@@ -215,7 +219,9 @@ import skillReferenceExists from './rules/skill-reference-exists.ts'
 import skillReservedName from './rules/skill-reserved-name.ts'
 import skillShellPlatform from './rules/skill-shell-platform.ts'
 import skillSideEffectsManualOnly from './rules/skill-side-effects-manual-only.ts'
+import statuslineHomePathShared from './rules/statusline-home-path-shared.ts'
 import statuslineScriptExists from './rules/statusline-script-exists.ts'
+import statuslineScriptTerminalSize from './rules/statusline-script-terminal-size.ts'
 import statuslineWindowsPath from './rules/statusline-windows-path.ts'
 
 // Read at run time, not imported, so `dist/` does not need its own copy.
@@ -436,13 +442,19 @@ const modules = [
   memoryTopicFrontmatter,
   rulesPathsNoMatch,
   settingsAgentExists,
+  settingsDefaultshellPowershellTool,
   settingsEnvContextCost,
   settingsEnvFormatHeuristic,
   settingsEnvSecretHeuristic,
+  settingsManagedEffortCap,
+  settingsManagedMerge,
   settingsModelCapability,
   settingsModelPinVersion,
   settingsNestedProjectFile,
   settingsSkilloverridesUnknownSkill,
+  settingsWorktreePaths,
+  statuslineHomePathShared,
+  statuslineScriptTerminalSize,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -678,13 +690,19 @@ const recommended: Record<RuleName, Severity> = {
   'memory-topic-frontmatter': 'off',
   'rules-paths-no-match': 'off',
   'settings-agent-exists': 'off',
+  'settings-defaultshell-powershell-tool': 'off',
   'settings-env-context-cost': 'off',
   'settings-env-format-heuristic': 'off',
   'settings-env-secret-heuristic': 'off',
+  'settings-managed-effort-cap': 'off',
+  'settings-managed-merge': 'off',
   'settings-model-capability': 'off',
   'settings-model-pin-version': 'off',
   'settings-nested-project-file': 'off',
   'settings-skilloverrides-unknown-skill': 'off',
+  'settings-worktree-paths': 'off',
+  'statusline-home-path-shared': 'off',
+  'statusline-script-terminal-size': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

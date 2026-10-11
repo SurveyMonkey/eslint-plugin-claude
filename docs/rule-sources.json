@@ -1908,6 +1908,28 @@
       "hash": "43d1e4fa703b70785f061ceef00a54a64ff6976540125f9a7175283b3924d1d6"
     }
   ],
+  "settings-defaultshell-powershell-tool": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "defaultShell",
+      "hash": "952236e781b8f672c75a8efbd94ebed80d2664cac9aeea378c58c97ee9f32198"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Shell selection in settings, hooks, and skills",
+      "hash": "46bd3d16a2df6ceabac0e843bc0f7f7819419f0b8c1147a30f9964d8a10c678f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/tools-reference",
+      "heading": "Enable the PowerShell tool",
+      "hash": "358b621b9e028968eefa970552fde932d65fe91e6e23c1f38d2d58123111d119"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
+    }
+  ],
   "settings-deprecated-key": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -2494,6 +2516,28 @@
       "hash": "e92f56891f12f525d75863edf865047dd034ce8ab9e2897599cf107c7fa3884d"
     }
   ],
+  "settings-managed-effort-cap": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "effortLevel",
+      "hash": "c48649f2902e054f8aee91c23b860b0f1c468db5fd3e0e6b9300db95bb761d45"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "maxEffortLevel",
+      "hash": "9300ac5a4a77a5e131ebbc90540f3d4efbabb6e35574557786d256b3739eba93"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Organization effort limits",
+      "hash": "5dd60f696d2982c2e366989b66525b8121d60a6dbad67df5d20a15ce29713e70"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
+    }
+  ],
   "settings-managed-file": [
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -2524,6 +2568,28 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "settings-managed-merge": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "managedSourcesBehavior",
+      "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Compose every managed source",
+      "hash": "53148f11f1a782f35d259f2377369ee37f222231c00e8866dc7484ed59070bc0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "How Claude Code combines managed sources",
+      "hash": "abe44f2b4c66cfcbc336d49da018dec208d0cb8fcd5f92478c6f0effa446e7ff"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Split a file-based policy across teams",
+      "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
   "settings-managed-value-form": [
@@ -3166,6 +3232,23 @@
       "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
     }
   ],
+  "settings-worktree-paths": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "worktree.symlinkDirectories",
+      "hash": "f41fd4d6e3be197621898f9215099a954755b7766f81c8c8bc975a30a2132704"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "worktree.sparsePaths",
+      "hash": "95c97176ceae0c1b5bd5d87755a6a9489f949cbadb854c1bb767666bfd6250c7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Check out only the directories you need",
+      "hash": "384853737dbdb0252a9c43b790d94a1afc18be6f7ab91f04779081efa33f2625"
+    }
+  ],
   "settings-worktree-sparse-claude-dir": [
     {
       "url": "https://code.claude.com/docs/en/large-codebases",
@@ -3675,6 +3758,18 @@
       "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279"
     }
   ],
+  "statusline-home-path-shared": [
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Use the /statusline command",
+      "hash": "44e446be0845c7bd451d32181623431219f3ddbe134f1792f5d9057adb6532f0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Manually configure a status line",
+      "hash": "99d791a86b650b9a7d18038782136147afda1bfd8ab82c7d57169e92e62cbb26"
+    }
+  ],
   "statusline-script-exists": [
     {
       "url": "https://code.claude.com/docs/en/statusline",
@@ -3695,6 +3790,13 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Status line and file suggestion gates",
       "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+    }
+  ],
+  "statusline-script-terminal-size": [
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Size output to the terminal",
+      "hash": "cab76d0ce094ae1adcf8be564ca053080286ef8d290cda6306c0c8459a333158"
     }
   ],
   "statusline-windows-path": [
