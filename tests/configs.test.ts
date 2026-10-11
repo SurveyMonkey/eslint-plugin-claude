@@ -564,6 +564,50 @@ const TREE: Record<string, string> = {
   'skills/listed/SKILL.md': '---\nname: listed\ndescription: d\n---\n',
   'skills/omitted/SKILL.md': '---\nname: omitted\ndescription: d\n---\n',
   'plugins/q/SKILL.md': '# Q\n',
+  // One plugin for each rule of the manifest and layout layer (#11).
+  // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
+  'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
+  'plugins/loc/.claude-plugin/bin/tool': '',
+  // The default `skills/` directory is in the `skills` key too. Its loose file is a report of
+  // `skill-file-layout` only. The loose file in `extra/` is a report of the manifest rule.
+  'plugins/skl/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'skl',
+    skills: ['./extra', './skills'],
+  }),
+  'plugins/skl/extra/loose.md': '# Loose\n',
+  'plugins/skl/skills/loose.md': '# Loose\n',
+  // A `commands` directory with no command in it.
+  'plugins/cmd/.claude-plugin/plugin.json': JSON.stringify({ name: 'cmd', commands: './cmds' }),
+  'plugins/cmd/cmds/.gitkeep': '',
+  // A `commands` key that points out of the default `commands/` folder.
+  'plugins/shadow/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'shadow',
+    commands: ['./extras/c.md'],
+  }),
+  'plugins/shadow/commands/c.md': '# C\n',
+  // A repository with a `.git`, because the rule counts the directories below the repository.
+  // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
+  'packages/ppl/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/ppl/.claude/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'pp' }),
+  'packages/ppl/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'pp' }),
+  '.claude/plugins/q/.claude-plugin/plugin.json': JSON.stringify({ name: 'q' }),
+  // A plugin in `.claude/skills/` that declares a monitor and an MCP bundle. The same manifest
+  // in a plugin outside `.claude/skills/`, and one level too deep, is a decoy.
+  '.claude/skills/sp/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sp',
+    mcpServers: './server.mcpb',
+    monitors: [],
+  }),
+  '.claude/skills/deep/sp/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sp',
+    mcpServers: './server.mcpb',
+    monitors: [],
+  }),
+  'plugins/sp/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sp',
+    mcpServers: './server.mcpb',
+    monitors: [],
+  }),
   '.claude/skills/loose.md': '# Loose\n',
   '.claude/skills/layout/skill.md': '# Wrong case\n',
   '.claude/skills/ref/SKILL.md': '[a](missing.md)\n',
@@ -2705,6 +2749,23 @@ const STRICT_ONLY_EXPECTED = [
   'packages/dup/hooks/hooks.json: claude/hooks-command-path-variable@1',
 ]
 
+// The plugin manifest and layout rules of #11, in the order of the `modules` list. Each is an
+// error, with one JSON block for its files.
+const PLUGIN_RULES = [
+  { name: 'plugin-manifest-location', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-skill-dir-layout', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-no-project-plugins-dir',
+    files: ['**/.claude/plugins/**/.claude-plugin/plugin.json'],
+  },
+  {
+    name: 'plugin-project-skills-dir-limits',
+    files: ['**/.claude/skills/*/.claude-plugin/plugin.json'],
+  },
+  { name: 'plugin-commands-dir-nonempty', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-default-dir-shadowed', files: ['**/.claude-plugin/plugin.json'] },
+]
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -2961,7 +3022,18 @@ const EXPECTED = [
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/teams/x.md: claude/agent-teams-no-project-config@2',
+  '.claude/skills/sp/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
+  '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
+  '.claude/skills/sp/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
+  'packages/ppl/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
+  'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
+  'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/p/.claude-plugin/plugin.json: claude/hooks-event-name-known@2',
+  'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
+  'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
+  'plugins/shadow/commands/c.md: claude/skill-description-present@1',
+  'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
+  'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
   'plugins/p/agents/ignored.md: claude/agent-plugin-ignored-fields@2',
   'plugins/p/agents/schema.md: claude/agent-frontmatter-schema@2',
@@ -3536,7 +3608,9 @@ const EXPECTED = [
   'packages/mcs/managed-settings.json: claude/settings-schema@2',
   'packages/mcs/.claude/settings.local.json: claude/mcp-settings-mcpservers@2',
   'packages/pb/.claude/skills/p/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
+  'packages/pb/.claude/skills/p/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/pb/.claude/skills/r/.claude-plugin/plugin.json: claude/mcp-project-plugin-bundle@2',
+  'packages/pb/.claude/skills/r/.claude-plugin/plugin.json: claude/plugin-project-skills-dir-limits@2',
   'packages/tn/.claude/settings.json: claude/mcp-tool-name-format@2',
   'packages/tn/.claude/settings.local.json: claude/mcp-tool-name-format@2',
   'packages/tn/managed-settings.json: claude/mcp-tool-name-format@2',
@@ -4441,6 +4515,10 @@ describe('configs', () => {
           { [`claude/${block}`]: severity ?? 'error' },
         ]),
       ),
+      ...PLUGIN_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
     ])
   })
 
@@ -4483,6 +4561,7 @@ describe('configs', () => {
       ...MCP_OFF_RULES.flatMap(({ name, markdown }) =>
         (markdown ? [name, name] : [name]).map((block) => `claude/strict/${block}`),
       ),
+      ...PLUGIN_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -4686,6 +4765,15 @@ describe('configs', () => {
     }
   })
 
+  it('gives each rule of the plugin layout layer one JSON block for its files', () => {
+    for (const { name, files } of PLUGIN_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
   it('gives each MCP rule one JSON block for its files, and one Markdown block if it has a second target', () => {
     for (const { name, files, markdown, language } of MCP_RULES) {
       const blocks = plugin.configs.recommended.filter(
@@ -4824,7 +4912,10 @@ describe('configs', () => {
     expect(await reports(blocks, descriptionRoot)).toEqual([...DESCRIPTION_REPORTS].sort())
     // The manifest of `q` replaces `agents/`, so the rules of A1 to A3 are silent on `unlisted.md`
     // too: `agent-plugin-ignored-fields` would report its `permissionMode` in a plugin agent.
-    expect(await reports(plugin.configs.recommended, descriptionRoot)).toEqual([])
+    // The manifest of `q` also replaces `agents/`, so `plugin-default-dir-shadowed` reports it.
+    expect(await reports(plugin.configs.recommended, descriptionRoot)).toEqual([
+      'plugins/q/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
+    ])
   }, 30_000)
   it('reports the max-bytes rule on the files that it reads, on a tree of its own', async () => {
     // The override sets a small `max` and keeps the severity of the preset.

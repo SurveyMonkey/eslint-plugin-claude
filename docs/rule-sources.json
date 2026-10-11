@@ -3303,6 +3303,30 @@
       "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
     }
   ],
+  "plugin-commands-dir-nonempty": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "commands",
+      "hash": "66e4002f473fe00465b948897872b99da8d374345506c4f0fabdf66764b4bdd5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Warning: No commands found in plugin <name> custom directory",
+      "hash": "2cb2897b72750eeaceb4ddf915b05564fc36ae62a53463abe7638854864a0836"
+    }
+  ],
+  "plugin-default-dir-shadowed": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How each key combines with its default location",
+      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Themes and output styles",
+      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
+    }
+  ],
   "plugin-evals-replay-committed": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",
@@ -3325,6 +3349,74 @@
       "url": "https://code.claude.com/docs/en/plugin-evals",
       "heading": "Use a different eval directory",
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-manifest-location": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Manifest file",
+      "hash": "fa6b735c54300cc4b0860ea6ce11a5bcb86ae2e43fe0cc0ce62887e5cb397418"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/create",
+      "heading": "Plugin layout",
+      "hash": "0823a83e4b31d35e49aa0a9a05509041e8226c4cb0eab50301e89c1260f4cb66"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Plugin loads but its skills are missing",
+      "hash": "49e5a968bdde3b6eab79721a6b5201fc280b3091c0ff2c38f27edd128b4f2048"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Standard layout",
+      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+    }
+  ],
+  "plugin-no-project-plugins-dir": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Plugins shared through a repository",
+      "hash": "71249e9304755651cccc811bd2487edf214505849e20bf6cfa7a3333a704a3e5"
+    }
+  ],
+  "plugin-project-skills-dir-limits": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Plugins shared through a repository",
+      "hash": "71249e9304755651cccc811bd2487edf214505849e20bf6cfa7a3333a704a3e5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "mcpServers",
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "monitors",
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    }
+  ],
+  "plugin-skill-dir-layout": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Standard layout",
+      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Skills",
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "claude plugin validate reports errors",
+      "hash": "1a81e712ad87d27e93c264dbd2fa80b040e8b0a396710f1fe92b568ac9597a5c"
     }
   ],
   "rules-frontmatter-schema": [

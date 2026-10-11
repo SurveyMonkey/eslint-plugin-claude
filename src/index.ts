@@ -219,8 +219,14 @@ import permissionsSpecifierUnsupported from './rules/permissions-specifier-unsup
 import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
+import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
+import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
+import pluginManifestLocation from './rules/plugin-manifest-location.ts'
+import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMaxLines from './rules/rules-max-lines.ts'
 import rulesMdExtension from './rules/rules-md-extension.ts'
@@ -671,6 +677,12 @@ const modules = [
   mcpPluginRootPaths,
   mcpStdioCommandHasArgs,
   mcpUnknownKeys,
+  pluginManifestLocation,
+  pluginSkillDirLayout,
+  pluginNoProjectPluginsDir,
+  pluginProjectSkillsDirLimits,
+  pluginCommandsDirNonempty,
+  pluginDefaultDirShadowed,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1027,6 +1039,12 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-plugin-root-paths': 'off',
   'mcp-stdio-command-has-args': 'off',
   'mcp-unknown-keys': 'off',
+  'plugin-manifest-location': 'error',
+  'plugin-skill-dir-layout': 'error',
+  'plugin-no-project-plugins-dir': 'error',
+  'plugin-project-skills-dir-limits': 'error',
+  'plugin-commands-dir-nonempty': 'error',
+  'plugin-default-dir-shadowed': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

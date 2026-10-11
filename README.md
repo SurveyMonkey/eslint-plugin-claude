@@ -200,6 +200,17 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-evals-replay-committed`](docs/rules/plugin-evals-replay-committed.md) | No `.gitignore` pattern covers the `mocks/.replay/` directory of the eval suite of a plugin, and git tracks its files | `warn` | `warn` |
 | [`claude/plugin-evals-results-gitignored`](docs/rules/plugin-evals-results-gitignored.md) | A `.gitignore` pattern covers the `results/` directory of the eval suite of a plugin | `warn` | `warn` |
 
+### Plugin manifest and layout
+
+| Rule | Checks | `recommended` | `strict` |
+|------|--------|---------------|----------|
+| [`claude/plugin-manifest-location`](docs/rules/plugin-manifest-location.md) | No component inside `.claude-plugin/`, which holds only `plugin.json` and `marketplace.json` | `error` | `error` |
+| [`claude/plugin-skill-dir-layout`](docs/rules/plugin-skill-dir-layout.md) | No loose `.md` file in a skills directory that the `skills` key lists | `error` | `error` |
+| [`claude/plugin-no-project-plugins-dir`](docs/rules/plugin-no-project-plugins-dir.md) | No plugin under a project `.claude/plugins/` directory, which Claude Code does not scan | `error` | `error` |
+| [`claude/plugin-project-skills-dir-limits`](docs/rules/plugin-project-skills-dir-limits.md) | No monitor, MCP bundle or outside MCP file in a plugin in `.claude/skills/` | `error` | `error` |
+| [`claude/plugin-commands-dir-nonempty`](docs/rules/plugin-commands-dir-nonempty.md) | A `commands` path that names a directory holds at least one command | `error` | `error` |
+| [`claude/plugin-default-dir-shadowed`](docs/rules/plugin-default-dir-shadowed.md) | A key that replaces a default folder, such as `commands`, has a path inside the folder | `error` | `error` |
+
 ### Marketplace manifest
 
 | Rule | Checks | `recommended` | `strict` |
