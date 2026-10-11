@@ -2062,6 +2062,13 @@
       "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
+  "settings-env-numeric-spelling": [
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
+    }
+  ],
   "settings-env-prompt-caching-off": [
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -2268,6 +2275,13 @@
       "hash": "e69ba2ca454c11ade9f139fd84fbc93f3f4d0cdb96fa38eedbdb5d6e7b27c1b8"
     }
   ],
+  "settings-footerlinks-pattern": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Badge constraints",
+      "hash": "f01d48be5f83ca7fc6328d2033ea0da1aa0c8b37b4965f32951dd72acdd51fd2"
+    }
+  ],
   "settings-global-only-file": [
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -2452,6 +2466,30 @@
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "settings-managed-value-form": [
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Turn telemetry off for your organization",
+      "hash": "5193b719ebb9569a57e9057c6ea11c5159d05864690a4bc1683a3c7e528d46d2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/server-managed-settings",
+      "heading": "Environment variables and the approval dialog",
+      "hash": "7c9d663e237cd2ab320254b1021f6a9953d2e8d7f3ccd9dc7646be1c45aa0f81"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
+    }
+  ],
+  "settings-managed-version-floor": [
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Block specific models or versions",
+      "hash": "bcadcf38852a8781e32b31c765cc06c49352a68ca276c6bbb806c15091292648"
     }
   ],
   "settings-marketplace-headers-helper-https": [
@@ -2982,6 +3020,13 @@
       "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128"
     }
   ],
+  "settings-worktree-sparse-claude-dir": [
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Check out only the directories you need",
+      "hash": "384853737dbdb0252a9c43b790d94a1afc18be6f7ab91f04779081efa33f2625"
+    }
+  ],
   "skill-agent-exists": [
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -3504,6 +3549,13 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Status line and file suggestion gates",
       "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+    }
+  ],
+  "statusline-windows-path": [
+    {
+      "url": "https://code.claude.com/docs/en/statusline",
+      "heading": "Windows configuration",
+      "hash": "cf11b740fddf26d96b3cf6ebd9ca43b9bf1954c1a5fd14240efea2109beed74f"
     }
   ]
 }
