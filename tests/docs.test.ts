@@ -164,6 +164,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-plugin-suggestion-marketplaces-source',
     'settings-project-value-ignored',
     'settings-removed-key',
+    'settings-schema',
     'settings-skilloverrides-key',
     'settings-strict-known-marketplaces-skills-dir',
     'settings-sync-claude-ai-plugins',

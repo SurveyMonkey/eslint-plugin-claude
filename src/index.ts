@@ -148,6 +148,7 @@ import settingsModelValue from './rules/settings-model-value.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
+import settingsSchema from './rules/settings-schema.ts'
 import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
@@ -335,6 +336,7 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  settingsSchema,
   hooksScriptExists,
   hooksScriptExecutable,
   pluginBinExecutable,
@@ -549,6 +551,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'settings-schema': 'error',
   'hooks-script-exists': 'error',
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',

@@ -261,6 +261,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/statusline-script-exists`](docs/rules/statusline-script-exists.md) | The script in `statusLine.command`, `subagentStatusLine.command` or `fileSuggestion.command` exists in the repository and has git mode `100755` | `error` | `error` |
 | [`claude/settings-local-gitignored`](docs/rules/settings-local-gitignored.md) | A `.gitignore` pattern of the repository covers the `settings.local.json` beside a `.claude/settings.json` | `warn` | `warn` |
 | [`claude/settings-local-untracked`](docs/rules/settings-local-untracked.md) | The `settings.local.json` beside a `.claude/settings.json` is not tracked by git, and `.claude` is not a symbolic link | `warn` | `warn` |
+| [`claude/settings-schema`](docs/rules/settings-schema.md) | A settings key is one that Claude Code knows, an environment variable name is in `env` and not at the top level, and a value has the type, enum value, range, form and shape that the docs give; no report inside `permissions` or `sandbox` | `error` | `error` |
 
 ### Permissions and sandbox
 
