@@ -1,110 +1,136 @@
 {
   "url": "https://code.claude.com/docs/en/sub-agents",
-  "hash": "8f2fd54755e35862095b49f7008b0ef5f74285be368286b068d47bfc1c039784",
+  "hash": "dd3f22aa021a3525f48227321c34eab28b322d7ab77cb3d5fc01ddd048e8f6ea",
   "blocks": [
     {
       "id": "create-custom-subagents",
-      "hash": "23ac31e44fde652518e32788650c1b5da0446c66764a3a69f5ab0ca8dfec9164"
+      "hash": "23ac31e44fde652518e32788650c1b5da0446c66764a3a69f5ab0ca8dfec9164",
+      "bodyHash": "3f50b2db5e0acf56e6a654ae5dc4de6d75dd613a3e1c3b785b6f60d54fb724e1"
     },
     {
       "id": "built-in-subagents",
-      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d"
+      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d",
+      "bodyHash": "22043429de4aaad3a8d33be740e0a870c9c78aae059a3a465c3b6e5c65d04e3d"
     },
     {
       "id": "quickstart-create-your-first-subagent",
-      "hash": "7fce8d9fca49d313ec8d98d1e2c9c8c7662c390f3a68088b164c23c7aef9bced"
+      "hash": "7fce8d9fca49d313ec8d98d1e2c9c8c7662c390f3a68088b164c23c7aef9bced",
+      "bodyHash": "423a270b45798d6a8c73b228dadaf6625c877bbf6c3c96ac9f5e71ca1ee51371"
     },
     {
       "id": "configure-subagents",
-      "hash": "1b5e3ae4590a7cebcde6ebda1ac9d3e679e1fdae4dde52ff31f87e91465ced41"
+      "hash": "1b5e3ae4590a7cebcde6ebda1ac9d3e679e1fdae4dde52ff31f87e91465ced41",
+      "bodyHash": "f8f95d9dad5cd09cdd8ca95ea976d5600c917985eaad4651f2c8bf83fbcb0290"
     },
     {
       "id": "choose-the-subagent-scope",
-      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a"
+      "hash": "f96e59e5daa2eb9456a200a0f403b83fcd4a456a3165de167619e0e4dcf3fd9a",
+      "bodyHash": "5400f8cb5a0316f2ccff2cef648fed5db7c8560088acd82496eb757465d9f255"
     },
     {
       "id": "write-subagent-files",
-      "hash": "365d563dc5a8b404417649185c198c9dbaf4ea7de9c9b880c31efccd9d2b8e28"
+      "hash": "365d563dc5a8b404417649185c198c9dbaf4ea7de9c9b880c31efccd9d2b8e28",
+      "bodyHash": "5d6d6bc83ac51631be6ed177c68b4ef1caa2c8766547fac55109199b1a5284ea"
     },
     {
       "id": "supported-frontmatter-fields",
-      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74",
+      "bodyHash": "e73cc10859f324a35356955285f9c0e1bc0dc9edc34eb68e1424daf04b08d4c9"
     },
     {
       "id": "subagent-files-claude-code-skips",
-      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3"
+      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3",
+      "bodyHash": "03aa706aab8eb4476e95abe34baa4f68875bf913c048ff28532fe939e2b8f5fe"
     },
     {
       "id": "check-an-agents-directory-before-a-session",
-      "hash": "80e49b5663d727fbcb38ec2d779057442d4ebb38b55879e9d19efff25194c8a1"
+      "hash": "80e49b5663d727fbcb38ec2d779057442d4ebb38b55879e9d19efff25194c8a1",
+      "bodyHash": "390a3453f456798cb051350ab32d15b19b6df12197249c330203a0acfd6b1b98"
     },
     {
       "id": "choose-a-model",
-      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae"
+      "hash": "ea006bdc1af80c1cb4fad720394d98e780a1772c5b47fa34eea9e8c07a62e59e",
+      "bodyHash": "b6ee9692adb92f23e2306e8f0ad9650502fdb0cd1fe46c40d27ce2e4536e3444"
     },
     {
       "id": "run-every-subagent-on-one-model",
-      "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681"
+      "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681",
+      "bodyHash": "1f00e784302d346ceb77f78cf0de47b48acc65577467efb5efd2dc381b51dbd7"
     },
     {
       "id": "choose-an-effort-level",
-      "hash": "bfe065ca4ccd631299fb3faf49ab6680168b5b3afe51d9bc3a5e66fc90801844"
+      "hash": "bfe065ca4ccd631299fb3faf49ab6680168b5b3afe51d9bc3a5e66fc90801844",
+      "bodyHash": "f6518d4c33d81a2ab05350bc2e1e47e019225605f67173ce409ee236e5fb3e10"
     },
     {
       "id": "control-subagent-capabilities",
-      "hash": "deca3af791adacfcffae9610875872bc7f017846b7ddcaaa9bbadff1755b4ab8"
+      "hash": "deca3af791adacfcffae9610875872bc7f017846b7ddcaaa9bbadff1755b4ab8",
+      "bodyHash": "5e049eab665ae3299c72fd0c0d376028123646a31fe9bb84ae68cd382a4c90d5"
     },
     {
       "id": "available-tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493",
+      "bodyHash": "bd73e84d5fc6ca851b27095389d1686547c424d5333922e70aed9d99d6cdba0c"
     },
     {
       "id": "restrict-which-subagents-can-be-spawned",
-      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d",
+      "bodyHash": "de746546924e600372cfa4d9eb986cd2d3674beeca1ce5d4c52ec51fb3cfb4bf"
     },
     {
       "id": "scope-mcp-servers-to-a-subagent",
-      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12"
+      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12",
+      "bodyHash": "a46098cde630c18a60b4b38375ea311a07ff6b2c7d1cb396d345fdef070f9d01"
     },
     {
       "id": "inline-server-trust",
-      "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e"
+      "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e",
+      "bodyHash": "46beb86be9efd3d14fce126649828c34671fc29181628c10b8a4a0d81639fa20"
     },
     {
       "id": "permission-modes",
-      "hash": "3d8082b6b76c04b1e6dd126251ca535eba14de00c6371e8eeeca041ec6341144"
+      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129",
+      "bodyHash": "ce30082453e65645b28e6a73e8d0dc8c3421ed2acbbae38ef4ad45ceddf47600"
     },
     {
       "id": "preload-skills-into-subagents",
-      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7",
+      "bodyHash": "c19d79ecf69ced4cef54b8e6e3ff1df45e2d482100ba1d1f43b2bbdac367d525"
     },
     {
       "id": "enable-persistent-memory",
-      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+      "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de",
+      "bodyHash": "58a7958104634d5d64d2e6b945fca9099854738a0e07540d76c6a52c30335c19"
     },
     {
       "id": "persistent-memory-tips",
-      "hash": "092ff2d1ba59805d02281760049a88ebfa85b4434d4da8aeb9f17d02a6702693"
+      "hash": "092ff2d1ba59805d02281760049a88ebfa85b4434d4da8aeb9f17d02a6702693",
+      "bodyHash": "d4edf8be663ffdbcc13aeac5231006475326d026d8a6e4beb6dfeb90c803cfec"
     },
     {
       "id": "conditional-rules-with-hooks",
-      "hash": "d2a6706c321b3564a76122e05951cfbb10284130a4ece6885db49a7a97f778c1"
+      "hash": "d2a6706c321b3564a76122e05951cfbb10284130a4ece6885db49a7a97f778c1",
+      "bodyHash": "ac22da897ac49112c4ce23585170cfd18403888d19574bfde8c7727fdd717d71"
     },
     {
       "id": "disable-specific-subagents",
-      "hash": "0a27d1ce1f15c5bf6965bca5e50dcf928ca64b88f37599b1db7f2af960696bbd"
+      "hash": "0a27d1ce1f15c5bf6965bca5e50dcf928ca64b88f37599b1db7f2af960696bbd",
+      "bodyHash": "d43630fbe3954404bd4d5515ed607862c0153a1a398cafb04001aaa0d379911b"
     },
     {
       "id": "define-hooks-for-subagents",
-      "hash": "c4d9835d9d3ab594b05cfa3f4795d033eb446e70ed576b3527aaaf3a08c3d8fc"
+      "hash": "c4d9835d9d3ab594b05cfa3f4795d033eb446e70ed576b3527aaaf3a08c3d8fc",
+      "bodyHash": "044f33854e613379b7c5e5424726a9d90f5dcbc18529aa4601ed503dc7d2eec8"
     },
     {
       "id": "hooks-in-subagent-frontmatter",
-      "hash": "8701fb5db031c0b97a178933492c78f9e0d3135f102bce023f080158a1bb2b04"
+      "hash": "8701fb5db031c0b97a178933492c78f9e0d3135f102bce023f080158a1bb2b04",
+      "bodyHash": "b9a71bd9d3fdd53011873277ef95925853e6b5460afb70b0a397317425f97175"
     },
     {
       "id": "project-level-hooks-for-subagent-events",
-      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f"
+      "hash": "a537c89d0047a9779e88067a78258327186b95dd7559ce8e4ecd8cef0827624f",
+      "bodyHash": "6c747e68c659755c01d8632132412ae48e807078e5b0960fd0fa3761ebde3b3a"
     },
     {
       "id": "work-with-subagents",
@@ -112,27 +138,33 @@
     },
     {
       "id": "understand-automatic-delegation",
-      "hash": "4232b0e8ef80c8dd0bcd1e3207ce7d342db34301900e3c594c89bb14a806e71f"
+      "hash": "4232b0e8ef80c8dd0bcd1e3207ce7d342db34301900e3c594c89bb14a806e71f",
+      "bodyHash": "cf37c092cdf624c94c29d56340c8222256e296e826dcb5abe7e503767441cff3"
     },
     {
       "id": "invoke-subagents-explicitly",
-      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d"
+      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d",
+      "bodyHash": "f623e8d3e67fcbd114273bb5160ed899757e4575b47638fd38ed4956422bfeb7"
     },
     {
       "id": "run-subagents-in-foreground-or-background",
-      "hash": "b5c906ea4ebd8e32eefdb3b44b30499aa6e0b3318b6f2c5ef441ec1ec0726607"
+      "hash": "b5c906ea4ebd8e32eefdb3b44b30499aa6e0b3318b6f2c5ef441ec1ec0726607",
+      "bodyHash": "ff40a30d2731e527a169174927f7f36cce42c5ac3c50ee1bc3ca2231fe51899a"
     },
     {
       "id": "subagent-names",
-      "hash": "f957a10b6d32e3a62ce69c5872e7e655b45618523cd75fd68d23a637ea268f76"
+      "hash": "f957a10b6d32e3a62ce69c5872e7e655b45618523cd75fd68d23a637ea268f76",
+      "bodyHash": "0ec5f6c932d6c2f34909ed657d95fa3c98571a0ccec46f5bc15d2039e59d4083"
     },
     {
       "id": "api-errors-in-subagents",
-      "hash": "2bcbf096f1f5afbf3c9f3a54a65d17c9e3c58d1d4f0cdd1801dbf09a9be03400"
+      "hash": "2bcbf096f1f5afbf3c9f3a54a65d17c9e3c58d1d4f0cdd1801dbf09a9be03400",
+      "bodyHash": "56ea1882823643b335b940cca7dd9752a1e780a832d0ed5a72798168a8057ae4"
     },
     {
       "id": "subagent-output-scanning",
-      "hash": "9312725e786572b9c2e5df7697497440e802c8842fc95e3409ee2b23eb84dcf3"
+      "hash": "9312725e786572b9c2e5df7697497440e802c8842fc95e3409ee2b23eb84dcf3",
+      "bodyHash": "c9f03c55e977a235943b2d35942eb6dd86d0457a8b6c456716be8c443be94d11"
     },
     {
       "id": "common-patterns",
@@ -140,27 +172,33 @@
     },
     {
       "id": "isolate-high-volume-operations",
-      "hash": "dfaaab3bf24690a88b280d86605e0eaca2fe0ec0272458cdf884ad54ab2b95f0"
+      "hash": "dfaaab3bf24690a88b280d86605e0eaca2fe0ec0272458cdf884ad54ab2b95f0",
+      "bodyHash": "7fb5c7c8472a2460b0b67879f5888ec31b65c4b6af989b773ac074d1f2d7b563"
     },
     {
       "id": "run-parallel-research",
-      "hash": "0f53a7b8c64adee210e8db3169d0a18eca3c8681b1fb4ea7d35427b0df4de698"
+      "hash": "0f53a7b8c64adee210e8db3169d0a18eca3c8681b1fb4ea7d35427b0df4de698",
+      "bodyHash": "a68a950c1e195aeeee258f176514b34fd3cc114930aef333929c85f73e181dcc"
     },
     {
       "id": "chain-subagents",
-      "hash": "07822bf3d7ac2eba8b8437b00e2ad752a72f73dec88ec4276ccb002c3aee3481"
+      "hash": "07822bf3d7ac2eba8b8437b00e2ad752a72f73dec88ec4276ccb002c3aee3481",
+      "bodyHash": "8700a65a058e7d22726f98f12853f3131e5b0effdf64c07f903e3f7b90dc60c7"
     },
     {
       "id": "choose-between-subagents-and-main-conversation",
-      "hash": "0ca4db5d7b85c5609d7d47f1d4c22a774ad518e5e8fdca7f5ed6482c15bb1282"
+      "hash": "0ca4db5d7b85c5609d7d47f1d4c22a774ad518e5e8fdca7f5ed6482c15bb1282",
+      "bodyHash": "e5a1cc543e22c5a66001e849dd8f2c901a386282576888d25718ddde17c2c500"
     },
     {
       "id": "let-subagents-spawn-their-own-subagents",
-      "hash": "9fb950d07dbb10138c62b65193c8048e3c9fe0fc42450322804063a7249abc34"
+      "hash": "9fb950d07dbb10138c62b65193c8048e3c9fe0fc42450322804063a7249abc34",
+      "bodyHash": "8aa6f0d88427f22de922f59e6c57b62dbd2c434cdbf5cc75a5d9fda48b38af08"
     },
     {
       "id": "concurrent-subagent-limit",
-      "hash": "bf847bb675a8985a53febd0deb7f67fd6b0a6722e6914fc42747d2fc62219dce"
+      "hash": "bf847bb675a8985a53febd0deb7f67fd6b0a6722e6914fc42747d2fc62219dce",
+      "bodyHash": "4ab9541bd76b78e8cb13cf98c26d55aed456dc731f6abad090d2e59de9565668"
     },
     {
       "id": "manage-subagent-context",
@@ -168,63 +206,88 @@
     },
     {
       "id": "what-loads-at-startup",
-      "hash": "f4f4f5593b4196f9d1820e1ca842e918b36e7e3393398af6a11c498962cbf61b"
+      "hash": "9069ac9222a02860aafa374fc14d71d140acd1be4b4ca7eb93bd04de4e46baaa",
+      "bodyHash": "26156073fc8d7eb68935c22aab4ebf4f08aa15677187b0ee892e71b4ed7ddbd6"
     },
     {
       "id": "resume-subagents",
-      "hash": "e97d63ba2f0888113a9b9acc4ba550c68242f7a78b995d632ca07827e3a9a95c"
+      "hash": "e97d63ba2f0888113a9b9acc4ba550c68242f7a78b995d632ca07827e3a9a95c",
+      "bodyHash": "e5dc14a0e9e373ef8b1ed945ba45b46f872d2d1ce5a0f8039685eb10fb4de89d"
     },
     {
       "id": "auto-compaction",
-      "hash": "4e5d3378f75fa8b1602b6e7970100b82015c398346d31db18cdabbad7357cfd3"
+      "hash": "4e5d3378f75fa8b1602b6e7970100b82015c398346d31db18cdabbad7357cfd3",
+      "bodyHash": "88f9ef07cec5f38e72ffb9e9a3c48e4b6891f4e1261f5f4e8dc13d35aec8aa5a"
     },
     {
       "id": "fork-the-current-conversation",
-      "hash": "3184eae9de867b089f5dd77238a086c236059ffe160753f6c93225861cda505b"
+      "hash": "3184eae9de867b089f5dd77238a086c236059ffe160753f6c93225861cda505b",
+      "bodyHash": "1d063572e1275920a001dc1b19357cc5119e4ef9fd7b3b9f6a9fab265ef847f2"
     },
     {
       "id": "observe-and-steer-running-forks",
-      "hash": "c95104f92c6e7b57652451e01962f84c3f29c90d01f8039fcbb0cfbde881b7f7"
+      "hash": "c95104f92c6e7b57652451e01962f84c3f29c90d01f8039fcbb0cfbde881b7f7",
+      "bodyHash": "73042a8dc633ddbdf46cf3d36cd56cd1e57541d73f17cef0cb26f67a3a94e7a2"
     },
     {
       "id": "how-forks-differ-from-other-subagents",
-      "hash": "7b036dc90863a0afae2ce158f7831d3805978421bddb1849e4488a5a31b78aa2"
+      "hash": "7b036dc90863a0afae2ce158f7831d3805978421bddb1849e4488a5a31b78aa2",
+      "bodyHash": "28e0a20080cd020ee398453b6c32c677092ff5b95c2c949434602e64053ea15f"
     },
     {
       "id": "turn-fork-mode-on-or-off",
-      "hash": "9ae9423836bb2667689e69a908e437991bccb8d5086739d10cf4f49f00382037"
+      "hash": "9ae9423836bb2667689e69a908e437991bccb8d5086739d10cf4f49f00382037",
+      "bodyHash": "6315278b67b9247fba7b020cdc3f2a62d461fbecf7a6c293b4591e6c1da38cb5"
     },
     {
       "id": "example-subagents",
-      "hash": "82629c8ea8380caaf4dcae8ffad4d3aa77caad73cad55b160cec3402d6c88b84"
+      "hash": "82629c8ea8380caaf4dcae8ffad4d3aa77caad73cad55b160cec3402d6c88b84",
+      "bodyHash": "e1df74beb90f0dffcfa578308a2383ae408b3a10aadc2dd24cfcd7d1850f2e09"
     },
     {
       "id": "code-reviewer",
-      "hash": "d67b7b527dae9c3f72d9b9a8da3bc4d0bef08073572f5449348f0c0dcd638e01"
+      "hash": "d67b7b527dae9c3f72d9b9a8da3bc4d0bef08073572f5449348f0c0dcd638e01",
+      "bodyHash": "5f1546864deb2abe30c395a837916908c2bab3c414b7b1ee187f260d6ff37d7f"
     },
     {
       "id": "debugger",
-      "hash": "7a6e805c70d84f59b17a020532d27a83b98ff495280d3602a9e13fd5fe9b39ba"
+      "hash": "7a6e805c70d84f59b17a020532d27a83b98ff495280d3602a9e13fd5fe9b39ba",
+      "bodyHash": "db88d63e5013dc4060e97a88415e0b37c8cd21969183cb2f01904c801fee40c2"
     },
     {
       "id": "data-scientist",
-      "hash": "ff50a87795c22ae3ba359fcb51e1f9f1636332998d2c7d7a5abdbd50fc09b901"
+      "hash": "ff50a87795c22ae3ba359fcb51e1f9f1636332998d2c7d7a5abdbd50fc09b901",
+      "bodyHash": "f116c72714454fcdfdf9ba792ba95f51a78fdb3348a51901f48897148fe6732a"
     },
     {
       "id": "database-query-validator",
-      "hash": "f7f42fc982522097b127028f5291606fec9bb1dd92170eaf88d7f985325af9d5"
+      "hash": "f7f42fc982522097b127028f5291606fec9bb1dd92170eaf88d7f985325af9d5",
+      "bodyHash": "de6ab2f7558699b20ae82a1be4f78e0a19dd622d1f5f6d6db2ef3e38720e2fd4"
     },
     {
       "id": "next-steps",
-      "hash": "d0fb8706dea3a0b6b0593ddce7b304df5dbd5a5d97fb0f93dd4aabd2e9abe323"
+      "hash": "d0fb8706dea3a0b6b0593ddce7b304df5dbd5a5d97fb0f93dd4aabd2e9abe323",
+      "bodyHash": "4ba05371e1f54a261072fd4807f1f66760f246238b730b94abea8185169845f9"
     }
   ],
   "sources": [
+    {
+      "heading": "Available tools",
+      "id": "available-tools",
+      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493",
+      "text": "#### Available tools\n\nSubagents inherit the [built-in tools](/docs/en/tools-reference) and MCP tools available in the main conversation, narrowed by two filters: the first removes a short list of tools from every subagent, and the second reduces the built-in tool set for subagents that run in the [background](#run-subagents-in-foreground-or-background), which is the default. On macOS, Linux, and WSL, a subagent can also receive the Glob and Grep tools when the main conversation doesn't have them, as described under [Glob tool behavior](/docs/en/tools-reference#glob-tool-behavior). [Forks](#fork-the-current-conversation) skip both filters and receive the main conversation's exact tool pool. The first filter removes these tools, even when listed in the `tools` field:\n\n* `Agent`, when the subagent is at the [depth limit](#let-subagents-spawn-their-own-subagents); in a [fork](#fork-the-current-conversation) the tool stays listed but returns an error instead of spawning\n* `AskUserQuestion`\n* `EndConversation`, which can end only the main conversation; see [EndConversation tool behavior](/docs/en/tools-reference#endconversation-tool-behavior)\n* `EnterPlanMode`\n* `ExitPlanMode`, unless the subagent's [`permissionMode`](#permission-modes) is `plan`\n* `ScheduleWakeup`\n* `WaitForMcpServers`\n* `Workflow`\n\nThe second filter applies to subagents running in the background. Apart from `Agent` and `ExitPlanMode`, which follow the first filter's conditions wherever the subagent runs, a background subagent keeps every MCP tool but only these built-in tools: `Read`, `Grep`, `Glob`, `LSP`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`, `SendMessage`, and `Artifact`, plus [`SubagentHandback`](/docs/en/tools-reference) for a subagent that reports through it. Claude Code removes every other built-in tool from a background subagent, whether inherited or listed in the `tools` field, so the same definition can resolve to different tools in the foreground and the background. The removal reports no error unless it leaves the `tools` list [resolving to nothing](/docs/en/errors#agent-would-be-spawned-with-zero-tools).\n\nBefore v2.1.280, background subagents couldn't use `LSP`.\n\n[`ListAgents`](/docs/en/cross-session-messaging) follows these filters like any built-in tool: a foreground subagent inherits it in sessions where cross-session messaging is enabled, and a background subagent doesn't keep it.\n\nTeammates in [agent teams](/docs/en/agent-teams) additionally keep the task tools and cron tools: `TaskCreate`, `TaskGet`, `TaskList`, `TaskUpdate`, `CronCreate`, `CronDelete`, and `CronList`.\n\nIn a [session without the Task tools](/docs/en/tools-reference#task-tool-availability), Claude Code doesn't provide the task tools to subagents either, even when the subagent runs a different model. An in-process teammate follows your session the same way, while a teammate in its own [split pane](/docs/en/agent-teams#choose-a-display-mode) runs as a separate Claude Code process, so its own model decides.\n\nTo restrict tools, use the `tools` field as an allowlist or the `disallowedTools` field as a denylist. This example uses `tools` to allow only Read, Grep, Glob, and Bash. The subagent can't edit files, write files, or use any MCP tools:\n\n```yaml theme={null}\n---\nname: safe-researcher\ndescription: Research agent with restricted capabilities\ntools: Read, Grep, Glob, Bash\n---\n```\n\nThis example uses `disallowedTools` to inherit the subagent's tool pool except Write and Edit. The subagent keeps Bash, MCP tools, and the rest of its pool:\n\n```yaml theme={null}\n---\nname: no-writes\ndescription: Inherits the available tools except file writes\ndisallowedTools: Write, Edit\n---\n```\n\nIf both are set, `disallowedTools` is applied first, then `tools` is resolved against the remaining pool. A tool listed in both is removed.\n\nWhen nothing in the `tools` list resolves to a tool, for example because every entry is misspelled or names a tool that isn't available to subagents, Claude Code usually refuses to launch the subagent and the Agent tool returns an error naming the unresolved entries; see [Agent would be spawned with zero tools](/docs/en/errors#agent-would-be-spawned-with-zero-tools) for the message and how to fix each entry. Before v2.1.208, that subagent launched with no tools and could return an empty or confusing result.\n\nBoth fields accept MCP server-level patterns in addition to exact tool names: `mcp__<server>` or `mcp__<server>__*` grants or removes every tool from the named server. In `disallowedTools`, `mcp__*` also removes every MCP tool from any server. This example removes every tool from the `github` MCP server while keeping tools from other servers and the built-in tools in its pool:\n\n```yaml theme={null}\n---\nname: local-only\ndescription: Inherits every tool except those from the github MCP server\ndisallowedTools: mcp__github\n---\n```\n\nA `disallowedTools` entry with a specifier, such as `Bash(git push *)`, still removes the whole tool from the subagent, not only the matching commands. To keep Bash and block specific commands, add a [Bash deny rule](/docs/en/permissions#bash) such as `Bash(git push *)` to `permissions.deny` in your settings. The rule applies to the main conversation and to subagents."
+    },
     {
       "heading": "Frontmatter reference",
       "id": "supported-frontmatter-fields",
       "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74",
       "text": "<h3 id=\"supported-frontmatter-fields\">\n  Frontmatter reference\n</h3>\n\nConfigure a subagent with YAML [frontmatter](/docs/en/glossary#frontmatter) between `---` markers at the top of its file, and write its system prompt as Markdown after the closing `---`. Only `name` and `description` are required.\n\nMulti-word field names use camelCase, such as `maxTurns` and `disallowedTools`, and must match the table exactly: Claude Code ignores a field it doesn't recognize without reporting an error. To find out why a subagent file didn't load, see [Subagent files Claude Code skips](#subagent-files-claude-code-skips).\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `name` | Yes | Unique identifier of at most 256 characters, such as `code-reviewer` or `reviewer-v2`. [Hooks](/docs/en/hooks#subagentstart) receive this value as `agent_type`. The filename doesn't have to match. Names can't contain `:`, which is reserved for [plugin-scoped identifiers](/docs/en/plugins/overview) such as `my-plugin:reviewer` |\n| `description` | Yes | When Claude should delegate to this subagent |\n| `tools` | No | [Tools](#available-tools) the subagent can use, as a comma-separated string such as `Read, Grep, Bash` or a YAML list. Inherits every tool available to subagents if omitted. If no entry in the list resolves to a tool, the subagent usually [fails to launch](/docs/en/errors#agent-would-be-spawned-with-zero-tools) with an error naming the entries. To preload Skills into context, use the `skills` field rather than listing `Skill` here |\n| `disallowedTools` | No | Tools to deny, removed from inherited or specified list. Same format as `tools`. An entry with a specifier, such as `Bash(git push *)`, still [removes the whole tool](#available-tools) |\n| `model` | No | [Model](#choose-a-model) to use: `sonnet`, `opus`, `haiku`, `fable`, a full model ID such as `claude-opus-5-5`, or `inherit`. When you omit it, Claude Code picks the model in the [subagent model order](#choose-a-model) |\n| `permissionMode` | No | [Permission mode](#permission-modes): `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, or `manual` as an alias for `default`. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `maxTurns` | No | Maximum number of agentic turns before the subagent stops. When the subagent reaches the limit, Claude Code returns its output marked as partial, and Claude can [resume it](#resume-subagents) to continue. The partial marking requires Claude Code v2.1.246 or later |\n| `skills` | No | [Skills](/docs/en/skills) to preload into the subagent's context at startup. The full skill content is injected, not only the description. Subagents can still invoke unlisted project, user, and plugin skills through the Skill tool |\n| `mcpServers` | No | [MCP servers](/docs/en/mcp) available to this subagent. Each entry is either a server name referencing an already-configured server (e.g., `\"slack\"`) or an inline definition with the server name as key and a full [MCP server config](/docs/en/mcp#installing-mcp-servers) as value. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `hooks` | No | [Lifecycle hooks](#define-hooks-for-subagents) scoped to this subagent. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `memory` | No | [Persistent memory scope](#enable-persistent-memory): `user`, `project`, or `local`. Enables cross-session learning |\n| `background` | No | Set to `true` to keep this subagent in the background even when Claude asks to run it in the foreground. Where [fork mode](#turn-fork-mode-on-or-off) is on, Claude Code already runs the subagents Claude spawns [in the background](#run-subagents-in-foreground-or-background) |\n| `omitClaudeMd` | No | Set to `true` to launch this subagent without the user, project, and local CLAUDE.md files; [managed policy files](/docs/en/memory#how-claude-md-files-load) still load, except for [managed subagents](#choose-the-subagent-scope). Use it for subagents that take everything they need from the [delegation prompt](#what-loads-at-startup). Ignored when the agent runs as the main session agent via `--agent` or the `agent` setting. Requires Claude Code v2.1.271 or later |\n| `effort` | No | Effort level when this subagent is active. Overrides the session effort level, but not the [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/en/env-vars#variables) environment variable. Options: `low`, `medium`, `high`, `xhigh`, `max`; available levels depend on the model. See [Choose an effort level](#choose-an-effort-level) |\n| `isolation` | No | Set to `worktree` to run the subagent in a temporary [git worktree](/docs/en/worktrees), giving it an isolated copy of the repository branched by default from your [default branch](/docs/en/worktrees#choose-the-base-branch) rather than the parent session's `HEAD`. The worktree is automatically cleaned up if the subagent makes no changes |\n| `color` | No | Display color for the subagent in the task list and transcript. Accepts `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, or `cyan` |\n| `initialPrompt` | No | Auto-submitted as the first user turn when this agent runs as the main session agent (via `--agent` or the `agent` setting). [Commands](/docs/en/commands) and [skills](/docs/en/skills) are processed. Prepended to any user-provided prompt. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `experimental` | No | Map of experimental options. Set its `cacheTtl` key to `5m` or `1h` to choose the [prompt cache lifetime](/docs/en/prompt-caching#choose-the-ttl-yourself) for this subagent's requests, at the frontmatter's place in the [cache lifetime precedence](/docs/en/prompt-caching#choose-the-ttl-yourself). Claude Code ignores any other value, ignores `1h` while your Claude subscription is using usage credits, and reads the field only from subagent files. Requires Claude Code v2.1.248 or later |\n\nWrite `cacheTtl` inside the `experimental` map, not at the top level of the frontmatter.\n\n```yaml theme={null}\n---\nname: repo-auditor\ndescription: Audits a large repository and reports what it finds\nexperimental:\n  cacheTtl: 1h\n---\n```"
+    },
+    {
+      "heading": "Permission modes",
+      "id": "permission-modes",
+      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129",
+      "text": "#### Permission modes\n\nSet `permissionMode` to choose the permission mode a subagent runs in. Use the modes' config values, so Manual mode is `default`. If you leave it unset, the subagent inherits the main conversation's [permission mode](/docs/en/permission-modes).\n\nThe main conversation's permission mode decides whether Claude Code uses the value you set:\n\n* When the main conversation is in `bypassPermissions`, `acceptEdits`, or [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode), the subagent runs in that same mode and Claude Code ignores the `permissionMode` you set. Under auto mode, the classifier evaluates the subagent's tool calls with the main conversation's block and allow rules. When the subagent finishes, the classifier also reviews its work and its final report before the report is delivered, as [How auto mode handles subagents](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) describes.\n* When the main conversation is in `default`, `dontAsk`, or `plan` mode, the subagent runs in the permission mode you set. It keeps the main conversation's permission mode instead in these cases:\n  * You set `bypassPermissions`. The `bypassPermissions` exception requires Claude Code v2.1.267 or later.\n  * You set `auto` and [auto mode isn't available](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) to the subagent, such as when a settings file sets [`disableAutoMode`](/docs/en/settings-reference#disableautomode) or the subagent's model doesn't support auto mode.\n\n`permissionMode` accepts these values, and `manual` as an alias for `default`:\n\n| Mode | Behavior |\n| :- | :- |\n| `default` | Manual mode: prompts for permission |\n| `acceptEdits` | Auto-accept file edits and common filesystem commands for paths in the working directory or `additionalDirectories` |\n| `auto` | [Auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode): a background classifier reviews commands and protected-directory writes |\n| `dontAsk` | Auto-deny permission prompts. Explicitly allowed tools still work; `AskUserQuestion`, MCP tools marked [`requiresUserInteraction`](/docs/en/mcp#require-approval-for-a-specific-tool), [reads from network paths](/docs/en/permissions#network-paths), and connector tools [your organization set to `ask`](/docs/en/mcp#organization-controls-on-connector-tools) in sessions where that setting reaches Claude Code are denied even if you've allowed them |\n| `bypassPermissions` | [Skip permission prompts](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode). A subagent runs in this mode only when the main conversation does |\n| `plan` | Plan mode (read-only exploration) |"
     },
     {
       "heading": "Subagent files Claude Code skips",
@@ -245,6 +308,12 @@
       "text": "#### Scope MCP servers to a subagent\n\nUse the `mcpServers` field to give a subagent access to [MCP](/docs/en/mcp) servers that aren't available in the main conversation. Inline servers defined here are connected when the subagent starts, subject to the [trust rule for the agent file's folder](#inline-server-trust), and disconnected when it finishes. String references share the parent session's connection.\n\n<Note>\n  The `mcpServers` field applies in both contexts where an agent file can run:\n\n  * As a subagent, spawned through the Agent tool or an @-mention\n  * As the main session, launched with [`--agent`](#invoke-subagents-explicitly) or the `agent` setting\n\n  When the agent is the main session, inline server definitions connect at startup alongside servers from [`.mcp.json`](/docs/en/mcp) and settings files, under the same [trust rule for the agent file's folder](#inline-server-trust). In `/mcp`, a remote (HTTP or SSE) server you've used before can show the [`cached` status](/docs/en/mcp#managing-your-servers) instead; Claude Code connects it when Claude first calls one of its tools.\n</Note>\n\nEach entry in the list is either an inline server definition or a string referencing an MCP server already configured in your session:\n\n```yaml theme={null}\n---\nname: browser-tester\ndescription: Tests features in a real browser using Playwright\nmcpServers:\n  # Inline definition: scoped to this subagent only\n  - playwright:\n      type: stdio\n      command: npx\n      args: [\"-y\", \"@playwright/mcp@latest\"]\n  # Reference by name: reuses an already-configured server\n  - github\n---\n\nUse the Playwright tools to navigate, screenshot, and interact with pages.\n```\n\nInline definitions use the same schema as `.mcp.json` server entries, keyed by the server name, and support the `stdio`, `http`, `sse`, and `ws` types.\n\nTo keep an MCP server out of the main conversation entirely and avoid its tool descriptions consuming context there, define it inline here rather than in `.mcp.json`. The subagent gets the tools; the parent conversation doesn't.\n\nThe MCP restrictions that apply to the main session also cover servers declared in subagent frontmatter:\n\n* [`--strict-mcp-config`](/docs/en/cli-reference) and [`--bare`](/docs/en/cli-reference)\n* [Enterprise managed MCP configuration](/docs/en/managed-mcp)\n* [`allowedMcpServers` and `deniedMcpServers` policies](/docs/en/managed-mcp#policy-based-control-with-allowlists-and-denylists)\n\nWhen one of these blocks a server, Claude Code skips it and shows a warning naming the blocked servers.\n\nManaged-settings restrictions apply to every subagent regardless of how it is defined. `--strict-mcp-config` doesn't filter servers you pass inline via `--agents` or the SDK `agents` option, since those are explicit caller input."
     },
     {
+      "heading": "Trust required for inline MCP servers",
+      "id": "inline-server-trust",
+      "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e",
+      "text": "<h4 id=\"inline-server-trust\">\n  Trust required for inline MCP servers\n</h4>\n\nClaude Code loads an [inline MCP server](#scope-mcp-servers-to-a-subagent) from an agent file in your project's `.claude/agents/` directory, or in an `--add-dir` directory's `.claude/agents/`, only after you [trust the folder the agent file came from](/docs/en/permissions#what-runs-before-you-trust-a-folder). Before v2.1.238, Claude Code loaded these servers without checking trust.\n\n* **Trust that doesn't count**: a parent folder's trust, and the automatic trust a `-p` or SDK session gets for [hooks in settings files](/docs/en/permissions#what-runs-before-you-trust-a-folder)\n* **Until then**: Claude Code skips every inline server in that agent file and writes the exact `projects[\"<path>\"].hasTrustDialogAccepted` key for `~/.claude.json` to the debug log\n* **`--add-dir` directories**: a directory outside your trusted workspace's repository needs its own trust entry, since its `.claude/agents/` files don't inherit your workspace's trust\n\nClaude Code loads two kinds of server without checking trust for the folder the agent file came from:\n\n* A name that references a server you already configured\n* An inline server in an agent file from `~/.claude/agents/`, in one you pass with `--agents` or the SDK `agents` option, or in one that managed settings supplies"
+    },
+    {
       "heading": "Enable persistent memory",
       "id": "enable-persistent-memory",
       "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de",
@@ -255,6 +324,12 @@
       "id": "run-every-subagent-on-one-model",
       "hash": "fe42e76c373472325b09c5921ed24e8affdb59d9885f9e032c03363fb2947681",
       "text": "#### Run every subagent on one model\n\n`CLAUDE_CODE_SUBAGENT_MODEL` is a default, so a subagent's definition or a model Claude passes still takes precedence over it. To apply one model to every subagent, [teammate](/docs/en/agent-teams#specify-teammates-and-models), and [workflow agent](/docs/en/workflows), also set `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` to `1`. Requires Claude Code v2.1.257 or later.\n\n* If you set both variables, subagents run on the model in `CLAUDE_CODE_SUBAGENT_MODEL`.\n* If you set only `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`, subagents run on the main conversation's model, except that the built-in Explore subagent runs on the [model listed for it under Built-in subagents](#built-in-subagents).\n\nFor example, to run every subagent on Haiku, set both variables in the `env` block of a [settings file](/docs/en/settings):\n\n```json theme={null}\n{\n  \"env\": {\n    \"CLAUDE_CODE_SUBAGENT_MODEL\": \"haiku\",\n    \"CLAUDE_CODE_SUBAGENT_MODEL_FORCE\": \"1\"\n  }\n}\n```\n\nTo check that the setting took effect, run [`/tasks`](/docs/en/commands) while a subagent is running. The subagent's row shows the model it runs on.\n\nWhile `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` is [on](/docs/en/env-vars), Claude Code ignores the `model` field in subagent definitions, and Claude can't pass a model when it starts a subagent. These subagents still run on the main conversation's model:\n\n* A [fork](#fork-the-current-conversation)\n* A [skill that runs in a subagent](/docs/en/skills#run-skills-in-a-subagent) with `model: inherit`"
+    },
+    {
+      "heading": "Built-in subagents",
+      "id": "built-in-subagents",
+      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d",
+      "text": "## Built-in subagents\n\nClaude Code includes built-in subagents that Claude automatically uses when appropriate. Each inherits the parent conversation's permission rules; most run with a restricted tool set.\n\nExplore and Plan skip your CLAUDE.md files and the git status snapshot to keep research fast and inexpensive. Every other built-in and [custom subagent](#configure-subagents) loads both, unless its definition sets the [`omitClaudeMd`](#supported-frontmatter-fields) field to skip the user, project, and local CLAUDE.md files. For the full breakdown of what reaches a subagent, see [what loads at startup](#what-loads-at-startup).\n\n<Tabs>\n  <Tab title=\"Explore\">\n    A fast, read-only agent optimized for searching and analyzing codebases.\n\n    * **Model**: the main conversation's model. When the main conversation runs Fable, Explore's model depends on how you connect:\n      * With a Claude subscription, an Anthropic Console account, or an [LLM gateway](/docs/en/llm-gateway) reached through `ANTHROPIC_BASE_URL`, Explore runs on the Opus model that the [`opus` alias](/docs/en/model-config#model-aliases) resolves to.\n      * On Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry, [Claude Platform on AWS](/docs/en/claude-platform-on-aws), or a [Claude apps gateway](/docs/en/claude-apps-gateway), Explore stays on the main conversation's model.\n    * **Tools**: read-only tools; Write and Edit are denied\n    * **Purpose**: file discovery, code search, codebase exploration\n\n    A [user or project subagent](#choose-the-subagent-scope) named `Explore` overrides the built-in and keeps its own `model` field, so define one with `model: haiku` to run exploration on a lower-cost model. To force one model onto every subagent, Explore included, see [Run every subagent on one model](#run-every-subagent-on-one-model).\n\n    Claude delegates to Explore when it needs to search or understand a codebase without making changes. This keeps exploration results out of your main conversation context.\n\n    When invoking Explore, Claude specifies a thoroughness level: **quick** for targeted lookups, **medium** for balanced exploration, or **very thorough** for comprehensive analysis.\n  </Tab>\n\n  <Tab title=\"Plan\">\n    A research agent used during [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) to gather context before presenting a plan.\n\n    * **Model**: inherits from the main conversation, unless you set `CLAUDE_CODE_SUBAGENT_MODEL` and [force it onto every subagent](#run-every-subagent-on-one-model)\n    * **Tools**: read-only tools; Write and Edit are denied\n    * **Purpose**: codebase research for planning\n\n    When you're in plan mode and Claude needs to understand your codebase, it delegates research to the Plan subagent so that exploration output stays in a separate context window while the main conversation remains read-only.\n  </Tab>\n\n  <Tab title=\"General-purpose\">\n    A capable agent for complex, multi-step tasks that require both exploration and action.\n\n    * **Model**: the [`CLAUDE_CODE_SUBAGENT_MODEL`](#choose-a-model) model if you set one and nothing assigns a model another way, otherwise the main conversation's model; [Choose a model](#choose-a-model) states the full order, and [Run every subagent on one model](#run-every-subagent-on-one-model) shows how to make the variable override those sources\n    * **Tools**: every tool [available to subagents](#available-tools)\n    * **Purpose**: complex research, multi-step operations, code modifications\n\n    Claude delegates to general-purpose when the task requires both exploration and modification, complex reasoning to interpret results, or multiple dependent steps.\n  </Tab>\n\n  <Tab title=\"Other\">\n    Claude Code includes additional helper agents for specific tasks. These are typically invoked automatically, so you don't need to use them directly.\n\n    | Agent | Model | When Claude uses it |\n    | :- | :- | :- |\n    | claude | None of its own; follows the [model order](#choose-a-model) when Claude spawns it as a subagent | When a task doesn't fit a more specialized agent. A catch-all with every tool [available to subagents](#available-tools). Also the default agent for a dispatched [background session](/docs/en/agent-view); [which permission mode it starts in](/docs/en/agent-view#permission-mode-model-and-effort) depends on how the session was started |\n    | statusline-setup | Sonnet | When you run `/statusline` to configure your status line |\n    | claude-code-guide | Haiku | When you ask questions about Claude Code features |\n  </Tab>\n</Tabs>\n\nBuilt-in subagents are registered by default in interactive sessions. To restrict them:\n\n* To block a specific built-in type, add it to `permissions.deny` as shown in [Disable specific subagents](#disable-specific-subagents).\n* To prevent Claude from delegating to any subagent, deny the `Agent` tool itself with [`permissions.deny`](/docs/en/permissions#tool-specific-permission-rules).\n* To remove only the built-in `Explore` and `Plan` subagents, set [`CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS=1`](/docs/en/env-vars). Claude reads and explores files directly instead of delegating to them. Requires Claude Code v2.1.198 or later.\n* In [non-interactive mode](/docs/en/headless) and the [Agent SDK](/docs/en/agent-sdk/overview), set [`CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS=1`](/docs/en/env-vars) to remove all built-in types and supply only your own.\n\nAn Agent tool call that omits `subagent_type` fails with [`subagent_type is required`](/docs/en/errors#subagent-type-is-required) when the session has no `general-purpose` subagent to fall back on.\n\nBeyond these built-in subagents, you can create your own with custom prompts, tool restrictions, permission modes, hooks, and skills. The following sections show how to get started and customize subagents."
     },
     {
       "heading": "Choose the subagent scope",
@@ -275,22 +350,10 @@
       "text": "<h3 id=\"supported-frontmatter-fields\">\n  Frontmatter reference\n</h3>\n\nConfigure a subagent with YAML [frontmatter](/docs/en/glossary#frontmatter) between `---` markers at the top of its file, and write its system prompt as Markdown after the closing `---`. Only `name` and `description` are required.\n\nMulti-word field names use camelCase, such as `maxTurns` and `disallowedTools`, and must match the table exactly: Claude Code ignores a field it doesn't recognize without reporting an error. To find out why a subagent file didn't load, see [Subagent files Claude Code skips](#subagent-files-claude-code-skips).\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `name` | Yes | Unique identifier of at most 256 characters, such as `code-reviewer` or `reviewer-v2`. [Hooks](/docs/en/hooks#subagentstart) receive this value as `agent_type`. The filename doesn't have to match. Names can't contain `:`, which is reserved for [plugin-scoped identifiers](/docs/en/plugins/overview) such as `my-plugin:reviewer` |\n| `description` | Yes | When Claude should delegate to this subagent |\n| `tools` | No | [Tools](#available-tools) the subagent can use, as a comma-separated string such as `Read, Grep, Bash` or a YAML list. Inherits every tool available to subagents if omitted. If no entry in the list resolves to a tool, the subagent usually [fails to launch](/docs/en/errors#agent-would-be-spawned-with-zero-tools) with an error naming the entries. To preload Skills into context, use the `skills` field rather than listing `Skill` here |\n| `disallowedTools` | No | Tools to deny, removed from inherited or specified list. Same format as `tools`. An entry with a specifier, such as `Bash(git push *)`, still [removes the whole tool](#available-tools) |\n| `model` | No | [Model](#choose-a-model) to use: `sonnet`, `opus`, `haiku`, `fable`, a full model ID such as `claude-opus-5-5`, or `inherit`. When you omit it, Claude Code picks the model in the [subagent model order](#choose-a-model) |\n| `permissionMode` | No | [Permission mode](#permission-modes): `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, or `manual` as an alias for `default`. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `maxTurns` | No | Maximum number of agentic turns before the subagent stops. When the subagent reaches the limit, Claude Code returns its output marked as partial, and Claude can [resume it](#resume-subagents) to continue. The partial marking requires Claude Code v2.1.246 or later |\n| `skills` | No | [Skills](/docs/en/skills) to preload into the subagent's context at startup. The full skill content is injected, not only the description. Subagents can still invoke unlisted project, user, and plugin skills through the Skill tool |\n| `mcpServers` | No | [MCP servers](/docs/en/mcp) available to this subagent. Each entry is either a server name referencing an already-configured server (e.g., `\"slack\"`) or an inline definition with the server name as key and a full [MCP server config](/docs/en/mcp#installing-mcp-servers) as value. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `hooks` | No | [Lifecycle hooks](#define-hooks-for-subagents) scoped to this subagent. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `memory` | No | [Persistent memory scope](#enable-persistent-memory): `user`, `project`, or `local`. Enables cross-session learning |\n| `background` | No | Set to `true` to keep this subagent in the background even when Claude asks to run it in the foreground. Where [fork mode](#turn-fork-mode-on-or-off) is on, Claude Code already runs the subagents Claude spawns [in the background](#run-subagents-in-foreground-or-background) |\n| `omitClaudeMd` | No | Set to `true` to launch this subagent without the user, project, and local CLAUDE.md files; [managed policy files](/docs/en/memory#how-claude-md-files-load) still load, except for [managed subagents](#choose-the-subagent-scope). Use it for subagents that take everything they need from the [delegation prompt](#what-loads-at-startup). Ignored when the agent runs as the main session agent via `--agent` or the `agent` setting. Requires Claude Code v2.1.271 or later |\n| `effort` | No | Effort level when this subagent is active. Overrides the session effort level, but not the [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/en/env-vars#variables) environment variable. Options: `low`, `medium`, `high`, `xhigh`, `max`; available levels depend on the model. See [Choose an effort level](#choose-an-effort-level) |\n| `isolation` | No | Set to `worktree` to run the subagent in a temporary [git worktree](/docs/en/worktrees), giving it an isolated copy of the repository branched by default from your [default branch](/docs/en/worktrees#choose-the-base-branch) rather than the parent session's `HEAD`. The worktree is automatically cleaned up if the subagent makes no changes |\n| `color` | No | Display color for the subagent in the task list and transcript. Accepts `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, or `cyan` |\n| `initialPrompt` | No | Auto-submitted as the first user turn when this agent runs as the main session agent (via `--agent` or the `agent` setting). [Commands](/docs/en/commands) and [skills](/docs/en/skills) are processed. Prepended to any user-provided prompt. Ignored for [plugin subagents](#choose-the-subagent-scope) |\n| `experimental` | No | Map of experimental options. Set its `cacheTtl` key to `5m` or `1h` to choose the [prompt cache lifetime](/docs/en/prompt-caching#choose-the-ttl-yourself) for this subagent's requests, at the frontmatter's place in the [cache lifetime precedence](/docs/en/prompt-caching#choose-the-ttl-yourself). Claude Code ignores any other value, ignores `1h` while your Claude subscription is using usage credits, and reads the field only from subagent files. Requires Claude Code v2.1.248 or later |\n\nWrite `cacheTtl` inside the `experimental` map, not at the top level of the frontmatter.\n\n```yaml theme={null}\n---\nname: repo-auditor\ndescription: Audits a large repository and reports what it finds\nexperimental:\n  cacheTtl: 1h\n---\n```"
     },
     {
-      "heading": "Permission modes",
-      "id": "permission-modes",
-      "hash": "3d8082b6b76c04b1e6dd126251ca535eba14de00c6371e8eeeca041ec6341144",
-      "text": "#### Permission modes\n\nSet `permissionMode` to choose the permission mode a subagent runs in. Use the modes' config values, so Manual mode is `default`. If you leave it unset, the subagent inherits the main conversation's [permission mode](/docs/en/permission-modes).\n\nThe main conversation's permission mode decides whether Claude Code uses the value you set:\n\n* When the main conversation is in `bypassPermissions`, `acceptEdits`, or [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode), the subagent runs in that same mode and Claude Code ignores the `permissionMode` you set. Under auto mode, the classifier evaluates the subagent's tool calls with the main conversation's block and allow rules. When the subagent finishes, the classifier also reviews its work and its final report before the report is delivered, as [How auto mode handles subagents](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) describes.\n* When the main conversation is in `default`, `dontAsk`, or `plan` mode, the subagent runs in the permission mode you set. It keeps the main conversation's permission mode instead in these cases:\n  * You set `bypassPermissions`. The `bypassPermissions` exception requires Claude Code v2.1.267 or later.\n  * You set `auto` and [auto mode isn't available](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) to the subagent, such as when a settings file sets [`disableAutoMode`](/docs/en/settings-reference#disableautomode) or the subagent's model doesn't support auto mode.\n\n`permissionMode` accepts these values, and `manual` as an alias for `default`:\n\n| Mode | Behavior |\n| :- | :- |\n| `default` | Manual mode: prompts for permission |\n| `acceptEdits` | Auto-accept file edits and common filesystem commands for paths in the working directory or `additionalDirectories` |\n| `auto` | [Auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode): a background classifier reviews commands and protected-directory writes |\n| `dontAsk` | Auto-deny permission prompts. Explicitly allowed tools still work; `AskUserQuestion`, MCP tools marked [`requiresUserInteraction`](/docs/en/mcp#require-approval-for-a-specific-tool), and connector tools [your organization set to `ask`](/docs/en/mcp#organization-controls-on-connector-tools) in sessions where that setting reaches Claude Code are denied even if you've allowed them |\n| `bypassPermissions` | [Skip permission prompts](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode). A subagent runs in this mode only when the main conversation does |\n| `plan` | Plan mode (read-only exploration) |"
-    },
-    {
       "heading": "Preload skills into subagents",
       "id": "preload-skills-into-subagents",
       "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7",
       "text": "#### Preload skills into subagents\n\nUse the `skills` field to inject skill content into a subagent's context at startup. This gives the subagent domain knowledge without requiring it to discover and load skills during execution.\n\n```yaml theme={null}\n---\nname: api-developer\ndescription: Implement API endpoints following team conventions\nskills:\n  - api-conventions\n  - error-handling-patterns\n---\n\nImplement API endpoints. Follow the conventions and patterns from the preloaded skills.\n```\n\nThe full content of each listed skill is injected into the subagent's context at startup, up to the first 32 distinct names in the list. This field controls which skills are preloaded, not which skills the subagent can access: without it, the subagent can still discover and invoke project, user, and plugin skills through the Skill tool during execution. To prevent a subagent from invoking skills entirely, omit `Skill` from the [`tools`](#available-tools) list or add it to `disallowedTools`.\n\nYou can't preload skills that set [`disable-model-invocation: true`](/docs/en/skills#control-who-invokes-a-skill), since preloading draws from the same set of skills Claude can invoke. This includes the bundled `/verify` skill, which Claude can't run on its own.\n\nIf a listed skill is missing or disabled, for example by your organization's policy, Claude Code skips it and logs a warning to the debug log.\n\n<Note>\n  This is the inverse of [running a skill in a subagent](/docs/en/skills#run-skills-in-a-subagent). With `skills` in a subagent, the subagent controls the system prompt and loads skill content. With `context: fork` in a skill, the skill content is injected into the agent you specify. In both cases the subagent starts without your conversation history.\n</Note>"
-    },
-    {
-      "heading": "Available tools",
-      "id": "available-tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493",
-      "text": "#### Available tools\n\nSubagents inherit the [built-in tools](/docs/en/tools-reference) and MCP tools available in the main conversation, narrowed by two filters: the first removes a short list of tools from every subagent, and the second reduces the built-in tool set for subagents that run in the [background](#run-subagents-in-foreground-or-background), which is the default. On macOS, Linux, and WSL, a subagent can also receive the Glob and Grep tools when the main conversation doesn't have them, as described under [Glob tool behavior](/docs/en/tools-reference#glob-tool-behavior). [Forks](#fork-the-current-conversation) skip both filters and receive the main conversation's exact tool pool. The first filter removes these tools, even when listed in the `tools` field:\n\n* `Agent`, when the subagent is at the [depth limit](#let-subagents-spawn-their-own-subagents); in a [fork](#fork-the-current-conversation) the tool stays listed but returns an error instead of spawning\n* `AskUserQuestion`\n* `EndConversation`, which can end only the main conversation; see [EndConversation tool behavior](/docs/en/tools-reference#endconversation-tool-behavior)\n* `EnterPlanMode`\n* `ExitPlanMode`, unless the subagent's [`permissionMode`](#permission-modes) is `plan`\n* `ScheduleWakeup`\n* `WaitForMcpServers`\n* `Workflow`\n\nThe second filter applies to subagents running in the background. Apart from `Agent` and `ExitPlanMode`, which follow the first filter's conditions wherever the subagent runs, a background subagent keeps every MCP tool but only these built-in tools: `Read`, `Grep`, `Glob`, `LSP`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`, `SendMessage`, and `Artifact`, plus [`SubagentHandback`](/docs/en/tools-reference) for a subagent that reports through it. Claude Code removes every other built-in tool from a background subagent, whether inherited or listed in the `tools` field, so the same definition can resolve to different tools in the foreground and the background. The removal reports no error unless it leaves the `tools` list [resolving to nothing](/docs/en/errors#agent-would-be-spawned-with-zero-tools).\n\nBefore v2.1.280, background subagents couldn't use `LSP`.\n\n[`ListAgents`](/docs/en/cross-session-messaging) follows these filters like any built-in tool: a foreground subagent inherits it in sessions where cross-session messaging is enabled, and a background subagent doesn't keep it.\n\nTeammates in [agent teams](/docs/en/agent-teams) additionally keep the task tools and cron tools: `TaskCreate`, `TaskGet`, `TaskList`, `TaskUpdate`, `CronCreate`, `CronDelete`, and `CronList`.\n\nIn a [session without the Task tools](/docs/en/tools-reference#task-tool-availability), Claude Code doesn't provide the task tools to subagents either, even when the subagent runs a different model. An in-process teammate follows your session the same way, while a teammate in its own [split pane](/docs/en/agent-teams#choose-a-display-mode) runs as a separate Claude Code process, so its own model decides.\n\nTo restrict tools, use the `tools` field as an allowlist or the `disallowedTools` field as a denylist. This example uses `tools` to allow only Read, Grep, Glob, and Bash. The subagent can't edit files, write files, or use any MCP tools:\n\n```yaml theme={null}\n---\nname: safe-researcher\ndescription: Research agent with restricted capabilities\ntools: Read, Grep, Glob, Bash\n---\n```\n\nThis example uses `disallowedTools` to inherit the subagent's tool pool except Write and Edit. The subagent keeps Bash, MCP tools, and the rest of its pool:\n\n```yaml theme={null}\n---\nname: no-writes\ndescription: Inherits the available tools except file writes\ndisallowedTools: Write, Edit\n---\n```\n\nIf both are set, `disallowedTools` is applied first, then `tools` is resolved against the remaining pool. A tool listed in both is removed.\n\nWhen nothing in the `tools` list resolves to a tool, for example because every entry is misspelled or names a tool that isn't available to subagents, Claude Code usually refuses to launch the subagent and the Agent tool returns an error naming the unresolved entries; see [Agent would be spawned with zero tools](/docs/en/errors#agent-would-be-spawned-with-zero-tools) for the message and how to fix each entry. Before v2.1.208, that subagent launched with no tools and could return an empty or confusing result.\n\nBoth fields accept MCP server-level patterns in addition to exact tool names: `mcp__<server>` or `mcp__<server>__*` grants or removes every tool from the named server. In `disallowedTools`, `mcp__*` also removes every MCP tool from any server. This example removes every tool from the `github` MCP server while keeping tools from other servers and the built-in tools in its pool:\n\n```yaml theme={null}\n---\nname: local-only\ndescription: Inherits every tool except those from the github MCP server\ndisallowedTools: mcp__github\n---\n```\n\nA `disallowedTools` entry with a specifier, such as `Bash(git push *)`, still removes the whole tool from the subagent, not only the matching commands. To keep Bash and block specific commands, add a [Bash deny rule](/docs/en/permissions#bash) such as `Bash(git push *)` to `permissions.deny` in your settings. The rule applies to the main conversation and to subagents."
     },
     {
       "heading": "Restrict which subagents can be spawned",
@@ -307,14 +370,8 @@
     {
       "heading": "Choose a model",
       "id": "choose-a-model",
-      "hash": "954e6031f941a80b24e9f37166ef3dd8de3d2cc5815119543a3ee84aa158a3ae",
-      "text": "### Choose a model\n\nThe `model` field controls which model the subagent uses:\n\n* **Model alias**: use one of the available aliases: `sonnet`, `opus`, `haiku`, or `fable`\n* **Full model ID**: use a full model ID such as `claude-opus-5-5` or `claude-sonnet-5`. Accepts the same values as the `--model` flag\n* **inherit**: use the same model as the main conversation\n\nWhen Claude invokes a subagent, it can also pass a `model` parameter for that specific invocation. Claude Code resolves the subagent's model in this order:\n\n1. The per-invocation `model` parameter\n2. The subagent definition's `model` frontmatter, where `inherit` selects the main conversation's model\n3. The [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/en/model-config#environment-variables) environment variable, when you set it to a model alias or model ID\n4. The main conversation's model\n\nIf an installed [mod](/docs/en/plugins/mods/overview) sets a model in its [`agent.spawn`](/docs/en/plugins/mods/reference#subagents) hook, Claude Code uses that model in place of the per-invocation parameter.\n\nIn two cases, a family alias such as `opus` in the per-invocation parameter or the frontmatter resolves to the main conversation's model instead of the [version the alias points to](/docs/en/model-config#model-aliases):\n\n* **The main conversation's model belongs to that family**: the subagent runs on the main conversation's exact model, including any `[1m]` suffix, so it gets the same [extended context](/docs/en/model-config#extended-context) window as the main conversation.\n* **Claude Code can't tell the main conversation's model family, on [a provider other than the Anthropic API](/docs/en/third-party-integrations)**: this can happen with an [application inference profile ARN](/docs/en/amazon-bedrock#iam-configuration) on Amazon Bedrock that Claude Code hasn't resolved to a backing model. This case covers only the `opus` alias, and doesn't apply when you set [`ANTHROPIC_DEFAULT_OPUS_MODEL`](/docs/en/model-config#environment-variables), since `opus` then resolves to the model you set.\n\nAn alias in `CLAUDE_CODE_SUBAGENT_MODEL` always resolves to the version the alias points to, even when it names the main conversation's family.\n\nSetting `CLAUDE_CODE_SUBAGENT_MODEL` by itself doesn't change the model the built-in Explore and Plan subagents run on. To change it, see [Run every subagent on one model](#run-every-subagent-on-one-model).\n\nBefore v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` came first in this order and overrode both the per-invocation parameter and the frontmatter, including `model: inherit`.\n\nSetting the variable to `inherit` is the same as leaving it unset. Before v2.1.196, that value forced subagents onto the main conversation's model and ignored the other sources.\n\nClaude Code checks the per-invocation parameter, frontmatter, and environment variable values against your organization's [`availableModels`](/docs/en/model-config#restrict-model-selection) allowlist. For a blocked value, it substitutes another model:\n\n* When the blocked value is a family alias such as `opus`, Claude Code runs the subagent on the newest version of that family the allowlist permits, following the same [substitution rules and provider scope](/docs/en/model-config#restrict-model-selection) as `/model`. Before v2.1.222, Claude Code ran the subagent on the inherited model for a blocked family alias as well.\n* For any other blocked value, on providers where that substitution doesn't operate, or when the allowlist permits no version of the family, Claude Code runs the subagent on the inherited model instead. If you set `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code tries that model first, under these same rules.\n\nIn interactive sessions, Claude Code shows a warning naming the requested model and the model the subagent runs on, for either substitution.\n\nTo check which model a subagent is running on, run [`/tasks`](/docs/en/commands). Claude Code names the model on the subagent's row, and adds the [effort level](/docs/en/model-config#adjust-effort-level) set for that subagent, if any. Requires Claude Code v2.1.242 or later.\n\nA per-invocation `model` parameter also applies when the subagent is [resumed or sent a follow-up message](#resume-subagents), so the subagent stays on that model. Before v2.1.211, resuming dropped the per-invocation value and the subagent reverted to its definition's `model` field or, without one, the main conversation's model.\n\nAs of v2.1.198, subagents also inherit the main conversation's [extended thinking](/docs/en/model-config#extended-thinking) configuration: if thinking is on in your session, it's on for the subagent, and if it's off, it stays off. There is no per-subagent thinking setting. Before v2.1.198, subagents ran with extended thinking disabled regardless of the main conversation's setting."
-    },
-    {
-      "heading": "Built-in subagents",
-      "id": "built-in-subagents",
-      "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d",
-      "text": "## Built-in subagents\n\nClaude Code includes built-in subagents that Claude automatically uses when appropriate. Each inherits the parent conversation's permission rules; most run with a restricted tool set.\n\nExplore and Plan skip your CLAUDE.md files and the git status snapshot to keep research fast and inexpensive. Every other built-in and [custom subagent](#configure-subagents) loads both, unless its definition sets the [`omitClaudeMd`](#supported-frontmatter-fields) field to skip the user, project, and local CLAUDE.md files. For the full breakdown of what reaches a subagent, see [what loads at startup](#what-loads-at-startup).\n\n<Tabs>\n  <Tab title=\"Explore\">\n    A fast, read-only agent optimized for searching and analyzing codebases.\n\n    * **Model**: the main conversation's model. When the main conversation runs Fable, Explore's model depends on how you connect:\n      * With a Claude subscription, an Anthropic Console account, or an [LLM gateway](/docs/en/llm-gateway) reached through `ANTHROPIC_BASE_URL`, Explore runs on the Opus model that the [`opus` alias](/docs/en/model-config#model-aliases) resolves to.\n      * On Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry, [Claude Platform on AWS](/docs/en/claude-platform-on-aws), or a [Claude apps gateway](/docs/en/claude-apps-gateway), Explore stays on the main conversation's model.\n    * **Tools**: read-only tools; Write and Edit are denied\n    * **Purpose**: file discovery, code search, codebase exploration\n\n    A [user or project subagent](#choose-the-subagent-scope) named `Explore` overrides the built-in and keeps its own `model` field, so define one with `model: haiku` to run exploration on a lower-cost model. To force one model onto every subagent, Explore included, see [Run every subagent on one model](#run-every-subagent-on-one-model).\n\n    Claude delegates to Explore when it needs to search or understand a codebase without making changes. This keeps exploration results out of your main conversation context.\n\n    When invoking Explore, Claude specifies a thoroughness level: **quick** for targeted lookups, **medium** for balanced exploration, or **very thorough** for comprehensive analysis.\n  </Tab>\n\n  <Tab title=\"Plan\">\n    A research agent used during [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) to gather context before presenting a plan.\n\n    * **Model**: inherits from the main conversation, unless you set `CLAUDE_CODE_SUBAGENT_MODEL` and [force it onto every subagent](#run-every-subagent-on-one-model)\n    * **Tools**: read-only tools; Write and Edit are denied\n    * **Purpose**: codebase research for planning\n\n    When you're in plan mode and Claude needs to understand your codebase, it delegates research to the Plan subagent so that exploration output stays in a separate context window while the main conversation remains read-only.\n  </Tab>\n\n  <Tab title=\"General-purpose\">\n    A capable agent for complex, multi-step tasks that require both exploration and action.\n\n    * **Model**: the [`CLAUDE_CODE_SUBAGENT_MODEL`](#choose-a-model) model if you set one and nothing assigns a model another way, otherwise the main conversation's model; [Choose a model](#choose-a-model) states the full order, and [Run every subagent on one model](#run-every-subagent-on-one-model) shows how to make the variable override those sources\n    * **Tools**: every tool [available to subagents](#available-tools)\n    * **Purpose**: complex research, multi-step operations, code modifications\n\n    Claude delegates to general-purpose when the task requires both exploration and modification, complex reasoning to interpret results, or multiple dependent steps.\n  </Tab>\n\n  <Tab title=\"Other\">\n    Claude Code includes additional helper agents for specific tasks. These are typically invoked automatically, so you don't need to use them directly.\n\n    | Agent | Model | When Claude uses it |\n    | :- | :- | :- |\n    | claude | None of its own; follows the [model order](#choose-a-model) when Claude spawns it as a subagent | When a task doesn't fit a more specialized agent. A catch-all with every tool [available to subagents](#available-tools). Also the default agent for a dispatched [background session](/docs/en/agent-view); [which permission mode it starts in](/docs/en/agent-view#permission-mode-model-and-effort) depends on how the session was started |\n    | statusline-setup | Sonnet | When you run `/statusline` to configure your status line |\n    | claude-code-guide | Haiku | When you ask questions about Claude Code features |\n  </Tab>\n</Tabs>\n\nBuilt-in subagents are registered by default in interactive sessions. To restrict them:\n\n* To block a specific built-in type, add it to `permissions.deny` as shown in [Disable specific subagents](#disable-specific-subagents).\n* To prevent Claude from delegating to any subagent, deny the `Agent` tool itself with [`permissions.deny`](/docs/en/permissions#tool-specific-permission-rules).\n* To remove only the built-in `Explore` and `Plan` subagents, set [`CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS=1`](/docs/en/env-vars). Claude reads and explores files directly instead of delegating to them. Requires Claude Code v2.1.198 or later.\n* In [non-interactive mode](/docs/en/headless) and the [Agent SDK](/docs/en/agent-sdk/overview), set [`CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS=1`](/docs/en/env-vars) to remove all built-in types and supply only your own.\n\nAn Agent tool call that omits `subagent_type` fails with [`subagent_type is required`](/docs/en/errors#subagent-type-is-required) when the session has no `general-purpose` subagent to fall back on.\n\nBeyond these built-in subagents, you can create your own with custom prompts, tool restrictions, permission modes, hooks, and skills. The following sections show how to get started and customize subagents."
+      "hash": "ea006bdc1af80c1cb4fad720394d98e780a1772c5b47fa34eea9e8c07a62e59e",
+      "text": "### Choose a model\n\nThe `model` field controls which model the subagent uses:\n\n* **Model alias**: use one of the available aliases: `sonnet`, `opus`, `haiku`, or `fable`\n* **Full model ID**: use a full model ID such as `claude-opus-5-5` or `claude-sonnet-5`. Accepts the same values as the `--model` flag\n* **inherit**: use the same model as the main conversation\n\nWhen Claude invokes a subagent, it can also pass a `model` parameter for that specific invocation. Claude Code resolves the subagent's model in this order:\n\n1. The per-invocation `model` parameter\n2. The subagent definition's `model` frontmatter, where `inherit` selects the main conversation's model\n3. The [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/en/model-config#environment-variables) environment variable, when you set it to a model alias or model ID\n4. The main conversation's model\n\nIf an installed [mod](/docs/en/plugins/mods/overview) sets a model in its [`agent.spawn`](/docs/en/plugins/mods/reference#subagents) hook, Claude Code uses that model in place of the per-invocation parameter.\n\nIn two cases, a family alias such as `opus` in the per-invocation parameter or the frontmatter resolves to the main conversation's model instead of the [version the alias points to](/docs/en/model-config#model-aliases):\n\n* **The main conversation's model belongs to that family**: the subagent runs on the main conversation's exact model, including any `[1m]` suffix, so it gets the same [extended context](/docs/en/model-config#extended-context) window as the main conversation.\n* **Claude Code can't tell the main conversation's model family, on [a provider other than the Anthropic API](/docs/en/third-party-integrations)**: this can happen with an [application inference profile ARN](/docs/en/amazon-bedrock#iam-configuration) on Amazon Bedrock that Claude Code hasn't resolved to a backing model. This case covers only the `opus` alias, and doesn't apply when you set [`ANTHROPIC_DEFAULT_OPUS_MODEL`](/docs/en/model-config#environment-variables), since `opus` then resolves to the model you set.\n\nAn alias in `CLAUDE_CODE_SUBAGENT_MODEL` always resolves to the version the alias points to, even when it names the main conversation's family. Setting the variable to `inherit` is the same as leaving it unset.\n\nSetting `CLAUDE_CODE_SUBAGENT_MODEL` by itself doesn't change the model the built-in Explore and Plan subagents run on. To change it, see [Run every subagent on one model](#run-every-subagent-on-one-model).\n\nBefore v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` came first in this order and overrode both the per-invocation parameter and the frontmatter, including `model: inherit`.\n\nClaude Code checks the per-invocation parameter, frontmatter, and environment variable values against your organization's [`availableModels`](/docs/en/model-config#restrict-model-selection) allowlist. For a blocked value, it substitutes another model:\n\n* When the blocked value is a family alias such as `opus`, Claude Code runs the subagent on the newest version of that family the allowlist permits, following the same [substitution rules and provider scope](/docs/en/model-config#restrict-model-selection) as `/model`. Before v2.1.222, Claude Code ran the subagent on the inherited model for a blocked family alias as well.\n* For any other blocked value, on providers where that substitution doesn't operate, or when the allowlist permits no version of the family, Claude Code runs the subagent on the inherited model instead. If you set `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code tries that model first, under these same rules.\n\nIn interactive sessions, Claude Code shows a warning naming the requested model and the model the subagent runs on, for either substitution.\n\nTo check which model a subagent is running on, run [`/tasks`](/docs/en/commands). Claude Code names the model on the subagent's row, and adds the [effort level](/docs/en/model-config#adjust-effort-level) set for that subagent, if any. Requires Claude Code v2.1.242 or later.\n\nA per-invocation `model` parameter also applies when the subagent is [resumed or sent a follow-up message](#resume-subagents), so the subagent stays on that model. Before v2.1.211, resuming dropped the per-invocation value and the subagent reverted to its definition's `model` field or, without one, the main conversation's model.\n\nAs of v2.1.198, subagents also inherit the main conversation's [extended thinking](/docs/en/model-config#extended-thinking) configuration: if thinking is on in your session, it's on for the subagent, and if it's off, it stays off. There is no per-subagent thinking setting. Before v2.1.198, subagents ran with extended thinking disabled regardless of the main conversation's setting."
     }
   ]
 }

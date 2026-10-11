@@ -4,59 +4,73 @@
   "blocks": [
     {
       "id": "create-a-marketplace",
-      "hash": "020416723372f147a50d9924506e73f6a200ff536b7d68cb0b2d7bfe399e32f1"
+      "hash": "020416723372f147a50d9924506e73f6a200ff536b7d68cb0b2d7bfe399e32f1",
+      "bodyHash": "6e41316d32c51c1b71c42d204a9854d47cdf5d95dd2bb561061c26f210d02abe"
     },
     {
       "id": "create-a-marketplace-1",
-      "hash": "03fc9c0c85494895c906268b250a87fc95ca393d138f4bab7132d5f02207c1f6"
+      "hash": "03fc9c0c85494895c906268b250a87fc95ca393d138f4bab7132d5f02207c1f6",
+      "bodyHash": "3dd162f7d07524e3df58ed421f211ad2edb7bb94b41dba02d2fcbda039cd88d0"
     },
     {
       "id": "add-plugin-entries",
-      "hash": "b1e3048cbf0551e1f60cd1c2a1e3d7926c165fdcabca3009466f26aa6bfdb453"
+      "hash": "b1e3048cbf0551e1f60cd1c2a1e3d7926c165fdcabca3009466f26aa6bfdb453",
+      "bodyHash": "cc52096d118a5075e6ad134c2cc701ccd438e1e89a4e1d579cad09ad19c2b085"
     },
     {
       "id": "rules-for-plugin-entries",
-      "hash": "fd62a6f288e565058642450c8703e1b054cbeffbfa68fbaa34f5e7f87e1e9a3d"
+      "hash": "fd62a6f288e565058642450c8703e1b054cbeffbfa68fbaa34f5e7f87e1e9a3d",
+      "bodyHash": "af0a7e8d463068975f64fe973eec16109f7afc1480b00ad2b4f9434a282a22ae"
     },
     {
       "id": "write-relative-paths-from-the-marketplace-root",
-      "hash": "814c053fbb01e6764cd45f1cd0bac890eaf9ce1315a46bff6e452a0e1251ab8a"
+      "hash": "814c053fbb01e6764cd45f1cd0bac890eaf9ce1315a46bff6e452a0e1251ab8a",
+      "bodyHash": "3a853d581b238785d7e37105019cf797cea0b04eaae78b24e1d34eb104156bcf"
     },
     {
       "id": "keep-the-entry-name-and-the-manifest-name-the-same",
-      "hash": "7b9fbfa87ad9074a72c48e244a949556af66447094d8956335808a8ee71c5c6a"
+      "hash": "7b9fbfa87ad9074a72c48e244a949556af66447094d8956335808a8ee71c5c6a",
+      "bodyHash": "ae85c822d2ebfdf8abf82e257922c6a035c32ee701ae8b5ec87bcabecf45583d"
     },
     {
       "id": "choose-a-plugin-source",
-      "hash": "84270f72b9aba6fa12c01f7e57f4a5e34019c514fe20137ea90a86ce0fbcc559"
+      "hash": "84270f72b9aba6fa12c01f7e57f4a5e34019c514fe20137ea90a86ce0fbcc559",
+      "bodyHash": "314579f23de909a2099880c3230336a0f62f71d61997f8554cf908ac6c94b151"
     },
     {
       "id": "validate-and-test",
-      "hash": "be31f9acac861d211bf32f81a3f71e1e704dbf61243f45be4cba1f453ebf2557"
+      "hash": "be31f9acac861d211bf32f81a3f71e1e704dbf61243f45be4cba1f453ebf2557",
+      "bodyHash": "44075ee03d4ec6a4af298be22e1fbda521f765c524edda50eaa4c665dcda962e"
     },
     {
       "id": "problems-that-validation-reports",
-      "hash": "34d7e317ab1d3c2e5cf9477f85aa32a328ccb980272d10e374ea7ac13767ec5e"
+      "hash": "34d7e317ab1d3c2e5cf9477f85aa32a328ccb980272d10e374ea7ac13767ec5e",
+      "bodyHash": "032f48bca8e97dfbb572b38fe30e248f9cd18157070ef094143fce325167f9dc"
     },
     {
       "id": "problems-that-surface-when-you-add-or-install",
-      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b"
+      "hash": "c3c19086f9ebb1507008109ae32a6a71b47e575c841c31fd4bcaec1b8c550b0b",
+      "bodyHash": "38e985157796ee10955f3f799186587f82b72e3d178118538bdf53157b1bdd80"
     },
     {
       "id": "test-an-edit-to-a-plugin",
-      "hash": "2ee1593ecbac7bf3f2c751325fc5aa0c1586e52bed457ea8cfca08fb7f013685"
+      "hash": "2ee1593ecbac7bf3f2c751325fc5aa0c1586e52bed457ea8cfca08fb7f013685",
+      "bodyHash": "abd8f208fdb08b5f6de1014ee5ff4fbb17d0dabe430a591a8fd16358991c60f6"
     },
     {
       "id": "remove-the-marketplace-to-start-over",
-      "hash": "ac97cab042f63f26de90912a14be7fd897da313969314221a499d12d3e01a010"
+      "hash": "ac97cab042f63f26de90912a14be7fd897da313969314221a499d12d3e01a010",
+      "bodyHash": "a45a2b9ee7866ccd9f4b54e760115560c59e4fe9a918056cef5b30c1ae3d6289"
     },
     {
       "id": "host-your-marketplace",
-      "hash": "6563c806f2325931de3ed54b4f8198ecf988b04d66bb5af107eb64a7b85855b7"
+      "hash": "6563c806f2325931de3ed54b4f8198ecf988b04d66bb5af107eb64a7b85855b7",
+      "bodyHash": "a6a83a30ed3be0a02f7d495cff80d8e75ef1c95b9fc535856fbe5dd95e1f1c08"
     },
     {
       "id": "next-steps",
-      "hash": "aaccf5ee3a44388b4f415fc00e68748c45e5d401598b4d30f2806ed5a6c2d0f8"
+      "hash": "aaccf5ee3a44388b4f415fc00e68748c45e5d401598b4d30f2806ed5a6c2d0f8",
+      "bodyHash": "ede7256effc3d09f41514e18530ebeca1fe2794d2fdd64cd7901e6bc218a5e6c"
     }
   ],
   "sources": [

@@ -4,55 +4,68 @@
   "blocks": [
     {
       "id": "output-styles",
-      "hash": "4677bfc1c6ad2a856471a1bce0a34b8d2e9405ce129b8860aab51255cec10be9"
+      "hash": "4677bfc1c6ad2a856471a1bce0a34b8d2e9405ce129b8860aab51255cec10be9",
+      "bodyHash": "3a89c2982247287801cae2e0b6e9471f56ec44a20b6479c83cc098106b1f6c7e"
     },
     {
       "id": "built-in-output-styles",
-      "hash": "ae56118af1459ff72b0f65644dce78d05438e9aa33084301762d0481c59e99a9"
+      "hash": "ae56118af1459ff72b0f65644dce78d05438e9aa33084301762d0481c59e99a9",
+      "bodyHash": "96ff32bcf654db8cb4bf5161508eac5f2514cdcd8e5906042514941c09671f81"
     },
     {
       "id": "default",
-      "hash": "e22481c30452912727b6f2a0afd98c347b4c7f07aab36894720e07ec875e37ad"
+      "hash": "e22481c30452912727b6f2a0afd98c347b4c7f07aab36894720e07ec875e37ad",
+      "bodyHash": "4c5b712ba52ad2132e27f3d95e5b7b9946725b310e51a554b63b32ed24a02e2e"
     },
     {
       "id": "proactive",
-      "hash": "4b598c28443b001e3e01db3e5412fae78b7be4293b145c0f87297fa4eaacf346"
+      "hash": "4b598c28443b001e3e01db3e5412fae78b7be4293b145c0f87297fa4eaacf346",
+      "bodyHash": "ce12d00772f01143701e4fb5cd5a4a83fa9d18d74d50f614c69eee9c8c85ca24"
     },
     {
       "id": "concise",
-      "hash": "a8b8281f8ab187123bcd5910edecf65c107d1c29591026f0a1e01c299826304d"
+      "hash": "a8b8281f8ab187123bcd5910edecf65c107d1c29591026f0a1e01c299826304d",
+      "bodyHash": "27b835a6cd7fa4454ae58c7a4505b18e7a75973d4de6be1b9c307e01feebf7d5"
     },
     {
       "id": "explanatory",
-      "hash": "e3b174e73fc5edf3976f08326c7e1f74e1cc36d0093b1cfd59af41e2e0f271d7"
+      "hash": "e3b174e73fc5edf3976f08326c7e1f74e1cc36d0093b1cfd59af41e2e0f271d7",
+      "bodyHash": "0bd1f9ebfacd0da52af61d31a033e07f54351a80f56294652b6644b722be3ad7"
     },
     {
       "id": "learning",
-      "hash": "827b93dda7bd6e5b99f85331ad95c1810a858460fb09d0175c8f7f35b256c357"
+      "hash": "827b93dda7bd6e5b99f85331ad95c1810a858460fb09d0175c8f7f35b256c357",
+      "bodyHash": "72b9b2377162560137229c8b5616fa639c9fdb710d57bc12d44e0cc66dfb4aa1"
     },
     {
       "id": "change-your-output-style",
-      "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407"
+      "hash": "9974f3accd4876421deaee9d44d5c5e95f7e2cae2ee41285c03b2e7203cf3407",
+      "bodyHash": "8829775c7d2a8f4361b7ad6cc39b5759ff90de0f0e94f9b4bd0e8f7be10d88ad"
     },
     {
       "id": "create-a-custom-output-style",
-      "hash": "adf86cd9bf3581d4bae2a29f61b8c52f0c45d838419d4beb8395b8f221aaac6f"
+      "hash": "adf86cd9bf3581d4bae2a29f61b8c52f0c45d838419d4beb8395b8f221aaac6f",
+      "bodyHash": "74384c7c820b2aa2bc83f1423e07f6ffcfe10bc0be6703f39bf6e041692bf802"
     },
     {
       "id": "frontmatter",
-      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b",
+      "bodyHash": "8973f113081bf9e525feee345c08171335e7a51ca981bfc6ab839d6c0c6a96d8"
     },
     {
       "id": "choose-between-an-output-style-and-other-features",
-      "hash": "0d55d256a364d64d4b13a7b7946a971e1e34ddd9456768e6a73ae1d523932fe5"
+      "hash": "0d55d256a364d64d4b13a7b7946a971e1e34ddd9456768e6a73ae1d523932fe5",
+      "bodyHash": "574fcc4ddd135db2bf6761c4f0b9d57194465c2c23b97b0966067ea7f3049a53"
     },
     {
       "id": "how-output-styles-work",
-      "hash": "44b13a917f0cb05cadebc5c9df4e0c423e105323fa17a467fb76957e648cf18a"
+      "hash": "44b13a917f0cb05cadebc5c9df4e0c423e105323fa17a467fb76957e648cf18a",
+      "bodyHash": "af4b920d3eeb78156fdfd8238eaa5c6cb3dfc7d187cad17ec17673be7f71dd0f"
     },
     {
       "id": "related-resources",
-      "hash": "f0f6164462531e6a5336043cddce5df0a9b4927cf938bf906528e5bc219430c0"
+      "hash": "f0f6164462531e6a5336043cddce5df0a9b4927cf938bf906528e5bc219430c0",
+      "bodyHash": "8efbbfae770d3e3d8bb6feab6f46de610d38c221569217b5fb5ff09b11d0713b"
     }
   ],
   "sources": [

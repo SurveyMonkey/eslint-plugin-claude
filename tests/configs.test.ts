@@ -163,6 +163,26 @@ const TREE: Record<string, string> = {
   'plugins/p/agents/ignored.md': '---\nname: i\ndescription: d\npermissionMode: plan\n---\n',
   'plugins/p/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
   'plugins/p/agents/no-name.md': '---\ndescription: A plugin agent without a name loads.\n---\n',
+  // The subagent field warn rules: a reporting file for each rule, the same fault in a plugin
+  // agent where the rule is silent, and in a folder that no rule reads. The two version rules
+  // report only once `minVersion` is set, so the test below sets it.
+  '.claude/agents/shadow.md': '---\nname: Explore\ndescription: d\n---\n',
+  '.claude/agents/conditional.md': '---\nname: c\ndescription: d\ntools: Read, CronCreate\n---\n',
+  '.claude/agents/disallowed.md':
+    '---\nname: dis\ndescription: d\ndisallowedTools: Bash(git push *)\n---\n',
+  '.claude/agents/task-alias.md': '---\nname: ta\ndescription: d\ntools: Task(worker), Read\n---\n',
+  '.claude/agents/inline.md':
+    '---\nname: i\ndescription: d\nmcpServers:\n  - pw:\n      type: stdio\n      command: npx\n---\n',
+  '.claude/agents/bom.md': '\uFEFF---\nname: bom\ndescription: d\n---\n',
+  '.claude/agents/versions.md': '---\nname: ver\ndescription: d\nomitClaudeMd: true\n---\n',
+  'plugins/p/agents/shadow.md': '---\nname: Explore\ndescription: d\n---\n',
+  'plugins/p/agents/conditional.md': '---\nname: c\ndescription: d\ntools: Read, CronCreate\n---\n',
+  'plugins/p/agents/inline.md':
+    '---\nname: i\ndescription: d\nmcpServers:\n  - pw:\n      type: stdio\n      command: npx\n---\n',
+  'plugins/p/agents/bom.md': '\uFEFF---\nname: bom\ndescription: d\n---\n',
+  'plugins/p/agents/versions.md': '---\nname: ver\ndescription: d\nomitClaudeMd: true\n---\n',
+  'docs/agents/warn.md':
+    '\uFEFF---\nname: Explore\ntools: CronCreate, Task\ndisallowedTools: Bash(x)\nomitClaudeMd: true\nmcpServers:\n  - pw:\n      command: npx\n---\n',
   '.claude/output-styles/yaml.md': '---\nname: [unclosed\n---\n',
   '.claude/output-styles/schema.md': '---\nforce-for-plugin: true\n---\n',
   'plugins/p/output-styles/forced.md': '---\nforce-for-plugin: true\n---\n',
@@ -949,6 +969,14 @@ const EXPECTED = [
   'packages/z/.claude/agents/dup1.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/dup2.md: claude/agent-name-unique@2',
   'packages/z/.claude/agents/preload.md: claude/agent-skills-preloadable@2',
+  '.claude/agents/shadow.md: claude/agent-name-shadows-builtin@1',
+  '.claude/agents/conditional.md: claude/agent-tools-conditional@1',
+  'plugins/p/agents/conditional.md: claude/agent-tools-conditional@1',
+  '.claude/agents/disallowed.md: claude/agent-disallowed-tools-scope@1',
+  '.claude/agents/task-alias.md: claude/agent-tools-task-alias@1',
+  '.claude/agents/inline.md: claude/agent-mcp-servers-inline-trust@1',
+  // A plugin agent ignores `mcpServers`, so the trust rule is silent and the ignored-fields rule reports.
+  'plugins/p/agents/inline.md: claude/agent-plugin-ignored-fields@2',
 ].sort()
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -971,6 +999,18 @@ const AGENT_RULES = [
   'agent-teams-no-project-config',
   'output-style-frontmatter-valid',
   'output-style-frontmatter-schema',
+]
+
+// The subagent field rules of #9 that are `warn`, in the order of the `modules` list. They
+// follow the agent and output style rules.
+const AGENT_WARN_RULES = [
+  'agent-disallowed-tools-scope',
+  'agent-field-min-version',
+  'agent-mcp-servers-inline-trust',
+  'agent-name-shadows-builtin',
+  'agent-no-bom',
+  'agent-tools-conditional',
+  'agent-tools-task-alias',
 ]
 
 // The skill rules of #8, in the order of the `modules` list. Each is an error.
@@ -1051,6 +1091,10 @@ describe('configs', () => {
       ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
       ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
       ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
+      ...AGENT_WARN_RULES.map((rule) => [
+        `claude/recommended/${rule}`,
+        { [`claude/${rule}`]: 'warn' },
+      ]),
       ...TOOL_LIST_BLOCKS.map((rule) => [
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'error' },
@@ -1084,6 +1128,7 @@ describe('configs', () => {
       'claude/strict/hooks-event-name-known',
       ...NEW_RULES.map((rule) => `claude/strict/${rule}`),
       ...AGENT_RULES.map((rule) => `claude/strict/${rule}`),
+      ...AGENT_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...TOOL_LIST_BLOCKS.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_RULES.map((rule) => `claude/strict/${rule}`),
@@ -1170,6 +1215,25 @@ describe('configs', () => {
   it('recommended reports each rule on its own files, at its own severity', async () => {
     expect(await reports(plugin.configs.recommended)).toEqual(EXPECTED)
   }, 30_000)
+
+  it('reports the version rules on their files once minVersion is set', async () => {
+    const options = ['warn', { minVersion: '2.1.0' }]
+    const config = [
+      ...plugin.configs.recommended,
+      {
+        files: ['**/agents/**/*.md'],
+        rules: { 'claude/agent-no-bom': options, 'claude/agent-field-min-version': options },
+      },
+    ] as Linter.Config[]
+    const found = (await reports(config)).filter((report) => !EXPECTED.includes(report))
+    expect(found).toEqual([
+      '.claude/agents/bom.md: claude/agent-no-bom@1',
+      '.claude/agents/versions.md: claude/agent-field-min-version@1',
+      'packages/z/.claude/agents/boss.md: claude/agent-field-min-version@1',
+      'plugins/p/agents/bom.md: claude/agent-no-bom@1',
+      'plugins/p/agents/versions.md: claude/agent-field-min-version@1',
+    ])
+  })
 
   it('strict reports the same files as recommended today', async () => {
     expect(await reports(plugin.configs.strict)).toEqual(EXPECTED)

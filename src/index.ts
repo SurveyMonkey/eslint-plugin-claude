@@ -2,19 +2,26 @@ import { createRequire } from 'node:module'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import type { ESLint, Linter } from 'eslint'
+import agentDisallowedToolsScope from './rules/agent-disallowed-tools-scope.ts'
+import agentFieldMinVersion from './rules/agent-field-min-version.ts'
 import agentFrontmatterSchema from './rules/agent-frontmatter-schema.ts'
 import agentFrontmatterValid from './rules/agent-frontmatter-valid.ts'
+import agentMcpServersInlineTrust from './rules/agent-mcp-servers-inline-trust.ts'
 import agentMcpServersSchema from './rules/agent-mcp-servers-schema.ts'
 import agentMemoryAutoMemoryOff from './rules/agent-memory-auto-memory-off.ts'
 import agentMemoryGrantsWrite from './rules/agent-memory-grants-write.ts'
 import agentModelForced from './rules/agent-model-forced.ts'
+import agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import agentNameUnique from './rules/agent-name-unique.ts'
+import agentNoBom from './rules/agent-no-bom.ts'
 import agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
 import agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
+import agentToolsConditional from './rules/agent-tools-conditional.ts'
 import agentToolsKnown from './rules/agent-tools-known.ts'
+import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
@@ -138,6 +145,13 @@ const modules = [
   agentTeamsNoProjectConfig,
   outputStyleFrontmatterValid,
   outputStyleFrontmatterSchema,
+  agentDisallowedToolsScope,
+  agentFieldMinVersion,
+  agentMcpServersInlineTrust,
+  agentNameShadowsBuiltin,
+  agentNoBom,
+  agentToolsConditional,
+  agentToolsTaskAlias,
   permissionsRuleSyntax,
   permissionsUnknownTool,
   permissionsToolNameGlob,
@@ -256,6 +270,13 @@ const recommended: Record<RuleName, Severity> = {
   'agent-teams-no-project-config': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
+  'agent-disallowed-tools-scope': 'warn',
+  'agent-field-min-version': 'warn',
+  'agent-mcp-servers-inline-trust': 'warn',
+  'agent-name-shadows-builtin': 'warn',
+  'agent-no-bom': 'warn',
+  'agent-tools-conditional': 'warn',
+  'agent-tools-task-alias': 'warn',
   'permissions-rule-syntax': 'error',
   'permissions-unknown-tool': 'error',
   'permissions-tool-name-glob': 'error',

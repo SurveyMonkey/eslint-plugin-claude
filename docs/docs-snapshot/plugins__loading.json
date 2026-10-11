@@ -1,126 +1,161 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/loading",
-  "hash": "5f2c61daf0df22624ca9977d86a73873e2afac685c389fd0c3e9213fd1cc950f",
+  "hash": "981414aeb654516276a878dc8f8942f251b279ba36b9003fe77355e4e24484a5",
   "blocks": [
     {
       "id": "plugin-loading-reference",
-      "hash": "e33898b3c41c2a8e50ee017b20c360b6d53f3533d1e6dffe32d755467aa2e50a"
+      "hash": "e33898b3c41c2a8e50ee017b20c360b6d53f3533d1e6dffe32d755467aa2e50a",
+      "bodyHash": "5bfbf97c6de79d1ebc73c32f71e0437cf9b0353cc27c82266c107f8509f9b1eb"
     },
     {
       "id": "check-which-stage-a-plugin-reached",
-      "hash": "63ce2d23697129baf0c5640024b0ce22a3d0e3513971a68e93ced18ad91304d4"
+      "hash": "63ce2d23697129baf0c5640024b0ce22a3d0e3513971a68e93ced18ad91304d4",
+      "bodyHash": "6e256d5cd43004df2b25cd7106fd57c3ad791fa97b47b3b1589d53607804cf79"
     },
     {
       "id": "plugins-and-marketplaces-that-arent-on-disk-at-session-start",
-      "hash": "2059b9ecd7ae148f29a2307a3d0b17d1831b5e465f279c5fd1260e87489833bd"
+      "hash": "2059b9ecd7ae148f29a2307a3d0b17d1831b5e465f279c5fd1260e87489833bd",
+      "bodyHash": "ae1636acb7ea655b77c47f223aadc24006088178635288a5cd518d24163c6e6a"
     },
     {
       "id": "find-where-a-plugin-came-from",
-      "hash": "00e7387adcc4279a1bbc9d47c7c0db90da2b7c56b4773bf5ad92c8a13fd90090"
+      "hash": "00e7387adcc4279a1bbc9d47c7c0db90da2b7c56b4773bf5ad92c8a13fd90090",
+      "bodyHash": "07c8d66092c2143823b903a25e2051edd34d97b65d5ea71f8060f09300e4197f"
     },
     {
       "id": "entry-name-and-manifest-name",
-      "hash": "37d9429e2b2e7dadd8d9c3b0527355a2057b9d5ddd8f65024f39756f575e5afc"
+      "hash": "37d9429e2b2e7dadd8d9c3b0527355a2057b9d5ddd8f65024f39756f575e5afc",
+      "bodyHash": "d77420e15a508fe19f0724c331063af10dbad8fd1246cfc8e89ae583ac5365f2"
     },
     {
       "id": "plugins-shared-through-a-repository",
-      "hash": "83c964091287b63057f43bf3c1b19a3185cec14a58cc3ab1aa3ef66a21cee8fb"
+      "hash": "71249e9304755651cccc811bd2487edf214505849e20bf6cfa7a3333a704a3e5",
+      "bodyHash": "d7f473eef5aa0cb5cf0802a892bd7d1c2b346b067e93ee2c72b73eb128272431"
     },
     {
       "id": "synced-plugins",
-      "hash": "0058c2efb5577c3543ce9fc3967c980de8c90907c80ccf9e96cda0b0c16d8082"
+      "hash": "0058c2efb5577c3543ce9fc3967c980de8c90907c80ccf9e96cda0b0c16d8082",
+      "bodyHash": "cd65c7058f156f12aa73f851b4d094ee75ccb6d85d128ba4dfa5e6dd87f7cf22"
     },
     {
       "id": "sync-timing-in-terminal-sessions",
-      "hash": "df8890e3ca6f3d9efc632031ae6648ca51aed86b22f1088973f7b21e47f3968c"
+      "hash": "df8890e3ca6f3d9efc632031ae6648ca51aed86b22f1088973f7b21e47f3968c",
+      "bodyHash": "20ab486b27e9cc10c30fb5239fd6b3bda4c4a23b43dcfa010fb82f33b7485051"
     },
     {
       "id": "sign-in-requirements-for-terminal-sync",
-      "hash": "e64bf7f6e3a8e8bf1bc2d2f87d95ce679f9621b17f5b45f51aa6510816c89e42"
+      "hash": "e64bf7f6e3a8e8bf1bc2d2f87d95ce679f9621b17f5b45f51aa6510816c89e42",
+      "bodyHash": "c17a015e93dafb6f171e45c523c24a743d9eead2e1b0b46356c0bcd5d5ce837c"
     },
     {
       "id": "control-which-synced-plugins-load",
-      "hash": "ae047e681cddb6408be829f3a30882758a8de9e1689b1df4daac452ead1a2f02"
+      "hash": "ae047e681cddb6408be829f3a30882758a8de9e1689b1df4daac452ead1a2f02",
+      "bodyHash": "fbda329a679586a523f980caf9261654ffc32462263a6440dc4699ab3a9f7e37"
     },
     {
       "id": "find-where-a-plugin-is-enabled",
-      "hash": "cbc6ad0c40585de5fe138143de0554e6a900ca42096247a25ca218c9a64f5742"
+      "hash": "cbc6ad0c40585de5fe138143de0554e6a900ca42096247a25ca218c9a64f5742",
+      "bodyHash": "9d44a2a932ecbeda26636d1f3de1f3a84c97df35f758fb85107dcd851dbb489e"
     },
     {
       "id": "disabled-in-user-settings-but-still-loads",
-      "hash": "1a4dd0ce99b9b80ba569865ad431c7e4e8b984a16ca8576f2ad3c82c9fb44490"
+      "hash": "1a4dd0ce99b9b80ba569865ad431c7e4e8b984a16ca8576f2ad3c82c9fb44490",
+      "bodyHash": "5c6b432f1135a28131007a3ed8787403c65f0edbf83ac252e2b98b19160059de"
     },
     {
       "id": "enabled-in-project-settings-but-not-installed",
-      "hash": "f4befea69a0ac2aecb8118be6ebf2752c16ea7c87ffa21956e28bce5b2feb7bb"
+      "hash": "f4befea69a0ac2aecb8118be6ebf2752c16ea7c87ffa21956e28bce5b2feb7bb",
+      "bodyHash": "2bce6a11af84ab950cfeaadbb88d77101394ceb521a91a55a193d7331a98e3e0"
     },
     {
       "id": "find-plugins-on-disk",
-      "hash": "3db1e363cd07923ea804e2f129241b4e2da82cb19259458a292d171bd1b35969"
+      "hash": "3db1e363cd07923ea804e2f129241b4e2da82cb19259458a292d171bd1b35969",
+      "bodyHash": "000269087cb05d0e610efac5f31fcc447b5ae7a52ba54f69ce46efc55b46da2f"
     },
     {
       "id": "in-place-and-copied-plugins",
-      "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
+      "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff",
+      "bodyHash": "7b060ae10034b2461b70f350e00d4d984d3f0e699437851611283483a113bafb"
     },
     {
       "id": "paths-that-escape-the-plugin-directory",
-      "hash": "8cda23d96a189f7d236c5a4358a1331bf976125f12431fe6d47e7ce7a9a46c5e"
+      "hash": "8cda23d96a189f7d236c5a4358a1331bf976125f12431fe6d47e7ce7a9a46c5e",
+      "bodyHash": "4e5cdb6913caa4da61355f565b7287f50cf3e1d61d63b8442ff2ca08a9301dc9"
     },
     {
       "id": "cleanup-of-previous-versions",
-      "hash": "203ebc398014ef5a7b898675d8b86b01e6151e758573219f4cd6f6b29b2c363a"
+      "hash": "203ebc398014ef5a7b898675d8b86b01e6151e758573219f4cd6f6b29b2c363a",
+      "bodyHash": "8d4db91c9ddb9c4a984422d55c079df9858396bad89ee9724c2dbdec935d22e8"
     },
     {
       "id": "node-js-package-dependencies",
-      "hash": "723f74cd5a6db8901c1be0afbe351c502c76a5f5e79d6de01e08c99fe152cbb0"
+      "hash": "723f74cd5a6db8901c1be0afbe351c502c76a5f5e79d6de01e08c99fe152cbb0",
+      "bodyHash": "9d3f457b7b15f2d1bb7e25ad94f9735f6df4d5a77d3b846fc18b637bfebeec74"
     },
     {
       "id": "when-the-dependency-install-runs",
-      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52"
+      "hash": "bb18806aa8bd05f98c8f298c6361233cbfc793d88cff7705561de552acf48f52",
+      "bodyHash": "c30500fd4e1370356023721b5e6298fac1c4e04f06b8e8ad10ab3d1545dd4521"
     },
     {
       "id": "limits-on-the-dependency-install",
-      "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba"
+      "hash": "a45b15f00c04c174a7887f5fffef549587697546b46bf18241edfa25b3c2e7ba",
+      "bodyHash": "a45c8fba3c6b78520124c96ba643d74ddfa9a4c34486a4f95057fe2e80ca49c9"
     },
     {
       "id": "when-the-dependency-install-fails-or-is-skipped",
-      "hash": "e9e73986d749ac68cdfca5e3baa46cbd4316c2cba3354985113f8d61bd78638f"
+      "hash": "e9e73986d749ac68cdfca5e3baa46cbd4316c2cba3354985113f8d61bd78638f",
+      "bodyHash": "945a2b78ec68ef16e4e72061224e00a25225b2a50186d5515fbd613109b80b65"
     },
     {
       "id": "versions-and-updates",
-      "hash": "0914af507b7bcfd0336db12271de84c00b038f8c54106c9dce2e44de65d8acc4"
+      "hash": "0914af507b7bcfd0336db12271de84c00b038f8c54106c9dce2e44de65d8acc4",
+      "bodyHash": "35a3975254359e45427871b61fe9d69d29081fc03b51ddb2a2efe1a11b94c4b9"
     },
     {
       "id": "how-claude-code-computes-the-version",
-      "hash": "4f6d0641506dc5f6ebf4f9d7a0e10856f9495ba9a866466123ae3d5e232c301b"
+      "hash": "4f6d0641506dc5f6ebf4f9d7a0e10856f9495ba9a866466123ae3d5e232c301b",
+      "bodyHash": "017f0b3ba2ca68a61d21ac335beaef9a662c982b5fb37273e9d5b0380b5f3e1a"
     },
     {
       "id": "when-claude-code-refreshes-a-marketplace-before-an-install",
-      "hash": "5076f411a184a62aa2f317e75637f4cca9e94ae835a6e0201b6a3bbf61e5505d"
+      "hash": "5076f411a184a62aa2f317e75637f4cca9e94ae835a6e0201b6a3bbf61e5505d",
+      "bodyHash": "0eb1e1517c9b7459d6c2a201cfc12eccde4e1a49158e0ea727f0e4e1cd12d0e6"
     },
     {
       "id": "when-auto-update-runs",
-      "hash": "99bbc462ad8fe0153bc08444ea0bfa8dad3a25d019d78d178feba36d1b82fa99"
+      "hash": "99bbc462ad8fe0153bc08444ea0bfa8dad3a25d019d78d178feba36d1b82fa99",
+      "bodyHash": "9f69bcc8ab864d8988f9194fad7358dd932d15f62f9b50ebc7528124920614f1"
     },
     {
       "id": "which-marketplaces-and-plugins-auto-update",
-      "hash": "526d1cc7e6abf7712cc45deb0cae4ec94c16c2b4d5573b8e1f4ccb965d9dcf3e"
+      "hash": "526d1cc7e6abf7712cc45deb0cae4ec94c16c2b4d5573b8e1f4ccb965d9dcf3e",
+      "bodyHash": "974f7a576b362fbffa81acc9140abda2bb6c5e08e3f3e2806c9c1b7ee9d6534c"
     },
     {
       "id": "when-a-command-source-re-runs",
-      "hash": "8b49e81abadc41d60c6a994868198209ba098b03d03a6c57c2173f214851336a"
+      "hash": "8b49e81abadc41d60c6a994868198209ba098b03d03a6c57c2173f214851336a",
+      "bodyHash": "347b5d5ba736ec3e13cf3fcacdff7916c904a9f12c481e7d9c8a42f642ba1dfa"
     },
     {
       "id": "name-conflicts",
-      "hash": "975ff0be4bbc70b185ec1ceb208aa5a5b3116036f1b72b0ce590302a97b6a20a"
+      "hash": "975ff0be4bbc70b185ec1ceb208aa5a5b3116036f1b72b0ce590302a97b6a20a",
+      "bodyHash": "eac73fd7372e64d1aa19fb87f238825b0b91e2b7a20d0bc3bd703566eb1350a0"
+    },
+    {
+      "id": "hooks-when-two-enabled-plugins-share-a-name",
+      "hash": "3e932e32fb9986dfcb31043772a68529d3c5f514a56e46e107746f26fd96b1e8",
+      "bodyHash": "13c5e0404e04458f9312f453a10b0f156b24c7a8c40bbccfba9d2991eeec1ce6"
     },
     {
       "id": "keep-a-session-only-plugin-from-loading",
-      "hash": "c8cafa003604859420625a345a5de0fadabde98ea7e4f35158f96bda878073e1"
+      "hash": "c8cafa003604859420625a345a5de0fadabde98ea7e4f35158f96bda878073e1",
+      "bodyHash": "f9db8b2c50d640e38eb8c6656089e8ca82c4d591230158d25691fdbdccb4d6fb"
     },
     {
       "id": "next-steps",
-      "hash": "31bfa6d69336b9586ec2d71785d1013a09847effae0a27d54893272b372336ee"
+      "hash": "31bfa6d69336b9586ec2d71785d1013a09847effae0a27d54893272b372336ee",
+      "bodyHash": "260723234db75549b6d8a7ea210d2c0649860256231b184f1d1dd45bfe48da3e"
     }
   ],
   "sources": [

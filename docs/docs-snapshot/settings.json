@@ -1,130 +1,161 @@
 {
   "url": "https://code.claude.com/docs/en/settings",
-  "hash": "0da9be3c724c42a996b9e5354fc7e7d3fd13b401e916b337077d2da56cdaa4f4",
+  "hash": "a8cc395af5e0938659ddfd38a703bdc8a5151640216c5230098408e30625e380",
   "blocks": [
     {
       "id": "settings-files-and-precedence",
-      "hash": "aeec38d07ea306844a05f48b2298d7ad4a227fc2f1ed61aa1af11169408af6a8"
+      "hash": "aeec38d07ea306844a05f48b2298d7ad4a227fc2f1ed61aa1af11169408af6a8",
+      "bodyHash": "5740863cfaa1bfdc1f33230d3e4b9f80f55d19eba2c726cc0e20f2c60da19414"
     },
     {
       "id": "settings-files-and-who-they-affect",
-      "hash": "354339bf540672253eee313dfaba622fefad8515511e08206b29f13abd61f672"
+      "hash": "354339bf540672253eee313dfaba622fefad8515511e08206b29f13abd61f672",
+      "bodyHash": "e865a1708758d1687d9cc7b455a2db8dc427ea6736af19e58c23cc5fb74c43ee"
     },
     {
       "id": "compare-the-scope-of-each-settings-file",
-      "hash": "5b718df2fdc86e2c8ad469e9cdc95c165843ab9e4f583c2b1bc9d8be3b0cfec6"
+      "hash": "5b718df2fdc86e2c8ad469e9cdc95c165843ab9e4f583c2b1bc9d8be3b0cfec6",
+      "bodyHash": "1f65ea0684fb7586a0368aceaf825f60e144f18f79d9586717535e2a2694f7d7"
     },
     {
       "id": "find-or-create-your-settings-files",
-      "hash": "3108f983174219404fa2710e126d1ba08ea60a5c5f18d840acdc5cbcd2128b75"
+      "hash": "3108f983174219404fa2710e126d1ba08ea60a5c5f18d840acdc5cbcd2128b75",
+      "bodyHash": "6ee436abd88563f09ac92dc2a385f415db0acfacd2c6b9e98bc76b69e471fd19"
     },
     {
       "id": "share-settings-with-your-team",
-      "hash": "c45b16966c8f9af8937426e13e75bf3ff53a58f783bcdc14c05331333a5e2232"
+      "hash": "c45b16966c8f9af8937426e13e75bf3ff53a58f783bcdc14c05331333a5e2232",
+      "bodyHash": "aee675fcbcf19238121a1882d71185762cfbbba293d7a811f4517f4c87e05e19"
     },
     {
       "id": "keep-personal-settings-out-of-a-repository",
-      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc"
+      "hash": "059a80d7b6dc65aba882d4c952a6fb32d0da4cbdfa982b7434f56ef0c2184dcc",
+      "bodyHash": "e8433cc44fdecc4f87c6149d7ad3318c95b785ce42036d80e21d07b8287b688a"
     },
     {
       "id": "where-claude-code-keeps-the-local-file-in-a-git-repository",
-      "hash": "d22a9454f31f12a55265c52b63d2ca836a279059a83b925ee0d7184814a16d47"
+      "hash": "7b7c6a0690c26c486ca5d66873d1547926e265ae8abf4017e9c4c9583cbb05b2",
+      "bodyHash": "7509d95fd2fbe560d3b4f68744f5efb2d362c02e9ee026b5ced18d87982a39ac"
     },
     {
       "id": "check-what-your-organization-enforces",
-      "hash": "6b1ce937824bbd3aeb07b796b722d2d2795467d899268e4bbb9591881f049b88"
+      "hash": "6b1ce937824bbd3aeb07b796b722d2d2795467d899268e4bbb9591881f049b88",
+      "bodyHash": "f38e0e537e4cbe3562aa1b6cb0c837fa1a183d82a0e287b1dabcf23ff78974d0"
     },
     {
       "id": "change-a-setting",
-      "hash": "e224fca9ae056643994517838283f07ba16d6ec68b2edfd8290f2b97d4446ae8"
+      "hash": "e224fca9ae056643994517838283f07ba16d6ec68b2edfd8290f2b97d4446ae8",
+      "bodyHash": "d74f979c6332967e01888220052a3105fa328b4a87fd3cf08d940cad5d337b7c"
     },
     {
       "id": "use-the-config-menu",
-      "hash": "5b6dba79aeb8dd069666b8e6d6d59ad9f2c38043fb41375ec25bc2a5b4c64a7c"
+      "hash": "5b6dba79aeb8dd069666b8e6d6d59ad9f2c38043fb41375ec25bc2a5b4c64a7c",
+      "bodyHash": "10addfb2de691227dc60a76d4a1f46e3b28e835b562ca593501a321a3fd0badb"
     },
     {
       "id": "edit-a-settings-file",
-      "hash": "499813f3fb39099aaca8887927679984bb6940165ac754a6bfb83299e65027bf"
+      "hash": "499813f3fb39099aaca8887927679984bb6940165ac754a6bfb83299e65027bf",
+      "bodyHash": "b1d0e99a7e8a194eaf470f6cd265b17cb56e072e65a9df5c1991632acc9a7547"
     },
     {
       "id": "change-a-setting-for-one-session",
-      "hash": "cf3eb5b660abab3e1e18b2cb24856850e6b1e5ebedce13e3b8095449142f8def"
+      "hash": "cf3eb5b660abab3e1e18b2cb24856850e6b1e5ebedce13e3b8095449142f8def",
+      "bodyHash": "575e27335748cce2982c1915266518c954f9b4f4b9cb34cedecd7468fb2afaba"
     },
     {
       "id": "when-edits-take-effect",
-      "hash": "24abb8864ae52b90f31a30632bf6f15b47ee2f5069e955a093270287169c021c"
+      "hash": "24abb8864ae52b90f31a30632bf6f15b47ee2f5069e955a093270287169c021c",
+      "bodyHash": "63c9d0e800c1feb7ca601198493d937f7c9b695d2526edcc4b97c0a1570fb3ca"
     },
     {
       "id": "confirm-what-loaded",
-      "hash": "0e2812771390d8e4926e0a4962af284ad8457f8cd84c33588d2803169d925915"
+      "hash": "0e2812771390d8e4926e0a4962af284ad8457f8cd84c33588d2803169d925915",
+      "bodyHash": "14457b127aeabc379766e22230da76f9deb42981d639e8314b2bf4290e7373a2"
     },
     {
       "id": "fix-a-broken-settings-file",
-      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696"
+      "hash": "86dc63a12158b6e1d60262637836003ba01043628536c874d392d58db2336696",
+      "bodyHash": "4a6f62493299e6e92692acf037007f206d9d04e801c379d2685e37c7e25fafe4"
     },
     {
       "id": "settings-precedence",
-      "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
+      "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5",
+      "bodyHash": "04a39e190246e505c690dd6f7201010ef64608ef594b5035224c8e3f4971c142"
     },
     {
       "id": "lists-merge-instead-of-overriding",
-      "hash": "83f8af90b4b6f118b10bf04043b20e630a6131e1402e0ed28283d498b2791a1f"
+      "hash": "83f8af90b4b6f118b10bf04043b20e630a6131e1402e0ed28283d498b2791a1f",
+      "bodyHash": "13ceb88845ad400b069f9cc667152cc5ac270a3a73b07f64dcf89025cce3b5ca"
     },
     {
       "id": "precedence-examples",
-      "hash": "b69dcf167aa66c6316abc5fb34b6fa809ce5c85115ad95bf9a0b2e47f5b2d994"
+      "hash": "b69dcf167aa66c6316abc5fb34b6fa809ce5c85115ad95bf9a0b2e47f5b2d994",
+      "bodyHash": "3fdfb5ed7ef6f69e010f0b18acd835944c519e5df483ba41eec4e5651e89d6b9"
     },
     {
       "id": "team-settings-override-personal-settings",
-      "hash": "635c810b150be451154c58042d2dba3f17e591be407174cbd1abfa89121f93a0"
+      "hash": "635c810b150be451154c58042d2dba3f17e591be407174cbd1abfa89121f93a0",
+      "bodyHash": "8fd8fcd97ea3029b8f1e43281314cc485a77363d4b536bc50c1b383ac5f4531e"
     },
     {
       "id": "organization-settings-override-everything",
-      "hash": "8180eea56e3335f70e104a4aed1b983704958dda0cbd250fc60e9b7900d44807"
+      "hash": "8180eea56e3335f70e104a4aed1b983704958dda0cbd250fc60e9b7900d44807",
+      "bodyHash": "aee725dc73063719d5e84bb27b6d97b8b71ee95bdab436c89d2890395bafc153"
     },
     {
       "id": "the-command-line-overrides-your-files-for-one-session",
-      "hash": "c4e6a6ee085eb4614e0bbc5e0a2aa7e65c402a9cf429e56ac4f183fbd5c2562c"
+      "hash": "c4e6a6ee085eb4614e0bbc5e0a2aa7e65c402a9cf429e56ac4f183fbd5c2562c",
+      "bodyHash": "16705c4ce5bf5312ad2eebf368f346f21d4642a9c40cb09c2ae1e103b941402a"
     },
     {
       "id": "a-flag-or-environment-variable-sets-the-same-thing",
-      "hash": "dee4e57652a3e1f1a2db49460152a0544f5f9e2192a2336269a52c839907d146"
+      "hash": "dee4e57652a3e1f1a2db49460152a0544f5f9e2192a2336269a52c839907d146",
+      "bodyHash": "1bd1375ea77f3cc2e0964b448b7a9c3fcd814c949288ff30d4cf45d9155fceb2"
     },
     {
       "id": "troubleshoot-a-setting-that-doesnt-apply",
-      "hash": "f938d4962beb3266ccab41d27dd2cd10d85a92cb2b26714792da7e7bee07117a"
+      "hash": "f938d4962beb3266ccab41d27dd2cd10d85a92cb2b26714792da7e7bee07117a",
+      "bodyHash": "0fbae35d7c96e5c884da343479d0ecfd1b820cce66992d86b40309e831e992e8"
     },
     {
       "id": "a-value-you-set-is-ignored",
-      "hash": "946650199ac3fb5711cb544d59f8b4a1e3606eff5bb9551fd531e5a0f1f78906"
+      "hash": "946650199ac3fb5711cb544d59f8b4a1e3606eff5bb9551fd531e5a0f1f78906",
+      "bodyHash": "e483904da7b1a267b55d6b0e64c2ca5b437837ec43fa925a6854d106e5e3a02f"
     },
     {
       "id": "a-change-you-made-in-claude-code-is-lost-in-new-sessions",
-      "hash": "a70083829af8ce46bb27873a643c2b2ebab07c48faa8085a82253fecb03699b2"
+      "hash": "a70083829af8ce46bb27873a643c2b2ebab07c48faa8085a82253fecb03699b2",
+      "bodyHash": "9f222ad000fc79f47f5e896eeab640c95c749f4950535d27164eaae9f9fd9959"
     },
     {
       "id": "a-managed-change-hasnt-reached-you",
-      "hash": "4bca032f0094a697583290a1709dcf0f60bacafce983d306caf9e0c8261c79d3"
+      "hash": "4bca032f0094a697583290a1709dcf0f60bacafce983d306caf9e0c8261c79d3",
+      "bodyHash": "50f70c0e807a0f5bb8f7370a7eb80a91d00092825c88455f3f108822c4a3e2e6"
     },
     {
       "id": "a-committed-key-doesnt-reach-teammates",
-      "hash": "e348522d20cb922191e150ed492df47faf117f981786729476bc77ccb1f2981e"
+      "hash": "f07548e73f84dc0f8fb4437e53240b10f963237d3122a8208f5b97824bc96879",
+      "bodyHash": "9fe14eb0125d1744e9bd2d5c826de5a0106e631aea72d90316c58b549f34b6de"
     },
     {
       "id": "permission-rules-combine-differently-than-you-expected",
-      "hash": "d463b6f9233e5d901b75623b1742cf3fe7ab3535dfc93b7e6f7e35dae3a73574"
+      "hash": "d463b6f9233e5d901b75623b1742cf3fe7ab3535dfc93b7e6f7e35dae3a73574",
+      "bodyHash": "5d9f154c37b593e8189b9301043a86de0033b7e98b37a9efe3aa628159027799"
     },
     {
       "id": "exceptions-to-managed-settings-precedence",
-      "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33"
+      "hash": "1f1c441251d4d535bd383ca408533854a69cfcffc580bbd06c2036746850dc33",
+      "bodyHash": "53f4e7ee0f72bd66e3ab4c1b0bc2c152a67e86117916643cfa4e14374e89829e"
     },
     {
       "id": "settings-in-cloud-sessions",
-      "hash": "5ae415f25fab34347b143c360958b1c41f3aadc38b9072d87824c161c2d06957"
+      "hash": "5ae415f25fab34347b143c360958b1c41f3aadc38b9072d87824c161c2d06957",
+      "bodyHash": "fcdf2a87f7d122c66ff5863efd4448100cb1906f84755e9c483d526d1a75f510"
     },
     {
       "id": "whats-next",
-      "hash": "6fe69d401328c8f46c4b0c0b0c9da3bc1d77541c34b790d7cb722df7e122fff0"
+      "hash": "6fe69d401328c8f46c4b0c0b0c9da3bc1d77541c34b790d7cb722df7e122fff0",
+      "bodyHash": "56c9cfe4a6b21c6da5a36a6bc16933eec505ce93fe8370b3bb23de6fee9649a6"
     }
   ],
   "sources": [
@@ -143,8 +174,8 @@
     {
       "heading": "A committed key doesn't reach teammates",
       "id": "a-committed-key-doesnt-reach-teammates",
-      "hash": "e348522d20cb922191e150ed492df47faf117f981786729476bc77ccb1f2981e",
-      "text": "#### A committed key doesn't reach teammates\n\nTwo things keep a key in `.claude/settings.json` from applying for everyone who clones it:\n\n* **Claude Code ignores the key in a repository file.** Look for `User, local, or managed`, `User or managed`, `Managed`, or `Global config` in the Scope column of the [settings index](/docs/en/settings-reference#settings-index). Those keys never apply from the shared file, apart from a few that a repository file can still switch off. Each of those entries says so on its Scope line. `Global config` keys apply only from `~/.claude.json`.\n\n  Inside the `env` key, the telemetry export variables never apply from the shared file either, apart from a few off values; see [Variables Claude Code ignores in `env`](/docs/en/settings-reference#variables-claude-code-ignores-in-env).\n* **The key waits for trust.** `permissions.allow` rules, `permissions.additionalDirectories`, `extraKnownMarketplaces`, and most [`env`](/docs/en/settings-reference#env) values apply only after each teammate [trusts the folder](/docs/en/permissions#project-allow-rules-and-workspace-trust). Until then they still see prompts and don't get plugins from a marketplace the file declares. `deny` and `ask` rules apply right away."
+      "hash": "f07548e73f84dc0f8fb4437e53240b10f963237d3122a8208f5b97824bc96879",
+      "text": "#### A committed key doesn't reach teammates\n\nTwo things keep a key in `.claude/settings.json` from applying for everyone who clones it:\n\n* **Claude Code ignores the key in a repository file.** Look for `User, local, or managed`, `User or managed`, `User`, `Managed`, or `Global config` in the Scope column of the [settings index](/docs/en/settings-reference#settings-index). Those keys never apply from the shared file, apart from a few that a repository file can still switch off. Each of those entries says so on its Scope line. `Global config` keys apply only from `~/.claude.json`.\n\n  Inside the `env` key, the telemetry export variables never apply from the shared file either, apart from a few off values; see [Variables Claude Code ignores in `env`](/docs/en/settings-reference#variables-claude-code-ignores-in-env).\n* **The key waits for trust.** `permissions.allow` rules, `permissions.additionalDirectories`, `extraKnownMarketplaces`, and most [`env`](/docs/en/settings-reference#env) values apply only after each teammate [trusts the folder](/docs/en/permissions#project-allow-rules-and-workspace-trust). Until then they still see prompts and don't get plugins from a marketplace the file declares. `deny` and `ask` rules apply right away."
     },
     {
       "heading": "Exceptions to managed settings precedence",

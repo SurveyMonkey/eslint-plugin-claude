@@ -1,114 +1,141 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "d6e29a83e653ddb855c42be1ce8bcac953075dda88b8f710bd88784105a97006",
+  "hash": "37a3ce71801730ffdc22cd5e9dcac29f0dab259f395df772af953e192fd888ba",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
-      "hash": "8e7b157e429fa2abe119506ab0a177cc61bbd96c93623661285764b1ffe74493"
+      "hash": "8e7b157e429fa2abe119506ab0a177cc61bbd96c93623661285764b1ffe74493",
+      "bodyHash": "0641600548cb962392c0717d5d779185eba434d3bbc3f98bb604467ccbf4eca7"
     },
     {
       "id": "explore-the-plugin-directory",
-      "hash": "1f04a2d8101caed8553a650710d3ebab3c0cec6893636a4b4579bc0370c14e8f"
+      "hash": "1f04a2d8101caed8553a650710d3ebab3c0cec6893636a4b4579bc0370c14e8f",
+      "bodyHash": "ef6c82c0f07b360fdefa79c6797fa486a5b0e50adec20f329bede839f06b9128"
     },
     {
       "id": "add-each-kind-of-component",
-      "hash": "c77a44c6f4a199ab85bde5a963e1eccd0fa2dc48abb428fde8c1f914e0e37055"
+      "hash": "c77a44c6f4a199ab85bde5a963e1eccd0fa2dc48abb428fde8c1f914e0e37055",
+      "bodyHash": "d97e5259411435b07c0168efc7a349f163fe7f43d984e8c35b1a7074b68c5f8f"
     },
     {
       "id": "skills",
-      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c"
+      "hash": "4728b4c5d1d7da8fb2cf874c1087f1d00e244908396ca2130a6e582410f7833c",
+      "bodyHash": "c3e514b3987ae63fc5d78c85339e2e7654b1cb6577e6537c758619889cecaffb"
     },
     {
       "id": "commands",
-      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c"
+      "hash": "8384cf0266b33d3ca47c02cc5bd4d9d7f6d10ba4cd4dc81e49babb8f0328b18c",
+      "bodyHash": "a837c1776471bd6ea4c51477c47d86ea5c1b1bceeb9c4c19328ee40a085008df"
     },
     {
       "id": "define-commands-in-the-manifest",
-      "hash": "7f5c1ddcce18376868c3a5ba39ce6a20f3cb9811dc2a4269bd834cc3a0b5c95a"
+      "hash": "7f5c1ddcce18376868c3a5ba39ce6a20f3cb9811dc2a4269bd834cc3a0b5c95a",
+      "bodyHash": "e76bbf3a94e72172076619a0e0f1c9339efe553e5deaf45d3313bd8acc4e167d"
     },
     {
       "id": "agents",
-      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a"
+      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a",
+      "bodyHash": "dd953896e4c2b713f978e18d0d15c8d97179859840b341101ecf02f41f329d56"
     },
     {
       "id": "organize-agents-in-subfolders",
-      "hash": "e2ebd4ab3f9e16d7596dc56212ad773f7666dc4835782a3a6f9283c9996b467d"
+      "hash": "e2ebd4ab3f9e16d7596dc56212ad773f7666dc4835782a3a6f9283c9996b467d",
+      "bodyHash": "2c8e1fceeab406ba05020c2f01adc2a9b9e416047fa107f0a201ea6ac56eabc1"
     },
     {
       "id": "frontmatter-fields-in-plugin-agents",
-      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
+      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281",
+      "bodyHash": "5ba097a4861f97dcd57139af3a8185ec5776e14631be43adf458b0f7edfa25e3"
     },
     {
       "id": "hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0"
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e",
+      "bodyHash": "e42a87c51aa966d856129d70cc05c840815722193ca02509fa4b58b8b7e9f185"
     },
     {
       "id": "when-plugin-hooks-fire",
-      "hash": "3855bcbece7f949e74f4feae9f05902fa6424d43eb498e71ff31bb588e39aaef"
+      "hash": "3855bcbece7f949e74f4feae9f05902fa6424d43eb498e71ff31bb588e39aaef",
+      "bodyHash": "c6478f6c402e68fe6c102f527a0ba41d79a31ad85cb331379541c9934b054fff"
     },
     {
       "id": "environment-quoting-and-matching-mcp-tools",
-      "hash": "b069f59f62495d79c3cd6c6bae525cc7e74bdc0fdf2280b2a19edd1ec6af9167"
+      "hash": "b069f59f62495d79c3cd6c6bae525cc7e74bdc0fdf2280b2a19edd1ec6af9167",
+      "bodyHash": "8f33b2f4a00c4c881791086e647e1305c6ce75ff2216f8d471e2f1ffc65d15f8"
     },
     {
       "id": "mcp-servers",
-      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+      "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2",
+      "bodyHash": "2d42583721f1df2b2567d47644e9fd78b567800fb29a4be68a023dc6fa24453f"
     },
     {
       "id": "reach-users-on-claude-ai-and-cowork",
-      "hash": "4f0529d1f774f14b3041eea6f65851e6c2b086edec7f4981482c3b04bde75759"
+      "hash": "4f0529d1f774f14b3041eea6f65851e6c2b086edec7f4981482c3b04bde75759",
+      "bodyHash": "35cb5ac3f669eb6852b315fcb0332e5891021d07f988f757b1942f51bdc5d889"
     },
     {
       "id": "server-names-tool-names-and-reloads",
-      "hash": "22612bdc79e35256932fec70a4acde5aeb73c2b697bb72c84eddebb32c19b9bd"
+      "hash": "22612bdc79e35256932fec70a4acde5aeb73c2b697bb72c84eddebb32c19b9bd",
+      "bodyHash": "00bcf3ac8de506fdfe721397c4cd193efd0e7c2fc59ee437e635b5836e0884b0"
     },
     {
       "id": "include-a-packaged-mcpb-server",
-      "hash": "8a0ff461b0a91ad8c13072b917adf7982103e231d33a5c606b9650bc6e6b8015"
+      "hash": "8a0ff461b0a91ad8c13072b917adf7982103e231d33a5c606b9650bc6e6b8015",
+      "bodyHash": "818d5b92b3f663e88d23280dee2195db7eaf60d6326629b3c8375f15718edfa3"
     },
     {
       "id": "lsp-servers",
-      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f"
+      "hash": "286b28bc989c5a90ac1bb3aa18a1dc3aea089e48fd6440c700ffa65687993a2f",
+      "bodyHash": "019bcfa3e6e1c77d896266c15eaf5dcc24e9bbf0e82834629432470085f6a37f"
     },
     {
       "id": "executables",
-      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
+      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9",
+      "bodyHash": "978c57689e2f16c2633db23d32ffe411d468be52c657dfdc5d9e1aeaee921b5b"
     },
     {
       "id": "default-settings",
-      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
+      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03",
+      "bodyHash": "410f5a57d54a2720c5512148953fb18c4c18b651c60ba947ea8d05ca12014402"
     },
     {
       "id": "themes-and-output-styles",
-      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51"
+      "hash": "0d6d564104822b898420751046e4f0e4a85cd97173ccfa3cb8855f6509449a51",
+      "bodyHash": "79ededbb9031df1e4d5c5db4908d42fac00464cbb21441a24b2c484e2c276b0b"
     },
     {
       "id": "channels",
-      "hash": "eb0e80e27d22500287150337d4c09956ed1dbf2a824e04449335e6b54ba9d141"
+      "hash": "eb0e80e27d22500287150337d4c09956ed1dbf2a824e04449335e6b54ba9d141",
+      "bodyHash": "de2ed04812ebc4f6904ae644c14400b407b5965e9d0d1ebce0218e6397bc7200"
     },
     {
       "id": "monitors",
-      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd"
+      "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd",
+      "bodyHash": "571076200ed0ad3ec7ef86707519c405551082b4f03eb9813a42faf3505ceb9b"
     },
     {
       "id": "user-configuration",
-      "hash": "7985992b6f5d23c85f453f43e8d61a1fa4fd945d7b177315416bf88b15745129"
+      "hash": "7985992b6f5d23c85f453f43e8d61a1fa4fd945d7b177315416bf88b15745129",
+      "bodyHash": "f0601e199e2c104cf868aefcc8a7973c1a3df592fa259d87a4d889ac87eb2b3f"
     },
     {
       "id": "when-the-configuration-dialog-appears",
-      "hash": "c0c338e82c0331b86c32865ded4415034a4ebd5107b2d79a8436d5af483885d2"
+      "hash": "c0c338e82c0331b86c32865ded4415034a4ebd5107b2d79a8436d5af483885d2",
+      "bodyHash": "c8e681932b2249d41851b7a13fd3fb82d258876fa944846b4482ca06fa3aa115"
     },
     {
       "id": "path-variables-and-persistent-data",
-      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5",
+      "bodyHash": "c8c7437122f556ad3e55ecb927dcf935d720ebcc949e3f4fb2a6b248bb33f2d2"
     },
     {
       "id": "install-dependencies-into-the-data-directory",
-      "hash": "0a96435bdd82ae06083a71b4ee0c918c54fc297947c487b7ac8015d9aedf58e5"
+      "hash": "0a96435bdd82ae06083a71b4ee0c918c54fc297947c487b7ac8015d9aedf58e5",
+      "bodyHash": "4c85ffc79774584e1ba0286c122a9db25447731cd2368d842c696c9872268f63"
     },
     {
       "id": "next-steps",
-      "hash": "c5094a8bae479893102921afadd48c9e1d0a970f4e5014477f2b7d2ffde1cd15"
+      "hash": "c5094a8bae479893102921afadd48c9e1d0a970f4e5014477f2b7d2ffde1cd15",
+      "bodyHash": "f97977f8e1ba8be19e69e3b14287fc4f9e8f9393b4756841e4f620b797378fee"
     }
   ],
   "sources": [
@@ -127,8 +154,8 @@
     {
       "heading": "Hooks",
       "id": "hooks",
-      "hash": "6c27a4c50a0e92cb4f935bee787cdf1f80e6fa67e92ea70c4ca96018335ff1d0",
-      "text": "### Hooks\n\nA [hook](/docs/en/hooks-guide) runs something automatically at a point in Claude Code's lifecycle, such as after every file edit: a shell command, an HTTP request, an MCP tool call, a prompt to a model, or a subagent. Save the plugin's hooks in `hooks/hooks.json` at the plugin root, under a top-level `\"hooks\"` key, in the same shape as the `hooks` object in `settings.json`. That lets you copy an existing settings hook in unchanged.\n\nThis hook runs a bundled script after every `Write` or `Edit`:\n\n```json hooks/hooks.json theme={null}\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\\\"\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\nSave the script at `scripts/format.sh` and make it executable.\n\nLoad the plugin and ask Claude to edit a file. A `PostToolUse` hook that exits 0 shows nothing in the transcript, so confirm it ran with [debug logging](/docs/en/hooks#debug-hooks) or by what the script itself changes.\n\nHooks in `hooks/hooks.json` and in the `hooks` manifest key both load. For every event and its payload, see [Hook events](/docs/en/hooks#hook-events).\n\nTo write hooks as JavaScript functions that run inside Claude Code and can draw in its interface, list a module file under a `modules` key in the same `hooks/hooks.json`. A plugin with one is a mod. See [Create a mod](/docs/en/plugins/mods/create)."
+      "hash": "7c9e7ab4b631fc565a853866f80b99a7c04dd485984201c3baef683efc72da0e",
+      "text": "### Hooks\n\nA [hook](/docs/en/hooks-guide) runs something automatically at a point in Claude Code's lifecycle, such as after every file edit: a shell command, an HTTP request, an MCP tool call, a prompt to a model, or a subagent. Save the plugin's hooks in `hooks/hooks.json` at the plugin root, under a top-level `\"hooks\"` key, in the same shape as the `hooks` object in `settings.json`. That lets you copy an existing settings hook in unchanged.\n\nThis hook runs a bundled script after every `Write` or `Edit`:\n\n```json hooks/hooks.json theme={null}\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\\\"\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\nSave the script at `scripts/format.sh` and make it executable.\n\nLoad the plugin and ask Claude to edit a file. A `PostToolUse` hook that exits 0 shows nothing in the transcript, so confirm it ran with [debug logging](/docs/en/hooks#debug-hooks) or by what the script itself changes.\n\nHooks in `hooks/hooks.json` and in the `hooks` manifest key both load. For every event and its payload, see [Hook events](/docs/en/hooks#hook-events).\n\nWhen another enabled plugin has the same name, one of the two registers its `hooks/hooks.json` hooks and the other's are left out. See [Hooks when two enabled plugins share a name](/docs/en/plugins/loading#hooks-when-two-enabled-plugins-share-a-name) for which one, and for the note in `/plugin` that tells you.\n\nTo write hooks as JavaScript functions that run inside Claude Code and can draw in its interface, list a module file under a `modules` key in the same `hooks/hooks.json`. A plugin with one is a mod. See [Create a mod](/docs/en/plugins/mods/create)."
     },
     {
       "heading": "Executables",
