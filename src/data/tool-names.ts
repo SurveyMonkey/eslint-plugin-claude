@@ -136,6 +136,16 @@ export const MCP_PLUGIN_PREFIX = 'plugin_'
  *  the "MCP" section (https://code.claude.com/docs/en/permissions#mcp). */
 export const MCP_COWORK_SERVER = 'workspace'
 
+/** True for `mcp__<server>__<tool>`: a server, the separator, and a tool name that is not empty. */
+export function isFullMcpName(name: string): boolean {
+  if (!name.startsWith(MCP_PREFIX)) {
+    return false
+  }
+  const rest = name.slice(MCP_PREFIX.length)
+  const split = rest.indexOf(MCP_SEPARATOR)
+  return split > 0 && split + MCP_SEPARATOR.length < rest.length
+}
+
 /** The tools that Claude Code removes from every subagent, even when the
  *  `tools` field lists them. `Agent` at the depth limit and `ExitPlanMode`
  *  outside plan mode are conditional, so they are not here. Source: the first

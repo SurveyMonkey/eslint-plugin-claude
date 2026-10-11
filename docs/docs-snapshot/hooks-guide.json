@@ -174,6 +174,12 @@
   ],
   "sources": [
     {
+      "heading": "Hook not firing",
+      "id": "hook-not-firing",
+      "hash": "9e1447393024785b239935c51f5bba3dbba37ebcac4fdcf9c04bbe8121b0d062",
+      "text": "### Hook not firing\n\nThe hook is configured but never executes.\n\n* Run `/hooks` and confirm the hook appears under the correct event\n* Check that the matcher pattern matches the tool name exactly. Matchers are case-sensitive\n* Verify you're triggering the right event type: `PreToolUse` fires before tool execution, `PostToolUse` fires after. A `PermissionRequest` hook fires when Claude Code is about to ask you for permission; see the [limitations](#limitations) for the non-interactive cases"
+    },
+    {
       "heading": "Block edits to protected files",
       "id": "block-edits-to-protected-files",
       "hash": "89b47ca14e76084d92da70dec31f687bfd52ee74ed2f75ce5414d328deaddf7f",
