@@ -38,7 +38,10 @@ import agentToolsKnown from './rules/agent-tools-known.ts'
 import agentToolsSkillForPreload from './rules/agent-tools-skill-for-preload.ts'
 import agentToolsTaskAlias from './rules/agent-tools-task-alias.ts'
 import agentToolsUnavailable from './rules/agent-tools-unavailable.ts'
+import claudeMdAgentsMdVariant from './rules/claude-md-agents-md-variant.ts'
+import claudeMdExcludesPattern from './rules/claude-md-excludes-pattern.ts'
 import claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
+import claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import commandLegacyFormat from './rules/command-legacy-format.ts'
 import hooksEventNameKnown from './rules/hooks-event-name-known.ts'
 import hooksScriptExecutable from './rules/hooks-script-executable.ts'
@@ -69,6 +72,7 @@ import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
+import memorySettingsSchema from './rules/memory-settings-schema.ts'
 import outputStyleForceForPlugin from './rules/output-style-force-for-plugin.ts'
 import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schema.ts'
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
@@ -85,6 +89,9 @@ import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
+import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
+import rulesMdExtension from './rules/rules-md-extension.ts'
+import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
@@ -317,6 +324,13 @@ const modules = [
   settingsMarketplaceKeyAlias,
   settingsMarketplaceSkipLfs,
   settingsStrictKnownMarketplacesSkillsDir,
+  claudeMdAgentsMdVariant,
+  claudeMdExcludesPattern,
+  claudeMdMaxBytes,
+  memorySettingsSchema,
+  rulesFrontmatterSchema,
+  rulesMdExtension,
+  rulesPathsGlobValid,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -496,6 +510,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-marketplace-key-alias': 'warn',
   'settings-marketplace-skip-lfs': 'warn',
   'settings-strict-known-marketplaces-skills-dir': 'warn',
+  'claude-md-agents-md-variant': 'error',
+  'claude-md-excludes-pattern': 'error',
+  'claude-md-max-bytes': 'error',
+  'memory-settings-schema': 'error',
+  'rules-frontmatter-schema': 'error',
+  'rules-md-extension': 'error',
+  'rules-paths-glob-valid': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

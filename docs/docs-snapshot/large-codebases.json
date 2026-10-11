@@ -1,0 +1,119 @@
+{
+  "url": "https://code.claude.com/docs/en/large-codebases",
+  "hash": "e3876d436261084dc8efcfb38a4cf065ca50d6c21493fa6c68019fc07426a8b3",
+  "blocks": [
+    {
+      "id": "set-up-claude-code-in-a-monorepo-or-large-codebase",
+      "hash": "43402efea89b74d2bccf6602f2d5b88f9a79587f6eb44a41ee9784784cd96ca1",
+      "bodyHash": "05fee8cda584500a1fe26419f7e0ff9dc26067a77a774f47cd22043a563ed548"
+    },
+    {
+      "id": "what-this-guide-covers",
+      "hash": "19cbd407d4d747dea17d457e201d308078179583122efe3a75a973a9aea89edc",
+      "bodyHash": "6c4ab309db841be6f66bffa1fe1479263ec1060a86d2047d9069b2b5226594be"
+    },
+    {
+      "id": "settings-on-this-page",
+      "hash": "6e3a28c2a584627ba91374a5e722ad884d582cb1b9c6134fb4b5db76d72d8c3f",
+      "bodyHash": "65326cdf6f9d506169d29d0767831ceab1868cbdfb7ddd896ee45a5cf99b889b"
+    },
+    {
+      "id": "the-example-monorepo",
+      "hash": "d0a49649627523b14f9e0734d6cf99051f25d64524aa3aa9c7e2c0e9a2df14aa",
+      "bodyHash": "99a915350c983f1fa37cf86e5e93a97abeb6df39d2bbc956b3443680fa055808"
+    },
+    {
+      "id": "choose-where-to-start-claude",
+      "hash": "305b0e1ed3d3ddf4b2908deb5ade5754a05605174d836931e3ce709adea23a0b",
+      "bodyHash": "21fa39b803977cfe9f62ed78fb867f7762a6f9932488f07dc89efe1b79fd76bf"
+    },
+    {
+      "id": "layer-claude-md-files-by-directory",
+      "hash": "3d7bac322a2af45a2b5140464d76f16ae13d2465503e1a0861d7500d19d5990f",
+      "bodyHash": "f1a233d264b1732049e0c0160ab24826a52daa7d77cebb6f76ba5df8a5b78e4f"
+    },
+    {
+      "id": "choose-between-per-directory-claude-md-and-path-scoped-rules",
+      "hash": "0105a3cd2b961b529223c9f7ddc96e297eb4137997145e28a890a38145175172",
+      "bodyHash": "0f9c7779860750f4f3c4472b0540269c72ed3a0d823ae119ea9a0f627d1ccf99"
+    },
+    {
+      "id": "exclude-irrelevant-claude-md-files",
+      "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0",
+      "bodyHash": "dacaca1537918125c25dc0e9a3deef5b8c35b5547930fa3759ce94d13666f64b"
+    },
+    {
+      "id": "reduce-what-claude-reads",
+      "hash": "da7b7da6c918de8a1019c50f17c1d6fe4f98bc8d354b251852ac0dfdde351ff9",
+      "bodyHash": "f189ae91f3db75e8c50697fe28b5697e4798add81947e59603a1f280b56bb4c1"
+    },
+    {
+      "id": "block-reads-of-generated-and-vendored-code",
+      "hash": "63667dcf98cd2018074df8b2c6a4c9806a595c26b05463dfcbf5e76b07290a14",
+      "bodyHash": "2ce34fe9bd335c0c95b053128e47655bbbf24e5048b91aa1a25dde33341eb245"
+    },
+    {
+      "id": "reduce-file-reads-with-code-intelligence",
+      "hash": "bc0da5edaf7964969c7f1be152ad63c6919b18232081d3fc813fe64fef1e4f90",
+      "bodyHash": "44c3b522eb049f997d063b7a19dc21aefd6ddb660c5aa3c4d77a81a211ff0bbb"
+    },
+    {
+      "id": "scope-worktrees-and-file-access",
+      "hash": "45963334172867e786665afc7d50be5b89950e61ca9954e3040289b85ad35dd1",
+      "bodyHash": "dd582be2b98ac484fc1c2264a49c9591240ffdb6773ca8bda6199d621a44173b"
+    },
+    {
+      "id": "check-out-only-the-directories-you-need",
+      "hash": "384853737dbdb0252a9c43b790d94a1afc18be6f7ab91f04779081efa33f2625",
+      "bodyHash": "ce54573a84d84e47a7ed028caa459b2837367a0b9bae7ed99cccdc6e8ee27ddb"
+    },
+    {
+      "id": "grant-access-across-packages-or-repositories",
+      "hash": "4426fb50a81e8d164a0b281f3a26632ddc24392c54ebfcd23eeb359cb7e4c7a5",
+      "bodyHash": "9c2ed242b3db5f763e41feddaf654e9b07ad7a39c07e67620db7255523f5a423"
+    },
+    {
+      "id": "add-per-directory-skills",
+      "hash": "7bb7e7d7fb3de8c9847cc28956b65af529c6baae0db5fec9ecc40847c574e9ea",
+      "bodyHash": "b988e5617de9d2e3edd71dc80f4b280a9c7cd69d1bdbf44427313c6166e64a88"
+    },
+    {
+      "id": "keep-skills-discoverable",
+      "hash": "af2ab7d2a6220a6768421a489c9186264e622ffb7c172ea77f315bd9642d78d9",
+      "bodyHash": "d02127c032cc711d0274187018011dba078939014ea715a84d1240596de36282"
+    },
+    {
+      "id": "centralize-conventions-when-layering-stops-scaling",
+      "hash": "88e66ca2e076a0120746a8d256e83ebc31f047ade1105fe523491dd6b29f5f17",
+      "bodyHash": "b4823c55725fa0ed7a6049ce277ebebe48de0d78ffd66ca28113b5cd6496eb33"
+    },
+    {
+      "id": "recommend-the-right-plugin-at-session-start",
+      "hash": "c867cee94e8ffd7ddcd00343bb3c9f9d2718b17d5fc2d7371db8dd6ad7041232",
+      "bodyHash": "cb0914dd2d3b07be17ae7f0395e95a5164075c0d140ff7a57b665341326fb8da"
+    },
+    {
+      "id": "put-it-together",
+      "hash": "5269918ffb6c02c652b8ebd3e4d0479e7c09672c932a2726cbc5afd4d1b72653",
+      "bodyHash": "26fba508a8f00da7c63bcc9ad4d1c12f5dae4d42edd8ec92d66a77ec719154de"
+    },
+    {
+      "id": "scope-and-plan-changes-that-span-packages",
+      "hash": "c93f1c78ce87677bb31a739e594db8aab903cd52d854aa5017c521bb7ac75eaa",
+      "bodyHash": "ab458b29c6d12504d0d78cc7105c260d1abbc81db99278977baf9251955ca23a"
+    },
+    {
+      "id": "next-steps",
+      "hash": "68ea6fa4adb74e95bec870a930b69b94523ddbd2bd59a6a0a6fc5a0bcc02804f",
+      "bodyHash": "d79d62ad46d1905ea84ac64d20012b43afd1d580c345d103b1e97d90b6932302"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Exclude irrelevant CLAUDE.md files",
+      "id": "exclude-irrelevant-claude-md-files",
+      "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0",
+      "text": "### Exclude irrelevant CLAUDE.md files\n\nWhen you start Claude from the repository root, each subdirectory's CLAUDE.md can [load on demand](/docs/en/memory#how-claude-md-files-load) during the session. The `claudeMdExcludes` setting skips specific files by path or glob pattern so they never load.\n\nUse this for directories you never work in, such as other teams' packages, legacy code, or vendored subtrees. The exclusion list is static, not a per-task switch. To focus on one package today and another tomorrow, [start Claude from that package's directory](#choose-where-to-start-claude) instead of editing exclusions.\n\nIf you only want these exclusions for yourself, put the setting in `.claude/settings.local.json`. Claude Code adds that file to your global gitignore when it saves a setting there. Since you are creating it by hand here, add it to your gitignore yourself. Patterns use glob syntax matched against absolute file paths, so start relative-style patterns with `**/` to match anywhere in the tree. The example below excludes a package owned by another team:\n\n```json .claude/settings.local.json theme={null}\n{\n  \"claudeMdExcludes\": [\n    \"**/packages/web/**\"\n  ]\n}\n```\n\nThis skips every CLAUDE.md and rules file under that package. The root CLAUDE.md and the packages you do work in still load normally.\n\nThese patterns cover other common cases:\n\n* `\"**/packages/*/CLAUDE.md\"`: excludes every package's CLAUDE.md while keeping the root\n* `\"**/packages/legacy-*/**\"`: excludes every package whose name matches the glob, including rules\n* `\"/home/user/monorepo/legacy/CLAUDE.md\"`: excludes one specific file by absolute path\n\nManaged policy CLAUDE.md files cannot be excluded, so organization-wide instructions always apply. You can set `claudeMdExcludes` at any [settings scope](/docs/en/settings#where-settings-live): user, project, local, or managed. Arrays merge across scopes, so a team can set project-level defaults while individuals add local overrides.\n\nFor the full exclusion documentation, see [Exclude specific CLAUDE.md files](/docs/en/memory#exclude-specific-claude-md-files)."
+    }
+  ]
+}
