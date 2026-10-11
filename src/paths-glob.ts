@@ -137,7 +137,7 @@ function hasBrokenBracket(pattern: string): boolean {
 
 /** The patterns of a `paths` value: each item of a list, or each part of a
  *  comma-separated string. */
-function patternsOf(value: unknown): string[] {
+export function patternsOf(value: unknown): string[] {
   if (Array.isArray(value)) {
     return value.filter((item): item is string => typeof item === 'string')
   }

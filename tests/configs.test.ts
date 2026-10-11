@@ -889,6 +889,64 @@ const TREE: Record<string, string> = {
   'packages/md/ok/CLAUDE.md': '@../f2.md\n',
   'packages/md/docs/notes.md': '@../f1.md\n',
   'packages/mda/AGENTS.md': '@f1.md\n',
+  // `claude-md-import-in-code-span`: a path in a code span or a fence that names a file, in each
+  // file that the rule reads. The same paths where no rule reads them, and a path to a missing
+  // file. The file `.git` makes `packages/ic` a repository.
+  'packages/ic/.git': 'gitdir: ../.git\n',
+  'packages/ic/present.md': '# Present\n',
+  'packages/ic/CLAUDE.md': 'Use `@present.md`.\n',
+  'packages/ic/.claude/CLAUDE.md': 'Use `@../present.md`.\n',
+  'packages/ic/CLAUDE.local.md': '```\n@present.md\n```\n',
+  'packages/ic/docs/notes.md': 'Use `@../present.md`.\n',
+  'packages/ic/ok/CLAUDE.md': 'Use `@none.md`, and import @../present.md.\n',
+  'packages/ica/AGENTS.md': 'Use `@present.md`.\n',
+  'packages/ica/present.md': '# Present\n',
+  // `claude-md-agents-md-prose-pointer`: a sentence that tells Claude to read AGENTS.md. The same
+  // sentence where no rule reads it, and beside an import.
+  'packages/pp/.git': 'gitdir: ../.git\n',
+  'packages/pp/CLAUDE.md': 'Read AGENTS.md first.\n',
+  'packages/pp/.claude/CLAUDE.md': 'Read AGENTS.md first.\n',
+  'packages/pp/CLAUDE.local.md': 'Read AGENTS.md first.\n',
+  'packages/pp/ok/CLAUDE.md': '@AGENTS.md\n\nRead AGENTS.md first.\n',
+  'packages/pp/ok/AGENTS.md': '# Agents\n',
+  // `claude-md-excludes-absolute-committed`: a machine path in the committed file. The same path
+  // in the local file, in a managed file and in another settings file.
+  'packages/ea/.claude/settings.json': '{"claudeMdExcludes": ["/Users/x/work/**", "**/ok/**"]}',
+  'packages/ea/.claude/settings.local.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  'packages/ea/managed-settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  'packages/ea/.vscode/settings.json': '{"claudeMdExcludes": ["/Users/x/work/**"]}',
+  // `memory-agent-memory-orphan`: an index of a folder that no subagent owns, and one that a
+  // project subagent owns. The file `.git` makes `packages/ao` a repository.
+  'packages/ao/.git': 'gitdir: ../.git\n',
+  'packages/ao/.claude/agent-memory/lone/MEMORY.md': '# Lone\n',
+  'packages/ao/.claude/agent-memory/lone/topic.md': '# Topic\n',
+  'packages/ao/.claude/agent-memory/owned/MEMORY.md': '# Owned\n',
+  'packages/ao/.claude/agents/owned.md':
+    '---\nname: owned\ndescription: d\nmemory: project\ntools: Read, Write, Edit\n---\n',
+  // `rules-paths-no-match`: a rule with a glob that matches a file, and one that matches none.
+  // The same rule where no rule reads it. The file `.git` makes `packages/pn` a repository.
+  'packages/pn/.git': 'gitdir: ../.git\n',
+  'packages/pn/src/a.ts': 'x\n',
+  'packages/pn/.claude/rules/hit.md': '---\npaths:\n  - "src/**/*.ts"\n---\n# Hit\n',
+  'packages/pn/.claude/rules/miss.md': '---\npaths:\n  - "nope/**/*.ts"\n---\n# Miss\n',
+  'packages/pn/docs/miss.md': '---\npaths:\n  - "nope/**/*.ts"\n---\n# Miss\n',
+  // `claude-md-location`: a CLAUDE.local.md in a `.claude` folder, and a case variant. The loaded
+  // names, and a name that only looks like one.
+  'packages/lo/.claude/CLAUDE.local.md': '# Notes\n',
+  'packages/lo/web/claude.md': '# Notes\n',
+  'packages/lo/CLAUDE.md': '# Notes\n',
+  'packages/lo/.claude/CLAUDE.md': '# Notes\n',
+  'packages/lo/CLAUDE.local.md': '# Notes\n',
+  'packages/lo/docs/claude-notes.md': '# Notes\n',
+  // `claude-md-html-comment-content`: a block comment with an instruction in each file that the
+  // rule reads. The same comment where no rule reads it, and inline, in a fence and as a note.
+  'packages/hc/.git': 'gitdir: ../.git\n',
+  'packages/hc/CLAUDE.md': '<!-- MUST run tests -->\n',
+  'packages/hc/.claude/CLAUDE.md': '<!-- MUST run tests -->\n',
+  'packages/hc/CLAUDE.local.md': '<!-- MUST run tests -->\n',
+  'packages/hc/docs/notes.md': '<!-- MUST run tests -->\n',
+  'packages/hc/ok/CLAUDE.md':
+    'Text <!-- MUST run tests --> more\n\n```\n<!-- MUST run tests -->\n```\n\n<!-- Maintainer: Jo -->\n',
   // `claude-md-max-lines`: a file of 201 lines in each place that it lints, and an import of a long
   // file. The same text where no rule reads it: a Markdown file that is not an instruction file.
   'packages/lm/CLAUDE.md': LONG,
@@ -1298,6 +1356,22 @@ const MEMORY_WARN_RULES = [
   'rules-max-lines',
   'rules-symlink-external',
 ]
+
+// The rules of #13 that are `off` in `recommended`. `strict` turns each on at `warn`.
+const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
+  'claude-md-agents-md-prose-pointer': ['markdown/gfm', ['**/CLAUDE.md']],
+  'claude-md-combined-size': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-html-comment-content': ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md']],
+  'claude-md-excludes-absolute-committed': ['json/json', ['**/.claude/settings.json']],
+  'claude-md-import-in-code-span': [
+    'markdown/gfm',
+    ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
+  ],
+  'claude-md-location': ['markdown/gfm', ['**/*.md']],
+  'memory-agent-memory-orphan': ['markdown/gfm', ['**/.claude/agent-memory/*/MEMORY.md']],
+  'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
+}
+const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -1797,6 +1871,32 @@ const STRICT_ONLY = [
   'packages/mo/.claude/skills/opus/SKILL.md: claude/skill-model-override@1',
   'packages/mo/.claude/commands/cmodel.md: claude/skill-model-override@1',
   'packages/lr/.claude/loop.md: claude/skill-loop-reference-invocable@1',
+  // `claude-md-import-in-code-span` reads CLAUDE.md, CLAUDE.local.md and AGENTS.md, and no other file.
+  // `claude-md-agents-md-prose-pointer` reads CLAUDE.md files, and no other file.
+  'packages/pp/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
+  'packages/pp/.claude/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
+  // `claude-md-excludes-absolute-committed` reads the committed project file, and no other file.
+  'packages/ea/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
+  'packages/cx/ok/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
+  // `memory-agent-memory-orphan` reads the `MEMORY.md` index, and no other file.
+  'packages/ao/.claude/agent-memory/lone/MEMORY.md: claude/memory-agent-memory-orphan@1',
+  // The staged fixture tree of `packages/gu` holds one index with no agent.
+  'packages/gu/mem/project/.claude/agent-memory/reviewer/MEMORY.md: claude/memory-agent-memory-orphan@1',
+  // `rules-paths-no-match` reads the rule files, and no other file.
+  'packages/pn/.claude/rules/miss.md: claude/rules-paths-no-match@1',
+  // `claude-md-location` reads every Markdown file, and reports the two places and names.
+  'packages/lo/.claude/CLAUDE.local.md: claude/claude-md-location@1',
+  'packages/lo/web/claude.md: claude/claude-md-location@1',
+  // The staged fixture tree of `packages/gu` holds a `.claude/CLAUDE.local.md`.
+  'packages/gu/claude/dot/.claude/CLAUDE.local.md: claude/claude-md-location@1',
+  // `claude-md-html-comment-content` reads CLAUDE.md and CLAUDE.local.md, and no other file.
+  'packages/hc/CLAUDE.md: claude/claude-md-html-comment-content@1',
+  'packages/hc/.claude/CLAUDE.md: claude/claude-md-html-comment-content@1',
+  'packages/hc/CLAUDE.local.md: claude/claude-md-html-comment-content@1',
+  'packages/ic/CLAUDE.md: claude/claude-md-import-in-code-span@1',
+  'packages/ic/.claude/CLAUDE.md: claude/claude-md-import-in-code-span@1',
+  'packages/ic/CLAUDE.local.md: claude/claude-md-import-in-code-span@1',
+  'packages/ica/AGENTS.md: claude/claude-md-import-in-code-span@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -1984,6 +2084,7 @@ const OFF_RULES = [
   ...AGENT_OFF_RULES,
   ...MARKETPLACE_OFF_RULES,
   ...MARKET_SETTINGS_OFF_RULES,
+  ...MEMORY_OFF_RULES,
 ]
 
 let root = ''
@@ -2157,6 +2258,7 @@ describe('configs', () => {
       ...MARKET_SETTINGS_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
       ...MEMORY_WARN_RULES.map((rule) => `claude/strict/${rule}`),
+      ...MEMORY_OFF_RULES.map((rule) => `claude/strict/${rule}`),
     ])
   })
 
@@ -2381,6 +2483,14 @@ describe('configs', () => {
     expect(blocks('rules-md-extension')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
     ])
+  })
+
+  it('turns each off memory rule on in strict only, on the files that it reads', () => {
+    for (const rule of MEMORY_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([MEMORY_OFF_BLOCKS[rule]])
+    }
   })
 
   it('recommended reports each rule on its own files, at its own severity', async () => {
