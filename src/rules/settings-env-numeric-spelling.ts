@@ -1,11 +1,12 @@
 // A number in the `env` block that is not in plain digits (docs/rules/settings-env-numeric-spelling.md).
 // Claude Code before v2.1.211 reads `1e6` or `64_000` as a much smaller number. The rule reads the
 // shape of the value, because the docs name no list of numeric variables. A variable that has a
-// form in `src/data/settings-env.ts` and rejects the value is for `settings-env-value-format`.
+// form in `src/data/settings-env.ts` and rejects the value is for `settings-env-value-format`. A
+// variable that the heuristic form rejects is for `settings-env-format-heuristic`.
 // The fault shows only on a client before v2.1.211. So the rule reports nothing unless the option
 // `minVersion` names a client below that version.
 import type { JSONRuleDefinition } from '@eslint/json'
-import { CREDENTIAL_ENV_VARS, envValueForm } from '../data/settings-env.ts'
+import { CREDENTIAL_ENV_VARS, envValueForm, heuristicEnvForm } from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -79,7 +80,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }>
             value.type !== 'String' ||
             !(SCIENTIFIC.test(value.value) || SEPARATED.test(value.value)) ||
             CREDENTIAL_ENV_VARS.includes(variable) ||
-            envValueForm(variable)?.accepts(value.value) === false
+            envValueForm(variable)?.accepts(value.value) === false ||
+            heuristicEnvForm(variable)?.accepts(value.value) === false
           ) {
             continue
           }

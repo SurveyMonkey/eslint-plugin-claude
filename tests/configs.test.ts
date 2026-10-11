@@ -1207,6 +1207,31 @@ const TREE: Record<string, string> = {
   'packages/ll/.claude/settings.local.json': '{}',
   'packages/ll/pkg/.claude/settings.local.json': '{}',
   'packages/ll/pkg/.claude/settings.json': '{}',
+  // The settings rules of #14 that are `off` in `recommended` read these files. Each pair has a
+  // file that reports in `strict` and a file where the rule is silent.
+  'packages/ll/.claude/settings.json': '{}',
+  'packages/oa-agent/.claude/settings.json': '{"agent": "nobody"}',
+  'packages/oa-agent/.claude/settings.local.json': '{"agent": "Explore"}',
+  'packages/oa-skill/.claude/settings.json': '{"skillOverrides": {"nothing": "off"}}',
+  'packages/oa-skill/.claude/settings.local.json': '{"skillOverrides": {"batch": "off"}}',
+  'packages/oa-pin/.claude/settings.json': '{"model": "opus"}',
+  'packages/oa-pin/.claude/settings.local.json': '{"model": "opus"}',
+  'packages/oa-pin/managed-settings.json':
+    '{"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}, "availableModels": ["claude-opus-4-8"]}',
+  'packages/oa-pin/managed-settings.d/10-a.json':
+    '{"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}, "availableModels": ["us.anthropic.claude-opus-4-8"]}',
+  'packages/oa-cap/.claude/settings.json': '{"model": "claude-sonnet-4-5[1m]"}',
+  'packages/oa-cap/.claude/settings.local.json': '{"model": "claude-opus-4-6[1m]"}',
+  'packages/oa-cap/managed-settings.json':
+    '{"availableModels": ["opus"], "model": "claude-opus-5-5", "alwaysThinkingEnabled": false}',
+  'packages/oa-secret/.claude/settings.json': '{"env": {"MY_TOKEN": "abc"}}',
+  'packages/oa-secret/.claude/settings.local.json': '{"env": {"MY_TOKEN": "abc"}}',
+  'packages/oa-cost/.claude/settings.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
+  'packages/oa-cost/.claude/settings.local.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
+  'packages/oa-format/.claude/settings.json': '{"env": {"MCP_TIMEOUT": "30s"}}',
+  'packages/oa-format/.claude/settings.local.json': '{"env": {"MCP_TIMEOUT": "30000"}}',
+  'packages/oa-format/managed-settings.json':
+    '{"availableModels": ["opus"], "env": {"MCP_TIMEOUT": "30s"}}',
   // `settings-webfetch-preflight-skip` reads the project files and the managed files. A
   // `WebFetch(...)` rule in the other file of the folder, or of the managed source, is silent.
   'packages/wf/.claude/settings.json': '{"skipWebFetchPreflight": true}',
@@ -1719,6 +1744,19 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
   'rules-paths-no-match': ['markdown/gfm', ['**/.claude/rules/**/*.md']],
 }
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
+
+// The settings rules of the model and env layer of #14 are `off` in `recommended`. `strict` turns
+// each on at `warn`. They come last in the `modules` list, with the files of each.
+const SETTINGS_OFF_RULES: { name: string; files: string[] }[] = [
+  { name: 'settings-agent-exists', files: PROJECT_FILES },
+  { name: 'settings-env-context-cost', files: SHARED_FILE },
+  { name: 'settings-env-format-heuristic', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-secret-heuristic', files: SHARED_FILE },
+  { name: 'settings-model-capability', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-model-pin-version', files: [...SHARED_FILE, ...MANAGED_FILES] },
+  { name: 'settings-nested-project-file', files: SHARED_FILE },
+  { name: 'settings-skilloverrides-unknown-skill', files: PROJECT_FILES },
+]
 
 // `settings-schema-url` reports each settings file that is a JSON object with no `$schema`. The
 // trees have many such files, so the list is computed from them. A project file, a managed file
@@ -2413,6 +2451,26 @@ const STRICT_ONLY = [
   'packages/dr/.claude/CLAUDE.md: claude/claude-md-dangling-reference@1',
   'packages/dr/CLAUDE.local.md: claude/claude-md-dangling-reference@1',
   'packages/dr/.claude/rules/a.md: claude/claude-md-dangling-reference@1',
+  // The `off` settings rules read only the files of their own glob, so the decoy files report
+  // nowhere.
+  'packages/oa-agent/.claude/settings.json: claude/settings-agent-exists@1',
+  'packages/oa-cost/.claude/settings.json: claude/settings-env-context-cost@1',
+  'packages/oa-format/.claude/settings.json: claude/settings-env-format-heuristic@1',
+  'packages/oa-format/managed-settings.json: claude/settings-env-format-heuristic@1',
+  'packages/oa-secret/.claude/settings.json: claude/settings-env-secret-heuristic@1',
+  'packages/oa-cap/.claude/settings.json: claude/settings-model-capability@1',
+  'packages/oa-cap/managed-settings.json: claude/settings-model-capability@1',
+  'packages/oa-pin/.claude/settings.json: claude/settings-model-pin-version@1',
+  'packages/oa-pin/managed-settings.json: claude/settings-model-pin-version@1',
+  'packages/ll/pkg/.claude/settings.json: claude/settings-nested-project-file@1',
+  // The git trees hold project files below the root of a repository.
+  'packages/gu/set/bad/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/gu/set/ok/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/gu/set/open/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/hx/ok/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/hx/sl/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/hx/sl/ok/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/oa-skill/.claude/settings.json: claude/settings-skilloverrides-unknown-skill@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -2602,6 +2660,7 @@ const OFF_RULES = [
   ...MARKETPLACE_OFF_RULES,
   ...MARKET_SETTINGS_OFF_RULES,
   ...MEMORY_OFF_RULES,
+  ...SETTINGS_OFF_RULES.map(({ name }) => name),
 ]
 
 let root = ''
@@ -2776,6 +2835,7 @@ describe('configs', () => {
       ...MEMORY_RULES.map((rule) => `claude/strict/${rule}`),
       ...MEMORY_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...MEMORY_OFF_RULES.map((rule) => `claude/strict/${rule}`),
+      ...SETTINGS_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -3007,6 +3067,14 @@ describe('configs', () => {
       expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([MEMORY_OFF_BLOCKS[rule]])
+    }
+  })
+
+  it('turns each off settings rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of SETTINGS_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
   })
 
