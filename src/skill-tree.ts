@@ -279,7 +279,7 @@ export function danglingOf(entry: string): null | Unreadable {
  *  Otherwise the result is null when the real path of that part, plus the
  *  rest, is in `bound`. It is `UNREADABLE` when that path is out of `bound`,
  *  because the rule cannot see out of `bound`. */
-function missingOf(file: string, bound: string): null | Unreadable {
+export function missingOf(file: string, bound: string): null | Unreadable {
   const rest: string[] = []
   let at = path.resolve(file)
   let real = realOf(at)

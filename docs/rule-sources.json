@@ -72,6 +72,18 @@
       "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281"
     }
   ],
+  "agent-initial-prompt-main-only": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Invoke subagents explicitly",
+      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d"
+    }
+  ],
   "agent-mcp-servers-inline-trust": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -82,6 +94,18 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Trust required for inline MCP servers",
       "hash": "a404c47132e66d8e9eb9899407b1db0b4a165ceffbeb03560c4ba49d5e3fee9e"
+    }
+  ],
+  "agent-mcp-servers-ref-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Scope MCP servers to a subagent",
+      "hash": "c7ddf54a5c2a025ca369046dff4b43db84501066fa4b9e9eb40d6e78ea162c12"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "MCP installation scopes",
+      "hash": "ccf7550288a7f4484a8912aef5e402ae3b6a7d06c8ea0921128a278e0c734463"
     }
   ],
   "agent-mcp-servers-schema": [
@@ -147,6 +171,23 @@
       "url": "https://code.claude.com/docs/en/settings",
       "heading": "Settings precedence",
       "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
+    }
+  ],
+  "agent-model-value": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Choose a model",
+      "hash": "ea006bdc1af80c1cb4fad720394d98e780a1772c5b47fa34eea9e8c07a62e59e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Model aliases",
+      "hash": "a09e1c9b1762d03557790bd6d2bff27c741d3881a2fb9c76d1c2379d1949c324"
     }
   ],
   "agent-name-shadowing": [
@@ -252,6 +293,23 @@
       "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
+  "agent-skills-exist": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Preload skills into subagents",
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Choose where skills load",
+      "hash": "825bb5974ddabd2fc5a83644513bc5a9557af0bb5efeec460a9ec8ca618a5173"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/commands",
+      "heading": "All commands",
+      "hash": "c062c399a79edfe1a9968dbe26791d4ea42c04353adb5dc7216d3609972bc758"
+    }
+  ],
   "agent-skills-preloadable": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -274,6 +332,18 @@
       "url": "https://code.claude.com/docs/en/agent-teams",
       "heading": "Architecture",
       "hash": "8b140073ce9205ab8eab85587937b24ce4abc2c809b65ca8f8c68b6de3a77615"
+    }
+  ],
+  "agent-tools-agent-type-list": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Restrict which subagents can be spawned",
+      "hash": "e3fed2f8e72ce5f0ff1a46a4472928dc6d5942c4eca5c57cd7d78b631086329d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Invoke subagents explicitly",
+      "hash": "166337fb1c5d1a8e742a1a5ad89d226e5e5b2ee04e8a9703ad98f4e69560401d"
     }
   ],
   "agent-tools-conditional": [
@@ -313,6 +383,18 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Agent would be spawned with zero tools",
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+    }
+  ],
+  "agent-tools-skill-for-preload": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "95e616bf097b65bc8ea559e6a74db2d01c72e0628a044dc14a42218b57f11b74"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Preload skills into subagents",
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
     }
   ],
   "agent-tools-task-alias": [

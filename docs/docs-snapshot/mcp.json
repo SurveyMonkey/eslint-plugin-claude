@@ -409,6 +409,12 @@
   ],
   "sources": [
     {
+      "heading": "MCP installation scopes",
+      "id": "mcp-installation-scopes",
+      "hash": "ccf7550288a7f4484a8912aef5e402ae3b6a7d06c8ea0921128a278e0c734463",
+      "text": "## MCP installation scopes\n\nMCP servers can be configured at three scopes. The scope you choose controls which projects the server loads in and whether the configuration is shared with your team. Administrators can also deploy or provide servers for every user via [managed configuration](#managed-mcp-configuration).\n\n| Scope | Loads in | Shared with team | Stored in |\n| - | - | - | - |\n| [Local](#local-scope) | Current project only | No | `~/.claude.json` |\n| [Project](#project-scope) | Current project only | Yes, via version control | `.mcp.json` in project root |\n| [User](#user-scope) | All your projects | No | `~/.claude.json` |"
+    },
+    {
       "heading": "Option 1: Add a remote HTTP server",
       "id": "option-1-add-a-remote-http-server",
       "hash": "8621821eb444c49ade0a15684e8e40fe711933cb83a6c80477f0a109efc27401",
