@@ -51,7 +51,8 @@ project settings of the start directory with no parent fallback, so the rule res
 
 The rule makes no report for these entries:
 
-- A path that is not in the repository, a path with `~`, `$` or a NUL byte, an empty entry, and an entry that is not a string.
+- A path that is not in the repository, an entry that is not a string, and an entry with a NUL byte. A home path (`~/x`)
+  and a variable (`$HOME/x`) are not read: the rule takes each as a name below the project.
 - A directory that is not there, an entry that is a file, and a link with no target.
 - A directory that the rule cannot read, or whose `CLAUDE.md` or `.claude` is a link that leaves the repository (ADR 001,
   Decision 14).

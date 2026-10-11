@@ -92,6 +92,7 @@ describe(`${name}: silent`, () => {
       '(ls)',
       'Bash',
       'mcp__(x)',
+      'mcp__github tools (read-only)',
       '',
     ]
     expect(ids(mode({ allow: entries }))).toEqual([])

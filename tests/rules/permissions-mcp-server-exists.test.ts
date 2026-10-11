@@ -75,6 +75,11 @@ describe(`${name}: silent`, () => {
     expect(ids(repo({}), PROJECT, code)).toEqual([])
   })
 
+  it('reports a plugin whose name only starts like an enabled plugin name', () => {
+    const code = enabled({ 'lint@acme': true }, 'mcp__plugin_linter_search__query')
+    expect(ids(repo({}), PROJECT, code)).toEqual(['unknown'])
+  })
+
   it('stays silent when an enabled plugin name can start the server part', () => {
     // `my` and `plugin_srv` is one reading of the name. The rule cannot tell the plugin part
     // from the server part, so it accepts every plugin name that fits.

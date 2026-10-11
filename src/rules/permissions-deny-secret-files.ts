@@ -54,14 +54,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'open' }> = {
         const bound = repositoryRoot(project)
         const children = gitChildren(bound, project)
         const secrets = gitTracksBelow(bound, path.join(project, SECRETS))
-        if (children === UNREADABLE || secrets === UNREADABLE) {
+        if (children === UNREADABLE) {
           return
         }
         const tracked = [
           ...children
             .map(([file]) => file)
             .filter((file) => ENV_FILE.test(file) && !PLACEHOLDER.test(file)),
-          ...(secrets ? [SECRETS] : []),
+          ...(secrets === true ? [SECRETS] : []),
         ]
         if (tracked.length === 0) {
           return
@@ -84,11 +84,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'open' }> = {
         })
         const open = tracked.filter(
           (item) =>
-            !patterns.some(
-              (pattern) =>
-                pattern !== null &&
-                denyPatternCovers(pattern, item === SECRETS ? `${SECRETS}x` : item),
-            ),
+            !patterns.some((pattern) => pattern !== null && denyPatternCovers(pattern, item)),
         )
         if (open.length === 0) {
           return

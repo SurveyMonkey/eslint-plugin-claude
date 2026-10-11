@@ -80,10 +80,27 @@ describe(`${name}: reports`, () => {
           'Read(./)',
           'Read(/)',
           'Read(!./.env)',
+          'Read(//.env)',
+          'Edit',
+          'Bash',
+          'WebFetch(domain:a.test)',
         ],
       },
     })
     expect(ids(root, code)).toEqual(['open'])
+  })
+
+  it('reports a secrets folder that a pattern of another shape does not cover', () => {
+    // `?` and `*` stay in one part of the path, so none of these covers `secrets/k`.
+    for (const rule of ['Read(secrets?x)', 'Read(secrets*x)', 'Read(secrets?)']) {
+      expect(ids(tracking('secrets/k'), deny(rule)), rule).toEqual(['open'])
+    }
+  })
+
+  it('reports a .env that a pattern of another shape does not cover', () => {
+    for (const rule of ['Read(**/env)', 'Read(./.en)', 'Read(.env/**)', 'Read(env)']) {
+      expect(ids(tracking('.env'), deny(rule)), rule).toEqual(['open'])
+    }
   })
 
   it('reports a project below the root for the files of that project only', () => {

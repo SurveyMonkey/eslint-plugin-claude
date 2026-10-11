@@ -19,7 +19,6 @@ import {
   realDirectory,
   realOf,
   repositoryRoot,
-  statOf,
   UNREADABLE,
 } from '../skill-tree.ts'
 
@@ -84,10 +83,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noConfig' }> = {
       const list = valueAt(document, ['permissions', 'additionalDirectories'])
       for (const node of stringEntries(list)) {
         const entry = node.value
-        // A home path and a variable are out of the repository, or unknown. A NUL byte is not a path.
-        if (/[\0$]/.test(entry) || entry.startsWith('~') || entry === '') {
-          continue
-        }
+        // A home path, a variable and a NUL byte need no check here. `~` and `$` start a name
+        // below the project, which the rule skips, and a NUL byte makes the read fail.
         const isAbsolute = path.isAbsolute(entry)
         if (!isAbsolute && kind === 'local') {
           continue
@@ -104,10 +101,6 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noConfig' }> = {
         // The project directory, a directory above it and one below it load their configuration
         // as part of the project.
         if (isInside(real, project) || isInside(project, real)) {
-          continue
-        }
-        const info = statOf(real)
-        if (info === null || info === UNREADABLE || !info.isDirectory()) {
           continue
         }
         const held = heldIn(real, bound)

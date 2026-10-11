@@ -162,6 +162,21 @@ describe(`${name}: silent`, () => {
     expect(ids(dir, settings(absolute), 'managed-settings.d/10-a.json')).toEqual([])
   })
 
+  it('stays silent in a managed file below the root, whose project folder is not known', () => {
+    const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
+    const absolute = path.join(dir, 'packages/shared')
+    expect(ids(dir, settings(absolute), 'packages/m/managed-settings.json')).toEqual([])
+    expect(ids(dir, settings('../shared'), 'packages/m/managed-settings.d/10-a.json')).toEqual([])
+  })
+
+  it('reads a folder named ~ or $HOME as a plain name, not as a home path or a variable', () => {
+    const dir = tree({
+      'packages/api/~/CLAUDE.md': 'x\n',
+      'packages/api/$HOME/CLAUDE.md': 'x\n',
+    })
+    expect(ids(dir, settings('~', '$HOME'))).toEqual([])
+  })
+
   it('stays silent for an entry that is not a string, a key that is not a list, or no key', () => {
     const dir = tree({ [SHARED_CLAUDE]: 'x\n' })
     const code = (value: unknown) =>
@@ -197,6 +212,26 @@ describe(`${name}: a path that the rule cannot see`, () => {
     expect(recorded.paths.filter((entry) => !inside(entry))).toEqual([])
   })
 
+  onLinks('reads no path behind a link that leaves the repository', () => {
+    const outside = tree({ 'CLAUDE.md': 'x\n' }, false)
+    const outer = tree({}, false)
+    const repo = path.join(outer, 'repo')
+    mkdirSync(path.join(repo, '.git'), { recursive: true })
+    link(repo, 'packages/shared', outside)
+    recorded.paths = []
+    recorded.on = true
+    try {
+      const file = 'repo/packages/api/.claude/settings.json'
+      expect(ids(outer, settings('../shared'), file)).toEqual([])
+    } finally {
+      recorded.on = false
+    }
+    const inside = (entry: string) =>
+      [repo, realpathSync(repo)].some((root) => entry === root || entry.startsWith(root + path.sep))
+    expect(recorded.paths.length).toBeGreaterThan(0)
+    expect(recorded.paths.filter((entry) => !inside(entry))).toEqual([])
+  })
+
   onLinks('stays silent for a link out of the repository', () => {
     const outside = tree({ 'CLAUDE.md': 'x\n' }, false)
     const dir = tree({ 'packages/api/.claude/settings.json': '{}' })
@@ -218,7 +253,7 @@ describe(`${name}: a path that the rule cannot see`, () => {
   })
 
   onLinks('stays silent for a CLAUDE.md that is a link with no target', () => {
-    const dir = tree({ 'packages/shared/src/a.ts': 'x\n' })
+    const dir = tree({ 'packages/shared/.claude/skills/s/SKILL.md': 'x\n' })
     link(dir, 'packages/shared/CLAUDE.md', 'missing.md')
     expect(ids(dir, settings('../shared'))).toEqual([])
   })

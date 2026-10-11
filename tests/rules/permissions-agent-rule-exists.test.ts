@@ -107,6 +107,7 @@ describe(`${name}: silent`, () => {
       'statusline-setup',
       'claude-code-guide',
       'explore',
+      ' Explore ',
     ].map((agentName) => `Agent(${agentName})`)
     expect(ids(tree({}), settings(...rules))).toEqual([])
   })

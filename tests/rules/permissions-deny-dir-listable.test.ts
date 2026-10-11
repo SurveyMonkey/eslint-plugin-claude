@@ -88,6 +88,7 @@ describe(`${name}: silent`, () => {
       'Read',
       'Read()',
       'Read(offset:5)',
+      'Read( ./build/** )',
     ]
     expect(ids(deny(...rules))).toEqual([])
   })

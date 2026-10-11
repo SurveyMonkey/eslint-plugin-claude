@@ -33,7 +33,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'listable' }> = {
     return settingsListener(context, (entries) => {
       for (const entry of entries) {
         const specifier = entry.list === 'deny' ? pathSpecifier(entry, ['Read']) : null
-        const pattern = specifier?.trim() ?? ''
+        const pattern = specifier ?? ''
         const directory = pattern.endsWith('/**')
           ? pattern.slice(0, -3).split('/').pop()
           : undefined

@@ -119,22 +119,19 @@ function patternSource(pattern: string): string {
 
 /** True when the `Read` deny pattern `pattern` may cover the path `relative`, which is relative to
  *  the project directory and uses `/`. A pattern covers a path when it matches the path or a
- *  directory above it. The check errs toward true, because a false answer makes a report. These
- *  patterns cannot be placed in the project, so they cover nothing: `!` (a carve-out), `//`
- *  (an absolute path) and `~/` (the home directory). A bracket expression is not read, and may
- *  cover the path. */
+ *  directory above it. The check errs toward true, because a false answer makes a report. A `//`
+ *  pattern is an absolute path, which the project cannot place, so it covers nothing. A `!`
+ *  carve-out and a `~/` path match no relative path, so the match fails for them. A bracket
+ *  expression is not read, and may cover the path. */
 export function denyPatternCovers(pattern: string, relative: string): boolean {
   const text = pattern.trim()
-  if (/^(?:!|~\/|\/\/)/.test(text)) {
+  if (text.startsWith('//')) {
     return false
   }
   if (text.includes('[')) {
     return true
   }
   const bare = text.replace(/^(?:\.\/|\/)+/, '')
-  if (bare === '') {
-    return false
-  }
   const matcher = new RegExp(`^${patternSource(bare)}$`)
   for (let at = relative.length; at > 0; at = relative.lastIndexOf('/', at - 1)) {
     if (matcher.test(relative.slice(0, at))) {

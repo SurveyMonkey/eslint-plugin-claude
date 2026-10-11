@@ -63,7 +63,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noPushAsk' }> = {
     return {
       Document(node) {
         const value = valueAt(node, ['permissions', 'defaultMode'])
-        if (value?.type !== 'String' || value.value !== 'auto') {
+        if (value?.type !== 'String') {
           return
         }
         const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
