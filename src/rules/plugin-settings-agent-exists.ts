@@ -5,13 +5,14 @@
 // the file or the agents.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
+import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { PLUGIN_SETTINGS_KEYS } from '../data/plugin-layout.ts'
 import { docsUrl } from '../docs-url.ts'
 import { enclosingMarketplace, entriesIn } from '../marketplace-file.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { lookup, type Plugin, readPlugin, readPluginAt } from '../plugin-manifest.ts'
 import { entriesOf, isInside, readJson, realOf, SKIPPED, UNREADABLE } from '../skill-tree.ts'
-import { BUILT_IN, pluginAgents } from './skill-agent-exists.ts'
+import { pluginAgents } from './skill-agent-exists.ts'
 
 const name = 'plugin-settings-agent-exists' as const
 
@@ -109,7 +110,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
         if (wanted.includes(':') && !wanted.startsWith(`${pluginName.toLowerCase()}:`)) {
           return
         }
-        if (BUILT_IN.some(same)) {
+        if (BUILT_IN_AGENTS.some(same)) {
           return
         }
         // A link with no target, or a part with a real path out of the repository, can hold the agent.

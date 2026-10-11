@@ -654,8 +654,6 @@ const TREE: Record<string, string> = {
   // A plugin that the marketplace serves from npm, with a `package.json` and no shrinkwrap.
   'packages/cxd/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
   'packages/cxd/plugins/pkg/package.json': '{}',
-  'packages/cx/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
-  'packages/cx/plugins/pkg/package.json': '{}',
   // A plugin that depends on a plugin with a `command` source in the same marketplace, in a
   // repository with a `.git`.
   'packages/nai/.git/HEAD': 'ref: refs/heads/main\n',
@@ -3275,9 +3273,8 @@ const EXPECTED = [
   'packages/cxd/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
   'packages/cxd/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
   // `plugin-manifest-publish-metadata` reports each manifest of the trees, because none sets
-  'packages/cx/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
+  'packages/nai/.claude-plugin/marketplace.json: claude/marketplace-command-source@1',
   'packages/nai/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-not-auto-installed@1',
-  'packages/cx/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
   // `plugin-manifest-publish-metadata` reports each manifest of the tree, because none sets
   // `homepage` and `repository` or has a README.md. It skips a plugin in `.claude/skills/<name>/`.
   ...SCHEMA_URL_TREES.map(([file]) => file)
@@ -4934,12 +4931,14 @@ describe('configs', () => {
       line.includes('marketplace-min-version'),
     )
     // The `archive` source, the `command` source and the `headersHelper` of the bad marketplace,
-    // and the `archive` source and the `headers` of the credential marketplace.
+    // the `archive` source and the `headers` of the credential marketplace, and the `command`
+    // source of the marketplace in `packages/nai`.
     expect(found).toEqual([
       ...Array(3).fill('.claude-plugin/marketplace.json: claude/marketplace-min-version@1'),
       ...Array(2).fill(
         'packages/hc/.claude-plugin/marketplace.json: claude/marketplace-min-version@1',
       ),
+      'packages/nai/.claude-plugin/marketplace.json: claude/marketplace-min-version@1',
     ])
   }, 30_000)
 
