@@ -4316,8 +4316,6 @@ const STRICT_ONLY = [
   'packages/mc/.mcp.json: claude/mcp-unknown-keys@1',
   'plugins/p/.mcp.json: claude/mcp-plugin-root-paths@1',
   'plugins/p/.mcp.json: claude/mcp-unknown-keys@1',
-// The reports of the `off` plugin rules. They appear in `strict` only, at `warn`.
-const STRICT_ONLY = [
   'plugins/ucs/.claude-plugin/plugin.json: claude/plugin-user-config-sensitive@1',
   'plugins/chs/.claude-plugin/plugin.json: claude/plugin-channel-server-stdio@1',
   'packages/pr/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-prerelease-range@1',
@@ -4736,6 +4734,7 @@ const OFF_RULES = [
   ...SETTINGS_OFF_RULES.map(({ name }) => name),
   // A rule with a Markdown target has two blocks, so it appears twice.
   ...MCP_OFF_RULES.flatMap(({ name, markdown }) => (markdown ? [name, name] : [name])),
+  ...PLUGIN_OFF_RULES.map(({ name }) => name),
 ]
 
 let root = ''
@@ -4921,12 +4920,6 @@ describe('configs', () => {
     const strict = rulesOf(plugin.configs.strict)
     expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
     expect(strict.filter(isOff)).toEqual(OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })))
-      PLUGIN_OFF_RULES.some(({ name }) => rules?.[`claude/${name}`] !== undefined)
-    const strict = rulesOf(plugin.configs.strict)
-    expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
-    expect(strict.filter(isOff)).toEqual(
-      PLUGIN_OFF_RULES.map(({ name }) => ({ [`claude/${name}`]: 'warn' })),
-    )
     expect(plugin.configs.strict.map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
@@ -5162,11 +5155,6 @@ describe('configs', () => {
         (c) => c.name === `claude/recommended/${name}`,
       )
       expect(blocks.map((c) => [c.language, c.files])).toEqual([[language, files]])
-  it('turns each off plugin rule on in strict only, on the files that it reads', () => {
-    for (const { name, files } of PLUGIN_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
-      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
-      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
   })
 
@@ -5257,6 +5245,14 @@ describe('configs', () => {
 
   it('turns each off settings rule on in strict only, on the files that it reads', () => {
     for (const { name, files } of SETTINGS_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('turns each off plugin rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of PLUGIN_OFF_RULES) {
       expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
@@ -5531,7 +5527,5 @@ describe('configs', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
-  it('strict reports the files of recommended, and those of the off rules', async () => {
-    expect(await reports(plugin.configs.strict)).toEqual([...EXPECTED, ...STRICT_ONLY].sort())
   }, 30_000)
 })
