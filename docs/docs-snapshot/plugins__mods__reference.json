@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/mods/reference",
-  "hash": "da442642a2f73be64e881d27d99c15202c37ed7361b2766be6366a0c20efb378",
+  "hash": "662a6a6066a0dade433e1c52e410b300240ea9ccd01b96b79dfa6876be40a71c",
   "blocks": [
     {
       "id": "mods-reference",
@@ -34,8 +34,8 @@
     },
     {
       "id": "prompts-and-what-claude-reads",
-      "hash": "f83828d16e7c8101a1ec8cec9ae1150de3125bd05a89b0d890ee6f381c5829a8",
-      "bodyHash": "3bcfd30ec3dc172dc2e8837ad1b73d04f8ff8565267041a56bb9193562562fa6"
+      "hash": "ae951fedb07f1279ecbe0e845010fba5a2d080eba88d4cf8cc0a192afa7a7564",
+      "bodyHash": "a5f02f60d090a7dc3b495416fc685f5861093071868b3817652c09a2854be407"
     },
     {
       "id": "commands-and-configuration",
