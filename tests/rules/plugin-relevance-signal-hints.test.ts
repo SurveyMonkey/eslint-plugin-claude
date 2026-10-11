@@ -13,7 +13,7 @@ const check = it
 const cliMessage = (entry: string) =>
   `The \`cli\` entry "${entry}" has white space. Claude Code records one command name for each shell command: the first token after any environment variable assignments and \`sudo\`. The entry is an exact match, so it never matches. Write the command name only.`
 const fileMessage = (pattern: string) =>
-  `The \`file\` pattern "${pattern}" starts with \`^\`. Claude Code matches it against the path of a manifest file, which is typically absolute, so it never matches. Anchor the pattern at the end, for example \`[/\\\\]package\\.json$\`.`
+  `The \`file\` pattern "${pattern}" starts with \`^\`. Claude Code matches it against the path of a manifest file, which is typically absolute, so it never matches. Anchor the pattern at the end, for example \`[/\\\\]package\\\\.json$\` in JSON.`
 
 const entryOf = (signals: unknown) => ({
   name: 'tf',

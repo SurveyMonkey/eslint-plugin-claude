@@ -142,6 +142,8 @@ describe(RULE, () => {
     ['a name that holds cp', `mycp a ${ROOT}/b`],
     ['an assignment alone', `X=${ROOT}`],
     ['cp with flags only', 'cp -r'],
+    ['a program named like an Object member', 'constructor install'],
+    ['a program named toString', 'toString'],
   ])('stays silent for %s', (_title, command) => {
     expect(run(command)).toEqual([])
   })

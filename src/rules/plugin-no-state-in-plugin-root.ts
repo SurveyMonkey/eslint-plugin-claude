@@ -23,12 +23,12 @@ const ASSIGNMENT = /^[A-Za-z_][A-Za-z0-9_]*=/
 const TO_LAST = new Set(['cp', 'mv'])
 const TO_ANY = new Set(['tee', 'touch', 'mkdir'])
 // The package managers and the words that install into the folder where they run.
-const INSTALLERS: Readonly<Record<string, readonly string[]>> = {
-  npm: ['install', 'i', 'ci'],
-  yarn: ['install', 'add'],
-  pnpm: ['install', 'i', 'add'],
-  bun: ['install', 'i', 'add'],
-}
+const INSTALLERS: ReadonlyMap<string, readonly string[]> = new Map([
+  ['npm', ['install', 'i', 'ci']],
+  ['yarn', ['install', 'add']],
+  ['pnpm', ['install', 'i', 'add']],
+  ['bun', ['install', 'i', 'add']],
+])
 
 /** The first write under the plugin root in the shell text `text`, as the words that name it, or
  *  undefined when the text has none. */
@@ -44,7 +44,7 @@ function firstWrite(text: string): string | undefined {
     const program = path.posix.basename(words[at] ?? '')
     const args = words.slice(at + 1)
     const targets = args.filter((word) => !word.startsWith('-'))
-    const install = INSTALLERS[program]?.find((word) => args.includes(word))
+    const install = INSTALLERS.get(program)?.find((word) => args.includes(word))
     if (program === 'cd') {
       inRoot = args.some((word) => HAS_ROOT.test(word))
     } else if (TO_LAST.has(program) && HAS_ROOT.test(targets.at(-1) ?? '')) {

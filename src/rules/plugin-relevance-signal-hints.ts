@@ -20,7 +20,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'cli' | 'file' }> = {
     schema: [],
     messages: {
       cli: 'The `cli` entry "{{entry}}" has white space. Claude Code records one command name for each shell command: the first token after any environment variable assignments and `sudo`. The entry is an exact match, so it never matches. Write the command name only.',
-      file: 'The `file` pattern "{{pattern}}" starts with `^`. Claude Code matches it against the path of a manifest file, which is typically absolute, so it never matches. Anchor the pattern at the end, for example `[/\\\\]package\\.json$`.',
+      file: 'The `file` pattern "{{pattern}}" starts with `^`. Claude Code matches it against the path of a manifest file, which is typically absolute, so it never matches. Anchor the pattern at the end, for example `[/\\\\]package\\\\.json$` in JSON.',
     },
   },
   create(context) {
