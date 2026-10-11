@@ -181,3 +181,25 @@ export const HANDLER_FIELDS: Readonly<Record<HandlerType, readonly string[]>> = 
   prompt: ['prompt', 'model', 'continueOnBlock'],
   agent: ['prompt', 'model'],
 }
+
+// The events that run an agent hook. Source: the hooks reference, "Agent-based hooks"
+// (https://code.claude.com/docs/en/hooks#agent-based-hooks), checked on 2026-10-10. Agent hooks run on the
+// events that run prompt hooks, except `PermissionRequest`. The list of those events is in "Prompt-based
+// hooks" (https://code.claude.com/docs/en/hooks#prompt-based-hooks), which `hooks-handler-type-event-support`
+// cites. `PermissionDenied` is also not in this list: Claude Code runs an agent hook there and discards
+// its output. Review this section on or before 2027-04-10.
+
+/** The events whose agent hooks Claude Code runs and acts on. */
+export const AGENT_HOOK_EVENTS: readonly string[] = [
+  'UserPromptSubmit',
+  'UserPromptExpansion',
+  'PreToolUse',
+  'PostToolUse',
+  'PostToolUseFailure',
+  'PostToolBatch',
+  'SubagentStop',
+  'TaskCreated',
+  'TaskCompleted',
+  'Stop',
+  'TeammateIdle',
+]

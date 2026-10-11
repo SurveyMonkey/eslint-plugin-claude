@@ -132,6 +132,41 @@ export function stringOf(node: HObject, key: string): string | undefined {
   return value?.kind === 'string' ? value.value : undefined
 }
 
+/** A location for a node that has no place in a file, such as a node that is read from a file
+ *  that the rule does not lint. */
+const NOWHERE: Loc = { start: { line: 1, column: 1 }, end: { line: 1, column: 1 } }
+
+/** The node for a parsed JSON value. The location of each node is `NOWHERE`. A rule uses it to read the
+ *  hooks of a file that it does not lint with `groupsOf` and `handlersOf`. A value that JSON does not
+ *  have, such as a missing key, gives a node of kind `other`. */
+export function fromData(value: unknown): HNode {
+  if (Array.isArray(value)) {
+    return { kind: 'array', loc: NOWHERE, items: value.map(fromData) }
+  }
+  switch (typeof value) {
+    case 'string':
+      return { kind: 'string', loc: NOWHERE, value }
+    case 'number':
+      return { kind: 'number', loc: NOWHERE, value }
+    case 'boolean':
+      return { kind: 'boolean', loc: NOWHERE, value }
+    case 'object':
+      return value === null
+        ? { kind: 'null', loc: NOWHERE }
+        : {
+            kind: 'object',
+            loc: NOWHERE,
+            members: Object.entries(value).map(([key, member]) => ({
+              key,
+              keyLoc: NOWHERE,
+              value: fromData(member),
+            })),
+          }
+    default:
+      return { kind: 'other', loc: NOWHERE }
+  }
+}
+
 function fromJson(node: ValueNode): HNode {
   switch (node.type) {
     case 'Object':
@@ -318,4 +353,10 @@ export function handlersOf(source: HookSource): HookHandler[] {
   return groupsOf(source).flatMap(({ event, matcher, handlers }) =>
     handlers.map((handler) => ({ source, event, matcher: matcher?.value, handler })),
   )
+}
+
+/** The member of the `hooks` object of `source` that holds the event `event`, or undefined. It gives
+ *  the location of the event name. */
+export function eventMember(source: HookSource, event: string): HMember | undefined {
+  return source.hooks?.kind === 'object' ? memberOf(source.hooks, event) : undefined
 }
