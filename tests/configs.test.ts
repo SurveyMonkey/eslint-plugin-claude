@@ -16,6 +16,7 @@ const pluginRoot = `\${CLAUDE_PLUGIN_ROOT}`
 const pluginData = `\${CLAUDE_PLUGIN_DATA}`
 const projectDir = `\${CLAUDE_PROJECT_DIR}`
 const userConfigRef = `./run.sh \${user_config.token}`
+const tokenRef = `Use \${user_config.token}\n`
 const badHooks = JSON.stringify({ hooks: { preToolUse: [] } })
 /** A hooks object with one command hook. */
 const hookOf = (command: string) => ({
@@ -634,6 +635,50 @@ const TREE: Record<string, string> = {
   'plugins/env2/monitors/monitors.json': JSON.stringify([
     { name: 'm', description: 'd', command: 'tail -F $CLAUDE_PLUGIN_DATA/log' },
   ]),
+  // A marketplace in a repository with a `.git`, and a plugin that depends on a name that the
+  // marketplace does not list.
+  'packages/cxd/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/cxd/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'cx',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'dep', source: './plugins/dep' },
+      { name: 'pkg', source: { source: 'npm', package: '@acme/pkg' } },
+    ],
+  }),
+  'packages/cxd/plugins/dep/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'dep',
+    dependencies: ['ghost'],
+  }),
+  // A plugin that the marketplace serves from npm, with a `package.json` and no shrinkwrap.
+  'packages/cxd/plugins/pkg/.claude-plugin/plugin.json': JSON.stringify({ name: 'pkg' }),
+  'packages/cxd/plugins/pkg/package.json': '{}',
+  // A monitor that starts when a skill runs, in the manifest and in the default file. The plugin
+  // has no such skill.
+  'plugins/msk/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'msk',
+    monitors: [{ name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' }],
+  }),
+  'plugins/msk2/.claude-plugin/plugin.json': JSON.stringify({ name: 'msk2' }),
+  'plugins/msk2/monitors/monitors.json': JSON.stringify([
+    { name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' },
+  ]),
+  // A plugin that sets `agent` in the manifest and in a root `settings.json`.
+  'plugins/set/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'set',
+    settings: { agent: 'a' },
+  }),
+  'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
+  // A reference to a sensitive option in a skill and an agent of a plugin. A command is not read.
+  'plugins/sen/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'sen',
+    userConfig: {
+      token: { type: 'string', title: 'T', description: 'D', sensitive: true },
+    },
+  }),
+  'plugins/sen/skills/s/SKILL.md': `---\nname: s\n---\n\n${tokenRef}`,
+  'plugins/sen/agents/a.md': `---\nname: a\ndescription: d\n---\n\n${tokenRef}`,
+  'plugins/sen/commands/c.md': tokenRef,
   // A repository with a `.git`, because the rule counts the directories below the repository.
   // The same plugin below `plugins/` is a decoy. A tree with no `.git` gets no report.
   'packages/ppl/.git/HEAD': 'ref: refs/heads/main\n',
@@ -2844,6 +2889,18 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json'],
     severity: 'warn',
   },
+  { name: 'plugin-dependencies-resolve', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-monitors-skill-exists',
+    files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
+  },
+  { name: 'plugin-npm-source-shrinkwrap', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-settings-single-source', files: ['**/.claude-plugin/plugin.json'] },
+  {
+    name: 'plugin-user-config-sensitive-in-content',
+    language: 'markdown/gfm',
+    files: ['**/SKILL.md', '**/agents/**/*.md'],
+  },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -3108,6 +3165,8 @@ const EXPECTED = [
   'packages/ppl/.claude/plugins/p/.claude-plugin/plugin.json: claude/plugin-no-project-plugins-dir@2',
   'plugins/cmd/.claude-plugin/plugin.json: claude/plugin-commands-dir-nonempty@2',
   'plugins/lfs/.claude-plugin/plugin.json: claude/plugin-no-git-lfs@2',
+  'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',
+  'plugins/msk2/monitors/monitors.json: claude/plugin-monitors-skill-exists@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
   'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
   'plugins/bare/commands/c.md: claude/command-legacy-format@1',
@@ -3124,6 +3183,8 @@ const EXPECTED = [
   'plugins/ucf/.mcp.json: claude/mcp-headershelper-path@1',
   'plugins/ucf/hooks/hooks.json: claude/plugin-user-config-no-shell-fields@2',
   'plugins/ucf/monitors/monitors.json: claude/plugin-user-config-no-shell-fields@2',
+  'packages/cxd/plugins/dep/.claude-plugin/plugin.json: claude/plugin-dependencies-resolve@2',
+  'packages/cxd/plugins/pkg/.claude-plugin/plugin.json: claude/plugin-npm-source-shrinkwrap@2',
   ...(LINKS
     ? [
         'packages/l/site/plugins/m/.claude-plugin/plugin.json: claude/plugin-symlink-escapes-marketplace@2',
@@ -3134,6 +3195,12 @@ const EXPECTED = [
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
   'plugins/shadow/commands/c.md: claude/skill-description-present@1',
+  'plugins/set/.claude-plugin/plugin.json: claude/plugin-settings-single-source@2',
+  'plugins/sen/agents/a.md: claude/plugin-user-config-sensitive-in-content@2',
+  'plugins/sen/commands/c.md: claude/command-legacy-format@1',
+  'plugins/sen/commands/c.md: claude/skill-description-present@1',
+  'plugins/sen/skills/s/SKILL.md: claude/plugin-user-config-sensitive-in-content@2',
+  'plugins/sen/skills/s/SKILL.md: claude/skill-description-present@1',
   'plugins/skl/.claude-plugin/plugin.json: claude/plugin-skill-dir-layout@2',
   'plugins/skl/skills/loose.md: claude/skill-file-layout@2',
   'plugins/p/SKILL.md: claude/skill-plugin-root-shadowed@2',
@@ -5010,7 +5077,7 @@ describe('configs', () => {
     expect(own.length).toBeGreaterThan(0)
     for (const report of own) {
       expect(report).toMatch(
-        /^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/(?:p|ts|bare)\/agents\//,
+        /^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/(?:p|ts|bare|sen)\/agents\//,
       )
     }
   }, 30_000)

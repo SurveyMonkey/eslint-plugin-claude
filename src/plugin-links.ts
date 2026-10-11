@@ -59,7 +59,7 @@ export function placeOf(
  *  link with no target, or a link out of the repository. It can also fail to
  *  read. A file that does not parse still marks its folder, because the rule
  *  needs only the place. The catalog need not list the plugin. */
-function marketplaceRootOf(plugin: Plugin): string | undefined {
+export function marketplaceRootOf(plugin: Plugin): string | undefined {
   for (let at = plugin.realRoot; ; at = path.dirname(at)) {
     const found = readJson(path.join(at, '.claude-plugin', 'marketplace.json'), plugin.bound)
     if (found === UNREADABLE) {

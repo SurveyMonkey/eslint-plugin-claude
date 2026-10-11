@@ -5,6 +5,9 @@
 // 2027-04-10, the `stale_after` date of docs/rules/plugin-manifest-location.md.
 // The second list is the "How each key combines with its default location"
 // section (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location).
+// The third list is the "Default settings" section of the components page
+// (https://code.claude.com/docs/en/plugins/components#default-settings), checked on Claude Code
+// 2.1.296 on 2026-10-10.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -42,3 +45,8 @@ export const REPLACED_DEFAULTS: readonly {
   { key: ['experimental', 'themes'], folder: 'themes' },
   { key: ['experimental', 'monitors'], folder: 'monitors' },
 ]
+
+/** The settings keys that take effect when a plugin sets them, in a root
+ *  `settings.json` or in the manifest key `settings`. Claude Code drops every
+ *  other key. */
+export const PLUGIN_SETTINGS_KEYS: readonly string[] = ['agent', 'subagentStatusLine']

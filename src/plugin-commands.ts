@@ -48,14 +48,19 @@ export function pluginFileOf(file: string): { role: FileRole; plugin: Plugin } |
   return entry === undefined || plugin === undefined ? undefined : { role: entry.role, plugin }
 }
 
-/** The string commands in a monitors array: the `command` of each object. */
-function monitorsOf(value: ValueNode | undefined): PluginCommand[] {
+/** The string members `key` of the objects in a monitors array. */
+function monitorFields(value: ValueNode | undefined, key: string): StringNode[] {
   return value?.type !== 'Array'
     ? []
     : value.elements.flatMap(({ value: entry }) => {
-        const command = lastMember(entry, 'command')?.value
-        return command?.type === 'String' ? [{ kind: 'monitor' as const, node: command }] : []
+        const member = lastMember(entry, key)?.value
+        return member?.type === 'String' ? [member] : []
       })
+}
+
+/** The string commands in a monitors array: the `command` of each object. */
+function monitorsOf(value: ValueNode | undefined): PluginCommand[] {
+  return monitorFields(value, 'command').map((node) => ({ kind: 'monitor' as const, node }))
 }
 
 /** The shell-form command hooks of an event map. A hook is in shell form when it
@@ -144,5 +149,25 @@ export function commandsOf(
       return serversOf(lastMember(body, 'mcpServers')?.value)
     case 'monitors':
       return replacesMonitorsFile(plugin) ? [] : monitorsOf(body)
+  }
+}
+
+/** The `when` strings of the monitors of the file with the role `role` and the
+ *  plugin `plugin`, in file order. A hook file and an MCP file have none. A
+ *  monitors file that a manifest key replaces has none. */
+export function whensOf(role: FileRole, document: DocumentNode, plugin: Plugin): StringNode[] {
+  const body = document.body
+  switch (role) {
+    case 'manifest': {
+      const experimental = lastMember(body, 'experimental')?.value
+      return [
+        ...monitorFields(lastMember(experimental, 'monitors')?.value, 'when'),
+        ...monitorFields(lastMember(body, 'monitors')?.value, 'when'),
+      ]
+    }
+    case 'monitors':
+      return replacesMonitorsFile(plugin) ? [] : monitorFields(body, 'when')
+    default:
+      return []
   }
 }
