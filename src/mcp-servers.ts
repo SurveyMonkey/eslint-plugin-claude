@@ -69,3 +69,20 @@ export function lastMembers(members: readonly MemberNode[]): MemberNode[] {
   }
   return members.filter((member) => last.get(keyOf(member.name)) === member)
 }
+
+/** The string declarations in the `mcpServers` member of a `plugin.json` whose top-level value is
+ *  `manifest`: the value when it is a string, and each string item when it is an array. The docs
+ *  give a path to a `.json` file, a path or URL of an MCP bundle, and an inline map, and an array
+ *  can mix them. An inline map is not a string, so it is not in the result. Of two `mcpServers`
+ *  members, only the last counts, as `JSON.parse` keeps the last.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers) */
+export function declaredMcpStrings(manifest: ValueNode): Extract<ValueNode, { type: 'String' }>[] {
+  const declared = lastMember(manifest, 'mcpServers')?.value
+  if (declared === undefined) {
+    return []
+  }
+  const items = declared.type === 'Array' ? declared.elements.map(({ value }) => value) : [declared]
+  return items.filter(
+    (item): item is Extract<ValueNode, { type: 'String' }> => item.type === 'String',
+  )
+}

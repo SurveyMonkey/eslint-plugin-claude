@@ -1,0 +1,169 @@
+{
+  "url": "https://code.claude.com/docs/en/managed-mcp",
+  "hash": "45a53673fa9e07f69610a79437bb4c0cc477090311097772bf740c0e7dbbb6ad",
+  "blocks": [
+    {
+      "id": "control-mcp-server-access-for-your-organization",
+      "hash": "8b681a94556c5826cb88cfa15f46c4f03ea707d425f3cb397f59750c0a497bd5",
+      "bodyHash": "10710a6596020d14639443bc906e5e0e4ef5531554841ed6fe4fd8e217b43fe7"
+    },
+    {
+      "id": "choose-a-pattern",
+      "hash": "a93e94327b70579268b642d9d3127021296085ed585c0f3e91d3be280e7ee00b",
+      "bodyHash": "86597a7ffccbc8f691b38b4912bd3edeaf377396f35774f47cae3d939562cdce"
+    },
+    {
+      "id": "exclusive-control-with-managed-mcp-json",
+      "hash": "ac2d72806f3c6b13d020a3db13ccb7826116286f75e6878baffe8e451b62d7ee",
+      "bodyHash": "5fd1fb0a101885138aae88faec8733cc080e2f218517a2937700b6392098e9d2"
+    },
+    {
+      "id": "deploy-managed-mcp-json",
+      "hash": "69d9fe59b8186fd22ef47148b8aa7a7c85c99d25d779c7fe9d7d6ccff77009cf",
+      "bodyHash": "4eb2c4ac2b28d5fa78e841ec0f3f9b1296b42385225577d0a32d3048e0ee1684"
+    },
+    {
+      "id": "authenticate-with-per-user-credentials",
+      "hash": "c8f77058987dd077575b7734a3e36ac3c05787a68ba4eec5a3cc47559aa80697",
+      "bodyHash": "c5da31a65b2fcbab06fb39c9ece575237c9b70ef0f98e40f679c54a91faf2b65"
+    },
+    {
+      "id": "servers-passed-with---mcp-config-or---strict-mcp-config",
+      "hash": "bfaf8c5d4433ab2915e3254fb42168a7704fbc6e9e0dee307e117d3bc0e96517",
+      "bodyHash": "0c615d0ac505b011230a70b87557bc091b3e969cf5ddd7c2f919d45248db75a9"
+    },
+    {
+      "id": "how-allowlists-and-denylists-apply-to-the-managed-set",
+      "hash": "74b6eba8a45683de99c6daf6db2032f488c2a842ed5f113feb52e6988e96d41f",
+      "bodyHash": "e01efbc1ddf8be793576516c1a970d91345d0f16d3e068a37dd21f052ab23d97"
+    },
+    {
+      "id": "validate-the-configuration",
+      "hash": "46e32a6b5fcf773f9678a0cf8e2eaae8ccd87281004715ce091f71e44869f9bb",
+      "bodyHash": "1106a503445ff4bfb2ac4470e4e91ec89cdd4759cee6db4402ef5bfe751af69e"
+    },
+    {
+      "id": "disable-mcp-entirely",
+      "hash": "42b0ab22b0c6fea745c44350765c16ac84c980d29ae31f420594a2d480209bb5",
+      "bodyHash": "6bca0041866d2320c47b0260df18779ec6941a50abc833e7a0024357444a67de"
+    },
+    {
+      "id": "allow-claude-ai-connectors-alongside-the-managed-set",
+      "hash": "cc3a998b7fde83bc47efb5f51731949f79c218eb742755a00e4817b3a361a6a9",
+      "bodyHash": "ad774f7cba13dcf0560162b240d638d34176305430ad86067d3285815cfd773c"
+    },
+    {
+      "id": "allow-claude-in-chrome-alongside-the-managed-set",
+      "hash": "27874af43bdf3578d319a3c027604dc2221676dcb59935177c491b5dea55486d",
+      "bodyHash": "69743939ade0a7133f73d86753996644db00859377637bd14f677e30bf959647"
+    },
+    {
+      "id": "provide-servers-through-managed-settings",
+      "hash": "20be94a7ff43e277e4b14a0153c69041bf76347410a5ac199d77000e3e4314bf",
+      "bodyHash": "c0da0ef5c81c090260f1abc81d9af072499c2eb7fdb413b81ea312b22e3308fc"
+    },
+    {
+      "id": "what-an-entry-can-contain",
+      "hash": "e5b712c2002f398d3c0c2ff68af5367aed555d07cd9759d7c737d5aa6d236d79",
+      "bodyHash": "c12624692bf6265b9262fa249b2d8ab04ab9bc7aa1567d42825c61b804bdf634"
+    },
+    {
+      "id": "how-provided-servers-load",
+      "hash": "4415ba46073ae21b4766f22ae9fe0705ca035f3406da5b3dd7c8b36a542153d1",
+      "bodyHash": "249a611e7efccfe1b370f18c13b5535c92e941272aed40862c8efa7a6282e583"
+    },
+    {
+      "id": "what-users-can-see-and-change",
+      "hash": "ecc028fc77a03089d36b01cebff86772de89be42bfdf9e69c8bf9d1e10cf32f0",
+      "bodyHash": "1b55f475111c145e6c5c29e69a813fb21ba4509987d2fea3516796ed0167a067"
+    },
+    {
+      "id": "where-managedmcpservers-applies",
+      "hash": "166c1e3b50abeeb50b72f8228703aecc83f035036a92fa7f635eab19056848ef",
+      "bodyHash": "5e99131afa314ddc56a877be98b6f9f7f1becec589a83edd0409819e46794292"
+    },
+    {
+      "id": "when-provided-servers-connect",
+      "hash": "bebc883f27ece1f4471094daf047cfcb95fe4d77f7b0d9cb0758844b2112e490",
+      "bodyHash": "9a7d11bd2762514607b1fe292664be2818ea212e3236456d3c792327b8cd0957"
+    },
+    {
+      "id": "policy-based-control-with-allowlists-and-denylists",
+      "hash": "648980ccfb31aae117ad362729596b33b36248344fbd86d1c57324eaf6a991c8",
+      "bodyHash": "de9c5439ea950efeb679be89712ab8b8c9138937dc59df3e6e00642577bb5f76"
+    },
+    {
+      "id": "match-servers-by-url-command-or-name",
+      "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c",
+      "bodyHash": "507bad9d6a336104b0418fa05ed731f815a6022315171e4ee3a05827d1193ed9"
+    },
+    {
+      "id": "how-servername-entries-match",
+      "hash": "5ee30752e3cdc17b0b7efee043509e138766c2fc917eb60dadd1d7a3aa75fdb6",
+      "bodyHash": "e20a39a9d8fb34f63982b31f26af5eb23c58a556cda8923b8ac9f620451a1f69"
+    },
+    {
+      "id": "how-servercommand-entries-match",
+      "hash": "e5888ae62f3566c069e288755df8ae20f36ce7820543d7f72f3e9de05ac00275",
+      "bodyHash": "ec93cf0dc442d87ff8fd7508970d1196253a12e1df6da1b5318b742b0064c144"
+    },
+    {
+      "id": "how-serverurl-entries-match",
+      "hash": "f9c4088b626a08227855eaf229527585646372ee75f76dd69d828ad5260a3b4a",
+      "bodyHash": "3ad20770de86dcacc2c8ed2293df0b5ba8067345bdf94cb6ccf305fd53acb0d0"
+    },
+    {
+      "id": "how-policy-entries-expand",
+      "hash": "06f370f066111673b25f981f174fc4232cf2f69e5e7c45a2cfe07222146fd1ca",
+      "bodyHash": "88d0136b50da77aab932f928af28b9d102a05589558cd17fbdad09df9c2726f4"
+    },
+    {
+      "id": "how-a-server-is-evaluated",
+      "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb",
+      "bodyHash": "a7740c4d6c1d79aff8500cf3f5ab54a6a280a906d02b48a462d42d4a8b46b617"
+    },
+    {
+      "id": "servers-that-skip-the-allowlist-check",
+      "hash": "a657f99dc10f070e490a1cad4aa4520c4a36895aea8c700fd179f2e535200d06",
+      "bodyHash": "e49250fb06c7d6f64fe246f3df528f89fb47e6babcf50df30d2663fae8ff4129"
+    },
+    {
+      "id": "example-configuration",
+      "hash": "98bf92d06d77f89d36abc68e4d6697ae4b6f00b8ef96fff67c5080ddf51f2fc8",
+      "bodyHash": "fb22c4712d24ea75b839b5412d80039fe8d640127573f09081f35f64f82a984a"
+    },
+    {
+      "id": "restrict-the-allowlist-to-managed-settings-only",
+      "hash": "40d7714f510c071e7d11d43e5688a53fe66d807a5b7e637131d033c246d2cb89",
+      "bodyHash": "2dc6771071eb70533a4dfcaa0ab5ff906cc5aac4c62f6b4e97df4ff56e26b421"
+    },
+    {
+      "id": "how-restrictions-appear-to-users",
+      "hash": "4ceefa8f5c58fbcf666d1af51a1b979ceb873cb40f3ac2a559a6dce6acf4f4b0",
+      "bodyHash": "70fd217b5e0c9669e596ab417af439eabaebeb403c122ce1632242c84d8c8a45"
+    },
+    {
+      "id": "monitor-mcp-usage",
+      "hash": "dcfa080de0d4d42aae69d47e0e4db975b19e8c20b17a68eca8a8770a8e6e51c5",
+      "bodyHash": "4d696d7b584f9a38aa78c3ec971736f214968630b5d3a6e2f5273a6755947462"
+    },
+    {
+      "id": "configuration-summary",
+      "hash": "d934c154eedfeb0eb425eb5b117adecf456b8c643e257c98c18c25673971559a",
+      "bodyHash": "6262d970af2ed706811825f9a4811611770908d6d9bac468c94efeda6bc5a764"
+    },
+    {
+      "id": "related-resources",
+      "hash": "09ece822be8b9ca02663f45483a91e5581adec5ba78aae2aa4fe11937ae7f8f2",
+      "bodyHash": "0ed88ad240da431569791dec627be290e1cdaaa5d55de347fbe9deb991131015"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Match servers by URL, command, or name",
+      "id": "match-servers-by-url-command-or-name",
+      "hash": "3470472e8eccbf40d25b67baddce37ddfb65a556008e2951e82081e1d2d8216c",
+      "text": "### Match servers by URL, command, or name\n\n`allowedMcpServers` and `deniedMcpServers` are lists of entries. Each entry is an object with a single key that identifies servers by their URL, their command, or their name:\n\n| Key | Matches | Use for |\n| :- | :- | :- |\n| `serverUrl` | A remote server URL, exact or with `*` wildcards | HTTP and SSE servers |\n| `serverCommand` | The exact command and arguments that start a stdio server | Stdio servers |\n| `serverName` | The user-assigned label. Exact match only; wildcards are not expanded | Either type, but see [How `serverName` entries match](#how-servername-entries-match) |\n\nLeaving `allowedMcpServers` unset is different from setting it to an empty array:\n\n| Setting | Unset (default) | Empty array `[]` | Populated |\n| :- | :- | :- | :- |\n| `allowedMcpServers` | All servers allowed | No servers allowed, apart from [those that skip the allowlist check](#servers-that-skip-the-allowlist-check) | Only matching servers allowed, apart from [those that skip the allowlist check](#servers-that-skip-the-allowlist-check) |\n| `deniedMcpServers` | No servers blocked | No servers blocked | Matching servers blocked |\n\nSee [Invalid entries in managed settings](/docs/en/managed-settings#invalid-entries-in-managed-settings) for what happens when an entry fails schema validation."
+    }
+  ]
+}
