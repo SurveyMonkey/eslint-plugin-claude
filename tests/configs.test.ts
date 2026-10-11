@@ -1334,12 +1334,12 @@ const SCOPE_RULES = [
   { name: 'settings-model-list', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-skilloverrides-key', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-shadowed', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   // The git layer of #10, #11 and #14. The rules that read the index mode need a repository.
   { name: 'hooks-script-exists', files: HOOKS_FILES },
   { name: 'hooks-script-executable', files: HOOKS_FILES },
   { name: 'plugin-bin-executable', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'statusline-script-exists', files: [...PROJECT_FILES, ...MANAGED_FILES] },
-  { name: 'settings-schema', files: [...PROJECT_FILES, ...MANAGED_FILES] },
 ]
 
 // The rules of #11, #13 and #14 that ask git whether a file is tracked or ignored, in the order of
@@ -1787,6 +1787,8 @@ const EXPECTED = [
   'packages/re/.claude/rules/noextension: claude/rules-md-extension@2',
   // `memory-settings-schema` reads the project and managed files, and no other file.
   'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
+  // `settings-schema` also reports the wrong type of `autoMemoryEnabled`.
+  'packages/ms/.claude/settings.json: claude/settings-schema@2',
   'packages/ms/.claude/settings.local.json: claude/memory-settings-schema@2',
   'packages/ms/managed-settings.json: claude/memory-settings-schema@2',
   'packages/ms/managed-settings.d/10-a.json: claude/memory-settings-schema@2',

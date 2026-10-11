@@ -336,6 +336,7 @@ const modules = [
   settingsModelList,
   settingsSkilloverridesKey,
   settingsEnvShadowed,
+  settingsSchema,
   hooksScriptExists,
   hooksScriptExecutable,
   pluginBinExecutable,
@@ -388,7 +389,6 @@ const modules = [
   memoryIndexEntryFormat,
   memoryTopicFrontmatter,
   rulesPathsNoMatch,
-  settingsSchema,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -551,6 +551,7 @@ const recommended: Record<RuleName, Severity> = {
   'settings-model-list': 'error',
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
+  'settings-schema': 'error',
   'hooks-script-exists': 'error',
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',
@@ -603,7 +604,6 @@ const recommended: Record<RuleName, Severity> = {
   'memory-index-entry-format': 'off',
   'memory-topic-frontmatter': 'off',
   'rules-paths-no-match': 'off',
-  'settings-schema': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
