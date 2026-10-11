@@ -212,6 +212,12 @@
       "text": "### Executables\n\nFiles in `bin/` at the plugin root are on the `PATH` of the Bash tool's shell while the plugin is enabled, so Claude can run them as bare commands. Add an executable script:\n\n```bash bin/hello-plugin theme={null}\n#!/bin/bash\necho \"hello from my-plugin\"\n```\n\nMake it executable with `chmod +x bin/hello-plugin` and load the plugin. When you ask Claude to run `hello-plugin`, the Bash tool result shows the script's output.\n\nPlugin `bin/` directories come after the user's own `PATH` entries, so a plugin can't shadow `git`, `ls`, or another system command.\n\nclaude.ai and Cowork don't install a plugin that has a top-level `bin/` directory, including one you [distribute through claude.ai organization settings](https://claude.com/docs/plugins/org-sync#keep-executables-out-of-the-top-level-bin-directory)."
     },
     {
+      "heading": "Channels",
+      "id": "channels",
+      "hash": "eb0e80e27d22500287150337d4c09956ed1dbf2a824e04449335e6b54ba9d141",
+      "text": "### Channels\n\nA [channel](/docs/en/channels) lets an outside system such as a chat app send messages into a session. In a plugin, a channel is one of the MCP servers plus a `channels` entry that binds to it and can prompt for its own configuration. This manifest binds a channel to a `telegram` server and asks for a bot token:\n\n```json .claude-plugin/plugin.json theme={null}\n{\n  \"name\": \"my-plugin\",\n  \"mcpServers\": {\n    \"telegram\": {\n      \"command\": \"node\",\n      \"args\": [\"${CLAUDE_PLUGIN_ROOT}/server.js\"],\n      \"env\": { \"BOT_TOKEN\": \"${user_config.bot_token}\" }\n    }\n  },\n  \"channels\": [\n    {\n      \"server\": \"telegram\",\n      \"userConfig\": {\n        \"bot_token\": {\n          \"type\": \"string\",\n          \"title\": \"Bot token\",\n          \"description\": \"Telegram bot token\",\n          \"sensitive\": true\n        }\n      }\n    }\n  ]\n}\n```\n\n`server` must match a key in `mcpServers`. The per-channel `userConfig` takes the same shape as the [top-level `userConfig` key](#user-configuration).\n\nFor what the server must implement and how users enable a channel plugin, see [Package as a plugin](/docs/en/channels-reference#package-as-a-plugin) in the channels reference. For the field table, see [`channels`](/docs/en/plugins/manifest-reference#channels)."
+    },
+    {
       "heading": "Monitors",
       "id": "monitors",
       "hash": "5c7420c3f171f17b95bbc1c1bd21abeeed3f978ecff4c46b572a740d1d2e01fd",
