@@ -4,75 +4,93 @@
   "blocks": [
     {
       "id": "configure-your-terminal-for-claude-code",
-      "hash": "c9faf15bbd2dd4b2b61a892807755553c9d2339882110427eccd0243995b8d86"
+      "hash": "c9faf15bbd2dd4b2b61a892807755553c9d2339882110427eccd0243995b8d86",
+      "bodyHash": "b1f1de10f258b731dc5feb20d766df44a49373d7f9e37718a65ddf013d3f1435"
     },
     {
       "id": "enter-multiline-prompts",
-      "hash": "5b7b180ac4a8dee5f45a253f23220053e29e78c83ef9f7d808e657f33d2cdba8"
+      "hash": "5b7b180ac4a8dee5f45a253f23220053e29e78c83ef9f7d808e657f33d2cdba8",
+      "bodyHash": "2a1ccba862cdc4c52e9787dee82e1ce6af33b34a108350bf5346e56bcac4e2da"
     },
     {
       "id": "enable-option-key-shortcuts-on-macos",
-      "hash": "664d507f2eb5d714df90b4d625efb2f639a8fc2c32178966fa82b006f0995adf"
+      "hash": "664d507f2eb5d714df90b4d625efb2f639a8fc2c32178966fa82b006f0995adf",
+      "bodyHash": "ae61441a7cc3b7f74fcc308cb776bf9c62cb9556c1fe292f8681f4a5cd70ce80"
     },
     {
       "id": "get-a-terminal-bell-or-notification",
-      "hash": "ad2c4650afc4cc7207e41c5483d4c3d81eb9f3e9249ef757397ee21d72bae3ef"
+      "hash": "ad2c4650afc4cc7207e41c5483d4c3d81eb9f3e9249ef757397ee21d72bae3ef",
+      "bodyHash": "5785530e4b059c5e58e598787a16f85a44e1dfa73651b577ddffe3e4f5c972b3"
     },
     {
       "id": "play-a-sound-with-a-notification-hook",
-      "hash": "b293feb7d5abb19c5724484dee90da9e76119c767f2d36cab2c48188abdef55d"
+      "hash": "b293feb7d5abb19c5724484dee90da9e76119c767f2d36cab2c48188abdef55d",
+      "bodyHash": "c4a4c108b5222df462b018d9b9b69b4a0dabc9a9245bba435c304646ed703fb8"
     },
     {
       "id": "see-session-status-in-your-terminal",
-      "hash": "78cd0e0f3d4f72f8611a6c9c5e065d704a7ec1e991d8f4da09853f18c9753263"
+      "hash": "78cd0e0f3d4f72f8611a6c9c5e065d704a7ec1e991d8f4da09853f18c9753263",
+      "bodyHash": "233d567400a946b76224e6af67e31003f4814fa69be49c89f6f8e31e13e8dc34"
     },
     {
       "id": "configure-tmux",
-      "hash": "d56b93963bbba337cd1132a7dac483c8b2328396adc9486dba4d028c9087a2d3"
+      "hash": "d56b93963bbba337cd1132a7dac483c8b2328396adc9486dba4d028c9087a2d3",
+      "bodyHash": "eb32bc44bc8fed4da098e3340f16e33b870c8118bdc66cbf9df01df8aa3c4610"
     },
     {
       "id": "fix-backspace-deleting-a-whole-word-on-windows",
-      "hash": "2a490355b268367674198d26f3a3c9f6fe8d1ef9e1923469b36fe8f85b05b6cf"
+      "hash": "2a490355b268367674198d26f3a3c9f6fe8d1ef9e1923469b36fe8f85b05b6cf",
+      "bodyHash": "281b1800919c613e8b0fb3429f49ea58c83d6dca80633281bc65bdecd9c0ad4d"
     },
     {
       "id": "match-the-color-theme",
-      "hash": "977248396f52eff162e73db313ecb741b9317c3bc3a1894bbba1fd9ec20e2a00"
+      "hash": "977248396f52eff162e73db313ecb741b9317c3bc3a1894bbba1fd9ec20e2a00",
+      "bodyHash": "cf0e68a0cc0e25d5b4dd0c88d3e917b93589afc36e17702172f155fda209fbb5"
     },
     {
       "id": "create-a-custom-theme",
-      "hash": "d703916c26837c686ee32a41aca398d321b89499a1d4135e44765881313e5157"
+      "hash": "d703916c26837c686ee32a41aca398d321b89499a1d4135e44765881313e5157",
+      "bodyHash": "0b3e709597d0790be16bf5162607787e5195efd6f4efc22ab156e946ffc9ae8f"
     },
     {
       "id": "switch-to-fullscreen-rendering",
-      "hash": "06c4ebc05804bbc442ab2a457c49ec549f4d652b74217e7f7700e3d2d386529c"
+      "hash": "06c4ebc05804bbc442ab2a457c49ec549f4d652b74217e7f7700e3d2d386529c",
+      "bodyHash": "e31d2d169111b91402cf394f8857fc8896d9df7275cbbd12ea0f4a079e789298"
     },
     {
       "id": "cap-response-width-in-wide-terminals",
-      "hash": "f9f496c4772635e9dab92fa3eeef5e89f9f7e206be53471c1c608762d32ff77f"
+      "hash": "f9f496c4772635e9dab92fa3eeef5e89f9f7e206be53471c1c608762d32ff77f",
+      "bodyHash": "7bc784dbb6da8169a30dafdb587f32d1a295ceb7097c651a4378f6a813f470b5"
     },
     {
       "id": "paste-large-content",
-      "hash": "34c057957cf8d3a8b0bf32ce4f8a9dc38d74115e58253b7bfd02a0395fa85b19"
+      "hash": "34c057957cf8d3a8b0bf32ce4f8a9dc38d74115e58253b7bfd02a0395fa85b19",
+      "bodyHash": "428dfb8dcb0c293374a7012fb5f8d1cf87ac5c880542e478da1714e7a95d3877"
     },
     {
       "id": "how-claude-treats-pasted-text",
-      "hash": "d9b84384a848522af45e3d4fc0b8b3abb7a54ce3cc4add41e4a6038bd5d2a895"
+      "hash": "d9b84384a848522af45e3d4fc0b8b3abb7a54ce3cc4add41e4a6038bd5d2a895",
+      "bodyHash": "5d1b660e82ea569559338858a136e0582440a46c7b03a645141f605980ce286a"
     },
     {
       "id": "delete-and-restore-a-collapsed-paste",
-      "hash": "8fe6eb7d1a65960245e3c79fd4f986cfe63892e05123e56b382367b510b15359"
+      "hash": "8fe6eb7d1a65960245e3c79fd4f986cfe63892e05123e56b382367b510b15359",
+      "bodyHash": "19a99d183f68df222703f998fe42ad96f1516f25b89428173f16df65733361fa"
     },
     {
       "id": "recall-a-prompt-that-had-pasted-text",
-      "hash": "b5bb53826544340b3c10973d0c09e124692bb20f5a98dc6b3dcaba2a3379650c"
+      "hash": "b5bb53826544340b3c10973d0c09e124692bb20f5a98dc6b3dcaba2a3379650c",
+      "bodyHash": "5af5277b6126ea59342d74f60505740fb31328504d1569c44fc17c98e1e07b7e"
     },
     {
       "id": "edit-prompts-with-vim-keybindings",
-      "hash": "8b60838345892e1517e00dc63fee1f1f58a8999bde30d95cbe3ac9dda854edf8"
+      "hash": "8b60838345892e1517e00dc63fee1f1f58a8999bde30d95cbe3ac9dda854edf8",
+      "bodyHash": "4f2b597f3edbf2a4f24550ebab72160f9c5e12f9bbc6e9358f0424b725dbb9d0"
     },
     {
       "id": "related-resources",
-      "hash": "3eecebb21a78b238c5e83583bfe65a27b8abaac1854055b9c72d24097d3f54b3"
+      "hash": "3eecebb21a78b238c5e83583bfe65a27b8abaac1854055b9c72d24097d3f54b3",
+      "bodyHash": "2f9b8b6eef3ef915684ef1ed571e2d0e7c8a4eca05f6c2cedef0ff800f1bbd83"
     }
   ],
   "sources": [

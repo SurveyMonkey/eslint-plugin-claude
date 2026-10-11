@@ -3296,13 +3296,6 @@
       "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
     }
   ],
-  "plugin-bin-executable": [
-    {
-      "url": "https://code.claude.com/docs/en/plugins/components",
-      "heading": "Executables",
-      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
-    }
-  ],
   "plugin-bin-claude-ai": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -3313,6 +3306,13 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Standard layout",
       "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+    }
+  ],
+  "plugin-bin-executable": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Executables",
+      "hash": "15149ad202eddade15987a5243b541e3f50d8d9077bf41fcc22fb113fde47ad9"
     }
   ],
   "plugin-commands-dir-nonempty": [
