@@ -30,8 +30,8 @@ rule reports at the `command` string. It reads the commands in order, so `exit 1
 report. A message goes to stderr with `>&2`, `1>&2` or `>/dev/stderr`. The text can be a conditional branch,
 because the rule cannot see which branch runs.
 
-The events are those of the list "Exit code 2 behavior per event" that say "Yes" under "Can block?".[^exit2] Three of
-them are not checked:
+The events are those of the list "Exit code 2 behavior per event" that say "Yes" under "Can block?", and
+`PermissionRequest`.[^exit2] Three of them are not checked:
 
 | Event | Why |
 |-------|-----|

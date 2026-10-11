@@ -26,7 +26,7 @@ command prints as a literal, and reports these faults at the `command` string.
 
 | Message | Fault |
 |---------|-------|
-| `level` | `permissionDecision`, `additionalContext` or `updatedInput` at the top level. They belong inside `hookSpecificOutput`.[^wrong-level][^decision] |
+| `level` | `permissionDecision`, `additionalContext` or `updatedInput` at the top level. They belong inside `hookSpecificOutput`. The hooks guide names `permissionDecision` and `additionalContext` only.[^wrong-level][^decision] |
 | `eventName` | A `hookSpecificOutput.hookEventName` that is not the event of the hook |
 | `eventNameMissing` | A `hookSpecificOutput` with no `hookEventName`. The docs say that it "requires a `hookEventName` field set to the event name".[^json-output] |
 | `decision` | A top-level `decision` other than `"block"`. "The only value for `decision` is `"block"`".[^decision] |

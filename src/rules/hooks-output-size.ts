@@ -75,7 +75,7 @@ const rule: Rule.RuleModule = {
     defaultOptions: [{ maxOutputChars: OUTPUT_CAP, maxClassifierChars: CLASSIFIER_CAP }],
     messages: {
       overCap:
-        'The {{what}} has {{length}} characters. Claude Code caps it at {{max}}, saves the text to a file, and passes Claude the file path with a preview of the first 2,000 characters.',
+        'The {{what}} has {{length}} characters. Claude Code caps it at {{max}}, saves the text to a file, and passes Claude the file path with a preview of up to the first 2,000 characters.',
       overConfigured: 'The {{what}} has {{length}} characters. The configured limit is {{max}}.',
       classifierCap:
         'The {{what}} has {{length}} characters. Claude Code caps the notes of one tool call at {{max}} characters and cuts the rest.',

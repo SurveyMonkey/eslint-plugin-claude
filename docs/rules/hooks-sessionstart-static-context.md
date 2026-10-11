@@ -76,5 +76,5 @@ Pass: a hook that prints the current branch, with `git branch --show-current`.
 ## Sources
 
 [^context]: [Hooks reference: Add context for Claude](https://code.claude.com/docs/en/hooks#add-context-for-claude)
-[^agents]: [How Claude remembers your project: Remove an earlier AGENTS.md workaround](https://code.claude.com/docs/en/memory#remove-an-earlier-agentsmd-workaround)
+[^agents]: [How Claude remembers your project: Remove an earlier AGENTS.md workaround](https://code.claude.com/docs/en/memory#remove-an-earlier-agents-md-workaround)
 [^decision]: [Hooks reference: SessionStart decision control](https://code.claude.com/docs/en/hooks#sessionstart-decision-control)

@@ -195,8 +195,9 @@ export function scriptText({ file, folder }: HookScript): string | undefined {
 }
 
 /** A text that a command handler runs, for the rules that read what a hook prints. `script` is the file name of
- *  a repository script, and undefined for the inline command. `text` is the text without comment lines. `commands`
- *  are its simple commands, and they are empty for a script of another language, which the shell reader cannot read. */
+ *  a repository script, and undefined for the inline command. `text` is the text of a script without comment
+ *  lines, and the inline command as written. `commands` are its simple commands, and they are empty for a script
+ *  of another language, which the shell reader cannot read. */
 export interface HandlerText {
   script: string | undefined
   text: string

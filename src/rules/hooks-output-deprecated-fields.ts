@@ -1,4 +1,4 @@
-// The hooks reference marks three things as old (docs/rules/hooks-output-deprecated-fields.md):
+// The hooks reference has two deprecations and one "prefer" note (docs/rules/hooks-output-deprecated-fields.md):
 // - the top-level `decision` and `reason` of `PreToolUse`, which `hookSpecificOutput.permissionDecision` replaces;
 // - `updatedMCPToolOutput` of `PostToolUse`, where the docs say to prefer `updatedToolOutput`;
 // - the input field `team_name` of the task and teammate events.

@@ -2,7 +2,7 @@
 // means to block must exit 2 (docs/rules/hooks-output-blocking-exit-code.md). The rule is a heuristic. A script
 // means to block when it writes a message to stderr and then exits with 1. The rule reads the inline command
 // and the repository scripts that the command runs, on the events where exit 2 blocks. It makes no report for
-// a script that prints JSON, because a hook that prints valid JSON succeeds whatever its exit code.
+// a script that prints JSON, because JSON that passes validation decides the outcome (exit 1 stays a success).
 import type { Rule } from 'eslint'
 import {
   BLOCKING_EVENTS,

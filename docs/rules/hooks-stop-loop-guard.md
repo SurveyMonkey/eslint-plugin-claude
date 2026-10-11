@@ -34,7 +34,7 @@ The rule is a heuristic. A `Stop` or `SubagentStop` handler blocks when its text
   protections as `decision: "block"`".[^decision]
 
 A handler has a guard when the text of the command, or of a repository script that it runs, names `stop_hook_active` or
-`transcript_path`. Then the rule is silent, because the docs allow either check. A comment line does not count. The
+`transcript_path`. Then the rule is silent, because the docs allow either check. A comment line of a script does not count. The
 rule cannot see whether the check works, so it does not read the condition. A script of another language is not
 read, and it gives no report. A handler in the background (`async` or `asyncRewake`) is skipped.
 

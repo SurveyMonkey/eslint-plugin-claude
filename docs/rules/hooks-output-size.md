@@ -22,7 +22,7 @@ Keep the context that a hook prints under the output caps.
 
 Claude Code caps the strings `additionalContext`, `systemMessage` and `initialUserMessage` of a hook, and its plain
 stdout, at 10,000 characters. It measures each string on its own. Over the cap, it saves the output to a file in the
-session directory, and passes Claude the file path with a preview of the first 2,000 characters. It does not ask
+session directory, and passes Claude the file path with a preview of up to the first 2,000 characters. It does not ask
 Claude to read the file. "This cap has no setting or environment variable to raise it."[^json-output][^add-context]
 Plain stdout is added to the context on `UserPromptSubmit`, `UserPromptExpansion`, `SessionStart` and
 `PostModelSwitch`.[^exit-0]
@@ -33,7 +33,7 @@ measures each string on its own. A string over the cap proves a cut.
 
 The rule reads the strings of a JSON object that a command prints as a literal. It reads each field at the top level
 and inside `hookSpecificOutput`. On the four events above, it also measures a literal `echo` or `printf` text that is
-no JSON object. The length is `String.length`, which counts UTF-16 code units, as Claude Code does.
+no JSON object. The length is `String.length`, which counts UTF-16 code units.
 
 ### JSON that the rule reads
 

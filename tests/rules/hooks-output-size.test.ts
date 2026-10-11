@@ -74,7 +74,7 @@ describe(`${name}: JSON fields`, () => {
       '/repo/.claude/settings.json',
     )
     expect(message?.message).toBe(
-      'The "additionalContext" string has 10001 characters. Claude Code caps it at 10000, saves the text to a file, and passes Claude the file path with a preview of the first 2,000 characters.',
+      'The "additionalContext" string has 10001 characters. Claude Code caps it at 10000, saves the text to a file, and passes Claude the file path with a preview of up to the first 2,000 characters.',
     )
   })
 
@@ -120,7 +120,7 @@ describe(`${name}: plain stdout`, () => {
       '/repo/.claude/settings.json',
     )
     expect(message?.message).toBe(
-      'The plain stdout has 10001 characters. Claude Code caps it at 10000, saves the text to a file, and passes Claude the file path with a preview of the first 2,000 characters.',
+      'The plain stdout has 10001 characters. Claude Code caps it at 10000, saves the text to a file, and passes Claude the file path with a preview of up to the first 2,000 characters.',
     )
   })
 })

@@ -31,7 +31,7 @@ both matchers select. It reports at the `command` string of the later handler. A
 
 The check for "the same tool" is exact. The candidates are the tools that the two matchers name, and the built-in tools
 of `src/data/tool-names.ts`. A missing, empty or `*` matcher selects every tool. A matcher of exact names selects those
-names. Any other matcher is a regular expression that the rule runs with `RegExp.test`, as Claude Code does for a tool
+names. Any other matcher is a regular expression that the rule runs with `RegExp.test`, for a tool
 event. A tool that both select is the proof. If a regular expression names no known tool, the rule is silent.
 
 The rule skips a handler with an `if` condition, because that handler may run for other calls than the other one. It

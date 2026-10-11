@@ -20,7 +20,7 @@ Do not use the deprecated hook output and input fields.
 
 ## Rule details
 
-The hooks reference marks three things as old. The rule reports each at the `command` string.
+The hooks reference has two deprecations and one "prefer" note. The rule reports each at the `command` string.
 
 | Message | Fault |
 |---------|-------|
@@ -30,7 +30,7 @@ The hooks reference marks three things as old. The rule reports each at the `com
 
 The inventory row cites `TaskCreated` only. The docs give the same note for `TaskCompleted` and `TeammateIdle`, so
 the rule checks all three events. For `team_name`, the rule reads the text of the command and of the scripts, in any
-language, and skips lines that only hold a comment (`#` or `//`). A name such as `my_team_name` is not the field.
+language, and skips the lines of a script that only hold a comment (`#` or `//`). A name such as `my_team_name` is not the field.
 
 The `decision` of `PreModelSwitch`, `PostToolUse`, `Stop` and the other events is a current form, so the rule makes no
 report there. [`hooks-output-schema`](hooks-output-schema.md) checks the values of `decision`.
