@@ -37,7 +37,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
     schema: [
       {
         type: 'object',
-        properties: { ignorePattern: { type: 'string' } },
+        properties: {
+          ignorePattern: {
+            description:
+              'A regular expression. The rule ignores an import when the expression matches the @ and the path.',
+            type: 'string',
+          },
+        },
         additionalProperties: false,
       },
     ],

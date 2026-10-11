@@ -30,7 +30,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'variant'
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' } } },
+        properties: {
+          allow: {
+            description: 'Paths that the rule does not check.',
+            type: 'array',
+            items: { type: 'string' },
+          },
+        },
         additionalProperties: false,
       },
     ],

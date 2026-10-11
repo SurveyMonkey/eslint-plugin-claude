@@ -59,6 +59,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'dropped' }> 
         type: 'object',
         properties: {
           interpreters: {
+            description: 'More program names. The rule reports a wildcard rule for each of them.',
             type: 'array',
             items: { type: 'string', minLength: 1 },
             uniqueItems: true,

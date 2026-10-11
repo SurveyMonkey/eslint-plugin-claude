@@ -24,7 +24,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown'
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' }, uniqueItems: true } },
+        properties: {
+          allow: {
+            description: 'Model values to accept. Each value is an exact match.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
+        },
         additionalProperties: false,
       },
     ],

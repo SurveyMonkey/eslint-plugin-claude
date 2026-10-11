@@ -31,7 +31,15 @@ const rule: MarkdownRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' }, uniqueItems: true } },
+        properties: {
+          allow: {
+            description:
+              'Names of agents that the team starts with --agent, and agent types from outside the repository.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
+        },
         additionalProperties: false,
       },
     ],

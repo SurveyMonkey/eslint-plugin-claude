@@ -28,7 +28,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown' }> 
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description: 'Agent names to accept, such as a user agent or a plugin agent.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

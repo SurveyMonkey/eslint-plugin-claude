@@ -31,7 +31,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown' }> 
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description:
+              'Names of user or plugin agents. The rule makes no report for these names.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

@@ -155,7 +155,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string', minLength: 1 }, uniqueItems: true },
+          allow: {
+            description:
+              'Bash permission rules that the rule treats as allowed, as in allowed-tools.',
+            type: 'array',
+            items: { type: 'string', minLength: 1 },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

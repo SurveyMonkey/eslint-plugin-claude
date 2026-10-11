@@ -21,7 +21,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooManyS
     schema: [
       {
         type: 'object',
-        properties: { maxSteps: { type: 'integer', minimum: 1 } },
+        properties: {
+          maxSteps: {
+            description:
+              'The most items in one numbered list. Without it, the rule makes no report.',
+            type: 'integer',
+            minimum: 1,
+          },
+        },
         additionalProperties: false,
       },
     ],

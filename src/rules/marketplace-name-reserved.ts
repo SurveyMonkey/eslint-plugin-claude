@@ -45,7 +45,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageIds }>
     schema: [
       {
         type: 'object',
-        properties: { allowOfficial: { type: 'boolean' } },
+        properties: {
+          allowOfficial: {
+            description: 'Set true to accept the names that Anthropic reserves.',
+            type: 'boolean',
+          },
+        },
         additionalProperties: false,
       },
     ],

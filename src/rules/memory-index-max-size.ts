@@ -49,8 +49,18 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          maxLines: { type: 'integer', minimum: 1, maximum: LINES },
-          maxBytes: { type: 'integer', minimum: 1, maximum: BYTES },
+          maxLines: {
+            description: 'The most lines in the index.',
+            type: 'integer',
+            minimum: 1,
+            maximum: LINES,
+          },
+          maxBytes: {
+            description: 'The most bytes in the index.',
+            type: 'integer',
+            minimum: 1,
+            maximum: BYTES,
+          },
         },
         additionalProperties: false,
       },

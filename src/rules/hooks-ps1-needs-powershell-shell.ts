@@ -42,7 +42,12 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          platforms: { type: 'array', items: { enum: PLATFORMS }, uniqueItems: true },
+          platforms: {
+            description: 'The platforms where the team runs Claude Code.',
+            type: 'array',
+            items: { enum: PLATFORMS },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

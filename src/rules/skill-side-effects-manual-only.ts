@@ -80,6 +80,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'sideEffe
         type: 'object',
         properties: {
           patterns: {
+            description: 'More patterns. The rule adds them to the default patterns.',
             type: 'array',
             items: { type: 'string', pattern: '[A-Za-z0-9]' },
             uniqueItems: true,

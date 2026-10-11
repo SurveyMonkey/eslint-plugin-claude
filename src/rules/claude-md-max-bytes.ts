@@ -30,7 +30,14 @@ const rule: MarkdownRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1, maximum: FILE_MAX } },
+        properties: {
+          max: {
+            description: 'The most bytes in the file.',
+            type: 'integer',
+            minimum: 1,
+            maximum: FILE_MAX,
+          },
+        },
         additionalProperties: false,
       },
     ],

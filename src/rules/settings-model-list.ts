@@ -73,7 +73,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1, maximum: CHAIN_MAX } },
+        properties: {
+          max: {
+            description: 'The most different entries in fallbackModel.',
+            type: 'integer',
+            minimum: 1,
+            maximum: CHAIN_MAX,
+          },
+        },
         additionalProperties: false,
       },
     ],

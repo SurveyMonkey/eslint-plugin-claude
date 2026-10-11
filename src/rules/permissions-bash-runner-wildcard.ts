@@ -31,6 +31,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'runner' }> =
         type: 'object',
         properties: {
           runners: {
+            description:
+              'The runners to check, each as its words, such as "devbox run". The list replaces the default.',
             type: 'array',
             items: { type: 'string', pattern: '\\S' },
             uniqueItems: true,

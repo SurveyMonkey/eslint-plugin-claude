@@ -23,7 +23,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'cloud' | 'vs
     schema: [
       {
         type: 'object',
-        properties: { vscode: { type: 'boolean' } },
+        properties: {
+          vscode: {
+            description: 'Set true to also report a defaultMode in a project or local file.',
+            type: 'boolean',
+          },
+        },
         additionalProperties: false,
       },
     ],

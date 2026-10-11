@@ -59,8 +59,16 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          maxTokens: { type: 'integer', minimum: 1 },
-          charsPerToken: { type: 'number', minimum: 1 },
+          maxTokens: {
+            description: 'The most tokens that the agent descriptions of one scope can have.',
+            type: 'integer',
+            minimum: 1,
+          },
+          charsPerToken: {
+            description: 'The number of characters for each token in the estimate.',
+            type: 'number',
+            minimum: 1,
+          },
         },
         additionalProperties: false,
       },

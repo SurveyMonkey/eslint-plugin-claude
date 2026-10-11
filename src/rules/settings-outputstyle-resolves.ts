@@ -106,7 +106,12 @@ const rule: JSONRuleDefinition<{
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description: 'Style names to accept, such as a user style or a plugin style.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

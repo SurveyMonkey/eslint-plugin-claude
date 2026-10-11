@@ -26,7 +26,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'empty' }> = 
     schema: [
       {
         type: 'object',
-        properties: { names: { type: 'array', items: { type: 'string', minLength: 1 } } },
+        properties: {
+          names: {
+            description: 'More variable names to report.',
+            type: 'array',
+            items: { type: 'string', minLength: 1 },
+          },
+        },
         additionalProperties: false,
       },
     ],

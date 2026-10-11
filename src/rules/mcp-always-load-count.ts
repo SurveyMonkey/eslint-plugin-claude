@@ -76,7 +76,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooMany' }> 
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 0 } },
+        properties: {
+          max: {
+            description: 'The most servers that set alwaysLoad to true.',
+            type: 'integer',
+            minimum: 0,
+          },
+        },
         additionalProperties: false,
       },
     ],

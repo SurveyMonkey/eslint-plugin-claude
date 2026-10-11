@@ -34,7 +34,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadowed
     schema: [
       {
         type: 'object',
-        properties: { personalNames: names, enterpriseNames: names },
+        properties: {
+          personalNames: { ...names, description: 'The names of the personal skills of the team.' },
+          enterpriseNames: {
+            ...names,
+            description: 'The names of the enterprise skills, from the managed settings.',
+          },
+        },
         additionalProperties: false,
       },
     ],

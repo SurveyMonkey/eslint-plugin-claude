@@ -27,7 +27,13 @@ const rule: JSONRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { min: { type: 'integer', minimum: TIMEOUT_MIN } },
+        properties: {
+          min: {
+            description: 'The lowest timeout, in milliseconds.',
+            type: 'integer',
+            minimum: TIMEOUT_MIN,
+          },
+        },
         additionalProperties: false,
       },
     ],

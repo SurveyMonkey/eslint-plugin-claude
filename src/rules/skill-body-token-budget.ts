@@ -29,7 +29,12 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          max: { type: 'integer', minimum: 1, maximum: COMPACTION_TOKENS },
+          max: {
+            description: 'The most tokens in the body of the skill.',
+            type: 'integer',
+            minimum: 1,
+            maximum: COMPACTION_TOKENS,
+          },
         },
         additionalProperties: false,
       },

@@ -45,7 +45,12 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          nameMax: { type: 'integer', minimum: 1, maximum: NAME_LIMIT },
+          nameMax: {
+            description: 'The most characters in the name of an agent.',
+            type: 'integer',
+            minimum: 1,
+            maximum: NAME_LIMIT,
+          },
         },
         additionalProperties: false,
       },

@@ -26,7 +26,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'orphan' 
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' } } },
+        properties: {
+          allow: {
+            description:
+              'Names of subagents that the repository does not hold, such as user subagents.',
+            type: 'array',
+            items: { type: 'string' },
+          },
+        },
         additionalProperties: false,
       },
     ],

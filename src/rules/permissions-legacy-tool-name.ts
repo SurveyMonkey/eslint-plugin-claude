@@ -36,7 +36,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
     schema: [
       {
         type: 'object',
-        properties: { minVersion: { type: 'string', pattern: '^\\d+\\.\\d+\\.\\d+$' } },
+        properties: {
+          minVersion: {
+            description:
+              'The oldest Claude Code version that the team supports, as major.minor.patch.',
+            type: 'string',
+            pattern: '^\\d+\\.\\d+\\.\\d+$',
+          },
+        },
         additionalProperties: false,
       },
     ],

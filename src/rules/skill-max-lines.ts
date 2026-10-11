@@ -25,8 +25,15 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          max: { type: 'integer', minimum: 1 },
-          countFrontmatter: { type: 'boolean' },
+          max: {
+            description: 'The file must have fewer lines than this number.',
+            type: 'integer',
+            minimum: 1,
+          },
+          countFrontmatter: {
+            description: 'Set true to count the whole file. Set false to count the body only.',
+            type: 'boolean',
+          },
         },
         additionalProperties: false,
       },

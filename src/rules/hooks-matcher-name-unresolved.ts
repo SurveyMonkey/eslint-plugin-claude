@@ -172,7 +172,13 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description:
+              'Names that the repository does not define, such as a tool, a user agent or a user MCP server.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

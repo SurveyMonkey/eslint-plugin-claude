@@ -93,8 +93,18 @@ const rule: JSONRuleDefinition<{
       {
         type: 'object',
         properties: {
-          maxUrlChars: { type: 'integer', minimum: 1, maximum: URL_MAX },
-          maxLabelColumns: { type: 'integer', minimum: 1, maximum: LABEL_MAX },
+          maxUrlChars: {
+            description: 'The most characters in the literal text of a url.',
+            type: 'integer',
+            minimum: 1,
+            maximum: URL_MAX,
+          },
+          maxLabelColumns: {
+            description: 'The most display columns in the literal text of a label.',
+            type: 'integer',
+            minimum: 1,
+            maximum: LABEL_MAX,
+          },
         },
         additionalProperties: false,
       },

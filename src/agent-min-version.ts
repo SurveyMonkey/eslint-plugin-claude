@@ -6,7 +6,13 @@
 /** The schema of the options of such a rule. A version is `major.minor.patch`. */
 export const MIN_VERSION_SCHEMA = {
   type: 'object',
-  properties: { minVersion: { type: 'string', pattern: '^\\d+\\.\\d+\\.\\d+$' } },
+  properties: {
+    minVersion: {
+      description: 'The oldest Claude Code version that the team supports, as major.minor.patch.',
+      type: 'string',
+      pattern: '^\\d+\\.\\d+\\.\\d+$',
+    },
+  },
   additionalProperties: false,
 } as const
 

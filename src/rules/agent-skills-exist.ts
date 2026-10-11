@@ -124,7 +124,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' }, uniqueItems: true } },
+        properties: {
+          allow: {
+            description: 'Names of skills that the repository cannot see.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
+        },
         additionalProperties: false,
       },
     ],

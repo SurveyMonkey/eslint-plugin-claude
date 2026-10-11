@@ -32,7 +32,14 @@ const rule: JSONRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1, maximum: COMMAND_MAX } },
+        properties: {
+          max: {
+            description: 'The most characters in the command.',
+            type: 'integer',
+            minimum: 1,
+            maximum: COMMAND_MAX,
+          },
+        },
         additionalProperties: false,
       },
     ],
