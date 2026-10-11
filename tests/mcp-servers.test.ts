@@ -10,9 +10,11 @@ import { keyOf } from '../src/marketplace-json.ts'
 import {
   declaredMcpStrings,
   isUnreadMcpPath,
+  MANAGED_SERVER_TYPES,
   type McpFileKind,
   mcpFileKind,
   REMOTE_SERVER_TYPES,
+  SERVER_NAME_PATTERN,
   serverMembers,
 } from '../src/mcp-servers.ts'
 
@@ -133,6 +135,19 @@ describe('serverMembers', () => {
 
 it('lists the remote server types', () => {
   expect([...REMOTE_SERVER_TYPES].sort()).toEqual(['http', 'sse', 'streamable-http', 'ws'])
+})
+
+it('lists the types of a managedMcpServers entry, which leave out ws', () => {
+  expect([...MANAGED_SERVER_TYPES].sort()).toEqual(['http', 'sse', 'streamable-http'])
+})
+
+it('accepts letters, numbers, hyphens and underscores in a server name', () => {
+  for (const name of ['a', 'A-z_0-9', '-', '_']) {
+    expect(SERVER_NAME_PATTERN.test(name)).toBe(true)
+  }
+  for (const name of ['', 'a b', 'a.b', '*', 'a\n', 'é']) {
+    expect(SERVER_NAME_PATTERN.test(name)).toBe(false)
+  }
 })
 
 describe('declaredMcpStrings', () => {

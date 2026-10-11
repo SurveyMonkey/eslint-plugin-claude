@@ -10,6 +10,16 @@ import { UNREADABLE } from './skill-tree.ts'
 /** The `type` values of a server that connects over the network. A `url` belongs to these. */
 export const REMOTE_SERVER_TYPES: readonly string[] = ['http', 'streamable-http', 'sse', 'ws']
 
+/** The `type` values that an entry of `managedMcpServers` may have. `streamable-http` is an alias
+ *  of `http`. The other remote types are not valid there.
+ *  (https://code.claude.com/docs/en/managed-mcp#what-an-entry-can-contain) */
+export const MANAGED_SERVER_TYPES: readonly string[] = ['http', 'streamable-http', 'sse']
+
+/** A server name that Claude Code accepts in `managedMcpServers` and in an allowlist
+ *  `serverName`: letters, numbers, hyphens and underscores.
+ *  (https://code.claude.com/docs/en/managed-mcp#how-servername-entries-match) */
+export const SERVER_NAME_PATTERN = /^[A-Za-z0-9_-]+$/
+
 /** Where a `.mcp.json` sits: in a project, or at the root of a plugin. */
 export type McpFileKind = 'project' | 'plugin'
 
