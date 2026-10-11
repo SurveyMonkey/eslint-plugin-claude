@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-evals-prompt-frontmatter`
@@ -61,6 +61,15 @@ The rule makes no report in these cases:
 Fail: a `prompt.md` with `max_turn: 5` in its frontmatter.
 
 Pass: a `prompt.md` with `max_turns: 10` and `allowed_tools: [Read, Glob, Grep, Skill]`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-evals-prompt-frontmatter': 'error'
+```
 
 ## Options
 

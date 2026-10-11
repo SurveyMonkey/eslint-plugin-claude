@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-no-project-plugins-dir`
@@ -46,6 +46,15 @@ that path.
 Fail: `.claude/plugins/deploy/.claude-plugin/plugin.json`.
 
 Pass: `.claude/skills/deploy/.claude-plugin/plugin.json`, `plugins/deploy/.claude-plugin/plugin.json`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-no-project-plugins-dir': 'error'
+```
 
 ## Options
 

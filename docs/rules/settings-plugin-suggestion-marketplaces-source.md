@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-09
 generated:
   by: claude-code
-  at: 2026-10-09T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-plugin-suggestion-marketplaces-source`
@@ -89,6 +89,15 @@ Pass, with the declaration in a drop-in. `managed-settings.d/20-marketplaces.jso
 {
   "strictKnownMarketplaces": [{ "source": "github", "repo": "acme-corp/*" }]
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-plugin-suggestion-marketplaces-source': 'error'
 ```
 
 ## Sources

@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-settings-agent-exists`
@@ -72,6 +72,15 @@ When a key appears twice, the rule reads the last one, as `JSON.parse` does.
 Fail: `{ "agent": "security-reviewer" }` in a plugin with no `agents/security-reviewer.md`.
 
 Pass: `{ "agent": "security-reviewer" }` in a plugin with `agents/security-reviewer.md`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-settings-agent-exists': 'warn'
+```
 
 ## Options
 

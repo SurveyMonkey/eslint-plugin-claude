@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-emphasis-overuse`
@@ -63,6 +63,15 @@ Pass, with the same limit:
 - IMPORTANT: run the tests.
 - Use pnpm.
 - Do not edit generated files.
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-emphasis-overuse': 'warn'
 ```
 
 ## Options

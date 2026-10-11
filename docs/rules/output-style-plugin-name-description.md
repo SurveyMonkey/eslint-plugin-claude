@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-01
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `output-style-plugin-name-description`
@@ -58,6 +58,15 @@ keep-coding-instructions: true
 ---
 
 Answer in as few words as possible.
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/output-style-plugin-name-description': 'warn'
 ```
 
 ## Options

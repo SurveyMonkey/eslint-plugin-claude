@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `rules-symlink-external-scoped`
@@ -67,6 +67,15 @@ rule makes no report. A user config can turn this rule off for files that
 a team shares on purpose.
 
 A linked rule with no `paths` loads after the approval. This rule does not look at it.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/rules-symlink-external-scoped': 'error'
+```
 
 ## Sources
 

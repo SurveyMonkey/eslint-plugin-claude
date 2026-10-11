@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-npm-source-shrinkwrap`
@@ -67,6 +67,15 @@ Fail: a marketplace entry `{ "name": "p", "source": { "source": "npm", "package"
 and a plugin `p` with a `package.json` and no `npm-shrinkwrap.json`.
 
 Pass: the same plugin with an `npm-shrinkwrap.json`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-npm-source-shrinkwrap': 'error'
+```
 
 ## Options
 

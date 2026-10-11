@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-dependencies-prerelease-range`
@@ -70,6 +70,15 @@ Fail: the dependency `{ "name": "dep", "version": "^2.0.0" }`, when the entry of
 version `2.0.0-beta.1`.
 
 Pass: the same dependency with the range `^2.0.0-0`, or with the entry version `2.0.0`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-dependencies-prerelease-range': 'warn'
+```
 
 ## Sources
 

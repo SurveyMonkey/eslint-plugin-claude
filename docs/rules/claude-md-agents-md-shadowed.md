@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-agents-md-shadowed`
@@ -70,6 +70,15 @@ that loads the file:
 - An import that leaves the repository, such as a path that starts with `~`.
 
 A CLAUDE.md that is a folder does not count.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-agents-md-shadowed': 'error'
+```
 
 ## Sources
 

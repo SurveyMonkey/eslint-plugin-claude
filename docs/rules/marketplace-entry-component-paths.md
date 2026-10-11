@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-07
 generated:
   by: claude-code
-  at: 2026-10-07T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `marketplace-entry-component-paths`
@@ -85,6 +85,15 @@ Fail:
 
 Pass: the same file, with `"commands": ["./commands/"]` and `"agents": "./agents/reviewer.md"`,
 where both paths are in `plugins/formatter`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/marketplace-entry-component-paths': 'error'
+```
 
 ## Options
 

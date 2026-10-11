@@ -7,7 +7,7 @@ related_issues: [10]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `hooks-script-exists`
@@ -92,6 +92,15 @@ Fail:
 in `.claude/settings.json`, with no `.claude/hooks/check.sh`.
 
 Pass: the same file, with the script in `.claude/hooks/`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/hooks-script-exists': 'error'
+```
 
 ## Options
 

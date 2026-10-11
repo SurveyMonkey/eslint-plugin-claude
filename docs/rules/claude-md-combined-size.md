@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-combined-size`
@@ -64,6 +64,15 @@ Fail, with `max` set to 400, when the files of the folder add up to 450 lines:
 ```
 
 Pass, when the same files add up to 350 lines.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-combined-size': 'warn'
+```
 
 ## Options
 

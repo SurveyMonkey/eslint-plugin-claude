@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `statusline-home-path-shared`
@@ -60,6 +60,15 @@ Pass: commit the script, and use a path in the repository.
     "command": "${CLAUDE_PROJECT_DIR}/.claude/statusline.sh"
   }
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/statusline-home-path-shared': 'warn'
 ```
 
 ## Sources

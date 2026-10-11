@@ -7,7 +7,7 @@ related_issues: [50]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-body-token-budget`
@@ -50,6 +50,15 @@ in these cases:
 
 Fail: a `SKILL.md` with 20,001 characters in the body. Pass: the same skill with its reference
 material in a supporting file and a body of 20,000 characters or fewer.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-body-token-budget': 'warn'
+```
 
 ## Options
 

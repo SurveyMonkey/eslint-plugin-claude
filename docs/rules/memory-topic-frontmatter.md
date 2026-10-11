@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `memory-topic-frontmatter`
@@ -64,6 +64,29 @@ Pass:
 type: feedback
 modified: 2026-10-14T09:30:00Z
 ---
+```
+
+## Usage
+
+The `recommended` config configures no file that this rule checks. Add a block that gives the
+files and the language of the rule:
+
+```js
+// eslint.config.js
+import { defineConfig } from 'eslint/config'
+import markdown from '@eslint/markdown'
+import claude from 'eslint-plugin-claude'
+
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/.claude/agent-memory/*/*.md'],
+    plugins: { claude, markdown },
+    language: 'markdown/gfm',
+    languageOptions: { frontmatter: 'yaml' },
+    rules: { 'claude/memory-topic-frontmatter': 'warn' },
+  },
+])
 ```
 
 ## Sources

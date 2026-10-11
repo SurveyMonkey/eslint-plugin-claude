@@ -7,7 +7,7 @@ related_issues: [15]
 stale_after: 2027-03-29
 generated:
   by: claude-code
-  at: 2026-10-01T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `permissions-mcp-rule-parens`
@@ -44,6 +44,15 @@ Pass:
 
 ```json
 { "permissions": { "deny": ["mcp__github__create_issue"] } }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/permissions-mcp-rule-parens': 'error'
 ```
 
 ## Sources

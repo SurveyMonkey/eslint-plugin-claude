@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-themes-layout`
@@ -67,6 +67,15 @@ a theme with a `base` of `bogus` and an `overrides` array. The docs say that the
 Fail, in `themes/dracula.json`: `{"name": "Dracula", "base": "midnight"}`.
 
 Pass: `{"name": "Dracula", "base": "dark", "overrides": {"claude": "#bd93f9"}}`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-themes-layout': 'warn'
+```
 
 ## Options
 

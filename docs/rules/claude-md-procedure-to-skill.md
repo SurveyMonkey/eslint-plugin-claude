@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-procedure-to-skill`
@@ -55,6 +55,15 @@ Pass, with the same limit:
 1. Run the tests.
 2. Build the package.
 3. Bump the version.
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-procedure-to-skill': 'warn'
 ```
 
 ## Options

@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-dependencies-resolve`
@@ -72,6 +72,15 @@ Fail: `"dependencies": ["audit-logger"]` in a plugin of a marketplace that has n
 name `audit-logger`.
 
 Pass: the same dependency, with an entry named `audit-logger` in `plugins`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-dependencies-resolve': 'error'
+```
 
 ## Options
 

@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-package-lockfile-choice`
@@ -56,6 +56,15 @@ Only the plugin root counts. The rule reads no lockfile content and no `lockfile
 Fail: a plugin root with `package.json`, `bun.lock` and `package-lock.json`.
 
 Pass: a plugin root with `package.json` and `package-lock.json`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-package-lockfile-choice': 'warn'
+```
 
 ## Options
 

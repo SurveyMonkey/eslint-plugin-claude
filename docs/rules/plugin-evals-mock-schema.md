@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-evals-mock-schema`
@@ -64,6 +64,15 @@ report in these cases:
 Fail: a mock with `type: agent` and `error: true`.
 
 Pass: a mock with `type: fixed` and `error: true`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-evals-mock-schema': 'error'
+```
 
 ## Options
 

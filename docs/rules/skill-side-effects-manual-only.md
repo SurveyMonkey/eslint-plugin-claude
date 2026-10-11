@@ -7,7 +7,7 @@ related_issues: [50]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-side-effects-manual-only`
@@ -76,6 +76,15 @@ allowed-tools: Bash(git push *)
 ---
 
 Push the tag and tell the team.
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-side-effects-manual-only': 'warn'
 ```
 
 ## Options

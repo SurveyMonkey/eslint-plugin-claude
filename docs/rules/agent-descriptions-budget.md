@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `agent-descriptions-budget`
@@ -63,6 +63,15 @@ see them. A nested `.claude/` directory is a scope of its own.
 
 Fail, with `maxTokens: 10`: two agents with 25 characters each, which is about 13 tokens. Pass: the
 same agents with `maxTokens: 20`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/agent-descriptions-budget': 'warn'
+```
 
 ## Options
 

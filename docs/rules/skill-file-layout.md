@@ -7,7 +7,7 @@ related_issues: [8]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-09-30T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-file-layout`
@@ -59,6 +59,15 @@ can find it, and the report is a false alarm.
 Fail: `.claude/skills/deploy.md`, `.claude/skills/deploy/skill.md`.
 
 Pass: `.claude/skills/deploy/SKILL.md`, `.claude/skills/deploy/reference.md`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-file-layout': 'error'
+```
 
 ## Options
 

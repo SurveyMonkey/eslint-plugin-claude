@@ -7,7 +7,7 @@ related_issues: [16]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `mcp-no-literal-secrets`
@@ -98,6 +98,28 @@ Pass:
     }
   }
 }
+```
+
+## Usage
+
+The `recommended` config configures `.mcp.json` and `plugin.json`, but not
+`managed-mcp.json`. To check all three files, add a block that gives the files and the language of the rule:
+
+```js
+// eslint.config.js
+import { defineConfig } from 'eslint/config'
+import json from '@eslint/json'
+import claude from 'eslint-plugin-claude'
+
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
+    plugins: { claude, json },
+    language: 'json/json',
+    rules: { 'claude/mcp-no-literal-secrets': 'warn' },
+  },
+])
 ```
 
 ## Sources

@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-no-state-in-plugin-root`
@@ -66,6 +66,15 @@ the plugin is unseen.
 Fail: a monitor `command` `echo ok > "${CLAUDE_PLUGIN_ROOT}/state"`.
 
 Pass: a monitor `command` `echo ok > "${CLAUDE_PLUGIN_DATA}/state"`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-no-state-in-plugin-root': 'warn'
+```
 
 ## Sources
 

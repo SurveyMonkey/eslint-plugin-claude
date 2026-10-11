@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-user-config-sensitive`
@@ -54,6 +54,15 @@ Fail: `"api_token": { "type": "string", "title": "API token", "description": "d"
 Pass: the same option with `"sensitive": true`, or `"tokenizer": { ... }`.
 
 A `title` that is not a string adds no word. The key is still checked.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-user-config-sensitive': 'warn'
+```
 
 ## Sources
 

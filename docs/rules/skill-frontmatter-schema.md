@@ -7,7 +7,7 @@ related_issues: [8]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-09-30T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-frontmatter-schema`
@@ -82,6 +82,15 @@ name: deploy
 allowed-tools: Bash(git push *)
 effort: high
 ---
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-frontmatter-schema': 'error'
 ```
 
 ## Options

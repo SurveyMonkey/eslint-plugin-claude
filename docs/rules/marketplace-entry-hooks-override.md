@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-07
 generated:
   by: claude-code
-  at: 2026-10-07T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `marketplace-entry-hooks-override`
@@ -84,6 +84,15 @@ with a `plugins/formatter/.claude-plugin/plugin.json` that sets `hooks` for `Pos
 
 Pass: the same file, where `plugin.json` sets `hooks` for `PreToolUse` only, or the entry has no
 `hooks`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/marketplace-entry-hooks-override': 'error'
+```
 
 ## Options
 

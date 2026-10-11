@@ -7,7 +7,7 @@ related_issues: [10]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `hooks-stop-loop-guard`
@@ -78,6 +78,15 @@ Fail, in `.claude/settings.json`, when `.claude/hooks/tests.sh` writes to stderr
 Pass: the same script, when it runs `exit 0` early if `.stop_hook_active` is `true`.
 
 If the hook needs more than eight rounds, the docs say to raise the cap with `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/hooks-stop-loop-guard': 'warn'
+```
 
 ## Sources
 
