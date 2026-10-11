@@ -4,71 +4,88 @@
   "blocks": [
     {
       "id": "configure-auto-mode",
-      "hash": "88847dd0b169a44e3f69710dc95ccdae759ac73c6c932b66be9a439f908fa2df"
+      "hash": "88847dd0b169a44e3f69710dc95ccdae759ac73c6c932b66be9a439f908fa2df",
+      "bodyHash": "b1b5a0221bd9f7bfa2bee196e4d52af0296f451dce59370fb81b3d3a674992bf"
     },
     {
       "id": "common-boundaries",
-      "hash": "0fca167cfc878b0e45b3f3593e4d6cc7cd7a22fe19ca093a78eee6778b19fe92"
+      "hash": "0fca167cfc878b0e45b3f3593e4d6cc7cd7a22fe19ca093a78eee6778b19fe92",
+      "bodyHash": "ca45c3e5254cb2c8e0c254223f99a299ba7042943c6de958d0ba8a5259c446d8"
     },
     {
       "id": "add-a-human-checkpoint",
-      "hash": "a2bf2c967bce360aa3c0776486ace04855a34330e9d219f27b05dfa09d01d5f5"
+      "hash": "a2bf2c967bce360aa3c0776486ace04855a34330e9d219f27b05dfa09d01d5f5",
+      "bodyHash": "91a87cced49b5def17db027c04ab9c3437479e5d0764ca63431ea0fd837aaa78"
     },
     {
       "id": "where-the-classifier-reads-configuration",
-      "hash": "58f3d954821551614a5f3bed35cbfc959fac2a61f5f37b94bb6c3b7a80775d88"
+      "hash": "58f3d954821551614a5f3bed35cbfc959fac2a61f5f37b94bb6c3b7a80775d88",
+      "bodyHash": "c273d1999fa3ab6de0187ad875fad68bf62831b8ba93c620f24a5e9017bb849e"
     },
     {
       "id": "define-trusted-infrastructure",
-      "hash": "0a18d4f5a20ba5ea6e0fe10a0706785be2882a7a77f77c01268b67d42a7ac7f1"
+      "hash": "0a18d4f5a20ba5ea6e0fe10a0706785be2882a7a77f77c01268b67d42a7ac7f1",
+      "bodyHash": "54415a072a9104182406fa334b4c22a612b397343daa598aedfe59b742bd3eb1"
     },
     {
       "id": "generate-environment-entries",
-      "hash": "843dddcd50e30b98fa1bcafa7fe701f313e959ea84e75385ee7d6c5aee0457f4"
+      "hash": "843dddcd50e30b98fa1bcafa7fe701f313e959ea84e75385ee7d6c5aee0457f4",
+      "bodyHash": "ae264415742df2febf7e9d076dfeecdf2ea3baa50a5b1603b4f18f4504a5dbfe"
     },
     {
       "id": "what-auto-mode-setup-reads",
-      "hash": "9aaf4a630fbb385b5a14564a56c551b995308a5774a7598ff553f71cdc40a59f"
+      "hash": "9aaf4a630fbb385b5a14564a56c551b995308a5774a7598ff553f71cdc40a59f",
+      "bodyHash": "7678c7464d552eca3430eafc95c8ab226a9dbb96e9ef64b3ce60c7cf11fb6287"
     },
     {
       "id": "review-and-save-the-draft",
-      "hash": "c44c238ce6397e31226fe207db6e1065dbb421d5e57e87f98a21231779d472e6"
+      "hash": "c44c238ce6397e31226fe207db6e1065dbb421d5e57e87f98a21231779d472e6",
+      "bodyHash": "2184e16fc46e2494d5ea52dc79f00ec23567ff5b0686d5e8258671ff883bd67b"
     },
     {
       "id": "turn-off-auto-mode-setup",
-      "hash": "b4fc175e8c5d56518f6ad02a4191b588b0b3ab7c2373919b64774cf6d0f634f0"
+      "hash": "b4fc175e8c5d56518f6ad02a4191b588b0b3ab7c2373919b64774cf6d0f634f0",
+      "bodyHash": "3151d6d6fcccf8c1fae4f56c07ac67c892eff50c2c960175ce5514be39ab9097"
     },
     {
       "id": "override-the-block-and-allow-rules",
-      "hash": "8d1869043a9760eb8806df8ba78823d9015f4a1d555b470408bee433bb67d54e"
+      "hash": "8d1869043a9760eb8806df8ba78823d9015f4a1d555b470408bee433bb67d54e",
+      "bodyHash": "18ea983f0d17da13a04f79c78424ef9d032e3d53f670b11df19933ab59fc33c5"
     },
     {
       "id": "edit-rules-from-permissions",
-      "hash": "2f2350127db922785bb2e744e092165b91abe607c9f1045a11ccd2665763b293"
+      "hash": "2f2350127db922785bb2e744e092165b91abe607c9f1045a11ccd2665763b293",
+      "bodyHash": "290fe9e0fd3ab90568e3755e5e752b4347813910d20c6de5435ac0889a61bec9"
     },
     {
       "id": "route-all-shell-commands-through-the-classifier",
-      "hash": "b52acf9c05c6e4fa5f0f1580c0db4d42458ee3657e95e956f47182182d10f613"
+      "hash": "b52acf9c05c6e4fa5f0f1580c0db4d42458ee3657e95e956f47182182d10f613",
+      "bodyHash": "b23e3fb29b467bdc5b069f8e04e229a33f0d2304e66d9e478908baf88251f3ee"
     },
     {
       "id": "inspect-the-defaults-and-your-effective-config",
-      "hash": "a8230396c9e0b04251d5fa5e43b275fdbbe816d5937a0f21564917e28ae72038"
+      "hash": "a8230396c9e0b04251d5fa5e43b275fdbbe816d5937a0f21564917e28ae72038",
+      "bodyHash": "58c1df3ed432ad7f772e4e601d281a66a94217bfa69d32b2b18ec47b75f7e2a0"
     },
     {
       "id": "review-denials",
-      "hash": "43f9635668bb87a6a6785dabdf22f6d2114a6103978829a7b51586837063c74b"
+      "hash": "43f9635668bb87a6a6785dabdf22f6d2114a6103978829a7b51586837063c74b",
+      "bodyHash": "e0b03bb520f946f2165f324837c669a7b9fce879d250c15282aac91b60171b61"
     },
     {
       "id": "fix-a-denial-with-an-allow-rule-an-environment-entry-or-a-retry",
-      "hash": "9e8ec4f1d8a9a25b580df3f297ca44d901c618c8868feda547e450f74e5d05a5"
+      "hash": "9e8ec4f1d8a9a25b580df3f297ca44d901c618c8868feda547e450f74e5d05a5",
+      "bodyHash": "d9e003c48d7e4bb279cd002cb8e5bcc41c0ae5325faec2087728401df9709b28"
     },
     {
       "id": "fix-repeated-denials",
-      "hash": "9f249ea7b6a5e5f91c2f762110d441b46df5ae81b1c3896f948ce6565ab94ba9"
+      "hash": "9f249ea7b6a5e5f91c2f762110d441b46df5ae81b1c3896f948ce6565ab94ba9",
+      "bodyHash": "ea702983bb2d95d7cb405f85dc83eecbb8488d33d16d7cdee0bd56575349690e"
     },
     {
       "id": "see-also",
-      "hash": "0dbb6796651982eb8fe4c9648613bc2076d4e8d19784dcb39e9fadb8197e8a11"
+      "hash": "0dbb6796651982eb8fe4c9648613bc2076d4e8d19784dcb39e9fadb8197e8a11",
+      "bodyHash": "0abb029a74b5fddcc2140746971bd9ec3d059dd05014c1e0e13a08b251d0b0d5"
     }
   ],
   "sources": [
