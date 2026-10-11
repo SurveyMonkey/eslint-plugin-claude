@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-auto-mode-push-ask, a heuristic that reports a managed settings source that sets defaultMode to auto and holds no ask or deny rule for git push, because auto mode pushes to any branch of the repository without a prompt.
+description: The ESLint rule claude/permissions-auto-mode-push-ask, a heuristic that reports a managed settings source that sets defaultMode to auto and holds no ask or deny rule for git push, because auto mode pushes to most branches of the repository without a prompt.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -23,7 +23,7 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 ## Rule details
 
-Auto mode allows pushes to any branch of the repository you work in, and pull request creation, by default.[^common] An `ask`
+By default, auto mode allows pushes to the branches of the repository you work in, and pull request creation.[^common] A branch with a deploy name, such as `production`, is an exception. An `ask`
 rule with a command, such as `Bash(git push *)`, is evaluated before the classifier, and always forces a prompt, even in auto
 mode.[^checkpoint] A `deny` rule blocks before the classifier too.[^checkpoint]
 

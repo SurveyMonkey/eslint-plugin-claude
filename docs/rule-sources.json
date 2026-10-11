@@ -3149,6 +3149,10 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Built-in subagents",
       "hash": "cc9b12b4175ab256c03ba359d8e64bcfc31a9a28e832a801e3d647a6e68b864d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Subagent files Claude Code skips"
     }
   ],
   "permissions-allow-dir-depth": [

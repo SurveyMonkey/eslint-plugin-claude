@@ -1,4 +1,4 @@
-// Auto mode pushes to any branch of the repository without a prompt. An `ask` rule that matches
+// Auto mode pushes to most branches of the repository without a prompt. An `ask` rule that matches
 // `git push` is the human checkpoint (docs/rules/permissions-auto-mode-push-ask.md). A file does
 // not show whether a session runs in auto mode, so the rule is a heuristic. It reads managed
 // files, where `permissions.defaultMode: "auto"` takes effect. The value has no effect in the two
@@ -51,7 +51,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'noPushAsk' }> = {
     schema: [],
     messages: {
       noPushAsk:
-        'This managed source sets "defaultMode" to "auto" and holds no "ask" rule for `git push`. In auto mode, Claude pushes to any branch of the repository without a prompt. Add "Bash(git push *)" to "permissions.ask" for a checkpoint. A push that Claude writes another way, such as `git -C <dir> push`, does not match the rule. A PreToolUse hook can inspect the full command.',
+        'This managed source sets "defaultMode" to "auto" and holds no "ask" rule for `git push`. In auto mode, Claude pushes to most branches of the repository without a prompt. Add "Bash(git push *)" to "permissions.ask" for a checkpoint. A push that Claude writes another way, such as `git -C <dir> push`, does not match the rule. A PreToolUse hook can inspect the full command.',
     },
   },
   create(context) {

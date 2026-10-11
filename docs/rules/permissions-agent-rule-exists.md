@@ -32,7 +32,7 @@ directory above the project, up to the repository root. The rule does not compar
 Claude Code does.
 
 An agent file with no `name` field, a `name` that is not a string, or no frontmatter defines no name here. A file with a `name`
-and no `description` counts as a definition, so the rule makes no report for it. The YAML parser of the rule can differ from
+and no `description` defines no name, because Claude Code skips it.[^skips] The YAML parser of the rule can differ from
 the parser of Claude Code.
 
 ### What the rule does not read
@@ -74,3 +74,4 @@ Pass, with the file `.claude/agents/reviewer.md` that has `name: reviewer`:
 [^agent]: [Configure permissions: Agent (subagents)](https://code.claude.com/docs/en/permissions#agent-subagents)
 [^disable]: [Create custom subagents: Disable specific subagents](https://code.claude.com/docs/en/sub-agents#disable-specific-subagents)
 [^builtin]: [Create custom subagents: Built-in subagents](https://code.claude.com/docs/en/sub-agents#built-in-subagents)
+[^skips]: [Create custom subagents: Subagent files Claude Code skips](https://code.claude.com/docs/en/sub-agents#subagent-files-claude-code-skips)

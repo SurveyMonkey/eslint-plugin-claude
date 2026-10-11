@@ -46,6 +46,7 @@ it('reads a parameter rule with white space around the colon', () => {
 // https://code.claude.com/docs/en/permissions#wildcard-patterns
 it.each([
   ['npm run build', ['npm run build'], ['npm run build --watch']],
+  ['npm run build', ['npm run build'], ['sudo npm run build']],
   ['npm run *', ['npm run build', 'npm run test --watch', 'npm run'], ['npm install']],
   [
     'git log * main',
@@ -71,6 +72,14 @@ it('reads a character of a pattern as text, and gives no match for an empty patt
   expect(commandPatternMatches('a.b (x)', 'a.b (x)')).toBe(true)
   expect(commandPatternMatches('a.b (x)', 'axb (x)')).toBe(false)
   expect(commandPatternMatches('a?b', 'axb')).toBe(false)
+  expect(commandPatternMatches('a+b', 'a+b')).toBe(true)
+  expect(commandPatternMatches('a+b', 'aab')).toBe(false)
+  expect(commandPatternMatches('a|b', 'a')).toBe(false)
+  expect(commandPatternMatches('a$', 'a')).toBe(false)
+  expect(commandPatternMatches('^a', 'a')).toBe(false)
+  expect(commandPatternMatches('[a]', 'a')).toBe(false)
+  expect(commandPatternMatches('a{2}', 'aa')).toBe(false)
+  expect(commandPatternMatches('a\\b', 'a\\b')).toBe(true)
   expect(commandPatternMatches('', '')).toBe(false)
   expect(commandPatternMatches('  ', 'ls')).toBe(false)
 })

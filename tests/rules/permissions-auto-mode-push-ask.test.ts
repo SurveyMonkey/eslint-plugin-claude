@@ -1,4 +1,4 @@
-// In auto mode, Claude pushes to any branch of the repository without a prompt. An `ask` rule
+// In auto mode, Claude pushes to most branches of the repository without a prompt. An `ask` rule
 // such as `Bash(git push *)` is the human checkpoint
 // (https://code.claude.com/docs/en/auto-mode-config#add-a-human-checkpoint). A `defaultMode` of
 // `auto` takes effect in managed settings and in user settings. It has no effect in the two project
@@ -130,6 +130,12 @@ describe(`${name}: silent`, () => {
     }
     const root = repo({ [OTHER]: text({ disableAutoMode: 'disable' }) })
     expect(ids(root, DROP_IN, auto())).toEqual([])
+  })
+
+  it('reports when the lock key is null, which the docs read as no lock', () => {
+    expect(ids(repo({}), MANAGED, { ...auto(), disableAutoMode: null })).toEqual(['noPushAsk'])
+    const inner = { permissions: { defaultMode: 'auto', disableAutoMode: null } }
+    expect(ids(repo({}), MANAGED, inner)).toEqual(['noPushAsk'])
   })
 
   it('stays silent in a hidden drop-in, and in a project file where auto has no effect', () => {
