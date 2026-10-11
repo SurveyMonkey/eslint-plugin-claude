@@ -154,9 +154,27 @@ const noSkillsDir = JSON.stringify({
   strictKnownMarketplaces: [{ source: 'github', repo: 'acme/*' }],
 })
 const withSkillsDir = JSON.stringify({ strictKnownMarketplaces: [skillsDir] })
-// One byte over the 4 MiB that Claude Code loads from a CLAUDE.md file. An HTML comment is
-// the cheapest text for the Markdown parser.
-const bigMarkdown = `<!--${'x'.repeat(4194305 - 7)}-->`
+
+// `claude-md-max-bytes`: a CLAUDE.md file over the limit in each place that Claude Code reads one.
+// The same text where it reads none: a Markdown file with a near name, `AGENTS.md`, and a rule
+// file (a size rule for rules is not this one). The files are small, and the test sets a small
+// `max`. The rule test holds the case of the default limit of 4 MiB.
+const MAX_BYTES_LIMIT = 100
+const smallMarkdown = `# Notes\n\n${'x'.repeat(300)}\n`
+const MAX_BYTES_TREE: Record<string, string> = {
+  'CLAUDE.md': smallMarkdown,
+  '.claude/CLAUDE.md': smallMarkdown,
+  'CLAUDE.local.md': smallMarkdown,
+  'docs/CLAUDE-notes.md': smallMarkdown,
+  'AGENTS.md': smallMarkdown,
+  '.claude/rules/CLAUDE.md': smallMarkdown,
+}
+// The reports of `claude-md-max-bytes` over `MAX_BYTES_TREE`: the files that the rule reads.
+const MAX_BYTES_REPORTS = [
+  '.claude/CLAUDE.md: claude/claude-md-max-bytes@2',
+  'CLAUDE.local.md: claude/claude-md-max-bytes@2',
+  'CLAUDE.md: claude/claude-md-max-bytes@2',
+]
 
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
@@ -809,15 +827,6 @@ const TREE: Record<string, string> = {
   'packages/sd/.vscode/settings.json': noSkillsDir,
   'packages/sd2/managed-settings.json': noSkillsDir,
   'packages/sd2/managed-settings.d/10-a.json': withSkillsDir,
-  // The CLAUDE.md, rules and memory rules of #13. `claude-md-max-bytes`: a CLAUDE.md file over
-  // 4 MiB in each place that Claude Code reads one. The same text where it reads none: a Markdown
-  // file with a near name, `AGENTS.md`, and a rule file (a size rule for rules is not this one).
-  'packages/mb/CLAUDE.md': bigMarkdown,
-  'packages/mb/.claude/CLAUDE.md': bigMarkdown,
-  'packages/mb/CLAUDE.local.md': bigMarkdown,
-  'packages/mb/docs/CLAUDE-notes.md': bigMarkdown,
-  'packages/mb/AGENTS.md': bigMarkdown,
-  'packages/mb/.claude/rules/CLAUDE.md': bigMarkdown,
   // `claude-md-agents-md-variant`: the variants that Claude Code never reads, and a Markdown file
   // below `.agents/`. The same text where Claude Code reads it or where no rule reads it.
   'packages/av/AGENTS.local.md': '# Notes\n',
@@ -1483,10 +1492,6 @@ const EXPECTED = [
   'packages/ms/managed-settings.json: claude/memory-settings-schema@2',
   'packages/ms/managed-settings.d/10-a.json: claude/memory-settings-schema@2',
   'packages/ms/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
-  // `claude-md-max-bytes` reads CLAUDE.md and CLAUDE.local.md, and no other file.
-  'packages/mb/CLAUDE.md: claude/claude-md-max-bytes@2',
-  'packages/mb/.claude/CLAUDE.md: claude/claude-md-max-bytes@2',
-  'packages/mb/CLAUDE.local.md: claude/claude-md-max-bytes@2',
   // The grammar rules read the settings files of a project, and no other settings file.
   ...[
     '.claude/settings.json',
@@ -1840,6 +1845,7 @@ const OFF_RULES = [
 let root = ''
 isolateGitConfig()
 let descriptionRoot = ''
+let maxBytesRoot = ''
 
 beforeAll(() => {
   root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-'))
@@ -1869,6 +1875,11 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(descriptionRoot, file)), { recursive: true })
     writeFileSync(path.join(descriptionRoot, file), content)
   }
+  maxBytesRoot = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-max-bytes-'))
+  for (const [file, content] of Object.entries(MAX_BYTES_TREE)) {
+    mkdirSync(path.dirname(path.join(maxBytesRoot, file)), { recursive: true })
+    writeFileSync(path.join(maxBytesRoot, file), content)
+  }
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -1878,6 +1889,7 @@ beforeAll(() => {
 afterAll(() => {
   rmSync(root, { recursive: true, force: true })
   rmSync(descriptionRoot, { recursive: true, force: true })
+  rmSync(maxBytesRoot, { recursive: true, force: true })
 })
 
 /** Each report over the tree, as `file: rule@severity`, sorted. */
@@ -2232,6 +2244,21 @@ describe('configs', () => {
     // too: `agent-plugin-ignored-fields` would report its `permissionMode` in a plugin agent.
     expect(await reports(plugin.configs.recommended, descriptionRoot)).toEqual([])
   }, 30_000)
+  it('reports the max-bytes rule on the files that it reads, on a tree of its own', async () => {
+    // The override sets a small `max` and keeps the severity of the preset.
+    const withLimit = (preset: Linter.Config[]) =>
+      [
+        ...preset,
+        {
+          files: ['**/CLAUDE.md', '**/CLAUDE.local.md'],
+          rules: { 'claude/claude-md-max-bytes': ['error', { max: MAX_BYTES_LIMIT }] },
+        },
+      ] as Linter.Config[]
+    expect(await reports(withLimit(plugin.configs.recommended), maxBytesRoot)).toEqual(
+      MAX_BYTES_REPORTS,
+    )
+    expect(await reports(withLimit(plugin.configs.strict), maxBytesRoot)).toEqual(MAX_BYTES_REPORTS)
+  }, 30_000)
   it('reports the two option rules on their own files once an option turns them on', async () => {
     const shell = '---\ndescription: d\nshell: bash\n---\n\n!`date`\n'
     const files: Record<string, string> = {
@@ -2289,7 +2316,7 @@ describe('configs', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
-  })
+  }, 30_000)
 
   it('reports the two budget rules on their own files once an option sets a small limit', async () => {
     const skill = '---\ndescription: d\n---\n\nfive!\n'
