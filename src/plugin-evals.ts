@@ -209,6 +209,9 @@ export function evalFileOf(file: string): EvalFile | null {
   }
 }
 
+/** Order two directory entries by name, in code unit order. */
+const byName = (a: Dirent, b: Dirent): number => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+
 /** The case directories of the eval directory `evalDir`, as absolute paths, in name order. A
  *  directory is a case when it holds a `prompt.md` or a `case.yaml`. Everything
  *  below a case belongs to it, so the walk goes no deeper. The walk skips `.git`,
@@ -227,9 +230,7 @@ export function caseDirectories(evalDir: string): string[] {
       return
     }
     // Sorted, so that the result does not depend on the order of the listing.
-    for (const entry of entries.toSorted((a, b) =>
-      a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
-    )) {
+    for (const entry of entries.toSorted(byName)) {
       const reserved = top && (entry.name === 'mocks' || entry.name === 'results')
       if (entry.isDirectory() && !SKIPPED.has(entry.name) && !reserved) {
         visit(path.join(dir, entry.name), false)
@@ -281,4 +282,32 @@ export function readCaseYaml(file: string, bound: string): CaseYaml | null {
       return text.slice(start, end)
     },
   }
+}
+
+/** A directory `mocks/<server>/` of an eval suite. `dir` is its path, and `server` is its name. */
+export interface MockDirectory {
+  dir: string
+  server: string
+}
+
+/** The server directories in `mocks/` of the eval directory `evalDir` and of each case, in name
+ *  order. The directory `.replay` holds saved answers, so it is no server. The result skips a
+ *  `mocks` that is a link with a real path out of `bound`, and a `mocks` that cannot be listed
+ *  (ADR 001, Decision 14). */
+export function mockDirectories(evalDir: string, bound: string): MockDirectory[] {
+  const found: MockDirectory[] = []
+  for (const owner of new Set([evalDir, ...caseDirectories(evalDir)])) {
+    const mocks = path.join(owner, 'mocks')
+    const real = realOf(mocks)
+    const entries = typeof real === 'string' && isInside(real, bound) ? entriesOf(real) : null
+    if (!Array.isArray(entries)) {
+      continue
+    }
+    for (const entry of entries.toSorted(byName)) {
+      if (entry.isDirectory() && entry.name !== '.replay') {
+        found.push({ dir: path.join(mocks, entry.name), server: entry.name })
+      }
+    }
+  }
+  return found
 }
