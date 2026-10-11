@@ -4,131 +4,163 @@
   "blocks": [
     {
       "id": "best-practices-for-claude-code",
-      "hash": "d50ed54de787c3ebe11296bfb76808d5d1fc1bbae8ecfb26ce92e2e6c4eadf5a"
+      "hash": "d50ed54de787c3ebe11296bfb76808d5d1fc1bbae8ecfb26ce92e2e6c4eadf5a",
+      "bodyHash": "c0dd815db365721de16c9ff0cc724508b1940549c4011c522b321842abafa609"
     },
     {
       "id": "give-claude-a-way-to-verify-its-work",
-      "hash": "9713195098a137f3297a5b14b197e0281614d8cd0895376d00f4747866d9b4a2"
+      "hash": "9713195098a137f3297a5b14b197e0281614d8cd0895376d00f4747866d9b4a2",
+      "bodyHash": "5c03bf198207c6a565b72e7e91b1bab248de0663d685ebccb99295f4dab5d34a"
     },
     {
       "id": "explore-first-then-plan-then-code",
-      "hash": "ae2dcbc022b0c36886c89cbf00e06f0e93100c13ff4f7ddd83344d46f39f7b29"
+      "hash": "ae2dcbc022b0c36886c89cbf00e06f0e93100c13ff4f7ddd83344d46f39f7b29",
+      "bodyHash": "8f3d7a371900df30fc259f368539b11e809efd83abd49dcd3b6903d0a12b4c1e"
     },
     {
       "id": "provide-specific-context-in-your-prompts",
-      "hash": "d61d5da517840b0281f0e5a51066b5a86fd0e0a8b9834cfab9a2736146b4487d"
+      "hash": "d61d5da517840b0281f0e5a51066b5a86fd0e0a8b9834cfab9a2736146b4487d",
+      "bodyHash": "4d53dc21ccca6e8c4c0188f0811ad79fa761e4a051863cbaa3b486d933102875"
     },
     {
       "id": "provide-rich-content",
-      "hash": "40432bc2152ec0e83bf7390215b79fafbde902a326547b611aea7200bb559b32"
+      "hash": "40432bc2152ec0e83bf7390215b79fafbde902a326547b611aea7200bb559b32",
+      "bodyHash": "45f3ec74c374816bf89672493ce4eb832ee3eb03605c33dfd2c0d0eb44663cca"
     },
     {
       "id": "configure-your-environment",
-      "hash": "8aa50365941f509d2efe37f401125c44dcd7cbb47754f3bedb365dcc0793a221"
+      "hash": "8aa50365941f509d2efe37f401125c44dcd7cbb47754f3bedb365dcc0793a221",
+      "bodyHash": "a078ade491ce5e7cb55f7df29fa67e83cff33803bc2e5c72cc32d9e43a2c2ac3"
     },
     {
       "id": "write-an-effective-claude-md",
-      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819"
+      "hash": "7eff0503cba3fa7fdc01745ee63bbaa1c90159372044cd0077ac8df32820c819",
+      "bodyHash": "2f654a7111a51b0db578efab2fc6ff1565149162ca7f7059a9bca43f530f03c3"
     },
     {
       "id": "configure-permissions",
-      "hash": "ff2778dd0bf3dcdb697bfcc457dc4e94c6fb24e42cea087167ab3475ac81a626"
+      "hash": "ff2778dd0bf3dcdb697bfcc457dc4e94c6fb24e42cea087167ab3475ac81a626",
+      "bodyHash": "a447990ab634dfe5a714a74d6bd920dd4dc8e6c047fdc16dfdb186c1f05b7c8a"
     },
     {
       "id": "use-cli-tools",
-      "hash": "efe1531e194b5e78bd84917f3aa30a7487142ff48e1137c3fca456fabc266f44"
+      "hash": "efe1531e194b5e78bd84917f3aa30a7487142ff48e1137c3fca456fabc266f44",
+      "bodyHash": "e753689ed3141283ebb7ac05fa736de249ce31bfa8abbe79143ec633be3efe4e"
     },
     {
       "id": "connect-mcp-servers",
-      "hash": "ebaaf5a475a6fc4dba360d2e58e6ff34cf6d71eab6427448cc70b15152f49607"
+      "hash": "ebaaf5a475a6fc4dba360d2e58e6ff34cf6d71eab6427448cc70b15152f49607",
+      "bodyHash": "408014e37f3cb7aa2f4d6db37c79a0360cd4aa847ddc8ae05bee7c34574a23ed"
     },
     {
       "id": "set-up-hooks",
-      "hash": "530e7be3450b0e6fdba2cf8a71ed966f762cf5ffa9694388bf5e2f971c30e77c"
+      "hash": "530e7be3450b0e6fdba2cf8a71ed966f762cf5ffa9694388bf5e2f971c30e77c",
+      "bodyHash": "1415fbecdefd3f919add204b6db187b488d662983a81ac59d787bbae2ce5fa69"
     },
     {
       "id": "create-skills",
-      "hash": "77742fd3b50adcce7549829d1af55d1bc2e5f17ecf1e506e3cef86dd2ab743f9"
+      "hash": "77742fd3b50adcce7549829d1af55d1bc2e5f17ecf1e506e3cef86dd2ab743f9",
+      "bodyHash": "fec8a5d531060476a2379986e670f0461f77b67c0531ee553eff4b9b00a98fca"
     },
     {
       "id": "create-custom-subagents",
-      "hash": "ad950f200defa05bbc7d4d15b4eff237c060c0bdfdda1abacf8fb09b66c3b025"
+      "hash": "ad950f200defa05bbc7d4d15b4eff237c060c0bdfdda1abacf8fb09b66c3b025",
+      "bodyHash": "5583460cc6c727e80dcd689e549608e2108d86170cd8723b599ab6c95802ccad"
     },
     {
       "id": "install-plugins",
-      "hash": "19ce24d89bb4abee31799c886f6e53b52e3fba768baaff23dafc76ed8542c053"
+      "hash": "19ce24d89bb4abee31799c886f6e53b52e3fba768baaff23dafc76ed8542c053",
+      "bodyHash": "3454e3ed288fd1c9f61bd85cba0d95cb7b8643b76c40b283745e0f24812318af"
     },
     {
       "id": "communicate-effectively",
-      "hash": "a2e791968f61a0a84ad8abee6e769e6cf05cbb0a5c0ef0ff8a63b6c94cdc7ae1"
+      "hash": "a2e791968f61a0a84ad8abee6e769e6cf05cbb0a5c0ef0ff8a63b6c94cdc7ae1",
+      "bodyHash": "14760b6b3d60a4f37b1608bc1dfc899348e44dfeb53357624893fa5adbd82c8f"
     },
     {
       "id": "ask-codebase-questions",
-      "hash": "7095287c16e37f054bf21deda76d804dddfd73730cf06e7b58414d9936e1d84a"
+      "hash": "7095287c16e37f054bf21deda76d804dddfd73730cf06e7b58414d9936e1d84a",
+      "bodyHash": "9f14c0d2885618032a5ab92c4b13d47ad0f39cb7825f72e5200c6c1be1f4abe5"
     },
     {
       "id": "let-claude-interview-you",
-      "hash": "d062058245821fad31ee3c2f885abae1d60a8b7da47920d9512552775a1e797c"
+      "hash": "d062058245821fad31ee3c2f885abae1d60a8b7da47920d9512552775a1e797c",
+      "bodyHash": "a106f9035f244b13bd5b6f8e223009d705b520476d4c0c0f58e7e5c5c3d1829e"
     },
     {
       "id": "manage-your-session",
-      "hash": "a137ec0b5d3eb8e8ba38bf4a2c849d9d351c18d5c8c11d13dc456c61dd2cf5b7"
+      "hash": "a137ec0b5d3eb8e8ba38bf4a2c849d9d351c18d5c8c11d13dc456c61dd2cf5b7",
+      "bodyHash": "55e454269ac15c0d011494a231586c03e7adfca160cb37d9e41e754c66ecba96"
     },
     {
       "id": "course-correct-early-and-often",
-      "hash": "eebe8b2c2b9b9de747e06a40fcbc84588cfb8a0c8449cfca03aa77403a48d17d"
+      "hash": "eebe8b2c2b9b9de747e06a40fcbc84588cfb8a0c8449cfca03aa77403a48d17d",
+      "bodyHash": "4cded910a2096e0da6a9033a13713f02c613f90d69501cfac807a50416dd0b69"
     },
     {
       "id": "manage-context-aggressively",
-      "hash": "e5043c86a7e81c1149f7504d470bfa92dad796804cc655e30e942d237995696c"
+      "hash": "e5043c86a7e81c1149f7504d470bfa92dad796804cc655e30e942d237995696c",
+      "bodyHash": "c3718e0626f5524dc1fd44531dd0aff7611c30b2d49fb1a01bdb184f7e905385"
     },
     {
       "id": "use-subagents-for-investigation",
-      "hash": "46487f551e7882eb5709735056e64dc140d1e9812c84dee88869e79858bcfee5"
+      "hash": "46487f551e7882eb5709735056e64dc140d1e9812c84dee88869e79858bcfee5",
+      "bodyHash": "c15d76c877fa0b30724152e43dd7512f57580f259309c0abd6b9a412ce34f955"
     },
     {
       "id": "rewind-with-checkpoints",
-      "hash": "f8a91d60d5e0c52b0cc416040d45ae9bc6898299682ab3238abe617f55f97dcb"
+      "hash": "f8a91d60d5e0c52b0cc416040d45ae9bc6898299682ab3238abe617f55f97dcb",
+      "bodyHash": "0c4161ad4cbd87ccb495ac223a690149d926449ad78035ed426768f5f566ae35"
     },
     {
       "id": "resume-conversations",
-      "hash": "0e41e45cbc686e7ab268323af570464044b203968f66c10dd363b6b5ef3269a2"
+      "hash": "0e41e45cbc686e7ab268323af570464044b203968f66c10dd363b6b5ef3269a2",
+      "bodyHash": "0d672c65b697090df8ae082324c51048f6d61df48388f8119257bc8e31ddd69d"
     },
     {
       "id": "automate-and-scale",
-      "hash": "cf97949cdf1c057b908f015f95b6d92615398c507539bae91155553a95821bf8"
+      "hash": "cf97949cdf1c057b908f015f95b6d92615398c507539bae91155553a95821bf8",
+      "bodyHash": "33cd7e993060df477dcb2f5ef8cf14c30cf16fff1ce5a4f0525ccfc2c8732e85"
     },
     {
       "id": "run-non-interactive-mode",
-      "hash": "eca3b57687b65271f5d1c8b6c11a7693d536537a3f54aec6887f3a77e0cd8771"
+      "hash": "eca3b57687b65271f5d1c8b6c11a7693d536537a3f54aec6887f3a77e0cd8771",
+      "bodyHash": "b3da9bffcc315c6b58a9143f44a831805f143236e2c293a9dd869d62952cbd7c"
     },
     {
       "id": "run-multiple-claude-sessions",
-      "hash": "60f9c7cc364994148436acc1e2a8c0df7cf5acb141c8d1156cfde0d5d4e27808"
+      "hash": "60f9c7cc364994148436acc1e2a8c0df7cf5acb141c8d1156cfde0d5d4e27808",
+      "bodyHash": "ec1bec1f5f39218f7d5ad6c9ce7ef7011d89b0434fc01aa67882f00f8b6d9a73"
     },
     {
       "id": "fan-out-across-files",
-      "hash": "a4330356e9ce397946e9c6e6e81580075922a6c71ed563243110ad4a3e93e555"
+      "hash": "a4330356e9ce397946e9c6e6e81580075922a6c71ed563243110ad4a3e93e555",
+      "bodyHash": "91482d0c34782436014596c08b6837a93afb965ace6252e2b756d76c277a6da1"
     },
     {
       "id": "run-autonomously-with-auto-mode",
-      "hash": "e14c4db404942aacc1b31963a1fc95ac77a622a158055a52bf39c4077015dd63"
+      "hash": "e14c4db404942aacc1b31963a1fc95ac77a622a158055a52bf39c4077015dd63",
+      "bodyHash": "1cb7f2039588cc6af0947140af3bddbbdbda8c1dca779093f70a9b379847ef60"
     },
     {
       "id": "add-an-adversarial-review-step",
-      "hash": "48f561091bd6734decdddf6a568fc3ebc91c62a5ad1fde970231717659c5efb8"
+      "hash": "48f561091bd6734decdddf6a568fc3ebc91c62a5ad1fde970231717659c5efb8",
+      "bodyHash": "ecc795e7168cd2eb20499cbd6f4609da73e06c75ccebd2bf6c0884a81fdde405"
     },
     {
       "id": "avoid-common-failure-patterns",
-      "hash": "d8742ffa004a549a1896a92a2f71fd6d774381df33c7366bac64c3daf4f9ae04"
+      "hash": "d8742ffa004a549a1896a92a2f71fd6d774381df33c7366bac64c3daf4f9ae04",
+      "bodyHash": "fbdc0494a27709cd06be8d8488d1b053cd82392768a788ad0f5a5fe58781c83c"
     },
     {
       "id": "develop-your-intuition",
-      "hash": "5627d874743abd8cba73ca69d7e248f08c9ab815951bb780dd3a04fcc58b8516"
+      "hash": "5627d874743abd8cba73ca69d7e248f08c9ab815951bb780dd3a04fcc58b8516",
+      "bodyHash": "8374c595ddcff878b5490c84c57e750536fd9e51cd782f1c9d2b80d3f0539b53"
     },
     {
       "id": "related-resources",
-      "hash": "7004cec79c119aae358bd6eed19214e9157ccaf0fd1f904f24057d71ed45bbb0"
+      "hash": "7004cec79c119aae358bd6eed19214e9157ccaf0fd1f904f24057d71ed45bbb0",
+      "bodyHash": "07fee13d5792a3adf9ead3f4f93f697744765fcc9dd5648f0635eae87626e725"
     }
   ],
   "sources": [

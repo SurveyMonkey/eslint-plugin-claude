@@ -593,7 +593,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0b09d47a573226a1758e4052ad31836aacd2a23028179af6df24bff4db8f5826"
+      "hash": "89007657f7b53ac84896056a7efa24a1568cee92fa687eb216116956473559e4"
     }
   ],
   "claude-md-guardrail-to-hook": [
@@ -1420,6 +1420,18 @@
       "url": "https://code.claude.com/docs/en/memory",
       "heading": "Share rules across projects with symlinks",
       "hash": "22fa7deac27fd79336c6602fabb75218aef100bc086f63090dfbeb042c659a5f"
+    }
+  ],
+  "memory-topic-frontmatter": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Auto memory",
+      "hash": "22465dc6f3e06d8f7d854e9f4e827789b2e7dd43c156fa6c75b49ec34adb7641"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
     }
   ],
   "output-style-force-for-plugin": [
