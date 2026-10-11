@@ -89,6 +89,13 @@ import marketplaceSelfHostedRootSource from './rules/marketplace-self-hosted-roo
 import marketplaceSourceSchema from './rules/marketplace-source-schema.ts'
 import marketplaceStrictFalseConflict from './rules/marketplace-strict-false-conflict.ts'
 import marketplaceVersionDuplicate from './rules/marketplace-version-duplicate.ts'
+import mcpHiddenWhitespace from './rules/mcp-hidden-whitespace.ts'
+import mcpJsonFileSize from './rules/mcp-json-file-size.ts'
+import mcpJsonLocation from './rules/mcp-json-location.ts'
+import mcpJsonServersKey from './rules/mcp-json-servers-key.ts'
+import mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
+import mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
+import mcpTimeoutMin from './rules/mcp-timeout-min.ts'
 import memoryAgentMemoryLocalUntracked from './rules/memory-agent-memory-local-untracked.ts'
 import memoryAgentMemoryOrphan from './rules/memory-agent-memory-orphan.ts'
 import memoryAutoMemoryDirectoryCommitted from './rules/memory-auto-memory-directory-committed.ts'
@@ -455,6 +462,13 @@ const modules = [
   settingsWorktreePaths,
   statuslineHomePathShared,
   statuslineScriptTerminalSize,
+  mcpJsonLocation,
+  mcpJsonServersKey,
+  mcpJsonFileSize,
+  mcpServerNameReserved,
+  mcpRemoteUrlEmpty,
+  mcpHiddenWhitespace,
+  mcpTimeoutMin,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -703,6 +717,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-worktree-paths': 'off',
   'statusline-home-path-shared': 'off',
   'statusline-script-terminal-size': 'off',
+  'mcp-json-location': 'error',
+  'mcp-json-servers-key': 'error',
+  'mcp-json-file-size': 'error',
+  'mcp-server-name-reserved': 'error',
+  'mcp-remote-url-empty': 'error',
+  'mcp-hidden-whitespace': 'error',
+  'mcp-timeout-min': 'error',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

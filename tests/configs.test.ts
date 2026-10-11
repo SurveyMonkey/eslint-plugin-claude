@@ -182,6 +182,24 @@ const MAX_BYTES_REPORTS = [
   'CLAUDE.md: claude/claude-md-max-bytes@2',
 ]
 
+// `mcp-json-file-size`: a `.mcp.json` over a small `max` that the test sets. It has an `mcpServers`
+// object, so only the size rule reports it. The tree is separate from `TREE`, so no large file is
+// in the shared tree. The rule test holds the case of the default limit of 2 MiB.
+const MCP_SIZE_LIMIT = 100
+const MCP_SIZE_TREE: Record<string, string> = {
+  'packages/mbig/.mcp.json': JSON.stringify({ mcpServers: {}, a: 'x'.repeat(300) }),
+}
+
+// A server list with one fault for each content rule of #16: a reserved name, a remote server with
+// an empty `url`, a header value with a trailing line break, and a `timeout` in seconds.
+const badMcpServers = {
+  workspace: { command: 'x' },
+  docs: { type: 'http', url: '' },
+  api: { type: 'http', url: 'https://x.test/mcp', headers: { Authorization: 'Bearer t\n' } },
+  build: { command: 'x', timeout: 60 },
+}
+const badMcp = JSON.stringify({ mcpServers: badMcpServers })
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -1373,6 +1391,26 @@ const TREE: Record<string, string> = {
     '{"statusLine": {"type": "command", "command": "node C:\\\\Users\\\\me\\\\status.mjs"}}',
   'packages/winpath2/managed-settings.json':
     '{"statusLine": {"type": "command", "command": "node C:/Users/me/status.mjs"}}',
+  // The `.mcp.json` rules of #16. A project file with one fault for each content rule, a file
+  // with the VS Code key, and a clean file. `MCP_SIZE_TREE` holds the file over the size limit.
+  'packages/mc/.mcp.json': badMcp,
+  'packages/mk2/.mcp.json': '{"servers": {"db": {"command": "x"}}}',
+  'packages/mok/.mcp.json': '{"mcpServers": {"db": {"command": "x", "timeout": 5000}}}',
+  // The three paths under `.claude/` that Claude Code does not read. Only `mcp-json-location`
+  // reports them, and the content rules skip them. A nearby path is silent for every rule.
+  'packages/mu/.claude/.mcp.json': badMcp,
+  'packages/mu/.claude/mcp.json': badMcp,
+  'packages/mu/.claude/config/mcp.json': badMcp,
+  'packages/mu/.claude/other/mcp.json': badMcp,
+  // A plugin `.mcp.json` may omit the wrapper, and may hold a placeholder with an empty `url`.
+  // The plugin root is `plugins/p`, which has a manifest above. The servers-key and URL rules skip
+  // it. The name, whitespace and timeout rules read it.
+  'plugins/p/.mcp.json': JSON.stringify(badMcpServers),
+  // The same content where no rule reads it: other names and other directories.
+  'packages/mc/mcp.json': badMcp,
+  'packages/mc/.mcp.json.bak': badMcp,
+  'packages/mc/sub/mcp.json': '{"servers": {}}',
+  '.vscode/mcp.json': '{"servers": {"db": {"command": "x"}}}',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -1827,6 +1865,19 @@ const SCHEMA_URL_MISSING = SCHEMA_URL_TREES.filter(([file, content]) => {
   const data: unknown = SETTINGS_FILE.test(file) ? JSON.parse(content) : null
   return typeof data === 'object' && data !== null && !Array.isArray(data) && !('$schema' in data)
 }).map(([file]) => file)
+
+// The rules of #16 on `.mcp.json`, in the order of the `modules` list, with the files of each.
+// Each is an error.
+const MCP_PATHS = ['**/.claude/.mcp.json', '**/.claude/mcp.json', '**/.claude/config/mcp.json']
+const MCP_RULES = [
+  { name: 'mcp-json-location', files: MCP_PATHS },
+  { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
+  { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
+  { name: 'mcp-server-name-reserved', files: ['**/.mcp.json'] },
+  { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
+  { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
+  { name: 'mcp-timeout-min', files: ['**/.mcp.json'] },
+]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -2417,6 +2468,22 @@ const EXPECTED = [
   'packages/mo/.claude/commands/cmodel.md: claude/command-legacy-format@1',
   'packages/pw/commands/cbad.md: claude/command-legacy-format@1',
   'packages/se/.claude/commands/cpush.md: claude/command-legacy-format@1',
+  // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`, and no other file.
+  // The paths under `.claude/` get the location report only.
+  ...[
+    'mcp-server-name-reserved',
+    'mcp-remote-url-empty',
+    'mcp-hidden-whitespace',
+    'mcp-timeout-min',
+  ].map((rule) => `packages/mc/.mcp.json: claude/${rule}@2`),
+  'packages/mk2/.mcp.json: claude/mcp-json-servers-key@2',
+  ...['.claude/.mcp.json', '.claude/mcp.json', '.claude/config/mcp.json'].map(
+    (file) => `packages/mu/${file}: claude/mcp-json-location@2`,
+  ),
+  // The plugin file has no wrapper. The URL rule skips the placeholder.
+  ...['mcp-server-name-reserved', 'mcp-hidden-whitespace', 'mcp-timeout-min'].map(
+    (rule) => `plugins/p/.mcp.json: claude/${rule}@2`,
+  ),
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
@@ -2734,6 +2801,7 @@ let root = ''
 isolateGitConfig()
 let descriptionRoot = ''
 let maxBytesRoot = ''
+let mcpSizeRoot = ''
 // A folder next to the tree, for the files that links in the tree lead to.
 let external = ''
 
@@ -2771,6 +2839,11 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(maxBytesRoot, file)), { recursive: true })
     writeFileSync(path.join(maxBytesRoot, file), content)
   }
+  mcpSizeRoot = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-mcp-size-'))
+  for (const [file, content] of Object.entries(MCP_SIZE_TREE)) {
+    mkdirSync(path.dirname(path.join(mcpSizeRoot, file)), { recursive: true })
+    writeFileSync(path.join(mcpSizeRoot, file), content)
+  }
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -2794,6 +2867,7 @@ afterAll(() => {
   rmSync(root, { recursive: true, force: true })
   rmSync(descriptionRoot, { recursive: true, force: true })
   rmSync(maxBytesRoot, { recursive: true, force: true })
+  rmSync(mcpSizeRoot, { recursive: true, force: true })
   rmSync(external, { recursive: true, force: true })
 })
 
@@ -2869,6 +2943,10 @@ describe('configs', () => {
         `claude/recommended/${rule}`,
         { [`claude/${rule}`]: 'warn' },
       ]),
+      ...MCP_RULES.map(({ name }) => [
+        `claude/recommended/${name}`,
+        { [`claude/${name}`]: 'error' },
+      ]),
     ])
   })
 
@@ -2903,6 +2981,7 @@ describe('configs', () => {
       ...MEMORY_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...MEMORY_OFF_RULES.map((rule) => `claude/strict/${rule}`),
       ...SETTINGS_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...MCP_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -3073,6 +3152,15 @@ describe('configs', () => {
     }
   })
 
+  it('gives each .mcp.json rule one JSON block for its files', () => {
+    for (const { name, files } of MCP_RULES) {
+      const blocks = plugin.configs.recommended.filter(
+        (c) => c.name === `claude/recommended/${name}`,
+      )
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
   // The run starts a `git` process for each file that a git rule reads, so it needs more than the
   // default time on a busy machine.
   // The tree holds files of 4 MiB for the size rule, so these two runs need more than 5 seconds
@@ -3213,6 +3301,19 @@ describe('configs', () => {
       MAX_BYTES_REPORTS,
     )
     expect(await reports(withLimit(plugin.configs.strict), maxBytesRoot)).toEqual(MAX_BYTES_REPORTS)
+  }, 30_000)
+  it('reports the .mcp.json size rule on a tree of its own', async () => {
+    // The override sets a small `max` and keeps the severity of the preset.
+    const config = [
+      ...plugin.configs.recommended,
+      {
+        files: ['**/.mcp.json'],
+        rules: { 'claude/mcp-json-file-size': ['error', { max: MCP_SIZE_LIMIT }] },
+      },
+    ] as Linter.Config[]
+    expect(await reports(config, mcpSizeRoot)).toEqual([
+      'packages/mbig/.mcp.json: claude/mcp-json-file-size@2',
+    ])
   }, 30_000)
   it('reports the two option rules on their own files once an option turns them on', async () => {
     const shell = '---\ndescription: d\nshell: bash\n---\n\n!`date`\n'
