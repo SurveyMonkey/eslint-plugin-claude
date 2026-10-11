@@ -27,7 +27,10 @@ Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build 
 rule definitions in `src/rules/` (`eslint.config.mjs`, ADR 001 Decision 7). Each schema option
 needs a `description`. A rule with a schema option needs `meta.defaultOptions`, and `create`
 reads each default from it. `tests/default-options.test.ts` compares `meta.defaultOptions` with
-the Options table of the rule doc.
+the Options of the rule doc. It also checks the descriptions of a schema that a rule imports,
+which the lint cannot see. Each module in `src/rules/` ends with `export default rule`. If a
+module does not, the lint finds no rule in it, and checks nothing
+(`tests/rule-export-last.test.ts`).
 
 The pre-commit hooks (`lefthook.yml`) sort a staged `package.json`, then run Biome, tsc and the
 Vitest tests related to the staged files. CI runs every check again, and the "Require CI" and

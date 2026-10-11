@@ -119,10 +119,10 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    product.** Biome checks the TypeScript and JSON in this repository. ESLint, with
    `eslint-plugin-eslint-plugin` and a parser that removes the TypeScript types, checks the rule
    definitions in `src/rules/` ([#235](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/235)).
-   Biome cannot check the `meta` of a rule, such as a schema option with no description. A docs
-   generator reads `meta.defaultOptions`, so a default that only `create` applies is not in the
-   docs ([#236](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/236)). The plugin's
-   rules lint Claude Code configuration files in the repositories that install it.
+   Biome cannot check the `meta` of a rule, such as a schema option with no description. The docs
+   generator of [#236](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/236) reads
+   `meta.defaultOptions`, so a default that only `create` applies cannot get into its docs. The
+   plugin's rules lint Claude Code configuration files in the repositories that install it.
 8. **`@eslint/markdown` and `@eslint/json` are `peerDependencies`, and `yaml` is a
    `dependency`.**
    - The two language plugins are peers, at `^8.0.0` and `^2.0.0`. The consumer installs one
