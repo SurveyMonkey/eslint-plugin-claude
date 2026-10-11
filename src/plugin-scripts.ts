@@ -9,7 +9,7 @@ import { realScript, type Scope, scriptRefs, wordsOf } from './script-refs.ts'
 import { isInside, statOf } from './skill-tree.ts'
 
 /** The largest script that the reader reads, in bytes. A larger file is not a script. */
-export const MAX_SCRIPT_BYTES = 1_048_576
+const MAX_SCRIPT_BYTES = 1_048_576
 
 /** A script of a plugin: the word of the command that names it, the real path of the file, and
  *  its text. */

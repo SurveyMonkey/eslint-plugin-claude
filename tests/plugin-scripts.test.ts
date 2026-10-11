@@ -5,10 +5,12 @@ import { chmodSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { readPluginAt } from '../src/plugin-manifest.ts'
-import { afterRoot, MAX_SCRIPT_BYTES, pluginScripts } from '../src/plugin-scripts.ts'
+import { afterRoot, pluginScripts } from '../src/plugin-scripts.ts'
 import { link, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { pluginTree } from './plugin-tree.test-support.ts'
 
+// The largest script that the reader reads, in bytes.
+const LIMIT = 1_048_576
 const linked = noLinks ? it.skip : it
 const unreadable = noLinks || process.getuid?.() === 0 ? it.skip : it
 
@@ -63,11 +65,7 @@ describe('pluginScripts', () => {
     ['a script that is not there', `\${CLAUDE_PLUGIN_ROOT}/none.sh`, {}],
     ['a folder', `\${CLAUDE_PLUGIN_ROOT}/dir`, { 'dir/x': 'x' }],
     ['a binary file', `\${CLAUDE_PLUGIN_ROOT}/b`, { b: 'a\0b' }],
-    [
-      'a script above the limit',
-      `\${CLAUDE_PLUGIN_ROOT}/big`,
-      { big: 'x'.repeat(MAX_SCRIPT_BYTES + 1) },
-    ],
+    ['a script above the limit', `\${CLAUDE_PLUGIN_ROOT}/big`, { big: 'x'.repeat(LIMIT + 1) }],
     ['a relative program', './run.sh', { 'run.sh': 'x' }],
     ['a project path', `\${CLAUDE_PROJECT_DIR}/run.sh`, { 'run.sh': 'x' }],
     ['a path above the plugin', `\${CLAUDE_PLUGIN_ROOT}/../run.sh`, { 'run.sh': 'x' }],
@@ -76,7 +74,7 @@ describe('pluginScripts', () => {
   })
 
   it('reads a script at the limit', () => {
-    const files = { big: 'x'.repeat(MAX_SCRIPT_BYTES) }
+    const files = { big: 'x'.repeat(LIMIT) }
     expect(scripts(`\${CLAUDE_PLUGIN_ROOT}/big`, files)).toHaveLength(1)
   })
 
@@ -113,7 +111,7 @@ describe('pluginScripts', () => {
 
   linked('gives no script for a named pipe, which a read would wait on', () => {
     const { dir, top } = pluginTree({ name: 'p' })
-    execFileSync('mkfifo', [path.join(top, 'pipe')])
+    execFileSync('sh', ['-c', 'mkfifo "$0"', path.join(top, 'pipe')])
     const plugin = readPluginAt(dir) as NonNullable<ReturnType<typeof readPluginAt>>
     expect(pluginScripts(plugin, `\${CLAUDE_PLUGIN_ROOT}/pipe`)).toEqual([])
   })
