@@ -91,12 +91,13 @@ describe(`${name}: reports`, () => {
   })
 
   it('reports a secrets folder that a pattern of another shape does not cover', () => {
-    // `?` and `*` stay in one part of the path, so none of these covers `secrets/k`.
+    // `?` stays in one part of the path, and `.` is a dot, so none of these covers `secrets/`.
     for (const rule of [
-      'Read(secrets?k)',
-      'Read(secrets*k)',
       'Read(secrets?x)',
       'Read(secrets*x)',
+      'Read(secrets?)',
+      // A `.` is a dot, and not any character: it must not match the `/` of `secrets/`.
+      'Read(secrets.)',
     ]) {
       expect(ids(tracking('secrets/k'), deny(rule)), rule).toEqual(['open'])
     }
@@ -128,6 +129,10 @@ describe(`${name}: reports`, () => {
 })
 
 describe(`${name}: silent`, () => {
+  it('stays silent when the pattern has spaces around it', () => {
+    expect(ids(tracking('.env'), deny('Read( ./.env )'))).toEqual([])
+  })
+
   it('stays silent for the deny list of the docs example', () => {
     const root = tracking('.env', '.env.local', 'secrets/key.pem')
     expect(ids(root, deny('Read(./.env)', 'Read(./.env.*)', 'Read(./secrets/**)'))).toEqual([])
