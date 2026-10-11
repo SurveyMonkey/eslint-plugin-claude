@@ -197,6 +197,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | Rule | Checks | `recommended` | `strict` |
 |------|--------|---------------|----------|
 | [`claude/plugin-bin-executable`](docs/rules/plugin-bin-executable.md) | Each file directly in the `bin/` of a plugin has git mode `100755` | `error` | `error` |
+| [`claude/plugin-evals-case-yaml`](docs/rules/plugin-evals-case-yaml.md) | A `case.yaml` of an eval suite has no `schema_version` of `1.1`, has no `name`, or names a `context` path that is not in the case directory | `error` | `error` |
 | [`claude/plugin-evals-dir`](docs/rules/plugin-evals-dir.md) | The `experimental.evals` value of a plugin manifest is not a relative path of plain directory names | `error` | `error` |
 | [`claude/plugin-evals-grader`](docs/rules/plugin-evals-grader.md) | An eval grader file has a missing or unknown `type`, a `weight` that is not positive, an unlisted `arm`, `target` or `focus`, or an inline `(?i)` | `error` | `error` |
 | [`claude/plugin-evals-mock-schema`](docs/rules/plugin-evals-mock-schema.md) | An eval mock file has a `type` other than `fixed` or `agent`, `error` on an agent mock, or `abort_when` on a fixed mock | `error` | `error` |

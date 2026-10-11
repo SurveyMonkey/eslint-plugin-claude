@@ -11,7 +11,7 @@ import { lintPlugin, pluginTree } from '../plugin-tree.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-evals-case-yaml'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const CASE = 'evals/first/case.yaml'
 const GOOD = 'schema_version: "1.1"\nname: first\n'

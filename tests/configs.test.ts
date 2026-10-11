@@ -2424,6 +2424,13 @@ const TREE: Record<string, string> = {
   'packages/evs/ms/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
   'packages/evs/ms/ok/evals/mocks/gh/issue.md': '---\nerror: true\n---\n\nNo.\n',
   'packages/evs/ms/ok/evals/mocks/.replay/gh/issue.md': '---\ntype: agent\nerror: true\n---\n',
+  // `plugin-evals-case-yaml`: a case.yaml with no version and a script that is not there; a valid
+  // case.yaml; a case.yaml in a folder that is no case.
+  'packages/evs/cy/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'packages/evs/cy/bad/evals/first/case.yaml': 'name: first\ncontext:\n  scaffold_script: run.sh\n',
+  'packages/evs/cy/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'packages/evs/cy/ok/evals/first/case.yaml': 'schema_version: "1.1"\nname: first\n',
+  'packages/evs/cy/ok/evals/mocks/x/case.yaml': 'name: x\n',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3183,6 +3190,7 @@ const PLUGIN_RULES: {
     severity: 'warn',
   },
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
+  { name: 'plugin-evals-case-yaml', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-evals-dir', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-evals-grader', language: 'markdown/gfm', files: ['**/graders/*.md'] },
   { name: 'plugin-evals-mock-schema', language: 'markdown/gfm', files: ['**/mocks/*/*.md'] },
@@ -3263,6 +3271,9 @@ const EXPECTED = [
   '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
   'packages/evs/am/bad/evals/first/prompt.md: claude/plugin-evals-prompt-no-at-mentions@2',
+  // `plugin-evals-case-yaml` reports the missing version and the missing script, two reports.
+  'packages/evs/cy/bad/.claude-plugin/plugin.json: claude/plugin-evals-case-yaml@2',
+  'packages/evs/cy/bad/.claude-plugin/plugin.json: claude/plugin-evals-case-yaml@2',
   'packages/evs/dir/bad/.claude-plugin/plugin.json: claude/plugin-evals-dir@2',
   'packages/evs/gr/bad/evals/first/graders/g.md: claude/plugin-evals-grader@2',
   'packages/evs/ms/bad/evals/mocks/gh/issue.md: claude/plugin-evals-mock-schema@2',

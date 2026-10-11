@@ -229,6 +229,7 @@ import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-
 import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
+import pluginEvalsCaseYaml from './rules/plugin-evals-case-yaml.ts'
 import pluginEvalsDir from './rules/plugin-evals-dir.ts'
 import pluginEvalsGrader from './rules/plugin-evals-grader.ts'
 import pluginEvalsMockSchema from './rules/plugin-evals-mock-schema.ts'
@@ -753,6 +754,7 @@ const modules = [
   pluginPackageLifecycleScripts,
   pluginPackageLockfileChoice,
   pluginThemesLayout,
+  pluginEvalsCaseYaml,
   pluginEvalsDir,
   pluginEvalsGrader,
   pluginEvalsMockSchema,
@@ -1141,6 +1143,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-evals-case-yaml': 'error',
   'plugin-evals-dir': 'error',
   'plugin-evals-grader': 'error',
   'plugin-evals-mock-schema': 'error',

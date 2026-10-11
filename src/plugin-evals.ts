@@ -4,8 +4,9 @@
 // value prints a `Warning:` line. The run then uses `evals/`
 // (https://code.claude.com/docs/en/plugin-evals#use-a-different-eval-directory).
 // A rule that lints the manifest asks here for the directory of its plugin.
-import type { Dirent } from 'node:fs'
+import { type Dirent, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
+import { isMap as isYamlMap, type Node, parseDocument } from 'yaml'
 import { isMap } from './frontmatter-values.ts'
 import { type DocumentNode, lastMember } from './marketplace-json.ts'
 import { type Plugin, readPluginAt } from './plugin-manifest.ts'
@@ -237,4 +238,47 @@ export function caseDirectories(evalDir: string): string[] {
   }
   visit(evalDir, true)
   return found
+}
+
+// A `case.yaml` is small. A larger file is not read.
+const MAX_YAML_BYTES = 1_048_576
+
+/** A `case.yaml` that parsed to a map. `data` holds the fields. `written` gives the text of the
+ *  value of a top-level key as the author wrote it, with its quotes. */
+export interface CaseYaml {
+  data: Record<string, unknown>
+  written: (key: string) => string
+}
+
+/** The map in the `case.yaml` at `file`, or null. The result is null in these cases: the file is
+ *  not a regular file of at most 1 MiB; its real path is out of `bound` (ADR 001, Decision 14); it
+ *  cannot be read; the YAML does not parse, repeats a key, or is not a map. */
+export function readCaseYaml(file: string, bound: string): CaseYaml | null {
+  const real = realOf(file)
+  if (typeof real !== 'string' || !isInside(real, bound)) {
+    return null
+  }
+  let text: string
+  try {
+    const info = statSync(real)
+    if (!info.isFile() || info.size > MAX_YAML_BYTES) {
+      return null
+    }
+    text = readFileSync(real, 'utf8')
+  } catch {
+    return null
+  }
+  const doc = parseDocument(text)
+  const map = doc.contents
+  if (doc.errors.length > 0 || !isYamlMap(map)) {
+    return null
+  }
+  return {
+    data: doc.toJS() as Record<string, unknown>,
+    written: (key) => {
+      // The key is there when a rule asks, and the range of a node that the parser read is set.
+      const [start, end] = (map.get(key, true) as Node).range as [number, number, number]
+      return text.slice(start, end)
+    },
+  }
 }

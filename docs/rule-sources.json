@@ -3438,6 +3438,28 @@
       "hash": "9de69d61eceec2763f26275389d46d633e54ef0762b0dc08aff82dad8805ca8e"
     }
   ],
+  "plugin-evals-case-yaml": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "case.yaml fields",
+      "hash": "1480a6234bb734704db93d51d2478bbefd73392da9bde406356c9f603f850677"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Seed the workspace or conversation",
+      "hash": "f1e6e29f1ca79693578120787c9d7b64a185a442afd1b19011cefe18c1947f4f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Eval suite reference",
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-dir": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",
