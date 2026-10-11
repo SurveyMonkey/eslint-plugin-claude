@@ -120,7 +120,9 @@ import rulesPathsGlobValid from './rules/rules-paths-glob-valid.ts'
 import rulesPathsNoMatch from './rules/rules-paths-no-match.ts'
 import rulesSymlinkExternal from './rules/rules-symlink-external.ts'
 import rulesSymlinkExternalScoped from './rules/rules-symlink-external-scoped.ts'
+import settingsAttributionFalse from './rules/settings-attribution-false.ts'
 import settingsConflictingKeys from './rules/settings-conflicting-keys.ts'
+import settingsDeprecatedKey from './rules/settings-deprecated-key.ts'
 import settingsEnabledPluginsEntryExists from './rules/settings-enabled-plugins-entry-exists.ts'
 import settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
 import settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
@@ -133,6 +135,7 @@ import settingsExtraKnownMarketplacesDirectory from './rules/settings-extra-know
 import settingsExtraKnownMarketplacesKeyMatchesName from './rules/settings-extra-known-marketplaces-key-matches-name.ts'
 import settingsExtraKnownMarketplacesSchema from './rules/settings-extra-known-marketplaces-schema.ts'
 import settingsFileSize from './rules/settings-file-size.ts'
+import settingsGlobalOnlyFile from './rules/settings-global-only-file.ts'
 import settingsKeyScope from './rules/settings-key-scope.ts'
 import settingsKnownMarketplacesPatternAnchored from './rules/settings-known-marketplaces-pattern-anchored.ts'
 import settingsKnownMarketplacesPolicySchema from './rules/settings-known-marketplaces-policy-schema.ts'
@@ -145,10 +148,14 @@ import settingsMarketplaceKeyAliasConflict from './rules/settings-marketplace-ke
 import settingsMarketplaceSkipLfs from './rules/settings-marketplace-skip-lfs.ts'
 import settingsModelList from './rules/settings-model-list.ts'
 import settingsModelValue from './rules/settings-model-value.ts'
+import settingsOutputstyleResolves from './rules/settings-outputstyle-resolves.ts'
 import settingsPluginSuggestionMarketplacesSource from './rules/settings-plugin-suggestion-marketplaces-source.ts'
+import settingsProjectAutocontinueOff from './rules/settings-project-autocontinue-off.ts'
 import settingsProjectValueIgnored from './rules/settings-project-value-ignored.ts'
+import settingsRedundantValue from './rules/settings-redundant-value.ts'
 import settingsRemovedKey from './rules/settings-removed-key.ts'
 import settingsSchema from './rules/settings-schema.ts'
+import settingsSchemaUrl from './rules/settings-schema-url.ts'
 import settingsSkilloverridesKey from './rules/settings-skilloverrides-key.ts'
 import settingsStrictKnownMarketplacesSkillsDir from './rules/settings-strict-known-marketplaces-skills-dir.ts'
 import settingsSyncClaudeAiPlugins from './rules/settings-sync-claude-ai-plugins.ts'
@@ -337,6 +344,13 @@ const modules = [
   settingsSkilloverridesKey,
   settingsEnvShadowed,
   settingsSchema,
+  settingsAttributionFalse,
+  settingsDeprecatedKey,
+  settingsGlobalOnlyFile,
+  settingsOutputstyleResolves,
+  settingsProjectAutocontinueOff,
+  settingsRedundantValue,
+  settingsSchemaUrl,
   hooksScriptExists,
   hooksScriptExecutable,
   pluginBinExecutable,
@@ -552,6 +566,13 @@ const recommended: Record<RuleName, Severity> = {
   'settings-skilloverrides-key': 'error',
   'settings-env-shadowed': 'error',
   'settings-schema': 'error',
+  'settings-attribution-false': 'warn',
+  'settings-deprecated-key': 'warn',
+  'settings-global-only-file': 'error',
+  'settings-outputstyle-resolves': 'error',
+  'settings-project-autocontinue-off': 'warn',
+  'settings-redundant-value': 'warn',
+  'settings-schema-url': 'warn',
   'hooks-script-exists': 'error',
   'hooks-script-executable': 'error',
   'plugin-bin-executable': 'error',
