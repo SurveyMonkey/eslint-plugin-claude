@@ -210,11 +210,15 @@ import outputStyleFrontmatterSchema from './rules/output-style-frontmatter-schem
 import outputStyleFrontmatterValid from './rules/output-style-frontmatter-valid.ts'
 import outputStyleNameUnique from './rules/output-style-name-unique.ts'
 import outputStylePluginNameDescription from './rules/output-style-plugin-name-description.ts'
+import permissionsAdditionalDirectoriesNoConfig from './rules/permissions-additional-directories-no-config.ts'
 import permissionsAdditionalDirectoriesPath from './rules/permissions-additional-directories-path.ts'
+import permissionsAgentRuleExists from './rules/permissions-agent-rule-exists.ts'
 import permissionsAllowDirDepth from './rules/permissions-allow-dir-depth.ts'
 import permissionsAllowUnrestricted from './rules/permissions-allow-unrestricted.ts'
 import permissionsAutoModeDefaults from './rules/permissions-auto-mode-defaults.ts'
 import permissionsAutoModeDroppedAllow from './rules/permissions-auto-mode-dropped-allow.ts'
+import permissionsAutoModePushAsk from './rules/permissions-auto-mode-push-ask.ts'
+import permissionsAutoModeRuleSyntax from './rules/permissions-auto-mode-rule-syntax.ts'
 import permissionsAutoModeSchema from './rules/permissions-auto-mode-schema.ts'
 import permissionsBashArgumentConstraint from './rules/permissions-bash-argument-constraint.ts'
 import permissionsBashColonStarMid from './rules/permissions-bash-colon-star-mid.ts'
@@ -236,6 +240,8 @@ import permissionsDefaultModeProjectIgnored from './rules/permissions-default-mo
 import permissionsDefaultModeSurface from './rules/permissions-default-mode-surface.ts'
 import permissionsDefaultModeValue from './rules/permissions-default-mode-value.ts'
 import permissionsDenyAllTools from './rules/permissions-deny-all-tools.ts'
+import permissionsDenyDirListable from './rules/permissions-deny-dir-listable.ts'
+import permissionsDenySecretFiles from './rules/permissions-deny-secret-files.ts'
 import permissionsDisableModeValue from './rules/permissions-disable-mode-value.ts'
 import permissionsDuplicateRule from './rules/permissions-duplicate-rule.ts'
 import permissionsEndConversation from './rules/permissions-end-conversation.ts'
@@ -244,6 +250,7 @@ import permissionsIgnorePatterns from './rules/permissions-ignore-patterns.ts'
 import permissionsInvalidPathPattern from './rules/permissions-invalid-path-pattern.ts'
 import permissionsLegacyToolName from './rules/permissions-legacy-tool-name.ts'
 import permissionsMcpRuleParens from './rules/permissions-mcp-rule-parens.ts'
+import permissionsMcpServerExists from './rules/permissions-mcp-server-exists.ts'
 import permissionsNegation from './rules/permissions-negation.ts'
 import permissionsParamRule from './rules/permissions-param-rule.ts'
 import permissionsParamRuleIntent from './rules/permissions-param-rule-intent.ts'
@@ -644,6 +651,13 @@ const modules = [
   permissionsBashReadonlyRedundant,
   permissionsPathAnchor,
   permissionsParamRuleIntent,
+  permissionsMcpServerExists,
+  permissionsAgentRuleExists,
+  permissionsAdditionalDirectoriesNoConfig,
+  permissionsDenyDirListable,
+  permissionsDenySecretFiles,
+  permissionsAutoModePushAsk,
+  permissionsAutoModeRuleSyntax,
   marketplaceNameReserved,
   marketplaceCommandVersionIgnored,
   marketplaceHeadersHelperCommand,
@@ -1106,6 +1120,13 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-bash-readonly-redundant': 'off',
   'permissions-path-anchor': 'off',
   'permissions-param-rule-intent': 'off',
+  'permissions-mcp-server-exists': 'off',
+  'permissions-agent-rule-exists': 'off',
+  'permissions-additional-directories-no-config': 'off',
+  'permissions-deny-dir-listable': 'off',
+  'permissions-deny-secret-files': 'off',
+  'permissions-auto-mode-push-ask': 'off',
+  'permissions-auto-mode-rule-syntax': 'off',
   'marketplace-name-reserved': 'error',
   'marketplace-command-version-ignored': 'error',
   'marketplace-headers-helper-command': 'error',

@@ -36,3 +36,20 @@ export const COMMAND_PARAMETERS: readonly string[] = [
 export function isInputParameterRule(list: string, specifier: string): boolean {
   return list !== 'allow' && COMMAND_PARAMETERS.includes(paramName(specifier) ?? '')
 }
+
+/** True when the command pattern `specifier` matches `command`, as the permissions page reads a
+ *  wildcard pattern (https://code.claude.com/docs/en/permissions#wildcard-patterns). A `*`
+ *  matches any text, including spaces. A final ` *` that is the only wildcard also matches the
+ *  bare command. The rule reads a command as one string, so it splits no compound command. */
+export function commandPatternMatches(specifier: string, command: string): boolean {
+  const pattern = commandWords(specifier).join(' ')
+  if (pattern === '') {
+    return false
+  }
+  const bareTail = pattern.endsWith(' *') && pattern.indexOf('*') === pattern.length - 1
+  const source = (bareTail ? pattern.slice(0, -2) : pattern)
+    .split('*')
+    .map((part) => part.replace(/[\\^$.|?+()[\]{}]/g, '\\$&'))
+    .join('.*')
+  return new RegExp(`^${source}${bareTail ? '(?: .*)?' : ''}$`, 's').test(command)
+}

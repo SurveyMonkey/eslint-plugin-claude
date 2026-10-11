@@ -462,6 +462,13 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-bash-readonly-redundant`](docs/rules/permissions-bash-readonly-redundant.md) | No Bash allow rule for a built-in read-only command such as `ls` | `off` | `warn` |
 | [`claude/permissions-path-anchor`](docs/rules/permissions-path-anchor.md) | A path rule starts with `//` for an absolute path, and a project sandbox path starts with `./` | `off` | `warn` |
 | [`claude/permissions-param-rule-intent`](docs/rules/permissions-param-rule-intent.md) | A `Tool(param:value)` rule is in `deny` or `ask`, not in `allow` | `off` | `warn` |
+| [`claude/permissions-mcp-server-exists`](docs/rules/permissions-mcp-server-exists.md) | An `mcp__plugin_` tool reference names a plugin that the project enables | `off` | `warn` |
+| [`claude/permissions-agent-rule-exists`](docs/rules/permissions-agent-rule-exists.md) | An `Agent(Name)` rule names a built-in subagent or one that the repository defines | `off` | `warn` |
+| [`claude/permissions-additional-directories-no-config`](docs/rules/permissions-additional-directories-no-config.md) | No `additionalDirectories` entry names a directory with CLAUDE.md, rules, skills, commands or agents, which load from none of them | `off` | `warn` |
+| [`claude/permissions-deny-dir-listable`](docs/rules/permissions-deny-dir-listable.md) | A `Read` deny rule for `dist`, `build` or `vendor` ends in `/**/*`, not `/**` | `off` | `warn` |
+| [`claude/permissions-deny-secret-files`](docs/rules/permissions-deny-secret-files.md) | A tracked `.env`, `.env.*` file or `secrets/` folder has a `Read` deny rule | `off` | `warn` |
+| [`claude/permissions-auto-mode-push-ask`](docs/rules/permissions-auto-mode-push-ask.md) | A managed file with auto mode on has an `ask` or `deny` rule for `git push` | `off` | `warn` |
+| [`claude/permissions-auto-mode-rule-syntax`](docs/rules/permissions-auto-mode-rule-syntax.md) | An `autoMode` entry is prose, not a permission rule such as `Bash(...)` | `off` | `warn` |
 
 ### MCP and LSP servers
 

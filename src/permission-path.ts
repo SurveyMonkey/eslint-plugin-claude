@@ -15,7 +15,10 @@ export const PATH_TOOLS: readonly string[] = [...GITIGNORE_TOOLS, 'Cd']
  *  be a parameter rule, as `Read(offset:5)`, and `permissions-param-rule` reads that. A path
  *  can start with a drive letter, as `C:\Users`, and `parameterOf` reads the letter as a
  *  parameter name. A parameter name is a word, so a name of one letter is a drive. */
-export function pathSpecifier(entry: ParsedEntry, tools: readonly string[]): string | null {
+export function pathSpecifier(
+  entry: Pick<ParsedEntry, 'list' | 'rule'>,
+  tools: readonly string[],
+): string | null {
   const { tool, specifier } = entry.rule
   if (specifier === null || !tools.includes(tool)) {
     return null
@@ -89,4 +92,51 @@ export function singleSegmentDirectory(pattern: string): string | null {
     ['.', '..', '~'].includes(name)
     ? null
     : name
+}
+
+/** The source of a regular expression for the gitignore-style `pattern`, relative to the project
+ *  directory. A `*` stays in one path part. A `**` crosses parts, and `**` + `/` also matches no
+ *  part. A trailing `/` means the whole directory. */
+function patternSource(pattern: string): string {
+  const text = pattern.endsWith('/') ? `${pattern}**` : pattern
+  let out = ''
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i] as string
+    if (ch === '*' && text[i + 1] === '*') {
+      const slash = text[i + 2] === '/'
+      out += slash ? '(?:.*/)?' : '.*'
+      i += slash ? 2 : 1
+    } else if (ch === '*') {
+      out += '[^/]*'
+    } else if (ch === '?') {
+      out += '[^/]'
+    } else {
+      out += ch.replace(/[\\^$.|+()[\]{}]/g, '\\$&')
+    }
+  }
+  return out
+}
+
+/** True when the `Read` deny pattern `pattern` may cover the path `relative`, which is relative to
+ *  the project directory and uses `/`. A pattern covers a path when it matches the path or a
+ *  directory above it. The check errs toward true, because a false answer makes a report. A `//`
+ *  pattern is an absolute path, which the project cannot place, so it covers nothing. A `!`
+ *  carve-out and a `~/` path match no relative path, so the match fails for them. A bracket
+ *  expression is not read, and may cover the path. */
+export function denyPatternCovers(pattern: string, relative: string): boolean {
+  const text = pattern.trim()
+  if (text.startsWith('//')) {
+    return false
+  }
+  if (text.includes('[')) {
+    return true
+  }
+  const bare = text.replace(/^(?:\.\/|\/)+/, '')
+  const matcher = new RegExp(`^${patternSource(bare)}$`)
+  for (let at = relative.length; at > 0; at = relative.lastIndexOf('/', at - 1)) {
+    if (matcher.test(relative.slice(0, at))) {
+      return true
+    }
+  }
+  return false
 }

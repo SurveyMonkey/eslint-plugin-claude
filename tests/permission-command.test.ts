@@ -2,7 +2,11 @@
 // and a `:*` in the middle as literal text:
 // https://code.claude.com/docs/en/permissions#wildcard-patterns
 import { expect, it } from 'vitest'
-import { commandWords, isInputParameterRule } from '../src/permission-command.ts'
+import {
+  commandPatternMatches,
+  commandWords,
+  isInputParameterRule,
+} from '../src/permission-command.ts'
 
 it('splits a pattern at white space', () => {
   expect(commandWords('git log --oneline *')).toEqual(['git', 'log', '--oneline', '*'])
@@ -36,4 +40,50 @@ it('reads a parameter rule with white space around the colon', () => {
   expect(isInputParameterRule('allow', 'timeout:5')).toBe(false)
   expect(isInputParameterRule('deny', 'command:rm *')).toBe(false)
   expect(isInputParameterRule('deny', 'git log *')).toBe(false)
+})
+
+// The rows of the table in "Wildcard patterns":
+// https://code.claude.com/docs/en/permissions#wildcard-patterns
+it.each([
+  ['npm run build', ['npm run build'], ['npm run build --watch']],
+  ['npm run build', ['npm run build'], ['sudo npm run build']],
+  ['npm run *', ['npm run build', 'npm run test --watch', 'npm run'], ['npm install']],
+  [
+    'git log * main',
+    ['git log --oneline main', 'git log -5 main'],
+    ['git log main', 'git push origin main'],
+  ],
+  ['git * main', ['git merge main', 'git push origin main'], ['git log']],
+  ['* --version', ['node --version', "bash -c 'echo hi' --version"], ['node -v']],
+  ['ls *', ['ls -la', 'ls'], ['lsof']],
+  ['ls*', ['ls -la', 'lsof'], []],
+  ['* --help *', ['npm --help x'], ['npm --help']],
+  ['ls:*', ['ls -la', 'ls'], ['lsof']],
+])('matches the pattern %s as the docs table says', (pattern, matches, misses) => {
+  for (const command of matches) {
+    expect(commandPatternMatches(pattern, command), command).toBe(true)
+  }
+  for (const command of misses) {
+    expect(commandPatternMatches(pattern, command), command).toBe(false)
+  }
+})
+
+it('reads a character of a pattern as text, and gives no match for an empty pattern', () => {
+  expect(commandPatternMatches('a.b (x)', 'a.b (x)')).toBe(true)
+  expect(commandPatternMatches('a.b (x)', 'axb (x)')).toBe(false)
+  expect(commandPatternMatches('a?b', 'axb')).toBe(false)
+  expect(commandPatternMatches('a+b', 'a+b')).toBe(true)
+  expect(commandPatternMatches('a+b', 'aab')).toBe(false)
+  expect(commandPatternMatches('a|b', 'a')).toBe(false)
+  expect(commandPatternMatches('a$', 'a')).toBe(false)
+  expect(commandPatternMatches('^a', 'a')).toBe(false)
+  expect(commandPatternMatches('[a]', 'a')).toBe(false)
+  expect(commandPatternMatches('a{2}', 'aa')).toBe(false)
+  expect(commandPatternMatches('a\\b', 'a\\b')).toBe(true)
+  expect(commandPatternMatches('', '')).toBe(false)
+  expect(commandPatternMatches('  ', 'ls')).toBe(false)
+})
+
+it('lets a * match text across lines', () => {
+  expect(commandPatternMatches('git push *', 'git push origin\nmain')).toBe(true)
 })

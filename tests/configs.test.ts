@@ -3678,6 +3678,80 @@ const BASH_OFF_RULES = [
   'permissions-param-rule-intent',
 ]
 
+// The off rules of #15 for cross-file checks and auto mode, in the order of the `modules` list.
+// `strict` turns each on at `warn`. The files are the globs of each rule.
+const CROSS_OFF_RULES: { name: string; files: string[] }[] = [
+  { name: 'permissions-mcp-server-exists', files: PROJECT_FILES },
+  { name: 'permissions-agent-rule-exists', files: PROJECT_FILES },
+  { name: 'permissions-additional-directories-no-config', files: PROJECT_FILES },
+  { name: 'permissions-deny-dir-listable', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-deny-secret-files', files: SHARED_FILE },
+  { name: 'permissions-auto-mode-push-ask', files: MANAGED_FILES },
+  { name: 'permissions-auto-mode-rule-syntax', files: MANAGED_FILES },
+]
+
+// A tree of its own for these rules. The file `.env` and the folder `packages/shared` need git,
+// and the shared tree has no room for more fixtures. Each rule has a file that reports and a file
+// that stays silent. `Q10_TREE` is staged, so git tracks each file.
+const settingsOf = (content: object) => JSON.stringify(content)
+const Q10_TREE: Record<string, string> = {
+  'packages/mcp/.claude/settings.json': settingsOf({
+    enabledPlugins: { 'lint@acme': true },
+    permissions: { allow: ['mcp__plugin_ghost_search__query'] },
+  }),
+  'packages/mcp-ok/.claude/settings.json': settingsOf({
+    enabledPlugins: { 'ghost@acme': true },
+    permissions: { allow: ['mcp__plugin_ghost_search__query'] },
+  }),
+  'packages/agent/.claude/settings.json': settingsOf({ permissions: { deny: ['Agent(Ghost)'] } }),
+  'packages/agent-ok/.claude/settings.json': settingsOf({
+    permissions: { deny: ['Agent(Explore)'] },
+  }),
+  'packages/shared/CLAUDE.md': '# Shared\n',
+  'packages/plain/index.ts': 'export {}\n',
+  'packages/api/.claude/settings.json': settingsOf({
+    permissions: { additionalDirectories: ['../shared'] },
+  }),
+  'packages/api-ok/.claude/settings.json': settingsOf({
+    permissions: { additionalDirectories: ['../plain'] },
+  }),
+  'packages/dir/.claude/settings.json': settingsOf({ permissions: { deny: ['Read(./build/**)'] } }),
+  'packages/dir/managed-settings.json': settingsOf({ permissions: { deny: ['Read(./dist/**)'] } }),
+  'packages/dir-ok/.claude/settings.json': settingsOf({
+    permissions: { deny: ['Read(./build/**/*)'] },
+  }),
+  'packages/sec/.claude/settings.json': '{}',
+  'packages/sec/.env': 'KEY=1\n',
+  'packages/sec-ok/.claude/settings.json': settingsOf({ permissions: { deny: ['Read(./.env)'] } }),
+  'packages/sec-ok/.env': 'KEY=1\n',
+  'packages/push/managed-settings.json': settingsOf({ permissions: { defaultMode: 'auto' } }),
+  // Claude Code ignores a hidden drop-in, so the rules make no report there.
+  'packages/push/managed-settings.d/.20-hidden.json': settingsOf({
+    permissions: { defaultMode: 'auto' },
+    autoMode: { allow: ['Bash(ls)'] },
+  }),
+  'packages/push-ok/managed-settings.json': settingsOf({
+    permissions: { defaultMode: 'auto', ask: ['Bash(git push *)'] },
+  }),
+  'packages/syntax/managed-settings.json': settingsOf({ autoMode: { allow: ['Bash(ls)'] } }),
+  'packages/syntax-ok/managed-settings.json': settingsOf({
+    autoMode: { allow: ['Listing files is allowed'] },
+  }),
+}
+
+// The reports of the tree above. Each rule reports one file. `dir` reports twice, because its
+// managed file reports too.
+const Q10_REPORTS = [
+  'packages/mcp/.claude/settings.json: claude/permissions-mcp-server-exists@1',
+  'packages/agent/.claude/settings.json: claude/permissions-agent-rule-exists@1',
+  'packages/api/.claude/settings.json: claude/permissions-additional-directories-no-config@1',
+  'packages/dir/.claude/settings.json: claude/permissions-deny-dir-listable@1',
+  'packages/dir/managed-settings.json: claude/permissions-deny-dir-listable@1',
+  'packages/sec/.claude/settings.json: claude/permissions-deny-secret-files@1',
+  'packages/push/managed-settings.json: claude/permissions-auto-mode-push-ask@1',
+  'packages/syntax/managed-settings.json: claude/permissions-auto-mode-rule-syntax@1',
+].sort()
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -5118,6 +5192,9 @@ const STRICT_ONLY = [
   'packages/opi/.claude/settings.local.json: claude/permissions-param-rule-intent@1',
   'packages/opi/managed-settings.d/10-a.json: claude/permissions-param-rule-intent@1',
   'packages/opi/managed-settings.json: claude/permissions-param-rule-intent@1',
+  // The tree of `pdi` sets `defaultMode` to `auto` in its managed files, and holds no push rule.
+  'packages/pdi/managed-settings.d/10-a.json: claude/permissions-auto-mode-push-ask@1',
+  'packages/pdi/managed-settings.json: claude/permissions-auto-mode-push-ask@1',
   'packages/oro/.claude/settings.json: claude/permissions-bash-readonly-redundant@1',
   'packages/oro/.claude/settings.local.json: claude/permissions-bash-readonly-redundant@1',
   'packages/oro/managed-settings.d/10-a.json: claude/permissions-bash-readonly-redundant@1',
@@ -5553,6 +5630,7 @@ const OFF_RULES = [
   ...SKILL_OFF_RULES,
   ...AGENT_OFF_RULES,
   ...BASH_OFF_RULES,
+  ...CROSS_OFF_RULES.map(({ name }) => name),
   ...MARKETPLACE_OFF_RULES,
   ...MARKET_SETTINGS_OFF_RULES,
   ...MEMORY_OFF_RULES,
@@ -5568,6 +5646,7 @@ let descriptionRoot = ''
 let maxBytesRoot = ''
 let mcpSizeRoot = ''
 let outputSizeRoot = ''
+let q10Root = ''
 // A folder next to the tree, for the files that links in the tree lead to.
 let external = ''
 
@@ -5615,6 +5694,12 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(outputSizeRoot, file)), { recursive: true })
     writeFileSync(path.join(outputSizeRoot, file), content)
   }
+  q10Root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-q10-'))
+  for (const [file, content] of Object.entries(Q10_TREE)) {
+    mkdirSync(path.dirname(path.join(q10Root, file)), { recursive: true })
+    writeFileSync(path.join(q10Root, file), content)
+  }
+  stage(q10Root, Object.keys(Q10_TREE))
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -5642,6 +5727,7 @@ afterAll(() => {
   rmSync(maxBytesRoot, { recursive: true, force: true })
   rmSync(mcpSizeRoot, { recursive: true, force: true })
   rmSync(outputSizeRoot, { recursive: true, force: true })
+  rmSync(q10Root, { recursive: true, force: true })
   rmSync(external, { recursive: true, force: true })
 })
 
@@ -5785,6 +5871,7 @@ describe('configs', () => {
       ...SANDBOX_RULES.map(({ name }) => `claude/strict/${name}`),
       ...WARN_RULES.map(({ name }) => `claude/strict/${name}`),
       ...BASH_OFF_RULES.map((rule) => `claude/strict/${rule}`),
+      ...CROSS_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
       ...MARKETPLACE_RULES.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_WARN_RULES.map((rule) => `claude/strict/${rule}`),
       ...MARKETPLACE_OFF_RULES.map((rule) => `claude/strict/${rule}`),
@@ -5939,6 +6026,24 @@ describe('configs', () => {
       ])
     }
   })
+
+  it('turns each cross-file and auto mode off rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of CROSS_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('reports the cross-file and auto mode off rules in strict on a tree of its own', async () => {
+    // Other rules report on these files too. Only these rules count here.
+    const own = (found: string[]) =>
+      found.filter((report) =>
+        CROSS_OFF_RULES.some(({ name }) => report.includes(`: claude/${name}@`)),
+      )
+    expect(own(await reports(plugin.configs.strict, q10Root))).toEqual(Q10_REPORTS)
+    expect(own(await reports(plugin.configs.recommended, q10Root))).toEqual([])
+  }, 30_000)
 
   it('gives each settings rule one JSON block for the two project settings files', () => {
     for (const rule of SETTINGS_RULES.filter((r) => r !== CONFLICT_RULE)) {
