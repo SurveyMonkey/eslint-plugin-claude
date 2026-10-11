@@ -87,6 +87,18 @@ export const HOOKS_TARGET = {
   also: { language: 'markdown' as const, files: ['**/SKILL.md', '**/agents/**/*.md'] },
 }
 
+/** The platforms that a rule with the option `platforms` knows. Claude Code runs a hook in PowerShell by
+ *  default on `windows-no-git-bash`, and in Bash on the others (the hooks reference, "Command hook fields"). */
+const PLATFORMS = ['windows-git-bash', 'windows-no-git-bash', 'macos', 'linux', 'wsl'] as const
+
+/** The schema of the option `platforms`. A rule that depends on the platform of a team takes it, and
+ *  makes no report without it. */
+export const PLATFORMS_SCHEMA = {
+  type: 'object',
+  properties: { platforms: { type: 'array', items: { enum: PLATFORMS }, uniqueItems: true } },
+  additionalProperties: false,
+} as const
+
 /** `items` as a quoted list for a message: `"a"`, `"a" and "b"`, `"a", "b" and "c"`. */
 export function quotedList(items: readonly string[]): string {
   const quoted = items.map((item) => `"${item}"`)
@@ -124,6 +136,15 @@ export function lastMembers(node: HObject): HMember[] {
 export function isTrue(node: HObject, key: string): boolean {
   const value = memberOf(node, key)?.value
   return value?.kind === 'boolean' && value.value
+}
+
+/** The string items of the `args` of the handler `node`, or undefined when `args` is no array (shell form). An item
+ *  that is no string is left out. */
+export function argsOf(node: HObject): string[] | undefined {
+  const args = memberOf(node, 'args')?.value
+  return args?.kind === 'array'
+    ? args.items.flatMap((item) => (item.kind === 'string' ? [item.value] : []))
+    : undefined
 }
 
 /** The string value of the member `key` of `node`, or undefined. */
