@@ -2384,6 +2384,18 @@ const TREE: Record<string, string> = {
   'packages/mc/.mcp.json.bak': badMcp,
   'packages/mc/sub/mcp.json': '{"servers": {}}',
   '.vscode/mcp.json': '{"servers": {"db": {"command": "x"}}}',
+  // The eval rules of #11. Each folder of `packages/evs` is a plugin with a suite. The folder
+  // `packages/evs` is a repository, so that the rules find the plugin above an eval file.
+  'packages/evs/.git/HEAD': 'ref: refs/heads/main\n',
+  // `plugin-evals-dir`: an eval directory that leaves the plugin; a plain path.
+  'packages/evs/dir/bad/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'bad',
+    experimental: { evals: '../x' },
+  }),
+  'packages/evs/dir/ok/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ok',
+    experimental: { evals: 'evals2' },
+  }),
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3143,6 +3155,7 @@ const PLUGIN_RULES: {
     severity: 'warn',
   },
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
+  { name: 'plugin-evals-dir', files: ['**/.claude-plugin/plugin.json'] },
 ]
 
 // The plugin rules of #11 that are `off` in `recommended`, in the order of the `modules` list.
@@ -3217,6 +3230,7 @@ const EXPECTED = [
   '.claude/teams/sub/x.json: claude/agent-teams-no-project-config@2',
   '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
+  'packages/evs/dir/bad/.claude-plugin/plugin.json: claude/plugin-evals-dir@2',
   'packages/hk/.claude-plugin/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/agents/ev.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-command-removed-cli-flag@2',

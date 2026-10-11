@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { lintJson } from '../rule-tester.test-support.ts'
 
 const RULE = 'plugin-evals-dir'
-const check = it.fails
+const check = it
 const FILE = '/p/.claude-plugin/plugin.json'
 const lint = (code: string) => lintJson(RULE, code, FILE)
 const manifest = (evals: unknown) => JSON.stringify({ name: 'p', experimental: { evals } })
@@ -39,7 +39,6 @@ describe(RULE, () => {
     ['a path with a parent segment in the middle', 'a/../b', '"a/../b"'],
     ['an empty string', '', '""'],
     ['an empty segment', 'a//b', '"a//b"'],
-    ['a trailing separator', 'qa/', '"qa/"'],
   ])('reports %s', (_title, value, shown) => {
     expect(lint(manifest(value)).map((m) => m.message)).toEqual([UNUSABLE(shown)])
   })

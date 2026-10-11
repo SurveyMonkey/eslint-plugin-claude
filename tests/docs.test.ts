@@ -245,6 +245,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-dependencies-prerelease-range',
     'plugin-dependencies-resolve',
     'plugin-dir-not-marketplace-root',
+    'plugin-evals-dir',
     'plugin-evals-replay-committed',
     'plugin-evals-results-gitignored',
     'plugin-feature-min-version',

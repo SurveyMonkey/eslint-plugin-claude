@@ -280,16 +280,16 @@
   ],
   "sources": [
     {
-      "heading": "Replay agent mock answers",
-      "id": "replay-agent-mock-answers",
-      "hash": "5de9b0e4820bd48bdd6142fc79548a00888737a466249e0880dea782867dc7a2",
-      "text": "#### Replay agent mock answers\n\nA `type: agent` mock answers with a call to the [`--judge-model`](#command-options), so its output varies between runs and changes if you change the judge. When a run completes without an error or abort, Claude Code saves each answer an agent mock gave under the results directory in `mock-recordings/`.\n\nOpen `ADOPT.txt` there to see each recording and the `.replay/<server>/` directory to copy it into, beside the mock that produced it. After you copy a recording there, later runs answer the identical call from it with no model call. Commit `mocks/.replay/` with the rest of `mocks/` so CI runs are repeatable."
-    },
-    {
       "heading": "Use a different eval directory",
       "id": "use-a-different-eval-directory",
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b",
       "text": "### Use a different eval directory\n\nIf `evals/` is already taken by another tool, keep the suite in a different directory. You can record that directory in the plugin's `plugin.json` so every run and every collaborator uses it, or pass it on the command line for a single run:\n\n* **In `plugin.json`**: add `\"experimental\": { \"evals\": \"quality/evals\" }`.\n* **On the command line**: pass `--eval-dir quality/evals` to both `claude plugin eval` and `claude plugin eval init`.\n\nIf you set both, the flag's directory is used. Give a relative path of plain directory names such as `qa` or `quality/evals`. An absolute path or one containing `..` isn't accepted: as a flag value it's an error, while an unusable manifest value prints a `Warning:` line and the run uses `evals/` instead. Cases, results, and `init` output all move to that directory."
+    },
+    {
+      "heading": "Replay agent mock answers",
+      "id": "replay-agent-mock-answers",
+      "hash": "5de9b0e4820bd48bdd6142fc79548a00888737a466249e0880dea782867dc7a2",
+      "text": "#### Replay agent mock answers\n\nA `type: agent` mock answers with a call to the [`--judge-model`](#command-options), so its output varies between runs and changes if you change the judge. When a run completes without an error or abort, Claude Code saves each answer an agent mock gave under the results directory in `mock-recordings/`.\n\nOpen `ADOPT.txt` there to see each recording and the `.replay/<server>/` directory to copy it into, beside the mock that produced it. After you copy a recording there, later runs answer the identical call from it with no model call. Commit `mocks/.replay/` with the rest of `mocks/` so CI runs are repeatable."
     },
     {
       "heading": "Eval suite reference",

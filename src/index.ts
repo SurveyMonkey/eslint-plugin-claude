@@ -229,6 +229,7 @@ import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-
 import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
+import pluginEvalsDir from './rules/plugin-evals-dir.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
@@ -748,6 +749,7 @@ const modules = [
   pluginPackageLifecycleScripts,
   pluginPackageLockfileChoice,
   pluginThemesLayout,
+  pluginEvalsDir,
   pluginUserConfigSensitive,
   pluginChannelServerStdio,
   pluginBinShadowsSystemCommand,
@@ -1131,6 +1133,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-evals-dir': 'error',
   'plugin-feature-min-version': 'warn',
   'plugin-manifest-metadata-format': 'warn',
   'plugin-manifest-no-bom': 'warn',

@@ -16,17 +16,19 @@ const PLAIN_NAME = /^(?!\.{1,2}$)[^/\\]+$/
 // The start of a path on a drive of Windows. It is an absolute path.
 const DRIVE = /^[A-Za-z]:/
 
+/** True when `value` is a relative path of plain directory names, as the docs
+ *  accept for `experimental.evals`. */
+export function isEvalDirPath(value: string): boolean {
+  return !DRIVE.test(value) && value.split('/').every((name) => PLAIN_NAME.test(name))
+}
+
 /** The eval directory that `experimental.evals` of the manifest names. It is
  *  a path from the plugin root with `/` separators. The result is `evals` in
  *  three cases. The value is not there. It is not a string. It is not a
  *  relative path of plain directory names. */
 function evalDirName(document: DocumentNode): string {
   const value = lastMember(lastMember(document.body, 'experimental')?.value, 'evals')?.value
-  return value?.type === 'String' &&
-    !DRIVE.test(value.value) &&
-    value.value.split('/').every((name) => PLAIN_NAME.test(name))
-    ? value.value
-    : DEFAULT_EVAL_DIR
+  return value?.type === 'String' && isEvalDirPath(value.value) ? value.value : DEFAULT_EVAL_DIR
 }
 
 /** The eval directory of the plugin whose manifest is `filename`. The result
