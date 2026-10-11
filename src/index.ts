@@ -220,10 +220,13 @@ import permissionsToolNameGlob from './rules/permissions-tool-name-glob.ts'
 import permissionsUnknownTool from './rules/permissions-unknown-tool.ts'
 import pluginBinClaudeAi from './rules/plugin-bin-claude-ai.ts'
 import pluginBinExecutable from './rules/plugin-bin-executable.ts'
+import pluginBinShadowsSystemCommand from './rules/plugin-bin-shadows-system-command.ts'
+import pluginChannelServerStdio from './rules/plugin-channel-server-stdio.ts'
 import pluginCommandsDirNonempty from './rules/plugin-commands-dir-nonempty.ts'
 import pluginCommandsMapFields from './rules/plugin-commands-map-fields.ts'
 import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
+import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
@@ -254,6 +257,7 @@ import pluginSymlinkEscapesPlugin from './rules/plugin-symlink-escapes-plugin.ts
 import pluginThemesLayout from './rules/plugin-themes-layout.ts'
 import pluginUserConfigFieldApplicability from './rules/plugin-user-config-field-applicability.ts'
 import pluginUserConfigNoShellFields from './rules/plugin-user-config-no-shell-fields.ts'
+import pluginUserConfigSensitive from './rules/plugin-user-config-sensitive.ts'
 import pluginUserConfigSensitiveInContent from './rules/plugin-user-config-sensitive-in-content.ts'
 import rulesFrontmatterSchema from './rules/rules-frontmatter-schema.ts'
 import rulesMaxLines from './rules/rules-max-lines.ts'
@@ -739,6 +743,10 @@ const modules = [
   pluginPackageLifecycleScripts,
   pluginPackageLockfileChoice,
   pluginThemesLayout,
+  pluginUserConfigSensitive,
+  pluginChannelServerStdio,
+  pluginBinShadowsSystemCommand,
+  pluginDependenciesPrereleaseRange,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1129,6 +1137,10 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-package-lifecycle-scripts': 'warn',
   'plugin-package-lockfile-choice': 'warn',
   'plugin-themes-layout': 'warn',
+  'plugin-user-config-sensitive': 'off',
+  'plugin-channel-server-stdio': 'off',
+  'plugin-bin-shadows-system-command': 'off',
+  'plugin-dependencies-prerelease-range': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

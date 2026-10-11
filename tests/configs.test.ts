@@ -712,6 +712,63 @@ const TREE: Record<string, string> = {
     name: 'uca',
     userConfig: { a: { type: 'string', title: 'T', description: 'D', min: 1 } },
   }),
+  // The `off` plugin rules read these trees. A token option without `sensitive` reports in `strict`
+  // only. The decoy sets it, or has no word of a token or a password.
+  'plugins/ucs/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ucs',
+    userConfig: { api_token: { type: 'string', title: 'T', description: 'D' } },
+  }),
+  'plugins/ucs2/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'ucs2',
+    userConfig: {
+      api_token: { type: 'string', title: 'T', description: 'D', sensitive: true },
+      tokenizer: { type: 'string', title: 'T', description: 'D' },
+    },
+  }),
+  // A channel bound to a remote server reports in `strict` only. The decoy binds to a stdio server.
+  'plugins/chs/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'chs',
+    mcpServers: { tg: { url: 'https://chat.example.com/mcp' } },
+    channels: [{ server: 'tg' }],
+  }),
+  'plugins/chs2/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'chs2',
+    mcpServers: { tg: { command: 'node' } },
+    channels: [{ server: 'tg' }],
+  }),
+  // A `bin/` file with the name of a system command reports in `strict` only. The decoy does not.
+  'plugins/bsc/.claude-plugin/plugin.json': JSON.stringify({ name: 'bsc' }),
+  'plugins/bsc/bin/git': '#!/bin/sh\n',
+  'plugins/bsc2/.claude-plugin/plugin.json': JSON.stringify({ name: 'bsc2' }),
+  'plugins/bsc2/bin/my-tool': '#!/bin/sh\n',
+  // A range that misses the pre-release version of its dependency reports in `strict` only. The
+  // decoy has the suffix. The marketplace needs a `.git` above it.
+  'packages/pr/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/pr/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'pr',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'user', source: './plugins/user' },
+      { name: 'dep', source: { source: 'npm', package: '@acme/dep' }, version: '2.0.0-beta.1' },
+    ],
+  }),
+  'packages/pr/plugins/user/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'user',
+    dependencies: [{ name: 'dep', version: '^2.0.0' }],
+  }),
+  'packages/pr2/.git/HEAD': 'ref: refs/heads/main\n',
+  'packages/pr2/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'pr2',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'user', source: './plugins/user' },
+      { name: 'dep', source: { source: 'npm', package: '@acme/dep' }, version: '2.0.0-beta.1' },
+    ],
+  }),
+  'packages/pr2/plugins/user/.claude-plugin/plugin.json': JSON.stringify({
+    name: 'user',
+    dependencies: [{ name: 'dep', version: '^2.0.0-0' }],
+  }),
   // A command entry with a field that the manifest reference does not list.
   'plugins/cmf/.claude-plugin/plugin.json': JSON.stringify({
     name: 'cmf',
@@ -3022,6 +3079,15 @@ const PLUGIN_RULES: {
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
 ]
 
+// The plugin rules of #11 that are `off` in `recommended`, in the order of the `modules` list.
+// `strict` turns each on at `warn`.
+const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
+  { name: 'plugin-user-config-sensitive', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-channel-server-stdio', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-bin-shadows-system-command', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-dependencies-prerelease-range', files: ['**/.claude-plugin/plugin.json'] },
+]
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -4250,6 +4316,10 @@ const STRICT_ONLY = [
   'packages/mc/.mcp.json: claude/mcp-unknown-keys@1',
   'plugins/p/.mcp.json: claude/mcp-plugin-root-paths@1',
   'plugins/p/.mcp.json: claude/mcp-unknown-keys@1',
+  'plugins/ucs/.claude-plugin/plugin.json: claude/plugin-user-config-sensitive@1',
+  'plugins/chs/.claude-plugin/plugin.json: claude/plugin-channel-server-stdio@1',
+  'packages/pr/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-prerelease-range@1',
+  'plugins/bsc/.claude-plugin/plugin.json: claude/plugin-bin-shadows-system-command@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -4664,6 +4734,7 @@ const OFF_RULES = [
   ...SETTINGS_OFF_RULES.map(({ name }) => name),
   // A rule with a Markdown target has two blocks, so it appears twice.
   ...MCP_OFF_RULES.flatMap(({ name, markdown }) => (markdown ? [name, name] : [name])),
+  ...PLUGIN_OFF_RULES.map(({ name }) => name),
 ]
 
 let root = ''
@@ -4881,6 +4952,7 @@ describe('configs', () => {
         (markdown ? [name, name] : [name]).map((block) => `claude/strict/${block}`),
       ),
       ...PLUGIN_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...PLUGIN_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -5173,6 +5245,14 @@ describe('configs', () => {
 
   it('turns each off settings rule on in strict only, on the files that it reads', () => {
     for (const { name, files } of SETTINGS_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('turns each off plugin rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of PLUGIN_OFF_RULES) {
       expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])

@@ -326,6 +326,74 @@ describe('the bin rule of the plugin layer', () => {
   })
 })
 
+describe('the off rules of the plugin layer', () => {
+  const SECRET = JSON.stringify({
+    name: 'p',
+    userConfig: { api_token: { type: 'string', title: 'T', description: 'D' } },
+  })
+  it('plugin-user-config-sensitive reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(SECRET)
+    expect(lintPlugin('plugin-user-config-sensitive', dir, code)).toHaveLength(1)
+  })
+  linked('plugin-user-config-sensitive stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, SECRET)
+    expect(lintPlugin('plugin-user-config-sensitive', dir, SECRET)).toEqual([])
+  })
+
+  const CHANNEL = JSON.stringify({
+    name: 'p',
+    mcpServers: { tg: { url: 'https://chat.example.com/mcp' } },
+    channels: [{ server: 'tg' }],
+  })
+  it('plugin-channel-server-stdio reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(CHANNEL)
+    expect(lintPlugin('plugin-channel-server-stdio', dir, code)).toHaveLength(1)
+  })
+  // The `.mcp.json` links back in, so only a look at the folder out of the repository tells the plugin.
+  linked('plugin-channel-server-stdio stays silent for the linked plugin', () => {
+    const manifest = JSON.stringify({ name: 'p', channels: [{ server: 'tg' }] })
+    const { dir } = linkedOut(
+      {},
+      { '.mcp.json': JSON.stringify({ tg: { url: 'https://chat.example.com/mcp' } }) },
+      manifest,
+    )
+    expect(lintPlugin('plugin-channel-server-stdio', dir, manifest)).toEqual([])
+  })
+
+  const RANGED = JSON.stringify({ name: 'p', dependencies: [{ name: 'dep', version: '^2.0.0' }] })
+  const CATALOG = JSON.stringify({
+    name: 'acme',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'p', source: './p' },
+      { name: 'dep', source: { source: 'npm', package: 'd' }, version: '2.0.0-beta.1' },
+    ],
+  })
+  it('plugin-dependencies-prerelease-range reports in the plugin in the repository', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': CATALOG,
+      'p/.claude-plugin/plugin.json': RANGED,
+    })
+    expect(
+      lintPlugin('plugin-dependencies-prerelease-range', path.join(top, 'p'), RANGED),
+    ).toHaveLength(1)
+  })
+  linked('plugin-dependencies-prerelease-range stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({}, {}, RANGED, { '.claude-plugin/marketplace.json': CATALOG })
+    expect(lintPlugin('plugin-dependencies-prerelease-range', dir, RANGED)).toEqual([])
+  })
+
+  it('plugin-bin-shadows-system-command reports in the plugin in the repository', () => {
+    const { dir, code } = pluginTree(MANIFEST, { 'bin/git': '' })
+    expect(lintPlugin('plugin-bin-shadows-system-command', dir, code)).toHaveLength(1)
+  })
+  // The folder links back in, so only a look at the folder out of the repository tells the plugin.
+  linked('plugin-bin-shadows-system-command stays silent for the linked plugin', () => {
+    const { dir } = linkedOut({ 'bin/git': '' })
+    expect(lintPlugin('plugin-bin-shadows-system-command', dir, MANIFEST)).toEqual([])
+  })
+})
+
 describe('readPluginAt', () => {
   it('gives the plugin for a root in the repository', () => {
     expect(readPluginAt(inside({}))).toMatchObject({ fields: { name: 'p' } })
