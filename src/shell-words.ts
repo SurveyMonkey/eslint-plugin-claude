@@ -138,8 +138,8 @@ export function scanCommands(line: string): Command[] {
       endCommand()
       ticks = !ticks
     } else if (char === '|') {
-      // `||` is a list operator, and `|` or `|&` is a pipe.
-      endCommand(line.charAt(i + 1) !== '|' && line.charAt(i - 1) !== '|')
+      // `||` is a list operator, and `|` or `|&` is a pipe. The second `|` of `||` ends no command.
+      endCommand(line.charAt(i + 1) !== '|')
     } else if (/[;&\n]/.test(char)) {
       endCommand()
     } else if (/\s/.test(char)) {

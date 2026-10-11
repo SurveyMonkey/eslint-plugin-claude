@@ -87,6 +87,12 @@ describe('sinkOf', () => {
     }
   })
 
+  it('gives other for a command that a pipe or a command substitution takes', () => {
+    expect(sink('echo a | cat')).toBe('other')
+    expect(sink('x=$(echo a)', 1)).toBe('other')
+    expect(sink('echo a | cat', 1)).toBe('stdout')
+  })
+
   it('reads the command at the index', () => {
     expect(sink('echo a >&2; echo b', 2)).toBe('stdout')
     expect(sink('echo a; echo b >&2', 1)).toBe('stderr')
