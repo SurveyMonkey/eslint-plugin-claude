@@ -4,63 +4,78 @@
   "blocks": [
     {
       "id": "connect-to-mcp-servers",
-      "hash": "b841beef4629dc1f4321edd97ce745008355fded336f8658a2fd72a2920b9e09"
+      "hash": "b841beef4629dc1f4321edd97ce745008355fded336f8658a2fd72a2920b9e09",
+      "bodyHash": "cd47b9a1ca8e956e2a3c327ee13030e45ce814824df9030c9dc0520ca442bdf0"
     },
     {
       "id": "before-you-begin",
-      "hash": "08fb1585dd2b5c74ea10f8fddc411dc493209a510cefb06ec3555d664c0ba962"
+      "hash": "08fb1585dd2b5c74ea10f8fddc411dc493209a510cefb06ec3555d664c0ba962",
+      "bodyHash": "29b99050ce2fbe4635f7aeed511e967ac6ea0ec2ab74c8069341f62066db1e41"
     },
     {
       "id": "add-and-verify-a-server",
-      "hash": "479b221ea6f62d2ebbb9a5bdedb816e7cbef2c65aaba2c6ef971825aaf75cf2a"
+      "hash": "479b221ea6f62d2ebbb9a5bdedb816e7cbef2c65aaba2c6ef971825aaf75cf2a",
+      "bodyHash": "bf013cedbe9bb8f472391444f4ac6c47fa7bc68e48d924de82bc3fd2d7c5ef17"
     },
     {
       "id": "where-servers-are-saved",
-      "hash": "1c357b3e451fc2a045fb6b0fd0f354c2b9e4c0f0aeef8bd5c689abf760f77250"
+      "hash": "1c357b3e451fc2a045fb6b0fd0f354c2b9e4c0f0aeef8bd5c689abf760f77250",
+      "bodyHash": "2615e1aa3bd3636f8ab636d3a46a1f1321d8e7595d1cb69379efde8df4ec5a3b"
     },
     {
       "id": "find-your-configuration-on-disk",
-      "hash": "40c10fc91cf026d02648e43c4e005877383b0f7f1bcc7f82ad1b06ec81bc5bc8"
+      "hash": "40c10fc91cf026d02648e43c4e005877383b0f7f1bcc7f82ad1b06ec81bc5bc8",
+      "bodyHash": "fb62111e67abbaa484041e42635bd2d851f70b1fcb7351f2cb1c38bdb75afbee"
     },
     {
       "id": "change-server-scope",
-      "hash": "4abe31653bf856e61f2c90a4e0cb5208815823137a80857a1af71cac677161ba"
+      "hash": "4abe31653bf856e61f2c90a4e0cb5208815823137a80857a1af71cac677161ba",
+      "bodyHash": "281919b38c27372663534c550a4b7456be3349ec9da69830b9ae4ad7f0794f95"
     },
     {
       "id": "use-a-server-in-all-your-projects",
-      "hash": "ae00471858ef4917604329abdf5dc617a00478c3baa207833d24ac635a9e9d1c"
+      "hash": "ae00471858ef4917604329abdf5dc617a00478c3baa207833d24ac635a9e9d1c",
+      "bodyHash": "377b67afbb7a1aabb55d8c780dc28ea0d5d267bc278c4f430c25d97906ebf58c"
     },
     {
       "id": "share-a-server-with-your-team",
-      "hash": "9b611b5d587a842021ef240f4748a1975bf34c917ec1b0394c10e6f5b1257ed2"
+      "hash": "9b611b5d587a842021ef240f4748a1975bf34c917ec1b0394c10e6f5b1257ed2",
+      "bodyHash": "413bb540cc6da9c3731c8a5f6aa501e042961c2edf64ffdda2a7e6a9d0985725"
     },
     {
       "id": "additional-mcp-server-examples",
-      "hash": "fb8cb9e1a8e80bda41de0b47faa8106c656b27cdb251c03d7d00236359bfcb11"
+      "hash": "fb8cb9e1a8e80bda41de0b47faa8106c656b27cdb251c03d7d00236359bfcb11",
+      "bodyHash": "ec369f59bd32265b2dac6d3cd324c01ed433825af6fa313e32aa7d834bbfe3af"
     },
     {
       "id": "add-a-local-server",
-      "hash": "3ee06a3e66f369260290fb05774ba12d9be2d45400df76a96b5bdb8fbc40482c"
+      "hash": "3ee06a3e66f369260290fb05774ba12d9be2d45400df76a96b5bdb8fbc40482c",
+      "bodyHash": "19f0ae14ca092c36428c575fccb53aeace3c7559d86f616fd459e672f81398ba"
     },
     {
       "id": "connect-a-server-that-requires-sign-in",
-      "hash": "9593553a420bf5abbffc0c9acd4f4b246fdaa5530e267c9bb4be2f163768b848"
+      "hash": "9593553a420bf5abbffc0c9acd4f4b246fdaa5530e267c9bb4be2f163768b848",
+      "bodyHash": "c6238bed2ade6752932ef259fdcf9027deda0d7c74aaed77aa869c14f4022491"
     },
     {
       "id": "edit--mcp-json-directly",
-      "hash": "88406efc430301191bc23167781d27b91135ce461933513e18f092d8da8c216c"
+      "hash": "88406efc430301191bc23167781d27b91135ce461933513e18f092d8da8c216c",
+      "bodyHash": "f9a3938f5905fb1945e2714b8d9bbea48dadf9f3bb3d12ad84a16eea0d89eec0"
     },
     {
       "id": "connect-from-other-surfaces",
-      "hash": "60d5d43c7013cbffd442d2661887816cde114a2e632b8149a4adfae5ac6aa6f0"
+      "hash": "60d5d43c7013cbffd442d2661887816cde114a2e632b8149a4adfae5ac6aa6f0",
+      "bodyHash": "28894df46c93128ee73c9c983882087fc86ee478007e3dc0ee4a3617e7632126"
     },
     {
       "id": "troubleshooting",
-      "hash": "1dc08c26dfb4f19bbb5cc4e1e442e5e776b7ecd61679f4754af5dd35aeea5939"
+      "hash": "1dc08c26dfb4f19bbb5cc4e1e442e5e776b7ecd61679f4754af5dd35aeea5939",
+      "bodyHash": "c5cea82e642b2f0c5caae27422e7fcfef41dd52337b26944f10897dfd38af64a"
     },
     {
       "id": "next-steps",
-      "hash": "b0a60c199a957482fb810e3e19190fa672a42d617172fbe558b97ca6ffe98828"
+      "hash": "b0a60c199a957482fb810e3e19190fa672a42d617172fbe558b97ca6ffe98828",
+      "bodyHash": "6e7ef5ec593935d262d1c6bcbf93fe554a6486636c069591fc9499a66b54d1d7"
     }
   ],
   "sources": [
