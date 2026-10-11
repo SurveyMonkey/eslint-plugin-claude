@@ -1,0 +1,308 @@
+{
+  "url": "https://code.claude.com/docs/en/sandboxing",
+  "hash": "3af277f8d73cdc6b27145b09c8db755f0e25c50b49ab5ea86c5191695defce46",
+  "blocks": [
+    {
+      "id": "configure-the-sandboxed-bash-tool",
+      "hash": "8746bb02b343092c166a410114b694040a4a106eee8ec7599e4b481da282b5f6",
+      "bodyHash": "f0be2e24cff65232aa9f4d6c3b93bf5b83928768cdc189f2b765416e1e0c9eea"
+    },
+    {
+      "id": "what-the-sandbox-restricts",
+      "hash": "721d542ca02dc6f2b1a765a131b12ec3270d5ebd073c8472def3725d27377b2c",
+      "bodyHash": "1f789b7e45a3abce7dec86d3c866b4fc27a04e93b0fb9687fdd1f7a9a6c04045"
+    },
+    {
+      "id": "what-runs-outside-the-sandbox",
+      "hash": "591c53685a628d3219b11dba59ca2c206f33dafe6904fff6a3e73437fcf11af5",
+      "bodyHash": "ef5f6bad63319311dbf8a619005ab08f68730139b1edc69e56f1b88444677d6e"
+    },
+    {
+      "id": "get-started",
+      "hash": "3b5133f12ad59bde78125f1c62cc8563197fcd2433fb304d3874bf2c39e98c6c",
+      "bodyHash": "de412831b499965ed72204887e03b01d6da82f0bf4d319a974b5b092bbf86a97"
+    },
+    {
+      "id": "confirm-commands-run-inside-the-sandbox",
+      "hash": "9fecbc116a10849c5a9b617518390dd141d9a1dc8e31f2b5c10d6998e218595a",
+      "bodyHash": "95ea2c73b68847c8155f9eeb2fb95cd9bf8e47967249921f684c9bec4d659605"
+    },
+    {
+      "id": "set-up-linux-and-wsl2",
+      "hash": "6de934f16aebb93b1e8a2a6bd7083d23562dd57576341f96c350f9dd409714d2",
+      "bodyHash": "cdc36e2b429db0c50677d6ff03a1cdf6351d93722f331c0f8d009e4b23fae7fd"
+    },
+    {
+      "id": "sandbox-modes",
+      "hash": "a2430e02aa2014926ba945d7d1985226f59fac0e14b20cf47d554d0876023cd7",
+      "bodyHash": "af9a34e9bd53518246c46c565cf7467c300dd475e26fad81f75bdd54c18810d0"
+    },
+    {
+      "id": "auto-allow-mode",
+      "hash": "9484633057d5e90c873293a3e1ebea957fbd59a2d3db373a65fbca18586b91eb",
+      "bodyHash": "00af73162ef0057c4ac2a09fa97919376dc6bd57ca58b666be09424161a50752"
+    },
+    {
+      "id": "regular-permissions-mode",
+      "hash": "fecc1c055de0447686687f075b7ba7d265cac8dc13fe3b26771cc389c39ceb26",
+      "bodyHash": "7a44edb98ea3ddb8ef15af47ca1f1d5b3ef767e93ab35fba2329ecb01366ca74"
+    },
+    {
+      "id": "the-unsandboxed-retry-escape-hatch",
+      "hash": "11f649b46c0866c709179eb770020a7cf763235aaca1a2dce70e0b8370ab98d2",
+      "bodyHash": "f724d0a9d36ced7a5b68ae9c7775e8d0bb4d5e3d0d7c257e9d3f11e458ac12c8"
+    },
+    {
+      "id": "turn-off-the-retry-with-strict-sandbox-mode",
+      "hash": "6dfa81735d821091d4e520b857863b4821fbb94a0c19f44888fea06ff77afbe1",
+      "bodyHash": "5026d8ce99b3f4b990209ce7108dfb6e7e5ec7669315727844537bf383e6bdac"
+    },
+    {
+      "id": "temporary-directories",
+      "hash": "e50c042e6eaf4a9065dd6f1da6aa12e827f14061430f87b8e10eb4773b4e597d",
+      "bodyHash": "743576b352bb4e7bda6192eda366ecf35abf1819684cff1b42c4950726cadbd2"
+    },
+    {
+      "id": "configure-sandboxing",
+      "hash": "f47954102875a1fdc8b8c9b85df7a3822f6ced10d13448e56e07b835d9509848",
+      "bodyHash": "82893f827f160a7b181cc709aaacac158a93b84ab472e6896d0e95f6a23625a3"
+    },
+    {
+      "id": "run-commands-outside-the-sandbox-with-excludedcommands",
+      "hash": "00160a18dbf5e6e81f1e4ab8a426694f3e6399c433fca16392035d04963994b0",
+      "bodyHash": "3041c87d4e6e2a77e5bebf8a2f76fd3c52af14d4e5a2907ac9b64caf77d48df2"
+    },
+    {
+      "id": "disable-filesystem-isolation",
+      "hash": "e297b1e1e8385508031d710562f7e70d29f9e93e4dc813f6fe58d319bb839b9e",
+      "bodyHash": "18fe66322a2c3c3646085eba4f7264045c3da036cbe5f0690c013499f0fea712"
+    },
+    {
+      "id": "which-settings-can-disable-it",
+      "hash": "359992e07d5544469ea72032b61ece778eb73166d32be3f315f0b6e3b5880ad3",
+      "bodyHash": "d889c2c960c457584977c01d165335b93df5f79276feaae3b54c36f57e08ee8a"
+    },
+    {
+      "id": "what-changes-when-filesystem-isolation-is-off",
+      "hash": "f5016435991ef99a08c7b9716f3f29c7993092bdf715c6ab04f74d6ad0f93dd0",
+      "bodyHash": "f5b8fd47546171644e74c3fb2c03bbaa030e9afc78fa25f01543189e32ed6661"
+    },
+    {
+      "id": "protect-credentials",
+      "hash": "7c83a7546e34d95a9373e91efcc871fc0707e611f7fef26633be82780c3913a3",
+      "bodyHash": "c60731ef1c8d472382a36c114094c5f2349ef2c19acb104cf094480b5fc7d8c1"
+    },
+    {
+      "id": "mask-credentials",
+      "hash": "91b57dd88665c2899650d9fba468a2e663a30965726851a8fc966ab6f0ed16e3",
+      "bodyHash": "4bac3f75aaa43959bb04d38eff91fc463163d136ab43a780466e09ba77c97687"
+    },
+    {
+      "id": "mask-environment-variables",
+      "hash": "0de7dc77eac0e8100fa4b8fc6e3d23676ab5c7d264f37f6ea317ac52266365a8",
+      "bodyHash": "c4d29fd52b70ee719a41a4dc012491ceb33d16b32e83add13a82255b734de0a9"
+    },
+    {
+      "id": "re-sign-aws-requests",
+      "hash": "19109ea519585d9178e0ca872e07d820830541f642ecee3df638e0b487cc51f5",
+      "bodyHash": "fa47889190f5b5683cdd48632b0435474a68763a2a068ea5bebe89aff2c78fc8"
+    },
+    {
+      "id": "mask-credential-files",
+      "hash": "f710e1f6b094956380fe8fa7d883fe93ef255cb7f0b16e7f6f231bf0b5b0e417",
+      "bodyHash": "17c46f4b304de411497f6bec61ae8dff321be2aa0210a0990f4c451a27d06dd4"
+    },
+    {
+      "id": "how-sandboxing-works",
+      "hash": "068c2fe243b5749f4e024145b6b8a10a2269be7f7530fff2b8040e582929113c"
+    },
+    {
+      "id": "filesystem-isolation",
+      "hash": "65b7cf9f7f984879e99daeffcc58e508d6f3b7ab01e4b83cddaf888260d48e1e",
+      "bodyHash": "370c161bc2e6f648b7be576d37e1a0834e9e7d73c9d9b52b7020d66ae45e3373"
+    },
+    {
+      "id": "protected-paths",
+      "hash": "880632f45fd7bc03f173f03ff9e58ea5733bd1777d57c0f4b4322e00d0441390",
+      "bodyHash": "0e3f55504682afda3353580c44135b40756578bd2c3bd0f9852f1f11d42e722f"
+    },
+    {
+      "id": "network-isolation",
+      "hash": "b5d83df90c4e3c59646ae1fe5650a830bd4f82acbd4e1cf3106530573218ef54",
+      "bodyHash": "ea25fe222fd59c4fb230d80d5ed9258fb85bae60ca64c4ecfe8f97786da11c96"
+    },
+    {
+      "id": "hosts-outside-your-allowed-domains",
+      "hash": "90e531d5851038a0c71d58807c07838b3312c2a00ea531a65b6b08a6745e69a3",
+      "bodyHash": "76da964778418c823266b0677e94e6c3d7be22120eb6affb5346b95d3910c830"
+    },
+    {
+      "id": "hostnames-that-resolve-to-local-addresses",
+      "hash": "e22f10516af700aa4c16697deeb7982e46bad1ab86ffb02a7a61bcce6cb39b46",
+      "bodyHash": "cdb61d466e8a4486748c028709d674a73ee165c7488a9ecc3f9ad87372fa73fa"
+    },
+    {
+      "id": "per-command-allowed-domains-in-auto-mode",
+      "hash": "bde631c2809f9a0011c51528a7148ad088ca04b89f2fbfa1a358c04382f8499e",
+      "bodyHash": "0b142d48b8446e1e5d428d7edb618e72abdee52749aed3b55df67fefa3d03908"
+    },
+    {
+      "id": "ipv6-addresses-in-domain-lists",
+      "hash": "c62042566fc5f186f5b97861299097ede711bc227f92626bf1b69e1b8e918e50",
+      "bodyHash": "245fb44cbcb181bd6ec1e13810e105bcba7ff9b9bf2a27e788a4eba3580c76e8"
+    },
+    {
+      "id": "os-level-enforcement",
+      "hash": "2d8cce12f635556384e5112192cde801a18ec0d15decfad43461ac55ee201877",
+      "bodyHash": "5cdd521ed4dfd7fdbfe87e995b1d5c258d71d6ad657ea6263031e3cfd7b32262"
+    },
+    {
+      "id": "how-sandboxing-relates-to-permissions-and-permission-modes",
+      "hash": "90d9325e783f1f29e04890bb74b032ff1cad24b78fc506a7b3c4888b09150fee",
+      "bodyHash": "b786f9005fde82894aa4157b795129942d1f8419a8d424da305284cc42d43b51"
+    },
+    {
+      "id": "permission-rules",
+      "hash": "0c8fec51aed28d3792e9e004f75779c51dbaf53a97e4bcadcd5455c75fc25e05",
+      "bodyHash": "7ad5a92e8078a331dd58ceb0501498f0bcb8f6f5f48f24dd0c4d1dd7ec2919b2"
+    },
+    {
+      "id": "permission-modes",
+      "hash": "bb09a181f047fd1bed1749e0b625588bfcd20ae7bb9362c365145451c6168fbd",
+      "bodyHash": "2991e57d0043ebabde544d13e0d5202424c11238318bb996a0b67d450db0beba"
+    },
+    {
+      "id": "configure-the-sandbox-for-your-organization",
+      "hash": "58548df754707d8c1681aec4bb8e75c829cc4d028f811c4663d906e21ff497ae",
+      "bodyHash": "e2a31b4ca68b31c79245e19e9b7053f36b6a6326c4dd3ae1c8b39cad529fd683"
+    },
+    {
+      "id": "enforce-sandboxing-with-managed-settings",
+      "hash": "9ed9ca92638f62e06bddb6525ff368abd8c1e4938246336de81e4a4a64394876",
+      "bodyHash": "63b51b17007d33c75627c72880098cb06af8d3e1802383e1a427102f68044767"
+    },
+    {
+      "id": "keep-developers-from-widening-the-policy",
+      "hash": "a3491981c685464f6686c2c3c191c82c35d7ae081d932010c83573235a5a6984",
+      "bodyHash": "21873fdf4373096e1dbe21734d9b5028952e9625d3289ba02690add0a5cd6c99"
+    },
+    {
+      "id": "repository-settings-under-an-admin-required-sandbox",
+      "hash": "222c786eec1c9b5f4c271a19975fdab2b9a734025ed29a3c687128899b694fea",
+      "bodyHash": "2db63565f83c6dc002380a31e73dacd6ac80d1b8febcc988674fde54551809f5"
+    },
+    {
+      "id": "locks-that-apply-without-an-admin-required-sandbox",
+      "hash": "9e2e4d1ed5ce00443cf2a21987aaa83dccc160c4773cbab0fb15b7bdc6850161",
+      "bodyHash": "a117543ec383e522bae941a42b5a7888da3479a06bce39698acbb3a497a7576a"
+    },
+    {
+      "id": "custom-proxy-configuration",
+      "hash": "7b0a780fff84f615eed97772f603e8cda254c3747bcbd618b8996ff28ce53e84",
+      "bodyHash": "42259bec0bd50dcbc70ea860a6232f2882a0b4d25059b962f406748788660738"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "53676f5b881725093278d204f5a1b49eaacc6f97a44ba0f092b5941c54d41a30",
+      "bodyHash": "16d2339746caf24521633c3cd492d056f1822750903b1ba32640e2a745072a2c"
+    },
+    {
+      "id": "commands-fail-with-a-host-not-allowed-error",
+      "hash": "e9db2675b10eb2d9a1b5e876453b12b988740970b55b3fb38d7bc57656bbb8a4",
+      "bodyHash": "dc9ce2258f8d44c8e96f322020511239d54ef819973bb7b09b1353036755c544"
+    },
+    {
+      "id": "jest-hangs-or-fails",
+      "hash": "798e7fa994d0c3aeaf8f47145371c5da85aa4addc2cfa1a690b7933b20a796cc",
+      "bodyHash": "a8fc7add62813d321cd3c9edeb5eb9a5648f175df0f1423633c6e7f9a0726fbd"
+    },
+    {
+      "id": "go-based-clis-fail-tls-verification-on-macos",
+      "hash": "16dcf39340f2b48c95daef8d711a401372d9d970689a97bfe7871400242ef981",
+      "bodyHash": "ecb75596a0cba981f74a1c600bc2a3e87090b95ccba77d32294f0a3fa53e24ab"
+    },
+    {
+      "id": "open-osascript-or-browser-based-auth-flows-fail-with-error--600-on-macos",
+      "hash": "85f1a853f62769afe0abc6271a6c2a3308f9ce5fb6f7c6c3ccda2255e03c0d05",
+      "bodyHash": "9b65fc9c53ac6ddafa025315a20562820a75f4fac648cce92b744e41e9810f43"
+    },
+    {
+      "id": "docker-commands-fail",
+      "hash": "71592e5cf42c28becd899cedbc74d069fdee1e452becfbd2a9d8c84bc8c41be5",
+      "bodyHash": "a93a7a89354c3c916faa305450ca354f53f1ba1a618c9ee4646eaf0a037ba90d"
+    },
+    {
+      "id": "pbcopy-xclip-or-wl-copy-doesnt-update-the-clipboard",
+      "hash": "72b294adbbec8fb74ef728d41cdbeac661e07be397713c86780ea7dadd1b1146",
+      "bodyHash": "bc60332997f86ef3aee3bef01432728f41de3c570b8109af1ba68f11e912183d"
+    },
+    {
+      "id": "a-git-command-fails-with-unable-to-unlink-old",
+      "hash": "a99f5f6577c9f670b92f13ec04c428122869998fae5037d520ceebe3e8492a19",
+      "bodyHash": "9bdfb420a6bec31db3402b0ac84d1f20b99b5ae664855da1598120d3275a2fc9"
+    },
+    {
+      "id": "bubblewrap-fails-to-start-inside-a-container",
+      "hash": "9fbc22abe88520a2f307de7176d876d13c4c47cf5e345d420b7a648041ee225f",
+      "bodyHash": "bb8606616972cb7fe10ab3b900c441803097e7bd8240fa62a98152da1353368a"
+    },
+    {
+      "id": "0-byte-read-only-files-appear-at--claude-settings-paths-and-yes-and-dont-ask-again-doesnt-save",
+      "hash": "a1acf40779e963ea2cd08ac1b3fb02adf54832c4507f4be9794e6197ada2b5c6",
+      "bodyHash": "22f3f0a51ad5706ce57f4ec8c157a35b38df951402b8716e2488218aab63dd7c"
+    },
+    {
+      "id": "git-over-ssh-fails-with-the-sandbox-on",
+      "hash": "ba36fb1209bf754e66ea081a15b7a93d816f2bedb7054821dffec01e7fb2dbda",
+      "bodyHash": "4bfe4a496e003a6c56375ef933c08e51ce560066b55b2183aee208b4ec78bfbe"
+    },
+    {
+      "id": "a-database-client-or-other-non-http-tool-fails-to-reach-an-allowed-host",
+      "hash": "cc8e4aa0449c1252776da18ba24e7e36f0a60c6ac9356f8f582ee0b95dcd0b37",
+      "bodyHash": "33457e5eaf53bd925f3720c3a6f96617f7f869419258bdab75ba646311bea134"
+    },
+    {
+      "id": "a-command-fails-to-reach-a-server-on-localhost",
+      "hash": "2d3fb735e0f00fae8da97193f0fc7cb8de8ad1207d6544580a42804895111b06",
+      "bodyHash": "69d4a002a499fe67f31eaea409ca9074ddbf6d99feb57e6439d9824370dc2ae6"
+    },
+    {
+      "id": "an-allowed-hostname-is-refused-with-resolved-to-a-loopback-address",
+      "hash": "132d1809a7bb7139e1cbb0fa0d7de1dbb867f1880c4bac7e091ee592e631c359",
+      "bodyHash": "948a3ea274276fc0fa3cdf718f9f1c7cc9593359c06e86407a3752ca4b5edc36"
+    },
+    {
+      "id": "sandbox-fails-with-sandbox-settings-are-overridden-by-a-higher-priority-configuration",
+      "hash": "bb39ea4ee8d05e79461a91ad24488779ec4b30616c4d73b631f4119d04d531db",
+      "bodyHash": "eff284d36832a53be603958739833f420d8e8cc226f958893cccd227b8abca64"
+    },
+    {
+      "id": "limitations",
+      "hash": "4885be347027fae262068f7744571076a7465b54fcac77a95d53e6c9bd28bcdf",
+      "bodyHash": "2fda31f89f13a4fd12c7fabd92ea82502ac1fa829916d96db51ed60ce0d90e09"
+    },
+    {
+      "id": "security-limitations",
+      "hash": "38c6b07ead0e26e0d70c8353b2abf4bdcbeaae12ba549740aacda939664645bf",
+      "bodyHash": "fe4eb8dd8ba681172e4160de0df8d7556a1bbf55a3d13028ca3f12a8965a03b2"
+    },
+    {
+      "id": "scope",
+      "hash": "3b829becc87c89a973c72ed0fd0fa7ebf7a285c22665491f0f0460727648367b",
+      "bodyHash": "7fae4a4b6c9209455ba1cef59dc136e5352623708fb348a5d5dd2d8140e5ed79"
+    },
+    {
+      "id": "see-also",
+      "hash": "1c5900b9454c3a0b3d67bc561dcc06de49dcfeccefc153779d01b0f023d59801",
+      "bodyHash": "f5a6b39184e0e64c89ada19b90567a83dcb577613ab3372c712027252d99c229"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Protected paths",
+      "id": "protected-paths",
+      "hash": "880632f45fd7bc03f173f03ff9e58ea5733bd1777d57c0f4b4322e00d0441390",
+      "text": "### Protected paths\n\nInside the directories that sandboxed commands can write to, the sandbox still denies writes to the files Claude Code loads configuration and code from. A command that could edit those files could grant itself permissions, or add a hook or MCP server that Claude Code runs outside the sandbox. The permission system has its own [protected paths](/docs/en/permission-modes#protected-paths), which control what Claude Code approves before a tool runs; the sandbox's list applies to a command that is already running. It covers four groups of paths:\n\n* **In your working directory and the directories above it**: the `.claude` settings files, the `.claude/skills`, `.claude/agents`, `.claude/commands`, and `.claude/hooks` directories, `.mcp.json`, and the files Claude Code runs on its own, such as `.claude/workflows` and `.claude/scheduled_tasks.json`\n* **In your working directory only**: shell startup files such as `.bashrc` and `.zshrc`, `.gitconfig`, the `.vscode` and `.idea` directories, and `hooks` and `config` inside `.git`\n* **Files that would turn your working directory into a bare git repository**: `HEAD`, `objects`, and `refs` at the top level, plus existing `config` and `hooks` entries there when a `HEAD` sits beside them. A file named `config` is denied even with no `HEAD`. On Linux and WSL2, the sandbox deletes a top-level `HEAD` file or `objects` or `refs` directory that appears while a sandboxed command is running\n* **In `~/.claude`, or the directory `CLAUDE_CONFIG_DIR` points to**: most of its contents, plus `~/.claude.json` and the `.credentials.json` credential store\n\nIf a symlink appears at a protected settings file's path during the session, the sandbox also denies writes to the file it points to, starting with the next command.\n\nThere is no way to exempt one of these paths: an `allowWrite` entry or an `Edit` allow rule that covers the path doesn't lift the protection. The only way to turn the protection off is [`filesystem.disabled`](#disable-filesystem-isolation), which turns off filesystem isolation for every path. To see most of these paths resolved for your machine, run `/sandbox` and open the **Config** tab, which lists them under **Denied within allowed**, mixed in with your own `denyWrite` entries.\n\nIf `git merge` or `git checkout` fails with `unable to unlink old` on one of these paths, see [A git command fails with `unable to unlink old`](#a-git-command-fails-with-unable-to-unlink-old)."
+    }
+  ]
+}

@@ -2,9 +2,16 @@
 // from two kinds of file. A settings file is JSON, with a `Document` node. A
 // skill or command file is Markdown, with a `yaml` node for its frontmatter.
 // One rule object serves both languages, as in `agent-teams-no-project-config`.
+import type { JSONRuleVisitor } from '@eslint/json'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { Rule } from 'eslint'
-import { type PermissionEntry, permissionEntries, skillEntries } from './permission-entries.ts'
+import {
+  type ParsedEntry,
+  type PermissionEntry,
+  parsedEntries,
+  permissionEntries,
+  skillEntries,
+} from './permission-entries.ts'
 import { isHiddenDropIn } from './settings-files.ts'
 import { classifySkillFile } from './skill-files.ts'
 import { readFrontmatter } from './skill-frontmatter.ts'
@@ -50,4 +57,24 @@ export function permissionListener(
   }
   // `Rule.RuleListener` types a node as an ESTree node. These nodes are not.
   return listener as unknown as Rule.RuleListener
+}
+
+/** The root node of a settings file. */
+export type SettingsDocument = Parameters<NonNullable<JSONRuleVisitor['Document']>>[0]
+
+/** A listener for a rule that reads settings files only, and not skill files.
+ *  It calls `check` with the entries that parse and the document, and skips a
+ *  hidden drop-in in `managed-settings.d`. An entry that does not parse is for
+ *  `permissions-rule-syntax`. */
+export function settingsListener(
+  context: { readonly filename: string },
+  check: (entries: ParsedEntry[], document: SettingsDocument) => void,
+): JSONRuleVisitor {
+  return {
+    Document(node) {
+      if (!isHiddenDropIn(context.filename)) {
+        check(parsedEntries(permissionEntries(node)), node)
+      }
+    },
+  }
 }
