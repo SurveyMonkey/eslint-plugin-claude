@@ -4,47 +4,58 @@
   "blocks": [
     {
       "id": "extend-claude-code",
-      "hash": "283d445e3b0955e269a8e3ba44ad03d238284f8b08e3452f8def28df817b87aa"
+      "hash": "283d445e3b0955e269a8e3ba44ad03d238284f8b08e3452f8def28df817b87aa",
+      "bodyHash": "b2c6ab4f283ce784c496adb5c028645c346a8d9e526917ffa267877f96845a69"
     },
     {
       "id": "overview",
-      "hash": "fb235123532d1478fb903dc8fd55e0104c28b455fb039a08aea9c21506f38017"
+      "hash": "fb235123532d1478fb903dc8fd55e0104c28b455fb039a08aea9c21506f38017",
+      "bodyHash": "98cfefe11c4ba80190101f73b4654aa4b8f0200e08b9985a328fe9f353451340"
     },
     {
       "id": "match-features-to-your-goal",
-      "hash": "4b68c6858fdfd799525d582c3d94b11083fd554db1fed210bbbf17784df8e08b"
+      "hash": "4b68c6858fdfd799525d582c3d94b11083fd554db1fed210bbbf17784df8e08b",
+      "bodyHash": "20d2bbe1bd99d3dd96210c0fc8de7430cb37a64b983db144d258a496daf0f2b0"
     },
     {
       "id": "build-your-setup-over-time",
-      "hash": "62dcf019c65aec8095ce62b1b7995b44ae00414ed4d7824e1389b6bf9a8d64de"
+      "hash": "62dcf019c65aec8095ce62b1b7995b44ae00414ed4d7824e1389b6bf9a8d64de",
+      "bodyHash": "f676133fb0e33d28510647ace5fa3d28f978b4361f026f08c10c6bbce5ea67f1"
     },
     {
       "id": "compare-similar-features",
-      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772"
+      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772",
+      "bodyHash": "0ad8b3528c4774bff44b02a0347b5a45f805611f57eb2748a6e6853e4b77ce0f"
     },
     {
       "id": "understand-how-features-layer",
-      "hash": "57c10ac99dc60ea62a58253d2eeea45a693ced02ff165ce5c3ec4e683d9cb25b"
+      "hash": "57c10ac99dc60ea62a58253d2eeea45a693ced02ff165ce5c3ec4e683d9cb25b",
+      "bodyHash": "219851ebd448d3b1af0b4b372357386f1471663873bb61a130bc8c9014c46803"
     },
     {
       "id": "combine-features",
-      "hash": "e289fa93726f8d2b88a2a2be2813c377b566c090d25e3785e2e5243d6ccd9624"
+      "hash": "e289fa93726f8d2b88a2a2be2813c377b566c090d25e3785e2e5243d6ccd9624",
+      "bodyHash": "05111f6dc2f6340b54e3a4240099c52e86723a6b0b7daf78090510ad2a042328"
     },
     {
       "id": "understand-context-costs",
-      "hash": "afa1b5858402e3b4bbde0a6872be24da149ba5b384cbdb9619592bba7770a2d4"
+      "hash": "afa1b5858402e3b4bbde0a6872be24da149ba5b384cbdb9619592bba7770a2d4",
+      "bodyHash": "779e2110429003fcfa1176f6e3e38b82e97601d7a189fa7ddf8245a6b3e961a4"
     },
     {
       "id": "context-cost-by-feature",
-      "hash": "8061a9ac6519e236bab65c1fb111c0e93dafd6b75492c2415745e769f71714eb"
+      "hash": "8061a9ac6519e236bab65c1fb111c0e93dafd6b75492c2415745e769f71714eb",
+      "bodyHash": "cc6d403d1a86f459fdd0d931966c15697ee6772db82683f1197ff0cdc308248d"
     },
     {
       "id": "understand-how-features-load",
-      "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279"
+      "hash": "4a5d575b8a2c1e80e724e83fa27e7a6b0f92566c3bb65fce8557a86a5e1b0279",
+      "bodyHash": "9f26b7906b09e23061448c47cd268e4e43242fa8a28a248f82b6409b9fa4ad58"
     },
     {
       "id": "learn-more",
-      "hash": "0020d89de5b5302efa07f5acf9e3cfaec11afb064f4fe656e872443607d687ff"
+      "hash": "0020d89de5b5302efa07f5acf9e3cfaec11afb064f4fe656e872443607d687ff",
+      "bodyHash": "d33dcb999f17cd842ca0a190eb63123deed57bddbfd880c6b57dd7d90846945f"
     }
   ],
   "sources": [
