@@ -111,7 +111,7 @@ describe('pluginScripts', () => {
 
   linked('gives no script for a named pipe, which a read would wait on', () => {
     const { dir, top } = pluginTree({ name: 'p' })
-    execFileSync('sh', ['-c', 'mkfifo "$0"', path.join(top, 'pipe')])
+    execFileSync('mkfifo', [path.join(top, 'pipe')])
     const plugin = readPluginAt(dir) as NonNullable<ReturnType<typeof readPluginAt>>
     expect(pluginScripts(plugin, `\${CLAUDE_PLUGIN_ROOT}/pipe`)).toEqual([])
   })
