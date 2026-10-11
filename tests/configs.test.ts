@@ -1877,14 +1877,18 @@ const STRICT_ONLY = [
   'packages/pp/.claude/CLAUDE.md: claude/claude-md-agents-md-prose-pointer@1',
   // `claude-md-excludes-absolute-committed` reads the committed project file, and no other file.
   'packages/ea/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
-  'packages/ex/ok/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
+  'packages/cx/ok/.claude/settings.json: claude/claude-md-excludes-absolute-committed@1',
   // `memory-agent-memory-orphan` reads the `MEMORY.md` index, and no other file.
   'packages/ao/.claude/agent-memory/lone/MEMORY.md: claude/memory-agent-memory-orphan@1',
+  // The staged fixture tree of `packages/gu` holds one index with no agent.
+  'packages/gu/mem/project/.claude/agent-memory/reviewer/MEMORY.md: claude/memory-agent-memory-orphan@1',
   // `rules-paths-no-match` reads the rule files, and no other file.
   'packages/pn/.claude/rules/miss.md: claude/rules-paths-no-match@1',
   // `claude-md-location` reads every Markdown file, and reports the two places and names.
   'packages/lo/.claude/CLAUDE.local.md: claude/claude-md-location@1',
   'packages/lo/web/claude.md: claude/claude-md-location@1',
+  // The staged fixture tree of `packages/gu` holds a `.claude/CLAUDE.local.md`.
+  'packages/gu/claude/dot/.claude/CLAUDE.local.md: claude/claude-md-location@1',
   // `claude-md-html-comment-content` reads CLAUDE.md and CLAUDE.local.md, and no other file.
   'packages/hc/CLAUDE.md: claude/claude-md-html-comment-content@1',
   'packages/hc/.claude/CLAUDE.md: claude/claude-md-html-comment-content@1',
