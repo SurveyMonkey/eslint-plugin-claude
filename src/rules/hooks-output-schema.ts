@@ -104,7 +104,7 @@ const rule: Rule.RuleModule = {
     schema: [],
     messages: {
       level:
-        'The JSON output has "{{field}}" at the top level. Claude Code ignores it there, and shows no error. Put it inside "hookSpecificOutput".',
+        'The JSON output has "{{field}}" at the top level. Claude Code ignores it there. Put it inside "hookSpecificOutput".',
       eventName:
         'The "hookEventName" of the JSON output is "{{actual}}", and this hook runs on {{event}}. Set it to "{{event}}".',
       eventNameMissing:

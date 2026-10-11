@@ -1,7 +1,7 @@
 // Claude Code caps `additionalContext`, `systemMessage`, `initialUserMessage` and plain stdout at 10,000 characters,
 // and the `classifierContext` notes of one tool call at 2,000 characters (docs/rules/hooks-output-size.md).
-// Over the first cap, Claude Code saves the text to a file and passes Claude the path and a preview. No setting
-// raises either cap. The rule measures the strings that a command prints as literals, inline or from a
+// Over the first cap, Claude Code saves the text to a file and passes Claude the path and a preview. The docs say no
+// setting raises the output cap. The rule measures the strings that a command prints as literals, inline or from a
 // repository script. The options set a lower limit, and their schemas allow no more than the cap. At another
 // value, the message names the configured limit.
 import type { Rule } from 'eslint'

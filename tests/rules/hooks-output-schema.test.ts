@@ -46,7 +46,7 @@ describe(`${name}: a field at the wrong level`, () => {
       '/repo/.claude/settings.json',
     )
     expect(message?.message).toBe(
-      'The JSON output has "permissionDecision" at the top level. Claude Code ignores it there, and shows no error. Put it inside "hookSpecificOutput".',
+      'The JSON output has "permissionDecision" at the top level. Claude Code ignores it there. Put it inside "hookSpecificOutput".',
     )
   })
 

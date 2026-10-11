@@ -29,10 +29,9 @@ The rule is a heuristic. It reads the handlers of one file. It reports a handler
 both matchers select. It reports at the `command` string of the later handler. A file that is a different source
 (another settings file, a plugin) is a different scope, and the rule does not compare them.
 
-The check for "the same tool" is exact. The candidates are the tools that the two matchers name, and the built-in tools
+The check for "the same tool" goes tool by tool. The candidates are the tools that the two matchers name, and the built-in tools
 of `src/data/tool-names.ts`. A missing, empty or `*` matcher selects every tool. A matcher of exact names selects those
-names. Any other matcher is a regular expression that the rule runs with `RegExp.test`, for a tool
-event. A tool that both select is the proof. If a regular expression names no known tool, the rule is silent.
+names. Any other matcher is a regular expression that the rule runs with `RegExp.prototype.test`, as Claude Code does. A tool that both select is the proof. If a regular expression names no known tool, the rule is silent.
 
 The rule skips a handler with an `if` condition, because that handler may run for other calls than the other one. It
 skips a handler in the background. It skips a group whose `matcher` is not a string

@@ -1,7 +1,7 @@
 // When several `PreToolUse` hooks return `updatedInput`, the last one to finish takes effect, and the order
 // is not fixed, because the hooks run in parallel (docs/rules/hooks-multiple-updatedinput.md). The rule reads
 // the handlers of one file. It reports a handler that prints `hookSpecificOutput.updatedInput` as a literal,
-// when an earlier handler of the file does so too, and a tool exists that both matchers name. A handler with an
+// when an earlier handler of the file does so too, and a tool exists that both matchers select. A handler with an
 // `if` condition, or in the background, is not a provable rewrite for every call, so the rule skips it.
 import type { Rule } from 'eslint'
 import { TOOL_NAMES } from '../data/tool-names.ts'

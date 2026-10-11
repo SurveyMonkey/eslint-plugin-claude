@@ -20,8 +20,8 @@ Print JSON output that Claude Code reads, with each field at its level.
 
 ## Rule details
 
-A hook prints a JSON object, and Claude Code reads specific fields from it. A field at the wrong level, or with a value
-that Claude Code does not read, has no effect. Claude Code shows no error.[^wrong-level] The rule reads JSON that a
+A hook prints a JSON object, and Claude Code reads specific fields from it. A field at the wrong level has no effect. For
+`permissionDecision` and `additionalContext`, Claude Code shows no error.[^wrong-level] The rule reads JSON that a
 command prints as a literal, and reports these faults at the `command` string.
 
 | Message | Fault |

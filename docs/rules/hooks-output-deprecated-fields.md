@@ -48,7 +48,8 @@ The rule reads the inline `command` (and an exec-form `command` with its `args`)
 command runs. A script is the command word, or the script of `bash`, `sh` or `zsh`, when the path starts with
 `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}`, as [`hooks-script-shebang`](hooks-script-shebang.md) resolves it.
 The output of a script at run time is not in a file, so the rule reads what the text shows. It reads the simple
-commands of the text. It skips a script of another language (by its extension or its shebang), a binary file, a
+commands of the text. It reads no commands of a script of another language (by its extension or its shebang), but it reads
+its text for `team_name`. It skips a binary file, a
 handler with `shell: "powershell"` and no `args`, and a file that it cannot read inside the repository: a missing
 file, a folder, a FIFO, a link with no target, a link that leads out of the repository, a file that is not readable,
 and a file of more than one megabyte (ADR 001, Decision 14).

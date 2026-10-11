@@ -28,15 +28,14 @@ continuation. Parse the `stop_hook_active` field from the JSON input and exit ea
 
 The rule is a heuristic. A `Stop` or `SubagentStop` handler blocks when its text:
 
-- runs `exit 2`, which prevents Claude from stopping;
+- runs `exit 2`, which blocks the stop;
 - prints a JSON object with `decision: "block"`;
 - or prints `hookSpecificOutput.additionalContext`, which continues the conversation "through the same loop
   protections as `decision: "block"`".[^decision]
 
 A handler has a guard when the text of the command, or of a repository script that it runs, names `stop_hook_active` or
 `transcript_path`. Then the rule is silent, because the docs allow either check. A comment line of a script does not count. The
-rule cannot see whether the check works, so it does not read the condition. A script of another language is not
-read, and it gives no report. A handler in the background (`async` or `asyncRewake`) is skipped.
+rule cannot see whether the check works, so it does not read the condition. A script of another language has no block that the rule can read. Its text can still name a guard. A handler in the background (`async` or `asyncRewake`) is skipped.
 
 `hooks-output-blocking-exit-code` owns `exit 1`. This rule does not treat `exit 1` as a block.
 

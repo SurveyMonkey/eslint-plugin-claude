@@ -10,9 +10,15 @@ const WRAPPERS = ['exec', 'env', 'command', 'nohup']
 /** True when `word` is a `NAME=value` word, which sets a variable for the command. */
 export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 
+/** How deep a quote and a substitution may nest before the reader gives up and takes the rest of the line. */
+const MAX_NESTING = 100
+
 /** The index of the `)` that closes the `(` at `open` in `line`, or the last index. A quote, a backslash, a
  *  backtick and a nested substitution inside keep their own level. */
-function closingParen(line: string, open: number): number {
+function closingParen(line: string, open: number, nesting = 0): number {
+  if (nesting > MAX_NESTING) {
+    return line.length - 1
+  }
   let depth = 0
   for (let i = open; i < line.length; i++) {
     const char = line.charAt(i)
@@ -23,7 +29,7 @@ function closingParen(line: string, open: number): number {
       }
       i = end
     } else if (char === '"') {
-      i = closingQuote(line, i)
+      i = closingQuote(line, i, nesting + 1)
     } else if (char === '`') {
       i = closingTick(line, i)
     } else if (char === '\\') {
@@ -39,13 +45,13 @@ function closingParen(line: string, open: number): number {
 
 /** The index of the double quote that closes the one at `start` in `line`, or the last index. A command
  *  substitution or a backtick pair inside holds quotes of its own. */
-function closingQuote(line: string, start: number): number {
+function closingQuote(line: string, start: number, nesting = 0): number {
   for (let i = start + 1; i < line.length; i++) {
     const char = line.charAt(i)
     if (char === '\\') {
       i++
     } else if (char === '$' && line.startsWith('(', i + 1)) {
-      i = closingParen(line, i + 1)
+      i = closingParen(line, i + 1, nesting + 1)
     } else if (char === '`') {
       i = closingTick(line, i)
     } else if (char === '"') {
@@ -72,6 +78,8 @@ function closingTick(line: string, start: number): number {
 export interface Command {
   words: string[]
   stdout: boolean
+  /** True when a lone `&` ended the command before this one. */
+  afterAmp?: true
 }
 
 /** The simple commands of a shell line. A command ends at `;`, `&`, `|`, a parenthesis, a backtick or a new line
@@ -85,6 +93,8 @@ export function scanCommands(line: string): Command[] {
   let quote = ''
   // For each open parenthesis: true when `$` comes before it, which makes it a command substitution.
   const levels: boolean[] = []
+  let substitutions = 0
+  let amp = false
   let ticks = false
   const endWord = () => {
     if (open) {
@@ -93,12 +103,17 @@ export function scanCommands(line: string): Command[] {
       open = false
     }
   }
-  const endCommand = (piped = false) => {
+  const endCommand = (piped = false, lone = false) => {
     endWord()
     if (words.length > 0) {
-      commands.push({ words, stdout: !piped && !ticks && !levels.includes(true) })
+      commands.push({
+        words,
+        stdout: !piped && !ticks && substitutions === 0,
+        ...(amp ? { afterAmp: true as const } : {}),
+      })
       words = []
     }
+    amp = lone
   }
   for (let i = 0; i < line.length; i++) {
     const char = line.charAt(i)
@@ -110,7 +125,9 @@ export function scanCommands(line: string): Command[] {
         i += line.charAt(i + 1) === '\r' ? 2 : 1
       } else {
         // The next character is part of the word. A backslash at the end of the string adds no character.
-        word += line.charAt(++i)
+        const next = line.charAt(++i)
+        // In double quotes the shell keeps the backslash before any character but these four.
+        word += quote === '"' && !'$`"\\'.includes(next) ? `\\${next}` : next
         open = true
       }
     } else if (quote !== '' && char === quote) {
@@ -131,16 +148,19 @@ export function scanCommands(line: string): Command[] {
     } else if (char === '(') {
       endCommand()
       levels.push(line.charAt(i - 1) === '$')
+      substitutions += levels[levels.length - 1] ? 1 : 0
     } else if (char === ')') {
       endCommand()
-      levels.pop()
+      substitutions -= levels.pop() ? 1 : 0
     } else if (char === '`') {
       endCommand()
       ticks = !ticks
     } else if (char === '|') {
       // `||` is a list operator, and `|` or `|&` is a pipe. The second `|` of `||` ends no command.
       endCommand(line.charAt(i + 1) !== '|')
-    } else if (/[;&\n]/.test(char)) {
+    } else if (char === '&') {
+      endCommand(false, line.charAt(i - 1) !== '&' && line.charAt(i + 1) !== '&')
+    } else if (/[;\n]/.test(char)) {
       endCommand()
     } else if (/\s/.test(char)) {
       endWord()
@@ -209,7 +229,8 @@ export function sinkOf(commands: Command[], index: number): Sink {
     }
   }
   // The scanner ends the command of `&>file` at the `&`. The next command then starts with the redirect.
-  if (commands[index + 1]?.words[0]?.startsWith('>')) {
+  const following = commands[index + 1]
+  if (following?.afterAmp && following.words[0]?.startsWith('>')) {
     return 'other'
   }
   return stdout ? 'stdout' : 'other'
@@ -275,6 +296,15 @@ function objectIn(word: string): Record<string, unknown> | undefined {
   }
 }
 
+/** `text` without the `\n` pairs at its end, which a `printf` format prints as new lines. */
+function withoutTrailingNewlines(text: string): string {
+  let end = text.length
+  while (text.startsWith('\\n', end - 2) && end >= 2) {
+    end -= 2
+  }
+  return text.slice(0, end)
+}
+
 /** What the `echo` and `printf` commands of `commands` print to standard output. A command that prints a JSON
  *  object gives one item for each object. Any other gives one item with `json` undefined. A command that
  *  sends its output to stderr or a file prints nothing here. */
@@ -285,9 +315,9 @@ export function printedBy(commands: Command[]): Printed[] {
     }
     const args = printedArguments(words.slice(statementAt(words) + 1))
     // `printf` turns a `\n` of its format into a new line. `echo` prints the two characters.
-    const end = nameOf(words) === 'printf' ? /(?:\\n)+$/ : /$^/
+    const printf = nameOf(words) === 'printf'
     const objects = args.flatMap((arg) => {
-      const json = objectIn(arg.replace(end, ''))
+      const json = objectIn(printf ? withoutTrailingNewlines(arg) : arg)
       return json === undefined ? [] : [{ json, text: arg }]
     })
     return objects.length > 0 ? objects : [{ json: undefined, text: args.join(' ') }]

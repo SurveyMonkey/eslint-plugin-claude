@@ -43,7 +43,7 @@ The rule makes no report in these cases:
 - The handler sets `onFailure: "block"`. Any other exit code then blocks, as exit 2 does.[^onfailure] The field has
   no effect on `Stop`, `SubagentStop`, `TaskCompleted` and `TeammateIdle`, so the rule still reports there.
 - The handler is in the background (`async` or `asyncRewake`). A background hook cannot block.
-- The text prints a JSON object. A hook that exits 1 and prints JSON that passes validation succeeds, and the JSON
+- The text prints a JSON object as a literal with `echo` or `printf`. A hook that exits 1 and prints JSON that passes validation succeeds, and the JSON
   fields decide what happens.[^outcome] `hooks-output-schema` reads that JSON.
 
 ### What the rule reads

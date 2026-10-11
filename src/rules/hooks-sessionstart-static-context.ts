@@ -16,7 +16,7 @@ import {
   objectField,
 } from '../hooks-config.ts'
 import { type HandlerText, placeholderFolders } from '../hooks-files.ts'
-import { type Command, commandWordAt, isPrinter, printedBy, sinkOf } from '../shell-words.ts'
+import { type Command, isPrinter, printedBy, sinkOf, statementAt } from '../shell-words.ts'
 
 const name = 'hooks-sessionstart-static-context' as const
 
@@ -26,7 +26,7 @@ const FILE_PRINTERS = ['cat', 'head', 'tail', 'less', 'more', 'bat']
 /** True when a command of `commands` prints a file named `AGENTS.md`. */
 function printsAgentsFile(commands: Command[]): boolean {
   return commands.some(({ words }, index) => {
-    const at = commandWordAt(words)
+    const at = statementAt(words)
     return (
       FILE_PRINTERS.includes(path.posix.basename(words[at] ?? '')) &&
       sinkOf(commands, index) === 'stdout' &&

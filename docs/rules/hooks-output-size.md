@@ -71,8 +71,8 @@ Pass: the same script with a shorter message.
 'claude/hooks-output-size': ['warn', { maxOutputChars: 4000, maxClassifierChars: 500 }]
 ```
 
-The defaults are the caps of Claude Code. No setting raises a cap, so the schema allows no value above its default
-(`maximum`). A team can set a lower value to keep the context short. A config that sets only the severity keeps the
+The defaults are the caps of Claude Code. The docs say that no setting raises the output cap. The schema also allows no value above the
+2,000 of the classifier cap (`maximum`). A team can set a lower value to keep the context short. A config that sets only the severity keeps the
 defaults. The `recommended` and `strict` configs set no option.
 
 At the default, the message says that Claude Code caps the string. At another value, the message says "The configured
