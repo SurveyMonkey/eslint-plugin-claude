@@ -1607,12 +1607,12 @@ const TREE: Record<string, string> = {
   // `mcp-approval-conflict`: a name in both lists. The project pair reports in the file with the
   // enabled entry. The managed pair reports in the drop-in with the enabled entry. A hidden drop-in
   // is for `settings-managed-file`.
-  'packages/ac/.claude/settings.json': '{"enabledMcpjsonServers": ["db"]}',
-  'packages/ac/.claude/settings.local.json': '{"disabledMcpjsonServers": ["db"]}',
-  'packages/ac/managed-settings.json': '{"disabledMcpjsonServers": ["db"]}',
-  'packages/ac/managed-settings.d/10-a.json': '{"enabledMcpjsonServers": ["db"]}',
-  'packages/ac/managed-settings.d/.20-hidden.json': '{"enabledMcpjsonServers": ["db"]}',
-  'packages/ac/.vscode/settings.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/mac/.claude/settings.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/mac/.claude/settings.local.json': '{"disabledMcpjsonServers": ["db"]}',
+  'packages/mac/managed-settings.json': '{"disabledMcpjsonServers": ["db"]}',
+  'packages/mac/managed-settings.d/10-a.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/mac/managed-settings.d/.20-hidden.json': '{"enabledMcpjsonServers": ["db"]}',
+  'packages/mac/.vscode/settings.json': '{"enabledMcpjsonServers": ["db"]}',
   // `mcp-allow-deny-overlap`: the same shape for the policy lists.
   'packages/ao/.claude/settings.json': '{"allowedMcpServers": [{"serverName": "db"}]}',
   'packages/ao/.claude/settings.local.json': '{"deniedMcpServers": [{"serverName": "db"}]}',
@@ -2795,18 +2795,22 @@ const EXPECTED = [
   'plugins/ts/skills/s/SKILL.md: claude/mcp-plugin-tool-name-scoped@2',
   'plugins/ts/commands/c.md: claude/mcp-plugin-tool-name-scoped@2',
   'plugins/ts/commands/c.md: claude/command-legacy-format@1',
+  'plugins/ts/commands/c.md: claude/skill-description-present@1',
+  'plugins/ts/skills/o/SKILL.md: claude/skill-description-present@1',
+  'plugins/ts/skills/s/SKILL.md: claude/skill-description-present@1',
   'plugins/ts/agents/a.md: claude/mcp-plugin-tool-name-scoped@2',
   'packages/an/.claude/settings.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.local.json: claude/mcp-approval-names-exist@2',
   'packages/an/.claude/settings.json: claude/mcp-approval-committed@2',
-  'packages/ac/.claude/settings.json: claude/mcp-approval-conflict@2',
-  'packages/ac/.claude/settings.json: claude/mcp-approval-committed@2',
-  'packages/ac/managed-settings.d/10-a.json: claude/mcp-approval-conflict@2',
-  'packages/ac/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/mac/.claude/settings.json: claude/mcp-approval-conflict@2',
+  'packages/mac/.claude/settings.json: claude/mcp-approval-committed@2',
+  'packages/mac/managed-settings.d/10-a.json: claude/mcp-approval-conflict@2',
+  'packages/mac/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/ao/.claude/settings.json: claude/mcp-allow-deny-overlap@2',
   'packages/ao/managed-settings.d/10-a.json: claude/mcp-allow-deny-overlap@2',
   'packages/ao/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/lc/.claude-plugin/marketplace.json: claude/lsp-extension-conflict@2',
+  'packages/lc/marketplace.json: claude/marketplace-location@1',
   'plugins/ld/.claude-plugin/plugin.json: claude/lsp-duplicate-server-name@2',
 ].sort()
 
@@ -3604,7 +3608,9 @@ describe('configs', () => {
     const own = all.filter(isDescription)
     expect(own.length).toBeGreaterThan(0)
     for (const report of own) {
-      expect(report).toMatch(/^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/p\/agents\//)
+      expect(report).toMatch(
+        /^(?:packages\/[\w/]+\/)?\.claude\/agents\/|^plugins\/(?:p|ts)\/agents\//,
+      )
     }
   }, 30_000)
 
