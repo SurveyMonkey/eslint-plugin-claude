@@ -49,6 +49,7 @@ const MONITORS = JSON.stringify([{ name: 'm', command: 'run $CLAUDE_PLUGIN_ROOT/
 const LIFECYCLE = JSON.stringify({ scripts: { postinstall: 'node setup.js' } })
 const THEME = JSON.stringify({ base: 'bogus' })
 const QUOTE = JSON.stringify([{ name: 'm', command: `run \${CLAUDE_PLUGIN_ROOT}/x` }])
+const PARENT = JSON.stringify([{ name: 'm', command: `cat "\${CLAUDE_PLUGIN_ROOT}/../x"` }])
 const STATE = JSON.stringify([{ name: 'm', command: `touch "\${CLAUDE_PLUGIN_ROOT}/x"` }])
 
 describe('a plugin root that links out of the repository', () => {
@@ -61,6 +62,7 @@ describe('a plugin root that links out of the repository', () => {
       MONITORS,
     ],
     ['plugin-monitors-command-quote', 'monitors/monitors.json', '**/monitors/monitors.json', QUOTE],
+    ['plugin-no-parent-path-escape', 'monitors/monitors.json', '**/monitors/monitors.json', PARENT],
     [
       'plugin-no-state-in-plugin-root',
       'monitors/monitors.json',

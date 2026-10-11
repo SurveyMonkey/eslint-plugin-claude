@@ -245,6 +245,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-relevance-signal-hints`](docs/rules/plugin-relevance-signal-hints.md) | A `relevance` `cli` entry is one command name, and a `manifestDeps` `file` pattern does not start with `^`, because neither can match | `off` | `warn` |
 | [`claude/plugin-dir-not-marketplace-root`](docs/rules/plugin-dir-not-marketplace-root.md) | A script that loads a plugin with `--plugin-dir` or `CLAUDE_CODE_PLUGIN_DIRS` names the folder of a plugin, not a marketplace root, because Claude Code does not read `marketplace.json` there | `off` | `warn` |
 | [`claude/plugin-no-state-in-plugin-root`](docs/rules/plugin-no-state-in-plugin-root.md) | A plugin command or script does not write under `${CLAUDE_PLUGIN_ROOT}`, because the plugin root changes with each version; state goes to `${CLAUDE_PLUGIN_DATA}` | `off` | `warn` |
+| [`claude/plugin-no-parent-path-escape`](docs/rules/plugin-no-parent-path-escape.md) | A plugin command or script does not name a path above the plugin root, such as `../shared`, because a copied plugin has no files outside its directory | `off` | `warn` |
 
 ### Marketplace manifest
 

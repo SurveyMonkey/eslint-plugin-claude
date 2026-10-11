@@ -257,6 +257,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-monitors-command-quote',
     'plugin-monitors-skill-exists',
     'plugin-no-git-lfs',
+    'plugin-no-parent-path-escape',
     'plugin-no-project-plugins-dir',
     'plugin-no-state-in-plugin-root',
     'plugin-npm-source-shrinkwrap',

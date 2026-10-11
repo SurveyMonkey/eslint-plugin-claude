@@ -241,6 +241,7 @@ import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
+import pluginNoParentPathEscape from './rules/plugin-no-parent-path-escape.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
 import pluginNoStateInPluginRoot from './rules/plugin-no-state-in-plugin-root.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
@@ -753,6 +754,7 @@ const modules = [
   pluginRelevanceSignalHints,
   pluginDirNotMarketplaceRoot,
   pluginNoStateInPluginRoot,
+  pluginNoParentPathEscape,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1150,6 +1152,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-relevance-signal-hints': 'off',
   'plugin-dir-not-marketplace-root': 'off',
   'plugin-no-state-in-plugin-root': 'off',
+  'plugin-no-parent-path-escape': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.
