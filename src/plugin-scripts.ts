@@ -45,7 +45,8 @@ function textOf(real: string): string | undefined {
   }
 }
 
-/** The scripts of `plugin` that the shell command `command` runs, in order. */
+/** The scripts of `plugin` that `command` names as its first program or as the first argument of a
+ *  leading interpreter. A script after `&&` or `;` is not read. */
 export function pluginScripts(plugin: Plugin, command: string): PluginScript[] {
   const scope: Scope = {
     bound: plugin.bound,

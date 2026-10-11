@@ -48,8 +48,8 @@ the plugin does not bundle. A bare program name, such as `gopls`, is on the `PAT
 report. The rule does not look for the target of a path. It reads no file that the manifest names.
 
 `plugin-no-parent-path-escape` reads `${CLAUDE_PLUGIN_ROOT}/../x`, which this rule does not report.
-A relative path such as `../x` in a monitor command is reported by this rule only. So one command
-does not get a report from both rules.
+A relative path such as `../x` in a monitor command is reported by this rule only. So one word does
+not get a report from both rules.
 
 The rule makes no report when it cannot see the plugin. The plugin root can be unseen, and the real
 path of the root, of `.claude-plugin/` or of `plugin.json` can be out of the repository.

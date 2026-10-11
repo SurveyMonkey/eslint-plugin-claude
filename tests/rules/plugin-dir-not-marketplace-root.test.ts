@@ -159,11 +159,29 @@ describe(RULE, () => {
     ['an empty value', 'claude --plugin-dir='],
     ['a path that is not there', 'claude --plugin-dir ./missing'],
     ['a path that is a file', 'claude --plugin-dir ./package.json'],
-    ['another flag', 'claude --add-dir .'],
-    ['a word that holds the flag', 'claude --plugin-directory .'],
-    ['no flag', 'echo hi'],
   ])('stays silent for %s', (_title, command) => {
     expect(run({ dev: command }, undefined, 'a/b')).toEqual([])
+  })
+
+  check.each([
+    ['another flag', 'claude --add-dir .'],
+    ['a word that holds the flag', 'claude --plugin-directory .'],
+    ['a word that holds the flag with an equals sign', 'claude --plugin-directory=.'],
+    ['no flag', 'echo hi'],
+  ])('stays silent at a marketplace root for %s', (_title, command) => {
+    expect(run({ dev: command })).toEqual([])
+  })
+
+  check('stays silent for a folder whose name holds a variable mark', () => {
+    const files = { '$X/.claude-plugin/marketplace.json': MARKET }
+    expect(run({ dev: "claude --plugin-dir '$X'" }, files)).toEqual([])
+  })
+
+  check('splits a list of CLAUDE_CODE_PLUGIN_DIRS at a semicolon', () => {
+    const top = tree({ '.claude-plugin/marketplace.json': MARKET })
+    const code = scripts({ dev: `CLAUDE_CODE_PLUGIN_DIRS="/elsewhere;${top}" claude` })
+    const found = lintPluginFile(RULE, ['**/package.json'], path.join(top, 'package.json'), code)
+    expect(texts(found)).toEqual([message('dev', top, 'CLAUDE_CODE_PLUGIN_DIRS')])
   })
 
   linked('stays silent for a link to a folder out of the repository', () => {

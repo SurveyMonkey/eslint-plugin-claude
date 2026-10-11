@@ -37,8 +37,8 @@ stays in the root, and the rule does not report it. A relative path such as `../
 command gets no report from this rule, because the working folder of the command is not known.
 `plugin-path-uses-plugin-root` reports a monitor command that starts with a relative path.
 
-**A script.** The rule reads each script of the plugin that a command runs. A script is a file that
-the command names as its program, or as the first argument of an interpreter such as `bash` or
+**A script.** The rule reads the script of the plugin that a command runs first. A script is a file that
+the command names as its first program, or as the first argument of an interpreter such as `bash` or
 `node`, with a path from `${CLAUDE_PLUGIN_ROOT}`. The rule reads a text file of at most 1 MiB with a
 real path in the plugin root. In the script it reports a word with a `..` segment that, resolved
 from the folder of the script, is above the plugin root. A script in `scripts/` that names
@@ -52,7 +52,7 @@ The rule makes no report in these cases:
 
 - The word has a variable, a substitution, a glob, a `~`, a URL or another expansion.
 - The word is an absolute path, or is after a `#` comment mark.
-- The script is a link out of the repository, a link with no target, a folder, a binary file or a
+- The script is a link out of the plugin, a link with no target, a folder, a binary file or a
   file over the limit.
 - The plugin is unseen.
 

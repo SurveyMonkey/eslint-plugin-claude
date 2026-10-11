@@ -36,8 +36,8 @@ The rule reads these commands:
 It does not read a file that the manifest names, an MCP `command` with `args`, or an exec-form
 hook.
 
-The rule also reads the scripts that a command runs. A script is a file of the plugin that the
-command names as its program, or as the first argument of an interpreter such as `bash` or `node`,
+The rule also reads the script that a command runs first. A script is a file of the plugin that the
+command names as its first program, or as the first argument of an interpreter such as `bash` or `node`,
 with a path from `${CLAUDE_PLUGIN_ROOT}`. The rule reads a text file of at most 1 MiB with a real
 path in the plugin root. It reads no other file.
 
@@ -59,7 +59,7 @@ The rule checks less than a shell. It does not expand a variable or follow a scr
 runs. It sees a `cd` only as a word in the same command or script. A relative target after `cd` to
 the root gets no report, except for a package install.
 
-The rule makes no report when it cannot read a script. A link out of the repository, a link with
+The rule makes no report when it cannot read a script. A link out of the plugin, a link with
 no target, a folder, a binary file and a file over the limit give no script. The same holds when
 the plugin is unseen.
 
