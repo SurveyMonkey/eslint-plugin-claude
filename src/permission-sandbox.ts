@@ -62,9 +62,8 @@ export function isOn(value: ValueNode | undefined, isManaged: boolean): boolean 
  *  as it is, and `~/` becomes `~`. */
 export function sandboxPath(entry: string): string {
   const path = entry
-    .trim()
     .replace(/\/\*\*$/, '')
     .replace(/^\/\/+/, '/')
     .replace(/\/+$/, '')
-  return path === '' && entry.trim().startsWith('/') ? '/' : path
+  return path === '' && entry.startsWith('/') ? '/' : path
 }

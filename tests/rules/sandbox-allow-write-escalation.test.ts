@@ -39,6 +39,7 @@ describe(`${name}: reports`, () => {
       '/home/me/.bashrc',
       '/root/.bashrc',
       '//home/me/.bashrc',
+      '$HOME/.zshrc',
     ]) {
       expect(ids(write(entry)), entry).toEqual(['startup'])
     }
@@ -67,7 +68,18 @@ describe(`${name}: reports`, () => {
   })
 
   it('reports a directory that holds a startup file or an executables directory', () => {
-    for (const entry of ['~', '~/', '/', '/usr', '/usr/local', '/Users/me', '/home/me']) {
+    for (const entry of [
+      '~',
+      '~/',
+      '~/**',
+      '/',
+      '/usr',
+      '/usr/local',
+      '/Users/me',
+      '/home/me',
+      '/root',
+      '$HOME',
+    ]) {
       expect(ids(write(entry)), entry).toEqual(['broad'])
     }
   })
@@ -103,6 +115,8 @@ describe(`${name}: silent`, () => {
       '/usr/binary',
       '~/.local/binx',
       '/var/tmp',
+      '/tmp/Users/me/.zshrc',
+      '/mnt/home/me/.bashrc',
     ]) {
       expect(ids(write(entry)), entry).toEqual([])
     }

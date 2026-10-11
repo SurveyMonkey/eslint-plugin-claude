@@ -72,7 +72,7 @@ describe(`${name}: one file`, () => {
   })
 
   it('is silent when denyRead denies the home directory, as the docs example does', () => {
-    for (const entry of ['~/', '~', '/Users/me', '/home/me', '/']) {
+    for (const entry of ['~/', '~', '~/**', '/Users/me', '/home/me', '/root', '/']) {
       expect(alone(deny(entry)), entry).toEqual([])
     }
   })
@@ -111,8 +111,16 @@ describe(`${name}: one file`, () => {
     expect(alone({ sandbox: { enabled: true, filesystem: { denyRead: [1, null] } } })).toEqual([
       'open',
     ])
-    const files = [{ path: '~/.aws', mode: 'allow' }, 'x', { path: 5, mode: 'deny' }]
-    expect(alone({ sandbox: { enabled: true, credentials: { files } } })).toEqual(['open'])
+    const files = [
+      { path: '~/.aws', mode: 'allow' },
+      { path: '~/.ssh', mode: 'deny' },
+      'x',
+      { path: 5, mode: 'deny' },
+    ]
+    const credentials = { files }
+    expect(alone({ sandbox: { enabled: true, credentials } })).toEqual(['open'])
+    expect(message({ sandbox: { enabled: true, credentials } })).toContain('`~/.aws`')
+    expect(message({ sandbox: { enabled: true, credentials } })).not.toContain('`~/.ssh`')
   })
 
   it('is silent when filesystem isolation is off, or reads outside the working directory are blocked', () => {
