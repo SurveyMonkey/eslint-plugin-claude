@@ -38,6 +38,15 @@ describe(`${name}: static text`, () => {
     ])
   })
 
+  it('reports a file that a branch of a block prints', () => {
+    for (const line of [
+      'if [ -f AGENTS.md ]; then cat AGENTS.md; fi',
+      'test -f AGENTS.md && { cat AGENTS.md; }',
+    ]) {
+      expect(inline(line), line).toEqual(['agentsFile'])
+    }
+  })
+
   it('reports a script that only echoes static text', () => {
     expect(script('#!/bin/bash\n# context\necho "This repo uses bun test"\n')).toEqual([
       'staticText',
@@ -161,7 +170,7 @@ describe(`${name}: silent`, () => {
     expect(script('#!/bin/bash\n\n')).toEqual([])
   })
 
-  it('is silent for a handler that is no command, in the background or for powershell', () => {
+  it('is silent for a handler that is no command or that is for powershell', () => {
     const http = settings(hooks('SessionStart', [{ type: 'http', url: 'https://x.example' }]))
     expect(lintJson(name, http, '/repo/.claude/settings.json')).toEqual([])
     expect(inline('echo "static"', 'SessionStart', { shell: 'powershell' })).toEqual([])

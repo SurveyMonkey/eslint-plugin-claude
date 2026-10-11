@@ -52,6 +52,14 @@ describe(`${name}: the report`, () => {
     }
   })
 
+  it('does not count a comment line of an inline command as a guard', () => {
+    expect(inline('# stop_hook_active\nexit 2')).toEqual(['noGuard'])
+  })
+
+  it('reports a block decision that a redirect-only command follows', () => {
+    expect(inline(`echo '{"decision":"block","reason":"x"}' && >&2 echo log`)).toEqual(['noGuard'])
+  })
+
   it('reports once for a handler', () => {
     expect(inline(`echo '{"decision":"block","reason":"x"}'; exit 2`)).toEqual(['noGuard'])
   })

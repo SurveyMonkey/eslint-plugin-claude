@@ -127,6 +127,10 @@ describe(`${name}: team_name`, () => {
     )
   })
 
+  it('is silent for a comment line of an inline command', () => {
+    expect(ids('# reads team_name\nexit 0', 'TaskCreated')).toEqual([])
+  })
+
   it('is silent for another event, another name and a comment', () => {
     expect(script(jq, 'PreToolUse')).toEqual([])
     expect(script(`#!/bin/bash\njq -r '.teammate_name'\n`, 'TaskCreated')).toEqual([])

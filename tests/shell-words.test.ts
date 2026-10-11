@@ -157,6 +157,24 @@ describe('printedBy', () => {
     expect(printed(`echo '{"a":1}\\n'`).map(({ json }) => json)).toEqual([undefined])
   })
 
+  it('reads the JSON of a printf format in double quotes, and a \\n at its end', () => {
+    expect(printed('printf "{\\"a\\":1}\\n"').map(({ json }) => json)).toEqual([{ a: 1 }])
+  })
+
+  it('keeps a printer that a later redirect-only command does not take', () => {
+    for (const line of [`echo '{"a":1}' && >f`, `echo '{"a":1}'; >f`, `echo '{"a":1}'\n>f`]) {
+      expect(
+        printed(line).map(({ json }) => json),
+        line,
+      ).toEqual([{ a: 1 }])
+    }
+    expect(printed(`echo '{"a":1}' &>f`)).toEqual([])
+  })
+
+  it('takes the text of a printer after a word that starts a branch', () => {
+    expect(printed('if x; then echo a; fi')).toEqual([{ json: undefined, text: 'a' }])
+  })
+
   it('tells a printer by the command word', () => {
     expect(isPrinter(['A=1', 'echo', 'a'])).toBe(true)
     expect(isPrinter(['/bin/echo'])).toBe(true)
@@ -180,9 +198,25 @@ describe('scanCommands', () => {
   const streams = (line: string) =>
     scanCommands(line).map(({ words, stdout }) => `${words.join(' ')}:${stdout ? 'out' : 'taken'}`)
 
-  it('gives the same words as commandsOf', () => {
-    const line = 'a b; c | d && e & f\ng `h` (i)'
-    expect(scanCommands(line).map(({ words }) => words)).toEqual(commandsOf(line))
+  it('marks a command that a lone & ended the command before', () => {
+    const ampAfter = (line: string) => scanCommands(line).map(({ afterAmp }) => afterAmp === true)
+    expect(ampAfter('a & b')).toEqual([false, true])
+    expect(ampAfter('a &b; c')).toEqual([false, true, false])
+    expect(ampAfter('a && b')).toEqual([false, false])
+    expect(ampAfter('a; >f')).toEqual([false, false])
+  })
+
+  it('keeps the backslash in double quotes, but before $, a backtick, a quote and a backslash', () => {
+    expect(commandsOf('echo "a\\nb" "c\\$d" "e\\"f" "g\\\\h" i\\nj')).toEqual([
+      ['echo', 'a\\nb', 'c$d', 'e"f', 'g\\h', 'inj'],
+    ])
+  })
+
+  it('stops at a depth, and does not throw or hang on a line of unclosed groups', () => {
+    const start = Date.now()
+    expect(scanCommands(`echo ${'"$('.repeat(20_000)}`)).toHaveLength(1)
+    expect(scanCommands('a('.repeat(100_000))).toHaveLength(100_000)
+    expect(Date.now() - start).toBeLessThan(5000)
   })
 
   it('marks a command that a pipe takes, and not a list operator', () => {

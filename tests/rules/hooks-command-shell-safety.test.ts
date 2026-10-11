@@ -103,6 +103,12 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
+  it('reads the line after -c with the quotes of a substitution in it', () => {
+    // H9 keeps the quotes of a quoted substitution in its word. Before, the `-c` line lost them and reported `$Y`.
+    expect(line('bash -c "x=$(echo "$Y")"')).toEqual([])
+    expect(line('bash -c "x=$(echo $Y)"')).toEqual(['unquoted'])
+  })
+
   it('reads the inside of a command substitution on its own', () => {
     for (const text of ['echo $(ls $DIR)', 'echo "$(echo $X)"', 'echo $(cat $F']) {
       expect(line(text), text).toEqual(['unquoted'])
