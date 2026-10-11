@@ -4,12 +4,11 @@
 // (https://code.claude.com/docs/en/hooks-guide#limitations). The rule reads the handlers of one file. It reports a
 // `PreToolUse` handler that prints `updatedInput` as a literal, when an earlier handler of the file also does so
 // for a tool that both matchers name.
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { command, FILES, settings } from '../hooks.test-support.ts'
 import { lintScript, P, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-multiple-updatedinput'
 
 const rewrite = (field = 'command') =>

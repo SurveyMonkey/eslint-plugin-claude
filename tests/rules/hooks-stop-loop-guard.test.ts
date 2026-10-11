@@ -4,12 +4,11 @@
 // this value or process the transcript" (https://code.claude.com/docs/en/hooks#stop-input). The rule is a
 // heuristic. A script blocks when it exits 2, or prints a block decision or `additionalContext`. It is guarded when
 // its text names `stop_hook_active` or `transcript_path`.
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { command, hooks, settings } from '../hooks.test-support.ts'
 import { lintInline, lintScript, P, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-stop-loop-guard'
 
 const UNGUARDED = `#!/bin/bash\ninput=$(cat)\necho "Run the tests first" >&2\nexit 2\n`

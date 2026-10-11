@@ -4,12 +4,11 @@
 // hook adds a second copy to the context"
 // (https://code.claude.com/docs/en/memory#remove-an-earlier-agents-md-workaround). The rule is a heuristic. It
 // reports a `SessionStart` command that only echoes text with no variable, and one that prints `AGENTS.md`.
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { command, hooks, settings } from '../hooks.test-support.ts'
 import { lintInline, lintScript, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-sessionstart-static-context'
 
 const inline = (line: string, event = 'SessionStart', fields: Record<string, unknown> = {}) =>

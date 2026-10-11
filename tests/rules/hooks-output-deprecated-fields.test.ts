@@ -4,12 +4,11 @@
 // (https://code.claude.com/docs/en/hooks#posttooluse-decision-control). The input field `team_name` is
 // "Deprecated" on the task and teammate events (https://code.claude.com/docs/en/hooks#taskcreated-input).
 // The rule reads JSON that a command prints, and the text of a repository script.
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { command, hooks, settings } from '../hooks.test-support.ts'
 import { lintInline, lintScript, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-output-deprecated-fields'
 
 const echo = (value: unknown) => `echo '${JSON.stringify(value)}'`

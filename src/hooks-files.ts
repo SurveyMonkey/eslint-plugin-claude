@@ -193,3 +193,43 @@ export function scriptText({ file, folder }: HookScript): string | undefined {
     return undefined
   }
 }
+
+/** A text that a command handler runs, for the rules that read what a hook prints. `script` is the file name of
+ *  a repository script, and undefined for the inline command. `text` is the text without comment lines. `commands`
+ *  are its simple commands, and they are empty for a script of another language, which `commandsOf` cannot read. */
+export interface HandlerText {
+  script: string | undefined
+  text: string
+  commands: string[][]
+}
+
+/** A script of another language, by its extension. */
+const OTHER_LANGUAGE = /\.(?:py|js|mjs|cjs|ts|rb|ps1|bat|cmd)$/i
+const SHELL_SHEBANG = /^#!.*\b(?:ba|z|da|k)?sh\b/
+/** A line that holds only a comment. A shell and a script of another language start one with `#` or `//`. */
+const COMMENT_LINE = /^[ \t]*(?:#|\/\/).*$/gm
+
+/** The texts of a command handler: the inline command, then each repository script that it runs, as
+ *  `scriptsRun` and `scriptText` find them. A script that is binary, or that a rule must not read, is left
+ *  out. */
+export function handlerTexts(
+  line: string,
+  args: string[] | undefined,
+  folders: PlaceholderFolders,
+): HandlerText[] {
+  const inline: HandlerText =
+    args === undefined
+      ? { script: undefined, text: line, commands: commandsOf(line) }
+      : { script: undefined, text: [line, ...args].join(' '), commands: [[line, ...args]] }
+  const scripts = scriptsRun(line, args, folders, true).flatMap((script) => {
+    const raw = scriptText(script)
+    if (raw === undefined || raw.includes('\0')) {
+      return []
+    }
+    const text = raw.replace(COMMENT_LINE, '')
+    const shell =
+      !OTHER_LANGUAGE.test(script.file) && (!raw.startsWith('#!') || SHELL_SHEBANG.test(raw))
+    return [{ script: path.basename(script.file), text, commands: shell ? commandsOf(text) : [] }]
+  })
+  return [inline, ...scripts]
+}

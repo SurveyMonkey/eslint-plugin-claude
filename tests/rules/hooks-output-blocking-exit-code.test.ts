@@ -3,13 +3,12 @@
 // (https://code.claude.com/docs/en/hooks#other-exit-codes). The rule is a heuristic. A script means to block when
 // it writes a message to stderr and then exits with 1. It reports that on an event where exit 2 blocks.
 import path from 'node:path'
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
 import { command, hooks, settings } from '../hooks.test-support.ts'
 import { lintInline, lintScript, P, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-output-blocking-exit-code'
 const BLOCK =
   '#!/bin/bash\ninput=$(cat)\nif [[ "$input" == *rm* ]]; then\n  echo "Blocked: rm" >&2\n  exit 1\nfi\nexit 0\n'

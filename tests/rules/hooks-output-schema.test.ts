@@ -5,13 +5,12 @@
 // (https://code.claude.com/docs/en/hooks-guide#hook-json-has-no-effect). The rule reads JSON that an inline
 // command prints, and JSON that a repository script prints with `echo` or `printf`.
 import path from 'node:path'
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
 import { command, hooks, settings } from '../hooks.test-support.ts'
 import { lintInline, lintScript, P, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-output-schema'
 
 /** An `echo` of the JSON value `value`. */

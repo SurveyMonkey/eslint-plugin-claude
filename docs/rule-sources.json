@@ -1366,6 +1366,16 @@
       "hash": "2a7a06bfaf7063791c67539c9afe6ad89bb9759d57ed458eebc05dd7b719981a"
     }
   ],
+  "hooks-multiple-updatedinput": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Limitations"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreToolUse decision control"
+    }
+  ],
   "hooks-no-standalone-file": [
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
@@ -1396,6 +1406,90 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "hooks",
       "hash": "f98e4a25b4217af1a1f6daf4694dae882c092a1a7c4c3110cb6b7463afd6b8a6"
+    }
+  ],
+  "hooks-output-blocking-exit-code": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Other exit codes"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exit code 2 behavior per event"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Block the action when a hook fails"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exit code output"
+    }
+  ],
+  "hooks-output-deprecated-fields": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreToolUse decision control"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PostToolUse decision control"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "TaskCreated input"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "TaskCompleted input"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "TeammateIdle input"
+    }
+  ],
+  "hooks-output-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "JSON output"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Fields at the wrong level"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Decision control"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreModelSwitch decision control"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Annotate a result for the auto mode classifier"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "ConfigChange decision control"
+    }
+  ],
+  "hooks-output-size": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "JSON output"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Add context for Claude"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Exit code 0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Annotate a result for the auto mode classifier"
     }
   ],
   "hooks-placeholder-quoted": [
@@ -1524,6 +1618,34 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "SessionEnd input",
       "hash": "5c43676cf7d4683be7cfaf5fe8991b26328352a83a1d10c29c8d2eb386c24d03"
+    }
+  ],
+  "hooks-sessionstart-static-context": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Add context for Claude"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Remove an earlier AGENTS.md workaround"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionStart decision control"
+    }
+  ],
+  "hooks-stop-loop-guard": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "heading": "Stop hook hits the block cap"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Stop input"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Stop decision control"
     }
   ],
   "hooks-timeout-units": [

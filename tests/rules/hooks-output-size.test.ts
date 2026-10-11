@@ -4,12 +4,11 @@
 // (https://code.claude.com/docs/en/hooks#json-output). Claude Code caps the `classifierContext` notes of one
 // tool call at 2,000 characters (https://code.claude.com/docs/en/hooks#annotate-a-result-for-the-auto-mode-classifier).
 // The rule measures a string that a command prints as a literal.
-import { describe, expect, it as realIt } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { command, hooks, settings } from '../hooks.test-support.ts'
 import { lintInline, lintScript, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
-const it = realIt.fails
 const name = 'hooks-output-size'
 
 const echo = (value: unknown) => `echo '${JSON.stringify(value)}'`
@@ -118,7 +117,7 @@ describe(`${name}: options`, () => {
       ids(context('x'.repeat(11), 'classifierContext', 'PostToolUse'), 'PostToolUse', [
         { maxClassifierChars: 10 },
       ]),
-    ).toEqual(['classifierConfigured'])
+    ).toEqual(['overConfigured'])
   })
 
   it('names the configured limit in the message', () => {
