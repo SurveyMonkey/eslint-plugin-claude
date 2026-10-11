@@ -35,7 +35,7 @@ The rule reports these faults:
 - A `pattern` of a `regex` grader that has an inline `(?i)`. The docs say "inline `(?i)` isn't
   supported" and ask for `flags: i`.[^types]
 
-The report is on the value, as it is written in the file. The rule reports each fault of a file.
+The report is on the value. A missing `type` is reported on the frontmatter block, or at the start of the file. The rule reports each fault of a file.
 An empty value, such as `weight:`, is the same as an absent key.
 
 The rule reads `target` for a `regex` grader and `focus` for an `llm` grader, as the docs do. It does

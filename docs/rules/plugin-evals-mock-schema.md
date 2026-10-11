@@ -21,7 +21,7 @@ Use the type, error and abort_when keys of an eval mock file as documented.
 ## Rule details
 
 An eval run can answer the MCP tool calls of a plugin from mock files, one file for each tool, in
-`mocks/<server>/<tool>.md`. The frontmatter of a mock file takes four keys.[^files]
+`mocks/<server>/<tool>.md`. The frontmatter of a mock file takes four keys, and `_server.md` also takes `tools`.[^files]
 
 - `type` is `fixed` or `agent`. The default is `fixed`.
 - `expect` guards the input of a call.
@@ -32,14 +32,15 @@ The rule reports these faults:
 
 - A `type` that is not `fixed` or `agent`, on the value. The rule then reads no other key.
 - `error: true` on a mock with `type: agent`, on the key.
-- `abort_when` on a mock that is `fixed`, on the key. A mock with no `type` is `fixed`.
+- `abort_when` on a mock that is `fixed`, on the key. A mock with no `type` is `fixed`, except `_server.md`.
 
 The rule does not report `error: false` or an empty `error`, because they have no effect. It does not
 read `expect`.
 
 The file `_server.md` is one agent mock that answers several tools. Its `tools` key lists them.[^files]
-The docs do not say that `_server.md` needs a `type`. So the rule reads `error` and `abort_when` in
-`_server.md` only when the file sets a `type`.
+The docs call it "a single `type: agent` mock". So a `_server.md` with no `type` is an `agent` mock,
+and the rule reports `error: true` in it. A `type` that the file sets wins. Any other file with no
+`type` is `fixed`.
 
 ### Which files the rule reads
 

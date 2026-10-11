@@ -149,6 +149,12 @@ describe(RULE, () => {
     expect(lint('bogus: 1', 'evals/c/prompt.md', files)).toEqual([])
   })
 
+  check('stays silent for a file named prompt.md that is a grader or a mock', () => {
+    const files = { 'evals/first/prompt.md': 'x', 'evals/first/case.yaml': 'name: a' }
+    expect(lint('bogus: 1', 'evals/first/graders/prompt.md', files)).toEqual([])
+    expect(lint('bogus: 1', 'evals/mocks/gh/prompt.md')).toEqual([])
+  })
+
   check('stays silent for a prompt.md that is no case, and for a file outside any suite', () => {
     expect(lint('bogus: 1', 'prompt.md')).toEqual([])
     expect(lint('bogus: 1', 'docs/prompt.md')).toEqual([])

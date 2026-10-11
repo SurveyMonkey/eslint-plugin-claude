@@ -46,7 +46,7 @@ the path in `experimental.evals`.[^dir] A directory below a case belongs to that
 skips the directories `mocks` and `results` at the top of the eval directory, and `.git` and
 `node_modules`. It does not enter a link to a directory.
 
-The rule does not report these, because the row of the inventory and the docs ask for less:
+The rule does not report these:
 
 - A case without a grader. The docs say that such a case fails to load, and the rule does not read
   the `graders` list of a `case.yaml` or the `graders/` directory.[^layout]
