@@ -3445,6 +3445,18 @@
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
     }
   ],
+  "plugin-evals-prompt-frontmatter": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "prompt.md frontmatter",
+      "hash": "5f96edf31109ddc50b9167f50c9015b5fe016d674b53fbdc8633c1453c848dc3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-replay-committed": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",

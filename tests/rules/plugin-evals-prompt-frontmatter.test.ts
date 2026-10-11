@@ -3,11 +3,11 @@
 // "prompt.md frontmatter"). The trees are on disk, because the rule finds the plugin and the case
 // around the file. The files glob is in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
-import { link, noLinks } from '../marketplace-tree.test-support.ts'
-import { lintEval, MANIFEST, suite } from '../plugin-evals.test-support.ts'
+import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
+import { lintEval, MANIFEST, PLUGIN, suite } from '../plugin-evals.test-support.ts'
 
 const RULE = 'plugin-evals-prompt-frontmatter'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILE = 'evals/first/prompt.md'
 
@@ -34,9 +34,9 @@ describe(RULE, () => {
       ruleId: `claude/${RULE}`,
       messageId: 'unknownKey',
       message: UNKNOWN('bogus'),
-      line: 4,
+      line: 3,
       column: 1,
-      endLine: 4,
+      endLine: 3,
       endColumn: 6,
     })
   })
@@ -159,7 +159,8 @@ describe(RULE, () => {
   })
 
   linked('stays silent when the root of the plugin links out of the repository', () => {
-    const outside = suite({ [FILE]: 'x' })
+    // The folder has no `.git`, so it is out of the repository of `top`.
+    const outside = tree({ [MANIFEST]: PLUGIN, [FILE]: 'x' }, false)
     const top = suite()
     link(top, 'plug', outside)
     expect(lintEval(RULE, top, `plug/${FILE}`, '---\nbogus: 1\n---\n')).toEqual([])

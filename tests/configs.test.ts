@@ -2396,6 +2396,13 @@ const TREE: Record<string, string> = {
     name: 'ok',
     experimental: { evals: 'evals2' },
   }),
+  // `plugin-evals-prompt-frontmatter`: an unknown key in the `prompt.md` of a case; valid keys;
+  // an unknown key in a file that is no case.
+  'packages/evs/pf/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'packages/evs/pf/bad/evals/first/prompt.md': '---\nbogus: 1\n---\n\nWrite a message.\n',
+  'packages/evs/pf/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'packages/evs/pf/ok/evals/first/prompt.md': '---\nmax_turns: 10\n---\n\nWrite a message.\n',
+  'packages/evs/pf/ok/docs/prompt.md': '---\nbogus: 1\n---\n',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3156,6 +3163,7 @@ const PLUGIN_RULES: {
   },
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
   { name: 'plugin-evals-dir', files: ['**/.claude-plugin/plugin.json'] },
+  { name: 'plugin-evals-prompt-frontmatter', language: 'markdown/gfm', files: ['**/prompt.md'] },
 ]
 
 // The plugin rules of #11 that are `off` in `recommended`, in the order of the `modules` list.
@@ -3231,6 +3239,7 @@ const EXPECTED = [
   '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
   'packages/evs/dir/bad/.claude-plugin/plugin.json: claude/plugin-evals-dir@2',
+  'packages/evs/pf/bad/evals/first/prompt.md: claude/plugin-evals-prompt-frontmatter@2',
   'packages/hk/.claude-plugin/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/agents/ev.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-command-removed-cli-flag@2',
