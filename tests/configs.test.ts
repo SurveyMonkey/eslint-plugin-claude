@@ -4626,7 +4626,6 @@ describe('configs', () => {
           { [`claude/${block}`]: severity ?? 'error' },
         ]),
       ),
-      ...PLUGIN_RULES.map(({ name }) => [
       ...PLUGIN_RULES.map(({ name, severity = 'error' }) => [
         `claude/recommended/${name}`,
         { [`claude/${name}`]: severity },
