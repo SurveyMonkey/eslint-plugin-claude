@@ -74,3 +74,19 @@ export function hasUnclosedBracket(pattern: string): boolean {
   }
   return false
 }
+
+/** The directory name of a pattern such as `src/**`: one segment with no wildcard, then `/**`.
+ *  The result is null for any other pattern. In an `allow` rule, a pattern of this shape matches
+ *  one directory under the current directory. In a `deny` or `ask` rule, it matches the name at
+ *  any depth (https://code.claude.com/docs/en/permissions#read-and-edit). The `./` form, `~`,
+ *  `.` and `..` are not a plain name, so the result is null for them. A name that is one letter
+ *  and a `:` is a drive letter, so the result is null for it. */
+export function singleSegmentDirectory(pattern: string): string | null {
+  const name = /^([^/]+)\/\*\*$/.exec(pattern.trim())?.[1]
+  return name === undefined ||
+    /[*?[\]\\!]/.test(name) ||
+    /^[A-Za-z]:$/.test(name) ||
+    ['.', '..', '~'].includes(name)
+    ? null
+    : name
+}
