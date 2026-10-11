@@ -1515,15 +1515,15 @@ const TREE: Record<string, string> = {
   // `mcp-allowlist-servername-dead`: the main file has the three kinds. A drop-in with names only is
   // dead too, because the lists combine. A hidden drop-in is for `settings-managed-file`. The same
   // content where no rule reads it.
-  'packages/ad/managed-settings.json': deadAllowlist,
-  'packages/ad/managed-settings.d/10-a.json': JSON.stringify({
+  'packages/mad/managed-settings.json': deadAllowlist,
+  'packages/mad/managed-settings.d/10-a.json': JSON.stringify({
     allowedMcpServers: [{ serverName: 'b' }],
   }),
-  'packages/ad/managed-settings.d/.20-hidden.json': deadAllowlist,
-  'packages/ad/managed-settings.d/30-b.txt': deadAllowlist,
-  'packages/ad/managed-settings.d/sub/40-c.json': deadAllowlist,
-  'packages/ad/.claude/settings.json': deadAllowlist,
-  'packages/ad/.vscode/settings.json': deadAllowlist,
+  'packages/mad/managed-settings.d/.20-hidden.json': deadAllowlist,
+  'packages/mad/managed-settings.d/30-b.txt': deadAllowlist,
+  'packages/mad/managed-settings.d/sub/40-c.json': deadAllowlist,
+  'packages/mad/.claude/settings.json': deadAllowlist,
+  'packages/mad/.vscode/settings.json': deadAllowlist,
   // `mcp-managed-servers-entry`: an array in the main file, and a dropped entry in a drop-in. A
   // hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/me/managed-settings.json': badManagedArray,
@@ -2692,9 +2692,9 @@ const EXPECTED = [
   'plugins/lx/.claude-plugin/plugin.json: claude/lsp-transport-socket@2',
   // The managed policy rules read the main file and the drop-ins, and the secret rule reads the
   // committed project file.
-  'packages/ad/managed-settings.json: claude/mcp-allowlist-servername-dead@2',
-  'packages/ad/managed-settings.d/10-a.json: claude/mcp-allowlist-servername-dead@2',
-  'packages/ad/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/mad/managed-settings.json: claude/mcp-allowlist-servername-dead@2',
+  'packages/mad/managed-settings.d/10-a.json: claude/mcp-allowlist-servername-dead@2',
+  'packages/mad/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/me/managed-settings.json: claude/mcp-managed-servers-entry@2',
   'packages/me/managed-settings.d/10-a.json: claude/mcp-managed-servers-entry@2',
   'packages/me/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
