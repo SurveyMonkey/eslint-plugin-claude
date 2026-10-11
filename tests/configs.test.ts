@@ -1549,16 +1549,21 @@ const MEMORY_OFF_BLOCKS: Record<string, [string, string[]]> = {
 const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
 
 // `settings-schema-url` reports each settings file that is a JSON object with no `$schema`. The
-// tree has many such files, so the list is computed from the tree. A project file, a managed file
-// and a drop-in that is not hidden are settings files. The other files of the tree are not.
+// trees have many such files, so the list is computed from them. A project file, a managed file
+// and a drop-in that is not hidden are settings files. The other files of the trees are not.
 const SETTINGS_FILE =
   /(^|\/)(\.claude\/settings(\.local)?\.json|managed-settings\.json|managed-settings\.d\/[^./][^/]*\.json)$/
-const SCHEMA_URL_MISSING = Object.entries(TREE)
-  .filter(([file, content]) => {
-    const data: unknown = SETTINGS_FILE.test(file) ? JSON.parse(content) : null
-    return typeof data === 'object' && data !== null && !Array.isArray(data) && !('$schema' in data)
-  })
-  .map(([file]) => file)
+const SCHEMA_URL_TREES = [
+  ...Object.entries(TREE),
+  ...Object.entries(GIT_TREE).map(([file, content]) => [`${GIT_REPO}/${file}`, content] as const),
+  ...Object.entries({ ...GU_TREE, ...GU_LOOSE }).map(
+    ([file, content]) => [`${GU_REPO}/${file}`, content] as const,
+  ),
+]
+const SCHEMA_URL_MISSING = SCHEMA_URL_TREES.filter(([file, content]) => {
+  const data: unknown = SETTINGS_FILE.test(file) ? JSON.parse(content) : null
+  return typeof data === 'object' && data !== null && !Array.isArray(data) && !('$schema' in data)
+}).map(([file]) => file)
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
@@ -2261,6 +2266,7 @@ const DESCRIPTION_TREE: Record<string, string> = {
   // Agent teams are on here, so the three fields of `team.md` report. The agent `team-ok.md`
   // sets none of them. The folder `quiet` sets the fields, and no settings file there turns teams on.
   'packages/teams/.claude/settings.json': JSON.stringify({
+    $schema: 'https://json.schemastore.org/claude-code-settings.json',
     env: { CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: '1' },
   }),
   'packages/teams/.claude/agents/team.md': agentFile('team', 'Use proactively.', TEAM_FIELDS),
