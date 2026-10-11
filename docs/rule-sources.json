@@ -3438,6 +3438,110 @@
       "hash": "9de69d61eceec2763f26275389d46d633e54ef0762b0dc08aff82dad8805ca8e"
     }
   ],
+  "plugin-evals-case-yaml": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "case.yaml fields",
+      "hash": "1480a6234bb734704db93d51d2478bbefd73392da9bde406356c9f603f850677"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Seed the workspace or conversation",
+      "hash": "f1e6e29f1ca79693578120787c9d7b64a185a442afd1b19011cefe18c1947f4f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Eval suite reference",
+      "hash": "25ab36ec5e9b1619075b58f68e111b3c67b85fbfb321e34856f600f933bcc6e6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-dir": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-grader": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Grader frontmatter",
+      "hash": "db226c1e2665ae3f2961e2d6d0352a072180fbadebede9a21cba90d157c750dd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "What a grader can look at",
+      "hash": "bc92624bd1b81f596300598f8759ab0df738037a558c01f2f5362f43b2779bbe"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Grader types",
+      "hash": "e5de5b56f8fd6e23fb9ad61b20700549c2eb5ccfe5088ed65ef1f2344f35408e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-mock-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Mock files",
+      "hash": "8cc4a7cc4186f7accda5e5479c32ecae2013a57cb42d9e581d44fcaa8b642d6f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-mock-server-exists": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Mock MCP servers",
+      "hash": "156c24365742283311eea11699ea9cb047104abb76f3f11fb796ec3b7829c90b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Score against the no-plugin baseline",
+      "hash": "86640c862ad36c360291b6d7f501d5858facd175606476b50c03b66536cfd27d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-prompt-frontmatter": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "prompt.md frontmatter",
+      "hash": "5f96edf31109ddc50b9167f50c9015b5fe016d674b53fbdc8633c1453c848dc3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
+  "plugin-evals-prompt-no-at-mentions": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Set run limits and tools in prompt.md",
+      "hash": "76b01a44ca6e3cfe1a0879f6e0916a94307de96689ec93fe1ac9edfb9dea1edd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-replay-committed": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",

@@ -229,6 +229,13 @@ import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-
 import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
 import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
+import pluginEvalsCaseYaml from './rules/plugin-evals-case-yaml.ts'
+import pluginEvalsDir from './rules/plugin-evals-dir.ts'
+import pluginEvalsGrader from './rules/plugin-evals-grader.ts'
+import pluginEvalsMockSchema from './rules/plugin-evals-mock-schema.ts'
+import pluginEvalsMockServerExists from './rules/plugin-evals-mock-server-exists.ts'
+import pluginEvalsPromptFrontmatter from './rules/plugin-evals-prompt-frontmatter.ts'
+import pluginEvalsPromptNoAtMentions from './rules/plugin-evals-prompt-no-at-mentions.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
@@ -748,6 +755,13 @@ const modules = [
   pluginPackageLifecycleScripts,
   pluginPackageLockfileChoice,
   pluginThemesLayout,
+  pluginEvalsCaseYaml,
+  pluginEvalsDir,
+  pluginEvalsGrader,
+  pluginEvalsMockSchema,
+  pluginEvalsMockServerExists,
+  pluginEvalsPromptFrontmatter,
+  pluginEvalsPromptNoAtMentions,
   pluginUserConfigSensitive,
   pluginChannelServerStdio,
   pluginBinShadowsSystemCommand,
@@ -1131,6 +1145,13 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-evals-case-yaml': 'error',
+  'plugin-evals-dir': 'error',
+  'plugin-evals-grader': 'error',
+  'plugin-evals-mock-schema': 'error',
+  'plugin-evals-mock-server-exists': 'error',
+  'plugin-evals-prompt-frontmatter': 'error',
+  'plugin-evals-prompt-no-at-mentions': 'error',
   'plugin-feature-min-version': 'warn',
   'plugin-manifest-metadata-format': 'warn',
   'plugin-manifest-no-bom': 'warn',

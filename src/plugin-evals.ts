@@ -4,10 +4,23 @@
 // value prints a `Warning:` line. The run then uses `evals/`
 // (https://code.claude.com/docs/en/plugin-evals#use-a-different-eval-directory).
 // A rule that lints the manifest asks here for the directory of its plugin.
+import { type Dirent, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
+import { isMap as isYamlMap, type Node, parseDocument } from 'yaml'
+import { isMap } from './frontmatter-values.ts'
 import { type DocumentNode, lastMember } from './marketplace-json.ts'
+import { type Plugin, readPluginAt } from './plugin-manifest.ts'
 import { isPluginRoot } from './plugin-root.ts'
-import { entriesOf, isInside, realOf, repositoryRoot } from './skill-tree.ts'
+import {
+  entriesOf,
+  isInside,
+  realDirectory,
+  realOf,
+  repositoryRoot,
+  SKIPPED,
+  UNREADABLE,
+  type Unreadable,
+} from './skill-tree.ts'
 
 const DEFAULT_EVAL_DIR = 'evals'
 
@@ -16,17 +29,31 @@ const PLAIN_NAME = /^(?!\.{1,2}$)[^/\\]+$/
 // The start of a path on a drive of Windows. It is an absolute path.
 const DRIVE = /^[A-Za-z]:/
 
+/** True when `value` is a relative path of plain directory names, as the docs
+ *  accept for `experimental.evals`. */
+export function isEvalDirPath(value: string): boolean {
+  return !DRIVE.test(value) && value.split('/').every((name) => PLAIN_NAME.test(name))
+}
+
+/** The eval directory that the value `value` of `experimental.evals` names. It is
+ *  `evals` in three cases. The value is not there. It is not a string. It is not
+ *  a relative path of plain directory names. */
+function chosenDir(value: unknown): string {
+  return typeof value === 'string' && isEvalDirPath(value) ? value : DEFAULT_EVAL_DIR
+}
+
 /** The eval directory that `experimental.evals` of the manifest names. It is
- *  a path from the plugin root with `/` separators. The result is `evals` in
- *  three cases. The value is not there. It is not a string. It is not a
- *  relative path of plain directory names. */
+ *  a path from the plugin root with `/` separators. */
 function evalDirName(document: DocumentNode): string {
   const value = lastMember(lastMember(document.body, 'experimental')?.value, 'evals')?.value
-  return value?.type === 'String' &&
-    !DRIVE.test(value.value) &&
-    value.value.split('/').every((name) => PLAIN_NAME.test(name))
-    ? value.value
-    : DEFAULT_EVAL_DIR
+  return chosenDir(value?.type === 'String' ? value.value : undefined)
+}
+
+/** The eval directory that `experimental.evals` names in `fields`, the keys of a
+ *  manifest read from disk. The rules of `evalDirName` apply. */
+function evalDirNameOf(fields: Readonly<Record<string, unknown>>): string {
+  const { experimental } = fields
+  return chosenDir(isMap(experimental) ? experimental.evals : undefined)
 }
 
 /** The eval directory of the plugin whose manifest is `filename`. The result
@@ -63,4 +90,239 @@ export function holdsFile(dir: string): boolean {
     Array.isArray(entries) &&
     entries.some((entry) => !entry.isDirectory() || holdsFile(path.join(dir, entry.name)))
   )
+}
+
+/** The kinds of a file in an eval suite that a rule lints as Markdown. */
+type EvalFileKind = 'prompt' | 'grader' | 'mock'
+
+/** A Markdown file of an eval suite. `evalDir` is the eval directory of the
+ *  plugin as an absolute path. `caseDir` is the directory of the case that owns
+ *  the file, or null for a mock of the whole suite. `server` is the directory
+ *  name of a mock, which names a server of the plugin. */
+export interface EvalFile {
+  kind: EvalFileKind
+  plugin: Plugin
+  evalDir: string
+  caseDir: string | null
+  server?: string
+}
+
+/** True when `entries`, the listing of a directory, hold a `prompt.md` or a
+ *  `case.yaml`. A link to a file counts as the file. */
+const holdsCaseFile = (entries: Dirent[]): boolean =>
+  entries.some(
+    (entry) =>
+      (entry.name === 'prompt.md' || entry.name === 'case.yaml') &&
+      (entry.isFile() || entry.isSymbolicLink()),
+  )
+
+/** True when `dir` is a case: it holds a `prompt.md` or a `case.yaml`. The
+ *  result is `UNREADABLE` when the directory cannot be listed, and false when it
+ *  is not there. */
+function isCaseDirectory(dir: string): boolean | Unreadable {
+  const entries = entriesOf(dir)
+  return Array.isArray(entries) ? holdsCaseFile(entries) : (entries ?? false)
+}
+
+/** The nearest directory at or above `start` that is a plugin root, or null.
+ *  The walk stops at the repository root, so that no call reaches a path above
+ *  it (ADR 001, Decision 14). It is also null when a directory cannot be seen. */
+function pluginRootAbove(start: string): string | null {
+  const bound = repositoryRoot(start)
+  for (let at = start; ; at = path.dirname(at)) {
+    const root = isPluginRoot(at)
+    if (root === true) {
+      return at
+    }
+    // A root that cannot be seen is not skipped, because the plugin above it is not its plugin.
+    if (root === UNREADABLE || realDirectory(at) === bound || path.dirname(at) === at) {
+      return null
+    }
+  }
+}
+
+/** What the Markdown file `file` is in an eval suite, or null. The path alone
+ *  gives the kind, by the layout of the eval suite reference:
+ *  - `graders/<name>.md` in a case is a grader.
+ *  - `mocks/<server>/<tool>.md` in a case, or in the eval directory, is a mock.
+ *    The directory `.replay` holds saved answers, so it is no server.
+ *  - `prompt.md` in a case is a prompt. A `prompt.md` below a case belongs to
+ *    that case. A directory `mocks` or `results` at the top of the eval
+ *    directory is no case.
+ *
+ *  The result is null when the file is in no eval directory: the nearest plugin
+ *  root is not seen, or the file is out of its eval directory. It is also null
+ *  when the directory of the case cannot be listed. */
+export function evalFileOf(file: string): EvalFile | null {
+  const abs = path.resolve(file)
+  const dir = path.dirname(abs)
+  const parent = path.dirname(dir)
+  let kind: EvalFileKind
+  if (!abs.endsWith('.md')) {
+    return null
+  }
+  if (path.basename(dir) === 'graders') {
+    kind = 'grader'
+  } else if (path.basename(parent) === 'mocks' && path.basename(dir) !== '.replay') {
+    kind = 'mock'
+  } else if (path.basename(abs) === 'prompt.md') {
+    kind = 'prompt'
+  } else {
+    return null
+  }
+  const root = pluginRootAbove(dir)
+  const plugin = root === null ? undefined : readPluginAt(root)
+  if (plugin === undefined) {
+    return null
+  }
+  const evalDir = path.join(plugin.root, evalDirNameOf(plugin.fields))
+  const real = realOf(evalDir)
+  if (typeof real !== 'string' || !isInside(real, plugin.bound) || !isInside(dir, evalDir)) {
+    return null
+  }
+  // The case that owns a grader or a case mock is the folder above `graders/` or `mocks/`.
+  const owner = kind === 'grader' ? parent : path.dirname(parent)
+  if (kind === 'prompt') {
+    const rel = path.relative(evalDir, dir).split(path.sep)
+    if (rel[0] === 'mocks' || rel[0] === 'results') {
+      return null
+    }
+    // A `prompt.md` below a case is a fixture of that case.
+    for (let at = parent; isInside(at, evalDir) && at !== evalDir; at = path.dirname(at)) {
+      if (isCaseDirectory(at) !== false) {
+        return null
+      }
+    }
+    return { kind, plugin, evalDir, caseDir: dir }
+  }
+  if (kind === 'mock' && owner === evalDir) {
+    return { kind, plugin, evalDir, caseDir: null, server: path.basename(dir) }
+  }
+  if (!isInside(owner, evalDir) || isCaseDirectory(owner) !== true) {
+    return null
+  }
+  return {
+    kind,
+    plugin,
+    evalDir,
+    caseDir: owner,
+    ...(kind === 'mock' ? { server: path.basename(dir) } : {}),
+  }
+}
+
+/** Order two directory entries by name, in code unit order. */
+const byName = (a: Dirent, b: Dirent): number => Number(a.name > b.name) - Number(a.name < b.name)
+
+/** The case directories of the eval directory `evalDir`, as absolute paths, in name order. A
+ *  directory is a case when it holds a `prompt.md` or a `case.yaml`. Everything
+ *  below a case belongs to it, so the walk goes no deeper. The walk skips `.git`,
+ *  `node_modules`, and the directories `mocks` and `results` at the top. It does
+ *  not enter a link to a directory. A directory that cannot be listed adds no
+ *  case. */
+export function caseDirectories(evalDir: string): string[] {
+  const found: string[] = []
+  const visit = (dir: string, top: boolean) => {
+    const entries = entriesOf(dir)
+    if (!Array.isArray(entries)) {
+      return
+    }
+    if (holdsCaseFile(entries)) {
+      found.push(dir)
+      return
+    }
+    // Sorted, so that the result does not depend on the order of the listing.
+    for (const entry of entries.toSorted(byName)) {
+      const reserved = top && (entry.name === 'mocks' || entry.name === 'results')
+      if (entry.isDirectory() && !SKIPPED.has(entry.name) && !reserved) {
+        visit(path.join(dir, entry.name), false)
+      }
+    }
+  }
+  visit(evalDir, true)
+  return found
+}
+
+// A `case.yaml` is small. A larger file is not read.
+const MAX_YAML_BYTES = 1_048_576
+
+/** A `case.yaml` that parsed to a map. `data` holds the fields. `written` gives the text of the
+ *  value of a top-level key as the author wrote it, with its quotes. */
+export interface CaseYaml {
+  data: Record<string, unknown>
+  written: (key: string) => string
+}
+
+/** The map in the `case.yaml` at `file`, or null. The result is null in these cases: the file is
+ *  not a file of at most 1 MiB; its real path is out of `bound` (ADR 001, Decision 14); it
+ *  cannot be read; the YAML does not parse, repeats a key, or is not a map. */
+export function readCaseYaml(file: string, bound: string): CaseYaml | null {
+  const real = realOf(file)
+  if (typeof real !== 'string' || !isInside(real, bound)) {
+    return null
+  }
+  let text: string
+  try {
+    const info = statSync(real)
+    // A directory has a size too, and its read throws, so it ends in the catch below.
+    if (info.size > MAX_YAML_BYTES) {
+      return null
+    }
+    text = readFileSync(real, 'utf8')
+  } catch {
+    return null
+  }
+  let doc: ReturnType<typeof parseDocument>
+  let data: Record<string, unknown>
+  try {
+    doc = parseDocument(text)
+    // An alias with no anchor, or too many aliases, throws here and not in `parseDocument`.
+    data = doc.toJS() as Record<string, unknown>
+  } catch {
+    return null
+  }
+  const map = doc.contents
+  if (doc.errors.length > 0 || !isYamlMap(map)) {
+    return null
+  }
+  return {
+    data,
+    written: (key) => {
+      // A key that a merge or an alias supplies has no node in this map, and so no text.
+      const node = map.get(key, true) as Node | undefined
+      const range = node?.range
+      if (range) {
+        return text.slice(range[0], range[1])
+      }
+      const value = data[key]
+      return typeof value === 'object' ? JSON.stringify(value) : String(value)
+    },
+  }
+}
+
+/** A directory `mocks/<server>/` of an eval suite. `dir` is its path, and `server` is its name. */
+export interface MockDirectory {
+  dir: string
+  server: string
+}
+
+/** The server directories in `mocks/` of the eval directory `evalDir` and of each case, in name
+ *  order. The directory `.replay` holds saved answers, so it is no server. The result skips a
+ *  `mocks` that is a link with a real path out of `bound`, and a `mocks` that cannot be listed
+ *  (ADR 001, Decision 14). */
+export function mockDirectories(evalDir: string, bound: string): MockDirectory[] {
+  const found: MockDirectory[] = []
+  for (const owner of new Set([evalDir, ...caseDirectories(evalDir)])) {
+    const mocks = path.join(owner, 'mocks')
+    const real = realOf(mocks)
+    const entries = typeof real === 'string' && isInside(real, bound) ? entriesOf(real) : null
+    if (!Array.isArray(entries)) {
+      continue
+    }
+    for (const entry of entries.toSorted(byName)) {
+      if (entry.isDirectory() && entry.name !== '.replay') {
+        found.push({ dir: path.join(mocks, entry.name), server: entry.name })
+      }
+    }
+  }
+  return found
 }

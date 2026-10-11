@@ -24,6 +24,11 @@
 // (https://code.claude.com/docs/en/plugins/components#executables), checked on Claude Code 2.1.296
 // on 2026-10-10, says that a plugin cannot shadow `git`, `ls` "or another system command". It
 // names two commands and gives no list.
+// The ninth list is the formats of an eval suite. The "Eval suite reference" section of the plugin
+// evals page (https://code.claude.com/docs/en/plugin-evals#eval-suite-reference) gives the
+// `prompt.md` fields and their limits, the `case.yaml` version, the grader keys and types, the
+// values of `target` and `focus`, and the mock keys and types. It was checked on Claude Code 2.1.296
+// on 2026-10-10.
 // The manifest and `scripts/` are not in the first list. The manifest has its own place, and
 // `scripts/` is a folder of the plugin author, not a default location.
 
@@ -143,3 +148,61 @@ export const SYSTEM_COMMANDS: readonly string[] = [
   'ssh',
   'tar',
 ]
+
+/** The value of `schema_version` that a `case.yaml` must set. The docs write it as a string. */
+export const EVAL_CASE_SCHEMA_VERSION = '1.1'
+
+/** Every field that the frontmatter of an eval `prompt.md` accepts, in the order of the table.
+ *  The docs say that an unknown key is an error. */
+export const EVAL_PROMPT_FIELDS: readonly string[] = [
+  'schema_version',
+  'name',
+  'description',
+  'tags',
+  'plugins',
+  'runs',
+  'expected_outcome',
+  'model',
+  'max_turns',
+  'timeout_seconds',
+  'allowed_tools',
+  'append_system_prompt',
+  'env',
+]
+
+/** The limits of the number fields of `prompt.md`. The docs give `runs` as "1 to 50", `max_turns`
+ *  as "up to 200" and `timeout_seconds` as "up to 3600". They give no lower bound for the last
+ *  two, so `min` is absent for them. */
+export const EVAL_PROMPT_LIMITS: ReadonlyMap<string, { min?: number; max: number }> = new Map([
+  ['runs', { min: 1, max: 50 }],
+  ['max_turns', { max: 200 }],
+  ['timeout_seconds', { max: 3600 }],
+])
+
+/** The pattern that every key of `env` in `prompt.md` must match. */
+export const EVAL_ENV_KEY = /^EVAL_[A-Z0-9_]*$/
+
+/** The grader types, in the order of the table. */
+export const EVAL_GRADER_TYPES: readonly string[] = [
+  'regex',
+  'tool_used',
+  'tool_order',
+  'file_exists',
+  'llm',
+  'baseline',
+]
+
+/** The values of the grader key `arm`. The key may also be absent. */
+export const EVAL_GRADER_ARMS: readonly string[] = ['with-only', 'both']
+
+/** The string values of `target` (a `regex` grader) and `focus` (an `llm` grader). The map form
+ *  `{ source: file, path: <path> }` is the fifth value. */
+export const EVAL_GRADER_TARGETS: readonly string[] = [
+  'last_message',
+  'trace',
+  'files',
+  'mock_calls',
+]
+
+/** The values of the mock key `type`. A mock file with no `type` is `fixed`. */
+export const EVAL_MOCK_TYPES: readonly string[] = ['fixed', 'agent']
