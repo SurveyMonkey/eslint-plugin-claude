@@ -7,7 +7,7 @@ related_issues: [16]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `mcp-hidden-whitespace`
@@ -71,6 +71,15 @@ Pass:
     }
   }
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/mcp-hidden-whitespace': 'error'
 ```
 
 ## Sources

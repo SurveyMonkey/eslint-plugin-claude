@@ -7,7 +7,7 @@ related_issues: [50]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-loop-reference-invocable`
@@ -62,6 +62,29 @@ Pass, with a `.claude/skills/review/SKILL.md` that Claude can invoke:
 
 ```markdown
 /review 1234
+```
+
+## Usage
+
+The `recommended` config configures no file that this rule checks. Add a block that gives the
+files and the language of the rule:
+
+```js
+// eslint.config.js
+import { defineConfig } from 'eslint/config'
+import markdown from '@eslint/markdown'
+import claude from 'eslint-plugin-claude'
+
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/.claude/loop.md'],
+    plugins: { claude, markdown },
+    language: 'markdown/gfm',
+    languageOptions: { frontmatter: 'yaml' },
+    rules: { 'claude/skill-loop-reference-invocable': 'warn' },
+  },
+])
 ```
 
 ## Sources

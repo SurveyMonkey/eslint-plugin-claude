@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `settings-local-untracked`
@@ -57,6 +57,15 @@ The rule does not check that `settings.json` is on the disk.
 Fail: `.claude/settings.json` with `.claude/settings.local.json` in the index.
 
 Pass: the same repository after `git rm --cached .claude/settings.local.json`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/settings-local-untracked': 'warn'
+```
 
 ## Options
 

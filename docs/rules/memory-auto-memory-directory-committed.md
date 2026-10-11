@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `memory-auto-memory-directory-committed`
@@ -49,6 +49,15 @@ files.
 The rule lints the two project files. A managed settings file is policy, and not repository-supplied input. So the rule does not lint `managed-settings.json` or a file in `managed-settings.d/`. The
 local file is usually in `.gitignore`. The rule still lints it, because the key has the same trust
 rule there. A team that keeps the file out of Git can turn the rule off for it.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/memory-auto-memory-directory-committed': 'warn'
+```
 
 ## Sources
 

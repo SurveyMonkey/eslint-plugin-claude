@@ -7,7 +7,7 @@ related_issues: [8]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-09-30T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-plugin-root-shadowed`
@@ -62,6 +62,15 @@ Pass, the same plugin without `skills/`:
 my-plugin/
 ├── .claude-plugin/plugin.json
 └── SKILL.md
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-plugin-root-shadowed': 'error'
 ```
 
 ## Options

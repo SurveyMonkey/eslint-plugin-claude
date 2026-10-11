@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `rules-max-lines`
@@ -51,6 +51,15 @@ Validate input at the boundary.
 The rule checks a file below `.claude/rules/` only. A file named `CLAUDE.md` or `AGENTS.md` in that
 folder is a rule file, so the rule checks it. `claude-md-max-lines` checks the other instruction
 files, and an imported file below `.claude/rules/` is left to this rule.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/rules-max-lines': 'warn'
+```
 
 ## Options
 

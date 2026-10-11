@@ -7,7 +7,7 @@ related_issues: [15]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `sandbox-domain-duplicate`
@@ -47,6 +47,15 @@ Pass:
 
 ```json
 { "sandbox": { "network": { "allowedDomains": ["example.com", "example.com:443", "*.example.com"] } } }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/sandbox-domain-duplicate': 'warn'
 ```
 
 ## Options

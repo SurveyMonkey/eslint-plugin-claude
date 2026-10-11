@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-01
 generated:
   by: claude-code
-  at: 2026-10-01T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `agent-frontmatter-schema`
@@ -77,6 +77,15 @@ description: Reviews code.
 maxTurns: 5
 effort: high
 ---
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/agent-frontmatter-schema': 'error'
 ```
 
 ## Options

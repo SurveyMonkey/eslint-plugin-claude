@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-monitors-skill-exists`
@@ -75,6 +75,15 @@ The rule does not check the skill of a plugin that this plugin depends on.
 Fail: `"when": "on-skill-invoke:deploy"` in a plugin with no `deploy` skill.
 
 Pass: the same monitor, in a plugin with `skills/deploy/SKILL.md`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-monitors-skill-exists': 'error'
+```
 
 ## Options
 

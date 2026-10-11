@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-evals-replay-committed`
@@ -74,6 +74,15 @@ Fail: `.gitignore` with `.replay/`, in a repository with an eval suite. Fail: a 
 `evals/mocks/.replay/github/answer` that git does not track.
 
 Pass: the same plugin after `git add evals/mocks/.replay`, with no pattern for it.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-evals-replay-committed': 'warn'
+```
 
 ## Options
 

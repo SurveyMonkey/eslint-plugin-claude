@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-manifest-location`
@@ -53,6 +53,15 @@ The docs that this rule cites do not say that `claude plugin validate` reports t
 Fail: `.claude-plugin/plugin.json` next to `.claude-plugin/skills/deploy/SKILL.md`.
 
 Pass: `.claude-plugin/plugin.json` with `skills/deploy/SKILL.md` at the plugin root.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-manifest-location': 'error'
+```
 
 ## Options
 

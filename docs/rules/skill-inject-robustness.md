@@ -7,7 +7,7 @@ related_issues: [50]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-inject-robustness`
@@ -111,6 +111,15 @@ Its script path must have a file name with the word `check`, `lint`, `verify` or
 word must not be part of a longer word, so `checker.sh` and `recheck.sh` pass. A check script
 passes when `|| true`, `|| :`, a pipe or another command follows it. The last subcommand sets the
 exit code. The rule cannot tell which other scripts exit with 1, so it does not check them.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-inject-robustness': 'warn'
+```
 
 ## Options
 

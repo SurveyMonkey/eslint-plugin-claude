@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-07
 generated:
   by: claude-code
-  at: 2026-10-07T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `marketplace-strict-false-conflict`
@@ -73,6 +73,15 @@ with a `plugins/formatter/.claude-plugin/plugin.json`.
 
 Pass: the same file, with `commands` in `plugins/formatter/.claude-plugin/plugin.json` and not in
 the entry.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/marketplace-strict-false-conflict': 'error'
+```
 
 ## Options
 

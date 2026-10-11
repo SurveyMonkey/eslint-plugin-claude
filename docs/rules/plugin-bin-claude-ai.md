@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-bin-claude-ai`
@@ -48,6 +48,15 @@ The rule makes no report in these cases:
 Fail, with `targets: ["claude-ai"]`: a plugin root with `bin/hello-plugin`.
 
 Pass: the same plugin with no option, or a plugin with no `bin/` folder.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-bin-claude-ai': 'warn'
+```
 
 ## Options
 

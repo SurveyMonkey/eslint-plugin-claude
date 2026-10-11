@@ -7,7 +7,7 @@ related_issues: [50]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `skill-boolean-literal`
@@ -66,6 +66,15 @@ name: deploy
 disable-model-invocation: true
 user-invocable: false
 ---
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/skill-boolean-literal': 'warn'
 ```
 
 ## Options

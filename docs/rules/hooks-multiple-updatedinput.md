@@ -7,7 +7,7 @@ related_issues: [10]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `hooks-multiple-updatedinput`
@@ -64,6 +64,15 @@ The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md)
 Fail, in `.claude/settings.json`: two groups for `Bash`, and the command of each prints a different `updatedInput`.
 
 Pass: one hook rewrites the input, or the matchers select different tools.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/hooks-multiple-updatedinput': 'warn'
+```
 
 ## Sources
 

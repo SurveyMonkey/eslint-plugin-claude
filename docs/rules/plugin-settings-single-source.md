@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-settings-single-source`
@@ -53,6 +53,15 @@ Fail: a `plugin.json` with `"settings": { "agent": "a" }` and a `settings.json` 
 `{ "agent": "b" }`.
 
 Pass: the `agent` key in `settings.json` only.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-settings-single-source': 'error'
+```
 
 ## Options
 

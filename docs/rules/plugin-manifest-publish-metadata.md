@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-manifest-publish-metadata`
@@ -52,6 +52,15 @@ Fail: a manifest of `{ "name": "deploy-tools" }`.
 
 Pass: a manifest with `"homepage": "https://example.com/deploy-tools"` and
 `"repository": "https://github.com/acme/deploy-tools"`, and a `README.md` at the plugin root.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-manifest-publish-metadata': 'warn'
+```
 
 ## Options
 

@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `claude-md-dangling-reference`
@@ -72,6 +72,15 @@ Pass, when `docs/adr/001.md` and `.claude/skills/deploy/SKILL.md` exist:
 
 ```markdown
 The decision is in `docs/adr/001.md`. Run `/deploy` to ship.
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/claude-md-dangling-reference': 'warn'
 ```
 
 ## Options

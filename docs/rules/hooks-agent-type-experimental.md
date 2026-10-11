@@ -7,7 +7,7 @@ related_issues: [10]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `hooks-agent-type-experimental`
@@ -51,6 +51,15 @@ Pass:
     "Stop": [{ "hooks": [{ "type": "command", "command": "./verify-tests.sh" }] }]
   }
 }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/hooks-agent-type-experimental': 'warn'
 ```
 
 ## Sources

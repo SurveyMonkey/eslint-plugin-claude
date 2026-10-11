@@ -7,7 +7,7 @@ related_issues: [15]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `sandbox-weakening-options`
@@ -57,6 +57,15 @@ Pass:
 
 ```json
 { "sandbox": { "enableWeakerNestedSandbox": false } }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/sandbox-weakening-options': 'warn'
 ```
 
 ## Options

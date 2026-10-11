@@ -7,7 +7,7 @@ related_issues: [13]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `memory-index-max-size`
@@ -60,6 +60,15 @@ Pass, in the same configuration:
 
 The rule lints `MEMORY.md` directly in `.claude/agent-memory/<name>/`. It does not lint a topic
 file, a nested file, or an index in `.claude/agent-memory-local/`. That folder is not committed.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/memory-index-max-size': 'warn'
+```
 
 ## Options
 

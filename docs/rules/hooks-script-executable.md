@@ -7,7 +7,7 @@ related_issues: [10]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `hooks-script-executable`
@@ -78,6 +78,15 @@ Fail:
 in `.claude/settings.json`, when git tracks `.claude/hooks/check.sh` with mode `100644`.
 
 Pass: the same file, with `git update-index --chmod=+x .claude/hooks/check.sh`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/hooks-script-executable': 'error'
+```
 
 ## Options
 

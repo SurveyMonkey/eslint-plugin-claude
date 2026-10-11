@@ -7,7 +7,7 @@ related_issues: [9, 15]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-10-02T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `agent-tools-unavailable`
@@ -70,6 +70,15 @@ description: Researches a topic
 background: true
 tools: Read, Grep, WebSearch
 ---
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/agent-tools-unavailable': 'error'
 ```
 
 ## Options

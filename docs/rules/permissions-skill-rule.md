@@ -7,7 +7,7 @@ related_issues: [15, 33]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-10-02T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `permissions-skill-rule`
@@ -61,6 +61,15 @@ Pass:
 
 ```json
 { "permissions": { "allow": ["Skill(anthropic-skills *)", "Skill(commit)"] } }
+```
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/permissions-skill-rule': 'error'
 ```
 
 ## Options

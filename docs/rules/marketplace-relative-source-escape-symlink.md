@@ -7,7 +7,7 @@ related_issues: [12]
 stale_after: 2027-04-07
 generated:
   by: claude-code
-  at: 2026-10-07T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `marketplace-relative-source-escape-symlink`
@@ -66,6 +66,15 @@ but out of the marketplace root:
 
 Pass: the same file, with `plugins/formatter` as a directory in the marketplace root, or as a link
 to another directory in the marketplace root.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/marketplace-relative-source-escape-symlink': 'error'
+```
 
 ## Options
 

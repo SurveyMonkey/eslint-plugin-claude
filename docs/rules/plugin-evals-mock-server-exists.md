@@ -7,7 +7,7 @@ related_issues: [11]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-10T00:00:00Z
+  at: 2026-10-11T00:00:00Z
 ---
 
 # `plugin-evals-mock-server-exists`
@@ -66,6 +66,15 @@ that page.[^mocks]
 Fail: a plugin whose `.mcp.json` declares `github`, with a file `evals/mocks/tracker/create_issue.md`.
 
 Pass: the same plugin with the file `evals/mocks/github/create_issue.md`.
+
+## Usage
+
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
+
+```js
+'claude/plugin-evals-mock-server-exists': 'error'
+```
 
 ## Options
 
