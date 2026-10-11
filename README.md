@@ -469,6 +469,14 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/permissions-deny-secret-files`](docs/rules/permissions-deny-secret-files.md) | A tracked `.env`, `.env.*` file or `secrets/` folder has a `Read` deny rule | `off` | `warn` |
 | [`claude/permissions-auto-mode-push-ask`](docs/rules/permissions-auto-mode-push-ask.md) | A managed file with auto mode on has an `ask` or `deny` rule for `git push` | `off` | `warn` |
 | [`claude/permissions-auto-mode-rule-syntax`](docs/rules/permissions-auto-mode-rule-syntax.md) | An `autoMode` entry is prose, not a permission rule such as `Bash(...)` | `off` | `warn` |
+| [`claude/sandbox-allow-write-escalation`](docs/rules/sandbox-allow-write-escalation.md) | No `allowWrite` entry for a shell startup file, `/etc` or a directory of executables | `off` | `warn` |
+| [`claude/sandbox-credentials-recommended`](docs/rules/sandbox-credentials-recommended.md) | A sandbox that is on keeps `~/.aws` and `~/.ssh` unreadable | `off` | `warn` |
+| [`claude/sandbox-docker-excluded`](docs/rules/sandbox-docker-excluded.md) | A project that uses Docker excludes `docker` from the sandbox | `off` | `warn` |
+| [`claude/sandbox-domain-broad`](docs/rules/sandbox-domain-broad.md) | No `allowedDomains` entry for every host or a whole top-level domain | `off` | `warn` |
+| [`claude/sandbox-excluded-commands-broad`](docs/rules/sandbox-excluded-commands-broad.md) | No `excludedCommands` entry for every command or for a whole shell or interpreter | `off` | `warn` |
+| [`claude/sandbox-proxy-env`](docs/rules/sandbox-proxy-env.md) | A script that starts `claude` with a proxy variable has it in the settings `env` block | `off` | `warn` |
+| [`claude/sandbox-settings-without-enabled`](docs/rules/sandbox-settings-without-enabled.md) | A file with `sandbox` keys has `sandbox.enabled` set to `true` in its source | `off` | `warn` |
+| [`claude/sandbox-unsandboxed-retry`](docs/rules/sandbox-unsandboxed-retry.md) | A sandbox that is on closes the unsandboxed retry: `allowUnsandboxedCommands` is `false`, or an ask rule names `dangerouslyDisableSandbox` | `off` | `warn` |
 
 ### MCP and LSP servers
 

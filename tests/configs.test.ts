@@ -3752,6 +3752,91 @@ const Q10_REPORTS = [
   'packages/syntax/managed-settings.json: claude/permissions-auto-mode-rule-syntax@1',
 ].sort()
 
+// The off rules of #15 for the sandbox, in the order of the `modules` list. `strict` turns each on
+// at `warn`. The files are the globs of each rule.
+const SANDBOX_OFF_RULES: { name: string; files: string[] }[] = [
+  { name: 'sandbox-allow-write-escalation', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-credentials-recommended', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-docker-excluded', files: SHARED_FILE },
+  { name: 'sandbox-domain-broad', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-excluded-commands-broad', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-proxy-env', files: SHARED_FILE },
+  { name: 'sandbox-settings-without-enabled', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'sandbox-unsandboxed-retry', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+]
+
+// A tree of its own for these rules, staged in git, because `sandbox-docker-excluded` and
+// `sandbox-proxy-env` ask the git index. Each rule has a folder that reports and a folder that
+// stays silent. `SANDBOX_OK` is a sandbox that no rule reports.
+const SANDBOX_OK = {
+  enabled: true,
+  allowUnsandboxedCommands: false,
+  filesystem: { denyRead: ['~/'] },
+}
+const sandboxWith = (fields: object, extra: object = {}) =>
+  settingsOf({ ...extra, sandbox: { ...SANDBOX_OK, ...fields } })
+const Q11_TREE: Record<string, string> = {
+  'packages/s-without/.claude/settings.json': settingsOf({ sandbox: { failIfUnavailable: true } }),
+  'packages/s-without-ok/.claude/settings.json': sandboxWith({}),
+  'packages/s-broad/.claude/settings.json': sandboxWith({ excludedCommands: ['bash *'] }),
+  'packages/s-broad-ok/.claude/settings.json': sandboxWith({
+    excludedCommands: ['docker compose *'],
+  }),
+  'packages/s-retry/.claude/settings.json': sandboxWith({ allowUnsandboxedCommands: true }),
+  'packages/s-retry-ok/.claude/settings.json': sandboxWith({}),
+  'packages/s-domain/.claude/settings.json': sandboxWith({
+    network: { allowedDomains: ['*.com'] },
+  }),
+  'packages/s-domain-ok/.claude/settings.json': sandboxWith({
+    network: { allowedDomains: ['*.npmjs.org'] },
+  }),
+  'packages/s-creds/.claude/settings.json': sandboxWith({ filesystem: {} }),
+  'packages/s-creds-ok/.claude/settings.json': sandboxWith({}),
+  'packages/s-write/.claude/settings.json': sandboxWith({
+    filesystem: { denyRead: ['~/'], allowWrite: ['~/.zshrc'] },
+  }),
+  'packages/s-write-ok/.claude/settings.json': sandboxWith({
+    filesystem: { denyRead: ['~/'], allowWrite: ['./build'] },
+  }),
+  'packages/s-docker/.claude/settings.json': sandboxWith({}),
+  'packages/s-docker/Dockerfile': 'FROM node:22\n',
+  'packages/s-docker-ok/.claude/settings.json': sandboxWith({
+    excludedCommands: ['docker compose *'],
+  }),
+  'packages/s-docker-ok/Dockerfile': 'FROM node:22\n',
+  'packages/s-proxy/.claude/settings.json': sandboxWith({}),
+  'packages/s-proxy/package.json': settingsOf({
+    scripts: { claude: 'HTTPS_PROXY=http://proxy.example.com:8080 claude' },
+  }),
+  'packages/s-proxy-ok/.claude/settings.json': sandboxWith(
+    {},
+    { env: { HTTPS_PROXY: 'http://proxy.example.com:8080' } },
+  ),
+  'packages/s-proxy-ok/package.json': settingsOf({
+    scripts: { claude: 'HTTPS_PROXY=http://proxy.example.com:8080 claude' },
+  }),
+  // A managed file with no `enabled`, and a hidden drop-in that Claude Code ignores.
+  'packages/s-managed/managed-settings.json': settingsOf({ sandbox: { excludedCommands: ['*'] } }),
+  'packages/s-managed/managed-settings.d/.20-hidden.json': settingsOf({
+    sandbox: { excludedCommands: ['*'] },
+  }),
+}
+
+// The reports of the tree above. The rule `sandbox-settings-without-enabled` also reports the
+// managed file, which has no `enabled`, and `sandbox-excluded-commands-broad` reports its star.
+const Q11_REPORTS = [
+  'packages/s-without/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/s-broad/.claude/settings.json: claude/sandbox-excluded-commands-broad@1',
+  'packages/s-retry/.claude/settings.json: claude/sandbox-unsandboxed-retry@1',
+  'packages/s-domain/.claude/settings.json: claude/sandbox-domain-broad@1',
+  'packages/s-creds/.claude/settings.json: claude/sandbox-credentials-recommended@1',
+  'packages/s-write/.claude/settings.json: claude/sandbox-allow-write-escalation@1',
+  'packages/s-docker/.claude/settings.json: claude/sandbox-docker-excluded@1',
+  'packages/s-proxy/.claude/settings.json: claude/sandbox-proxy-env@1',
+  'packages/s-managed/managed-settings.json: claude/sandbox-excluded-commands-broad@1',
+  'packages/s-managed/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+].sort()
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -5221,6 +5306,70 @@ const STRICT_ONLY = [
   'packages/wrn/managed-settings.json: claude/permissions-bash-deny-not-boundary@1',
   'packages/x/.claude/settings.json: claude/permissions-bash-deny-not-boundary@1',
   'packages/x/.claude/settings.local.json: claude/permissions-bash-deny-not-boundary@1',
+  // The sandbox off rules report the fixtures of the sandbox and permissions rules, which set
+  // `sandbox` keys with no `enabled`, or `enabled` with no retry rule and no credential entry.
+  'packages/opa/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/opa/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/opa/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/opa/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ppa/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ppa2/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/psb/.claude/settings.json: claude/sandbox-credentials-recommended@1',
+  'packages/psb/.claude/settings.local.json: claude/sandbox-credentials-recommended@1',
+  'packages/psb/managed-settings.d/10-a.json: claude/sandbox-credentials-recommended@1',
+  'packages/psb/managed-settings.json: claude/sandbox-credentials-recommended@1',
+  'packages/sca/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sca/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sca/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sca/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/scm/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/scm/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/scm/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/scm/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdo/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdo/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdo/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdo/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdx/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdx/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdx/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sdx/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sec/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sec/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sec/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sec/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sfd/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sfd/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sfd/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/sfd/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssc/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssc/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssc/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssc/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssm/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssm/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssm/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/ssm/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wdu/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wdu/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wdu/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wdu/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wmf/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wmf/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wmf/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wmf/managed-settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wwm/.claude/settings.json: claude/sandbox-credentials-recommended@1',
+  'packages/wwm/.claude/settings.json: claude/sandbox-unsandboxed-retry@1',
+  'packages/wwm/.claude/settings.local.json: claude/sandbox-credentials-recommended@1',
+  'packages/wwm/.claude/settings.local.json: claude/sandbox-unsandboxed-retry@1',
+  'packages/wwm/managed-settings.d/10-a.json: claude/sandbox-credentials-recommended@1',
+  'packages/wwm/managed-settings.d/10-a.json: claude/sandbox-unsandboxed-retry@1',
+  'packages/wwm/managed-settings.json: claude/sandbox-credentials-recommended@1',
+  'packages/wwm/managed-settings.json: claude/sandbox-unsandboxed-retry@1',
+  'packages/wwo/.claude/settings.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wwo/.claude/settings.local.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wwo/managed-settings.d/10-a.json: claude/sandbox-settings-without-enabled@1',
+  'packages/wwo/managed-settings.json: claude/sandbox-settings-without-enabled@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
@@ -5638,6 +5787,7 @@ const OFF_RULES = [
   // A rule with a Markdown target has two blocks, so it appears twice.
   ...MCP_OFF_RULES.flatMap(({ name, markdown }) => (markdown ? [name, name] : [name])),
   ...PLUGIN_OFF_RULES.map(({ name }) => name),
+  ...SANDBOX_OFF_RULES.map(({ name }) => name),
 ]
 
 let root = ''
@@ -5647,6 +5797,7 @@ let maxBytesRoot = ''
 let mcpSizeRoot = ''
 let outputSizeRoot = ''
 let q10Root = ''
+let q11Root = ''
 // A folder next to the tree, for the files that links in the tree lead to.
 let external = ''
 
@@ -5700,6 +5851,12 @@ beforeAll(() => {
     writeFileSync(path.join(q10Root, file), content)
   }
   stage(q10Root, Object.keys(Q10_TREE))
+  q11Root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-q11-'))
+  for (const [file, content] of Object.entries(Q11_TREE)) {
+    mkdirSync(path.dirname(path.join(q11Root, file)), { recursive: true })
+    writeFileSync(path.join(q11Root, file), content)
+  }
+  stage(q11Root, Object.keys(Q11_TREE))
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -5728,6 +5885,7 @@ afterAll(() => {
   rmSync(mcpSizeRoot, { recursive: true, force: true })
   rmSync(outputSizeRoot, { recursive: true, force: true })
   rmSync(q10Root, { recursive: true, force: true })
+  rmSync(q11Root, { recursive: true, force: true })
   rmSync(external, { recursive: true, force: true })
 })
 
@@ -5891,6 +6049,7 @@ describe('configs', () => {
       ),
       ...PLUGIN_RULES.map(({ name }) => `claude/strict/${name}`),
       ...PLUGIN_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
+      ...SANDBOX_OFF_RULES.map(({ name }) => `claude/strict/${name}`),
     ])
   })
 
@@ -6043,6 +6202,24 @@ describe('configs', () => {
       )
     expect(own(await reports(plugin.configs.strict, q10Root))).toEqual(Q10_REPORTS)
     expect(own(await reports(plugin.configs.recommended, q10Root))).toEqual([])
+  }, 30_000)
+
+  it('turns each sandbox off rule on in strict only, on the files that it reads', () => {
+    for (const { name, files } of SANDBOX_OFF_RULES) {
+      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
+    }
+  })
+
+  it('reports the sandbox off rules in strict on a tree of its own', async () => {
+    // Other rules report on these files too. Only these rules count here.
+    const own = (found: string[]) =>
+      found.filter((report) =>
+        SANDBOX_OFF_RULES.some(({ name }) => report.includes(`: claude/${name}@`)),
+      )
+    expect(own(await reports(plugin.configs.strict, q11Root))).toEqual(Q11_REPORTS)
+    expect(own(await reports(plugin.configs.recommended, q11Root))).toEqual([])
   }, 30_000)
 
   it('gives each settings rule one JSON block for the two project settings files', () => {
