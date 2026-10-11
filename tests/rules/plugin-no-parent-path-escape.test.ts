@@ -152,6 +152,27 @@ describe(RULE, () => {
     expect(runScript(`${line}\n`, 'scripts/run.sh')).toEqual([])
   })
 
+  /** The messages for a monitor that runs the script `text` of a plugin at `plugins/q/`. */
+  function runNested(text: string, name = 'run.sh') {
+    const command = `bash ${ROOT}/${name}`
+    const { dir } = pluginTree({ name: 'p' }, { [name]: text }, 'plugins/q/')
+    const code = JSON.stringify(monitorOf(command))
+    return lintPluginFile(RULE, FILES, path.join(dir, 'monitors/monitors.json'), code).map(
+      (m) => m.message,
+    )
+  }
+
+  check.each([
+    ['a folder of the repository above the plugin', '../shared/x', '../shared/x'],
+    ['a sibling plugin with the same name start', '../q2/x', '../q2/x'],
+  ])('reports a script of a nested plugin that names %s', (_title, word, expected) => {
+    expect(runNested(`cat ${word}\n`)).toEqual([scriptMessage(`${ROOT}/run.sh`, expected)])
+  })
+
+  check('stays silent for a script of a nested plugin that names its own root', () => {
+    expect(runNested('cd ..\n', 'scripts/run.sh')).toEqual([])
+  })
+
   check('stays silent for a script that is not there', () => {
     expect(run(`bash ${ROOT}/missing.sh`)).toEqual([])
   })
