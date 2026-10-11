@@ -2463,6 +2463,13 @@ const STRICT_ONLY = [
   'packages/oa-pin/.claude/settings.json: claude/settings-model-pin-version@1',
   'packages/oa-pin/managed-settings.json: claude/settings-model-pin-version@1',
   'packages/ll/pkg/.claude/settings.json: claude/settings-nested-project-file@1',
+  // The git trees hold project files below the root of a repository.
+  'packages/gu/set/bad/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/gu/set/ok/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/gu/set/open/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/hx/ok/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/hx/sl/.claude/settings.json: claude/settings-nested-project-file@1',
+  'packages/hx/sl/ok/.claude/settings.json: claude/settings-nested-project-file@1',
   'packages/oa-skill/.claude/settings.json: claude/settings-skilloverrides-unknown-skill@1',
 ]
 
