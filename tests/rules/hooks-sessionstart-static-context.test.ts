@@ -117,6 +117,7 @@ describe(`${name}: silent`, () => {
       'echo',
       'echo ""',
       './context.sh',
+      'FOO=bar',
       "bash -c 'echo hi'",
     ]) {
       expect(inline(line), line).toEqual([])
