@@ -13,3 +13,15 @@ export function commandWords(specifier: string): string[] {
   const words = (suffix ? text.slice(0, -2) : text).split(/\s+/).filter((word) => word !== '')
   return suffix ? [...words, '*'] : words
 }
+
+/** True for a deny or ask rule on an input parameter of a command tool, as in
+ *  `Bash(run_in_background:true)` and `Bash(run_in_background:*)`. There the `*` is the wildcard of
+ *  a value and not a command suffix
+ *  (https://code.claude.com/docs/en/permissions#match-by-input-parameter). Only the parameters
+ *  that are not the command itself are listed. */
+export function isInputParameterRule(list: string, specifier: string): boolean {
+  return (
+    list !== 'allow' &&
+    /^(?:run_in_background|description|timeout|dangerouslyDisableSandbox):/.test(specifier.trim())
+  )
+}
