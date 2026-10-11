@@ -7,7 +7,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintEval, MANIFEST, PLUGIN, suite } from '../plugin-evals.test-support.ts'
 
 const RULE = 'plugin-evals-prompt-no-at-mentions'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 const FILE = 'evals/first/prompt.md'
 const top = suite({ [FILE]: 'x', 'evals/first/graders/g.md': 'x', 'evals/mocks/gh/t.md': 'x' })
@@ -59,7 +59,9 @@ describe(RULE, () => {
   })
 
   check('reports a path with an escaped space', () => {
-    expect(messages('Read @my\\ notes.md now\n')).toEqual([MENTION('my notes.md')])
+    const found = lint('Read @my\\ notes.md now\n')
+    expect(found.map((m) => m.message)).toEqual([MENTION('my notes.md')])
+    expect(found[0]).toMatchObject({ column: 6, endColumn: 19 })
   })
 
   check('stays silent for a body with no mention', () => {
@@ -98,6 +100,8 @@ describe(RULE, () => {
   check('reads the eval directory of experimental.evals', () => {
     const custom = suite({
       [MANIFEST]: JSON.stringify({ name: 'p', experimental: { evals: 'qa' } }),
+      'qa/c/prompt.md': 'x',
+      'evals/c/prompt.md': 'x',
     })
     expect(lintEval(RULE, custom, 'qa/c/prompt.md', 'See @a.md\n')).toHaveLength(1)
     expect(lintEval(RULE, custom, 'evals/c/prompt.md', 'See @a.md\n')).toEqual([])

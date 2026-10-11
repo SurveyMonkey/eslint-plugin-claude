@@ -3457,6 +3457,18 @@
       "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
     }
   ],
+  "plugin-evals-prompt-no-at-mentions": [
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Set run limits and tools in prompt.md",
+      "hash": "76b01a44ca6e3cfe1a0879f6e0916a94307de96689ec93fe1ac9edfb9dea1edd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-evals",
+      "heading": "Use a different eval directory",
+      "hash": "ddeebcd16c77bf8105a4dcfc74ddc7e1a8c0bb31a02ae42f321c9e88a4cdc58b"
+    }
+  ],
   "plugin-evals-replay-committed": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",

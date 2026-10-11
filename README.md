@@ -199,6 +199,7 @@ The rules are in groups by the type of file that they check. The groups follow t
 | [`claude/plugin-bin-executable`](docs/rules/plugin-bin-executable.md) | Each file directly in the `bin/` of a plugin has git mode `100755` | `error` | `error` |
 | [`claude/plugin-evals-dir`](docs/rules/plugin-evals-dir.md) | The `experimental.evals` value of a plugin manifest is not a relative path of plain directory names | `error` | `error` |
 | [`claude/plugin-evals-prompt-frontmatter`](docs/rules/plugin-evals-prompt-frontmatter.md) | An eval `prompt.md` has an unknown frontmatter key, a number past its limit, or an `env` key that does not match `EVAL_` | `error` | `error` |
+| [`claude/plugin-evals-prompt-no-at-mentions`](docs/rules/plugin-evals-prompt-no-at-mentions.md) | The body of an eval `prompt.md` has an `@path` mention, which Claude Code does not expand | `error` | `error` |
 | [`claude/plugin-evals-replay-committed`](docs/rules/plugin-evals-replay-committed.md) | No `.gitignore` pattern covers the `mocks/.replay/` directory of the eval suite of a plugin, and git tracks its files | `warn` | `warn` |
 | [`claude/plugin-evals-results-gitignored`](docs/rules/plugin-evals-results-gitignored.md) | A `.gitignore` pattern covers the `results/` directory of the eval suite of a plugin | `warn` | `warn` |
 

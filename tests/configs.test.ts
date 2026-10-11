@@ -2403,6 +2403,11 @@ const TREE: Record<string, string> = {
   'packages/evs/pf/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
   'packages/evs/pf/ok/evals/first/prompt.md': '---\nmax_turns: 10\n---\n\nWrite a message.\n',
   'packages/evs/pf/ok/docs/prompt.md': '---\nbogus: 1\n---\n',
+  // `plugin-evals-prompt-no-at-mentions`: a mention in the body of a case; a mention in code.
+  'packages/evs/am/bad/.claude-plugin/plugin.json': JSON.stringify({ name: 'bad' }),
+  'packages/evs/am/bad/evals/first/prompt.md': 'Summarize @src/app.ts.\n',
+  'packages/evs/am/ok/.claude-plugin/plugin.json': JSON.stringify({ name: 'ok' }),
+  'packages/evs/am/ok/evals/first/prompt.md': 'Summarize `@src/app.ts`.\n',
 }
 
 // The files that the test stages in the repository `packages/hx`, for the rules that read the git
@@ -3164,6 +3169,7 @@ const PLUGIN_RULES: {
   { name: 'plugin-themes-layout', files: ['**/themes/*.json'], severity: 'warn' },
   { name: 'plugin-evals-dir', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-evals-prompt-frontmatter', language: 'markdown/gfm', files: ['**/prompt.md'] },
+  { name: 'plugin-evals-prompt-no-at-mentions', language: 'markdown/gfm', files: ['**/prompt.md'] },
 ]
 
 // The plugin rules of #11 that are `off` in `recommended`, in the order of the `modules` list.
@@ -3238,6 +3244,7 @@ const EXPECTED = [
   '.claude/teams/sub/x.json: claude/agent-teams-no-project-config@2',
   '.claude/teams/team.md: claude/agent-teams-no-project-config@2',
   '.claude/teams/teams.json: claude/agent-teams-no-project-config@2',
+  'packages/evs/am/bad/evals/first/prompt.md: claude/plugin-evals-prompt-no-at-mentions@2',
   'packages/evs/dir/bad/.claude-plugin/plugin.json: claude/plugin-evals-dir@2',
   'packages/evs/pf/bad/evals/first/prompt.md: claude/plugin-evals-prompt-frontmatter@2',
   'packages/hk/.claude-plugin/hooks.json: claude/hooks-no-standalone-file@2',
