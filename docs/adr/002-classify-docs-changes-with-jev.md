@@ -1,10 +1,10 @@
 ---
 type: ADR
-description: The docs watch classifies each changed Claude Code docs block with three TypeSafe Jev Noul questions and fixed thresholds, keeps its state in docs/ where only a reviewed pull request changes it, and opens one deduplicated GitHub issue for each changed block.
+description: The docs watch classifies each changed Claude Code docs block with three TypeSafe Jev Noul questions and fixed thresholds, keeps its state in docs/ where only a reviewed pull request changes it, and opens deduplicated GitHub issues, with digest issues for the uncited blocks of each page.
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112, 137, 149, 150, 152]
+related_issues: [25, 112, 137, 149, 150, 151, 152]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -30,6 +30,11 @@ lists 407 releases. Among them:
 hooks page: four `new-rule` issues (#44, #45, #121, #122) and one `needs-triage` issue (#123).
 Rows of the Hooks section of `docs/rules-inventory.md` cite each of these blocks (lines 384 to
 437 on 2026-10-10).
+
+**One docs change can touch many blocks of one page.** The `onFailure` field of Claude Code
+v2.1.295 changed four blocks of the hooks page and added one. The job opened five issues (#121 to
+#125). Each body quotes the `onFailure` text. A person read all five to find one change. No
+marker names a rule. Inventory rows cite three of the blocks (#121, #122 and #123).
 
 **The constraints are these:**
 
@@ -202,14 +207,19 @@ that of the new block. The block ID comes from the docs, so the marker holds it 
 ` rules=<ids>` lists the rules of the issue, and is not there when the issue names no rule.
 
 All findings for one page, block and hash in one run give one issue, with all their rules and
-reasons. The first kind in this list names the issue: `moved`, `rule-removal`, `rule-update`,
-`needs-triage`, `new-rule`. `moved` is first, because the issue keeps the fields of the first
-kind only. Only a `moved` finding has the new heading. Before it opens an issue,
-`scripts/docs-issues.ts` reads the bodies of all open issues. An open issue for the same page,
-block and hash stops a new issue when the open issues name all its rules. The kind does not
-count. A Jev answer near a threshold can change the kind from one run to the next. A rule that
-the open issues do not name gives a new issue. A block that changes again has a new hash, so it
-gets a new issue.
+reasons. That issue can be one section of a digest issue (Decision 8). The first kind in this
+list names the issue: `moved`, `rule-removal`, `rule-update`, `needs-triage`, `new-rule`.
+`moved` is first, because the issue keeps the fields of the first kind only. Only a `moved`
+finding has the new heading. Before it opens an issue, `scripts/docs-issues.ts` reads the bodies
+of all open issues. An open issue for the same page, block and hash stops a new issue when the
+open issues name all its rules. The kind does not count. A Jev answer near a threshold can
+change the kind from one run to the next. A rule that the open issues do not name gives a new
+issue. A block that changes again has a new hash, so it gets a new issue.
+
+A digest issue has the marker of each of its blocks, so this check works for each block. An open
+digest stops a new issue for each block that it names. A later run that finds new blocks of the
+same page opens issues for the new blocks only: an issue of its own for one block, or a new
+digest for two or more.
 
 Only open issues count. Close an issue in the pull request that refreshes the snapshot. If a
 person closes it first, the next run opens it again.
@@ -272,7 +282,7 @@ stores the text of a mapped block only.
   The block split cannot read a code fence that is not closed. It also cannot read a line that
   looks like an HTML heading in a form that it does not know.
 - A finding that is not valid, a failed `gh` call, or more than 20 new issues in one live run
-  stops the issue step with exit 1. A dry run has no limit.
+  stops the issue step with exit 1. A digest issue counts as one issue. A dry run has no limit.
 - A check report that the workflow cannot read fails the job.
 
 ### 8. Issues open with the App token, as a Task, with the `claude-docs-change` label
@@ -309,6 +319,35 @@ run prints each comment and posts none. The step also stops before it writes for
 The findings file has no `tracked` list. A tracked block is not valid. A tracked block is in the
 list twice. A group issue has a state that is not `open` or `closed`.
 
+**The uncited blocks of a page share a digest issue.** After the dedupe and the group comment
+path, the step takes each `new-rule` and `needs-triage` finding that names no rule. A finding
+of a tracked block whose group issues are all closed is one of them. When a page has two or
+more of them, they give a digest issue, titled `docs(<page>): triage <n> changed blocks`.
+`<page>` is the page path after `/docs/en/`. The title has no scope when the page has no
+`/docs/en/`, when the path after it is empty, or when the title is longer than 69 characters.
+The body starts with the marker of each block, one on each line. Then it has a section for each
+block, with its metadata and its diff or its quoted text. The section of a tracked block also
+has the line of its inventory rows. A section has no Before and After parts. A page with one
+such finding gets the issue of that block, as before.
+
+Each of these keeps an issue of its own, because it needs its own decision:
+
+- a `moved` finding
+- a `rule-update` or `rule-removal` finding
+- a finding that names a rule, a whole-page rule included
+
+**The size of a digest.** A digest holds at most 20 blocks (`MAX_DIGEST_BLOCKS`). Its whole body
+takes at most 60,000 characters, so it stays under the GitHub limit of 65,536. The step cuts no
+section. It puts the blocks of a page in groups, in order. When the next block would pass 20
+blocks or 60,000 characters, that block starts a new group. A block whose digest alone passes
+60,000 characters gets the issue of that block. A group of one block also gets the issue of that
+block. Each fence in a section holds at most 280 characters of its text
+(`MAX_DIGEST_QUOTE`). A fence of a text of backticks takes three times its text, and a section
+can have two fences. The worst body in the tests, 20 such sections with a line of inventory rows
+each, takes 57,826 characters.
+
+The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
+
 ## Consequences
 
 - Each block costs one request of about 1,400 input tokens. At the price on 2026-09-29
@@ -324,8 +363,8 @@ list twice. A group issue has a state that is not `open` or `closed`.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
 - `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed.
 - When all group issues of a tracked block are closed, each finding of the block opens its issue.
-  A tracked block with no finding gets nothing: a removed block that no whole-page rule cites,
-  or a block with a low Jev answer.
+  That issue can be one section of a digest. A tracked block with no finding gets nothing: a
+  removed block that no whole-page rule cites, or a block with a low Jev answer.
 - While a group issue is open, a finding of a tracked block that names no rule opens no issue.
   The finding stays in the classifier output. A person reads the comment when they build the row.
   A finding that names a whole-page rule still opens its issue.
@@ -333,4 +372,11 @@ list twice. A group issue has a state that is not `open` or `closed`.
   with an older copy of `scripts/docs-watch.ts` writes a page with no body hash.
 - A move to another page, or a move that also changes the body, still gives two issues. The
   cross-reference line helps a person match them on one page only.
+- A digest issue can need a decision for each block. It closes in the pull request that makes
+  all of them. A digest quotes at most 280 characters of each text, so a person reads the page
+  for the rest.
+- A page with large blocks gives more issues, because the split depends on the size of each
+  block.
+- An open digest stops an issue for each block that it names. A new block of the page in a
+  later run gets an issue of its own, or a new digest with the other new blocks.
 - A new Jev version needs a new run of the spike before the pin moves.

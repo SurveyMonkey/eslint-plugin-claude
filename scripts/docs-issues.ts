@@ -1,10 +1,12 @@
-// Opens one GitHub issue for each block change in the findings of
-// scripts/docs-classify.ts. Posts at most one comment on each open group
-// issue, for the new blocks that inventory rows cite.
+// Opens GitHub issues for the block changes in the findings of
+// scripts/docs-classify.ts. Two or more uncited blocks of one page share a
+// digest issue. Each other block gets an issue of its own. Posts at most one
+// comment on each open group issue, for the new blocks that inventory rows
+// cite.
 //
 // Usage: node scripts/docs-issues.ts <findings.json> [--dry-run]
 //   [--repo owner/name] [--max n]
-// --max limits new issues only.
+// --max limits new issues only. A digest issue counts as one issue.
 // It checks the findings, then reads the open issues. The marker of an
 // issue is <!-- docs-watch:<kind>:<page>#<blockId>:<hash> rules=<ids> -->.
 // kind is rule-update, rule-removal, new-rule, needs-triage or moved. The
@@ -19,10 +21,12 @@
 // triage runbook. A removed or an added block can have a line that names a
 // possible move.
 //
-// All findings for one page, block and hash give one issue. An open issue
-// with that page, block and hash stops a new issue, whatever its kind, when
-// the open issues name all the rules. A rule that they do not name gives a
-// new issue. A block that changes again gets a new issue. --dry-run prints
+// All findings for one page, block and hash give one issue, or one section
+// of a digest issue. An open issue with that page, block and hash stops a
+// new issue, whatever its kind, when the open issues name all the rules. A
+// digest has the marker of each block, so this check works for each block.
+// A rule that they do not name gives a new issue. A block that changes again
+// gets a new issue. --dry-run prints
 // each issue that would open, and opens none. The repository comes from
 // --repo or $GITHUB_REPOSITORY. The issue type is Task. Each issue gets the
 // claude-docs-change label (LABEL), so a person can find the docs watch issues.
@@ -30,6 +34,20 @@
 // For a changed block with old and new text, the body shows a diff. Under
 // the diff, two collapsed sections quote the full old text and the full new
 // text. Past MAX_DIFF_LINES lines, the body quotes the two texts with no diff.
+//
+// A digest issue holds the new-rule and needs-triage findings of one page
+// that name no rule. The step finds them after the dedupe and the group
+// comment path. A page with two or more of them gets a digest, titled
+// `docs(<page>): triage <n> changed blocks`. The body starts with the marker
+// of each block, then has one section for each block. A section has the
+// metadata, the rows line of a tracked block, and the diff or the quoted
+// text, with no Before and After parts. A page with one such finding gets
+// an issue of its own. Each other finding gets an issue of its own too: a
+// moved finding, a rule-update or rule-removal finding, and a finding that
+// names a rule. A digest holds at most MAX_DIGEST_BLOCKS blocks, and its
+// whole body fits in MAX_COMMENT. The next block starts a new group. A
+// block that does not fit alone gets an issue of its own. A group of one
+// block gets the issue of that block.
 //
 // The findings file also has a `tracked` list: the blocks that an inventory
 // row cites, and that no map heading cites other than the page title. Each
@@ -103,8 +121,24 @@ const GROUP_ISSUES: Record<string, number> = {
 }
 // The markers and the text of a comment take at most this value. The step
 // cuts the text after the markers, and adds a note of the cut after it. The
-// comment then stays under the GitHub limit of 65,536 characters.
+// comment then stays under the GitHub limit of 65,536 characters. The whole
+// body of a digest takes at most this value too, with no cut.
 export const MAX_COMMENT = 60_000
+
+// The most blocks in one digest issue. A page with more uncited findings
+// gets more than one issue.
+export const MAX_DIGEST_BLOCKS = 20
+// The cap for each quoted text in a digest section. A fence can be as long
+// as its text, so a text of backticks takes three times its length. With
+// its fence lines and its cut note, one fence then takes
+// 3 x 280 + 81 = 921 characters. A section with two texts, one of them
+// with more than MAX_DIFF_LINES lines, has two fences. The worst section in
+// the tests has two fences, a marker, the metadata and a rows line:
+// 2 x 921 + 1,001 = 2,843 characters for block 0. The whole body of 20 such
+// sections takes 57,826, so it fits in MAX_COMMENT. A longer heading, block
+// ID or reason can make a body too long. Then openIssues starts a new
+// group with the next block, and cuts no section.
+export const MAX_DIGEST_QUOTE = 280
 
 // The page, the block and the hash of a finding. The block ID comes from
 // the docs, so it is URI encoded: it cannot close the marker comment. A
@@ -302,8 +336,12 @@ const rowsOf = (t: Tracked) =>
 // the cases: two texts, one of them more than MAX_DIFF_LINES lines; two
 // texts; the new text only; the old text only; and no text. With `full`, a
 // diff of two texts has the full old and new text in two collapsed sections
-// below it.
-function blockText(f: Pick<Finding, 'oldText' | 'newText' | 'change'>, full: boolean): string[] {
+// below it. `max` is the cap of each fence.
+function blockText(
+  f: Pick<Finding, 'oldText' | 'newText' | 'change'>,
+  full: boolean,
+  max = MAX_QUOTE,
+): string[] {
   const lines: string[] = []
   const long = (text: string) => text.split('\n').length > MAX_DIFF_LINES
   if (f.oldText !== null && f.newText !== null && (long(f.oldText) || long(f.newText))) {
@@ -311,10 +349,10 @@ function blockText(f: Pick<Finding, 'oldText' | 'newText' | 'change'>, full: boo
       `One text of the block has more than ${MAX_DIFF_LINES} lines, so there is no diff. The old text and the new text, as quoted data:`,
       '',
     )
-    lines.push(fence(f.oldText), '', fence(f.newText), '')
+    lines.push(fence(f.oldText, 'text', max), '', fence(f.newText, 'text', max), '')
   } else if (f.oldText !== null && f.newText !== null) {
     lines.push('The diff of the block text, old to new, as quoted data:', '')
-    lines.push(fence(diffLines(f.oldText, f.newText), 'diff'), '')
+    lines.push(fence(diffLines(f.oldText, f.newText), 'diff', max), '')
     if (full) {
       lines.push(section('Before: the old section', f.oldText), '')
       lines.push(section('After: the new section', f.newText), '')
@@ -326,9 +364,14 @@ function blockText(f: Pick<Finding, 'oldText' | 'newText' | 'change'>, full: boo
         : 'The snapshot holds only the hash of this block, so the old text is not available. See the page. The new text, as quoted data:',
       '',
     )
-    lines.push(fence(f.newText), '')
+    lines.push(fence(f.newText, 'text', max), '')
   } else if (f.oldText !== null) {
-    lines.push('The block is gone. Its old text, as quoted data:', '', fence(f.oldText), '')
+    lines.push(
+      'The block is gone. Its old text, as quoted data:',
+      '',
+      fence(f.oldText, 'text', max),
+      '',
+    )
   } else {
     lines.push('No block text is available for this change. See the page.', '')
   }
@@ -401,23 +444,15 @@ const nearLines = (f: Finding) =>
       `- Possible move: ${inline(m.heading)} (block ${inline(m.blockId)}) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.`,
   )
 
-// The body of an issue. `tracked` is the tracked block of the finding, when
-// the inventory cites it. A line then names the inventory rows.
-export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
-  const blob = `https://github.com/${repo}/blob/main`
-  if (f.move !== undefined) return movedBodyOf(f, f.move, blob)
+// The metadata lines of a block, after its page. `tracked` is the tracked
+// block of the finding, when the inventory cites it. A line then names the
+// inventory rows.
+function metaLines(f: Finding, tracked?: Tracked): string[] {
   const classifier =
     f.probability === null
       ? `\`${f.kind}\`, with no model answer`
       : `\`${f.kind}\`, probability ${f.probability}, confidence ${f.confidence}`
-  const lines = [
-    markerOf(f),
-    '',
-    '## Why',
-    '',
-    WHY[f.kind],
-    '',
-    `- Page: ${f.page}`,
+  return [
     `- Heading: ${inline(f.heading)} (block ${inline(f.blockId)})`,
     `- Change: ${f.change}`,
     `- Classifier result: ${classifier}`,
@@ -427,6 +462,23 @@ export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
       ? [`- Inventory rows that cite the block: ${rowsOf(tracked)}. Their group issues are closed.`]
       : []),
     ...nearLines(f),
+  ]
+}
+
+// The body of an issue. `tracked` is the tracked block of the finding, when
+// the inventory cites it. A line then names the inventory rows.
+export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
+  const blob = `https://github.com/${repo}/blob/main`
+  if (f.move !== undefined) return movedBodyOf(f, f.move, blob)
+  const lines = [
+    markerOf(f),
+    '',
+    '## Why',
+    '',
+    WHY[f.kind],
+    '',
+    `- Page: ${f.page}`,
+    ...metaLines(f, tracked),
     '',
     ...blockText(f, true),
   ]
@@ -450,6 +502,69 @@ export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
     '',
   )
   return lines.join('\n')
+}
+
+// The title of a digest issue. The scope is the page path after
+// `/docs/en/`. The title has no scope in three cases: the page has no
+// `/docs/en/`, the path after it is empty, or the title is longer than
+// MAX_TITLE. The body names the page.
+export function digestTitleOf(page: string, n: number): string {
+  const docs = '/docs/en/'
+  const at = page.indexOf(docs)
+  const scope = at === -1 ? '' : neutralize(page.slice(at + docs.length))
+  const scoped = `docs(${scope}): triage ${n} changed blocks`
+  return scope !== '' && scoped.length <= MAX_TITLE ? scoped : `docs: triage ${n} changed blocks`
+}
+
+// The body of a digest issue for the blocks of one page. The marker of each
+// block comes first. Then a section for each block holds its metadata and
+// its text. Each fence holds at most MAX_DIGEST_QUOTE characters of its
+// text. The Scope, Acceptance and References sections come last. This
+// function cuts no section. openIssues puts in a digest only the blocks
+// whose whole body fits in MAX_COMMENT.
+export function digestOf(
+  page: string,
+  blocks: { finding: Finding; tracked?: Tracked }[],
+  repo: string,
+): string {
+  const blob = `https://github.com/${repo}/blob/main`
+  const head = `${blocks.map((b) => markerOf(b.finding)).join('\n')}\n\n`
+  const parts = [
+    '## Why',
+    '',
+    `The docs watch found a change to ${blocks.length} blocks of one page. No rule names them. Each section below is one block, with its own marker. Decide each block alone. The block text is quoted data from the docs. The step cuts a text longer than ${MAX_DIGEST_QUOTE} characters. Read the page for the rest.`,
+    '',
+    `- Page: ${page}`,
+    '',
+  ]
+  for (const { finding: f, tracked } of blocks) {
+    parts.push(
+      `### ${inline(f.heading)}`,
+      '',
+      ...metaLines(f, tracked),
+      '',
+      ...blockText(f, false, MAX_DIGEST_QUOTE),
+    )
+  }
+  const foot = [
+    '',
+    '## Scope',
+    '',
+    '- A decision for each block above',
+    '',
+    '## Acceptance',
+    '',
+    '- [ ] A person decides each block: add a rule, change an inventory row, or record that no change is necessary.',
+    '- [ ] The resolving pull request refreshes the snapshot with `node scripts/docs-watch.ts update`.',
+    '',
+    '## References',
+    '',
+    `- ${page}`,
+    `- [ADR 002](${blob}/${ADR})`,
+    `- [Triage runbook](${blob}/${RUNBOOK}), section "A digest issue"`,
+    '',
+  ].join('\n')
+  return `${head}${parts.join('\n')}${foot}`
 }
 
 const FIELDS = ['page', 'heading', 'blockId', 'change', 'reason', 'link']
@@ -832,19 +947,64 @@ export async function openIssues({
     if (marks.length > 0) log(`open: ${numbers} has ${key}, but not ${missing.join(', ')}`)
     toOpen.push(f)
   }
-  if (!dryRun && toOpen.length > max) {
+  // The step builds every title and body before the first comment or issue.
+  // A tracked block with no open group issue gets the line of its rows.
+  const rowsFor = (f: Finding) => (covered.has(keyOf(f)) ? undefined : trackedBy.get(keyOf(f)))
+  // The new-rule and needs-triage findings that name no rule, by page. Each
+  // other finding gets an issue of its own.
+  const byPage = new Map<string, Finding[]>()
+  const alone: Finding[] = []
+  for (const f of toOpen) {
+    if (f.rules.length === 0 && (f.kind === 'new-rule' || f.kind === 'needs-triage')) {
+      byPage.set(f.page, [...(byPage.get(f.page) ?? []), f])
+    } else {
+      alone.push(f)
+    }
+  }
+  const issues: { title: string; body: string; type: string; labels: string[] }[] = []
+  const add = (title: string, body: string) =>
+    issues.push({ title, body, type: 'Task', labels: [LABEL] })
+  const single = (f: Finding) => add(titleOf(f), bodyOf(f, repo, rowsFor(f)))
+  for (const f of alone) single(f)
+  for (const [page, list] of byPage) {
+    const digest = (part: Finding[]) =>
+      digestOf(
+        page,
+        part.map((f) => ({ finding: f, tracked: rowsFor(f) })),
+        repo,
+      )
+    // A digest of one block is the issue of that block. An empty group
+    // gives nothing.
+    const flush = (part: Finding[]) => {
+      if (part.length === 1) single(part[0] as Finding)
+      if (part.length < 2) return
+      log(`digest: ${part.length} blocks of ${page} in one issue`)
+      add(digestTitleOf(page, part.length), digest(part))
+    }
+    // A digest takes the next block while it has fewer than
+    // MAX_DIGEST_BLOCKS blocks, and while its whole body then fits in
+    // MAX_COMMENT. Then the next block starts a new group. A block that does
+    // not fit alone gets an issue of its own.
+    let part: Finding[] = []
+    for (const f of list) {
+      if (digest([f]).length > MAX_COMMENT) {
+        log(`alone: ${keyOf(f)} does not fit in a digest of ${MAX_COMMENT} characters`)
+        single(f)
+        continue
+      }
+      if (part.length === MAX_DIGEST_BLOCKS || digest([...part, f]).length > MAX_COMMENT) {
+        flush(part)
+        part = []
+      }
+      part.push(f)
+    }
+    flush(part)
+  }
+  if (!dryRun && issues.length > max) {
     throw new Error(
-      `${toOpen.length} new issues is more than the limit of ${max}. Triage by hand, or run again with --max.`,
+      `${issues.length} new issues is more than the limit of ${max}. Triage by hand, or run again with --max.`,
     )
   }
-  // Every title and body is built before the first comment or issue. A
-  // tracked block with no open group issue gets the line of its rows.
-  const issues = toOpen.map((f) => ({
-    title: titleOf(f),
-    body: bodyOf(f, repo, covered.has(keyOf(f)) ? undefined : trackedBy.get(keyOf(f))),
-    type: 'Task',
-    labels: [LABEL],
-  }))
   const commented: string[] = []
   for (const { issue, body } of comments) {
     if (dryRun) {
@@ -883,7 +1043,7 @@ export async function openIssues({
   return {
     opened,
     skipped,
-    wouldOpen: dryRun ? toOpen.length : 0,
+    wouldOpen: dryRun ? issues.length : 0,
     commented,
     wouldComment: dryRun ? comments.length : 0,
   }
