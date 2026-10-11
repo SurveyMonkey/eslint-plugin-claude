@@ -158,6 +158,14 @@ describe(`${name}: silent`, () => {
     expect(ids(root, ON)).toEqual([])
   })
 
+  it('is silent when the project folder is a link to a folder outside the repository', () => {
+    const outside = plain({ 'proj/.claude/settings.json': '{}', 'proj/Dockerfile': 'FROM x\n' })
+    const root = plain({ 'keep.txt': 'x\n' })
+    symlinkSync(path.join(outside, 'proj'), path.join(root, 'link'))
+    stage(root, ['keep.txt'])
+    expect(ids(root, ON, 'link/.claude/settings.json')).toEqual([])
+  })
+
   it('is silent for a script that only ends in the name, or a scripts value of another type', () => {
     const scripts = (value: unknown) => ({ 'package.json': file({ scripts: value }) })
     expect(ids(tracking(scripts({ up: 'mydocker up' })), ON)).toEqual([])
