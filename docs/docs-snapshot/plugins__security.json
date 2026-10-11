@@ -4,51 +4,63 @@
   "blocks": [
     {
       "id": "plugin-security-and-trust",
-      "hash": "cd0ed208f944069c8e06cb48499ab859252741d5f1e73031667e072540c12eb4"
+      "hash": "cd0ed208f944069c8e06cb48499ab859252741d5f1e73031667e072540c12eb4",
+      "bodyHash": "1103a6f6d15fed178bccc0f7277eb652938d89e42281445a6241a1b7f9d2b84a"
     },
     {
       "id": "understand-what-a-plugin-can-do",
-      "hash": "786239e7c3421cc0b8ef69390202e66beb731f8b022ecbdf9c2b33ac40f8315e"
+      "hash": "786239e7c3421cc0b8ef69390202e66beb731f8b022ecbdf9c2b33ac40f8315e",
+      "bodyHash": "e50383901ea1e86362dd7612629d96ce4bb5ea1bd8955bfc971c34f9c35177eb"
     },
     {
       "id": "marketplace-tiers",
-      "hash": "0fff8a0b306294a872f7c1fd1351d516d52a8a3a631baf5eae53dea61d8e0863"
+      "hash": "0fff8a0b306294a872f7c1fd1351d516d52a8a3a631baf5eae53dea61d8e0863",
+      "bodyHash": "13cab9cec30b3ceac5c2d44a9b7ba348f622da58eb21e490c921e6ee1ba570bc"
     },
     {
       "id": "official-marketplace-names",
-      "hash": "6355ddc5e0677048fb86374362193e5d0728b8fcb5a9ca6fb28db9f664801ebd"
+      "hash": "6355ddc5e0677048fb86374362193e5d0728b8fcb5a9ca6fb28db9f664801ebd",
+      "bodyHash": "87e78ca8387f9b919cf13d90833dfb4e1ce1424b27b58e6ae79d997168512642"
     },
     {
       "id": "review-a-plugin-before-you-install",
-      "hash": "d024bd0ed104b802e3b088e79f1730ce0d74d451fb1cce1eaf8a5f832711390a"
+      "hash": "d024bd0ed104b802e3b088e79f1730ce0d74d451fb1cce1eaf8a5f832711390a",
+      "bodyHash": "5dfbb6be11b27480bbfa45b4e4013307de6d763bc8af8ddabf5b5d6a116b70a4"
     },
     {
       "id": "remove-a-plugin-you-no-longer-trust",
-      "hash": "eb435d33ec128f5676c061dbd0c64833f049c55de4f6f310c6856cb8bc606054"
+      "hash": "eb435d33ec128f5676c061dbd0c64833f049c55de4f6f310c6856cb8bc606054",
+      "bodyHash": "24c886596f3705e50f0ec278a57d495b0c70e3d9159990ed80cb0e0d3ff84c86"
     },
     {
       "id": "recognize-when-claude-code-refuses-or-warns",
-      "hash": "d2ce1fbf0fc188823b32f54f16de283768b2c96cb289812d27ceecd11e444187"
+      "hash": "d2ce1fbf0fc188823b32f54f16de283768b2c96cb289812d27ceecd11e444187",
+      "bodyHash": "4737ba92a1a96768cc41d31c7ea6be3e7a66bc57c1f871c2caed9d16f1197c2c"
     },
     {
       "id": "trust-warning-before-you-install",
-      "hash": "6ac7ecedb6bcfdad0568a00dd1a5cec1950e2d77b5291de2fa0a271a56355770"
+      "hash": "6ac7ecedb6bcfdad0568a00dd1a5cec1950e2d77b5291de2fa0a271a56355770",
+      "bodyHash": "9aab07f56ee4b41fbe1479343ef7ce58f4d8485df2eba7ed481d15dc883af531"
     },
     {
       "id": "untrusted-marketplace-sources-and-failed-integrity-checks",
-      "hash": "4153eec4921b705a50a4b944d1de01acd4ac5d5de2ddf9998a6a2368d84038ab"
+      "hash": "4153eec4921b705a50a4b944d1de01acd4ac5d5de2ddf9998a6a2368d84038ab",
+      "bodyHash": "472208ca8c6090c354343c7aec24e8d3f65628f888cb00de4d55a1465874aff8"
     },
     {
       "id": "enforce-plugin-controls-for-your-organization",
-      "hash": "886926a9ed062c7a79ec262dc4fa5c26874f16460c09fe2cf07ef0ec02b4fa27"
+      "hash": "886926a9ed062c7a79ec262dc4fa5c26874f16460c09fe2cf07ef0ec02b4fa27",
+      "bodyHash": "50372355e2c34b4bb69d6b4e3bf07e5ccfe82659a5c857b413c425dacaaabaf6"
     },
     {
       "id": "find-plugins-in-telemetry",
-      "hash": "3e2620edbe99dd584a857180da1d8016830ddff6b937631b19a33852e5ebe5b5"
+      "hash": "3e2620edbe99dd584a857180da1d8016830ddff6b937631b19a33852e5ebe5b5",
+      "bodyHash": "e5b6eefb503d390af5007dc50fe5368fa160ac038040eea25a830695f1769a56"
     },
     {
       "id": "next-steps",
-      "hash": "8dd68f390b945f94e1af1398fa998191d0daadd651671eb0477ef8b8e0c0b9de"
+      "hash": "8dd68f390b945f94e1af1398fa998191d0daadd651671eb0477ef8b8e0c0b9de",
+      "bodyHash": "461c426de7b450378e1503ac778e088226faf030040cf681757c4d6e2dfb2134"
     }
   ],
   "sources": [
