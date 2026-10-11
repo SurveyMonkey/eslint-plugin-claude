@@ -377,3 +377,13 @@ export const PROMPT_CACHING_OFF_VARS: readonly string[] = [
   'DISABLE_PROMPT_CACHING_OPUS',
   'DISABLE_PROMPT_CACHING_SONNET',
 ]
+
+/** The four privacy toggles. The server-managed settings page says that Claude Code decides by the
+ *  delivered value whether one needs approval: a truthy value such as `1` or `true` applies without
+ *  the approval dialog, and any other non-empty value shows it. */
+export const PRIVACY_TOGGLE_ENV_VARS: readonly string[] = [
+  'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC',
+  'DISABLE_ERROR_REPORTING',
+  'DISABLE_TELEMETRY',
+  'DO_NOT_TRACK',
+]
