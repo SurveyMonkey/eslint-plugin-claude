@@ -11,7 +11,7 @@ import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPluginFile } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-dir-not-marketplace-root'
-const check = it.fails
+const check = it
 const linked = noLinks ? it.skip : check
 
 const message = (script: string, value: string, source = '--plugin-dir') =>

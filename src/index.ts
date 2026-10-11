@@ -228,6 +228,7 @@ import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
 import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
+import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
@@ -749,6 +750,7 @@ const modules = [
   pluginBinShadowsSystemCommand,
   pluginDependenciesPrereleaseRange,
   pluginRelevanceSignalHints,
+  pluginDirNotMarketplaceRoot,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1144,6 +1146,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-bin-shadows-system-command': 'off',
   'plugin-dependencies-prerelease-range': 'off',
   'plugin-relevance-signal-hints': 'off',
+  'plugin-dir-not-marketplace-root': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

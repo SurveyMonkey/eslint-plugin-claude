@@ -764,6 +764,18 @@ const TREE: Record<string, string> = {
       },
     ],
   }),
+  // A script that loads a marketplace root with `--plugin-dir` reports in `strict` only. The decoy
+  // loads the plugin under it.
+  'packages/dnm/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'dnm',
+    owner: { name: 'o' },
+    plugins: [{ name: 'p', source: { source: 'github', repo: 'a/b' } }],
+  }),
+  'packages/dnm/package.json': JSON.stringify({ scripts: { dev: 'claude --plugin-dir .' } }),
+  'packages/dnm2/package.json': JSON.stringify({
+    scripts: { dev: 'claude --plugin-dir ./plugins/p' },
+  }),
+  'packages/dnm2/plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'dnm2' }),
   // A range that misses the pre-release version of its dependency reports in `strict` only. The
   // decoy has the suffix. The marketplace needs a `.git` above it.
   'packages/pr/.git/HEAD': 'ref: refs/heads/main\n',
@@ -3110,6 +3122,7 @@ const PLUGIN_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'plugin-bin-shadows-system-command', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-dependencies-prerelease-range', files: ['**/.claude-plugin/plugin.json'] },
   { name: 'plugin-relevance-signal-hints', files: ['**/.claude-plugin/marketplace.json'] },
+  { name: 'plugin-dir-not-marketplace-root', files: ['**/package.json'] },
 ]
 
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
@@ -4345,6 +4358,7 @@ const STRICT_ONLY = [
   'packages/pr/plugins/user/.claude-plugin/plugin.json: claude/plugin-dependencies-prerelease-range@1',
   'plugins/bsc/.claude-plugin/plugin.json: claude/plugin-bin-shadows-system-command@1',
   'packages/rsh/.claude-plugin/marketplace.json: claude/plugin-relevance-signal-hints@1',
+  'packages/dnm/package.json: claude/plugin-dir-not-marketplace-root@1',
 ]
 
 // The agent and output style rules of #9, in the order of the `modules` list. Each is an
