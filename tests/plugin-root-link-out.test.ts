@@ -49,6 +49,9 @@ const MONITORS = JSON.stringify([{ name: 'm', command: 'run $CLAUDE_PLUGIN_ROOT/
 const LIFECYCLE = JSON.stringify({ scripts: { postinstall: 'node setup.js' } })
 const THEME = JSON.stringify({ base: 'bogus' })
 const QUOTE = JSON.stringify([{ name: 'm', command: `run \${CLAUDE_PLUGIN_ROOT}/x` }])
+const RELATIVE = JSON.stringify([{ name: 'm', command: './bin/m' }])
+const PARENT = JSON.stringify([{ name: 'm', command: `cat "\${CLAUDE_PLUGIN_ROOT}/../x"` }])
+const STATE = JSON.stringify([{ name: 'm', command: `touch "\${CLAUDE_PLUGIN_ROOT}/x"` }])
 
 describe('a plugin root that links out of the repository', () => {
   const jsonCases: [string, string, string, string][] = [
@@ -60,6 +63,19 @@ describe('a plugin root that links out of the repository', () => {
       MONITORS,
     ],
     ['plugin-monitors-command-quote', 'monitors/monitors.json', '**/monitors/monitors.json', QUOTE],
+    ['plugin-no-parent-path-escape', 'monitors/monitors.json', '**/monitors/monitors.json', PARENT],
+    [
+      'plugin-path-uses-plugin-root',
+      'monitors/monitors.json',
+      '**/monitors/monitors.json',
+      RELATIVE,
+    ],
+    [
+      'plugin-no-state-in-plugin-root',
+      'monitors/monitors.json',
+      '**/monitors/monitors.json',
+      STATE,
+    ],
     ['plugin-package-lifecycle-scripts', 'package.json', '**/package.json', LIFECYCLE],
     ['plugin-themes-layout', 'themes/t.json', '**/themes/*.json', THEME],
   ]

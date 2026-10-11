@@ -228,6 +228,7 @@ import pluginDefaultDirShadowed from './rules/plugin-default-dir-shadowed.ts'
 import pluginDependenciesNotAutoInstalled from './rules/plugin-dependencies-not-auto-installed.ts'
 import pluginDependenciesPrereleaseRange from './rules/plugin-dependencies-prerelease-range.ts'
 import pluginDependenciesResolve from './rules/plugin-dependencies-resolve.ts'
+import pluginDirNotMarketplaceRoot from './rules/plugin-dir-not-marketplace-root.ts'
 import pluginEvalsReplayCommitted from './rules/plugin-evals-replay-committed.ts'
 import pluginEvalsResultsGitignored from './rules/plugin-evals-results-gitignored.ts'
 import pluginFeatureMinVersion from './rules/plugin-feature-min-version.ts'
@@ -240,14 +241,18 @@ import pluginMonitorsCommandEnv from './rules/plugin-monitors-command-env.ts'
 import pluginMonitorsCommandQuote from './rules/plugin-monitors-command-quote.ts'
 import pluginMonitorsSkillExists from './rules/plugin-monitors-skill-exists.ts'
 import pluginNoGitLfs from './rules/plugin-no-git-lfs.ts'
+import pluginNoParentPathEscape from './rules/plugin-no-parent-path-escape.ts'
 import pluginNoProjectPluginsDir from './rules/plugin-no-project-plugins-dir.ts'
+import pluginNoStateInPluginRoot from './rules/plugin-no-state-in-plugin-root.ts'
 import pluginNpmSourceShrinkwrap from './rules/plugin-npm-source-shrinkwrap.ts'
 import pluginPackageLifecycleScripts from './rules/plugin-package-lifecycle-scripts.ts'
 import pluginPackageLockfile from './rules/plugin-package-lockfile.ts'
 import pluginPackageLockfileChoice from './rules/plugin-package-lockfile-choice.ts'
 import pluginPathNoBackslash from './rules/plugin-path-no-backslash.ts'
+import pluginPathUsesPluginRoot from './rules/plugin-path-uses-plugin-root.ts'
 import pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
+import pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
 import pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
 import pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
@@ -747,6 +752,11 @@ const modules = [
   pluginChannelServerStdio,
   pluginBinShadowsSystemCommand,
   pluginDependenciesPrereleaseRange,
+  pluginRelevanceSignalHints,
+  pluginDirNotMarketplaceRoot,
+  pluginNoStateInPluginRoot,
+  pluginNoParentPathEscape,
+  pluginPathUsesPluginRoot,
 ]
 
 type RuleName = (typeof modules)[number]['name']
@@ -1141,6 +1151,11 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-channel-server-stdio': 'off',
   'plugin-bin-shadows-system-command': 'off',
   'plugin-dependencies-prerelease-range': 'off',
+  'plugin-relevance-signal-hints': 'off',
+  'plugin-dir-not-marketplace-root': 'off',
+  'plugin-no-state-in-plugin-root': 'off',
+  'plugin-no-parent-path-escape': 'off',
+  'plugin-path-uses-plugin-root': 'off',
 }
 
 // `strict` keeps each `recommended` severity, and turns `off` into `warn`.

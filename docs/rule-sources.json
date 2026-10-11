@@ -3426,6 +3426,18 @@
       "hash": "29213ec9dc8e50d1c658ead1b53e9a29420ca39bcf276cff0c70b790a69401aa"
     }
   ],
+  "plugin-dir-not-marketplace-root": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "--plugin-dir at a marketplace root doesn't load the plugins under plugins/",
+      "hash": "22249faca7cf8b84894ac914a1cfafabae32d2c5f5edab0570f6f0dd2df24529"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "9de69d61eceec2763f26275389d46d633e54ef0762b0dc08aff82dad8805ca8e"
+    }
+  ],
   "plugin-evals-replay-committed": [
     {
       "url": "https://code.claude.com/docs/en/plugin-evals",
@@ -3600,11 +3612,35 @@
       "hash": "0de65b237d44a0b04cceb843ff98051438dfbf231bad8a8df06320836ac72810"
     }
   ],
+  "plugin-no-parent-path-escape": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "In-place and copied plugins",
+      "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Files the plugin references outside its directory aren't found",
+      "hash": "b9441e35d239e0b4be478a3e338468589b8f7075a9d3f23926d5b692c4218b9c"
+    }
+  ],
   "plugin-no-project-plugins-dir": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
       "heading": "Plugins shared through a repository",
       "hash": "71249e9304755651cccc811bd2487edf214505849e20bf6cfa7a3333a704a3e5"
+    }
+  ],
+  "plugin-no-state-in-plugin-root": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Reference plugin paths and store data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Install dependencies into the data directory",
+      "hash": "0a96435bdd82ae06083a71b4ee0c918c54fc297947c487b7ac8015d9aedf58e5"
     }
   ],
   "plugin-npm-source-shrinkwrap": [
@@ -3682,6 +3718,23 @@
       "hash": "992893f8ac877a6a52fddb8f51510e80a43ac980470a365eb1706fdc583a9d54"
     }
   ],
+  "plugin-path-uses-plugin-root": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Reference plugin paths and store data",
+      "hash": "bacb226458fb4bca85d2f48729f882b8860dbaf16efcfe4bf2cfedff8c38ebc5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/publish",
+      "heading": "Prepare your plugin for release",
+      "hash": "9de39a9a3c45c1bce089b935877c35b38082e5a3894e22e1fb5963e3a12043ea"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "monitors",
+      "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    }
+  ],
   "plugin-path-var-braced": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -3704,6 +3757,23 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "monitors",
       "hash": "3481db5566180bc56ddeeef4b6bc7c777a65f4f07892f9b230e3b70a522dd6d8"
+    }
+  ],
+  "plugin-relevance-signal-hints": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/relevance",
+      "heading": "Command name matching",
+      "hash": "414604a929b4ec117ab86f4469f261e5025af4e5c861648419845ea99b7209f6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/relevance",
+      "heading": "relevance.signals",
+      "hash": "2aa124c2b54b75cbe4c50a787b33185efdd46fc67af6bb5ad8f0d2885caead25"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/relevance",
+      "heading": "Manifest dependency matching",
+      "hash": "cb2aced873feea0df706274a79bbb69050dfceae065ec414c5c27118b439d54c"
     }
   ],
   "plugin-settings-agent-exists": [

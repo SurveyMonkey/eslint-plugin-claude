@@ -511,10 +511,22 @@
       "text": "<h3 id=\"warning-no-commands-found-in-plugin-custom-directory\">\n  `Warning: No commands found in plugin <name> custom directory`\n</h3>\n\nWhen the plugin loads, the `claude --debug` log at `~/.claude/debug/<session-id>.txt` records `Warning: No commands found in plugin <name> custom directory: <path>. Expected .md files or SKILL.md in subdirectories.` Nothing appears in the session or the **Errors** tab.\n\nThe `commands` path in the manifest exists but holds no `.md` files and no `SKILL.md` in a subdirectory. Add the command files, or remove the path from the manifest."
     },
     {
+      "heading": "--plugin-dir at a marketplace root doesn't load the plugins under plugins/",
+      "id": "plugin-dir-loads-a-plugin-with-no-components",
+      "hash": "22249faca7cf8b84894ac914a1cfafabae32d2c5f5edab0570f6f0dd2df24529",
+      "text": "<h3 id=\"plugin-dir-loads-a-plugin-with-no-components\">\n  `--plugin-dir` at a marketplace root doesn't load the plugins under `plugins/`\n</h3>\n\nYou started `claude --plugin-dir <path>` and see no error, but the plugin's skills, agents, and hooks aren't there.\n\n`--plugin-dir` takes the plugin's root directory, the one that contains `.claude-plugin/plugin.json` and the component directories such as `skills/`. If you point it at a marketplace root instead, Claude Code doesn't read `marketplace.json`, so a plugin under `plugins/` doesn't load, and you see no error. Before v2.1.281, Claude Code loaded a marketplace root as one empty plugin named after that directory. Point the flag at the plugin directory itself:\n\n```shell theme={null}\nclaude --plugin-dir ./my-marketplace/plugins/my-plugin\n```\n\nThen open **Installed** in `/plugin`, where the plugin's details pane lists its components."
+    },
+    {
       "heading": "Plugin loads but its skills are missing",
       "id": "plugin-loads-but-its-skills-are-missing",
       "hash": "49e5a968bdde3b6eab79721a6b5201fc280b3091c0ff2c38f27edd128b4f2048",
       "text": "<h3 id=\"plugin-loads-but-its-skills-are-missing\">\n  Plugin loads but its skills are missing\n</h3>\n\nYour plugin is listed under **Installed** with no errors, but its skills aren't offered when you type `/`.\n\nSkills load from `skills/` at the plugin root and commands from `commands/` at the plugin root. Only `plugin.json` belongs inside `.claude-plugin/`, and a `skills/` directory inside `.claude-plugin/` isn't scanned. Move the directories to the plugin root and run `/reload-plugins`. Afterward, the plugin's details pane in `/plugin` lists the skills, and typing `/` offers them.\n\nEach skill is a directory containing `SKILL.md`. A `skills` entry in the manifest that points at a `SKILL.md` file rather than its directory is reported as `path is a file; skills entries must be directories containing SKILL.md`."
+    },
+    {
+      "heading": "Files the plugin references outside its directory aren't found",
+      "id": "files-the-plugin-references-outside-its-directory-arent-found",
+      "hash": "b9441e35d239e0b4be478a3e338468589b8f7075a9d3f23926d5b692c4218b9c",
+      "text": "<h3 id=\"files-the-plugin-references-outside-its-directory-arent-found\">\n  Files the plugin references outside its directory aren't found\n</h3>\n\nA plugin works from its source directory with `--plugin-dir` but fails after install, with errors about a path such as `../shared-utils`.\n\nClaude Code copies an installed plugin into its cache and loads it from there, so a path that reaches outside the plugin's own directory points at nothing in the cache. Move the shared files inside the plugin directory, or reference them through a symlink inside it. For where the cache is and how paths resolve, see [Find plugins on disk](/docs/en/plugins/loading#find-plugins-on-disk)."
     },
     {
       "heading": "claude plugin validate reports errors",
