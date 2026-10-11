@@ -20,7 +20,7 @@ const ASSIGNMENT = /^[A-Za-z_][A-Za-z0-9_]*=/
 
 /** True when the program `text` is a path with a folder that starts in the working folder, such
  *  as `bin/m`. A name, an absolute path, a home path and a path from a variable are not. */
-const isFolderPath = (text: string) => text.includes('/') && !/^[/$~.]/.test(text)
+const isFolderPath = (text: string) => text.includes('/') && !/^[/$~]/.test(text)
 
 /** The first relative path in the shell command `command`: a word that starts with `./` or `../`,
  *  or a program path such as `bin/m`. The result is undefined when the command has none. */
@@ -70,8 +70,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'monitor' | 'lsp' }> = {
             context.report({ node: command, messageId: 'monitor', data: { path: found } })
           }
         }
-        // `monitors.json` holds no LSP server, and its folder is not a plugin root.
-        for (const member of file?.role === 'monitors' ? [] : lspServerMembers(node.body, full)) {
+        for (const member of lspServerMembers(node.body, full)) {
           const command = lastMember(member.value, 'command')?.value
           const args = lastMember(member.value, 'args')?.value
           const server = keyOf(member.name)

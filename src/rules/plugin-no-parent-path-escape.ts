@@ -18,8 +18,6 @@ const name = 'plugin-no-parent-path-escape' as const
 // A path with one of these characters can hold a variable, a substitution, a glob, a home path or a
 // URL. The rule cannot resolve it.
 const UNRESOLVED = /[$`*?[\]{}\\~:=!#"']/
-// A word with a `..` segment.
-const PARENT = /(?:^|\/)\.\.(?:\/|$)/
 
 /** True when the rest of a word after `${CLAUDE_PLUGIN_ROOT}` is a path that leaves the root. */
 function leavesRoot(rest: string): boolean {
@@ -52,7 +50,6 @@ function firstEscape(text: string, root: string, from: string | undefined): stri
 function isEscape(word: string, root: string, from: string | undefined): boolean {
   return (
     from !== undefined &&
-    PARENT.test(word) &&
     !word.startsWith('/') &&
     !UNRESOLVED.test(word) &&
     !isInside(path.resolve(from, word), root)

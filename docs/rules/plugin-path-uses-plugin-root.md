@@ -37,8 +37,8 @@ This rule reads the monitors and the LSP servers:
   `experimental.monitors` of `plugin.json`. The rule reports the first relative path of the command:
   a word that starts with `./` or `../`, or a program path with a folder, such as `bin/m`.
 - The `command` of an LSP server in `.lsp.json` and in the inline `lspServers` of `plugin.json`. It
-  is relative when it starts with `./` or `../`, or has a folder and does not start with `/`, `~`,
-  `$` or `.`.
+  is relative when it starts with `./` or `../`, or has a folder and does not start with `/`, `~`
+  or `$`.
 - The strings of the `args` of an LSP server that start with `./` or `../`.
 
 The rule checks less than its row in the inventory. An absolute path gets no report, because it can
