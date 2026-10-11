@@ -271,17 +271,26 @@ export function readCaseYaml(file: string, bound: string): CaseYaml | null {
   } catch {
     return null
   }
-  const doc = parseDocument(text)
+  let doc: ReturnType<typeof parseDocument>
+  let data: Record<string, unknown>
+  try {
+    doc = parseDocument(text)
+    // An alias with no anchor, or too many aliases, throws here and not in `parseDocument`.
+    data = doc.toJS() as Record<string, unknown>
+  } catch {
+    return null
+  }
   const map = doc.contents
   if (doc.errors.length > 0 || !isYamlMap(map)) {
     return null
   }
   return {
-    data: doc.toJS() as Record<string, unknown>,
+    data,
     written: (key) => {
-      // The key is there when a rule asks, and the range of a node that the parser read is set.
-      const [start, end] = (map.get(key, true) as Node).range as [number, number, number]
-      return text.slice(start, end)
+      // A key that a merge or an alias supplies has no node in this map, and so no text.
+      const node = map.get(key, true) as Node | undefined
+      const range = node?.range
+      return range ? text.slice(range[0], range[1]) : String(data[key])
     },
   }
 }

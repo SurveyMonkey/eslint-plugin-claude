@@ -87,12 +87,19 @@ describe(RULE, () => {
     expect(messages('type:\nerror: true\nabort_when: x')).toEqual([ABORT])
   })
 
-  check('reads a _server.md as an agent mock, so it reports error and not abort_when', () => {
+  check('reads a _server.md without a type as an agent mock', () => {
     const server = 'evals/mocks/gh/_server.md'
     expect(messages('tools: [issue]\nabort_when: x', server)).toEqual([])
-    expect(messages('tools: [issue]\nerror: true', server)).toEqual([])
+    expect(messages('tools: [issue]\nerror: true', server)).toEqual([ERROR])
     expect(messages('type: agent\nerror: true', server)).toEqual([ERROR])
     expect(messages('type: fixed\nabort_when: x', server)).toEqual([ABORT])
+    expect(messages('type: fixed\nerror: true', server)).toEqual([])
+  })
+
+  check('reads a tool file that only ends in _server.md as a fixed mock', () => {
+    const tool = 'evals/mocks/gh/create_server.md'
+    expect(messages('abort_when: x', tool)).toEqual([ABORT])
+    expect(messages('error: true', tool)).toEqual([])
   })
 
   check('reads a mock of a case', () => {

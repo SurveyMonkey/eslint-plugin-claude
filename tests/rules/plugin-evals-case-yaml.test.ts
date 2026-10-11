@@ -37,6 +37,17 @@ const MISSING = (key: string, value: string) =>
   `The file "evals/first/case.yaml" names "${value}" in \`context.${key}\`, and the case directory has no such path.`
 
 describe(RULE, () => {
+  check('stays silent for YAML that throws when it becomes data', () => {
+    const many = `a: &x v\nl: [${Array.from({ length: 101 }, () => '*x').join(', ')}]\n`
+    expect(yaml(`${GOOD}${many}`)).toEqual([])
+    expect(yaml(`${GOOD}l: *missing\n`)).toEqual([])
+  })
+
+  check('places a version that a merge key supplies without a crash', () => {
+    const merged = '%YAML 1.1\n---\nbase: &b {schema_version: 2.0}\n<<: *b\nname: x\n'
+    expect(yaml(merged)).toEqual([BAD_VERSION('2')])
+  })
+
   check('reports a missing schema_version, at the start of the manifest', () => {
     const { dir, code } = pluginTree({ name: 'p' }, { [CASE]: 'name: first\n' })
     const found = lintPlugin(RULE, dir, code)

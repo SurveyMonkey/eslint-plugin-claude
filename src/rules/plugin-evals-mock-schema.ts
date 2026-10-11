@@ -3,6 +3,7 @@
 // (docs/rules/plugin-evals-mock-schema.md). The mock type list is in `src/data/plugin-layout.ts`.
 // `src/plugin-evals.ts` finds the mock files. The rule makes no report when it cannot see the
 // plugin.
+import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { EVAL_MOCK_TYPES } from '../data/plugin-layout.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -31,9 +32,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'errorAgent' | 'abo
     if (evalFileOf(context.filename)?.kind !== 'mock') {
       return {}
     }
-    // The docs call `_server.md` an agent mock, and do not say that it needs a `type`. So without
-    // a `type`, the file has no type that the rule can read.
-    const isServerFile = context.filename.endsWith('_server.md')
+    // The docs call `_server.md` "a single `type: agent` mock". So `_server.md` without a `type`
+    // is an agent mock. Any other file without a `type` is `fixed`, the documented default.
+    const isServerFile = path.basename(context.filename) === '_server.md'
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
@@ -65,7 +66,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'errorAgent' | 'abo
           report('type', 'badType')
         }
         // A type that the rule cannot read matches none of the two branches below.
-        const effective = type ?? (isServerFile ? undefined : 'fixed')
+        const effective = type ?? (isServerFile ? 'agent' : 'fixed')
         if (effective === 'agent' && error === true) {
           report('error', 'errorAgent')
         }
