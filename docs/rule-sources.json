@@ -486,6 +486,30 @@
       "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
     }
   ],
+  "claude-md-agents-md-variant": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When Claude Code reads AGENTS.md",
+      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0"
+    }
+  ],
+  "claude-md-excludes-pattern": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Exclude specific CLAUDE.md files",
+      "hash": "76fcc9585d73ea229ea17ef0d5899a380579bc1de1452fc724276b4bd073634d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "claudeMdExcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/large-codebases",
+      "heading": "Exclude irrelevant CLAUDE.md files",
+      "hash": "ab0fc4b6b335657aa4f41fb135646dd33b111cc6fec00ea04677de78cd636fc0"
+    }
+  ],
   "claude-md-local-untracked": [
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -496,6 +520,18 @@
       "url": "https://code.claude.com/docs/en/claude-directory",
       "heading": "What's not shown",
       "hash": "ecbab3d62091c2305b6c8e5a2094ae1c6f3298f3dbeff6296a97c7b90a30dd1d"
+    }
+  ],
+  "claude-md-max-bytes": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "How it works",
+      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "My CLAUDE.md is too large",
+      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f"
     }
   ],
   "command-legacy-format": [
@@ -1126,6 +1162,33 @@
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Enable persistent memory",
       "hash": "5810a84ff6d6419d883bd76b800a2d6d251fbb890a14c042523927824523a8de"
+    }
+  ],
+  "memory-settings-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoMemoryEnabled",
+      "hash": "3c2e520f5512c7975ccb059aa4d2422547f9c3771fbb6d407202929c560ef8e0"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "autoMemoryDirectory",
+      "hash": "1b7a3c3c2ecf64b64953b520394d0c350cfc6dec505cdb1627f8b93bf397b58f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "claudeMdExcludes",
+      "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Choose which instruction files load",
+      "hash": "a5bf28053c790e1f870993d51ed44877e47e0528db036df620c2a540fdd9cfa7"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "pluginConfigs",
+      "hash": "37d84c25529f596ada3d156850dc51152d128e94e5ec2c475766f6e86952b895"
     }
   ],
   "output-style-force-for-plugin": [
