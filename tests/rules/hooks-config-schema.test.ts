@@ -359,35 +359,52 @@ describe(`${name}: frontmatter`, () => {
     ])
   })
 
-  it('reads an alias that names an ancestor as a node no rule reads, and is silent for an unknown anchor', () => {
+  it('reads an alias that names an ancestor as a node of no type', () => {
     expect(yaml('Stop: &a [*a]\n')).toEqual(['groupNotObject'])
     expect(yaml('Stop: &a { k: *a }\n')).toEqual(['eventNotArray'])
+  })
+
+  it('is silent for an alias with no anchor, as the frontmatter does not parse', () => {
     expect(yaml('Stop: *missing\n')).toEqual([])
   })
 
-  it('stops after a number of aliases, and does not expand a nest of them', () => {
+  it('reads 1000 aliases, and makes no report on a hooks value with more', () => {
+    const fault = 'Stop:\n  - { hooks: [ { type: script } ] }\n  - { hooks: &a [] }\n'
+    const row = '  - { hooks: *a }\n'
+    expect(yaml(fault + row.repeat(1000))).toEqual(['typeInvalid'])
+    expect(yaml(fault + row.repeat(1001))).toEqual([])
+  })
+
+  it('does not expand a nest of aliases', () => {
     const levels = Array.from({ length: 12 }, (_, i) => {
       const refs = Array.from({ length: 10 }, () => `*l${i}`).join(', ')
       return `l${i + 1}: &l${i + 1} [${refs}]\n`
     })
     const start = Date.now()
-    expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l12\n`)).toContain('eventNotArray')
+    expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l12\n`)).toEqual([])
     expect(Date.now() - start).toBeLessThan(5000)
   })
 
-  it('makes no report on an object that holds a merge key, as no docs page says what it means', () => {
+  it('makes no report on a hooks value that holds a merge key, as no docs page says what it means', () => {
     const base = 'Stop:\n  - hooks:\n      - &base { type: command, command: ./a.sh }\n'
-    expect(yaml(`${base}      - <<: *base\n        timeout: x\n`)).toEqual(['fieldType'].slice(1))
+    expect(yaml(`${base}      - { type: command, command: ./a.sh, timeout: x }\n`)).toEqual([
+      'fieldType',
+    ])
+    expect(yaml(`${base}      - <<: *base\n        timeout: x\n`)).toEqual([])
     expect(yaml(`${base}      - { <<: *base, type: script }\n`)).toEqual([])
     expect(yaml('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n')).toEqual([])
     expect(yaml('<<: { Stop: x }\nSessionEnd: x\n')).toEqual([])
-    expect(yaml('Stop: { <<: { k: 1 } }\n')).toEqual([])
+    // A rule that saw the other events could report a fault that is not there, so none is read.
     expect(yaml('Stop: { <<: { k: 1 } }\nSessionEnd: x\n')).toEqual([])
     expect(
       yaml(
         'Stop:\n  - hooks:\n      - { type: command, command: a, input: { <<: { k: 1 } } }\n      - { type: script }\n',
       ),
-    ).toEqual(['typeInvalid'])
+    ).toEqual([])
+  })
+
+  it('reads a quoted << as a plain key', () => {
+    expect(yaml('Stop: { "<<": 1 }\nSessionEnd: x\n')).toEqual(['eventNotArray', 'eventNotArray'])
   })
 
   it('skips a key that is not a string', () => {
