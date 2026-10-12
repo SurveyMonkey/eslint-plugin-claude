@@ -11,7 +11,7 @@
 //
 // One rule object serves two languages. The Markdown tree has a `root` node, and the JSON tree
 // has a `Document` node. The `also` block of `target` gives a JSON file below `.claude/rules/`
-// the JSON language, so the rule needs the `Document` listener to report on it.
+// the JSON language. The `Document` listener reports on that file.
 import path from 'node:path'
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'

@@ -43,8 +43,9 @@ export function mainAgentNames(scope: AgentFile): string[] | Unreadable {
 
 /** The `name` of each agent file in `.claude/agents/` of each project folder. The result is
  *  `UNREADABLE` when a scan meets a link out of the repository, a directory that it cannot read, or
- *  a file that it cannot read, because the missing agent can be there. A file with no `name`, or with
- *  frontmatter that does not parse, defines no agent. */
+ *  a file that it cannot read, because the missing agent can be there. The same holds for an agents
+ *  folder that is not there, when the nearest part of its path that exists is out of the repository.
+ *  A file with no `name`, or with frontmatter that does not parse, defines no agent. */
 export function projectAgentNames(scope: AgentFile): string[] | Unreadable {
   const bound = repositoryRoot(scope.root)
   const names: string[] = []

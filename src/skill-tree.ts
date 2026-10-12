@@ -145,12 +145,12 @@ function frontmatterOf(text: string): Record<string, unknown> | null {
 export const SKIPPED = new Set(['.git', 'node_modules'])
 
 /** The `.md` files of a scan. `outside` is true when the scan did not follow
- *  a link because its target is out of the bound. It is also true when `dir`
- *  is not there and the real path of the nearest part of it that exists is out
- *  of the bound. The scan cannot see out of the bound, so a folder can be
- *  there. `unreadable` is true when the scan could not read a directory or a
- *  link, or met a dangling link. A dangling link can lead anywhere, so a file
- *  can be behind it. */
+ *  a link because its target is out of the bound. It is also true for a `dir`
+ *  that is not there, if its nearest part that exists is out of the bound. The
+ *  scan cannot see out of the bound, so a folder can be there. `unreadable` is
+ *  true when the scan could not read a directory or a link, or met a dangling
+ *  link. A dangling link can lead anywhere, so a file can be behind it. A
+ *  dangling link in the path of `dir` sets `unreadable`, not `outside`. */
 export interface Scan {
   files: string[]
   outside: boolean
@@ -161,12 +161,11 @@ export interface Scan {
  *  or below `bound`. A link to a directory is followed once, and the real
  *  directory comes before a link to it. The walk skips `.git` and
  *  `node_modules`. A link to a file counts when the file exists. The result
- *  is empty when `dir` does not exist. Then the scan sets `outside` if the
- *  real path of the nearest part of `dir` that exists is out of `bound`.
- *  When `dir` is a dangling link, or has one in its path, the scan sets
- *  `unreadable`. When the scan cannot read a
- *  directory or a link, or meets a dangling link, it sets `unreadable` and
- *  keeps the files that it found. */
+ *  is empty when `dir` does not exist. When `dir` is a dangling link, or has
+ *  one in its path, the scan sets `unreadable`. Otherwise it sets `outside` if
+ *  the nearest part of `dir` that exists is out of `bound`. When the scan
+ *  cannot read a directory or a link, or meets a dangling link, it sets
+ *  `unreadable` and keeps the files that it found. */
 export function markdownFiles(dir: string, bound: string): Scan {
   const scan: Scan = { files: [], outside: false, unreadable: false }
   walk(dir, bound, new Set<string>(), scan)
