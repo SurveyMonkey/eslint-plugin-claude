@@ -156,6 +156,9 @@ describe(`${name}: an unquoted variable in the command`, () => {
       "date\t# it's\n",
       "# it's\n",
       "echo (# it's\n)",
+      // A comment after an expansion that ends, and after a group in braces.
+      `echo \${@} # it's\n`,
+      "{ date; } # it's\n",
     ]) {
       expect(script(`x="$(${text})"\nrm -rf $TARGET\n`), text).toEqual(['destructive'])
     }
@@ -191,6 +194,10 @@ describe(`${name}: an unquoted variable in the command`, () => {
 
   it('ends a comment in a backtick substitution at the closing backtick', () => {
     expect(line('x="$(echo `id -u # uid`)"; rm -rf $TARGET')).toEqual(['destructive'])
+    // The closing backtick ends the substitution, so a backtick in a later comment is plain text.
+    expect(script('x="$(echo `id # u`; date # a ` it\'s\n)"\nrm -rf $TARGET\n')).toEqual([
+      'destructive',
+    ])
     // Out of a backtick substitution, a backtick in a comment is plain text.
     expect(script('x="$(date # a ` tick\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
   })
