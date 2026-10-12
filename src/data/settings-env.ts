@@ -281,8 +281,7 @@ const REMOVED_ENV_VARS = new Map<string, string>([
 
 /** The variables that Claude Code ignores in project and local settings for some values only,
  *  and those values. The env vars reference says that Claude Code ignores `1` for
- *  `CLAUDE_CODE_ENABLE_CFC`. A project file may set `0`, which turns Chrome integration off.
- *  The match is exact. */
+ *  `CLAUDE_CODE_ENABLE_CFC`. The docs name no other value, so the match is exact. */
 const IGNORED_VALUES_IN_PROJECT_FILES = new Map<string, readonly string[]>([
   ['CLAUDE_CODE_ENABLE_CFC', ['1']],
 ])
@@ -306,8 +305,8 @@ export function turnsTelemetryOff(name: string, value: string): boolean {
   return TELEMETRY_OFF_VALUES.get(name)?.includes(value.toLowerCase()) ?? false
 }
 
-/** True when Claude Code ignores the value `value` of the variable `name` in a project or local
- *  file, and applies other values of the variable. */
+/** True when the docs say that Claude Code ignores the value `value` of the variable `name` in a
+ *  project or local file. */
 export function ignoresValueInProjectFiles(name: string, value: string): boolean {
   return IGNORED_VALUES_IN_PROJECT_FILES.get(name)?.includes(value) ?? false
 }

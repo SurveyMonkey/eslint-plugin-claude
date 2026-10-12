@@ -143,9 +143,9 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
         PROJECT_FILES.map((filename) => ({ code: env({ [name]: value }), filename })),
       ),
     ),
-    // "Claude Code ignores 1 in project and local settings". Another value still applies, and
-    // so does any value in a managed file. A value that is not a string is for
-    // `settings-env-value-format`.
+    // "Claude Code ignores 1 in project and local settings". The docs name no other value,
+    // so the rule is silent on one, and on any value in a managed file. A value that is not a
+    // string is for `settings-env-value-format`.
     ...['0', '', 'true', ' 1', '10'].flatMap((value) =>
       PROJECT_FILES.map((filename) => ({
         code: env({ CLAUDE_CODE_ENABLE_CFC: value }),

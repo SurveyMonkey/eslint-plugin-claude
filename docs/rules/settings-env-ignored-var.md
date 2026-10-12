@@ -80,9 +80,8 @@ for each value, and so does a value that is not a string.
 
 `CLAUDE_CODE_ENABLE_CFC` set to `1` turns Chrome integration on. Claude Code ignores that value in
 project and local settings, so a repository cannot connect Claude to your browser.[^chrome] The
-rule reports the value `1` in those files. Other values still apply, and the rule makes no
-report on them. Examples are `0`, which turns the integration off, and a value that is not a
-string.
+rule reports the value `1` in those files. The docs name no other value, so the rule makes
+no report on one. Examples are `0`, `true`, and a value that is not a string.
 
 ### Removed variables
 
