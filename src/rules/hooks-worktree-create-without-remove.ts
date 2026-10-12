@@ -2,7 +2,7 @@
 // The hooks reference, "WorktreeRemove", says to pair it with a WorktreeRemove hook. Without one, Claude
 // Code removes a worktree that git knows, and leaves any other worktree on disk.
 // The rule reads one file at a time, because "the same source" is one file. A map that holds a merge
-// key can hide a WorktreeRemove handler, so the rule makes no report when the WorktreeRemove event
+// key can hide a WorktreeRemove handler. So the rule makes no report when the WorktreeRemove event
 // holds one (ADR 001, Decision 14).
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'

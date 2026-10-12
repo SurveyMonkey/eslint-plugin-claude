@@ -103,7 +103,7 @@ const FILE_KEYS = new Map<string, Kind>([
 /** The events where an array `matcher` also stops the other hooks of the file from loading. */
 const WHOLE_FILE = ['PreToolUse', 'PermissionRequest']
 
-/** True when `node` holds a merge key. No report rests on such a node. */
+/** True when `node` is of kind `unseen`: a map that holds a merge key. No report rests on it. */
 const unseen = (node: HNode) => node.kind === 'unseen'
 
 /** True when `node` is of the kind `kind`, or when the rule cannot see its kind. */
