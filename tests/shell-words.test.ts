@@ -212,6 +212,35 @@ describe('scanCommands', () => {
     ])
   })
 
+  it('skips a comment to the end of its line, whatever quote it holds', () => {
+    expect(commandsOf("echo a # it's here\nrm -rf x")).toEqual([
+      ['echo', 'a'],
+      ['rm', '-rf', 'x'],
+    ])
+    expect(commandsOf('echo a # say "hi\nrm x')).toEqual([
+      ['echo', 'a'],
+      ['rm', 'x'],
+    ])
+    expect(commandsOf('echo a # a `b\nrm x')).toEqual([
+      ['echo', 'a'],
+      ['rm', 'x'],
+    ])
+    expect(commandsOf('# only a comment')).toEqual([])
+    expect(commandsOf('a;# c ; d\nb\r\nc')).toEqual([['a'], ['b'], ['c']])
+    expect(commandsOf('a # b\\\nc')).toEqual([['a'], ['c']])
+  })
+
+  it('reads a # as a comment only where a word starts, and outside quotes', () => {
+    expect(commandsOf('echo a#b "# c" \'# d\' \\# e ""#f')).toEqual([
+      ['echo', 'a#b', '# c', '# d', '#', 'e', '#f'],
+    ])
+    expect(commandsOf(`echo $# \${#x} "\${#y}" $(echo #z\nb)`)).toEqual([
+      ['echo', '$#', `\${#x}`, `\${#y}`, '$'],
+      ['echo'],
+      ['b'],
+    ])
+  })
+
   it('stops at a depth, and does not throw or hang on a line of unclosed groups', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'"$('.repeat(20_000)}`)).toHaveLength(1)
