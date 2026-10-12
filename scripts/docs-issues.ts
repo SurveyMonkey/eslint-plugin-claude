@@ -1,8 +1,8 @@
 // Opens GitHub issues for the block changes in the findings of
 // scripts/docs-classify.ts. Two or more uncited blocks of one page share a
-// digest issue. Each other block gets an issue of its own. Posts at most one
-// comment on each open group issue, for the new blocks that inventory rows
-// cite.
+// digest issue. Each other block gets an issue of its own. Posts the new
+// blocks that inventory rows cite on each open group issue, in one comment
+// or more.
 //
 // Usage: node scripts/docs-issues.ts <findings.json> [--dry-run]
 //   [--repo owner/name] [--max n]
@@ -133,8 +133,9 @@ export const MAX_COMMENT = 60_000
 // The heading or the block ID in the text of a body or a comment is cut at
 // this many characters. The marker keeps the full block ID.
 export const MAX_NAME = 300
-// A reason, and a line of inventory rows, is cut at this many characters.
-// merge makes a reason longer for each finding that it joins.
+// A line of inventory rows is cut at this many characters. So is the reason
+// in an issue for one block. merge makes a reason longer for each finding
+// that it joins.
 export const MAX_REASON = 2000
 // The most possible-move lines for one block.
 export const MAX_MOVES = 5
@@ -257,7 +258,8 @@ export function inline(text: string): string {
   return `${ticks}${pad}${body}${pad}${ticks}`
 }
 
-// A text of at most `max` characters, with "..." after a cut.
+// A text of at most `max` characters as it is. A longer text is cut at `max`
+// characters, and gets "..." after the cut.
 const short = (text: string, max: number) =>
   text.length <= max ? text : `${cutAt(text, max).trimEnd()}...`
 
@@ -493,7 +495,7 @@ const nearLines = (f: Finding) => {
 // The metadata lines of a block, after its page. `tracked` is the tracked
 // block of the finding, when the inventory cites it. A line then names the
 // inventory rows. `reason` is the reason line text: an issue for one block
-// cuts it, and a digest does not, because its packing limits its size.
+// cuts it. A digest does not, because MAX_COMMENT limits the size of a digest.
 function metaLines(f: Finding, reason: string, tracked?: Tracked): string[] {
   const classifier =
     f.probability === null
@@ -519,7 +521,7 @@ function metaLines(f: Finding, reason: string, tracked?: Tracked): string[] {
 // the inventory cites it. A line then names the inventory rows. The body
 // takes at most MAX_COMMENT characters. When the body with the Before and
 // After parts does not fit, it has no Before and After parts. The step cuts
-// no body: a body that still does not fit throws, before any gh call.
+// no body: a body that still does not fit throws before the step writes.
 export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
   const blob = `https://github.com/${repo}/blob/main`
   const body =
