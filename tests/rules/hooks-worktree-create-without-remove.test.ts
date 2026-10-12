@@ -120,7 +120,7 @@ describe(`${name}: a merge key`, () => {
         `${createYaml}WorktreeRemove:\n  - hooks:\n      - { type: command, command: ./r.sh, input: { <<: { a: 1 } } }\n`,
       ),
     ).toEqual([])
-    // One group or one handler that holds a merge key is sufficient, next to an item that is not.
+    // One group or one handler that holds a merge key is enough, next to an item that is not.
     expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n  - x\n`)).toEqual([])
     expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - <<: *c\n      - x\n`)).toEqual(
       [],
