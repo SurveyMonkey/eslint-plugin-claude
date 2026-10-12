@@ -45,9 +45,8 @@ The rule makes no report on these files:
 
 The rule makes no report on a directory.
 
-The rule also reads the JSON files below `.claude/rules/`, such as `settings.json`, with the JSON
-language. It reports each one in the same way. For a JSON file that does not parse, ESLint gives a
-parse error, and this rule makes no report.
+The rule reports a JSON file below `.claude/rules/`, such as `settings.json`, in the same way. For
+a JSON file that does not parse, ESLint gives a parse error, and this rule makes no report.
 
 A config block of your own can match a file below `.claude/rules/` and set another language. ESLint
 then lints that file with that language. This rule makes no report on it, unless the language

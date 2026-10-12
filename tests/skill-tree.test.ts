@@ -288,7 +288,7 @@ describe('markdownFiles and a link with no target', () => {
       put('lo/elsewhere/team/far.md', '')
       const repo = path.join(scratch, 'lo', 'repo')
       symlinkSync('../elsewhere', path.join(repo, '.claude'))
-      // The target has no `agents` folder, and the link is out of the bound.
+      // The target has no `agents` folder, and the link leads out of the bound.
       expect(markdownFiles(path.join(repo, '.claude', 'agents'), repo)).toEqual({
         files: [],
         outside: true,
@@ -631,8 +631,8 @@ describe('readJson when a stat fails', () => {
   })
 
   it('gives null for a file that a process removed after the real path resolved', () => {
-    // The file is not on disk, and `realpaths` makes the real path resolve, as it did before the
-    // process removed the file.
+    // The file is not on disk. `realpaths` makes the real path resolve, as before the process
+    // removed the file.
     const file = path.join(scratch, 'rs', 'removed.json')
     realpaths.set(file, file)
     try {
@@ -647,8 +647,8 @@ describe('readJson when a stat fails', () => {
   it.skipIf(process.platform === 'win32')(
     'gives UNREADABLE for a link whose target a process removed after the real path resolved',
     () => {
-      // The link has no target on disk, and `realpaths` makes it resolve, as it did before the
-      // process removed the target.
+      // The link has no target on disk. `realpaths` makes it resolve, as before the process
+      // removed the target.
       const target = path.join(scratch, 'rs', 'target.json')
       const link = path.join(scratch, 'rs', 'link.json')
       symlinkSync('target.json', link)

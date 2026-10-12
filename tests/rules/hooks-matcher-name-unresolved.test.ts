@@ -342,9 +342,10 @@ describe(`${name}: a subagent name`, () => {
     expect(lintJson(name, subagents('nope'), path.join(root, SETTINGS_FILE))).toEqual([])
   })
 
-  // The `.claude` folder of a nested project is a link out of the repository, and its target has
-  // no `agents` folder. The folder is not there, and its real path is out of the repository. The
-  // agent can be there, so the rule makes no report, though the root of the repository has agents.
+  // The `.claude` folder of a nested project is a link out of the repository. Its target has no
+  // `agents` folder. The folder is not there. The nearest part of its path that exists is out of
+  // the repository. The agent can be there, so the rule makes no report, though the root of the
+  // repository has agents.
   it('is silent when a .claude folder is a link out of the repository and has no agents folder', () => {
     const text = subagents('nope')
     const nested = 'packages/a/.claude/settings.json'

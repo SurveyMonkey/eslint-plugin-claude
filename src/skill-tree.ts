@@ -146,11 +146,12 @@ export const SKIPPED = new Set(['.git', 'node_modules'])
 
 /** The `.md` files of a scan. `outside` is true when the scan did not follow
  *  a link because its target is out of the bound. It is also true for a `dir`
- *  that is not there, if its nearest part that exists is out of the bound. The
- *  scan cannot see out of the bound, so a folder can be there. `unreadable` is
- *  true when the scan could not read a directory or a link, or met a dangling
- *  link. A dangling link can lead anywhere, so a file can be behind it. A
- *  dangling link in the path of `dir` sets `unreadable`, not `outside`. */
+ *  that is not there. That occurs when the real path of its nearest part that
+ *  exists is out of the bound. The scan cannot see out of the bound, so a
+ *  folder can be there. `unreadable` is true when the scan could not read a
+ *  directory or a link, or met a dangling link. A dangling link can lead
+ *  anywhere, so a file can be behind it. A dangling link in the path of `dir`
+ *  sets `unreadable`, not `outside`. */
 export interface Scan {
   files: string[]
   outside: boolean
@@ -163,9 +164,9 @@ export interface Scan {
  *  `node_modules`. A link to a file counts when the file exists. The result
  *  is empty when `dir` does not exist. When `dir` is a dangling link, or has
  *  one in its path, the scan sets `unreadable`. Otherwise it sets `outside` if
- *  the nearest part of `dir` that exists is out of `bound`. When the scan
- *  cannot read a directory or a link, or meets a dangling link, it sets
- *  `unreadable` and keeps the files that it found. */
+ *  the real path of the nearest part of `dir` that exists is out of `bound`.
+ *  When the scan cannot read a directory or a link, or meets a dangling link,
+ *  it sets `unreadable` and keeps the files that it found. */
 export function markdownFiles(dir: string, bound: string): Scan {
   const scan: Scan = { files: [], outside: false, unreadable: false }
   walk(dir, bound, new Set<string>(), scan)
@@ -376,8 +377,8 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
   }
   const text = textOf(real)
   if (typeof text !== 'string') {
-    // `realOf` found a target, so null means that the target went away during the read. A link
-    // in the path is still an entry then, and `missingOf` tells it from a file that is gone.
+    // `realOf` found a target, so null means that a process removed the target during the read. A
+    // link in the path is still an entry then, and `missingOf` tells it from a file that is gone.
     return text === null ? missingOf(file, bound) : text
   }
   try {

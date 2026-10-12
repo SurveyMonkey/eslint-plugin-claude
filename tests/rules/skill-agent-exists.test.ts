@@ -498,8 +498,8 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
 })
 
 // A project directory that is a link to a target out of the repository. The folder
-// `.claude/agents/` below the link is not there, and the nearest part of its path that exists is
-// out of the repository. The rule cannot see the folder (ADR 001, Decision 14). So it makes no
+// `.claude/agents/` below the link is not there. The nearest part of its path that exists is out
+// of the repository. The rule cannot see the folder (ADR 001, Decision 14). So it makes no
 // report, whatever agent the field names.
 describe.skipIf(process.platform === 'win32')('a project directory that is a link', () => {
   const file = (() => {
@@ -521,13 +521,13 @@ describe.skipIf(process.platform === 'win32')('a project directory that is a lin
 // target. The folder is not there, and the nearest part of its path that exists is out of the
 // repository.
 describe.skipIf(process.platform === 'win32')('a .claude link out of the repository', () => {
-  it('stays silent when the agents folder is missing, and reports it in the repository', () => {
+  it('stays silent when .claude is a link out of the repository, and reports when .claude is in it', () => {
     put('lnkout/repo/.git/HEAD', '')
     put('lnkout/target/skills/s/SKILL.md', '# S\n')
     symlinkSync('../target', path.join(scratch, 'lnkout/repo/.claude'))
     const file = path.join(scratch, 'lnkout', 'repo', '.claude', 'skills', 's', 'SKILL.md')
     expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toEqual([])
-    // The same tree with the folder in the repository: the folder is there, and the report holds.
+    // The same tree with a real `.claude` folder: the agents folder is not there, and the report holds.
     put('lnkin/repo/.git/HEAD', '')
     put('lnkin/repo/.claude/skills/s/SKILL.md', '# S\n')
     const inside = path.join(scratch, 'lnkin', 'repo', '.claude', 'skills', 's', 'SKILL.md')
