@@ -34,6 +34,11 @@ function closingParen(line: string, open: number, nesting = 0): number {
       i = closingTick(line, i)
     } else if (char === '\\') {
       i++
+    } else if (char === '#' && /[\s();|&]/.test(line.charAt(i - 1))) {
+      // A `#` that starts a word starts a comment, to the next new line. A quote or a
+      // parenthesis in it is plain text.
+      const end = line.indexOf('\n', i)
+      i = end === -1 ? line.length : end
     } else if (char === '(') {
       depth++
     } else if (char === ')' && --depth === 0) {
@@ -84,8 +89,9 @@ export interface Command {
 
 /** The simple commands of a shell line. A command ends at `;`, `&`, `|`, a parenthesis, a backtick or a new line
  *  that no backslash joins. A `#` that starts a word starts a comment. The reader skips it to the next
- *  new line. A quote or a backslash joins characters into one word. A quote is not part of the
- *  word. A command substitution in double quotes is part of the word, and holds quotes of its own. */
+ *  new line, or in backticks to the closing backtick. A backslash in a comment joins no lines. A quote
+ *  or a backslash joins characters into one word. A quote is not part of the word. A command
+ *  substitution in double quotes is part of the word, and holds quotes of its own. */
 export function scanCommands(line: string): Command[] {
   const commands: Command[] = []
   let words: string[] = []
@@ -147,9 +153,10 @@ export function scanCommands(line: string): Command[] {
       quote = char
       open = true
     } else if (char === '#' && !open) {
-      // A comment ends before the next new line. A quote in it is plain text.
-      const end = line.indexOf('\n', i)
-      i = end === -1 ? line.length : end - 1
+      // A comment ends before the next new line. In a backtick substitution it also ends before
+      // the closing backtick. Each character in it, such as a quote, is plain text.
+      const length = line.slice(i).search(ticks ? /[\n`]/ : /\n/)
+      i = length === -1 ? line.length : i + length - 1
     } else if (char === '(') {
       endCommand()
       levels.push(line.charAt(i - 1) === '$')

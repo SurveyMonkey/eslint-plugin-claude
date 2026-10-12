@@ -230,6 +230,28 @@ describe('scanCommands', () => {
     expect(commandsOf('a # b\\\nc')).toEqual([['a'], ['c']])
   })
 
+  it('ends a comment in backticks at the closing backtick', () => {
+    // Bash reads the body of a backtick pair first, so a comment in it ends there.
+    expect(commandsOf('echo `echo a # b`; rm -rf x')).toEqual([
+      ['echo'],
+      ['echo', 'a'],
+      ['rm', '-rf', 'x'],
+    ])
+    expect(commandsOf("echo `# it's`; rm y")).toEqual([['echo'], ['rm', 'y']])
+  })
+
+  it('skips a comment in a command substitution in double quotes', () => {
+    expect(commandsOf(`echo "$(echo a # it's\n)"; rm z`)).toEqual([
+      ['echo', `$(echo a # it's\n)`],
+      ['rm', 'z'],
+    ])
+    expect(commandsOf('echo "$(echo a # )\n)"\nrm w')).toEqual([
+      ['echo', '$(echo a # )\n)'],
+      ['rm', 'w'],
+    ])
+    expect(commandsOf('echo "$(a$#)" "$(a #b')).toEqual([['echo', '$(a$#)', '$(a #b']])
+  })
+
   it('reads a # as a comment only where a word starts, and outside quotes', () => {
     expect(commandsOf('echo a#b "# c" \'# d\' \\# e ""#f')).toEqual([
       ['echo', 'a#b', '# c', '# d', '#', 'e', '#f'],
