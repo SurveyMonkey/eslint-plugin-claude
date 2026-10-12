@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-frontmatter-schema`
+# claude/rules-frontmatter-schema
 
-Give a rule file the frontmatter that Claude Code reads.
+📝 Give a rule file the frontmatter that Claude Code reads.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/rules/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/rules/**/*.md` |
 
 ## Rule details
 
@@ -68,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/rules-frontmatter-schema': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

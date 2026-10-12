@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-marketplace-headers-helper-https`
+# claude/settings-marketplace-headers-helper-https
 
-Give a `url` marketplace source that has a `headersHelper` an `https://` URL.
+📝 Give a url marketplace source that has a headersHelper an https:// URL.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 

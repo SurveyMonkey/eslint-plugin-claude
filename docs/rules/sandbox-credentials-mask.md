@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-credentials-mask`
+# claude/sandbox-credentials-mask
 
-Give each `mask` entry of `sandbox.credentials` fields that agree with each other and with the sandbox settings.
+📝 Give each mask entry of sandbox.credentials fields that agree.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -92,10 +96,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-credentials-mask': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

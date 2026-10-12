@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-results-gitignored`
+# claude/plugin-evals-results-gitignored
 
-Cover the results directory of an eval suite with a .gitignore pattern.
+📝 Cover the results directory of an eval suite with a .gitignore pattern.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -73,10 +77,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-results-gitignored': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-import-external`
+# claude/claude-md-import-external
 
-Do not import a file from outside the repository.
+📝 Do not import a file from outside the repository.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/CLAUDE.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/CLAUDE.md` |
 
 ## Rule details
 

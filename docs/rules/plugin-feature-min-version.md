@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-feature-min-version`
+# claude/plugin-feature-min-version
 
-Use no `plugin.json` feature that is newer than the oldest Claude Code that the repository supports.
+📝 Use no plugin.json feature that is newer than the minVersion option.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude-plugin/plugin.json` |
 
 The rule makes no report until the option `minVersion` is set.
 
@@ -70,9 +74,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | unset | The oldest Claude Code version that the repository supports, such as `2.1.200`. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/plugin-feature-min-version': ['warn', { minVersion: '2.1.200' }]

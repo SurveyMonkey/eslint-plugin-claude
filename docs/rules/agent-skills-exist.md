@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-skills-exist`
+# claude/agent-skills-exist
 
-Name a skill that exists in the `skills` of a subagent.
+📝 Name a skill that exists in the skills of a subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 The rule is `off` in `recommended`.
 
@@ -95,9 +99,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of skills that the repository cannot see, such as the skills in `~/.claude/skills/`. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                     | Type     | Default |
+| :------ | :---------------------------------------------- | :------- | :------ |
+| `allow` | Names of skills that the repository cannot see. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-skills-exist': ['warn', { allow: ['my-user-skill'] }]

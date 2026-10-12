@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-server-name-anthropic-skills`
+# claude/mcp-server-name-anthropic-skills
 
-Do not name an MCP server `anthropic-skills`.
+📝 Do not name an MCP server anthropic-skills.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | consistency | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

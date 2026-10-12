@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-server-name-format`
+# claude/mcp-server-name-format
 
-Name each MCP server with letters, numbers, hyphens and underscores only.
+📝 Name an MCP server with letters, numbers, hyphens and underscores only.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

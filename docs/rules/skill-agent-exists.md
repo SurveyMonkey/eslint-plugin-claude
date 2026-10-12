@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-agent-exists`
+# claude/skill-agent-exists
 
-Name an agent that exists in the `agent` field of a skill.
+📝 Name an agent that exists in the `agent` field of a skill.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/SKILL.md`, `**/commands/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -111,9 +115,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of agents that the repository cannot see, such as the agents in `~/.claude/agents/`. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                     | Type     | Default |
+| :------ | :---------------------------------------------- | :------- | :------ |
+| `allow` | Names of agents that the repository cannot see. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-agent-exists': ['error', { allow: ['my-user-agent'] }]

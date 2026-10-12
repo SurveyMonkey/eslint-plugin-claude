@@ -10,13 +10,19 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-event-name-known`
+# claude/hooks-event-name-known
 
-Use a hook event name that Claude Code knows.
+📝 Use a hook event name that Claude Code knows.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/.claude-plugin/plugin.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/.claude-plugin/plugin.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -81,9 +87,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `additionalEvents` | `[]` | Event names to accept that are not in the list yet, for a Claude Code release newer than the list. |
+<!-- begin auto-generated rule options list -->
+
+| Name               | Description                                                     | Type     | Default |
+| :----------------- | :-------------------------------------------------------------- | :------- | :------ |
+| `additionalEvents` | Event names to accept that are not in the list of known events. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/hooks-event-name-known': ['error', { additionalEvents: ['NewEvent'] }]

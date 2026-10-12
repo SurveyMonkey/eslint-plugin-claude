@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-field-min-version`
+# claude/agent-field-min-version
 
-Use only the subagent fields that the oldest Claude Code version supports.
+📝 Use only the subagent fields that the oldest Claude Code version supports.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 ## Rule details
 
@@ -79,9 +83,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | none | The lowest Claude Code version that the team supports, as `major.minor.patch`. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-field-min-version': ['warn', { minVersion: '2.1.200' }]

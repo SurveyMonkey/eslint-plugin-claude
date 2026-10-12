@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-commands-dir-nonempty`
+# claude/plugin-commands-dir-nonempty
 
-Name a `commands` directory that holds at least one command.
+📝 Name a commands directory that holds at least one command.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/plugin.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -59,10 +63,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-commands-dir-nonempty': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

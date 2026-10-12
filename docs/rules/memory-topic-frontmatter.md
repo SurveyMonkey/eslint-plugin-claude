@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-topic-frontmatter`
+# claude/memory-topic-frontmatter
 
-Give a memory topic file a valid `type` and an ISO 8601 `modified` value.
+📝 Give a memory topic file a valid type and an ISO 8601 modified time.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/.claude/agent-memory/*/*.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude/agent-memory/*/*.md` |
 
 The rule is `off` in `recommended`.
 

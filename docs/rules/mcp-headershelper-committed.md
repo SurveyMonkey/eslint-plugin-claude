@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-headershelper-committed`
+# claude/mcp-headershelper-committed
 
-Check each `headersHelper` in a committed project `.mcp.json`.
+📝 Review each headersHelper in a committed project .mcp.json.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.mcp.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.mcp.json` |
 
 ## Rule details
 

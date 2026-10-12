@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-combined-size`
+# claude/claude-md-combined-size
 
-Keep the instruction files that load at launch within a combined number of lines.
+📝 Keep the files that load at launch within a combined number of lines.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | limit | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 The rule is `off` in `recommended`.
 
@@ -76,9 +80,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | none | The most lines in the set. An integer from 1. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                                                               | Type    |
+| :---- | :------------------------------------------------------------------------ | :------ |
+| `max` | The most lines in the set of files. Without it, the rule makes no report. | Integer |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-combined-size': ['warn', { max: 400 }]

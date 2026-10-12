@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-side-effects-manual-only`
+# claude/skill-side-effects-manual-only
 
-Let only the user invoke a skill that has side effects.
+📝 Let only the user invoke a skill that has side effects.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/SKILL.md`, `**/commands/**/*.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it matches words in text.
 
@@ -89,15 +93,20 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `patterns` | `[]` | More patterns. Each has at least one ASCII letter or digit. The rule adds them to the default patterns. A quote mark in a pattern is not part of a word. |
+<!-- begin auto-generated rule options list -->
+
+| Name       | Description                                                | Type     | Default |
+| :--------- | :--------------------------------------------------------- | :------- | :------ |
+| `patterns` | More patterns. The rule adds them to the default patterns. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-side-effects-manual-only': ['warn', { patterns: ['terraform apply', 'kubectl delete'] }]
 ```
 
-The `recommended` and `strict` configs set no option.
+Each pattern has at least one ASCII letter or digit. A quote mark in a pattern is not part of a
+word. The `recommended` and `strict` configs set no option.
 
 ## Sources
 

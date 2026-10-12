@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-auto-memory-directory-committed`
+# claude/memory-auto-memory-directory-committed
 
-Do not set `autoMemoryDirectory` in a project settings file.
+📝 Do not set autoMemoryDirectory in a project settings file.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 

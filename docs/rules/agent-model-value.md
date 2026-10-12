@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-model-value`
+# claude/agent-model-value
 
-Set the model of a subagent to an alias, `inherit`, or a model ID.
+📝 Set the model of a subagent to an alias, inherit, or a model ID.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | load | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 The rule is `off` in `recommended`.
 
@@ -84,9 +88,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Model values that the rule cannot judge, such as the ID of a gateway. Each is an exact match. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                           | Type     | Default |
+| :------ | :---------------------------------------------------- | :------- | :------ |
+| `allow` | Model values to accept. Each value is an exact match. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-model-value': ['warn', { allow: ['team-gateway-model'] }]

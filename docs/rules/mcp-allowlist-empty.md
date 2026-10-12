@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-allowlist-empty`
+# claude/mcp-allowlist-empty
 
-Confirm that an empty `allowedMcpServers` list is intended.
+📝 Confirm that an empty allowedMcpServers list is intended.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files: `managed-settings.json` and each
 `managed-settings.d/*.json` drop-in. It reads no hidden drop-in, because Claude Code ignores it.

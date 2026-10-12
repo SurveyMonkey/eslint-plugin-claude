@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-additional-directories-path`
+# claude/permissions-additional-directories-path
 
-Write each `additionalDirectories` entry as a local path.
+📝 Write each additionalDirectories entry as a local path.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
 It reads no hidden drop-in, because Claude Code ignores it.
@@ -74,10 +78,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-additional-directories-path': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

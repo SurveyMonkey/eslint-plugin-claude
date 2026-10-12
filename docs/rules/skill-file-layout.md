@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-file-layout`
+# claude/skill-file-layout
 
-Put each skill in a folder, in a file named `SKILL.md`.
+📝 Put each skill in a folder, in a file named SKILL.md.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/skills/*.md`, `**/skills/*/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/skills/*.md`, `**/skills/*/*.md` |
 
 ## Rule details
 
@@ -68,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-file-layout': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

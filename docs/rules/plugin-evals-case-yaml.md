@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-case-yaml`
+# claude/plugin-evals-case-yaml
 
-Give a case.yaml its schema_version and name, and keep its paths in the case.
+📝 Give a case.yaml its schema_version and name, and keep its paths in the case.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/plugin.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -77,10 +81,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-case-yaml': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

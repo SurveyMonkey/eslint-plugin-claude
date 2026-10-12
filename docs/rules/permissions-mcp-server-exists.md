@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-mcp-server-exists`
+# claude/permissions-mcp-server-exists
 
-Name only servers of enabled plugins in an `mcp__plugin_` tool reference.
+📝 Name only servers of enabled plugins in an mcp__plugin_ tool reference.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -80,10 +84,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-mcp-server-exists': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

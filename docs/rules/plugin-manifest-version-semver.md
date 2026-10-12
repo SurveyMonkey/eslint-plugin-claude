@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-manifest-version-semver`
+# claude/plugin-manifest-version-semver
 
-Set the `version` of `plugin.json` to a semantic version.
+📝 Set the version of plugin.json to a semantic version.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -54,10 +58,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-manifest-version-semver': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

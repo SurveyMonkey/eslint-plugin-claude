@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-server-name-reserved`
+# claude/mcp-server-name-reserved
 
-Do not give an MCP server a name that Claude Code reserves.
+📝 Do not give an MCP server a name that Claude Code reserves.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.mcp.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.mcp.json` |
 
 ## Rule details
 
@@ -68,9 +72,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `names` | `[]` | More server names to report. A list of non-empty strings. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                  | Type     | Default |
+| :------ | :--------------------------- | :------- | :------ |
+| `names` | More server names to report. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/mcp-server-name-reserved': ['error', { names: ['internal'] }]

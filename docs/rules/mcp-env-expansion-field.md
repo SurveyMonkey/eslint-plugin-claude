@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-env-expansion-field`
+# claude/mcp-env-expansion-field
 
-Use a `${VAR}` reference in an MCP server only in a field that expands it.
+📝 Use a ${VAR} reference in an MCP server only in a field that expands it.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.mcp.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.mcp.json` |
 
 ## Rule details
 

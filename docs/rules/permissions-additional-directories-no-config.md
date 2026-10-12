@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-additional-directories-no-config`
+# claude/permissions-additional-directories-no-config
 
-Do not list a directory with Claude configuration in `additionalDirectories`, which loads none of it.
+📝 Do not list a directory with Claude configuration in additionalDirectories, which loads none of it.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -79,10 +83,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-additional-directories-no-config': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

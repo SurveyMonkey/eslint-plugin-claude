@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-relative-source-escape-symlink`
+# claude/marketplace-relative-source-escape-symlink
 
-Keep a relative marketplace source inside the marketplace root.
+📝 Keep a relative marketplace source inside the marketplace root.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | security | `**/.claude-plugin/marketplace.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -75,10 +79,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-relative-source-escape-symlink': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

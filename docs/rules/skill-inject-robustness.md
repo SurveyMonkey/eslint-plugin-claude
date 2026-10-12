@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-inject-robustness`
+# claude/skill-inject-robustness
 
-Make the injected commands of a skill robust.
+📝 Make the injected commands of a skill robust.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | load | `**/SKILL.md`, `**/commands/**/*.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it reads each command as text.
 
@@ -122,6 +126,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```
 
 ## Options
+
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                                 | Type     | Default |
+| :------ | :-------------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Bash permission rules that the rule treats as allowed, as in allowed-tools. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 `allow` is a list of permission rules. It has the grammar of `allowed-tools`, for example
 `Bash(npm *)`. The rule treats each Bash rule in the list as allowed, as if every skill named it

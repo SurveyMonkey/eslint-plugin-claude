@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-agents-md-prose-pointer`
+# claude/claude-md-agents-md-prose-pointer
 
-Import `AGENTS.md` with `@AGENTS.md`, not with a sentence that points to it.
+📝 Import AGENTS.md with @AGENTS.md instead of a sentence that points to it.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md` |
 
 The rule is `off` in `recommended`.
 

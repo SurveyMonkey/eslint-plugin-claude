@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-user-config-no-shell-fields`
+# claude/plugin-user-config-no-shell-fields
 
-Keep `${user_config.*}` out of the fields that a shell runs.
+📝 Keep ${user_config.*} out of the fields that a shell runs.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/plugin.json`, `**/hooks/hooks.json`, `**/.mcp.json`, `**/monitors/monitors.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json`, `**/hooks/hooks.json`, `**/.mcp.json`, `**/monitors/monitors.json` |
 
 ## Rule details
 
@@ -84,10 +88,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-user-config-no-shell-fields': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

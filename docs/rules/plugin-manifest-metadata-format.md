@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-manifest-metadata-format`
+# claude/plugin-manifest-metadata-format
 
-Set the `license` of `plugin.json` to an SPDX license expression, and the `repository` to a URL.
+📝 Set the license of plugin.json to an SPDX expression and the repository to a URL.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -83,10 +87,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-manifest-metadata-format': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

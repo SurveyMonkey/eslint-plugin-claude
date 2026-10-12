@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-known-marketplaces-pattern-anchored`
+# claude/settings-known-marketplaces-pattern-anchored
 
-Anchor the `hostPattern` and `pathPattern` entries of `strictKnownMarketplaces`.
+📝 Anchor the hostPattern and pathPattern entries of strictKnownMarketplaces.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

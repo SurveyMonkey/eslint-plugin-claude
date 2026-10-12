@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-description-present`
+# claude/skill-description-present
 
-Set a `description` on a skill.
+📝 Set a description on a skill.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/SKILL.md`, `**/commands/**/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -66,10 +70,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-description-present': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

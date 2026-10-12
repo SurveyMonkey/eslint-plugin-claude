@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-mcp-servers-inline-trust`
+# claude/agent-mcp-servers-inline-trust
 
-Review the inline MCP servers of a project subagent before you trust the folder.
+📝 Review the inline MCP servers of a project subagent before you trust the folder.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/agents/**/*.md`, in `.claude/agents/` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/agents/**/*.md`, in `.claude/agents/` |
 
 ## Rule details
 
@@ -77,10 +81,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-mcp-servers-inline-trust': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

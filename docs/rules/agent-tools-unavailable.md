@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-tools-unavailable`
+# claude/agent-tools-unavailable
 
-Do not list in `tools` a tool that Claude Code removes from the subagent.
+📝 Do not list in tools a tool that Claude Code removes from the subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 ## Rule details
 
@@ -80,10 +84,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-tools-unavailable': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

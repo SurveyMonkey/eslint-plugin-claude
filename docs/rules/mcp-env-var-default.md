@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-env-var-default`
+# claude/mcp-env-var-default
 
-Give a `${VAR}` reference in an MCP server entry a `:-default`, in case the variable is unset.
+📝 Give an MCP variable reference a default, in case the variable is unset.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

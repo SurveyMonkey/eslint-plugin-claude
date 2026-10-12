@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-enabled-plugins-external-source`
+# claude/settings-enabled-plugins-external-source
 
-Do not rely on `.claude/settings.json` to install a plugin that has an external source.
+📝 Do not enable a plugin in .claude/settings.json when its marketplace entry has an external source.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/.claude/settings.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/settings.json` |
 
 ## Rule details
 

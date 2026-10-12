@@ -30,7 +30,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Write an MCP tool reference as mcp__<server> or mcp__<server>__<tool>',
+      description: 'Write an MCP tool reference as `mcp__<server>` or `mcp__<server>__<tool>`',
       url: docsUrl(name),
     },
     schema: [],

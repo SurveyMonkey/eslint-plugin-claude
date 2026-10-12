@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-path-var-braced`
+# claude/plugin-path-var-braced
 
-Write the plugin path variables of plugin Markdown in the braced form.
+📝 Write the plugin path variables of plugin Markdown in the braced form.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/SKILL.md`, `**/commands/**/*.md`, `**/agents/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/SKILL.md`, `**/commands/**/*.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -62,10 +66,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-path-var-braced': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

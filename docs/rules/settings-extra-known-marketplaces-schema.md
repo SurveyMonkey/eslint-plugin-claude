@@ -10,14 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-extra-known-marketplaces-schema`
+# claude/settings-extra-known-marketplaces-schema
 
-Write each `extraKnownMarketplaces` entry as `{source, autoUpdate?}`, with a source that Claude Code
-loads.
+📝 Write each extraKnownMarketplaces entry with a source that Claude Code loads.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 

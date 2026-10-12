@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-domain-broad`
+# claude/sandbox-domain-broad
 
-Do not allow every host, or a whole top-level domain, in the sandbox.
+📝 Do not allow every host, or a whole top-level domain, in the sandbox.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -65,6 +69,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```
 
 ## Options
+
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                    | Type     | Default |
+| :------ | :----------------------------- | :------- | :------ |
+| `broad` | More hosts to report as broad. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 `broad` is an array of hosts. The default is `[]`.
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-env-secret-heuristic`
+# claude/settings-env-secret-heuristic
 
-Do not commit an `env` variable that looks like a secret.
+📝 Do not commit an env variable that looks like a secret.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude/settings.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A name can end in `_KEY` and hold no secret.
 `strict` turns it on at `warn`.

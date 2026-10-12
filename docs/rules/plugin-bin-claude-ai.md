@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-bin-claude-ai`
+# claude/plugin-bin-claude-ai
 
-Do not ship a top-level `bin/` folder in a plugin that targets claude.ai.
+📝 Do not ship a top-level bin folder in a plugin that targets claude.ai.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -59,6 +63,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```
 
 ## Options
+
+<!-- begin auto-generated rule options list -->
+
+| Name      | Description                                                       | Type  | Default |
+| :-------- | :---------------------------------------------------------------- | :---- | :------ |
+| `targets` | The apps that the plugin must reach. The only value is claude-ai. | Array | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 An object with one property.
 

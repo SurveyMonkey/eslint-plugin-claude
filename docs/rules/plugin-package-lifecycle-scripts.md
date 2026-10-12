@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-package-lifecycle-scripts`
+# claude/plugin-package-lifecycle-scripts
 
-Do not rely on a lifecycle script in the `package.json` of a plugin.
+📝 Do not rely on a lifecycle script in the package.json of a plugin.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/package.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/package.json` |
 
 ## Rule details
 
@@ -59,10 +63,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-package-lifecycle-scripts': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

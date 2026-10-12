@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-memory-grants-write`
+# claude/agent-memory-grants-write
 
-Do not use memory in a subagent whose tools list leaves out Write and Edit.
+📝 Do not use memory in a subagent whose tools list leaves out Write and Edit.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | security | `**/agents/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -66,10 +70,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-memory-grants-write': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

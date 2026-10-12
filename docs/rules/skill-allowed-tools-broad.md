@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-allowed-tools-broad`
+# claude/skill-allowed-tools-broad
 
-Do not give a skill an unscoped tool grant in `allowed-tools`.
+📝 Do not give a skill an unscoped tool grant in allowed-tools.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | security | `**/SKILL.md`, `**/commands/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -79,9 +83,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Rules to accept, each as written in `allowed-tools`, such as `Bash` or `mcp__github__*`. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                                       | Type     | Default |
+| :------ | :-------------------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Rules to accept, as each one is in allowed-tools, such as Bash or mcp__github__*. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 "claude/skill-allowed-tools-broad": ["error", { allow: ["WebFetch"] }]

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-mcp-rule-parens`
+# claude/permissions-mcp-rule-parens
 
-Write an MCP permission rule without parentheses.
+📝 Write an MCP permission rule without parentheses.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in. A managed file is a settings file. It reads no hidden drop-in, because Claude Code ignores it.
 

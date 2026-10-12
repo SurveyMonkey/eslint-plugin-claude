@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `output-style-force-for-plugin`
+# claude/output-style-force-for-plugin
 
-Do not force the output style of a plugin on each user.
+📝 Do not force the output style of a plugin on each user.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/output-styles/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/output-styles/*.md` |
 
 ## Rule details
 
@@ -61,10 +65,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/output-style-force-for-plugin': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

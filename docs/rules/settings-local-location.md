@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-local-location`
+# claude/settings-local-location
 
-Keep `.claude/settings.local.json` at the repository root.
+📝 Keep .claude/settings.local.json at the repository root.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| deprecated | `**/.claude/settings.local.json` |
 
 ## Rule details
 

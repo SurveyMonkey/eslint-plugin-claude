@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-credentials-recommended`
+# claude/sandbox-credentials-recommended
 
-Deny sandboxed commands the credential directories `~/.aws` and `~/.ssh`.
+📝 Deny sandboxed commands the credential directories ~/.aws and ~/.ssh.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -90,10 +94,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-credentials-recommended': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

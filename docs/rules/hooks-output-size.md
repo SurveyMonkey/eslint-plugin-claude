@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-output-size`
+# claude/hooks-output-size
 
-Keep the context that a hook prints under the output caps.
+📝 Keep the context that a hook prints under the output caps.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -71,10 +75,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `maxOutputChars` | `10000` | The limit on `additionalContext`, `systemMessage`, `initialUserMessage` and plain stdout. Optional. |
-| `maxClassifierChars` | `2000` | The limit on a `classifierContext` note. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name                 | Description                                                                                  | Type    | Default |
+| :------------------- | :------------------------------------------------------------------------------------------- | :------ | :------ |
+| `maxClassifierChars` | The most characters in a classifierContext note.                                             | Integer | `2000`  |
+| `maxOutputChars`     | The most characters in additionalContext, systemMessage, initialUserMessage or plain stdout. | Integer | `10000` |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/hooks-output-size': ['warn', { maxOutputChars: 4000, maxClassifierChars: 500 }]

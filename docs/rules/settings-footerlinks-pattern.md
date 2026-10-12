@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-footerlinks-pattern`
+# claude/settings-footerlinks-pattern
 
-Keep each `footerLinksRegexes` entry of a managed settings file within the limits of the docs.
+📝 Keep the footerLinksRegexes entries of a managed settings file within the limits.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -100,10 +104,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `maxUrlChars` | `2048` | The most characters of the literal text of a `url`. An integer from 1 to 2048. Optional. |
-| `maxLabelColumns` | `28` | The most display columns of the literal text of a `label`. An integer from 1 to 28. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name              | Description                                              | Type    | Default |
+| :---------------- | :------------------------------------------------------- | :------ | :------ |
+| `maxLabelColumns` | The most display columns in the literal text of a label. | Integer | `28`    |
+| `maxUrlChars`     | The most characters in the literal text of a url.        | Integer | `2048`  |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/settings-footerlinks-pattern': ['warn', { maxUrlChars: 512, maxLabelColumns: 16 }]

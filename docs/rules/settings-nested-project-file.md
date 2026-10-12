@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-nested-project-file`
+# claude/settings-nested-project-file
 
-Keep the shared project settings file at the repository root.
+📝 Keep the shared project settings file at the repository root.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/settings.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A monorepo can have one file for each
 package on purpose. `strict` turns it on at `warn`.

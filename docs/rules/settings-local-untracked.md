@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-local-untracked`
+# claude/settings-local-untracked
 
-Keep settings.local.json out of git and out of a linked .claude directory.
+📝 Keep settings.local.json out of git and out of a linked .claude directory.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude/settings.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json` |
 
 ## Rule details
 
@@ -66,10 +70,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/settings-local-untracked': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

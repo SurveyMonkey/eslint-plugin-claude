@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-emphasis-overuse`
+# claude/claude-md-emphasis-overuse
 
-Do not use emphasis words on many lines of a CLAUDE.md.
+📝 Do not use emphasis words on many lines of a CLAUDE.md.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 The rule is `off` in `recommended`.
 
@@ -76,9 +80,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | none | The most lines with emphasis. An integer from 1. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                                                               | Type    |
+| :---- | :------------------------------------------------------------------------ | :------ |
+| `max` | The most lines with emphasis words. Without it, the rule makes no report. | Integer |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-emphasis-overuse': ['warn', { max: 5 }]

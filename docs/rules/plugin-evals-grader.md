@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-grader`
+# claude/plugin-evals-grader
 
-Give an eval grader a valid type, weight, arm, target and focus.
+📝 Give an eval grader a valid type, weight, arm, target and focus.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/graders/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/graders/*.md` |
 
 ## Rule details
 
@@ -72,10 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-grader': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-windows-path`
+# claude/permissions-windows-path
 
-Write a path rule in POSIX form, not with a drive letter or a backslash.
+📝 Write a path rule in POSIX form, not with a drive letter or a backslash.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
 It reads no hidden drop-in, because Claude Code ignores it.
@@ -76,10 +80,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-windows-path': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

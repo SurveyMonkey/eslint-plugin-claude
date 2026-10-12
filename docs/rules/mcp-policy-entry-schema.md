@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-policy-entry-schema`
+# claude/mcp-policy-entry-schema
 
-Write each `allowedMcpServers` and `deniedMcpServers` entry with exactly one valid key.
+📝 Write each allowedMcpServers and deniedMcpServers entry with exactly one valid key.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each
 `managed-settings.d/*.json` drop-in. It reads no hidden drop-in, because Claude Code ignores it.

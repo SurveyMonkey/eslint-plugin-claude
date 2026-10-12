@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-agent-memory-orphan`
+# claude/memory-agent-memory-orphan
 
-Keep agent memory only for a subagent that sets `memory: project`.
+📝 Keep agent memory only for a subagent that sets memory: project.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/.claude/agent-memory/*/MEMORY.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude/agent-memory/*/MEMORY.md` |
 
 The rule is `off` in `recommended`.
 
@@ -79,9 +83,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of subagents that the repository does not hold, such as user subagents. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                                   | Type     | Default |
+| :------ | :---------------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Names of subagents that the repository does not hold, such as user subagents. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/memory-agent-memory-orphan': ['warn', { allow: ['my-user-agent'] }]

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `command-legacy-format`
+# claude/command-legacy-format
 
-Use a skill, not the legacy command format.
+📝 Use a skill, not the legacy command format.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/commands/**/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| deprecated | `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -54,10 +58,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/command-legacy-format': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-tools-task-alias`
+# claude/agent-tools-task-alias
 
-Write Agent, not its old name Task, in the tools of a subagent.
+📝 Write Agent, not its old name Task, in the tools of a subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| deprecated | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 ## Rule details
 
@@ -58,10 +62,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-tools-task-alias': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-excluded-commands-syntax`
+# claude/sandbox-excluded-commands-syntax
 
-Write each `sandbox.excludedCommands` entry as a command pattern, with no `Bash(` wrapper.
+📝 Write each excludedCommands entry as a command pattern, with no Bash( wrapper.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
 It reads no hidden drop-in, because Claude Code ignores it.
@@ -71,10 +75,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-excluded-commands-syntax': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

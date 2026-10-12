@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-deny-all-tools`
+# claude/permissions-deny-all-tools
 
-Deny every tool or every MCP tool only on purpose.
+📝 Deny every tool or every MCP tool only on purpose.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -61,10 +65,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-deny-all-tools': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

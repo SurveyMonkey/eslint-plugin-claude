@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-memory-scope-project`
+# claude/agent-memory-scope-project
 
-Prefer memory: project, the recommended scope, in a subagent.
+📝 Prefer memory: project, the recommended scope, in a subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/agents/**/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -62,10 +66,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-memory-scope-project': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

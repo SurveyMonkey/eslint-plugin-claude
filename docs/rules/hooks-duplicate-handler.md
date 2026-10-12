@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-duplicate-handler`
+# claude/hooks-duplicate-handler
 
-Do not define one hook handler in a plugin and in the project settings, or in two sources of one plugin.
+📝 Do not define one hook handler in a plugin and in the project settings, or in two sources of one plugin.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | consistency | `**/hooks/hooks.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/hooks/hooks.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

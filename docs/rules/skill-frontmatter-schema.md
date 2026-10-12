@@ -10,13 +10,19 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-frontmatter-schema`
+# claude/skill-frontmatter-schema
 
-Use the frontmatter fields of a skill, with the right types and values.
+📝 Use the frontmatter fields of a skill, with the right types and values.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md`, `**/commands/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -92,10 +98,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-frontmatter-schema': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

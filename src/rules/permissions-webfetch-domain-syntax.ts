@@ -35,7 +35,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Write a WebFetch rule as domain:<host>, with a hostname or wildcard only',
+      description: 'Write a WebFetch rule as `domain:<host>`, with a hostname or wildcard only',
       url: docsUrl(name),
     },
     schema: [],

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-disable-connectors-false`
+# claude/mcp-disable-connectors-false
 
-Do not set `disableClaudeAiConnectors` to `false` in a managed settings file.
+📝 Do not set disableClaudeAiConnectors to false in a managed settings file.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files: `managed-settings.json` and each
 `managed-settings.d/*.json` drop-in. It reads no hidden drop-in, because Claude Code ignores it.

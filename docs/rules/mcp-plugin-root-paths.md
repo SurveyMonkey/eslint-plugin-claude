@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-plugin-root-paths`
+# claude/mcp-plugin-root-paths
 
-Write a file of a plugin MCP server as a path from `${CLAUDE_PLUGIN_ROOT}`.
+📝 Write a file of a plugin MCP server as a path from the plugin root variable.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | portability | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-inject-bang-position`
+# claude/skill-inject-bang-position
 
-Put an inline command placeholder at the start of a line or after whitespace.
+📝 Put an inline command placeholder at the start of a line or after whitespace.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md`, `**/commands/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -67,10 +71,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-inject-bang-position': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

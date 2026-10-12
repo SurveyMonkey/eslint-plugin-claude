@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-import-max-depth`
+# claude/claude-md-import-max-depth
 
-Keep a chain of imports within four hops.
+📝 Keep a chain of imports within four hops.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
 
 ## Rule details
 
@@ -67,9 +71,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `4` | The depth in hops. An integer from 1 to 4. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                                | Type    | Default |
+| :---- | :----------------------------------------- | :------ | :------ |
+| `max` | The most import hops from the linted file. | Integer | `4`     |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-import-max-depth': ['error', { max: 2 }]

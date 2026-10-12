@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-no-parent-path-escape`
+# claude/plugin-no-parent-path-escape
 
-Do not name a path above the plugin root in a plugin command or script.
+📝 Do not name a path above the plugin root in a plugin command or script.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | load | `**/.claude-plugin/plugin.json`, `**/hooks/hooks.json`, `**/.mcp.json`, `**/monitors/monitors.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json`, `**/hooks/hooks.json`, `**/.mcp.json`, `**/monitors/monitors.json` |
 
 ## Rule details
 

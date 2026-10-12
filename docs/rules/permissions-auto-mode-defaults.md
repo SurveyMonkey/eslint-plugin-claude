@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-auto-mode-defaults`
+# claude/permissions-auto-mode-defaults
 
-Keep the built-in auto mode rules with `"$defaults"` in each `autoMode` array.
+📝 Keep the built-in auto mode rules with "$defaults" in each autoMode array.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads managed files only. It skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -69,10 +73,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-auto-mode-defaults': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

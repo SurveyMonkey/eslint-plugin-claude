@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-symlink-network-target`
+# claude/memory-symlink-network-target
 
-Do not link a `CLAUDE.md` or a rule to a network path.
+📝 Do not link a CLAUDE.md or a rule to a network path.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/CLAUDE.md`, `**/.claude/rules/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/CLAUDE.md`, `**/.claude/rules/**/*.md` |
 
 ## Rule details
 

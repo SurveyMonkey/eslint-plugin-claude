@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-git-instructions`
+# claude/claude-md-git-instructions
 
-Turn off the built-in git instructions when a CLAUDE.md sets commit or pull request rules.
+📝 Turn off the built-in git instructions when CLAUDE.md sets git rules.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md`, `**/.claude/rules/**/*.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md`, `**/.claude/rules/**/*.md` |
 
 The rule is `off` in `recommended`.
 

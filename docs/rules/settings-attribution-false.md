@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-attribution-false`
+# claude/settings-attribution-false
 
-Do not set `attribution` to `false` in a file that an older Claude Code also reads.
+📝 Do not set attribution to false in a file that an older Claude Code also reads.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-stdio-command-has-args`
+# claude/mcp-stdio-command-has-args
 
-Put the program of a stdio MCP server in `command`, and its arguments in `args`.
+📝 Put the arguments of a stdio MCP server in args, not in command.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

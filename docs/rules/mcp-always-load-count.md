@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-always-load-count`
+# claude/mcp-always-load-count
 
-Limit the MCP servers that set `alwaysLoad: true`.
+📝 Limit the MCP servers that load all their tools upfront with alwaysLoad.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | limit | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 
@@ -83,9 +87,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `2` | The most servers with `alwaysLoad: true`. An integer of 0 or more. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                                   | Type    | Default |
+| :---- | :-------------------------------------------- | :------ | :------ |
+| `max` | The most servers that set alwaysLoad to true. | Integer | `2`     |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/mcp-always-load-count': ['warn', { max: 3 }]

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-mcp-servers-ref-exists`
+# claude/agent-mcp-servers-ref-exists
 
-Name a server that `.mcp.json` defines in the `mcpServers` of a subagent.
+📝 Name a server that .mcp.json defines in the mcpServers of a subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/agents/**/*.md`, in `.claude/agents/` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/agents/**/*.md`, in `.claude/agents/` |
 
 The rule is `off` in `recommended`.
 
@@ -82,9 +86,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of servers that the repository cannot see, such as servers in `~/.claude.json`. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                          | Type     | Default |
+| :------ | :--------------------------------------------------- | :------- | :------ |
+| `allow` | Names of MCP servers that the repository cannot see. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-mcp-servers-ref-exists': ['warn', { allow: ['hubspot'] }]

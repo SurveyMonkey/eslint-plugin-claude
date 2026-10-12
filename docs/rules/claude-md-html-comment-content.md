@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-html-comment-content`
+# claude/claude-md-html-comment-content
 
-Keep instructions out of a block-level HTML comment.
+📝 Keep instructions out of a block-level HTML comment.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 The rule is `off` in `recommended`.
 

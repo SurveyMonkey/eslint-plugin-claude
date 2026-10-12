@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-agent-exists`
+# claude/settings-agent-exists
 
-Name an agent that the repository defines, or that Claude Code ships, in `agent`.
+📝 Name an agent that the repository defines or Claude Code ships in the agent setting.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, because user and plugin agents are not in the
 repository. `strict` turns it on at `warn`.
@@ -56,9 +60,13 @@ an agent in the option `allow`.
 
 ### Options
 
-| Option | Type | Default | Meaning |
-|--------|------|---------|---------|
-| `allow` | array of strings | `[]` | Agent names to accept, such as a user agent or a plugin agent |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                    | Type     | Default |
+| :------ | :------------------------------------------------------------- | :------- | :------ |
+| `allow` | Agent names to accept, such as a user agent or a plugin agent. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ### What the rule does not check
 

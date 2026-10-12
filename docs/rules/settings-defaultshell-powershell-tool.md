@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-defaultshell-powershell-tool`
+# claude/settings-defaultshell-powershell-tool
 
-Turn the PowerShell tool on where `defaultShell` is `"powershell"`.
+📝 Turn the PowerShell tool on where defaultShell is powershell.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. `strict` turns it on at `warn`. The rule makes no
 report until you set the option `platforms`.
@@ -85,6 +89,16 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/settings-defaultshell-powershell-tool': 'warn'
 ```
+
+## Options
+
+<!-- begin auto-generated rule options list -->
+
+| Name        | Description                                                                          | Type  |
+| :---------- | :----------------------------------------------------------------------------------- | :---- |
+| `platforms` | The platforms where the team runs Claude Code. Without it, the rule makes no report. | Array |
+
+<!-- end auto-generated rule options list -->
 
 ## Sources
 

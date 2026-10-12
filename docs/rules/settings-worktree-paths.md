@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-worktree-paths`
+# claude/settings-worktree-paths
 
-Name a directory of the repository in `worktree.symlinkDirectories` and `worktree.sparsePaths`.
+📝 Name a directory of the repository in the worktree path lists.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A directory such as `node_modules` is often not in
 a fresh checkout, and the rule then reports it. `strict` turns the rule on at `warn`.

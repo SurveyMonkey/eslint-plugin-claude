@@ -10,13 +10,19 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-permission-mode-manual`
+# claude/agent-permission-mode-manual
 
-Write permissionMode: default, not the alias manual, in a local subagent.
+📝 Write permissionMode: default, not the alias manual, in a local subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/agents/**/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -60,10 +66,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-permission-mode-manual': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

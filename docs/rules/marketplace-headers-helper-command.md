@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-headers-helper-command`
+# claude/marketplace-headers-helper-command
 
-Write the `headersHelper` command of an entry as the docs require.
+📝 Write the headersHelper command of an entry as the docs require.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/marketplace.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -93,9 +97,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `500` | The most characters in the command. An integer from 1 to 500. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                         | Type    | Default |
+| :---- | :---------------------------------- | :------ | :------ |
+| `max` | The most characters in the command. | Integer | `500`   |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/marketplace-headers-helper-command': ['error', { max: 200 }]

@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-bin-shadows-system-command`
+# claude/plugin-bin-shadows-system-command
 
-Do not name a `bin/` file like a system command.
+📝 Do not name a bin file like a system command that the plugin cannot shadow.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

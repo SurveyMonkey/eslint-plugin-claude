@@ -27,7 +27,8 @@ const rule: MarkdownRuleDefinition<{
   meta: {
     type: 'problem',
     docs: {
-      description: 'Name a tool that Claude Code knows in the tools of a subagent',
+      description:
+        'Name a tool that Claude Code knows in the tools and disallowedTools of a subagent',
       url: docsUrl(name),
     },
     schema: [],

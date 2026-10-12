@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-oauth-values`
+# claude/mcp-oauth-values
 
-Give the `oauth` object of an MCP server an `https://` metadata URL and one string of scopes.
+📝 Give an MCP oauth object an https metadata URL and a string of scopes.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.mcp.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.mcp.json` |
 
 ## Rule details
 

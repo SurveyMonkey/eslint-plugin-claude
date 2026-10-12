@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-reference-exists`
+# claude/skill-reference-exists
 
-Link only to files that exist in the skill folder.
+📝 Link only to files that exist in the skill folder.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/SKILL.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/SKILL.md` |
 
 ## Rule details
 
@@ -84,10 +88,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-reference-exists': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

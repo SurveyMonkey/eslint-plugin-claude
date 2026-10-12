@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-auto-mode-push-ask`
+# claude/permissions-auto-mode-push-ask
 
-Add an `ask` rule for `git push` where a managed file turns on auto mode.
+📝 Add an ask rule for git push where a managed file turns on auto mode.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
@@ -72,10 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-auto-mode-push-ask': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

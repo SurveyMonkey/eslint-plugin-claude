@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-managed-value-form`
+# claude/settings-managed-value-form
 
-Give a privacy toggle in the `env` block of a managed settings file a truthy value, such as `1`.
+📝 Give a privacy toggle in the env block of a managed settings file a truthy value.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

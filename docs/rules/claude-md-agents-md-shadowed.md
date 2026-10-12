@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-agents-md-shadowed`
+# claude/claude-md-agents-md-shadowed
 
-Import an `AGENTS.md` from the `CLAUDE.md` file that shadows it.
+📝 Import an AGENTS.md from the CLAUDE.md file that shadows it.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/AGENTS.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/AGENTS.md` |
 
 ## Rule details
 

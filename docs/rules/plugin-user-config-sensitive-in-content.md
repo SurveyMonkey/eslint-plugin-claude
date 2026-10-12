@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-user-config-sensitive-in-content`
+# claude/plugin-user-config-sensitive-in-content
 
-Keep the reference to a sensitive plugin option out of skill and agent content.
+📝 Keep the reference to a sensitive plugin option out of skill and agent content.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md`, `**/agents/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -63,10 +67,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-user-config-sensitive-in-content': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

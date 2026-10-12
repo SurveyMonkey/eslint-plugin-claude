@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-derivable-content`
+# claude/claude-md-derivable-content
 
-Leave out of a CLAUDE.md what Claude can work out from the code.
+📝 Leave out of CLAUDE.md what Claude can work out from the code.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 The rule is `off` in `recommended`.
 

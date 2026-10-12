@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-no-git-lfs`
+# claude/plugin-no-git-lfs
 
-Keep plugin files out of Git LFS.
+📝 Keep plugin files out of Git LFS.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/plugin.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -87,10 +91,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-no-git-lfs': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

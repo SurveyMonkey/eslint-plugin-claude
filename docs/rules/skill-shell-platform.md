@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-shell-platform`
+# claude/skill-shell-platform
 
-Set a shell that the target platforms of a skill can run.
+📝 Set a shell that the target platforms of a skill can run.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/SKILL.md`, `**/commands/**/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule makes no report until the option `platforms` lists a platform.
 
@@ -71,18 +75,23 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `platforms` | unset | A list of `windows-no-git-bash`, `macos`, `linux`, `wsl`, `bedrock`, `vertex` and `foundry`. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name        | Description                                                  | Type  |
+| :---------- | :----------------------------------------------------------- | :---- |
+| `platforms` | The platforms and providers where the team runs Claude Code. | Array |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-shell-platform': ['warn', { platforms: ['windows-no-git-bash', 'macos', 'linux'] }]
 ```
 
-With no `platforms`, the rule is inactive and makes no report. The `recommended` and `strict`
-configs set no option. A team turns the rule on when it names its platforms. The platform
-`windows-no-git-bash` makes the rule report `shell: bash`. Each other platform makes it report
-`shell: powershell`.
+`platforms` lists values from `windows-no-git-bash`, `macos`, `linux`, `wsl`, `bedrock`, `vertex`
+and `foundry`. With no `platforms`, the rule is inactive and makes no report. The `recommended`
+and `strict` configs set no option. A team turns the rule on when it names its platforms. The
+platform `windows-no-git-bash` makes the rule report `shell: bash`. Each other platform makes it
+report `shell: powershell`.
 
 ## Sources
 

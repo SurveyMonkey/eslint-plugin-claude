@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-name-unique`
+# claude/skill-name-unique
 
-Give each skill and command in one scope its own name.
+📝 Give each skill and command in one scope its own name.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/SKILL.md`, `**/commands/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -108,10 +112,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-name-unique': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

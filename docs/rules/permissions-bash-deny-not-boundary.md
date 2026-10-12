@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-bash-deny-not-boundary`
+# claude/permissions-bash-deny-not-boundary
 
-Do not rely on a Bash or Read deny rule as a security boundary.
+📝 Do not rely on a Bash or Read deny rule as a security boundary.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
@@ -68,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-bash-deny-not-boundary': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

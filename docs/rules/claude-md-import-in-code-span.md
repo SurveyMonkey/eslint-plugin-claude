@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-import-in-code-span`
+# claude/claude-md-import-in-code-span
 
-Do not write an `@path` import that names a file inside code.
+📝 Do not write an @path import that names a file inside code.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
 
 The rule is `off` in `recommended`.
 

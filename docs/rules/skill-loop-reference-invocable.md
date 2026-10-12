@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-loop-reference-invocable`
+# claude/skill-loop-reference-invocable
 
-Do not start `loop.md` with a skill that only the user can invoke.
+📝 Do not start loop.md with a skill that only the user can invoke.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/loop.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/loop.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic, and it reads other files.
 

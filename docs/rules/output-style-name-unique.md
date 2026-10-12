@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `output-style-name-unique`
+# claude/output-style-name-unique
 
-Give each project output style its own name.
+📝 Give each project output style its own name.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | consistency | `**/output-styles/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/output-styles/*.md` |
 
 ## Rule details
 
@@ -69,10 +73,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/output-style-name-unique': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

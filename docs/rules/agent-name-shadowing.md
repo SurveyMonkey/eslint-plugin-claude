@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-name-shadowing`
+# claude/agent-name-shadowing
 
-Do not reuse the name of an agent in a .claude/agents directory above.
+📝 Do not reuse the name of an agent in a .claude/agents directory above.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | consistency | `**/agents/**/*.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -63,10 +67,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-name-shadowing': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

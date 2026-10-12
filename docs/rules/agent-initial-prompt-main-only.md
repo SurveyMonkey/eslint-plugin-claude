@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-initial-prompt-main-only`
+# claude/agent-initial-prompt-main-only
 
-Set `initialPrompt` only in a local agent that the settings run as the main thread.
+📝 Set initialPrompt only in a local agent that the settings run as the main thread.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/agents/**/*.md`, in `.claude/agents/` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/agents/**/*.md`, in `.claude/agents/` |
 
 The rule is `off` in `recommended`.
 
@@ -71,9 +75,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of agents that the team starts with `--agent`. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                        | Type     | Default |
+| :------ | :------------------------------------------------- | :------- | :------ |
+| `allow` | Names of agents that the team starts with --agent. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-initial-prompt-main-only': ['warn', { allow: ['reviewer'] }]

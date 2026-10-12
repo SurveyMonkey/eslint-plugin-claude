@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-json-file-size`
+# claude/mcp-json-file-size
 
-Keep a `.mcp.json` file at or under 2 MiB.
+📝 Keep a .mcp.json file at or under 2 MiB.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | limit | `**/.mcp.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/.mcp.json` |
 
 ## Rule details
 
@@ -70,9 +74,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `2097152` | The most bytes of the file. An integer from 1 to 2097152. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                 | Type    | Default   |
+| :---- | :-------------------------- | :------ | :-------- |
+| `max` | The most bytes in the file. | Integer | `2097152` |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/mcp-json-file-size': ['error', { max: 1048576 }]

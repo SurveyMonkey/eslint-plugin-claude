@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-credentials-mask-fallback`
+# claude/sandbox-credentials-mask-fallback
 
-Give a `mask` entry an `extract` pattern with a capturing group, and a file path that Claude Code can mask.
+📝 Give a mask entry an extract group and a file path that it can mask.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads the `mask` entries of managed files only. It skips a hidden drop-in in `managed-settings.d`, because Claude Code
 ignores it.
@@ -75,10 +79,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-credentials-mask-fallback': 'warn'
 ```
-
-## Options
-
-None. The rule has no threshold option.
 
 ## Sources
 

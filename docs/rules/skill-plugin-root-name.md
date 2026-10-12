@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-plugin-root-name`
+# claude/skill-plugin-root-name
 
-Set a name on the `SKILL.md` at the root of a plugin.
+📝 Set a name on the SKILL.md at the root of a plugin.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/SKILL.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md` |
 
 ## Rule details
 
@@ -71,10 +75,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-plugin-root-name': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

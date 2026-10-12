@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-read-deny-notebook`
+# claude/permissions-read-deny-notebook
 
-Add an `Edit` `deny` rule next to a `Read` `deny` rule, because `NotebookEdit` is not covered.
+📝 Add an Edit deny rule next to a Read deny rule, because NotebookEdit is not covered.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -65,10 +69,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-read-deny-notebook': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

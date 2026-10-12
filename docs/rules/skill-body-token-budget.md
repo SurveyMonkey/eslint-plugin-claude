@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-body-token-budget`
+# claude/skill-body-token-budget
 
-Keep the body of a skill within the tokens that compaction keeps.
+📝 Keep the body of a skill within the tokens that compaction keeps.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | limit | `**/SKILL.md`, `**/commands/**/*.md` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it estimates the token count.
 
@@ -62,9 +66,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `5000` | The most estimated tokens that the body can have. An integer from 1 to 5000. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                               | Type    | Default |
+| :---- | :---------------------------------------- | :------ | :------ |
+| `max` | The most tokens in the body of the skill. | Integer | `5000`  |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-body-token-budget': ['warn', { max: 3000 }]

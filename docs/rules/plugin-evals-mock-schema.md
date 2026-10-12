@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-mock-schema`
+# claude/plugin-evals-mock-schema
 
-Use the type, error and abort_when keys of an eval mock file as documented.
+📝 Use the type, error and abort_when keys of an eval mock file as documented.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/mocks/*/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/mocks/*/*.md` |
 
 ## Rule details
 
@@ -73,10 +77,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-mock-schema': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

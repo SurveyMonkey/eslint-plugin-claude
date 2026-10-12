@@ -2,6 +2,7 @@
 // another file, sends the reader of a report to a 404.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
+import type { Linter } from 'eslint'
 import { expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { docsUrl } from '../src/docs-url.ts'
@@ -491,4 +492,81 @@ it('gives each rule doc frontmatter that parses, with a string description', () 
     }, file).not.toThrow()
     expect(typeof description, file).toBe('string')
   }
+})
+
+/** The files and the severity that `config` gives each rule. A rule with two languages has two
+ *  blocks, so its files are the files of both. */
+function rulesOf(config: Linter.Config[]): Map<string, { files: string[]; severity: unknown }> {
+  const rules = new Map<string, { files: string[]; severity: unknown }>()
+  for (const block of config) {
+    for (const [id, severity] of Object.entries(block.rules ?? {})) {
+      const name = id.slice('claude/'.length)
+      const files = (block.files ?? []).flat().map(String)
+      rules.set(name, { files: [...(rules.get(name)?.files ?? []), ...files], severity })
+    }
+  }
+  return rules
+}
+
+const STRICT = rulesOf(plugin.configs.strict)
+const RECOMMENDED = rulesOf(plugin.configs.recommended)
+
+/** The text of the doc of `name`. */
+function docOf(name: string): string {
+  return readFileSync(path.join(DOCS, `${name}.md`), 'utf8')
+}
+
+// eslint-doc-generator writes no Files cell (ADR 003). A person writes it, so a test compares it
+// with the files of the rule. A cell can add where the files are, after ", in ".
+it('gives each rule doc a Files cell with the files of the rule', () => {
+  expect(STRICT.size).toBe(Object.keys(plugin.rules).length)
+  for (const [name, { files }] of STRICT) {
+    const cell = /^\| Category \| Files \|\n\|-+\|-+\|\n\| [^|]+ \| (.+) \|$/m.exec(
+      docOf(name),
+    )?.[1]
+    const globs = files.map((file) => `\`${file}\``).join(', ')
+    expect(cell === globs || cell?.startsWith(`${globs}, in `), `${name}: ${cell}`).toBe(true)
+  }
+})
+
+// eslint-doc-generator writes no Usage block (ADR 003). The block gives the `recommended`
+// severity, or the `strict` severity for a rule that is off in `recommended` (CONTRIBUTING.md).
+it('gives each rule doc a Usage block with the severity of the rule', () => {
+  expect(STRICT.size).toBe(Object.keys(plugin.rules).length)
+  for (const [name, strict] of STRICT) {
+    const severity = (RECOMMENDED.get(name) ?? strict).severity
+    const usage =
+      docOf(name)
+        .split(/^## Usage$/m)[1]
+        ?.split(/^## /m)[0] ?? ''
+    const code = /^```js\n([\s\S]*?)^```$/m.exec(usage)?.[1] ?? ''
+    expect(code, name).toContain(`'claude/${name}': '${severity}'`)
+  }
+})
+
+// eslint-doc-generator writes no options list in a doc that has no markers for it, and its
+// `--check` then passes (ADR 003). So a test requires the markers for each rule with options.
+it('gives the options list markers to each rule doc with options, and to no other', () => {
+  for (const [name, rule] of Object.entries(plugin.rules)) {
+    const schema = rule.meta?.schema
+    const options = Array.isArray(schema) && schema.length > 0
+    const doc = docOf(name)
+    expect(doc.includes('<!-- begin auto-generated rule options list -->'), name).toBe(options)
+    expect(doc.includes('<!-- end auto-generated rule options list -->'), name).toBe(options)
+  }
+})
+
+// The generator writes the README rule list from the groups of `.eslint-doc-generatorrc.mjs`.
+// `--check` compares the README with that same list, so it cannot see a rule that the list
+// leaves out or names twice.
+it('lists each rule once in the README rule list', () => {
+  const readme = readFileSync(path.resolve(import.meta.dirname, '../README.md'), 'utf8')
+  const list =
+    readme
+      .split('<!-- begin auto-generated rules list -->')[1]
+      ?.split('<!-- end auto-generated rules list -->')[0] ?? ''
+  const rows = [...list.matchAll(/^\| \[([a-z0-9-]+)\]\(docs\/rules\/\1\.md\)/gm)].map(
+    (match) => match[1],
+  )
+  expect(rows.sort()).toEqual(Object.keys(plugin.rules).sort())
 })

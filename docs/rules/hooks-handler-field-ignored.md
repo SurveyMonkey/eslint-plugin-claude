@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-handler-field-ignored`
+# claude/hooks-handler-field-ignored
 
-Leave out the hook handler fields that Claude Code ignores.
+📝 Leave out the hook handler fields that Claude Code ignores.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -91,10 +95,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `sessionEndMax` | `60` | The rule reports a `SessionEnd` `timeout` above this number of seconds. Optional. |
-| `sessionEndPluginMax` | `1.5` | The rule reports a `SessionEnd` `timeout` above this number of seconds in a plugin `hooks.json`. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name                  | Description                                                                   | Type   | Default |
+| :-------------------- | :---------------------------------------------------------------------------- | :----- | :------ |
+| `sessionEndMax`       | The most seconds for a SessionEnd timeout.                                    | Number | `60`    |
+| `sessionEndPluginMax` | The most seconds for a SessionEnd timeout in the hooks.json file of a plugin. | Number | `1.5`   |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/hooks-handler-field-ignored': ['error', { sessionEndMax: 120 }]

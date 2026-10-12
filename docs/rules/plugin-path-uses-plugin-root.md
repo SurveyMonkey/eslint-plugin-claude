@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-path-uses-plugin-root`
+# claude/plugin-path-uses-plugin-root
 
-Name the files of a plugin monitor or LSP server through `${CLAUDE_PLUGIN_ROOT}`, not through a relative path.
+📝 Write a file of a plugin monitor or LSP server as a path from the plugin root variable.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | load | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json`, `**/.lsp.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json`, `**/.lsp.json` |
 
 ## Rule details
 

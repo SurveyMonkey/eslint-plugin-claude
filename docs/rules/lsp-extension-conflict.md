@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `lsp-extension-conflict`
+# claude/lsp-extension-conflict
 
-Give each LSP server of a marketplace its own file extensions.
+📝 Do not let two LSP servers of a marketplace claim one file extension.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/.claude-plugin/marketplace.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 

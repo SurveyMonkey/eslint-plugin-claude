@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-permission-mode-bypass`
+# claude/agent-permission-mode-bypass
 
-Do not set permissionMode to bypassPermissions in a local subagent.
+📝 Do not set permissionMode to bypassPermissions in a local subagent.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | security | `**/agents/**/*.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -58,10 +62,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-permission-mode-bypass': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

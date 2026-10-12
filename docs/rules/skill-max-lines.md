@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-max-lines`
+# claude/skill-max-lines
 
-Keep a `SKILL.md` under a number of lines.
+📝 Keep a SKILL.md under a number of lines.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/SKILL.md` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/SKILL.md` |
 
 ## Rule details
 
@@ -45,10 +49,14 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `500` | The file must have fewer lines than this number. Optional. |
-| `countFrontmatter` | `true` | `true` counts the whole file. `false` counts the body only. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name               | Description                                                         | Type    | Default |
+| :----------------- | :------------------------------------------------------------------ | :------ | :------ |
+| `countFrontmatter` | Set true to count the whole file. Set false to count the body only. | Boolean | `true`  |
+| `max`              | The file must have fewer lines than this number.                    | Integer | `500`   |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-max-lines': ['warn', { max: 300, countFrontmatter: false }]

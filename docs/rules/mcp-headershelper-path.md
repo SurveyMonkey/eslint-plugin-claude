@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-headershelper-path`
+# claude/mcp-headershelper-path
 
-Give a `headersHelper` an absolute path, or a command on `PATH`.
+📝 Give an MCP headersHelper an absolute path or a command on PATH.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

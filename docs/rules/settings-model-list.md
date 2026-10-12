@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-model-list`
+# claude/settings-model-list
 
-Keep the model lists of a settings file consistent with the way Claude Code reads them.
+📝 Keep the model lists of a settings file consistent with the way Claude Code reads them.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -133,12 +137,16 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Type | Default | Schema maximum |
-|--------|------|---------|----------------|
-| `max` | integer, at least 1 | 3 | 3 |
+<!-- begin auto-generated rule options list -->
 
-`max` is the most distinct entries of `fallbackModel`. The `recommended` and `strict` configs set
-no option.
+| Name  | Description                                  | Type    | Default |
+| :---- | :------------------------------------------- | :------ | :------ |
+| `max` | The most different entries in fallbackModel. | Integer | `3`     |
+
+<!-- end auto-generated rule options list -->
+
+`max` is the most distinct entries of `fallbackModel`. The schema sets a maximum of 3. The
+`recommended` and `strict` configs set no option.
 
 ## Sources
 

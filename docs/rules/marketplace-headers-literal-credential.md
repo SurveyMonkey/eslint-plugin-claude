@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-headers-literal-credential`
+# claude/marketplace-headers-literal-credential
 
-Keep a literal credential out of the headers of a marketplace download.
+📝 Keep a literal credential out of the headers of a marketplace download.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude-plugin/marketplace.json`, `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude-plugin/marketplace.json`, `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 
@@ -102,10 +106,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-headers-literal-credential': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

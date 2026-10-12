@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-max-bytes`
+# claude/claude-md-max-bytes
 
-Keep a CLAUDE.md file at or under 4 MiB.
+📝 Keep a CLAUDE.md file at or under 4 MiB.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | limit | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 ## Rule details
 
@@ -62,9 +66,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `4194304` | The most bytes of the file. An integer from 1 to 4194304. Optional. |
+<!-- begin auto-generated rule options list -->
+
+| Name  | Description                 | Type    | Default   |
+| :---- | :-------------------------- | :------ | :-------- |
+| `max` | The most bytes in the file. | Integer | `4194304` |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-max-bytes': ['error', { max: 1048576 }]

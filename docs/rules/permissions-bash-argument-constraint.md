@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-bash-argument-constraint`
+# claude/permissions-bash-argument-constraint
 
-Do not limit `curl` or `wget` to a URL with a Bash allow rule.
+📝 Do not limit curl or wget to a URL with a Bash allow rule.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
@@ -59,10 +63,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-bash-argument-constraint': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

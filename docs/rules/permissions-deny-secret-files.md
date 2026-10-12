@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-deny-secret-files`
+# claude/permissions-deny-secret-files
 
-Deny `Read` for a tracked `.env` file or `secrets` folder in the project settings.
+📝 Deny Read for a tracked .env file or secrets folder in the project settings.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude/settings.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -69,10 +73,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-deny-secret-files': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

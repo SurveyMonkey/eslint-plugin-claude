@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-agent-rule-exists`
+# claude/permissions-agent-rule-exists
 
-Name an agent that the repository defines or Claude Code ships in an `Agent` rule.
+📝 Name an agent that the repository defines or Claude Code ships in an Agent rule.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -70,9 +74,13 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of user or plugin agents, as an array of unique strings. The rule reports no rule for these names. |
+<!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                               | Type     | Default |
+| :------ | :------------------------------------------------------------------------ | :------- | :------ |
+| `allow` | Names of user or plugin agents. The rule makes no report for these names. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 ```js
 "claude/permissions-agent-rule-exists": ["warn", { allow: ["my-user-agent"] }]

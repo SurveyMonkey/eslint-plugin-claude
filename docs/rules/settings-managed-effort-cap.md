@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-managed-effort-cap`
+# claude/settings-managed-effort-cap
 
-Set `maxEffortLevel` beside `effortLevel` in managed settings.
+📝 Set maxEffortLevel beside effortLevel in managed settings.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. On a Claude Enterprise plan, your organization can also set an effort limit
 on the server side.[^org] `strict` turns the rule on at `warn`.

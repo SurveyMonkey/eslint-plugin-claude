@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-env-context-cost`
+# claude/settings-env-context-cost
 
-Do not set an `env` variable that raises the context cost in the shared settings file.
+📝 Do not set an env variable that raises the context cost in the shared settings file.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | limit | `**/.claude/settings.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. `strict` turns it on at `warn`. The rule
 compares no number, so it has no threshold option.

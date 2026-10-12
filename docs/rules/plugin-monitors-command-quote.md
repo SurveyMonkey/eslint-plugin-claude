@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-monitors-command-quote`
+# claude/plugin-monitors-command-quote
 
-Put the path variables of a monitor command inside quotes.
+📝 Put the path variables of a monitor command inside quotes.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json` |
 
 ## Rule details
 
@@ -77,10 +81,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-monitors-command-quote': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

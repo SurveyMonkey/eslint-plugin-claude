@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-stdio-relative-path`
+# claude/mcp-stdio-relative-path
 
-Do not use a `./` or `../` path in the `command` or `args` of a project MCP server.
+📝 Do not use a ./ or ../ path in the command or args of a project MCP server.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.mcp.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.mcp.json` |
 
 ## Rule details
 

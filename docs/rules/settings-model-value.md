@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-model-value`
+# claude/settings-model-value
 
-Set each model value to an alias or a model ID in a known form.
+📝 Set each model value to an alias or a model ID that Claude Code accepts.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -47,6 +51,14 @@ For an `ANTHROPIC_DEFAULT_*_MODEL` variable, the rule reports an alias only, suc
 `default`. The docs give a Bedrock ID, an ARN and a Foundry deployment name as valid values. So the rule does not require the `claude-` prefix there.[^variables]
 
 ### Options
+
+<!-- begin auto-generated rule options list -->
+
+| Name                 | Description                                                                   | Type     | Default |
+| :------------------- | :---------------------------------------------------------------------------- | :------- | :------ |
+| `providerIdPatterns` | Regular expressions. A model value that matches one of them passes the check. | String[] | `[]`    |
+
+<!-- end auto-generated rule options list -->
 
 `providerIdPatterns` is a list of regular expression sources. A value that matches one passes the
 check of `model`, `fallbackModel`, `availableModels`, `advisorModel`, `env.ANTHROPIC_MODEL` and

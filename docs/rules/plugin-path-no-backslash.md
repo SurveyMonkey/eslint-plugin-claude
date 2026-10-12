@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-path-no-backslash`
+# claude/plugin-path-no-backslash
 
-Write the component paths of `plugin.json` with forward slashes.
+📝 Write the component paths of plugin.json with forward slashes.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -67,10 +71,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-path-no-backslash': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

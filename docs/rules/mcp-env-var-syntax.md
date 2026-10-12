@@ -10,13 +10,17 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-env-var-syntax`
+# claude/mcp-env-var-syntax
 
-Write a variable reference in an MCP server entry as `${VAR}` or `${VAR:-default}`.
+📝 Write an MCP variable reference as ${VAR} or ${VAR:-default}.
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
+<!-- end auto-generated rule header -->
+
+| Category | Files |
+|----------|-------|
+| no-op | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 
