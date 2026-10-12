@@ -532,6 +532,7 @@ it('gives each rule doc a Files cell with the files of the rule', () => {
 // eslint-doc-generator writes no Usage block (ADR 003). The block gives the `recommended`
 // severity, or the `strict` severity for a rule that is off in `recommended` (CONTRIBUTING.md).
 it('gives each rule doc a Usage block with the severity of the rule', () => {
+  expect(STRICT.size).toBe(Object.keys(plugin.rules).length)
   for (const [name, strict] of STRICT) {
     const severity = (RECOMMENDED.get(name) ?? strict).severity
     const usage =
@@ -541,4 +542,31 @@ it('gives each rule doc a Usage block with the severity of the rule', () => {
     const code = /^```js\n([\s\S]*?)^```$/m.exec(usage)?.[1] ?? ''
     expect(code, name).toContain(`'claude/${name}': '${severity}'`)
   }
+})
+
+// eslint-doc-generator writes no options list in a doc that has no markers for it, and its
+// `--check` then passes (ADR 003). So a test requires the markers for each rule with options.
+it('gives the options list markers to each rule doc with options, and to no other', () => {
+  for (const [name, rule] of Object.entries(plugin.rules)) {
+    const schema = rule.meta?.schema
+    const options = Array.isArray(schema) && schema.length > 0
+    const doc = docOf(name)
+    expect(doc.includes('<!-- begin auto-generated rule options list -->'), name).toBe(options)
+    expect(doc.includes('<!-- end auto-generated rule options list -->'), name).toBe(options)
+  }
+})
+
+// The generator writes the README rule list from the groups of `.eslint-doc-generatorrc.mjs`.
+// `--check` compares the README with that same list, so it cannot see a rule that the list
+// leaves out or names twice.
+it('lists each rule once in the README rule list', () => {
+  const readme = readFileSync(path.resolve(import.meta.dirname, '../README.md'), 'utf8')
+  const list =
+    readme
+      .split('<!-- begin auto-generated rules list -->')[1]
+      ?.split('<!-- end auto-generated rules list -->')[0] ?? ''
+  const rows = [...list.matchAll(/^\| \[([a-z0-9-]+)\]\(docs\/rules\/\1\.md\)/gm)].map(
+    (match) => match[1],
+  )
+  expect(rows.sort()).toEqual(Object.keys(plugin.rules).sort())
 })

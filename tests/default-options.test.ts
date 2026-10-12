@@ -1,7 +1,8 @@
 // Each rule with a schema option keeps its defaults in `meta.defaultOptions`, not in `create`
 // (issue #235). eslint-doc-generator writes the options list of each rule doc from `meta`
 // (ADR 003), and `pnpm docs:check` fails when a doc does not agree with it. This test checks
-// what the generator cannot see: a description on each option, and no default in `create`.
+// what `docs:check` does not: one options object, no default that is not an option, a
+// description on each option, and no default in `create`.
 // The test expects 77 rules with options. A new rule with options makes it fail until its author
 // changes the count.
 import { readFileSync } from 'node:fs'
@@ -36,6 +37,11 @@ describe('default options', () => {
     it(`${name} has one options object, and meta.defaultOptions of length 1`, () => {
       expect(schema, name).toHaveLength(1)
       expect(rule.meta?.defaultOptions, name).toHaveLength(1)
+      const properties = Object.keys((schema[0] as { properties?: object }).properties ?? {})
+      const defaults = Object.keys(rule.meta?.defaultOptions?.[0] ?? {})
+      expect(properties, `${name}: the options of the schema`).toEqual(
+        expect.arrayContaining(defaults),
+      )
       if (PLATFORMS_IN_CREATE.has(name)) {
         expect(rule.meta?.defaultOptions?.[0], name).not.toHaveProperty('platforms')
       }
