@@ -106,11 +106,18 @@ Pass:
 
 ## Usage
 
-Put the rule in `rules`, in the config block that extends `claude/recommended`. See
-[Usage](../../README.md#usage) in the README.
+The rule does not compare the path of a file with its globs. An entry in the block that extends
+`claude/recommended` applies to each JSON file that the config lints. So give the rule its
+files in a block of its own:
 
 ```js
-'claude/mcp-no-literal-secrets': 'warn'
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
+    rules: { 'claude/mcp-no-literal-secrets': 'warn' },
+  },
+])
 ```
 
 ## Sources

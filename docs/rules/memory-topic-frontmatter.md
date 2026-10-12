@@ -72,11 +72,18 @@ modified: 2026-10-14T09:30:00Z
 
 ## Usage
 
-Put the rule in `rules`, in the config block that extends `claude/recommended`. See
-[Usage](../../README.md#usage) in the README.
+The rule does not compare the path of a file with its globs. An entry in the block that extends
+`claude/recommended` applies to each Markdown file that the config lints. So give the rule its
+files in a block of its own:
 
 ```js
-'claude/memory-topic-frontmatter': 'warn'
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/.claude/agent-memory/*/*.md'],
+    rules: { 'claude/memory-topic-frontmatter': 'warn' },
+  },
+])
 ```
 
 ## Sources
