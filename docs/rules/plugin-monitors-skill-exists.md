@@ -66,7 +66,7 @@ The rule makes no report in these cases:
 - The rule cannot list the skills. A skill file or a skill folder can be a link
   with no target, or a link out of the repository. A real path can be out
   of the repository. A folder or a file can fail to read. A link in `commands/` can lead out of the
-  repository.
+  repository, or can have no target.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The
   manifest can fail to parse.

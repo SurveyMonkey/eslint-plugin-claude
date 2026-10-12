@@ -49,7 +49,8 @@ not.
 
 The rule makes no report when it cannot see a style. It reads no file out of the repository.
 These cases give no report. A link leads out of the repository. The project is a link out of the
-repository. A link in place of `.claude` or `output-styles/` has no target. The rule cannot read
+repository. A link in place of `.claude` or `output-styles/` has no target. A link in
+`output-styles/` has no target. The rule cannot read
 a directory. The rule cannot read a style file.
 
 A style from a user directory (`~/.claude/output-styles/`), from a plugin, or from a managed

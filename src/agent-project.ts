@@ -92,8 +92,8 @@ export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
     return files
   }
   const agents = path.join(scope.root, 'agents')
-  // `markdownFiles` reads a directory that is not there as empty. Such a directory behind a
-  // dangling link, or out of the repository, is a part that the check cannot see.
+  // `markdownFiles` reads a directory that is not there as empty, and does not check the
+  // bound for it. Such a directory out of the repository is a part that the check cannot see.
   if (realOf(agents) === null && missingOf(agents, bound) === UNREADABLE) {
     return UNREADABLE
   }
