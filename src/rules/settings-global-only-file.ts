@@ -63,9 +63,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude/keybindings.json', '**/.claude/themes/*.json', '**/.claude.json'],
-  rule,
 }
+
+export default rule

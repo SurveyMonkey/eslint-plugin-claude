@@ -98,7 +98,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'command' | 'script' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [
@@ -107,5 +107,6 @@ export default {
     '**/.mcp.json',
     '**/monitors/monitors.json',
   ],
-  rule,
 }
+
+export default rule

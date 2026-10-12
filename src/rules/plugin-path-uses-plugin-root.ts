@@ -93,9 +93,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'monitor' | 'lsp' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json', '**/.lsp.json'],
-  rule,
 }
+
+export default rule

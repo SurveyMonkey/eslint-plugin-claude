@@ -42,9 +42,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'tracked' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/.claude/agent-memory-local/**/*.md'],
-  rule,
 }
+
+export default rule

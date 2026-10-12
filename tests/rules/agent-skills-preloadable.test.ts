@@ -3,7 +3,7 @@
 import { symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import rule from '../../src/rules/agent-skills-preloadable.ts'
+import * as rule from '../../src/rules/agent-skills-preloadable.ts'
 import { agent, lintWith, repo } from '../agent-settings.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'
 

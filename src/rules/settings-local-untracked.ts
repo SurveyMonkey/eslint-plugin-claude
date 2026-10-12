@@ -55,4 +55,6 @@ const rule: JSONRuleDefinition<{ MessageIds: 'tracked' | 'symlink' }> = {
   },
 }
 
-export default { name, language: 'json' as const, files: ['**/.claude/settings.json'], rule }
+export const target = { name, language: 'json' as const, files: ['**/.claude/settings.json'] }
+
+export default rule

@@ -151,9 +151,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'secret' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
-  rule,
 }
+
+export default rule

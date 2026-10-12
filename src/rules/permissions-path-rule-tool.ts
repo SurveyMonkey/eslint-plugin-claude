@@ -39,11 +39,12 @@ const rule: Rule.RuleModule = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES],
   // The same rule, for the files that the Markdown language reads.
   also: SKILL_TARGET,
-  rule,
 }
+
+export default rule

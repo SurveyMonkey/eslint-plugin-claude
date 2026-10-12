@@ -5,7 +5,7 @@
 import { rmSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import rule from '../../src/rules/agent-memory-auto-memory-off.ts'
+import * as rule from '../../src/rules/agent-memory-auto-memory-off.ts'
 import { agent, lintWith, repo } from '../agent-settings.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
 import { chmodCannotBlock, withoutAccess } from '../rule-tester.test-support.ts'

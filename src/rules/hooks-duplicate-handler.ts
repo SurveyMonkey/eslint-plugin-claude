@@ -166,9 +166,10 @@ const rule: Rule.RuleModule = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/hooks/hooks.json', '**/.claude-plugin/plugin.json'],
-  rule,
 }
+
+export default rule

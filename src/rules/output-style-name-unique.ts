@@ -137,4 +137,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' | 'shadows' }> = {
   },
 }
 
-export default { name, language: 'markdown' as const, files: ['**/output-styles/*.md'], rule }
+export const target = { name, language: 'markdown' as const, files: ['**/output-styles/*.md'] }
+
+export default rule

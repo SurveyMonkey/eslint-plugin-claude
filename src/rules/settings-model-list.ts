@@ -252,9 +252,10 @@ function allows(entry: string, id: string): boolean {
   return model.startsWith(from) && !/[a-z0-9]/i.test(model.charAt(from.length))
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES],
-  rule,
 }
+
+export default rule

@@ -41,9 +41,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'socket' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.lsp.json', '**/.claude-plugin/plugin.json'],
-  rule,
 }
+
+export default rule

@@ -108,9 +108,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'external' | 'externalInImporte
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/CLAUDE.md'],
-  rule,
 }
+
+export default rule

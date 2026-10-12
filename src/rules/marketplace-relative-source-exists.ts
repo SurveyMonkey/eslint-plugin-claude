@@ -37,9 +37,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude-plugin/marketplace.json'],
-  rule,
 }
+
+export default rule

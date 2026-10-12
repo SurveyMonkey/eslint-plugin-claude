@@ -104,9 +104,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'marketplaceRoot' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/package.json'],
-  rule,
 }
+
+export default rule

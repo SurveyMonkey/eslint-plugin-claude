@@ -73,4 +73,6 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'ignored'
   },
 }
 
-export default { name, language: 'markdown' as const, files: ['**/agents/**/*.md'], rule }
+export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+
+export default rule

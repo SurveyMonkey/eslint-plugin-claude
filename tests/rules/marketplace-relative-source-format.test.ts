@@ -2,11 +2,10 @@
 // `metadata.pluginRoot`, in `.claude-plugin/marketplace.json`. The files glob
 // and the decoy files are in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
-import relativeSource from '../../src/rules/marketplace-relative-source-format.ts'
+import rule from '../../src/rules/marketplace-relative-source-format.ts'
 import { lintMarketplace, tree } from '../marketplace-tree.test-support.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
 
-const { rule } = relativeSource
 const filename = '.claude-plugin/marketplace.json'
 const manifest = (plugins: unknown[], metadata?: unknown) =>
   JSON.stringify({ name: 'acme', metadata, plugins })

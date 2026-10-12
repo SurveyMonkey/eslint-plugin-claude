@@ -56,9 +56,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bracket' | 'budget' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/SKILL.md'],
-  rule,
 }
+
+export default rule

@@ -64,9 +64,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'localInClaude' | 'caseVariant'
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/*.md'],
-  rule,
 }
+
+export default rule

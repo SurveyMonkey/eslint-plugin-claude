@@ -65,9 +65,10 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'variant'
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/AGENTS.local.md', '**/AGENTS.override.md', '**/.agents/**/*.md'],
-  rule,
 }
+
+export default rule

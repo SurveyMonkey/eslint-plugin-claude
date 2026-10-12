@@ -77,9 +77,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'loose' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude-plugin/plugin.json'],
-  rule,
 }
+
+export default rule

@@ -39,9 +39,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'multiLine' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/.claude/agent-memory/*/MEMORY.md'],
-  rule,
 }
+
+export default rule

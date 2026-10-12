@@ -61,9 +61,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'outside' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.lsp.json'],
-  rule,
 }
+
+export default rule

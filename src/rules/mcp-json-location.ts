@@ -37,9 +37,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unread' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude/.mcp.json', '**/.claude/mcp.json', '**/.claude/config/mcp.json'],
-  rule,
 }
+
+export default rule

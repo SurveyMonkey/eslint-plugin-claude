@@ -54,9 +54,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'notExecutable' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/hooks/hooks.json', ...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES],
-  rule,
 }
+
+export default rule

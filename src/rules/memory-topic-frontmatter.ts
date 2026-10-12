@@ -88,9 +88,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'badType' | 'badModified' }> = 
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/.claude/agent-memory/*/*.md'],
-  rule,
 }
+
+export default rule

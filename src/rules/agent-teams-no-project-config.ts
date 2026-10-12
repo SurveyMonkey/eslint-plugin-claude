@@ -31,11 +31,12 @@ const rule: Rule.RuleModule = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/.claude/teams/**/*.md'],
   // The same rule, for the files that the JSON language reads.
   also: { language: 'json' as const, files: ['**/.claude/teams/**/*.json'] },
-  rule,
 }
+
+export default rule

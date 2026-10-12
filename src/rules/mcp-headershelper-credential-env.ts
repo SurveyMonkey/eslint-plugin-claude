@@ -86,9 +86,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'removed' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.mcp.json'],
-  rule,
 }
+
+export default rule

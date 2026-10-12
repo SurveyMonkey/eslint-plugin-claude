@@ -82,9 +82,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'shape' | 'name' | 'base' | 'overri
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/themes/*.json'],
-  rule,
 }
+
+export default rule

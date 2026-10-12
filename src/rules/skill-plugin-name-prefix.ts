@@ -71,4 +71,6 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'doubled'
   },
 }
 
-export default { name, language: 'markdown' as const, files: ['**/SKILL.md'], rule }
+export const target = { name, language: 'markdown' as const, files: ['**/SKILL.md'] }
+
+export default rule

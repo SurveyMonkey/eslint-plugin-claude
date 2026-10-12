@@ -185,9 +185,10 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooLong'
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/CLAUDE.md', '**/CLAUDE.local.md'],
-  rule,
 }
+
+export default rule

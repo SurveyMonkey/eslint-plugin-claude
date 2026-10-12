@@ -56,9 +56,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'prose' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/CLAUDE.md'],
-  rule,
 }
+
+export default rule

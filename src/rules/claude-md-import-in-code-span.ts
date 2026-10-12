@@ -82,9 +82,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'inCode' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
-  rule,
 }
+
+export default rule

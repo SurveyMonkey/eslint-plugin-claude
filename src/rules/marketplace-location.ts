@@ -36,9 +36,10 @@ const rule: JSONRuleDefinition<{ MessageIds: 'misplaced' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/marketplace.json'],
-  rule,
 }
+
+export default rule

@@ -74,9 +74,10 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'traffic' | 'bypas
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: ['**/.claude/settings.json'],
-  rule,
 }
+
+export default rule

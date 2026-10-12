@@ -102,9 +102,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'manualOnly' }> = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/.claude/loop.md'],
-  rule,
 }
+
+export default rule

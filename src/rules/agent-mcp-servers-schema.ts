@@ -82,9 +82,10 @@ const rule: MarkdownRuleDefinition<{
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/agents/**/*.md'],
-  rule,
 }
+
+export default rule

@@ -30,8 +30,12 @@ export function repo(files: Record<string, string>) {
 export const agent = (fields: string, name = 'a') =>
   `---\nname: ${name}\ndescription: d\n${fields}---\n\nBody.\n`
 
-/** The messages of the rule `module` for `code` at `filename`. */
-export function lintWith(module: { name: string; rule: unknown }, code: string, filename: string) {
+/** The messages of the rule module `module` (its `target` and default export) for `code` at `filename`. */
+export function lintWith(
+  module: { target: { name: string }; default: unknown },
+  code: string,
+  filename: string,
+) {
   return new Linter({ cwd: path.parse(filename).root }).verify(
     code,
     [
@@ -39,11 +43,11 @@ export function lintWith(module: { name: string; rule: unknown }, code: string, 
         files: ['**/*.md'],
         plugins: {
           markdown,
-          claude: { rules: { [module.name]: module.rule as Rule.RuleModule } },
+          claude: { rules: { [module.target.name]: module.default as Rule.RuleModule } },
         },
         language: 'markdown/gfm',
         languageOptions: { frontmatter: 'yaml' },
-        rules: { [`claude/${module.name}`]: 'error' },
+        rules: { [`claude/${module.target.name}`]: 'error' },
       },
     ],
     { filename },

@@ -1,10 +1,9 @@
 // The rule reads the top-level members, `owner`, `metadata` and the entries of
 // `plugins` in `.claude-plugin/marketplace.json`. The files glob and the decoy
 // files are in tests/configs.test.ts.
-import schema from '../../src/rules/marketplace-schema.ts'
+import rule from '../../src/rules/marketplace-schema.ts'
 import { json5Tester, jsonTester } from '../rule-tester.test-support.ts'
 
-const { rule } = schema
 const filename = '.claude-plugin/marketplace.json'
 
 const entry = { name: 'p', source: './p' }

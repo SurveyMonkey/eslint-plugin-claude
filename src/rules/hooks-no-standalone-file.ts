@@ -38,7 +38,7 @@ const rule: Rule.RuleModule = {
   },
 }
 
-export default {
+export const target = {
   name,
   language: 'json' as const,
   files: [
@@ -47,5 +47,6 @@ export default {
     '**/.claude-plugin/hooks.json',
     '**/.claude-plugin/hooks/hooks.json',
   ],
-  rule,
 }
+
+export default rule
