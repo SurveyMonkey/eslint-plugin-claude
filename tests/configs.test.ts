@@ -2,10 +2,14 @@
 // matches nothing, so this test runs ESLint itself over a tree built in a
 // temporary directory. The tree is not committed, so neither the lint of
 // this repository nor Claude Code reads it as configuration.
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
+import json from '@eslint/json'
+import markdown from '@eslint/markdown'
 import { ESLint, type Linter } from 'eslint'
+import { defineConfig } from 'eslint/config'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
 import { isolateGitConfig, stage } from './git-tree.test-support.ts'
@@ -5903,113 +5907,123 @@ async function reports(config: Linter.Config[], base = root): Promise<string[]> 
     .sort()
 }
 
+/** True when a block of `config` has a rule entry for `rule`, at any severity. */
+const hasRuleBlock = (config: Linter.Config[], rule: string) =>
+  config.some((c) => c.rules !== undefined && `claude/${rule}` in c.rules)
+
 describe('configs', () => {
   it('names one block for each rule in recommended, at its severity', () => {
-    expect(plugin.configs.recommended.map((c) => [c.name, c.rules])).toEqual([
+    expect(plugin.configs.recommended.filter((c) => c.rules).map((c) => [c.name, c.rules])).toEqual(
       [
-        'claude/recommended/skill-description-max-length',
-        { 'claude/skill-description-max-length': 'warn' },
-      ],
-      ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
-      ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
-      ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
-      ...HOOKS_RULES.filter(({ strictOnly }) => !strictOnly).flatMap(({ name, blocks, severity }) =>
-        blocks.map(() => [
+        [
+          'claude/recommended/skill-description-max-length',
+          { 'claude/skill-description-max-length': 'warn' },
+        ],
+        ['claude/recommended/command-legacy-format', { 'claude/command-legacy-format': 'warn' }],
+        ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
+        ['claude/recommended/hooks-event-name-known', { 'claude/hooks-event-name-known': 'error' }],
+        ...HOOKS_RULES.filter(({ strictOnly }) => !strictOnly).flatMap(
+          ({ name, blocks, severity }) =>
+            blocks.map(() => [
+              `claude/recommended/${name}`,
+              { [`claude/${name}`]: severity ?? 'error' },
+            ]),
+        ),
+        ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
+        ...WARN_SKILL_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'warn' },
+        ]),
+        ...PLUGIN_SKILL_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'warn' },
+        ]),
+        ...AGENT_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'error' },
+        ]),
+        ...AGENT_WARN_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'warn' },
+        ]),
+        ...TOOL_LIST_BLOCKS.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'error' },
+        ]),
+        ...MODE_RULES.map(({ name }) => [
           `claude/recommended/${name}`,
-          { [`claude/${name}`]: severity ?? 'error' },
+          { [`claude/${name}`]: 'error' },
         ]),
-      ),
-      ...NEW_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
-      ...WARN_SKILL_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'warn' },
-      ]),
-      ...PLUGIN_SKILL_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'warn' },
-      ]),
-      ...AGENT_RULES.map((rule) => [`claude/recommended/${rule}`, { [`claude/${rule}`]: 'error' }]),
-      ...AGENT_WARN_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'warn' },
-      ]),
-      ...TOOL_LIST_BLOCKS.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'error' },
-      ]),
-      ...MODE_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
-      ]),
-      ...ALLOW_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
-      ]),
-      ...PATH_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
-      ]),
-      ...SANDBOX_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'error' },
-      ]),
-      ...WARN_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'warn' },
-      ]),
-      ...MARKETPLACE_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'error' },
-      ]),
-      ...MARKETPLACE_WARN_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'warn' },
-      ]),
-      ...SETTINGS_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'error' },
-      ]),
-      ...SCOPE_RULES.map(({ name, severity = 'error' }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: severity },
-      ]),
-      ...UNTRACKED_RULES.map(({ name }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: 'warn' },
-      ]),
-      ...MARKET_SETTINGS_RULES.filter(({ severity }) => severity !== 'off').map(
-        ({ name, severity }) => [`claude/recommended/${name}`, { [`claude/${name}`]: severity }],
-      ),
-      ...MEMORY_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'error' },
-      ]),
-      ...MEMORY_WARN_RULES.map((rule) => [
-        `claude/recommended/${rule}`,
-        { [`claude/${rule}`]: 'warn' },
-      ]),
-      ...MCP_RULES.flatMap(({ name, markdown, severity }) =>
-        (markdown ? [name, name] : [name]).map((block) => [
-          `claude/recommended/${block}`,
-          { [`claude/${block}`]: severity ?? 'error' },
+        ...ALLOW_RULES.map(({ name }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: 'error' },
         ]),
-      ),
-      ...PLUGIN_RULES.map(({ name, severity = 'error' }) => [
-        `claude/recommended/${name}`,
-        { [`claude/${name}`]: severity },
-      ]),
-    ])
+        ...PATH_RULES.map(({ name }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: 'error' },
+        ]),
+        ...SANDBOX_RULES.map(({ name }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: 'error' },
+        ]),
+        ...WARN_RULES.map(({ name }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: 'warn' },
+        ]),
+        ...MARKETPLACE_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'error' },
+        ]),
+        ...MARKETPLACE_WARN_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'warn' },
+        ]),
+        ...SETTINGS_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'error' },
+        ]),
+        ...SCOPE_RULES.map(({ name, severity = 'error' }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: severity },
+        ]),
+        ...UNTRACKED_RULES.map(({ name }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: 'warn' },
+        ]),
+        ...MARKET_SETTINGS_RULES.filter(({ severity }) => severity !== 'off').map(
+          ({ name, severity }) => [`claude/recommended/${name}`, { [`claude/${name}`]: severity }],
+        ),
+        ...MEMORY_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'error' },
+        ]),
+        ...MEMORY_WARN_RULES.map((rule) => [
+          `claude/recommended/${rule}`,
+          { [`claude/${rule}`]: 'warn' },
+        ]),
+        ...MCP_RULES.flatMap(({ name, markdown, severity }) =>
+          (markdown ? [name, name] : [name]).map((block) => [
+            `claude/recommended/${block}`,
+            { [`claude/${block}`]: severity ?? 'error' },
+          ]),
+        ),
+        ...PLUGIN_RULES.map(({ name, severity = 'error' }) => [
+          `claude/recommended/${name}`,
+          { [`claude/${name}`]: severity },
+        ]),
+      ],
+    )
   })
 
   // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
   it('gives strict the rules of recommended, and each off rule at warn', () => {
-    const rulesOf = (config: Linter.Config[]) => config.map((c) => c.rules)
+    const rulesOf = (config: Linter.Config[]) => config.flatMap((c) => (c.rules ? [c.rules] : []))
     const isOff = (rules: Linter.Config['rules']) =>
       OFF_RULES.some((rule) => rules?.[`claude/${rule}`] !== undefined)
     const strict = rulesOf(plugin.configs.strict)
     expect(strict.filter((rules) => !isOff(rules))).toEqual(rulesOf(plugin.configs.recommended))
     expect(strict.filter(isOff)).toEqual(OFF_RULES.map((rule) => ({ [`claude/${rule}`]: 'warn' })))
-    expect(plugin.configs.strict.map((c) => c.name)).toEqual([
+    expect(plugin.configs.strict.filter((c) => c.rules).map((c) => c.name)).toEqual([
       'claude/strict/skill-description-max-length',
       'claude/strict/command-legacy-format',
       'claude/strict/hooks-event-name-known',
@@ -6055,7 +6069,7 @@ describe('configs', () => {
 
   it('turns each off agent rule on in strict only, on the agent files', () => {
     for (const rule of AGENT_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       const files = DESCRIPTION_RULES.includes(rule) ? ['**/*.md'] : ['**/agents/**/*.md']
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['markdown/gfm', files]])
@@ -6064,7 +6078,7 @@ describe('configs', () => {
 
   it('turns each off MCP rule on in strict only, on the files that it reads', () => {
     for (const { name, files, markdown } of MCP_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, name)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', files],
@@ -6153,7 +6167,7 @@ describe('configs', () => {
 
   it('turns each off marketplace rule on in strict only, on the files that it reads', () => {
     for (const rule of MARKETPLACE_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         [
@@ -6168,7 +6182,7 @@ describe('configs', () => {
 
   it('turns each off skill rule on in strict only, on the files that it reads', () => {
     for (const rule of SKILL_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['markdown/gfm', OFF_FILES[rule] ?? ['**/SKILL.md', '**/commands/**/*.md']],
@@ -6178,7 +6192,7 @@ describe('configs', () => {
 
   it('turns each off rule on in strict only, on the project and managed files', () => {
     for (const rule of BASH_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([
         ['json/json', [...PROJECT_FILES, ...MANAGED_FILES]],
@@ -6188,7 +6202,7 @@ describe('configs', () => {
 
   it('turns each cross-file and auto mode off rule on in strict only, on the files that it reads', () => {
     for (const { name, files } of CROSS_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, name)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
@@ -6206,7 +6220,7 @@ describe('configs', () => {
 
   it('turns each sandbox off rule on in strict only, on the files that it reads', () => {
     for (const { name, files } of SANDBOX_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, name)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
@@ -6255,7 +6269,7 @@ describe('configs', () => {
   it('turns each off marketplace settings rule on in strict only', () => {
     expect(MARKET_SETTINGS_OFF_RULES).toEqual(['settings-enabled-plugins-marketplace-declared'])
     for (const rule of MARKET_SETTINGS_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => c.rules)).toEqual([{ [`claude/${rule}`]: 'warn' }])
     }
@@ -6425,7 +6439,7 @@ describe('configs', () => {
 
   it('turns each off memory rule on in strict only, on the files that it reads', () => {
     for (const rule of MEMORY_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${rule}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([MEMORY_OFF_BLOCKS[rule]])
     }
@@ -6433,7 +6447,7 @@ describe('configs', () => {
 
   it('turns each off settings rule on in strict only, on the files that it reads', () => {
     for (const { name, files } of SETTINGS_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, name)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
@@ -6441,7 +6455,7 @@ describe('configs', () => {
 
   it('turns each off plugin rule on in strict only, on the files that it reads', () => {
     for (const { name, files } of PLUGIN_OFF_RULES) {
-      expect(plugin.configs.recommended.some((c) => c.name?.endsWith(`/${name}`))).toBe(false)
+      expect(hasRuleBlock(plugin.configs.recommended, name)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${name}`)
       expect(blocks.map((c) => [c.language, c.files])).toEqual([['json/json', files]])
     }
@@ -6716,4 +6730,117 @@ describe('configs', () => {
       rmSync(dir, { recursive: true, force: true })
     }
   }, 30_000)
+})
+
+// The block names and settings that each language has in a config.
+const LANGUAGE_SETTINGS = {
+  markdown: { language: 'markdown/gfm', languageOptions: { frontmatter: 'yaml' } },
+  json: { language: 'json/json' },
+} as const
+
+// The language object that ESLint resolves for each language name.
+const LANGUAGE_OBJECTS = { markdown: markdown.languages.gfm, json: json.languages.json }
+
+interface Target {
+  name: string
+  language: 'markdown' | 'json'
+  files: string[]
+  also?: { language: 'markdown' | 'json'; files: string[] }
+}
+
+/** The `target` of each rule module, read from the module itself. */
+async function targets(): Promise<Target[]> {
+  const dir = path.join(import.meta.dirname, '../src/rules')
+  const found: Target[] = []
+  for (const file of readdirSync(dir).filter((f) => f.endsWith('.ts'))) {
+    const mod = (await import(pathToFileURL(path.join(dir, file)).href)) as { target: Target }
+    found.push(mod.target)
+  }
+  return found
+}
+
+/** A file path that a glob of a `target` matches. */
+function sampleOf(glob: string): string {
+  return `proj/${glob
+    .replace(/^\*\*\//, '')
+    .replaceAll('**/', 'a/b/')
+    .replace('!(*.*)', 'nodot')
+    .replace('*.*', 'x.y')
+    .replaceAll('*', 'x')}`
+}
+
+describe('files of each rule in recommended and strict', () => {
+  it('reaches every glob of every rule with a rules entry in the user block', async () => {
+    const all = await targets()
+    expect(all.length).toBe(Object.keys(plugin.rules).length)
+    const cwd = mkdtempSync(path.join(tmpdir(), 'claude-config-globs-'))
+    try {
+      for (const config of ['recommended', 'strict']) {
+        for (const { name, language, files, also } of all) {
+          const eslint = new ESLint({
+            cwd,
+            overrideConfigFile: true,
+            overrideConfig: defineConfig([
+              {
+                plugins: { claude: plugin },
+                extends: [`claude/${config}`],
+                rules: { [`claude/${name}`]: 'warn' },
+              },
+            ]),
+          })
+          const groups: [Target['language'], string[]][] = [[language, files]]
+          if (also) groups.push([also.language, also.files])
+          for (const [lang, globs] of groups) {
+            for (const glob of globs) {
+              const calculated = await eslint.calculateConfigForFile(path.join(cwd, sampleOf(glob)))
+              const where = `${config} ${name} ${glob}`
+              expect([where, calculated?.rules?.[`claude/${name}`]?.[0]]).toEqual([where, 1])
+              expect([where, calculated?.language]).toEqual([where, LANGUAGE_OBJECTS[lang]])
+            }
+          }
+        }
+      }
+    } finally {
+      rmSync(cwd, { recursive: true, force: true })
+    }
+  }, 120_000)
+
+  it('has one block for each language, with the union of the globs and no rules', async () => {
+    const all = await targets()
+    for (const language of ['markdown', 'json'] as const) {
+      const union = new Set(
+        all.flatMap((t) => [
+          ...(t.language === language ? t.files : []),
+          ...(t.also?.language === language ? t.also.files : []),
+        ]),
+      )
+      for (const config of ['recommended', 'strict'] as const) {
+        const blocks = plugin.configs[config].filter(
+          (c) => c.name === `claude/${config}/${language}-files`,
+        )
+        expect(blocks).toHaveLength(1)
+        const [block] = blocks as [Linter.Config]
+        expect(block.rules).toBeUndefined()
+        expect(new Set(block.files as string[])).toEqual(union)
+        expect(block.files).toHaveLength(union.size)
+        expect(block.language).toBe(LANGUAGE_SETTINGS[language].language)
+        expect(block.plugins?.claude).toBe(plugin)
+      }
+    }
+  })
+
+  it('never gives one glob to two languages', async () => {
+    const all = await targets()
+    const owner = new Map<string, string>()
+    for (const { language, files, also } of all) {
+      const groups: [Target['language'], string[]][] = [[language, files]]
+      if (also) groups.push([also.language, also.files])
+      for (const [lang, globs] of groups) {
+        for (const glob of globs) {
+          expect([glob, owner.get(glob) ?? lang]).toEqual([glob, lang])
+          owner.set(glob, lang)
+        }
+      }
+    }
+  })
 })

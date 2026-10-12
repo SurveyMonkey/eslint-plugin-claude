@@ -72,25 +72,11 @@ modified: 2026-10-14T09:30:00Z
 
 ## Usage
 
-The `recommended` config configures no file that this rule checks. Add a block that gives the
-files and the language of the rule:
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+[Usage](../../README.md#usage) in the README.
 
 ```js
-// eslint.config.js
-import { defineConfig } from 'eslint/config'
-import markdown from '@eslint/markdown'
-import claude from 'eslint-plugin-claude'
-
-export default defineConfig([
-  { plugins: { claude }, extends: ['claude/recommended'] },
-  {
-    files: ['**/.claude/agent-memory/*/*.md'],
-    plugins: { claude, markdown },
-    language: 'markdown/gfm',
-    languageOptions: { frontmatter: 'yaml' },
-    rules: { 'claude/memory-topic-frontmatter': 'warn' },
-  },
-])
+'claude/memory-topic-frontmatter': 'warn'
 ```
 
 ## Sources

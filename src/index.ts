@@ -1609,7 +1609,7 @@ const STRICT: Record<Severity, Exclude<Severity, 'off'>> = {
 // `ESLint.Plugin`, so a config name with a typo does not type-check.
 // `ESLint.Plugin['rules']` rather than `Rule.RuleModule`, which types
 // JavaScript rules only. Each config is an array of one block per rule that
-// it turns on. Add a key for a new config.
+// it turns on, then one block of files for each language. Add a key for a new config.
 type Plugin = Omit<ESLint.Plugin, 'meta' | 'configs'> & {
   meta: { name: string; version: string; namespace: 'claude' }
   rules: NonNullable<ESLint.Plugin['rules']>
@@ -1627,7 +1627,7 @@ const plugin: Plugin = {
  *  files and language. The block also registers the language plugins, so a
  *  consumer needs no other setup. */
 function configFor(config: string, severity: (rule: RuleName) => Severity): Linter.Config[] {
-  return modules
+  const ruleBlocks = modules
     .filter((m) => severity(m.target.name) !== 'off')
     .flatMap((m: Module) =>
       [
@@ -1641,6 +1641,29 @@ function configFor(config: string, severity: (rule: RuleName) => Severity): Lint
         rules: { [`claude/${m.target.name}`]: severity(m.target.name as RuleName) },
       })),
     )
+  return [...ruleBlocks, ...fileBlocksFor(config)]
+}
+
+/** One block for each language, with the globs of every rule of that
+ *  language and no rules. A rule that is `off` has no block of its own, so
+ *  this block gives its files a config. A user then turns the rule on with
+ *  an entry in `rules`. The globs come from the modules, so a new rule adds
+ *  no entry to a central list. */
+function fileBlocksFor(config: string): Linter.Config[] {
+  const globs = new Map<Language, Set<string>>()
+  for (const { target } of modules as Module[]) {
+    for (const block of [target, ...(target.also ? [target.also] : [])]) {
+      const set = globs.get(block.language) ?? new Set<string>()
+      for (const glob of block.files) set.add(glob)
+      globs.set(block.language, set)
+    }
+  }
+  return [...globs].map(([language, files]) => ({
+    name: `claude/${config}/${language}-files`,
+    files: [...files],
+    plugins: { claude: plugin, markdown, json },
+    ...LANGUAGES[language],
+  }))
 }
 
 plugin.configs.recommended = configFor('recommended', (rule) => recommended[rule])
