@@ -67,7 +67,8 @@ The rule is silent in these cases:
 - The file is not a skill or command file, such as `docs/SKILL.md`.
 - The frontmatter does not parse.
 - A scan of an agents directory meets a link out of the repository, or a link with no target.
-  The agents directory can also be a link with no target.
+  The agents directory can also be a link with no target. It can also be missing, with a real path
+  out of the repository, as when `.claude` is a link out of the repository.
 
 The rule makes no report that rests on a file that it cannot read. A read can fail for a reason
 other than a missing file, such as a permission error. This applies to an agents directory, an

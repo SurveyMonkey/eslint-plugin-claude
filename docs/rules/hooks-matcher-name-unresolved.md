@@ -46,7 +46,8 @@ reads only an exact-match value, so a regular expression gets no report.
 
 The agent and server checks rest on an absence, so they read inside the repository only (ADR 001, Decision 14).
 The rule makes no report for a kind of name when it cannot read one source of that kind. These cases count: a
-folder or a file with no read access, a link that leads out of the repository, a link with no target in the
+folder or a file with no read access, a link that leads out of the repository, an agents folder that is not there
+and has a path out of the repository, a link with no target in the
 agents folder (an agent can hide behind it), and a `.mcp.json` that does not parse. The rule also makes no report when the repository has no agent
 file or no `.mcp.json`, because a user-level agent or a user-scope server can fill the gap.
 

@@ -249,12 +249,60 @@ describe('markdownFiles and a link with no target', () => {
     },
   )
 
-  it('gives nothing for a missing directory out of the bound, with no link in its path', () => {
+  // A missing directory out of the bound can be there. The scan cannot see out of the bound
+  // (ADR 001, Decision 14), so it sets `outside`.
+  it('sets outside for a missing directory out of the bound, with no link in its path', () => {
     put('db/in/a.md', '')
     expect(markdownFiles(path.join(scratch, 'db', 'gone'), path.join(scratch, 'db', 'in'))).toEqual(
-      { files: [], outside: false, unreadable: false },
+      { files: [], outside: true, unreadable: false },
     )
+    // A missing directory below the bound is not there, and the scan sees that.
+    expect(
+      markdownFiles(path.join(scratch, 'db', 'in', 'gone'), path.join(scratch, 'db', 'in')),
+    ).toEqual({ files: [], outside: false, unreadable: false })
+    // The same holds when a file in the path stops the walk up.
+    expect(
+      markdownFiles(path.join(scratch, 'db', 'in', 'a.md', 'gone'), path.join(scratch, 'db', 'in')),
+    ).toEqual({ files: [], outside: false, unreadable: false })
   })
+
+  it.skipIf(process.platform === 'win32')(
+    'sets outside for a missing directory below a link out of the bound',
+    () => {
+      put('lo/repo/.git/HEAD', '')
+      put('lo/elsewhere/team/far.md', '')
+      const repo = path.join(scratch, 'lo', 'repo')
+      symlinkSync('../elsewhere', path.join(repo, '.claude'))
+      // The target has no `agents` folder, and the link is out of the bound.
+      expect(markdownFiles(path.join(repo, '.claude', 'agents'), repo)).toEqual({
+        files: [],
+        outside: true,
+        unreadable: false,
+      })
+      // The bound of the target itself holds the path, so the folder is not there.
+      expect(
+        markdownFiles(path.join(repo, '.claude', 'agents'), path.join(scratch, 'lo', 'elsewhere')),
+      ).toEqual({ files: [], outside: false, unreadable: false })
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'sets unreadable, not outside, for a dangling link in the path of a directory out of the bound',
+    () => {
+      put('ld/in/a.md', '')
+      mkdirSync(path.join(scratch, 'ld', 'out'), { recursive: true })
+      symlinkSync('missing', path.join(scratch, 'ld', 'out', 'agents'))
+      expect(
+        markdownFiles(
+          path.join(scratch, 'ld', 'out', 'agents', 'team'),
+          path.join(scratch, 'ld', 'in'),
+        ),
+      ).toEqual({ files: [], outside: false, unreadable: true })
+      expect(
+        markdownFiles(path.join(scratch, 'ld', 'out', 'agents'), path.join(scratch, 'ld', 'in')),
+      ).toEqual({ files: [], outside: false, unreadable: true })
+    },
+  )
 })
 
 describe('markdownFiles when a stat fails', () => {

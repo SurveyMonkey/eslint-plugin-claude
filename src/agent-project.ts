@@ -92,8 +92,8 @@ export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
     return files
   }
   const agents = path.join(scope.root, 'agents')
-  // `markdownFiles` reads a directory that is not there as empty, and does not check the
-  // bound for it. Such a directory out of the repository is a part that the check cannot see.
+  // A directory that is not there, with a path out of the repository, is a part that the check
+  // cannot see. The scan below sets `outside` for it too, and gives the same result.
   if (realOf(agents) === null && missingOf(agents, bound) === UNREADABLE) {
     return UNREADABLE
   }
