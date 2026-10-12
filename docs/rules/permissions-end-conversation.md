@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-end-conversation
 
+📝 Do not name EndConversation in a deny or ask rule.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

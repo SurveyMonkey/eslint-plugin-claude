@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-plugin-ignored-fields
 
+📝 Leave out the frontmatter fields that Claude Code ignores in a plugin agent.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

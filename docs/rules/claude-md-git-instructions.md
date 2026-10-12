@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-git-instructions
 
+📝 Turn off the built-in git instructions when CLAUDE.md sets git rules.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

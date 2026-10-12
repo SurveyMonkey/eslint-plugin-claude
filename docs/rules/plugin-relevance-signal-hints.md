@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-relevance-signal-hints
 
+📝 Write a relevance cli entry as one command name, and a file pattern with an end anchor.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

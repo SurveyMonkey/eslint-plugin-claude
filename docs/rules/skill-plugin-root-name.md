@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-plugin-root-name
 
+📝 Set a name on the SKILL.md at the root of a plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

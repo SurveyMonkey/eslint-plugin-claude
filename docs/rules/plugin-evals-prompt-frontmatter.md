@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-prompt-frontmatter
 
+📝 Use the documented frontmatter fields, limits and env keys in an eval prompt.md.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

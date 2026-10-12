@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-exec-wrapper-prefix
 
+📝 Write an exact Bash allow rule for an exec wrapper such as watch.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

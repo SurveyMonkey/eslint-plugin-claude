@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-dangling-reference
 
+📝 Point only to paths and slash commands that exist in the repository.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -86,6 +90,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                              | Type     | Default |
+| :------ | :----------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Commands and paths from outside the repository, as the file writes them. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

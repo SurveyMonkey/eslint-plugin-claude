@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-cd-allowlist
 
+📝 Add a Cd allow rule only to put /cd in allowlist mode.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

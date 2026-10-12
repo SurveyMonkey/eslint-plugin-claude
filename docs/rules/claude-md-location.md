@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-location
 
+📝 Put a CLAUDE.md file where Claude Code loads it, with its exact name.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

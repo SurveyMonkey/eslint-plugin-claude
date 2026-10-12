@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-excludes-absolute-committed
 
+📝 Keep a machine-specific claudeMdExcludes path out of the committed settings.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

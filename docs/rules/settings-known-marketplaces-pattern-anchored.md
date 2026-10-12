@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-known-marketplaces-pattern-anchored
 
+📝 Anchor the hostPattern and pathPattern entries of strictKnownMarketplaces.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-exec-form-command-spaces
 
+📝 Set only the executable in the command of a hook in exec form.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

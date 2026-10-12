@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-auto-mode-dropped-allow
 
+📝 Do not rely on an allow rule that auto mode drops.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -94,6 +98,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name           | Description                                                            | Type     | Default |
+| :------------- | :--------------------------------------------------------------------- | :------- | :------ |
+| `interpreters` | More program names. The rule reports a wildcard rule for each of them. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

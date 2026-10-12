@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-dependencies-resolve
 
+📝 Name only dependencies that the marketplace of the plugin resolves.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

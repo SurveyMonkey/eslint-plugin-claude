@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-hidden-whitespace
 
+📝 Remove leading and trailing whitespace from the values of an MCP server.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

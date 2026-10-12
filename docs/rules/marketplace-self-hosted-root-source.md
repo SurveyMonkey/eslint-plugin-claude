@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-self-hosted-root-source
 
+📝 Give a marketplace beside a plugin.json an entry for the repository root.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

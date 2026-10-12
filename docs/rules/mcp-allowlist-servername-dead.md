@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-allowlist-servername-dead
 
+📝 Do not list a serverName in an allowlist that has serverUrl and serverCommand entries.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

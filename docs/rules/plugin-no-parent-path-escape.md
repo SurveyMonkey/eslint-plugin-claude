@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-no-parent-path-escape
 
+📝 Do not name a path above the plugin root in a plugin command or script.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

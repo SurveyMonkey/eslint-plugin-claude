@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-filechanged-star-matcher
 
+📝 Omit the matcher of a FileChanged hook instead of "*".
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-enabled-plugins-external-source
 
+📝 Do not enable a plugin in .claude/settings.json when its marketplace entry has an external source.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

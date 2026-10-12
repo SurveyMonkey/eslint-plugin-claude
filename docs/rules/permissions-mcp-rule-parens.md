@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-mcp-rule-parens
 
+📝 Write an MCP permission rule without parentheses.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

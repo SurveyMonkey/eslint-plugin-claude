@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-project-plugin-bundle
 
+📝 Declare the MCP servers of a project plugin inline or in a .mcp.json.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

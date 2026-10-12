@@ -12,6 +12,10 @@ generated:
 
 # claude/memory-index-entry-format
 
+📝 Keep each entry of a MEMORY.md index to one line.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

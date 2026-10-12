@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-loop-reference-invocable
 
+📝 Do not start loop.md with a skill that only the user can invoke.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

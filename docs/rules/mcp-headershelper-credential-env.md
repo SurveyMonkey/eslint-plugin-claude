@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-headershelper-credential-env
 
+📝 Do not read a credential variable in an inline MCP headersHelper.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

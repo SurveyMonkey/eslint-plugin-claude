@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-legacy-tool-name
 
+📝 Write Agent in place of Task, and Edit in place of MultiEdit.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -64,6 +68,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
 <!-- end auto-generated rule options list -->
 
 ```js

@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-proxy-env
 
+📝 Set the proxy variables of a script that starts claude in the settings env block.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

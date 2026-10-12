@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-model-override
 
+📝 Do not switch the model in a skill or command.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

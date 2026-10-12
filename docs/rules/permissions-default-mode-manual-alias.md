@@ -12,6 +12,12 @@ generated:
 
 # claude/permissions-default-mode-manual-alias
 
+📝 Write "default" in place of the "manual" alias of permissions.defaultMode.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -68,6 +74,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
 <!-- end auto-generated rule options list -->
 
 ```js

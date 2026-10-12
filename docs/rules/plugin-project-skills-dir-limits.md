@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-project-skills-dir-limits
 
+📝 Use no monitor, MCP bundle or outside MCP file in a plugin in .claude/skills/.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

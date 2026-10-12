@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-insecure-url
 
+📝 Use https:// or wss:// for a remote MCP server that is not on the machine.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

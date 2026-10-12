@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-env-var-syntax
 
+📝 Write an MCP variable reference as ${VAR} or ${VAR:-default}.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

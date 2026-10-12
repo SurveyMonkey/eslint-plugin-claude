@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-attribution-false
 
+📝 Do not set attribution to false in a file that an older Claude Code also reads.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

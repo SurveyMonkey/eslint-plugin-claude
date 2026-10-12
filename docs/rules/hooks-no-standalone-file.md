@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-no-standalone-file
 
+📝 Put project hooks under the hooks key of a settings file, not in a hooks file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

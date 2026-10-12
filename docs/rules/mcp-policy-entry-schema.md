@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-policy-entry-schema
 
+📝 Write each allowedMcpServers and deniedMcpServers entry with exactly one valid key.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

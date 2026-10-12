@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-marketplace-key-alias
 
+📝 Write extraKnownMarketplaces and strictKnownMarketplaces, not their aliases additionalMarketplaces and allowedMarketplaces.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

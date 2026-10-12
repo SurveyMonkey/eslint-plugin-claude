@@ -12,6 +12,10 @@ generated:
 
 # claude/output-style-force-for-plugin
 
+📝 Do not force the output style of a plugin on each user.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

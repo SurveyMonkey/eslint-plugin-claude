@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-user-config-field-applicability
 
+📝 Set min, max and multiple only on the userConfig option types they fit.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

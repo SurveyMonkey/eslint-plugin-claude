@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-approval-conflict
 
+📝 Do not list a server in both enabledMcpjsonServers and disabledMcpjsonServers.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-default-mode-value
 
+📝 Set permissions.defaultMode to a permission mode that Claude Code knows.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-removed-key
 
+📝 Do not set a settings key that has no effect.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

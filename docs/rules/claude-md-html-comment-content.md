@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-html-comment-content
 
+📝 Keep instructions out of a block-level HTML comment.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

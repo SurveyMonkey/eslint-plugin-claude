@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-credential
 
+📝 Do not set a credential in the env block of a settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

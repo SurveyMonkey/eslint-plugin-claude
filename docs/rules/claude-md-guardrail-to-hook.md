@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-guardrail-to-hook
 
+📝 Enforce a guardrail with a hook or a permission rule, not with CLAUDE.md text.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

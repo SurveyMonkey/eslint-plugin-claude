@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-bash-without-powershell
 
+📝 Match PowerShell wherever a tool hook matches Bash.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

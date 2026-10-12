@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-webfetch-mid-wildcard
 
+📝 Use only a leading *. or a bare * in a WebFetch domain while the sandbox is on.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-http-literal-secret
 
+📝 Use a variable and not a literal credential in a header of an http hook.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

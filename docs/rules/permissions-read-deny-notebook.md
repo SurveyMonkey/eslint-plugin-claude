@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-read-deny-notebook
 
+📝 Add an Edit deny rule next to a Read deny rule, because NotebookEdit is not covered.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

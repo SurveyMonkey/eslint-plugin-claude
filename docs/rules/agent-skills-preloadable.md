@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-skills-preloadable
 
+📝 Preload only skills that a model can invoke.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

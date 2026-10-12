@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-plugin-path-vars
 
+📝 Write a plugin path in a plugin skill with the braced plugin variable.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

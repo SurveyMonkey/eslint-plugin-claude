@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-precedence-shadowing
 
+📝 Do not name a project skill like a personal or enterprise skill.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -78,6 +82,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name              | Description                                                    | Type     | Default |
+| :---------------- | :------------------------------------------------------------- | :------- | :------ |
+| `enterpriseNames` | The names of the enterprise skills, from the managed settings. | String[] | `[]`    |
+| `personalNames`   | The names of the personal skills of the team.                  | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

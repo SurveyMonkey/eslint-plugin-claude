@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-managed-file
 
+📝 Write a managed settings file as Claude Code reads it.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

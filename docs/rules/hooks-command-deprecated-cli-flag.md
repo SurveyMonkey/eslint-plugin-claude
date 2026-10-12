@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-command-deprecated-cli-flag
 
+📝 Do not pass a deprecated CLI flag in a hook command.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

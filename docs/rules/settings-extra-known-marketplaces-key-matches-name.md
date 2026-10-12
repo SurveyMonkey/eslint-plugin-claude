@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-extra-known-marketplaces-key-matches-name
 
+📝 Key each extraKnownMarketplaces entry by the name in the marketplace.json that it points at.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

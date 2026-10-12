@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-bin-executable
 
+📝 Give each file in the bin directory of a plugin the executable bit.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

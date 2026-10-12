@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-manifest-location
 
+📝 Keep the components of a plugin out of .claude-plugin/.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-invocation-redundant-fields
 
+📝 Remove a field that the invocation settings of a skill make useless.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

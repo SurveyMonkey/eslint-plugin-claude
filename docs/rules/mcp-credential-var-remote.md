@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-credential-var-remote
 
+📝 Do not use a credential variable in the url or headers of a remote MCP server.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -86,6 +90,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                    | Type     | Default |
+| :------ | :----------------------------- | :------- | :------ |
+| `names` | More variable names to report. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

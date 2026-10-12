@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-runner-wildcard
 
+📝 Write one Bash allow rule for each inner command of an environment runner.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -78,6 +82,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name      | Description                                                                                   | Type     | Default                                                          |
+| :-------- | :-------------------------------------------------------------------------------------------- | :------- | :--------------------------------------------------------------- |
+| `runners` | The runners to check, each as its words, such as "devbox run". The list replaces the default. | String[] | [`direnv exec`, `devbox run`, `mise exec`, `npx`, `docker exec`] |
+
 <!-- end auto-generated rule options list -->
 
 ```js

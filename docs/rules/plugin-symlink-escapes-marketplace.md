@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-symlink-escapes-marketplace
 
+📝 Keep the target of a link under a plugin inside the marketplace.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

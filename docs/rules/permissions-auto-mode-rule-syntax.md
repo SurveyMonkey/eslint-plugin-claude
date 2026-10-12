@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-auto-mode-rule-syntax
 
+📝 Write autoMode entries as prose, and put a permission rule in permissions.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

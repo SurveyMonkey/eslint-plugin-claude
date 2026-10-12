@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-stop-loop-guard
 
+📝 Read stop_hook_active in a Stop hook that blocks.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

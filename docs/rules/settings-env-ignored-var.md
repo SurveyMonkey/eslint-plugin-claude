@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-ignored-var
 
+📝 Do not set an env variable that Claude Code ignores in a settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-allow-unrestricted
 
+📝 Do not allow every Bash or PowerShell command, or every WebFetch domain.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-secret-heuristic
 
+📝 Do not commit an env variable that looks like a secret.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-weakening-options
 
+📝 Do not weaken the sandbox with an option that removes isolation.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

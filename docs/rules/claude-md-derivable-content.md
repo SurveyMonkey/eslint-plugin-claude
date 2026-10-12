@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-derivable-content
 
+📝 Leave out of CLAUDE.md what Claude can work out from the code.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

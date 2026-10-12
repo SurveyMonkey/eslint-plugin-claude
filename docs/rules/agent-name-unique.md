@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-name-unique
 
+📝 Give each local agent its own name.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-config-schema
 
+📝 Write the hooks config as events, matcher groups and handlers.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

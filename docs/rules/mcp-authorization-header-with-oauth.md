@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-authorization-header-with-oauth
 
+📝 Do not set oauth beside a static Authorization header on an MCP server.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

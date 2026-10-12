@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-sessionend-default-timeout
 
+📝 Set a timeout on a SessionEnd hook, which Claude Code cancels after 1.5 seconds.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

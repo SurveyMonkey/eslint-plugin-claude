@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-channel-server-stdio
 
+📝 Bind a channel to a stdio MCP server, not to a remote server.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

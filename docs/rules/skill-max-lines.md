@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-max-lines
 
+📝 Keep a SKILL.md under a number of lines.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -46,6 +50,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name               | Description                                                         | Type    | Default |
+| :----------------- | :------------------------------------------------------------------ | :------ | :------ |
+| `countFrontmatter` | Set true to count the whole file. Set false to count the body only. | Boolean | `true`  |
+| `max`              | The file must have fewer lines than this number.                    | Integer | `500`   |
+
 <!-- end auto-generated rule options list -->
 
 ```js

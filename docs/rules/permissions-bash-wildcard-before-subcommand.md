@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-wildcard-before-subcommand
 
+📝 Put the * of a Bash allow rule after the subcommand.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

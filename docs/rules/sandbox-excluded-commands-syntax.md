@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-excluded-commands-syntax
 
+📝 Write each excludedCommands entry as a command pattern, with no Bash( wrapper.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

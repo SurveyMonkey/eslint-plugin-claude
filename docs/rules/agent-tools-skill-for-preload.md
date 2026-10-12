@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-tools-skill-for-preload
 
+📝 Preload skills with the skills field, not with Skill in tools.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

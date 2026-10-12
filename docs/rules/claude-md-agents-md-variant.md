@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-agents-md-variant
 
+📝 Do not keep an AGENTS.md variant that Claude Code never reads.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -66,6 +70,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                         | Type     | Default |
+| :------ | :---------------------------------- | :------- | :------ |
+| `allow` | Paths that the rule does not check. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

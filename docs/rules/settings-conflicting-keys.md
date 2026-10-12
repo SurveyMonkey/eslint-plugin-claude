@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-conflicting-keys
 
+📝 Do not set a settings key that another key in the same file voids.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

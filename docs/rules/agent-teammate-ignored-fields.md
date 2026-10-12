@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-teammate-ignored-fields
 
+📝 Leave out the subagent fields that Claude Code ignores for a teammate, when the settings turn agent teams on.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

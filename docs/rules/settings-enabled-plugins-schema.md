@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-enabled-plugins-schema
 
+📝 Write each enabledPlugins key as plugin-name@marketplace-name with a Boolean value.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-file-layout
 
+📝 Put each skill in a folder, in a file named SKILL.md.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

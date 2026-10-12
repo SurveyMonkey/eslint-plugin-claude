@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-credentials-aws
 
+📝 Give sandbox.credentials AWS entries that Claude Code can pair and apply.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

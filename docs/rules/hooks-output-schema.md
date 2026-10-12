@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-output-schema
 
+📝 Print JSON output that Claude Code reads, with each field at its level.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

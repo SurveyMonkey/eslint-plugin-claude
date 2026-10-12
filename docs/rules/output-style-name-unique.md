@@ -12,6 +12,10 @@ generated:
 
 # claude/output-style-name-unique
 
+📝 Give each project output style its own name.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-allowed-tools-broad
 
+📝 Do not give a skill an unscoped tool grant in allowed-tools.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -80,6 +84,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                                       | Type     | Default |
+| :------ | :-------------------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Rules to accept, as each one is in allowed-tools, such as Bash or mcp__github__*. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

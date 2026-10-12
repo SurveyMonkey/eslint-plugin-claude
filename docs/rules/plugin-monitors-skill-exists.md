@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-monitors-skill-exists
 
+📝 Name a skill of the plugin in a monitor that starts when a skill runs.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

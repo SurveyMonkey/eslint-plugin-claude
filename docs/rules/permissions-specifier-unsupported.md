@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-specifier-unsupported
 
+📝 Write a tool that takes no specifier as its bare name.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

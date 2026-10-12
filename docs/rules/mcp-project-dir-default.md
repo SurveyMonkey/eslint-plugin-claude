@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-project-dir-default
 
+📝 Give CLAUDE_PROJECT_DIR a default in the command or args of a project MCP server.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

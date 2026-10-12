@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-known-marketplaces-policy-schema
 
+📝 Write each marketplace policy entry as a source object that Claude Code reads.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

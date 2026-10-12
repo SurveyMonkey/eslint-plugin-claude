@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-env-var-default
 
+📝 Give an MCP variable reference a default, in case the variable is unset.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

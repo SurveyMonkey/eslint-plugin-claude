@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-themes-layout
 
+📝 Write a plugin theme file in the custom theme format.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

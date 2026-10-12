@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-no-git-lfs
 
+📝 Keep plugin files out of Git LFS.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

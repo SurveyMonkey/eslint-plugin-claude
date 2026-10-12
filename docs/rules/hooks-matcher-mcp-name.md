@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-mcp-name
 
+📝 Match the tools of an MCP server with mcp__<server>__.*, not the server name.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

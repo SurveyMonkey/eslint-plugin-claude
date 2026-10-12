@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-headers-literal-credential
 
+📝 Keep a literal credential out of the headers of a marketplace download.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

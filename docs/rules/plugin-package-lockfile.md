@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-package-lockfile
 
+📝 Ship a lockfile that Claude Code reads with the package.json of a plugin.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

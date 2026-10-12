@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-entry-component-paths
 
+📝 Write the component paths of a marketplace entry as the plugin path rules require.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

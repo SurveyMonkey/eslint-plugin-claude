@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-relative-source-exists
 
+📝 Name an existing directory in a relative marketplace source.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

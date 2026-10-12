@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-name-shadowing
 
+📝 Do not reuse the name of an agent in a .claude/agents directory above.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

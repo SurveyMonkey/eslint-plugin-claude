@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-timeout-units
 
+📝 Write the timeout of a hook in seconds, not in milliseconds.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -70,6 +74,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name               | Description                                            | Type    | Default |
+| :----------------- | :----------------------------------------------------- | :------ | :------ |
+| `millisecondsFrom` | The lowest timeout, in seconds, that the rule reports. | Integer | `1000`  |
+
 <!-- end auto-generated rule options list -->
 
 ```js

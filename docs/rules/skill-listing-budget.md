@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-listing-budget
 
+📝 Keep the skill and command descriptions of one scope within the listing budget.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -84,6 +88,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                 | Type    | Default |
+| :----------- | :---------------------------------------------------------- | :------ | :------ |
+| `listingMax` | The length at which Claude Code cuts the text of one entry. | Integer | `1536`  |
+| `max`        | The most characters in the entries of one scope.            | Integer | `8000`  |
+
 <!-- end auto-generated rule options list -->
 
 ```js

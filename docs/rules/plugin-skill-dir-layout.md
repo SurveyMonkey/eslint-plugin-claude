@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-skill-dir-layout
 
+📝 Put each skill of a listed skills directory in a folder with a SKILL.md.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

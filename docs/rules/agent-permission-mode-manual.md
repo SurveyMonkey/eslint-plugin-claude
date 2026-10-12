@@ -12,6 +12,12 @@ generated:
 
 # claude/agent-permission-mode-manual
 
+📝 Write permissionMode: default, not the alias manual, in a local subagent.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-settings-single-source
 
+📝 Set the default settings of a plugin in settings.json or in the manifest, not both.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

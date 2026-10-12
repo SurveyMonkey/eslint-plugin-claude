@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-prompt-no-at-mentions
 
+📝 Do not write an @path mention in the body of an eval prompt.md.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

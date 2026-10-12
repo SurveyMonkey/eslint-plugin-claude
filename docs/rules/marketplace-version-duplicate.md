@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-version-duplicate
 
+📝 Set the version of a marketplace plugin in the entry or in plugin.json, not both.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

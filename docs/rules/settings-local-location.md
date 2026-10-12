@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-local-location
 
+📝 Keep .claude/settings.local.json at the repository root.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

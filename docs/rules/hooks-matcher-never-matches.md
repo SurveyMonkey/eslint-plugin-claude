@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-never-matches
 
+📝 Use a matcher value that a tool hook can match.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

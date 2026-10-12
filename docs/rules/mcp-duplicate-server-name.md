@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-duplicate-server-name
 
+📝 Declare each MCP server name of a plugin once.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-unsandboxed-retry
 
+📝 Close the unsandboxed retry of Claude while the sandbox is on.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

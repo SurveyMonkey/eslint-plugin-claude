@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-relative-source-url-hosted
 
+📝 Give an entry of a URL-hosted marketplace a source that needs no marketplace files.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

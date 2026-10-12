@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-no-sse-transport
 
+📝 Use the http transport for an MCP server, not the deprecated sse transport.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

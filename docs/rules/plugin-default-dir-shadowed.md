@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-default-dir-shadowed
 
+📝 Point a manifest key that replaces a default folder at a path inside the folder.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

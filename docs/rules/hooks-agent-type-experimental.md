@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-agent-type-experimental
 
+📝 Use a command hook, not an experimental agent hook.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

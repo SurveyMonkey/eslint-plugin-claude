@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-scope
 
+📝 Do not put a credentials mask entry in a project or local settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-enabled-plugins-marketplace-declared
 
+📝 Declare the marketplace of each enabled plugin in extraKnownMarketplaces of the project settings.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

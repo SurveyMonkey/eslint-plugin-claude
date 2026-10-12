@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-tools-conditional
 
+📝 Do not list in tools a tool that a background or nested subagent loses.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

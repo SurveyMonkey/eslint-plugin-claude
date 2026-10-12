@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-body-token-budget
 
+📝 Keep the body of a skill within the tokens that compaction keeps.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -63,6 +67,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name  | Description                               | Type    | Default |
+| :---- | :---------------------------------------- | :------ | :------ |
+| `max` | The most tokens in the body of the skill. | Integer | `5000`  |
+
 <!-- end auto-generated rule options list -->
 
 ```js

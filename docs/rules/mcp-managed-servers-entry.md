@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-managed-servers-entry
 
+📝 Write each managedMcpServers entry so that Claude Code loads it.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

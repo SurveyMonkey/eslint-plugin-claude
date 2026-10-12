@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-handler-field-unknown
 
+📝 Use only the handler fields that the docs list for the hook type.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

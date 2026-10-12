@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-anthropic-hosted-url
 
+📝 Do not add an Anthropic-hosted connector as an MCP server entry.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -84,6 +88,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                | Type     | Default |
+| :------ | :------------------------- | :------- | :------ |
+| `hosts` | More host names to report. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ## Sources

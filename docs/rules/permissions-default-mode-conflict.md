@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-default-mode-conflict
 
+📝 Do not set permissions.defaultMode to bypassPermissions while the mode is locked.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

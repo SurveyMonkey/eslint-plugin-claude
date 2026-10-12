@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-command-link-mode
 
+📝 Do not use link mode in a command plugin source.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

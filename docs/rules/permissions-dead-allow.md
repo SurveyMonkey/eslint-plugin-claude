@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-dead-allow
 
+📝 Do not write an allow rule that a deny or ask rule covers.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

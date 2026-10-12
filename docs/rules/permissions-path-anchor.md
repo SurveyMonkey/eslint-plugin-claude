@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-path-anchor
 
+📝 Anchor a path rule at the file system root with //, and a project path with ./.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-skills-key-redundant-default
 
+📝 Do not list the default skills directory in the skills key of a plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

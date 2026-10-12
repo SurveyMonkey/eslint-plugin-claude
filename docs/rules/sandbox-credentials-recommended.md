@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-credentials-recommended
 
+📝 Deny sandboxed commands the credential directories ~/.aws and ~/.ssh.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

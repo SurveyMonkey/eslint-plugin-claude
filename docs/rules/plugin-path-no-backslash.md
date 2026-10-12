@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-path-no-backslash
 
+📝 Write the component paths of plugin.json with forward slashes.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

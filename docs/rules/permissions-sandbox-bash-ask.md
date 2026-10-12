@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-sandbox-bash-ask
 
+📝 Do not rely on a bare Bash ask rule while the sandbox auto-allows Bash.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-domain-broad
 
+📝 Do not allow every host, or a whole top-level domain, in the sandbox.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -67,6 +71,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                    | Type     | Default |
+| :------ | :----------------------------- | :------- | :------ |
+| `broad` | More hosts to report as broad. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 `broad` is an array of hosts. The default is `[]`.

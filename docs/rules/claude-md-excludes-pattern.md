@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-excludes-pattern
 
+📝 Start each claudeMdExcludes pattern at the root or with **/.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

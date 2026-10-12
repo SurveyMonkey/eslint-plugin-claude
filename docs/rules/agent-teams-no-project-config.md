@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-teams-no-project-config
 
+📝 Do not keep a team config file in .claude/teams/.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

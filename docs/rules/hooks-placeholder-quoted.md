@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-placeholder-quoted
 
+📝 Put the path placeholder of a shell-form hook command inside quotes.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

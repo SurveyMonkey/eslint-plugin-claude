@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-env-client-secret
 
+📝 Do not set MCP_CLIENT_SECRET in the env block of a committed settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

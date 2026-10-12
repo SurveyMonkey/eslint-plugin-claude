@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-path-rule-tool
 
+📝 Write a path rule as Edit(path) or Read(path).
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-commands-map-fields
 
+📝 Use only the documented fields in an entry of the commands map of a plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

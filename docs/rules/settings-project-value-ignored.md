@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-project-value-ignored
 
+📝 Do not set a value in a project settings file that Claude Code ignores there.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

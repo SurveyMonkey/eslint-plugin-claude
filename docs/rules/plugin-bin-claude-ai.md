@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-bin-claude-ai
 
+📝 Do not ship a top-level bin folder in a plugin that targets claude.ai.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -61,6 +65,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name      | Description                                                       | Type  | Default |
+| :-------- | :---------------------------------------------------------------- | :---- | :------ |
+| `targets` | The apps that the plugin must reach. The only value is claude-ai. | Array | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 An object with one property.

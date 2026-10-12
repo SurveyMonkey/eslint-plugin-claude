@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-nested-project-file
 
+📝 Keep the shared project settings file at the repository root.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

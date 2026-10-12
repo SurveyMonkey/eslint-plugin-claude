@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-inject-bang-position
 
+📝 Put an inline command placeholder at the start of a line or after whitespace.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

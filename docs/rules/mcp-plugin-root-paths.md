@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-plugin-root-paths
 
+📝 Write a file of a plugin MCP server as a path from the plugin root variable.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

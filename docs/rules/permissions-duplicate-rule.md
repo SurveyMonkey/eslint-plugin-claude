@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-duplicate-rule
 
+📝 Write each permission rule once in a settings file.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

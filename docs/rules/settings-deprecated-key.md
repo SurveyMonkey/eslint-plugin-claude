@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-deprecated-key
 
+📝 Do not set a deprecated settings key.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

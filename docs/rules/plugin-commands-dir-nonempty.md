@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-commands-dir-nonempty
 
+📝 Name a commands directory that holds at least one command.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

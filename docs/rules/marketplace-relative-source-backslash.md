@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-relative-source-backslash
 
+📝 Write a relative plugin source with forward slashes.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-argument-constraint
 
+📝 Do not limit curl or wget to a URL with a Bash allow rule.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

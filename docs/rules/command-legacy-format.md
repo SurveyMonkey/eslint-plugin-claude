@@ -12,6 +12,10 @@ generated:
 
 # claude/command-legacy-format
 
+📝 Use a skill, not the legacy command format.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

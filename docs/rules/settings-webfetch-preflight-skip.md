@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-webfetch-preflight-skip
 
+📝 Pair skipWebFetchPreflight with a WebFetch permission rule.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

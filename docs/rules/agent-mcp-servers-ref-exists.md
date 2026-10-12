@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-mcp-servers-ref-exists
 
+📝 Name a server that .mcp.json defines in the mcpServers of a subagent.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -83,6 +87,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                          | Type     | Default |
+| :------ | :--------------------------------------------------- | :------- | :------ |
+| `allow` | Names of MCP servers that the repository cannot see. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

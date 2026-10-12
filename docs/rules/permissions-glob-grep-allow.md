@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-glob-grep-allow
 
+📝 Do not rely on a Glob or Grep allow rule to restore the tool.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

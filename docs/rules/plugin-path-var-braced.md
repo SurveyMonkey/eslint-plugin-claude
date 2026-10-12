@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-path-var-braced
 
+📝 Write the plugin path variables of plugin Markdown in the braced form.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

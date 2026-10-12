@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-headershelper-committed
 
+📝 Review each headersHelper in a committed project .mcp.json.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

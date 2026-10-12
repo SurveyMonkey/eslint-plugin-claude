@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-plugin-scoped-name-unique
 
+📝 Give each agent of a plugin its own scoped name.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

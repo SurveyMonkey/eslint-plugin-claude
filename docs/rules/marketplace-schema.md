@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-schema
 
+📝 Write the fields of marketplace.json as the docs require.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

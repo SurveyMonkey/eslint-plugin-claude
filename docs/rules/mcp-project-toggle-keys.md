@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-project-toggle-keys
 
+📝 Do not set the per-project MCP toggle lists in a settings file.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

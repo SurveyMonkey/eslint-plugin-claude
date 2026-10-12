@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-enum
 
+📝 Use a matcher value that the hook event sends.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

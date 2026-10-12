@@ -12,6 +12,10 @@ generated:
 
 # claude/memory-auto-memory-directory-committed
 
+📝 Do not set autoMemoryDirectory in a project settings file.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-local-untracked
 
+📝 Keep CLAUDE.local.md out of git, and cover it with a .gitignore pattern.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

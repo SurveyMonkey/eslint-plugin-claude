@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-model-forced
 
+📝 Do not set `model` in a local agent when the settings force one subagent model.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

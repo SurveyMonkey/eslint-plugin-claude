@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-if-dir-glob-depth
 
+📝 Write a directory pattern in a hook if condition so that it matches at the depth you mean.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -83,6 +87,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
 <!-- end auto-generated rule options list -->
 
 ```js

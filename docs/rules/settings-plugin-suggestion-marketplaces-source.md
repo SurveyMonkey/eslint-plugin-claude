@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-plugin-suggestion-marketplaces-source
 
+📝 Declare the source of each pluginSuggestionMarketplaces name in managed settings.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

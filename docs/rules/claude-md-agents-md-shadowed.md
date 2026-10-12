@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-agents-md-shadowed
 
+📝 Import an AGENTS.md from the CLAUDE.md file that shadows it.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

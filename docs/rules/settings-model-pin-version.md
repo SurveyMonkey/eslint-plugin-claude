@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-model-pin-version
 
+📝 Pin the model of the shared settings file to a version.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-env-var-unavailable
 
+📝 Read only a variable that Claude Code sets for the hook event.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

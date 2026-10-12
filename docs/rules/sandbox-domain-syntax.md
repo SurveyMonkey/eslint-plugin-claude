@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-domain-syntax
 
+📝 Write each sandbox domain as a host with an optional port, in the form of the docs.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

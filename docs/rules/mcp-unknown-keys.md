@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-unknown-keys
 
+📝 Use only the documented keys in an MCP server entry and its oauth object.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

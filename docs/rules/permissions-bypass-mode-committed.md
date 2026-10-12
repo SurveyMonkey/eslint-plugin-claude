@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bypass-mode-committed
 
+📝 Do not commit permissions.defaultMode: "bypassPermissions".
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

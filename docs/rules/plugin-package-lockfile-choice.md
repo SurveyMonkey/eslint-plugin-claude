@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-package-lockfile-choice
 
+📝 Ship one lockfile with the package.json of a plugin, and prefer an npm lockfile.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-import-in-code-span
 
+📝 Do not write an @path import that names a file inside code.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

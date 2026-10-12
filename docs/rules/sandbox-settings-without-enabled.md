@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-settings-without-enabled
 
+📝 Set sandbox.enabled to true in a source that sets other sandbox keys.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

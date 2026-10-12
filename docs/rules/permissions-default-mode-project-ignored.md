@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-default-mode-project-ignored
 
+📝 Do not set permissions.defaultMode to auto in a project or local settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

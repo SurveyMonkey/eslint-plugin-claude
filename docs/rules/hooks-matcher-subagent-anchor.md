@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-subagent-anchor
 
+📝 Anchor a subagent matcher that holds the colon of a plugin-scoped name.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

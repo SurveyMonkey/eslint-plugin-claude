@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-description-proactive
 
+📝 Put a phrase such as "use proactively" in the description of a subagent.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

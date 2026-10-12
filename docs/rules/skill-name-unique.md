@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-name-unique
 
+📝 Give each skill and command in one scope its own name.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

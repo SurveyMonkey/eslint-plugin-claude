@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-command-shell-safety
 
+📝 Quote shell variables, and check the path before rm -rf, in a hook command.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

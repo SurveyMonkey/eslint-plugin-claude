@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-mock-server-exists
 
+📝 Name only servers of the plugin MCP configuration in the mocks of an eval suite.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

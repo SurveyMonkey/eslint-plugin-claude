@@ -12,6 +12,10 @@ generated:
 
 # claude/statusline-script-terminal-size
 
+📝 Read COLUMNS and LINES in a status line script, not tput cols.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

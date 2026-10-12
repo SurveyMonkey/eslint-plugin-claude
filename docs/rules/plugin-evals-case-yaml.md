@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-case-yaml
 
+📝 Give a case.yaml its schema_version and name, and keep its paths in the case.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

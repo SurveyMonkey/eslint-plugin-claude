@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-tool-server-unknown
 
+📝 Name only declared MCP servers in a tool reference.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

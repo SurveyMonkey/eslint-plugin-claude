@@ -12,6 +12,10 @@ generated:
 
 # claude/statusline-windows-path
 
+📝 Write a path in the statusLine command with forward slashes.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

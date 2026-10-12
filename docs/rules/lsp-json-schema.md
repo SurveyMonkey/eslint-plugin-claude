@@ -12,6 +12,10 @@ generated:
 
 # claude/lsp-json-schema
 
+📝 Write .lsp.json as a map of server names to configs with the documented fields.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

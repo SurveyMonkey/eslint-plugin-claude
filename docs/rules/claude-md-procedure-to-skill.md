@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-procedure-to-skill
 
+📝 Move a long numbered procedure from CLAUDE.md into a skill or a scoped rule.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -69,6 +73,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name       | Description                                                                | Type    |
+| :--------- | :------------------------------------------------------------------------- | :------ |
+| `maxSteps` | The most items in one numbered list. Without it, the rule makes no report. | Integer |
+
 <!-- end auto-generated rule options list -->
 
 ```js

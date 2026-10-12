@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-tools-agent-type-list
 
+📝 Use an Agent(type) list only in an agent that runs as the main thread.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -86,6 +90,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                                                     | Type     | Default |
+| :------ | :---------------------------------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Names of agents that the team starts with --agent, and agent types from outside the repository. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

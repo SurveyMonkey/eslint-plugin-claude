@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-param-rule-intent
 
+📝 Write a parameter rule in deny or ask, not in allow.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-deprecated-var
 
+📝 Do not set an env variable that Claude Code deprecates.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

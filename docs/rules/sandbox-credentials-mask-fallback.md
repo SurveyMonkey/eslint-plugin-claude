@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-credentials-mask-fallback
 
+📝 Give a mask entry an extract group and a file path that it can mask.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

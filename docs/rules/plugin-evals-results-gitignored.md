@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-results-gitignored
 
+📝 Cover the results directory of an eval suite with a .gitignore pattern.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

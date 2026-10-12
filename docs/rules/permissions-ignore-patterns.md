@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-ignore-patterns
 
+📝 Use permissions.deny Read rules in place of the deprecated ignorePatterns.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

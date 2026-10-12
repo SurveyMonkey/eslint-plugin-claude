@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-outputstyle-resolves
 
+📝 Name an output style that Claude Code can load in the outputStyle setting.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -54,6 +58,11 @@ policy is not in the repository. Name such a style in the option `allow`.
 ### Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                    | Type     | Default |
+| :------ | :------------------------------------------------------------- | :------- | :------ |
+| `allow` | Style names to accept, such as a user style or a plugin style. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ### What the rule does not check

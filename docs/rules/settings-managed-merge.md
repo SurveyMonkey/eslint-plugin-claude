@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-managed-merge
 
+📝 Set managedSourcesBehavior in the highest-priority managed source.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

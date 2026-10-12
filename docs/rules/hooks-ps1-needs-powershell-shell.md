@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-ps1-needs-powershell-shell
 
+📝 Set shell powershell on a hook command that runs a .ps1 file.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -103,6 +107,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name        | Description                                    | Type  |
+| :---------- | :--------------------------------------------- | :---- |
+| `platforms` | The platforms where the team runs Claude Code. | Array |
+
 <!-- end auto-generated rule options list -->
 
 ```js

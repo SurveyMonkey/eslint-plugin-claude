@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-docker-excluded
 
+📝 Exclude docker from the sandbox in a project that uses Docker.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

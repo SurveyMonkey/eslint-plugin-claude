@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-dependencies-not-auto-installed
 
+📝 Do not rely on Claude Code to install a dependency with a command source.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

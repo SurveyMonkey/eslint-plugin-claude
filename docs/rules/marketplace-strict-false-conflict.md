@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-strict-false-conflict
 
+📝 Declare no component field in an entry with strict set to false when the source has a plugin.json.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

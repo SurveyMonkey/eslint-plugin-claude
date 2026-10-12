@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-side-effects-manual-only
 
+📝 Let only the user invoke a skill that has side effects.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -90,6 +94,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name       | Description                                                | Type     | Default |
+| :--------- | :--------------------------------------------------------- | :------- | :------ |
+| `patterns` | More patterns. The rule adds them to the default patterns. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

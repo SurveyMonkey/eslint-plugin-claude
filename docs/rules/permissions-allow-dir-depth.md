@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-allow-dir-depth
 
+📝 Write the depth of a one-directory allow pattern for Read and Edit.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

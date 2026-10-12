@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-monitors-command-env
 
+📝 Write the plugin path variables of a monitor command in the braced form.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

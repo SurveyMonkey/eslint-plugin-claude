@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-command-path-variable
 
+📝 Reach the files of a plugin hook through the CLAUDE_PLUGIN_ROOT variable.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

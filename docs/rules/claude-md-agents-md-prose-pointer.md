@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-agents-md-prose-pointer
 
+📝 Import AGENTS.md with @AGENTS.md instead of a sentence that points to it.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

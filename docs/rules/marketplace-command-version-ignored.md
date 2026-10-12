@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-command-version-ignored
 
+📝 Do not set the version of an entry with a command source.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

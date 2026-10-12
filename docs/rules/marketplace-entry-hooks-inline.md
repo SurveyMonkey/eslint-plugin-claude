@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-entry-hooks-inline
 
+📝 Write the hooks of a marketplace entry as an inline object.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/rules-paths-glob-valid
 
+📝 Use valid globs in the `paths` field of a rule file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

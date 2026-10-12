@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-duplicate-handler
 
+📝 Do not define one hook handler in a plugin and in the project settings, or in two sources of one plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

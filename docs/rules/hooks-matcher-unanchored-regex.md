@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-unanchored-regex
 
+📝 Anchor a tool matcher that is a regular expression.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

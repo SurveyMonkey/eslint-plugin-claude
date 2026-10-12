@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-allow-write-escalation
 
+📝 Do not let sandboxed commands write shell startup files or executable directories.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

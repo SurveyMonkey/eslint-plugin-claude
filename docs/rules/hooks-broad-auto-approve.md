@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-broad-auto-approve
 
+📝 Do not auto-approve every tool or set bypassPermissions in a hook.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

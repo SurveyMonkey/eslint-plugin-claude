@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-bin-shadows-system-command
 
+📝 Do not name a bin file like a system command that the plugin cannot shadow.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

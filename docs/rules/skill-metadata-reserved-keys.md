@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-metadata-reserved-keys
 
+📝 Do not reuse a frontmatter field name as a metadata key.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

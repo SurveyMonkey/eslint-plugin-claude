@@ -12,6 +12,10 @@ generated:
 
 # claude/rules-symlink-external
 
+📝 Do not link a rule file to a folder outside the repository.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

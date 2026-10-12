@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-settings-agent-exists
 
+📝 Name an agent of the plugin in the agent setting of its default settings.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

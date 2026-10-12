@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-worktree-paths
 
+📝 Name a directory of the repository in the worktree path lists.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

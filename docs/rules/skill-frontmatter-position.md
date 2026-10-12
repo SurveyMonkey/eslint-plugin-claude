@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-frontmatter-position
 
+📝 Put the frontmatter of a skill on line 1.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

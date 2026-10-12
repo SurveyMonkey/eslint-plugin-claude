@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-shadowed
 
+📝 Do not set an env variable that another setting or its own value voids.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

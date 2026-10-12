@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-exec-form-shell-syntax
 
+📝 Use no shell syntax in the command or args of a hook in exec form.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-json-location
 
+📝 Put the project MCP config in .mcp.json at the repository root.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

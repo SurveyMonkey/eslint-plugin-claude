@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-relative-source-escape-symlink
 
+📝 Keep a relative marketplace source inside the marketplace root.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

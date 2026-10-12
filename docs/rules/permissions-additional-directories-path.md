@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-additional-directories-path
 
+📝 Write each additionalDirectories entry as a local path.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

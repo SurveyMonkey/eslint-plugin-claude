@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-tool-name-glob
 
+📝 Put a tool-name glob in an allow rule only after mcp__<server>__.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

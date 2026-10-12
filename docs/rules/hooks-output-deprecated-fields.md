@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-output-deprecated-fields
 
+📝 Do not use the deprecated hook output and input fields.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

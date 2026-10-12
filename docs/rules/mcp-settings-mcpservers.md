@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-settings-mcpservers
 
+📝 Define MCP servers in .mcp.json, not in a settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

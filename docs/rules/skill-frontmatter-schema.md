@@ -12,6 +12,12 @@ generated:
 
 # claude/skill-frontmatter-schema
 
+📝 Use the frontmatter fields of a skill, with the right types and values.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
+💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

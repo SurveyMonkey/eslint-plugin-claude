@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-schema
 
+📝 Set only the settings keys that Claude Code knows, with the values it accepts.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

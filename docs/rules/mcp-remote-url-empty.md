@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-remote-url-empty
 
+📝 Give each remote server in a project .mcp.json a url.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-env-expansion-field
 
+📝 Use a ${VAR} reference in an MCP server only in a field that expands it.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

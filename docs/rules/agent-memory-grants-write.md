@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-memory-grants-write
 
+📝 Do not use memory in a subagent whose tools list leaves out Write and Edit.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

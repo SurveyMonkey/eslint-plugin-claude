@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-strict-known-marketplaces-skills-dir
 
+📝 Add the skills-dir source to a strictKnownMarketplaces allowlist.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

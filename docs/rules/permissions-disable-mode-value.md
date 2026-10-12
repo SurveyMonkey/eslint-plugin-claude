@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-disable-mode-value
 
+📝 Set a permission mode lock to the string "disable".
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

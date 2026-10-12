@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-replay-committed
 
+📝 Commit the mocks/.replay directory of an eval suite, and do not ignore it.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-rule-syntax
 
+📝 Write each permission rule as Tool or Tool(specifier).
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-memory-auto-memory-off
 
+📝 Do not set `memory` in a local agent when the settings turn auto memory off.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

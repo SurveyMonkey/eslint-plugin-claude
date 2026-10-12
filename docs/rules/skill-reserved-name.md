@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-reserved-name
 
+📝 Do not use a name that Claude Code reserves for synced skills.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-entry-hooks-override
 
+📝 Declare the hooks of an event in the marketplace entry or in plugin.json, not in both.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

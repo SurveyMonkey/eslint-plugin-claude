@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-sync-claude-ai-plugins
 
+📝 Do not set syncClaudeAiPlugins in .claude/settings.json, or set it to true.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

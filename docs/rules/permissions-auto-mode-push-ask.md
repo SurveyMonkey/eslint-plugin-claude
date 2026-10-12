@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-auto-mode-push-ask
 
+📝 Add an ask rule for git push where a managed file turns on auto mode.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-no-literal-secrets
 
+📝 Do not write a literal credential in a committed MCP config.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

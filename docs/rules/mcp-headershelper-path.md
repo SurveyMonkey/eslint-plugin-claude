@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-headershelper-path
 
+📝 Give an MCP headersHelper an absolute path or a command on PATH.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

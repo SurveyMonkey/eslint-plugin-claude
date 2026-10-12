@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-filesystem-disabled-conflict
 
+📝 Do not set sandbox.filesystem.disabled with entries that it switches off.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

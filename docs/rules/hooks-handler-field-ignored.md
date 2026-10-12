@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-handler-field-ignored
 
+📝 Leave out the hook handler fields that Claude Code ignores.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -92,6 +96,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name                  | Description                                                                   | Type   | Default |
+| :-------------------- | :---------------------------------------------------------------------------- | :----- | :------ |
+| `sessionEndMax`       | The most seconds for a SessionEnd timeout.                                    | Number | `60`    |
+| `sessionEndPluginMax` | The most seconds for a SessionEnd timeout in the hooks.json file of a plugin. | Number | `1.5`   |
+
 <!-- end auto-generated rule options list -->
 
 ```js

@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-domain-overlap
 
+📝 Do not allow a sandbox domain that deniedDomains also holds.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

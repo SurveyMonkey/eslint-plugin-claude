@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-unsupported-event
 
+📝 Set no matcher on a hook event that has no matcher support.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

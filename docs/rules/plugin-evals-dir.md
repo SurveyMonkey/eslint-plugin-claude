@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-dir
 
+📝 Write experimental.evals as a relative path of plain directory names.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

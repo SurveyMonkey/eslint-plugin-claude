@@ -12,6 +12,10 @@ generated:
 
 # claude/output-style-plugin-name-description
 
+📝 Set name and description in the frontmatter of a plugin output style.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

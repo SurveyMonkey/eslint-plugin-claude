@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-user-config-sensitive
 
+📝 Set sensitive on a userConfig option for a token or a password.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

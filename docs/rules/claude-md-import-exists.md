@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-import-exists
 
+📝 Import only files that exist.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -81,6 +85,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name            | Description                                                                                      | Type   |
+| :-------------- | :----------------------------------------------------------------------------------------------- | :----- |
+| `ignorePattern` | A regular expression. The rule ignores an import when the expression matches the @ and the path. | String |
+
 <!-- end auto-generated rule options list -->
 
 The docs define a token no further than the steps above. So the rule reports a word such as

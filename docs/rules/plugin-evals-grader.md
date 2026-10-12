@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-grader
 
+📝 Give an eval grader a valid type, weight, arm, target and focus.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

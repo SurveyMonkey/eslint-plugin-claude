@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-plugin-root-shadowed
 
+📝 Do not put a SKILL.md at the root of a plugin that has other skills.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

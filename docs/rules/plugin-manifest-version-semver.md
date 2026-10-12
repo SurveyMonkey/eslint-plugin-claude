@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-manifest-version-semver
 
+📝 Set the version of plugin.json to a semantic version.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

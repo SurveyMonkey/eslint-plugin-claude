@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-schema-url
 
+📝 Point "$schema" of a settings file at the Claude Code settings schema.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

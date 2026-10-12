@@ -12,6 +12,10 @@ generated:
 
 # claude/claude-md-emphasis-overuse
 
+📝 Do not use emphasis words on many lines of a CLAUDE.md.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -77,6 +81,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name  | Description                                                               | Type    |
+| :---- | :------------------------------------------------------------------------ | :------ |
+| `max` | The most lines with emphasis words. Without it, the rule makes no report. | Integer |
+
 <!-- end auto-generated rule options list -->
 
 ```js

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-deprecated-value
 
+📝 Drop the matcher value that Claude Code no longer sends.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

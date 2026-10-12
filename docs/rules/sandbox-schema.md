@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-schema
 
+📝 Use only the documented keys in sandbox, each with a value of its type.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

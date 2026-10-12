@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-local-gitignored
 
+📝 Cover settings.local.json with a .gitignore pattern.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

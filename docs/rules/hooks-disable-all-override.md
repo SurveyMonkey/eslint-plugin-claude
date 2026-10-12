@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-disable-all-override
 
+📝 Do not set disableAllHooks to false in the committed project settings.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-schema
 
+📝 Use only the documented keys in permissions, each with a value of its type.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

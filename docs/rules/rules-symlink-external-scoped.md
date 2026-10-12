@@ -12,6 +12,10 @@ generated:
 
 # claude/rules-symlink-external-scoped
 
+📝 Do not scope a rule that is a link out of the repository with paths.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

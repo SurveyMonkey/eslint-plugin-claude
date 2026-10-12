@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-descriptions-budget
 
+📝 Keep the names and descriptions of the subagents of one scope within the token limit.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -76,6 +80,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name            | Description                                                               | Type    | Default |
+| :-------------- | :------------------------------------------------------------------------ | :------ | :------ |
+| `charsPerToken` | The number of characters for each token in the estimate.                  | Number  | `4`     |
+| `maxTokens`     | The most tokens in the names and descriptions of the agents of one scope. | Integer | `15000` |
+
 <!-- end auto-generated rule options list -->
 
 ```js

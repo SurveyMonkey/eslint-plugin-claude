@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-plugin-vars-outside-plugin
 
+📝 Use plugin variables in plugin skills only.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-package-lifecycle-scripts
 
+📝 Do not rely on a lifecycle script in the package.json of a plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-local-untracked
 
+📝 Keep settings.local.json out of git and out of a linked .claude directory.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

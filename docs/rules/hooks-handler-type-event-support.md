@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-handler-type-event-support
 
+📝 Use a hook handler type that the event runs.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

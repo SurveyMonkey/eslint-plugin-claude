@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-managed-value-form
 
+📝 Give a privacy toggle in the env block of a managed settings file a truthy value.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

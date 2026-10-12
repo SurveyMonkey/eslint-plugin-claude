@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-boolean-literal
 
+📝 Write a Boolean field of a skill as true or false.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -80,6 +84,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
 <!-- end auto-generated rule options list -->
 
 ```js

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-defaultshell-powershell-tool
 
+📝 Turn the PowerShell tool on where defaultShell is powershell.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -89,6 +93,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name        | Description                                                                          | Type  |
+| :---------- | :----------------------------------------------------------------------------------- | :---- |
+| `platforms` | The platforms where the team runs Claude Code. Without it, the rule makes no report. | Array |
+
 <!-- end auto-generated rule options list -->
 
 ## Sources

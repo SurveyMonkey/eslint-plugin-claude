@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-reference-exists
 
+📝 Link only to files that exist in the skill folder.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

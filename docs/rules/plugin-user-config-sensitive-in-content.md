@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-user-config-sensitive-in-content
 
+📝 Keep the reference to a sensitive plugin option out of skill and agent content.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

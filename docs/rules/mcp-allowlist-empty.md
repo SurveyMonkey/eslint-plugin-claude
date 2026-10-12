@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-allowlist-empty
 
+📝 Confirm that an empty allowedMcpServers list is intended.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

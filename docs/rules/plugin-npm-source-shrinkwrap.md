@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-npm-source-shrinkwrap
 
+📝 Ship npm-shrinkwrap.json with a plugin that a marketplace serves from npm.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

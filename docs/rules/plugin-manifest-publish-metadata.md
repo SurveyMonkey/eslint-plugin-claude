@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-manifest-publish-metadata
 
+📝 Set homepage and repository in plugin.json, and add a README.md to the plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

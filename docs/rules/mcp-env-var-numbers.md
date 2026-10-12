@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-env-var-numbers
 
+📝 Write an MCP timeout in the env block of a settings file in milliseconds.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

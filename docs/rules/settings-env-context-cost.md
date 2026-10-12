@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-context-cost
 
+📝 Do not set an env variable that raises the context cost in the shared settings file.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

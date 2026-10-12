@@ -12,6 +12,10 @@ generated:
 
 # claude/lsp-duplicate-server-name
 
+📝 Declare each LSP server name of a plugin once.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

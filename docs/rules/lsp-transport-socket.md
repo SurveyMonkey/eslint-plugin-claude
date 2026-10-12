@@ -12,6 +12,10 @@ generated:
 
 # claude/lsp-transport-socket
 
+📝 Do not set the transport of an LSP server to socket.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

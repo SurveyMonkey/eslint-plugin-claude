@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-webfetch-apex
 
+📝 Add a WebFetch rule for the apex domain next to a wildcard subdomain rule.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

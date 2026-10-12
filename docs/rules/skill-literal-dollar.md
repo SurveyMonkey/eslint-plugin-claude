@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-literal-dollar
 
+📝 Escape a dollar amount in a skill so that it is not an argument placeholder.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

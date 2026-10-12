@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-stdio-command-has-args
 
+📝 Put the arguments of a stdio MCP server in args, not in command.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

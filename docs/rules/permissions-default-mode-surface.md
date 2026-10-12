@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-default-mode-surface
 
+📝 Do not rely on permissions.defaultMode where a Claude Code surface ignores it.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -74,6 +78,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name     | Description                                                       | Type    | Default |
+| :------- | :---------------------------------------------------------------- | :------ | :------ |
+| `vscode` | Set true to also report a defaultMode in a project or local file. | Boolean | `false` |
+
 <!-- end auto-generated rule options list -->
 
 ```js

@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-mcp-servers-schema
 
+📝 Write the mcpServers field of a local subagent as a list of servers.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

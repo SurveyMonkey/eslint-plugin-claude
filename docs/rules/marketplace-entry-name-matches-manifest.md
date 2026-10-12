@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-entry-name-matches-manifest
 
+📝 Keep the name of a marketplace entry the same as the name in its plugin.json.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

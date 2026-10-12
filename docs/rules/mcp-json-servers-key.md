@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-json-servers-key
 
+📝 Put the servers of a project .mcp.json under the mcpServers key.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

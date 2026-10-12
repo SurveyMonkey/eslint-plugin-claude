@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-invalid-path-pattern
 
+📝 Write a Read or Edit specifier as a valid gitignore pattern.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

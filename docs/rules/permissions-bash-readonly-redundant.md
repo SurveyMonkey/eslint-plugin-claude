@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-readonly-redundant
 
+📝 Do not write an allow rule for a read-only command that runs without a prompt.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

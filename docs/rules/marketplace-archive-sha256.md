@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-archive-sha256
 
+📝 Pin an archive plugin source with sha256.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

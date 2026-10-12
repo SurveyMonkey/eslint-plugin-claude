@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-value-format
 
+📝 Write the env block of a settings file as an object of string values.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-dependencies-prerelease-range
 
+📝 Give a dependency range a pre-release suffix when it must match a pre-release.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

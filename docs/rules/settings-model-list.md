@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-model-list
 
+📝 Keep the model lists of a settings file consistent with the way Claude Code reads them.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -134,10 +138,15 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name  | Description                                  | Type    | Default |
+| :---- | :------------------------------------------- | :------ | :------ |
+| `max` | The most different entries in fallbackModel. | Integer | `3`     |
+
 <!-- end auto-generated rule options list -->
 
-`max` is the most distinct entries of `fallbackModel`. The `recommended` and `strict` configs set
-no option.
+`max` is the most distinct entries of `fallbackModel`. The schema sets a maximum of 3. The
+`recommended` and `strict` configs set no option.
 
 ## Sources
 

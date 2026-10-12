@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-symlink-escapes-plugin
 
+📝 Keep the target of a link under a plugin inside the plugin.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

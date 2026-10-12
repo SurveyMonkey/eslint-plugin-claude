@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-entry-root-skills
 
+📝 List every skill directory in the skills of an entry whose source is the marketplace root.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

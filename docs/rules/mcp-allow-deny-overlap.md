@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-allow-deny-overlap
 
+📝 Do not list one entry in both allowedMcpServers and deniedMcpServers.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-worktree-sparse-claude-dir
 
+📝 List .claude in worktree.sparsePaths.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

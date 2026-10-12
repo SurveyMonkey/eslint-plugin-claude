@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-deny-secret-files
 
+📝 Deny Read for a tracked .env file or secrets folder in the project settings.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

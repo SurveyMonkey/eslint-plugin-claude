@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-global-only-file
 
+📝 Do not keep a global-only Claude Code file in a repository.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

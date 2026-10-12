@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-sessionstart-static-context
 
+📝 Put static SessionStart context in CLAUDE.md, and do not print AGENTS.md.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

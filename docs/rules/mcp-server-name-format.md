@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-server-name-format
 
+📝 Name an MCP server with letters, numbers, hyphens and underscores only.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

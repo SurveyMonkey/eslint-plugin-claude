@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-tools-unavailable
 
+📝 Do not list in tools a tool that Claude Code removes from the subagent.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-excluded-commands-broad
 
+📝 Do not exclude every command, or a whole shell or interpreter, from the sandbox.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-approval-names-exist
 
+📝 Name only servers of .mcp.json in the approval lists of the project.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-http-env-allowlist
 
+📝 List each environment variable of an http hook header in allowedEnvVars.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

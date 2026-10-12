@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-model-capability
 
+📝 Do not set a model option that the model of the file does not support.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

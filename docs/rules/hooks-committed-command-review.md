@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-committed-command-review
 
+📝 Review each command hook that the repository commits.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

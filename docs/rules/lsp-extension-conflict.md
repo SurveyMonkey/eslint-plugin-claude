@@ -12,6 +12,10 @@ generated:
 
 # claude/lsp-extension-conflict
 
+📝 Do not let two LSP servers of a marketplace claim one file extension.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

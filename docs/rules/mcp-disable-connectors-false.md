@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-disable-connectors-false
 
+📝 Do not set disableClaudeAiConnectors to false in a managed settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

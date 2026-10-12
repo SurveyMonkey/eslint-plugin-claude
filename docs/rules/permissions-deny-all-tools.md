@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-deny-all-tools
 
+📝 Deny every tool or every MCP tool only on purpose.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

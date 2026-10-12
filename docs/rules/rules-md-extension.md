@@ -12,6 +12,10 @@ generated:
 
 # claude/rules-md-extension
 
+📝 Give each file in .claude/rules/ the .md extension.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

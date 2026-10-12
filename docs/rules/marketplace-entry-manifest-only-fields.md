@@ -12,6 +12,10 @@ generated:
 
 # claude/marketplace-entry-manifest-only-fields
 
+📝 Declare mcpServers, lspServers, userConfig and channels in plugin.json, not in the entry.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-multiple-updatedinput
 
+📝 Let one PreToolUse hook rewrite the input of a tool.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

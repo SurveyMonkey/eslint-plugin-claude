@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-exec-form-windows-shim
 
+📝 Do not spawn an npm shim in exec form on Windows.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -91,6 +95,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name        | Description                                    | Type  |
+| :---------- | :--------------------------------------------- | :---- |
+| `platforms` | The platforms where the team runs Claude Code. | Array |
+
 <!-- end auto-generated rule options list -->
 
 ```js

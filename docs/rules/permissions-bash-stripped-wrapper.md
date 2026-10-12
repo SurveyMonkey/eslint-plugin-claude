@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-stripped-wrapper
 
+📝 Write a Bash rule for the inner command, not for a wrapper that is stripped.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

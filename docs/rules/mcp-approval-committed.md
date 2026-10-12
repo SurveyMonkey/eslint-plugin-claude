@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-approval-committed
 
+📝 Do not commit an approval of the project MCP servers.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

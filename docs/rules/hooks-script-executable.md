@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-script-executable
 
+📝 Give a hook script the executable bit.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

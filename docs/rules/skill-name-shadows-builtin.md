@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-name-shadows-builtin
 
+📝 Do not give a skill the name of a built-in command or a bundled skill.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -87,6 +91,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                                                       | Type     | Default |
+| :------ | :-------------------------------------------------------------------------------- | :------- | :------ |
+| `allow` | Names that the repository replaces on purpose. The rule makes no report for them. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ```js

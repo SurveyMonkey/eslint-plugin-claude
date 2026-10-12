@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-deny-dir-listable
 
+📝 End a Read deny rule for generated or vendored code in /**/* so that the directory stays listable.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

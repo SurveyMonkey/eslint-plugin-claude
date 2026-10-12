@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-skilloverrides-unknown-skill
 
+📝 Key skillOverrides by the name of a skill that the repository or Claude Code has.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -67,6 +71,11 @@ The rule makes no report when it cannot see a skill. It makes no report in these
 ### Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name    | Description                                  | Type     | Default |
+| :------ | :------------------------------------------- | :------- | :------ |
+| `allow` | Skill names to accept, such as a user skill. | String[] | `[]`    |
+
 <!-- end auto-generated rule options list -->
 
 ### What the rule does not check

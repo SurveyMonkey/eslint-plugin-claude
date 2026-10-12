@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-marketplace-headers-helper-https
 
+📝 Give a url marketplace source that has a headersHelper an https:// URL.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

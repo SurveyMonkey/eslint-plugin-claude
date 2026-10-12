@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-skill-rule
 
+📝 Name the anthropic-skills namespace in a Skill allow rule for a synced skill.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

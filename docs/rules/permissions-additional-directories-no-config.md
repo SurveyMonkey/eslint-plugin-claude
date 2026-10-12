@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-additional-directories-no-config
 
+📝 Do not list a directory with Claude configuration in additionalDirectories, which loads none of it.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

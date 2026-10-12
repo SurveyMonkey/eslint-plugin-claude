@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-redundant-value
 
+📝 Do not set a settings value that is the same as an unset key.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

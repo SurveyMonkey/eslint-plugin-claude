@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-platform-limits
 
+📝 Do not rely on a sandbox setting that the platform or version does not honor.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -79,6 +83,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+| `platforms`  | The platforms where the team runs Claude Code.                               | Array  |
+
 <!-- end auto-generated rule options list -->
 
 ```js

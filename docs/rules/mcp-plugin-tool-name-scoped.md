@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-plugin-tool-name-scoped
 
+📝 Name a tool of a plugin MCP server with the scoped name of the plugin.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

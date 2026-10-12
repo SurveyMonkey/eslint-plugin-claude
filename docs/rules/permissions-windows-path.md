@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-windows-path
 
+📝 Write a path rule in POSIX form, not with a drive letter or a backslash.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

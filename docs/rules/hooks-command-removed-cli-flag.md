@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-command-removed-cli-flag
 
+📝 Do not pass a CLI flag that Claude Code removed in a hook command.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

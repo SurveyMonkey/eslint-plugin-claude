@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-invocation-unreachable
 
+📝 Let the user or Claude invoke a skill.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

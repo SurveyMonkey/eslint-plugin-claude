@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-enabled-plugins-entry-exists
 
+📝 Enable a plugin by the name of an entry in the marketplace.json of its marketplace.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

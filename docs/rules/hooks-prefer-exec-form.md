@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-prefer-exec-form
 
+📝 Use exec form for a hook that references a path placeholder.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

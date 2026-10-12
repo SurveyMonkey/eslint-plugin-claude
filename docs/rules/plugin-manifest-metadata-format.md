@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-manifest-metadata-format
 
+📝 Set the license of plugin.json to an SPDX expression and the repository to a URL.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

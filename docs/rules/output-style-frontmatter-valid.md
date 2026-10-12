@@ -12,6 +12,10 @@ generated:
 
 # claude/output-style-frontmatter-valid
 
+📝 Give an output style file frontmatter that Claude Code can read.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

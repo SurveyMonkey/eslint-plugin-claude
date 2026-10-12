@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-auto-mode-defaults
 
+📝 Keep the built-in auto mode rules with "$defaults" in each autoMode array.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

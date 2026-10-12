@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-policy-servername-weak
 
+📝 Do not rely on a serverName entry in an MCP policy list.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

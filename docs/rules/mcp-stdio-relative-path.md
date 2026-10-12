@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-stdio-relative-path
 
+📝 Do not use a ./ or ../ path in the command or args of a project MCP server.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

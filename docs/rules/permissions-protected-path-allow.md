@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-protected-path-allow
 
+📝 Do not allow a write to a protected path or the removal of a critical path.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

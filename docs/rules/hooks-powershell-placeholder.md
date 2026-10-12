@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-powershell-placeholder
 
+📝 Write a path placeholder of a PowerShell hook in a form that PowerShell expands.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

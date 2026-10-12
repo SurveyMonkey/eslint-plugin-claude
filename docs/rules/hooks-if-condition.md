@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-if-condition
 
+📝 Write the if field of a hook as one permission rule on a tool event.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

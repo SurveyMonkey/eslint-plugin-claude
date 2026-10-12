@@ -12,6 +12,10 @@ generated:
 
 # claude/rules-paths-no-match
 
+📝 Use a paths glob that matches at least one file.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

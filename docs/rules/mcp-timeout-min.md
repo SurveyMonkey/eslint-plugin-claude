@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-timeout-min
 
+📝 Write the timeout of an MCP server in milliseconds, at 1000 or more.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -71,6 +75,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name  | Description                          | Type    | Default |
+| :---- | :----------------------------------- | :------ | :------ |
+| `min` | The lowest timeout, in milliseconds. | Integer | `1000`  |
+
 <!-- end auto-generated rule options list -->
 
 ```js

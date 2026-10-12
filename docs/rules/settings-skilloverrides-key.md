@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-skilloverrides-key
 
+📝 Do not set a skillOverrides key that Claude Code does not apply.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

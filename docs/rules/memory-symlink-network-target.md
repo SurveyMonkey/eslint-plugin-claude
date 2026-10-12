@@ -12,6 +12,10 @@ generated:
 
 # claude/memory-symlink-network-target
 
+📝 Do not link a CLAUDE.md or a rule to a network path.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

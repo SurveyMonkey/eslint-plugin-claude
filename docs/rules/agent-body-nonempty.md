@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-body-nonempty
 
+📝 Give a subagent file a body, because the body is its system prompt.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

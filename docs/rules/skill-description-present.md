@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-description-present
 
+📝 Set a description on a skill.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

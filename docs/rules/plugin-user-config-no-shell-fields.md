@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-user-config-no-shell-fields
 
+📝 Keep ${user_config.*} out of the fields that a shell runs.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

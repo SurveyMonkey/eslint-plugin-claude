@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-fork-fields-require-context
 
+📝 Set agent and background only with context: fork.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

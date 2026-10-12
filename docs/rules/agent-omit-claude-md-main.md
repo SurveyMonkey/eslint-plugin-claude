@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-omit-claude-md-main
 
+📝 Do not set `omitClaudeMd` in a local agent that the settings run as the main thread.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

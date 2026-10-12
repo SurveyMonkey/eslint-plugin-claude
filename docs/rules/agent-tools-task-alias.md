@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-tools-task-alias
 
+📝 Write Agent, not its old name Task, in the tools of a subagent.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

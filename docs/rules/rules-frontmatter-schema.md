@@ -12,6 +12,10 @@ generated:
 
 # claude/rules-frontmatter-schema
 
+📝 Give a rule file the frontmatter that Claude Code reads.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-negation
 
+📝 Write a ! rule after the path rule that it carves, and not before an anchor.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

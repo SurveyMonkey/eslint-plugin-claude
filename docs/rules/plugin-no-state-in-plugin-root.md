@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-no-state-in-plugin-root
 
+📝 Write the state of a plugin to the plugin data folder, not to the plugin root.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

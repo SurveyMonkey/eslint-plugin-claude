@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-allowed-tools-ineffective
 
+📝 Do not list a tool in a field that does not affect it.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

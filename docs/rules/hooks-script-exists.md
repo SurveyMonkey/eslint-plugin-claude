@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-script-exists
 
+📝 Name a hook script that exists.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

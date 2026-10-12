@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-footerlinks-pattern
 
+📝 Keep the footerLinksRegexes entries of a managed settings file within the limits.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -101,6 +105,12 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name              | Description                                              | Type    | Default |
+| :---------------- | :------------------------------------------------------- | :------ | :------ |
+| `maxLabelColumns` | The most display columns in the literal text of a label. | Integer | `28`    |
+| `maxUrlChars`     | The most characters in the literal text of a url.        | Integer | `2048`  |
+
 <!-- end auto-generated rule options list -->
 
 ```js

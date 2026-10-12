@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-param-rule
 
+📝 Do not match the primary input field with a parameter rule.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

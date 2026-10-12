@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-script-shebang
 
+📝 Start a hook script that runs directly with a shebang line.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

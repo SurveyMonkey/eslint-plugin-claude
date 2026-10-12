@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-deny-not-boundary
 
+📝 Do not rely on a Bash or Read deny rule as a security boundary.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

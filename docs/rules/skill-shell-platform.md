@@ -12,6 +12,10 @@ generated:
 
 # claude/skill-shell-platform
 
+📝 Set a shell that the target platforms of a skill can run.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -72,6 +76,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name        | Description                                                  | Type  |
+| :---------- | :----------------------------------------------------------- | :---- |
+| `platforms` | The platforms and providers where the team runs Claude Code. | Array |
+
 <!-- end auto-generated rule options list -->
 
 ```js

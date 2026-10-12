@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-bash-colon-star-mid
 
+📝 Put the :* of a Bash rule at the end of the pattern.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

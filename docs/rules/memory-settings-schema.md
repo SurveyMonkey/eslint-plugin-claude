@@ -12,6 +12,10 @@ generated:
 
 # claude/memory-settings-schema
 
+📝 Give the memory keys of a settings file the types and values that Claude Code reads.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

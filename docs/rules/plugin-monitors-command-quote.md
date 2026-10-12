@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-monitors-command-quote
 
+📝 Put the path variables of a monitor command inside quotes.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

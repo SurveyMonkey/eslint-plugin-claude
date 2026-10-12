@@ -12,6 +12,10 @@ generated:
 
 # claude/lsp-json-location
 
+📝 Put .lsp.json at the root of a plugin.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

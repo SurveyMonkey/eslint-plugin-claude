@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-policy-literal-values
 
+📝 Write a literal serverUrl and serverCommand in an MCP policy entry.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

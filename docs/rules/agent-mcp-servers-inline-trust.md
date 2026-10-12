@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-mcp-servers-inline-trust
 
+📝 Review the inline MCP servers of a project subagent before you trust the folder.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

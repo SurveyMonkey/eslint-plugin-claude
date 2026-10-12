@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-managed-effort-cap
 
+📝 Set maxEffortLevel beside effortLevel in managed settings.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

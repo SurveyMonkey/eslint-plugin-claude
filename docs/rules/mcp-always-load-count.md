@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-always-load-count
 
+📝 Limit the MCP servers that load all their tools upfront with alwaysLoad.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
@@ -84,6 +88,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Options
 
 <!-- begin auto-generated rule options list -->
+
+| Name  | Description                                   | Type    | Default |
+| :---- | :-------------------------------------------- | :------ | :------ |
+| `max` | The most servers that set alwaysLoad to true. | Integer | `2`     |
+
 <!-- end auto-generated rule options list -->
 
 ```js

@@ -12,6 +12,10 @@ generated:
 
 # claude/mcp-server-name-anthropic-skills
 
+📝 Do not name an MCP server anthropic-skills.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

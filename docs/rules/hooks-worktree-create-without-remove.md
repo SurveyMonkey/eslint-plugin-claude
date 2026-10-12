@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-worktree-create-without-remove
 
+📝 Pair a WorktreeCreate hook with a WorktreeRemove hook in the same file.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

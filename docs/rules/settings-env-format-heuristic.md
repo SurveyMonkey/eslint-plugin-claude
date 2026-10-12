@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-env-format-heuristic
 
+📝 Write the MCP and PowerShell env variables in the form that the docs give.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

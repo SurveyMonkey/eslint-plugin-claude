@@ -12,6 +12,10 @@ generated:
 
 # claude/permissions-block-reads-false
 
+📝 Do not set blockReadsOutsideWorkingDirectories to false.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

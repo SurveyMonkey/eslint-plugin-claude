@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-marketplace-key-alias-conflict
 
+📝 Do not set a marketplace key and its alias in one settings file.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

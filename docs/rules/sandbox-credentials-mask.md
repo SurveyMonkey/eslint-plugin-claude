@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-credentials-mask
 
+📝 Give each mask entry of sandbox.credentials fields that agree.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

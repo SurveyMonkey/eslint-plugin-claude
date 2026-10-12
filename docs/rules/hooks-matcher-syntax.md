@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-matcher-syntax
 
+📝 Write a hook matcher in the form that Claude Code reads.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

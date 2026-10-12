@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-async-on-blocking-event
 
+📝 Do not run a hook in the background on an event whose hooks can block or decide.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

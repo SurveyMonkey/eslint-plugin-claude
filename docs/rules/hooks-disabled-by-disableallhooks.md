@@ -12,6 +12,10 @@ generated:
 
 # claude/hooks-disabled-by-disableallhooks
 
+📝 Do not define hooks in a settings file that sets disableAllHooks to true.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

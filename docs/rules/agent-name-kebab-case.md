@@ -12,6 +12,10 @@ generated:
 
 # claude/agent-name-kebab-case
 
+📝 Write the name of a subagent in kebab-case, as the docs examples do.
+
+⚠️ This rule _warns_ in the 🔒 `strict` config.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

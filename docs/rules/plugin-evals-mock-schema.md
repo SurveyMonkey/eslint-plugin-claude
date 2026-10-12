@@ -12,6 +12,10 @@ generated:
 
 # claude/plugin-evals-mock-schema
 
+📝 Use the type, error and abort_when keys of an eval mock file as documented.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

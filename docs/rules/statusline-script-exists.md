@@ -12,6 +12,10 @@ generated:
 
 # claude/statusline-script-exists
 
+📝 Name a status line script that exists and is executable.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

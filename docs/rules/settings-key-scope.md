@@ -12,6 +12,10 @@ generated:
 
 # claude/settings-key-scope
 
+📝 Set each settings key in a file that Claude Code reads it from.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |

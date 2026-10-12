@@ -12,6 +12,10 @@ generated:
 
 # claude/sandbox-domain-duplicate
 
+📝 Write each domain once in an allowedDomains or deniedDomains list.
+
+⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+
 <!-- end auto-generated rule header -->
 
 | Category | Files |
