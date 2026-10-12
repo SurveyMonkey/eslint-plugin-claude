@@ -78,6 +78,8 @@ jobs:
             run: pnpm knip
           - name: publint
             run: pnpm publint
+          - name: docs
+            run: pnpm docs:check
           - name: lefthook
             run: pnpm exec lefthook validate
     steps:
