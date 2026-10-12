@@ -8,8 +8,8 @@
 // The tree is tolerant: a value of the wrong type is still a node. `hooks-config-schema`
 // reports it. The other rules read `handlersOf`, which gives the handlers of well-formed groups only.
 // A YAML map that holds a merge key is a node of kind `unseen`. It is an object, and no rule reads
-// into it. A YAML value
-// over the alias limit gives no tree at all (see `fromYaml`).
+// into it. `handlersOf` gives no handler that holds one. A YAML value over the alias limit gives no
+// tree at all (see `fromYaml`).
 import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
@@ -302,8 +302,8 @@ export function holdsUnseen(node: HNode): boolean {
  *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So a map that
  *  holds one is a node of kind `unseen`, and the walk does not read into it. Its siblings and the
  *  nodes around it stay readable. The unseen map can hide a thing whose absence a rule reports.
- *  Such a rule reads `holdsUnseen`. A rule that counts needs no check, because a hidden thing can
- *  only remove a report.
+ *  Such a rule reads `holdsUnseen`. A rule that reports a thing that it sees needs no check, because
+ *  a hidden thing can only remove that report.
  *
  *  An alias over the limit is undefined. An undefined node makes each object and list around it
  *  undefined, up to the whole `hooks` value. */

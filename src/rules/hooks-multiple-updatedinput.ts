@@ -73,8 +73,7 @@ const rule: Rule.RuleModule = {
       const earlier: (string | undefined)[] = []
       for (const { event, group, matcher, handlers } of groupsOf(source)) {
         const given = memberOf(group, 'matcher')?.value
-        // A matcher that is no string is for `hooks-config-schema`. A matcher that holds a merge key is
-        // unseen, and no rule reports it.
+        // A matcher that is no string is for `hooks-config-schema`.
         if (event !== 'PreToolUse' || (given !== undefined && given.kind !== 'string')) {
           continue
         }
