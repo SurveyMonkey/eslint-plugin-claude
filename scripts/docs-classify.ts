@@ -833,7 +833,19 @@ export function planPage({
         newText: target.text,
       }
       if (cited.length === 0 && sections.length === 0) {
-        const skipped = 'moved, and no rule or inventory row cites it'
+        // The note names what cites the new block, when a rule or a row does.
+        const rules = byBlock.get(target.key) ?? []
+        const rows = (trackedRows.get(target.key) ?? []).flatMap((s) => s.rules)
+        const skipped =
+          rules.length === 0 && rows.length === 0
+            ? 'moved, and no rule or inventory row cites it'
+            : [
+                'moved, and no rule or inventory row cites the old block.',
+                ...(rules.length > 0
+                  ? [`Rules that cite the new block: ${rules.join(', ')}.`]
+                  : []),
+                ...(rows.length > 0 ? [`Rows that cite the new block: ${rows.join(', ')}.`] : []),
+              ].join(' ')
         items.push({ ...item, rules: [], askRequirement: false, skipped })
         continue
       }

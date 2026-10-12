@@ -1427,6 +1427,36 @@ describe('a moved section (#152)', () => {
     ])
   })
 
+  it('names the rule of the new block when nothing cites the old block (#219)', async () => {
+    // The map already cites the new heading. The old block has no citation.
+    const map: SourceMap = { ...cited, 'c-rule': [{ url: URL_, heading: 'command files' }] }
+    const moved = PAGE.replace('### `commands`', '### `command files`')
+    const jev = fakeJev(() => 1)
+    const stored = await watch.readPage(URL_, ['hooks'], serve(PAGE))
+    const output = await api.classify({
+      map,
+      inventory: new Map(),
+      snapshots: new Map([[watch.snapshotName(URL_), stored]]),
+      rules,
+      links: new Map(),
+      fetchText: serve(moved),
+      jev: { fetch: jev.fetch, key: KEY },
+    })
+    expect(jev.calls).toEqual([])
+    expect(output.results.filter((r) => r.change === 'moved')).toEqual([
+      {
+        page: URL_,
+        heading: 'commands',
+        blockId: 'commands',
+        change: 'moved',
+        outcomes: [],
+        note:
+          'moved, and no rule or inventory row cites the old block. ' +
+          'Rules that cite the new block: c-rule.',
+      },
+    ])
+  })
+
   it('gives the findings of today for a renamed heading with a changed body, each with the cross-reference line', async () => {
     const map: SourceMap = {
       'settings-env-value-format': [{ url: ENV, heading: 'Variables in settings files' }],
