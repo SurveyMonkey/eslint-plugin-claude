@@ -275,6 +275,7 @@ describe('scanCommands', () => {
     ])
     // A `)` that closes a subshell ends a word, so a `#` after it starts a comment.
     expect(commandsOf('(a)#b\nc')).toEqual([['a'], ['c']])
+    expect(commandsOf('echo $(date) #x; rm -rf y\nc')).toEqual([['echo', '$'], ['date'], ['c']])
   })
 
   it('reads a # as a comment only where a word starts, and outside quotes', () => {
