@@ -63,6 +63,8 @@ that rests on a file that it cannot read. It makes no report in these cases:
 
 - It cannot list `commands/`.
 - A link in `commands/` leads out of the repository, or has no target.
+- `commands/` is not there, and the nearest part of its path that exists is out of the
+  repository.
 - It cannot read a skill or command file.
 - The manifest of the plugin is unreadable, or has a `skills` key.
 
