@@ -75,7 +75,7 @@ const handlersIn = (
 ) =>
   data === undefined || data === UNREADABLE
     ? []
-    : handlersOf({ kind, hooks: fromData(data.hooks), partial: false, file: undefined })
+    : handlersOf({ kind, hooks: fromData(data.hooks), file: undefined })
 
 /** The settings files with their handlers. `disableAllHooks` merges across settings files: the nearest
  *  file that sets it wins, and `settings.local.json` wins over `settings.json`. When the merged value is
@@ -103,9 +103,7 @@ function ownHandlers(source: HookSource, manifest: boolean): HookHandler[] {
     return handlersOf(source)
   }
   const maps = source.hooks?.kind === 'array' ? source.hooks.items : [source.hooks]
-  return maps.flatMap((hooks) =>
-    handlersOf({ kind: 'plugin', hooks, partial: source.partial, file: undefined }),
-  )
+  return maps.flatMap((hooks) => handlersOf({ kind: 'plugin', hooks, file: undefined }))
 }
 
 const rule: Rule.RuleModule = {

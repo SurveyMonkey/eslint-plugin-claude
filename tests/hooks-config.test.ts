@@ -54,11 +54,10 @@ function firstHandler(source: HookSource | undefined) {
 }
 
 describe('hooksListener: a merge key in YAML', () => {
-  it('gives an unseen node for an alias to a map that holds a merge key, and sets the flag', () => {
+  it('gives an unseen node for an alias to a map that holds a merge key', () => {
     const code = `---\nbase: &m { <<: { a: 1 }, type: command }\nhooks:\n  Stop:\n    - hooks:\n        - *m\n        - { type: command, command: c }\n---\n`
     const [source] = sourcesOf(code)
     const [merged, sibling] = firstHandler(source)
-    expect(source?.partial).toBe(true)
     // The unseen node takes the place of the alias, at line 6.
     expect(merged).toEqual({
       kind: 'unseen',
@@ -70,10 +69,9 @@ describe('hooksListener: a merge key in YAML', () => {
   it('gives an unseen hooks value when the value itself holds a merge key', () => {
     const [source] = sourcesOf(frontmatter('<<: { Stop: [] }\nSessionEnd: x\n'))
     expect(source?.hooks?.kind).toBe('unseen')
-    expect(source?.partial).toBe(true)
   })
 
-  it('reads a quoted << as an ordinary key, and leaves the flag false', () => {
+  it('reads a quoted << as an ordinary key', () => {
     const [source] = sourcesOf(
       frontmatter("Stop:\n  - hooks:\n      - { '<<': 1, type: command }\n"),
     )
@@ -83,7 +81,6 @@ describe('hooksListener: a merge key in YAML', () => {
       '<<',
       'type',
     ])
-    expect(source?.partial).toBe(false)
   })
 
   it('leaves the whole value unread over the alias limit', () => {

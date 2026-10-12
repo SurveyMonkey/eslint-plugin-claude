@@ -72,9 +72,6 @@ export interface HookSource {
   /** The `hooks` value. It is undefined when the file has no `hooks` key, or when its YAML is over
    *  the alias limit (see `fromYaml`). */
   hooks: HNode | undefined
-  /** True when the `hooks` value holds a node of kind `unseen` (see `holdsUnseen`). JSON gives
-   *  false. */
-  partial: boolean
   /** The whole file of a plugin `hooks.json`. Settings and frontmatter give undefined. */
   file: HNode | undefined
 }
@@ -407,7 +404,7 @@ export function hooksListener(
         if (hooksFileKind(context.filename) === 'plugin') {
           const file = fromJson(body)
           const hooks = file.kind === 'object' ? memberOf(file, 'hooks')?.value : undefined
-          check({ kind: 'plugin', hooks, partial: false, file })
+          check({ kind: 'plugin', hooks, file })
         }
         return
       }
@@ -418,7 +415,6 @@ export function hooksListener(
       check({
         kind: 'settings',
         hooks: member === undefined ? undefined : fromJson(member.value),
-        partial: false,
         file: undefined,
       })
     },
@@ -445,7 +441,7 @@ export function hooksListener(
       })
       const walk = { at: fm.at, marks, path: [], aliases: { left: MAX_ALIASES } }
       const hooks = value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0))
-      check({ kind, hooks, partial: hooks !== undefined && holdsUnseen(hooks), file: undefined })
+      check({ kind, hooks, file: undefined })
     },
   }
   // `Rule.RuleListener` types a node as an ESTree node. These nodes are not.

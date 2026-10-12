@@ -51,7 +51,7 @@ const rule: Rule.RuleModule = {
       const events = handlersOf(source).map(({ event }) => event)
       const create = eventMember(source, 'WorktreeCreate')
       const remove = eventMember(source, 'WorktreeRemove')
-      const hidden = source.partial && remove !== undefined && hidesHandler(remove.value)
+      const hidden = remove !== undefined && hidesHandler(remove.value)
       if (
         create !== undefined &&
         events.includes('WorktreeCreate') &&
