@@ -70,11 +70,24 @@ same agents with `maxTokens: 20`.
 
 ## Usage
 
-Put the rule in `rules`, in the config block that extends `claude/recommended`. See
+The glob of the rule matches each Markdown file, so the `recommended` config does not configure it.
+A `rules` entry in the block that extends `claude/recommended` would not reach the files. Give the
+rule its files, the plugin and the language in a block of its own. See
 [Usage](../../README.md#usage) in the README.
 
 ```js
-'claude/agent-descriptions-budget': 'warn'
+import markdown from '@eslint/markdown'
+
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/*.md'],
+    plugins: { claude, markdown },
+    language: 'markdown/gfm',
+    languageOptions: { frontmatter: 'yaml' },
+    rules: { 'claude/agent-descriptions-budget': 'warn' },
+  },
+])
 ```
 
 ## Options
