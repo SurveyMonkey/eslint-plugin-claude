@@ -124,8 +124,10 @@ classifies the change, opens issues and posts comments (see [Docs classifier](#d
   to the run summary. For each changed page, it lists the blocks that changed, were added or were
   removed. It also counts the blocks that did not change.
 - `check` exits 0 when a page changed, so a person must read the run summary. It exits 1 when a
-  fetch or parse fails, or when the map cites no page. It exits 1 when a mapped heading is not on
-  its page, or is on it more than once. It exits 1 for an unknown option, or for a map or
+  fetch or parse fails, or when the map cites no page. An HTML heading with an `id` that has a
+  character other than `a-z`, `0-9`, `_` or `-` is a parse failure. It exits 1 when a mapped
+  heading is not on its page, or is on it more than once. It exits 1 when a `hash` in the map is
+  not the hash of its source in the snapshot. It exits 1 for an unknown option, or for a map or
   snapshot file that it cannot read. A missing snapshot is not a failure: every page is then new.
 - `update` writes the snapshot and sets `hash` on each source in the map. A person runs it, in a
   pull request. The scheduled job never runs it.
@@ -189,8 +191,9 @@ a diff, then the full old and new sections in two collapsed parts. Two or more `
 and a section for each block. It holds at most 20 blocks, and its body takes at most 60,000
 characters. A digest section has no collapsed parts, and it cuts each text at 280 characters. A
 digest counts as one issue toward `--max`. For a moved block, the body names the old and new
-headings, the new anchor and each footnote to change. For tracked blocks, it posts at most one
-comment on each open group issue (`GROUP_ISSUES`), with the blocks that it did not post before.
+headings, the new anchor and each footnote to change. For tracked blocks, it posts the blocks
+that it did not post before on each open group issue (`GROUP_ISSUES`). Each comment takes at most
+60,000 characters, so a run can post more than one comment on an issue.
 While a group issue of a block is open, a finding of the block that names no rule opens no issue.
 `--dry-run` prints each issue and each comment, and opens and posts none. A manual run of the
 workflow takes a `dry_run` input.

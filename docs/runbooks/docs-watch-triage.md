@@ -157,9 +157,10 @@ update. Change the rule in the same pull request.
 `docs/rules-inventory.md` is a second source map. The job tracks a block that an inventory
 footnote cites. A heading of `docs/rule-sources.json` that cites the block stops this, but a
 heading that cites the whole page does not. Each section of "Rules by group"
-has a group issue, for example #10 for Hooks. While that issue is open, the job posts one comment
-on it for each run that finds new tracked blocks. The comment starts with one hidden marker for
-each block: `<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`. Do not edit the markers. The
+has a group issue, for example #10 for Hooks. While that issue is open, the job posts the new
+tracked blocks of each run on it, in one comment or more of at most 60,000 characters. The
+comment starts with one hidden marker for each block:
+`<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`. Do not edit the markers. The
 job does not post a block again while its marker is in a comment of the issue.
 
 Do these steps:
