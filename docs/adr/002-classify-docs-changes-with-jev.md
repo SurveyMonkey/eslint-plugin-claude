@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112, 137, 149, 150, 151, 152]
+related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -280,9 +280,17 @@ stores the text of a mapped block only.
   - no `TYPESAFE_API_KEY` when a block needs a call.
 
   The block split cannot read a code fence that is not closed. It also cannot read a line that
-  looks like an HTML heading in a form that it does not know.
+  looks like an HTML heading in a form that it does not know. It also cannot read an HTML
+  heading whose `id` has a character other than a lowercase letter, a digit, `_` or `-`
+  (#35). The block IDs of the cited pages use only these. The error names the page and the
+  `id`. The docs watch `check` uses the same block split, so `check` also exits 1.
+- `check` also exits 1 when a `hash` in `docs/rule-sources.json` is not the hash of its source
+  in the snapshot.
 - A finding that is not valid, a failed `gh` call, or more than 20 new issues in one live run
   stops the issue step with exit 1. A digest issue counts as one issue. A dry run has no limit.
+  A `gh` call that prints no URL for a new issue or comment also stops the step. An issue body
+  or a group comment that cannot fit in 60,000 characters stops the step before it writes
+  (Decision 8).
 - A check report that the workflow cannot read fails the job.
 
 ### 8. Issues open with the App token, as a Task, with the `claude-docs-change` label
@@ -311,13 +319,23 @@ group issue. It does not post a block again while its marker is in a comment.
 A tracked block opens no issue for a finding with no rule while one of its group issues is open.
 The comment takes its place. When all its group issues are closed, the finding opens its
 issue, with a line that names the inventory rows. A finding that names a rule opens its issue as
-before. Docs text in a comment gets the same fence and word joiners as an issue body. The markers
-come first. The step cuts the text after them so that the markers and the text take at most
-60,000 characters. A note of the cut follows, so the comment stays under the GitHub limit of
-65,536. A cut never removes a marker. Comments do not count toward the limit of 20 issues. A dry
-run prints each comment and posts none. The step also stops before it writes for four causes.
-The findings file has no `tracked` list. A tracked block is not valid. A tracked block is in the
-list twice. A group issue has a state that is not `open` or `closed`.
+before. Docs text in a comment gets the same fence and word joiners as an issue body. The marker
+of each block in the comment comes first. The step cuts no comment. It takes the new blocks in
+order while the whole comment takes at most 60,000 characters, so the comment stays under the
+GitHub limit of 65,536. A block that does not fit gets no marker, so the next run posts it. So
+each marker has the text of its block (#218). A block whose comment alone passes 60,000
+characters stops the step before it writes. Comments do not count toward the limit of 20
+issues. A dry run prints each comment and posts none. The step also stops before it writes for
+four causes. The findings file has no `tracked` list. A tracked block is not valid. A tracked
+block is in the list twice. A group issue has a state that is not `open` or `closed`.
+
+**The size of an issue body.** The body of an issue for one block takes at most 60,000
+characters (#218). In the text, a heading or a block ID takes at most 300 characters. The
+marker keeps the full block ID. A reason and a line of inventory rows take at most 2,000
+characters each. A block has at most five lines of possible moves, and a line counts the
+others. When the body with the Before and After parts passes 60,000 characters, the body has no
+Before and After parts. A body that still does not fit stops the step before it writes. A cut
+of a text never splits a character that takes two UTF-16 units.
 
 **The uncited blocks of a page share a digest issue.** After the dedupe and the group comment
 path, the step takes each `new-rule` and `needs-triage` finding that names no rule. A finding
