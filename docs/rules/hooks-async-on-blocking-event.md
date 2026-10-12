@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-async-on-blocking-event`
+# claude/hooks-async-on-blocking-event
 
-Do not run a hook in the background on an event whose hooks can block or decide.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 

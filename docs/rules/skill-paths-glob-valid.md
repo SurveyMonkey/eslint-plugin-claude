@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-paths-glob-valid`
+# claude/skill-paths-glob-valid
 
-Use valid globs in the `paths` field of a skill.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md` |
 
 ## Rule details
 
@@ -79,10 +79,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-paths-glob-valid': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

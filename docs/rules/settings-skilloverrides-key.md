@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-skilloverrides-key`
+# claude/settings-skilloverrides-key
 
-Do not set a `skillOverrides` key that Claude Code does not apply.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

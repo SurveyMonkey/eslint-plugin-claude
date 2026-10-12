@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-authorization-header-with-oauth`
+# claude/mcp-authorization-header-with-oauth
 
-Do not set `oauth` beside a static `Authorization` header on an MCP server.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.mcp.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.mcp.json` |
 
 ## Rule details
 

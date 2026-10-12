@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-webfetch-preflight-skip`
+# claude/settings-webfetch-preflight-skip
 
-Pair `skipWebFetchPreflight: true` with a `WebFetch(...)` permission rule.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

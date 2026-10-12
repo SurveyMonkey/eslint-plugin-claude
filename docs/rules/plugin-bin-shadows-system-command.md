@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-bin-shadows-system-command`
+# claude/plugin-bin-shadows-system-command
 
-Do not name a `bin/` file like a system command.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-sync-claude-ai-plugins`
+# claude/settings-sync-claude-ai-plugins
 
-Do not set `syncClaudeAiPlugins` in `.claude/settings.json`, and do not set it to `true`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 

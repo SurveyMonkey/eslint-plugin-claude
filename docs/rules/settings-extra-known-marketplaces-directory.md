@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-extra-known-marketplaces-directory`
+# claude/settings-extra-known-marketplaces-directory
 
-Do not point a committed `extraKnownMarketplaces` entry at a directory by an absolute path.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json` |
 
 ## Rule details
 

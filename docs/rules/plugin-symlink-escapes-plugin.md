@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-symlink-escapes-plugin`
+# claude/plugin-symlink-escapes-plugin
 
-Keep the target of a link under a plugin inside the plugin.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -79,10 +79,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-symlink-escapes-plugin': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-listing-budget`
+# claude/skill-listing-budget
 
-Keep the skill and command descriptions of one scope within the listing budget.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | limit | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| limit | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic, and it reads more than one file.
 
@@ -83,10 +83,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `8000` | The most characters that the entries of one scope can have. Optional. |
-| `listingMax` | `1536` | The cut of the text of one entry. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-listing-budget': ['warn', { max: 16000, listingMax: 1024 }]

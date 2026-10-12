@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-paths-no-match`
+# claude/rules-paths-no-match
 
-Use a `paths` glob that matches at least one file.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/rules/**/*.md` |
 
 The rule is `off` in `recommended`.
 

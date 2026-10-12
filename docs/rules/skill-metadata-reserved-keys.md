@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-metadata-reserved-keys`
+# claude/skill-metadata-reserved-keys
 
-Do not reuse a frontmatter field name as a `metadata` key.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -67,10 +67,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-metadata-reserved-keys': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

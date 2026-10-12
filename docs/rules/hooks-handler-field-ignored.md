@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-handler-field-ignored`
+# claude/hooks-handler-field-ignored
 
-Leave out the hook handler fields that Claude Code ignores.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -91,10 +91,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `sessionEndMax` | `60` | The rule reports a `SessionEnd` `timeout` above this number of seconds. Optional. |
-| `sessionEndPluginMax` | `1.5` | The rule reports a `SessionEnd` `timeout` above this number of seconds in a plugin `hooks.json`. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/hooks-handler-field-ignored': ['error', { sessionEndMax: 120 }]

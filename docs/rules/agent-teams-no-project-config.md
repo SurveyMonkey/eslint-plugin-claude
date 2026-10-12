@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-teams-no-project-config`
+# claude/agent-teams-no-project-config
 
-Do not keep a team config file in `.claude/teams/`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/teams/**/*.md`, `**/.claude/teams/**/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/teams/**/*.md`, `**/.claude/teams/**/*.json` |
 
 ## Rule details
 
@@ -55,10 +55,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-teams-no-project-config': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

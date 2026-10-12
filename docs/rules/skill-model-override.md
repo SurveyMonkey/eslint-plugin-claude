@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-model-override`
+# claude/skill-model-override
 
-Do not switch the model in a skill or command.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it cannot see the model of the
 session.

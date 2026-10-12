@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-no-bom`
+# claude/skill-no-bom
 
-Save a skill or command file with no byte order mark.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule makes no report until the option `minVersion` is set.
 
@@ -83,9 +83,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | unset | The oldest Claude Code version that the repository supports, such as `2.1.239`. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-no-bom': ['warn', { minVersion: '2.1.200' }]

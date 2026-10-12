@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-procedure-to-skill`
+# claude/claude-md-procedure-to-skill
 
-Move a long numbered procedure from a CLAUDE.md into a skill or a path-scoped rule.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 The rule is `off` in `recommended`.
 
@@ -68,9 +68,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `maxSteps` | none | The most items in one numbered list. An integer from 1. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-procedure-to-skill': ['warn', { maxSteps: 7 }]

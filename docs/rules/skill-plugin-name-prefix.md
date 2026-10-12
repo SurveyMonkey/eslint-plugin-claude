@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-plugin-name-prefix`
+# claude/skill-plugin-name-prefix
 
-Do not start the name of a plugin skill with the plugin prefix.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| portability | `**/SKILL.md` |
 
 The rule makes no report until the option `minVersion` is set.
 
@@ -73,9 +73,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | unset | The oldest Claude Code version that the repository supports, such as `2.1.230`. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-plugin-name-prefix': ['warn', { minVersion: '2.1.230' }]

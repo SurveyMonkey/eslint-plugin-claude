@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `hooks-no-standalone-file`
+# claude/hooks-no-standalone-file
 
-Put project hooks under the `hooks` key of a settings file, not in a hooks file.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/hooks.json`, `**/.claude/hooks/hooks.json`, `**/.claude-plugin/hooks.json`, `**/.claude-plugin/hooks/hooks.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/hooks.json`, `**/.claude/hooks/hooks.json`, `**/.claude-plugin/hooks.json`, `**/.claude-plugin/hooks/hooks.json` |
 
 ## Rule details
 

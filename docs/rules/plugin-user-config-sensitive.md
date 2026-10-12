@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-user-config-sensitive`
+# claude/plugin-user-config-sensitive
 
-Set `sensitive` on a `userConfig` option for a token or a password.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

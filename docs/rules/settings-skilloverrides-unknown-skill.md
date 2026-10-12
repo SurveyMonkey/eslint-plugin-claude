@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-skilloverrides-unknown-skill`
+# claude/settings-skilloverrides-unknown-skill
 
-Key `skillOverrides` by the name of a skill that the repository or Claude Code has.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, because user skills are not in the
 repository. `strict` turns it on at `warn`.
@@ -66,9 +66,8 @@ The rule makes no report when it cannot see a skill. It makes no report in these
 
 ### Options
 
-| Option | Type | Default | Meaning |
-|--------|------|---------|---------|
-| `allow` | array of strings | `[]` | Skill names to accept, such as a user skill |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ### What the rule does not check
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-domain-duplicate`
+# claude/sandbox-domain-duplicate
 
-Write each domain once in an `allowedDomains` or `deniedDomains` list.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -57,10 +57,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-domain-duplicate': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

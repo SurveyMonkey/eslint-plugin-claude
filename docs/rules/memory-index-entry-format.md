@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-index-entry-format`
+# claude/memory-index-entry-format
 
-Keep each entry of a `MEMORY.md` index to one line.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.claude/agent-memory/*/MEMORY.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/agent-memory/*/MEMORY.md` |
 
 The rule is `off` in `recommended`.
 

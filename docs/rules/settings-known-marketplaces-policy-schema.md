@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-known-marketplaces-policy-schema`
+# claude/settings-known-marketplaces-policy-schema
 
-Write each marketplace policy entry as a source object that Claude Code reads.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

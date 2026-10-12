@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-dead-allow`
+# claude/permissions-dead-allow
 
-Do not write an `allow` rule that a `deny` or `ask` rule covers.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -92,10 +92,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-dead-allow': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

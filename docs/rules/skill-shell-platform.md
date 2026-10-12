@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-shell-platform`
+# claude/skill-shell-platform
 
-Set a shell that the target platforms of a skill can run.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule makes no report until the option `platforms` lists a platform.
 
@@ -71,9 +71,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `platforms` | unset | A list of `windows-no-git-bash`, `macos`, `linux`, `wsl`, `bedrock`, `vertex` and `foundry`. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-shell-platform': ['warn', { platforms: ['windows-no-git-bash', 'macos', 'linux'] }]

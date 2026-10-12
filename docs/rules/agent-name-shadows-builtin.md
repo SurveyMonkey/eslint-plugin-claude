@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-name-shadows-builtin`
+# claude/agent-name-shadows-builtin
 
-Do not give a local subagent the name of a built-in subagent.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/agents/**/*.md`, in `.claude/agents/` |
+| Category | Files |
+|----------|-------|
+| practice | `**/agents/**/*.md`, in `.claude/agents/` |
 
 ## Rule details
 
@@ -68,9 +68,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names of built-in subagents that a local agent replaces on purpose. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-name-shadows-builtin': ['warn', { allow: ['Explore'] }]

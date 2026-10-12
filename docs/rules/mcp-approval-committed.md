@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-approval-committed`
+# claude/mcp-approval-committed
 
-Do not commit an approval of the project MCP servers.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 

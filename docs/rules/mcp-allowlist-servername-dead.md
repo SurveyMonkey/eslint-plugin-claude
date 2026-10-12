@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-allowlist-servername-dead`
+# claude/mcp-allowlist-servername-dead
 
-Do not list a `serverName` in an allowlist that has `serverUrl` and `serverCommand` entries.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files: `managed-settings.json` and each
 `managed-settings.d/*.json` drop-in. It reads no hidden drop-in, because Claude Code ignores it.

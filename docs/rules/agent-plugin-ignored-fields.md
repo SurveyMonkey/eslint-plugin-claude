@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-plugin-ignored-fields`
+# claude/agent-plugin-ignored-fields
 
-Leave out the frontmatter fields that Claude Code ignores in a plugin agent.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -64,10 +64,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-plugin-ignored-fields': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

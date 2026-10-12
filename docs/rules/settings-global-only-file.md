@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-global-only-file`
+# claude/settings-global-only-file
 
-Do not keep a file in a repository that Claude Code reads from the home directory only.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/keybindings.json`, `**/.claude/themes/*.json`, `**/.claude.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/keybindings.json`, `**/.claude/themes/*.json`, `**/.claude.json` |
 
 ## Rule details
 

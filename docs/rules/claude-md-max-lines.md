@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-max-lines`
+# claude/claude-md-max-lines
 
-Keep an instruction file at or under 200 lines.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
+| Category | Files |
+|----------|-------|
+| limit | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
 
 ## Rule details
 
@@ -71,9 +71,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `200` | The most lines of a file. An integer from 1. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-max-lines': ['warn', { max: 300 }]

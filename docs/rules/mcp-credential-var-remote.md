@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-credential-var-remote`
+# claude/mcp-credential-var-remote
 
-Do not reference a credential variable in the `url` or `headers` of a remote MCP server.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.mcp.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.mcp.json` |
 
 ## Rule details
 
@@ -85,9 +85,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `names` | `[]` | More variable names to report. A list of non-empty strings. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/mcp-credential-var-remote': ['error', { names: ['INTERNAL_TOKEN'] }]

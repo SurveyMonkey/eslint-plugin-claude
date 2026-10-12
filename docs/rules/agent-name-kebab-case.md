@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-name-kebab-case`
+# claude/agent-name-kebab-case
 
-Write the name of a subagent in kebab-case, as the docs examples do.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/*.md`, in the agent folders |
+| Category | Files |
+|----------|-------|
+| practice | `**/*.md`, in the agent folders |
 
 The rule is `off` in `recommended`. The rule is a heuristic.
 

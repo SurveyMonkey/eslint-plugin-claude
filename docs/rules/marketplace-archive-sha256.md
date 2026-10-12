@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-archive-sha256`
+# claude/marketplace-archive-sha256
 
-Pin an `archive` plugin source with `sha256`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -76,10 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-archive-sha256': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

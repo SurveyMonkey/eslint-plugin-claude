@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-no-sse-transport`
+# claude/mcp-no-sse-transport
 
-Use the `http` transport for an MCP server, not the deprecated `sse` transport.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| deprecated | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

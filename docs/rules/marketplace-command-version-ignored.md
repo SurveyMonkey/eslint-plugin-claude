@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-command-version-ignored`
+# claude/marketplace-command-version-ignored
 
-Do not set the `version` of an entry that has a `command` source.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -80,10 +80,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-command-version-ignored': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

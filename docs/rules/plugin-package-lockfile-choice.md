@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-package-lockfile-choice`
+# claude/plugin-package-lockfile-choice
 
-Ship one lockfile with the `package.json` of a plugin, and prefer an npm lockfile.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -65,10 +65,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-package-lockfile-choice': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

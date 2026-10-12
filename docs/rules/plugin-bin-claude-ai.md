@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-bin-claude-ai`
+# claude/plugin-bin-claude-ai
 
-Do not ship a top-level `bin/` folder in a plugin that targets claude.ai.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -59,6 +59,9 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```
 
 ## Options
+
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 An object with one property.
 

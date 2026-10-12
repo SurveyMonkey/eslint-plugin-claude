@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `output-style-plugin-name-description`
+# claude/output-style-plugin-name-description
 
-Set name and description in the frontmatter of a plugin output style.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/output-styles/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/output-styles/*.md` |
 
 ## Rule details
 
@@ -68,10 +68,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/output-style-plugin-name-description': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

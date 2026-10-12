@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-permission-mode-manual`
+# claude/agent-permission-mode-manual
 
-Write permissionMode: default, not the alias manual, in a local subagent.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -60,10 +60,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-permission-mode-manual': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

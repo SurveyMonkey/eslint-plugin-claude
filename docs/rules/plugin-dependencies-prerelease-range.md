@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-dependencies-prerelease-range`
+# claude/plugin-dependencies-prerelease-range
 
-Give a dependency range a pre-release suffix when it must match a pre-release version.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

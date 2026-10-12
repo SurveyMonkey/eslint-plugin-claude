@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-dependencies-not-auto-installed`
+# claude/plugin-dependencies-not-auto-installed
 
-Do not rely on Claude Code to install a dependency with a `command` source.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-dependencies-not-auto-installed': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

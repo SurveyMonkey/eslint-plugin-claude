@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-frontmatter-position`
+# claude/skill-frontmatter-position
 
-Put the frontmatter of a skill on line 1.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -76,10 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-frontmatter-position': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

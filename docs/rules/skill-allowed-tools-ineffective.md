@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-allowed-tools-ineffective`
+# claude/skill-allowed-tools-ineffective
 
-Do not list a tool in a field that does not affect it.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -76,10 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-allowed-tools-ineffective': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

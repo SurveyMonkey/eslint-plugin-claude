@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-teammate-ignored-fields`
+# claude/agent-teammate-ignored-fields
 
-Leave out the subagent fields that Claude Code ignores for a teammate, when the settings turn agent teams on.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/*.md`, in `.claude/agents/` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/*.md`, in `.claude/agents/` |
 
 The rule is `off` in `recommended`. The rule is a heuristic, and it reads more than one file.
 

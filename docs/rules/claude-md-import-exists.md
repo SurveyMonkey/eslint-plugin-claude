@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-import-exists`
+# claude/claude-md-import-exists
 
-Import only files that exist.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
 
 ## Rule details
 
@@ -80,9 +80,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `ignorePattern` | none | A regular expression. The rule skips a token when the expression matches `@` and the path. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 The docs define a token no further than the steps above. So the rule reports a word such as
 `@scope/pkg` or `@types/node` in the text. Use the option for such text.

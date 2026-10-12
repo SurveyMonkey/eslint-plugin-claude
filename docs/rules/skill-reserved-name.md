@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-reserved-name`
+# claude/skill-reserved-name
 
-Do not use a name that Claude Code reserves for synced skills.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| load | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -67,10 +67,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-reserved-name': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

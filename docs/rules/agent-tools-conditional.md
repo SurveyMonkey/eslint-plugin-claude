@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-tools-conditional`
+# claude/agent-tools-conditional
 
-Do not list in tools a tool that a background or nested subagent loses.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | no-op | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+| Category | Files |
+|----------|-------|
+| no-op | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-tools-conditional': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-no-literal-secrets`
+# claude/mcp-no-literal-secrets
 
-Do not write a literal credential in a committed MCP config.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | security | `**/.mcp.json`, `**/managed-mcp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.mcp.json`, `**/managed-mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

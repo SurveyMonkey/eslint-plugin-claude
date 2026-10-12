@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-platform-limits`
+# claude/sandbox-platform-limits
 
-Do not rely on a sandbox setting that the platform or the Claude Code version does not honor.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -78,10 +78,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `platforms` | unset | The platforms where the team runs Claude Code. An array of `windows-git-bash`, `windows-no-git-bash`, `macos`, `linux`, `wsl`. |
-| `minVersion` | unset | The oldest Claude Code version of the team, as `major.minor.patch`. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 "claude/sandbox-platform-limits": ["warn", { platforms: ["linux", "macos"], minVersion: "2.1.200" }]

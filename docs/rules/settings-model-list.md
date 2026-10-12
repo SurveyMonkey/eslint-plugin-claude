@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-model-list`
+# claude/settings-model-list
 
-Keep the model lists of a settings file consistent with the way Claude Code reads them.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -133,9 +133,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Type | Default | Schema maximum |
-|--------|------|---------|----------------|
-| `max` | integer, at least 1 | 3 | 3 |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 `max` is the most distinct entries of `fallbackModel`. The `recommended` and `strict` configs set
 no option.

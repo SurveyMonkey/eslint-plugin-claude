@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-symlink-external-scoped`
+# claude/rules-symlink-external-scoped
 
-Do not scope a rule that is a link out of the repository with `paths`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/rules/**/*.md` |
 
 ## Rule details
 

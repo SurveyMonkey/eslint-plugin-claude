@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-dependencies-resolve`
+# claude/plugin-dependencies-resolve
 
-Name only dependencies that the marketplace of the plugin resolves.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -81,10 +81,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-dependencies-resolve': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

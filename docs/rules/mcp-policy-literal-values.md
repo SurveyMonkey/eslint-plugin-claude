@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-policy-literal-values`
+# claude/mcp-policy-literal-values
 
-Write a literal `serverUrl` and `serverCommand` in an MCP policy entry.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files: `managed-settings.json` and each
 `managed-settings.d/*.json` drop-in. It reads no hidden drop-in, because Claude Code ignores it.

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-plugin-tool-name-scoped`
+# claude/mcp-plugin-tool-name-scoped
 
-Name a tool of a plugin MCP server with the scoped name of the plugin.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md`, `**/commands/**/*.md`, `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md`, `**/commands/**/*.md`, `**/agents/**/*.md` |
 
 ## Rule details
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-default-mode-manual-alias`
+# claude/permissions-default-mode-manual-alias
 
-Write `default` in place of the `manual` alias of `permissions.defaultMode`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads managed files too. A hidden drop-in in `managed-settings.d` gets no report, because Claude Code ignores it.
 Claude Code reads an invalid managed `permissions.defaultMode` as `default` only from v2.1.282.[^closed] Every client that rejects `manual` is older, so a managed file has no exemption.
@@ -67,9 +67,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | unset | The lowest Claude Code version that reads your files, as `major.minor.patch`. The rule reports when it is below `2.1.200`. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 "claude/permissions-default-mode-manual-alias": ["warn", { minVersion: "2.1.150" }]

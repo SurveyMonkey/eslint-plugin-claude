@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-entry-component-paths`
+# claude/marketplace-entry-component-paths
 
-Write the component paths of an entry as the plugin path rules require, to paths that exist.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -94,10 +94,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-entry-component-paths': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

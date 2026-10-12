@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-committed-helper-command`
+# claude/settings-committed-helper-command
 
-Do not set a shell command key in the shared settings file.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.claude/settings.json` |
 
 ## Rule details
 

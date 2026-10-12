@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-relevance-signal-hints`
+# claude/plugin-relevance-signal-hints
 
-Write a `cli` entry as one command name, and a `file` pattern with an anchor at the end.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 

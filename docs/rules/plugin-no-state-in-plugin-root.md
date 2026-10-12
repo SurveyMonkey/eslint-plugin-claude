@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-no-state-in-plugin-root`
+# claude/plugin-no-state-in-plugin-root
 
-Write the state of a plugin to `${CLAUDE_PLUGIN_DATA}`, not to `${CLAUDE_PLUGIN_ROOT}`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.claude-plugin/plugin.json`, `**/hooks/hooks.json`, `**/.mcp.json`, `**/monitors/monitors.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json`, `**/hooks/hooks.json`, `**/.mcp.json`, `**/monitors/monitors.json` |
 
 ## Rule details
 

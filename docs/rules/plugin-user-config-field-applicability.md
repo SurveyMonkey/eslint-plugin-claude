@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-user-config-field-applicability`
+# claude/plugin-user-config-field-applicability
 
-Set `min`, `max` and `multiple` only on the `userConfig` option types that they fit.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -62,10 +62,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-user-config-field-applicability': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

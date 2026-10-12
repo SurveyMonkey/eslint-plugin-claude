@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-plugin-root-shadowed`
+# claude/skill-plugin-root-shadowed
 
-Do not put a `SKILL.md` at the root of a plugin that has other skills.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/SKILL.md` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-plugin-root-shadowed': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

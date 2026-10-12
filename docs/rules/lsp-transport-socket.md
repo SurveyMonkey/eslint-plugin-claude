@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `lsp-transport-socket`
+# claude/lsp-transport-socket
 
-Do not set the `transport` of an LSP server to `socket`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.lsp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.lsp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

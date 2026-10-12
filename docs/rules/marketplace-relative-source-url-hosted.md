@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-relative-source-url-hosted`
+# claude/marketplace-relative-source-url-hosted
 
-Give each entry of a URL-hosted marketplace a source that needs no marketplace files.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | load | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -86,10 +86,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-relative-source-url-hosted': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

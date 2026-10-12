@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-docker-excluded`
+# claude/sandbox-docker-excluded
 
-Exclude `docker` from the sandbox in a project that uses Docker.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-docker-excluded': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

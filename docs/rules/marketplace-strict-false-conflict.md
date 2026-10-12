@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-strict-false-conflict`
+# claude/marketplace-strict-false-conflict
 
-Declare no component field in an entry with `"strict": false` when the source has a `plugin.json`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -82,10 +82,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-strict-false-conflict': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-env-prompt-caching-off`
+# claude/settings-env-prompt-caching-off
 
-Do not turn prompt caching off from the shared settings file.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json` |
 
 ## Rule details
 

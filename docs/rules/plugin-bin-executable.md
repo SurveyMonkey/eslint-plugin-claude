@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-bin-executable`
+# claude/plugin-bin-executable
 
-Give each file in the bin directory of a plugin the executable bit.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -65,10 +65,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-bin-executable': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

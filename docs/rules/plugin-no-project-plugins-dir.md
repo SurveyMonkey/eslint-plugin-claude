@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-no-project-plugins-dir`
+# claude/plugin-no-project-plugins-dir
 
-Keep a plugin out of the `.claude/plugins/` directory of a project.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/plugins/**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/plugins/**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -55,10 +55,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-no-project-plugins-dir': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

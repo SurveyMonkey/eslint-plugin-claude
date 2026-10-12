@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-tools-skill-for-preload`
+# claude/agent-tools-skill-for-preload
 
-Preload skills with the `skills` field, not with `Skill` in `tools`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
+| Category | Files |
+|----------|-------|
+| practice | `**/agents/**/*.md`, in `.claude/agents/` and in the `agents/` directory of a plugin |
 
 The rule is `off` in `recommended`.
 
@@ -74,10 +74,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-tools-skill-for-preload': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-invocation-redundant-fields`
+# claude/skill-invocation-redundant-fields
 
-Remove a field that the invocation settings of a skill make useless.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md` |
 
 ## Rule details
 
@@ -68,10 +68,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-invocation-redundant-fields': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

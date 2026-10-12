@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-stdio-command-has-args`
+# claude/mcp-stdio-command-has-args
 
-Put the program of a stdio MCP server in `command`, and its arguments in `args`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

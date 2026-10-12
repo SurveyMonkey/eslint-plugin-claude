@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-default-dir-shadowed`
+# claude/plugin-default-dir-shadowed
 
-Point a manifest key that replaces a default folder at a path inside the folder.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -71,10 +71,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-default-dir-shadowed': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

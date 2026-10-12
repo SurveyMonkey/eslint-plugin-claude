@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-mock-server-exists`
+# claude/plugin-evals-mock-server-exists
 
-Name only servers of the plugin MCP configuration in the mocks of an eval suite.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -75,10 +75,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-mock-server-exists': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

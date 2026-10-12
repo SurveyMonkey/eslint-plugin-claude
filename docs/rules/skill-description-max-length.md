@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-description-max-length`
+# claude/skill-description-max-length
 
-Limit the length of a skill description.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| limit | `**/SKILL.md` |
 
 ## Rule details
 
@@ -61,9 +61,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `listingMax` | `1536` | The limit on `description` plus `when_to_use`. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-description-max-length': ['warn', { listingMax: 1000 }]

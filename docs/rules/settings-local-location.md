@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-local-location`
+# claude/settings-local-location
 
-Keep `.claude/settings.local.json` at the repository root.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/.claude/settings.local.json` |
+| Category | Files |
+|----------|-------|
+| deprecated | `**/.claude/settings.local.json` |
 
 ## Rule details
 

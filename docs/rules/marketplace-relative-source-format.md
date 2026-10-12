@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-relative-source-format`
+# claude/marketplace-relative-source-format
 
-Write a relative plugin source as the docs require.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -90,10 +90,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-relative-source-format': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

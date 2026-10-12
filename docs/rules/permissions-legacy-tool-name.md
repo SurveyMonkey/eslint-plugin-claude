@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-legacy-tool-name`
+# claude/permissions-legacy-tool-name
 
-Write `Agent` in place of `Task`, and `Edit` in place of `MultiEdit`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| deprecated | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -63,9 +63,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | unset | The lowest Claude Code version that reads your files, as `major.minor.patch`. Below `2.1.63`, the `Task` report stops. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 "claude/permissions-legacy-tool-name": ["warn", { minVersion: "2.1.50" }]

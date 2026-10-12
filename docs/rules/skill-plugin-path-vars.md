@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-plugin-path-vars`
+# claude/skill-plugin-path-vars
 
-Write a plugin path in a plugin skill with the braced plugin variable.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | portability | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| portability | `**/SKILL.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic.
 

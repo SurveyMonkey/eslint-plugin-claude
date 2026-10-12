@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-auto-mode-rule-syntax`
+# claude/permissions-auto-mode-rule-syntax
 
-Write `autoMode` entries as prose, and put a permission rule in `permissions`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
@@ -67,10 +67,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-auto-mode-rule-syntax': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

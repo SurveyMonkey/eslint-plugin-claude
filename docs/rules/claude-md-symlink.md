@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-symlink`
+# claude/claude-md-symlink
 
-Make a CLAUDE.md a regular file, and import AGENTS.md.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/CLAUDE.md` |
+| Category | Files |
+|----------|-------|
+| portability | `**/CLAUDE.md` |
 
 ## Rule details
 

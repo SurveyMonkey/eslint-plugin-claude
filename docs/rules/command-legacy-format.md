@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `command-legacy-format`
+# claude/command-legacy-format
 
-Use a skill, not the legacy command format.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | deprecated | `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| deprecated | `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -54,10 +54,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/command-legacy-format': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-managed-file`
+# claude/settings-managed-file
 
-Write a managed settings file as Claude Code reads it.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

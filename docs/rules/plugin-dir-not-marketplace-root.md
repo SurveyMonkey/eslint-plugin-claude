@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-dir-not-marketplace-root`
+# claude/plugin-dir-not-marketplace-root
 
-Point `--plugin-dir` at the folder of a plugin, not at a marketplace root.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/package.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/package.json` |
 
 ## Rule details
 

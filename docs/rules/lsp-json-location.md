@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `lsp-json-location`
+# claude/lsp-json-location
 
-Put `.lsp.json` at the root of a plugin.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.lsp.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.lsp.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

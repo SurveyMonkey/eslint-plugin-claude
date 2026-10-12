@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-frontmatter-valid`
+# claude/agent-frontmatter-valid
 
-Give a local subagent file frontmatter that Claude Code can load.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| load | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -84,9 +84,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `nameMax` | `256` | The limit on the length of `name`, in characters. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/agent-frontmatter-valid': ['error', { nameMax: 64 }]

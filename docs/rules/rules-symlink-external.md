@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-symlink-external`
+# claude/rules-symlink-external
 
-Do not link a rule file to a folder outside the repository.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/rules/**/*.md` |
 
 ## Rule details
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-oauth-transport`
+# claude/mcp-oauth-transport
 
-Use `oauth` only on an `http` or `sse` MCP server.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.mcp.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.mcp.json` |
 
 ## Rule details
 

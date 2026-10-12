@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-location`
+# claude/marketplace-location
 
-Keep `marketplace.json` in the `.claude-plugin` directory of the marketplace root.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/marketplace.json` |
 
 ## Rule details
 
@@ -59,10 +59,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-location': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

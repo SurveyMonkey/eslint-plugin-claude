@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-argument-escape`
+# claude/skill-argument-escape
 
-Escape an argument placeholder with one backslash, not two.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -73,10 +73,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-argument-escape': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

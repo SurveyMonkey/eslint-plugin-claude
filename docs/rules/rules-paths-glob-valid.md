@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-paths-glob-valid`
+# claude/rules-paths-glob-valid
 
-Use valid globs in the `paths` field of a rule file.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/rules/**/*.md` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/rules-paths-glob-valid': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

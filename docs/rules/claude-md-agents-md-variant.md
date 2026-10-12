@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-agents-md-variant`
+# claude/claude-md-agents-md-variant
 
-Do not keep an `AGENTS.md` variant that Claude Code never reads.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/AGENTS.local.md`, `**/AGENTS.override.md`, `**/.agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/AGENTS.local.md`, `**/AGENTS.override.md`, `**/.agents/**/*.md` |
 
 ## Rule details
 
@@ -65,9 +65,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Paths that the rule leaves out. A list of strings. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-agents-md-variant': ['error', { allow: ['.agents', 'AGENTS.override.md'] }]

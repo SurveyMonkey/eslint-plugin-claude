@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-entry-name-matches-manifest`
+# claude/marketplace-entry-name-matches-manifest
 
-Keep the name of a marketplace entry the same as the name in its `plugin.json`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -86,10 +86,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-entry-name-matches-manifest': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-prompt-frontmatter`
+# claude/plugin-evals-prompt-frontmatter
 
-Use the documented frontmatter fields, limits and env keys in an eval prompt.md.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/prompt.md` |
+| Category | Files |
+|----------|-------|
+| load | `**/prompt.md` |
 
 ## Rule details
 
@@ -70,10 +70,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-prompt-frontmatter': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

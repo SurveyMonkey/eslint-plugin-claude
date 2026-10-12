@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-evals-prompt-no-at-mentions`
+# claude/plugin-evals-prompt-no-at-mentions
 
-Do not write an @path mention in the body of an eval prompt.md.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/prompt.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/prompt.md` |
 
 ## Rule details
 
@@ -62,10 +62,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-evals-prompt-no-at-mentions': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

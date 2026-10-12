@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-model-forced`
+# claude/agent-model-forced
 
-Do not set `model` in a local agent when the settings force one subagent model.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -60,10 +60,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-model-forced': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

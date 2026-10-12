@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-remote-url-empty`
+# claude/mcp-remote-url-empty
 
-Give each remote server in a project `.mcp.json` a `url`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.mcp.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.mcp.json` |
 
 ## Rule details
 

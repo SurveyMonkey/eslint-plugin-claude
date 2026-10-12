@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-excludes-absolute-committed`
+# claude/claude-md-excludes-absolute-committed
 
-Keep a machine-specific `claudeMdExcludes` path out of the committed settings.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | portability | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`.
 

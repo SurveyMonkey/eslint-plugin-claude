@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-skill-dir-layout`
+# claude/plugin-skill-dir-layout
 
-Put each skill of a listed skills directory in a folder, in a file named `SKILL.md`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -69,10 +69,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-skill-dir-layout': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

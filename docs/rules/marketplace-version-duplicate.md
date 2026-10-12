@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-version-duplicate`
+# claude/marketplace-version-duplicate
 
-Set the version of a marketplace plugin in the entry or in its `plugin.json`, not in both.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -80,10 +80,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-version-duplicate': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

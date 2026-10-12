@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-env-numeric-spelling`
+# claude/settings-env-numeric-spelling
 
-Write a number in the `env` block of a settings file in plain digits.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -44,9 +44,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `minVersion` | unset, the rule reports nothing | The oldest Claude Code client of the team, as three numbers such as `2.1.200`. The rule reports when it is below 2.1.211. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 A fault shows only on a client older than v2.1.211. The rule cannot know which clients a team
 runs. So it reports nothing until the option `minVersion` names the oldest client of the team. It

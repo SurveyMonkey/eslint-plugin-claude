@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `lsp-extension-conflict`
+# claude/lsp-extension-conflict
 
-Give each LSP server of a marketplace its own file extensions.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 

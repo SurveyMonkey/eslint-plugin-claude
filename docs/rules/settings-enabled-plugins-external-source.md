@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-enabled-plugins-external-source`
+# claude/settings-enabled-plugins-external-source
 
-Do not rely on `.claude/settings.json` to install a plugin that has an external source.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/settings.json` |
 
 ## Rule details
 

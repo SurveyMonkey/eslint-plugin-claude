@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-anthropic-hosted-url`
+# claude/mcp-anthropic-hosted-url
 
-Do not add an Anthropic-hosted connector as an MCP server entry.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.mcp.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.mcp.json` |
 
 ## Rule details
 
@@ -83,9 +83,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 { "claude/mcp-anthropic-hosted-url": ["error", { "hosts": ["mcp.example.com"] }] }
 ```
 
-| Option | Default | Use |
-|--------|---------|---------|
-| `hosts` | `[]` | Host names to report in addition to the three above |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-self-hosted-root-source`
+# claude/marketplace-self-hosted-root-source
 
-Give a marketplace beside a `plugin.json` an entry for the repository root.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-self-hosted-root-source': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-channel-server-stdio`
+# claude/plugin-channel-server-stdio
 
-Bind a channel to a stdio MCP server, not to a remote server.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | load | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

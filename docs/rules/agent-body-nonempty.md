@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-body-nonempty`
+# claude/agent-body-nonempty
 
-Give a subagent file a body, because the body is its system prompt.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/*.md`, in the agent folders |
+| Category | Files |
+|----------|-------|
+| practice | `**/*.md`, in the agent folders |
 
 The rule is `off` in `recommended`. The rule is a heuristic.
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `output-style-frontmatter-schema`
+# claude/output-style-frontmatter-schema
 
-Use the frontmatter fields of an output style, with the right types.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/output-styles/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/output-styles/*.md` |
 
 ## Rule details
 
@@ -70,10 +70,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/output-style-frontmatter-schema': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-md-extension`
+# claude/rules-md-extension
 
-Give each file in `.claude/rules/` the `.md` extension.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/rules/**/*.*`, `**/.claude/rules/**/!(*.*)` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/rules/**/*.*`, `**/.claude/rules/**/!(*.*)` |
 
 ## Rule details
 
@@ -66,10 +66,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/rules-md-extension': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-monitors-command-env`
+# claude/plugin-monitors-command-env
 
-Write the plugin path variables of a monitor command in the braced form.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json` |
 
 ## Rule details
 
@@ -70,10 +70,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-monitors-command-env': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

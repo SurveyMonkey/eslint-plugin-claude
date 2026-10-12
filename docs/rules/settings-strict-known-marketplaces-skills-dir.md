@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-strict-known-marketplaces-skills-dir`
+# claude/settings-strict-known-marketplaces-skills-dir
 
-Add the `skills-dir` source to a `strictKnownMarketplaces` allowlist.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-proxy-env`
+# claude/sandbox-proxy-env
 
-Set the proxy variables of a script that starts `claude` in the settings `env` block.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 
@@ -79,10 +79,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-proxy-env': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

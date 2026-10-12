@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-dangling-reference`
+# claude/claude-md-dangling-reference
 
-Point only to paths and slash commands that exist in the repository.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | consistency | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/.claude/rules/**/*.md` |
 
 The rule is `off` in `recommended`.
 
@@ -85,9 +85,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Commands and paths from outside the repository, written as in the file, without a line suffix. A command can have the slash or not. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/claude-md-dangling-reference': ['warn', { allow: ['/init', '/memory', 'review'] }]

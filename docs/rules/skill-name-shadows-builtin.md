@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-name-shadows-builtin`
+# claude/skill-name-shadows-builtin
 
-Do not give a skill the name of a built-in command or a bundled skill.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | consistency | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -86,9 +86,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `allow` | `[]` | Names that the repository replaces on purpose. The rule makes no report for them. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/skill-name-shadows-builtin': ['warn', { allow: ['batch'] }]

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-project-skills-dir-limits`
+# claude/plugin-project-skills-dir-limits
 
-Use no monitor, MCP bundle or outside MCP file in a plugin in `.claude/skills/`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude/skills/*/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/skills/*/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -71,10 +71,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-project-skills-dir-limits': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-settings-agent-exists`
+# claude/plugin-settings-agent-exists
 
-Name an agent of the plugin in the `agent` setting of its default settings.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | consistency | `**/.claude-plugin/plugin.json`, `**/settings.json` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude-plugin/plugin.json`, `**/settings.json` |
 
 ## Rule details
 
@@ -81,10 +81,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-settings-agent-exists': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-managed-version-floor`
+# claude/settings-managed-version-floor
 
-Set `requiredMinimumVersion` to 2.1.283 or later with `deniedModels` or `availableModelsMatch`.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

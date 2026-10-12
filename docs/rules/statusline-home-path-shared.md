@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `statusline-home-path-shared`
+# claude/statusline-home-path-shared
 
-Do not point the shared `statusLine` command at the home `.claude` folder.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | portability | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A team can put the script in the home folder of
 each person. `strict` turns it on at `warn`.

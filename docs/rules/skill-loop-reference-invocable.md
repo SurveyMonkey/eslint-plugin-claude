@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-loop-reference-invocable`
+# claude/skill-loop-reference-invocable
 
-Do not start `loop.md` with a skill that only the user can invoke.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/.claude/loop.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude/loop.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic, and it reads other files.
 

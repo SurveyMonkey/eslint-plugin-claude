@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `marketplace-entry-root-skills`
+# claude/marketplace-entry-root-skills
 
-List every skill directory in the `skills` of an entry whose source is the marketplace root.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/.claude-plugin/marketplace.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -81,10 +81,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/marketplace-entry-root-skills': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

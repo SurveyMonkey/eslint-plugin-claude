@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-insecure-url`
+# claude/mcp-insecure-url
 
-Use `https://` or `wss://` for a remote MCP server that is not on the machine.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | security | `**/.mcp.json` |
+| Category | Files |
+|----------|-------|
+| security | `**/.mcp.json` |
 
 ## Rule details
 

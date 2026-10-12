@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-local-untracked`
+# claude/claude-md-local-untracked
 
-Keep CLAUDE.local.md out of git, and cover it with a .gitignore pattern.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/CLAUDE.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/claude-md-local-untracked': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

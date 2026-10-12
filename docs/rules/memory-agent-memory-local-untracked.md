@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-agent-memory-local-untracked`
+# claude/memory-agent-memory-local-untracked
 
-Keep the local memory of a subagent out of git.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/agent-memory-local/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/agent-memory-local/**/*.md` |
 
 ## Rule details
 
@@ -62,10 +62,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/memory-agent-memory-local-untracked': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

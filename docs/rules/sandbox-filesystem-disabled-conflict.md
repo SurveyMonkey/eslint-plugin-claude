@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `sandbox-filesystem-disabled-conflict`
+# claude/sandbox-filesystem-disabled-conflict
 
-Do not set `sandbox.filesystem.disabled` in a file that holds entries which it switches off.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files only. It reads no hidden drop-in, because Claude Code ignores it.
 
@@ -89,10 +89,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/sandbox-filesystem-disabled-conflict': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

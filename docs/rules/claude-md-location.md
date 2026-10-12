@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-location`
+# claude/claude-md-location
 
-Put a CLAUDE.md file where Claude Code loads it, with its exact name.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | no-op | `**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/*.md` |
 
 The rule is `off` in `recommended`.
 

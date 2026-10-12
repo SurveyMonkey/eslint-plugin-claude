@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `skill-invocation-unreachable`
+# claude/skill-invocation-unreachable
 
-Let the user or Claude invoke a skill.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/SKILL.md` |
+| Category | Files |
+|----------|-------|
+| load | `**/SKILL.md` |
 
 ## Rule details
 
@@ -75,10 +75,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/skill-invocation-unreachable': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

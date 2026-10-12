@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `lsp-json-schema`
+# claude/lsp-json-schema
 
-Write `.lsp.json` as a map of server names to configs, with the documented fields.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.lsp.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.lsp.json` |
 
 The rule lints a `.lsp.json` at the root of a plugin: the directory that holds
 `.claude-plugin/plugin.json`. The rule does not lint `plugin.json`. It makes no report for a

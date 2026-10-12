@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-agents-md-prose-pointer`
+# claude/claude-md-agents-md-prose-pointer
 
-Import `AGENTS.md` with `@AGENTS.md`, not with a sentence that points to it.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md` |
 
 The rule is `off` in `recommended`.
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-themes-layout`
+# claude/plugin-themes-layout
 
-Write a plugin theme file in the custom theme format.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/themes/*.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/themes/*.json` |
 
 ## Rule details
 
@@ -76,10 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-themes-layout': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

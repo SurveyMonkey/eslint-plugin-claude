@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `memory-index-max-size`
+# claude/memory-index-max-size
 
-Keep a MEMORY.md index within 200 lines and 25,000 bytes.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/.claude/agent-memory/*/MEMORY.md` |
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/agent-memory/*/MEMORY.md` |
 
 ## Rule details
 
@@ -72,10 +72,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `maxLines` | `200` | The most lines of the index. An integer from 1 to 200. Optional. |
-| `maxBytes` | `25000` | The most bytes of the index. An integer from 1 to 25000. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/memory-index-max-size': ['warn', { maxLines: 150, maxBytes: 20000 }]

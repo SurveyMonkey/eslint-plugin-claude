@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `plugin-symlink-escapes-marketplace`
+# claude/plugin-symlink-escapes-marketplace
 
-Keep the target of a link under a plugin inside the marketplace.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| load | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -75,10 +75,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/plugin-symlink-escapes-marketplace': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

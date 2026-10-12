@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `claude-md-guardrail-to-hook`
+# claude/claude-md-guardrail-to-hook
 
-Enforce a guardrail with a hook or a permission rule, not with CLAUDE.md text.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| practice | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/.claude/rules/**/*.md` |
 
 The rule is `off` in `recommended`.
 

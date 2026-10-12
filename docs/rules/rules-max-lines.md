@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `rules-max-lines`
+# claude/rules-max-lines
 
-Keep a rule file at or under 200 lines.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | limit | `**/.claude/rules/**/*.md` |
+| Category | Files |
+|----------|-------|
+| limit | `**/.claude/rules/**/*.md` |
 
 ## Rule details
 
@@ -63,9 +63,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Options
 
-| Option | Default | Use |
-|--------|---------|-----|
-| `max` | `200` | The most lines of a file. An integer from 1. Optional. |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ```js
 'claude/rules-max-lines': ['warn', { max: 300 }]

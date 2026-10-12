@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `lsp-duplicate-server-name`
+# claude/lsp-duplicate-server-name
 
-Declare each LSP server name of a plugin once.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

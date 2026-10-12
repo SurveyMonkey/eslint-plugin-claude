@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `settings-local-gitignored`
+# claude/settings-local-gitignored
 
-Cover settings.local.json with a .gitignore pattern.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | practice | `**/.claude/settings.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/settings-local-gitignored': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

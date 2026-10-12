@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `permissions-deny-dir-listable`
+# claude/permissions-deny-dir-listable
 
-End a `Read` deny rule for generated or vendored code in `/**/*` so that the directory stays listable.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `strict` | `warn` | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files |
+|----------|-------|
+| practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 The rule also lints the managed settings files. It reads no hidden drop-in, because Claude Code ignores it.
@@ -60,10 +60,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/permissions-deny-dir-listable': 'warn'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `mcp-plugin-stdio-reach`
+# claude/mcp-plugin-stdio-reach
 
-Do not declare a stdio MCP server in a plugin that targets claude.ai.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `warn` | portability | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files |
+|----------|-------|
+| portability | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule makes no report until the option `targets` holds `claude-ai`.
 
@@ -77,9 +77,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 { "claude/mcp-plugin-stdio-reach": ["warn", { "targets": ["claude-ai"] }] }
 ```
 
-| Option | Default | Use |
-|--------|---------|---------|
-| `targets` | `[]` | The apps that the plugin must reach. The only value is `claude-ai` |
+<!-- begin auto-generated rule options list -->
+<!-- end auto-generated rule options list -->
 
 ## Sources
 

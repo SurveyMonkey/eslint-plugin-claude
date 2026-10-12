@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-name-unique`
+# claude/agent-name-unique
 
-Give each local agent its own name.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | consistency | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| consistency | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-name-unique': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

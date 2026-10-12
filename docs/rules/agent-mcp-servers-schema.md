@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-mcp-servers-schema`
+# claude/agent-mcp-servers-schema
 
-Write the mcpServers field of a local subagent as a list of servers.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | load | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| load | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -72,10 +72,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-mcp-servers-schema': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 

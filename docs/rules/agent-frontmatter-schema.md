@@ -10,13 +10,13 @@ generated:
   at: 2026-10-11T00:00:00Z
 ---
 
-# `agent-frontmatter-schema`
+# claude/agent-frontmatter-schema
 
-Use the frontmatter fields of a subagent, with the right types and values.
+<!-- end auto-generated rule header -->
 
-| Config | Severity | Category | Files |
-|--------|----------|----------|-------|
-| `recommended`, `strict` | `error` | no-op | `**/agents/**/*.md` |
+| Category | Files |
+|----------|-------|
+| no-op | `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -87,10 +87,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```js
 'claude/agent-frontmatter-schema': 'error'
 ```
-
-## Options
-
-None.
 
 ## Sources
 
