@@ -5,7 +5,7 @@
 // `PreToolUse` handler that prints `updatedInput` as a literal, when an earlier handler of the file also does so
 // for a tool that both matchers name.
 import { describe, expect, it } from 'vitest'
-import { command, FILES, settings } from '../hooks.test-support.ts'
+import { command, FILES, frontmatter, markdownIds, settings } from '../hooks.test-support.ts'
 import { lintScript, P, unreadable } from '../hooks-output.test-support.ts'
 import { lintJson } from '../rule-tester.test-support.ts'
 
@@ -192,5 +192,32 @@ describe(`${name}: silent`, () => {
     })) {
       expect(found, what).toEqual([])
     }
+  })
+})
+
+// No docs page says how Claude Code reads a merge key (`<<`). A map that holds one can only hide a
+// handler, so it cannot add a report.
+describe(`${name}: a merge key`, () => {
+  const run = `{ type: command, command: ${JSON.stringify(rewrite())} }`
+  const yaml = (groups: string) =>
+    markdownIds(name, frontmatter(`PreToolUse:\n${groups}`), FILES.skill)
+
+  it('counts no handler that holds a merge key', () => {
+    expect(yaml(`  - matcher: Bash\n    hooks:\n      - <<: ${run}\n      - ${run}\n`)).toEqual([])
+    expect(yaml(`  - matcher: Bash\n    hooks:\n      - &r ${run}\n      - <<: *r\n`)).toEqual([])
+  })
+
+  it('reads no matcher that holds a merge key', () => {
+    expect(
+      yaml(
+        `  - matcher: { <<: { a: 1 } }\n    hooks: [${run}]\n  - matcher: Bash\n    hooks: [${run}]\n`,
+      ),
+    ).toEqual([])
+  })
+
+  it('still reports two handlers beside one that holds a merge key', () => {
+    expect(
+      yaml(`  - matcher: Bash\n    hooks:\n      - &r ${run}\n      - <<: *r\n      - ${run}\n`),
+    ).toEqual(['multiple'])
   })
 })

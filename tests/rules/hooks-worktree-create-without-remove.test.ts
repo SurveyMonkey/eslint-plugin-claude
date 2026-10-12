@@ -106,6 +106,56 @@ describe(`${name}: the silent cases`, () => {
   })
 })
 
+// No docs page says how Claude Code reads a merge key (`<<`), so a map that holds one can hide a
+// WorktreeRemove handler.
+describe(`${name}: a merge key`, () => {
+  const yaml = (text: string) => markdownIds(name, frontmatter(text), FILES.skill)
+  const createYaml = 'WorktreeCreate:\n  - hooks:\n      - &c { type: command, command: ./c.sh }\n'
+
+  it('is silent when a WorktreeRemove group or handler holds a merge key', () => {
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - <<: *c\n`)).toEqual([])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n`)).toEqual([])
+    expect(
+      yaml(
+        `${createYaml}WorktreeRemove:\n  - hooks:\n      - { type: command, command: ./r.sh, input: { <<: { a: 1 } } }\n`,
+      ),
+    ).toEqual([])
+    // One group or one handler that holds a merge key is enough, next to an item that is not.
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n  - x\n`)).toEqual([])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - <<: *c\n      - x\n`)).toEqual(
+      [],
+    )
+  })
+
+  it('reports when a handler item is a list that holds a merge key, as a list is no handler', () => {
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - [ { <<: *c } ]\n`)).toEqual([
+      'noRemove',
+    ])
+  })
+
+  it('reports when the WorktreeRemove value or its handler list is a map with a merge key', () => {
+    // A map is no list, so it holds no handler.
+    expect(yaml(`${createYaml}WorktreeRemove: { <<: { a: 1 } }\n`)).toEqual(['noRemove'])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([
+      'noRemove',
+    ])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - x\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([
+      'noRemove',
+    ])
+  })
+
+  it('is silent when the hooks value itself holds a merge key', () => {
+    expect(yaml(`<<: { WorktreeRemove: [] }\n${createYaml}`)).toEqual([])
+  })
+
+  it('still reports when the merge key is in another event', () => {
+    const other = 'Stop:\n  - hooks:\n      - <<: *c\n'
+    expect(yaml(`${createYaml}${other}`)).toEqual(['noRemove'])
+    expect(yaml(`${createYaml}${other}WorktreeRemove: []\n`)).toEqual(['noRemove'])
+    expect(yaml(`${createYaml}      - <<: *c\n`)).toEqual(['noRemove'])
+  })
+})
+
 describe(`${name}: one file at a time`, () => {
   it('reports a create hook whose remove hook is in another settings file on disk', () => {
     const text = settings(create)

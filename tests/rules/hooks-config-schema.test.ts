@@ -398,23 +398,73 @@ describe(`${name}: frontmatter`, () => {
     expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l4\n`)).toEqual([])
   })
 
-  it('makes no report on a hooks value that holds a merge key, as no docs page says what it means', () => {
-    const base = 'Stop:\n  - hooks:\n      - &base { type: command, command: ./a.sh }\n'
+  // No docs page says how Claude Code reads a merge key (`<<`). So the rule reads no key of a map
+  // that holds one. The map is still an object, so a report on its kind stays. Each case gives the
+  // report id and the line.
+  const at = (text: string) =>
+    lintMarkdown(name, frontmatter(text), FILES.skill).map(({ messageId, line }) => [
+      messageId,
+      line,
+    ])
+  const merged = '{ <<: { k: 1 } }'
+  const base = 'Stop:\n  - hooks:\n      - &base { type: command, command: ./a.sh }\n'
+  const unseenHandler = '      - <<: *base\n        timeout: x\n'
+
+  it('makes no report that rests on a key of a map that holds a merge key', () => {
     expect(yaml(`${base}      - { type: command, command: ./a.sh, timeout: x }\n`)).toEqual([
       'fieldType',
     ])
-    expect(yaml(`${base}      - <<: *base\n        timeout: x\n`)).toEqual([])
+    expect(yaml(`${base}${unseenHandler}`)).toEqual([])
     expect(yaml(`${base}      - { <<: *base, type: script }\n`)).toEqual([])
     expect(yaml('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n')).toEqual([])
+    // Here the `hooks` value itself holds the merge key, so the rule reads no event.
     expect(yaml('<<: { Stop: x }\nSessionEnd: x\n')).toEqual([])
-    // A rule that sees the other events can report a fault that is not there, so the reader reads
-    // none of them.
-    expect(yaml('Stop: { <<: { k: 1 } }\nSessionEnd: x\n')).toEqual([])
+  })
+
+  it('reports a sibling event of an event where a handler holds a merge key', () => {
+    expect(at(`${base}${unseenHandler}SessionEnd: x\n`)).toEqual([['eventNotArray', 10]])
+  })
+
+  it('reports a sibling group of a group that holds a merge key', () => {
+    expect(at('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n  - x\n')).toEqual([
+      ['groupNotObject', 8],
+    ])
+  })
+
+  it('reports a sibling handler of a handler that holds a merge key', () => {
+    expect(at(`${base}${unseenHandler}      - x\n`)).toEqual([['handlerNotObject', 10]])
     expect(
-      yaml(
-        'Stop:\n  - hooks:\n      - { type: command, command: a, input: { <<: { k: 1 } } }\n      - { type: script }\n',
-      ),
-    ).toEqual([])
+      at(`${base}${unseenHandler}      - { type: command, command: ./b.sh, timeout: x }\n`),
+    ).toEqual([['fieldType', 10]])
+  })
+
+  it('reports an event that is a map with a merge key, as a map is no array', () => {
+    expect(at(`Stop: ${merged}\nSessionEnd: x\n`)).toEqual([
+      ['eventNotArray', 5],
+      ['eventNotArray', 6],
+    ])
+    expect(at(`Stop: ${merged}\nSessionEnd:\n  - hooks:\n      - <<: { type: script }\n`)).toEqual([
+      ['eventNotArray', 5],
+    ])
+  })
+
+  it('reports a matcher and a handler list that are maps with a merge key', () => {
+    expect(at(`Stop:\n  - matcher: ${merged}\n    hooks: []\n  - <<: { matcher: 1 }\n`)).toEqual([
+      ['matcherType', 6],
+    ])
+    expect(at(`Stop:\n  - hooks: ${merged}\n  - <<: { hooks: 1 }\n`)).toEqual([
+      ['handlersMissing', 6],
+    ])
+  })
+
+  it('reports a field that is a map with a merge key where the field takes another kind', () => {
+    const two = (first: string) => at(`${base}      - ${first}\n${unseenHandler}`)
+    expect(two(`{ type: ${merged} }`)).toEqual([['typeInvalid', 8]])
+    expect(two(`{ type: command, command: a, timeout: ${merged} }`)).toEqual([['fieldType', 8]])
+    expect(two(`{ type: command, command: a, args: [a, ${merged}] }`)).toEqual([['fieldType', 8]])
+    expect(two(`{ type: command, command: a, shell: ${merged} }`)).toEqual([['fieldValue', 8]])
+    // An object field holds an object, so it is no fault.
+    expect(two(`{ type: command, command: a, input: ${merged} }`)).toEqual([])
   })
 
   it('reads a quoted << as an ordinary key', () => {

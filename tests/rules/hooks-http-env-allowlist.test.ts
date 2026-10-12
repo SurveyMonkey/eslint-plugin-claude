@@ -175,3 +175,30 @@ describe(`${name}: the files`, () => {
     ).toEqual([])
   })
 })
+
+// No docs page says how Claude Code reads a merge key (`<<`), so the rule reads no map that holds
+// one.
+describe(`${name}: a merge key`, () => {
+  const yaml = (handlers: string) =>
+    markdownIds(name, frontmatter(`Stop:\n  - hooks:\n${handlers}`), FILES.skill)
+  const sibling = '      - { type: http, url: u, headers: { A: $X } }\n'
+
+  it('is silent for a handler that holds a merge key, and reports its sibling', () => {
+    const merged = '      - <<: { type: http, url: u }\n        headers: { A: $X }\n'
+    expect(yaml(merged)).toEqual([])
+    expect(yaml(merged + sibling)).toEqual(['unlisted'])
+  })
+
+  it('is silent for headers that hold a merge key, and reports its sibling', () => {
+    const merged = '      - { type: http, url: u, headers: { <<: { A: $X } } }\n'
+    expect(yaml(merged)).toEqual([])
+    expect(yaml(merged + sibling)).toEqual(['unlisted'])
+  })
+
+  it('is silent when an allowedEnvVars item holds a merge key, and reports its sibling', () => {
+    const merged =
+      '      - { type: http, url: u, headers: { A: $X }, allowedEnvVars: [B, { <<: { a: 1 } }] }\n'
+    expect(yaml(merged)).toEqual([])
+    expect(yaml(merged + sibling)).toEqual(['unlisted'])
+  })
+})

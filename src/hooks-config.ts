@@ -7,7 +7,9 @@
 //
 // The tree is tolerant: a value of the wrong type is still a node. `hooks-config-schema`
 // reports it. The other rules read `handlersOf`, which gives the handlers of well-formed groups only.
-// A YAML value that no rule can read gives no tree at all (see `fromYaml`).
+// A YAML map that holds a merge key is a node of kind `unseen`. It is an object, and no rule reads
+// into it. `handlersOf` gives no handler that holds one. A YAML value over the alias limit gives no
+// tree at all (see `fromYaml`).
 import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
@@ -47,7 +49,9 @@ export interface HMember {
 }
 
 /** A value of the config. A node of kind `other` is a value of no JSON type. An example is a
- *  YAML alias that names its own ancestor. No rule reads into it. */
+ *  YAML alias that names its own ancestor. No rule reads into it. A node of kind `unseen` is a YAML
+ *  map that holds a merge key (`<<`). It is an object, and no rule reads a key of it (see
+ *  `fromYaml`). */
 export type HNode =
   | { kind: 'object'; loc: Loc; members: HMember[] }
   | { kind: 'array'; loc: Loc; items: HNode[] }
@@ -56,6 +60,7 @@ export type HNode =
   | { kind: 'boolean'; loc: Loc; value: boolean }
   | { kind: 'null'; loc: Loc }
   | { kind: 'other'; loc: Loc }
+  | { kind: 'unseen'; loc: Loc }
 
 export type HObject = Extract<HNode, { kind: 'object' }>
 
@@ -64,8 +69,8 @@ type SourceKind = 'settings' | 'plugin' | 'skill' | 'agent'
 
 export interface HookSource {
   kind: SourceKind
-  /** The `hooks` value. It is undefined when the file has no `hooks` key, or when no rule can
-   *  read its YAML (see `fromYaml`). */
+  /** The `hooks` value. It is undefined when the file has no `hooks` key, or when its YAML is over
+   *  the alias limit (see `fromYaml`). */
   hooks: HNode | undefined
   /** The whole file of a plugin `hooks.json`. Settings and frontmatter give undefined. */
   file: HNode | undefined
@@ -277,16 +282,31 @@ interface YamlContext {
  *  count. */
 const MAX_ALIASES = 1000
 
-/** The node for a YAML node, or undefined when no rule can read the value. A null node has no range,
- *  so it takes `fallback`. Any other node has a range.
+/** True when `node` is of kind `unseen`, or holds a node of that kind at any depth. */
+export function holdsUnseen(node: HNode): boolean {
+  if (node.kind === 'object') {
+    return node.members.some(({ value }) => holdsUnseen(value))
+  }
+  if (node.kind === 'array') {
+    return node.items.some(holdsUnseen)
+  }
+  return node.kind === 'unseen'
+}
+
+/** The node for a YAML node, or undefined when the walk goes over the alias limit. A null node has
+ *  no range, so it takes `fallback`. Any other node has a range.
  *
  *  An alias reads as the node that it names. That node takes the location of the alias (`place`). A
  *  node inside it keeps its own location. An alias that names an ancestor is kind `other`.
  *
- *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So an object
- *  that holds one is undefined. An alias over the limit is undefined too. An undefined node makes
- *  each object and list around it undefined, up to the whole `hooks` value. A rule that sees part of
- *  the value can report a fault that is not there. An example is a missing `WorktreeRemove` hook. */
+ *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So a map that
+ *  holds one is a node of kind `unseen`, and the walk does not read into it. Its siblings and the
+ *  nodes around it stay readable. The unseen map can hide a thing whose absence a rule reports.
+ *  Such a rule reads `holdsUnseen`. A rule that reports a thing that it sees needs no check, because
+ *  a hidden thing can only remove that report.
+ *
+ *  An alias over the limit is undefined. An undefined node makes each object and list around it
+ *  undefined, up to the whole `hooks` value. */
 function fromYaml(
   node: unknown,
   context: YamlContext,
@@ -318,7 +338,7 @@ function fromYaml(
       ({ key }) => isScalar(key) && key.type === 'PLAIN' && key.value === '<<',
     )
     if (merge) {
-      return undefined
+      return { kind: 'unseen', loc }
     }
     const members: HMember[] = []
     for (const pair of node.items) {
@@ -420,11 +440,8 @@ export function hooksListener(
         },
       })
       const walk = { at: fm.at, marks, path: [], aliases: { left: MAX_ALIASES } }
-      check({
-        kind,
-        hooks: value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0)),
-        file: undefined,
-      })
+      const hooks = value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0))
+      check({ kind, hooks, file: undefined })
     },
   }
   // `Rule.RuleListener` types a node as an ESTree node. These nodes are not.
@@ -444,7 +461,12 @@ export interface HookGroup {
 
 /** The matcher groups of the source, in file order. A value of the wrong shape adds none: an
  *  event whose value is not an array, and a group that is not an object. A group that has no
- *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. */
+ *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. An
+ *  event of kind `unseen` is an object, so it adds none, and `hooks-config-schema` reports it. A
+ *  group of kind `unseen` adds none, and no rule reports it. An `unseen` matcher
+ *  gives `matcher: undefined`, as an omitted matcher does. So a rule reads the `matcher` member
+ *  before it reads undefined as "every tool". `handlers` leaves out each handler that holds an
+ *  `unseen` node. A rule cannot know how Claude Code runs it. */
 export function groupsOf(source: HookSource): HookGroup[] {
   const { hooks } = source
   if (hooks?.kind !== 'object') {
@@ -469,7 +491,9 @@ export function groupsOf(source: HookSource): HookGroup[] {
             matcher?.kind === 'string' ? { value: matcher.value, loc: matcher.loc } : undefined,
           handlers:
             inner?.kind === 'array'
-              ? inner.items.filter((item): item is HObject => item.kind === 'object')
+              ? inner.items.filter(
+                  (item): item is HObject => item.kind === 'object' && !holdsUnseen(item),
+                )
               : [],
         },
       ]
@@ -479,7 +503,8 @@ export function groupsOf(source: HookSource): HookGroup[] {
 
 /** The handlers of the source, in file order. A value of the wrong shape adds none:
  *  an event whose value is not an array, a group that is not an object or that has no
- *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
+ *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type.
+ *  A handler that holds a node of kind `unseen` adds none (see `groupsOf`). */
 export function handlersOf(source: HookSource): HookHandler[] {
   return groupsOf(source).flatMap(({ event, matcher, handlers }) =>
     handlers.map((handler) => ({ source, event, matcher: matcher?.value, handler })),

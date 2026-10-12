@@ -182,3 +182,32 @@ describe(`${name}: the files`, () => {
     expect(ids(command({ command: './a.ps1' }), BASH, '/repo/.github/hooks/hooks.json')).toEqual([])
   })
 })
+
+// No docs page says how Claude Code reads a merge key (`<<`), so the rule reads no handler that
+// holds one.
+describe(`${name}: a merge key`, () => {
+  const yaml = (handlers: string) =>
+    lintMd(
+      frontmatter(`PostToolUse:\n  - matcher: Write\n    hooks:\n${handlers}`),
+      FILES.skill,
+      BASH,
+    )
+
+  it('is silent for a handler that holds a merge key, and reports its sibling', () => {
+    expect(yaml('      - <<: { type: command, command: ./a.ps1 }\n')).toEqual([])
+    expect(
+      yaml(
+        '      - <<: { type: command, command: ./a.ps1 }\n      - { type: command, command: ./b.ps1 }\n',
+      ),
+    ).toEqual(['ps1'])
+  })
+
+  it('is silent when args or shell holds a merge key, and reports a sibling', () => {
+    const sibling = '      - { type: command, command: ./b.ps1 }\n'
+    for (const field of ['args', 'shell']) {
+      const merged = `      - { type: command, command: ./a.ps1, ${field}: { <<: { a: 1 } } }\n`
+      expect(yaml(merged), field).toEqual([])
+      expect(yaml(merged + sibling), field).toEqual(['ps1'])
+    }
+  })
+})
