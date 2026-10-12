@@ -12,13 +12,14 @@ import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
 import {
-  type Document,
   isAlias,
   isMap,
   isScalar,
   isSeq,
+  type Node,
   parseDocument,
   type Scalar,
+  visit,
   type YAMLMap,
 } from 'yaml'
 import { classifyAgentFile } from './agent-files.ts'
@@ -242,12 +243,12 @@ function fromJson(node: ValueNode): HNode {
 
 type At = (start: number, end: number) => Loc
 
-/** The state of one `fromYaml` walk. `doc` holds the anchors, and `path` holds the nodes that the
- *  walk is inside. `aliases` holds the count of aliases that the walk can still read. All copies of
+/** The state of one `fromYaml` walk. `marks` holds each alias and each node with an anchor, in
+ *  document order. `path` holds the nodes that the walk is inside. `aliases` holds the count of aliases that the walk can still read. All copies of
  *  the context share one `aliases` object, so the count applies to the full walk. */
 interface YamlContext {
   at: At
-  doc: Document
+  marks: readonly Node[]
   path: readonly unknown[]
   aliases: { left: number }
 }
@@ -280,7 +281,17 @@ function fromYaml(
   const [start, end] = (node as { range: [number, number, number] }).range
   const loc = place ?? at(start, end)
   if (isAlias(node)) {
-    const target = node.resolve(context.doc)
+    // `Alias.resolve` reads the whole document for each alias, so a long list of aliases is slow.
+    // This search reads the marks of the document, which the listener finds once.
+    let target: Node | undefined
+    for (const mark of context.marks) {
+      if (mark === node) {
+        break
+      }
+      if (mark.anchor === node.source) {
+        target = mark
+      }
+    }
     if (path.includes(target)) {
       return { kind: 'other', loc }
     }
@@ -388,7 +399,15 @@ export function hooksListener(
       // `readFrontmatter` gives a result only when the YAML is a mapping.
       const doc = parseDocument(node.value)
       const value = (doc.contents as YAMLMap).get('hooks', true)
-      const walk = { at: fm.at, doc, path: [], aliases: { left: MAX_ALIASES } }
+      const marks: Node[] = []
+      visit(doc, {
+        Node: (_key, mark) => {
+          if (isAlias(mark) || mark.anchor !== undefined) {
+            marks.push(mark)
+          }
+        },
+      })
+      const walk = { at: fm.at, marks, path: [], aliases: { left: MAX_ALIASES } }
       check({
         kind,
         hooks: value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0)),

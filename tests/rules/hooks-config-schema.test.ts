@@ -342,6 +342,8 @@ describe(`${name}: frontmatter`, () => {
       'typeInvalid',
     ])
     expect(yaml('Stop: &a [x]\nSessionEnd: *a\n')).toEqual(['groupNotObject', 'groupNotObject'])
+    // An alias names the last node before it with the anchor, and not a later one.
+    expect(yaml('Stop: &a []\nSessionEnd: *a\nPostToolUse: &a x\n')).toEqual(['eventNotArray'])
   })
 
   it('reports at the alias, and at the anchor for a fault inside the named node', () => {
