@@ -33,9 +33,11 @@ import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 // A `statSync` can fail after `realpathSync` resolves the same path. A process can remove the
 // file between the two calls. No tree on disk gives that order, so the wrapper below
-// makes `statSync` fail with the code in `faults` for that path. Each other call goes to the
+// makes `statSync` fail with the code in `faults` for that path. It also makes `realpathSync`
+// give the path in `realpaths` for a path that is not on disk. Each other call goes to the
 // real function.
 const faults = vi.hoisted(() => new Map<string, string>())
+const realpaths = vi.hoisted(() => new Map<string, string>())
 vi.mock('node:fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:fs')>()
   const statSync = (...args: unknown[]) => {
@@ -45,7 +47,18 @@ vi.mock('node:fs', async (importOriginal) => {
     }
     return (actual.statSync as (...rest: unknown[]) => unknown)(...args)
   }
-  return { ...actual, statSync, default: { ...actual, statSync } }
+  const realpathSync = Object.assign(
+    (...args: unknown[]) =>
+      realpaths.get(String(args[0])) ??
+      (actual.realpathSync as (...rest: unknown[]) => unknown)(...args),
+    { native: actual.realpathSync.native },
+  )
+  return {
+    ...actual,
+    statSync,
+    realpathSync,
+    default: { ...actual, statSync, realpathSync },
+  }
 })
 
 // The system tool that makes a FIFO. Node has no call for it.
@@ -604,21 +617,46 @@ describe('readJson', () => {
 })
 
 describe('readJson when a stat fails', () => {
-  it('gives UNREADABLE for a failed stat, and null for a file that a process removed', () => {
+  it('gives UNREADABLE for a failed stat of a file', () => {
     const file = put('rs/a.json', '{"a":1}')
-    for (const [code, result] of [
-      ['EACCES', UNREADABLE],
-      ['ENOENT', null],
-    ] as const) {
-      faults.set(file, code)
-      try {
-        expect(readJson(file, scratch)).toBe(result)
-      } finally {
-        faults.clear()
-      }
+    faults.set(file, 'EACCES')
+    try {
+      expect(readJson(file, scratch)).toBe(UNREADABLE)
+    } finally {
+      faults.clear()
     }
     expect(readJson(file, scratch)).toEqual({ data: { a: 1 } })
   })
+
+  it('gives null for a file that a process removed after the real path resolved', () => {
+    // The file is not on disk, and `realpaths` makes the real path resolve, as it did before the
+    // process removed the file.
+    const file = path.join(scratch, 'rs', 'removed.json')
+    realpaths.set(file, file)
+    try {
+      expect(readJson(file, scratch)).toBeNull()
+    } finally {
+      realpaths.clear()
+    }
+    // Without the wrapper, the file is not there, and the result is the same.
+    expect(readJson(file, scratch)).toBeNull()
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a link whose target a process removed after the real path resolved',
+    () => {
+      const target = put('rs/target.json', '{"a":1}')
+      const link = path.join(scratch, 'rs', 'link.json')
+      symlinkSync('target.json', link)
+      expect(readJson(link, scratch)).toEqual({ data: { a: 1 } })
+      faults.set(target, 'ENOENT')
+      try {
+        expect(readJson(link, scratch)).toBe(UNREADABLE)
+      } finally {
+        faults.clear()
+      }
+    },
+  )
 })
 
 // Claude Code 2.1.246 and later loads a `plugin.json` that starts with a byte order mark (the

@@ -16,9 +16,17 @@
 //   block is not skipped, because the docs do not name it.
 // - The text of an HTML comment is not an import. Claude Code strips a block
 //   comment before it injects the file.
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, Stats } from 'node:fs'
 import path from 'node:path'
-import { danglingOf, isInside, realOf, UNREADABLE, type Unreadable } from './skill-tree.ts'
+import {
+  danglingOf,
+  isInside,
+  realOf,
+  statOf,
+  textOf,
+  UNREADABLE,
+  type Unreadable,
+} from './skill-tree.ts'
 
 /** One `@path` import in the text of a file. */
 export interface MemoryImport {
@@ -210,13 +218,17 @@ export function locate(file: string, bound: string): Located {
 }
 
 /** The text of the file at the real path `real`. The result is null for a
- *  directory, and `UNREADABLE` when the read fails. */
+ *  directory, and `UNREADABLE` when the read fails. It is also `UNREADABLE`
+ *  for a path that is not a regular file, such as a FIFO. A read of a FIFO can
+ *  wait for a writer, and stop the lint run. */
 export function readImported(real: string): string | null | Unreadable {
-  try {
-    return readFileSync(real, 'utf8')
-  } catch (error) {
-    return (error as NodeJS.ErrnoException).code === 'EISDIR' ? null : UNREADABLE
+  const stat = statOf(real)
+  if (stat instanceof Stats && stat.isDirectory()) {
+    return null
   }
+  // `textOf` gives null for a path that is not there. A caller reads a path that it found, so
+  // for it that is a failed read.
+  return textOf(real) ?? UNREADABLE
 }
 
 /** The first of `forms`, resolved in `dir`, that is a file or directory in
